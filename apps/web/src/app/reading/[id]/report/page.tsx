@@ -9,26 +9,54 @@ import { Button, Card, CardContent, cn } from '@hieu-asia/ui';
 import {
   getReading,
   type ApiClientError,
-  type GetReadingResponse,
-  type ReadingReport,
+  type Reading,
 } from '@/lib/api-client';
 import { CautionBanner } from '@/components/caution-banner';
 import { ReportContextSummary } from '@/components/report-context-summary';
 
-const SECTIONS: Array<{ key: keyof ReadingReport; label: string; short: string }> = [
-  { key: 'summary', label: 'Tóm tắt báo cáo', short: 'Tóm tắt' },
-  { key: 'core_personality', label: 'Tổng quan bản chất', short: 'Bản chất' },
-  { key: 'strengths', label: 'Điểm mạnh cốt lõi', short: 'Điểm mạnh' },
-  { key: 'blind_spots', label: 'Điểm mù cần chuyển hóa', short: 'Điểm mù' },
-  { key: 'career_insights', label: 'Sự nghiệp / Kinh doanh', short: 'Sự nghiệp' },
-  { key: 'life_path', label: 'Đường đời', short: 'Đường đời' },
-  { key: 'relationship_guide', label: 'Quan hệ / Đội nhóm', short: 'Quan hệ' },
-  { key: 'action_plan', label: 'Kế hoạch hành động', short: 'Hành động' },
-];
+/** Parsed H2 section of the report markdown. */
+interface MarkdownSection {
+  title: string;
+  body: string;
+  isCaution: boolean;
+}
 
-function splitCautionFlags(raw?: string): string[] {
-  if (!raw) return [];
-  return raw
+/**
+ * Split a Markdown blob into sections keyed by H2 headings.
+ *
+ * The backend report contract guarantees 9 `## ` headings; we tolerate
+ * extra/missing sections gracefully and skip any preamble before the first H2.
+ */
+function parseMarkdownSections(markdown: string): MarkdownSection[] {
+  if (!markdown) return [];
+  const lines = markdown.split(/\r?\n/);
+  const sections: MarkdownSection[] = [];
+  let current: MarkdownSection | null = null;
+
+  for (const line of lines) {
+    const match = /^##\s+(.+?)\s*$/.exec(line);
+    if (match && match[1]) {
+      if (current) sections.push(current);
+      const title = match[1].trim();
+      current = {
+        title,
+        body: '',
+        isCaution: /cảnh báo|caution/i.test(title),
+      };
+      continue;
+    }
+    if (current) {
+      current.body += (current.body ? '\n' : '') + line;
+    }
+  }
+  if (current) sections.push(current);
+  return sections.map((s) => ({ ...s, body: s.body.trim() }));
+}
+
+/** Extract caution bullets from a section body (handles `-`, `*`, `•`, `1.`). */
+function extractCautionBullets(body: string): string[] {
+  if (!body) return [];
+  return body
     .split(/\r?\n+/)
     .map((line) => line.replace(/^[-*•\d.)\s]+/, '').trim())
     .filter(Boolean);
@@ -39,7 +67,7 @@ export default function ReportPage() {
   const router = useRouter();
   const readingId = params?.id ?? '';
 
-  const query = useQuery<GetReadingResponse, ApiClientError>({
+  const query = useQuery<Reading | null, ApiClientError>({
     queryKey: ['reading', readingId],
     queryFn: () => getReading(readingId),
     enabled: !!readingId,
@@ -47,9 +75,9 @@ export default function ReportPage() {
     refetchOnWindowFocus: false,
   });
 
-  const session = query.data?.session;
+  const session = query.data;
   const state = session?.state;
-  const report = session?.report;
+  const markdown = session?.report?.markdown ?? '';
 
   React.useEffect(() => {
     if (!state) return;
@@ -58,10 +86,20 @@ export default function ReportPage() {
     }
   }, [state, readingId, router]);
 
+  const sections = React.useMemo(
+    () => parseMarkdownSections(markdown),
+    [markdown],
+  );
+  const cautionSection = sections.find((s) => s.isCaution);
+  const reportSections = sections.filter((s) => !s.isCaution);
+  const cautionFlags = cautionSection
+    ? extractCautionBullets(cautionSection.body)
+    : [];
+
   if (query.isLoading) return <ReportSkeleton />;
 
   // Not ready yet (e.g. still pending) or fetch error.
-  if (!report || state !== 'report_ready') {
+  if (!markdown || state !== 'report_ready') {
     const errMessage =
       query.error?.message ??
       (state && state.startsWith('error_at_')
@@ -92,8 +130,6 @@ export default function ReportPage() {
     );
   }
 
-  const cautionFlags = splitCautionFlags(report.caution_flags);
-
   return (
     <main className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
       <header className="mb-6 flex items-center justify-between">
@@ -119,7 +155,7 @@ export default function ReportPage() {
 
         <CautionBanner flags={cautionFlags} />
 
-        <ReportSections report={report} />
+        <ReportSections sections={reportSections} />
 
         <ReportFooter readingId={readingId} />
       </div>
@@ -127,13 +163,12 @@ export default function ReportPage() {
   );
 }
 
-function ReportSections({ report }: { report: ReadingReport }) {
-  const available = SECTIONS.filter((s) => !!report[s.key]);
-  const [active, setActive] = React.useState<keyof ReadingReport | null>(
-    available[0]?.key ?? null,
+function ReportSections({ sections }: { sections: MarkdownSection[] }) {
+  const [active, setActive] = React.useState<string | null>(
+    sections[0]?.title ?? null,
   );
 
-  if (!available.length) {
+  if (!sections.length) {
     return (
       <p className="text-center text-sm text-cream/60">
         Báo cáo trống — vui lòng thử tạo lại.
@@ -148,36 +183,36 @@ function ReportSections({ report }: { report: ReadingReport }) {
         aria-label="Mục báo cáo"
         className="hidden flex-wrap gap-2 border-b border-gold/15 pb-3 md:flex"
       >
-        {available.map((s) => (
+        {sections.map((s) => (
           <button
-            key={s.key}
+            key={s.title}
             role="tab"
-            aria-selected={active === s.key}
-            onClick={() => setActive(s.key)}
+            aria-selected={active === s.title}
+            onClick={() => setActive(s.title)}
             className={cn(
               'rounded-md px-3 py-2 text-sm font-medium transition-colors',
-              active === s.key
+              active === s.title
                 ? 'bg-gold/15 text-gold'
                 : 'text-cream/70 hover:bg-gold/5 hover:text-cream',
             )}
           >
-            {s.label}
+            {s.title}
           </button>
         ))}
       </nav>
 
       <div className="space-y-3 md:hidden">
-        {available.map((s) => {
-          const open = active === s.key;
+        {sections.map((s) => {
+          const open = active === s.title;
           return (
             <div
-              key={s.key}
+              key={s.title}
               className="rounded-md border border-gold/15 bg-ink/40"
             >
               <button
                 type="button"
                 aria-expanded={open}
-                onClick={() => setActive(open ? null : s.key)}
+                onClick={() => setActive(open ? null : s.title)}
                 className="flex w-full items-center justify-between px-4 py-3 text-left"
               >
                 <span
@@ -186,7 +221,7 @@ function ReportSections({ report }: { report: ReadingReport }) {
                     open ? 'text-gold' : 'text-cream/80',
                   )}
                 >
-                  {s.label}
+                  {s.title}
                 </span>
                 <span aria-hidden className="text-gold/60">
                   {open ? '▾' : '▸'}
@@ -194,7 +229,7 @@ function ReportSections({ report }: { report: ReadingReport }) {
               </button>
               {open && (
                 <div className="border-t border-gold/10 p-4">
-                  <SectionBody content={report[s.key]} />
+                  <SectionBody content={s.body} />
                 </div>
               )}
             </div>
@@ -203,7 +238,11 @@ function ReportSections({ report }: { report: ReadingReport }) {
       </div>
 
       <div className="hidden md:block" role="tabpanel">
-        {active && <SectionBody content={report[active]} />}
+        {active && (
+          <SectionBody
+            content={sections.find((s) => s.title === active)?.body ?? ''}
+          />
+        )}
       </div>
     </div>
   );

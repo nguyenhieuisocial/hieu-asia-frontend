@@ -4,13 +4,16 @@ import * as React from 'react';
 import { motion } from 'framer-motion';
 import { useRouter, useParams } from 'next/navigation';
 import { Button, Card, CardContent } from '@hieu-asia/ui';
-import { ProcessingStepper } from '@/components/processing-stepper';
+import {
+  ProcessingStepper,
+  type StepKey,
+  type StepStatus,
+} from '@/components/processing-stepper';
 import {
   ApiClientError,
   getReading,
   type ReadingState,
 } from '@/lib/api-client';
-import type { StepStatus, StepKey } from '@/lib/use-reading-progress';
 
 const POLL_INTERVAL_MS = 3000;
 
@@ -69,9 +72,9 @@ export default function ProcessingPage() {
 
     const tick = async () => {
       try {
-        const res = await getReading(readingId);
+        const reading = await getReading(readingId);
         if (cancelled) return;
-        const next = res.session?.state ?? null;
+        const next = reading?.state ?? null;
         setState(next);
         setError(null);
 

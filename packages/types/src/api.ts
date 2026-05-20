@@ -93,6 +93,10 @@ export interface ActionPlanByPeriod {
 }
 
 /**
+ * @deprecated Backend now returns a single Markdown blob via {@link Reading.report}.
+ * Kept for legacy consumers (miniapp-telegram, `InsightCard`). New code on the web
+ * app should parse `report.markdown` H2 sections directly.
+ *
  * Master report. 9 tabs map 1:1 to fields here.
  *
  * Tab → Field:
@@ -152,6 +156,104 @@ export interface ChatResponse {
   answer: string;
   session_id: string;
   message_count: number;
+}
+
+// ---------- Reading session (Supabase reading-get / reading-create contract) ----------
+
+/**
+ * Backend reading lifecycle state.
+ *
+ * Phases: vision → logic → psychology → alignment → report.
+ * Each phase emits a `_pending` and `_done` transition. Terminal states:
+ *   - `report_ready`     — analysis succeeded
+ *   - `vision_skipped`   — user opted out of palm upload
+ *   - `error_at_<phase>` — phase-specific failure
+ *   - `error_internal`   — non-phase failure (queue, infra…)
+ */
+export type ReadingState =
+  | 'pending'
+  | 'vision_pending'
+  | 'vision_done'
+  | 'logic_pending'
+  | 'logic_done'
+  | 'psychology_pending'
+  | 'psychology_done'
+  | 'alignment_pending'
+  | 'alignment_done'
+  | 'report_pending'
+  | 'report_ready'
+  | 'vision_skipped'
+  | 'error_internal'
+  | `error_at_${string}`;
+
+export interface ReadingInputs {
+  birth_date?: string;
+  birth_time?: string | null;
+  birth_place?: string;
+  gender?: string;
+  primary_concern?: string;
+  /** Free-form survey/display fields the web client stores alongside required inputs. */
+  [key: string]: unknown;
+}
+
+export interface ReadingInsights {
+  vision?: string;
+  logic?: string;
+  psychology?: string;
+  alignment?: string;
+}
+
+/** Final markdown report. Backend now returns a single Markdown blob with H2 sections. */
+export interface ReadingReportMarkdown {
+  markdown: string;
+}
+
+export interface TuviChart {
+  year: string;
+  month: string;
+  day: string;
+  hour: string;
+}
+
+/**
+ * Canonical reading row as returned by `GET /api/reading/{id}` proxy
+ * (Supabase Edge Function `reading-get`).
+ */
+export interface Reading {
+  id: string;
+  user_id: string;
+  state: ReadingState;
+  inputs: ReadingInputs;
+  palm_image_url?: string;
+  survey_answers?: Record<string, unknown>;
+  tuvi_chart?: TuviChart;
+  insights?: ReadingInsights;
+  report?: ReadingReportMarkdown;
+  errors?: Record<string, string>;
+  created_at: string;
+  updated_at: string;
+}
+
+// ---------- Mentor chat (api.hieu.asia /ai/role/mentor contract) ----------
+
+export type MentorRole = 'system' | 'user' | 'assistant';
+
+export interface MentorMessage {
+  role: MentorRole;
+  content: string;
+}
+
+export interface MentorRequest {
+  messages: MentorMessage[];
+  session_id?: string;
+}
+
+export interface MentorResponse {
+  ok: boolean;
+  vendor?: string;
+  model?: string;
+  response?: string;
+  error?: string;
 }
 
 // ---------- RAG ----------

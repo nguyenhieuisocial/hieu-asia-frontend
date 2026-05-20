@@ -3,7 +3,22 @@
 import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Loader2 } from 'lucide-react';
-import type { StepStatus } from '@/lib/use-reading-progress';
+
+export type StepKey =
+  | 'prepare_context'
+  | 'vision'
+  | 'logic'
+  | 'psychology'
+  | 'alignment'
+  | 'report';
+
+export type StepState = 'pending' | 'running' | 'done';
+
+export interface StepStatus {
+  key: StepKey;
+  label: string;
+  state: StepState;
+}
 
 export interface ProcessingStepperProps {
   steps: StepStatus[];

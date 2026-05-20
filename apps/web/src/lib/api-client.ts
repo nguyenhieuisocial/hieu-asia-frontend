@@ -6,66 +6,27 @@
  * server-only credentials.
  */
 
-export type ReadingState =
-  | 'vision_pending'
-  | 'vision_done'
-  | 'logic_pending'
-  | 'logic_done'
-  | 'psychology_pending'
-  | 'psychology_done'
-  | 'alignment_pending'
-  | 'alignment_done'
-  | 'report_pending'
-  | 'report_ready'
-  | `error_at_${string}`
-  | string;
+import type {
+  MentorMessage,
+  MentorResponse,
+  Reading,
+} from '@hieu-asia/types';
 
-export interface ReadingInsights {
-  vision?: string;
-  logic?: string;
-  psychology?: string;
-  alignment?: string;
-}
+export type {
+  MentorMessage,
+  MentorResponse,
+  MentorRole,
+  Reading,
+  ReadingInsights,
+  ReadingInputs,
+  ReadingReportMarkdown,
+  ReadingState,
+} from '@hieu-asia/types';
 
-export interface ReadingReport {
-  core_personality: string;
-  strengths: string;
-  blind_spots: string;
-  career_insights: string;
-  life_path: string;
-  relationship_guide: string;
-  action_plan: string;
-  caution_flags: string;
-  summary: string;
-}
-
-export interface ReadingSession {
-  id: string;
-  user_id: string;
-  state: ReadingState;
-  inputs: Record<string, unknown>;
-  insights?: ReadingInsights;
-  report?: ReadingReport;
-}
-
+/** Envelope returned by `/api/reading/[id]` proxy. */
 export interface GetReadingResponse {
   ok: boolean;
-  session?: ReadingSession;
-  error?: string;
-}
-
-export type MentorRole = 'system' | 'user' | 'assistant';
-
-export interface MentorMessage {
-  role: MentorRole;
-  content: string;
-}
-
-export interface ChatMentorResponse {
-  ok: boolean;
-  vendor?: string;
-  model?: string;
-  response?: string;
+  session?: Reading;
   error?: string;
 }
 
@@ -93,8 +54,13 @@ async function readJson<T>(res: Response): Promise<T> {
   }
 }
 
-/** GET /api/reading/{id} — server proxies to Supabase reading-get. */
-export async function getReading(id: string): Promise<GetReadingResponse> {
+/**
+ * GET /api/reading/{id} — server proxies to Supabase reading-get.
+ *
+ * Returns the raw {@link Reading} row, or `null` when the proxy reports
+ * `ok: true` without a session (e.g. row not yet inserted).
+ */
+export async function getReading(id: string): Promise<Reading | null> {
   if (!id) throw new ApiClientError(400, null, 'reading id required');
 
   const res = await fetch(`/api/reading/${encodeURIComponent(id)}`, {
@@ -112,14 +78,25 @@ export async function getReading(id: string): Promise<GetReadingResponse> {
       body?.error ?? `Failed to fetch reading ${id}`,
     );
   }
-  return body;
+  return body.session ?? null;
+}
+
+/**
+ * Convenience helper for callers that still want the legacy envelope shape.
+ * Prefer {@link getReading} for new code.
+ */
+export async function getReadingEnvelope(
+  id: string,
+): Promise<GetReadingResponse> {
+  const session = await getReading(id);
+  return { ok: true, session: session ?? undefined };
 }
 
 /** POST /api/mentor — server proxies to api.hieu.asia/ai/role/mentor. */
 export async function chatMentor(
   messages: MentorMessage[],
   sessionId?: string,
-): Promise<ChatMentorResponse> {
+): Promise<MentorResponse> {
   if (!messages?.length) {
     throw new ApiClientError(400, null, 'messages required');
   }
@@ -134,7 +111,7 @@ export async function chatMentor(
     cache: 'no-store',
   });
 
-  const body = await readJson<ChatMentorResponse>(res);
+  const body = await readJson<MentorResponse>(res);
 
   if (!res.ok || body.ok === false) {
     throw new ApiClientError(
@@ -145,3 +122,7 @@ export async function chatMentor(
   }
   return body;
 }
+
+// NOTE: legacy `ReadingReport` (rich object) was removed. The backend now
+// returns `Reading.report.markdown`, a single Markdown blob with H2 sections.
+// Consumers should parse `markdown` into sections themselves.
