@@ -2,15 +2,13 @@
 
 import * as React from 'react';
 import { useTheme } from 'next-themes';
+import { getWebApp } from '@/lib/telegram-init';
+import { exchangeInitDataForJwt } from '@/lib/telegram-auth';
 
 /**
- * Sync theme với Telegram WebApp.colorScheme.
+ * Sync theme với Telegram WebApp.colorScheme + exchange initData → JWT.
  *
- * When running inside Telegram WebView, `window.Telegram.WebApp.colorScheme`
- * is "light" | "dark" based on user's Telegram theme. We mirror it into
- * next-themes so all components react.
- *
- * Outside Telegram (e.g. dev preview in browser), this is a no-op.
+ * Runs once on first mount. Outside Telegram, all calls no-op.
  */
 export function TelegramThemeBridge() {
   const { setTheme } = useTheme();
@@ -18,31 +16,22 @@ export function TelegramThemeBridge() {
   React.useEffect(() => {
     let cancelled = false;
 
-    const apply = async () => {
-      try {
-        // Dynamic import — @twa-dev/sdk reads `window.Telegram` only on client.
-        const mod = await import('@twa-dev/sdk');
-        const WebApp = mod.default;
-        if (cancelled) return;
+    (async () => {
+      const webApp = await getWebApp();
+      if (cancelled || !webApp) return;
 
-        WebApp.ready();
-        WebApp.expand();
-        if (WebApp.colorScheme === 'dark' || WebApp.colorScheme === 'light') {
-          setTheme(WebApp.colorScheme);
+      const applyScheme = () => {
+        if (webApp.colorScheme === 'dark' || webApp.colorScheme === 'light') {
+          setTheme(webApp.colorScheme);
         }
+      };
+      applyScheme();
+      webApp.onEvent('themeChanged', applyScheme);
 
-        WebApp.onEvent('themeChanged', () => {
-          if (cancelled) return;
-          if (WebApp.colorScheme === 'dark' || WebApp.colorScheme === 'light') {
-            setTheme(WebApp.colorScheme);
-          }
-        });
-      } catch {
-        // Not inside Telegram — ignore.
-      }
-    };
+      // Best-effort: get a JWT from initData. Mock-mode if backend unset.
+      void exchangeInitDataForJwt();
+    })();
 
-    void apply();
     return () => {
       cancelled = true;
     };

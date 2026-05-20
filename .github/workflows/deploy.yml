@@ -1,16 +1,36 @@
 # Deploy all three apps to Vercel production on push to main.
 #
+# PREFERRED PATH: Vercel GitHub App integration
+# ---------------------------------------------
+# For production, we recommend installing the **Vercel GitHub App** on the
+# `hieu-asia-frontend` repo (https://vercel.com/docs/git/vercel-for-github).
+# Once installed and each app is imported in Vercel:
+#   - Vercel auto-deploys every push to main (production)
+#   - Vercel auto-deploys every PR (preview, with auto comment)
+#   - No CLI tokens, no GHA build minutes
+#
+# This workflow is kept as a FALLBACK for cases where:
+#   - The GitHub App isn't available (e.g. enterprise org without approval)
+#   - You need custom build steps not expressible in vercel.json
+#   - You want a single source of truth in YAML
+#
+# To DISABLE this workflow when GitHub App is active:
+#   - GitHub repo Settings -> Actions -> Workflows -> deploy -> Disable
+#   - OR change `on:` trigger to `workflow_dispatch:` only
+#
 # Production domain mapping (configure in Vercel project settings):
 #   hieu-asia-web     -> hieu.asia
 #   hieu-asia-admin   -> admin.hieu.asia
 #   hieu-asia-miniapp -> miniapp.hieu.asia
 #
-# Secrets required (per repo):
+# Secrets required (per repo, only when using CLI path):
 #   VERCEL_TOKEN
 #   VERCEL_ORG_ID
 #   VERCEL_PROJECT_ID_WEB
 #   VERCEL_PROJECT_ID_ADMIN
 #   VERCEL_PROJECT_ID_MINIAPP
+# Optional:
+#   SLACK_WEBHOOK_URL / DISCORD_WEBHOOK_URL  for deploy notifications
 name: deploy
 
 on:
@@ -69,5 +89,47 @@ jobs:
         run: vercel build --prod --token=$VERCEL_TOKEN
 
       - name: Deploy production
+        id: deploy
         working-directory: ${{ matrix.app.dir }}
-        run: vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
+        run: |
+          url=$(vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN)
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "::notice::Deployed ${{ matrix.app.name }} to $url"
+
+  notify:
+    name: Notify deploy result
+    needs: deploy
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slack notification
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          STATUS: ${{ needs.deploy.result }}
+          SHA: ${{ github.sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "SLACK_WEBHOOK_URL not set, skipping"
+            exit 0
+          fi
+          EMOJI="white_check_mark"
+          [ "$STATUS" != "success" ] && EMOJI="x"
+          curl -fsS -X POST "$SLACK_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            --data "{\"text\":\":${EMOJI}: frontend deploy *${STATUS}* on ${REPO}@${SHA:0:7}\"}"
+
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          STATUS: ${{ needs.deploy.result }}
+          SHA: ${{ github.sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [ -z "$DISCORD_WEBHOOK_URL" ]; then
+            echo "DISCORD_WEBHOOK_URL not set, skipping"
+            exit 0
+          fi
+          curl -fsS -X POST "$DISCORD_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            --data "{\"content\":\"frontend deploy **${STATUS}** on ${REPO}@${SHA:0:7}\"}"

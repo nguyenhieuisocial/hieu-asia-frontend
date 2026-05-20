@@ -1,0 +1,40 @@
+{
+  "name": "@hieu-asia/miniapp-zalo",
+  "version": "0.1.0",
+  "private": true,
+  "zmp": {
+    "framework": "react"
+  },
+  "scripts": {
+    "dev": "zmp dev",
+    "build": "zmp build",
+    "lint": "eslint src --max-warnings 0",
+    "test": "echo 'miniapp-zalo: no tests yet'",
+    "types:check": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo node_modules"
+  },
+  "dependencies": {
+    "@hieu-asia/api-client": "workspace:*",
+    "@hieu-asia/types": "workspace:*",
+    "@hieu-asia/ui": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.0.0",
+    "zmp-sdk": "^2.0.0",
+    "zmp-ui": "^1.0.0"
+  },
+  "devDependencies": {
+    "@hieu-asia/config": "workspace:*",
+    "@tailwindcss/postcss": "^4.0.0-beta.3",
+    "@types/node": "^22.7.4",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.12.0",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^4.0.0-beta.3",
+    "typescript": "^5.6.2",
+    "vite": "^6.0.0",
+    "zmp-cli": "^2.0.0"
+  }
+}

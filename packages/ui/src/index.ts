@@ -16,3 +16,7 @@ export { Switch } from './components/Switch';
 export { ConsentCheckboxList } from './components/ConsentCheckboxList';
 export type { ConsentItem } from './components/ConsentCheckboxList';
 export { InsightCard } from './components/InsightCard';
+
+// Admin / back-office primitives
+export { DataTable, StatusBadge } from './components/DataTable';
+export type { Column as DataTableColumn, DataTableProps } from './components/DataTable';

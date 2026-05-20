@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@config '../../tailwind.config.ts';
 
 @layer base {
   :root {
@@ -6,13 +7,17 @@
     --foreground: 240 10% 6%;
     --primary: 40 51% 48%;
     --radius: 0.625rem;
+    --border: 40 30% 75%;
   }
   .dark {
     --background: 240 8% 6%;
     --foreground: 36 30% 92%;
     --primary: 40 51% 48%;
+    --border: 40 30% 25%;
   }
   body {
     @apply bg-ink text-cream font-sans antialiased;
+    /* No horizontal scroll inside Telegram WebView */
+    overscroll-behavior-y: contain;
   }
 }

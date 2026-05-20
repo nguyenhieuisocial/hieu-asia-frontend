@@ -1,34 +1,76 @@
-import Link from 'next/link';
+'use client';
+
+import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
-import { ThemeToggle } from '@/components/theme-toggle';
+import { Users, Sparkles, MessageSquare, DollarSign, Gauge } from 'lucide-react';
+import { StatCard } from '@/components/stat-card';
+import { ReadingsChart } from '@/components/cost-chart';
+import { getKpis, getReadingsPerDay } from '@/lib/admin-api';
 
-export default function AdminHomePage() {
+function fmtUsd(v: number) {
+  return `$${v.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+}
+
+export default function AdminOverviewPage() {
+  const kpis = useQuery({ queryKey: ['admin', 'kpis'], queryFn: getKpis });
+  const readings = useQuery({ queryKey: ['admin', 'readings-per-day'], queryFn: () => getReadingsPerDay(30) });
+
   return (
-    <main className="min-h-screen bg-ink-radial">
-      <header className="container mx-auto flex items-center justify-between px-6 py-5">
-        <h1 className="font-heading text-xl text-gold">admin.hieu.asia</h1>
-        <ThemeToggle />
-      </header>
+    <div className="space-y-6">
+      <div>
+        <h1 className="font-heading text-3xl font-semibold text-cream">Tổng quan</h1>
+        <p className="mt-1 text-sm text-cream/65">
+          Theo dõi nhanh số liệu vận hành ngày + tháng. Dữ liệu hiện đang là mock — sẽ thay bằng
+          backend `/admin/*` khi sẵn sàng.
+        </p>
+      </div>
 
-      <section className="container mx-auto grid max-w-5xl gap-6 px-6 py-12 sm:grid-cols-2 lg:grid-cols-3">
-        {[
-          { href: '/users', title: 'Người dùng', desc: 'Danh sách user + filter.' },
-          { href: '/readings', title: 'Phiên phân tích', desc: 'Task Celery + status.' },
-          { href: '/rag', title: 'RAG', desc: 'Quản lý tài liệu + license metadata.' },
-        ].map((it) => (
-          <Link key={it.href} href={it.href as never}>
-            <Card className="transition hover:border-gold/40">
-              <CardHeader>
-                <CardTitle>{it.title}</CardTitle>
-                <CardDescription>{it.desc}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gold/80">→ Mở</p>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
-      </section>
-    </main>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <StatCard
+          label="Tổng người dùng"
+          value={kpis.data?.total_users.toLocaleString('vi-VN') ?? '—'}
+          delta={{ value: '+12 / 7d', direction: 'up' }}
+          icon={<Users className="h-4 w-4" />}
+        />
+        <StatCard
+          label="Báo cáo hôm nay"
+          value={kpis.data?.readings_today ?? '—'}
+          delta={{ value: '+3 vs hôm qua', direction: 'up' }}
+          icon={<Sparkles className="h-4 w-4" />}
+        />
+        <StatCard
+          label="Mentor đang chat"
+          value={kpis.data?.active_mentor_sessions ?? '—'}
+          hint="đang xử lý"
+          icon={<MessageSquare className="h-4 w-4" />}
+        />
+        <StatCard
+          label="Doanh thu 7 ngày"
+          value={kpis.data ? fmtUsd(kpis.data.weekly_revenue_usd) : '—'}
+          delta={{ value: '+8.4%', direction: 'up' }}
+          icon={<DollarSign className="h-4 w-4" />}
+        />
+        <StatCard
+          label="Điểm eval TB"
+          value={kpis.data?.eval_avg_score.toFixed(2) ?? '—'}
+          hint="trên 5"
+          icon={<Gauge className="h-4 w-4" />}
+        />
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Báo cáo 30 ngày qua</CardTitle>
+          <CardDescription>Số lượng phiên phân tích theo ngày — vàng = tổng, đỏ = lỗi.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {readings.isLoading ? (
+            <div className="h-72 animate-pulse rounded bg-cream/5" />
+          ) : (
+            <ReadingsChart data={readings.data ?? []} />
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 }
