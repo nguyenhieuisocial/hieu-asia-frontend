@@ -1,0 +1,73 @@
+# Deploy all three apps to Vercel production on push to main.
+#
+# Production domain mapping (configure in Vercel project settings):
+#   hieu-asia-web     -> hieu.asia
+#   hieu-asia-admin   -> admin.hieu.asia
+#   hieu-asia-miniapp -> miniapp.hieu.asia
+#
+# Secrets required (per repo):
+#   VERCEL_TOKEN
+#   VERCEL_ORG_ID
+#   VERCEL_PROJECT_ID_WEB
+#   VERCEL_PROJECT_ID_ADMIN
+#   VERCEL_PROJECT_ID_MINIAPP
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Vercel prod - ${{ matrix.app.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app:
+          - name: web
+            dir: apps/web
+            project_id_secret: VERCEL_PROJECT_ID_WEB
+          - name: admin
+            dir: apps/admin
+            project_id_secret: VERCEL_PROJECT_ID_ADMIN
+          - name: miniapp
+            dir: apps/miniapp-telegram
+            project_id_secret: VERCEL_PROJECT_ID_MINIAPP
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets[matrix.app.project_id_secret] }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel env (production)
+        working-directory: ${{ matrix.app.dir }}
+        run: vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+
+      - name: Build production
+        working-directory: ${{ matrix.app.dir }}
+        run: vercel build --prod --token=$VERCEL_TOKEN
+
+      - name: Deploy production
+        working-directory: ${{ matrix.app.dir }}
+        run: vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN

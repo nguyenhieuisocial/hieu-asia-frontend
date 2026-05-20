@@ -1,0 +1,19 @@
+# Optional pre-commit hooks for the frontend monorepo.
+# Install once: pip install pre-commit && pre-commit install
+# Alternative: use Husky + lint-staged inside package.json (preferred by JS folks).
+repos:
+  - repo: local
+    hooks:
+      - id: pnpm-lint
+        name: pnpm lint (turbo)
+        entry: pnpm lint --fix
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+
+      - id: pnpm-test-affected
+        name: pnpm turbo test (affected)
+        entry: pnpm turbo test --filter='[HEAD^1]'
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]

@@ -1,0 +1,79 @@
+# Deploy a Vercel preview for each app on every pull request and
+# comment the URLs back on the PR.
+#
+# Secrets required (per repo):
+#   VERCEL_TOKEN              - personal token, scope: full
+#   VERCEL_ORG_ID             - team or user id
+#   VERCEL_PROJECT_ID_WEB     - project id for apps/web
+#   VERCEL_PROJECT_ID_ADMIN   - project id for apps/admin
+#   VERCEL_PROJECT_ID_MINIAPP - project id for apps/miniapp-telegram
+name: preview
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  preview:
+    name: Vercel preview - ${{ matrix.app.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app:
+          - name: web
+            dir: apps/web
+            project_id_secret: VERCEL_PROJECT_ID_WEB
+          - name: admin
+            dir: apps/admin
+            project_id_secret: VERCEL_PROJECT_ID_ADMIN
+          - name: miniapp
+            dir: apps/miniapp-telegram
+            project_id_secret: VERCEL_PROJECT_ID_MINIAPP
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets[matrix.app.project_id_secret] }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel env
+        working-directory: ${{ matrix.app.dir }}
+        run: vercel pull --yes --environment=preview --token=$VERCEL_TOKEN
+
+      - name: Build
+        working-directory: ${{ matrix.app.dir }}
+        run: vercel build --token=$VERCEL_TOKEN
+
+      - name: Deploy preview
+        id: deploy
+        working-directory: ${{ matrix.app.dir }}
+        run: |
+          url=$(vercel deploy --prebuilt --token=$VERCEL_TOKEN)
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Comment URL on PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: vercel-preview-${{ matrix.app.name }}
+          message: |
+            **${{ matrix.app.name }}** preview: ${{ steps.deploy.outputs.url }}
