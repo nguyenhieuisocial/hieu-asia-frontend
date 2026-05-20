@@ -1,0 +1,18 @@
+@import 'tailwindcss';
+
+@layer base {
+  :root {
+    --background: 36 30% 92%;
+    --foreground: 240 10% 6%;
+    --primary: 40 51% 48%;
+    --radius: 0.625rem;
+  }
+  .dark {
+    --background: 240 8% 6%;
+    --foreground: 36 30% 92%;
+    --primary: 40 51% 48%;
+  }
+  body {
+    @apply bg-ink text-cream font-sans antialiased;
+  }
+}

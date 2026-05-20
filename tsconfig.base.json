@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "allowJs": false,
+    "checkJs": false,
+    "jsx": "preserve",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "declaration": false,
+    "noEmit": true,
+    "paths": {
+      "@hieu-asia/ui": ["./packages/ui/src/index.ts"],
+      "@hieu-asia/ui/*": ["./packages/ui/src/*"],
+      "@hieu-asia/types": ["./packages/types/src/index.ts"],
+      "@hieu-asia/api-client": ["./packages/api-client/src/index.ts"],
+      "@hieu-asia/config/*": ["./packages/config/*"]
+    }
+  },
+  "exclude": ["node_modules", ".next", "dist", ".turbo"]
+}

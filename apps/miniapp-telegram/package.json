@@ -1,0 +1,43 @@
+{
+  "name": "miniapp-telegram",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3002",
+    "build": "next build",
+    "start": "next start --port 3002",
+    "lint": "next lint",
+    "test": "echo 'miniapp-telegram: no tests yet'",
+    "types:check": "tsc --noEmit",
+    "clean": "rm -rf .next .turbo node_modules"
+  },
+  "dependencies": {
+    "@auth/core": "^0.37.2",
+    "@hieu-asia/api-client": "workspace:*",
+    "@hieu-asia/types": "workspace:*",
+    "@hieu-asia/ui": "workspace:*",
+    "@hookform/resolvers": "^3.9.0",
+    "@tanstack/react-query": "^5.59.0",
+    "@twa-dev/sdk": "^7.10.0",
+    "framer-motion": "^11.11.0",
+    "next": "^15.0.0",
+    "next-auth": "5.0.0-beta.22",
+    "next-themes": "^0.3.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.53.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@hieu-asia/config": "workspace:*",
+    "@types/node": "^22.7.4",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.12.0",
+    "eslint-config-next": "^15.0.0",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^4.0.0-beta.3",
+    "typescript": "^5.6.2"
+  }
+}

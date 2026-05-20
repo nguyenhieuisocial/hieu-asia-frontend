@@ -1,0 +1,24 @@
+{
+  "name": "@hieu-asia/config",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./eslint": "./eslint-preset.js",
+    "./tsconfig.base": "./tsconfig.base.json",
+    "./tsconfig.next": "./tsconfig.next.json",
+    "./tsconfig.lib": "./tsconfig.lib.json",
+    "./tailwind": "./tailwind-preset.ts"
+  },
+  "files": [
+    "eslint-preset.js",
+    "tsconfig.base.json",
+    "tsconfig.next.json",
+    "tsconfig.lib.json",
+    "tailwind-preset.ts"
+  ],
+  "scripts": {
+    "lint": "echo 'config: no lint'",
+    "types:check": "echo 'config: no types:check'"
+  }
+}

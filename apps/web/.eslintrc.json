@@ -1,0 +1,3 @@
+{
+  "extends": ["@hieu-asia/config/eslint"]
+}
