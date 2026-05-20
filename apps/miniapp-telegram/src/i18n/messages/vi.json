@@ -1,0 +1,32 @@
+{
+  "common": {
+    "appName": "hieu.asia",
+    "back": "Quay lại",
+    "next": "Tiếp tục",
+    "submit": "Gửi",
+    "cancel": "Huỷ",
+    "retry": "Thử lại",
+    "loading": "Đang tải…"
+  },
+  "welcome": {
+    "kicker": "hieu.asia · mini app",
+    "greeting": "Chào",
+    "tagline": "Cẩm Nang Cuộc Đời AI — phân tích tính cách, vận hạn, chiến lược hành động.",
+    "ctaStart": "Bắt đầu"
+  },
+  "consent": {
+    "title": "Đồng ý xử lý dữ liệu",
+    "continue": "Tiếp tục"
+  },
+  "dashboard": {
+    "title": "Báo cáo của tôi",
+    "newReportCta": "Tạo báo cáo mới",
+    "mentorQuotaLabel": "Gói Mentor"
+  },
+  "errors": {
+    "notFoundTitle": "Trang không có",
+    "notFoundBody": "Mini App không tìm thấy đường dẫn này. Quay về dashboard để tiếp tục.",
+    "errorTitle": "Mini App gặp sự cố",
+    "errorBody": "Thử lại — nếu vẫn lỗi, mở web app trên trình duyệt."
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "common": {
+    "appName": "hieu.asia",
+    "tagline": "AI Life Handbook",
+    "back": "Back",
+    "next": "Continue",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "retry": "Retry",
+    "loading": "Loading…"
+  },
+  "landing": {
+    "kicker": "Premium AI insight platform",
+    "title": "Your AI Life Handbook",
+    "subtitle": "Personalized analysis of personality, fortune, career, and action strategy — powered by Tu Vi + Psychology + Vision AI.",
+    "ctaPrimary": "Start reading",
+    "ctaSecondary": "View demo report",
+    "trustNote": "Not deterministic · Data encrypted · For reference only"
+  },
+  "errors": {
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "The link may have expired or been mistyped. Head back to the homepage to start again.",
+    "serverErrorTitle": "Something went wrong",
+    "serverErrorBody": "We hit a temporary issue. Try again — if the problem persists, head home."
+  },
+  "consent": {
+    "title": "Before we begin",
+    "subtitle": "Please accept the 4 items below to continue.",
+    "continue": "Continue"
+  },
+  "processing": {
+    "kicker": "Step 4 / 4",
+    "title": "Agent council analyzing",
+    "subtitle": "Six AI specialists are cross-checking your birth data, palm lines, and personality.",
+    "tip": "Approx. 30 – 60 seconds · Please keep this page open"
+  },
+  "report": {
+    "tabs": {
+      "overview": "Overview",
+      "personality": "Personality",
+      "career": "Career",
+      "relationship": "Relationships",
+      "health": "Health",
+      "finance": "Finance",
+      "strategy": "Strategy"
+    }
+  },
+  "mentor": {
+    "title": "AI Mentor",
+    "placeholder": "Ask your mentor anything…"
+  }
+}

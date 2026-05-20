@@ -1,4 +1,9 @@
 import type { NextConfig } from 'next';
+import bundleAnalyzer from '@next/bundle-analyzer';
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -6,6 +11,18 @@ const nextConfig: NextConfig = {
   experimental: {
     typedRoutes: true,
   },
+  // Performance budget: warn on chunks > 250kB.
+  webpack(config, { isServer }) {
+    if (!isServer) {
+      config.performance = {
+        ...config.performance,
+        hints: process.env.NODE_ENV === 'production' ? 'warning' : false,
+        maxAssetSize: 300_000,
+        maxEntrypointSize: 300_000,
+      };
+    }
+    return config;
+  },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

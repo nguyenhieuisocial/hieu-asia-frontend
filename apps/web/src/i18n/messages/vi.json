@@ -1,0 +1,52 @@
+{
+  "common": {
+    "appName": "hieu.asia",
+    "tagline": "Cẩm Nang Cuộc Đời AI",
+    "back": "Quay lại",
+    "next": "Tiếp tục",
+    "submit": "Gửi",
+    "cancel": "Huỷ",
+    "retry": "Thử lại",
+    "loading": "Đang tải…"
+  },
+  "landing": {
+    "kicker": "Premium AI insight platform",
+    "title": "Cẩm Nang Cuộc Đời AI",
+    "subtitle": "Phân tích tính cách, vận hạn, sự nghiệp và chiến lược hành động cá nhân hóa từ Tử Vi + Tâm lý + Vision AI.",
+    "ctaPrimary": "Bắt đầu luận giải",
+    "ctaSecondary": "Xem demo báo cáo",
+    "trustNote": "Không định mệnh hóa · Dữ liệu được mã hoá · Kết quả mang tính tham khảo"
+  },
+  "errors": {
+    "notFoundTitle": "Trang không tồn tại",
+    "notFoundBody": "Có thể link đã hết hạn hoặc gõ sai. Hãy quay về trang chủ và bắt đầu lại từ đó.",
+    "serverErrorTitle": "Đã có lỗi xảy ra",
+    "serverErrorBody": "Hệ thống gặp sự cố tạm thời. Bạn có thể thử lại — nếu vẫn lỗi, vui lòng quay về trang chủ."
+  },
+  "consent": {
+    "title": "Trước khi bắt đầu",
+    "subtitle": "Vui lòng đồng ý 4 điều khoản dưới đây để tiếp tục.",
+    "continue": "Tiếp tục"
+  },
+  "processing": {
+    "kicker": "Bước 4 / 4",
+    "title": "Hội đồng Agent đang phân tích",
+    "subtitle": "Sáu chuyên gia AI đang đối chiếu ngày sinh, đường chỉ tay và tính cách của bạn.",
+    "tip": "Khoảng 30 – 60 giây · Vui lòng giữ trang mở"
+  },
+  "report": {
+    "tabs": {
+      "overview": "Tổng quan",
+      "personality": "Tính cách",
+      "career": "Sự nghiệp",
+      "relationship": "Quan hệ",
+      "health": "Sức khoẻ",
+      "finance": "Tài chính",
+      "strategy": "Chiến lược"
+    }
+  },
+  "mentor": {
+    "title": "Cố vấn AI",
+    "placeholder": "Hỏi điều bạn muốn cố vấn…"
+  }
+}

@@ -9,6 +9,7 @@
     "lint": "next lint",
     "test": "echo 'web: no tests yet'",
     "types:check": "tsc --noEmit",
+    "analyze": "cross-env ANALYZE=true next build",
     "clean": "rm -rf .next .turbo node_modules"
   },
   "dependencies": {
@@ -22,6 +23,7 @@
     "lucide-react": "^0.453.0",
     "next": "^15.0.0",
     "next-auth": "5.0.0-beta.22",
+    "next-intl": "^3.26.0",
     "next-themes": "^0.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -34,11 +36,13 @@
   },
   "devDependencies": {
     "@hieu-asia/config": "workspace:*",
+    "@next/bundle-analyzer": "^15.0.0",
     "@tailwindcss/postcss": "^4.0.0-beta.3",
     "@types/node": "^22.7.4",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
     "eslint": "^9.12.0",
     "eslint-config-next": "^15.0.0",
     "postcss": "^8.4.47",

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
+import { Button, Card, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { CalendarDays, ScanLine, ClipboardList, Sparkles, ShieldCheck, Trash2, Info, Lock } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LaSoSvg } from '@/components/la-so-svg';

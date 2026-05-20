@@ -1,0 +1,32 @@
+{
+  "common": {
+    "appName": "hieu.asia",
+    "back": "Back",
+    "next": "Continue",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "retry": "Retry",
+    "loading": "Loading…"
+  },
+  "welcome": {
+    "kicker": "hieu.asia · mini app",
+    "greeting": "Hi",
+    "tagline": "AI Life Handbook — personality, fortune, and action strategy.",
+    "ctaStart": "Start"
+  },
+  "consent": {
+    "title": "Data processing consent",
+    "continue": "Continue"
+  },
+  "dashboard": {
+    "title": "My readings",
+    "newReportCta": "New reading",
+    "mentorQuotaLabel": "Mentor plan"
+  },
+  "errors": {
+    "notFoundTitle": "Not found",
+    "notFoundBody": "Mini App could not find this path. Back to dashboard to continue.",
+    "errorTitle": "Mini App error",
+    "errorBody": "Retry — if it persists, open the web app in your browser."
+  }
+}

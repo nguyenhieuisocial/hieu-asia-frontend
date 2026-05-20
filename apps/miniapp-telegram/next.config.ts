@@ -1,4 +1,7 @@
 import type { NextConfig } from 'next';
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 /**
  * Telegram Mini App lives inside a Telegram WebView. Needs to:
@@ -17,11 +20,14 @@ const nextConfig: NextConfig = {
         source: '/(.*)',
         headers: [
           // Telegram WebView sometimes needs CSP frame-ancestors permissive.
-          { key: 'Content-Security-Policy', value: "frame-ancestors 'self' https://*.telegram.org https://web.telegram.org" },
+          {
+            key: 'Content-Security-Policy',
+            value: "frame-ancestors 'self' https://*.telegram.org https://web.telegram.org",
+          },
         ],
       },
     ];
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

@@ -6,7 +6,14 @@ Operations console for hieu.asia — V1 mock-driven, real backend wiring pending
 
 ```powershell
 pnpm --filter admin dev    # port 3001
+pnpm --filter admin analyze    # bundle analyzer
 ```
+
+## Performance
+
+- **Target Lighthouse desktop: ≥ 90** (admin is desktop-first, internal use)
+- Mobile target: ≥ 75 (internal tool, low priority)
+- Per-asset budget warns at > 300 kB in production (recharts ships ~150 kB)
 
 ## Auth
 

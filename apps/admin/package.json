@@ -9,6 +9,7 @@
     "lint": "next lint",
     "test": "echo 'admin: no tests yet'",
     "types:check": "tsc --noEmit",
+    "analyze": "cross-env ANALYZE=true next build",
     "clean": "rm -rf .next .turbo node_modules"
   },
   "dependencies": {
@@ -30,10 +31,12 @@
   },
   "devDependencies": {
     "@hieu-asia/config": "workspace:*",
+    "@next/bundle-analyzer": "^15.0.0",
     "@types/node": "^22.7.4",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
     "eslint": "^9.12.0",
     "eslint-config-next": "^15.0.0",
     "postcss": "^8.4.47",
