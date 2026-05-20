@@ -1,0 +1,13 @@
+{
+  "app": {
+    "title": "hieu.asia",
+    "description": "Cẩm Nang Cuộc Đời AI",
+    "headerColor": "#0F0F12",
+    "textColor": "white",
+    "statusBar": "light",
+    "hideAndroidBottomNavigationBar": true
+  },
+  "debug": false,
+  "template": {},
+  "listCSS": []
+}
