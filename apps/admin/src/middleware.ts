@@ -9,6 +9,13 @@ import { ADMIN_SESSION_COOKIE } from '@/lib/auth';
  */
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Belt + suspenders: never gate the login endpoint (matcher already excludes,
+  // but in case the regex changes or caches stale, explicit short-circuit here).
+  if (pathname === '/api/admin/login' || pathname.startsWith('/api/admin/login/')) {
+    return NextResponse.next();
+  }
+
   const session = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
 
   // Already logged in — block /login to avoid loops.
