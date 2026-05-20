@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -35,6 +36,7 @@ function buildBirthData(values: BirthDataValues): BirthData {
 
 export function BirthDataForm() {
   const router = useRouter();
+  const [consented, setConsented] = React.useState(false);
   const {
     register,
     handleSubmit,
@@ -62,12 +64,20 @@ export function BirthDataForm() {
   const showConfidence = !unknownTime && birthTime && birthTime.length > 0;
 
   const onSubmit = handleSubmit(async (values) => {
+    if (!consented) return;
+    const consentTimestamp = new Date().toISOString();
     const userId = getOrCreateAnonUserId();
     const res = await createReading(userId, buildBirthData(values));
     if (typeof window !== 'undefined') {
       window.sessionStorage.setItem(
         'hieu.reading.session',
-        JSON.stringify({ task_id: res.task_id, session_id: res.session_id, status: 'queued' }),
+        JSON.stringify({
+          task_id: res.task_id,
+          session_id: res.session_id,
+          status: 'queued',
+          consent_timestamp: consentTimestamp,
+          consent_version: 'v1.0',
+        }),
       );
     }
     router.push(`/reading/${res.session_id}/upload`);
@@ -199,8 +209,41 @@ export function BirthDataForm() {
         </p>
       </div>
 
+      {/* Consent — required before submit */}
+      <div className="rounded-md border border-gold/20 bg-ink/40 p-4">
+        <label className="flex cursor-pointer items-start gap-3 text-sm text-cream/85">
+          <Checkbox
+            checked={consented}
+            onChange={(e) => setConsented((e.target as HTMLInputElement).checked)}
+            required
+            aria-required="true"
+          />
+          <span className="leading-relaxed">
+            Tôi đồng ý với{' '}
+            <Link
+              href="/privacy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold underline hover:text-gold/80"
+            >
+              Chính sách bảo mật
+            </Link>{' '}
+            và{' '}
+            <Link
+              href="/terms"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold underline hover:text-gold/80"
+            >
+              Điều khoản dịch vụ
+            </Link>
+            . Tôi hiểu rằng báo cáo có tính chất tham khảo, không thay thế tư vấn chuyên môn.
+          </span>
+        </label>
+      </div>
+
       <div className="flex justify-end border-t border-gold/15 pt-6">
-        <Button type="submit" size="lg" disabled={isSubmitting}>
+        <Button type="submit" size="lg" disabled={isSubmitting || !consented}>
           {isSubmitting ? 'Đang xử lý...' : 'Tiếp theo'}
         </Button>
       </div>
