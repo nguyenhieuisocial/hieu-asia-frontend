@@ -15,51 +15,22 @@ import {
   Switch,
 } from '@hieu-asia/ui';
 import { Info } from 'lucide-react';
-import { apiClient } from '@/lib/api';
 import { birthDataSchema, VN_PROVINCES, type BirthDataValues } from '@/lib/birth-data-schema';
-import type { CreateReadingResponse, UserContext } from '@hieu-asia/types';
+import { createReading, getOrCreateAnonUserId, type BirthData } from '@hieu-asia/supabase';
 
 const CONFIDENCE_LABELS = ['Đoán', 'Không chắc', 'Tương đối', 'Khá chắc', 'Chính xác'];
 
-function buildUserContext(values: BirthDataValues): UserContext {
+function buildBirthData(values: BirthDataValues): BirthData {
   return {
     birth_date: values.birth_date,
+    birth_time: values.unknown_birth_time ? null : values.birth_time || null,
     birth_place: values.birth_place,
-    gender: values.gender,
+    gender: values.gender ?? null,
+    display_name: values.display_name || null,
+    calendar: values.calendar,
     timezone: 'Asia/Ho_Chi_Minh',
-    // Carry display name + calendar + time as part of personality_raw notes for V1
-    personality_raw: JSON.stringify({
-      display_name: values.display_name || null,
-      birth_time: values.unknown_birth_time ? null : values.birth_time || null,
-      time_confidence: values.unknown_birth_time ? 1 : values.time_confidence,
-      calendar: values.calendar,
-    }),
+    time_confidence: values.unknown_birth_time ? 1 : values.time_confidence,
   };
-}
-
-async function submitMockable(values: BirthDataValues): Promise<CreateReadingResponse> {
-  // Backend not running locally → mock if NEXT_PUBLIC_API_URL unset.
-  if (!process.env.NEXT_PUBLIC_API_URL) {
-    await new Promise((r) => setTimeout(r, 350));
-    return {
-      task_id: 'mock-001',
-      session_id: 'session_mock-001',
-      status: 'queued',
-    };
-  }
-
-  return apiClient.createReading({
-    user_id: 'anonymous',
-    user_context: buildUserContext(values),
-    // Placeholder — actual hand image URL is attached in Screen 4 (upload).
-    hand_image_url: '',
-    consent: {
-      accepted: true,
-      accepted_at: new Date().toISOString(),
-      version: 'v1.0',
-      purposes: ['personalized_reading', 'mentor_chat'],
-    },
-  });
 }
 
 export function BirthDataForm() {
@@ -91,11 +62,15 @@ export function BirthDataForm() {
   const showConfidence = !unknownTime && birthTime && birthTime.length > 0;
 
   const onSubmit = handleSubmit(async (values) => {
-    const res = await submitMockable(values);
+    const userId = getOrCreateAnonUserId();
+    const res = await createReading(userId, buildBirthData(values));
     if (typeof window !== 'undefined') {
-      window.sessionStorage.setItem('hieu.reading.session', JSON.stringify(res));
+      window.sessionStorage.setItem(
+        'hieu.reading.session',
+        JSON.stringify({ task_id: res.task_id, session_id: res.session_id, status: 'queued' }),
+      );
     }
-    router.push(`/reading/${res.task_id}/upload`);
+    router.push(`/reading/${res.session_id}/upload`);
   });
 
   return (

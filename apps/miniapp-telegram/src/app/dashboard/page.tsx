@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu
 import { TgBackButton } from '@/components/tg-back-button';
 import { TgMainButton } from '@/components/tg-main-button';
 import { getTelegramUser, type TelegramUser } from '@/lib/telegram-auth';
+import { getOrCreateAnonUserId, listReadings } from '@hieu-asia/supabase';
 
 interface DashReport {
   id: string;
@@ -15,27 +16,44 @@ interface DashReport {
   mentor_messages: number;
 }
 
-const MOCK_REPORTS: DashReport[] = [
-  {
-    id: 'demo-task-001',
-    date: '20/05/2026',
-    primary_concern: 'Dòng tiền căng + middle manager chống đối',
-    mentor_messages: 12,
-  },
-  {
-    id: 'demo-task-002',
-    date: '12/03/2026',
-    primary_concern: 'Có nên mở chi nhánh thứ 4?',
-    mentor_messages: 5,
-  },
-];
+function formatVnDate(iso: string): string {
+  const d = new Date(iso);
+  return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+}
 
 export default function MiniAppDashboardPage() {
   const router = useRouter();
   const [user, setUser] = React.useState<TelegramUser | null>(null);
+  const [reports, setReports] = React.useState<DashReport[]>([]);
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     void getTelegramUser().then(setUser);
+  }, []);
+
+  React.useEffect(() => {
+    const userId = getOrCreateAnonUserId();
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
+    listReadings(userId)
+      .then((rows) => {
+        setReports(
+          rows.map((r) => ({
+            id: r.session_id,
+            date: formatVnDate(r.updated_at),
+            primary_concern:
+              r.state_json.birth_data?.primary_concern ||
+              `Báo cáo cho ${r.state_json.birth_data?.birth_place ?? '—'}`,
+            mentor_messages: 0,
+          })),
+        );
+      })
+      .catch((e) => {
+        console.warn('listReadings failed:', e);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   return (
@@ -60,8 +78,12 @@ export default function MiniAppDashboardPage() {
           <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-gold/75">
             Báo cáo của tôi
           </p>
+          {loading && <p className="text-sm text-cream/60">Đang tải báo cáo...</p>}
+          {!loading && reports.length === 0 && (
+            <p className="text-sm text-cream/60">Bạn chưa có báo cáo nào.</p>
+          )}
           <ul className="space-y-3">
-            {MOCK_REPORTS.map((r) => (
+            {reports.map((r) => (
               <li key={r.id}>
                 <Link href={`/reading/${r.id}/report`}>
                   <Card className="transition-colors hover:border-gold/40">

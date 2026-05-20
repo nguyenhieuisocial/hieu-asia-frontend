@@ -12,24 +12,34 @@ import {
   type PlanUsage,
   type SettingsState,
 } from '@/components/dashboard-sections';
+import { getOrCreateAnonUserId, listReadings } from '@hieu-asia/supabase';
 
 // V1 mock: assume logged-in user. Real auth wired in Phase 2.
 const MOCK_USER = { name: 'Anh Minh', email: 'minh@example.com' };
 
-const MOCK_REPORTS: DashboardReport[] = [
-  {
-    id: 'demo-task-001',
-    date: '20/05/2026',
-    primary_concern: 'Dòng tiền căng + middle manager chống đối',
-    status: 'completed',
-  },
-  {
-    id: 'demo-task-002',
-    date: '12/03/2026',
-    primary_concern: 'Có nên mở chi nhánh thứ 4?',
-    status: 'completed',
-  },
-];
+function formatVnDate(iso: string): string {
+  const d = new Date(iso);
+  return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+}
+
+function rowToReport(row: {
+  session_id: string;
+  state_json: { birth_data?: { primary_concern?: string | null; birth_place?: string }; status?: string };
+  updated_at: string;
+}): DashboardReport {
+  const status: DashboardReport['status'] =
+    row.state_json.status === 'completed' ? 'completed' :
+    row.state_json.status === 'failed' ? 'failed' :
+    'running';
+  return {
+    id: row.session_id,
+    date: formatVnDate(row.updated_at),
+    primary_concern:
+      row.state_json.birth_data?.primary_concern ||
+      `Báo cáo cho ${row.state_json.birth_data?.birth_place ?? '—'}`,
+    status,
+  };
+}
 
 const MOCK_SESSIONS: MentorSession[] = [
   {
@@ -72,6 +82,23 @@ const SECTIONS: { id: SectionId; label: string }[] = [
 
 export default function DashboardPage() {
   const [active, setActive] = React.useState<SectionId>('reports');
+  const [reports, setReports] = React.useState<DashboardReport[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const userId = getOrCreateAnonUserId();
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
+    listReadings(userId)
+      .then((rows) => setReports(rows.map(rowToReport)))
+      .catch((e) => {
+        console.warn('listReadings failed:', e);
+        setReports([]);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <main className="min-h-screen bg-ink-radial">
@@ -115,7 +142,13 @@ export default function DashboardPage() {
         </nav>
 
         <section role="tabpanel">
-          {active === 'reports' && <ReportsSection items={MOCK_REPORTS} />}
+          {active === 'reports' && (
+            loading ? (
+              <p className="text-sm text-cream/60">Đang tải báo cáo...</p>
+            ) : (
+              <ReportsSection items={reports} />
+            )
+          )}
           {active === 'mentor' && (
             <MentorSessionsSection sessions={MOCK_SESSIONS} />
           )}

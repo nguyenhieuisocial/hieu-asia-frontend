@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, ConsentCheckboxList, type ConsentItem } from '@hieu-asia/ui';
 import { TgMainButton } from '@/components/tg-main-button';
 import { TgBackButton } from '@/components/tg-back-button';
+import { getOrCreateAnonUserId, logAudit } from '@hieu-asia/supabase';
 
 const ITEMS: ConsentItem[] = [
   { id: 'birth_data', label: 'Ngày giờ sinh', purpose: 'Dựng lá số + mốc luận giải vận hạn.' },
@@ -18,18 +19,25 @@ export default function ConsentPage() {
   const [checked, setChecked] = React.useState<Record<string, boolean>>({});
   const allChecked = ITEMS.every((i) => checked[i.id]);
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (!allChecked) return;
+    const acceptedAt = new Date().toISOString();
+    const purposes = ['personalized_reading', 'mentor_chat'];
     if (typeof window !== 'undefined') {
       window.sessionStorage.setItem(
         'hieu.consent',
-        JSON.stringify({
-          accepted: true,
-          accepted_at: new Date().toISOString(),
-          version: 'v1.0',
-          purposes: ['personalized_reading', 'mentor_chat'],
-        }),
+        JSON.stringify({ accepted: true, accepted_at: acceptedAt, version: 'v1.0', purposes }),
       );
+    }
+    const userId = getOrCreateAnonUserId();
+    try {
+      await logAudit({
+        user_id: userId,
+        action: 'consent_accepted',
+        audit_metadata: { boxes: 4, version: 'v1.0', purposes, accepted_at: acceptedAt, surface: 'miniapp-telegram' },
+      });
+    } catch (e) {
+      console.warn('audit log failed:', e);
     }
     router.push('/reading/new');
   };

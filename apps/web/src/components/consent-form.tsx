@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button, Checkbox } from '@hieu-asia/ui';
 import { Check } from 'lucide-react';
+import { getOrCreateAnonUserId, logAudit } from '@hieu-asia/supabase';
 
 const CONSENT_ITEMS = [
   {
@@ -73,19 +74,35 @@ export function ConsentForm() {
     values.survey === true &&
     values.context === true;
 
-  const onSubmit = handleSubmit(() => {
+  const onSubmit = handleSubmit(async () => {
+    const acceptedAt = new Date().toISOString();
+    const purposes = [
+      'personalized_reading',
+      'mentor_chat',
+      ...(values.improve_optin ? ['quality_improvement'] : []),
+    ];
+
     // Persist consent state for next step (very small footprint, no PII)
     if (typeof window !== 'undefined') {
       window.sessionStorage.setItem(
         'hieu.consent',
-        JSON.stringify({
-          accepted: true,
-          accepted_at: new Date().toISOString(),
-          version: 'v1.0',
-          purposes: ['personalized_reading', 'mentor_chat', ...(values.improve_optin ? ['quality_improvement'] : [])],
-        }),
+        JSON.stringify({ accepted: true, accepted_at: acceptedAt, version: 'v1.0', purposes }),
       );
     }
+
+    // Generate / reuse anonymous user id and record consent in Supabase audit_log.
+    const userId = getOrCreateAnonUserId();
+    try {
+      await logAudit({
+        user_id: userId,
+        action: 'consent_accepted',
+        audit_metadata: { boxes: 4, version: 'v1.0', purposes, accepted_at: acceptedAt },
+      });
+    } catch (e) {
+      // Non-blocking — surface in console for diagnostics; user can still proceed.
+      console.warn('audit log failed:', e);
+    }
+
     router.push('/reading/new');
   });
 

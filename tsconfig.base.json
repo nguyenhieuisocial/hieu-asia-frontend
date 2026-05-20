@@ -25,6 +25,7 @@
       "@hieu-asia/ui/*": ["./packages/ui/src/*"],
       "@hieu-asia/types": ["./packages/types/src/index.ts"],
       "@hieu-asia/api-client": ["./packages/api-client/src/index.ts"],
+      "@hieu-asia/supabase": ["./packages/supabase-client/src/index.ts"],
       "@hieu-asia/config/*": ["./packages/config/*"]
     }
   },

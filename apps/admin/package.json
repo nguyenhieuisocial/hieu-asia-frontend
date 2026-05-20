@@ -15,6 +15,7 @@
   "dependencies": {
     "@auth/core": "^0.37.2",
     "@hieu-asia/api-client": "workspace:*",
+    "@hieu-asia/supabase": "workspace:*",
     "@hieu-asia/types": "workspace:*",
     "@hieu-asia/ui": "workspace:*",
     "@hookform/resolvers": "^3.9.0",

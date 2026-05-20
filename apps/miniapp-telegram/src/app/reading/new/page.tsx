@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, Checkbox, Input, Label, RadioGroup, RadioGroupItem } from '@hieu-asia/ui';
 import { TgMainButton } from '@/components/tg-main-button';
 import { TgBackButton } from '@/components/tg-back-button';
-import type { UserContext } from '@hieu-asia/types';
+import { createReading, getOrCreateAnonUserId, type BirthData } from '@hieu-asia/supabase';
 
 type Gender = 'nam' | 'nữ' | 'khác' | 'không nói';
 
@@ -25,25 +25,34 @@ export default function NewReadingPage() {
     !!gender &&
     (unknownTime || birthTime.length === 5);
 
-  const onSubmit = () => {
-    if (!valid) return;
-    // Generate a draft reading id (real id arrives from backend at /processing).
-    const readingId = `draft_${Date.now().toString(36)}`;
-    const ctx: UserContext = {
+  const [submitting, setSubmitting] = React.useState(false);
+
+  const onSubmit = async () => {
+    if (!valid || submitting) return;
+    setSubmitting(true);
+    const userId = getOrCreateAnonUserId();
+    const birth: BirthData = {
       birth_date: birthDate,
+      birth_time: unknownTime ? null : birthTime || null,
       birth_place: birthPlace,
-      gender,
+      gender: gender || null,
+      display_name: displayName || null,
       timezone: 'Asia/Ho_Chi_Minh',
       primary_concern: concern || null,
-      personality_raw: JSON.stringify({
-        display_name: displayName || null,
-        birth_time: unknownTime ? null : birthTime || null,
-      }),
     };
-    if (typeof window !== 'undefined') {
-      window.sessionStorage.setItem(`hieu.birth.${readingId}`, JSON.stringify(ctx));
+    try {
+      const res = await createReading(userId, birth);
+      if (typeof window !== 'undefined') {
+        window.sessionStorage.setItem(
+          `hieu.birth.${res.session_id}`,
+          JSON.stringify({ ...birth, task_id: res.task_id }),
+        );
+      }
+      router.push(`/reading/${res.session_id}/upload`);
+    } catch (e) {
+      console.error('reading create failed:', e);
+      setSubmitting(false);
     }
-    router.push(`/reading/${readingId}/upload`);
   };
 
   return (
@@ -106,7 +115,7 @@ export default function NewReadingPage() {
         </Card>
       </div>
 
-      <TgMainButton text="Tiếp tục" onClick={onSubmit} disabled={!valid} />
+      <TgMainButton text={submitting ? 'Đang xử lý...' : 'Tiếp tục'} onClick={onSubmit} disabled={!valid || submitting} />
     </main>
   );
 }
