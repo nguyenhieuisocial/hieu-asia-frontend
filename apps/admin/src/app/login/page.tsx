@@ -10,6 +10,7 @@ export default function AdminLoginPage() {
   const next = search.get('next') ?? '/';
 
   const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const [pending, setPending] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -21,7 +22,7 @@ export default function AdminLoginPage() {
       const res = await fetch('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -43,8 +44,9 @@ export default function AdminLoginPage() {
         <CardHeader>
           <CardTitle className="text-2xl">admin.hieu.asia</CardTitle>
           <CardDescription>
-            Đăng nhập bằng email có quyền vận hành. Email phải nằm trong danh sách
-            <code className="mx-1 rounded bg-cream/5 px-1.5 py-0.5 font-mono text-xs">ADMIN_EMAILS</code>.
+            Email phải nằm trong allowlist <code className="mx-1 rounded bg-cream/5 px-1.5 py-0.5 font-mono text-xs">ADMIN_EMAILS</code>
+            và mật khẩu khớp <code className="mx-1 rounded bg-cream/5 px-1.5 py-0.5 font-mono text-xs">ADMIN_PASSWORD</code>
+            (cấu hình ở Vercel env).
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -54,11 +56,23 @@ export default function AdminLoginPage() {
               <Input
                 id="email"
                 type="email"
-                autoComplete="email"
+                autoComplete="username"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@hieu.asia"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Mật khẩu</Label>
+              <Input
+                id="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
               />
             </div>
             {error && (
@@ -66,11 +80,12 @@ export default function AdminLoginPage() {
                 {error}
               </p>
             )}
-            <Button type="submit" size="lg" className="w-full" disabled={pending || !email}>
+            <Button type="submit" size="lg" className="w-full" disabled={pending || !email || !password}>
               {pending ? 'Đang xác thực…' : 'Đăng nhập'}
             </Button>
             <p className="text-xs text-cream/50">
-              V1 dùng cookie + allow-list email. V2 sẽ chuyển sang magic-link.
+              Cookie-based session 7 ngày. Constant-time password compare. Failed-closed
+              nếu <code className="rounded bg-cream/5 px-1 font-mono">ADMIN_PASSWORD</code> chưa set.
             </p>
           </form>
         </CardContent>

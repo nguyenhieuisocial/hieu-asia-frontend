@@ -30,6 +30,6 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Skip Next internals + static assets.
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|api/health).*)'],
+  // Skip Next internals + static assets + login API (needs to be reachable without session).
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|api/health|api/admin/login).*)'],
 };
