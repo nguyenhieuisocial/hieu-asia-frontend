@@ -27,10 +27,11 @@ const VENDORS = [
     model: 'gpt-5.5',
     keyHint: 'sk-...',
     keyUrl: 'https://platform.openai.com/api-keys',
-    oauth: true,
-    oauthLabel: 'Login với ChatGPT Plus/Pro (Codex OAuth)',
-    oauthHint:
-      'Tab mới mở auth.openai.com → login ChatGPT → callback hiển thị code → copy paste vào đây',
+    // OpenAI Codex OAuth dùng localhost:1455 callback — không web-paste được.
+    // Chỉ chạy được khi cài Codex CLI local. Ở đây chỉ hỗ trợ API key.
+    oauth: false,
+    oauthLabel: '',
+    oauthHint: '',
   },
   {
     id: 'google',
@@ -173,9 +174,9 @@ export default function ConnectPage() {
       </header>
 
       <div className="rounded-lg border border-amber-700/40 bg-amber-900/10 p-4 text-sm leading-relaxed">
-        <b>2 cách kết nối</b>: <b>OAuth</b> (Claude Pro/Max — dùng quota subscription) hoặc{' '}
-        <b>API key</b> (charge riêng). OpenAI/Gemini hiện chỉ API key — OAuth Codex/Gemini CLI sẽ
-        thêm sau.
+        <b>2 cách kết nối</b>: <b>OAuth</b> (Claude Pro/Max + Gemini CLI — dùng quota subscription)
+        hoặc <b>API key</b> (charge riêng). <b>OpenAI</b> chỉ API key — Codex OAuth dùng{' '}
+        <code className="font-mono text-xs">localhost:1455</code> callback nên không web-paste được.
       </div>
 
       {VENDORS.map((v) => {
