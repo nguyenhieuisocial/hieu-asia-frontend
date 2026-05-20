@@ -5,7 +5,7 @@ import { ThemeProvider } from '@/components/providers/theme-provider';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { Sidebar } from '@/components/sidebar';
 import { Topbar } from '@/components/topbar';
-import { ADMIN_SESSION_COOKIE } from '@/lib/auth';
+import { ADMIN_SESSION_COOKIE, decodeSession } from '@/lib/auth';
 import './globals.css';
 
 const beVietnam = Be_Vietnam_Pro({
@@ -26,7 +26,8 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
-  const adminEmail = cookieStore.get(ADMIN_SESSION_COOKIE)?.value ?? '';
+  const session = decodeSession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
+  const adminEmail = session?.email ?? '';
 
   // No session → render children without chrome (login page handles itself).
   if (!adminEmail) {

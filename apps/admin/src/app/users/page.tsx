@@ -1,161 +1,399 @@
 'use client';
 
 import * as React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  DataTable,
-  Input,
-  StatusBadge,
-  type DataTableColumn,
-} from '@hieu-asia/ui';
-import { listUsers } from '@/lib/admin-api';
-import type { AdminUser } from '@/lib/mock-data';
+import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
 
-const PLAN_TONE: Record<AdminUser['plan'], React.ComponentProps<typeof StatusBadge>['status']> = {
-  free: 'neutral',
-  mentor_month: 'info',
-  mentor_year: 'warning',
-  lifetime: 'success',
+type AdminRole = 'owner' | 'admin' | 'viewer';
+
+interface AdminUser {
+  id: string;
+  email: string;
+  role: AdminRole;
+  created_at: string;
+}
+
+const ROLE_LABEL: Record<AdminRole, string> = {
+  owner: 'Chủ sở hữu',
+  admin: 'Quản trị',
+  viewer: 'Chỉ đọc',
 };
 
-const PLAN_LABEL: Record<AdminUser['plan'], string> = {
-  free: 'Miễn phí',
-  mentor_month: 'Mentor tháng',
-  mentor_year: 'Mentor năm',
-  lifetime: 'Trọn đời',
+const ROLE_TONE: Record<AdminRole, string> = {
+  owner: 'bg-gold/15 text-gold border-gold/30',
+  admin: 'bg-blue-500/10 text-blue-300 border-blue-500/30',
+  viewer: 'bg-cream/10 text-cream/70 border-cream/20',
 };
-
-const PAGE_SIZE = 15;
 
 function fmtDate(iso: string) {
-  return new Date(iso).toLocaleDateString('vi-VN');
+  try {
+    return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
+  } catch {
+    return iso;
+  }
 }
 
 export default function AdminUsersPage() {
-  const [search, setSearch] = React.useState('');
-  const [plan, setPlan] = React.useState<AdminUser['plan'] | ''>('');
-  const [page, setPage] = React.useState(1);
+  const [users, setUsers] = React.useState<AdminUser[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
+  const [flash, setFlash] = React.useState<{ kind: 'ok' | 'err'; msg: string } | null>(null);
+  const [editing, setEditing] = React.useState<AdminUser | null>(null);
+  const [creating, setCreating] = React.useState(false);
+  const [deleting, setDeleting] = React.useState<AdminUser | null>(null);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['admin', 'users', { search, plan, page }],
-    queryFn: () => listUsers({ search, plan: plan || undefined, page, page_size: PAGE_SIZE }),
-  });
+  const showFlash = React.useCallback((kind: 'ok' | 'err', msg: string) => {
+    setFlash({ kind, msg });
+    setTimeout(() => setFlash(null), 4000);
+  }, []);
 
-  const [selected, setSelected] = React.useState<AdminUser | null>(null);
+  const load = React.useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const r = await fetch('/api/admin/users', { cache: 'no-store' });
+      const data = await r.json();
+      if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
+      setUsers(data.users);
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  const cols: DataTableColumn<AdminUser>[] = [
-    { key: 'id', header: 'ID', width: '110px', cell: (u) => <span className="font-mono text-xs text-cream/70">{u.id}</span> },
-    { key: 'email', header: 'Email', cell: (u) => <span className="text-cream">{u.email}</span> },
-    {
-      key: 'telegram_id',
-      header: 'Telegram',
-      cell: (u) => u.telegram_id ? <span className="font-mono text-xs text-cream/75">{u.telegram_id}</span> : <span className="text-cream/40">—</span>,
-    },
-    { key: 'registered_at', header: 'Đăng ký', cell: (u) => fmtDate(u.registered_at), width: '110px' },
-    { key: 'last_active_at', header: 'Truy cập gần nhất', cell: (u) => fmtDate(u.last_active_at), width: '150px' },
-    {
-      key: 'plan',
-      header: 'Gói',
-      width: '130px',
-      cell: (u) => <StatusBadge status={PLAN_TONE[u.plan]} label={PLAN_LABEL[u.plan]} />,
-    },
-    { key: 'total_readings', header: 'BC', align: 'right', width: '60px' },
-    { key: 'total_spend_usd', header: 'Chi tiêu', align: 'right', width: '90px', cell: (u) => `$${u.total_spend_usd.toFixed(2)}` },
-  ];
+  React.useEffect(() => {
+    load();
+  }, [load]);
+
+  // KV is eventually consistent (~60s); a 1s wait after mutation usually gets us
+  // the fresh value but isn't a hard guarantee.
+  const refreshAfterMutation = React.useCallback(async () => {
+    await new Promise((res) => setTimeout(res, 1000));
+    await load();
+  }, [load]);
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-heading text-3xl font-semibold text-cream">Người dùng</h1>
-        <p className="mt-1 text-sm text-cream/65">Danh sách tài khoản đăng ký + gói + hoạt động.</p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="font-heading text-3xl font-semibold text-cream">Người dùng admin</h1>
+          <p className="mt-1 text-sm text-cream/65">
+            Quản lý danh sách admin login (lưu trong Cloudflare KV). Role <b className="text-gold">owner</b> không thể xóa.
+          </p>
+        </div>
+        <Button onClick={() => setCreating(true)} className="shrink-0">+ Thêm user</Button>
       </div>
 
+      {flash && (
+        <div
+          className={`rounded-md border px-3 py-2 text-sm ${
+            flash.kind === 'ok'
+              ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300'
+              : 'border-red-500/40 bg-red-500/10 text-red-300'
+          }`}
+        >
+          {flash.msg}
+        </div>
+      )}
+
       <Card>
-        <CardHeader className="gap-3">
-          <CardTitle className="text-base">Bộ lọc</CardTitle>
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <Input
-              placeholder="Tìm theo email hoặc ID…"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(1);
-              }}
-              className="sm:max-w-sm"
-            />
-            <select
-              value={plan}
-              onChange={(e) => {
-                setPlan(e.target.value as AdminUser['plan'] | '');
-                setPage(1);
-              }}
-              className="h-10 rounded-md border border-gold/15 bg-ink/40 px-3 text-sm text-cream"
-            >
-              <option value="">Tất cả gói</option>
-              <option value="free">Miễn phí</option>
-              <option value="mentor_month">Mentor tháng</option>
-              <option value="mentor_year">Mentor năm</option>
-              <option value="lifetime">Trọn đời</option>
-            </select>
-          </div>
+        <CardHeader>
+          <CardTitle className="text-base">Danh sách</CardTitle>
         </CardHeader>
         <CardContent>
-          <DataTable
-            columns={cols}
-            rows={data?.rows ?? []}
-            rowKey={(u) => u.id}
-            onRowClick={(u) => setSelected(u)}
-            page={data?.page ?? 1}
-            pageSize={data?.page_size ?? PAGE_SIZE}
-            total={data?.total ?? 0}
-            onPageChange={setPage}
-            emptyState={isLoading ? 'Đang tải…' : 'Không có user khớp.'}
-          />
+          {error && (
+            <p className="mb-4 rounded border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300">
+              {error}
+            </p>
+          )}
+          {loading ? (
+            <p className="py-8 text-center text-sm text-cream/55">Đang tải…</p>
+          ) : users.length === 0 ? (
+            <p className="py-8 text-center text-sm text-cream/55">Chưa có user.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gold/15 text-left text-xs uppercase tracking-wider text-cream/55">
+                    <th className="pb-2 pr-4 font-medium">Email</th>
+                    <th className="pb-2 pr-4 font-medium">Role</th>
+                    <th className="pb-2 pr-4 font-medium">Tạo lúc</th>
+                    <th className="pb-2 text-right font-medium">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map((u) => (
+                    <tr key={u.id} className="border-b border-gold/5 last:border-0">
+                      <td className="py-3 pr-4 text-cream">{u.email}</td>
+                      <td className="py-3 pr-4">
+                        <span
+                          className={`inline-flex items-center rounded border px-2 py-0.5 text-xs font-medium ${ROLE_TONE[u.role]}`}
+                        >
+                          {ROLE_LABEL[u.role]}
+                        </span>
+                      </td>
+                      <td className="py-3 pr-4 font-mono text-xs text-cream/70">{fmtDate(u.created_at)}</td>
+                      <td className="py-3 text-right">
+                        <div className="inline-flex gap-2">
+                          <button
+                            onClick={() => setEditing(u)}
+                            className="rounded border border-gold/30 px-2 py-1 text-xs text-gold hover:bg-gold/10"
+                          >
+                            Sửa
+                          </button>
+                          <button
+                            onClick={() => setDeleting(u)}
+                            disabled={u.role === 'owner'}
+                            className="rounded border border-red-500/30 px-2 py-1 text-xs text-red-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-30"
+                            title={u.role === 'owner' ? 'Không thể xóa owner' : 'Xóa'}
+                          >
+                            Xóa
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      {selected && <UserDrawer user={selected} onClose={() => setSelected(null)} />}
+      {creating && (
+        <UserFormModal
+          mode="create"
+          onClose={() => setCreating(false)}
+          onSubmit={async (payload) => {
+            const r = await fetch('/api/admin/users', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload),
+            });
+            const data = await r.json();
+            if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
+            setCreating(false);
+            showFlash('ok', `Đã tạo user ${payload.email}`);
+            await refreshAfterMutation();
+          }}
+        />
+      )}
+
+      {editing && (
+        <UserFormModal
+          mode="edit"
+          initial={editing}
+          onClose={() => setEditing(null)}
+          onSubmit={async (payload) => {
+            const r = await fetch(`/api/admin/users/${editing.id}`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload),
+            });
+            const data = await r.json();
+            if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
+            setEditing(null);
+            showFlash('ok', `Đã cập nhật ${payload.email ?? editing.email}`);
+            await refreshAfterMutation();
+          }}
+        />
+      )}
+
+      {deleting && (
+        <ConfirmDeleteModal
+          user={deleting}
+          onClose={() => setDeleting(null)}
+          onConfirm={async () => {
+            const r = await fetch(`/api/admin/users/${deleting.id}`, { method: 'DELETE' });
+            const data = await r.json();
+            if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
+            setDeleting(null);
+            showFlash('ok', `Đã xóa ${deleting.email}`);
+            await refreshAfterMutation();
+          }}
+        />
+      )}
     </div>
   );
 }
 
-function UserDrawer({ user, onClose }: { user: AdminUser; onClose: () => void }) {
+interface UserFormPayload {
+  email?: string;
+  password?: string;
+  role?: AdminRole;
+}
+
+function UserFormModal({
+  mode,
+  initial,
+  onClose,
+  onSubmit,
+}: {
+  mode: 'create' | 'edit';
+  initial?: AdminUser;
+  onClose: () => void;
+  onSubmit: (payload: UserFormPayload) => Promise<void>;
+}) {
+  const [email, setEmail] = React.useState(initial?.email ?? '');
+  const [password, setPassword] = React.useState('');
+  const [role, setRole] = React.useState<AdminRole>(initial?.role ?? 'viewer');
+  const [pending, setPending] = React.useState(false);
+  const [err, setErr] = React.useState<string | null>(null);
+
+  const isOwnerLocked = mode === 'edit' && initial?.role === 'owner';
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPending(true);
+    setErr(null);
+    try {
+      const payload: UserFormPayload = {};
+      if (mode === 'create') {
+        payload.email = email;
+        payload.password = password;
+        payload.role = role;
+      } else {
+        if (email !== initial!.email) payload.email = email;
+        if (password) payload.password = password;
+        if (role !== initial!.role) payload.role = role;
+      }
+      await onSubmit(payload);
+    } catch (e) {
+      setErr((e as Error).message);
+    } finally {
+      setPending(false);
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-50 bg-black/60" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4" onClick={onClose}>
       <div
-        className="absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto border-l border-gold/20 bg-ink p-6 shadow-2xl"
+        className="w-full max-w-md rounded-lg border border-gold/20 bg-ink p-6 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between">
-          <h2 className="font-heading text-xl text-cream">{user.email}</h2>
-          <button onClick={onClose} className="text-cream/60 hover:text-gold">✕</button>
-        </div>
-        <dl className="mt-6 space-y-3 text-sm">
-          <Row label="ID">{user.id}</Row>
-          <Row label="Telegram">{user.telegram_id ?? '—'}</Row>
-          <Row label="Đăng ký">{fmtDate(user.registered_at)}</Row>
-          <Row label="Truy cập gần nhất">{fmtDate(user.last_active_at)}</Row>
-          <Row label="Gói">{PLAN_LABEL[user.plan]}</Row>
-          <Row label="Số báo cáo">{user.total_readings}</Row>
-          <Row label="Tổng chi tiêu">${user.total_spend_usd.toFixed(2)}</Row>
-        </dl>
-        <p className="mt-6 rounded border border-gold/15 bg-gold/5 p-3 text-xs text-cream/65">
-          TODO: link đến danh sách session của user, force-logout, đổi gói.
-        </p>
+        <h2 className="font-heading text-xl text-cream">
+          {mode === 'create' ? 'Thêm user admin' : 'Sửa user'}
+        </h2>
+        <form onSubmit={submit} className="mt-5 space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="user@hieu.asia"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="password">
+              Mật khẩu {mode === 'edit' && <span className="text-cream/50">(để trống = giữ nguyên)</span>}
+            </Label>
+            <Input
+              id="password"
+              type="password"
+              required={mode === 'create'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder={mode === 'create' ? '••••••••' : 'Mật khẩu mới (tùy chọn)'}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="role">Vai trò</Label>
+            <select
+              id="role"
+              value={role}
+              disabled={isOwnerLocked}
+              onChange={(e) => setRole(e.target.value as AdminRole)}
+              className="h-10 w-full rounded-md border border-gold/15 bg-ink/40 px-3 text-sm text-cream disabled:opacity-50"
+            >
+              <option value="viewer">Viewer — chỉ đọc</option>
+              <option value="admin">Admin — CRUD users</option>
+              <option value="owner">Owner — full quyền</option>
+            </select>
+            {isOwnerLocked && (
+              <p className="text-xs text-cream/50">Owner role bị khóa (chống lock-out).</p>
+            )}
+          </div>
+          {err && (
+            <p className="rounded border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300">
+              {err}
+            </p>
+          )}
+          <div className="flex justify-end gap-2 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded border border-cream/20 px-4 py-2 text-sm text-cream/75 hover:bg-cream/5"
+            >
+              Hủy
+            </button>
+            <Button type="submit" disabled={pending}>
+              {pending ? 'Đang lưu…' : mode === 'create' ? 'Tạo user' : 'Lưu thay đổi'}
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   );
 }
 
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
+function ConfirmDeleteModal({
+  user,
+  onClose,
+  onConfirm,
+}: {
+  user: AdminUser;
+  onClose: () => void;
+  onConfirm: () => Promise<void>;
+}) {
+  const [pending, setPending] = React.useState(false);
+  const [err, setErr] = React.useState<string | null>(null);
+
+  const submit = async () => {
+    setPending(true);
+    setErr(null);
+    try {
+      await onConfirm();
+    } catch (e) {
+      setErr((e as Error).message);
+      setPending(false);
+    }
+  };
+
   return (
-    <div className="flex items-center justify-between border-b border-gold/10 pb-2">
-      <dt className="text-xs uppercase tracking-wider text-cream/55">{label}</dt>
-      <dd className="font-mono text-sm text-cream">{children}</dd>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4" onClick={onClose}>
+      <div
+        className="w-full max-w-md rounded-lg border border-red-500/30 bg-ink p-6 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 className="font-heading text-xl text-cream">Xóa user?</h2>
+        <p className="mt-3 text-sm text-cream/75">
+          Bạn chắc chắn muốn xóa <b className="text-cream">{user.email}</b>?
+          User này sẽ không đăng nhập được nữa.
+        </p>
+        {err && (
+          <p className="mt-3 rounded border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300">
+            {err}
+          </p>
+        )}
+        <div className="mt-5 flex justify-end gap-2">
+          <button
+            onClick={onClose}
+            className="rounded border border-cream/20 px-4 py-2 text-sm text-cream/75 hover:bg-cream/5"
+          >
+            Hủy
+          </button>
+          <button
+            onClick={submit}
+            disabled={pending}
+            className="rounded border border-red-500/40 bg-red-500/10 px-4 py-2 text-sm text-red-300 hover:bg-red-500/20 disabled:opacity-50"
+          >
+            {pending ? 'Đang xóa…' : 'Xóa'}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

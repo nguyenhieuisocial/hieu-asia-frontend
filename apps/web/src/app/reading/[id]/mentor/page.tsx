@@ -4,7 +4,11 @@ import * as React from 'react';
 import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
-import { apiClient } from '@/lib/api';
+import {
+  ApiClientError,
+  chatMentor,
+  type MentorMessage,
+} from '@/lib/api-client';
 import {
   ChatMessageList,
   type ChatMessage,
@@ -35,36 +39,59 @@ function makeId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-function mockMentorReply(userMsg: string): string {
-  return [
-    `**Về câu hỏi của bạn:** "${userMsg.slice(0, 80)}${userMsg.length > 80 ? '…' : ''}"`,
-    '',
-    'Dựa trên báo cáo, tôi gợi ý 3 bước:',
-    '',
-    '1. **Tách vấn đề thành 2 phần** — cái nào cần xử lý trong 7 ngày, cái nào cần 30 ngày.',
-    '2. **Trao đổi 1:1 với người liên quan** trước khi ra quyết định công khai.',
-    '3. **Đặt deadline tự cam kết** và share với 1 người tin cậy.',
-    '',
-    '_Nói cho tôi biết bạn muốn đi sâu vào bước nào — tôi sẽ cụ thể hơn._',
-  ].join('\n');
+const PIN_KEY_PREFIX = 'hieu.pinned.';
+const HISTORY_KEY_PREFIX = 'hieu.chat.';
+
+function loadHistory(readingId: string): ChatMessage[] | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = window.sessionStorage.getItem(HISTORY_KEY_PREFIX + readingId);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as ChatMessage[];
+    return Array.isArray(parsed) && parsed.length ? parsed : null;
+  } catch {
+    return null;
+  }
 }
 
-const PIN_KEY_PREFIX = 'hieu.pinned.';
+function persistHistory(readingId: string, messages: ChatMessage[]) {
+  if (typeof window === 'undefined') return;
+  try {
+    window.sessionStorage.setItem(
+      HISTORY_KEY_PREFIX + readingId,
+      JSON.stringify(messages),
+    );
+  } catch {
+    /* ignore quota */
+  }
+}
+
+function toMentorMessages(messages: ChatMessage[]): MentorMessage[] {
+  return messages
+    .filter((m) => m.id !== 'welcome')
+    .map<MentorMessage>((m) => ({
+      role: m.role === 'mentor' ? 'assistant' : 'user',
+      content: m.content,
+    }));
+}
 
 export default function MentorChatPage() {
   const params = useParams<{ id: string }>();
   const search = useSearchParams();
   const readingId = params?.id ?? '';
-  const sessionId = readingId; // session_id = task_id in V1
+  const sessionId = readingId;
 
   const [messages, setMessages] = React.useState<ChatMessage[]>([WELCOME]);
   const [input, setInput] = React.useState('');
   const [pinned, setPinned] = React.useState<PinnedInsight[]>([]);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [toast, setToast] = React.useState<string | null>(null);
 
-  // Load pinned from localStorage
+  // Hydrate from sessionStorage (chat history) + localStorage (pinned).
   React.useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || !readingId) return;
+    const history = loadHistory(readingId);
+    if (history) setMessages(history);
     try {
       const raw = window.localStorage.getItem(PIN_KEY_PREFIX + readingId);
       if (raw) setPinned(JSON.parse(raw));
@@ -73,7 +100,12 @@ export default function MentorChatPage() {
     }
   }, [readingId]);
 
-  // Pre-fill from ?q=
+  // Persist chat history whenever it changes.
+  React.useEffect(() => {
+    if (!readingId) return;
+    persistHistory(readingId, messages);
+  }, [readingId, messages]);
+
   React.useEffect(() => {
     const q = search?.get('q');
     if (q) setInput(q);
@@ -94,50 +126,67 @@ export default function MentorChatPage() {
     [readingId],
   );
 
+  const showToast = React.useCallback((message: string) => {
+    setToast(message);
+    window.setTimeout(() => setToast(null), 4000);
+  }, []);
+
   const chatMutation = useMutation({
-    mutationFn: async (message: string) =>
-      apiClient.chatMentor(sessionId, message),
-    onSuccess: (res, _message) => {
+    mutationFn: async (vars: {
+      history: ChatMessage[];
+      userText: string;
+    }) => {
+      const history = [
+        ...toMentorMessages(vars.history),
+        { role: 'user' as const, content: vars.userText },
+      ];
+      const res = await chatMentor(history, sessionId);
+      const answer = res.response?.trim();
+      if (!answer) {
+        throw new ApiClientError(
+          502,
+          res,
+          'Mentor không trả lời được, vui lòng thử lại.',
+        );
+      }
+      return answer;
+    },
+    onSuccess: (answer) => {
       setMessages((prev) => [
         ...prev,
         {
           id: makeId(),
           role: 'mentor',
-          content: res.answer,
+          content: answer,
           ts: Date.now(),
         },
       ]);
     },
-    onError: (_err, message) => {
-      // Backend offline → use mock reply
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: makeId(),
-          role: 'mentor',
-          content: mockMentorReply(message),
-          ts: Date.now(),
-        },
-      ]);
+    onError: (err) => {
+      const msg =
+        err instanceof ApiClientError
+          ? err.message
+          : 'Không kết nối được Mentor. Vui lòng thử lại sau.';
+      showToast(msg);
     },
   });
 
   const onSend = () => {
     const text = input.trim();
     if (!text || chatMutation.isPending) return;
-    setMessages((prev) => [
-      ...prev,
+    const next: ChatMessage[] = [
+      ...messages,
       { id: makeId(), role: 'user', content: text, ts: Date.now() },
-    ]);
+    ];
+    setMessages(next);
     setInput('');
-    chatMutation.mutate(text);
+    chatMutation.mutate({ history: messages, userText: text });
   };
 
   const onFeedback = (id: string, value: 'up' | 'down') => {
     setMessages((prev) =>
       prev.map((m) => (m.id === id ? { ...m, feedback: value } : m)),
     );
-    // Optimistic only — POST /v1/sessions/{id}/feedback is TBD in client.
   };
 
   const onPin = (id: string) => {
@@ -191,9 +240,18 @@ export default function MentorChatPage() {
           onClick={() => setDrawerOpen((v) => !v)}
           className="rounded-md border border-gold/20 px-3 py-1.5 text-xs text-cream/80 hover:border-gold hover:text-gold lg:hidden"
         >
-          📌 {pinned.length}
+          {pinned.length} ghim
         </button>
       </header>
+
+      {toast && (
+        <div
+          role="alert"
+          className="mx-auto mt-3 max-w-md rounded-md border border-red-400/40 bg-red-500/15 px-4 py-2 text-center text-sm text-red-100"
+        >
+          {toast}
+        </div>
+      )}
 
       <div className="flex flex-1 overflow-hidden">
         <section className="flex flex-1 flex-col">
@@ -218,7 +276,6 @@ export default function MentorChatPage() {
           </div>
         </section>
 
-        {/* Desktop pinned panel */}
         <div className="hidden w-80 shrink-0 lg:block">
           <PinnedInsights
             items={pinned}
@@ -228,7 +285,6 @@ export default function MentorChatPage() {
           />
         </div>
 
-        {/* Mobile drawer */}
         {drawerOpen && (
           <div
             className="fixed inset-0 z-50 bg-black/60 lg:hidden"

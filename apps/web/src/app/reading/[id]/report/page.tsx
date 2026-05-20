@@ -4,45 +4,98 @@ import * as React from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '@hieu-asia/ui';
-import type {
-  ReadingStatusResponse,
-  StrategicActionPlan,
-} from '@hieu-asia/types';
-import { apiClient } from '@/lib/api';
-import { MOCK_REPORT, MOCK_USER_CONTEXT } from '@/lib/mock-report';
+import ReactMarkdown from 'react-markdown';
+import { Button, Card, CardContent, cn } from '@hieu-asia/ui';
+import {
+  getReading,
+  type ApiClientError,
+  type GetReadingResponse,
+  type ReadingReport,
+} from '@/lib/api-client';
 import { CautionBanner } from '@/components/caution-banner';
 import { ReportContextSummary } from '@/components/report-context-summary';
-import { ReportTabs } from '@/components/report-tabs';
+
+const SECTIONS: Array<{ key: keyof ReadingReport; label: string; short: string }> = [
+  { key: 'summary', label: 'Tóm tắt báo cáo', short: 'Tóm tắt' },
+  { key: 'core_personality', label: 'Tổng quan bản chất', short: 'Bản chất' },
+  { key: 'strengths', label: 'Điểm mạnh cốt lõi', short: 'Điểm mạnh' },
+  { key: 'blind_spots', label: 'Điểm mù cần chuyển hóa', short: 'Điểm mù' },
+  { key: 'career_insights', label: 'Sự nghiệp / Kinh doanh', short: 'Sự nghiệp' },
+  { key: 'life_path', label: 'Đường đời', short: 'Đường đời' },
+  { key: 'relationship_guide', label: 'Quan hệ / Đội nhóm', short: 'Quan hệ' },
+  { key: 'action_plan', label: 'Kế hoạch hành động', short: 'Hành động' },
+];
+
+function splitCautionFlags(raw?: string): string[] {
+  if (!raw) return [];
+  return raw
+    .split(/\r?\n+/)
+    .map((line) => line.replace(/^[-*•\d.)\s]+/, '').trim())
+    .filter(Boolean);
+}
 
 export default function ReportPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
-  const taskId = params?.id ?? '';
+  const readingId = params?.id ?? '';
 
-  const query = useQuery<ReadingStatusResponse, Error>({
-    queryKey: ['reading', taskId],
-    queryFn: () => apiClient.getReading(taskId),
-    enabled: !!taskId,
+  const query = useQuery<GetReadingResponse, ApiClientError>({
+    queryKey: ['reading', readingId],
+    queryFn: () => getReading(readingId),
+    enabled: !!readingId,
     retry: 1,
+    refetchOnWindowFocus: false,
   });
-  const { data, isLoading, isError } = query;
+
+  const session = query.data?.session;
+  const state = session?.state;
+  const report = session?.report;
 
   React.useEffect(() => {
-    if (data?.status === 'running' || data?.status === 'queued') {
-      router.replace(`/reading/${taskId}/processing`);
+    if (!state) return;
+    if (state !== 'report_ready' && !state.startsWith('error_at_')) {
+      router.replace(`/reading/${readingId}/processing`);
     }
-  }, [data?.status, router, taskId]);
+  }, [state, readingId, router]);
 
-  if (isLoading) return <ReportSkeleton />;
+  if (query.isLoading) return <ReportSkeleton />;
 
-  // Use mock fallback when API returned no structured plan
-  // (V1 backend returns markdown only; structured StrategicActionPlan endpoint TBD).
-  const plan: StrategicActionPlan = MOCK_REPORT;
-  const isFromMock = isError || !data || data.status !== 'completed';
+  // Not ready yet (e.g. still pending) or fetch error.
+  if (!report || state !== 'report_ready') {
+    const errMessage =
+      query.error?.message ??
+      (state && state.startsWith('error_at_')
+        ? `Phân tích thất bại ở bước "${state.replace('error_at_', '')}".`
+        : 'Báo cáo chưa sẵn sàng, vui lòng đợi…');
+    return (
+      <main className="container mx-auto max-w-2xl px-4 py-16 text-center">
+        <Card>
+          <CardContent className="space-y-4 p-8">
+            <p className="font-heading text-lg text-cream">
+              Chưa có báo cáo để hiển thị
+            </p>
+            <p className="text-sm text-cream/70">{errMessage}</p>
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <Button onClick={() => query.refetch()}>Thử lại</Button>
+              <Button
+                variant="outline"
+                onClick={() =>
+                  router.push(`/reading/${readingId}/processing`)
+                }
+              >
+                Xem tiến trình
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </main>
+    );
+  }
+
+  const cautionFlags = splitCautionFlags(report.caution_flags);
 
   return (
-    <main className="container mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+    <main className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
       <header className="mb-6 flex items-center justify-between">
         <Link
           href="/dashboard"
@@ -55,25 +108,145 @@ export default function ReportPage() {
 
       <div className="space-y-6">
         <ReportContextSummary
-          displayName={MOCK_USER_CONTEXT.display_name}
-          role={MOCK_USER_CONTEXT.role}
-          primaryConcern={MOCK_USER_CONTEXT.primary_concern}
+          displayName={(session?.inputs?.display_name as string) ?? 'Bạn'}
+          role={(session?.inputs?.role as string) ?? 'Người dùng'}
+          primaryConcern={
+            (session?.inputs?.primary_concern as string) ??
+            'Báo cáo cá nhân hóa'
+          }
           generatedAt={new Date().toLocaleDateString('vi-VN')}
         />
 
-        <CautionBanner flags={plan.caution_flags} />
+        <CautionBanner flags={cautionFlags} />
 
-        <ReportTabs plan={plan} readingId={taskId} />
+        <ReportSections report={report} />
 
-        <ReportFooter readingId={taskId} />
-
-        {isFromMock && (
-          <p className="text-center font-mono text-xs text-cream/40">
-            (Hiển thị dữ liệu mock — backend chưa trả structured plan.)
-          </p>
-        )}
+        <ReportFooter readingId={readingId} />
       </div>
     </main>
+  );
+}
+
+function ReportSections({ report }: { report: ReadingReport }) {
+  const available = SECTIONS.filter((s) => !!report[s.key]);
+  const [active, setActive] = React.useState<keyof ReadingReport | null>(
+    available[0]?.key ?? null,
+  );
+
+  if (!available.length) {
+    return (
+      <p className="text-center text-sm text-cream/60">
+        Báo cáo trống — vui lòng thử tạo lại.
+      </p>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <nav
+        role="tablist"
+        aria-label="Mục báo cáo"
+        className="hidden flex-wrap gap-2 border-b border-gold/15 pb-3 md:flex"
+      >
+        {available.map((s) => (
+          <button
+            key={s.key}
+            role="tab"
+            aria-selected={active === s.key}
+            onClick={() => setActive(s.key)}
+            className={cn(
+              'rounded-md px-3 py-2 text-sm font-medium transition-colors',
+              active === s.key
+                ? 'bg-gold/15 text-gold'
+                : 'text-cream/70 hover:bg-gold/5 hover:text-cream',
+            )}
+          >
+            {s.label}
+          </button>
+        ))}
+      </nav>
+
+      <div className="space-y-3 md:hidden">
+        {available.map((s) => {
+          const open = active === s.key;
+          return (
+            <div
+              key={s.key}
+              className="rounded-md border border-gold/15 bg-ink/40"
+            >
+              <button
+                type="button"
+                aria-expanded={open}
+                onClick={() => setActive(open ? null : s.key)}
+                className="flex w-full items-center justify-between px-4 py-3 text-left"
+              >
+                <span
+                  className={cn(
+                    'text-sm font-medium',
+                    open ? 'text-gold' : 'text-cream/80',
+                  )}
+                >
+                  {s.label}
+                </span>
+                <span aria-hidden className="text-gold/60">
+                  {open ? '▾' : '▸'}
+                </span>
+              </button>
+              {open && (
+                <div className="border-t border-gold/10 p-4">
+                  <SectionBody content={report[s.key]} />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="hidden md:block" role="tabpanel">
+        {active && <SectionBody content={report[active]} />}
+      </div>
+    </div>
+  );
+}
+
+function SectionBody({ content }: { content: string }) {
+  return (
+    <article className="markdown-report space-y-3 text-sm leading-relaxed text-cream/90">
+      <ReactMarkdown
+        components={{
+          h1: ({ ...props }) => (
+            <h2
+              className="mt-4 font-heading text-xl text-gold"
+              {...props}
+            />
+          ),
+          h2: ({ ...props }) => (
+            <h3
+              className="mt-3 font-heading text-lg text-cream"
+              {...props}
+            />
+          ),
+          h3: ({ ...props }) => (
+            <h4
+              className="mt-3 font-heading text-base text-cream"
+              {...props}
+            />
+          ),
+          p: ({ ...props }) => <p className="leading-relaxed" {...props} />,
+          ul: ({ ...props }) => (
+            <ul className="ml-5 list-disc space-y-1" {...props} />
+          ),
+          ol: ({ ...props }) => (
+            <ol className="ml-5 list-decimal space-y-1" {...props} />
+          ),
+          strong: ({ ...props }) => (
+            <strong className="text-gold" {...props} />
+          ),
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    </article>
   );
 }
 
@@ -93,11 +266,11 @@ function ReportFooter({ readingId }: { readingId: string }) {
   return (
     <div className="flex flex-col gap-3 border-t border-gold/15 pt-6 sm:flex-row sm:items-center sm:justify-between print:hidden">
       <Button variant="outline" onClick={() => window.print()}>
-        📄 Tải PDF báo cáo
+        Tải PDF báo cáo
       </Button>
       <div className="flex gap-3">
         <Button variant="outline" onClick={onShare}>
-          {copied ? '✓ Đã chép link' : '🔗 Chia sẻ'}
+          {copied ? 'Đã chép link' : 'Chia sẻ'}
         </Button>
         <Button asChild={false}>
           <Link href={`/reading/${readingId}/mentor`}>

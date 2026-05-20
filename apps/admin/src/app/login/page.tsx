@@ -44,9 +44,8 @@ export default function AdminLoginPage() {
         <CardHeader>
           <CardTitle className="text-2xl">admin.hieu.asia</CardTitle>
           <CardDescription>
-            Email phải nằm trong allowlist <code className="mx-1 rounded bg-cream/5 px-1.5 py-0.5 font-mono text-xs">ADMIN_EMAILS</code>
-            và mật khẩu khớp <code className="mx-1 rounded bg-cream/5 px-1.5 py-0.5 font-mono text-xs">ADMIN_PASSWORD</code>
-            (cấu hình ở Vercel env).
+            Đăng nhập bằng tài khoản admin (lưu trong Cloudflare KV).
+            Quản lý user list tại <code className="mx-1 rounded bg-cream/5 px-1.5 py-0.5 font-mono text-xs">/users</code> sau khi đăng nhập.
           </CardDescription>
         </CardHeader>
         <CardContent>

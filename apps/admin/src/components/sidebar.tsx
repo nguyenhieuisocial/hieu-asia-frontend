@@ -25,7 +25,7 @@ interface NavItem {
 
 const NAV: NavItem[] = [
   { href: '/', label: 'Tổng quan', Icon: LayoutDashboard },
-  { href: '/users', label: 'Người dùng', Icon: Users },
+  { href: '/users', label: 'Người dùng admin', Icon: Users },
   { href: '/sessions', label: 'Phiên phân tích', Icon: ListTodo },
   { href: '/tasks', label: 'Task / Lỗi', Icon: Bot },
   { href: '/cost', label: 'Chi phí AI', Icon: DollarSign },

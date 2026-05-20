@@ -2,38 +2,118 @@
 
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { useRouter, useParams, useSearchParams } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { ProcessingStepper } from '@/components/processing-stepper';
-import { useReadingProgress } from '@/lib/use-reading-progress';
+import {
+  ApiClientError,
+  getReading,
+  type ReadingState,
+} from '@/lib/api-client';
+import type { StepStatus, StepKey } from '@/lib/use-reading-progress';
+
+const POLL_INTERVAL_MS = 3000;
+
+const STEP_ORDER: { key: StepKey; label: string }[] = [
+  { key: 'prepare_context', label: 'Đang dựng dữ liệu nền…' },
+  { key: 'vision', label: 'Đang phân tích ảnh bàn tay…' },
+  { key: 'logic', label: 'Đang lập ma trận ngày sinh…' },
+  { key: 'psychology', label: 'Đang đối chiếu tâm lý hành vi…' },
+  { key: 'alignment', label: 'Đang đồng bộ Hội đồng Agent…' },
+  { key: 'report', label: 'Đang biên tập Cẩm Nang Cuộc Đời…' },
+];
+
+/**
+ * Map backend `state` → currently running step index.
+ *
+ * `*_pending` → that phase is running.
+ * `*_done`    → that phase finished, the next one is about to start.
+ */
+function stateToActiveIndex(state: ReadingState): number {
+  if (!state) return 0;
+  if (state === 'report_ready') return STEP_ORDER.length;
+  if (state.startsWith('error_at_')) {
+    // Highlight whichever phase the error occurred at; don't advance past it.
+    const phase = state.replace('error_at_', '');
+    return Math.max(0, STEP_ORDER.findIndex((s) => s.key === phase));
+  }
+
+  const [phase, status] = state.split('_') as [string, string | undefined];
+  const idx = STEP_ORDER.findIndex((s) => s.key === phase);
+  if (idx === -1) return 0;
+  return status === 'done' ? idx + 1 : idx;
+}
+
+function buildSteps(state: ReadingState | null): StepStatus[] {
+  const activeIdx = state ? stateToActiveIndex(state) : 0;
+  return STEP_ORDER.map((s, i) => ({
+    ...s,
+    state:
+      i < activeIdx ? 'done' : i === activeIdx ? 'running' : 'pending',
+  }));
+}
 
 export default function ProcessingPage() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
-  const search = useSearchParams();
-  const readingId = params.id;
-  const sessionId = search.get('session_id');
+  const readingId = params?.id ?? '';
 
-  const { steps, status, error } = useReadingProgress({
-    sessionId,
-    mock: !sessionId,
-    mockStepMs: 3200,
-  });
+  const [state, setState] = React.useState<ReadingState | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
+  const [retryNonce, setRetryNonce] = React.useState(0);
 
-  // Redirect on completion
   React.useEffect(() => {
-    if (status !== 'completed') return;
-    const t = window.setTimeout(() => {
-      router.push(`/reading/${readingId}/report`);
-    }, 900);
-    return () => window.clearTimeout(t);
-  }, [status, readingId, router]);
+    if (!readingId) return;
+    let cancelled = false;
+    let timer: number | undefined;
 
-  const failed = status === 'failed';
+    const tick = async () => {
+      try {
+        const res = await getReading(readingId);
+        if (cancelled) return;
+        const next = res.session?.state ?? null;
+        setState(next);
+        setError(null);
+
+        if (next === 'report_ready') {
+          // Allow stepper to flush "done" frame before nav.
+          window.setTimeout(() => {
+            if (!cancelled) {
+              router.replace(`/reading/${readingId}/report`);
+            }
+          }, 600);
+          return;
+        }
+
+        if (next && next.startsWith('error_at_')) {
+          setError(`Phân tích thất bại ở bước "${next.replace('error_at_', '')}".`);
+          return;
+        }
+
+        timer = window.setTimeout(tick, POLL_INTERVAL_MS);
+      } catch (err) {
+        if (cancelled) return;
+        const msg =
+          err instanceof ApiClientError
+            ? `Không kết nối được máy chủ (${err.status}).`
+            : 'Không kết nối được máy chủ.';
+        setError(msg);
+        timer = window.setTimeout(tick, POLL_INTERVAL_MS * 2);
+      }
+    };
+
+    tick();
+    return () => {
+      cancelled = true;
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [readingId, router, retryNonce]);
+
+  const failed = !!state && state.startsWith('error_at_');
+  const steps = React.useMemo(() => buildSteps(state), [state]);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-ink-radial pb-24">
-      {/* Ambient backdrop */}
       <motion.div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10"
@@ -63,11 +143,24 @@ export default function ProcessingPage() {
             {failed ? (
               <ErrorBlock
                 message={error ?? 'Có lỗi xảy ra trong quá trình phân tích.'}
-                onRetry={() => router.refresh()}
-                onBack={() => router.push(`/reading/${readingId}/survey`)}
+                onRetry={() => {
+                  setError(null);
+                  setState(null);
+                  setRetryNonce((n) => n + 1);
+                }}
+                onBack={() =>
+                  router.push(`/reading/${readingId}/survey`)
+                }
               />
             ) : (
-              <ProcessingStepper steps={steps} />
+              <>
+                <ProcessingStepper steps={steps} />
+                {error && (
+                  <p className="mt-4 text-center text-xs text-red-300">
+                    {error} — đang thử lại…
+                  </p>
+                )}
+              </>
             )}
           </CardContent>
         </Card>

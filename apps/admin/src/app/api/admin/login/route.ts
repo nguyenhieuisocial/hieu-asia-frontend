@@ -1,22 +1,23 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { ADMIN_SESSION_COOKIE, isAdminEmail } from '@/lib/auth';
+import {
+  ADMIN_SESSION_COOKIE,
+  constantTimeEqual,
+  encodeSession,
+  fetchAdminUsersFull,
+  sha256Hex,
+  type AdminRole,
+} from '@/lib/auth';
 
 /**
  * POST /api/admin/login  { email, password }
  *
- * Email must be in ADMIN_EMAILS allowlist AND password must equal ADMIN_PASSWORD.
- * Constant-time string compare to avoid timing attacks.
+ * Validates against the KV-backed admin user list (fetched via Worker
+ * /admin/users?with_hash=1). Constant-time hash comparison.
  *
- * If ADMIN_PASSWORD is unset on the server, the route refuses to log anyone in
- * (no fallback to email-only) — fail closed.
+ * Break-glass: if `ADMIN_PASSWORD` env is set AND the KV fetch fails, allow
+ *   `admin@hieu.asia` to log in with that password (role=owner). This keeps
+ *   the site recoverable if the Worker is down or KV is corrupted.
  */
-
-function constantTimeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return diff === 0;
-}
 
 export async function POST(request: NextRequest) {
   let email = '';
@@ -33,24 +34,43 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Vui lòng nhập đủ email và mật khẩu.' }, { status: 400 });
   }
 
-  if (!isAdminEmail(email)) {
-    return NextResponse.json({ error: 'Email không có quyền truy cập admin.' }, { status: 403 });
+  const passwordHash = await sha256Hex(password);
+  let matchedRole: AdminRole | null = null;
+  let kvError: string | null = null;
+
+  try {
+    const users = await fetchAdminUsersFull();
+    const user = users.find((u) => u.email.toLowerCase() === email);
+    if (user && constantTimeEqual(passwordHash, user.password_hash)) {
+      matchedRole = user.role;
+    } else if (user) {
+      return NextResponse.json({ error: 'Sai mật khẩu.' }, { status: 401 });
+    } else {
+      return NextResponse.json({ error: 'Email không có quyền truy cập admin.' }, { status: 403 });
+    }
+  } catch (err) {
+    kvError = (err as Error).message;
   }
 
-  const adminPassword = process.env.ADMIN_PASSWORD;
-  if (!adminPassword) {
-    return NextResponse.json(
-      { error: 'ADMIN_PASSWORD chưa cấu hình trên server.' },
-      { status: 503 },
-    );
+  // Break-glass: only kicks in if KV fetch failed AND env password is set
+  if (!matchedRole && kvError) {
+    const breakGlassPw = process.env.ADMIN_PASSWORD;
+    if (breakGlassPw && email === 'admin@hieu.asia' && constantTimeEqual(password, breakGlassPw)) {
+      matchedRole = 'owner';
+    } else {
+      return NextResponse.json(
+        { error: `Không thể xác thực: ${kvError}` },
+        { status: 503 },
+      );
+    }
   }
 
-  if (!constantTimeEqual(password, adminPassword)) {
-    return NextResponse.json({ error: 'Sai mật khẩu.' }, { status: 401 });
+  if (!matchedRole) {
+    return NextResponse.json({ error: 'Đăng nhập thất bại.' }, { status: 401 });
   }
 
-  const res = NextResponse.json({ ok: true, email });
-  res.cookies.set(ADMIN_SESSION_COOKIE, email, {
+  const res = NextResponse.json({ ok: true, email, role: matchedRole });
+  res.cookies.set(ADMIN_SESSION_COOKIE, encodeSession(email, matchedRole), {
     httpOnly: true,
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
