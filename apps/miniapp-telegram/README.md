@@ -27,3 +27,16 @@ sync that into the `NEXT_LOCALE` cookie via TelegramThemeBridge.
 
 `Content-Security-Policy: frame-ancestors 'self' https://*.telegram.org https://web.telegram.org`
 set in `next.config.ts` to allow embedding in Telegram WebView.
+
+## Required Vercel env vars
+
+For `POST /api/auth/telegram` (HMAC verify + Supabase upsert):
+
+- `TELEGRAM_BOT_TOKEN` — same token used by the Supabase `telegram-webhook`
+  edge function. Must be the secret bot token, not the public bot username.
+- `SUPABASE_URL` — e.g. `https://fvftbqairezsybasqsek.supabase.co`
+- `SUPABASE_SERVICE_ROLE_KEY` — service-role key, **server-only** (never
+  expose via `NEXT_PUBLIC_*`).
+
+The route uses the Node runtime (`runtime = 'nodejs'`) because it depends on
+the built-in `crypto` module for HMAC-SHA256.

@@ -6,6 +6,7 @@ import { getLocale, getMessages } from 'next-intl/server';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { TelegramThemeBridge } from '@/components/telegram-theme-bridge';
+import { TelegramWebAppProvider } from '@/components/telegram-webapp-provider';
 import './globals.css';
 
 const beVietnam = Be_Vietnam_Pro({
@@ -47,7 +48,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
             <TelegramThemeBridge />
-            <QueryProvider>{children}</QueryProvider>
+            <TelegramWebAppProvider>
+              <QueryProvider>{children}</QueryProvider>
+            </TelegramWebAppProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>
