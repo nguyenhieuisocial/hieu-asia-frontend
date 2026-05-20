@@ -17,6 +17,8 @@ const VENDORS = [
     keyUrl: 'https://console.anthropic.com/settings/keys',
     oauth: true,
     oauthLabel: 'Login với Claude Pro/Max (OAuth)',
+    oauthHint:
+      'Tab mới mở claude.ai → authorize → Anthropic hiển thị code ở console.anthropic.com → copy paste vào đây',
   },
   {
     id: 'openai',
@@ -25,7 +27,10 @@ const VENDORS = [
     model: 'gpt-5',
     keyHint: 'sk-...',
     keyUrl: 'https://platform.openai.com/api-keys',
-    oauth: false,
+    oauth: true,
+    oauthLabel: 'Login với ChatGPT Plus/Pro (Codex OAuth)',
+    oauthHint:
+      'Tab mới mở auth.openai.com → login ChatGPT → callback hiển thị code → copy paste vào đây',
   },
   {
     id: 'google',
@@ -34,7 +39,10 @@ const VENDORS = [
     model: 'gemini-2.5-flash',
     keyHint: 'AI...',
     keyUrl: 'https://aistudio.google.com/app/apikey',
-    oauth: false,
+    oauth: true,
+    oauthLabel: 'Login với Google (Gemini CLI OAuth)',
+    oauthHint:
+      'Tab mới mở accounts.google.com → authorize → codeassist.google.com hiển thị code → copy paste vào đây',
   },
 ] as const;
 
@@ -200,14 +208,7 @@ export default function ConnectPage() {
                 </button>
                 {oauthVisible[v.id] && (
                   <div className="mt-3 rounded-lg bg-zinc-950 p-3 text-xs">
-                    <p className="opacity-80">
-                      1. Vừa mở tab → authorize trên Claude.ai
-                      <br />
-                      2. Anthropic hiển thị <b>code</b> trên trang
-                      console.anthropic.com
-                      <br />
-                      3. Copy code và paste vào đây:
-                    </p>
+                    <p className="opacity-80">{v.oauthHint}</p>
                     <div className="mt-2 flex gap-2">
                       <input
                         id={`oauth-code-${v.id}`}
