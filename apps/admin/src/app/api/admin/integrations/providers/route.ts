@@ -1,12 +1,22 @@
 import { NextResponse } from 'next/server';
 
 const GATEWAY = process.env.HIEU_API_GATEWAY_URL ?? 'https://api.hieu.asia';
+const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
 
-// Public read-only — surfaces only boolean status of which providers are configured.
-// Safe to expose because cookie-gated middleware already required admin login.
+// Read-only providers status. Gated by admin cookie at middleware layer; the
+// Worker itself requires X-Admin-Token (admin endpoint), so we forward it here.
 export async function GET() {
+  if (!TOKEN) {
+    return NextResponse.json(
+      { ok: false, error: 'HIEU_API_ADMIN_TOKEN not configured on the admin app' },
+      { status: 503 },
+    );
+  }
   try {
-    const r = await fetch(`${GATEWAY}/ai/providers`, { cache: 'no-store' });
+    const r = await fetch(`${GATEWAY}/ai/providers`, {
+      cache: 'no-store',
+      headers: { 'X-Admin-Token': TOKEN },
+    });
     const data = await r.json();
     return NextResponse.json(data, { status: r.status });
   } catch (err) {

@@ -13,12 +13,14 @@ const VENDORS = [
     name: 'Anthropic Claude',
     roles: 'psychology • report • mentor • judge',
     model: 'claude-opus-4-7',
-    keyHint: 'sk-ant-...',
+    keyHint: 'sk-ant-api03-...',
     keyUrl: 'https://console.anthropic.com/settings/keys',
-    oauth: true,
-    oauthLabel: 'Login với Claude Pro/Max (OAuth)',
-    oauthHint:
-      'Tab mới mở claude.ai → authorize → Anthropic hiển thị code ở console.anthropic.com → copy paste vào đây',
+    // Anthropic disabled OAuth-token use on /v1/messages cho third-party tools
+    // từ ~Feb 2026. Subscription OAuth chỉ còn hoạt động trong Claude Code/Claude.ai.
+    // Force API key (sk-ant-api03-*) — workspace billing, charge riêng.
+    oauth: false,
+    oauthLabel: '',
+    oauthHint: '',
   },
   {
     id: 'openai',
@@ -174,9 +176,11 @@ export default function ConnectPage() {
       </header>
 
       <div className="rounded-lg border border-amber-700/40 bg-amber-900/10 p-4 text-sm leading-relaxed">
-        <b>2 cách kết nối</b>: <b>OAuth</b> (Claude Pro/Max + Gemini CLI — dùng quota subscription)
-        hoặc <b>API key</b> (charge riêng). <b>OpenAI</b> chỉ API key — Codex OAuth dùng{' '}
-        <code className="font-mono text-xs">localhost:1455</code> callback nên không web-paste được.
+        <b>Cách kết nối</b>: <b>Google Gemini</b> hỗ trợ OAuth (dùng quota Code Assist Standard).{' '}
+        <b>Anthropic Claude</b> và <b>OpenAI GPT</b> chỉ API key — Anthropic disable OAuth cho
+        Messages API third-party từ Feb 2026 (chỉ Claude Code/.ai được dùng), OpenAI Codex chỉ
+        accept <code className="font-mono text-xs">localhost:1455</code> callback nên không
+        web-paste được.
       </div>
 
       {VENDORS.map((v) => {
