@@ -3,21 +3,15 @@
  * to PostHog (when key configured), and to the Worker KV-backed funnel store.
  *
  * All three are fire-and-forget: never throws, never blocks UI.
+ *
+ * The canonical event vocabulary lives in `event-taxonomy.ts`. See
+ * `EVENTS.md` for prose definitions and PostHog interpretation guidance.
  */
 
 import { getPostHog } from './posthog';
+import type { EventName, EventPropertyMap } from './event-taxonomy';
 
-export type EventName =
-  | 'consent_given'
-  | 'palm_uploaded'
-  | 'survey_completed'
-  | 'report_viewed'
-  | 'mentor_message_sent'
-  | 'payment_intent_created'
-  | 'payment_completed'
-  | 'affiliate_link_clicked'
-  | 'daily_horoscope_subscribed'
-  | 'tool_used';
+export type { EventName } from './event-taxonomy';
 
 declare global {
   interface Window {
@@ -30,11 +24,20 @@ declare global {
  *
  * Layers:
  *   1. Plausible — counts as custom event in dashboard (no-op when script not loaded)
- *   2. Worker KV — populates admin funnel + drop-off detection
+ *   2. PostHog — captures with super-properties + session replay link
+ *   3. Worker KV — populates admin funnel + drop-off detection
  *
- * Pages call this in handlers, e.g. `track('palm_uploaded', { backend: 'r2' })`.
+ * Generic signature: when the caller passes a known `EventName`, props are
+ * type-checked against `EventPropertyMap[K]`. Unknown event names fall back
+ * to a loose `Record<string, unknown>` payload (still useful for ad-hoc
+ * experimentation in dev).
  */
-export function track(event: EventName, properties?: Record<string, unknown>): void {
+export function track<K extends EventName>(
+  event: K,
+  properties?: EventPropertyMap[K] | Record<string, unknown>,
+): void;
+export function track(event: string, properties?: Record<string, unknown>): void;
+export function track(event: string, properties?: Record<string, unknown>): void {
   if (typeof window === 'undefined') return;
 
   // 1. Plausible (custom event tag) — silent no-op if script absent

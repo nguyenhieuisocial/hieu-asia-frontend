@@ -19,6 +19,7 @@ import {
   Settings,
   Sparkles,
   Key,
+  Activity,
   Menu,
   X,
 } from 'lucide-react';
@@ -38,6 +39,7 @@ const NAV: NavItem[] = [
   { href: '/transactions', label: 'Giao dịch', Icon: Receipt },
   { href: '/payments', label: 'Thanh toán', Icon: CreditCard },
   { href: '/analytics', label: 'Analytics', Icon: BarChart3 },
+  { href: '/posthog', label: 'PostHog', Icon: Activity },
   { href: '/tasks', label: 'Task / Lỗi', Icon: Bot },
   { href: '/cost', label: 'Chi phí AI', Icon: DollarSign },
   { href: '/llm-spend', label: 'Chi phí LLM', Icon: DollarSign },

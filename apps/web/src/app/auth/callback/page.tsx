@@ -14,7 +14,8 @@
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getSupabaseAuth } from '@/lib/auth-client';
-import { getPostHog } from '@/lib/posthog';
+import { identifyUser } from '@/lib/identify';
+import { track } from '@/lib/analytics';
 
 const ANON_USER_KEY = 'hieu.user_id';
 const LINKED_ANON_KEY = 'hieu.linked_anon_user_id';
@@ -63,14 +64,26 @@ export default function AuthCallbackPage() {
         /* localStorage blocked — ignore */
       }
 
-      // Identify the authenticated user in PostHog so subsequent events tie
-      // back to a stable distinct_id. No-op when PostHog isn't configured.
+      // Rich identify (email, name, avatar, locale, affiliate, membership)
+      // + alias prior anon distinct_id + group analytics. No-op without PH.
       try {
-        const ph = getPostHog();
-        if (ph) {
-          ph.identify(data.session.user.id, {
-            email: data.session.user.email,
-          });
+        await identifyUser(data.session.user);
+      } catch {
+        /* ignore */
+      }
+
+      try {
+        const newUser =
+          !!data.session.user.created_at &&
+          Date.now() - new Date(data.session.user.created_at).getTime() < 60_000;
+        track('user_identified', {
+          user_id: data.session.user.id,
+          new_user: newUser,
+        });
+        if (newUser) {
+          track('signup_completed', { method: 'magic_link' });
+        } else {
+          track('signin_completed', { method: 'magic_link' });
         }
       } catch {
         /* ignore */

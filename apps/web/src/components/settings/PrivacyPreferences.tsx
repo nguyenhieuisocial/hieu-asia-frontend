@@ -4,6 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Button, Switch, toast } from '@hieu-asia/ui';
 import type { UserPreferences } from '@/lib/user-preferences';
+import { optInPostHog, optOutPostHog } from '@/lib/posthog';
 import { PrefRow, SettingsSection } from './SettingsSection';
 
 export interface PrivacyPreferencesProps {
@@ -14,6 +15,10 @@ export interface PrivacyPreferencesProps {
 export function PrivacyPreferences({ prefs, onChange }: PrivacyPreferencesProps) {
   function toggle(key: keyof UserPreferences['privacy'], value: boolean) {
     onChange({ privacy: { ...prefs.privacy, [key]: value } });
+    if (key === 'analytics_opt_in') {
+      if (value) optInPostHog();
+      else optOutPostHog();
+    }
     toast.success('Đã cập nhật quyền riêng tư');
   }
 

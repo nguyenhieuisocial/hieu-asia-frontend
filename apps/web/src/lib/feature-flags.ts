@@ -13,12 +13,14 @@
 
 import * as React from "react";
 import { getPostHog } from "./posthog";
+import { track } from "./analytics";
 
 export function useFeatureFlag<T extends boolean | string = boolean>(
   key: string,
   defaultValue: T = false as T,
 ): T {
   const [value, setValue] = React.useState<T>(defaultValue);
+  const reportedRef = React.useRef<string | boolean | null>(null);
 
   React.useEffect(() => {
     const ph = getPostHog();
@@ -28,6 +30,13 @@ export function useFeatureFlag<T extends boolean | string = boolean>(
       const flag = ph.getFeatureFlag(key);
       if (flag === undefined) return;
       setValue(flag as T);
+      // Fire `feature_flag_evaluated` once per (key, variant) per session
+      // so we can correlate downstream events with the variant they saw.
+      const variant = flag as string | boolean;
+      if (reportedRef.current !== variant) {
+        reportedRef.current = variant;
+        track("feature_flag_evaluated", { flag_key: key, variant });
+      }
     };
 
     // Initial read (flags may already be loaded).
