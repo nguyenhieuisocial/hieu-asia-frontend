@@ -3,11 +3,9 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
 import { toast } from '@hieu-asia/ui';
 import {
-  ApiClientError,
-  chatMentor,
+  chatMentorStream,
   type MentorMessage,
 } from '@/lib/api-client';
 import {
@@ -20,9 +18,13 @@ import {
   PinnedInsights,
   type PinnedInsight,
 } from '@/components/pinned-insights';
-import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
-import { EmptyState } from '@/components/ui/EmptyState';
-import { MentorSkeleton } from '@/components/skeletons/MentorSkeleton';
+import {
+  appendMessage as appendStoredMessage,
+  clearHistory,
+  loadHistory,
+  saveHistory,
+  type StoredMessage,
+} from '@/lib/mentor-history';
 
 const QUICK_PROMPTS = [
   'Tôi nên xử lý nhân sự chống đối thế nào?',
@@ -39,35 +41,33 @@ const WELCOME: ChatMessage = {
   ts: Date.now(),
 };
 
+const PIN_KEY_PREFIX = 'hieu.pinned.';
+
 function makeId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-const PIN_KEY_PREFIX = 'hieu.pinned.';
-const HISTORY_KEY_PREFIX = 'hieu.chat.';
-
-function loadHistory(readingId: string): ChatMessage[] | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = window.sessionStorage.getItem(HISTORY_KEY_PREFIX + readingId);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as ChatMessage[];
-    return Array.isArray(parsed) && parsed.length ? parsed : null;
-  } catch {
-    return null;
-  }
+function fromStored(m: StoredMessage): ChatMessage {
+  const parsed = Date.parse(m.ts);
+  return {
+    id: m.id,
+    role: m.role,
+    content: m.content,
+    ts: Number.isFinite(parsed) ? parsed : Date.now(),
+    feedback: m.feedback ?? null,
+    pinned: !!m.pinned,
+  };
 }
 
-function persistHistory(readingId: string, messages: ChatMessage[]) {
-  if (typeof window === 'undefined') return;
-  try {
-    window.sessionStorage.setItem(
-      HISTORY_KEY_PREFIX + readingId,
-      JSON.stringify(messages),
-    );
-  } catch {
-    /* ignore quota */
-  }
+function toStored(m: ChatMessage): StoredMessage {
+  return {
+    id: m.id,
+    role: m.role,
+    content: m.content,
+    ts: new Date(m.ts).toISOString(),
+    feedback: m.feedback ?? null,
+    pinned: !!m.pinned,
+  };
 }
 
 function toMentorMessages(messages: ChatMessage[]): MentorMessage[] {
@@ -80,16 +80,6 @@ function toMentorMessages(messages: ChatMessage[]): MentorMessage[] {
 }
 
 export default function MentorChatPage() {
-  return (
-    <ErrorBoundary>
-      <React.Suspense fallback={<MentorSkeleton />}>
-        <MentorChatContent />
-      </React.Suspense>
-    </ErrorBoundary>
-  );
-}
-
-function MentorChatContent() {
   const params = useParams<{ id: string }>();
   const search = useSearchParams();
   const readingId = params?.id ?? '';
@@ -99,12 +89,14 @@ function MentorChatContent() {
   const [input, setInput] = React.useState('');
   const [pinned, setPinned] = React.useState<PinnedInsight[]>([]);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [streaming, setStreaming] = React.useState(false);
+  const abortRef = React.useRef<AbortController | null>(null);
 
-  // Hydrate from sessionStorage (chat history) + localStorage (pinned).
+  // Hydrate from localStorage (history + pinned).
   React.useEffect(() => {
     if (typeof window === 'undefined' || !readingId) return;
-    const history = loadHistory(readingId);
-    if (history) setMessages(history);
+    const stored = loadHistory(readingId);
+    if (stored.length) setMessages(stored.map(fromStored));
     try {
       const raw = window.localStorage.getItem(PIN_KEY_PREFIX + readingId);
       if (raw) setPinned(JSON.parse(raw));
@@ -113,11 +105,20 @@ function MentorChatContent() {
     }
   }, [readingId]);
 
-  // Persist chat history whenever it changes.
+  // Persist history when not actively streaming (avoid spamming localStorage
+  // on every token; we flush once the stream finishes).
   React.useEffect(() => {
-    if (!readingId) return;
-    persistHistory(readingId, messages);
-  }, [readingId, messages]);
+    if (!readingId || streaming) return;
+    const toPersist = messages
+      .filter((m) => m.id !== 'welcome')
+      .map(toStored);
+    saveHistory(readingId, toPersist);
+  }, [readingId, messages, streaming]);
+
+  // Cleanup any in-flight stream on unmount.
+  React.useEffect(() => {
+    return () => abortRef.current?.abort();
+  }, []);
 
   React.useEffect(() => {
     const q = search?.get('q');
@@ -139,56 +140,79 @@ function MentorChatContent() {
     [readingId],
   );
 
-  const chatMutation = useMutation({
-    mutationFn: async (vars: {
-      history: ChatMessage[];
-      userText: string;
-    }) => {
-      const history = [
-        ...toMentorMessages(vars.history),
-        { role: 'user' as const, content: vars.userText },
-      ];
-      const res = await chatMentor(history, sessionId);
-      const answer = res.response?.trim();
-      if (!answer) {
-        throw new ApiClientError(
-          502,
-          res,
-          'Mentor không trả lời được, vui lòng thử lại.',
-        );
-      }
-      return answer;
-    },
-    onSuccess: (answer) => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: makeId(),
-          role: 'mentor',
-          content: answer,
-          ts: Date.now(),
-        },
-      ]);
-    },
-    onError: (err) => {
-      const msg =
-        err instanceof ApiClientError
-          ? err.message
-          : 'Không kết nối được Mentor. Vui lòng thử lại sau.';
-      toast.error('Mentor không phản hồi', { description: msg });
-    },
-  });
-
-  const onSend = () => {
+  const onSend = async () => {
     const text = input.trim();
-    if (!text || chatMutation.isPending) return;
-    const next: ChatMessage[] = [
-      ...messages,
-      { id: makeId(), role: 'user', content: text, ts: Date.now() },
-    ];
-    setMessages(next);
+    if (!text || streaming) return;
+
+    const userMsg: ChatMessage = {
+      id: makeId(),
+      role: 'user',
+      content: text,
+      ts: Date.now(),
+    };
+    const mentorId = makeId();
+    const mentorMsg: ChatMessage = {
+      id: mentorId,
+      role: 'mentor',
+      content: '',
+      ts: Date.now(),
+    };
+
+    // Conversation that will be sent to the mentor (includes the new user
+    // message but NOT the empty assistant placeholder).
+    const conversation = [...messages, userMsg];
+    setMessages([...conversation, mentorMsg]);
     setInput('');
-    chatMutation.mutate({ history: messages, userText: text });
+    appendStoredMessage(readingId, toStored(userMsg));
+    setStreaming(true);
+
+    const ctrl = new AbortController();
+    abortRef.current = ctrl;
+
+    let acc = '';
+    try {
+      const history = toMentorMessages(conversation);
+      for await (const ev of chatMentorStream(history, sessionId, ctrl.signal)) {
+        if (ev.type === 'chunk') {
+          acc += ev.text;
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === mentorId ? { ...m, content: acc } : m,
+            ),
+          );
+        } else if (ev.type === 'error') {
+          toast.error('Mentor không phản hồi', {
+            description: ev.error,
+          });
+          setMessages((prev) => prev.filter((m) => m.id !== mentorId));
+          return;
+        }
+        // 'done' just signals end of stream.
+      }
+      if (!acc.trim()) {
+        setMessages((prev) => prev.filter((m) => m.id !== mentorId));
+        toast.error('Mentor không phản hồi', {
+          description: 'Mentor không trả lời được, vui lòng thử lại.',
+        });
+        return;
+      }
+      appendStoredMessage(
+        readingId,
+        toStored({ ...mentorMsg, content: acc }),
+      );
+    } catch (err) {
+      if ((err as Error).name === 'AbortError') return;
+      toast.error('Mentor không phản hồi', {
+        description:
+          err instanceof Error
+            ? err.message
+            : 'Không kết nối được Mentor. Vui lòng thử lại sau.',
+      });
+      setMessages((prev) => prev.filter((m) => m.id !== mentorId));
+    } finally {
+      setStreaming(false);
+      abortRef.current = null;
+    }
   };
 
   const onFeedback = (id: string, value: 'up' | 'down') => {
@@ -205,17 +229,32 @@ function MentorChatContent() {
       ? pinned.filter((p) => p.id !== id)
       : [
           ...pinned,
-          {
-            id,
-            content: msg.content,
-            pinnedAt: Date.now(),
-          },
+          { id, content: msg.content, pinnedAt: Date.now() },
         ];
     setMessages((prev) =>
       prev.map((m) => (m.id === id ? { ...m, pinned: !exists } : m)),
     );
     persistPinned(next);
   };
+
+  const onClearHistory = () => {
+    if (streaming) return;
+    if (
+      typeof window !== 'undefined' &&
+      !window.confirm('Xóa toàn bộ lịch sử trò chuyện với mentor?')
+    ) {
+      return;
+    }
+    clearHistory(readingId);
+    setMessages([WELCOME]);
+    toast.success('Đã xóa lịch sử trò chuyện');
+  };
+
+  const hasHistory = messages.some((m) => m.id !== 'welcome');
+  const lastMentor = [...messages].reverse().find((m) => m.role === 'mentor');
+  const showTyping =
+    streaming &&
+    (!lastMentor || lastMentor.id === 'welcome' || lastMentor.content === '');
 
   return (
     <main id="main-content" className="flex h-screen flex-col bg-ink-radial">
@@ -244,55 +283,39 @@ function MentorChatContent() {
             </p>
           </div>
         </div>
-        <button
-          type="button"
-          onClick={() => setDrawerOpen((v) => !v)}
-          aria-label={`Mở danh sách ${pinned.length} ghim`}
-          aria-expanded={drawerOpen}
-          className="rounded-md border border-gold/20 px-3 py-1.5 text-xs text-cream/80 hover:border-gold hover:text-gold lg:hidden"
-        >
-          {pinned.length} ghim
-        </button>
+        <div className="flex items-center gap-2">
+          {hasHistory && (
+            <button
+              type="button"
+              onClick={onClearHistory}
+              disabled={streaming}
+              className="rounded-md border border-gold/20 px-3 py-1.5 text-xs text-cream/80 hover:border-gold hover:text-gold disabled:opacity-50"
+            >
+              Xóa lịch sử
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => setDrawerOpen((v) => !v)}
+            aria-label={`Mở danh sách ${pinned.length} ghim`}
+            aria-expanded={drawerOpen}
+            className="rounded-md border border-gold/20 px-3 py-1.5 text-xs text-cream/80 hover:border-gold hover:text-gold lg:hidden"
+          >
+            {pinned.length} ghim
+          </button>
+        </div>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
         <section className="flex flex-1 flex-col">
           <div className="flex-1 overflow-y-auto">
             <div className="mx-auto w-full max-w-3xl">
-              {messages.length <= 1 && !chatMutation.isPending ? (
-                <EmptyState
-                  icon={
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={1.5}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                    </svg>
-                  }
-                  title="Bắt đầu trò chuyện với Mentor"
-                  description="Mentor đã đọc báo cáo của bạn. Hỏi bất kỳ điều gì — từ định hướng nghề nghiệp đến quyết định nhỏ hàng ngày."
-                  action={{
-                    label: 'Câu hỏi gợi ý',
-                    onClick: () => {
-                      const first = QUICK_PROMPTS[0];
-                      if (first) setInput(first);
-                    },
-                  }}
-                />
-              ) : (
-                <ChatMessageList
-                  messages={messages}
-                  isTyping={chatMutation.isPending}
-                  onFeedback={onFeedback}
-                  onPin={onPin}
-                />
-              )}
+              <ChatMessageList
+                messages={messages}
+                isTyping={showTyping}
+                onFeedback={onFeedback}
+                onPin={onPin}
+              />
             </div>
           </div>
           <div className="mx-auto w-full max-w-3xl">
@@ -301,7 +324,7 @@ function MentorChatContent() {
               value={input}
               onChange={setInput}
               onSend={onSend}
-              disabled={chatMutation.isPending}
+              disabled={streaming}
             />
           </div>
         </section>

@@ -9,13 +9,8 @@ import {
   type StepKey,
   type StepStatus,
 } from '@/components/processing-stepper';
-import {
-  ApiClientError,
-  getReading,
-  type ReadingState,
-} from '@/lib/api-client';
-
-const POLL_INTERVAL_MS = 3000;
+import type { ReadingState } from '@/lib/api-client';
+import { useReadingSession } from '@/lib/use-reading-session';
 
 const STEP_ORDER: { key: StepKey; label: string }[] = [
   { key: 'prepare_context', label: 'Đang dựng dữ liệu nền…' },
@@ -36,7 +31,6 @@ function stateToActiveIndex(state: ReadingState): number {
   if (!state) return 0;
   if (state === 'report_ready') return STEP_ORDER.length;
   if (state.startsWith('error_at_')) {
-    // Highlight whichever phase the error occurred at; don't advance past it.
     const phase = state.replace('error_at_', '');
     return Math.max(0, STEP_ORDER.findIndex((s) => s.key === phase));
   }
@@ -61,60 +55,35 @@ export default function ProcessingPage() {
   const params = useParams<{ id: string }>();
   const readingId = params?.id ?? '';
 
-  const [state, setState] = React.useState<ReadingState | null>(null);
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-  const [retryNonce, setRetryNonce] = React.useState(0);
+  const { state, error, retry } = useReadingSession(readingId);
 
+  // Surface fetch errors via toast (once per change).
   React.useEffect(() => {
-    if (!readingId) return;
-    let cancelled = false;
-    let timer: number | undefined;
+    if (!error) return;
+    toast.error('Không tải được trạng thái', { description: error });
+  }, [error]);
 
-    const tick = async () => {
-      try {
-        const reading = await getReading(readingId);
-        if (cancelled) return;
-        const next = reading?.state ?? null;
-        setState(next);
-
-        if (next === 'report_ready') {
-          toast.success('Báo cáo đã sẵn sàng!');
-          // Allow stepper to flush "done" frame before nav.
-          window.setTimeout(() => {
-            if (!cancelled) {
-              router.replace(`/reading/${readingId}/report`);
-            }
-          }, 600);
-          return;
-        }
-
-        if (next && next.startsWith('error_at_')) {
-          const msg = `Phân tích thất bại ở bước "${next.replace('error_at_', '')}".`;
-          setErrorMessage(msg);
-          toast.error('Phân tích thất bại', { description: msg });
-          return;
-        }
-
-        timer = window.setTimeout(tick, POLL_INTERVAL_MS);
-      } catch (err) {
-        if (cancelled) return;
-        const msg =
-          err instanceof ApiClientError
-            ? `Không kết nối được máy chủ (${err.status}).`
-            : 'Không kết nối được máy chủ.';
-        toast.error('Không tải được trạng thái', { description: msg });
-        timer = window.setTimeout(tick, POLL_INTERVAL_MS * 2);
-      }
-    };
-
-    tick();
-    return () => {
-      cancelled = true;
-      if (timer) window.clearTimeout(timer);
-    };
-  }, [readingId, router, retryNonce]);
+  // Navigate to report when ready.
+  React.useEffect(() => {
+    if (state !== 'report_ready') return;
+    toast.success('Báo cáo đã sẵn sàng!');
+    const t = window.setTimeout(() => {
+      router.replace(`/reading/${readingId}/report`);
+    }, 600);
+    return () => window.clearTimeout(t);
+  }, [state, readingId, router]);
 
   const failed = !!state && state.startsWith('error_at_');
+  const errorMessage = failed
+    ? `Phân tích thất bại ở bước "${state!.replace('error_at_', '')}".`
+    : null;
+
+  React.useEffect(() => {
+    if (errorMessage) {
+      toast.error('Phân tích thất bại', { description: errorMessage });
+    }
+  }, [errorMessage]);
+
   const steps = React.useMemo(() => buildSteps(state), [state]);
 
   return (
@@ -147,12 +116,10 @@ export default function ProcessingPage() {
           <CardContent className="pt-8">
             {failed ? (
               <ErrorBlock
-                message={errorMessage ?? 'Có lỗi xảy ra trong quá trình phân tích.'}
-                onRetry={() => {
-                  setErrorMessage(null);
-                  setState(null);
-                  setRetryNonce((n) => n + 1);
-                }}
+                message={
+                  errorMessage ?? 'Có lỗi xảy ra trong quá trình phân tích.'
+                }
+                onRetry={retry}
                 onBack={() =>
                   router.push(`/reading/${readingId}/survey`)
                 }

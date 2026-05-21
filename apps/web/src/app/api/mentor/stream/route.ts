@@ -1,0 +1,260 @@
+/**
+ * Server-Sent Events proxy for the mentor endpoint.
+ *
+ * Mirrors `/api/mentor`'s auth + system-prompt injection, but instead of
+ * returning the upstream JSON verbatim it splits the assistant response into
+ * short chunks and streams them to the browser as SSE events:
+ *
+ *   event: chunk    data: "..."           (one per text chunk)
+ *   event: done     data: "{ ... }"        (final envelope, includes vendor/model)
+ *   event: error    data: "{ ... }"        (on upstream failure)
+ *
+ * MVP: artificial chunking from a complete upstream response. Worker-native
+ * streaming is deferred — when the upstream learns to stream, this handler
+ * is the place to switch over.
+ */
+
+import type { NextRequest } from 'next/server';
+import type {
+  MentorMessage,
+  MentorResponse,
+  Reading,
+} from '@hieu-asia/types';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+const HIEU_API_URL =
+  process.env.HIEU_API_URL ?? 'https://api.hieu.asia';
+const HIEU_API_SERVICE_TOKEN = process.env.HIEU_API_SERVICE_TOKEN;
+const SUPABASE_URL =
+  process.env.SUPABASE_URL ?? 'https://fvftbqairezsybasqsek.supabase.co';
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
+
+const DEFAULT_SYSTEM_PROMPT =
+  'Bạn là mentor cá nhân. Trả lời ấm áp, đồng cảm, ngắn gọn (2-3 đoạn), tiếng Việt. Luôn nhắc rằng user quyết định, AI chỉ gợi mở.';
+
+const CHUNK_DELAY_MS = 50;
+const CHUNK_TARGET_CHARS = 60;
+
+interface MentorRequestBody {
+  session_id?: string;
+  messages?: MentorMessage[];
+}
+
+interface SupabaseReadingEnvelope {
+  ok?: boolean;
+  session?: Reading;
+  error?: string;
+}
+
+async function fetchReading(sessionId: string): Promise<Reading | null> {
+  if (!SUPABASE_ANON_KEY) return null;
+  try {
+    const url = `${SUPABASE_URL}/functions/v1/reading-get?id=${encodeURIComponent(sessionId)}`;
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        apikey: SUPABASE_ANON_KEY,
+      },
+      cache: 'no-store',
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as SupabaseReadingEnvelope;
+    if (data.ok === false) return null;
+    return data.session ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function buildSystemPrompt(session: Reading): string {
+  const reportMd = session.report?.markdown?.trim();
+  const chart = session.tuvi_chart;
+  const lines: string[] = [
+    'Bạn là mentor cá nhân của user này. Sử dụng báo cáo dưới đây làm "Bộ não cố định" — không nói trái với nội dung báo cáo, tham chiếu cụ thể vào các phần đã viết.',
+  ];
+  if (reportMd) lines.push('', '--- BÁO CÁO CỦA USER ---', reportMd);
+  if (chart) {
+    lines.push(
+      '',
+      '--- BÁT TỰ ---',
+      `Năm: ${chart.year}, Tháng: ${chart.month}, Ngày: ${chart.day}, Giờ: ${chart.hour}`,
+    );
+  }
+  lines.push(
+    '',
+    '--- CONTEXT ---',
+    'User đang trò chuyện trên giao diện chat. Trả lời ấm áp, đồng cảm, ngắn gọn (2-3 đoạn), tiếng Việt. Luôn nhắc rằng user quyết định, AI chỉ gợi mở.',
+  );
+  return lines.join('\n');
+}
+
+/**
+ * Split text into chunks of roughly CHUNK_TARGET_CHARS, preferring sentence
+ * boundaries so the output reads naturally as it streams in.
+ */
+function chunkResponse(text: string): string[] {
+  if (!text) return [];
+  // Split on sentence boundaries first.
+  const sentences = text.split(/(?<=[.!?…])\s+/);
+  const chunks: string[] = [];
+  let buf = '';
+  for (const s of sentences) {
+    if (!buf) {
+      buf = s;
+    } else if ((buf + ' ' + s).length <= CHUNK_TARGET_CHARS) {
+      buf = buf + ' ' + s;
+    } else {
+      chunks.push(buf);
+      buf = s;
+    }
+    // Long sentence — flush in word-sized pieces.
+    while (buf.length > CHUNK_TARGET_CHARS * 2) {
+      const cut = buf.lastIndexOf(' ', CHUNK_TARGET_CHARS);
+      const idx = cut > 20 ? cut : CHUNK_TARGET_CHARS;
+      chunks.push(buf.slice(0, idx));
+      buf = buf.slice(idx).trimStart();
+    }
+  }
+  if (buf) chunks.push(buf);
+  return chunks;
+}
+
+function sseLine(event: string, data: string): string {
+  return `event: ${event}\ndata: ${data}\n\n`;
+}
+
+export async function POST(req: NextRequest) {
+  if (!HIEU_API_SERVICE_TOKEN) {
+    return new Response(
+      JSON.stringify({
+        ok: false,
+        error: 'server_misconfigured: HIEU_API_SERVICE_TOKEN missing',
+      }),
+      { status: 500, headers: { 'content-type': 'application/json' } },
+    );
+  }
+
+  let body: MentorRequestBody;
+  try {
+    body = (await req.json()) as MentorRequestBody;
+  } catch {
+    return new Response(
+      JSON.stringify({ ok: false, error: 'invalid_json' }),
+      { status: 400, headers: { 'content-type': 'application/json' } },
+    );
+  }
+
+  const incomingMessages: MentorMessage[] = Array.isArray(body.messages)
+    ? body.messages
+    : [];
+  const sessionId =
+    typeof body.session_id === 'string' && body.session_id.length > 0
+      ? body.session_id
+      : undefined;
+
+  let systemPrompt = DEFAULT_SYSTEM_PROMPT;
+  let userId: string | undefined;
+  if (sessionId) {
+    const session = await fetchReading(sessionId);
+    if (session) {
+      systemPrompt = buildSystemPrompt(session);
+      userId = session.user_id;
+    }
+  }
+
+  const hasSystem = incomingMessages.some((m) => m.role === 'system');
+  const finalMessages: MentorMessage[] = hasSystem
+    ? incomingMessages
+    : [{ role: 'system', content: systemPrompt }, ...incomingMessages];
+
+  const headers: Record<string, string> = {
+    'content-type': 'application/json',
+    'X-Service-Token': HIEU_API_SERVICE_TOKEN,
+  };
+  if (sessionId) headers['X-Session-Id'] = sessionId;
+  if (userId) headers['X-User-Id'] = userId;
+
+  const encoder = new TextEncoder();
+  const stream = new ReadableStream<Uint8Array>({
+    async start(controller) {
+      const write = (event: string, data: unknown) => {
+        controller.enqueue(
+          encoder.encode(sseLine(event, JSON.stringify(data))),
+        );
+      };
+
+      try {
+        const res = await fetch(`${HIEU_API_URL}/ai/role/mentor`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ ...body, messages: finalMessages }),
+          cache: 'no-store',
+        });
+
+        const text = await res.text();
+        let parsed: MentorResponse | null = null;
+        try {
+          parsed = JSON.parse(text) as MentorResponse;
+        } catch {
+          parsed = null;
+        }
+
+        if (!res.ok || !parsed || parsed.ok === false) {
+          write('error', {
+            ok: false,
+            status: res.status,
+            error:
+              parsed?.error ?? `upstream_error_${res.status}`,
+          });
+          controller.close();
+          return;
+        }
+
+        const answer = (parsed.response ?? '').trim();
+        if (!answer) {
+          write('error', {
+            ok: false,
+            error: 'empty_response',
+          });
+          controller.close();
+          return;
+        }
+
+        const chunks = chunkResponse(answer);
+        for (let i = 0; i < chunks.length; i++) {
+          write('chunk', chunks[i] + (i < chunks.length - 1 ? ' ' : ''));
+          if (i < chunks.length - 1) {
+            await new Promise((r) => setTimeout(r, CHUNK_DELAY_MS));
+          }
+        }
+
+        write('done', {
+          ok: true,
+          vendor: parsed.vendor,
+          model: parsed.model,
+        });
+        controller.close();
+      } catch (err) {
+        write('error', {
+          ok: false,
+          error: 'upstream_fetch_failed',
+          detail: err instanceof Error ? err.message : String(err),
+        });
+        controller.close();
+      }
+    },
+  });
+
+  return new Response(stream, {
+    status: 200,
+    headers: {
+      'content-type': 'text/event-stream; charset=utf-8',
+      'cache-control': 'no-store, no-transform',
+      connection: 'keep-alive',
+      'x-accel-buffering': 'no',
+    },
+  });
+}
