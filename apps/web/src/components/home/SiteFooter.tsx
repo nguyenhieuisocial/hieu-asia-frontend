@@ -2,8 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Mail, MessageCircle, Facebook, Heart } from 'lucide-react';
-import { Button, Input } from '@hieu-asia/ui';
+import { Mail, MessageCircle, Facebook, Heart, ArrowRight } from 'lucide-react';
 
 const PRODUCT_LINKS = [
   { href: '/reading', label: 'Phân tích lá số' },
@@ -25,9 +24,12 @@ const RESOURCE_LINKS = [
   { href: '/features', label: 'Tính năng' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/about', label: 'Về chúng tôi' },
+  { href: '/community', label: 'Cộng đồng' },
+  { href: '/changelog', label: 'Changelog' },
 ];
 
 const LEGAL_LINKS = [
+  { href: '/legal', label: 'Pháp lý' },
   { href: '/privacy', label: 'Quyền riêng tư' },
   { href: '/terms', label: 'Điều khoản' },
   { href: '/account', label: 'Tài khoản & xoá dữ liệu' },
@@ -53,27 +55,16 @@ export function SiteFooter() {
               Theo dõi
             </h3>
             <p className="mt-4 text-sm leading-relaxed text-cream/65">
-              Nhận một bài viết ngắn mỗi tuần — cách dùng cổ học để ra quyết định
-              tốt hơn. Không spam, có thể huỷ bất cứ lúc nào.
+              Một bài viết ngắn mỗi tuần — cách dùng cổ học để ra quyết định
+              tốt hơn. Không spam, huỷ bất cứ lúc nào.
             </p>
-            <form
-              className="mt-4 flex gap-2"
-              onSubmit={(e) => {
-                e.preventDefault();
-                // Newsletter wire-up TBD.
-              }}
+            <Link
+              href="/community#newsletter"
+              className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/5 px-4 py-2 text-sm font-medium text-gold transition-colors hover:bg-gold/10"
             >
-              <Input
-                type="email"
-                placeholder="email@cua.ban"
-                aria-label="Email đăng ký nhận tin"
-                className="bg-ink/60"
-                required
-              />
-              <Button type="submit" size="sm">
-                Đăng ký
-              </Button>
-            </form>
+              Đăng ký newsletter
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </Link>
             <div className="mt-5 flex items-center gap-3">
               <SocialLink href="mailto:hi@hieu.asia" label="Email">
                 <Mail className="h-4 w-4" aria-hidden="true" />

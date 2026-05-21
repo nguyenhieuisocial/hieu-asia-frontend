@@ -1,10 +1,12 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
 import { Sun, Focus, Hand, MoveDiagonal } from 'lucide-react';
 import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { PalmUpload } from '@/components/palm-upload';
+import { SiteNav } from '@/components/home/SiteNav';
 import { uploadHandImage } from '@/lib/upload-image';
 import { track } from '@/lib/analytics';
 
@@ -53,18 +55,28 @@ export default function PalmUploadPage() {
   }
 
   return (
-    <main className="min-h-screen bg-ink-radial pb-24">
-      <header className="container mx-auto max-w-2xl px-5 py-8">
-        <p className="font-mono text-xs uppercase tracking-widest text-gold">
-          Bước 2 / 4
-        </p>
-        <h1 className="mt-2 font-heading text-3xl font-semibold text-cream sm:text-4xl">
-          Tải ảnh lòng bàn tay
-        </h1>
-        <p className="mt-2 text-sm text-cream/70">
-          Hệ thống phân tích các đường chỉ tay để cộng hưởng với dữ liệu sinh trắc.
-        </p>
-      </header>
+    <>
+      <SiteNav />
+      <main id="main-content" className="min-h-screen bg-ink-radial pb-24 pt-16">
+        <header className="container mx-auto max-w-2xl px-5 py-8">
+          <nav aria-label="Breadcrumb" className="mb-3 text-xs text-cream/55">
+            <Link href="/" className="hover:text-gold">Trang chủ</Link>
+            <span className="mx-1.5">/</span>
+            <Link href="/reading" className="hover:text-gold">Lá số</Link>
+            <span className="mx-1.5">/</span>
+            <span className="text-cream/70">Tải ảnh tay</span>
+          </nav>
+          <p className="font-mono text-xs uppercase tracking-widest text-gold">
+            Bước 2 / 4
+          </p>
+          <h1 className="mt-2 font-heading text-3xl font-semibold text-cream sm:text-4xl">
+            <span className="bg-gold-gradient bg-clip-text text-transparent">Tải ảnh</span>{' '}
+            lòng bàn tay
+          </h1>
+          <p className="mt-2 text-sm text-cream/70">
+            Hệ thống phân tích các đường chỉ tay để cộng hưởng với dữ liệu sinh trắc.
+          </p>
+        </header>
 
       <section className="container mx-auto max-w-2xl space-y-6 px-5">
         <Card>
@@ -120,6 +132,7 @@ export default function PalmUploadPage() {
           Ảnh được mã hoá khi lưu trữ và chỉ dùng để phân tích cho phiên này.
         </p>
       </section>
-    </main>
+      </main>
+    </>
   );
 }

@@ -9,8 +9,12 @@
  */
 
 import * as React from 'react';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { ShieldCheck, Sparkles } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
+import { SiteNav } from '@/components/home/SiteNav';
+import { SiteFooter } from '@/components/home/SiteFooter';
 import { sendMagicLink } from '@/lib/auth-client';
 
 export default function SignInPage() {
@@ -36,14 +40,35 @@ export default function SignInPage() {
   }
 
   return (
-    <main className="min-h-screen bg-ink text-cream flex items-center justify-center px-4 py-12">
+    <>
+      <SiteNav />
+      <main
+        id="main-content"
+        className="relative isolate flex min-h-screen flex-col items-center justify-center bg-ink-radial px-4 py-12 pt-24 text-cream"
+      >
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.15)_0%,_transparent_55%)]"
+        />
+        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+          <Link href="/" className="hover:text-gold">Trang chủ</Link>
+          <span className="mx-1.5">/</span>
+          <span className="text-cream/70">Đăng nhập</span>
+        </nav>
       <Card className="w-full max-w-md border-gold/20 bg-ink/80 backdrop-blur">
         <CardHeader>
-          <CardTitle className="font-heading text-2xl text-gold">
-            Đăng nhập hieu.asia
+          <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gold/30 bg-gold/10">
+            <Sparkles className="h-4 w-4 text-gold" aria-hidden="true" />
+          </div>
+          <CardTitle className="font-heading text-2xl">
+            <span className="bg-gold-gradient bg-clip-text text-transparent">
+              Đăng nhập
+            </span>{' '}
+            hieu.asia
           </CardTitle>
           <p className="mt-2 text-sm text-cream/70">
-            Nhập email để nhận liên kết đăng nhập. Không cần mật khẩu.
+            Nhập email để nhận liên kết đăng nhập. Không cần mật khẩu, không
+            cần ghi nhớ.
           </p>
         </CardHeader>
         <CardContent>
@@ -102,6 +127,12 @@ export default function SignInPage() {
           )}
         </CardContent>
       </Card>
-    </main>
+        <p className="mt-6 inline-flex items-center gap-1.5 text-xs text-cream/55">
+          <ShieldCheck className="h-3.5 w-3.5 text-gold/80" aria-hidden="true" />
+          Liên kết chỉ dùng được một lần · hết hạn sau 15 phút
+        </p>
+      </main>
+      <SiteFooter />
+    </>
   );
 }

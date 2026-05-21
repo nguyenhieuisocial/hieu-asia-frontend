@@ -14,6 +14,20 @@ const nextConfig: NextConfig = {
   experimental: {
     typedRoutes: true,
   },
+  async redirects() {
+    return [
+      // Vanity / legacy URL aliases — keep canonical Vietnamese slugs.
+      { source: '/learn/numerology', destination: '/learn/than-so-hoc', permanent: true },
+      { source: '/numerology', destination: '/than-so-hoc', permanent: true },
+      { source: '/learn/bazi', destination: '/learn/bat-tu', permanent: true },
+      { source: '/learn/zi-wei', destination: '/learn/tu-vi', permanent: true },
+      { source: '/learn/ziwei', destination: '/learn/tu-vi', permanent: true },
+      { source: '/palm', destination: '/learn/palm', permanent: true },
+      // Legal hub aliases
+      { source: '/legal/privacy', destination: '/privacy', permanent: true },
+      { source: '/legal/terms', destination: '/terms', permanent: true },
+    ];
+  },
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: '**.hieu.asia' },

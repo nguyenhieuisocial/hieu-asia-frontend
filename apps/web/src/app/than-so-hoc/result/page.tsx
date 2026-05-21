@@ -4,6 +4,8 @@ import * as React from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
+import { SiteNav } from '@/components/home/SiteNav';
+import { SiteFooter } from '@/components/home/SiteFooter';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -75,29 +77,48 @@ export default function ThanSoHocResultPage() {
 
   if (loading) {
     return (
-      <main className="mx-auto max-w-4xl px-4 py-8">
-        <div className="rounded-lg border bg-card p-10 text-center text-sm text-foreground/70">
-          Đang phân tích thần số học...
-        </div>
-      </main>
+      <>
+        <SiteNav />
+        <main className="min-h-screen bg-ink pt-20">
+          <div className="mx-auto max-w-4xl px-4 py-8">
+            <Breadcrumb />
+            <div className="rounded-lg border border-cream/10 bg-ink/40 p-10 text-center text-sm text-cream/70">
+              <div className="mx-auto mb-3 h-8 w-8 animate-spin rounded-full border-2 border-gold/30 border-t-gold" aria-hidden="true" />
+              Đang phân tích thần số học...
+            </div>
+          </div>
+        </main>
+        <SiteFooter />
+      </>
     );
   }
 
   if (error || !data) {
     return (
-      <main className="mx-auto max-w-4xl px-4 py-8 space-y-4">
-        <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-6 text-sm text-red-600">
-          {error ?? 'Có lỗi xảy ra.'}
-        </div>
-        <Link href="/than-so-hoc" className="text-sm text-gold underline-offset-4 hover:underline">
-          ← Thử lại
-        </Link>
-      </main>
+      <>
+        <SiteNav />
+        <main className="min-h-screen bg-ink pt-20">
+          <div className="mx-auto max-w-4xl px-4 py-8 space-y-4">
+            <Breadcrumb />
+            <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-6 text-sm text-red-300">
+              {error ?? 'Có lỗi xảy ra.'}
+            </div>
+            <Link href="/than-so-hoc" className="text-sm text-gold underline-offset-4 hover:underline">
+              ← Thử lại
+            </Link>
+          </div>
+        </main>
+        <SiteFooter />
+      </>
     );
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-8 space-y-8">
+    <>
+      <SiteNav />
+      <main className="min-h-screen bg-ink pt-20 text-cream">
+      <div className="mx-auto max-w-5xl px-4 py-8 space-y-8">
+      <Breadcrumb />
       <header className="space-y-2 text-center">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Bản đồ Thần Số Học</h1>
         <p className="text-sm text-foreground/70">
@@ -200,7 +221,22 @@ export default function ThanSoHocResultPage() {
           ← Tính số khác
         </Link>
       </div>
+      </div>
     </main>
+    <SiteFooter />
+    </>
+  );
+}
+
+function Breadcrumb() {
+  return (
+    <nav aria-label="Breadcrumb" className="text-xs text-cream/55">
+      <Link href="/" className="hover:text-gold">Trang chủ</Link>
+      <span className="mx-1.5">/</span>
+      <Link href="/than-so-hoc" className="hover:text-gold">Thần Số Học</Link>
+      <span className="mx-1.5">/</span>
+      <span className="text-cream/70">Kết quả</span>
+    </nav>
   );
 }
 

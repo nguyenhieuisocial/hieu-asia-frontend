@@ -8,6 +8,8 @@ import { FreeTools } from '@/components/home/FreeTools';
 import { WhyChoose } from '@/components/home/WhyChoose';
 import { StoryTestimonials } from '@/components/home/StoryTestimonials';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
+import { PricingTeaser } from '@/components/home/PricingTeaser';
+import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 
 export const metadata: Metadata = {
   title: 'hieu.asia — Hiểu mình. Quyết định mình.',
@@ -228,8 +230,10 @@ export default function LandingPage() {
         <MethodChooser />
         <FreeTools />
         <WhyChoose />
+        <PricingTeaser />
         <StoryTestimonials />
         <FaqAccordion items={HOME_FAQ} id="faq" />
+        <NewsletterSignup id="newsletter" />
       </main>
       <SiteFooter />
     </>

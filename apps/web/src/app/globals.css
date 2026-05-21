@@ -51,6 +51,18 @@
   }
 }
 
+/* Smooth scroll for anchor links — respects prefers-reduced-motion via the
+ * [data-reduced-motion='true'] override below. */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 @layer utilities {
   /* Visually hidden but accessible to screen readers */
   .sr-only {
