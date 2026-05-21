@@ -6,10 +6,21 @@
 import * as React from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { SiteNav } from '@/components/home/SiteNav';
+import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata: Metadata = {
   title: 'Điều khoản chương trình affiliate · hieu.asia',
-  description: 'Điều khoản, quyền lợi và nghĩa vụ thuế khi tham gia chương trình affiliate hieu.asia.',
+  description:
+    'Điều khoản, quyền lợi và nghĩa vụ thuế khi tham gia chương trình affiliate hieu.asia.',
+  alternates: { canonical: 'https://hieu.asia/affiliate/terms' },
+  openGraph: {
+    title: 'Điều khoản chương trình affiliate · hieu.asia',
+    description:
+      'Cơ cấu hoa hồng tier-based, cookie 30 ngày, nghĩa vụ thuế VN và quy trình payout.',
+    url: 'https://hieu.asia/affiliate/terms',
+    type: 'article',
+  },
 };
 
 const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
@@ -159,42 +170,77 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
 
 export default function AffiliateTermsPage() {
   return (
-    <main className="min-h-screen bg-ink px-4 py-10 text-cream">
-      <div className="mx-auto max-w-3xl space-y-8">
-        <header>
-          <h1 className="text-3xl font-bold">Điều khoản chương trình affiliate</h1>
-          <p className="mt-2 text-sm text-cream/60">
-            Cập nhật ngày 21/05/2026. Áp dụng cho mọi affiliate đăng ký từ ngày này trở đi; affiliate
-            V1.4 được áp dụng song song điều khoản cũ trong 90 ngày chuyển tiếp.
-          </p>
-        </header>
+    <div className="min-h-screen bg-ink text-cream">
+      <SiteNav />
+      <main id="main-content" className="relative overflow-hidden pt-16">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-[320px] bg-ink-radial opacity-80"
+        />
 
-        <nav className="rounded border border-cream/10 bg-cream/[0.03] p-4">
-          <div className="mb-2 text-xs uppercase text-cream/60">Mục lục</div>
-          <ol className="list-decimal space-y-0.5 pl-5 text-sm">
+        <section className="relative mx-auto max-w-3xl px-6 pt-12 pb-20 sm:pt-16">
+          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-cream/55">
+            <Link href="/" className="hover:text-gold">Trang chủ</Link>
+            <span className="mx-1.5">/</span>
+            <Link href="/affiliate" className="hover:text-gold">Affiliate</Link>
+            <span className="mx-1.5">/</span>
+            <span className="text-cream/70">Điều khoản</span>
+          </nav>
+
+          <header>
+            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+              Affiliate · Terms
+            </p>
+            <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-4xl">
+              Điều khoản chương trình{' '}
+              <span className="bg-gold-gradient bg-clip-text text-transparent">
+                affiliate
+              </span>
+            </h1>
+            <p className="mt-4 text-sm leading-relaxed text-cream/70">
+              Cập nhật ngày 21/05/2026. Áp dụng cho mọi affiliate đăng ký từ
+              ngày này trở đi; affiliate V1.4 được áp dụng song song điều khoản
+              cũ trong 90 ngày chuyển tiếp.
+            </p>
+          </header>
+
+          <nav
+            aria-label="Mục lục"
+            className="mt-8 rounded-xl border border-cream/10 bg-ink/40 p-4 backdrop-blur-sm"
+          >
+            <div className="mb-2 font-mono text-[10px] uppercase tracking-[0.24em] text-gold/80">
+              Mục lục
+            </div>
+            <ol className="list-decimal space-y-1 pl-5 text-sm text-cream/80">
+              {SECTIONS.map((s) => (
+                <li key={s.id}>
+                  <a className="hover:text-gold" href={`#${s.id}`}>
+                    {s.title.replace(/^\d+\.\s/, '')}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+
+          <div className="mt-10 space-y-10">
             {SECTIONS.map((s) => (
-              <li key={s.id}>
-                <a className="hover:text-gold" href={`#${s.id}`}>
-                  {s.title.replace(/^\d+\.\s/, '')}
-                </a>
-              </li>
+              <section key={s.id} id={s.id} className="scroll-mt-24 space-y-3">
+                <h2 className="font-heading text-xl font-semibold text-cream sm:text-2xl">
+                  {s.title}
+                </h2>
+                <div className="text-sm leading-relaxed">{s.body}</div>
+              </section>
             ))}
-          </ol>
-        </nav>
+          </div>
 
-        {SECTIONS.map((s) => (
-          <section key={s.id} id={s.id} className="scroll-mt-20 space-y-2">
-            <h2 className="text-xl font-semibold">{s.title}</h2>
-            <div className="text-sm leading-relaxed">{s.body}</div>
-          </section>
-        ))}
-
-        <div className="border-t border-cream/10 pt-6 text-center text-sm">
-          <Link href="/affiliate/signup" className="text-gold hover:underline">
-            Quay lại đăng ký affiliate →
-          </Link>
-        </div>
-      </div>
-    </main>
+          <div className="mt-12 border-t border-cream/10 pt-6 text-center text-sm">
+            <Link href="/affiliate/signup" className="text-gold hover:underline">
+              Quay lại đăng ký affiliate →
+            </Link>
+          </div>
+        </section>
+      </main>
+      <SiteFooter />
+    </div>
   );
 }

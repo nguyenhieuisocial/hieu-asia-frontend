@@ -8,8 +8,18 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Skeleton } from '@hieu-asia/ui';
+import { Button, Card, CardContent, CardHeader, CardTitle, Skeleton } from '@hieu-asia/ui';
+import { SiteNav } from '@/components/home/SiteNav';
+import { SiteFooter } from '@/components/home/SiteFooter';
 import { TierProgress, type Tier, type TierProgressData } from '@/components/affiliate/TierProgress';
+import {
+  ShareToolkit,
+  PayoutRequest,
+  RecentEvents,
+  PayoutHistory,
+  type DashRecentEvent,
+  type DashPayout,
+} from '@/components/affiliate/DashboardSections';
 
 interface AffiliateRecord {
   id: string;
@@ -34,24 +44,6 @@ interface Stats {
   last_updated: string;
 }
 
-interface TrackEvent {
-  event: 'click' | 'signup' | 'conversion';
-  user_id?: string;
-  amount?: number;
-  commission?: number;
-  ts: string;
-}
-
-interface PayoutRecord {
-  id: string;
-  amount: number;
-  method: string;
-  status: 'pending' | 'paid' | 'rejected';
-  requested_at: string;
-  paid_at?: string;
-  rejected_reason?: string;
-}
-
 interface FraudFlag {
   reason: string;
   detail: string;
@@ -72,8 +64,8 @@ interface MeResponse {
   ok: true;
   affiliate: AffiliateRecord;
   stats: Stats;
-  recent: TrackEvent[];
-  payouts: PayoutRecord[];
+  recent: DashRecentEvent[];
+  payouts: DashPayout[];
   min_payout_vnd: number;
   tier?: TierProgressData;
   tiers?: Tier[];
@@ -93,25 +85,12 @@ function dt(iso: string) {
   }
 }
 
-const EVENT_LABEL: Record<TrackEvent['event'], { text: string; tone: string }> = {
-  click: { text: 'Click', tone: 'bg-cream/10 text-cream/70' },
-  signup: { text: 'Đăng ký', tone: 'bg-blue-500/10 text-blue-300' },
-  conversion: { text: 'Mua', tone: 'bg-gold/15 text-gold' },
-};
-
-const STATUS_LABEL: Record<PayoutRecord['status'], { text: string; tone: string }> = {
-  pending: { text: 'Đang chờ', tone: 'text-yellow-400' },
-  paid: { text: 'Đã trả', tone: 'text-green-400' },
-  rejected: { text: 'Bị từ chối', tone: 'text-red-400' },
-};
-
 export default function AffiliateDashboardPage() {
   const [data, setData] = React.useState<MeResponse | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [payoutAmount, setPayoutAmount] = React.useState<string>('');
   const [payoutMsg, setPayoutMsg] = React.useState<{ ok: boolean; text: string } | null>(null);
-  const [copied, setCopied] = React.useState(false);
 
   const load = React.useCallback(async () => {
     setLoading(true);
@@ -168,44 +147,56 @@ export default function AffiliateDashboardPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-ink p-6 text-cream">
-        <div className="mx-auto max-w-5xl space-y-4">
-          <Skeleton className="h-10 w-48" />
-          <div className="grid gap-4 sm:grid-cols-3">
-            <Skeleton className="h-24" />
-            <Skeleton className="h-24" />
-            <Skeleton className="h-24" />
+      <div className="min-h-screen bg-ink text-cream">
+        <SiteNav />
+        <main className="pt-20 pb-16 px-4 sm:px-6">
+          <div className="mx-auto max-w-5xl space-y-4">
+            <Skeleton className="h-10 w-48" />
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Skeleton className="h-24" />
+              <Skeleton className="h-24" />
+              <Skeleton className="h-24" />
+            </div>
+            <Skeleton className="h-64" />
           </div>
-          <Skeleton className="h-64" />
-        </div>
-      </main>
+        </main>
+        <SiteFooter />
+      </div>
     );
   }
 
   if (error === 'not_signed_in') {
     return (
-      <main className="min-h-screen bg-ink p-6 text-cream">
-        <div className="mx-auto max-w-md text-center">
-          <h1 className="mb-2 text-2xl font-bold">Bạn chưa đăng nhập</h1>
-          <p className="mb-6 text-cream/70">
-            Đăng ký affiliate để xem dashboard hoặc khôi phục session từ email.
-          </p>
-          <Link href="/affiliate/signup">
-            <Button className="bg-gold text-ink hover:bg-gold/90">Đăng ký ngay</Button>
-          </Link>
-        </div>
-      </main>
+      <div className="min-h-screen bg-ink text-cream">
+        <SiteNav />
+        <main className="pt-24 pb-16 px-4 sm:px-6">
+          <div className="mx-auto max-w-md text-center">
+            <h1 className="mb-2 font-heading text-2xl font-bold">Bạn chưa đăng nhập</h1>
+            <p className="mb-6 text-cream/70">
+              Đăng ký affiliate để xem dashboard hoặc khôi phục session từ email.
+            </p>
+            <Link href="/affiliate/signup">
+              <Button className="bg-gold text-ink hover:bg-gold/90">Đăng ký ngay</Button>
+            </Link>
+          </div>
+        </main>
+        <SiteFooter />
+      </div>
     );
   }
 
   if (error || !data) {
     return (
-      <main className="min-h-screen bg-ink p-6 text-cream">
-        <div className="mx-auto max-w-md text-center">
-          <p className="text-red-300">{error ?? 'Không tải được dashboard'}</p>
-          <Button onClick={load} className="mt-4">Thử lại</Button>
-        </div>
-      </main>
+      <div className="min-h-screen bg-ink text-cream">
+        <SiteNav />
+        <main className="pt-24 pb-16 px-4 sm:px-6">
+          <div className="mx-auto max-w-md text-center">
+            <p className="text-rose-300">{error ?? 'Không tải được dashboard'}</p>
+            <Button onClick={load} className="mt-4">Thử lại</Button>
+          </div>
+        </main>
+        <SiteFooter />
+      </div>
     );
   }
 
@@ -216,23 +207,31 @@ export default function AffiliateDashboardPage() {
   const canPayout = s.pending_payout >= data.min_payout_vnd && a.status === 'active';
   const shareText = `Tôi đang dùng hieu.asia — phân tích Tử Vi, MBTI và lòng bàn tay bằng AI. Đăng ký qua link của tôi nhé: ${shareUrl}`;
 
-  function copyText(text: string) {
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }
-
   return (
-    <main className="min-h-screen bg-ink px-4 py-8 text-cream">
+    <div className="min-h-screen bg-ink text-cream">
+      <SiteNav />
+      <main id="main-content" className="pt-20 pb-16 px-4 sm:px-6">
       <div className="mx-auto max-w-5xl space-y-6">
+        <nav aria-label="Breadcrumb" className="text-xs text-cream/55">
+          <Link href="/" className="hover:text-gold">Trang chủ</Link>
+          <span className="mx-1.5">/</span>
+          <Link href="/affiliate" className="hover:text-gold">Affiliate</Link>
+          <span className="mx-1.5">/</span>
+          <span className="text-cream/70">Dashboard</span>
+        </nav>
         <header className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Affiliate Dashboard</h1>
-            <p className="text-sm text-cream/60">
-              Xin chào, {a.display_name} · Mã{' '}
+            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+              Affiliate · Dashboard
+            </p>
+            <h1 className="mt-2 font-heading text-2xl font-bold sm:text-3xl">
+              Xin chào, {a.display_name}
+            </h1>
+            <p className="mt-1 text-sm text-cream/60">
+              Mã của bạn:{' '}
               <span className="font-mono text-gold">{a.code}</span>
               {a.status === 'banned' && (
-                <span className="ml-2 rounded bg-red-500/20 px-2 py-0.5 text-xs text-red-300">
+                <span className="ml-2 rounded bg-rose-500/20 px-2 py-0.5 text-xs text-rose-300">
                   ĐÃ BAN
                 </span>
               )}
@@ -342,144 +341,26 @@ export default function AffiliateDashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Share toolkit */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Bộ công cụ chia sẻ</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <div className="mb-1 text-xs uppercase text-cream/60">Link giới thiệu</div>
-              <div className="flex gap-2">
-                <Input value={shareUrl} readOnly className="font-mono text-xs" />
-                <Button onClick={() => copyText(shareUrl)}>
-                  {copied ? 'Đã copy' : 'Copy'}
-                </Button>
-              </div>
-            </div>
-            <div>
-              <div className="mb-1 text-xs uppercase text-cream/60">Caption gợi ý (VN)</div>
-              <div className="flex gap-2">
-                <Input value={shareText} readOnly className="text-xs" />
-                <Button onClick={() => copyText(shareText)}>Copy</Button>
-              </div>
-            </div>
-            <div>
-              <div className="mb-1 text-xs uppercase text-cream/60">QR code</div>
-              <div className="flex items-center gap-4">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={qrUrl} alt="QR" width={128} height={128} className="rounded bg-white p-2" />
-                <a
-                  href={qrUrl}
-                  download={`hieu-asia-${a.code}.png`}
-                  className="text-sm text-gold hover:underline"
-                >
-                  Tải QR code (PNG)
-                </a>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <ShareToolkit shareUrl={shareUrl} shareText={shareText} qrUrl={qrUrl} code={a.code} />
 
-        {/* Payout request */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Yêu cầu rút tiền</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="text-sm text-cream/70">
-              Phương thức: <b>{a.payout_method.toUpperCase()}</b> · Đích:{' '}
-              <span className="font-mono">{a.payout_destination}</span>
-            </div>
-            <div className="flex gap-2">
-              <Input
-                type="number"
-                placeholder={`Min ${data.min_payout_vnd.toLocaleString('vi-VN')}`}
-                value={payoutAmount}
-                onChange={(e) => setPayoutAmount(e.target.value)}
-                disabled={!canPayout}
-              />
-              <Button
-                onClick={requestPayout}
-                disabled={!canPayout}
-                className="bg-gold text-ink hover:bg-gold/90"
-              >
-                Gửi yêu cầu
-              </Button>
-            </div>
-            {!canPayout && a.status === 'active' && (
-              <p className="text-xs text-cream/50">
-                Cần đạt {vnd(data.min_payout_vnd)} mới được rút.
-              </p>
-            )}
-            {payoutMsg && (
-              <p className={`text-sm ${payoutMsg.ok ? 'text-green-400' : 'text-red-300'}`}>
-                {payoutMsg.text}
-              </p>
-            )}
-          </CardContent>
-        </Card>
+        <PayoutRequest
+          payoutMethod={a.payout_method}
+          payoutDestination={a.payout_destination}
+          minPayout={data.min_payout_vnd}
+          canPayout={canPayout}
+          payoutAmount={payoutAmount}
+          setPayoutAmount={setPayoutAmount}
+          onSubmit={requestPayout}
+          msg={payoutMsg}
+          isActive={a.status === 'active'}
+        />
 
-        {/* Recent events */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Hoạt động gần đây</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {data.recent.length === 0 ? (
-              <p className="text-sm text-cream/50">Chưa có hoạt động nào.</p>
-            ) : (
-              <div className="space-y-1">
-                {data.recent.map((ev, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center justify-between border-b border-cream/5 py-2 text-sm last:border-0"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className={`rounded px-2 py-0.5 text-xs ${EVENT_LABEL[ev.event].tone}`}>
-                        {EVENT_LABEL[ev.event].text}
-                      </span>
-                      <span className="text-cream/70">{dt(ev.ts)}</span>
-                    </div>
-                    {ev.commission !== undefined && (
-                      <span className="font-mono text-gold">+{vnd(ev.commission)}</span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <RecentEvents events={data.recent} />
 
-        {/* Payouts */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Lịch sử rút tiền</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {data.payouts.length === 0 ? (
-              <p className="text-sm text-cream/50">Chưa có yêu cầu nào.</p>
-            ) : (
-              <div className="space-y-1">
-                {data.payouts.map((p) => (
-                  <div
-                    key={p.id}
-                    className="flex items-center justify-between border-b border-cream/5 py-2 text-sm last:border-0"
-                  >
-                    <div>
-                      <span className="font-mono">{vnd(p.amount)}</span>{' '}
-                      <span className="text-cream/50">· {dt(p.requested_at)}</span>
-                    </div>
-                    <span className={STATUS_LABEL[p.status].tone}>
-                      {STATUS_LABEL[p.status].text}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <PayoutHistory payouts={data.payouts} />
       </div>
-    </main>
+      </main>
+      <SiteFooter />
+    </div>
   );
 }

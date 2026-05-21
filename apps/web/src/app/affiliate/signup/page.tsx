@@ -9,6 +9,8 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
+import { SiteNav } from '@/components/home/SiteNav';
+import { SiteFooter } from '@/components/home/SiteFooter';
 
 type PayoutMethod = 'bank' | 'momo' | 'zalo';
 
@@ -79,8 +81,14 @@ export default function AffiliateSignupPage() {
 
   if (result) {
     return (
-      <main className="min-h-screen bg-ink px-4 py-12 text-cream">
-        <div className="mx-auto max-w-xl">
+      <div className="min-h-screen bg-ink text-cream">
+        <SiteNav />
+        <main id="main-content" className="relative overflow-hidden bg-ink-radial pt-24 pb-20">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-20 right-[-10%] h-[360px] w-[360px] rounded-full bg-gold/15 blur-3xl"
+          />
+          <div className="relative mx-auto max-w-xl px-4">
           <Card className="border-gold/30">
             <CardHeader>
               <div className="mb-2 text-3xl">🎉</div>
@@ -131,17 +139,29 @@ export default function AffiliateSignupPage() {
               </Link>
             </CardContent>
           </Card>
-        </div>
-      </main>
+          </div>
+        </main>
+        <SiteFooter />
+      </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-ink px-4 py-12 text-cream">
-      <div className="mx-auto max-w-xl">
-        <Link href="/affiliate" className="text-sm text-cream/60 hover:text-gold">
-          ← Quay lại
-        </Link>
+    <div className="min-h-screen bg-ink text-cream">
+      <SiteNav />
+      <main id="main-content" className="relative overflow-hidden bg-ink-radial pt-20 pb-20">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-20 right-[-10%] h-[360px] w-[360px] rounded-full bg-gold/10 blur-3xl"
+        />
+        <div className="relative mx-auto max-w-xl px-4">
+        <nav aria-label="Breadcrumb" className="mb-4 text-xs text-cream/55">
+          <Link href="/" className="hover:text-gold">Trang chủ</Link>
+          <span className="mx-1.5">/</span>
+          <Link href="/affiliate" className="hover:text-gold">Affiliate</Link>
+          <span className="mx-1.5">/</span>
+          <span className="text-cream/70">Đăng ký</span>
+        </nav>
         <Card className="mt-4 border-cream/10">
           <CardHeader>
             <CardTitle className="text-2xl">Đăng ký affiliate</CardTitle>
@@ -226,12 +246,18 @@ export default function AffiliateSignupPage() {
                 <Link href="/terms" className="text-gold hover:underline">
                   Điều khoản
                 </Link>{' '}
-                và quy chế Affiliate (không spam, không mạo danh, hoa hồng có thể điều chỉnh).
+                và{' '}
+                <Link href="/affiliate/terms" className="text-gold hover:underline">
+                  quy chế Affiliate
+                </Link>{' '}
+                (không spam, không mạo danh, hoa hồng có thể điều chỉnh).
               </p>
             </form>
           </CardContent>
         </Card>
-      </div>
-    </main>
+        </div>
+      </main>
+      <SiteFooter />
+    </div>
   );
 }
