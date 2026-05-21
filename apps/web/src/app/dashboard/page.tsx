@@ -13,6 +13,9 @@ import {
   type SettingsState,
 } from '@/components/dashboard-sections';
 import { getOrCreateAnonUserId, listReadings } from '@hieu-asia/supabase';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { DashboardSkeleton } from '@/components/skeletons/DashboardSkeleton';
 
 // V1 mock: assume logged-in user. Real auth wired in Phase 2.
 const MOCK_USER = { name: 'Anh Minh', email: 'minh@example.com' };
@@ -81,6 +84,14 @@ const SECTIONS: { id: SectionId; label: string }[] = [
 ];
 
 export default function DashboardPage() {
+  return (
+    <ErrorBoundary>
+      <DashboardContent />
+    </ErrorBoundary>
+  );
+}
+
+function DashboardContent() {
   const [active, setActive] = React.useState<SectionId>('reports');
   const [reports, setReports] = React.useState<DashboardReport[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -99,6 +110,8 @@ export default function DashboardPage() {
       })
       .finally(() => setLoading(false));
   }, []);
+
+  if (loading) return <DashboardSkeleton />;
 
   return (
     <main className="min-h-screen bg-ink-radial">
@@ -143,8 +156,26 @@ export default function DashboardPage() {
 
         <section role="tabpanel">
           {active === 'reports' && (
-            loading ? (
-              <p className="text-sm text-cream/60">Đang tải báo cáo...</p>
+            reports.length === 0 ? (
+              <EmptyState
+                icon={
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" />
+                  </svg>
+                }
+                title="Chưa có phân tích nào"
+                description="Bắt đầu phiên đầu tiên — chỉ mất 5 phút."
+                action={{ label: 'Bắt đầu phân tích', href: '/onboarding' }}
+              />
             ) : (
               <ReportsSection items={reports} />
             )

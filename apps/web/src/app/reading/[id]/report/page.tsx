@@ -13,6 +13,8 @@ import {
 } from '@/lib/api-client';
 import { CautionBanner } from '@/components/caution-banner';
 import { ReportContextSummary } from '@/components/report-context-summary';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
+import { ReportSkeleton } from '@/components/skeletons/ReportSkeleton';
 
 /** Parsed H2 section of the report markdown. */
 interface MarkdownSection {
@@ -63,6 +65,16 @@ function extractCautionBullets(body: string): string[] {
 }
 
 export default function ReportPage() {
+  return (
+    <ErrorBoundary>
+      <React.Suspense fallback={<ReportSkeleton />}>
+        <ReportContent />
+      </React.Suspense>
+    </ErrorBoundary>
+  );
+}
+
+function ReportContent() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const readingId = params?.id ?? '';
@@ -318,22 +330,5 @@ function ReportFooter({ readingId }: { readingId: string }) {
         </Button>
       </div>
     </div>
-  );
-}
-
-function ReportSkeleton() {
-  return (
-    <main className="container mx-auto max-w-6xl animate-pulse px-6 py-12">
-      <div className="mb-6 h-6 w-32 rounded bg-cream/10" />
-      <div className="space-y-4">
-        <div className="h-28 rounded-lg bg-cream/5" />
-        <div className="h-16 rounded-lg bg-cream/5" />
-        <div className="h-12 rounded bg-cream/5" />
-        <div className="grid gap-4 lg:grid-cols-2">
-          <div className="h-48 rounded-lg bg-cream/5" />
-          <div className="h-48 rounded-lg bg-cream/5" />
-        </div>
-      </div>
-    </main>
   );
 }

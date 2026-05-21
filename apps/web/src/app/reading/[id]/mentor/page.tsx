@@ -20,6 +20,9 @@ import {
   PinnedInsights,
   type PinnedInsight,
 } from '@/components/pinned-insights';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { MentorSkeleton } from '@/components/skeletons/MentorSkeleton';
 
 const QUICK_PROMPTS = [
   'Tôi nên xử lý nhân sự chống đối thế nào?',
@@ -77,6 +80,16 @@ function toMentorMessages(messages: ChatMessage[]): MentorMessage[] {
 }
 
 export default function MentorChatPage() {
+  return (
+    <ErrorBoundary>
+      <React.Suspense fallback={<MentorSkeleton />}>
+        <MentorChatContent />
+      </React.Suspense>
+    </ErrorBoundary>
+  );
+}
+
+function MentorChatContent() {
   const params = useParams<{ id: string }>();
   const search = useSearchParams();
   const readingId = params?.id ?? '';
@@ -246,12 +259,40 @@ export default function MentorChatPage() {
         <section className="flex flex-1 flex-col">
           <div className="flex-1 overflow-y-auto">
             <div className="mx-auto w-full max-w-3xl">
-              <ChatMessageList
-                messages={messages}
-                isTyping={chatMutation.isPending}
-                onFeedback={onFeedback}
-                onPin={onPin}
-              />
+              {messages.length <= 1 && !chatMutation.isPending ? (
+                <EmptyState
+                  icon={
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={1.5}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                  }
+                  title="Bắt đầu trò chuyện với Mentor"
+                  description="Mentor đã đọc báo cáo của bạn. Hỏi bất kỳ điều gì — từ định hướng nghề nghiệp đến quyết định nhỏ hàng ngày."
+                  action={{
+                    label: 'Câu hỏi gợi ý',
+                    onClick: () => {
+                      const first = QUICK_PROMPTS[0];
+                      if (first) setInput(first);
+                    },
+                  }}
+                />
+              ) : (
+                <ChatMessageList
+                  messages={messages}
+                  isTyping={chatMutation.isPending}
+                  onFeedback={onFeedback}
+                  onPin={onPin}
+                />
+              )}
             </div>
           </div>
           <div className="mx-auto w-full max-w-3xl">

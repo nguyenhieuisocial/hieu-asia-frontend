@@ -24,14 +24,20 @@ export default function NotFound() {
           Trang không tồn tại
         </h1>
         <p className="mt-4 text-sm text-cream/70 sm:text-base">
-          Có thể link đã hết hạn hoặc gõ sai. Hãy quay về trang chủ và bắt đầu lại từ đó.
+          Có thể link đã hết hạn hoặc gõ sai. Hãy quay về trang chủ hoặc xem lại
+          báo cáo của bạn.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link href="/">
             <Button size="lg">Về trang chủ</Button>
           </Link>
-          <Link href="/onboarding">
+          <Link href="/dashboard">
             <Button size="lg" variant="outline">
+              Bảng điều khiển
+            </Button>
+          </Link>
+          <Link href="/onboarding">
+            <Button size="lg" variant="ghost">
               Bắt đầu luận giải
             </Button>
           </Link>
