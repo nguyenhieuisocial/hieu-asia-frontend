@@ -3,15 +3,18 @@
  * `/<path>` with `X-Admin-Token` from server env. Used by `src/lib/admin-api.ts`
  * so the browser never sees the shared admin token.
  *
- * Gate: requires a valid admin session cookie (decoded via `decodeSession`).
- * Without it, returns 401 — the existing `middleware.ts` will usually redirect
- * to /login before requests reach this route, but we double-check here.
+ * Gate: requires a HMAC-VERIFIED admin session cookie (via `verifySession`).
+ * Without it, returns 401. Defence-in-depth on top of middleware which only
+ * checks cookie *presence*. Sub-agent F (2026-05-21) verified a forged cookie
+ * `attacker@evil.com:owner` previously bypassed this gate — the switch from
+ * `decodeSession` to `verifySession` closes that hole when ADMIN_COOKIE_SECRET
+ * is set.
  *
  * The path segments after `/api/admin-proxy/` are forwarded verbatim, plus the
  * query string. Methods: GET, POST, PATCH, DELETE.
  */
 import { type NextRequest, NextResponse } from 'next/server';
-import { ADMIN_SESSION_COOKIE, decodeSession } from '@/lib/auth';
+import { ADMIN_SESSION_COOKIE, verifySession } from '@/lib/auth';
 
 // Edge runtime — eliminates Vercel serverless cold-start (5-15s) which was
 // the root cause of "signal is aborted without reason" in the admin UI.
@@ -32,7 +35,7 @@ async function forward(
   // Gate on admin session cookie (middleware already redirects unauth users,
   // but defence-in-depth — never let an anon hit /admin/* via this proxy).
   const cookie = req.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-  const session = decodeSession(cookie);
+  const session = await verifySession(cookie);
   if (!session) {
     return NextResponse.json({ ok: false, error: 'unauthenticated' }, { status: 401 });
   }

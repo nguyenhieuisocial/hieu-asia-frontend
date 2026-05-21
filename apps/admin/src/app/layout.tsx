@@ -6,7 +6,7 @@ import { QueryProvider } from '@/components/providers/query-provider';
 import { Sidebar } from '@/components/sidebar';
 import { Topbar } from '@/components/topbar';
 import { Toaster } from '@hieu-asia/ui';
-import { ADMIN_SESSION_COOKIE, decodeSession } from '@/lib/auth';
+import { ADMIN_SESSION_COOKIE, verifySession } from '@/lib/auth';
 import './globals.css';
 
 const beVietnam = Be_Vietnam_Pro({
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
-  const session = decodeSession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
+  const session = await verifySession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
   const adminEmail = session?.email ?? '';
 
   // No session → render children without chrome (login page handles itself).

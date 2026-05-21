@@ -70,7 +70,9 @@ export async function POST(request: NextRequest) {
   }
 
   const res = NextResponse.json({ ok: true, email, role: matchedRole });
-  res.cookies.set(ADMIN_SESSION_COOKIE, encodeSession(email, matchedRole), {
+  // encodeSession is async now (uses Web Crypto HMAC). Await before setting cookie.
+  const signed = await encodeSession(email, matchedRole);
+  res.cookies.set(ADMIN_SESSION_COOKIE, signed, {
     httpOnly: true,
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
