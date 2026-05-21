@@ -5,10 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle, Button } from '@hieu-asia/ui'
 import { ChevronRight, ArrowRight, Sparkles, ShieldAlert } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
-import { MAJOR_STARS_CONTENT, findStarContent } from '@/lib/tuvi-content';
+import { ALL_STARS_CONTENT, findStarContent } from '@/lib/tuvi-content';
 
 export function generateStaticParams() {
-  return MAJOR_STARS_CONTENT.map((s) => ({ star: s.slug }));
+  return ALL_STARS_CONTENT.map((s) => ({ star: s.slug }));
 }
 
 export async function generateMetadata(

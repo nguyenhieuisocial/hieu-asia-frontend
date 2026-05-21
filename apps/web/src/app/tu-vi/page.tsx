@@ -51,6 +51,19 @@ const MAJOR_STARS: { slug: string; name: string; hint: string }[] = [
   { slug: 'pha-quan', name: 'Phá Quân', hint: 'Phá cách, đổi mới, mạo hiểm.' },
 ];
 
+const AUX_STARS: { slug: string; name: string; hint: string }[] = [
+  { slug: 'ta-phu', name: 'Tả Phụ', hint: 'Trợ tinh — quý nhân hỗ trợ.' },
+  { slug: 'huu-bat', name: 'Hữu Bật', hint: 'Trợ tinh — cặp với Tả Phụ.' },
+  { slug: 'van-xuong', name: 'Văn Xương', hint: 'Văn tinh — học vấn, viết.' },
+  { slug: 'van-khuc', name: 'Văn Khúc', hint: 'Văn tinh — nghệ thuật, sáng tạo.' },
+  { slug: 'khoi-viet', name: 'Thiên Khôi - Thiên Việt', hint: 'Quý nhân tinh — mentor.' },
+  { slug: 'loc-ton', name: 'Lộc Tồn', hint: 'Tài tinh — tích luỹ.' },
+  { slug: 'kinh-da', name: 'Kình Dương - Đà La', hint: 'Sát tinh nhẹ — áp lực.' },
+  { slug: 'hoa-linh', name: 'Hỏa Tinh - Linh Tinh', hint: 'Sát tinh — biến động.' },
+  { slug: 'hoa-loc', name: 'Hoá Lộc', hint: 'Tứ hoá — cơ hội tài lộc.' },
+  { slug: 'hoa-ky', name: 'Hoá Kỵ', hint: 'Tứ hoá — chủ đề cần chú ý.' },
+];
+
 const BREADCRUMB_JSONLD = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -159,6 +172,36 @@ export default function TuViHubPage() {
           </p>
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {MAJOR_STARS.map((s) => (
+              <Link
+                key={s.slug}
+                href={`/tu-vi/sao/${s.slug}`}
+                className="flex items-start justify-between gap-3 rounded-lg border border-cream/10 bg-ink/40 p-3 transition-colors hover:border-gold/40"
+              >
+                <div>
+                  <p className="font-heading text-sm font-semibold text-cream">{s.name}</p>
+                  <p className="mt-0.5 text-xs text-cream/65">{s.hint}</p>
+                </div>
+                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-cream/45" aria-hidden />
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Aux stars */}
+        <section className="relative mx-auto max-w-5xl px-6 pb-12">
+          <div className="mb-6 flex items-center gap-3">
+            <Sparkles className="h-5 w-5 text-gold/70" aria-hidden />
+            <h2 className="font-heading text-2xl font-semibold text-cream sm:text-3xl">
+              Phụ tinh + tứ hoá quan trọng
+            </h2>
+          </div>
+          <p className="mb-6 max-w-3xl text-sm text-cream/70 sm:text-base">
+            Phụ tinh và tứ hoá điều chỉnh ý nghĩa của chính tinh. Một chính tinh có Hoá
+            Lộc luận khác với cùng chính tinh có Hoá Kỵ — bộ này quyết định "vị thuốc"
+            của lá số.
+          </p>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {AUX_STARS.map((s) => (
               <Link
                 key={s.slug}
                 href={`/tu-vi/sao/${s.slug}`}

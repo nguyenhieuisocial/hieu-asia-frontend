@@ -518,6 +518,133 @@ export const MAJOR_STARS_CONTENT: StarContent[] = [
   },
 ];
 
+// ============================================================================
+// Auxiliary stars (phụ tinh / sao bổ trợ) — top 10 most-asked
+// ============================================================================
+
+export const AUX_STARS_CONTENT: StarContent[] = [
+  {
+    slug: 'ta-phu',
+    name: 'Tả Phụ',
+    category: 'aux',
+    archetype: 'Sao trợ tinh — người hỗ trợ, đồng minh.',
+    positive: ['Có quý nhân hỗ trợ trong sự nghiệp.', 'Khả năng làm việc nhóm tốt.'],
+    caution: ['Cần học tự đứng vững khi không có Tả Phụ ở đại vận.'],
+    byPalace: [
+      { palace: 'Mệnh', reading: 'Người dễ có quý nhân, có sức hỗ trợ tự nhiên.' },
+      { palace: 'Quan Lộc', reading: 'Hợp vai trò có team support, không hợp solo.' },
+    ],
+  },
+  {
+    slug: 'huu-bat',
+    name: 'Hữu Bật',
+    category: 'aux',
+    archetype: 'Sao trợ tinh — cặp với Tả Phụ, hỗ trợ từ phía nữ/bạn.',
+    positive: ['Có người hỗ trợ về cảm xúc và tinh thần.', 'Quan hệ mạng lưới rộng.'],
+    caution: ['Khi xa Tả Phụ, có thể cảm thấy cô đơn dù được giúp đỡ.'],
+    byPalace: [
+      { palace: 'Mệnh', reading: 'Tâm tính ấm áp, dễ kết bạn.' },
+      { palace: 'Phu Thê', reading: 'Hôn nhân có hỗ trợ từ bạn bè, gia đình hai bên.' },
+    ],
+  },
+  {
+    slug: 'van-xuong',
+    name: 'Văn Xương',
+    category: 'aux',
+    archetype: 'Văn tinh — học vấn, viết lách, văn chương.',
+    positive: ['Khả năng viết và diễn đạt tốt.', 'Hợp công việc trí thức.'],
+    caution: ['Khi gặp Hoá Kỵ, dễ vướng giấy tờ, hợp đồng.'],
+    byPalace: [
+      { palace: 'Mệnh', reading: 'Người ưa đọc, viết, suy ngẫm.' },
+      { palace: 'Quan Lộc', reading: 'Hợp ngành giáo dục, xuất bản, truyền thông.' },
+    ],
+  },
+  {
+    slug: 'van-khuc',
+    name: 'Văn Khúc',
+    category: 'aux',
+    archetype: 'Văn tinh — nghệ thuật, lời nói, biểu diễn.',
+    positive: ['Khả năng diễn đạt qua nghệ thuật.', 'Hợp công việc cần sự sáng tạo.'],
+    caution: ['Cảm xúc dễ thay đổi.'],
+    byPalace: [
+      { palace: 'Mệnh', reading: 'Người có tâm hồn nghệ sĩ.' },
+      { palace: 'Quan Lộc', reading: 'Hợp nghệ thuật, ca hát, biểu diễn, sáng tạo nội dung.' },
+    ],
+  },
+  {
+    slug: 'khoi-viet',
+    name: 'Thiên Khôi - Thiên Việt',
+    category: 'aux',
+    archetype: 'Quý nhân tinh — gặp người trên đỡ đầu.',
+    positive: ['Có quý nhân lớn tuổi hỗ trợ.', 'Hợp được mentor có thẩm quyền.'],
+    caution: ['Cần giữ thái độ khiêm tốn để giữ quý nhân.'],
+    byPalace: [
+      { palace: 'Mệnh', reading: 'Đời thường có người trên giúp ở các bước ngoặt.' },
+    ],
+  },
+  {
+    slug: 'loc-ton',
+    name: 'Lộc Tồn',
+    category: 'aux',
+    archetype: 'Tài tinh — tích luỹ, dòng tiền ổn định.',
+    positive: ['Tích luỹ tài chính qua chuyên môn.', 'Khả năng quản lý tiền dài hạn.'],
+    caution: ['Có thể quá thận trọng, bỏ lỡ cơ hội tăng trưởng.'],
+    byPalace: [
+      { palace: 'Tài Bạch', reading: 'Tiền vào đều, hợp tiết kiệm và bảo toàn vốn.' },
+    ],
+  },
+  {
+    slug: 'kinh-da',
+    name: 'Kình Dương - Đà La',
+    category: 'aux',
+    archetype: 'Sát tinh nhẹ — áp lực, mâu thuẫn, "gai trong vận".',
+    positive: ['Tăng động lực trong khủng hoảng.', 'Hợp công việc cạnh tranh.'],
+    caution: ['Dễ vướng tranh chấp.', 'Cần kiểm soát phản ứng dưới áp lực.'],
+    byPalace: [
+      { palace: 'Mệnh', reading: 'Người có phần "lửa" trong tính cách — cần kênh hợp để xả.' },
+      { palace: 'Tật Ách', reading: 'Cẩn trọng thương tích, không phải dự báo bệnh nặng.' },
+    ],
+  },
+  {
+    slug: 'hoa-linh',
+    name: 'Hỏa Tinh - Linh Tinh',
+    category: 'aux',
+    archetype: 'Sát tinh — biến động đột ngột.',
+    positive: ['Khả năng phản ứng nhanh.', 'Hợp ngành thay đổi liên tục.'],
+    caution: ['Quyết định bốc đồng dễ tốn tiền.', 'Cần học suy nghĩ trước khi hành động.'],
+    byPalace: [
+      { palace: 'Mệnh', reading: 'Người có năng lượng cao, ưa đột phá.' },
+    ],
+  },
+  {
+    slug: 'hoa-loc',
+    name: 'Hoá Lộc',
+    category: 'aux',
+    archetype: 'Tứ hoá — Lộc (tài lộc, cơ hội).',
+    positive: ['Năm có Hoá Lộc thường có cơ hội tài chính + nghề mới.', 'Hợp đẩy sự nghiệp.'],
+    caution: ['Cơ hội nhiều nhưng cần kỷ luật để giữ.'],
+    byPalace: [
+      { palace: 'Quan Lộc', reading: 'Năm thuận cho thăng tiến, mở rộng vai trò.' },
+      { palace: 'Tài Bạch', reading: 'Năm dòng tiền tốt, hợp tích luỹ.' },
+    ],
+  },
+  {
+    slug: 'hoa-ky',
+    name: 'Hoá Kỵ',
+    category: 'aux',
+    archetype: 'Tứ hoá — Kỵ (vướng mắc, cần chú ý).',
+    positive: ['Là tín hiệu cảnh báo — ai biết đọc thì tránh được tổn thất.', 'Tăng động lực rèn luyện.'],
+    caution: ['Không phải "đời mạt vận" — là chủ đề cần xử lý trong năm/giai đoạn đó.', 'Cẩn trọng quyết định lớn khi Hoá Kỵ tại cung liên quan.'],
+    byPalace: [
+      { palace: 'Mệnh', reading: 'Năm có Hoá Kỵ tại Mệnh — chủ đề chính là "tự nhìn lại". Không hợp mở rộng vội.' },
+      { palace: 'Tài Bạch', reading: 'Năm cần kỷ luật tài chính cao — tránh leverage.' },
+      { palace: 'Phu Thê', reading: 'Năm cần giao tiếp kỳ vọng rõ — dễ hiểu lầm trong quan hệ.' },
+    ],
+  },
+];
+
+export const ALL_STARS_CONTENT: StarContent[] = [...MAJOR_STARS_CONTENT, ...AUX_STARS_CONTENT];
+
 export function findStarContent(slug: string): StarContent | undefined {
-  return MAJOR_STARS_CONTENT.find((s) => s.slug === slug);
+  return ALL_STARS_CONTENT.find((s) => s.slug === slug);
 }

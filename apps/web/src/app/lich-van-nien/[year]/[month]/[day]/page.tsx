@@ -1,0 +1,317 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { Card, CardContent, CardHeader, CardTitle, Button } from '@hieu-asia/ui';
+import { ChevronRight, Sun, Moon, Sparkles, AlertTriangle, ArrowRight } from 'lucide-react';
+import { SiteNav } from '@/components/home/SiteNav';
+import { SiteFooter } from '@/components/home/SiteFooter';
+
+interface VanNienDay {
+  solarDate?: { year?: number; month?: number; day?: number; weekday?: string; iso?: string };
+  lunarDate?: { year?: number; month?: number; day?: number; isLeap?: boolean; chineseMonthName?: string; chineseDayName?: string };
+  canChi?: { year?: string; month?: string; day?: string };
+  trucNgay?: string;
+  isHoangDao?: boolean;
+  isHacDao?: boolean;
+  goodStars?: string[];
+  badStars?: string[];
+  goodActivities?: string[];
+  avoidActivities?: string[];
+  hoangDaoHours?: { hour: string; name: string }[];
+}
+
+interface ApiResponse {
+  ok: boolean;
+  day?: VanNienDay;
+  error?: string;
+}
+
+const WORKER_BASE = process.env.HIEU_API_URL ?? 'https://api.hieu.asia';
+
+function isValidDate(y: number, m: number, d: number): boolean {
+  if (!Number.isFinite(y) || y < 1900 || y > 2100) return false;
+  if (!Number.isFinite(m) || m < 1 || m > 12) return false;
+  if (!Number.isFinite(d) || d < 1 || d > 31) return false;
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  return (
+    dt.getUTCFullYear() === y &&
+    dt.getUTCMonth() === m - 1 &&
+    dt.getUTCDate() === d
+  );
+}
+
+async function fetchDay(year: number, month: number, day: number): Promise<VanNienDay | null> {
+  try {
+    const res = await fetch(
+      `${WORKER_BASE}/tools/lich-van-nien/day?year=${year}&month=${month}&day=${day}`,
+      { next: { revalidate: 86400 } },
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as ApiResponse;
+    return data.ok ? data.day ?? null : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ year: string; month: string; day: string }>;
+}): Promise<Metadata> {
+  const { year, month, day } = await params;
+  const y = Number(year);
+  const m = Number(month);
+  const d = Number(day);
+  if (!isValidDate(y, m, d)) return {};
+  const url = `https://hieu.asia/lich-van-nien/${y}/${String(m).padStart(2, '0')}/${String(d).padStart(2, '0')}`;
+  return {
+    title: `Ngày ${d}/${m}/${y} — âm lịch, Can Chi, giờ hoàng đạo`,
+    description: `Lịch vạn niên ngày ${d}/${m}/${y}: âm lịch, Thiên Can Địa Chi, Hoàng/Hắc đạo, Trực, sao tốt sao xấu, giờ hoàng đạo và việc nên/kiêng.`,
+    alternates: { canonical: url },
+    openGraph: {
+      title: `Lịch ngày ${d}/${m}/${y} · hieu.asia`,
+      description: 'Tra cứu âm lịch + Can Chi + giờ tốt cho ngày này.',
+      url,
+      type: 'article',
+    },
+  };
+}
+
+export default async function ArchiveDayPage({
+  params,
+}: {
+  params: Promise<{ year: string; month: string; day: string }>;
+}) {
+  const { year, month, day } = await params;
+  const y = Number(year);
+  const m = Number(month);
+  const d = Number(day);
+
+  if (!isValidDate(y, m, d)) notFound();
+
+  const data = await fetchDay(y, m, d);
+  if (!data) notFound();
+
+  const dateLabel = `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}/${y}`;
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
+      { '@type': 'ListItem', position: 2, name: 'Lịch Vạn Niên', item: 'https://hieu.asia/lich-van-nien' },
+      { '@type': 'ListItem', position: 3, name: dateLabel, item: `https://hieu.asia/lich-van-nien/${y}/${String(m).padStart(2, '0')}/${String(d).padStart(2, '0')}` },
+    ],
+  };
+
+  return (
+    <div className="min-h-screen bg-ink text-cream">
+      <SiteNav />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+
+      <main id="main-content" className="relative overflow-hidden pt-16">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-[360px] bg-ink-radial opacity-80"
+        />
+
+        <section className="relative mx-auto max-w-3xl px-6 pb-10 pt-12 sm:pt-16">
+          <nav aria-label="Breadcrumb" className="mb-4 flex flex-wrap items-center text-xs text-cream/55">
+            <Link href="/" className="hover:text-gold">Trang chủ</Link>
+            <ChevronRight className="mx-1 h-3 w-3" aria-hidden />
+            <Link href="/lich-van-nien" className="hover:text-gold">Lịch Vạn Niên</Link>
+            <ChevronRight className="mx-1 h-3 w-3" aria-hidden />
+            <span className="text-cream/75">{dateLabel}</span>
+          </nav>
+
+          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+            {data.solarDate?.weekday ?? '—'}
+          </p>
+          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+            Lịch ngày {dateLabel}
+          </h1>
+          {data.lunarDate?.chineseDayName && data.lunarDate?.chineseMonthName && (
+            <p className="mt-3 text-base leading-relaxed text-cream/80 sm:text-lg">
+              Âm lịch: {data.lunarDate.chineseDayName} {data.lunarDate.chineseMonthName}, năm{' '}
+              {data.canChi?.year ?? ''}
+            </p>
+          )}
+        </section>
+
+        <section className="relative mx-auto max-w-3xl px-6 pb-10">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Card className="border-cream/10 bg-ink/40">
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center gap-2 font-heading text-base text-cream">
+                  <Sun className="h-4 w-4 text-gold" aria-hidden /> Dương lịch
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm leading-relaxed text-cream/80">
+                {dateLabel} · {data.solarDate?.weekday}
+              </CardContent>
+            </Card>
+            <Card className="border-cream/10 bg-ink/40">
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center gap-2 font-heading text-base text-cream">
+                  <Moon className="h-4 w-4 text-purple-300" aria-hidden /> Âm lịch
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm leading-relaxed text-cream/80">
+                {data.lunarDate?.chineseDayName} {data.lunarDate?.chineseMonthName} năm {data.canChi?.year}
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        <section className="relative mx-auto max-w-3xl px-6 pb-10">
+          <Card className="border-gold/30 bg-gradient-to-br from-gold/[0.05] to-transparent">
+            <CardHeader>
+              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+                Can Chi · Trực · Hoàng Hắc Đạo
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-3 sm:grid-cols-2">
+              <Stat label="Can Chi năm" value={data.canChi?.year ?? '—'} />
+              <Stat label="Can Chi tháng" value={data.canChi?.month ?? '—'} />
+              <Stat label="Can Chi ngày" value={data.canChi?.day ?? '—'} />
+              <Stat label="Trực ngày" value={data.trucNgay ?? '—'} />
+              <div className="sm:col-span-2">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-cream/55">
+                  Phân loại
+                </p>
+                <p className="mt-1 font-heading text-lg font-semibold">
+                  {data.isHoangDao && <span className="text-jade-50">Ngày Hoàng Đạo</span>}
+                  {data.isHacDao && <span className="text-amber-300">Ngày Hắc Đạo</span>}
+                  {!data.isHoangDao && !data.isHacDao && <span className="text-cream/70">Bình thường</span>}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+        {(data.goodActivities?.length || data.avoidActivities?.length) && (
+          <section className="relative mx-auto max-w-3xl px-6 pb-10">
+            <div className="grid gap-3 md:grid-cols-2">
+              {data.goodActivities && data.goodActivities.length > 0 && (
+                <Card className="border-jade/30 bg-jade/[0.04]">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="flex items-center gap-2 font-heading text-base text-jade-50">
+                      <Sparkles className="h-4 w-4" aria-hidden /> Việc nên làm
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-1.5 text-sm text-cream/80">
+                      {data.goodActivities.map((a, i) => (
+                        <li key={i} className="flex gap-2">
+                          <span className="text-jade-50">+</span>
+                          <span>{a}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              )}
+              {data.avoidActivities && data.avoidActivities.length > 0 && (
+                <Card className="border-amber-700/40 bg-amber-900/10">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="flex items-center gap-2 font-heading text-base text-amber-200">
+                      <AlertTriangle className="h-4 w-4" aria-hidden /> Việc nên kiêng
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-1.5 text-sm text-cream/80">
+                      {data.avoidActivities.map((a, i) => (
+                        <li key={i} className="flex gap-2">
+                          <span className="text-amber-300">!</span>
+                          <span>{a}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </section>
+        )}
+
+        {(data.goodStars?.length || data.badStars?.length) && (
+          <section className="relative mx-auto max-w-3xl px-6 pb-10">
+            <Card className="border-cream/10 bg-ink/40">
+              <CardHeader>
+                <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+                  Sao tốt — sao xấu
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="grid gap-3 sm:grid-cols-2">
+                {data.goodStars && data.goodStars.length > 0 && (
+                  <div>
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-jade-50">
+                      Sao tốt
+                    </p>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {data.goodStars.map((s) => (
+                        <span key={s} className="rounded bg-jade/15 px-2 py-0.5 font-mono text-xs text-jade-50">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {data.badStars && data.badStars.length > 0 && (
+                  <div>
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-red-300">
+                      Sao xấu
+                    </p>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {data.badStars.map((s) => (
+                        <span key={s} className="rounded bg-red-500/15 px-2 py-0.5 font-mono text-xs text-red-300">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </section>
+        )}
+
+        <section className="relative mx-auto max-w-3xl px-6 pb-20">
+          <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent p-6 sm:p-8">
+            <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+              Ngày {dateLabel} hợp với việc gì của BẠN?
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-cream/80 sm:text-base">
+              Lịch chung dùng cho mọi người. Để biết ngày này có hợp với lá số riêng
+              của bạn không (cung Mệnh, đại vận, lưu niên), lập lá số 2 phút.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link href="/onboarding">
+                <Button size="lg">Lập lá số cá nhân hoá</Button>
+              </Link>
+              <Link
+                href="/lich-van-nien"
+                className="inline-flex items-center text-sm text-cream/70 hover:text-gold"
+              >
+                Quay về Lịch Vạn Niên <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
+              </Link>
+            </div>
+          </div>
+        </section>
+      </main>
+      <SiteFooter />
+    </div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="font-mono text-[10px] uppercase tracking-widest text-cream/55">{label}</p>
+      <p className="mt-1 font-heading text-lg font-semibold text-cream">{value}</p>
+    </div>
+  );
+}
+
+// ISR: revalidate daily (worker also caches 24h on edge).
+export const revalidate = 86400;

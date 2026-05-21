@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { PALACES_CONTENT, MAJOR_STARS_CONTENT } from '@/lib/tuvi-content';
+import { PALACES_CONTENT, ALL_STARS_CONTENT } from '@/lib/tuvi-content';
 
 const BASE_URL = 'https://hieu.asia';
 
@@ -13,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.65,
   }));
 
-  const starUrls: MetadataRoute.Sitemap = MAJOR_STARS_CONTENT.map((s) => ({
+  const starUrls: MetadataRoute.Sitemap = ALL_STARS_CONTENT.map((s) => ({
     url: `${BASE_URL}/tu-vi/sao/${s.slug}`,
     lastModified: now,
     changeFrequency: 'monthly' as const,
