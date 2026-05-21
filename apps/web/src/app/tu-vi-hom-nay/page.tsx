@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { ZodiacCard } from '@/components/daily/ZodiacCard';
 import { SubscribePush } from '@/components/daily/SubscribePush';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { getVietnamTodayISO } from '@/lib/vn-date';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 600;
@@ -22,13 +23,9 @@ const ZODIACS: { key: string; label: string; icon: string }[] = [
 ];
 
 function formatToday(): string {
-  // ICT date.
-  const now = new Date();
-  const ict = new Date(now.getTime() + 7 * 3600 * 1000);
-  const y = ict.getUTCFullYear();
-  const m = String(ict.getUTCMonth() + 1).padStart(2, '0');
-  const d = String(ict.getUTCDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
+  // Robust VN-tz date via Intl. Replaces the old +7h shift which fails on
+  // hosts whose process tz isn't VN if combined with `.toISOString()` later.
+  return getVietnamTodayISO();
 }
 
 export const metadata: Metadata = {
