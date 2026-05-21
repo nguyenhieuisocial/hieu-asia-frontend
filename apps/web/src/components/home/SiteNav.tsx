@@ -26,8 +26,16 @@ const LEARN_LINKS: readonly NavLink[] = [
   { href: '/learn/palm', label: 'Palm Reading' },
 ];
 
+const TOOLS_LINKS: readonly NavLink[] = [
+  { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay' },
+  { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
+  { href: '/hop-tuoi', label: 'Hợp tuổi' },
+  { href: '/than-so-hoc', label: 'Thần Số Học' },
+  { href: '/can-xuong', label: 'Cân Xương Đoán Số' },
+  { href: '/thuoc-lo-ban', label: 'Thước Lỗ Ban' },
+];
+
 const PRIMARY_LINKS: readonly NavLink[] = [
-  { href: '/', label: 'Trang chủ' },
   { href: '/features', label: 'Tính năng' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/about', label: 'Về chúng tôi' },
@@ -59,6 +67,7 @@ export function SiteNav() {
               {l.label}
             </Link>
           ))}
+          <ToolsDropdown />
           <LearnDropdown />
         </nav>
 
@@ -74,6 +83,36 @@ export function SiteNav() {
         </div>
       </div>
     </header>
+  );
+}
+
+function ToolsDropdown() {
+  return (
+    <div className="group relative">
+      <button
+        type="button"
+        className="inline-flex items-center gap-1 text-sm text-cream/75 transition-colors hover:text-gold"
+        aria-haspopup="true"
+      >
+        Công cụ
+        <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" aria-hidden="true" />
+      </button>
+      <div
+        className="invisible absolute left-1/2 top-full z-50 mt-1 w-64 -translate-x-1/2 rounded-xl border border-cream/10 bg-ink/95 p-2 opacity-0 shadow-2xl backdrop-blur-md transition-all group-hover:visible group-hover:opacity-100"
+        role="menu"
+      >
+        {TOOLS_LINKS.map((l) => (
+          <Link
+            key={l.href}
+            href={l.href}
+            className="block rounded-md px-3 py-2 text-sm text-cream/80 transition-colors hover:bg-gold/10 hover:text-gold"
+            role="menuitem"
+          >
+            {l.label}
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -130,12 +169,33 @@ function MobileDrawer() {
           <SheetTitle className="font-heading text-gold">hieu.asia</SheetTitle>
         </SheetHeader>
         <nav className="mt-6 flex flex-col gap-1" aria-label="Điều hướng di động">
+          <Link
+            href="/"
+            onClick={() => setOpen(false)}
+            className="rounded-md px-3 py-2.5 text-sm text-cream/85 transition-colors hover:bg-gold/10 hover:text-gold"
+          >
+            Trang chủ
+          </Link>
           {PRIMARY_LINKS.map((l) => (
             <Link
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
               className="rounded-md px-3 py-2.5 text-sm text-cream/85 transition-colors hover:bg-gold/10 hover:text-gold"
+            >
+              {l.label}
+            </Link>
+          ))}
+          <div className="my-2 h-px bg-cream/5" />
+          <p className="px-3 pb-1 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/60">
+            Công cụ
+          </p>
+          {TOOLS_LINKS.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              onClick={() => setOpen(false)}
+              className="rounded-md px-3 py-2 text-sm text-cream/75 transition-colors hover:bg-gold/10 hover:text-gold"
             >
               {l.label}
             </Link>

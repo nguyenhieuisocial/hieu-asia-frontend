@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { ZodiacCard } from '@/components/daily/ZodiacCard';
 import { SubscribePush } from '@/components/daily/SubscribePush';
+import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 600;
@@ -72,25 +72,30 @@ export default async function Page() {
   const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 
   return (
-    <main id="main-content" className="min-h-screen bg-ink text-cream">
-      <section className="border-b border-cream/5 bg-ink/60">
-        <div className="mx-auto max-w-6xl px-6 py-10">
-          <Link href="/" className="text-xs text-cream/60 hover:text-gold">
-            ← Về trang chủ
-          </Link>
-          <h1 className="mt-4 font-heading text-3xl font-bold leading-tight text-cream sm:text-4xl">
-            Tử vi 12 con giáp hôm nay
-          </h1>
-          <p className="mt-2 text-sm text-cream/60 sm:text-base">
-            Ngày {today} — tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe.
+    <ToolPageShell
+      eyebrow={`Tử vi · ${today}`}
+      icon={<span aria-hidden="true">🐲</span>}
+      title={
+        <>
+          Tử vi <GoldAccent>12 con giáp</GoldAccent> hôm nay
+        </>
+      }
+      description="Tổng quan, sự nghiệp, tình duyên, tài lộc và sức khỏe cho từng tuổi. Đăng ký để nhận thông báo mỗi sáng 6h."
+      breadcrumb={[
+        { label: 'Trang chủ', href: '/' },
+        { label: 'Tử vi hôm nay' },
+      ]}
+      heroAction={<SubscribePush vapidPublicKey={vapidKey} />}
+    >
+      <section className="mt-8">
+        <div className="mb-5 flex items-center justify-between">
+          <h2 className="font-heading text-lg font-semibold text-cream">
+            Chọn tuổi của bạn
+          </h2>
+          <p className="hidden font-mono text-[10px] uppercase tracking-[0.28em] text-cream/40 sm:block">
+            12 con giáp · điểm 1–10
           </p>
-          <div className="mt-6">
-            <SubscribePush vapidPublicKey={vapidKey} />
-          </div>
         </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-6 py-10">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {ZODIACS.map((z) => {
             const h = byKey.get(z.key);
@@ -107,6 +112,6 @@ export default async function Page() {
           })}
         </div>
       </section>
-    </main>
+    </ToolPageShell>
   );
 }

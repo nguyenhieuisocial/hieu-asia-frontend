@@ -1,11 +1,23 @@
 'use client';
 
 import * as React from 'react';
-import Link from 'next/link';
+import { Check, X } from 'lucide-react';
 import {
-  Button, Card, CardContent, CardHeader, CardTitle, Input, Label,
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Skeleton,
 } from '@hieu-asia/ui';
+import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -41,9 +53,13 @@ export default function ThuocLoBanPage() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); setResult(null);
+    setError(null);
+    setResult(null);
     const v = Number(valueCm);
-    if (!Number.isFinite(v) || v <= 0) { setError('Vui lòng nhập kích thước hợp lệ (cm).'); return; }
+    if (!Number.isFinite(v) || v <= 0) {
+      setError('Vui lòng nhập kích thước hợp lệ (cm).');
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch(`${API_BASE}/tools/thuoc-lo-ban`, {
@@ -62,122 +78,197 @@ export default function ThuocLoBanPage() {
   };
 
   const selectedLabel = TYPE_OPTIONS.find((t) => t.value === type)?.label ?? '';
+  const isGood = result?.fortune === 'Tốt';
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-8 space-y-8">
-      <section className="text-center space-y-3">
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Thước Lỗ Ban</h1>
-        <p className="text-base sm:text-lg text-foreground/80 max-w-2xl mx-auto">
-          Tra cứu kích thước phong thủy theo Thước Lỗ Ban — cung Tốt/Xấu, ô con,
-          ý nghĩa và gợi ý kích thước tốt gần nhất.
-        </p>
-      </section>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Nhập kích thước</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form className="space-y-4" onSubmit={onSubmit}>
-            <div className="space-y-1.5">
-              <Label htmlFor="value_cm">Kích thước (cm)</Label>
-              <Input
-                id="value_cm"
-                type="number"
-                min={0}
-                step="0.1"
-                value={valueCm}
-                onChange={(e) => setValueCm(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label>Loại thước</Label>
-              <Select value={type} onValueChange={(v) => setType(v as LoBanType)}>
-                <SelectTrigger>
-                  <SelectValue>{selectedLabel}</SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  {TYPE_OPTIONS.map((t) => (
-                    <SelectItem key={t.value} value={t.value}>
-                      <div className="flex flex-col">
-                        <span className="font-medium">{t.label}</span>
-                        <span className="text-xs text-foreground/60">{t.hint}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            {error && <p className="text-sm text-red-500">{error}</p>}
-            <Button type="submit" disabled={loading} className="w-full">
-              {loading ? 'Đang tra...' : 'Tra Thước Lỗ Ban'}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-
-      {result && (
-        <section className="space-y-4">
-          <Card className={result.fortune === 'Tốt'
-            ? 'border-emerald-500/30 bg-gradient-to-br from-emerald-500/5 to-transparent'
-            : 'border-rose-500/30 bg-gradient-to-br from-rose-500/5 to-transparent'}>
-            <CardContent className="p-6 text-center space-y-2">
-              <div className="text-xs uppercase tracking-wider text-foreground/60">
-                {result.cm} cm · {result.type_label}
-              </div>
-              <div className="font-heading text-3xl sm:text-4xl text-gold">
-                {result.block} · {result.sub}
-              </div>
-              <span className={`inline-block rounded-full px-3 py-1 text-sm font-medium ${
-                result.fortune === 'Tốt'
-                  ? 'bg-emerald-500/15 text-emerald-600'
-                  : 'bg-rose-500/15 text-rose-600'
-              }`}>
-                {result.fortune === 'Tốt' ? '✓ Tốt' : '✗ Xấu'}
-              </span>
-              <p className="text-sm text-foreground/80 max-w-xl mx-auto pt-1">{result.meaning}</p>
-              <p className="text-xs text-foreground/60">
-                Vị trí trong chu kỳ: {result.position_in_cycle_cm.toFixed(1)} / {result.cycle_length_cm} cm
-              </p>
+    <ToolPageShell
+      eyebrow="Phong thủy · Lỗ Ban"
+      icon={<span aria-hidden="true">📏</span>}
+      title={
+        <>
+          Thước <GoldAccent>Lỗ Ban</GoldAccent>
+        </>
+      }
+      description="Tra cứu kích thước phong thủy theo Thước Lỗ Ban — cung Tốt/Xấu, ô con, ý nghĩa và gợi ý kích thước tốt gần nhất."
+      breadcrumb={[
+        { label: 'Trang chủ', href: '/' },
+        { label: 'Thước Lỗ Ban' },
+      ]}
+    >
+      <section className="mt-6 grid gap-6 lg:grid-cols-5">
+        <div className="lg:col-span-2">
+          <Card className="border-gold/20 bg-ink/60 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="font-heading text-lg">Nhập kích thước</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form className="space-y-5" onSubmit={onSubmit}>
+                <div className="space-y-1.5">
+                  <Label htmlFor="value_cm" className="text-cream/85">
+                    Kích thước (cm)
+                  </Label>
+                  <Input
+                    id="value_cm"
+                    type="number"
+                    min={0}
+                    step="0.1"
+                    value={valueCm}
+                    onChange={(e) => setValueCm(e.target.value)}
+                    required
+                    className="bg-ink/60 font-mono text-base"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-cream/85">Loại thước</Label>
+                  <Select value={type} onValueChange={(v) => setType(v as LoBanType)}>
+                    <SelectTrigger className="bg-ink/60">
+                      <SelectValue>{selectedLabel}</SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TYPE_OPTIONS.map((t) => (
+                        <SelectItem key={t.value} value={t.value}>
+                          <div className="flex flex-col">
+                            <span className="font-medium">{t.label}</span>
+                            <span className="text-xs text-foreground/60">{t.hint}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                {error && (
+                  <p
+                    role="alert"
+                    className="rounded-md border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-300"
+                  >
+                    {error}
+                  </p>
+                )}
+                <Button type="submit" disabled={loading} className="w-full">
+                  {loading ? 'Đang tra...' : 'Tra Thước Lỗ Ban →'}
+                </Button>
+              </form>
             </CardContent>
           </Card>
+        </div>
 
-          {(result.next_good || result.prev_good) && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Gợi ý kích thước tốt gần nhất</CardTitle>
-              </CardHeader>
-              <CardContent className="grid gap-3 sm:grid-cols-2">
-                {result.prev_good && (
-                  <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-3">
-                    <div className="text-xs uppercase text-foreground/60">Nhỏ hơn</div>
-                    <div className="mt-1 font-medium">{result.prev_good.cm} cm</div>
-                    <div className="text-xs text-foreground/70">
-                      {result.prev_good.block} · {result.prev_good.sub}
-                    </div>
-                  </div>
-                )}
-                {result.next_good && (
-                  <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-3">
-                    <div className="text-xs uppercase text-foreground/60">Lớn hơn</div>
-                    <div className="mt-1 font-medium">{result.next_good.cm} cm</div>
-                    <div className="text-xs text-foreground/70">
-                      {result.next_good.block} · {result.next_good.sub}
-                    </div>
-                  </div>
-                )}
+        <div className="lg:col-span-3">
+          {loading && <LoBanLoadingSkeleton />}
+
+          {!loading && !result && (
+            <Card className="border-dashed border-cream/15 bg-ink/30">
+              <CardContent className="flex flex-col items-center justify-center px-6 py-12 text-center">
+                <div aria-hidden className="text-5xl">📏</div>
+                <h2 className="mt-4 font-heading text-lg text-cream">Chưa có kết quả</h2>
+                <p className="mt-2 max-w-md text-sm text-cream/60">
+                  Nhập kích thước (cm) và chọn loại thước. Hệ thống sẽ tra cung Tốt / Xấu, ý nghĩa
+                  ô con và gợi ý kích thước tốt gần nhất nếu kích thước hiện tại rơi vào cung xấu.
+                </p>
               </CardContent>
             </Card>
           )}
-        </section>
-      )}
 
-      <div className="text-center">
-        <Link href="/" className="text-sm text-gold underline-offset-4 hover:underline">
-          ← Quay về trang chủ
-        </Link>
+          {!loading && result && (
+            <div className="space-y-4">
+              <Card
+                className={`relative overflow-hidden border ${
+                  isGood
+                    ? 'border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 to-transparent'
+                    : 'border-rose-500/30 bg-gradient-to-br from-rose-500/10 to-transparent'
+                }`}
+              >
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gold/10 blur-3xl"
+                />
+                <CardContent className="relative p-6 text-center sm:p-8">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-cream/55">
+                    {result.cm} cm · {result.type_label}
+                  </div>
+                  <div className="my-3 bg-gold-gradient bg-clip-text font-heading text-3xl font-bold text-transparent sm:text-4xl">
+                    {result.block} · {result.sub}
+                  </div>
+                  <span
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm font-medium ${
+                      isGood
+                        ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-300'
+                        : 'border-rose-500/40 bg-rose-500/15 text-rose-300'
+                    }`}
+                  >
+                    {isGood ? (
+                      <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                    ) : (
+                      <X className="h-3.5 w-3.5" aria-hidden="true" />
+                    )}
+                    {result.fortune}
+                  </span>
+                  <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-cream/85">
+                    {result.meaning}
+                  </p>
+                  <p className="mt-3 font-mono text-[10px] tracking-wide text-cream/45">
+                    Vị trí trong chu kỳ: {result.position_in_cycle_cm.toFixed(1)} /{' '}
+                    {result.cycle_length_cm} cm
+                  </p>
+                </CardContent>
+              </Card>
+
+              {(result.next_good || result.prev_good) && (
+                <Card className="border-cream/10 bg-ink/50">
+                  <CardHeader>
+                    <CardTitle className="text-base text-gold">
+                      Gợi ý kích thước tốt gần nhất
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="grid gap-3 sm:grid-cols-2">
+                    {result.prev_good && (
+                      <SuggestionCell direction="Nhỏ hơn" suggestion={result.prev_good} />
+                    )}
+                    {result.next_good && (
+                      <SuggestionCell direction="Lớn hơn" suggestion={result.next_good} />
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+    </ToolPageShell>
+  );
+}
+
+function SuggestionCell({
+  direction,
+  suggestion,
+}: {
+  direction: string;
+  suggestion: { cm: number; block: string; sub: string };
+}) {
+  return (
+    <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4 transition-colors hover:bg-emerald-500/10">
+      <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-emerald-300/80">
+        {direction}
       </div>
-    </main>
+      <div className="mt-1.5 font-heading text-xl font-semibold text-cream">{suggestion.cm} cm</div>
+      <div className="mt-1 text-xs text-cream/70">
+        {suggestion.block} · {suggestion.sub}
+      </div>
+    </div>
+  );
+}
+
+function LoBanLoadingSkeleton() {
+  return (
+    <div className="space-y-4">
+      <Card className="border-cream/10 bg-ink/50">
+        <CardContent className="p-6">
+          <Skeleton className="mx-auto h-3 w-32" />
+          <Skeleton className="mx-auto mt-3 h-10 w-48" />
+          <Skeleton className="mx-auto mt-3 h-5 w-20 rounded-full" />
+          <Skeleton className="mx-auto mt-4 h-4 w-3/4" />
+        </CardContent>
+      </Card>
+      <Skeleton className="h-32 rounded-xl" />
+    </div>
   );
 }

@@ -8,9 +8,16 @@ import { Button, Input } from '@hieu-asia/ui';
 const PRODUCT_LINKS = [
   { href: '/reading', label: 'Phân tích lá số' },
   { href: '/onboarding?cta=mentor', label: 'AI Mentor' },
+  { href: '/affiliate', label: 'Affiliate' },
+];
+
+const TOOLS_LINKS = [
   { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay' },
   { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
-  { href: '/affiliate', label: 'Affiliate' },
+  { href: '/hop-tuoi', label: 'Hợp tuổi' },
+  { href: '/than-so-hoc', label: 'Thần Số Học' },
+  { href: '/can-xuong', label: 'Cân Xương Đoán Số' },
+  { href: '/thuoc-lo-ban', label: 'Thước Lỗ Ban' },
 ];
 
 const RESOURCE_LINKS = [
@@ -33,13 +40,15 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
         <div className="grid gap-10 md:grid-cols-12">
           {/* Sản phẩm */}
-          <FooterCol title="Sản phẩm" links={PRODUCT_LINKS} className="md:col-span-3" />
+          <FooterCol title="Sản phẩm" links={PRODUCT_LINKS} className="md:col-span-2" />
+          {/* Công cụ miễn phí */}
+          <FooterCol title="Công cụ" links={TOOLS_LINKS} className="md:col-span-3" />
           {/* Tài nguyên */}
           <FooterCol title="Tài nguyên" links={RESOURCE_LINKS} className="md:col-span-2" />
           {/* Pháp lý */}
           <FooterCol title="Pháp lý" links={LEGAL_LINKS} className="md:col-span-2" />
           {/* Theo dõi + signup */}
-          <div className="md:col-span-5">
+          <div className="md:col-span-3">
             <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-cream/90">
               Theo dõi
             </h3>

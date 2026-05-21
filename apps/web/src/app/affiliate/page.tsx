@@ -8,6 +8,8 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Slider } from '@hieu-asia/ui';
+import { SiteNav } from '@/components/home/SiteNav';
+import { SiteFooter } from '@/components/home/SiteFooter';
 
 const COMMISSION_FIRST = 0.30;
 const COMMISSION_RECURRING = 0.10;
@@ -24,9 +26,14 @@ export default function AffiliateLandingPage() {
   const yearTotal = monthlyFirst * 12 + recurring * 6;
 
   return (
-    <main className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-ink text-cream">
+      <SiteNav />
+      <main id="main-content" className="pt-16">
       {/* Hero */}
-      <section className="border-b border-cream/10 px-6 py-20 sm:py-28">
+      <section className="relative overflow-hidden border-b border-cream/10 px-6 py-20 sm:py-28">
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-full bg-ink-radial opacity-80" />
+        <div aria-hidden className="pointer-events-none absolute -top-20 right-[-10%] h-[360px] w-[360px] rounded-full bg-gold/10 blur-3xl" />
+        <div className="relative">
         <div className="mx-auto max-w-4xl text-center">
           <div className="mb-4 inline-flex rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-xs text-gold">
             Chương trình affiliate — chưa từng có ở thị trường VN
@@ -50,6 +57,7 @@ export default function AffiliateLandingPage() {
               </Button>
             </Link>
           </div>
+        </div>
         </div>
       </section>
 
@@ -175,6 +183,8 @@ export default function AffiliateLandingPage() {
           </div>
         </div>
       </section>
-    </main>
+      </main>
+      <SiteFooter />
+    </div>
   );
 }

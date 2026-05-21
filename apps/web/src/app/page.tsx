@@ -4,6 +4,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { HeroV3 } from '@/components/home/HeroV3';
 import { HowToStart } from '@/components/home/HowToStart';
 import { MethodChooser } from '@/components/home/MethodChooser';
+import { FreeTools } from '@/components/home/FreeTools';
 import { WhyChoose } from '@/components/home/WhyChoose';
 import { StoryTestimonials } from '@/components/home/StoryTestimonials';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
@@ -225,6 +226,7 @@ export default function LandingPage() {
         <HeroV3 />
         <HowToStart />
         <MethodChooser />
+        <FreeTools />
         <WhyChoose />
         <StoryTestimonials />
         <FaqAccordion items={HOME_FAQ} id="faq" />
