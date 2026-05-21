@@ -3,27 +3,33 @@ import {
   ADMIN_SESSION_COOKIE,
   constantTimeEqual,
   encodeSession,
-  fetchAdminUsersFull,
-  sha256Hex,
   type AdminRole,
 } from '@/lib/auth';
 
 /**
  * POST /api/admin/login  { email, password }
  *
- * Validates against the KV-backed admin user list (fetched via Worker
- * /admin/users?with_hash=1). Constant-time hash comparison.
+ * Delegates password verification to the Worker `/admin/login` endpoint, which
+ * does proper argon2id verification (with sha256-legacy fallback). The old
+ * implementation pulled `/admin/users?with_hash=1` and did a raw sha256
+ * comparison locally — that never matched the stored argon2id hashes, so
+ * NO password could log in via the UI even when correct.
  *
- * Break-glass: if `ADMIN_PASSWORD` env is set AND the KV fetch fails, allow
- *   `admin@hieu.asia` to log in with that password (role=owner). This keeps
- *   the site recoverable if the Worker is down or KV is corrupted.
+ * Break-glass: if `ADMIN_PASSWORD` env is set AND the Worker call fails, allow
+ *   `admin@hieu.asia` to log in with that password (role=owner). Keeps the
+ *   site recoverable when the Worker is down or KV is corrupted.
  *
- * Runtime: Edge (0ms cold-start vs Node serverless 5–15s). All deps in auth.ts
- * are Edge-compatible: Web Crypto (sha256Hex, hmacSha256Hex), fetch, no Node API.
- * This eliminates the "Operation timed out after 35008 ms" symptom seen when the
- * Vercel Node serverless function was cold-starting on every login attempt.
+ * Runtime: Edge (0ms cold-start). All deps Edge-compat: fetch, Web Crypto HMAC.
  */
 export const runtime = 'edge';
+
+const GATEWAY = process.env.HIEU_API_GATEWAY_URL ?? 'https://api.hieu.asia';
+
+interface WorkerLoginResponse {
+  ok: boolean;
+  user?: { email: string; role: AdminRole };
+  error?: string;
+}
 
 export async function POST(request: NextRequest) {
   let email = '';
@@ -40,32 +46,46 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Vui lòng nhập đủ email và mật khẩu.' }, { status: 400 });
   }
 
-  const passwordHash = await sha256Hex(password);
+  const token = process.env.HIEU_API_ADMIN_TOKEN;
   let matchedRole: AdminRole | null = null;
-  let kvError: string | null = null;
+  let workerError: string | null = null;
 
-  try {
-    const users = await fetchAdminUsersFull();
-    const user = users.find((u) => u.email.toLowerCase() === email);
-    if (user && constantTimeEqual(passwordHash, user.password_hash)) {
-      matchedRole = user.role;
-    } else if (user) {
-      return NextResponse.json({ error: 'Sai mật khẩu.' }, { status: 401 });
-    } else {
-      return NextResponse.json({ error: 'Email không có quyền truy cập admin.' }, { status: 403 });
+  // Primary path: ask the Worker to verify (handles argon2id + legacy sha256).
+  if (token) {
+    try {
+      const r = await fetch(`${GATEWAY}/admin/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Token': token,
+        },
+        body: JSON.stringify({ email, password }),
+        cache: 'no-store',
+      });
+      const data = (await r.json().catch(() => ({}))) as WorkerLoginResponse;
+      if (r.status === 401) {
+        return NextResponse.json({ error: 'Sai email hoặc mật khẩu.' }, { status: 401 });
+      }
+      if (!r.ok || !data.ok || !data.user) {
+        workerError = data.error ?? `gateway HTTP ${r.status}`;
+      } else if (data.user.email.toLowerCase() === email) {
+        matchedRole = data.user.role;
+      }
+    } catch (err) {
+      workerError = (err as Error).message;
     }
-  } catch (err) {
-    kvError = (err as Error).message;
+  } else {
+    workerError = 'HIEU_API_ADMIN_TOKEN not configured';
   }
 
-  // Break-glass: only kicks in if KV fetch failed AND env password is set
-  if (!matchedRole && kvError) {
+  // Break-glass: only kicks in if Worker call failed AND env password is set.
+  if (!matchedRole && workerError) {
     const breakGlassPw = process.env.ADMIN_PASSWORD;
     if (breakGlassPw && email === 'admin@hieu.asia' && constantTimeEqual(password, breakGlassPw)) {
       matchedRole = 'owner';
     } else {
       return NextResponse.json(
-        { error: `Không thể xác thực: ${kvError}` },
+        { error: `Không thể xác thực: ${workerError}` },
         { status: 503 },
       );
     }
@@ -76,7 +96,6 @@ export async function POST(request: NextRequest) {
   }
 
   const res = NextResponse.json({ ok: true, email, role: matchedRole });
-  // encodeSession is async now (uses Web Crypto HMAC). Await before setting cookie.
   const signed = await encodeSession(email, matchedRole);
   res.cookies.set(ADMIN_SESSION_COOKIE, signed, {
     httpOnly: true,
