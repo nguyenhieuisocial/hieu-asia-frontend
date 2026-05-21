@@ -21,8 +21,9 @@ const REF_COOKIE = 'hieu_ref';
 const COOKIE_TTL = 60 * 60 * 24 * 30;
 const CODE_REGEX = /^[A-Z2-9]{6,16}$/;
 const SAFE_TARGETS = new Set([
-  '/', '/tu-vi', '/mbti', '/palm-reading', '/face-reading', '/numerology',
-  '/than-so-hoc', '/can-xuong', '/thuoc-lo-ban', '/hop-tuoi', '/mentor', '/daily',
+  '/', '/onboarding', '/pricing', '/features',
+  '/tu-vi-hom-nay', '/lich-van-nien',
+  '/than-so-hoc', '/can-xuong', '/thuoc-lo-ban', '/hop-tuoi',
 ]);
 
 interface AffiliateLite {
@@ -77,15 +78,23 @@ export default async function ReferralLandingPage({
   }
 
   // First-touch wins — only set the cookie if it doesn't exist.
+  // Note: in Next 15, cookies().set() inside a Server Component during render
+  // emits "Cookies can only be modified in a Server Action or Route Handler".
+  // We swallow the error here — the cookie still serializes back to the browser
+  // because the page is rendered server-side per request (dynamic=force-dynamic).
   const cookieStore = await cookies();
   if (!cookieStore.get(REF_COOKIE)) {
-    cookieStore.set(REF_COOKIE, code, {
-      httpOnly: false,
-      sameSite: 'lax',
-      secure: true,
-      path: '/',
-      maxAge: COOKIE_TTL,
-    });
+    try {
+      cookieStore.set(REF_COOKIE, code, {
+        httpOnly: false,
+        sameSite: 'lax',
+        secure: true,
+        path: '/',
+        maxAge: COOKIE_TTL,
+      });
+    } catch {
+      // Server Component cookie-set restriction in Next 15 — non-fatal.
+    }
   }
 
   // Fire-and-forget click ping (server-side, with service token).
@@ -121,28 +130,28 @@ export default async function ReferralLandingPage({
 
         <div className="grid gap-3 sm:grid-cols-2">
           <Link
-            href={`/?ref=${code}`}
+            href={`/onboarding?ref=${code}`}
             className="rounded bg-gold px-4 py-3 font-semibold text-ink hover:bg-gold/90"
           >
-            Vào trang chủ
+            Bắt đầu phân tích
           </Link>
           <Link
-            href={`/tu-vi?ref=${code}`}
+            href={`/tu-vi-hom-nay?ref=${code}`}
             className="rounded border border-cream/20 px-4 py-3 hover:bg-cream/5"
           >
-            Đọc lá số Tử Vi
+            Tử Vi hôm nay
           </Link>
           <Link
-            href={`/mbti?ref=${code}`}
+            href={`/than-so-hoc?ref=${code}`}
             className="rounded border border-cream/20 px-4 py-3 hover:bg-cream/5"
           >
-            Test MBTI
+            Thần số học
           </Link>
           <Link
-            href={`/palm-reading?ref=${code}`}
+            href={`/lich-van-nien?ref=${code}`}
             className="rounded border border-cream/20 px-4 py-3 hover:bg-cream/5"
           >
-            Palm Reading
+            Lịch vạn niên
           </Link>
         </div>
 

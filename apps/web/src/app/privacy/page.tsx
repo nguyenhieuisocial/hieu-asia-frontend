@@ -224,10 +224,10 @@ export default function PrivacyPage() {
                 </a>
               </li>
               <li>
-                Form liên hệ:{' '}
-                <Link href="/contact" className="text-gold underline">
-                  hieu.asia/contact
-                </Link>
+                Hỗ trợ:{' '}
+                <a className="text-gold underline" href="mailto:support@hieu.asia">
+                  support@hieu.asia
+                </a>
               </li>
             </ul>
             <p className="text-xs text-cream/55">
