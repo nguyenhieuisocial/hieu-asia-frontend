@@ -19,9 +19,25 @@ import { getOrCreateAnonUserId, listReadings } from '@hieu-asia/supabase';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { DashboardSkeleton } from '@/components/skeletons/DashboardSkeleton';
+import { useAuth } from '@/hooks/use-auth';
 
-// V1 mock: assume logged-in user. Real auth wired in Phase 2.
-const MOCK_USER = { name: 'Anh Minh', email: 'minh@example.com' };
+/**
+ * Derive a display name from the authenticated Supabase user, falling back to
+ * "Khách" for anon sessions. Email-derived name is best-effort — full profile
+ * (display_name from `users` table) is fetched separately if needed.
+ */
+function displayNameFromUser(user: { email?: string | null; user_metadata?: Record<string, unknown> } | null): string {
+  if (!user) return 'Khách';
+  const meta = user.user_metadata ?? {};
+  const fromMeta = typeof meta.full_name === 'string' ? meta.full_name :
+    typeof meta.name === 'string' ? meta.name : '';
+  if (fromMeta) return fromMeta;
+  if (user.email) {
+    const local = user.email.split('@')[0];
+    if (local) return local;
+  }
+  return 'Khách';
+}
 
 function formatVnDate(iso: string): string {
   const d = new Date(iso);
@@ -95,6 +111,8 @@ export default function DashboardPage() {
 }
 
 function DashboardContent() {
+  const auth = useAuth();
+  const userName = displayNameFromUser(auth.user);
   const [active, setActive] = React.useState<SectionId>('reports');
   const [reports, setReports] = React.useState<DashboardReport[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -145,14 +163,14 @@ function DashboardContent() {
               aria-hidden
               className="flex h-12 w-12 items-center justify-center rounded-full border border-gold/30 bg-gradient-to-br from-gold/20 via-ink to-purple/20 font-heading text-lg text-gold"
             >
-              {MOCK_USER.name.charAt(0)}
+              {userName.charAt(0).toUpperCase()}
             </div>
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/80">
                 Chào,
               </p>
               <h1 className="mt-1 font-heading text-2xl text-cream sm:text-3xl">
-                {MOCK_USER.name}
+                {userName}
               </h1>
             </div>
           </header>
