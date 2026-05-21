@@ -167,7 +167,7 @@ export default function JournalHubPage() {
                 aria-selected={filter === t.id}
                 onClick={() => setFilter(t.id)}
                 className={[
-                  'rounded-md px-4 py-1.5 text-xs font-medium transition',
+                  'rounded-md px-4 py-2 text-sm font-medium transition sm:py-1.5 sm:text-xs',
                   filter === t.id
                     ? 'bg-gold/15 text-gold'
                     : 'text-cream/65 hover:text-cream',

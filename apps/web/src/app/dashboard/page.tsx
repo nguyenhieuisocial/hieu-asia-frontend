@@ -179,7 +179,7 @@ function DashboardContent() {
               aria-selected={active === s.id}
               onClick={() => setActive(s.id)}
               className={cn(
-                'rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                'inline-flex min-h-[44px] items-center rounded-md px-3 py-2 text-sm font-medium transition-colors sm:min-h-0',
                 active === s.id
                   ? 'bg-gold/15 text-gold'
                   : 'text-cream/70 hover:bg-gold/5 hover:text-cream',

@@ -16,7 +16,7 @@ export function ChatQuickPrompts({ prompts, onPick }: ChatQuickPromptsProps) {
           key={i}
           type="button"
           onClick={() => onPick(p)}
-          className="shrink-0 rounded-full border border-gold/30 bg-ink/60 px-3 py-1.5 text-xs text-cream/90 hover:border-gold hover:bg-gold/10"
+          className="shrink-0 rounded-full border border-gold/30 bg-ink/60 px-3 py-2 text-sm text-cream/90 hover:border-gold hover:bg-gold/10 sm:py-1.5 sm:text-xs"
         >
           {p}
         </button>

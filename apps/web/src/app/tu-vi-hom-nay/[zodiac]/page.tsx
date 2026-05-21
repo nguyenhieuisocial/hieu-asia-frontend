@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { ExpertContent, ExpertTerm } from '@/components/reading/ModeContent';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 600;
@@ -78,13 +79,29 @@ export async function generateMetadata({ params }: { params: Promise<{ zodiac: s
   };
 }
 
-function ScoreRow({ label, score, summary }: { label: string; score: number; summary: string }) {
+function ScoreRow({
+  label,
+  expertCung,
+  score,
+  summary,
+}: {
+  label: string;
+  /** Tên cung tương ứng trong Tử Vi (chỉ hiển thị ở chế độ Chuyên gia). */
+  expertCung?: string;
+  score: number;
+  summary: string;
+}) {
   const pct = Math.max(0, Math.min(100, score * 10));
   const color = score >= 8 ? 'bg-emerald-400' : score >= 6 ? 'bg-gold' : score >= 4 ? 'bg-amber-400' : 'bg-rose-400';
   return (
     <div>
       <div className="flex items-center justify-between text-sm">
-        <span className="font-medium text-cream">{label}</span>
+        <span className="font-medium text-cream">
+          {label}
+          {expertCung && (
+            <ExpertTerm className="ml-1 text-cream/55">({expertCung})</ExpertTerm>
+          )}
+        </span>
         <span className="text-cream/70">{score}/10</span>
       </div>
       <div className="mt-1 h-2 overflow-hidden rounded-full bg-cream/10">
@@ -160,17 +177,31 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
           </section>
 
           <section className="mx-auto max-w-3xl px-6 py-4">
-            <h2 className="font-heading text-xl font-semibold text-cream">Bốn lĩnh vực</h2>
+            <h2 className="font-heading text-xl font-semibold text-cream">
+              Bốn lĩnh vực
+              <ExpertTerm className="ml-2 font-mono text-[11px] font-normal uppercase tracking-[0.24em] text-gold/80">
+                · tứ cung trọng yếu
+              </ExpertTerm>
+            </h2>
+            <ExpertContent className="mt-2 text-xs leading-relaxed text-cream/65">
+              Bốn lĩnh vực bên dưới đối chiếu với bốn cung trong lá số: Quan Lộc · Phu Thê ·
+              Tài Bạch · Tật Ách. Điểm số phản ánh tương tác của tiểu hạn ngày với chính
+              tinh thủ cung tương ứng.
+            </ExpertContent>
             <div className="mt-4 space-y-5 rounded-2xl border border-cream/10 bg-ink/40 p-5">
-              <ScoreRow label="Sự nghiệp" score={h.career.score} summary={h.career.summary} />
-              <ScoreRow label="Tình duyên" score={h.love.score} summary={h.love.summary} />
-              <ScoreRow label="Tài lộc" score={h.money.score} summary={h.money.summary} />
-              <ScoreRow label="Sức khỏe" score={h.health.score} summary={h.health.summary} />
+              <ScoreRow label="Sự nghiệp" expertCung="cung Quan Lộc" score={h.career.score} summary={h.career.summary} />
+              <ScoreRow label="Tình duyên" expertCung="cung Phu Thê" score={h.love.score} summary={h.love.summary} />
+              <ScoreRow label="Tài lộc" expertCung="cung Tài Bạch" score={h.money.score} summary={h.money.summary} />
+              <ScoreRow label="Sức khỏe" expertCung="cung Tật Ách" score={h.health.score} summary={h.health.summary} />
             </div>
           </section>
 
           <section className="mx-auto max-w-3xl px-6 py-4">
             <h2 className="font-heading text-xl font-semibold text-cream">Vận may hôm nay</h2>
+            <ExpertContent className="mt-2 text-xs leading-relaxed text-cream/65">
+              Hướng tốt và giờ tốt suy ra từ tiểu hạn ngày kết hợp với địa chi tuổi —
+              dùng làm tham chiếu, không phải mệnh lệnh.
+            </ExpertContent>
             <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
               <Info label="Số may mắn" value={h.lucky_numbers.join(' · ')} />
               <Info label="Màu may mắn" value={h.lucky_colors.join(' · ')} />

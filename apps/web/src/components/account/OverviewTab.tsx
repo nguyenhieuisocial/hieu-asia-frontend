@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from '@hieu-asia/ui';
 import { readJournalEntries, readWeeklyReviews } from '@/lib/journal-storage';
+import { ExpertModeToggle } from './ExpertModeToggle';
 
 interface QuickStat {
   label: string;
@@ -213,6 +214,18 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
           <Button variant="outline" asChild={false}>
             <Link href="/journal/new">Weekly review</Link>
           </Button>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Cài đặt hiển thị</CardTitle>
+          <CardDescription>
+            Điều chỉnh cách luận giải hiển thị cho bạn trên các trang đọc.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ExpertModeToggle />
         </CardContent>
       </Card>
 

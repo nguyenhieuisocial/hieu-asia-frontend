@@ -40,6 +40,7 @@ import {
   ScrollText,
   Flag,
   Ticket,
+  Shield,
 } from 'lucide-react';
 
 interface NavItem {
@@ -93,6 +94,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/vendors', label: 'Vendors', Icon: Cpu },
       { href: '/cost', label: 'Chi phí AI', Icon: DollarSign },
       { href: '/llm-spend', label: 'Chi phí LLM', Icon: DollarSign },
+      { href: '/ai-quality', label: 'Chất lượng AI', Icon: Shield },
       { href: '/secrets', label: 'API Keys', Icon: Key },
       { href: '/feature-flags', label: 'Feature flags', Icon: Flag },
       { href: '/users', label: 'Người dùng admin', Icon: Users },

@@ -265,7 +265,7 @@ export default function MentorChatPage() {
           <Link
             href={`/reading/${readingId}/report`}
             aria-label="Quay lại báo cáo"
-            className="text-sm text-cream/60 hover:text-gold"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-md text-base text-cream/60 hover:bg-gold/10 hover:text-gold sm:h-8 sm:w-8 sm:text-sm"
           >
             <span aria-hidden="true">←</span>
           </Link>
@@ -291,7 +291,7 @@ export default function MentorChatPage() {
               type="button"
               onClick={onClearHistory}
               disabled={streaming}
-              className="rounded-md border border-gold/20 px-3 py-1.5 text-xs text-cream/80 hover:border-gold hover:text-gold disabled:opacity-50"
+              className="inline-flex min-h-[44px] items-center rounded-md border border-gold/20 px-3 py-1.5 text-xs text-cream/80 hover:border-gold hover:text-gold disabled:opacity-50 sm:min-h-0"
             >
               Xóa lịch sử
             </button>
@@ -301,7 +301,7 @@ export default function MentorChatPage() {
             onClick={() => setDrawerOpen((v) => !v)}
             aria-label={`Mở danh sách ${pinned.length} ghim`}
             aria-expanded={drawerOpen}
-            className="rounded-md border border-gold/20 px-3 py-1.5 text-xs text-cream/80 hover:border-gold hover:text-gold lg:hidden"
+            className="inline-flex min-h-[44px] items-center rounded-md border border-gold/20 px-3 py-1.5 text-xs text-cream/80 hover:border-gold hover:text-gold sm:min-h-0 lg:hidden"
           >
             {pinned.length} ghim
           </button>

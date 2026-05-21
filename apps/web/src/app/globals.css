@@ -115,3 +115,22 @@ html {
 [data-high-contrast='true'] body {
   color: #fff;
 }
+
+/* Mobile form inputs — prevent iOS zoom on focus.
+ * iOS Safari auto-zooms when an input's computed font-size is < 16px.
+ * Our shared Input/Textarea components in @hieu-asia/ui use text-sm (14px)
+ * by default; here we override to 16px ONLY on small viewports while
+ * keeping the desktop look intact. */
+@media (max-width: 640px) {
+  input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='submit']):not([type='button']):not([type='reset']),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+/* Prevent horizontal overflow caused by stray wide elements (defensive). */
+html,
+body {
+  overflow-x: hidden;
+}

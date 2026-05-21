@@ -16,6 +16,10 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import {
+  BeginnerContent,
+  ExpertContent,
+} from '@/components/reading/ModeContent';
 
 const SLUG = 'hieu-ban-than';
 const TOPIC = 'self';
@@ -62,18 +66,35 @@ const TOOLS: { name: string; desc: string; href: string }[] = [
   },
 ];
 
-const QUESTIONS: { q: string; a: string }[] = [
+interface QuestionRow {
+  q: string;
+  /** Beginner-friendly answer — accessible Vietnamese, minimal jargon. */
+  beginner: string;
+  /** Expert answer — Tử Vi terminology preserved, citation-friendly. */
+  expert: string;
+}
+
+const QUESTIONS: QuestionRow[] = [
   {
     q: 'Tại sao tôi cứ vướng cùng một loại vấn đề?',
-    a: 'Lá số chỉ ra "mẫu hình" lặp lại trong cách bạn ra quyết định — thường nằm ở cung Mệnh kết hợp với phụ tinh. Hiểu mẫu hình giúp bạn nhận ra điểm trigger trước khi rơi vào nó lần nữa, thay vì tự trách sau khi đã xảy ra.',
+    beginner:
+      'Lá số chỉ ra mẫu hình lặp lại trong cách bạn ra quyết định. Khi nhận ra mẫu hình, bạn dễ nhìn thấy điểm trigger trước khi rơi vào nó lần nữa, thay vì tự trách sau khi đã xảy ra.',
+    expert:
+      'Mẫu hình lặp lại thường nằm ở cung Mệnh kết hợp với chính tinh thủ Mệnh và bộ phụ tinh sát–hoá. Soi thêm tam phương tứ chính (Quan Lộc · Tài Bạch · Thiên Di) để xác định trục năng lượng tạo ra mẫu hình, từ đó nhận diện trigger sớm.',
   },
   {
     q: 'Điểm mạnh thật sự của tôi là gì, không phải điều tôi tưởng?',
-    a: 'Người ta hay nhầm "thứ mình thích" với "thứ mình giỏi". Lá số tách hai lớp này: cung Mệnh cho khí chất cốt lõi, Quan Lộc cho năng lực thực thi. Bạn sẽ thấy mảnh nào đang được dùng đúng, mảnh nào còn ngủ.',
+    beginner:
+      'Người ta hay nhầm "thứ mình thích" với "thứ mình giỏi". Lá số tách hai lớp này: phần khí chất cốt lõi và phần năng lực thực thi. Bạn sẽ thấy mảnh nào đang được dùng đúng, mảnh nào còn ngủ.',
+    expert:
+      'Cung Mệnh cho khí chất cốt lõi (chính tinh thủ Mệnh + miếu/vượng/hãm), cung Quan Lộc cho năng lực thực thi. Đối chiếu với cung Phúc Đức để loại trừ những điểm mạnh "tâm lý" nhưng không có hậu thuẫn vận hành thực tế.',
   },
   {
     q: 'Tôi nên đầu tư phát triển điều gì trong 1-2 năm tới?',
-    a: 'Hệ thống đọc đại vận hiện tại + cung Phúc Đức để gợi ý ba hướng phát triển có cộng hưởng với pha hiện tại — kèm câu hỏi tự phản tư để bạn tự chọn, không phải lời khuyên áp đặt.',
+    beginner:
+      'Hệ thống đọc giai đoạn vận hiện tại + nền tảng phúc khí để gợi ý ba hướng phát triển có cộng hưởng với pha bạn đang ở — kèm câu hỏi tự phản tư để bạn tự chọn, không phải lời khuyên áp đặt.',
+    expert:
+      'Đọc đại vận hiện hành (10 năm) + tiểu vận năm hiện tại + cung Phúc Đức nền. Khi sao Lộc/Quyền/Khoa/Kỵ rơi vào tam phương tứ chính của Quan/Tài, đó là cửa sổ phát triển — gợi ý xoay quanh cung được kích hoạt.',
   },
 ];
 
@@ -183,6 +204,20 @@ export default function HieuBanThanPage() {
               </Link>
             ))}
           </div>
+
+          <ExpertContent className="mt-6 rounded-xl border border-gold/30 bg-gold/5 p-5 text-sm leading-relaxed text-cream/80">
+            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Bộ khung Tử Vi đang dùng
+            </p>
+            <p className="mt-2">
+              Lộ trình này soi <strong className="text-cream">cung Mệnh</strong> (khí chất),{' '}
+              <strong className="text-cream">cung Thân</strong> (vận hành đời sống),
+              tam phương tứ chính (Quan Lộc · Tài Bạch · Thiên Di) và{' '}
+              <strong className="text-cream">cung Phúc Đức</strong> nền. Đại vận hiện hành
+              cùng tiểu hạn năm hiện tại được dùng để gợi ý cửa sổ phát triển — không phải
+              tiên đoán cố định.
+            </p>
+          </ExpertContent>
         </section>
 
         <section className="relative mx-auto max-w-4xl px-6 pb-12">
@@ -199,7 +234,12 @@ export default function HieuBanThanPage() {
                 className="rounded-xl border border-cream/10 bg-ink/40 p-5"
               >
                 <p className="font-heading text-base font-semibold text-cream">{qa.q}</p>
-                <p className="mt-2 text-sm leading-relaxed text-cream/75">{qa.a}</p>
+                <BeginnerContent className="mt-2 text-sm leading-relaxed text-cream/75">
+                  {qa.beginner}
+                </BeginnerContent>
+                <ExpertContent className="mt-2 text-sm leading-relaxed text-cream/75">
+                  {qa.expert}
+                </ExpertContent>
               </div>
             ))}
           </div>

@@ -22,6 +22,14 @@ export interface SavedProfile {
   birthTime?: string; // HH:MM, optional
   birthPlace?: string; // free text
   birthTimeConfidence?: 'known' | 'approximate' | 'unknown';
+  /**
+   * Chế độ Chuyên gia (roadmap §3.5). When true, reading pages render technical
+   * Tử Vi terminology (cung, sao, đại vận, tiểu hạn). When false/undefined,
+   * accessible Vietnamese is shown. Default false.
+   * Note: also persisted standalone under `hieu:expert-mode:v1` via
+   * `useExpertMode()` so anonymous visitors can toggle without a saved profile.
+   */
+  expertMode?: boolean;
   updatedAt?: string; // ISO
 }
 

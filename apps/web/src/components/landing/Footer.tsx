@@ -108,7 +108,7 @@ function SocialLink({
     <Link
       href={href}
       aria-label={label}
-      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-cream/10 text-cream/65 transition-colors hover:border-gold/40 hover:text-gold"
+      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-cream/10 text-cream/65 transition-colors hover:border-gold/40 hover:text-gold sm:h-9 sm:w-9"
     >
       {children}
     </Link>
