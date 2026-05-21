@@ -6,10 +6,51 @@ import { getWebApp } from '@/lib/telegram-init';
 import { exchangeInitDataForJwt } from '@/lib/telegram-auth';
 
 /**
- * Sync theme với Telegram WebApp.colorScheme + exchange initData → JWT.
+ * Sync Telegram themeParams → CSS variables + next-themes color scheme.
  *
- * Runs once on first mount. Outside Telegram, all calls no-op.
+ * - Maps every themeParam (bg, text, hint, link, button, secondary_bg, accent, ...)
+ *   to `--tg-*` CSS variables on <html>, so the UI can opt-in via CSS.
+ * - Mirrors `WebApp.colorScheme` to next-themes ("dark"/"light") and to
+ *   `data-tg-color-scheme` on <html> for non-next-themes consumers.
+ * - Re-applies on Telegram "themeChanged" event (user toggles theme).
+ * - Outside Telegram, no-ops silently.
+ * - Also kicks off best-effort initData → JWT exchange (mock when backend unset).
  */
+type ThemeParamKey =
+  | 'bg_color'
+  | 'secondary_bg_color'
+  | 'text_color'
+  | 'hint_color'
+  | 'link_color'
+  | 'button_color'
+  | 'button_text_color'
+  | 'header_bg_color'
+  | 'accent_text_color'
+  | 'section_bg_color'
+  | 'section_header_text_color'
+  | 'subtitle_text_color'
+  | 'destructive_text_color'
+  | 'section_separator_color'
+  | 'bottom_bar_bg_color';
+
+const PARAM_TO_VAR: Record<ThemeParamKey, string> = {
+  bg_color: '--tg-bg-color',
+  secondary_bg_color: '--tg-secondary-bg',
+  text_color: '--tg-text-color',
+  hint_color: '--tg-hint-color',
+  link_color: '--tg-link-color',
+  button_color: '--tg-button-color',
+  button_text_color: '--tg-button-text-color',
+  header_bg_color: '--tg-header-bg',
+  accent_text_color: '--tg-accent-text',
+  section_bg_color: '--tg-section-bg',
+  section_header_text_color: '--tg-section-header-text',
+  subtitle_text_color: '--tg-subtitle-text',
+  destructive_text_color: '--tg-destructive-text',
+  section_separator_color: '--tg-section-separator',
+  bottom_bar_bg_color: '--tg-bottom-bar-bg',
+};
+
 export function TelegramThemeBridge() {
   const { setTheme } = useTheme();
 
@@ -20,13 +61,23 @@ export function TelegramThemeBridge() {
       const webApp = await getWebApp();
       if (cancelled || !webApp) return;
 
-      const applyScheme = () => {
+      const applyTheme = () => {
+        const root = document.documentElement;
+        const params = webApp.themeParams as Partial<Record<ThemeParamKey, string>> | undefined;
+        if (params) {
+          for (const [key, cssVar] of Object.entries(PARAM_TO_VAR) as [ThemeParamKey, string][]) {
+            const value = params[key];
+            if (value) root.style.setProperty(cssVar, value);
+          }
+        }
         if (webApp.colorScheme === 'dark' || webApp.colorScheme === 'light') {
+          root.dataset.tgColorScheme = webApp.colorScheme;
           setTheme(webApp.colorScheme);
         }
       };
-      applyScheme();
-      webApp.onEvent('themeChanged', applyScheme);
+
+      applyTheme();
+      webApp.onEvent('themeChanged', applyTheme);
 
       // Best-effort: get a JWT from initData. Mock-mode if backend unset.
       void exchangeInitDataForJwt();

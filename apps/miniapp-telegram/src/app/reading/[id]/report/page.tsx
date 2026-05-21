@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, InsightCard } from '@hieu-asia/ui';
 import { TgMainButton } from '@/components/tg-main-button';
 import { TgBackButton } from '@/components/tg-back-button';
+import { SwipeBackHandler } from '@/components/ui/SwipeBackHandler';
 import type { InsightItem } from '@hieu-asia/types';
 
 /** Mini App report uses MOCK data identical in spirit to web's mock. */
@@ -54,6 +55,7 @@ export default function MiniAppReportPage() {
 
   return (
     <main className="min-h-screen px-4 pb-32 pt-3">
+      <SwipeBackHandler />
       <TgBackButton onBack={() => router.push('/dashboard')} fallbackLabel="Dashboard" />
 
       <div className="mx-auto max-w-md pt-3">

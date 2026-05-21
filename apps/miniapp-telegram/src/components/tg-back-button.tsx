@@ -6,26 +6,48 @@ import { getWebApp } from '@/lib/telegram-init';
 import { haptic } from '@/lib/telegram-haptic';
 
 /**
- * Shows Telegram's native BackButton. Default action = router.back().
+ * Shows Telegram's native BackButton.
  *
- * Outside Telegram, this renders an inline back arrow in the header so dev
- * preview is still usable.
+ * - Default action: router.back().
+ * - `onBack`: custom handler (overrides router.back).
+ * - `confirmBeforeExit`: when true AND no `onBack`, show Telegram confirm
+ *   dialog; if user confirms → WebApp.close(). Used at root pages (welcome,
+ *   dashboard) where back means "exit the mini app".
+ * - Outside Telegram, renders an inline fallback arrow so dev preview works.
  */
 export interface TgBackButtonProps {
   onBack?: () => void;
   fallbackLabel?: string;
+  confirmBeforeExit?: boolean;
+  exitMessage?: string;
 }
 
-export function TgBackButton({ onBack, fallbackLabel = 'Quay lại' }: TgBackButtonProps) {
+export function TgBackButton({
+  onBack,
+  fallbackLabel = 'Quay lại',
+  confirmBeforeExit = false,
+  exitMessage = 'Bạn có chắc muốn thoát?',
+}: TgBackButtonProps) {
   const router = useRouter();
   const [isNative, setIsNative] = React.useState<boolean | null>(null);
 
   React.useEffect(() => {
     let cancelled = false;
+    let webAppRef: Awaited<ReturnType<typeof getWebApp>> | null = null;
+
     const handler = () => {
       void haptic('light');
-      if (onBack) onBack();
-      else router.back();
+      if (onBack) {
+        onBack();
+        return;
+      }
+      if (confirmBeforeExit && webAppRef) {
+        webAppRef.showConfirm(exitMessage, (confirmed: boolean) => {
+          if (confirmed) webAppRef?.close();
+        });
+        return;
+      }
+      router.back();
     };
 
     (async () => {
@@ -35,6 +57,7 @@ export function TgBackButton({ onBack, fallbackLabel = 'Quay lại' }: TgBackBut
         setIsNative(false);
         return;
       }
+      webAppRef = webApp;
       setIsNative(true);
       webApp.BackButton.onClick(handler);
       webApp.BackButton.show();
@@ -49,7 +72,7 @@ export function TgBackButton({ onBack, fallbackLabel = 'Quay lại' }: TgBackBut
         bb.hide();
       });
     };
-  }, [onBack, router]);
+  }, [onBack, router, confirmBeforeExit, exitMessage]);
 
   if (isNative !== false) return null;
 

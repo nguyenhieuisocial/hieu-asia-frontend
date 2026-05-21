@@ -6,6 +6,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Button } from '@hieu-asia/ui';
 import { Send } from 'lucide-react';
 import { TgBackButton } from '@/components/tg-back-button';
+import { SwipeBackHandler } from '@/components/ui/SwipeBackHandler';
 import { apiClient } from '@/lib/api';
 import { haptic } from '@/lib/telegram-haptic';
 
@@ -71,6 +72,7 @@ export default function MiniAppMentorPage() {
 
   return (
     <main className="flex h-[100dvh] flex-col">
+      <SwipeBackHandler />
       <header className="flex items-center justify-between border-b border-gold/15 bg-ink/80 px-4 py-3 backdrop-blur">
         <TgBackButton onBack={() => router.push(`/reading/${sessionId}/report`)} fallbackLabel="Báo cáo" />
         <div className="flex items-center gap-2">

@@ -1,12 +1,13 @@
 'use client';
 
-import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { Sparkles, ScanLine, MessageSquare, Lock } from 'lucide-react';
 import { TgMainButton } from '@/components/tg-main-button';
-import { getTelegramUser, type TelegramUser } from '@/lib/telegram-auth';
+import { TgBackButton } from '@/components/tg-back-button';
+import { useTelegramUser } from '@/hooks/use-telegram-user';
+import { useHaptic } from '@/hooks/use-haptic';
 
 const TRUST = [
   { Icon: Sparkles, text: 'Báo cáo cá nhân hoá 9 góc nhìn' },
@@ -17,16 +18,14 @@ const TRUST = [
 
 export default function MiniAppWelcomePage() {
   const router = useRouter();
-  const [user, setUser] = React.useState<TelegramUser | null>(null);
-
-  React.useEffect(() => {
-    void getTelegramUser().then(setUser);
-  }, []);
+  const user = useTelegramUser();
+  const h = useHaptic();
 
   const greetingName = user?.first_name ?? 'bạn';
 
   return (
     <main className="min-h-screen px-4 pb-32 pt-6">
+      <TgBackButton confirmBeforeExit exitMessage="Thoát Cẩm Nang Cuộc Đời?" />
       <div className="mx-auto max-w-md">
         <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">
           hieu.asia · mini app
@@ -62,6 +61,7 @@ export default function MiniAppWelcomePage() {
 
         <Link
           href="/dashboard"
+          onClick={() => h.light()}
           className="mt-4 block rounded-md border border-gold/20 px-4 py-3 text-center text-sm text-cream/80 hover:border-gold/40"
         >
           Đã có báo cáo trước đây? Mở bảng điều khiển →
