@@ -64,6 +64,16 @@ export function DeleteAccountSection({ userId }: DeleteAccountSectionProps) {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ user_id: userId, confirm: CONFIRM_BACKEND }),
       });
+      // Guard against HTML error pages (Vercel 502, gateway timeout) —
+      // never feed a non-JSON body to JSON.parse.
+      const ct = res.headers.get('content-type') ?? '';
+      if (!/\bjson\b/i.test(ct)) {
+        toast.error('Xóa tài khoản thất bại', {
+          description: `Phản hồi không phải JSON (HTTP ${res.status})`,
+        });
+        setPending(false);
+        return;
+      }
       const data: EraseResponse = await res.json();
       if (!res.ok || !data.ok) {
         toast.error('Xóa tài khoản thất bại', {

@@ -56,6 +56,14 @@ export function DataExportSection({ userId }: DataExportSectionProps) {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ user_id: userId }),
       });
+      // Guard against HTML error pages.
+      const ct = res.headers.get('content-type') ?? '';
+      if (!/\bjson\b/i.test(ct)) {
+        toast.error('Không tạo được bản xuất', {
+          description: `Phản hồi không phải JSON (HTTP ${res.status})`,
+        });
+        return;
+      }
       const data: ExportResponse = await res.json();
       if (!res.ok || !data.ok || !data.export_url) {
         toast.error('Không tạo được bản xuất', {

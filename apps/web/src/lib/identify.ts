@@ -41,7 +41,10 @@ function readPersona(): string | null {
 async function readMembershipTier(): Promise<MembershipTier> {
   try {
     const res = await fetch('/api/user/me', { cache: 'no-store' });
-    if (!res.ok) return 'free';
+    // Content-type guard: even if /api/user/me ever 404s and Next renders
+    // an HTML error page, we never feed it to JSON.parse.
+    const ct = res.headers.get('content-type') ?? '';
+    if (!res.ok || !/\bjson\b/i.test(ct)) return 'free';
     const data = (await res.json()) as { membership_tier?: MembershipTier };
     return data?.membership_tier ?? 'free';
   } catch {

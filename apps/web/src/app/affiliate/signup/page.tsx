@@ -53,6 +53,12 @@ export default function AffiliateSignupPage() {
           payout_destination: destination,
         }),
       });
+      // Guard against HTML error pages.
+      const ct = res.headers.get('content-type') ?? '';
+      if (!/\bjson\b/i.test(ct)) {
+        setError(`Phản hồi không phải JSON (HTTP ${res.status})`);
+        return;
+      }
       const data: SignupSuccess | SignupError = await res.json();
       if (!data.ok) {
         setError(data.error);

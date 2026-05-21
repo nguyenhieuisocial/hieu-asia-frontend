@@ -101,6 +101,12 @@ export default function AffiliateDashboardPage() {
         setError('not_signed_in');
         return;
       }
+      // Guard against HTML error pages.
+      const ct = res.headers.get('content-type') ?? '';
+      if (!/\bjson\b/i.test(ct)) {
+        setError(`Phản hồi không phải JSON (HTTP ${res.status})`);
+        return;
+      }
       const d = await res.json();
       if (!d.ok) {
         setError(d.error ?? 'Lỗi không xác định');
@@ -130,6 +136,12 @@ export default function AffiliateDashboardPage() {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ amount }),
     });
+    // Guard against HTML error pages.
+    const ct = res.headers.get('content-type') ?? '';
+    if (!/\bjson\b/i.test(ct)) {
+      setPayoutMsg({ ok: false, text: `Phản hồi không phải JSON (HTTP ${res.status})` });
+      return;
+    }
     const d = await res.json();
     if (d.ok) {
       setPayoutMsg({ ok: true, text: 'Đã gửi yêu cầu rút tiền. Admin sẽ xử lý trong 1–3 ngày.' });
