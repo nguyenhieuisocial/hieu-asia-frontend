@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import * as Sentry from '@sentry/nextjs';
 import { Button } from '@hieu-asia/ui';
 
 export default function AdminError({
@@ -12,7 +13,9 @@ export default function AdminError({
   reset: () => void;
 }) {
   React.useEffect(() => {
+    // Reports to Sentry via @sentry/nextjs
     console.error('[admin/error]', error);
+    Sentry.captureException(error);
   }, [error]);
 
   return (

@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import * as Sentry from '@sentry/nextjs';
 import { Alert, Button } from '@hieu-asia/ui';
 
 export default function ErrorPage({
@@ -12,8 +13,9 @@ export default function ErrorPage({
   reset: () => void;
 }) {
   React.useEffect(() => {
-    // Surface to console for now. Replace with Sentry/PostHog later.
+    // Surface to console for visibility. Reports to Sentry via @sentry/nextjs.
     console.error('[web/error]', error);
+    Sentry.captureException(error);
   }, [error]);
 
   return (
