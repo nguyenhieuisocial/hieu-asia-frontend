@@ -42,11 +42,6 @@ const WEBSITE_JSONLD = {
   name: 'hieu.asia',
   url: 'https://hieu.asia',
   inLanguage: 'vi-VN',
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: 'https://hieu.asia/search?q={search_term_string}',
-    'query-input': 'required name=search_term_string',
-  },
 };
 
 const HOWTO_JSONLD = {
