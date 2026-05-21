@@ -21,13 +21,17 @@ export function getSupabaseAuth(): SupabaseClient | null {
   if (typeof window === 'undefined') return null;
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !anon) {
+  // Prefer new `sb_publishable_*` key (Oct 2025+); fall back to legacy
+  // `eyJ…` anon JWT during migration.
+  const key =
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) {
     _disabled = true;
     return null;
   }
 
-  _client = createClient(url, anon, {
+  _client = createClient(url, key, {
     auth: {
       persistSession: true,
       detectSessionInUrl: true,
