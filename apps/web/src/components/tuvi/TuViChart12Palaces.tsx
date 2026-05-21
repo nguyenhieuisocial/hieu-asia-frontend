@@ -23,29 +23,6 @@ import { Sparkles, ShieldAlert, Info } from 'lucide-react';
 import type { TuViChart, TuViPalace } from '@/lib/tuvi-client';
 import { tamPhuongTuChinh } from '@/lib/tuvi-client';
 
-/**
- * Iztro returns palaces ordered by earthly branch (Dần→Hợi). The canonical
- * Bắc phái display traditionally puts cung Mệnh at a specific quadrant.
- * For now we keep the engine order — the grid renders by `palace.index`.
- */
-const GRID_POSITIONS: Record<number, { row: number; col: number }> = {
-  // 4×4 grid; corners + edges hold the 12 palaces; inner 2×2 is meta.
-  // Index 0 = Mệnh per iztro convention; positions follow Tử Vi tradition:
-  // start at top-left, run clockwise around the border.
-  0: { row: 4, col: 1 }, // Mệnh (bottom-left side)
-  1: { row: 4, col: 2 },
-  2: { row: 4, col: 3 },
-  3: { row: 4, col: 4 }, // bottom-right
-  4: { row: 3, col: 4 },
-  5: { row: 2, col: 4 },
-  6: { row: 1, col: 4 }, // top-right
-  7: { row: 1, col: 3 },
-  8: { row: 1, col: 2 },
-  9: { row: 1, col: 1 }, // top-left
-  10: { row: 2, col: 1 },
-  11: { row: 3, col: 1 },
-};
-
 interface PalaceCellProps {
   palace: TuViPalace;
   selected: boolean;
@@ -120,7 +97,7 @@ function PalaceCell({ palace, selected, trigon, onClick }: PalaceCellProps) {
   );
 }
 
-function PalaceDetail({ palace, chart }: { palace: TuViPalace; chart: TuViChart }) {
+function PalaceDetail({ palace }: { palace: TuViPalace }) {
   return (
     <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent p-5">
       <div className="flex items-start justify-between gap-3">
@@ -258,7 +235,7 @@ export function TuViChart12Palaces({
       </div>
 
       {/* Detail card for selected palace */}
-      <PalaceDetail palace={selectedPalace} chart={chart} />
+      <PalaceDetail palace={selectedPalace} />
 
       {/* Legend */}
       <div className="flex flex-wrap items-center gap-3 text-[11px] text-cream/55">

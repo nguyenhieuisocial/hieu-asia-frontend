@@ -1,0 +1,223 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
+import { Calendar, Briefcase, Heart, Wallet, Activity, ArrowRight } from 'lucide-react';
+import { SiteNav } from '@/components/home/SiteNav';
+import { SiteFooter } from '@/components/home/SiteFooter';
+
+export const metadata: Metadata = {
+  title: 'Tử vi 2026 cá nhân hoá theo ngày sinh — Bính Ngọ năm hành Hoả',
+  description:
+    'Tử vi 2026 (năm Bính Ngọ): chủ đề năm, sự nghiệp, tài chính, tình cảm, sức khoẻ — cá nhân hoá theo lá số Tử Vi Đẩu Số và đại vận hiện tại.',
+  alternates: { canonical: 'https://hieu.asia/tu-vi-2026' },
+  openGraph: {
+    title: 'Tử vi năm 2026 · hieu.asia',
+    description: 'Năm Bính Ngọ — chủ đề năm + 12 tháng + 3 quyết định nên cân nhắc.',
+    url: 'https://hieu.asia/tu-vi-2026',
+    type: 'article',
+  },
+};
+
+const MONTHS: { name: string; theme: string }[] = [
+  { name: 'Tháng 1 — Mậu Dần', theme: 'Khởi đầu thận trọng. Lên kế hoạch năm, chưa nên ra quyết định lớn.' },
+  { name: 'Tháng 2 — Kỷ Mão', theme: 'Năng lượng giao tiếp tốt. Phù hợp tái lập quan hệ và mạng lưới.' },
+  { name: 'Tháng 3 — Canh Thìn', theme: 'Thời điểm đẩy dự án ổn định. Chú ý sức khoẻ tinh thần.' },
+  { name: 'Tháng 4 — Tân Tỵ', theme: 'Cảm xúc dễ căng — tránh quyết định trong lúc nóng.' },
+  { name: 'Tháng 5 — Nhâm Ngọ', theme: 'Cơ hội xa quê, du học, dự án quốc tế.' },
+  { name: 'Tháng 6 — Quý Mùi', theme: 'Phù hợp tích luỹ tài chính + chăm sóc gia đạo.' },
+  { name: 'Tháng 7 — Giáp Thân', theme: 'Cần thận trọng khẩu thiệt. Tránh tranh luận online.' },
+  { name: 'Tháng 8 — Ất Dậu', theme: 'Thời điểm tốt để kết nối — học thêm, mentor, mở rộng kỹ năng.' },
+  { name: 'Tháng 9 — Bính Tuất', theme: 'Sự nghiệp có dấu hiệu thay đổi — nên đánh giá lại 6 tháng đầu năm.' },
+  { name: 'Tháng 10 — Đinh Hợi', theme: 'Tài chính cần kỷ luật. Tránh đầu tư rủi ro cao cuối năm.' },
+  { name: 'Tháng 11 — Mậu Tý', theme: 'Năng lượng nội tâm tăng — phù hợp ôn lại mục tiêu.' },
+  { name: 'Tháng 12 — Kỷ Sửu', theme: 'Khép năm bằng kế hoạch 2027 — không vội quyết định cuối năm.' },
+];
+
+const THEMES = [
+  {
+    icon: Briefcase,
+    title: 'Sự nghiệp 2026',
+    body: 'Năm Hoả Mã — năng lượng đẩy người có Quan Lộc tốt mở rộng phạm vi. Cẩn trọng với quyết định nghề nóng vội quý 1 + quý 4.',
+  },
+  {
+    icon: Wallet,
+    title: 'Tài chính 2026',
+    body: 'Không phải năm "all-in" — Bính Ngọ có khuynh hướng biến động. Ưu tiên emergency fund 6 tháng trước khi tăng rủi ro.',
+  },
+  {
+    icon: Heart,
+    title: 'Tình cảm 2026',
+    body: 'Năm phù hợp cho người độc thân kết duyên (đặc biệt tuổi có Đào Hoa nhập hạn). Người đang trong quan hệ: tập trung giao tiếp kỳ vọng.',
+  },
+  {
+    icon: Activity,
+    title: 'Sức khoẻ 2026',
+    body: 'Năm Hoả vượng — cẩn trọng với stress + giấc ngủ. Duy trì vận động đều, không ép quá nhanh.',
+  },
+];
+
+const DECISIONS = [
+  {
+    label: 'Có nên chuyển ngành/công ty?',
+    body:
+      'Năm 2026 thuận cho chuyển đổi NẾU bạn đã có 6 tháng runway tài chính + 2-3 cơ hội cụ thể đã xác minh. Không thuận cho "nhảy mù".',
+  },
+  {
+    label: 'Có nên cưới?',
+    body:
+      'Xét lá số Phu Thê + Phúc Đức + Đại vận. Nếu hai bên đã sống chung 1 năm và thông qua 1 khủng hoảng — đây là năm thuận.',
+  },
+  {
+    label: 'Có nên đầu tư bất động sản?',
+    body:
+      'Năm thuận cho người có Điền Trạch mạnh + tài chính ổn. Cẩn trọng với leverage cao trong quý 3.',
+  },
+];
+
+const BREADCRUMB_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
+    { '@type': 'ListItem', position: 2, name: 'Tử vi 2026', item: 'https://hieu.asia/tu-vi-2026' },
+  ],
+};
+
+export default function TuVi2026Page() {
+  return (
+    <div className="min-h-screen bg-ink text-cream">
+      <SiteNav />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
+      />
+
+      <main id="main-content" className="relative overflow-hidden pt-16">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-ink-radial opacity-80"
+        />
+
+        <section className="relative mx-auto max-w-3xl px-6 pb-12 pt-12 sm:pt-16">
+          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+            Năm Bính Ngọ · hành Hoả · 17/02/2026 → 05/02/2027
+          </p>
+          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+            Tử vi 2026 — chủ đề năm Bính Ngọ
+          </h1>
+          <p className="mt-5 text-base leading-relaxed text-cream/80 sm:text-lg">
+            2026 là năm Bính Ngọ — hành Hoả vượng. Đây là năm năng lượng cao: thuận cho
+            người chủ động, không thuận cho người chần chừ. Nhưng năng lượng Hoả cũng
+            dễ "đốt" nếu không quản lý — ai vội vàng tài chính hoặc quan hệ trong năm
+            này dễ tiếc nuối.
+          </p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Link href="/onboarding">
+              <Button size="lg">Xem tử vi 2026 của tôi</Button>
+            </Link>
+            <Link href="/sample-report">
+              <Button size="lg" variant="outline">
+                Mẫu báo cáo
+              </Button>
+            </Link>
+          </div>
+        </section>
+
+        <section className="relative mx-auto max-w-3xl px-6 pb-12">
+          <h2 className="mb-5 font-heading text-2xl font-semibold text-cream sm:text-3xl">
+            4 chủ đề lớn của năm
+          </h2>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {THEMES.map((t) => {
+              const Icon = t.icon;
+              return (
+                <Card key={t.title} className="border-cream/10 bg-ink/40">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="flex items-center gap-2 font-heading text-base text-cream">
+                      <Icon className="h-4 w-4 text-gold" aria-hidden /> {t.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-sm leading-relaxed text-cream/75">
+                    {t.body}
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="relative mx-auto max-w-3xl px-6 pb-12">
+          <h2 className="mb-5 font-heading text-2xl font-semibold text-cream sm:text-3xl">
+            12 tháng 2026 — sơ đồ năng lượng
+          </h2>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {MONTHS.map((m) => (
+              <div
+                key={m.name}
+                className="rounded-lg border border-cream/10 bg-ink/40 p-3"
+              >
+                <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">
+                  {m.name}
+                </p>
+                <p className="mt-1 text-sm leading-relaxed text-cream/80">{m.theme}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-cream/55">
+            Đây là khung tháng chung. Lưu nguyệt cá nhân hoá theo lá số có thể lệch — Mentor sẽ tinh
+            chỉnh theo Mệnh — Thân — Đại vận của bạn.
+          </p>
+        </section>
+
+        <section className="relative mx-auto max-w-3xl px-6 pb-12">
+          <h2 className="mb-5 font-heading text-2xl font-semibold text-cream sm:text-3xl">
+            3 quyết định nhiều người cân nhắc trong 2026
+          </h2>
+          <div className="space-y-3">
+            {DECISIONS.map((d) => (
+              <Card key={d.label} className="border-cream/10 bg-ink/40">
+                <CardHeader className="pb-2">
+                  <CardTitle className="font-heading text-base text-cream">
+                    {d.label}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm leading-relaxed text-cream/75">
+                  {d.body}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-cream/55">
+            hieu.asia KHÔNG quyết định thay bạn. Mỗi quyết định cần cân nhắc dữ kiện đời thực + lá
+            số + bối cảnh — Mentor sẽ hỏi lại bối cảnh trước khi gợi ý.
+          </p>
+        </section>
+
+        <section className="relative mx-auto max-w-3xl px-6 pb-20">
+          <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent p-6 sm:p-8">
+            <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+              Xem tử vi 2026 cá nhân hoá theo lá số của bạn
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-cream/80 sm:text-base">
+              Khung trên là chung cho năm Bính Ngọ. Tử vi 2026 RIÊNG bạn phụ thuộc vào đại
+              vận hiện tại + lưu niên cá nhân + cung Quan/Tài/Phu Thê của riêng bạn.
+              Lập lá số 2 phút để xem chi tiết.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link href="/onboarding">
+                <Button size="lg">Lập lá số miễn phí</Button>
+              </Link>
+              <Link
+                href="/tu-vi"
+                className="inline-flex items-center text-sm text-cream/70 hover:text-gold"
+              >
+                Cẩm nang Tử Vi <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
+              </Link>
+            </div>
+          </div>
+        </section>
+      </main>
+      <SiteFooter />
+    </div>
+  );
+}
