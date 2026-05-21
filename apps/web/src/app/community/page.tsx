@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 
 const CHANNELS = [
   {
-    href: 'https://t.me/hieuasia_bot',
+    href: 'https://t.me/hieuasiabot',
     label: 'Telegram bot',
     desc: 'Bot Tử Vi hôm nay, mentor mini, và thông báo sản phẩm.',
     icon: MessageCircle,

@@ -18,7 +18,7 @@ export function TelegramIntegration() {
   }, []);
 
   function handleLinkBot() {
-    const botUrl = process.env.NEXT_PUBLIC_TELEGRAM_BOT_URL ?? 'https://t.me/hieuasia_bot';
+    const botUrl = process.env.NEXT_PUBLIC_TELEGRAM_BOT_URL ?? 'https://t.me/hieuasiabot';
     window.open(botUrl, '_blank', 'noopener,noreferrer');
     toast.info('Mở Telegram', {
       description: 'Bấm /start trong bot rồi quay lại đây để hoàn tất liên kết.',

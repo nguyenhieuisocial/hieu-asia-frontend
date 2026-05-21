@@ -69,7 +69,7 @@ export function SiteFooter() {
               <SocialLink href="mailto:hi@hieu.asia" label="Email">
                 <Mail className="h-4 w-4" aria-hidden="true" />
               </SocialLink>
-              <SocialLink href="https://t.me/hieuasia_bot" label="Telegram bot">
+              <SocialLink href="https://t.me/hieuasiabot" label="Telegram bot">
                 <MessageCircle className="h-4 w-4" aria-hidden="true" />
               </SocialLink>
               <SocialLink href="https://facebook.com/hieu.asia" label="Facebook">

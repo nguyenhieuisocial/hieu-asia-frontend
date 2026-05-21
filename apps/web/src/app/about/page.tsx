@@ -216,7 +216,7 @@ export default function AboutPage() {
                   hi@hieu.asia
                 </Button>
               </Link>
-              <Link href="https://t.me/hieuasia_bot">
+              <Link href="https://t.me/hieuasiabot">
                 <Button size="lg" variant="outline" className="min-w-[200px]">
                   <MessageCircle className="mr-1.5 h-4 w-4" aria-hidden={true} />
                   Telegram bot
