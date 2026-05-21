@@ -44,9 +44,13 @@ jobs:
             turbo-${{ runner.os }}-
 
       - name: Turbo lint/test/build (affected)
+        # Exclude `@hieu-asia/miniapp-zalo` — `zmp build` requires `zmp login`
+        # (Zalo developer portal auth) which CI cannot perform. Local devs
+        # build it manually after `zmp login`.
         run: |
+          FILTER='--filter=!@hieu-asia/miniapp-zalo'
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            pnpm turbo lint test build --filter='[origin/main]'
+            pnpm turbo lint test build "$FILTER" --filter='[origin/main]'
           else
-            pnpm turbo lint test build
+            pnpm turbo lint test build "$FILTER"
           fi
