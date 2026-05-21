@@ -110,12 +110,16 @@ export default function TermsPage() {
             <p className="font-semibold text-cream">Chính sách hoàn tiền (Refund Policy):</p>
             <ul className="list-disc space-y-2 pl-5">
               <li>
-                Hoàn tiền 100% trong vòng <strong className="text-gold">24 giờ</strong> kể từ khi
-                thanh toán, NẾU báo cáo chưa được tạo (hệ thống chưa gọi AI inference).
+                Hoàn tiền <strong className="text-gold">100% trong vòng 24 giờ</strong> nếu báo
+                cáo chưa được tạo (hệ thống chưa gọi AI inference).
               </li>
               <li>
-                Sau khi báo cáo đã được tạo, do chi phí AI inference không thể thu hồi, hoàn tiền sẽ
-                được xem xét theo từng trường hợp.
+                Sau khi báo cáo đã được tạo, chúng tôi vẫn xem xét hoàn tiền trong{' '}
+                <strong className="text-gold">14 ngày</strong> nếu có lỗi kỹ thuật, nội dung
+                không được tạo, hoặc trải nghiệm không đúng mô tả.
+              </li>
+              <li>
+                Mỗi yêu cầu được phản hồi trong vòng <strong className="text-gold">3 ngày làm việc</strong>.
               </li>
               <li>
                 Yêu cầu hoàn tiền vui lòng gửi tới{' '}

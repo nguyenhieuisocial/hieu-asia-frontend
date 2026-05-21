@@ -70,20 +70,21 @@ export function PricingTeaser() {
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
-            Pricing · hoàn tiền 14 ngày
+            Pricing · hoàn tiền 24h trước-inference
           </p>
           <h2
             id="pricing-teaser-heading"
             className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-cream sm:text-4xl"
           >
-            Một giá rõ ràng,{' '}
+            Chọn mức độ{' '}
             <span className="bg-gold-gradient bg-clip-text text-transparent">
-              không bẫy
+              đồng hành phù hợp
             </span>
           </h2>
           <p className="mt-4 text-base leading-relaxed text-cream/70 sm:text-lg">
-            Không tự gia hạn ngầm. Huỷ một cú nhấp. Hoàn tiền nếu bạn không thấy
-            giá trị trong 14 ngày.
+            Khảo sát đầu vào miễn phí. Bạn chỉ thanh toán khi muốn mở khoá luận
+            giải đầy đủ hoặc Mentor cá nhân hoá. Hoàn tiền 100% trong 24 giờ
+            nếu báo cáo chưa được tạo.
           </p>
         </div>
 

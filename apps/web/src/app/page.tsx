@@ -12,15 +12,17 @@ import { PricingTeaser } from '@/components/home/PricingTeaser';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 
 export const metadata: Metadata = {
-  title: 'hieu.asia — Hiểu mình. Quyết định mình.',
+  title: 'hieu.asia — Cẩm nang AI giúp hiểu mình và ra quyết định',
   description:
-    'Mỗi quyết định quan trọng cần một góc nhìn sâu hơn — tri thức cổ học Việt Nam, được AI giải mã rõ ràng, để bạn tự chọn con đường.',
-  alternates: { canonical: 'https://hieu.asia' },
+    'Kết hợp Tử Vi, Bát Tự, Thần Số Học, MBTI và AI Mentor để giúp bạn hiểu bản thân, đặt câu hỏi đúng và tự ra quyết định có trách nhiệm.',
+  alternates: { canonical: 'https://hieu.asia/' },
   openGraph: {
     title: 'hieu.asia — Hiểu mình. Quyết định mình.',
     description:
-      'Tử Vi · MBTI · Palm Reading · AI Mentor. Góc nhìn sâu, không phán định mệnh — bạn chọn con đường.',
-    url: 'https://hieu.asia',
+      'Cẩm nang AI cá nhân hoá bằng cổ học Việt Nam và tâm lý hiện đại.',
+    url: 'https://hieu.asia/',
+    siteName: 'hieu.asia',
+    locale: 'vi_VN',
     type: 'website',
   },
 };
@@ -168,9 +170,10 @@ const HOME_FAQ: readonly FaqItem[] = [
     q: 'Giá bao nhiêu? Có dùng thử miễn phí không?',
     a: (
       <p>
-        Khảo sát đầu vào miễn phí. Báo cáo Premium 99.000đ một lần, hoặc gói
-        Tháng 199.000đ để mở khoá Mentor AI không giới hạn. Xem chi tiết tại
-        trang Pricing.
+        Khảo sát đầu vào miễn phí. Gói Standard 99.000đ một lần (1 lá số đầy
+        đủ + PDF + 3 câu hỏi Mentor), Premium 199.000đ/tháng hoặc 1.990.000đ/năm
+        (Mentor không giới hạn + đại vận/lưu niên), hoặc Lifetime 4.990.000đ
+        một lần. Xem chi tiết tại trang Pricing.
       </p>
     ),
   },
@@ -179,8 +182,9 @@ const HOME_FAQ: readonly FaqItem[] = [
     a: (
       <p>
         Có. Bạn huỷ trong trang Tài khoản — gói vẫn dùng được đến hết kỳ đã
-        thanh toán, không tự gia hạn. Chúng tôi cũng có chính sách hoàn tiền 14
-        ngày cho các gói mới.
+        thanh toán, không tự gia hạn. Hoàn tiền 100% trong 24 giờ nếu báo cáo
+        chưa được tạo; sau đó vẫn xem xét hoàn tiền trong 14 ngày khi có lỗi
+        kỹ thuật hoặc trải nghiệm không đúng mô tả.
       </p>
     ),
   },

@@ -50,9 +50,9 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
     q: 'Chi phí như thế nào?',
     a: (
       <p>
-        Khảo sát đầu vào miễn phí. Báo cáo Premium 99.000đ một lần. Gói Tháng 199.000đ unlock
-        Mentor AI không giới hạn và cập nhật vận hạn lưu niên. Gói Năm 1.990.000đ tiết kiệm
-        17% và bao gồm phân tích sâu cho người thân (lên đến 3 lá số).
+        Khảo sát đầu vào miễn phí. Gói Standard 99.000đ một lần (1 lá số đầy đủ + PDF +
+        3 câu hỏi Mentor). Premium 199.000đ/tháng hoặc 1.990.000đ/năm (Mentor không giới
+        hạn + đại vận/lưu niên + người thân). Lifetime 4.990.000đ một lần — dùng trọn đời.
       </p>
     ),
   },

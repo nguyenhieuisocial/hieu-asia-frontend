@@ -2,18 +2,51 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { getOrCreateAnonUserId } from '@hieu-asia/supabase';
 import { DataExportSection } from '@/components/account/DataExportSection';
 import { DeleteAccountSection } from '@/components/account/DeleteAccountSection';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { useAuth } from '@/hooks/use-auth';
 
 export default function AccountPage() {
+  const router = useRouter();
+  const auth = useAuth();
   const [userId, setUserId] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     setUserId(getOrCreateAnonUserId() || null);
   }, []);
+
+  // Gate destructive actions behind authentication. Anonymous visitors can
+  // still see their anon user id but must sign in to export or delete data.
+  React.useEffect(() => {
+    if (!auth.loading && !auth.user) {
+      router.replace('/signin?returnTo=' + encodeURIComponent('/account'));
+    }
+  }, [auth.loading, auth.user, router]);
+
+  // While auth state resolves OR while redirecting, show a minimal placeholder.
+  if (auth.loading || !auth.user) {
+    return (
+      <div className="min-h-screen bg-ink text-cream">
+        <SiteNav />
+        <main id="main-content" className="pt-16">
+          <div className="mx-auto max-w-3xl px-6 py-20 text-center">
+            <div
+              aria-hidden
+              className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-gold/30 border-t-gold"
+            />
+            <p className="mt-4 font-mono text-xs uppercase tracking-[0.28em] text-cream/60">
+              {auth.loading ? 'Đang kiểm tra phiên đăng nhập…' : 'Chuyển hướng đến trang đăng nhập…'}
+            </p>
+          </div>
+        </main>
+        <SiteFooter />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-ink text-cream">

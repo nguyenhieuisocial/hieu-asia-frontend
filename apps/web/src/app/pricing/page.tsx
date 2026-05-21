@@ -50,10 +50,11 @@ const TIERS: readonly Tier[] = [
   {
     id: 'standard',
     name: 'Standard',
-    monthly: 99_000,
-    annual: 990_000,
+    monthly: 0,
+    annual: 99_000,
     description: 'Một lá số đầy đủ, không tự gia hạn.',
     cta: 'Chọn Standard',
+    isOneTime: true,
   },
   {
     id: 'premium',
@@ -154,8 +155,10 @@ const PRICING_FAQ: readonly FaqItem[] = [
     q: 'Tôi có hoàn tiền được không?',
     a: (
       <p>
-        Có. Chính sách hoàn tiền 14 ngày cho tất cả gói mới — bạn chỉ cần email
-        cho chúng tôi và sẽ nhận lại toàn bộ trong vòng 3 ngày làm việc.
+        Hoàn tiền 100% trong 24 giờ nếu báo cáo chưa được tạo. Sau khi báo cáo
+        đã được tạo, chúng tôi vẫn xem xét hoàn tiền trong 14 ngày nếu có lỗi
+        kỹ thuật hoặc trải nghiệm không đúng mô tả. Mỗi yêu cầu được phản hồi
+        trong 3 ngày làm việc.
       </p>
     ),
   },
@@ -250,13 +253,14 @@ export default function PricingPage() {
               <span className="bg-gold-gradient bg-clip-text text-transparent">với bạn</span>
             </h1>
             <p className="mt-5 text-base leading-relaxed text-cream/75 sm:text-lg">
-              Khảo sát đầu vào luôn miễn phí. Hủy hoặc đổi gói bất cứ lúc nào.
-              Hoàn tiền 14 ngày, không cần lý do.
+              Khảo sát đầu vào luôn miễn phí. Hoàn tiền 100% trong 24 giờ nếu báo
+              cáo chưa được tạo; sau đó vẫn xem xét hoàn tiền 14 ngày khi có lỗi
+              kỹ thuật hoặc trải nghiệm không đúng mô tả.
             </p>
             {!sessionId && (
               <p className="mx-auto mt-5 inline-flex items-center gap-2 rounded-full border border-gold/25 bg-gold/5 px-4 py-1.5 text-xs text-gold/90">
                 <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
-                Hoàn tiền 14 ngày · Thanh toán an toàn nội địa
+                Hoàn tiền 24h trước-inference · Bảo vệ thanh toán
               </p>
             )}
 
