@@ -6,6 +6,14 @@ import { ChevronRight, Sun, Moon, Sparkles, AlertTriangle, ArrowRight } from 'lu
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
+interface VanNienHour {
+  name?: string;
+  canChi?: string;
+  type?: 'hoang_dao' | 'hac_dao' | string;
+  star?: string;
+  suggestions?: string[];
+}
+
 interface VanNienDay {
   solarDate?: { year?: number; month?: number; day?: number; weekday?: string; iso?: string };
   lunarDate?: { year?: number; month?: number; day?: number; isLeap?: boolean; chineseMonthName?: string; chineseDayName?: string };
@@ -13,11 +21,17 @@ interface VanNienDay {
   trucNgay?: string;
   isHoangDao?: boolean;
   isHacDao?: boolean;
+  // Worker returns starsToday/badStarsToday/suggestedActivities — alias kept for forward-compat.
+  starsToday?: string[];
+  badStarsToday?: string[];
   goodStars?: string[];
   badStars?: string[];
+  suggestedActivities?: string[];
   goodActivities?: string[];
   avoidActivities?: string[];
-  hoangDaoHours?: { hour: string; name: string }[];
+  hours?: VanNienHour[];
+  dayStar?: string;
+  meaningSummary?: string;
 }
 
 interface ApiResponse {
@@ -94,6 +108,11 @@ export default async function ArchiveDayPage({
   if (!data) notFound();
 
   const dateLabel = `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}/${y}`;
+  const goodStars = data.goodStars ?? data.starsToday ?? [];
+  const badStars = data.badStars ?? data.badStarsToday ?? [];
+  const goodActivities = data.goodActivities ?? data.suggestedActivities ?? [];
+  const avoidActivities = data.avoidActivities ?? [];
+  const hoangDaoHours = (data.hours ?? []).filter((h) => h.type === 'hoang_dao');
 
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
@@ -193,10 +212,10 @@ export default async function ArchiveDayPage({
           </Card>
         </section>
 
-        {(data.goodActivities?.length || data.avoidActivities?.length) && (
+        {(goodActivities.length > 0 || avoidActivities.length > 0) && (
           <section className="relative mx-auto max-w-3xl px-6 pb-10">
             <div className="grid gap-3 md:grid-cols-2">
-              {data.goodActivities && data.goodActivities.length > 0 && (
+              {goodActivities.length > 0 && (
                 <Card className="border-jade/30 bg-jade/[0.04]">
                   <CardHeader className="pb-2">
                     <CardTitle className="flex items-center gap-2 font-heading text-base text-jade-50">
@@ -205,7 +224,7 @@ export default async function ArchiveDayPage({
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-1.5 text-sm text-cream/80">
-                      {data.goodActivities.map((a, i) => (
+                      {goodActivities.map((a, i) => (
                         <li key={i} className="flex gap-2">
                           <span className="text-jade-50">+</span>
                           <span>{a}</span>
@@ -215,7 +234,7 @@ export default async function ArchiveDayPage({
                   </CardContent>
                 </Card>
               )}
-              {data.avoidActivities && data.avoidActivities.length > 0 && (
+              {avoidActivities.length > 0 && (
                 <Card className="border-amber-700/40 bg-amber-900/10">
                   <CardHeader className="pb-2">
                     <CardTitle className="flex items-center gap-2 font-heading text-base text-amber-200">
@@ -224,7 +243,7 @@ export default async function ArchiveDayPage({
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-1.5 text-sm text-cream/80">
-                      {data.avoidActivities.map((a, i) => (
+                      {avoidActivities.map((a, i) => (
                         <li key={i} className="flex gap-2">
                           <span className="text-amber-300">!</span>
                           <span>{a}</span>
@@ -238,7 +257,7 @@ export default async function ArchiveDayPage({
           </section>
         )}
 
-        {(data.goodStars?.length || data.badStars?.length) && (
+        {(goodStars.length > 0 || badStars.length > 0) && (
           <section className="relative mx-auto max-w-3xl px-6 pb-10">
             <Card className="border-cream/10 bg-ink/40">
               <CardHeader>
@@ -247,30 +266,63 @@ export default async function ArchiveDayPage({
                 </CardTitle>
               </CardHeader>
               <CardContent className="grid gap-3 sm:grid-cols-2">
-                {data.goodStars && data.goodStars.length > 0 && (
+                {goodStars.length > 0 && (
                   <div>
                     <p className="font-mono text-[10px] uppercase tracking-widest text-jade-50">
                       Sao tốt
                     </p>
                     <div className="mt-2 flex flex-wrap gap-1.5">
-                      {data.goodStars.map((s) => (
+                      {goodStars.map((s) => (
                         <span key={s} className="rounded bg-jade/15 px-2 py-0.5 font-mono text-xs text-jade-50">{s}</span>
                       ))}
                     </div>
                   </div>
                 )}
-                {data.badStars && data.badStars.length > 0 && (
+                {badStars.length > 0 && (
                   <div>
                     <p className="font-mono text-[10px] uppercase tracking-widest text-red-300">
                       Sao xấu
                     </p>
                     <div className="mt-2 flex flex-wrap gap-1.5">
-                      {data.badStars.map((s) => (
+                      {badStars.map((s) => (
                         <span key={s} className="rounded bg-red-500/15 px-2 py-0.5 font-mono text-xs text-red-300">{s}</span>
                       ))}
                     </div>
                   </div>
                 )}
+              </CardContent>
+            </Card>
+          </section>
+        )}
+
+        {hoangDaoHours.length > 0 && (
+          <section className="relative mx-auto max-w-3xl px-6 pb-10">
+            <Card className="border-jade/30 bg-jade/[0.04]">
+              <CardHeader>
+                <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+                  Giờ hoàng đạo
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="grid gap-2 sm:grid-cols-2">
+                  {hoangDaoHours.map((h, i) => (
+                    <li key={i} className="flex items-center gap-2 text-sm text-cream/80">
+                      <Sparkles className="h-3.5 w-3.5 text-jade-50" aria-hidden />
+                      <span className="font-medium text-cream">{h.name}</span>
+                      {h.star && <span className="text-xs text-cream/60">· {h.star}</span>}
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          </section>
+        )}
+
+        {data.meaningSummary && (
+          <section className="relative mx-auto max-w-3xl px-6 pb-10">
+            <Card className="border-cream/10 bg-ink/40">
+              <CardContent className="text-sm leading-relaxed text-cream/80">
+                {data.meaningSummary}
               </CardContent>
             </Card>
           </section>
