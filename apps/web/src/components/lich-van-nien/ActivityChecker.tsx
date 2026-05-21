@@ -86,8 +86,9 @@ export function ActivityChecker({ defaultDate }: { defaultDate?: string } = {}) 
       const data = await res.json();
       if (!data.ok) throw new Error(data.error || 'Lỗi không xác định');
       setResult(data as CheckResult);
-    } catch (e: any) {
-      setError(String(e?.message ?? e));
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setError(msg);
     } finally {
       setLoading(false);
     }
