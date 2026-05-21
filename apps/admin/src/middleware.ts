@@ -1,32 +1,57 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { ADMIN_SESSION_COOKIE } from '@/lib/auth';
+import { ADMIN_SESSION_COOKIE, verifySession } from '@/lib/auth';
 
 /**
  * Admin middleware — gate every route except /login and Next internals.
  *
- * V1: just checks cookie presence. Allow-list check happens at /login
- * (cookie isn't set unless email matched). For V2: verify a signed JWT.
+ * V2 (2026-05-22): HMAC verifies the session cookie.
+ *   - If cookie present + valid signature → allow through.
+ *   - If cookie present + invalid (legacy unsigned, forged, expired secret) →
+ *     CLEAR the cookie AND redirect to /login. This auto-recovers the
+ *     "stale cookie lockout" that happened when ADMIN_COOKIE_SECRET rolled
+ *     out: users with pre-HMAC cookies were silently bounced to 401 by
+ *     admin-proxy AND saw a chrome-less layout (layout.tsx verifySession
+ *     also returned null).
+ *   - If no cookie → redirect to /login with `?next=`.
+ *
+ * Middleware runs on Edge runtime by default; verifySession uses Web Crypto.
  */
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Belt + suspenders: never gate the login endpoint (matcher already excludes,
-  // but in case the regex changes or caches stale, explicit short-circuit here).
+  // Never gate the login endpoint (matcher already excludes, but explicit
+  // short-circuit defends against matcher regressions).
   if (pathname === '/api/admin/login' || pathname.startsWith('/api/admin/login/')) {
     return NextResponse.next();
   }
 
-  const session = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+  const rawCookie = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+  const session = await verifySession(rawCookie);
+  const isLoginPage = pathname === '/login' || pathname.startsWith('/login/');
 
-  // Already logged in — block /login to avoid loops.
-  if (pathname.startsWith('/login')) {
+  // Cookie present BUT invalid → user is locked out (stale signature, forged,
+  // or secret rotated). Clear cookie + bounce to /login. Never let them sit on
+  // a chrome-less page wondering why everything is broken.
+  if (rawCookie && !session) {
+    const url = new URL('/login', request.url);
+    if (!isLoginPage) url.searchParams.set('next', pathname);
+    url.searchParams.set('reason', 'session_invalid');
+    const res = NextResponse.redirect(url);
+    res.cookies.set(ADMIN_SESSION_COOKIE, '', { maxAge: 0, path: '/' });
+    return res;
+  }
+
+  // Already authenticated → block /login to avoid loops.
+  if (isLoginPage) {
     if (session) {
-      return NextResponse.redirect(new URL('/', request.url));
+      const next = request.nextUrl.searchParams.get('next');
+      const target = next && next.startsWith('/') ? next : '/';
+      return NextResponse.redirect(new URL(target, request.url));
     }
     return NextResponse.next();
   }
 
-  // Everything else needs a session.
+  // Everything else needs a verified session.
   if (!session) {
     const url = new URL('/login', request.url);
     url.searchParams.set('next', pathname);
@@ -37,6 +62,9 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Skip Next internals + static assets + login API (needs to be reachable without session).
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|api/health|api/admin/login).*)'],
+  // Skip Next internals + static assets + login API (needs to be reachable
+  // without session) + admin-proxy (does its own HMAC check at the route).
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|icon|api/health|api/admin/login|api/admin/logout).*)',
+  ],
 };

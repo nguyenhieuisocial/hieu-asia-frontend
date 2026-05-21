@@ -8,11 +8,16 @@ export default function AdminLoginPage() {
   const router = useRouter();
   const search = useSearchParams();
   const next = search.get('next') ?? '/';
+  const reason = search.get('reason');
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [pending, setPending] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
+  const [error, setError] = React.useState<string | null>(
+    reason === 'session_invalid'
+      ? 'Phiên đăng nhập đã hết hạn hoặc không hợp lệ (cookie cũ trước khi bật HMAC). Vui lòng đăng nhập lại.'
+      : null,
+  );
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
