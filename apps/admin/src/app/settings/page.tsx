@@ -15,7 +15,8 @@ import {
   TabsList,
   TabsTrigger,
 } from '@hieu-asia/ui';
-import { Settings, ToggleLeft, Server, Bell, Shield, KeyRound, Cpu } from 'lucide-react';
+import { Settings, ToggleLeft, Server, Bell, Shield, KeyRound, Cpu, Palette } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import { getFeatureFlags, updateFeatureFlags, type FeatureFlags } from '@/lib/admin-api';
 import { MockBanner } from '@/components/mock-banner';
 import { PageHeader } from '@/components/admin/page-header';
@@ -68,6 +69,8 @@ export default function AdminSettingsPage() {
         </TabsList>
 
         <TabsContent value="general" className="space-y-6">
+          <ThemePreferenceCard />
+
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -270,5 +273,59 @@ export default function AdminSettingsPage() {
         </TabsContent>
       </Tabs>
     </div>
+  );
+}
+
+/**
+ * Theme picker tied to next-themes + localStorage (next-themes persists by
+ * default). Three options: dark (default), light, system.
+ */
+function ThemePreferenceCard() {
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
+
+  const options: { value: 'dark' | 'light' | 'system'; label: string }[] = [
+    { value: 'dark', label: 'Tối (mặc định)' },
+    { value: 'light', label: 'Sáng' },
+    { value: 'system', label: 'Theo hệ thống' },
+  ];
+
+  const active = mounted ? (theme ?? 'system') : 'dark';
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Palette className="h-4 w-4 text-gold" />
+          Giao diện
+        </CardTitle>
+        <CardDescription>
+          Lưu trong <code className="font-mono text-cream/75">localStorage</code> qua next-themes.
+          Mặc định khi chưa chọn:{' '}
+          <span className="text-cream/85">tối</span>. Đang dùng:{' '}
+          <span className="text-gold">{resolvedTheme ?? 'dark'}</span>.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="inline-flex rounded-md border border-gold/20 bg-ink/40 p-0.5">
+          {options.map((o) => (
+            <button
+              key={o.value}
+              type="button"
+              onClick={() => setTheme(o.value)}
+              className={
+                'rounded px-3 py-1.5 text-xs transition-colors ' +
+                (active === o.value
+                  ? 'bg-gold/20 text-gold'
+                  : 'text-cream/65 hover:bg-gold/5')
+              }
+            >
+              {o.label}
+            </button>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

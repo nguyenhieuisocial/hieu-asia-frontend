@@ -40,6 +40,16 @@ const PLAN_LABEL: Record<AdminTransaction['plan'], string> = {
   lifetime: 'Trọn đời',
 };
 
+/**
+ * Mask a secret-like opaque string: show first 4 + last 4 (e.g. Stripe/SePay IDs).
+ */
+function maskSecret(value: string | null | undefined): string {
+  if (!value) return '—';
+  const s = String(value);
+  if (s.length <= 12) return s;
+  return `${s.slice(0, 4)}…${s.slice(-4)}`;
+}
+
 export default function AdminPaymentsPage() {
   const qc = useQueryClient();
   const [page, setPage] = React.useState(1);
@@ -55,13 +65,30 @@ export default function AdminPaymentsPage() {
   });
 
   const txCols: DataTableColumn<AdminTransaction>[] = [
-    { key: 'id', header: 'ID', width: '110px', cell: (t) => <span className="font-mono text-xs">{t.id}</span> },
+    {
+      key: 'id',
+      header: 'ID',
+      width: '110px',
+      cell: (t) => (
+        <span className="font-mono text-xs" title={t.id}>
+          {maskSecret(t.id)}
+        </span>
+      ),
+    },
     { key: 'user_email', header: 'User' },
     { key: 'plan', header: 'Gói', width: '120px', cell: (t) => PLAN_LABEL[t.plan] },
     { key: 'amount_usd', header: 'Amount', align: 'right', width: '90px', cell: (t) => `$${t.amount_usd.toFixed(2)}` },
     { key: 'status', header: 'Trạng thái', width: '120px', cell: (t) => <StatusBadge status={STATUS_TONE[t.status]} label={t.status} /> },
     { key: 'created_at', header: 'Tạo', width: '150px', cell: (t) => new Date(t.created_at).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' }) },
-    { key: 'stripe_id', header: 'Stripe', cell: (t) => <span className="font-mono text-xs text-cream/65">{t.stripe_id}</span> },
+    {
+      key: 'stripe_id',
+      header: 'Stripe',
+      cell: (t) => (
+        <span className="font-mono text-xs text-cream/65" title={t.stripe_id}>
+          {maskSecret(t.stripe_id)}
+        </span>
+      ),
+    },
     {
       key: 'actions',
       header: '',

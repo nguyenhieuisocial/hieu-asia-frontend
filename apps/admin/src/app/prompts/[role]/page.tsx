@@ -22,7 +22,7 @@ import {
   Skeleton,
   toast,
 } from '@hieu-asia/ui';
-import { ChevronLeft, Eye } from 'lucide-react';
+import { ChevronLeft, Eye, GitCompare } from 'lucide-react';
 import { PromptEditor } from '@/components/prompts/PromptEditor';
 
 const ROLES = ['vision', 'logic', 'psychology', 'alignment', 'report', 'mentor', 'judge'] as const;
@@ -96,6 +96,32 @@ function diffSummary(a: string, b: string): { added: number; removed: number } {
   return { added, removed };
 }
 
+/**
+ * Line-by-line diff between two prompt bodies. Returns rows tagged 'add' /
+ * 'remove' / 'context'. Uses LCS-light: simple line-by-line membership in
+ * the opposite set — good enough for prompt comparisons (no reordering
+ * detection, but visually correct for typical edits).
+ */
+function lineDiff(a: string, b: string): Array<{ kind: 'add' | 'remove' | 'ctx'; text: string }> {
+  const aLines = a.split('\n');
+  const bLines = b.split('\n');
+  const bSet = new Set(bLines);
+  const aSet = new Set(aLines);
+  const max = Math.max(aLines.length, bLines.length);
+  const out: Array<{ kind: 'add' | 'remove' | 'ctx'; text: string }> = [];
+  for (let i = 0; i < max; i++) {
+    const cur = aLines[i];
+    const old = bLines[i];
+    if (cur !== undefined && old !== undefined && cur === old) {
+      out.push({ kind: 'ctx', text: cur });
+    } else {
+      if (old !== undefined && !aSet.has(old)) out.push({ kind: 'remove', text: old });
+      if (cur !== undefined && !bSet.has(cur)) out.push({ kind: 'add', text: cur });
+    }
+  }
+  return out;
+}
+
 export default function PromptEditPage() {
   const params = useParams<{ role: string }>();
   const router = useRouter();
@@ -115,6 +141,7 @@ export default function PromptEditPage() {
   const [confirmSaveOpen, setConfirmSaveOpen] = React.useState(false);
   const [confirmResetOpen, setConfirmResetOpen] = React.useState(false);
   const [previewOpen, setPreviewOpen] = React.useState(false);
+  const [diffOpen, setDiffOpen] = React.useState(false);
 
   // Seed editor when prompt loads
   React.useEffect(() => {
@@ -192,15 +219,26 @@ export default function PromptEditPage() {
             )}
           </h1>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setPreviewOpen(true)}
-          disabled={!draft}
-        >
-          <Eye className="mr-1.5 h-3.5 w-3.5" />
-          Preview
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setDiffOpen(true)}
+            disabled={!prompt?.default_system || !draft}
+          >
+            <GitCompare className="mr-1.5 h-3.5 w-3.5" />
+            So sánh v{prompt?.version ?? 1} ↔ default
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPreviewOpen(true)}
+            disabled={!draft}
+          >
+            <Eye className="mr-1.5 h-3.5 w-3.5" />
+            Preview
+          </Button>
+        </div>
       </div>
 
       {error && (
@@ -380,6 +418,47 @@ export default function PromptEditPage() {
               className="border-red-400/40 text-red-200 hover:bg-red-500/10"
             >
               {resetMut.isPending ? 'Đang khôi phục…' : 'Khôi phục'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Version diff (current draft vs default) */}
+      <Dialog open={diffOpen} onOpenChange={setDiffOpen}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>So sánh phiên bản</DialogTitle>
+            <DialogDescription>
+              Bên trái: bản hiện đang chỉnh (v{prompt?.version ?? 1}{dirty ? ' + chưa lưu' : ''}). Bên
+              phải / inline: DEFAULT_PROMPTS gốc.
+            </DialogDescription>
+          </DialogHeader>
+          {prompt?.default_system ? (
+            <div className="max-h-[60vh] overflow-auto rounded-md border border-gold/15 bg-ink/60 font-mono text-xs leading-5">
+              {lineDiff(draft, prompt.default_system).map((row, i) => (
+                <div
+                  key={i}
+                  className={
+                    row.kind === 'add'
+                      ? 'bg-emerald-500/10 px-3 py-0.5 text-emerald-200'
+                      : row.kind === 'remove'
+                        ? 'bg-red-500/10 px-3 py-0.5 text-red-200'
+                        : 'px-3 py-0.5 text-cream/70'
+                  }
+                >
+                  <span className="mr-2 select-none text-cream/35">
+                    {row.kind === 'add' ? '+' : row.kind === 'remove' ? '-' : ' '}
+                  </span>
+                  {row.text || ' '}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-cream/55">Chưa load được default — thử reload.</p>
+          )}
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setDiffOpen(false)}>
+              Đóng
             </Button>
           </DialogFooter>
         </DialogContent>

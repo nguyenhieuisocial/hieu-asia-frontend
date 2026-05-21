@@ -1,8 +1,17 @@
 'use client';
 
+import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
-import { DollarSign, Activity, TrendingUp, Calendar } from 'lucide-react';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  cn,
+} from '@hieu-asia/ui';
+import { DollarSign, Activity, TrendingUp, Calendar, Download } from 'lucide-react';
 import { CostChart } from '@/components/cost-chart';
 import { getCostByDay, getTopSpenders } from '@/lib/admin-api';
 import { MockBanner } from '@/components/mock-banner';
@@ -15,8 +24,42 @@ function fmtUsd(v: number) {
   return `$${v.toFixed(2)}`;
 }
 
+type Range = 7 | 14 | 30 | 90;
+
+const RANGE_OPTIONS: { value: Range; label: string }[] = [
+  { value: 7, label: '7d' },
+  { value: 14, label: '14d' },
+  { value: 30, label: '30d' },
+  { value: 90, label: '90d' },
+];
+
+function downloadCsv(filename: string, rows: Array<Record<string, string | number>>) {
+  if (rows.length === 0) return;
+  const headers = Object.keys(rows[0]!);
+  const body = rows
+    .map((r) =>
+      headers
+        .map((h) => `"${String(r[h] ?? '').replace(/"/g, '""')}"`)
+        .join(','),
+    )
+    .join('\n');
+  const csv = `${headers.join(',')}\n${body}`;
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 export default function AdminCostPage() {
-  const cost = useQuery({ queryKey: ['admin', 'cost-by-day'], queryFn: () => getCostByDay(30) });
+  const [days, setDays] = React.useState<Range>(30);
+
+  const cost = useQuery({
+    queryKey: ['admin', 'cost-by-day', days],
+    queryFn: () => getCostByDay(days),
+  });
   const top = useQuery({ queryKey: ['admin', 'top-spenders'], queryFn: () => getTopSpenders(10) });
 
   const data = cost.data ?? [];
@@ -27,13 +70,58 @@ export default function AdminCostPage() {
   const spark = data.slice(-14).map((d) => d.total_usd);
   const hasData = monthTotal > 0;
 
+  const exportCsv = () => {
+    downloadCsv(
+      `hieu-asia-cost-${days}d-${new Date().toISOString().slice(0, 10)}.csv`,
+      data.map((d) => ({
+        date: d.date,
+        total_usd: d.total_usd.toFixed(6),
+      })),
+    );
+  };
+
   return (
     <div className="space-y-6">
       <PageHeader
         title="Chi phí AI"
-        description={<>Tổng hợp từ <code className="font-mono text-cream/75">llm_trace_daily</code> — gộp theo ngày + theo model.</>}
+        description={
+          <>
+            Tổng hợp từ <code className="font-mono text-cream/75">llm_trace_daily</code> — gộp
+            theo ngày + theo model.
+          </>
+        }
         icon={<DollarSign className="h-5 w-5" />}
         badge={hasData ? <LiveBadge /> : null}
+        actions={
+          <>
+            <div className="inline-flex rounded-md border border-gold/20 bg-ink/40 p-0.5">
+              {RANGE_OPTIONS.map((r) => (
+                <button
+                  key={r.value}
+                  type="button"
+                  onClick={() => setDays(r.value)}
+                  className={cn(
+                    'rounded px-3 py-1 text-xs transition-colors',
+                    days === r.value
+                      ? 'bg-gold/20 text-gold'
+                      : 'text-cream/65 hover:bg-gold/5',
+                  )}
+                >
+                  {r.label}
+                </button>
+              ))}
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={exportCsv}
+              disabled={data.length === 0}
+            >
+              <Download className="mr-1.5 h-3.5 w-3.5" />
+              Xuất CSV
+            </Button>
+          </>
+        }
       />
 
       <MockBanner source={cost.data?._source ?? top.data?._source} />
@@ -48,7 +136,7 @@ export default function AdminCostPage() {
           hint="USD"
         />
         <KpiCard
-          label="30 ngày"
+          label={`${days} ngày`}
           value={fmtUsd(monthTotal)}
           icon={<DollarSign className="h-4 w-4" />}
           accent="jade"
@@ -70,7 +158,7 @@ export default function AdminCostPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Chi phí theo model — 30 ngày</CardTitle>
+          <CardTitle>Chi phí theo model — {days} ngày</CardTitle>
           <CardDescription>
             Stacked bar — vàng đậm = GPT-4o, vàng nhạt = mini, tím = Claude, jade = Gemini.
           </CardDescription>
@@ -83,8 +171,9 @@ export default function AdminCostPage() {
               title="Chưa có LLM trace"
               description={
                 <>
-                  Bắt đầu chạy hệ thống AI để track spend. Mỗi cuộc gọi LLM được ledger ngay khi xảy ra
-                  vào bảng <code className="font-mono text-gold">hieu_asia.llm_traces</code>.
+                  Bắt đầu chạy hệ thống AI để track spend. Mỗi cuộc gọi LLM được ledger ngay khi
+                  xảy ra vào bảng{' '}
+                  <code className="font-mono text-gold">hieu_asia.llm_traces</code>.
                 </>
               }
               className="border-0 bg-transparent"
@@ -98,7 +187,7 @@ export default function AdminCostPage() {
       <Card>
         <CardHeader>
           <CardTitle>Top 10 user chi tiêu</CardTitle>
-          <CardDescription>Sorted theo total_spend_usd (30 ngày gần nhất).</CardDescription>
+          <CardDescription>Sorted theo total_spend_usd ({days} ngày gần nhất).</CardDescription>
         </CardHeader>
         <CardContent>
           {(top.data ?? []).length === 0 && !top.isLoading ? (
@@ -116,16 +205,16 @@ export default function AdminCostPage() {
                 >
                   <span className="flex items-center gap-3">
                     <span
-                      className={
-                        'inline-flex h-7 w-7 items-center justify-center rounded-full font-mono text-xs ' +
-                        (i === 0
+                      className={cn(
+                        'inline-flex h-7 w-7 items-center justify-center rounded-full font-mono text-xs',
+                        i === 0
                           ? 'bg-gradient-to-br from-gold to-gold-600 text-ink shadow-md'
                           : i === 1
                             ? 'bg-cream/15 text-cream'
                             : i === 2
                               ? 'bg-gold/15 text-gold'
-                              : 'bg-ink/60 text-cream/70')
-                      }
+                              : 'bg-ink/60 text-cream/70',
+                      )}
                     >
                       {i + 1}
                     </span>

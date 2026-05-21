@@ -9,10 +9,39 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  toast,
 } from '@hieu-asia/ui';
-import { Receipt, Download } from 'lucide-react';
+import { Receipt, Download, Undo2 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
+
+/**
+ * Mask an opaque id for display — keep first 4 + last 4, dots in the middle.
+ */
+function maskId(id: string | null | undefined): string {
+  if (!id) return '—';
+  if (id.length <= 12) return id;
+  return `${id.slice(0, 4)}…${id.slice(-4)}`;
+}
+
+/**
+ * Attempt to refund a transaction. Worker endpoint /payment/refund/:id is
+ * not yet wired (Wave-D backlog). For now we log NotImplemented and toast.
+ */
+async function refundTransaction(record: { id: string; intent_id?: string | null }) {
+  try {
+    const r = await fetch(`/api/admin-proxy/payment/refund/${encodeURIComponent(record.intent_id ?? record.id)}`, {
+      method: 'POST',
+    });
+    if (r.status === 404) {
+      return { ok: false, status: 'not_implemented' as const };
+    }
+    const data = await r.json().catch(() => ({ ok: false, error: `HTTP ${r.status}` }));
+    return { ok: !!data.ok, status: data.ok ? ('done' as const) : ('error' as const), error: data.error };
+  } catch (e) {
+    return { ok: false, status: 'error' as const, error: (e as Error).message };
+  }
+}
 
 /** One transaction row as returned by Worker `GET /payment/transactions`. */
 interface TransactionRecord {
@@ -89,6 +118,23 @@ export default function AdminTransactionsPage() {
   const records: TransactionRecord[] = data?.records ?? [];
   const showError = !!error || data?.ok === false;
   const errorMsg = (error as Error | undefined)?.message ?? data?.error;
+
+  const handleRefund = async (r: TransactionRecord) => {
+    if (!confirm(`Refund giao dịch ${maskId(r.intent_id ?? r.id)}?`)) return;
+    const result = await refundTransaction(r);
+    if (result.status === 'not_implemented') {
+      // eslint-disable-next-line no-console
+      console.warn('[refund] NotImplemented — worker endpoint /payment/refund chưa wire', r);
+      toast.error('Refund chưa wire', {
+        description: 'Worker endpoint /payment/refund chưa sẵn sàng. Đã log NotImplemented.',
+      });
+    } else if (result.ok) {
+      toast.success('Đã refund', { description: maskId(r.intent_id ?? r.id) });
+      refetch();
+    } else {
+      toast.error('Refund thất bại', { description: result.error ?? 'unknown' });
+    }
+  };
 
   const exportCsv = () => {
     if (records.length === 0) return;
@@ -181,12 +227,13 @@ export default function AdminTransactionsPage() {
                   <th className="px-3 py-2 font-medium">User ID</th>
                   <th className="px-3 py-2 text-right font-medium">Amount</th>
                   <th className="px-3 py-2 font-medium">Metadata</th>
+                  <th className="px-3 py-2 text-right font-medium">Hành động</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800">
                 {isLoading && (
                   <tr>
-                    <td colSpan={6} className="px-3 py-6 text-center text-cream/55">
+                    <td colSpan={7} className="px-3 py-6 text-center text-cream/55">
                       Đang tải…
                     </td>
                   </tr>
@@ -194,7 +241,7 @@ export default function AdminTransactionsPage() {
 
                 {!isLoading && records.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="px-3 py-2">
+                    <td colSpan={7} className="px-3 py-2">
                       <EmptyState
                         title="Chưa có giao dịch nào"
                         description="Mọi event payment (intent_created, intent_paid, refund) ghi tại Worker sẽ hiện ở đây real-time."
@@ -204,36 +251,60 @@ export default function AdminTransactionsPage() {
                   </tr>
                 )}
 
-                {records.map((r) => (
-                  <tr key={r.id} className="hover:bg-gold/[0.03]">
-                    <td className="whitespace-nowrap px-3 py-2 text-cream/85">
-                      {fmtTs(r.ts)}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-2">
-                      <span className="rounded border border-[#B8923D]/30 bg-[#B8923D]/10 px-2 py-0.5 font-mono text-xs text-[#B8923D]">
-                        {r.type}
-                      </span>
-                    </td>
-                    <td className="px-3 py-2 font-mono text-xs text-cream/70">
-                      {r.intent_id ?? '—'}
-                    </td>
-                    <td className="px-3 py-2 font-mono text-xs text-cream/70">
-                      {r.user_id ?? '—'}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-2 text-right tabular-nums text-cream/85">
-                      {fmtAmount(r.amount)}
-                    </td>
-                    <td className="max-w-md px-3 py-2 align-top">
-                      {r.metadata ? (
-                        <pre className="max-h-32 overflow-auto whitespace-pre-wrap break-all rounded bg-ink/60 px-2 py-1 font-mono text-[11px] leading-snug text-cream/65">
-                          {JSON.stringify(r.metadata, null, 2)}
-                        </pre>
-                      ) : (
-                        <span className="text-cream/40">—</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                {records.map((r) => {
+                  const canRefund = r.type === 'intent_paid';
+                  return (
+                    <tr key={r.id} className="hover:bg-gold/[0.03]">
+                      <td className="whitespace-nowrap px-3 py-2 text-cream/85">
+                        {fmtTs(r.ts)}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-2">
+                        <span className="rounded border border-[#B8923D]/30 bg-[#B8923D]/10 px-2 py-0.5 font-mono text-xs text-[#B8923D]">
+                          {r.type}
+                        </span>
+                      </td>
+                      <td
+                        className="px-3 py-2 font-mono text-xs text-cream/70"
+                        title={r.intent_id ?? undefined}
+                      >
+                        {maskId(r.intent_id)}
+                      </td>
+                      <td
+                        className="px-3 py-2 font-mono text-xs text-cream/70"
+                        title={r.user_id ?? undefined}
+                      >
+                        {maskId(r.user_id)}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-2 text-right tabular-nums text-cream/85">
+                        {fmtAmount(r.amount)}
+                      </td>
+                      <td className="max-w-md px-3 py-2 align-top">
+                        {r.metadata ? (
+                          <pre className="max-h-32 overflow-auto whitespace-pre-wrap break-all rounded bg-ink/60 px-2 py-1 font-mono text-[11px] leading-snug text-cream/65">
+                            {JSON.stringify(r.metadata, null, 2)}
+                          </pre>
+                        ) : (
+                          <span className="text-cream/40">—</span>
+                        )}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-2 text-right">
+                        {canRefund ? (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleRefund(r)}
+                            className="border-red-400/30 text-red-300 hover:bg-red-500/10"
+                          >
+                            <Undo2 className="mr-1 h-3 w-3" />
+                            Refund
+                          </Button>
+                        ) : (
+                          <span className="text-cream/30">—</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

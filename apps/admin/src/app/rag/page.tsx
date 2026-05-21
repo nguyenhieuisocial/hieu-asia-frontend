@@ -13,6 +13,7 @@ import {
   Input,
   Label,
   StatusBadge,
+  toast,
   type DataTableColumn,
 } from '@hieu-asia/ui';
 import { getQdrantStats, ingestRagChunks, listRagChunks } from '@/lib/admin-api';
@@ -20,8 +21,27 @@ import { MockBanner } from '@/components/mock-banner';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
-import { BookOpen, FileText, Database, Layers } from 'lucide-react';
+import { BookOpen, FileText, Database, Layers, RotateCw } from 'lucide-react';
 import type { RagChunk } from '@/lib/mock-data';
+
+/**
+ * POST /admin/rag/reindex/:source_id — re-runs embedding job.
+ * Worker endpoint may not exist yet — handle 404 gracefully.
+ */
+async function reindexDocument(sourceId: string): Promise<{ ok: boolean; queued?: boolean; error?: string }> {
+  const r = await fetch(`/api/admin-proxy/admin/rag/reindex/${encodeURIComponent(sourceId)}`, {
+    method: 'POST',
+  });
+  if (r.status === 404) {
+    return { ok: false, error: 'Endpoint chưa wire ở worker (/admin/rag/reindex)' };
+  }
+  const text = await r.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    return { ok: false, error: `HTTP ${r.status}` };
+  }
+}
 
 const DISCIPLINE_LABEL: Record<RagChunk['discipline'], string> = {
   tu_vi: 'Tử Vi',
@@ -40,6 +60,19 @@ export default function AdminRagPage() {
   const qc = useQueryClient();
   const chunks = useQuery({ queryKey: ['admin', 'rag', 'chunks'], queryFn: listRagChunks });
   const stats = useQuery({ queryKey: ['admin', 'rag', 'qdrant'], queryFn: getQdrantStats });
+
+  const reindex = useMutation({
+    mutationFn: reindexDocument,
+    onSuccess: (data, sourceId) => {
+      if (data.ok) {
+        toast.success('Đã queue reindex', { description: `Source: ${sourceId}` });
+        qc.invalidateQueries({ queryKey: ['admin', 'rag'] });
+      } else {
+        toast.error('Reindex thất bại', { description: data.error });
+      }
+    },
+    onError: (e) => toast.error('Reindex thất bại', { description: (e as Error).message }),
+  });
 
   const cols: DataTableColumn<RagChunk>[] = [
     { key: 'source_id', header: 'Source ID', cell: (c) => <span className="font-mono text-xs text-cream/75">{c.source_id}</span> },
@@ -62,6 +95,23 @@ export default function AdminRagPage() {
       header: 'Nhập',
       width: '110px',
       cell: (c) => new Date(c.ingested_at).toLocaleDateString('vi-VN'),
+    },
+    {
+      key: 'actions',
+      header: '',
+      width: '110px',
+      cell: (c) => (
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => reindex.mutate(c.source_id)}
+          disabled={reindex.isPending}
+          aria-label={`Reindex ${c.source_id}`}
+        >
+          <RotateCw className={`mr-1 h-3 w-3 ${reindex.isPending && reindex.variables === c.source_id ? 'animate-spin' : ''}`} />
+          Reindex
+        </Button>
+      ),
     },
   ];
 

@@ -1,23 +1,66 @@
 'use client';
 
-import * as React from 'react';
+/**
+ * /admin/connect — third-party connection control panel.
+ *
+ * Two sections:
+ *   1. AI providers (Anthropic / OpenAI / Google) — API key / OAuth wire-up
+ *   2. Service integrations (Resend / Langfuse / SePay / Sentry / PostHog)
+ *      — each row has a "Test connection" button that pings the worker
+ *        `/admin/<service>/health` endpoint. If the worker hasn't wired
+ *        that route, the UI shows "Health check chưa wire" instead of a
+ *        hard error.
+ *
+ * Styling matches the premium ink/gold theme used elsewhere in admin.
+ */
 
+import * as React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  cn,
+} from '@hieu-asia/ui';
+import {
+  Plug,
+  CheckCircle2,
+  XCircle,
+  Loader2,
+  AlertTriangle,
+  ExternalLink,
+} from 'lucide-react';
+import { PageHeader } from '@/components/admin/page-header';
+
+type AiVendorId = 'anthropic' | 'openai' | 'google';
 type Providers = Record<
-  'anthropic' | 'openai' | 'google' | 'cloudflare',
+  AiVendorId | 'cloudflare',
   { api_key: boolean; oauth: boolean }
 >;
 
-const VENDORS = [
+interface AiVendor {
+  id: AiVendorId;
+  name: string;
+  roles: string;
+  model: string;
+  keyHint: string;
+  keyUrl: string;
+  oauth: boolean;
+  oauthLabel: string;
+  oauthHint: string;
+}
+
+const AI_VENDORS: ReadonlyArray<AiVendor> = [
   {
     id: 'anthropic',
     name: 'Anthropic Claude',
-    roles: 'psychology • report • mentor • judge',
+    roles: 'psychology · report · mentor · judge',
     model: 'claude-opus-4-7',
     keyHint: 'sk-ant-api03-...',
     keyUrl: 'https://console.anthropic.com/settings/keys',
-    // Anthropic disabled OAuth-token use on /v1/messages cho third-party tools
-    // từ ~Feb 2026. Subscription OAuth chỉ còn hoạt động trong Claude Code/Claude.ai.
-    // Force API key (sk-ant-api03-*) — workspace billing, charge riêng.
     oauth: false,
     oauthLabel: '',
     oauthHint: '',
@@ -25,12 +68,10 @@ const VENDORS = [
   {
     id: 'openai',
     name: 'OpenAI GPT',
-    roles: 'logic • alignment',
+    roles: 'logic · alignment',
     model: 'gpt-5.5',
     keyHint: 'sk-...',
     keyUrl: 'https://platform.openai.com/api-keys',
-    // OpenAI Codex OAuth dùng localhost:1455 callback — không web-paste được.
-    // Chỉ chạy được khi cài Codex CLI local. Ở đây chỉ hỗ trợ API key.
     oauth: false,
     oauthLabel: '',
     oauthHint: '',
@@ -38,50 +79,210 @@ const VENDORS = [
   {
     id: 'google',
     name: 'Google Gemini',
-    roles: 'vision (palm/face)',
+    roles: 'vision (palm / face)',
     model: 'gemini-3.5-flash',
     keyHint: 'AI...',
     keyUrl: 'https://aistudio.google.com/app/apikey',
     oauth: true,
-    oauthLabel: 'Login với Google (Gemini CLI OAuth)',
+    oauthLabel: 'Login với Google (Gemini OAuth)',
     oauthHint:
-      'Tab mới mở accounts.google.com → authorize → codeassist.google.com hiển thị code → copy paste vào đây',
+      'Tab mới mở accounts.google.com → authorize → copy code từ codeassist.google.com → paste vào ô bên dưới.',
   },
-] as const;
+];
 
-export default function ConnectPage() {
-  const [providers, setProviders] = React.useState<Providers | null>(null);
-  const [models, setModels] = React.useState<Record<string, string>>({});
-  const [busy, setBusy] = React.useState<string | null>(null);
-  const [msg, setMsg] = React.useState<Record<string, { kind: 'ok' | 'err' | 'pending'; text: string }>>({});
-  const [oauthState, setOAuthState] = React.useState<Record<string, string>>({});
-  const [oauthVisible, setOAuthVisible] = React.useState<Record<string, boolean>>({});
+interface ServiceIntegration {
+  id: string;
+  name: string;
+  hint: string;
+  /** Path appended to /api/admin-proxy/admin/ for health check. */
+  healthPath: string;
+  /** Optional doc link (opens external). */
+  docUrl?: string;
+}
 
-  const refresh = React.useCallback(async () => {
-    const r = await fetch('/api/admin/integrations/providers', { cache: 'no-store' });
-    const data = await r.json();
-    setProviders(data.providers);
-    setModels(data.default_models ?? {});
-  }, []);
+const SERVICES: ReadonlyArray<ServiceIntegration> = [
+  {
+    id: 'resend',
+    name: 'Resend (email)',
+    hint: 'Transactional email — confirmations, magic-link, reports.',
+    healthPath: 'resend/health',
+    docUrl: 'https://resend.com/docs',
+  },
+  {
+    id: 'langfuse',
+    name: 'Langfuse (LLM tracing)',
+    hint: 'Traces & evals cho mọi cuộc gọi LLM (latency, cost, prompts).',
+    healthPath: 'langfuse/health',
+    docUrl: 'https://langfuse.com/docs',
+  },
+  {
+    id: 'sepay',
+    name: 'SePay (payment)',
+    hint: 'Webhook & intent flow cho gói trả phí (VNĐ).',
+    healthPath: 'sepay/health',
+    docUrl: 'https://docs.sepay.vn',
+  },
+  {
+    id: 'sentry',
+    name: 'Sentry (error tracking)',
+    hint: 'Capture exception, performance, session replay.',
+    healthPath: 'sentry/health',
+    docUrl: 'https://docs.sentry.io',
+  },
+  {
+    id: 'posthog',
+    name: 'PostHog (analytics)',
+    hint: 'Product analytics + feature flag + recording.',
+    healthPath: 'posthog/health',
+    docUrl: 'https://posthog.com/docs',
+  },
+];
 
-  React.useEffect(() => {
-    refresh();
-  }, [refresh]);
+type HealthResult =
+  | { kind: 'ok'; detail?: string }
+  | { kind: 'down'; detail: string }
+  | { kind: 'not_wired'; detail: string };
 
-  const setStatus = (id: string, kind: 'ok' | 'err' | 'pending', text: string) =>
-    setMsg((m) => ({ ...m, [id]: { kind, text } }));
-
-  const onConnectKey = async (vendor: string) => {
-    const input = document.getElementById(`key-${vendor}`) as HTMLInputElement;
-    const key = input.value.trim();
-    if (!key) {
-      setStatus(vendor, 'err', 'Vui lòng nhập API key');
-      return;
+async function pingHealth(path: string): Promise<HealthResult> {
+  try {
+    const r = await fetch(`/api/admin-proxy/admin/${path}`, { cache: 'no-store' });
+    if (r.status === 404) {
+      return { kind: 'not_wired', detail: 'Health check chưa wire ở worker.' };
     }
-    setBusy(vendor);
-    setStatus(vendor, 'pending', 'Đang validate với vendor...');
+    const text = await r.text();
+    let data: { ok?: boolean; status?: string; error?: string } = {};
     try {
-      const r = await fetch(`/api/admin/integrations/keys/${vendor}`, {
+      data = JSON.parse(text);
+    } catch {
+      // non-JSON response — treat as down
+      return { kind: 'down', detail: `HTTP ${r.status} (non-JSON)` };
+    }
+    if (r.ok && data.ok !== false) {
+      return { kind: 'ok', detail: data.status ?? 'reachable' };
+    }
+    return { kind: 'down', detail: data.error ?? `HTTP ${r.status}` };
+  } catch (e) {
+    return { kind: 'down', detail: (e as Error).message };
+  }
+}
+
+function ServiceRow({ service }: { service: ServiceIntegration }) {
+  const [result, setResult] = React.useState<HealthResult | null>(null);
+  const [testing, setTesting] = React.useState(false);
+
+  const runTest = async () => {
+    setTesting(true);
+    setResult(null);
+    const r = await pingHealth(service.healthPath);
+    setResult(r);
+    setTesting(false);
+  };
+
+  const dotCls =
+    result?.kind === 'ok'
+      ? 'bg-emerald-400'
+      : result?.kind === 'down'
+        ? 'bg-red-400'
+        : result?.kind === 'not_wired'
+          ? 'bg-amber-400'
+          : 'bg-cream/30';
+
+  return (
+    <div className="flex items-start justify-between gap-3 rounded-lg border border-gold/15 bg-ink/40 px-4 py-3 transition-colors hover:border-gold/25">
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          <span className={cn('h-2 w-2 shrink-0 rounded-full', dotCls)} aria-hidden />
+          <p className="truncate font-medium text-cream">{service.name}</p>
+          {service.docUrl && (
+            <a
+              href={service.docUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="text-cream/40 hover:text-gold"
+              aria-label={`docs ${service.name}`}
+            >
+              <ExternalLink className="h-3 w-3" />
+            </a>
+          )}
+        </div>
+        <p className="mt-0.5 text-xs text-cream/60">{service.hint}</p>
+        {result && (
+          <p
+            className={cn(
+              'mt-1.5 font-mono text-[11px]',
+              result.kind === 'ok' && 'text-emerald-300',
+              result.kind === 'down' && 'text-red-300',
+              result.kind === 'not_wired' && 'text-amber-300',
+            )}
+          >
+            {result.kind === 'ok' && (
+              <>
+                <CheckCircle2 className="-mt-0.5 mr-1 inline h-3 w-3" />
+                OK — {result.detail}
+              </>
+            )}
+            {result.kind === 'down' && (
+              <>
+                <XCircle className="-mt-0.5 mr-1 inline h-3 w-3" />
+                {result.detail}
+              </>
+            )}
+            {result.kind === 'not_wired' && (
+              <>
+                <AlertTriangle className="-mt-0.5 mr-1 inline h-3 w-3" />
+                {result.detail}
+              </>
+            )}
+          </p>
+        )}
+      </div>
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={runTest}
+        disabled={testing}
+        className="shrink-0"
+      >
+        {testing ? (
+          <>
+            <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
+            Đang test…
+          </>
+        ) : (
+          'Test connection'
+        )}
+      </Button>
+    </div>
+  );
+}
+
+interface AiCardProps {
+  vendor: AiVendor;
+  providers: Providers | null;
+  model: string | undefined;
+  onChange: () => void;
+}
+
+function AiVendorCard({ vendor, providers, model, onChange }: AiCardProps) {
+  const st = providers?.[vendor.id];
+  const connected = !!(st?.api_key || st?.oauth);
+  const [busy, setBusy] = React.useState(false);
+  const [status, setStatus] = React.useState<{ kind: 'ok' | 'err' | 'pending'; text: string } | null>(
+    null,
+  );
+  const [oauthState, setOAuthState] = React.useState<string | null>(null);
+  const [oauthVisible, setOAuthVisible] = React.useState(false);
+
+  const setSt = (kind: 'ok' | 'err' | 'pending', text: string) => setStatus({ kind, text });
+
+  const onConnectKey = async () => {
+    const input = document.getElementById(`key-${vendor.id}`) as HTMLInputElement;
+    const key = input.value.trim();
+    if (!key) return setSt('err', 'Vui lòng nhập API key');
+    setBusy(true);
+    setSt('pending', 'Đang validate với vendor…');
+    try {
+      const r = await fetch(`/api/admin/integrations/keys/${vendor.id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ api_key: key }),
@@ -89,206 +290,266 @@ export default function ConnectPage() {
       const d = await r.json();
       if (d.ok) {
         input.value = '';
-        setStatus(vendor, 'ok', `✓ ${vendor} đã kết nối (API key)`);
-        refresh();
+        setSt('ok', `Đã kết nối ${vendor.name} (API key)`);
+        onChange();
       } else {
-        setStatus(vendor, 'err', `✗ ${d.error ?? 'Lỗi không xác định'}`);
+        setSt('err', d.error ?? 'Lỗi không xác định');
       }
     } catch (err) {
-      setStatus(vendor, 'err', `✗ ${(err as Error).message}`);
+      setSt('err', (err as Error).message);
     } finally {
-      setBusy(null);
+      setBusy(false);
     }
   };
 
-  const onOAuthStart = async (vendor: string) => {
-    setBusy(vendor);
-    setStatus(vendor, 'pending', 'Đang tạo OAuth flow...');
+  const onOAuthStart = async () => {
+    setBusy(true);
+    setSt('pending', 'Đang tạo OAuth flow…');
     try {
-      const r = await fetch(`/api/admin/integrations/oauth/${vendor}/start`, { method: 'POST' });
+      const r = await fetch(`/api/admin/integrations/oauth/${vendor.id}/start`, {
+        method: 'POST',
+      });
       const d = await r.json();
-      if (!d.ok) {
-        setStatus(vendor, 'err', `✗ ${d.error ?? 'Lỗi'}`);
-        return;
-      }
-      setOAuthState((s) => ({ ...s, [vendor]: d.state }));
-      setOAuthVisible((s) => ({ ...s, [vendor]: true }));
-      setStatus(vendor, 'pending', 'Mở tab mới để authorize → quay lại paste code dưới đây');
+      if (!d.ok) return setSt('err', d.error ?? 'Lỗi');
+      setOAuthState(d.state);
+      setOAuthVisible(true);
+      setSt('pending', 'Mở tab mới → quay lại paste code bên dưới');
       window.open(d.auth_url, '_blank', 'noopener,noreferrer');
     } catch (err) {
-      setStatus(vendor, 'err', `✗ ${(err as Error).message}`);
+      setSt('err', (err as Error).message);
     } finally {
-      setBusy(null);
+      setBusy(false);
     }
   };
 
-  const onOAuthExchange = async (vendor: string) => {
-    const input = document.getElementById(`oauth-code-${vendor}`) as HTMLInputElement;
+  const onOAuthExchange = async () => {
+    const input = document.getElementById(`oauth-code-${vendor.id}`) as HTMLInputElement;
     const code = input.value.trim();
-    const state = oauthState[vendor];
-    if (!code) {
-      setStatus(vendor, 'err', 'Paste code trước khi exchange');
-      return;
-    }
-    if (!state) {
-      setStatus(vendor, 'err', 'OAuth state hết hạn — bấm lại button OAuth');
-      return;
-    }
-    setBusy(vendor);
-    setStatus(vendor, 'pending', 'Đang exchange code...');
+    if (!code) return setSt('err', 'Paste code trước khi exchange');
+    if (!oauthState) return setSt('err', 'OAuth state hết hạn — bấm lại OAuth');
+    setBusy(true);
+    setSt('pending', 'Đang exchange code…');
     try {
-      const r = await fetch(`/api/admin/integrations/oauth/${vendor}/exchange`, {
+      const r = await fetch(`/api/admin/integrations/oauth/${vendor.id}/exchange`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ state, code }),
+        body: JSON.stringify({ state: oauthState, code }),
       });
       const d = await r.json();
       if (d.ok) {
         input.value = '';
-        setOAuthVisible((s) => ({ ...s, [vendor]: false }));
-        setStatus(vendor, 'ok', `✓ ${vendor} đã kết nối qua OAuth (dùng Pro/Max quota)`);
-        refresh();
+        setOAuthVisible(false);
+        setSt('ok', `Đã kết nối ${vendor.name} qua OAuth`);
+        onChange();
       } else {
-        setStatus(vendor, 'err', `✗ ${d.error ?? 'Lỗi exchange'}`);
+        setSt('err', d.error ?? 'Lỗi exchange');
       }
     } catch (err) {
-      setStatus(vendor, 'err', `✗ ${(err as Error).message}`);
+      setSt('err', (err as Error).message);
     } finally {
-      setBusy(null);
+      setBusy(false);
     }
   };
 
-  const onRevokeKey = async (vendor: string) => {
-    if (!confirm(`Revoke ${vendor} API key?`)) return;
-    await fetch(`/api/admin/integrations/keys/${vendor}`, { method: 'DELETE' });
-    refresh();
+  const onRevoke = async () => {
+    if (!confirm(`Revoke ${vendor.name} API key?`)) return;
+    await fetch(`/api/admin/integrations/keys/${vendor.id}`, { method: 'DELETE' });
+    onChange();
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6 p-6">
-      <header>
-        <h1 className="text-3xl font-bold text-[#B8923D]">Kết nối AI providers</h1>
-        <p className="mt-2 text-sm opacity-70">
-          Mỗi feature dùng vendor phù hợp (Vision → Gemini, Logic → GPT, Empathy → Claude). Keys
-          lưu encrypted trong Cloudflare KV. Trang này yêu cầu admin login. Endpoint backend yêu
-          cầu admin token (proxy server-side ẩn token).
-        </p>
-      </header>
-
-      <div className="rounded-lg border border-amber-700/40 bg-amber-900/10 p-4 text-sm leading-relaxed">
-        <b>Cách kết nối</b>: <b>Google Gemini</b> hỗ trợ OAuth (dùng quota Code Assist Standard).{' '}
-        <b>Anthropic Claude</b> và <b>OpenAI GPT</b> chỉ API key — Anthropic disable OAuth cho
-        Messages API third-party từ Feb 2026 (chỉ Claude Code/.ai được dùng), OpenAI Codex chỉ
-        accept <code className="font-mono text-xs">localhost:1455</code> callback nên không
-        web-paste được.
-      </div>
-
-      {VENDORS.map((v) => {
-        const st = providers?.[v.id];
-        const status = msg[v.id];
-        return (
-          <div key={v.id} className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-5">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-semibold">{v.name}</h2>
-              {st && (st.api_key || st.oauth) && (
-                <span className="text-xs text-emerald-400">
-                  {st.oauth && '🔐 OAuth'}
-                  {st.oauth && st.api_key && ' + '}
-                  {st.api_key && '🔑 API key'}
-                </span>
-              )}
-            </div>
-            <div className="mt-1 text-xs opacity-60">
-              Roles: {v.roles} — model {models[v.id] ?? v.model}
-            </div>
-
-            {v.oauth && (
-              <div className="mt-4">
-                <button
-                  onClick={() => onOAuthStart(v.id)}
-                  disabled={busy === v.id}
-                  className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-zinc-900 hover:bg-amber-500 disabled:opacity-50"
-                >
-                  🔐 {v.oauthLabel}
-                </button>
-                {oauthVisible[v.id] && (
-                  <div className="mt-3 rounded-lg bg-zinc-950 p-3 text-xs">
-                    <p className="opacity-80">{v.oauthHint}</p>
-                    <div className="mt-2 flex gap-2">
-                      <input
-                        id={`oauth-code-${v.id}`}
-                        type="text"
-                        placeholder="paste OAuth code"
-                        className="flex-1 rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2 font-mono text-xs"
-                      />
-                      <button
-                        onClick={() => onOAuthExchange(v.id)}
-                        disabled={busy === v.id}
-                        className="rounded-md bg-amber-600 px-3 py-2 text-xs font-semibold text-zinc-900 hover:bg-amber-500 disabled:opacity-50"
-                      >
-                        Exchange
-                      </button>
-                    </div>
-                  </div>
+    <Card>
+      <CardHeader>
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <span
+                className={cn(
+                  'inline-block h-2 w-2 rounded-full',
+                  connected ? 'bg-emerald-400' : 'bg-cream/30',
                 )}
-              </div>
-            )}
-
-            <div className="mt-4 text-xs opacity-60">
-              <span>API key: tạo tại </span>
-              <a className="text-amber-400 hover:underline" href={v.keyUrl} target="_blank" rel="noreferrer">
-                {v.keyUrl.replace('https://', '')}
-              </a>
-            </div>
-            <div className="mt-2 flex gap-2">
-              <input
-                id={`key-${v.id}`}
-                type="password"
-                placeholder={v.keyHint}
-                className="flex-1 rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2 font-mono text-xs"
               />
-              <button
-                onClick={() => onConnectKey(v.id)}
-                disabled={busy === v.id}
-                className="rounded-md bg-amber-600 px-4 py-2 text-sm font-semibold text-zinc-900 hover:bg-amber-500 disabled:opacity-50"
-              >
-                Connect
-              </button>
-              {st?.api_key && (
-                <button
-                  onClick={() => onRevokeKey(v.id)}
-                  className="rounded-md border border-red-700 px-3 py-2 text-xs text-red-400 hover:bg-red-900/30"
-                >
-                  Revoke
-                </button>
-              )}
-            </div>
-            {status && (
-              <div
-                className={`mt-2 text-xs ${
-                  status.kind === 'ok'
-                    ? 'text-emerald-400'
-                    : status.kind === 'err'
-                      ? 'text-red-400'
-                      : 'opacity-70'
-                }`}
-              >
-                {status.text}
+              {vendor.name}
+            </CardTitle>
+            <CardDescription className="mt-1 font-mono text-xs">
+              {model ?? vendor.model}
+            </CardDescription>
+          </div>
+          {connected && (
+            <span className="rounded border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-emerald-300">
+              {st?.oauth ? 'OAuth' : 'API key'}
+            </span>
+          )}
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <p className="text-xs text-cream/65">Roles: {vendor.roles}</p>
+
+        {vendor.oauth && (
+          <div>
+            <Button
+              size="sm"
+              onClick={onOAuthStart}
+              disabled={busy}
+              className="bg-gold/20 text-gold hover:bg-gold/30"
+            >
+              {vendor.oauthLabel}
+            </Button>
+            {oauthVisible && (
+              <div className="mt-2 rounded border border-gold/15 bg-ink/60 p-2 text-xs">
+                <p className="text-cream/65">{vendor.oauthHint}</p>
+                <div className="mt-2 flex gap-2">
+                  <input
+                    id={`oauth-code-${vendor.id}`}
+                    type="text"
+                    placeholder="paste OAuth code"
+                    className="flex-1 rounded-md border border-gold/20 bg-ink/60 px-2 py-1.5 font-mono text-xs text-cream placeholder:text-cream/30 focus:border-gold/50 focus:outline-none"
+                  />
+                  <Button size="sm" onClick={onOAuthExchange} disabled={busy}>
+                    Exchange
+                  </Button>
+                </div>
               </div>
             )}
           </div>
-        );
-      })}
+        )}
 
-      <div className="rounded-xl border border-amber-900/40 bg-zinc-900/30 p-5">
-        <h2 className="text-lg font-semibold">Cloudflare Workers AI (default, free)</h2>
-        <div className="mt-1 text-xs opacity-60">
-          Llama 3.3 70B + Llama 3.2 vision — đã active, không cần key.
+        <div>
+          <p className="text-xs text-cream/55">
+            API key:{' '}
+            <a href={vendor.keyUrl} target="_blank" rel="noreferrer" className="text-gold hover:underline">
+              {vendor.keyUrl.replace('https://', '')}
+            </a>
+          </p>
+          <div className="mt-1.5 flex gap-2">
+            <input
+              id={`key-${vendor.id}`}
+              type="password"
+              placeholder={vendor.keyHint}
+              className="flex-1 rounded-md border border-gold/20 bg-ink/60 px-2 py-1.5 font-mono text-xs text-cream placeholder:text-cream/30 focus:border-gold/50 focus:outline-none"
+            />
+            <Button size="sm" onClick={onConnectKey} disabled={busy}>
+              Connect
+            </Button>
+            {st?.api_key && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={onRevoke}
+                className="border-red-400/40 text-red-300 hover:bg-red-500/10"
+              >
+                Revoke
+              </Button>
+            )}
+          </div>
         </div>
-        <div className="mt-2 text-xs opacity-60">
-          Dùng làm fallback khi vendor key chưa set hoặc rate-limited.
-        </div>
+
+        {status && (
+          <div
+            className={cn(
+              'rounded border px-2 py-1 text-xs',
+              status.kind === 'ok' && 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300',
+              status.kind === 'err' && 'border-red-500/40 bg-red-500/10 text-red-300',
+              status.kind === 'pending' && 'border-gold/30 bg-gold/5 text-cream/75',
+            )}
+          >
+            {status.text}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+interface ProvidersResp {
+  providers?: Providers;
+  default_models?: Record<string, string>;
+}
+
+async function fetchProviders(): Promise<ProvidersResp> {
+  const r = await fetch('/api/admin/integrations/providers', { cache: 'no-store' });
+  if (!r.ok) return {};
+  return (await r.json()) as ProvidersResp;
+}
+
+export default function ConnectPage() {
+  const { data, refetch } = useQuery({
+    queryKey: ['admin', 'connect', 'providers'],
+    queryFn: fetchProviders,
+  });
+
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        title="Kết nối"
+        description="Wire-up các vendor AI và service tích hợp. Keys lưu encrypted trong Cloudflare KV."
+        icon={<Plug className="h-5 w-5" />}
+      />
+
+      <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-cream/75">
+        <b className="text-gold">Lưu ý:</b> Google Gemini hỗ trợ OAuth. Anthropic và OpenAI chỉ
+        chấp nhận API key — Anthropic disable OAuth cho Messages API từ Feb 2026, OpenAI Codex
+        chỉ accept <code className="font-mono">localhost:1455</code> callback nên không web-paste
+        được.
       </div>
+
+      <section className="space-y-3">
+        <h2 className="font-heading text-sm font-semibold uppercase tracking-wider text-cream/85">
+          Vendor AI
+        </h2>
+        <div className="grid gap-4 lg:grid-cols-3">
+          {AI_VENDORS.map((v) => (
+            <AiVendorCard
+              key={v.id}
+              vendor={v}
+              providers={data?.providers ?? null}
+              model={data?.default_models?.[v.id]}
+              onChange={refetch}
+            />
+          ))}
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <span className="inline-block h-2 w-2 rounded-full bg-emerald-400" />
+              Cloudflare Workers AI
+              <span className="rounded border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-emerald-300">
+                Native
+              </span>
+            </CardTitle>
+            <CardDescription className="font-mono text-xs">
+              llama-3.3-70b-instruct · llama-3.2-vision-11b
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-cream/65">
+              Active mặc định, không cần key. Dùng làm fallback khi vendor key chưa set hoặc bị
+              rate-limit.
+            </p>
+          </CardContent>
+        </Card>
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="font-heading text-sm font-semibold uppercase tracking-wider text-cream/85">
+          Service tích hợp
+        </h2>
+        <Card>
+          <CardHeader>
+            <CardTitle>Health checks</CardTitle>
+            <CardDescription>
+              Ping <code className="font-mono text-cream/75">/admin/&lt;service&gt;/health</code>{' '}
+              qua worker để kiểm tra kết nối thực tế.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {SERVICES.map((s) => (
+              <ServiceRow key={s.id} service={s} />
+            ))}
+          </CardContent>
+        </Card>
+      </section>
     </div>
   );
 }
