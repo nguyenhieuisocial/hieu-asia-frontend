@@ -93,10 +93,22 @@ export default function LearnBatTuPage() {
         </Accordion>
       </section>
 
-      <section className="mt-12 text-center">
-        <Link href="/onboarding">
-          <Button size="lg">Lập lá Bát Tự của bạn</Button>
-        </Link>
+      <section
+        aria-labelledby="bat-tu-cta-heading"
+        className="mt-12 rounded-2xl border border-gold/25 bg-ink/40 p-8 text-center"
+      >
+        <h2 id="bat-tu-cta-heading" className="font-heading text-2xl font-bold text-cream">
+          Trải nghiệm ngay
+        </h2>
+        <p className="mx-auto mt-3 max-w-xl text-sm text-cream/70">
+          Nhập ngày giờ sinh, hệ thống lập 4 trụ Năm – Tháng – Ngày – Giờ và phân tích cân bằng
+          Ngũ Hành. Bạn xem Bát Tự đầy đủ trước khi đọc luận giải chi tiết.
+        </p>
+        <div className="mt-6">
+          <Link href="/reading/new?method=bat-tu">
+            <Button size="lg">Xem Bát Tự của bạn</Button>
+          </Link>
+        </div>
       </section>
     </main>
   );

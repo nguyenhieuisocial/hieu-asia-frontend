@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu
 import { Users, Sparkles, MessageSquare, DollarSign, Gauge } from 'lucide-react';
 import { StatCard } from '@/components/stat-card';
 import { ReadingsChart } from '@/components/cost-chart';
+import { MockBanner } from '@/components/mock-banner';
 import { getKpis, getReadingsPerDay } from '@/lib/admin-api';
 
 function fmtUsd(v: number) {
@@ -20,10 +21,13 @@ export default function AdminOverviewPage() {
       <div>
         <h1 className="font-heading text-3xl font-semibold text-cream">Tổng quan</h1>
         <p className="mt-1 text-sm text-cream/65">
-          Theo dõi nhanh số liệu vận hành ngày + tháng. Dữ liệu hiện đang là mock — sẽ thay bằng
-          backend `/admin/*` khi sẵn sàng.
+          Theo dõi nhanh số liệu vận hành ngày + tháng. KPI lấy từ
+          <code className="mx-1 font-mono text-cream/75">/admin/analytics</code>
+          (fallback mock khi gateway không trả lời).
         </p>
       </div>
+
+      <MockBanner source={kpis.data?._source ?? readings.data?._source} />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <StatCard

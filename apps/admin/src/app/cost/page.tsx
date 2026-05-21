@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu
 import { StatCard } from '@/components/stat-card';
 import { CostChart } from '@/components/cost-chart';
 import { getCostByDay, getTopSpenders } from '@/lib/admin-api';
+import { MockBanner } from '@/components/mock-banner';
 
 function fmtUsd(v: number) {
   return `$${v.toFixed(2)}`;
@@ -28,6 +29,8 @@ export default function AdminCostPage() {
           Tổng hợp từ Langfuse / OpenRouter / Anthropic — gộp theo ngày + theo model.
         </p>
       </div>
+
+      <MockBanner source={cost.data?._source ?? top.data?._source} />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Hôm nay" value={fmtUsd(today)} hint="USD" />

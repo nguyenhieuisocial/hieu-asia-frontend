@@ -116,10 +116,25 @@ export default function LearnThanSoHocPage() {
         </Accordion>
       </section>
 
-      <section className="mt-12 text-center">
-        <Link href="/than-so-hoc">
-          <Button size="lg">Tính số chủ đạo của bạn</Button>
-        </Link>
+      <section
+        aria-labelledby="numerology-cta-heading"
+        className="mt-12 rounded-2xl border border-gold/25 bg-ink/40 p-8 text-center"
+      >
+        <h2
+          id="numerology-cta-heading"
+          className="font-heading text-2xl font-bold text-cream"
+        >
+          Trải nghiệm ngay
+        </h2>
+        <p className="mx-auto mt-3 max-w-xl text-sm text-cream/70">
+          Chỉ cần ngày sinh và tên đầy đủ, hệ thống tính ra số chủ đạo, số biểu hiện và số linh
+          hồn — kèm diễn giải năng lượng từng số.
+        </p>
+        <div className="mt-6">
+          <Link href="/reading/new?method=numerology">
+            <Button size="lg">Khám phá Thần Số Học</Button>
+          </Link>
+        </div>
       </section>
     </main>
   );

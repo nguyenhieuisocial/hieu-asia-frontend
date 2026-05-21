@@ -14,6 +14,7 @@ import {
   type DataTableColumn,
 } from '@hieu-asia/ui';
 import { getQueueDepth, listTasks, retryTask } from '@/lib/admin-api';
+import { MockBanner } from '@/components/mock-banner';
 import type { AdminTask } from '@/lib/mock-data';
 import type { TaskStatus } from '@hieu-asia/types';
 
@@ -75,6 +76,8 @@ export default function AdminTasksPage() {
         <h1 className="font-heading text-3xl font-semibold text-cream">Task / Lỗi (Celery)</h1>
         <p className="mt-1 text-sm text-cream/65">Theo dõi worker. Refresh tự động mỗi 5s.</p>
       </div>
+
+      <MockBanner source={data?._source ?? queue.data?._source} />
 
       <div className="grid gap-4 sm:grid-cols-3">
         <QueueCard name="Default" count={queue.data?.default ?? 0} />

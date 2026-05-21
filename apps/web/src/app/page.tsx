@@ -4,6 +4,8 @@ import { Button } from '@hieu-asia/ui';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Hero } from '@/components/landing/Hero';
 import { TrustSignalCarousel } from '@/components/learn/TrustSignalCarousel';
+import { HowToStart } from '@/components/home/HowToStart';
+import { MethodChooser } from '@/components/home/MethodChooser';
 import { Features } from '@/components/landing/Features';
 import { HowItWorks } from '@/components/landing/HowItWorks';
 import { Testimonials } from '@/components/landing/Testimonials';
@@ -49,6 +51,89 @@ const WEBSITE_JSONLD = {
   },
 };
 
+const HOWTO_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'Bắt đầu trong 3 phút với hieu.asia',
+  description:
+    'Ba bước để có góc nhìn huyền học cá nhân hóa: nhập thông tin, để AI phân tích, trò chuyện với AI Mentor.',
+  inLanguage: 'vi-VN',
+  totalTime: 'PT3M',
+  step: [
+    {
+      '@type': 'HowToStep',
+      position: 1,
+      name: 'Nhập thông tin cơ bản',
+      text: 'Cung cấp ngày giờ sinh và giới tính. Khoảng 1 phút, có thể chỉnh sửa sau.',
+      url: 'https://hieu.asia/onboarding',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 2,
+      name: 'AI phân tích trong 30 giây',
+      text: 'Hệ thống tổng hợp Tử Vi, Bát Tự, Thần Số Học và MBTI thành một bức tranh rõ ràng.',
+      url: 'https://hieu.asia/#how',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 3,
+      name: 'Trò chuyện với AI Mentor để hành động',
+      text: 'Đặt câu hỏi về quyết định bạn đang cân nhắc. Mentor gợi ý các bước tiếp theo.',
+      url: 'https://hieu.asia/onboarding',
+    },
+  ],
+};
+
+const SERVICES_JSONLD = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Service',
+      name: 'Tử Vi Đẩu Số',
+      serviceType: 'Tử Vi astrology reading',
+      provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
+      areaServed: 'VN',
+      inLanguage: 'vi-VN',
+      url: 'https://hieu.asia/learn/tu-vi',
+      description:
+        'Lá số Tử Vi 12 cung với chính tinh và phụ tinh — bản đồ 12 lĩnh vực đời sống.',
+    },
+    {
+      '@type': 'Service',
+      name: 'Bát Tự Tứ Trụ',
+      serviceType: 'Bát Tự (BaZi) reading',
+      provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
+      areaServed: 'VN',
+      inLanguage: 'vi-VN',
+      url: 'https://hieu.asia/learn/bat-tu',
+      description:
+        'Bát Tự 4 trụ Năm – Tháng – Ngày – Giờ theo Ngũ Hành — cân bằng năng lượng bẩm sinh.',
+    },
+    {
+      '@type': 'Service',
+      name: 'MBTI 16 loại tính cách',
+      serviceType: 'MBTI personality assessment',
+      provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
+      areaServed: 'VN',
+      inLanguage: 'vi-VN',
+      url: 'https://hieu.asia/learn/mbti',
+      description:
+        'MBTI dựa trên 4 trục của Carl Jung — khung tự nhận thức về cách bạn vận hành tự nhiên.',
+    },
+    {
+      '@type': 'Service',
+      name: 'Palm Reading AI',
+      serviceType: 'Palmistry / chiromancy AI analysis',
+      provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
+      areaServed: 'VN',
+      inLanguage: 'vi-VN',
+      url: 'https://hieu.asia/learn/palm',
+      description:
+        'AI phân tích 7 đường chính trên lòng bàn tay — tâm đạo, trí đạo, sinh đạo và các đường phụ.',
+    },
+  ],
+};
+
 export default function LandingPage() {
   return (
     <main id="main-content" className="min-h-screen bg-ink text-cream">
@@ -60,9 +145,19 @@ export default function LandingPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_JSONLD) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(HOWTO_JSONLD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(SERVICES_JSONLD) }}
+      />
       <SiteHeader />
       <Hero />
       <TrustSignalCarousel />
+      <HowToStart />
+      <MethodChooser />
       <Features />
       <HowItWorks />
       <Testimonials />

@@ -91,10 +91,22 @@ export default function LearnTuViPage() {
         </Accordion>
       </section>
 
-      <section className="mt-12 text-center">
-        <Link href="/onboarding">
-          <Button size="lg">Trải nghiệm lá số Tử Vi của bạn</Button>
-        </Link>
+      <section
+        aria-labelledby="tu-vi-cta-heading"
+        className="mt-12 rounded-2xl border border-gold/25 bg-ink/40 p-8 text-center"
+      >
+        <h2 id="tu-vi-cta-heading" className="font-heading text-2xl font-bold text-cream">
+          Trải nghiệm ngay
+        </h2>
+        <p className="mx-auto mt-3 max-w-xl text-sm text-cream/70">
+          Nhập ngày giờ sinh, hệ thống dựng lá số Tử Vi 12 cung trong khoảng 30 giây. Bạn xem
+          lá số đầy đủ trước khi quyết định mở khóa luận giải sâu.
+        </p>
+        <div className="mt-6">
+          <Link href="/reading/new?method=tu-vi">
+            <Button size="lg">Lập lá số Tử Vi của bạn</Button>
+          </Link>
+        </div>
       </section>
     </main>
   );

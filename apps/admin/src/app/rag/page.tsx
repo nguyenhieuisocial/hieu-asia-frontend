@@ -16,6 +16,7 @@ import {
   type DataTableColumn,
 } from '@hieu-asia/ui';
 import { getQdrantStats, ingestRagChunks, listRagChunks } from '@/lib/admin-api';
+import { MockBanner } from '@/components/mock-banner';
 import type { RagChunk } from '@/lib/mock-data';
 
 const DISCIPLINE_LABEL: Record<RagChunk['discipline'], string> = {
@@ -66,6 +67,8 @@ export default function AdminRagPage() {
         <h1 className="font-heading text-3xl font-semibold text-cream">RAG documents</h1>
         <p className="mt-1 text-sm text-cream/65">Tài liệu đã ingest + thống kê Qdrant.</p>
       </div>
+
+      <MockBanner source={chunks.data?._source ?? stats.data?._source} />
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Card>

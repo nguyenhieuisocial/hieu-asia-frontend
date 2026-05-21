@@ -26,6 +26,7 @@ import {
 } from '@hieu-asia/ui';
 import { Download, MoreVertical, RotateCcw, Trash2, Eye } from 'lucide-react';
 import { listSessions } from '@/lib/admin-api';
+import { MockBanner } from '@/components/mock-banner';
 import type { TaskStatus } from '@hieu-asia/types';
 
 const STATUS_TONE: Record<TaskStatus, React.ComponentProps<typeof StatusBadge>['status']> = {
@@ -189,6 +190,8 @@ export default function AdminSessionsPage() {
           Xuất CSV tất cả
         </Button>
       </div>
+
+      <MockBanner source={data?._source} />
 
       <Card>
         <CardHeader>

@@ -11,6 +11,7 @@ import {
   Switch,
 } from '@hieu-asia/ui';
 import { getFeatureFlags, updateFeatureFlags, type FeatureFlags } from '@/lib/admin-api';
+import { MockBanner } from '@/components/mock-banner';
 
 interface FlagDef {
   key: keyof FeatureFlags;
@@ -47,6 +48,8 @@ export default function AdminSettingsPage() {
           Feature flags (V1: in-memory backend) và biến môi trường runtime.
         </p>
       </div>
+
+      <MockBanner source={flags?._source} />
 
       <Card>
         <CardHeader>

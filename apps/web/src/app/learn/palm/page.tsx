@@ -89,10 +89,22 @@ export default function LearnPalmPage() {
         </Accordion>
       </section>
 
-      <section className="mt-12 text-center">
-        <Link href="/onboarding">
-          <Button size="lg">Tải ảnh bàn tay & phân tích</Button>
-        </Link>
+      <section
+        aria-labelledby="palm-cta-heading"
+        className="mt-12 rounded-2xl border border-gold/25 bg-ink/40 p-8 text-center"
+      >
+        <h2 id="palm-cta-heading" className="font-heading text-2xl font-bold text-cream">
+          Trải nghiệm ngay
+        </h2>
+        <p className="mx-auto mt-3 max-w-xl text-sm text-cream/70">
+          Chụp ảnh hai lòng bàn tay theo hướng dẫn, AI phân tích 7 đường chính và đặc trưng cá
+          nhân. Không cần giờ sinh chính xác.
+        </p>
+        <div className="mt-6">
+          <Link href="/reading/new?method=palm">
+            <Button size="lg">Upload ảnh chỉ tay</Button>
+          </Link>
+        </div>
       </section>
     </main>
   );

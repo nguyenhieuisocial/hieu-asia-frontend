@@ -22,6 +22,7 @@ import {
   refundTransaction,
   toggleCoupon,
 } from '@/lib/admin-api';
+import { MockBanner } from '@/components/mock-banner';
 import type { AdminCoupon, AdminTransaction } from '@/lib/mock-data';
 
 const STATUS_TONE: Record<AdminTransaction['status'], React.ComponentProps<typeof StatusBadge>['status']> = {
@@ -85,6 +86,8 @@ export default function AdminPaymentsPage() {
         <h1 className="font-heading text-3xl font-semibold text-cream">Thanh toán</h1>
         <p className="mt-1 text-sm text-cream/65">Giao dịch Stripe + quản lý coupon.</p>
       </div>
+
+      <MockBanner source={tx.data?._source ?? coupons.data?._source} />
 
       <Card>
         <CardHeader>
