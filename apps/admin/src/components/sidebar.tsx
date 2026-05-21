@@ -37,6 +37,9 @@ import {
   X,
   ChevronDown,
   HandCoins,
+  ScrollText,
+  Flag,
+  Ticket,
 } from 'lucide-react';
 
 interface NavItem {
@@ -59,6 +62,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/', label: 'Tổng quan', Icon: LayoutDashboard },
       { href: '/sessions', label: 'Phiên phân tích', Icon: ListTodo },
       { href: '/tasks', label: 'Task / Lỗi', Icon: Bot },
+      { href: '/audit', label: 'Audit log', Icon: ScrollText },
     ],
   },
   {
@@ -67,6 +71,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: '/customers', label: 'Khách hàng', Icon: User },
       { href: '/affiliates', label: 'Affiliate', Icon: HandCoins },
+      { href: '/coupons', label: 'Coupons', Icon: Ticket },
       { href: '/transactions', label: 'Giao dịch', Icon: Receipt },
       { href: '/payments', label: 'Thanh toán', Icon: CreditCard },
       { href: '/analytics', label: 'Analytics', Icon: BarChart3 },
@@ -89,6 +94,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/cost', label: 'Chi phí AI', Icon: DollarSign },
       { href: '/llm-spend', label: 'Chi phí LLM', Icon: DollarSign },
       { href: '/secrets', label: 'API Keys', Icon: Key },
+      { href: '/feature-flags', label: 'Feature flags', Icon: Flag },
       { href: '/users', label: 'Người dùng admin', Icon: Users },
       { href: '/settings', label: 'Cài đặt', Icon: Settings },
     ],
