@@ -14,6 +14,7 @@ import {
   Skeleton,
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { track } from '@/lib/analytics';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -94,8 +95,10 @@ export default function CanXuongPage() {
       const json = (await res.json()) as { ok: boolean; result?: CanXuongResult; error?: string };
       if (!json.ok || !json.result) throw new Error(json.error ?? 'Không tính được kết quả');
       setResult(json.result);
+      track('tool_used', { tool: 'can-xuong', result: 'ok' });
     } catch (e) {
       setError((e as Error).message);
+      track('tool_used', { tool: 'can-xuong', result: 'error' });
     } finally {
       setLoading(false);
     }

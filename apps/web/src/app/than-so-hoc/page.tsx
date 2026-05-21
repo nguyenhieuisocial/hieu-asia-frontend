@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { track } from '@/lib/analytics';
 
 const FEATURES: { title: string; body: string; icon: string }[] = [
   { title: 'Đường đời', body: 'Sứ mệnh và con đường lớn nhất của cuộc đời bạn.', icon: '🛤️' },
@@ -29,6 +30,7 @@ export default function ThanSoHocLandingPage() {
       return;
     }
     setSubmitting(true);
+    track('cta_clicked', { cta_id: 'than-so-hoc-submit', page: '/than-so-hoc' });
     const params = new URLSearchParams({ full_name: fullName.trim(), birth_date: birthDate });
     router.push(`/than-so-hoc/result?${params.toString()}`);
   };

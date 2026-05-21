@@ -18,6 +18,7 @@ import {
   Skeleton,
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { track } from '@/lib/analytics';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -70,8 +71,10 @@ export default function ThuocLoBanPage() {
       const json = (await res.json()) as { ok: boolean; result?: LoBanResult; error?: string };
       if (!json.ok || !json.result) throw new Error(json.error ?? 'Không tra được kích thước');
       setResult(json.result);
+      track('tool_used', { tool: 'thuoc-lo-ban', result: 'ok' });
     } catch (e) {
       setError((e as Error).message);
+      track('tool_used', { tool: 'thuoc-lo-ban', result: 'error' });
     } finally {
       setLoading(false);
     }
