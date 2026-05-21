@@ -85,3 +85,21 @@
     padding-right: max(0px, env(safe-area-inset-right));
   }
 }
+
+/* User preferences — reduced motion (opt-in from /settings) */
+[data-reduced-motion='true'] *,
+[data-reduced-motion='true'] *::before,
+[data-reduced-motion='true'] *::after {
+  animation-duration: 0.001s !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001s !important;
+  scroll-behavior: auto !important;
+}
+
+/* User preferences — high-contrast mode */
+[data-high-contrast='true'] {
+  --border: 40 60% 60%;
+}
+[data-high-contrast='true'] body {
+  color: #fff;
+}
