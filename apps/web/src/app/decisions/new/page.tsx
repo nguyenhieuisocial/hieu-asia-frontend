@@ -100,7 +100,7 @@ function NewDecisionInner() {
   const questionLength = question.trim().length;
   const situationLength = situation.length;
   const canSubmit =
-    !submitting && questionLength >= 10 && questionLength <= 200 && situationLength <= 1000;
+    !submitting && questionLength >= 10 && questionLength <= 500 && situationLength <= 1000;
 
   const payloadPreview = useMemo(
     () =>
@@ -301,13 +301,13 @@ function NewDecisionInner() {
                   id="decision-question"
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
-                  maxLength={200}
-                  placeholder="Nhập câu hỏi (10–200 ký tự)"
+                  maxLength={500}
+                  placeholder="Nhập câu hỏi (10–500 ký tự)"
                   className="mt-2"
                   required
                 />
                 <div className="mt-1 flex justify-end text-xs text-cream/50">
-                  {questionLength}/200
+                  {questionLength}/500
                 </div>
               </div>
 

@@ -18,6 +18,9 @@ export default function robots(): MetadataRoute.Robots {
           '/signin',
           '/auth/',
           '/onboarding/',
+          // Wave 6 — private detail URLs (localStorage-only, would soft-404 for crawlers)
+          '/decisions/d_',
+          '/journal/jr_',
         ],
       },
       {
