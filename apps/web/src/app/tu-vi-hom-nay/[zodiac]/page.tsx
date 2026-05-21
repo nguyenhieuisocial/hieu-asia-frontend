@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { SiteNav } from '@/components/home/SiteNav';
+import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 600;
@@ -67,6 +69,12 @@ export async function generateMetadata({ params }: { params: Promise<{ zodiac: s
     title: `Tử vi tuổi ${label} hôm nay`,
     description: `Tử vi hôm nay cho tuổi ${label}: tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe, giờ tốt, hướng tốt.`,
     alternates: { canonical: `https://hieu.asia/tu-vi-hom-nay/${zodiac}` },
+    openGraph: {
+      title: `Tử vi tuổi ${label} hôm nay · hieu.asia`,
+      description: `4 lĩnh vực, số/màu/hướng may mắn và lưu ý cho tuổi ${label}.`,
+      url: `https://hieu.asia/tu-vi-hom-nay/${zodiac}`,
+      type: 'article',
+    },
   };
 }
 
@@ -95,23 +103,42 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
   const icon = ZODIAC_ICON[zodiac] ?? '🔮';
 
   return (
-    <main id="main-content" className="min-h-screen bg-ink text-cream">
-      <section className="border-b border-cream/5 bg-ink/60">
-        <div className="mx-auto max-w-3xl px-6 py-8">
-          <Link href="/tu-vi-hom-nay" className="text-xs text-cream/60 hover:text-gold">
-            ← Xem tuổi khác
-          </Link>
-          <div className="mt-4 flex items-start gap-4">
+    <div className="min-h-screen bg-ink text-cream">
+      <SiteNav />
+      <main id="main-content" className="pt-16">
+      <section className="relative isolate overflow-hidden border-b border-cream/5 bg-ink/60">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-[280px] bg-ink-radial opacity-80 -z-10"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-20 right-[-10%] h-[260px] w-[260px] rounded-full bg-gold/15 blur-3xl -z-10"
+        />
+        <div className="mx-auto max-w-3xl px-6 py-10">
+          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-cream/55">
+            <Link href="/" className="hover:text-gold">Trang chủ</Link>
+            <span className="mx-1.5">/</span>
+            <Link href="/tu-vi-hom-nay" className="hover:text-gold">Tử vi hôm nay</Link>
+            <span className="mx-1.5">/</span>
+            <span className="text-cream/70">Tuổi {label}</span>
+          </nav>
+          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+            Tử vi hằng ngày
+          </p>
+          <div className="mt-3 flex items-start gap-4">
             <div className="text-5xl sm:text-6xl" aria-hidden>{icon}</div>
             <div>
-              <h1 className="font-heading text-3xl font-bold text-cream sm:text-4xl">
-                Tử vi tuổi {label} hôm nay
+              <h1 className="font-heading text-3xl font-bold leading-tight text-cream sm:text-4xl">
+                Tử vi tuổi{' '}
+                <span className="bg-gold-gradient bg-clip-text text-transparent">{label}</span>{' '}
+                hôm nay
               </h1>
-              <p className="mt-1 text-sm text-cream/60">
+              <p className="mt-2 text-sm text-cream/60">
                 {h?.date ?? '—'}{h?.lunar_date ? ` · ${h.lunar_date}` : ''}
               </p>
               {h ? (
-                <div className="mt-3 text-2xl font-bold text-gold">
+                <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-sm font-semibold text-gold">
                   Tổng quan: {h.overall.score}/10
                 </div>
               ) : null}
@@ -162,7 +189,7 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
 
           <section className="mx-auto max-w-3xl px-6 py-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <Link href="/tu-vi-hom-nay" className="rounded-lg border border-cream/20 px-4 py-2 text-sm text-cream/80 hover:border-gold hover:text-gold">
+              <Link href="/tu-vi-hom-nay" className="rounded-lg border border-cream/20 px-4 py-2 text-sm text-cream/80 transition-colors hover:border-gold hover:text-gold">
                 ← Xem tuổi khác
               </Link>
               <ShareButton zodiac={zodiac} label={label} score={h.overall.score} />
@@ -170,7 +197,9 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
           </section>
         </>
       )}
-    </main>
+      </main>
+      <SiteFooter />
+    </div>
   );
 }
 
