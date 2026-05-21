@@ -63,32 +63,24 @@ function rowToReport(row: {
   };
 }
 
-const MOCK_SESSIONS: MentorSession[] = [
-  {
-    id: 's1',
-    reading_id: 'demo-task-001',
-    message_count: 12,
-    last_message_preview:
-      'Tôi gợi ý chia 7 ngày tới thành 3 giai đoạn: stabilize cash, talk to team…',
-    last_active: '2 giờ trước',
-  },
-  {
-    id: 's2',
-    reading_id: 'demo-task-002',
-    message_count: 5,
-    last_message_preview: 'Trước khi mở chi nhánh mới, hãy kiểm tra 3 chỉ số…',
-    last_active: '2 tháng trước',
-  },
-];
+// Mentor sessions persistence is currently localStorage-only (see
+// mentor-history.ts) — there's no cross-device list yet. Pass empty so the
+// section renders its honest "Bạn chưa có cuộc trò chuyện nào" empty state
+// rather than fake conversations.
+const EMPTY_MENTOR_SESSIONS: MentorSession[] = [];
 
-const MOCK_PLAN: PlanUsage = {
-  plan_name: 'Gói Mentor Tháng',
-  mentor_used: 17,
-  mentor_limit: 60,
+// Default free plan until billing/usage endpoint lands. Showing real plan
+// requires linking to `users.plan` + `mentor_usage_monthly` (not yet wired).
+const DEFAULT_PLAN: PlanUsage = {
+  plan_name: 'Gói miễn phí',
+  mentor_used: 0,
+  mentor_limit: 3,
 };
 
-const MOCK_SETTINGS: SettingsState = {
-  email_notifications: true,
+// Default settings — user can opt-in; persistence layer (Postgres `user_prefs`)
+// not yet wired client-side.
+const DEFAULT_SETTINGS: SettingsState = {
+  email_notifications: false,
   telegram_notifications: false,
   language: 'vi',
 };
@@ -225,12 +217,12 @@ function DashboardContent() {
             )
           )}
           {active === 'mentor' && (
-            <MentorSessionsSection sessions={MOCK_SESSIONS} />
+            <MentorSessionsSection sessions={EMPTY_MENTOR_SESSIONS} />
           )}
-          {active === 'plan' && <PlanSection usage={MOCK_PLAN} />}
+          {active === 'plan' && <PlanSection usage={DEFAULT_PLAN} />}
           {active === 'settings' && (
             <SettingsSection
-              initial={MOCK_SETTINGS}
+              initial={DEFAULT_SETTINGS}
               onExport={() => {
                 toast.info('Xuất dữ liệu', {
                   description:
