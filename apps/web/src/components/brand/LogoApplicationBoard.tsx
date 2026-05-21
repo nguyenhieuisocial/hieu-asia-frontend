@@ -167,7 +167,7 @@ export function LogoApplicationBoard() {
           <div className="h-1 w-20 overflow-hidden rounded-full bg-cream/10">
             <div className="h-full w-1/2 animate-pulse rounded-full bg-gold" />
           </div>
-          <div className="font-mono text-[9px] uppercase tracking-[0.25em] text-cream/50">
+          <div className="font-mono text-[9px] uppercase tracking-[0.25em] text-cream/70">
             đang tải…
           </div>
         </div>

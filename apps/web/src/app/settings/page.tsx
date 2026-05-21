@@ -145,7 +145,7 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div className="mt-10 text-xs text-cream/45">
+          <div className="mt-10 text-xs text-cream/70">
             Cần hỗ trợ?{' '}
             <a className="text-gold underline-offset-4 hover:underline" href="mailto:support@hieu.asia">
               support@hieu.asia

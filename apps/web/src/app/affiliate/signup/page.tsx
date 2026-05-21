@@ -247,7 +247,7 @@ export default function AffiliateSignupPage() {
                 {submitting ? 'Đang tạo tài khoản…' : 'Đăng ký'}
               </Button>
 
-              <p className="text-xs text-cream/50">
+              <p className="text-xs text-cream/70">
                 Khi đăng ký bạn đồng ý với{' '}
                 <Link href="/terms" className="text-gold hover:underline">
                   Điều khoản

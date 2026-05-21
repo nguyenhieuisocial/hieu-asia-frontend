@@ -58,7 +58,7 @@ export function AccountSection({ userId }: AccountSectionProps) {
       </div>
 
       <div className="border-t border-cream/5 pt-4">
-        <p className="text-xs font-semibold uppercase tracking-widest text-cream/45">
+        <p className="text-xs font-semibold uppercase tracking-widest text-cream/70">
           Quản lý tài khoản
         </p>
         <ul className="mt-3 space-y-2 text-sm">

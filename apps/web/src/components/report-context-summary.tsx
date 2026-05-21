@@ -31,7 +31,7 @@ export function ReportContextSummary({
           </p>
         </div>
         {generatedAt && (
-          <p className="font-mono text-xs text-cream/50">
+          <p className="font-mono text-xs text-cream/70">
             Tạo lúc: {generatedAt}
           </p>
         )}

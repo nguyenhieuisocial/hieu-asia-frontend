@@ -355,7 +355,7 @@ export default function DecisionBriefPage() {
                       />
                     )}
                     <span className="flex flex-1 items-start gap-2">
-                      <span className="font-mono text-xs text-cream/50">
+                      <span className="font-mono text-xs text-cream/70">
                         {i + 1}.
                       </span>
                       <span

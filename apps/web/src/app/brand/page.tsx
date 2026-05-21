@@ -115,7 +115,7 @@ export default function BrandPage() {
               <div className="mt-6 px-3">
                 <Link
                   href="/"
-                  className="inline-flex items-center gap-1 text-xs text-cream/50 hover:text-gold"
+                  className="inline-flex items-center gap-1 text-xs text-cream/70 hover:text-gold"
                 >
                   ← Về trang chủ
                 </Link>
@@ -359,7 +359,7 @@ export default function BrandPage() {
       <footer className="border-t border-gold/10 bg-ink/80 py-10">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-6 text-center">
           <Logo kind="wordmark" size={36} />
-          <p className="text-xs text-cream/50">
+          <p className="text-xs text-cream/70">
             © {new Date().getFullYear()} hieu.asia — Brand System v1
           </p>
           <Link href="/" className="text-xs text-cream/60 hover:text-gold">
@@ -451,15 +451,15 @@ function ClearSpaceGuide() {
         <div className="mt-5 flex items-end gap-6">
           <div className="flex flex-col items-center gap-2">
             <SymbolMark size={16} />
-            <span className="font-mono text-[10px] text-cream/50">16 px</span>
+            <span className="font-mono text-[10px] text-cream/70">16 px</span>
           </div>
           <div className="flex flex-col items-center gap-2">
             <Wordmark size={20} />
-            <span className="font-mono text-[10px] text-cream/50">80 px W</span>
+            <span className="font-mono text-[10px] text-cream/70">80 px W</span>
           </div>
           <div className="flex flex-col items-center gap-2">
             <Lockup size={30} />
-            <span className="font-mono text-[10px] text-cream/50">120 px W</span>
+            <span className="font-mono text-[10px] text-cream/70">120 px W</span>
           </div>
         </div>
       </div>

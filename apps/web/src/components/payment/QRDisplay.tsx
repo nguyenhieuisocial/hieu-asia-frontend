@@ -144,7 +144,7 @@ export function QRDisplay({ intent, onExpire }: QRDisplayProps) {
                 'rounded-md border px-3 py-1 text-sm font-mono',
                 intent.status === 'pending'
                   ? 'border-gold/40 text-gold'
-                  : 'border-cream/20 text-cream/50',
+                  : 'border-cream/20 text-cream/70',
               )}
               aria-label="Thời gian còn lại"
             >

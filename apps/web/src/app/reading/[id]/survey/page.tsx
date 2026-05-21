@@ -151,7 +151,7 @@ export default function SurveyPage() {
             Mất khoảng 2 phút — không có đáp án đúng/sai.
           </p>
           {uploadObject && (
-            <p className="mt-2 font-mono text-xs text-cream/45">
+            <p className="mt-2 font-mono text-xs text-cream/70">
               Ảnh đã tải lên: {uploadObject.split('/').pop()}
             </p>
           )}

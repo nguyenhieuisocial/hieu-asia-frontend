@@ -187,7 +187,7 @@ export function MentorTab() {
                       <p className="truncate text-sm text-cream/90">
                         {s.preview ?? `Phiên ${s.reading_id.slice(0, 8)}`}
                       </p>
-                      <p className="mt-0.5 font-mono text-[10px] text-cream/45">
+                      <p className="mt-0.5 font-mono text-[10px] text-cream/70">
                         {fmtDate(s.last_message_at)} · {s.reading_id.slice(0, 12)}
                       </p>
                     </div>

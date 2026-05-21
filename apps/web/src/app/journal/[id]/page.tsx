@@ -315,7 +315,7 @@ export default function JournalEntryPage() {
                               className="mt-2"
                               required
                             />
-                            <div className="mt-1 flex justify-end text-xs text-cream/50">
+                            <div className="mt-1 flex justify-end text-xs text-cream/70">
                               {actualOutcome.trim().length}/500
                             </div>
                           </div>
@@ -337,7 +337,7 @@ export default function JournalEntryPage() {
                               className="mt-2"
                               required
                             />
-                            <div className="mt-1 flex justify-end text-xs text-cream/50">
+                            <div className="mt-1 flex justify-end text-xs text-cream/70">
                               {lesson.trim().length}/500
                             </div>
                           </div>
@@ -414,7 +414,7 @@ export default function JournalEntryPage() {
                 {reviewedAt && (
                   <p className="flex items-start gap-2 text-xs text-cream/55">
                     <RotateCcw
-                      className="mt-0.5 h-3.5 w-3.5 shrink-0 text-cream/50"
+                      className="mt-0.5 h-3.5 w-3.5 shrink-0 text-cream/70"
                       aria-hidden="true"
                     />
                     Review đã chốt. Nếu muốn ghi tiếp, hãy tạo một quyết định

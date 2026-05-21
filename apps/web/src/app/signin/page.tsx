@@ -112,7 +112,7 @@ export default function SignInPage() {
                 {loading ? 'Đang gửi…' : 'Gửi liên kết đăng nhập'}
               </Button>
 
-              <p className="text-center text-xs text-cream/50">
+              <p className="text-center text-xs text-cream/70">
                 Bằng cách đăng nhập, bạn đồng ý với{' '}
                 <a href="/terms" className="underline hover:text-gold">
                   Điều khoản

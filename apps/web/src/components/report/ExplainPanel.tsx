@@ -62,7 +62,7 @@ export function ExplainPanel({
         <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
         <span>
           Xem căn cứ luận giải
-          {topic ? <span className="text-cream/50"> · {topic}</span> : null}
+          {topic ? <span className="text-cream/70"> · {topic}</span> : null}
         </span>
         {open ? (
           <ChevronUp className="h-3.5 w-3.5" aria-hidden="true" />
@@ -91,7 +91,7 @@ export function ExplainPanel({
             </p>
 
             {palaces.length === 0 ? (
-              <p className="mt-2 text-sm text-cream/50">
+              <p className="mt-2 text-sm text-cream/70">
                 Chưa có dữ liệu cung được trích dẫn.
               </p>
             ) : (

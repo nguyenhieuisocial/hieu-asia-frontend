@@ -211,7 +211,7 @@ export default function ThuocLoBanPage() {
                   <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-cream/85">
                     {result.meaning}
                   </p>
-                  <p className="mt-3 font-mono text-[10px] tracking-wide text-cream/45">
+                  <p className="mt-3 font-mono text-[10px] tracking-wide text-cream/70">
                     Vị trí trong chu kỳ: {result.position_in_cycle_cm.toFixed(1)} /{' '}
                     {result.cycle_length_cm} cm
                   </p>

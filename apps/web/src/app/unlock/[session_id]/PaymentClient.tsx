@@ -225,7 +225,7 @@ export function PaymentClient({ sessionId, tier }: PaymentClientProps) {
     <div className="space-y-4">
       <QRDisplay intent={intent} onExpire={handleExpire} />
       {intent.status === 'pending' && (
-        <p className="text-center text-xs text-cream/50">
+        <p className="text-center text-xs text-cream/70">
           Trang sẽ tự chuyển sau khi xác nhận thanh toán thành công.
         </p>
       )}

@@ -89,7 +89,7 @@ function PalaceCell({ palace, selected, trigon, onClick }: PalaceCellProps) {
         </div>
       )}
       {palace.decadal?.range && (
-        <p className="mt-auto font-mono text-[9px] text-cream/45">
+        <p className="mt-auto font-mono text-[9px] text-cream/70">
           ĐV {palace.decadal.range[0]}–{palace.decadal.range[1]}
         </p>
       )}
@@ -146,7 +146,7 @@ function PalaceDetail({ palace }: { palace: TuViPalace }) {
         )}
         {palace.adjectiveStars.length > 0 && (
           <div className="sm:col-span-2">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-cream/45">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-cream/70">
               Sao bổ trợ ({palace.adjectiveStars.length})
             </p>
             <div className="mt-2 flex flex-wrap gap-1">
@@ -154,7 +154,7 @@ function PalaceDetail({ palace }: { palace: TuViPalace }) {
                 <StarPill key={s.name} star={s} />
               ))}
               {palace.adjectiveStars.length > 12 && (
-                <span className="text-[10px] text-cream/45">
+                <span className="text-[10px] text-cream/70">
                   +{palace.adjectiveStars.length - 12} sao khác
                 </span>
               )}

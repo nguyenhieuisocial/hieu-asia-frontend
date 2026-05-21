@@ -121,7 +121,7 @@ export function DecisionsTab() {
                     >
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm text-cream/90">{d.question}</p>
-                        <p className="mt-0.5 text-[11px] text-cream/45">
+                        <p className="mt-0.5 text-[11px] text-cream/70">
                           {TOPIC_LABEL[d.topic] ?? d.topic} · {fmtDate(d.createdAt)}
                         </p>
                       </div>
@@ -159,7 +159,7 @@ export function DecisionsTab() {
                     >
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm text-cream/90">{j.question}</p>
-                        <p className="mt-0.5 text-[11px] text-cream/45">
+                        <p className="mt-0.5 text-[11px] text-cream/70">
                           {TOPIC_LABEL[j.topic] ?? j.topic} · {fmtDate(j.createdAt)}
                         </p>
                       </div>

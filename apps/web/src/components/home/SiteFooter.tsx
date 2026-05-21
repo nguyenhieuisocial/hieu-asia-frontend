@@ -90,7 +90,7 @@ export function SiteFooter() {
               <Heart className="h-3.5 w-3.5 fill-gold text-gold" aria-hidden="true" />
             </p>
           </div>
-          <div className="mt-3 flex flex-col gap-2 text-xs text-cream/45 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-3 flex flex-col gap-2 text-xs text-cream/70 sm:flex-row sm:items-center sm:justify-between">
             <p>© {year} hieu.asia · Mọi quyền được bảo lưu.</p>
             <p>Kết quả mang tính tham khảo — không thay thế tư vấn y tế, pháp lý hay tài chính.</p>
           </div>

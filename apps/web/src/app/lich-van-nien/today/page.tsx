@@ -192,7 +192,7 @@ export default function TodayPage() {
           />
         )}
 
-        <div className="text-center text-xs text-cream/45">
+        <div className="text-center text-xs text-cream/70">
           <Link href="/lich-van-nien" className="hover:text-gold">← Quay lại Lịch Vạn Niên</Link>
         </div>
       </section>

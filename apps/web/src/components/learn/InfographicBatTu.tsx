@@ -92,7 +92,7 @@ export function InfographicBatTu() {
           </tbody>
         </table>
       </div>
-      <p className="text-center text-xs text-cream/50">
+      <p className="text-center text-xs text-cream/70">
         Ví dụ: Một lá Bát Tự gồm 4 trụ (Năm/Tháng/Ngày/Giờ sinh), mỗi trụ có 1 Thiên Can + 1 Địa Chi.
       </p>
       <div className="flex flex-wrap justify-center gap-2 text-xs">

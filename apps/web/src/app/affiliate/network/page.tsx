@@ -439,7 +439,7 @@ export default function AffiliateNetworkPage() {
           </Link>
         </div>
 
-        <p className="mt-6 text-xs text-cream/45">
+        <p className="mt-6 text-xs text-cream/70">
           Tổng cây: {stats.total_subtree} người (L1 + L2 + L3).
         </p>
       </main>

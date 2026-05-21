@@ -32,13 +32,13 @@ export function PinnedInsights({
         <h2 className="font-heading text-sm font-medium text-gold">
           📌 Insights đã ghim
         </h2>
-        <p className="mt-1 text-xs text-cream/50">
+        <p className="mt-1 text-xs text-cream/70">
           {items.length} mục · lưu trên thiết bị này
         </p>
       </header>
       <div className="flex-1 space-y-3 overflow-y-auto p-3">
         {items.length === 0 && (
-          <p className="px-2 py-6 text-center text-xs text-cream/50">
+          <p className="px-2 py-6 text-center text-xs text-cream/70">
             Chưa có gì được ghim. Ghim câu trả lời từ Mentor hoặc insight trong
             báo cáo để xem ở đây.
           </p>

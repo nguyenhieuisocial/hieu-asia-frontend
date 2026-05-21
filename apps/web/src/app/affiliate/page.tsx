@@ -131,7 +131,7 @@ export default function AffiliateLandingPage() {
                   <div className="text-xl font-bold text-gold">{formatVND(yearTotal)}</div>
                 </div>
               </div>
-              <p className="mt-4 text-xs text-cream/50">
+              <p className="mt-4 text-xs text-cream/70">
                 * Ước tính. Thu nhập thực tế tùy thuộc retention và churn rate của khách bạn giới thiệu.
               </p>
             </CardContent>

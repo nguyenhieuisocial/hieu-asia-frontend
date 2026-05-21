@@ -107,13 +107,13 @@ export function MethodChooser() {
 
               <dl className="mt-4 space-y-3 text-sm leading-relaxed text-cream/70">
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wider text-cream/50">
+                  <dt className="text-xs font-semibold uppercase tracking-wider text-cream/70">
                     Cho bạn biết
                   </dt>
                   <dd className="mt-1">{tells}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wider text-cream/50">
+                  <dt className="text-xs font-semibold uppercase tracking-wider text-cream/70">
                     Phù hợp khi
                   </dt>
                   <dd className="mt-1">{bestFor}</dd>

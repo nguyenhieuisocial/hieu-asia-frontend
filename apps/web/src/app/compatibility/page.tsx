@@ -276,7 +276,7 @@ export default function CompatibilityPage() {
                         <div className="text-sm font-semibold text-cream">{s.dimension}</div>
                         <div className="text-xs text-cream/55">{s.signal}</div>
                       </div>
-                      <div className="font-heading text-2xl text-cream">{s.score}<span className="text-sm text-cream/50">/10</span></div>
+                      <div className="font-heading text-2xl text-cream">{s.score}<span className="text-sm text-cream/70">/10</span></div>
                     </div>
                     <div className="mt-3">
                       <ScoreBar score={s.score} signal={s.signal} />

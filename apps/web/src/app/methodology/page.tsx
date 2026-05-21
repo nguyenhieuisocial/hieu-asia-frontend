@@ -498,7 +498,7 @@ export default function MethodologyPage() {
               ))}
             </div>
 
-            <p className="mt-6 font-mono text-[11px] text-cream/50">
+            <p className="mt-6 font-mono text-[11px] text-cream/70">
               Last verified: {LAST_VERIFIED}
             </p>
           </div>

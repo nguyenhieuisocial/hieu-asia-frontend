@@ -101,7 +101,7 @@ export default function ProcessingPage() {
       </motion.div>
 
       <header className="container mx-auto max-w-2xl px-5 py-10 text-center">
-        <nav aria-label="Breadcrumb" className="mx-auto mb-4 text-xs text-cream/50">
+        <nav aria-label="Breadcrumb" className="mx-auto mb-4 text-xs text-cream/70">
           <Link href="/" className="hover:text-gold">Trang chủ</Link>
           <span className="mx-1.5">/</span>
           <Link href="/reading" className="hover:text-gold">Lá số của bạn</Link>

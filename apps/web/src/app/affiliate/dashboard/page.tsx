@@ -262,7 +262,7 @@ export default function AffiliateDashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-gold">{vnd(s.total_earned)}</div>
-              <div className="text-xs text-cream/50">Đã trả: {vnd(s.paid_total)}</div>
+              <div className="text-xs text-cream/70">Đã trả: {vnd(s.paid_total)}</div>
             </CardContent>
           </Card>
           <Card>
@@ -271,7 +271,7 @@ export default function AffiliateDashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{vnd(s.pending_payout)}</div>
-              <div className="text-xs text-cream/50">
+              <div className="text-xs text-cream/70">
                 Tối thiểu rút: {vnd(data.min_payout_vnd)}
               </div>
             </CardContent>
@@ -282,7 +282,7 @@ export default function AffiliateDashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{s.clicks} clicks</div>
-              <div className="text-xs text-cream/50">
+              <div className="text-xs text-cream/70">
                 {s.signups} đăng ký · {s.conversions} mua
               </div>
             </CardContent>
@@ -297,7 +297,7 @@ export default function AffiliateDashboardPage() {
               <div className="mt-1 text-cream/70">
                 Lý do: <b>{data.flag.reason}</b> — {data.flag.detail}
               </div>
-              <div className="mt-2 text-xs text-cream/50">
+              <div className="mt-2 text-xs text-cream/70">
                 Payout sẽ bị tạm khoá đến khi admin review. Vui lòng liên hệ support nếu bạn cho rằng có nhầm lẫn.
               </div>
             </CardContent>
@@ -318,7 +318,7 @@ export default function AffiliateDashboardPage() {
                 <div key={n.id} className="rounded border border-cream/10 bg-cream/[0.03] p-3 text-sm">
                   <div className="flex items-center justify-between">
                     <span className="font-semibold">{n.title}</span>
-                    <span className="text-xs text-cream/50">{dt(n.created_at)}</span>
+                    <span className="text-xs text-cream/70">{dt(n.created_at)}</span>
                   </div>
                   <div className="mt-1 text-cream/70">{n.message}</div>
                   {n.link && (

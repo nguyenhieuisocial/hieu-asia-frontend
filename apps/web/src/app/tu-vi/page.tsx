@@ -181,7 +181,7 @@ export default function TuViHubPage() {
                   <p className="font-heading text-sm font-semibold text-cream">{s.name}</p>
                   <p className="mt-0.5 text-xs text-cream/65">{s.hint}</p>
                 </div>
-                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-cream/45" aria-hidden />
+                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-cream/70" aria-hidden />
               </Link>
             ))}
           </div>
@@ -211,7 +211,7 @@ export default function TuViHubPage() {
                   <p className="font-heading text-sm font-semibold text-cream">{s.name}</p>
                   <p className="mt-0.5 text-xs text-cream/65">{s.hint}</p>
                 </div>
-                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-cream/45" aria-hidden />
+                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-cream/70" aria-hidden />
               </Link>
             ))}
           </div>

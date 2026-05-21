@@ -156,7 +156,7 @@ export function PayoutRequest({
           </Button>
         </div>
         {!canPayout && isActive && (
-          <p className="text-xs text-cream/50">Cần đạt {vnd(minPayout)} mới được rút.</p>
+          <p className="text-xs text-cream/70">Cần đạt {vnd(minPayout)} mới được rút.</p>
         )}
         {msg && (
           <p className={`text-sm ${msg.ok ? 'text-green-400' : 'text-rose-300'}`} role="status">
@@ -176,7 +176,7 @@ export function RecentEvents({ events }: { events: DashRecentEvent[] }) {
       </CardHeader>
       <CardContent>
         {events.length === 0 ? (
-          <p className="text-sm text-cream/50">Chưa có hoạt động nào.</p>
+          <p className="text-sm text-cream/70">Chưa có hoạt động nào.</p>
         ) : (
           <div className="space-y-1">
             {events.map((ev, i) => (
@@ -210,7 +210,7 @@ export function PayoutHistory({ payouts }: { payouts: DashPayout[] }) {
       </CardHeader>
       <CardContent>
         {payouts.length === 0 ? (
-          <p className="text-sm text-cream/50">Chưa có yêu cầu nào.</p>
+          <p className="text-sm text-cream/70">Chưa có yêu cầu nào.</p>
         ) : (
           <div className="space-y-1">
             {payouts.map((p) => (
@@ -220,7 +220,7 @@ export function PayoutHistory({ payouts }: { payouts: DashPayout[] }) {
               >
                 <div>
                   <span className="font-mono">{vnd(p.amount)}</span>{' '}
-                  <span className="text-cream/50">· {dt(p.requested_at)}</span>
+                  <span className="text-cream/70">· {dt(p.requested_at)}</span>
                 </div>
                 <span className={STATUS_LABEL[p.status].tone}>
                   {STATUS_LABEL[p.status].text}

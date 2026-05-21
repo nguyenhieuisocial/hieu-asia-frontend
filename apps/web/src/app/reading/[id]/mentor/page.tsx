@@ -279,7 +279,7 @@ export default function MentorChatPage() {
             <p className="font-heading text-sm text-cream">
               Cố vấn Cuộc Đời
             </p>
-            <p className="flex items-center gap-1.5 text-xs text-cream/50">
+            <p className="flex items-center gap-1.5 text-xs text-cream/70">
               <span aria-hidden="true" className="inline-block h-2 w-2 rounded-full bg-jade-500" />
               đang trực
             </p>

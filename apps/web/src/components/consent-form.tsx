@@ -147,7 +147,7 @@ export function ConsentForm() {
               <Checkbox className="mt-1" {...register('improve_optin')} />
               <span className="text-sm text-cream/80">
                 Cải thiện chất lượng dịch vụ
-                <span className="ml-1 text-xs text-cream/50">(tùy chọn — bạn có thể bỏ chọn)</span>
+                <span className="ml-1 text-xs text-cream/70">(tùy chọn — bạn có thể bỏ chọn)</span>
               </span>
             </label>
           </li>

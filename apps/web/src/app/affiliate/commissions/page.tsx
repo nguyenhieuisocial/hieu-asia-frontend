@@ -411,7 +411,7 @@ export default function AffiliateCommissionsPage() {
               <Button className="bg-gold text-ink hover:bg-gold/90">Yêu cầu rút</Button>
             </Link>
           ) : (
-            <Button disabled className="bg-cream/10 text-cream/50">
+            <Button disabled className="bg-cream/10 text-cream/70">
               Yêu cầu rút (tối thiểu {vnd(MIN_PAYOUT_VND)})
             </Button>
           )}
@@ -420,7 +420,7 @@ export default function AffiliateCommissionsPage() {
           </Link>
         </div>
 
-        <p className="mt-4 text-xs text-cream/45">
+        <p className="mt-4 text-xs text-cream/70">
           Thời gian xử lý: 7-30 ngày làm việc tuỳ phương thức thanh toán.
         </p>
       </main>

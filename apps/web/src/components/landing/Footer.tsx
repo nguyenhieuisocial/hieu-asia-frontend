@@ -56,7 +56,7 @@ export function Footer() {
           <FooterCol title="Về chúng tôi" links={COMPANY_LINKS} className="md:col-span-3" />
         </div>
 
-        <div className="mt-14 flex flex-col gap-4 border-t border-cream/5 pt-6 text-xs text-cream/50 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-14 flex flex-col gap-4 border-t border-cream/5 pt-6 text-xs text-cream/70 sm:flex-row sm:items-center sm:justify-between">
           <p>© {year} hieu.asia · Made in Vietnam</p>
           <p>Kết quả mang tính tham khảo · Không định mệnh hóa</p>
         </div>

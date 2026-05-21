@@ -241,7 +241,7 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
                   <>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm text-cream/90">{a.label}</p>
-                      <p className="mt-0.5 text-[11px] text-cream/45">{relTime(a.ts)}</p>
+                      <p className="mt-0.5 text-[11px] text-cream/70">{relTime(a.ts)}</p>
                     </div>
                     {a.href && (
                       <ChevronRight

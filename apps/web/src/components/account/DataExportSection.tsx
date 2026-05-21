@@ -113,7 +113,7 @@ export function DataExportSection({ userId }: DataExportSectionProps) {
             {pending ? 'Đang chuẩn bị…' : 'Tải xuống (JSON)'}
           </Button>
         </div>
-        <p className="text-xs text-cream/45">
+        <p className="text-xs text-cream/70">
           Link tải xuống chứa chữ ký HMAC và hết hạn sau 24 giờ. Vui lòng lưu file
           về máy nếu muốn giữ lại lâu dài.
         </p>

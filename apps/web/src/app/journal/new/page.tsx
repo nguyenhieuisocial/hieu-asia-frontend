@@ -192,7 +192,7 @@ export default function NewJournalEntryPage() {
                   className="mt-2"
                   required
                 />
-                <div className="mt-1 flex justify-end text-xs text-cream/50">
+                <div className="mt-1 flex justify-end text-xs text-cream/70">
                   {qLen}/200 (tối thiểu 10)
                 </div>
               </div>
@@ -214,7 +214,7 @@ export default function NewJournalEntryPage() {
                   className="mt-2"
                   required
                 />
-                <div className="mt-1 flex justify-end text-xs text-cream/50">
+                <div className="mt-1 flex justify-end text-xs text-cream/70">
                   {dLen}/500 (tối thiểu 10)
                 </div>
               </div>
@@ -222,7 +222,7 @@ export default function NewJournalEntryPage() {
               <div>
                 <Label htmlFor="j-reasoning" className="text-sm font-medium">
                   Lý do bạn chọn vậy?{' '}
-                  <span className="text-cream/50">(tuỳ chọn)</span>
+                  <span className="text-cream/70">(tuỳ chọn)</span>
                 </Label>
                 <p className="mt-1 text-xs text-cream/55">
                   Càng cụ thể, sau này càng dễ học từ chính mình.
@@ -236,7 +236,7 @@ export default function NewJournalEntryPage() {
                   placeholder="Vì tôi đã cảm thấy công việc không còn ý nghĩa, và..."
                   className="mt-2"
                 />
-                <div className="mt-1 flex justify-end text-xs text-cream/50">
+                <div className="mt-1 flex justify-end text-xs text-cream/70">
                   {rLen}/1000
                 </div>
               </div>
@@ -260,7 +260,7 @@ export default function NewJournalEntryPage() {
                   className="mt-2"
                   required
                 />
-                <div className="mt-1 flex justify-end text-xs text-cream/50">
+                <div className="mt-1 flex justify-end text-xs text-cream/70">
                   {eLen}/500 (tối thiểu 10)
                 </div>
               </div>

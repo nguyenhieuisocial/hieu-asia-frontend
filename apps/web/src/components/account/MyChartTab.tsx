@@ -293,7 +293,7 @@ export function MyChartTab() {
 function Field({ label, value }: { label: string; value?: string }) {
   return (
     <div>
-      <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-cream/45">
+      <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-cream/70">
         {label}
       </dt>
       <dd className="mt-1 text-sm text-cream/90">{value || '—'}</dd>

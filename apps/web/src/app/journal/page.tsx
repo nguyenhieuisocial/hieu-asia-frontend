@@ -265,7 +265,7 @@ export default function JournalHubPage() {
                           </p>
                         </div>
                         <ArrowRight
-                          className="hidden h-4 w-4 shrink-0 self-center text-cream/50 transition group-hover:translate-x-0.5 group-hover:text-gold sm:block"
+                          className="hidden h-4 w-4 shrink-0 self-center text-cream/70 transition group-hover:translate-x-0.5 group-hover:text-gold sm:block"
                           aria-hidden="true"
                         />
                       </CardContent>

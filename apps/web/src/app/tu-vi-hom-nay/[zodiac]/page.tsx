@@ -206,7 +206,7 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
 function Info({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl border border-cream/10 bg-ink/40 p-3">
-      <div className="text-xs uppercase tracking-wide text-cream/50">{label}</div>
+      <div className="text-xs uppercase tracking-wide text-cream/70">{label}</div>
       <div className="mt-1 text-base font-semibold text-cream">{value || '—'}</div>
     </div>
   );

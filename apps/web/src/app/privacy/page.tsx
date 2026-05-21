@@ -124,7 +124,7 @@ export default function PrivacyPage() {
         <Link href="/" className="font-heading text-xl font-semibold text-gold">
           hieu.asia
         </Link>
-        <span className="font-mono text-xs uppercase tracking-widest text-cream/50">Chính sách bảo mật</span>
+        <span className="font-mono text-xs uppercase tracking-widest text-cream/70">Chính sách bảo mật</span>
       </header>
 
       <section className="container mx-auto max-w-3xl px-6 pb-20 pt-6">

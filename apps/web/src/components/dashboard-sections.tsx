@@ -58,7 +58,7 @@ export function ReportsSection({ items }: { items: DashboardReport[] }) {
             </div>
             <StatusBadge status={r.status} />
           </div>
-          <p className="mt-3 font-mono text-xs text-cream/50">{r.date}</p>
+          <p className="mt-3 font-mono text-xs text-cream/70">{r.date}</p>
           <p className="mt-1 text-sm text-cream/90 group-hover:text-gold">
             {r.primary_concern}
           </p>
@@ -129,7 +129,7 @@ export function MentorSessionsSection({
               <p className="truncate text-sm text-cream/90">
                 {s.last_message_preview}
               </p>
-              <p className="font-mono text-xs text-cream/50">
+              <p className="font-mono text-xs text-cream/70">
                 {s.message_count} tin nhắn · {s.last_active}
               </p>
             </div>

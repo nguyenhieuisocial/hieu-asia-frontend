@@ -314,7 +314,7 @@ function NewDecisionInner() {
               <div>
                 <Label htmlFor="decision-situation" className="text-sm font-medium">
                   Mô tả tình huống cụ thể{' '}
-                  <span className="text-cream/50">(tuỳ chọn)</span>
+                  <span className="text-cream/70">(tuỳ chọn)</span>
                 </Label>
                 <p className="mt-1 text-xs text-cream/55">
                   3–5 câu về bối cảnh: lý do, ràng buộc, điều bạn lo ngại.

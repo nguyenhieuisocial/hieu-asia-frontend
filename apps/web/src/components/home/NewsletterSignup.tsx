@@ -126,7 +126,7 @@ export function NewsletterSignup({
                   {error}
                 </p>
               )}
-              <p className="text-[11px] leading-relaxed text-cream/45">
+              <p className="text-[11px] leading-relaxed text-cream/70">
                 Bằng cách đăng ký bạn đồng ý với{' '}
                 <a href="/privacy" className="underline hover:text-gold">
                   Chính sách bảo mật

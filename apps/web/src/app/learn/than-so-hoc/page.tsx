@@ -75,7 +75,7 @@ export default function LearnThanSoHocPage() {
             </div>
           ))}
         </div>
-        <p className="mt-4 text-center text-xs text-cream/50">
+        <p className="mt-4 text-center text-xs text-cream/70">
           Ngoài 1–9 còn có 3 số “bậc thầy”: 11, 22, 33 — không rút gọn về 1 chữ số.
         </p>
       </section>

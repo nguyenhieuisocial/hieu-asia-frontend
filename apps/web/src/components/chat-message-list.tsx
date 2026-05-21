@@ -172,7 +172,7 @@ function FeedbackButton({
         'rounded px-1.5 py-0.5 text-xs transition-colors',
         active
           ? 'bg-gold/20 text-gold'
-          : 'text-cream/50 hover:bg-gold/10 hover:text-cream',
+          : 'text-cream/70 hover:bg-gold/10 hover:text-cream',
       )}
     >
       {label}

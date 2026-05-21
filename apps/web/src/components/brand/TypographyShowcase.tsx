@@ -152,7 +152,7 @@ function Sample({
         <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-gold">
           {label}
         </div>
-        <div className="mt-1 text-[11px] text-cream/50">{meta}</div>
+        <div className="mt-1 text-[11px] text-cream/70">{meta}</div>
       </div>
       <div>{children}</div>
     </div>

@@ -168,7 +168,7 @@ export default function ChangelogPage() {
                       <span className="font-heading text-xl font-semibold text-cream">
                         {r.version}
                       </span>
-                      <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-cream/45">
+                      <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-cream/70">
                         {r.date}
                       </span>
                       {tag && (

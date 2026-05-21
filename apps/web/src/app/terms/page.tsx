@@ -15,7 +15,7 @@ export default function TermsPage() {
         <Link href="/" className="font-heading text-xl font-semibold text-gold">
           hieu.asia
         </Link>
-        <span className="font-mono text-xs uppercase tracking-widest text-cream/50">Điều khoản dịch vụ</span>
+        <span className="font-mono text-xs uppercase tracking-widest text-cream/70">Điều khoản dịch vụ</span>
       </header>
 
       <section className="container mx-auto max-w-3xl px-6 pb-20 pt-6">

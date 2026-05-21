@@ -510,7 +510,7 @@ function FieldTextarea({
         className="mt-2"
         required
       />
-      <div className="mt-1 flex justify-end text-xs text-cream/50">
+      <div className="mt-1 flex justify-end text-xs text-cream/70">
         {len}/300 (tối thiểu 10)
       </div>
     </div>

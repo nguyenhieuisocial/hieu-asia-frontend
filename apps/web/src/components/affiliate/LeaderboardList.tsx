@@ -36,7 +36,7 @@ export function LeaderboardList({ entries, period }: Props) {
       </CardHeader>
       <CardContent>
         {entries.length === 0 ? (
-          <p className="text-sm text-cream/50">Chưa có dữ liệu.</p>
+          <p className="text-sm text-cream/70">Chưa có dữ liệu.</p>
         ) : (
           <ol className="space-y-2">
             {entries.map((e) => (
@@ -52,7 +52,7 @@ export function LeaderboardList({ entries, period }: Props) {
                   </span>
                   <div>
                     <div className="font-medium">{e.display_name}</div>
-                    <div className="font-mono text-xs text-cream/50">{e.code}</div>
+                    <div className="font-mono text-xs text-cream/70">{e.code}</div>
                   </div>
                 </div>
                 <div className="text-right">

@@ -70,7 +70,7 @@ export function InfographicMBTI() {
               {activeType.code}
             </span>
             <span className="text-sm text-cream/80">{activeType.nickname}</span>
-            <span className="ml-auto text-xs text-cream/50">
+            <span className="ml-auto text-xs text-cream/70">
               {QUADRANT_STYLE[activeType.quadrant].label}
             </span>
           </div>
@@ -85,7 +85,7 @@ export function InfographicMBTI() {
             className={`inline-flex items-center gap-1.5 rounded border border-cream/15 px-2 py-1 ${QUADRANT_STYLE[q].bg}`}
           >
             <span className={QUADRANT_STYLE[q].text}>{QUADRANT_STYLE[q].label}</span>
-            <span className="text-cream/50">({q})</span>
+            <span className="text-cream/70">({q})</span>
           </span>
         ))}
       </div>
