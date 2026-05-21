@@ -47,18 +47,25 @@ interface WorkerKeyDef {
 }
 
 const WORKER_KEYS: WorkerKeyDef[] = [
+  { name: 'ADMIN_TOKEN',              desc: 'Admin gate (X-Admin-Token) for all /admin/* routes.' },
+  { name: 'SERVICE_TOKEN',            desc: 'Service-to-service token (Bot ↔ Worker, Edge Functions).' },
+  { name: 'SUPABASE_SERVICE_ROLE_KEY',desc: 'Supabase service role JWT — RLS bypass for admin queries.' },
+  { name: 'SUPABASE_ANON_KEY',        desc: 'Supabase anon JWT — fallback when service role unavailable.' },
   { name: 'RESEND_API_KEY',           desc: 'Resend HTTP API — transactional email.' },
-  { name: 'ANTHROPIC_API_KEY',        desc: 'Claude Opus 4.7 — psychology / report / mentor / judge.' },
-  { name: 'OPENAI_API_KEY',           desc: 'GPT-5.5 — logic / alignment.' },
-  { name: 'SUPABASE_SERVICE_ROLE_KEY',desc: 'Supabase service role — storage + edge functions.' },
+  { name: 'ANTHROPIC_API_KEY',        desc: 'Anthropic Claude — primary LLM for reading + mentor.' },
+  { name: 'OPENAI_API_KEY',           desc: 'OpenAI GPT — fallback LLM, embeddings.' },
+  { name: 'GOOGLE_API_KEY',           desc: 'Google Gemini — Vision / OCR for palm reading.' },
   { name: 'VAPID_PUBLIC_KEY',         desc: 'Web Push public key (browser notifications).' },
   { name: 'VAPID_PRIVATE_KEY',        desc: 'Web Push private key — kept secret.' },
-  { name: 'SERVICE_SHARED_TOKEN',     desc: 'Bot ↔ Worker service-to-service token.' },
-  { name: 'ADMIN_SHARED_TOKEN',       desc: 'Admin shared token (legacy alias of ADMIN_TOKEN).' },
+  { name: 'VAPID_SUBJECT',            desc: 'RFC 8292 contact (mailto:admin@hieu.asia).' },
   { name: 'UPLOADS_SIGNING_SECRET',   desc: 'HMAC secret cho R2 presigned upload URLs.' },
   { name: 'SEPAY_WEBHOOK_SECRET',     desc: 'SePay webhook signature verification.' },
-  { name: 'LANGFUSE_PUBLIC_KEY',      desc: 'Langfuse observability — public key.' },
-  { name: 'LANGFUSE_SECRET_KEY',      desc: 'Langfuse observability — secret key.' },
+  { name: 'LANGFUSE_PUBLIC_KEY',      desc: 'Langfuse observability — public key (pk_lf_*).' },
+  { name: 'LANGFUSE_SECRET_KEY',      desc: 'Langfuse observability — secret key (sk_lf_*).' },
+  { name: 'SENTRY_DSN',               desc: 'Sentry error tracking DSN (optional).' },
+  { name: 'TELEGRAM_BOT_TOKEN',       desc: 'Telegram bot — daily horoscope + mentor proxy.' },
+  { name: 'ADMIN_CF_API_TOKEN',       desc: 'Bootstrap — CF API token (Workers Scripts Write).' },
+  { name: 'ADMIN_VERCEL_TOKEN',       desc: 'Bootstrap — Vercel API token (env vars Write).' },
 ];
 
 interface VercelKeyDef {
