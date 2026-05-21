@@ -19,24 +19,24 @@ export const metadata: Metadata = {
 export default function LearnMBTIPage() {
   return (
     <main className="mx-auto max-w-4xl px-6 py-12 sm:py-16">
-      <nav className="mb-6 text-xs text-cream/50">
-        <Link href="/learn" className="hover:text-gold">
-          Học huyền học
-        </Link>
-        <span className="mx-2">/</span>
+      <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+        <Link href="/" className="hover:text-gold">Trang chủ</Link>
+        <span className="mx-1.5">/</span>
+        <Link href="/learn" className="hover:text-gold">Học huyền học</Link>
+        <span className="mx-1.5">/</span>
         <span className="text-cream/70">MBTI</span>
       </nav>
 
       <header className="mb-10 text-center">
-        <p className="font-heading text-xs uppercase tracking-widest text-gold/80">
-          Tây phương — Carl Jung
+        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+          Tây phương · Carl Jung
         </p>
-        <h1 className="mt-2 font-heading text-3xl font-bold text-cream sm:text-4xl">
-          MBTI — 16 loại tính cách
+        <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-4xl">
+          MBTI — <span className="bg-gold-gradient bg-clip-text text-transparent">16 loại tính cách</span>
         </h1>
-        <p className="mx-auto mt-3 max-w-2xl text-sm text-cream/70">
+        <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-cream/75">
           Myers–Briggs Type Indicator phát triển từ thuyết tâm lý của Carl Jung. 4 trục lưỡng
-          cực tạo nên 16 nhóm tính cách — không phải “ô đóng”, mà là thiên hướng tự nhiên.
+          cực tạo nên 16 nhóm tính cách — không phải "ô đóng", mà là thiên hướng tự nhiên.
         </p>
       </header>
 

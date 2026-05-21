@@ -53,14 +53,23 @@ const TOPICS: readonly LearnTopic[] = [
 export default function LearnLandingPage() {
   return (
     <main className="mx-auto max-w-5xl px-6 py-12 sm:py-16">
+      <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+        <Link href="/" className="hover:text-gold">Trang chủ</Link>
+        <span className="mx-1.5">/</span>
+        <span className="text-cream/70">Học huyền học</span>
+      </nav>
+
       <section className="text-center">
-        <p className="font-heading text-sm uppercase tracking-widest text-gold/80">
+        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
           Học huyền học
         </p>
-        <h1 className="mt-2 font-heading text-3xl font-bold text-cream sm:text-5xl">
-          Hiểu cội nguồn trước khi hiểu chính mình
+        <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+          Hiểu cội nguồn trước khi{' '}
+          <span className="bg-gold-gradient bg-clip-text text-transparent">
+            hiểu chính mình
+          </span>
         </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-sm text-cream/70 sm:text-base">
+        <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-cream/75 sm:text-base">
           Mỗi báo cáo tại hieu.asia không phải là phán quyết định mệnh. Đó là một góc nhìn —
           và bạn xứng đáng biết góc nhìn đó được dựng nên từ đâu. 5 khái niệm dưới đây là nền
           tảng tối thiểu để bạn đọc báo cáo của mình một cách có ý thức.
@@ -70,18 +79,18 @@ export default function LearnLandingPage() {
       <section className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {TOPICS.map((t) => (
           <Link key={t.href} href={t.href} className="group">
-            <Card className="h-full border-cream/10 bg-ink/40 transition-colors hover:border-gold/40">
+            <Card className="h-full border-cream/10 bg-ink/40 backdrop-blur-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:border-gold/40 group-hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]">
               <CardHeader>
                 <CardTitle className="font-heading text-lg text-gold group-hover:text-gold">
                   {t.title}
                 </CardTitle>
-                <CardDescription className="text-xs uppercase tracking-wide text-cream/50">
+                <CardDescription className="font-mono text-[10px] uppercase tracking-[0.24em] text-cream/55">
                   {t.subtitle}
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-cream/70">{t.blurb}</p>
-                <span className="mt-3 inline-block text-xs font-semibold text-gold/80 group-hover:text-gold">
+                <p className="text-sm leading-relaxed text-cream/75">{t.blurb}</p>
+                <span className="mt-4 inline-block text-xs font-semibold text-gold/80 group-hover:text-gold">
                   Đọc giải thích →
                 </span>
               </CardContent>

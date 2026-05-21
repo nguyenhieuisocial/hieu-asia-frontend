@@ -36,22 +36,22 @@ const NUMBERS: readonly NumberCard[] = [
 export default function LearnThanSoHocPage() {
   return (
     <main className="mx-auto max-w-4xl px-6 py-12 sm:py-16">
-      <nav className="mb-6 text-xs text-cream/50">
-        <Link href="/learn" className="hover:text-gold">
-          Học huyền học
-        </Link>
-        <span className="mx-2">/</span>
+      <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+        <Link href="/" className="hover:text-gold">Trang chủ</Link>
+        <span className="mx-1.5">/</span>
+        <Link href="/learn" className="hover:text-gold">Học huyền học</Link>
+        <span className="mx-1.5">/</span>
         <span className="text-cream/70">Thần Số Học</span>
       </nav>
 
       <header className="mb-10 text-center">
-        <p className="font-heading text-xs uppercase tracking-widest text-gold/80">
-          Tây phương — Pythagoras
+        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+          Tây phương · Pythagoras
         </p>
-        <h1 className="mt-2 font-heading text-3xl font-bold text-cream sm:text-4xl">
-          Thần Số Học
+        <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-4xl">
+          Thần <span className="bg-gold-gradient bg-clip-text text-transparent">Số Học</span>
         </h1>
-        <p className="mx-auto mt-3 max-w-2xl text-sm text-cream/70">
+        <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-cream/75">
           Pythagoras tin rằng mọi thứ đều có thể quy về số. Thần Số Học hiện đại rút số chủ
           đạo từ ngày sinh và tên — mỗi số từ 1 đến 9 mang một nguồn năng lượng riêng.
         </p>

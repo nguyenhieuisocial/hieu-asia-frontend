@@ -19,23 +19,23 @@ export const metadata: Metadata = {
 export default function LearnBatTuPage() {
   return (
     <main className="mx-auto max-w-4xl px-6 py-12 sm:py-16">
-      <nav className="mb-6 text-xs text-cream/50">
-        <Link href="/learn" className="hover:text-gold">
-          Học huyền học
-        </Link>
-        <span className="mx-2">/</span>
+      <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+        <Link href="/" className="hover:text-gold">Trang chủ</Link>
+        <span className="mx-1.5">/</span>
+        <Link href="/learn" className="hover:text-gold">Học huyền học</Link>
+        <span className="mx-1.5">/</span>
         <span className="text-cream/70">Bát Tự Tứ Trụ</span>
       </nav>
 
       <header className="mb-10 text-center">
-        <p className="font-heading text-xs uppercase tracking-widest text-gold/80">
-          Đông phương — Trung Hoa
+        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+          Đông phương · Trung Hoa
         </p>
-        <h1 className="mt-2 font-heading text-3xl font-bold text-cream sm:text-4xl">
-          Bát Tự Tứ Trụ
+        <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-4xl">
+          Bát Tự <span className="bg-gold-gradient bg-clip-text text-transparent">Tứ Trụ</span>
         </h1>
-        <p className="mx-auto mt-3 max-w-2xl text-sm text-cream/70">
-          “Bát Tự” = 8 chữ. Đây là 4 cặp Thiên Can + Địa Chi tương ứng với Năm, Tháng, Ngày,
+        <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-cream/75">
+          "Bát Tự" = 8 chữ. Đây là 4 cặp Thiên Can + Địa Chi tương ứng với Năm, Tháng, Ngày,
           Giờ sinh — tạo nên 4 trụ phản ánh năng lượng Ngũ Hành chi phối số mệnh.
         </p>
       </header>
