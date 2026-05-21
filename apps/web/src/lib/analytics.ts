@@ -1,9 +1,11 @@
 /**
- * Analytics tracking — sends events to Plausible (when domain configured)
- * and to the Worker KV-backed funnel store.
+ * Analytics tracking — sends events to Plausible (when domain configured),
+ * to PostHog (when key configured), and to the Worker KV-backed funnel store.
  *
- * Both are fire-and-forget: never throws, never blocks UI.
+ * All three are fire-and-forget: never throws, never blocks UI.
  */
+
+import { getPostHog } from './posthog';
 
 export type EventName =
   | 'consent_given'
@@ -44,7 +46,17 @@ export function track(event: EventName, properties?: Record<string, unknown>): v
     /* ignore */
   }
 
-  // 2. Worker KV via Next.js proxy
+  // 2. PostHog — silent no-op when key missing or user opted out
+  try {
+    const ph = getPostHog();
+    if (ph) {
+      ph.capture(event, properties);
+    }
+  } catch {
+    /* ignore */
+  }
+
+  // 3. Worker KV via Next.js proxy
   try {
     const userId = (() => {
       try {

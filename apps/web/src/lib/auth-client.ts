@@ -11,6 +11,7 @@
  */
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { getPostHog } from './posthog';
 
 let _client: SupabaseClient | null = null;
 let _disabled = false;
@@ -69,4 +70,11 @@ export async function signOut(): Promise<void> {
   const supabase = getSupabaseAuth();
   if (!supabase) return;
   await supabase.auth.signOut();
+  // Reset PostHog distinct_id so the next anonymous session is a new visitor.
+  try {
+    const ph = getPostHog();
+    if (ph) ph.reset();
+  } catch {
+    /* ignore */
+  }
 }

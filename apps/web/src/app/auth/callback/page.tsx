@@ -14,6 +14,7 @@
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getSupabaseAuth } from '@/lib/auth-client';
+import { getPostHog } from '@/lib/posthog';
 
 const ANON_USER_KEY = 'hieu.user_id';
 const LINKED_ANON_KEY = 'hieu.linked_anon_user_id';
@@ -60,6 +61,19 @@ export default function AuthCallbackPage() {
         }
       } catch {
         /* localStorage blocked — ignore */
+      }
+
+      // Identify the authenticated user in PostHog so subsequent events tie
+      // back to a stable distinct_id. No-op when PostHog isn't configured.
+      try {
+        const ph = getPostHog();
+        if (ph) {
+          ph.identify(data.session.user.id, {
+            email: data.session.user.email,
+          });
+        }
+      } catch {
+        /* ignore */
       }
 
       router.replace('/dashboard');

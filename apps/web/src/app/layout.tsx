@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from 'next';
+import { Suspense } from 'react';
 import { Be_Vietnam_Pro, Inter, Outfit, JetBrains_Mono } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { PlausibleScript } from '@/components/analytics/PlausibleScript';
+import { PostHogProvider } from '@/components/PostHogProvider';
 import { Toaster } from '@hieu-asia/ui';
 import './globals.css';
 
@@ -136,7 +138,11 @@ export default async function RootLayout({
         </a>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-            <QueryProvider>{children}</QueryProvider>
+            <QueryProvider>
+              <Suspense fallback={null}>
+                <PostHogProvider>{children}</PostHogProvider>
+              </Suspense>
+            </QueryProvider>
             <Toaster />
           </ThemeProvider>
         </NextIntlClientProvider>
