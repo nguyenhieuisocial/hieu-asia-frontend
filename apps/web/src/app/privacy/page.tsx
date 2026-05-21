@@ -132,11 +132,16 @@ export default function PrivacyPage() {
               </li>
             </ul>
             <p className="mt-3">
-              <strong>Cách thực hiện:</strong> gửi email tới{' '}
+              <strong>Cách thực hiện:</strong>{' '}
+              <Link href="/account" className="text-gold underline">
+                Truy cập trang Tài khoản
+              </Link>{' '}
+              để tải xuống bản sao dữ liệu hoặc xóa tài khoản tức thì. Hoặc gửi
+              email tới{' '}
               <a className="text-gold underline" href="mailto:privacy@hieu.asia">
                 privacy@hieu.asia
               </a>{' '}
-              kèm thông tin xác thực. Chúng tôi sẽ phản hồi trong 30 ngày làm việc.
+              — chúng tôi sẽ phản hồi trong 30 ngày làm việc.
             </p>
           </CardContent>
         </Card>
