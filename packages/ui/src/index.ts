@@ -85,6 +85,10 @@ export { ConsentCheckboxList } from './components/ConsentCheckboxList';
 export type { ConsentItem } from './components/ConsentCheckboxList';
 export { InsightCard } from './components/InsightCard';
 
+// Brand identity — Logo system (wordmark / symbol / lockup, 4 variants)
+export { Logo, Wordmark, SymbolMark, Lockup } from './components/Logo';
+export type { LogoVariant, LogoKind } from './components/Logo';
+
 // Admin / back-office primitives
 export { DataTable, StatusBadge } from './components/DataTable';
 export type { Column as DataTableColumn, DataTableProps } from './components/DataTable';

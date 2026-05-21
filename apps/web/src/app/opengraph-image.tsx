@@ -1,5 +1,10 @@
 import { ImageResponse } from 'next/og';
 
+/**
+ * OG image 1200×630 — share preview cho hieu.asia.
+ * Embedded "H" symbol mark (box-stack tương đương SymbolMark SVG) + wordmark + tagline.
+ */
+
 export const alt = 'hieu.asia — Tử Vi, MBTI, palm reading bằng AI';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
@@ -21,11 +26,64 @@ export default function OpengraphImage() {
           fontFamily: 'serif',
         }}
       >
+        {/* Symbol mark — top left */}
         <div
           style={{
             position: 'absolute',
-            top: 80,
+            top: 64,
             left: 96,
+            width: 96,
+            height: 96,
+            background: 'linear-gradient(135deg, #0F0F12 0%, #1A0E2E 100%)',
+            borderRadius: 18,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div style={{ position: 'relative', width: 56, height: 68, display: 'flex' }}>
+            <div
+              style={{
+                position: 'absolute',
+                left: 0,
+                top: 0,
+                width: 10,
+                height: 68,
+                background: 'linear-gradient(180deg, #D4B25A 0%, #B8923D 100%)',
+                borderRadius: 5,
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                right: 0,
+                top: 0,
+                width: 10,
+                height: 68,
+                background: 'linear-gradient(180deg, #D4B25A 0%, #B8923D 100%)',
+                borderRadius: 5,
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                left: 0,
+                top: 29,
+                width: 56,
+                height: 10,
+                background: 'linear-gradient(90deg, #D4B25A 0%, #B8923D 100%)',
+                borderRadius: 5,
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Eyebrow */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 100,
+            left: 224,
             fontSize: 28,
             color: '#B8923D',
             letterSpacing: '0.35em',
@@ -37,6 +95,7 @@ export default function OpengraphImage() {
           Premium AI insight
         </div>
 
+        {/* Main wordmark + tagline */}
         <div
           style={{
             marginTop: 'auto',
@@ -80,6 +139,7 @@ export default function OpengraphImage() {
           </div>
         </div>
 
+        {/* Bottom right small wordmark */}
         <div
           style={{
             position: 'absolute',
@@ -92,7 +152,7 @@ export default function OpengraphImage() {
             display: 'flex',
           }}
         >
-          hieu.asia
+          hieu.asia/brand
         </div>
       </div>
     ),
