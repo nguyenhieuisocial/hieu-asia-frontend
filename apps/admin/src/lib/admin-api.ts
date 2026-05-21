@@ -1,34 +1,33 @@
 /**
  * Admin API surface (typed wrappers).
  *
- * Wave-D wiring: each function tries the real backend first (via the
- * `/api/admin-proxy/*` Next.js route → Worker `/admin/*` with `X-Admin-Token`).
- * If the proxy fails (env missing, gateway down, endpoint not shipped yet, or
- * response shape unexpected), we fall back to deterministic mocks from
- * `mock-data.ts` so the UI keeps rendering.
+ * Each function tries the real backend first (via the `/api/admin-proxy/*`
+ * Next.js route → Worker `/admin/*` with `X-Admin-Token`). When the proxy
+ * fails (env missing, gateway down, response shape unexpected), we fall back
+ * to deterministic mocks from `mock-data.ts` so the UI keeps rendering. The
+ * `_source.isMock` tag drives the `MockBanner` so operators can tell what's
+ * real vs degraded.
  *
- * Each function returns `{ isMock: boolean }` metadata via `MockBanner` so
- * pages can display "đang dùng dữ liệu mock" notice when appropriate.
- *
- * Backend endpoints used:
- *   GET /admin/analytics?days=30                    (revenue, vendor cost, funnel)
- *   GET /admin/customers?search=&plan=&limit=       (end-user list)
- *   GET /admin/users                                (admin login users in KV)
- *   GET /payment/transactions?limit=&user_id=       (raw payment events)
- *   GET /admin/audit?prefix=admin&limit=            (audit trail)
+ * Backend endpoints used (all real as of Wave D post-fix):
+ *   GET  /admin/analytics?days=30                  revenue, vendor cost, funnel
+ *   GET  /admin/customers?search=&plan=&limit=     end-user list (Postgres)
+ *   GET  /admin/customers/:id                      customer detail + history
+ *   GET  /admin/sessions?status=&search=&...       reading_sessions list
+ *   GET  /admin/tasks?status=&...                  reading_tasks list
+ *   POST /admin/tasks/:id/retry                    flip status → pending
+ *   GET  /admin/queue_depth                        queue snapshot
+ *   GET  /admin/cost/by_day                        llm_traces aggregated by day
+ *   GET  /admin/cost/top_spenders                  llm_traces aggregated by user
+ *   GET  /admin/rag/chunks?limit=&document_id=     corpus_chunks list
+ *   GET  /payment/transactions?limit=&user_id=     raw payment events
  *
  * Endpoints NOT shipped yet (mock-only — TODO marked `isMock: true`):
- *   GET  /admin/sessions          (list reading sessions; only export+bulk-delete exist)
- *   GET  /admin/tasks             (Celery task status)
- *   GET  /admin/queue_depth
- *   GET  /admin/cost/by_day
- *   GET  /admin/cost/top_spenders
- *   GET  /admin/rag/chunks, /admin/qdrant/stats
+ *   GET  /admin/qdrant/stats        (Qdrant moved to pgvector; stats TBD)
  *   POST /admin/rag/ingest
  *   GET  /admin/coupons
  *   POST /admin/coupons, PATCH /admin/coupons/{code}
  *   GET  /admin/feature_flags, PATCH /admin/feature_flags
- *   POST /admin/tasks/{id}/retry, /admin/payments/{id}/refund
+ *   POST /admin/payments/{id}/refund
  */
 
 import {
@@ -151,38 +150,106 @@ export async function getUser(id: string) {
 
 // ---------- Sessions ----------
 
+interface BackendSessionRow {
+  session_id: string;
+  state_json?: Record<string, unknown> | null;
+  updated_at: string;
+}
+
 interface SessionsEnvelope {
   ok: boolean;
-  rows?: AdminSession[];
+  sessions?: BackendSessionRow[];
   total?: number;
-  page?: number;
-  page_size?: number;
+  next_cursor?: string | null;
+}
+
+/** Map backend status strings → UI TaskStatus. */
+function normalizeStatus(s: unknown): AdminSession['status'] {
+  const v = String(s ?? '').toLowerCase();
+  if (v === 'done' || v === 'completed' || v === 'report_ready') return 'completed';
+  if (v === 'failed' || v === 'error') return 'failed';
+  if (v === 'running' || v === 'processing') return 'running';
+  return 'queued';
+}
+
+/** Map a Postgres reading_sessions row → admin UI shape. */
+function mapBackendSession(row: BackendSessionRow): AdminSession {
+  const st = (row.state_json ?? {}) as Record<string, unknown>;
+  const createdRaw = st.created_at as string | undefined;
+  const userId = (st.user_id as string | undefined) ?? '';
+  const birth = (st.birth_data ?? {}) as Record<string, unknown>;
+  const primary =
+    (st.primary_concern as string | undefined) ??
+    (st.user_question as string | undefined) ??
+    (birth.name as string | undefined) ??
+    '—';
+  const status = normalizeStatus(st.status ?? st.state);
+  const createdAt = createdRaw ?? row.updated_at;
+  let duration: number | null = null;
+  if (status === 'completed' || status === 'failed') {
+    const dt = Math.floor((new Date(row.updated_at).getTime() - new Date(createdAt).getTime()) / 1000);
+    duration = Number.isFinite(dt) && dt >= 0 ? dt : null;
+  }
+  return {
+    session_id: row.session_id,
+    task_id: (st.task_id as string | undefined) ?? row.session_id,
+    user_id: userId,
+    user_email: (st.user_email as string | undefined) ?? userId ?? '—',
+    status,
+    created_at: createdAt,
+    completed_at: status === 'completed' ? row.updated_at : null,
+    duration_seconds: duration,
+    cost_usd: Number(st.cost_usd ?? 0) || 0,
+    primary_concern: primary,
+    error: (st.error as string | undefined) ?? null,
+  };
+}
+
+/** UI status → backend `state_json.status` filter value. */
+function uiStatusToBackend(s: AdminSession['status']): string {
+  if (s === 'completed') return 'report_ready';
+  if (s === 'failed') return 'failed';
+  if (s === 'running') return 'running';
+  return 'pending';
 }
 
 export async function listSessions(
   q: PageQuery & { status?: AdminSession['status']; from?: string; to?: string } = {},
 ) {
-  // TODO(wave-D): `/admin/sessions` list endpoint not shipped — only
-  // `/admin/sessions/export` and `/admin/sessions/bulk-delete` exist. When
-  // backend ships a paginated list endpoint, swap to real fetch.
+  const pageSize = q.page_size ?? 20;
+  const offset = ((q.page ?? 1) - 1) * pageSize;
   const qs = new URLSearchParams();
-  if (q.status) qs.set('status', q.status);
-  if (q.search) qs.set('search', q.search);
+  qs.set('limit', String(pageSize));
+  // Worker uses cursor; emulate offset → cursor via base64({offset}) so this
+  // page-based UI keeps working without protocol churn.
+  if (offset > 0) qs.set('cursor', btoa(JSON.stringify({ offset })));
+  if (q.status) qs.set('status', uiStatusToBackend(q.status));
   if (q.from) qs.set('from', q.from);
   if (q.to) qs.set('to', q.to);
-  if (q.page) qs.set('page', String(q.page));
-  if (q.page_size) qs.set('page_size', String(q.page_size));
   const real = await proxyFetch<SessionsEnvelope>(`/admin/sessions?${qs.toString()}`);
-  if (real?.ok && Array.isArray(real.rows)) {
+  if (real?.ok !== false && Array.isArray(real?.sessions)) {
+    let rows = real.sessions.map(mapBackendSession);
+    // Search filter is applied client-side because Postgres needs a full-text
+    // index for `state_json` deep search; cheap for the current row volume.
+    if (q.search) {
+      const s = q.search.toLowerCase();
+      rows = rows.filter(
+        (r) =>
+          r.session_id.toLowerCase().includes(s) ||
+          r.user_email.toLowerCase().includes(s) ||
+          r.primary_concern.toLowerCase().includes(s),
+      );
+    }
     return {
-      rows: real.rows,
-      total: real.total ?? real.rows.length,
-      page: real.page ?? q.page ?? 1,
-      page_size: real.page_size ?? q.page_size ?? 20,
+      rows,
+      total: real.total ?? rows.length + offset,
+      page: q.page ?? 1,
+      page_size: pageSize,
       _source: { isMock: false } as DataSource,
     };
   }
 
+  // Mock fallback.
   let rows = MOCK_SESSIONS;
   if (q.status) rows = rows.filter((s) => s.status === q.status);
   if (q.search) {
@@ -196,7 +263,7 @@ export async function listSessions(
   }
   if (q.from) rows = rows.filter((s) => s.created_at >= q.from!);
   if (q.to) rows = rows.filter((s) => s.created_at <= q.to!);
-  return delay(mock(paginate(rows, q), '/admin/sessions list endpoint not shipped'));
+  return delay(mock(paginate(rows, q), 'gateway unreachable; showing mock'));
 }
 
 export async function getSession(id: string) {
@@ -205,23 +272,108 @@ export async function getSession(id: string) {
 
 // ---------- Tasks ----------
 
+interface BackendTaskRow {
+  task_id: string;
+  session_id: string;
+  status: string;
+  error: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface TasksEnvelope {
+  ok: boolean;
+  tasks?: BackendTaskRow[];
+  total?: number;
+  next_cursor?: string | null;
+}
+
+function mapBackendTask(row: BackendTaskRow): AdminTask {
+  const status = normalizeStatus(row.status);
+  let duration: number | null = null;
+  if (status === 'completed' || status === 'failed') {
+    const dt = Math.floor(
+      (new Date(row.updated_at).getTime() - new Date(row.created_at).getTime()) / 1000,
+    );
+    duration = Number.isFinite(dt) && dt >= 0 ? dt : null;
+  }
+  return {
+    task_id: row.task_id,
+    name: row.session_id, // backend has no task name yet — surface session id for traceability
+    status,
+    started_at: row.created_at,
+    duration_seconds: duration,
+    retries: 0, // reading_tasks has no retries column yet
+    error: row.error,
+  };
+}
+
+function uiTaskStatusToBackend(s: AdminTask['status']): string {
+  if (s === 'completed') return 'done';
+  if (s === 'failed') return 'failed';
+  if (s === 'running') return 'processing';
+  return 'pending';
+}
+
 export async function listTasks(q: PageQuery & { status?: AdminTask['status'] } = {}) {
-  // TODO(wave-D): /admin/tasks endpoint not shipped — Celery/Worker task list.
+  const pageSize = q.page_size ?? 30;
+  const offset = ((q.page ?? 1) - 1) * pageSize;
+  const qs = new URLSearchParams();
+  qs.set('limit', String(pageSize));
+  if (offset > 0) qs.set('cursor', btoa(JSON.stringify({ offset })));
+  if (q.status) qs.set('status', uiTaskStatusToBackend(q.status));
+  const real = await proxyFetch<TasksEnvelope>(`/admin/tasks?${qs.toString()}`);
+  if (real?.ok !== false && Array.isArray(real?.tasks)) {
+    const rows = real.tasks.map(mapBackendTask);
+    return {
+      rows,
+      total: real.total ?? rows.length + offset,
+      page: q.page ?? 1,
+      page_size: pageSize,
+      _source: { isMock: false } as DataSource,
+    };
+  }
   let rows = MOCK_TASKS;
   if (q.status) rows = rows.filter((t) => t.status === q.status);
   return delay(
-    mock(paginate(rows, { ...q, page_size: q.page_size ?? 30 }), '/admin/tasks not shipped'),
+    mock(paginate(rows, { ...q, page_size: pageSize }), 'gateway unreachable; showing mock'),
   );
 }
 
 export async function retryTask(taskId: string) {
-  // TODO(wave-D): POST /admin/tasks/{taskId}/retry not shipped.
+  const real = await proxyFetch<{ ok: boolean; task?: BackendTaskRow }>(
+    `/admin/tasks/${encodeURIComponent(taskId)}/retry`,
+    { method: 'POST' },
+  );
+  if (real?.ok && real.task) {
+    return { task_id: real.task.task_id, status: 'queued' as const, isMock: false };
+  }
   return delay({ task_id: taskId, status: 'queued' as const, isMock: true });
 }
 
+interface QueueDepthEnvelope {
+  ok: boolean;
+  queue?: { pending?: number; processing?: number; completed?: number; failed?: number };
+  oldest_pending_age_seconds?: number | null;
+}
+
 export async function getQueueDepth() {
-  // TODO(wave-D): /admin/queue_depth not shipped.
-  return delay(mock({ ...MOCK_QUEUE_DEPTH }, '/admin/queue_depth not shipped'));
+  const real = await proxyFetch<QueueDepthEnvelope>('/admin/queue_depth');
+  if (real?.ok && real.queue) {
+    return Object.assign(
+      {
+        // Backend has no queue partitioning yet — map pending → default,
+        // processing → high_priority so the existing 3-card layout stays
+        // meaningful without misleading numbers.
+        default: real.queue.pending ?? 0,
+        high_priority: real.queue.processing ?? 0,
+        rag: 0,
+        oldest_pending_age_seconds: real.oldest_pending_age_seconds ?? null,
+      },
+      { _source: { isMock: false } as DataSource },
+    );
+  }
+  return delay(mock({ ...MOCK_QUEUE_DEPTH }, 'gateway unreachable; showing mock'));
 }
 
 // ---------- Cost ----------
@@ -234,24 +386,59 @@ interface AnalyticsEnvelope {
   sessions?: { total: number; completed: number };
 }
 
-/** Convert analytics.vendor_cost (single-day total) into 30-day series.
- *  The worker doesn't currently break vendor cost down by day, so we synthesize
- *  a flat series and tag isMock=true to keep the shape but be honest. */
+interface CostByDayEnvelope {
+  ok: boolean;
+  days?: Array<{ day: string; cost_usd: number; request_count: number; tokens_total: number }>;
+}
+
+/** Fetch llm_traces daily rollup. Returns a slice of the last N days. */
 export async function getCostByDay(days = 30): Promise<CostByDay[] & { _source: DataSource }> {
-  // TODO(wave-D): /admin/cost/by_day not shipped. Worker exposes total via
-  // /admin/analytics but no daily breakdown — keep mock for now.
+  const real = await proxyFetch<CostByDayEnvelope>('/admin/cost/by_day');
+  if (real?.ok && Array.isArray(real.days)) {
+    const rows: CostByDay[] = real.days.slice(-days).map((d) => ({
+      date: d.day,
+      total_usd: Number(d.cost_usd ?? 0),
+      // Backend doesn't yet break out by model. Keep the by_model field as a
+      // single bucket so the stacked chart still renders.
+      by_model: { all_models: Number(d.cost_usd ?? 0) },
+    }));
+    return Object.assign(rows, { _source: { isMock: false } as DataSource }) as CostByDay[] & {
+      _source: DataSource;
+    };
+  }
   const rows = MOCK_COST_BY_DAY.slice(-days);
   return delay(
-    Object.assign([...rows], { _source: { isMock: true, reason: '/admin/cost/by_day not shipped' } }),
+    Object.assign([...rows], {
+      _source: { isMock: true, reason: 'gateway unreachable; showing mock' } as DataSource,
+    }),
   ) as Promise<CostByDay[] & { _source: DataSource }>;
 }
 
+interface TopSpendersEnvelope {
+  ok: boolean;
+  top_spenders?: Array<{ user_id: string; cost_usd: number; request_count: number }>;
+}
+
 export async function getTopSpenders(limit = 10) {
-  // TODO(wave-D): /admin/cost/top_spenders not shipped.
+  const real = await proxyFetch<TopSpendersEnvelope>('/admin/cost/top_spenders');
+  if (real?.ok && Array.isArray(real.top_spenders)) {
+    const rows = real.top_spenders.slice(0, limit).map((u) => ({
+      // Shape adapter: cost page reads .id, .email, .total_spend_usd.
+      id: u.user_id || 'anonymous',
+      email: u.user_id || 'anonymous',
+      telegram_id: null,
+      registered_at: '',
+      last_active_at: '',
+      plan: 'free' as AdminUser['plan'],
+      total_readings: u.request_count,
+      total_spend_usd: Number(u.cost_usd ?? 0),
+    }));
+    return Object.assign([...rows], { _source: { isMock: false } as DataSource });
+  }
   const rows = MOCK_TOP_SPENDERS.slice(0, limit);
   return delay(
     Object.assign([...rows], {
-      _source: { isMock: true, reason: '/admin/cost/top_spenders not shipped' },
+      _source: { isMock: true, reason: 'gateway unreachable; showing mock' },
     }),
   );
 }
@@ -299,11 +486,54 @@ export async function getReadingsPerDay(
 
 // ---------- RAG ----------
 
+interface RagChunksEnvelope {
+  ok: boolean;
+  chunks?: Array<{
+    id: string;
+    document_id: string;
+    chunk_index: number;
+    page_from: number | null;
+    page_to: number | null;
+    content: string;
+    metadata: Record<string, unknown>;
+    token_count: number | null;
+    created_at: string;
+  }>;
+}
+
 export async function listRagChunks() {
-  // TODO(wave-D): /admin/rag/chunks not shipped.
+  const real = await proxyFetch<RagChunksEnvelope>('/admin/rag/chunks?limit=100');
+  if (real?.ok && Array.isArray(real.chunks)) {
+    // The UI table shows one row per source (document). Roll chunks up.
+    const byDoc = new Map<string, RagChunk>();
+    for (const c of real.chunks) {
+      const meta = c.metadata ?? {};
+      const discipline = (meta.discipline as RagChunk['discipline']) ?? 'general';
+      const title = (meta.title as string | undefined) ?? c.document_id;
+      const license =
+        (meta.license_status as RagChunk['license_status']) ?? 'owned_or_licensed';
+      const existing = byDoc.get(c.document_id);
+      if (existing) {
+        existing.chunk_count += 1;
+        if (c.created_at < existing.ingested_at) existing.ingested_at = c.created_at;
+      } else {
+        byDoc.set(c.document_id, {
+          id: c.document_id,
+          source_id: c.document_id,
+          source_title: title,
+          discipline,
+          license_status: license,
+          chunk_count: 1,
+          ingested_at: c.created_at,
+        });
+      }
+    }
+    const rows = Array.from(byDoc.values());
+    return Object.assign(rows, { _source: { isMock: false } as DataSource });
+  }
   return delay(
     Object.assign([...MOCK_RAG_CHUNKS], {
-      _source: { isMock: true, reason: '/admin/rag/chunks not shipped' } as DataSource,
+      _source: { isMock: true, reason: 'gateway unreachable; showing mock' } as DataSource,
     }),
   );
 }

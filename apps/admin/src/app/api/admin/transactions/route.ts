@@ -33,8 +33,15 @@ export async function GET(req: Request) {
         headers: { 'X-Admin-Token': TOKEN },
       },
     );
-    const data = await r.json();
-    return NextResponse.json(data, { status: r.status });
+    const text = await r.text();
+    try {
+      return NextResponse.json(JSON.parse(text), { status: r.status });
+    } catch {
+      return NextResponse.json(
+        { ok: false, error: `gateway returned non-JSON (status ${r.status})`, body: text.slice(0, 500) },
+        { status: r.status >= 500 ? r.status : 502 },
+      );
+    }
   } catch (err) {
     return NextResponse.json(
       {
