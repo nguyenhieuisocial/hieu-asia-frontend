@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   title:
     'Methodology Tử Vi — Trường phái, an sao, đại vận, lưu niên · hieu.asia',
   description:
-    'Chi tiết phương pháp Tử Vi Bắc phái dùng tại hieu.asia: 24+ sao chính/phụ, cách an Mệnh-Thân-Cục, đại vận, lưu niên, và đường phân định engine vs AI.',
+    'Chi tiết phương pháp Tử Vi Bắc phái dùng tại hieu.asia: 114 sao chính/phụ, cách an Mệnh-Thân-Cục, đại vận, lưu niên, và đường phân định engine vs AI.',
   alternates: { canonical: 'https://hieu.asia/methodology/tu-vi' },
   openGraph: {
     title: 'Methodology Tử Vi · hieu.asia',
@@ -117,7 +117,151 @@ const SAO_NHO: string[] = [
   'Tấu Thư',
 ];
 
-const TODAY_ISO = '2026-05-22';
+// §5.1 — Full 114-star list with metadata
+type StarRow = {
+  name: string;
+  group: string;
+  basis: string;
+  defaultShow: string;
+  note?: string;
+};
+
+const STARS_114: StarRow[] = [
+  // 14 chính tinh
+  { name: 'Tử Vi', group: 'Chính tinh', basis: 'Cục + ngày âm', defaultShow: 'Có', note: 'Đế tinh — gốc an sao' },
+  { name: 'Thiên Cơ', group: 'Chính tinh', basis: 'Vị trí Tử Vi', defaultShow: 'Có' },
+  { name: 'Thái Dương', group: 'Chính tinh', basis: 'Vị trí Tử Vi', defaultShow: 'Có' },
+  { name: 'Vũ Khúc', group: 'Chính tinh', basis: 'Vị trí Tử Vi', defaultShow: 'Có' },
+  { name: 'Thiên Đồng', group: 'Chính tinh', basis: 'Vị trí Tử Vi', defaultShow: 'Có' },
+  { name: 'Liêm Trinh', group: 'Chính tinh', basis: 'Vị trí Tử Vi', defaultShow: 'Có' },
+  { name: 'Thiên Phủ', group: 'Chính tinh', basis: 'Đối xứng Tử Vi qua Dần-Thân', defaultShow: 'Có' },
+  { name: 'Thái Âm', group: 'Chính tinh', basis: 'Vị trí Thiên Phủ', defaultShow: 'Có' },
+  { name: 'Tham Lang', group: 'Chính tinh', basis: 'Vị trí Thiên Phủ', defaultShow: 'Có' },
+  { name: 'Cự Môn', group: 'Chính tinh', basis: 'Vị trí Thiên Phủ', defaultShow: 'Có' },
+  { name: 'Thiên Tướng', group: 'Chính tinh', basis: 'Vị trí Thiên Phủ', defaultShow: 'Có' },
+  { name: 'Thiên Lương', group: 'Chính tinh', basis: 'Vị trí Thiên Phủ', defaultShow: 'Có' },
+  { name: 'Thất Sát', group: 'Chính tinh', basis: 'Vị trí Thiên Phủ', defaultShow: 'Có' },
+  { name: 'Phá Quân', group: 'Chính tinh', basis: 'Vị trí Thiên Phủ', defaultShow: 'Có' },
+
+  // 10 phụ tinh chính
+  { name: 'Tả Phụ', group: 'Phụ tinh chính', basis: 'Tháng âm', defaultShow: 'Có' },
+  { name: 'Hữu Bật', group: 'Phụ tinh chính', basis: 'Tháng âm', defaultShow: 'Có' },
+  { name: 'Văn Xương', group: 'Phụ tinh chính', basis: 'Giờ sinh', defaultShow: 'Có' },
+  { name: 'Văn Khúc', group: 'Phụ tinh chính', basis: 'Giờ sinh', defaultShow: 'Có' },
+  { name: 'Thiên Khôi', group: 'Phụ tinh chính', basis: 'Can năm', defaultShow: 'Có' },
+  { name: 'Thiên Việt', group: 'Phụ tinh chính', basis: 'Can năm', defaultShow: 'Có' },
+  { name: 'Lộc Tồn', group: 'Phụ tinh chính', basis: 'Can năm', defaultShow: 'Có' },
+  { name: 'Kình Dương', group: 'Phụ tinh chính', basis: 'Can năm (cạnh Lộc Tồn)', defaultShow: 'Có' },
+  { name: 'Đà La', group: 'Phụ tinh chính', basis: 'Can năm (cạnh Lộc Tồn)', defaultShow: 'Có' },
+  { name: 'Hoả Tinh', group: 'Phụ tinh chính', basis: 'Chi năm + giờ', defaultShow: 'Có' },
+  { name: 'Linh Tinh', group: 'Phụ tinh chính', basis: 'Chi năm + giờ', defaultShow: 'Có' },
+
+  // 4 Tứ Hoá
+  { name: 'Hoá Lộc', group: 'Tứ Hoá', basis: 'Can năm', defaultShow: 'Có' },
+  { name: 'Hoá Quyền', group: 'Tứ Hoá', basis: 'Can năm', defaultShow: 'Có' },
+  { name: 'Hoá Khoa', group: 'Tứ Hoá', basis: 'Can năm', defaultShow: 'Có' },
+  { name: 'Hoá Kỵ', group: 'Tứ Hoá', basis: 'Can năm', defaultShow: 'Có' },
+
+  // ~12 sao cát phụ
+  { name: 'Thiên Mã', group: 'Sao cát/sao phụ', basis: 'Chi năm', defaultShow: 'Có' },
+  { name: 'Long Trì', group: 'Sao cát/sao phụ', basis: 'Chi năm', defaultShow: 'Có' },
+  { name: 'Phượng Các', group: 'Sao cát/sao phụ', basis: 'Chi năm', defaultShow: 'Có' },
+  { name: 'Thiên Hỉ', group: 'Sao cát/sao phụ', basis: 'Chi năm', defaultShow: 'Có' },
+  { name: 'Hồng Loan', group: 'Sao cát/sao phụ', basis: 'Chi năm', defaultShow: 'Có' },
+  { name: 'Đào Hoa', group: 'Sao cát/sao phụ', basis: 'Chi năm', defaultShow: 'Có' },
+  { name: 'Hoa Cái', group: 'Sao cát/sao phụ', basis: 'Chi năm', defaultShow: 'Có' },
+  { name: 'Thiên Đức', group: 'Sao cát/sao phụ', basis: 'Chi năm', defaultShow: 'Có' },
+  { name: 'Nguyệt Đức', group: 'Sao cát/sao phụ', basis: 'Chi năm', defaultShow: 'Có' },
+  { name: 'Giải Thần', group: 'Sao cát/sao phụ', basis: 'Tháng âm', defaultShow: 'Ẩn' },
+  { name: 'Thiên Hình', group: 'Sao cát/sao phụ', basis: 'Tháng âm', defaultShow: 'Ẩn' },
+  { name: 'Thiên Diêu', group: 'Sao cát/sao phụ', basis: 'Tháng âm', defaultShow: 'Ẩn' },
+
+  // ~10 sao hung phụ
+  { name: 'Cô Thần', group: 'Sao hung phụ', basis: 'Chi năm', defaultShow: 'Có' },
+  { name: 'Quả Tú', group: 'Sao hung phụ', basis: 'Chi năm', defaultShow: 'Có' },
+  { name: 'Thiên Khốc', group: 'Sao hung phụ', basis: 'Chi năm', defaultShow: 'Có' },
+  { name: 'Thiên Hư', group: 'Sao hung phụ', basis: 'Chi năm', defaultShow: 'Có' },
+  { name: 'Tuần', group: 'Sao hung phụ', basis: 'Can năm', defaultShow: 'Có' },
+  { name: 'Triệt', group: 'Sao hung phụ', basis: 'Can năm', defaultShow: 'Có' },
+  { name: 'Kiếp Sát', group: 'Sao hung phụ', basis: 'Chi năm', defaultShow: 'Ẩn' },
+  { name: 'Đại Hao', group: 'Sao hung phụ', basis: 'Chi năm', defaultShow: 'Ẩn' },
+  { name: 'Tiểu Hao', group: 'Sao hung phụ', basis: 'Chi năm', defaultShow: 'Ẩn' },
+  { name: 'Phá Toái', group: 'Sao hung phụ', basis: 'Chi năm', defaultShow: 'Ẩn' },
+
+  // 64 sao nhỏ + lưu sao
+  { name: 'Phục Binh', group: 'Sao nhỏ/lưu sao', basis: 'Vòng Lộc Tồn', defaultShow: 'Ẩn' },
+  { name: 'Quan Phù', group: 'Sao nhỏ/lưu sao', basis: 'Vòng Thái Tuế', defaultShow: 'Ẩn' },
+  { name: 'Lực Sĩ', group: 'Sao nhỏ/lưu sao', basis: 'Vòng Lộc Tồn', defaultShow: 'Ẩn' },
+  { name: 'Thanh Long', group: 'Sao nhỏ/lưu sao', basis: 'Vòng Lộc Tồn', defaultShow: 'Ẩn' },
+  { name: 'Thiếu Âm', group: 'Sao nhỏ/lưu sao', basis: 'Vòng Thái Tuế', defaultShow: 'Ẩn' },
+  { name: 'Thiếu Dương', group: 'Sao nhỏ/lưu sao', basis: 'Vòng Thái Tuế', defaultShow: 'Ẩn' },
+  { name: 'Tử Phù', group: 'Sao nhỏ/lưu sao', basis: 'Vòng Thái Tuế', defaultShow: 'Ẩn' },
+  { name: 'Bệnh Phù', group: 'Sao nhỏ/lưu sao', basis: 'Vòng Thái Tuế', defaultShow: 'Ẩn' },
+  { name: 'Tuế Phá', group: 'Sao nhỏ/lưu sao', basis: 'Vòng Thái Tuế', defaultShow: 'Ẩn' },
+  { name: 'Lưu Hà', group: 'Sao nhỏ/lưu sao', basis: 'Can năm', defaultShow: 'Ẩn' },
+  { name: 'Phỉ Liêm', group: 'Sao nhỏ/lưu sao', basis: 'Vòng Lộc Tồn', defaultShow: 'Ẩn' },
+  { name: 'Hỉ Thần', group: 'Sao nhỏ/lưu sao', basis: 'Vòng Lộc Tồn', defaultShow: 'Ẩn' },
+  { name: 'Hoa Cái Lưu', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên', defaultShow: 'Ẩn' },
+  { name: 'Cô Quả Lưu', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên', defaultShow: 'Ẩn' },
+  { name: 'Thiên Quan', group: 'Sao nhỏ/lưu sao', basis: 'Can năm', defaultShow: 'Ẩn' },
+  { name: 'Thiên Phúc', group: 'Sao nhỏ/lưu sao', basis: 'Can năm', defaultShow: 'Ẩn' },
+  { name: 'Ân Quang', group: 'Sao nhỏ/lưu sao', basis: 'Vị trí Văn Xương', defaultShow: 'Ẩn' },
+  { name: 'Thiên Quý', group: 'Sao nhỏ/lưu sao', basis: 'Vị trí Văn Khúc', defaultShow: 'Ẩn' },
+  { name: 'Tam Thai', group: 'Sao nhỏ/lưu sao', basis: 'Tháng + Tả Phụ', defaultShow: 'Ẩn' },
+  { name: 'Bát Toạ', group: 'Sao nhỏ/lưu sao', basis: 'Tháng + Hữu Bật', defaultShow: 'Ẩn' },
+  { name: 'Đài Phụ', group: 'Sao nhỏ/lưu sao', basis: 'Giờ + Văn Xương', defaultShow: 'Ẩn' },
+  { name: 'Phong Cáo', group: 'Sao nhỏ/lưu sao', basis: 'Giờ + Văn Khúc', defaultShow: 'Ẩn' },
+  { name: 'Long Đức', group: 'Sao nhỏ/lưu sao', basis: 'Chi năm', defaultShow: 'Ẩn' },
+  { name: 'Nguyệt Đức Lưu', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên', defaultShow: 'Ẩn' },
+  { name: 'Tang Môn', group: 'Sao nhỏ/lưu sao', basis: 'Vòng Thái Tuế', defaultShow: 'Ẩn' },
+  { name: 'Bạch Hổ', group: 'Sao nhỏ/lưu sao', basis: 'Vòng Thái Tuế', defaultShow: 'Ẩn' },
+  { name: 'Điếu Khách', group: 'Sao nhỏ/lưu sao', basis: 'Vòng Thái Tuế', defaultShow: 'Ẩn' },
+  { name: 'Trực Phù', group: 'Sao nhỏ/lưu sao', basis: 'Vòng Thái Tuế', defaultShow: 'Ẩn' },
+  { name: 'Thiên Không', group: 'Sao nhỏ/lưu sao', basis: 'Vòng Thái Tuế', defaultShow: 'Ẩn' },
+  { name: 'Địa Không', group: 'Sao nhỏ/lưu sao', basis: 'Giờ sinh', defaultShow: 'Ẩn' },
+  { name: 'Địa Kiếp', group: 'Sao nhỏ/lưu sao', basis: 'Giờ sinh', defaultShow: 'Ẩn' },
+  { name: 'Tướng Quân', group: 'Sao nhỏ/lưu sao', basis: 'Vòng Lộc Tồn', defaultShow: 'Ẩn' },
+  { name: 'Tấu Thư', group: 'Sao nhỏ/lưu sao', basis: 'Vòng Lộc Tồn', defaultShow: 'Ẩn' },
+  { name: 'Đẩu Quân', group: 'Sao nhỏ/lưu sao', basis: 'Tháng âm + giờ', defaultShow: 'Ẩn' },
+  { name: 'Thiên Trù', group: 'Sao nhỏ/lưu sao', basis: 'Can năm', defaultShow: 'Ẩn' },
+  { name: 'Đại Sát', group: 'Sao nhỏ/lưu sao', basis: 'Chi năm', defaultShow: 'Ẩn' },
+  { name: 'Thiên Tài', group: 'Sao nhỏ/lưu sao', basis: 'Năm + cung Mệnh', defaultShow: 'Ẩn' },
+  { name: 'Thiên Thọ', group: 'Sao nhỏ/lưu sao', basis: 'Năm + cung Thân', defaultShow: 'Ẩn' },
+  { name: 'Thiên Y', group: 'Sao nhỏ/lưu sao', basis: 'Tháng âm', defaultShow: 'Ẩn' },
+  { name: 'Thiên Thương', group: 'Sao nhỏ/lưu sao', basis: 'Cung Nô Bộc + Thiên Di', defaultShow: 'Ẩn' },
+  { name: 'Thiên Sứ', group: 'Sao nhỏ/lưu sao', basis: 'Cung Tật Ách', defaultShow: 'Ẩn' },
+  { name: 'Lưu Lộc', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (can)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Kình', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (can)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Đà', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (can)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Khôi', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (can)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Việt', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (can)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Xương', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên', defaultShow: 'Ẩn' },
+  { name: 'Lưu Khúc', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên', defaultShow: 'Ẩn' },
+  { name: 'Lưu Mã', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (chi)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Hoá Lộc', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (can)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Hoá Quyền', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (can)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Hoá Khoa', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (can)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Hoá Kỵ', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (can)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Tang', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (chi)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Hổ', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (chi)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Khốc', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (chi)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Hư', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (chi)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Hồng', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (chi)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Hỉ', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (chi)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Đào', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (chi)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Cô', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (chi)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Quả', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (chi)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Long', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (chi)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Phượng', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (chi)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Thái Tuế', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (chi)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Tuế Phá', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (chi)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Quan Phù', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (chi)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Tử Phù', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (chi)', defaultShow: 'Ẩn' },
+  { name: 'Lưu Bệnh Phù', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên (chi)', defaultShow: 'Ẩn' },
+  { name: 'Phá Quân Lưu', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên', defaultShow: 'Ẩn' },
+];
+
+const TODAY_ISO = '2026-05-21';
 
 const ARTICLE_JSONLD = {
   '@context': 'https://schema.org',
@@ -162,6 +306,25 @@ const BREADCRUMB_JSONLD = {
     },
   ],
 };
+
+// Table of contents for sticky sidebar
+const TOC: { id: string; label: string }[] = [
+  { id: 'truong-phai', label: '1. Trường phái' },
+  { id: 'danh-sach-sao', label: '2. Danh sách sao' },
+  { id: 'danh-sach-114', label: '2b. 114 sao đầy đủ' },
+  { id: 'menh-than', label: '3. An Mệnh & Thân' },
+  { id: 'an-chinh-tinh', label: '4. An chính tinh' },
+  { id: 'phu-tinh-tu-hoa', label: '5. Phụ tinh & Tứ Hoá' },
+  { id: 'dai-van', label: '6. Đại vận' },
+  { id: 'luu-nien', label: '7. Lưu niên' },
+  { id: 'nguon-quy-tac', label: '8. Dị bản & nguồn' },
+  { id: 'cung-chu-de', label: '9. Cung theo chủ đề' },
+  { id: 'edge-cases', label: '10. Trường hợp đặc biệt' },
+  { id: 'rule-time-claims', label: '11. Quy tắc thời gian' },
+  { id: 'modes', label: '12. Hai chế độ' },
+  { id: 'ai-vs-engine', label: '13. AI vs Engine' },
+  { id: 'gioi-han', label: '14. Giới hạn' },
+];
 
 export default function MethodologyTuViPage() {
   return (
@@ -219,9 +382,10 @@ export default function MethodologyTuViPage() {
           </div>
         </section>
 
-        <section className="relative mx-auto max-w-3xl space-y-6 px-6 pb-20">
+        <div className="relative mx-auto max-w-6xl px-6 pb-20 lg:grid lg:grid-cols-[1fr_240px] lg:gap-8">
+          <section className="space-y-6">
           {/* 1. Trường phái */}
-          <Card id="truong-phai" className="border-cream/10 bg-ink/40">
+          <Card id="truong-phai" className="border-cream/10 bg-ink/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-heading text-xl text-cream sm:text-2xl">
                 <BookOpen className="h-5 w-5 text-gold" aria-hidden /> Trường phái dùng
@@ -253,7 +417,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 2. Danh sách sao */}
-          <Card id="danh-sach-sao" className="border-cream/10 bg-ink/40">
+          <Card id="danh-sach-sao" className="border-cream/10 bg-ink/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-heading text-xl text-cream sm:text-2xl">
                 <Star className="h-5 w-5 text-gold" aria-hidden /> Danh sách sao sử dụng
@@ -316,8 +480,75 @@ export default function MethodologyTuViPage() {
             </CardContent>
           </Card>
 
+          {/* §5.1 — Danh sách 114 sao đầy đủ */}
+          <Card id="danh-sach-114" className="border-cream/10 bg-ink/40 scroll-mt-24">
+            <CardHeader>
+              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+                Danh sách 114 sao đầy đủ
+              </CardTitle>
+              <CardDescription className="text-cream/60">
+                Bảng tham chiếu — nhóm, căn cứ an, hiển thị mặc định. Tổng {STARS_114.length} sao.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm text-cream/80 sm:text-base">
+              <div className="overflow-x-auto rounded-lg border border-cream/10">
+                <table className="min-w-full text-left text-xs sm:text-sm">
+                  <thead className="bg-ink/60 text-cream/70">
+                    <tr>
+                      <th className="px-3 py-2 font-medium">Sao</th>
+                      <th className="px-3 py-2 font-medium">Nhóm</th>
+                      <th className="px-3 py-2 font-medium">Căn cứ an</th>
+                      <th className="px-3 py-2 font-medium">Hiển thị mặc định</th>
+                      <th className="px-3 py-2 font-medium">Ghi chú</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-cream/10">
+                    {STARS_114.slice(0, 30).map((s) => (
+                      <tr key={s.name} className="hover:bg-ink/40">
+                        <td className="whitespace-nowrap px-3 py-2 text-cream">{s.name}</td>
+                        <td className="whitespace-nowrap px-3 py-2 text-cream/70">{s.group}</td>
+                        <td className="px-3 py-2 text-cream/70">{s.basis}</td>
+                        <td className="whitespace-nowrap px-3 py-2 text-cream/70">{s.defaultShow}</td>
+                        <td className="px-3 py-2 text-cream/60">{s.note ?? ''}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <details className="rounded-lg border border-cream/10 bg-ink/40 p-3">
+                <summary className="cursor-pointer text-sm text-gold/90 hover:text-gold">
+                  Xem {STARS_114.length - 30} sao còn lại
+                </summary>
+                <div className="mt-3 overflow-x-auto rounded-lg border border-cream/10">
+                  <table className="min-w-full text-left text-xs sm:text-sm">
+                    <thead className="bg-ink/60 text-cream/70">
+                      <tr>
+                        <th className="px-3 py-2 font-medium">Sao</th>
+                        <th className="px-3 py-2 font-medium">Nhóm</th>
+                        <th className="px-3 py-2 font-medium">Căn cứ an</th>
+                        <th className="px-3 py-2 font-medium">Hiển thị mặc định</th>
+                        <th className="px-3 py-2 font-medium">Ghi chú</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-cream/10">
+                      {STARS_114.slice(30).map((s) => (
+                        <tr key={s.name} className="hover:bg-ink/40">
+                          <td className="whitespace-nowrap px-3 py-2 text-cream">{s.name}</td>
+                          <td className="whitespace-nowrap px-3 py-2 text-cream/70">{s.group}</td>
+                          <td className="px-3 py-2 text-cream/70">{s.basis}</td>
+                          <td className="whitespace-nowrap px-3 py-2 text-cream/70">{s.defaultShow}</td>
+                          <td className="px-3 py-2 text-cream/60">{s.note ?? ''}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </details>
+            </CardContent>
+          </Card>
+
           {/* 3. An Mệnh & Thân */}
-          <Card id="menh-than" className="border-cream/10 bg-ink/40">
+          <Card id="menh-than" className="border-cream/10 bg-ink/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
                 Cách an cung Mệnh và Thân
@@ -346,7 +577,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 4. An chính tinh */}
-          <Card id="an-chinh-tinh" className="border-cream/10 bg-ink/40">
+          <Card id="an-chinh-tinh" className="border-cream/10 bg-ink/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
                 Cách an chính tinh
@@ -375,7 +606,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 5. Phụ tinh + Tứ Hoá */}
-          <Card id="phu-tinh-tu-hoa" className="border-cream/10 bg-ink/40">
+          <Card id="phu-tinh-tu-hoa" className="border-cream/10 bg-ink/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
                 Cách an phụ tinh và Tứ Hoá
@@ -407,7 +638,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 6. Đại vận */}
-          <Card id="dai-van" className="border-cream/10 bg-ink/40">
+          <Card id="dai-van" className="border-cream/10 bg-ink/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
                 Cách tính Đại Vận
@@ -423,21 +654,39 @@ export default function MethodologyTuViPage() {
                 âm-dương của thiên can năm sinh + giới tính. Nam Dương / Nữ Âm đi{' '}
                 <em>thuận</em>; Nam Âm / Nữ Dương đi <em>nghịch</em>.
               </p>
-              <p>
-                <strong>Tuổi khởi đại vận:</strong> bằng <em>Cục số</em> (Thuỷ 2 → 2 tuổi,
-                Mộc 3 → 3 tuổi, ..., Thổ 5 → 5 tuổi, Kim 4 → 4 tuổi, Hoả 6 → 6 tuổi).
-              </p>
-              <p className="rounded-lg border border-gold/20 bg-gold/5 p-3 text-cream/85">
-                <strong className="text-gold">Caveat.</strong> Tuổi khởi đại vận có dị
-                biệt giữa các phái: một số nhánh dùng 5/6/7 tuổi cố định. Engine
-                hieu.asia dùng <em>Cục số ÷ 10</em> (chính xác hơn cho thời điểm chuyển
-                vận, nhất là khi đối chiếu với tiểu vận).
-              </p>
+              <div className="rounded-lg border border-cream/10 bg-ink/60 p-4 text-cream/85">
+                <p className="font-medium text-cream">Tuổi khởi đại vận:</p>
+                <ul className="mt-2 list-disc space-y-1 pl-5 text-cream/80">
+                  <li>
+                    <strong>Bản phổ thông:</strong> dùng Cục số (Thuỷ nhị cục = 2, Mộc tam
+                    cục = 3, Kim tứ cục = 4, Thổ ngũ cục = 5, Hoả lục cục = 6) làm tuổi
+                    khởi đại vận đầu tiên.
+                  </li>
+                  <li>
+                    <strong>Một số nhánh:</strong> tinh chỉnh thời điểm chuyển vận theo
+                    ngày/giờ sinh (chứ không phải đúng sinh nhật).
+                  </li>
+                  <li>
+                    <strong>Engine hieu.asia hiện dùng:</strong> tuổi khởi vận = Cục số,
+                    với chiều đại vận tính theo cặp (giới tính + âm/dương can năm).
+                  </li>
+                  <li>
+                    Nếu công thức này thay đổi,{' '}
+                    <Link
+                      href="/methodology/algorithm-changelog"
+                      className="text-gold underline-offset-4 hover:underline"
+                    >
+                      /methodology/algorithm-changelog
+                    </Link>{' '}
+                    ghi rõ.
+                  </li>
+                </ul>
+              </div>
             </CardContent>
           </Card>
 
           {/* 7. Lưu niên */}
-          <Card id="luu-nien" className="border-cream/10 bg-ink/40">
+          <Card id="luu-nien" className="border-cream/10 bg-ink/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
                 Cách tính Lưu Niên
@@ -463,8 +712,241 @@ export default function MethodologyTuViPage() {
             </CardContent>
           </Card>
 
+          {/* §5.2 — Dị bản và nguồn quy tắc */}
+          <Card id="nguon-quy-tac" className="border-cream/10 bg-ink/40 scroll-mt-24">
+            <CardHeader>
+              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+                Dị bản và nguồn quy tắc
+              </CardTitle>
+              <CardDescription className="text-cream/60">
+                Mỗi quy tắc engine dùng — kèm dị bản phổ biến và lý do chọn.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4 text-sm leading-relaxed text-cream/80 sm:text-base">
+              <div className="rounded-lg border border-cream/10 bg-ink/60 p-4">
+                <p className="font-medium text-cream">Quy tắc: Tứ Hoá</p>
+                <p className="mt-1"><span className="text-cream/60">Nguồn / nhánh chính:</span> Bắc phái Trần Đoàn — an theo <em>can năm sinh</em>.</p>
+                <p><span className="text-cream/60">Dị bản:</span> Phái Tử Vân dùng <em>can ngày</em> (Tứ Hoá phi tinh); Liễu Vô Cư Sĩ đối chiếu cả can năm + can ngày.</p>
+                <p><span className="text-cream/60">Engine mặc định:</span> <strong>Can năm</strong>.</p>
+                <p><span className="text-cream/60">Tại sao chọn:</span> Bắc phái mainstream, tư liệu nhiều, dễ kiểm chứng deterministic.</p>
+              </div>
+              <div className="rounded-lg border border-cream/10 bg-ink/60 p-4">
+                <p className="font-medium text-cream">Quy tắc: An Mệnh</p>
+                <p className="mt-1"><span className="text-cream/60">Nguồn / nhánh chính:</span> "Tháng âm lùi — giờ tiến tới" (Bắc phái phổ thông).</p>
+                <p><span className="text-cream/60">Dị bản:</span> Một số sách Đài Loan đếm cả hai chiều thuận; nhánh dân gian Việt Nam đôi khi đảo công thức.</p>
+                <p><span className="text-cream/60">Engine mặc định:</span> <strong>Tháng âm lùi, giờ tiến tới</strong> từ cung Dần.</p>
+                <p><span className="text-cream/60">Tại sao chọn:</span> Khớp với hầu hết sách Bắc phái chuẩn (Tử Vi Đẩu Số Toàn Thư).</p>
+              </div>
+              <div className="rounded-lg border border-cream/10 bg-ink/60 p-4">
+                <p className="font-medium text-cream">Quy tắc: Cục số</p>
+                <p className="mt-1"><span className="text-cream/60">Nguồn / nhánh chính:</span> Bảng Lục Thập Hoa Giáp — nạp âm Can Chi năm + cung Mệnh.</p>
+                <p><span className="text-cream/60">Dị bản:</span> Một số nhánh dùng nạp âm năm + chi tháng (ít phổ biến).</p>
+                <p><span className="text-cream/60">Engine mặc định:</span> <strong>Nạp âm can-chi năm + cung Mệnh</strong> → Kim/Mộc/Thuỷ/Hoả/Thổ (2-6 cục).</p>
+                <p><span className="text-cream/60">Tại sao chọn:</span> Phương pháp mainstream, mỗi tổ hợp (năm + cung Mệnh) chỉ ra <em>một</em> cục duy nhất.</p>
+              </div>
+              <div className="rounded-lg border border-cream/10 bg-ink/60 p-4">
+                <p className="font-medium text-cream">Quy tắc: Đại vận thuận/nghịch</p>
+                <p className="mt-1"><span className="text-cream/60">Nguồn / nhánh chính:</span> "Dương Nam Âm Nữ thuận, Âm Nam Dương Nữ nghịch".</p>
+                <p><span className="text-cream/60">Dị bản:</span> Có sách dùng âm-dương chi năm thay vì can năm — kết quả thường giống, nhưng vài năm biên giới khác.</p>
+                <p><span className="text-cream/60">Engine mặc định:</span> Dùng <strong>âm-dương can năm + giới tính</strong>.</p>
+                <p><span className="text-cream/60">Tại sao chọn:</span> Bám sát Tử Vi Đẩu Số Toàn Thư và đa số tài liệu Bắc phái hiện đại.</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* §5.3 — Cung nào dùng cho chủ đề nào */}
+          <Card id="cung-chu-de" className="border-cream/10 bg-ink/40 scroll-mt-24">
+            <CardHeader>
+              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+                Cung nào dùng cho chủ đề nào
+              </CardTitle>
+              <CardDescription className="text-cream/60">
+                Map từ câu hỏi user sang cung chính, cung phụ và thời vận engine sẽ đối chiếu.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm text-cream/80 sm:text-base">
+              <div className="overflow-x-auto rounded-lg border border-cream/10">
+                <table className="min-w-full text-left text-xs sm:text-sm">
+                  <thead className="bg-ink/60 text-cream/70">
+                    <tr>
+                      <th className="px-3 py-2 font-medium">Chủ đề user hỏi</th>
+                      <th className="px-3 py-2 font-medium">Cung chính</th>
+                      <th className="px-3 py-2 font-medium">Cung phụ</th>
+                      <th className="px-3 py-2 font-medium">Thời vận</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-cream/10">
+                    <tr>
+                      <td className="px-3 py-2 text-cream">Sự nghiệp</td>
+                      <td className="px-3 py-2 text-cream/80">Quan Lộc</td>
+                      <td className="px-3 py-2 text-cream/70">Mệnh, Tài Bạch, Thiên Di, Nô Bộc</td>
+                      <td className="px-3 py-2 text-cream/70">Đại vận, lưu niên</td>
+                    </tr>
+                    <tr>
+                      <td className="px-3 py-2 text-cream">Tài chính</td>
+                      <td className="px-3 py-2 text-cream/80">Tài Bạch</td>
+                      <td className="px-3 py-2 text-cream/70">Quan Lộc, Điền Trạch, Phúc Đức</td>
+                      <td className="px-3 py-2 text-cream/70">Đại vận, lưu niên</td>
+                    </tr>
+                    <tr>
+                      <td className="px-3 py-2 text-cream">Tình cảm</td>
+                      <td className="px-3 py-2 text-cream/80">Phu Thê</td>
+                      <td className="px-3 py-2 text-cream/70">Mệnh, Phúc Đức, Nô Bộc, Tử Tức</td>
+                      <td className="px-3 py-2 text-cream/70">Đại vận, lưu niên</td>
+                    </tr>
+                    <tr>
+                      <td className="px-3 py-2 text-cream">Gia đình</td>
+                      <td className="px-3 py-2 text-cream/80">Phụ Mẫu, Huynh Đệ</td>
+                      <td className="px-3 py-2 text-cream/70">Phúc Đức, Điền Trạch</td>
+                      <td className="px-3 py-2 text-cream/70">Đại vận</td>
+                    </tr>
+                    <tr>
+                      <td className="px-3 py-2 text-cream">Sức khoẻ / thói quen</td>
+                      <td className="px-3 py-2 text-cream/80">Tật Ách</td>
+                      <td className="px-3 py-2 text-cream/70">Mệnh, Phúc Đức</td>
+                      <td className="px-3 py-2 text-cream/70">Đại vận, lưu niên</td>
+                    </tr>
+                    <tr>
+                      <td className="px-3 py-2 text-cream">Đi xa / đổi môi trường</td>
+                      <td className="px-3 py-2 text-cream/80">Thiên Di</td>
+                      <td className="px-3 py-2 text-cream/70">Mệnh, Quan Lộc, Nô Bộc</td>
+                      <td className="px-3 py-2 text-cream/70">Đại vận, lưu niên</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* §5.5 — Trường hợp đặc biệt */}
+          <Card id="edge-cases" className="border-cream/10 bg-ink/40 scroll-mt-24">
+            <CardHeader>
+              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+                Trường hợp đặc biệt
+              </CardTitle>
+              <CardDescription className="text-cream/60">
+                Các edge case engine bắt buộc xử lý — không cho phép "đoán".
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm text-cream/80 sm:text-base">
+              <div className="overflow-x-auto rounded-lg border border-cream/10">
+                <table className="min-w-full text-left text-xs sm:text-sm">
+                  <thead className="bg-ink/60 text-cream/70">
+                    <tr>
+                      <th className="px-3 py-2 font-medium">Edge case</th>
+                      <th className="px-3 py-2 font-medium">Rủi ro</th>
+                      <th className="px-3 py-2 font-medium">Hệ thống xử lý</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-cream/10">
+                    <tr>
+                      <td className="px-3 py-2 text-cream">Sinh gần ranh giờ Tý</td>
+                      <td className="px-3 py-2 text-cream/70">Cung Mệnh/Thân có thể đổi</td>
+                      <td className="px-3 py-2 text-cream/70">Cảnh báo confidence + gợi ý so sánh 2 lá số</td>
+                    </tr>
+                    <tr>
+                      <td className="px-3 py-2 text-cream">Không nhớ giờ sinh</td>
+                      <td className="px-3 py-2 text-cream/70">Confidence thấp</td>
+                      <td className="px-3 py-2 text-cream/70">Hỏi hồi cứu, không phán cứng</td>
+                    </tr>
+                    <tr>
+                      <td className="px-3 py-2 text-cream">Sinh trong tháng nhuận</td>
+                      <td className="px-3 py-2 text-cream/70">Sai tháng âm</td>
+                      <td className="px-3 py-2 text-cream/70">Bắt user xác nhận tháng nhuận</td>
+                    </tr>
+                    <tr>
+                      <td className="px-3 py-2 text-cream">Sinh ngoài VN</td>
+                      <td className="px-3 py-2 text-cream/70">Sai timezone</td>
+                      <td className="px-3 py-2 text-cream/70">Hỏi nơi sinh / timezone</td>
+                    </tr>
+                    <tr>
+                      <td className="px-3 py-2 text-cream">Sinh ngày đổi tiết khí</td>
+                      <td className="px-3 py-2 text-cream/70">Sai Can Chi tháng</td>
+                      <td className="px-3 py-2 text-cream/70">Ngày đổi tiết khí có flag, prompt user xác nhận</td>
+                    </tr>
+                    <tr>
+                      <td className="px-3 py-2 text-cream">Nhập ngày âm nhưng chọn nhầm lịch dương</td>
+                      <td className="px-3 py-2 text-cream/70">Sai toàn bộ chart</td>
+                      <td className="px-3 py-2 text-cream/70">Validator pattern check (tháng âm hợp lý, ngày âm ≤ 30)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* §5.6 — Quy tắc khi AI nhắc thời gian cụ thể */}
+          <Card id="rule-time-claims" className="border-cream/10 bg-ink/40 scroll-mt-24">
+            <CardHeader>
+              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+                Quy tắc khi AI nhắc năm/quý/tháng cụ thể
+              </CardTitle>
+              <CardDescription className="text-cream/60">
+                Mọi mention thời gian hoặc sao đều phải có evidence từ chart, không phải tone AI.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm leading-relaxed text-cream/80 sm:text-base">
+              <ul className="list-disc space-y-2 pl-5">
+                <li>
+                  Nếu output nhắc <strong>năm / quý / tháng</strong> → phải có evidence
+                  từ <em>đại vận / lưu niên / lưu nguyệt</em> cụ thể (không phải tone AI).
+                </li>
+                <li>
+                  Nếu output nhắc <strong>sao cụ thể</strong> → sao phải tồn tại trong
+                  <em> chart JSON</em> hoặc <em>transit JSON</em>.
+                </li>
+                <li>
+                  Nếu output <strong>khuyên hành động</strong> → phải có ÍT NHẤT 1 điều
+                  kiện kiểm chứng ngoài đời.
+                </li>
+              </ul>
+              <p className="rounded-lg border border-amber-700/40 bg-amber-900/15 p-3 text-cream/90">
+                <strong className="text-amber-200">Validator.</strong> Cả 3 rule đều có
+                check tự động trên output trước khi gửi tới user. Vi phạm → response bị
+                regenerate.
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* §5.7 — Hai chế độ diễn giải */}
+          <Card id="modes" className="border-cream/10 bg-ink/40 scroll-mt-24">
+            <CardHeader>
+              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+                Hai chế độ diễn giải
+              </CardTitle>
+              <CardDescription className="text-cream/60">
+                Cùng một kết luận, hai cách nói — user chọn theo nhu cầu.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4 text-sm leading-relaxed text-cream/80 sm:text-base">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="rounded-lg border border-cream/15 bg-ink/60 p-4">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+                    Mode dễ hiểu
+                  </p>
+                  <p className="mt-2 text-cream/85">
+                    "Bạn hợp môi trường có quyền tự chủ, mục tiêu dài hạn và không quá vụn vặt."
+                  </p>
+                </div>
+                <div className="rounded-lg border border-cream/15 bg-ink/60 p-4">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+                    Mode chuyên sâu
+                  </p>
+                  <p className="mt-2 text-cream/85">
+                    "Luận dựa trên Quan Lộc, tam phương Mệnh–Tài–Di, đại vận hiện tại và
+                    nhóm sao chủ động trong cung sự nghiệp."
+                  </p>
+                </div>
+              </div>
+              <p className="rounded-lg border border-cream/10 bg-ink/40 p-3 text-xs text-cream/65">
+                Mode chuyên sâu sẽ có toggle trong báo cáo (chưa active trong UI hiện
+                tại — coming soon).
+              </p>
+            </CardContent>
+          </Card>
+
           {/* 8. AI vs Engine */}
-          <Card id="ai-vs-engine" className="border-cream/10 bg-ink/40">
+          <Card id="ai-vs-engine" className="border-cream/10 bg-ink/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-heading text-xl text-cream sm:text-2xl">
                 <Shield className="h-5 w-5 text-gold" aria-hidden /> AI làm gì, engine
@@ -519,7 +1001,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 9. Giới hạn */}
-          <Card id="gioi-han" className="border-cream/10 bg-ink/40">
+          <Card id="gioi-han" className="border-cream/10 bg-ink/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
                 Giới hạn và sự thật
@@ -593,7 +1075,32 @@ export default function MethodologyTuViPage() {
               </span>
             </Link>
           </div>
-        </section>
+          </section>
+
+          {/* Sticky table of contents (desktop only) */}
+          <aside className="hidden lg:block">
+            <nav
+              aria-label="Mục lục"
+              className="sticky top-20 rounded-lg border border-cream/10 bg-ink/40 p-4"
+            >
+              <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/80">
+                Mục lục
+              </p>
+              <ul className="space-y-1.5 text-xs">
+                {TOC.map((item) => (
+                  <li key={item.id}>
+                    <a
+                      href={`#${item.id}`}
+                      className="block rounded px-2 py-1 text-cream/70 transition hover:bg-ink/60 hover:text-gold"
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </aside>
+        </div>
       </main>
       <SiteFooter />
     </div>

@@ -19,7 +19,11 @@ interface NavLink {
 }
 
 const LEARN_LINKS: readonly NavLink[] = [
+  { href: '/methodology', label: 'Methodology tổng quan' },
   { href: '/methodology/tu-vi', label: 'Methodology Tử Vi' },
+  { href: '/methodology/bat-tu', label: 'Methodology Bát Tự (beta)' },
+  { href: '/methodology/model-card', label: 'AI Model Card' },
+  { href: '/methodology/ai-safety', label: 'AI Safety Policy' },
   { href: '/methodology/algorithm-changelog', label: 'Algorithm changelog' },
   { href: '/learn/tu-vi', label: 'Tử Vi Đẩu Số' },
   { href: '/learn/bat-tu', label: 'Bát Tự Tứ Trụ' },
@@ -30,11 +34,16 @@ const LEARN_LINKS: readonly NavLink[] = [
 
 const TOOLS_LINKS: readonly NavLink[] = [
   { href: '/decisions', label: 'Decision Brief' },
+  { href: '/decision-simulator', label: 'Decision Simulator' },
   { href: '/journal', label: 'Decision Journal' },
   { href: '/weekly-review', label: 'Weekly Review' },
   { href: '/ban-do', label: 'Bản đồ của bạn' },
+  { href: '/monthly-planning', label: 'Monthly Planning' },
+  { href: '/annual-planning', label: 'Annual Planning' },
+  { href: '/timeline', label: 'Đại vận timeline' },
   { href: '/compatibility', label: 'Hợp đôi 2 lá số' },
   { href: '/career-fit', label: 'Career Fit' },
+  { href: '/family-profiles', label: 'Family Profiles' },
   { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay' },
   { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
   { href: '/hop-tuoi', label: 'Hợp tuổi (12 con giáp)' },

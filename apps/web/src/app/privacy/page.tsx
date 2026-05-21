@@ -7,7 +7,7 @@ export const metadata = {
     'Cam kết bảo vệ dữ liệu cá nhân tại hieu.asia, tuân thủ Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân.',
 };
 
-const LAST_UPDATED = '22/05/2026';
+const LAST_UPDATED = '21/05/2026';
 
 interface SubProcessor {
   vendor: string;
@@ -219,6 +219,22 @@ export default function PrivacyPage() {
             <CardDescription>Theo Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 text-sm leading-relaxed text-cream/85">
+            <div className="rounded-md border border-gold/20 bg-ink/40 p-4 text-xs text-cream/80">
+              <p className="font-semibold text-cream">Liên hệ về dữ liệu cá nhân:</p>
+              <ul className="mt-2 list-disc space-y-1 pl-5">
+                <li>
+                  Email DPO:{' '}
+                  <a className="text-gold underline" href="mailto:privacy@hieu.asia">
+                    privacy@hieu.asia
+                  </a>
+                </li>
+                <li>Phản hồi: xác nhận trong 72h, xử lý trong tối đa 30 ngày làm việc</li>
+                <li>
+                  Khiếu nại: A05 (Cục An ninh mạng + phòng chống tội phạm sử dụng công nghệ cao)
+                  nếu cần
+                </li>
+              </ul>
+            </div>
             <ul className="list-disc space-y-2 pl-5">
               <li>
                 <strong className="text-cream">Quyền truy cập:</strong> yêu cầu xem toàn bộ dữ liệu của bạn.
@@ -248,8 +264,10 @@ export default function PrivacyPage() {
               email tới{' '}
               <a className="text-gold underline" href="mailto:privacy@hieu.asia">
                 privacy@hieu.asia
-              </a>{' '}
-              — chúng tôi sẽ phản hồi trong 30 ngày làm việc.
+              </a>
+              . Chúng tôi xác nhận đã nhận yêu cầu trong vòng 72 giờ làm việc. Việc xử lý, xuất dữ
+              liệu hoặc xoá dữ liệu được hoàn tất trong tối đa 30 ngày làm việc, trừ khi pháp luật
+              yêu cầu thời hạn khác.
             </p>
           </CardContent>
         </Card>
