@@ -72,5 +72,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/methodology/algorithm-changelog`, lastModified: now, changeFrequency: 'monthly', priority: 0.55 },
   ];
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem];
+  // Wave 6 — Retention features + new compat/career tools.
+  const retentionTools: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/journal`, lastModified: now, changeFrequency: 'weekly', priority: 0.75 },
+    { url: `${BASE_URL}/journal/new`, lastModified: now, changeFrequency: 'monthly', priority: 0.65 },
+    { url: `${BASE_URL}/weekly-review`, lastModified: now, changeFrequency: 'weekly', priority: 0.75 },
+    { url: `${BASE_URL}/compatibility`, lastModified: now, changeFrequency: 'monthly', priority: 0.75 },
+    { url: `${BASE_URL}/career-fit`, lastModified: now, changeFrequency: 'monthly', priority: 0.75 },
+  ];
+
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools];
 }

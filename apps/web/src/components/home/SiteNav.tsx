@@ -30,10 +30,14 @@ const LEARN_LINKS: readonly NavLink[] = [
 
 const TOOLS_LINKS: readonly NavLink[] = [
   { href: '/decisions', label: 'Decision Brief' },
+  { href: '/journal', label: 'Decision Journal' },
+  { href: '/weekly-review', label: 'Weekly Review' },
   { href: '/ban-do', label: 'Bản đồ của bạn' },
+  { href: '/compatibility', label: 'Hợp đôi 2 lá số' },
+  { href: '/career-fit', label: 'Career Fit' },
   { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay' },
   { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
-  { href: '/hop-tuoi', label: 'Hợp tuổi' },
+  { href: '/hop-tuoi', label: 'Hợp tuổi (12 con giáp)' },
   { href: '/than-so-hoc', label: 'Thần Số Học' },
   { href: '/can-xuong', label: 'Cân Xương Đoán Số' },
   { href: '/thuoc-lo-ban', label: 'Thước Lỗ Ban' },

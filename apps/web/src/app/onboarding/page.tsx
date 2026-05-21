@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { ConsentForm } from '@/components/consent-form';
 import { SiteNav } from '@/components/home/SiteNav';
+import { OnboardingRecap, OnboardingStepBadge } from '@/components/onboarding-recap';
 
 export const metadata: Metadata = {
   title: 'Mở khóa lá số — hieu.asia',
@@ -40,7 +41,7 @@ export default function OnboardingPage() {
               <span className="mx-1.5">/</span>
               <span className="text-cream/70">Mở khóa lá số</span>
             </span>
-            <span className="font-mono tracking-[0.24em] text-gold/80">Bước 1 / 4</span>
+            <OnboardingStepBadge />
           </nav>
 
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
@@ -57,6 +58,8 @@ export default function OnboardingPage() {
             </Link>
             .
           </p>
+
+          <OnboardingRecap />
 
           <Card className="mt-8 border-gold/20 bg-ink/60 backdrop-blur-sm">
             <CardHeader>
