@@ -25,6 +25,7 @@ export default function AppleIcon() {
       >
         <div
           style={{
+            display: 'flex',
             position: 'relative',
             width: 100,
             height: 120,
