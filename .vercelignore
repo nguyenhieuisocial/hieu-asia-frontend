@@ -1,0 +1,59 @@
+# Exclude from Vercel CLI upload (similar to .gitignore but Vercel-specific)
+# Vercel git auto-deploy ignores .gitignore'd files; CLI does NOT — needs this file.
+
+# Build artifacts (each app rebuilds remotely)
+**/.next
+**/.turbo
+**/.swc
+**/dist
+**/build
+**/out
+**/coverage
+
+# Dependencies (Vercel reinstalls from pnpm-lock.yaml)
+**/node_modules
+**/.pnpm-store
+.pnpm-store
+
+# Local env files (Vercel uses dashboard env vars)
+**/.env
+**/.env.local
+**/.env.development.local
+**/.env.production.local
+**/.env.*.local
+
+# Logs
+**/*.log
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+
+# IDE/editor
+.vscode
+.idea
+**/*.swp
+**/*.swo
+.DS_Store
+Thumbs.db
+
+# Test artifacts
+**/playwright-report
+**/test-results
+**/.nyc_output
+
+# Other monorepo subdirs NOT needed for any single app deploy
+# (Vercel only builds one app at a time per project)
+e2e
+ops
+docs
+.github
+
+# Wrangler / Worker dev artifacts (in case backend symlinked in)
+**/.wrangler
+**/wrangler.toml
+
+# Claude tooling
+.claude
+CLAUDE.md
+AGENTS.md
