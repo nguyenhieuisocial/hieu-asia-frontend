@@ -77,7 +77,7 @@ jobs:
           cache: pnpm
 
       - name: Install Vercel CLI
-        run: npm install -g vercel@39.4.0
+        run: npm install -g vercel@47.1.4
 
       - name: Deploy production (remote build)
         id: deploy
