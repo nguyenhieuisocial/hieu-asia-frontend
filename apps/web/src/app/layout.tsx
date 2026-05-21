@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { QueryProvider } from '@/components/providers/query-provider';
+import { PlausibleScript } from '@/components/analytics/PlausibleScript';
 import { Toaster } from '@hieu-asia/ui';
 import './globals.css';
 
@@ -139,6 +140,7 @@ export default async function RootLayout({
             <Toaster />
           </ThemeProvider>
         </NextIntlClientProvider>
+        <PlausibleScript />
       </body>
     </html>
   );

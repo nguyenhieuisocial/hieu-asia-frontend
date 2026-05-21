@@ -6,6 +6,7 @@ import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { Card, CardContent } from '@hieu-asia/ui';
 import type { SurveyAnswers } from '@/lib/survey-schema';
 import { apiClient } from '@/lib/api';
+import { track } from '@/lib/analytics';
 
 // SurveyJS is client-only — heavy DOM dependency, skip SSR.
 const PersonalitySurvey = dynamic(
@@ -72,6 +73,8 @@ export default function SurveyPage() {
           JSON.stringify(answers),
         );
       }
+
+      track('survey_completed', { reading_id: readingId, answer_count: Object.keys(answers ?? {}).length });
 
       try {
         const consent = readSession<ConsentDraft>('hieu.consent') ?? {

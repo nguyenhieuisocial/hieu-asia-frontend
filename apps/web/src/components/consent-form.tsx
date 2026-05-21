@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { Button, Checkbox } from '@hieu-asia/ui';
 import { Check } from 'lucide-react';
 import { getOrCreateAnonUserId, logAudit } from '@hieu-asia/supabase';
+import { track } from '@/lib/analytics';
 
 const CONSENT_ITEMS = [
   {
@@ -102,6 +103,8 @@ export function ConsentForm() {
       // Non-blocking — surface in console for diagnostics; user can still proceed.
       console.warn('audit log failed:', e);
     }
+
+    track('consent_given', { purposes_count: purposes.length, improve_optin: !!values.improve_optin });
 
     router.push('/reading/new');
   });

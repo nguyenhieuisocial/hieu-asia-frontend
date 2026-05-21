@@ -15,6 +15,7 @@ import { CautionBanner } from '@/components/caution-banner';
 import { ReportContextSummary } from '@/components/report-context-summary';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { ReportSkeleton } from '@/components/skeletons/ReportSkeleton';
+import { track } from '@/lib/analytics';
 
 /** Parsed H2 section of the report markdown. */
 interface MarkdownSection {
@@ -97,6 +98,14 @@ function ReportContent() {
       router.replace(`/reading/${readingId}/processing`);
     }
   }, [state, readingId, router]);
+
+  const reportTrackedRef = React.useRef<string | null>(null);
+  React.useEffect(() => {
+    if (state === 'report_ready' && markdown && reportTrackedRef.current !== readingId) {
+      reportTrackedRef.current = readingId;
+      track('report_viewed', { reading_id: readingId, section_count: markdown.match(/^##\s+/gm)?.length ?? 0 });
+    }
+  }, [state, markdown, readingId]);
 
   const sections = React.useMemo(
     () => parseMarkdownSections(markdown),

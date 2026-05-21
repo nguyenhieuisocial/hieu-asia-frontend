@@ -6,6 +6,7 @@ import { Sun, Focus, Hand, MoveDiagonal } from 'lucide-react';
 import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { PalmUpload } from '@/components/palm-upload';
 import { uploadHandImage } from '@/lib/upload-image';
+import { track } from '@/lib/analytics';
 
 const CHECKLIST = [
   { icon: Sun, text: 'Ánh sáng rõ, không tối' },
@@ -40,6 +41,7 @@ export default function PalmUploadPage() {
           JSON.stringify(result),
         );
       }
+      track('palm_uploaded', { reading_id: readingId, size_bytes: file.size, content_type: file.type });
       router.push(
         `/reading/${readingId}/survey?upload_object=${encodeURIComponent(result.object_name)}`,
       );

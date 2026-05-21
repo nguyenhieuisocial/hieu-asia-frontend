@@ -25,6 +25,7 @@ import {
   saveHistory,
   type StoredMessage,
 } from '@/lib/mentor-history';
+import { track } from '@/lib/analytics';
 
 const QUICK_PROMPTS = [
   'Tôi nên xử lý nhân sự chống đối thế nào?',
@@ -164,6 +165,7 @@ export default function MentorChatPage() {
     setMessages([...conversation, mentorMsg]);
     setInput('');
     appendStoredMessage(readingId, toStored(userMsg));
+    track('mentor_message_sent', { reading_id: readingId, message_count: conversation.filter(m => m.role === 'user').length, length: text.length });
     setStreaming(true);
 
     const ctrl = new AbortController();

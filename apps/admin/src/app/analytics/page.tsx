@@ -19,9 +19,16 @@ interface AnalyticsResponse {
   days?: number;
   revenue?: { daily: RevenueDay[]; total: number; txn_count: number };
   vendor_cost?: Record<string, { tokens: number; requests: number; cost_usd: number }>;
+  vendor_cost_meta?: { configured: boolean; total_cost_usd: number; total_requests: number; note?: string };
   funnel?: Record<string, number>;
+  funnel_v2?: {
+    stages: Array<{ name: string; count: number; conversion_rate: number }>;
+    drop_off_points: string[];
+    total_events: number;
+    window_days: number;
+  };
   sessions?: { total: number; completed: number; conversion_rate: number; error_rate: number };
-  sources?: { langfuse: boolean; kv_transactions: boolean };
+  sources?: { langfuse: boolean; kv_transactions: boolean; kv_events?: boolean };
   error?: string;
 }
 
@@ -128,6 +135,26 @@ export default function AnalyticsPage() {
       {data?.sources && !data.sources.langfuse && (
         <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-cream/70">
           Langfuse chưa wire — vendor cost hiển thị 0. Đặt LANGFUSE_PUBLIC_KEY/SECRET_KEY để bật.
+        </div>
+      )}
+      {data?.funnel_v2 && data.funnel_v2.total_events === 0 && (
+        <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-cream/70">
+          Funnel data trống — chưa có events trong {days} ngày. Verify NEXT_PUBLIC_PLAUSIBLE_DOMAIN
+          và user activity, hoặc đợi traffic.
+        </div>
+      )}
+      {data?.funnel_v2 && data.funnel_v2.drop_off_points.length > 0 && (
+        <div className="rounded-md border border-amber-400/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+          Drop-off &gt;30% phát hiện tại:{' '}
+          {data.funnel_v2.drop_off_points
+            .map(p => FUNNEL_LABELS[p] ?? p)
+            .join(', ')}
+          .
+        </div>
+      )}
+      {data?.vendor_cost_meta?.note && (
+        <div className="rounded-md border border-gold/20 bg-ink/40 px-3 py-2 text-xs text-cream/55">
+          {data.vendor_cost_meta.note}
         </div>
       )}
 

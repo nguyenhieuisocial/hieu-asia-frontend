@@ -14,6 +14,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { QRDisplay, type PaymentIntent } from '@/components/payment/QRDisplay';
+import { track } from '@/lib/analytics';
 
 type Tier = 'premium' | 'subscription_monthly' | 'subscription_yearly';
 
@@ -89,6 +90,7 @@ export function PaymentClient({ sessionId, tier }: PaymentClientProps) {
       .then((i) => {
         if (cancelled) return;
         setIntent(i);
+        track('payment_intent_created', { session_id: sessionId, tier, intent_id: i.id, amount: i.amount_due });
       })
       .catch((err: unknown) => {
         if (cancelled) return;
@@ -127,11 +129,16 @@ export function PaymentClient({ sessionId, tier }: PaymentClientProps) {
   }, [intent, expired]);
 
   // 3. On `paid` → redirect to report.
+  const paidTrackedRef = React.useRef<string | null>(null);
   React.useEffect(() => {
     if (intent?.status === 'paid') {
+      if (paidTrackedRef.current !== intent.id) {
+        paidTrackedRef.current = intent.id;
+        track('payment_completed', { session_id: sessionId, tier, intent_id: intent.id, amount: intent.amount_due });
+      }
       router.push(`/reading/${encodeURIComponent(sessionId)}/report`);
     }
-  }, [intent?.status, router, sessionId]);
+  }, [intent?.status, intent?.id, intent?.amount_due, router, sessionId, tier]);
 
   const handleRetry = React.useCallback(() => {
     setAttempt((n) => n + 1);
