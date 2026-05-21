@@ -10,11 +10,19 @@ import {
   CardHeader,
   CardTitle,
 } from '@hieu-asia/ui';
-import { BarChart3 } from 'lucide-react';
+import {
+  BarChart3,
+  TrendingUp,
+  Users,
+  Activity,
+  DollarSign,
+} from 'lucide-react';
 import { RevenueChart, type RevenueDay } from '@/components/analytics/RevenueChart';
 import { VendorCostChart, type VendorCost } from '@/components/analytics/VendorCostChart';
 import { FunnelChart, type FunnelStage } from '@/components/analytics/FunnelChart';
 import { PageHeader } from '@/components/admin/page-header';
+import { KpiCard } from '@/components/admin/kpi-card';
+import { LiveBadge } from '@/components/admin/live-badge';
 
 interface AnalyticsResponse {
   ok: boolean;
@@ -62,18 +70,6 @@ function fmtCurrency(n: number) {
   return new Intl.NumberFormat('vi-VN').format(n) + ' đ';
 }
 
-function KpiCard({ label, value, hint }: { label: string; value: string; hint?: string }) {
-  return (
-    <Card>
-      <CardContent className="py-5">
-        <div className="text-xs uppercase tracking-wider text-cream/55">{label}</div>
-        <div className="mt-2 font-heading text-2xl text-gold">{value}</div>
-        {hint && <div className="mt-1 text-xs text-cream/55">{hint}</div>}
-      </CardContent>
-    </Card>
-  );
-}
-
 export default function AnalyticsPage() {
   const [days, setDays] = React.useState<Range>('30');
   const { data, isLoading, refetch, isFetching, error } = useQuery({
@@ -106,6 +102,7 @@ export default function AnalyticsPage() {
         title="Analytics"
         description={`Doanh thu, vendor cost và onboarding funnel — ${days} ngày gần nhất.`}
         icon={<BarChart3 className="h-5 w-5" />}
+        badge={data && !isLoading ? <LiveBadge /> : null}
         actions={
           <>
             <div className="inline-flex rounded-md border border-gold/20 bg-ink/40 p-0.5">
@@ -160,13 +157,34 @@ export default function AnalyticsPage() {
       )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <KpiCard label={`Doanh thu (${days}d)`} value={fmtCurrency(revenue.total)} hint={`${revenue.txn_count} giao dịch`} />
-        <KpiCard label={`Phiên (${days}d)`} value={sessions.total.toLocaleString('vi-VN')} hint={`${sessions.completed} hoàn thành`} />
         <KpiCard
-          label="Conversion (paid/started)"
-          value={(sessions.conversion_rate * 100).toFixed(1) + '%'}
+          label={`Doanh thu (${days}d)`}
+          value={fmtCurrency(revenue.total)}
+          icon={<DollarSign className="h-4 w-4" />}
+          accent="gold"
+          hint={`${revenue.txn_count} giao dịch`}
         />
-        <KpiCard label="Avg LLM cost/phiên" value={`$${avgCost.toFixed(3)}`} hint={`tổng $${totalLLMCost.toFixed(2)}`} />
+        <KpiCard
+          label={`Phiên (${days}d)`}
+          value={sessions.total.toLocaleString('vi-VN')}
+          icon={<Users className="h-4 w-4" />}
+          accent="purple"
+          hint={`${sessions.completed} hoàn thành`}
+        />
+        <KpiCard
+          label="Conversion"
+          value={(sessions.conversion_rate * 100).toFixed(1) + '%'}
+          icon={<TrendingUp className="h-4 w-4" />}
+          accent="jade"
+          hint="paid / started"
+        />
+        <KpiCard
+          label="Avg LLM cost/phiên"
+          value={`$${avgCost.toFixed(3)}`}
+          icon={<Activity className="h-4 w-4" />}
+          accent="gold"
+          hint={`tổng $${totalLLMCost.toFixed(2)}`}
+        />
       </div>
 
       <Card>

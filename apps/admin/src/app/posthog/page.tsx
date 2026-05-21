@@ -25,6 +25,7 @@ import {
 } from '@hieu-asia/ui';
 import { ExternalLink, CheckCircle2, AlertTriangle, Activity } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
+import { LiveBadge } from '@/components/admin/live-badge';
 
 const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
 const POSTHOG_HOST =
@@ -93,12 +94,24 @@ export default function AdminPostHogPage() {
   const deepLink = (slug: string) =>
     DASHBOARD_URL ? `${DASHBOARD_URL.replace(/\/$/, '')}/${slug}` : undefined;
 
+  const configuredCount = status.filter((s) => s.ok).length;
+  const fullyConfigured = configuredCount === status.length;
+
   return (
     <div className="space-y-6">
       <PageHeader
         title="PostHog"
         description="Trạng thái config + portal sang dashboard. Phân tích thực tế (funnel, replay, feature flag) sống tại posthog.com."
         icon={<Activity className="h-5 w-5" />}
+        badge={
+          fullyConfigured ? (
+            <LiveBadge tone="jade" />
+          ) : (
+            <span className="rounded-full border border-amber-400/30 bg-amber-500/10 px-2 py-0.5 font-mono text-[10px] text-amber-200">
+              {configuredCount}/{status.length} cấu hình
+            </span>
+          )
+        }
       />
 
       <Card>

@@ -24,7 +24,9 @@ import {
 } from '@/lib/admin-api';
 import { MockBanner } from '@/components/mock-banner';
 import { PageHeader } from '@/components/admin/page-header';
-import { CreditCard } from 'lucide-react';
+import { KpiCard } from '@/components/admin/kpi-card';
+import { LiveBadge } from '@/components/admin/live-badge';
+import { CreditCard, DollarSign, Ticket, Undo2, TrendingUp } from 'lucide-react';
 import type { AdminCoupon, AdminTransaction } from '@/lib/mock-data';
 
 const STATUS_TONE: Record<AdminTransaction['status'], React.ComponentProps<typeof StatusBadge>['status']> = {
@@ -109,15 +111,56 @@ export default function AdminPaymentsPage() {
     },
   ];
 
+  // KPIs aggregated from the current page.
+  const rows = tx.data?.rows ?? [];
+  const totalRevenue = rows
+    .filter((t) => t.status === 'succeeded')
+    .reduce((s, t) => s + t.amount_usd, 0);
+  const refundedCount = rows.filter((t) => t.status === 'refunded').length;
+  const succeededCount = rows.filter((t) => t.status === 'succeeded').length;
+  const activeCoupons = (coupons.data ?? []).filter((c) => c.active).length;
+
   return (
     <div className="space-y-6">
       <PageHeader
         title="Thanh toán"
         description="Giao dịch SePay + quản lý coupon."
         icon={<CreditCard className="h-5 w-5" />}
+        badge={rows.length > 0 ? <LiveBadge /> : null}
       />
 
       <MockBanner source={tx.data?._source ?? coupons.data?._source} />
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <KpiCard
+          label="Doanh thu (trang)"
+          value={`$${totalRevenue.toFixed(2)}`}
+          icon={<DollarSign className="h-4 w-4" />}
+          accent="gold"
+          hint={`${succeededCount} succeeded`}
+        />
+        <KpiCard
+          label="Tổng giao dịch"
+          value={tx.data?.total ?? 0}
+          icon={<TrendingUp className="h-4 w-4" />}
+          accent="jade"
+          hint="all-time"
+        />
+        <KpiCard
+          label="Refunded (trang)"
+          value={refundedCount}
+          icon={<Undo2 className="h-4 w-4" />}
+          accent={refundedCount > 0 ? 'red' : 'jade'}
+          hint="đã hoàn"
+        />
+        <KpiCard
+          label="Coupon active"
+          value={activeCoupons}
+          icon={<Ticket className="h-4 w-4" />}
+          accent="purple"
+          hint={`${(coupons.data ?? []).length} tổng`}
+        />
+      </div>
 
       <Card>
         <CardHeader>
