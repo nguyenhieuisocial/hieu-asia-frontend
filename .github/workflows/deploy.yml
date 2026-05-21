@@ -50,13 +50,10 @@ jobs:
       matrix:
         app:
           - name: web
-            dir: apps/web
             project_id_secret: VERCEL_PROJECT_ID_WEB
           - name: admin
-            dir: apps/admin
             project_id_secret: VERCEL_PROJECT_ID_ADMIN
           - name: miniapp
-            dir: apps/miniapp-telegram
             project_id_secret: VERCEL_PROJECT_ID_MINIAPP
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -81,10 +78,10 @@ jobs:
 
       - name: Deploy production (remote build)
         id: deploy
-        working-directory: ${{ matrix.app.dir }}
-        # Single-step deploy: Vercel pulls the source + runs the install/build
-        # command defined in the project (works regardless of monorepo layout).
-        # Avoids the `spawn sh ENOENT` from `vercel build` invoked locally.
+        # IMPORTANT: run from MONOREPO ROOT (not apps/<name>/) — each Vercel
+        # project has `rootDirectory: apps/<name>` configured server-side, so
+        # CLI must execute from one level up. Running from `apps/admin` causes
+        # path doubling: `apps/admin/apps/admin` and a 404 error.
         run: |
           url=$(vercel deploy --prod --yes --token="$VERCEL_TOKEN")
           echo "url=$url" >> "$GITHUB_OUTPUT"
