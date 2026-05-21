@@ -40,10 +40,18 @@ async function json<T>(path: string, init: RequestInit = {}, timeoutMs = 30_000)
   try {
     const res = await fetch(`${PROXY}${path}`, {
       cache: 'no-store',
+      credentials: 'same-origin',
       ...init,
       signal: ctrl.signal,
       headers: { 'Content-Type': 'application/json', ...(init.headers ?? {}) },
     });
+    // 401 unauthenticated → admin-proxy rejected the session. Bounce to login
+    // so user re-auths rather than staring at "Không kết nối được backend".
+    if (res.status === 401 && typeof window !== 'undefined') {
+      const next = window.location.pathname + window.location.search;
+      window.location.href = `/login?reason=session_invalid&next=${encodeURIComponent(next)}`;
+      throw new Error('Phiên đăng nhập đã hết hạn — đang chuyển hướng đến /login…');
+    }
     const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string } & T;
     if (!res.ok || data.ok === false) {
       throw new Error(data.error ?? `HTTP ${res.status}`);

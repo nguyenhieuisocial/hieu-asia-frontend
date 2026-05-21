@@ -164,7 +164,7 @@ export default function CustomerDetailPage() {
               </span>
             )}
           </div>
-          <h1 className="mt-2 font-heading text-3xl font-semibold text-cream">
+          <h1 className="mt-2 font-heading text-2xl font-semibold text-cream sm:text-3xl">
             {customer?.display_name ?? `Khách hàng ${id.slice(0, 8)}…`}
           </h1>
           <div className="mt-1 flex items-center gap-2">

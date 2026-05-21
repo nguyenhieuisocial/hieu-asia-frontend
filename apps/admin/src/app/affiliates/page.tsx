@@ -71,7 +71,7 @@ export default function AdminAffiliatesPage() {
     <div className="space-y-6">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="font-heading text-3xl font-semibold text-cream">Affiliate program</h1>
+          <h1 className="font-heading text-2xl font-semibold text-cream sm:text-3xl">Affiliate program</h1>
           <p className="mt-1 text-sm text-cream/60">
             Bảng điều khiển realtime: KPIs, leaderboard, payouts, fraud, assets, broadcast.
           </p>

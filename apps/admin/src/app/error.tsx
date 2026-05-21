@@ -22,7 +22,7 @@ export default function AdminError({
     <div className="flex min-h-[60vh] items-center justify-center px-6 py-16 text-cream">
       <div className="mx-auto max-w-lg text-center">
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-red-400">500</p>
-        <h1 className="mt-3 font-heading text-3xl font-semibold text-cream">
+        <h1 className="mt-3 font-heading text-2xl font-semibold text-cream sm:text-3xl">
           Lỗi vận hành panel
         </h1>
         <p className="mt-3 text-sm text-cream/70">

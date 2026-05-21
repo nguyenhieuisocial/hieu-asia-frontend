@@ -137,7 +137,7 @@ export function KpiCard({
           </span>
         )}
       </div>
-      <p className="relative mt-3 font-heading text-3xl font-semibold tracking-tight text-cream">
+      <p className="relative mt-3 font-heading text-2xl font-semibold tracking-tight text-cream sm:text-3xl">
         {value}
       </p>
       <div className="relative mt-2 flex items-center justify-between gap-2 text-xs">

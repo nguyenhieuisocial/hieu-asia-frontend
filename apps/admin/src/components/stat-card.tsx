@@ -22,7 +22,7 @@ export function StatCard({ label, value, hint, delta, icon, className }: StatCar
         <p className="font-mono text-[10px] uppercase tracking-widest text-cream/55">{label}</p>
         {icon && <span className="text-gold/70">{icon}</span>}
       </div>
-      <p className="mt-2 font-heading text-3xl font-semibold text-cream">{value}</p>
+      <p className="mt-2 font-heading text-2xl font-semibold text-cream sm:text-3xl">{value}</p>
       <div className="mt-1 flex items-center gap-2 text-xs">
         {delta && (
           <span

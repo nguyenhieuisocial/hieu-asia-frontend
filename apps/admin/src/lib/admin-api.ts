@@ -93,6 +93,7 @@ async function proxyFetch<T>(
   try {
     const res = await fetch(`${PROXY}${path}`, {
       cache: 'no-store',
+      credentials: 'same-origin',
       ...init,
       signal: ctrl.signal,
       headers: {
@@ -100,6 +101,14 @@ async function proxyFetch<T>(
         ...(init.headers ?? {}),
       },
     });
+    // 401 unauthenticated → session expired/invalid. Bounce to login so the
+    // user actually re-auths instead of seeing the page fall back to mocks
+    // silently (which hides the real problem). Only triggers in the browser.
+    if (res.status === 401 && typeof window !== 'undefined') {
+      const next = window.location.pathname + window.location.search;
+      window.location.href = `/login?reason=session_invalid&next=${encodeURIComponent(next)}`;
+      return null;
+    }
     if (!res.ok) return null;
     const data = (await res.json()) as { ok?: boolean } & T;
     // Worker wraps payloads in {ok: true, ...}. If ok is explicitly false, treat as fail.
