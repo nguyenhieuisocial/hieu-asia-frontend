@@ -28,11 +28,13 @@ import {
   DialogTitle,
   Input,
   Label,
+  cn,
   toast,
 } from '@hieu-asia/ui';
-import { Ticket, Plus, ShieldAlert, Trash2 } from 'lucide-react';
+import { Ticket, Plus, ShieldAlert, Trash2, Search, Percent, CheckCircle2, XCircle } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
+import { KpiCard } from '@/components/admin/kpi-card';
 
 interface Coupon {
   code: string;
@@ -52,6 +54,15 @@ interface CouponsResponse {
   note?: string;
   error?: string;
 }
+
+type StatusFilter = 'all' | 'active' | 'revoked' | 'expired';
+
+const STATUS_FILTERS: Array<{ value: StatusFilter; label: string }> = [
+  { value: 'all', label: 'Tất cả' },
+  { value: 'active', label: 'Active' },
+  { value: 'revoked', label: 'Revoked' },
+  { value: 'expired', label: 'Expired' },
+];
 
 function fmtDate(iso?: string | null) {
   if (!iso) return '—';
@@ -130,7 +141,66 @@ export default function CouponsPage() {
   const errorMsg = (error as Error | undefined)?.message ?? data?.error;
   const note = data?.note;
 
+  // -- Filtering --------------------------------------------------------------
+  const [search, setSearch] = React.useState('');
+  const [statusFilter, setStatusFilter] = React.useState<StatusFilter>('all');
+  const searchRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === '/' && document.activeElement?.tagName !== 'INPUT') {
+        e.preventDefault();
+        searchRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  const filtered = React.useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return coupons.filter((c) => {
+      if (statusFilter !== 'all' && c.status !== statusFilter) return false;
+      if (q && !c.code.toLowerCase().includes(q) && !(c.notes ?? '').toLowerCase().includes(q))
+        return false;
+      return true;
+    });
+  }, [coupons, search, statusFilter]);
+
+  // -- Bulk selection ---------------------------------------------------------
+  const [selected, setSelected] = React.useState<Set<string>>(new Set());
+
+  const toggleOne = (code: string) =>
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(code)) next.delete(code);
+      else next.add(code);
+      return next;
+    });
+
+  const allActiveFilteredSelected =
+    filtered.length > 0 &&
+    filtered.filter((c) => c.status === 'active').every((c) => selected.has(c.code));
+
+  const togglePage = () =>
+    setSelected((prev) => {
+      const next = new Set(prev);
+      const activeOnPage = filtered.filter((c) => c.status === 'active');
+      if (activeOnPage.every((c) => next.has(c.code))) {
+        for (const c of activeOnPage) next.delete(c.code);
+      } else {
+        for (const c of activeOnPage) next.add(c.code);
+      }
+      return next;
+    });
+
+  const clearSelection = () => setSelected(new Set());
+
+  // -- KPIs -------------------------------------------------------------------
   const activeCount = coupons.filter((c) => c.status === 'active').length;
+  const revokedCount = coupons.filter((c) => c.status === 'revoked').length;
+  const expiredCount = coupons.filter((c) => c.status === 'expired').length;
+  const totalUses = coupons.reduce((s, c) => s + (c.uses ?? 0), 0);
 
   // -- Create dialog ----------------------------------------------------------
   const [open, setOpen] = React.useState(false);
@@ -170,8 +240,32 @@ export default function CouponsPage() {
   }
 
   function onRevoke(code: string) {
-    if (typeof window !== 'undefined' && !window.confirm(`Revoke coupon "${code}"? Action không undo được.`)) return;
+    if (
+      typeof window !== 'undefined' &&
+      !window.confirm(`Revoke coupon "${code}"? Action không undo được.`)
+    )
+      return;
     revokeMut.mutate(code);
+  }
+
+  async function bulkRevoke() {
+    const codes = Array.from(selected);
+    if (codes.length === 0) return;
+    if (
+      typeof window !== 'undefined' &&
+      !window.confirm(`Revoke ${codes.length} coupon? Action không undo được.`)
+    )
+      return;
+    for (const c of codes) {
+      try {
+        await revokeCoupon(c);
+      } catch (err) {
+        toast.error(`Revoke ${c} thất bại`, { description: (err as Error).message });
+      }
+    }
+    toast.success(`Đã revoke ${codes.length} coupon`);
+    clearSelection();
+    qc.invalidateQueries({ queryKey: ['admin', 'coupons'] });
   }
 
   return (
@@ -195,12 +289,75 @@ export default function CouponsPage() {
         }
       />
 
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <KpiCard
+          label="Active"
+          value={activeCount}
+          icon={<CheckCircle2 className="h-4 w-4" />}
+          accent="jade"
+          hint="đang dùng được"
+        />
+        <KpiCard
+          label="Revoked"
+          value={revokedCount}
+          icon={<XCircle className="h-4 w-4" />}
+          accent={revokedCount > 0 ? 'red' : 'jade'}
+          hint="đã thu hồi"
+        />
+        <KpiCard
+          label="Expired"
+          value={expiredCount}
+          icon={<Ticket className="h-4 w-4" />}
+          accent="purple"
+          hint="hết hạn"
+        />
+        <KpiCard
+          label="Lượt dùng"
+          value={totalUses}
+          icon={<Percent className="h-4 w-4" />}
+          accent="gold"
+          hint="tổng redeem"
+        />
+      </div>
+
       <Card>
         <CardHeader>
-          <CardTitle>Danh sách coupon</CardTitle>
-          <CardDescription>
-            State trong Postgres `hieu_asia.coupons`. Tự động chuyển `expired` khi quá `valid_to`.
-          </CardDescription>
+          <CardTitle className="text-base">Bộ lọc</CardTitle>
+          <div className="mt-2 flex flex-col gap-3">
+            <div className="relative max-w-md">
+              <Search
+                className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-cream/40"
+                aria-hidden
+              />
+              <Input
+                ref={searchRef}
+                placeholder="Tìm code / note…   (phím /)"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {STATUS_FILTERS.map((f) => {
+                const active = statusFilter === f.value;
+                return (
+                  <button
+                    key={f.value}
+                    type="button"
+                    onClick={() => setStatusFilter(f.value)}
+                    className={cn(
+                      'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
+                      active
+                        ? 'border-gold/60 bg-gold/15 text-gold'
+                        : 'border-cream/15 bg-ink/40 text-cream/70 hover:border-gold/30 hover:text-cream',
+                    )}
+                  >
+                    {f.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           {showError && (
@@ -216,21 +373,40 @@ export default function CouponsPage() {
             </div>
           )}
 
-          {isLoading && <div className="px-3 py-6 text-center text-cream/55">Đang tải…</div>}
+          {isLoading && (
+            <div className="space-y-2 py-2">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-10 animate-pulse rounded bg-cream/5" />
+              ))}
+            </div>
+          )}
 
-          {!isLoading && coupons.length === 0 && !showError && (
+          {!isLoading && filtered.length === 0 && !showError && (
             <EmptyState
-              title="Chưa có coupon"
-              description="Tạo mã giảm giá đầu tiên để chạy promo / referral."
+              title={coupons.length === 0 ? 'Chưa có coupon' : 'Không có coupon khớp bộ lọc'}
+              description={
+                coupons.length === 0
+                  ? 'Tạo mã giảm giá đầu tiên để chạy promo / referral.'
+                  : 'Thử bỏ filter hoặc xóa search query.'
+              }
               className="my-2 border-0 bg-transparent"
             />
           )}
 
-          {coupons.length > 0 && (
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-sm">
+          {filtered.length > 0 && (
+            <div className="overflow-x-auto rounded-lg border border-gold/15 bg-ink/40">
+              <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gold/15 text-left text-[11px] uppercase tracking-wider text-cream/60">
+                  <tr className="border-b border-gold/15 text-left text-[11px] uppercase tracking-wider text-gold/80">
+                    <th className="w-10 px-3 py-2">
+                      <input
+                        type="checkbox"
+                        checked={allActiveFilteredSelected}
+                        onChange={togglePage}
+                        aria-label="Chọn tất cả coupon active"
+                        className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-ink/40 text-gold accent-gold"
+                      />
+                    </th>
                     <th className="px-3 py-2 font-medium">Code</th>
                     <th className="px-3 py-2 font-medium">Giảm</th>
                     <th className="px-3 py-2 font-medium">Status</th>
@@ -238,52 +414,95 @@ export default function CouponsPage() {
                     <th className="px-3 py-2 font-medium">Hiệu lực</th>
                     <th className="px-3 py-2 font-medium">Note</th>
                     <th className="px-3 py-2 font-medium">Tạo</th>
-                    <th className="px-3 py-2 font-medium"></th>
+                    <th className="px-3 py-2 font-medium" />
                   </tr>
                 </thead>
                 <tbody>
-                  {coupons.map((c) => (
-                    <tr
-                      key={c.code}
-                      className="border-b border-gold/10 transition-colors hover:bg-ink/40"
-                    >
-                      <td className="px-3 py-2 font-mono text-gold">{c.code}</td>
-                      <td className="px-3 py-2">{c.discount_pct}%</td>
-                      <td className="px-3 py-2">{statusPill(c.status)}</td>
-                      <td className="px-3 py-2 font-mono text-xs text-cream/70">
-                        {c.uses ?? 0}
-                        {c.max_uses ? <span className="text-cream/40">/{c.max_uses}</span> : ''}
-                      </td>
-                      <td className="px-3 py-2 font-mono text-[11px] text-cream/65">
-                        {fmtDate(c.valid_from)} → {fmtDate(c.valid_to)}
-                      </td>
-                      <td className="max-w-[18ch] truncate px-3 py-2 text-xs text-cream/55" title={c.notes ?? ''}>
-                        {c.notes ?? '—'}
-                      </td>
-                      <td className="px-3 py-2 font-mono text-[11px] text-cream/50">
-                        {fmtDate(c.created_at)}
-                      </td>
-                      <td className="px-3 py-2 text-right">
-                        {c.status === 'active' ? (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            disabled={revokeMut.isPending}
-                            onClick={() => onRevoke(c.code)}
-                            className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        ) : null}
-                      </td>
-                    </tr>
-                  ))}
+                  {filtered.map((c) => {
+                    const isSelected = selected.has(c.code);
+                    const canSelect = c.status === 'active';
+                    return (
+                      <tr
+                        key={c.code}
+                        className={cn(
+                          'border-b border-gold/10 transition-colors last:border-0 hover:bg-gold/[0.03]',
+                          isSelected && 'bg-gold/5',
+                        )}
+                      >
+                        <td className="px-3 py-2">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            disabled={!canSelect}
+                            onChange={() => toggleOne(c.code)}
+                            aria-label={`Chọn ${c.code}`}
+                            className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-ink/40 text-gold accent-gold disabled:cursor-not-allowed disabled:opacity-30"
+                          />
+                        </td>
+                        <td className="px-3 py-2 font-mono text-gold">{c.code}</td>
+                        <td className="px-3 py-2 tabular-nums text-cream/90">
+                          {c.discount_pct}%
+                        </td>
+                        <td className="px-3 py-2">{statusPill(c.status)}</td>
+                        <td className="px-3 py-2 font-mono text-xs text-cream/70 tabular-nums">
+                          {c.uses ?? 0}
+                          {c.max_uses ? <span className="text-cream/40">/{c.max_uses}</span> : ''}
+                        </td>
+                        <td className="px-3 py-2 font-mono text-[11px] text-cream/65">
+                          {fmtDate(c.valid_from)} → {fmtDate(c.valid_to)}
+                        </td>
+                        <td
+                          className="max-w-[18ch] truncate px-3 py-2 text-xs text-cream/55"
+                          title={c.notes ?? ''}
+                        >
+                          {c.notes ?? '—'}
+                        </td>
+                        <td className="px-3 py-2 font-mono text-[11px] text-cream/50">
+                          {fmtDate(c.created_at)}
+                        </td>
+                        <td className="px-3 py-2 text-right">
+                          {c.status === 'active' ? (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              disabled={revokeMut.isPending}
+                              onClick={() => onRevoke(c.code)}
+                              className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          ) : null}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
           )}
         </CardContent>
       </Card>
+
+      {/* Floating bulk action bar */}
+      {selected.size > 0 && (
+        <div className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2 lg:left-[calc(50%+8rem)]">
+          <div className="flex items-center gap-2 rounded-full border border-gold/40 bg-ink/95 px-3 py-2 shadow-2xl backdrop-blur">
+            <span className="px-2 font-mono text-xs text-gold">{selected.size} đã chọn</span>
+            <Button
+              size="sm"
+              onClick={bulkRevoke}
+              disabled={revokeMut.isPending}
+              className="bg-red-500/90 text-cream hover:bg-red-500"
+            >
+              <Trash2 className="mr-1.5 h-3.5 w-3.5" />
+              Revoke {selected.size}
+            </Button>
+            <Button size="sm" variant="ghost" onClick={clearSelection}>
+              Bỏ chọn
+            </Button>
+          </div>
+        </div>
+      )}
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-md">

@@ -9,11 +9,15 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Input,
+  cn,
   toast,
 } from '@hieu-asia/ui';
-import { Receipt, Download, Undo2 } from 'lucide-react';
+import { Receipt, Download, Undo2, Search, DollarSign, Activity, Users } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
+import { KpiCard } from '@/components/admin/kpi-card';
+import { LiveBadge } from '@/components/admin/live-badge';
 
 /**
  * Mask an opaque id for display — keep first 4 + last 4, dots in the middle.
@@ -30,14 +34,21 @@ function maskId(id: string | null | undefined): string {
  */
 async function refundTransaction(record: { id: string; intent_id?: string | null }) {
   try {
-    const r = await fetch(`/api/admin-proxy/payment/refund/${encodeURIComponent(record.intent_id ?? record.id)}`, {
-      method: 'POST',
-    });
+    const r = await fetch(
+      `/api/admin-proxy/payment/refund/${encodeURIComponent(record.intent_id ?? record.id)}`,
+      {
+        method: 'POST',
+      },
+    );
     if (r.status === 404) {
       return { ok: false, status: 'not_implemented' as const };
     }
     const data = await r.json().catch(() => ({ ok: false, error: `HTTP ${r.status}` }));
-    return { ok: !!data.ok, status: data.ok ? ('done' as const) : ('error' as const), error: data.error };
+    return {
+      ok: !!data.ok,
+      status: data.ok ? ('done' as const) : ('error' as const),
+      error: data.error,
+    };
   } catch (e) {
     return { ok: false, status: 'error' as const, error: (e as Error).message };
   }
@@ -98,9 +109,21 @@ function fmtAmount(amount: number | null | undefined) {
 
 const LIMIT = 100;
 
+type TypeFilter = '' | 'intent_created' | 'intent_paid' | 'refund' | 'failed';
+
+const TYPE_FILTERS: Array<{ value: TypeFilter; label: string }> = [
+  { value: '', label: 'Tất cả' },
+  { value: 'intent_created', label: 'Created' },
+  { value: 'intent_paid', label: 'Paid' },
+  { value: 'refund', label: 'Refund' },
+  { value: 'failed', label: 'Failed' },
+];
+
 export default function AdminTransactionsPage() {
   const [userIdInput, setUserIdInput] = React.useState('');
   const [userIdFilter, setUserIdFilter] = React.useState('');
+  const [typeFilter, setTypeFilter] = React.useState<TypeFilter>('');
+  const searchRef = React.useRef<HTMLInputElement>(null);
 
   // Debounce userId filter (300ms).
   React.useEffect(() => {
@@ -110,14 +133,37 @@ export default function AdminTransactionsPage() {
     return () => window.clearTimeout(handle);
   }, [userIdInput]);
 
+  // `/` focuses search.
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === '/' && document.activeElement?.tagName !== 'INPUT') {
+        e.preventDefault();
+        searchRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
   const { data, isLoading, isFetching, refetch, error } = useQuery({
     queryKey: ['admin', 'transactions', { limit: LIMIT, userId: userIdFilter }],
     queryFn: () => fetchTransactions({ limit: LIMIT, userId: userIdFilter }),
   });
 
-  const records: TransactionRecord[] = data?.records ?? [];
+  const allRecords: TransactionRecord[] = data?.records ?? [];
+  const records = React.useMemo(() => {
+    if (!typeFilter) return allRecords;
+    return allRecords.filter((r) => r.type === typeFilter);
+  }, [allRecords, typeFilter]);
+
   const showError = !!error || data?.ok === false;
   const errorMsg = (error as Error | undefined)?.message ?? data?.error;
+
+  // KPIs
+  const totalAmount = records.reduce((s, r) => s + (r.amount ?? 0), 0);
+  const paidCount = allRecords.filter((r) => r.type === 'intent_paid').length;
+  const refundCount = allRecords.filter((r) => r.type === 'refund').length;
+  const uniqueUsers = new Set(allRecords.map((r) => r.user_id).filter(Boolean)).size;
 
   const handleRefund = async (r: TransactionRecord) => {
     if (!confirm(`Refund giao dịch ${maskId(r.intent_id ?? r.id)}?`)) return;
@@ -166,8 +212,14 @@ export default function AdminTransactionsPage() {
     <div className="space-y-6">
       <PageHeader
         title="Giao dịch"
-        description={<>Lịch sử thanh toán raw từ Worker <code className="font-mono text-cream/75">/payment/transactions</code>.</>}
+        description={
+          <>
+            Lịch sử thanh toán raw từ Worker{' '}
+            <code className="font-mono text-cream/75">/payment/transactions</code>.
+          </>
+        }
         icon={<Receipt className="h-5 w-5" />}
+        badge={allRecords.length > 0 ? <LiveBadge /> : null}
         actions={
           <>
             <Button variant="outline" size="sm" onClick={exportCsv} disabled={records.length === 0}>
@@ -181,33 +233,96 @@ export default function AdminTransactionsPage() {
         }
       />
 
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <KpiCard
+          label="Bản ghi"
+          value={allRecords.length}
+          icon={<Activity className="h-4 w-4" />}
+          accent="gold"
+          hint={`tối đa ${LIMIT}`}
+        />
+        <KpiCard
+          label="Paid"
+          value={paidCount}
+          icon={<DollarSign className="h-4 w-4" />}
+          accent="jade"
+          hint="intent_paid"
+        />
+        <KpiCard
+          label="Refund"
+          value={refundCount}
+          icon={<Undo2 className="h-4 w-4" />}
+          accent={refundCount > 0 ? 'red' : 'jade'}
+          hint="lifetime"
+        />
+        <KpiCard
+          label="Unique user"
+          value={uniqueUsers}
+          icon={<Users className="h-4 w-4" />}
+          accent="purple"
+          hint="có giao dịch"
+        />
+      </div>
+
       <Card>
         <CardHeader>
-          <CardTitle>Bộ lọc</CardTitle>
-          <CardDescription>
-            Lọc theo user_id (debounce 300ms). Limit cố định {LIMIT} bản ghi.
-          </CardDescription>
+          <CardTitle className="text-base">Bộ lọc</CardTitle>
+          <div className="mt-2 flex flex-col gap-3">
+            <div className="relative max-w-md">
+              <Search
+                className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-cream/40"
+                aria-hidden
+              />
+              <Input
+                ref={searchRef}
+                id="filter-user-id"
+                type="text"
+                value={userIdInput}
+                onChange={(e) => setUserIdInput(e.target.value)}
+                placeholder="user_id…   (phím /)"
+                className="pl-9 font-mono"
+              />
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {TYPE_FILTERS.map((f) => {
+                const active = typeFilter === f.value;
+                return (
+                  <button
+                    key={f.value || 'all'}
+                    type="button"
+                    onClick={() => setTypeFilter(f.value)}
+                    className={cn(
+                      'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
+                      active
+                        ? 'border-gold/60 bg-gold/15 text-gold'
+                        : 'border-cream/15 bg-ink/40 text-cream/70 hover:border-gold/30 hover:text-cream',
+                    )}
+                  >
+                    {f.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </CardHeader>
-        <CardContent>
-          <label htmlFor="filter-user-id" className="block text-xs text-cream/60">
-            user_id
-          </label>
-          <input
-            id="filter-user-id"
-            type="text"
-            value={userIdInput}
-            onChange={(e) => setUserIdInput(e.target.value)}
-            placeholder="vd: 7f3a-..."
-            className="mt-1.5 w-full max-w-sm rounded-md border border-gold/20 bg-ink/60 px-3 py-2 font-mono text-sm text-cream placeholder:text-cream/30 focus:border-[#B8923D] focus:outline-none"
-          />
-        </CardContent>
+        <CardContent />
       </Card>
 
       <Card>
         <CardHeader>
           <CardTitle>Danh sách giao dịch</CardTitle>
           <CardDescription>
-            Hiển thị {records.length} / tối đa {LIMIT}.
+            Hiển thị {records.length} / {allRecords.length} (tối đa {LIMIT}).
+            {typeFilter && (
+              <span className="ml-1 font-mono text-[10px] text-gold">
+                · filter: {typeFilter}
+              </span>
+            )}
+            {totalAmount > 0 && (
+              <span className="ml-2 text-cream/75">
+                · Tổng: <span className="font-mono text-gold">{fmtAmount(totalAmount)}</span>
+              </span>
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -217,10 +332,10 @@ export default function AdminTransactionsPage() {
             </div>
           )}
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto rounded-lg border border-gold/15 bg-ink/40">
             <table className="min-w-full divide-y divide-zinc-800 text-sm">
               <thead>
-                <tr className="text-left text-xs uppercase tracking-wider text-cream/55">
+                <tr className="text-left text-xs uppercase tracking-wider text-gold/80">
                   <th className="px-3 py-2 font-medium">Thời gian</th>
                   <th className="px-3 py-2 font-medium">Type</th>
                   <th className="px-3 py-2 font-medium">Intent ID</th>
@@ -243,8 +358,16 @@ export default function AdminTransactionsPage() {
                   <tr>
                     <td colSpan={7} className="px-3 py-2">
                       <EmptyState
-                        title="Chưa có giao dịch nào"
-                        description="Mọi event payment (intent_created, intent_paid, refund) ghi tại Worker sẽ hiện ở đây real-time."
+                        title={
+                          allRecords.length === 0
+                            ? 'Chưa có giao dịch nào'
+                            : 'Không có giao dịch khớp filter'
+                        }
+                        description={
+                          allRecords.length === 0
+                            ? 'Mọi event payment (intent_created, intent_paid, refund) ghi tại Worker sẽ hiện ở đây real-time.'
+                            : 'Thử "Tất cả" hoặc bỏ user_id filter.'
+                        }
                         className="my-2 border-0 bg-transparent"
                       />
                     </td>
@@ -255,23 +378,41 @@ export default function AdminTransactionsPage() {
                   const canRefund = r.type === 'intent_paid';
                   return (
                     <tr key={r.id} className="hover:bg-gold/[0.03]">
-                      <td className="whitespace-nowrap px-3 py-2 text-cream/85">
-                        {fmtTs(r.ts)}
-                      </td>
+                      <td className="whitespace-nowrap px-3 py-2 text-cream/85">{fmtTs(r.ts)}</td>
                       <td className="whitespace-nowrap px-3 py-2">
-                        <span className="rounded border border-[#B8923D]/30 bg-[#B8923D]/10 px-2 py-0.5 font-mono text-xs text-[#B8923D]">
+                        <span
+                          className={`rounded border px-2 py-0.5 font-mono text-xs ${
+                            r.type === 'intent_paid'
+                              ? 'border-jade/40 bg-jade/10 text-jade'
+                              : r.type === 'refund'
+                              ? 'border-red-400/40 bg-red-500/10 text-red-200'
+                              : 'border-[#B8923D]/30 bg-[#B8923D]/10 text-[#B8923D]'
+                          }`}
+                        >
                           {r.type}
                         </span>
                       </td>
                       <td
-                        className="px-3 py-2 font-mono text-xs text-cream/70"
+                        className="cursor-pointer px-3 py-2 font-mono text-xs text-cream/70 hover:text-gold"
                         title={r.intent_id ?? undefined}
+                        onClick={() => {
+                          if (r.intent_id) {
+                            navigator.clipboard.writeText(r.intent_id).catch(() => {});
+                            toast.success('Đã copy intent ID');
+                          }
+                        }}
                       >
                         {maskId(r.intent_id)}
                       </td>
                       <td
-                        className="px-3 py-2 font-mono text-xs text-cream/70"
+                        className="cursor-pointer px-3 py-2 font-mono text-xs text-cream/70 hover:text-gold"
                         title={r.user_id ?? undefined}
+                        onClick={() => {
+                          if (r.user_id) {
+                            navigator.clipboard.writeText(r.user_id).catch(() => {});
+                            toast.success('Đã copy user ID');
+                          }
+                        }}
                       >
                         {maskId(r.user_id)}
                       </td>

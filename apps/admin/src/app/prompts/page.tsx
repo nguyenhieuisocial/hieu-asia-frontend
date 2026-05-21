@@ -22,8 +22,11 @@ import {
   GraduationCap,
   Scale,
   ChevronRight,
+  Sparkles,
   type LucideIcon,
 } from 'lucide-react';
+import { PageHeader } from '@/components/admin/page-header';
+import { KpiCard } from '@/components/admin/kpi-card';
 
 /** Canonical agent roles. Must match Worker KV keys. */
 const ROLES = [
@@ -76,6 +79,24 @@ function fmtDate(iso: string | null) {
   return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
 }
 
+function fmtRelative(iso: string | null) {
+  if (!iso) return '';
+  try {
+    const diff = Date.now() - new Date(iso).getTime();
+    const d = Math.floor(diff / 86_400_000);
+    if (d < 1) {
+      const h = Math.floor(diff / 3_600_000);
+      if (h < 1) return 'vừa cập nhật';
+      return `${h}h trước`;
+    }
+    if (d < 7) return `${d} ngày trước`;
+    if (d < 30) return `${Math.floor(d / 7)} tuần trước`;
+    return `${Math.floor(d / 30)} tháng trước`;
+  } catch {
+    return '';
+  }
+}
+
 export default function PromptsListPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['admin', 'prompts'],
@@ -89,14 +110,62 @@ export default function PromptsListPage() {
   }, [data]);
 
   const workerMissing = !isLoading && !error && (data?.length ?? 0) === 0;
+  const customCount = (data ?? []).filter((p) => p.is_custom).length;
+  const totalVersions = (data ?? []).reduce((s, p) => s + p.version, 0);
+  const lastUpdate = (data ?? []).reduce<string | null>((acc, p) => {
+    if (!p.updated_at) return acc;
+    if (!acc) return p.updated_at;
+    return new Date(p.updated_at) > new Date(acc) ? p.updated_at : acc;
+  }, null);
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-heading text-3xl font-semibold text-cream">Prompt Editor</h1>
-        <p className="mt-1 text-sm text-cream/65">
-          Chỉnh system prompt cho 7 vai trò trong pipeline agent. Lưu vào KV để override default.
-        </p>
+      <PageHeader
+        title="Prompt Editor"
+        description="Chỉnh system prompt cho 7 vai trò trong pipeline agent. Lưu vào KV để override default."
+        icon={<Sparkles className="h-5 w-5" />}
+        badge={
+          customCount > 0 ? (
+            <span className="rounded-full border border-gold/20 bg-gold/10 px-2 py-0.5 font-mono text-[10px] text-gold">
+              {customCount}/{ROLES.length} custom
+            </span>
+          ) : null
+        }
+      />
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <KpiCard
+          label="Total roles"
+          value={ROLES.length}
+          icon={<Sparkles className="h-4 w-4" />}
+          accent="gold"
+          hint="agent pipeline"
+        />
+        <KpiCard
+          label="Custom overrides"
+          value={customCount}
+          icon={<FileText className="h-4 w-4" />}
+          accent="purple"
+          hint={`${ROLES.length - customCount} default`}
+        />
+        <KpiCard
+          label="Total versions"
+          value={totalVersions || '—'}
+          icon={<Scale className="h-4 w-4" />}
+          accent="jade"
+          hint="lifetime edits"
+        />
+        <KpiCard
+          label="Cập nhật cuối"
+          value={
+            <span className="font-heading text-base">
+              {lastUpdate ? fmtRelative(lastUpdate) : '—'}
+            </span>
+          }
+          icon={<Brain className="h-4 w-4" />}
+          accent="gold"
+          hint={lastUpdate ? fmtDate(lastUpdate) : ''}
+        />
       </div>
 
       {error && (
@@ -156,7 +225,15 @@ export default function PromptsListPage() {
                   )}
                   <div className="text-xs text-cream/55">
                     <div>
-                      Cập nhật: <span className="text-cream/80">{fmtDate(p?.updated_at ?? null)}</span>
+                      Cập nhật:{' '}
+                      <span className="text-cream/80" title={p?.updated_at ?? ''}>
+                        {fmtDate(p?.updated_at ?? null)}
+                      </span>
+                      {p?.updated_at && (
+                        <span className="ml-1.5 font-mono text-[10px] text-cream/45">
+                          ({fmtRelative(p.updated_at)})
+                        </span>
+                      )}
                     </div>
                     <div>
                       Bởi: <span className="text-cream/80">{p?.updated_by ?? '—'}</span>

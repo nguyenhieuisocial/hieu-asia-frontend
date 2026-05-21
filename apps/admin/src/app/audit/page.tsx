@@ -17,9 +17,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@hieu-asia/ui';
-import { ShieldAlert } from 'lucide-react';
+import { ShieldAlert, Download, Activity, Users, AlertTriangle, Clock } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
+import { KpiCard } from '@/components/admin/kpi-card';
 
 interface AuditEntry {
   id?: string;
@@ -48,12 +49,34 @@ const ACTION_OPTIONS = [
   { value: 'coupon_revoked', label: 'coupon_revoked' },
 ];
 
+const HIGH_RISK_ACTIONS = new Set([
+  'user_erased',
+  'secret_rotated',
+  'coupon_revoked',
+  'admin_user_deleted',
+]);
+
 function fmtDate(iso: string | null | undefined) {
   if (!iso) return '—';
   try {
     return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'medium' });
   } catch {
     return iso;
+  }
+}
+
+function fmtRelative(iso: string | null | undefined) {
+  if (!iso) return '';
+  try {
+    const diff = Date.now() - new Date(iso).getTime();
+    const m = Math.floor(diff / 60_000);
+    if (m < 1) return 'vừa xong';
+    if (m < 60) return `${m}m`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h`;
+    return `${Math.floor(h / 24)}d`;
+  } catch {
+    return '';
   }
 }
 
@@ -77,6 +100,34 @@ async function fetchAudit(params: {
   } catch {
     return { ok: false, error: `Invalid JSON (status ${res.status})` };
   }
+}
+
+function exportCsv(entries: AuditEntry[]) {
+  if (entries.length === 0) return;
+  const headers = ['ts', 'actor', 'actor_type', 'action', 'resource_id', 'ip', 'metadata'];
+  const body = entries
+    .map((e) =>
+      [
+        e.ts ?? '',
+        e.actor ?? '',
+        e.actor_type ?? '',
+        e.action ?? '',
+        e.resource_id ?? '',
+        e.ip ?? '',
+        e.metadata ? JSON.stringify(e.metadata) : '',
+      ]
+        .map((v) => `"${String(v).replace(/"/g, '""')}"`)
+        .join(','),
+    )
+    .join('\n');
+  const csv = `${headers.join(',')}\n${body}`;
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `audit-log-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 const LIMIT = 100;
@@ -103,6 +154,14 @@ export default function AuditPage() {
   const errorMsg = (error as Error | undefined)?.message ?? data?.error;
   const note = data?.note;
 
+  // KPIs
+  const uniqueActors = new Set(entries.map((e) => e.actor).filter(Boolean)).size;
+  const highRiskCount = entries.filter((e) => HIGH_RISK_ACTIONS.has(e.action ?? '')).length;
+  const last24h = entries.filter((e) => {
+    if (!e.ts) return false;
+    return Date.now() - new Date(e.ts).getTime() < 24 * 3600 * 1000;
+  }).length;
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -110,11 +169,53 @@ export default function AuditPage() {
         description="Bản ghi hoạt động — admin actions + GDPR-related events. Lưu 12 tháng theo Nghị định 13/2023."
         icon={<ShieldAlert className="h-5 w-5" />}
         actions={
-          <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
-            {isFetching ? 'Đang tải…' : 'Làm mới'}
-          </Button>
+          <>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => exportCsv(entries)}
+              disabled={entries.length === 0}
+            >
+              <Download className="mr-1.5 h-3.5 w-3.5" />
+              Xuất CSV
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
+              {isFetching ? 'Đang tải…' : 'Làm mới'}
+            </Button>
+          </>
         }
       />
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <KpiCard
+          label="Hiển thị / trang"
+          value={entries.length}
+          icon={<Activity className="h-4 w-4" />}
+          accent="gold"
+          hint={`tối đa ${LIMIT}`}
+        />
+        <KpiCard
+          label="24h gần nhất"
+          value={last24h}
+          icon={<Clock className="h-4 w-4" />}
+          accent="purple"
+          hint="event"
+        />
+        <KpiCard
+          label="Actor unique"
+          value={uniqueActors}
+          icon={<Users className="h-4 w-4" />}
+          accent="jade"
+          hint="người thao tác"
+        />
+        <KpiCard
+          label="High-risk"
+          value={highRiskCount}
+          icon={<AlertTriangle className="h-4 w-4" />}
+          accent={highRiskCount > 0 ? 'red' : 'jade'}
+          hint="erase / rotate / revoke"
+        />
+      </div>
 
       <Card>
         <CardHeader>
@@ -209,37 +310,54 @@ export default function AuditPage() {
                     </td>
                   </tr>
                 )}
-                {entries.map((e, i) => (
-                  <tr key={e.id ?? `${e.ts ?? ''}-${i}`} className="hover:bg-gold/[0.03]">
-                    <td className="px-3 py-2 font-mono text-xs text-cream/80">{fmtDate(e.ts)}</td>
-                    <td className="px-3 py-2 text-cream/85">
-                      <div>{e.actor ?? '—'}</div>
-                      {e.actor_type && (
-                        <div className="font-mono text-[10px] uppercase tracking-wider text-cream/45">
-                          {e.actor_type}
+                {entries.map((e, i) => {
+                  const highRisk = HIGH_RISK_ACTIONS.has(e.action ?? '');
+                  return (
+                    <tr key={e.id ?? `${e.ts ?? ''}-${i}`} className="hover:bg-gold/[0.03]">
+                      <td className="px-3 py-2 font-mono text-xs text-cream/80" title={e.ts ?? ''}>
+                        <div>{fmtDate(e.ts)}</div>
+                        <div className="text-[10px] text-cream/40">{fmtRelative(e.ts)}</div>
+                      </td>
+                      <td className="px-3 py-2 text-cream/85">
+                        <div className="truncate" title={e.actor ?? ''}>
+                          {e.actor ?? '—'}
                         </div>
-                      )}
-                    </td>
-                    <td className="px-3 py-2">
-                      <span className="inline-flex items-center rounded border border-gold/20 bg-gold/5 px-2 py-0.5 font-mono text-xs text-gold">
-                        {e.action ?? '—'}
-                      </span>
-                    </td>
-                    <td className="px-3 py-2 font-mono text-xs text-cream/70">
-                      {e.resource_id ?? '—'}
-                    </td>
-                    <td className="px-3 py-2 font-mono text-xs text-cream/70">{e.ip ?? '—'}</td>
-                    <td className="px-3 py-2">
-                      {e.metadata && Object.keys(e.metadata).length > 0 ? (
-                        <code className="line-clamp-2 max-w-md font-mono text-[11px] text-cream/65">
-                          {JSON.stringify(e.metadata)}
-                        </code>
-                      ) : (
-                        <span className="text-cream/40">—</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                        {e.actor_type && (
+                          <div className="font-mono text-[10px] uppercase tracking-wider text-cream/45">
+                            {e.actor_type}
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-3 py-2">
+                        <span
+                          className={`inline-flex items-center rounded border px-2 py-0.5 font-mono text-xs ${
+                            highRisk
+                              ? 'border-red-400/40 bg-red-500/10 text-red-200'
+                              : 'border-gold/20 bg-gold/5 text-gold'
+                          }`}
+                        >
+                          {e.action ?? '—'}
+                        </span>
+                      </td>
+                      <td
+                        className="max-w-[18ch] truncate px-3 py-2 font-mono text-xs text-cream/70"
+                        title={e.resource_id ?? ''}
+                      >
+                        {e.resource_id ?? '—'}
+                      </td>
+                      <td className="px-3 py-2 font-mono text-xs text-cream/70">{e.ip ?? '—'}</td>
+                      <td className="px-3 py-2">
+                        {e.metadata && Object.keys(e.metadata).length > 0 ? (
+                          <code className="line-clamp-2 max-w-md font-mono text-[11px] text-cream/65">
+                            {JSON.stringify(e.metadata)}
+                          </code>
+                        ) : (
+                          <span className="text-cream/40">—</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
