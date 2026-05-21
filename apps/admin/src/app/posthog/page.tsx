@@ -23,7 +23,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@hieu-asia/ui';
-import { ExternalLink, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { ExternalLink, CheckCircle2, AlertTriangle, Activity } from 'lucide-react';
+import { PageHeader } from '@/components/admin/page-header';
 
 const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
 const POSTHOG_HOST =
@@ -94,13 +95,11 @@ export default function AdminPostHogPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-heading text-3xl font-semibold text-cream">PostHog</h1>
-        <p className="mt-1 text-sm text-cream/65">
-          Trạng thái config + portal sang dashboard. Phân tích thực tế (funnel,
-          replay, feature flag) sống tại posthog.com.
-        </p>
-      </div>
+      <PageHeader
+        title="PostHog"
+        description="Trạng thái config + portal sang dashboard. Phân tích thực tế (funnel, replay, feature flag) sống tại posthog.com."
+        icon={<Activity className="h-5 w-5" />}
+      />
 
       <Card>
         <CardHeader>

@@ -148,10 +148,16 @@ export const MOCK_TASKS: AdminTask[] = Array.from({ length: 30 }, (_, i) => {
   };
 });
 
-export const MOCK_QUEUE_DEPTH = {
+export const MOCK_QUEUE_DEPTH: {
+  default: number;
+  high_priority: number;
+  rag: number;
+  oldest_pending_age_seconds: number | null;
+} = {
   default: 3,
   high_priority: 0,
   rag: 1,
+  oldest_pending_age_seconds: null,
 };
 
 // ---------- Cost tracking ----------

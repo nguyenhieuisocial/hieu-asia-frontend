@@ -10,9 +10,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@hieu-asia/ui';
+import { BarChart3 } from 'lucide-react';
 import { RevenueChart, type RevenueDay } from '@/components/analytics/RevenueChart';
 import { VendorCostChart, type VendorCost } from '@/components/analytics/VendorCostChart';
 import { FunnelChart, type FunnelStage } from '@/components/analytics/FunnelChart';
+import { PageHeader } from '@/components/admin/page-header';
 
 interface AnalyticsResponse {
   ok: boolean;
@@ -100,32 +102,31 @@ export default function AnalyticsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="font-heading text-3xl font-semibold text-cream">Analytics</h1>
-          <p className="mt-1 text-sm text-cream/65">
-            Doanh thu, vendor cost và onboarding funnel — {days} ngày gần nhất.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="inline-flex rounded-md border border-gold/20 p-0.5">
-            {(['7', '30', '90'] as Range[]).map(r => (
-              <button
-                key={r}
-                onClick={() => setDays(r)}
-                className={`rounded px-3 py-1 text-xs ${
-                  days === r ? 'bg-gold/20 text-gold' : 'text-cream/65 hover:bg-gold/5'
-                }`}
-              >
-                {r}d
-              </button>
-            ))}
-          </div>
-          <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
-            {isFetching ? 'Đang tải…' : 'Làm mới'}
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        title="Analytics"
+        description={`Doanh thu, vendor cost và onboarding funnel — ${days} ngày gần nhất.`}
+        icon={<BarChart3 className="h-5 w-5" />}
+        actions={
+          <>
+            <div className="inline-flex rounded-md border border-gold/20 bg-ink/40 p-0.5">
+              {(['7', '30', '90'] as Range[]).map((r) => (
+                <button
+                  key={r}
+                  onClick={() => setDays(r)}
+                  className={`rounded px-3 py-1 text-xs transition-colors ${
+                    days === r ? 'bg-gold/20 text-gold' : 'text-cream/65 hover:bg-gold/5'
+                  }`}
+                >
+                  {r}d
+                </button>
+              ))}
+            </div>
+            <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
+              {isFetching ? 'Đang tải…' : 'Làm mới'}
+            </Button>
+          </>
+        }
+      />
 
       {showError && (
         <div className="rounded-md border border-red-400/40 bg-red-500/10 px-3 py-2 text-sm text-red-200">

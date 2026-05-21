@@ -1,5 +1,18 @@
 'use client';
 
+/**
+ * Admin sidebar — grouped, collapsible, mobile off-canvas.
+ *
+ * Groups follow the operating-model split:
+ *   - Vận hành (operations): dashboard, sessions, tasks
+ *   - Doanh thu (growth):    customers, transactions, payments, affiliates, analytics, posthog
+ *   - Tri thức (knowledge):  rag, prompts
+ *   - Hệ thống (system):     vendors, cost, llm-spend, secrets, users (admin), settings
+ *
+ * Each group expands by default; the user's last collapse state is kept in
+ * localStorage so reloads don't disrupt navigation.
+ */
+
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -22,6 +35,8 @@ import {
   Activity,
   Menu,
   X,
+  ChevronDown,
+  HandCoins,
 } from 'lucide-react';
 
 interface NavItem {
@@ -30,33 +45,96 @@ interface NavItem {
   Icon: React.ComponentType<{ className?: string }>;
 }
 
-const NAV: NavItem[] = [
-  { href: '/', label: 'Tổng quan', Icon: LayoutDashboard },
-  { href: '/customers', label: 'Khách hàng', Icon: User },
-  { href: '/users', label: 'Người dùng admin', Icon: Users },
-  { href: '/sessions', label: 'Phiên phân tích', Icon: ListTodo },
-  { href: '/vendors', label: 'Vendors', Icon: Cpu },
-  { href: '/transactions', label: 'Giao dịch', Icon: Receipt },
-  { href: '/payments', label: 'Thanh toán', Icon: CreditCard },
-  { href: '/analytics', label: 'Analytics', Icon: BarChart3 },
-  { href: '/posthog', label: 'PostHog', Icon: Activity },
-  { href: '/tasks', label: 'Task / Lỗi', Icon: Bot },
-  { href: '/cost', label: 'Chi phí AI', Icon: DollarSign },
-  { href: '/llm-spend', label: 'Chi phí LLM', Icon: DollarSign },
-  { href: '/rag', label: 'RAG', Icon: BookOpen },
-  { href: '/prompts', label: 'Prompt Editor', Icon: Sparkles },
-  { href: '/secrets', label: 'API Keys', Icon: Key },
-  { href: '/settings', label: 'Cài đặt', Icon: Settings },
+interface NavGroup {
+  id: string;
+  label: string;
+  items: NavItem[];
+}
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    id: 'ops',
+    label: 'Vận hành',
+    items: [
+      { href: '/', label: 'Tổng quan', Icon: LayoutDashboard },
+      { href: '/sessions', label: 'Phiên phân tích', Icon: ListTodo },
+      { href: '/tasks', label: 'Task / Lỗi', Icon: Bot },
+    ],
+  },
+  {
+    id: 'growth',
+    label: 'Doanh thu',
+    items: [
+      { href: '/customers', label: 'Khách hàng', Icon: User },
+      { href: '/affiliates', label: 'Affiliate', Icon: HandCoins },
+      { href: '/transactions', label: 'Giao dịch', Icon: Receipt },
+      { href: '/payments', label: 'Thanh toán', Icon: CreditCard },
+      { href: '/analytics', label: 'Analytics', Icon: BarChart3 },
+      { href: '/posthog', label: 'PostHog', Icon: Activity },
+    ],
+  },
+  {
+    id: 'knowledge',
+    label: 'Tri thức',
+    items: [
+      { href: '/rag', label: 'RAG', Icon: BookOpen },
+      { href: '/prompts', label: 'Prompt Editor', Icon: Sparkles },
+    ],
+  },
+  {
+    id: 'system',
+    label: 'Hệ thống',
+    items: [
+      { href: '/vendors', label: 'Vendors', Icon: Cpu },
+      { href: '/cost', label: 'Chi phí AI', Icon: DollarSign },
+      { href: '/llm-spend', label: 'Chi phí LLM', Icon: DollarSign },
+      { href: '/secrets', label: 'API Keys', Icon: Key },
+      { href: '/users', label: 'Người dùng admin', Icon: Users },
+      { href: '/settings', label: 'Cài đặt', Icon: Settings },
+    ],
+  },
 ];
+
+const COLLAPSED_KEY = 'admin-sidebar-collapsed';
 
 export function Sidebar() {
   const pathname = usePathname();
   const [openMobile, setOpenMobile] = React.useState(false);
+  const [collapsed, setCollapsed] = React.useState<Set<string>>(new Set());
+  const [hydrated, setHydrated] = React.useState(false);
+
+  // Persist collapse state in localStorage.
+  React.useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(COLLAPSED_KEY);
+      if (stored) setCollapsed(new Set(JSON.parse(stored)));
+    } catch {
+      /* noop */
+    }
+    setHydrated(true);
+  }, []);
+
+  React.useEffect(() => {
+    if (!hydrated) return;
+    try {
+      window.localStorage.setItem(COLLAPSED_KEY, JSON.stringify([...collapsed]));
+    } catch {
+      /* noop */
+    }
+  }, [collapsed, hydrated]);
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
     return pathname === href || pathname?.startsWith(href + '/');
   };
+
+  const toggleGroup = (id: string) =>
+    setCollapsed((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
 
   return (
     <>
@@ -86,9 +164,19 @@ export function Sidebar() {
           openMobile ? 'translate-x-0' : '-translate-x-full',
         )}
       >
+        {/* Brand */}
         <div className="flex items-center justify-between px-2 pb-5">
-          <Link href="/" className="font-heading text-lg text-gold" onClick={() => setOpenMobile(false)}>
-            admin.hieu.asia
+          <Link
+            href="/"
+            className="group flex items-center gap-2"
+            onClick={() => setOpenMobile(false)}
+          >
+            <span className="flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-gold via-gold/70 to-purple/70 font-heading text-sm font-bold text-ink shadow-md">
+              h
+            </span>
+            <span className="font-heading text-base text-cream group-hover:text-gold">
+              admin<span className="text-gold">.</span>hieu
+            </span>
           </Link>
           <button
             type="button"
@@ -100,30 +188,56 @@ export function Sidebar() {
           </button>
         </div>
 
-        <nav className="flex-1 space-y-0.5 overflow-y-auto">
-          {NAV.map(({ href, label, Icon }) => {
-            const active = isActive(href);
+        <nav className="flex-1 space-y-3 overflow-y-auto pr-1">
+          {NAV_GROUPS.map((group) => {
+            const isCollapsed = collapsed.has(group.id);
             return (
-              <Link
-                key={href}
-                href={href}
-                onClick={() => setOpenMobile(false)}
-                className={cn(
-                  'flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors',
-                  active
-                    ? 'bg-gold/15 text-gold'
-                    : 'text-cream/75 hover:bg-gold/5 hover:text-cream',
+              <div key={group.id} className="space-y-0.5">
+                <button
+                  type="button"
+                  onClick={() => toggleGroup(group.id)}
+                  className="flex w-full items-center justify-between px-2 pb-1 text-left"
+                >
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-cream/45">
+                    {group.label}
+                  </span>
+                  <ChevronDown
+                    className={cn(
+                      'h-3 w-3 text-cream/35 transition-transform',
+                      isCollapsed && '-rotate-90',
+                    )}
+                  />
+                </button>
+                {!isCollapsed && (
+                  <div className="space-y-0.5">
+                    {group.items.map(({ href, label, Icon }) => {
+                      const active = isActive(href);
+                      return (
+                        <Link
+                          key={href}
+                          href={href}
+                          onClick={() => setOpenMobile(false)}
+                          className={cn(
+                            'flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors',
+                            active
+                              ? 'bg-gradient-to-r from-gold/15 via-gold/5 to-transparent text-gold shadow-[inset_2px_0_0_0_#B8923D]'
+                              : 'text-cream/75 hover:bg-gold/5 hover:text-cream',
+                          )}
+                        >
+                          <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                          <span>{label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
                 )}
-              >
-                <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
-                <span>{label}</span>
-              </Link>
+              </div>
             );
           })}
         </nav>
 
         <div className="border-t border-gold/15 px-2 pt-3 font-mono text-[10px] uppercase tracking-wider text-cream/40">
-          v0.1 · operations
+          v0.2 · ops console
         </div>
       </aside>
     </>

@@ -31,6 +31,9 @@ import { DailyCostChart } from '@/components/llm-spend/DailyCostChart';
 import { VendorBarChart } from '@/components/llm-spend/VendorBarChart';
 import { RecentTracesTable } from '@/components/llm-spend/RecentTracesTable';
 import { BudgetsManager } from '@/components/llm-spend/BudgetsManager';
+import { PageHeader } from '@/components/admin/page-header';
+import { LiveBadge } from '@/components/admin/live-badge';
+import { DollarSign } from 'lucide-react';
 
 function fmtTime(d: Date) {
   return d.toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'medium' });
@@ -135,21 +138,26 @@ export default function LlmSpendPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="font-heading text-3xl font-semibold text-cream">Chi phí LLM theo thời gian thực</h1>
-          <p className="mt-1 max-w-2xl text-sm text-cream/65">
-            Lời hứa: mọi cuộc gọi LLM đều được ledger ngay khi xảy ra. Không có chi phí ẩn,
-            không có lag &gt; 30s. Dashboard này đọc trực tiếp từ <code className="font-mono text-gold">hieu_asia.llm_traces</code>.
-          </p>
-          <p className="mt-2 font-mono text-[11px] uppercase tracking-wider text-cream/45">
-            Cập nhật lần cuối: {fmtTime(lastRefresh)}
-          </p>
-        </div>
-        <Button variant="outline" size="sm" onClick={refreshAll} disabled={anyFetching}>
-          {anyFetching ? 'Đang tải…' : 'Làm mới ngay'}
-        </Button>
-      </div>
+      <PageHeader
+        title="Chi phí LLM theo thời gian thực"
+        description={
+          <>
+            Mọi cuộc gọi LLM đều được ledger ngay khi xảy ra. Đọc trực tiếp từ{' '}
+            <code className="font-mono text-gold">hieu_asia.llm_traces</code>.
+            <br />
+            <span className="font-mono text-[10px] uppercase tracking-wider text-cream/45">
+              Cập nhật lần cuối: {fmtTime(lastRefresh)}
+            </span>
+          </>
+        }
+        icon={<DollarSign className="h-5 w-5" />}
+        badge={<LiveBadge />}
+        actions={
+          <Button variant="outline" size="sm" onClick={refreshAll} disabled={anyFetching}>
+            {anyFetching ? 'Đang tải…' : 'Làm mới ngay'}
+          </Button>
+        }
+      />
 
       {!configured && (
         <div className="rounded-md border border-amber-400/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">

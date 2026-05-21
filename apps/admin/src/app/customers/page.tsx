@@ -11,6 +11,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@hieu-asia/ui';
+import { Users, UserCheck, Crown, Filter } from 'lucide-react';
+import { PageHeader } from '@/components/admin/page-header';
+import { EmptyState } from '@/components/admin/empty-state';
+import { KpiCard } from '@/components/admin/kpi-card';
 
 interface Customer {
   id: string;
@@ -120,18 +124,58 @@ export default function CustomersPage() {
   const errorMsg = (error as Error | undefined)?.message ?? data?.error;
   const note = data?.note;
 
+  // Aggregate stat strip
+  const totalShown = customers.length;
+  const paying = customers.filter((c) => c.plan === 'premium' || c.plan === 'subscription').length;
+  const free = customers.filter((c) => !c.plan || c.plan === 'free').length;
+  const last7 = customers.filter((c) => {
+    if (!c.last_active) return false;
+    const t = new Date(c.last_active).getTime();
+    return !Number.isNaN(t) && Date.now() - t < 7 * 24 * 3600 * 1000;
+  }).length;
+
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="font-heading text-3xl font-semibold text-cream">Khách hàng</h1>
-          <p className="mt-1 text-sm text-cream/65">
-            Danh sách end-user đã sử dụng hieu.asia (từ Supabase users + reading_sessions).
-          </p>
-        </div>
-        <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
-          {isFetching ? 'Đang tải…' : 'Làm mới'}
-        </Button>
+      <PageHeader
+        title="Khách hàng"
+        description="End-user dùng hieu.asia (Supabase users + reading_sessions). Click row để xem chi tiết."
+        icon={<Users className="h-5 w-5" />}
+        actions={
+          <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
+            {isFetching ? 'Đang tải…' : 'Làm mới'}
+          </Button>
+        }
+      />
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <KpiCard
+          label="Hiển thị / trang"
+          value={totalShown}
+          icon={<Users className="h-4 w-4" />}
+          accent="gold"
+          hint={`tối đa ${LIMIT}`}
+        />
+        <KpiCard
+          label="Active 7d"
+          value={last7}
+          icon={<UserCheck className="h-4 w-4" />}
+          accent="jade"
+          hint="có hoạt động"
+        />
+        <KpiCard
+          label="Paying"
+          value={paying}
+          icon={<Crown className="h-4 w-4" />}
+          accent="gold"
+          hint="premium + sub"
+        />
+        <KpiCard
+          label="Free tier"
+          value={free}
+          icon={<Filter className="h-4 w-4" />}
+          accent="purple"
+          hint="miễn phí"
+        />
       </div>
 
       <Card>
@@ -198,7 +242,27 @@ export default function CustomersPage() {
                   <tr><td colSpan={7} className="px-3 py-6 text-center text-cream/55">Đang tải…</td></tr>
                 )}
                 {!isLoading && customers.length === 0 && (
-                  <tr><td colSpan={7} className="px-3 py-6 text-center text-cream/55">Chưa có khách hàng nào.</td></tr>
+                  <tr>
+                    <td colSpan={7} className="px-3 py-2">
+                      <EmptyState
+                        title={search || plan !== 'all' ? 'Không có khách hàng khớp bộ lọc' : 'Chưa có khách hàng nào'}
+                        description={
+                          search || plan !== 'all' ? (
+                            'Thử bỏ filter hoặc xoá search query.'
+                          ) : (
+                            <>
+                              Khi user đầu tiên đăng ký qua Telegram hoặc email, dòng đầu tiên sẽ hiện ở đây.
+                              <br />
+                              <span className="mt-1 inline-block font-mono text-[10px] uppercase tracking-wider text-cream/45">
+                                onboarding chưa wire với bảng <code>users</code>
+                              </span>
+                            </>
+                          )
+                        }
+                        className="my-2 border-0 bg-transparent"
+                      />
+                    </td>
+                  </tr>
                 )}
                 {customers.map((c) => (
                   <tr key={c.id} className="cursor-pointer hover:bg-gold/[0.03]">

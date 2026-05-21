@@ -28,6 +28,7 @@ import {
   toast,
 } from '@hieu-asia/ui';
 import { Check, Key, ShieldAlert, Trash2 } from 'lucide-react';
+import { PageHeader } from '@/components/admin/page-header';
 import {
   deleteWorkerSecret,
   fetchSecretsList,
@@ -266,18 +267,11 @@ export default function SecretsPage() {
 
   return (
     <div className="space-y-6">
-      <header className="flex items-start gap-3">
-        <div className="rounded-md border border-gold/20 bg-gold/10 p-2 text-gold">
-          <Key className="h-5 w-5" />
-        </div>
-        <div>
-          <h1 className="font-heading text-3xl font-semibold text-cream">Quản lý API Keys</h1>
-          <p className="mt-1 text-sm text-cream/65">
-            Paste API key tại đây — backend gọi Cloudflare và Vercel API để rotate secrets.
-            Giá trị không bao giờ được lưu trong KV, chỉ ghi nhận lần set vào audit log.
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        title="Quản lý API Keys"
+        description="Paste API key tại đây — backend gọi Cloudflare và Vercel API để rotate secrets. Giá trị không bao giờ được lưu trong KV, chỉ ghi nhận lần set vào audit log."
+        icon={<Key className="h-5 w-5" />}
+      />
 
       {/* Bootstrap banner */}
       {bootstrap && (!bootstrap.cf_token_set || !bootstrap.vercel_token_set) && (

@@ -10,6 +10,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@hieu-asia/ui';
+import { Receipt, Download } from 'lucide-react';
+import { PageHeader } from '@/components/admin/page-header';
+import { EmptyState } from '@/components/admin/empty-state';
 
 /** One transaction row as returned by Worker `GET /payment/transactions`. */
 interface TransactionRecord {
@@ -87,26 +90,50 @@ export default function AdminTransactionsPage() {
   const showError = !!error || data?.ok === false;
   const errorMsg = (error as Error | undefined)?.message ?? data?.error;
 
+  const exportCsv = () => {
+    if (records.length === 0) return;
+    const rows = [
+      ['Thời gian', 'Type', 'Intent ID', 'User ID', 'Amount', 'Metadata'].join(','),
+      ...records.map((r) =>
+        [
+          r.ts,
+          r.type,
+          r.intent_id ?? '',
+          r.user_id ?? '',
+          r.amount ?? '',
+          JSON.stringify(r.metadata ?? {}).replace(/,/g, ';'),
+        ]
+          .map((v) => `"${String(v).replace(/"/g, '""')}"`)
+          .join(','),
+      ),
+    ].join('\n');
+    const blob = new Blob([rows], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `transactions-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="space-y-6">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <h1 className="font-heading text-3xl font-semibold text-cream">
-            Giao dịch
-          </h1>
-          <p className="mt-1 text-sm text-cream/65">
-            Lịch sử thanh toán raw từ Worker `/payment/transactions`.
-          </p>
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => refetch()}
-          disabled={isFetching}
-        >
-          {isFetching ? 'Đang tải…' : 'Làm mới'}
-        </Button>
-      </div>
+      <PageHeader
+        title="Giao dịch"
+        description={<>Lịch sử thanh toán raw từ Worker <code className="font-mono text-cream/75">/payment/transactions</code>.</>}
+        icon={<Receipt className="h-5 w-5" />}
+        actions={
+          <>
+            <Button variant="outline" size="sm" onClick={exportCsv} disabled={records.length === 0}>
+              <Download className="mr-1.5 h-3.5 w-3.5" />
+              Xuất CSV
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
+              {isFetching ? 'Đang tải…' : 'Làm mới'}
+            </Button>
+          </>
+        }
+      />
 
       <Card>
         <CardHeader>
@@ -167,8 +194,12 @@ export default function AdminTransactionsPage() {
 
                 {!isLoading && records.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="px-3 py-6 text-center text-cream/55">
-                      Chưa có giao dịch nào.
+                    <td colSpan={6} className="px-3 py-2">
+                      <EmptyState
+                        title="Chưa có giao dịch nào"
+                        description="Mọi event payment (intent_created, intent_paid, refund) ghi tại Worker sẽ hiện ở đây real-time."
+                        className="my-2 border-0 bg-transparent"
+                      />
                     </td>
                   </tr>
                 )}

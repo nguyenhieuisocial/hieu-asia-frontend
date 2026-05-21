@@ -11,6 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@hieu-asia/ui';
+import { Cpu } from 'lucide-react';
+import { PageHeader } from '@/components/admin/page-header';
 
 type Vendor = 'anthropic' | 'openai' | 'google' | 'cloudflare';
 type Role = 'vision' | 'logic' | 'psychology' | 'alignment' | 'report' | 'mentor' | 'judge';
@@ -185,17 +187,16 @@ export default function VendorsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="font-heading text-3xl font-semibold text-cream">Vendors</h1>
-          <p className="mt-1 text-sm text-cream/65">
-            Trạng thái kết nối các vendor AI và bảng routing theo role.
-          </p>
-        </div>
-        <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
-          {isFetching ? 'Đang tải…' : 'Làm mới'}
-        </Button>
-      </div>
+      <PageHeader
+        title="Vendors"
+        description="Trạng thái kết nối các vendor AI và bảng routing theo role."
+        icon={<Cpu className="h-5 w-5" />}
+        actions={
+          <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
+            {isFetching ? 'Đang tải…' : 'Làm mới'}
+          </Button>
+        }
+      />
 
       {showError && (
         <div className="rounded-md border border-red-400/40 bg-red-500/10 px-3 py-2 text-sm text-red-200">

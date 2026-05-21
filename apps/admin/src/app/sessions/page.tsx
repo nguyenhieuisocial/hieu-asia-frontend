@@ -27,6 +27,9 @@ import {
 import { Download, MoreVertical, RotateCcw, Trash2, Eye } from 'lucide-react';
 import { listSessions } from '@/lib/admin-api';
 import { MockBanner } from '@/components/mock-banner';
+import { PageHeader } from '@/components/admin/page-header';
+import { EmptyState } from '@/components/admin/empty-state';
+import { ListTodo } from 'lucide-react';
 import type { TaskStatus } from '@hieu-asia/types';
 
 const STATUS_TONE: Record<TaskStatus, React.ComponentProps<typeof StatusBadge>['status']> = {
@@ -178,18 +181,18 @@ export default function AdminSessionsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="font-heading text-3xl font-semibold text-cream">Phiên phân tích</h1>
-          <p className="mt-1 text-sm text-cream/65">
-            Mỗi phiên = 1 task Celery + 1 báo cáo. Click để xem chi tiết.
-          </p>
-        </div>
-        <Button variant="outline" size="sm" onClick={handleExportAll}>
-          <Download className="mr-1.5 h-3.5 w-3.5" />
-          Xuất CSV tất cả
-        </Button>
-      </div>
+      <PageHeader
+        title="Phiên phân tích"
+        description={<>Mỗi phiên = 1 task pipeline + 1 báo cáo. Click vào session_id để xem state JSON đầy đủ và lifecycle timeline.</>}
+        icon={<ListTodo className="h-5 w-5" />}
+        badge={total > 0 ? <span className="rounded-full border border-gold/20 bg-gold/10 px-2 py-0.5 font-mono text-[10px] text-gold">{total} phiên</span> : null}
+        actions={
+          <Button variant="outline" size="sm" onClick={handleExportAll}>
+            <Download className="mr-1.5 h-3.5 w-3.5" />
+            Xuất CSV tất cả
+          </Button>
+        }
+      />
 
       <MockBanner source={data?._source} />
 
@@ -274,8 +277,20 @@ export default function AdminSessionsPage() {
                 <tbody>
                   {rows.length === 0 ? (
                     <tr>
-                      <td colSpan={9} className="px-4 py-12 text-center text-cream/50">
-                        {isLoading ? 'Đang tải…' : 'Không có phiên khớp.'}
+                      <td colSpan={9} className="px-4 py-2">
+                        {isLoading ? (
+                          <div className="py-10 text-center text-cream/50">Đang tải…</div>
+                        ) : (
+                          <EmptyState
+                            title={search || status ? 'Không có phiên khớp bộ lọc' : 'Chưa có phiên phân tích nào'}
+                            description={
+                              search || status
+                                ? 'Thử bỏ bớt filter để xem nhiều dữ liệu hơn.'
+                                : 'Khi user bắt đầu một phiên đọc bài, dòng đầu tiên sẽ xuất hiện ở đây kèm trạng thái real-time.'
+                            }
+                            className="my-2 border-0 bg-transparent"
+                          />
+                        )}
                       </td>
                     </tr>
                   ) : (

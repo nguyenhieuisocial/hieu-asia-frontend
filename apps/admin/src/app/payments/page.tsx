@@ -23,6 +23,8 @@ import {
   toggleCoupon,
 } from '@/lib/admin-api';
 import { MockBanner } from '@/components/mock-banner';
+import { PageHeader } from '@/components/admin/page-header';
+import { CreditCard } from 'lucide-react';
 import type { AdminCoupon, AdminTransaction } from '@/lib/mock-data';
 
 const STATUS_TONE: Record<AdminTransaction['status'], React.ComponentProps<typeof StatusBadge>['status']> = {
@@ -82,10 +84,11 @@ export default function AdminPaymentsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-heading text-3xl font-semibold text-cream">Thanh toán</h1>
-        <p className="mt-1 text-sm text-cream/65">Giao dịch Stripe + quản lý coupon.</p>
-      </div>
+      <PageHeader
+        title="Thanh toán"
+        description="Giao dịch SePay + quản lý coupon."
+        icon={<CreditCard className="h-5 w-5" />}
+      />
 
       <MockBanner source={tx.data?._source ?? coupons.data?._source} />
 

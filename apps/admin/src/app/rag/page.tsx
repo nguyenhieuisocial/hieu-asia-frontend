@@ -17,6 +17,10 @@ import {
 } from '@hieu-asia/ui';
 import { getQdrantStats, ingestRagChunks, listRagChunks } from '@/lib/admin-api';
 import { MockBanner } from '@/components/mock-banner';
+import { PageHeader } from '@/components/admin/page-header';
+import { KpiCard } from '@/components/admin/kpi-card';
+import { EmptyState } from '@/components/admin/empty-state';
+import { BookOpen, FileText, Database, Layers } from 'lucide-react';
 import type { RagChunk } from '@/lib/mock-data';
 
 const DISCIPLINE_LABEL: Record<RagChunk['discipline'], string> = {
@@ -61,36 +65,53 @@ export default function AdminRagPage() {
     },
   ];
 
+  const rows = chunks.data ?? [];
+  const docCount = rows.length;
+  const chunkCount = rows.reduce((s, r) => s + (r.chunk_count ?? 0), 0);
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-heading text-3xl font-semibold text-cream">RAG documents</h1>
-        <p className="mt-1 text-sm text-cream/65">Tài liệu đã ingest + thống kê Qdrant.</p>
-      </div>
+      <PageHeader
+        title="RAG documents"
+        description="Tài liệu đã ingest cho retrieval. Embeddings lưu trong pgvector."
+        icon={<BookOpen className="h-5 w-5" />}
+      />
 
       <MockBanner source={chunks.data?._source ?? stats.data?._source} />
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardDescription>Collection</CardDescription>
-            <CardTitle className="font-mono text-base">{stats.data?.collection ?? '—'}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardDescription>Vectors</CardDescription>
-            <CardTitle>{stats.data?.vectors_count.toLocaleString('vi-VN') ?? '—'}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardDescription>Status</CardDescription>
-            <CardTitle>
-              <StatusBadge status="success" label={stats.data?.status ?? '—'} />
-            </CardTitle>
-          </CardHeader>
-        </Card>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <KpiCard
+          label="Documents"
+          value={docCount.toLocaleString('vi-VN')}
+          icon={<FileText className="h-4 w-4" />}
+          accent="gold"
+          hint="đã ingest"
+        />
+        <KpiCard
+          label="Chunks"
+          value={chunkCount.toLocaleString('vi-VN')}
+          icon={<Layers className="h-4 w-4" />}
+          accent="purple"
+          hint="vector rows"
+        />
+        <KpiCard
+          label="Collection"
+          value={<span className="font-mono text-base">{stats.data?.collection ?? 'pgvector'}</span>}
+          icon={<Database className="h-4 w-4" />}
+          accent="jade"
+          hint="embeddings store"
+        />
+        <KpiCard
+          label="Status"
+          value={
+            <StatusBadge
+              status={stats.data?.status === 'green' ? 'success' : 'info'}
+              label={stats.data?.status ?? 'ready'}
+            />
+          }
+          icon={<BookOpen className="h-4 w-4" />}
+          accent="jade"
+        />
       </div>
 
       <IngestForm onIngested={() => qc.invalidateQueries({ queryKey: ['admin', 'rag'] })} />
@@ -98,14 +119,23 @@ export default function AdminRagPage() {
       <Card>
         <CardHeader>
           <CardTitle>Tài liệu đã ingest</CardTitle>
+          <CardDescription>Group theo document_id; chunks tính ngược từ corpus_chunks.</CardDescription>
         </CardHeader>
         <CardContent>
-          <DataTable
-            columns={cols}
-            rows={chunks.data ?? []}
-            rowKey={(c) => c.id}
-            emptyState={chunks.isLoading ? 'Đang tải…' : 'Chưa có tài liệu.'}
-          />
+          {rows.length === 0 && !chunks.isLoading ? (
+            <EmptyState
+              title="Chưa có tài liệu nào"
+              description="Dùng form trên để ingest tài liệu đầu tiên. Mỗi blank-line trong text tạo 1 chunk; embeddings được sinh tự động."
+              className="border-0 bg-transparent"
+            />
+          ) : (
+            <DataTable
+              columns={cols}
+              rows={rows}
+              rowKey={(c) => c.id}
+              emptyState={chunks.isLoading ? 'Đang tải…' : 'Chưa có tài liệu.'}
+            />
+          )}
         </CardContent>
       </Card>
     </div>
