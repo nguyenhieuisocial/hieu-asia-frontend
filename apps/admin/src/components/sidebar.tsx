@@ -18,6 +18,7 @@ import {
   Receipt,
   Settings,
   Sparkles,
+  Key,
   Menu,
   X,
 } from 'lucide-react';
@@ -42,6 +43,7 @@ const NAV: NavItem[] = [
   { href: '/llm-spend', label: 'Chi phí LLM', Icon: DollarSign },
   { href: '/rag', label: 'RAG', Icon: BookOpen },
   { href: '/prompts', label: 'Prompt Editor', Icon: Sparkles },
+  { href: '/secrets', label: 'API Keys', Icon: Key },
   { href: '/settings', label: 'Cài đặt', Icon: Settings },
 ];
 

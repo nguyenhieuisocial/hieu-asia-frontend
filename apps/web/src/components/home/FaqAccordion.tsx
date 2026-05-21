@@ -1,0 +1,84 @@
+'use client';
+
+import * as React from 'react';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@hieu-asia/ui';
+
+export interface FaqItem {
+  q: string;
+  a: React.ReactNode;
+}
+
+interface FaqAccordionProps {
+  items: readonly FaqItem[];
+  id?: string;
+  eyebrow?: string;
+  title?: React.ReactNode;
+  subtitle?: string;
+  className?: string;
+}
+
+/**
+ * Reusable FAQ accordion — used on /, /pricing, /features.
+ * Smooth expand via Radix Accordion (already in @hieu-asia/ui).
+ */
+export function FaqAccordion({
+  items,
+  id = 'faq',
+  eyebrow = 'Câu hỏi thường gặp',
+  title,
+  subtitle,
+  className,
+}: FaqAccordionProps) {
+  return (
+    <section
+      id={id}
+      aria-labelledby={`${id}-heading`}
+      className={['relative bg-ink py-20 sm:py-28', className ?? ''].join(' ').trim()}
+    >
+      <div className="mx-auto max-w-3xl px-6">
+        <div className="text-center">
+          <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
+            {eyebrow}
+          </p>
+          <h2
+            id={`${id}-heading`}
+            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-cream sm:text-4xl"
+          >
+            {title ?? (
+              <>
+                Mọi thứ bạn muốn{' '}
+                <span className="bg-gold-gradient bg-clip-text text-transparent">hỏi trước</span>
+              </>
+            )}
+          </h2>
+          {subtitle && (
+            <p className="mt-4 text-base leading-relaxed text-cream/70 sm:text-lg">{subtitle}</p>
+          )}
+        </div>
+
+        <div
+          className="mt-12 rounded-2xl border border-cream/5 px-6"
+          style={{ backgroundColor: 'rgba(20, 20, 26, 0.4)' }}
+        >
+          <Accordion type="single" collapsible className="w-full">
+            {items.map((item, i) => (
+              <AccordionItem key={i} value={`${id}-${i}`}>
+                <AccordionTrigger className="text-left text-base font-medium">
+                  {item.q}
+                </AccordionTrigger>
+                <AccordionContent className="leading-relaxed text-cream/75">
+                  {item.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </div>
+    </section>
+  );
+}

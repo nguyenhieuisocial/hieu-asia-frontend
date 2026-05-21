@@ -191,18 +191,6 @@ export default function AdminAffiliatesPage() {
 
 // ============== Overview ==============
 
-interface ListQuery {
-  data: ReturnType<typeof useFakeListQueryType> | undefined;
-  isLoading: boolean;
-  refetch: () => void;
-}
-
-// Type helper for query objects (avoids leaking @tanstack types everywhere)
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function useFakeListQueryType() {
-  return fetchAffiliatesList();
-}
-
 function OverviewTab({
   listQuery,
   fraudCount,

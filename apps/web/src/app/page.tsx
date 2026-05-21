@@ -1,18 +1,12 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { Button } from '@hieu-asia/ui';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { Hero } from '@/components/landing/Hero';
-import { TrustSignalCarousel } from '@/components/learn/TrustSignalCarousel';
+import { SiteNav } from '@/components/home/SiteNav';
+import { SiteFooter } from '@/components/home/SiteFooter';
+import { HeroV3 } from '@/components/home/HeroV3';
 import { HowToStart } from '@/components/home/HowToStart';
 import { MethodChooser } from '@/components/home/MethodChooser';
-import { Features } from '@/components/landing/Features';
-import { HowItWorks } from '@/components/landing/HowItWorks';
-import { Testimonials } from '@/components/landing/Testimonials';
-import { PricingPreview } from '@/components/landing/PricingPreview';
-import { FAQ } from '@/components/landing/FAQ';
-import { CTA } from '@/components/landing/CTA';
-import { Footer } from '@/components/landing/Footer';
+import { WhyChoose } from '@/components/home/WhyChoose';
+import { StoryTestimonials } from '@/components/home/StoryTestimonials';
+import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 
 export const metadata: Metadata = {
   title: 'hieu.asia — Hiểu mình. Quyết định mình.',
@@ -35,7 +29,8 @@ const ORGANIZATION_JSONLD = {
   url: 'https://hieu.asia',
   logo: 'https://hieu.asia/icon',
   sameAs: ['https://t.me/hieuasiabot'],
-  description: 'Hiểu mình. Quyết định mình. AI giải mã Tử Vi, Bát Tự, MBTI và tướng tay theo tri thức cổ học Việt Nam.',
+  description:
+    'Hiểu mình. Quyết định mình. AI giải mã Tử Vi, Bát Tự, MBTI và tướng tay theo tri thức cổ học Việt Nam.',
 };
 
 const WEBSITE_JSONLD = {
@@ -134,9 +129,81 @@ const SERVICES_JSONLD = {
   ],
 };
 
+const HOME_FAQ: readonly FaqItem[] = [
+  {
+    q: 'hieu.asia có dự đoán tương lai không?',
+    a: (
+      <p>
+        Không. Chúng tôi không tuyên bố dự đoán tương lai. Mục tiêu của hieu.asia
+        là giúp bạn nhìn rõ mẫu hình hành vi và động lực bẩm sinh, để bạn tự ra
+        quyết định tốt hơn.
+      </p>
+    ),
+  },
+  {
+    q: 'Tôi không có giờ sinh chính xác thì có dùng được không?',
+    a: (
+      <p>
+        Có. Bạn vẫn có thể bắt đầu với MBTI, Thần Số Học và Palm Reading mà
+        không cần giờ sinh. Khi tìm được thông tin chính xác hơn, bạn có thể cập
+        nhật lá số bất cứ lúc nào.
+      </p>
+    ),
+  },
+  {
+    q: 'Dữ liệu cá nhân được bảo vệ thế nào?',
+    a: (
+      <>
+        <p>
+          Toàn bộ dữ liệu được mã hoá AES-256 khi lưu trữ và truyền qua TLS 1.3.
+          Chúng tôi không bán dữ liệu cho bên thứ ba và không dùng dữ liệu của
+          bạn để huấn luyện mô hình.
+        </p>
+        <p className="mt-2">
+          Bạn có thể yêu cầu xoá toàn bộ tài khoản trong trang Tài khoản. Tuân
+          thủ GDPR và các tiêu chuẩn bảo mật phổ biến.
+        </p>
+      </>
+    ),
+  },
+  {
+    q: 'Giá bao nhiêu? Có dùng thử miễn phí không?',
+    a: (
+      <p>
+        Khảo sát đầu vào miễn phí. Báo cáo Premium 99.000đ một lần, hoặc gói
+        Tháng 199.000đ để mở khoá Mentor AI không giới hạn. Xem chi tiết tại
+        trang Pricing.
+      </p>
+    ),
+  },
+  {
+    q: 'Tôi có thể huỷ gói subscription bất cứ lúc nào?',
+    a: (
+      <p>
+        Có. Bạn huỷ trong trang Tài khoản — gói vẫn dùng được đến hết kỳ đã
+        thanh toán, không tự gia hạn. Chúng tôi cũng có chính sách hoàn tiền 14
+        ngày cho các gói mới.
+      </p>
+    ),
+  },
+  {
+    q: 'hieu.asia có khác gì với các app xem bói khác?',
+    a: (
+      <>
+        <p>
+          Ba điểm khác biệt rõ ràng: (1) tính toán Tử Vi và Bát Tự theo trường
+          phái Bắc phái với 114 sao, không phải bảng tra cứu sẵn; (2) Mentor AI
+          đặt câu hỏi và đối thoại có ngữ cảnh, không phải chatbot scripted;
+          (3) văn phong calm, không định mệnh hoá — bạn vẫn là người chọn.
+        </p>
+      </>
+    ),
+  },
+];
+
 export default function LandingPage() {
   return (
-    <main id="main-content" className="min-h-screen bg-ink text-cream">
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSONLD) }}
@@ -153,53 +220,16 @@ export default function LandingPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(SERVICES_JSONLD) }}
       />
-      <SiteHeader />
-      <Hero />
-      <TrustSignalCarousel />
-      <HowToStart />
-      <MethodChooser />
-      <Features />
-      <HowItWorks />
-      <Testimonials />
-      <PricingPreview />
-      <FAQ />
-      <CTA />
-      <Footer />
-    </main>
-  );
-}
-
-function SiteHeader() {
-  return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-cream/5 bg-ink/70 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5">
-        <Link href="/" className="font-heading text-lg font-bold text-gold sm:text-xl">
-          hieu.asia
-        </Link>
-        <nav className="hidden items-center gap-7 md:flex" aria-label="Điều hướng chính">
-          <a href="#features" className="text-sm text-cream/70 transition-colors hover:text-gold">
-            Tính năng
-          </a>
-          <a href="#how" className="text-sm text-cream/70 transition-colors hover:text-gold">
-            Cách hoạt động
-          </a>
-          <Link href="/learn" className="text-sm text-cream/70 transition-colors hover:text-gold">
-            Học huyền học
-          </Link>
-          <a href="#pricing" className="text-sm text-cream/70 transition-colors hover:text-gold">
-            Bảng giá
-          </a>
-          <a href="#faq" className="text-sm text-cream/70 transition-colors hover:text-gold">
-            FAQ
-          </a>
-        </nav>
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-          <Link href="/onboarding" className="hidden sm:inline-flex">
-            <Button size="sm">Mở khóa lá số</Button>
-          </Link>
-        </div>
-      </div>
-    </header>
+      <SiteNav />
+      <main id="main-content" className="min-h-screen bg-ink text-cream pt-16">
+        <HeroV3 />
+        <HowToStart />
+        <MethodChooser />
+        <WhyChoose />
+        <StoryTestimonials />
+        <FaqAccordion items={HOME_FAQ} id="faq" />
+      </main>
+      <SiteFooter />
+    </>
   );
 }
