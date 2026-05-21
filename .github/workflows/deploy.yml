@@ -77,21 +77,16 @@ jobs:
           cache: pnpm
 
       - name: Install Vercel CLI
-        run: npm install -g vercel@latest
+        run: npm install -g vercel@39.4.0
 
-      - name: Pull Vercel env (production)
-        working-directory: ${{ matrix.app.dir }}
-        run: vercel pull --yes --environment=production --token=$VERCEL_TOKEN
-
-      - name: Build production
-        working-directory: ${{ matrix.app.dir }}
-        run: vercel build --prod --token=$VERCEL_TOKEN
-
-      - name: Deploy production
+      - name: Deploy production (remote build)
         id: deploy
         working-directory: ${{ matrix.app.dir }}
+        # Single-step deploy: Vercel pulls the source + runs the install/build
+        # command defined in the project (works regardless of monorepo layout).
+        # Avoids the `spawn sh ENOENT` from `vercel build` invoked locally.
         run: |
-          url=$(vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN)
+          url=$(vercel deploy --prod --yes --token="$VERCEL_TOKEN")
           echo "url=$url" >> "$GITHUB_OUTPUT"
           echo "::notice::Deployed ${{ matrix.app.name }} to $url"
 
