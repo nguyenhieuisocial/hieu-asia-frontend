@@ -205,17 +205,18 @@ export default function MentorChatPage() {
   };
 
   return (
-    <main className="flex h-screen flex-col bg-ink-radial">
+    <main id="main-content" className="flex h-screen flex-col bg-ink-radial">
       <header className="flex items-center justify-between border-b border-gold/15 bg-ink/80 px-4 py-3">
         <div className="flex items-center gap-3">
           <Link
             href={`/reading/${readingId}/report`}
+            aria-label="Quay lại báo cáo"
             className="text-sm text-cream/60 hover:text-gold"
           >
-            ←
+            <span aria-hidden="true">←</span>
           </Link>
           <div
-            aria-hidden
+            aria-hidden="true"
             className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/40 bg-purple/30 text-base"
           >
             ☯
@@ -225,7 +226,7 @@ export default function MentorChatPage() {
               Cố vấn Cuộc Đời
             </p>
             <p className="flex items-center gap-1.5 text-xs text-cream/50">
-              <span className="inline-block h-2 w-2 rounded-full bg-jade-500" />
+              <span aria-hidden="true" className="inline-block h-2 w-2 rounded-full bg-jade-500" />
               đang trực
             </p>
           </div>
@@ -233,6 +234,8 @@ export default function MentorChatPage() {
         <button
           type="button"
           onClick={() => setDrawerOpen((v) => !v)}
+          aria-label={`Mở danh sách ${pinned.length} ghim`}
+          aria-expanded={drawerOpen}
           className="rounded-md border border-gold/20 px-3 py-1.5 text-xs text-cream/80 hover:border-gold hover:text-gold lg:hidden"
         >
           {pinned.length} ghim

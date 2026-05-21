@@ -24,55 +24,82 @@ export interface ProcessingStepperProps {
   steps: StepStatus[];
 }
 
-export function ProcessingStepper({ steps }: ProcessingStepperProps) {
-  return (
-    <ol className="space-y-5">
-      {steps.map((step, idx) => (
-        <li key={step.key} className="flex items-start gap-4">
-          {/* Indicator column with vertical connector */}
-          <div className="relative flex flex-col items-center">
-            <StepIndicator state={step.state} />
-            {idx < steps.length - 1 && (
-              <span
-                className={[
-                  'mt-1 w-px flex-1 transition-colors',
-                  step.state === 'done' ? 'bg-jade/50' : 'bg-gold/15',
-                ].join(' ')}
-                style={{ minHeight: 28 }}
-              />
-            )}
-          </div>
+function describeState(state: StepState): string {
+  if (state === 'done') return 'hoàn thành';
+  if (state === 'running') return 'đang chạy';
+  return 'đang chờ';
+}
 
-          {/* Label */}
-          <div className="pb-3 pt-1">
-            <p
-              className={[
-                'text-base transition-colors',
-                step.state === 'done' && 'text-cream/80',
-                step.state === 'running' && 'font-medium text-cream',
-                step.state === 'pending' && 'text-cream/40',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-            >
-              {step.label}
-            </p>
-            <AnimatePresence>
-              {step.state === 'running' && (
-                <motion.p
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  className="mt-1 font-mono text-xs uppercase tracking-widest text-gold"
-                >
-                  Đang xử lý
-                </motion.p>
+export function ProcessingStepper({ steps }: ProcessingStepperProps) {
+  const runningIdx = steps.findIndex((s) => s.state === 'running');
+  const runningStep = runningIdx >= 0 ? steps[runningIdx] : undefined;
+  const doneCount = steps.filter((s) => s.state === 'done').length;
+  const total = steps.length;
+  const liveText = runningStep
+    ? `Đang bước ${runningIdx + 1} trên ${total}: ${runningStep.label}`
+    : doneCount === total
+      ? 'Hoàn thành phân tích'
+      : `Đã hoàn thành ${doneCount} trên ${total} bước`;
+
+  return (
+    <>
+      <ol className="space-y-5" aria-label="Tiến trình phân tích">
+        {steps.map((step, idx) => (
+          <li
+            key={step.key}
+            className="flex items-start gap-4"
+            aria-current={step.state === 'running' ? 'step' : undefined}
+            aria-label={`Bước ${idx + 1}: ${step.label}. Trạng thái: ${describeState(step.state)}`}
+          >
+            {/* Indicator column with vertical connector */}
+            <div className="relative flex flex-col items-center" aria-hidden="true">
+              <StepIndicator state={step.state} />
+              {idx < steps.length - 1 && (
+                <span
+                  className={[
+                    'mt-1 w-px flex-1 transition-colors',
+                    step.state === 'done' ? 'bg-jade/50' : 'bg-gold/15',
+                  ].join(' ')}
+                  style={{ minHeight: 28 }}
+                />
               )}
-            </AnimatePresence>
-          </div>
-        </li>
-      ))}
-    </ol>
+            </div>
+
+            {/* Label */}
+            <div className="pb-3 pt-1">
+              <p
+                className={[
+                  'text-base transition-colors',
+                  step.state === 'done' && 'text-cream/80',
+                  step.state === 'running' && 'font-medium text-cream',
+                  step.state === 'pending' && 'text-cream/40',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+              >
+                {step.label}
+              </p>
+              <AnimatePresence>
+                {step.state === 'running' && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="mt-1 font-mono text-xs uppercase tracking-widest text-gold"
+                    aria-hidden="true"
+                  >
+                    Đang xử lý
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <p className="sr-only" aria-live="polite" aria-atomic="true">
+        {liveText}
+      </p>
+    </>
   );
 }
 

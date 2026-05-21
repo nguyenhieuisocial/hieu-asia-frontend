@@ -86,23 +86,45 @@ export function BirthDataForm() {
   return (
     <form onSubmit={onSubmit} className="space-y-7">
       {/* Display name */}
-      <Field label="Họ tên / biệt danh" hint="Tùy chọn. Hiển thị trong báo cáo và phiên Mentor." error={errors.display_name?.message}>
-        <Input placeholder="VD: Anh Hiếu" maxLength={100} {...register('display_name')} />
+      <Field
+        id="display_name"
+        label="Họ tên / biệt danh"
+        hint="Tùy chọn. Hiển thị trong báo cáo và phiên Mentor."
+        error={errors.display_name?.message}
+      >
+        {(ariaProps) => (
+          <Input
+            placeholder="VD: Anh Hiếu"
+            maxLength={100}
+            {...ariaProps}
+            {...register('display_name')}
+          />
+        )}
       </Field>
 
       {/* Birth date */}
-      <Field label="Ngày sinh" required error={errors.birth_date?.message}>
-        <Input type="date" {...register('birth_date')} />
+      <Field id="birth_date" label="Ngày sinh" required error={errors.birth_date?.message}>
+        {(ariaProps) => (
+          <Input type="date" {...ariaProps} {...register('birth_date')} />
+        )}
       </Field>
 
       {/* Birth time + unknown toggle */}
       <div className="space-y-3">
         <Field
+          id="birth_time"
           label="Giờ sinh"
           hint="Càng chính xác càng tốt — quan trọng cho luận giải vận hạn."
           error={errors.birth_time?.message}
         >
-          <Input type="time" disabled={unknownTime} {...register('birth_time')} />
+          {(ariaProps) => (
+            <Input
+              type="time"
+              disabled={unknownTime}
+              {...ariaProps}
+              {...register('birth_time')}
+            />
+          )}
         </Field>
         <label className="flex cursor-pointer items-center gap-2.5 text-sm text-cream/80">
           <Checkbox
@@ -119,85 +141,112 @@ export function BirthDataForm() {
       {/* Time confidence — only when time entered */}
       {showConfidence && (
         <Field
+          id="time_confidence"
           label="Mức độ chắc chắn về giờ sinh"
           hint="1 = đoán mò, 5 = chắc chắn từ giấy khai sinh"
         >
-          <Controller
-            control={control}
-            name="time_confidence"
-            render={({ field }) => (
-              <div>
-                <Slider
-                  min={1}
-                  max={5}
-                  step={1}
-                  value={field.value}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                  ticks={CONFIDENCE_LABELS}
-                />
-              </div>
-            )}
-          />
+          {(ariaProps) => (
+            <Controller
+              control={control}
+              name="time_confidence"
+              render={({ field }) => (
+                <div>
+                  <Slider
+                    min={1}
+                    max={5}
+                    step={1}
+                    value={field.value}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    ticks={CONFIDENCE_LABELS}
+                    aria-labelledby={ariaProps['aria-labelledby']}
+                    aria-describedby={ariaProps['aria-describedby']}
+                  />
+                </div>
+              )}
+            />
+          )}
         </Field>
       )}
 
       {/* Birth place */}
-      <Field label="Nơi sinh" required error={errors.birth_place?.message}>
-        <Input
-          list="vn-provinces"
-          placeholder="VD: Hà Nội"
-          autoComplete="off"
-          {...register('birth_place')}
-        />
-        <datalist id="vn-provinces">
-          {VN_PROVINCES.map((p) => (
-            <option key={p} value={p} />
-          ))}
-        </datalist>
+      <Field id="birth_place" label="Nơi sinh" required error={errors.birth_place?.message}>
+        {(ariaProps) => (
+          <>
+            <Input
+              list="vn-provinces"
+              placeholder="VD: Hà Nội"
+              autoComplete="off"
+              {...ariaProps}
+              {...register('birth_place')}
+            />
+            <datalist id="vn-provinces">
+              {VN_PROVINCES.map((p) => (
+                <option key={p} value={p} />
+              ))}
+            </datalist>
+          </>
+        )}
       </Field>
 
       {/* Gender */}
-      <Field label="Giới tính" required error={errors.gender?.message}>
-        <Controller
-          control={control}
-          name="gender"
-          render={({ field }) => (
-            <RadioGroup
-              name="gender"
-              value={field.value}
-              onValueChange={field.onChange}
-              className="grid-cols-2 sm:grid-cols-4"
-            >
-              {(['nam', 'nữ', 'khác', 'không nói'] as const).map((g) => (
-                <label
-                  key={g}
-                  className="flex cursor-pointer items-center gap-2 rounded-md border border-gold/15 bg-ink/40 px-3 py-2 text-sm capitalize text-cream/90 hover:border-gold/30 has-[:checked]:border-gold has-[:checked]:bg-gold/10"
-                >
-                  <RadioGroupItem value={g} />
-                  <span>{g}</span>
-                </label>
-              ))}
-            </RadioGroup>
-          )}
-        />
+      <Field id="gender" label="Giới tính" required error={errors.gender?.message}>
+        {(ariaProps) => (
+          <Controller
+            control={control}
+            name="gender"
+            render={({ field }) => (
+              <RadioGroup
+                name="gender"
+                value={field.value}
+                onValueChange={field.onChange}
+                className="grid-cols-2 sm:grid-cols-4"
+                aria-labelledby={ariaProps['aria-labelledby']}
+                aria-describedby={ariaProps['aria-describedby']}
+                aria-required={ariaProps['aria-required']}
+                aria-invalid={ariaProps['aria-invalid']}
+              >
+                {(['nam', 'nữ', 'khác', 'không nói'] as const).map((g) => (
+                  <label
+                    key={g}
+                    className="flex cursor-pointer items-center gap-2 rounded-md border border-gold/15 bg-ink/40 px-3 py-2 text-sm capitalize text-cream/90 hover:border-gold/30 has-[:checked]:border-gold has-[:checked]:bg-gold/10"
+                  >
+                    <RadioGroupItem value={g} />
+                    <span>{g}</span>
+                  </label>
+                ))}
+              </RadioGroup>
+            )}
+          />
+        )}
       </Field>
 
       {/* Calendar toggle */}
-      <Field label="Loại lịch" hint="Mặc định dương lịch. Bật nếu bạn nhập ngày âm.">
-        <Controller
-          control={control}
-          name="calendar"
-          render={({ field }) => (
-            <div className="flex items-center gap-3 text-sm text-cream/80">
-              <span className={field.value === 'duong' ? 'text-gold' : ''}>Dương lịch</span>
-              <Switch
-                checked={field.value === 'am'}
-                onCheckedChange={(checked) => field.onChange(checked ? 'am' : 'duong')}
-              />
-              <span className={field.value === 'am' ? 'text-gold' : ''}>Âm lịch</span>
-            </div>
-          )}
-        />
+      <Field
+        id="calendar"
+        label="Loại lịch"
+        hint="Mặc định dương lịch. Bật nếu bạn nhập ngày âm."
+      >
+        {(ariaProps) => (
+          <Controller
+            control={control}
+            name="calendar"
+            render={({ field }) => (
+              <div
+                className="flex items-center gap-3 text-sm text-cream/80"
+                aria-labelledby={ariaProps['aria-labelledby']}
+                aria-describedby={ariaProps['aria-describedby']}
+              >
+                <span className={field.value === 'duong' ? 'text-gold' : ''}>Dương lịch</span>
+                <Switch
+                  checked={field.value === 'am'}
+                  onCheckedChange={(checked) => field.onChange(checked ? 'am' : 'duong')}
+                  aria-label="Chuyển đổi giữa dương lịch và âm lịch"
+                />
+                <span className={field.value === 'am' ? 'text-gold' : ''}>Âm lịch</span>
+              </div>
+            )}
+          />
+        )}
       </Field>
 
       {/* Hint banner */}
@@ -251,28 +300,68 @@ export function BirthDataForm() {
   );
 }
 
+interface FieldAriaProps {
+  id: string;
+  'aria-labelledby': string;
+  'aria-describedby': string | undefined;
+  'aria-required': true | undefined;
+  'aria-invalid': true | undefined;
+}
+
 function Field({
+  id,
   label,
   hint,
   error,
   required,
   children,
 }: {
+  id: string;
   label: string;
   hint?: string;
   error?: string;
   required?: boolean;
-  children: React.ReactNode;
+  children: (ariaProps: FieldAriaProps) => React.ReactNode;
 }) {
+  const labelId = `${id}-label`;
+  const hintId = `${id}-hint`;
+  const errorId = `${id}-error`;
+  const describedBy =
+    [error ? errorId : null, hint ? hintId : null].filter(Boolean).join(' ') ||
+    undefined;
+
+  const ariaProps: FieldAriaProps = {
+    id,
+    'aria-labelledby': labelId,
+    'aria-describedby': describedBy,
+    'aria-required': required ? true : undefined,
+    'aria-invalid': error ? true : undefined,
+  };
+
   return (
     <div className="space-y-2">
-      <Label>
+      <Label id={labelId} htmlFor={id}>
         {label}
-        {required && <span className="ml-1 text-gold">*</span>}
+        {required && (
+          <>
+            <span className="ml-1 text-gold" aria-hidden="true">
+              *
+            </span>
+            <span className="sr-only">(bắt buộc)</span>
+          </>
+        )}
       </Label>
-      {children}
-      {hint && !error && <p className="text-xs text-cream/55">{hint}</p>}
-      {error && <p className="text-xs text-red-400/90">{error}</p>}
+      {children(ariaProps)}
+      {hint && !error && (
+        <p id={hintId} className="text-xs text-cream/55">
+          {hint}
+        </p>
+      )}
+      {error && (
+        <p id={errorId} role="alert" className="text-xs text-red-400/90">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

@@ -36,7 +36,7 @@ const TRUST = [
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-ink text-cream">
+    <main id="main-content" className="min-h-screen bg-ink text-cream">
       <header className="container mx-auto flex items-center justify-between px-6 py-5">
         <span className="font-heading text-xl font-semibold text-gold">hieu.asia</span>
         <ThemeToggle />

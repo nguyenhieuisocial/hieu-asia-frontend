@@ -36,26 +36,40 @@ export function ChatInput({
 
   return (
     <form
+      aria-label="Gửi tin nhắn cho Mentor"
       onSubmit={(e) => {
         e.preventDefault();
         if (!disabled && value.trim()) onSend();
       }}
       className="flex items-end gap-2 border-t border-gold/15 bg-ink/80 px-3 py-3 sm:px-4 sm:py-4"
     >
+      <label htmlFor="mentor-chat-input" className="sr-only">
+        Nội dung tin nhắn
+      </label>
       <textarea
+        id="mentor-chat-input"
         ref={textareaRef}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={onKeyDown}
         rows={1}
         placeholder={placeholder ?? 'Hỏi Mentor về bất kỳ điều gì…'}
+        aria-label="Nội dung tin nhắn gửi Mentor"
+        aria-describedby="mentor-chat-hint"
         className={cn(
           'flex-1 resize-none rounded-md border border-gold/20 bg-ink/60 px-3 py-2 text-sm text-cream',
           'placeholder:text-cream/40 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold',
         )}
         disabled={disabled}
       />
-      <Button type="submit" disabled={disabled || !value.trim()}>
+      <span id="mentor-chat-hint" className="sr-only">
+        Nhấn Enter để gửi, Shift + Enter để xuống dòng
+      </span>
+      <Button
+        type="submit"
+        disabled={disabled || !value.trim()}
+        aria-label="Gửi tin nhắn cho Mentor"
+      >
         Gửi
       </Button>
     </form>

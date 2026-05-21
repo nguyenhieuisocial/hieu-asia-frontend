@@ -6,7 +6,7 @@ export const metadata = { title: 'Đồng ý xử lý dữ liệu' };
 
 export default function OnboardingPage() {
   return (
-    <main className="min-h-screen bg-ink-radial">
+    <main id="main-content" className="min-h-screen bg-ink-radial">
       <header className="container mx-auto flex items-center justify-between px-6 py-5">
         <Link href="/" className="font-heading text-xl font-semibold text-gold">
           hieu.asia

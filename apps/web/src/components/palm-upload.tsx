@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Image from 'next/image';
 import { Camera, Upload, X, CheckCircle2 } from 'lucide-react';
 import { Button } from '@hieu-asia/ui';
 import { validateImage } from '@/lib/upload-image';
@@ -50,8 +51,14 @@ export function PalmUpload({ onSelect, onClear, file, previewUrl }: PalmUploadPr
     return (
       <div className="space-y-4">
         <div className="relative overflow-hidden rounded-xl border border-gold/30 bg-ink-night/60">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={previewUrl} alt="Ảnh lòng bàn tay" className="mx-auto max-h-[480px] w-auto" />
+          <Image
+            src={previewUrl}
+            alt="Lòng bàn tay bạn vừa tải lên"
+            width={dims?.w ?? 400}
+            height={dims?.h ?? 400}
+            className="mx-auto max-h-[480px] w-auto"
+            unoptimized={previewUrl.startsWith('blob:') || previewUrl.startsWith('data:')}
+          />
           <div className="absolute right-3 top-3">
             <Button
               variant="outline"
@@ -61,9 +68,9 @@ export function PalmUpload({ onSelect, onClear, file, previewUrl }: PalmUploadPr
                 setDims(null);
                 if (inputRef.current) inputRef.current.value = '';
               }}
-              aria-label="Xoá ảnh"
+              aria-label="Xoá ảnh và chụp lại"
             >
-              <X className="h-4 w-4" />
+              <X className="h-4 w-4" aria-hidden="true" />
               Chụp lại
             </Button>
           </div>
@@ -93,6 +100,8 @@ export function PalmUpload({ onSelect, onClear, file, previewUrl }: PalmUploadPr
         }}
         onDragLeave={() => setDragOver(false)}
         onDrop={onDrop}
+        aria-label="Tải ảnh lòng bàn tay lên — kéo thả hoặc nhấn để chọn"
+        aria-describedby="palm-upload-hint"
         className={[
           'w-full rounded-xl border-2 border-dashed p-8 text-center transition-colors',
           dragOver
@@ -101,11 +110,11 @@ export function PalmUpload({ onSelect, onClear, file, previewUrl }: PalmUploadPr
         ].join(' ')}
       >
         <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gold/10 text-gold">
-          <Upload className="h-6 w-6" />
+          <Upload className="h-6 w-6" aria-hidden="true" />
         </div>
         <p className="text-base font-medium text-cream">Kéo thả ảnh vào đây</p>
         <p className="mt-1 text-sm text-cream/60">hoặc nhấn để chọn từ máy</p>
-        <p className="mt-3 text-xs text-cream/40">JPG / PNG / WEBP · tối đa 10MB</p>
+        <p id="palm-upload-hint" className="mt-3 text-xs text-cream/40">JPG / PNG / WEBP · tối đa 10MB</p>
       </button>
 
       <Button
@@ -113,8 +122,9 @@ export function PalmUpload({ onSelect, onClear, file, previewUrl }: PalmUploadPr
         variant="outline"
         className="w-full"
         onClick={() => cameraRef.current?.click()}
+        aria-label="Mở camera để chụp ảnh lòng bàn tay"
       >
-        <Camera className="h-4 w-4" />
+        <Camera className="h-4 w-4" aria-hidden="true" />
         Chụp ảnh bằng camera
       </Button>
 
@@ -123,6 +133,8 @@ export function PalmUpload({ onSelect, onClear, file, previewUrl }: PalmUploadPr
         type="file"
         accept="image/jpeg,image/png,image/webp"
         className="hidden"
+        aria-hidden="true"
+        tabIndex={-1}
         onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
       />
       <input
@@ -131,11 +143,17 @@ export function PalmUpload({ onSelect, onClear, file, previewUrl }: PalmUploadPr
         accept="image/*"
         capture="environment"
         className="hidden"
+        aria-hidden="true"
+        tabIndex={-1}
         onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
       />
 
       {error && (
-        <p className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300">
+        <p
+          role="alert"
+          aria-live="polite"
+          className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
+        >
           {error}
         </p>
       )}
