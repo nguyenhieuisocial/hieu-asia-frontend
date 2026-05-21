@@ -7,7 +7,115 @@ export const metadata = {
     'Cam kết bảo vệ dữ liệu cá nhân tại hieu.asia, tuân thủ Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân.',
 };
 
-const LAST_UPDATED = '21/05/2026';
+const LAST_UPDATED = '22/05/2026';
+
+interface SubProcessor {
+  vendor: string;
+  purpose: string;
+  dataShared: string;
+  location: string;
+  retention: string;
+  policyUrl: string;
+}
+
+const SUB_PROCESSORS: SubProcessor[] = [
+  {
+    vendor: 'Anthropic (Claude)',
+    purpose: 'Soạn báo cáo Tử Vi, Mentor chat',
+    dataShared: 'Lá số (không có tên thật/ngày sinh gốc), câu hỏi Mentor',
+    location: 'Hoa Kỳ',
+    retention: 'Không lưu (zero-retention API)',
+    policyUrl: 'https://www.anthropic.com/legal/privacy',
+  },
+  {
+    vendor: 'OpenAI (GPT)',
+    purpose: 'Logic + fallback alignment',
+    dataShared: 'Prompt ẩn danh hoá',
+    location: 'Hoa Kỳ',
+    retention: '30 ngày (theo enterprise API)',
+    policyUrl: 'https://openai.com/policies/privacy-policy',
+  },
+  {
+    vendor: 'Google (Gemini Vision)',
+    purpose: 'OCR + phân tích đặc điểm bàn tay',
+    dataShared: 'Ảnh bàn tay (không kèm danh tính)',
+    location: 'Hoa Kỳ',
+    retention: 'Không lưu (API-only)',
+    policyUrl: 'https://policies.google.com/privacy',
+  },
+  {
+    vendor: 'Cloudflare',
+    purpose: 'Hosting Workers, R2 storage, CDN',
+    dataShared: 'HTTP traffic, file uploads, cache',
+    location: 'Toàn cầu (edge); chính: Hoa Kỳ',
+    retention: 'Logs 24-72h; R2 theo policy bên dưới',
+    policyUrl: 'https://www.cloudflare.com/privacypolicy/',
+  },
+  {
+    vendor: 'Vercel',
+    purpose: 'Frontend hosting Next.js',
+    dataShared: 'HTTP request metadata, build artifacts',
+    location: 'Hoa Kỳ',
+    retention: 'Logs 30 ngày',
+    policyUrl: 'https://vercel.com/legal/privacy-policy',
+  },
+  {
+    vendor: 'Supabase',
+    purpose: 'Database Postgres, Auth, Edge Functions',
+    dataShared: 'User profile, reading records, audit log',
+    location: 'Singapore (ap-southeast-1)',
+    retention: 'Theo retention chính sách bên trên',
+    policyUrl: 'https://supabase.com/privacy',
+  },
+  {
+    vendor: 'SePay',
+    purpose: 'Xử lý thanh toán QR (Việt Nam)',
+    dataShared: 'Số tiền, mã giao dịch, ngân hàng',
+    location: 'Việt Nam',
+    retention: 'Theo quy định NHNN (10 năm)',
+    policyUrl: 'https://sepay.vn/dieu-khoan',
+  },
+  {
+    vendor: 'PostHog',
+    purpose: 'Product analytics (ẩn danh)',
+    dataShared: 'Sự kiện UI, không kèm PII',
+    location: 'EU (eu.posthog.com)',
+    retention: '12 tháng',
+    policyUrl: 'https://posthog.com/privacy',
+  },
+  {
+    vendor: 'Sentry',
+    purpose: 'Error tracking',
+    dataShared: 'Stack trace, browser metadata',
+    location: 'Hoa Kỳ',
+    retention: '90 ngày',
+    policyUrl: 'https://sentry.io/privacy/',
+  },
+  {
+    vendor: 'Resend',
+    purpose: 'Email giao dịch (magic-link, OTP)',
+    dataShared: 'Email + nội dung email',
+    location: 'Hoa Kỳ',
+    retention: 'Logs 30 ngày',
+    policyUrl: 'https://resend.com/legal/privacy-policy',
+  },
+  {
+    vendor: 'Telegram',
+    purpose: 'Bot login + notification',
+    dataShared: 'Telegram User ID (không kèm tên hieu.asia)',
+    location: 'EU/Anh',
+    retention: 'Theo policy Telegram',
+    policyUrl: 'https://telegram.org/privacy',
+  },
+  {
+    vendor: 'Langfuse',
+    purpose: 'LLM observability (cost + latency)',
+    dataShared: 'Prompt + completion ẩn danh hoá',
+    location: 'EU',
+    retention: '30 ngày',
+    policyUrl: 'https://langfuse.com/privacy',
+  },
+];
 
 export default function PrivacyPage() {
   return (
@@ -157,16 +265,50 @@ export default function PrivacyPage() {
               <li>Truy cập dữ liệu nội bộ được kiểm soát bằng RBAC và audit log đầy đủ.</li>
             </ul>
             <div className="mt-4 rounded-md border border-gold/15 bg-ink/40 p-4">
-              <p className="font-semibold text-cream">Vendor sub-processors:</p>
-              <ul className="mt-2 list-disc space-y-1 pl-5 text-cream/75">
-                <li>Anthropic (Claude) — phân tích tâm lý, soạn báo cáo.</li>
-                <li>OpenAI (GPT) — logic và alignment.</li>
-                <li>Google (Gemini) — vision AI (ảnh bàn tay).</li>
-                <li>Cloudflare — hosting, R2 storage, Workers AI fallback.</li>
-                <li>Vercel — frontend hosting.</li>
-                <li>Supabase — database, audit log, Edge Functions.</li>
-                <li>SePay — xử lý thanh toán.</li>
-              </ul>
+              <p className="font-semibold text-cream">
+                Vendor sub-processors ({SUB_PROCESSORS.length} bên đang được uỷ thác):
+              </p>
+              <p className="mt-1 text-xs text-cream/65">
+                Bảng cập nhật mỗi lần thay đổi nhà cung cấp. Bạn có quyền phản đối việc xử lý dữ liệu
+                bởi bất kỳ vendor nào dưới đây — vui lòng email{' '}
+                <a className="text-gold underline" href="mailto:privacy@hieu.asia">
+                  privacy@hieu.asia
+                </a>
+                .
+              </p>
+              <div className="mt-4 -mx-2 overflow-x-auto">
+                <table className="w-full min-w-[640px] border-collapse text-left text-xs">
+                  <thead>
+                    <tr className="border-b border-cream/15 text-cream/65">
+                      <th className="px-2 py-2 font-mono uppercase tracking-wider">Vendor</th>
+                      <th className="px-2 py-2 font-mono uppercase tracking-wider">Mục đích</th>
+                      <th className="px-2 py-2 font-mono uppercase tracking-wider">Dữ liệu gửi</th>
+                      <th className="px-2 py-2 font-mono uppercase tracking-wider">Vị trí</th>
+                      <th className="px-2 py-2 font-mono uppercase tracking-wider">Lưu trữ</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-cream/80">
+                    {SUB_PROCESSORS.map((sp) => (
+                      <tr key={sp.vendor} className="border-b border-cream/8 align-top">
+                        <td className="px-2 py-2.5">
+                          <a
+                            href={sp.policyUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-semibold text-cream hover:text-gold"
+                          >
+                            {sp.vendor}
+                          </a>
+                        </td>
+                        <td className="px-2 py-2.5">{sp.purpose}</td>
+                        <td className="px-2 py-2.5">{sp.dataShared}</td>
+                        <td className="px-2 py-2.5">{sp.location}</td>
+                        <td className="px-2 py-2.5">{sp.retention}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </CardContent>
         </Card>
