@@ -16,7 +16,19 @@ import { ReportContextSummary } from '@/components/report-context-summary';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { ReportSkeleton } from '@/components/skeletons/ReportSkeleton';
 import { TuViChartSection } from '@/components/tuvi/TuViChartSection';
+import { SectionFeedback } from '@/components/report/SectionFeedback';
 import { track } from '@/lib/analytics';
+
+/** Slugify Vietnamese section title for a stable, URL-safe sectionId. */
+function slugifySectionId(title: string): string {
+  return title
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/đ/g, 'd')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
 
 /** Parsed H2 section of the report markdown. */
 interface MarkdownSection {
@@ -261,6 +273,7 @@ function ReportSections({ sections }: { sections: MarkdownSection[] }) {
               {open && (
                 <div className="border-t border-gold/10 p-4">
                   <SectionBody content={s.body} />
+                  <SectionFeedback sectionId={`reading-${slugifySectionId(s.title)}`} />
                 </div>
               )}
             </div>
@@ -270,11 +283,21 @@ function ReportSections({ sections }: { sections: MarkdownSection[] }) {
 
       <div className="hidden md:block" role="tabpanel">
         {active && (
-          <SectionBody
-            content={sections.find((s) => s.title === active)?.body ?? ''}
+          <ActiveDesktopSection
+            section={sections.find((s) => s.title === active)}
           />
         )}
       </div>
+    </div>
+  );
+}
+
+function ActiveDesktopSection({ section }: { section: MarkdownSection | undefined }) {
+  if (!section) return null;
+  return (
+    <div className="space-y-4">
+      <SectionBody content={section.body} />
+      <SectionFeedback sectionId={`reading-${slugifySectionId(section.title)}`} />
     </div>
   );
 }

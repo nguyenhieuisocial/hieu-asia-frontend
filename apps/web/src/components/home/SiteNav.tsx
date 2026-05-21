@@ -19,6 +19,8 @@ interface NavLink {
 }
 
 const LEARN_LINKS: readonly NavLink[] = [
+  { href: '/methodology/tu-vi', label: 'Methodology Tử Vi' },
+  { href: '/methodology/algorithm-changelog', label: 'Algorithm changelog' },
   { href: '/learn/tu-vi', label: 'Tử Vi Đẩu Số' },
   { href: '/learn/bat-tu', label: 'Bát Tự Tứ Trụ' },
   { href: '/learn/than-so-hoc', label: 'Thần Số Học' },
@@ -27,6 +29,8 @@ const LEARN_LINKS: readonly NavLink[] = [
 ];
 
 const TOOLS_LINKS: readonly NavLink[] = [
+  { href: '/decisions', label: 'Decision Brief' },
+  { href: '/ban-do', label: 'Bản đồ của bạn' },
   { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay' },
   { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
   { href: '/hop-tuoi', label: 'Hợp tuổi' },
@@ -36,6 +40,7 @@ const TOOLS_LINKS: readonly NavLink[] = [
 ];
 
 const PRIMARY_LINKS: readonly NavLink[] = [
+  { href: '/lo-trinh', label: 'Lộ trình' },
   { href: '/features', label: 'Tính năng' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/about', label: 'Về chúng tôi' },
@@ -76,7 +81,7 @@ export function SiteNav() {
           <Link href="/signin" className="hidden text-sm text-cream/75 transition-colors hover:text-gold sm:inline-flex sm:px-2">
             Đăng nhập
           </Link>
-          <Link href="/onboarding" className="hidden sm:inline-flex">
+          <Link href="/onboarding/topic" className="hidden sm:inline-flex">
             <Button size="sm">Mở khóa lá số</Button>
           </Link>
           <MobileDrawer />
@@ -223,7 +228,7 @@ function MobileDrawer() {
             Đăng nhập
           </Link>
           <Link
-            href="/onboarding"
+            href="/onboarding/topic"
             onClick={() => setOpen(false)}
             className="mt-2"
           >
