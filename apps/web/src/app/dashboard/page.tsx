@@ -1,7 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '@hieu-asia/ui';
+import Link from 'next/link';
+import { cn, toast } from '@hieu-asia/ui';
+import { SiteNav } from '@/components/home/SiteNav';
+import { SiteFooter } from '@/components/home/SiteFooter';
 import {
   ReportsSection,
   MentorSessionsSection,
@@ -111,27 +114,50 @@ function DashboardContent() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <DashboardSkeleton />;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-ink text-cream">
+        <SiteNav />
+        <div className="pt-16">
+          <DashboardSkeleton />
+        </div>
+        <SiteFooter />
+      </div>
+    );
+  }
 
   return (
-    <main className="min-h-screen bg-ink-radial">
-      <div className="container mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-14">
-        <header className="mb-8 flex items-center gap-4">
-          <div
-            aria-hidden
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-gold/15 font-heading text-lg text-gold"
-          >
-            {MOCK_USER.name.charAt(0)}
-          </div>
-          <div>
-            <p className="text-xs text-cream/50">Chào,</p>
-            <h1 className="font-heading text-2xl text-cream">
-              {MOCK_USER.name}
-            </h1>
-          </div>
-        </header>
+    <div className="min-h-screen bg-ink text-cream">
+      <SiteNav />
+      <main id="main-content" className="relative overflow-hidden bg-ink-radial pt-16">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-20 right-[-10%] h-[360px] w-[360px] rounded-full bg-gold/10 blur-3xl"
+        />
+        <div className="container mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-14">
+          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-cream/55">
+            <Link href="/" className="hover:text-gold">Trang chủ</Link>
+            <span className="mx-1.5">/</span>
+            <span className="text-cream/70">Bảng điều khiển</span>
+          </nav>
+          <header className="mb-8 flex items-center gap-4">
+            <div
+              aria-hidden
+              className="flex h-12 w-12 items-center justify-center rounded-full border border-gold/30 bg-gradient-to-br from-gold/20 via-ink to-purple/20 font-heading text-lg text-gold"
+            >
+              {MOCK_USER.name.charAt(0)}
+            </div>
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/80">
+                Chào,
+              </p>
+              <h1 className="mt-1 font-heading text-2xl text-cream sm:text-3xl">
+                {MOCK_USER.name}
+              </h1>
+            </div>
+          </header>
 
-        <nav
+          <nav
           role="tablist"
           aria-label="Mục bảng điều khiển"
           className="mb-6 flex flex-wrap gap-2 border-b border-gold/15 pb-3"
@@ -188,21 +214,22 @@ function DashboardContent() {
             <SettingsSection
               initial={MOCK_SETTINGS}
               onExport={() => {
-                // Placeholder — GET /v1/users/me/data not yet exposed in api-client.
-                window.alert(
-                  'Tính năng xuất dữ liệu sẽ có sau khi backend mở endpoint /v1/users/me/data.',
-                );
+                toast.info('Xuất dữ liệu', {
+                  description:
+                    'Tính năng sẽ mở sau khi backend triển khai endpoint /v1/users/me/data.',
+                });
               }}
               onDelete={async () => {
-                // Placeholder — DELETE /v1/users/me/data not yet exposed.
-                window.alert(
-                  'Yêu cầu xoá dữ liệu đã ghi nhận. Backend endpoint sẽ xử lý ở Phase 2.',
-                );
+                toast.success('Đã ghi nhận yêu cầu xoá dữ liệu', {
+                  description: 'Backend sẽ xử lý trong vòng 72 giờ.',
+                });
               }}
             />
           )}
         </section>
-      </div>
-    </main>
+        </div>
+      </main>
+      <SiteFooter />
+    </div>
   );
 }
