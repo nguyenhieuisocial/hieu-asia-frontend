@@ -13,14 +13,14 @@ import { CTA } from '@/components/landing/CTA';
 import { Footer } from '@/components/landing/Footer';
 
 export const metadata: Metadata = {
-  title: 'hieu.asia — Hiểu chính mình. Quyết định tốt hơn.',
+  title: 'hieu.asia — Hiểu mình. Quyết định mình.',
   description:
-    'Phân tích Tử Vi, Bát Tự, MBTI và lòng bàn tay bằng AI. Báo cáo định hướng hành động, không định mệnh hóa — người bạn đồng hành huyền học hiện đại cho người Việt.',
+    'Mỗi quyết định quan trọng cần một góc nhìn sâu hơn — tri thức cổ học Việt Nam, được AI giải mã rõ ràng, để bạn tự chọn con đường.',
   alternates: { canonical: 'https://hieu.asia' },
   openGraph: {
-    title: 'hieu.asia — Hiểu chính mình. Quyết định tốt hơn.',
+    title: 'hieu.asia — Hiểu mình. Quyết định mình.',
     description:
-      'Tử Vi · MBTI · Palm Reading · AI Mentor. Phân tích sâu, đồng cảm, không định mệnh hóa.',
+      'Tử Vi · MBTI · Palm Reading · AI Mentor. Góc nhìn sâu, không phán định mệnh — bạn chọn con đường.',
     url: 'https://hieu.asia',
     type: 'website',
   },
@@ -33,7 +33,7 @@ const ORGANIZATION_JSONLD = {
   url: 'https://hieu.asia',
   logo: 'https://hieu.asia/icon',
   sameAs: ['https://t.me/hieuasiabot'],
-  description: 'AI phân tích Tử Vi, Bát Tự, MBTI và lòng bàn tay.',
+  description: 'Hiểu mình. Quyết định mình. AI giải mã Tử Vi, Bát Tự, MBTI và tướng tay theo tri thức cổ học Việt Nam.',
 };
 
 const WEBSITE_JSONLD = {
@@ -101,7 +101,7 @@ function SiteHeader() {
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <Link href="/onboarding" className="hidden sm:inline-flex">
-            <Button size="sm">Bắt đầu</Button>
+            <Button size="sm">Mở khóa lá số</Button>
           </Link>
         </div>
       </div>

@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Bảng giá — Premium 99k / Tháng 199k / Năm 1.99M',
+  title: 'Bảng giá — hieu.asia',
   description:
-    '3 gói dịch vụ hieu.asia: Premium báo cáo 1 lần 99.000đ, gói tháng 199.000đ unlimited, gói năm 1.990.000đ tiết kiệm 17%.',
+    'Mỗi quyết định quan trọng cần một góc nhìn sâu hơn. Chọn gói phù hợp: Premium 99.000đ một lần, gói tháng 199.000đ, gói năm 1.990.000đ.',
   alternates: { canonical: 'https://hieu.asia/pricing' },
   openGraph: {
-    title: 'Bảng giá hieu.asia — Premium / Tháng / Năm',
+    title: 'Bảng giá — hieu.asia',
     description:
-      'Premium 99.000đ một lần · Gói tháng 199.000đ unlimited · Gói năm 1.990.000đ tiết kiệm 17%.',
+      'Premium 99.000đ · Gói tháng 199.000đ · Gói năm 1.990.000đ. Mở khóa góc nhìn sâu cho mỗi quyết định quan trọng.',
     url: 'https://hieu.asia/pricing',
     type: 'website',
   },

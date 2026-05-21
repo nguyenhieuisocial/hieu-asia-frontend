@@ -172,9 +172,9 @@ function DashboardContent() {
                     <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" />
                   </svg>
                 }
-                title="Chưa có phân tích nào"
-                description="Bắt đầu phiên đầu tiên — chỉ mất 5 phút."
-                action={{ label: 'Bắt đầu phân tích', href: '/onboarding' }}
+                title="Chưa có lá số nào"
+                description="Mở khóa lá số đầu tiên — chỉ mất 5 phút."
+                action={{ label: 'Mở khóa lá số', href: '/onboarding' }}
               />
             ) : (
               <ReportsSection items={reports} />

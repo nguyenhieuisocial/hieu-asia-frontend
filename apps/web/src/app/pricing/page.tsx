@@ -97,17 +97,19 @@ export default function PricingPage() {
         >
           ← Quay lại
         </Link>
-        <h1 className="mt-4 font-heading text-3xl text-cream sm:text-4xl">
+        <p className="mt-4 font-mono text-xs uppercase tracking-widest text-gold/70">
+          Hiểu mình. Quyết định mình.
+        </p>
+        <h1 className="mt-2 font-heading text-3xl text-cream sm:text-4xl">
           Mở khóa toàn bộ báo cáo
         </h1>
         <p className="mt-3 max-w-2xl text-sm text-cream/70 sm:text-base">
-          Chọn gói phù hợp để xem chi tiết báo cáo Tử Vi, Bát Tự cùng tư vấn
-          Mentor cá nhân hóa.
+          Mỗi quyết định quan trọng cần một góc nhìn sâu hơn — tri thức cổ học
+          Việt Nam, được AI giải mã rõ ràng, để bạn tự chọn con đường.
         </p>
         {!sessionId && (
           <p className="mt-4 rounded-md border border-yellow-500/30 bg-yellow-500/10 px-3 py-2 text-xs text-yellow-200">
-            Chưa có báo cáo nào được chọn — bạn cần tạo báo cáo trước khi
-            thanh toán.
+            Chưa có lá số nào được chọn — bạn cần tạo lá số trước khi thanh toán.
           </p>
         )}
       </header>
