@@ -29,6 +29,38 @@ const nextConfig: NextConfig = {
       { source: '/legal/terms', destination: '/terms', permanent: true },
     ];
   },
+  async rewrites() {
+    return [
+      // Legacy /favicon.ico requests → Next.js app/icon.tsx (covers older crawlers).
+      { source: '/favicon.ico', destination: '/icon' },
+    ];
+  },
+  async headers() {
+    // Content-Security-Policy — allows: self + Vercel/Supabase + Cloudflare API + PostHog + Sentry + fonts.
+    // `'unsafe-inline'` on script-src needed for Next.js inline bootstrap scripts (build IDs etc.).
+    const csp = [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://us.i.posthog.com https://*.posthog.com https://browser.sentry-cdn.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' data: https://fonts.gstatic.com",
+      "img-src 'self' data: blob: https: ",
+      "connect-src 'self' https://api.hieu.asia https://*.hieu.asia https://*.supabase.co https://*.supabase.in https://us.i.posthog.com https://*.posthog.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cloud.langfuse.com https://api.vietqr.io",
+      "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'none'",
+      "upgrade-insecure-requests",
+    ].join('; ');
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'Content-Security-Policy', value: csp },
+        ],
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: '**.hieu.asia' },
