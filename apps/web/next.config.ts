@@ -17,6 +17,10 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: '**.hieu.asia' },
+      { protocol: 'https', hostname: 'img.vietqr.io' },
+      { protocol: 'https', hostname: 'api.vietqr.io' },
+      { protocol: 'https', hostname: '**.supabase.co' },
+      { protocol: 'https', hostname: '**.supabase.in' },
       { protocol: 'http', hostname: 'localhost' },
     ],
   },

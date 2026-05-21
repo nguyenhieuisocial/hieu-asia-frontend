@@ -1,9 +1,24 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Button, Card, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { CalendarDays, ScanLine, ClipboardList, Sparkles, ShieldCheck, Trash2, Info, Lock } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LaSoSvg } from '@/components/la-so-svg';
 import { HeroEntrance } from '@/components/hero-entrance';
+
+export const metadata: Metadata = {
+  title: 'hieu.asia — Cẩm Nang Cuộc Đời AI',
+  description:
+    'Phân tích Tử Vi, Bát Tự, MBTI và lòng bàn tay bằng AI. Báo cáo định hướng hành động, không định mệnh hóa - người bạn đồng hành để hiểu chính mình.',
+  alternates: { canonical: 'https://hieu.asia' },
+  openGraph: {
+    title: 'hieu.asia — Cẩm Nang Cuộc Đời AI',
+    description:
+      'Phân tích Tử Vi, Bát Tự, MBTI và lòng bàn tay bằng AI. Người bạn đồng hành để hiểu chính mình.',
+    url: 'https://hieu.asia',
+    type: 'website',
+  },
+};
 
 const STEPS = [
   { step: '1', title: 'Nhập ngày sinh', desc: 'Thông tin cơ bản và bối cảnh hiện tại.', Icon: CalendarDays },

@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Be_Vietnam_Pro, Inter, Outfit, JetBrains_Mono } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
@@ -32,13 +32,79 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://hieu.asia'),
   title: {
-    default: 'hieu.asia — Cẩm Nang Cuộc Đời AI',
+    default: 'hieu.asia — Tử Vi & MBTI bằng AI',
     template: '%s · hieu.asia',
   },
   description:
-    'Phân tích tính cách, vận hạn, sự nghiệp và chiến lược hành động cá nhân hóa bằng AI.',
-  metadataBase: new URL('https://hieu.asia'),
+    'Hệ thống AI phân tích Tử Vi, Bát Tự, MBTI và lòng bàn tay. Người bạn đồng hành giúp bạn hiểu chính mình rõ hơn.',
+  applicationName: 'hieu.asia',
+  authors: [{ name: 'hieu.asia' }],
+  creator: 'hieu.asia',
+  publisher: 'hieu.asia',
+  keywords: [
+    'Tử Vi',
+    'Tử Vi Đẩu Số',
+    'Bát Tự',
+    'MBTI',
+    'AI',
+    'palm reading',
+    'xem chỉ tay',
+    'kinh dịch',
+    'huyền học',
+    'tử vi AI',
+    'tâm lý học',
+    'Việt Nam',
+    'hieu.asia',
+  ],
+  category: 'lifestyle',
+  formatDetection: {
+    telephone: false,
+    email: false,
+    address: false,
+  },
+  alternates: {
+    canonical: 'https://hieu.asia',
+    languages: {
+      'vi-VN': 'https://hieu.asia',
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'vi_VN',
+    url: 'https://hieu.asia',
+    siteName: 'hieu.asia',
+    title: 'hieu.asia — Tử Vi & MBTI bằng AI',
+    description:
+      'Hệ thống AI phân tích Tử Vi, Bát Tự, MBTI và lòng bàn tay. Người bạn đồng hành giúp bạn hiểu chính mình.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'hieu.asia — Tử Vi & MBTI bằng AI',
+    description: 'Tử Vi · MBTI · Palm Reading bằng AI',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#0F0F12' },
+    { media: '(prefers-color-scheme: light)', color: '#B8923D' },
+  ],
+  colorScheme: 'dark',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default async function RootLayout({
