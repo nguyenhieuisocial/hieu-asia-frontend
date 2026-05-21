@@ -99,7 +99,7 @@ export function HeroV3() {
           aria-label="Tin cậy"
         >
           <TrustBadge Icon={Users}>10k+ giải đoán</TrustBadge>
-          <TrustBadge Icon={ShieldCheck}>GDPR compliant</TrustBadge>
+          <TrustBadge Icon={ShieldCheck}>Privacy-first · Tải/xoá dữ liệu</TrustBadge>
           <TrustBadge Icon={Globe2}>Hỗ trợ Tiếng Việt + English</TrustBadge>
         </motion.ul>
       </div>

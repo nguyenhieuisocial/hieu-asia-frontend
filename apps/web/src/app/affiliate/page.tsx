@@ -70,7 +70,7 @@ export default function AffiliateLandingPage() {
               {
                 step: '1',
                 title: 'Đăng ký',
-                body: 'Nhận affiliate link và QR code chỉ trong 30 giây. Không cần KYC, không cần xét duyệt.',
+                body: 'Nhận affiliate link và QR code chỉ trong 30 giây. Đăng ký nhanh, xét duyệt tự động. Khi rút tiền, bạn có thể cần xác minh thông tin nhận thanh toán theo quy định.',
               },
               {
                 step: '2',
