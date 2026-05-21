@@ -147,9 +147,9 @@ export default function KeHoachNamPage() {
             <Link href={`/onboarding/topic?topic=${TOPIC}`}>
               <Button size="lg">Bắt đầu lập lá số</Button>
             </Link>
-            <Link href="/sample-report">
+            <Link href="/annual-planning">
               <Button size="lg" variant="outline">
-                Xem mẫu báo cáo
+                Mở Annual Planning
               </Button>
             </Link>
           </div>

@@ -12,6 +12,7 @@ import { Button, Card, CardContent, Skeleton, Tabs, TabsList, TabsTrigger } from
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { LeaderboardList, type LeaderboardEntry } from '@/components/affiliate/LeaderboardList';
+import { safeJson } from '@/lib/safe-json';
 
 type Period = 'monthly' | 'all_time';
 
@@ -25,15 +26,24 @@ export default function AffiliateLeaderboardPage() {
     let alive = true;
     setLoading(true);
     setError(null);
-    fetch(`/api/affiliate/leaderboard?period=${period}&limit=20`, { cache: 'no-store' })
-      .then((r) => r.json())
-      .then((d) => {
+    (async () => {
+      try {
+        const res = await fetch(`/api/affiliate/leaderboard?period=${period}&limit=20`, { cache: 'no-store' });
+        const parsed = await safeJson<{ ok: boolean; leaderboard?: LeaderboardEntry[]; error?: string }>(res);
         if (!alive) return;
-        if (d.ok) setEntries(d.leaderboard ?? []);
-        else setError(d.error ?? 'Không tải được bảng xếp hạng.');
-      })
-      .catch((e) => alive && setError(e.message ?? 'Lỗi mạng.'))
-      .finally(() => alive && setLoading(false));
+        if (!parsed.ok) {
+          setError(`Phản hồi không hợp lệ (HTTP ${parsed.status})`);
+        } else {
+          const d = parsed.data;
+          if (d.ok) setEntries(d.leaderboard ?? []);
+          else setError(d.error ?? 'Không tải được bảng xếp hạng.');
+        }
+      } catch (e) {
+        if (alive) setError((e as Error).message ?? 'Lỗi mạng.');
+      } finally {
+        if (alive) setLoading(false);
+      }
+    })();
     return () => {
       alive = false;
     };

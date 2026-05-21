@@ -152,9 +152,9 @@ export default function HieuBanThanPage() {
             <Link href={`/onboarding/topic?topic=${TOPIC}`}>
               <Button size="lg">Bắt đầu lập lá số</Button>
             </Link>
-            <Link href="/sample-report">
+            <Link href="/onboarding/topic?topic=self">
               <Button size="lg" variant="outline">
-                Xem mẫu báo cáo
+                Bắt đầu hành trình cá nhân
               </Button>
             </Link>
           </div>

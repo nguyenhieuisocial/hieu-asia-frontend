@@ -93,5 +93,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/family-profiles`, lastModified: now, changeFrequency: 'monthly', priority: 0.65 },
   ];
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7];
+  // Wave 8/9 — Multi-tier affiliate hubs (public-facing landing).
+  const wave9: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/affiliate/network`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${BASE_URL}/affiliate/commissions`, lastModified: now, changeFrequency: 'weekly', priority: 0.65 },
+  ];
+
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9];
 }

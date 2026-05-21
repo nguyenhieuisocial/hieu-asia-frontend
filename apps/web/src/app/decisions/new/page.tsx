@@ -306,7 +306,7 @@ function NewDecisionInner() {
                   className="mt-2"
                   required
                 />
-                <div className="mt-1 flex justify-end text-xs text-cream/50">
+                <div className="mt-1 flex justify-end text-xs text-cream/70">
                   {questionLength}/500
                 </div>
               </div>
@@ -329,7 +329,7 @@ function NewDecisionInner() {
                   placeholder="Tôi đang làm vị trí X được 3 năm, gần đây cảm thấy..."
                   className="mt-2"
                 />
-                <div className="mt-1 flex justify-end text-xs text-cream/50">
+                <div className="mt-1 flex justify-end text-xs text-cream/70">
                   {situationLength}/1000
                 </div>
               </div>

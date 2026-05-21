@@ -393,7 +393,7 @@ function ChoiceFields({
           placeholder='Ví dụ: "Ở lại công ty hiện tại"'
           className="mt-2"
         />
-        <div className="mt-1 flex justify-end text-xs text-cream/50">
+        <div className="mt-1 flex justify-end text-xs text-cream/70">
           {titleLen}/100 (tối thiểu 5)
         </div>
       </div>
@@ -410,7 +410,7 @@ function ChoiceFields({
           className="mt-2"
           placeholder="Bối cảnh, điều kiện đi kèm (tuỳ chọn)."
         />
-        <div className="mt-1 flex justify-end text-xs text-cream/50">
+        <div className="mt-1 flex justify-end text-xs text-cream/70">
           {descLen}/500
         </div>
       </div>

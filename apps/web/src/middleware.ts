@@ -1,40 +1,96 @@
 /**
  * Affiliate attribution middleware.
  *
- * On every request, if `?ref=CODE` is present and no `hieu_ref` cookie is set
- * (first-touch wins), we:
- *   1. Set `hieu_ref=CODE` cookie (30 days)
- *   2. Fire-and-forget call to /api/affiliate/track with event=click
+ * On every public request:
+ *  1. If `?ref=CODE` is present and CODE matches the format regex:
+ *     - First-touch wins: if no `hieu_ref` cookie, set it (30d) and
+ *       fire-and-forget /api/affiliate/track click.
+ *     - If cookie already matches, just refresh TTL.
+ *     - Strip `?ref=...` from the URL via 307 redirect (clean URL).
+ *     - Set `x-affiliate-ref` response header so server components see it.
+ *  2. If `?ref=` is invalid format, strip param but don't set cookie.
+ *  3. If no `?ref=` but a valid `hieu_ref` cookie exists, refresh TTL.
  *
- * Surgical: does NOT touch any reading / mentor / payment flows.
+ * Skips `/api/*`, `/_next/*`, `/admin/*`, and static asset paths.
+ * Surgical: does NOT touch reading/mentor/payment flows.
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
 
 const COOKIE_NAME = 'hieu_ref';
 const COOKIE_TTL = 60 * 60 * 24 * 30; // 30 days
-const CODE_REGEX = /^[A-Z2-9]{6,16}$/;
+// Accept short codes (3-32 chars, alphanum + _ -). Broader than legacy uppercase
+// scheme so we don't reject codes minted by the new affiliate worker.
+const CODE_REGEX = /^[A-Za-z0-9_-]{3,32}$/;
 
-export function middleware(req: NextRequest) {
-  const url = req.nextUrl;
-  const ref = url.searchParams.get('ref');
-  if (!ref || !CODE_REGEX.test(ref)) return NextResponse.next();
-
-  // First-touch wins — don't overwrite an existing attribution.
-  const existing = req.cookies.get(COOKIE_NAME)?.value;
-  if (existing) return NextResponse.next();
-
-  const res = NextResponse.next();
-  res.cookies.set(COOKIE_NAME, ref, {
-    httpOnly: false, // readable client-side so signup flow can attach
-    sameSite: 'lax',
+function cookieOpts() {
+  return {
+    httpOnly: false as const, // readable client-side for analytics/signup attach
+    sameSite: 'lax' as const,
     secure: true,
     path: '/',
     maxAge: COOKIE_TTL,
-  });
+  };
+}
 
-  // Fire-and-forget click track. We don't await — the user's request continues
-  // immediately. Failure is non-fatal (the cookie carries the attribution).
+export function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+
+  // Skip excluded paths. The matcher already filters most of these but we
+  // double-check here for safety (matcher patterns can drift).
+  if (
+    pathname.startsWith('/api/') ||
+    pathname.startsWith('/_next/') ||
+    pathname.startsWith('/admin/') ||
+    pathname === '/favicon.ico'
+  ) {
+    return NextResponse.next();
+  }
+
+  const refRaw = req.nextUrl.searchParams.get('ref');
+  const existing = req.cookies.get(COOKIE_NAME)?.value;
+
+  // --- No ?ref= → pass through, refresh cookie if it's valid. ---
+  if (!refRaw) {
+    if (existing && CODE_REGEX.test(existing)) {
+      const res = NextResponse.next();
+      res.cookies.set(COOKIE_NAME, existing, cookieOpts());
+      return res;
+    }
+    return NextResponse.next();
+  }
+
+  const ref = refRaw.trim();
+
+  // --- ?ref= invalid → strip param, no cookie. ---
+  if (!CODE_REGEX.test(ref)) {
+    const url = req.nextUrl.clone();
+    url.searchParams.delete('ref');
+    return NextResponse.redirect(url);
+  }
+
+  // --- ?ref= valid → clean URL via redirect. ---
+  const cleanUrl = req.nextUrl.clone();
+  cleanUrl.searchParams.delete('ref');
+  const res = NextResponse.redirect(cleanUrl);
+  res.headers.set('x-affiliate-ref', ref);
+
+  if (existing === ref) {
+    // Already attributed to this code — just refresh TTL.
+    res.cookies.set(COOKIE_NAME, ref, cookieOpts());
+    return res;
+  }
+
+  if (existing) {
+    // First-touch wins — don't overwrite an existing attribution.
+    // Still refresh existing cookie TTL so the original attribution sticks.
+    res.cookies.set(COOKIE_NAME, existing, cookieOpts());
+    return res;
+  }
+
+  // First click — set cookie and fire-and-forget click track.
+  res.cookies.set(COOKIE_NAME, ref, cookieOpts());
+
   const origin = req.nextUrl.origin;
   fetch(`${origin}/api/affiliate/track`, {
     method: 'POST',
@@ -46,7 +102,7 @@ export function middleware(req: NextRequest) {
   return res;
 }
 
-// Run on every page request — skip API/_next/static.
+// Run on every page request — skip API/_next/static/admin/files-with-extension.
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)'],
+  matcher: ['/((?!api|_next/static|_next/image|admin|favicon.ico|robots.txt|sitemap.xml).*)'],
 };

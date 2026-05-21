@@ -12,6 +12,7 @@ import { Button, Card, CardContent, Skeleton } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { AssetCard, type ResolvedAsset } from '@/components/affiliate/AssetCard';
+import { safeJson } from '@/lib/safe-json';
 
 type Filter = 'all' | 'banner' | 'video' | 'text' | 'qr' | 'logo';
 
@@ -30,20 +31,25 @@ export default function AffiliateAssetsPage() {
   const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    fetch('/api/affiliate/assets', { cache: 'no-store' })
-      .then(async (r) => {
+    (async () => {
+      try {
+        const r = await fetch('/api/affiliate/assets', { cache: 'no-store' });
         if (r.status === 401) {
           setError('not_signed_in');
-          return null;
+          return;
         }
-        return r.json();
-      })
-      .then((d) => {
-        if (!d) return;
+        const parsed = await safeJson<{ ok: boolean; assets?: ResolvedAsset[]; error?: string }>(r);
+        if (!parsed.ok) {
+          setError(`Phản hồi không hợp lệ (HTTP ${parsed.status})`);
+          return;
+        }
+        const d = parsed.data;
         if (d.ok) setAssets(d.assets ?? []);
         else setError(d.error ?? 'Lỗi tải assets');
-      })
-      .catch((e) => setError(e.message));
+      } catch (e) {
+        setError((e as Error).message);
+      }
+    })();
   }, []);
 
   const filtered = React.useMemo(() => {

@@ -151,9 +151,9 @@ export default function HangNgayPage() {
             <Link href={`/onboarding/topic?topic=${TOPIC}`}>
               <Button size="lg">Bắt đầu lập lá số</Button>
             </Link>
-            <Link href="/sample-report">
+            <Link href="/tu-vi-hom-nay">
               <Button size="lg" variant="outline">
-                Xem mẫu báo cáo
+                Xem Tử Vi hôm nay
               </Button>
             </Link>
           </div>

@@ -14,6 +14,7 @@
 import { redirect } from 'next/navigation';
 import { cookies, headers } from 'next/headers';
 import Link from 'next/link';
+import { safeJson } from '@/lib/safe-json';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,7 +41,9 @@ async function fetchAffiliateName(code: string): Promise<string | null> {
     const r = await fetch(`${base}/affiliate/leaderboard?period=all_time&limit=50`, {
       cache: 'no-store',
     });
-    const d = (await r.json()) as { ok: boolean; leaderboard: { code: string; display_name: string }[] };
+    const parsed = await safeJson<{ ok: boolean; leaderboard: { code: string; display_name: string }[] }>(r);
+    if (!parsed.ok) return null;
+    const d = parsed.data;
     if (!d.ok) return null;
     const hit = d.leaderboard.find((e) => e.code === code);
     return hit?.display_name ?? null;

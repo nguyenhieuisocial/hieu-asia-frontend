@@ -44,6 +44,8 @@ const TOOLS_LINKS: readonly NavLink[] = [
   { href: '/compatibility', label: 'Hợp đôi 2 lá số' },
   { href: '/career-fit', label: 'Career Fit' },
   { href: '/family-profiles', label: 'Family Profiles' },
+  { href: '/affiliate/network', label: 'Affiliate · Mạng lưới' },
+  { href: '/affiliate/commissions', label: 'Affiliate · Hoa hồng' },
   { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay' },
   { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
   { href: '/hop-tuoi', label: 'Hợp tuổi (12 con giáp)' },
@@ -91,12 +93,21 @@ export function SiteNav() {
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Link href="/signin" className="hidden text-sm text-cream/75 transition-colors hover:text-gold sm:inline-flex sm:px-2">
+          <Link
+            href="/account"
+            className="hidden text-sm text-cream/75 transition-colors hover:text-gold sm:inline-flex sm:px-2"
+          >
+            Tài khoản
+          </Link>
+          <Link
+            href="/signin"
+            className="hidden text-sm text-cream/75 transition-colors hover:text-gold sm:inline-flex sm:px-2"
+          >
             Đăng nhập
           </Link>
-          <Link href="/onboarding/topic" className="hidden sm:inline-flex">
-            <Button size="sm">Mở khóa lá số</Button>
-          </Link>
+          <Button asChild size="sm" className="hidden sm:inline-flex">
+            <Link href="/onboarding/topic">Mở khóa lá số</Link>
+          </Button>
           <MobileDrawer />
         </div>
       </div>
@@ -177,7 +188,7 @@ function MobileDrawer() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger
-        className="inline-flex h-9 w-9 items-center justify-center rounded-md text-cream/85 transition-colors hover:bg-gold/10 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold md:hidden"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-md text-cream/85 transition-colors hover:bg-gold/10 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold md:hidden"
         aria-label="Mở menu"
       >
         <Menu className="h-5 w-5" />
@@ -186,7 +197,10 @@ function MobileDrawer() {
         <SheetHeader>
           <SheetTitle className="font-heading text-gold">hieu.asia</SheetTitle>
         </SheetHeader>
-        <nav className="mt-6 flex flex-col gap-1" aria-label="Điều hướng di động">
+        <nav
+          className="mt-6 flex max-h-[calc(100vh-8rem)] flex-col gap-1 overflow-y-auto pb-6"
+          aria-label="Điều hướng di động"
+        >
           <Link
             href="/"
             onClick={() => setOpen(false)}
@@ -240,13 +254,11 @@ function MobileDrawer() {
           >
             Đăng nhập
           </Link>
-          <Link
-            href="/onboarding/topic"
-            onClick={() => setOpen(false)}
-            className="mt-2"
-          >
-            <Button className="w-full">Mở khóa lá số</Button>
-          </Link>
+          <Button asChild className="mt-2 w-full">
+            <Link href="/onboarding/topic" onClick={() => setOpen(false)}>
+              Mở khóa lá số
+            </Link>
+          </Button>
         </nav>
       </SheetContent>
     </Sheet>

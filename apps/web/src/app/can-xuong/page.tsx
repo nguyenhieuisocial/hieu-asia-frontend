@@ -15,6 +15,7 @@ import {
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { track } from '@/lib/analytics';
+import { safeJson } from '@/lib/safe-json';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -92,7 +93,9 @@ export default function CanXuongPage() {
           gender,
         }),
       });
-      const json = (await res.json()) as { ok: boolean; result?: CanXuongResult; error?: string };
+      const parsed = await safeJson<{ ok: boolean; result?: CanXuongResult; error?: string }>(res);
+      if (!parsed.ok) throw new Error(`Phản hồi không hợp lệ (HTTP ${parsed.status})`);
+      const json = parsed.data;
       if (!json.ok || !json.result) throw new Error(json.error ?? 'Không tính được kết quả');
       setResult(json.result);
       track('tool_used', { tool: 'can-xuong', result: 'ok' });

@@ -152,9 +152,9 @@ export default function SuNghiepPage() {
             <Link href={`/onboarding/topic?topic=${TOPIC}`}>
               <Button size="lg">Bắt đầu lập lá số</Button>
             </Link>
-            <Link href="/sample-report">
+            <Link href="/decisions/new?topic=career">
               <Button size="lg" variant="outline">
-                Xem mẫu báo cáo
+                Ghi quyết định sự nghiệp
               </Button>
             </Link>
           </div>

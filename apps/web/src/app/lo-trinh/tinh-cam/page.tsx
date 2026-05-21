@@ -153,9 +153,9 @@ export default function TinhCamPage() {
             <Link href={`/onboarding/topic?topic=${TOPIC}`}>
               <Button size="lg">Bắt đầu lập lá số</Button>
             </Link>
-            <Link href="/sample-report">
+            <Link href="/decisions/new?topic=relationship">
               <Button size="lg" variant="outline">
-                Xem mẫu báo cáo
+                Ghi quyết định tình cảm
               </Button>
             </Link>
           </div>

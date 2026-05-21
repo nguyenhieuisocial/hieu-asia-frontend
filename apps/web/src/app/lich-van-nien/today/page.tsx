@@ -9,6 +9,7 @@ import {
   type VanNienMonthDayDTO,
 } from '@/components/lich-van-nien/CalendarMonth';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { safeJson } from '@/lib/safe-json';
 
 function getApiBase(): string {
   if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_URL) {
@@ -48,19 +49,21 @@ export default function TodayPage() {
       day: String(day),
     });
     if (birthYear) params.set('user_birth_year', birthYear);
-    fetch(`${getApiBase()}/tools/lich-van-nien/day?${params.toString()}`)
-      .then((r) => r.json())
-      .then((data) => {
+    (async () => {
+      try {
+        const res = await fetch(`${getApiBase()}/tools/lich-van-nien/day?${params.toString()}`);
+        const parsed = await safeJson<{ ok: boolean; day?: VanNienDayDTO; error?: string }>(res);
         if (cancelled) return;
+        if (!parsed.ok) throw new Error(`Phản hồi không hợp lệ (HTTP ${parsed.status})`);
+        const data = parsed.data;
         if (!data.ok) throw new Error(data.error);
-        setDayInfo(data.day);
-      })
-      .catch((e) => {
-        if (!cancelled) setError(String(e?.message ?? e));
-      })
-      .finally(() => {
+        if (data.day) setDayInfo(data.day);
+      } catch (e) {
+        if (!cancelled) setError(String((e as Error)?.message ?? e));
+      } finally {
         if (!cancelled) setLoading(false);
-      });
+      }
+    })();
     return () => {
       cancelled = true;
     };
@@ -69,19 +72,20 @@ export default function TodayPage() {
   // Fetch month
   React.useEffect(() => {
     let cancelled = false;
-    fetch(`${getApiBase()}/tools/lich-van-nien/month`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ year, month }),
-    })
-      .then((r) => r.json())
-      .then((data) => {
+    (async () => {
+      try {
+        const res = await fetch(`${getApiBase()}/tools/lich-van-nien/month`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ year, month }),
+        });
+        const parsed = await safeJson<{ ok: boolean; days?: VanNienMonthDayDTO[] }>(res);
         if (cancelled) return;
-        if (data.ok) setMonthDays(data.days);
-      })
-      .catch(() => {
+        if (parsed.ok && parsed.data.ok && parsed.data.days) setMonthDays(parsed.data.days);
+      } catch {
         /* ignore — month is secondary */
-      });
+      }
+    })();
     return () => {
       cancelled = true;
     };

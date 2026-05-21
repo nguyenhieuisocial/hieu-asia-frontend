@@ -19,6 +19,7 @@ import {
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { track } from '@/lib/analytics';
+import { safeJson } from '@/lib/safe-json';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -68,7 +69,9 @@ export default function ThuocLoBanPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ value_cm: v, type }),
       });
-      const json = (await res.json()) as { ok: boolean; result?: LoBanResult; error?: string };
+      const parsed = await safeJson<{ ok: boolean; result?: LoBanResult; error?: string }>(res);
+      if (!parsed.ok) throw new Error(`Phản hồi không hợp lệ (HTTP ${parsed.status})`);
+      const json = parsed.data;
       if (!json.ok || !json.result) throw new Error(json.error ?? 'Không tra được kích thước');
       setResult(json.result);
       track('tool_used', { tool: 'thuoc-lo-ban', result: 'ok' });

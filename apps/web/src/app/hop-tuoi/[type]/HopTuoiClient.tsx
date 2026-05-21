@@ -24,6 +24,7 @@ import {
 } from '@hieu-asia/ui';
 import { BirthInputPair, isValidPerson, type PersonInput } from '@/components/hop-tuoi/BirthInputPair';
 import { CompatibilityScore } from '@/components/hop-tuoi/CompatibilityScore';
+import { safeJson } from '@/lib/safe-json';
 import type { HopTuoiType } from './page';
 
 // ----- shared API -----
@@ -104,7 +105,9 @@ function TwoPersonFlow({ type }: { type: 'wedding' | 'business' }) {
           person2: { year: parseInt(pair[1].year, 10), gender: pair[1].gender, name: pair[1].name || undefined },
         }),
       });
-      const data = await res.json();
+      const parsed = await safeJson<{ ok?: boolean; error?: string; result?: CompatibilityResult }>(res);
+      if (!parsed.ok) throw new Error(`Phản hồi không hợp lệ (HTTP ${parsed.status})`);
+      const data = parsed.data;
       if (!data.ok) throw new Error(data.error || 'Lỗi không xác định');
       setResult(data.result as CompatibilityResult);
     } catch (e: unknown) {
@@ -183,7 +186,9 @@ function BirthChildFlow() {
           year_planned: yp,
         }),
       });
-      const data = await res.json();
+      const parsed = await safeJson<{ ok?: boolean; error?: string; result?: BirthChildResult }>(res);
+      if (!parsed.ok) throw new Error(`Phản hồi không hợp lệ (HTTP ${parsed.status})`);
+      const data = parsed.data;
       if (!data.ok) throw new Error(data.error || 'Lỗi');
       setResult(data.result as BirthChildResult);
     } catch (e: unknown) {
@@ -334,7 +339,9 @@ function XongDatFlow() {
           })),
         }),
       });
-      const data = await res.json();
+      const parsed = await safeJson<{ ok?: boolean; error?: string; result?: XongDatResult }>(res);
+      if (!parsed.ok) throw new Error(`Phản hồi không hợp lệ (HTTP ${parsed.status})`);
+      const data = parsed.data;
       if (!data.ok) throw new Error(data.error || 'Lỗi');
       setResult(data.result as XongDatResult);
     } catch (e: unknown) {

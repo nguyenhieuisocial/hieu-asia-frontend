@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation';
 import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { QRDisplay, type PaymentIntent } from '@/components/payment/QRDisplay';
 import { track } from '@/lib/analytics';
+import { safeJson } from '@/lib/safe-json';
 
 type Tier = 'premium' | 'subscription_monthly' | 'subscription_yearly';
 
@@ -52,7 +53,11 @@ async function createIntent(
     }),
     cache: 'no-store',
   });
-  const body = (await res.json()) as IntentEnvelope;
+  const parsed = await safeJson<IntentEnvelope>(res);
+  if (!parsed.ok) {
+    throw new Error(`Phản hồi không hợp lệ (HTTP ${parsed.status})`);
+  }
+  const body = parsed.data;
   if (!res.ok || !body.ok || !body.intent) {
     throw new Error(body.error ?? `Tạo giao dịch thất bại (${res.status})`);
   }
@@ -64,7 +69,11 @@ async function pollIntent(id: string): Promise<PaymentIntent> {
     `/api/payment/intent/${encodeURIComponent(id)}`,
     { method: 'GET', cache: 'no-store' },
   );
-  const body = (await res.json()) as IntentEnvelope;
+  const parsed = await safeJson<IntentEnvelope>(res);
+  if (!parsed.ok) {
+    throw new Error(`Phản hồi không hợp lệ (HTTP ${parsed.status})`);
+  }
+  const body = parsed.data;
   if (!res.ok || !body.ok || !body.intent) {
     throw new Error(body.error ?? `Không kiểm tra được trạng thái`);
   }

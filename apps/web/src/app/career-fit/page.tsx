@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, RadioGroup, RadioGroupItem } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { safeJson } from '@/lib/safe-json';
 
 const API_BASE = process.env.NEXT_PUBLIC_HIEU_API_URL ?? 'https://api.hieu.asia';
 
@@ -164,13 +165,19 @@ export default function CareerFitPage() {
           },
         }),
       });
-      const data = (await res.json()) as
+      const parsed = await safeJson<
         | { ok: true; report: CareerFitReport }
-        | { ok: false; error?: string };
-      if (!data.ok) {
-        setError(data.error ?? 'Có lỗi xảy ra, thử lại sau.');
+        | { ok: false; error?: string }
+      >(res);
+      if (!parsed.ok) {
+        setError(`Phản hồi không hợp lệ (HTTP ${parsed.status})`);
       } else {
-        setReport(data.report);
+        const data = parsed.data;
+        if (!data.ok) {
+          setError(data.error ?? 'Có lỗi xảy ra, thử lại sau.');
+        } else {
+          setReport(data.report);
+        }
       }
     } catch {
       setError('Không kết nối được máy chủ. Thử lại sau.');

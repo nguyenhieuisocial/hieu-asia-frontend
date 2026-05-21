@@ -16,6 +16,7 @@ import {
   SelectValue,
   cn,
 } from '@hieu-asia/ui';
+import { safeJson } from '@/lib/safe-json';
 
 type Activity =
   | 'cuoi_hoi'
@@ -83,7 +84,9 @@ export function ActivityChecker({ defaultDate }: { defaultDate?: string } = {}) 
           user_birth_year: birthYear ? Number(birthYear) : undefined,
         }),
       });
-      const data = await res.json();
+      const parsed = await safeJson<CheckResult & { error?: string }>(res);
+      if (!parsed.ok) throw new Error(`Phản hồi không hợp lệ (HTTP ${parsed.status})`);
+      const data = parsed.data;
       if (!data.ok) throw new Error(data.error || 'Lỗi không xác định');
       setResult(data as CheckResult);
     } catch (e: unknown) {
