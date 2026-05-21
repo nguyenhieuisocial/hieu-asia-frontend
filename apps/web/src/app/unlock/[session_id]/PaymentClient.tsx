@@ -1,0 +1,218 @@
+/**
+ * PaymentClient — client component that owns the full payment lifecycle.
+ *
+ * 1. On mount, POSTs `/api/payment/intent` once to obtain a SePay/VietQR intent.
+ * 2. Renders the QR + bank info via <QRDisplay />.
+ * 3. Polls `/api/payment/intent/{id}` every 5s, refreshing local state.
+ * 4. On `status === 'paid'` → redirect to `/reading/{session_id}/report`.
+ * 5. On `status === 'expired'` or countdown 0 → show retry CTA.
+ */
+
+'use client';
+
+import * as React from 'react';
+import { useRouter } from 'next/navigation';
+import { Button, Card, CardContent } from '@hieu-asia/ui';
+import { QRDisplay, type PaymentIntent } from '@/components/payment/QRDisplay';
+
+type Tier = 'premium' | 'subscription_monthly' | 'subscription_yearly';
+
+const POLL_INTERVAL_MS = 5_000;
+
+interface PaymentClientProps {
+  sessionId: string;
+  tier: Tier;
+}
+
+interface IntentEnvelope {
+  ok: boolean;
+  intent?: PaymentIntent;
+  error?: string;
+}
+
+function resolveUserId(sessionId: string): string {
+  if (typeof window === 'undefined') return `anon-${sessionId}`;
+  return (
+    window.sessionStorage.getItem('hieu.user_id') ?? `anon-${sessionId}`
+  );
+}
+
+async function createIntent(
+  sessionId: string,
+  tier: Tier,
+): Promise<PaymentIntent> {
+  const res = await fetch('/api/payment/intent', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      user_id: resolveUserId(sessionId),
+      session_id: sessionId,
+      tier,
+    }),
+    cache: 'no-store',
+  });
+  const body = (await res.json()) as IntentEnvelope;
+  if (!res.ok || !body.ok || !body.intent) {
+    throw new Error(body.error ?? `Tạo giao dịch thất bại (${res.status})`);
+  }
+  return body.intent;
+}
+
+async function pollIntent(id: string): Promise<PaymentIntent> {
+  const res = await fetch(
+    `/api/payment/intent/${encodeURIComponent(id)}`,
+    { method: 'GET', cache: 'no-store' },
+  );
+  const body = (await res.json()) as IntentEnvelope;
+  if (!res.ok || !body.ok || !body.intent) {
+    throw new Error(body.error ?? `Không kiểm tra được trạng thái`);
+  }
+  return body.intent;
+}
+
+export function PaymentClient({ sessionId, tier }: PaymentClientProps) {
+  const router = useRouter();
+  const [intent, setIntent] = React.useState<PaymentIntent | null>(null);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
+  const [expired, setExpired] = React.useState(false);
+  const [attempt, setAttempt] = React.useState(0);
+
+  // 1. Create intent once per (session, tier, attempt) tuple.
+  React.useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    setExpired(false);
+    setIntent(null);
+    createIntent(sessionId, tier)
+      .then((i) => {
+        if (cancelled) return;
+        setIntent(i);
+      })
+      .catch((err: unknown) => {
+        if (cancelled) return;
+        setError(err instanceof Error ? err.message : String(err));
+      })
+      .finally(() => {
+        if (cancelled) return;
+        setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [sessionId, tier, attempt]);
+
+  // 2. Poll status every 5s while pending.
+  React.useEffect(() => {
+    if (!intent) return;
+    if (intent.status !== 'pending') return;
+    if (expired) return;
+
+    let cancelled = false;
+    const tick = async () => {
+      try {
+        const fresh = await pollIntent(intent.id);
+        if (cancelled) return;
+        setIntent(fresh);
+      } catch {
+        // Soft-fail: keep last known state, try again next tick.
+      }
+    };
+    const t = setInterval(tick, POLL_INTERVAL_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(t);
+    };
+  }, [intent, expired]);
+
+  // 3. On `paid` → redirect to report.
+  React.useEffect(() => {
+    if (intent?.status === 'paid') {
+      router.push(`/reading/${encodeURIComponent(sessionId)}/report`);
+    }
+  }, [intent?.status, router, sessionId]);
+
+  const handleRetry = React.useCallback(() => {
+    setAttempt((n) => n + 1);
+  }, []);
+
+  const handleExpire = React.useCallback(() => {
+    setExpired(true);
+  }, []);
+
+  if (loading) {
+    return (
+      <Card className="border-gold/15 bg-ink/40">
+        <CardContent className="space-y-3 p-8 text-center">
+          <p className="font-heading text-cream">Đang tạo giao dịch…</p>
+          <div className="mx-auto h-2 w-32 animate-pulse rounded bg-cream/10" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="border-red-500/30 bg-ink/40">
+        <CardContent className="space-y-4 p-8 text-center">
+          <p className="font-heading text-cream">
+            Không thể tạo giao dịch
+          </p>
+          <p className="text-sm text-cream/70">{error}</p>
+          <Button onClick={handleRetry}>Thử lại</Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!intent) {
+    return (
+      <Card className="border-gold/15 bg-ink/40">
+        <CardContent className="p-8 text-center text-sm text-cream/70">
+          Không có dữ liệu giao dịch.
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Treat both upstream "expired" and local countdown-zero the same.
+  const showExpired =
+    expired ||
+    intent.status === 'expired' ||
+    intent.status === 'cancelled';
+
+  if (showExpired) {
+    return (
+      <div className="space-y-4">
+        <QRDisplay
+          intent={{ ...intent, status: 'expired' }}
+          onExpire={handleExpire}
+        />
+        <Card className="border-red-500/30 bg-ink/40">
+          <CardContent className="flex flex-col items-center gap-3 p-6 text-center">
+            <p className="font-heading text-cream">
+              Giao dịch đã hết hạn
+            </p>
+            <p className="text-sm text-cream/70">
+              Mã QR chỉ có hiệu lực trong 15 phút. Bạn có thể tạo lại để
+              tiếp tục.
+            </p>
+            <Button onClick={handleRetry}>Tạo lại giao dịch</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <QRDisplay intent={intent} onExpire={handleExpire} />
+      {intent.status === 'pending' && (
+        <p className="text-center text-xs text-cream/50">
+          Trang sẽ tự chuyển sau khi xác nhận thanh toán thành công.
+        </p>
+      )}
+    </div>
+  );
+}
