@@ -57,3 +57,6 @@ docs
 .claude
 CLAUDE.md
 AGENTS.md
+
+# GitNexus knowledge graph (LadybugDB locks during analyze)
+**/.gitnexus
