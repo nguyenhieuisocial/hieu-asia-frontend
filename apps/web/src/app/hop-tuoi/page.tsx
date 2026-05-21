@@ -8,6 +8,25 @@ export const metadata = {
   description:
     'Xem hợp tuổi miễn phí cho cưới hỏi, hợp tác kinh doanh, sinh con, xông đất. Phân tích Thiên Can, Địa Chi, Tam hợp, Tứ hành xung, Cung Phi 8 trạch.',
   alternates: { canonical: 'https://hieu.asia/hop-tuoi' },
+  openGraph: {
+    title: 'Hợp tuổi cưới hỏi, làm ăn, sinh con · hieu.asia',
+    description:
+      'Tương hợp Can Chi theo từng việc cụ thể — Tam Hợp, Lục Hợp, Tứ Hành Xung. Miễn phí.',
+    url: 'https://hieu.asia/hop-tuoi',
+    type: 'website' as const,
+  },
+};
+
+const HOP_TUOI_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  serviceType: 'Hợp tuổi · Tương hợp Can Chi',
+  provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
+  areaServed: 'VN',
+  inLanguage: 'vi-VN',
+  url: 'https://hieu.asia/hop-tuoi',
+  description:
+    'Xem hợp tuổi cho cưới hỏi, hợp tác kinh doanh, sinh con, xông đất theo Thiên Can - Địa Chi.',
 };
 
 const CARDS = [
@@ -39,6 +58,11 @@ const CARDS = [
 
 export default function HopTuoiLandingPage() {
   return (
+    <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(HOP_TUOI_JSONLD) }}
+    />
     <ToolPageShell
       eyebrow="Hợp tuổi · Tương hợp Can Chi"
       icon={<span aria-hidden="true">☯</span>}
@@ -90,5 +114,6 @@ export default function HopTuoiLandingPage() {
         Công cụ tham khảo — không thay thế tư vấn chuyên gia. Quyết định cuối cùng thuộc về bạn.
       </p>
     </ToolPageShell>
+    </>
   );
 }
