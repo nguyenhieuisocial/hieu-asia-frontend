@@ -18,6 +18,7 @@ const LEGAL_LINKS = [
 const COMPANY_LINKS = [
   { href: '#features', label: 'Tính năng' },
   { href: '#how', label: 'Cách hoạt động' },
+  { href: '/learn', label: 'Học huyền học' },
   { href: '#pricing', label: 'Bảng giá' },
   { href: '#faq', label: 'FAQ' },
 ];

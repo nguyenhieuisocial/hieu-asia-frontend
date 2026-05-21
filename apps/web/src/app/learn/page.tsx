@@ -1,0 +1,106 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
+import { EOSIDIN } from '@/components/learn/EOSIDIN';
+
+export const metadata: Metadata = {
+  title: 'Học huyền học hiện đại — hieu.asia',
+  description:
+    'Tìm hiểu Tử Vi, Bát Tự, Thần Số Học, MBTI và xem chỉ tay — kiến thức nền tảng cho người mới, infographic trực quan, ngôn ngữ Việt dễ hiểu.',
+  alternates: { canonical: 'https://hieu.asia/learn' },
+};
+
+interface LearnTopic {
+  href: string;
+  title: string;
+  subtitle: string;
+  blurb: string;
+}
+
+const TOPICS: readonly LearnTopic[] = [
+  {
+    href: '/learn/tu-vi',
+    title: 'Tử Vi 12 cung',
+    subtitle: 'Đông phương — Trung Hoa',
+    blurb: 'Lá số 12 cung phản ánh các lĩnh vực đời sống: Mệnh, Tài, Phu Thê, Quan Lộc...',
+  },
+  {
+    href: '/learn/bat-tu',
+    title: 'Bát Tự Tứ Trụ',
+    subtitle: 'Đông phương — Trung Hoa',
+    blurb: '4 trụ (Năm/Tháng/Ngày/Giờ) với Thiên Can + Địa Chi xác định mệnh cách.',
+  },
+  {
+    href: '/learn/than-so-hoc',
+    title: 'Thần Số Học',
+    subtitle: 'Tây phương — Pythagoras',
+    blurb: 'Phép tính số chủ đạo từ ngày sinh và tên — bản đồ tính cách & sứ mệnh.',
+  },
+  {
+    href: '/learn/mbti',
+    title: 'MBTI 16 loại tính cách',
+    subtitle: 'Tây phương — Carl Jung',
+    blurb: '4 trục: I/E, N/S, T/F, J/P tạo nên 16 nhóm tính cách phân loại tâm lý.',
+  },
+  {
+    href: '/learn/palm',
+    title: 'Xem chỉ tay',
+    subtitle: 'Phổ quát',
+    blurb: '7 đường chính: tâm đạo, trí đạo, sinh đạo, số mệnh, mặt trời, mercury, kim tinh.',
+  },
+];
+
+export default function LearnLandingPage() {
+  return (
+    <main className="mx-auto max-w-5xl px-6 py-12 sm:py-16">
+      <section className="text-center">
+        <p className="font-heading text-sm uppercase tracking-widest text-gold/80">
+          Học huyền học
+        </p>
+        <h1 className="mt-2 font-heading text-3xl font-bold text-cream sm:text-5xl">
+          Hiểu cội nguồn trước khi hiểu chính mình
+        </h1>
+        <p className="mx-auto mt-4 max-w-2xl text-sm text-cream/70 sm:text-base">
+          Mỗi báo cáo tại hieu.asia không phải là phán quyết định mệnh. Đó là một góc nhìn —
+          và bạn xứng đáng biết góc nhìn đó được dựng nên từ đâu. 5 khái niệm dưới đây là nền
+          tảng tối thiểu để bạn đọc báo cáo của mình một cách có ý thức.
+        </p>
+      </section>
+
+      <section className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {TOPICS.map((t) => (
+          <Link key={t.href} href={t.href} className="group">
+            <Card className="h-full border-cream/10 bg-ink/40 transition-colors hover:border-gold/40">
+              <CardHeader>
+                <CardTitle className="font-heading text-lg text-gold group-hover:text-gold">
+                  {t.title}
+                </CardTitle>
+                <CardDescription className="text-xs uppercase tracking-wide text-cream/50">
+                  {t.subtitle}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-cream/70">{t.blurb}</p>
+                <span className="mt-3 inline-block text-xs font-semibold text-gold/80 group-hover:text-gold">
+                  Đọc giải thích →
+                </span>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
+      </section>
+
+      <section className="mt-16">
+        <div className="mb-6 text-center">
+          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+            Phương pháp EOSIDIN
+          </h2>
+          <p className="mt-2 text-sm text-cream/60">
+            7 bước hieu.asia dùng để chuyển dữ liệu thô thành insight có thể hành động.
+          </p>
+        </div>
+        <EOSIDIN />
+      </section>
+    </main>
+  );
+}

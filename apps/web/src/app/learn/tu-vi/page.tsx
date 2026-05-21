@@ -1,0 +1,101 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+  Button,
+} from '@hieu-asia/ui';
+import { InfographicTuVi } from '@/components/learn/InfographicTuVi';
+
+export const metadata: Metadata = {
+  title: 'Tử Vi 12 cung — Học huyền học | hieu.asia',
+  description:
+    'Tìm hiểu 12 cung Tử Vi: Mệnh, Tài Bạch, Phu Thê, Quan Lộc... Mỗi cung phản ánh một lĩnh vực đời sống cụ thể.',
+  alternates: { canonical: 'https://hieu.asia/learn/tu-vi' },
+};
+
+export default function LearnTuViPage() {
+  return (
+    <main className="mx-auto max-w-4xl px-6 py-12 sm:py-16">
+      <nav className="mb-6 text-xs text-cream/50">
+        <Link href="/learn" className="hover:text-gold">
+          Học huyền học
+        </Link>
+        <span className="mx-2">/</span>
+        <span className="text-cream/70">Tử Vi 12 cung</span>
+      </nav>
+
+      <header className="mb-10 text-center">
+        <p className="font-heading text-xs uppercase tracking-widest text-gold/80">
+          Đông phương — Trung Hoa
+        </p>
+        <h1 className="mt-2 font-heading text-3xl font-bold text-cream sm:text-4xl">
+          Tử Vi 12 cung
+        </h1>
+        <p className="mx-auto mt-3 max-w-2xl text-sm text-cream/70">
+          Lá số Tử Vi chia đời người thành 12 lĩnh vực (gọi là “cung”), mỗi cung chứa các sao
+          ảnh hưởng đến một mặt cụ thể của cuộc sống — từ sức khỏe, tài chính, tình cảm đến
+          sự nghiệp.
+        </p>
+      </header>
+
+      <section className="rounded-xl border border-cream/10 bg-ink/40 p-6 sm:p-8">
+        <InfographicTuVi />
+      </section>
+
+      <section className="mt-10">
+        <h2 className="mb-4 font-heading text-xl font-bold text-cream">Giải thích chi tiết</h2>
+        <Accordion type="single" collapsible className="space-y-2">
+          <AccordionItem value="origin" className="rounded border border-cream/10 px-4">
+            <AccordionTrigger>Tử Vi đến từ đâu?</AccordionTrigger>
+            <AccordionContent>
+              Tử Vi Đẩu Số khởi nguồn từ Trung Hoa thời Tống (thế kỷ 10), do Trần Đoàn lão tổ
+              hệ thống hóa. Nguyên lý chính: vị trí các sao quanh sao Tử Vi (Polaris) tại thời
+              khắc sinh phản ánh cấu trúc số mệnh.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="cung" className="rounded border border-cream/10 px-4">
+            <AccordionTrigger>Cung là gì?</AccordionTrigger>
+            <AccordionContent>
+              Cung là một trong 12 ô trên lá số, ứng với một “khu vực” của đời sống. Ví dụ
+              cung Tài Bạch phản ánh dòng tiền, cung Phu Thê phản ánh hôn nhân. Sao đóng trong
+              cung nào sẽ ảnh hưởng đến khu vực đó.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="stars" className="rounded border border-cream/10 px-4">
+            <AccordionTrigger>Có bao nhiêu sao?</AccordionTrigger>
+            <AccordionContent>
+              Hệ thống tiêu chuẩn dùng 14 chính tinh (Tử Vi, Thiên Phủ, Vũ Khúc, Liêm Trinh...)
+              cộng các phụ tinh — tổng cộng hơn 100 sao. hieu.asia dùng engine Iztro để tính
+              đầy đủ chính tinh và phụ tinh.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="usage" className="rounded border border-cream/10 px-4">
+            <AccordionTrigger>Đọc lá số để làm gì?</AccordionTrigger>
+            <AccordionContent>
+              Không phải để biết tương lai cố định. Mà để nhận diện thiên hướng, điểm mạnh,
+              điểm dễ vấp — từ đó có quyết định phù hợp hơn. Lá số là bản đồ, không phải kịch
+              bản.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="limit" className="rounded border border-cream/10 px-4">
+            <AccordionTrigger>Giới hạn của Tử Vi?</AccordionTrigger>
+            <AccordionContent>
+              Tử Vi không dự đoán được trúng số, không thay thế lời khuyên y tế/pháp lý/tài
+              chính. Đây là công cụ tự nhận thức, dùng kết hợp với suy nghĩ tỉnh táo và hành
+              động thực tế.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </section>
+
+      <section className="mt-12 text-center">
+        <Link href="/onboarding">
+          <Button size="lg">Trải nghiệm lá số Tử Vi của bạn</Button>
+        </Link>
+      </section>
+    </main>
+  );
+}

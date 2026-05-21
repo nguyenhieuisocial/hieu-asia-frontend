@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Button } from '@hieu-asia/ui';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Hero } from '@/components/landing/Hero';
+import { TrustSignalCarousel } from '@/components/learn/TrustSignalCarousel';
 import { Features } from '@/components/landing/Features';
 import { HowItWorks } from '@/components/landing/HowItWorks';
 import { Testimonials } from '@/components/landing/Testimonials';
@@ -61,6 +62,7 @@ export default function LandingPage() {
       />
       <SiteHeader />
       <Hero />
+      <TrustSignalCarousel />
       <Features />
       <HowItWorks />
       <Testimonials />
@@ -86,6 +88,9 @@ function SiteHeader() {
           <a href="#how" className="text-sm text-cream/70 transition-colors hover:text-gold">
             Cách hoạt động
           </a>
+          <Link href="/learn" className="text-sm text-cream/70 transition-colors hover:text-gold">
+            Học huyền học
+          </Link>
           <a href="#pricing" className="text-sm text-cream/70 transition-colors hover:text-gold">
             Bảng giá
           </a>
