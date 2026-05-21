@@ -58,6 +58,16 @@ function isTopicId(v: string | null): v is TopicId {
   return v === 'career' || v === 'relationship' || v === 'finance' || v === 'family' || v === 'general';
 }
 
+/** Map onboarding/lo-trinh topic slugs to the backend's canonical 5-topic set. */
+function normalizeTopicSlug(v: string | null): TopicId {
+  if (!v) return 'general';
+  if (v === 'love') return 'relationship';     // /onboarding/topic uses "love"
+  if (v === 'self') return 'general';           // /lo-trinh/hieu-ban-than
+  if (v === 'decision') return 'general';       // /onboarding/topic uses "decision"
+  if (isTopicId(v)) return v;
+  return 'general';
+}
+
 // Cheap UUID generator — avoids requiring crypto.randomUUID polyfill.
 function makeId(): string {
   if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
@@ -74,13 +84,18 @@ function NewDecisionInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialTopicRaw = searchParams.get('topic');
-  const initialTopic: TopicId = isTopicId(initialTopicRaw) ? initialTopicRaw : 'general';
+  const initialTopic: TopicId = normalizeTopicSlug(initialTopicRaw);
 
   const [topic, setTopic] = useState<TopicId>(initialTopic);
   const [question, setQuestion] = useState('');
   const [situation, setSituation] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [safetyBlock, setSafetyBlock] = useState<{
+    category: string;
+    reply: string;
+    followUps: string[];
+  } | null>(null);
 
   const questionLength = question.trim().length;
   const situationLength = situation.length;
@@ -109,6 +124,7 @@ function NewDecisionInner() {
     e.preventDefault();
     if (!canSubmit) return;
     setError(null);
+    setSafetyBlock(null);
     setSubmitting(true);
     try {
       const res = await fetch(`${API_BASE}/decisions/brief`, {
@@ -120,13 +136,53 @@ function NewDecisionInner() {
           situation: situation.trim() || undefined,
         }),
       });
-      if (!res.ok) {
-        throw new Error(`API ${res.status}`);
+      // Rate limit (429) → friendly message, do not throw.
+      if (res.status === 429) {
+        setError('Bạn đã tạo Decision Brief quá nhanh. Vui lòng thử lại sau ~1 giờ.');
+        setSubmitting(false);
+        return;
       }
-      const data = (await res.json()) as { brief?: DecisionBrief } | DecisionBrief;
-      const brief: DecisionBrief =
-        'brief' in data && data.brief ? data.brief : (data as DecisionBrief);
-
+      const data = (await res.json().catch(() => null)) as
+        | (Record<string, unknown> & {
+            ok?: boolean;
+            safe?: boolean;
+            blocked?: boolean;
+            category?: string;
+            reply?: string;
+            followUps?: string[];
+            brief?: DecisionBrief;
+            error?: string;
+            kind?: string;
+          })
+        | null;
+      if (!data) {
+        throw new Error('Phản hồi không hợp lệ');
+      }
+      // Safety-gate response — worker returns 200 with safe=false.
+      if (data.ok === true && data.safe === false && data.reply) {
+        setSafetyBlock({
+          category: data.category ?? 'general',
+          reply: data.reply,
+          followUps: Array.isArray(data.followUps) ? data.followUps : [],
+        });
+        setSubmitting(false);
+        return;
+      }
+      // Server-side validation error (400) — show the message directly.
+      if (!res.ok || data.ok === false) {
+        const reason = typeof data.error === 'string' ? data.error : `API ${res.status}`;
+        if (data.kind === 'input') {
+          setError(`Đầu vào không hợp lệ: ${reason}`);
+        } else {
+          setError(reason);
+        }
+        setSubmitting(false);
+        return;
+      }
+      const brief: DecisionBrief | undefined = data.brief;
+      if (!brief || !brief.realProblem) {
+        throw new Error('Brief returned empty');
+      }
       const id = makeId();
       const record = {
         id,
@@ -277,6 +333,30 @@ function NewDecisionInner() {
                   {situationLength}/1000
                 </div>
               </div>
+
+              {safetyBlock && (
+                <div
+                  role="alert"
+                  className="rounded-lg border border-rose-500/40 bg-rose-900/10 p-4"
+                >
+                  <div className="flex items-start gap-3">
+                    <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-rose-300" aria-hidden="true" />
+                    <div className="space-y-2 text-sm leading-relaxed text-cream/85">
+                      <p>{safetyBlock.reply}</p>
+                      {safetyBlock.followUps.length > 0 && (
+                        <>
+                          <p className="text-xs text-cream/55">Gợi ý:</p>
+                          <ul className="ml-4 list-disc space-y-1 text-xs text-cream/70">
+                            {safetyBlock.followUps.map((f, i) => (
+                              <li key={i}>{f}</li>
+                            ))}
+                          </ul>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {error && (
                 <div

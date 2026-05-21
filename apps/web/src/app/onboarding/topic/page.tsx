@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Briefcase, Heart, Wallet, Users, Compass, Crosshair, type LucideIcon } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
@@ -53,14 +53,36 @@ function writeStored(next: StoredOnboarding) {
   }
 }
 
-export default function OnboardingTopicPage() {
+function isValidTopic(v: string | null): v is TopicId {
+  return (
+    v === 'career' ||
+    v === 'love' ||
+    v === 'finance' ||
+    v === 'family' ||
+    v === 'self' ||
+    v === 'decision'
+  );
+}
+
+function OnboardingTopicInner() {
   const router = useRouter();
-  const [selected, setSelected] = useState<TopicId | null>(null);
+  const searchParams = useSearchParams();
+  const queryTopic = searchParams.get('topic');
+  const [selected, setSelected] = useState<TopicId | null>(
+    isValidTopic(queryTopic) ? queryTopic : null,
+  );
 
   useEffect(() => {
+    // URL > stored. If URL gave a valid topic, prefer it (and persist).
+    if (isValidTopic(queryTopic)) {
+      const stored = readStored();
+      writeStored({ ...stored, topic: queryTopic });
+      setSelected(queryTopic);
+      return;
+    }
     const stored = readStored();
     if (stored.topic) setSelected(stored.topic);
-  }, []);
+  }, [queryTopic]);
 
   function handleSelect(id: TopicId) {
     setSelected(id);
@@ -126,5 +148,13 @@ export default function OnboardingTopicPage() {
       </main>
       <SiteFooter />
     </div>
+  );
+}
+
+export default function OnboardingTopicPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-ink" aria-hidden="true" />}>
+      <OnboardingTopicInner />
+    </Suspense>
   );
 }
