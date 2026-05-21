@@ -74,7 +74,9 @@ jobs:
           cache: pnpm
 
       - name: Install Vercel CLI
-        run: npm install -g vercel@47.1.4
+        # Pin to the latest stable that supports the deploy endpoint we use.
+        # 47.1.4 is too old (endpoint requires 47.2.2+); 54.3.0 is latest.
+        run: npm install -g vercel@54.3.0
 
       - name: Deploy production (remote build)
         id: deploy
