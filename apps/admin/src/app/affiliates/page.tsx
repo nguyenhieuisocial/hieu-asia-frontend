@@ -106,9 +106,21 @@ export default function AdminAffiliatesPage() {
   return (
     <main className="min-h-screen bg-ink p-6 text-cream">
       <div className="mx-auto max-w-6xl space-y-6">
-        <header className="flex items-center justify-between">
+        <header className="flex flex-wrap items-center justify-between gap-2">
           <h1 className="text-2xl font-bold">Affiliates</h1>
-          <Button onClick={load}>Làm mới</Button>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/affiliates/fraud">
+              <Button variant="ghost" className="border border-cream/20">
+                Fraud report
+              </Button>
+            </Link>
+            <Link href="/affiliates/broadcast">
+              <Button variant="ghost" className="border border-cream/20">
+                Broadcast
+              </Button>
+            </Link>
+            <Button onClick={load}>Làm mới</Button>
+          </div>
         </header>
 
         {/* Pending payouts callout */}

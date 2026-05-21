@@ -9,6 +9,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Skeleton } from '@hieu-asia/ui';
+import { TierProgress, type Tier, type TierProgressData } from '@/components/affiliate/TierProgress';
 
 interface AffiliateRecord {
   id: string;
@@ -51,6 +52,22 @@ interface PayoutRecord {
   rejected_reason?: string;
 }
 
+interface FraudFlag {
+  reason: string;
+  detail: string;
+  flagged_at: string;
+}
+
+interface Notification {
+  id: string;
+  kind: string;
+  title: string;
+  message: string;
+  link?: string;
+  created_at: string;
+  read: boolean;
+}
+
 interface MeResponse {
   ok: true;
   affiliate: AffiliateRecord;
@@ -58,6 +75,10 @@ interface MeResponse {
   recent: TrackEvent[];
   payouts: PayoutRecord[];
   min_payout_vnd: number;
+  tier?: TierProgressData;
+  tiers?: Tier[];
+  flag?: FraudFlag | null;
+  notifications?: Notification[];
 }
 
 function vnd(n: number) {
@@ -256,6 +277,70 @@ export default function AffiliateDashboardPage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Fraud flag banner */}
+        {data.flag && (
+          <Card className="border-red-500/40 bg-red-500/5">
+            <CardContent className="pt-6 text-sm">
+              <div className="font-semibold text-red-300">⚠ Tài khoản đang bị flag fraud</div>
+              <div className="mt-1 text-cream/70">
+                Lý do: <b>{data.flag.reason}</b> — {data.flag.detail}
+              </div>
+              <div className="mt-2 text-xs text-cream/50">
+                Payout sẽ bị tạm khoá đến khi admin review. Vui lòng liên hệ support nếu bạn cho rằng có nhầm lẫn.
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Tier progress */}
+        {data.tier && data.tiers && <TierProgress tier={data.tier} tiers={data.tiers} />}
+
+        {/* Notifications */}
+        {data.notifications && data.notifications.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Thông báo</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {data.notifications.slice(0, 5).map((n) => (
+                <div key={n.id} className="rounded border border-cream/10 bg-cream/[0.03] p-3 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold">{n.title}</span>
+                    <span className="text-xs text-cream/50">{dt(n.created_at)}</span>
+                  </div>
+                  <div className="mt-1 text-cream/70">{n.message}</div>
+                  {n.link && (
+                    <Link href={n.link} className="mt-1 inline-block text-xs text-gold hover:underline">
+                      Xem chi tiết →
+                    </Link>
+                  )}
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Quick links to assets / leaderboard / terms */}
+        <Card>
+          <CardContent className="flex flex-wrap gap-3 pt-6 text-sm">
+            <Link href="/affiliate/assets" className="rounded bg-gold/10 px-3 py-1.5 text-gold hover:bg-gold/20">
+              Marketing assets
+            </Link>
+            <Link
+              href="/affiliate/leaderboard"
+              className="rounded border border-cream/20 px-3 py-1.5 hover:bg-cream/5"
+            >
+              Bảng xếp hạng
+            </Link>
+            <Link
+              href="/affiliate/terms"
+              className="rounded border border-cream/20 px-3 py-1.5 hover:bg-cream/5"
+            >
+              Điều khoản &amp; thuế VN
+            </Link>
+          </CardContent>
+        </Card>
 
         {/* Share toolkit */}
         <Card>
