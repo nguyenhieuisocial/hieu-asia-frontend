@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import { useRouter, useParams } from 'next/navigation';
-import { Button, Card, CardContent } from '@hieu-asia/ui';
+import { Button, Card, CardContent, toast } from '@hieu-asia/ui';
 import {
   ProcessingStepper,
   type StepKey,
@@ -62,7 +62,7 @@ export default function ProcessingPage() {
   const readingId = params?.id ?? '';
 
   const [state, setState] = React.useState<ReadingState | null>(null);
-  const [error, setError] = React.useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [retryNonce, setRetryNonce] = React.useState(0);
 
   React.useEffect(() => {
@@ -76,9 +76,9 @@ export default function ProcessingPage() {
         if (cancelled) return;
         const next = reading?.state ?? null;
         setState(next);
-        setError(null);
 
         if (next === 'report_ready') {
+          toast.success('Báo cáo đã sẵn sàng!');
           // Allow stepper to flush "done" frame before nav.
           window.setTimeout(() => {
             if (!cancelled) {
@@ -89,7 +89,9 @@ export default function ProcessingPage() {
         }
 
         if (next && next.startsWith('error_at_')) {
-          setError(`Phân tích thất bại ở bước "${next.replace('error_at_', '')}".`);
+          const msg = `Phân tích thất bại ở bước "${next.replace('error_at_', '')}".`;
+          setErrorMessage(msg);
+          toast.error('Phân tích thất bại', { description: msg });
           return;
         }
 
@@ -100,7 +102,7 @@ export default function ProcessingPage() {
           err instanceof ApiClientError
             ? `Không kết nối được máy chủ (${err.status}).`
             : 'Không kết nối được máy chủ.';
-        setError(msg);
+        toast.error('Không tải được trạng thái', { description: msg });
         timer = window.setTimeout(tick, POLL_INTERVAL_MS * 2);
       }
     };
@@ -145,9 +147,9 @@ export default function ProcessingPage() {
           <CardContent className="pt-8">
             {failed ? (
               <ErrorBlock
-                message={error ?? 'Có lỗi xảy ra trong quá trình phân tích.'}
+                message={errorMessage ?? 'Có lỗi xảy ra trong quá trình phân tích.'}
                 onRetry={() => {
-                  setError(null);
+                  setErrorMessage(null);
                   setState(null);
                   setRetryNonce((n) => n + 1);
                 }}
@@ -156,14 +158,7 @@ export default function ProcessingPage() {
                 }
               />
             ) : (
-              <>
-                <ProcessingStepper steps={steps} />
-                {error && (
-                  <p className="mt-4 text-center text-xs text-red-300">
-                    {error} — đang thử lại…
-                  </p>
-                )}
-              </>
+              <ProcessingStepper steps={steps} />
             )}
           </CardContent>
         </Card>

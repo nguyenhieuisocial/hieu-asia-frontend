@@ -4,6 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
+import { toast } from '@hieu-asia/ui';
 import {
   ApiClientError,
   chatMentor,
@@ -85,7 +86,6 @@ export default function MentorChatPage() {
   const [input, setInput] = React.useState('');
   const [pinned, setPinned] = React.useState<PinnedInsight[]>([]);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const [toast, setToast] = React.useState<string | null>(null);
 
   // Hydrate from sessionStorage (chat history) + localStorage (pinned).
   React.useEffect(() => {
@@ -126,11 +126,6 @@ export default function MentorChatPage() {
     [readingId],
   );
 
-  const showToast = React.useCallback((message: string) => {
-    setToast(message);
-    window.setTimeout(() => setToast(null), 4000);
-  }, []);
-
   const chatMutation = useMutation({
     mutationFn: async (vars: {
       history: ChatMessage[];
@@ -167,7 +162,7 @@ export default function MentorChatPage() {
         err instanceof ApiClientError
           ? err.message
           : 'Không kết nối được Mentor. Vui lòng thử lại sau.';
-      showToast(msg);
+      toast.error('Mentor không phản hồi', { description: msg });
     },
   });
 
@@ -243,15 +238,6 @@ export default function MentorChatPage() {
           {pinned.length} ghim
         </button>
       </header>
-
-      {toast && (
-        <div
-          role="alert"
-          className="mx-auto mt-3 max-w-md rounded-md border border-red-400/40 bg-red-500/15 px-4 py-2 text-center text-sm text-red-100"
-        >
-          {toast}
-        </div>
-      )}
 
       <div className="flex flex-1 overflow-hidden">
         <section className="flex flex-1 flex-col">

@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { QueryProvider } from '@/components/providers/query-provider';
+import { Toaster } from '@hieu-asia/ui';
 import './globals.css';
 
 const beVietnam = Be_Vietnam_Pro({
@@ -120,9 +121,16 @@ export default async function RootLayout({
       className={`${beVietnam.variable} ${inter.variable} ${outfit.variable} ${mono.variable}`}
     >
       <body>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-gold focus:px-4 focus:py-2 focus:text-ink focus:outline-none focus:ring-2 focus:ring-cream"
+        >
+          Bỏ qua đến nội dung chính
+        </a>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
             <QueryProvider>{children}</QueryProvider>
+            <Toaster />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>
