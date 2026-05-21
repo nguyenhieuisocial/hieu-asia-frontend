@@ -31,9 +31,12 @@ export interface SecretsListResponse {
   bootstrap: BootstrapStatus;
 }
 
-async function json<T>(path: string, init: RequestInit = {}, timeoutMs = 10_000): Promise<T> {
+async function json<T>(path: string, init: RequestInit = {}, timeoutMs = 30_000): Promise<T> {
+  // Bumped 10s → 30s: Vercel serverless cold-start can be 5-15s; worker
+  // itself is <1s. Pass abort reason for clear UX ("signal is aborted
+  // without reason" replaced by explicit timeout message).
   const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), timeoutMs);
+  const t = setTimeout(() => ctrl.abort(new DOMException(`Request timed out after ${timeoutMs}ms`, 'TimeoutError')), timeoutMs);
   try {
     const res = await fetch(`${PROXY}${path}`, {
       cache: 'no-store',
@@ -46,6 +49,12 @@ async function json<T>(path: string, init: RequestInit = {}, timeoutMs = 10_000)
       throw new Error(data.error ?? `HTTP ${res.status}`);
     }
     return data;
+  } catch (err) {
+    // Re-throw with a UX-friendly message for the timeout case.
+    if ((err as Error).name === 'TimeoutError' || (err as Error).name === 'AbortError') {
+      throw new Error(`Backend không phản hồi trong ${timeoutMs / 1000}s. Thử lại sau vài giây.`);
+    }
+    throw err;
   } finally {
     clearTimeout(t);
   }

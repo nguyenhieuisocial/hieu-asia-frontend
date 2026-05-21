@@ -79,11 +79,17 @@ function mock<T extends object>(value: T, reason?: string): T & { _source: DataS
 async function proxyFetch<T>(
   path: string,
   init: RequestInit = {},
-  timeoutMs = 8000,
+  timeoutMs = 25_000,
 ): Promise<T | null> {
+  // Bumped 8s → 25s. Vercel serverless cold-start can take 5-15s for the
+  // first proxy hit after idle. 8s was triggering false "gateway unreachable"
+  // banners across most admin pages on first load.
   if (typeof window === 'undefined' && typeof fetch === 'undefined') return null;
   const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), timeoutMs);
+  const t = setTimeout(
+    () => ctrl.abort(new DOMException(`Proxy timeout after ${timeoutMs}ms`, 'TimeoutError')),
+    timeoutMs,
+  );
   try {
     const res = await fetch(`${PROXY}${path}`, {
       cache: 'no-store',

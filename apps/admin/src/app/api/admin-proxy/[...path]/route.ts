@@ -13,7 +13,12 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { ADMIN_SESSION_COOKIE, decodeSession } from '@/lib/auth';
 
-export const runtime = 'nodejs';
+// Edge runtime — eliminates Vercel serverless cold-start (5-15s) which was
+// the root cause of "signal is aborted without reason" in the admin UI.
+// `decodeSession` uses pure-JS string ops; no Node-specific APIs in the
+// hot path. ADMIN_VERCEL_TOKEN/HIEU_API_* env vars read at runtime from
+// `process.env` work identically under Edge.
+export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 const GATEWAY = process.env.HIEU_API_GATEWAY_URL ?? 'https://api.hieu.asia';
