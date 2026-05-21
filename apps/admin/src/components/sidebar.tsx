@@ -17,6 +17,7 @@ import {
   CreditCard,
   Receipt,
   Settings,
+  Sparkles,
   Menu,
   X,
 } from 'lucide-react';
@@ -39,6 +40,7 @@ const NAV: NavItem[] = [
   { href: '/tasks', label: 'Task / Lỗi', Icon: Bot },
   { href: '/cost', label: 'Chi phí AI', Icon: DollarSign },
   { href: '/rag', label: 'RAG', Icon: BookOpen },
+  { href: '/prompts', label: 'Prompt Editor', Icon: Sparkles },
   { href: '/settings', label: 'Cài đặt', Icon: Settings },
 ];
 

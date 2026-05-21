@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/components/providers/theme-provider';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { Sidebar } from '@/components/sidebar';
 import { Topbar } from '@/components/topbar';
+import { Toaster } from '@hieu-asia/ui';
 import { ADMIN_SESSION_COOKIE, decodeSession } from '@/lib/auth';
 import './globals.css';
 
@@ -63,6 +64,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               </div>
             </div>
           </QueryProvider>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
