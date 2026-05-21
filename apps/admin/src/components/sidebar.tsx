@@ -12,6 +12,7 @@ import {
   DollarSign,
   BookOpen,
   CreditCard,
+  Receipt,
   Settings,
   Menu,
   X,
@@ -31,6 +32,7 @@ const NAV: NavItem[] = [
   { href: '/cost', label: 'Chi phí AI', Icon: DollarSign },
   { href: '/rag', label: 'RAG', Icon: BookOpen },
   { href: '/payments', label: 'Thanh toán', Icon: CreditCard },
+  { href: '/transactions', label: 'Giao dịch', Icon: Receipt },
   { href: '/settings', label: 'Cài đặt', Icon: Settings },
 ];
 
