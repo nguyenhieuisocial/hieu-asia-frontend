@@ -15,6 +15,7 @@ import { CautionBanner } from '@/components/caution-banner';
 import { ReportContextSummary } from '@/components/report-context-summary';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { ReportSkeleton } from '@/components/skeletons/ReportSkeleton';
+import { TuViChartSection } from '@/components/tuvi/TuViChartSection';
 import { track } from '@/lib/analytics';
 
 /** Parsed H2 section of the report markdown. */
@@ -172,6 +173,15 @@ function ReportContent() {
             'Báo cáo cá nhân hóa'
           }
           generatedAt={new Date().toLocaleDateString('vi-VN')}
+        />
+
+        {/* Interactive 12-cung chart — fetches deterministic structure from
+            the Tử Vi engine before the AI narrative below. Skips silently if
+            inputs aren't sufficient. */}
+        <TuViChartSection
+          birthDate={(session?.inputs?.birth_date as string | null | undefined) ?? null}
+          birthTime={(session?.inputs?.birth_time as string | null | undefined) ?? null}
+          gender={(session?.inputs?.gender as string | null | undefined) ?? null}
         />
 
         <CautionBanner flags={cautionFlags} />
