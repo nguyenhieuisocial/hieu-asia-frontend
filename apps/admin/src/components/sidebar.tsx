@@ -7,8 +7,11 @@ import { cn } from '@hieu-asia/ui';
 import {
   LayoutDashboard,
   Users,
+  User,
   ListTodo,
   Bot,
+  BarChart3,
+  Cpu,
   DollarSign,
   BookOpen,
   CreditCard,
@@ -26,13 +29,16 @@ interface NavItem {
 
 const NAV: NavItem[] = [
   { href: '/', label: 'Tổng quan', Icon: LayoutDashboard },
+  { href: '/customers', label: 'Khách hàng', Icon: User },
   { href: '/users', label: 'Người dùng admin', Icon: Users },
   { href: '/sessions', label: 'Phiên phân tích', Icon: ListTodo },
+  { href: '/vendors', label: 'Vendors', Icon: Cpu },
+  { href: '/transactions', label: 'Giao dịch', Icon: Receipt },
+  { href: '/payments', label: 'Thanh toán', Icon: CreditCard },
+  { href: '/analytics', label: 'Analytics', Icon: BarChart3 },
   { href: '/tasks', label: 'Task / Lỗi', Icon: Bot },
   { href: '/cost', label: 'Chi phí AI', Icon: DollarSign },
   { href: '/rag', label: 'RAG', Icon: BookOpen },
-  { href: '/payments', label: 'Thanh toán', Icon: CreditCard },
-  { href: '/transactions', label: 'Giao dịch', Icon: Receipt },
   { href: '/settings', label: 'Cài đặt', Icon: Settings },
 ];
 

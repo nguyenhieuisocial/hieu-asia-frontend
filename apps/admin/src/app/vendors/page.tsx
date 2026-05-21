@@ -1,0 +1,280 @@
+'use client';
+
+import * as React from 'react';
+import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@hieu-asia/ui';
+
+type Vendor = 'anthropic' | 'openai' | 'google' | 'cloudflare';
+type Role = 'vision' | 'logic' | 'psychology' | 'alignment' | 'report' | 'mentor' | 'judge';
+
+interface ProviderRow {
+  vendor: Vendor;
+  api_key: boolean;
+  oauth: boolean;
+  model: string;
+  last_used: string | null;
+  requests_7d: number;
+  fallback_count_7d: number;
+  latency_p50_ms: number;
+  latency_p95_ms: number;
+}
+
+interface RoleRoute {
+  primary: Vendor;
+  fallbacks: Vendor[];
+}
+
+interface VendorsResponse {
+  ok: boolean;
+  providers?: ProviderRow[];
+  default_models?: Record<Vendor, string>;
+  role_routing?: Record<Role, RoleRoute>;
+  sources?: { langfuse: boolean };
+  error?: string;
+}
+
+const VENDOR_LABEL: Record<Vendor, string> = {
+  anthropic: 'Anthropic Claude',
+  openai: 'OpenAI GPT',
+  google: 'Google Gemini',
+  cloudflare: 'Cloudflare Workers AI',
+};
+
+const ROLE_LABEL: Record<Role, string> = {
+  vision: 'vision',
+  logic: 'logic',
+  psychology: 'psychology',
+  alignment: 'alignment',
+  report: 'report',
+  mentor: 'mentor',
+  judge: 'judge',
+};
+
+async function fetchVendors(): Promise<VendorsResponse> {
+  const res = await fetch('/api/admin/vendors', { cache: 'no-store' });
+  const text = await res.text();
+  try {
+    return JSON.parse(text) as VendorsResponse;
+  } catch {
+    return { ok: false, error: `Invalid JSON (status ${res.status})` };
+  }
+}
+
+function statusOf(p: ProviderRow): { color: string; label: string } {
+  if (p.vendor === 'cloudflare') return { color: 'bg-emerald-500', label: '🟢 active (free tier)' };
+  const hasCred = p.api_key || p.oauth;
+  if (!hasCred) return { color: 'bg-red-500', label: '🔴 chưa kết nối' };
+  return { color: 'bg-emerald-500', label: '🟢 active' };
+}
+
+function VendorCard({ p }: { p: ProviderRow }) {
+  const status = statusOf(p);
+  const mode = p.oauth ? 'OAuth' : p.api_key ? 'API key' : p.vendor === 'cloudflare' ? 'Native' : '—';
+  const [testing, setTesting] = React.useState(false);
+  const [testResult, setTestResult] = React.useState<{ ok: boolean; msg: string } | null>(null);
+
+  const testConnection = async () => {
+    setTesting(true);
+    setTestResult(null);
+    try {
+      // Calling /ai/role/mentor would need SERVICE_TOKEN — instead test via /ai/providers admin endpoint
+      const r = await fetch('/api/admin/vendors', { cache: 'no-store' });
+      const d = await r.json();
+      if (d.ok) {
+        const refreshed = (d.providers as ProviderRow[]).find(x => x.vendor === p.vendor);
+        if (refreshed && (refreshed.api_key || refreshed.oauth) || p.vendor === 'cloudflare') {
+          setTestResult({ ok: true, msg: 'Credentials present, ready to route.' });
+        } else {
+          setTestResult({ ok: false, msg: 'Chưa có credentials.' });
+        }
+      } else {
+        setTestResult({ ok: false, msg: d.error ?? 'Lỗi' });
+      }
+    } catch (e) {
+      setTestResult({ ok: false, msg: (e as Error).message });
+    } finally {
+      setTesting(false);
+    }
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <span className={`inline-block h-2 w-2 rounded-full ${status.color}`} />
+              {VENDOR_LABEL[p.vendor]}
+            </CardTitle>
+            <CardDescription className="mt-1 font-mono text-xs">{p.model}</CardDescription>
+          </div>
+          <span className="rounded border border-gold/20 bg-gold/5 px-2 py-0.5 text-[10px] uppercase tracking-wider text-cream/70">
+            {mode}
+          </span>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <div className="text-xs text-cream/70">{status.label}</div>
+
+        <dl className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs">
+          <dt className="text-cream/55">Requests 7d</dt>
+          <dd className="tabular-nums text-cream/85">{p.requests_7d.toLocaleString('vi-VN')}</dd>
+          <dt className="text-cream/55">Fallback 7d</dt>
+          <dd className="tabular-nums text-cream/85">{p.fallback_count_7d}</dd>
+          <dt className="text-cream/55">p50 / p95</dt>
+          <dd className="tabular-nums font-mono text-cream/85">{p.latency_p50_ms} / {p.latency_p95_ms} ms</dd>
+          <dt className="text-cream/55">Last used</dt>
+          <dd className="font-mono text-[11px] text-cream/70">{p.last_used ?? '—'}</dd>
+        </dl>
+
+        {testResult && (
+          <div
+            className={`rounded border px-2 py-1 text-xs ${
+              testResult.ok
+                ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300'
+                : 'border-red-500/40 bg-red-500/10 text-red-300'
+            }`}
+          >
+            {testResult.msg}
+          </div>
+        )}
+
+        <div className="flex flex-wrap gap-2 pt-1">
+          <button
+            onClick={testConnection}
+            disabled={testing}
+            className="rounded border border-gold/30 px-2.5 py-1 text-xs text-gold hover:bg-gold/10 disabled:opacity-50"
+          >
+            {testing ? 'Đang test…' : 'Test connection'}
+          </button>
+          {p.vendor !== 'cloudflare' && (
+            <Link
+              href="/connect"
+              className="rounded border border-cream/20 px-2.5 py-1 text-xs text-cream/75 hover:bg-cream/5"
+            >
+              Reconfigure
+            </Link>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+const VENDORS_ORDER: Vendor[] = ['anthropic', 'openai', 'google', 'cloudflare'];
+const ROLES_ORDER: Role[] = ['vision', 'logic', 'psychology', 'alignment', 'report', 'mentor', 'judge'];
+
+export default function VendorsPage() {
+  const { data, isLoading, refetch, isFetching, error } = useQuery({
+    queryKey: ['admin', 'vendors'],
+    queryFn: fetchVendors,
+  });
+
+  const showError = !!error || data?.ok === false;
+  const errorMsg = (error as Error | undefined)?.message ?? data?.error;
+  const providers = data?.providers ?? [];
+  const routing = data?.role_routing ?? null;
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="font-heading text-3xl font-semibold text-cream">Vendors</h1>
+          <p className="mt-1 text-sm text-cream/65">
+            Trạng thái kết nối các vendor AI và bảng routing theo role.
+          </p>
+        </div>
+        <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
+          {isFetching ? 'Đang tải…' : 'Làm mới'}
+        </Button>
+      </div>
+
+      {showError && (
+        <div className="rounded-md border border-red-400/40 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+          {errorMsg ?? 'Không tải được vendor status.'}
+        </div>
+      )}
+      {data?.sources && !data.sources.langfuse && (
+        <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-cream/70">
+          Langfuse chưa wire — latency / fallback metrics hiển thị 0.
+        </div>
+      )}
+
+      {isLoading ? (
+        <p className="py-8 text-center text-sm text-cream/55">Đang tải…</p>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {VENDORS_ORDER.map(v => {
+            const p = providers.find(x => x.vendor === v);
+            if (!p) return null;
+            return <VendorCard key={v} p={p} />;
+          })}
+        </div>
+      )}
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Role routing</CardTitle>
+          <CardDescription>
+            Mỗi role có 1 primary vendor + fallback chain. Hiện UI read-only — edit sẽ enable khi Worker route endpoint sẵn sàng.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {!routing ? (
+            <p className="py-4 text-center text-sm text-cream/55">Chưa có routing.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-zinc-800 text-sm">
+                <thead>
+                  <tr className="text-left text-xs uppercase tracking-wider text-cream/55">
+                    <th className="px-3 py-2 font-medium">Role</th>
+                    <th className="px-3 py-2 font-medium">Primary</th>
+                    <th className="px-3 py-2 font-medium">Fallback chain</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-zinc-800">
+                  {ROLES_ORDER.map(r => {
+                    const route = routing[r];
+                    if (!route) return null;
+                    return (
+                      <tr key={r} className="hover:bg-gold/[0.03]">
+                        <td className="px-3 py-2 font-mono text-xs text-cream/85">{ROLE_LABEL[r]}</td>
+                        <td className="px-3 py-2">
+                          <span className="rounded border border-[#B8923D]/30 bg-[#B8923D]/10 px-2 py-0.5 font-mono text-xs text-[#B8923D]">
+                            {route.primary}
+                          </span>
+                        </td>
+                        <td className="px-3 py-2">
+                          <div className="flex flex-wrap gap-1">
+                            {route.fallbacks.length === 0 ? (
+                              <span className="text-cream/40">—</span>
+                            ) : route.fallbacks.map((fb, i) => (
+                              <span
+                                key={fb + i}
+                                className="rounded border border-cream/20 bg-cream/5 px-2 py-0.5 font-mono text-xs text-cream/70"
+                              >
+                                {fb}
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

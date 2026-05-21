@@ -1,0 +1,185 @@
+'use client';
+
+import * as React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@hieu-asia/ui';
+import { RevenueChart, type RevenueDay } from '@/components/analytics/RevenueChart';
+import { VendorCostChart, type VendorCost } from '@/components/analytics/VendorCostChart';
+import { FunnelChart, type FunnelStage } from '@/components/analytics/FunnelChart';
+
+interface AnalyticsResponse {
+  ok: boolean;
+  days?: number;
+  revenue?: { daily: RevenueDay[]; total: number; txn_count: number };
+  vendor_cost?: Record<string, { tokens: number; requests: number; cost_usd: number }>;
+  funnel?: Record<string, number>;
+  sessions?: { total: number; completed: number; conversion_rate: number; error_rate: number };
+  sources?: { langfuse: boolean; kv_transactions: boolean };
+  error?: string;
+}
+
+type Range = '7' | '30' | '90';
+
+async function fetchAnalytics(days: Range): Promise<AnalyticsResponse> {
+  const res = await fetch(`/api/admin/analytics?days=${days}`, { cache: 'no-store' });
+  const text = await res.text();
+  try {
+    return JSON.parse(text) as AnalyticsResponse;
+  } catch {
+    return { ok: false, error: `Invalid JSON (status ${res.status})` };
+  }
+}
+
+const FUNNEL_LABELS: Record<string, string> = {
+  reading_started: 'Bắt đầu phiên đọc',
+  consent_given: 'Đồng ý điều khoản',
+  palm_uploaded: 'Upload palm',
+  survey_completed: 'Hoàn thành survey',
+  report_ready: 'Báo cáo sẵn sàng',
+  mentor_started: 'Bắt đầu mentor',
+  paid: 'Thanh toán',
+};
+
+const FUNNEL_ORDER = ['reading_started', 'consent_given', 'palm_uploaded', 'survey_completed', 'report_ready', 'mentor_started', 'paid'];
+
+function fmtCurrency(n: number) {
+  return new Intl.NumberFormat('vi-VN').format(n) + ' đ';
+}
+
+function KpiCard({ label, value, hint }: { label: string; value: string; hint?: string }) {
+  return (
+    <Card>
+      <CardContent className="py-5">
+        <div className="text-xs uppercase tracking-wider text-cream/55">{label}</div>
+        <div className="mt-2 font-heading text-2xl text-gold">{value}</div>
+        {hint && <div className="mt-1 text-xs text-cream/55">{hint}</div>}
+      </CardContent>
+    </Card>
+  );
+}
+
+export default function AnalyticsPage() {
+  const [days, setDays] = React.useState<Range>('30');
+  const { data, isLoading, refetch, isFetching, error } = useQuery({
+    queryKey: ['admin', 'analytics', days],
+    queryFn: () => fetchAnalytics(days),
+  });
+
+  const showError = !!error || data?.ok === false;
+  const errorMsg = (error as Error | undefined)?.message ?? data?.error;
+
+  const revenue = data?.revenue ?? { daily: [], total: 0, txn_count: 0 };
+  const vendorCost: VendorCost[] = Object.entries(data?.vendor_cost ?? {}).map(([vendor, v]) => ({
+    vendor,
+    cost_usd: v.cost_usd,
+    tokens: v.tokens,
+    requests: v.requests,
+  }));
+  const funnel: FunnelStage[] = FUNNEL_ORDER.flatMap(k => {
+    const count = data?.funnel?.[k];
+    if (count === undefined) return [];
+    return [{ key: k, label: FUNNEL_LABELS[k] ?? k, count }];
+  });
+  const sessions = data?.sessions ?? { total: 0, completed: 0, conversion_rate: 0, error_rate: 0 };
+  const totalLLMCost = vendorCost.reduce((s, v) => s + v.cost_usd, 0);
+  const avgCost = sessions.total > 0 ? totalLLMCost / sessions.total : 0;
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="font-heading text-3xl font-semibold text-cream">Analytics</h1>
+          <p className="mt-1 text-sm text-cream/65">
+            Doanh thu, vendor cost và onboarding funnel — {days} ngày gần nhất.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="inline-flex rounded-md border border-gold/20 p-0.5">
+            {(['7', '30', '90'] as Range[]).map(r => (
+              <button
+                key={r}
+                onClick={() => setDays(r)}
+                className={`rounded px-3 py-1 text-xs ${
+                  days === r ? 'bg-gold/20 text-gold' : 'text-cream/65 hover:bg-gold/5'
+                }`}
+              >
+                {r}d
+              </button>
+            ))}
+          </div>
+          <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
+            {isFetching ? 'Đang tải…' : 'Làm mới'}
+          </Button>
+        </div>
+      </div>
+
+      {showError && (
+        <div className="rounded-md border border-red-400/40 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+          {errorMsg ?? 'Không tải được analytics.'}
+        </div>
+      )}
+      {data?.sources && !data.sources.langfuse && (
+        <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-cream/70">
+          Langfuse chưa wire — vendor cost hiển thị 0. Đặt LANGFUSE_PUBLIC_KEY/SECRET_KEY để bật.
+        </div>
+      )}
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <KpiCard label={`Doanh thu (${days}d)`} value={fmtCurrency(revenue.total)} hint={`${revenue.txn_count} giao dịch`} />
+        <KpiCard label={`Phiên (${days}d)`} value={sessions.total.toLocaleString('vi-VN')} hint={`${sessions.completed} hoàn thành`} />
+        <KpiCard
+          label="Conversion (paid/started)"
+          value={(sessions.conversion_rate * 100).toFixed(1) + '%'}
+        />
+        <KpiCard label="Avg LLM cost/phiên" value={`$${avgCost.toFixed(3)}`} hint={`tổng $${totalLLMCost.toFixed(2)}`} />
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Doanh thu theo ngày</CardTitle>
+          <CardDescription>Tổng amount của intent_paid mỗi ngày.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <p className="py-8 text-center text-sm text-cream/55">Đang tải…</p>
+          ) : (
+            <RevenueChart data={revenue.daily} />
+          )}
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Chi phí theo vendor</CardTitle>
+            <CardDescription>Phân bổ LLM cost (USD).</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <VendorCostChart data={vendorCost} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Onboarding funnel</CardTitle>
+            <CardDescription>Drop-off mỗi bước từ start → paid.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <p className="py-8 text-center text-sm text-cream/55">Đang tải…</p>
+            ) : (
+              <FunnelChart stages={funnel} />
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
