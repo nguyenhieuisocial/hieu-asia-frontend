@@ -71,7 +71,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: pnpm
+        # No `cache: pnpm` — the remote-build deploy doesn't run `pnpm install`
+        # locally, so caching pnpm store fires a post-step path validation
+        # warning that marks the job as failure even when deploy succeeds.
 
       - name: Install Vercel CLI
         # Pin to the latest stable that supports the deploy endpoint we use.
