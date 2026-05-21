@@ -98,7 +98,7 @@ export function HeroV3() {
           className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs text-cream/65 sm:text-sm"
           aria-label="Tin cậy"
         >
-          <TrustBadge Icon={Users}>100k+ giải đoán</TrustBadge>
+          <TrustBadge Icon={Users}>10k+ giải đoán</TrustBadge>
           <TrustBadge Icon={ShieldCheck}>GDPR compliant</TrustBadge>
           <TrustBadge Icon={Globe2}>Hỗ trợ Tiếng Việt + English</TrustBadge>
         </motion.ul>
