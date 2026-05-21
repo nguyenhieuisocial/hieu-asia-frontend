@@ -25,9 +25,40 @@ export const metadata: Metadata = {
   },
 };
 
+const ORGANIZATION_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'hieu.asia',
+  url: 'https://hieu.asia',
+  logo: 'https://hieu.asia/icon',
+  sameAs: ['https://t.me/hieuasiabot'],
+  description: 'AI phân tích Tử Vi, Bát Tự, MBTI và lòng bàn tay.',
+};
+
+const WEBSITE_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'hieu.asia',
+  url: 'https://hieu.asia',
+  inLanguage: 'vi-VN',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: 'https://hieu.asia/search?q={search_term_string}',
+    'query-input': 'required name=search_term_string',
+  },
+};
+
 export default function LandingPage() {
   return (
     <main id="main-content" className="min-h-screen bg-ink text-cream">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSONLD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_JSONLD) }}
+      />
       <SiteHeader />
       <Hero />
       <Features />

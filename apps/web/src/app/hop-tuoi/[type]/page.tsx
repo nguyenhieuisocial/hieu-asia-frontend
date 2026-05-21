@@ -30,7 +30,11 @@ export async function generateMetadata({ params }: { params: Promise<{ type: str
   const { type } = await params;
   if (!TYPES.includes(type as HopTuoiType)) return { title: 'Hợp Tuổi' };
   const m = META[type as HopTuoiType];
-  return { title: `${m.title} | hieu.asia`, description: m.description };
+  return {
+    title: m.title,
+    description: m.description,
+    alternates: { canonical: `https://hieu.asia/hop-tuoi/${type}` },
+  };
 }
 
 export default async function HopTuoiTypePage({ params }: { params: Promise<{ type: string }> }) {

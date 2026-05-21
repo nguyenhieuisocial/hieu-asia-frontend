@@ -120,6 +120,12 @@ export default async function RootLayout({
       suppressHydrationWarning
       className={`${beVietnam.variable} ${inter.variable} ${outfit.variable} ${mono.variable}`}
     >
+      <head>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fvftbqairezsybasqsek.supabase.co" />
+        <link rel="preconnect" href="https://api.hieu.asia" />
+        <meta name="format-detection" content="telephone=no" />
+      </head>
       <body>
         <a
           href="#main-content"

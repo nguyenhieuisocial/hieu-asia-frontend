@@ -40,6 +40,7 @@ export default function AdminLoginPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-ink-radial px-5 py-16">
+      <h1 className="sr-only">Đăng nhập admin.hieu.asia</h1>
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">admin.hieu.asia</CardTitle>

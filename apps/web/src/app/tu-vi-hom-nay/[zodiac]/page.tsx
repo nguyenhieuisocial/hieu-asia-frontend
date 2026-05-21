@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: { params: Promise<{ zodiac: s
   const { zodiac } = await params;
   const label = ZODIAC_LABEL[zodiac] ?? zodiac;
   return {
-    title: `Tử vi tuổi ${label} hôm nay — hieu.asia`,
+    title: `Tử vi tuổi ${label} hôm nay`,
     description: `Tử vi hôm nay cho tuổi ${label}: tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe, giờ tốt, hướng tốt.`,
     alternates: { canonical: `https://hieu.asia/tu-vi-hom-nay/${zodiac}` },
   };

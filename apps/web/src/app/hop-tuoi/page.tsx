@@ -2,9 +2,10 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 
 export const metadata = {
-  title: 'Hợp Tuổi — Xem tương hợp Can Chi | hieu.asia',
+  title: 'Hợp tuổi cưới hỏi, làm ăn, sinh con — Phân tích AI',
   description:
     'Xem hợp tuổi miễn phí cho cưới hỏi, hợp tác kinh doanh, sinh con, xông đất. Phân tích Thiên Can, Địa Chi, Tam hợp, Tứ hành xung, Cung Phi 8 trạch.',
+  alternates: { canonical: 'https://hieu.asia/hop-tuoi' },
 };
 
 const CARDS = [

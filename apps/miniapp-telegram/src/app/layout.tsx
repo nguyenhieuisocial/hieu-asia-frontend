@@ -20,8 +20,20 @@ const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit', display: 
 const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrains-mono', display: 'swap' });
 
 export const metadata: Metadata = {
-  title: 'hieu.asia · Mini App',
-  description: 'Cẩm Nang Cuộc Đời AI trong Telegram.',
+  metadataBase: new URL('https://miniapp.hieu.asia'),
+  title: 'hieu.asia Mini App',
+  description: 'Telegram Mini App cho hieu.asia — Tử Vi, Bát Tự, MBTI bằng AI ngay trong Telegram.',
+  alternates: { canonical: 'https://miniapp.hieu.asia' },
+  openGraph: {
+    type: 'website',
+    locale: 'vi_VN',
+    url: 'https://miniapp.hieu.asia',
+    siteName: 'hieu.asia',
+    title: 'hieu.asia Mini App',
+    description: 'Mở trong Telegram để dùng — Tử Vi, Bát Tự, MBTI bằng AI.',
+  },
+  robots: { index: false, follow: false },
+  formatDetection: { telephone: false, email: false, address: false },
 };
 
 export const viewport: Viewport = {

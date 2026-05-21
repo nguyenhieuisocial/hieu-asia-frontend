@@ -15,6 +15,9 @@ export default function OnboardingPage() {
       </header>
 
       <section className="container mx-auto max-w-2xl px-6 pb-20 pt-6">
+        <h1 className="mb-6 font-heading text-3xl font-semibold text-cream sm:text-4xl">
+          Bắt đầu phân tích — Bước 1/4
+        </h1>
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl">Trước khi bắt đầu</CardTitle>

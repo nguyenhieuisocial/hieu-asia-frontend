@@ -32,7 +32,7 @@ function formatToday(): string {
 }
 
 export const metadata: Metadata = {
-  title: 'Tử vi 12 con giáp hôm nay — hieu.asia',
+  title: 'Tử vi 12 con giáp hôm nay',
   description:
     'Tử vi hàng ngày cho 12 con giáp: tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe. Đăng ký nhận thông báo mỗi sáng 6h.',
   alternates: { canonical: 'https://hieu.asia/tu-vi-hom-nay' },
