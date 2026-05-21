@@ -4,8 +4,19 @@ import * as React from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, StatusBadge } from '@hieu-asia/ui';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  StatusBadge,
+  cn,
+} from '@hieu-asia/ui';
+import { ChevronLeft, Clock, DollarSign, ListTodo, Copy, AlertCircle } from 'lucide-react';
 import { getSession } from '@/lib/admin-api';
+import { KpiCard } from '@/components/admin/kpi-card';
+import { EmptyState } from '@/components/admin/empty-state';
 import type { TaskStatus } from '@hieu-asia/types';
 
 const STATUS_TONE: Record<TaskStatus, React.ComponentProps<typeof StatusBadge>['status']> = {
@@ -15,71 +26,191 @@ const STATUS_TONE: Record<TaskStatus, React.ComponentProps<typeof StatusBadge>['
   failed: 'error',
 };
 
-const MOCK_CHAT = [
-  { role: 'user', content: 'Tôi nên xử lý middle manager chống đối thế nào?', ts: '2026-05-20 10:14' },
-  {
-    role: 'mentor',
-    content:
-      'Có 3 bước cụ thể: 1) Trao đổi 1:1 trước khi public, 2) Đặt KPI rõ ràng cho 14 ngày, 3) Quyết định tách hoặc retain dựa trên data.',
-    ts: '2026-05-20 10:14',
-  },
-  { role: 'user', content: 'Nếu họ không cam kết KPI thì sao?', ts: '2026-05-20 10:16' },
-  {
-    role: 'mentor',
-    content: 'Đây là "soft no" — chuẩn bị offboarding plan, thông báo HR, và song song tuyển backup. Đừng cảm tính.',
-    ts: '2026-05-20 10:16',
-  },
-];
+const STATUS_LABEL: Record<TaskStatus, string> = {
+  queued: 'Đang chờ',
+  running: 'Đang chạy',
+  completed: 'Hoàn tất',
+  failed: 'Lỗi',
+};
+
+interface AuditEntry {
+  ts: string;
+  actor?: string | null;
+  action: string;
+  detail?: string | null;
+}
+
+interface SessionAuditResp {
+  ok: boolean;
+  entries?: AuditEntry[];
+  note?: string;
+}
+
+/** Pull audit_log entries scoped to this session, if worker supports it. */
+async function fetchSessionAudit(id: string): Promise<SessionAuditResp> {
+  try {
+    const r = await fetch(`/api/admin/audit-log?resource_id=${encodeURIComponent(id)}&limit=50`, {
+      cache: 'no-store',
+    });
+    const data = await r.json();
+    return data as SessionAuditResp;
+  } catch {
+    return { ok: false };
+  }
+}
+
+function fmtDateTime(iso: string) {
+  return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'medium' });
+}
+
+function fmtDuration(sec: number | null) {
+  if (sec == null) return '—';
+  if (sec < 60) return `${sec}s`;
+  return `${Math.floor(sec / 60)}m ${sec % 60}s`;
+}
 
 export default function SessionDetailPage() {
   const params = useParams<{ id: string }>();
   const id = params?.id ?? '';
-  const { data: session, isLoading } = useQuery({
+  const session = useQuery({
     queryKey: ['admin', 'session', id],
     queryFn: () => getSession(id),
   });
+  const audit = useQuery({
+    queryKey: ['admin', 'session', id, 'audit'],
+    queryFn: () => fetchSessionAudit(id),
+    enabled: !!id,
+  });
 
-  if (isLoading) {
-    return <div className="animate-pulse text-cream/60">Đang tải session…</div>;
+  const copyId = React.useCallback(() => {
+    if (!session.data) return;
+    navigator.clipboard.writeText(session.data.session_id).catch(() => {});
+  }, [session.data]);
+
+  if (session.isLoading) {
+    return (
+      <div className="space-y-4">
+        <div className="h-8 w-48 animate-pulse rounded bg-cream/5" />
+        <div className="h-32 animate-pulse rounded-xl bg-cream/5" />
+        <div className="grid gap-4 sm:grid-cols-3">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="h-28 animate-pulse rounded-xl bg-cream/5" />
+          ))}
+        </div>
+      </div>
+    );
   }
-  if (!session) {
-    return <div className="text-cream/60">Không tìm thấy session.</div>;
+
+  if (!session.data) {
+    return (
+      <div className="space-y-6">
+        <Link
+          href="/sessions"
+          className="inline-flex items-center gap-1.5 text-sm text-cream/60 hover:text-gold"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Quay lại danh sách
+        </Link>
+        <EmptyState
+          title="Không tìm thấy session"
+          description={
+            <>
+              ID <code className="font-mono text-gold">{id}</code> không tồn tại hoặc đã bị xóa.
+            </>
+          }
+        />
+      </div>
+    );
   }
+
+  const s = session.data;
+  const entries = audit.data?.entries ?? [];
 
   return (
     <div className="space-y-6">
-      <Link href="/sessions" className="text-sm text-cream/60 hover:text-gold">
-        ← Quay lại danh sách
+      <Link
+        href="/sessions"
+        className="inline-flex items-center gap-1.5 text-sm text-cream/60 hover:text-gold"
+      >
+        <ChevronLeft className="h-4 w-4" />
+        Quay lại danh sách
       </Link>
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="font-mono text-xl font-semibold text-gold">{session.session_id}</h1>
-          <p className="mt-1 text-sm text-cream/70">User: {session.user_email}</p>
+
+      {/* Header */}
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <ListTodo className="h-5 w-5 text-gold" />
+            <span className="font-mono text-[10px] uppercase tracking-widest text-cream/55">
+              Session detail
+            </span>
+            <StatusBadge status={STATUS_TONE[s.status]} label={STATUS_LABEL[s.status]} />
+          </div>
+          <div className="mt-2 flex items-center gap-2">
+            <h1 className="truncate font-mono text-2xl font-semibold text-gold" title={s.session_id}>
+              {s.session_id}
+            </h1>
+            <button
+              type="button"
+              onClick={copyId}
+              className="inline-flex h-7 w-7 items-center justify-center rounded text-cream/55 hover:bg-gold/10 hover:text-gold"
+              aria-label="Copy session ID"
+              title="Copy session ID"
+            >
+              <Copy className="h-3.5 w-3.5" />
+            </button>
+          </div>
+          <p className="mt-1 text-sm text-cream/65">
+            User: <span className="text-cream">{s.user_email}</span>
+          </p>
         </div>
-        <StatusBadge status={STATUS_TONE[session.status]} label={session.status} />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <Stat label="Tạo lúc">{new Date(session.created_at).toLocaleString('vi-VN')}</Stat>
-        <Stat label="Thời lượng">{session.duration_seconds ? `${session.duration_seconds}s` : '—'}</Stat>
-        <Stat label="Cost">${session.cost_usd.toFixed(3)}</Stat>
+        <KpiCard
+          label="Tạo lúc"
+          value={<span className="text-lg">{fmtDateTime(s.created_at)}</span>}
+          icon={<Clock className="h-4 w-4" />}
+          accent="gold"
+          hint="timestamp"
+        />
+        <KpiCard
+          label="Thời lượng"
+          value={fmtDuration(s.duration_seconds)}
+          icon={<Clock className="h-4 w-4" />}
+          accent="jade"
+          hint={s.status === 'running' ? 'đang chạy' : 'pipeline'}
+        />
+        <KpiCard
+          label="Cost"
+          value={`$${s.cost_usd.toFixed(3)}`}
+          icon={<DollarSign className="h-4 w-4" />}
+          accent="purple"
+          hint="USD"
+        />
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle>Bối cảnh user</CardTitle>
-          <CardDescription>{session.primary_concern}</CardDescription>
+          <CardDescription>Mối quan tâm chính từ survey + input ban đầu.</CardDescription>
         </CardHeader>
+        <CardContent>
+          <p className="text-sm leading-relaxed text-cream/90">{s.primary_concern}</p>
+        </CardContent>
       </Card>
 
-      {session.error && (
-        <Card>
+      {s.error && (
+        <Card className="border-red-500/30">
           <CardHeader>
-            <CardTitle className="text-base text-red-300">Lỗi</CardTitle>
+            <CardTitle className="flex items-center gap-2 text-base text-red-300">
+              <AlertCircle className="h-4 w-4" />
+              Lỗi pipeline
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <pre className="overflow-x-auto rounded border border-red-500/30 bg-red-500/5 p-3 font-mono text-xs text-red-200">
-              {session.error}
+            <pre className="overflow-x-auto rounded border border-red-500/30 bg-red-500/5 p-3 font-mono text-xs leading-relaxed text-red-200">
+              {s.error}
             </pre>
           </CardContent>
         </Card>
@@ -87,58 +218,57 @@ export default function SessionDetailPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Báo cáo final (mock)</CardTitle>
-          <CardDescription>Markdown rendered từ `final_report_markdown`. Hiện đang là sample.</CardDescription>
+          <CardTitle>Audit trail</CardTitle>
+          <CardDescription>
+            Các sự kiện liên quan tới session này (re-orchestrate, delete, manual override).
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="prose prose-invert prose-sm max-w-none rounded border border-gold/15 bg-ink/40 p-4 text-cream/85">
-            <h3 className="text-gold">Tổng quan</h3>
-            <p>
-              User là người có xu hướng quyết định nhanh, đôi khi bốc đồng. Mạnh ở khả năng nhìn xa,
-              yếu ở quản lý chi tiết hàng ngày. Mục tiêu: học cách phân quyền + giữ kỷ luật theo dõi
-              chỉ số tài chính tuần.
-            </p>
-            <h3 className="text-gold">Hành động 30 ngày</h3>
-            <ul>
-              <li>Họp 1:1 với team trưởng, ra KPI rõ ràng.</li>
-              <li>Đặt budget tháng và xem báo cáo dòng tiền mỗi thứ 6.</li>
-              <li>Ghi nhật ký quyết định 5 phút mỗi tối.</li>
-            </ul>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Lịch sử chat Mentor (mock)</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {MOCK_CHAT.map((m, i) => (
-            <div
-              key={i}
-              className={`rounded-lg border p-3 ${
-                m.role === 'user'
-                  ? 'border-gold/20 bg-gold/5'
-                  : 'border-purple/30 bg-purple/10'
-              }`}
-            >
-              <p className="font-mono text-[10px] uppercase tracking-wider text-cream/55">
-                {m.role === 'user' ? 'User' : 'Mentor'} · {m.ts}
-              </p>
-              <p className="mt-1 text-sm leading-relaxed text-cream">{m.content}</p>
+          {audit.isLoading ? (
+            <div className="space-y-2 py-2">
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="h-10 animate-pulse rounded bg-cream/5" />
+              ))}
             </div>
-          ))}
+          ) : audit.data?.note ? (
+            <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-cream/70">
+              {audit.data.note}
+            </div>
+          ) : entries.length === 0 ? (
+            <EmptyState
+              title="Chưa có sự kiện"
+              description="Các hành động ghi vào audit_log sẽ hiện ở đây theo thời gian giảm dần."
+              className="border-0 bg-transparent"
+            />
+          ) : (
+            <ul className="space-y-2">
+              {entries.map((e, i) => (
+                <li
+                  key={i}
+                  className={cn(
+                    'flex items-start gap-3 rounded-md border border-gold/10 bg-ink/40 px-3 py-2',
+                  )}
+                >
+                  <span className="shrink-0 font-mono text-[11px] text-cream/55" title={e.ts}>
+                    {fmtDateTime(e.ts)}
+                  </span>
+                  <span className="inline-flex items-center rounded border border-gold/20 bg-gold/5 px-1.5 py-0.5 font-mono text-[10px] text-gold">
+                    {e.action}
+                  </span>
+                  <span className="min-w-0 flex-1 text-sm text-cream/85">
+                    {e.actor && (
+                      <span className="font-mono text-xs text-cream/70">{e.actor}</span>
+                    )}
+                    {e.detail && (
+                      <span className="ml-1.5 text-cream/60">— {e.detail}</span>
+                    )}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
         </CardContent>
       </Card>
-    </div>
-  );
-}
-
-function Stat({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="rounded-lg border border-gold/15 bg-ink/40 p-4">
-      <p className="font-mono text-[10px] uppercase tracking-widest text-cream/55">{label}</p>
-      <p className="mt-1 font-heading text-lg text-cream">{children}</p>
     </div>
   );
 }
