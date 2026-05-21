@@ -11,8 +11,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@hieu-asia/ui';
-import { Cpu } from 'lucide-react';
+import { Cpu, CheckCircle2, AlertCircle, Activity, Zap } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
+import { KpiCard } from '@/components/admin/kpi-card';
 
 type Vendor = 'anthropic' | 'openai' | 'google' | 'cloudflare';
 type Role = 'vision' | 'logic' | 'psychology' | 'alignment' | 'report' | 'mentor' | 'judge';
@@ -208,6 +209,52 @@ export default function VendorsPage() {
           Langfuse chưa wire — latency / fallback metrics hiển thị 0.
         </div>
       )}
+
+      {!isLoading && providers.length > 0 && (() => {
+        const connected = providers.filter(
+          (p) => p.api_key || p.oauth || p.vendor === 'cloudflare',
+        ).length;
+        const totalRequests = providers.reduce((s, p) => s + (p.requests_7d ?? 0), 0);
+        const totalFallback = providers.reduce((s, p) => s + (p.fallback_count_7d ?? 0), 0);
+        const avgP95 =
+          providers.length > 0
+            ? Math.round(
+                providers.reduce((s, p) => s + (p.latency_p95_ms ?? 0), 0) / providers.length,
+              )
+            : 0;
+        return (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <KpiCard
+              label="Connected"
+              value={`${connected}/${providers.length}`}
+              icon={<CheckCircle2 className="h-4 w-4" />}
+              accent={connected === providers.length ? 'jade' : 'gold'}
+              hint="có credentials"
+            />
+            <KpiCard
+              label="Requests 7d"
+              value={totalRequests.toLocaleString('vi-VN')}
+              icon={<Activity className="h-4 w-4" />}
+              accent="gold"
+              hint="tổng calls"
+            />
+            <KpiCard
+              label="Fallback 7d"
+              value={totalFallback}
+              icon={<AlertCircle className="h-4 w-4" />}
+              accent={totalFallback > 0 ? 'red' : 'jade'}
+              hint="primary failed"
+            />
+            <KpiCard
+              label="Avg p95 latency"
+              value={`${avgP95} ms`}
+              icon={<Zap className="h-4 w-4" />}
+              accent="purple"
+              hint="across vendors"
+            />
+          </div>
+        );
+      })()}
 
       {isLoading ? (
         <p className="py-8 text-center text-sm text-cream/55">Đang tải…</p>

@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/components/providers/theme-provider';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { Sidebar } from '@/components/sidebar';
 import { Topbar } from '@/components/topbar';
+import { MobileNav } from '@/components/mobile-nav';
 import { Toaster } from '@hieu-asia/ui';
 import { ADMIN_SESSION_COOKIE, verifySession } from '@/lib/auth';
 import './globals.css';
@@ -60,8 +61,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <Sidebar />
               <div className="lg:pl-64">
                 <Topbar adminEmail={adminEmail} />
-                <main className="px-4 py-6 lg:px-8 lg:py-8">{children}</main>
+                <main className="px-4 pb-20 pt-6 lg:px-8 lg:py-8 lg:pb-8">{children}</main>
               </div>
+              <MobileNav />
             </div>
           </QueryProvider>
           <Toaster />
