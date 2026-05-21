@@ -17,7 +17,13 @@ import {
  * Break-glass: if `ADMIN_PASSWORD` env is set AND the KV fetch fails, allow
  *   `admin@hieu.asia` to log in with that password (role=owner). This keeps
  *   the site recoverable if the Worker is down or KV is corrupted.
+ *
+ * Runtime: Edge (0ms cold-start vs Node serverless 5–15s). All deps in auth.ts
+ * are Edge-compatible: Web Crypto (sha256Hex, hmacSha256Hex), fetch, no Node API.
+ * This eliminates the "Operation timed out after 35008 ms" symptom seen when the
+ * Vercel Node serverless function was cold-starting on every login attempt.
  */
+export const runtime = 'edge';
 
 export async function POST(request: NextRequest) {
   let email = '';
