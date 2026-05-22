@@ -27,11 +27,12 @@ import {
   TabsTrigger,
   toast,
 } from '@hieu-asia/ui';
-import { Check, Key, ShieldAlert, Trash2 } from 'lucide-react';
+import { Check, Copy, Eye, EyeOff, Key, ShieldAlert, Trash2 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import {
   deleteWorkerSecret,
   fetchSecretsList,
+  revealVercelEnv,
   setVercelEnv,
   setWorkerSecret,
   type SecretAuditRecord,
@@ -102,6 +103,105 @@ function fmtTs(ts?: string): string {
   }
 }
 
+async function copyToClipboard(text: string, label: string) {
+  try {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      await navigator.clipboard.writeText(text);
+      toast.success(`${label} đã copy vào clipboard.`);
+      return;
+    }
+    throw new Error('Clipboard API không khả dụng');
+  } catch (err) {
+    toast.error(`Copy thất bại: ${(err as Error).message}`);
+  }
+}
+
+/** Inline copy-name button — used in every secret row. */
+function CopyNameButton({ name }: { name: string }) {
+  return (
+    <button
+      type="button"
+      title={`Copy "${name}"`}
+      aria-label={`Copy ${name}`}
+      onClick={(e) => {
+        e.stopPropagation();
+        void copyToClipboard(name, name);
+      }}
+      className="rounded p-1 text-muted-foreground transition hover:bg-gold/10 hover:text-gold"
+    >
+      <Copy className="h-3.5 w-3.5" />
+    </button>
+  );
+}
+
+/**
+ * Reveal modal — shows a decrypted Vercel env value with a countdown auto-dismiss.
+ * Value is held only in React state; never persisted. Modal closes when countdown
+ * hits 0 OR user dismisses manually. Copy button writes value to clipboard.
+ */
+function RevealModal({
+  open,
+  onClose,
+  name,
+  value,
+  ttlSeconds,
+}: {
+  open: boolean;
+  onClose: () => void;
+  name: string;
+  value: string;
+  ttlSeconds: number;
+}) {
+  const [remaining, setRemaining] = React.useState(ttlSeconds);
+
+  React.useEffect(() => {
+    if (!open) return;
+    setRemaining(ttlSeconds);
+    const t = setInterval(() => {
+      setRemaining((r) => {
+        if (r <= 1) {
+          clearInterval(t);
+          onClose();
+          return 0;
+        }
+        return r - 1;
+      });
+    }, 1000);
+    return () => clearInterval(t);
+  }, [open, ttlSeconds, onClose]);
+
+  return (
+    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Eye className="h-4 w-4 text-gold" /> Giá trị secret
+          </DialogTitle>
+          <DialogDescription>
+            <code className="font-mono text-gold">{name}</code> — modal tự đóng sau{' '}
+            <span className="font-semibold text-amber-300">{remaining}s</span>. Đừng paste vào
+            chat / chỗ công cộng.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="mt-2 break-all rounded-md border border-gold/20 bg-zinc-950 px-3 py-2 font-mono text-xs text-foreground">
+          {value}
+        </div>
+        <DialogFooter>
+          <Button
+            variant="outline"
+            onClick={() => void copyToClipboard(value, name)}
+          >
+            <Copy className="mr-2 h-4 w-4" /> Copy
+          </Button>
+          <Button variant="ghost" onClick={onClose}>
+            Đóng ngay
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 // ---------- Worker secret row + modal -----------------------------------------
 
 function WorkerSecretRow({
@@ -117,11 +217,16 @@ function WorkerSecretRow({
 }) {
   const last = latestFor(entries, (e) => e.target === 'worker' && e.name === def.name);
   const isSet = !!last && last.action !== 'delete';
+  // CLI-set worker secrets land in /list with set_at:"" + by_admin:"cli" because
+  // wrangler doesn't go through our audit log. Surface this honestly instead of
+  // showing a bogus "—" with no explanation.
+  const setViaCli = isSet && !last?.set_at && last?.by_admin === 'cli';
   return (
     <div className="flex items-start justify-between gap-3 rounded-md border border-gold/15 bg-card/60 px-4 py-3">
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <span className="font-mono text-sm text-foreground">{def.name}</span>
+          <CopyNameButton name={def.name} />
           {isSet ? (
             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-900/40 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-300">
               <Check className="h-3 w-3" /> Set
@@ -134,10 +239,20 @@ function WorkerSecretRow({
         </div>
         <p className="mt-1 text-xs text-muted-foreground">{def.desc}</p>
         <p className="mt-1 font-mono text-[10px] text-muted-foreground">
-          Last set: {fmtTs(last?.set_at)} {last?.by_admin ? `· ${last.by_admin}` : ''}
+          Last set: {setViaCli ? 'set via wrangler CLI (timestamp unknown)' : fmtTs(last?.set_at)}
+          {last?.by_admin && !setViaCli ? ` · ${last.by_admin}` : ''}
         </p>
       </div>
       <div className="flex shrink-0 gap-2">
+        <Button
+          size="sm"
+          variant="ghost"
+          disabled
+          title="Worker secrets là write-only trên Cloudflare — không đọc được. Dùng nút Cập nhật để rotate."
+          className="text-muted-foreground"
+        >
+          <EyeOff className="h-4 w-4" />
+        </Button>
         <Button size="sm" variant="outline" onClick={() => onOpen(def.name)}>
           {isSet ? 'Cập nhật' : 'Set'}
         </Button>
@@ -162,10 +277,14 @@ function VercelSecretRow({
   def,
   entries,
   onOpen,
+  onReveal,
+  revealing,
 }: {
   def: VercelKeyDef;
   entries: SecretAuditRecord[];
   onOpen: (name: string, defaultProject: VercelProject) => void;
+  onReveal: (name: string, project: VercelProject) => void;
+  revealing: boolean;
 }) {
   // Show latest across any project/target.
   const last = latestFor(entries, (e) => e.target === 'vercel' && e.name === def.name);
@@ -175,6 +294,7 @@ function VercelSecretRow({
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <span className="font-mono text-sm text-foreground">{def.name}</span>
+          <CopyNameButton name={def.name} />
           {isSet ? (
             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-900/40 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-300">
               <Check className="h-3 w-3" /> Set
@@ -193,7 +313,16 @@ function VercelSecretRow({
           {last?.by_admin ? ` · ${last.by_admin}` : ''}
         </p>
       </div>
-      <div className="shrink-0">
+      <div className="flex shrink-0 gap-2">
+        <Button
+          size="sm"
+          variant="ghost"
+          disabled={revealing}
+          title={`Xem giá trị hiện tại (project=${def.defaultProject}) — audit-logged, 10s auto-close`}
+          onClick={() => onReveal(def.name, def.defaultProject)}
+        >
+          <Eye className="h-4 w-4" />
+        </Button>
         <Button size="sm" variant="outline" onClick={() => onOpen(def.name, def.defaultProject)}>
           {isSet ? 'Cập nhật' : 'Set'}
         </Button>
@@ -258,6 +387,27 @@ export default function SecretsPage() {
     },
     onError: (e: Error) => toast.error(`Set thất bại: ${e.message}`),
   });
+
+  // -- Reveal modal (Vercel only — worker secrets are write-only) --
+  const [revealOpen, setRevealOpen] = React.useState(false);
+  const [revealedValue, setRevealedValue] = React.useState('');
+  const [revealedName, setRevealedName] = React.useState('');
+  const [revealedTtl, setRevealedTtl] = React.useState(10);
+
+  const revealMut = useMutation({
+    mutationFn: (vars: { name: string; project: VercelProject }) =>
+      revealVercelEnv({ name: vars.name, project: vars.project, target: 'production' }),
+    onSuccess: (d) => {
+      setRevealedName(d.name);
+      setRevealedValue(d.value);
+      setRevealedTtl(d.ttl_seconds ?? 10);
+      setRevealOpen(true);
+    },
+    onError: (e: Error) => toast.error(`Reveal thất bại: ${e.message}`),
+  });
+
+  const openReveal = (name: string, project: VercelProject) =>
+    revealMut.mutate({ name, project });
 
   const openWorker = (name: string) => {
     setWorkerName(name);
@@ -360,6 +510,8 @@ export default function SecretsPage() {
                   def={def}
                   entries={entries}
                   onOpen={openVercel}
+                  onReveal={openReveal}
+                  revealing={revealMut.isPending}
                 />
               ))}
             </CardContent>
@@ -489,6 +641,19 @@ export default function SecretsPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Reveal modal — shows decrypted Vercel env value, auto-closes after TTL. */}
+      <RevealModal
+        open={revealOpen}
+        onClose={() => {
+          setRevealOpen(false);
+          setRevealedValue('');
+          setRevealedName('');
+        }}
+        name={revealedName}
+        value={revealedValue}
+        ttlSeconds={revealedTtl}
+      />
     </div>
   );
 }

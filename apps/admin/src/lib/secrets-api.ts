@@ -116,3 +116,28 @@ export function setVercelEnv(args: {
     body: JSON.stringify(args),
   });
 }
+
+export interface RevealVercelEnvResult {
+  ok: boolean;
+  name: string;
+  project: VercelProject;
+  vercel_target: VercelTarget;
+  value: string;
+  ttl_seconds: number;
+}
+
+/**
+ * Fetch the current decrypted value of a Vercel env var for one-time display.
+ * Server-side: audit-logged + rate-limited (10/hour/admin). Worker secrets
+ * cannot be revealed — Cloudflare's secret API is write-only.
+ */
+export function revealVercelEnv(args: {
+  name: string;
+  project: VercelProject;
+  target: VercelTarget;
+}): Promise<RevealVercelEnvResult> {
+  return json<RevealVercelEnvResult>('/admin/secrets/vercel-env-reveal', {
+    method: 'POST',
+    body: JSON.stringify(args),
+  });
+}
