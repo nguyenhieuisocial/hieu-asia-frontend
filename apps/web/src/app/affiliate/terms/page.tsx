@@ -8,6 +8,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { AffiliateSubNav } from '@/components/affiliate/AffiliateSubNav';
 
 export const metadata: Metadata = {
   title: 'Điều khoản chương trình affiliate · hieu.asia',
@@ -186,6 +187,8 @@ export default function AffiliateTermsPage() {
             <span className="mx-1.5">/</span>
             <span className="text-muted-foreground">Điều khoản</span>
           </nav>
+
+          <AffiliateSubNav />
 
           <header>
             <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">

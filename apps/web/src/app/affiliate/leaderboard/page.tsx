@@ -12,6 +12,7 @@ import { Button, Card, CardContent, Skeleton, Tabs, TabsList, TabsTrigger } from
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { LeaderboardList, type LeaderboardEntry } from '@/components/affiliate/LeaderboardList';
+import { AffiliateSubNav } from '@/components/affiliate/AffiliateSubNav';
 import { safeJson } from '@/lib/safe-json';
 
 type Period = 'monthly' | 'all_time';
@@ -70,6 +71,8 @@ export default function AffiliateLeaderboardPage() {
             <span className="mx-1.5">/</span>
             <span className="text-muted-foreground">Bảng xếp hạng</span>
           </nav>
+
+          <AffiliateSubNav />
 
           <header className="text-center">
             <div

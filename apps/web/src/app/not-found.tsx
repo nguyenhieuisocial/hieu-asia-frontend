@@ -31,9 +31,9 @@ export default function NotFound() {
           <Link href="/">
             <Button size="lg">Về trang chủ</Button>
           </Link>
-          <Link href="/dashboard">
+          <Link href="/account">
             <Button size="lg" variant="outline">
-              Bảng điều khiển
+              Tài khoản
             </Button>
           </Link>
           <Link href="/onboarding">

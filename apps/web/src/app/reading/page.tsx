@@ -92,7 +92,7 @@ export default function ReadingHubPage() {
           </h2>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <Link
-              href="/dashboard"
+              href="/account"
               className="group flex items-start gap-4 rounded-lg border border-border bg-card/40 p-5 transition hover:border-gold/30 hover:bg-card/60"
             >
               <LayoutDashboard className="h-6 w-6 shrink-0 text-gold/80" aria-hidden="true" />

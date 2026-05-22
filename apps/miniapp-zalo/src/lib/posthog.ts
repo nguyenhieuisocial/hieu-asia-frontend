@@ -19,7 +19,7 @@
 import posthog, { type PostHog } from 'posthog-js';
 
 const PREFS_KEY = 'hieu.user.preferences';
-const DEFAULT_HOST = 'https://eu.i.posthog.com';
+const DEFAULT_HOST = 'https://us.i.posthog.com';
 const APP_VERSION = 'zalo-miniapp-v1.0';
 
 let _initialized = false;

@@ -18,7 +18,7 @@
 import posthog, { type PostHog } from "posthog-js";
 
 const PREFS_KEY = "hieu.user.preferences";
-const DEFAULT_HOST = "https://eu.i.posthog.com";
+const DEFAULT_HOST = "https://us.i.posthog.com";
 const APP_VERSION = "v2.3";
 
 let _initialized = false;

@@ -48,12 +48,12 @@ const TOOLS: { name: string; desc: string; href: string }[] = [
   {
     name: 'Annual Planner',
     desc: 'Khung lập kế hoạch năm — gắn mục tiêu cá nhân với pha đại vận và lưu niên.',
-    href: '/dashboard',
+    href: '/annual-planning',
   },
   {
     name: 'Monthly Review',
     desc: 'Sổ tay rà soát từng tháng — bạn kiểm chứng dự đoán đầu năm với thực tế tháng đó.',
-    href: '/dashboard',
+    href: '/monthly-planning',
   },
 ];
 

@@ -23,6 +23,7 @@ import {
 import { Users, Network, TrendingUp, ChevronRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { AffiliateSubNav } from '@/components/affiliate/AffiliateSubNav';
 import { getSupabaseAuth } from '@/lib/auth-client';
 import { safeJson } from '@/lib/safe-json';
 import { useFeatureFlag, FLAGS } from '@/lib/feature-flags';
@@ -236,6 +237,8 @@ export default function AffiliateNetworkPage() {
           <span className="mx-1.5">/</span>
           <span className="text-muted-foreground">Mạng lưới</span>
         </nav>
+
+        <AffiliateSubNav />
 
         {/* Hero */}
         <header className="mb-10">

@@ -76,7 +76,7 @@ export default function SignInPage() {
   React.useEffect(() => {
     if (!authLoading && authedUser) {
       const next = searchParams.get('next');
-      router.replace(next && next.startsWith('/') ? next : '/dashboard');
+      router.replace(next && next.startsWith('/') ? next : '/account');
     }
   }, [authLoading, authedUser, router, searchParams]);
 

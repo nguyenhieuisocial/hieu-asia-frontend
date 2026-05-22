@@ -302,7 +302,7 @@ export default function PricingPage() {
         return;
       }
       if (!sessionId) {
-        router.push('/dashboard?need_reading=1');
+        router.push('/account?need_reading=1');
         return;
       }
       router.push(`/unlock/${encodeURIComponent(sessionId)}?tier=${tier}&period=${period}`);

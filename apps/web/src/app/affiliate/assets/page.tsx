@@ -12,6 +12,7 @@ import { Button, Card, CardContent, Skeleton } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { AssetCard, type ResolvedAsset } from '@/components/affiliate/AssetCard';
+import { AffiliateSubNav } from '@/components/affiliate/AffiliateSubNav';
 import { safeJson } from '@/lib/safe-json';
 
 type Filter = 'all' | 'banner' | 'video' | 'text' | 'qr' | 'logo';
@@ -79,6 +80,8 @@ export default function AffiliateAssetsPage() {
             <span className="mx-1.5">/</span>
             <span className="text-muted-foreground">Marketing assets</span>
           </nav>
+
+          <AffiliateSubNav />
 
           {error === 'not_signed_in' ? (
             <Card className="border-border bg-card/40">

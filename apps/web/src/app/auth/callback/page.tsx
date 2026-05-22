@@ -11,7 +11,7 @@
  *   3. Stash anonymous user id vào `hieu.linked_anon_user_id` để dashboard
  *      có thể gọi backend merge endpoint sau.
  *   4. Track new vs returning user (magic_link vs oauth method từ app_metadata).
- *   5. Redirect về /dashboard hoặc /signin?error=... (friendly translated).
+ *   5. Redirect về /account hoặc /signin?error=... (friendly translated).
  */
 
 import * as React from 'react';
@@ -158,7 +158,7 @@ export default function AuthCallbackPage() {
         /* ignore */
       }
 
-      router.replace('/dashboard');
+      router.replace('/account');
     })();
 
     return () => {

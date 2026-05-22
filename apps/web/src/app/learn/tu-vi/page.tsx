@@ -54,6 +54,11 @@ export default function LearnTuViPage() {
           ảnh hưởng đến một mặt cụ thể của cuộc sống — từ sức khỏe, tài chính, tình cảm đến
           sự nghiệp.
         </p>
+        <p className="mt-3 text-xs text-muted-foreground">
+          <Link href="/methodology/tu-vi" className="text-gold/80 underline-offset-4 hover:underline">
+            Xem phương pháp luận →
+          </Link>
+        </p>
       </header>
 
       <section className="rounded-xl border border-border bg-card/40 p-6 sm:p-8">

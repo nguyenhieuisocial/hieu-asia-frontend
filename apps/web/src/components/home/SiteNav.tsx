@@ -37,23 +37,30 @@ const LEARN_LINKS: readonly NavLink[] = [
 ];
 
 const TOOLS_LINKS: readonly NavLink[] = [
-  { href: '/decisions', label: 'Decision Brief' },
+  { href: '/decisions', label: 'Quyết định (Hub)' },
   { href: '/decision-simulator', label: 'Decision Simulator' },
   { href: '/journal', label: 'Decision Journal' },
   { href: '/weekly-review', label: 'Weekly Review' },
   { href: '/ban-do', label: 'Bản đồ của bạn' },
+  { href: '/sample-report', label: 'Báo cáo mẫu' },
   { href: '/monthly-planning', label: 'Monthly Planning' },
   { href: '/annual-planning', label: 'Annual Planning' },
   { href: '/timeline', label: 'Đại vận timeline' },
+  { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại' },
   { href: '/compatibility', label: 'Hợp đôi 2 lá số' },
   { href: '/career-fit', label: 'Career Fit' },
   { href: '/family-profiles', label: 'Family Profiles' },
   { href: '/affiliate/network', label: 'Affiliate · Mạng lưới' },
   { href: '/affiliate/commissions', label: 'Affiliate · Hoa hồng' },
   { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay' },
+  { href: '/tu-vi-2026', label: 'Tử Vi 2026' },
+  { href: '/tu-vi-nghe-nghiep', label: 'Tử Vi · Nghề nghiệp' },
+  { href: '/tu-vi-tinh-yeu', label: 'Tử Vi · Tình yêu' },
+  { href: '/tu-vi-tai-chinh', label: 'Tử Vi · Tài chính' },
   { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
   { href: '/hop-tuoi', label: 'Hợp tuổi (12 con giáp)' },
   { href: '/than-so-hoc', label: 'Thần Số Học' },
+  { href: '/tinh-menh-cuc', label: 'Tính Mệnh Cục' },
   { href: '/can-xuong', label: 'Cân Xương Đoán Số' },
   { href: '/thuoc-lo-ban', label: 'Thước Lỗ Ban' },
 ];
@@ -191,14 +198,6 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
           className="absolute right-0 top-full z-50 mt-1 w-56 rounded-xl border border-border bg-card/95 p-1.5 shadow-2xl backdrop-blur-md"
           role="menu"
         >
-          <Link
-            href="/dashboard"
-            onClick={() => setOpen(false)}
-            className="block rounded-md px-3 py-2 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
-            role="menuitem"
-          >
-            Dashboard
-          </Link>
           <Link
             href="/account"
             onClick={() => setOpen(false)}
@@ -396,13 +395,6 @@ function MobileDrawer({
           </Link>
           {isAuthed && (
             <>
-              <Link
-                href="/dashboard"
-                onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
-              >
-                Dashboard
-              </Link>
               <Link
                 href="/account"
                 onClick={() => setOpen(false)}

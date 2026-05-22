@@ -170,10 +170,10 @@ function ReportContent() {
     <main className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
       <header className="mb-6 flex items-center justify-between">
         <Link
-          href="/dashboard"
+          href="/account"
           className="text-sm text-muted-foreground hover:text-gold"
         >
-          ← Bảng điều khiển
+          ← Tài khoản
         </Link>
         <span className="font-heading text-lg text-gold">hieu.asia</span>
       </header>
