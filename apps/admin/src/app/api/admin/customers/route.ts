@@ -19,11 +19,19 @@ export async function GET(req: Request) {
     );
   }
   const url = new URL(req.url);
+  // Wave 38.2: add 8s fetch timeout. Previously a hung outbound fetch would
+  // burn the whole serverless 10s budget and the function would return
+  // Vercel's default 503 with no body, making debugging hell. With AbortController
+  // we surface a useful error in <8s.
+  const ac = new AbortController();
+  const timer = setTimeout(() => ac.abort(), 8000);
   try {
     const r = await fetch(`${GATEWAY}/admin/customers${url.search}`, {
       cache: 'no-store',
       headers: { 'X-Admin-Token': TOKEN },
+      signal: ac.signal,
     });
+    clearTimeout(timer);
     // Guard against non-JSON responses (Cloudflare HTML error pages, etc.)
     // so the page never sees the "Invalid JSON" fallback path.
     const text = await r.text();
@@ -36,9 +44,18 @@ export async function GET(req: Request) {
       );
     }
   } catch (err) {
+    clearTimeout(timer);
+    const msg = (err as Error).message;
+    const isAbort = msg.toLowerCase().includes('abort');
     return NextResponse.json(
-      { ok: false, error: `gateway unreachable: ${(err as Error).message}` },
-      { status: 502 },
+      {
+        ok: false,
+        error: isAbort
+          ? `gateway timeout: fetch to ${GATEWAY} exceeded 8s`
+          : `gateway unreachable: ${msg}`,
+        gateway: GATEWAY,
+      },
+      { status: 504 },
     );
   }
 }
