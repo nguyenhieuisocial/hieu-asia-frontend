@@ -40,10 +40,22 @@ const nextConfig: NextConfig = {
     // `'unsafe-inline'` on script-src needed for Next.js inline bootstrap scripts (build IDs etc.).
     // `'unsafe-eval'` is required by Next.js dev mode (Fast Refresh) but MUST NOT ship to prod.
     const isDev = process.env.NODE_ENV === 'development';
+    // Wave 41.4 — pixel host allowlists. Marketing pixels are consent-gated
+    // at runtime (only injected after CMP opt-in), but CSP must allow the
+    // hosts up-front or the browser blocks the script tag before our gate
+    // can run anything. Hosts:
+    //   Meta Pixel:    connect.facebook.net (JS), *.facebook.com (img/conn)
+    //   Google Ads:    googletagmanager.com (JS), googleadservices.com + google.com (conn/img)
+    //   TikTok Pixel:  analytics.tiktok.com (JS+conn)
+    const pixelScriptHosts = 'https://connect.facebook.net https://www.googletagmanager.com https://analytics.tiktok.com';
+    const pixelConnectHosts = 'https://*.facebook.com https://www.googleadservices.com https://www.google-analytics.com https://www.google.com https://analytics.tiktok.com';
+    const pixelImgHosts = 'https://*.facebook.com https://www.google.com https://www.googleadservices.com https://www.google-analytics.com';
+
     const scriptSrc = [
       "script-src 'self' 'unsafe-inline'",
       isDev ? "'unsafe-eval'" : '',
       'https://us.i.posthog.com https://*.posthog.com https://browser.sentry-cdn.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io',
+      pixelScriptHosts,
     ]
       .filter(Boolean)
       .join(' ');
@@ -52,8 +64,8 @@ const nextConfig: NextConfig = {
       scriptSrc,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' data: https://fonts.gstatic.com",
-      "img-src 'self' data: blob: https: ",
-      "connect-src 'self' https://api.hieu.asia https://*.hieu.asia https://*.supabase.co https://*.supabase.in https://us.i.posthog.com https://*.posthog.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cloud.langfuse.com https://api.vietqr.io",
+      `img-src 'self' data: blob: https: ${pixelImgHosts}`,
+      `connect-src 'self' https://api.hieu.asia https://*.hieu.asia https://*.supabase.co https://*.supabase.in https://us.i.posthog.com https://*.posthog.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cloud.langfuse.com https://api.vietqr.io ${pixelConnectHosts}`,
       "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
       "object-src 'none'",
       "base-uri 'self'",

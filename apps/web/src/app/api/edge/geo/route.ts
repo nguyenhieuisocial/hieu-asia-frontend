@@ -36,6 +36,8 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json(
     { country, city, region },
-    { headers: { "cache-control": "public, max-age=3600" } },
+    // Wave 41.8 — `private` so CDN never caches one visitor's country for
+    // another. Per-browser cache only.
+    { headers: { "cache-control": "private, max-age=3600" } },
   );
 }

@@ -78,9 +78,14 @@ function deleteCookieByPrefix(prefix: string): void {
       const name = raw.split("=")[0]?.trim();
       if (!name) continue;
       if (name === prefix || name.startsWith(prefix)) {
-        // Delete on this hostname and apex (e.g. .hieu.asia).
+        // Delete on this hostname and apex (e.g. `.hieu.asia`).
+        // Wave 41.7 — fix apex calc: prior `host.replace(/^[^.]+\./, ".")`
+        // failed on apex visits (e.g. `hieu.asia` had nothing to strip and
+        // resulted in `hieu.asia` instead of `.hieu.asia`). Take last 2
+        // labels and prepend a dot.
         const host = window.location.hostname;
-        const apex = host.replace(/^[^.]+\./, ".");
+        const parts = host.split(".");
+        const apex = parts.length >= 2 ? "." + parts.slice(-2).join(".") : `.${host}`;
         for (const dom of ["", `; Domain=${host}`, `; Domain=${apex}`]) {
           document.cookie = `${name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT${dom}`;
         }

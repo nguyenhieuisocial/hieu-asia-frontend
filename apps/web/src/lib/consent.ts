@@ -52,11 +52,31 @@ function readBool(key: string, fallback: boolean): boolean {
   }
 }
 
+/**
+ * Wave 41.7 — compute apex domain for cross-subdomain consent cookies.
+ * `null` on localhost / Vercel preview / single-label hosts.
+ */
+function computeApexDomain(): string | null {
+  try {
+    const host = window.location.hostname;
+    if (!host) return null;
+    if (host === "localhost" || /^\d/.test(host) || !host.includes(".")) return null;
+    if (host.endsWith(".vercel.app")) return null;
+    const parts = host.split(".");
+    if (parts.length < 2) return null;
+    return "." + parts.slice(-2).join(".");
+  } catch {
+    return null;
+  }
+}
+
 function writeBoolCookie(name: string, value: boolean): void {
   try {
     const maxAge = COOKIE_TTL_DAYS * 86400;
     const secure = window.location.protocol === "https:" ? "; Secure" : "";
-    document.cookie = `${name}=${value ? "true" : "false"}; Path=/; Max-Age=${maxAge}; SameSite=Lax${secure}`;
+    const apex = computeApexDomain();
+    const domain = apex ? `; Domain=${apex}` : "";
+    document.cookie = `${name}=${value ? "true" : "false"}; Path=/; Max-Age=${maxAge}; SameSite=Lax${secure}${domain}`;
   } catch {
     /* ignore */
   }
@@ -72,21 +92,25 @@ function writeBoth(key: string, cookieName: string, value: boolean): void {
 }
 
 /**
- * Read the current consent state. Returns sane defaults on SSR / before
- * the banner has been shown:
- *   - analytics ON  (legitimate-interest under NĐ 13/2023)
- *   - marketing OFF (explicit opt-in required)
- *   - personalization ON
+ * Read the current consent state. Returns conservative defaults on SSR /
+ * before the banner has been shown (everything OFF except `shown=false`).
+ *
+ * GDPR / ePrivacy: analytics + marketing + personalization all require
+ * explicit opt-in. The banner is shown to VN + EU on first visit; ROW
+ * geo gets legitimate-interest defaults applied silently by
+ * `shouldShowBanner()` AFTER it resolves country. Until then we do NOT
+ * track — `analytics:false` until the banner records an explicit choice
+ * (or `shouldShowBanner()` writes the legitimate-interest defaults).
  */
 export function getConsent(): ConsentState {
   if (typeof window === "undefined") {
-    return { shown: false, analytics: true, marketing: false, personalization: true };
+    return { shown: false, analytics: false, marketing: false, personalization: false };
   }
   return {
     shown: readBool(CONSENT_SHOWN_KEY, false),
-    analytics: readBool(CONSENT_ANALYTICS_KEY, true),
+    analytics: readBool(CONSENT_ANALYTICS_KEY, false),
     marketing: readBool(CONSENT_MARKETING_KEY, false),
-    personalization: readBool(CONSENT_PERSONALIZATION_KEY, true),
+    personalization: readBool(CONSENT_PERSONALIZATION_KEY, false),
   };
 }
 

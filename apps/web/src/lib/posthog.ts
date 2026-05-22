@@ -37,6 +37,19 @@ function isOptedOut(): boolean {
   }
 }
 
+/**
+ * Read Wave 41 CMP consent state directly (avoids cyclic import with
+ * `consent.ts`, which itself imports from `posthog.ts`). Returns `false`
+ * if the user has not yet recorded an explicit `analytics:true`.
+ */
+function hasAnalyticsConsent(): boolean {
+  try {
+    return window.localStorage.getItem("hieu.consent.analytics") === "true";
+  } catch {
+    return false;
+  }
+}
+
 interface NavigatorConnection {
   effectiveType?: string;
 }
@@ -103,6 +116,11 @@ export function getPostHog(): PostHog | null {
 
   posthog.init(key, {
     api_host: host,
+    // GDPR / ePrivacy: opt out of capturing until the CMP banner records
+    // explicit `analytics:true`. PostHog SDK still loads (so feature flags
+    // and surveys can be evaluated) but autocapture/$pageview don't ship
+    // events until `optInPostHog()` is called after consent.
+    opt_out_capturing_by_default: true,
     // Pageviews: we fire `$pageview` manually on App Router navigations.
     capture_pageview: false,
     // Page leaves: enables accurate bounce / time-on-page (auto in v1.50+).
@@ -148,8 +166,16 @@ export function getPostHog(): PostHog | null {
     },
   });
 
+  // Legacy preferences key opt-out still honoured.
   if (isOptedOut()) {
     posthog.opt_out_capturing();
+  }
+
+  // Wave 41 CMP — opt back in if the user has previously granted analytics
+  // consent (returning visitor). Otherwise the `opt_out_capturing_by_default:
+  // true` above keeps autocapture silent until they click Accept.
+  if (hasAnalyticsConsent()) {
+    posthog.opt_in_capturing();
   }
 
   _initialized = true;

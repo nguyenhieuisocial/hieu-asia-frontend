@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * useSurvey — polls PostHog for the active surveys matching this user and
  * returns the first one whose id matches `surveyId` (or `null`). Surveys
@@ -62,8 +64,6 @@ export function markSurveyShown(surveyId: string): void {
     /* quota / disabled — best-effort */
   }
 }
-
-'use client';
 
 import * as React from 'react';
 import { getPostHog } from './posthog';

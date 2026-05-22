@@ -24,6 +24,28 @@ const STORAGE_KEY = "hieu.attr";
 const COOKIE_NAME = "hieu_attr";
 const COOKIE_TTL_DAYS = 90;
 
+/**
+ * Wave 41.7 — compute apex domain from current hostname for cross-subdomain
+ * cookies. Returns `.hieu.asia` on hieu.asia + www.hieu.asia + api.hieu.asia.
+ * Returns `null` on localhost / preview deploys (no Domain= attribute set).
+ */
+function computeApexDomain(): string | null {
+  try {
+    const host = window.location.hostname;
+    if (!host) return null;
+    // Skip localhost / IPv4 / single-label hosts.
+    if (host === "localhost" || /^\d/.test(host) || !host.includes(".")) return null;
+    // Vercel preview URLs (*.vercel.app) — keep host-scoped.
+    if (host.endsWith(".vercel.app")) return null;
+    // For everything else (apex + subdomains), use last two labels.
+    const parts = host.split(".");
+    if (parts.length < 2) return null;
+    return "." + parts.slice(-2).join(".");
+  } catch {
+    return null;
+  }
+}
+
 const UTM_KEYS = [
   "utm_source",
   "utm_medium",
@@ -104,7 +126,11 @@ function writeStorage(state: AttributionState): void {
     const value = encodeURIComponent(JSON.stringify(compact));
     const maxAge = COOKIE_TTL_DAYS * 86400;
     const secure = window.location.protocol === "https:" ? "; Secure" : "";
-    document.cookie = `${COOKIE_NAME}=${value}; Path=/; Max-Age=${maxAge}; SameSite=Lax${secure}`;
+    // Wave 41.7 — set Domain=.hieu.asia so api.hieu.asia worker can also
+    // read the cookie for server-side enrichment.
+    const apexDomain = computeApexDomain();
+    const domain = apexDomain ? `; Domain=${apexDomain}` : "";
+    document.cookie = `${COOKIE_NAME}=${value}; Path=/; Max-Age=${maxAge}; SameSite=Lax${secure}${domain}`;
   } catch {
     /* ignore */
   }
