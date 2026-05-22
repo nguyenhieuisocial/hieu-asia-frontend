@@ -44,9 +44,38 @@ export default async function CaseStudyPage({ params }: PageProps) {
   const c = getCaseStudy(slug);
   if (!c) notFound();
 
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: c.title,
+    description: c.excerpt,
+    url: `https://hieu.asia/community/cases/${c.slug}`,
+    datePublished: c.publishedAt,
+    dateModified: c.publishedAt,
+    inLanguage: 'vi-VN',
+    author: {
+      '@type': 'Organization',
+      name: 'hieu.asia',
+      url: 'https://hieu.asia',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'hieu.asia',
+      url: 'https://hieu.asia',
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://hieu.asia/community/cases/${c.slug}`,
+    },
+  };
+
   return (
     <>
       <SiteNav />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <main id="main-content" className="min-h-screen bg-ink text-cream pt-16">
         <article className="mx-auto max-w-3xl px-6 py-12 sm:py-16">
           <Link

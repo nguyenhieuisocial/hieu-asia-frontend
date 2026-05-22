@@ -237,6 +237,23 @@ export default function TinhCamPage() {
           </div>
         </section>
 
+        <section className="relative mx-auto max-w-4xl px-6 pb-12">
+          <Link
+            href="/community/cases/quan-he-vo-chong-ran-nut"
+            className="group block rounded-xl border border-cream/10 bg-ink/30 p-5 transition-colors hover:border-gold/40"
+          >
+            <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/70">
+              Đọc case study tương tự
+            </p>
+            <p className="mt-2 font-heading text-base font-semibold text-cream group-hover:text-gold">
+              Quan hệ vợ chồng có dấu hiệu rạn nứt — có nên ly hôn?
+            </p>
+            <p className="mt-1.5 text-xs leading-relaxed text-cream/65">
+              Nữ, 42 tuổi · cung Phu Thê có Thiên Cơ + Hoá Kỵ · compatibility check chỉ ra va chạm là phong cách, không phải giá trị.
+            </p>
+          </Link>
+        </section>
+
         <section className="relative mx-auto max-w-4xl px-6 pb-20">
           <div className="rounded-xl border border-cream/10 bg-ink/40 p-6 sm:p-8">
             <h2 className="font-heading text-2xl font-semibold text-cream">

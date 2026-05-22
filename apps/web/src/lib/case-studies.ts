@@ -87,6 +87,69 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
     ],
     publishedAt: '2026-04-22',
   },
+  {
+    slug: 'quan-he-vo-chong-ran-nut',
+    title: 'Quan hệ vợ chồng có dấu hiệu rạn nứt — có nên ly hôn?',
+    excerpt:
+      'Sau 3 năm ngại đối diện vấn đề, T. gần như quyết định ly hôn. Lá số chỉ ra cung Phu Thê có Thiên Cơ + Hoá Kỵ — đối ứng hôn nhân nhiều biến động nhưng không tự nhiên đổ vỡ. Compatibility check với chồng cho thấy điểm va chạm chính: cách giải toả căng thẳng.',
+    persona: 'Nữ, 42 tuổi, kế toán, 12 năm hôn nhân, 1 con tuổi teen',
+    year: 2025,
+    insight:
+      'Cung Phu Thê (Thiên Cơ + Hoá Kỵ) — biến động cao, nhưng không phải mệnh "ly tán". Compatibility với chồng (Mộc + Kim) tương khắc về phong cách giao tiếp, không phải về giá trị cốt lõi. Methodology /methodology/tu-vi giải thích chi tiết.',
+    decision:
+      'T. không quyết định ngay. Dùng 60 ngày để: viết Decision Brief mỗi tuần về 1 va chạm cụ thể, đăng ký 1 phiên tư vấn cặp đôi, và quan trọng nhất — dừng tự đổ lỗi. Sau 60 ngày, T. + chồng quyết định không ly hôn nhưng đăng ký liệu trình counseling 6 tháng. 18 tháng sau, T. nói "vẫn có lúc khó, nhưng không còn nghĩ đến chuyện kết thúc."',
+    reflection:
+      '"Lá số không nói tôi nên ở hay đi. Nó cho tôi khung để hỏi câu đúng: \'Vấn đề là phong cách hay là giá trị?\' Khi rõ là phong cách, tôi mới dám chọn ở lại để thay đổi phong cách thay vì bỏ giá trị."',
+    related: [
+      { href: '/compatibility', label: 'Hợp đôi 2 lá số' },
+      { href: '/lo-trinh/tinh-cam', label: 'Lộ trình quyết định gia đình' },
+      { href: '/decisions/new', label: 'Tạo Decision Brief cho quyết định của bạn' },
+      { href: '/methodology/tu-vi', label: 'Methodology Tử Vi đầy đủ' },
+    ],
+    publishedAt: '2026-04-05',
+  },
+  {
+    slug: 'dau-tu-bat-dong-san-dau-tien',
+    title: 'Đầu tư bất động sản đầu tiên — có nên nhảy vào lúc thị trường đỉnh?',
+    excerpt:
+      'Sau 8 năm tích luỹ, M. gần như chốt mua căn hộ chung cư TP.HCM thì đại vận sắp chuyển. Lá số chỉ ra cung Tài Bạch + Điền Trạch — không hợp đầu tư BĐS chu kỳ ngắn. Decision Brief cùng tư vấn tài chính giúp M. nhìn ra: bài toán không phải mua hay không, mà là cho mục đích gì.',
+    persona: 'Nam, 35 tuổi, kỹ sư, đã tiết kiệm 8 năm, đang phân vân giữa 2 căn hộ ở TP.HCM và Đà Nẵng',
+    year: 2026,
+    insight:
+      'Cung Điền Trạch (Thái Âm + Phong Cáo) — phù hợp BĐS để ở/dài hạn, không hợp lướt sóng. Cung Tài Bạch (Vũ Khúc) — quản lý tiền cẩn trọng. Đại vận 36-45 chuyển sang cung Mệnh có Thiên Cơ — biến động sự nghiệp cao. Methodology /methodology/algorithm-changelog mô tả cách tính đại vận.',
+    decision:
+      'M. quyết định: không mua BĐS ngay. Thay vào đó: 50% tiền tiết kiệm gửi ETF quốc tế (đa dạng hoá), 30% giữ tiền mặt (đệm chuyển nghề), 20% mua căn studio Đà Nẵng làm second home (không vay). Lý do: cung Điền Trạch hợp BĐS ở thật, đại vận 36-45 không hợp lock liquidity. 12 tháng sau, M. đổi nghề thành công nhờ có đệm tiền mặt.',
+    reflection:
+      '"Bạn bè bảo tôi mua ngay vì \'giá lên\'. Lá số bảo tôi đứt mạch nếu đại vận chuyển. Cuối cùng tôi không mua theo logic \'giá\', tôi mua theo logic \'cuộc đời tôi sẽ ra sao 5 năm tới\'."',
+    related: [
+      { href: '/career-fit', label: 'Career Fit công cụ' },
+      { href: '/lo-trinh/su-nghiep', label: 'Lộ trình nghề nghiệp' },
+      { href: '/lo-trinh/ke-hoach-nam', label: 'Lộ trình kế hoạch năm' },
+      { href: '/methodology/tu-vi', label: 'Methodology Tử Vi đầy đủ' },
+    ],
+    publishedAt: '2026-03-20',
+  },
+  {
+    slug: 'khoi-nghiep-lan-thu-3',
+    title: 'Khởi nghiệp lần thứ 3 sau 2 thất bại — có nên thử nữa?',
+    excerpt:
+      'Sau 2 lần đóng startup (1 lần do market timing, 1 lần do co-founder), Q. ngại thử lần 3. Lá số chỉ ra cung Mệnh có Phá Quân + Liêm Trinh — mẫu hình "phải vỡ rồi mới định hình". Decision Brief giúp Q. tách 2 thất bại thành 2 bài học khác nhau.',
+    persona: 'Nam, 41 tuổi, founder 2 startup đã đóng, đang phân vân giữa đi làm thuê an toàn vs thử lần nữa với ý tưởng mới',
+    year: 2025,
+    insight:
+      'Cung Mệnh (Phá Quân + Liêm Trinh) — sáng tạo + bứt phá, nhưng dễ tự đốt mình. Cung Quan Lộc (Tử Vi + Hoá Lộc) — phù hợp lãnh đạo có chiều sâu, không hợp "fast & loose". Hai thất bại trước: lần 1 đúng năng lực sai timing, lần 2 sai năng lực (chọn co-founder không phù hợp). Methodology /methodology/tu-vi chi tiết Phá Quân + Liêm Trinh.',
+    decision:
+      'Q. không đi làm thuê. Q. cũng không khởi nghiệp ngay. Dùng 90 ngày để: viết Decision Brief về 3 ý tưởng đang có, gặp 10 người đã trải qua startup lần 3+ (network sâu), và xây cấu trúc co-founder/advisor TRƯỚC khi quyết định ý tưởng. Sau 90 ngày, Q. chọn ý tưởng thứ 2 (B2B SaaS) cùng 1 co-founder cũ từ lần 1 (đã biết nhau 8 năm). 18 tháng sau, startup raise được seed, Q. nói "lần này tôi không sợ vỡ — tôi sợ vỡ không có học."',
+    reflection:
+      '"Lá số không bảo tôi sẽ thành công. Nó bảo tôi: \'Bạn được sinh ra để vỡ và xây lại — không có cách khác.\' Khi tôi chấp nhận điều đó, tôi không còn sợ thử nữa."',
+    related: [
+      { href: '/career-fit', label: 'Career Fit công cụ' },
+      { href: '/lo-trinh/su-nghiep', label: 'Lộ trình nghề nghiệp' },
+      { href: '/decisions/new', label: 'Tạo Decision Brief cho quyết định của bạn' },
+      { href: '/methodology/tu-vi', label: 'Methodology Tử Vi đầy đủ' },
+    ],
+    publishedAt: '2026-05-10',
+  },
 ] as const;
 
 export function getCaseStudy(slug: string): CaseStudy | undefined {

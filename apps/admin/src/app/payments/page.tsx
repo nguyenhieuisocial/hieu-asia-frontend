@@ -30,6 +30,7 @@ import { CreditCard, DollarSign, Ticket, Undo2, TrendingUp, Download } from 'luc
 import type { AdminCoupon, AdminTransaction } from '@/lib/mock-data';
 import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
 import { useOptimisticMutation } from '@/lib/optimistic-mutation';
+import { useSavedFilters } from '@/lib/saved-filters';
 
 const STATUS_TONE: Record<AdminTransaction['status'], React.ComponentProps<typeof StatusBadge>['status']> = {
   succeeded: 'success',
@@ -54,9 +55,27 @@ function maskSecret(value: string | null | undefined): string {
   return `${s.slice(0, 4)}…${s.slice(-4)}`;
 }
 
+type StatusFilter = 'all' | AdminTransaction['status'];
+type PlanFilter = 'all' | AdminTransaction['plan'];
+
+interface PaymentsFilter {
+  status: StatusFilter;
+  plan: PlanFilter;
+}
+
 export default function AdminPaymentsPage() {
   const qc = useQueryClient();
   const [page, setPage] = React.useState(1);
+  const [status, setStatus] = React.useState<StatusFilter>('all');
+  const [plan, setPlan] = React.useState<PlanFilter>('all');
+
+  // Saved filter presets (status + plan). Persisted under
+  // `hieu-admin:filters:payments:v1`.
+  const { presets, savePreset, loadPreset, deletePreset } = useSavedFilters<PaymentsFilter>(
+    'payments',
+    { status: 'all', plan: 'all' },
+  );
+
   const tx = useQuery({
     queryKey: ['admin', 'transactions', page],
     queryFn: () => listTransactions({ page, page_size: 15 }),
@@ -113,14 +132,37 @@ export default function AdminPaymentsPage() {
     },
   ];
 
-  // KPIs aggregated from the current page.
-  const rows = tx.data?.rows ?? [];
+  // KPIs aggregated from the current page (post-filter).
+  const allRows = tx.data?.rows ?? [];
+  const rows = React.useMemo(
+    () =>
+      allRows.filter((t) => {
+        if (status !== 'all' && t.status !== status) return false;
+        if (plan !== 'all' && t.plan !== plan) return false;
+        return true;
+      }),
+    [allRows, status, plan],
+  );
   const totalRevenue = rows
     .filter((t) => t.status === 'succeeded')
     .reduce((s, t) => s + t.amount_usd, 0);
   const refundedCount = rows.filter((t) => t.status === 'refunded').length;
   const succeededCount = rows.filter((t) => t.status === 'succeeded').length;
   const activeCoupons = (coupons.data ?? []).filter((c) => c.active).length;
+
+  const applyPreset = (name: string) => {
+    const p = loadPreset(name);
+    if (!p) return;
+    setStatus(p.status);
+    setPlan(p.plan);
+  };
+
+  const onSavePreset = () => {
+    if (typeof window === 'undefined') return;
+    const name = window.prompt('Tên bộ lọc?', 'Bộ lọc của tôi');
+    if (!name || !name.trim()) return;
+    savePreset(name, { status, plan });
+  };
 
   return (
     <div className="space-y-6">
@@ -169,6 +211,77 @@ export default function AdminPaymentsPage() {
           <div>
             <CardTitle>Giao dịch gần đây</CardTitle>
             <CardDescription>Webhook events ghi tại `/v1/payments/webhook`. Refund đi qua Stripe API.</CardDescription>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value as StatusFilter)}
+                className="h-8 rounded-md border border-gold/20 bg-ink/60 px-2 text-xs text-cream focus:border-gold focus:outline-none"
+                aria-label="Lọc theo trạng thái"
+              >
+                <option value="all">Tất cả status</option>
+                <option value="succeeded">Succeeded</option>
+                <option value="refunded">Refunded</option>
+                <option value="pending">Pending</option>
+                <option value="failed">Failed</option>
+              </select>
+              <select
+                value={plan}
+                onChange={(e) => setPlan(e.target.value as PlanFilter)}
+                className="h-8 rounded-md border border-gold/20 bg-ink/60 px-2 text-xs text-cream focus:border-gold focus:outline-none"
+                aria-label="Lọc theo gói"
+              >
+                <option value="all">Tất cả gói</option>
+                <option value="mentor_month">Mentor tháng</option>
+                <option value="mentor_year">Mentor năm</option>
+                <option value="lifetime">Trọn đời</option>
+              </select>
+              {presets.length > 0 && (
+                <select
+                  onChange={(e) => {
+                    if (e.target.value) applyPreset(e.target.value);
+                    e.target.value = '';
+                  }}
+                  defaultValue=""
+                  className="h-8 rounded-md border border-gold/30 bg-ink/60 px-2 text-xs text-gold focus:border-gold focus:outline-none"
+                  aria-label="Bộ lọc đã lưu"
+                >
+                  <option value="" disabled>
+                    Bộ lọc đã lưu…
+                  </option>
+                  {presets.map((p) => (
+                    <option key={p.name} value={p.name}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+              {presets.length > 0 && (
+                <select
+                  onChange={(e) => {
+                    if (!e.target.value) return;
+                    if (window.confirm(`Xoá bộ lọc "${e.target.value}"?`)) {
+                      deletePreset(e.target.value);
+                    }
+                    e.target.value = '';
+                  }}
+                  defaultValue=""
+                  className="h-8 rounded-md border border-red-400/20 bg-ink/60 px-2 text-xs text-red-300 focus:border-red-400 focus:outline-none"
+                  aria-label="Xoá bộ lọc đã lưu"
+                >
+                  <option value="" disabled>
+                    Xoá…
+                  </option>
+                  {presets.map((p) => (
+                    <option key={p.name} value={p.name}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+              <Button size="sm" variant="outline" onClick={onSavePreset}>
+                Lưu bộ lọc
+              </Button>
+            </div>
           </div>
           <Button
             size="sm"
@@ -205,13 +318,19 @@ export default function AdminPaymentsPage() {
         <CardContent>
           <DataTable
             columns={txCols}
-            rows={tx.data?.rows ?? []}
+            rows={rows}
             rowKey={(t) => t.id}
             page={tx.data?.page ?? 1}
             pageSize={tx.data?.page_size ?? 15}
             total={tx.data?.total ?? 0}
             onPageChange={setPage}
-            emptyState={tx.isLoading ? 'Đang tải…' : 'Chưa có giao dịch.'}
+            emptyState={
+              tx.isLoading
+                ? 'Đang tải…'
+                : status !== 'all' || plan !== 'all'
+                  ? 'Không có giao dịch khớp bộ lọc.'
+                  : 'Chưa có giao dịch.'
+            }
           />
         </CardContent>
       </Card>

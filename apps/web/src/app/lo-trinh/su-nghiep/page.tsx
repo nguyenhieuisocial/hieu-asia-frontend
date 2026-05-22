@@ -236,6 +236,23 @@ export default function SuNghiepPage() {
           </div>
         </section>
 
+        <section className="relative mx-auto max-w-4xl px-6 pb-12">
+          <Link
+            href="/community/cases/khoi-nghiep-lan-thu-3"
+            className="group block rounded-xl border border-cream/10 bg-ink/30 p-5 transition-colors hover:border-gold/40"
+          >
+            <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/70">
+              Đọc case study tương tự
+            </p>
+            <p className="mt-2 font-heading text-base font-semibold text-cream group-hover:text-gold">
+              Khởi nghiệp lần thứ 3 sau 2 thất bại — có nên thử nữa?
+            </p>
+            <p className="mt-1.5 text-xs leading-relaxed text-cream/65">
+              Nam, 41 tuổi · cung Mệnh Phá Quân + Liêm Trinh · tách 2 thất bại thành 2 bài học khác nhau trước khi quyết.
+            </p>
+          </Link>
+        </section>
+
         <section className="relative mx-auto max-w-4xl px-6 pb-20">
           <div className="rounded-xl border border-cream/10 bg-ink/40 p-6 sm:p-8">
             <h2 className="font-heading text-2xl font-semibold text-cream">

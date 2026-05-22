@@ -11,11 +11,14 @@ import {
   Label,
   cn,
 } from '@hieu-asia/ui';
-import { Users, Crown, Shield, Eye, Plus, Pencil, Trash2, Search, Download } from 'lucide-react';
+import { Users, Crown, Shield, Eye, Plus, Pencil, Trash2, Search, Download, History, BookmarkPlus, Lock } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
+import { AuditLogDrawer } from '@/components/admin/audit-drawer';
 import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
+import { useBulkSelection } from '@/lib/bulk-action';
+import { useSavedFilters } from '@/lib/saved-filters';
 
 type AdminRole = 'owner' | 'admin' | 'viewer';
 
@@ -84,7 +87,17 @@ export default function AdminUsersPage() {
   const [deleting, setDeleting] = React.useState<AdminUser | null>(null);
   const [search, setSearch] = React.useState('');
   const [roleFilter, setRoleFilter] = React.useState<'all' | AdminRole>('all');
+  const [auditUser, setAuditUser] = React.useState<AdminUser | null>(null);
+  const [bulkSuspendOpen, setBulkSuspendOpen] = React.useState(false);
+  const [bulkPending, setBulkPending] = React.useState(false);
   const searchRef = React.useRef<HTMLInputElement>(null);
+
+  // Saved filter presets (search + roleFilter) — persisted in localStorage
+  // under `hieu-admin:filters:users:v1`.
+  const { presets, savePreset, loadPreset, deletePreset } = useSavedFilters<{
+    search: string;
+    roleFilter: 'all' | AdminRole;
+  }>('users', { search: '', roleFilter: 'all' });
 
   const showFlash = React.useCallback((kind: 'ok' | 'err', msg: string) => {
     setFlash({ kind, msg });
@@ -137,6 +150,63 @@ export default function AdminUsersPage() {
       return true;
     });
   }, [users, search, roleFilter]);
+
+  // Bulk selection — owners are unselectable (cannot suspend owners).
+  const selectable = React.useMemo(() => filtered.filter((u) => u.role !== 'owner'), [filtered]);
+  const bulk = useBulkSelection(selectable, (u) => u.id);
+
+  const onApplyPreset = React.useCallback(
+    (name: string) => {
+      const p = loadPreset(name);
+      if (!p) return;
+      setSearch(p.search);
+      setRoleFilter(p.roleFilter);
+    },
+    [loadPreset],
+  );
+
+  const onSavePreset = React.useCallback(() => {
+    if (typeof window === 'undefined') return;
+    const name = window.prompt('Tên bộ lọc?', 'Bộ lọc của tôi');
+    if (!name || !name.trim()) return;
+    savePreset(name, { search, roleFilter });
+    showFlash('ok', `Đã lưu bộ lọc "${name.trim()}"`);
+  }, [savePreset, search, roleFilter, showFlash]);
+
+  // "Tạm khoá" = downgrade role to `viewer`. The KV-backed admin user schema
+  // has no `status` column, so we model suspension as revoking write privs.
+  // TODO(sprint-3): replace with server-side bulk endpoint `POST /admin/users/bulk`
+  // that accepts `{ ids: string[], action: 'suspend' }` and writes one audit_log row.
+  const runBulkSuspend = React.useCallback(async () => {
+    setBulkPending(true);
+    const ids = Array.from(bulk.selected);
+    let ok = 0;
+    let fail = 0;
+    for (const id of ids) {
+      try {
+        const r = await fetch(`/api/admin/users/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role: 'viewer' }),
+        });
+        const data = await r.json().catch(() => ({ ok: false }));
+        if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
+        ok += 1;
+      } catch {
+        fail += 1;
+      }
+    }
+    setBulkPending(false);
+    setBulkSuspendOpen(false);
+    bulk.clear();
+    showFlash(
+      fail === 0 ? 'ok' : 'err',
+      fail === 0
+        ? `Đã tạm khoá ${ok} user (đổi role → viewer)`
+        : `Tạm khoá: ${ok} OK · ${fail} lỗi`,
+    );
+    await refreshAfterMutation();
+  }, [bulk, refreshAfterMutation, showFlash]);
 
   const ownerCount = users.filter((u) => u.role === 'owner').length;
   const adminCount = users.filter((u) => u.role === 'admin').length;
@@ -252,7 +322,7 @@ export default function AdminUsersPage() {
                 className="pl-9"
               />
             </div>
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap items-center gap-1.5">
               {ROLE_FILTERS.map((f) => {
                 const active = roleFilter === f.value;
                 return (
@@ -271,6 +341,61 @@ export default function AdminUsersPage() {
                   </button>
                 );
               })}
+              <div className="ml-auto flex items-center gap-1.5">
+                {presets.length > 0 && (
+                  <select
+                    onChange={(e) => {
+                      if (e.target.value) onApplyPreset(e.target.value);
+                      e.target.value = '';
+                    }}
+                    defaultValue=""
+                    className="h-7 rounded-md border border-gold/20 bg-ink/60 px-2 text-xs text-cream focus:border-gold focus:outline-none"
+                    aria-label="Chọn bộ lọc đã lưu"
+                  >
+                    <option value="" disabled>
+                      Bộ lọc đã lưu…
+                    </option>
+                    {presets.map((p) => (
+                      <option key={p.name} value={p.name}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                {presets.length > 0 && (
+                  <select
+                    onChange={(e) => {
+                      if (!e.target.value) return;
+                      if (window.confirm(`Xoá bộ lọc "${e.target.value}"?`)) {
+                        deletePreset(e.target.value);
+                        showFlash('ok', `Đã xoá bộ lọc "${e.target.value}"`);
+                      }
+                      e.target.value = '';
+                    }}
+                    defaultValue=""
+                    className="h-7 rounded-md border border-red-400/20 bg-ink/60 px-2 text-xs text-red-300 focus:border-red-400 focus:outline-none"
+                    aria-label="Xoá bộ lọc đã lưu"
+                  >
+                    <option value="" disabled>
+                      Xoá…
+                    </option>
+                    {presets.map((p) => (
+                      <option key={p.name} value={p.name}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                <button
+                  type="button"
+                  onClick={onSavePreset}
+                  className="inline-flex h-7 items-center gap-1 rounded-md border border-gold/20 bg-ink/40 px-2 text-xs text-cream/80 hover:border-gold/50 hover:text-gold"
+                  title="Lưu search + role hiện tại thành preset"
+                >
+                  <BookmarkPlus className="h-3 w-3" />
+                  Lưu bộ lọc
+                </button>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -305,6 +430,19 @@ export default function AdminUsersPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gold/15 text-left">
+                    <th className="w-10 px-3 py-3">
+                      <input
+                        type="checkbox"
+                        checked={bulk.allSelected}
+                        ref={(el) => {
+                          if (el) el.indeterminate = bulk.someSelected;
+                        }}
+                        onChange={bulk.toggleAll}
+                        disabled={selectable.length === 0}
+                        aria-label="Chọn tất cả user (trừ owner)"
+                        className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-ink/40 text-gold accent-gold disabled:cursor-not-allowed disabled:opacity-30"
+                      />
+                    </th>
                     <th className="px-4 py-3 font-mono text-xs uppercase tracking-wider text-gold/80">
                       Email
                     </th>
@@ -314,7 +452,7 @@ export default function AdminUsersPage() {
                     <th className="px-4 py-3 font-mono text-xs uppercase tracking-wider text-gold/80" style={{ width: '180px' }}>
                       Tạo lúc
                     </th>
-                    <th className="px-4 py-3 text-right font-mono text-xs uppercase tracking-wider text-gold/80" style={{ width: '160px' }}>
+                    <th className="px-4 py-3 text-right font-mono text-xs uppercase tracking-wider text-gold/80" style={{ width: '200px' }}>
                       Thao tác
                     </th>
                   </tr>
@@ -322,11 +460,27 @@ export default function AdminUsersPage() {
                 <tbody>
                   {filtered.map((u) => {
                     const RoleIcon = ROLE_ICON[u.role];
+                    const isOwner = u.role === 'owner';
+                    const isSelected = bulk.isSelected(u.id);
                     return (
                       <tr
                         key={u.id}
-                        className="border-b border-gold/10 transition-colors last:border-0 hover:bg-gold/[0.03]"
+                        className={cn(
+                          'border-b border-gold/10 transition-colors last:border-0 hover:bg-gold/[0.03]',
+                          isSelected && 'bg-gold/5',
+                        )}
                       >
+                        <td className="px-3 py-3">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            disabled={isOwner}
+                            onChange={() => bulk.toggle(u.id)}
+                            aria-label={`Chọn ${u.email}`}
+                            className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-ink/40 text-gold accent-gold disabled:cursor-not-allowed disabled:opacity-30"
+                            title={isOwner ? 'Không thể chọn owner' : 'Chọn'}
+                          />
+                        </td>
                         <td className="px-4 py-3 text-cream">{u.email}</td>
                         <td className="px-4 py-3">
                           <span
@@ -349,6 +503,15 @@ export default function AdminUsersPage() {
                         </td>
                         <td className="px-4 py-3 text-right">
                           <div className="inline-flex gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => setAuditUser(u)}
+                              className="inline-flex items-center gap-1 rounded border border-cream/20 px-2 py-1 text-xs text-cream/70 hover:bg-cream/5 hover:text-cream"
+                              title="Xem audit log"
+                            >
+                              <History className="h-3 w-3" />
+                              Log
+                            </button>
                             <button
                               type="button"
                               onClick={() => setEditing(u)}
@@ -432,6 +595,100 @@ export default function AdminUsersPage() {
           }}
         />
       )}
+
+      {/* Floating bulk action bar */}
+      {bulk.count > 0 && (
+        <div className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2 lg:left-[calc(50%+8rem)]">
+          <div className="flex items-center gap-2 rounded-full border border-gold/40 bg-ink/95 px-3 py-2 shadow-2xl backdrop-blur">
+            <span className="px-2 font-mono text-xs text-gold">{bulk.count} đã chọn</span>
+            <Button
+              size="sm"
+              onClick={() => setBulkSuspendOpen(true)}
+              disabled={bulkPending}
+              className="bg-amber-500/90 text-ink hover:bg-amber-500"
+            >
+              <Lock className="mr-1.5 h-3.5 w-3.5" />
+              Tạm khoá {bulk.count} user
+            </Button>
+            <Button size="sm" variant="ghost" onClick={bulk.clear}>
+              Bỏ chọn
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {bulkSuspendOpen && (
+        <BulkSuspendConfirm
+          count={bulk.count}
+          pending={bulkPending}
+          onClose={() => setBulkSuspendOpen(false)}
+          onConfirm={runBulkSuspend}
+        />
+      )}
+
+      <AuditLogDrawer
+        resourceId={auditUser?.id ?? null}
+        resourceLabel={auditUser?.email}
+        resourceType="user"
+        open={!!auditUser}
+        onClose={() => setAuditUser(null)}
+        limit={10}
+      />
+    </div>
+  );
+}
+
+function BulkSuspendConfirm({
+  count,
+  pending,
+  onClose,
+  onConfirm,
+}: {
+  count: number;
+  pending: boolean;
+  onClose: () => void;
+  onConfirm: () => Promise<void>;
+}) {
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !pending) onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose, pending]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4"
+      onClick={pending ? undefined : onClose}
+    >
+      <div
+        className="w-full max-w-md rounded-lg border border-amber-500/30 bg-ink p-6 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 className="font-heading text-xl text-cream">Tạm khoá {count} user?</h2>
+        <p className="mt-3 text-sm text-cream/75">
+          Sẽ đổi role thành <b className="text-cream">viewer</b> (chỉ đọc) cho{' '}
+          <b className="text-cream">{count} user</b>. User vẫn đăng nhập được nhưng không thao tác
+          được. Owner không bị ảnh hưởng.
+        </p>
+        <p className="mt-2 text-xs text-cream/45">
+          {count} request PATCH chạy tuần tự. Bulk endpoint server-side sẽ có ở Sprint 3.
+        </p>
+        <div className="mt-5 flex justify-end gap-2">
+          <Button variant="outline" size="sm" onClick={onClose} disabled={pending}>
+            Hủy
+          </Button>
+          <Button
+            size="sm"
+            onClick={onConfirm}
+            disabled={pending}
+            className="bg-amber-500/90 text-ink hover:bg-amber-500"
+          >
+            {pending ? 'Đang xử lý…' : `Tạm khoá ${count} user`}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

@@ -36,6 +36,7 @@ import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
+import { useBulkSelection } from '@/lib/bulk-action';
 
 interface Coupon {
   code: string;
@@ -169,33 +170,17 @@ export default function CouponsPage() {
   }, [coupons, search, statusFilter]);
 
   // -- Bulk selection ---------------------------------------------------------
-  const [selected, setSelected] = React.useState<Set<string>>(new Set());
-
-  const toggleOne = (code: string) =>
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(code)) next.delete(code);
-      else next.add(code);
-      return next;
-    });
-
-  const allActiveFilteredSelected =
-    filtered.length > 0 &&
-    filtered.filter((c) => c.status === 'active').every((c) => selected.has(c.code));
-
-  const togglePage = () =>
-    setSelected((prev) => {
-      const next = new Set(prev);
-      const activeOnPage = filtered.filter((c) => c.status === 'active');
-      if (activeOnPage.every((c) => next.has(c.code))) {
-        for (const c of activeOnPage) next.delete(c.code);
-      } else {
-        for (const c of activeOnPage) next.add(c.code);
-      }
-      return next;
-    });
-
-  const clearSelection = () => setSelected(new Set());
+  // Only active coupons are selectable (revoked/expired can't be re-revoked).
+  const activeFiltered = React.useMemo(
+    () => filtered.filter((c) => c.status === 'active'),
+    [filtered],
+  );
+  const bulk = useBulkSelection(activeFiltered, (c) => c.code);
+  const selected = bulk.selected;
+  const allActiveFilteredSelected = bulk.allSelected;
+  const togglePage = bulk.toggleAll;
+  const toggleOne = bulk.toggle;
+  const clearSelection = bulk.clear;
 
   // -- KPIs -------------------------------------------------------------------
   const activeCount = coupons.filter((c) => c.status === 'active').length;
@@ -249,12 +234,14 @@ export default function CouponsPage() {
     revokeMut.mutate(code);
   }
 
+  // TODO(sprint-3): replace client-side loop with `POST /admin/coupons/bulk-revoke`
+  // that accepts `{ codes: string[] }` and writes one audit_log entry.
   async function bulkRevoke() {
     const codes = Array.from(selected);
     if (codes.length === 0) return;
     if (
       typeof window !== 'undefined' &&
-      !window.confirm(`Revoke ${codes.length} coupon? Action không undo được.`)
+      !window.confirm(`Vô hiệu hoá ${codes.length} coupon? Action không undo được.`)
     )
       return;
     for (const c of codes) {
@@ -264,7 +251,7 @@ export default function CouponsPage() {
         toast.error(`Revoke ${c} thất bại`, { description: (err as Error).message });
       }
     }
-    toast.success(`Đã revoke ${codes.length} coupon`);
+    toast.success(`Đã vô hiệu hoá ${codes.length} coupon`);
     clearSelection();
     qc.invalidateQueries({ queryKey: ['admin', 'coupons'] });
   }
@@ -533,7 +520,7 @@ export default function CouponsPage() {
               className="bg-red-500/90 text-cream hover:bg-red-500"
             >
               <Trash2 className="mr-1.5 h-3.5 w-3.5" />
-              Revoke {selected.size}
+              Vô hiệu hoá {selected.size} coupon
             </Button>
             <Button size="sm" variant="ghost" onClick={clearSelection}>
               Bỏ chọn
