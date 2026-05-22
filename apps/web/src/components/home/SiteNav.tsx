@@ -232,71 +232,111 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
   );
 }
 
-function ToolsDropdown() {
+/**
+ * Generic click-toggle dropdown (Wave 38.3 fix).
+ * Replaces the previous group-hover CSS-only pattern which was broken on
+ * touch devices and frustrating for click-instead-of-hover users.
+ * Same pattern as AuthedMenu — state + click-outside + Escape + auto-close
+ * on item nav.
+ */
+function ClickDropdown({
+  label,
+  items,
+  widthClass,
+  footer,
+}: {
+  label: string;
+  items: readonly NavLink[];
+  widthClass: string;
+  footer?: { href: string; label: string };
+}) {
+  const [open, setOpen] = React.useState(false);
+  const ref = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    if (!open) return;
+    function onDocClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setOpen(false);
+    }
+    document.addEventListener('mousedown', onDocClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDocClick);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
   return (
-    <div className="group relative">
+    <div ref={ref} className="relative">
       <button
         type="button"
+        onClick={() => setOpen((o) => !o)}
         className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-gold"
         aria-haspopup="true"
+        aria-expanded={open}
       >
-        Công cụ
-        <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" aria-hidden="true" />
+        {label}
+        <ChevronDown
+          className={cn(
+            'h-3.5 w-3.5 transition-transform',
+            open && 'rotate-180',
+          )}
+          aria-hidden="true"
+        />
       </button>
-      <div
-        className="invisible absolute left-1/2 top-full z-50 mt-1 w-64 -translate-x-1/2 rounded-xl border border-border bg-card/95 p-2 opacity-0 shadow-2xl backdrop-blur-md transition-all group-hover:visible group-hover:opacity-100"
-        role="menu"
-      >
-        {TOOLS_LINKS.map((l) => (
-          <Link
-            key={l.href}
-            href={l.href}
-            className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-gold/10 hover:text-gold"
-            role="menuitem"
-          >
-            {l.label}
-          </Link>
-        ))}
-      </div>
+      {open && (
+        <div
+          className={cn(
+            'absolute left-1/2 top-full z-50 mt-1 -translate-x-1/2 rounded-xl border border-border bg-card/95 p-2 shadow-2xl backdrop-blur-md',
+            widthClass,
+          )}
+          role="menu"
+        >
+          {items.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              onClick={() => setOpen(false)}
+              className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-gold/10 hover:text-gold"
+              role="menuitem"
+            >
+              {l.label}
+            </Link>
+          ))}
+          {footer && (
+            <>
+              <div className="my-1 h-px bg-muted/5" />
+              <Link
+                href={footer.href}
+                onClick={() => setOpen(false)}
+                className="block rounded-md px-3 py-2 text-sm font-medium text-gold transition-colors hover:bg-gold/10"
+                role="menuitem"
+              >
+                {footer.label}
+              </Link>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }
 
+function ToolsDropdown() {
+  return <ClickDropdown label="Công cụ" items={TOOLS_LINKS} widthClass="w-64" />;
+}
+
 function LearnDropdown() {
   return (
-    <div className="group relative">
-      <button
-        type="button"
-        className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-gold"
-        aria-haspopup="true"
-      >
-        Học
-        <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" aria-hidden="true" />
-      </button>
-      <div
-        className="invisible absolute left-1/2 top-full z-50 mt-1 w-60 -translate-x-1/2 rounded-xl border border-border bg-card/95 p-2 opacity-0 shadow-2xl backdrop-blur-md transition-all group-hover:visible group-hover:opacity-100"
-        role="menu"
-      >
-        {LEARN_LINKS.map((l) => (
-          <Link
-            key={l.href}
-            href={l.href}
-            className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-gold/10 hover:text-gold"
-            role="menuitem"
-          >
-            {l.label}
-          </Link>
-        ))}
-        <div className="my-1 h-px bg-muted/5" />
-        <Link
-          href="/learn"
-          className="block rounded-md px-3 py-2 text-sm font-medium text-gold transition-colors hover:bg-gold/10"
-          role="menuitem"
-        >
-          Tất cả bài học →
-        </Link>
-      </div>
-    </div>
+    <ClickDropdown
+      label="Học"
+      items={LEARN_LINKS}
+      widthClass="w-60"
+      footer={{ href: '/learn', label: 'Tất cả bài học →' }}
+    />
   );
 }
 
