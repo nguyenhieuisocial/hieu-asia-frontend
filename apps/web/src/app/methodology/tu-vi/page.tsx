@@ -1016,14 +1016,16 @@ export default function MethodologyTuViPage() {
                 </li>
                 <li>
                   Giờ sinh không rõ → độ chắc chắn giảm. Engine sẽ giảm confidence và
-                  Mentor sẽ ưu tiên hỏi lại thay vì đoán cứng. Xem trang{' '}
+                  Mentor sẽ ưu tiên hỏi lại thay vì đoán cứng. Bạn có thể dùng{' '}
                   <Link
-                    href="/onboarding/situation"
+                    href="/tu-vi/rectify"
                     className="text-gold underline-offset-4 hover:underline"
                   >
-                    /onboarding/situation
+                    /tu-vi/rectify
                   </Link>{' '}
-                  cho cách hồi cứu giờ sinh từ ký ức gia đình.
+                  (Birth Time Rectification) để trả lời 12 câu hồi cứu sự kiện đời, từ đó
+                  thu hẹp khung giờ (canh) khả dĩ xuống top 3 ứng viên. Đây là heuristic
+                  ước lượng, không thay thế xác định chính xác từ chuyên gia Tử Vi.
                 </li>
                 <li>
                   Lá số <strong>không thay thế</strong> bác sĩ, luật sư, hay cố vấn tài

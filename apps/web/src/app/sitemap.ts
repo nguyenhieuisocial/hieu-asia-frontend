@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { PALACES_CONTENT, ALL_STARS_CONTENT } from '@/lib/tuvi-content';
+import { listCaseStudies } from '@/lib/case-studies';
 
 const BASE_URL = 'https://hieu.asia';
 
@@ -47,6 +48,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const tuviHub: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/tu-vi`, lastModified: now, changeFrequency: 'weekly', priority: 0.85 },
+    { url: `${BASE_URL}/tu-vi/rectify`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/methodology`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/sample-report`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/tu-vi-2026`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
@@ -99,5 +101,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/affiliate/commissions`, lastModified: now, changeFrequency: 'weekly', priority: 0.65 },
   ];
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9];
+  // Wave 13 — Community case studies (§8.6).
+  const caseStudyUrls: MetadataRoute.Sitemap = listCaseStudies().map((c) => ({
+    url: `${BASE_URL}/community/cases/${c.slug}`,
+    lastModified: new Date(c.publishedAt),
+    changeFrequency: 'yearly' as const,
+    priority: 0.55,
+  }));
+  const wave13: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/community/cases`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    ...caseStudyUrls,
+  ];
+
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...wave13];
 }

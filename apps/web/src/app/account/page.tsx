@@ -15,6 +15,7 @@ import {
 import { OverviewTab } from '@/components/account/OverviewTab';
 import { MyChartTab } from '@/components/account/MyChartTab';
 import { DecisionsTab } from '@/components/account/DecisionsTab';
+import { OperatingManualTab } from '@/components/account/OperatingManualTab';
 import { MentorTab } from '@/components/account/MentorTab';
 import { PaymentsTab } from '@/components/account/PaymentsTab';
 import { AffiliateTab } from '@/components/account/AffiliateTab';
@@ -141,6 +142,7 @@ function AccountPageInner() {
               )}
               {tab === 'chart' && <MyChartTab />}
               {tab === 'decisions' && <DecisionsTab />}
+              {tab === 'manual' && <OperatingManualTab />}
               {tab === 'mentor' && <MentorTab />}
               {tab === 'payments' && <PaymentsTab />}
               {tab === 'affiliate' && <AffiliateTab />}

@@ -143,6 +143,12 @@ function OnboardingTopicInner() {
             >
               Bỏ qua, đến lập lá số →
             </Link>
+            <Link
+              href="/tu-vi/rectify"
+              className="inline-flex items-center gap-2 rounded-md border border-gold/25 px-3 py-2 text-sm text-gold/90 transition-colors hover:bg-gold/10 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+            >
+              Không biết giờ sinh? → Làm Hồi cứu (BTR)
+            </Link>
           </div>
         </section>
       </main>

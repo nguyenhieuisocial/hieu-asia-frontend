@@ -7,7 +7,7 @@
 
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { MessageCircle, Mail, BookOpen, Users, Sparkles } from 'lucide-react';
+import { MessageCircle, Mail, BookOpen, Users, Sparkles, FileText } from 'lucide-react';
 import { Button } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
@@ -61,6 +61,15 @@ const CHANNELS = [
     desc: 'Một bài ngắn mỗi tuần — không spam, không bán hàng. Huỷ bất cứ lúc nào.',
     icon: Sparkles,
     cta: 'Cuộn xuống đăng ký',
+    external: false,
+    status: 'live' as const,
+  },
+  {
+    href: '/community/cases',
+    label: 'Case studies',
+    desc: 'Quyết định thực tế từ người dùng — ẩn danh hoá, kèm methodology pages liên quan.',
+    icon: FileText,
+    cta: 'Đọc các case',
     external: false,
     status: 'live' as const,
   },

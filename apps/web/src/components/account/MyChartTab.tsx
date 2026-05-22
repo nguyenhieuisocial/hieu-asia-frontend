@@ -262,6 +262,24 @@ export function MyChartTab() {
         </CardContent>
       </Card>
 
+      {!editing && !profile.birth_time && (
+        <Card className="border-gold/30 bg-gold/5">
+          <CardHeader>
+            <CardTitle className="text-lg">Không biết giờ sinh?</CardTitle>
+            <CardDescription>
+              Trả lời 12 câu hồi cứu sự kiện đời (Birth Time Rectification) để thu hẹp
+              khung giờ khả dĩ xuống top 3 ứng viên. Ước lượng dựa trên hồi cứu, không
+              thay thế xác định chính xác từ chuyên gia.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild={false}>
+              <Link href="/tu-vi/rectify">Bắt đầu hồi cứu giờ sinh →</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">Báo cáo lá số</CardTitle>

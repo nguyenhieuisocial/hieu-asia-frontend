@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { ChevronRight } from 'lucide-react';
+import { BookOpen, ChevronRight } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 import {
   Button,
@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from '@hieu-asia/ui';
 import { readJournalEntries, readWeeklyReviews } from '@/lib/journal-storage';
+import { buildOperatingManual } from '@/lib/operating-manual';
 import { ExpertModeToggle } from './ExpertModeToggle';
 
 interface QuickStat {
@@ -125,7 +126,16 @@ function loadOverviewLocal(): Pick<OverviewData, 'chartCount' | 'decisionCount' 
 
 export interface OverviewTabProps {
   user: User;
-  onNavigate: (tab: 'chart' | 'decisions' | 'mentor' | 'payments' | 'affiliate' | 'privacy') => void;
+  onNavigate: (
+    tab:
+      | 'chart'
+      | 'decisions'
+      | 'manual'
+      | 'mentor'
+      | 'payments'
+      | 'affiliate'
+      | 'privacy',
+  ) => void;
 }
 
 export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
@@ -136,10 +146,20 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
     tier: 'free',
     activity: [],
   });
+  const [manualState, setManualState] = React.useState<
+    { ready: true; filled: number; total: number } | { ready: false } | null
+  >(null);
 
   React.useEffect(() => {
     const local = loadOverviewLocal();
     setData((prev) => ({ ...prev, ...local }));
+
+    const m = buildOperatingManual();
+    if (m) {
+      setManualState({ ready: true, filled: m.filledCount, total: m.totalCount });
+    } else {
+      setManualState({ ready: false });
+    }
 
     // Best-effort: fetch tier + chart count from /api/user/me
     fetch('/api/user/me', { cache: 'no-store' })
@@ -198,6 +218,30 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
           </div>
         ))}
       </div>
+
+      {manualState?.ready && (
+        <button
+          type="button"
+          onClick={() => onNavigate('manual')}
+          className="group flex w-full items-center gap-4 rounded-xl border border-gold/30 bg-gold/[0.06] p-4 text-left transition hover:border-gold/60 hover:bg-gold/[0.10]"
+        >
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold/40 bg-ink/60">
+            <BookOpen className="h-5 w-5 text-gold" aria-hidden />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-heading text-base text-cream">
+              Sổ tay cá nhân sẵn sàng ({manualState.filled}/{manualState.total} mục)
+            </span>
+            <span className="mt-0.5 block text-xs text-cream/70">
+              Một trang tổng hợp về bạn — in được, xuất Markdown được.
+            </span>
+          </span>
+          <ChevronRight
+            className="h-5 w-5 shrink-0 text-gold/70 transition group-hover:translate-x-0.5"
+            aria-hidden
+          />
+        </button>
+      )}
 
       <Card>
         <CardHeader>

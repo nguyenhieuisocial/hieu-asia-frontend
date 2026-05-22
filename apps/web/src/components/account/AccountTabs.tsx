@@ -9,6 +9,7 @@ import {
   CreditCard,
   Network,
   ShieldCheck,
+  BookOpen,
 } from 'lucide-react';
 import { cn } from '@hieu-asia/ui';
 
@@ -16,6 +17,7 @@ export type AccountTabId =
   | 'overview'
   | 'chart'
   | 'decisions'
+  | 'manual'
   | 'mentor'
   | 'payments'
   | 'affiliate'
@@ -31,6 +33,7 @@ export const ACCOUNT_TABS: readonly TabDef[] = [
   { id: 'overview', label: 'Tổng quan', icon: Eye },
   { id: 'chart', label: 'Lá số của tôi', icon: User },
   { id: 'decisions', label: 'Quyết định', icon: FileText },
+  { id: 'manual', label: 'Sổ tay cá nhân', icon: BookOpen },
   { id: 'mentor', label: 'Mentor', icon: MessageCircle },
   { id: 'payments', label: 'Thanh toán', icon: CreditCard },
   { id: 'affiliate', label: 'Affiliate', icon: Network },
