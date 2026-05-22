@@ -28,11 +28,25 @@ export async function middleware(request: NextRequest) {
   const rawCookie = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
   const session = await verifySession(rawCookie);
   const isLoginPage = pathname === '/login' || pathname.startsWith('/login/');
+  // API routes must NEVER get an HTML redirect — fetch() callers parse the
+  // response as JSON, and an HTML login page leaks as `Unexpected token '<',
+  // "<!DOCTYPE "...` (P0 reported 2026-05-22 on /users add-user POST).
+  // For these paths we return JSON 401 and let the client redirect via UI.
+  const isApi = pathname.startsWith('/api/');
 
   // Cookie present BUT invalid → user is locked out (stale signature, forged,
-  // or secret rotated). Clear cookie + bounce to /login. Never let them sit on
-  // a chrome-less page wondering why everything is broken.
+  // or secret rotated). Clear cookie + (for HTML) bounce to /login, or (for
+  // API) return JSON 401. Never let them sit on a chrome-less page wondering
+  // why everything is broken, and never feed HTML to a JSON parser.
   if (rawCookie && !session) {
+    if (isApi) {
+      const res = NextResponse.json(
+        { ok: false, error: 'session_invalid' },
+        { status: 401 },
+      );
+      res.cookies.set(ADMIN_SESSION_COOKIE, '', { maxAge: 0, path: '/' });
+      return res;
+    }
     const url = new URL('/login', request.url);
     if (!isLoginPage) url.searchParams.set('next', pathname);
     url.searchParams.set('reason', 'session_invalid');
@@ -53,6 +67,12 @@ export async function middleware(request: NextRequest) {
 
   // Everything else needs a verified session.
   if (!session) {
+    if (isApi) {
+      return NextResponse.json(
+        { ok: false, error: 'unauthenticated' },
+        { status: 401 },
+      );
+    }
     const url = new URL('/login', request.url);
     url.searchParams.set('next', pathname);
     return NextResponse.redirect(url);

@@ -552,6 +552,19 @@ export default function AdminUsersPage() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(payload),
             });
+            // Defensive: middleware used to 307-redirect API calls to /login,
+            // which `fetch` follows transparently and returns HTML. `r.json()`
+            // then threw "Unexpected token '<', \"<!DOCTYPE\"..." and the UI
+            // stuck on "Đang lưu…". Fixed in middleware.ts (JSON 401 for /api/*),
+            // but keep this guard so any other HTML leak (Vercel timeout page,
+            // CF 5xx, etc.) surfaces a readable error instead of a parse crash.
+            const ct = r.headers.get('content-type') ?? '';
+            if (!ct.includes('application/json')) {
+              if (r.status === 401 || r.redirected) {
+                throw new Error('Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.');
+              }
+              throw new Error(`Lỗi server (HTTP ${r.status}). Thử lại sau.`);
+            }
             const data = await r.json();
             if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
             setCreating(false);

@@ -2,14 +2,12 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  Switch,
   Tabs,
   TabsContent,
   TabsList,
@@ -17,22 +15,7 @@ import {
 } from '@hieu-asia/ui';
 import { Settings, ToggleLeft, Server, Bell, Shield, KeyRound, Cpu, Palette } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { getFeatureFlags, updateFeatureFlags, type FeatureFlags } from '@/lib/admin-api';
-import { MockBanner } from '@/components/mock-banner';
 import { PageHeader } from '@/components/admin/page-header';
-
-interface FlagDef {
-  key: keyof FeatureFlags;
-  label: string;
-  desc: string;
-}
-
-const FLAGS: FlagDef[] = [
-  { key: 'mentor_chat_enabled', label: 'Mentor chat', desc: 'Cho phép user gửi tin nhắn cho Mentor AI.' },
-  { key: 'premium_signup_open', label: 'Premium signup', desc: 'Mở đăng ký gói trả phí.' },
-  { key: 'telegram_login_enabled', label: 'Telegram login', desc: 'Cho phép đăng nhập qua Telegram WebApp.' },
-  { key: 'rag_ingestion_lock', label: 'Khoá ingest RAG', desc: 'Khoá ingest tài liệu mới (an toàn pre-release).' },
-];
 
 const ENV_DISPLAY: { key: string; value: string }[] = [
   { key: 'NEXT_PUBLIC_API_URL', value: process.env.NEXT_PUBLIC_API_URL ?? '(unset → mock mode)' },
@@ -43,13 +26,6 @@ const ENV_DISPLAY: { key: string; value: string }[] = [
 ];
 
 export default function AdminSettingsPage() {
-  const qc = useQueryClient();
-  const { data: flags } = useQuery({ queryKey: ['admin', 'flags'], queryFn: getFeatureFlags });
-  const mutation = useMutation({
-    mutationFn: updateFeatureFlags,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'flags'] }),
-  });
-
   return (
     <div className="space-y-6">
       <PageHeader
@@ -57,8 +33,6 @@ export default function AdminSettingsPage() {
         description="Feature flags + biến môi trường + đường dẫn nhanh tới các module quản trị."
         icon={<Settings className="h-5 w-5" />}
       />
-
-      <MockBanner source={flags?._source} />
 
       <Tabs defaultValue="general">
         <TabsList>
@@ -78,30 +52,26 @@ export default function AdminSettingsPage() {
                 Feature flags
               </CardTitle>
               <CardDescription>
-                Bật/tắt tính năng không cần deploy. V1 lưu in-memory — restart sẽ reset. V2 sẽ
-                persist qua KV.
+                Feature flags được quản lý ở trang{' '}
+                <Link href="/feature-flags" className="text-gold hover:underline">
+                  Feature Flags
+                </Link>
+                . Toggle ở đây gây drift schema — đã gỡ bỏ.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3">
-              {FLAGS.map((f) => {
-                const value = flags?.[f.key] ?? false;
-                return (
-                  <div
-                    key={f.key}
-                    className="flex items-center justify-between rounded-md border border-gold/15 bg-ink/40 px-4 py-3 transition-colors hover:border-gold/25"
-                  >
-                    <div className="pr-4">
-                      <p className="font-medium text-cream">{f.label}</p>
-                      <p className="text-xs text-cream/60">{f.desc}</p>
-                    </div>
-                    <Switch
-                      checked={value}
-                      onCheckedChange={(checked) => mutation.mutate({ [f.key]: checked })}
-                      disabled={mutation.isPending}
-                    />
-                  </div>
-                );
-              })}
+            <CardContent>
+              <Link
+                href="/feature-flags"
+                className="flex items-center justify-between rounded-md border border-gold/15 bg-ink/40 px-4 py-3 transition-colors hover:border-gold/30"
+              >
+                <div>
+                  <p className="font-medium text-cream">Mở Feature Flags</p>
+                  <p className="text-xs text-cream/60">
+                    Bật/tắt tính năng runtime, persist qua Worker.
+                  </p>
+                </div>
+                <span className="font-mono text-xs text-gold">→</span>
+              </Link>
             </CardContent>
           </Card>
 

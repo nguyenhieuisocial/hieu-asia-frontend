@@ -652,28 +652,8 @@ export async function toggleCoupon(code: string, active: boolean) {
 }
 
 // ---------- Feature flags ----------
-
-export interface FeatureFlags {
-  mentor_chat_enabled: boolean;
-  premium_signup_open: boolean;
-  telegram_login_enabled: boolean;
-  rag_ingestion_lock: boolean;
-}
-
-const MOCK_FLAGS: FeatureFlags = {
-  mentor_chat_enabled: true,
-  premium_signup_open: true,
-  telegram_login_enabled: true,
-  rag_ingestion_lock: false,
-};
-
-export async function getFeatureFlags() {
-  // TODO(wave-D): /admin/feature_flags not shipped.
-  return delay({ ...MOCK_FLAGS, _source: { isMock: true } as DataSource });
-}
-
-export async function updateFeatureFlags(patch: Partial<FeatureFlags>) {
-  // TODO(wave-D): PATCH /admin/feature_flags not shipped — in-memory only.
-  Object.assign(MOCK_FLAGS, patch);
-  return delay({ ...MOCK_FLAGS, _source: { isMock: true } as DataSource });
-}
+// Feature-flag CRUD lives in `frontend/apps/admin/src/app/feature-flags/page.tsx`
+// which calls the worker directly (GET /admin/feature-flags + POST /admin/feature-flags/toggle).
+// The old mock-only `getFeatureFlags` / `updateFeatureFlags` were removed because
+// they wrote to a module-level object that never persisted and used a stale
+// 4-flag schema that drifted from the worker's real 6-flag schema.
