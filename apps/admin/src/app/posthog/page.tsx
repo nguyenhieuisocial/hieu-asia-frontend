@@ -28,8 +28,11 @@ import { PageHeader } from '@/components/admin/page-header';
 import { LiveBadge } from '@/components/admin/live-badge';
 
 const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+// Wave 40/41 — US Cloud is the project we actually use. EU was a stale
+// holdover from initial template that didn't get caught in the Wave 40
+// `DEFAULT_HOST` sweep (which only covered web/miniapp).
 const POSTHOG_HOST =
-  process.env.NEXT_PUBLIC_POSTHOG_HOST ?? 'https://eu.i.posthog.com';
+  process.env.NEXT_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com';
 const DASHBOARD_URL = process.env.NEXT_PUBLIC_POSTHOG_DASHBOARD_URL;
 const PROJECT_ID = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_ID;
 
@@ -75,7 +78,7 @@ export default function AdminPostHogPage() {
       label: 'NEXT_PUBLIC_POSTHOG_HOST',
       ok: true,
       value: POSTHOG_HOST,
-      hint: 'API ingest host. EU by default.',
+      hint: 'API ingest host. US Cloud (project 434217).',
     },
     {
       label: 'NEXT_PUBLIC_POSTHOG_DASHBOARD_URL',
@@ -175,7 +178,7 @@ export default function AdminPostHogPage() {
               {' '}để hiển thị deep-link (ví dụ
               {' '}
               <code className="text-gold">
-                https://eu.posthog.com/project/12345
+                https://us.posthog.com/project/434217
               </code>
               ).
             </p>
@@ -191,16 +194,16 @@ export default function AdminPostHogPage() {
         <CardContent>
           <ol className="ml-5 list-decimal space-y-2 text-sm text-foreground/85">
             <li>
-              Tạo project tại{' '}
+              Project sống tại{' '}
               <a
-                href="https://eu.posthog.com/signup"
+                href="https://us.posthog.com/project/434217"
                 target="_blank"
                 rel="noreferrer"
                 className="text-gold underline"
               >
-                eu.posthog.com
+                us.posthog.com/project/434217
               </a>
-              {' '}và copy project API key.
+              {' '}(US Cloud). Project API key đã set trong Vercel env.
             </li>
             <li>
               Đặt <code className="text-gold">NEXT_PUBLIC_POSTHOG_KEY</code> trong
