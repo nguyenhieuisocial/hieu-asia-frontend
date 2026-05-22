@@ -11,6 +11,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  cn,
 } from '@hieu-asia/ui';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { useAuth } from '@/hooks/use-auth';
@@ -126,12 +127,33 @@ export function SiteNav() {
 
 /**
  * Authed user menu (desktop) — shows email + Dashboard + Sign-out.
- * Wave 36 fix: replace static "Đăng nhập" link so logged-in users see
- * their session state.
+ * Wave 36: replace static "Đăng nhập" link so logged-in users see session state.
+ * Wave 38.1: click-toggle (not hover) — fixes touch devices + click-instead-of-hover users.
  */
 function AuthedMenu({ user }: { user: { email?: string } }) {
   const router = useRouter();
   const [pending, setPending] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
+
+  // Close on outside click + Esc.
+  React.useEffect(() => {
+    if (!open) return;
+    function onDocClick(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setOpen(false);
+    }
+    document.addEventListener('mousedown', onDocClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDocClick);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
 
   async function onSignOut() {
     setPending(true);
@@ -141,57 +163,71 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
       router.refresh();
     } finally {
       setPending(false);
+      setOpen(false);
     }
   }
 
   return (
-    <div className="group relative hidden sm:block">
+    <div ref={containerRef} className="relative hidden sm:block">
       <button
         type="button"
+        onClick={() => setOpen((o) => !o)}
         className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
         aria-haspopup="true"
+        aria-expanded={open}
       >
         <UserCircle2 className="h-4 w-4" aria-hidden="true" />
         <span className="max-w-[120px] truncate">{user.email ?? 'Tài khoản'}</span>
-        <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" aria-hidden="true" />
+        <ChevronDown
+          className={cn(
+            'h-3.5 w-3.5 transition-transform',
+            open && 'rotate-180',
+          )}
+          aria-hidden="true"
+        />
       </button>
-      <div
-        className="invisible absolute right-0 top-full z-50 mt-1 w-56 rounded-xl border border-border bg-card/95 p-1.5 opacity-0 shadow-2xl backdrop-blur-md transition-all group-hover:visible group-hover:opacity-100"
-        role="menu"
-      >
-        <Link
-          href="/dashboard"
-          className="block rounded-md px-3 py-2 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
-          role="menuitem"
+      {open && (
+        <div
+          className="absolute right-0 top-full z-50 mt-1 w-56 rounded-xl border border-border bg-card/95 p-1.5 shadow-2xl backdrop-blur-md"
+          role="menu"
         >
-          Dashboard
-        </Link>
-        <Link
-          href="/account"
-          className="block rounded-md px-3 py-2 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
-          role="menuitem"
-        >
-          Tài khoản
-        </Link>
-        <Link
-          href="/reading"
-          className="block rounded-md px-3 py-2 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
-          role="menuitem"
-        >
-          Lá số của bạn
-        </Link>
-        <div className="my-1 h-px bg-muted/5" />
-        <button
-          type="button"
-          onClick={onSignOut}
-          disabled={pending}
-          className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-foreground/85 transition-colors hover:bg-rose-500/10 hover:text-rose-300 disabled:opacity-50"
-          role="menuitem"
-        >
-          <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
-          {pending ? 'Đang thoát…' : 'Đăng xuất'}
-        </button>
-      </div>
+          <Link
+            href="/dashboard"
+            onClick={() => setOpen(false)}
+            className="block rounded-md px-3 py-2 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
+            role="menuitem"
+          >
+            Dashboard
+          </Link>
+          <Link
+            href="/account"
+            onClick={() => setOpen(false)}
+            className="block rounded-md px-3 py-2 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
+            role="menuitem"
+          >
+            Tài khoản
+          </Link>
+          <Link
+            href="/reading"
+            onClick={() => setOpen(false)}
+            className="block rounded-md px-3 py-2 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
+            role="menuitem"
+          >
+            Lá số của bạn
+          </Link>
+          <div className="my-1 h-px bg-muted/5" />
+          <button
+            type="button"
+            onClick={onSignOut}
+            disabled={pending}
+            className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-foreground/85 transition-colors hover:bg-rose-500/10 hover:text-rose-300 disabled:opacity-50"
+            role="menuitem"
+          >
+            <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
+            {pending ? 'Đang thoát…' : 'Đăng xuất'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
