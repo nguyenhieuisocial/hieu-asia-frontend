@@ -97,9 +97,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Wave 8/9 — Multi-tier affiliate hubs (public-facing landing).
   const wave9: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/affiliate`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${BASE_URL}/affiliate/network`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${BASE_URL}/affiliate/commissions`, lastModified: now, changeFrequency: 'weekly', priority: 0.65 },
+    { url: `${BASE_URL}/affiliate/signup`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/affiliate/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
+    { url: `${BASE_URL}/affiliate/leaderboard`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
+    { url: `${BASE_URL}/affiliate/assets`, lastModified: now, changeFrequency: 'monthly', priority: 0.55 },
   ];
+
+  // Daily / reading / brand additions.
+  const waveAdditions: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/lich-van-nien/today`, lastModified: now, changeFrequency: 'daily', priority: 0.65 },
+    { url: `${BASE_URL}/lich-van-nien/ngay-tot-xau`, lastModified: now, changeFrequency: 'daily', priority: 0.6 },
+    { url: `${BASE_URL}/reading`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
+    { url: `${BASE_URL}/brand`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
+  ];
+
+  // Dynamic zodiac daily entries.
+  const ZODIAC_LIST = ['ty','suu','dan','mao','thin','ti','ngo','mui','than','dau','tuat','hoi'];
+  const zodiacDailyUrls: MetadataRoute.Sitemap = ZODIAC_LIST.map((z) => ({
+    url: `${BASE_URL}/tu-vi-hom-nay/${z}`,
+    lastModified: now,
+    changeFrequency: 'daily' as const,
+    priority: 0.55,
+  }));
 
   // Wave 13 — Community case studies (§8.6).
   const caseStudyUrls: MetadataRoute.Sitemap = listCaseStudies().map((c) => ({
@@ -113,5 +135,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...caseStudyUrls,
   ];
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...wave13];
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13];
 }

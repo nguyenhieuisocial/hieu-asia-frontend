@@ -23,10 +23,11 @@ export function NewsletterSignup({
   const [email, setEmail] = React.useState('');
   const [state, setState] = React.useState<'idle' | 'loading' | 'sent' | 'error'>('idle');
   const [error, setError] = React.useState<string | null>(null);
+  const [alreadySubscribed, setAlreadySubscribed] = React.useState(false);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email.trim()) return;
+    if (!email.trim() || state === 'loading') return;
     setState('loading');
     setError(null);
     try {
@@ -38,10 +39,12 @@ export function NewsletterSignup({
       const data = (await res.json().catch(() => ({}))) as {
         ok?: boolean;
         error?: string;
+        alreadySubscribed?: boolean;
       };
       if (!res.ok || !data.ok) {
         throw new Error(data.error ?? 'Đăng ký không thành công');
       }
+      setAlreadySubscribed(Boolean(data.alreadySubscribed));
       setState('sent');
     } catch (err) {
       setState('error');
@@ -82,9 +85,13 @@ export function NewsletterSignup({
             >
               <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" aria-hidden="true" />
               <div>
-                <p className="font-medium">Đã đăng ký!</p>
+                <p className="font-medium">
+                  {alreadySubscribed ? 'Bạn đã đăng ký trước đó' : 'Đã đăng ký'}
+                </p>
                 <p className="mt-1 text-emerald-200/80">
-                  Hẹn gặp lại trong hộp thư của bạn vào tuần tới.
+                  {alreadySubscribed
+                    ? 'Hộp thư của bạn vẫn nằm trong danh sách. Hẹn gặp lại vào tuần tới.'
+                    : 'Hãy kiểm tra hộp thư để xác nhận đăng ký.'}
                 </p>
               </div>
             </div>

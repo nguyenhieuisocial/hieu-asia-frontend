@@ -12,6 +12,7 @@
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { getPostHog } from './posthog';
+import { clearAnonState } from './anon-cleanup';
 
 let _client: SupabaseClient | null = null;
 let _disabled = false;
@@ -47,20 +48,69 @@ export function getSupabaseAuth(): SupabaseClient | null {
  * Send a magic link to `email`. The link redirects back to `/auth/callback`.
  * Returns `{ ok: true }` on success or `{ ok: false, error }` otherwise.
  */
+/**
+ * Resolve the public site origin for auth redirects.
+ *
+ * Order:
+ *   1. `NEXT_PUBLIC_SITE_URL` env (preferred, set on Vercel = https://hieu.asia)
+ *   2. `window.location.origin` (falls back to current host — works on previews)
+ *
+ * Note: The actual link inside the email is built by Supabase from its
+ * dashboard "Site URL" + this `redirectTo` as a query param. So Supabase
+ * Auth → URL Configuration → Site URL must ALSO be set to `https://hieu.asia`,
+ * else emails ship with `http://localhost:3000` links regardless of what we
+ * pass here.
+ */
+function resolveSiteOrigin(): string | undefined {
+  const envUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  if (envUrl && envUrl.startsWith('http')) return envUrl.replace(/\/$/, '');
+  if (typeof window !== 'undefined') return window.location.origin;
+  return undefined;
+}
+
 export async function sendMagicLink(
   email: string,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const supabase = getSupabaseAuth();
   if (!supabase) return { ok: false, error: 'auth_unavailable' };
 
-  const redirectTo =
-    typeof window !== 'undefined'
-      ? `${window.location.origin}/auth/callback`
-      : undefined;
+  const origin = resolveSiteOrigin();
+  const redirectTo = origin ? `${origin}/auth/callback` : undefined;
 
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: { emailRedirectTo: redirectTo },
+  });
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
+}
+
+/**
+ * Sign in with a third-party OAuth provider. Supported in Wave 14:
+ *  - google
+ *  - facebook
+ *  - apple
+ *
+ * Provider must be enabled + credentials set in Supabase dashboard
+ * (Auth → Providers). Returns immediately after triggering the redirect —
+ * the user will land back on `/auth/callback` post-OAuth.
+ */
+export async function signInWithOAuth(
+  provider: 'google' | 'facebook' | 'apple',
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const supabase = getSupabaseAuth();
+  if (!supabase) return { ok: false, error: 'auth_unavailable' };
+
+  const origin = resolveSiteOrigin();
+  const redirectTo = origin ? `${origin}/auth/callback` : undefined;
+
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: {
+      redirectTo,
+      // Force account selection so users on shared devices can pick.
+      queryParams: provider === 'google' ? { prompt: 'select_account' } : undefined,
+    },
   });
   if (error) return { ok: false, error: error.message };
   return { ok: true };
@@ -77,4 +127,8 @@ export async function signOut(): Promise<void> {
   } catch {
     /* ignore */
   }
+  // P1 audit fix (Wave 14): clear anonymous-state localStorage so the next
+  // user on this device doesn't inherit prior anon data (persona, referrer,
+  // session_id, onboarding draft, etc.).
+  clearAnonState();
 }

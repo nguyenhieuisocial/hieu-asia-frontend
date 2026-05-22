@@ -417,7 +417,7 @@ export default function AffiliateNetworkPage() {
             </ul>
             <div className="mt-3">
               <Link
-                href="/legal/affiliate-policy"
+                href="/affiliate/terms"
                 className="inline-flex items-center gap-1 text-amber-200 hover:underline"
               >
                 Xem chi tiết chính sách

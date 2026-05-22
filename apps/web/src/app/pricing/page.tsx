@@ -14,11 +14,21 @@
 
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Check, X, ShieldCheck } from 'lucide-react';
+import { Check, X, ShieldCheck, Sparkles } from 'lucide-react';
 import { Button } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
+
+/**
+ * Launch promotion — matches the `hieu_asia.coupons` table seed.
+ * Set `code` to null (or remove the banner) when the campaign ends.
+ */
+const LAUNCH_PROMO = {
+  code: 'LAUNCH50',
+  percentOff: 30,
+  endsAt: '2026-06-30',
+} as const;
 
 type Period = 'monthly' | 'annual';
 type TierId = 'free' | 'standard' | 'premium' | 'lifetime';
@@ -166,8 +176,9 @@ const PRICING_FAQ: readonly FaqItem[] = [
     q: 'Gói năm rẻ hơn bao nhiêu so với gói tháng?',
     a: (
       <p>
-        Khi chọn gói năm, bạn tiết kiệm 17% so với 12 tháng cộng lại. Premium
-        gói tháng 199.000đ × 12 = 2.388.000đ, gói năm chỉ 1.990.000đ.
+        Khi chọn gói năm Premium, bạn tiết kiệm 17% so với 12 tháng cộng lại —
+        tương đương 2 tháng miễn phí. Cụ thể: 199.000đ × 12 = 2.388.000đ, gói
+        năm chỉ 1.990.000đ (tức ~165.833đ / tháng).
       </p>
     ),
   },
@@ -213,11 +224,49 @@ function priceFor(tier: Tier, period: Period): { display: string; cadence: strin
   return { display: formatVND(tier.annual), cadence: '/ năm' };
 }
 
+/**
+ * Compute the annual discount vs. 12× monthly. Returns null for tiers that
+ * don't have both monthly + annual pricing (free, one-time).
+ *
+ * Premium today: monthly 199k × 12 = 2,388k, annual 1,990k → saves 398k ≈ 16.7%
+ * → rounds to 17%, equivalent to "2 tháng miễn phí" (2/12 = 16.7%).
+ */
+function annualDiscount(tier: Tier): { percent: number; monthsFree: number; saved: number } | null {
+  if (tier.isOneTime || tier.monthly <= 0 || tier.annual <= 0) return null;
+  const twelve = tier.monthly * 12;
+  if (twelve <= tier.annual) return null;
+  const saved = twelve - tier.annual;
+  const percent = Math.round((saved / twelve) * 100);
+  const monthsFree = Math.round((saved / tier.monthly) * 10) / 10;
+  return { percent, monthsFree, saved };
+}
+
+/** Equivalent monthly cost for an annual subscription — for the "~165.833/tháng" hint. */
+function monthlyEquivalent(tier: Tier): string | null {
+  if (tier.isOneTime || tier.annual <= 0) return null;
+  const perMonth = Math.round(tier.annual / 12);
+  return `~${new Intl.NumberFormat('vi-VN').format(perMonth)}₫ / tháng`;
+}
+
+/**
+ * Best annual discount across all subscription tiers — drives the period
+ * toggle badge so the copy stays in sync with the underlying numbers.
+ */
+function bestAnnualDiscountPercent(tiers: readonly Tier[]): number {
+  let best = 0;
+  for (const t of tiers) {
+    const d = annualDiscount(t);
+    if (d && d.percent > best) best = d.percent;
+  }
+  return best;
+}
+
 export default function PricingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const sessionId = searchParams?.get('session') ?? '';
   const [period, setPeriod] = React.useState<Period>('annual');
+  const bestDiscount = React.useMemo(() => bestAnnualDiscountPercent(TIERS), []);
 
   const handleSelect = React.useCallback(
     (tier: TierId) => {
@@ -271,11 +320,27 @@ export default function PricingPage() {
               </PeriodButton>
               <PeriodButton current={period} value="annual" onClick={setPeriod}>
                 Hàng năm{' '}
-                <span className="ml-1 rounded-full bg-gold/20 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-gold">
-                  Tiết kiệm 17%
-                </span>
+                {bestDiscount > 0 && (
+                  <span className="ml-1 rounded-full bg-gold/20 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-gold">
+                    Tiết kiệm {bestDiscount}%
+                  </span>
+                )}
               </PeriodButton>
             </div>
+
+            {/* Launch promo banner */}
+            {LAUNCH_PROMO.code && (
+              <div className="mx-auto mt-6 flex max-w-xl items-center justify-center gap-2 rounded-2xl border border-gold/30 bg-gradient-to-r from-gold/[0.08] via-gold/[0.04] to-purple/[0.08] px-4 py-3 text-sm text-cream/90">
+                <Sparkles className="h-4 w-4 shrink-0 text-gold" aria-hidden="true" />
+                <p>
+                  Ưu đãi ra mắt — nhập code{' '}
+                  <code className="rounded bg-gold/15 px-1.5 py-0.5 font-mono text-xs text-gold">
+                    {LAUNCH_PROMO.code}
+                  </code>{' '}
+                  giảm <b>{LAUNCH_PROMO.percentOff}%</b> mọi gói trả phí
+                </p>
+              </div>
+            )}
           </div>
         </section>
 
@@ -356,6 +421,8 @@ function TierCard({
   onSelect: () => void;
 }) {
   const { display, cadence } = priceFor(tier, period);
+  const discount = annualDiscount(tier);
+  const perMonth = period === 'annual' ? monthlyEquivalent(tier) : null;
   return (
     <article
       className={[
@@ -376,6 +443,14 @@ function TierCard({
         <span className="font-heading text-3xl font-bold text-cream">{display}</span>
         {cadence && <span className="text-sm text-cream/55">{cadence}</span>}
       </div>
+      {period === 'annual' && perMonth && (
+        <p className="mt-1 text-xs text-cream/50">{perMonth}</p>
+      )}
+      {period === 'annual' && discount && (
+        <p className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[11px] font-medium text-emerald-300">
+          Tiết kiệm {discount.percent}% · {discount.monthsFree} tháng miễn phí
+        </p>
+      )}
       <ul className="mt-5 space-y-2 text-sm">
         {FEATURE_ROWS.map((row) => {
           const v = row.values[tier.id];
@@ -429,6 +504,8 @@ function ComparisonTable({
             </th>
             {tiers.map((tier) => {
               const { display, cadence } = priceFor(tier, period);
+              const discount = annualDiscount(tier);
+              const perMonth = period === 'annual' ? monthlyEquivalent(tier) : null;
               return (
                 <th
                   key={tier.id}
@@ -454,6 +531,14 @@ function ComparisonTable({
                       <span className="text-xs text-cream/55">{cadence}</span>
                     )}
                   </div>
+                  {period === 'annual' && perMonth && (
+                    <p className="mt-1 text-[11px] text-cream/45">{perMonth}</p>
+                  )}
+                  {period === 'annual' && discount && (
+                    <p className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
+                      −{discount.percent}% · {discount.monthsFree} tháng miễn phí
+                    </p>
+                  )}
                   <Button
                     onClick={() => onSelect(tier.id)}
                     size="sm"

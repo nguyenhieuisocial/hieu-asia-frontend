@@ -13,8 +13,6 @@ export default function robots(): MetadataRoute.Robots {
           '/dashboard/',
           '/account',
           '/settings',
-          '/checkout',
-          '/processing',
           '/signin',
           '/auth/',
           '/onboarding/',

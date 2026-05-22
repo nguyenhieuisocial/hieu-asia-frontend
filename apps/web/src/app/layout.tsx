@@ -68,8 +68,14 @@ export const metadata: Metadata = {
     email: false,
     address: false,
   },
+  // SEO fix (Wave 14 audit): only `/` (homepage) should canonicalize to root.
+  // Previously this bubbled to every child page lacking its own canonical →
+  // pages like /lich-van-nien, /career-fit risked being seen as duplicates of /.
+  // Each indexable child page now sets its own `alternates.canonical`; if a
+  // page omits canonical, Next.js will not emit a canonical tag (self-canonical
+  // by default, which is correct).
+  // The homepage canonical is declared in `app/page.tsx`'s own metadata.
   alternates: {
-    canonical: 'https://hieu.asia',
     languages: {
       'vi-VN': 'https://hieu.asia',
     },

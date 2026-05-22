@@ -41,19 +41,41 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Fire-and-forget proxy to backend gateway. If it fails or is unreachable,
-  // we still return ok=true — keeping the public CTA reliable. Worker logs
-  // capture the request for reconciliation.
+  // Proxy to backend gateway. If the worker is reachable we forward its
+  // response so 4xx (invalid email, rate-limited) reach the user; if the
+  // worker is down or times out we degrade to ok=true so the form CTA stays
+  // reliable — worker logs persist 7 days for manual reconciliation.
   try {
-    await fetch(`${HIEU_API_URL}/email/subscribe`, {
+    const upstream = await fetch(`${HIEU_API_URL}/email/subscribe`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ email, source }),
-      // Short timeout so a slow upstream doesn't block the form.
-      signal: AbortSignal.timeout(2500),
-    }).catch(() => {});
+      signal: AbortSignal.timeout(3500),
+    });
+    const data = (await upstream.json().catch(() => ({}))) as {
+      ok?: boolean;
+      error?: string;
+      alreadySubscribed?: boolean;
+    };
+    if (upstream.status === 429) {
+      return NextResponse.json(
+        { ok: false, error: 'Quá nhiều yêu cầu — thử lại sau ít phút' },
+        { status: 429 },
+      );
+    }
+    if (upstream.ok && data.ok) {
+      return NextResponse.json({ ok: true, alreadySubscribed: data.alreadySubscribed });
+    }
+    // 4xx from worker — surface the message (e.g. "Email không hợp lệ").
+    if (upstream.status >= 400 && upstream.status < 500) {
+      return NextResponse.json(
+        { ok: false, error: data.error ?? 'Đăng ký không thành công' },
+        { status: upstream.status },
+      );
+    }
+    // 5xx — degrade silently to keep CTA working.
   } catch {
-    /* swallow — handled below */
+    /* network / timeout — degrade silently below */
   }
 
   return NextResponse.json({ ok: true });
