@@ -60,6 +60,17 @@ interface AuditRow {
   audit_metadata: Record<string, unknown>;
 }
 
+// Wave 48 — top-N row shape from /api/admin/affiliates/leaderboard-top
+interface TopRow {
+  user_id: string;
+  affiliate_code: string;
+  email: string | null;
+  tier: string | null;
+  total_earned_vnd: number;
+  total_available_vnd: number;
+  total_orders: number;
+}
+
 async function fetchPromoters(): Promise<PromoterRow[]> {
   const r = await fetch('/api/admin/affiliates/promoters', { cache: 'no-store' });
   const d = await r.json();
@@ -92,6 +103,15 @@ async function fetchActivity(): Promise<AuditRow[]> {
   return d.activity as AuditRow[];
 }
 
+async function fetchTopAffiliates(): Promise<TopRow[]> {
+  const r = await fetch('/api/admin/affiliates/leaderboard-top?limit=5', {
+    cache: 'no-store',
+  });
+  const d = await r.json();
+  if (!r.ok || !d.ok) return [];
+  return d.leaderboard as TopRow[];
+}
+
 function dt(iso: string) {
   try {
     return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
@@ -114,6 +134,10 @@ export default function AdminAffiliatesPage() {
     queryKey: ['affiliate-activity'],
     queryFn: fetchActivity,
     refetchInterval: 30_000,
+  });
+  const topQ = useQuery({
+    queryKey: ['affiliate-top-5'],
+    queryFn: fetchTopAffiliates,
   });
   // Legacy KV-side aggregates (powers fraud-flagged + ban counts that haven't
   // been migrated yet).
@@ -170,6 +194,66 @@ export default function AdminAffiliatesPage() {
           }
         />
       </div>
+
+      {/* Wave 48 — Top 5 affiliates (admin-only view with email) */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">
+            Top 5 affiliates this period
+            <span className="ml-2 text-xs font-normal text-muted-foreground">
+              (mv_affiliate_leaderboard · refreshed hourly)
+            </span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {topQ.isLoading ? (
+            <p className="text-sm text-muted-foreground">Đang tải…</p>
+          ) : (topQ.data ?? []).length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Materialized view chưa có dữ liệu. Cron job{' '}
+              <code className="font-mono text-xs">aff-leaderboard-refresh</code> chạy
+              mỗi giờ phút 30.
+            </p>
+          ) : (
+            <ol className="space-y-2">
+              {(topQ.data ?? []).map((row, idx) => (
+                <li
+                  key={row.user_id}
+                  className="flex flex-wrap items-center justify-between gap-3 border-b border-border py-2 last:border-0"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="w-6 text-right font-mono text-sm text-muted-foreground">
+                      #{idx + 1}
+                    </span>
+                    <div className="space-y-0.5">
+                      <div className="font-mono text-sm font-medium">
+                        {row.affiliate_code}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {row.email ?? row.user_id.slice(0, 8)}
+                        {row.tier && (
+                          <span className="ml-2 rounded bg-muted/40 px-1.5 py-0.5 text-[10px] uppercase tracking-wider">
+                            {row.tier}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right text-sm">
+                    <div className="font-semibold text-gold">
+                      {vnd(row.total_earned_vnd)}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {row.total_orders.toLocaleString('vi-VN')} đơn ·{' '}
+                      {vnd(row.total_available_vnd)} available
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Sub-page quick-links */}
       <Card>

@@ -1,54 +1,100 @@
 /**
- * /affiliate/leaderboard — public ranking page.
- * Social proof + competition driver. Public, no auth required.
+ * /affiliate/leaderboard — Wave 48 public leaderboard.
+ *
+ * Server component fetching the materialized view `mv_affiliate_leaderboard`
+ * via the worker endpoint `GET /affiliate/leaderboard?limit=50`. Renders top
+ * 50 affiliates ordered by `total_earned_vnd DESC`, refreshed hourly.
+ *
+ * PII guard: only `affiliate_code` (non-PII slug), `tier`, totals, order count
+ * are surfaced. `user_id` returned by the upstream endpoint is dropped
+ * server-side before render — it never reaches the client bundle.
  */
 
-'use client';
-
-import * as React from 'react';
 import Link from 'next/link';
+import Script from 'next/script';
 import { Trophy } from 'lucide-react';
-import { Button, Card, CardContent, Skeleton, Tabs, TabsList, TabsTrigger } from '@hieu-asia/ui';
+import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
-import { LeaderboardList, type LeaderboardEntry } from '@/components/affiliate/LeaderboardList';
 import { AffiliateSubNav } from '@/components/affiliate/AffiliateSubNav';
-import { safeJson } from '@/lib/safe-json';
+import { LeaderboardPodium } from '@/components/affiliate/LeaderboardPodium';
 
-type Period = 'monthly' | 'all_time';
+export const revalidate = 60;
 
-export default function AffiliateLeaderboardPage() {
-  const [period, setPeriod] = React.useState<Period>('monthly');
-  const [entries, setEntries] = React.useState<LeaderboardEntry[]>([]);
-  const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState<string | null>(null);
+const HIEU_API_URL = process.env.HIEU_API_URL ?? 'https://api.hieu.asia';
 
-  React.useEffect(() => {
-    let alive = true;
-    setLoading(true);
-    setError(null);
-    (async () => {
-      try {
-        const res = await fetch(`/api/affiliate/leaderboard?period=${period}&limit=20`, { cache: 'no-store' });
-        const parsed = await safeJson<{ ok: boolean; leaderboard?: LeaderboardEntry[]; error?: string }>(res);
-        if (!alive) return;
-        if (!parsed.ok) {
-          setError(`Phản hồi không hợp lệ (HTTP ${parsed.status})`);
-        } else {
-          const d = parsed.data;
-          if (d.ok) setEntries(d.leaderboard ?? []);
-          else setError(d.error ?? 'Không tải được bảng xếp hạng.');
-        }
-      } catch (e) {
-        if (alive) setError((e as Error).message ?? 'Lỗi mạng.');
-      } finally {
-        if (alive) setLoading(false);
-      }
-    })();
-    return () => {
-      alive = false;
-    };
-  }, [period]);
+export interface PublicLeaderboardRow {
+  affiliate_code: string;
+  tier: string | null;
+  total_earned_vnd: number;
+  total_orders: number;
+}
+
+interface UpstreamRow {
+  user_id?: string;
+  affiliate_code?: string;
+  tier?: string | null;
+  total_earned_vnd?: number | string | null;
+  total_orders?: number | string | null;
+  // KV-fallback shape (pre-Wave 46) — still possible if Supabase env unset.
+  code?: string;
+  conversions?: number;
+  total_earned?: number;
+}
+
+async function loadLeaderboard(): Promise<PublicLeaderboardRow[]> {
+  try {
+    const r = await fetch(`${HIEU_API_URL}/affiliate/leaderboard?limit=50`, {
+      next: { revalidate: 60 },
+    });
+    if (!r.ok) return [];
+    const d = (await r.json()) as { ok?: boolean; leaderboard?: UpstreamRow[] };
+    if (!d.ok || !Array.isArray(d.leaderboard)) return [];
+    // PII strip: drop user_id, keep only public columns.
+    return d.leaderboard.map((row) => ({
+      affiliate_code: row.affiliate_code ?? row.code ?? '',
+      tier: row.tier ?? null,
+      total_earned_vnd: Number(row.total_earned_vnd ?? row.total_earned ?? 0),
+      total_orders: Number(row.total_orders ?? row.conversions ?? 0),
+    }));
+  } catch {
+    return [];
+  }
+}
+
+function vnd(n: number) {
+  return n.toLocaleString('vi-VN') + 'đ';
+}
+
+export default async function AffiliateLeaderboardPage() {
+  const rows = await loadLeaderboard();
+  const totalEarned = rows.reduce((s, r) => s + r.total_earned_vnd, 0);
+  const top3 = rows.slice(0, 3);
+  const rest = rows.slice(3);
+
+  // JSON-LD payload — server-rendered, all values are numbers/static strings
+  // (no untrusted user input flows into HTML — affiliate codes are not embedded
+  // in the LD-JSON below).
+  const ldJson = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        name: 'hieu.asia',
+        url: 'https://hieu.asia',
+      },
+      {
+        '@type': 'WebPage',
+        '@id': 'https://hieu.asia/affiliate/leaderboard',
+        name: 'Bảng vàng Affiliate hieu.asia — Top 50',
+        description:
+          totalEarned > 0
+            ? `Cộng đồng affiliate hieu.asia đã kiếm tổng cộng ${vnd(totalEarned)}.`
+            : 'Bảng xếp hạng top 50 affiliate hieu.asia, cập nhật mỗi giờ.',
+        numberOfItems: rows.length,
+      },
+    ],
+  });
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -63,13 +109,13 @@ export default function AffiliateLeaderboardPage() {
           className="pointer-events-none absolute -top-24 right-[-10%] h-[360px] w-[360px] rounded-full bg-gold/10 blur-3xl"
         />
 
-        <section className="relative mx-auto max-w-3xl px-6 pt-12 pb-20 sm:pt-16">
+        <section className="relative mx-auto max-w-4xl px-6 pt-12 pb-20 sm:pt-16">
           <nav aria-label="Breadcrumb" className="mb-4 text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">Trang chủ</Link>
             <span className="mx-1.5">/</span>
             <Link href="/affiliate" className="hover:text-gold">Affiliate</Link>
             <span className="mx-1.5">/</span>
-            <span className="text-muted-foreground">Bảng xếp hạng</span>
+            <span className="text-muted-foreground">Bảng vàng</span>
           </nav>
 
           <AffiliateSubNav />
@@ -82,64 +128,82 @@ export default function AffiliateLeaderboardPage() {
               <Trophy className="h-5 w-5 text-gold" aria-hidden="true" />
             </div>
             <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
-              Affiliate · Ranking
+              Affiliate · Bảng vàng
             </p>
             <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
-              Bảng xếp hạng{' '}
+              Bảng vàng{' '}
               <span className="bg-gold-gradient bg-clip-text text-transparent">
-                affiliate
+                affiliate hieu.asia
               </span>
             </h1>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Tên đã được làm mờ một phần để bảo vệ riêng tư. Top 3 nhận badge
-              đặc biệt mỗi tháng và phần thưởng tier nâng cấp.
+              Top 50 affiliate kiếm nhiều nhất — tổng hợp 60 phút trước. Danh
+              tính được ẩn, chỉ hiển thị mã affiliate công khai.
             </p>
+            {totalEarned > 0 && (
+              <p className="mt-3 text-sm text-gold">
+                Tổng cộng cộng đồng đã kiếm được{' '}
+                <strong className="font-semibold">{vnd(totalEarned)}</strong>
+              </p>
+            )}
           </header>
 
-          <div className="mt-8 flex justify-center">
-            <Tabs value={period} onValueChange={(v) => setPeriod(v as Period)}>
-              <TabsList>
-                <TabsTrigger value="monthly">30 ngày qua</TabsTrigger>
-                <TabsTrigger value="all_time">Mọi thời gian</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
+          {/* Top 3 podium */}
+          {top3.length > 0 && (
+            <div className="mt-10">
+              <LeaderboardPodium top3={top3} />
+            </div>
+          )}
 
-          <div className="mt-8">
-            {loading && (
-              <div className="space-y-2">
-                {[0, 1, 2, 3, 4].map((i) => (
-                  <Skeleton key={i} className="h-14 rounded-xl" />
-                ))}
-              </div>
-            )}
+          {/* Rest of the list, rank 4..50 */}
+          {rest.length > 0 && (
+            <ol className="mt-8 space-y-2">
+              {rest.map((r, idx) => (
+                <li
+                  key={r.affiliate_code || idx}
+                  className="flex items-center justify-between rounded-xl border border-border bg-card/40 px-4 py-3"
+                >
+                  <div className="flex items-center gap-4">
+                    <span className="w-8 text-right font-mono text-sm text-muted-foreground">
+                      #{idx + 4}
+                    </span>
+                    <div>
+                      <div className="font-mono text-sm font-medium text-foreground">
+                        {r.affiliate_code || '—'}
+                      </div>
+                      {r.tier && (
+                        <div className="mt-0.5">
+                          <TierBadge tier={r.tier} />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-semibold text-gold">{vnd(r.total_earned_vnd)}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {r.total_orders.toLocaleString('vi-VN')} đơn
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          )}
 
-            {!loading && error && (
-              <Card className="border-rose-500/30 bg-rose-500/5">
-                <CardContent className="px-6 py-10 text-center">
-                  <p className="text-sm text-rose-200">{error}</p>
-                </CardContent>
-              </Card>
-            )}
+          {rows.length === 0 && (
+            <Card className="mt-10 border-border bg-card/40">
+              <CardContent className="px-6 py-12 text-center">
+                <p className="font-heading text-base text-foreground">
+                  Chưa có dữ liệu
+                </p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Bảng vàng làm mới mỗi giờ. Hãy là người đầu tiên — đăng ký
+                  affiliate và bắt đầu giới thiệu.
+                </p>
+              </CardContent>
+            </Card>
+          )}
 
-            {!loading && !error && entries.length === 0 && (
-              <Card className="border-border bg-card/40">
-                <CardContent className="px-6 py-12 text-center">
-                  <p className="font-heading text-base text-foreground">Chưa có dữ liệu</p>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    Hãy là người đầu tiên xuất hiện trên bảng xếp hạng — đăng ký
-                    affiliate và bắt đầu giới thiệu.
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-
-            {!loading && !error && entries.length > 0 && (
-              <LeaderboardList entries={entries} period={period} />
-            )}
-          </div>
-
-          <div className="mt-10 text-center">
+          <div className="mt-12 text-center">
             <Link href="/affiliate">
               <Button variant="ghost" className="border border-border">
                 Đăng ký affiliate
@@ -147,8 +211,33 @@ export default function AffiliateLeaderboardPage() {
             </Link>
           </div>
         </section>
+
+        {/* JSON-LD — Next.js Script with strategy "afterInteractive" */}
+        <Script
+          id="leaderboard-jsonld"
+          type="application/ld+json"
+        >
+          {ldJson}
+        </Script>
       </main>
       <SiteFooter />
     </div>
+  );
+}
+
+function TierBadge({ tier }: { tier: string }) {
+  const colors: Record<string, string> = {
+    bronze: 'bg-orange-500/15 text-orange-200 border-orange-500/30',
+    silver: 'bg-slate-400/15 text-slate-200 border-slate-400/30',
+    gold: 'bg-gold/15 text-gold border-gold/30',
+    platinum: 'bg-purple/15 text-purple-200 border-purple/30',
+  };
+  const cls = colors[tier.toLowerCase()] ?? 'bg-muted/30 text-muted-foreground border-border';
+  return (
+    <span
+      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider ${cls}`}
+    >
+      {tier}
+    </span>
   );
 }
