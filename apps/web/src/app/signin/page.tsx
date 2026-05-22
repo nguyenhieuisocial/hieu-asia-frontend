@@ -18,12 +18,13 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Facebook, Apple, ShieldCheck, Sparkles } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { sendMagicLink, signInWithOAuth } from '@/lib/auth-client';
+import { useAuth } from '@/hooks/use-auth';
 import { track } from '@/lib/analytics';
 
 type OAuthProvider = 'google' | 'facebook' | 'apple';
@@ -64,8 +65,20 @@ function GoogleIcon({ className }: { className?: string }) {
 }
 
 export default function SignInPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const initialError = searchParams.get('error');
+  // Wave 36 fix: redirect away if already signed in. Without this guard, a
+  // logged-in user can reload /signin and see the form again — confusing and
+  // could let them re-trigger an OAuth flow that overwrites their session.
+  const { user: authedUser, loading: authLoading } = useAuth();
+
+  React.useEffect(() => {
+    if (!authLoading && authedUser) {
+      const next = searchParams.get('next');
+      router.replace(next && next.startsWith('/') ? next : '/dashboard');
+    }
+  }, [authLoading, authedUser, router, searchParams]);
 
   // Pre-flight: if Supabase env is missing, render a "not available" notice
   // instead of a form that silently fails on submit (Task 4).
@@ -86,6 +99,20 @@ export default function SignInPage() {
   const [error, setError] = React.useState<string | null>(initialError);
 
   const anyLoading = emailLoading || oauthLoading !== null;
+
+  // While we determine whether there's an existing session, render a minimal
+  // placeholder to avoid flashing the full sign-in form to logged-in users.
+  if (authLoading || (!authLoading && authedUser)) {
+    return (
+      <>
+        <SiteNav />
+        <main className="flex min-h-screen items-center justify-center bg-ink text-cream">
+          <p className="font-heading text-gold">Đang kiểm tra phiên đăng nhập…</p>
+        </main>
+        <SiteFooter />
+      </>
+    );
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
