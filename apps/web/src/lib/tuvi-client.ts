@@ -142,6 +142,50 @@ export function findPalaceByName(chart: TuViChart, name: string): TuViPalace | n
 }
 
 /**
+ * Compact chart envelope that the worker accepts on /decisions/brief and
+ * /mentor/skills/decision (Wave 18). Mirrors `ChartContext` server-side; the
+ * StructuredChart UI component consumes the same shape.
+ */
+export interface StructuredChartEnvelope {
+  palaces: string[];
+  mainStars: string[];
+  auxStars: string[];
+  transformations: string[];
+}
+
+/**
+ * Project a full TuViChart down to the compact StructuredChart envelope.
+ * Dedupes star names; collects mutagen-tagged stars into `transformations`
+ * (the engine flags 化禄 / 化權 / 化科 / 化忌 via `mutagen` on the star).
+ */
+export function projectTuViChartToStructured(chart: TuViChart): StructuredChartEnvelope {
+  const palaces: string[] = [];
+  const main = new Set<string>();
+  const aux = new Set<string>();
+  const trans = new Set<string>();
+  for (const p of chart.palaces) {
+    if (p.name) palaces.push(p.name);
+    for (const s of p.majorStars) {
+      if (s.name) main.add(s.name);
+      if (s.mutagen) trans.add(`${s.name} ${s.mutagen}`);
+    }
+    for (const s of p.minorStars) {
+      if (s.name) aux.add(s.name);
+      if (s.mutagen) trans.add(`${s.name} ${s.mutagen}`);
+    }
+    for (const s of p.adjectiveStars) {
+      if (s.name) aux.add(s.name);
+    }
+  }
+  return {
+    palaces,
+    mainStars: [...main],
+    auxStars: [...aux],
+    transformations: [...trans],
+  };
+}
+
+/**
  * Tam phương tứ chính — given a palace index (0=Mệnh by iztro convention),
  * returns the indexes of its three other "trigon" palaces.
  *

@@ -23,6 +23,11 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import {
+  castTuViChart,
+  projectTuViChartToStructured,
+  type StructuredChartEnvelope,
+} from '@/lib/tuvi-client';
 
 type TopicId = 'career' | 'relationship' | 'finance' | 'family' | 'general';
 
@@ -53,11 +58,71 @@ interface DecisionBrief {
   caveats: string[];
   generatedAt: string;
 }
-interface StructuredChart {
-  palaces: string[];
-  mainStars: string[];
-  auxStars: string[];
-  transformations: string[];
+type StructuredChart = StructuredChartEnvelope;
+
+/**
+ * Stored chart profile (see `MyChartTab` / operating-manual). We only need
+ * the birth inputs to cast a Tử Vi chart on demand — the chart itself is
+ * not persisted under this key, just the birth data.
+ */
+const CHART_PROFILE_KEY = 'hieu:chart:profile:v1';
+const ONBOARDING_KEY = 'hieu:onboarding:v2';
+
+interface BirthInputs {
+  birth_date: string;
+  birth_time: string;
+  gender: string;
+}
+
+function readBirthInputs(): BirthInputs | null {
+  if (typeof window === 'undefined') return null;
+  // Primary: explicit chart profile written by /account → MyChartTab.
+  const tryParse = (raw: string | null): Partial<BirthInputs> | null => {
+    if (!raw) return null;
+    try {
+      const obj = JSON.parse(raw) as Record<string, unknown>;
+      return {
+        birth_date: typeof obj.birth_date === 'string' ? obj.birth_date : '',
+        birth_time: typeof obj.birth_time === 'string' ? obj.birth_time : '',
+        gender: typeof obj.gender === 'string' ? obj.gender : '',
+      };
+    } catch {
+      return null;
+    }
+  };
+  const sources = [
+    window.localStorage.getItem(CHART_PROFILE_KEY),
+    window.localStorage.getItem(ONBOARDING_KEY),
+  ];
+  for (const raw of sources) {
+    const parsed = tryParse(raw);
+    if (
+      parsed &&
+      parsed.birth_date &&
+      parsed.birth_time &&
+      parsed.gender &&
+      /^\d{4}-\d{1,2}-\d{1,2}$/.test(parsed.birth_date)
+    ) {
+      return {
+        birth_date: parsed.birth_date,
+        birth_time: parsed.birth_time,
+        gender: parsed.gender,
+      };
+    }
+  }
+  return null;
+}
+
+function parseHour(raw: string): number {
+  const m = /^(\d{1,2})/.exec(raw.trim());
+  if (!m || !m[1]) return 12;
+  const h = Number(m[1]);
+  return Number.isFinite(h) && h >= 0 && h <= 23 ? h : 12;
+}
+
+function normalizeGender(raw: string): 'male' | 'female' {
+  const v = raw.toLowerCase().trim();
+  return v === 'nữ' || v === 'nu' || v === 'female' || v === 'f' ? 'female' : 'male';
 }
 
 function isTopicId(v: string | null): v is TopicId {
@@ -103,6 +168,42 @@ function NewDecisionInner() {
     followUps: string[];
   } | null>(null);
 
+  // Chart hydration — read stored birth inputs (set via /account or onboarding)
+  // and cast a Tử Vi chart on mount. The cast is cached in localStorage by the
+  // tuvi-client, so this is instant on the second visit. We don't block the
+  // form on this; if it fails or no inputs exist, the brief still submits
+  // without a chart (worker just won't echo one).
+  const [birthInputs, setBirthInputs] = useState<BirthInputs | null>(null);
+  const [chart, setChart] = useState<StructuredChart | null>(null);
+  const [chartLoading, setChartLoading] = useState(false);
+
+  useEffect(() => {
+    const inputs = readBirthInputs();
+    setBirthInputs(inputs);
+    if (!inputs) return;
+    let cancelled = false;
+    setChartLoading(true);
+    castTuViChart({
+      birthSolarDate: inputs.birth_date,
+      birthHour: parseHour(inputs.birth_time),
+      gender: normalizeGender(inputs.gender),
+      language: 'vi-VN',
+    })
+      .then((full) => {
+        if (cancelled) return;
+        setChart(projectTuViChartToStructured(full));
+      })
+      .catch(() => {
+        // Silent fallback — submit without chart.
+      })
+      .finally(() => {
+        if (!cancelled) setChartLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const questionLength = question.trim().length;
   const situationLength = situation.length;
   const canSubmit =
@@ -140,6 +241,9 @@ function NewDecisionInner() {
           topic,
           question: question.trim(),
           situation: situation.trim() || undefined,
+          // Wave 19 — attach structured chart when available so the worker
+          // can echo a typed envelope back for the detail page renderer.
+          chart: chart ?? undefined,
         }),
       });
       // Rate limit (429) → friendly message, do not throw.
@@ -253,6 +357,43 @@ function NewDecisionInner() {
             vẫn là của bạn.
           </p>
         </div>
+
+        {chart && birthInputs ? (
+          <div
+            className="mb-8 flex items-start gap-3 rounded-lg border border-jade/30 bg-jade/5 p-4"
+            data-testid="decision-chart-banner"
+          >
+            <span className="mt-0.5 text-jade" aria-hidden="true">
+              ✓
+            </span>
+            <p className="text-sm leading-relaxed text-cream/85">
+              <strong className="font-semibold">Lá số đã có</strong> — đang sử
+              dụng lá số ngày {birthInputs.birth_date}. Brief sẽ tham chiếu các
+              cung và sao trong lá số của bạn.
+            </p>
+          </div>
+        ) : !birthInputs && !chartLoading ? (
+          <Card className="mb-8 border-gold/20 bg-gold/5">
+            <CardContent className="flex flex-col items-start gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="font-medium text-cream">
+                  Tạo Decision Brief có lá số (nhanh hơn)
+                </p>
+                <p className="mt-1 text-xs text-cream/65">
+                  Nhập ngày & giờ sinh một lần — Brief sẽ tham chiếu cung & sao
+                  thay vì chỉ dựa vào mô tả.
+                </p>
+              </div>
+              <Button asChild={false} variant="outline">
+                <Link
+                  href={`/onboarding?returnTo=${encodeURIComponent('/decisions/new')}`}
+                >
+                  Lập lá số trước →
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        ) : null}
 
         <form onSubmit={handleSubmit} noValidate>
           <Card className="border-gold/20 bg-ink/60 backdrop-blur">

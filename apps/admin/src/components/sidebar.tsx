@@ -33,6 +33,7 @@ import {
   Sparkles,
   Key,
   Activity,
+  LineChart,
   Menu,
   X,
   ChevronDown,
@@ -64,6 +65,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/sessions', label: 'Phiên phân tích', Icon: ListTodo },
       { href: '/tasks', label: 'Task / Lỗi', Icon: Bot },
       { href: '/audit', label: 'Audit log', Icon: ScrollText },
+      { href: '/metrics', label: 'Metrics', Icon: LineChart },
     ],
   },
   {
