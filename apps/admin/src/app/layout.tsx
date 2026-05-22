@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { cookies } from 'next/headers';
 import { Be_Vietnam_Pro, Inter, Outfit, JetBrains_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { QueryProvider } from '@/components/providers/query-provider';
+import { PostHogProvider } from '@/components/posthog-provider';
 import { Sidebar } from '@/components/sidebar';
 import { Topbar } from '@/components/topbar';
 import { MobileNav } from '@/components/mobile-nav';
@@ -41,7 +43,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       >
         <body>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-            <QueryProvider>{children}</QueryProvider>
+            <Suspense fallback={null}>
+              <PostHogProvider>
+                <QueryProvider>{children}</QueryProvider>
+              </PostHogProvider>
+            </Suspense>
           </ThemeProvider>
         </body>
       </html>
@@ -56,16 +62,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     >
       <body>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <QueryProvider>
-            <div className="min-h-screen bg-ink-radial">
-              <Sidebar />
-              <div className="lg:pl-64">
-                <Topbar adminEmail={adminEmail} />
-                <main className="px-4 pb-20 pt-6 lg:px-8 lg:py-8 lg:pb-8">{children}</main>
-              </div>
-              <MobileNav />
-            </div>
-          </QueryProvider>
+          <Suspense fallback={null}>
+            <PostHogProvider>
+              <QueryProvider>
+                <div className="min-h-screen bg-ink-radial">
+                  <Sidebar />
+                  <div className="lg:pl-64">
+                    <Topbar adminEmail={adminEmail} />
+                    <main className="px-4 pb-20 pt-6 lg:px-8 lg:py-8 lg:pb-8">{children}</main>
+                  </div>
+                  <MobileNav />
+                </div>
+              </QueryProvider>
+            </PostHogProvider>
+          </Suspense>
           <Toaster />
         </ThemeProvider>
       </body>

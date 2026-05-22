@@ -17,6 +17,7 @@
     "@hieu-asia/api-client": "workspace:*",
     "@hieu-asia/types": "workspace:*",
     "@hieu-asia/ui": "workspace:*",
+    "posthog-js": "^1.374.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.0.0",

@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from 'next';
+import { Suspense } from 'react';
 import { Be_Vietnam_Pro, Inter, Outfit, JetBrains_Mono } from 'next/font/google';
 import Script from 'next/script';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { QueryProvider } from '@/components/providers/query-provider';
+import { PostHogProvider } from '@/components/posthog-provider';
 import { TelegramThemeBridge } from '@/components/telegram-theme-bridge';
 import { TelegramWebAppProvider } from '@/components/telegram-webapp-provider';
 import './globals.css';
@@ -62,7 +64,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
             <TelegramThemeBridge />
             <TelegramWebAppProvider>
-              <QueryProvider>{children}</QueryProvider>
+              <Suspense fallback={null}>
+                <PostHogProvider>
+                  <QueryProvider>{children}</QueryProvider>
+                </PostHogProvider>
+              </Suspense>
             </TelegramWebAppProvider>
           </ThemeProvider>
         </NextIntlClientProvider>

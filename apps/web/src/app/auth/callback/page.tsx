@@ -18,6 +18,7 @@ import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getSupabaseAuth } from '@/lib/auth-client';
 import { identifyUser } from '@/lib/identify';
+import { onboardAffiliateFromRef } from '@/lib/affiliate-onboard';
 import { track } from '@/lib/analytics';
 
 const ANON_USER_KEY = 'hieu.user_id';
@@ -124,6 +125,11 @@ export default function AuthCallbackPage() {
       } catch {
         /* ignore */
       }
+
+      // Wave 32 — first-touch L1 attribution. Reads `hieu_ref` cookie (set by
+      // middleware on /r/<CODE> or ?ref=<CODE>) and POSTs to worker's
+      // /aff/onboard. Idempotent, fire-and-forget, swallows errors.
+      void onboardAffiliateFromRef();
 
       try {
         const newUser =

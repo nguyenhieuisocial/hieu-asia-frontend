@@ -5,6 +5,10 @@ import { ChevronRight, ArrowRight, Shield } from 'lucide-react';
 import { Button } from '@hieu-asia/ui';
 import { PALACE_READINGS, findPalaceReading } from '@/lib/palace-readings';
 
+// Closed whitelist of the 12 palace slugs. Defence-in-depth alongside
+// findPalaceReading() — rejects malformed input before lookup.
+const CUNG_SLUG_REGEX = /^cung-[a-z-]{2,20}$/;
+
 export function generateStaticParams() {
   return PALACE_READINGS.map((p) => ({ cung: p.slug }));
 }
@@ -13,6 +17,7 @@ export async function generateMetadata(
   { params }: { params: Promise<{ cung: string }> },
 ): Promise<Metadata> {
   const { cung } = await params;
+  if (!CUNG_SLUG_REGEX.test(cung)) return { title: 'Không tìm thấy cung Tử Vi | hieu.asia' };
   const data = findPalaceReading(cung);
   if (!data) return { title: 'Không tìm thấy cung Tử Vi | hieu.asia' };
   return {
@@ -36,6 +41,7 @@ export default async function LearnPalacePage({
   params: Promise<{ cung: string }>;
 }) {
   const { cung } = await params;
+  if (!CUNG_SLUG_REGEX.test(cung)) notFound();
   const data = findPalaceReading(cung);
   if (!data) notFound();
 
