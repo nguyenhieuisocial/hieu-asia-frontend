@@ -26,12 +26,18 @@
  * replace these placeholder ids with the real UUIDs. The string keys here
  * are stable so consumers don't have to change.
  */
+/**
+ * Wave 42.3 — real PostHog survey UUIDs (project 434217 US Cloud).
+ * Created 2026-05-22 via REST API. Keys here are the stable JS-side names;
+ * values are the PostHog survey IDs the SDK uses to match
+ * `getActiveMatchingSurveys()`.
+ */
 export const SURVEY_IDS = {
-  ONBOARDING_NPS: "survey_onboarding_nps",
-  READING_SATISFACTION: "survey_reading_satisfaction",
-  CHURN_RISK: "survey_churn_risk",
-  PRICING_INTENT: "survey_pricing_intent",
-  FEATURE_REQUEST: "survey_feature_request",
+  ONBOARDING_NPS: "019e5031-4caf-0000-cc97-f5926c58e347",
+  READING_SATISFACTION: "019e5031-3fa6-0000-6518-4e5cab637d8d",
+  CHURN_RISK: "019e5031-5576-0000-2054-896831998be8",
+  PRICING_INTENT: "019e5031-45eb-0000-43b1-89f46b4aa2d2",
+  FEATURE_REQUEST: "019e5031-5b44-0000-f657-ff8606541660",
 } as const;
 
 export type SurveyKey = keyof typeof SURVEY_IDS;
