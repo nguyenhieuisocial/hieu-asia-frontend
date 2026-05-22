@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { PALACES_CONTENT, ALL_STARS_CONTENT } from '@/lib/tuvi-content';
 import { listCaseStudies } from '@/lib/case-studies';
+import { PALACE_READINGS } from '@/lib/palace-readings';
 
 const BASE_URL = 'https://hieu.asia';
 
@@ -135,5 +136,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...caseStudyUrls,
   ];
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13];
+  // Wave 38.4 audit additions — surface hidden SEO pages to Google Search Console.
+  // P1 fix: 4 hop-tuoi sub-types + 12 palace deep-dives + newsletter were missing.
+  const wave38Additions: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/hop-tuoi/wedding`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/hop-tuoi/business`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/hop-tuoi/birth-child`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/hop-tuoi/xong-dat`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/newsletter`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
+  ];
+  const learnPalaceUrls: MetadataRoute.Sitemap = PALACE_READINGS.map((p) => ({
+    url: `${BASE_URL}/learn/tu-vi/${p.slug}`,
+    lastModified: now,
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }));
+
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...learnPalaceUrls];
 }
