@@ -36,7 +36,7 @@ const REASON_TONE: Record<FraudFlag['reason'], string> = {
   ip_duplicate: 'bg-orange-500/15 text-orange-300',
   self_referral: 'bg-red-500/20 text-red-300',
   velocity: 'bg-yellow-500/15 text-yellow-300',
-  manual: 'bg-cream/10 text-cream/70',
+  manual: 'bg-muted/40 text-muted-foreground',
 };
 
 function dt(iso: string) {
@@ -91,18 +91,18 @@ export default function AdminFraudPage() {
   const cleared = data?.flags.filter((f) => f.cleared_at) ?? [];
 
   return (
-    <main className="min-h-screen bg-ink p-6 text-cream">
+    <main className="min-h-screen bg-card p-6 text-foreground">
       <div className="mx-auto max-w-5xl space-y-6">
         <header className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">Fraud report</h1>
-            <p className="text-sm text-cream/60">
+            <p className="text-sm text-muted-foreground">
               {data ? `${data.active_count} flag đang active · ${cleared.length} đã clear` : 'Đang tải…'}
             </p>
           </div>
           <div className="flex gap-2">
             <Link href="/affiliates">
-              <Button variant="ghost" className="border border-cream/20">
+              <Button variant="ghost" className="border border-border">
                 Quay lại affiliates
               </Button>
             </Link>
@@ -118,7 +118,7 @@ export default function AdminFraudPage() {
           </CardHeader>
           <CardContent>
             {active.length === 0 ? (
-              <p className="text-sm text-cream/50">Không có flag nào.</p>
+              <p className="text-sm text-muted-foreground">Không có flag nào.</p>
             ) : (
               <div className="space-y-2">
                 {active.map((f) => (
@@ -137,13 +137,13 @@ export default function AdminFraudPage() {
                         {REASON_LABEL[f.reason]}
                       </span>
                     </div>
-                    <div className="mt-1 text-cream/80">{f.detail}</div>
+                    <div className="mt-1 text-foreground/85">{f.detail}</div>
                     <div className="mt-1 flex items-center justify-between">
-                      <span className="text-xs text-cream/50">Flagged: {dt(f.flagged_at)}</span>
+                      <span className="text-xs text-muted-foreground">Flagged: {dt(f.flagged_at)}</span>
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="border border-cream/20"
+                        className="border border-border"
                         onClick={() => clearFlag(f.code)}
                         disabled={clearing === f.code}
                       >
@@ -163,10 +163,10 @@ export default function AdminFraudPage() {
           </CardHeader>
           <CardContent>
             {cleared.length === 0 ? (
-              <p className="text-sm text-cream/50">Chưa có flag nào được clear.</p>
+              <p className="text-sm text-muted-foreground">Chưa có flag nào được clear.</p>
             ) : (
               <table className="w-full text-sm">
-                <thead className="border-b border-cream/10 text-left text-xs uppercase text-cream/60">
+                <thead className="border-b border-border text-left text-xs uppercase text-muted-foreground">
                   <tr>
                     <th className="pb-2 pr-3">Mã</th>
                     <th className="pb-2 pr-3">Lý do</th>
@@ -178,13 +178,13 @@ export default function AdminFraudPage() {
                 </thead>
                 <tbody>
                   {cleared.map((f) => (
-                    <tr key={f.code} className="border-b border-cream/5">
+                    <tr key={f.code} className="border-b border-border">
                       <td className="py-1.5 pr-3 font-mono text-gold">{f.code}</td>
                       <td className="py-1.5 pr-3">{REASON_LABEL[f.reason]}</td>
-                      <td className="py-1.5 pr-3 text-cream/70">{f.detail}</td>
-                      <td className="py-1.5 pr-3 text-cream/60">{dt(f.flagged_at)}</td>
-                      <td className="py-1.5 pr-3 text-cream/60">{f.cleared_at ? dt(f.cleared_at) : '—'}</td>
-                      <td className="py-1.5 text-cream/60">{f.cleared_by ?? '—'}</td>
+                      <td className="py-1.5 pr-3 text-muted-foreground">{f.detail}</td>
+                      <td className="py-1.5 pr-3 text-muted-foreground">{dt(f.flagged_at)}</td>
+                      <td className="py-1.5 pr-3 text-muted-foreground">{f.cleared_at ? dt(f.cleared_at) : '—'}</td>
+                      <td className="py-1.5 text-muted-foreground">{f.cleared_by ?? '—'}</td>
                     </tr>
                   ))}
                 </tbody>

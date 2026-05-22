@@ -145,7 +145,7 @@ export default function LlmSpendPage() {
             Mọi cuộc gọi LLM đều được ledger ngay khi xảy ra. Đọc trực tiếp từ{' '}
             <code className="font-mono text-gold">hieu_asia.llm_traces</code>.
             <br />
-            <span className="font-mono text-[10px] uppercase tracking-wider text-cream/45">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
               Cập nhật lần cuối: {fmtTime(lastRefresh)}
             </span>
           </>
@@ -182,7 +182,7 @@ export default function LlmSpendPage() {
         </CardHeader>
         <CardContent>
           {daily.isLoading ? (
-            <div className="h-80 animate-pulse rounded bg-cream/5" />
+            <div className="h-80 animate-pulse rounded bg-muted/30" />
           ) : (
             <DailyCostChart data={daily.data ?? []} />
           )}
@@ -220,24 +220,24 @@ export default function LlmSpendPage() {
                 {(topUsers.data ?? []).map((u, i) => (
                   <li
                     key={u.user_id}
-                    className="flex items-center justify-between rounded-md border border-gold/10 bg-ink/40 px-3 py-2 text-sm"
+                    className="flex items-center justify-between rounded-md border border-gold/10 bg-card/60 px-3 py-2 text-sm"
                   >
                     <span className="flex items-center gap-3">
                       <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-gold/15 font-mono text-xs text-gold">
                         {i + 1}
                       </span>
-                      <span className="font-mono text-xs text-cream">{u.user_id}</span>
+                      <span className="font-mono text-xs text-foreground">{u.user_id}</span>
                     </span>
                     <span className="flex items-center gap-4 font-mono text-xs">
-                      <span className="text-cream/65">{u.call_count} calls</span>
-                      <span className="text-cream/55">{u.avg_latency_ms.toFixed(0)}ms avg</span>
+                      <span className="text-muted-foreground">{u.call_count} calls</span>
+                      <span className="text-muted-foreground">{u.avg_latency_ms.toFixed(0)}ms avg</span>
                       <span className="text-gold">${u.cost_usd.toFixed(4)}</span>
                     </span>
                   </li>
                 ))}
-                {topUsers.isLoading && <li className="text-cream/55">Đang tải…</li>}
+                {topUsers.isLoading && <li className="text-muted-foreground">Đang tải…</li>}
                 {!topUsers.isLoading && (topUsers.data ?? []).length === 0 && (
-                  <li className="text-cream/55">Chưa có dữ liệu user.</li>
+                  <li className="text-muted-foreground">Chưa có dữ liệu user.</li>
                 )}
               </ol>
             </CardContent>

@@ -75,8 +75,8 @@ export default function AdminRagPage() {
   });
 
   const cols: DataTableColumn<RagChunk>[] = [
-    { key: 'source_id', header: 'Source ID', cell: (c) => <span className="font-mono text-xs text-cream/75">{c.source_id}</span> },
-    { key: 'source_title', header: 'Tiêu đề', cell: (c) => <span className="text-cream">{c.source_title}</span> },
+    { key: 'source_id', header: 'Source ID', cell: (c) => <span className="font-mono text-xs text-foreground/85">{c.source_id}</span> },
+    { key: 'source_title', header: 'Tiêu đề', cell: (c) => <span className="text-foreground">{c.source_title}</span> },
     {
       key: 'discipline',
       header: 'Discipline',
@@ -254,7 +254,7 @@ function IngestForm({ onIngested }: { onIngested: () => void }) {
               id="disc"
               value={discipline}
               onChange={(e) => setDiscipline(e.target.value as RagChunk['discipline'])}
-              className="h-10 w-full rounded-md border border-gold/15 bg-ink/40 px-3 text-sm text-cream"
+              className="h-10 w-full rounded-md border border-gold/15 bg-card/60 px-3 text-sm text-foreground"
             >
               <option value="tu_vi">Tử Vi</option>
               <option value="palmistry">Palmistry</option>
@@ -268,7 +268,7 @@ function IngestForm({ onIngested }: { onIngested: () => void }) {
               id="lic"
               value={license}
               onChange={(e) => setLicense(e.target.value as RagChunk['license_status'])}
-              className="h-10 w-full rounded-md border border-gold/15 bg-ink/40 px-3 text-sm text-cream"
+              className="h-10 w-full rounded-md border border-gold/15 bg-card/60 px-3 text-sm text-foreground"
             >
               <option value="owned_or_licensed">Owned / Licensed</option>
               <option value="public_domain">Public domain</option>
@@ -282,7 +282,7 @@ function IngestForm({ onIngested }: { onIngested: () => void }) {
               type="file"
               accept=".txt,.md"
               onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])}
-              className="block w-full text-sm text-cream/80 file:mr-3 file:rounded file:border-0 file:bg-gold/15 file:px-3 file:py-1.5 file:text-sm file:text-gold hover:file:bg-gold/25"
+              className="block w-full text-sm text-foreground/85 file:mr-3 file:rounded file:border-0 file:bg-gold/15 file:px-3 file:py-1.5 file:text-sm file:text-gold hover:file:bg-gold/25"
             />
           </div>
           <div className="space-y-2 sm:col-span-2">
@@ -293,9 +293,9 @@ function IngestForm({ onIngested }: { onIngested: () => void }) {
               onChange={(e) => setText(e.target.value)}
               rows={6}
               placeholder="Dán nội dung. Mỗi đoạn cách nhau bằng dòng trống."
-              className="block w-full rounded-md border border-gold/15 bg-ink/40 p-3 text-sm text-cream"
+              className="block w-full rounded-md border border-gold/15 bg-card/60 p-3 text-sm text-foreground"
             />
-            <p className="text-xs text-cream/55">
+            <p className="text-xs text-muted-foreground">
               Phát hiện <span className="text-gold">{chunks.length}</span> chunk(s).
             </p>
           </div>

@@ -30,7 +30,7 @@ export function TierBadge({ conversions, withProgress, className }: TierBadgePro
         {info.label}
       </span>
       {withProgress && info.nextThreshold != null && (
-        <div className="h-1 w-20 overflow-hidden rounded-full bg-cream/10">
+        <div className="h-1 w-20 overflow-hidden rounded-full bg-muted/40">
           <div
             className={cn('h-full transition-all', info.barClass)}
             style={{ width: `${Math.round(info.progress * 100)}%` }}

@@ -118,22 +118,22 @@ function WorkerSecretRow({
   const last = latestFor(entries, (e) => e.target === 'worker' && e.name === def.name);
   const isSet = !!last && last.action !== 'delete';
   return (
-    <div className="flex items-start justify-between gap-3 rounded-md border border-gold/15 bg-ink/40 px-4 py-3">
+    <div className="flex items-start justify-between gap-3 rounded-md border border-gold/15 bg-card/60 px-4 py-3">
       <div className="min-w-0">
         <div className="flex items-center gap-2">
-          <span className="font-mono text-sm text-cream">{def.name}</span>
+          <span className="font-mono text-sm text-foreground">{def.name}</span>
           {isSet ? (
             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-900/40 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-300">
               <Check className="h-3 w-3" /> Set
             </span>
           ) : (
-            <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-cream/60">
+            <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               Chưa set
             </span>
           )}
         </div>
-        <p className="mt-1 text-xs text-cream/60">{def.desc}</p>
-        <p className="mt-1 font-mono text-[10px] text-cream/40">
+        <p className="mt-1 text-xs text-muted-foreground">{def.desc}</p>
+        <p className="mt-1 font-mono text-[10px] text-muted-foreground">
           Last set: {fmtTs(last?.set_at)} {last?.by_admin ? `· ${last.by_admin}` : ''}
         </p>
       </div>
@@ -171,22 +171,22 @@ function VercelSecretRow({
   const last = latestFor(entries, (e) => e.target === 'vercel' && e.name === def.name);
   const isSet = !!last && last.action !== 'delete';
   return (
-    <div className="flex items-start justify-between gap-3 rounded-md border border-gold/15 bg-ink/40 px-4 py-3">
+    <div className="flex items-start justify-between gap-3 rounded-md border border-gold/15 bg-card/60 px-4 py-3">
       <div className="min-w-0">
         <div className="flex items-center gap-2">
-          <span className="font-mono text-sm text-cream">{def.name}</span>
+          <span className="font-mono text-sm text-foreground">{def.name}</span>
           {isSet ? (
             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-900/40 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-300">
               <Check className="h-3 w-3" /> Set
             </span>
           ) : (
-            <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-cream/60">
+            <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               Chưa set
             </span>
           )}
         </div>
-        <p className="mt-1 text-xs text-cream/60">{def.desc}</p>
-        <p className="mt-1 font-mono text-[10px] text-cream/40">
+        <p className="mt-1 text-xs text-muted-foreground">{def.desc}</p>
+        <p className="mt-1 font-mono text-[10px] text-muted-foreground">
           Last set: {fmtTs(last?.set_at)}
           {last?.project ? ` · project=${last.project}` : ''}
           {last?.vercel_target ? ` · target=${last.vercel_target}` : ''}
@@ -324,7 +324,7 @@ export default function SecretsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              {list.isLoading && <p className="text-sm text-cream/60">Đang tải…</p>}
+              {list.isLoading && <p className="text-sm text-muted-foreground">Đang tải…</p>}
               {list.isError && (
                 <p className="text-sm text-red-400">
                   Không kết nối được backend: {(list.error as Error).message}
@@ -353,7 +353,7 @@ export default function SecretsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              {list.isLoading && <p className="text-sm text-cream/60">Đang tải…</p>}
+              {list.isLoading && <p className="text-sm text-muted-foreground">Đang tải…</p>}
               {VERCEL_KEYS.map((def) => (
                 <VercelSecretRow
                   key={def.name}
@@ -367,13 +367,13 @@ export default function SecretsPage() {
         </TabsContent>
       </Tabs>
 
-      <div className="text-xs text-cream/55">
+      <div className="text-xs text-muted-foreground">
         Cần audit chi tiết hơn? Xem{' '}
         <Link href="/settings" className="text-gold hover:underline">
           /settings
         </Link>{' '}
         hoặc kéo log audit qua{' '}
-        <code className="font-mono text-cream/75">GET /admin/audit?actor_type=admin</code>.
+        <code className="font-mono text-foreground/85">GET /admin/audit?actor_type=admin</code>.
       </div>
 
       {/* Worker secret modal */}
@@ -393,7 +393,7 @@ export default function SecretsPage() {
               Backend gọi Cloudflare API ngay; giá trị không lưu trong KV/DB.
             </DialogDescription>
           </DialogHeader>
-          <Label className="text-xs uppercase tracking-wider text-cream/65">Giá trị</Label>
+          <Label className="text-xs uppercase tracking-wider text-muted-foreground">Giá trị</Label>
           <Input
             type="password"
             autoFocus
@@ -435,11 +435,11 @@ export default function SecretsPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-xs uppercase tracking-wider text-cream/65">Project</Label>
+              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Project</Label>
               <select
                 value={vercelProject}
                 onChange={(e) => setVercelProject(e.target.value as VercelProject)}
-                className="mt-1 w-full rounded-md border border-gold/20 bg-ink px-3 py-2 text-sm text-cream"
+                className="mt-1 w-full rounded-md border border-gold/20 bg-card px-3 py-2 text-sm text-foreground"
               >
                 <option value="web">web</option>
                 <option value="admin">admin</option>
@@ -447,11 +447,11 @@ export default function SecretsPage() {
               </select>
             </div>
             <div>
-              <Label className="text-xs uppercase tracking-wider text-cream/65">Target</Label>
+              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Target</Label>
               <select
                 value={vercelTarget}
                 onChange={(e) => setVercelTarget(e.target.value as VercelTarget)}
-                className="mt-1 w-full rounded-md border border-gold/20 bg-ink px-3 py-2 text-sm text-cream"
+                className="mt-1 w-full rounded-md border border-gold/20 bg-card px-3 py-2 text-sm text-foreground"
               >
                 <option value="production">production</option>
                 <option value="preview">preview</option>
@@ -460,7 +460,7 @@ export default function SecretsPage() {
             </div>
           </div>
 
-          <Label className="mt-2 text-xs uppercase tracking-wider text-cream/65">Giá trị</Label>
+          <Label className="mt-2 text-xs uppercase tracking-wider text-muted-foreground">Giá trị</Label>
           <Input
             type="password"
             autoFocus

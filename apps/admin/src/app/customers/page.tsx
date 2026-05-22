@@ -48,7 +48,7 @@ const PLAN_LABEL: Record<PlanFilter, string> = {
 };
 
 const PLAN_TONE: Record<NonNullable<Customer['plan']>, string> = {
-  free: 'bg-cream/10 text-cream/70 border-cream/20',
+  free: 'bg-muted/40 text-muted-foreground border-border',
   premium: 'bg-gold/15 text-gold border-gold/30',
   subscription: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30',
 };
@@ -96,7 +96,7 @@ function CustomerAvatar({ email, name }: { email?: string | null; name?: string 
   const initials = (name ?? email ?? '?').slice(0, 2).toUpperCase();
   if (src) return <img src={src} alt="" className="h-8 w-8 rounded-full border border-gold/20" />;
   return (
-    <div className="flex h-8 w-8 items-center justify-center rounded-full border border-gold/20 bg-ink/60 text-xs font-medium text-cream/70">
+    <div className="flex h-8 w-8 items-center justify-center rounded-full border border-gold/20 bg-card/60 text-xs font-medium text-muted-foreground">
       {initials}
     </div>
   );
@@ -226,12 +226,12 @@ export default function CustomersPage() {
               value={searchInput}
               onChange={(e) => { setSearchInput(e.target.value); setCursor(undefined); }}
               placeholder="Tìm theo tên, email hoặc telegram_id…"
-              className="rounded-md border border-gold/20 bg-ink/60 px-3 py-2 text-sm text-cream placeholder:text-cream/30 focus:border-[#B8923D] focus:outline-none"
+              className="rounded-md border border-gold/20 bg-card/60 px-3 py-2 text-sm text-foreground placeholder:text-foreground/30 focus:border-[#B8923D] focus:outline-none"
             />
             <select
               value={plan}
               onChange={(e) => { setPlan(e.target.value as PlanFilter); setCursor(undefined); }}
-              className="h-10 rounded-md border border-gold/20 bg-ink/60 px-3 text-sm text-cream focus:border-[#B8923D] focus:outline-none"
+              className="h-10 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground focus:border-[#B8923D] focus:outline-none"
             >
               {(Object.keys(PLAN_LABEL) as PlanFilter[]).map(p => (
                 <option key={p} value={p}>{PLAN_LABEL[p]}</option>
@@ -255,7 +255,7 @@ export default function CustomersPage() {
             </div>
           )}
           {note && !showError && (
-            <div className="mb-4 rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-cream/70">
+            <div className="mb-4 rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-muted-foreground">
               {note}
             </div>
           )}
@@ -263,7 +263,7 @@ export default function CustomersPage() {
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-zinc-800 text-sm">
               <thead>
-                <tr className="text-left text-xs uppercase tracking-wider text-cream/55">
+                <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
                   <th className="px-3 py-2 font-medium">Avatar</th>
                   <th className="px-3 py-2 font-medium">Tên / Email</th>
                   <th className="px-3 py-2 font-medium">Telegram</th>
@@ -275,7 +275,7 @@ export default function CustomersPage() {
               </thead>
               <tbody className="divide-y divide-zinc-800">
                 {isLoading && (
-                  <tr><td colSpan={7} className="px-3 py-6 text-center text-cream/55">Đang tải…</td></tr>
+                  <tr><td colSpan={7} className="px-3 py-6 text-center text-muted-foreground">Đang tải…</td></tr>
                 )}
                 {!isLoading && customers.length === 0 && (
                   <tr>
@@ -289,7 +289,7 @@ export default function CustomersPage() {
                             <>
                               Khi user đầu tiên đăng ký qua Telegram hoặc email, dòng đầu tiên sẽ hiện ở đây.
                               <br />
-                              <span className="mt-1 inline-block font-mono text-[10px] uppercase tracking-wider text-cream/45">
+                              <span className="mt-1 inline-block font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                                 onboarding chưa wire với bảng <code>users</code>
                               </span>
                             </>
@@ -309,21 +309,21 @@ export default function CustomersPage() {
                     </td>
                     <td className="px-3 py-2">
                       <Link href={`/customers/${c.id}`} className="block">
-                        <div className="text-cream">{c.display_name ?? '(không tên)'}</div>
-                        <div className="font-mono text-xs text-cream/55">{c.email ?? '—'}</div>
+                        <div className="text-foreground">{c.display_name ?? '(không tên)'}</div>
+                        <div className="font-mono text-xs text-muted-foreground">{c.email ?? '—'}</div>
                       </Link>
                     </td>
-                    <td className="px-3 py-2 font-mono text-xs text-cream/70">{c.telegram_id ?? '—'}</td>
+                    <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{c.telegram_id ?? '—'}</td>
                     <td className="px-3 py-2">
                       {c.plan ? (
                         <span className={`inline-flex items-center rounded border px-2 py-0.5 text-xs font-medium ${PLAN_TONE[c.plan]}`}>
                           {PLAN_LABEL[c.plan]}
                         </span>
-                      ) : <span className="text-cream/40">—</span>}
+                      ) : <span className="text-muted-foreground">—</span>}
                     </td>
-                    <td className="px-3 py-2 font-mono text-xs text-cream/70">{fmtDate(c.created_at)}</td>
-                    <td className="px-3 py-2 font-mono text-xs text-cream/70">{fmtDate(c.last_active)}</td>
-                    <td className="px-3 py-2 text-right tabular-nums text-cream/85">{c.sessions_count ?? 0}</td>
+                    <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{fmtDate(c.created_at)}</td>
+                    <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{fmtDate(c.last_active)}</td>
+                    <td className="px-3 py-2 text-right tabular-nums text-foreground/85">{c.sessions_count ?? 0}</td>
                   </tr>
                 ))}
               </tbody>

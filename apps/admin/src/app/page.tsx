@@ -84,8 +84,8 @@ export default function AdminOverviewPage() {
         description={
           <>
             Theo dõi nhanh vận hành ngày + tháng. Dữ liệu lấy từ{' '}
-            <code className="font-mono text-cream/75">/admin/analytics</code> +{' '}
-            <code className="font-mono text-cream/75">/admin/cost</code>.
+            <code className="font-mono text-foreground/85">/admin/analytics</code> +{' '}
+            <code className="font-mono text-foreground/85">/admin/cost</code>.
           </>
         }
         badge={<LiveBadge />}
@@ -149,7 +149,7 @@ export default function AdminOverviewPage() {
           </CardHeader>
           <CardContent>
             {readings.isLoading ? (
-              <div className="h-72 animate-pulse rounded bg-cream/5" />
+              <div className="h-72 animate-pulse rounded bg-muted/30" />
             ) : (
               <ReadingsChart data={readings.data ?? []} />
             )}

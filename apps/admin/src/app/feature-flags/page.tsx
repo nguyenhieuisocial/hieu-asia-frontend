@@ -136,7 +136,7 @@ export default function FeatureFlagsPage() {
           )}
 
           {isLoading && (
-            <div className="px-3 py-6 text-center text-cream/55">Đang tải…</div>
+            <div className="px-3 py-6 text-center text-muted-foreground">Đang tải…</div>
           )}
 
           {!isLoading && flags.length === 0 && !showError && (
@@ -152,7 +152,7 @@ export default function FeatureFlagsPage() {
               {flags.map((f) => (
                 <div
                   key={f.key}
-                  className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gold/15 bg-ink/40 px-4 py-3"
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gold/15 bg-card/60 px-4 py-3"
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
@@ -163,8 +163,8 @@ export default function FeatureFlagsPage() {
                         </span>
                       )}
                     </div>
-                    <p className="mt-0.5 text-xs text-cream/65">{f.description}</p>
-                    <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-cream/40">
+                    <p className="mt-0.5 text-xs text-muted-foreground">{f.description}</p>
+                    <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                       Cập nhật: {fmtDate(f.last_modified)}
                     </p>
                   </div>
@@ -173,7 +173,7 @@ export default function FeatureFlagsPage() {
                       className={
                         f.enabled
                           ? 'font-mono text-xs uppercase tracking-wider text-jade'
-                          : 'font-mono text-xs uppercase tracking-wider text-cream/45'
+                          : 'font-mono text-xs uppercase tracking-wider text-muted-foreground'
                       }
                     >
                       {f.enabled ? 'ON' : 'OFF'}

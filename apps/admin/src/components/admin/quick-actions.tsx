@@ -42,8 +42,8 @@ const TONE_CLASS: Record<Action['tone'], string> = {
 
 export function QuickActions() {
   return (
-    <div className="rounded-xl border border-gold/15 bg-ink/40 p-5 backdrop-blur-sm">
-      <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-cream/85">
+    <div className="rounded-xl border border-gold/15 bg-card/60 p-5 backdrop-blur-sm">
+      <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/85">
         Thao tác nhanh
       </h3>
       <div className="mt-3 grid grid-cols-2 gap-2">
@@ -51,12 +51,12 @@ export function QuickActions() {
           <Link
             key={a.href + a.label}
             href={a.href}
-            className="group flex items-center gap-2.5 rounded-lg border border-gold/10 bg-ink/30 px-3 py-2.5 text-sm transition-all hover:border-gold/30 hover:bg-ink/50"
+            className="group flex items-center gap-2.5 rounded-lg border border-gold/10 bg-card/50 px-3 py-2.5 text-sm transition-all hover:border-gold/30 hover:bg-card/50"
           >
             <span className={cn('inline-flex h-7 w-7 items-center justify-center rounded-md border', TONE_CLASS[a.tone])}>
               <a.Icon className="h-3.5 w-3.5" aria-hidden />
             </span>
-            <span className="text-cream/85 group-hover:text-cream">{a.label}</span>
+            <span className="text-foreground/85 group-hover:text-foreground">{a.label}</span>
           </Link>
         ))}
       </div>

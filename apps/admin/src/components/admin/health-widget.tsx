@@ -60,7 +60,7 @@ function StatusDot({ status }: { status: Status }) {
   if (status === 'ok') return <CheckCircle2 className="h-3.5 w-3.5 text-jade-50" />;
   if (status === 'warn') return <AlertTriangle className="h-3.5 w-3.5 text-gold" />;
   if (status === 'down') return <AlertTriangle className="h-3.5 w-3.5 text-red-400" />;
-  return <MinusCircle className="h-3.5 w-3.5 text-cream/40" />;
+  return <MinusCircle className="h-3.5 w-3.5 text-muted-foreground" />;
 }
 
 export function HealthWidget() {
@@ -140,26 +140,26 @@ export function HealthWidget() {
   const anyLoading = queue.isLoading || secrets.isLoading || health.isLoading;
 
   return (
-    <div className="rounded-xl border border-gold/15 bg-ink/40 p-5 backdrop-blur-sm">
+    <div className="rounded-xl border border-gold/15 bg-card/60 p-5 backdrop-blur-sm">
       <div className="flex items-center justify-between">
-        <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-cream/85">
+        <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/85">
           Sức khoẻ hệ thống
         </h3>
-        {anyLoading && <Loader2 className="h-3.5 w-3.5 animate-spin text-cream/40" />}
+        {anyLoading && <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />}
       </div>
       <ul className="mt-3 space-y-2.5">
         {rows.map((r) => (
           <li key={r.label} className="flex items-start justify-between gap-3 text-xs">
             <span className="flex items-center gap-2">
               <StatusDot status={r.status} />
-              <span className="text-cream/85">{r.label}</span>
+              <span className="text-foreground/85">{r.label}</span>
             </span>
             <span
               className={cn(
                 'min-w-0 truncate text-right font-mono text-[11px]',
                 r.status === 'warn' && 'text-gold',
                 r.status === 'down' && 'text-red-300',
-                (r.status === 'ok' || r.status === 'unknown') && 'text-cream/55',
+                (r.status === 'ok' || r.status === 'unknown') && 'text-muted-foreground',
               )}
             >
               {r.detail}

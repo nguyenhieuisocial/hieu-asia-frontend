@@ -105,13 +105,13 @@ export default function AnalyticsPage() {
         badge={data && !isLoading ? <LiveBadge /> : null}
         actions={
           <>
-            <div className="inline-flex rounded-md border border-gold/20 bg-ink/40 p-0.5">
+            <div className="inline-flex rounded-md border border-gold/20 bg-card/60 p-0.5">
               {(['7', '30', '90'] as Range[]).map((r) => (
                 <button
                   key={r}
                   onClick={() => setDays(r)}
                   className={`rounded px-3 py-1 text-xs transition-colors ${
-                    days === r ? 'bg-gold/20 text-gold' : 'text-cream/65 hover:bg-gold/5'
+                    days === r ? 'bg-gold/20 text-gold' : 'text-muted-foreground hover:bg-gold/5'
                   }`}
                 >
                   {r}d
@@ -131,12 +131,12 @@ export default function AnalyticsPage() {
         </div>
       )}
       {data?.sources && !data.sources.langfuse && (
-        <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-cream/70">
+        <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-muted-foreground">
           Langfuse chưa wire — vendor cost hiển thị 0. Đặt LANGFUSE_PUBLIC_KEY/SECRET_KEY để bật.
         </div>
       )}
       {data?.funnel_v2 && data.funnel_v2.total_events === 0 && (
-        <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-cream/70">
+        <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-muted-foreground">
           Funnel data trống — chưa có events trong {days} ngày. Verify NEXT_PUBLIC_PLAUSIBLE_DOMAIN
           và user activity, hoặc đợi traffic.
         </div>
@@ -151,7 +151,7 @@ export default function AnalyticsPage() {
         </div>
       )}
       {data?.vendor_cost_meta?.note && (
-        <div className="rounded-md border border-gold/20 bg-ink/40 px-3 py-2 text-xs text-cream/55">
+        <div className="rounded-md border border-gold/20 bg-card/60 px-3 py-2 text-xs text-muted-foreground">
           {data.vendor_cost_meta.note}
         </div>
       )}
@@ -194,7 +194,7 @@ export default function AnalyticsPage() {
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <p className="py-8 text-center text-sm text-cream/55">Đang tải…</p>
+            <p className="py-8 text-center text-sm text-muted-foreground">Đang tải…</p>
           ) : (
             <RevenueChart data={revenue.daily} />
           )}
@@ -219,7 +219,7 @@ export default function AnalyticsPage() {
           </CardHeader>
           <CardContent>
             {isLoading ? (
-              <p className="py-8 text-center text-sm text-cream/55">Đang tải…</p>
+              <p className="py-8 text-center text-sm text-muted-foreground">Đang tải…</p>
             ) : (
               <FunnelChart stages={funnel} />
             )}

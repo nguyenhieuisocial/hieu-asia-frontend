@@ -107,7 +107,7 @@ export default function AdminPaymentsPage() {
       key: 'stripe_id',
       header: 'Stripe',
       cell: (t) => (
-        <span className="font-mono text-xs text-cream/65" title={t.stripe_id}>
+        <span className="font-mono text-xs text-muted-foreground" title={t.stripe_id}>
           {maskSecret(t.stripe_id)}
         </span>
       ),
@@ -215,7 +215,7 @@ export default function AdminPaymentsPage() {
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as StatusFilter)}
-                className="h-8 rounded-md border border-gold/20 bg-ink/60 px-2 text-xs text-cream focus:border-gold focus:outline-none"
+                className="h-8 rounded-md border border-gold/20 bg-card/60 px-2 text-xs text-foreground focus:border-gold focus:outline-none"
                 aria-label="Lọc theo trạng thái"
               >
                 <option value="all">Tất cả status</option>
@@ -227,7 +227,7 @@ export default function AdminPaymentsPage() {
               <select
                 value={plan}
                 onChange={(e) => setPlan(e.target.value as PlanFilter)}
-                className="h-8 rounded-md border border-gold/20 bg-ink/60 px-2 text-xs text-cream focus:border-gold focus:outline-none"
+                className="h-8 rounded-md border border-gold/20 bg-card/60 px-2 text-xs text-foreground focus:border-gold focus:outline-none"
                 aria-label="Lọc theo gói"
               >
                 <option value="all">Tất cả gói</option>
@@ -242,7 +242,7 @@ export default function AdminPaymentsPage() {
                     e.target.value = '';
                   }}
                   defaultValue=""
-                  className="h-8 rounded-md border border-gold/30 bg-ink/60 px-2 text-xs text-gold focus:border-gold focus:outline-none"
+                  className="h-8 rounded-md border border-gold/30 bg-card/60 px-2 text-xs text-gold focus:border-gold focus:outline-none"
                   aria-label="Bộ lọc đã lưu"
                 >
                   <option value="" disabled>
@@ -265,7 +265,7 @@ export default function AdminPaymentsPage() {
                     e.target.value = '';
                   }}
                   defaultValue=""
-                  className="h-8 rounded-md border border-red-400/20 bg-ink/60 px-2 text-xs text-red-300 focus:border-red-400 focus:outline-none"
+                  className="h-8 rounded-md border border-red-400/20 bg-card/60 px-2 text-xs text-red-300 focus:border-red-400 focus:outline-none"
                   aria-label="Xoá bộ lọc đã lưu"
                 >
                   <option value="" disabled>
@@ -405,16 +405,16 @@ function CouponManager({ coupons, loading }: { coupons: AdminCoupon[]; loading: 
         </form>
 
         <ul className="space-y-2">
-          {loading && <li className="text-sm text-cream/60">Đang tải…</li>}
+          {loading && <li className="text-sm text-muted-foreground">Đang tải…</li>}
           {coupons.map((c) => (
             <li
               key={c.code}
-              className="flex items-center justify-between rounded-md border border-gold/15 bg-ink/40 px-4 py-3 text-sm"
+              className="flex items-center justify-between rounded-md border border-gold/15 bg-card/60 px-4 py-3 text-sm"
             >
               <div className="flex items-center gap-3">
                 <span className="font-mono text-gold">{c.code}</span>
-                <span className="text-cream/70">-{c.discount_percent}%</span>
-                <span className="text-cream/50">
+                <span className="text-muted-foreground">-{c.discount_percent}%</span>
+                <span className="text-muted-foreground">
                   {c.redeemed}/{c.max_redemptions} dùng
                 </span>
                 <StatusBadge status={c.active ? 'success' : 'neutral'} label={c.active ? 'Active' : 'Inactive'} />

@@ -71,7 +71,7 @@ export function PromptEditor({
 
   return (
     <div className={cn('flex flex-col gap-2', className)}>
-      <div className="flex items-center justify-end gap-3 text-xs text-cream/60">
+      <div className="flex items-center justify-end gap-3 text-xs text-muted-foreground">
         <label className="inline-flex cursor-pointer items-center gap-1.5">
           <input
             type="checkbox"
@@ -83,12 +83,12 @@ export function PromptEditor({
         </label>
       </div>
 
-      <div className="flex h-[60vh] overflow-hidden rounded-md border border-gold/15 bg-ink/40 backdrop-blur-sm">
+      <div className="flex h-[60vh] overflow-hidden rounded-md border border-gold/15 bg-card/60 backdrop-blur-sm">
         {/* Line-number gutter */}
         <div
           ref={gutterRef}
           aria-hidden="true"
-          className="select-none overflow-hidden border-r border-gold/10 bg-ink/60 px-2 py-3 text-right font-mono text-xs leading-5 text-cream/40"
+          className="select-none overflow-hidden border-r border-gold/10 bg-card/60 px-2 py-3 text-right font-mono text-xs leading-5 text-muted-foreground"
           style={{ minWidth: '3rem' }}
         >
           {Array.from({ length: lineCount }, (_, i) => (
@@ -108,19 +108,19 @@ export function PromptEditor({
           lang={spellCheck ? 'vi' : undefined}
           wrap={wrap ? 'soft' : 'off'}
           className={cn(
-            'flex-1 resize-none bg-transparent px-3 py-3 font-mono text-sm leading-5 text-cream',
-            'placeholder:text-cream/30 focus:outline-none',
+            'flex-1 resize-none bg-transparent px-3 py-3 font-mono text-sm leading-5 text-foreground',
+            'placeholder:text-foreground/30 focus:outline-none',
             wrap ? 'whitespace-pre-wrap break-words' : 'whitespace-pre overflow-x-auto',
           )}
         />
       </div>
 
-      <div className="flex justify-between font-mono text-[11px] text-cream/55">
+      <div className="flex justify-between font-mono text-[11px] text-muted-foreground">
         <span>
           {value.length.toLocaleString('vi-VN')} ký tự · {lineCount} dòng
           {maxLength && ` · tối đa ${maxLength.toLocaleString('vi-VN')}`}
         </span>
-        <span className="text-cream/40">Tab = 2 spaces · Cmd/Ctrl+S = Lưu</span>
+        <span className="text-muted-foreground">Tab = 2 spaces · Cmd/Ctrl+S = Lưu</span>
       </div>
     </div>
   );

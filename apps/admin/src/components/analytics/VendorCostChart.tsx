@@ -23,7 +23,7 @@ export function VendorCostChart({ data }: { data: VendorCost[] }) {
 
   if (total === 0) {
     return (
-      <div className="flex h-72 items-center justify-center text-sm text-cream/55">
+      <div className="flex h-72 items-center justify-center text-sm text-muted-foreground">
         Chưa có dữ liệu vendor cost (Langfuse chưa wire).
       </div>
     );

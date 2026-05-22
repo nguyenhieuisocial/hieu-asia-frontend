@@ -185,27 +185,27 @@ function ServiceRow({ service }: { service: ServiceIntegration }) {
         ? 'bg-red-400'
         : result?.kind === 'not_wired'
           ? 'bg-amber-400'
-          : 'bg-cream/30';
+          : 'bg-muted/60';
 
   return (
-    <div className="flex items-start justify-between gap-3 rounded-lg border border-gold/15 bg-ink/40 px-4 py-3 transition-colors hover:border-gold/25">
+    <div className="flex items-start justify-between gap-3 rounded-lg border border-gold/15 bg-card/60 px-4 py-3 transition-colors hover:border-gold/25">
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span className={cn('h-2 w-2 shrink-0 rounded-full', dotCls)} aria-hidden />
-          <p className="truncate font-medium text-cream">{service.name}</p>
+          <p className="truncate font-medium text-foreground">{service.name}</p>
           {service.docUrl && (
             <a
               href={service.docUrl}
               target="_blank"
               rel="noreferrer"
-              className="text-cream/40 hover:text-gold"
+              className="text-muted-foreground hover:text-gold"
               aria-label={`docs ${service.name}`}
             >
               <ExternalLink className="h-3 w-3" />
             </a>
           )}
         </div>
-        <p className="mt-0.5 text-xs text-cream/60">{service.hint}</p>
+        <p className="mt-0.5 text-xs text-muted-foreground">{service.hint}</p>
         {result && (
           <p
             className={cn(
@@ -366,7 +366,7 @@ function AiVendorCard({ vendor, providers, model, onChange }: AiCardProps) {
               <span
                 className={cn(
                   'inline-block h-2 w-2 rounded-full',
-                  connected ? 'bg-emerald-400' : 'bg-cream/30',
+                  connected ? 'bg-emerald-400' : 'bg-muted/60',
                 )}
               />
               {vendor.name}
@@ -383,7 +383,7 @@ function AiVendorCard({ vendor, providers, model, onChange }: AiCardProps) {
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
-        <p className="text-xs text-cream/65">Roles: {vendor.roles}</p>
+        <p className="text-xs text-muted-foreground">Roles: {vendor.roles}</p>
 
         {vendor.oauth && (
           <div>
@@ -396,14 +396,14 @@ function AiVendorCard({ vendor, providers, model, onChange }: AiCardProps) {
               {vendor.oauthLabel}
             </Button>
             {oauthVisible && (
-              <div className="mt-2 rounded border border-gold/15 bg-ink/60 p-2 text-xs">
-                <p className="text-cream/65">{vendor.oauthHint}</p>
+              <div className="mt-2 rounded border border-gold/15 bg-card/60 p-2 text-xs">
+                <p className="text-muted-foreground">{vendor.oauthHint}</p>
                 <div className="mt-2 flex gap-2">
                   <input
                     id={`oauth-code-${vendor.id}`}
                     type="text"
                     placeholder="paste OAuth code"
-                    className="flex-1 rounded-md border border-gold/20 bg-ink/60 px-2 py-1.5 font-mono text-xs text-cream placeholder:text-cream/30 focus:border-gold/50 focus:outline-none"
+                    className="flex-1 rounded-md border border-gold/20 bg-card/60 px-2 py-1.5 font-mono text-xs text-foreground placeholder:text-foreground/30 focus:border-gold/50 focus:outline-none"
                   />
                   <Button size="sm" onClick={onOAuthExchange} disabled={busy}>
                     Exchange
@@ -415,7 +415,7 @@ function AiVendorCard({ vendor, providers, model, onChange }: AiCardProps) {
         )}
 
         <div>
-          <p className="text-xs text-cream/55">
+          <p className="text-xs text-muted-foreground">
             API key:{' '}
             <a href={vendor.keyUrl} target="_blank" rel="noreferrer" className="text-gold hover:underline">
               {vendor.keyUrl.replace('https://', '')}
@@ -426,7 +426,7 @@ function AiVendorCard({ vendor, providers, model, onChange }: AiCardProps) {
               id={`key-${vendor.id}`}
               type="password"
               placeholder={vendor.keyHint}
-              className="flex-1 rounded-md border border-gold/20 bg-ink/60 px-2 py-1.5 font-mono text-xs text-cream placeholder:text-cream/30 focus:border-gold/50 focus:outline-none"
+              className="flex-1 rounded-md border border-gold/20 bg-card/60 px-2 py-1.5 font-mono text-xs text-foreground placeholder:text-foreground/30 focus:border-gold/50 focus:outline-none"
             />
             <Button size="sm" onClick={onConnectKey} disabled={busy}>
               Connect
@@ -450,7 +450,7 @@ function AiVendorCard({ vendor, providers, model, onChange }: AiCardProps) {
               'rounded border px-2 py-1 text-xs',
               status.kind === 'ok' && 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300',
               status.kind === 'err' && 'border-red-500/40 bg-red-500/10 text-red-300',
-              status.kind === 'pending' && 'border-gold/30 bg-gold/5 text-cream/75',
+              status.kind === 'pending' && 'border-gold/30 bg-gold/5 text-foreground/85',
             )}
           >
             {status.text}
@@ -486,7 +486,7 @@ export default function ConnectPage() {
         icon={<Plug className="h-5 w-5" />}
       />
 
-      <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-cream/75">
+      <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-foreground/85">
         <b className="text-gold">Lưu ý:</b> Google Gemini hỗ trợ OAuth. Anthropic và OpenAI chỉ
         chấp nhận API key — Anthropic disable OAuth cho Messages API từ Feb 2026, OpenAI Codex
         chỉ accept <code className="font-mono">localhost:1455</code> callback nên không web-paste
@@ -494,7 +494,7 @@ export default function ConnectPage() {
       </div>
 
       <section className="space-y-3">
-        <h2 className="font-heading text-sm font-semibold uppercase tracking-wider text-cream/85">
+        <h2 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/85">
           Vendor AI
         </h2>
         <div className="grid gap-4 lg:grid-cols-3">
@@ -523,7 +523,7 @@ export default function ConnectPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-cream/65">
+            <p className="text-xs text-muted-foreground">
               Active mặc định, không cần key. Dùng làm fallback khi vendor key chưa set hoặc bị
               rate-limit.
             </p>
@@ -532,14 +532,14 @@ export default function ConnectPage() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="font-heading text-sm font-semibold uppercase tracking-wider text-cream/85">
+        <h2 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/85">
           Service tích hợp
         </h2>
         <Card>
           <CardHeader>
             <CardTitle>Health checks</CardTitle>
             <CardDescription>
-              Ping <code className="font-mono text-cream/75">/admin/&lt;service&gt;/health</code>{' '}
+              Ping <code className="font-mono text-foreground/85">/admin/&lt;service&gt;/health</code>{' '}
               qua worker để kiểm tra kết nối thực tế.
             </CardDescription>
           </CardHeader>

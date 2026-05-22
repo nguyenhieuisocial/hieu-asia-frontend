@@ -86,7 +86,7 @@ export default function AdminCostPage() {
         title="Chi phí AI"
         description={
           <>
-            Tổng hợp từ <code className="font-mono text-cream/75">llm_trace_daily</code> — gộp
+            Tổng hợp từ <code className="font-mono text-foreground/85">llm_trace_daily</code> — gộp
             theo ngày + theo model.
           </>
         }
@@ -94,7 +94,7 @@ export default function AdminCostPage() {
         badge={hasData ? <LiveBadge /> : null}
         actions={
           <>
-            <div className="inline-flex rounded-md border border-gold/20 bg-ink/40 p-0.5">
+            <div className="inline-flex rounded-md border border-gold/20 bg-card/60 p-0.5">
               {RANGE_OPTIONS.map((r) => (
                 <button
                   key={r.value}
@@ -104,7 +104,7 @@ export default function AdminCostPage() {
                     'rounded px-3 py-1 text-xs transition-colors',
                     days === r.value
                       ? 'bg-gold/20 text-gold'
-                      : 'text-cream/65 hover:bg-gold/5',
+                      : 'text-muted-foreground hover:bg-gold/5',
                   )}
                 >
                   {r.label}
@@ -165,7 +165,7 @@ export default function AdminCostPage() {
         </CardHeader>
         <CardContent>
           {cost.isLoading ? (
-            <div className="h-80 animate-pulse rounded bg-cream/5" />
+            <div className="h-80 animate-pulse rounded bg-muted/30" />
           ) : !hasData ? (
             <EmptyState
               title="Chưa có LLM trace"
@@ -201,7 +201,7 @@ export default function AdminCostPage() {
               {(top.data ?? []).map((u, i) => (
                 <li
                   key={u.id || u.email || i}
-                  className="flex items-center justify-between rounded-md border border-gold/10 bg-ink/40 px-3 py-2 text-sm transition-colors hover:border-gold/25"
+                  className="flex items-center justify-between rounded-md border border-gold/10 bg-card/60 px-3 py-2 text-sm transition-colors hover:border-gold/25"
                 >
                   <span className="flex items-center gap-3">
                     <span
@@ -210,20 +210,20 @@ export default function AdminCostPage() {
                         i === 0
                           ? 'bg-gradient-to-br from-gold to-gold-600 text-ink shadow-md'
                           : i === 1
-                            ? 'bg-cream/15 text-cream'
+                            ? 'bg-muted/40 text-foreground'
                             : i === 2
                               ? 'bg-gold/15 text-gold'
-                              : 'bg-ink/60 text-cream/70',
+                              : 'bg-card/60 text-muted-foreground',
                       )}
                     >
                       {i + 1}
                     </span>
-                    <span className="font-mono text-xs text-cream">{u.email}</span>
+                    <span className="font-mono text-xs text-foreground">{u.email}</span>
                   </span>
                   <span className="font-mono text-gold">${u.total_spend_usd.toFixed(2)}</span>
                 </li>
               ))}
-              {top.isLoading && <li className="text-cream/60">Đang tải…</li>}
+              {top.isLoading && <li className="text-muted-foreground">Đang tải…</li>}
             </ol>
           )}
         </CardContent>

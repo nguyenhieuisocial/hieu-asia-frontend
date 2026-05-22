@@ -146,8 +146,8 @@ const TIER_BANDS: Array<{ tier: Tier; min: number; label: string; badgeClass: st
     tier: 'silver',
     min: 10,
     label: 'Silver',
-    badgeClass: 'bg-cream/10 text-cream/90 border-cream/30',
-    barClass: 'bg-cream/70',
+    badgeClass: 'bg-muted/40 text-foreground/90 border-border',
+    barClass: 'bg-muted',
   },
   {
     tier: 'gold',
@@ -161,7 +161,7 @@ const TIER_BANDS: Array<{ tier: Tier; min: number; label: string; badgeClass: st
     min: 200,
     label: 'Platinum',
     badgeClass:
-      'bg-gradient-to-r from-purple-700/40 to-gold/30 text-cream border-purple-400/40',
+      'bg-gradient-to-r from-purple-700/40 to-gold/30 text-foreground border-purple-400/40',
     barClass: 'bg-purple-400',
   },
 ];

@@ -14,15 +14,15 @@ export function StatCard({ label, value, hint, delta, icon, className }: StatCar
   return (
     <div
       className={cn(
-        'rounded-lg border border-gold/15 bg-ink/50 p-5 backdrop-blur-sm transition-colors hover:border-gold/30',
+        'rounded-lg border border-gold/15 bg-card/50 p-5 backdrop-blur-sm transition-colors hover:border-gold/30',
         className,
       )}
     >
       <div className="flex items-start justify-between">
-        <p className="font-mono text-[10px] uppercase tracking-widest text-cream/55">{label}</p>
+        <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
         {icon && <span className="text-gold/70">{icon}</span>}
       </div>
-      <p className="mt-2 font-heading text-2xl font-semibold text-cream sm:text-3xl">{value}</p>
+      <p className="mt-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">{value}</p>
       <div className="mt-1 flex items-center gap-2 text-xs">
         {delta && (
           <span
@@ -30,7 +30,7 @@ export function StatCard({ label, value, hint, delta, icon, className }: StatCar
               'rounded px-1.5 py-0.5 font-mono',
               delta.direction === 'up' && 'bg-jade/15 text-jade-50',
               delta.direction === 'down' && 'bg-red-500/15 text-red-300',
-              delta.direction === 'flat' && 'bg-cream/5 text-cream/60',
+              delta.direction === 'flat' && 'bg-muted/30 text-muted-foreground',
             )}
           >
             {delta.direction === 'up' && '↑ '}
@@ -38,7 +38,7 @@ export function StatCard({ label, value, hint, delta, icon, className }: StatCar
             {delta.value}
           </span>
         )}
-        {hint && <span className="text-cream/55">{hint}</span>}
+        {hint && <span className="text-muted-foreground">{hint}</span>}
       </div>
     </div>
   );

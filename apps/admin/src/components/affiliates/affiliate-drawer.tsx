@@ -87,7 +87,7 @@ export function AffiliateDrawer({ affiliateId, onClose, onChange }: AffiliateDra
     <Sheet open={open} onOpenChange={(o) => (!o ? onClose() : null)}>
       <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-xl">
         {isLoading ? (
-          <p className="text-sm text-cream/60">Đang tải hồ sơ…</p>
+          <p className="text-sm text-muted-foreground">Đang tải hồ sơ…</p>
         ) : error || !data ? (
           <p className="text-sm text-red-300">
             {error instanceof Error ? error.message : 'Không tải được hồ sơ.'}
@@ -144,16 +144,16 @@ export function AffiliateDrawer({ affiliateId, onClose, onChange }: AffiliateDra
 
             <Section title={`Yêu cầu rút tiền (${data.payouts.length})`}>
               {data.payouts.length === 0 ? (
-                <p className="text-sm text-cream/50">Chưa có.</p>
+                <p className="text-sm text-muted-foreground">Chưa có.</p>
               ) : (
                 <div className="space-y-2">
                   {data.payouts.map((p) => (
-                    <div key={p.id} className="rounded border border-cream/10 p-2 text-sm">
+                    <div key={p.id} className="rounded border border-border p-2 text-sm">
                       <div className="flex items-center justify-between">
                         <span className="font-mono text-gold">{vnd(p.amount)}</span>
                         <PayoutStatus status={p.status} />
                       </div>
-                      <div className="text-xs text-cream/60">
+                      <div className="text-xs text-muted-foreground">
                         {p.method.toUpperCase()} · {dtFull(p.requested_at)}
                       </div>
                       {p.status === 'pending' && (
@@ -183,19 +183,19 @@ export function AffiliateDrawer({ affiliateId, onClose, onChange }: AffiliateDra
               }
             >
               {data.recent.length === 0 ? (
-                <p className="text-sm text-cream/50">Chưa có sự kiện.</p>
+                <p className="text-sm text-muted-foreground">Chưa có sự kiện.</p>
               ) : (
                 <div className="max-h-64 space-y-1 overflow-y-auto pr-1 text-sm">
                   {data.recent.map((ev, i) => (
                     <div
                       key={i}
-                      className="flex items-center justify-between border-b border-cream/5 py-1 last:border-0"
+                      className="flex items-center justify-between border-b border-border py-1 last:border-0"
                     >
                       <span className="flex items-center gap-2">
-                        <span className="rounded bg-cream/10 px-1.5 py-0.5 text-[10px] uppercase">
+                        <span className="rounded bg-muted/40 px-1.5 py-0.5 text-[10px] uppercase">
                           {ev.event}
                         </span>
-                        <span className="text-xs text-cream/70">{dtFull(ev.ts)}</span>
+                        <span className="text-xs text-muted-foreground">{dtFull(ev.ts)}</span>
                       </span>
                       {ev.commission != null && (
                         <span className="font-mono text-xs text-gold">+{vnd(ev.commission)}</span>
@@ -206,9 +206,9 @@ export function AffiliateDrawer({ affiliateId, onClose, onChange }: AffiliateDra
               )}
             </Section>
 
-            <div className="mt-6 flex flex-wrap gap-2 border-t border-cream/10 pt-4">
+            <div className="mt-6 flex flex-wrap gap-2 border-t border-border pt-4">
               <Link href={`/affiliates/${affiliateId}`}>
-                <Button variant="ghost" className="border border-cream/20">
+                <Button variant="ghost" className="border border-border">
                   Mở trang đầy đủ
                 </Button>
               </Link>
@@ -236,8 +236,8 @@ export function AffiliateDrawer({ affiliateId, onClose, onChange }: AffiliateDra
 
 function Stat({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="rounded border border-cream/10 bg-ink/40 p-2">
-      <div className="text-[10px] uppercase tracking-wider text-cream/55">{label}</div>
+    <div className="rounded border border-border bg-card/60 p-2">
+      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
       <div className="mt-0.5 font-mono text-sm">{value}</div>
     </div>
   );
@@ -255,7 +255,7 @@ function Section({
   return (
     <section className="mt-5">
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-cream/70">{title}</h3>
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{title}</h3>
         {action}
       </div>
       {children}
@@ -273,8 +273,8 @@ function Row({
   mono?: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between border-b border-cream/5 py-1 text-sm last:border-0">
-      <span className="text-cream/60">{label}</span>
+    <div className="flex items-center justify-between border-b border-border py-1 text-sm last:border-0">
+      <span className="text-muted-foreground">{label}</span>
       <span className={mono ? 'font-mono' : ''}>{value}</span>
     </div>
   );

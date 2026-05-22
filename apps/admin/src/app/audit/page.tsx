@@ -229,7 +229,7 @@ export default function AuditPage() {
             <select
               value={action}
               onChange={(e) => setAction(e.target.value)}
-              className="h-10 rounded-md border border-gold/20 bg-ink/60 px-3 text-sm text-cream focus:border-[#B8923D] focus:outline-none"
+              className="h-10 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground focus:border-[#B8923D] focus:outline-none"
             >
               {ACTION_OPTIONS.map((o) => (
                 <option key={o.value || 'all'} value={o.value}>
@@ -242,19 +242,19 @@ export default function AuditPage() {
               value={actorInput}
               onChange={(e) => setActorInput(e.target.value)}
               placeholder="Actor (email / user_id)…"
-              className="rounded-md border border-gold/20 bg-ink/60 px-3 py-2 text-sm text-cream placeholder:text-cream/30 focus:border-[#B8923D] focus:outline-none"
+              className="rounded-md border border-gold/20 bg-card/60 px-3 py-2 text-sm text-foreground placeholder:text-foreground/30 focus:border-[#B8923D] focus:outline-none"
             />
             <input
               type="datetime-local"
               value={from}
               onChange={(e) => setFrom(e.target.value)}
-              className="rounded-md border border-gold/20 bg-ink/60 px-3 py-2 text-sm text-cream focus:border-[#B8923D] focus:outline-none"
+              className="rounded-md border border-gold/20 bg-card/60 px-3 py-2 text-sm text-foreground focus:border-[#B8923D] focus:outline-none"
             />
             <input
               type="datetime-local"
               value={to}
               onChange={(e) => setTo(e.target.value)}
-              className="rounded-md border border-gold/20 bg-ink/60 px-3 py-2 text-sm text-cream focus:border-[#B8923D] focus:outline-none"
+              className="rounded-md border border-gold/20 bg-card/60 px-3 py-2 text-sm text-foreground focus:border-[#B8923D] focus:outline-none"
             />
           </div>
         </CardContent>
@@ -272,7 +272,7 @@ export default function AuditPage() {
             </div>
           )}
           {note && !showError && (
-            <div className="mb-4 rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-cream/70">
+            <div className="mb-4 rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-muted-foreground">
               {note}
             </div>
           )}
@@ -280,7 +280,7 @@ export default function AuditPage() {
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-zinc-800 text-sm">
               <thead>
-                <tr className="text-left text-xs uppercase tracking-wider text-cream/55">
+                <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
                   <th className="px-3 py-2 font-medium">Thời gian</th>
                   <th className="px-3 py-2 font-medium">Actor</th>
                   <th className="px-3 py-2 font-medium">Action</th>
@@ -292,7 +292,7 @@ export default function AuditPage() {
               <tbody className="divide-y divide-zinc-800">
                 {isLoading && (
                   <tr>
-                    <td colSpan={6} className="px-3 py-6 text-center text-cream/55">
+                    <td colSpan={6} className="px-3 py-6 text-center text-muted-foreground">
                       Đang tải…
                     </td>
                   </tr>
@@ -314,16 +314,16 @@ export default function AuditPage() {
                   const highRisk = HIGH_RISK_ACTIONS.has(e.action ?? '');
                   return (
                     <tr key={e.id ?? `${e.ts ?? ''}-${i}`} className="hover:bg-gold/[0.03]">
-                      <td className="px-3 py-2 font-mono text-xs text-cream/80" title={e.ts ?? ''}>
+                      <td className="px-3 py-2 font-mono text-xs text-foreground/85" title={e.ts ?? ''}>
                         <div>{fmtDate(e.ts)}</div>
-                        <div className="text-[10px] text-cream/40">{fmtRelative(e.ts)}</div>
+                        <div className="text-[10px] text-muted-foreground">{fmtRelative(e.ts)}</div>
                       </td>
-                      <td className="px-3 py-2 text-cream/85">
+                      <td className="px-3 py-2 text-foreground/85">
                         <div className="truncate" title={e.actor ?? ''}>
                           {e.actor ?? '—'}
                         </div>
                         {e.actor_type && (
-                          <div className="font-mono text-[10px] uppercase tracking-wider text-cream/45">
+                          <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                             {e.actor_type}
                           </div>
                         )}
@@ -340,19 +340,19 @@ export default function AuditPage() {
                         </span>
                       </td>
                       <td
-                        className="max-w-[18ch] truncate px-3 py-2 font-mono text-xs text-cream/70"
+                        className="max-w-[18ch] truncate px-3 py-2 font-mono text-xs text-muted-foreground"
                         title={e.resource_id ?? ''}
                       >
                         {e.resource_id ?? '—'}
                       </td>
-                      <td className="px-3 py-2 font-mono text-xs text-cream/70">{e.ip ?? '—'}</td>
+                      <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{e.ip ?? '—'}</td>
                       <td className="px-3 py-2">
                         {e.metadata && Object.keys(e.metadata).length > 0 ? (
-                          <code className="line-clamp-2 max-w-md font-mono text-[11px] text-cream/65">
+                          <code className="line-clamp-2 max-w-md font-mono text-[11px] text-muted-foreground">
                             {JSON.stringify(e.metadata)}
                           </code>
                         ) : (
-                          <span className="text-cream/40">—</span>
+                          <span className="text-muted-foreground">—</span>
                         )}
                       </td>
                     </tr>

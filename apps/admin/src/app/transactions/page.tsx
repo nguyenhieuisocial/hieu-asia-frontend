@@ -215,7 +215,7 @@ export default function AdminTransactionsPage() {
         description={
           <>
             Lịch sử thanh toán raw từ Worker{' '}
-            <code className="font-mono text-cream/75">/payment/transactions</code>.
+            <code className="font-mono text-foreground/85">/payment/transactions</code>.
           </>
         }
         icon={<Receipt className="h-5 w-5" />}
@@ -270,7 +270,7 @@ export default function AdminTransactionsPage() {
           <div className="mt-2 flex flex-col gap-3">
             <div className="relative max-w-md">
               <Search
-                className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-cream/40"
+                className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
                 aria-hidden
               />
               <Input
@@ -295,7 +295,7 @@ export default function AdminTransactionsPage() {
                       'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
                       active
                         ? 'border-gold/60 bg-gold/15 text-gold'
-                        : 'border-cream/15 bg-ink/40 text-cream/70 hover:border-gold/30 hover:text-cream',
+                        : 'border-border bg-card/60 text-muted-foreground hover:border-gold/30 hover:text-foreground',
                     )}
                   >
                     {f.label}
@@ -319,7 +319,7 @@ export default function AdminTransactionsPage() {
               </span>
             )}
             {totalAmount > 0 && (
-              <span className="ml-2 text-cream/75">
+              <span className="ml-2 text-foreground/85">
                 · Tổng: <span className="font-mono text-gold">{fmtAmount(totalAmount)}</span>
               </span>
             )}
@@ -332,7 +332,7 @@ export default function AdminTransactionsPage() {
             </div>
           )}
 
-          <div className="overflow-x-auto rounded-lg border border-gold/15 bg-ink/40">
+          <div className="overflow-x-auto rounded-lg border border-gold/15 bg-card/60">
             <table className="min-w-full divide-y divide-zinc-800 text-sm">
               <thead>
                 <tr className="text-left text-xs uppercase tracking-wider text-gold/80">
@@ -348,7 +348,7 @@ export default function AdminTransactionsPage() {
               <tbody className="divide-y divide-zinc-800">
                 {isLoading && (
                   <tr>
-                    <td colSpan={7} className="px-3 py-6 text-center text-cream/55">
+                    <td colSpan={7} className="px-3 py-6 text-center text-muted-foreground">
                       Đang tải…
                     </td>
                   </tr>
@@ -378,7 +378,7 @@ export default function AdminTransactionsPage() {
                   const canRefund = r.type === 'intent_paid';
                   return (
                     <tr key={r.id} className="hover:bg-gold/[0.03]">
-                      <td className="whitespace-nowrap px-3 py-2 text-cream/85">{fmtTs(r.ts)}</td>
+                      <td className="whitespace-nowrap px-3 py-2 text-foreground/85">{fmtTs(r.ts)}</td>
                       <td className="whitespace-nowrap px-3 py-2">
                         <span
                           className={`rounded border px-2 py-0.5 font-mono text-xs ${
@@ -393,7 +393,7 @@ export default function AdminTransactionsPage() {
                         </span>
                       </td>
                       <td
-                        className="cursor-pointer px-3 py-2 font-mono text-xs text-cream/70 hover:text-gold"
+                        className="cursor-pointer px-3 py-2 font-mono text-xs text-muted-foreground hover:text-gold"
                         title={r.intent_id ?? undefined}
                         onClick={() => {
                           if (r.intent_id) {
@@ -405,7 +405,7 @@ export default function AdminTransactionsPage() {
                         {maskId(r.intent_id)}
                       </td>
                       <td
-                        className="cursor-pointer px-3 py-2 font-mono text-xs text-cream/70 hover:text-gold"
+                        className="cursor-pointer px-3 py-2 font-mono text-xs text-muted-foreground hover:text-gold"
                         title={r.user_id ?? undefined}
                         onClick={() => {
                           if (r.user_id) {
@@ -416,16 +416,16 @@ export default function AdminTransactionsPage() {
                       >
                         {maskId(r.user_id)}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-2 text-right tabular-nums text-cream/85">
+                      <td className="whitespace-nowrap px-3 py-2 text-right tabular-nums text-foreground/85">
                         {fmtAmount(r.amount)}
                       </td>
                       <td className="max-w-md px-3 py-2 align-top">
                         {r.metadata ? (
-                          <pre className="max-h-32 overflow-auto whitespace-pre-wrap break-all rounded bg-ink/60 px-2 py-1 font-mono text-[11px] leading-snug text-cream/65">
+                          <pre className="max-h-32 overflow-auto whitespace-pre-wrap break-all rounded bg-card/60 px-2 py-1 font-mono text-[11px] leading-snug text-muted-foreground">
                             {JSON.stringify(r.metadata, null, 2)}
                           </pre>
                         ) : (
-                          <span className="text-cream/40">—</span>
+                          <span className="text-muted-foreground">—</span>
                         )}
                       </td>
                       <td className="whitespace-nowrap px-3 py-2 text-right">
@@ -440,7 +440,7 @@ export default function AdminTransactionsPage() {
                             Refund
                           </Button>
                         ) : (
-                          <span className="text-cream/30">—</span>
+                          <span className="text-foreground/30">—</span>
                         )}
                       </td>
                     </tr>

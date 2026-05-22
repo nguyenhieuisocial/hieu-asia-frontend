@@ -48,7 +48,7 @@ export function RecentTracesTable({
       key: 'created_at',
       header: 'Thời gian',
       width: '180px',
-      cell: (r) => <span className="font-mono text-xs text-cream/80">{fmtTime(r.created_at)}</span>,
+      cell: (r) => <span className="font-mono text-xs text-foreground/85">{fmtTime(r.created_at)}</span>,
     },
     {
       key: 'vendor',
@@ -59,13 +59,13 @@ export function RecentTracesTable({
     {
       key: 'model',
       header: 'Model',
-      cell: (r) => <span className="font-mono text-xs text-cream/85">{r.model}</span>,
+      cell: (r) => <span className="font-mono text-xs text-foreground/85">{r.model}</span>,
     },
     {
       key: 'role',
       header: 'Role',
       width: '110px',
-      cell: (r) => (r.role ? <span className="text-xs text-cream/70">{r.role}</span> : <span className="text-cream/30">—</span>),
+      cell: (r) => (r.role ? <span className="text-xs text-muted-foreground">{r.role}</span> : <span className="text-foreground/30">—</span>),
     },
     {
       key: 'tokens',
@@ -73,7 +73,7 @@ export function RecentTracesTable({
       align: 'right',
       width: '100px',
       cell: (r) => (
-        <span className="font-mono text-xs text-cream/70">
+        <span className="font-mono text-xs text-muted-foreground">
           {(r.input_tokens ?? 0) + (r.output_tokens ?? 0)}
         </span>
       ),
@@ -102,13 +102,13 @@ export function RecentTracesTable({
 
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-3 text-xs text-cream/65">
+      <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
         <label className="flex items-center gap-2">
           <span>Vendor:</span>
           <select
             value={vendorFilter}
             onChange={(e) => onVendorFilterChange(e.target.value)}
-            className="rounded border border-gold/20 bg-ink/60 px-2 py-1 text-xs text-cream"
+            className="rounded border border-gold/20 bg-card/60 px-2 py-1 text-xs text-foreground"
           >
             <option value="">Tất cả</option>
             {vendors.map((v) => (
@@ -123,7 +123,7 @@ export function RecentTracesTable({
           <select
             value={roleFilter}
             onChange={(e) => onRoleFilterChange(e.target.value)}
-            className="rounded border border-gold/20 bg-ink/60 px-2 py-1 text-xs text-cream"
+            className="rounded border border-gold/20 bg-card/60 px-2 py-1 text-xs text-foreground"
           >
             <option value="">Tất cả</option>
             {roles.map((v) => (
@@ -133,7 +133,7 @@ export function RecentTracesTable({
             ))}
           </select>
         </label>
-        <span className="ml-auto text-cream/45">{rows.length} bản ghi</span>
+        <span className="ml-auto text-muted-foreground">{rows.length} bản ghi</span>
       </div>
       <DataTable
         columns={cols}

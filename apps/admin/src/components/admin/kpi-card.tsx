@@ -127,17 +127,17 @@ export function KpiCard({
         aria-hidden
       />
       <div className="relative flex items-start justify-between gap-2">
-        <p className="font-mono text-[10px] uppercase tracking-widest text-cream/55">{label}</p>
+        <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
         {icon && (
           <span
-            className="rounded-md border border-gold/15 bg-ink/40 p-1.5 text-gold/80"
+            className="rounded-md border border-gold/15 bg-card/60 p-1.5 text-gold/80"
             aria-hidden
           >
             {icon}
           </span>
         )}
       </div>
-      <p className="relative mt-3 font-heading text-2xl font-semibold tracking-tight text-cream sm:text-3xl">
+      <p className="relative mt-3 font-heading text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
         {value}
       </p>
       <div className="relative mt-2 flex items-center justify-between gap-2 text-xs">
@@ -148,7 +148,7 @@ export function KpiCard({
                 'rounded px-1.5 py-0.5 font-mono text-[10px]',
                 effDelta.direction === 'up' && 'bg-jade/15 text-jade-50',
                 effDelta.direction === 'down' && 'bg-red-500/15 text-red-300',
-                effDelta.direction === 'flat' && 'bg-cream/5 text-cream/60',
+                effDelta.direction === 'flat' && 'bg-muted/30 text-muted-foreground',
               )}
             >
               {effDelta.direction === 'up' && '↑ '}
@@ -156,7 +156,7 @@ export function KpiCard({
               {effDelta.value}
             </span>
           )}
-          {hint && <span className="text-cream/55">{hint}</span>}
+          {hint && <span className="text-muted-foreground">{hint}</span>}
         </div>
         {sparkline && sparkline.length > 1 && (
           <Sparkline points={sparkline} stroke={stroke} />

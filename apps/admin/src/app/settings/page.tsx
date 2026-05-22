@@ -62,11 +62,11 @@ export default function AdminSettingsPage() {
             <CardContent>
               <Link
                 href="/feature-flags"
-                className="flex items-center justify-between rounded-md border border-gold/15 bg-ink/40 px-4 py-3 transition-colors hover:border-gold/30"
+                className="flex items-center justify-between rounded-md border border-gold/15 bg-card/60 px-4 py-3 transition-colors hover:border-gold/30"
               >
                 <div>
-                  <p className="font-medium text-cream">Mở Feature Flags</p>
-                  <p className="text-xs text-cream/60">
+                  <p className="font-medium text-foreground">Mở Feature Flags</p>
+                  <p className="text-xs text-muted-foreground">
                     Bật/tắt tính năng runtime, persist qua Worker.
                   </p>
                 </div>
@@ -96,8 +96,8 @@ export default function AdminSettingsPage() {
                     key={row.key}
                     className="flex items-center justify-between border-b border-gold/10 py-2 last:border-0"
                   >
-                    <dt className="text-cream/65">{row.key}</dt>
-                    <dd className="text-cream">{row.value}</dd>
+                    <dt className="text-muted-foreground">{row.key}</dt>
+                    <dd className="text-foreground">{row.value}</dd>
                   </div>
                 ))}
               </dl>
@@ -119,10 +119,10 @@ export default function AdminSettingsPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3 text-sm">
-                <div className="rounded-md border border-gold/15 bg-ink/40 px-4 py-3">
-                  <p className="font-medium text-cream">Resend (email)</p>
-                  <p className="text-xs text-cream/60">
-                    Cần <code className="font-mono text-cream/75">RESEND_API_KEY</code> trên Worker.
+                <div className="rounded-md border border-gold/15 bg-card/60 px-4 py-3">
+                  <p className="font-medium text-foreground">Resend (email)</p>
+                  <p className="text-xs text-muted-foreground">
+                    Cần <code className="font-mono text-foreground/85">RESEND_API_KEY</code> trên Worker.
                     Set ở{' '}
                     <Link href="/secrets" className="text-gold hover:underline">
                       /secrets
@@ -130,18 +130,18 @@ export default function AdminSettingsPage() {
                     .
                   </p>
                 </div>
-                <div className="rounded-md border border-gold/15 bg-ink/40 px-4 py-3">
-                  <p className="font-medium text-cream">Web Push (VAPID)</p>
-                  <p className="text-xs text-cream/60">
-                    Cần <code className="font-mono text-cream/75">VAPID_PUBLIC_KEY</code> +{' '}
-                    <code className="font-mono text-cream/75">VAPID_PRIVATE_KEY</code>.
+                <div className="rounded-md border border-gold/15 bg-card/60 px-4 py-3">
+                  <p className="font-medium text-foreground">Web Push (VAPID)</p>
+                  <p className="text-xs text-muted-foreground">
+                    Cần <code className="font-mono text-foreground/85">VAPID_PUBLIC_KEY</code> +{' '}
+                    <code className="font-mono text-foreground/85">VAPID_PRIVATE_KEY</code>.
                   </p>
                 </div>
-                <div className="rounded-md border border-gold/15 bg-ink/40 px-4 py-3">
-                  <p className="font-medium text-cream">Telegram bot</p>
-                  <p className="text-xs text-cream/60">
+                <div className="rounded-md border border-gold/15 bg-card/60 px-4 py-3">
+                  <p className="font-medium text-foreground">Telegram bot</p>
+                  <p className="text-xs text-muted-foreground">
                     Bot deep-link qua{' '}
-                    <code className="font-mono text-cream/75">NEXT_PUBLIC_TELEGRAM_BOT</code>.
+                    <code className="font-mono text-foreground/85">NEXT_PUBLIC_TELEGRAM_BOT</code>.
                   </p>
                 </div>
               </div>
@@ -161,41 +161,41 @@ export default function AdminSettingsPage() {
             <CardContent className="grid gap-3 sm:grid-cols-2">
               <Link
                 href="/vendors"
-                className="flex items-center justify-between rounded-md border border-gold/15 bg-ink/40 px-4 py-3 transition-colors hover:border-gold/30"
+                className="flex items-center justify-between rounded-md border border-gold/15 bg-card/60 px-4 py-3 transition-colors hover:border-gold/30"
               >
                 <div>
-                  <p className="font-medium text-cream">LLM Vendors</p>
-                  <p className="text-xs text-cream/60">Anthropic, OpenAI, Google, Cloudflare</p>
+                  <p className="font-medium text-foreground">LLM Vendors</p>
+                  <p className="text-xs text-muted-foreground">Anthropic, OpenAI, Google, Cloudflare</p>
                 </div>
                 <span className="font-mono text-xs text-gold">→</span>
               </Link>
               <Link
                 href="/posthog"
-                className="flex items-center justify-between rounded-md border border-gold/15 bg-ink/40 px-4 py-3 transition-colors hover:border-gold/30"
+                className="flex items-center justify-between rounded-md border border-gold/15 bg-card/60 px-4 py-3 transition-colors hover:border-gold/30"
               >
                 <div>
-                  <p className="font-medium text-cream">PostHog Analytics</p>
-                  <p className="text-xs text-cream/60">Funnel, replay, feature flag</p>
+                  <p className="font-medium text-foreground">PostHog Analytics</p>
+                  <p className="text-xs text-muted-foreground">Funnel, replay, feature flag</p>
                 </div>
                 <span className="font-mono text-xs text-gold">→</span>
               </Link>
               <Link
                 href="/connect"
-                className="flex items-center justify-between rounded-md border border-gold/15 bg-ink/40 px-4 py-3 transition-colors hover:border-gold/30"
+                className="flex items-center justify-between rounded-md border border-gold/15 bg-card/60 px-4 py-3 transition-colors hover:border-gold/30"
               >
                 <div>
-                  <p className="font-medium text-cream">OAuth Connect</p>
-                  <p className="text-xs text-cream/60">Wire OAuth flow cho vendor</p>
+                  <p className="font-medium text-foreground">OAuth Connect</p>
+                  <p className="text-xs text-muted-foreground">Wire OAuth flow cho vendor</p>
                 </div>
                 <span className="font-mono text-xs text-gold">→</span>
               </Link>
               <Link
                 href="/payments"
-                className="flex items-center justify-between rounded-md border border-gold/15 bg-ink/40 px-4 py-3 transition-colors hover:border-gold/30"
+                className="flex items-center justify-between rounded-md border border-gold/15 bg-card/60 px-4 py-3 transition-colors hover:border-gold/30"
               >
                 <div>
-                  <p className="font-medium text-cream">Payments</p>
-                  <p className="text-xs text-cream/60">SePay webhook + coupon</p>
+                  <p className="font-medium text-foreground">Payments</p>
+                  <p className="text-xs text-muted-foreground">SePay webhook + coupon</p>
                 </div>
                 <span className="font-mono text-xs text-gold">→</span>
               </Link>
@@ -217,24 +217,24 @@ export default function AdminSettingsPage() {
             <CardContent className="grid gap-3 sm:grid-cols-2">
               <Link
                 href="/secrets"
-                className="flex items-center justify-between rounded-md border border-gold/15 bg-ink/40 px-4 py-3 transition-colors hover:border-gold/30"
+                className="flex items-center justify-between rounded-md border border-gold/15 bg-card/60 px-4 py-3 transition-colors hover:border-gold/30"
               >
                 <div className="flex items-center gap-2">
                   <KeyRound className="h-4 w-4 text-gold/70" />
                   <div>
-                    <p className="font-medium text-cream">API Keys</p>
-                    <p className="text-xs text-cream/60">Worker + Vercel secrets</p>
+                    <p className="font-medium text-foreground">API Keys</p>
+                    <p className="text-xs text-muted-foreground">Worker + Vercel secrets</p>
                   </div>
                 </div>
                 <span className="font-mono text-xs text-gold">→</span>
               </Link>
               <Link
                 href="/users"
-                className="flex items-center justify-between rounded-md border border-gold/15 bg-ink/40 px-4 py-3 transition-colors hover:border-gold/30"
+                className="flex items-center justify-between rounded-md border border-gold/15 bg-card/60 px-4 py-3 transition-colors hover:border-gold/30"
               >
                 <div>
-                  <p className="font-medium text-cream">Admin users</p>
-                  <p className="text-xs text-cream/60">RBAC: owner / admin / viewer</p>
+                  <p className="font-medium text-foreground">Admin users</p>
+                  <p className="text-xs text-muted-foreground">RBAC: owner / admin / viewer</p>
                 </div>
                 <span className="font-mono text-xs text-gold">→</span>
               </Link>
@@ -271,14 +271,14 @@ function ThemePreferenceCard() {
           Giao diện
         </CardTitle>
         <CardDescription>
-          Lưu trong <code className="font-mono text-cream/75">localStorage</code> qua next-themes.
+          Lưu trong <code className="font-mono text-foreground/85">localStorage</code> qua next-themes.
           Mặc định khi chưa chọn:{' '}
-          <span className="text-cream/85">tối</span>. Đang dùng:{' '}
+          <span className="text-foreground/85">tối</span>. Đang dùng:{' '}
           <span className="text-gold">{resolvedTheme ?? 'dark'}</span>.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="inline-flex rounded-md border border-gold/20 bg-ink/40 p-0.5">
+        <div className="inline-flex rounded-md border border-gold/20 bg-card/60 p-0.5">
           {options.map((o) => (
             <button
               key={o.value}
@@ -288,7 +288,7 @@ function ThemePreferenceCard() {
                 'rounded px-3 py-1.5 text-xs transition-colors ' +
                 (active === o.value
                   ? 'bg-gold/20 text-gold'
-                  : 'text-cream/65 hover:bg-gold/5')
+                  : 'text-muted-foreground hover:bg-gold/5')
               }
             >
               {o.label}

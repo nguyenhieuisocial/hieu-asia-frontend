@@ -150,10 +150,10 @@ export default function AdminAffiliateDetailPage({
     }
   }
 
-  if (loading) return <main className="p-6 text-cream">Loading…</main>;
+  if (loading) return <main className="p-6 text-foreground">Loading…</main>;
   if (error || !data)
     return (
-      <main className="p-6 text-cream">
+      <main className="p-6 text-foreground">
         <p className="text-red-300">{error ?? 'Not found'}</p>
         <Link href="/affiliates" className="text-gold hover:underline">
           ← Quay lại
@@ -165,18 +165,18 @@ export default function AdminAffiliateDetailPage({
   const s = data.stats;
 
   return (
-    <main className="min-h-screen bg-ink p-6 text-cream">
+    <main className="min-h-screen bg-card p-6 text-foreground">
       <div className="mx-auto max-w-5xl space-y-6">
         <header className="flex items-center justify-between">
           <div>
-            <Link href="/affiliates" className="text-sm text-cream/60 hover:text-gold">
+            <Link href="/affiliates" className="text-sm text-muted-foreground hover:text-gold">
               ← Affiliates
             </Link>
             <h1 className="mt-1 text-2xl font-bold">
               {a.display_name}{' '}
               <span className="ml-2 font-mono text-base text-gold">{a.code}</span>
             </h1>
-            <p className="text-sm text-cream/60">{a.email}</p>
+            <p className="text-sm text-muted-foreground">{a.email}</p>
           </div>
           <Button
             variant={a.status === 'active' ? 'outline' : 'default'}
@@ -192,7 +192,7 @@ export default function AdminAffiliateDetailPage({
         <div className="grid gap-4 sm:grid-cols-4">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs uppercase text-cream/60">Clicks</CardTitle>
+              <CardTitle className="text-xs uppercase text-muted-foreground">Clicks</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-xl font-bold">{s.clicks}</div>
@@ -200,7 +200,7 @@ export default function AdminAffiliateDetailPage({
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs uppercase text-cream/60">Conversions</CardTitle>
+              <CardTitle className="text-xs uppercase text-muted-foreground">Conversions</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-xl font-bold">{s.conversions}</div>
@@ -208,7 +208,7 @@ export default function AdminAffiliateDetailPage({
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs uppercase text-cream/60">Total earned</CardTitle>
+              <CardTitle className="text-xs uppercase text-muted-foreground">Total earned</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-xl font-bold text-gold">{vnd(s.total_earned)}</div>
@@ -216,7 +216,7 @@ export default function AdminAffiliateDetailPage({
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs uppercase text-cream/60">Khả dụng</CardTitle>
+              <CardTitle className="text-xs uppercase text-muted-foreground">Khả dụng</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-xl font-bold">{vnd(s.pending_payout)}</div>
@@ -231,26 +231,26 @@ export default function AdminAffiliateDetailPage({
           </CardHeader>
           <CardContent className="grid gap-2 text-sm sm:grid-cols-2">
             <div>
-              <span className="text-cream/60">Phương thức:</span>{' '}
+              <span className="text-muted-foreground">Phương thức:</span>{' '}
               <b>{a.payout_method.toUpperCase()}</b>
             </div>
             <div>
-              <span className="text-cream/60">Đích:</span>{' '}
+              <span className="text-muted-foreground">Đích:</span>{' '}
               <span className="font-mono">{a.payout_destination}</span>
             </div>
             <div>
-              <span className="text-cream/60">Hoa hồng tháng đầu:</span>{' '}
+              <span className="text-muted-foreground">Hoa hồng tháng đầu:</span>{' '}
               {(a.commission_rate_first_month * 100).toFixed(0)}%
             </div>
             <div>
-              <span className="text-cream/60">Hoa hồng recurring:</span>{' '}
+              <span className="text-muted-foreground">Hoa hồng recurring:</span>{' '}
               {(a.commission_rate_recurring * 100).toFixed(0)}%
             </div>
             <div>
-              <span className="text-cream/60">Tạo lúc:</span> {dt(a.created_at)}
+              <span className="text-muted-foreground">Tạo lúc:</span> {dt(a.created_at)}
             </div>
             <div>
-              <span className="text-cream/60">Trạng thái:</span>{' '}
+              <span className="text-muted-foreground">Trạng thái:</span>{' '}
               <b className={a.status === 'active' ? 'text-green-400' : 'text-red-400'}>
                 {a.status}
               </b>
@@ -265,19 +265,19 @@ export default function AdminAffiliateDetailPage({
           </CardHeader>
           <CardContent>
             {data.payouts.length === 0 ? (
-              <p className="text-sm text-cream/50">Chưa có yêu cầu.</p>
+              <p className="text-sm text-muted-foreground">Chưa có yêu cầu.</p>
             ) : (
               <div className="space-y-2">
                 {data.payouts.map((p) => (
                   <div
                     key={p.id}
-                    className="rounded border border-cream/10 p-3"
+                    className="rounded border border-border p-3"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div>
                         <span className="font-mono text-gold">{vnd(p.amount)}</span>{' '}
-                        <span className="text-cream/60">· {p.method.toUpperCase()}</span>{' '}
-                        <span className="font-mono text-xs text-cream/50">{p.destination}</span>
+                        <span className="text-muted-foreground">· {p.method.toUpperCase()}</span>{' '}
+                        <span className="font-mono text-xs text-muted-foreground">{p.destination}</span>
                       </div>
                       <div className="text-sm">
                         {p.status === 'pending' && <span className="text-yellow-400">Đang chờ</span>}
@@ -286,9 +286,9 @@ export default function AdminAffiliateDetailPage({
                       </div>
                     </div>
                     {p.rejected_reason && (
-                      <div className="mt-1 text-xs text-cream/50">Lý do: {p.rejected_reason}</div>
+                      <div className="mt-1 text-xs text-muted-foreground">Lý do: {p.rejected_reason}</div>
                     )}
-                    <div className="mt-1 text-xs text-cream/50">
+                    <div className="mt-1 text-xs text-muted-foreground">
                       Yêu cầu lúc {dt(p.requested_at)}
                     </div>
                     {p.status === 'pending' && (
@@ -348,19 +348,19 @@ export default function AdminAffiliateDetailPage({
           </CardHeader>
           <CardContent>
             {data.recent.length === 0 ? (
-              <p className="text-sm text-cream/50">Chưa có sự kiện.</p>
+              <p className="text-sm text-muted-foreground">Chưa có sự kiện.</p>
             ) : (
               <div className="space-y-1 text-sm">
                 {data.recent.map((ev, i) => (
                   <div
                     key={i}
-                    className="flex items-center justify-between border-b border-cream/5 py-1.5 last:border-0"
+                    className="flex items-center justify-between border-b border-border py-1.5 last:border-0"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="rounded bg-cream/10 px-2 py-0.5 text-xs">{ev.event}</span>
-                      <span className="text-cream/70">{dt(ev.ts)}</span>
+                      <span className="rounded bg-muted/40 px-2 py-0.5 text-xs">{ev.event}</span>
+                      <span className="text-muted-foreground">{dt(ev.ts)}</span>
                       {ev.user_id && (
-                        <span className="font-mono text-xs text-cream/40">
+                        <span className="font-mono text-xs text-muted-foreground">
                           user:{ev.user_id.slice(0, 8)}
                         </span>
                       )}

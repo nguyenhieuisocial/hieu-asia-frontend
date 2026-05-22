@@ -44,14 +44,14 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-ink-radial px-5 py-16">
+    <main className="flex min-h-screen items-center justify-center bg-background px-5 py-16">
       <h1 className="sr-only">Đăng nhập admin.hieu.asia</h1>
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">admin.hieu.asia</CardTitle>
           <CardDescription>
             Đăng nhập bằng tài khoản admin (lưu trong Cloudflare KV).
-            Quản lý user list tại <code className="mx-1 rounded bg-cream/5 px-1.5 py-0.5 font-mono text-xs">/users</code> sau khi đăng nhập.
+            Quản lý user list tại <code className="mx-1 rounded bg-muted/30 px-1.5 py-0.5 font-mono text-xs">/users</code> sau khi đăng nhập.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -88,9 +88,9 @@ export default function AdminLoginPage() {
             <Button type="submit" size="lg" className="w-full" disabled={pending || !email || !password}>
               {pending ? 'Đang xác thực…' : 'Đăng nhập'}
             </Button>
-            <p className="text-xs text-cream/50">
+            <p className="text-xs text-muted-foreground">
               Cookie-based session 7 ngày. Constant-time password compare. Failed-closed
-              nếu <code className="rounded bg-cream/5 px-1 font-mono">ADMIN_PASSWORD</code> chưa set.
+              nếu <code className="rounded bg-muted/30 px-1 font-mono">ADMIN_PASSWORD</code> chưa set.
             </p>
           </form>
         </CardContent>

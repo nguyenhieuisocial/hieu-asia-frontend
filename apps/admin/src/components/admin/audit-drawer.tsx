@@ -134,7 +134,7 @@ export function AuditLogDrawer({
           </SheetTitle>
           <SheetDescription className="break-words">
             {limit} entry mới nhất cho {resourceType}{' '}
-            <span className="font-mono text-cream/85">{label}</span>.
+            <span className="font-mono text-foreground/85">{label}</span>.
           </SheetDescription>
         </SheetHeader>
 
@@ -145,7 +145,7 @@ export function AuditLogDrawer({
         )}
 
         {note && !showError && (
-          <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-cream/70">
+          <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-muted-foreground">
             {note}
           </div>
         )}
@@ -153,13 +153,13 @@ export function AuditLogDrawer({
         {isLoading && (
           <div className="space-y-2 pt-2">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-14 animate-pulse rounded bg-cream/5" />
+              <div key={i} className="h-14 animate-pulse rounded bg-muted/30" />
             ))}
           </div>
         )}
 
         {!isLoading && !showError && entries.length === 0 && (
-          <p className="rounded-md border border-cream/10 bg-ink/40 px-3 py-4 text-center text-xs text-cream/55">
+          <p className="rounded-md border border-border bg-card/60 px-3 py-4 text-center text-xs text-muted-foreground">
             Chưa có hoạt động nào cho {resourceType} này.
           </p>
         )}
@@ -171,7 +171,7 @@ export function AuditLogDrawer({
               return (
                 <li
                   key={e.id ?? `${e.ts ?? ''}-${i}`}
-                  className="rounded-md border border-gold/15 bg-ink/40 px-3 py-2 text-xs"
+                  className="rounded-md border border-gold/15 bg-card/60 px-3 py-2 text-xs"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <span
@@ -184,25 +184,25 @@ export function AuditLogDrawer({
                       {highRisk && <AlertTriangle className="h-3 w-3" />}
                       {e.action ?? '—'}
                     </span>
-                    <span className="font-mono text-[10px] text-cream/45">
+                    <span className="font-mono text-[10px] text-muted-foreground">
                       {fmtRelative(e.ts)}
                     </span>
                   </div>
-                  <div className="mt-1.5 font-mono text-[10px] text-cream/55" title={e.ts ?? ''}>
+                  <div className="mt-1.5 font-mono text-[10px] text-muted-foreground" title={e.ts ?? ''}>
                     {fmtDate(e.ts)}
                   </div>
                   {e.resource_id && (
-                    <div className="mt-1 font-mono text-[10px] text-cream/55">
-                      <span className="text-cream/35">resource:</span> {e.resource_id}
+                    <div className="mt-1 font-mono text-[10px] text-muted-foreground">
+                      <span className="text-muted-foreground">resource:</span> {e.resource_id}
                     </div>
                   )}
                   {e.ip && (
-                    <div className="font-mono text-[10px] text-cream/55">
-                      <span className="text-cream/35">ip:</span> {e.ip}
+                    <div className="font-mono text-[10px] text-muted-foreground">
+                      <span className="text-muted-foreground">ip:</span> {e.ip}
                     </div>
                   )}
                   {e.metadata && Object.keys(e.metadata).length > 0 && (
-                    <pre className="mt-1.5 max-h-24 overflow-y-auto rounded bg-ink/60 px-2 py-1 font-mono text-[10px] text-cream/65">
+                    <pre className="mt-1.5 max-h-24 overflow-y-auto rounded bg-card/60 px-2 py-1 font-mono text-[10px] text-muted-foreground">
                       {JSON.stringify(e.metadata, null, 2)}
                     </pre>
                   )}

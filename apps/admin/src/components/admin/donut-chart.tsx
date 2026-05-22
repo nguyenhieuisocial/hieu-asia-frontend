@@ -78,7 +78,7 @@ export function DonutChart({
           })}
         {centerLabel && (
           <foreignObject x={0} y={0} width={size} height={size}>
-            <div className="flex h-full w-full items-center justify-center text-center text-cream">
+            <div className="flex h-full w-full items-center justify-center text-center text-foreground">
               {centerLabel}
             </div>
           </foreignObject>
@@ -95,16 +95,16 @@ export function DonutChart({
                   className="inline-block h-2.5 w-2.5 shrink-0 rounded-sm"
                   style={{ background: s.color }}
                 />
-                <span className="truncate text-cream/80">{s.label}</span>
+                <span className="truncate text-foreground/85">{s.label}</span>
               </span>
               <span className="flex shrink-0 items-center gap-2 font-mono">
-                <span className="text-cream/60">{pct.toFixed(0)}%</span>
-                <span className="tabular-nums text-cream">{v.toLocaleString()}</span>
+                <span className="text-muted-foreground">{pct.toFixed(0)}%</span>
+                <span className="tabular-nums text-foreground">{v.toLocaleString()}</span>
               </span>
             </li>
           );
         })}
-        {isEmpty && <li className="text-cream/50">Chưa có dữ liệu.</li>}
+        {isEmpty && <li className="text-muted-foreground">Chưa có dữ liệu.</li>}
       </ul>
     </div>
   );

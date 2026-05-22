@@ -90,11 +90,11 @@ export default function SessionDetailPage() {
   if (session.isLoading) {
     return (
       <div className="space-y-4">
-        <div className="h-8 w-48 animate-pulse rounded bg-cream/5" />
-        <div className="h-32 animate-pulse rounded-xl bg-cream/5" />
+        <div className="h-8 w-48 animate-pulse rounded bg-muted/30" />
+        <div className="h-32 animate-pulse rounded-xl bg-muted/30" />
         <div className="grid gap-4 sm:grid-cols-3">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-28 animate-pulse rounded-xl bg-cream/5" />
+            <div key={i} className="h-28 animate-pulse rounded-xl bg-muted/30" />
           ))}
         </div>
       </div>
@@ -106,7 +106,7 @@ export default function SessionDetailPage() {
       <div className="space-y-6">
         <Link
           href="/sessions"
-          className="inline-flex items-center gap-1.5 text-sm text-cream/60 hover:text-gold"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-gold"
         >
           <ChevronLeft className="h-4 w-4" />
           Quay lại danh sách
@@ -130,7 +130,7 @@ export default function SessionDetailPage() {
     <div className="space-y-6">
       <Link
         href="/sessions"
-        className="inline-flex items-center gap-1.5 text-sm text-cream/60 hover:text-gold"
+        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-gold"
       >
         <ChevronLeft className="h-4 w-4" />
         Quay lại danh sách
@@ -141,7 +141,7 @@ export default function SessionDetailPage() {
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <ListTodo className="h-5 w-5 text-gold" />
-            <span className="font-mono text-[10px] uppercase tracking-widest text-cream/55">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
               Session detail
             </span>
             <StatusBadge status={STATUS_TONE[s.status]} label={STATUS_LABEL[s.status]} />
@@ -153,15 +153,15 @@ export default function SessionDetailPage() {
             <button
               type="button"
               onClick={copyId}
-              className="inline-flex h-7 w-7 items-center justify-center rounded text-cream/55 hover:bg-gold/10 hover:text-gold"
+              className="inline-flex h-7 w-7 items-center justify-center rounded text-muted-foreground hover:bg-gold/10 hover:text-gold"
               aria-label="Copy session ID"
               title="Copy session ID"
             >
               <Copy className="h-3.5 w-3.5" />
             </button>
           </div>
-          <p className="mt-1 text-sm text-cream/65">
-            User: <span className="text-cream">{s.user_email}</span>
+          <p className="mt-1 text-sm text-muted-foreground">
+            User: <span className="text-foreground">{s.user_email}</span>
           </p>
         </div>
       </div>
@@ -196,7 +196,7 @@ export default function SessionDetailPage() {
           <CardDescription>Mối quan tâm chính từ survey + input ban đầu.</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm leading-relaxed text-cream/90">{s.primary_concern}</p>
+          <p className="text-sm leading-relaxed text-foreground/90">{s.primary_concern}</p>
         </CardContent>
       </Card>
 
@@ -227,11 +227,11 @@ export default function SessionDetailPage() {
           {audit.isLoading ? (
             <div className="space-y-2 py-2">
               {[...Array(2)].map((_, i) => (
-                <div key={i} className="h-10 animate-pulse rounded bg-cream/5" />
+                <div key={i} className="h-10 animate-pulse rounded bg-muted/30" />
               ))}
             </div>
           ) : audit.data?.note ? (
-            <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-cream/70">
+            <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-muted-foreground">
               {audit.data.note}
             </div>
           ) : entries.length === 0 ? (
@@ -246,21 +246,21 @@ export default function SessionDetailPage() {
                 <li
                   key={i}
                   className={cn(
-                    'flex items-start gap-3 rounded-md border border-gold/10 bg-ink/40 px-3 py-2',
+                    'flex items-start gap-3 rounded-md border border-gold/10 bg-card/60 px-3 py-2',
                   )}
                 >
-                  <span className="shrink-0 font-mono text-[11px] text-cream/55" title={e.ts}>
+                  <span className="shrink-0 font-mono text-[11px] text-muted-foreground" title={e.ts}>
                     {fmtDateTime(e.ts)}
                   </span>
                   <span className="inline-flex items-center rounded border border-gold/20 bg-gold/5 px-1.5 py-0.5 font-mono text-[10px] text-gold">
                     {e.action}
                   </span>
-                  <span className="min-w-0 flex-1 text-sm text-cream/85">
+                  <span className="min-w-0 flex-1 text-sm text-foreground/85">
                     {e.actor && (
-                      <span className="font-mono text-xs text-cream/70">{e.actor}</span>
+                      <span className="font-mono text-xs text-muted-foreground">{e.actor}</span>
                     )}
                     {e.detail && (
-                      <span className="ml-1.5 text-cream/60">— {e.detail}</span>
+                      <span className="ml-1.5 text-muted-foreground">— {e.detail}</span>
                     )}
                   </span>
                 </li>

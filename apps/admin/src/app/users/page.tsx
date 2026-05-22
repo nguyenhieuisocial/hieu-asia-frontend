@@ -38,7 +38,7 @@ const ROLE_LABEL: Record<AdminRole, string> = {
 const ROLE_TONE: Record<AdminRole, string> = {
   owner: 'bg-gold/15 text-gold border-gold/30',
   admin: 'bg-blue-500/10 text-blue-300 border-blue-500/30',
-  viewer: 'bg-cream/10 text-cream/70 border-cream/20',
+  viewer: 'bg-muted/40 text-muted-foreground border-border',
 };
 
 const ROLE_ICON: Record<AdminRole, React.ComponentType<{ className?: string }>> = {
@@ -220,7 +220,7 @@ export default function AdminUsersPage() {
           <>
             Quản lý danh sách admin login (Cloudflare KV). Role <b className="text-gold">owner</b> không
             thể xóa. Mọi thay đổi ghi vào{' '}
-            <code className="font-mono text-cream/75">audit_log</code>.
+            <code className="font-mono text-foreground/85">audit_log</code>.
           </>
         }
         icon={<Users className="h-5 w-5" />}
@@ -311,7 +311,7 @@ export default function AdminUsersPage() {
           <div className="mt-2 flex flex-col gap-3">
             <div className="relative max-w-sm">
               <Search
-                className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-cream/40"
+                className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
                 aria-hidden
               />
               <Input
@@ -334,7 +334,7 @@ export default function AdminUsersPage() {
                       'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
                       active
                         ? 'border-gold/60 bg-gold/15 text-gold'
-                        : 'border-cream/15 bg-ink/40 text-cream/70 hover:border-gold/30 hover:text-cream',
+                        : 'border-border bg-card/60 text-muted-foreground hover:border-gold/30 hover:text-foreground',
                     )}
                   >
                     {f.label}
@@ -349,7 +349,7 @@ export default function AdminUsersPage() {
                       e.target.value = '';
                     }}
                     defaultValue=""
-                    className="h-7 rounded-md border border-gold/20 bg-ink/60 px-2 text-xs text-cream focus:border-gold focus:outline-none"
+                    className="h-7 rounded-md border border-gold/20 bg-card/60 px-2 text-xs text-foreground focus:border-gold focus:outline-none"
                     aria-label="Chọn bộ lọc đã lưu"
                   >
                     <option value="" disabled>
@@ -373,7 +373,7 @@ export default function AdminUsersPage() {
                       e.target.value = '';
                     }}
                     defaultValue=""
-                    className="h-7 rounded-md border border-red-400/20 bg-ink/60 px-2 text-xs text-red-300 focus:border-red-400 focus:outline-none"
+                    className="h-7 rounded-md border border-red-400/20 bg-card/60 px-2 text-xs text-red-300 focus:border-red-400 focus:outline-none"
                     aria-label="Xoá bộ lọc đã lưu"
                   >
                     <option value="" disabled>
@@ -389,7 +389,7 @@ export default function AdminUsersPage() {
                 <button
                   type="button"
                   onClick={onSavePreset}
-                  className="inline-flex h-7 items-center gap-1 rounded-md border border-gold/20 bg-ink/40 px-2 text-xs text-cream/80 hover:border-gold/50 hover:text-gold"
+                  className="inline-flex h-7 items-center gap-1 rounded-md border border-gold/20 bg-card/60 px-2 text-xs text-foreground/85 hover:border-gold/50 hover:text-gold"
                   title="Lưu search + role hiện tại thành preset"
                 >
                   <BookmarkPlus className="h-3 w-3" />
@@ -408,7 +408,7 @@ export default function AdminUsersPage() {
           {loading ? (
             <div className="space-y-2 py-2">
               {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-12 animate-pulse rounded bg-cream/5" />
+                <div key={i} className="h-12 animate-pulse rounded bg-muted/30" />
               ))}
             </div>
           ) : filtered.length === 0 ? (
@@ -426,7 +426,7 @@ export default function AdminUsersPage() {
               className="border-0 bg-transparent"
             />
           ) : (
-            <div className="overflow-x-auto rounded-lg border border-gold/15 bg-ink/40">
+            <div className="overflow-x-auto rounded-lg border border-gold/15 bg-card/60">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gold/15 text-left">
@@ -440,7 +440,7 @@ export default function AdminUsersPage() {
                         onChange={bulk.toggleAll}
                         disabled={selectable.length === 0}
                         aria-label="Chọn tất cả user (trừ owner)"
-                        className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-ink/40 text-gold accent-gold disabled:cursor-not-allowed disabled:opacity-30"
+                        className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-card/60 text-gold accent-gold disabled:cursor-not-allowed disabled:opacity-30"
                       />
                     </th>
                     <th className="px-4 py-3 font-mono text-xs uppercase tracking-wider text-gold/80">
@@ -477,11 +477,11 @@ export default function AdminUsersPage() {
                             disabled={isOwner}
                             onChange={() => bulk.toggle(u.id)}
                             aria-label={`Chọn ${u.email}`}
-                            className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-ink/40 text-gold accent-gold disabled:cursor-not-allowed disabled:opacity-30"
+                            className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-card/60 text-gold accent-gold disabled:cursor-not-allowed disabled:opacity-30"
                             title={isOwner ? 'Không thể chọn owner' : 'Chọn'}
                           />
                         </td>
-                        <td className="px-4 py-3 text-cream">{u.email}</td>
+                        <td className="px-4 py-3 text-foreground">{u.email}</td>
                         <td className="px-4 py-3">
                           <span
                             className={cn(
@@ -494,10 +494,10 @@ export default function AdminUsersPage() {
                           </span>
                         </td>
                         <td className="px-4 py-3">
-                          <div className="font-mono text-xs text-cream/85" title={u.created_at}>
+                          <div className="font-mono text-xs text-foreground/85" title={u.created_at}>
                             {fmtDate(u.created_at)}
                           </div>
-                          <div className="font-mono text-[10px] text-cream/45">
+                          <div className="font-mono text-[10px] text-muted-foreground">
                             {fmtRelative(u.created_at)}
                           </div>
                         </td>
@@ -506,7 +506,7 @@ export default function AdminUsersPage() {
                             <button
                               type="button"
                               onClick={() => setAuditUser(u)}
-                              className="inline-flex items-center gap-1 rounded border border-cream/20 px-2 py-1 text-xs text-cream/70 hover:bg-cream/5 hover:text-cream"
+                              className="inline-flex items-center gap-1 rounded border border-border px-2 py-1 text-xs text-muted-foreground hover:bg-muted/30 hover:text-foreground"
                               title="Xem audit log"
                             >
                               <History className="h-3 w-3" />
@@ -612,7 +612,7 @@ export default function AdminUsersPage() {
       {/* Floating bulk action bar */}
       {bulk.count > 0 && (
         <div className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2 lg:left-[calc(50%+8rem)]">
-          <div className="flex items-center gap-2 rounded-full border border-gold/40 bg-ink/95 px-3 py-2 shadow-2xl backdrop-blur">
+          <div className="flex items-center gap-2 rounded-full border border-gold/40 bg-card/95 px-3 py-2 shadow-2xl backdrop-blur">
             <span className="px-2 font-mono text-xs text-gold">{bulk.count} đã chọn</span>
             <Button
               size="sm"
@@ -676,16 +676,16 @@ function BulkSuspendConfirm({
       onClick={pending ? undefined : onClose}
     >
       <div
-        className="w-full max-w-md rounded-lg border border-amber-500/30 bg-ink p-6 shadow-2xl"
+        className="w-full max-w-md rounded-lg border border-amber-500/30 bg-card p-6 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="font-heading text-xl text-cream">Tạm khoá {count} user?</h2>
-        <p className="mt-3 text-sm text-cream/75">
-          Sẽ đổi role thành <b className="text-cream">viewer</b> (chỉ đọc) cho{' '}
-          <b className="text-cream">{count} user</b>. User vẫn đăng nhập được nhưng không thao tác
+        <h2 className="font-heading text-xl text-foreground">Tạm khoá {count} user?</h2>
+        <p className="mt-3 text-sm text-foreground/85">
+          Sẽ đổi role thành <b className="text-foreground">viewer</b> (chỉ đọc) cho{' '}
+          <b className="text-foreground">{count} user</b>. User vẫn đăng nhập được nhưng không thao tác
           được. Owner không bị ảnh hưởng.
         </p>
-        <p className="mt-2 text-xs text-cream/45">
+        <p className="mt-2 text-xs text-muted-foreground">
           {count} request PATCH chạy tuần tự. Bulk endpoint server-side sẽ có ở Sprint 3.
         </p>
         <div className="mt-5 flex justify-end gap-2">
@@ -768,10 +768,10 @@ function UserFormModal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-lg border border-gold/20 bg-ink p-6 shadow-2xl"
+        className="w-full max-w-md rounded-lg border border-gold/20 bg-card p-6 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="font-heading text-xl text-cream">
+        <h2 className="font-heading text-xl text-foreground">
           {mode === 'create' ? 'Thêm user admin' : 'Sửa user'}
         </h2>
         <form onSubmit={submit} className="mt-5 space-y-4">
@@ -791,7 +791,7 @@ function UserFormModal({
             <Label htmlFor="password">
               Mật khẩu{' '}
               {mode === 'edit' && (
-                <span className="text-cream/50">(để trống = giữ nguyên)</span>
+                <span className="text-muted-foreground">(để trống = giữ nguyên)</span>
               )}
             </Label>
             <Input
@@ -810,14 +810,14 @@ function UserFormModal({
               value={role}
               disabled={isOwnerLocked}
               onChange={(e) => setRole(e.target.value as AdminRole)}
-              className="h-10 w-full rounded-md border border-gold/15 bg-ink/40 px-3 text-sm text-cream disabled:opacity-50"
+              className="h-10 w-full rounded-md border border-gold/15 bg-card/60 px-3 text-sm text-foreground disabled:opacity-50"
             >
               <option value="viewer">Viewer — chỉ đọc</option>
               <option value="admin">Admin — CRUD users</option>
               <option value="owner">Owner — full quyền</option>
             </select>
             {isOwnerLocked && (
-              <p className="text-xs text-cream/50">
+              <p className="text-xs text-muted-foreground">
                 Owner role bị khóa (chống lock-out).
               </p>
             )}
@@ -878,12 +878,12 @@ function ConfirmDeleteModal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-lg border border-red-500/30 bg-ink p-6 shadow-2xl"
+        className="w-full max-w-md rounded-lg border border-red-500/30 bg-card p-6 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="font-heading text-xl text-cream">Xóa user?</h2>
-        <p className="mt-3 text-sm text-cream/75">
-          Bạn chắc chắn muốn xóa <b className="text-cream">{user.email}</b>?
+        <h2 className="font-heading text-xl text-foreground">Xóa user?</h2>
+        <p className="mt-3 text-sm text-foreground/85">
+          Bạn chắc chắn muốn xóa <b className="text-foreground">{user.email}</b>?
           User này sẽ không đăng nhập được nữa.
         </p>
         {err && (
@@ -899,7 +899,7 @@ function ConfirmDeleteModal({
             size="sm"
             onClick={submit}
             disabled={pending}
-            className="bg-red-500/90 text-cream hover:bg-red-500"
+            className="bg-red-500/90 text-foreground hover:bg-red-500"
           >
             {pending ? 'Đang xóa…' : 'Xóa'}
           </Button>

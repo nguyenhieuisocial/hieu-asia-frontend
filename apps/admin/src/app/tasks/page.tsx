@@ -80,12 +80,12 @@ export default function AdminTasksPage() {
       key: 'task_id',
       header: 'Task ID',
       width: '120px',
-      cell: (t) => <span className="font-mono text-xs text-cream/70">{t.task_id.slice(0, 12)}…</span>,
+      cell: (t) => <span className="font-mono text-xs text-muted-foreground">{t.task_id.slice(0, 12)}…</span>,
     },
     {
       key: 'name',
       header: 'Session',
-      cell: (t) => <span className="font-mono text-xs text-cream">{t.name}</span>,
+      cell: (t) => <span className="font-mono text-xs text-foreground">{t.name}</span>,
     },
     {
       key: 'status',
@@ -115,7 +115,7 @@ export default function AdminTasksPage() {
         t.error ? (
           <span className="line-clamp-1 font-mono text-xs text-red-300">{t.error}</span>
         ) : (
-          <span className="text-cream/30">—</span>
+          <span className="text-foreground/30">—</span>
         ),
     },
     {
@@ -206,7 +206,7 @@ export default function AdminTasksPage() {
                       'rounded-full border px-3 py-1 text-xs font-medium transition-colors ' +
                       (active
                         ? 'border-gold/60 bg-gold/15 text-gold'
-                        : 'border-cream/15 bg-ink/40 text-cream/70 hover:border-gold/30 hover:text-cream')
+                        : 'border-border bg-card/60 text-muted-foreground hover:border-gold/30 hover:text-foreground')
                     }
                   >
                     {f.label}

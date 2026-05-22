@@ -38,7 +38,7 @@ export function VendorBarChart({ data }: { data: LlmDailyRow[] }) {
 
   if (rows.length === 0) {
     return (
-      <div className="flex h-64 items-center justify-center text-sm text-cream/55">
+      <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">
         Chưa có dữ liệu.
       </div>
     );

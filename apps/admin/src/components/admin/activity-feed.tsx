@@ -79,7 +79,7 @@ const TONE_DOT: Record<AuditEntry['tone'], string> = {
   jade: 'bg-jade-50 border-jade/40',
   purple: 'bg-purple-50 border-purple/40',
   red: 'bg-red-400 border-red-500/40',
-  neutral: 'bg-cream/40 border-cream/15',
+  neutral: 'bg-muted border-border',
 };
 
 export function ActivityFeed() {
@@ -117,13 +117,13 @@ export function ActivityFeed() {
   const isFallback = !audit.data && fallbackEntries.length > 0;
 
   return (
-    <div className="rounded-xl border border-gold/15 bg-ink/40 p-5 backdrop-blur-sm">
+    <div className="rounded-xl border border-gold/15 bg-card/60 p-5 backdrop-blur-sm">
       <div className="flex items-center justify-between">
-        <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-cream/85">
+        <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/85">
           Hoạt động gần đây
         </h3>
         {isFallback && (
-          <span className="font-mono text-[10px] uppercase tracking-widest text-cream/40">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
             sessions feed
           </span>
         )}
@@ -133,10 +133,10 @@ export function ActivityFeed() {
         <ul className="mt-3 space-y-3">
           {[0, 1, 2, 3].map((i) => (
             <li key={i} className="flex animate-pulse items-start gap-3">
-              <span className="mt-1 h-2.5 w-2.5 rounded-full bg-cream/10" />
+              <span className="mt-1 h-2.5 w-2.5 rounded-full bg-muted/40" />
               <div className="flex-1 space-y-1.5">
-                <div className="h-2 w-2/3 rounded bg-cream/10" />
-                <div className="h-2 w-1/3 rounded bg-cream/5" />
+                <div className="h-2 w-2/3 rounded bg-muted/40" />
+                <div className="h-2 w-1/3 rounded bg-muted/30" />
               </div>
             </li>
           ))}
@@ -145,8 +145,8 @@ export function ActivityFeed() {
 
       {noData && (
         <div className="mt-4 flex flex-col items-center gap-2 py-6 text-center">
-          <Activity className="h-6 w-6 text-cream/30" />
-          <p className="text-xs text-cream/50">Chưa có hoạt động — chờ event đầu tiên.</p>
+          <Activity className="h-6 w-6 text-foreground/30" />
+          <p className="text-xs text-muted-foreground">Chưa có hoạt động — chờ event đầu tiên.</p>
         </div>
       )}
 
@@ -164,16 +164,16 @@ export function ActivityFeed() {
                 />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2 text-xs">
-                    <span className="truncate font-medium text-cream/90">{e.action}</span>
-                    <span className="shrink-0 font-mono text-[10px] text-cream/45">
+                    <span className="truncate font-medium text-foreground/90">{e.action}</span>
+                    <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
                       {relTime(e.ts)}
                     </span>
                   </div>
                   {e.detail && (
-                    <p className="mt-0.5 line-clamp-1 text-xs text-cream/55">{e.detail}</p>
+                    <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">{e.detail}</p>
                   )}
                   {e.actor && (
-                    <p className="mt-0.5 font-mono text-[10px] text-cream/40">{e.actor}</p>
+                    <p className="mt-0.5 font-mono text-[10px] text-muted-foreground">{e.actor}</p>
                   )}
                 </div>
               </>

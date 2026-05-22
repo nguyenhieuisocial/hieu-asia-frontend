@@ -80,7 +80,7 @@ function statusPill(s: Coupon['status']) {
     s === 'active'
       ? 'border-jade/40 bg-jade/10 text-jade'
       : s === 'expired'
-      ? 'border-cream/30 bg-cream/5 text-cream/65'
+      ? 'border-border bg-muted/30 text-muted-foreground'
       : 'border-red-400/40 bg-red-500/10 text-red-200';
   return (
     <span
@@ -351,7 +351,7 @@ export default function CouponsPage() {
           <div className="mt-2 flex flex-col gap-3">
             <div className="relative max-w-md">
               <Search
-                className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-cream/40"
+                className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
                 aria-hidden
               />
               <Input
@@ -374,7 +374,7 @@ export default function CouponsPage() {
                       'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
                       active
                         ? 'border-gold/60 bg-gold/15 text-gold'
-                        : 'border-cream/15 bg-ink/40 text-cream/70 hover:border-gold/30 hover:text-cream',
+                        : 'border-border bg-card/60 text-muted-foreground hover:border-gold/30 hover:text-foreground',
                     )}
                   >
                     {f.label}
@@ -401,7 +401,7 @@ export default function CouponsPage() {
           {isLoading && (
             <div className="space-y-2 py-2">
               {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-10 animate-pulse rounded bg-cream/5" />
+                <div key={i} className="h-10 animate-pulse rounded bg-muted/30" />
               ))}
             </div>
           )}
@@ -419,7 +419,7 @@ export default function CouponsPage() {
           )}
 
           {filtered.length > 0 && (
-            <div className="overflow-x-auto rounded-lg border border-gold/15 bg-ink/40">
+            <div className="overflow-x-auto rounded-lg border border-gold/15 bg-card/60">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gold/15 text-left text-[11px] uppercase tracking-wider text-gold/80">
@@ -429,7 +429,7 @@ export default function CouponsPage() {
                         checked={allActiveFilteredSelected}
                         onChange={togglePage}
                         aria-label="Chọn tất cả coupon active"
-                        className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-ink/40 text-gold accent-gold"
+                        className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-card/60 text-gold accent-gold"
                       />
                     </th>
                     <th className="px-3 py-2 font-medium">Code</th>
@@ -461,28 +461,28 @@ export default function CouponsPage() {
                             disabled={!canSelect}
                             onChange={() => toggleOne(c.code)}
                             aria-label={`Chọn ${c.code}`}
-                            className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-ink/40 text-gold accent-gold disabled:cursor-not-allowed disabled:opacity-30"
+                            className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-card/60 text-gold accent-gold disabled:cursor-not-allowed disabled:opacity-30"
                           />
                         </td>
                         <td className="px-3 py-2 font-mono text-gold">{c.code}</td>
-                        <td className="px-3 py-2 tabular-nums text-cream/90">
+                        <td className="px-3 py-2 tabular-nums text-foreground/90">
                           {c.discount_pct}%
                         </td>
                         <td className="px-3 py-2">{statusPill(c.status)}</td>
-                        <td className="px-3 py-2 font-mono text-xs text-cream/70 tabular-nums">
+                        <td className="px-3 py-2 font-mono text-xs text-muted-foreground tabular-nums">
                           {c.uses ?? 0}
-                          {c.max_uses ? <span className="text-cream/40">/{c.max_uses}</span> : ''}
+                          {c.max_uses ? <span className="text-muted-foreground">/{c.max_uses}</span> : ''}
                         </td>
-                        <td className="px-3 py-2 font-mono text-[11px] text-cream/65">
+                        <td className="px-3 py-2 font-mono text-[11px] text-muted-foreground">
                           {fmtDate(c.valid_from)} → {fmtDate(c.valid_to)}
                         </td>
                         <td
-                          className="max-w-[18ch] truncate px-3 py-2 text-xs text-cream/55"
+                          className="max-w-[18ch] truncate px-3 py-2 text-xs text-muted-foreground"
                           title={c.notes ?? ''}
                         >
                           {c.notes ?? '—'}
                         </td>
-                        <td className="px-3 py-2 font-mono text-[11px] text-cream/50">
+                        <td className="px-3 py-2 font-mono text-[11px] text-muted-foreground">
                           {fmtDate(c.created_at)}
                         </td>
                         <td className="px-3 py-2 text-right">
@@ -511,13 +511,13 @@ export default function CouponsPage() {
       {/* Floating bulk action bar */}
       {selected.size > 0 && (
         <div className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2 lg:left-[calc(50%+8rem)]">
-          <div className="flex items-center gap-2 rounded-full border border-gold/40 bg-ink/95 px-3 py-2 shadow-2xl backdrop-blur">
+          <div className="flex items-center gap-2 rounded-full border border-gold/40 bg-card/95 px-3 py-2 shadow-2xl backdrop-blur">
             <span className="px-2 font-mono text-xs text-gold">{selected.size} đã chọn</span>
             <Button
               size="sm"
               onClick={bulkRevoke}
               disabled={revokeMut.isPending}
-              className="bg-red-500/90 text-cream hover:bg-red-500"
+              className="bg-red-500/90 text-foreground hover:bg-red-500"
             >
               <Trash2 className="mr-1.5 h-3.5 w-3.5" />
               Vô hiệu hoá {selected.size} coupon
@@ -548,7 +548,7 @@ export default function CouponsPage() {
                 required
                 pattern="[A-Z0-9_-]{3,32}"
               />
-              <p className="mt-1 font-mono text-[10px] text-cream/45">
+              <p className="mt-1 font-mono text-[10px] text-muted-foreground">
                 UPPER_SNAKE_CASE, 3–32 ký tự, A-Z 0-9 _ -.
               </p>
             </div>

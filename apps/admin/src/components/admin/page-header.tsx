@@ -38,13 +38,13 @@ export function PageHeader({
         )}
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <h1 className="font-heading text-2xl font-semibold tracking-tight text-cream sm:text-3xl">
+            <h1 className="font-heading text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
               {title}
             </h1>
             {badge}
           </div>
           {description && (
-            <p className="mt-1 max-w-3xl text-sm text-cream/65">{description}</p>
+            <p className="mt-1 max-w-3xl text-sm text-muted-foreground">{description}</p>
           )}
         </div>
       </div>

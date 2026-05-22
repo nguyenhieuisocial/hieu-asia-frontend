@@ -20,13 +20,13 @@ export function FunnelChart({ stages }: { stages: FunnelStage[] }) {
         return (
           <div key={s.key} className="space-y-1">
             <div className="flex items-baseline justify-between text-xs">
-              <span className="text-cream/75">{s.label}</span>
-              <span className="tabular-nums text-cream/55">
-                <span className="font-medium text-cream">{s.count.toLocaleString('vi-VN')}</span>
-                {i > 0 && <span className="ml-2 text-cream/45">({ofTop.toFixed(1)}%)</span>}
+              <span className="text-foreground/85">{s.label}</span>
+              <span className="tabular-nums text-muted-foreground">
+                <span className="font-medium text-foreground">{s.count.toLocaleString('vi-VN')}</span>
+                {i > 0 && <span className="ml-2 text-muted-foreground">({ofTop.toFixed(1)}%)</span>}
               </span>
             </div>
-            <div className="h-7 w-full overflow-hidden rounded bg-ink/60">
+            <div className="h-7 w-full overflow-hidden rounded bg-card/60">
               <div
                 className="h-full rounded bg-gradient-to-r from-[#B8923D] to-[#D5B057] transition-all"
                 style={{ width: `${pct}%` }}

@@ -70,7 +70,7 @@ export function PaymentTicker() {
         <div
           key={it.id}
           className={cn(
-            'pointer-events-auto rounded-lg border border-gold/30 bg-ink/95 px-3 py-2 text-sm text-cream shadow-lg backdrop-blur',
+            'pointer-events-auto rounded-lg border border-gold/30 bg-card/95 px-3 py-2 text-sm text-foreground shadow-lg backdrop-blur',
             'animate-in slide-in-from-right-4 duration-300',
           )}
         >

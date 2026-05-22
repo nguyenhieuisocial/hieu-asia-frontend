@@ -49,6 +49,24 @@ const preset = {
         },
         // Semantic aliases for shadcn/ui tokens (mapped in app globals.css)
         cream: '#F2EDE3',
+        // Theme-aware tokens — resolve via CSS vars defined in app globals.css.
+        // Use these for theme-adaptive chrome (bg-card, text-foreground, etc.).
+        background: 'hsl(var(--background) / <alpha-value>)',
+        foreground: 'hsl(var(--foreground) / <alpha-value>)',
+        card: {
+          DEFAULT: 'hsl(var(--card) / <alpha-value>)',
+          foreground: 'hsl(var(--card-foreground) / <alpha-value>)',
+        },
+        primary: {
+          DEFAULT: 'hsl(var(--primary) / <alpha-value>)',
+          foreground: 'hsl(var(--primary-foreground) / <alpha-value>)',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted) / <alpha-value>)',
+          foreground: 'hsl(var(--muted-foreground) / <alpha-value>)',
+        },
+        border: 'hsl(var(--border) / <alpha-value>)',
+        ring: 'hsl(var(--ring) / <alpha-value>)',
       },
       fontFamily: {
         sans: ['var(--font-be-vietnam)', 'var(--font-inter)', 'system-ui', 'sans-serif'],

@@ -9,8 +9,10 @@
  *   - Tri thức (knowledge):  rag, prompts
  *   - Hệ thống (system):     vendors, cost, llm-spend, secrets, users (admin), settings
  *
- * Each group expands by default; the user's last collapse state is kept in
- * localStorage so reloads don't disrupt navigation.
+ * Each group expands by default on desktop; mobile-first paint collapses
+ * `system` + `knowledge` to keep the off-canvas drawer scrollable on small
+ * screens. The user's last collapse state is kept in localStorage so reloads
+ * don't disrupt navigation.
  */
 
 import * as React from 'react';
@@ -113,11 +115,17 @@ export function Sidebar() {
   const [collapsed, setCollapsed] = React.useState<Set<string>>(new Set());
   const [hydrated, setHydrated] = React.useState(false);
 
-  // Persist collapse state in localStorage.
+  // Persist collapse state in localStorage. On mobile first-paint with no
+  // stored state, default-collapse the bulkier groups so the drawer is
+  // immediately scannable instead of dumping 22 items.
   React.useEffect(() => {
     try {
       const stored = window.localStorage.getItem(COLLAPSED_KEY);
-      if (stored) setCollapsed(new Set(JSON.parse(stored)));
+      if (stored) {
+        setCollapsed(new Set(JSON.parse(stored)));
+      } else if (window.innerWidth < 768) {
+        setCollapsed(new Set(['system', 'knowledge']));
+      }
     } catch {
       /* noop */
     }
@@ -132,6 +140,26 @@ export function Sidebar() {
       /* noop */
     }
   }, [collapsed, hydrated]);
+
+  // Lock body scroll while the mobile drawer is open. Restore on close + unmount.
+  React.useEffect(() => {
+    if (!openMobile) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [openMobile]);
+
+  // Close drawer on ESC.
+  React.useEffect(() => {
+    if (!openMobile) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpenMobile(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [openMobile]);
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
@@ -148,15 +176,18 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile toggle */}
-      <button
-        type="button"
-        onClick={() => setOpenMobile(true)}
-        className="fixed left-3 top-3 z-40 inline-flex h-9 w-9 items-center justify-center rounded-md border border-gold/20 bg-ink/80 text-cream backdrop-blur lg:hidden"
-        aria-label="Mở menu"
-      >
-        <Menu className="h-4 w-4" />
-      </button>
+      {/* Mobile toggle — hidden while drawer is open so the close (X) button
+          inside the drawer is the single canonical close affordance. */}
+      {!openMobile && (
+        <button
+          type="button"
+          onClick={() => setOpenMobile(true)}
+          className="fixed left-3 top-3 z-40 inline-flex h-11 w-11 items-center justify-center rounded-md border border-gold/20 bg-card/80 text-foreground backdrop-blur lg:hidden"
+          aria-label="Mở menu"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+      )}
 
       {/* Backdrop (mobile) */}
       {openMobile && (
@@ -169,7 +200,7 @@ export function Sidebar() {
 
       <aside
         className={cn(
-          'fixed left-0 top-0 z-50 flex h-screen w-64 flex-col border-r border-gold/15 bg-ink/95 px-3 py-4 backdrop-blur-md transition-transform',
+          'fixed left-0 top-0 z-50 flex h-screen w-64 flex-col border-r border-gold/15 bg-card/95 px-3 py-4 backdrop-blur-md transition-transform',
           'lg:translate-x-0',
           openMobile ? 'translate-x-0' : '-translate-x-full',
         )}
@@ -184,17 +215,17 @@ export function Sidebar() {
             <span className="flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-gold via-gold/70 to-purple/70 font-heading text-sm font-bold text-ink shadow-md">
               h
             </span>
-            <span className="font-heading text-base text-cream group-hover:text-gold">
+            <span className="font-heading text-base text-foreground group-hover:text-gold">
               admin<span className="text-gold">.</span>hieu
             </span>
           </Link>
           <button
             type="button"
             onClick={() => setOpenMobile(false)}
-            className="lg:hidden"
+            className="inline-flex h-9 w-9 items-center justify-center lg:hidden"
             aria-label="Đóng menu"
           >
-            <X className="h-4 w-4 text-cream/60" />
+            <X className="h-5 w-5 text-muted-foreground" />
           </button>
         </div>
 
@@ -208,12 +239,12 @@ export function Sidebar() {
                   onClick={() => toggleGroup(group.id)}
                   className="flex w-full items-center justify-between px-2 pb-1 text-left"
                 >
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-cream/45">
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                     {group.label}
                   </span>
                   <ChevronDown
                     className={cn(
-                      'h-3 w-3 text-cream/35 transition-transform',
+                      'h-3 w-3 text-muted-foreground transition-transform',
                       isCollapsed && '-rotate-90',
                     )}
                   />
@@ -231,7 +262,7 @@ export function Sidebar() {
                             'flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors',
                             active
                               ? 'bg-gradient-to-r from-gold/15 via-gold/5 to-transparent text-gold shadow-[inset_2px_0_0_0_#B8923D]'
-                              : 'text-cream/75 hover:bg-gold/5 hover:text-cream',
+                              : 'text-foreground/75 hover:bg-gold/5 hover:text-foreground',
                           )}
                         >
                           <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -246,7 +277,7 @@ export function Sidebar() {
           })}
         </nav>
 
-        <div className="border-t border-gold/15 px-2 pt-3 font-mono text-[10px] uppercase tracking-wider text-cream/40">
+        <div className="border-t border-gold/15 px-2 pt-3 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
           v0.2 · ops console
         </div>
       </aside>

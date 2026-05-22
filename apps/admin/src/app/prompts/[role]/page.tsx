@@ -205,15 +205,15 @@ export default function PromptEditPage() {
         <div>
           <Link
             href="/prompts"
-            className="inline-flex items-center gap-1 text-xs text-cream/60 hover:text-gold"
+            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-gold"
           >
             <ChevronLeft className="h-3.5 w-3.5" />
             Prompts
           </Link>
-          <h1 className="mt-1 font-heading text-2xl font-semibold text-cream">
+          <h1 className="mt-1 font-heading text-2xl font-semibold text-foreground">
             {role}
             {prompt && (
-              <span className="ml-2 font-mono text-xs font-normal text-cream/60">
+              <span className="ml-2 font-mono text-xs font-normal text-muted-foreground">
                 v{prompt.version} · {prompt.is_custom ? 'custom' : 'default'}
               </span>
             )}
@@ -292,21 +292,21 @@ export default function PromptEditPage() {
               <CardHeader>
                 <CardTitle className="text-sm">Metadata</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2 text-xs text-cream/70">
+              <CardContent className="space-y-2 text-xs text-muted-foreground">
                 <div>
                   Phiên bản: <span className="font-mono text-gold">v{prompt?.version ?? 1}</span>
                 </div>
                 <div>
                   Trạng thái:{' '}
-                  <span className={prompt?.is_custom ? 'text-gold' : 'text-cream/60'}>
+                  <span className={prompt?.is_custom ? 'text-gold' : 'text-muted-foreground'}>
                     {prompt?.is_custom ? 'custom' : 'default'}
                   </span>
                 </div>
                 <div>
-                  Cập nhật: <span className="text-cream/90">{fmtDate(prompt?.updated_at ?? null)}</span>
+                  Cập nhật: <span className="text-foreground/90">{fmtDate(prompt?.updated_at ?? null)}</span>
                 </div>
                 <div>
-                  Bởi: <span className="text-cream/90">{prompt?.updated_by ?? '—'}</span>
+                  Bởi: <span className="text-foreground/90">{prompt?.updated_by ?? '—'}</span>
                 </div>
               </CardContent>
             </Card>
@@ -319,12 +319,12 @@ export default function PromptEditPage() {
                 {PLACEHOLDERS.map((p) => (
                   <code
                     key={p}
-                    className="block rounded border border-gold/15 bg-ink/60 px-2 py-1 font-mono text-xs text-cream/80"
+                    className="block rounded border border-gold/15 bg-card/60 px-2 py-1 font-mono text-xs text-foreground/85"
                   >
                     {p}
                   </code>
                 ))}
-                <p className="pt-1 text-[11px] text-cream/55">
+                <p className="pt-1 text-[11px] text-muted-foreground">
                   Sẽ được thay khi gọi LLM. Giữ nguyên syntax 2 dấu ngoặc nhọn.
                 </p>
               </CardContent>
@@ -336,7 +336,7 @@ export default function PromptEditPage() {
               </CardHeader>
               <CardContent>
                 {!prompt?.history?.length ? (
-                  <p className="text-xs text-cream/55">Chưa có lịch sử.</p>
+                  <p className="text-xs text-muted-foreground">Chưa có lịch sử.</p>
                 ) : (
                   <ul className="space-y-1.5 text-xs">
                     {prompt.history.slice(0, 5).map((h) => (
@@ -345,8 +345,8 @@ export default function PromptEditPage() {
                         className="flex items-center justify-between border-b border-gold/10 pb-1.5 last:border-0"
                       >
                         <span className="font-mono text-gold/80">v{h.version}</span>
-                        <span className="text-cream/70">{fmtDate(h.updated_at)}</span>
-                        <span className="truncate text-cream/55">{h.updated_by ?? '—'}</span>
+                        <span className="text-muted-foreground">{fmtDate(h.updated_at)}</span>
+                        <span className="truncate text-muted-foreground">{h.updated_by ?? '—'}</span>
                       </li>
                     ))}
                   </ul>
@@ -358,7 +358,7 @@ export default function PromptEditPage() {
       )}
 
       {/* Bottom action bar */}
-      <div className="sticky bottom-0 flex flex-wrap items-center justify-end gap-2 border-t border-gold/15 bg-ink/95 py-3 backdrop-blur">
+      <div className="sticky bottom-0 flex flex-wrap items-center justify-end gap-2 border-t border-gold/15 bg-card/95 py-3 backdrop-blur">
         <Button variant="ghost" onClick={() => router.push('/prompts')} disabled={saveMut.isPending}>
           Hủy
         </Button>
@@ -434,7 +434,7 @@ export default function PromptEditPage() {
             </DialogDescription>
           </DialogHeader>
           {prompt?.default_system ? (
-            <div className="max-h-[60vh] overflow-auto rounded-md border border-gold/15 bg-ink/60 font-mono text-xs leading-5">
+            <div className="max-h-[60vh] overflow-auto rounded-md border border-gold/15 bg-card/60 font-mono text-xs leading-5">
               {lineDiff(draft, prompt.default_system).map((row, i) => (
                 <div
                   key={i}
@@ -443,10 +443,10 @@ export default function PromptEditPage() {
                       ? 'bg-emerald-500/10 px-3 py-0.5 text-emerald-200'
                       : row.kind === 'remove'
                         ? 'bg-red-500/10 px-3 py-0.5 text-red-200'
-                        : 'px-3 py-0.5 text-cream/70'
+                        : 'px-3 py-0.5 text-muted-foreground'
                   }
                 >
-                  <span className="mr-2 select-none text-cream/35">
+                  <span className="mr-2 select-none text-muted-foreground">
                     {row.kind === 'add' ? '+' : row.kind === 'remove' ? '-' : ' '}
                   </span>
                   {row.text || ' '}
@@ -454,7 +454,7 @@ export default function PromptEditPage() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-cream/55">Chưa load được default — thử reload.</p>
+            <p className="text-sm text-muted-foreground">Chưa load được default — thử reload.</p>
           )}
           <DialogFooter>
             <Button variant="ghost" onClick={() => setDiffOpen(false)}>
@@ -473,7 +473,7 @@ export default function PromptEditPage() {
               Đây là cách prompt sẽ được gửi đến LLM (system message). Placeholders chưa thay.
             </DialogDescription>
           </DialogHeader>
-          <pre className="max-h-[60vh] overflow-auto rounded-md border border-gold/15 bg-ink/60 p-4 font-mono text-xs leading-5 text-cream/90">
+          <pre className="max-h-[60vh] overflow-auto rounded-md border border-gold/15 bg-card/60 p-4 font-mono text-xs leading-5 text-foreground/90">
 {`role: system
 content: |
 ${draft

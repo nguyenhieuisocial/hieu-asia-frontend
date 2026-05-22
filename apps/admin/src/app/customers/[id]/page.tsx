@@ -95,7 +95,7 @@ async function fetchCustomer(id: string): Promise<CustomerDetailResponse> {
 }
 
 const PLAN_TONE: Record<string, string> = {
-  free: 'bg-cream/10 text-cream/70 border-cream/20',
+  free: 'bg-muted/40 text-muted-foreground border-border',
   premium: 'bg-gold/15 text-gold border-gold/30',
   subscription: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30',
 };
@@ -126,11 +126,11 @@ export default function CustomerDetailPage() {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <div className="h-6 w-40 animate-pulse rounded bg-cream/5" />
-        <div className="h-20 animate-pulse rounded-xl bg-cream/5" />
+        <div className="h-6 w-40 animate-pulse rounded bg-muted/30" />
+        <div className="h-20 animate-pulse rounded-xl bg-muted/30" />
         <div className="grid gap-4 sm:grid-cols-3">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-28 animate-pulse rounded-xl bg-cream/5" />
+            <div key={i} className="h-28 animate-pulse rounded-xl bg-muted/30" />
           ))}
         </div>
       </div>
@@ -141,7 +141,7 @@ export default function CustomerDetailPage() {
     <div className="space-y-6">
       <Link
         href="/customers"
-        className="inline-flex items-center gap-1.5 text-sm text-cream/60 hover:text-gold"
+        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-gold"
       >
         <ChevronLeft className="h-4 w-4" />
         Quay lại danh sách
@@ -151,30 +151,30 @@ export default function CustomerDetailPage() {
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <User className="h-5 w-5 text-gold" />
-            <span className="font-mono text-[10px] uppercase tracking-widest text-cream/55">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
               Khách hàng
             </span>
             {customer?.plan && (
               <span
                 className={`inline-flex items-center rounded border px-2 py-0.5 text-xs font-medium ${
-                  PLAN_TONE[customer.plan] ?? 'border-cream/15 bg-cream/5 text-cream/70'
+                  PLAN_TONE[customer.plan] ?? 'border-border bg-muted/30 text-muted-foreground'
                 }`}
               >
                 {customer.plan}
               </span>
             )}
           </div>
-          <h1 className="mt-2 font-heading text-2xl font-semibold text-cream sm:text-3xl">
+          <h1 className="mt-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             {customer?.display_name ?? `Khách hàng ${id.slice(0, 8)}…`}
           </h1>
           <div className="mt-1 flex items-center gap-2">
-            <p className="font-mono text-xs text-cream/55" title={id}>
+            <p className="font-mono text-xs text-muted-foreground" title={id}>
               {id}
             </p>
             <button
               type="button"
               onClick={copyId}
-              className="inline-flex h-6 w-6 items-center justify-center rounded text-cream/45 hover:bg-gold/10 hover:text-gold"
+              className="inline-flex h-6 w-6 items-center justify-center rounded text-muted-foreground hover:bg-gold/10 hover:text-gold"
               aria-label="Copy ID"
               title="Copy ID"
             >
@@ -193,7 +193,7 @@ export default function CustomerDetailPage() {
         </div>
       )}
       {note && !showError && (
-        <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-cream/70">
+        <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-muted-foreground">
           {note}
         </div>
       )}
@@ -239,7 +239,7 @@ export default function CustomerDetailPage() {
           </CardHeader>
           <CardContent>
             {!customer ? (
-              <p className="text-sm text-cream/55">Chưa có dữ liệu hồ sơ.</p>
+              <p className="text-sm text-muted-foreground">Chưa có dữ liệu hồ sơ.</p>
             ) : (
               <dl className="space-y-2 text-sm">
                 <Field label="Tên hiển thị" value={customer.display_name} />
@@ -281,12 +281,12 @@ export default function CustomerDetailPage() {
                     className="flex items-center justify-between border-b border-gold/10 pb-2 last:border-0"
                   >
                     <div className="min-w-0">
-                      <div className="truncate text-cream">{s.topic ?? '(không topic)'}</div>
-                      <div className="font-mono text-xs text-cream/55" title={s.created_at ?? ''}>
+                      <div className="truncate text-foreground">{s.topic ?? '(không topic)'}</div>
+                      <div className="font-mono text-xs text-muted-foreground" title={s.created_at ?? ''}>
                         {fmtDate(s.created_at)} · {fmtRelative(s.created_at)}
                       </div>
                     </div>
-                    <span className="shrink-0 rounded border border-gold/20 bg-gold/5 px-2 py-0.5 text-xs text-cream/70">
+                    <span className="shrink-0 rounded border border-gold/20 bg-gold/5 px-2 py-0.5 text-xs text-muted-foreground">
                       {s.status ?? '—'}
                     </span>
                   </li>
@@ -314,10 +314,10 @@ export default function CustomerDetailPage() {
               className="border-0 bg-transparent py-4"
             />
           ) : (
-            <div className="overflow-x-auto rounded-lg border border-gold/15 bg-ink/40">
+            <div className="overflow-x-auto rounded-lg border border-gold/15 bg-card/60">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gold/15 text-left text-xs uppercase tracking-wider text-cream/55">
+                  <tr className="border-b border-gold/15 text-left text-xs uppercase tracking-wider text-muted-foreground">
                     <th className="px-4 py-2 font-medium">Thời gian</th>
                     <th className="px-4 py-2 font-medium">Type</th>
                     <th className="px-4 py-2 text-right font-medium">Amount</th>
@@ -326,7 +326,7 @@ export default function CustomerDetailPage() {
                 <tbody>
                   {transactions.map((t) => (
                     <tr key={t.id} className="border-b border-gold/5 last:border-0 hover:bg-gold/[0.03]">
-                      <td className="px-4 py-2 font-mono text-xs text-cream/70">
+                      <td className="px-4 py-2 font-mono text-xs text-muted-foreground">
                         {fmtDate(t.created_at)}
                       </td>
                       <td className="px-4 py-2">
@@ -334,7 +334,7 @@ export default function CustomerDetailPage() {
                           {t.type}
                         </span>
                       </td>
-                      <td className="px-4 py-2 text-right tabular-nums text-cream/85">
+                      <td className="px-4 py-2 text-right tabular-nums text-foreground/85">
                         {t.amount != null
                           ? new Intl.NumberFormat('vi-VN').format(t.amount) + ' đ'
                           : '—'}
@@ -368,7 +368,7 @@ export default function CustomerDetailPage() {
                   className="flex items-baseline gap-3 border-b border-gold/5 pb-1.5 last:border-0"
                 >
                   <span
-                    className="w-40 shrink-0 font-mono text-xs text-cream/55"
+                    className="w-40 shrink-0 font-mono text-xs text-muted-foreground"
                     title={row.ts}
                   >
                     {fmtDate(row.ts)}
@@ -377,7 +377,7 @@ export default function CustomerDetailPage() {
                     {row.action}
                   </span>
                   {row.detail && (
-                    <span className="text-cream/70">— {row.detail}</span>
+                    <span className="text-muted-foreground">— {row.detail}</span>
                   )}
                 </li>
               ))}
@@ -402,10 +402,10 @@ function Field({
 }) {
   return (
     <div className="flex items-baseline gap-3">
-      <dt className="w-32 shrink-0 text-xs uppercase tracking-wider text-cream/55">{label}</dt>
-      <dd className={`min-w-0 flex-1 text-cream ${mono ? 'truncate font-mono text-xs' : ''}`}>
+      <dt className="w-32 shrink-0 text-xs uppercase tracking-wider text-muted-foreground">{label}</dt>
+      <dd className={`min-w-0 flex-1 text-foreground ${mono ? 'truncate font-mono text-xs' : ''}`}>
         {value ?? '—'}
-        {hint && <span className="ml-1.5 font-mono text-[10px] text-cream/45">({hint})</span>}
+        {hint && <span className="ml-1.5 font-mono text-[10px] text-muted-foreground">({hint})</span>}
       </dd>
     </div>
   );

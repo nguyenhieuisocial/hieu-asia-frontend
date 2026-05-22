@@ -98,18 +98,18 @@ export default function AdminBroadcastPage() {
   }
 
   return (
-    <main className="min-h-screen bg-ink p-6 text-cream">
+    <main className="min-h-screen bg-card p-6 text-foreground">
       <div className="mx-auto max-w-4xl space-y-6">
         <header className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">Broadcast tới affiliates</h1>
-            <p className="text-sm text-cream/60">
+            <p className="text-sm text-muted-foreground">
               In-app notifications hiển thị ngay trong dashboard. Email/Telegram được queue và gửi qua
               hệ thống delivery riêng.
             </p>
           </div>
           <Link href="/affiliates">
-            <Button variant="ghost" className="border border-cream/20">
+            <Button variant="ghost" className="border border-border">
               Quay lại
             </Button>
           </Link>
@@ -121,7 +121,7 @@ export default function AdminBroadcastPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="mb-1 block text-xs uppercase text-cream/60">Tiêu đề</label>
+              <label className="mb-1 block text-xs uppercase text-muted-foreground">Tiêu đề</label>
               <Input
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
@@ -130,7 +130,7 @@ export default function AdminBroadcastPage() {
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs uppercase text-cream/60">Nội dung</label>
+              <label className="mb-1 block text-xs uppercase text-muted-foreground">Nội dung</label>
               <Textarea
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
@@ -138,10 +138,10 @@ export default function AdminBroadcastPage() {
                 rows={6}
                 maxLength={4000}
               />
-              <p className="mt-1 text-xs text-cream/50">{body.length} / 4000</p>
+              <p className="mt-1 text-xs text-muted-foreground">{body.length} / 4000</p>
             </div>
             <div>
-              <div className="mb-1 text-xs uppercase text-cream/60">Channels</div>
+              <div className="mb-1 text-xs uppercase text-muted-foreground">Channels</div>
               <div className="flex flex-wrap gap-3">
                 {(['in_app', 'email', 'telegram'] as Channel[]).map((c) => (
                   <label key={c} className="flex items-center gap-2 text-sm">
@@ -152,11 +152,11 @@ export default function AdminBroadcastPage() {
               </div>
             </div>
             <div>
-              <div className="mb-1 text-xs uppercase text-cream/60">Đối tượng</div>
+              <div className="mb-1 text-xs uppercase text-muted-foreground">Đối tượng</div>
               <select
                 value={target}
                 onChange={(e) => setTarget(e.target.value as TargetStatus)}
-                className="rounded border border-cream/20 bg-ink p-2 text-sm text-cream"
+                className="rounded border border-border bg-card p-2 text-sm text-foreground"
               >
                 <option value="active">Chỉ active</option>
                 <option value="all">Tất cả (kể cả banned)</option>
@@ -185,17 +185,17 @@ export default function AdminBroadcastPage() {
           </CardHeader>
           <CardContent>
             {history.length === 0 ? (
-              <p className="text-sm text-cream/50">Chưa có broadcast nào.</p>
+              <p className="text-sm text-muted-foreground">Chưa có broadcast nào.</p>
             ) : (
               <div className="space-y-2">
                 {history.map((b) => (
-                  <div key={b.id} className="rounded border border-cream/10 bg-cream/[0.03] p-3 text-sm">
+                  <div key={b.id} className="rounded border border-border bg-muted/30 p-3 text-sm">
                     <div className="flex items-center justify-between">
                       <span className="font-semibold">{b.subject}</span>
-                      <span className="text-xs text-cream/50">{dt(b.created_at)}</span>
+                      <span className="text-xs text-muted-foreground">{dt(b.created_at)}</span>
                     </div>
-                    <p className="mt-1 line-clamp-2 text-cream/70">{b.body}</p>
-                    <div className="mt-1 flex items-center gap-2 text-xs text-cream/60">
+                    <p className="mt-1 line-clamp-2 text-muted-foreground">{b.body}</p>
+                    <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
                       <span>{b.recipients} recipients</span>
                       <span>· {b.channels.map((c) => CHANNEL_LABEL[c]).join(' · ')}</span>
                       <span>· {b.target_status === 'all' ? 'tất cả' : 'active'}</span>

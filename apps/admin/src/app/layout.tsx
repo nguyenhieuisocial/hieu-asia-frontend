@@ -65,11 +65,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Suspense fallback={null}>
             <PostHogProvider>
               <QueryProvider>
-                <div className="min-h-screen bg-ink-radial">
+                <div className="min-h-screen bg-background">
                   <Sidebar />
                   <div className="lg:pl-64">
                     <Topbar adminEmail={adminEmail} />
-                    <main className="px-4 pb-20 pt-6 lg:px-8 lg:py-8 lg:pb-8">{children}</main>
+                    <main className="px-4 pt-6 pb-[calc(5rem+env(safe-area-inset-bottom))] lg:px-8 lg:py-8 lg:pb-8">{children}</main>
                   </div>
                   <MobileNav />
                 </div>

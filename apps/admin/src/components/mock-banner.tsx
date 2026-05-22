@@ -30,5 +30,5 @@ export function SkeletonBlock({
 }: {
   className?: string;
 }) {
-  return <div className={`${className} animate-pulse rounded bg-cream/10`} />;
+  return <div className={`${className} animate-pulse rounded bg-muted/40`} />;
 }

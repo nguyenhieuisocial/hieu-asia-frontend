@@ -53,22 +53,22 @@ export function Topbar({ adminEmail }: { adminEmail: string }) {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-gold/15 bg-ink/80 px-4 py-3 backdrop-blur-md lg:px-8">
-      <nav aria-label="breadcrumb" className="min-w-0 pl-12 lg:pl-0">
+    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-gold/15 bg-card/80 px-4 py-3 backdrop-blur-md lg:px-8">
+      <nav aria-label="breadcrumb" className="min-w-0 pl-14 lg:pl-0">
         <ol className="flex items-center gap-1.5 overflow-hidden text-xs">
           {crumbs.map((c, i) => {
             const isLast = i === crumbs.length - 1;
             return (
               <li key={c.href + i} className="flex shrink-0 items-center gap-1.5">
-                {i > 0 && <ChevronRight className="h-3 w-3 text-cream/30" />}
+                {i > 0 && <ChevronRight className="h-3 w-3 text-muted-foreground" />}
                 {isLast ? (
-                  <span className="truncate font-mono uppercase tracking-wider text-cream/85">
+                  <span className="truncate font-mono uppercase tracking-wider text-foreground/85">
                     {c.label}
                   </span>
                 ) : (
                   <Link
                     href={c.href}
-                    className="truncate font-mono uppercase tracking-wider text-cream/50 hover:text-cream"
+                    className="truncate font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground"
                   >
                     {c.label}
                   </Link>
@@ -80,7 +80,7 @@ export function Topbar({ adminEmail }: { adminEmail: string }) {
       </nav>
       <div className="flex items-center gap-2">
         <ThemeToggle />
-        <div className="hidden items-center gap-2 rounded-md border border-gold/15 bg-ink/40 px-3 py-1.5 text-xs text-cream/75 sm:flex">
+        <div className="hidden items-center gap-2 rounded-md border border-gold/15 bg-card/60 px-3 py-1.5 text-xs text-foreground/75 sm:flex">
           <span
             aria-hidden
             className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-gold/40 to-gold/10 font-heading text-[10px] text-gold"
@@ -93,7 +93,7 @@ export function Topbar({ adminEmail }: { adminEmail: string }) {
           type="button"
           onClick={onLogout}
           disabled={pending}
-          className="inline-flex items-center gap-1.5 rounded-md border border-gold/20 px-3 py-1.5 text-xs text-cream/85 hover:border-gold hover:text-gold disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 rounded-md border border-gold/20 px-3 py-1.5 text-xs text-foreground/85 hover:border-gold hover:text-gold disabled:opacity-50"
         >
           <LogOut className="h-3 w-3" />
           {pending ? 'Đang thoát…' : 'Đăng xuất'}

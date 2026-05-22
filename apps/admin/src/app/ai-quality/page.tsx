@@ -157,13 +157,13 @@ function BarRow({ label, value, max, hint, accent = 'gold' }: BarRowProps) {
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between text-xs">
-        <span className="text-cream/80">{label}</span>
-        <span className="font-mono text-cream/60">
+        <span className="text-foreground/85">{label}</span>
+        <span className="font-mono text-muted-foreground">
           {value}
-          {hint && <span className="ml-2 text-cream/45">{hint}</span>}
+          {hint && <span className="ml-2 text-muted-foreground">{hint}</span>}
         </span>
       </div>
-      <div className="h-2 overflow-hidden rounded-full bg-ink/60">
+      <div className="h-2 overflow-hidden rounded-full bg-card/60">
         <div
           className={cn('h-full rounded-full', ACCENT_BAR[accent])}
           style={{ width: `${(pct * 100).toFixed(1)}%` }}
@@ -183,14 +183,14 @@ interface PassFailBarProps {
 function PassFailBar({ passFirst, passRetry, failFinal, total }: PassFailBarProps) {
   if (total === 0) {
     return (
-      <div className="h-3 w-full rounded-full bg-ink/60" aria-label="no data" />
+      <div className="h-3 w-full rounded-full bg-card/60" aria-label="no data" />
     );
   }
   const pf = (passFirst / total) * 100;
   const pr = (passRetry / total) * 100;
   const ff = (failFinal / total) * 100;
   return (
-    <div className="flex h-3 w-full overflow-hidden rounded-full bg-ink/60">
+    <div className="flex h-3 w-full overflow-hidden rounded-full bg-card/60">
       <div
         className="h-full bg-jade/70"
         style={{ width: `${pf.toFixed(2)}%` }}
@@ -245,7 +245,7 @@ export default function AiQualityPage() {
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className="h-32 animate-pulse rounded-xl border border-gold/10 bg-cream/5"
+              className="h-32 animate-pulse rounded-xl border border-gold/10 bg-muted/30"
             />
           ))}
         </div>
@@ -329,10 +329,10 @@ export default function AiQualityPage() {
                   return (
                     <div key={ep} className="space-y-2">
                       <div className="flex flex-wrap items-baseline justify-between gap-2">
-                        <span className="font-heading text-sm text-cream">
+                        <span className="font-heading text-sm text-foreground">
                           {ENDPOINT_LABEL[ep]}
                         </span>
-                        <span className="font-mono text-xs text-cream/60">
+                        <span className="font-mono text-xs text-muted-foreground">
                           {s.total} calls · pass {fmtPct(s.final_pass_rate)} ·
                           retry {fmtPct(s.retry_rate)}
                         </span>
@@ -343,7 +343,7 @@ export default function AiQualityPage() {
                         failFinal={s.fail_final}
                         total={s.total}
                       />
-                      <div className="grid grid-cols-3 text-[10px] font-mono text-cream/55">
+                      <div className="grid grid-cols-3 text-[10px] font-mono text-muted-foreground">
                         <span>pass-first {s.pass_first}</span>
                         <span>pass-retry {s.pass_retry}</span>
                         <span className="text-right">fail-final {s.fail_final}</span>
@@ -352,7 +352,7 @@ export default function AiQualityPage() {
                   );
                 })}
                 {!hasAnyData && (
-                  <p className="text-sm text-cream/55">
+                  <p className="text-sm text-muted-foreground">
                     Chưa có call nào trong 30 ngày qua. Counters bắt đầu đếm sau
                     khi worker được deploy với wiring mới.
                   </p>
@@ -385,7 +385,7 @@ export default function AiQualityPage() {
                     <div key={ep} className="space-y-3">
                       <div className="flex items-center gap-2">
                         <AlertTriangle className="h-3.5 w-3.5 text-gold/70" />
-                        <span className="font-heading text-sm text-cream">
+                        <span className="font-heading text-sm text-foreground">
                           {ENDPOINT_LABEL[ep]}
                         </span>
                       </div>
@@ -420,7 +420,7 @@ export default function AiQualityPage() {
             <CardContent>
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gold/15 text-left font-mono text-[10px] uppercase tracking-widest text-cream/55">
+                  <tr className="border-b border-gold/15 text-left font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                     <th className="py-2">Endpoint</th>
                     <th className="py-2 text-right">Calls</th>
                     <th className="py-2 text-right">Pass</th>
@@ -436,8 +436,8 @@ export default function AiQualityPage() {
                         key={ep}
                         className="border-b border-gold/5 hover:bg-gold/5"
                       >
-                        <td className="py-2 text-cream">{ENDPOINT_LABEL[ep]}</td>
-                        <td className="py-2 text-right font-mono text-cream/75">
+                        <td className="py-2 text-foreground">{ENDPOINT_LABEL[ep]}</td>
+                        <td className="py-2 text-right font-mono text-foreground/85">
                           {s.total}
                         </td>
                         <td className="py-2 text-right font-mono">
@@ -453,7 +453,7 @@ export default function AiQualityPage() {
                             {fmtPct(s.final_pass_rate)}
                           </span>
                         </td>
-                        <td className="py-2 text-right font-mono text-cream/65">
+                        <td className="py-2 text-right font-mono text-muted-foreground">
                           {fmtPct(s.retry_rate)}
                         </td>
                         <td className="py-2 text-right font-mono text-gold">
@@ -467,7 +467,7 @@ export default function AiQualityPage() {
             </CardContent>
           </Card>
 
-          <p className="font-mono text-[10px] uppercase tracking-wider text-cream/40">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
             Cập nhật: {new Date(summary.generated_at).toLocaleString('vi-VN')}
           </p>
         </>

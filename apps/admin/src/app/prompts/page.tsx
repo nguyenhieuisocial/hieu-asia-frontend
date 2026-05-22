@@ -198,10 +198,10 @@ export default function PromptsListPage() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
-                      <CardTitle className="text-base text-cream">{meta.label}</CardTitle>
-                      <ChevronRight className="h-4 w-4 text-cream/40 transition-transform group-hover:translate-x-0.5 group-hover:text-gold" />
+                      <CardTitle className="text-base text-foreground">{meta.label}</CardTitle>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-gold" />
                     </div>
-                    <p className="mt-1 text-xs text-cream/60">{meta.tagline}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">{meta.tagline}</p>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-2 pt-0">
@@ -214,29 +214,29 @@ export default function PromptsListPage() {
                           custom
                         </span>
                       ) : (
-                        <span className="inline-flex items-center rounded-full border border-cream/15 bg-cream/5 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-cream/60">
+                        <span className="inline-flex items-center rounded-full border border-border bg-muted/30 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                           default
                         </span>
                       )}
-                      <span className="inline-flex items-center rounded-full border border-cream/15 bg-cream/5 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-cream/70">
+                      <span className="inline-flex items-center rounded-full border border-border bg-muted/30 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                         v{p?.version ?? 1}
                       </span>
                     </div>
                   )}
-                  <div className="text-xs text-cream/55">
+                  <div className="text-xs text-muted-foreground">
                     <div>
                       Cập nhật:{' '}
-                      <span className="text-cream/80" title={p?.updated_at ?? ''}>
+                      <span className="text-foreground/85" title={p?.updated_at ?? ''}>
                         {fmtDate(p?.updated_at ?? null)}
                       </span>
                       {p?.updated_at && (
-                        <span className="ml-1.5 font-mono text-[10px] text-cream/45">
+                        <span className="ml-1.5 font-mono text-[10px] text-muted-foreground">
                           ({fmtRelative(p.updated_at)})
                         </span>
                       )}
                     </div>
                     <div>
-                      Bởi: <span className="text-cream/80">{p?.updated_by ?? '—'}</span>
+                      Bởi: <span className="text-foreground/85">{p?.updated_by ?? '—'}</span>
                     </div>
                   </div>
                 </CardContent>

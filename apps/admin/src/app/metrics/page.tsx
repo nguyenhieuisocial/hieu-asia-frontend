@@ -69,7 +69,7 @@ function fmtNum(n: number) {
 
 // Color thresholds: green < 500ms, gold 500-1500ms, red > 1500ms.
 function latencyClass(ms: number | null): string {
-  if (ms === null) return 'text-cream/40';
+  if (ms === null) return 'text-muted-foreground';
   if (ms < 500) return 'text-jade-50';
   if (ms <= 1500) return 'text-gold';
   return 'text-red-300';
@@ -149,36 +149,36 @@ export default function AdminMetricsPage() {
       />
 
       {/* Worker version / health banner */}
-      <div className="flex flex-wrap items-center gap-3 rounded-md border border-gold/15 bg-ink/40 px-4 py-2.5 text-xs">
-        <span className="flex items-center gap-2 text-cream/70">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-cream/45">
+      <div className="flex flex-wrap items-center gap-3 rounded-md border border-gold/15 bg-card/60 px-4 py-2.5 text-xs">
+        <span className="flex items-center gap-2 text-muted-foreground">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
             Worker
           </span>
-          <span className="font-mono text-cream">
+          <span className="font-mono text-foreground">
             {health?.version ? `v${health.version}` : '—'}
           </span>
           {health?.commit && (
-            <span className="font-mono text-cream/55">· {health.commit.slice(0, 7)}</span>
+            <span className="font-mono text-muted-foreground">· {health.commit.slice(0, 7)}</span>
           )}
         </span>
-        <span className="flex items-center gap-2 text-cream/70">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-cream/45">
+        <span className="flex items-center gap-2 text-muted-foreground">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
             Snapshot
           </span>
-          <span className="font-mono text-cream">
+          <span className="font-mono text-foreground">
             {data ? fmtDateTime(data.generated_at) : '—'}
           </span>
         </span>
         {data?.date && (
-          <span className="flex items-center gap-2 text-cream/70">
-            <span className="font-mono text-[10px] uppercase tracking-widest text-cream/45">
+          <span className="flex items-center gap-2 text-muted-foreground">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
               Ngày
             </span>
-            <span className="font-mono text-cream">{data.date}</span>
+            <span className="font-mono text-foreground">{data.date}</span>
           </span>
         )}
-        <span className="ml-auto flex items-center gap-2 text-cream/70">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-cream/45">
+        <span className="ml-auto flex items-center gap-2 text-muted-foreground">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
             Tỷ lệ lỗi (5xx) hôm nay
           </span>
           <span
@@ -203,7 +203,7 @@ export default function AdminMetricsPage() {
           {loading && !data ? (
             <div className="space-y-2 py-2">
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="h-10 animate-pulse rounded bg-cream/5" />
+                <div key={i} className="h-10 animate-pulse rounded bg-muted/30" />
               ))}
             </div>
           ) : rows.length === 0 ? (
@@ -213,7 +213,7 @@ export default function AdminMetricsPage() {
               className="border-0 bg-transparent"
             />
           ) : (
-            <div className="overflow-x-auto rounded-lg border border-gold/15 bg-ink/40">
+            <div className="overflow-x-auto rounded-lg border border-gold/15 bg-card/60">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gold/15 text-left">
@@ -243,8 +243,8 @@ export default function AdminMetricsPage() {
                       key={r.endpoint}
                       className="border-b border-gold/10 last:border-0 hover:bg-gold/[0.03]"
                     >
-                      <td className="px-4 py-3 font-mono text-xs text-cream">{r.endpoint}</td>
-                      <td className="px-4 py-3 text-right font-mono text-cream/90">
+                      <td className="px-4 py-3 font-mono text-xs text-foreground">{r.endpoint}</td>
+                      <td className="px-4 py-3 text-right font-mono text-foreground/90">
                         {fmtNum(r.count)}
                       </td>
                       <td
@@ -257,7 +257,7 @@ export default function AdminMetricsPage() {
                       >
                         {r.p95_ms === null ? '—' : fmtNum(Math.round(r.p95_ms))}
                       </td>
-                      <td className="px-4 py-3 text-right font-mono text-cream/90">
+                      <td className="px-4 py-3 text-right font-mono text-foreground/90">
                         {fmtNum(r.errors)}
                       </td>
                       <td
@@ -270,7 +270,7 @@ export default function AdminMetricsPage() {
                 </tbody>
               </table>
               {typeof data?.isolate_flushes_today === 'number' && (
-                <p className="border-t border-gold/10 px-4 py-2 font-mono text-[10px] text-cream/45">
+                <p className="border-t border-gold/10 px-4 py-2 font-mono text-[10px] text-muted-foreground">
                   {fmtNum(data.isolate_flushes_today)} isolate flushes today
                 </p>
               )}
@@ -285,7 +285,7 @@ export default function AdminMetricsPage() {
             <CardTitle className="text-base">Top user-agent buckets</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto rounded-lg border border-gold/15 bg-ink/40">
+            <div className="overflow-x-auto rounded-lg border border-gold/15 bg-card/60">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gold/15 text-left">
@@ -303,8 +303,8 @@ export default function AdminMetricsPage() {
                       key={u.bucket}
                       className="border-b border-gold/10 last:border-0 hover:bg-gold/[0.03]"
                     >
-                      <td className="px-4 py-3 font-mono text-xs text-cream">{u.bucket}</td>
-                      <td className="px-4 py-3 text-right font-mono text-cream/90">
+                      <td className="px-4 py-3 font-mono text-xs text-foreground">{u.bucket}</td>
+                      <td className="px-4 py-3 text-right font-mono text-foreground/90">
                         {fmtNum(u.count)}
                       </td>
                     </tr>

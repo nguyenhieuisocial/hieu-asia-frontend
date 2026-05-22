@@ -50,7 +50,7 @@ export function DailyCostChart({ data }: { data: LlmDailyRow[] }) {
 
   if (rows.length === 0) {
     return (
-      <div className="flex h-72 items-center justify-center text-sm text-cream/55">
+      <div className="flex h-72 items-center justify-center text-sm text-muted-foreground">
         Chưa có giao dịch trong khoảng này.
       </div>
     );

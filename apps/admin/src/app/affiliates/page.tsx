@@ -71,15 +71,15 @@ export default function AdminAffiliatesPage() {
     <div className="space-y-6">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="font-heading text-2xl font-semibold text-cream sm:text-3xl">Affiliate program</h1>
-          <p className="mt-1 text-sm text-cream/60">
+          <h1 className="font-heading text-2xl font-semibold text-foreground sm:text-3xl">Affiliate program</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             Bảng điều khiển realtime: KPIs, leaderboard, payouts, fraud, assets, broadcast.
           </p>
         </div>
         <div className="flex gap-2">
           <Button
             variant="ghost"
-            className="border border-cream/20"
+            className="border border-border"
             onClick={() => listQuery.refetch()}
           >
             Làm mới
@@ -201,7 +201,7 @@ function OverviewTab({
   onOpenDrawer: (id: string) => void;
 }) {
   const list = listQuery.data;
-  if (listQuery.isLoading) return <p className="text-sm text-cream/60">Đang tải…</p>;
+  if (listQuery.isLoading) return <p className="text-sm text-muted-foreground">Đang tải…</p>;
   if (listQuery.error)
     return <p className="text-sm text-red-300">{(listQuery.error as Error).message}</p>;
   if (!list) return null;
@@ -288,11 +288,11 @@ function OverviewTab({
               {topMovers.map((a) => (
                 <tr
                   key={a.id}
-                  className="cursor-pointer border-b border-cream/5 hover:bg-cream/5"
+                  className="cursor-pointer border-b border-border hover:bg-muted/30"
                   onClick={() => onOpenDrawer(a.id)}
                 >
                   <td className="py-2 font-mono text-gold">{a.code}</td>
-                  <td className="py-2 text-cream/80">{a.display_name}</td>
+                  <td className="py-2 text-foreground/85">{a.display_name}</td>
                   <td className="py-2">
                     <TierBadge conversions={a.stats.conversions} />
                   </td>
@@ -301,7 +301,7 @@ function OverviewTab({
               ))}
               {topMovers.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="py-4 text-center text-cream/50">
+                  <td colSpan={4} className="py-4 text-center text-muted-foreground">
                     Chưa có affiliate.
                   </td>
                 </tr>
@@ -325,9 +325,9 @@ function TierStat({
     tier === 'platinum' ? 200 : tier === 'gold' ? 50 : tier === 'silver' ? 10 : 0,
   );
   return (
-    <div className="rounded border border-cream/10 bg-ink/40 p-2">
+    <div className="rounded border border-border bg-card/60 p-2">
       <TierBadge conversions={info.threshold} />
-      <div className="mt-1 font-heading text-xl text-cream">{count}</div>
+      <div className="mt-1 font-heading text-xl text-foreground">{count}</div>
     </div>
   );
 }
@@ -468,7 +468,7 @@ function LeaderboardTab({
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortKey)}
-            className="rounded border border-cream/20 bg-ink p-2 text-sm text-cream"
+            className="rounded border border-border bg-card p-2 text-sm text-foreground"
           >
             <option value="earnings">Sort: Earnings</option>
             <option value="clicks">Sort: Clicks</option>
@@ -478,16 +478,16 @@ function LeaderboardTab({
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-            className="rounded border border-cream/20 bg-ink p-2 text-sm text-cream"
+            className="rounded border border-border bg-card p-2 text-sm text-foreground"
           >
             <option value="all">Status: tất cả</option>
             <option value="active">Active</option>
             <option value="banned">Banned</option>
           </select>
-          <Button variant="ghost" className="border border-cream/20" onClick={exportLeaderboard}>
+          <Button variant="ghost" className="border border-border" onClick={exportLeaderboard}>
             Export CSV
           </Button>
-          <div className="ml-auto text-sm text-cream/60">
+          <div className="ml-auto text-sm text-muted-foreground">
             {filtered.length} / {list?.affiliates.length ?? 0}
           </div>
         </CardContent>
@@ -525,7 +525,7 @@ function LeaderboardTab({
       <Card>
         <CardContent className="overflow-x-auto pt-6">
           <table className="w-full text-sm">
-            <thead className="border-b border-cream/10 text-left text-xs uppercase text-cream/60">
+            <thead className="border-b border-border text-left text-xs uppercase text-muted-foreground">
               <tr>
                 <th className="pb-2 pr-2 w-8">
                   <Checkbox checked={allOnPageSelected} onChange={toggleAll} />
@@ -554,7 +554,7 @@ function LeaderboardTab({
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={10} className="py-6 text-center text-cream/50">
+                  <td colSpan={10} className="py-6 text-center text-muted-foreground">
                     Không có kết quả nào.
                   </td>
                 </tr>
@@ -581,11 +581,11 @@ function AffiliateRow({
   onOpen: () => void;
 }) {
   return (
-    <tr className="border-b border-cream/5 hover:bg-cream/5">
+    <tr className="border-b border-border hover:bg-muted/30">
       <td className="py-2 pr-2" onClick={(e) => e.stopPropagation()}>
         <Checkbox checked={selected} onChange={onToggle} />
       </td>
-      <td className="py-2 pr-3 font-mono text-xs text-cream/50">{rank}</td>
+      <td className="py-2 pr-3 font-mono text-xs text-muted-foreground">{rank}</td>
       <td className="py-2 pr-3 font-mono">
         <button onClick={onOpen} className="text-gold hover:underline">
           {affiliate.code}
@@ -607,7 +607,7 @@ function AffiliateRow({
           <span className="text-red-400">Banned</span>
         )}
       </td>
-      <td className="py-2 text-cream/60">{dt(affiliate.created_at)}</td>
+      <td className="py-2 text-muted-foreground">{dt(affiliate.created_at)}</td>
     </tr>
   );
 }
@@ -687,12 +687,12 @@ function PayoutsTab({
         <CardContent className="flex flex-wrap items-center justify-between gap-3 pt-6">
           <div>
             <div className="font-heading text-2xl text-gold">{vnd(total)}</div>
-            <div className="text-xs text-cream/60">
+            <div className="text-xs text-muted-foreground">
               {payouts.length} yêu cầu đang chờ
             </div>
           </div>
           <div className="flex gap-2">
-            <Button variant="ghost" className="border border-cream/20" onClick={exportCsv}>
+            <Button variant="ghost" className="border border-border" onClick={exportCsv}>
               Export CSV
             </Button>
           </div>
@@ -714,10 +714,10 @@ function PayoutsTab({
       <Card>
         <CardContent className="overflow-x-auto pt-6">
           {payouts.length === 0 ? (
-            <p className="text-sm text-cream/50">Không có payout pending.</p>
+            <p className="text-sm text-muted-foreground">Không có payout pending.</p>
           ) : (
             <table className="w-full text-sm">
-              <thead className="border-b border-cream/10 text-left text-xs uppercase text-cream/60">
+              <thead className="border-b border-border text-left text-xs uppercase text-muted-foreground">
                 <tr>
                   <th className="pb-2 pr-2 w-8">
                     <Checkbox
@@ -736,11 +736,11 @@ function PayoutsTab({
                 {payouts.map((p) => {
                   const aff = list?.affiliates.find((a) => a.id === p.affiliate_id);
                   return (
-                    <tr key={p.id} className="border-b border-cream/5 hover:bg-cream/5">
+                    <tr key={p.id} className="border-b border-border hover:bg-muted/30">
                       <td className="py-2 pr-2">
                         <Checkbox checked={selected.has(p.id)} onChange={() => toggle(p.id)} />
                       </td>
-                      <td className="py-2 pr-3 font-mono text-xs text-cream/60">{p.id}</td>
+                      <td className="py-2 pr-3 font-mono text-xs text-muted-foreground">{p.id}</td>
                       <td className="py-2 pr-3">
                         <button
                           onClick={() => onOpenDrawer(p.affiliate_id)}
@@ -748,10 +748,10 @@ function PayoutsTab({
                         >
                           {aff?.code ?? p.affiliate_id.slice(0, 8)}
                         </button>{' '}
-                        {aff && <span className="text-cream/70">— {aff.display_name}</span>}
+                        {aff && <span className="text-muted-foreground">— {aff.display_name}</span>}
                       </td>
                       <td className="py-2 pr-3 text-right font-mono text-gold">{vnd(p.amount)}</td>
-                      <td className="py-2 pr-3 text-cream/60">{dtFull(p.requested_at)}</td>
+                      <td className="py-2 pr-3 text-muted-foreground">{dtFull(p.requested_at)}</td>
                       <td className="py-2">
                         <Button
                           size="sm"
@@ -793,7 +793,7 @@ function FraudTab({
   fraudQuery: ReturnType<typeof useQuery<Awaited<ReturnType<typeof fetchFraudReport>>>>;
   listQuery: ReturnType<typeof useQuery<Awaited<ReturnType<typeof fetchAffiliatesList>>>>;
 }) {
-  if (fraudQuery.isLoading) return <p className="text-sm text-cream/60">Đang tải fraud report…</p>;
+  if (fraudQuery.isLoading) return <p className="text-sm text-muted-foreground">Đang tải fraud report…</p>;
   if (fraudQuery.error)
     return <p className="text-sm text-red-300">{(fraudQuery.error as Error).message}</p>;
   const data = fraudQuery.data;
@@ -818,10 +818,10 @@ function FraudTab({
         </CardHeader>
         <CardContent>
           {insights.ratio_anomalies.length === 0 ? (
-            <p className="text-sm text-cream/50">Không phát hiện anomaly nào.</p>
+            <p className="text-sm text-muted-foreground">Không phát hiện anomaly nào.</p>
           ) : (
             <table className="w-full text-sm">
-              <thead className="border-b border-cream/10 text-left text-xs uppercase text-cream/60">
+              <thead className="border-b border-border text-left text-xs uppercase text-muted-foreground">
                 <tr>
                   <th className="pb-2 pr-3">Mã</th>
                   <th className="pb-2 pr-3 text-right">Clicks</th>
@@ -831,7 +831,7 @@ function FraudTab({
               </thead>
               <tbody>
                 {insights.ratio_anomalies.map((r) => (
-                  <tr key={r.code} className="border-b border-cream/5">
+                  <tr key={r.code} className="border-b border-border">
                     <td className="py-1.5 pr-3 font-mono text-gold">{r.code}</td>
                     <td className="py-1.5 pr-3 text-right">{r.clicks}</td>
                     <td className="py-1.5 pr-3 text-right">{r.convs}</td>
@@ -850,14 +850,14 @@ function FraudTab({
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-base">Flag đang active ({data.active_count})</CardTitle>
           <Link href="/affiliates/fraud">
-            <Button size="sm" variant="ghost" className="border border-cream/20">
+            <Button size="sm" variant="ghost" className="border border-border">
               Trang fraud đầy đủ
             </Button>
           </Link>
         </CardHeader>
         <CardContent>
           {data.flags.filter((f) => !f.cleared_at).length === 0 ? (
-            <p className="text-sm text-cream/50">Không có flag active.</p>
+            <p className="text-sm text-muted-foreground">Không có flag active.</p>
           ) : (
             <div className="space-y-2">
               {data.flags
@@ -879,8 +879,8 @@ function FraudTab({
                         {f.reason}
                       </span>
                     </div>
-                    <div className="mt-1 text-cream/80">{f.detail}</div>
-                    <div className="mt-1 text-xs text-cream/50">Flagged: {dtFull(f.flagged_at)}</div>
+                    <div className="mt-1 text-foreground/85">{f.detail}</div>
+                    <div className="mt-1 text-xs text-muted-foreground">Flagged: {dtFull(f.flagged_at)}</div>
                   </div>
                 ))}
             </div>
@@ -907,10 +907,10 @@ function FraudStat({
         ? 'border-orange-500/30 bg-orange-500/5'
         : tone === 'yellow'
           ? 'border-yellow-500/30 bg-yellow-500/5'
-          : 'border-cream/20 bg-cream/5';
+          : 'border-border bg-muted/30';
   return (
     <div className={`rounded border p-3 ${toneCls}`}>
-      <div className="text-xs uppercase tracking-wider text-cream/60">{label}</div>
+      <div className="text-xs uppercase tracking-wider text-muted-foreground">{label}</div>
       <div className="mt-1 font-heading text-2xl">{count}</div>
     </div>
   );
@@ -928,19 +928,19 @@ function AssetsTab() {
     <>
       <Card>
         <CardContent className="flex flex-wrap items-center gap-2 pt-6">
-          <span className="text-sm text-cream/60">Lọc:</span>
+          <span className="text-sm text-muted-foreground">Lọc:</span>
           {(['all', 'banner', 'social', 'video', 'copy', 'landing'] as const).map((k) => (
             <Button
               key={k}
               size="sm"
               variant={filter === k ? 'default' : 'ghost'}
               onClick={() => setFilter(k)}
-              className={filter === k ? '' : 'border border-cream/20'}
+              className={filter === k ? '' : 'border border-border'}
             >
               {k}
             </Button>
           ))}
-          <div className="ml-auto text-sm text-cream/60">
+          <div className="ml-auto text-sm text-muted-foreground">
             {filtered.length} / {MARKETING_ASSETS.length}
           </div>
         </CardContent>
@@ -951,16 +951,16 @@ function AssetsTab() {
           <Card key={asset.id} className="flex flex-col">
             <CardHeader>
               <CardTitle className="text-sm">{asset.title}</CardTitle>
-              <p className="text-xs text-cream/55">
+              <p className="text-xs text-muted-foreground">
                 {asset.kind} · {asset.size}
               </p>
             </CardHeader>
             <CardContent className="mt-auto space-y-2 text-sm">
               <div className="flex items-center justify-between">
-                <span className="text-cream/60 text-xs">Downloads:</span>
+                <span className="text-muted-foreground text-xs">Downloads:</span>
                 <span className="font-mono text-gold">{asset.download_count ?? 0}</span>
               </div>
-              <code className="block truncate rounded bg-ink/60 px-2 py-1 text-[10px] text-cream/70">
+              <code className="block truncate rounded bg-card/60 px-2 py-1 text-[10px] text-muted-foreground">
                 {asset.url}
               </code>
               <div className="flex gap-2">
@@ -970,7 +970,7 @@ function AssetsTab() {
                   rel="noopener noreferrer"
                   className="flex-1"
                 >
-                  <Button size="sm" variant="ghost" className="w-full border border-cream/20">
+                  <Button size="sm" variant="ghost" className="w-full border border-border">
                     Mở
                   </Button>
                 </a>
@@ -990,7 +990,7 @@ function AssetsTab() {
         ))}
       </div>
 
-      <p className="text-xs text-cream/50">
+      <p className="text-xs text-muted-foreground">
         Download counters cần endpoint{' '}
         <code className="font-mono">GET /admin/affiliates/assets</code> ở worker (chưa có).
       </p>
@@ -1007,7 +1007,7 @@ function BroadcastTab() {
         <CardTitle className="text-base">Broadcast tới affiliates</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3 text-sm">
-        <p className="text-cream/70">
+        <p className="text-muted-foreground">
           Soạn thông báo gửi tới tất cả (hoặc active-only) affiliate qua in-app /
           email / Telegram. Trang đầy đủ có composer + lịch sử broadcast.
         </p>

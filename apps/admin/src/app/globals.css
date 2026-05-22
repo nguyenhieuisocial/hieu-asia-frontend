@@ -38,7 +38,7 @@
   }
 
   body {
-    @apply bg-ink text-cream font-sans antialiased;
+    @apply font-sans antialiased;
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
   }

@@ -119,23 +119,23 @@ function VendorCard({ p }: { p: ProviderRow }) {
             </CardTitle>
             <CardDescription className="mt-1 font-mono text-xs">{p.model}</CardDescription>
           </div>
-          <span className="rounded border border-gold/20 bg-gold/5 px-2 py-0.5 text-[10px] uppercase tracking-wider text-cream/70">
+          <span className="rounded border border-gold/20 bg-gold/5 px-2 py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">
             {mode}
           </span>
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
-        <div className="text-xs text-cream/70">{status.label}</div>
+        <div className="text-xs text-muted-foreground">{status.label}</div>
 
         <dl className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs">
-          <dt className="text-cream/55">Requests 7d</dt>
-          <dd className="tabular-nums text-cream/85">{p.requests_7d.toLocaleString('vi-VN')}</dd>
-          <dt className="text-cream/55">Fallback 7d</dt>
-          <dd className="tabular-nums text-cream/85">{p.fallback_count_7d}</dd>
-          <dt className="text-cream/55">p50 / p95</dt>
-          <dd className="tabular-nums font-mono text-cream/85">{p.latency_p50_ms} / {p.latency_p95_ms} ms</dd>
-          <dt className="text-cream/55">Last used</dt>
-          <dd className="font-mono text-[11px] text-cream/70">{p.last_used ?? '—'}</dd>
+          <dt className="text-muted-foreground">Requests 7d</dt>
+          <dd className="tabular-nums text-foreground/85">{p.requests_7d.toLocaleString('vi-VN')}</dd>
+          <dt className="text-muted-foreground">Fallback 7d</dt>
+          <dd className="tabular-nums text-foreground/85">{p.fallback_count_7d}</dd>
+          <dt className="text-muted-foreground">p50 / p95</dt>
+          <dd className="tabular-nums font-mono text-foreground/85">{p.latency_p50_ms} / {p.latency_p95_ms} ms</dd>
+          <dt className="text-muted-foreground">Last used</dt>
+          <dd className="font-mono text-[11px] text-muted-foreground">{p.last_used ?? '—'}</dd>
         </dl>
 
         {testResult && (
@@ -161,7 +161,7 @@ function VendorCard({ p }: { p: ProviderRow }) {
           {p.vendor !== 'cloudflare' && (
             <Link
               href="/connect"
-              className="rounded border border-cream/20 px-2.5 py-1 text-xs text-cream/75 hover:bg-cream/5"
+              className="rounded border border-border px-2.5 py-1 text-xs text-foreground/85 hover:bg-muted/30"
             >
               Reconfigure
             </Link>
@@ -205,7 +205,7 @@ export default function VendorsPage() {
         </div>
       )}
       {data?.sources && !data.sources.langfuse && (
-        <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-cream/70">
+        <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-muted-foreground">
           Langfuse chưa wire — latency / fallback metrics hiển thị 0.
         </div>
       )}
@@ -257,7 +257,7 @@ export default function VendorsPage() {
       })()}
 
       {isLoading ? (
-        <p className="py-8 text-center text-sm text-cream/55">Đang tải…</p>
+        <p className="py-8 text-center text-sm text-muted-foreground">Đang tải…</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {VENDORS_ORDER.map(v => {
@@ -277,12 +277,12 @@ export default function VendorsPage() {
         </CardHeader>
         <CardContent>
           {!routing ? (
-            <p className="py-4 text-center text-sm text-cream/55">Chưa có routing.</p>
+            <p className="py-4 text-center text-sm text-muted-foreground">Chưa có routing.</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-zinc-800 text-sm">
                 <thead>
-                  <tr className="text-left text-xs uppercase tracking-wider text-cream/55">
+                  <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
                     <th className="px-3 py-2 font-medium">Role</th>
                     <th className="px-3 py-2 font-medium">Primary</th>
                     <th className="px-3 py-2 font-medium">Fallback chain</th>
@@ -294,7 +294,7 @@ export default function VendorsPage() {
                     if (!route) return null;
                     return (
                       <tr key={r} className="hover:bg-gold/[0.03]">
-                        <td className="px-3 py-2 font-mono text-xs text-cream/85">{ROLE_LABEL[r]}</td>
+                        <td className="px-3 py-2 font-mono text-xs text-foreground/85">{ROLE_LABEL[r]}</td>
                         <td className="px-3 py-2">
                           <span className="rounded border border-[#B8923D]/30 bg-[#B8923D]/10 px-2 py-0.5 font-mono text-xs text-[#B8923D]">
                             {route.primary}
@@ -303,11 +303,11 @@ export default function VendorsPage() {
                         <td className="px-3 py-2">
                           <div className="flex flex-wrap gap-1">
                             {route.fallbacks.length === 0 ? (
-                              <span className="text-cream/40">—</span>
+                              <span className="text-muted-foreground">—</span>
                             ) : route.fallbacks.map((fb, i) => (
                               <span
                                 key={fb + i}
-                                className="rounded border border-cream/20 bg-cream/5 px-2 py-0.5 font-mono text-xs text-cream/70"
+                                className="rounded border border-border bg-muted/30 px-2 py-0.5 font-mono text-xs text-muted-foreground"
                               >
                                 {fb}
                               </span>

@@ -59,10 +59,10 @@ export function BudgetsManager({ rows, isLoading }: Props) {
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
       <div className="space-y-3">
-        <h3 className="font-mono text-xs uppercase tracking-widest text-cream/55">Budget hiện hữu</h3>
-        {isLoading && <p className="text-sm text-cream/55">Đang tải…</p>}
+        <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Budget hiện hữu</h3>
+        {isLoading && <p className="text-sm text-muted-foreground">Đang tải…</p>}
         {!isLoading && rows.length === 0 && (
-          <p className="text-sm text-cream/55">Chưa có budget. Tạo budget đầu tiên ở cột phải.</p>
+          <p className="text-sm text-muted-foreground">Chưa có budget. Tạo budget đầu tiên ở cột phải.</p>
         )}
         <ul className="space-y-2">
           {rows.map((b) => {
@@ -71,26 +71,26 @@ export function BudgetsManager({ rows, isLoading }: Props) {
             return (
               <li
                 key={b.id ?? `${b.user_id ?? 'global'}-${b.period}`}
-                className="rounded-md border border-gold/15 bg-ink/40 px-3 py-3 text-sm"
+                className="rounded-md border border-gold/15 bg-card/60 px-3 py-3 text-sm"
               >
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="font-mono text-xs text-gold">
                       {b.user_id ? `user:${b.user_id.slice(0, 12)}` : b.team_id ? `team:${b.team_id}` : 'global'}
                     </span>
-                    <span className="ml-2 rounded bg-cream/5 px-1.5 py-0.5 font-mono text-[10px] uppercase text-cream/65">
+                    <span className="ml-2 rounded bg-muted/30 px-1.5 py-0.5 font-mono text-[10px] uppercase text-muted-foreground">
                       {b.period}
                     </span>
                   </div>
-                  <span className="font-mono text-cream">
+                  <span className="font-mono text-foreground">
                     {fmtUsd(b.current_usage_usd)} / {fmtUsd(b.limit_usd)}
                   </span>
                 </div>
-                <div className="mt-2 h-1.5 w-full overflow-hidden rounded bg-cream/5">
+                <div className="mt-2 h-1.5 w-full overflow-hidden rounded bg-muted/30">
                   <div className={`h-full ${tone}`} style={{ width: `${p}%` }} />
                 </div>
                 {b.soft_limit_usd != null && (
-                  <div className="mt-1 text-[11px] text-cream/55">soft limit: {fmtUsd(b.soft_limit_usd)}</div>
+                  <div className="mt-1 text-[11px] text-muted-foreground">soft limit: {fmtUsd(b.soft_limit_usd)}</div>
                 )}
               </li>
             );
@@ -131,7 +131,7 @@ export function BudgetsManager({ rows, isLoading }: Props) {
                 onChange={(e) =>
                   setForm((f) => ({ ...f, period: e.target.value as BudgetUpsert['period'] }))
                 }
-                className="w-full rounded border border-gold/20 bg-ink/60 px-3 py-2 text-sm text-cream"
+                className="w-full rounded border border-gold/20 bg-card/60 px-3 py-2 text-sm text-foreground"
               >
                 <option value="daily">daily</option>
                 <option value="weekly">weekly</option>

@@ -50,13 +50,13 @@ function StatusItem({ row }: { row: StatusRow }) {
           ) : (
             <AlertTriangle className="h-4 w-4 text-amber-400" aria-hidden />
           )}
-          <span className="text-sm font-medium text-cream">{row.label}</span>
+          <span className="text-sm font-medium text-foreground">{row.label}</span>
         </div>
         {row.hint && (
-          <p className="ml-6 mt-1 text-xs text-cream/55">{row.hint}</p>
+          <p className="ml-6 mt-1 text-xs text-muted-foreground">{row.hint}</p>
         )}
       </div>
-      <code className="shrink-0 truncate font-mono text-xs text-cream/70">
+      <code className="shrink-0 truncate font-mono text-xs text-muted-foreground">
         {row.value}
       </code>
     </div>
@@ -170,7 +170,7 @@ export default function AdminPostHogPage() {
               </a>
             </>
           ) : (
-            <p className="text-sm text-cream/60">
+            <p className="text-sm text-muted-foreground">
               Set <code className="text-gold">NEXT_PUBLIC_POSTHOG_DASHBOARD_URL</code>
               {' '}để hiển thị deep-link (ví dụ
               {' '}
@@ -189,7 +189,7 @@ export default function AdminPostHogPage() {
           <CardDescription>Cấu hình tối thiểu để bật toàn bộ feature.</CardDescription>
         </CardHeader>
         <CardContent>
-          <ol className="ml-5 list-decimal space-y-2 text-sm text-cream/75">
+          <ol className="ml-5 list-decimal space-y-2 text-sm text-foreground/85">
             <li>
               Tạo project tại{' '}
               <a

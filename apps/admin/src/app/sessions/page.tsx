@@ -227,7 +227,7 @@ export default function AdminSessionsPage() {
                       'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
                       active
                         ? 'border-gold/60 bg-gold/15 text-gold'
-                        : 'border-cream/15 bg-ink/40 text-cream/70 hover:border-gold/30 hover:text-cream',
+                        : 'border-border bg-card/60 text-muted-foreground hover:border-gold/30 hover:text-foreground',
                     )}
                   >
                     {f.label}
@@ -239,7 +239,7 @@ export default function AdminSessionsPage() {
         </CardHeader>
         <CardContent>
           {/* Selectable table (custom, since DataTable doesn't support row selection). */}
-          <div className="rounded-lg border border-gold/15 bg-ink/40 backdrop-blur-sm">
+          <div className="rounded-lg border border-gold/15 bg-card/60 backdrop-blur-sm">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
@@ -279,7 +279,7 @@ export default function AdminSessionsPage() {
                     <tr>
                       <td colSpan={9} className="px-4 py-2">
                         {isLoading ? (
-                          <div className="py-10 text-center text-cream/50">Đang tải…</div>
+                          <div className="py-10 text-center text-muted-foreground">Đang tải…</div>
                         ) : (
                           <EmptyState
                             title={search || status ? 'Không có phiên khớp bộ lọc' : 'Chưa có phiên phân tích nào'}
@@ -319,9 +319,9 @@ export default function AdminSessionsPage() {
                               {s.session_id}
                             </Link>
                           </td>
-                          <td className="px-4 py-3 text-cream">{s.user_email}</td>
+                          <td className="px-4 py-3 text-foreground">{s.user_email}</td>
                           <td className="px-4 py-3">
-                            <span className="line-clamp-1 text-cream/85">{s.primary_concern}</span>
+                            <span className="line-clamp-1 text-foreground/85">{s.primary_concern}</span>
                           </td>
                           <td className="px-4 py-3">
                             <StatusBadge
@@ -329,11 +329,11 @@ export default function AdminSessionsPage() {
                               label={STATUS_LABEL[s.status]}
                             />
                           </td>
-                          <td className="px-4 py-3 text-cream/90">{fmtDateTime(s.created_at)}</td>
-                          <td className="px-4 py-3 text-right text-cream/90">
+                          <td className="px-4 py-3 text-foreground/90">{fmtDateTime(s.created_at)}</td>
+                          <td className="px-4 py-3 text-right text-foreground/90">
                             {fmtDuration(s.duration_seconds)}
                           </td>
-                          <td className="px-4 py-3 text-right text-cream/90">
+                          <td className="px-4 py-3 text-right text-foreground/90">
                             ${s.cost_usd.toFixed(3)}
                           </td>
                           <td className="px-2 py-3">
@@ -352,10 +352,10 @@ export default function AdminSessionsPage() {
               </table>
             </div>
 
-            <div className="flex items-center justify-between border-t border-gold/15 px-4 py-3 text-xs text-cream/70">
+            <div className="flex items-center justify-between border-t border-gold/15 px-4 py-3 text-xs text-muted-foreground">
               <span>
                 Trang <span className="text-gold">{page}</span> / {totalPages} ·{' '}
-                <span className="text-cream/50">{total} bản ghi</span>
+                <span className="text-muted-foreground">{total} bản ghi</span>
               </span>
               <div className="flex gap-1">
                 <button
@@ -383,7 +383,7 @@ export default function AdminSessionsPage() {
       {/* Floating action bar */}
       {selected.size > 0 && (
         <div className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2 lg:left-[calc(50%+8rem)]">
-          <div className="flex items-center gap-2 rounded-full border border-gold/40 bg-ink/95 px-3 py-2 shadow-2xl backdrop-blur">
+          <div className="flex items-center gap-2 rounded-full border border-gold/40 bg-card/95 px-3 py-2 shadow-2xl backdrop-blur">
             <span className="px-2 font-mono text-xs text-gold">{selected.size} đã chọn</span>
             <Button
               size="sm"
@@ -396,7 +396,7 @@ export default function AdminSessionsPage() {
             <Button
               size="sm"
               onClick={() => setConfirmBulkOpen(true)}
-              className="bg-red-500/90 text-cream hover:bg-red-500"
+              className="bg-red-500/90 text-foreground hover:bg-red-500"
             >
               <Trash2 className="mr-1.5 h-3.5 w-3.5" />
               Xóa {selected.size} phiên
@@ -437,7 +437,7 @@ export default function AdminSessionsPage() {
             <Button
               onClick={() => bulkDeleteMut.mutate(Array.from(selected))}
               disabled={bulkConfirmText !== CONFIRM_PHRASE || bulkDeleteMut.isPending}
-              className="bg-red-500/90 text-cream hover:bg-red-500"
+              className="bg-red-500/90 text-foreground hover:bg-red-500"
             >
               {bulkDeleteMut.isPending ? 'Đang xóa…' : 'Xóa'}
             </Button>
@@ -466,7 +466,7 @@ export default function AdminSessionsPage() {
                   setConfirmSingleId(null);
                 }
               }}
-              className="bg-red-500/90 text-cream hover:bg-red-500"
+              className="bg-red-500/90 text-foreground hover:bg-red-500"
             >
               Xóa
             </Button>
@@ -495,7 +495,7 @@ function RowMenu({
         <button
           type="button"
           aria-label="Thao tác"
-          className="inline-flex h-7 w-7 items-center justify-center rounded-md text-cream/60 hover:bg-gold/10 hover:text-gold"
+          className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-gold/10 hover:text-gold"
         >
           <MoreVertical className="h-4 w-4" />
         </button>
@@ -504,7 +504,7 @@ function RowMenu({
         <Link
           href={`/sessions/${sessionId}`}
           onClick={() => setOpen(false)}
-          className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-sm text-cream hover:bg-gold/10"
+          className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-sm text-foreground hover:bg-gold/10"
         >
           <Eye className="h-3.5 w-3.5" />
           Xem chi tiết
@@ -516,7 +516,7 @@ function RowMenu({
             onReOrchestrate();
           }}
           disabled={reOrchPending}
-          className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm text-cream hover:bg-gold/10 disabled:opacity-50"
+          className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm text-foreground hover:bg-gold/10 disabled:opacity-50"
         >
           <RotateCcw className="h-3.5 w-3.5" />
           Re-run pipeline

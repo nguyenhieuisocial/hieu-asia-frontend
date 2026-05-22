@@ -19,17 +19,17 @@ export default function AdminError({
   }, [error]);
 
   return (
-    <div className="flex min-h-[60vh] items-center justify-center px-6 py-16 text-cream">
+    <div className="flex min-h-[60vh] items-center justify-center px-6 py-16 text-foreground">
       <div className="mx-auto max-w-lg text-center">
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-red-400">500</p>
-        <h1 className="mt-3 font-heading text-2xl font-semibold text-cream sm:text-3xl">
+        <h1 className="mt-3 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
           Lỗi vận hành panel
         </h1>
-        <p className="mt-3 text-sm text-cream/70">
+        <p className="mt-3 text-sm text-muted-foreground">
           Một query hoặc component admin gặp lỗi. Thử lại — nếu vẫn lỗi, kiểm tra console hoặc Sentry.
         </p>
         {error.digest && (
-          <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-cream/40">
+          <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
             digest: {error.digest}
           </p>
         )}

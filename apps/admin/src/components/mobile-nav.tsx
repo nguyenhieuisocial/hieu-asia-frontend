@@ -38,7 +38,7 @@ export function MobileNav() {
 
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-30 border-t border-gold/15 bg-ink/95 backdrop-blur-md lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-30 border-t border-gold/15 bg-card/95 backdrop-blur-md lg:hidden pb-[max(env(safe-area-inset-bottom),0.5rem)]"
       aria-label="Điều hướng chính (mobile)"
     >
       <ul className="grid grid-cols-5">
@@ -50,7 +50,7 @@ export function MobileNav() {
                 href={href}
                 className={cn(
                   'flex flex-col items-center gap-0.5 px-2 py-2.5 text-[10px] transition-colors',
-                  active ? 'text-gold' : 'text-cream/60 hover:text-cream',
+                  active ? 'text-gold' : 'text-muted-foreground hover:text-foreground',
                 )}
               >
                 <Icon className="h-5 w-5" aria-hidden />
