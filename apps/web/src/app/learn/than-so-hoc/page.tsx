@@ -36,28 +36,28 @@ const NUMBERS: readonly NumberCard[] = [
 export default function LearnThanSoHocPage() {
   return (
     <main className="mx-auto max-w-4xl px-6 py-12 sm:py-16">
-      <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+      <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
         <Link href="/" className="hover:text-gold">Trang chủ</Link>
         <span className="mx-1.5">/</span>
         <Link href="/learn" className="hover:text-gold">Học huyền học</Link>
         <span className="mx-1.5">/</span>
-        <span className="text-cream/70">Thần Số Học</span>
+        <span className="text-muted-foreground">Thần Số Học</span>
       </nav>
 
       <header className="mb-10 text-center">
         <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
           Tây phương · Pythagoras
         </p>
-        <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-4xl">
+        <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
           Thần <span className="bg-gold-gradient bg-clip-text text-transparent">Số Học</span>
         </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-cream/75">
+        <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
           Pythagoras tin rằng mọi thứ đều có thể quy về số. Thần Số Học hiện đại rút số chủ
           đạo từ ngày sinh và tên — mỗi số từ 1 đến 9 mang một nguồn năng lượng riêng.
         </p>
       </header>
 
-      <section className="rounded-xl border border-cream/10 bg-ink/40 p-6 sm:p-8">
+      <section className="rounded-xl border border-border bg-card/40 p-6 sm:p-8">
         <h2 className="mb-4 text-center font-heading text-lg font-semibold text-gold">
           9 số chủ đạo
         </h2>
@@ -65,25 +65,25 @@ export default function LearnThanSoHocPage() {
           {NUMBERS.map((n) => (
             <div
               key={n.num}
-              className="rounded-lg border border-cream/15 bg-ink/40 p-4 transition-colors hover:border-gold/40"
+              className="rounded-lg border border-border bg-card/40 p-4 transition-colors hover:border-gold/40"
             >
               <div className="flex items-baseline gap-3">
                 <span className="font-heading text-3xl font-bold text-gold">{n.num}</span>
-                <span className="text-sm font-semibold text-cream">{n.name}</span>
+                <span className="text-sm font-semibold text-foreground">{n.name}</span>
               </div>
-              <p className="mt-1 text-xs text-cream/60">{n.keywords}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{n.keywords}</p>
             </div>
           ))}
         </div>
-        <p className="mt-4 text-center text-xs text-cream/70">
+        <p className="mt-4 text-center text-xs text-muted-foreground">
           Ngoài 1–9 còn có 3 số “bậc thầy”: 11, 22, 33 — không rút gọn về 1 chữ số.
         </p>
       </section>
 
       <section className="mt-10">
-        <h2 className="mb-4 font-heading text-xl font-bold text-cream">Giải thích chi tiết</h2>
+        <h2 className="mb-4 font-heading text-xl font-bold text-foreground">Giải thích chi tiết</h2>
         <Accordion type="single" collapsible className="space-y-2">
-          <AccordionItem value="origin" className="rounded border border-cream/10 px-4">
+          <AccordionItem value="origin" className="rounded border border-border px-4">
             <AccordionTrigger>Pythagoras là ai?</AccordionTrigger>
             <AccordionContent>
               Pythagoras (~570 TCN) là nhà toán học, triết gia Hy Lạp — người đặt nền móng cho
@@ -91,14 +91,14 @@ export default function LearnThanSoHocPage() {
               riêng phản ánh quy luật vũ trụ.
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="calc" className="rounded border border-cream/10 px-4">
+          <AccordionItem value="calc" className="rounded border border-border px-4">
             <AccordionTrigger>Cách tính số chủ đạo?</AccordionTrigger>
             <AccordionContent>
               Cộng tất cả chữ số trong ngày sinh đầy đủ. Ví dụ 15/08/1990 = 1+5+0+8+1+9+9+0 =
               33 → 3+3 = 6. Vậy số chủ đạo là 6 (riêng 11, 22, 33 giữ nguyên — gọi là số bậc thầy).
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="name" className="rounded border border-cream/10 px-4">
+          <AccordionItem value="name" className="rounded border border-border px-4">
             <AccordionTrigger>Số từ tên thì sao?</AccordionTrigger>
             <AccordionContent>
               Mỗi chữ cái được gán một số 1–9 theo bảng Pythagoras. Cộng các số ứng với tên
@@ -106,7 +106,7 @@ export default function LearnThanSoHocPage() {
               urge number).
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="usage" className="rounded border border-cream/10 px-4">
+          <AccordionItem value="usage" className="rounded border border-border px-4">
             <AccordionTrigger>Dùng để làm gì?</AccordionTrigger>
             <AccordionContent>
               Soi tính cách bẩm sinh, sứ mệnh đời, vùng dễ vấp. Là công cụ tự nhận thức nhanh
@@ -118,15 +118,15 @@ export default function LearnThanSoHocPage() {
 
       <section
         aria-labelledby="numerology-cta-heading"
-        className="mt-12 rounded-2xl border border-gold/25 bg-ink/40 p-8 text-center"
+        className="mt-12 rounded-2xl border border-gold/25 bg-card/40 p-8 text-center"
       >
         <h2
           id="numerology-cta-heading"
-          className="font-heading text-2xl font-bold text-cream"
+          className="font-heading text-2xl font-bold text-foreground"
         >
           Trải nghiệm ngay
         </h2>
-        <p className="mx-auto mt-3 max-w-xl text-sm text-cream/70">
+        <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">
           Chỉ cần ngày sinh và tên đầy đủ, hệ thống tính ra số chủ đạo, số biểu hiện và số linh
           hồn — kèm diễn giải năng lượng từng số.
         </p>

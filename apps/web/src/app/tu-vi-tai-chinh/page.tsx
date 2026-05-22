@@ -59,7 +59,7 @@ const BREADCRUMB_JSONLD = {
 
 export default function TuViTaiChinhPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -76,10 +76,10 @@ export default function TuViTaiChinhPage() {
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Tử Vi · Tài chính & dòng tiền cá nhân
           </p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
             Tử Vi tài chính — bạn quản lý tiền kiểu nào?
           </h1>
-          <p className="mt-5 text-base leading-relaxed text-cream/80 sm:text-lg">
+          <p className="mt-5 text-base leading-relaxed text-foreground/80 sm:text-lg">
             Cung Tài Bạch phản ánh CÁCH BẠN KIẾM và QUẢN LÝ tiền — không phải con số tài
             sản. Hiểu khuynh hướng giúp bạn chọn chiến lược tài chính hợp tính cách
             mình, thay vì copy strategy người khác.
@@ -107,21 +107,21 @@ export default function TuViTaiChinhPage() {
         </section>
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12">
-          <h2 className="mb-5 font-heading text-2xl font-semibold text-cream sm:text-3xl">
+          <h2 className="mb-5 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             4 khuôn mẫu tài chính thường gặp
           </h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {PATTERNS.map((p) => {
               const Icon = p.icon;
               return (
-                <Card key={p.title} className="border-cream/10 bg-ink/40">
+                <Card key={p.title} className="border-border bg-card/40">
                   <CardHeader className="pb-2">
-                    <CardTitle className="flex items-start gap-2 font-heading text-base text-cream">
+                    <CardTitle className="flex items-start gap-2 font-heading text-base text-foreground">
                       <Icon className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden />
                       {p.title}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="text-sm leading-relaxed text-cream/75">
+                  <CardContent className="text-sm leading-relaxed text-muted-foreground">
                     {p.body}
                   </CardContent>
                 </Card>
@@ -131,14 +131,14 @@ export default function TuViTaiChinhPage() {
         </section>
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12">
-          <Card className="border-cream/10 bg-ink/40">
+          <Card className="border-border bg-card/40">
             <CardHeader>
-              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
                 Lằn ranh hieu.asia không vượt qua
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2 text-sm leading-relaxed text-cream/80 sm:text-base">
+              <ul className="space-y-2 text-sm leading-relaxed text-foreground/80 sm:text-base">
                 {REMINDERS.map((r, i) => (
                   <li key={i} className="flex gap-2">
                     <span className="text-amber-300">→</span>
@@ -152,10 +152,10 @@ export default function TuViTaiChinhPage() {
 
         <section className="relative mx-auto max-w-3xl px-6 pb-20">
           <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent p-6 sm:p-8">
-            <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+            <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
               Xem cung Tài Bạch + Điền Trạch của bạn
             </h2>
-            <p className="mt-3 text-sm leading-relaxed text-cream/80 sm:text-base">
+            <p className="mt-3 text-sm leading-relaxed text-foreground/80 sm:text-base">
               Lập lá số 2 phút. Mentor sẽ giúp bạn dịch Tài Bạch + Điền Trạch + đại vận
               thành thói quen tài chính nên có (và nên tránh) trong 90 ngày tới.
             </p>
@@ -165,7 +165,7 @@ export default function TuViTaiChinhPage() {
               </Link>
               <Link
                 href="/tu-vi-2026"
-                className="inline-flex items-center text-sm text-cream/70 hover:text-gold"
+                className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"
               >
                 Tử vi 2026 <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
               </Link>

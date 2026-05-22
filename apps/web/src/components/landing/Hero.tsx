@@ -13,7 +13,7 @@ const ROTATING_WORDS = ['Tử Vi', 'MBTI', 'Palm Reading', 'AI Mentor'];
 
 export function Hero() {
   return (
-    <section className="relative isolate min-h-screen overflow-hidden bg-ink">
+    <section className="relative isolate min-h-screen overflow-hidden bg-background">
       {/* Layered backdrop */}
       <div
         aria-hidden="true"
@@ -31,7 +31,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="inline-flex items-center gap-2 rounded-full border border-gold/25 bg-ink/60 px-4 py-1.5 backdrop-blur-sm"
+          className="inline-flex items-center gap-2 rounded-full border border-gold/25 bg-card/60 px-4 py-1.5 backdrop-blur-sm"
         >
           <SparklesIcon className="h-3.5 w-3.5 text-gold" aria-hidden="true" />
           <span className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/90 sm:text-xs">
@@ -43,7 +43,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-8 max-w-4xl font-heading text-5xl font-bold leading-[1.05] tracking-tight text-cream sm:text-6xl lg:text-7xl"
+          className="mt-8 max-w-4xl font-heading text-5xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-6xl lg:text-7xl"
         >
           Hiểu chính mình.
           <br />
@@ -54,7 +54,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-heading text-2xl font-medium text-cream/90 sm:text-3xl"
+          className="mt-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-heading text-2xl font-medium text-foreground/90 sm:text-3xl"
         >
           <TextRotate words={ROTATING_WORDS} />
         </motion.div>
@@ -63,7 +63,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-6 max-w-2xl text-base leading-relaxed text-cream/75 sm:text-lg"
+          className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg"
         >
           Người bạn đồng hành huyền học hiện đại — phân tích sâu, đồng cảm,
           không định mệnh hóa.
@@ -95,7 +95,7 @@ export function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.45 }}
-          className="mt-12 grid w-full max-w-2xl grid-cols-1 gap-y-3 divide-cream/10 sm:grid-cols-3 sm:divide-x"
+          className="mt-12 grid w-full max-w-2xl grid-cols-1 gap-y-3 divide-border sm:grid-cols-3 sm:divide-x"
         >
           <Stat value="10,000+" label="phân tích đã tạo" />
           <Stat value="95%" label="người dùng quay lại" />
@@ -106,7 +106,7 @@ export function Hero() {
       {/* Bottom fade into next section */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-ink"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-background"
       />
     </section>
   );
@@ -116,7 +116,7 @@ function Stat({ value, label }: { value: string; label: string }) {
   return (
     <div className="flex flex-col items-center px-4 sm:px-2">
       <span className="font-mono text-xl font-semibold text-gold sm:text-2xl">{value}</span>
-      <span className="mt-1 text-xs text-cream/55 sm:text-sm">{label}</span>
+      <span className="mt-1 text-xs text-muted-foreground sm:text-sm">{label}</span>
     </div>
   );
 }

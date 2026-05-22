@@ -143,10 +143,10 @@ function ReportContent() {
       <main className="container mx-auto max-w-2xl px-4 py-16 text-center">
         <Card>
           <CardContent className="space-y-4 p-8">
-            <p className="font-heading text-lg text-cream">
+            <p className="font-heading text-lg text-foreground">
               Chưa có báo cáo để hiển thị
             </p>
-            <p className="text-sm text-cream/70">{errMessage}</p>
+            <p className="text-sm text-muted-foreground">{errMessage}</p>
             <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
               <Button onClick={() => query.refetch()}>Thử lại</Button>
               <Button
@@ -169,7 +169,7 @@ function ReportContent() {
       <header className="mb-6 flex items-center justify-between">
         <Link
           href="/dashboard"
-          className="text-sm text-cream/60 hover:text-gold"
+          className="text-sm text-muted-foreground hover:text-gold"
         >
           ← Bảng điều khiển
         </Link>
@@ -213,7 +213,7 @@ function ReportSections({ sections }: { sections: MarkdownSection[] }) {
 
   if (!sections.length) {
     return (
-      <p className="text-center text-sm text-cream/60">
+      <p className="text-center text-sm text-muted-foreground">
         Báo cáo trống — vui lòng thử tạo lại.
       </p>
     );
@@ -236,7 +236,7 @@ function ReportSections({ sections }: { sections: MarkdownSection[] }) {
               'rounded-md px-3 py-2 text-sm font-medium transition-colors',
               active === s.title
                 ? 'bg-gold/15 text-gold'
-                : 'text-cream/70 hover:bg-gold/5 hover:text-cream',
+                : 'text-muted-foreground hover:bg-gold/5 hover:text-foreground',
             )}
           >
             {s.title}
@@ -250,7 +250,7 @@ function ReportSections({ sections }: { sections: MarkdownSection[] }) {
           return (
             <div
               key={s.title}
-              className="rounded-md border border-gold/15 bg-ink/40"
+              className="rounded-md border border-gold/15 bg-card/40"
             >
               <button
                 type="button"
@@ -261,7 +261,7 @@ function ReportSections({ sections }: { sections: MarkdownSection[] }) {
                 <span
                   className={cn(
                     'text-sm font-medium',
-                    open ? 'text-gold' : 'text-cream/80',
+                    open ? 'text-gold' : 'text-foreground/80',
                   )}
                 >
                   {s.title}
@@ -304,7 +304,7 @@ function ActiveDesktopSection({ section }: { section: MarkdownSection | undefine
 
 function SectionBody({ content }: { content: string }) {
   return (
-    <article className="markdown-report space-y-3 text-sm leading-relaxed text-cream/90">
+    <article className="markdown-report space-y-3 text-sm leading-relaxed text-foreground/90">
       <ReactMarkdown
         components={{
           h1: ({ ...props }) => (
@@ -315,13 +315,13 @@ function SectionBody({ content }: { content: string }) {
           ),
           h2: ({ ...props }) => (
             <h3
-              className="mt-3 font-heading text-lg text-cream"
+              className="mt-3 font-heading text-lg text-foreground"
               {...props}
             />
           ),
           h3: ({ ...props }) => (
             <h4
-              className="mt-3 font-heading text-base text-cream"
+              className="mt-3 font-heading text-base text-foreground"
               {...props}
             />
           ),

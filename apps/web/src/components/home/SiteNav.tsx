@@ -74,7 +74,7 @@ export function SiteNav() {
   const isAuthed = !!user && !loading;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-cream/5 bg-ink/70 backdrop-blur-md">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-card/70 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         <Link href="/" className="font-heading text-lg font-bold text-gold sm:text-xl">
           hieu.asia
@@ -88,7 +88,7 @@ export function SiteNav() {
             <Link
               key={l.href}
               href={l.href}
-              className="text-sm text-cream/75 transition-colors hover:text-gold"
+              className="text-sm text-muted-foreground transition-colors hover:text-gold"
             >
               {l.label}
             </Link>
@@ -107,7 +107,7 @@ export function SiteNav() {
               {!loading && (
                 <Link
                   href="/signin"
-                  className="hidden text-sm text-cream/75 transition-colors hover:text-gold sm:inline-flex sm:px-2"
+                  className="hidden text-sm text-muted-foreground transition-colors hover:text-gold sm:inline-flex sm:px-2"
                 >
                   Đăng nhập
                 </Link>
@@ -148,7 +148,7 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
     <div className="group relative hidden sm:block">
       <button
         type="button"
-        className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-cream/85 transition-colors hover:bg-gold/10 hover:text-gold"
+        className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
         aria-haspopup="true"
       >
         <UserCircle2 className="h-4 w-4" aria-hidden="true" />
@@ -156,36 +156,36 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
         <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" aria-hidden="true" />
       </button>
       <div
-        className="invisible absolute right-0 top-full z-50 mt-1 w-56 rounded-xl border border-cream/10 bg-ink/95 p-1.5 opacity-0 shadow-2xl backdrop-blur-md transition-all group-hover:visible group-hover:opacity-100"
+        className="invisible absolute right-0 top-full z-50 mt-1 w-56 rounded-xl border border-border bg-card/95 p-1.5 opacity-0 shadow-2xl backdrop-blur-md transition-all group-hover:visible group-hover:opacity-100"
         role="menu"
       >
         <Link
           href="/dashboard"
-          className="block rounded-md px-3 py-2 text-sm text-cream/85 transition-colors hover:bg-gold/10 hover:text-gold"
+          className="block rounded-md px-3 py-2 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
           role="menuitem"
         >
           Dashboard
         </Link>
         <Link
           href="/account"
-          className="block rounded-md px-3 py-2 text-sm text-cream/85 transition-colors hover:bg-gold/10 hover:text-gold"
+          className="block rounded-md px-3 py-2 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
           role="menuitem"
         >
           Tài khoản
         </Link>
         <Link
           href="/reading"
-          className="block rounded-md px-3 py-2 text-sm text-cream/85 transition-colors hover:bg-gold/10 hover:text-gold"
+          className="block rounded-md px-3 py-2 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
           role="menuitem"
         >
           Lá số của bạn
         </Link>
-        <div className="my-1 h-px bg-cream/5" />
+        <div className="my-1 h-px bg-muted/5" />
         <button
           type="button"
           onClick={onSignOut}
           disabled={pending}
-          className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-cream/85 transition-colors hover:bg-rose-500/10 hover:text-rose-300 disabled:opacity-50"
+          className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-foreground/85 transition-colors hover:bg-rose-500/10 hover:text-rose-300 disabled:opacity-50"
           role="menuitem"
         >
           <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
@@ -201,21 +201,21 @@ function ToolsDropdown() {
     <div className="group relative">
       <button
         type="button"
-        className="inline-flex items-center gap-1 text-sm text-cream/75 transition-colors hover:text-gold"
+        className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-gold"
         aria-haspopup="true"
       >
         Công cụ
         <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" aria-hidden="true" />
       </button>
       <div
-        className="invisible absolute left-1/2 top-full z-50 mt-1 w-64 -translate-x-1/2 rounded-xl border border-cream/10 bg-ink/95 p-2 opacity-0 shadow-2xl backdrop-blur-md transition-all group-hover:visible group-hover:opacity-100"
+        className="invisible absolute left-1/2 top-full z-50 mt-1 w-64 -translate-x-1/2 rounded-xl border border-border bg-card/95 p-2 opacity-0 shadow-2xl backdrop-blur-md transition-all group-hover:visible group-hover:opacity-100"
         role="menu"
       >
         {TOOLS_LINKS.map((l) => (
           <Link
             key={l.href}
             href={l.href}
-            className="block rounded-md px-3 py-2 text-sm text-cream/80 transition-colors hover:bg-gold/10 hover:text-gold"
+            className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-gold/10 hover:text-gold"
             role="menuitem"
           >
             {l.label}
@@ -231,27 +231,27 @@ function LearnDropdown() {
     <div className="group relative">
       <button
         type="button"
-        className="inline-flex items-center gap-1 text-sm text-cream/75 transition-colors hover:text-gold"
+        className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-gold"
         aria-haspopup="true"
       >
         Học
         <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" aria-hidden="true" />
       </button>
       <div
-        className="invisible absolute left-1/2 top-full z-50 mt-1 w-60 -translate-x-1/2 rounded-xl border border-cream/10 bg-ink/95 p-2 opacity-0 shadow-2xl backdrop-blur-md transition-all group-hover:visible group-hover:opacity-100"
+        className="invisible absolute left-1/2 top-full z-50 mt-1 w-60 -translate-x-1/2 rounded-xl border border-border bg-card/95 p-2 opacity-0 shadow-2xl backdrop-blur-md transition-all group-hover:visible group-hover:opacity-100"
         role="menu"
       >
         {LEARN_LINKS.map((l) => (
           <Link
             key={l.href}
             href={l.href}
-            className="block rounded-md px-3 py-2 text-sm text-cream/80 transition-colors hover:bg-gold/10 hover:text-gold"
+            className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-gold/10 hover:text-gold"
             role="menuitem"
           >
             {l.label}
           </Link>
         ))}
-        <div className="my-1 h-px bg-cream/5" />
+        <div className="my-1 h-px bg-muted/5" />
         <Link
           href="/learn"
           className="block rounded-md px-3 py-2 text-sm font-medium text-gold transition-colors hover:bg-gold/10"
@@ -290,12 +290,12 @@ function MobileDrawer({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger
-        className="inline-flex h-11 w-11 items-center justify-center rounded-md text-cream/85 transition-colors hover:bg-gold/10 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold md:hidden"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-md text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold md:hidden"
         aria-label="Mở menu"
       >
         <Menu className="h-5 w-5" />
       </SheetTrigger>
-      <SheetContent side="right" className="w-72 border-cream/10 bg-ink text-cream">
+      <SheetContent side="right" className="w-72 border-border bg-background text-foreground">
         <SheetHeader>
           <SheetTitle className="font-heading text-gold">hieu.asia</SheetTitle>
         </SheetHeader>
@@ -308,13 +308,13 @@ function MobileDrawer({
               <p className="font-mono text-[10px] uppercase tracking-widest text-gold/60">
                 Đã đăng nhập
               </p>
-              <p className="mt-0.5 truncate text-xs text-cream/85">{userEmail}</p>
+              <p className="mt-0.5 truncate text-xs text-foreground/85">{userEmail}</p>
             </div>
           )}
           <Link
             href="/"
             onClick={() => setOpen(false)}
-            className="rounded-md px-3 py-2.5 text-sm text-cream/85 transition-colors hover:bg-gold/10 hover:text-gold"
+            className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
           >
             Trang chủ
           </Link>
@@ -323,21 +323,21 @@ function MobileDrawer({
               <Link
                 href="/dashboard"
                 onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm text-cream/85 transition-colors hover:bg-gold/10 hover:text-gold"
+                className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
               >
                 Dashboard
               </Link>
               <Link
                 href="/account"
                 onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm text-cream/85 transition-colors hover:bg-gold/10 hover:text-gold"
+                className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
               >
                 Tài khoản
               </Link>
               <Link
                 href="/reading"
                 onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm text-cream/85 transition-colors hover:bg-gold/10 hover:text-gold"
+                className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
               >
                 Lá số của bạn
               </Link>
@@ -348,12 +348,12 @@ function MobileDrawer({
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="rounded-md px-3 py-2.5 text-sm text-cream/85 transition-colors hover:bg-gold/10 hover:text-gold"
+              className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
             >
               {l.label}
             </Link>
           ))}
-          <div className="my-2 h-px bg-cream/5" />
+          <div className="my-2 h-px bg-muted/5" />
           <p className="px-3 pb-1 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/60">
             Công cụ
           </p>
@@ -362,12 +362,12 @@ function MobileDrawer({
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="rounded-md px-3 py-2 text-sm text-cream/75 transition-colors hover:bg-gold/10 hover:text-gold"
+              className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-gold/10 hover:text-gold"
             >
               {l.label}
             </Link>
           ))}
-          <div className="my-2 h-px bg-cream/5" />
+          <div className="my-2 h-px bg-muted/5" />
           <p className="px-3 pb-1 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/60">
             Học
           </p>
@@ -376,18 +376,18 @@ function MobileDrawer({
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="rounded-md px-3 py-2 text-sm text-cream/75 transition-colors hover:bg-gold/10 hover:text-gold"
+              className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-gold/10 hover:text-gold"
             >
               {l.label}
             </Link>
           ))}
-          <div className="my-2 h-px bg-cream/5" />
+          <div className="my-2 h-px bg-muted/5" />
           {isAuthed ? (
             <button
               type="button"
               onClick={onSignOut}
               disabled={signOutPending}
-              className="flex w-full items-center gap-2 rounded-md px-3 py-2.5 text-left text-sm text-cream/85 transition-colors hover:bg-rose-500/10 hover:text-rose-300 disabled:opacity-50"
+              className="flex w-full items-center gap-2 rounded-md px-3 py-2.5 text-left text-sm text-foreground/85 transition-colors hover:bg-rose-500/10 hover:text-rose-300 disabled:opacity-50"
             >
               <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
               {signOutPending ? 'Đang thoát…' : 'Đăng xuất'}
@@ -396,7 +396,7 @@ function MobileDrawer({
             <Link
               href="/signin"
               onClick={() => setOpen(false)}
-              className="rounded-md px-3 py-2.5 text-sm text-cream/85 transition-colors hover:bg-gold/10 hover:text-gold"
+              className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
             >
               Đăng nhập
             </Link>

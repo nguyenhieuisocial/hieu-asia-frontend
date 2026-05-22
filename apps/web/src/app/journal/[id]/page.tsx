@@ -119,11 +119,11 @@ export default function JournalEntryPage() {
   }
 
   return (
-    <main className="min-h-screen bg-ink text-cream">
+    <main className="min-h-screen bg-background text-foreground">
       <SiteNav />
 
       <section className="mx-auto max-w-3xl px-6 pt-16 pb-20">
-        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">
             Trang chủ
           </Link>
@@ -132,12 +132,12 @@ export default function JournalEntryPage() {
             Decision Journal
           </Link>
           <span className="mx-1.5">/</span>
-          <span className="text-cream/70">Chi tiết</span>
+          <span className="text-muted-foreground">Chi tiết</span>
         </nav>
 
         {!hydrated && (
           <div
-            className="rounded-lg border border-cream/10 bg-ink/40 p-8 text-sm text-cream/55"
+            className="rounded-lg border border-border bg-card/40 p-8 text-sm text-muted-foreground"
             aria-busy="true"
           >
             Đang tải...
@@ -145,16 +145,16 @@ export default function JournalEntryPage() {
         )}
 
         {hydrated && !entry && (
-          <Card className="border-cream/15 bg-ink/60">
+          <Card className="border-border bg-card/60">
             <CardContent className="flex flex-col items-center px-6 py-12 text-center">
               <BookOpen
-                className="mb-4 h-10 w-10 text-cream/40"
+                className="mb-4 h-10 w-10 text-muted-foreground"
                 aria-hidden="true"
               />
               <h1 className="font-heading text-xl font-semibold">
                 Không tìm thấy quyết định này
               </h1>
-              <p className="mt-3 max-w-md text-sm leading-relaxed text-cream/70">
+              <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
                 Không tìm thấy quyết định này trên trình duyệt của bạn. Có thể
                 bạn đã xoá, hoặc đang ở một thiết bị khác — dữ liệu Journal được
                 lưu cục bộ.
@@ -173,7 +173,7 @@ export default function JournalEntryPage() {
                 <span className="rounded-full border border-gold/30 bg-gold/10 px-2.5 py-0.5 text-xs font-medium text-gold">
                   {TOPIC_LABEL[entry.topic]}
                 </span>
-                <span className="text-xs text-cream/55">
+                <span className="text-xs text-muted-foreground">
                   Tạo ngày {formatDate(entry.createdAt)}
                 </span>
                 {reviewedAt && (
@@ -193,21 +193,21 @@ export default function JournalEntryPage() {
 
             <div className="grid gap-6 sm:grid-cols-[1fr_220px] sm:items-start">
               <div className="space-y-6">
-                <Card className="border-gold/15 bg-ink/60">
+                <Card className="border-gold/15 bg-card/60">
                   <CardHeader>
                     <CardTitle className="font-heading text-base">
                       Bạn đã chọn
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-cream/85">
+                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/85">
                       {entry.decision}
                     </p>
                   </CardContent>
                 </Card>
 
                 {entry.reasoning && (
-                  <Card className="border-cream/10 bg-ink/40">
+                  <Card className="border-border bg-card/40">
                     <CardHeader className="flex flex-row items-center justify-between">
                       <CardTitle className="font-heading text-base">
                         Lý do
@@ -215,7 +215,7 @@ export default function JournalEntryPage() {
                       <button
                         type="button"
                         onClick={() => setShowReasoning((v) => !v)}
-                        className="text-xs text-cream/65 hover:text-gold"
+                        className="text-xs text-muted-foreground hover:text-gold"
                         aria-expanded={showReasoning}
                       >
                         {showReasoning ? 'Ẩn' : 'Hiện'}
@@ -223,7 +223,7 @@ export default function JournalEntryPage() {
                     </CardHeader>
                     {showReasoning && (
                       <CardContent>
-                        <p className="whitespace-pre-wrap text-sm leading-relaxed text-cream/80">
+                        <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/80">
                           {entry.reasoning}
                         </p>
                       </CardContent>
@@ -231,14 +231,14 @@ export default function JournalEntryPage() {
                   </Card>
                 )}
 
-                <Card className="border-cream/10 bg-ink/40">
+                <Card className="border-border bg-card/40">
                   <CardHeader>
                     <CardTitle className="font-heading text-base">
                       Kỳ vọng kết quả
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-cream/80">
+                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/80">
                       {entry.expectedOutcome}
                     </p>
                   </CardContent>
@@ -265,7 +265,7 @@ export default function JournalEntryPage() {
                           <h3 className="text-xs font-medium uppercase tracking-wider text-emerald-300/80">
                             Kết quả thực
                           </h3>
-                          <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-cream/85">
+                          <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-foreground/85">
                             {entry.actualOutcome}
                           </p>
                         </div>
@@ -273,19 +273,19 @@ export default function JournalEntryPage() {
                           <h3 className="text-xs font-medium uppercase tracking-wider text-emerald-300/80">
                             Bài học
                           </h3>
-                          <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-cream/85">
+                          <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-foreground/85">
                             {entry.lesson}
                           </p>
                         </div>
-                        <p className="text-xs text-cream/55">
+                        <p className="text-xs text-muted-foreground">
                           Review hoàn thành ngày {formatDate(reviewedAt)}.
                         </p>
                       </CardContent>
                     </Card>
                   ) : (
-                    <Card className="border-gold/20 bg-ink/60">
+                    <Card className="border-gold/20 bg-card/60">
                       <CardContent className="p-5">
-                        <p className="mb-5 text-sm leading-relaxed text-cream/75">
+                        <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
                           Khi đã đủ thời gian, bạn có thể quay lại đây ghi lại
                           kết quả thực và rút ra bài học. Không cần đợi đúng 30
                           ngày — bao giờ bạn sẵn sàng thì review.
@@ -315,7 +315,7 @@ export default function JournalEntryPage() {
                               className="mt-2"
                               required
                             />
-                            <div className="mt-1 flex justify-end text-xs text-cream/70">
+                            <div className="mt-1 flex justify-end text-xs text-muted-foreground">
                               {actualOutcome.trim().length}/500
                             </div>
                           </div>
@@ -337,7 +337,7 @@ export default function JournalEntryPage() {
                               className="mt-2"
                               required
                             />
-                            <div className="mt-1 flex justify-end text-xs text-cream/70">
+                            <div className="mt-1 flex justify-end text-xs text-muted-foreground">
                               {lesson.trim().length}/500
                             </div>
                           </div>
@@ -358,10 +358,10 @@ export default function JournalEntryPage() {
                   )}
                 </section>
 
-                <div className="flex items-center justify-between gap-4 border-t border-cream/10 pt-6">
+                <div className="flex items-center justify-between gap-4 border-t border-border pt-6">
                   <Link
                     href="/journal"
-                    className="text-sm text-cream/65 hover:text-gold"
+                    className="text-sm text-muted-foreground hover:text-gold"
                   >
                     ← Về Decision Journal
                   </Link>
@@ -382,16 +382,16 @@ export default function JournalEntryPage() {
                     <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
                     Review sau
                   </div>
-                  <p className="mt-2 text-sm font-medium text-cream">
+                  <p className="mt-2 text-sm font-medium text-foreground">
                     {addDays(entry.createdAt, 30)}
                   </p>
-                  <p className="mt-1 text-xs text-cream/60">
+                  <p className="mt-1 text-xs text-muted-foreground">
                     Gợi ý 30 ngày — bạn có thể review sớm hơn hoặc muộn hơn.
                   </p>
                 </div>
 
-                <div className="rounded-lg border border-cream/10 bg-ink/40 p-4">
-                  <p className="text-xs text-cream/60">
+                <div className="rounded-lg border border-border bg-card/40 p-4">
+                  <p className="text-xs text-muted-foreground">
                     Bạn cần thêm hỗ trợ?
                   </p>
                   <Link
@@ -403,7 +403,7 @@ export default function JournalEntryPage() {
                   </Link>
                 </div>
 
-                <p className="flex items-start gap-2 text-xs text-cream/55">
+                <p className="flex items-start gap-2 text-xs text-muted-foreground">
                   <Sparkles
                     className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold/70"
                     aria-hidden="true"
@@ -412,9 +412,9 @@ export default function JournalEntryPage() {
                 </p>
 
                 {reviewedAt && (
-                  <p className="flex items-start gap-2 text-xs text-cream/55">
+                  <p className="flex items-start gap-2 text-xs text-muted-foreground">
                     <RotateCcw
-                      className="mt-0.5 h-3.5 w-3.5 shrink-0 text-cream/70"
+                      className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground"
                       aria-hidden="true"
                     />
                     Review đã chốt. Nếu muốn ghi tiếp, hãy tạo một quyết định

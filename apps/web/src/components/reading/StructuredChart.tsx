@@ -40,7 +40,7 @@ export function StructuredChart({ chart, className }: StructuredChartProps) {
     <section
       aria-labelledby="structured-chart-heading"
       className={[
-        'rounded-lg border border-gold/15 bg-ink/40 p-5',
+        'rounded-lg border border-gold/15 bg-card/40 p-5',
         className ?? '',
       ].join(' ')}
     >
@@ -51,13 +51,13 @@ export function StructuredChart({ chart, className }: StructuredChartProps) {
         <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
         Lá số tham chiếu
       </h2>
-      <p className="mt-2 text-xs leading-relaxed text-cream/60">
+      <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
         Các cung và sao đã được dùng để đối chiếu nội dung dưới đây.
       </p>
 
       {chart.palaces.length > 0 && (
         <div className="mt-4">
-          <p className="text-xs font-medium uppercase tracking-wider text-cream/60">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
             12 cung ({chart.palaces.length})
           </p>
           <ul
@@ -67,7 +67,7 @@ export function StructuredChart({ chart, className }: StructuredChartProps) {
             {chart.palaces.map((p) => (
               <li
                 key={p}
-                className="rounded border border-cream/10 bg-ink/60 px-2.5 py-1.5 text-xs text-cream/85"
+                className="rounded border border-border bg-card/60 px-2.5 py-1.5 text-xs text-foreground/85"
               >
                 {p}
               </li>
@@ -78,14 +78,14 @@ export function StructuredChart({ chart, className }: StructuredChartProps) {
 
       {chart.mainStars.length > 0 && (
         <div className="mt-4">
-          <p className="text-xs font-medium uppercase tracking-wider text-cream/60">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Chính tinh ({chart.mainStars.length})
           </p>
           <ul role="list" className="mt-2 flex flex-wrap gap-1.5">
             {chart.mainStars.map((s) => (
               <li
                 key={s}
-                className="inline-flex items-center rounded-full border border-gold/30 bg-gold/5 px-2.5 py-0.5 text-xs text-cream/90"
+                className="inline-flex items-center rounded-full border border-gold/30 bg-gold/5 px-2.5 py-0.5 text-xs text-foreground/90"
               >
                 {s}
               </li>
@@ -96,14 +96,14 @@ export function StructuredChart({ chart, className }: StructuredChartProps) {
 
       {chart.auxStars.length > 0 && (
         <div className="mt-4">
-          <p className="text-xs font-medium uppercase tracking-wider text-cream/60">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Phụ tinh ({chart.auxStars.length})
           </p>
           <ul role="list" className="mt-2 flex flex-wrap gap-1.5">
             {chart.auxStars.map((s) => (
               <li
                 key={s}
-                className="inline-flex items-center rounded-full border border-cream/15 bg-ink/60 px-2.5 py-0.5 text-xs text-cream/75"
+                className="inline-flex items-center rounded-full border border-border bg-card/60 px-2.5 py-0.5 text-xs text-muted-foreground"
               >
                 {s}
               </li>
@@ -114,14 +114,14 @@ export function StructuredChart({ chart, className }: StructuredChartProps) {
 
       {chart.transformations.length > 0 && (
         <div className="mt-4">
-          <p className="text-xs font-medium uppercase tracking-wider text-cream/60">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Tứ hoá ({chart.transformations.length})
           </p>
           <ul role="list" className="mt-2 flex flex-wrap gap-1.5">
             {chart.transformations.map((t) => (
               <li
                 key={t}
-                className="inline-flex items-center rounded-full border border-jade/30 bg-jade/5 px-2.5 py-0.5 text-xs text-cream/85"
+                className="inline-flex items-center rounded-full border border-jade/30 bg-jade/5 px-2.5 py-0.5 text-xs text-foreground/85"
               >
                 {t}
               </li>

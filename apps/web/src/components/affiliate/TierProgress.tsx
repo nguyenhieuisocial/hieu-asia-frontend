@@ -45,14 +45,14 @@ export function TierProgress({ tier, tiers }: Props) {
               {c.name}
             </span>
           </span>
-          <span className="text-xs text-cream/60">
+          <span className="text-xs text-muted-foreground">
             {tier.monthly_conversions} conversions / 30 ngày
           </span>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <div className="mb-1 flex justify-between text-xs text-cream/60">
+          <div className="mb-1 flex justify-between text-xs text-muted-foreground">
             <span>
               Hoa hồng: <b className="text-gold">{pct(c.commission_first)}</b> tháng đầu ·{' '}
               <b className="text-gold">{pct(c.commission_recurring)}</b> recurring
@@ -64,7 +64,7 @@ export function TierProgress({ tier, tiers }: Props) {
               </span>
             )}
           </div>
-          <div className="h-2 overflow-hidden rounded-full bg-cream/10">
+          <div className="h-2 overflow-hidden rounded-full bg-muted/10">
             <div
               className="h-full rounded-full transition-all"
               style={{
@@ -82,7 +82,7 @@ export function TierProgress({ tier, tiers }: Props) {
               <div
                 key={t.name}
                 className={`rounded border p-2 text-xs ${
-                  active ? 'border-gold/50 bg-gold/5' : 'border-cream/10'
+                  active ? 'border-gold/50 bg-gold/5' : 'border-border'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -91,10 +91,10 @@ export function TierProgress({ tier, tiers }: Props) {
                   </span>
                   {active && <span className="text-[10px] text-gold">Hiện tại</span>}
                 </div>
-                <div className="mt-1 text-cream/60">
+                <div className="mt-1 text-muted-foreground">
                   ≥ {t.min_monthly_conversions} conv/tháng
                 </div>
-                <div className="text-cream/70">
+                <div className="text-muted-foreground">
                   {pct(t.commission_first)} / {pct(t.commission_recurring)}
                 </div>
               </div>

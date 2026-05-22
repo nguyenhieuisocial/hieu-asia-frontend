@@ -16,7 +16,7 @@ const PersonalitySurvey = dynamic(
   {
     ssr: false,
     loading: () => (
-      <p className="py-12 text-center text-sm text-cream/60">Đang nạp khảo sát…</p>
+      <p className="py-12 text-center text-sm text-muted-foreground">Đang nạp khảo sát…</p>
     ),
   },
 );
@@ -129,43 +129,43 @@ export default function SurveyPage() {
       <SiteNav />
       <main id="main-content" className="min-h-screen bg-ink-radial pb-24 pt-20">
         <header className="container mx-auto max-w-3xl px-5">
-          <nav aria-label="Breadcrumb" className="mb-3 flex items-center justify-between text-xs text-cream/55">
+          <nav aria-label="Breadcrumb" className="mb-3 flex items-center justify-between text-xs text-muted-foreground">
             <span>
               <Link href="/" className="hover:text-gold">Trang chủ</Link>
               <span className="mx-1.5">/</span>
               <Link href="/reading" className="hover:text-gold">Lá số</Link>
               <span className="mx-1.5">/</span>
-              <span className="text-cream/70">Khảo sát</span>
+              <span className="text-muted-foreground">Khảo sát</span>
             </span>
             <span className="font-mono tracking-[0.24em] text-gold/80">Bước 3 / 4</span>
           </nav>
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Khảo sát tính cách
           </p>
-          <h1 className="mt-3 font-heading text-3xl font-semibold leading-tight text-cream sm:text-4xl">
+          <h1 className="mt-3 font-heading text-3xl font-semibold leading-tight text-foreground sm:text-4xl">
             <span className="bg-gold-gradient bg-clip-text text-transparent">12 câu hỏi</span>{' '}
             ngắn về cách bạn quyết định
           </h1>
-          <p className="mt-3 text-sm leading-relaxed text-cream/75">
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
             Để hệ thống hiểu cách bạn phản ứng, giao tiếp và đưa ra quyết định.
             Mất khoảng 2 phút — không có đáp án đúng/sai.
           </p>
           {uploadObject && (
-            <p className="mt-2 font-mono text-xs text-cream/70">
+            <p className="mt-2 font-mono text-xs text-muted-foreground">
               Ảnh đã tải lên: {uploadObject.split('/').pop()}
             </p>
           )}
         </header>
 
         <section className="container mx-auto mt-8 max-w-3xl px-5">
-          <Card className="border-gold/20 bg-ink/60 backdrop-blur-sm">
+          <Card className="border-gold/20 bg-card/60 backdrop-blur-sm">
             <CardContent className="pt-6">
               <PersonalitySurvey onComplete={handleComplete} />
             </CardContent>
           </Card>
 
           {submitting && (
-            <p className="mt-4 text-center text-sm text-cream/70" role="status">
+            <p className="mt-4 text-center text-sm text-muted-foreground" role="status">
               Đang gửi khảo sát…
             </p>
           )}

@@ -294,9 +294,9 @@ export default function PricingPage() {
   return (
     <>
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-ink text-cream pt-16">
+      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
         {/* Hero */}
-        <section className="relative isolate overflow-hidden bg-ink">
+        <section className="relative isolate overflow-hidden bg-background">
           <div
             aria-hidden="true"
             className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,_rgba(59,39,84,0.4)_0%,_transparent_55%)]"
@@ -305,11 +305,11 @@ export default function PricingPage() {
             <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
               Pricing
             </p>
-            <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-cream sm:text-5xl">
+            <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
               Chọn gói phù hợp{' '}
               <span className="bg-gold-gradient bg-clip-text text-transparent">với bạn</span>
             </h1>
-            <p className="mt-5 text-base leading-relaxed text-cream/75 sm:text-lg">
+            <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
               Khảo sát đầu vào luôn miễn phí. Hoàn tiền 100% trong 24 giờ nếu báo
               cáo chưa được tạo; sau đó vẫn xem xét hoàn tiền 14 ngày khi có lỗi
               kỹ thuật hoặc trải nghiệm không đúng mô tả.
@@ -322,7 +322,7 @@ export default function PricingPage() {
             )}
 
             {/* Period toggle */}
-            <div className="mt-8 inline-flex items-center gap-1 rounded-full border border-cream/10 bg-ink/60 p-1">
+            <div className="mt-8 inline-flex items-center gap-1 rounded-full border border-border bg-card/60 p-1">
               <PeriodButton current={period} value="monthly" onClick={setPeriod}>
                 Hàng tháng
               </PeriodButton>
@@ -338,7 +338,7 @@ export default function PricingPage() {
 
             {/* Launch promo banner — gated by `pricing-launch50-banner` flag */}
             {LAUNCH_PROMO.code && showLaunchBanner && (
-              <div className="mx-auto mt-6 flex max-w-xl items-center justify-center gap-2 rounded-2xl border border-gold/30 bg-gradient-to-r from-gold/[0.08] via-gold/[0.04] to-purple/[0.08] px-4 py-3 text-sm text-cream/90">
+              <div className="mx-auto mt-6 flex max-w-xl items-center justify-center gap-2 rounded-2xl border border-gold/30 bg-gradient-to-r from-gold/[0.08] via-gold/[0.04] to-purple/[0.08] px-4 py-3 text-sm text-foreground/90">
                 <Sparkles className="h-4 w-4 shrink-0 text-gold" aria-hidden="true" />
                 <p>
                   Ưu đãi ra mắt — nhập code{' '}
@@ -353,7 +353,7 @@ export default function PricingPage() {
         </section>
 
         {/* Mobile cards / Desktop table */}
-        <section className="relative bg-ink pb-16 sm:pb-24">
+        <section className="relative bg-background pb-16 sm:pb-24">
           <div className="mx-auto max-w-6xl px-6">
             {/* Mobile: stacked cards */}
             <div className="space-y-6 md:hidden">
@@ -410,7 +410,7 @@ function PeriodButton({
         'inline-flex items-center rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
         active
           ? 'bg-gold text-ink'
-          : 'text-cream/70 hover:text-cream',
+          : 'text-muted-foreground hover:text-foreground',
       ].join(' ')}
       aria-pressed={active}
     >
@@ -437,7 +437,7 @@ function TierCard({
         'relative flex flex-col rounded-2xl border p-6',
         tier.highlighted
           ? 'border-gold/60 bg-gradient-to-b from-gold/[0.06] to-transparent shadow-[0_0_60px_-20px_rgba(184,146,61,0.5)]'
-          : 'border-cream/10 bg-ink/40',
+          : 'border-border bg-card/40',
       ].join(' ')}
     >
       {tier.badge && (
@@ -445,14 +445,14 @@ function TierCard({
           {tier.badge}
         </span>
       )}
-      <h3 className="font-heading text-lg font-semibold text-cream">{tier.name}</h3>
-      <p className="mt-1 text-sm text-cream/65">{tier.description}</p>
+      <h3 className="font-heading text-lg font-semibold text-foreground">{tier.name}</h3>
+      <p className="mt-1 text-sm text-muted-foreground">{tier.description}</p>
       <div className="mt-4 flex items-baseline gap-1.5">
-        <span className="font-heading text-3xl font-bold text-cream">{display}</span>
-        {cadence && <span className="text-sm text-cream/55">{cadence}</span>}
+        <span className="font-heading text-3xl font-bold text-foreground">{display}</span>
+        {cadence && <span className="text-sm text-muted-foreground">{cadence}</span>}
       </div>
       {period === 'annual' && perMonth && (
-        <p className="mt-1 text-xs text-cream/50">{perMonth}</p>
+        <p className="mt-1 text-xs text-muted-foreground">{perMonth}</p>
       )}
       {period === 'annual' && discount && (
         <p className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[11px] font-medium text-emerald-300">
@@ -464,7 +464,7 @@ function TierCard({
           const v = row.values[tier.id];
           if (v === false) return null;
           return (
-            <li key={row.label} className="flex items-start gap-2 text-cream/80">
+            <li key={row.label} className="flex items-start gap-2 text-foreground/85">
               <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden="true" />
               <span>
                 {row.label}
@@ -503,11 +503,11 @@ function ComparisonTable({
   }, []);
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-cream/10">
+    <div className="overflow-hidden rounded-2xl border border-border">
       <table className="w-full border-collapse text-left">
         <thead>
           <tr>
-            <th className="sticky left-0 z-10 w-1/4 bg-ink/80 p-5 text-sm font-medium text-cream/60 backdrop-blur">
+            <th className="sticky left-0 z-10 w-1/4 bg-card/80 p-5 text-sm font-medium text-muted-foreground backdrop-blur">
               Tính năng
             </th>
             {tiers.map((tier) => {
@@ -527,20 +527,20 @@ function ComparisonTable({
                       {tier.badge}
                     </span>
                   )}
-                  <div className="font-heading text-lg font-semibold text-cream">
+                  <div className="font-heading text-lg font-semibold text-foreground">
                     {tier.name}
                   </div>
-                  <p className="mt-1 text-xs text-cream/60">{tier.description}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{tier.description}</p>
                   <div className="mt-3 flex items-baseline gap-1.5">
-                    <span className="font-heading text-2xl font-bold text-cream">
+                    <span className="font-heading text-2xl font-bold text-foreground">
                       {display}
                     </span>
                     {cadence && (
-                      <span className="text-xs text-cream/55">{cadence}</span>
+                      <span className="text-xs text-muted-foreground">{cadence}</span>
                     )}
                   </div>
                   {period === 'annual' && perMonth && (
-                    <p className="mt-1 text-[11px] text-cream/45">{perMonth}</p>
+                    <p className="mt-1 text-[11px] text-muted-foreground">{perMonth}</p>
                   )}
                   {period === 'annual' && discount && (
                     <p className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
@@ -563,17 +563,17 @@ function ComparisonTable({
         <tbody>
           {groups.map(([groupName, rows]) => (
             <React.Fragment key={groupName}>
-              <tr className="border-t border-cream/5">
+              <tr className="border-t border-border">
                 <td
                   colSpan={tiers.length + 1}
-                  className="bg-ink/60 px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/70"
+                  className="bg-card/60 px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/70"
                 >
                   {groupName}
                 </td>
               </tr>
               {rows.map((row) => (
-                <tr key={row.label} className="border-t border-cream/5">
-                  <td className="sticky left-0 bg-ink/80 p-4 text-sm text-cream/80 backdrop-blur">
+                <tr key={row.label} className="border-t border-border">
+                  <td className="sticky left-0 bg-card/80 p-4 text-sm text-foreground/85 backdrop-blur">
                     {row.label}
                   </td>
                   {tiers.map((tier) => {
@@ -590,10 +590,10 @@ function ComparisonTable({
                           <Check className="h-4 w-4 text-gold" aria-label="Có" />
                         )}
                         {v === false && (
-                          <X className="h-4 w-4 text-cream/25" aria-label="Không" />
+                          <X className="h-4 w-4 text-foreground/25" aria-label="Không" />
                         )}
                         {typeof v === 'string' && (
-                          <span className="text-cream/85">{v}</span>
+                          <span className="text-foreground/85">{v}</span>
                         )}
                       </td>
                     );

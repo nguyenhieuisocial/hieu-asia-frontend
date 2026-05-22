@@ -73,8 +73,8 @@ export function AffiliateTab() {
       className="space-y-6"
     >
       <div>
-        <h2 className="font-heading text-2xl text-cream sm:text-3xl">Affiliate</h2>
-        <p className="mt-1 text-sm text-cream/65">
+        <h2 className="font-heading text-2xl text-foreground sm:text-3xl">Affiliate</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Mã giới thiệu, số tuyến dưới và hoa hồng tổng. Chi tiết xem trong{' '}
           <Link href="/affiliate/network" className="text-gold hover:underline">
             mạng lưới
@@ -85,7 +85,7 @@ export function AffiliateTab() {
 
       {!loaded ? (
         <Card>
-          <CardContent className="py-8 text-center text-sm text-cream/55">Đang tải…</CardContent>
+          <CardContent className="py-8 text-center text-sm text-muted-foreground">Đang tải…</CardContent>
         </Card>
       ) : notSignedUp || !data ? (
         <Card>
@@ -110,7 +110,7 @@ export function AffiliateTab() {
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex flex-wrap items-center gap-2">
-                <code className="rounded-md border border-cream/15 bg-ink/60 px-3 py-1.5 font-mono text-sm text-gold">
+                <code className="rounded-md border border-border bg-card/60 px-3 py-1.5 font-mono text-sm text-gold">
                   {data.code ?? '—'}
                 </code>
                 {data.code && (
@@ -121,7 +121,7 @@ export function AffiliateTab() {
               </div>
               {data.share_url && (
                 <div className="flex flex-wrap items-center gap-2">
-                  <code className="max-w-full truncate rounded-md border border-cream/15 bg-ink/60 px-3 py-1.5 font-mono text-xs text-cream/85">
+                  <code className="max-w-full truncate rounded-md border border-border bg-card/60 px-3 py-1.5 font-mono text-xs text-foreground/85">
                     {data.share_url}
                   </code>
                   <Button size="sm" variant="outline" onClick={() => copy(data.share_url!)}>
@@ -165,9 +165,9 @@ export function AffiliateTab() {
 
 function MiniStat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-xl border border-cream/10 bg-ink/40 p-4">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cream/55">{label}</p>
-      <p className="mt-2 font-heading text-2xl text-cream">{value}</p>
+    <div className="rounded-xl border border-border bg-card/40 p-4">
+      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{label}</p>
+      <p className="mt-2 font-heading text-2xl text-foreground">{value}</p>
     </div>
   );
 }

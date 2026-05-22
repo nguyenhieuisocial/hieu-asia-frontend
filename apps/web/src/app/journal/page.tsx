@@ -86,7 +86,7 @@ export default function JournalHubPage() {
   }, [entries, filter]);
 
   return (
-    <main className="min-h-screen bg-ink text-cream">
+    <main className="min-h-screen bg-background text-foreground">
       <SiteNav />
 
       <script
@@ -96,12 +96,12 @@ export default function JournalHubPage() {
       />
 
       <section className="mx-auto max-w-5xl px-6 pt-16 pb-20">
-        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">
             Trang chủ
           </Link>
           <span className="mx-1.5">/</span>
-          <span className="text-cream/70">Decision Journal</span>
+          <span className="text-muted-foreground">Decision Journal</span>
         </nav>
 
         <header className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
@@ -114,7 +114,7 @@ export default function JournalHubPage() {
                 Decision Journal
               </span>
             </h1>
-            <p className="mt-4 text-sm leading-relaxed text-cream/75 sm:text-base">
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
               Ghi lại các quyết định của bạn — và review sau 7-30 ngày để hiểu
               mình tốt hơn. Lưu trên trình duyệt, không gửi server.
             </p>
@@ -128,24 +128,24 @@ export default function JournalHubPage() {
         </header>
 
         {hydrated && stats.total > 0 && (
-          <div className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-cream/70">
+          <div className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
             <span>
               Tổng số quyết định:{' '}
-              <strong className="font-medium text-cream">{stats.total}</strong>
+              <strong className="font-medium text-foreground">{stats.total}</strong>
             </span>
-            <span aria-hidden="true" className="text-cream/30">
+            <span aria-hidden="true" className="text-muted-foreground">
               •
             </span>
             <span>
               Đã review:{' '}
-              <strong className="font-medium text-cream">{stats.reviewed}</strong>
+              <strong className="font-medium text-foreground">{stats.reviewed}</strong>
             </span>
-            <span aria-hidden="true" className="text-cream/30">
+            <span aria-hidden="true" className="text-muted-foreground">
               •
             </span>
             <span>
               Chưa review:{' '}
-              <strong className="font-medium text-cream">{stats.pending}</strong>
+              <strong className="font-medium text-foreground">{stats.pending}</strong>
             </span>
           </div>
         )}
@@ -154,7 +154,7 @@ export default function JournalHubPage() {
           <div
             role="tablist"
             aria-label="Lọc theo trạng thái"
-            className="mb-6 inline-flex rounded-lg border border-cream/15 bg-ink/40 p-1"
+            className="mb-6 inline-flex rounded-lg border border-border bg-card/40 p-1"
           >
             {([
               { id: 'all', label: 'Tất cả' },
@@ -170,7 +170,7 @@ export default function JournalHubPage() {
                   'rounded-md px-4 py-2 text-sm font-medium transition sm:py-1.5 sm:text-xs',
                   filter === t.id
                     ? 'bg-gold/15 text-gold'
-                    : 'text-cream/65 hover:text-cream',
+                    : 'text-muted-foreground hover:text-foreground',
                 ].join(' ')}
               >
                 {t.label}
@@ -181,7 +181,7 @@ export default function JournalHubPage() {
 
         {!hydrated && (
           <div
-            className="rounded-lg border border-cream/10 bg-ink/40 p-8 text-sm text-cream/55"
+            className="rounded-lg border border-border bg-card/40 p-8 text-sm text-muted-foreground"
             aria-busy="true"
           >
             Đang tải...
@@ -189,7 +189,7 @@ export default function JournalHubPage() {
         )}
 
         {hydrated && stats.total === 0 && (
-          <Card className="border-gold/20 bg-ink/60">
+          <Card className="border-gold/20 bg-card/60">
             <CardContent className="flex flex-col items-center px-6 py-12 text-center">
               <BookOpen
                 className="mb-4 h-10 w-10 text-gold/70"
@@ -198,7 +198,7 @@ export default function JournalHubPage() {
               <h2 className="font-heading text-xl font-semibold">
                 Chưa có quyết định nào được ghi
               </h2>
-              <p className="mt-3 max-w-md text-sm leading-relaxed text-cream/70">
+              <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
                 Bắt đầu bằng một quyết định bạn đang phân vân. 30 ngày sau, bạn
                 có thể quay lại xem mình đã chọn vì lý do gì — và rút ra điều gì.
               </p>
@@ -217,7 +217,7 @@ export default function JournalHubPage() {
         )}
 
         {hydrated && stats.total > 0 && visible.length === 0 && (
-          <div className="rounded-lg border border-cream/10 bg-ink/40 p-8 text-center text-sm text-cream/60">
+          <div className="rounded-lg border border-border bg-card/40 p-8 text-center text-sm text-muted-foreground">
             Không có quyết định nào trong nhóm này.
           </div>
         )}
@@ -232,7 +232,7 @@ export default function JournalHubPage() {
                     href={`/journal/${e.id}`}
                     className="group block focus:outline-none"
                   >
-                    <Card className="border-gold/15 bg-ink/60 transition group-hover:border-gold/40 group-focus:border-gold/50">
+                    <Card className="border-gold/15 bg-card/60 transition group-hover:border-gold/40 group-focus:border-gold/50">
                       <CardContent className="flex flex-col gap-3 p-5 sm:flex-row sm:items-start sm:justify-between">
                         <div className="min-w-0 flex-1">
                           <div className="mb-2 flex flex-wrap items-center gap-2">
@@ -248,7 +248,7 @@ export default function JournalHubPage() {
                                 Đã review {formatDate(e.reviewedAt as string)}
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 text-xs text-cream/55">
+                              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
                                 <Circle
                                   className="h-3.5 w-3.5"
                                   aria-hidden="true"
@@ -257,15 +257,15 @@ export default function JournalHubPage() {
                               </span>
                             )}
                           </div>
-                          <h2 className="font-heading text-base font-semibold leading-snug text-cream">
+                          <h2 className="font-heading text-base font-semibold leading-snug text-foreground">
                             {truncate(e.question, 140)}
                           </h2>
-                          <p className="mt-1 text-xs text-cream/55">
+                          <p className="mt-1 text-xs text-muted-foreground">
                             Tạo ngày {formatDate(e.createdAt)}
                           </p>
                         </div>
                         <ArrowRight
-                          className="hidden h-4 w-4 shrink-0 self-center text-cream/70 transition group-hover:translate-x-0.5 group-hover:text-gold sm:block"
+                          className="hidden h-4 w-4 shrink-0 self-center text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-gold sm:block"
                           aria-hidden="true"
                         />
                       </CardContent>
@@ -287,14 +287,14 @@ export default function JournalHubPage() {
           >
             Bạn có thể thử Weekly Review
           </h2>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-cream/75">
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             Mỗi tuần dành 5 phút nhìn lại — chuyển từ &ldquo;cảm giác&rdquo;
             sang &ldquo;dữ kiện&rdquo;. Không bắt buộc, nhưng giúp bạn thấy
             mình rõ hơn theo thời gian.
           </p>
           <Link
             href="/weekly-review"
-            className="mt-5 inline-flex items-center gap-2 rounded-md border border-gold/50 bg-ink/60 px-4 py-2 text-sm font-medium text-gold transition hover:bg-gold/10"
+            className="mt-5 inline-flex items-center gap-2 rounded-md border border-gold/50 bg-card/60 px-4 py-2 text-sm font-medium text-gold transition hover:bg-gold/10"
           >
             Mở Weekly Review
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

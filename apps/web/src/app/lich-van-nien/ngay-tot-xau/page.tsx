@@ -36,11 +36,11 @@ export default function NgayTotXauPage() {
       <section className="space-y-8">
         <ActivityChecker />
 
-        <section className="rounded-2xl border border-cream/10 bg-ink/40 p-6 backdrop-blur-sm">
+        <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
           <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
             Cách chấm điểm
           </h2>
-          <ul className="mt-3 space-y-1.5 pl-5 text-sm text-cream/75 list-disc">
+          <ul className="mt-3 space-y-1.5 pl-5 text-sm text-muted-foreground list-disc">
             <li>Điểm khởi đầu: 50/100.</li>
             <li>Ngày Hoàng Đạo +15, Hắc Đạo -15.</li>
             <li>Trực ngày phù hợp việc +10, không phù hợp -20.</li>

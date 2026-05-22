@@ -236,7 +236,7 @@ function BirthChildFlow() {
         <div className="space-y-6">
           <div className="flex flex-col items-center gap-4">
             <CompatibilityScore score={result.combinedScore} rating={result.rating} />
-            <p className="max-w-2xl text-center text-cream/80">
+            <p className="max-w-2xl text-center text-foreground/80">
               Năm {result.yearPlanned} ({result.childYear.canChi} — {result.childYear.animal}, nạp âm{' '}
               {result.childYear.napAm}).
             </p>
@@ -251,7 +251,7 @@ function BirthChildFlow() {
                 {result.suggestedYears.map((y) => (
                   <div
                     key={y.year}
-                    className="flex items-center justify-between rounded-md border border-cream/10 bg-cream/5 px-3 py-2"
+                    className="flex items-center justify-between rounded-md border border-border bg-muted/5 px-3 py-2"
                   >
                     <span className="text-sm">
                       {y.year} — {y.canChi} ({y.animal})
@@ -269,7 +269,7 @@ function BirthChildFlow() {
             </CardHeader>
             <CardContent>
               <FactorList factors={result.parent1WithChild.factors} />
-              <p className="mt-3 text-sm text-cream/70">{result.parent1WithChild.summary}</p>
+              <p className="mt-3 text-sm text-muted-foreground">{result.parent1WithChild.summary}</p>
             </CardContent>
           </Card>
 
@@ -279,7 +279,7 @@ function BirthChildFlow() {
             </CardHeader>
             <CardContent>
               <FactorList factors={result.parent2WithChild.factors} />
-              <p className="mt-3 text-sm text-cream/70">{result.parent2WithChild.summary}</p>
+              <p className="mt-3 text-sm text-muted-foreground">{result.parent2WithChild.summary}</p>
             </CardContent>
           </Card>
         </div>
@@ -468,18 +468,18 @@ function XongDatFlow() {
           <CardContent>
             <div className="space-y-3">
               {result.ranked.map((r, i) => (
-                <div key={i} className="rounded-lg border border-cream/10 bg-cream/5 p-4">
+                <div key={i} className="rounded-lg border border-border bg-muted/5 p-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium">
                         #{i + 1} — {r.candidate.name || `Ứng viên ${i + 1}`} ({r.candidate.canChi},{' '}
                         {r.candidate.animal})
                       </div>
-                      <div className="text-sm text-cream/60">{r.rating}</div>
+                      <div className="text-sm text-muted-foreground">{r.rating}</div>
                     </div>
                     <div className="font-mono text-2xl font-bold text-gold">{r.score}</div>
                   </div>
-                  <p className="mt-2 text-sm text-cream/70">{r.summary}</p>
+                  <p className="mt-2 text-sm text-muted-foreground">{r.summary}</p>
                 </div>
               ))}
             </div>
@@ -509,7 +509,7 @@ function ResultView({ result, onShare }: { result: CompatibilityResult; onShare:
             <PersonInfo p={result.person1} />
             <PersonInfo p={result.person2} />
           </div>
-          <p className="text-cream/80">{result.summary}</p>
+          <p className="text-foreground/80">{result.summary}</p>
         </CardContent>
       </Card>
 
@@ -546,15 +546,15 @@ function ResultView({ result, onShare }: { result: CompatibilityResult; onShare:
 
 function PersonInfo({ p }: { p: CompatibilityResult['person1'] }) {
   return (
-    <div className="rounded-md border border-cream/10 bg-cream/5 p-3">
+    <div className="rounded-md border border-border bg-muted/5 p-3">
       <div className="font-medium text-gold">{p.name || 'Người'}</div>
-      <div className="mt-1 text-cream/80">
+      <div className="mt-1 text-foreground/80">
         {p.canChi} — {p.animal}
       </div>
-      <div className="text-xs text-cream/60">
+      <div className="text-xs text-muted-foreground">
         Nạp âm: {p.napAm} ({p.element})
       </div>
-      {p.cungPhi && <div className="text-xs text-cream/60">Cung Phi: {p.cungPhi}</div>}
+      {p.cungPhi && <div className="text-xs text-muted-foreground">Cung Phi: {p.cungPhi}</div>}
     </div>
   );
 }
@@ -563,10 +563,10 @@ function FactorList({ factors }: { factors: Factor[] }) {
   return (
     <ul className="space-y-2">
       {factors.map((f, i) => (
-        <li key={i} className="flex items-start justify-between gap-3 rounded-md border border-cream/10 px-3 py-2">
+        <li key={i} className="flex items-start justify-between gap-3 rounded-md border border-border px-3 py-2">
           <div>
             <div className="text-sm font-medium">{f.type}</div>
-            <div className="text-xs text-cream/60">
+            <div className="text-xs text-muted-foreground">
               {f.value} — {f.verdict}
             </div>
           </div>
@@ -576,7 +576,7 @@ function FactorList({ factors }: { factors: Factor[] }) {
                 ? 'font-mono text-sm text-emerald-400'
                 : f.weight < 0
                   ? 'font-mono text-sm text-rose-400'
-                  : 'font-mono text-sm text-cream/40'
+                  : 'font-mono text-sm text-foreground/40'
             }
           >
             {f.weight > 0 ? `+${f.weight}` : f.weight}

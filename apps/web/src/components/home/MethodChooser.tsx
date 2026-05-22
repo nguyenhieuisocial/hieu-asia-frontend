@@ -76,7 +76,7 @@ export function MethodChooser() {
     <section
       id="methods"
       aria-labelledby="methods-heading"
-      className="relative bg-ink py-20 sm:py-28"
+      className="relative bg-background py-20 sm:py-28"
     >
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
@@ -85,11 +85,11 @@ export function MethodChooser() {
           </p>
           <h2
             id="methods-heading"
-            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-cream sm:text-4xl"
+            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
           >
             Bốn góc nhìn, một con người
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-cream/70 sm:text-lg">
+          <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
             Mỗi phương pháp soi một lát cắt khác nhau. Bạn có thể bắt đầu từ một phương pháp,
             kết hợp thêm sau.
           </p>
@@ -100,14 +100,14 @@ export function MethodChooser() {
             <article
               key={key}
               className={[
-                'group relative flex flex-col rounded-2xl border bg-ink/40 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]',
+                'group relative flex flex-col rounded-2xl border bg-card/40 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]',
                 recommended
                   ? 'border-gold/60 shadow-[0_0_32px_-16px_rgba(184,146,61,0.55)] hover:border-gold/80'
-                  : 'border-cream/10 hover:border-gold/40',
+                  : 'border-border hover:border-gold/40',
               ].join(' ')}
             >
               {recommended && (
-                <span className="absolute -top-2.5 left-5 inline-flex items-center rounded-full border border-gold/50 bg-ink px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-gold">
+                <span className="absolute -top-2.5 left-5 inline-flex items-center rounded-full border border-gold/50 bg-background px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-gold">
                   Gợi ý
                 </span>
               )}
@@ -115,22 +115,22 @@ export function MethodChooser() {
                 <Icon className="h-5 w-5 text-gold" aria-hidden={true} />
               </div>
 
-              <h3 className="font-heading text-lg font-semibold leading-tight text-cream">
+              <h3 className="font-heading text-lg font-semibold leading-tight text-foreground">
                 {name}
               </h3>
               <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-gold/60">
                 {origin}
               </p>
 
-              <dl className="mt-4 space-y-3 text-sm leading-relaxed text-cream/70">
+              <dl className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wider text-cream/70">
+                  <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     Cho bạn biết
                   </dt>
                   <dd className="mt-1">{tells}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wider text-cream/70">
+                  <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     Phù hợp khi
                   </dt>
                   <dd className="mt-1">{bestFor}</dd>
@@ -154,10 +154,10 @@ export function MethodChooser() {
                   >
                     Xem mẫu →
                   </Link>
-                  <span aria-hidden="true" className="text-cream/30">·</span>
+                  <span aria-hidden="true" className="text-muted-foreground">·</span>
                   <Link
                     href={learnHref}
-                    className="text-cream/55 transition-colors hover:text-gold"
+                    className="text-muted-foreground transition-colors hover:text-gold"
                   >
                     Tìm hiểu thêm
                   </Link>

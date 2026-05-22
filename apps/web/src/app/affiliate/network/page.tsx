@@ -74,7 +74,7 @@ const STATUS_LABEL: Record<AffiliateNetwork['status'], string> = {
 const STATUS_CLASS: Record<AffiliateNetwork['status'], string> = {
   active: 'bg-jade-500/15 text-jade-300',
   suspended: 'bg-amber-500/15 text-amber-300',
-  closed: 'bg-cream/10 text-cream/60',
+  closed: 'bg-muted/10 text-muted-foreground',
 };
 
 const BREADCRUMB_JSONLD = {
@@ -154,7 +154,7 @@ export default function AffiliateNetworkPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-ink text-cream">
+      <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
         <main className="mx-auto max-w-5xl px-6 pt-16 pb-20">
           <Skeleton className="h-10 w-72" />
@@ -173,12 +173,12 @@ export default function AffiliateNetworkPage() {
 
   if (error === 'not_signed_in' || error === 'auth_unavailable') {
     return (
-      <div className="min-h-screen bg-ink text-cream">
+      <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
         <main className="mx-auto max-w-5xl px-6 pt-16 pb-20">
           <div className="mx-auto max-w-md text-center">
             <h1 className="mb-2 font-heading text-2xl font-bold">Đăng nhập để xem mạng lưới</h1>
-            <p className="mb-6 text-cream/70">
+            <p className="mb-6 text-muted-foreground">
               Bạn cần đăng nhập để xem mạng lưới affiliate của mình.
             </p>
             <Link href="/signin">
@@ -193,7 +193,7 @@ export default function AffiliateNetworkPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-ink text-cream">
+      <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
         <main className="mx-auto max-w-5xl px-6 pt-16 pb-20">
           <div className="mx-auto max-w-md text-center">
@@ -212,7 +212,7 @@ export default function AffiliateNetworkPage() {
   const shareLink = code ? `https://hieu.asia/?ref=${code}` : '';
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -220,12 +220,12 @@ export default function AffiliateNetworkPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
       />
       <main className="mx-auto max-w-5xl px-6 pt-16 pb-20">
-        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">Trang chủ</Link>
           <span className="mx-1.5">/</span>
           <Link href="/affiliate" className="hover:text-gold">Affiliate</Link>
           <span className="mx-1.5">/</span>
-          <span className="text-cream/70">Mạng lưới</span>
+          <span className="text-muted-foreground">Mạng lưới</span>
         </nav>
 
         {/* Hero */}
@@ -236,7 +236,7 @@ export default function AffiliateNetworkPage() {
           <h1 className="mt-2 font-heading text-3xl font-bold sm:text-4xl">
             Mạng lưới của bạn (L1 / L2 / L3)
           </h1>
-          <p className="mt-3 max-w-2xl text-cream/70">
+          <p className="mt-3 max-w-2xl text-muted-foreground">
             Đa tầng tối đa 3 cấp. Tuân thủ Nghị định 40/2018/NĐ-CP — hoa hồng chỉ trả khi có giao
             dịch thật.
           </p>
@@ -254,7 +254,7 @@ export default function AffiliateNetworkPage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-gold">{stats.l1_count}</div>
-              <div className="mt-1 text-xs text-cream/55">người mời trực tiếp</div>
+              <div className="mt-1 text-xs text-muted-foreground">người mời trực tiếp</div>
             </CardContent>
           </Card>
           <Card>
@@ -267,7 +267,7 @@ export default function AffiliateNetworkPage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold">{stats.l2_count}</div>
-              <div className="mt-1 text-xs text-cream/55">người ở cấp 2</div>
+              <div className="mt-1 text-xs text-muted-foreground">người ở cấp 2</div>
             </CardContent>
           </Card>
           <Card>
@@ -280,7 +280,7 @@ export default function AffiliateNetworkPage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold">{stats.l3_count}</div>
-              <div className="mt-1 text-xs text-cream/55">người ở cấp 3</div>
+              <div className="mt-1 text-xs text-muted-foreground">người ở cấp 3</div>
             </CardContent>
           </Card>
         </section>
@@ -311,12 +311,12 @@ export default function AffiliateNetworkPage() {
                 >
                   {STATUS_LABEL[network.status]}
                 </span>
-                <span className="rounded bg-cream/10 px-2 py-0.5 text-xs text-cream/70">
+                <span className="rounded bg-muted/10 px-2 py-0.5 text-xs text-muted-foreground">
                   Tier: {TIER_LABEL[network.tier]}
                 </span>
               </div>
               <div className="flex flex-wrap items-center gap-3">
-                <code className="break-all rounded bg-cream/[0.04] px-3 py-2 text-sm text-cream/85">
+                <code className="break-all rounded bg-muted/[0.04] px-3 py-2 text-sm text-foreground/85">
                   {shareLink}
                 </code>
                 <Button
@@ -330,7 +330,7 @@ export default function AffiliateNetworkPage() {
             </CardContent>
           </Card>
         ) : (
-          <Card className="mt-6 border-cream/20">
+          <Card className="mt-6 border-border">
             <CardHeader>
               <CardTitle className="text-base">Chưa có mã affiliate</CardTitle>
               <CardDescription>
@@ -357,14 +357,14 @@ export default function AffiliateNetworkPage() {
           </CardHeader>
           <CardContent>
             {children.length === 0 ? (
-              <div className="rounded border border-dashed border-cream/15 px-4 py-10 text-center text-sm text-cream/60">
+              <div className="rounded border border-dashed border-border px-4 py-10 text-center text-sm text-muted-foreground">
                 Chưa có ai gia nhập từ link của bạn. Chia sẻ link để bắt đầu.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="text-left text-xs uppercase text-cream/55">
-                    <tr className="border-b border-cream/10">
+                  <thead className="text-left text-xs uppercase text-muted-foreground">
+                    <tr className="border-b border-border">
                       <th className="py-2 pr-3 font-normal">Tên</th>
                       <th className="py-2 pr-3 font-normal">Mã</th>
                       <th className="py-2 pr-3 font-normal">Tier</th>
@@ -374,8 +374,8 @@ export default function AffiliateNetworkPage() {
                   </thead>
                   <tbody>
                     {children.map((c) => (
-                      <tr key={c.user_id} className="border-b border-cream/[0.06]">
-                        <td className="py-2 pr-3 font-mono text-cream/80">
+                      <tr key={c.user_id} className="border-b border-border">
+                        <td className="py-2 pr-3 font-mono text-foreground/80">
                           {maskUserId(c.user_id)}
                         </td>
                         <td className="py-2 pr-3 font-mono text-gold">{c.affiliate_code}</td>
@@ -387,7 +387,7 @@ export default function AffiliateNetworkPage() {
                             {STATUS_LABEL[c.status]}
                           </span>
                         </td>
-                        <td className="py-2 pr-3 text-xs text-cream/55">
+                        <td className="py-2 pr-3 text-xs text-muted-foreground">
                           <span className="font-mono">L{c.depth}</span>
                         </td>
                       </tr>
@@ -403,11 +403,11 @@ export default function AffiliateNetworkPage() {
         <Card className="mt-6 border-amber-500/40 bg-amber-500/[0.04]">
           <CardHeader>
             <CardTitle className="text-base text-amber-200">Lưu ý pháp lý</CardTitle>
-            <CardDescription className="text-cream/70">
+            <CardDescription className="text-muted-foreground">
               Hoa hồng tại hieu.asia tuân thủ Nghị định 40/2018/NĐ-CP về bán hàng đa cấp.
             </CardDescription>
           </CardHeader>
-          <CardContent className="text-sm text-cream/75">
+          <CardContent className="text-sm text-muted-foreground">
             <ul className="space-y-1.5">
               <li>• Cấp tối đa 3 tầng (L1=30%, L2=5%, L3=2%).</li>
               <li>• Hoa hồng chỉ trả khi có giao dịch thật, KHÔNG dựa trên tuyển dụng.</li>
@@ -439,7 +439,7 @@ export default function AffiliateNetworkPage() {
           </Link>
         </div>
 
-        <p className="mt-6 text-xs text-cream/70">
+        <p className="mt-6 text-xs text-muted-foreground">
           Tổng cây: {stats.total_subtree} người (L1 + L2 + L3).
         </p>
       </main>

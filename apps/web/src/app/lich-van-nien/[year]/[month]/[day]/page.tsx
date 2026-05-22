@@ -125,7 +125,7 @@ export default async function ArchiveDayPage({
   };
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -139,22 +139,22 @@ export default async function ArchiveDayPage({
         />
 
         <section className="relative mx-auto max-w-3xl px-6 pb-10 pt-12 sm:pt-16">
-          <nav aria-label="Breadcrumb" className="mb-4 flex flex-wrap items-center text-xs text-cream/55">
+          <nav aria-label="Breadcrumb" className="mb-4 flex flex-wrap items-center text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">Trang chủ</Link>
             <ChevronRight className="mx-1 h-3 w-3" aria-hidden />
             <Link href="/lich-van-nien" className="hover:text-gold">Lịch Vạn Niên</Link>
             <ChevronRight className="mx-1 h-3 w-3" aria-hidden />
-            <span className="text-cream/75">{dateLabel}</span>
+            <span className="text-muted-foreground">{dateLabel}</span>
           </nav>
 
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             {data.solarDate?.weekday ?? '—'}
           </p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
             Lịch ngày {dateLabel}
           </h1>
           {data.lunarDate?.chineseDayName && data.lunarDate?.chineseMonthName && (
-            <p className="mt-3 text-base leading-relaxed text-cream/80 sm:text-lg">
+            <p className="mt-3 text-base leading-relaxed text-foreground/80 sm:text-lg">
               Âm lịch: {data.lunarDate.chineseDayName} {data.lunarDate.chineseMonthName}, năm{' '}
               {data.canChi?.year ?? ''}
             </p>
@@ -163,23 +163,23 @@ export default async function ArchiveDayPage({
 
         <section className="relative mx-auto max-w-3xl px-6 pb-10">
           <div className="grid gap-3 sm:grid-cols-2">
-            <Card className="border-cream/10 bg-ink/40">
+            <Card className="border-border bg-card/40">
               <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2 font-heading text-base text-cream">
+                <CardTitle className="flex items-center gap-2 font-heading text-base text-foreground">
                   <Sun className="h-4 w-4 text-gold" aria-hidden /> Dương lịch
                 </CardTitle>
               </CardHeader>
-              <CardContent className="text-sm leading-relaxed text-cream/80">
+              <CardContent className="text-sm leading-relaxed text-foreground/80">
                 {dateLabel} · {data.solarDate?.weekday}
               </CardContent>
             </Card>
-            <Card className="border-cream/10 bg-ink/40">
+            <Card className="border-border bg-card/40">
               <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2 font-heading text-base text-cream">
+                <CardTitle className="flex items-center gap-2 font-heading text-base text-foreground">
                   <Moon className="h-4 w-4 text-purple-300" aria-hidden /> Âm lịch
                 </CardTitle>
               </CardHeader>
-              <CardContent className="text-sm leading-relaxed text-cream/80">
+              <CardContent className="text-sm leading-relaxed text-foreground/80">
                 {data.lunarDate?.chineseDayName} {data.lunarDate?.chineseMonthName} năm {data.canChi?.year}
               </CardContent>
             </Card>
@@ -189,7 +189,7 @@ export default async function ArchiveDayPage({
         <section className="relative mx-auto max-w-3xl px-6 pb-10">
           <Card className="border-gold/30 bg-gradient-to-br from-gold/[0.05] to-transparent">
             <CardHeader>
-              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
                 Can Chi · Trực · Hoàng Hắc Đạo
               </CardTitle>
             </CardHeader>
@@ -199,13 +199,13 @@ export default async function ArchiveDayPage({
               <Stat label="Can Chi ngày" value={data.canChi?.day ?? '—'} />
               <Stat label="Trực ngày" value={data.trucNgay ?? '—'} />
               <div className="sm:col-span-2">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-cream/55">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                   Phân loại
                 </p>
                 <p className="mt-1 font-heading text-lg font-semibold">
                   {data.isHoangDao && <span className="text-jade-50">Ngày Hoàng Đạo</span>}
                   {data.isHacDao && <span className="text-amber-300">Ngày Hắc Đạo</span>}
-                  {!data.isHoangDao && !data.isHacDao && <span className="text-cream/70">Bình thường</span>}
+                  {!data.isHoangDao && !data.isHacDao && <span className="text-muted-foreground">Bình thường</span>}
                 </p>
               </div>
             </CardContent>
@@ -223,7 +223,7 @@ export default async function ArchiveDayPage({
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-1.5 text-sm text-cream/80">
+                    <ul className="space-y-1.5 text-sm text-foreground/80">
                       {goodActivities.map((a, i) => (
                         <li key={i} className="flex gap-2">
                           <span className="text-jade-50">+</span>
@@ -242,7 +242,7 @@ export default async function ArchiveDayPage({
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-1.5 text-sm text-cream/80">
+                    <ul className="space-y-1.5 text-sm text-foreground/80">
                       {avoidActivities.map((a, i) => (
                         <li key={i} className="flex gap-2">
                           <span className="text-amber-300">!</span>
@@ -259,9 +259,9 @@ export default async function ArchiveDayPage({
 
         {(goodStars.length > 0 || badStars.length > 0) && (
           <section className="relative mx-auto max-w-3xl px-6 pb-10">
-            <Card className="border-cream/10 bg-ink/40">
+            <Card className="border-border bg-card/40">
               <CardHeader>
-                <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+                <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
                   Sao tốt — sao xấu
                 </CardTitle>
               </CardHeader>
@@ -299,17 +299,17 @@ export default async function ArchiveDayPage({
           <section className="relative mx-auto max-w-3xl px-6 pb-10">
             <Card className="border-jade/30 bg-jade/[0.04]">
               <CardHeader>
-                <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+                <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
                   Giờ hoàng đạo
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="grid gap-2 sm:grid-cols-2">
                   {hoangDaoHours.map((h, i) => (
-                    <li key={i} className="flex items-center gap-2 text-sm text-cream/80">
+                    <li key={i} className="flex items-center gap-2 text-sm text-foreground/80">
                       <Sparkles className="h-3.5 w-3.5 text-jade-50" aria-hidden />
-                      <span className="font-medium text-cream">{h.name}</span>
-                      {h.star && <span className="text-xs text-cream/60">· {h.star}</span>}
+                      <span className="font-medium text-foreground">{h.name}</span>
+                      {h.star && <span className="text-xs text-muted-foreground">· {h.star}</span>}
                     </li>
                   ))}
                 </ul>
@@ -320,8 +320,8 @@ export default async function ArchiveDayPage({
 
         {data.meaningSummary && (
           <section className="relative mx-auto max-w-3xl px-6 pb-10">
-            <Card className="border-cream/10 bg-ink/40">
-              <CardContent className="text-sm leading-relaxed text-cream/80">
+            <Card className="border-border bg-card/40">
+              <CardContent className="text-sm leading-relaxed text-foreground/80">
                 {data.meaningSummary}
               </CardContent>
             </Card>
@@ -330,10 +330,10 @@ export default async function ArchiveDayPage({
 
         <section className="relative mx-auto max-w-3xl px-6 pb-20">
           <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent p-6 sm:p-8">
-            <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+            <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
               Ngày {dateLabel} hợp với việc gì của BẠN?
             </h2>
-            <p className="mt-3 text-sm leading-relaxed text-cream/80 sm:text-base">
+            <p className="mt-3 text-sm leading-relaxed text-foreground/80 sm:text-base">
               Lịch chung dùng cho mọi người. Để biết ngày này có hợp với lá số riêng
               của bạn không (cung Mệnh, đại vận, lưu niên), lập lá số 2 phút.
             </p>
@@ -343,7 +343,7 @@ export default async function ArchiveDayPage({
               </Link>
               <Link
                 href="/lich-van-nien"
-                className="inline-flex items-center text-sm text-cream/70 hover:text-gold"
+                className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"
               >
                 Quay về Lịch Vạn Niên <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
               </Link>
@@ -359,8 +359,8 @@ export default async function ArchiveDayPage({
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-widest text-cream/55">{label}</p>
-      <p className="mt-1 font-heading text-lg font-semibold text-cream">{value}</p>
+      <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
+      <p className="mt-1 font-heading text-lg font-semibold text-foreground">{value}</p>
     </div>
   );
 }

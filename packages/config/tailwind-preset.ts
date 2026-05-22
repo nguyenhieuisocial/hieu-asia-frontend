@@ -81,8 +81,12 @@ const preset = {
       backgroundImage: {
         'gold-gradient':
           'linear-gradient(135deg, #B8923D 0%, #D5B057 50%, #B8923D 100%)',
+        // Wave 38 — ink-radial uses CSS vars so it responds to light/dark mode.
+        // Light: gold-tinted ellipse on near-white. Dark: gold-tinted on ink.
+        // Drop opacity goes into the gradient stops via rgba on the gold accent;
+        // background fills with the theme's --background.
         'ink-radial':
-          'radial-gradient(ellipse at top, #1a1a22 0%, #0F0F12 60%)',
+          'radial-gradient(ellipse at top, rgba(184,146,61,0.10) 0%, hsl(var(--background)) 60%)',
       },
     },
   },

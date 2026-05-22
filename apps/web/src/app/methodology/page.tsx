@@ -416,7 +416,7 @@ function StatusBadge({
     );
   }
   return (
-    <span className="inline-flex rounded-full border border-cream/20 bg-cream/5 px-2 py-0.5 text-[11px] font-medium text-cream/60">
+    <span className="inline-flex rounded-full border border-border bg-muted/5 px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
       optional
     </span>
   );
@@ -424,7 +424,7 @@ function StatusBadge({
 
 export default function MethodologyPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -448,26 +448,26 @@ export default function MethodologyPage() {
           <div className="relative mx-auto max-w-4xl px-6 pb-12 pt-12 sm:pt-16">
             <nav
               aria-label="Breadcrumb"
-              className="mb-4 text-xs text-cream/55"
+              className="mb-4 text-xs text-muted-foreground"
             >
               <Link href="/" className="hover:text-gold">
                 Trang chủ
               </Link>
               <span className="mx-1.5">/</span>
-              <span className="text-cream/70">Phương pháp luận</span>
+              <span className="text-muted-foreground">Phương pháp luận</span>
             </nav>
 
             <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
               Methodology
             </p>
-            <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+            <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
               Phương pháp luận hieu.asia
             </h1>
-            <p className="mt-3 font-heading text-lg text-cream/80 sm:text-2xl">
+            <p className="mt-3 font-heading text-lg text-foreground/80 sm:text-2xl">
               Engine tính gì, AI luận gì, người dùng quyết gì
             </p>
 
-            <div className="mt-6 space-y-4 text-base leading-relaxed text-cream/75 sm:text-lg">
+            <div className="mt-6 space-y-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
               <p>
                 hieu.asia không dùng AI để &quot;phán mệnh&quot;. Chúng tôi
                 dùng engine deterministic để lập lá số, dùng AI để diễn giải
@@ -496,14 +496,14 @@ export default function MethodologyPage() {
               ].map((pill) => (
                 <span
                   key={pill}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-cream/15 bg-ink/40 px-3 py-1 text-cream/75"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-3 py-1 text-muted-foreground"
                 >
                   {pill}
                 </span>
               ))}
             </div>
 
-            <p className="mt-6 font-mono text-[11px] text-cream/70">
+            <p className="mt-6 font-mono text-[11px] text-muted-foreground">
               Last verified: {LAST_VERIFIED}
             </p>
           </div>
@@ -511,10 +511,10 @@ export default function MethodologyPage() {
 
         {/* Principles */}
         <section className="relative mx-auto max-w-4xl px-6 py-12">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             Nguyên tắc nền tảng
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             5 nguyên tắc định hình mọi quyết định sản phẩm của hieu.asia.
           </p>
           <ol className="mt-8 space-y-4">
@@ -522,7 +522,7 @@ export default function MethodologyPage() {
               const Icon = p.icon;
               return (
                 <li key={p.n}>
-                  <Card className="border-cream/10 bg-ink/40">
+                  <Card className="border-border bg-card/40">
                     <CardContent className="flex gap-4 p-5 sm:p-6">
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 font-mono text-sm font-bold text-gold">
                         {p.n}
@@ -533,11 +533,11 @@ export default function MethodologyPage() {
                             className="h-4 w-4 text-gold/80"
                             aria-hidden
                           />
-                          <h3 className="font-heading text-base font-semibold text-cream sm:text-lg">
+                          <h3 className="font-heading text-base font-semibold text-foreground sm:text-lg">
                             {p.title}
                           </h3>
                         </div>
-                        <p className="mt-1.5 text-sm leading-relaxed text-cream/75">
+                        <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                           {p.body}
                         </p>
                       </div>
@@ -551,10 +551,10 @@ export default function MethodologyPage() {
 
         {/* Pipeline */}
         <section className="relative mx-auto max-w-5xl px-6 py-12">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             Quy trình tạo một báo cáo
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             6 tầng pipeline — từ input của user tới quyết định cuối cùng.
           </p>
 
@@ -563,17 +563,17 @@ export default function MethodologyPage() {
               const Icon = step.icon;
               return (
                 <li key={step.label} className="relative">
-                  <div className="flex h-full flex-col rounded-xl border border-cream/10 bg-ink/40 p-5">
+                  <div className="flex h-full flex-col rounded-xl border border-border bg-card/40 p-5">
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-[11px] text-gold/70">
                         0{idx + 1}
                       </span>
                       <Icon className="h-4 w-4 text-gold/80" aria-hidden />
-                      <h3 className="font-heading text-sm font-semibold text-cream">
+                      <h3 className="font-heading text-sm font-semibold text-foreground">
                         {step.label}
                       </h3>
                     </div>
-                    <p className="mt-2 text-sm leading-relaxed text-cream/70">
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                       {step.desc}
                     </p>
                   </div>
@@ -591,17 +591,17 @@ export default function MethodologyPage() {
 
         {/* Data sources */}
         <section className="relative mx-auto max-w-5xl px-6 py-12">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             Dữ liệu dùng để luận
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             Mỗi phương pháp có engine riêng, AI chỉ đọc output structured.
           </p>
 
-          <div className="mt-6 overflow-x-auto rounded-xl border border-cream/10 bg-ink/40">
+          <div className="mt-6 overflow-x-auto rounded-xl border border-border bg-card/40">
             <table className="w-full min-w-[720px] text-sm">
               <thead>
-                <tr className="border-b border-cream/10 text-left text-xs uppercase tracking-wider text-cream/55">
+                <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
                   <th className="px-4 py-3 font-medium">Phương pháp</th>
                   <th className="px-4 py-3 font-medium">Dữ liệu dùng</th>
                   <th className="px-4 py-3 font-medium">Engine tính?</th>
@@ -613,14 +613,14 @@ export default function MethodologyPage() {
                 {DATA_ROWS.map((row) => (
                   <tr
                     key={row.method}
-                    className="border-b border-cream/5 last:border-b-0"
+                    className="border-b border-border last:border-b-0"
                   >
-                    <td className="px-4 py-3 font-medium text-cream">
+                    <td className="px-4 py-3 font-medium text-foreground">
                       {row.method}
                     </td>
-                    <td className="px-4 py-3 text-cream/75">{row.data}</td>
-                    <td className="px-4 py-3 text-cream/75">{row.engine}</td>
-                    <td className="px-4 py-3 text-cream/75">{row.ai}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.data}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.engine}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.ai}</td>
                     <td className="px-4 py-3">
                       <StatusBadge status={row.status} />
                     </td>
@@ -633,10 +633,10 @@ export default function MethodologyPage() {
 
         {/* AI Can / Cannot */}
         <section className="relative mx-auto max-w-5xl px-6 py-12">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             AI làm gì, không làm gì
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             Ranh giới rõ ràng giữa diễn giải và phán định.
           </p>
 
@@ -649,7 +649,7 @@ export default function MethodologyPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-2.5 text-sm leading-relaxed text-cream/80">
+                <ul className="space-y-2.5 text-sm leading-relaxed text-foreground/80">
                   {AI_CAN.map((item) => (
                     <li key={item} className="flex gap-2">
                       <CheckCircle2
@@ -671,7 +671,7 @@ export default function MethodologyPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-2.5 text-sm leading-relaxed text-cream/80">
+                <ul className="space-y-2.5 text-sm leading-relaxed text-foreground/80">
                   {AI_CANNOT.map((item) => (
                     <li key={item} className="flex gap-2">
                       <XCircle
@@ -689,10 +689,10 @@ export default function MethodologyPage() {
 
         {/* Confidence score */}
         <section className="relative mx-auto max-w-4xl px-6 py-12">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             Mức tin cậy của kết luận
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             Mỗi report có confidence score. Khi thiếu dữ liệu, hieu.asia
             không &quot;đoán cứng&quot; — hệ thống nói rõ độ không chắc.
           </p>
@@ -713,7 +713,7 @@ export default function MethodologyPage() {
                   <div className="font-heading text-base font-semibold">
                     {c.level}
                   </div>
-                  <p className="mt-2 text-sm leading-relaxed text-cream/75">
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                     {c.desc}
                   </p>
                 </div>
@@ -721,11 +721,11 @@ export default function MethodologyPage() {
             })}
           </div>
 
-          <div className="mt-6 rounded-xl border border-cream/10 bg-ink/30 p-5">
+          <div className="mt-6 rounded-xl border border-border bg-card/30 p-5">
             <p className="font-mono text-[11px] uppercase tracking-wider text-gold/70">
               Ví dụ
             </p>
-            <p className="mt-2 text-sm italic leading-relaxed text-cream/80 sm:text-base">
+            <p className="mt-2 text-sm italic leading-relaxed text-foreground/80 sm:text-base">
               &quot;Mức tin cậy: Trung bình. Lý do: bạn nhập giờ sinh khoảng
               23:30, gần ranh giờ Tý. Một số cung có thể thay đổi nếu giờ
               sinh lệch 20-30 phút.&quot;
@@ -735,20 +735,20 @@ export default function MethodologyPage() {
 
         {/* Evidence Standard */}
         <section className="relative mx-auto max-w-4xl px-6 py-12">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             Vì sao kết luận này?
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             Mỗi kết luận quan trọng đều có thể bung ra phần căn cứ.
           </p>
 
-          <Card className="mt-6 border-cream/10 bg-ink/40">
+          <Card className="mt-6 border-border bg-card/40">
             <CardContent className="space-y-5 p-5 sm:p-6">
               <div>
                 <p className="font-mono text-[11px] uppercase tracking-wider text-gold/70">
                   Claim
                 </p>
-                <p className="mt-2 font-heading text-base text-cream sm:text-lg">
+                <p className="mt-2 font-heading text-base text-foreground sm:text-lg">
                   &quot;Bạn nên kiểm chứng cơ hội mới trong 60 ngày trước khi
                   nghỉ việc.&quot;
                 </p>
@@ -758,7 +758,7 @@ export default function MethodologyPage() {
                 <p className="font-mono text-[11px] uppercase tracking-wider text-jade/80">
                   Dựa trên
                 </p>
-                <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-cream/80">
+                <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-foreground/80">
                   <li className="flex gap-2">
                     <ChevronRight
                       className="mt-0.5 h-4 w-4 shrink-0 text-jade/70"
@@ -796,7 +796,7 @@ export default function MethodologyPage() {
                 <p className="font-mono text-[11px] uppercase tracking-wider text-rose-300/80">
                   Không kết luận
                 </p>
-                <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-cream/80">
+                <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-foreground/80">
                   <li className="flex gap-2">
                     <XCircle
                       className="mt-0.5 h-4 w-4 shrink-0 text-rose-400/80"
@@ -818,7 +818,7 @@ export default function MethodologyPage() {
                 <p className="font-mono text-[11px] uppercase tracking-wider text-gold/80">
                   Bước kiểm chứng
                 </p>
-                <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-cream/80">
+                <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-foreground/80">
                   <li className="flex gap-2">
                     <Sparkles
                       className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
@@ -848,17 +848,17 @@ export default function MethodologyPage() {
 
         {/* Validation Snapshot */}
         <section className="relative mx-auto max-w-4xl px-6 py-12">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             Kiểm chứng thuật toán
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             Snapshot test suite tại lần verify gần nhất ({LAST_VERIFIED}).
           </p>
 
-          <div className="mt-6 overflow-x-auto rounded-xl border border-cream/10 bg-ink/40">
+          <div className="mt-6 overflow-x-auto rounded-xl border border-border bg-card/40">
             <table className="w-full min-w-[560px] text-sm">
               <thead>
-                <tr className="border-b border-cream/10 text-left text-xs uppercase tracking-wider text-cream/55">
+                <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
                   <th className="px-4 py-3 font-medium">Hạng mục</th>
                   <th className="px-4 py-3 font-medium">Kết quả</th>
                   <th className="px-4 py-3 font-medium">Trạng thái</th>
@@ -868,10 +868,10 @@ export default function MethodologyPage() {
                 {VALIDATION_ROWS.map((row) => (
                   <tr
                     key={row.label}
-                    className="border-b border-cream/5 last:border-b-0"
+                    className="border-b border-border last:border-b-0"
                   >
-                    <td className="px-4 py-3 text-cream/85">{row.label}</td>
-                    <td className="px-4 py-3 font-mono text-cream/75">
+                    <td className="px-4 py-3 text-foreground/85">{row.label}</td>
+                    <td className="px-4 py-3 font-mono text-muted-foreground">
                       {row.result}
                     </td>
                     <td className="px-4 py-3">
@@ -893,7 +893,7 @@ export default function MethodologyPage() {
             </table>
           </div>
 
-          <p className="mt-4 text-sm leading-relaxed text-cream/65">
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
             Golden dataset đang mở rộng từ 32 lên 100 lá số ground-truth.
             Mỗi release engine chạy lại regression test.
           </p>
@@ -901,22 +901,22 @@ export default function MethodologyPage() {
 
         {/* Human review */}
         <section className="relative mx-auto max-w-4xl px-6 py-12">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             Human review
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             4 vai trò review, 4 trigger trigger, SLA xử lý phản hồi.
           </p>
 
           <div className="mt-6 grid gap-4 lg:grid-cols-2">
-            <Card className="border-cream/10 bg-ink/40">
+            <Card className="border-border bg-card/40">
               <CardHeader>
-                <CardTitle className="text-base text-cream">
+                <CardTitle className="text-base text-foreground">
                   Vai trò review
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-2.5 text-sm leading-relaxed text-cream/80">
+                <ul className="space-y-2.5 text-sm leading-relaxed text-foreground/80">
                   {REVIEW_ROLES.map((r) => (
                     <li key={r.role} className="flex gap-2">
                       <Eye
@@ -924,7 +924,7 @@ export default function MethodologyPage() {
                         aria-hidden
                       />
                       <span>
-                        <span className="font-medium text-cream">
+                        <span className="font-medium text-foreground">
                           {r.role}:
                         </span>{' '}
                         {r.desc}
@@ -935,14 +935,14 @@ export default function MethodologyPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-cream/10 bg-ink/40">
+            <Card className="border-border bg-card/40">
               <CardHeader>
-                <CardTitle className="text-base text-cream">
+                <CardTitle className="text-base text-foreground">
                   Khi nào review được kích hoạt
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-2.5 text-sm leading-relaxed text-cream/80">
+                <ul className="space-y-2.5 text-sm leading-relaxed text-foreground/80">
                   {REVIEW_TRIGGERS.map((t) => (
                     <li key={t} className="flex gap-2">
                       <ChevronRight
@@ -961,7 +961,7 @@ export default function MethodologyPage() {
             <p className="font-mono text-[11px] uppercase tracking-wider text-gold/80">
               SLA
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-cream/80">
+            <p className="mt-2 text-sm leading-relaxed text-foreground/80">
               Xác nhận tiếp nhận trong 72h. Xử lý hoàn tất trong tối đa 30
               ngày làm việc (yêu cầu xoá/xuất dữ liệu).
             </p>
@@ -970,14 +970,14 @@ export default function MethodologyPage() {
 
         {/* Privacy recap */}
         <section className="relative mx-auto max-w-4xl px-6 py-12">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             Privacy-first methodology
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             Tóm tắt cách hieu.asia xử lý dữ liệu cá nhân.
           </p>
 
-          <ul className="mt-6 space-y-2.5 text-sm leading-relaxed text-cream/80">
+          <ul className="mt-6 space-y-2.5 text-sm leading-relaxed text-foreground/80">
             {PRIVACY_BULLETS.map((b) => (
               <li key={b} className="flex gap-2">
                 <Lock
@@ -989,7 +989,7 @@ export default function MethodologyPage() {
             ))}
           </ul>
 
-          <p className="mt-5 text-sm text-cream/70">
+          <p className="mt-5 text-sm text-muted-foreground">
             Bảng sub-processor đầy đủ và quyền user xem tại{' '}
             <Link
               href="/privacy"
@@ -1003,25 +1003,25 @@ export default function MethodologyPage() {
 
         {/* Quality Rubric */}
         <section className="relative mx-auto max-w-5xl px-6 py-12">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             Một luận giải tốt cần 8 tiêu chí
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             Quality rubric — mỗi tiêu chí kèm câu hỏi xác minh.
           </p>
 
           <ol className="mt-6 grid gap-3 sm:grid-cols-2">
             {RUBRIC.map((r) => (
               <li key={r.n}>
-                <div className="flex h-full gap-3 rounded-xl border border-cream/10 bg-ink/40 p-4">
+                <div className="flex h-full gap-3 rounded-xl border border-border bg-card/40 p-4">
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 font-mono text-xs font-bold text-gold">
                     {r.n}
                   </span>
                   <div className="min-w-0">
-                    <p className="font-heading text-sm font-semibold text-cream">
+                    <p className="font-heading text-sm font-semibold text-foreground">
                       {r.name}
                     </p>
-                    <p className="mt-1 text-sm leading-relaxed text-cream/70">
+                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                       {r.q}
                     </p>
                   </div>
@@ -1033,10 +1033,10 @@ export default function MethodologyPage() {
 
         {/* FAQ */}
         <section className="relative mx-auto max-w-4xl px-6 py-12">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             Câu hỏi thường gặp
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             Những câu hỏi thường gặp nhất về phương pháp luận hieu.asia.
           </p>
 
@@ -1044,10 +1044,10 @@ export default function MethodologyPage() {
             {FAQ.map((f) => (
               <details
                 key={f.q}
-                className="group rounded-xl border border-cream/10 bg-ink/40 p-5 transition-colors open:border-gold/25 open:bg-ink/60"
+                className="group rounded-xl border border-border bg-card/40 p-5 transition-colors open:border-gold/25 open:bg-card/60"
               >
                 <summary className="flex cursor-pointer list-none items-start justify-between gap-4">
-                  <h3 className="font-heading text-base font-semibold text-cream">
+                  <h3 className="font-heading text-base font-semibold text-foreground">
                     {f.q}
                   </h3>
                   <ChevronRight
@@ -1055,7 +1055,7 @@ export default function MethodologyPage() {
                     aria-hidden
                   />
                 </summary>
-                <p className="mt-3 text-sm leading-relaxed text-cream/80">
+                <p className="mt-3 text-sm leading-relaxed text-foreground/80">
                   {f.a}
                 </p>
               </details>
@@ -1065,10 +1065,10 @@ export default function MethodologyPage() {
 
         {/* Related */}
         <section className="relative mx-auto max-w-5xl px-6 pb-20 pt-12">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             Đọc tiếp
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             Tài liệu chi tiết hơn về từng phần.
           </p>
 
@@ -1079,17 +1079,17 @@ export default function MethodologyPage() {
                 <Link
                   key={r.href}
                   href={r.href}
-                  className="group flex items-center gap-3 rounded-xl border border-cream/10 bg-ink/40 p-4 transition-colors hover:border-gold/30 hover:bg-ink/60"
+                  className="group flex items-center gap-3 rounded-xl border border-border bg-card/40 p-4 transition-colors hover:border-gold/30 hover:bg-card/60"
                 >
                   <Icon
                     className="h-5 w-5 shrink-0 text-gold/80"
                     aria-hidden
                   />
-                  <span className="flex-1 font-heading text-sm font-semibold text-cream">
+                  <span className="flex-1 font-heading text-sm font-semibold text-foreground">
                     {r.title}
                   </span>
                   <ArrowRight
-                    className="h-4 w-4 shrink-0 text-cream/40 transition-transform group-hover:translate-x-1 group-hover:text-gold"
+                    className="h-4 w-4 shrink-0 text-foreground/40 transition-transform group-hover:translate-x-1 group-hover:text-gold"
                     aria-hidden
                   />
                 </Link>
@@ -1097,7 +1097,7 @@ export default function MethodologyPage() {
             })}
           </div>
 
-          <div className="mt-10 rounded-xl border border-cream/10 bg-ink/40 p-5 text-sm leading-relaxed text-cream/75">
+          <div className="mt-10 rounded-xl border border-border bg-card/40 p-5 text-sm leading-relaxed text-muted-foreground">
             <p className="flex items-start gap-2">
               <AlertTriangle
                 className="mt-0.5 h-4 w-4 shrink-0 text-amber-300"

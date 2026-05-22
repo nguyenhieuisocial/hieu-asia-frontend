@@ -17,7 +17,7 @@ export function CautionBanner({ flags, className }: CautionBannerProps) {
     <aside
       aria-label="Lưu ý quan trọng"
       className={cn(
-        'rounded-lg border border-gold/30 bg-gold/5 text-cream',
+        'rounded-lg border border-gold/30 bg-gold/5 text-foreground',
         className,
       )}
     >
@@ -40,7 +40,7 @@ export function CautionBanner({ flags, className }: CautionBannerProps) {
       {open && (
         <ul
           id={panelId}
-          className="space-y-2 border-t border-gold/15 px-4 py-3 text-sm text-cream/80"
+          className="space-y-2 border-t border-gold/15 px-4 py-3 text-sm text-foreground/80"
         >
           {flags.map((flag, i) => (
             <li key={i} className="flex gap-2">

@@ -37,7 +37,7 @@ export function WhyChoose() {
     <section
       id="why"
       aria-labelledby="why-heading"
-      className="relative bg-ink py-20 sm:py-28"
+      className="relative bg-background py-20 sm:py-28"
     >
       <div
         aria-hidden="true"
@@ -50,7 +50,7 @@ export function WhyChoose() {
           </p>
           <h2
             id="why-heading"
-            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-cream sm:text-4xl"
+            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
           >
             Bốn lý do để bắt đầu{' '}
             <span className="bg-gold-gradient bg-clip-text text-transparent">ngay hôm nay</span>
@@ -61,7 +61,7 @@ export function WhyChoose() {
           {REASONS.map(({ Icon, title, desc }) => (
             <article
               key={title}
-              className="group relative overflow-hidden rounded-2xl border border-cream/10 bg-ink/40 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]"
+              className="group relative overflow-hidden rounded-2xl border border-border bg-card/40 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]"
             >
               <div
                 aria-hidden="true"
@@ -75,10 +75,10 @@ export function WhyChoose() {
                 <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-gold/30 bg-gold/5 transition-colors group-hover:border-gold/60 group-hover:bg-gold/10">
                   <Icon className="h-5 w-5 text-gold" aria-hidden={true} />
                 </div>
-                <h3 className="font-heading text-base font-semibold leading-tight text-cream">
+                <h3 className="font-heading text-base font-semibold leading-tight text-foreground">
                   {title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-cream/70">{desc}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{desc}</p>
               </div>
             </article>
           ))}

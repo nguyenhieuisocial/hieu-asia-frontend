@@ -19,8 +19,8 @@ function Mock({ title, hint, children }: MockProps) {
         {children}
       </div>
       <CardContent className="border-t border-gold/10 pt-4">
-        <div className="font-heading text-sm font-semibold text-cream">{title}</div>
-        <div className="mt-1 text-[11px] text-cream/55">{hint}</div>
+        <div className="font-heading text-sm font-semibold text-foreground">{title}</div>
+        <div className="mt-1 text-[11px] text-muted-foreground">{hint}</div>
       </CardContent>
     </Card>
   );

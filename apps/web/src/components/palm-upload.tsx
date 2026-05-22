@@ -80,7 +80,7 @@ export function PalmUpload({ onSelect, onClear, file, previewUrl }: PalmUploadPr
             <CheckCircle2 className="h-4 w-4" />
             Ảnh hợp lệ
           </span>
-          <span className="font-mono text-xs text-cream/70">
+          <span className="font-mono text-xs text-muted-foreground">
             {(file.size / 1024 / 1024).toFixed(2)}MB
             {dims && ` · ${dims.w}×${dims.h}`}
           </span>
@@ -112,9 +112,9 @@ export function PalmUpload({ onSelect, onClear, file, previewUrl }: PalmUploadPr
         <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gold/10 text-gold">
           <Upload className="h-6 w-6" aria-hidden="true" />
         </div>
-        <p className="text-base font-medium text-cream">Kéo thả ảnh vào đây</p>
-        <p className="mt-1 text-sm text-cream/60">hoặc nhấn để chọn từ máy</p>
-        <p id="palm-upload-hint" className="mt-3 text-xs text-cream/40">JPG / PNG / WEBP · tối đa 10MB</p>
+        <p className="text-base font-medium text-foreground">Kéo thả ảnh vào đây</p>
+        <p className="mt-1 text-sm text-muted-foreground">hoặc nhấn để chọn từ máy</p>
+        <p id="palm-upload-hint" className="mt-3 text-xs text-muted-foreground">JPG / PNG / WEBP · tối đa 10MB</p>
       </button>
 
       <Button

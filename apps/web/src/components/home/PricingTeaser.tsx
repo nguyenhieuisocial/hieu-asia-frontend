@@ -88,7 +88,7 @@ export function PricingTeaser() {
     <section
       id="pricing-teaser"
       aria-labelledby="pricing-teaser-heading"
-      className="relative border-y border-cream/5 bg-ink py-20 scroll-mt-24 sm:py-24"
+      className="relative border-y border-border bg-background py-20 scroll-mt-24 sm:py-24"
     >
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
@@ -97,14 +97,14 @@ export function PricingTeaser() {
           </p>
           <h2
             id="pricing-teaser-heading"
-            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-cream sm:text-4xl"
+            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
           >
             Chọn mức độ{' '}
             <span className="bg-gold-gradient bg-clip-text text-transparent">
               đồng hành phù hợp
             </span>
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-cream/70 sm:text-lg">
+          <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
             Khảo sát đầu vào miễn phí. Bạn chỉ thanh toán khi muốn mở khoá luận
             giải đầy đủ hoặc Mentor cá nhân hoá. Hoàn tiền 100% trong 24 giờ
             nếu báo cáo chưa được tạo.
@@ -119,7 +119,7 @@ export function PricingTeaser() {
                 'relative flex flex-col rounded-2xl border p-6',
                 tier.highlighted
                   ? 'border-gold/60 bg-gradient-to-b from-gold/[0.06] to-transparent shadow-[0_0_60px_-20px_rgba(184,146,61,0.5)] lg:-translate-y-2'
-                  : 'border-cream/10 bg-ink/40',
+                  : 'border-border bg-card/40',
               ].join(' ')}
             >
               {tier.highlighted && (
@@ -127,20 +127,20 @@ export function PricingTeaser() {
                   Phổ biến nhất
                 </span>
               )}
-              <h3 className="font-heading text-lg font-semibold text-cream">{tier.name}</h3>
-              <p className="mt-1 text-sm text-cream/65">{tier.pitch}</p>
+              <h3 className="font-heading text-lg font-semibold text-foreground">{tier.name}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{tier.pitch}</p>
               <div className="mt-4 flex items-baseline gap-1.5">
-                <span className="font-heading text-3xl font-bold text-cream">{tier.price}</span>
+                <span className="font-heading text-3xl font-bold text-foreground">{tier.price}</span>
                 {tier.cadence && (
-                  <span className="text-sm text-cream/55">{tier.cadence}</span>
+                  <span className="text-sm text-muted-foreground">{tier.cadence}</span>
                 )}
               </div>
               {tier.subline && (
-                <p className="mt-1 text-xs text-cream/50">{tier.subline}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{tier.subline}</p>
               )}
               <ul className="mt-5 flex-1 space-y-2 text-sm">
                 {tier.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-cream/80">
+                  <li key={f} className="flex items-start gap-2 text-foreground/80">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden="true" />
                     <span>{f}</span>
                   </li>
@@ -161,7 +161,7 @@ export function PricingTeaser() {
         <div className="mt-10 text-center">
           <Link
             href="/pricing"
-            className="inline-flex items-center gap-1 text-sm text-cream/65 transition-colors hover:text-gold"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-gold"
           >
             Xem 5 gói (kèm Lifetime {formatVND(PRICING.lifetime.vnd)}) · So sánh đầy đủ tính năng
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

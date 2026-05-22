@@ -107,7 +107,7 @@ const DECISIONS = [
 
 export default function AnnualPlanningPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -115,12 +115,12 @@ export default function AnnualPlanningPage() {
       />
 
       <section className="mx-auto max-w-5xl px-6 pt-16 pb-20">
-        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">
             Trang chủ
           </Link>
           <span className="mx-1.5">/</span>
-          <span className="text-cream/70">Annual Planning</span>
+          <span className="text-muted-foreground">Annual Planning</span>
         </nav>
 
         <header className="mb-10">
@@ -132,7 +132,7 @@ export default function AnnualPlanningPage() {
               Kế hoạch năm 2026 theo lá số
             </span>
           </h1>
-          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-cream/75 sm:text-base">
+          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
             Chủ đề lưu niên + 4 quý + decisions lớn nên chuẩn bị. Demo content;
             lập lá số để cá nhân hoá theo đại vận của bạn.
           </p>
@@ -146,7 +146,7 @@ export default function AnnualPlanningPage() {
             <CardTitle className="font-heading text-xl sm:text-2xl">
               Năm Bính Ngọ — &ldquo;xây nền + thử nghiệm có kiểm soát&rdquo;
             </CardTitle>
-            <CardDescription className="text-cream/75">
+            <CardDescription className="text-muted-foreground">
               Năng lượng Hoả vượng: thuận cho người chủ động, không thuận cho
               người chần chừ — nhưng dễ &ldquo;đốt&rdquo; nếu thiếu kỷ luật.
             </CardDescription>
@@ -169,7 +169,7 @@ export default function AnnualPlanningPage() {
           </h2>
           <div className="grid gap-4 md:grid-cols-2">
             {QUARTERS.map((q) => (
-              <Card key={q.label} className="border-cream/10 bg-ink/40">
+              <Card key={q.label} className="border-border bg-card/40">
                 <CardHeader>
                   <div className="flex items-center justify-between gap-3">
                     <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
@@ -186,7 +186,7 @@ export default function AnnualPlanningPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-2 text-sm text-cream/80">
+                  <ul className="space-y-2 text-sm text-foreground/80">
                     {q.points.map((p) => (
                       <li key={p} className="flex gap-2">
                         <span
@@ -210,9 +210,9 @@ export default function AnnualPlanningPage() {
           >
             Decisions lớn nên chuẩn bị
           </h2>
-          <Card className="border-cream/10 bg-ink/40">
+          <Card className="border-border bg-card/40">
             <CardContent className="p-6">
-              <ul className="space-y-3 text-sm text-cream/85">
+              <ul className="space-y-3 text-sm text-foreground/85">
                 {DECISIONS.map((d) => (
                   <li key={d} className="flex items-start gap-3">
                     <CheckCircle2
@@ -223,7 +223,7 @@ export default function AnnualPlanningPage() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-5 text-xs text-cream/55">
+              <p className="mt-5 text-xs text-muted-foreground">
                 Mỗi quyết định trên nên đi kèm 1 decision journal: bối cảnh, lựa
                 chọn thay thế, tiêu chí review sau 30 / 90 ngày.
               </p>

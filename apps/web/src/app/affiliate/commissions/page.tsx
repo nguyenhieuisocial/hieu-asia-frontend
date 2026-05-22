@@ -89,7 +89,7 @@ const STATUS_CLASS: Record<Status, string> = {
   locked: 'bg-gold/15 text-gold',
   paid: 'bg-jade-500/15 text-jade-300',
   clawback: 'bg-rose-500/15 text-rose-300',
-  void: 'bg-cream/10 text-cream/60',
+  void: 'bg-muted/10 text-muted-foreground',
 };
 
 const FILTERS: { key: Filter; label: string }[] = [
@@ -190,12 +190,12 @@ export default function AffiliateCommissionsPage() {
 
   if (error === 'not_signed_in' || error === 'auth_unavailable') {
     return (
-      <div className="min-h-screen bg-ink text-cream">
+      <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
         <main className="mx-auto max-w-5xl px-6 pt-16 pb-20">
           <div className="mx-auto max-w-md text-center">
             <h1 className="mb-2 font-heading text-2xl font-bold">Đăng nhập để xem hoa hồng</h1>
-            <p className="mb-6 text-cream/70">
+            <p className="mb-6 text-muted-foreground">
               Bạn cần đăng nhập để xem lịch sử hoa hồng affiliate.
             </p>
             <Link href="/signin">
@@ -209,7 +209,7 @@ export default function AffiliateCommissionsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -217,12 +217,12 @@ export default function AffiliateCommissionsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
       />
       <main className="mx-auto max-w-5xl px-6 pt-16 pb-20">
-        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">Trang chủ</Link>
           <span className="mx-1.5">/</span>
           <Link href="/affiliate" className="hover:text-gold">Affiliate</Link>
           <span className="mx-1.5">/</span>
-          <span className="text-cream/70">Hoa hồng</span>
+          <span className="text-muted-foreground">Hoa hồng</span>
         </nav>
 
         {/* Hero */}
@@ -233,7 +233,7 @@ export default function AffiliateCommissionsPage() {
           <h1 className="mt-2 font-heading text-3xl font-bold sm:text-4xl">
             Hoa hồng của bạn
           </h1>
-          <p className="mt-3 max-w-2xl text-cream/70">
+          <p className="mt-3 max-w-2xl text-muted-foreground">
             Lịch sử hoa hồng 3 tầng. Trả sau khi giao dịch confirm (~7 ngày).
           </p>
         </header>
@@ -244,7 +244,7 @@ export default function AffiliateCommissionsPage() {
             <CardHeader className="pb-2">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-jade-300" />
-                <CardTitle className="text-xs uppercase text-cream/60">Tổng nhận</CardTitle>
+                <CardTitle className="text-xs uppercase text-muted-foreground">Tổng nhận</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
@@ -255,7 +255,7 @@ export default function AffiliateCommissionsPage() {
             <CardHeader className="pb-2">
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4 text-amber-300" />
-                <CardTitle className="text-xs uppercase text-cream/60">Đang chờ</CardTitle>
+                <CardTitle className="text-xs uppercase text-muted-foreground">Đang chờ</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
@@ -266,7 +266,7 @@ export default function AffiliateCommissionsPage() {
             <CardHeader className="pb-2">
               <div className="flex items-center gap-2">
                 <RefreshCcw className="h-4 w-4 text-rose-300" />
-                <CardTitle className="text-xs uppercase text-cream/60">Đã hoàn lại</CardTitle>
+                <CardTitle className="text-xs uppercase text-muted-foreground">Đã hoàn lại</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
@@ -276,8 +276,8 @@ export default function AffiliateCommissionsPage() {
           <Card>
             <CardHeader className="pb-2">
               <div className="flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-cream/60" />
-                <CardTitle className="text-xs uppercase text-cream/60">
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-xs uppercase text-muted-foreground">
                   Tỉ lệ hoàn lại
                 </CardTitle>
               </div>
@@ -306,7 +306,7 @@ export default function AffiliateCommissionsPage() {
                 className={`rounded-full border px-4 py-1.5 text-sm transition ${
                   active
                     ? 'border-gold/60 bg-gold/15 text-gold'
-                    : 'border-cream/15 text-cream/70 hover:border-cream/30 hover:text-cream'
+                    : 'border-border text-muted-foreground hover:border-border hover:text-foreground'
                 }`}
               >
                 {f.label}
@@ -342,14 +342,14 @@ export default function AffiliateCommissionsPage() {
                 </button>
               </div>
             ) : rows.length === 0 ? (
-              <div className="rounded border border-dashed border-cream/15 px-4 py-10 text-center text-sm text-cream/60">
+              <div className="rounded border border-dashed border-border px-4 py-10 text-center text-sm text-muted-foreground">
                 Chưa có hoa hồng nào.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="text-left text-xs uppercase text-cream/55">
-                    <tr className="border-b border-cream/10">
+                  <thead className="text-left text-xs uppercase text-muted-foreground">
+                    <tr className="border-b border-border">
                       <th className="py-2 pr-3 font-normal">Ngày</th>
                       <th className="py-2 pr-3 font-normal">Order ID</th>
                       <th className="py-2 pr-3 font-normal">Người mua</th>
@@ -362,23 +362,23 @@ export default function AffiliateCommissionsPage() {
                   </thead>
                   <tbody>
                     {rows.map((r) => (
-                      <tr key={r.id} className="border-b border-cream/[0.06]">
-                        <td className="py-2 pr-3 text-cream/70">{dt(r.created_at)}</td>
-                        <td className="py-2 pr-3 font-mono text-xs text-cream/70">
+                      <tr key={r.id} className="border-b border-border">
+                        <td className="py-2 pr-3 text-muted-foreground">{dt(r.created_at)}</td>
+                        <td className="py-2 pr-3 font-mono text-xs text-muted-foreground">
                           {r.order_id.slice(0, 12)}
                         </td>
-                        <td className="py-2 pr-3 font-mono text-xs text-cream/70">
+                        <td className="py-2 pr-3 font-mono text-xs text-muted-foreground">
                           {maskUserId(r.source_user_id)}
                         </td>
                         <td className="py-2 pr-3">
-                          <span className="rounded bg-cream/10 px-2 py-0.5 text-xs">
+                          <span className="rounded bg-muted/10 px-2 py-0.5 text-xs">
                             L{r.tier_level}
                           </span>
                         </td>
                         <td className="py-2 pr-3 text-right tabular-nums">
                           {vnd(r.gross_amount_vnd)}
                         </td>
-                        <td className="py-2 pr-3 text-right tabular-nums text-cream/70">
+                        <td className="py-2 pr-3 text-right tabular-nums text-muted-foreground">
                           {pct(r.commission_rate)}
                         </td>
                         <td className="py-2 pr-3 text-right font-semibold tabular-nums text-gold">
@@ -411,16 +411,16 @@ export default function AffiliateCommissionsPage() {
               <Button className="bg-gold text-ink hover:bg-gold/90">Yêu cầu rút</Button>
             </Link>
           ) : (
-            <Button disabled className="bg-cream/10 text-cream/70">
+            <Button disabled className="bg-muted/10 text-muted-foreground">
               Yêu cầu rút (tối thiểu {vnd(MIN_PAYOUT_VND)})
             </Button>
           )}
-          <Link href="/affiliate/network" className="text-sm text-cream/70 hover:text-gold">
+          <Link href="/affiliate/network" className="text-sm text-muted-foreground hover:text-gold">
             Xem mạng lưới →
           </Link>
         </div>
 
-        <p className="mt-4 text-xs text-cream/70">
+        <p className="mt-4 text-xs text-muted-foreground">
           Thời gian xử lý: 7-30 ngày làm việc tuỳ phương thức thanh toán.
         </p>
       </main>

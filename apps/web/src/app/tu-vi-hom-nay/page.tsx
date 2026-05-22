@@ -90,10 +90,10 @@ export default async function Page() {
     >
       <section className="mt-8">
         <div className="mb-5 flex items-center justify-between">
-          <h2 className="font-heading text-lg font-semibold text-cream">
+          <h2 className="font-heading text-lg font-semibold text-foreground">
             Chọn tuổi của bạn
           </h2>
-          <p className="hidden font-mono text-[10px] uppercase tracking-[0.28em] text-cream/40 sm:block">
+          <p className="hidden font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/40 sm:block">
             12 con giáp · điểm 1–10
           </p>
         </div>

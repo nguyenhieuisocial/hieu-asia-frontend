@@ -41,9 +41,9 @@ export function EmptyState({
           {icon}
         </div>
       )}
-      <h3 className="mb-2 text-lg font-semibold text-cream">{title}</h3>
+      <h3 className="mb-2 text-lg font-semibold text-foreground">{title}</h3>
       {description && (
-        <p className="mb-6 max-w-md text-sm text-cream/60">{description}</p>
+        <p className="mb-6 max-w-md text-sm text-muted-foreground">{description}</p>
       )}
       {action &&
         (action.href ? (

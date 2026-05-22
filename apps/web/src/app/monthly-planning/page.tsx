@@ -118,7 +118,7 @@ const ENERGIES: {
 
 const TONE_STYLE: Record<'Thuận' | 'Trung tính' | 'Cẩn trọng', string> = {
   'Thuận': 'border-emerald-400/40 bg-emerald-500/10 text-emerald-200',
-  'Trung tính': 'border-cream/20 bg-cream/5 text-cream/80',
+  'Trung tính': 'border-border bg-muted/5 text-foreground/80',
   'Cẩn trọng': 'border-amber-400/40 bg-amber-500/10 text-amber-200',
 };
 
@@ -134,7 +134,7 @@ export default function MonthlyPlanningPage() {
   const monthLabel = currentMonthVN();
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -142,12 +142,12 @@ export default function MonthlyPlanningPage() {
       />
 
       <section className="mx-auto max-w-5xl px-6 pt-16 pb-20">
-        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">
             Trang chủ
           </Link>
           <span className="mx-1.5">/</span>
-          <span className="text-cream/70">Monthly Planning</span>
+          <span className="text-muted-foreground">Monthly Planning</span>
         </nav>
 
         <header className="mb-10">
@@ -164,7 +164,7 @@ export default function MonthlyPlanningPage() {
               Lập kế hoạch tháng theo lá số
             </span>
           </h1>
-          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-cream/75 sm:text-base">
+          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
             Chia chủ đề tháng thành 4 tuần. Premium subscription tự fill dữ liệu từ
             đại vận + lưu nguyệt của bạn — Phase 1 hiển thị nội dung tham chiếu.
           </p>
@@ -178,8 +178,8 @@ export default function MonthlyPlanningPage() {
             <CardTitle className="font-heading text-xl capitalize sm:text-2xl">
               {monthLabel}
             </CardTitle>
-            <CardDescription className="text-cream/75">
-              Chủ đề tham chiếu — <strong className="text-cream">xây nền hơn là
+            <CardDescription className="text-muted-foreground">
+              Chủ đề tham chiếu — <strong className="text-foreground">xây nền hơn là
               mở rộng</strong>. Tập trung vào hệ thống bạn đã có, đừng vội thêm
               dự án mới.
             </CardDescription>
@@ -197,7 +197,7 @@ export default function MonthlyPlanningPage() {
             {WEEKS.map((w) => {
               const Icon = w.icon;
               return (
-                <Card key={w.label} className="border-cream/10 bg-ink/40">
+                <Card key={w.label} className="border-border bg-card/40">
                   <CardHeader>
                     <div className="flex items-center gap-2">
                       <Icon className="h-4 w-4 text-gold" aria-hidden="true" />
@@ -208,12 +208,12 @@ export default function MonthlyPlanningPage() {
                     <CardTitle className="mt-1 font-heading text-lg">
                       {w.title}
                     </CardTitle>
-                    <CardDescription className="text-cream/75">
+                    <CardDescription className="text-muted-foreground">
                       {w.description}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-2 text-sm text-cream/80">
+                    <ul className="space-y-2 text-sm text-foreground/80">
                       {w.actions.map((a) => (
                         <li key={a} className="flex gap-2">
                           <span aria-hidden="true" className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-gold/70" />
@@ -239,10 +239,10 @@ export default function MonthlyPlanningPage() {
             {ENERGIES.map((e) => {
               const Icon = e.icon;
               return (
-                <Card key={e.label} className="border-cream/10 bg-ink/40">
+                <Card key={e.label} className="border-border bg-card/40">
                   <CardContent className="flex flex-col items-start gap-2 p-5">
                     <Icon className="h-5 w-5 text-gold/80" aria-hidden="true" />
-                    <p className="text-sm font-medium text-cream">{e.label}</p>
+                    <p className="text-sm font-medium text-foreground">{e.label}</p>
                     <span
                       className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-medium ${TONE_STYLE[e.tone]}`}
                     >
@@ -265,7 +265,7 @@ export default function MonthlyPlanningPage() {
           <h2 className="mt-2 font-heading text-lg font-semibold sm:text-xl">
             Cá nhân hoá theo lá số của bạn
           </h2>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-cream/75">
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             Lập lá số Tử Vi để nội dung tháng phản ánh đại vận + lưu nguyệt riêng
             của bạn — thay vì chủ đề tham chiếu chung.
           </p>

@@ -89,8 +89,8 @@ export function DecisionsTab() {
       className="space-y-6"
     >
       <div>
-        <h2 className="font-heading text-2xl text-cream sm:text-3xl">Quyết định &amp; Journal</h2>
-        <p className="mt-1 text-sm text-cream/65">
+        <h2 className="font-heading text-2xl text-foreground sm:text-3xl">Quyết định &amp; Journal</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Decision Brief và nhật ký quyết định của bạn.
         </p>
       </div>
@@ -110,9 +110,9 @@ export function DecisionsTab() {
           </CardHeader>
           <CardContent>
             {decisions.length === 0 ? (
-              <p className="text-sm text-cream/55">Chưa có decision brief nào.</p>
+              <p className="text-sm text-muted-foreground">Chưa có decision brief nào.</p>
             ) : (
-              <ul className="divide-y divide-cream/5">
+              <ul className="divide-y divide-border">
                 {decisions.map((d) => (
                   <li key={d.id} className="py-3">
                     <Link
@@ -120,12 +120,12 @@ export function DecisionsTab() {
                       className="flex items-center gap-3 hover:text-gold"
                     >
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm text-cream/90">{d.question}</p>
-                        <p className="mt-0.5 text-[11px] text-cream/70">
+                        <p className="truncate text-sm text-foreground/90">{d.question}</p>
+                        <p className="mt-0.5 text-[11px] text-muted-foreground">
                           {TOPIC_LABEL[d.topic] ?? d.topic} · {fmtDate(d.createdAt)}
                         </p>
                       </div>
-                      <ChevronRight className="h-4 w-4 shrink-0 text-cream/40" aria-hidden />
+                      <ChevronRight className="h-4 w-4 shrink-0 text-foreground/40" aria-hidden />
                     </Link>
                   </li>
                 ))}
@@ -148,9 +148,9 @@ export function DecisionsTab() {
           </CardHeader>
           <CardContent>
             {journal.length === 0 ? (
-              <p className="text-sm text-cream/55">Chưa có nhật ký nào.</p>
+              <p className="text-sm text-muted-foreground">Chưa có nhật ký nào.</p>
             ) : (
-              <ul className="divide-y divide-cream/5">
+              <ul className="divide-y divide-border">
                 {journal.map((j) => (
                   <li key={j.id} className="py-3">
                     <Link
@@ -158,12 +158,12 @@ export function DecisionsTab() {
                       className="flex items-center gap-3 hover:text-gold"
                     >
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm text-cream/90">{j.question}</p>
-                        <p className="mt-0.5 text-[11px] text-cream/70">
+                        <p className="truncate text-sm text-foreground/90">{j.question}</p>
+                        <p className="mt-0.5 text-[11px] text-muted-foreground">
                           {TOPIC_LABEL[j.topic] ?? j.topic} · {fmtDate(j.createdAt)}
                         </p>
                       </div>
-                      <ChevronRight className="h-4 w-4 shrink-0 text-cream/40" aria-hidden />
+                      <ChevronRight className="h-4 w-4 shrink-0 text-foreground/40" aria-hidden />
                     </Link>
                   </li>
                 ))}

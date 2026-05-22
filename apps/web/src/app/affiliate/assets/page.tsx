@@ -59,7 +59,7 @@ export default function AffiliateAssetsPage() {
   }, [assets, filter]);
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
@@ -72,27 +72,27 @@ export default function AffiliateAssetsPage() {
         />
 
         <section className="relative mx-auto max-w-6xl px-6 pt-12 pb-20 sm:pt-16">
-          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-cream/55">
+          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">Trang chủ</Link>
             <span className="mx-1.5">/</span>
             <Link href="/affiliate" className="hover:text-gold">Affiliate</Link>
             <span className="mx-1.5">/</span>
-            <span className="text-cream/70">Marketing assets</span>
+            <span className="text-muted-foreground">Marketing assets</span>
           </nav>
 
           {error === 'not_signed_in' ? (
-            <Card className="border-cream/10 bg-ink/40">
+            <Card className="border-border bg-card/40">
               <CardContent className="flex flex-col items-center px-6 py-16 text-center">
                 <div
                   aria-hidden="true"
-                  className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-gold/25 bg-gradient-to-br from-gold/15 via-ink to-purple/20"
+                  className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-gold/25 bg-gradient-to-br from-gold/15 via-background to-purple/20"
                 >
                   <LockKeyhole className="h-5 w-5 text-gold" aria-hidden="true" />
                 </div>
-                <h1 className="font-heading text-2xl font-semibold text-cream">
+                <h1 className="font-heading text-2xl font-semibold text-foreground">
                   Cần đăng nhập affiliate
                 </h1>
-                <p className="mt-3 max-w-md text-sm leading-relaxed text-cream/70">
+                <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
                   Đăng nhập để xem và tải về banner, caption, QR code đã được cá
                   nhân hoá với mã giới thiệu của bạn.
                 </p>
@@ -114,13 +114,13 @@ export default function AffiliateAssetsPage() {
                 <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
                   Affiliate · Toolkit
                 </p>
-                <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-4xl">
+                <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
                   Marketing{' '}
                   <span className="bg-gold-gradient bg-clip-text text-transparent">
                     Assets
                   </span>
                 </h1>
-                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-cream/75 sm:text-base">
+                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
                   Banner, video, caption, QR — tất cả đã được cá nhân hoá với mã
                   giới thiệu của bạn. Sao chép một click, đăng ngay.
                 </p>
@@ -134,7 +134,7 @@ export default function AffiliateAssetsPage() {
                     className={`rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${
                       filter === f.key
                         ? 'border-gold bg-gold text-ink'
-                        : 'border-cream/15 bg-ink/40 text-cream/75 hover:border-gold/40 hover:text-cream'
+                        : 'border-border bg-card/40 text-muted-foreground hover:border-gold/40 hover:text-foreground'
                     }`}
                   >
                     {f.label}
@@ -156,8 +156,8 @@ export default function AffiliateAssetsPage() {
                     </CardContent>
                   </Card>
                 ) : filtered.length === 0 ? (
-                  <Card className="border-cream/10 bg-ink/40">
-                    <CardContent className="px-6 py-10 text-center text-sm text-cream/65">
+                  <Card className="border-border bg-card/40">
+                    <CardContent className="px-6 py-10 text-center text-sm text-muted-foreground">
                       Không có asset trong nhóm này.
                     </CardContent>
                   </Card>

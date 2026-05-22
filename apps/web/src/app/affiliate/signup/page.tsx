@@ -87,7 +87,7 @@ export default function AffiliateSignupPage() {
 
   if (result) {
     return (
-      <div className="min-h-screen bg-ink text-cream">
+      <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
         <main id="main-content" className="relative overflow-hidden bg-ink-radial pt-24 pb-20">
           <div
@@ -102,14 +102,14 @@ export default function AffiliateSignupPage() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
-                <Label className="text-xs uppercase text-cream/60">Mã affiliate của bạn</Label>
+                <Label className="text-xs uppercase text-muted-foreground">Mã affiliate của bạn</Label>
                 <div className="mt-1 rounded border border-gold/30 bg-gold/10 p-3 text-center font-mono text-2xl font-bold text-gold">
                   {result.code}
                 </div>
               </div>
 
               <div>
-                <Label className="text-xs uppercase text-cream/60">Link giới thiệu</Label>
+                <Label className="text-xs uppercase text-muted-foreground">Link giới thiệu</Label>
                 <div className="mt-1 flex gap-2">
                   <Input value={result.share_url} readOnly className="font-mono text-xs" />
                   <Button onClick={copyLink} type="button">
@@ -119,8 +119,8 @@ export default function AffiliateSignupPage() {
               </div>
 
               <div>
-                <Label className="text-xs uppercase text-cream/60">QR Code</Label>
-                <div className="mt-1 flex justify-center rounded border border-cream/10 bg-white p-4">
+                <Label className="text-xs uppercase text-muted-foreground">QR Code</Label>
+                <div className="mt-1 flex justify-center rounded border border-border bg-white p-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={result.qr_url} alt="QR code" width={256} height={256} className="block" />
                 </div>
@@ -133,7 +133,7 @@ export default function AffiliateSignupPage() {
                 </a>
               </div>
 
-              <div className="rounded border border-cream/10 bg-cream/5 p-3 text-sm text-cream/70">
+              <div className="rounded border border-border bg-muted/5 p-3 text-sm text-muted-foreground">
                 Mẹo: kết hợp link + QR khi đăng Facebook để chuyển đổi tốt hơn. Theo dõi
                 clicks/conversions trong dashboard.
               </div>
@@ -153,7 +153,7 @@ export default function AffiliateSignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <main id="main-content" className="relative overflow-hidden bg-ink-radial pt-20 pb-20">
         <div
@@ -161,17 +161,17 @@ export default function AffiliateSignupPage() {
           className="pointer-events-none absolute -top-20 right-[-10%] h-[360px] w-[360px] rounded-full bg-gold/10 blur-3xl"
         />
         <div className="relative mx-auto max-w-xl px-4">
-        <nav aria-label="Breadcrumb" className="mb-4 text-xs text-cream/55">
+        <nav aria-label="Breadcrumb" className="mb-4 text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">Trang chủ</Link>
           <span className="mx-1.5">/</span>
           <Link href="/affiliate" className="hover:text-gold">Affiliate</Link>
           <span className="mx-1.5">/</span>
-          <span className="text-cream/70">Đăng ký</span>
+          <span className="text-muted-foreground">Đăng ký</span>
         </nav>
-        <Card className="mt-4 border-cream/10">
+        <Card className="mt-4 border-border">
           <CardHeader>
             <CardTitle className="text-2xl">Đăng ký affiliate</CardTitle>
-            <p className="text-sm text-cream/70">
+            <p className="text-sm text-muted-foreground">
               Hoa hồng 30% tháng đầu / 10% recurring · Cookie 30 ngày
             </p>
           </CardHeader>
@@ -207,7 +207,7 @@ export default function AffiliateSignupPage() {
                   id="method"
                   value={method}
                   onChange={(e) => setMethod(e.target.value as PayoutMethod)}
-                  className="mt-1 w-full rounded border border-cream/20 bg-ink p-2 text-cream"
+                  className="mt-1 w-full rounded border border-border bg-background p-2 text-foreground"
                 >
                   <option value="bank">Chuyển khoản ngân hàng</option>
                   <option value="momo">Ví MoMo</option>
@@ -247,7 +247,7 @@ export default function AffiliateSignupPage() {
                 {submitting ? 'Đang tạo tài khoản…' : 'Đăng ký'}
               </Button>
 
-              <p className="text-xs text-cream/70">
+              <p className="text-xs text-muted-foreground">
                 Khi đăng ký bạn đồng ý với{' '}
                 <Link href="/terms" className="text-gold hover:underline">
                   Điều khoản

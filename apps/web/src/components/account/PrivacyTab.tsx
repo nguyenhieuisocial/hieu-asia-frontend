@@ -120,8 +120,8 @@ export function PrivacyTab({ userId }: PrivacyTabProps) {
       className="space-y-6"
     >
       <div>
-        <h2 className="font-heading text-2xl text-cream sm:text-3xl">Quyền riêng tư</h2>
-        <p className="mt-1 text-sm text-cream/65">
+        <h2 className="font-heading text-2xl text-foreground sm:text-3xl">Quyền riêng tư</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Quyền theo Nghị định 13/2023/NĐ-CP — bạn kiểm soát mọi dữ liệu.
         </p>
       </div>
@@ -137,11 +137,11 @@ export function PrivacyTab({ userId }: PrivacyTabProps) {
           {CONSENT_FIELDS.map((f) => (
             <div
               key={f.key}
-              className="flex items-start justify-between gap-4 rounded-lg border border-cream/10 bg-ink/40 p-4"
+              className="flex items-start justify-between gap-4 rounded-lg border border-border bg-card/40 p-4"
             >
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-cream">{f.label}</p>
-                <p className="mt-1 text-xs text-cream/55">{f.hint}</p>
+                <p className="text-sm font-medium text-foreground">{f.label}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{f.hint}</p>
               </div>
               <Switch
                 checked={consent[f.key]}

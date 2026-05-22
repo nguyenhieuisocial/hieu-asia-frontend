@@ -40,31 +40,31 @@ export function AccountSection({ userId }: AccountSectionProps) {
         <Field
           label="Loại tài khoản"
           value={
-            <span className="inline-flex items-center rounded-md border border-cream/15 bg-ink/40 px-2 py-1 text-xs font-medium text-cream/85">
+            <span className="inline-flex items-center rounded-md border border-border bg-card/40 px-2 py-1 text-xs font-medium text-foreground/85">
               {isAnon ? 'Anonymous (chưa đăng ký)' : 'Đã đăng ký'}
             </span>
           }
         />
-        <Field label="Email" value={<span className="text-cream/70">{isAnon ? 'Chưa liên kết' : '—'}</span>} />
-        <Field label="Thành viên từ" value={<span className="text-cream/85">{formattedDate}</span>} />
+        <Field label="Email" value={<span className="text-muted-foreground">{isAnon ? 'Chưa liên kết' : '—'}</span>} />
+        <Field label="Thành viên từ" value={<span className="text-foreground/85">{formattedDate}</span>} />
         <Field
           label="Gói dịch vụ"
           value={
-            <span className="inline-flex items-center rounded-md bg-cream/10 px-2 py-1 text-xs font-semibold text-cream">
+            <span className="inline-flex items-center rounded-md bg-muted/10 px-2 py-1 text-xs font-semibold text-foreground">
               Free
             </span>
           }
         />
       </div>
 
-      <div className="border-t border-cream/5 pt-4">
-        <p className="text-xs font-semibold uppercase tracking-widest text-cream/70">
+      <div className="border-t border-border pt-4">
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
           Quản lý tài khoản
         </p>
         <ul className="mt-3 space-y-2 text-sm">
           <li>
-            <span className="text-cream/55">Đổi mật khẩu:</span>{' '}
-            <span className="text-cream/55">Sắp ra mắt (sau khi bật email auth).</span>
+            <span className="text-muted-foreground">Đổi mật khẩu:</span>{' '}
+            <span className="text-muted-foreground">Sắp ra mắt (sau khi bật email auth).</span>
           </li>
           <li>
             <Link href="/account" className="text-gold underline">
@@ -84,8 +84,8 @@ export function AccountSection({ userId }: AccountSectionProps) {
 
 function Field({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-cream/5 bg-ink/30 px-3 py-2">
-      <div className="text-[10px] font-semibold uppercase tracking-widest text-cream/40">{label}</div>
+    <div className="rounded-lg border border-border bg-card/30 px-3 py-2">
+      <div className="text-[10px] font-semibold uppercase tracking-widest text-foreground/40">{label}</div>
       <div className="mt-1 text-sm">{value}</div>
     </div>
   );

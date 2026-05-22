@@ -103,11 +103,11 @@ export function PhotoDirection() {
         ))}
       </div>
 
-      <div className="rounded-lg border border-gold/15 bg-ink/40 p-5">
+      <div className="rounded-lg border border-gold/15 bg-card/40 p-5">
         <h4 className="font-heading text-sm font-semibold text-gold">
           Nguyên tắc bắt buộc
         </h4>
-        <ul className="mt-3 space-y-1.5 text-sm text-cream/80">
+        <ul className="mt-3 space-y-1.5 text-sm text-foreground/80">
           {RULES.map((rule) => (
             <li key={rule} className="flex gap-2">
               <span className="text-gold">·</span>

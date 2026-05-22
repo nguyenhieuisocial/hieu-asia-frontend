@@ -106,7 +106,7 @@ export default function SignInPage() {
     return (
       <>
         <SiteNav />
-        <main className="flex min-h-screen items-center justify-center bg-ink text-cream">
+        <main className="flex min-h-screen items-center justify-center bg-background text-foreground">
           <p className="font-heading text-gold">Đang kiểm tra phiên đăng nhập…</p>
         </main>
         <SiteFooter />
@@ -153,20 +153,20 @@ export default function SignInPage() {
       <SiteNav />
       <main
         id="main-content"
-        className="relative isolate flex min-h-screen flex-col items-center justify-center bg-ink-radial px-4 py-12 pt-24 text-cream"
+        className="relative isolate flex min-h-screen flex-col items-center justify-center bg-background px-4 py-12 pt-24 text-foreground"
       >
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.15)_0%,_transparent_55%)]"
         />
-        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">
             Trang chủ
           </Link>
           <span className="mx-1.5">/</span>
-          <span className="text-cream/70">Đăng nhập</span>
+          <span className="text-muted-foreground">Đăng nhập</span>
         </nav>
-        <Card className="w-full max-w-md border-gold/20 bg-ink/80 backdrop-blur">
+        <Card className="w-full max-w-md border-gold/20 bg-card/80 backdrop-blur">
           <CardHeader>
             <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gold/30 bg-gold/10">
               <Sparkles className="h-4 w-4 text-gold" aria-hidden="true" />
@@ -177,7 +177,7 @@ export default function SignInPage() {
               </span>{' '}
               hieu.asia
             </CardTitle>
-            <p className="mt-2 text-sm text-cream/70">
+            <p className="mt-2 text-sm text-muted-foreground">
               Chọn nhà cung cấp hoặc dùng email — không cần mật khẩu.
             </p>
           </CardHeader>
@@ -211,7 +211,7 @@ export default function SignInPage() {
                     variant="outline"
                     onClick={() => onOAuthClick('google')}
                     disabled={anyLoading}
-                    className="h-12 w-full justify-start gap-3 border-cream/10 bg-ink/40 text-cream hover:border-gold/40 hover:bg-ink/60"
+                    className="h-12 w-full justify-start gap-3 border-border bg-card/40 text-foreground hover:border-gold/40 hover:bg-card/60"
                   >
                     <GoogleIcon className="h-5 w-5 shrink-0" />
                     <span className="flex-1 text-left text-sm">
@@ -224,7 +224,7 @@ export default function SignInPage() {
                     variant="outline"
                     onClick={() => onOAuthClick('facebook')}
                     disabled={anyLoading}
-                    className="h-12 w-full justify-start gap-3 border-cream/10 bg-ink/40 text-cream hover:border-gold/40 hover:bg-ink/60"
+                    className="h-12 w-full justify-start gap-3 border-border bg-card/40 text-foreground hover:border-gold/40 hover:bg-card/60"
                   >
                     <Facebook
                       className="h-5 w-5 shrink-0 text-[#1877F2]"
@@ -243,10 +243,10 @@ export default function SignInPage() {
                     variant="outline"
                     onClick={() => onOAuthClick('apple')}
                     disabled={anyLoading}
-                    className="h-12 w-full justify-start gap-3 border-cream/10 bg-ink/40 text-cream hover:border-gold/40 hover:bg-ink/60"
+                    className="h-12 w-full justify-start gap-3 border-border bg-card/40 text-foreground hover:border-gold/40 hover:bg-card/60"
                   >
                     <Apple
-                      className="h-5 w-5 shrink-0 text-cream"
+                      className="h-5 w-5 shrink-0 text-foreground"
                       aria-hidden="true"
                       fill="currentColor"
                     />
@@ -259,10 +259,10 @@ export default function SignInPage() {
                 {/* Divider */}
                 <div className="relative my-2" aria-hidden="true">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-cream/10" />
+                    <div className="w-full border-t border-border" />
                   </div>
                   <div className="relative flex justify-center text-xs">
-                    <span className="bg-ink/80 px-3 uppercase tracking-wider text-cream/50">
+                    <span className="bg-card/80 px-3 uppercase tracking-wider text-muted-foreground">
                       hoặc
                     </span>
                   </div>
@@ -271,7 +271,7 @@ export default function SignInPage() {
                 {/* Magic-link form */}
                 <form onSubmit={onSubmit} className="space-y-4">
                   <div className="space-y-1">
-                    <Label htmlFor="email" className="text-cream/80">
+                    <Label htmlFor="email" className="text-foreground/80">
                       Email
                     </Label>
                     <Input
@@ -304,7 +304,7 @@ export default function SignInPage() {
                     {emailLoading ? 'Đang gửi…' : 'Gửi liên kết đăng nhập'}
                   </Button>
 
-                  <p className="text-center text-xs text-cream/70">
+                  <p className="text-center text-xs text-muted-foreground">
                     Bằng cách đăng nhập, bạn đồng ý với{' '}
                     <a href="/terms" className="underline hover:text-gold">
                       Điều khoản
@@ -320,7 +320,7 @@ export default function SignInPage() {
             )}
           </CardContent>
         </Card>
-        <p className="mt-6 inline-flex items-center gap-1.5 text-xs text-cream/55">
+        <p className="mt-6 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
           <ShieldCheck className="h-3.5 w-3.5 text-gold/80" aria-hidden="true" />
           Liên kết chỉ dùng được một lần · hết hạn sau 15 phút
         </p>

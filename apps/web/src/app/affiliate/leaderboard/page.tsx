@@ -50,7 +50,7 @@ export default function AffiliateLeaderboardPage() {
   }, [period]);
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
@@ -63,31 +63,31 @@ export default function AffiliateLeaderboardPage() {
         />
 
         <section className="relative mx-auto max-w-3xl px-6 pt-12 pb-20 sm:pt-16">
-          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-cream/55">
+          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">Trang chủ</Link>
             <span className="mx-1.5">/</span>
             <Link href="/affiliate" className="hover:text-gold">Affiliate</Link>
             <span className="mx-1.5">/</span>
-            <span className="text-cream/70">Bảng xếp hạng</span>
+            <span className="text-muted-foreground">Bảng xếp hạng</span>
           </nav>
 
           <header className="text-center">
             <div
               aria-hidden="true"
-              className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-gold/25 bg-gradient-to-br from-gold/15 via-ink to-purple/20"
+              className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-gold/25 bg-gradient-to-br from-gold/15 via-background to-purple/20"
             >
               <Trophy className="h-5 w-5 text-gold" aria-hidden="true" />
             </div>
             <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
               Affiliate · Ranking
             </p>
-            <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-4xl">
+            <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
               Bảng xếp hạng{' '}
               <span className="bg-gold-gradient bg-clip-text text-transparent">
                 affiliate
               </span>
             </h1>
-            <p className="mt-4 text-sm leading-relaxed text-cream/75 sm:text-base">
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
               Tên đã được làm mờ một phần để bảo vệ riêng tư. Top 3 nhận badge
               đặc biệt mỗi tháng và phần thưởng tier nâng cấp.
             </p>
@@ -120,10 +120,10 @@ export default function AffiliateLeaderboardPage() {
             )}
 
             {!loading && !error && entries.length === 0 && (
-              <Card className="border-cream/10 bg-ink/40">
+              <Card className="border-border bg-card/40">
                 <CardContent className="px-6 py-12 text-center">
-                  <p className="font-heading text-base text-cream">Chưa có dữ liệu</p>
-                  <p className="mt-2 text-sm text-cream/65">
+                  <p className="font-heading text-base text-foreground">Chưa có dữ liệu</p>
+                  <p className="mt-2 text-sm text-muted-foreground">
                     Hãy là người đầu tiên xuất hiện trên bảng xếp hạng — đăng ký
                     affiliate và bắt đầu giới thiệu.
                   </p>
@@ -138,7 +138,7 @@ export default function AffiliateLeaderboardPage() {
 
           <div className="mt-10 text-center">
             <Link href="/affiliate">
-              <Button variant="ghost" className="border border-cream/20">
+              <Button variant="ghost" className="border border-border">
                 Đăng ký affiliate
               </Button>
             </Link>

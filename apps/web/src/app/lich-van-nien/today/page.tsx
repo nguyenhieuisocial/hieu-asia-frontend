@@ -108,14 +108,14 @@ export default function TodayPage() {
       ]}
     >
       <section className="space-y-6">
-        <Card className="border-gold/20 bg-ink/60 backdrop-blur-sm">
+        <Card className="border-gold/20 bg-card/60 backdrop-blur-sm">
           <CardHeader>
             <CardTitle className="font-heading text-base">Chọn ngày</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid gap-3 sm:grid-cols-4">
               <div className="space-y-1.5">
-                <Label htmlFor="y" className="text-cream/85">Năm</Label>
+                <Label htmlFor="y" className="text-foreground/85">Năm</Label>
                 <Input
                   id="y"
                   type="number"
@@ -124,11 +124,11 @@ export default function TodayPage() {
                   max={2199}
                   value={year}
                   onChange={(e) => setYear(Number(e.target.value) || t.year)}
-                  className="bg-ink/60"
+                  className="bg-card/60"
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="m" className="text-cream/85">Tháng</Label>
+                <Label htmlFor="m" className="text-foreground/85">Tháng</Label>
                 <Input
                   id="m"
                   type="number"
@@ -137,11 +137,11 @@ export default function TodayPage() {
                   max={12}
                   value={month}
                   onChange={(e) => setMonth(Math.max(1, Math.min(12, Number(e.target.value) || 1)))}
-                  className="bg-ink/60"
+                  className="bg-card/60"
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="d" className="text-cream/85">Ngày</Label>
+                <Label htmlFor="d" className="text-foreground/85">Ngày</Label>
                 <Input
                   id="d"
                   type="number"
@@ -150,11 +150,11 @@ export default function TodayPage() {
                   max={31}
                   value={day}
                   onChange={(e) => setDay(Math.max(1, Math.min(31, Number(e.target.value) || 1)))}
-                  className="bg-ink/60"
+                  className="bg-card/60"
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="by" className="text-cream/85">Năm sinh của bạn</Label>
+                <Label htmlFor="by" className="text-foreground/85">Năm sinh của bạn</Label>
                 <Input
                   id="by"
                   type="number"
@@ -162,7 +162,7 @@ export default function TodayPage() {
                   placeholder="VD: 1990"
                   value={birthYear}
                   onChange={(e) => setBirthYear(e.target.value)}
-                  className="bg-ink/60"
+                  className="bg-card/60"
                 />
               </div>
             </div>
@@ -192,7 +192,7 @@ export default function TodayPage() {
           />
         )}
 
-        <div className="text-center text-xs text-cream/70">
+        <div className="text-center text-xs text-muted-foreground">
           <Link href="/lich-van-nien" className="hover:text-gold">← Quay lại Lịch Vạn Niên</Link>
         </div>
       </section>

@@ -207,13 +207,13 @@ export default function CareerFitPage() {
         ]}
       >
         <form onSubmit={onSubmit} className="mt-6 space-y-6">
-          <Card className="border-cream/10 bg-ink/50 backdrop-blur-sm">
+          <Card className="border-border bg-card/50 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle className="font-heading text-lg text-cream">Thông tin cơ bản</CardTitle>
+              <CardTitle className="font-heading text-lg text-foreground">Thông tin cơ bản</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <Label htmlFor="cf-date" className="text-cream/85">
+                <Label htmlFor="cf-date" className="text-foreground/85">
                   Ngày sinh<span className="text-rose-400"> *</span>
                 </Label>
                 <Input
@@ -222,22 +222,22 @@ export default function CareerFitPage() {
                   value={birthDate}
                   onChange={(e) => setBirthDate(e.target.value)}
                   required
-                  className="bg-ink/60"
+                  className="bg-card/60"
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-cream/85">Giới tính</Label>
+                <Label className="text-foreground/85">Giới tính</Label>
                 <RadioGroup
                   name="cf-gender"
                   value={gender}
                   onValueChange={(v) => setGender(v as 'male' | 'female')}
                   className="flex gap-4"
                 >
-                  <label className="flex items-center gap-2 text-sm text-cream/85">
+                  <label className="flex items-center gap-2 text-sm text-foreground/85">
                     <RadioGroupItem value="male" id="cf-male" />
                     <span>Nam</span>
                   </label>
-                  <label className="flex items-center gap-2 text-sm text-cream/85">
+                  <label className="flex items-center gap-2 text-sm text-foreground/85">
                     <RadioGroupItem value="female" id="cf-female" />
                     <span>Nữ</span>
                   </label>
@@ -246,15 +246,15 @@ export default function CareerFitPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-cream/10 bg-ink/50 backdrop-blur-sm">
+          <Card className="border-border bg-card/50 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle className="font-heading text-lg text-cream">Cách bạn vận hành</CardTitle>
+              <CardTitle className="font-heading text-lg text-foreground">Cách bạn vận hành</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               {PREF_GROUPS.map((g) => (
                 <div key={g.key} className="space-y-2">
-                  <Label className="text-cream/85">{g.label}</Label>
-                  <p className="text-xs text-cream/55">{g.helper}</p>
+                  <Label className="text-foreground/85">{g.label}</Label>
+                  <p className="text-xs text-muted-foreground">{g.helper}</p>
                   <RadioGroup
                     name={`cf-${g.key}`}
                     value={prefState[g.key]}
@@ -264,7 +264,7 @@ export default function CareerFitPage() {
                     {g.options.map((o) => (
                       <label
                         key={o.value}
-                        className="flex items-center gap-2 rounded-md border border-cream/10 bg-ink/40 px-3 py-2 text-sm text-cream/85 transition-colors hover:border-gold/30"
+                        className="flex items-center gap-2 rounded-md border border-border bg-card/40 px-3 py-2 text-sm text-foreground/85 transition-colors hover:border-gold/30"
                       >
                         <RadioGroupItem value={o.value} id={`${g.key}-${o.value}`} />
                         <span>{o.label}</span>
@@ -290,17 +290,17 @@ export default function CareerFitPage() {
         </form>
 
         {!report && !loading && (
-          <p className="mt-10 rounded-md border border-cream/10 bg-ink/40 px-4 py-6 text-center text-sm text-cream/55">
+          <p className="mt-10 rounded-md border border-border bg-card/40 px-4 py-6 text-center text-sm text-muted-foreground">
             Chọn 5 sở thích và bấm phân tích để xem top 3 nhóm công việc phù hợp.
           </p>
         )}
 
         {report && (
           <section className="mt-10 space-y-8">
-            <Card className="border-gold/30 bg-ink/60 backdrop-blur-sm">
+            <Card className="border-gold/30 bg-card/60 backdrop-blur-sm">
               <CardContent className="pt-6">
-                <p className="text-sm leading-relaxed text-cream/80">{report.summary}</p>
-                <p className="mt-2 text-xs text-cream/55">
+                <p className="text-sm leading-relaxed text-foreground/80">{report.summary}</p>
+                <p className="mt-2 text-xs text-muted-foreground">
                   Mệnh theo địa chi năm sinh: <span className="text-gold">{report.elementOfZodiac}</span>
                 </p>
               </CardContent>
@@ -312,22 +312,22 @@ export default function CareerFitPage() {
               </h2>
               <div className="grid gap-4 md:grid-cols-3">
                 {report.topMatches.map((m) => (
-                  <Card key={m.category} className="border-cream/10 bg-ink/40 backdrop-blur-sm">
+                  <Card key={m.category} className="border-border bg-card/40 backdrop-blur-sm">
                     <CardHeader>
                       <div className="flex items-center justify-between gap-2">
-                        <CardTitle className="font-heading text-base text-cream">
+                        <CardTitle className="font-heading text-base text-foreground">
                           {m.category}
                         </CardTitle>
                         <FitBadge score={m.fitScore} />
                       </div>
                     </CardHeader>
                     <CardContent className="space-y-3">
-                      <ul className="list-disc space-y-1 pl-5 text-xs text-cream/75">
+                      <ul className="list-disc space-y-1 pl-5 text-xs text-muted-foreground">
                         {m.examples.map((ex) => (
                           <li key={ex}>{ex}</li>
                         ))}
                       </ul>
-                      <p className="text-xs text-cream/80">{m.rationale}</p>
+                      <p className="text-xs text-foreground/80">{m.rationale}</p>
                       <p className="rounded-md border border-rose-500/20 bg-rose-500/5 px-2 py-1.5 text-xs text-rose-200/85">
                         Cẩn trọng: {m.watchOut}
                       </p>
@@ -341,9 +341,9 @@ export default function CareerFitPage() {
               <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
                 Toàn bộ 5 nhóm — xếp hạng
               </h2>
-              <div className="overflow-hidden rounded-xl border border-cream/10 bg-ink/40">
+              <div className="overflow-hidden rounded-xl border border-border bg-card/40">
                 <table className="w-full text-sm">
-                  <thead className="border-b border-cream/10 text-xs text-cream/55">
+                  <thead className="border-b border-border text-xs text-muted-foreground">
                     <tr>
                       <th className="px-4 py-2 text-left font-medium">Nhóm</th>
                       <th className="px-4 py-2 text-right font-medium">Fit score</th>
@@ -353,9 +353,9 @@ export default function CareerFitPage() {
                     {report.allCategories.map((c, i) => (
                       <tr
                         key={c.category}
-                        className={i % 2 === 0 ? 'bg-ink/30' : ''}
+                        className={i % 2 === 0 ? 'bg-card/30' : ''}
                       >
-                        <td className="px-4 py-2 text-cream/85">{c.category}</td>
+                        <td className="px-4 py-2 text-foreground/85">{c.category}</td>
                         <td className="px-4 py-2 text-right">
                           <FitBadge score={c.fitScore} />
                         </td>
@@ -366,8 +366,8 @@ export default function CareerFitPage() {
               </div>
             </div>
 
-            <footer className="rounded-md border border-cream/10 bg-ink/30 px-4 py-3 text-xs text-cream/55">
-              <p className="mb-1 font-semibold text-cream/70">Lưu ý:</p>
+            <footer className="rounded-md border border-border bg-card/30 px-4 py-3 text-xs text-muted-foreground">
+              <p className="mb-1 font-semibold text-muted-foreground">Lưu ý:</p>
               <ul className="list-disc space-y-1 pl-5">
                 {report.caveats.map((c, i) => (
                   <li key={i}>{c}</li>

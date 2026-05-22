@@ -76,26 +76,26 @@ export function OnboardingRecap() {
 
   return (
     <div className="mt-6 space-y-4">
-      <div className="rounded-lg border border-gold/20 bg-ink/40 p-4">
+      <div className="rounded-lg border border-gold/20 bg-card/40 p-4">
         <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-gold/80">
           Bạn đã chọn:
         </p>
-        <ul className="mt-3 space-y-2 text-sm text-cream/80">
+        <ul className="mt-3 space-y-2 text-sm text-foreground/80">
           {topicLabel && (
             <li>
-              <span className="text-cream/55">Chủ đề:</span>{' '}
-              <span className="text-cream">{topicLabel}</span>
+              <span className="text-muted-foreground">Chủ đề:</span>{' '}
+              <span className="text-foreground">{topicLabel}</span>
             </li>
           )}
           {data.situation && (
             <li>
-              <span className="text-cream/55">Tình huống:</span>{' '}
-              <span className="text-cream">"{truncate(data.situation, 150)}"</span>
+              <span className="text-muted-foreground">Tình huống:</span>{' '}
+              <span className="text-foreground">"{truncate(data.situation, 150)}"</span>
             </li>
           )}
           <li>
-            <span className="text-cream/55">Đồng ý:</span>{' '}
-            <span className="text-cream">{consentSummary}</span>
+            <span className="text-muted-foreground">Đồng ý:</span>{' '}
+            <span className="text-foreground">{consentSummary}</span>
           </li>
         </ul>
         <Link
@@ -106,7 +106,7 @@ export function OnboardingRecap() {
         </Link>
       </div>
 
-      <div className="rounded-md border border-jade-50/30 bg-jade/5 p-3 text-xs leading-relaxed text-cream/75">
+      <div className="rounded-md border border-jade-50/30 bg-jade/5 p-3 text-xs leading-relaxed text-foreground/75">
         Bạn đã đồng ý xử lý ngày giờ sinh ở bước trước; phần này bổ sung các quyền chi tiết hơn.
       </div>
     </div>

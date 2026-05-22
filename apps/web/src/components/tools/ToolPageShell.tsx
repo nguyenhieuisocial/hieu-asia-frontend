@@ -36,7 +36,7 @@ export function ToolPageShell({
   children,
 }: ToolPageShellProps) {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
 
       <main id="main-content" className="relative overflow-hidden pt-16">
@@ -58,7 +58,7 @@ export function ToolPageShell({
           <div className="mx-auto max-w-6xl px-6 pt-12 pb-8 sm:pt-16 sm:pb-12">
             {breadcrumb && breadcrumb.length > 0 && (
               <nav aria-label="Breadcrumb" className="mb-4">
-                <ol className="flex flex-wrap items-center gap-1.5 text-xs text-cream/55">
+                <ol className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
                   {breadcrumb.map((b, i) => (
                     <li key={i} className="flex items-center gap-1.5">
                       {b.href ? (
@@ -66,10 +66,10 @@ export function ToolPageShell({
                           {b.label}
                         </Link>
                       ) : (
-                        <span className="text-cream/70">{b.label}</span>
+                        <span className="text-muted-foreground">{b.label}</span>
                       )}
                       {i < breadcrumb.length - 1 && (
-                        <ChevronRight className="h-3 w-3 text-cream/30" aria-hidden="true" />
+                        <ChevronRight className="h-3 w-3 text-foreground/30" aria-hidden="true" />
                       )}
                     </li>
                   ))}
@@ -81,7 +81,7 @@ export function ToolPageShell({
               {icon && (
                 <div
                   aria-hidden="true"
-                  className="hidden h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-gold/25 bg-gradient-to-br from-gold/15 via-ink to-purple/20 text-3xl shadow-[0_0_40px_-12px_rgba(184,146,61,0.45)] sm:flex"
+                  className="hidden h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-gold/25 bg-gradient-to-br from-gold/15 via-background to-purple/20 text-3xl shadow-[0_0_40px_-12px_rgba(184,146,61,0.45)] sm:flex"
                 >
                   {icon}
                 </div>
@@ -90,10 +90,10 @@ export function ToolPageShell({
                 <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
                   {eyebrow}
                 </p>
-                <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-4xl lg:text-5xl">
+                <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
                   {title}
                 </h1>
-                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-cream/75 sm:text-base">
+                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
                   {description}
                 </p>
                 {heroAction && <div className="mt-6">{heroAction}</div>}

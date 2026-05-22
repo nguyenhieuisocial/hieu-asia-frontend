@@ -36,14 +36,14 @@ export function LeaderboardList({ entries, period }: Props) {
       </CardHeader>
       <CardContent>
         {entries.length === 0 ? (
-          <p className="text-sm text-cream/70">Chưa có dữ liệu.</p>
+          <p className="text-sm text-muted-foreground">Chưa có dữ liệu.</p>
         ) : (
           <ol className="space-y-2">
             {entries.map((e) => (
               <li
                 key={e.code}
-                className={`flex items-center justify-between rounded border border-cream/10 p-3 ${
-                  e.rank <= 3 ? 'bg-gold/5' : 'bg-cream/[0.02]'
+                className={`flex items-center justify-between rounded border border-border p-3 ${
+                  e.rank <= 3 ? 'bg-gold/5' : 'bg-muted/[0.02]'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -52,7 +52,7 @@ export function LeaderboardList({ entries, period }: Props) {
                   </span>
                   <div>
                     <div className="font-medium">{e.display_name}</div>
-                    <div className="font-mono text-xs text-cream/70">{e.code}</div>
+                    <div className="font-mono text-xs text-muted-foreground">{e.code}</div>
                   </div>
                 </div>
                 <div className="text-right">

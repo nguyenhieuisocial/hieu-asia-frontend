@@ -60,7 +60,7 @@ const BREADCRUMB_JSONLD = {
 
 export default function TuViNgheNghiepPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -77,10 +77,10 @@ export default function TuViNgheNghiepPage() {
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Tử Vi · Sự nghiệp & vai trò
           </p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
             Bạn hợp ngành nào, vai trò gì, môi trường nào?
           </h1>
-          <p className="mt-5 text-base leading-relaxed text-cream/80 sm:text-lg">
+          <p className="mt-5 text-base leading-relaxed text-foreground/80 sm:text-lg">
             Tử Vi không kê khai "bạn sẽ làm nghề X". Nhưng cung Quan Lộc + Tài Bạch +
             Thiên Di cho biết KIỂU vai trò, KIỂU môi trường, KIỂU đồng nghiệp mà bạn
             phát huy tốt nhất. Lập lá số 2 phút để xem 4 cung chính ảnh hưởng nghề
@@ -99,21 +99,21 @@ export default function TuViNgheNghiepPage() {
         </section>
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12">
-          <h2 className="mb-5 font-heading text-2xl font-semibold text-cream sm:text-3xl">
+          <h2 className="mb-5 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             4 khuôn mẫu nghề nghiệp thường gặp
           </h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {PATTERNS.map((p) => {
               const Icon = p.icon;
               return (
-                <Card key={p.title} className="border-cream/10 bg-ink/40">
+                <Card key={p.title} className="border-border bg-card/40">
                   <CardHeader className="pb-2">
-                    <CardTitle className="flex items-start gap-2 font-heading text-base text-cream">
+                    <CardTitle className="flex items-start gap-2 font-heading text-base text-foreground">
                       <Icon className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden />
                       {p.title}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="text-sm leading-relaxed text-cream/75">
+                  <CardContent className="text-sm leading-relaxed text-muted-foreground">
                     {p.body}
                   </CardContent>
                 </Card>
@@ -123,14 +123,14 @@ export default function TuViNgheNghiepPage() {
         </section>
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12">
-          <Card className="border-cream/10 bg-ink/40">
+          <Card className="border-border bg-card/40">
             <CardHeader>
-              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
                 Mentor sẽ giúp bạn trả lời 5 câu này
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ol className="space-y-2 text-sm leading-relaxed text-cream/80 sm:text-base">
+              <ol className="space-y-2 text-sm leading-relaxed text-foreground/80 sm:text-base">
                 {QUESTIONS.map((q, i) => (
                   <li key={i} className="flex gap-3">
                     <span className="shrink-0 font-mono text-gold/70">
@@ -140,7 +140,7 @@ export default function TuViNgheNghiepPage() {
                   </li>
                 ))}
               </ol>
-              <p className="mt-4 text-xs text-cream/55">
+              <p className="mt-4 text-xs text-muted-foreground">
                 Mentor không trả lời "có" hoặc "không" — Mentor hỏi lại bối cảnh, đối chiếu lá số,
                 và đưa 2–3 kịch bản với điều kiện kiểm chứng. Bạn vẫn là người quyết định.
               </p>
@@ -150,10 +150,10 @@ export default function TuViNgheNghiepPage() {
 
         <section className="relative mx-auto max-w-3xl px-6 pb-20">
           <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent p-6 sm:p-8">
-            <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+            <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
               Bắt đầu — xem Quan Lộc + Tài Bạch của bạn
             </h2>
-            <p className="mt-3 text-sm leading-relaxed text-cream/80 sm:text-base">
+            <p className="mt-3 text-sm leading-relaxed text-foreground/80 sm:text-base">
               Lập lá số (2 phút, miễn phí). Bạn sẽ thấy 12 cung tương tác, click vào cung
               Quan Lộc để xem chính tinh + đại vận + lưu niên. Sau đó hỏi Mentor về quyết
               định nghề cụ thể của bạn.
@@ -164,7 +164,7 @@ export default function TuViNgheNghiepPage() {
               </Link>
               <Link
                 href="/sample-report"
-                className="inline-flex items-center text-sm text-cream/70 hover:text-gold"
+                className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"
               >
                 Xem mẫu báo cáo <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
               </Link>

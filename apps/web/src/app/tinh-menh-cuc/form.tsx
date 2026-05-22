@@ -56,7 +56,7 @@ export function TinhMenhCucForm() {
   };
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
@@ -65,7 +65,7 @@ export function TinhMenhCucForm() {
         />
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12 pt-12 sm:pt-16">
-          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-cream/55">
+          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">
               Trang chủ
             </Link>
@@ -74,25 +74,25 @@ export function TinhMenhCucForm() {
               Tử Vi
             </Link>
             <span className="mx-1.5">/</span>
-            <span className="text-cream/75">Tính Mệnh Cục</span>
+            <span className="text-muted-foreground">Tính Mệnh Cục</span>
           </nav>
 
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Free tool · Bước 1 của Tử Vi
           </p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
             Tính Mệnh Cục miễn phí
           </h1>
-          <p className="mt-5 text-base leading-relaxed text-cream/80 sm:text-lg">
+          <p className="mt-5 text-base leading-relaxed text-foreground/80 sm:text-lg">
             Bước đầu tiên khi đọc lá số Tử Vi: xác định cung Mệnh, cung Thân, Cục và âm
             dương. 30 giây, không cần đăng ký.
           </p>
         </section>
 
         <section className="relative mx-auto max-w-2xl px-6 pb-12">
-          <Card className="border-gold/20 bg-ink/40">
+          <Card className="border-gold/20 bg-card/40">
             <CardHeader>
-              <CardTitle className="font-heading text-xl text-cream">
+              <CardTitle className="font-heading text-xl text-foreground">
                 Nhập ngày–giờ sinh
               </CardTitle>
             </CardHeader>
@@ -128,7 +128,7 @@ export function TinhMenhCucForm() {
                     value={birthHour}
                     onChange={(e) => setBirthHour(e.target.value)}
                   />
-                  <label className="flex items-center gap-2 text-xs text-cream/65">
+                  <label className="flex items-center gap-2 text-xs text-muted-foreground">
                     <input
                       type="checkbox"
                       checked={!hasTime}
@@ -176,7 +176,7 @@ export function TinhMenhCucForm() {
           <section className="relative mx-auto max-w-2xl px-6 pb-12">
             <Card className="border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 font-heading text-xl text-cream sm:text-2xl">
+                <CardTitle className="flex items-center gap-2 font-heading text-xl text-foreground sm:text-2xl">
                   <Sparkles className="h-5 w-5 text-gold" aria-hidden /> Kết quả của bạn
                 </CardTitle>
               </CardHeader>
@@ -225,7 +225,7 @@ export function TinhMenhCucForm() {
                   </div>
                 )}
 
-                <div className="border-t border-cream/10 pt-4 text-xs leading-relaxed text-cream/65">
+                <div className="border-t border-border pt-4 text-xs leading-relaxed text-muted-foreground">
                   Đây là phần cấu trúc — bước 1 của lá số. Để xem 12 cung tương tác, 14
                   chính tinh và đại vận của riêng bạn, lập lá số đầy đủ (vẫn miễn phí).
                 </div>
@@ -236,7 +236,7 @@ export function TinhMenhCucForm() {
                   </Link>
                   <Link
                     href="/tu-vi"
-                    className="inline-flex items-center text-sm text-cream/70 hover:text-gold"
+                    className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"
                   >
                     Cẩm nang Tử Vi <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
                   </Link>
@@ -247,13 +247,13 @@ export function TinhMenhCucForm() {
         )}
 
         <section className="relative mx-auto max-w-2xl px-6 pb-20">
-          <Card className="border-cream/10 bg-ink/40">
+          <Card className="border-border bg-card/40">
             <CardHeader>
-              <CardTitle className="font-heading text-lg text-cream">
+              <CardTitle className="font-heading text-lg text-foreground">
                 Cục là gì?
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm leading-relaxed text-cream/75">
+            <CardContent className="space-y-2 text-sm leading-relaxed text-muted-foreground">
               <p>
                 Cục trong Tử Vi xác định CHU KỲ ĐẠI VẬN của bạn — 10 năm 1 đại vận.
                 Có 5 loại Cục theo ngũ hành:
@@ -275,7 +275,7 @@ export function TinhMenhCucForm() {
                   <strong className="text-gold">Hỏa lục cục</strong> — đại vận từ 6 tuổi
                 </li>
               </ul>
-              <p className="text-cream/65">
+              <p className="text-muted-foreground">
                 Mệnh hoà với Cục → giai đoạn phát triển thuận. Mệnh khắc Cục → cảm giác
                 "vận ngược" — không phải định mệnh, là dấu hiệu cần thay đổi cách tiếp
                 cận. Mentor sẽ giải thích chi tiết khi bạn lập lá số đầy đủ.
@@ -291,10 +291,10 @@ export function TinhMenhCucForm() {
 
 function ResultRow({ label, value, hint }: { label: string; value: string; hint: string }) {
   return (
-    <div className="rounded-md border border-cream/10 bg-ink/40 p-3">
-      <p className="font-mono text-[10px] uppercase tracking-widest text-cream/55">{label}</p>
+    <div className="rounded-md border border-border bg-card/40 p-3">
+      <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
       <p className="mt-1 font-heading text-lg font-semibold text-gold">{value}</p>
-      <p className="mt-1 text-xs text-cream/65">{hint}</p>
+      <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
     </div>
   );
 }

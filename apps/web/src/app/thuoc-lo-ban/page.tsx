@@ -103,14 +103,14 @@ export default function ThuocLoBanPage() {
     >
       <section className="mt-6 grid gap-6 lg:grid-cols-5">
         <div className="lg:col-span-2">
-          <Card className="border-gold/20 bg-ink/60 backdrop-blur-sm">
+          <Card className="border-gold/20 bg-card/60 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="font-heading text-lg">Nhập kích thước</CardTitle>
             </CardHeader>
             <CardContent>
               <form className="space-y-5" onSubmit={onSubmit}>
                 <div className="space-y-1.5">
-                  <Label htmlFor="value_cm" className="text-cream/85">
+                  <Label htmlFor="value_cm" className="text-foreground/85">
                     Kích thước (cm)
                   </Label>
                   <Input
@@ -121,13 +121,13 @@ export default function ThuocLoBanPage() {
                     value={valueCm}
                     onChange={(e) => setValueCm(e.target.value)}
                     required
-                    className="bg-ink/60 font-mono text-base"
+                    className="bg-card/60 font-mono text-base"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-cream/85">Loại thước</Label>
+                  <Label className="text-foreground/85">Loại thước</Label>
                   <Select value={type} onValueChange={(v) => setType(v as LoBanType)}>
-                    <SelectTrigger className="bg-ink/60">
+                    <SelectTrigger className="bg-card/60">
                       <SelectValue>{selectedLabel}</SelectValue>
                     </SelectTrigger>
                     <SelectContent>
@@ -162,11 +162,11 @@ export default function ThuocLoBanPage() {
           {loading && <LoBanLoadingSkeleton />}
 
           {!loading && !result && (
-            <Card className="border-dashed border-cream/15 bg-ink/30">
+            <Card className="border-dashed border-border bg-card/30">
               <CardContent className="flex flex-col items-center justify-center px-6 py-12 text-center">
                 <div aria-hidden className="text-5xl">📏</div>
-                <h2 className="mt-4 font-heading text-lg text-cream">Chưa có kết quả</h2>
-                <p className="mt-2 max-w-md text-sm text-cream/60">
+                <h2 className="mt-4 font-heading text-lg text-foreground">Chưa có kết quả</h2>
+                <p className="mt-2 max-w-md text-sm text-muted-foreground">
                   Nhập kích thước (cm) và chọn loại thước. Hệ thống sẽ tra cung Tốt / Xấu, ý nghĩa
                   ô con và gợi ý kích thước tốt gần nhất nếu kích thước hiện tại rơi vào cung xấu.
                 </p>
@@ -188,7 +188,7 @@ export default function ThuocLoBanPage() {
                   className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gold/10 blur-3xl"
                 />
                 <CardContent className="relative p-6 text-center sm:p-8">
-                  <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-cream/55">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
                     {result.cm} cm · {result.type_label}
                   </div>
                   <div className="my-3 bg-gold-gradient bg-clip-text font-heading text-3xl font-bold text-transparent sm:text-4xl">
@@ -208,10 +208,10 @@ export default function ThuocLoBanPage() {
                     )}
                     {result.fortune}
                   </span>
-                  <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-cream/85">
+                  <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-foreground/85">
                     {result.meaning}
                   </p>
-                  <p className="mt-3 font-mono text-[10px] tracking-wide text-cream/70">
+                  <p className="mt-3 font-mono text-[10px] tracking-wide text-muted-foreground">
                     Vị trí trong chu kỳ: {result.position_in_cycle_cm.toFixed(1)} /{' '}
                     {result.cycle_length_cm} cm
                   </p>
@@ -219,7 +219,7 @@ export default function ThuocLoBanPage() {
               </Card>
 
               {(result.next_good || result.prev_good) && (
-                <Card className="border-cream/10 bg-ink/50">
+                <Card className="border-border bg-card/50">
                   <CardHeader>
                     <CardTitle className="text-base text-gold">
                       Gợi ý kích thước tốt gần nhất
@@ -255,8 +255,8 @@ function SuggestionCell({
       <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-emerald-300/80">
         {direction}
       </div>
-      <div className="mt-1.5 font-heading text-xl font-semibold text-cream">{suggestion.cm} cm</div>
-      <div className="mt-1 text-xs text-cream/70">
+      <div className="mt-1.5 font-heading text-xl font-semibold text-foreground">{suggestion.cm} cm</div>
+      <div className="mt-1 text-xs text-muted-foreground">
         {suggestion.block} · {suggestion.sub}
       </div>
     </div>
@@ -266,7 +266,7 @@ function SuggestionCell({
 function LoBanLoadingSkeleton() {
   return (
     <div className="space-y-4">
-      <Card className="border-cream/10 bg-ink/50">
+      <Card className="border-border bg-card/50">
         <CardContent className="p-6">
           <Skeleton className="mx-auto h-3 w-32" />
           <Skeleton className="mx-auto mt-3 h-10 w-48" />

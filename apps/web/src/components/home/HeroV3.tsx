@@ -16,7 +16,7 @@ export function HeroV3() {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative isolate overflow-hidden bg-ink"
+      className="relative isolate overflow-hidden bg-background"
     >
       {/* Layer 1: purple/gold radial wash */}
       <div
@@ -36,7 +36,7 @@ export function HeroV3() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="inline-flex items-center gap-2 rounded-full border border-gold/25 bg-ink/60 px-4 py-1.5 backdrop-blur-sm"
+          className="inline-flex items-center gap-2 rounded-full border border-gold/25 bg-card/60 px-4 py-1.5 backdrop-blur-sm"
         >
           <span className="h-1.5 w-1.5 rounded-full bg-gold" aria-hidden="true" />
           <span className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/90 sm:text-xs">
@@ -49,7 +49,7 @@ export function HeroV3() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-8 max-w-4xl font-heading text-5xl font-bold leading-[1.05] tracking-tight text-cream sm:text-6xl lg:text-7xl"
+          className="mt-8 max-w-4xl font-heading text-5xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-6xl lg:text-7xl"
         >
           Hiểu mình.{' '}
           <span className="bg-gold-gradient bg-clip-text text-transparent">
@@ -61,7 +61,7 @@ export function HeroV3() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-7 max-w-2xl text-base leading-relaxed text-cream/80 sm:text-lg"
+          className="mt-7 max-w-2xl text-base leading-relaxed text-foreground/80 sm:text-lg"
         >
           Mỗi khi bạn đứng trước một quyết định quan trọng, hieu.asia cho bạn một
           góc nhìn sâu hơn — bằng tri thức cổ học Á Đông, trình bày bằng tiếng
@@ -95,7 +95,7 @@ export function HeroV3() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs text-cream/65 sm:text-sm"
+          className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs text-muted-foreground sm:text-sm"
           aria-label="Tin cậy"
         >
           <TrustBadge Icon={Users}>Tử Vi Bắc phái 114 sao · validation 4 tầng</TrustBadge>
@@ -107,7 +107,7 @@ export function HeroV3() {
       {/* Bottom fade */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-ink"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-background"
       />
     </section>
   );

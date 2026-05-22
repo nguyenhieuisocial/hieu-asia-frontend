@@ -72,7 +72,7 @@ export function PrivacyPreferences({ prefs, onChange }: PrivacyPreferencesProps)
         }
       />
       <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs text-cream/55">
+        <p className="text-xs text-muted-foreground">
           Xem chi tiết các loại dữ liệu hệ thống thu thập trong{' '}
           <Link href="/privacy" className="text-gold underline">
             chính sách bảo mật

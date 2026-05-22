@@ -235,7 +235,7 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
       >
         <Card className="mt-6 border-rose-500/30 bg-rose-500/5">
           <CardContent className="pt-6">
-            <p className="text-sm text-cream/80">
+            <p className="text-sm text-foreground/80">
               Không tải được danh sách câu hỏi. Vui lòng thử lại sau ít phút hoặc kiểm tra kết nối mạng.
             </p>
           </CardContent>
@@ -261,7 +261,7 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
       ]}
     >
       {/* Caveat banner — always visible */}
-      <div className="mt-6 rounded-md border border-gold/25 bg-gold/5 px-4 py-3 text-xs text-cream/75">
+      <div className="mt-6 rounded-md border border-gold/25 bg-gold/5 px-4 py-3 text-xs text-muted-foreground">
         <strong className="text-gold">Lưu ý:</strong> Kết quả là <em>ước lượng</em> dựa
         trên hồi cứu sự kiện đời, <strong>không thay thế</strong> việc xác định chính
         xác giờ sinh từ chuyên gia Tử Vi hoặc giấy khai sinh. Dùng để thu hẹp khung
@@ -273,7 +273,7 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
         <section className="mt-8">
           {/* Progress bar */}
           <div className="mb-6">
-            <div className="flex items-center justify-between text-xs text-cream/65">
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span className="font-mono uppercase tracking-[0.28em] text-gold/80">
                 Câu {stepIndex + 1}/{total}
               </span>
@@ -284,7 +284,7 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
               aria-valuemin={0}
               aria-valuemax={100}
               aria-valuenow={progressPct}
-              className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-cream/10"
+              className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-muted/10"
             >
               <div
                 className="h-full bg-gold-gradient transition-[width] duration-300"
@@ -294,16 +294,16 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
           </div>
 
           {current && (
-            <Card key={current.id} className="border-cream/10 bg-ink/50 backdrop-blur-sm">
+            <Card key={current.id} className="border-border bg-card/50 backdrop-blur-sm">
               <CardHeader>
                 <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/70">
                   {AXIS_LABEL[current.axis]}
                 </p>
-                <CardTitle className="font-heading text-lg text-cream sm:text-xl">
+                <CardTitle className="font-heading text-lg text-foreground sm:text-xl">
                   {current.prompt}
                 </CardTitle>
                 {current.helper && (
-                  <CardDescription className="text-xs text-cream/60">
+                  <CardDescription className="text-xs text-muted-foreground">
                     {current.helper}
                   </CardDescription>
                 )}
@@ -323,8 +323,8 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
                         className={[
                           'flex cursor-pointer items-start gap-3 rounded-md border px-3 py-3 text-sm transition-colors',
                           checked
-                            ? 'border-gold/60 bg-gold/10 text-cream'
-                            : 'border-cream/10 bg-ink/40 text-cream/85 hover:border-gold/30',
+                            ? 'border-gold/60 bg-gold/10 text-foreground'
+                            : 'border-border bg-card/40 text-foreground/85 hover:border-gold/30',
                         ].join(' ')}
                       >
                         <RadioGroupItem
@@ -385,7 +385,7 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
             <Button
               type="button"
               variant="ghost"
-              className="mt-3 text-cream/60"
+              className="mt-3 text-muted-foreground"
               onClick={submit}
               disabled={loading}
             >
@@ -399,12 +399,12 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
       {result && (
         <section className="mt-8 space-y-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="font-heading text-xl text-cream sm:text-2xl">
+            <h2 className="font-heading text-xl text-foreground sm:text-2xl">
               Top 3 khung giờ khả dĩ
             </h2>
             <ConfidenceBadge value={result.confidence} />
           </div>
-          <p className="text-xs text-cream/55">
+          <p className="text-xs text-muted-foreground">
             Trả lời {result.answeredCount}/{result.totalQuestions} câu.
             {result.confidence === 'low' && ' Trả lời thêm câu để tăng độ tin cậy.'}
           </p>
@@ -417,10 +417,10 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
                 <Card
                   key={c.canh}
                   className={[
-                    'border bg-ink/50 backdrop-blur-sm',
+                    'border bg-card/50 backdrop-blur-sm',
                     isTop
                       ? 'border-gold/50 shadow-[0_0_30px_-12px_rgba(184,146,61,0.45)]'
-                      : 'border-cream/10',
+                      : 'border-border',
                   ].join(' ')}
                 >
                   <CardHeader>
@@ -428,14 +428,14 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
                       <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/70">
                         Hạng #{i + 1}
                       </p>
-                      <span className="font-mono text-xs text-cream/55">
+                      <span className="font-mono text-xs text-muted-foreground">
                         điểm: {c.score}
                       </span>
                     </div>
-                    <CardTitle className="font-heading text-2xl text-cream">
+                    <CardTitle className="font-heading text-2xl text-foreground">
                       Giờ {c.canh}
                     </CardTitle>
-                    <CardDescription className="text-cream/70">
+                    <CardDescription className="text-muted-foreground">
                       Khung: <span className="text-gold">{c.range}</span>
                       <span className="mx-1">·</span>
                       Giờ đại diện: <span className="text-gold">{c.hour}</span>
@@ -443,10 +443,10 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div>
-                      <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.24em] text-cream/55">
+                      <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
                         Vì sao
                       </p>
-                      <ul className="space-y-1 text-xs text-cream/80">
+                      <ul className="space-y-1 text-xs text-foreground/80">
                         {c.reasoning.map((r, ri) => (
                           <li key={ri}>• {r}</li>
                         ))}
@@ -472,8 +472,8 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
             })}
           </div>
 
-          <div className="rounded-md border border-cream/10 bg-ink/30 px-4 py-3 text-xs text-cream/65">
-            <p className="mb-1 font-semibold text-cream/80">{result.caveat}</p>
+          <div className="rounded-md border border-border bg-card/30 px-4 py-3 text-xs text-muted-foreground">
+            <p className="mb-1 font-semibold text-foreground/80">{result.caveat}</p>
           </div>
 
           <div className="flex flex-wrap gap-3 pt-2">

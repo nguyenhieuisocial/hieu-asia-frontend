@@ -48,8 +48,8 @@ export function AssetCard({ asset }: Props) {
   }
 
   return (
-    <Card className="overflow-hidden border-cream/10">
-      <div className="aspect-video bg-cream/[0.04] flex items-center justify-center text-xs text-cream/40">
+    <Card className="overflow-hidden border-border">
+      <div className="aspect-video bg-muted/[0.04] flex items-center justify-center text-xs text-muted-foreground">
         {asset.type === 'qr' && asset.resolved_qr ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={asset.resolved_qr} alt="QR" className="h-full w-full object-contain bg-white p-3" />
@@ -73,7 +73,7 @@ export function AssetCard({ asset }: Props) {
         <div className="flex items-start justify-between gap-2">
           <div>
             <div className="text-sm font-semibold">{asset.title}</div>
-            <div className="mt-0.5 text-xs text-cream/60">{asset.caption}</div>
+            <div className="mt-0.5 text-xs text-muted-foreground">{asset.caption}</div>
           </div>
           <span className="shrink-0 rounded bg-gold/10 px-2 py-0.5 text-[10px] uppercase text-gold">
             {TYPE_LABEL[asset.type]}
@@ -83,7 +83,7 @@ export function AssetCard({ asset }: Props) {
         {asset.platforms && (
           <div className="flex flex-wrap gap-1">
             {asset.platforms.map((p) => (
-              <span key={p} className="rounded bg-cream/5 px-2 py-0.5 text-[10px] text-cream/60">
+              <span key={p} className="rounded bg-muted/5 px-2 py-0.5 text-[10px] text-muted-foreground">
                 {p}
               </span>
             ))}
@@ -91,7 +91,7 @@ export function AssetCard({ asset }: Props) {
         )}
 
         {asset.resolved_content && (
-          <pre className="max-h-32 overflow-y-auto whitespace-pre-wrap rounded bg-cream/[0.04] p-2 text-xs text-cream/80">
+          <pre className="max-h-32 overflow-y-auto whitespace-pre-wrap rounded bg-muted/[0.04] p-2 text-xs text-foreground/80">
             {asset.resolved_content}
           </pre>
         )}

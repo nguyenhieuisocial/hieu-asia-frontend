@@ -166,7 +166,7 @@ const BREADCRUMB_JSONLD = {
 
 export default function SampleReportPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -176,17 +176,17 @@ export default function SampleReportPage() {
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-ink-radial opacity-80"
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.10)_0%,_transparent_55%)] dark:bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.18)_0%,_transparent_55%)]"
         />
 
         <section className="relative mx-auto max-w-3xl px-6 pb-10 pt-12 sm:pt-16">
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Mẫu báo cáo · Cẩm nang cá nhân hoá
           </p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
             Xem trước trải nghiệm hieu.asia
           </h1>
-          <p className="mt-5 text-base leading-relaxed text-cream/80 sm:text-lg">
+          <p className="mt-5 text-base leading-relaxed text-foreground/85 sm:text-lg">
             Đây là báo cáo demo cho một persona giả định — không phải thông tin có thật.
             Mục đích: để bạn thấy hieu.asia trả về gì TRƯỚC khi quyết định lập lá số.
           </p>
@@ -195,7 +195,7 @@ export default function SampleReportPage() {
             <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/25 bg-gold/5 px-3 py-1 text-gold/90">
               <ShieldCheck className="h-3.5 w-3.5" aria-hidden /> Persona demo · không có dữ liệu thật
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-cream/15 bg-ink/40 px-3 py-1 text-cream/75">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-3 py-1 text-muted-foreground">
               Tử Vi Bắc phái 114 sao
             </span>
           </div>
@@ -205,11 +205,11 @@ export default function SampleReportPage() {
         <section className="relative mx-auto max-w-3xl px-6 pb-10">
           <Card className="border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent">
             <CardHeader>
-              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
                 Tóm tắt 1 trang
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm leading-relaxed text-cream/85 sm:text-base">
+            <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/85 sm:text-base">
               <div className="grid gap-2 text-xs sm:grid-cols-2">
                 <Stat label="Tên" value={PERSONA.name} />
                 <Stat label="Sinh" value={PERSONA.birthSolar} />
@@ -230,24 +230,24 @@ export default function SampleReportPage() {
 
         {/* 12 cung previews */}
         <section className="relative mx-auto max-w-3xl px-6 pb-10">
-          <h2 className="mb-5 font-heading text-2xl font-semibold text-cream sm:text-3xl">
+          <h2 className="mb-5 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             Lá số 12 cung — preview
           </h2>
           <div className="space-y-4">
             {PALACE_PREVIEWS.map((p, i) => {
               const Icon = p.icon;
               return (
-                <Card key={i} className="border-cream/10 bg-ink/40">
+                <Card key={i} className="border-border bg-card/40">
                   <CardHeader className="pb-3">
-                    <CardTitle className="flex items-center gap-2 font-heading text-base text-cream sm:text-lg">
+                    <CardTitle className="flex items-center gap-2 font-heading text-base text-foreground sm:text-lg">
                       <Icon className="h-4 w-4 text-gold" aria-hidden /> {p.palace}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    <p className="text-sm leading-relaxed text-cream/80 sm:text-base">
+                    <p className="text-sm leading-relaxed text-foreground/85 sm:text-base">
                       {p.summary}
                     </p>
-                    <ul className="space-y-1.5 text-sm text-cream/70">
+                    <ul className="space-y-1.5 text-sm text-muted-foreground">
                       {p.insights.map((s, j) => (
                         <li key={j} className="flex gap-2">
                           <span className="text-gold/70">·</span>
@@ -264,16 +264,16 @@ export default function SampleReportPage() {
 
         {/* Mentor sample */}
         <section className="relative mx-auto max-w-3xl px-6 pb-10">
-          <h2 className="mb-5 font-heading text-2xl font-semibold text-cream sm:text-3xl">
+          <h2 className="mb-5 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             AI Mentor — đối thoại mẫu
           </h2>
-          <Card className="border-cream/10 bg-ink/40">
+          <Card className="border-border bg-card/40">
             <CardContent className="space-y-4 pt-5 text-sm leading-relaxed sm:text-base">
-              <div className="rounded-lg bg-cream/5 p-3">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-cream/55">
+              <div className="rounded-lg bg-muted/5 p-3">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                   User
                 </p>
-                <p className="mt-1 text-cream/90">
+                <p className="mt-1 text-foreground/90">
                   Tôi đang phân vân giữa ở lại công ty hiện tại hoặc chuyển sang một
                   startup mới. Tôi nên làm gì?
                 </p>
@@ -282,25 +282,25 @@ export default function SampleReportPage() {
                 <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">
                   Mentor
                 </p>
-                <p className="mt-1 text-cream/85">
+                <p className="mt-1 text-foreground/85">
                   Trước khi trả lời, mình cần hỏi 2 việc: (1) Bạn có runway tài chính
                   bao nhiêu tháng nếu thu nhập giảm 30%? (2) Trong 6 tháng qua, bạn có
                   cảm thấy ngừng học ở công ty hiện tại không?
                 </p>
-                <p className="mt-3 text-cream/85">
+                <p className="mt-3 text-foreground/85">
                   Lá số bạn cho thấy chủ đề năm nay là "củng cố trước khi mở rộng" —
                   Quan Lộc đang Hoá Quyền, có dấu hiệu thăng tiến nếu chờ đúng dịp.
                   Nhưng Tài Bạch không hợp rủi ro cao.
                 </p>
-                <p className="mt-3 text-cream/85">
+                <p className="mt-3 text-foreground/85">
                   <strong className="text-gold/90">3 kịch bản để bạn cân nhắc:</strong>
                 </p>
-                <ol className="ml-4 mt-2 list-decimal space-y-1 text-cream/85">
+                <ol className="ml-4 mt-2 list-decimal space-y-1 text-foreground/85">
                   <li>Ở lại + đàm phán vai trò mới (ít rủi ro, tận dụng Quan Lộc tốt).</li>
                   <li>Tìm việc song song trong 60 ngày (kiểm chứng cơ hội trước khi nhảy).</li>
                   <li>Chuyển hẳn (chỉ chọn nếu runway ≥ 6 tháng + cơ hội đã xác minh).</li>
                 </ol>
-                <p className="mt-3 text-cream/85">
+                <p className="mt-3 text-foreground/85">
                   Mình không khuyên bạn nghỉ ngay. Bước 7 ngày tới: tính runway, viết
                   5 tiêu chí công việc mới, nói chuyện với 2 người trong ngành bạn quan
                   tâm.
@@ -312,22 +312,22 @@ export default function SampleReportPage() {
 
         {/* 30-60-90 plan */}
         <section className="relative mx-auto max-w-3xl px-6 pb-10">
-          <h2 className="mb-5 font-heading text-2xl font-semibold text-cream sm:text-3xl">
+          <h2 className="mb-5 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             Kế hoạch 30-60-90 ngày
           </h2>
           <div className="grid gap-4 md:grid-cols-3">
             {PLAN_30_60_90.map((p, i) => (
-              <Card key={i} className="border-cream/10 bg-ink/40">
+              <Card key={i} className="border-border bg-card/40">
                 <CardHeader className="pb-3">
                   <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">
                     {p.period}
                   </p>
-                  <CardTitle className="mt-1 font-heading text-base text-cream">
+                  <CardTitle className="mt-1 font-heading text-base text-foreground">
                     {p.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-2 text-sm text-cream/75">
+                  <ul className="space-y-2 text-sm text-muted-foreground">
                     {p.items.map((it, j) => (
                       <li key={j} className="flex gap-2">
                         <span className="text-gold/70">→</span>
@@ -345,12 +345,12 @@ export default function SampleReportPage() {
         <section className="relative mx-auto max-w-3xl px-6 pb-10">
           <Card className="border-purple/30 bg-purple/[0.04]">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="flex items-center gap-2 font-heading text-xl text-foreground sm:text-2xl">
                 <Calendar className="h-5 w-5 text-purple-300" aria-hidden /> 5 câu tự phản tư
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ol className="space-y-3 text-sm leading-relaxed text-cream/85 sm:text-base">
+              <ol className="space-y-3 text-sm leading-relaxed text-foreground/85 sm:text-base">
                 {REFLECTION_QUESTIONS.map((q, i) => (
                   <li key={i} className="flex gap-3">
                     <span className="shrink-0 font-mono text-purple-300">
@@ -367,10 +367,10 @@ export default function SampleReportPage() {
         {/* CTA */}
         <section className="relative mx-auto max-w-3xl px-6 pb-20">
           <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent p-6 sm:p-8">
-            <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+            <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
               Sẵn sàng nhận Cẩm Nang của bạn?
             </h2>
-            <p className="mt-3 text-sm leading-relaxed text-cream/80 sm:text-base">
+            <p className="mt-3 text-sm leading-relaxed text-foreground/85 sm:text-base">
               Mẫu trên là persona giả định. Báo cáo thật của bạn sẽ cá nhân hoá theo
               ngày–giờ sinh, MBTI (nếu có), bối cảnh đời sống. Hoàn tiền 100% trong 24
               giờ nếu báo cáo chưa được tạo.
@@ -386,7 +386,7 @@ export default function SampleReportPage() {
               </Link>
               <Link
                 href="/methodology"
-                className="inline-flex items-center text-sm text-cream/70 hover:text-gold"
+                className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"
               >
                 Phương pháp luận
                 <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
@@ -403,8 +403,8 @@ export default function SampleReportPage() {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-widest text-cream/55">{label}</p>
-      <p className="mt-0.5 font-heading text-sm font-semibold text-cream">{value}</p>
+      <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
+      <p className="mt-0.5 font-heading text-sm font-semibold text-foreground">{value}</p>
     </div>
   );
 }

@@ -57,7 +57,7 @@ export default function OnboardingSituationPage() {
 
   if (!ready) {
     return (
-      <div className="min-h-screen bg-ink text-cream">
+      <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
         <main className="min-h-screen" />
         <SiteFooter />
@@ -80,7 +80,7 @@ export default function OnboardingSituationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <main className="min-h-screen">
         <section className="mx-auto max-w-3xl px-6 pt-24 pb-20">
@@ -88,7 +88,7 @@ export default function OnboardingSituationPage() {
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">
             Bạn đang ở tình huống nào?
           </h1>
-          <p className="mt-4 text-sm leading-relaxed text-cream/75 sm:text-base">
+          <p className="mt-4 text-sm leading-relaxed text-foreground/75 sm:text-base">
             Mô tả ngắn (50–500 ký tự). Càng cụ thể, Mentor càng giúp đúng. Bạn có thể bỏ qua bước này.
           </p>
 
@@ -103,24 +103,24 @@ export default function OnboardingSituationPage() {
               aria-label="Mô tả tình huống của bạn"
             />
             <div className="mt-2 flex items-center justify-between text-xs">
-              <span className={tooShort ? 'text-gold/80' : 'text-cream/55'}>
+              <span className={tooShort ? 'text-gold/80' : 'text-muted-foreground'}>
                 {tooShort ? 'Cần ít nhất 50 ký tự để Mentor hiểu rõ.' : ' '}
               </span>
-              <span className="font-mono text-cream/60">
+              <span className="font-mono text-muted-foreground">
                 {len} / {MAX_LEN}
               </span>
             </div>
           </div>
 
           <div className="mt-8">
-            <p className="text-xs uppercase tracking-[0.28em] text-cream/55">Hoặc thử một ví dụ</p>
+            <p className="text-xs uppercase tracking-[0.28em] text-muted-foreground">Hoặc thử một ví dụ</p>
             <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {EXAMPLES.map((ex) => (
                 <button
                   key={ex}
                   type="button"
                   onClick={() => setSituation(ex)}
-                  className="rounded-lg border border-gold/20 bg-ink/40 p-4 text-left text-sm leading-relaxed text-cream/75 transition-colors hover:border-gold/50 hover:bg-gold/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                  className="rounded-lg border border-gold/20 bg-card/40 p-4 text-left text-sm leading-relaxed text-foreground/75 transition-colors hover:border-gold/50 hover:bg-gold/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
                 >
                   {ex}
                 </button>
@@ -132,7 +132,7 @@ export default function OnboardingSituationPage() {
             <button
               type="button"
               onClick={() => router.push('/onboarding/topic')}
-              className="inline-flex items-center gap-2 rounded-md border border-gold/30 px-4 py-2 text-sm text-cream transition-colors hover:bg-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+              className="inline-flex items-center gap-2 rounded-md border border-gold/30 px-4 py-2 text-sm text-foreground transition-colors hover:bg-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
             >
               ← Quay lại
             </button>
@@ -146,7 +146,7 @@ export default function OnboardingSituationPage() {
             <button
               type="button"
               onClick={handleSkip}
-              className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm text-cream/70 transition-colors hover:bg-gold/10 hover:text-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+              className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-gold/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
             >
               Bỏ qua
             </button>

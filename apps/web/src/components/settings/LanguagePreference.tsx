@@ -84,7 +84,7 @@ export function LanguagePreference({ prefs, onChange }: LanguagePreferenceProps)
         label="Đơn vị tiền tệ"
         description="VND (Việt Nam Đồng) — đơn vị duy nhất hỗ trợ hiện tại."
         control={
-          <span className="rounded-md border border-cream/10 bg-ink/40 px-3 py-1 font-mono text-xs text-cream/70">
+          <span className="rounded-md border border-border bg-card/40 px-3 py-1 font-mono text-xs text-muted-foreground">
             VND
           </span>
         }

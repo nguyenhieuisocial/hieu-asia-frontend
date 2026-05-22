@@ -22,9 +22,9 @@ export const metadata: Metadata = {
 
 export default function OnboardingPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <main id="main-content" className="relative overflow-hidden bg-ink-radial pt-20 pb-20">
+      <main id="main-content" className="relative overflow-hidden bg-background pt-20 pb-20">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -top-20 right-[-10%] h-[360px] w-[360px] rounded-full bg-gold/10 blur-3xl"
@@ -35,11 +35,11 @@ export default function OnboardingPage() {
         />
 
         <section className="relative mx-auto max-w-2xl px-6">
-          <nav aria-label="Breadcrumb" className="mb-4 flex items-center justify-between text-xs text-cream/55">
+          <nav aria-label="Breadcrumb" className="mb-4 flex items-center justify-between text-xs text-muted-foreground">
             <span>
               <Link href="/" className="hover:text-gold">Trang chủ</Link>
               <span className="mx-1.5">/</span>
-              <span className="text-cream/70">Mở khóa lá số</span>
+              <span className="text-muted-foreground">Mở khóa lá số</span>
             </span>
             <OnboardingStepBadge />
           </nav>
@@ -47,10 +47,10 @@ export default function OnboardingPage() {
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Hiểu mình. Quyết định mình.
           </p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-4xl">
+          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
             Mở khóa <span className="bg-gold-gradient bg-clip-text text-transparent">lá số</span>
           </h1>
-          <p className="mt-4 max-w-xl text-sm leading-relaxed text-cream/75">
+          <p className="mt-4 max-w-xl text-sm leading-relaxed text-foreground/75">
             Trước khi bắt đầu, vui lòng xem các mục dữ liệu hieu.asia sẽ xử lý.
             Bạn có quyền từ chối hoặc rút lại đồng ý bất cứ lúc nào tại trang{' '}
             <Link href="/account" className="text-gold underline-offset-4 hover:underline">
@@ -61,10 +61,10 @@ export default function OnboardingPage() {
 
           <OnboardingRecap />
 
-          <Card className="mt-8 border-gold/20 bg-ink/60 backdrop-blur-sm">
+          <Card className="mt-8 border-gold/20 bg-card/60 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="font-heading text-2xl">Đồng ý xử lý dữ liệu sinh</CardTitle>
-              <CardDescription className="text-cream/70">
+              <CardDescription className="text-muted-foreground">
                 Bước này chỉ hỏi quyền tối thiểu cần để lập lá số. Quyền tuỳ chọn
                 (Palm, MBTI, lưu chat) sẽ hỏi sau khi bạn dùng đến.
               </CardDescription>
@@ -74,13 +74,13 @@ export default function OnboardingPage() {
             </CardContent>
           </Card>
 
-          <p className="mt-6 text-center text-xs text-cream/55">
+          <p className="mt-6 text-center text-xs text-muted-foreground">
             Mã hoá AES-256 · TLS 1.3 · Không dùng dữ liệu cá nhân để huấn luyện
             mô hình. Chỉ dùng dữ liệu đã ẩn danh để cải thiện prompt — bạn có
             thể tắt tùy chọn này bất cứ lúc nào.
           </p>
 
-          <p className="mt-4 text-center text-xs text-cream/60">
+          <p className="mt-4 text-center text-xs text-muted-foreground">
             Chưa muốn quyết định ngay?{' '}
             <Link href="/sample-report" className="text-gold underline-offset-4 hover:underline">
               Xem báo cáo mẫu trước →

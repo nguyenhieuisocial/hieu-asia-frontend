@@ -29,7 +29,7 @@ export default async function NewsletterConfirmedPage({ searchParams }: PageProp
   return (
     <>
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-ink text-cream pt-16">
+      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
         <section className="mx-auto max-w-2xl px-6 py-24 text-center">
           {ok ? (
             <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-300">
@@ -40,10 +40,10 @@ export default async function NewsletterConfirmedPage({ searchParams }: PageProp
               <AlertCircle className="h-7 w-7" aria-hidden="true" />
             </div>
           )}
-          <h1 className="mt-6 font-heading text-3xl font-bold leading-tight text-cream sm:text-4xl">
+          <h1 className="mt-6 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
             {ok ? 'Đã xác nhận đăng ký' : 'Liên kết không hợp lệ'}
           </h1>
-          <p className="mt-4 text-base leading-relaxed text-cream/75">
+          <p className="mt-4 text-base leading-relaxed text-muted-foreground">
             {ok
               ? 'Cảm ơn bạn. Bạn sẽ nhận được bài viết đầu tiên trong vài ngày tới — không spam, không bán hàng, huỷ bất cứ lúc nào.'
               : status === 'expired'

@@ -106,7 +106,7 @@ export default function OnboardingConsentPage() {
 
   if (!ready) {
     return (
-      <div className="min-h-screen bg-ink text-cream">
+      <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
         <main className="min-h-screen" />
         <SiteFooter />
@@ -115,7 +115,7 @@ export default function OnboardingConsentPage() {
   }
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <main className="min-h-screen">
         <section className="mx-auto max-w-3xl px-6 pt-24 pb-20">
@@ -123,7 +123,7 @@ export default function OnboardingConsentPage() {
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">
             Bạn cho phép xử lý gì?
           </h1>
-          <p className="mt-4 text-sm leading-relaxed text-cream/75 sm:text-base">
+          <p className="mt-4 text-sm leading-relaxed text-foreground/75 sm:text-base">
             hieu.asia tách rõ dữ liệu bắt buộc và dữ liệu tuỳ chọn. Bạn có thể đổi lựa chọn bất kỳ lúc nào trong{' '}
             <Link href="/account" className="text-gold underline-offset-4 hover:underline">
               Tài khoản
@@ -135,10 +135,10 @@ export default function OnboardingConsentPage() {
             .
           </p>
 
-          <Card className="mt-8 border-jade-50/30 bg-ink/60">
+          <Card className="mt-8 border-jade-50/30 bg-card/60">
             <CardHeader>
               <CardTitle className="font-heading text-lg text-jade-50">Bắt buộc</CardTitle>
-              <CardDescription className="text-cream/70">
+              <CardDescription className="text-muted-foreground">
                 Dữ liệu duy nhất bắt buộc để tạo lá số.
               </CardDescription>
             </CardHeader>
@@ -146,10 +146,10 @@ export default function OnboardingConsentPage() {
               <div className="flex items-start gap-3">
                 <Checkbox id="consent-birth" checked disabled aria-label="Đồng ý xử lý ngày giờ sinh" />
                 <div className="flex-1">
-                  <Label htmlFor="consent-birth" className="text-sm text-cream">
+                  <Label htmlFor="consent-birth" className="text-sm text-foreground">
                     Đồng ý xử lý ngày giờ sinh để lập lá số (bắt buộc)
                   </Label>
-                  <p className="mt-1 text-xs leading-relaxed text-cream/60">
+                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                     Đây là dữ liệu duy nhất bắt buộc để tạo lá số. Bạn có thể xoá tài khoản + dữ liệu bất kỳ lúc nào.
                   </p>
                 </div>
@@ -157,10 +157,10 @@ export default function OnboardingConsentPage() {
             </CardContent>
           </Card>
 
-          <Card className="mt-6 border-gold/20 bg-ink/60">
+          <Card className="mt-6 border-gold/20 bg-card/60">
             <CardHeader>
               <CardTitle className="font-heading text-lg">Tuỳ chọn</CardTitle>
-              <CardDescription className="text-cream/70">
+              <CardDescription className="text-muted-foreground">
                 Bật để mở thêm tính năng. Mặc định tất cả đang tắt.
               </CardDescription>
             </CardHeader>
@@ -177,10 +177,10 @@ export default function OnboardingConsentPage() {
                         aria-describedby={`${id}-hint`}
                       />
                       <div className="flex-1">
-                        <Label htmlFor={id} className="text-sm text-cream">
+                        <Label htmlFor={id} className="text-sm text-foreground">
                           {item.label}
                         </Label>
-                        <p id={`${id}-hint`} className="mt-1 text-xs leading-relaxed text-cream/60">
+                        <p id={`${id}-hint`} className="mt-1 text-xs leading-relaxed text-muted-foreground">
                           {item.hint}
                         </p>
                       </div>
@@ -195,7 +195,7 @@ export default function OnboardingConsentPage() {
             <button
               type="button"
               onClick={() => router.push('/onboarding/situation')}
-              className="inline-flex items-center gap-2 rounded-md border border-gold/30 px-4 py-2 text-sm text-cream transition-colors hover:bg-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+              className="inline-flex items-center gap-2 rounded-md border border-gold/30 px-4 py-2 text-sm text-foreground transition-colors hover:bg-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
             >
               ← Quay lại
             </button>

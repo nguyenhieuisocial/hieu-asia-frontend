@@ -14,7 +14,7 @@ export function ReportSkeleton() {
       </header>
 
       <div className="space-y-6">
-        <div className="space-y-3 rounded-lg border border-gold/15 bg-ink/40 p-5">
+        <div className="space-y-3 rounded-lg border border-gold/15 bg-card/40 p-5">
           <Skeleton className="h-10 w-1/2" />
           <Skeleton className="h-4 w-1/4" />
           <Skeleton className="h-4 w-2/3" />
@@ -26,7 +26,7 @@ export function ReportSkeleton() {
           {Array.from({ length: 9 }).map((_, i) => (
             <div
               key={i}
-              className="space-y-3 rounded-lg border border-gold/15 bg-ink/40 p-5"
+              className="space-y-3 rounded-lg border border-gold/15 bg-card/40 p-5"
             >
               <Skeleton className="h-6 w-1/3" />
               <div className="space-y-2">

@@ -60,13 +60,13 @@ function ProfileFieldset({
   prefix: string;
 }) {
   return (
-    <Card className="border-cream/10 bg-ink/50 backdrop-blur-sm">
+    <Card className="border-border bg-card/50 backdrop-blur-sm">
       <CardHeader>
-        <CardTitle className="font-heading text-lg text-cream">{label}</CardTitle>
+        <CardTitle className="font-heading text-lg text-foreground">{label}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-1.5">
-          <Label htmlFor={`${prefix}-name`} className="text-cream/85">
+          <Label htmlFor={`${prefix}-name`} className="text-foreground/85">
             Tên gọi (tùy chọn)
           </Label>
           <Input
@@ -74,12 +74,12 @@ function ProfileFieldset({
             value={value.name}
             onChange={(e) => onChange({ ...value, name: e.target.value })}
             placeholder="Ví dụ: Lan"
-            className="bg-ink/60"
+            className="bg-card/60"
             autoComplete="off"
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor={`${prefix}-date`} className="text-cream/85">
+          <Label htmlFor={`${prefix}-date`} className="text-foreground/85">
             Ngày sinh<span className="text-rose-400"> *</span>
           </Label>
           <Input
@@ -88,11 +88,11 @@ function ProfileFieldset({
             value={value.birthDate}
             onChange={(e) => onChange({ ...value, birthDate: e.target.value })}
             required
-            className="bg-ink/60"
+            className="bg-card/60"
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor={`${prefix}-time`} className="text-cream/85">
+          <Label htmlFor={`${prefix}-time`} className="text-foreground/85">
             Giờ sinh (tùy chọn)
           </Label>
           <Input
@@ -100,11 +100,11 @@ function ProfileFieldset({
             type="time"
             value={value.birthTime}
             onChange={(e) => onChange({ ...value, birthTime: e.target.value })}
-            className="bg-ink/60"
+            className="bg-card/60"
           />
         </div>
         <div className="space-y-1.5">
-          <Label className="text-cream/85">
+          <Label className="text-foreground/85">
             Giới tính<span className="text-rose-400"> *</span>
           </Label>
           <RadioGroup
@@ -113,11 +113,11 @@ function ProfileFieldset({
             onValueChange={(v) => onChange({ ...value, gender: v as 'male' | 'female' })}
             className="flex gap-4"
           >
-            <label className="flex items-center gap-2 text-sm text-cream/85">
+            <label className="flex items-center gap-2 text-sm text-foreground/85">
               <RadioGroupItem value="male" id={`${prefix}-male`} />
               <span>Nam</span>
             </label>
-            <label className="flex items-center gap-2 text-sm text-cream/85">
+            <label className="flex items-center gap-2 text-sm text-foreground/85">
               <RadioGroupItem value="female" id={`${prefix}-female`} />
               <span>Nữ</span>
             </label>
@@ -137,7 +137,7 @@ function ScoreBar({ score, signal }: { score: number; signal: PairChemistryScore
         ? 'bg-rose-500/80'
         : 'bg-gold/80';
   return (
-    <div className="h-2 w-full overflow-hidden rounded-full bg-cream/10">
+    <div className="h-2 w-full overflow-hidden rounded-full bg-muted/10">
       <div className={`h-full ${color} transition-all`} style={{ width: `${pct}%` }} />
     </div>
   );
@@ -234,16 +234,16 @@ export default function CompatibilityPage() {
         </form>
 
         {!report && !loading && (
-          <p className="mt-10 rounded-md border border-cream/10 bg-ink/40 px-4 py-6 text-center text-sm text-cream/55">
+          <p className="mt-10 rounded-md border border-border bg-card/40 px-4 py-6 text-center text-sm text-muted-foreground">
             Nhập thông tin hai người và bấm phân tích để xem 5 chiều cộng hưởng + gợi ý giao tiếp.
           </p>
         )}
 
         {report && (
           <section className="mt-10 space-y-8">
-            <Card className="border-gold/30 bg-ink/60 backdrop-blur-sm">
+            <Card className="border-gold/30 bg-card/60 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="font-heading text-lg text-cream">
+                <CardTitle className="font-heading text-lg text-foreground">
                   {report.profileA.display} ({report.profileA.zodiac}) × {report.profileB.display} ({report.profileB.zodiac})
                 </CardTitle>
               </CardHeader>
@@ -254,9 +254,9 @@ export default function CompatibilityPage() {
                     aria-label={`Điểm tổng ${report.overallScore} trên 10`}
                   >
                     {report.overallScore}
-                    <span className="ml-1 text-sm text-cream/60">/10</span>
+                    <span className="ml-1 text-sm text-muted-foreground">/10</span>
                   </div>
-                  <p className="text-sm leading-relaxed text-cream/80">{report.summary}</p>
+                  <p className="text-sm leading-relaxed text-foreground/80">{report.summary}</p>
                 </div>
               </CardContent>
             </Card>
@@ -269,19 +269,19 @@ export default function CompatibilityPage() {
                 {report.scores.map((s) => (
                   <div
                     key={s.dimension}
-                    className="rounded-xl border border-cream/10 bg-ink/40 p-4"
+                    className="rounded-xl border border-border bg-card/40 p-4"
                   >
                     <div className="flex items-center justify-between gap-3">
                       <div>
-                        <div className="text-sm font-semibold text-cream">{s.dimension}</div>
-                        <div className="text-xs text-cream/55">{s.signal}</div>
+                        <div className="text-sm font-semibold text-foreground">{s.dimension}</div>
+                        <div className="text-xs text-muted-foreground">{s.signal}</div>
                       </div>
-                      <div className="font-heading text-2xl text-cream">{s.score}<span className="text-sm text-cream/70">/10</span></div>
+                      <div className="font-heading text-2xl text-foreground">{s.score}<span className="text-sm text-muted-foreground">/10</span></div>
                     </div>
                     <div className="mt-3">
                       <ScoreBar score={s.score} signal={s.signal} />
                     </div>
-                    <p className="mt-2 text-xs text-cream/70">{s.note}</p>
+                    <p className="mt-2 text-xs text-muted-foreground">{s.note}</p>
                   </div>
                 ))}
               </div>
@@ -293,25 +293,25 @@ export default function CompatibilityPage() {
               </h2>
               <div className="grid gap-4 md:grid-cols-2">
                 {report.communication.map((tip, i) => (
-                  <Card key={i} className="border-cream/10 bg-ink/40 backdrop-blur-sm">
+                  <Card key={i} className="border-border bg-card/40 backdrop-blur-sm">
                     <CardContent className="space-y-3 pt-6">
                       <div>
                         <div className="text-[10px] uppercase tracking-wider text-rose-300/80">
                           Dễ trục trặc
                         </div>
-                        <p className="mt-1 text-sm text-cream/85">{tip.vulnerability}</p>
+                        <p className="mt-1 text-sm text-foreground/85">{tip.vulnerability}</p>
                       </div>
                       <div>
                         <div className="text-[10px] uppercase tracking-wider text-emerald-300/80">
                           Cách diễn đạt lại
                         </div>
-                        <p className="mt-1 text-sm text-cream/85">{tip.reframe}</p>
+                        <p className="mt-1 text-sm text-foreground/85">{tip.reframe}</p>
                       </div>
                       <div>
                         <div className="text-[10px] uppercase tracking-wider text-gold/80">
                           Thử nói
                         </div>
-                        <p className="mt-1 rounded-md border border-gold/20 bg-gold/5 px-3 py-2 text-sm italic text-cream/90">
+                        <p className="mt-1 rounded-md border border-gold/20 bg-gold/5 px-3 py-2 text-sm italic text-foreground/90">
                           {tip.suggestedPhrase}
                         </p>
                       </div>
@@ -321,8 +321,8 @@ export default function CompatibilityPage() {
               </div>
             </div>
 
-            <footer className="rounded-md border border-cream/10 bg-ink/30 px-4 py-3 text-xs text-cream/55">
-              <p className="mb-1 font-semibold text-cream/70">Lưu ý:</p>
+            <footer className="rounded-md border border-border bg-card/30 px-4 py-3 text-xs text-muted-foreground">
+              <p className="mb-1 font-semibold text-muted-foreground">Lưu ý:</p>
               <ul className="list-disc space-y-1 pl-5">
                 {report.caveats.map((c, i) => (
                   <li key={i}>{c}</li>

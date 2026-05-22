@@ -25,11 +25,6 @@ export function ThemeToggle() {
 
   React.useEffect(() => setMounted(true), []);
 
-  // Gate the visible toggle behind an env flag until light mode is finished.
-  if (process.env.NEXT_PUBLIC_THEME_TOGGLE !== '1') {
-    return null;
-  }
-
   const current = mounted ? (resolvedTheme ?? theme) : 'dark';
   const next = current === 'dark' ? 'light' : 'dark';
 

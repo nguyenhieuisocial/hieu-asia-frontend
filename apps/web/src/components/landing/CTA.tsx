@@ -8,9 +8,9 @@ import { Sparkles } from '@/components/animations/Sparkles';
 
 export function CTA() {
   return (
-    <section className="relative bg-ink py-20 sm:py-32">
+    <section className="relative bg-background py-20 sm:py-32">
       <div className="mx-auto max-w-5xl px-6">
-        <div className="relative overflow-hidden rounded-3xl border border-gold/25 bg-gradient-to-br from-purple-700/30 via-ink to-ink p-10 text-center sm:p-16">
+        <div className="relative overflow-hidden rounded-3xl border border-gold/25 bg-gradient-to-br from-purple-700/30 via-background to-background p-10 text-center sm:p-16">
           <Sparkles count={18} className="-z-10" />
           <div
             aria-hidden="true"
@@ -21,10 +21,10 @@ export function CTA() {
             }}
           />
 
-          <h2 className="font-heading text-4xl font-bold leading-tight tracking-tight text-cream sm:text-5xl">
+          <h2 className="font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
             Sẵn sàng tìm hiểu <span className="bg-gold-gradient bg-clip-text text-transparent">chính mình?</span>
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-cream/70 sm:text-lg">
+          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             Miễn phí khảo sát đầu tiên · không cần đăng ký · 30 giây để bắt đầu.
           </p>
           <div className="mt-10">

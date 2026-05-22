@@ -60,7 +60,7 @@ const ICONS = [
 export function IconShowcase() {
   return (
     <div>
-      <p className="text-sm text-cream/70">
+      <p className="text-sm text-muted-foreground">
         Stroke 1.5 · gold tint trên nền tối. Dùng từ <code className="rounded bg-gold/10 px-1 font-mono text-xs text-gold">lucide-react</code>.
         Không trộn icon set khác để giữ nhất quán đường nét.
       </p>
@@ -68,15 +68,15 @@ export function IconShowcase() {
         {ICONS.map(({ Icon, label, use }) => (
           <div
             key={label}
-            className="group flex flex-col items-start gap-2 rounded-lg border border-gold/15 bg-ink/40 p-4 transition hover:border-gold/40"
+            className="group flex flex-col items-start gap-2 rounded-lg border border-gold/15 bg-card/40 p-4 transition hover:border-gold/40"
           >
             <Icon
               className="h-7 w-7 text-gold transition group-hover:scale-110"
               strokeWidth={1.5}
               aria-hidden="true"
             />
-            <div className="text-xs font-medium text-cream">{label}</div>
-            <div className="text-[10px] text-cream/55">{use}</div>
+            <div className="text-xs font-medium text-foreground">{label}</div>
+            <div className="text-[10px] text-muted-foreground">{use}</div>
           </div>
         ))}
       </div>

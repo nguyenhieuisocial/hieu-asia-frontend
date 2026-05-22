@@ -155,7 +155,7 @@ function ListSection({
   const bulletColor = tone === 'rose' ? 'text-rose-400/80' : 'text-gold/70';
   return (
     <section className="relative mx-auto max-w-4xl px-6 py-8">
-      <Card className="border-cream/10 bg-ink/40">
+      <Card className="border-border bg-card/40">
         <CardHeader>
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 font-mono text-sm font-bold text-gold">
@@ -163,19 +163,19 @@ function ListSection({
             </div>
             <div className="flex items-center gap-2">
               <Icon className={`h-5 w-5 ${iconColor}`} aria-hidden />
-              <CardTitle className="font-heading text-lg text-cream sm:text-xl">
+              <CardTitle className="font-heading text-lg text-foreground sm:text-xl">
                 {title}
               </CardTitle>
             </div>
           </div>
           {description ? (
-            <CardDescription className="mt-2 text-sm text-cream/65">
+            <CardDescription className="mt-2 text-sm text-muted-foreground">
               {description}
             </CardDescription>
           ) : null}
         </CardHeader>
         <CardContent>
-          <ul className="space-y-2.5 text-sm leading-relaxed text-cream/80">
+          <ul className="space-y-2.5 text-sm leading-relaxed text-foreground/80">
             {items.map((item) => (
               <li key={item} className="flex gap-2">
                 {tone === 'rose' ? (
@@ -201,7 +201,7 @@ function ListSection({
 
 export default function ModelCardPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -217,7 +217,7 @@ export default function ModelCardPage() {
           <div className="relative mx-auto max-w-4xl px-6 pb-8 pt-12 sm:pt-16">
             <nav
               aria-label="Breadcrumb"
-              className="mb-4 text-xs text-cream/55"
+              className="mb-4 text-xs text-muted-foreground"
             >
               <Link href="/" className="hover:text-gold">
                 Trang chủ
@@ -227,16 +227,16 @@ export default function ModelCardPage() {
                 Phương pháp luận
               </Link>
               <span className="mx-1.5">/</span>
-              <span className="text-cream/70">Model card</span>
+              <span className="text-muted-foreground">Model card</span>
             </nav>
 
             <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
               Model Card
             </p>
-            <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+            <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
               Model Card — AI Mentor + Composer
             </h1>
-            <p className="mt-4 text-base leading-relaxed text-cream/75 sm:text-lg">
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
               Tài liệu mô tả mục đích, ranh giới, guardrails, đánh giá và xử lý
               dữ liệu của hệ AI Mentor + Composer mà hieu.asia đang vận hành.
             </p>
@@ -307,7 +307,7 @@ export default function ModelCardPage() {
 
         {/* Footer note */}
         <section className="relative mx-auto max-w-4xl px-6 pb-20 pt-8">
-          <div className="rounded-xl border border-gold/20 bg-gold/5 p-5 text-sm leading-relaxed text-cream/80">
+          <div className="rounded-xl border border-gold/20 bg-gold/5 p-5 text-sm leading-relaxed text-foreground/80">
             <p className="flex items-start gap-2">
               <CheckCircle2
                 className="mt-0.5 h-4 w-4 shrink-0 text-gold"

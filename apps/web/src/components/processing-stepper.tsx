@@ -70,9 +70,9 @@ export function ProcessingStepper({ steps }: ProcessingStepperProps) {
               <p
                 className={[
                   'text-base transition-colors',
-                  step.state === 'done' && 'text-cream/80',
-                  step.state === 'running' && 'font-medium text-cream',
-                  step.state === 'pending' && 'text-cream/40',
+                  step.state === 'done' && 'text-foreground/80',
+                  step.state === 'running' && 'font-medium text-foreground',
+                  step.state === 'pending' && 'text-muted-foreground',
                 ]
                   .filter(Boolean)
                   .join(' ')}
@@ -109,7 +109,7 @@ function StepIndicator({ state }: { state: StepStatus['state'] }) {
       <motion.span
         initial={{ scale: 0.6, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-jade text-cream shadow-[0_0_18px_-4px_rgba(45,95,90,0.7)]"
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-jade text-foreground shadow-[0_0_18px_-4px_rgba(45,95,90,0.7)]"
       >
         <Check className="h-4 w-4" strokeWidth={3} />
       </motion.span>
@@ -130,7 +130,7 @@ function StepIndicator({ state }: { state: StepStatus['state'] }) {
     );
   }
   return (
-    <span className="flex h-8 w-8 items-center justify-center rounded-full border border-gold/20 bg-ink/40">
+    <span className="flex h-8 w-8 items-center justify-center rounded-full border border-gold/20 bg-card/40">
       <span className="h-2 w-2 rounded-full bg-gold/30" />
     </span>
   );

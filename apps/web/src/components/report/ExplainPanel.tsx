@@ -55,14 +55,14 @@ export function ExplainPanel({
         aria-expanded={open}
         aria-controls={panelId}
         className={cn(
-          'inline-flex items-center gap-2 rounded-md border border-cream/15 bg-ink/40 px-3 py-1.5 text-xs font-medium text-cream/80 transition-colors',
+          'inline-flex items-center gap-2 rounded-md border border-border bg-card/40 px-3 py-1.5 text-xs font-medium text-foreground/80 transition-colors',
           'hover:border-gold/40 hover:text-gold',
         )}
       >
         <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
         <span>
           Xem căn cứ luận giải
-          {topic ? <span className="text-cream/70"> · {topic}</span> : null}
+          {topic ? <span className="text-muted-foreground"> · {topic}</span> : null}
         </span>
         {open ? (
           <ChevronUp className="h-3.5 w-3.5" aria-hidden="true" />
@@ -81,17 +81,17 @@ export function ExplainPanel({
         aria-hidden={!open}
       >
         <div className="overflow-hidden">
-          <div className="rounded-lg border border-cream/10 bg-ink/40 p-4 text-sm text-cream/85">
+          <div className="rounded-lg border border-border bg-card/40 p-4 text-sm text-foreground/85">
             {summary && (
-              <p className="mb-3 text-cream/90">{summary}</p>
+              <p className="mb-3 text-foreground/90">{summary}</p>
             )}
 
-            <p className="text-xs font-medium uppercase tracking-wider text-cream/60">
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Dựa trên:
             </p>
 
             {palaces.length === 0 ? (
-              <p className="mt-2 text-sm text-cream/70">
+              <p className="mt-2 text-sm text-muted-foreground">
                 Chưa có dữ liệu cung được trích dẫn.
               </p>
             ) : (
@@ -103,32 +103,32 @@ export function ExplainPanel({
             )}
 
             {(majorLuckRef || annualLuckRef) && (
-              <dl className="mt-4 space-y-1.5 border-t border-cream/10 pt-3 text-sm">
+              <dl className="mt-4 space-y-1.5 border-t border-border pt-3 text-sm">
                 {majorLuckRef && (
                   <div className="flex flex-wrap gap-x-2">
-                    <dt className="text-cream/60">Đại vận hiện tại:</dt>
-                    <dd className="text-cream/90">{majorLuckRef}</dd>
+                    <dt className="text-muted-foreground">Đại vận hiện tại:</dt>
+                    <dd className="text-foreground/90">{majorLuckRef}</dd>
                   </div>
                 )}
                 {annualLuckRef && (
                   <div className="flex flex-wrap gap-x-2">
-                    <dt className="text-cream/60">Lưu niên:</dt>
-                    <dd className="text-cream/90">{annualLuckRef}</dd>
+                    <dt className="text-muted-foreground">Lưu niên:</dt>
+                    <dd className="text-foreground/90">{annualLuckRef}</dd>
                   </div>
                 )}
               </dl>
             )}
 
             {userContext && (
-              <div className="mt-4 border-t border-cream/10 pt-3">
-                <p className="text-xs font-medium uppercase tracking-wider text-cream/60">
+              <div className="mt-4 border-t border-border pt-3">
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   Bối cảnh bạn đã cung cấp:
                 </p>
-                <p className="mt-1 italic text-cream/80">{userContext}</p>
+                <p className="mt-1 italic text-foreground/80">{userContext}</p>
               </div>
             )}
 
-            <p className="mt-4 flex items-start gap-2 border-t border-cream/10 pt-3 text-[11px] leading-relaxed text-cream/55">
+            <p className="mt-4 flex items-start gap-2 border-t border-border pt-3 text-[11px] leading-relaxed text-muted-foreground">
               <Info className="mt-0.5 h-3 w-3 shrink-0" aria-hidden="true" />
               <span>
                 Đây là khung dữ liệu lá số mà phần luận giải đã trích dẫn. AI
@@ -157,12 +157,12 @@ function PalaceRow({ palace }: { palace: ExplainPanelPalace }) {
       <div className={cn('flex flex-wrap items-baseline gap-1.5', styles.size)}>
         <strong className={styles.name}>{palace.name}</strong>
         {palace.stars.length > 0 && (
-          <span className="text-cream/70">
+          <span className="text-muted-foreground">
             — {palace.stars.join(', ')}
           </span>
         )}
       </div>
-      <p className="mt-1 text-xs leading-relaxed text-cream/70">
+      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
         {palace.reasoning}
       </p>
     </li>
@@ -182,22 +182,22 @@ const PALACE_STYLES: Record<
   primary: {
     border: 'border-gold/30',
     bg: 'bg-gold/15',
-    text: 'text-cream',
+    text: 'text-foreground',
     name: 'text-gold',
     size: 'text-sm',
   },
   secondary: {
-    border: 'border-cream/15',
-    bg: 'bg-ink/60',
-    text: 'text-cream/90',
-    name: 'text-cream',
+    border: 'border-border',
+    bg: 'bg-card/60',
+    text: 'text-foreground/90',
+    name: 'text-foreground',
     size: 'text-sm',
   },
   supporting: {
-    border: 'border-cream/10',
-    bg: 'bg-ink/40',
-    text: 'text-cream/60',
-    name: 'text-cream/80',
+    border: 'border-border',
+    bg: 'bg-card/40',
+    text: 'text-muted-foreground',
+    name: 'text-foreground/80',
     size: 'text-xs',
   },
 };

@@ -224,7 +224,7 @@ export default function LandingPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(SERVICES_JSONLD) }}
       />
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-ink text-cream pt-16">
+      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
         <HeroV3 />
         <WhyTrust />
         <HowToStart />

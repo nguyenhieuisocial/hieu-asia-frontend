@@ -124,16 +124,16 @@ const TAG_LABELS: Record<NonNullable<ReleaseEntry['tag']>, { label: string; cls:
   major: { label: 'Major', cls: 'border-gold/40 bg-gold/10 text-gold' },
   feature: { label: 'Tính năng', cls: 'border-purple/40 bg-purple/10 text-purple-200' },
   polish: { label: 'Polish', cls: 'border-jade/40 bg-jade/10 text-emerald-200' },
-  infra: { label: 'Hạ tầng', cls: 'border-cream/15 bg-cream/5 text-cream/70' },
+  infra: { label: 'Hạ tầng', cls: 'border-border bg-muted/5 text-muted-foreground' },
 };
 
 export default function ChangelogPage() {
   return (
     <>
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-ink text-cream pt-16">
+      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
         {/* Hero */}
-        <section className="relative isolate overflow-hidden bg-ink">
+        <section className="relative isolate overflow-hidden bg-background">
           <div
             aria-hidden="true"
             className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.18)_0%,_transparent_55%)]"
@@ -142,11 +142,11 @@ export default function ChangelogPage() {
             <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
               Changelog · lộ trình minh bạch
             </p>
-            <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-cream sm:text-5xl">
+            <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
               Chúng tôi đã{' '}
               <span className="bg-gold-gradient bg-clip-text text-transparent">xây gì</span>
             </h1>
-            <p className="mt-5 text-base leading-relaxed text-cream/75 sm:text-lg">
+            <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
               Lộ trình từ ngày đầu — không marketing tô hồng. Bạn thấy được cả
               những thay đổi nhỏ và những bước nhảy lớn.
             </p>
@@ -154,21 +154,21 @@ export default function ChangelogPage() {
         </section>
 
         {/* Timeline */}
-        <section className="relative bg-ink pb-20">
+        <section className="relative bg-background pb-20">
           <div className="mx-auto max-w-3xl px-6">
             <ol className="relative border-l border-gold/20">
               {RELEASES.map((r) => {
                 const tag = r.tag ? TAG_LABELS[r.tag] : null;
                 return (
                   <li key={r.version} className="ml-6 mb-12 last:mb-0">
-                    <span className="absolute -left-2.5 flex h-5 w-5 items-center justify-center rounded-full border border-gold/60 bg-ink">
+                    <span className="absolute -left-2.5 flex h-5 w-5 items-center justify-center rounded-full border border-gold/60 bg-background">
                       <Sparkles className="h-2.5 w-2.5 text-gold" aria-hidden="true" />
                     </span>
                     <div className="flex flex-wrap items-baseline gap-3">
-                      <span className="font-heading text-xl font-semibold text-cream">
+                      <span className="font-heading text-xl font-semibold text-foreground">
                         {r.version}
                       </span>
-                      <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-cream/70">
+                      <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
                         {r.date}
                       </span>
                       {tag && (
@@ -182,8 +182,8 @@ export default function ChangelogPage() {
                         </span>
                       )}
                     </div>
-                    <h2 className="mt-2 font-heading text-lg text-cream/95">{r.title}</h2>
-                    <ul className="mt-4 space-y-2 text-sm text-cream/75">
+                    <h2 className="mt-2 font-heading text-lg text-foreground/95">{r.title}</h2>
+                    <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
                       {r.bullets.map((b) => (
                         <li key={b} className="flex gap-2.5 leading-relaxed">
                           <span aria-hidden="true" className="mt-2 inline-block h-1 w-1 shrink-0 rounded-full bg-gold/70" />
@@ -199,12 +199,12 @@ export default function ChangelogPage() {
         </section>
 
         {/* CTA */}
-        <section className="border-t border-cream/5 bg-ink py-16">
+        <section className="border-t border-border bg-background py-16">
           <div className="mx-auto max-w-3xl px-6 text-center">
-            <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+            <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
               Có ý tưởng cho phiên bản tiếp theo?
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-sm text-cream/70 sm:text-base">
+            <p className="mx-auto mt-4 max-w-xl text-sm text-muted-foreground sm:text-base">
               Email cho chúng tôi hoặc theo dõi newsletter để cùng định hình
               hieu.asia. Bạn không phải user — bạn là đồng tác giả.
             </p>

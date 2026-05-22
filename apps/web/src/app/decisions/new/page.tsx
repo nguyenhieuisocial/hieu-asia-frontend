@@ -320,16 +320,16 @@ function NewDecisionInner() {
   }
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
 
       <main className="mx-auto max-w-3xl px-6 py-16 sm:py-20">
-        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">Trang chủ</Link>
           <span className="mx-1.5">/</span>
           <Link href="/decisions" className="hover:text-gold">Decision Brief</Link>
           <span className="mx-1.5">/</span>
-          <span className="text-cream/70">Tạo mới</span>
+          <span className="text-muted-foreground">Tạo mới</span>
         </nav>
 
         <header className="mb-8">
@@ -339,7 +339,7 @@ function NewDecisionInner() {
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">
             Tạo Decision Brief
           </h1>
-          <p className="mt-4 text-sm leading-relaxed text-cream/75 sm:text-base">
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
             Mô tả ngắn gọn câu hỏi và tình huống. Hệ thống sẽ trả về một bản
             tóm tắt giúp bạn nhìn vấn đề rõ hơn — không phải câu trả lời tuyệt
             đối.
@@ -351,7 +351,7 @@ function NewDecisionInner() {
             className="mt-0.5 h-5 w-5 shrink-0 text-amber-400/90"
             aria-hidden="true"
           />
-          <p className="text-sm leading-relaxed text-cream/85">
+          <p className="text-sm leading-relaxed text-foreground/85">
             <strong className="font-semibold">Decision Brief KHÔNG</strong> tư
             vấn tài chính, y tế hay pháp lý cụ thể. Mọi quyết định cuối cùng
             vẫn là của bạn.
@@ -366,7 +366,7 @@ function NewDecisionInner() {
             <span className="mt-0.5 text-jade" aria-hidden="true">
               ✓
             </span>
-            <p className="text-sm leading-relaxed text-cream/85">
+            <p className="text-sm leading-relaxed text-foreground/85">
               <strong className="font-semibold">Lá số đã có</strong> — đang sử
               dụng lá số ngày {birthInputs.birth_date}. Brief sẽ tham chiếu các
               cung và sao trong lá số của bạn.
@@ -376,10 +376,10 @@ function NewDecisionInner() {
           <Card className="mb-8 border-gold/20 bg-gold/5">
             <CardContent className="flex flex-col items-start gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="font-medium text-cream">
+                <p className="font-medium text-foreground">
                   Tạo Decision Brief có lá số (nhanh hơn)
                 </p>
-                <p className="mt-1 text-xs text-cream/65">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Nhập ngày & giờ sinh một lần — Brief sẽ tham chiếu cung & sao
                   thay vì chỉ dựa vào mô tả.
                 </p>
@@ -396,7 +396,7 @@ function NewDecisionInner() {
         ) : null}
 
         <form onSubmit={handleSubmit} noValidate>
-          <Card className="border-gold/20 bg-ink/60 backdrop-blur">
+          <Card className="border-gold/20 bg-card/60 backdrop-blur">
             <CardHeader>
               <CardTitle className="font-heading text-xl">
                 Bạn đang phân vân điều gì?
@@ -404,10 +404,10 @@ function NewDecisionInner() {
             </CardHeader>
             <CardContent className="space-y-8">
               <fieldset>
-                <legend className="text-sm font-medium text-cream/90">
+                <legend className="text-sm font-medium text-foreground/90">
                   Chủ đề
                 </legend>
-                <p className="mt-1 text-xs text-cream/55">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Giúp hệ thống chọn đúng cung trên lá số để tham chiếu.
                 </p>
                 <RadioGroup
@@ -424,15 +424,15 @@ function NewDecisionInner() {
                         'flex cursor-pointer items-start gap-3 rounded-lg border p-4 transition',
                         topic === t.id
                           ? 'border-gold bg-gold/10'
-                          : 'border-cream/15 bg-ink/40 hover:border-gold/40',
+                          : 'border-border bg-card/40 hover:border-gold/40',
                       ].join(' ')}
                     >
                       <RadioGroupItem id={`topic-${t.id}`} value={t.id} className="mt-1" />
                       <span className="flex flex-col">
-                        <span className="text-sm font-medium text-cream">
+                        <span className="text-sm font-medium text-foreground">
                           {t.label}
                         </span>
-                        <span className="mt-0.5 text-xs text-cream/60">
+                        <span className="mt-0.5 text-xs text-muted-foreground">
                           {t.hint}
                         </span>
                       </span>
@@ -446,7 +446,7 @@ function NewDecisionInner() {
                   Câu hỏi bạn đang phân vân?{' '}
                   <span className="text-red-400/80">*</span>
                 </Label>
-                <p className="mt-1 text-xs text-cream/55">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Ví dụ: &ldquo;Tôi có nên nghỉ việc trong 3 tháng tới?&rdquo;
                 </p>
                 <Input
@@ -458,7 +458,7 @@ function NewDecisionInner() {
                   className="mt-2"
                   required
                 />
-                <div className="mt-1 flex justify-end text-xs text-cream/70">
+                <div className="mt-1 flex justify-end text-xs text-muted-foreground">
                   {questionLength}/500
                 </div>
               </div>
@@ -466,9 +466,9 @@ function NewDecisionInner() {
               <div>
                 <Label htmlFor="decision-situation" className="text-sm font-medium">
                   Mô tả tình huống cụ thể{' '}
-                  <span className="text-cream/70">(tuỳ chọn)</span>
+                  <span className="text-muted-foreground">(tuỳ chọn)</span>
                 </Label>
-                <p className="mt-1 text-xs text-cream/55">
+                <p className="mt-1 text-xs text-muted-foreground">
                   3–5 câu về bối cảnh: lý do, ràng buộc, điều bạn lo ngại.
                   Càng cụ thể, gợi ý càng sát.
                 </p>
@@ -481,7 +481,7 @@ function NewDecisionInner() {
                   placeholder="Tôi đang làm vị trí X được 3 năm, gần đây cảm thấy..."
                   className="mt-2"
                 />
-                <div className="mt-1 flex justify-end text-xs text-cream/70">
+                <div className="mt-1 flex justify-end text-xs text-muted-foreground">
                   {situationLength}/1000
                 </div>
               </div>
@@ -493,12 +493,12 @@ function NewDecisionInner() {
                 >
                   <div className="flex items-start gap-3">
                     <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-rose-300" aria-hidden="true" />
-                    <div className="space-y-2 text-sm leading-relaxed text-cream/85">
+                    <div className="space-y-2 text-sm leading-relaxed text-foreground/85">
                       <p>{safetyBlock.reply}</p>
                       {safetyBlock.followUps.length > 0 && (
                         <>
-                          <p className="text-xs text-cream/55">Gợi ý:</p>
-                          <ul className="ml-4 list-disc space-y-1 text-xs text-cream/70">
+                          <p className="text-xs text-muted-foreground">Gợi ý:</p>
+                          <ul className="ml-4 list-disc space-y-1 text-xs text-muted-foreground">
                             {safetyBlock.followUps.map((f, i) => (
                               <li key={i}>{f}</li>
                             ))}
@@ -519,17 +519,17 @@ function NewDecisionInner() {
                     className="mt-0.5 h-5 w-5 shrink-0 text-amber-400/90"
                     aria-hidden="true"
                   />
-                  <div className="space-y-2 text-sm leading-relaxed text-cream/85">
+                  <div className="space-y-2 text-sm leading-relaxed text-foreground/85">
                     <p>
                       <strong className="font-semibold">
                         Tính năng đang nâng cấp, vui lòng quay lại sau.
                       </strong>{' '}
                       Chúng tôi không thể tạo Decision Brief lúc này.
                     </p>
-                    <p className="text-xs text-cream/55">
+                    <p className="text-xs text-muted-foreground">
                       Đây là dữ liệu sẽ được gửi (lưu lại để bạn thử lại sau):
                     </p>
-                    <pre className="overflow-x-auto rounded border border-cream/10 bg-ink/60 p-3 font-mono text-[11px] leading-relaxed text-cream/70">
+                    <pre className="overflow-x-auto rounded border border-border bg-card/60 p-3 font-mono text-[11px] leading-relaxed text-muted-foreground">
                       {payloadPreview}
                     </pre>
                   </div>
@@ -539,7 +539,7 @@ function NewDecisionInner() {
               <div className="flex items-center justify-between gap-4">
                 <Link
                   href="/decisions"
-                  className="text-sm text-cream/65 hover:text-gold"
+                  className="text-sm text-muted-foreground hover:text-gold"
                 >
                   ← Quay lại
                 </Link>
@@ -569,7 +569,7 @@ function NewDecisionInner() {
 
 export default function NewDecisionPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-ink" aria-hidden="true" />}>
+    <Suspense fallback={<div className="min-h-screen bg-background" aria-hidden="true" />}>
       <NewDecisionInner />
     </Suspense>
   );

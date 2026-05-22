@@ -80,20 +80,20 @@ export function TuViChartSection({
 
   if (query.isLoading) {
     return (
-      <Card className="border-gold/15 bg-ink/40">
+      <Card className="border-gold/15 bg-card/40">
         <CardContent className="space-y-3 pt-6">
           <div className="flex items-center gap-3">
             <div
               aria-hidden
               className="h-5 w-5 animate-spin rounded-full border-2 border-gold/30 border-t-gold"
             />
-            <p className="font-mono text-xs uppercase tracking-widest text-cream/65">
+            <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
               Đang dựng lá số 12 cung…
             </p>
           </div>
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
             {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="h-24 animate-pulse rounded-lg bg-cream/5" />
+              <div key={i} className="h-24 animate-pulse rounded-lg bg-muted/5" />
             ))}
           </div>
         </CardContent>
@@ -127,7 +127,7 @@ export function TuViChartSection({
           <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/80">
             Lá số 12 cung · Bắc phái 114 sao
           </p>
-          <h2 className="mt-1 font-heading text-2xl font-semibold text-cream sm:text-3xl">
+          <h2 className="mt-1 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             Bản đồ thiên hướng của bạn
           </h2>
         </div>
@@ -140,8 +140,8 @@ export function TuViChartSection({
 
       <TuViChart12Palaces chart={query.data} initialPalaceIndex={0} />
 
-      <Card className="border-cream/10 bg-ink/40">
-        <CardContent className="flex items-start gap-3 pt-5 text-xs leading-relaxed text-cream/70 sm:text-sm">
+      <Card className="border-border bg-card/40">
+        <CardContent className="flex items-start gap-3 pt-5 text-xs leading-relaxed text-muted-foreground sm:text-sm">
           <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-gold/80" aria-hidden />
           <p>
             Đây là phần cấu trúc lá số do hệ thống an theo trường phái Bắc phái 114 sao

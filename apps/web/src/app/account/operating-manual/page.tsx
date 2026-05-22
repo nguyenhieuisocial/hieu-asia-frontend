@@ -61,26 +61,26 @@ export default function OperatingManualPage() {
   }, []);
 
   return (
-    <div className="pom-print-wrapper min-h-screen bg-ink text-cream">
+    <div className="pom-print-wrapper min-h-screen bg-background text-foreground">
       <SiteNav />
       <main id="main-content" className="relative pt-16">
         <section className="mx-auto max-w-3xl px-6 pb-16 pt-10 sm:pt-14">
           <nav
             aria-label="Breadcrumb"
-            className="mb-6 text-xs text-cream/55 print:hidden"
+            className="mb-6 text-xs text-muted-foreground print:hidden"
           >
             <Link href="/account" className="hover:text-gold">
               <ArrowLeft className="mr-1 inline h-3 w-3" aria-hidden />
               Tài khoản
             </Link>
             <span className="mx-1.5">/</span>
-            <span className="text-cream/70">Sổ tay cá nhân</span>
+            <span className="text-muted-foreground">Sổ tay cá nhân</span>
           </nav>
 
           {!checkedHash ? (
             <div className="space-y-6" aria-hidden="true">
-              <div className="h-8 w-48 animate-pulse rounded bg-cream/10" />
-              <div className="h-64 w-full animate-pulse rounded bg-cream/5" />
+              <div className="h-8 w-48 animate-pulse rounded bg-muted/10" />
+              <div className="h-64 w-full animate-pulse rounded bg-muted/5" />
             </div>
           ) : shared ? (
             <SharedManualView manual={shared} />

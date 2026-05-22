@@ -26,7 +26,7 @@ const COMPANY_LINKS = [
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="relative border-t border-gold/15 bg-ink">
+    <footer className="relative border-t border-gold/15 bg-background">
       <div className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
         <div className="grid gap-10 md:grid-cols-12">
           {/* Brand */}
@@ -34,7 +34,7 @@ export function Footer() {
             <Link href="/" className="inline-flex items-center gap-2">
               <span className="font-heading text-xl font-bold text-gold">hieu.asia</span>
             </Link>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-cream/65">
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
               Cẩm nang cuộc đời AI — Tử Vi, MBTI, Palm Reading và Mentor cá nhân hóa cho
               người Việt hiện đại.
             </p>
@@ -56,7 +56,7 @@ export function Footer() {
           <FooterCol title="Về chúng tôi" links={COMPANY_LINKS} className="md:col-span-3" />
         </div>
 
-        <div className="mt-14 flex flex-col gap-4 border-t border-cream/5 pt-6 text-xs text-cream/70 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-14 flex flex-col gap-4 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>© {year} hieu.asia · Made in Vietnam</p>
           <p>Kết quả mang tính tham khảo · Không định mệnh hóa</p>
         </div>
@@ -76,7 +76,7 @@ function FooterCol({
 }) {
   return (
     <div className={className}>
-      <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-cream/90">
+      <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/90">
         {title}
       </h3>
       <ul className="mt-4 space-y-2.5">
@@ -84,7 +84,7 @@ function FooterCol({
           <li key={link.href}>
             <Link
               href={link.href}
-              className="text-sm text-cream/60 transition-colors hover:text-gold"
+              className="text-sm text-muted-foreground transition-colors hover:text-gold"
             >
               {link.label}
             </Link>
@@ -108,7 +108,7 @@ function SocialLink({
     <Link
       href={href}
       aria-label={label}
-      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-cream/10 text-cream/65 transition-colors hover:border-gold/40 hover:text-gold sm:h-9 sm:w-9"
+      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold sm:h-9 sm:w-9"
     >
       {children}
     </Link>

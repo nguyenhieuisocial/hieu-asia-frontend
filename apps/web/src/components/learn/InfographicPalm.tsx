@@ -107,22 +107,22 @@ export function InfographicPalm() {
               className={`flex w-full items-center gap-2 rounded border px-2.5 py-1.5 text-left text-xs transition-colors ${
                 active === line.id
                   ? 'border-gold bg-gold/10'
-                  : 'border-cream/15 hover:border-gold/40'
+                  : 'border-border hover:border-gold/40'
               }`}
             >
               <span
                 className="h-3 w-3 shrink-0 rounded-full"
                 style={{ backgroundColor: line.color }}
               />
-              <span className={active === line.id ? 'text-gold' : 'text-cream/80'}>
+              <span className={active === line.id ? 'text-gold' : 'text-foreground/80'}>
                 {line.name}
               </span>
             </button>
           ))}
         </div>
         {activeLine && (
-          <div className="mt-3 rounded border border-cream/15 bg-ink/40 p-3">
-            <p className="text-xs leading-relaxed text-cream/70">{activeLine.desc}</p>
+          <div className="mt-3 rounded border border-border bg-card/40 p-3">
+            <p className="text-xs leading-relaxed text-muted-foreground">{activeLine.desc}</p>
           </div>
         )}
       </div>

@@ -117,7 +117,7 @@ const DEMO_PROFILES = [
 
 export default function FamilyProfilesPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -125,12 +125,12 @@ export default function FamilyProfilesPage() {
       />
 
       <section className="mx-auto max-w-5xl px-6 pt-16 pb-20">
-        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">
             Trang chủ
           </Link>
           <span className="mx-1.5">/</span>
-          <span className="text-cream/70">Family Profiles</span>
+          <span className="text-muted-foreground">Family Profiles</span>
         </nav>
 
         <header className="mb-10">
@@ -142,7 +142,7 @@ export default function FamilyProfilesPage() {
               Hiểu cả nhà
             </span>
           </h1>
-          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-cream/75 sm:text-base">
+          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
             Tạo profile cho người thân (cha mẹ, vợ/chồng, con) để hiểu giao tiếp
             và lập kế hoạch chung.
           </p>
@@ -171,7 +171,7 @@ export default function FamilyProfilesPage() {
           </h2>
           <div className="grid gap-4 md:grid-cols-3">
             {STEPS.map((s) => (
-              <Card key={s.n} className="border-cream/10 bg-ink/40">
+              <Card key={s.n} className="border-border bg-card/40">
                 <CardHeader>
                   <div className="flex items-center gap-3">
                     <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-gold/40 bg-gold/10 font-mono text-xs font-medium text-gold">
@@ -183,7 +183,7 @@ export default function FamilyProfilesPage() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm leading-relaxed text-cream/75">
+                  <p className="text-sm leading-relaxed text-muted-foreground">
                     {s.body}
                   </p>
                 </CardContent>
@@ -201,7 +201,7 @@ export default function FamilyProfilesPage() {
           </h2>
           <Card className="border-amber-400/30 bg-amber-500/[0.05]">
             <CardContent className="p-6">
-              <ul className="space-y-4 text-sm text-cream/85">
+              <ul className="space-y-4 text-sm text-foreground/85">
                 {PRIVACY_BULLETS.map((b) => {
                   const Icon = b.icon;
                   return (
@@ -231,7 +231,7 @@ export default function FamilyProfilesPage() {
           </div>
           <div className="grid gap-4 md:grid-cols-3">
             {DEMO_PROFILES.map((p) => (
-              <Card key={p.label} className="border-cream/10 bg-ink/40">
+              <Card key={p.label} className="border-border bg-card/40">
                 <CardHeader>
                   <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
                     Thành viên
@@ -239,15 +239,15 @@ export default function FamilyProfilesPage() {
                   <CardTitle className="font-heading text-lg">
                     {p.label}
                   </CardTitle>
-                  <CardDescription className="text-cream/75">
+                  <CardDescription className="text-muted-foreground">
                     {p.summary}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm leading-relaxed text-cream/80">
-                    <strong className="text-cream">Gợi ý:</strong> {p.tip}
+                  <p className="text-sm leading-relaxed text-foreground/80">
+                    <strong className="text-foreground">Gợi ý:</strong> {p.tip}
                   </p>
-                  <p className="mt-4 text-xs text-cream/55">
+                  <p className="mt-4 text-xs text-muted-foreground">
                     Tính năng đang phát triển. Đăng ký để được thông báo khi
                     launch.
                   </p>
@@ -267,7 +267,7 @@ export default function FamilyProfilesPage() {
           <h2 className="mt-2 font-heading text-lg font-semibold sm:text-xl">
             Bắt đầu với lá số của bạn
           </h2>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-cream/75">
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             Có lá số cá nhân trước — sau đó hệ thống mới ghép được profile thành
             viên với bạn.
           </p>

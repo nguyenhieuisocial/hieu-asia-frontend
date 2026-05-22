@@ -83,19 +83,19 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
 
 export function FAQ() {
   return (
-    <section id="faq" className="relative bg-ink py-20 sm:py-32">
+    <section id="faq" className="relative bg-background py-20 sm:py-32">
       <div className="mx-auto max-w-3xl px-6">
         <div className="text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
             Câu hỏi thường gặp
           </p>
-          <h2 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-cream sm:text-5xl">
+          <h2 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
             Mọi thứ bạn muốn <span className="bg-gold-gradient bg-clip-text text-transparent">hỏi trước</span>
           </h2>
         </div>
 
         <div
-          className="mt-12 rounded-2xl border border-cream/5 px-6"
+          className="mt-12 rounded-2xl border border-border px-6"
           style={{ backgroundColor: 'rgba(20, 20, 26, 0.4)' }}
         >
           <Accordion type="single" collapsible className="w-full">
@@ -104,7 +104,7 @@ export function FAQ() {
                 <AccordionTrigger className="text-left text-base font-medium">
                   {item.q}
                 </AccordionTrigger>
-                <AccordionContent className="leading-relaxed text-cream/75">
+                <AccordionContent className="leading-relaxed text-muted-foreground">
                   {item.a}
                 </AccordionContent>
               </AccordionItem>

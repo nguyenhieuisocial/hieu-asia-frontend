@@ -144,7 +144,7 @@ export function BirthDataForm() {
             />
           )}
         </Field>
-        <label className="flex cursor-pointer items-center gap-2.5 text-sm text-cream/80">
+        <label className="flex cursor-pointer items-center gap-2.5 text-sm text-foreground/80">
           <Checkbox
             {...register('unknown_birth_time', {
               onChange: (e) => {
@@ -226,7 +226,7 @@ export function BirthDataForm() {
                 {(['nam', 'nữ', 'khác', 'không nói'] as const).map((g) => (
                   <label
                     key={g}
-                    className="flex cursor-pointer items-center gap-2 rounded-md border border-gold/15 bg-ink/40 px-3 py-2 text-sm capitalize text-cream/90 hover:border-gold/30 has-[:checked]:border-gold has-[:checked]:bg-gold/10"
+                    className="flex cursor-pointer items-center gap-2 rounded-md border border-gold/15 bg-card/40 px-3 py-2 text-sm capitalize text-foreground/90 hover:border-gold/30 has-[:checked]:border-gold has-[:checked]:bg-gold/10"
                   >
                     <RadioGroupItem value={g} />
                     <span>{g}</span>
@@ -250,7 +250,7 @@ export function BirthDataForm() {
             name="calendar"
             render={({ field }) => (
               <div
-                className="flex items-center gap-3 text-sm text-cream/80"
+                className="flex items-center gap-3 text-sm text-foreground/80"
                 aria-labelledby={ariaProps['aria-labelledby']}
                 aria-describedby={ariaProps['aria-describedby']}
               >
@@ -270,15 +270,15 @@ export function BirthDataForm() {
       {/* Hint banner */}
       <div className="flex items-start gap-3 rounded-md border border-jade/30 bg-jade/10 p-4">
         <Info className="mt-0.5 h-4 w-4 shrink-0 text-jade" aria-hidden="true" />
-        <p className="text-xs leading-relaxed text-cream/80">
+        <p className="text-xs leading-relaxed text-foreground/80">
           Nếu không chắc giờ sinh, hệ thống sẽ đánh dấu độ tin cậy thấp hơn ở phần luận giải vận hạn.
           Bạn vẫn nhận được phân tích tính cách và khuyến nghị hành động đầy đủ.
         </p>
       </div>
 
       {/* Consent — required before submit */}
-      <div className="rounded-md border border-gold/20 bg-ink/40 p-4">
-        <label className="flex cursor-pointer items-start gap-3 text-sm text-cream/85">
+      <div className="rounded-md border border-gold/20 bg-card/40 p-4">
+        <label className="flex cursor-pointer items-start gap-3 text-sm text-foreground/85">
           <Checkbox
             checked={consented}
             onChange={(e) => setConsented((e.target as HTMLInputElement).checked)}
@@ -371,7 +371,7 @@ function Field({
       </Label>
       {children(ariaProps)}
       {hint && !error && (
-        <p id={hintId} className="text-xs text-cream/55">
+        <p id={hintId} className="text-xs text-muted-foreground">
           {hint}
         </p>
       )}

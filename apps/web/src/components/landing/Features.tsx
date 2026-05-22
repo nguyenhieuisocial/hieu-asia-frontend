@@ -28,16 +28,16 @@ const FEATURES = [
 
 export function Features() {
   return (
-    <section id="features" className="relative bg-ink py-20 sm:py-32">
+    <section id="features" className="relative bg-background py-20 sm:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
             Tính năng cốt lõi
           </p>
-          <h2 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-cream sm:text-5xl">
+          <h2 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
             Bốn hệ thống. <span className="bg-gold-gradient bg-clip-text text-transparent">Một bức tranh.</span>
           </h2>
-          <p className="mt-5 text-base leading-relaxed text-cream/70 sm:text-lg">
+          <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
             Kết hợp tri thức cổ điển Á Đông với AI hiện đại — chính xác trong tính toán,
             đồng cảm trong diễn giải.
           </p>
@@ -47,7 +47,7 @@ export function Features() {
           {FEATURES.map(({ Icon, title, desc }) => (
             <article
               key={title}
-              className="group relative overflow-hidden rounded-2xl border border-cream/5 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]"
+              className="group relative overflow-hidden rounded-2xl border border-border p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]"
               style={{ backgroundColor: 'rgba(20, 20, 26, 0.4)' }}
             >
               {/* Hover glow */}
@@ -63,10 +63,10 @@ export function Features() {
                 <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-gold/30 bg-gold/5 transition-colors group-hover:border-gold/60 group-hover:bg-gold/10">
                   <Icon className="h-5 w-5 text-gold" aria-hidden="true" />
                 </div>
-                <h3 className="font-heading text-lg font-semibold leading-tight text-cream">
+                <h3 className="font-heading text-lg font-semibold leading-tight text-foreground">
                   {title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-cream/65">{desc}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{desc}</p>
               </div>
             </article>
           ))}

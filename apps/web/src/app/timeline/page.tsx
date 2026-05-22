@@ -116,7 +116,7 @@ export default function TimelinePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -124,12 +124,12 @@ export default function TimelinePage() {
       />
 
       <section className="mx-auto max-w-5xl px-6 pt-16 pb-20">
-        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">
             Trang chủ
           </Link>
           <span className="mx-1.5">/</span>
-          <span className="text-cream/70">Timeline</span>
+          <span className="text-muted-foreground">Timeline</span>
         </nav>
 
         <header className="mb-10">
@@ -141,7 +141,7 @@ export default function TimelinePage() {
               Timeline đại vận của bạn
             </span>
           </h1>
-          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-cream/75 sm:text-base">
+          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
             Đại vận = giai đoạn 10 năm. Lưu niên = năm hiện tại. Lưu nguyệt = tháng
             hiện tại. Demo content — lập lá số để cá nhân hoá theo cung an mệnh
             của bạn.
@@ -169,7 +169,7 @@ export default function TimelinePage() {
                     'min-w-[160px] flex-shrink-0',
                     active
                       ? 'border-gold/70 bg-gold/[0.07]'
-                      : 'border-cream/10 bg-ink/40',
+                      : 'border-border bg-card/40',
                   ].join(' ')}
                 >
                   <CardContent className="p-4">
@@ -178,13 +178,13 @@ export default function TimelinePage() {
                         Hiện tại
                       </span>
                     )}
-                    <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-cream/55">
+                    <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
                       {s.ageStart}–{s.ageEnd} tuổi
                     </p>
-                    <p className="mt-1 font-heading text-sm font-semibold text-cream">
+                    <p className="mt-1 font-heading text-sm font-semibold text-foreground">
                       {s.cung}
                     </p>
-                    <p className="mt-2 text-xs leading-relaxed text-cream/70">
+                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
                       {s.theme}
                     </p>
                   </CardContent>
@@ -192,7 +192,7 @@ export default function TimelinePage() {
               );
             })}
           </div>
-          <p className="mt-1 text-xs text-cream/55">
+          <p className="mt-1 text-xs text-muted-foreground">
             Kéo ngang để xem các đại vận khác. Giai đoạn đang highlight là demo
             cho user 28 tuổi.
           </p>
@@ -209,9 +209,9 @@ export default function TimelinePage() {
             <CardTitle className="font-heading text-xl sm:text-2xl">
               Lưu niên {currentYear} — Bính Ngọ
             </CardTitle>
-            <CardDescription className="text-cream/75">
+            <CardDescription className="text-muted-foreground">
               Chủ đề:{' '}
-              <strong className="text-cream">
+              <strong className="text-foreground">
                 xây nền + thử nghiệm có kiểm soát
               </strong>
               . Tháng đang trong:{' '}
@@ -229,12 +229,12 @@ export default function TimelinePage() {
           </h2>
           <div className="grid gap-4 sm:grid-cols-3">
             {upcoming.map((u) => (
-              <Card key={u.year} className="border-cream/10 bg-ink/40">
+              <Card key={u.year} className="border-border bg-card/40">
                 <CardHeader>
                   <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
                     Năm {u.year}
                   </p>
-                  <CardDescription className="text-cream/75">
+                  <CardDescription className="text-muted-foreground">
                     {u.theme}
                   </CardDescription>
                 </CardHeader>
@@ -253,7 +253,7 @@ export default function TimelinePage() {
           <h2 className="mt-2 font-heading text-lg font-semibold sm:text-xl">
             Xem timeline của riêng bạn
           </h2>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-cream/75">
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             Lập lá số Tử Vi để xác định đại vận thật + cung an mệnh + tinh đẩu
             theo ngày giờ sinh.
           </p>

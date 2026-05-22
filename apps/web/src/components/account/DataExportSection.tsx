@@ -96,15 +96,15 @@ export function DataExportSection({ userId }: DataExportSectionProps) {
           và audit log.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4 text-sm text-cream/85">
-        <ul className="list-disc space-y-1 pl-5 text-cream/75">
+      <CardContent className="space-y-4 text-sm text-foreground/85">
+        <ul className="list-disc space-y-1 pl-5 text-foreground/75">
           <li>Hồ sơ &amp; dữ liệu sinh trắc.</li>
           <li>Toàn bộ phiên đọc (Tử Vi, MBTI, tâm lý) ở định dạng JSON.</li>
           <li>Lịch sử giao dịch SePay.</li>
           <li>Audit log truy cập 12 tháng gần nhất.</li>
         </ul>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs text-cream/55">
+          <p className="text-xs text-muted-foreground">
             {lastExport
               ? `Lần xuất gần nhất: ${formatRelative(lastExport)}`
               : 'Chưa có bản xuất nào trên thiết bị này.'}
@@ -113,7 +113,7 @@ export function DataExportSection({ userId }: DataExportSectionProps) {
             {pending ? 'Đang chuẩn bị…' : 'Tải xuống (JSON)'}
           </Button>
         </div>
-        <p className="text-xs text-cream/70">
+        <p className="text-xs text-muted-foreground">
           Link tải xuống chứa chữ ký HMAC và hết hạn sau 24 giờ. Vui lòng lưu file
           về máy nếu muốn giữ lại lâu dài.
         </p>

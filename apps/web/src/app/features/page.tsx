@@ -154,9 +154,9 @@ export default function FeaturesPage() {
   return (
     <>
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-ink text-cream pt-16">
+      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
         {/* Hero */}
-        <section className="relative isolate overflow-hidden bg-ink">
+        <section className="relative isolate overflow-hidden bg-background">
           <div
             aria-hidden="true"
             className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,_rgba(59,39,84,0.4)_0%,_transparent_55%)]"
@@ -165,11 +165,11 @@ export default function FeaturesPage() {
             <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
               Sản phẩm
             </p>
-            <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-cream sm:text-5xl lg:text-6xl">
+            <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               Tính năng của{' '}
               <span className="bg-gold-gradient bg-clip-text text-transparent">hieu.asia</span>
             </h1>
-            <p className="mt-6 text-base leading-relaxed text-cream/75 sm:text-lg">
+            <p className="mt-6 text-base leading-relaxed text-muted-foreground sm:text-lg">
               Mọi công cụ bạn cần để hiểu chính mình rõ hơn — gói gọn trong một
               nền tảng, vận hành trên hạ tầng edge của Cloudflare.
             </p>
@@ -177,22 +177,22 @@ export default function FeaturesPage() {
         </section>
 
         {/* Feature grid */}
-        <section className="relative bg-ink py-12 sm:py-20">
+        <section className="relative bg-background py-12 sm:py-20">
           <div className="mx-auto max-w-6xl px-6">
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {FEATURES.map(({ Icon, anchor, title, desc, cta }) => (
                 <article
                   key={anchor}
                   id={anchor}
-                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-cream/10 bg-ink/40 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]"
+                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card/40 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]"
                 >
                   <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-gold/30 bg-gold/5 transition-colors group-hover:border-gold/60 group-hover:bg-gold/10">
                     <Icon className="h-5 w-5 text-gold" aria-hidden={true} />
                   </div>
-                  <h2 className="font-heading text-lg font-semibold leading-tight text-cream">
+                  <h2 className="font-heading text-lg font-semibold leading-tight text-foreground">
                     {title}
                   </h2>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-cream/70">
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
                     {desc}
                   </p>
                   {cta && (
@@ -209,12 +209,12 @@ export default function FeaturesPage() {
         </section>
 
         {/* CTA strip */}
-        <section className="relative bg-ink py-16">
+        <section className="relative bg-background py-16">
           <div className="mx-auto max-w-3xl px-6 text-center">
-            <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+            <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
               Sẵn sàng để bắt đầu?
             </h2>
-            <p className="mt-3 text-cream/70">
+            <p className="mt-3 text-muted-foreground">
               Mở khoá lá số trong 3 phút — khảo sát đầu vào miễn phí.
             </p>
             <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">

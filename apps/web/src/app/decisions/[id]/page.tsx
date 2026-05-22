@@ -156,12 +156,12 @@ export default function DecisionBriefPage() {
   // SSR / pre-hydrate placeholder — avoid flicker.
   if (!hydrated) {
     return (
-      <div className="min-h-screen bg-ink text-cream">
+      <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
         <main className="mx-auto max-w-3xl px-6 py-20" aria-hidden="true">
-          <div className="h-6 w-40 animate-pulse rounded bg-cream/10" />
-          <div className="mt-6 h-10 w-3/4 animate-pulse rounded bg-cream/10" />
-          <div className="mt-8 h-40 w-full animate-pulse rounded bg-cream/5" />
+          <div className="h-6 w-40 animate-pulse rounded bg-muted/10" />
+          <div className="mt-6 h-10 w-3/4 animate-pulse rounded bg-muted/10" />
+          <div className="mt-8 h-40 w-full animate-pulse rounded bg-muted/5" />
         </main>
         <SiteFooter />
       </div>
@@ -170,14 +170,14 @@ export default function DecisionBriefPage() {
 
   if (!record) {
     return (
-      <div className="min-h-screen bg-ink text-cream">
+      <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
         <main className="mx-auto max-w-2xl px-6 py-24 text-center">
           <Compass className="mx-auto h-10 w-10 text-gold/70" aria-hidden="true" />
           <h1 className="mt-6 font-heading text-3xl font-bold">
             Decision Brief này không tồn tại trên máy bạn
           </h1>
-          <p className="mt-4 text-sm leading-relaxed text-cream/70">
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
             Decision Brief được lưu trên trình duyệt của bạn — nếu bạn đổi máy
             hoặc xoá dữ liệu trình duyệt, brief sẽ mất. Bạn có thể tạo brief
             mới.
@@ -191,7 +191,7 @@ export default function DecisionBriefPage() {
             </Link>
             <Link
               href="/decisions"
-              className="text-sm text-cream/65 hover:text-gold"
+              className="text-sm text-muted-foreground hover:text-gold"
             >
               ← Về danh sách
             </Link>
@@ -206,16 +206,16 @@ export default function DecisionBriefPage() {
   const topicLabel = TOPIC_LABELS[topic] ?? 'Tổng quát';
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
 
       <main className="mx-auto max-w-3xl px-6 py-16 sm:py-20">
-        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">Trang chủ</Link>
           <span className="mx-1.5">/</span>
           <Link href="/decisions" className="hover:text-gold">Decision Brief</Link>
           <span className="mx-1.5">/</span>
-          <span className="text-cream/70">Brief</span>
+          <span className="text-muted-foreground">Brief</span>
         </nav>
 
         <header className="mb-10">
@@ -223,7 +223,7 @@ export default function DecisionBriefPage() {
             <span className="inline-flex items-center rounded-full border border-gold/30 bg-gold/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-gold">
               {topicLabel}
             </span>
-            <span className="text-xs text-cream/55">
+            <span className="text-xs text-muted-foreground">
               Tạo ngày {formatVNDate(createdAt)}
             </span>
           </div>
@@ -232,7 +232,7 @@ export default function DecisionBriefPage() {
           </h1>
 
           {reviewDate && (
-            <div className="mt-6 inline-flex items-center gap-2 rounded-lg border border-jade/30 bg-jade/[0.04] px-4 py-2.5 text-sm text-cream/85">
+            <div className="mt-6 inline-flex items-center gap-2 rounded-lg border border-jade/30 bg-jade/[0.04] px-4 py-2.5 text-sm text-foreground/85">
               <CalendarClock
                 className="h-4 w-4 text-jade"
                 aria-hidden="true"
@@ -249,7 +249,7 @@ export default function DecisionBriefPage() {
           >
             Vấn đề thật sự
           </h2>
-          <blockquote className="mt-3 border-l-2 border-l-gold pl-4 text-lg italic leading-relaxed text-cream/90 sm:text-xl">
+          <blockquote className="mt-3 border-l-2 border-l-gold pl-4 text-lg italic leading-relaxed text-foreground/90 sm:text-xl">
             {brief.realProblem}
           </blockquote>
         </section>
@@ -261,7 +261,7 @@ export default function DecisionBriefPage() {
           >
             Lá số nói gì
           </h2>
-          <p className="mt-3 text-base leading-relaxed text-cream/85">
+          <p className="mt-3 text-base leading-relaxed text-foreground/85">
             {brief.chartSignal}
           </p>
           {chart && <StructuredChart chart={chart} className="mt-4" />}
@@ -278,7 +278,7 @@ export default function DecisionBriefPage() {
             {brief.options.map((opt, i) => (
               <Card
                 key={`${i}-${opt.label}`}
-                className="border-gold/15 bg-ink/60 backdrop-blur-sm"
+                className="border-gold/15 bg-card/60 backdrop-blur-sm"
               >
                 <CardHeader>
                   <div className="flex items-center gap-3">
@@ -289,20 +289,20 @@ export default function DecisionBriefPage() {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p className="text-sm leading-relaxed text-cream/80">
+                  <p className="text-sm leading-relaxed text-foreground/80">
                     {opt.description}
                   </p>
 
                   {opt.risks.length > 0 && (
                     <div>
-                      <p className="text-xs font-medium uppercase tracking-wider text-cream/60">
+                      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                         Rủi ro:
                       </p>
                       <ul className="mt-2 space-y-1.5">
                         {opt.risks.map((r, ri) => (
                           <li
                             key={ri}
-                            className="flex items-start gap-2 text-sm text-cream/75"
+                            className="flex items-start gap-2 text-sm text-muted-foreground"
                           >
                             <span
                               className="mt-1.5 inline-block h-1 w-1 shrink-0 rounded-full bg-amber-400/70"
@@ -315,7 +315,7 @@ export default function DecisionBriefPage() {
                     </div>
                   )}
 
-                  <div className="inline-flex items-start gap-2 rounded-md border border-jade/30 bg-jade/[0.04] px-3 py-2 text-sm text-cream/85">
+                  <div className="inline-flex items-start gap-2 rounded-md border border-jade/30 bg-jade/[0.04] px-3 py-2 text-sm text-foreground/85">
                     <span className="text-xs font-medium uppercase tracking-wider text-jade">
                       Nên chọn khi:
                     </span>
@@ -334,7 +334,7 @@ export default function DecisionBriefPage() {
           >
             Bước nhỏ nhất 7 ngày
           </h2>
-          <p className="mb-5 text-sm text-cream/65">
+          <p className="mb-5 text-sm text-muted-foreground">
             Chọn 1–2 bước bạn có thể làm tuần này. Tick để theo dõi — dữ liệu
             lưu trên trình duyệt.
           </p>
@@ -351,7 +351,7 @@ export default function DecisionBriefPage() {
                       'flex w-full items-start gap-3 rounded-lg border p-4 text-left transition',
                       done
                         ? 'border-jade/40 bg-jade/[0.06]'
-                        : 'border-cream/10 bg-ink/40 hover:border-gold/30',
+                        : 'border-border bg-card/40 hover:border-gold/30',
                     ].join(' ')}
                   >
                     {done ? (
@@ -361,18 +361,18 @@ export default function DecisionBriefPage() {
                       />
                     ) : (
                       <Circle
-                        className="mt-0.5 h-5 w-5 shrink-0 text-cream/40"
+                        className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground"
                         aria-hidden="true"
                       />
                     )}
                     <span className="flex flex-1 items-start gap-2">
-                      <span className="font-mono text-xs text-cream/70">
+                      <span className="font-mono text-xs text-muted-foreground">
                         {i + 1}.
                       </span>
                       <span
                         className={[
                           'text-sm leading-relaxed',
-                          done ? 'text-cream/65 line-through' : 'text-cream/90',
+                          done ? 'text-muted-foreground line-through' : 'text-foreground/90',
                         ].join(' ')}
                       >
                         {step}
@@ -398,7 +398,7 @@ export default function DecisionBriefPage() {
                 {brief.caveats.map((c, i) => (
                   <li
                     key={i}
-                    className="flex items-start gap-2 text-sm leading-relaxed text-cream/80"
+                    className="flex items-start gap-2 text-sm leading-relaxed text-foreground/80"
                   >
                     <AlertTriangle
                       className="mt-0.5 h-4 w-4 shrink-0 text-amber-400/80"
@@ -412,11 +412,11 @@ export default function DecisionBriefPage() {
           </section>
         )}
 
-        <footer className="flex flex-col gap-3 border-t border-cream/10 pt-8 sm:flex-row sm:items-center sm:justify-between">
+        <footer className="flex flex-col gap-3 border-t border-border pt-8 sm:flex-row sm:items-center sm:justify-between">
           <button
             type="button"
             onClick={() => router.push('/decisions')}
-            className="text-sm text-cream/65 hover:text-gold"
+            className="text-sm text-muted-foreground hover:text-gold"
           >
             ← Quay lại danh sách
           </button>

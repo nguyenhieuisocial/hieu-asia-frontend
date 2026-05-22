@@ -40,7 +40,7 @@ function StarPill({ star }: { star: { name: string; brightness?: string; mutagen
         'inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-mono text-[10px]',
         isLucky && 'bg-jade/15 text-jade-50',
         isUnlucky && 'bg-red-500/15 text-red-300',
-        !isLucky && !isUnlucky && 'bg-cream/5 text-cream/80',
+        !isLucky && !isUnlucky && 'bg-muted/5 text-foreground/80',
       )}
     >
       {star.name}
@@ -60,11 +60,11 @@ function PalaceCell({ palace, selected, trigon, onClick }: PalaceCellProps) {
       aria-pressed={selected}
       aria-label={`Cung ${palace.name}`}
       className={cn(
-        'flex h-full min-h-[110px] flex-col items-start gap-1 rounded-lg border bg-ink/40 p-2 text-left transition-colors',
+        'flex h-full min-h-[110px] flex-col items-start gap-1 rounded-lg border bg-card/40 p-2 text-left transition-colors',
         'hover:border-gold/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold',
         selected && 'border-gold bg-gold/10 shadow-[0_0_20px_-8px_rgba(184,146,61,0.6)]',
         !selected && trigon && 'border-gold/40 bg-gold/[0.04]',
-        !selected && !trigon && 'border-cream/10',
+        !selected && !trigon && 'border-border',
       )}
     >
       <div className="flex w-full items-center justify-between">
@@ -74,13 +74,13 @@ function PalaceCell({ palace, selected, trigon, onClick }: PalaceCellProps) {
         {palace.isBodyPalace && (
           <span
             title="Cung Thân"
-            className="rounded bg-purple/30 px-1 font-mono text-[9px] text-cream/85"
+            className="rounded bg-purple/30 px-1 font-mono text-[9px] text-foreground/85"
           >
             Thân
           </span>
         )}
       </div>
-      <h3 className="font-heading text-sm font-semibold text-cream">{palace.name}</h3>
+      <h3 className="font-heading text-sm font-semibold text-foreground">{palace.name}</h3>
       {allMajor.length > 0 && (
         <div className="mt-0.5 flex flex-wrap gap-1">
           {allMajor.map((s) => (
@@ -89,7 +89,7 @@ function PalaceCell({ palace, selected, trigon, onClick }: PalaceCellProps) {
         </div>
       )}
       {palace.decadal?.range && (
-        <p className="mt-auto font-mono text-[9px] text-cream/70">
+        <p className="mt-auto font-mono text-[9px] text-muted-foreground">
           ĐV {palace.decadal.range[0]}–{palace.decadal.range[1]}
         </p>
       )}
@@ -105,7 +105,7 @@ function PalaceDetail({ palace }: { palace: TuViPalace }) {
           <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/80">
             {palace.heavenlyStem} {palace.earthlyBranch}
           </p>
-          <h3 className="mt-1 font-heading text-2xl font-bold text-cream">Cung {palace.name}</h3>
+          <h3 className="mt-1 font-heading text-2xl font-bold text-foreground">Cung {palace.name}</h3>
           {palace.isBodyPalace && (
             <p className="mt-1 text-xs text-purple-200">
               Đây cũng là Cung Thân — phần thể hiện hành động cụ thể trong đời.
@@ -134,7 +134,7 @@ function PalaceDetail({ palace }: { palace: TuViPalace }) {
         )}
         {palace.minorStars.length > 0 && (
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-widest text-cream/55">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
               Phụ tinh
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
@@ -146,7 +146,7 @@ function PalaceDetail({ palace }: { palace: TuViPalace }) {
         )}
         {palace.adjectiveStars.length > 0 && (
           <div className="sm:col-span-2">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-cream/70">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
               Sao bổ trợ ({palace.adjectiveStars.length})
             </p>
             <div className="mt-2 flex flex-wrap gap-1">
@@ -154,7 +154,7 @@ function PalaceDetail({ palace }: { palace: TuViPalace }) {
                 <StarPill key={s.name} star={s} />
               ))}
               {palace.adjectiveStars.length > 12 && (
-                <span className="text-[10px] text-cream/70">
+                <span className="text-[10px] text-muted-foreground">
                   +{palace.adjectiveStars.length - 12} sao khác
                 </span>
               )}
@@ -163,11 +163,11 @@ function PalaceDetail({ palace }: { palace: TuViPalace }) {
         )}
       </div>
 
-      <div className="mt-5 rounded-md border border-cream/10 bg-ink/40 p-3 text-xs leading-relaxed text-cream/75">
+      <div className="mt-5 rounded-md border border-border bg-card/40 p-3 text-xs leading-relaxed text-muted-foreground">
         <div className="flex items-start gap-2">
           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold/80" aria-hidden />
           <p>
-            <span className="font-semibold text-cream">Tam phương tứ chính:</span> các cung
+            <span className="font-semibold text-foreground">Tam phương tứ chính:</span> các cung
             được tô vàng nhạt trên sơ đồ là bộ liên kết với cung {palace.name}. Đây là
             nhóm cung chính dùng để luận sâu — cùng đọc bộ này mới ra kết luận có chiều
             sâu, không chỉ đọc một cung riêng lẻ.
@@ -209,7 +209,7 @@ export function TuViChart12Palaces({
   return (
     <div className="space-y-6">
       {/* Chart meta strip */}
-      <div className="rounded-xl border border-gold/20 bg-ink/40 p-4">
+      <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
         <div className="grid gap-3 text-xs sm:grid-cols-2 lg:grid-cols-4">
           <Stat label="Ngày dương" value={chart.meta.solarDate} />
           <Stat label="Can Chi" value={chart.meta.chineseDate.split(' - ')[0] ?? '—'} />
@@ -238,7 +238,7 @@ export function TuViChart12Palaces({
       <PalaceDetail palace={selectedPalace} />
 
       {/* Legend */}
-      <div className="flex flex-wrap items-center gap-3 text-[11px] text-cream/55">
+      <div className="flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
         <span className="inline-flex items-center gap-1.5">
           <span className="h-2 w-3 rounded-sm bg-gold" /> Cung đang chọn
         </span>
@@ -260,8 +260,8 @@ export function TuViChart12Palaces({
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-widest text-cream/55">{label}</p>
-      <p className="mt-1 font-heading text-sm font-semibold text-cream sm:text-base">{value}</p>
+      <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
+      <p className="mt-1 font-heading text-sm font-semibold text-foreground sm:text-base">{value}</p>
     </div>
   );
 }

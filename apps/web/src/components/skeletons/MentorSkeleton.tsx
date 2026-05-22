@@ -9,7 +9,7 @@ import { Skeleton } from '@hieu-asia/ui';
 export function MentorSkeleton() {
   return (
     <main className="flex h-screen flex-col bg-ink-radial">
-      <header className="flex items-center justify-between border-b border-gold/15 bg-ink/80 px-4 py-3">
+      <header className="flex items-center justify-between border-b border-gold/15 bg-card/80 px-4 py-3">
         <div className="flex items-center gap-3">
           <Skeleton className="h-5 w-5 rounded" />
           <Skeleton className="h-9 w-9 rounded-full" />
@@ -50,13 +50,13 @@ export function MentorSkeleton() {
           </div>
         </section>
 
-        <aside className="hidden w-80 shrink-0 border-l border-gold/15 bg-ink/40 p-4 lg:block">
+        <aside className="hidden w-80 shrink-0 border-l border-gold/15 bg-card/40 p-4 lg:block">
           <Skeleton className="mb-4 h-5 w-24" />
           <div className="space-y-3">
             {Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
-                className="space-y-2 rounded-md border border-gold/10 bg-ink/60 p-3"
+                className="space-y-2 rounded-md border border-gold/10 bg-card/60 p-3"
               >
                 <Skeleton className="h-3 w-20" />
                 <Skeleton className="h-4 w-full" />

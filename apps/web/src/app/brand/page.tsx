@@ -69,9 +69,13 @@ const VOICE_DONT = [
 
 export default function BrandPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       {/* HERO */}
-      <section className="relative isolate overflow-hidden border-b border-gold/10 bg-ink-radial">
+      <section className="relative isolate overflow-hidden border-b border-gold/10 bg-background">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.10)_0%,_transparent_55%)] dark:bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.18)_0%,_transparent_55%)]"
+        />
         <div
           aria-hidden="true"
           className="absolute inset-0 -z-10 [background-image:linear-gradient(rgba(184,146,61,0.5)_1px,transparent_1px),linear-gradient(90deg,rgba(184,146,61,0.5)_1px,transparent_1px)] [background-size:48px_48px] opacity-[0.06] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]"
@@ -80,10 +84,10 @@ export default function BrandPage() {
           <div className="font-mono text-xs uppercase tracking-[0.32em] text-gold">
             Brand System v1
           </div>
-          <h1 className="mt-4 font-heading text-4xl font-bold tracking-tight text-cream sm:text-5xl md:text-6xl">
+          <h1 className="mt-4 font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl">
             Hệ thống nhận diện <span className="text-gold">hieu.asia</span>
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-cream/80">
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-foreground/85">
             Tài liệu sống — mọi designer, marketer và LLM dùng cho hieu.asia
             đều bắt đầu từ đây. Logo, màu, typography, ứng dụng và giọng nói.
           </p>
@@ -106,7 +110,7 @@ export default function BrandPage() {
                 <a
                   key={id}
                   href={`#${id}`}
-                  className="flex items-center gap-2.5 rounded-md px-3 py-2 text-sm text-cream/80 transition hover:bg-gold/10 hover:text-cream"
+                  className="flex items-center gap-2.5 rounded-md px-3 py-2 text-sm text-foreground/85 transition hover:bg-gold/10 hover:text-foreground"
                 >
                   <Icon className="h-4 w-4 text-gold" strokeWidth={1.5} aria-hidden="true" />
                   <span>{label}</span>
@@ -115,7 +119,7 @@ export default function BrandPage() {
               <div className="mt-6 px-3">
                 <Link
                   href="/"
-                  className="inline-flex items-center gap-1 text-xs text-cream/70 hover:text-gold"
+                  className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-gold"
                 >
                   ← Về trang chủ
                 </Link>
@@ -127,11 +131,11 @@ export default function BrandPage() {
           <main className="min-w-0 space-y-20">
             {/* LOGO */}
             <Section id="logo" title="Logo system" eyebrow="01">
-              <p className="text-cream/70">
-                Ba dạng: <strong className="text-cream">wordmark</strong> (đầy đủ
-                tên),<strong className="text-cream"> symbol mark</strong> (chữ H, dùng
+              <p className="text-muted-foreground">
+                Ba dạng: <strong className="text-foreground">wordmark</strong> (đầy đủ
+                tên),<strong className="text-foreground"> symbol mark</strong> (chữ H, dùng
                 favicon / app icon),
-                <strong className="text-cream"> lockup</strong> (kết hợp).
+                <strong className="text-foreground"> lockup</strong> (kết hợp).
                 Mỗi dạng có 4 variant: gold gradient (mặc định), dark (cream trên nền tối), light (đen trên nền sáng), mono (1 màu, dùng cho in 1 màu hoặc dark theme).
               </p>
 
@@ -146,13 +150,13 @@ export default function BrandPage() {
                   <Wordmark variant="light" size={56} />
                 </LogoSwatch>
                 <LogoSwatch label="Wordmark · mono" bg="dark">
-                  <span className="text-cream/90">
+                  <span className="text-foreground/90">
                     <Wordmark variant="mono" size={56} />
                   </span>
                 </LogoSwatch>
               </div>
 
-              <h3 className="mt-12 font-heading text-lg font-semibold text-cream">
+              <h3 className="mt-12 font-heading text-lg font-semibold text-foreground">
                 Symbol mark (chữ H)
               </h3>
               <div className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-4">
@@ -166,13 +170,13 @@ export default function BrandPage() {
                   <SymbolMark variant="light" size={96} />
                 </LogoSwatch>
                 <LogoSwatch label="Mono variant" bg="dark">
-                  <span className="text-cream/90">
+                  <span className="text-foreground/90">
                     <SymbolMark variant="mono" size={96} />
                   </span>
                 </LogoSwatch>
               </div>
 
-              <h3 className="mt-12 font-heading text-lg font-semibold text-cream">
+              <h3 className="mt-12 font-heading text-lg font-semibold text-foreground">
                 Lockup (symbol + wordmark)
               </h3>
               <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -184,7 +188,7 @@ export default function BrandPage() {
                 </LogoSwatch>
               </div>
 
-              <h3 className="mt-12 font-heading text-lg font-semibold text-cream">
+              <h3 className="mt-12 font-heading text-lg font-semibold text-foreground">
                 Clear space &amp; min size
               </h3>
               <ClearSpaceGuide />
@@ -192,7 +196,7 @@ export default function BrandPage() {
 
             {/* COLORS */}
             <Section id="colors" title="Màu sắc" eyebrow="02">
-              <p className="text-cream/70">
+              <p className="text-muted-foreground">
                 Click vào ô màu để copy mã hex. Mỗi tier đặt tên Tailwind tương
                 ứng — dùng trực tiếp class <code className="rounded bg-gold/10 px-1 font-mono text-xs text-gold">bg-gold-500</code>.
               </p>
@@ -203,10 +207,10 @@ export default function BrandPage() {
 
             {/* TYPOGRAPHY */}
             <Section id="typography" title="Typography" eyebrow="03">
-              <p className="text-cream/70">
-                <strong className="text-cream">Outfit</strong> cho heading (display,
-                geometric, sạch). <strong className="text-cream">Be Vietnam Pro</strong> cho body (tối ưu diacritic tiếng Việt).
-                <strong className="text-cream"> JetBrains Mono</strong> cho mono / code.
+              <p className="text-muted-foreground">
+                <strong className="text-foreground">Outfit</strong> cho heading (display,
+                geometric, sạch). <strong className="text-foreground">Be Vietnam Pro</strong> cho body (tối ưu diacritic tiếng Việt).
+                <strong className="text-foreground"> JetBrains Mono</strong> cho mono / code.
               </p>
               <div className="mt-8">
                 <TypographyShowcase />
@@ -227,7 +231,7 @@ export default function BrandPage() {
 
             {/* PHOTO */}
             <Section id="photo" title="Photo direction" eyebrow="06">
-              <p className="text-cream/70">
+              <p className="text-muted-foreground">
                 Hieu.asia không dùng ảnh cosplay thầy bói hay bùa chú rẻ tiền.
                 Tông cinematic, ánh sáng tự nhiên, subject nhỏ trong không
                 gian lớn.
@@ -239,7 +243,7 @@ export default function BrandPage() {
 
             {/* APPLICATION */}
             <Section id="application" title="Ứng dụng logo (12 ngữ cảnh)" eyebrow="07">
-              <p className="text-cream/70">
+              <p className="text-muted-foreground">
                 Mỗi card là CSS mockup — kiểm tra logo hoạt động ra sao trên
                 các bề mặt khác nhau: digital, vật lý, social, presentation.
               </p>
@@ -250,7 +254,7 @@ export default function BrandPage() {
 
             {/* VOICE & TONE */}
             <Section id="voice" title="Voice &amp; tone" eyebrow="08">
-              <p className="text-cream/70">
+              <p className="text-muted-foreground">
                 Tự hiểu mình. Quyết định tốt hơn. Giọng đồng cảm, không định
                 mệnh hoá, không doạ nạt, không quảng cáo giật gân.
               </p>
@@ -266,7 +270,7 @@ export default function BrandPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-2 text-sm text-cream/85">
+                    <ul className="space-y-2 text-sm text-foreground/85">
                       {VOICE_DO.map((line) => (
                         <li key={line} className="flex gap-2">
                           <span className="text-jade-50">·</span>
@@ -288,7 +292,7 @@ export default function BrandPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-2 text-sm text-cream/85">
+                    <ul className="space-y-2 text-sm text-foreground/85">
                       {VOICE_DONT.map((line) => (
                         <li key={line} className="flex gap-2">
                           <span className="text-red-300">·</span>
@@ -305,24 +309,24 @@ export default function BrandPage() {
                   <CardTitle>Khẩu hiệu (taglines)</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-3 text-cream/85">
+                  <ul className="space-y-3 text-foreground/85">
                     <li>
                       <span className="font-heading text-xl font-semibold text-gold">
                         Tự hiểu mình. Quyết định tốt hơn.
                       </span>
-                      <div className="text-xs text-cream/55">Tagline chính</div>
+                      <div className="text-xs text-muted-foreground">Tagline chính</div>
                     </li>
                     <li>
-                      <span className="font-heading text-lg font-semibold text-cream">
+                      <span className="font-heading text-lg font-semibold text-foreground">
                         Người bạn đồng hành huyền học hiện đại
                       </span>
-                      <div className="text-xs text-cream/55">Mô tả ngắn</div>
+                      <div className="text-xs text-muted-foreground">Mô tả ngắn</div>
                     </li>
                     <li>
                       <span className="font-mono text-sm uppercase tracking-[0.3em] text-gold">
                         Premium AI insight platform
                       </span>
-                      <div className="text-xs text-cream/55">Eyebrow tiếng Anh</div>
+                      <div className="text-xs text-muted-foreground">Eyebrow tiếng Anh</div>
                     </li>
                   </ul>
                 </CardContent>
@@ -331,7 +335,7 @@ export default function BrandPage() {
 
             {/* DOWNLOAD */}
             <Section id="download" title="Tải tài nguyên" eyebrow="09">
-              <p className="text-cream/70">
+              <p className="text-muted-foreground">
                 Các đường link bên dưới sẽ trỏ tới bundle thực khi có. Hiện tại
                 copy logo bằng cách inspect SVG trên trang này hoặc copy hex từ
                 section màu.
@@ -347,7 +351,7 @@ export default function BrandPage() {
                 <DownloadItem title="OG image template" hint="1200×630 · Figma" />
                 <DownloadItem title="Brand book PDF" hint="Toàn bộ guideline · 20 trang" />
               </div>
-              <div className="mt-8 rounded-lg border border-gold/15 bg-ink/40 p-5 text-sm text-cream/70">
+              <div className="mt-8 rounded-lg border border-gold/15 bg-card/40 p-5 text-sm text-muted-foreground">
                 Liên hệ <a className="text-gold underline" href="mailto:brand@hieu.asia">brand@hieu.asia</a> nếu cần file gốc hoặc đặt request tuỳ biến.
               </div>
             </Section>
@@ -356,13 +360,13 @@ export default function BrandPage() {
       </div>
 
       {/* FOOTER */}
-      <footer className="border-t border-gold/10 bg-ink/80 py-10">
+      <footer className="border-t border-gold/10 bg-card/80 py-10">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-6 text-center">
           <Logo kind="wordmark" size={36} />
-          <p className="text-xs text-cream/70">
+          <p className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} hieu.asia — Brand System v1
           </p>
-          <Link href="/" className="text-xs text-cream/60 hover:text-gold">
+          <Link href="/" className="text-xs text-muted-foreground hover:text-gold">
             ← Về trang chủ
           </Link>
         </div>
@@ -389,7 +393,7 @@ function Section({
       <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/70">
         {eyebrow}
       </div>
-      <h2 className="mt-2 font-heading text-3xl font-semibold tracking-tight text-cream sm:text-4xl">
+      <h2 className="mt-2 font-heading text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
         {title}
       </h2>
       <div className="mt-6">{children}</div>
@@ -409,13 +413,13 @@ function LogoSwatch({
   return (
     <div
       className={`flex h-44 flex-col rounded-lg border ${
-        bg === 'dark' ? 'border-gold/15 bg-ink' : 'border-gold/20 bg-cream'
+        bg === 'dark' ? 'border-gold/15 bg-background' : 'border-gold/20 bg-muted'
       }`}
     >
       <div className="flex flex-1 items-center justify-center px-4">{children}</div>
       <div
         className={`border-t px-4 py-2 text-[11px] ${
-          bg === 'dark' ? 'border-gold/10 text-cream/60' : 'border-gold/15 text-ink/60'
+          bg === 'dark' ? 'border-gold/10 text-muted-foreground' : 'border-gold/15 text-foreground/60'
         }`}
       >
         {label}
@@ -427,11 +431,11 @@ function LogoSwatch({
 function ClearSpaceGuide() {
   return (
     <div className="mt-4 grid gap-4 md:grid-cols-2">
-      <div className="rounded-lg border border-gold/15 bg-ink/40 p-6">
-        <div className="font-heading text-sm font-semibold text-cream">
+      <div className="rounded-lg border border-gold/15 bg-card/40 p-6">
+        <div className="font-heading text-sm font-semibold text-foreground">
           Clear space
         </div>
-        <p className="mt-1 text-xs text-cream/60">
+        <p className="mt-1 text-xs text-muted-foreground">
           Không để text / element nào trong khoảng = ½ chiều cao chữ "h".
         </p>
         <div className="mt-5 flex items-center justify-center">
@@ -441,25 +445,25 @@ function ClearSpaceGuide() {
           </div>
         </div>
       </div>
-      <div className="rounded-lg border border-gold/15 bg-ink/40 p-6">
-        <div className="font-heading text-sm font-semibold text-cream">
+      <div className="rounded-lg border border-gold/15 bg-card/40 p-6">
+        <div className="font-heading text-sm font-semibold text-foreground">
           Min size
         </div>
-        <p className="mt-1 text-xs text-cream/60">
+        <p className="mt-1 text-xs text-muted-foreground">
           Symbol mark ≥ 16 px · Wordmark ≥ 80 px ngang · Lockup ≥ 120 px ngang.
         </p>
         <div className="mt-5 flex items-end gap-6">
           <div className="flex flex-col items-center gap-2">
             <SymbolMark size={16} />
-            <span className="font-mono text-[10px] text-cream/70">16 px</span>
+            <span className="font-mono text-[10px] text-muted-foreground">16 px</span>
           </div>
           <div className="flex flex-col items-center gap-2">
             <Wordmark size={20} />
-            <span className="font-mono text-[10px] text-cream/70">80 px W</span>
+            <span className="font-mono text-[10px] text-muted-foreground">80 px W</span>
           </div>
           <div className="flex flex-col items-center gap-2">
             <Lockup size={30} />
-            <span className="font-mono text-[10px] text-cream/70">120 px W</span>
+            <span className="font-mono text-[10px] text-muted-foreground">120 px W</span>
           </div>
         </div>
       </div>
@@ -471,11 +475,11 @@ function DownloadItem({ title, hint }: { title: string; hint: string }) {
   return (
     <div
       aria-disabled="true"
-      className="group flex items-start justify-between gap-3 rounded-lg border border-gold/15 bg-ink/40 p-4 opacity-90"
+      className="group flex items-start justify-between gap-3 rounded-lg border border-gold/15 bg-card/40 p-4 opacity-90"
     >
       <div>
-        <div className="font-heading text-sm font-semibold text-cream">{title}</div>
-        <div className="mt-1 text-[11px] text-cream/55">{hint}</div>
+        <div className="font-heading text-sm font-semibold text-foreground">{title}</div>
+        <div className="mt-1 text-[11px] text-muted-foreground">{hint}</div>
       </div>
       <ArrowUpRight className="h-4 w-4 text-gold/60" aria-hidden="true" />
     </div>

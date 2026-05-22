@@ -159,10 +159,10 @@ export function PaymentClient({ sessionId, tier }: PaymentClientProps) {
 
   if (loading) {
     return (
-      <Card className="border-gold/15 bg-ink/40">
+      <Card className="border-gold/15 bg-card/40">
         <CardContent className="space-y-3 p-8 text-center">
-          <p className="font-heading text-cream">Đang tạo giao dịch…</p>
-          <div className="mx-auto h-2 w-32 animate-pulse rounded bg-cream/10" />
+          <p className="font-heading text-foreground">Đang tạo giao dịch…</p>
+          <div className="mx-auto h-2 w-32 animate-pulse rounded bg-muted/10" />
         </CardContent>
       </Card>
     );
@@ -170,12 +170,12 @@ export function PaymentClient({ sessionId, tier }: PaymentClientProps) {
 
   if (error) {
     return (
-      <Card className="border-red-500/30 bg-ink/40">
+      <Card className="border-red-500/30 bg-card/40">
         <CardContent className="space-y-4 p-8 text-center">
-          <p className="font-heading text-cream">
+          <p className="font-heading text-foreground">
             Không thể tạo giao dịch
           </p>
-          <p className="text-sm text-cream/70">{error}</p>
+          <p className="text-sm text-muted-foreground">{error}</p>
           <Button onClick={handleRetry}>Thử lại</Button>
         </CardContent>
       </Card>
@@ -184,8 +184,8 @@ export function PaymentClient({ sessionId, tier }: PaymentClientProps) {
 
   if (!intent) {
     return (
-      <Card className="border-gold/15 bg-ink/40">
-        <CardContent className="p-8 text-center text-sm text-cream/70">
+      <Card className="border-gold/15 bg-card/40">
+        <CardContent className="p-8 text-center text-sm text-muted-foreground">
           Không có dữ liệu giao dịch.
         </CardContent>
       </Card>
@@ -205,12 +205,12 @@ export function PaymentClient({ sessionId, tier }: PaymentClientProps) {
           intent={{ ...intent, status: 'expired' }}
           onExpire={handleExpire}
         />
-        <Card className="border-red-500/30 bg-ink/40">
+        <Card className="border-red-500/30 bg-card/40">
           <CardContent className="flex flex-col items-center gap-3 p-6 text-center">
-            <p className="font-heading text-cream">
+            <p className="font-heading text-foreground">
               Giao dịch đã hết hạn
             </p>
-            <p className="text-sm text-cream/70">
+            <p className="text-sm text-muted-foreground">
               Mã QR chỉ có hiệu lực trong 15 phút. Bạn có thể tạo lại để
               tiếp tục.
             </p>
@@ -225,7 +225,7 @@ export function PaymentClient({ sessionId, tier }: PaymentClientProps) {
     <div className="space-y-4">
       <QRDisplay intent={intent} onExpire={handleExpire} />
       {intent.status === 'pending' && (
-        <p className="text-center text-xs text-cream/70">
+        <p className="text-center text-xs text-muted-foreground">
           Trang sẽ tự chuyển sau khi xác nhận thanh toán thành công.
         </p>
       )}

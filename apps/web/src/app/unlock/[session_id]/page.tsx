@@ -40,12 +40,12 @@ export default async function UnlockPage({
     return (
       <>
         <SiteNav />
-        <main className="min-h-screen bg-ink-radial pt-24 text-cream">
+        <main className="min-h-screen bg-background pt-24 text-foreground">
           <div className="container mx-auto max-w-2xl px-4 py-16 text-center">
-            <h1 className="font-heading text-2xl text-cream">
+            <h1 className="font-heading text-2xl text-foreground">
               Thiếu thông tin gói thanh toán
             </h1>
-            <p className="mt-3 text-sm text-cream/70">
+            <p className="mt-3 text-sm text-muted-foreground">
               Vui lòng chọn gói tại trang định giá để tiếp tục.
             </p>
             <Link
@@ -63,10 +63,10 @@ export default async function UnlockPage({
   return (
     <>
       <SiteNav />
-      <main className="min-h-screen bg-ink-radial pt-24 text-cream">
+      <main className="min-h-screen bg-background pt-24 text-foreground">
         <div className="container mx-auto max-w-3xl px-4 py-10 sm:px-6">
           <header className="mb-6 flex items-center justify-between">
-            <nav aria-label="Breadcrumb" className="text-xs text-cream/55">
+            <nav aria-label="Breadcrumb" className="text-xs text-muted-foreground">
               <Link href="/" className="hover:text-gold">Trang chủ</Link>
               <span className="mx-1.5">/</span>
               <Link
@@ -76,11 +76,11 @@ export default async function UnlockPage({
                 Pricing
               </Link>
               <span className="mx-1.5">/</span>
-              <span className="text-cream/70">Thanh toán</span>
+              <span className="text-muted-foreground">Thanh toán</span>
             </nav>
             <Link
               href={`/pricing?session=${encodeURIComponent(session_id)}`}
-              className="text-sm text-cream/60 transition hover:text-gold"
+              className="text-sm text-muted-foreground transition hover:text-gold"
             >
               ← Đổi gói
             </Link>

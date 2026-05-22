@@ -95,7 +95,7 @@ export function DaiVanHienTaiForm() {
   };
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
@@ -104,7 +104,7 @@ export function DaiVanHienTaiForm() {
         />
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12 pt-12 sm:pt-16">
-          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-cream/55">
+          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">
               Trang chủ
             </Link>
@@ -113,16 +113,16 @@ export function DaiVanHienTaiForm() {
               Tử Vi
             </Link>
             <span className="mx-1.5">/</span>
-            <span className="text-cream/75">Đại vận hiện tại</span>
+            <span className="text-muted-foreground">Đại vận hiện tại</span>
           </nav>
 
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Free tool · Chu kỳ 10 năm
           </p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
             Đại vận hiện tại của bạn
           </h1>
-          <p className="mt-5 text-base leading-relaxed text-cream/80 sm:text-lg">
+          <p className="mt-5 text-base leading-relaxed text-foreground/80 sm:text-lg">
             Đại vận là chu kỳ 10 năm trong Tử Vi — mỗi đại vận có chủ đề chính khác
             nhau. Tra cứu miễn phí: bạn đang ở giai đoạn nào và chủ đề lớn của 10 năm
             này.
@@ -130,9 +130,9 @@ export function DaiVanHienTaiForm() {
         </section>
 
         <section className="relative mx-auto max-w-2xl px-6 pb-12">
-          <Card className="border-gold/20 bg-ink/40">
+          <Card className="border-gold/20 bg-card/40">
             <CardHeader>
-              <CardTitle className="font-heading text-xl text-cream">
+              <CardTitle className="font-heading text-xl text-foreground">
                 Nhập thông tin
               </CardTitle>
             </CardHeader>
@@ -200,7 +200,7 @@ export function DaiVanHienTaiForm() {
           <section className="relative mx-auto max-w-2xl px-6 pb-12">
             <Card className="border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 font-heading text-xl text-cream sm:text-2xl">
+                <CardTitle className="flex items-center gap-2 font-heading text-xl text-foreground sm:text-2xl">
                   <Timer className="h-5 w-5 text-gold" aria-hidden /> Đại vận hiện tại
                 </CardTitle>
               </CardHeader>
@@ -224,15 +224,15 @@ export function DaiVanHienTaiForm() {
                   </div>
                 </div>
 
-                <div className="rounded-md border border-cream/10 bg-ink/40 p-4">
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-cream/55">
+                <div className="rounded-md border border-border bg-card/40 p-4">
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                     Cung chủ đại vận
                   </p>
-                  <p className="mt-1 font-heading text-xl font-semibold text-cream">
+                  <p className="mt-1 font-heading text-xl font-semibold text-foreground">
                     Cung {result.palace.name} · {result.palace.heavenlyStem}{' '}
                     {result.palace.earthlyBranch}
                   </p>
-                  <p className="mt-3 text-sm leading-relaxed text-cream/80">
+                  <p className="mt-3 text-sm leading-relaxed text-foreground/80">
                     {themeForPalace(result.palace.name)}
                   </p>
                 </div>
@@ -271,7 +271,7 @@ export function DaiVanHienTaiForm() {
                   </Link>
                   <Link
                     href="/tu-vi-2026"
-                    className="inline-flex items-center text-sm text-cream/70 hover:text-gold"
+                    className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"
                   >
                     Tử vi 2026 <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
                   </Link>
@@ -294,13 +294,13 @@ export function DaiVanHienTaiForm() {
         )}
 
         <section className="relative mx-auto max-w-2xl px-6 pb-20">
-          <Card className="border-cream/10 bg-ink/40">
+          <Card className="border-border bg-card/40">
             <CardHeader>
-              <CardTitle className="font-heading text-lg text-cream">
+              <CardTitle className="font-heading text-lg text-foreground">
                 Đại vận là gì?
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm leading-relaxed text-cream/75">
+            <CardContent className="space-y-2 text-sm leading-relaxed text-muted-foreground">
               <p>
                 Đại vận là chu kỳ 10 năm trong Tử Vi Đẩu Số. Mỗi 10 năm, ngôi sao chủ
                 đại vận chuyển sang cung khác — tạo ra một "chủ đề" khác cho cuộc

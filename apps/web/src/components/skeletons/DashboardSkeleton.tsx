@@ -27,7 +27,7 @@ export function DashboardSkeleton() {
           {Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
-              className="space-y-3 rounded-lg border border-gold/15 bg-ink/40 p-5"
+              className="space-y-3 rounded-lg border border-gold/15 bg-card/40 p-5"
             >
               <Skeleton className="h-3 w-20" />
               <Skeleton className="h-8 w-24" />
@@ -38,7 +38,7 @@ export function DashboardSkeleton() {
 
         <Skeleton className="mb-6 h-64 w-full rounded-lg" />
 
-        <div className="space-y-3 rounded-lg border border-gold/15 bg-ink/40 p-5">
+        <div className="space-y-3 rounded-lg border border-gold/15 bg-card/40 p-5">
           <Skeleton className="mb-2 h-5 w-32" />
           {Array.from({ length: 5 }).map((_, i) => (
             <div

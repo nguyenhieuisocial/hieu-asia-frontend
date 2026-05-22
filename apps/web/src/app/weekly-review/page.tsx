@@ -186,16 +186,16 @@ export default function WeeklyReviewPage() {
   }
 
   return (
-    <main className="min-h-screen bg-ink text-cream">
+    <main className="min-h-screen bg-background text-foreground">
       <SiteNav />
 
       <section className="mx-auto max-w-3xl px-6 pt-16 pb-20">
-        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">
             Trang chủ
           </Link>
           <span className="mx-1.5">/</span>
-          <span className="text-cream/70">Weekly Review</span>
+          <span className="text-muted-foreground">Weekly Review</span>
         </nav>
 
         <header className="mb-8">
@@ -207,7 +207,7 @@ export default function WeeklyReviewPage() {
               5 phút mỗi tuần
             </span>
           </h1>
-          <p className="mt-4 text-sm leading-relaxed text-cream/75 sm:text-base">
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
             Mỗi tuần, 5 phút — chuyển từ &ldquo;cảm giác&rdquo; sang
             &ldquo;dữ kiện&rdquo;. Lưu trên máy bạn.
           </p>
@@ -215,7 +215,7 @@ export default function WeeklyReviewPage() {
 
         {!hydrated && (
           <div
-            className="rounded-lg border border-cream/10 bg-ink/40 p-8 text-sm text-cream/55"
+            className="rounded-lg border border-border bg-card/40 p-8 text-sm text-muted-foreground"
             aria-busy="true"
           >
             Đang tải...
@@ -225,18 +225,18 @@ export default function WeeklyReviewPage() {
         {hydrated && (
           <>
             <div className="mb-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-              <span className="inline-flex items-center gap-2 text-cream/70">
+              <span className="inline-flex items-center gap-2 text-muted-foreground">
                 <Calendar className="h-4 w-4 text-gold/80" aria-hidden="true" />
                 Tuần này: {formatWeek(currentWeek)}
               </span>
               {streak > 0 && (
-                <span className="inline-flex items-center gap-2 text-cream/70">
+                <span className="inline-flex items-center gap-2 text-muted-foreground">
                   <Sparkles
                     className="h-4 w-4 text-gold/80"
                     aria-hidden="true"
                   />
                   Bạn đã review{' '}
-                  <strong className="font-medium text-cream">
+                  <strong className="font-medium text-foreground">
                     {streak} tuần liên tiếp
                   </strong>
                 </span>
@@ -254,7 +254,7 @@ export default function WeeklyReviewPage() {
                       />
                       Đã review tuần này
                     </CardTitle>
-                    <p className="mt-1 text-xs text-cream/60">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       {formatWeek(thisWeekReview.weekStart)} ·{' '}
                       <span className="rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[10px] font-medium text-gold">
                         {TOPIC_LABEL[thisWeekReview.topicFocus]}
@@ -264,7 +264,7 @@ export default function WeeklyReviewPage() {
                   <button
                     type="button"
                     onClick={() => setEditing(true)}
-                    className="inline-flex items-center gap-1.5 rounded-md border border-cream/15 bg-ink/40 px-3 py-1.5 text-xs text-cream/75 transition hover:border-gold/40 hover:text-gold"
+                    className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card/40 px-3 py-1.5 text-xs text-muted-foreground transition hover:border-gold/40 hover:text-gold"
                   >
                     <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
                     Sửa lại
@@ -281,7 +281,7 @@ export default function WeeklyReviewPage() {
 
             {showForm && (
               <form onSubmit={handleSubmit} noValidate>
-                <Card className="border-gold/20 bg-ink/60 backdrop-blur">
+                <Card className="border-gold/20 bg-card/60 backdrop-blur">
                   <CardHeader>
                     <CardTitle className="font-heading text-xl">
                       {thisWeekReview
@@ -291,7 +291,7 @@ export default function WeeklyReviewPage() {
                   </CardHeader>
                   <CardContent className="space-y-7">
                     <fieldset>
-                      <legend className="text-sm font-medium text-cream/90">
+                      <legend className="text-sm font-medium text-foreground/90">
                         Tuần này bạn tập trung vào đâu?
                       </legend>
                       <RadioGroup
@@ -310,14 +310,14 @@ export default function WeeklyReviewPage() {
                               'flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition',
                               topicFocus === t.id
                                 ? 'border-gold bg-gold/10'
-                                : 'border-cream/15 bg-ink/40 hover:border-gold/40',
+                                : 'border-border bg-card/40 hover:border-gold/40',
                             ].join(' ')}
                           >
                             <RadioGroupItem
                               id={`wt-${t.id}`}
                               value={t.id}
                             />
-                            <span className="text-sm text-cream">
+                            <span className="text-sm text-foreground">
                               {t.label}
                             </span>
                           </Label>
@@ -359,7 +359,7 @@ export default function WeeklyReviewPage() {
                         <button
                           type="button"
                           onClick={() => setEditing(false)}
-                          className="text-sm text-cream/65 hover:text-gold"
+                          className="text-sm text-muted-foreground hover:text-gold"
                         >
                           Huỷ
                         </button>
@@ -385,7 +385,7 @@ export default function WeeklyReviewPage() {
                       </Button>
                     </div>
 
-                    <p className="flex items-center gap-2 text-xs text-cream/55">
+                    <p className="flex items-center gap-2 text-xs text-muted-foreground">
                       <Sparkles
                         className="h-3.5 w-3.5 text-gold/70"
                         aria-hidden="true"
@@ -405,7 +405,7 @@ export default function WeeklyReviewPage() {
                 >
                   Các tuần đã review
                 </h2>
-                <p className="mt-1 text-xs text-cream/55">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Bấm vào một tuần để xem chi tiết.
                 </p>
                 <ul className="mt-5 grid gap-3">
@@ -413,7 +413,7 @@ export default function WeeklyReviewPage() {
                     const open = expandedId === r.id;
                     return (
                       <li key={r.id}>
-                        <Card className="border-cream/10 bg-ink/40">
+                        <Card className="border-border bg-card/40">
                           <button
                             type="button"
                             onClick={() =>
@@ -424,7 +424,7 @@ export default function WeeklyReviewPage() {
                           >
                             <div className="min-w-0">
                               <div className="flex flex-wrap items-center gap-2">
-                                <span className="text-sm font-medium text-cream">
+                                <span className="text-sm font-medium text-foreground">
                                   {formatWeek(r.weekStart)}
                                 </span>
                                 <span className="rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[10px] font-medium text-gold">
@@ -434,14 +434,14 @@ export default function WeeklyReviewPage() {
                             </div>
                             <ArrowRight
                               className={[
-                                'h-4 w-4 shrink-0 text-cream/55 transition',
+                                'h-4 w-4 shrink-0 text-muted-foreground transition',
                                 open ? 'rotate-90 text-gold' : '',
                               ].join(' ')}
                               aria-hidden="true"
                             />
                           </button>
                           {open && (
-                            <CardContent className="space-y-4 border-t border-cream/10 pt-5">
+                            <CardContent className="space-y-4 border-t border-border pt-5">
                               <ReviewField label="Khoảnh khắc tốt nhất" body={r.highlights} />
                               <ReviewField label="Điều làm bạn mệt" body={r.energyDrain} />
                               <ReviewField label="Một điều học được" body={r.oneLearning} />
@@ -460,13 +460,13 @@ export default function WeeklyReviewPage() {
               <h2 className="font-heading text-lg font-semibold sm:text-xl">
                 Cũng có thể dùng Decision Journal
               </h2>
-              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-cream/75">
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
                 Khi tuần này có một quyết định lớn, hãy ghi riêng vào Journal —
                 sẽ dễ review sau 30 ngày hơn.
               </p>
               <Link
                 href="/journal"
-                className="mt-5 inline-flex items-center gap-2 rounded-md border border-gold/50 bg-ink/60 px-4 py-2 text-sm font-medium text-gold transition hover:bg-gold/10"
+                className="mt-5 inline-flex items-center gap-2 rounded-md border border-gold/50 bg-card/60 px-4 py-2 text-sm font-medium text-gold transition hover:bg-gold/10"
               >
                 Mở Decision Journal
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -500,7 +500,7 @@ function FieldTextarea({
       <Label htmlFor={id} className="text-sm font-medium">
         {label} <span className="text-red-400/80">*</span>
       </Label>
-      <p className="mt-1 text-xs text-cream/55">{hint}</p>
+      <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
       <Textarea
         id={id}
         value={value}
@@ -510,7 +510,7 @@ function FieldTextarea({
         className="mt-2"
         required
       />
-      <div className="mt-1 flex justify-end text-xs text-cream/70">
+      <div className="mt-1 flex justify-end text-xs text-muted-foreground">
         {len}/300 (tối thiểu 10)
       </div>
     </div>
@@ -520,10 +520,10 @@ function FieldTextarea({
 function ReviewField({ label, body }: { label: string; body: string }) {
   return (
     <div>
-      <h3 className="text-xs font-medium uppercase tracking-wider text-cream/60">
+      <h3 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
         {label}
       </h3>
-      <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-cream/85">
+      <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-foreground/85">
         {body}
       </p>
     </div>

@@ -67,7 +67,7 @@ const BREADCRUMB_JSONLD = {
 
 export default function TuViTinhYeuPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -84,10 +84,10 @@ export default function TuViTinhYeuPage() {
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Tử Vi · Tình cảm & quan hệ thân mật
           </p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
             Tử Vi tình yêu — không phán hợp/khắc, chỉ giúp hiểu mình
           </h1>
-          <p className="mt-5 text-base leading-relaxed text-cream/80 sm:text-lg">
+          <p className="mt-5 text-base leading-relaxed text-foreground/80 sm:text-lg">
             Cung Phu Thê không nói "ai là người định mệnh của bạn". Nó mô tả KIỂU gắn bó
             bạn dễ rơi vào, nhu cầu cảm xúc cốt lõi, và rủi ro giao tiếp dễ gặp. hieu.asia
             kết hợp Tử Vi với khung tâm lý gắn bó hiện đại để giúp bạn hiểu CHÍNH BẠN
@@ -106,21 +106,21 @@ export default function TuViTinhYeuPage() {
         </section>
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12">
-          <h2 className="mb-5 font-heading text-2xl font-semibold text-cream sm:text-3xl">
+          <h2 className="mb-5 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             4 khuôn mẫu quan hệ thường gặp
           </h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {PATTERNS.map((p) => {
               const Icon = p.icon;
               return (
-                <Card key={p.title} className="border-cream/10 bg-ink/40">
+                <Card key={p.title} className="border-border bg-card/40">
                   <CardHeader className="pb-2">
-                    <CardTitle className="flex items-start gap-2 font-heading text-base text-cream">
+                    <CardTitle className="flex items-start gap-2 font-heading text-base text-foreground">
                       <Icon className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden />
                       {p.title}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="text-sm leading-relaxed text-cream/75">
+                  <CardContent className="text-sm leading-relaxed text-muted-foreground">
                     {p.body}
                   </CardContent>
                 </Card>
@@ -130,24 +130,24 @@ export default function TuViTinhYeuPage() {
         </section>
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12">
-          <h2 className="mb-5 font-heading text-2xl font-semibold text-cream sm:text-3xl">
+          <h2 className="mb-5 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             Nên / Không nên
           </h2>
           <div className="space-y-3">
             {DOS_DONTS.map((d, i) => (
-              <Card key={i} className="border-cream/10 bg-ink/40">
+              <Card key={i} className="border-border bg-card/40">
                 <CardContent className="grid gap-3 pt-5 sm:grid-cols-2">
                   <div>
                     <p className="font-mono text-[10px] uppercase tracking-widest text-jade-50">
                       Nên
                     </p>
-                    <p className="mt-1 text-sm leading-relaxed text-cream/85">{d.do}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-foreground/85">{d.do}</p>
                   </div>
                   <div>
                     <p className="font-mono text-[10px] uppercase tracking-widest text-red-300">
                       Không nên
                     </p>
-                    <p className="mt-1 text-sm leading-relaxed text-cream/85">{d.dont}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-foreground/85">{d.dont}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -157,10 +157,10 @@ export default function TuViTinhYeuPage() {
 
         <section className="relative mx-auto max-w-3xl px-6 pb-20">
           <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent p-6 sm:p-8">
-            <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+            <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
               Xem cung Phu Thê CỦA BẠN
             </h2>
-            <p className="mt-3 text-sm leading-relaxed text-cream/80 sm:text-base">
+            <p className="mt-3 text-sm leading-relaxed text-foreground/80 sm:text-base">
               Bạn sẽ thấy chính tinh tại Phu Thê, tứ hoá, và tam phương tứ chính (Phu Thê +
               Phúc Đức + Tật Ách + Quan Lộc). Mentor sẽ giúp bạn dịch chúng thành "tôi cần
               gì trong quan hệ" và "tôi dễ gặp rủi ro giao tiếp gì".
@@ -171,7 +171,7 @@ export default function TuViTinhYeuPage() {
               </Link>
               <Link
                 href="/hop-tuoi"
-                className="inline-flex items-center text-sm text-cream/70 hover:text-gold"
+                className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"
               >
                 Xem hợp tuổi cưới hỏi <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
               </Link>

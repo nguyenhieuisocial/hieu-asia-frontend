@@ -73,7 +73,7 @@ export function CompatibilityScore({ score, rating, size = 200 }: Props) {
           / 100
         </text>
       </svg>
-      <p className="text-center font-medium text-cream" style={{ color }}>
+      <p className="text-center font-medium text-foreground" style={{ color }}>
         {rating}
       </p>
     </div>

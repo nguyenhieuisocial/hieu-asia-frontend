@@ -31,7 +31,7 @@ export function SavedProfileBanner({
     <aside
       aria-label="Thông tin đã lưu"
       className={cn(
-        'rounded-lg border border-jade/30 bg-jade/5 px-4 py-3 text-cream',
+        'rounded-lg border border-jade/30 bg-jade/5 px-4 py-3 text-foreground',
         className,
       )}
     >
@@ -45,7 +45,7 @@ export function SavedProfileBanner({
             <p className="text-sm font-medium text-jade sm:text-base">
               Dùng thông tin đã lưu?
             </p>
-            <p className="truncate text-sm text-cream/80 sm:text-base">{summary}</p>
+            <p className="truncate text-sm text-foreground/80 sm:text-base">{summary}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 self-end sm:self-center">
@@ -59,7 +59,7 @@ export function SavedProfileBanner({
           <button
             type="button"
             onClick={() => onEdit?.()}
-            className="inline-flex items-center gap-1 rounded-md border border-jade/30 px-3 py-1.5 text-sm text-cream hover:bg-jade/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-jade/40"
+            className="inline-flex items-center gap-1 rounded-md border border-jade/30 px-3 py-1.5 text-sm text-foreground hover:bg-jade/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-jade/40"
           >
             <Edit3 aria-hidden="true" className="h-3.5 w-3.5" />
             Nhập lại
@@ -68,7 +68,7 @@ export function SavedProfileBanner({
             type="button"
             onClick={() => setDismissed(true)}
             aria-label="Đóng"
-            className="rounded-md p-1.5 text-cream/60 hover:bg-jade/10 hover:text-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-jade/40"
+            className="rounded-md p-1.5 text-muted-foreground hover:bg-jade/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-jade/40"
           >
             <X aria-hidden="true" className="h-4 w-4" />
           </button>

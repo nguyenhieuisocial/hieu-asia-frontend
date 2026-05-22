@@ -167,10 +167,10 @@ export default function AuthCallbackPage() {
   }, [router, searchParams]);
 
   return (
-    <main className="min-h-screen bg-ink text-cream flex items-center justify-center">
+    <main className="min-h-screen bg-background text-foreground flex items-center justify-center">
       <div className="text-center">
         <p className="font-heading text-gold text-lg">Đang xác thực…</p>
-        <p className="mt-2 text-sm text-cream/75">
+        <p className="mt-2 text-sm text-foreground/75">
           Vui lòng chờ trong giây lát.
         </p>
       </div>

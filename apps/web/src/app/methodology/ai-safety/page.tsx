@@ -251,7 +251,7 @@ const BREADCRUMB_JSONLD = {
 
 export default function AiSafetyPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -267,7 +267,7 @@ export default function AiSafetyPage() {
           <div className="relative mx-auto max-w-5xl px-6 pb-8 pt-12 sm:pt-16">
             <nav
               aria-label="Breadcrumb"
-              className="mb-4 text-xs text-cream/55"
+              className="mb-4 text-xs text-muted-foreground"
             >
               <Link href="/" className="hover:text-gold">
                 Trang chủ
@@ -277,16 +277,16 @@ export default function AiSafetyPage() {
                 Phương pháp luận
               </Link>
               <span className="mx-1.5">/</span>
-              <span className="text-cream/70">AI Safety</span>
+              <span className="text-muted-foreground">AI Safety</span>
             </nav>
 
             <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
               AI Safety
             </p>
-            <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+            <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
               AI Safety Policy
             </h1>
-            <p className="mt-4 text-base leading-relaxed text-cream/75 sm:text-lg">
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
               Cách hieu.asia phòng vệ AI: guardrails theo OWASP LLM Top 10,
               refusal policy 6 categories, 4 layer validation, adversarial
               testing 600 prompts.
@@ -296,23 +296,23 @@ export default function AiSafetyPage() {
 
         {/* 1. Định hướng */}
         <section className="relative mx-auto max-w-5xl px-6 py-8">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             1. Định hướng
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             Framework rủi ro và chất lượng tham chiếu.
           </p>
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
             {ORIENTATION.map((o) => (
-              <Card key={o.label} className="border-cream/10 bg-ink/40">
+              <Card key={o.label} className="border-border bg-card/40">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-base text-cream">
+                  <CardTitle className="flex items-center gap-2 text-base text-foreground">
                     <Compass className="h-4 w-4 text-gold/80" aria-hidden />
                     {o.label}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm leading-relaxed text-cream/75">
+                  <p className="text-sm leading-relaxed text-muted-foreground">
                     {o.text}
                   </p>
                   {o.href ? (
@@ -334,17 +334,17 @@ export default function AiSafetyPage() {
 
         {/* 2. Bảng guardrail */}
         <section className="relative mx-auto max-w-6xl px-6 py-12">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             2. Bảng guardrail
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             10 rủi ro chính và biện pháp đối ứng đang vận hành.
           </p>
 
-          <div className="mt-6 overflow-x-auto rounded-xl border border-cream/10 bg-ink/40">
+          <div className="mt-6 overflow-x-auto rounded-xl border border-border bg-card/40">
             <table className="w-full min-w-[720px] text-sm">
               <thead>
-                <tr className="border-b border-cream/10 text-left text-xs uppercase tracking-wider text-cream/55">
+                <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
                   <th className="px-4 py-3 font-medium">Rủi ro</th>
                   <th className="px-4 py-3 font-medium">Biện pháp</th>
                   <th className="px-4 py-3 font-medium">Trạng thái</th>
@@ -354,12 +354,12 @@ export default function AiSafetyPage() {
                 {GUARDRAILS.map((row) => (
                   <tr
                     key={row.risk}
-                    className="border-b border-cream/5 last:border-b-0"
+                    className="border-b border-border last:border-b-0"
                   >
-                    <td className="px-4 py-3 font-medium text-cream">
+                    <td className="px-4 py-3 font-medium text-foreground">
                       {row.risk}
                     </td>
-                    <td className="px-4 py-3 text-cream/75">{row.measure}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.measure}</td>
                     <td className="px-4 py-3">
                       <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade">
                         <CheckCircle2 className="h-3 w-3" aria-hidden />
@@ -375,10 +375,10 @@ export default function AiSafetyPage() {
 
         {/* 3. Refusal policy */}
         <section className="relative mx-auto max-w-5xl px-6 py-12">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             3. Refusal policy
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             6 categories engine từ chối trả lời — kèm ví dụ user prompt và
             reply mẫu.
           </p>
@@ -394,16 +394,16 @@ export default function AiSafetyPage() {
                     <XCircle className="h-4 w-4" aria-hidden />
                     {c.label}
                   </CardTitle>
-                  <CardDescription className="text-xs text-cream/65">
+                  <CardDescription className="text-xs text-muted-foreground">
                     Redirect: {c.redirect}
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-3 text-sm text-cream/80">
+                <CardContent className="space-y-3 text-sm text-foreground/80">
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-wider text-cream/55">
+                    <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                       User prompt ví dụ
                     </p>
-                    <p className="mt-1 italic text-cream/75">{c.example}</p>
+                    <p className="mt-1 italic text-muted-foreground">{c.example}</p>
                   </div>
                   <div>
                     <p className="font-mono text-[10px] uppercase tracking-wider text-jade/80">
@@ -419,10 +419,10 @@ export default function AiSafetyPage() {
 
         {/* 4. 4 layers */}
         <section className="relative mx-auto max-w-5xl px-6 py-12">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             4. Quy trình kiểm chứng (4 layers)
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             AI chỉ chen vào L3 — và bị bao bọc bởi L4.
           </p>
 
@@ -430,7 +430,7 @@ export default function AiSafetyPage() {
             {LAYERS.map((l) => (
               <li
                 key={l.n}
-                className="rounded-xl border border-cream/10 bg-ink/40 p-5"
+                className="rounded-xl border border-border bg-card/40 p-5"
               >
                 <div className="flex items-center gap-2">
                   <Layers className="h-4 w-4 text-gold/80" aria-hidden />
@@ -438,10 +438,10 @@ export default function AiSafetyPage() {
                     {l.n}
                   </span>
                 </div>
-                <h3 className="mt-2 font-heading text-sm font-semibold text-cream">
+                <h3 className="mt-2 font-heading text-sm font-semibold text-foreground">
                   {l.title}
                 </h3>
-                <p className="mt-1 text-sm leading-relaxed text-cream/70">
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                   {l.desc}
                 </p>
               </li>
@@ -451,16 +451,16 @@ export default function AiSafetyPage() {
 
         {/* 5. Adversarial testing */}
         <section className="relative mx-auto max-w-4xl px-6 py-12">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             5. Adversarial testing
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             Bộ test đối kháng định kỳ để xác nhận guardrails hoạt động.
           </p>
 
-          <Card className="mt-6 border-cream/10 bg-ink/40">
+          <Card className="mt-6 border-border bg-card/40">
             <CardContent className="p-5 sm:p-6">
-              <ul className="space-y-2.5 text-sm leading-relaxed text-cream/80">
+              <ul className="space-y-2.5 text-sm leading-relaxed text-foreground/80">
                 {ADVERSARIAL.map((item) => (
                   <li key={item} className="flex gap-2">
                     <Bug
@@ -477,16 +477,16 @@ export default function AiSafetyPage() {
 
         {/* 6. Reporting */}
         <section className="relative mx-auto max-w-4xl px-6 py-12">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             6. Báo cáo lỗi
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             Kênh báo cáo và SLA xử lý.
           </p>
 
           <Card className="mt-6 border-gold/20 bg-gold/5">
             <CardContent className="p-5 sm:p-6">
-              <ul className="space-y-2.5 text-sm leading-relaxed text-cream/85">
+              <ul className="space-y-2.5 text-sm leading-relaxed text-foreground/85">
                 {REPORTING.map((item) => (
                   <li key={item} className="flex gap-2">
                     <AlertTriangle
@@ -503,14 +503,14 @@ export default function AiSafetyPage() {
 
         {/* 7. References */}
         <section className="relative mx-auto max-w-4xl px-6 pb-20 pt-12">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             7. References
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             Framework và quy định tham chiếu.
           </p>
 
-          <ul className="mt-6 space-y-2.5 text-sm leading-relaxed text-cream/80">
+          <ul className="mt-6 space-y-2.5 text-sm leading-relaxed text-foreground/80">
             {REFERENCES.map((r) => (
               <li key={r.label} className="flex gap-2">
                 <BookOpen
@@ -522,7 +522,7 @@ export default function AiSafetyPage() {
                     href={r.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-cream/85 hover:text-gold"
+                    className="text-foreground/85 hover:text-gold"
                   >
                     {r.label}
                     <ExternalLink
@@ -537,7 +537,7 @@ export default function AiSafetyPage() {
             ))}
           </ul>
 
-          <div className="mt-10 rounded-xl border border-cream/10 bg-ink/40 p-5 text-sm leading-relaxed text-cream/75">
+          <div className="mt-10 rounded-xl border border-border bg-card/40 p-5 text-sm leading-relaxed text-muted-foreground">
             <p className="flex items-start gap-2">
               <Shield
                 className="mt-0.5 h-4 w-4 shrink-0 text-gold"

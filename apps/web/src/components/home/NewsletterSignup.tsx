@@ -53,7 +53,7 @@ export function NewsletterSignup({
   }
 
   const card = (
-    <div className="relative isolate overflow-hidden rounded-3xl border border-gold/20 bg-gradient-to-br from-gold/[0.07] via-ink to-purple/15 p-8 sm:p-12">
+    <div className="relative isolate overflow-hidden rounded-3xl border border-gold/20 bg-gradient-to-br from-gold/[0.07] via-background to-purple/15 p-8 sm:p-12">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-gold/15 blur-3xl"
@@ -68,10 +68,10 @@ export function NewsletterSignup({
           <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
             Newsletter · mỗi tuần một bài
           </p>
-          <h2 className="mt-4 font-heading text-2xl font-bold leading-tight text-cream sm:text-3xl">
+          <h2 className="mt-4 font-heading text-2xl font-bold leading-tight text-foreground sm:text-3xl">
             Theo dõi tri thức <span className="bg-gold-gradient bg-clip-text text-transparent">hàng tuần</span>
           </h2>
-          <p className="mt-3 text-sm leading-relaxed text-cream/70 sm:text-base">
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
             Một bài viết ngắn về cách dùng cổ học để ra quyết định tốt hơn. Không
             spam, không bán hàng, huỷ bất cứ lúc nào.
           </p>
@@ -102,7 +102,7 @@ export function NewsletterSignup({
               </label>
               <div className="relative">
                 <Mail
-                  className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-cream/40"
+                  className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                   aria-hidden="true"
                 />
                 <Input
@@ -112,7 +112,7 @@ export function NewsletterSignup({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="ban@cua.ban"
-                  className="bg-ink/70 pl-10"
+                  className="bg-card/70 pl-10"
                   disabled={state === 'loading'}
                   aria-describedby={error ? `${id}-error` : undefined}
                 />
@@ -133,7 +133,7 @@ export function NewsletterSignup({
                   {error}
                 </p>
               )}
-              <p className="text-[11px] leading-relaxed text-cream/70">
+              <p className="text-[11px] leading-relaxed text-muted-foreground">
                 Bằng cách đăng ký bạn đồng ý với{' '}
                 <a href="/privacy" className="underline hover:text-gold">
                   Chính sách bảo mật
@@ -150,7 +150,7 @@ export function NewsletterSignup({
   if (variant === 'inline') return <div id={id}>{card}</div>;
 
   return (
-    <section id={id} aria-labelledby={`${id}-heading`} className="relative bg-ink py-20 sm:py-24 scroll-mt-24">
+    <section id={id} aria-labelledby={`${id}-heading`} className="relative bg-background py-20 sm:py-24 scroll-mt-24">
       <h2 id={`${id}-heading`} className="sr-only">
         Đăng ký newsletter hieu.asia
       </h2>

@@ -143,23 +143,23 @@ const SUB_PROCESSORS: SubProcessor[] = [
 
 export default function PrivacyPage() {
   return (
-    <main className="min-h-screen bg-ink text-cream">
+    <main className="min-h-screen bg-background text-foreground">
       <header className="container mx-auto flex items-center justify-between px-6 py-5">
         <Link href="/" className="font-heading text-xl font-semibold text-gold">
           hieu.asia
         </Link>
-        <span className="font-mono text-xs uppercase tracking-widest text-cream/70">Chính sách bảo mật</span>
+        <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Chính sách bảo mật</span>
       </header>
 
       <section className="container mx-auto max-w-3xl px-6 pb-20 pt-6">
         <div className="mb-10">
-          <h1 className="font-heading text-3xl font-semibold text-cream sm:text-4xl">
+          <h1 className="font-heading text-3xl font-semibold text-foreground sm:text-4xl">
             Chính sách bảo mật dữ liệu cá nhân
           </h1>
-          <p className="mt-3 text-sm text-cream/70">
+          <p className="mt-3 text-sm text-muted-foreground">
             Cập nhật lần cuối: <span className="text-gold">{LAST_UPDATED}</span>
           </p>
-          <p className="mt-4 text-sm leading-relaxed text-cream/80">
+          <p className="mt-4 text-sm leading-relaxed text-foreground/80">
             Chính sách này mô tả cách hieu.asia thu thập, lưu trữ và sử dụng dữ liệu cá nhân của bạn,
             tuân thủ <strong className="text-gold">Nghị định 13/2023/NĐ-CP</strong> của Chính phủ Việt
             Nam về bảo vệ dữ liệu cá nhân.
@@ -170,9 +170,9 @@ export default function PrivacyPage() {
           <CardHeader>
             <CardTitle className="text-xl">1. Người thu thập dữ liệu</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm leading-relaxed text-cream/85">
+          <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/85">
             <p>
-              <strong className="text-cream">hieu.asia</strong> — nền tảng AI insight cá nhân hóa.
+              <strong className="text-foreground">hieu.asia</strong> — nền tảng AI insight cá nhân hóa.
             </p>
             <p>
               Mọi câu hỏi về dữ liệu, vui lòng liên hệ:{' '}
@@ -188,7 +188,7 @@ export default function PrivacyPage() {
             <CardTitle className="text-xl">2. Loại dữ liệu chúng tôi thu thập</CardTitle>
             <CardDescription>Chỉ thu thập dữ liệu cần thiết để tạo báo cáo cho bạn.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-2 text-sm leading-relaxed text-cream/85">
+          <CardContent className="space-y-2 text-sm leading-relaxed text-foreground/85">
             <ul className="list-disc space-y-2 pl-5">
               <li>Họ tên (hoặc biệt danh), ngày — tháng — năm — giờ sinh, nơi sinh.</li>
               <li>Ảnh lòng bàn tay; ảnh chân dung (tuỳ chọn, có thể bỏ qua).</li>
@@ -203,11 +203,11 @@ export default function PrivacyPage() {
           <CardHeader>
             <CardTitle className="text-xl">3. Mục đích sử dụng</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2 text-sm leading-relaxed text-cream/85">
+          <CardContent className="space-y-2 text-sm leading-relaxed text-foreground/85">
             <ul className="list-disc space-y-2 pl-5">
               <li>Tạo báo cáo phân tích cá nhân (Tử Vi + MBTI + tâm lý) dành riêng cho bạn.</li>
               <li>
-                <strong className="text-cream">Không dùng dữ liệu cá nhân để huấn luyện mô hình.</strong>{' '}
+                <strong className="text-foreground">Không dùng dữ liệu cá nhân để huấn luyện mô hình.</strong>{' '}
                 Chỉ dùng dữ liệu đã ẩn danh để cải thiện prompt — bạn có thể tắt
                 tùy chọn này bất cứ lúc nào trong{' '}
                 <Link href="/account" className="text-gold underline">
@@ -227,11 +227,11 @@ export default function PrivacyPage() {
             <CardTitle className="text-xl">4. Thời gian lưu trữ</CardTitle>
             <CardDescription>Chúng tôi xóa dữ liệu nhạy cảm sớm nhất có thể.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm leading-relaxed text-cream/85">
+          <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/85">
             <div className="rounded-md border border-jade/30 bg-jade/10 p-4">
               <p>
                 <strong className="text-jade">Ảnh bàn tay và ảnh chân dung:</strong>{' '}
-                <strong className="text-cream">TỰ ĐỘNG XÓA SAU 7 NGÀY</strong> kể từ khi báo cáo
+                <strong className="text-foreground">TỰ ĐỘNG XÓA SAU 7 NGÀY</strong> kể từ khi báo cáo
                 được xử lý xong. Sau khi vision AI trích xuất đặc điểm, ảnh gốc sẽ bị xóa vĩnh viễn.
               </p>
             </div>
@@ -248,9 +248,9 @@ export default function PrivacyPage() {
             <CardTitle className="text-xl">5. Quyền của bạn</CardTitle>
             <CardDescription>Theo Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm leading-relaxed text-cream/85">
-            <div className="rounded-md border border-gold/20 bg-ink/40 p-4 text-xs text-cream/80">
-              <p className="font-semibold text-cream">Liên hệ về dữ liệu cá nhân:</p>
+          <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/85">
+            <div className="rounded-md border border-gold/20 bg-card/40 p-4 text-xs text-foreground/80">
+              <p className="font-semibold text-foreground">Liên hệ về dữ liệu cá nhân:</p>
               <ul className="mt-2 list-disc space-y-1 pl-5">
                 <li>
                   Email DPO:{' '}
@@ -267,22 +267,22 @@ export default function PrivacyPage() {
             </div>
             <ul className="list-disc space-y-2 pl-5">
               <li>
-                <strong className="text-cream">Quyền truy cập:</strong> yêu cầu xem toàn bộ dữ liệu của bạn.
+                <strong className="text-foreground">Quyền truy cập:</strong> yêu cầu xem toàn bộ dữ liệu của bạn.
               </li>
               <li>
-                <strong className="text-cream">Quyền sao chép:</strong> nhận bản sao dữ liệu ở định dạng máy đọc được.
+                <strong className="text-foreground">Quyền sao chép:</strong> nhận bản sao dữ liệu ở định dạng máy đọc được.
               </li>
               <li>
-                <strong className="text-cream">Quyền chỉnh sửa:</strong> sửa dữ liệu không chính xác.
+                <strong className="text-foreground">Quyền chỉnh sửa:</strong> sửa dữ liệu không chính xác.
               </li>
               <li>
-                <strong className="text-cream">Quyền xóa:</strong> yêu cầu xóa toàn bộ dữ liệu cá nhân của bạn.
+                <strong className="text-foreground">Quyền xóa:</strong> yêu cầu xóa toàn bộ dữ liệu cá nhân của bạn.
               </li>
               <li>
-                <strong className="text-cream">Quyền rút lại sự đồng ý:</strong> rút lại consent bất cứ lúc nào.
+                <strong className="text-foreground">Quyền rút lại sự đồng ý:</strong> rút lại consent bất cứ lúc nào.
               </li>
               <li>
-                <strong className="text-cream">Quyền phản đối xử lý:</strong> phản đối việc dùng dữ liệu cho mục đích huấn luyện AI.
+                <strong className="text-foreground">Quyền phản đối xử lý:</strong> phản đối việc dùng dữ liệu cho mục đích huấn luyện AI.
               </li>
             </ul>
             <p className="mt-3">
@@ -306,17 +306,17 @@ export default function PrivacyPage() {
           <CardHeader>
             <CardTitle className="text-xl">6. Bảo mật dữ liệu</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm leading-relaxed text-cream/85">
+          <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/85">
             <ul className="list-disc space-y-2 pl-5">
               <li>Mã hóa TLS 1.3 cho toàn bộ dữ liệu truyền tải in-transit.</li>
               <li>Mã hóa at-rest cho ảnh và báo cáo trên Cloudflare R2 / Supabase Storage.</li>
               <li>Truy cập dữ liệu nội bộ được kiểm soát bằng RBAC và audit log đầy đủ.</li>
             </ul>
-            <div className="mt-4 rounded-md border border-gold/15 bg-ink/40 p-4">
-              <p className="font-semibold text-cream">
+            <div className="mt-4 rounded-md border border-gold/15 bg-card/40 p-4">
+              <p className="font-semibold text-foreground">
                 Vendor sub-processors ({SUB_PROCESSORS.length} bên đang được uỷ thác):
               </p>
-              <p className="mt-1 text-xs text-cream/65">
+              <p className="mt-1 text-xs text-muted-foreground">
                 Bảng cập nhật mỗi lần thay đổi nhà cung cấp. Bạn có quyền phản đối việc xử lý dữ liệu
                 bởi bất kỳ vendor nào dưới đây — vui lòng email{' '}
                 <a className="text-gold underline" href="mailto:privacy@hieu.asia">
@@ -327,7 +327,7 @@ export default function PrivacyPage() {
               <div className="mt-4 -mx-2 overflow-x-auto">
                 <table className="w-full min-w-[640px] border-collapse text-left text-xs">
                   <thead>
-                    <tr className="border-b border-cream/15 text-cream/65">
+                    <tr className="border-b border-border text-muted-foreground">
                       <th className="px-2 py-2 font-mono uppercase tracking-wider">Vendor</th>
                       <th className="px-2 py-2 font-mono uppercase tracking-wider">Mục đích</th>
                       <th className="px-2 py-2 font-mono uppercase tracking-wider">Dữ liệu gửi</th>
@@ -335,15 +335,15 @@ export default function PrivacyPage() {
                       <th className="px-2 py-2 font-mono uppercase tracking-wider">Lưu trữ</th>
                     </tr>
                   </thead>
-                  <tbody className="text-cream/80">
+                  <tbody className="text-foreground/80">
                     {SUB_PROCESSORS.map((sp) => (
-                      <tr key={sp.vendor} className="border-b border-cream/8 align-top">
+                      <tr key={sp.vendor} className="border-b border-border align-top">
                         <td className="px-2 py-2.5">
                           <a
                             href={sp.policyUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="font-semibold text-cream hover:text-gold"
+                            className="font-semibold text-foreground hover:text-gold"
                           >
                             {sp.vendor}
                           </a>
@@ -365,10 +365,10 @@ export default function PrivacyPage() {
           <CardHeader>
             <CardTitle className="text-xl">7. Cookie và tracking</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2 text-sm leading-relaxed text-cream/85">
+          <CardContent className="space-y-2 text-sm leading-relaxed text-foreground/85">
             <ul className="list-disc space-y-2 pl-5">
               <li>
-                Chỉ sử dụng <strong className="text-cream">functional cookies</strong> (session, locale,
+                Chỉ sử dụng <strong className="text-foreground">functional cookies</strong> (session, locale,
                 tùy chọn dark mode).
               </li>
               <li>
@@ -386,7 +386,7 @@ export default function PrivacyPage() {
           <CardHeader>
             <CardTitle className="text-xl">8. Thay đổi chính sách</CardTitle>
           </CardHeader>
-          <CardContent className="text-sm leading-relaxed text-cream/85">
+          <CardContent className="text-sm leading-relaxed text-foreground/85">
             <p>
               Chính sách này có thể được cập nhật khi luật pháp hoặc dịch vụ thay đổi. Mọi thay đổi
               quan trọng sẽ được thông báo qua email (nếu bạn đã cung cấp) và banner trên trang chủ
@@ -402,7 +402,7 @@ export default function PrivacyPage() {
           <CardHeader>
             <CardTitle className="text-xl">9. Liên hệ</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm leading-relaxed text-cream/85">
+          <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/85">
             <p>
               Mọi câu hỏi, yêu cầu thực hiện quyền, hoặc khiếu nại về dữ liệu cá nhân, vui lòng liên hệ:
             </p>
@@ -420,14 +420,14 @@ export default function PrivacyPage() {
                 </a>
               </li>
             </ul>
-            <p className="text-xs text-cream/55">
+            <p className="text-xs text-muted-foreground">
               Bạn cũng có quyền khiếu nại tới Bộ Công An — Cục An ninh mạng và phòng, chống tội phạm
               sử dụng công nghệ cao (A05) nếu cho rằng quyền lợi bị xâm phạm.
             </p>
           </CardContent>
         </Card>
 
-        <div className="mt-10 flex flex-col items-center gap-3 border-t border-gold/15 pt-8 text-center text-xs text-cream/55">
+        <div className="mt-10 flex flex-col items-center gap-3 border-t border-gold/15 pt-8 text-center text-xs text-muted-foreground">
           <p>
             Xem thêm:{' '}
             <Link href="/terms" className="text-gold underline">

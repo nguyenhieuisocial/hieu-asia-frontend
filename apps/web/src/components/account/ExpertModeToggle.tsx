@@ -17,15 +17,15 @@ export function ExpertModeToggle() {
   const checked = expertMode === true;
 
   return (
-    <div className="flex items-start justify-between gap-4 rounded-xl border border-cream/10 bg-ink/40 p-4">
+    <div className="flex items-start justify-between gap-4 rounded-xl border border-border bg-card/40 p-4">
       <div className="min-w-0">
         <label
           htmlFor="expert-mode-toggle"
-          className="block font-heading text-base text-cream"
+          className="block font-heading text-base text-foreground"
         >
           Chế độ Chuyên gia
         </label>
-        <p className="mt-1 text-sm text-cream/65">
+        <p className="mt-1 text-sm text-muted-foreground">
           Hiển thị thuật ngữ Tử Vi đầy đủ (cung, sao, đại vận, tiểu hạn).
           Khi tắt, ngôn ngữ đơn giản hơn.
         </p>

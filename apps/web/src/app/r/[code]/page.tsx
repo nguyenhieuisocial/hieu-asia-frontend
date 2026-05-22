@@ -103,7 +103,7 @@ export default async function ReferralLandingPage({
   const fullShareUrl = `${proto}://${host}/?ref=${code}`;
 
   return (
-    <main className="min-h-screen bg-ink px-4 py-16 text-cream">
+    <main className="min-h-screen bg-background px-4 py-16 text-foreground">
       <div className="mx-auto max-w-xl space-y-6 text-center">
         <div className="inline-flex rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-xs text-gold">
           Bạn được mời từ {name ? <b className="ml-1">&nbsp;{name}</b> : <span className="ml-1 font-mono">&nbsp;{code}</span>}
@@ -111,7 +111,7 @@ export default async function ReferralLandingPage({
         <h1 className="text-3xl font-bold sm:text-4xl">
           Chào mừng đến <span className="text-gold">hieu.asia</span>
         </h1>
-        <p className="mx-auto max-w-md text-sm text-cream/70">
+        <p className="mx-auto max-w-md text-sm text-muted-foreground">
           Tử Vi · MBTI · Palm Reading · Mentor AI — tất cả trong một. Đăng ký tài khoản để mở khoá phân
           tích cao cấp; mã giới thiệu đã được tự động áp dụng.
         </p>
@@ -125,25 +125,25 @@ export default async function ReferralLandingPage({
           </Link>
           <Link
             href={`/tu-vi-hom-nay?ref=${code}`}
-            className="rounded border border-cream/20 px-4 py-3 hover:bg-cream/5"
+            className="rounded border border-border px-4 py-3 hover:bg-muted/5"
           >
             Tử Vi hôm nay
           </Link>
           <Link
             href={`/than-so-hoc?ref=${code}`}
-            className="rounded border border-cream/20 px-4 py-3 hover:bg-cream/5"
+            className="rounded border border-border px-4 py-3 hover:bg-muted/5"
           >
             Thần số học
           </Link>
           <Link
             href={`/lich-van-nien?ref=${code}`}
-            className="rounded border border-cream/20 px-4 py-3 hover:bg-cream/5"
+            className="rounded border border-border px-4 py-3 hover:bg-muted/5"
           >
             Lịch vạn niên
           </Link>
         </div>
 
-        <p className="pt-6 text-xs text-cream/40">
+        <p className="pt-6 text-xs text-muted-foreground">
           Link đầy đủ: <span className="font-mono">{fullShareUrl}</span>
         </p>
       </div>

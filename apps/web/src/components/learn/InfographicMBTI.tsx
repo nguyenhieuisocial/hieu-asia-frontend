@@ -53,28 +53,28 @@ export function InfographicMBTI() {
               type="button"
               onClick={() => setActive(isActive ? null : t.code)}
               className={`rounded-lg border p-3 text-left transition-all ${style.bg} ${
-                isActive ? 'border-gold ring-2 ring-gold/40' : 'border-cream/15 hover:border-cream/40'
+                isActive ? 'border-gold ring-2 ring-gold/40' : 'border-border hover:border-border'
               }`}
             >
               <div className={`font-heading text-base font-bold ${style.text}`}>{t.code}</div>
-              <div className="text-[11px] text-cream/70">{t.nickname}</div>
+              <div className="text-[11px] text-muted-foreground">{t.nickname}</div>
             </button>
           );
         })}
       </div>
 
       {activeType && (
-        <div className="rounded-lg border border-gold/40 bg-ink/40 p-4">
+        <div className="rounded-lg border border-gold/40 bg-card/40 p-4">
           <div className="flex items-baseline gap-3">
             <span className={`font-heading text-xl font-bold ${QUADRANT_STYLE[activeType.quadrant].text}`}>
               {activeType.code}
             </span>
-            <span className="text-sm text-cream/80">{activeType.nickname}</span>
-            <span className="ml-auto text-xs text-cream/70">
+            <span className="text-sm text-foreground/80">{activeType.nickname}</span>
+            <span className="ml-auto text-xs text-muted-foreground">
               {QUADRANT_STYLE[activeType.quadrant].label}
             </span>
           </div>
-          <p className="mt-2 text-sm text-cream/70">{activeType.desc}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{activeType.desc}</p>
         </div>
       )}
 
@@ -82,10 +82,10 @@ export function InfographicMBTI() {
         {(Object.keys(QUADRANT_STYLE) as Quadrant[]).map((q) => (
           <span
             key={q}
-            className={`inline-flex items-center gap-1.5 rounded border border-cream/15 px-2 py-1 ${QUADRANT_STYLE[q].bg}`}
+            className={`inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 ${QUADRANT_STYLE[q].bg}`}
           >
             <span className={QUADRANT_STYLE[q].text}>{QUADRANT_STYLE[q].label}</span>
-            <span className="text-cream/70">({q})</span>
+            <span className="text-muted-foreground">({q})</span>
           </span>
         ))}
       </div>

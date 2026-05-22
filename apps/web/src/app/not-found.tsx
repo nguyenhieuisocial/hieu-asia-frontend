@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-ink-radial px-6 py-16 text-cream">
+    <main className="flex min-h-screen items-center justify-center bg-background px-6 py-16 text-foreground">
       <div className="mx-auto max-w-lg text-center">
         <p
           aria-hidden
@@ -20,10 +20,10 @@ export default function NotFound() {
         <p className="mt-2 font-mono text-xs uppercase tracking-[0.3em] text-gold/80">
           không tìm thấy trang này
         </p>
-        <h1 className="mt-6 font-heading text-3xl font-semibold text-cream sm:text-4xl">
+        <h1 className="mt-6 font-heading text-3xl font-semibold text-foreground sm:text-4xl">
           Trang không tồn tại
         </h1>
-        <p className="mt-4 text-sm text-cream/70 sm:text-base">
+        <p className="mt-4 text-sm text-muted-foreground sm:text-base">
           Có thể link đã hết hạn hoặc gõ sai. Hãy quay về trang chủ hoặc xem lại
           báo cáo của bạn.
         </p>

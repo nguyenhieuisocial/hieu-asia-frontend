@@ -32,7 +32,7 @@ const HIGHLIGHTS = [
 
 export default function NewsletterHubPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <main id="main-content" className="mx-auto max-w-4xl px-6 py-20 sm:py-24">
         <header className="mb-12 max-w-2xl">
@@ -42,7 +42,7 @@ export default function NewsletterHubPage() {
           <h1 className="mt-3 font-heading text-4xl font-bold leading-tight sm:text-5xl">
             Bản tin <span className="bg-gold-gradient bg-clip-text text-transparent">hieu.asia</span>
           </h1>
-          <p className="mt-5 text-base leading-relaxed text-cream/75 sm:text-lg">
+          <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
             Mỗi tuần một bài viết ngắn về Tử Vi ứng dụng và cập nhật sản phẩm
             tại hieu.asia. Cam kết không spam — chỉ nội dung đáng đọc.
           </p>
@@ -54,13 +54,13 @@ export default function NewsletterHubPage() {
           </h2>
           <div className="grid gap-4 sm:grid-cols-3">
             {HIGHLIGHTS.map(({ icon: Icon, title, text }) => (
-              <Card key={title} className="border-gold/15 bg-ink/60">
+              <Card key={title} className="border-gold/15 bg-card/60">
                 <CardContent className="pt-6">
                   <Icon className="mb-3 h-5 w-5 text-gold/80" aria-hidden="true" />
-                  <p className="font-heading text-base font-semibold text-cream">
+                  <p className="font-heading text-base font-semibold text-foreground">
                     {title}
                   </p>
-                  <p className="mt-2 text-sm leading-relaxed text-cream/70">
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                     {text}
                   </p>
                 </CardContent>

@@ -50,7 +50,7 @@ export function AccountTabs({ active, onChange }: AccountTabsProps) {
     <div
       role="tablist"
       aria-label="Phần tài khoản"
-      className="sticky top-16 z-20 -mx-6 border-b border-cream/10 bg-ink/85 px-6 backdrop-blur supports-[backdrop-filter]:bg-ink/65"
+      className="sticky top-16 z-20 -mx-6 border-b border-border bg-card/85 px-6 backdrop-blur supports-[backdrop-filter]:bg-card/65"
     >
       <div className="scrollbar-thin -mb-px flex gap-1 overflow-x-auto">
         {ACCOUNT_TABS.map((tab) => {
@@ -69,7 +69,7 @@ export function AccountTabs({ active, onChange }: AccountTabsProps) {
                 'group inline-flex shrink-0 items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition-colors',
                 isActive
                   ? 'border-gold text-gold'
-                  : 'border-transparent text-cream/65 hover:border-cream/30 hover:text-cream',
+                  : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground',
               )}
             >
               <Icon className="h-4 w-4" aria-hidden />

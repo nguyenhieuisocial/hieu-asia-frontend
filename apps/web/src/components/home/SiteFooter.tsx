@@ -38,7 +38,7 @@ const LEGAL_LINKS = [
 export function SiteFooter() {
   const year = new Date().getFullYear();
   return (
-    <footer className="relative border-t border-gold/15 bg-ink">
+    <footer className="relative border-t border-gold/15 bg-background">
       <div className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
         <div className="grid gap-10 md:grid-cols-12">
           {/* Sản phẩm */}
@@ -51,10 +51,10 @@ export function SiteFooter() {
           <FooterCol title="Pháp lý" links={LEGAL_LINKS} className="md:col-span-2" />
           {/* Theo dõi + signup */}
           <div className="md:col-span-3">
-            <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-cream/90">
+            <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/90">
               Theo dõi
             </h3>
-            <p className="mt-4 text-sm leading-relaxed text-cream/65">
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               Một bài viết ngắn mỗi tuần — cách dùng cổ học để ra quyết định
               tốt hơn. Không spam, huỷ bất cứ lúc nào.
             </p>
@@ -80,17 +80,17 @@ export function SiteFooter() {
         </div>
 
         {/* Brand strip + bottom row */}
-        <div className="mt-14 border-t border-cream/5 pt-6">
+        <div className="mt-14 border-t border-border pt-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <Link href="/" className="font-heading text-base font-bold text-gold">
               hieu.asia · Hiểu mình. Quyết định mình.
             </Link>
-            <p className="inline-flex items-center gap-1.5 text-xs text-cream/55">
+            <p className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
               Made in HCM with
               <Heart className="h-3.5 w-3.5 fill-gold text-gold" aria-hidden="true" />
             </p>
           </div>
-          <div className="mt-3 flex flex-col gap-2 text-xs text-cream/70 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-3 flex flex-col gap-2 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
             <p>© {year} hieu.asia · Mọi quyền được bảo lưu.</p>
             <p>Kết quả mang tính tham khảo — không thay thế tư vấn y tế, pháp lý hay tài chính.</p>
           </div>
@@ -111,7 +111,7 @@ function FooterCol({
 }) {
   return (
     <div className={className}>
-      <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-cream/90">
+      <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/90">
         {title}
       </h3>
       <ul className="mt-4 space-y-2.5">
@@ -119,7 +119,7 @@ function FooterCol({
           <li key={link.href}>
             <Link
               href={link.href}
-              className="text-sm text-cream/60 transition-colors hover:text-gold"
+              className="text-sm text-muted-foreground transition-colors hover:text-gold"
             >
               {link.label}
             </Link>
@@ -143,7 +143,7 @@ function SocialLink({
     <Link
       href={href}
       aria-label={label}
-      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-cream/10 text-cream/65 transition-colors hover:border-gold/40 hover:text-gold sm:h-9 sm:w-9"
+      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold sm:h-9 sm:w-9"
     >
       {children}
     </Link>

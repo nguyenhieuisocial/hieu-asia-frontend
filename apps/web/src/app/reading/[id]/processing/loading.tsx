@@ -1,6 +1,6 @@
 export default function ProcessingLoading() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-ink-radial text-cream">
+    <main className="flex min-h-screen items-center justify-center bg-ink-radial text-foreground">
       <div className="text-center">
         <div
           aria-hidden
@@ -9,7 +9,7 @@ export default function ProcessingLoading() {
         <p className="mt-5 font-mono text-xs uppercase tracking-widest text-gold/80">
           Khởi tạo hội đồng agent
         </p>
-        <p className="mt-2 text-sm text-cream/65">Quy trình sẽ bắt đầu trong vài giây…</p>
+        <p className="mt-2 text-sm text-muted-foreground">Quy trình sẽ bắt đầu trong vài giây…</p>
       </div>
     </main>
   );

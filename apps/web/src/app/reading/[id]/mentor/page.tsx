@@ -268,12 +268,12 @@ export default function MentorChatPage() {
 
   return (
     <main id="main-content" className="flex h-screen flex-col bg-ink-radial">
-      <header className="flex items-center justify-between border-b border-gold/15 bg-ink/80 px-4 py-3">
+      <header className="flex items-center justify-between border-b border-gold/15 bg-card/80 px-4 py-3">
         <div className="flex items-center gap-3">
           <Link
             href={`/reading/${readingId}/report`}
             aria-label="Quay lại báo cáo"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-md text-base text-cream/60 hover:bg-gold/10 hover:text-gold sm:h-8 sm:w-8 sm:text-sm"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-md text-base text-muted-foreground hover:bg-gold/10 hover:text-gold sm:h-8 sm:w-8 sm:text-sm"
           >
             <span aria-hidden="true">←</span>
           </Link>
@@ -284,10 +284,10 @@ export default function MentorChatPage() {
             ☯
           </div>
           <div>
-            <p className="font-heading text-sm text-cream">
+            <p className="font-heading text-sm text-foreground">
               Cố vấn Cuộc Đời
             </p>
-            <p className="flex items-center gap-1.5 text-xs text-cream/70">
+            <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <span aria-hidden="true" className="inline-block h-2 w-2 rounded-full bg-jade-500" />
               đang trực
             </p>
@@ -299,7 +299,7 @@ export default function MentorChatPage() {
               type="button"
               onClick={onClearHistory}
               disabled={streaming}
-              className="inline-flex min-h-[44px] items-center rounded-md border border-gold/20 px-3 py-1.5 text-xs text-cream/80 hover:border-gold hover:text-gold disabled:opacity-50 sm:min-h-0"
+              className="inline-flex min-h-[44px] items-center rounded-md border border-gold/20 px-3 py-1.5 text-xs text-foreground/80 hover:border-gold hover:text-gold disabled:opacity-50 sm:min-h-0"
             >
               Xóa lịch sử
             </button>
@@ -309,7 +309,7 @@ export default function MentorChatPage() {
             onClick={() => setDrawerOpen((v) => !v)}
             aria-label={`Mở danh sách ${pinned.length} ghim`}
             aria-expanded={drawerOpen}
-            className="inline-flex min-h-[44px] items-center rounded-md border border-gold/20 px-3 py-1.5 text-xs text-cream/80 hover:border-gold hover:text-gold sm:min-h-0 lg:hidden"
+            className="inline-flex min-h-[44px] items-center rounded-md border border-gold/20 px-3 py-1.5 text-xs text-foreground/80 hover:border-gold hover:text-gold sm:min-h-0 lg:hidden"
           >
             {pinned.length} ghim
           </button>
@@ -356,7 +356,7 @@ export default function MentorChatPage() {
             onClick={() => setDrawerOpen(false)}
           >
             <div
-              className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-ink shadow-2xl"
+              className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-background shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <PinnedInsights

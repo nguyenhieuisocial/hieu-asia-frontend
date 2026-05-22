@@ -88,9 +88,9 @@ export default function CommunityPage() {
   return (
     <>
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-ink text-cream pt-16">
+      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
         {/* Hero */}
-        <section className="relative isolate overflow-hidden bg-ink">
+        <section className="relative isolate overflow-hidden bg-background">
           <div
             aria-hidden="true"
             className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,_rgba(59,39,84,0.4)_0%,_transparent_55%)]"
@@ -99,13 +99,13 @@ export default function CommunityPage() {
             <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
               Cộng đồng
             </p>
-            <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-cream sm:text-5xl">
+            <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
               Học cùng nhau,{' '}
               <span className="bg-gold-gradient bg-clip-text text-transparent">
                 quyết định một mình
               </span>
             </h1>
-            <p className="mt-5 text-base leading-relaxed text-cream/75 sm:text-lg">
+            <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
               hieu.asia còn nhỏ — và đó là điểm mạnh. Bạn không nói với một bộ máy,
               bạn nói với một nhóm người thực sự quan tâm bạn đọc gì, hiểu gì, và
               quyết định ra sao.
@@ -114,7 +114,7 @@ export default function CommunityPage() {
         </section>
 
         {/* Channels grid */}
-        <section className="relative bg-ink pb-12">
+        <section className="relative bg-background pb-12">
           <div className="mx-auto max-w-6xl px-6">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {CHANNELS.map((c) => (
@@ -128,17 +128,17 @@ export default function CommunityPage() {
         <NewsletterSignup id="newsletter" />
 
         {/* Brand promise reminder */}
-        <section className="bg-ink py-16">
+        <section className="bg-background py-16">
           <div className="mx-auto max-w-3xl px-6 text-center">
             <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80">
               Lời hứa
             </p>
-            <p className="mt-4 font-heading text-2xl leading-relaxed text-cream sm:text-3xl">
+            <p className="mt-4 font-heading text-2xl leading-relaxed text-foreground sm:text-3xl">
               &ldquo;Không định mệnh hoá. Không hù doạ.
               <br className="hidden sm:block" />
               Không bán dữ liệu của bạn.&rdquo;
             </p>
-            <p className="mt-4 text-sm text-cream/75">
+            <p className="mt-4 text-sm text-muted-foreground">
               Đó là tiêu chuẩn cho mọi thứ chúng tôi viết và xây.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -172,7 +172,7 @@ function ChannelCard({
     isSoon ? (
       <div
         aria-disabled
-        className="relative flex h-full flex-col rounded-2xl border border-cream/10 bg-ink/40 p-6 opacity-70"
+        className="relative flex h-full flex-col rounded-2xl border border-border bg-card/40 p-6 opacity-70"
       >
         {children}
       </div>
@@ -181,7 +181,7 @@ function ChannelCard({
         href={channel.href}
         target={channel.external ? '_blank' : undefined}
         rel={channel.external ? 'noopener noreferrer' : undefined}
-        className="group relative flex h-full flex-col rounded-2xl border border-cream/10 bg-ink/40 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]"
+        className="group relative flex h-full flex-col rounded-2xl border border-border bg-card/40 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]"
       >
         {children}
       </Link>
@@ -189,7 +189,7 @@ function ChannelCard({
   return (
     <Wrapper>
       <div className="flex items-start justify-between">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-gold/25 bg-gradient-to-br from-gold/15 via-ink to-purple/20">
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-gold/25 bg-gradient-to-br from-gold/15 via-background to-purple/20">
           <Icon className="h-5 w-5 text-gold" aria-hidden="true" />
         </div>
         {isSoon && (
@@ -198,16 +198,16 @@ function ChannelCard({
           </span>
         )}
       </div>
-      <h2 className="mt-5 font-heading text-lg font-semibold text-cream">
+      <h2 className="mt-5 font-heading text-lg font-semibold text-foreground">
         {channel.label}
       </h2>
-      <p className="mt-2 flex-1 text-sm leading-relaxed text-cream/70">
+      <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
         {channel.desc}
       </p>
       <p
         className={[
           'mt-5 text-sm font-medium',
-          isSoon ? 'text-cream/40' : 'text-gold/90 group-hover:text-gold',
+          isSoon ? 'text-foreground/40' : 'text-gold/90 group-hover:text-gold',
         ].join(' ')}
       >
         {channel.cta} →

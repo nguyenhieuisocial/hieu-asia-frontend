@@ -85,7 +85,7 @@ const BREADCRUMB_JSONLD = {
 
 export default function TuVi2026Page() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -102,10 +102,10 @@ export default function TuVi2026Page() {
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Năm Bính Ngọ · hành Hoả · 17/02/2026 → 05/02/2027
           </p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
             Tử vi 2026 — chủ đề năm Bính Ngọ
           </h1>
-          <p className="mt-5 text-base leading-relaxed text-cream/80 sm:text-lg">
+          <p className="mt-5 text-base leading-relaxed text-foreground/80 sm:text-lg">
             2026 là năm Bính Ngọ — hành Hoả vượng. Đây là năm năng lượng cao: thuận cho
             người chủ động, không thuận cho người chần chừ. Nhưng năng lượng Hoả cũng
             dễ "đốt" nếu không quản lý — ai vội vàng tài chính hoặc quan hệ trong năm
@@ -124,20 +124,20 @@ export default function TuVi2026Page() {
         </section>
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12">
-          <h2 className="mb-5 font-heading text-2xl font-semibold text-cream sm:text-3xl">
+          <h2 className="mb-5 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             4 chủ đề lớn của năm
           </h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {THEMES.map((t) => {
               const Icon = t.icon;
               return (
-                <Card key={t.title} className="border-cream/10 bg-ink/40">
+                <Card key={t.title} className="border-border bg-card/40">
                   <CardHeader className="pb-2">
-                    <CardTitle className="flex items-center gap-2 font-heading text-base text-cream">
+                    <CardTitle className="flex items-center gap-2 font-heading text-base text-foreground">
                       <Icon className="h-4 w-4 text-gold" aria-hidden /> {t.title}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="text-sm leading-relaxed text-cream/75">
+                  <CardContent className="text-sm leading-relaxed text-muted-foreground">
                     {t.body}
                   </CardContent>
                 </Card>
@@ -147,47 +147,47 @@ export default function TuVi2026Page() {
         </section>
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12">
-          <h2 className="mb-5 font-heading text-2xl font-semibold text-cream sm:text-3xl">
+          <h2 className="mb-5 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             12 tháng 2026 — sơ đồ năng lượng
           </h2>
           <div className="grid gap-2 sm:grid-cols-2">
             {MONTHS.map((m) => (
               <div
                 key={m.name}
-                className="rounded-lg border border-cream/10 bg-ink/40 p-3"
+                className="rounded-lg border border-border bg-card/40 p-3"
               >
                 <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">
                   {m.name}
                 </p>
-                <p className="mt-1 text-sm leading-relaxed text-cream/80">{m.theme}</p>
+                <p className="mt-1 text-sm leading-relaxed text-foreground/80">{m.theme}</p>
               </div>
             ))}
           </div>
-          <p className="mt-4 text-xs text-cream/55">
+          <p className="mt-4 text-xs text-muted-foreground">
             Đây là khung tháng chung. Lưu nguyệt cá nhân hoá theo lá số có thể lệch — Mentor sẽ tinh
             chỉnh theo Mệnh — Thân — Đại vận của bạn.
           </p>
         </section>
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12">
-          <h2 className="mb-5 font-heading text-2xl font-semibold text-cream sm:text-3xl">
+          <h2 className="mb-5 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             3 quyết định nhiều người cân nhắc trong 2026
           </h2>
           <div className="space-y-3">
             {DECISIONS.map((d) => (
-              <Card key={d.label} className="border-cream/10 bg-ink/40">
+              <Card key={d.label} className="border-border bg-card/40">
                 <CardHeader className="pb-2">
-                  <CardTitle className="font-heading text-base text-cream">
+                  <CardTitle className="font-heading text-base text-foreground">
                     {d.label}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm leading-relaxed text-cream/75">
+                <CardContent className="text-sm leading-relaxed text-muted-foreground">
                   {d.body}
                 </CardContent>
               </Card>
             ))}
           </div>
-          <p className="mt-4 text-xs text-cream/55">
+          <p className="mt-4 text-xs text-muted-foreground">
             hieu.asia KHÔNG quyết định thay bạn. Mỗi quyết định cần cân nhắc dữ kiện đời thực + lá
             số + bối cảnh — Mentor sẽ hỏi lại bối cảnh trước khi gợi ý.
           </p>
@@ -195,10 +195,10 @@ export default function TuVi2026Page() {
 
         <section className="relative mx-auto max-w-3xl px-6 pb-20">
           <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent p-6 sm:p-8">
-            <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+            <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
               Xem tử vi 2026 cá nhân hoá theo lá số của bạn
             </h2>
-            <p className="mt-3 text-sm leading-relaxed text-cream/80 sm:text-base">
+            <p className="mt-3 text-sm leading-relaxed text-foreground/80 sm:text-base">
               Khung trên là chung cho năm Bính Ngọ. Tử vi 2026 RIÊNG bạn phụ thuộc vào đại
               vận hiện tại + lưu niên cá nhân + cung Quan/Tài/Phu Thê của riêng bạn.
               Lập lá số 2 phút để xem chi tiết.
@@ -209,7 +209,7 @@ export default function TuVi2026Page() {
               </Link>
               <Link
                 href="/tu-vi"
-                className="inline-flex items-center text-sm text-cream/70 hover:text-gold"
+                className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"
               >
                 Cẩm nang Tử Vi <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
               </Link>

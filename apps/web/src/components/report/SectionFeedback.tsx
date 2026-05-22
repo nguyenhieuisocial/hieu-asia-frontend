@@ -115,7 +115,7 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
   if (existing && !editing) {
     return (
       <div
-        className="rounded-lg border border-cream/10 bg-ink/40 p-4 text-xs text-cream/70"
+        className="rounded-lg border border-border bg-card/40 p-4 text-xs text-muted-foreground"
         aria-live="polite"
       >
         <div className="flex flex-wrap items-center gap-2">
@@ -124,7 +124,7 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
           </span>
           <span>
             Bạn đã đánh giá:{' '}
-            <strong className="text-cream">
+            <strong className="text-foreground">
               {RATING_LABEL[existing.rating]}
             </strong>
           </span>
@@ -141,7 +141,7 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
             Sửa
           </button>
         </div>
-        <p className="mt-2 text-[11px] text-cream/55">
+        <p className="mt-2 text-[11px] text-muted-foreground">
           Feedback lưu trên máy của bạn để cải thiện trải nghiệm cá nhân. Chỉ
           chia sẻ tới hệ thống khi bạn xác nhận (chưa tự động gửi đi).
         </p>
@@ -150,7 +150,7 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
   }
 
   return (
-    <div className="rounded-lg border border-cream/10 bg-ink/40 p-4 text-sm">
+    <div className="rounded-lg border border-border bg-card/40 p-4 text-sm">
       {justSaved && (
         <div
           role="status"
@@ -161,7 +161,7 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
         </div>
       )}
 
-      <p className="text-xs font-medium uppercase tracking-wider text-cream/70">
+      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
         Đoạn này có đúng với bạn không?
       </p>
       <div className="mt-2 flex flex-wrap gap-2">
@@ -188,7 +188,7 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
       {rating !== null && (
         <div className="mt-4 space-y-3">
           <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-cream/70">
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Bạn muốn điều chỉnh hướng nào?
             </p>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -208,7 +208,7 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
           <div>
             <label
               htmlFor={commentId}
-              className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-cream/70"
+              className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground"
             >
               <MessageSquare className="h-3 w-3" aria-hidden="true" />
               Ghi chú (không bắt buộc)
@@ -218,7 +218,7 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
               rows={3}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              className="mt-1 w-full resize-none rounded-md border border-cream/10 bg-ink/60 px-3 py-2 text-sm text-cream placeholder:text-cream/40 focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50"
+              className="mt-1 w-full resize-none rounded-md border border-border bg-card/60 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50"
               placeholder="Phần nào bạn thấy lệch, hay muốn AI đi sâu hơn ở đâu?"
               maxLength={500}
             />
@@ -237,7 +237,7 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
                   setAdjust(undefined);
                   setComment('');
                 }}
-                className="text-xs text-cream/60 hover:text-cream"
+                className="text-xs text-muted-foreground hover:text-foreground"
               >
                 Hủy
               </button>
@@ -246,7 +246,7 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
         </div>
       )}
 
-      <p className="mt-3 text-[11px] text-cream/55">
+      <p className="mt-3 text-[11px] text-muted-foreground">
         Feedback lưu trên máy của bạn để cải thiện trải nghiệm cá nhân. Chỉ
         chia sẻ tới hệ thống khi bạn xác nhận (chưa tự động gửi đi).
       </p>
@@ -271,7 +271,7 @@ function RatingButton({ active, onClick, icon, label }: RatingButtonProps) {
         'inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors',
         active
           ? 'border-gold/60 bg-gold/15 text-gold'
-          : 'border-cream/15 bg-ink/60 text-cream/80 hover:border-gold/30 hover:text-cream',
+          : 'border-border bg-card/60 text-foreground/80 hover:border-gold/30 hover:text-foreground',
       )}
     >
       {icon}
@@ -296,7 +296,7 @@ function AdjustChip({ active, onClick, label }: AdjustChipProps) {
         'rounded-full border px-3 py-1 text-xs transition-colors',
         active
           ? 'border-gold/60 bg-gold/15 text-gold'
-          : 'border-cream/15 bg-ink/60 text-cream/70 hover:border-gold/30 hover:text-cream',
+          : 'border-border bg-card/60 text-muted-foreground hover:border-gold/30 hover:text-foreground',
       )}
     >
       {label}

@@ -168,19 +168,19 @@ export default function ThanSoHocResultPage() {
 
           <section>
             <SectionTitle>Tháng cá nhân hiện tại</SectionTitle>
-            <Card className="mt-3 border-cream/10 bg-ink/50">
+            <Card className="mt-3 border-border bg-card/50">
               <CardContent className="flex items-start gap-5 p-5">
                 <div
                   aria-hidden="true"
-                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-gold/25 bg-gradient-to-br from-gold/15 via-ink to-purple/20 font-heading text-2xl font-bold text-gold"
+                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-gold/25 bg-gradient-to-br from-gold/15 via-background to-purple/20 font-heading text-2xl font-bold text-gold"
                 >
                   {data.personal_month.number}
                 </div>
                 <div className="min-w-0">
-                  <div className="font-heading text-base font-semibold text-cream">
+                  <div className="font-heading text-base font-semibold text-foreground">
                     {data.personal_month.name}
                   </div>
-                  <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-cream/80">
+                  <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-foreground/80">
                     {data.personal_month.meaning}
                   </p>
                 </div>
@@ -194,13 +194,13 @@ export default function ThanSoHocResultPage() {
               {data.pinnacle_cycles.map((p) => (
                 <div
                   key={p.index}
-                  className="rounded-xl border border-cream/10 bg-ink/40 p-4 transition-colors hover:border-gold/30"
+                  className="rounded-xl border border-border bg-card/40 p-4 transition-colors hover:border-gold/30"
                 >
-                  <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-cream/55">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
                     Đỉnh {p.index} · {p.age_range}
                   </div>
                   <div className="mt-2 font-heading text-3xl font-bold text-gold">{p.number}</div>
-                  <p className="mt-2 text-xs leading-relaxed text-cream/75">{p.meaning}</p>
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{p.meaning}</p>
                 </div>
               ))}
             </div>
@@ -212,15 +212,15 @@ export default function ThanSoHocResultPage() {
               {data.challenges.map((c) => (
                 <div
                   key={c.index}
-                  className="rounded-xl border border-cream/10 bg-ink/40 p-4 transition-colors hover:border-rose-400/30"
+                  className="rounded-xl border border-border bg-card/40 p-4 transition-colors hover:border-rose-400/30"
                 >
-                  <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-cream/55">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
                     Thử thách {c.index}
                   </div>
                   <div className="mt-2 font-heading text-3xl font-bold text-rose-300">
                     {c.number}
                   </div>
-                  <p className="mt-2 text-xs leading-relaxed text-cream/75">{c.meaning}</p>
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{c.meaning}</p>
                 </div>
               ))}
             </div>
@@ -234,7 +234,7 @@ export default function ThanSoHocResultPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm leading-relaxed text-cream/80">
+                <p className="text-sm leading-relaxed text-foreground/80">
                   Những con số sau đây không xuất hiện trong tên bạn. Đây là các bài học cuộc đời
                   bạn cần hoàn thiện:
                 </p>
@@ -263,13 +263,13 @@ export default function ThanSoHocResultPage() {
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="font-heading text-lg font-semibold text-cream sm:text-xl">{children}</h2>
+    <h2 className="font-heading text-lg font-semibold text-foreground sm:text-xl">{children}</h2>
   );
 }
 
 function HeroLifePath({ card, year }: { card: NumberCard; year: number }) {
   return (
-    <Card className="relative overflow-hidden border-gold/30 bg-gradient-to-br from-gold/10 via-ink/40 to-purple/15">
+    <Card className="relative overflow-hidden border-gold/30 bg-gradient-to-br from-gold/10 via-card/60 to-purple/15">
       <div
         aria-hidden
         className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-gold/20 blur-3xl"
@@ -289,13 +289,13 @@ function HeroLifePath({ card, year }: { card: NumberCard; year: number }) {
             </div>
           </div>
           <div className="min-w-0 flex-1">
-            <div className="font-heading text-xl font-semibold text-cream sm:text-2xl">
+            <div className="font-heading text-xl font-semibold text-foreground sm:text-2xl">
               {card.name}
             </div>
-            <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-cream/85 sm:text-base">
+            <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-foreground/85 sm:text-base">
               {card.meaning}
             </p>
-            <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-cream/10 bg-ink/40 px-3 py-1 font-mono text-[11px] tracking-wide text-cream/70">
+            <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-3 py-1 font-mono text-[11px] tracking-wide text-muted-foreground">
               Năm cá nhân hiện tại · <span className="font-bold text-gold">{year}</span>
             </p>
           </div>
@@ -311,11 +311,11 @@ function NumberCardView({ card, highlight }: { card: NumberCard; highlight?: boo
       className={
         highlight
           ? 'border-gold/40 bg-gradient-to-br from-gold/10 to-transparent'
-          : 'border-cream/10 bg-ink/40 transition-colors hover:border-gold/30'
+          : 'border-border bg-card/40 transition-colors hover:border-gold/30'
       }
     >
       <CardHeader className="pb-2">
-        <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-cream/55">
+        <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
           {card.name}
         </div>
       </CardHeader>
@@ -324,12 +324,12 @@ function NumberCardView({ card, highlight }: { card: NumberCard; highlight?: boo
           <div
             className={
               'font-heading text-4xl font-bold leading-none ' +
-              (highlight ? 'text-gold' : 'text-cream')
+              (highlight ? 'text-gold' : 'text-foreground')
             }
           >
             {card.number}
           </div>
-          <p className="text-xs leading-relaxed text-cream/75">{card.meaning}</p>
+          <p className="text-xs leading-relaxed text-muted-foreground">{card.meaning}</p>
         </div>
       </CardContent>
     </Card>
@@ -377,8 +377,8 @@ function ResultActions({ data }: { data: ThanSoHocResult }) {
   };
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-cream/10 bg-ink/40 p-4 sm:flex-row sm:items-center sm:justify-between">
-      <p className="text-xs text-cream/65">
+    <div className="flex flex-col gap-3 rounded-xl border border-border bg-card/40 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <p className="text-xs text-muted-foreground">
         Lưu lại kết quả để chia sẻ — hoặc đặt báo cáo chi tiết theo chiêm tinh, Tử Vi, MBTI.
       </p>
       <div className="flex flex-wrap gap-2">
@@ -414,7 +414,7 @@ function PremiumCta() {
     });
   };
   return (
-    <Card className="relative overflow-hidden border-gold/30 bg-gradient-to-br from-purple/20 via-ink/60 to-gold/10">
+    <Card className="relative overflow-hidden border-gold/30 bg-gradient-to-br from-purple/20 via-card/40 to-gold/10">
       <div
         aria-hidden
         className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-gold/20 blur-3xl"
@@ -424,10 +424,10 @@ function PremiumCta() {
           <div className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.24em] text-gold">
             <Crown className="h-3 w-3" aria-hidden="true" /> Premium
           </div>
-          <h3 className="mt-2 font-heading text-xl font-semibold text-cream sm:text-2xl">
+          <h3 className="mt-2 font-heading text-xl font-semibold text-foreground sm:text-2xl">
             Đặt báo cáo <GoldAccent>chi tiết</GoldAccent>
           </h3>
-          <p className="mt-2 text-sm leading-relaxed text-cream/75">
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
             Kết hợp Tử Vi · Bát Tự · MBTI và phân tích chỉ tay — báo cáo dài 15-20 trang,
             đi kèm chat với AI Mentor không giới hạn.
           </p>
@@ -445,7 +445,7 @@ function ErrorState({ message, onRetry }: { message: string; onRetry: () => void
     <Card className="mt-6 border-rose-500/30 bg-rose-500/5">
       <CardContent className="flex flex-col items-center justify-center px-6 py-12 text-center">
         <div aria-hidden className="text-5xl">⚠️</div>
-        <h2 className="mt-4 font-heading text-lg text-cream">Không tải được kết quả</h2>
+        <h2 className="mt-4 font-heading text-lg text-foreground">Không tải được kết quả</h2>
         <p className="mt-2 max-w-md text-sm text-rose-200">{message}</p>
         <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
           <Button onClick={onRetry} size="sm">
@@ -465,7 +465,7 @@ function ErrorState({ message, onRetry }: { message: string; onRetry: () => void
 function ResultSkeleton() {
   return (
     <div className="mt-6 space-y-6">
-      <Card className="border-cream/10 bg-ink/40">
+      <Card className="border-border bg-card/40">
         <CardContent className="p-6 sm:p-8">
           <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-8">
             <Skeleton className="h-24 w-24 rounded-xl" />

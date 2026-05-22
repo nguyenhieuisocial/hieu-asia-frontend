@@ -22,7 +22,7 @@ export interface DashPayout {
 }
 
 const EVENT_LABEL: Record<DashRecentEvent['event'], { text: string; tone: string }> = {
-  click: { text: 'Click', tone: 'bg-cream/10 text-cream/70' },
+  click: { text: 'Click', tone: 'bg-muted/10 text-muted-foreground' },
   signup: { text: 'Đăng ký', tone: 'bg-blue-500/10 text-blue-300' },
   conversion: { text: 'Mua', tone: 'bg-gold/15 text-gold' },
 };
@@ -69,7 +69,7 @@ export function ShareToolkit({
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.24em] text-cream/60">
+          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
             Link giới thiệu
           </div>
           <div className="flex gap-2">
@@ -80,7 +80,7 @@ export function ShareToolkit({
           </div>
         </div>
         <div>
-          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.24em] text-cream/60">
+          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
             Caption gợi ý (VN)
           </div>
           <div className="flex gap-2">
@@ -91,7 +91,7 @@ export function ShareToolkit({
           </div>
         </div>
         <div>
-          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.24em] text-cream/60">
+          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
             QR code
           </div>
           <div className="flex items-center gap-4">
@@ -139,7 +139,7 @@ export function PayoutRequest({
         <CardTitle className="text-lg">Yêu cầu rút tiền</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        <div className="text-sm text-cream/70">
+        <div className="text-sm text-muted-foreground">
           Phương thức: <b>{payoutMethod.toUpperCase()}</b> · Đích:{' '}
           <span className="font-mono">{payoutDestination}</span>
         </div>
@@ -156,7 +156,7 @@ export function PayoutRequest({
           </Button>
         </div>
         {!canPayout && isActive && (
-          <p className="text-xs text-cream/70">Cần đạt {vnd(minPayout)} mới được rút.</p>
+          <p className="text-xs text-muted-foreground">Cần đạt {vnd(minPayout)} mới được rút.</p>
         )}
         {msg && (
           <p className={`text-sm ${msg.ok ? 'text-green-400' : 'text-rose-300'}`} role="status">
@@ -176,19 +176,19 @@ export function RecentEvents({ events }: { events: DashRecentEvent[] }) {
       </CardHeader>
       <CardContent>
         {events.length === 0 ? (
-          <p className="text-sm text-cream/70">Chưa có hoạt động nào.</p>
+          <p className="text-sm text-muted-foreground">Chưa có hoạt động nào.</p>
         ) : (
           <div className="space-y-1">
             {events.map((ev, i) => (
               <div
                 key={i}
-                className="flex items-center justify-between border-b border-cream/5 py-2 text-sm last:border-0"
+                className="flex items-center justify-between border-b border-border py-2 text-sm last:border-0"
               >
                 <div className="flex items-center gap-3">
                   <span className={`rounded px-2 py-0.5 text-xs ${EVENT_LABEL[ev.event].tone}`}>
                     {EVENT_LABEL[ev.event].text}
                   </span>
-                  <span className="text-cream/70">{dt(ev.ts)}</span>
+                  <span className="text-muted-foreground">{dt(ev.ts)}</span>
                 </div>
                 {ev.commission !== undefined && (
                   <span className="font-mono text-gold">+{vnd(ev.commission)}</span>
@@ -210,17 +210,17 @@ export function PayoutHistory({ payouts }: { payouts: DashPayout[] }) {
       </CardHeader>
       <CardContent>
         {payouts.length === 0 ? (
-          <p className="text-sm text-cream/70">Chưa có yêu cầu nào.</p>
+          <p className="text-sm text-muted-foreground">Chưa có yêu cầu nào.</p>
         ) : (
           <div className="space-y-1">
             {payouts.map((p) => (
               <div
                 key={p.id}
-                className="flex items-center justify-between border-b border-cream/5 py-2 text-sm last:border-0"
+                className="flex items-center justify-between border-b border-border py-2 text-sm last:border-0"
               >
                 <div>
                   <span className="font-mono">{vnd(p.amount)}</span>{' '}
-                  <span className="text-cream/70">· {dt(p.requested_at)}</span>
+                  <span className="text-muted-foreground">· {dt(p.requested_at)}</span>
                 </div>
                 <span className={STATUS_LABEL[p.status].tone}>
                   {STATUS_LABEL[p.status].text}

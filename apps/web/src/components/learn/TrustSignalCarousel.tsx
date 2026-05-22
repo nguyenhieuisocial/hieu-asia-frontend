@@ -98,7 +98,7 @@ export function TrustSignalCarousel() {
 
   return (
     <section
-      className="border-y border-cream/5 bg-ink/40 py-12"
+      className="border-y border-border bg-card/40 py-12"
       aria-label="Tín nhiệm hieu.asia"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -108,11 +108,11 @@ export function TrustSignalCarousel() {
           <h2 className="font-heading text-2xl font-bold text-gold sm:text-3xl">
             Vì sao chọn hieu.asia
           </h2>
-          <p className="mt-1 text-sm text-cream/60">5 lý do để bạn tin tưởng nền tảng này</p>
+          <p className="mt-1 text-sm text-muted-foreground">5 lý do để bạn tin tưởng nền tảng này</p>
         </div>
 
         <div className="relative">
-          <div className="overflow-hidden rounded-xl border border-cream/10 bg-ink/60">
+          <div className="overflow-hidden rounded-xl border border-border bg-card/60">
             <div
               className="flex transition-transform duration-500 ease-out"
               style={{ transform: `translateX(-${index * 100}%)` }}
@@ -121,10 +121,10 @@ export function TrustSignalCarousel() {
                 <div key={c.headline} className="w-full shrink-0 p-8 sm:p-10">
                   <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
                     <div className="text-gold">{c.icon}</div>
-                    <h3 className="font-heading text-xl font-bold text-cream sm:text-2xl">
+                    <h3 className="font-heading text-xl font-bold text-foreground sm:text-2xl">
                       {c.headline}
                     </h3>
-                    <p className="text-sm text-cream/70 sm:text-base">{c.desc}</p>
+                    <p className="text-sm text-muted-foreground sm:text-base">{c.desc}</p>
                     <Link
                       href={c.href}
                       className="mt-1 inline-flex items-center gap-1.5 rounded-full border border-gold/40 px-4 py-1.5 text-xs font-semibold text-gold transition-colors hover:bg-gold/10"
@@ -142,7 +142,7 @@ export function TrustSignalCarousel() {
             type="button"
             onClick={prev}
             aria-label="Slide trước"
-            className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full border border-cream/20 bg-ink/80 p-2 text-cream/70 transition-colors hover:border-gold hover:text-gold sm:left-4"
+            className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full border border-border bg-card/80 p-2 text-muted-foreground transition-colors hover:border-gold hover:text-gold sm:left-4"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -150,7 +150,7 @@ export function TrustSignalCarousel() {
             type="button"
             onClick={next}
             aria-label="Slide kế"
-            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full border border-cream/20 bg-ink/80 p-2 text-cream/70 transition-colors hover:border-gold hover:text-gold sm:right-4"
+            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full border border-border bg-card/80 p-2 text-muted-foreground transition-colors hover:border-gold hover:text-gold sm:right-4"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
@@ -166,7 +166,7 @@ export function TrustSignalCarousel() {
               aria-label={`Slide ${i + 1}: ${c.headline}`}
               onClick={() => setIndex(i)}
               className={`h-1.5 rounded-full transition-all ${
-                i === index ? 'w-8 bg-gold' : 'w-1.5 bg-cream/30 hover:bg-cream/50'
+                i === index ? 'w-8 bg-gold' : 'w-1.5 bg-muted/30 hover:bg-muted/50'
               }`}
             />
           ))}

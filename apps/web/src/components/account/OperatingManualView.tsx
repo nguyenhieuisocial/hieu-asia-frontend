@@ -101,9 +101,9 @@ export function OperatingManualView({ embedded = false }: OperatingManualViewPro
   if (!hydrated) {
     return (
       <div className="space-y-6" aria-hidden="true">
-        <div className="h-8 w-48 animate-pulse rounded bg-cream/10" />
-        <div className="h-32 w-full animate-pulse rounded bg-cream/5" />
-        <div className="h-32 w-full animate-pulse rounded bg-cream/5" />
+        <div className="h-8 w-48 animate-pulse rounded bg-muted/10" />
+        <div className="h-32 w-full animate-pulse rounded bg-muted/5" />
+        <div className="h-32 w-full animate-pulse rounded bg-muted/5" />
       </div>
     );
   }
@@ -129,7 +129,7 @@ export function OperatingManualView({ embedded = false }: OperatingManualViewPro
       <article
         className={
           'pom-print-root mx-auto w-full ' +
-          (embedded ? '' : 'max-w-3xl rounded-2xl border border-cream/10 bg-ink/40 p-6 sm:p-10')
+          (embedded ? '' : 'max-w-3xl rounded-2xl border border-border bg-card/40 p-6 sm:p-10')
         }
       >
         <ManualHeader manual={manual} embedded={embedded} />
@@ -141,7 +141,7 @@ export function OperatingManualView({ embedded = false }: OperatingManualViewPro
         </div>
 
         {!embedded && (
-          <footer className="mt-12 border-t border-cream/10 pt-6 text-xs leading-relaxed text-cream/55">
+          <footer className="mt-12 border-t border-border pt-6 text-xs leading-relaxed text-muted-foreground">
             Sổ tay này được tổng hợp từ dữ liệu chính bạn nhập trên hieu.asia.
             Không có AI sinh nội dung — đây là lời của bạn được sắp xếp lại.
             Dữ liệu lưu trên trình duyệt; xoá cache trình duyệt sẽ mất.
@@ -182,13 +182,13 @@ function ManualHeader({
       </p>
       <h1
         className={
-          'mt-2 font-heading font-bold leading-tight text-cream ' +
+          'mt-2 font-heading font-bold leading-tight text-foreground ' +
           (embedded ? 'text-2xl sm:text-3xl' : 'text-3xl sm:text-4xl')
         }
       >
         {id.displayName ? (
           <>
-            <span className="text-cream/70">Vận hành của</span>{' '}
+            <span className="text-muted-foreground">Vận hành của</span>{' '}
             <span className="bg-gold-gradient bg-clip-text text-transparent">
               {id.displayName}
             </span>
@@ -200,7 +200,7 @@ function ManualHeader({
         )}
       </h1>
 
-      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-cream/65">
+      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
         {id.birthDate && <span>Sinh {formatDateVN(id.birthDate)}</span>}
         {id.birthTime && <span>· {id.birthTime}</span>}
         {id.birthPlace && <span>· {id.birthPlace}</span>}
@@ -213,7 +213,7 @@ function ManualHeader({
             #{id.chartHash}
           </Link>
         )}
-        <span className="text-cream/40">·</span>
+        <span className="text-foreground/40">·</span>
         <span>
           {manual.filledCount}/{manual.totalCount} mục có dữ liệu
         </span>
@@ -229,13 +229,13 @@ function SectionBlock({ section }: { section: ManualSection }) {
     <section aria-labelledby={`sec-${section.id}`}>
       <h2
         id={`sec-${section.id}`}
-        className="font-heading text-lg font-semibold text-cream sm:text-xl"
+        className="font-heading text-lg font-semibold text-foreground sm:text-xl"
       >
         {section.title}
       </h2>
 
       {empty ? (
-        <p className="mt-2 text-sm text-cream/55">
+        <p className="mt-2 text-sm text-muted-foreground">
           Cần thêm dữ liệu —{' '}
           {section.emptyHref ? (
             <Link
@@ -254,7 +254,7 @@ function SectionBlock({ section }: { section: ManualSection }) {
           {section.lines.map((ln, i) => (
             <li
               key={i}
-              className="flex items-start gap-2.5 text-sm leading-relaxed text-cream/85"
+              className="flex items-start gap-2.5 text-sm leading-relaxed text-foreground/85"
             >
               <span
                 aria-hidden
@@ -269,14 +269,14 @@ function SectionBlock({ section }: { section: ManualSection }) {
           {section.lines.map((ln, i) => (
             <li
               key={i}
-              className="border-l-2 border-gold/60 pl-3 text-sm italic leading-relaxed text-cream/90 sm:text-base"
+              className="border-l-2 border-gold/60 pl-3 text-sm italic leading-relaxed text-foreground/90 sm:text-base"
             >
               {ln}
             </li>
           ))}
         </ul>
       ) : (
-        <div className="mt-3 space-y-2 text-sm leading-relaxed text-cream/85 sm:text-base">
+        <div className="mt-3 space-y-2 text-sm leading-relaxed text-foreground/85 sm:text-base">
           {section.lines.map((ln, i) => (
             <p key={i}>
               <ProseLine text={ln} />
@@ -296,7 +296,7 @@ function ProseLine({ text }: { text: string }) {
       {parts.map((p, i) => {
         if (p.startsWith('**') && p.endsWith('**')) {
           return (
-            <strong key={i} className="font-semibold text-cream">
+            <strong key={i} className="font-semibold text-foreground">
               {p.slice(2, -2)}
             </strong>
           );
@@ -323,7 +323,7 @@ function ActionBar({
       className={[
         // Mobile: sticky bottom; desktop: floating top-right inside the page.
         'sticky bottom-4 z-30 mx-auto flex w-fit flex-wrap items-center justify-center gap-2',
-        'rounded-full border border-gold/30 bg-ink/85 px-2 py-2 shadow-lg backdrop-blur',
+        'rounded-full border border-gold/30 bg-card/85 px-2 py-2 shadow-lg backdrop-blur',
         'sm:fixed sm:right-6 sm:top-24 sm:bottom-auto sm:mx-0 sm:flex-col sm:items-stretch sm:gap-1.5 sm:rounded-2xl sm:px-2',
         'print:hidden',
       ].join(' ')}
@@ -381,13 +381,13 @@ function EmptyState({
         <div>
           <h2
             className={
-              'font-heading text-cream ' +
+              'font-heading text-foreground ' +
               (embedded ? 'text-xl sm:text-2xl' : 'text-2xl sm:text-3xl')
             }
           >
             Sổ tay cá nhân của bạn
           </h2>
-          <p className="mt-1 text-sm leading-relaxed text-cream/70">
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
             Khi bạn dùng đủ tính năng, hệ thống sẽ tổng hợp một trang giấy duy
             nhất — điểm mạnh, mẫu hình quyết định, nguyên tắc bạn đang vận hành
             theo. Không có AI sinh nội dung; chỉ là lời của bạn được sắp xếp lại.
@@ -410,7 +410,7 @@ function EmptyState({
                   />
                 ) : (
                   <Circle
-                    className="mt-0.5 h-5 w-5 shrink-0 text-cream/35"
+                    className="mt-0.5 h-5 w-5 shrink-0 text-foreground/35"
                     aria-hidden
                   />
                 )}
@@ -418,7 +418,7 @@ function EmptyState({
                   <p
                     className={
                       'text-sm ' +
-                      (c.done ? 'text-cream/65 line-through' : 'text-cream/90')
+                      (c.done ? 'text-muted-foreground line-through' : 'text-foreground/90')
                     }
                   >
                     {c.label}
@@ -436,10 +436,10 @@ function EmptyState({
             ))}
           </ul>
 
-          <div className="mt-5 flex items-center gap-3 rounded-md border border-cream/10 bg-ink/40 px-4 py-3">
+          <div className="mt-5 flex items-center gap-3 rounded-md border border-border bg-card/40 px-4 py-3">
             <Compass className="h-4 w-4 text-gold/80" aria-hidden />
-            <p className="text-xs text-cream/70">
-              Tiến độ tổng: <strong className="text-cream">{total}/3</strong> bản ghi
+            <p className="text-xs text-muted-foreground">
+              Tiến độ tổng: <strong className="text-foreground">{total}/3</strong> bản ghi
               (cần tối thiểu 3 để bắt đầu).
             </p>
           </div>

@@ -162,8 +162,8 @@ export function MyChartTab() {
       className="space-y-6"
     >
       <div>
-        <h2 className="font-heading text-2xl text-cream sm:text-3xl">Lá số của tôi</h2>
-        <p className="mt-1 text-sm text-cream/65">
+        <h2 className="font-heading text-2xl text-foreground sm:text-3xl">Lá số của tôi</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Thông tin sinh trắc của bạn được lưu lại để không phải nhập lại mỗi lần.
         </p>
       </div>
@@ -213,7 +213,7 @@ export function MyChartTab() {
                   onChange={(e) =>
                     setDraft({ ...draft, gender: e.target.value as ChartProfile['gender'] })
                   }
-                  className="flex h-10 w-full rounded-md border border-cream/20 bg-ink/60 px-3 py-2 text-sm text-cream"
+                  className="flex h-10 w-full rounded-md border border-border bg-card/60 px-3 py-2 text-sm text-foreground"
                 >
                   <option value="">— Chọn —</option>
                   <option value="nam">Nam</option>
@@ -295,7 +295,7 @@ export function MyChartTab() {
               </Link>
             </Button>
           ) : (
-            <p className="text-sm text-cream/60">
+            <p className="text-sm text-muted-foreground">
               Bạn chưa có phiên đọc nào.{' '}
               <Link href="/onboarding/topic" className="text-gold hover:underline">
                 Bắt đầu lập lá số →
@@ -311,10 +311,10 @@ export function MyChartTab() {
 function Field({ label, value }: { label: string; value?: string }) {
   return (
     <div>
-      <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-cream/70">
+      <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
         {label}
       </dt>
-      <dd className="mt-1 text-sm text-cream/90">{value || '—'}</dd>
+      <dd className="mt-1 text-sm text-foreground/90">{value || '—'}</dd>
     </div>
   );
 }

@@ -152,7 +152,7 @@ export function SubscribePush({ defaultZodiac, vapidPublicKey }: SubscribePushPr
 
   if (supported === false) {
     return (
-      <div className="rounded-xl border border-cream/10 bg-ink/40 p-4 text-sm text-cream/70">
+      <div className="rounded-xl border border-border bg-card/40 p-4 text-sm text-muted-foreground">
         Trình duyệt của bạn chưa hỗ trợ thông báo web push. Hãy dùng Chrome, Edge, hoặc Firefox để nhận tử vi mỗi sáng.
       </div>
     );
@@ -162,10 +162,10 @@ export function SubscribePush({ defaultZodiac, vapidPublicKey }: SubscribePushPr
     <div className="rounded-2xl border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <div className="font-heading text-lg font-semibold text-cream">
+          <div className="font-heading text-lg font-semibold text-foreground">
             Nhận tử vi mỗi sáng 6h
           </div>
-          <p className="mt-1 text-sm text-cream/70">
+          <p className="mt-1 text-sm text-muted-foreground">
             Mỗi ngày một thông báo ngắn cho tuổi của bạn.
           </p>
         </div>
@@ -174,7 +174,7 @@ export function SubscribePush({ defaultZodiac, vapidPublicKey }: SubscribePushPr
             value={zodiac}
             onChange={(e) => setZodiac(e.target.value)}
             disabled={busy || subscribed}
-            className="rounded-lg border border-cream/15 bg-ink/60 px-3 py-2 text-sm text-cream"
+            className="rounded-lg border border-border bg-card/60 px-3 py-2 text-sm text-foreground"
           >
             <option value="">Chọn tuổi…</option>
             {ZODIACS.map((z) => (
@@ -187,7 +187,7 @@ export function SubscribePush({ defaultZodiac, vapidPublicKey }: SubscribePushPr
             <button
               onClick={handleUnsubscribe}
               disabled={busy}
-              className="rounded-lg border border-cream/20 px-4 py-2 text-sm text-cream/80 transition hover:border-rose-400/60 hover:text-rose-300 disabled:opacity-50"
+              className="rounded-lg border border-border px-4 py-2 text-sm text-foreground/80 transition hover:border-rose-400/60 hover:text-rose-300 disabled:opacity-50"
             >
               {busy ? '…' : 'Hủy'}
             </button>
@@ -203,7 +203,7 @@ export function SubscribePush({ defaultZodiac, vapidPublicKey }: SubscribePushPr
         </div>
       </div>
       {message ? (
-        <div className="mt-3 text-sm text-cream/80">{message}</div>
+        <div className="mt-3 text-sm text-foreground/80">{message}</div>
       ) : null}
     </div>
   );

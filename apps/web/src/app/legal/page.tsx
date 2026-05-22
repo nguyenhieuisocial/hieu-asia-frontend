@@ -47,8 +47,8 @@ export default function LegalHubPage() {
   return (
     <>
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-ink text-cream pt-16">
-        <section className="relative isolate overflow-hidden bg-ink">
+      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
+        <section className="relative isolate overflow-hidden bg-background">
           <div
             aria-hidden="true"
             className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,_rgba(59,39,84,0.4)_0%,_transparent_55%)]"
@@ -57,13 +57,13 @@ export default function LegalHubPage() {
             <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
               Pháp lý
             </p>
-            <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-cream sm:text-5xl">
+            <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
               Quyền của bạn,{' '}
               <span className="bg-gold-gradient bg-clip-text text-transparent">
                 rõ ràng và đầy đủ
               </span>
             </h1>
-            <p className="mt-5 text-base leading-relaxed text-cream/75 sm:text-lg">
+            <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
               hieu.asia tuân thủ GDPR và Nghị định 13/2023 về Bảo vệ dữ liệu cá
               nhân. Bạn có quyền xem, xuất, sửa và xoá dữ liệu của mình bất cứ
               lúc nào.
@@ -71,7 +71,7 @@ export default function LegalHubPage() {
           </div>
         </section>
 
-        <section className="relative bg-ink pb-20">
+        <section className="relative bg-background pb-20">
           <div className="mx-auto max-w-5xl px-6">
             <div className="grid gap-4 sm:grid-cols-2">
               {SECTIONS.map((s) => {
@@ -80,16 +80,16 @@ export default function LegalHubPage() {
                   <Link
                     key={s.title}
                     href={s.href}
-                    className="group flex items-start gap-4 rounded-2xl border border-cream/10 bg-ink/40 p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]"
+                    className="group flex items-start gap-4 rounded-2xl border border-border bg-card/40 p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]"
                   >
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-gold/25 bg-gradient-to-br from-gold/15 via-ink to-purple/20">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-gold/25 bg-gradient-to-br from-gold/15 via-background to-purple/20">
                       <Icon className="h-5 w-5 text-gold" aria-hidden="true" />
                     </div>
                     <div className="flex-1">
-                      <h2 className="font-heading text-base font-semibold text-cream">
+                      <h2 className="font-heading text-base font-semibold text-foreground">
                         {s.title}
                       </h2>
-                      <p className="mt-1.5 text-sm leading-relaxed text-cream/70">
+                      <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                         {s.desc}
                       </p>
                       <p className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-gold/90 transition-colors group-hover:text-gold">
@@ -102,8 +102,8 @@ export default function LegalHubPage() {
               })}
             </div>
 
-            <div className="mt-10 rounded-2xl border border-cream/10 bg-ink/40 p-6 text-sm text-cream/70">
-              <p className="font-heading text-base text-cream">Liên hệ DPO</p>
+            <div className="mt-10 rounded-2xl border border-border bg-card/40 p-6 text-sm text-muted-foreground">
+              <p className="font-heading text-base text-foreground">Liên hệ DPO</p>
               <p className="mt-2 leading-relaxed">
                 Câu hỏi về dữ liệu cá nhân hoặc khiếu nại GDPR: gửi email tới{' '}
                 <a href="mailto:privacy@hieu.asia" className="text-gold hover:underline">

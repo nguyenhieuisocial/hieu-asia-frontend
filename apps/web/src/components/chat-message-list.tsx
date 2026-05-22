@@ -83,8 +83,8 @@ function MessageBubble({
         className={cn(
           'max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm sm:max-w-[70%]',
           isUser
-            ? 'rounded-br-sm bg-gold/15 text-cream'
-            : 'rounded-bl-sm border border-gold/15 bg-ink/70 text-cream',
+            ? 'rounded-br-sm bg-gold/15 text-foreground'
+            : 'rounded-bl-sm border border-gold/15 bg-card/70 text-foreground',
         )}
       >
         {isUser ? (
@@ -112,7 +112,7 @@ function MessageBubble({
                   <strong className="text-gold">{children}</strong>
                 ),
                 code: ({ children }) => (
-                  <code className="rounded bg-ink/80 px-1 font-mono text-xs">
+                  <code className="rounded bg-card/80 px-1 font-mono text-xs">
                     {children}
                   </code>
                 ),
@@ -123,7 +123,7 @@ function MessageBubble({
           </div>
         )}
         <div className="mt-2 flex items-center justify-between gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-          <span className="font-mono text-xs text-cream/40">{time}</span>
+          <span className="font-mono text-xs text-muted-foreground">{time}</span>
           {!isUser && (
             <div className="flex items-center gap-1">
               <FeedbackButton
@@ -172,7 +172,7 @@ function FeedbackButton({
         'rounded px-1.5 py-0.5 text-xs transition-colors',
         active
           ? 'bg-gold/20 text-gold'
-          : 'text-cream/70 hover:bg-gold/10 hover:text-cream',
+          : 'text-muted-foreground hover:bg-gold/10 hover:text-foreground',
       )}
     >
       {label}
@@ -189,7 +189,7 @@ function TypingIndicator() {
       >
         ☯
       </div>
-      <div className="flex items-center gap-1 rounded-2xl rounded-bl-sm border border-gold/15 bg-ink/70 px-4 py-3 text-sm text-cream/70">
+      <div className="flex items-center gap-1 rounded-2xl rounded-bl-sm border border-gold/15 bg-card/70 px-4 py-3 text-sm text-muted-foreground">
         <span>Đang soạn câu trả lời</span>
         <span className="inline-flex gap-0.5">
           <span className="animate-pulse">.</span>

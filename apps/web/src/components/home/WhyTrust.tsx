@@ -33,7 +33,7 @@ export function WhyTrust() {
   return (
     <section
       aria-labelledby="why-trust-heading"
-      className="relative bg-ink py-14 sm:py-20"
+      className="relative bg-background py-14 sm:py-20"
     >
       <div
         aria-hidden="true"
@@ -46,11 +46,11 @@ export function WhyTrust() {
           </p>
           <h2
             id="why-trust-heading"
-            className="mt-3 font-heading text-2xl font-bold leading-tight tracking-tight text-cream sm:text-3xl"
+            className="mt-3 font-heading text-2xl font-bold leading-tight tracking-tight text-foreground sm:text-3xl"
           >
             Không phải "AI nói vậy thì tin vậy"
           </h2>
-          <p className="mt-3 text-sm leading-relaxed text-cream/70 sm:text-base">
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
             Ba lớp phòng vệ kỹ thuật cụ thể, không chung chung.
           </p>
         </div>
@@ -59,15 +59,15 @@ export function WhyTrust() {
           {PROOFS.map(({ Icon, title, desc }) => (
             <li
               key={title}
-              className="rounded-2xl border border-cream/10 bg-ink/40 p-5"
+              className="rounded-2xl border border-border bg-card/40 p-5"
             >
               <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-gold/30 bg-gold/5">
                 <Icon className="h-4 w-4 text-gold" aria-hidden={true} />
               </div>
-              <h3 className="mt-4 font-heading text-sm font-semibold leading-snug text-cream">
+              <h3 className="mt-4 font-heading text-sm font-semibold leading-snug text-foreground">
                 {title}
               </h3>
-              <p className="mt-2 text-xs leading-relaxed text-cream/70 sm:text-sm">
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
                 {desc}
               </p>
             </li>

@@ -46,7 +46,7 @@ export function HowToStart() {
     <section
       id="how-to-start"
       aria-labelledby="how-to-start-heading"
-      className="relative bg-ink py-20 sm:py-28"
+      className="relative bg-background py-20 sm:py-28"
     >
       <div
         aria-hidden="true"
@@ -59,12 +59,12 @@ export function HowToStart() {
           </p>
           <h2
             id="how-to-start-heading"
-            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-cream sm:text-4xl"
+            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
           >
             Bắt đầu trong{' '}
             <span className="bg-gold-gradient bg-clip-text text-transparent">3 phút</span>
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-cream/70 sm:text-lg">
+          <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
             Ba bước rõ ràng — bạn luôn biết mình đang ở đâu và bước tiếp theo là gì.
           </p>
         </div>
@@ -73,7 +73,7 @@ export function HowToStart() {
           {STEPS.map(({ n, Icon, title, desc, ctaLabel, href }) => (
             <li
               key={n}
-              className="flex flex-col rounded-2xl border border-cream/10 bg-ink/40 p-6 transition-colors hover:border-gold/40"
+              className="flex flex-col rounded-2xl border border-border bg-card/40 p-6 transition-colors hover:border-gold/40"
             >
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-gold/30 bg-gold/5">
@@ -83,8 +83,8 @@ export function HowToStart() {
                   Bước {n}
                 </span>
               </div>
-              <h3 className="mt-5 font-heading text-lg font-semibold text-cream">{title}</h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-cream/65">{desc}</p>
+              <h3 className="mt-5 font-heading text-lg font-semibold text-foreground">{title}</h3>
+              <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{desc}</p>
               <Link href={href} className="mt-5">
                 <Button variant="outline" size="sm" className="group w-full">
                   {ctaLabel}

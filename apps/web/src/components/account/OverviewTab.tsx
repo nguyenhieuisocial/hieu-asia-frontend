@@ -194,10 +194,10 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
       className="space-y-6"
     >
       <div>
-        <h2 className="font-heading text-2xl text-cream sm:text-3xl">
+        <h2 className="font-heading text-2xl text-foreground sm:text-3xl">
           Chào, <span className="text-gold">{displayName}</span>
         </h2>
-        <p className="mt-1 text-sm text-cream/65">
+        <p className="mt-1 text-sm text-muted-foreground">
           Tổng quan tài khoản và hoạt động gần đây.
         </p>
       </div>
@@ -206,14 +206,14 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
         {stats.map((s) => (
           <div
             key={s.label}
-            className="rounded-xl border border-cream/10 bg-ink/40 p-4"
+            className="rounded-xl border border-border bg-card/40 p-4"
           >
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cream/55">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
               {s.label}
             </p>
-            <p className="mt-2 font-heading text-2xl text-cream">{s.value}</p>
+            <p className="mt-2 font-heading text-2xl text-foreground">{s.value}</p>
             {s.hint && (
-              <p className="mt-1 text-[11px] text-cream/40">{s.hint}</p>
+              <p className="mt-1 text-[11px] text-foreground/40">{s.hint}</p>
             )}
           </div>
         ))}
@@ -225,14 +225,14 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
           onClick={() => onNavigate('manual')}
           className="group flex w-full items-center gap-4 rounded-xl border border-gold/30 bg-gold/[0.06] p-4 text-left transition hover:border-gold/60 hover:bg-gold/[0.10]"
         >
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold/40 bg-ink/60">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold/40 bg-card/60">
             <BookOpen className="h-5 w-5 text-gold" aria-hidden />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block font-heading text-base text-cream">
+            <span className="block font-heading text-base text-foreground">
               Sổ tay cá nhân sẵn sàng ({manualState.filled}/{manualState.total} mục)
             </span>
-            <span className="mt-0.5 block text-xs text-cream/70">
+            <span className="mt-0.5 block text-xs text-muted-foreground">
               Một trang tổng hợp về bạn — in được, xuất Markdown được.
             </span>
           </span>
@@ -280,7 +280,7 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
         </CardHeader>
         <CardContent>
           {data.activity.length === 0 ? (
-            <p className="text-sm text-cream/55">
+            <p className="text-sm text-muted-foreground">
               Chưa có hoạt động. Bắt đầu bằng cách{' '}
               <button
                 type="button"
@@ -292,17 +292,17 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
               .
             </p>
           ) : (
-            <ul className="divide-y divide-cream/5">
+            <ul className="divide-y divide-border">
               {data.activity.map((a) => {
                 const inner = (
                   <>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm text-cream/90">{a.label}</p>
-                      <p className="mt-0.5 text-[11px] text-cream/70">{relTime(a.ts)}</p>
+                      <p className="truncate text-sm text-foreground/90">{a.label}</p>
+                      <p className="mt-0.5 text-[11px] text-muted-foreground">{relTime(a.ts)}</p>
                     </div>
                     {a.href && (
                       <ChevronRight
-                        className="h-4 w-4 shrink-0 text-cream/40"
+                        className="h-4 w-4 shrink-0 text-foreground/40"
                         aria-hidden
                       />
                     )}

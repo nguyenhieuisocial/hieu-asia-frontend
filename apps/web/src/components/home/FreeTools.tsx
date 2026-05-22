@@ -56,7 +56,7 @@ export function FreeTools() {
     <section
       id="tools"
       aria-labelledby="tools-heading"
-      className="relative border-y border-cream/5 bg-ink py-20 sm:py-24"
+      className="relative border-y border-border bg-background py-20 sm:py-24"
     >
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
@@ -65,11 +65,11 @@ export function FreeTools() {
           </p>
           <h2
             id="tools-heading"
-            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-cream sm:text-4xl"
+            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
           >
             Tra cứu nhanh, ngay <span className="bg-gold-gradient bg-clip-text text-transparent">hôm nay</span>
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-cream/70 sm:text-lg">
+          <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
             Sáu công cụ độc lập cho những câu hỏi thường ngày — không cần lập lá số đầy đủ.
           </p>
         </div>
@@ -79,7 +79,7 @@ export function FreeTools() {
             <Link
               key={t.href}
               href={t.href}
-              className="group relative flex items-start gap-4 overflow-hidden rounded-2xl border border-cream/10 bg-ink/40 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]"
+              className="group relative flex items-start gap-4 overflow-hidden rounded-2xl border border-border bg-card/40 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]"
             >
               <div
                 aria-hidden="true"
@@ -87,19 +87,19 @@ export function FreeTools() {
               />
               <div
                 aria-hidden
-                className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-gold/25 bg-gradient-to-br from-gold/15 via-ink to-purple/20 text-2xl"
+                className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-gold/25 bg-gradient-to-br from-gold/15 via-background to-purple/20 text-2xl"
               >
                 {t.emoji}
               </div>
               <div className="relative min-w-0 flex-1">
-                <div className="flex items-center gap-1 font-heading text-base font-semibold text-cream">
+                <div className="flex items-center gap-1 font-heading text-base font-semibold text-foreground">
                   {t.label}
                   <ArrowRight
                     className="h-3.5 w-3.5 text-gold/0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-gold"
                     aria-hidden="true"
                   />
                 </div>
-                <p className="mt-1 line-clamp-2 text-sm text-cream/65">{t.blurb}</p>
+                <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{t.blurb}</p>
               </div>
             </Link>
           ))}

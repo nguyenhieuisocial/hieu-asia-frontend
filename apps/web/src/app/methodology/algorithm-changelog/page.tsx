@@ -182,7 +182,7 @@ const TYPE_STYLE: Record<
   },
   note: {
     label: 'note',
-    className: 'border-cream/20 bg-cream/5 text-cream/60',
+    className: 'border-border bg-muted/5 text-muted-foreground',
   },
 };
 
@@ -193,7 +193,7 @@ function formatDate(iso: string): string {
 
 export default function AlgorithmChangelogPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -210,7 +210,7 @@ export default function AlgorithmChangelogPage() {
         />
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12 pt-12 sm:pt-16">
-          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-cream/55">
+          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">
               Trang chủ
             </Link>
@@ -219,16 +219,16 @@ export default function AlgorithmChangelogPage() {
               Phương pháp luận
             </Link>
             <span className="mx-1.5">/</span>
-            <span className="text-cream/70">Algorithm changelog</span>
+            <span className="text-muted-foreground">Algorithm changelog</span>
           </nav>
 
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Methodology · Algorithm changelog
           </p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
             Algorithm changelog — Phiên bản engine huyền học
           </h1>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-cream/75 sm:text-lg">
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             Mỗi thay đổi tới thuật toán an sao, tính lịch hoặc luận giải đều ghi tại
             đây. Khác với "changelog sản phẩm" (mô tả tính năng UI), bảng này theo dõi
             tính chính xác của engine.
@@ -238,11 +238,11 @@ export default function AlgorithmChangelogPage() {
             <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/25 bg-gold/5 px-3 py-1 text-gold/90">
               <Cpu className="h-3.5 w-3.5" aria-hidden /> Engine versions
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-cream/15 bg-ink/40 px-3 py-1 text-cream/75">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-3 py-1 text-muted-foreground">
               <GitCommit className="h-3.5 w-3.5" aria-hidden />{' '}
               {CHANGELOG.length} bản phát hành
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-cream/15 bg-ink/40 px-3 py-1 text-cream/75">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-3 py-1 text-muted-foreground">
               <Calendar className="h-3.5 w-3.5" aria-hidden /> Cập nhật{' '}
               {formatDate(TODAY_ISO)}
             </span>
@@ -254,7 +254,7 @@ export default function AlgorithmChangelogPage() {
             <Card
               key={release.version}
               id={`v${release.version}`}
-              className="border-cream/10 bg-ink/40"
+              className="border-border bg-card/40"
             >
               <CardHeader>
                 <div className="flex flex-wrap items-center gap-3">
@@ -262,15 +262,15 @@ export default function AlgorithmChangelogPage() {
                     <GitCommit className="h-3.5 w-3.5" aria-hidden /> v
                     {release.version}
                   </span>
-                  <span className="inline-flex items-center gap-1.5 text-xs text-cream/60">
+                  <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
                     <Calendar className="h-3.5 w-3.5" aria-hidden />{' '}
                     {formatDate(release.date)}
                   </span>
                 </div>
-                <CardTitle className="mt-2 font-heading text-lg text-cream sm:text-xl">
+                <CardTitle className="mt-2 font-heading text-lg text-foreground sm:text-xl">
                   Engine v{release.version}
                 </CardTitle>
-                <CardDescription className="text-cream/60">
+                <CardDescription className="text-muted-foreground">
                   {release.changes.length} thay đổi
                 </CardDescription>
               </CardHeader>
@@ -281,14 +281,14 @@ export default function AlgorithmChangelogPage() {
                     return (
                       <li
                         key={i}
-                        className="flex flex-col gap-2 rounded-lg border border-cream/10 bg-ink/60 p-3 sm:flex-row sm:items-start"
+                        className="flex flex-col gap-2 rounded-lg border border-border bg-card/60 p-3 sm:flex-row sm:items-start"
                       >
                         <span
                           className={`inline-flex w-fit shrink-0 items-center rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider ${style.className}`}
                         >
                           {style.label}
                         </span>
-                        <p className="text-sm leading-relaxed text-cream/80">
+                        <p className="text-sm leading-relaxed text-foreground/80">
                           {c.description}
                         </p>
                       </li>
@@ -303,15 +303,15 @@ export default function AlgorithmChangelogPage() {
           <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Link
               href="/methodology/tu-vi"
-              className="group rounded-xl border border-cream/15 bg-ink/40 p-5 transition hover:border-gold/40"
+              className="group rounded-xl border border-border bg-card/40 p-5 transition hover:border-gold/40"
             >
               <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
                 Đọc thêm
               </p>
-              <h3 className="mt-2 font-heading text-lg text-cream">
+              <h3 className="mt-2 font-heading text-lg text-foreground">
                 Xem methodology Tử Vi
               </h3>
-              <p className="mt-2 text-sm text-cream/70">
+              <p className="mt-2 text-sm text-muted-foreground">
                 Trường phái Bắc phái, cách an sao, đại vận, lưu niên — và lằn ranh engine
                 vs AI.
               </p>
@@ -326,10 +326,10 @@ export default function AlgorithmChangelogPage() {
               <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-amber-200/80">
                 Báo lỗi
               </p>
-              <h3 className="mt-2 font-heading text-lg text-cream">
+              <h3 className="mt-2 font-heading text-lg text-foreground">
                 Báo cáo lỗi engine
               </h3>
-              <p className="mt-2 text-sm text-cream/75">
+              <p className="mt-2 text-sm text-muted-foreground">
                 Nếu bạn phát hiện lá số sai ngày/giờ/sao, hoặc luận giải mâu thuẫn với
                 bản gốc — gửi cho team engineering.
               </p>

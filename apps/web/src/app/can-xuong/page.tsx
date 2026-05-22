@@ -126,14 +126,14 @@ export default function CanXuongPage() {
     >
       <section className="mt-6 grid gap-6 lg:grid-cols-5">
         <div className="lg:col-span-2">
-          <Card className="border-gold/20 bg-ink/60 backdrop-blur-sm">
+          <Card className="border-gold/20 bg-card/60 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="font-heading text-lg">Thông tin sinh thần</CardTitle>
             </CardHeader>
             <CardContent>
               <form className="space-y-5" onSubmit={onSubmit}>
                 <div className="space-y-1.5">
-                  <Label htmlFor="birth_date" className="text-cream/85">
+                  <Label htmlFor="birth_date" className="text-foreground/85">
                     Ngày sinh (dương lịch)
                   </Label>
                   <Input
@@ -142,11 +142,11 @@ export default function CanXuongPage() {
                     value={birthDate}
                     onChange={(e) => setBirthDate(e.target.value)}
                     required
-                    className="bg-ink/60"
+                    className="bg-card/60"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="birth_hour" className="text-cream/85">
+                  <Label htmlFor="birth_hour" className="text-foreground/85">
                     Giờ sinh (0–23)
                   </Label>
                   <Input
@@ -157,14 +157,14 @@ export default function CanXuongPage() {
                     value={birthHour}
                     onChange={(e) => setBirthHour(e.target.value)}
                     required
-                    className="bg-ink/60"
+                    className="bg-card/60"
                   />
-                  <p className="text-xs text-cream/55">
+                  <p className="text-xs text-muted-foreground">
                     Giờ dương lịch — ví dụ 10 (10h sáng), 14 (2h chiều).
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-cream/85">Giới tính</Label>
+                  <Label className="text-foreground/85">Giới tính</Label>
                   <RadioGroup
                     name="gender"
                     value={gender}
@@ -173,13 +173,13 @@ export default function CanXuongPage() {
                   >
                     <div className="flex items-center gap-2">
                       <RadioGroupItem value="M" id="g-m" />
-                      <Label htmlFor="g-m" className="font-normal text-cream/85">
+                      <Label htmlFor="g-m" className="font-normal text-foreground/85">
                         Nam
                       </Label>
                     </div>
                     <div className="flex items-center gap-2">
                       <RadioGroupItem value="F" id="g-f" />
-                      <Label htmlFor="g-f" className="font-normal text-cream/85">
+                      <Label htmlFor="g-f" className="font-normal text-foreground/85">
                         Nữ
                       </Label>
                     </div>
@@ -205,11 +205,11 @@ export default function CanXuongPage() {
           {loading && <CanXuongLoadingSkeleton />}
 
           {!loading && !result && (
-            <Card className="border-dashed border-cream/15 bg-ink/30">
+            <Card className="border-dashed border-border bg-card/30">
               <CardContent className="flex flex-col items-center justify-center px-6 py-12 text-center">
                 <div aria-hidden className="text-5xl">⚖️</div>
-                <h2 className="mt-4 font-heading text-lg text-cream">Chưa có kết quả</h2>
-                <p className="mt-2 max-w-md text-sm text-cream/60">
+                <h2 className="mt-4 font-heading text-lg text-foreground">Chưa có kết quả</h2>
+                <p className="mt-2 max-w-md text-sm text-muted-foreground">
                   Nhập ngày sinh và giờ sinh ở khung bên trái, hệ thống sẽ tính cân tổng năm – tháng – ngày –
                   giờ và đối chiếu với bài thơ luận số cổ.
                 </p>
@@ -227,7 +227,7 @@ export default function CanXuongPage() {
                   className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gold/15 blur-3xl"
                 />
                 <CardContent className="relative p-6 text-center sm:p-8">
-                  <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-cream/55">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
                     Tổng cân
                   </div>
                   <div className="my-2 bg-gold-gradient bg-clip-text font-heading text-5xl font-bold text-transparent">
@@ -238,7 +238,7 @@ export default function CanXuongPage() {
                   >
                     {result.fortune_level}
                   </span>
-                  <p className="mt-2 text-xs text-cream/55">
+                  <p className="mt-2 text-xs text-muted-foreground">
                     Năm {result.input.can_chi_year} · Giờ {result.input.chi_hour}
                   </p>
                 </CardContent>
@@ -251,23 +251,23 @@ export default function CanXuongPage() {
                 <WeightCell label="Cân giờ" value={result.weight_hour} />
               </div>
 
-              <Card className="border-cream/10 bg-ink/50">
+              <Card className="border-border bg-card/50">
                 <CardHeader>
                   <CardTitle className="text-base text-gold">Câu thơ luận số</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="whitespace-pre-line font-heading text-base italic leading-relaxed text-cream/90">
+                  <p className="whitespace-pre-line font-heading text-base italic leading-relaxed text-foreground/90">
                     {result.poem}
                   </p>
                 </CardContent>
               </Card>
 
-              <Card className="border-cream/10 bg-ink/50">
+              <Card className="border-border bg-card/50">
                 <CardHeader>
                   <CardTitle className="text-base text-gold">Luận giải</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm leading-relaxed text-cream/85">{result.interpretation}</p>
+                  <p className="text-sm leading-relaxed text-foreground/85">{result.interpretation}</p>
                 </CardContent>
               </Card>
             </div>
@@ -280,9 +280,9 @@ export default function CanXuongPage() {
 
 function WeightCell({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-cream/10 bg-ink/40 p-3 text-center transition-colors hover:border-gold/30">
-      <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-cream/55">{label}</div>
-      <div className="mt-1.5 font-heading text-base font-semibold text-cream">{value}</div>
+    <div className="rounded-xl border border-border bg-card/40 p-3 text-center transition-colors hover:border-gold/30">
+      <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">{label}</div>
+      <div className="mt-1.5 font-heading text-base font-semibold text-foreground">{value}</div>
     </div>
   );
 }
@@ -290,7 +290,7 @@ function WeightCell({ label, value }: { label: string; value: string }) {
 function CanXuongLoadingSkeleton() {
   return (
     <div className="space-y-4">
-      <Card className="border-cream/10 bg-ink/50">
+      <Card className="border-border bg-card/50">
         <CardContent className="p-6">
           <Skeleton className="mx-auto h-3 w-20" />
           <Skeleton className="mx-auto mt-3 h-12 w-32" />

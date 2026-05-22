@@ -101,9 +101,9 @@ export function ColorPalette() {
     <div className="space-y-10">
       {GROUPS.map((group) => (
         <div key={group.title}>
-          <h3 className="font-heading text-lg font-semibold text-cream">{group.title}</h3>
+          <h3 className="font-heading text-lg font-semibold text-foreground">{group.title}</h3>
           {group.description ? (
-            <p className="mt-1 text-sm text-cream/60">{group.description}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{group.description}</p>
           ) : null}
           <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
             {group.swatches.map((sw) => (
@@ -114,8 +114,8 @@ export function ColorPalette() {
       ))}
 
       <div>
-        <h3 className="font-heading text-lg font-semibold text-cream">Gradients</h3>
-        <p className="mt-1 text-sm text-cream/60">Tổ hợp gradient signature của brand</p>
+        <h3 className="font-heading text-lg font-semibold text-foreground">Gradients</h3>
+        <p className="mt-1 text-sm text-muted-foreground">Tổ hợp gradient signature của brand</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           {GRADIENTS.map((g) => (
             <GradientTile key={g.name} {...g} />

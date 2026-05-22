@@ -36,13 +36,13 @@ const TESTIMONIALS: Testimonial[] = [
 
 export function Testimonials() {
   return (
-    <section className="relative bg-ink py-20 sm:py-32">
+    <section className="relative bg-background py-20 sm:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
             Cộng đồng tin dùng
           </p>
-          <h2 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-cream sm:text-5xl">
+          <h2 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
             Người Việt nói gì <span className="bg-gold-gradient bg-clip-text text-transparent">về chúng tôi</span>
           </h2>
         </div>
@@ -51,7 +51,7 @@ export function Testimonials() {
           {TESTIMONIALS.map((t) => (
             <figure
               key={t.name}
-              className="relative flex h-full flex-col rounded-2xl border border-cream/5 p-6 transition-colors hover:border-gold/30"
+              className="relative flex h-full flex-col rounded-2xl border border-border p-6 transition-colors hover:border-gold/30"
               style={{ backgroundColor: 'rgba(20, 20, 26, 0.4)' }}
             >
               <Quote className="absolute right-5 top-5 h-6 w-6 text-gold/20" aria-hidden="true" />
@@ -62,18 +62,18 @@ export function Testimonials() {
                     className={
                       i < t.rating
                         ? 'h-4 w-4 fill-gold text-gold'
-                        : 'h-4 w-4 text-cream/20'
+                        : 'h-4 w-4 text-foreground/20'
                     }
                     aria-hidden="true"
                   />
                 ))}
               </div>
-              <blockquote className="mt-4 flex-1 text-base leading-relaxed text-cream/85">
+              <blockquote className="mt-4 flex-1 text-base leading-relaxed text-foreground/85">
                 &ldquo;{t.quote}&rdquo;
               </blockquote>
-              <figcaption className="mt-5 border-t border-cream/5 pt-4">
-                <div className="font-heading text-sm font-semibold text-cream">{t.name}</div>
-                <div className="text-xs text-cream/55">{t.role}</div>
+              <figcaption className="mt-5 border-t border-border pt-4">
+                <div className="font-heading text-sm font-semibold text-foreground">{t.name}</div>
+                <div className="text-xs text-muted-foreground">{t.role}</div>
               </figcaption>
             </figure>
           ))}

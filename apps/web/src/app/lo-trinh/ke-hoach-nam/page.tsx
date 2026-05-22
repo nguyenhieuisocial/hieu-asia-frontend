@@ -103,7 +103,7 @@ const BREADCRUMB_JSONLD = {
 
 export default function KeHoachNamPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -112,11 +112,11 @@ export default function KeHoachNamPage() {
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-ink-radial opacity-80"
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.10)_0%,_transparent_55%)] dark:bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.18)_0%,_transparent_55%)]"
         />
 
         <section className="relative mx-auto max-w-4xl px-6 pb-10 pt-12 sm:pt-16">
-          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-cream/55">
+          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">
               Trang chủ
             </Link>
@@ -125,7 +125,7 @@ export default function KeHoachNamPage() {
               Lộ trình
             </Link>
             <span className="mx-1.5">/</span>
-            <span className="text-cream/70">Lập kế hoạch năm</span>
+            <span className="text-muted-foreground">Lập kế hoạch năm</span>
           </nav>
 
           <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-lg bg-gold/10 text-gold">
@@ -134,10 +134,10 @@ export default function KeHoachNamPage() {
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Lộ trình · Tôi muốn lập kế hoạch năm
           </p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
             Kế hoạch năm — Bản đồ thời điểm cho 12 tháng tới
           </h1>
-          <p className="mt-5 max-w-3xl text-base leading-relaxed text-cream/75 sm:text-lg">
+          <p className="mt-5 max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             Bạn muốn nhìn cả năm: tháng nào nên đẩy, tháng nào nên giữ, đại vận đang vào
             pha gì. Lộ trình này phối hợp lưu niên 2026 với mục tiêu cá nhân — để kế
             hoạch của bạn cộng hưởng với pha, không đẩy ngược dòng.
@@ -158,20 +158,20 @@ export default function KeHoachNamPage() {
         <section className="relative mx-auto max-w-4xl px-6 pb-12">
           <div className="mb-6 flex items-center gap-3">
             <Sparkles className="h-5 w-5 text-gold" aria-hidden />
-            <h2 className="font-heading text-2xl font-semibold text-cream sm:text-3xl">
+            <h2 className="font-heading text-2xl font-semibold text-foreground sm:text-3xl">
               Bạn sẽ dùng tới những công cụ này
             </h2>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {TOOLS.map((t) => (
               <Link key={t.name} href={t.href}>
-                <Card className="h-full border-cream/10 bg-ink/40 transition-colors hover:border-gold/40">
+                <Card className="h-full border-border bg-card/40 transition-colors hover:border-gold/40">
                   <CardHeader className="pb-2">
-                    <CardTitle className="font-heading text-base text-cream">
+                    <CardTitle className="font-heading text-base text-foreground">
                       {t.name}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="text-xs leading-relaxed text-cream/70">
+                  <CardContent className="text-xs leading-relaxed text-muted-foreground">
                     {t.desc}
                   </CardContent>
                 </Card>
@@ -183,7 +183,7 @@ export default function KeHoachNamPage() {
         <section className="relative mx-auto max-w-4xl px-6 pb-12">
           <div className="mb-6 flex items-center gap-3">
             <BookOpen className="h-5 w-5 text-gold" aria-hidden />
-            <h2 className="font-heading text-2xl font-semibold text-cream sm:text-3xl">
+            <h2 className="font-heading text-2xl font-semibold text-foreground sm:text-3xl">
               3 câu hỏi điển hình lộ trình này trả lời
             </h2>
           </div>
@@ -191,10 +191,10 @@ export default function KeHoachNamPage() {
             {QUESTIONS.map((qa) => (
               <div
                 key={qa.q}
-                className="rounded-xl border border-cream/10 bg-ink/40 p-5"
+                className="rounded-xl border border-border bg-card/40 p-5"
               >
-                <p className="font-heading text-base font-semibold text-cream">{qa.q}</p>
-                <p className="mt-2 text-sm leading-relaxed text-cream/75">{qa.a}</p>
+                <p className="font-heading text-base font-semibold text-foreground">{qa.q}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{qa.a}</p>
               </div>
             ))}
           </div>
@@ -202,27 +202,27 @@ export default function KeHoachNamPage() {
 
         <section className="relative mx-auto max-w-4xl px-6 pb-12">
           <div className="grid gap-6 md:grid-cols-2">
-            <div className="rounded-xl border border-cream/10 bg-ink/40 p-6">
-              <h2 className="font-heading text-xl font-semibold text-cream">
+            <div className="rounded-xl border border-border bg-card/40 p-6">
+              <h2 className="font-heading text-xl font-semibold text-foreground">
                 Phù hợp khi bạn...
               </h2>
               <ul className="mt-4 space-y-2.5">
                 {FIT.map((f) => (
-                  <li key={f} className="flex gap-2.5 text-sm leading-relaxed text-cream/75">
+                  <li key={f} className="flex gap-2.5 text-sm leading-relaxed text-muted-foreground">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden />
                     <span>{f}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="rounded-xl border border-cream/10 bg-ink/30 p-6">
-              <h2 className="font-heading text-xl font-semibold text-cream">
+            <div className="rounded-xl border border-border bg-card/30 p-6">
+              <h2 className="font-heading text-xl font-semibold text-foreground">
                 Không phù hợp khi bạn...
               </h2>
               <ul className="mt-4 space-y-2.5">
                 {NOT_FIT.map((f) => (
-                  <li key={f} className="flex gap-2.5 text-sm leading-relaxed text-cream/70">
-                    <span aria-hidden className="mt-2 inline-block h-1 w-1 shrink-0 rounded-full bg-cream/40" />
+                  <li key={f} className="flex gap-2.5 text-sm leading-relaxed text-muted-foreground">
+                    <span aria-hidden className="mt-2 inline-block h-1 w-1 shrink-0 rounded-full bg-muted/40" />
                     <span>{f}</span>
                   </li>
                 ))}
@@ -234,26 +234,26 @@ export default function KeHoachNamPage() {
         <section className="relative mx-auto max-w-4xl px-6 pb-12">
           <Link
             href="/community/cases/dau-tu-bat-dong-san-dau-tien"
-            className="group block rounded-xl border border-cream/10 bg-ink/30 p-5 transition-colors hover:border-gold/40"
+            className="group block rounded-xl border border-border bg-card/30 p-5 transition-colors hover:border-gold/40"
           >
             <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/70">
               Đọc case study tương tự
             </p>
-            <p className="mt-2 font-heading text-base font-semibold text-cream group-hover:text-gold">
+            <p className="mt-2 font-heading text-base font-semibold text-foreground group-hover:text-gold">
               Đầu tư bất động sản đầu tiên — có nên nhảy vào lúc thị trường đỉnh?
             </p>
-            <p className="mt-1.5 text-xs leading-relaxed text-cream/65">
+            <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
               Nam, 35 tuổi · cung Điền Trạch + đại vận chuyển · chọn phân bổ tài sản theo pha vận, không theo giá thị trường.
             </p>
           </Link>
         </section>
 
         <section className="relative mx-auto max-w-4xl px-6 pb-20">
-          <div className="rounded-xl border border-cream/10 bg-ink/40 p-6 sm:p-8">
-            <h2 className="font-heading text-2xl font-semibold text-cream">
+          <div className="rounded-xl border border-border bg-card/40 p-6 sm:p-8">
+            <h2 className="font-heading text-2xl font-semibold text-foreground">
               Sẵn sàng bắt đầu?
             </h2>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-cream/70">
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
               Lập lá số mất khoảng 3 phút. Bạn có thể xem mẫu báo cáo trước nếu muốn
               biết kết quả trông như thế nào.
             </p>
@@ -263,7 +263,7 @@ export default function KeHoachNamPage() {
               </Link>
               <Link
                 href="/sample-report"
-                className="inline-flex items-center text-sm text-cream/70 hover:text-gold"
+                className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"
               >
                 Xem mẫu báo cáo
                 <ArrowRight className="ml-1 h-4 w-4" aria-hidden />

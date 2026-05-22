@@ -47,7 +47,7 @@ export function ReportsSection({ items }: { items: DashboardReport[] }) {
         <Link
           key={r.id}
           href={`/reading/${r.id}/report`}
-          className="group rounded-lg border border-gold/15 bg-ink/60 p-5 transition-colors hover:border-gold/50"
+          className="group rounded-lg border border-gold/15 bg-card/60 p-5 transition-colors hover:border-gold/50"
         >
           <div className="flex items-start justify-between gap-3">
             <div
@@ -58,8 +58,8 @@ export function ReportsSection({ items }: { items: DashboardReport[] }) {
             </div>
             <StatusBadge status={r.status} />
           </div>
-          <p className="mt-3 font-mono text-xs text-cream/70">{r.date}</p>
-          <p className="mt-1 text-sm text-cream/90 group-hover:text-gold">
+          <p className="mt-3 font-mono text-xs text-muted-foreground">{r.date}</p>
+          <p className="mt-1 text-sm text-foreground/90 group-hover:text-gold">
             {r.primary_concern}
           </p>
         </Link>
@@ -120,16 +120,16 @@ export function MentorSessionsSection({
         <li key={s.id}>
           <Link
             href={`/reading/${s.reading_id}/mentor`}
-            className="flex items-center gap-4 rounded-lg border border-gold/15 bg-ink/60 p-4 hover:border-gold/40"
+            className="flex items-center gap-4 rounded-lg border border-gold/15 bg-card/60 p-4 hover:border-gold/40"
           >
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-purple/30 text-base">
               ☯
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm text-cream/90">
+              <p className="truncate text-sm text-foreground/90">
                 {s.last_message_preview}
               </p>
-              <p className="font-mono text-xs text-cream/70">
+              <p className="font-mono text-xs text-muted-foreground">
                 {s.message_count} tin nhắn · {s.last_active}
               </p>
             </div>
@@ -160,7 +160,7 @@ export function PlanSection({ usage }: { usage: PlanUsage }) {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="h-2 overflow-hidden rounded-full bg-ink/60">
+        <div className="h-2 overflow-hidden rounded-full bg-card/60">
           <div
             className="h-full bg-gold-gradient transition-all"
             style={{ width: `${pct}%` }}
@@ -220,7 +220,7 @@ export function SettingsSection({
           />
 
           <div>
-            <p className="mb-2 text-sm text-cream/80">Ngôn ngữ</p>
+            <p className="mb-2 text-sm text-foreground/80">Ngôn ngữ</p>
             <div className="flex gap-2">
               {(['vi', 'en'] as const).map((lang) => (
                 <button
@@ -231,7 +231,7 @@ export function SettingsSection({
                     'rounded-md border px-3 py-1.5 text-xs uppercase tracking-wider',
                     state.language === lang
                       ? 'border-gold bg-gold/15 text-gold'
-                      : 'border-gold/20 text-cream/70 hover:border-gold/40',
+                      : 'border-gold/20 text-muted-foreground hover:border-gold/40',
                   )}
                 >
                   {lang === 'vi' ? 'Tiếng Việt' : 'English'}
@@ -277,7 +277,7 @@ function Toggle({
 }) {
   return (
     <label className="flex cursor-pointer items-center justify-between gap-3">
-      <span className="text-sm text-cream/90">{label}</span>
+      <span className="text-sm text-foreground/90">{label}</span>
       <button
         type="button"
         role="switch"
@@ -285,12 +285,12 @@ function Toggle({
         onClick={() => onChange(!checked)}
         className={cn(
           'relative h-6 w-11 rounded-full transition-colors',
-          checked ? 'bg-gold' : 'bg-cream/20',
+          checked ? 'bg-gold' : 'bg-muted/20',
         )}
       >
         <span
           className={cn(
-            'absolute top-0.5 h-5 w-5 rounded-full bg-cream transition-transform',
+            'absolute top-0.5 h-5 w-5 rounded-full bg-foreground transition-transform',
             checked ? 'translate-x-5' : 'translate-x-0.5',
           )}
         />

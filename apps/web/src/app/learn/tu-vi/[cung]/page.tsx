@@ -69,7 +69,7 @@ export default async function LearnPalacePage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
 
-      <nav aria-label="Breadcrumb" className="mb-6 flex items-center text-xs text-cream/55">
+      <nav aria-label="Breadcrumb" className="mb-6 flex items-center text-xs text-muted-foreground">
         <Link href="/" className="hover:text-gold">
           Trang chủ
         </Link>
@@ -82,67 +82,67 @@ export default async function LearnPalacePage({
           Tử Vi 12 cung
         </Link>
         <ChevronRight className="mx-1 h-3 w-3" aria-hidden />
-        <span className="text-cream/75">Cung {data.name}</span>
+        <span className="text-muted-foreground">Cung {data.name}</span>
       </nav>
 
       <header className="mb-10">
         <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
           {data.fullName} · {data.domain}
         </p>
-        <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-4xl">
+        <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
           Cung{' '}
           <span className="bg-gold-gradient bg-clip-text text-transparent">
             {data.name}
           </span>{' '}
           quản gì
         </h1>
-        <p className="mt-5 text-base leading-relaxed text-cream/80">{data.governs}</p>
+        <p className="mt-5 text-base leading-relaxed text-foreground/80">{data.governs}</p>
       </header>
 
       <section className="mb-10">
-        <h2 className="mb-4 font-heading text-xl font-bold text-cream">
+        <h2 className="mb-4 font-heading text-xl font-bold text-foreground">
           Những sao đáng để ý tại cung {data.name}
         </h2>
-        <p className="mb-4 text-sm leading-relaxed text-cream/70">
+        <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
           Đây là các sao xuất hiện nhiều tại cung này và tín hiệu mỗi sao mang lại khi đóng
           ở đây. Sao chỉ là gợi ý — phải đọc cùng miếu vượng và sao kèm để có nghĩa đầy đủ.
         </p>
-        <ul className="space-y-3 rounded-xl border border-cream/10 bg-ink/40 p-5 sm:p-6">
+        <ul className="space-y-3 rounded-xl border border-border bg-card/40 p-5 sm:p-6">
           {data.keyStars.map((s) => (
             <li key={s.name} className="flex flex-col gap-1 sm:flex-row sm:gap-3">
               <span className="shrink-0 font-mono text-xs font-semibold uppercase tracking-wider text-gold sm:w-28">
                 {s.name}
               </span>
-              <span className="text-sm leading-relaxed text-cream/80">{s.signal}</span>
+              <span className="text-sm leading-relaxed text-foreground/80">{s.signal}</span>
             </li>
           ))}
         </ul>
       </section>
 
       <section className="mb-10">
-        <h2 className="mb-4 font-heading text-xl font-bold text-cream">
+        <h2 className="mb-4 font-heading text-xl font-bold text-foreground">
           Một buổi luận cung {data.name} đi như thế nào
         </h2>
         <ol className="space-y-3">
           {data.framework.map((step, i) => (
             <li
               key={i}
-              className="flex gap-3 rounded-lg border border-cream/10 bg-ink/30 p-4"
+              className="flex gap-3 rounded-lg border border-border bg-card/30 p-4"
             >
               <span className="shrink-0 font-mono text-xs font-bold text-gold">
                 {String(i + 1).padStart(2, '0')}
               </span>
-              <span className="text-sm leading-relaxed text-cream/80">{step}</span>
+              <span className="text-sm leading-relaxed text-foreground/80">{step}</span>
             </li>
           ))}
         </ol>
       </section>
 
       <section className="mb-10">
-        <h2 className="mb-4 font-heading text-xl font-bold text-cream">
+        <h2 className="mb-4 font-heading text-xl font-bold text-foreground">
           Cung {data.name} trả lời được câu hỏi nào của bạn
         </h2>
-        <p className="mb-4 text-sm leading-relaxed text-cream/70">
+        <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
           Lá số không phải để hỏi "tương lai có gì". Hỏi đúng câu — bạn sẽ thấy lá số trở
           thành công cụ ra quyết định:
         </p>
@@ -150,10 +150,10 @@ export default async function LearnPalacePage({
           {data.decisionQuestions.map((q, i) => (
             <li
               key={i}
-              className="flex gap-3 rounded-lg border border-cream/10 bg-ink/30 px-4 py-3"
+              className="flex gap-3 rounded-lg border border-border bg-card/30 px-4 py-3"
             >
               <span className="shrink-0 text-gold/80">?</span>
-              <span className="text-sm leading-relaxed text-cream/80">{q}</span>
+              <span className="text-sm leading-relaxed text-foreground/80">{q}</span>
             </li>
           ))}
         </ul>
@@ -161,18 +161,18 @@ export default async function LearnPalacePage({
 
       <section
         aria-labelledby="disclaimer-heading"
-        className="mb-10 rounded-xl border border-cream/15 bg-ink/40 p-5 sm:p-6"
+        className="mb-10 rounded-xl border border-border bg-card/40 p-5 sm:p-6"
       >
         <div className="flex items-start gap-3">
           <Shield className="mt-0.5 h-5 w-5 shrink-0 text-gold/80" aria-hidden />
           <div>
             <h2
               id="disclaimer-heading"
-              className="font-heading text-base font-semibold text-cream"
+              className="font-heading text-base font-semibold text-foreground"
             >
               Lá số là bản đồ, không phải kịch bản
             </h2>
-            <p className="mt-2 text-sm leading-relaxed text-cream/75">
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               Nội dung trong trang này là kiến thức nền tảng để bạn tự đối chiếu — không phải
               dự đoán định mệnh, không thay thế lời khuyên y tế, pháp lý hay tài chính
               chuyên môn. Đọc thêm{' '}
@@ -193,11 +193,11 @@ export default async function LearnPalacePage({
         </div>
       </section>
 
-      <section className="mb-12 rounded-2xl border border-gold/25 bg-ink/40 p-6 text-center sm:p-8">
-        <h2 className="font-heading text-2xl font-bold text-cream">
+      <section className="mb-12 rounded-2xl border border-gold/25 bg-card/40 p-6 text-center sm:p-8">
+        <h2 className="font-heading text-2xl font-bold text-foreground">
           Xem cung {data.name} của bạn
         </h2>
-        <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-cream/75">
+        <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
           Bài này là phần kiến thức nền. Để xem cung {data.name} CỦA BẠN có sao nào, đại
           vận hiện tại ra sao — lập lá số mất khoảng 30 giây, không cần đăng ký.
         </p>
@@ -207,7 +207,7 @@ export default async function LearnPalacePage({
           </Link>
           <Link
             href="/learn/tu-vi"
-            className="inline-flex items-center text-sm text-cream/70 hover:text-gold"
+            className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"
           >
             Quay lại 12 cung
             <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
@@ -215,8 +215,8 @@ export default async function LearnPalacePage({
         </div>
       </section>
 
-      <section className="border-t border-cream/10 pt-8">
-        <h2 className="mb-4 font-heading text-base font-semibold text-cream">
+      <section className="border-t border-border pt-8">
+        <h2 className="mb-4 font-heading text-base font-semibold text-foreground">
           Các cung khác trong lá số
         </h2>
         <div className="flex flex-wrap gap-2">
@@ -224,7 +224,7 @@ export default async function LearnPalacePage({
             <Link
               key={p.slug}
               href={`/learn/tu-vi/${p.slug}`}
-              className="rounded-full border border-cream/15 bg-ink/40 px-3 py-1 text-xs text-cream/70 transition-colors hover:border-gold/50 hover:text-gold"
+              className="rounded-full border border-border bg-card/40 px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-gold/50 hover:text-gold"
             >
               Cung {p.name}
             </Link>

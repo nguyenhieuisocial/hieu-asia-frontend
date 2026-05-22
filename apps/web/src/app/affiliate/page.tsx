@@ -24,11 +24,11 @@ export default function AffiliateLandingPage() {
   const yearTotal = monthlyFirst * 12 + recurring * 6;
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <main id="main-content" className="pt-16">
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-cream/10 px-6 py-20 sm:py-28">
+      <section className="relative overflow-hidden border-b border-border px-6 py-20 sm:py-28">
         <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-full bg-ink-radial opacity-80" />
         <div aria-hidden className="pointer-events-none absolute -top-20 right-[-10%] h-[360px] w-[360px] rounded-full bg-gold/10 blur-3xl" />
         <div className="relative">
@@ -39,7 +39,7 @@ export default function AffiliateLandingPage() {
           <h1 className="mb-6 text-4xl font-bold leading-tight sm:text-5xl">
             Kiếm tiền cùng <span className="text-gold">hieu.asia</span>
           </h1>
-          <p className="mx-auto mb-8 max-w-2xl text-lg text-cream/80">
+          <p className="mx-auto mb-8 max-w-2xl text-lg text-foreground/80">
             Hoa hồng <b className="text-gold">30%</b> cho doanh thu tháng đầu, <b className="text-gold">10%</b> recurring 6 tháng tiếp.
             Cookie 30 ngày · QR code riêng · Dashboard real-time · Rút tiền từ 500.000đ.
           </p>
@@ -50,7 +50,7 @@ export default function AffiliateLandingPage() {
               </Button>
             </Link>
             <Link href="/affiliate/dashboard">
-              <Button size="lg" variant="ghost" className="border border-cream/20">
+              <Button size="lg" variant="ghost" className="border border-border">
                 Đăng nhập affiliate
               </Button>
             </Link>
@@ -81,14 +81,14 @@ export default function AffiliateLandingPage() {
                 body: 'Theo dõi clicks / conversions real-time. Rút về bank / MoMo / ZaloPay khi đạt 500k.',
               },
             ].map((s) => (
-              <Card key={s.step} className="border-cream/10 bg-cream/5">
+              <Card key={s.step} className="border-border bg-muted/5">
                 <CardHeader>
                   <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-gold text-sm font-bold text-ink">
                     {s.step}
                   </div>
                   <CardTitle className="text-lg">{s.title}</CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm text-cream/70">{s.body}</CardContent>
+                <CardContent className="text-sm text-muted-foreground">{s.body}</CardContent>
               </Card>
             ))}
           </div>
@@ -96,13 +96,13 @@ export default function AffiliateLandingPage() {
       </section>
 
       {/* Calculator */}
-      <section className="border-y border-cream/10 bg-cream/5 px-6 py-16">
+      <section className="border-y border-border bg-muted/5 px-6 py-16">
         <div className="mx-auto max-w-3xl">
           <h2 className="mb-3 text-center text-2xl font-bold">Tính nhanh thu nhập</h2>
-          <p className="mb-8 text-center text-sm text-cream/70">
+          <p className="mb-8 text-center text-sm text-muted-foreground">
             Trung bình mỗi đơn ~{formatVND(AVG_ORDER_VND)}. Trượt thanh để xem mức thu nhập tiềm năng.
           </p>
-          <Card className="border-gold/30 bg-ink">
+          <Card className="border-gold/30 bg-background">
             <CardContent className="pt-6">
               <label className="mb-2 block text-sm">
                 Số conversion / tháng: <span className="font-bold text-gold">{conversions}</span>
@@ -117,19 +117,19 @@ export default function AffiliateLandingPage() {
               />
               <div className="grid gap-4 sm:grid-cols-3">
                 <div>
-                  <div className="text-xs uppercase text-cream/60">Tháng đầu (30%)</div>
+                  <div className="text-xs uppercase text-muted-foreground">Tháng đầu (30%)</div>
                   <div className="text-xl font-bold text-gold">{formatVND(monthlyFirst)}</div>
                 </div>
                 <div>
-                  <div className="text-xs uppercase text-cream/60">Recurring 6 tháng (10%)</div>
+                  <div className="text-xs uppercase text-muted-foreground">Recurring 6 tháng (10%)</div>
                   <div className="text-xl font-bold text-gold">{formatVND(recurring)}</div>
                 </div>
                 <div>
-                  <div className="text-xs uppercase text-cream/60">Tiềm năng cả năm</div>
+                  <div className="text-xs uppercase text-muted-foreground">Tiềm năng cả năm</div>
                   <div className="text-xl font-bold text-gold">{formatVND(yearTotal)}</div>
                 </div>
               </div>
-              <p className="mt-4 text-xs text-cream/70">
+              <p className="mt-4 text-xs text-muted-foreground">
                 * Ước tính. Thu nhập thực tế tùy thuộc retention và churn rate của khách bạn giới thiệu.
               </p>
             </CardContent>
@@ -164,11 +164,11 @@ export default function AffiliateLandingPage() {
                 a: 'Payout dưới 2 triệu/tháng không cần KYC. Trên ngưỡng, chúng tôi xuất chứng từ thanh toán theo luật thuế VN (TNCN 10%).',
               },
             ].map((f, i) => (
-              <Card key={i} className="border-cream/10">
+              <Card key={i} className="border-border">
                 <CardHeader>
                   <CardTitle className="text-base">{f.q}</CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm text-cream/70">{f.a}</CardContent>
+                <CardContent className="text-sm text-muted-foreground">{f.a}</CardContent>
               </Card>
             ))}
           </div>

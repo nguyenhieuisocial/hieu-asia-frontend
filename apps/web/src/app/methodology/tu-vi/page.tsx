@@ -328,7 +328,7 @@ const TOC: { id: string; label: string }[] = [
 
 export default function MethodologyTuViPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -345,7 +345,7 @@ export default function MethodologyTuViPage() {
         />
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12 pt-12 sm:pt-16">
-          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-cream/55">
+          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">
               Trang chủ
             </Link>
@@ -354,16 +354,16 @@ export default function MethodologyTuViPage() {
               Phương pháp luận
             </Link>
             <span className="mx-1.5">/</span>
-            <span className="text-cream/70">Methodology Tử Vi</span>
+            <span className="text-muted-foreground">Methodology Tử Vi</span>
           </nav>
 
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Methodology · Tử Vi
           </p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
             Tử Vi Bắc phái — cách hieu.asia an sao, tính đại vận, lưu niên
           </h1>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-cream/75 sm:text-lg">
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             Trang này nói rõ trường phái Tử Vi mà engine hieu.asia dùng, danh sách sao,
             công thức an Mệnh-Thân-Cục, cách tính đại vận, lưu niên — và đường phân định
             phần nào do engine deterministic làm, phần nào do AI/LLM diễn giải.
@@ -373,10 +373,10 @@ export default function MethodologyTuViPage() {
             <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/25 bg-gold/5 px-3 py-1 text-gold/90">
               <BookOpen className="h-3.5 w-3.5" aria-hidden /> Bắc phái Trần Đoàn
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-cream/15 bg-ink/40 px-3 py-1 text-cream/75">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-3 py-1 text-muted-foreground">
               <Star className="h-3.5 w-3.5" aria-hidden /> 14 chính + 10 phụ + 90 sao nhỏ
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-cream/15 bg-ink/40 px-3 py-1 text-cream/75">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-3 py-1 text-muted-foreground">
               <Cpu className="h-3.5 w-3.5" aria-hidden /> Engine deterministic
             </span>
           </div>
@@ -385,18 +385,18 @@ export default function MethodologyTuViPage() {
         <div className="relative mx-auto max-w-6xl px-6 pb-20 lg:grid lg:grid-cols-[1fr_240px] lg:gap-8">
           <section className="space-y-6">
           {/* 1. Trường phái */}
-          <Card id="truong-phai" className="border-cream/10 bg-ink/40 scroll-mt-24">
+          <Card id="truong-phai" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="flex items-center gap-2 font-heading text-xl text-foreground sm:text-2xl">
                 <BookOpen className="h-5 w-5 text-gold" aria-hidden /> Trường phái dùng
                 tại hieu.asia
               </CardTitle>
-              <CardDescription className="text-cream/60">
+              <CardDescription className="text-muted-foreground">
                 Bắc phái — nhánh Trần Đoàn (Hi Di tiên sinh), có tham chiếu Tử Vân và Liễu
                 Vô Cư Sĩ.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm leading-relaxed text-cream/80 sm:text-base">
+            <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/80 sm:text-base">
               <p>
                 Engine của hieu.asia chạy theo <strong>Bắc phái</strong> (Tử Vi Đẩu Số
                 phương Bắc), nhánh chủ yếu theo <em>Trần Đoàn — Hi Di tiên sinh</em> và
@@ -407,7 +407,7 @@ export default function MethodologyTuViPage() {
                 chứng được, ít phụ thuộc vào "khẩu quyết" truyền miệng — phù hợp với engine
                 deterministic.
               </p>
-              <p className="rounded-lg border border-gold/20 bg-gold/5 p-3 text-cream/85">
+              <p className="rounded-lg border border-gold/20 bg-gold/5 p-3 text-foreground/85">
                 <strong className="text-gold">Caveat.</strong> Với một số luận điểm có dị
                 biệt giữa <em>phái Trung Châu</em>, <em>Tử Vân</em>, <em>Liễu Vô</em> —
                 chúng tôi ghi rõ ngay trong báo cáo, kèm chú thích chỗ nào engine theo
@@ -417,19 +417,19 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 2. Danh sách sao */}
-          <Card id="danh-sach-sao" className="border-cream/10 bg-ink/40 scroll-mt-24">
+          <Card id="danh-sach-sao" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="flex items-center gap-2 font-heading text-xl text-foreground sm:text-2xl">
                 <Star className="h-5 w-5 text-gold" aria-hidden /> Danh sách sao sử dụng
               </CardTitle>
-              <CardDescription className="text-cream/60">
+              <CardDescription className="text-muted-foreground">
                 14 chính tinh + 10 phụ tinh chính + ~90 sao phụ/sao nhỏ. Tổng 114 sao
                 trong engine.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6 text-sm leading-relaxed text-cream/80 sm:text-base">
+            <CardContent className="space-y-6 text-sm leading-relaxed text-foreground/80 sm:text-base">
               <div>
-                <h3 className="mb-2 font-heading text-base text-cream">
+                <h3 className="mb-2 font-heading text-base text-foreground">
                   14 chính tinh
                 </h3>
                 <ul className="flex flex-wrap gap-2">
@@ -448,7 +448,7 @@ export default function MethodologyTuViPage() {
               </div>
 
               <div>
-                <h3 className="mb-2 font-heading text-base text-cream">
+                <h3 className="mb-2 font-heading text-base text-foreground">
                   10 phụ tinh chính
                 </h3>
                 <ul className="flex flex-wrap gap-2">
@@ -456,7 +456,7 @@ export default function MethodologyTuViPage() {
                     <li key={s.slug}>
                       <Link
                         href={`/tu-vi/sao/${s.slug}`}
-                        className="inline-flex items-center gap-1 rounded-full border border-cream/20 bg-ink/40 px-3 py-1 text-xs text-cream/85 hover:border-gold/40 hover:text-gold"
+                        className="inline-flex items-center gap-1 rounded-full border border-border bg-card/40 px-3 py-1 text-xs text-foreground/85 hover:border-gold/40 hover:text-gold"
                       >
                         {s.name}
                         <ChevronRight className="h-3 w-3" aria-hidden />
@@ -467,11 +467,11 @@ export default function MethodologyTuViPage() {
               </div>
 
               <div>
-                <h3 className="mb-2 font-heading text-base text-cream">
+                <h3 className="mb-2 font-heading text-base text-foreground">
                   Các sao phụ và sao nhỏ
                 </h3>
-                <p className="text-cream/70">{SAO_NHO.join(' · ')}</p>
-                <p className="mt-3 rounded-lg border border-cream/10 bg-ink/60 p-3 text-xs text-cream/65">
+                <p className="text-muted-foreground">{SAO_NHO.join(' · ')}</p>
+                <p className="mt-3 rounded-lg border border-border bg-card/60 p-3 text-xs text-muted-foreground">
                   Đầy đủ 114 sao có trong engine; hiển thị tuỳ vào tầm quan trọng từng
                   cung — sao nào ảnh hưởng mạnh tới cung thì hiện rõ, sao "trang trí" thì
                   ẩn vào chi tiết.
@@ -481,19 +481,19 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* §5.1 — Danh sách 114 sao đầy đủ */}
-          <Card id="danh-sach-114" className="border-cream/10 bg-ink/40 scroll-mt-24">
+          <Card id="danh-sach-114" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
-              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
                 Danh sách 114 sao đầy đủ
               </CardTitle>
-              <CardDescription className="text-cream/60">
+              <CardDescription className="text-muted-foreground">
                 Bảng tham chiếu — nhóm, căn cứ an, hiển thị mặc định. Tổng {STARS_114.length} sao.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm text-cream/80 sm:text-base">
-              <div className="overflow-x-auto rounded-lg border border-cream/10">
+            <CardContent className="space-y-3 text-sm text-foreground/80 sm:text-base">
+              <div className="overflow-x-auto rounded-lg border border-border">
                 <table className="min-w-full text-left text-xs sm:text-sm">
-                  <thead className="bg-ink/60 text-cream/70">
+                  <thead className="bg-card/60 text-muted-foreground">
                     <tr>
                       <th className="px-3 py-2 font-medium">Sao</th>
                       <th className="px-3 py-2 font-medium">Nhóm</th>
@@ -504,24 +504,24 @@ export default function MethodologyTuViPage() {
                   </thead>
                   <tbody className="divide-y divide-cream/10">
                     {STARS_114.slice(0, 30).map((s) => (
-                      <tr key={s.name} className="hover:bg-ink/40">
-                        <td className="whitespace-nowrap px-3 py-2 text-cream">{s.name}</td>
-                        <td className="whitespace-nowrap px-3 py-2 text-cream/70">{s.group}</td>
-                        <td className="px-3 py-2 text-cream/70">{s.basis}</td>
-                        <td className="whitespace-nowrap px-3 py-2 text-cream/70">{s.defaultShow}</td>
-                        <td className="px-3 py-2 text-cream/60">{s.note ?? ''}</td>
+                      <tr key={s.name} className="hover:bg-card/40">
+                        <td className="whitespace-nowrap px-3 py-2 text-foreground">{s.name}</td>
+                        <td className="whitespace-nowrap px-3 py-2 text-muted-foreground">{s.group}</td>
+                        <td className="px-3 py-2 text-muted-foreground">{s.basis}</td>
+                        <td className="whitespace-nowrap px-3 py-2 text-muted-foreground">{s.defaultShow}</td>
+                        <td className="px-3 py-2 text-muted-foreground">{s.note ?? ''}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <details className="rounded-lg border border-cream/10 bg-ink/40 p-3">
+              <details className="rounded-lg border border-border bg-card/40 p-3">
                 <summary className="cursor-pointer text-sm text-gold/90 hover:text-gold">
                   Xem {STARS_114.length - 30} sao còn lại
                 </summary>
-                <div className="mt-3 overflow-x-auto rounded-lg border border-cream/10">
+                <div className="mt-3 overflow-x-auto rounded-lg border border-border">
                   <table className="min-w-full text-left text-xs sm:text-sm">
-                    <thead className="bg-ink/60 text-cream/70">
+                    <thead className="bg-card/60 text-muted-foreground">
                       <tr>
                         <th className="px-3 py-2 font-medium">Sao</th>
                         <th className="px-3 py-2 font-medium">Nhóm</th>
@@ -532,12 +532,12 @@ export default function MethodologyTuViPage() {
                     </thead>
                     <tbody className="divide-y divide-cream/10">
                       {STARS_114.slice(30).map((s) => (
-                        <tr key={s.name} className="hover:bg-ink/40">
-                          <td className="whitespace-nowrap px-3 py-2 text-cream">{s.name}</td>
-                          <td className="whitespace-nowrap px-3 py-2 text-cream/70">{s.group}</td>
-                          <td className="px-3 py-2 text-cream/70">{s.basis}</td>
-                          <td className="whitespace-nowrap px-3 py-2 text-cream/70">{s.defaultShow}</td>
-                          <td className="px-3 py-2 text-cream/60">{s.note ?? ''}</td>
+                        <tr key={s.name} className="hover:bg-card/40">
+                          <td className="whitespace-nowrap px-3 py-2 text-foreground">{s.name}</td>
+                          <td className="whitespace-nowrap px-3 py-2 text-muted-foreground">{s.group}</td>
+                          <td className="px-3 py-2 text-muted-foreground">{s.basis}</td>
+                          <td className="whitespace-nowrap px-3 py-2 text-muted-foreground">{s.defaultShow}</td>
+                          <td className="px-3 py-2 text-muted-foreground">{s.note ?? ''}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -548,13 +548,13 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 3. An Mệnh & Thân */}
-          <Card id="menh-than" className="border-cream/10 bg-ink/40 scroll-mt-24">
+          <Card id="menh-than" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
-              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
                 Cách an cung Mệnh và Thân
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm leading-relaxed text-cream/80 sm:text-base">
+            <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/80 sm:text-base">
               <p>
                 <strong>Cung Mệnh:</strong> tính từ <em>tháng âm</em> sinh và <em>giờ</em>{' '}
                 sinh, đếm theo trình tự 12 địa chi (Dần → Mão → Thìn → ...) theo bí quyết
@@ -577,13 +577,13 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 4. An chính tinh */}
-          <Card id="an-chinh-tinh" className="border-cream/10 bg-ink/40 scroll-mt-24">
+          <Card id="an-chinh-tinh" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
-              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
                 Cách an chính tinh
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm leading-relaxed text-cream/80 sm:text-base">
+            <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/80 sm:text-base">
               <p>
                 <strong>Tử Vi</strong> an theo <em>Cục + ngày âm</em>: số ngày sinh chia
                 cho Cục số (Thủy 2 cục → chia 2, Mộc 3 cục → chia 3, ...), thương quyết
@@ -596,7 +596,7 @@ export default function MethodologyTuViPage() {
                 Phủ đối xứng với Tử Vi qua trục Dần-Thân, kéo theo Thái Âm, Tham Lang, Cự
                 Môn, Thiên Tướng, Thiên Lương, Thất Sát, Phá Quân.
               </p>
-              <p className="rounded-lg border border-gold/20 bg-gold/5 p-3 text-cream/85">
+              <p className="rounded-lg border border-gold/20 bg-gold/5 p-3 text-foreground/85">
                 <strong className="text-gold">Caveat.</strong> Hệ thống không tự nội suy
                 nếu ngày âm {'>'} 30 trong tháng nhuận — engine có check và sẽ trả lỗi
                 yêu cầu user xác nhận lại ngày âm. Tránh trường hợp "đoán" ngày 31 thành
@@ -606,13 +606,13 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 5. Phụ tinh + Tứ Hoá */}
-          <Card id="phu-tinh-tu-hoa" className="border-cream/10 bg-ink/40 scroll-mt-24">
+          <Card id="phu-tinh-tu-hoa" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
-              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
                 Cách an phụ tinh và Tứ Hoá
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm leading-relaxed text-cream/80 sm:text-base">
+            <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/80 sm:text-base">
               <p>
                 <strong>Phụ tinh</strong> an theo <em>can/chi năm</em>, <em>tháng âm</em>,
                 hoặc <em>giờ</em> sinh, tuỳ từng nhóm sao. Ví dụ Tả Phụ – Hữu Bật an theo
@@ -626,7 +626,7 @@ export default function MethodologyTuViPage() {
                 can Giáp → Hoá Lộc tại Liêm Trinh, Hoá Quyền tại Phá Quân, Hoá Khoa tại
                 Vũ Khúc, Hoá Kỵ tại Thái Dương.
               </p>
-              <p className="rounded-lg border border-gold/20 bg-gold/5 p-3 text-cream/85">
+              <p className="rounded-lg border border-gold/20 bg-gold/5 p-3 text-foreground/85">
                 <strong className="text-gold">Caveat — dị biệt giữa nhánh.</strong> Phái{' '}
                 <em>Tử Vân</em> dùng <em>can ngày</em> để an Tứ Hoá (tạo ra "Tứ Hoá phi
                 tinh"). Phái <em>Liễu Vô Cư Sĩ</em> dùng cả <em>can năm</em> và{' '}
@@ -638,13 +638,13 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 6. Đại vận */}
-          <Card id="dai-van" className="border-cream/10 bg-ink/40 scroll-mt-24">
+          <Card id="dai-van" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
-              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
                 Cách tính Đại Vận
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm leading-relaxed text-cream/80 sm:text-base">
+            <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/80 sm:text-base">
               <p>
                 Mỗi <strong>đại vận = 10 năm</strong>; vận đầu tiên bắt đầu từ{' '}
                 <em>cung Mệnh</em>, sau đó di chuyển sang cung kế tiếp.
@@ -654,9 +654,9 @@ export default function MethodologyTuViPage() {
                 âm-dương của thiên can năm sinh + giới tính. Nam Dương / Nữ Âm đi{' '}
                 <em>thuận</em>; Nam Âm / Nữ Dương đi <em>nghịch</em>.
               </p>
-              <div className="rounded-lg border border-cream/10 bg-ink/60 p-4 text-cream/85">
-                <p className="font-medium text-cream">Tuổi khởi đại vận:</p>
-                <ul className="mt-2 list-disc space-y-1 pl-5 text-cream/80">
+              <div className="rounded-lg border border-border bg-card/60 p-4 text-foreground/85">
+                <p className="font-medium text-foreground">Tuổi khởi đại vận:</p>
+                <ul className="mt-2 list-disc space-y-1 pl-5 text-foreground/80">
                   <li>
                     <strong>Bản phổ thông:</strong> dùng Cục số (Thuỷ nhị cục = 2, Mộc tam
                     cục = 3, Kim tứ cục = 4, Thổ ngũ cục = 5, Hoả lục cục = 6) làm tuổi
@@ -686,13 +686,13 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 7. Lưu niên */}
-          <Card id="luu-nien" className="border-cream/10 bg-ink/40 scroll-mt-24">
+          <Card id="luu-nien" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
-              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
                 Cách tính Lưu Niên
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm leading-relaxed text-cream/80 sm:text-base">
+            <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/80 sm:text-base">
               <p>
                 <strong>Lưu niên</strong> = cung mà <em>địa chi năm hiện tại</em> trùng
                 với địa chi đặt tại cung đó trên lá số gốc. Ví dụ năm Ngọ — lưu niên rơi
@@ -703,7 +703,7 @@ export default function MethodologyTuViPage() {
                 trùng với địa chi cung. Lưu nhật, lưu thời tính tương tự nhưng độ ảnh
                 hưởng giảm dần.
               </p>
-              <p className="rounded-lg border border-gold/20 bg-gold/5 p-3 text-cream/85">
+              <p className="rounded-lg border border-gold/20 bg-gold/5 p-3 text-foreground/85">
                 <strong className="text-gold">Caveat.</strong> Lưu niên chỉ <em>gợi mở
                 chủ đề năm</em> — không quyết định cụ thể "việc gì xảy ra". Engine sẽ tô
                 đậm chủ đề năm trong báo cáo, nhưng luôn kèm câu "đây là bối cảnh, không
@@ -713,61 +713,61 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* §5.2 — Dị bản và nguồn quy tắc */}
-          <Card id="nguon-quy-tac" className="border-cream/10 bg-ink/40 scroll-mt-24">
+          <Card id="nguon-quy-tac" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
-              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
                 Dị bản và nguồn quy tắc
               </CardTitle>
-              <CardDescription className="text-cream/60">
+              <CardDescription className="text-muted-foreground">
                 Mỗi quy tắc engine dùng — kèm dị bản phổ biến và lý do chọn.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4 text-sm leading-relaxed text-cream/80 sm:text-base">
-              <div className="rounded-lg border border-cream/10 bg-ink/60 p-4">
-                <p className="font-medium text-cream">Quy tắc: Tứ Hoá</p>
-                <p className="mt-1"><span className="text-cream/60">Nguồn / nhánh chính:</span> Bắc phái Trần Đoàn — an theo <em>can năm sinh</em>.</p>
-                <p><span className="text-cream/60">Dị bản:</span> Phái Tử Vân dùng <em>can ngày</em> (Tứ Hoá phi tinh); Liễu Vô Cư Sĩ đối chiếu cả can năm + can ngày.</p>
-                <p><span className="text-cream/60">Engine mặc định:</span> <strong>Can năm</strong>.</p>
-                <p><span className="text-cream/60">Tại sao chọn:</span> Bắc phái mainstream, tư liệu nhiều, dễ kiểm chứng deterministic.</p>
+            <CardContent className="space-y-4 text-sm leading-relaxed text-foreground/80 sm:text-base">
+              <div className="rounded-lg border border-border bg-card/60 p-4">
+                <p className="font-medium text-foreground">Quy tắc: Tứ Hoá</p>
+                <p className="mt-1"><span className="text-muted-foreground">Nguồn / nhánh chính:</span> Bắc phái Trần Đoàn — an theo <em>can năm sinh</em>.</p>
+                <p><span className="text-muted-foreground">Dị bản:</span> Phái Tử Vân dùng <em>can ngày</em> (Tứ Hoá phi tinh); Liễu Vô Cư Sĩ đối chiếu cả can năm + can ngày.</p>
+                <p><span className="text-muted-foreground">Engine mặc định:</span> <strong>Can năm</strong>.</p>
+                <p><span className="text-muted-foreground">Tại sao chọn:</span> Bắc phái mainstream, tư liệu nhiều, dễ kiểm chứng deterministic.</p>
               </div>
-              <div className="rounded-lg border border-cream/10 bg-ink/60 p-4">
-                <p className="font-medium text-cream">Quy tắc: An Mệnh</p>
-                <p className="mt-1"><span className="text-cream/60">Nguồn / nhánh chính:</span> "Tháng âm lùi — giờ tiến tới" (Bắc phái phổ thông).</p>
-                <p><span className="text-cream/60">Dị bản:</span> Một số sách Đài Loan đếm cả hai chiều thuận; nhánh dân gian Việt Nam đôi khi đảo công thức.</p>
-                <p><span className="text-cream/60">Engine mặc định:</span> <strong>Tháng âm lùi, giờ tiến tới</strong> từ cung Dần.</p>
-                <p><span className="text-cream/60">Tại sao chọn:</span> Khớp với hầu hết sách Bắc phái chuẩn (Tử Vi Đẩu Số Toàn Thư).</p>
+              <div className="rounded-lg border border-border bg-card/60 p-4">
+                <p className="font-medium text-foreground">Quy tắc: An Mệnh</p>
+                <p className="mt-1"><span className="text-muted-foreground">Nguồn / nhánh chính:</span> "Tháng âm lùi — giờ tiến tới" (Bắc phái phổ thông).</p>
+                <p><span className="text-muted-foreground">Dị bản:</span> Một số sách Đài Loan đếm cả hai chiều thuận; nhánh dân gian Việt Nam đôi khi đảo công thức.</p>
+                <p><span className="text-muted-foreground">Engine mặc định:</span> <strong>Tháng âm lùi, giờ tiến tới</strong> từ cung Dần.</p>
+                <p><span className="text-muted-foreground">Tại sao chọn:</span> Khớp với hầu hết sách Bắc phái chuẩn (Tử Vi Đẩu Số Toàn Thư).</p>
               </div>
-              <div className="rounded-lg border border-cream/10 bg-ink/60 p-4">
-                <p className="font-medium text-cream">Quy tắc: Cục số</p>
-                <p className="mt-1"><span className="text-cream/60">Nguồn / nhánh chính:</span> Bảng Lục Thập Hoa Giáp — nạp âm Can Chi năm + cung Mệnh.</p>
-                <p><span className="text-cream/60">Dị bản:</span> Một số nhánh dùng nạp âm năm + chi tháng (ít phổ biến).</p>
-                <p><span className="text-cream/60">Engine mặc định:</span> <strong>Nạp âm can-chi năm + cung Mệnh</strong> → Kim/Mộc/Thuỷ/Hoả/Thổ (2-6 cục).</p>
-                <p><span className="text-cream/60">Tại sao chọn:</span> Phương pháp mainstream, mỗi tổ hợp (năm + cung Mệnh) chỉ ra <em>một</em> cục duy nhất.</p>
+              <div className="rounded-lg border border-border bg-card/60 p-4">
+                <p className="font-medium text-foreground">Quy tắc: Cục số</p>
+                <p className="mt-1"><span className="text-muted-foreground">Nguồn / nhánh chính:</span> Bảng Lục Thập Hoa Giáp — nạp âm Can Chi năm + cung Mệnh.</p>
+                <p><span className="text-muted-foreground">Dị bản:</span> Một số nhánh dùng nạp âm năm + chi tháng (ít phổ biến).</p>
+                <p><span className="text-muted-foreground">Engine mặc định:</span> <strong>Nạp âm can-chi năm + cung Mệnh</strong> → Kim/Mộc/Thuỷ/Hoả/Thổ (2-6 cục).</p>
+                <p><span className="text-muted-foreground">Tại sao chọn:</span> Phương pháp mainstream, mỗi tổ hợp (năm + cung Mệnh) chỉ ra <em>một</em> cục duy nhất.</p>
               </div>
-              <div className="rounded-lg border border-cream/10 bg-ink/60 p-4">
-                <p className="font-medium text-cream">Quy tắc: Đại vận thuận/nghịch</p>
-                <p className="mt-1"><span className="text-cream/60">Nguồn / nhánh chính:</span> "Dương Nam Âm Nữ thuận, Âm Nam Dương Nữ nghịch".</p>
-                <p><span className="text-cream/60">Dị bản:</span> Có sách dùng âm-dương chi năm thay vì can năm — kết quả thường giống, nhưng vài năm biên giới khác.</p>
-                <p><span className="text-cream/60">Engine mặc định:</span> Dùng <strong>âm-dương can năm + giới tính</strong>.</p>
-                <p><span className="text-cream/60">Tại sao chọn:</span> Bám sát Tử Vi Đẩu Số Toàn Thư và đa số tài liệu Bắc phái hiện đại.</p>
+              <div className="rounded-lg border border-border bg-card/60 p-4">
+                <p className="font-medium text-foreground">Quy tắc: Đại vận thuận/nghịch</p>
+                <p className="mt-1"><span className="text-muted-foreground">Nguồn / nhánh chính:</span> "Dương Nam Âm Nữ thuận, Âm Nam Dương Nữ nghịch".</p>
+                <p><span className="text-muted-foreground">Dị bản:</span> Có sách dùng âm-dương chi năm thay vì can năm — kết quả thường giống, nhưng vài năm biên giới khác.</p>
+                <p><span className="text-muted-foreground">Engine mặc định:</span> Dùng <strong>âm-dương can năm + giới tính</strong>.</p>
+                <p><span className="text-muted-foreground">Tại sao chọn:</span> Bám sát Tử Vi Đẩu Số Toàn Thư và đa số tài liệu Bắc phái hiện đại.</p>
               </div>
             </CardContent>
           </Card>
 
           {/* §5.3 — Cung nào dùng cho chủ đề nào */}
-          <Card id="cung-chu-de" className="border-cream/10 bg-ink/40 scroll-mt-24">
+          <Card id="cung-chu-de" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
-              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
                 Cung nào dùng cho chủ đề nào
               </CardTitle>
-              <CardDescription className="text-cream/60">
+              <CardDescription className="text-muted-foreground">
                 Map từ câu hỏi user sang cung chính, cung phụ và thời vận engine sẽ đối chiếu.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm text-cream/80 sm:text-base">
-              <div className="overflow-x-auto rounded-lg border border-cream/10">
+            <CardContent className="space-y-3 text-sm text-foreground/80 sm:text-base">
+              <div className="overflow-x-auto rounded-lg border border-border">
                 <table className="min-w-full text-left text-xs sm:text-sm">
-                  <thead className="bg-ink/60 text-cream/70">
+                  <thead className="bg-card/60 text-muted-foreground">
                     <tr>
                       <th className="px-3 py-2 font-medium">Chủ đề user hỏi</th>
                       <th className="px-3 py-2 font-medium">Cung chính</th>
@@ -777,40 +777,40 @@ export default function MethodologyTuViPage() {
                   </thead>
                   <tbody className="divide-y divide-cream/10">
                     <tr>
-                      <td className="px-3 py-2 text-cream">Sự nghiệp</td>
-                      <td className="px-3 py-2 text-cream/80">Quan Lộc</td>
-                      <td className="px-3 py-2 text-cream/70">Mệnh, Tài Bạch, Thiên Di, Nô Bộc</td>
-                      <td className="px-3 py-2 text-cream/70">Đại vận, lưu niên</td>
+                      <td className="px-3 py-2 text-foreground">Sự nghiệp</td>
+                      <td className="px-3 py-2 text-foreground/80">Quan Lộc</td>
+                      <td className="px-3 py-2 text-muted-foreground">Mệnh, Tài Bạch, Thiên Di, Nô Bộc</td>
+                      <td className="px-3 py-2 text-muted-foreground">Đại vận, lưu niên</td>
                     </tr>
                     <tr>
-                      <td className="px-3 py-2 text-cream">Tài chính</td>
-                      <td className="px-3 py-2 text-cream/80">Tài Bạch</td>
-                      <td className="px-3 py-2 text-cream/70">Quan Lộc, Điền Trạch, Phúc Đức</td>
-                      <td className="px-3 py-2 text-cream/70">Đại vận, lưu niên</td>
+                      <td className="px-3 py-2 text-foreground">Tài chính</td>
+                      <td className="px-3 py-2 text-foreground/80">Tài Bạch</td>
+                      <td className="px-3 py-2 text-muted-foreground">Quan Lộc, Điền Trạch, Phúc Đức</td>
+                      <td className="px-3 py-2 text-muted-foreground">Đại vận, lưu niên</td>
                     </tr>
                     <tr>
-                      <td className="px-3 py-2 text-cream">Tình cảm</td>
-                      <td className="px-3 py-2 text-cream/80">Phu Thê</td>
-                      <td className="px-3 py-2 text-cream/70">Mệnh, Phúc Đức, Nô Bộc, Tử Tức</td>
-                      <td className="px-3 py-2 text-cream/70">Đại vận, lưu niên</td>
+                      <td className="px-3 py-2 text-foreground">Tình cảm</td>
+                      <td className="px-3 py-2 text-foreground/80">Phu Thê</td>
+                      <td className="px-3 py-2 text-muted-foreground">Mệnh, Phúc Đức, Nô Bộc, Tử Tức</td>
+                      <td className="px-3 py-2 text-muted-foreground">Đại vận, lưu niên</td>
                     </tr>
                     <tr>
-                      <td className="px-3 py-2 text-cream">Gia đình</td>
-                      <td className="px-3 py-2 text-cream/80">Phụ Mẫu, Huynh Đệ</td>
-                      <td className="px-3 py-2 text-cream/70">Phúc Đức, Điền Trạch</td>
-                      <td className="px-3 py-2 text-cream/70">Đại vận</td>
+                      <td className="px-3 py-2 text-foreground">Gia đình</td>
+                      <td className="px-3 py-2 text-foreground/80">Phụ Mẫu, Huynh Đệ</td>
+                      <td className="px-3 py-2 text-muted-foreground">Phúc Đức, Điền Trạch</td>
+                      <td className="px-3 py-2 text-muted-foreground">Đại vận</td>
                     </tr>
                     <tr>
-                      <td className="px-3 py-2 text-cream">Sức khoẻ / thói quen</td>
-                      <td className="px-3 py-2 text-cream/80">Tật Ách</td>
-                      <td className="px-3 py-2 text-cream/70">Mệnh, Phúc Đức</td>
-                      <td className="px-3 py-2 text-cream/70">Đại vận, lưu niên</td>
+                      <td className="px-3 py-2 text-foreground">Sức khoẻ / thói quen</td>
+                      <td className="px-3 py-2 text-foreground/80">Tật Ách</td>
+                      <td className="px-3 py-2 text-muted-foreground">Mệnh, Phúc Đức</td>
+                      <td className="px-3 py-2 text-muted-foreground">Đại vận, lưu niên</td>
                     </tr>
                     <tr>
-                      <td className="px-3 py-2 text-cream">Đi xa / đổi môi trường</td>
-                      <td className="px-3 py-2 text-cream/80">Thiên Di</td>
-                      <td className="px-3 py-2 text-cream/70">Mệnh, Quan Lộc, Nô Bộc</td>
-                      <td className="px-3 py-2 text-cream/70">Đại vận, lưu niên</td>
+                      <td className="px-3 py-2 text-foreground">Đi xa / đổi môi trường</td>
+                      <td className="px-3 py-2 text-foreground/80">Thiên Di</td>
+                      <td className="px-3 py-2 text-muted-foreground">Mệnh, Quan Lộc, Nô Bộc</td>
+                      <td className="px-3 py-2 text-muted-foreground">Đại vận, lưu niên</td>
                     </tr>
                   </tbody>
                 </table>
@@ -819,19 +819,19 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* §5.5 — Trường hợp đặc biệt */}
-          <Card id="edge-cases" className="border-cream/10 bg-ink/40 scroll-mt-24">
+          <Card id="edge-cases" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
-              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
                 Trường hợp đặc biệt
               </CardTitle>
-              <CardDescription className="text-cream/60">
+              <CardDescription className="text-muted-foreground">
                 Các edge case engine bắt buộc xử lý — không cho phép "đoán".
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm text-cream/80 sm:text-base">
-              <div className="overflow-x-auto rounded-lg border border-cream/10">
+            <CardContent className="space-y-3 text-sm text-foreground/80 sm:text-base">
+              <div className="overflow-x-auto rounded-lg border border-border">
                 <table className="min-w-full text-left text-xs sm:text-sm">
-                  <thead className="bg-ink/60 text-cream/70">
+                  <thead className="bg-card/60 text-muted-foreground">
                     <tr>
                       <th className="px-3 py-2 font-medium">Edge case</th>
                       <th className="px-3 py-2 font-medium">Rủi ro</th>
@@ -840,34 +840,34 @@ export default function MethodologyTuViPage() {
                   </thead>
                   <tbody className="divide-y divide-cream/10">
                     <tr>
-                      <td className="px-3 py-2 text-cream">Sinh gần ranh giờ Tý</td>
-                      <td className="px-3 py-2 text-cream/70">Cung Mệnh/Thân có thể đổi</td>
-                      <td className="px-3 py-2 text-cream/70">Cảnh báo confidence + gợi ý so sánh 2 lá số</td>
+                      <td className="px-3 py-2 text-foreground">Sinh gần ranh giờ Tý</td>
+                      <td className="px-3 py-2 text-muted-foreground">Cung Mệnh/Thân có thể đổi</td>
+                      <td className="px-3 py-2 text-muted-foreground">Cảnh báo confidence + gợi ý so sánh 2 lá số</td>
                     </tr>
                     <tr>
-                      <td className="px-3 py-2 text-cream">Không nhớ giờ sinh</td>
-                      <td className="px-3 py-2 text-cream/70">Confidence thấp</td>
-                      <td className="px-3 py-2 text-cream/70">Hỏi hồi cứu, không phán cứng</td>
+                      <td className="px-3 py-2 text-foreground">Không nhớ giờ sinh</td>
+                      <td className="px-3 py-2 text-muted-foreground">Confidence thấp</td>
+                      <td className="px-3 py-2 text-muted-foreground">Hỏi hồi cứu, không phán cứng</td>
                     </tr>
                     <tr>
-                      <td className="px-3 py-2 text-cream">Sinh trong tháng nhuận</td>
-                      <td className="px-3 py-2 text-cream/70">Sai tháng âm</td>
-                      <td className="px-3 py-2 text-cream/70">Bắt user xác nhận tháng nhuận</td>
+                      <td className="px-3 py-2 text-foreground">Sinh trong tháng nhuận</td>
+                      <td className="px-3 py-2 text-muted-foreground">Sai tháng âm</td>
+                      <td className="px-3 py-2 text-muted-foreground">Bắt user xác nhận tháng nhuận</td>
                     </tr>
                     <tr>
-                      <td className="px-3 py-2 text-cream">Sinh ngoài VN</td>
-                      <td className="px-3 py-2 text-cream/70">Sai timezone</td>
-                      <td className="px-3 py-2 text-cream/70">Hỏi nơi sinh / timezone</td>
+                      <td className="px-3 py-2 text-foreground">Sinh ngoài VN</td>
+                      <td className="px-3 py-2 text-muted-foreground">Sai timezone</td>
+                      <td className="px-3 py-2 text-muted-foreground">Hỏi nơi sinh / timezone</td>
                     </tr>
                     <tr>
-                      <td className="px-3 py-2 text-cream">Sinh ngày đổi tiết khí</td>
-                      <td className="px-3 py-2 text-cream/70">Sai Can Chi tháng</td>
-                      <td className="px-3 py-2 text-cream/70">Ngày đổi tiết khí có flag, prompt user xác nhận</td>
+                      <td className="px-3 py-2 text-foreground">Sinh ngày đổi tiết khí</td>
+                      <td className="px-3 py-2 text-muted-foreground">Sai Can Chi tháng</td>
+                      <td className="px-3 py-2 text-muted-foreground">Ngày đổi tiết khí có flag, prompt user xác nhận</td>
                     </tr>
                     <tr>
-                      <td className="px-3 py-2 text-cream">Nhập ngày âm nhưng chọn nhầm lịch dương</td>
-                      <td className="px-3 py-2 text-cream/70">Sai toàn bộ chart</td>
-                      <td className="px-3 py-2 text-cream/70">Validator pattern check (tháng âm hợp lý, ngày âm ≤ 30)</td>
+                      <td className="px-3 py-2 text-foreground">Nhập ngày âm nhưng chọn nhầm lịch dương</td>
+                      <td className="px-3 py-2 text-muted-foreground">Sai toàn bộ chart</td>
+                      <td className="px-3 py-2 text-muted-foreground">Validator pattern check (tháng âm hợp lý, ngày âm ≤ 30)</td>
                     </tr>
                   </tbody>
                 </table>
@@ -876,16 +876,16 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* §5.6 — Quy tắc khi AI nhắc thời gian cụ thể */}
-          <Card id="rule-time-claims" className="border-cream/10 bg-ink/40 scroll-mt-24">
+          <Card id="rule-time-claims" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
-              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
                 Quy tắc khi AI nhắc năm/quý/tháng cụ thể
               </CardTitle>
-              <CardDescription className="text-cream/60">
+              <CardDescription className="text-muted-foreground">
                 Mọi mention thời gian hoặc sao đều phải có evidence từ chart, không phải tone AI.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm leading-relaxed text-cream/80 sm:text-base">
+            <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/80 sm:text-base">
               <ul className="list-disc space-y-2 pl-5">
                 <li>
                   Nếu output nhắc <strong>năm / quý / tháng</strong> → phải có evidence
@@ -900,7 +900,7 @@ export default function MethodologyTuViPage() {
                   kiện kiểm chứng ngoài đời.
                 </li>
               </ul>
-              <p className="rounded-lg border border-amber-700/40 bg-amber-900/15 p-3 text-cream/90">
+              <p className="rounded-lg border border-amber-700/40 bg-amber-900/15 p-3 text-foreground/90">
                 <strong className="text-amber-200">Validator.</strong> Cả 3 rule đều có
                 check tự động trên output trước khi gửi tới user. Vi phạm → response bị
                 regenerate.
@@ -909,36 +909,36 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* §5.7 — Hai chế độ diễn giải */}
-          <Card id="modes" className="border-cream/10 bg-ink/40 scroll-mt-24">
+          <Card id="modes" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
-              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
                 Hai chế độ diễn giải
               </CardTitle>
-              <CardDescription className="text-cream/60">
+              <CardDescription className="text-muted-foreground">
                 Cùng một kết luận, hai cách nói — user chọn theo nhu cầu.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4 text-sm leading-relaxed text-cream/80 sm:text-base">
+            <CardContent className="space-y-4 text-sm leading-relaxed text-foreground/80 sm:text-base">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="rounded-lg border border-cream/15 bg-ink/60 p-4">
+                <div className="rounded-lg border border-border bg-card/60 p-4">
                   <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
                     Mode dễ hiểu
                   </p>
-                  <p className="mt-2 text-cream/85">
+                  <p className="mt-2 text-foreground/85">
                     "Bạn hợp môi trường có quyền tự chủ, mục tiêu dài hạn và không quá vụn vặt."
                   </p>
                 </div>
-                <div className="rounded-lg border border-cream/15 bg-ink/60 p-4">
+                <div className="rounded-lg border border-border bg-card/60 p-4">
                   <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
                     Mode chuyên sâu
                   </p>
-                  <p className="mt-2 text-cream/85">
+                  <p className="mt-2 text-foreground/85">
                     "Luận dựa trên Quan Lộc, tam phương Mệnh–Tài–Di, đại vận hiện tại và
                     nhóm sao chủ động trong cung sự nghiệp."
                   </p>
                 </div>
               </div>
-              <p className="rounded-lg border border-cream/10 bg-ink/40 p-3 text-xs text-cream/65">
+              <p className="rounded-lg border border-border bg-card/40 p-3 text-xs text-muted-foreground">
                 Mode chuyên sâu sẽ có toggle trong báo cáo (chưa active trong UI hiện
                 tại — coming soon).
               </p>
@@ -946,24 +946,24 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 8. AI vs Engine */}
-          <Card id="ai-vs-engine" className="border-cream/10 bg-ink/40 scroll-mt-24">
+          <Card id="ai-vs-engine" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="flex items-center gap-2 font-heading text-xl text-foreground sm:text-2xl">
                 <Shield className="h-5 w-5 text-gold" aria-hidden /> AI làm gì, engine
                 làm gì
               </CardTitle>
-              <CardDescription className="text-cream/60">
+              <CardDescription className="text-muted-foreground">
                 Lằn ranh rõ ràng — không có chuyện AI "an sao theo cảm hứng".
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4 text-sm leading-relaxed text-cream/80 sm:text-base">
+            <CardContent className="space-y-4 text-sm leading-relaxed text-foreground/80 sm:text-base">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="rounded-lg border border-cream/15 bg-ink/60 p-4">
-                  <h3 className="mb-2 flex items-center gap-2 font-heading text-base text-cream">
+                <div className="rounded-lg border border-border bg-card/60 p-4">
+                  <h3 className="mb-2 flex items-center gap-2 font-heading text-base text-foreground">
                     <Database className="h-4 w-4 text-gold" aria-hidden /> Engine
                     deterministic
                   </h3>
-                  <ul className="list-disc space-y-1 pl-5 text-cream/80">
+                  <ul className="list-disc space-y-1 pl-5 text-foreground/80">
                     <li>Đổi dương lịch ↔ âm lịch</li>
                     <li>Tính Can Chi năm/tháng/ngày/giờ</li>
                     <li>An cung Mệnh, Thân, Cục</li>
@@ -971,27 +971,27 @@ export default function MethodologyTuViPage() {
                     <li>Tính Tứ Hoá theo can năm</li>
                     <li>Tính đại vận, lưu niên, lưu nguyệt</li>
                   </ul>
-                  <p className="mt-3 text-xs text-cream/60">
+                  <p className="mt-3 text-xs text-muted-foreground">
                     Không có yếu tố LLM. Cùng input → cùng output, mọi lúc.
                   </p>
                 </div>
-                <div className="rounded-lg border border-cream/15 bg-ink/60 p-4">
-                  <h3 className="mb-2 flex items-center gap-2 font-heading text-base text-cream">
+                <div className="rounded-lg border border-border bg-card/60 p-4">
+                  <h3 className="mb-2 flex items-center gap-2 font-heading text-base text-foreground">
                     <Brain className="h-4 w-4 text-gold" aria-hidden /> AI / LLM
                   </h3>
-                  <ul className="list-disc space-y-1 pl-5 text-cream/80">
+                  <ul className="list-disc space-y-1 pl-5 text-foreground/80">
                     <li>Diễn giải tổ hợp sao + cung</li>
                     <li>Ghép bối cảnh user (mục tiêu, tình huống)</li>
                     <li>Soạn báo cáo tiếng Việt mạch lạc</li>
                     <li>Trả lời Mentor: hỏi-đáp tự phản tư</li>
                     <li>Gợi ý câu hỏi kiểm chứng</li>
                   </ul>
-                  <p className="mt-3 text-xs text-cream/60">
+                  <p className="mt-3 text-xs text-muted-foreground">
                     AI đọc chart JSON từ engine, không tự tạo ra sao.
                   </p>
                 </div>
               </div>
-              <p className="rounded-lg border border-amber-700/40 bg-amber-900/15 p-3 text-cream/90">
+              <p className="rounded-lg border border-amber-700/40 bg-amber-900/15 p-3 text-foreground/90">
                 <strong className="text-amber-200">Hard rule.</strong> AI không được tự
                 an sao. Mọi mention sao trong output phải có trong chart JSON do engine
                 xuất. Có một validator chặn output bịa sao — nếu AI gọi tên sao không
@@ -1001,13 +1001,13 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 9. Giới hạn */}
-          <Card id="gioi-han" className="border-cream/10 bg-ink/40 scroll-mt-24">
+          <Card id="gioi-han" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
-              <CardTitle className="font-heading text-xl text-cream sm:text-2xl">
+              <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
                 Giới hạn và sự thật
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm leading-relaxed text-cream/80 sm:text-base">
+            <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/80 sm:text-base">
               <ul className="list-disc space-y-2 pl-5">
                 <li>
                   Tử Vi <strong>không tiên tri</strong> tai hoạ hay chết chóc. Mọi luận
@@ -1044,15 +1044,15 @@ export default function MethodologyTuViPage() {
           <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Link
               href="/sample-report"
-              className="group rounded-xl border border-cream/15 bg-ink/40 p-5 transition hover:border-gold/40"
+              className="group rounded-xl border border-border bg-card/40 p-5 transition hover:border-gold/40"
             >
               <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
                 Xem trước
               </p>
-              <h3 className="mt-2 font-heading text-lg text-cream">
+              <h3 className="mt-2 font-heading text-lg text-foreground">
                 Xem báo cáo mẫu
               </h3>
-              <p className="mt-2 text-sm text-cream/70">
+              <p className="mt-2 text-sm text-muted-foreground">
                 Một lá số được luận đầy đủ — để bạn biết kết quả thật trông như thế nào.
               </p>
               <span className="mt-3 inline-flex items-center gap-1 text-sm text-gold group-hover:underline">
@@ -1066,10 +1066,10 @@ export default function MethodologyTuViPage() {
               <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
                 Bắt đầu
               </p>
-              <h3 className="mt-2 font-heading text-lg text-cream">
+              <h3 className="mt-2 font-heading text-lg text-foreground">
                 Lập lá số của bạn
               </h3>
-              <p className="mt-2 text-sm text-cream/75">
+              <p className="mt-2 text-sm text-muted-foreground">
                 Trả lời 4 câu hỏi ngắn để engine an sao và soạn báo cáo riêng cho bạn.
               </p>
               <span className="mt-3 inline-flex items-center gap-1 text-sm text-gold group-hover:underline">
@@ -1083,7 +1083,7 @@ export default function MethodologyTuViPage() {
           <aside className="hidden lg:block">
             <nav
               aria-label="Mục lục"
-              className="sticky top-20 rounded-lg border border-cream/10 bg-ink/40 p-4"
+              className="sticky top-20 rounded-lg border border-border bg-card/40 p-4"
             >
               <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/80">
                 Mục lục
@@ -1093,7 +1093,7 @@ export default function MethodologyTuViPage() {
                   <li key={item.id}>
                     <a
                       href={`#${item.id}`}
-                      className="block rounded px-2 py-1 text-cream/70 transition hover:bg-ink/60 hover:text-gold"
+                      className="block rounded px-2 py-1 text-muted-foreground transition hover:bg-card/60 hover:text-gold"
                     >
                       {item.label}
                     </a>

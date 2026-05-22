@@ -92,7 +92,7 @@ function OnboardingTopicInner() {
   }
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <main className="min-h-screen">
         <section className="mx-auto max-w-3xl px-6 pt-24 pb-20">
@@ -100,7 +100,7 @@ function OnboardingTopicInner() {
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">
             Hôm nay bạn muốn hiểu điều gì?
           </h1>
-          <p className="mt-4 text-sm leading-relaxed text-cream/75 sm:text-base">
+          <p className="mt-4 text-sm leading-relaxed text-foreground/75 sm:text-base">
             Chọn một chủ đề để hieu.asia bắt đầu đúng nơi bạn cần. Bạn luôn có thể đổi sau.
           </p>
 
@@ -117,20 +117,20 @@ function OnboardingTopicInner() {
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold',
                     isSelected
                       ? 'border-gold bg-gold/10'
-                      : 'border-gold/20 bg-ink/40 hover:border-gold/50 hover:bg-gold/5',
+                      : 'border-gold/20 bg-card/40 hover:border-gold/50 hover:bg-gold/5',
                   ].join(' ')}
                   aria-pressed={isSelected}
                 >
                   <span
                     className={[
                       'inline-flex h-10 w-10 items-center justify-center rounded-lg border',
-                      isSelected ? 'border-gold/60 bg-gold/15 text-gold' : 'border-gold/25 bg-ink/60 text-gold/80',
+                      isSelected ? 'border-gold/60 bg-gold/15 text-gold' : 'border-gold/25 bg-card/60 text-gold/80',
                     ].join(' ')}
                   >
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </span>
-                  <span className="font-heading text-lg font-semibold leading-tight text-cream">{title}</span>
-                  <span className="text-xs leading-relaxed text-cream/65">{hint}</span>
+                  <span className="font-heading text-lg font-semibold leading-tight text-foreground">{title}</span>
+                  <span className="text-xs leading-relaxed text-muted-foreground">{hint}</span>
                 </button>
               );
             })}
@@ -139,7 +139,7 @@ function OnboardingTopicInner() {
           <div className="mt-10 flex flex-wrap items-center gap-3">
             <Link
               href="/onboarding"
-              className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm text-cream/70 transition-colors hover:bg-gold/10 hover:text-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+              className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-gold/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
             >
               Bỏ qua, đến lập lá số →
             </Link>
@@ -159,7 +159,7 @@ function OnboardingTopicInner() {
 
 export default function OnboardingTopicPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-ink" aria-hidden="true" />}>
+    <Suspense fallback={<div className="min-h-screen bg-background" aria-hidden="true" />}>
       <OnboardingTopicInner />
     </Suspense>
   );

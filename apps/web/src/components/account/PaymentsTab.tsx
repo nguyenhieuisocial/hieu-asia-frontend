@@ -117,8 +117,8 @@ export function PaymentsTab() {
       className="space-y-6"
     >
       <div>
-        <h2 className="font-heading text-2xl text-cream sm:text-3xl">Thanh toán</h2>
-        <p className="mt-1 text-sm text-cream/65">
+        <h2 className="font-heading text-2xl text-foreground sm:text-3xl">Thanh toán</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Subscription, lịch sử giao dịch và yêu cầu hoàn tiền.
         </p>
       </div>
@@ -154,14 +154,14 @@ export function PaymentsTab() {
         </CardHeader>
         <CardContent>
           {!loaded ? (
-            <p className="text-sm text-cream/55">Đang tải…</p>
+            <p className="text-sm text-muted-foreground">Đang tải…</p>
           ) : history.length === 0 ? (
-            <p className="text-sm text-cream/55">Chưa có giao dịch nào.</p>
+            <p className="text-sm text-muted-foreground">Chưa có giao dịch nào.</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="text-left font-mono text-[10px] uppercase tracking-[0.18em] text-cream/55">
-                  <tr className="border-b border-cream/10">
+                <thead className="text-left font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  <tr className="border-b border-border">
                     <th className="py-2 pr-4">Ngày</th>
                     <th className="py-2 pr-4">Mô tả</th>
                     <th className="py-2 pr-4 text-right">Số tiền</th>
@@ -170,13 +170,13 @@ export function PaymentsTab() {
                 </thead>
                 <tbody>
                   {history.map((p) => (
-                    <tr key={p.id} className="border-b border-cream/5">
-                      <td className="py-2.5 pr-4 text-cream/85">{fmtDate(p.created_at)}</td>
-                      <td className="py-2.5 pr-4 text-cream/85">{p.description ?? '—'}</td>
-                      <td className="py-2.5 pr-4 text-right text-cream font-mono">
+                    <tr key={p.id} className="border-b border-border">
+                      <td className="py-2.5 pr-4 text-foreground/85">{fmtDate(p.created_at)}</td>
+                      <td className="py-2.5 pr-4 text-foreground/85">{p.description ?? '—'}</td>
+                      <td className="py-2.5 pr-4 text-right text-foreground font-mono">
                         {fmtVnd(p.amount_vnd)}
                       </td>
-                      <td className="py-2.5 pr-4 text-cream/70">
+                      <td className="py-2.5 pr-4 text-muted-foreground">
                         {STATUS_LABEL[p.status] ?? p.status}
                       </td>
                     </tr>
@@ -193,9 +193,9 @@ export function PaymentsTab() {
 
 function Kpi({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-cream/10 bg-ink/40 p-3">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cream/55">{label}</p>
-      <p className="mt-1.5 text-base font-semibold text-cream">{value}</p>
+    <div className="rounded-lg border border-border bg-card/40 p-3">
+      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{label}</p>
+      <p className="mt-1.5 text-base font-semibold text-foreground">{value}</p>
     </div>
   );
 }

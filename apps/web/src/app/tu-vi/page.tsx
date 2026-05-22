@@ -75,7 +75,7 @@ const BREADCRUMB_JSONLD = {
 
 export default function TuViHubPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -88,21 +88,21 @@ export default function TuViHubPage() {
         />
 
         <section className="relative mx-auto max-w-5xl px-6 pb-12 pt-12 sm:pt-16">
-          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-cream/55">
+          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">
               Trang chủ
             </Link>
             <span className="mx-1.5">/</span>
-            <span className="text-cream/70">Tử Vi</span>
+            <span className="text-muted-foreground">Tử Vi</span>
           </nav>
 
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Tử Vi Đẩu Số · Bắc phái 114 sao
           </p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
             Lá số Tử Vi — bản đồ thiên hướng của bạn
           </h1>
-          <p className="mt-5 max-w-3xl text-base leading-relaxed text-cream/75 sm:text-lg">
+          <p className="mt-5 max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             Tử Vi Đẩu Số chia cuộc đời thành 12 cung, mỗi cung là một lĩnh vực sống. hieu.asia
             lập lá số theo trường phái Bắc phái 114 sao, có đại vận và lưu niên — kèm AI
             Mentor đối chiếu với bối cảnh đời thực để giúp bạn ra quyết định.
@@ -119,7 +119,7 @@ export default function TuViHubPage() {
             </Link>
             <Link
               href="/methodology"
-              className="inline-flex items-center text-sm text-cream/70 hover:text-gold"
+              className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"
             >
               Phương pháp luận
               <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
@@ -131,11 +131,11 @@ export default function TuViHubPage() {
         <section className="relative mx-auto max-w-5xl px-6 pb-12">
           <div className="mb-6 flex items-center gap-3">
             <Map className="h-5 w-5 text-gold" aria-hidden />
-            <h2 className="font-heading text-2xl font-semibold text-cream sm:text-3xl">
+            <h2 className="font-heading text-2xl font-semibold text-foreground sm:text-3xl">
               12 cung Tử Vi
             </h2>
           </div>
-          <p className="mb-6 max-w-3xl text-sm text-cream/70 sm:text-base">
+          <p className="mb-6 max-w-3xl text-sm text-muted-foreground sm:text-base">
             Mỗi cung đại diện một lĩnh vực đời sống. Tử Vi không đọc từng cung rời lẻ —
             luận đúng phải xem cùng tam phương tứ chính. Bấm từng cung để hiểu cách hệ
             thống diễn giải.
@@ -143,13 +143,13 @@ export default function TuViHubPage() {
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {PALACES.map((p) => (
               <Link key={p.slug} href={`/tu-vi/${p.slug}`}>
-                <Card className="h-full border-cream/10 bg-ink/40 transition-colors hover:border-gold/40">
+                <Card className="h-full border-border bg-card/40 transition-colors hover:border-gold/40">
                   <CardHeader className="pb-2">
-                    <CardTitle className="font-heading text-base text-cream">
+                    <CardTitle className="font-heading text-base text-foreground">
                       Cung {p.name}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="text-xs leading-relaxed text-cream/70">
+                  <CardContent className="text-xs leading-relaxed text-muted-foreground">
                     {p.pitch}
                   </CardContent>
                 </Card>
@@ -162,11 +162,11 @@ export default function TuViHubPage() {
         <section className="relative mx-auto max-w-5xl px-6 pb-12">
           <div className="mb-6 flex items-center gap-3">
             <Sparkles className="h-5 w-5 text-gold" aria-hidden />
-            <h2 className="font-heading text-2xl font-semibold text-cream sm:text-3xl">
+            <h2 className="font-heading text-2xl font-semibold text-foreground sm:text-3xl">
               14 chính tinh
             </h2>
           </div>
-          <p className="mb-6 max-w-3xl text-sm text-cream/70 sm:text-base">
+          <p className="mb-6 max-w-3xl text-sm text-muted-foreground sm:text-base">
             Chính tinh là nhóm 14 sao quan trọng nhất trong Tử Vi. Vị trí của chúng trên 12
             cung tạo ra "khuôn mẫu" tính cách + sự nghiệp + quan hệ.
           </p>
@@ -175,13 +175,13 @@ export default function TuViHubPage() {
               <Link
                 key={s.slug}
                 href={`/tu-vi/sao/${s.slug}`}
-                className="flex items-start justify-between gap-3 rounded-lg border border-cream/10 bg-ink/40 p-3 transition-colors hover:border-gold/40"
+                className="flex items-start justify-between gap-3 rounded-lg border border-border bg-card/40 p-3 transition-colors hover:border-gold/40"
               >
                 <div>
-                  <p className="font-heading text-sm font-semibold text-cream">{s.name}</p>
-                  <p className="mt-0.5 text-xs text-cream/65">{s.hint}</p>
+                  <p className="font-heading text-sm font-semibold text-foreground">{s.name}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">{s.hint}</p>
                 </div>
-                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-cream/70" aria-hidden />
+                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
               </Link>
             ))}
           </div>
@@ -191,11 +191,11 @@ export default function TuViHubPage() {
         <section className="relative mx-auto max-w-5xl px-6 pb-12">
           <div className="mb-6 flex items-center gap-3">
             <Sparkles className="h-5 w-5 text-gold/70" aria-hidden />
-            <h2 className="font-heading text-2xl font-semibold text-cream sm:text-3xl">
+            <h2 className="font-heading text-2xl font-semibold text-foreground sm:text-3xl">
               Phụ tinh + tứ hoá quan trọng
             </h2>
           </div>
-          <p className="mb-6 max-w-3xl text-sm text-cream/70 sm:text-base">
+          <p className="mb-6 max-w-3xl text-sm text-muted-foreground sm:text-base">
             Phụ tinh và tứ hoá điều chỉnh ý nghĩa của chính tinh. Một chính tinh có Hoá
             Lộc luận khác với cùng chính tinh có Hoá Kỵ — bộ này quyết định "vị thuốc"
             của lá số.
@@ -205,13 +205,13 @@ export default function TuViHubPage() {
               <Link
                 key={s.slug}
                 href={`/tu-vi/sao/${s.slug}`}
-                className="flex items-start justify-between gap-3 rounded-lg border border-cream/10 bg-ink/40 p-3 transition-colors hover:border-gold/40"
+                className="flex items-start justify-between gap-3 rounded-lg border border-border bg-card/40 p-3 transition-colors hover:border-gold/40"
               >
                 <div>
-                  <p className="font-heading text-sm font-semibold text-cream">{s.name}</p>
-                  <p className="mt-0.5 text-xs text-cream/65">{s.hint}</p>
+                  <p className="font-heading text-sm font-semibold text-foreground">{s.name}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">{s.hint}</p>
                 </div>
-                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-cream/70" aria-hidden />
+                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
               </Link>
             ))}
           </div>
@@ -221,7 +221,7 @@ export default function TuViHubPage() {
         <section className="relative mx-auto max-w-5xl px-6 pb-20">
           <div className="mb-6 flex items-center gap-3">
             <BookOpen className="h-5 w-5 text-gold" aria-hidden />
-            <h2 className="font-heading text-2xl font-semibold text-cream sm:text-3xl">
+            <h2 className="font-heading text-2xl font-semibold text-foreground sm:text-3xl">
               hieu.asia khác gì với web xem Tử Vi miễn phí?
             </h2>
           </div>
@@ -248,9 +248,9 @@ export default function TuViHubPage() {
 
 function FeatureItem({ title, body }: { title: string; body: string }) {
   return (
-    <div className="rounded-xl border border-cream/10 bg-ink/40 p-5">
-      <h3 className="font-heading text-base font-semibold text-cream">{title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-cream/70">{body}</p>
+    <div className="rounded-xl border border-border bg-card/40 p-5">
+      <h3 className="font-heading text-base font-semibold text-foreground">{title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
     </div>
   );
 }

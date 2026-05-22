@@ -120,7 +120,7 @@ const BREADCRUMB_JSONLD = {
 
 export default function DecisionsHubPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
 
       <script
@@ -140,7 +140,7 @@ export default function DecisionsHubPage() {
               bớt mơ hồ
             </span>
           </h1>
-          <p className="mt-5 text-base leading-relaxed text-cream/75 sm:text-lg">
+          <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
             Decision Brief không tiên đoán số phận. Nó giúp bạn{' '}
             <em>reframe</em> tình huống — tách vấn đề thật khỏi cảm xúc, nhìn
             các lựa chọn cạnh nhau, và chọn bước nhỏ nhất bạn có thể làm trong
@@ -159,13 +159,13 @@ export default function DecisionsHubPage() {
             {VALUE_PROPS.map(({ Icon, label }) => (
               <li
                 key={label}
-                className="flex items-start gap-4 rounded-lg border border-cream/10 bg-ink/40 p-5"
+                className="flex items-start gap-4 rounded-lg border border-border bg-card/40 p-5"
               >
                 <Icon
                   className="mt-0.5 h-5 w-5 shrink-0 text-gold/80"
                   aria-hidden="true"
                 />
-                <span className="text-sm leading-relaxed text-cream/80">
+                <span className="text-sm leading-relaxed text-foreground/80">
                   {label}
                 </span>
               </li>
@@ -180,7 +180,7 @@ export default function DecisionsHubPage() {
           >
             3 chủ đề bắt đầu nhanh
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             Chọn nơi bạn đang phân vân nhất. Bạn có thể đổi sau.
           </p>
           <div className="mt-8 grid gap-5 sm:grid-cols-3">
@@ -190,14 +190,14 @@ export default function DecisionsHubPage() {
                 href={`/decisions/new?topic=${id}`}
                 className="group"
               >
-                <Card className="h-full border-gold/15 bg-ink/60 backdrop-blur-sm transition hover:border-gold/40">
+                <Card className="h-full border-gold/15 bg-card/60 backdrop-blur-sm transition hover:border-gold/40">
                   <CardHeader>
                     <Icon
                       className="mb-2 h-6 w-6 text-gold/80"
                       aria-hidden="true"
                     />
                     <CardTitle className="text-lg">{title}</CardTitle>
-                    <CardDescription className="text-xs text-cream/55">
+                    <CardDescription className="text-xs text-muted-foreground">
                       {blurb}
                     </CardDescription>
                   </CardHeader>
@@ -224,7 +224,7 @@ export default function DecisionsHubPage() {
             {HOW_STEPS.map((step) => (
               <li
                 key={step.n}
-                className="rounded-lg border border-cream/10 bg-ink/40 p-6"
+                className="rounded-lg border border-border bg-card/40 p-6"
               >
                 <div className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/40 font-mono text-sm text-gold">
                   {step.n}
@@ -232,7 +232,7 @@ export default function DecisionsHubPage() {
                 <h3 className="mt-4 font-heading text-base font-semibold">
                   {step.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-cream/70">
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {step.body}
                 </p>
               </li>
@@ -250,7 +250,7 @@ export default function DecisionsHubPage() {
           >
             Chưa có lá số?
           </h2>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-cream/75">
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             Decision Brief gợi ý chính xác hơn khi đã có lá số của bạn — hệ
             thống sẽ kết hợp bối cảnh tình huống với tín hiệu từ lá số. Lập lá
             số trước (3–5 phút), rồi quay lại đây.
@@ -258,7 +258,7 @@ export default function DecisionsHubPage() {
           <div className="mt-6">
             <Link
               href="/onboarding/topic"
-              className="inline-flex items-center gap-2 rounded-md border border-gold/50 bg-ink/60 px-5 py-2.5 text-sm font-medium text-gold transition hover:bg-gold/10"
+              className="inline-flex items-center gap-2 rounded-md border border-gold/50 bg-card/60 px-5 py-2.5 text-sm font-medium text-gold transition hover:bg-gold/10"
             >
               Lập lá số trước
               <ArrowRight className="h-4 w-4" aria-hidden="true" />

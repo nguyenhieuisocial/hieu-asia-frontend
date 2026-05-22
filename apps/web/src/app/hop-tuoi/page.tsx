@@ -84,20 +84,20 @@ export default function HopTuoiLandingPage() {
             href={c.href}
             className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ink rounded-xl"
           >
-            <Card className="relative h-full overflow-hidden border-cream/10 bg-ink/50 backdrop-blur-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:border-gold/40 group-hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.45)]">
+            <Card className="relative h-full overflow-hidden border-border bg-card/50 backdrop-blur-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:border-gold/40 group-hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.45)]">
               {/* Subtle gradient corner accent */}
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-gold/15 blur-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               />
               <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-xl text-cream">
+                <CardTitle className="flex items-center gap-3 text-xl text-foreground">
                   <span aria-hidden className="text-3xl">
                     {c.emoji}
                   </span>
                   {c.title}
                 </CardTitle>
-                <CardDescription className="text-cream/65">{c.desc}</CardDescription>
+                <CardDescription className="text-muted-foreground">{c.desc}</CardDescription>
               </CardHeader>
               <CardContent>
                 <span className="inline-flex items-center gap-1 text-sm font-medium text-gold transition-transform group-hover:gap-2">
@@ -110,7 +110,7 @@ export default function HopTuoiLandingPage() {
         ))}
       </section>
 
-      <p className="mt-10 text-center text-xs text-cream/40">
+      <p className="mt-10 text-center text-xs text-foreground/40">
         Công cụ tham khảo — không thay thế tư vấn chuyên gia. Quyết định cuối cùng thuộc về bạn.
       </p>
     </ToolPageShell>

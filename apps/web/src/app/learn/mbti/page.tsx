@@ -19,35 +19,35 @@ export const metadata: Metadata = {
 export default function LearnMBTIPage() {
   return (
     <main className="mx-auto max-w-4xl px-6 py-12 sm:py-16">
-      <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+      <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
         <Link href="/" className="hover:text-gold">Trang chủ</Link>
         <span className="mx-1.5">/</span>
         <Link href="/learn" className="hover:text-gold">Học huyền học</Link>
         <span className="mx-1.5">/</span>
-        <span className="text-cream/70">MBTI</span>
+        <span className="text-muted-foreground">MBTI</span>
       </nav>
 
       <header className="mb-10 text-center">
         <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
           Tây phương · Carl Jung
         </p>
-        <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-4xl">
+        <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
           MBTI — <span className="bg-gold-gradient bg-clip-text text-transparent">16 loại tính cách</span>
         </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-cream/75">
+        <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
           Myers–Briggs Type Indicator phát triển từ thuyết tâm lý của Carl Jung. 4 trục lưỡng
           cực tạo nên 16 nhóm tính cách — không phải "ô đóng", mà là thiên hướng tự nhiên.
         </p>
       </header>
 
-      <section className="rounded-xl border border-cream/10 bg-ink/40 p-6 sm:p-8">
+      <section className="rounded-xl border border-border bg-card/40 p-6 sm:p-8">
         <InfographicMBTI />
       </section>
 
       <section className="mt-10">
-        <h2 className="mb-4 font-heading text-xl font-bold text-cream">Giải thích chi tiết</h2>
+        <h2 className="mb-4 font-heading text-xl font-bold text-foreground">Giải thích chi tiết</h2>
         <Accordion type="single" collapsible className="space-y-2">
-          <AccordionItem value="axes" className="rounded border border-cream/10 px-4">
+          <AccordionItem value="axes" className="rounded border border-border px-4">
             <AccordionTrigger>4 trục lưỡng cực là gì?</AccordionTrigger>
             <AccordionContent>
               <ul className="list-inside list-disc space-y-1">
@@ -70,7 +70,7 @@ export default function LearnMBTIPage() {
               </ul>
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="quadrant" className="rounded border border-cream/10 px-4">
+          <AccordionItem value="quadrant" className="rounded border border-border px-4">
             <AccordionTrigger>4 nhóm lớn?</AccordionTrigger>
             <AccordionContent>
               <ul className="list-inside list-disc space-y-1">
@@ -89,7 +89,7 @@ export default function LearnMBTIPage() {
               </ul>
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="caution" className="rounded border border-cream/10 px-4">
+          <AccordionItem value="caution" className="rounded border border-border px-4">
             <AccordionTrigger>Cần lưu ý gì?</AccordionTrigger>
             <AccordionContent>
               MBTI là khung phân loại, không phải chẩn đoán. Kết quả có thể thay đổi theo
@@ -97,7 +97,7 @@ export default function LearnMBTIPage() {
               để hiểu cách mình vận hành tự nhiên.
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="science" className="rounded border border-cream/10 px-4">
+          <AccordionItem value="science" className="rounded border border-border px-4">
             <AccordionTrigger>MBTI có khoa học không?</AccordionTrigger>
             <AccordionContent>
               MBTI bị nhiều nhà tâm lý học phản biện về độ tin cậy (test-retest reliability).
@@ -110,12 +110,12 @@ export default function LearnMBTIPage() {
 
       <section
         aria-labelledby="mbti-cta-heading"
-        className="mt-12 rounded-2xl border border-gold/25 bg-ink/40 p-8 text-center"
+        className="mt-12 rounded-2xl border border-gold/25 bg-card/40 p-8 text-center"
       >
-        <h2 id="mbti-cta-heading" className="font-heading text-2xl font-bold text-cream">
+        <h2 id="mbti-cta-heading" className="font-heading text-2xl font-bold text-foreground">
           Trải nghiệm ngay
         </h2>
-        <p className="mx-auto mt-3 max-w-xl text-sm text-cream/70">
+        <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">
           Trả lời bộ câu hỏi MBTI khoảng 5 phút để xem 1 trong 16 nhóm tính cách phù hợp với
           thiên hướng tự nhiên của bạn.
         </p>

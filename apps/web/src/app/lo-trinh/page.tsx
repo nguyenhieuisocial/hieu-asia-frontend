@@ -96,7 +96,7 @@ const BREADCRUMB_JSONLD = {
 
 export default function LoTrinhHubPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -105,25 +105,25 @@ export default function LoTrinhHubPage() {
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-ink-radial opacity-80"
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.10)_0%,_transparent_55%)] dark:bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.18)_0%,_transparent_55%)]"
         />
 
         <section className="relative mx-auto max-w-5xl px-6 pb-10 pt-12 sm:pt-16">
-          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-cream/55">
+          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">
               Trang chủ
             </Link>
             <span className="mx-1.5">/</span>
-            <span className="text-cream/70">Lộ trình</span>
+            <span className="text-muted-foreground">Lộ trình</span>
           </nav>
 
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Lộ trình theo nhu cầu
           </p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
             Bạn đang muốn hiểu điều gì?
           </h1>
-          <p className="mt-5 max-w-3xl text-base leading-relaxed text-cream/75 sm:text-lg">
+          <p className="mt-5 max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             Chọn lộ trình phù hợp — chúng tôi sẽ gợi ý đúng công cụ thay vì bắt bạn đọc hết
             menu sản phẩm.
           </p>
@@ -136,21 +136,21 @@ export default function LoTrinhHubPage() {
               return (
                 <Card
                   key={r.slug}
-                  className="flex h-full flex-col border-cream/10 bg-ink/40 transition-colors hover:border-gold/40"
+                  className="flex h-full flex-col border-border bg-card/40 transition-colors hover:border-gold/40"
                 >
                   <CardHeader className="pb-3">
                     <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gold/10 text-gold">
                       <Icon className="h-5 w-5" aria-hidden />
                     </div>
-                    <CardTitle className="font-heading text-lg text-cream">
+                    <CardTitle className="font-heading text-lg text-foreground">
                       {r.title}
                     </CardTitle>
-                    <CardDescription className="text-sm leading-relaxed text-cream/70">
+                    <CardDescription className="text-sm leading-relaxed text-muted-foreground">
                       {r.framing}
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="flex flex-1 flex-col justify-between gap-4">
-                    <ul className="space-y-1.5 text-xs text-cream/70">
+                    <ul className="space-y-1.5 text-xs text-muted-foreground">
                       {r.kit.map((k) => (
                         <li key={k} className="flex gap-2">
                           <span aria-hidden className="mt-1 inline-block h-1 w-1 shrink-0 rounded-full bg-gold/70" />
@@ -172,15 +172,15 @@ export default function LoTrinhHubPage() {
         </section>
 
         <section className="relative mx-auto max-w-5xl px-6 pb-20">
-          <div className="rounded-xl border border-cream/10 bg-ink/40 p-6 sm:p-8">
+          <div className="rounded-xl border border-border bg-card/40 p-6 sm:p-8">
             <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-start gap-3">
                 <Sparkles className="mt-1 h-5 w-5 shrink-0 text-gold" aria-hidden />
                 <div>
-                  <h2 className="font-heading text-lg font-semibold text-cream">
+                  <h2 className="font-heading text-lg font-semibold text-foreground">
                     Không chắc cần gì?
                   </h2>
-                  <p className="mt-1 text-sm leading-relaxed text-cream/70">
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                     Lập một lá số tổng quan trước — sau đó hệ thống sẽ gợi ý lộ trình
                     phù hợp dựa trên cấu trúc lá số của bạn.
                   </p>

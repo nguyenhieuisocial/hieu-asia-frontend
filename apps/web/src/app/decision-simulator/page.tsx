@@ -56,7 +56,7 @@ const TAGS: readonly Tag[] = ['Thấp', 'Trung bình', 'Cao'];
 
 const TAG_STYLE: Record<Tag, string> = {
   'Thấp': 'border-emerald-400/40 bg-emerald-500/10 text-emerald-200',
-  'Trung bình': 'border-cream/20 bg-cream/5 text-cream/80',
+  'Trung bình': 'border-border bg-muted/5 text-foreground/80',
   'Cao': 'border-amber-400/40 bg-amber-500/10 text-amber-200',
 };
 
@@ -163,7 +163,7 @@ export default function DecisionSimulatorPage() {
   }
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -171,12 +171,12 @@ export default function DecisionSimulatorPage() {
       />
 
       <section className="mx-auto max-w-3xl px-6 pt-16 pb-20">
-        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">
             Trang chủ
           </Link>
           <span className="mx-1.5">/</span>
-          <span className="text-cream/70">Decision Simulator</span>
+          <span className="text-muted-foreground">Decision Simulator</span>
         </nav>
 
         <div
@@ -202,18 +202,18 @@ export default function DecisionSimulatorPage() {
               So sánh 2 lựa chọn
             </span>
           </h1>
-          <p className="mt-4 text-sm leading-relaxed text-cream/75 sm:text-base">
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
             Không phải để biết đúng/sai, mà để hiểu rõ trade-off.
           </p>
         </header>
 
         <form onSubmit={handleSubmit} noValidate>
-          <Card className="border-gold/20 bg-ink/60">
+          <Card className="border-gold/20 bg-card/60">
             <CardHeader>
               <CardTitle className="font-heading text-xl">
                 2 lựa chọn của bạn
               </CardTitle>
-              <CardDescription className="text-cream/70">
+              <CardDescription className="text-muted-foreground">
                 Tiêu đề ngắn (5–100 ký tự) + mô tả tuỳ chọn (≤ 500 ký tự).
               </CardDescription>
             </CardHeader>
@@ -236,7 +236,7 @@ export default function DecisionSimulatorPage() {
               />
 
               <fieldset>
-                <legend className="text-sm font-medium text-cream/90">
+                <legend className="text-sm font-medium text-foreground/90">
                   Chủ đề
                 </legend>
                 <RadioGroup
@@ -253,11 +253,11 @@ export default function DecisionSimulatorPage() {
                         'flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition',
                         topic === t.id
                           ? 'border-gold bg-gold/10'
-                          : 'border-cream/15 bg-ink/40 hover:border-gold/40',
+                          : 'border-border bg-card/40 hover:border-gold/40',
                       ].join(' ')}
                     >
                       <RadioGroupItem id={`ds-topic-${t.id}`} value={t.id} />
-                      <span className="text-sm text-cream">{t.label}</span>
+                      <span className="text-sm text-foreground">{t.label}</span>
                     </Label>
                   ))}
                 </RadioGroup>
@@ -292,12 +292,12 @@ export default function DecisionSimulatorPage() {
               <Scale className="h-5 w-5 text-gold" aria-hidden="true" />
               Bảng so sánh
             </h2>
-            <Card className="border-cream/10 bg-ink/40">
+            <Card className="border-border bg-card/40">
               <CardContent className="p-0">
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-cream/10 text-xs uppercase tracking-wider text-cream/55">
+                      <tr className="border-b border-border text-xs uppercase tracking-wider text-muted-foreground">
                         <th className="px-5 py-3 text-left font-medium">
                           Tiêu chí
                         </th>
@@ -309,9 +309,9 @@ export default function DecisionSimulatorPage() {
                       {result.rows.map((r) => (
                         <tr
                           key={r.criterion}
-                          className="border-b border-cream/5 last:border-0"
+                          className="border-b border-border last:border-0"
                         >
-                          <td className="px-5 py-3 text-cream/85">
+                          <td className="px-5 py-3 text-foreground/85">
                             {r.criterion}
                           </td>
                           <td className="px-5 py-3">
@@ -336,7 +336,7 @@ export default function DecisionSimulatorPage() {
               </CardContent>
             </Card>
 
-            <p className="mt-5 text-sm leading-relaxed text-cream/80">
+            <p className="mt-5 text-sm leading-relaxed text-foreground/80">
               {result.summary}
             </p>
 
@@ -393,7 +393,7 @@ function ChoiceFields({
           placeholder='Ví dụ: "Ở lại công ty hiện tại"'
           className="mt-2"
         />
-        <div className="mt-1 flex justify-end text-xs text-cream/70">
+        <div className="mt-1 flex justify-end text-xs text-muted-foreground">
           {titleLen}/100 (tối thiểu 5)
         </div>
       </div>
@@ -410,7 +410,7 @@ function ChoiceFields({
           className="mt-2"
           placeholder="Bối cảnh, điều kiện đi kèm (tuỳ chọn)."
         />
-        <div className="mt-1 flex justify-end text-xs text-cream/70">
+        <div className="mt-1 flex justify-end text-xs text-muted-foreground">
           {descLen}/500
         </div>
       </div>

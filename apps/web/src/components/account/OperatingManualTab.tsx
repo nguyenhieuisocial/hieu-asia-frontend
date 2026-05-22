@@ -16,10 +16,10 @@ export function OperatingManualTab() {
       className="space-y-6"
     >
       <div>
-        <h2 className="font-heading text-2xl text-cream sm:text-3xl">
+        <h2 className="font-heading text-2xl text-foreground sm:text-3xl">
           Sổ tay cá nhân
         </h2>
-        <p className="mt-1 text-sm text-cream/65">
+        <p className="mt-1 text-sm text-muted-foreground">
           Tổng hợp một trang về bạn — điểm mạnh, mẫu hình quyết định, nguyên tắc
           vận hành. Lưu trên trình duyệt, không gửi server.
         </p>

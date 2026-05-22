@@ -38,7 +38,7 @@ export function PriceTier({
   return (
     <Card
       className={cn(
-        'relative flex h-full flex-col border bg-ink/40 transition-colors',
+        'relative flex h-full flex-col border bg-card/40 transition-colors',
         highlighted
           ? 'border-gold/60 shadow-[0_0_0_1px_rgba(212,175,55,0.15)]'
           : 'border-gold/15',
@@ -51,16 +51,16 @@ export function PriceTier({
       )}
       <CardContent className="flex flex-1 flex-col gap-5 p-6">
         <div>
-          <h3 className="font-heading text-xl text-cream">{name}</h3>
+          <h3 className="font-heading text-xl text-foreground">{name}</h3>
           <p className="mt-2 flex items-baseline gap-1">
             <span className="font-heading text-3xl text-gold">{price}</span>
             {period && (
-              <span className="text-sm text-cream/60">{period}</span>
+              <span className="text-sm text-muted-foreground">{period}</span>
             )}
           </p>
         </div>
 
-        <ul className="flex-1 space-y-2 text-sm text-cream/80">
+        <ul className="flex-1 space-y-2 text-sm text-foreground/80">
           {features.map((feat) => (
             <li key={feat} className="flex items-start gap-2">
               <span aria-hidden className="mt-0.5 text-gold">

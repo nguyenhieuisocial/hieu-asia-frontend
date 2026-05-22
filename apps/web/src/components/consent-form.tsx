@@ -78,30 +78,30 @@ export function ConsentForm() {
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       <div>
-        <h3 className="mb-3 font-heading text-base font-semibold text-cream">
+        <h3 className="mb-3 font-heading text-base font-semibold text-foreground">
           Mục đích sử dụng dữ liệu
         </h3>
         <ul className="space-y-2.5">
           {PURPOSES.map((p) => (
-            <li key={p} className="flex items-start gap-2 text-sm text-cream/80">
+            <li key={p} className="flex items-start gap-2 text-sm text-foreground/80">
               <Check className="mt-0.5 h-4 w-4 shrink-0 text-jade" aria-hidden="true" />
               <span>{p}</span>
             </li>
           ))}
         </ul>
-        <p className="mt-3 text-xs leading-relaxed text-cream/55">
+        <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
           Các quyền tuỳ chọn khác (palm, MBTI, Mentor history) sẽ hỏi sau, chỉ khi bạn dùng đến.
         </p>
       </div>
 
-      <div className="rounded-md border border-gold/30 bg-ink/40 p-4">
+      <div className="rounded-md border border-gold/30 bg-card/40 p-4">
         <label className="flex cursor-pointer items-start gap-3">
           <Checkbox className="mt-1" {...register('birth_data')} />
           <span className="flex-1">
-            <span className="block text-sm font-medium text-cream">
+            <span className="block text-sm font-medium text-foreground">
               Tôi đồng ý cho hieu.asia xử lý ngày sinh + giờ sinh để tạo lá số
             </span>
-            <span className="mt-1 block text-xs text-cream/75">
+            <span className="mt-1 block text-xs text-foreground/75">
               Theo Nghị định 13/2023/NĐ-CP. Mã hoá AES-256, không bán dữ liệu, có quyền rút lại bất cứ lúc nào tại{' '}
               <a href="/account" className="text-gold underline-offset-4 hover:underline">trang Tài khoản</a>.
             </span>
@@ -109,18 +109,18 @@ export function ConsentForm() {
         </label>
       </div>
 
-      <div className="rounded-md border border-gold/10 bg-ink/30 p-3">
+      <div className="rounded-md border border-gold/10 bg-card/30 p-3">
         <label className="flex cursor-pointer items-start gap-3">
           <Checkbox className="mt-1" {...register('improve_optin')} />
-          <span className="text-sm text-cream/80">
+          <span className="text-sm text-foreground/80">
             Cho phép dùng dữ liệu ẨN DANH để cải thiện sản phẩm
-            <span className="ml-1 text-xs text-cream/70">(tuỳ chọn — mặc định TẮT, không ảnh hưởng trải nghiệm)</span>
+            <span className="ml-1 text-xs text-muted-foreground">(tuỳ chọn — mặc định TẮT, không ảnh hưởng trải nghiệm)</span>
           </span>
         </label>
       </div>
 
       <div className="flex flex-col gap-3 border-t border-gold/15 pt-6 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs text-cream/55">
+        <p className="text-xs text-muted-foreground">
           Bạn có thể yêu cầu xoá toàn bộ dữ liệu cá nhân bất cứ lúc nào.
         </p>
         <Button type="submit" size="lg" disabled={!allChecked || isSubmitting}>

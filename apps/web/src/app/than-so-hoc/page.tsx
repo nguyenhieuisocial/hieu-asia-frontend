@@ -52,14 +52,14 @@ export default function ThanSoHocLandingPage() {
     >
       <section className="mt-6 grid gap-6 lg:grid-cols-5">
         <div className="lg:col-span-3">
-          <Card className="border-gold/20 bg-ink/60 backdrop-blur-sm">
+          <Card className="border-gold/20 bg-card/60 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="font-heading text-lg">Nhập thông tin của bạn</CardTitle>
             </CardHeader>
             <CardContent>
               <form className="space-y-5" onSubmit={onSubmit}>
                 <div className="space-y-1.5">
-                  <Label htmlFor="full_name" className="text-cream/85">
+                  <Label htmlFor="full_name" className="text-foreground/85">
                     Họ và tên đầy đủ
                   </Label>
                   <Input
@@ -69,14 +69,14 @@ export default function ThanSoHocLandingPage() {
                     onChange={(e) => setFullName(e.target.value)}
                     required
                     autoComplete="off"
-                    className="bg-ink/60"
+                    className="bg-card/60"
                   />
-                  <p className="text-xs text-cream/55">
+                  <p className="text-xs text-muted-foreground">
                     Dùng tên khai sinh đầy đủ để có kết quả chính xác nhất.
                   </p>
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="birth_date" className="text-cream/85">
+                  <Label htmlFor="birth_date" className="text-foreground/85">
                     Ngày sinh
                   </Label>
                   <Input
@@ -85,7 +85,7 @@ export default function ThanSoHocLandingPage() {
                     value={birthDate}
                     onChange={(e) => setBirthDate(e.target.value)}
                     required
-                    className="bg-ink/60"
+                    className="bg-card/60"
                   />
                 </div>
                 {error && (
@@ -112,14 +112,14 @@ export default function ThanSoHocLandingPage() {
             {FEATURES.map((f) => (
               <div
                 key={f.title}
-                className="flex items-start gap-3 rounded-xl border border-cream/10 bg-ink/40 p-3 transition-colors hover:border-gold/30"
+                className="flex items-start gap-3 rounded-xl border border-border bg-card/40 p-3 transition-colors hover:border-gold/30"
               >
                 <span aria-hidden className="text-xl">
                   {f.icon}
                 </span>
                 <div className="min-w-0">
-                  <div className="text-sm font-semibold text-cream">{f.title}</div>
-                  <div className="mt-0.5 text-xs text-cream/65">{f.body}</div>
+                  <div className="text-sm font-semibold text-foreground">{f.title}</div>
+                  <div className="mt-0.5 text-xs text-muted-foreground">{f.body}</div>
                 </div>
               </div>
             ))}

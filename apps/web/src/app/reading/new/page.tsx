@@ -24,12 +24,12 @@ export default function NewReadingPage() {
       <SiteNav />
       <main id="main-content" className="min-h-screen bg-ink-radial pt-16">
         <header className="container mx-auto flex items-center justify-between px-6 py-5">
-          <nav aria-label="Breadcrumb" className="text-xs text-cream/55">
+          <nav aria-label="Breadcrumb" className="text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">Trang chủ</Link>
             <span className="mx-1.5">/</span>
             <Link href="/reading" className="hover:text-gold">Lá số</Link>
             <span className="mx-1.5">/</span>
-            <span className="text-cream/70">Thông tin sinh</span>
+            <span className="text-muted-foreground">Thông tin sinh</span>
           </nav>
           <span className="font-mono text-xs uppercase tracking-widest text-gold/70">
             Bước 2 / 4
@@ -37,7 +37,7 @@ export default function NewReadingPage() {
         </header>
 
         <section className="container mx-auto max-w-2xl px-6 pb-20 pt-2">
-          <Card className="border-gold/20 bg-ink/60 backdrop-blur">
+          <Card className="border-gold/20 bg-card/60 backdrop-blur">
             <CardHeader>
               <CardTitle className="font-heading text-2xl">
                 <span className="bg-gold-gradient bg-clip-text text-transparent">

@@ -38,7 +38,7 @@ export function FaqAccordion({
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className={['relative bg-ink py-20 sm:py-28', className ?? ''].join(' ').trim()}
+      className={['relative bg-background py-20 sm:py-28', className ?? ''].join(' ').trim()}
     >
       <div className="mx-auto max-w-3xl px-6">
         <div className="text-center">
@@ -47,7 +47,7 @@ export function FaqAccordion({
           </p>
           <h2
             id={`${id}-heading`}
-            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-cream sm:text-4xl"
+            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
           >
             {title ?? (
               <>
@@ -57,12 +57,12 @@ export function FaqAccordion({
             )}
           </h2>
           {subtitle && (
-            <p className="mt-4 text-base leading-relaxed text-cream/70 sm:text-lg">{subtitle}</p>
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">{subtitle}</p>
           )}
         </div>
 
         <div
-          className="mt-12 rounded-2xl border border-cream/5 px-6"
+          className="mt-12 rounded-2xl border border-border px-6"
           style={{ backgroundColor: 'rgba(20, 20, 26, 0.4)' }}
         >
           <Accordion type="single" collapsible className="w-full">
@@ -71,7 +71,7 @@ export function FaqAccordion({
                 <AccordionTrigger className="text-left text-base font-medium">
                   {item.q}
                 </AccordionTrigger>
-                <AccordionContent className="leading-relaxed text-cream/75">
+                <AccordionContent className="leading-relaxed text-muted-foreground">
                   {item.a}
                 </AccordionContent>
               </AccordionItem>

@@ -106,7 +106,7 @@ export function InfographicTuVi() {
           {CUNG_12[active]!.name}
         </text>
         <foreignObject x={center - 100} y={center + 4} width={200} height={80}>
-          <div className="text-center text-xs leading-snug text-cream/80">
+          <div className="text-center text-xs leading-snug text-foreground/80">
             {CUNG_12[active]!.desc}
           </div>
         </foreignObject>
@@ -120,7 +120,7 @@ export function InfographicTuVi() {
             className={`rounded border px-2 py-1 text-left transition-colors ${
               active === i
                 ? 'border-gold bg-gold/10 text-gold'
-                : 'border-cream/15 text-cream/70 hover:border-gold/40'
+                : 'border-border text-muted-foreground hover:border-gold/40'
             }`}
           >
             <span className="font-semibold">{c.name}</span>

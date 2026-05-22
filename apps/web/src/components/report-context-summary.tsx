@@ -21,17 +21,17 @@ export function ReportContextSummary({
           <p className="font-mono text-xs uppercase tracking-wider text-gold/70">
             Báo cáo cá nhân hóa
           </p>
-          <h2 className="font-heading text-2xl text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl text-foreground sm:text-3xl">
             {displayName}
           </h2>
-          <p className="text-sm text-cream/70">
-            <span className="text-cream/90">{role}</span>
-            <span className="mx-2 text-cream/30">·</span>
+          <p className="text-sm text-muted-foreground">
+            <span className="text-foreground/90">{role}</span>
+            <span className="mx-2 text-muted-foreground">·</span>
             <span>{primaryConcern}</span>
           </p>
         </div>
         {generatedAt && (
-          <p className="font-mono text-xs text-cream/70">
+          <p className="font-mono text-xs text-muted-foreground">
             Tạo lúc: {generatedAt}
           </p>
         )}

@@ -29,26 +29,26 @@ export function DataDeletionDialog({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-lg border border-gold/30 bg-ink p-6 shadow-2xl"
+        className="w-full max-w-md rounded-lg border border-gold/30 bg-background p-6 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="mb-3 font-heading text-xl text-gold">
           Xác nhận xoá dữ liệu
         </h2>
-        <p className="mb-4 text-sm text-cream/80">
+        <p className="mb-4 text-sm text-foreground/80">
           Hành động này không thể hoàn tác. Tất cả báo cáo và lịch sử chat sẽ bị
           xoá vĩnh viễn.
         </p>
         <label className="block">
-          <span className="text-xs text-cream/70">
-            Gõ <code className="rounded bg-ink/80 px-1 text-gold">XOÁ</code> để
+          <span className="text-xs text-muted-foreground">
+            Gõ <code className="rounded bg-card/80 px-1 text-gold">XOÁ</code> để
             xác nhận
           </span>
           <input
             type="text"
             value={confirmText}
             onChange={(e) => setConfirmText(e.target.value)}
-            className="mt-1 w-full rounded-md border border-gold/20 bg-ink/60 px-3 py-2 text-sm text-cream focus:border-gold focus:outline-none"
+            className="mt-1 w-full rounded-md border border-gold/20 bg-card/60 px-3 py-2 text-sm text-foreground focus:border-gold focus:outline-none"
             autoFocus
           />
         </label>
@@ -66,7 +66,7 @@ export function DataDeletionDialog({
                 setPending(false);
               }
             }}
-            className="bg-red-500/80 text-cream hover:bg-red-500"
+            className="bg-red-500/80 text-foreground hover:bg-red-500"
           >
             {pending ? 'Đang xoá…' : 'Xoá vĩnh viễn'}
           </Button>

@@ -159,7 +159,7 @@ export default function AffiliateDashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-ink text-cream">
+      <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
         <main className="pt-20 pb-16 px-4 sm:px-6">
           <div className="mx-auto max-w-5xl space-y-4">
@@ -179,12 +179,12 @@ export default function AffiliateDashboardPage() {
 
   if (error === 'not_signed_in') {
     return (
-      <div className="min-h-screen bg-ink text-cream">
+      <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
         <main className="pt-24 pb-16 px-4 sm:px-6">
           <div className="mx-auto max-w-md text-center">
             <h1 className="mb-2 font-heading text-2xl font-bold">Bạn chưa đăng nhập</h1>
-            <p className="mb-6 text-cream/70">
+            <p className="mb-6 text-muted-foreground">
               Đăng ký affiliate để xem dashboard hoặc khôi phục session từ email.
             </p>
             <Link href="/affiliate/signup">
@@ -199,7 +199,7 @@ export default function AffiliateDashboardPage() {
 
   if (error || !data) {
     return (
-      <div className="min-h-screen bg-ink text-cream">
+      <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
         <main className="pt-24 pb-16 px-4 sm:px-6">
           <div className="mx-auto max-w-md text-center">
@@ -220,16 +220,16 @@ export default function AffiliateDashboardPage() {
   const shareText = `Tôi đang dùng hieu.asia — phân tích Tử Vi, MBTI và lòng bàn tay bằng AI. Đăng ký qua link của tôi nhé: ${shareUrl}`;
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <main id="main-content" className="pt-20 pb-16 px-4 sm:px-6">
       <div className="mx-auto max-w-5xl space-y-6">
-        <nav aria-label="Breadcrumb" className="text-xs text-cream/55">
+        <nav aria-label="Breadcrumb" className="text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">Trang chủ</Link>
           <span className="mx-1.5">/</span>
           <Link href="/affiliate" className="hover:text-gold">Affiliate</Link>
           <span className="mx-1.5">/</span>
-          <span className="text-cream/70">Dashboard</span>
+          <span className="text-muted-foreground">Dashboard</span>
         </nav>
         <header className="flex items-center justify-between">
           <div>
@@ -239,7 +239,7 @@ export default function AffiliateDashboardPage() {
             <h1 className="mt-2 font-heading text-2xl font-bold sm:text-3xl">
               Xin chào, {a.display_name}
             </h1>
-            <p className="mt-1 text-sm text-cream/60">
+            <p className="mt-1 text-sm text-muted-foreground">
               Mã của bạn:{' '}
               <span className="font-mono text-gold">{a.code}</span>
               {a.status === 'banned' && (
@@ -249,7 +249,7 @@ export default function AffiliateDashboardPage() {
               )}
             </p>
           </div>
-          <Button variant="ghost" onClick={signOut} className="text-cream/60">
+          <Button variant="ghost" onClick={signOut} className="text-muted-foreground">
             Đăng xuất
           </Button>
         </header>
@@ -258,31 +258,31 @@ export default function AffiliateDashboardPage() {
         <div className="grid gap-4 sm:grid-cols-3">
           <Card className="border-gold/30">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs uppercase text-cream/60">Tổng kiếm được</CardTitle>
+              <CardTitle className="text-xs uppercase text-muted-foreground">Tổng kiếm được</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-gold">{vnd(s.total_earned)}</div>
-              <div className="text-xs text-cream/70">Đã trả: {vnd(s.paid_total)}</div>
+              <div className="text-xs text-muted-foreground">Đã trả: {vnd(s.paid_total)}</div>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs uppercase text-cream/60">Số dư khả dụng</CardTitle>
+              <CardTitle className="text-xs uppercase text-muted-foreground">Số dư khả dụng</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{vnd(s.pending_payout)}</div>
-              <div className="text-xs text-cream/70">
+              <div className="text-xs text-muted-foreground">
                 Tối thiểu rút: {vnd(data.min_payout_vnd)}
               </div>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs uppercase text-cream/60">Hiệu suất</CardTitle>
+              <CardTitle className="text-xs uppercase text-muted-foreground">Hiệu suất</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{s.clicks} clicks</div>
-              <div className="text-xs text-cream/70">
+              <div className="text-xs text-muted-foreground">
                 {s.signups} đăng ký · {s.conversions} mua
               </div>
             </CardContent>
@@ -294,10 +294,10 @@ export default function AffiliateDashboardPage() {
           <Card className="border-red-500/40 bg-red-500/5">
             <CardContent className="pt-6 text-sm">
               <div className="font-semibold text-red-300">⚠ Tài khoản đang bị flag fraud</div>
-              <div className="mt-1 text-cream/70">
+              <div className="mt-1 text-muted-foreground">
                 Lý do: <b>{data.flag.reason}</b> — {data.flag.detail}
               </div>
-              <div className="mt-2 text-xs text-cream/70">
+              <div className="mt-2 text-xs text-muted-foreground">
                 Payout sẽ bị tạm khoá đến khi admin review. Vui lòng liên hệ support nếu bạn cho rằng có nhầm lẫn.
               </div>
             </CardContent>
@@ -315,12 +315,12 @@ export default function AffiliateDashboardPage() {
             </CardHeader>
             <CardContent className="space-y-2">
               {data.notifications.slice(0, 5).map((n) => (
-                <div key={n.id} className="rounded border border-cream/10 bg-cream/[0.03] p-3 text-sm">
+                <div key={n.id} className="rounded border border-border bg-muted/[0.03] p-3 text-sm">
                   <div className="flex items-center justify-between">
                     <span className="font-semibold">{n.title}</span>
-                    <span className="text-xs text-cream/70">{dt(n.created_at)}</span>
+                    <span className="text-xs text-muted-foreground">{dt(n.created_at)}</span>
                   </div>
-                  <div className="mt-1 text-cream/70">{n.message}</div>
+                  <div className="mt-1 text-muted-foreground">{n.message}</div>
                   {n.link && (
                     <Link href={n.link} className="mt-1 inline-block text-xs text-gold hover:underline">
                       Xem chi tiết →
@@ -340,13 +340,13 @@ export default function AffiliateDashboardPage() {
             </Link>
             <Link
               href="/affiliate/leaderboard"
-              className="rounded border border-cream/20 px-3 py-1.5 hover:bg-cream/5"
+              className="rounded border border-border px-3 py-1.5 hover:bg-muted/5"
             >
               Bảng xếp hạng
             </Link>
             <Link
               href="/affiliate/terms"
-              className="rounded border border-cream/20 px-3 py-1.5 hover:bg-cream/5"
+              className="rounded border border-border px-3 py-1.5 hover:bg-muted/5"
             >
               Điều khoản &amp; thuế VN
             </Link>

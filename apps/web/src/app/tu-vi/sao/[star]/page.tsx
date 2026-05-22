@@ -55,7 +55,7 @@ export default async function StarPage({
   };
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -69,7 +69,7 @@ export default async function StarPage({
         />
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12 pt-12 sm:pt-16">
-          <nav aria-label="Breadcrumb" className="mb-4 flex flex-wrap items-center text-xs text-cream/55">
+          <nav aria-label="Breadcrumb" className="mb-4 flex flex-wrap items-center text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">
               Trang chủ
             </Link>
@@ -78,16 +78,16 @@ export default async function StarPage({
               Tử Vi
             </Link>
             <ChevronRight className="mx-1 h-3 w-3" aria-hidden />
-            <span className="text-cream/75">Sao {data.name}</span>
+            <span className="text-muted-foreground">Sao {data.name}</span>
           </nav>
 
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             {data.category === 'major' ? 'Chính tinh' : 'Phụ tinh'}
           </p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
             Sao {data.name}
           </h1>
-          <p className="mt-5 text-base leading-relaxed text-cream/80 sm:text-lg">
+          <p className="mt-5 text-base leading-relaxed text-foreground/80 sm:text-lg">
             {data.archetype}
           </p>
         </section>
@@ -101,7 +101,7 @@ export default async function StarPage({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-2 text-sm leading-relaxed text-cream/80">
+                <ul className="space-y-2 text-sm leading-relaxed text-foreground/80">
                   {data.positive.map((p, i) => (
                     <li key={i} className="flex gap-2">
                       <span className="text-jade-50">+</span>
@@ -118,7 +118,7 @@ export default async function StarPage({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-2 text-sm leading-relaxed text-cream/80">
+                <ul className="space-y-2 text-sm leading-relaxed text-foreground/80">
                   {data.caution.map((p, i) => (
                     <li key={i} className="flex gap-2">
                       <span className="text-amber-300">!</span>
@@ -132,21 +132,21 @@ export default async function StarPage({
         </section>
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12">
-          <h2 className="mb-5 font-heading text-2xl font-semibold text-cream sm:text-3xl">
+          <h2 className="mb-5 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             Sao {data.name} tại các cung
           </h2>
-          <p className="mb-5 text-sm leading-relaxed text-cream/70 sm:text-base">
+          <p className="mb-5 text-sm leading-relaxed text-muted-foreground sm:text-base">
             Cùng một sao đứng ở cung khác nhau cho nghĩa khác nhau. Đây là cách đọc cơ
             bản — luận đầy đủ cần xét cát/sát tinh đi kèm, tứ hoá và đại vận.
           </p>
           <div className="space-y-3">
             {data.byPalace.map((p, i) => (
-              <Card key={i} className="border-cream/10 bg-ink/40">
+              <Card key={i} className="border-border bg-card/40">
                 <CardContent className="pt-5">
                   <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">
                     Cung {p.palace}
                   </p>
-                  <p className="mt-2 text-sm leading-relaxed text-cream/85 sm:text-base">
+                  <p className="mt-2 text-sm leading-relaxed text-foreground/85 sm:text-base">
                     {p.reading}
                   </p>
                 </CardContent>
@@ -157,7 +157,7 @@ export default async function StarPage({
 
         {data.withMutagen && data.withMutagen.length > 0 && (
           <section className="relative mx-auto max-w-3xl px-6 pb-12">
-            <h2 className="mb-5 font-heading text-2xl font-semibold text-cream sm:text-3xl">
+            <h2 className="mb-5 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
               Khi gặp tứ hoá
             </h2>
             <div className="space-y-3">
@@ -167,7 +167,7 @@ export default async function StarPage({
                     <p className="font-mono text-[10px] uppercase tracking-widest text-gold">
                       Hoá {m.type}
                     </p>
-                    <p className="mt-2 text-sm leading-relaxed text-cream/85 sm:text-base">
+                    <p className="mt-2 text-sm leading-relaxed text-foreground/85 sm:text-base">
                       {m.reading}
                     </p>
                   </CardContent>
@@ -179,10 +179,10 @@ export default async function StarPage({
 
         <section className="relative mx-auto max-w-3xl px-6 pb-20">
           <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent p-6 sm:p-8">
-            <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+            <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
               Xem sao {data.name} có nằm trong lá số của bạn không
             </h2>
-            <p className="mt-3 text-sm leading-relaxed text-cream/80 sm:text-base">
+            <p className="mt-3 text-sm leading-relaxed text-foreground/80 sm:text-base">
               Lập lá số để xem {data.name} đứng tại cung nào trong 12 cung của bạn, có
               tứ hoá không, đại vận đến hỗ trợ hay xung khắc.
             </p>
@@ -192,7 +192,7 @@ export default async function StarPage({
               </Link>
               <Link
                 href="/tu-vi"
-                className="inline-flex items-center text-sm text-cream/70 hover:text-gold"
+                className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"
               >
                 Quay về cẩm nang Tử Vi
                 <ArrowRight className="ml-1 h-4 w-4" aria-hidden />

@@ -198,7 +198,7 @@ const BREADCRUMB_JSONLD = {
 
 export default function BatTuMethodologyPage() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -214,7 +214,7 @@ export default function BatTuMethodologyPage() {
           <div className="relative mx-auto max-w-4xl px-6 pb-8 pt-12 sm:pt-16">
             <nav
               aria-label="Breadcrumb"
-              className="mb-4 text-xs text-cream/55"
+              className="mb-4 text-xs text-muted-foreground"
             >
               <Link href="/" className="hover:text-gold">
                 Trang chủ
@@ -224,7 +224,7 @@ export default function BatTuMethodologyPage() {
                 Phương pháp luận
               </Link>
               <span className="mx-1.5">/</span>
-              <span className="text-cream/70">Bát Tự</span>
+              <span className="text-muted-foreground">Bát Tự</span>
             </nav>
 
             <div className="flex flex-wrap items-center gap-3">
@@ -236,10 +236,10 @@ export default function BatTuMethodologyPage() {
                 Beta
               </span>
             </div>
-            <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-5xl">
+            <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
               Bát Tự
             </h1>
-            <p className="mt-4 text-base leading-relaxed text-cream/75 sm:text-lg">
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
               Bát Tự hiện ở trạng thái beta. Engine đã tính được 4 trụ, thập
               thần và ngũ hành, nhưng trong báo cáo hiện tại, Tử Vi vẫn là
               phương pháp chính; Bát Tự chỉ đóng vai trò lớp đối chiếu, không
@@ -250,7 +250,7 @@ export default function BatTuMethodologyPage() {
 
         {/* 1. Trạng thái hiện tại */}
         <section className="relative mx-auto max-w-4xl px-6 py-8">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             1. Trạng thái hiện tại
           </h2>
           <Card className="mt-4 border-amber-500/30 bg-amber-500/5">
@@ -261,7 +261,7 @@ export default function BatTuMethodologyPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2.5 text-sm leading-relaxed text-cream/85">
+              <ul className="space-y-2.5 text-sm leading-relaxed text-foreground/85">
                 {CURRENT_STATUS.map((item) => (
                   <li key={item} className="flex gap-2">
                     <ChevronRight
@@ -278,12 +278,12 @@ export default function BatTuMethodologyPage() {
 
         {/* 2. Khái niệm cơ bản */}
         <section className="relative mx-auto max-w-4xl px-6 py-8">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             2. Khái niệm cơ bản
           </h2>
-          <Card className="mt-4 border-cream/10 bg-ink/40">
+          <Card className="mt-4 border-border bg-card/40">
             <CardContent className="p-5 sm:p-6">
-              <ul className="space-y-2.5 text-sm leading-relaxed text-cream/80">
+              <ul className="space-y-2.5 text-sm leading-relaxed text-foreground/80">
                 {BASICS.map((item) => (
                   <li key={item} className="flex gap-2">
                     <BookOpen
@@ -300,17 +300,17 @@ export default function BatTuMethodologyPage() {
 
         {/* 3. 4 trụ */}
         <section className="relative mx-auto max-w-4xl px-6 py-8">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             3. 4 trụ là gì
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             Mỗi trụ là một cặp Can-Chi, phản ánh một lớp quan hệ.
           </p>
 
-          <div className="mt-6 overflow-x-auto rounded-xl border border-cream/10 bg-ink/40">
+          <div className="mt-6 overflow-x-auto rounded-xl border border-border bg-card/40">
             <table className="w-full min-w-[560px] text-sm">
               <thead>
-                <tr className="border-b border-cream/10 text-left text-xs uppercase tracking-wider text-cream/55">
+                <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
                   <th className="px-4 py-3 font-medium">Trụ</th>
                   <th className="px-4 py-3 font-medium">Đại diện</th>
                   <th className="px-4 py-3 font-medium">Quan hệ với chủ</th>
@@ -320,9 +320,9 @@ export default function BatTuMethodologyPage() {
                 {PILLARS.map((p) => (
                   <tr
                     key={p.pillar}
-                    className="border-b border-cream/5 last:border-b-0"
+                    className="border-b border-border last:border-b-0"
                   >
-                    <td className="px-4 py-3 font-medium text-cream">
+                    <td className="px-4 py-3 font-medium text-foreground">
                       <span className="inline-flex items-center gap-2">
                         <Columns3
                           className="h-4 w-4 text-gold/70"
@@ -331,10 +331,10 @@ export default function BatTuMethodologyPage() {
                         {p.pillar}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-cream/75">
+                    <td className="px-4 py-3 text-muted-foreground">
                       {p.represents}
                     </td>
-                    <td className="px-4 py-3 text-cream/75">{p.relation}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{p.relation}</td>
                   </tr>
                 ))}
               </tbody>
@@ -344,10 +344,10 @@ export default function BatTuMethodologyPage() {
 
         {/* 4. Thập thần */}
         <section className="relative mx-auto max-w-5xl px-6 py-8">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             4. Thập thần
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             10 vai trò xã hội của trụ ngày — tham chiếu nhanh, mỗi tên 1 câu
             nghĩa.
           </p>
@@ -355,15 +355,15 @@ export default function BatTuMethodologyPage() {
           <ol className="mt-6 grid gap-3 sm:grid-cols-2">
             {TEN_GODS.map((g, idx) => (
               <li key={g.name}>
-                <div className="flex h-full gap-3 rounded-xl border border-cream/10 bg-ink/40 p-4">
+                <div className="flex h-full gap-3 rounded-xl border border-border bg-card/40 p-4">
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 font-mono text-xs font-bold text-gold">
                     {idx + 1}
                   </span>
                   <div className="min-w-0">
-                    <p className="font-heading text-sm font-semibold text-cream">
+                    <p className="font-heading text-sm font-semibold text-foreground">
                       {g.name}
                     </p>
-                    <p className="mt-1 text-sm leading-relaxed text-cream/70">
+                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                       {g.meaning}
                     </p>
                   </div>
@@ -375,17 +375,17 @@ export default function BatTuMethodologyPage() {
 
         {/* 5. Ngũ hành */}
         <section className="relative mx-auto max-w-5xl px-6 py-8">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             5. Ngũ hành
           </h2>
-          <p className="mt-2 text-sm text-cream/65">
+          <p className="mt-2 text-sm text-muted-foreground">
             5 nguyên tố với quan hệ tương sinh + tương khắc.
           </p>
 
-          <div className="mt-6 overflow-x-auto rounded-xl border border-cream/10 bg-ink/40">
+          <div className="mt-6 overflow-x-auto rounded-xl border border-border bg-card/40">
             <table className="w-full min-w-[560px] text-sm">
               <thead>
-                <tr className="border-b border-cream/10 text-left text-xs uppercase tracking-wider text-cream/55">
+                <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
                   <th className="px-4 py-3 font-medium">Hành</th>
                   <th className="px-4 py-3 font-medium">Tương sinh</th>
                   <th className="px-4 py-3 font-medium">Tương khắc</th>
@@ -395,9 +395,9 @@ export default function BatTuMethodologyPage() {
                 {ELEMENTS.map((e) => (
                   <tr
                     key={e.name}
-                    className="border-b border-cream/5 last:border-b-0"
+                    className="border-b border-border last:border-b-0"
                   >
-                    <td className="px-4 py-3 font-medium text-cream">
+                    <td className="px-4 py-3 font-medium text-foreground">
                       <span className="inline-flex items-center gap-2">
                         <Flame
                           className="h-4 w-4 text-gold/70"
@@ -414,7 +414,7 @@ export default function BatTuMethodologyPage() {
             </table>
           </div>
 
-          <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 text-sm leading-relaxed text-cream/80">
+          <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 text-sm leading-relaxed text-foreground/80">
             <p className="flex items-start gap-2">
               <Info
                 className="mt-0.5 h-4 w-4 shrink-0 text-amber-300"
@@ -431,12 +431,12 @@ export default function BatTuMethodologyPage() {
 
         {/* 6. Hieu.asia làm gì */}
         <section className="relative mx-auto max-w-4xl px-6 py-8">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             6. Hieu.asia làm gì với Bát Tự (beta)
           </h2>
-          <Card className="mt-4 border-cream/10 bg-ink/40">
+          <Card className="mt-4 border-border bg-card/40">
             <CardContent className="p-5 sm:p-6">
-              <ul className="space-y-2.5 text-sm leading-relaxed text-cream/80">
+              <ul className="space-y-2.5 text-sm leading-relaxed text-foreground/80">
                 {WHAT_WE_DO.map((item) => (
                   <li key={item} className="flex gap-2">
                     <Sparkles
@@ -453,7 +453,7 @@ export default function BatTuMethodologyPage() {
 
         {/* 7. Limitations */}
         <section className="relative mx-auto max-w-4xl px-6 py-8">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             7. Limitations cụ thể của bản beta
           </h2>
           <Card className="mt-4 border-rose-500/30 bg-rose-950/15">
@@ -464,7 +464,7 @@ export default function BatTuMethodologyPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2.5 text-sm leading-relaxed text-cream/85">
+              <ul className="space-y-2.5 text-sm leading-relaxed text-foreground/85">
                 {LIMITATIONS.map((item) => (
                   <li key={item} className="flex gap-2">
                     <AlertTriangle
@@ -481,7 +481,7 @@ export default function BatTuMethodologyPage() {
 
         {/* 8. Roadmap */}
         <section className="relative mx-auto max-w-4xl px-6 py-8">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             8. Roadmap graduation
           </h2>
           <Card className="mt-4 border-jade/25 bg-jade/5">
@@ -492,7 +492,7 @@ export default function BatTuMethodologyPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2.5 text-sm leading-relaxed text-cream/85">
+              <ul className="space-y-2.5 text-sm leading-relaxed text-foreground/85">
                 {ROADMAP.map((item) => (
                   <li key={item} className="flex gap-2">
                     <ChevronRight
@@ -509,10 +509,10 @@ export default function BatTuMethodologyPage() {
 
         {/* 9. References */}
         <section className="relative mx-auto max-w-4xl px-6 pb-20 pt-8">
-          <h2 className="font-heading text-2xl font-bold text-cream sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             9. References
           </h2>
-          <ul className="mt-4 space-y-2.5 text-sm leading-relaxed text-cream/80">
+          <ul className="mt-4 space-y-2.5 text-sm leading-relaxed text-foreground/80">
             {REFERENCES.map((r) => (
               <li key={r.href} className="flex gap-2">
                 <BookOpen
@@ -521,7 +521,7 @@ export default function BatTuMethodologyPage() {
                 />
                 <Link
                   href={r.href}
-                  className="text-cream/85 hover:text-gold"
+                  className="text-foreground/85 hover:text-gold"
                 >
                   {r.label}
                 </Link>

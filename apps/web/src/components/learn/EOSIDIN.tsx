@@ -134,12 +134,12 @@ export function EOSIDIN() {
             </g>
           ))}
         </svg>
-        <div className="mt-4 w-full max-w-md rounded-lg border border-gold/30 bg-ink/40 p-4 text-center">
+        <div className="mt-4 w-full max-w-md rounded-lg border border-gold/30 bg-card/40 p-4 text-center">
           <div className="font-heading text-sm font-bold text-gold">
             {STEPS[active]!.letter} — {STEPS[active]!.name}{' '}
-            <span className="text-cream/60">({STEPS[active]!.vn})</span>
+            <span className="text-muted-foreground">({STEPS[active]!.vn})</span>
           </div>
-          <p className="mt-1 text-sm text-cream/70">{STEPS[active]!.desc}</p>
+          <p className="mt-1 text-sm text-muted-foreground">{STEPS[active]!.desc}</p>
         </div>
       </div>
 
@@ -148,13 +148,13 @@ export function EOSIDIN() {
           <li
             key={`${s.letter}-${i}`}
             className={`rounded border px-3 py-2 ${
-              active === i ? 'border-gold bg-gold/10' : 'border-cream/15'
+              active === i ? 'border-gold bg-gold/10' : 'border-border'
             }`}
           >
-            <div className="font-semibold text-cream">
+            <div className="font-semibold text-foreground">
               {i + 1}. {s.vn}
             </div>
-            <div className="text-cream/60">{s.desc}</div>
+            <div className="text-muted-foreground">{s.desc}</div>
           </li>
         ))}
       </ol>

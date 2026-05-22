@@ -97,18 +97,18 @@ function ScoreRow({
   return (
     <div>
       <div className="flex items-center justify-between text-sm">
-        <span className="font-medium text-cream">
+        <span className="font-medium text-foreground">
           {label}
           {expertCung && (
-            <ExpertTerm className="ml-1 text-cream/55">({expertCung})</ExpertTerm>
+            <ExpertTerm className="ml-1 text-muted-foreground">({expertCung})</ExpertTerm>
           )}
         </span>
-        <span className="text-cream/70">{score}/10</span>
+        <span className="text-muted-foreground">{score}/10</span>
       </div>
-      <div className="mt-1 h-2 overflow-hidden rounded-full bg-cream/10">
+      <div className="mt-1 h-2 overflow-hidden rounded-full bg-muted/10">
         <div className={`h-full ${color}`} style={{ width: `${pct}%` }} />
       </div>
-      {summary ? <p className="mt-2 text-sm text-cream/70">{summary}</p> : null}
+      {summary ? <p className="mt-2 text-sm text-muted-foreground">{summary}</p> : null}
     </div>
   );
 }
@@ -121,10 +121,10 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
   const icon = ZODIAC_ICON[zodiac] ?? '🔮';
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <main id="main-content" className="pt-16">
-      <section className="relative isolate overflow-hidden border-b border-cream/5 bg-ink/60">
+      <section className="relative isolate overflow-hidden border-b border-border bg-card/60">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-[280px] bg-ink-radial opacity-80 -z-10"
@@ -134,12 +134,12 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
           className="pointer-events-none absolute -top-20 right-[-10%] h-[260px] w-[260px] rounded-full bg-gold/15 blur-3xl -z-10"
         />
         <div className="mx-auto max-w-3xl px-6 py-10">
-          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-cream/55">
+          <nav aria-label="Breadcrumb" className="mb-4 text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">Trang chủ</Link>
             <span className="mx-1.5">/</span>
             <Link href="/tu-vi-hom-nay" className="hover:text-gold">Tử vi hôm nay</Link>
             <span className="mx-1.5">/</span>
-            <span className="text-cream/70">Tuổi {label}</span>
+            <span className="text-muted-foreground">Tuổi {label}</span>
           </nav>
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Tử vi hằng ngày
@@ -147,12 +147,12 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
           <div className="mt-3 flex items-start gap-4">
             <div className="text-5xl sm:text-6xl" aria-hidden>{icon}</div>
             <div>
-              <h1 className="font-heading text-3xl font-bold leading-tight text-cream sm:text-4xl">
+              <h1 className="font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
                 Tử vi tuổi{' '}
                 <span className="bg-gold-gradient bg-clip-text text-transparent">{label}</span>{' '}
                 hôm nay
               </h1>
-              <p className="mt-2 text-sm text-cream/60">
+              <p className="mt-2 text-sm text-muted-foreground">
                 {h?.date ?? '—'}{h?.lunar_date ? ` · ${h.lunar_date}` : ''}
               </p>
               {h ? (
@@ -166,38 +166,38 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
       </section>
 
       {!h ? (
-        <section className="mx-auto max-w-3xl px-6 py-10 text-center text-cream/70">
+        <section className="mx-auto max-w-3xl px-6 py-10 text-center text-muted-foreground">
           Đang tải tử vi cho tuổi {label}…
         </section>
       ) : (
         <>
           <section className="mx-auto max-w-3xl px-6 py-8">
-            <p className="rounded-2xl border border-cream/10 bg-ink/40 p-5 text-base leading-relaxed text-cream/85">
-              <span className="text-cream">
+            <p className="rounded-2xl border border-border bg-card/40 p-5 text-base leading-relaxed text-foreground/85">
+              <span className="text-foreground">
                 {getZodiacDailyOpener(zodiac, h.overall.score)}
               </span>
               {h.detailed_text ? (
                 <>
                   {' '}
-                  <span className="text-cream/75">{h.detailed_text}</span>
+                  <span className="text-muted-foreground">{h.detailed_text}</span>
                 </>
               ) : null}
             </p>
           </section>
 
           <section className="mx-auto max-w-3xl px-6 py-4">
-            <h2 className="font-heading text-xl font-semibold text-cream">
+            <h2 className="font-heading text-xl font-semibold text-foreground">
               Bốn lĩnh vực
               <ExpertTerm className="ml-2 font-mono text-[11px] font-normal uppercase tracking-[0.24em] text-gold/80">
                 · tứ cung trọng yếu
               </ExpertTerm>
             </h2>
-            <ExpertContent className="mt-2 text-xs leading-relaxed text-cream/65">
+            <ExpertContent className="mt-2 text-xs leading-relaxed text-muted-foreground">
               Bốn lĩnh vực bên dưới đối chiếu với bốn cung trong lá số: Quan Lộc · Phu Thê ·
               Tài Bạch · Tật Ách. Điểm số phản ánh tương tác của tiểu hạn ngày với chính
               tinh thủ cung tương ứng.
             </ExpertContent>
-            <div className="mt-4 space-y-5 rounded-2xl border border-cream/10 bg-ink/40 p-5">
+            <div className="mt-4 space-y-5 rounded-2xl border border-border bg-card/40 p-5">
               <ScoreRow label="Sự nghiệp" expertCung="cung Quan Lộc" score={h.career.score} summary={h.career.summary} />
               <ScoreRow label="Tình duyên" expertCung="cung Phu Thê" score={h.love.score} summary={h.love.summary} />
               <ScoreRow label="Tài lộc" expertCung="cung Tài Bạch" score={h.money.score} summary={h.money.summary} />
@@ -206,8 +206,8 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
           </section>
 
           <section className="mx-auto max-w-3xl px-6 py-4">
-            <h2 className="font-heading text-xl font-semibold text-cream">Vận may hôm nay</h2>
-            <ExpertContent className="mt-2 text-xs leading-relaxed text-cream/65">
+            <h2 className="font-heading text-xl font-semibold text-foreground">Vận may hôm nay</h2>
+            <ExpertContent className="mt-2 text-xs leading-relaxed text-muted-foreground">
               Hướng tốt và giờ tốt suy ra từ tiểu hạn ngày kết hợp với địa chi tuổi —
               dùng làm tham chiếu, không phải mệnh lệnh.
             </ExpertContent>
@@ -221,7 +221,7 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
 
           {h.avoid ? (
             <section className="mx-auto max-w-3xl px-6 py-4">
-              <div className="rounded-2xl border border-rose-400/30 bg-rose-400/5 p-4 text-sm text-cream/85">
+              <div className="rounded-2xl border border-rose-400/30 bg-rose-400/5 p-4 text-sm text-foreground/85">
                 <strong className="text-rose-300">Nên tránh:</strong> {h.avoid}
               </div>
             </section>
@@ -229,7 +229,7 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
 
           <section className="mx-auto max-w-3xl px-6 py-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <Link href="/tu-vi-hom-nay" className="rounded-lg border border-cream/20 px-4 py-2 text-sm text-cream/80 transition-colors hover:border-gold hover:text-gold">
+              <Link href="/tu-vi-hom-nay" className="rounded-lg border border-border px-4 py-2 text-sm text-foreground/80 transition-colors hover:border-gold hover:text-gold">
                 ← Xem tuổi khác
               </Link>
               <ShareButton zodiac={zodiac} label={label} score={h.overall.score} />
@@ -245,9 +245,9 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
 
 function Info({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-cream/10 bg-ink/40 p-3">
-      <div className="text-xs uppercase tracking-wide text-cream/70">{label}</div>
-      <div className="mt-1 text-base font-semibold text-cream">{value || '—'}</div>
+    <div className="rounded-xl border border-border bg-card/40 p-3">
+      <div className="text-xs uppercase tracking-wide text-muted-foreground">{label}</div>
+      <div className="mt-1 text-base font-semibold text-foreground">{value || '—'}</div>
     </div>
   );
 }

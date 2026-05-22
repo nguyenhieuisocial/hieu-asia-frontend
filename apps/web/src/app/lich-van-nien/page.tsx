@@ -138,7 +138,7 @@ export default async function LichVanNienPage() {
       )}
 
       <section className="mt-12">
-        <h2 className="mb-4 font-heading text-xl font-semibold text-cream">
+        <h2 className="mb-4 font-heading text-xl font-semibold text-foreground">
           Chọn ngày tốt cho việc
         </h2>
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-5 xl:grid-cols-9">
@@ -147,7 +147,7 @@ export default async function LichVanNienPage() {
               key={a.value}
               href={`/lich-van-nien/ngay-tot-xau?activity=${a.value}`}
               aria-label={`Chọn ngày tốt cho ${a.label}`}
-              className="group flex min-h-[88px] flex-col items-center justify-center gap-1 rounded-xl border border-cream/10 bg-ink/40 px-2 py-3 text-center transition-all duration-200 hover:-translate-y-0.5 hover:border-gold/40 hover:bg-ink/60 hover:shadow-[0_0_30px_-12px_rgba(184,146,61,0.4)]"
+              className="group flex min-h-[88px] flex-col items-center justify-center gap-1 rounded-xl border border-border bg-card/40 px-2 py-3 text-center transition-all duration-200 hover:-translate-y-0.5 hover:border-gold/40 hover:bg-card/60 hover:shadow-[0_0_30px_-12px_rgba(184,146,61,0.4)]"
             >
               <div
                 aria-hidden="true"
@@ -155,7 +155,7 @@ export default async function LichVanNienPage() {
               >
                 {a.emoji}
               </div>
-              <div className="text-[11px] font-medium leading-tight text-cream/85 sm:text-xs">
+              <div className="text-[11px] font-medium leading-tight text-foreground/85 sm:text-xs">
                 {a.label}
               </div>
             </Link>
@@ -169,13 +169,13 @@ export default async function LichVanNienPage() {
           return (
             <Card
               key={c.title}
-              className="group border-cream/10 bg-ink/50 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/40"
+              className="group border-border bg-card/50 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/40"
             >
               <CardHeader>
                 <Icon className="mb-2 h-5 w-5 text-gold/85" aria-hidden="true" />
                 <CardTitle className="text-base">{c.title}</CardTitle>
               </CardHeader>
-              <CardContent className="text-sm text-cream/75">
+              <CardContent className="text-sm text-muted-foreground">
                 <p className="leading-relaxed">{c.desc}</p>
                 <div className="mt-4">
                   <Link href={c.href}>
@@ -191,16 +191,16 @@ export default async function LichVanNienPage() {
       </section>
 
       <section className="mt-12">
-        <h2 className="mb-4 font-heading text-xl font-semibold text-cream">
+        <h2 className="mb-4 font-heading text-xl font-semibold text-foreground">
           Câu hỏi thường gặp
         </h2>
         <div className="space-y-3">
           {FAQS.map((f, i) => (
             <details
               key={i}
-              className="group rounded-xl border border-cream/10 bg-ink/40 p-4 transition-colors open:border-gold/30 open:bg-ink/60"
+              className="group rounded-xl border border-border bg-card/40 p-4 transition-colors open:border-gold/30 open:bg-card/60"
             >
-              <summary className="cursor-pointer list-none text-sm font-medium text-cream marker:hidden">
+              <summary className="cursor-pointer list-none text-sm font-medium text-foreground marker:hidden">
                 <span className="flex items-center justify-between">
                   {f.q}
                   <span className="ml-3 text-gold transition-transform group-open:rotate-45">
@@ -208,7 +208,7 @@ export default async function LichVanNienPage() {
                   </span>
                 </span>
               </summary>
-              <p className="mt-3 text-sm leading-relaxed text-cream/70">{f.a}</p>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{f.a}</p>
             </details>
           ))}
         </div>

@@ -105,8 +105,8 @@ export function MentorTab() {
       className="space-y-6"
     >
       <div>
-        <h2 className="font-heading text-2xl text-cream sm:text-3xl">Mentor</h2>
-        <p className="mt-1 text-sm text-cream/65">
+        <h2 className="font-heading text-2xl text-foreground sm:text-3xl">Mentor</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Các cuộc trò chuyện với mentor và bộ nhớ cá nhân hóa.
         </p>
       </div>
@@ -125,31 +125,31 @@ export function MentorTab() {
             </p>
           )}
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cream/55">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
               Mục tiêu hiện tại
             </p>
             {memory && memory.currentGoals.length > 0 ? (
-              <ul className="mt-2 list-disc space-y-1 pl-5 text-cream/85">
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-foreground/85">
                 {memory.currentGoals.map((g, i) => (
                   <li key={i}>{g}</li>
                 ))}
               </ul>
             ) : (
-              <p className="mt-2 text-cream/55">Chưa có mục tiêu nào được mentor ghi nhận.</p>
+              <p className="mt-2 text-muted-foreground">Chưa có mục tiêu nào được mentor ghi nhận.</p>
             )}
           </div>
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cream/55">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
               Quyết định mở
             </p>
             {memory && memory.openDecisions.length > 0 ? (
-              <ul className="mt-2 list-disc space-y-1 pl-5 text-cream/85">
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-foreground/85">
                 {memory.openDecisions.map((d, i) => (
                   <li key={i}>{d}</li>
                 ))}
               </ul>
             ) : (
-              <p className="mt-2 text-cream/55">Không có quyết định nào đang treo.</p>
+              <p className="mt-2 text-muted-foreground">Không có quyết định nào đang treo.</p>
             )}
           </div>
         </CardContent>
@@ -169,14 +169,14 @@ export function MentorTab() {
         </CardHeader>
         <CardContent>
           {sessions.length === 0 ? (
-            <p className="text-sm text-cream/55">
+            <p className="text-sm text-muted-foreground">
               Chưa có cuộc trò chuyện. Bắt đầu chat →{' '}
               <Link href="/reading" className="text-gold hover:underline">
                 /reading
               </Link>
             </p>
           ) : (
-            <ul className="divide-y divide-cream/5">
+            <ul className="divide-y divide-border">
               {sessions.map((s) => (
                 <li key={s.reading_id} className="py-3">
                   <Link
@@ -184,14 +184,14 @@ export function MentorTab() {
                     className="flex items-center gap-3 hover:text-gold"
                   >
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm text-cream/90">
+                      <p className="truncate text-sm text-foreground/90">
                         {s.preview ?? `Phiên ${s.reading_id.slice(0, 8)}`}
                       </p>
-                      <p className="mt-0.5 font-mono text-[10px] text-cream/70">
+                      <p className="mt-0.5 font-mono text-[10px] text-muted-foreground">
                         {fmtDate(s.last_message_at)} · {s.reading_id.slice(0, 12)}
                       </p>
                     </div>
-                    <ChevronRight className="h-4 w-4 shrink-0 text-cream/40" aria-hidden />
+                    <ChevronRight className="h-4 w-4 shrink-0 text-foreground/40" aria-hidden />
                   </Link>
                 </li>
               ))}

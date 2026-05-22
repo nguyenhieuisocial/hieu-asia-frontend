@@ -8,7 +8,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
  */
 export default function LearnLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <div id="main-content" className="relative overflow-hidden pt-16">
         <div

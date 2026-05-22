@@ -30,7 +30,7 @@ export default function CaseStudiesIndexPage() {
   return (
     <>
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-ink text-cream pt-16">
+      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
         <section className="relative isolate overflow-hidden">
           <div
             aria-hidden="true"
@@ -40,18 +40,18 @@ export default function CaseStudiesIndexPage() {
             <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
               Cộng đồng / Case studies
             </p>
-            <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-cream sm:text-5xl">
+            <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
               Quy trình thật,{' '}
               <span className="bg-gold-gradient bg-clip-text text-transparent">
                 không phải lời hứa
               </span>
             </h1>
-            <p className="mt-5 text-base leading-relaxed text-cream/75 sm:text-lg">
+            <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
               Mỗi câu chuyện là một quyết định khó. Chúng tôi không chia sẻ kết quả
               — chia sẻ cách người đó nhìn lá số, kết hợp với hoàn cảnh, rồi đi
               tới quyết định mà họ thấy thoải mái nhất.
             </p>
-            <p className="mt-3 text-sm text-cream/75">
+            <p className="mt-3 text-sm text-muted-foreground">
               Tất cả case đều được ẩn danh và xin phép trước khi xuất bản.
             </p>
           </div>
@@ -63,16 +63,16 @@ export default function CaseStudiesIndexPage() {
               {cases.map((c) => (
                 <article
                   key={c.slug}
-                  className="group rounded-2xl border border-cream/10 bg-ink/40 p-6 transition-all hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)] sm:p-8"
+                  className="group rounded-2xl border border-border bg-card/40 p-6 transition-all hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)] sm:p-8"
                 >
-                  <div className="flex items-center gap-3 text-xs text-cream/60">
+                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
                     <span className="font-mono uppercase tracking-[0.2em] text-gold/70">
                       {c.year}
                     </span>
                     <span aria-hidden>·</span>
                     <span>{c.persona}</span>
                   </div>
-                  <h2 className="mt-3 font-heading text-xl font-semibold text-cream sm:text-2xl">
+                  <h2 className="mt-3 font-heading text-xl font-semibold text-foreground sm:text-2xl">
                     <Link
                       href={`/community/cases/${c.slug}`}
                       className="transition-colors hover:text-gold"
@@ -80,7 +80,7 @@ export default function CaseStudiesIndexPage() {
                       {c.title}
                     </Link>
                   </h2>
-                  <p className="mt-3 text-sm leading-relaxed text-cream/75 sm:text-base">
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
                     {c.excerpt}
                   </p>
                   <div className="mt-5 flex items-center justify-between">
@@ -91,7 +91,7 @@ export default function CaseStudiesIndexPage() {
                       Đọc đầy đủ
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                     </Link>
-                    <span className="text-xs text-cream/50">
+                    <span className="text-xs text-muted-foreground">
                       {new Date(c.publishedAt).toLocaleDateString('vi-VN', {
                         day: 'numeric',
                         month: 'long',
@@ -103,9 +103,9 @@ export default function CaseStudiesIndexPage() {
               ))}
             </div>
 
-            <div className="mt-12 rounded-2xl border border-cream/10 bg-ink/30 p-6 text-center">
+            <div className="mt-12 rounded-2xl border border-border bg-card/30 p-6 text-center">
               <BookOpen className="mx-auto h-6 w-6 text-gold/70" aria-hidden="true" />
-              <p className="mt-3 text-sm text-cream/75">
+              <p className="mt-3 text-sm text-muted-foreground">
                 Bạn đã ra một quyết định khó sau khi đọc lá số?{' '}
                 <a
                   href="mailto:hi@hieu.asia?subject=Case%20study%20cho%20hieu.asia"

@@ -92,11 +92,11 @@ export default function NewJournalEntryPage() {
   }
 
   return (
-    <main className="min-h-screen bg-ink text-cream">
+    <main className="min-h-screen bg-background text-foreground">
       <SiteNav />
 
       <section className="mx-auto max-w-3xl px-6 pt-16 pb-20">
-        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream/55">
+        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">
             Trang chủ
           </Link>
@@ -105,7 +105,7 @@ export default function NewJournalEntryPage() {
             Decision Journal
           </Link>
           <span className="mx-1.5">/</span>
-          <span className="text-cream/70">Quyết định mới</span>
+          <span className="text-muted-foreground">Quyết định mới</span>
         </nav>
 
         <header className="mb-8">
@@ -122,14 +122,14 @@ export default function NewJournalEntryPage() {
             className="mt-0.5 h-5 w-5 shrink-0 text-gold/80"
             aria-hidden="true"
           />
-          <p className="text-sm leading-relaxed text-cream/85">
+          <p className="text-sm leading-relaxed text-foreground/85">
             Decision Journal không phán đúng/sai. Mục đích là 30 ngày sau bạn
             nhìn lại, biết mình đã quyết theo lý do gì.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} noValidate>
-          <Card className="border-gold/20 bg-ink/60 backdrop-blur">
+          <Card className="border-gold/20 bg-card/60 backdrop-blur">
             <CardHeader>
               <CardTitle className="font-heading text-xl">
                 Quyết định của bạn
@@ -137,7 +137,7 @@ export default function NewJournalEntryPage() {
             </CardHeader>
             <CardContent className="space-y-8">
               <fieldset>
-                <legend className="text-sm font-medium text-cream/90">
+                <legend className="text-sm font-medium text-foreground/90">
                   Chủ đề
                 </legend>
                 <RadioGroup
@@ -154,7 +154,7 @@ export default function NewJournalEntryPage() {
                         'flex cursor-pointer items-start gap-3 rounded-lg border p-4 transition',
                         topic === t.id
                           ? 'border-gold bg-gold/10'
-                          : 'border-cream/15 bg-ink/40 hover:border-gold/40',
+                          : 'border-border bg-card/40 hover:border-gold/40',
                       ].join(' ')}
                     >
                       <RadioGroupItem
@@ -163,10 +163,10 @@ export default function NewJournalEntryPage() {
                         className="mt-1"
                       />
                       <span className="flex flex-col">
-                        <span className="text-sm font-medium text-cream">
+                        <span className="text-sm font-medium text-foreground">
                           {t.label}
                         </span>
-                        <span className="mt-0.5 text-xs text-cream/60">
+                        <span className="mt-0.5 text-xs text-muted-foreground">
                           {t.hint}
                         </span>
                       </span>
@@ -180,7 +180,7 @@ export default function NewJournalEntryPage() {
                   Bạn đang quyết định điều gì?{' '}
                   <span className="text-red-400/80">*</span>
                 </Label>
-                <p className="mt-1 text-xs text-cream/55">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Câu hỏi gọn — sau này nhìn lại sẽ dễ nhớ ngữ cảnh.
                 </p>
                 <Input
@@ -192,7 +192,7 @@ export default function NewJournalEntryPage() {
                   className="mt-2"
                   required
                 />
-                <div className="mt-1 flex justify-end text-xs text-cream/70">
+                <div className="mt-1 flex justify-end text-xs text-muted-foreground">
                   {qLen}/200 (tối thiểu 10)
                 </div>
               </div>
@@ -201,7 +201,7 @@ export default function NewJournalEntryPage() {
                 <Label htmlFor="j-decision" className="text-sm font-medium">
                   Bạn đã chọn gì? <span className="text-red-400/80">*</span>
                 </Label>
-                <p className="mt-1 text-xs text-cream/55">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Phương án bạn quyết theo, kèm mốc thời gian nếu có.
                 </p>
                 <Textarea
@@ -214,7 +214,7 @@ export default function NewJournalEntryPage() {
                   className="mt-2"
                   required
                 />
-                <div className="mt-1 flex justify-end text-xs text-cream/70">
+                <div className="mt-1 flex justify-end text-xs text-muted-foreground">
                   {dLen}/500 (tối thiểu 10)
                 </div>
               </div>
@@ -222,9 +222,9 @@ export default function NewJournalEntryPage() {
               <div>
                 <Label htmlFor="j-reasoning" className="text-sm font-medium">
                   Lý do bạn chọn vậy?{' '}
-                  <span className="text-cream/70">(tuỳ chọn)</span>
+                  <span className="text-muted-foreground">(tuỳ chọn)</span>
                 </Label>
-                <p className="mt-1 text-xs text-cream/55">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Càng cụ thể, sau này càng dễ học từ chính mình.
                 </p>
                 <Textarea
@@ -236,7 +236,7 @@ export default function NewJournalEntryPage() {
                   placeholder="Vì tôi đã cảm thấy công việc không còn ý nghĩa, và..."
                   className="mt-2"
                 />
-                <div className="mt-1 flex justify-end text-xs text-cream/70">
+                <div className="mt-1 flex justify-end text-xs text-muted-foreground">
                   {rLen}/1000
                 </div>
               </div>
@@ -246,7 +246,7 @@ export default function NewJournalEntryPage() {
                   Bạn kỳ vọng kết quả thế nào?{' '}
                   <span className="text-red-400/80">*</span>
                 </Label>
-                <p className="mt-1 text-xs text-cream/55">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Viết kỳ vọng cụ thể — khi review, bạn sẽ so kết quả thực với
                   điều này.
                 </p>
@@ -260,7 +260,7 @@ export default function NewJournalEntryPage() {
                   className="mt-2"
                   required
                 />
-                <div className="mt-1 flex justify-end text-xs text-cream/70">
+                <div className="mt-1 flex justify-end text-xs text-muted-foreground">
                   {eLen}/500 (tối thiểu 10)
                 </div>
               </div>
@@ -268,7 +268,7 @@ export default function NewJournalEntryPage() {
               <div className="flex items-center justify-between gap-4">
                 <Link
                   href="/journal"
-                  className="text-sm text-cream/65 hover:text-gold"
+                  className="text-sm text-muted-foreground hover:text-gold"
                 >
                   ← Quay lại
                 </Link>
@@ -291,7 +291,7 @@ export default function NewJournalEntryPage() {
                 </Button>
               </div>
 
-              <p className="flex items-center gap-2 text-xs text-cream/55">
+              <p className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Sparkles className="h-3.5 w-3.5 text-gold/70" aria-hidden="true" />
                 Lưu trên trình duyệt của bạn. Không ai khác đọc được.
               </p>

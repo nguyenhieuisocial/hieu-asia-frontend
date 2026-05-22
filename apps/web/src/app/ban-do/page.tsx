@@ -116,7 +116,7 @@ export default function BanDoPage() {
   };
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
@@ -125,10 +125,10 @@ export default function BanDoPage() {
       <main id="main-content" className="pt-16">
         {/* Hero */}
         <section className="mx-auto max-w-5xl px-6 pt-12 pb-8">
-          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-cream">
+          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground">
             Bản đồ của bạn, đồng hành mỗi tuần
           </h1>
-          <p className="mt-4 text-lg text-cream/80 max-w-3xl">
+          <p className="mt-4 text-lg text-foreground/80 max-w-3xl">
             Bản đồ này theo dõi bạn theo 4 nhịp — hôm nay, tuần này, tháng này, năm nay. Premium
             đồng hành sẽ cập nhật mỗi tuần theo lá số riêng của bạn.
           </p>
@@ -139,19 +139,19 @@ export default function BanDoPage() {
 
         {/* Hôm nay */}
         <section className="mx-auto max-w-5xl px-6 pb-6">
-          <Card className="border-gold/30 bg-ink/40">
+          <Card className="border-gold/30 bg-card/40">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <Sparkles className="h-5 w-5 text-gold" aria-hidden="true" />
-                <CardTitle className="text-cream text-xl">
+                <CardTitle className="text-foreground text-xl">
                   Hôm nay · {todayLabel}
                 </CardTitle>
               </div>
-              <CardDescription className="text-cream/70">
+              <CardDescription className="text-muted-foreground">
                 Nhịp ngày — đủ ngắn để đọc trong 30 giây trước khi bắt đầu việc.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-5 text-cream/85">
+            <CardContent className="space-y-5 text-foreground/85">
               <div>
                 <h3 className="text-sm font-medium text-gold/90 uppercase tracking-wide mb-1">
                   Insight ngắn
@@ -169,12 +169,12 @@ export default function BanDoPage() {
                 <p>Một việc quan trọng đã đẩy lùi nhiều lần — chọn nó, làm trước cà phê thứ hai.</p>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-cream/60 uppercase tracking-wide mb-1">
+                <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-1">
                   Việc nên tránh
                 </h3>
                 <p>Tranh luận qua tin nhắn về những chuyện đã rõ ai đúng ai sai.</p>
               </div>
-              <blockquote className="border-l-2 border-gold/40 pl-4 italic text-cream/75">
+              <blockquote className="border-l-2 border-gold/40 pl-4 italic text-muted-foreground">
                 Nếu hôm nay chỉ làm được một việc, mình muốn cuối ngày nhìn lại và thấy việc gì?
               </blockquote>
             </CardContent>
@@ -183,32 +183,32 @@ export default function BanDoPage() {
 
         {/* Tuần này + Tháng này */}
         <section className="mx-auto max-w-5xl px-6 pb-6 grid gap-6 md:grid-cols-2">
-          <Card className="bg-ink/40 border-cream/10">
+          <Card className="bg-card/40 border-border">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <Compass className="h-5 w-5 text-jade-50" aria-hidden="true" />
-                <CardTitle className="text-cream text-lg">Tuần này</CardTitle>
+                <CardTitle className="text-foreground text-lg">Tuần này</CardTitle>
               </div>
             </CardHeader>
-            <CardContent className="space-y-4 text-sm text-cream/85">
+            <CardContent className="space-y-4 text-sm text-foreground/85">
               <div>
-                <div className="text-xs text-cream/60 uppercase tracking-wide mb-1">Chủ đề tuần</div>
+                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Chủ đề tuần</div>
                 <p>Sắp xếp lại ưu tiên — bớt nói có với việc không thuộc về mình.</p>
               </div>
               <div>
-                <div className="text-xs text-cream/60 uppercase tracking-wide mb-1">
+                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
                   Hành động chính
                 </div>
                 <p>Lên lịch 2 khối deep-work 2h, một việc khó mỗi khối.</p>
               </div>
               <div>
-                <div className="text-xs text-cream/60 uppercase tracking-wide mb-1">
+                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
                   Cuộc trò chuyện nên có
                 </div>
                 <p>Nói rõ với một người về kỳ vọng đang lệch — càng để lâu càng khó.</p>
               </div>
               <div>
-                <div className="text-xs text-cream/60 uppercase tracking-wide mb-1">
+                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
                   Rủi ro cần quản trị
                 </div>
                 <p>Quá tải buổi tối vì nhận thêm việc giữa tuần. Đặt giới hạn trước thứ Tư.</p>
@@ -216,41 +216,41 @@ export default function BanDoPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-ink/40 border-cream/10">
+          <Card className="bg-card/40 border-border">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <Calendar className="h-5 w-5 text-jade-50" aria-hidden="true" />
-                <CardTitle className="text-cream text-lg">Tháng này</CardTitle>
+                <CardTitle className="text-foreground text-lg">Tháng này</CardTitle>
               </div>
             </CardHeader>
-            <CardContent className="space-y-4 text-sm text-cream/85">
+            <CardContent className="space-y-4 text-sm text-foreground/85">
               <div>
-                <div className="text-xs text-cream/60 uppercase tracking-wide mb-1">Mục tiêu tháng</div>
+                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Mục tiêu tháng</div>
                 <p>Kết thúc một dự án còn lửng — không khởi động thêm cái mới.</p>
               </div>
               <div>
-                <div className="text-xs text-cream/60 uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
+                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
                   <Briefcase className="h-3 w-3" aria-hidden="true" /> Năng lượng sự nghiệp
                 </div>
                 <p>Đều, không bùng nổ. Phù hợp việc cần kiên nhẫn hơn việc cần tốc độ.</p>
               </div>
               <div>
-                <div className="text-xs text-cream/60 uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
+                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
                   <TrendingUp className="h-3 w-3" aria-hidden="true" /> Năng lượng tài chính
                 </div>
                 <p>Ổn định, nên tránh quyết định đầu tư lớn dựa trên cảm xúc.</p>
               </div>
               <div>
-                <div className="text-xs text-cream/60 uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
+                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
                   <Heart className="h-3 w-3" aria-hidden="true" /> Quan hệ
                 </div>
                 <p>Thời điểm tốt để hàn gắn một mối quan hệ đang xa cách trong im lặng.</p>
               </div>
-              <div className="pt-2 border-t border-cream/10">
-                <div className="text-xs text-cream/60 uppercase tracking-wide mb-1">
+              <div className="pt-2 border-t border-border">
+                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
                   Review cuối tháng
                 </div>
-                <p className="text-cream/75">Đặt lịch nhìn lại tháng vào {monthReviewDate}.</p>
+                <p className="text-muted-foreground">Đặt lịch nhìn lại tháng vào {monthReviewDate}.</p>
               </div>
             </CardContent>
           </Card>
@@ -258,19 +258,19 @@ export default function BanDoPage() {
 
         {/* Năm nay */}
         <section className="mx-auto max-w-5xl px-6 pb-8">
-          <Card className="bg-ink/40 border-cream/10">
+          <Card className="bg-card/40 border-border">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <Target className="h-5 w-5 text-gold" aria-hidden="true" />
-                <CardTitle className="text-cream text-lg">Năm nay</CardTitle>
+                <CardTitle className="text-foreground text-lg">Năm nay</CardTitle>
               </div>
-              <CardDescription className="text-cream/70">
+              <CardDescription className="text-muted-foreground">
                 Bốn quý — mỗi quý một nhịp khác nhau.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6 text-cream/85">
+            <CardContent className="space-y-6 text-foreground/85">
               <div>
-                <div className="text-xs text-cream/60 uppercase tracking-wide mb-1">
+                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
                   Chủ đề lưu niên
                 </div>
                 <p>
@@ -283,10 +283,10 @@ export default function BanDoPage() {
                 {QUARTERS.map((q) => (
                   <div
                     key={q.label}
-                    className="rounded-lg border border-cream/10 bg-ink/30 p-4"
+                    className="rounded-lg border border-border bg-card/30 p-4"
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-cream">{q.label}</span>
+                      <span className="text-sm font-medium text-foreground">{q.label}</span>
                       <span
                         className={
                           q.badge === 'Thuận lợi'
@@ -297,23 +297,23 @@ export default function BanDoPage() {
                         {q.badge}
                       </span>
                     </div>
-                    <p className="text-xs text-cream/75 leading-relaxed">{q.note}</p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{q.note}</p>
                   </div>
                 ))}
               </div>
 
               <div>
-                <div className="text-xs text-cream/60 uppercase tracking-wide mb-2">
+                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-2">
                   Các quyết định lớn nên chuẩn bị
                 </div>
-                <ul className="list-disc pl-5 space-y-1 text-sm text-cream/85">
+                <ul className="list-disc pl-5 space-y-1 text-sm text-foreground/85">
                   <li>Một thay đổi công việc — nếu có, nên rơi vào Q2 hoặc Q4.</li>
                   <li>Cam kết dài hạn trong quan hệ — cân nhắc kỹ trong Q3.</li>
                   <li>Khoản chi lớn (nhà, học, di chuyển) — chuẩn bị tài chính từ Q1.</li>
                 </ul>
               </div>
 
-              <p className="text-xs text-cream/60 italic">
+              <p className="text-xs text-muted-foreground italic">
                 Đây là gợi ý dựa trên chủ đề lưu niên chung. Lá số riêng sẽ cá nhân hoá nhiều hơn.
               </p>
             </CardContent>
@@ -325,10 +325,10 @@ export default function BanDoPage() {
           <Card className="border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent">
             <CardContent className="p-8 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
               <div className="space-y-2 max-w-xl">
-                <h2 className="text-xl md:text-2xl font-semibold text-cream">
+                <h2 className="text-xl md:text-2xl font-semibold text-foreground">
                   Bản đồ chưa cá nhân hoá. Lập lá số 2 phút để hệ thống đồng hành theo lá số riêng.
                 </h2>
-                <p className="text-sm text-cream/70">
+                <p className="text-sm text-muted-foreground">
                   Bạn nhập ngày giờ sinh một lần — sau đó mỗi tuần bản đồ sẽ cập nhật theo bạn,
                   không phải bản demo này.
                 </p>
@@ -343,7 +343,7 @@ export default function BanDoPage() {
                 <Button
                   asChild
                   variant="outline"
-                  className="border-cream/20 text-cream hover:bg-cream/5"
+                  className="border-border text-foreground hover:bg-muted/5"
                 >
                   <Link href="/pricing">Xem các gói Premium</Link>
                 </Button>

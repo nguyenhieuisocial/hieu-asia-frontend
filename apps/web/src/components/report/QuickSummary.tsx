@@ -86,11 +86,11 @@ function SummaryColumn({ accent, title, icon, items }: SummaryColumnProps) {
       </CardHeader>
       <CardContent className="pt-0">
         {items.length === 0 ? (
-          <p className="text-sm text-cream/70">Chưa có nội dung.</p>
+          <p className="text-sm text-muted-foreground">Chưa có nội dung.</p>
         ) : (
           <ol className="space-y-3">
             {items.map((item, i) => (
-              <li key={i} className="flex gap-3 text-sm text-cream/90">
+              <li key={i} className="flex gap-3 text-sm text-foreground/90">
                 <span
                   aria-hidden="true"
                   className={cn(

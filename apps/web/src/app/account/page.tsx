@@ -37,7 +37,7 @@ export default function AccountPage() {
 
 function AccountLoader() {
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <main id="main-content" className="pt-16">
         <div className="mx-auto max-w-3xl px-6 py-20 text-center">
@@ -86,7 +86,7 @@ function AccountPageInner() {
 
   if (auth.loading || !auth.user) {
     return (
-      <div className="min-h-screen bg-ink text-cream">
+      <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
         <main id="main-content" className="pt-16">
           <div className="mx-auto max-w-3xl px-6 py-20 text-center">
@@ -94,7 +94,7 @@ function AccountPageInner() {
               aria-hidden
               className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-gold/30 border-t-gold"
             />
-            <p className="mt-4 font-mono text-xs uppercase tracking-[0.28em] text-cream/60">
+            <p className="mt-4 font-mono text-xs uppercase tracking-[0.28em] text-muted-foreground">
               {auth.loading
                 ? 'Đang kiểm tra phiên đăng nhập…'
                 : 'Chuyển hướng đến trang đăng nhập…'}
@@ -109,12 +109,12 @@ function AccountPageInner() {
   const handleNavigate = (next: Exclude<AccountTabId, 'overview'>) => setTab(next);
 
   return (
-    <div className="min-h-screen bg-ink text-cream">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-ink-radial opacity-80"
+          className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-background opacity-80"
         />
         <div
           aria-hidden="true"
@@ -125,11 +125,11 @@ function AccountPageInner() {
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Tài khoản
           </p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-cream sm:text-4xl">
+          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
             Trung tâm{' '}
             <span className="bg-gold-gradient bg-clip-text text-transparent">tài khoản</span>
           </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-cream/75 sm:text-base">
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-foreground/75 sm:text-base">
             Dữ liệu của bạn được lưu lại — không cần nhập lại mỗi lần.
           </p>
 
@@ -150,7 +150,7 @@ function AccountPageInner() {
             </div>
           </div>
 
-          <div className="mt-12 rounded-xl border border-cream/10 bg-ink/40 p-4 text-xs text-cream/65">
+          <div className="mt-12 rounded-xl border border-border bg-card/40 p-4 text-xs text-muted-foreground">
             Cần hỗ trợ?{' '}
             <a className="text-gold underline-offset-4 hover:underline" href="mailto:privacy@hieu.asia">
               privacy@hieu.asia

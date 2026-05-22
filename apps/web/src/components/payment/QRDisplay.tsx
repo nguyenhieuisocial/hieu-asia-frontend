@@ -91,7 +91,7 @@ function StatusBadge({ status }: { status: PaymentStatus }) {
   };
   const c = config[status] ?? {
     label: status,
-    className: 'bg-cream/10 text-cream/70 border-cream/20',
+    className: 'bg-muted/10 text-muted-foreground border-border',
   };
   return (
     <span
@@ -111,7 +111,7 @@ export function QRDisplay({ intent, onExpire }: QRDisplayProps) {
     intent.status === 'expired' || intent.status === 'cancelled';
 
   return (
-    <Card className="border-gold/15 bg-ink/40">
+    <Card className="border-gold/15 bg-card/40">
       <CardContent className="grid gap-6 p-6 md:grid-cols-[auto,1fr]">
         {/* QR image */}
         <div className="flex flex-col items-center gap-3">
@@ -136,7 +136,7 @@ export function QRDisplay({ intent, onExpire }: QRDisplayProps) {
         {/* Info */}
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-3">
-            <h2 className="font-heading text-lg text-cream">
+            <h2 className="font-heading text-lg text-foreground">
               Quét QR để thanh toán
             </h2>
             <div
@@ -144,7 +144,7 @@ export function QRDisplay({ intent, onExpire }: QRDisplayProps) {
                 'rounded-md border px-3 py-1 text-sm font-mono',
                 intent.status === 'pending'
                   ? 'border-gold/40 text-gold'
-                  : 'border-cream/20 text-cream/70',
+                  : 'border-border text-muted-foreground',
               )}
               aria-label="Thời gian còn lại"
             >
@@ -153,34 +153,34 @@ export function QRDisplay({ intent, onExpire }: QRDisplayProps) {
           </div>
 
           <dl className="grid grid-cols-[max-content,1fr] gap-x-4 gap-y-2 text-sm">
-            <dt className="text-cream/60">Ngân hàng</dt>
-            <dd className="text-cream">{intent.bank_name}</dd>
+            <dt className="text-muted-foreground">Ngân hàng</dt>
+            <dd className="text-foreground">{intent.bank_name}</dd>
 
-            <dt className="text-cream/60">Số tài khoản</dt>
-            <dd className="font-mono text-cream">{intent.bank_account}</dd>
+            <dt className="text-muted-foreground">Số tài khoản</dt>
+            <dd className="font-mono text-foreground">{intent.bank_account}</dd>
 
             {intent.bank_holder && (
               <>
-                <dt className="text-cream/60">Chủ tài khoản</dt>
-                <dd className="text-cream">{intent.bank_holder}</dd>
+                <dt className="text-muted-foreground">Chủ tài khoản</dt>
+                <dd className="text-foreground">{intent.bank_holder}</dd>
               </>
             )}
 
-            <dt className="text-cream/60">Số tiền</dt>
+            <dt className="text-muted-foreground">Số tiền</dt>
             <dd className="font-mono text-gold">
               {formatVnd(intent.amount_due)}
             </dd>
 
-            <dt className="text-cream/60">Nội dung</dt>
+            <dt className="text-muted-foreground">Nội dung</dt>
             <dd className="font-mono text-gold">{intent.content}</dd>
           </dl>
 
-          <ol className="space-y-1.5 rounded-md border border-gold/15 bg-ink/60 p-4 text-xs text-cream/70">
+          <ol className="space-y-1.5 rounded-md border border-gold/15 bg-card/60 p-4 text-xs text-muted-foreground">
             <li>1. Mở app ngân hàng trên điện thoại</li>
             <li>2. Chọn chức năng &ldquo;Quét QR&rdquo; rồi quét mã trên</li>
             <li>
-              3. Kiểm tra <span className="text-cream">số tiền</span> và{' '}
-              <span className="text-cream">nội dung</span> đúng như trên — xác nhận chuyển khoản
+              3. Kiểm tra <span className="text-foreground">số tiền</span> và{' '}
+              <span className="text-foreground">nội dung</span> đúng như trên — xác nhận chuyển khoản
             </li>
             <li>4. Đợi 5-10 giây để hệ thống xác nhận tự động</li>
           </ol>
