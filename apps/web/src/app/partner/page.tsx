@@ -21,7 +21,7 @@ interface SubtreeResp {
 interface CommissionResp {
   ok: true;
   commissions: Array<{
-    state: string;
+    status: string;
     commission_vnd: number;
     created_at: string;
   }>;
@@ -93,7 +93,7 @@ function Dashboard() {
     .filter(
       (c) =>
         c.created_at >= monthStart &&
-        ['held', 'available', 'paid'].includes(c.state),
+        ['held', 'available', 'paid'].includes(c.status),
     )
     .reduce((sum, c) => sum + c.commission_vnd, 0);
 
@@ -112,7 +112,7 @@ function Dashboard() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Kpi label="Mạng lưới" value={totalSubtree.toLocaleString('vi-VN')} hint="người (toàn subtree)" />
         <Kpi label="HH tháng này" value={vnd(commissionThisMonth)} hint="held + available + paid" />
-        <Kpi label="Sẵn rút" value={vnd(availablePayout)} hint="state = available" />
+        <Kpi label="Sẵn rút" value={vnd(availablePayout)} hint="status = available" />
         <Kpi label="Đã nhận" value={vnd(lifetimePaid)} hint="lifetime paid" />
       </div>
 

@@ -22,6 +22,30 @@ export const dynamic = 'force-dynamic';
 
 const VALID_METHODS = new Set(['bank', 'momo', 'zalo']);
 
+const ALLOWED_PAYOUT_KEYS = [
+  'bank_name',
+  'account_number',
+  'account_holder',
+  'phone',
+] as const;
+
+/**
+ * Wave 44.1 hotfix (P1-2): the previous handler accepted arbitrary jsonb. Now
+ * whitelist keys + length cap so we cannot store oversized or unexpected blobs.
+ */
+function sanitizePayoutDetails(input: unknown): Record<string, string> | null {
+  if (!input || typeof input !== 'object') return null;
+  const out: Record<string, string> = {};
+  const src = input as Record<string, unknown>;
+  for (const k of ALLOWED_PAYOUT_KEYS) {
+    const v = src[k];
+    if (typeof v === 'string' && v.length > 0 && v.length <= 256) {
+      out[k] = v;
+    }
+  }
+  return Object.keys(out).length > 0 ? out : null;
+}
+
 interface NetworkRow {
   user_id: string;
 }
@@ -44,10 +68,7 @@ export async function PATCH(req: NextRequest) {
       { status: 400 },
     );
   }
-  const details =
-    body.payout_details && typeof body.payout_details === 'object'
-      ? body.payout_details
-      : {};
+  const details = sanitizePayoutDetails(body.payout_details) ?? {};
 
   // Verify the JWT maps to an affiliate row first (RLS does the scoping).
   const meR = await sbUser<NetworkRow[]>('affiliate_network?select=user_id&limit=1', jwt);

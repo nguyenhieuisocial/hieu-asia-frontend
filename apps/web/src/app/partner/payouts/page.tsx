@@ -11,16 +11,14 @@ import { Card, CardContent, CardHeader, CardTitle, Skeleton, StatusBadge } from 
 import { PartnerShell, partnerFetch } from '@/components/partner/PartnerShell';
 
 interface PayoutRow {
-  id: string;
+  id: number;
   affiliate_code: string;
+  period: string | null;
   amount_vnd: number;
   method: string | null;
-  destination: string | null;
-  status: string;
   reference: string | null;
   batch_id: string | null;
   paid_at: string | null;
-  requested_at: string;
 }
 
 interface PayoutsResp {
@@ -43,8 +41,7 @@ function dt(iso: string | null) {
 
 function payoutTone(p: PayoutRow): 'success' | 'warning' | 'neutral' {
   if (p.paid_at) return 'success';
-  if (p.status === 'pending') return 'warning';
-  return 'neutral';
+  return 'warning'; // no paid_at -> pending
 }
 
 export default function PartnerPayoutsPage() {
@@ -112,9 +109,9 @@ function PayoutsView() {
                 <tr>
                   <th className="py-2 pr-3">Số tiền</th>
                   <th className="py-2 pr-3">Phương thức</th>
+                  <th className="py-2 pr-3">Kỳ</th>
                   <th className="py-2 pr-3">Batch</th>
                   <th className="py-2 pr-3">Trạng thái</th>
-                  <th className="py-2 pr-3">Yêu cầu</th>
                   <th className="py-2 pr-3">Thanh toán</th>
                   <th className="py-2 pr-3">Tham chiếu</th>
                 </tr>
@@ -125,15 +122,17 @@ function PayoutsView() {
                     <td className="py-2 pr-3 font-medium">{vnd(p.amount_vnd)}</td>
                     <td className="py-2 pr-3 text-foreground/80">{p.method ?? '—'}</td>
                     <td className="py-2 pr-3 font-mono text-xs text-foreground/70">
+                      {p.period ?? '—'}
+                    </td>
+                    <td className="py-2 pr-3 font-mono text-xs text-foreground/70">
                       {p.batch_id ? p.batch_id.slice(0, 8) + '…' : '—'}
                     </td>
                     <td className="py-2 pr-3">
                       <StatusBadge
                         status={payoutTone(p)}
-                        label={p.paid_at ? 'paid' : p.status}
+                        label={p.paid_at ? 'paid' : 'pending'}
                       />
                     </td>
-                    <td className="py-2 pr-3 text-foreground/70">{dt(p.requested_at)}</td>
                     <td className="py-2 pr-3 text-foreground/70">{dt(p.paid_at)}</td>
                     <td className="py-2 pr-3 font-mono text-xs text-foreground/70">
                       {p.reference ?? '—'}

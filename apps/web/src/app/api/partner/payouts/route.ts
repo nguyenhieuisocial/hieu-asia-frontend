@@ -3,6 +3,11 @@
  *
  * Wave 44 — own payout history. RLS `affiliate_own_payouts_read` filters by
  * affiliate_code matching the user's affiliate_network row.
+ *
+ * Wave 44.1 hotfix: the actual DB schema is
+ *   id, affiliate_code, period, amount_vnd, paid_at, method, reference, batch_id
+ * — there is no `destination`, no `status` column, no `requested_at`. Derive
+ * status from paid_at presence; method already encodes bank/momo/zalo.
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
@@ -12,16 +17,14 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 interface PayoutRow {
-  id: string;
+  id: number;
   affiliate_code: string;
+  period: string | null;
   amount_vnd: number;
   method: string | null;
-  destination: string | null;
-  status: string;
   reference: string | null;
   batch_id: string | null;
   paid_at: string | null;
-  requested_at: string;
 }
 
 export async function GET(req: NextRequest) {
@@ -32,8 +35,9 @@ export async function GET(req: NextRequest) {
 
   const url = new URL(req.url);
   const statusFilter = url.searchParams.get('status');
+  // paid_at desc with nullsfirst surfaces pending (paid_at IS NULL) rows first.
   let q =
-    'affiliate_payouts?select=id,affiliate_code,amount_vnd,method,destination,status,reference,batch_id,paid_at,requested_at&order=requested_at.desc&limit=200';
+    'affiliate_payouts?select=id,affiliate_code,period,amount_vnd,method,reference,batch_id,paid_at&order=paid_at.desc.nullsfirst&limit=200';
   if (statusFilter === 'pending') {
     q += '&paid_at=is.null';
   } else if (statusFilter === 'paid') {

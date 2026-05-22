@@ -1,10 +1,13 @@
 /**
- * GET /api/partner/commissions?state=...
+ * GET /api/partner/commissions?status=...
  *
  * Wave 44 — lists the logged-in affiliate's own commission ledger.
  * RLS `affiliate_own_commissions_read` scopes to beneficiary_id = auth.uid().
  *
- * Also computes per-state aggregates for the dashboard strip.
+ * Also computes per-status aggregates for the dashboard strip.
+ *
+ * Wave 44.1 hotfix: the DB columns are `status` (not `state`) and `order_id`
+ * (not `source_order_id`). Pass-through DB names to avoid alias-mapping.
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
@@ -15,11 +18,11 @@ export const dynamic = 'force-dynamic';
 
 interface CommissionRow {
   id: string;
-  source_order_id: string | null;
+  order_id: string | null;
   tier_level: number;
   gross_amount_vnd: number;
   commission_vnd: number;
-  state: string;
+  status: string;
   created_at: string;
   available_at: string | null;
   beneficiary_id: string;
@@ -41,11 +44,11 @@ export async function GET(req: NextRequest) {
   }
 
   const url = new URL(req.url);
-  const stateFilter = url.searchParams.get('state');
+  const statusFilter = url.searchParams.get('status') ?? url.searchParams.get('state');
   let q =
-    'affiliate_commissions?select=id,source_order_id,tier_level,gross_amount_vnd,commission_vnd,state,created_at,available_at,beneficiary_id&order=created_at.desc&limit=500';
-  if (stateFilter && VALID_STATES.has(stateFilter)) {
-    q += `&state=eq.${stateFilter}`;
+    'affiliate_commissions?select=id,order_id,tier_level,gross_amount_vnd,commission_vnd,status,created_at,available_at,beneficiary_id&order=created_at.desc&limit=500';
+  if (statusFilter && VALID_STATES.has(statusFilter)) {
+    q += `&status=eq.${statusFilter}`;
   }
 
   const r = await sbUser<CommissionRow[]>(q, jwt);
@@ -57,11 +60,11 @@ export async function GET(req: NextRequest) {
   }
   const rows = r.body ?? [];
 
-  // Aggregate per state (unfiltered query for the strip).
+  // Aggregate per status (unfiltered query for the strip).
   let stripRows = rows;
-  if (stateFilter) {
+  if (statusFilter) {
     const allR = await sbUser<CommissionRow[]>(
-      'affiliate_commissions?select=state,commission_vnd&limit=2000',
+      'affiliate_commissions?select=status,commission_vnd&limit=2000',
       jwt,
     );
     stripRows = allR.ok && allR.body ? (allR.body as CommissionRow[]) : rows;
@@ -69,10 +72,10 @@ export async function GET(req: NextRequest) {
   const aggregates: Record<string, { count: number; vnd: number }> = {};
   for (const s of VALID_STATES) aggregates[s] = { count: 0, vnd: 0 };
   for (const c of stripRows) {
-    const bucket = aggregates[c.state] ?? { count: 0, vnd: 0 };
+    const bucket = aggregates[c.status] ?? { count: 0, vnd: 0 };
     bucket.count += 1;
     bucket.vnd += c.commission_vnd;
-    aggregates[c.state] = bucket;
+    aggregates[c.status] = bucket;
   }
 
   return NextResponse.json({ ok: true, commissions: rows, aggregates });

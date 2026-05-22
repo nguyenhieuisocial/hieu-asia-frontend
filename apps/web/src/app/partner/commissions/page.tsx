@@ -13,11 +13,11 @@ import { PartnerShell, partnerFetch } from '@/components/partner/PartnerShell';
 
 interface CommissionRow {
   id: string;
-  source_order_id: string | null;
+  order_id: string | null;
   tier_level: number;
   gross_amount_vnd: number;
   commission_vnd: number;
-  state: string;
+  status: string;
   created_at: string;
   available_at: string | null;
 }
@@ -43,7 +43,7 @@ function dt(iso: string | null) {
   }
 }
 
-function stateTone(s: string): 'success' | 'warning' | 'error' | 'info' | 'neutral' {
+function statusTone(s: string): 'success' | 'warning' | 'error' | 'info' | 'neutral' {
   if (s === 'paid') return 'success';
   if (s === 'available') return 'info';
   if (s === 'held') return 'warning';
@@ -58,7 +58,7 @@ export default function PartnerCommissionsPage() {
 function CommissionsView() {
   const [data, setData] = React.useState<CommissionResp | null>(null);
   const [error, setError] = React.useState<string | null>(null);
-  const [stateFilter, setStateFilter] = React.useState<string>('');
+  const [statusFilter, setStatusFilter] = React.useState<string>('');
 
   React.useEffect(() => {
     let cancelled = false;
@@ -66,8 +66,8 @@ function CommissionsView() {
     setError(null);
     async function load() {
       try {
-        const url = stateFilter
-          ? `/api/partner/commissions?state=${stateFilter}`
+        const url = statusFilter
+          ? `/api/partner/commissions?status=${statusFilter}`
           : '/api/partner/commissions';
         const r = await partnerFetch<CommissionResp>(url);
         if (!cancelled) setData(r);
@@ -79,7 +79,7 @@ function CommissionsView() {
     return () => {
       cancelled = true;
     };
-  }, [stateFilter]);
+  }, [statusFilter]);
 
   return (
     <div className="space-y-4">
@@ -98,10 +98,10 @@ function CommissionsView() {
                   <button
                     key={s}
                     type="button"
-                    onClick={() => setStateFilter(stateFilter === s ? '' : s)}
+                    onClick={() => setStatusFilter(statusFilter === s ? '' : s)}
                     className={
                       'rounded-lg border px-3 py-2 text-left text-xs transition-colors ' +
-                      (stateFilter === s
+                      (statusFilter === s
                         ? 'border-gold bg-gold/10'
                         : 'border-foreground/10 hover:bg-foreground/5')
                     }
@@ -122,7 +122,7 @@ function CommissionsView() {
       <Card>
         <CardHeader>
           <CardTitle>
-            Sổ hoa hồng {stateFilter ? <span className="text-gold">({stateFilter})</span> : null}
+            Sổ hoa hồng {statusFilter ? <span className="text-gold">({statusFilter})</span> : null}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -152,13 +152,13 @@ function CommissionsView() {
                   {data.commissions.map((c) => (
                     <tr key={c.id} className="border-b border-foreground/5">
                       <td className="py-2 pr-3 font-mono text-xs text-foreground/70">
-                        {c.source_order_id ? c.source_order_id.slice(0, 8) + '…' : '—'}
+                        {c.order_id ? c.order_id.slice(0, 8) + '…' : '—'}
                       </td>
                       <td className="py-2 pr-3">L{c.tier_level}</td>
                       <td className="py-2 pr-3 text-foreground/80">{vnd(c.gross_amount_vnd)}</td>
                       <td className="py-2 pr-3 font-medium">{vnd(c.commission_vnd)}</td>
                       <td className="py-2 pr-3">
-                        <StatusBadge status={stateTone(c.state)} label={c.state} />
+                        <StatusBadge status={statusTone(c.status)} label={c.status} />
                       </td>
                       <td className="py-2 pr-3 text-foreground/70">{dt(c.created_at)}</td>
                       <td className="py-2 pr-3 text-foreground/70">{dt(c.available_at)}</td>
