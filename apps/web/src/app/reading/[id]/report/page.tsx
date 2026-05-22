@@ -17,6 +17,8 @@ import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { ReportSkeleton } from '@/components/skeletons/ReportSkeleton';
 import { TuViChartSection } from '@/components/tuvi/TuViChartSection';
 import { SectionFeedback } from '@/components/report/SectionFeedback';
+import { SurveyPrompt } from '@/components/survey/SurveyPrompt';
+import { SURVEY_IDS } from '@/lib/survey';
 import { track } from '@/lib/analytics';
 
 /** Slugify Vietnamese section title for a stable, URL-safe sectionId. */
@@ -202,6 +204,18 @@ function ReportContent() {
 
         <ReportFooter readingId={readingId} />
       </div>
+
+      {/*
+        Wave 39 W-B — post-reading satisfaction survey.
+        Arms 30s after the report renders (PostHog itself dedupes per user;
+        `useSurveyPrompt` also localStorage-flags to avoid double-render
+        on remount). Only arms once a `report_ready` markdown exists.
+      */}
+      <SurveyPrompt
+        surveyId={SURVEY_IDS.READING_SATISFACTION}
+        armed
+        delayMs={30_000}
+      />
     </main>
   );
 }

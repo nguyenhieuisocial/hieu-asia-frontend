@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, Checkbox, Label } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { useFeatureFlag, FLAGS } from '@/lib/feature-flags';
 
 const STORAGE_KEY = 'hieu:onboarding:v2';
 
@@ -83,13 +84,40 @@ export default function OnboardingConsentPage() {
   const [consent, setConsent] = useState<ConsentState>(DEFAULT_CONSENT);
   const [ready, setReady] = useState(false);
 
+  // Wave 39 W-B — `onboarding_skip_optional` flag (targeted at users with
+  // `persona=power_user`). When ON, pre-check all optional consent items and
+  // auto-advance on first paint so power users don't get gated. Default OFF.
+  const skipOptional = useFeatureFlag<boolean>(
+    FLAGS.ONBOARDING_SKIP_OPTIONAL,
+    false,
+  );
+
   useEffect(() => {
     const stored = readStored();
     if (stored.consent) {
       setConsent({ ...DEFAULT_CONSENT, ...stored.consent });
+    } else if (skipOptional) {
+      // Power-user fast-path: all optional consents pre-checked.
+      setConsent({ mbti: true, palm: true, mentor: true, training: false });
     }
     setReady(true);
-  }, []);
+  }, [skipOptional]);
+
+  // Power-user fast-path: when the flag is ON and the user has no saved
+  // consent yet, auto-advance to the next step. The pre-checked consent
+  // state is still persisted via `handleContinue` so they keep control.
+  useEffect(() => {
+    if (!ready || !skipOptional) return;
+    const stored = readStored();
+    if (stored.consent) return; // user has been here before — don't auto-skip
+    // Persist the auto-set consent and advance.
+    writeStored({
+      ...stored,
+      consent: { mbti: true, palm: true, mentor: true, training: false },
+    });
+    const target = stored.topic === 'decision' ? '/decisions/new' : '/reading/new';
+    router.replace(target);
+  }, [ready, skipOptional, router]);
 
   function toggle(key: keyof ConsentState) {
     setConsent((prev) => ({ ...prev, [key]: !prev[key] }));

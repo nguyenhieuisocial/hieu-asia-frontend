@@ -20,6 +20,8 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 import { useFeatureFlag, FLAGS } from '@/lib/feature-flags';
+import { SurveyPrompt } from '@/components/survey/SurveyPrompt';
+import { SURVEY_IDS } from '@/lib/survey';
 import { PRICING } from '@/lib/pricing';
 
 /**
@@ -276,8 +278,25 @@ export default function PricingPage() {
     true,
   );
 
+  // Wave 39 W-B — `pricing_display_variant` controls the desktop layout.
+  // `comparison-table` (default) → side-by-side feature matrix.
+  // `tier-cards`                 → stacked cards on every viewport.
+  // Mobile always renders cards regardless.
+  const pricingVariant = useFeatureFlag<string>(
+    FLAGS.PRICING_DISPLAY_VARIANT,
+    'tier-cards',
+  );
+
+  // Wave 39 W-B — pricing intent survey: arm a 30s dwell timer. If the user
+  // hits a Buy CTA within 30s the timer is cancelled (no survey). If they
+  // hang on /pricing longer than 30s without buying, the prompt fires.
+  const [intentArmed, setIntentArmed] = React.useState(true);
+
   const handleSelect = React.useCallback(
     (tier: TierId) => {
+      // Wave 39 W-B — clicking any tier CTA disarms the pricing-intent survey
+      // (we only want to ask people who hesitated, not converters).
+      setIntentArmed(false);
       if (tier === 'free') {
         router.push('/onboarding');
         return;
@@ -367,13 +386,28 @@ export default function PricingPage() {
               ))}
             </div>
 
-            {/* Desktop: comparison table */}
+            {/* Desktop: comparison table (default) or stacked cards
+                 — variant `tier-cards` falls back to the mobile layout
+                 on all viewports for A/B testing layout preference. */}
             <div className="hidden md:block">
-              <ComparisonTable
-                tiers={TIERS}
-                period={period}
-                onSelect={handleSelect}
-              />
+              {pricingVariant === 'comparison-table' ? (
+                <ComparisonTable
+                  tiers={TIERS}
+                  period={period}
+                  onSelect={handleSelect}
+                />
+              ) : (
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                  {TIERS.map((tier) => (
+                    <TierCard
+                      key={tier.id}
+                      tier={tier}
+                      period={period}
+                      onSelect={() => handleSelect(tier.id)}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -383,6 +417,17 @@ export default function PricingPage() {
           id="pricing-faq"
           eyebrow="FAQ Pricing"
           title="Câu hỏi về thanh toán"
+        />
+
+        {/*
+          Wave 39 W-B — pricing intent survey. Arms when the user lands on
+          /pricing; disarmed when they click any tier CTA. Fires after a 30s
+          dwell so we only ask people who hesitated.
+        */}
+        <SurveyPrompt
+          surveyId={SURVEY_IDS.PRICING_INTENT}
+          armed={intentArmed}
+          delayMs={30_000}
         />
       </main>
       <SiteFooter />

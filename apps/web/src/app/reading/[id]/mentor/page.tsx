@@ -101,6 +101,14 @@ export default function MentorChatPage() {
     true,
   );
 
+  // Wave 39 W-B — observe `mentor_model_variant` assignment client-side so
+  // downstream events (mentor_message_sent, mentor_response_received) can be
+  // correlated with the LLM the worker actually picks. The worker reads the
+  // same PostHog flag server-side to choose the model; the web call here is
+  // observational only — the `feature_flag_evaluated` event fires once per
+  // session inside `useFeatureFlag`.
+  useFeatureFlag<string>(FLAGS.MENTOR_MODEL_VARIANT, 'claude-opus');
+
   // Hydrate from localStorage (history + pinned).
   React.useEffect(() => {
     if (typeof window === 'undefined' || !readingId) return;

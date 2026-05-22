@@ -25,6 +25,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { getSupabaseAuth } from '@/lib/auth-client';
 import { safeJson } from '@/lib/safe-json';
+import { useFeatureFlag, FLAGS } from '@/lib/feature-flags';
 
 const API_BASE = process.env.NEXT_PUBLIC_HIEU_API_URL ?? 'https://api.hieu.asia';
 
@@ -97,6 +98,14 @@ export default function AffiliateNetworkPage() {
   const [children, setChildren] = React.useState<AffiliateNetwork[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+
+  // Wave 39 W-B — `affiliate_l2_visible` hides L2 commission card until the
+  // multi-tier programme launches. Default false. When OFF, the L2 stat card
+  // and the L2 row in the legal footer are dropped from the layout.
+  const l2Visible = useFeatureFlag<boolean>(
+    FLAGS.AFFILIATE_L2_VISIBLE,
+    false,
+  );
 
   const load = React.useCallback(async () => {
     setLoading(true);
@@ -234,16 +243,22 @@ export default function AffiliateNetworkPage() {
             Affiliate · Network
           </p>
           <h1 className="mt-2 font-heading text-3xl font-bold sm:text-4xl">
-            Mạng lưới của bạn (L1 / L2 / L3)
+            {l2Visible
+              ? 'Mạng lưới của bạn (L1 / L2 / L3)'
+              : 'Mạng lưới của bạn (L1 / L3)'}
           </h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
-            Đa tầng tối đa 3 cấp. Tuân thủ Nghị định 40/2018/NĐ-CP — hoa hồng chỉ trả khi có giao
-            dịch thật.
+            {l2Visible
+              ? 'Đa tầng tối đa 3 cấp. Tuân thủ Nghị định 40/2018/NĐ-CP — hoa hồng chỉ trả khi có giao dịch thật.'
+              : 'Đa tầng tối đa 2 cấp. Tuân thủ Nghị định 40/2018/NĐ-CP — hoa hồng chỉ trả khi có giao dịch thật.'}
           </p>
         </header>
 
-        {/* Tier breakdown */}
-        <section className="grid gap-4 md:grid-cols-3">
+        {/* Tier breakdown — L2 card gated by `affiliate_l2_visible` flag
+            until the multi-tier programme launches. */}
+        <section
+          className={`grid gap-4 ${l2Visible ? 'md:grid-cols-3' : 'md:grid-cols-2'}`}
+        >
           <Card className="border-gold/40">
             <CardHeader>
               <div className="flex items-center gap-2">
@@ -257,19 +272,21 @@ export default function AffiliateNetworkPage() {
               <div className="mt-1 text-xs text-muted-foreground">người mời trực tiếp</div>
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <Network className="h-5 w-5 text-gold/70" />
-                <CardTitle className="text-base">L2 (Cấp 2)</CardTitle>
-              </div>
-              <CardDescription>5% hoa hồng</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{stats.l2_count}</div>
-              <div className="mt-1 text-xs text-muted-foreground">người ở cấp 2</div>
-            </CardContent>
-          </Card>
+          {l2Visible && (
+            <Card>
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <Network className="h-5 w-5 text-gold/70" />
+                  <CardTitle className="text-base">L2 (Cấp 2)</CardTitle>
+                </div>
+                <CardDescription>5% hoa hồng</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold">{stats.l2_count}</div>
+                <div className="mt-1 text-xs text-muted-foreground">người ở cấp 2</div>
+              </CardContent>
+            </Card>
+          )}
           <Card>
             <CardHeader>
               <div className="flex items-center gap-2">
@@ -409,7 +426,12 @@ export default function AffiliateNetworkPage() {
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
             <ul className="space-y-1.5">
-              <li>• Cấp tối đa 3 tầng (L1=30%, L2=5%, L3=2%).</li>
+              <li>
+                •{' '}
+                {l2Visible
+                  ? 'Cấp tối đa 3 tầng (L1=30%, L2=5%, L3=2%).'
+                  : 'Cấp tối đa 2 tầng (L1=30%, L3=2%).'}
+              </li>
               <li>• Hoa hồng chỉ trả khi có giao dịch thật, KHÔNG dựa trên tuyển dụng.</li>
               <li>• Không thu phí gia nhập.</li>
               <li>• Người mua không bị buộc phải mua tối thiểu để duy trì tư cách.</li>
@@ -440,7 +462,8 @@ export default function AffiliateNetworkPage() {
         </div>
 
         <p className="mt-6 text-xs text-muted-foreground">
-          Tổng cây: {stats.total_subtree} người (L1 + L2 + L3).
+          Tổng cây: {stats.total_subtree} người{' '}
+          {l2Visible ? '(L1 + L2 + L3).' : '(L1 + L3).'}
         </p>
       </main>
       <SiteFooter />

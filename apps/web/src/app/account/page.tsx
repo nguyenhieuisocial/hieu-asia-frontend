@@ -20,6 +20,8 @@ import { MentorTab } from '@/components/account/MentorTab';
 import { PaymentsTab } from '@/components/account/PaymentsTab';
 import { AffiliateTab } from '@/components/account/AffiliateTab';
 import { PrivacyTab } from '@/components/account/PrivacyTab';
+import { SurveyPrompt } from '@/components/survey/SurveyPrompt';
+import { SURVEY_IDS } from '@/lib/survey';
 
 const VALID_TABS = new Set<AccountTabId>(ACCOUNT_TABS.map((t) => t.id));
 
@@ -57,6 +59,13 @@ function AccountPageInner() {
   const search = useSearchParams();
   const auth = useAuth();
   const [userId, setUserId] = React.useState<string | null>(null);
+
+  // Wave 39 W-B — feature-request survey is opt-in via the "Góp ý" link
+  // (rendered in the footer of this page). The NPS / churn surveys arm
+  // automatically based on PostHog targeting rules (they're gated server-
+  // side by audience cohorts; the wire-in here just exposes the trigger
+  // point and lets PostHog decide whether to show).
+  const [feedbackArmed, setFeedbackArmed] = React.useState(false);
 
   // Tab state: URL ?tab=... → state. Updates back to URL on change.
   const initialTab: AccountTabId = isAccountTabId(search.get('tab'))
@@ -155,8 +164,34 @@ function AccountPageInner() {
             <a className="text-gold underline-offset-4 hover:underline" href="mailto:privacy@hieu.asia">
               privacy@hieu.asia
             </a>
+            {' · '}
+            <button
+              type="button"
+              onClick={() => setFeedbackArmed(true)}
+              className="text-gold underline-offset-4 hover:underline"
+            >
+              Góp ý tính năng
+            </button>
           </div>
         </section>
+
+        {/*
+          Wave 39 W-B — three account-scoped surveys:
+            - Onboarding NPS  — fires once on first /account visit after a
+                                completed reading (PostHog cohort targeting).
+            - Churn-risk      — fires for users with last_active > 14d ago
+                                (PostHog cohort targeting).
+            - Feature request — armed on demand via the "Góp ý" link above.
+          PostHog itself decides whether to actually render NPS/churn based
+          on the targeting rules configured in the dashboard; the wire-in
+          here just exposes the trigger point.
+        */}
+        <SurveyPrompt surveyId={SURVEY_IDS.ONBOARDING_NPS} armed />
+        <SurveyPrompt surveyId={SURVEY_IDS.CHURN_RISK} armed />
+        <SurveyPrompt
+          surveyId={SURVEY_IDS.FEATURE_REQUEST}
+          armed={feedbackArmed}
+        />
       </main>
       <SiteFooter />
     </div>

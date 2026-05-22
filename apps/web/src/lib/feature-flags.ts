@@ -65,6 +65,46 @@ export const FLAGS = {
    * before going GA. Defaults to `true` since the UI is already shipped.
    */
   MENTOR_SKILLS_ROLLOUT: "mentor-skills-rollout",
+
+  /**
+   * `mentor_model_variant` — multivariate string.
+   *
+   * Variants: `claude-opus` | `gpt-5` | `llama-70b`. The worker
+   * `/ai/role/mentor` endpoint actually selects the LLM; the web side
+   * just observes which variant the user landed in and fires
+   * `feature_flag_evaluated` so downstream events can be correlated.
+   * Defaults to `claude-opus` when PostHog unloaded.
+   */
+  MENTOR_MODEL_VARIANT: "mentor_model_variant",
+
+  /**
+   * `pricing_display_variant` — multivariate string.
+   *
+   * Variants: `tier-cards` | `comparison-table`. Decides whether the
+   * desktop /pricing view renders the side-by-side comparison table
+   * (default, current behaviour) or stacked tier cards on every viewport.
+   * Defaults to `tier-cards`.
+   */
+  PRICING_DISPLAY_VARIANT: "pricing_display_variant",
+
+  /**
+   * `onboarding_skip_optional` — boolean.
+   *
+   * When true, the optional-consent screen at `/onboarding/consent`
+   * pre-checks all `OPTIONAL_ITEMS` and routes straight to the next
+   * step on first paint. Targeted at users tagged `persona=power_user`
+   * via PostHog cohort. Default false — show the full screen.
+   */
+  ONBOARDING_SKIP_OPTIONAL: "onboarding_skip_optional",
+
+  /**
+   * `affiliate_l2_visible` — boolean.
+   *
+   * Gates the L2 (5% commission) card on /affiliate/dashboard +
+   * /affiliate/network. Default false until the multi-tier programme
+   * officially launches. Flip ON to reveal L2 metrics network-wide.
+   */
+  AFFILIATE_L2_VISIBLE: "affiliate_l2_visible",
 } as const;
 
 export type FlagKey = (typeof FLAGS)[keyof typeof FLAGS];
