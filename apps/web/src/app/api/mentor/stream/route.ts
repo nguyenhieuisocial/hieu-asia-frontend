@@ -40,6 +40,11 @@ const CHUNK_TARGET_CHARS = 60;
 interface MentorRequestBody {
   session_id?: string;
   messages?: MentorMessage[];
+  /** Wave 42.2 — PostHog `mentor_model_variant` flag value forwarded from
+   *  the browser. The worker validates this against an allowlist; unknown /
+   *  missing values fall through to the default route, so the client can't
+   *  request arbitrary models. */
+  model_variant?: string;
 }
 
 interface SupabaseReadingEnvelope {
@@ -176,6 +181,13 @@ export async function POST(req: NextRequest) {
   };
   if (sessionId) headers['X-Session-Id'] = sessionId;
   if (userId) headers['X-User-Id'] = userId;
+  // Wave 42.2 — forward the PostHog mentor_model_variant assignment to the
+  // worker. Worker enforces an allowlist (see MENTOR_VARIANT_ALLOWLIST in
+  // api-gateway/src/index.ts). Header is preferred over body so the worker
+  // can ignore variant without touching the JSON payload.
+  if (typeof body.model_variant === 'string' && body.model_variant) {
+    headers['X-Model-Variant'] = body.model_variant;
+  }
 
   const encoder = new TextEncoder();
   const stream = new ReadableStream<Uint8Array>({

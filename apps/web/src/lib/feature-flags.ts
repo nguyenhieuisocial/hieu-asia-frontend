@@ -69,11 +69,16 @@ export const FLAGS = {
   /**
    * `mentor_model_variant` — multivariate string.
    *
-   * Variants: `claude-opus` | `gpt-5` | `llama-70b`. The worker
-   * `/ai/role/mentor` endpoint actually selects the LLM; the web side
-   * just observes which variant the user landed in and fires
-   * `feature_flag_evaluated` so downstream events can be correlated.
-   * Defaults to `claude-opus` when PostHog unloaded.
+   * Variants: `control` | `claude-sonnet-4` | `gemini-1.5-pro`. The web
+   * client forwards the assignment to `/api/mentor/stream` (and the
+   * non-streaming `/api/mentor`) which proxies it to the worker via
+   * `X-Model-Variant`. The worker validates against
+   * `MENTOR_VARIANT_ALLOWLIST` and either swaps the primary vendor + model
+   * or falls back to `ROLE_ROUTING.mentor`. `control` is intentionally
+   * not in the allowlist — it means "use the default route".
+   *
+   * Defaults to `control` when PostHog is unloaded so the existing
+   * behaviour is preserved.
    */
   MENTOR_MODEL_VARIANT: "mentor_model_variant",
 

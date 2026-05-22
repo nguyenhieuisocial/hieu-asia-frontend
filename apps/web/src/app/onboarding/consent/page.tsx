@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, Checkbox, La
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { useFeatureFlag, FLAGS } from '@/lib/feature-flags';
+import { track } from '@/lib/analytics';
 
 const STORAGE_KEY = 'hieu:onboarding:v2';
 
@@ -115,6 +116,17 @@ export default function OnboardingConsentPage() {
       ...stored,
       consent: { mbti: true, palm: true, mentor: true, training: false },
     });
+    // Wave 42.2 — emit one `onboarding_step_skipped` event per optional item
+    // the flag bypassed so the funnel report can attribute drop-off / lift
+    // to specific steps, not just the cohort. `training` is left FALSE even
+    // on fast-path so it's reported as skipped-with-deny.
+    for (const item of OPTIONAL_ITEMS) {
+      track('onboarding_step_skipped', {
+        step: `consent.${item.key}`,
+        reason: 'flag:onboarding_skip_optional',
+        auto_value: item.key === 'training' ? false : true,
+      });
+    }
     const target = stored.topic === 'decision' ? '/decisions/new' : '/reading/new';
     router.replace(target);
   }, [ready, skipOptional, router]);

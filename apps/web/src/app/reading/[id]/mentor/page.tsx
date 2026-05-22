@@ -101,13 +101,17 @@ export default function MentorChatPage() {
     true,
   );
 
-  // Wave 39 W-B — observe `mentor_model_variant` assignment client-side so
-  // downstream events (mentor_message_sent, mentor_response_received) can be
-  // correlated with the LLM the worker actually picks. The worker reads the
-  // same PostHog flag server-side to choose the model; the web call here is
-  // observational only — the `feature_flag_evaluated` event fires once per
-  // session inside `useFeatureFlag`.
-  useFeatureFlag<string>(FLAGS.MENTOR_MODEL_VARIANT, 'claude-opus');
+  // Wave 42.2 — `mentor_model_variant` actually forks worker behaviour now.
+  // The web client evaluates the PostHog flag, fires `feature_flag_evaluated`
+  // (inside `useFeatureFlag`), then forwards the variant to the worker via
+  // the Next.js proxy in the request body. The worker honours the variant
+  // against an allowlist (see `MENTOR_VARIANT_ALLOWLIST` in api-gateway) —
+  // unknown values fall back to the default mentor route, so we can't drive
+  // arbitrary model selection from the browser.
+  const mentorVariant = useFeatureFlag<string>(
+    FLAGS.MENTOR_MODEL_VARIANT,
+    'control',
+  );
 
   // Hydrate from localStorage (history + pinned).
   React.useEffect(() => {
@@ -181,7 +185,15 @@ export default function MentorChatPage() {
     setMessages([...conversation, mentorMsg]);
     setInput('');
     appendStoredMessage(readingId, toStored(userMsg));
-    track('mentor_message_sent', { reading_id: readingId, message_count: conversation.filter(m => m.role === 'user').length, length: text.length });
+    track('mentor_message_sent', {
+      reading_id: readingId,
+      message_count: conversation.filter(m => m.role === 'user').length,
+      length: text.length,
+      // Wave 42.2 — tag the send event with which model variant the worker
+      // will be asked for, so analytics can correlate response quality with
+      // variant assignment without hitting `$ai_generation` join keys.
+      model_variant: mentorVariant,
+    });
     setStreaming(true);
 
     const ctrl = new AbortController();
@@ -190,7 +202,7 @@ export default function MentorChatPage() {
     let acc = '';
     try {
       const history = toMentorMessages(conversation);
-      for await (const ev of chatMentorStream(history, sessionId, ctrl.signal)) {
+      for await (const ev of chatMentorStream(history, sessionId, ctrl.signal, mentorVariant)) {
         if (ev.type === 'chunk') {
           acc += ev.text;
           setMessages((prev) =>

@@ -33,6 +33,9 @@ const DEFAULT_SYSTEM_PROMPT =
 interface MentorRequestBody {
   session_id?: string;
   messages?: MentorMessage[];
+  /** Wave 42.2 — PostHog `mentor_model_variant` flag value forwarded from
+   *  the browser. Validated against an allowlist worker-side. */
+  model_variant?: string;
 }
 
 interface SupabaseReadingEnvelope {
@@ -148,6 +151,10 @@ export async function POST(req: Request) {
   };
   if (sessionId) headers['X-Session-Id'] = sessionId;
   if (userId) headers['X-User-Id'] = userId;
+  // Wave 42.2 — forward mentor_model_variant PostHog assignment.
+  if (typeof body.model_variant === 'string' && body.model_variant) {
+    headers['X-Model-Variant'] = body.model_variant;
+  }
 
   try {
     const res = await fetch(`${HIEU_API_URL}/ai/role/mentor`, {

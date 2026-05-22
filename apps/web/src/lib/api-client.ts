@@ -146,11 +146,17 @@ export type MentorStreamEvent =
  *
  * `EventSource` only supports GET, so this implementation reads the
  * response body manually and parses `event:` / `data:` lines.
+ *
+ * `modelVariant` — Wave 42.2 PostHog `mentor_model_variant` flag value.
+ * Forwarded to the Next.js proxy (which forwards to the worker as
+ * `X-Model-Variant`). The worker honours the variant against an allowlist
+ * and falls back to the default mentor route on `control` / invalid input.
  */
 export async function* chatMentorStream(
   messages: MentorMessage[],
   sessionId?: string,
   signal?: AbortSignal,
+  modelVariant?: string,
 ): AsyncGenerator<MentorStreamEvent, void, void> {
   if (!messages?.length) {
     throw new ApiClientError(400, null, 'messages required');
@@ -162,7 +168,11 @@ export async function* chatMentorStream(
       'content-type': 'application/json',
       accept: 'text/event-stream',
     },
-    body: JSON.stringify({ messages, session_id: sessionId }),
+    body: JSON.stringify({
+      messages,
+      session_id: sessionId,
+      model_variant: modelVariant,
+    }),
     cache: 'no-store',
     signal,
   });
