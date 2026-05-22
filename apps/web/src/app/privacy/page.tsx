@@ -7,7 +7,7 @@ export const metadata = {
     'Cam kết bảo vệ dữ liệu cá nhân tại hieu.asia, tuân thủ Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân.',
 };
 
-const LAST_UPDATED = '21/05/2026';
+const LAST_UPDATED = '22/05/2026';
 
 interface SubProcessor {
   vendor: string;
@@ -57,6 +57,22 @@ const SUB_PROCESSORS: SubProcessor[] = [
     dataShared: 'HTTP request metadata, build artifacts',
     location: 'Hoa Kỳ',
     retention: 'Logs 30 ngày',
+    policyUrl: 'https://vercel.com/legal/privacy-policy',
+  },
+  {
+    vendor: 'Vercel Analytics',
+    purpose: 'Đếm số lượt truy cập + nguồn truy cập (privacy-first, không cookie)',
+    dataShared: 'URL trang, referrer, region (không IP, không cookie)',
+    location: 'Vercel Edge (US/EU)',
+    retention: '30 ngày (rolling)',
+    policyUrl: 'https://vercel.com/legal/privacy-policy',
+  },
+  {
+    vendor: 'Vercel Speed Insights',
+    purpose: 'Đo Core Web Vitals (LCP, CLS, INP) qua browser PerformanceObserver',
+    dataShared: 'Web Vitals metrics + URL path (không cookie, không PII)',
+    location: 'Vercel Edge',
+    retention: 'Aggregate (không lưu phiên cá nhân)',
     policyUrl: 'https://vercel.com/legal/privacy-policy',
   },
   {

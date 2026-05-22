@@ -2,8 +2,33 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, Checkbox, Label } from '@hieu-asia/ui';
 import { Check } from 'lucide-react';
+import { getUserInfo } from 'zmp-sdk/apis';
 import { ZaloHeader } from '../components/zalo-header';
 import { ZaloBottomCta } from '../components/zalo-bottom-cta';
+
+// NĐ 13/2023 audit endpoint — same Supabase Edge Function as miniapp-telegram.
+// Failures are non-blocking: consent UX continues regardless.
+async function logConsentAudit(payload: {
+  user_id: string;
+  audit_metadata: Record<string, unknown>;
+}): Promise<void> {
+  const url = (import.meta.env.VITE_EDGE_FN_URL as string | undefined)?.replace(/\/$/, '');
+  const anon = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+  if (!url || !anon) return; // env not wired in this build — skip silently
+  await fetch(`${url}/audit-log`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      apikey: anon,
+      Authorization: `Bearer ${anon}`,
+    },
+    body: JSON.stringify({
+      user_id: payload.user_id,
+      action: 'consent_accepted',
+      audit_metadata: payload.audit_metadata,
+    }),
+  });
+}
 
 // Wave 16 standard: 1 mandatory (birth_data) + 1 optional (improve_optin).
 // Palm / khảo sát quyền sẽ hỏi sau, chỉ khi user dùng đến.
@@ -17,17 +42,39 @@ export function ConsentPage() {
   const [birthData, setBirthData] = useState(false);
   const [improveOptin, setImproveOptin] = useState(false);
 
-  const onContinue = () => {
+  const onContinue = async () => {
     const acceptedAt = new Date().toISOString();
-    const purposes = [
-      'personalized_reading',
-      'mentor_chat',
-      ...(improveOptin ? ['quality_improvement'] : []),
-    ];
+    const optionalPurposes = improveOptin ? ['quality_improvement'] : [];
+    const purposes = ['personalized_reading', 'mentor_chat', ...optionalPurposes];
     window.sessionStorage.setItem(
       'hieu.consent',
       JSON.stringify({ accepted: true, accepted_at: acceptedAt, version: 'v2.0', purposes }),
     );
+    try {
+      let zaloUserId = '';
+      try {
+        const info = await getUserInfo({ avatarType: 'normal' });
+        zaloUserId = info.userInfo?.id ?? '';
+      } catch {
+        // Outside official Zalo client (dev / unauthorized) — log anonymously.
+      }
+      await logConsentAudit({
+        user_id: zaloUserId,
+        audit_metadata: {
+          source: 'zalo-miniapp',
+          surface: 'miniapp-zalo',
+          version: 'v2.0',
+          purposes,
+          mandatory_purposes: ['birth_data'],
+          optional_purposes: optionalPurposes,
+          zalo_user_id: zaloUserId,
+          user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+          timestamp_iso: acceptedAt,
+        },
+      });
+    } catch (e) {
+      console.warn('[consent] audit log failed:', e);
+    }
     navigate('/reading/new');
   };
 
