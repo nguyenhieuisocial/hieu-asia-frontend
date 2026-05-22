@@ -33,9 +33,19 @@
 #   SLACK_WEBHOOK_URL / DISCORD_WEBHOOK_URL  for deploy notifications
 name: deploy
 
+# DISABLED 2026-05-22 (Wave 22): Vercel GitHub App integration is now the
+# canonical path. Production deploys auto-fire on push to main via Vercel's
+# native Git integration (confirmed working — Wave 21 commit 5fdf44f deployed
+# READY without GHA involvement). This CLI fallback path was failing on every
+# push because VERCEL_TOKEN expired (#133) and was sending failure emails
+# despite Vercel native deploys succeeding.
+#
+# To re-enable temporarily for manual CLI deploy:
+#   - Rotate VERCEL_TOKEN in repo secrets first
+#   - Use the "Run workflow" button on the Actions tab (workflow_dispatch)
+#
+# DO NOT add `push:` trigger back unless Vercel GitHub App is disconnected.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:

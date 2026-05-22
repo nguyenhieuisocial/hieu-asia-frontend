@@ -9,9 +9,13 @@
 #   VERCEL_PROJECT_ID_MINIAPP - project id for apps/miniapp-telegram
 name: preview
 
+# DISABLED 2026-05-22 (Wave 22): Vercel GitHub App integration handles PR
+# previews automatically via its own bot comments. This CLI fallback would
+# duplicate the preview deploy + fail on expired VERCEL_TOKEN (#133).
+#
+# To re-enable: rotate VERCEL_TOKEN + change trigger back to `pull_request:`.
 on:
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
