@@ -37,6 +37,10 @@ export interface PartnerMe {
     created_at: string;
     payout_method: string | null;
     payout_details: Record<string, unknown> | null;
+    // Wave 45 — payout rail config (per-affiliate preference).
+    preferred_rail?: 'manual_csv' | 'wise' | 'stripe_connect';
+    rail_account_external_id?: string | null;
+    rail_account_status?: 'pending' | 'verified' | 'rejected' | 'manual_only';
   } | null;
 }
 

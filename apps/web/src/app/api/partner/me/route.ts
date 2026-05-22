@@ -32,6 +32,10 @@ interface NetworkRow {
   created_at: string;
   payout_method: string | null;
   payout_details: Record<string, unknown> | null;
+  // Wave 45 — payout rail config.
+  preferred_rail: 'manual_csv' | 'wise' | 'stripe_connect' | null;
+  rail_account_external_id: string | null;
+  rail_account_status: 'pending' | 'verified' | 'rejected' | 'manual_only' | null;
 }
 
 export async function GET(req: NextRequest) {
@@ -43,7 +47,7 @@ export async function GET(req: NextRequest) {
   const [userR, netR] = await Promise.all([
     sbUser<UserRow[]>('users?select=id,email,app_role&limit=1', jwt),
     sbUser<NetworkRow[]>(
-      'affiliate_network?select=user_id,affiliate_code,path,depth,tier,status,parent_user_id,created_at,payout_method,payout_details&limit=1',
+      'affiliate_network?select=user_id,affiliate_code,path,depth,tier,status,parent_user_id,created_at,payout_method,payout_details,preferred_rail,rail_account_external_id,rail_account_status&limit=1',
       jwt,
     ),
   ]);
