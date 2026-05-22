@@ -14,6 +14,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { getPostHog } from "@/lib/posthog";
 import { wireWebVitals } from "@/lib/web-vitals";
 import { identifyUser } from "@/lib/identify";
+import { onboardAffiliateFromRef } from "@/lib/affiliate-onboard";
 import { getSupabaseAuth } from "@/lib/auth-client";
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
@@ -35,12 +36,17 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
       if (cancelled) return;
       if (data.session?.user) {
         void identifyUser(data.session.user);
+        // Catches the "/r/<CODE> clicked after signup" edge case where the user
+        // never re-enters /auth/callback. Idempotent — localStorage flag +
+        // worker-side dedupe stop repeat calls on token refresh.
+        void onboardAffiliateFromRef();
       }
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       if (cancelled) return;
       if (session?.user) {
         void identifyUser(session.user);
+        void onboardAffiliateFromRef();
       }
     });
     return () => {

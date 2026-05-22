@@ -19,6 +19,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { getSupabaseAuth } from '@/lib/auth-client';
 import { identifyUser } from '@/lib/identify';
 import { onboardAffiliateFromRef } from '@/lib/affiliate-onboard';
+import { readAffiliateRef } from '@/lib/affiliate-ref';
 import { track } from '@/lib/analytics';
 
 const ANON_USER_KEY = 'hieu.user_id';
@@ -140,12 +141,16 @@ export default function AuthCallbackPage() {
         const provider = data.session.user.app_metadata?.provider;
         const method: 'magic_link' | 'oauth' =
           provider && provider !== 'email' ? 'oauth' : 'magic_link';
+        const refCode = readAffiliateRef();
         track('user_identified', {
           user_id: data.session.user.id,
           new_user: newUser,
         });
         if (newUser) {
-          track('signup_completed', { method });
+          track('signup_completed', {
+            method,
+            ...(refCode ? { referral_code: refCode } : {}),
+          });
         } else {
           track('signin_completed', { method });
         }
