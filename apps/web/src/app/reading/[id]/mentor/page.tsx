@@ -26,6 +26,7 @@ import {
   type StoredMessage,
 } from '@/lib/mentor-history';
 import { track } from '@/lib/analytics';
+import { useFeatureFlag, FLAGS } from '@/lib/feature-flags';
 
 const QUICK_PROMPTS = [
   'Tôi nên xử lý nhân sự chống đối thế nào?',
@@ -92,6 +93,13 @@ export default function MentorChatPage() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [streaming, setStreaming] = React.useState(false);
   const abortRef = React.useRef<AbortController | null>(null);
+
+  // Gate quick-prompt "skills" surface behind `mentor-skills-rollout`. Default
+  // ON since the UI is already shipped; toggle in PostHog to roll back fast.
+  const showSkills = useFeatureFlag<boolean>(
+    FLAGS.MENTOR_SKILLS_ROLLOUT,
+    true,
+  );
 
   // Hydrate from localStorage (history + pinned).
   React.useEffect(() => {
@@ -321,7 +329,9 @@ export default function MentorChatPage() {
             </div>
           </div>
           <div className="mx-auto w-full max-w-3xl">
-            <ChatQuickPrompts prompts={QUICK_PROMPTS} onPick={setInput} />
+            {showSkills && (
+              <ChatQuickPrompts prompts={QUICK_PROMPTS} onPick={setInput} />
+            )}
             <ChatInput
               value={input}
               onChange={setInput}

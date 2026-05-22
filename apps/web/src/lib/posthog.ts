@@ -103,15 +103,35 @@ export function getPostHog(): PostHog | null {
 
   posthog.init(key, {
     api_host: host,
-    capture_pageview: false, // manually triggered on route change
+    // Pageviews: we fire `$pageview` manually on App Router navigations.
+    capture_pageview: false,
+    // Page leaves: enables accurate bounce / time-on-page (auto in v1.50+).
     capture_pageleave: true,
+    // Session replay (Recordings) — needed for UX debug & funnel review.
     disable_session_recording: false,
+    // Autocapture: clicks, form submits, change events → also powers Heatmaps.
     autocapture: true,
-    capture_performance: true, // Web Vitals + paint metrics
-    enable_recording_console_log: true,
+    // Heatmaps: PostHog v1.95+ — explicit opt-in so the toolbar can render them.
+    enable_heatmaps: true,
+    // Exception auto-capture — hooks window.onerror + unhandledrejection.
+    // Removes the need for a manual error boundary integration.
+    capture_exceptions: true,
+    // Web Vitals + paint metrics (we also forward typed events via web-vitals.ts).
+    capture_performance: true,
+    // Privacy: don't capture console logs in recordings (may leak tokens/PII).
+    enable_recording_console_log: false,
+    // Privacy: honour the browser's "Do Not Track" header.
+    respect_dnt: true,
+    // Privacy: only create person profiles for identified users — anonymous
+    // visitors stay in event-only mode (cheaper + GDPR-friendly).
+    person_profiles: "identified_only",
+    // Persistence: localStorage for distinct_id continuity, cookie for SSR.
     cross_subdomain_cookie: true,
     persistence: "localStorage+cookie",
     session_recording: {
+      // We do NOT mask all text — we want readable replays for UX work.
+      // Sensitive fields are masked individually via `.posthog-mask` class or
+      // the password/credit-card auto-mask below.
       maskAllInputs: false,
       maskTextSelector: ".posthog-mask",
       maskInputOptions: {

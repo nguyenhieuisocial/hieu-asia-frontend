@@ -16,6 +16,7 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
+import { readFeatureFlag, FLAGS } from '@/lib/feature-flags';
 
 const STORAGE_KEY = 'hieu:expert-mode:v1';
 const URL_PARAM = 'expert';
@@ -35,7 +36,13 @@ function readUrlOverride(): boolean | null {
 function readStorage(): boolean {
   if (typeof window === 'undefined') return false;
   try {
-    return window.localStorage.getItem(STORAGE_KEY) === '1';
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (stored === '1') return true;
+    if (stored === '0') return false;
+    // No saved preference yet — consult PostHog feature flag for default.
+    // `expert-mode-default-on` lets us A/B test new-user defaults without
+    // touching code. Falls back to `false` (beginner) when PostHog unloaded.
+    return readFeatureFlag(FLAGS.EXPERT_MODE_DEFAULT_ON) === true;
   } catch {
     return false;
   }

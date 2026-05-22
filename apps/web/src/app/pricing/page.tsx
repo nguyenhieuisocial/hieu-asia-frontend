@@ -19,6 +19,7 @@ import { Button } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
+import { useFeatureFlag, FLAGS } from '@/lib/feature-flags';
 
 /**
  * Launch promotion — matches the `hieu_asia.coupons` table seed.
@@ -267,6 +268,12 @@ export default function PricingPage() {
   const sessionId = searchParams?.get('session') ?? '';
   const [period, setPeriod] = React.useState<Period>('annual');
   const bestDiscount = React.useMemo(() => bestAnnualDiscountPercent(TIERS), []);
+  // Default to TRUE so the campaign banner still shows when PostHog is down /
+  // blocked. Set the PostHog flag to `false` to kill the banner remotely.
+  const showLaunchBanner = useFeatureFlag<boolean>(
+    FLAGS.PRICING_LAUNCH50_BANNER,
+    true,
+  );
 
   const handleSelect = React.useCallback(
     (tier: TierId) => {
@@ -328,8 +335,8 @@ export default function PricingPage() {
               </PeriodButton>
             </div>
 
-            {/* Launch promo banner */}
-            {LAUNCH_PROMO.code && (
+            {/* Launch promo banner — gated by `pricing-launch50-banner` flag */}
+            {LAUNCH_PROMO.code && showLaunchBanner && (
               <div className="mx-auto mt-6 flex max-w-xl items-center justify-center gap-2 rounded-2xl border border-gold/30 bg-gradient-to-r from-gold/[0.08] via-gold/[0.04] to-purple/[0.08] px-4 py-3 text-sm text-cream/90">
                 <Sparkles className="h-4 w-4 shrink-0 text-gold" aria-hidden="true" />
                 <p>
