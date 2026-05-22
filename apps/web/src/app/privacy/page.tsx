@@ -93,10 +93,12 @@ const SUB_PROCESSORS: SubProcessor[] = [
   },
   {
     vendor: 'PostHog',
-    purpose: 'Product analytics (ẩn danh)',
-    dataShared: 'Sự kiện UI, không kèm PII',
-    location: 'EU (eu.posthog.com)',
-    retention: '12 tháng',
+    purpose:
+      'Product analytics (sự kiện UI, session replay, heatmap, feature flag). IP capture mặc định bật ($ip) để chống fraud và geo-segment — bạn có thể tắt bằng cách tắt analytics trong /account.',
+    dataShared:
+      'Sự kiện UI, distinct_id ẩn danh hoặc user_id sau khi đăng nhập, IP ($ip), user-agent, super-properties (locale/timezone/viewport). Không gửi email/họ tên thô cho miniapp; web app gửi email sau khi đăng nhập.',
+    location: 'Hoa Kỳ (us.i.posthog.com — PostHog US Cloud)',
+    retention: 'Sự kiện 12 tháng; session replay 30 ngày (PostHog Cloud defaults)',
     policyUrl: 'https://posthog.com/privacy',
   },
   {
