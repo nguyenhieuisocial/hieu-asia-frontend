@@ -8,6 +8,15 @@ import { QueryProvider } from '@/components/providers/query-provider';
 import { PlausibleScript } from '@/components/analytics/PlausibleScript';
 import { PostHogProvider } from '@/components/PostHogProvider';
 import { Toaster } from '@hieu-asia/ui';
+// Wave 21 — Vercel telemetry (customer-facing web only).
+// Phân vai analytics:
+//   - PostHog:               business events, feature flags, session replay, exceptions
+//   - Vercel Analytics:      privacy-first page views + referrer (Vercel dashboard)
+//   - Vercel Speed Insights: Core Web Vitals từ browser API native (SEO / Google ranking)
+// Không lo double-count: 3 surface khác nhau, mỗi cái phục vụ một mục đích riêng.
+// Local dev không có VERCEL env → no-op, không gửi data.
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import './globals.css';
 
 const beVietnam = Be_Vietnam_Pro({
@@ -153,6 +162,9 @@ export default async function RootLayout({
           </ThemeProvider>
         </NextIntlClientProvider>
         <PlausibleScript />
+        {/* Vercel telemetry — mount cuối <body> để fire sau khi providers init xong. */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
