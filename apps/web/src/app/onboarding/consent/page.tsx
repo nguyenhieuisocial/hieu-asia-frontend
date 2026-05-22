@@ -98,7 +98,10 @@ export default function OnboardingConsentPage() {
   function handleContinue() {
     const stored = readStored();
     writeStored({ ...stored, consent });
-    router.push('/onboarding');
+    // Wave 30 W-D — was '/onboarding' which is the legacy consent page and
+    // caused a double-consent loop. Route to the actual reading/decision flow.
+    const target = stored.topic === 'decision' ? '/decisions/new' : '/reading/new';
+    router.push(target);
   }
 
   if (!ready) {

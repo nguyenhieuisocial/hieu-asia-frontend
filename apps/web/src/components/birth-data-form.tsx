@@ -79,6 +79,24 @@ export function BirthDataForm() {
           consent_version: 'v1.0',
         }),
       );
+      // Wave 30 W-D — persist birth inputs to the chart-hydration key so
+      // /decisions/new and /account → MyChartTab can cast a chart without
+      // asking the user again. Shape matches `ChartProfile` in MyChartTab.
+      try {
+        window.localStorage.setItem(
+          'hieu:chart:profile:v1',
+          JSON.stringify({
+            full_name: values.display_name || '',
+            gender: values.gender ?? '',
+            birth_date: values.birth_date,
+            birth_time: values.unknown_birth_time ? '' : values.birth_time || '',
+            birth_place: values.birth_place,
+            updated_at: consentTimestamp,
+          }),
+        );
+      } catch {
+        /* quota — best effort */
+      }
     }
     router.push(`/reading/${res.session_id}/upload`);
   });

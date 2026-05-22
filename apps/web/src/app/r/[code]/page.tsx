@@ -12,14 +12,15 @@
  */
 
 import { redirect } from 'next/navigation';
-import { cookies, headers } from 'next/headers';
+import { headers } from 'next/headers';
 import Link from 'next/link';
 import { safeJson } from '@/lib/safe-json';
 
 export const dynamic = 'force-dynamic';
 
-const REF_COOKIE = 'hieu_ref';
-const COOKIE_TTL = 60 * 60 * 24 * 30;
+// NOTE: cookie set lives in `middleware.ts` for /r/<CODE>. Next 15 forbids
+// cookies().set() inside Server Components during render. The page component
+// now just renders + redirects.
 const CODE_REGEX = /^[A-Z2-9]{6,16}$/;
 const SAFE_TARGETS = new Set([
   '/', '/onboarding', '/pricing', '/features',
@@ -80,25 +81,9 @@ export default async function ReferralLandingPage({
     redirect('/');
   }
 
-  // First-touch wins — only set the cookie if it doesn't exist.
-  // Note: in Next 15, cookies().set() inside a Server Component during render
-  // emits "Cookies can only be modified in a Server Action or Route Handler".
-  // We swallow the error here — the cookie still serializes back to the browser
-  // because the page is rendered server-side per request (dynamic=force-dynamic).
-  const cookieStore = await cookies();
-  if (!cookieStore.get(REF_COOKIE)) {
-    try {
-      cookieStore.set(REF_COOKIE, code, {
-        httpOnly: false,
-        sameSite: 'lax',
-        secure: true,
-        path: '/',
-        maxAge: COOKIE_TTL,
-      });
-    } catch {
-      // Server Component cookie-set restriction in Next 15 — non-fatal.
-    }
-  }
+  // Cookie is set by middleware (see middleware.ts /r/<CODE> branch). First-
+  // touch wins. We do not touch cookies() here — Next 15 forbids that during
+  // Server Component render.
 
   // Fire-and-forget click ping (server-side, with service token).
   trackClickFireAndForget(code);

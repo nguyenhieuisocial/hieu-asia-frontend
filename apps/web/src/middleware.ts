@@ -56,6 +56,23 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(url, 301);
   }
 
+  // Wave 30 W-D — /r/<CODE> attribution. The page component used to call
+  // cookies().set() during render which Next 15 forbids (warning swallowed).
+  // Set-Cookie from middleware is the canonical way. First-touch wins.
+  const refLandingMatch = pathname.match(/^\/r\/([A-Za-z0-9_-]{3,32})\/?$/);
+  if (refLandingMatch && refLandingMatch[1]) {
+    const code = refLandingMatch[1].toUpperCase();
+    const existingRef = req.cookies.get(COOKIE_NAME)?.value;
+    const res = NextResponse.next();
+    if (!existingRef && CODE_REGEX.test(code)) {
+      res.cookies.set(COOKIE_NAME, code, cookieOpts());
+    } else if (existingRef && CODE_REGEX.test(existingRef)) {
+      // Refresh TTL on the existing attribution so first-touch sticks.
+      res.cookies.set(COOKIE_NAME, existingRef, cookieOpts());
+    }
+    return res;
+  }
+
   const refRaw = req.nextUrl.searchParams.get('ref');
   const existing = req.cookies.get(COOKIE_NAME)?.value;
 
