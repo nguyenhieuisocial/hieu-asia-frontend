@@ -7,6 +7,7 @@ import { ThemeProvider } from '@/components/providers/theme-provider';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { PlausibleScript } from '@/components/analytics/PlausibleScript';
 import { PostHogProvider } from '@/components/PostHogProvider';
+import { ConsentBanner } from '@/components/cmp/ConsentBanner';
 import { Toaster } from '@hieu-asia/ui';
 // Wave 21 — Vercel telemetry (customer-facing web only).
 // Phân vai analytics:
@@ -157,6 +158,10 @@ export default async function RootLayout({
               <Suspense fallback={null}>
                 <PostHogProvider>{children}</PostHogProvider>
               </Suspense>
+              {/* Wave 41 Track E — CMP cookie consent banner. Renders only
+                  on first visit (geo-aware: VN + EU always; auto-accept
+                  legitimate-interest defaults elsewhere). */}
+              <ConsentBanner />
             </QueryProvider>
             <Toaster />
           </ThemeProvider>

@@ -105,6 +105,46 @@ export interface EventPropertyMap {
     rating?: "good" | "needs-improvement" | "poor";
     page: string;
   };
+
+  // ── Wave 41 — Behaviour ─────────────────────────────────────────
+  scroll_depth: { depth_pct: 25 | 50 | 75 | 100; page: string };
+  page_dwell: {
+    page: string;
+    duration_ms: number;
+    total_elapsed_ms: number;
+    max_scroll: number;
+    reason: "pagehide" | "beforeunload";
+  };
+  exit_intent: {
+    page: string;
+    trigger: "mouse_leave_top" | "mobile_swipe_up";
+  };
+  form_started: { form_id: string; page: string };
+  form_submitted: {
+    form_id: string;
+    page: string;
+    time_to_submit_ms: number | null;
+  };
+  form_abandoned: {
+    form_id: string;
+    page: string;
+    last_field: string | null;
+    time_open_ms: number;
+  };
+  copy_event: {
+    char_count: number;
+    page_section: string;
+    page: string;
+    type: string;
+  };
+
+  // ── Wave 41 — Consent ───────────────────────────────────────────
+  consent_changed: {
+    analytics: boolean;
+    marketing: boolean;
+    personalization: boolean;
+    source: "banner_accept_all" | "banner_necessary_only" | "banner_custom" | "settings_page";
+  };
 }
 
 export type EventName = keyof EventPropertyMap;

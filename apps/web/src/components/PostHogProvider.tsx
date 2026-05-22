@@ -16,15 +16,45 @@ import { wireWebVitals } from "@/lib/web-vitals";
 import { identifyUser } from "@/lib/identify";
 import { onboardAffiliateFromRef } from "@/lib/affiliate-onboard";
 import { getSupabaseAuth } from "@/lib/auth-client";
+import { captureAttribution } from "@/lib/attribution";
+import { wireBehaviorTracking } from "@/lib/behavior";
+import { getConsent } from "@/lib/consent";
+import {
+  hasMarketingConsent,
+  loadMarketingPixels,
+  trackPixelPageView,
+} from "@/lib/marketing-pixels";
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Initialise once on mount + wire web vitals.
+  // Initialise once on mount + wire web vitals, attribution, behaviour.
   React.useEffect(() => {
     getPostHog();
     wireWebVitals();
+    // Wave 41 Track A — capture UTM/click-IDs on first paint, before any
+    // user interaction or identify() can blow away the anon attribution.
+    captureAttribution();
+    // Wave 41 Track B — wire scroll/dwell/exit-intent/form/copy events.
+    wireBehaviorTracking();
+    // Wave 41 Track D — if user already opted in marketing in a previous
+    // session, load pixels now (idempotent).
+    if (hasMarketingConsent()) {
+      loadMarketingPixels();
+    }
+    // Wave 41 — ensure anon distinct_id always persists for identity stitch.
+    try {
+      const ph = getPostHog();
+      if (ph) {
+        const anonId = ph.get_distinct_id?.();
+        if (anonId) {
+          localStorage.setItem("hieu.user_id", anonId);
+        }
+      }
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   // Watch Supabase auth — re-identify on session restore + tier refresh.
@@ -58,13 +88,23 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
   // Manual pageview on every route change.
   React.useEffect(() => {
     const ph = getPostHog();
-    if (!ph) return;
     if (!pathname) return;
 
     let url = window.location.origin + pathname;
     const qs = searchParams?.toString();
     if (qs) url += `?${qs}`;
-    ph.capture("$pageview", { $current_url: url });
+    if (ph) ph.capture("$pageview", { $current_url: url });
+
+    // Wave 41 — re-capture attribution on every SPA nav so cross-page
+    // `?utm_*` / `?fbclid` arrivals still register.
+    captureAttribution();
+
+    // Fire marketing pixel PageView on each SPA nav (consent-gated).
+    if (hasMarketingConsent()) {
+      trackPixelPageView();
+    }
+    // Silence unused-var lint when consent off.
+    void getConsent;
   }, [pathname, searchParams]);
 
   return <>{children}</>;

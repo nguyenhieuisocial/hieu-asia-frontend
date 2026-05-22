@@ -7,7 +7,82 @@ export const metadata = {
     'Cam kết bảo vệ dữ liệu cá nhân tại hieu.asia, tuân thủ Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân.',
 };
 
-const LAST_UPDATED = '22/05/2026';
+const LAST_UPDATED = '22/05/2026 (Wave 41)';
+
+interface CookieRow {
+  name: string;
+  purpose: string;
+  retention: string;
+  optOut: string;
+  category: 'necessary' | 'analytics' | 'marketing' | 'personalization';
+}
+
+// Wave 41 — full cookie inventory documented per NĐ 13/2023.
+const COOKIES: CookieRow[] = [
+  {
+    name: 'hieu_session',
+    purpose: 'Phiên đăng nhập (authentication)',
+    retention: '7 ngày trượt',
+    optOut: 'Đăng xuất',
+    category: 'necessary',
+  },
+  {
+    name: 'hieu_attr',
+    purpose: 'Attribution (UTM, fbclid, gclid, ttclid, msclkid, twclid, dclid, hieu_ref)',
+    retention: '90 ngày',
+    optOut: 'CMP banner / xoá cookie trình duyệt',
+    category: 'necessary',
+  },
+  {
+    name: 'hieu_consent_*',
+    purpose: 'Trạng thái đồng ý cookie (shown / analytics / marketing / personalization)',
+    retention: '365 ngày',
+    optOut: 'Cài đặt trình duyệt',
+    category: 'necessary',
+  },
+  {
+    name: 'hieu.theme',
+    purpose: 'Light/dark preference',
+    retention: '365 ngày',
+    optOut: 'Cài đặt trình duyệt',
+    category: 'personalization',
+  },
+  {
+    name: 'hieu.locale',
+    purpose: 'Ngôn ngữ hiển thị',
+    retention: '365 ngày',
+    optOut: 'Cài đặt trình duyệt',
+    category: 'personalization',
+  },
+  {
+    name: 'ph_phc_*_posthog',
+    purpose: 'PostHog distinct_id + session_id (analytics + session replay)',
+    retention: '365 ngày',
+    optOut: 'CMP — tắt Analytics',
+    category: 'analytics',
+  },
+  {
+    name: '_fbp',
+    purpose: 'Facebook Pixel — tracking ID phiên (chỉ tải sau khi opt-in Marketing)',
+    retention: '90 ngày',
+    optOut: 'CMP — tắt Marketing',
+    category: 'marketing',
+  },
+  {
+    name: '_gcl_*',
+    purpose: 'Google Ads conversion (chỉ tải sau khi opt-in Marketing)',
+    retention: '90 ngày',
+    optOut: 'CMP — tắt Marketing',
+    category: 'marketing',
+  },
+  {
+    name: '_ttp',
+    purpose: 'TikTok Pixel (chỉ tải sau khi opt-in Marketing)',
+    retention: '13 tháng',
+    optOut: 'CMP — tắt Marketing',
+    category: 'marketing',
+  },
+];
 
 interface SubProcessor {
   vendor: string;
@@ -141,6 +216,48 @@ const SUB_PROCESSORS: SubProcessor[] = [
     retention: '30 ngày',
     policyUrl: 'https://langfuse.com/privacy',
   },
+  // Wave 41 — Marketing pixels. CHỈ tải sau khi bạn opt-in qua CMP banner.
+  // Khi không opt-in, KHÔNG có request nào được gửi tới các vendor này từ
+  // trình duyệt của bạn — cookie cũng KHÔNG được set.
+  {
+    vendor: 'Facebook / Meta (Pixel + CAPI)',
+    purpose:
+      'Retargeting + conversion tracking (Pixel + Conversions API). Chỉ tải sau khi opt-in Marketing trong CMP banner.',
+    dataShared:
+      'Pixel: IP, user-agent, URL, click-IDs (fbclid). CAPI server-side: hashed email/phone (SHA-256), IP. Có dedup bằng eventID.',
+    location: 'Hoa Kỳ / EU (mạng CDN toàn cầu)',
+    retention: 'Cookie `_fbp` 90 ngày. Sự kiện CAPI: theo policy Meta.',
+    policyUrl: 'https://www.facebook.com/policy.php',
+  },
+  {
+    vendor: 'Google Ads',
+    purpose:
+      'Conversion tag (gtag) — đo hiệu quả quảng cáo Google Ads. Chỉ tải sau khi opt-in Marketing.',
+    dataShared: 'IP, user-agent, URL, conversion event (value + currency)',
+    location: 'Hoa Kỳ',
+    retention: 'Cookie `_gcl_*` 90 ngày',
+    policyUrl: 'https://policies.google.com/privacy',
+  },
+  {
+    vendor: 'TikTok (ByteDance) Pixel',
+    purpose: 'Retargeting + conversion. Chỉ tải sau khi opt-in Marketing.',
+    dataShared: 'IP, user-agent, URL, click-ID (ttclid)',
+    location: 'Singapore / Hoa Kỳ',
+    retention: 'Cookie `_ttp` 13 tháng',
+    policyUrl: 'https://www.tiktok.com/legal/page/row/privacy-policy/en',
+  },
+];
+
+// Vendor có dùng IP — disclose theo NĐ 13/2023.
+const IP_USING_VENDORS = [
+  'Cloudflare',
+  'Vercel',
+  'Supabase',
+  'Sentry',
+  'PostHog ($ip mặc định bật)',
+  'Facebook / Meta (Pixel + CAPI, chỉ khi opt-in Marketing)',
+  'Google Ads (chỉ khi opt-in Marketing)',
+  'TikTok Pixel (chỉ khi opt-in Marketing)',
 ];
 
 export default function PrivacyPage() {
@@ -286,6 +403,23 @@ export default function PrivacyPage() {
               <li>
                 <strong className="text-foreground">Quyền phản đối xử lý:</strong> phản đối việc dùng dữ liệu cho mục đích huấn luyện AI.
               </li>
+              <li>
+                <strong className="text-foreground">Quyền chuyển giao dữ liệu (portability):</strong>{' '}
+                tải xuống dữ liệu của bạn ở định dạng JSON máy đọc được qua{' '}
+                <Link href="/account" className="text-gold underline">
+                  /account → Xuất dữ liệu
+                </Link>
+                . (Wired qua Worker endpoint <code className="font-mono text-[11px]">/user/export</code>.)
+              </li>
+              <li>
+                <strong className="text-foreground">Quyền hạn chế xử lý (restriction):</strong>{' '}
+                tắt analytics + marketing trong CMP banner hoặc{' '}
+                <Link href="/account" className="text-gold underline">
+                  /account → Privacy
+                </Link>
+                . Khi tắt, mọi sự kiện đều bị PostHog opt-out và pixel marketing
+                được tear down.
+              </li>
             </ul>
             <p className="mt-3">
               <strong>Cách thực hiện:</strong>{' '}
@@ -365,22 +499,79 @@ export default function PrivacyPage() {
 
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="text-xl">7. Cookie và tracking</CardTitle>
+            <CardTitle className="text-xl">7. Cookies + dữ liệu thiết bị (Wave 41)</CardTitle>
+            <CardDescription>
+              Bảng liệt kê đầy đủ cookies và mục đích sử dụng. Marketing cookies CHỈ tải
+              sau khi bạn opt-in qua banner CMP.
+            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-2 text-sm leading-relaxed text-foreground/85">
-            <ul className="list-disc space-y-2 pl-5">
-              <li>
-                Chỉ sử dụng <strong className="text-foreground">functional cookies</strong> (session, locale,
-                tùy chọn dark mode).
-              </li>
-              <li>
-                <strong className="text-gold">KHÔNG sử dụng advertising cookies</strong> hay tracking
-                cookies của bên thứ ba.
-              </li>
-              <li>
-                Analytics tuỳ chọn: Cloudflare Web Analytics (hoàn toàn ẩn danh, không thu IP/fingerprint).
-              </li>
-            </ul>
+          <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/85">
+            <div className="-mx-2 overflow-x-auto">
+              <table className="w-full min-w-[640px] border-collapse text-left text-xs">
+                <thead>
+                  <tr className="border-b border-border text-muted-foreground">
+                    <th className="px-2 py-2 font-mono uppercase tracking-wider">Cookie</th>
+                    <th className="px-2 py-2 font-mono uppercase tracking-wider">Mục đích</th>
+                    <th className="px-2 py-2 font-mono uppercase tracking-wider">TTL</th>
+                    <th className="px-2 py-2 font-mono uppercase tracking-wider">Loại</th>
+                    <th className="px-2 py-2 font-mono uppercase tracking-wider">Opt-out</th>
+                  </tr>
+                </thead>
+                <tbody className="text-foreground/80">
+                  {COOKIES.map((c) => (
+                    <tr key={c.name} className="border-b border-border align-top">
+                      <td className="px-2 py-2.5 font-mono text-[11px]">{c.name}</td>
+                      <td className="px-2 py-2.5">{c.purpose}</td>
+                      <td className="px-2 py-2.5">{c.retention}</td>
+                      <td className="px-2 py-2.5 capitalize">{c.category}</td>
+                      <td className="px-2 py-2.5">{c.optOut}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="mt-4 rounded-md border border-gold/30 bg-gold/5 p-4 text-xs">
+              <p className="font-semibold text-foreground">Quản lý đồng ý cookie</p>
+              <p className="mt-1 text-foreground/80">
+                Bạn có thể mở lại banner cookie và đổi tuỳ chọn bất cứ lúc nào:
+              </p>
+              <button
+                type="button"
+                data-action="reopen-cmp"
+                className="mt-2 rounded-md border border-gold/40 px-3 py-1.5 text-xs font-semibold text-gold hover:bg-gold/10"
+              >
+                Quản lý cookies →
+              </button>
+              <script
+                dangerouslySetInnerHTML={{
+                  __html: `
+                    document.addEventListener('click', function(e) {
+                      var t = e.target;
+                      while (t && t.getAttribute) {
+                        if (t.getAttribute('data-action') === 'reopen-cmp') {
+                          try {
+                            window.localStorage.removeItem('hieu.consent.shown');
+                            document.cookie = 'hieu_consent_shown=false; Path=/; Max-Age=0; SameSite=Lax';
+                            window.dispatchEvent(new CustomEvent('hieu:consent:reopen'));
+                          } catch(e) {}
+                          return;
+                        }
+                        t = t.parentNode;
+                      }
+                    });
+                  `,
+                }}
+              />
+            </div>
+            <div className="mt-4 rounded-md border border-jade/20 bg-jade/5 p-4 text-xs">
+              <p className="font-semibold text-foreground">Sử dụng địa chỉ IP</p>
+              <p className="mt-1 text-foreground/80">
+                Một số sub-processor có nhận địa chỉ IP của bạn để cung cấp dịch vụ (chống
+                fraud, geo-segment, retargeting). Danh sách: {IP_USING_VENDORS.join(', ')}.
+                IP KHÔNG được chia sẻ với các vendor marketing server-side nếu bạn chưa
+                opt-in trong CMP banner.
+              </p>
+            </div>
           </CardContent>
         </Card>
 

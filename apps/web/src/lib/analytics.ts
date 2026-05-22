@@ -20,6 +20,22 @@ declare global {
 }
 
 /**
+ * Wave 41 — high-value events that are mirrored to the Worker `/event/track`
+ * endpoint for server-side enrichment + PostHog server capture. Keeping this
+ * list tight avoids drowning the Worker in low-signal page views.
+ */
+const HIGH_VALUE_EVENTS: ReadonlySet<string> = new Set<EventName>([
+  'payment_intent_created',
+  'payment_completed',
+  'payment_failed',
+  'signup_completed',
+  'signin_completed',
+  'mentor_chat_message_sent',
+  'reading_completed',
+  'consent_changed',
+]);
+
+/**
  * Fire-and-forget analytics event.
  *
  * Layers:
@@ -86,6 +102,33 @@ export function track(event: string, properties?: Record<string, unknown>): void
       }),
       keepalive: true,
     }).catch(() => {});
+  } catch {
+    /* ignore */
+  }
+
+  // 4. Worker /event/track — server-side enrichment for high-value events.
+  //    Geo/UA/login/tier added by worker. Skipped for noisy events like
+  //    page views to stay under rate limits.
+  try {
+    if (HIGH_VALUE_EVENTS.has(event)) {
+      const userId = (() => {
+        try {
+          return localStorage.getItem('hieu.user_id') ?? undefined;
+        } catch {
+          return undefined;
+        }
+      })();
+      void fetch('/api/event/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event,
+          properties,
+          distinct_id: userId,
+        }),
+        keepalive: true,
+      }).catch(() => {});
+    }
   } catch {
     /* ignore */
   }
