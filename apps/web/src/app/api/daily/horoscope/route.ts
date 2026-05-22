@@ -12,9 +12,20 @@ export const dynamic = 'force-dynamic';
 const HIEU_API_URL = process.env.HIEU_API_URL ?? 'https://api.hieu.asia';
 const HIEU_API_SERVICE_TOKEN = process.env.HIEU_API_SERVICE_TOKEN;
 
+/**
+ * Map the public-facing zodiac slug to the upstream backend slug.
+ * Frontend now uses `ti` for Tỵ (canonical), but the upstream worker still
+ * expects the legacy `ty2`. Translate at the boundary so callers can use the
+ * clean slug.
+ */
+function toUpstreamSlug(zodiac: string): string {
+  return zodiac === 'ti' ? 'ty2' : zodiac;
+}
+
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const zodiac = url.searchParams.get('zodiac');
+  const zodiacParam = url.searchParams.get('zodiac');
+  const zodiac = zodiacParam ? toUpstreamSlug(zodiacParam) : null;
   const date = url.searchParams.get('date');
   const all = url.searchParams.get('all');
 

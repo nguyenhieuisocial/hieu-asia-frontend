@@ -84,6 +84,14 @@ const SUB_PROCESSORS: SubProcessor[] = [
     policyUrl: 'https://posthog.com/privacy',
   },
   {
+    vendor: 'Plausible',
+    purpose: 'Page-view analytics (cookieless, GDPR-friendly)',
+    dataShared: 'URL truy cập, referer, user-agent rút gọn (không IP, không cookie)',
+    location: 'EU (Đức)',
+    retention: 'Aggregate vô thời hạn; raw 6 tháng',
+    policyUrl: 'https://plausible.io/privacy',
+  },
+  {
     vendor: 'Sentry',
     purpose: 'Error tracking',
     dataShared: 'Stack trace, browser metadata',
@@ -183,7 +191,13 @@ export default function PrivacyPage() {
             <ul className="list-disc space-y-2 pl-5">
               <li>Tạo báo cáo phân tích cá nhân (Tử Vi + MBTI + tâm lý) dành riêng cho bạn.</li>
               <li>
-                Cải thiện chất lượng AI prompts <em>sau khi dữ liệu đã được ẩn danh hóa hoàn toàn</em>.
+                <strong className="text-cream">Không dùng dữ liệu cá nhân để huấn luyện mô hình.</strong>{' '}
+                Chỉ dùng dữ liệu đã ẩn danh để cải thiện prompt — bạn có thể tắt
+                tùy chọn này bất cứ lúc nào trong{' '}
+                <Link href="/account" className="text-gold underline">
+                  Tài khoản
+                </Link>
+                .
               </li>
               <li>
                 <strong className="text-gold">Chúng tôi KHÔNG bán dữ liệu cá nhân cho bất kỳ bên thứ ba nào.</strong>

@@ -22,8 +22,8 @@ const REASONS: readonly Reason[] = [
   },
   {
     Icon: BookOpen,
-    title: 'AI giải mã cổ học Việt Nam',
-    desc: 'Tử Vi Bắc phái 114 sao, Bát Tự Ngũ Hành, Thần Số Học và MBTI — diễn giải bằng AI hiện đại, văn phong tiếng Việt.',
+    title: 'AI giải mã cổ học Á Đông',
+    desc: 'Tử Vi Bắc phái 114 sao, Bát Tự Ngũ Hành, Thần Số Học, MBTI — và cả tinh hoa cổ truyền Việt Nam (Cân Xương Đoán Số). Diễn giải bằng AI hiện đại, văn phong tiếng Việt.',
   },
   {
     Icon: MessageSquareHeart,

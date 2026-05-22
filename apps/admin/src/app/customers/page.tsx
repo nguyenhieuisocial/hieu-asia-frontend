@@ -11,10 +11,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@hieu-asia/ui';
-import { Users, UserCheck, Crown, Filter } from 'lucide-react';
+import { Users, UserCheck, Crown, Filter, Download } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
 import { KpiCard } from '@/components/admin/kpi-card';
+import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
 
 interface Customer {
   id: string;
@@ -141,9 +142,44 @@ export default function CustomersPage() {
         description="End-user dùng hieu.asia (Supabase users + reading_sessions). Click row để xem chi tiết."
         icon={<Users className="h-5 w-5" />}
         actions={
-          <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
-            {isFetching ? 'Đang tải…' : 'Làm mới'}
-          </Button>
+          <>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                exportToCSV(
+                  customers.map((c) => ({
+                    id: c.id,
+                    display_name: c.display_name ?? '',
+                    email: c.email ?? '',
+                    telegram_id: c.telegram_id ?? '',
+                    plan: c.plan ?? '',
+                    created_at: c.created_at ?? '',
+                    last_active: c.last_active ?? '',
+                    sessions_count: c.sessions_count ?? 0,
+                  })),
+                  fmtCsvFilename('customers'),
+                  {
+                    id: 'ID',
+                    display_name: 'Tên',
+                    email: 'Email',
+                    telegram_id: 'Telegram',
+                    plan: 'Plan',
+                    created_at: 'Tạo lúc',
+                    last_active: 'Hoạt động cuối',
+                    sessions_count: 'Phiên',
+                  },
+                )
+              }
+              disabled={customers.length === 0}
+            >
+              <Download className="mr-1.5 h-3.5 w-3.5" />
+              Xuất CSV
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
+              {isFetching ? 'Đang tải…' : 'Làm mới'}
+            </Button>
+          </>
         }
       />
 

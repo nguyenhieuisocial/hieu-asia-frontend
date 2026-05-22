@@ -31,10 +31,11 @@ import {
   cn,
   toast,
 } from '@hieu-asia/ui';
-import { Ticket, Plus, ShieldAlert, Trash2, Search, Percent, CheckCircle2, XCircle } from 'lucide-react';
+import { Ticket, Plus, ShieldAlert, Trash2, Search, Percent, CheckCircle2, XCircle, Download } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
 import { KpiCard } from '@/components/admin/kpi-card';
+import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
 
 interface Coupon {
   code: string;
@@ -282,10 +283,47 @@ export default function CouponsPage() {
           ) : null
         }
         actions={
-          <Button size="sm" onClick={() => setOpen(true)}>
-            <Plus className="mr-1 h-3.5 w-3.5" />
-            Tạo mới
-          </Button>
+          <>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() =>
+                exportToCSV(
+                  filtered.map((c) => ({
+                    code: c.code,
+                    discount_pct: c.discount_pct,
+                    status: c.status,
+                    uses: c.uses ?? 0,
+                    max_uses: c.max_uses ?? '',
+                    valid_from: c.valid_from ?? '',
+                    valid_to: c.valid_to ?? '',
+                    notes: c.notes ?? '',
+                    created_at: c.created_at ?? '',
+                  })),
+                  fmtCsvFilename('coupons'),
+                  {
+                    code: 'Code',
+                    discount_pct: 'Discount %',
+                    status: 'Status',
+                    uses: 'Uses',
+                    max_uses: 'Max uses',
+                    valid_from: 'Valid from',
+                    valid_to: 'Valid to',
+                    notes: 'Notes',
+                    created_at: 'Created',
+                  },
+                )
+              }
+              disabled={filtered.length === 0}
+            >
+              <Download className="mr-1.5 h-3.5 w-3.5" />
+              Xuất CSV
+            </Button>
+            <Button size="sm" onClick={() => setOpen(true)}>
+              <Plus className="mr-1 h-3.5 w-3.5" />
+              Tạo mới
+            </Button>
+          </>
         }
       />
 

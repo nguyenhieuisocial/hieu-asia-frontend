@@ -282,7 +282,7 @@ export interface AdminCoupon {
 }
 
 export const MOCK_COUPONS: AdminCoupon[] = [
-  { code: 'LAUNCH50', discount_percent: 50, max_redemptions: 100, redeemed: 47, active: true, expires_at: isoDaysAgo(-30) },
+  { code: 'LAUNCH30', discount_percent: 30, max_redemptions: 100, redeemed: 47, active: true, expires_at: isoDaysAgo(-30) },
   { code: 'FRIEND20', discount_percent: 20, max_redemptions: 500, redeemed: 213, active: true, expires_at: null },
   { code: 'EARLYBIRD', discount_percent: 30, max_redemptions: 200, redeemed: 200, active: false, expires_at: isoDaysAgo(15) },
   { code: 'INFLUENCER10', discount_percent: 10, max_redemptions: 1000, redeemed: 89, active: true, expires_at: isoDaysAgo(-60) },

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { HeroV3 } from '@/components/home/HeroV3';
+import { WhyTrust } from '@/components/home/WhyTrust';
 import { HowToStart } from '@/components/home/HowToStart';
 import { MethodChooser } from '@/components/home/MethodChooser';
 import { FreeTools } from '@/components/home/FreeTools';
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'hieu.asia — Hiểu mình. Quyết định mình.',
     description:
-      'Cẩm nang AI cá nhân hoá bằng cổ học Việt Nam và tâm lý hiện đại.',
+      'Cẩm nang AI cá nhân hoá bằng cổ học Á Đông và tâm lý hiện đại — trình bày bằng tiếng Việt.',
     url: 'https://hieu.asia/',
     siteName: 'hieu.asia',
     locale: 'vi_VN',
@@ -35,7 +36,7 @@ const ORGANIZATION_JSONLD = {
   logo: 'https://hieu.asia/icon',
   sameAs: ['https://t.me/hieuasiabot'],
   description:
-    'Hiểu mình. Quyết định mình. AI giải mã Tử Vi, Bát Tự, MBTI và tướng tay theo tri thức cổ học Việt Nam.',
+    'Hiểu mình. Quyết định mình. AI giải mã Tử Vi, Bát Tự, MBTI và tướng tay theo tri thức cổ học Á Đông, trình bày bằng tiếng Việt cho người Việt.',
 };
 
 const WEBSITE_JSONLD = {
@@ -225,6 +226,7 @@ export default function LandingPage() {
       <SiteNav />
       <main id="main-content" className="min-h-screen bg-ink text-cream pt-16">
         <HeroV3 />
+        <WhyTrust />
         <HowToStart />
         <MethodChooser />
         <FreeTools />

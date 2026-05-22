@@ -124,7 +124,7 @@ export default function ThanSoHocResultPage() {
       description={
         data
           ? `Phân tích cho ${data.input.full_name} · Sinh ngày ${data.input.birth_date}`
-          : 'Phân tích con số định mệnh theo phương pháp Pythagoras — đường đời, vận mệnh, linh hồn và chu kỳ đỉnh cao.'
+          : 'Phân tích con số chủ đạo theo phương pháp Pythagoras — đường đời, thiên hướng, linh hồn và chu kỳ đỉnh cao.'
       }
       breadcrumb={BREADCRUMB}
     >
@@ -344,7 +344,7 @@ function ResultActions({ data }: { data: ThanSoHocResult }) {
       `Bản đồ Thần Số Học — ${data.input.full_name}`,
       `Sinh ngày: ${data.input.birth_date}`,
       `Đường đời: ${data.life_path.number} (${data.life_path.name})`,
-      `Vận mệnh: ${data.expression.number} · Linh hồn: ${data.soul_urge.number} · Tính cách: ${data.personality.number}`,
+      `Số biểu đạt: ${data.expression.number} · Linh hồn: ${data.soul_urge.number} · Tính cách: ${data.personality.number}`,
       `Năm cá nhân ${data.input.current_year}: ${data.personal_year.number}`,
       '',
       'Xem chi tiết tại: https://hieu.asia/than-so-hoc',

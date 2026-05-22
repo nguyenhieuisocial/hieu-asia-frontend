@@ -20,13 +20,14 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 import { useFeatureFlag, FLAGS } from '@/lib/feature-flags';
+import { PRICING } from '@/lib/pricing';
 
 /**
  * Launch promotion — matches the `hieu_asia.coupons` table seed.
  * Set `code` to null (or remove the banner) when the campaign ends.
  */
 const LAUNCH_PROMO = {
-  code: 'LAUNCH50',
+  code: 'LAUNCH30',
   percentOff: 30,
   endsAt: '2026-06-30',
 } as const;
@@ -62,7 +63,7 @@ const TIERS: readonly Tier[] = [
     id: 'standard',
     name: 'Standard',
     monthly: 0,
-    annual: 99_000,
+    annual: PRICING.premium.vnd,
     description: 'Một lá số đầy đủ, không tự gia hạn.',
     cta: 'Chọn Standard',
     isOneTime: true,
@@ -70,8 +71,8 @@ const TIERS: readonly Tier[] = [
   {
     id: 'premium',
     name: 'Premium',
-    monthly: 199_000,
-    annual: 1_990_000,
+    monthly: PRICING.monthly.vnd,
+    annual: PRICING.yearly.vnd,
     description: 'Mentor không giới hạn — phổ biến nhất.',
     cta: 'Chọn Premium',
     highlighted: true,
@@ -81,7 +82,7 @@ const TIERS: readonly Tier[] = [
     id: 'lifetime',
     name: 'Lifetime',
     monthly: 0, // Lifetime ignores monthly view
-    annual: 4_990_000,
+    annual: PRICING.lifetime.vnd,
     description: 'Một lần thanh toán, dùng trọn đời.',
     cta: 'Chọn Lifetime',
     isOneTime: true,
@@ -271,7 +272,7 @@ export default function PricingPage() {
   // Default to TRUE so the campaign banner still shows when PostHog is down /
   // blocked. Set the PostHog flag to `false` to kill the banner remotely.
   const showLaunchBanner = useFeatureFlag<boolean>(
-    FLAGS.PRICING_LAUNCH50_BANNER,
+    FLAGS.PRICING_LAUNCH_BANNER,
     true,
   );
 

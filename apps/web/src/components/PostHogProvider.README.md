@@ -75,7 +75,7 @@ Define flags in PostHog dashboard, mirror the key in `FLAGS`:
 // src/lib/feature-flags.ts
 export const FLAGS = {
   EXPERT_MODE_DEFAULT_ON: "expert-mode-default-on",
-  PRICING_LAUNCH50_BANNER: "pricing-launch50-banner",
+  PRICING_LAUNCH_BANNER: "pricing-launch-banner",
   MENTOR_SKILLS_ROLLOUT: "mentor-skills-rollout",
 } as const;
 ```
@@ -85,7 +85,7 @@ Consume:
 ```tsx
 import { useFeatureFlag, FLAGS } from "@/lib/feature-flags";
 
-const showBanner = useFeatureFlag(FLAGS.PRICING_LAUNCH50_BANNER, true);
+const showBanner = useFeatureFlag(FLAGS.PRICING_LAUNCH_BANNER, true);
 //                                                                ^
 //                                          default while PostHog loads /
 //                                          when blocked by ad-blocker.
@@ -99,7 +99,7 @@ For non-React contexts (initializers, event handlers) use the imperative
 | Flag key | Default | Consumer | Effect |
 |---|---|---|---|
 | `expert-mode-default-on` | `false` | `useExpertMode()` | New visitors (no LS) start in expert mode when true. |
-| `pricing-launch50-banner` | `true` | `/pricing` page | Hides the LAUNCH50 banner when false. |
+| `pricing-launch-banner` | `true` | `/pricing` page | Hides the LAUNCH30 banner when false. |
 | `mentor-skills-rollout` | `true` | `/reading/[id]/mentor` | Hides quick-prompt skills when false. |
 
 ### Adding a new flag

@@ -7,8 +7,8 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { track } from '@/lib/analytics';
 
 const FEATURES: { title: string; body: string; icon: string }[] = [
-  { title: 'Đường đời', body: 'Sứ mệnh và con đường lớn nhất của cuộc đời bạn.', icon: '🛤️' },
-  { title: 'Vận mệnh', body: 'Tài năng và công việc phù hợp dựa trên tên đầy đủ.', icon: '⚡' },
+  { title: 'Đường đời', body: 'Con đường lớn và thiên hướng phát triển trong cuộc đời bạn.', icon: '🛤️' },
+  { title: 'Số biểu đạt', body: 'Tài năng và xu hướng nghề nghiệp dựa trên tên đầy đủ.', icon: '⚡' },
   { title: 'Linh hồn', body: 'Khao khát sâu thẳm và động lực bên trong.', icon: '✨' },
   { title: 'Tính cách', body: 'Cách người khác cảm nhận về bạn.', icon: '👤' },
   { title: 'Năm cá nhân 2026', body: 'Chu kỳ năng lượng năm nay dành cho bạn.', icon: '📅' },
@@ -44,7 +44,7 @@ export default function ThanSoHocLandingPage() {
           Thần <GoldAccent>Số Học</GoldAccent>
         </>
       }
-      description="Phân tích con số định mệnh theo phương pháp Pythagoras — đường đời, vận mệnh, linh hồn, tính cách, chu kỳ đỉnh cao và thử thách trong cuộc đời bạn."
+      description="Phân tích con số chủ đạo theo phương pháp Pythagoras — đường đời, thiên hướng, linh hồn, tính cách, chu kỳ đỉnh cao và thử thách trong cuộc đời bạn."
       breadcrumb={[
         { label: 'Trang chủ', href: '/' },
         { label: 'Thần Số Học' },

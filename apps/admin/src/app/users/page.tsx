@@ -11,10 +11,11 @@ import {
   Label,
   cn,
 } from '@hieu-asia/ui';
-import { Users, Crown, Shield, Eye, Plus, Pencil, Trash2, Search } from 'lucide-react';
+import { Users, Crown, Shield, Eye, Plus, Pencil, Trash2, Search, Download } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
+import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
 
 type AdminRole = 'owner' | 'admin' | 'viewer';
 
@@ -161,10 +162,32 @@ export default function AdminUsersPage() {
           ) : null
         }
         actions={
-          <Button size="sm" onClick={() => setCreating(true)}>
-            <Plus className="mr-1.5 h-3.5 w-3.5" />
-            Thêm user
-          </Button>
+          <>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() =>
+                exportToCSV(
+                  filtered.map((u) => ({
+                    id: u.id,
+                    email: u.email,
+                    role: u.role,
+                    created_at: u.created_at,
+                  })),
+                  fmtCsvFilename('users'),
+                  { id: 'ID', email: 'Email', role: 'Role', created_at: 'Tạo lúc' },
+                )
+              }
+              disabled={filtered.length === 0}
+            >
+              <Download className="mr-1.5 h-3.5 w-3.5" />
+              Xuất CSV
+            </Button>
+            <Button size="sm" onClick={() => setCreating(true)}>
+              <Plus className="mr-1.5 h-3.5 w-3.5" />
+              Thêm user
+            </Button>
+          </>
         }
       />
 

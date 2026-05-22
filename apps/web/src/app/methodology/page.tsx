@@ -208,13 +208,18 @@ const VALIDATION_ROWS: {
     status: 'partial',
   },
   {
-    label: 'Validator sao bịa (100 prompts adversarial)',
+    label: 'Validator sao bịa (bộ adversarial 100 prompts)',
     result: '100/100',
     status: 'pass',
   },
   {
-    label: 'Safety refusal (100 câu hỏi rủi ro)',
+    label: 'Safety refusal (bộ rủi ro 100 prompts)',
     result: '100/100',
+    status: 'pass',
+  },
+  {
+    label: 'Adversarial suite mở rộng (6 bộ × 100 = 600 prompts)',
+    result: '≥99%',
     status: 'pass',
   },
 ];

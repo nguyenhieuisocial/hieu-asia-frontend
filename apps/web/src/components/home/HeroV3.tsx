@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, MessageCircle, ShieldCheck, Globe2, Users } from 'lucide-react';
+import { ArrowRight, FileText, ShieldCheck, Globe2, Users } from 'lucide-react';
 import { Button } from '@hieu-asia/ui';
 
 /**
@@ -64,8 +64,8 @@ export function HeroV3() {
           className="mt-7 max-w-2xl text-base leading-relaxed text-cream/80 sm:text-lg"
         >
           Mỗi khi bạn đứng trước một quyết định quan trọng, hieu.asia cho bạn một
-          góc nhìn sâu hơn — bằng tri thức cổ học Việt Nam, được AI giải mã rõ
-          ràng, và để bạn tự chọn con đường.
+          góc nhìn sâu hơn — bằng tri thức cổ học Á Đông, trình bày bằng tiếng
+          Việt cho người Việt, được AI giải mã rõ ràng, và để bạn tự chọn con đường.
         </motion.p>
 
         <motion.div
@@ -75,18 +75,18 @@ export function HeroV3() {
           className="mt-10 flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row"
         >
           <Link href="/onboarding" className="w-full sm:w-auto">
-            <Button size="lg" className="group w-full min-w-[220px] sm:w-auto">
-              Mở khóa lá số
+            <Button size="lg" className="group w-full min-w-[260px] sm:w-auto">
+              Mở khóa lá số đầu tiên (miễn phí thử)
               <ArrowRight
                 className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5"
                 aria-hidden="true"
               />
             </Button>
           </Link>
-          <Link href="/onboarding?cta=mentor" className="w-full sm:w-auto">
+          <Link href="/sample-report" className="w-full sm:w-auto">
             <Button size="lg" variant="outline" className="group w-full min-w-[220px] sm:w-auto">
-              <MessageCircle className="mr-1.5 h-4 w-4" aria-hidden="true" />
-              Trò chuyện cùng AI Mentor
+              <FileText className="mr-1.5 h-4 w-4" aria-hidden="true" />
+              Xem báo cáo mẫu
             </Button>
           </Link>
         </motion.div>
@@ -98,7 +98,7 @@ export function HeroV3() {
           className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs text-cream/65 sm:text-sm"
           aria-label="Tin cậy"
         >
-          <TrustBadge Icon={Users}>10k+ giải đoán</TrustBadge>
+          <TrustBadge Icon={Users}>Tử Vi Bắc phái 114 sao · validation 4 tầng</TrustBadge>
           <TrustBadge Icon={ShieldCheck}>Privacy-first · Tải/xoá dữ liệu</TrustBadge>
           <TrustBadge Icon={Globe2}>Hỗ trợ Tiếng Việt + English</TrustBadge>
         </motion.ul>

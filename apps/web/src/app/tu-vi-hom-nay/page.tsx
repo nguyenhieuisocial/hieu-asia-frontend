@@ -13,7 +13,7 @@ const ZODIACS: { key: string; label: string; icon: string }[] = [
   { key: 'dan', label: 'Dần', icon: '🐯' },
   { key: 'mao', label: 'Mão', icon: '🐰' },
   { key: 'thin', label: 'Thìn', icon: '🐲' },
-  { key: 'ty2', label: 'Tỵ', icon: '🐍' },
+  { key: 'ti', label: 'Tỵ', icon: '🐍' },
   { key: 'ngo', label: 'Ngọ', icon: '🐴' },
   { key: 'mui', label: 'Mùi', icon: '🐐' },
   { key: 'than', label: 'Thân', icon: '🐵' },
@@ -64,7 +64,11 @@ export default async function Page() {
   const today = data?.date ?? formatToday();
   const byKey = new Map<string, DailyHoroscope>();
   if (data?.horoscopes) {
-    for (const h of data.horoscopes) byKey.set(h.zodiac_key, h);
+    for (const h of data.horoscopes) {
+      // Normalize legacy upstream slug `ty2` → canonical `ti`.
+      const key = h.zodiac_key === 'ty2' ? 'ti' : h.zodiac_key;
+      byKey.set(key, h);
+    }
   }
   const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 

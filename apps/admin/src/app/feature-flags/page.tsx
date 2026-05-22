@@ -8,7 +8,7 @@
  */
 
 import * as React from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import {
   Card,
   CardContent,
@@ -21,6 +21,7 @@ import {
 import { Flag } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
+import { useOptimisticMutation } from '@/lib/optimistic-mutation';
 
 interface FeatureFlag {
   key: string;
@@ -65,10 +66,11 @@ async function toggleFlag(input: { key: string; enabled: boolean }): Promise<Fea
   return data.flag as FeatureFlag;
 }
 
+const FLAGS_QUERY_KEY = ['admin', 'feature-flags'] as const;
+
 export default function FeatureFlagsPage() {
-  const qc = useQueryClient();
   const { data, isLoading, error } = useQuery({
-    queryKey: ['admin', 'feature-flags'],
+    queryKey: FLAGS_QUERY_KEY,
     queryFn: fetchFlags,
   });
 
@@ -76,13 +78,29 @@ export default function FeatureFlagsPage() {
   const showError = !!error || data?.ok === false;
   const errorMsg = (error as Error | undefined)?.message ?? data?.error;
 
-  const toggleMut = useMutation({
+  // Optimistic toggle: flip the row in cache instantly, rollback on error.
+  // Removes the perceived lag from KV propagation while keeping eventual
+  // consistency via `onSettled` invalidate.
+  const toggleMut = useOptimisticMutation<
+    FlagsResponse,
+    { key: string; enabled: boolean },
+    FeatureFlag
+  >({
+    queryKey: FLAGS_QUERY_KEY,
     mutationFn: toggleFlag,
+    applyOptimistic: (cache, vars) => {
+      if (!cache?.flags) return cache;
+      return {
+        ...cache,
+        flags: cache.flags.map((f) =>
+          f.key === vars.key ? { ...f, enabled: vars.enabled } : f,
+        ),
+      };
+    },
     onSuccess: (flag) => {
       toast.success(`Đã ${flag.enabled ? 'bật' : 'tắt'} flag`, { description: flag.key });
-      qc.invalidateQueries({ queryKey: ['admin', 'feature-flags'] });
     },
-    onError: (e) => toast.error('Toggle thất bại', { description: (e as Error).message }),
+    onError: (e) => toast.error('Toggle thất bại', { description: e.message }),
   });
 
   const enabledCount = flags.filter((f) => f.enabled).length;

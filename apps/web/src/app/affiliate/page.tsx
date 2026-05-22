@@ -10,14 +10,12 @@ import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Slider } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { AOV_VND, formatVND } from '@/lib/pricing';
 
 const COMMISSION_FIRST = 0.30;
 const COMMISSION_RECURRING = 0.10;
-const AVG_ORDER_VND = 199_000;
-
-function formatVND(n: number) {
-  return n.toLocaleString('vi-VN') + 'đ';
-}
+/** Average order value — anchored to the monthly Mentor subscription. */
+const AVG_ORDER_VND = AOV_VND;
 
 export default function AffiliateLandingPage() {
   const [conversions, setConversions] = React.useState(20);
@@ -36,7 +34,7 @@ export default function AffiliateLandingPage() {
         <div className="relative">
         <div className="mx-auto max-w-4xl text-center">
           <div className="mb-4 inline-flex rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-xs text-gold">
-            Chương trình affiliate — chưa từng có ở thị trường VN
+            Chương trình affiliate — cấu trúc 3 tầng minh bạch, tuân thủ Nghị định 40/2018
           </div>
           <h1 className="mb-6 text-4xl font-bold leading-tight sm:text-5xl">
             Kiếm tiền cùng <span className="text-gold">hieu.asia</span>
@@ -155,7 +153,7 @@ export default function AffiliateLandingPage() {
               },
               {
                 q: '"Recurring" tính như thế nào?',
-                a: 'Khách đăng ký gói tháng/năm: bạn được 30% tháng đầu + 10% mỗi tháng tiếp theo trong 6 tháng. Tổng cộng bạn có thể nhận lên tới 90% LTV của khách.',
+                a: 'Khách đăng ký gói tháng/năm: bạn được 30% tháng đầu + 10% mỗi tháng tiếp theo trong 6 tháng. Cộng dồn tối đa ~80% doanh thu của khách trong cửa sổ 6 tháng đó (không phải LTV trọn đời).',
               },
               {
                 q: 'Có ràng buộc nội dung không?',

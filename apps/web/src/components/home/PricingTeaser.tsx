@@ -1,19 +1,24 @@
 import Link from 'next/link';
 import { ArrowRight, Check } from 'lucide-react';
 import { Button } from '@hieu-asia/ui';
+import { PRICING, formatVND, monthlyEquivalent, yearlyDiscount } from '@/lib/pricing';
 
 /**
- * Compact 3-tier pricing teaser for the home page.
+ * Compact pricing teaser for the home page.
  *
- * Mirrors `/pricing` but trimmed — drops Lifetime row + comparison table.
- * Premium gets the gold spotlight; deep-link to full pricing for nuance.
+ * Mirrors `/pricing` (4 visible tiers: Free, Premium one-time, Mentor Monthly,
+ * Mentor Yearly) and deep-links to /pricing for Lifetime + full comparison.
+ * All numbers come from `lib/pricing.ts` so the homepage can never drift from
+ * the canonical pricing.
  */
 
 interface TeaserTier {
-  id: 'free' | 'standard' | 'premium';
+  id: 'free' | 'premium' | 'monthly' | 'yearly';
   name: string;
   price: string;
   cadence: string;
+  /** Optional secondary line under the price (e.g. monthly equivalent for yearly). */
+  subline?: string;
   pitch: string;
   features: readonly string[];
   highlighted?: boolean;
@@ -21,11 +26,14 @@ interface TeaserTier {
   ctaLabel: string;
 }
 
+const SAVE_PERCENT = yearlyDiscount();
+const YEARLY_PER_MONTH = monthlyEquivalent(PRICING.yearly.vnd);
+
 const TIERS: readonly TeaserTier[] = [
   {
     id: 'free',
     name: 'Free',
-    price: 'Miễn phí',
+    price: PRICING.standard.label,
     cadence: '',
     pitch: 'Khám phá nền tảng trước khi cam kết.',
     features: ['Khảo sát đầu vào', '6 công cụ miễn phí', 'Tử Vi rút gọn'],
@@ -35,7 +43,17 @@ const TIERS: readonly TeaserTier[] = [
   {
     id: 'premium',
     name: 'Premium',
-    price: '199.000₫',
+    price: formatVND(PRICING.premium.vnd),
+    cadence: 'một lần',
+    pitch: 'Một lá số đầy đủ, không tự gia hạn.',
+    features: ['1 lá số đầy đủ', '3 câu hỏi Mentor', 'PDF Cẩm Nang'],
+    ctaHref: '/pricing?tier=premium',
+    ctaLabel: 'Chọn Premium',
+  },
+  {
+    id: 'monthly',
+    name: 'Mentor Monthly',
+    price: formatVND(PRICING.monthly.vnd),
     cadence: '/ tháng',
     pitch: 'Mentor không giới hạn — phổ biến nhất.',
     features: [
@@ -45,18 +63,23 @@ const TIERS: readonly TeaserTier[] = [
       'PDF Cẩm Nang xuất bản',
     ],
     highlighted: true,
-    ctaHref: '/pricing?tier=premium',
-    ctaLabel: 'Chọn Premium',
+    ctaHref: '/pricing?tier=premium&period=monthly',
+    ctaLabel: 'Chọn gói tháng',
   },
   {
-    id: 'standard',
-    name: 'Standard',
-    price: '99.000₫',
-    cadence: 'một lần',
-    pitch: 'Một lá số đầy đủ, không tự gia hạn.',
-    features: ['1 lá số đầy đủ', '3 câu hỏi Mentor', 'PDF Cẩm Nang'],
-    ctaHref: '/pricing?tier=standard',
-    ctaLabel: 'Chọn Standard',
+    id: 'yearly',
+    name: 'Mentor Yearly',
+    price: formatVND(PRICING.yearly.vnd),
+    cadence: '/ năm',
+    subline: `~${formatVND(YEARLY_PER_MONTH)} / tháng · tiết kiệm ${SAVE_PERCENT}%`,
+    pitch: 'Trả 1 lần, dùng cả năm — rẻ hơn 17%.',
+    features: [
+      'Mọi tính năng của Monthly',
+      `Tiết kiệm ${SAVE_PERCENT}% so với gói tháng`,
+      'Tương đương 2 tháng miễn phí',
+    ],
+    ctaHref: '/pricing?tier=premium&period=annual',
+    ctaLabel: 'Chọn gói năm',
   },
 ];
 
@@ -88,14 +111,14 @@ export function PricingTeaser() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-5 md:grid-cols-3">
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {TIERS.map((tier) => (
             <article
               key={tier.id}
               className={[
                 'relative flex flex-col rounded-2xl border p-6',
                 tier.highlighted
-                  ? 'border-gold/60 bg-gradient-to-b from-gold/[0.06] to-transparent shadow-[0_0_60px_-20px_rgba(184,146,61,0.5)] md:-translate-y-2'
+                  ? 'border-gold/60 bg-gradient-to-b from-gold/[0.06] to-transparent shadow-[0_0_60px_-20px_rgba(184,146,61,0.5)] lg:-translate-y-2'
                   : 'border-cream/10 bg-ink/40',
               ].join(' ')}
             >
@@ -112,6 +135,9 @@ export function PricingTeaser() {
                   <span className="text-sm text-cream/55">{tier.cadence}</span>
                 )}
               </div>
+              {tier.subline && (
+                <p className="mt-1 text-xs text-cream/50">{tier.subline}</p>
+              )}
               <ul className="mt-5 flex-1 space-y-2 text-sm">
                 {tier.features.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-cream/80">
@@ -137,7 +163,7 @@ export function PricingTeaser() {
             href="/pricing"
             className="inline-flex items-center gap-1 text-sm text-cream/65 transition-colors hover:text-gold"
           >
-            So sánh đầy đủ tính năng
+            Xem 5 gói (kèm Lifetime {formatVND(PRICING.lifetime.vnd)}) · So sánh đầy đủ tính năng
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         </div>

@@ -8,7 +8,7 @@ const ZODIACS: { key: string; label: string; icon: string }[] = [
   { key: 'dan', label: 'Dần', icon: '🐯' },
   { key: 'mao', label: 'Mão', icon: '🐰' },
   { key: 'thin', label: 'Thìn', icon: '🐲' },
-  { key: 'ty2', label: 'Tỵ', icon: '🐍' },
+  { key: 'ti', label: 'Tỵ', icon: '🐍' },
   { key: 'ngo', label: 'Ngọ', icon: '🐴' },
   { key: 'mui', label: 'Mùi', icon: '🐐' },
   { key: 'than', label: 'Thân', icon: '🐵' },
@@ -56,7 +56,9 @@ export function SubscribePush({ defaultZodiac, vapidPublicKey }: SubscribePushPr
     const ok = typeof window !== 'undefined' && 'serviceWorker' in navigator && 'PushManager' in window;
     setSupported(ok);
     if (!ok) return;
-    const savedZ = localStorage.getItem(LS_ZODIAC);
+    const savedZRaw = localStorage.getItem(LS_ZODIAC);
+    // Legacy slug normalisation: `ty2` was the old Tỵ slug, now `ti`.
+    const savedZ = savedZRaw === 'ty2' ? 'ti' : savedZRaw;
     if (savedZ && !zodiac) setZodiac(savedZ);
     if (localStorage.getItem(LS_SUBBED) === '1') setSubscribed(true);
   }, []);

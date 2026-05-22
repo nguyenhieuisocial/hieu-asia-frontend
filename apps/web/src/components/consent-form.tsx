@@ -10,40 +10,13 @@ import { Check } from 'lucide-react';
 import { getOrCreateAnonUserId, logAudit } from '@hieu-asia/supabase';
 import { track } from '@/lib/analytics';
 
-const CONSENT_ITEMS = [
-  {
-    id: 'birth_data',
-    label: 'Ngày giờ sinh',
-    desc: 'Dùng để dựng lá số và mốc thời gian luận giải vận hạn.',
-  },
-  {
-    id: 'palm_image',
-    label: 'Ảnh bàn tay (palmistry)',
-    desc: 'Hệ thống Vision AI phân tích đường chỉ tay làm tham chiếu thêm.',
-  },
-  {
-    id: 'survey',
-    label: 'Câu trả lời khảo sát tính cách',
-    desc: 'Đối chiếu hành vi thực tế với mô hình Tử Vi và Tâm lý học.',
-  },
-  {
-    id: 'context',
-    label: 'Bối cảnh nghề nghiệp và mối quan tâm cá nhân',
-    desc: 'Để cá nhân hóa khuyến nghị 30-60-90 ngày sát thực tế.',
-  },
-] as const;
-
 const PURPOSES = [
-  { title: 'Tạo báo cáo phân tích cá nhân hóa', required: true },
-  { title: 'Duy trì phiên chat Mentor AI', required: true },
-  { title: 'Cải thiện chất lượng dịch vụ (tùy chọn)', required: false },
+  'Tạo báo cáo phân tích cá nhân hoá',
+  'Duy trì phiên chat Mentor AI',
 ];
 
 const schema = z.object({
-  birth_data: z.literal(true, { errorMap: () => ({ message: 'Bạn cần đồng ý mục này' }) }),
-  palm_image: z.literal(true, { errorMap: () => ({ message: 'Bạn cần đồng ý mục này' }) }),
-  survey: z.literal(true, { errorMap: () => ({ message: 'Bạn cần đồng ý mục này' }) }),
-  context: z.literal(true, { errorMap: () => ({ message: 'Bạn cần đồng ý mục này' }) }),
+  birth_data: z.literal(true, { errorMap: () => ({ message: 'Bạn cần đồng ý mục này để tạo lá số' }) }),
   improve_optin: z.boolean().optional(),
 });
 
@@ -61,19 +34,12 @@ export function ConsentForm() {
     mode: 'onChange',
     defaultValues: {
       birth_data: false as unknown as true,
-      palm_image: false as unknown as true,
-      survey: false as unknown as true,
-      context: false as unknown as true,
       improve_optin: false,
     },
   });
 
   const values = watch();
-  const allChecked =
-    values.birth_data === true &&
-    values.palm_image === true &&
-    values.survey === true &&
-    values.context === true;
+  const allChecked = values.birth_data === true;
 
   const onSubmit = handleSubmit(async () => {
     const acceptedAt = new Date().toISOString();
@@ -87,7 +53,7 @@ export function ConsentForm() {
     if (typeof window !== 'undefined') {
       window.sessionStorage.setItem(
         'hieu.consent',
-        JSON.stringify({ accepted: true, accepted_at: acceptedAt, version: 'v1.0', purposes }),
+        JSON.stringify({ accepted: true, accepted_at: acceptedAt, version: 'v2.0', purposes }),
       );
     }
 
@@ -97,7 +63,7 @@ export function ConsentForm() {
       await logAudit({
         user_id: userId,
         action: 'consent_accepted',
-        audit_metadata: { boxes: 4, version: 'v1.0', purposes, accepted_at: acceptedAt },
+        audit_metadata: { boxes: 1, version: 'v2.0', purposes, accepted_at: acceptedAt },
       });
     } catch (e) {
       // Non-blocking — surface in console for diagnostics; user can still proceed.
@@ -110,56 +76,55 @@ export function ConsentForm() {
   });
 
   return (
-    <form onSubmit={onSubmit} className="space-y-8">
+    <form onSubmit={onSubmit} className="space-y-6">
       <div>
         <h3 className="mb-3 font-heading text-base font-semibold text-cream">
-          Tôi đồng ý cho hệ thống xử lý
+          Mục đích sử dụng dữ liệu
         </h3>
-        <ul className="space-y-3">
-          {CONSENT_ITEMS.map((item) => (
-            <li
-              key={item.id}
-              className="rounded-md border border-gold/15 bg-ink/40 p-4 transition-colors hover:border-gold/30"
-            >
-              <label className="flex cursor-pointer items-start gap-3">
-                <Checkbox className="mt-1" {...register(item.id)} />
-                <span className="flex-1">
-                  <span className="block text-sm font-medium text-cream">{item.label}</span>
-                  <span className="mt-1 block text-xs text-cream/60">{item.desc}</span>
-                </span>
-              </label>
+        <ul className="space-y-2.5">
+          {PURPOSES.map((p) => (
+            <li key={p} className="flex items-start gap-2 text-sm text-cream/80">
+              <Check className="mt-0.5 h-4 w-4 shrink-0 text-jade" aria-hidden="true" />
+              <span>{p}</span>
             </li>
           ))}
         </ul>
+        <p className="mt-3 text-xs leading-relaxed text-cream/55">
+          Các quyền tuỳ chọn khác (palm, MBTI, Mentor history) sẽ hỏi sau, chỉ khi bạn dùng đến.
+        </p>
       </div>
 
-      <div>
-        <h3 className="mb-3 font-heading text-base font-semibold text-cream">Mục đích</h3>
-        <ul className="space-y-2.5">
-          {PURPOSES.slice(0, 2).map((p) => (
-            <li key={p.title} className="flex items-start gap-2 text-sm text-cream/80">
-              <Check className="mt-0.5 h-4 w-4 shrink-0 text-jade" aria-hidden="true" />
-              <span>{p.title}</span>
-            </li>
-          ))}
-          <li className="rounded-md border border-gold/10 bg-ink/30 p-3">
-            <label className="flex cursor-pointer items-start gap-3">
-              <Checkbox className="mt-1" {...register('improve_optin')} />
-              <span className="text-sm text-cream/80">
-                Cải thiện chất lượng dịch vụ
-                <span className="ml-1 text-xs text-cream/70">(tùy chọn — bạn có thể bỏ chọn)</span>
-              </span>
-            </label>
-          </li>
-        </ul>
+      <div className="rounded-md border border-gold/30 bg-ink/40 p-4">
+        <label className="flex cursor-pointer items-start gap-3">
+          <Checkbox className="mt-1" {...register('birth_data')} />
+          <span className="flex-1">
+            <span className="block text-sm font-medium text-cream">
+              Tôi đồng ý cho hieu.asia xử lý ngày sinh + giờ sinh để tạo lá số
+            </span>
+            <span className="mt-1 block text-xs text-cream/60">
+              Theo Nghị định 13/2023/NĐ-CP. Mã hoá AES-256, không bán dữ liệu, có quyền rút lại bất cứ lúc nào tại{' '}
+              <a href="/account" className="text-gold underline-offset-4 hover:underline">trang Tài khoản</a>.
+            </span>
+          </span>
+        </label>
+      </div>
+
+      <div className="rounded-md border border-gold/10 bg-ink/30 p-3">
+        <label className="flex cursor-pointer items-start gap-3">
+          <Checkbox className="mt-1" {...register('improve_optin')} />
+          <span className="text-sm text-cream/80">
+            Cho phép dùng dữ liệu ẨN DANH để cải thiện sản phẩm
+            <span className="ml-1 text-xs text-cream/70">(tuỳ chọn — mặc định TẮT, không ảnh hưởng trải nghiệm)</span>
+          </span>
+        </label>
       </div>
 
       <div className="flex flex-col gap-3 border-t border-gold/15 pt-6 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs text-cream/55">
-          Bạn có thể yêu cầu xóa toàn bộ dữ liệu cá nhân bất cứ lúc nào.
+          Bạn có thể yêu cầu xoá toàn bộ dữ liệu cá nhân bất cứ lúc nào.
         </p>
         <Button type="submit" size="lg" disabled={!allChecked || isSubmitting}>
-          Tiếp tục
+          Tiếp tục lập lá số
         </Button>
       </div>
     </form>

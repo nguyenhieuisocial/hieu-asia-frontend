@@ -15,6 +15,8 @@ interface Method {
   ctaLabel: string;
   href: string;
   learnHref: string;
+  sampleHref: string;
+  recommended?: boolean;
 }
 
 const METHODS: readonly Method[] = [
@@ -28,6 +30,8 @@ const METHODS: readonly Method[] = [
     ctaLabel: 'Bắt đầu Tử Vi',
     href: '/reading/new?method=tu-vi',
     learnHref: '/learn/tu-vi',
+    sampleHref: '/sample-report',
+    recommended: true,
   },
   {
     key: 'bat-tu',
@@ -39,6 +43,7 @@ const METHODS: readonly Method[] = [
     ctaLabel: 'Xem Bát Tự',
     href: '/reading/new?method=bat-tu',
     learnHref: '/learn/bat-tu',
+    sampleHref: '/sample-report#bat-tu',
   },
   {
     key: 'numerology',
@@ -50,6 +55,7 @@ const METHODS: readonly Method[] = [
     ctaLabel: 'Khám phá Số học & MBTI',
     href: '/reading/new?method=numerology',
     learnHref: '/learn/than-so-hoc',
+    sampleHref: '/sample-report#numerology',
   },
   {
     key: 'palm',
@@ -61,6 +67,7 @@ const METHODS: readonly Method[] = [
     ctaLabel: 'Upload ảnh chỉ tay',
     href: '/reading/new?method=palm',
     learnHref: '/learn/palm',
+    sampleHref: '/sample-report#palm',
   },
 ];
 
@@ -89,11 +96,21 @@ export function MethodChooser() {
         </div>
 
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {METHODS.map(({ key, Icon, name, origin, tells, bestFor, ctaLabel, href, learnHref }) => (
+          {METHODS.map(({ key, Icon, name, origin, tells, bestFor, ctaLabel, href, learnHref, sampleHref, recommended }) => (
             <article
               key={key}
-              className="group flex flex-col rounded-2xl border border-cream/10 bg-ink/40 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]"
+              className={[
+                'group relative flex flex-col rounded-2xl border bg-ink/40 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]',
+                recommended
+                  ? 'border-gold/60 shadow-[0_0_32px_-16px_rgba(184,146,61,0.55)] hover:border-gold/80'
+                  : 'border-cream/10 hover:border-gold/40',
+              ].join(' ')}
             >
+              {recommended && (
+                <span className="absolute -top-2.5 left-5 inline-flex items-center rounded-full border border-gold/50 bg-ink px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-gold">
+                  Gợi ý
+                </span>
+              )}
               <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-gold/30 bg-gold/5 transition-colors group-hover:border-gold/60 group-hover:bg-gold/10">
                 <Icon className="h-5 w-5 text-gold" aria-hidden={true} />
               </div>
@@ -130,12 +147,21 @@ export function MethodChooser() {
                     />
                   </Button>
                 </Link>
-                <Link
-                  href={learnHref}
-                  className="text-center text-xs text-cream/55 transition-colors hover:text-gold"
-                >
-                  Tìm hiểu thêm về {name}
-                </Link>
+                <div className="flex items-center justify-center gap-3 text-xs">
+                  <Link
+                    href={sampleHref}
+                    className="text-gold/85 transition-colors hover:text-gold"
+                  >
+                    Xem mẫu →
+                  </Link>
+                  <span aria-hidden="true" className="text-cream/30">·</span>
+                  <Link
+                    href={learnHref}
+                    className="text-cream/55 transition-colors hover:text-gold"
+                  >
+                    Tìm hiểu thêm
+                  </Link>
+                </div>
               </div>
             </article>
           ))}

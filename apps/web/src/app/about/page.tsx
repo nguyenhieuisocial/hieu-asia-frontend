@@ -8,7 +8,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 export const metadata: Metadata = {
   title: 'Về chúng tôi — hieu.asia',
   description:
-    'hieu.asia là người bạn đồng hành cho mỗi quyết định quan trọng — tri thức cổ học Việt Nam, AI hiện đại, văn phong calm, không định mệnh hoá.',
+    'hieu.asia là người bạn đồng hành cho mỗi quyết định quan trọng — tri thức cổ học Á Đông trình bày bằng tiếng Việt, AI hiện đại, văn phong calm, không định mệnh hoá.',
   alternates: { canonical: 'https://hieu.asia/about' },
   openGraph: {
     title: 'Về chúng tôi — hieu.asia',
@@ -23,7 +23,10 @@ const TECH_STACK: readonly { label: string; desc: string }[] = [
   { label: 'Cloudflare Workers', desc: 'Edge runtime ở 300+ thành phố, phản hồi dưới 1s.' },
   { label: 'Next.js 15 + React 19', desc: 'App Router, Server Components, streaming.' },
   { label: 'Supabase Postgres', desc: 'Database mã hoá AES-256, row-level security.' },
-  { label: 'Claude (Anthropic)', desc: 'Mentor AI đối thoại có ngữ cảnh, không scripted.' },
+  {
+    label: 'AI routing đa nhà cung cấp',
+    desc: 'Claude Opus (Anthropic) mặc định cho diễn giải sâu; GPT (OpenAI) dự phòng khi Claude quá tải hoặc cho phân loại nhanh; Gemini (Google) chuyên dụng cho phân tích ảnh palm reading.',
+  },
 ];
 
 const ETHICS: readonly { Icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>; title: string; desc: string }[] = [
@@ -82,8 +85,9 @@ export default function AboutPage() {
               </h2>
               <p className="mt-4 text-sm leading-relaxed text-cream/75 sm:text-base">
                 Mỗi khi bạn đứng trước một quyết định quan trọng, hieu.asia cho
-                bạn một góc nhìn sâu hơn — bằng tri thức cổ học Việt Nam, được AI
-                giải mã rõ ràng, và để bạn tự chọn con đường.
+                bạn một góc nhìn sâu hơn — bằng tri thức cổ học Á Đông, trình bày
+                bằng tiếng Việt cho người Việt, được AI giải mã rõ ràng, và để
+                bạn tự chọn con đường.
               </p>
             </article>
             <article className="rounded-2xl border border-cream/10 bg-ink/40 p-7">
@@ -112,19 +116,53 @@ export default function AboutPage() {
               <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/70">
                 Lời từ người sáng lập
               </p>
-              <blockquote className="mt-4 text-base leading-relaxed text-cream/85 sm:text-lg">
-                Tôi xây hieu.asia vì tôi tin cổ học Việt Nam đáng được trình bày
-                bằng ngôn ngữ của thời đại này — không huyễn hoặc, không thương
-                mại hoá rẻ tiền. Mỗi người trong chúng ta đều có quyền hiểu chính
-                mình rõ hơn, và quyền tự chọn con đường mình đi.
+
+              <div className="mt-5 flex items-start gap-5">
+                <div
+                  aria-hidden="true"
+                  className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-gold/40 bg-gradient-to-br from-gold/20 via-ink to-purple/30 font-heading text-2xl text-gold"
+                >
+                  H
+                </div>
+                <div className="flex-1">
+                  <p className="font-heading text-base font-semibold text-cream">
+                    Hiệu
+                  </p>
+                  <p className="text-xs text-cream/65">
+                    Một engineer + Tử Vi practitioner ở TP.HCM
+                  </p>
+                </div>
+              </div>
+
+              <blockquote className="mt-6 text-base leading-relaxed text-cream/85 sm:text-lg">
+                Tôi xây hieu.asia vì tôi tin cổ học Á Đông — bao gồm cả tinh
+                hoa cổ truyền Việt Nam như Cân Xương Đoán Số — đáng được trình
+                bày bằng ngôn ngữ của thời đại này, cho người Việt. Không huyễn
+                hoặc, không thương mại hoá rẻ tiền. Mỗi người trong chúng ta đều
+                có quyền hiểu chính mình rõ hơn, và quyền tự chọn con đường mình đi.
               </blockquote>
-              <p className="mt-6 font-heading text-sm font-semibold text-gold">
-                — Founder, hieu.asia
+
+              <p className="mt-5 text-sm leading-relaxed text-cream/75">
+                Tôi học Tử Vi Bắc phái từ năm 2017, code từ năm 2010. hieu.asia
+                là chỗ hai mạch ấy gặp nhau: engine deterministic làm phần tính
+                toán không sai sót, AI làm phần diễn giải dễ hiểu cho người
+                không quen thuật ngữ cổ. Mục tiêu là biến cổ học thành công cụ
+                ra quyết định bình thường, không phải nơi đi xem khi sợ hãi.
               </p>
-              <p className="mt-1 text-xs text-cream/55">
-                Tên chính thức và profile sẽ được cập nhật khi sản phẩm ra mắt
-                công khai.
-              </p>
+
+              <div className="mt-6 flex flex-wrap items-center gap-3 text-xs">
+                <a
+                  href="mailto:hi@hieu.asia"
+                  className="inline-flex items-center gap-1.5 rounded-md border border-gold/30 px-3 py-1.5 text-cream/80 transition-colors hover:bg-gold/10 hover:text-gold"
+                >
+                  <Mail className="h-3.5 w-3.5" aria-hidden={true} />
+                  hi@hieu.asia
+                </a>
+                <span className="text-cream/55">
+                  Tên đầy đủ sẽ public khi sản phẩm rời beta — tạm giữ kín để
+                  tránh khoá định danh sớm.
+                </span>
+              </div>
             </div>
           </div>
         </section>

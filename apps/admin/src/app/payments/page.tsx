@@ -26,8 +26,10 @@ import { MockBanner } from '@/components/mock-banner';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { LiveBadge } from '@/components/admin/live-badge';
-import { CreditCard, DollarSign, Ticket, Undo2, TrendingUp } from 'lucide-react';
+import { CreditCard, DollarSign, Ticket, Undo2, TrendingUp, Download } from 'lucide-react';
 import type { AdminCoupon, AdminTransaction } from '@/lib/mock-data';
+import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
+import { useOptimisticMutation } from '@/lib/optimistic-mutation';
 
 const STATUS_TONE: Record<AdminTransaction['status'], React.ComponentProps<typeof StatusBadge>['status']> = {
   succeeded: 'success',
@@ -163,9 +165,42 @@ export default function AdminPaymentsPage() {
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Giao dịch gần đây</CardTitle>
-          <CardDescription>Webhook events ghi tại `/v1/payments/webhook`. Refund đi qua Stripe API.</CardDescription>
+        <CardHeader className="flex flex-row items-start justify-between gap-4">
+          <div>
+            <CardTitle>Giao dịch gần đây</CardTitle>
+            <CardDescription>Webhook events ghi tại `/v1/payments/webhook`. Refund đi qua Stripe API.</CardDescription>
+          </div>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() =>
+              exportToCSV(
+                rows.map((t) => ({
+                  id: t.id,
+                  user_email: t.user_email,
+                  plan: t.plan,
+                  amount_usd: t.amount_usd,
+                  status: t.status,
+                  stripe_id: t.stripe_id,
+                  created_at: t.created_at,
+                })),
+                fmtCsvFilename('payments'),
+                {
+                  id: 'ID',
+                  user_email: 'User',
+                  plan: 'Plan',
+                  amount_usd: 'Amount (USD)',
+                  status: 'Status',
+                  stripe_id: 'Stripe ID',
+                  created_at: 'Created',
+                },
+              )
+            }
+            disabled={rows.length === 0}
+          >
+            <Download className="mr-1.5 h-3.5 w-3.5" />
+            Xuất CSV
+          </Button>
         </CardHeader>
         <CardContent>
           <DataTable
@@ -207,9 +242,13 @@ function CouponManager({ coupons, loading }: { coupons: AdminCoupon[]; loading: 
     },
   });
 
-  const toggle = useMutation({
-    mutationFn: ({ code, active }: { code: string; active: boolean }) => toggleCoupon(code, active),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'coupons'] }),
+  // Optimistic toggle so the pill flips instantly. Rollback restores prior
+  // `active` state if the worker rejects (e.g. coupon revoked server-side).
+  const toggle = useOptimisticMutation<AdminCoupon[], { code: string; active: boolean }>({
+    queryKey: ['admin', 'coupons'],
+    mutationFn: ({ code, active }) => toggleCoupon(code, active),
+    applyOptimistic: (cache, vars) =>
+      cache?.map((c) => (c.code === vars.code ? { ...c, active: vars.active } : c)),
   });
 
   return (

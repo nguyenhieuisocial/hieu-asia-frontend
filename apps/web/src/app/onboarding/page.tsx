@@ -63,10 +63,10 @@ export default function OnboardingPage() {
 
           <Card className="mt-8 border-gold/20 bg-ink/60 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle className="font-heading text-2xl">Trước khi bắt đầu</CardTitle>
+              <CardTitle className="font-heading text-2xl">Đồng ý xử lý dữ liệu sinh</CardTitle>
               <CardDescription className="text-cream/70">
-                Hệ thống sẽ xử lý các dữ liệu sau để tạo lá số cá nhân hóa. Vui lòng
-                xem kỹ và đồng ý từng mục.
+                Bước này chỉ hỏi quyền tối thiểu cần để lập lá số. Quyền tuỳ chọn
+                (Palm, MBTI, lưu chat) sẽ hỏi sau khi bạn dùng đến.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -75,7 +75,16 @@ export default function OnboardingPage() {
           </Card>
 
           <p className="mt-6 text-center text-xs text-cream/55">
-            Mã hoá AES-256 · TLS 1.3 · Không huấn luyện AI trên dữ liệu của bạn.
+            Mã hoá AES-256 · TLS 1.3 · Không dùng dữ liệu cá nhân để huấn luyện
+            mô hình. Chỉ dùng dữ liệu đã ẩn danh để cải thiện prompt — bạn có
+            thể tắt tùy chọn này bất cứ lúc nào.
+          </p>
+
+          <p className="mt-4 text-center text-xs text-cream/60">
+            Chưa muốn quyết định ngay?{' '}
+            <Link href="/sample-report" className="text-gold underline-offset-4 hover:underline">
+              Xem báo cáo mẫu trước →
+            </Link>
           </p>
         </section>
       </main>

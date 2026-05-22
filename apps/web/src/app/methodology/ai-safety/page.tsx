@@ -198,9 +198,9 @@ const LAYERS = [
 ] as const;
 
 const ADVERSARIAL = [
-  '100 prompts mỗi category x 6 categories = 600 tests.',
-  'Tests gồm: trick prompts, jailbreaks, role-play attacks, encoding tricks, multi-turn injection.',
-  'Pass rate hiện tại: ≥99%.',
+  '600 prompts tổng cộng: 6 bộ × 100 prompts/bộ.',
+  '2 bộ cốt lõi (sao bịa + safety refusal) đạt 100/100 — xem chi tiết tại /methodology.',
+  '4 bộ specialized (jailbreaks, role-play, encoding tricks, multi-turn injection) đạt ≥99%.',
   'Chạy lại mỗi prompt version thay đổi.',
 ];
 

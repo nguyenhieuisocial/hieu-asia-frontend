@@ -4,19 +4,20 @@ import { notFound } from 'next/navigation';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { ExpertContent, ExpertTerm } from '@/components/reading/ModeContent';
+import { getZodiacDailyOpener } from '@/lib/daily-opener';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 600;
 
 const ZODIAC_LABEL: Record<string, string> = {
   ty: 'Tý', suu: 'Sửu', dan: 'Dần', mao: 'Mão',
-  thin: 'Thìn', ty2: 'Tỵ', ngo: 'Ngọ', mui: 'Mùi',
+  thin: 'Thìn', ti: 'Tỵ', ngo: 'Ngọ', mui: 'Mùi',
   than: 'Thân', dau: 'Dậu', tuat: 'Tuất', hoi: 'Hợi',
 };
 
 const ZODIAC_ICON: Record<string, string> = {
   ty: '🐭', suu: '🐂', dan: '🐯', mao: '🐰',
-  thin: '🐲', ty2: '🐍', ngo: '🐴', mui: '🐐',
+  thin: '🐲', ti: '🐍', ngo: '🐴', mui: '🐐',
   than: '🐵', dau: '🐓', tuat: '🐶', hoi: '🐷',
 };
 
@@ -172,7 +173,15 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
         <>
           <section className="mx-auto max-w-3xl px-6 py-8">
             <p className="rounded-2xl border border-cream/10 bg-ink/40 p-5 text-base leading-relaxed text-cream/85">
-              {h.detailed_text}
+              <span className="text-cream">
+                {getZodiacDailyOpener(zodiac, h.overall.score)}
+              </span>
+              {h.detailed_text ? (
+                <>
+                  {' '}
+                  <span className="text-cream/75">{h.detailed_text}</span>
+                </>
+              ) : null}
             </p>
           </section>
 

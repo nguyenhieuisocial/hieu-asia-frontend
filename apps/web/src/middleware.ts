@@ -47,6 +47,15 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  // Legacy slug — the Tỵ canh used to live at /tu-vi-hom-nay/ty2 to avoid
+  // collision with /tu-vi-hom-nay/ty (Tý). It now lives at /tu-vi-hom-nay/ti.
+  // 301 to preserve any inbound links (search, social shares).
+  if (pathname === '/tu-vi-hom-nay/ty2') {
+    const url = req.nextUrl.clone();
+    url.pathname = '/tu-vi-hom-nay/ti';
+    return NextResponse.redirect(url, 301);
+  }
+
   const refRaw = req.nextUrl.searchParams.get('ref');
   const existing = req.cookies.get(COOKIE_NAME)?.value;
 

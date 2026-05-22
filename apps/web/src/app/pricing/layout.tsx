@@ -59,10 +59,10 @@ const PRODUCT_JSONLD = {
       url: 'https://hieu.asia/pricing',
       category: 'one-time',
     },
-    // Launch promo — drop this entry when LAUNCH50 ends.
+    // Launch promo — drop this entry when LAUNCH30 ends.
     {
       '@type': 'Offer',
-      name: 'Ưu đãi ra mắt LAUNCH50 — giảm 30% mọi gói trả phí',
+      name: 'Ưu đãi ra mắt LAUNCH30 — giảm 30% mọi gói trả phí',
       priceCurrency: 'VND',
       availability: 'https://schema.org/InStock',
       url: 'https://hieu.asia/pricing',

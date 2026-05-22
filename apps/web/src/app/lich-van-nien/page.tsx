@@ -141,17 +141,23 @@ export default async function LichVanNienPage() {
         <h2 className="mb-4 font-heading text-xl font-semibold text-cream">
           Chọn ngày tốt cho việc
         </h2>
-        <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-5 lg:grid-cols-9">
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-5 xl:grid-cols-9">
           {ACTIVITIES.map((a) => (
             <Link
               key={a.value}
               href={`/lich-van-nien/ngay-tot-xau?activity=${a.value}`}
-              className="group rounded-xl border border-cream/10 bg-ink/40 p-3 text-center transition-all duration-200 hover:-translate-y-0.5 hover:border-gold/40 hover:bg-ink/60 hover:shadow-[0_0_30px_-12px_rgba(184,146,61,0.4)]"
+              aria-label={`Chọn ngày tốt cho ${a.label}`}
+              className="group flex min-h-[88px] flex-col items-center justify-center gap-1 rounded-xl border border-cream/10 bg-ink/40 px-2 py-3 text-center transition-all duration-200 hover:-translate-y-0.5 hover:border-gold/40 hover:bg-ink/60 hover:shadow-[0_0_30px_-12px_rgba(184,146,61,0.4)]"
             >
-              <div className="text-2xl transition-transform duration-200 group-hover:scale-110">
+              <div
+                aria-hidden="true"
+                className="text-2xl transition-transform duration-200 group-hover:scale-110"
+              >
                 {a.emoji}
               </div>
-              <div className="mt-1 text-xs font-medium text-cream/85">{a.label}</div>
+              <div className="text-[11px] font-medium leading-tight text-cream/85 sm:text-xs">
+                {a.label}
+              </div>
             </Link>
           ))}
         </div>

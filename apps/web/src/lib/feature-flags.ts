@@ -44,13 +44,18 @@ export const FLAGS = {
   EXPERT_MODE_DEFAULT_ON: "expert-mode-default-on",
 
   /**
-   * `pricing-launch50-banner` — boolean.
+   * `pricing-launch-banner` — boolean.
    *
-   * Gates the LAUNCH50 promo banner on /pricing. Lets us turn the campaign
+   * Gates the LAUNCH30 promo banner on /pricing. Lets us turn the campaign
    * on/off without redeploying when the coupon expires or we run out of
    * budget. Defaults to `true` so the banner shows if PostHog is down.
+   *
+   * NOTE: The PostHog dashboard flag key was renamed from
+   * `pricing-launch50-banner` → `pricing-launch-banner` to drop the stale
+   * "50" suffix (the discount has always been 30%). Update the PostHog
+   * dashboard side in lockstep with deploying this change.
    */
-  PRICING_LAUNCH50_BANNER: "pricing-launch50-banner",
+  PRICING_LAUNCH_BANNER: "pricing-launch-banner",
 
   /**
    * `mentor-skills-rollout` — boolean.

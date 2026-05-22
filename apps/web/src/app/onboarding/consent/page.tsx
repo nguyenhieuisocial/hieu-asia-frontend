@@ -73,8 +73,8 @@ const OPTIONAL_ITEMS: OptionalItem[] = [
   },
   {
     key: 'training',
-    label: 'Cho phép dùng dữ liệu đã ẨN DANH HOÁ để cải thiện sản phẩm (mặc định TẮT — bạn vẫn nhận được sản phẩm đầy đủ nếu để tắt)',
-    hint: 'Bật cho phép hieu.asia học từ pattern ẩn danh. Tắt không ảnh hưởng trải nghiệm.',
+    label: 'Cho phép dùng dữ liệu đã ẩn danh để cải thiện prompt (mặc định TẮT — bạn vẫn nhận được sản phẩm đầy đủ nếu để tắt)',
+    hint: 'Không dùng dữ liệu cá nhân để huấn luyện mô hình. Chỉ dùng dữ liệu đã ẩn danh để cải thiện prompt — bạn có thể tắt tùy chọn này bất cứ lúc nào.',
   },
 ];
 
