@@ -101,7 +101,7 @@ export function ConsentForm() {
             <span className="block text-sm font-medium text-cream">
               Tôi đồng ý cho hieu.asia xử lý ngày sinh + giờ sinh để tạo lá số
             </span>
-            <span className="mt-1 block text-xs text-cream/60">
+            <span className="mt-1 block text-xs text-cream/75">
               Theo Nghị định 13/2023/NĐ-CP. Mã hoá AES-256, không bán dữ liệu, có quyền rút lại bất cứ lúc nào tại{' '}
               <a href="/account" className="text-gold underline-offset-4 hover:underline">trang Tài khoản</a>.
             </span>

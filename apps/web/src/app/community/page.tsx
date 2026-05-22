@@ -138,7 +138,7 @@ export default function CommunityPage() {
               <br className="hidden sm:block" />
               Không bán dữ liệu của bạn.&rdquo;
             </p>
-            <p className="mt-4 text-sm text-cream/60">
+            <p className="mt-4 text-sm text-cream/75">
               Đó là tiêu chuẩn cho mọi thứ chúng tôi viết và xây.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">

@@ -8,6 +8,7 @@ import {
   Button,
 } from '@hieu-asia/ui';
 import { InfographicTuVi } from '@/components/learn/InfographicTuVi';
+import { PALACE_READINGS } from '@/lib/palace-readings';
 
 export const metadata: Metadata = {
   title: 'Tử Vi 12 cung — Học huyền học | hieu.asia',
@@ -57,6 +58,36 @@ export default function LearnTuViPage() {
 
       <section className="rounded-xl border border-cream/10 bg-ink/40 p-6 sm:p-8">
         <InfographicTuVi />
+      </section>
+
+      <section className="mt-12">
+        <h2 className="mb-3 font-heading text-xl font-bold text-cream">
+          12 cung — bấm vào cung bạn quan tâm
+        </h2>
+        <p className="mb-5 text-sm leading-relaxed text-cream/70">
+          Mỗi cung là một trang riêng: bạn sẽ thấy cung đó quản lĩnh vực nào, các sao đáng để
+          ý, cách một buổi luận đi từ sao sang quyết định, và những câu hỏi đời thực mà cung
+          này thực sự trả lời được.
+        </p>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {PALACE_READINGS.map((p) => (
+            <Link
+              key={p.slug}
+              href={`/learn/tu-vi/${p.slug}`}
+              className="group rounded-lg border border-cream/10 bg-ink/40 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-gold/40 hover:bg-ink/60"
+            >
+              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold/70">
+                {p.domain}
+              </p>
+              <p className="mt-1.5 font-heading text-base font-semibold text-cream group-hover:text-gold">
+                Cung {p.name}
+              </p>
+              <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-cream/65">
+                {p.governs.split('.')[0]}.
+              </p>
+            </Link>
+          ))}
+        </div>
       </section>
 
       <section className="mt-10">

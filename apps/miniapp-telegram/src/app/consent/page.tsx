@@ -7,26 +7,39 @@ import { TgMainButton } from '@/components/tg-main-button';
 import { TgBackButton } from '@/components/tg-back-button';
 import { getOrCreateAnonUserId, logAudit } from '@hieu-asia/supabase';
 
-const ITEMS: ConsentItem[] = [
-  { id: 'birth_data', label: 'Ngày giờ sinh', purpose: 'Dựng lá số + mốc luận giải vận hạn.' },
-  { id: 'palm_image', label: 'Ảnh bàn tay', purpose: 'Vision AI phân tích đường chỉ tay.' },
-  { id: 'survey', label: 'Câu trả lời khảo sát', purpose: 'Hiểu cách bạn quyết định và phản ứng.' },
-  { id: 'context', label: 'Bối cảnh nghề nghiệp', purpose: 'Cá nhân hoá khuyến nghị 30-60-90 ngày.' },
+const REQUIRED_ITEMS: ConsentItem[] = [
+  {
+    id: 'birth_data',
+    label: 'Ngày giờ sinh',
+    purpose: 'Dữ liệu duy nhất bắt buộc để dựng lá số. Bạn có thể xoá tài khoản bất cứ lúc nào.',
+    required: true,
+  },
+];
+
+const OPTIONAL_ITEMS: ConsentItem[] = [
+  { id: 'palm_image', label: 'Ảnh bàn tay (tuỳ chọn)', purpose: 'Vision AI phân tích đường chỉ tay. Ảnh tự xoá sau 7 ngày.' },
+  { id: 'survey', label: 'Câu trả lời khảo sát MBTI (tuỳ chọn)', purpose: 'Đối chiếu MBTI với lá số để chỉ ra điểm trùng và điểm lệch.' },
+  { id: 'context', label: 'Bối cảnh nghề nghiệp (tuỳ chọn)', purpose: 'Cá nhân hoá khuyến nghị 30-60-90 ngày.' },
 ];
 
 export default function ConsentPage() {
   const router = useRouter();
-  const [checked, setChecked] = React.useState<Record<string, boolean>>({});
-  const allChecked = ITEMS.every((i) => checked[i.id]);
+  const [checked, setChecked] = React.useState<Record<string, boolean>>({ birth_data: true });
+  // Mandatory item is pre-checked + disabled (see ConsentCheckboxList `required`),
+  // so the submit button only depends on it being truthy.
+  const canSubmit = checked.birth_data === true;
 
   const onSubmit = async () => {
-    if (!allChecked) return;
+    if (!canSubmit) return;
     const acceptedAt = new Date().toISOString();
-    const purposes = ['personalized_reading', 'mentor_chat'];
+    const purposes = ['personalized_reading'];
+    if (checked.palm_image) purposes.push('palm_image');
+    if (checked.survey) purposes.push('mbti_survey');
+    if (checked.context) purposes.push('career_context');
     if (typeof window !== 'undefined') {
       window.sessionStorage.setItem(
         'hieu.consent',
-        JSON.stringify({ accepted: true, accepted_at: acceptedAt, version: 'v1.0', purposes }),
+        JSON.stringify({ accepted: true, accepted_at: acceptedAt, version: 'v2.0', purposes }),
       );
     }
     const userId = getOrCreateAnonUserId();
@@ -34,7 +47,7 @@ export default function ConsentPage() {
       await logAudit({
         user_id: userId,
         action: 'consent_accepted',
-        audit_metadata: { boxes: 4, version: 'v1.0', purposes, accepted_at: acceptedAt, surface: 'miniapp-telegram' },
+        audit_metadata: { version: 'v2.0', purposes, accepted_at: acceptedAt, surface: 'miniapp-telegram' },
       });
     } catch (e) {
       console.warn('audit log failed:', e);
@@ -48,23 +61,33 @@ export default function ConsentPage() {
 
       <div className="mx-auto max-w-md pt-3">
         <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">Bước 1 / 4</p>
-        <h1 className="mt-1 font-heading text-xl font-semibold text-cream">Đồng ý xử lý dữ liệu</h1>
+        <h1 className="mt-1 font-heading text-xl font-semibold text-cream">Bạn cho phép xử lý gì?</h1>
         <p className="mt-2 text-sm text-cream/70">
-          Vui lòng xem từng mục và đồng ý. Bạn có quyền rút lại bất cứ lúc nào.
+          hieu.asia tách rõ dữ liệu bắt buộc và tuỳ chọn. Bạn có thể đổi lựa chọn bất cứ lúc nào.
         </p>
 
         <Card className="mt-5">
           <CardHeader>
-            <CardTitle className="text-base">Hệ thống sẽ xử lý</CardTitle>
-            <CardDescription>Mã hoá khi lưu, không bán cho bên thứ ba.</CardDescription>
+            <CardTitle className="text-base">Bắt buộc</CardTitle>
+            <CardDescription>Dữ liệu duy nhất bắt buộc để tạo lá số.</CardDescription>
           </CardHeader>
           <CardContent>
-            <ConsentCheckboxList items={ITEMS} onChange={setChecked} />
+            <ConsentCheckboxList items={REQUIRED_ITEMS} onChange={(s) => setChecked((p) => ({ ...p, ...s }))} />
+          </CardContent>
+        </Card>
+
+        <Card className="mt-4">
+          <CardHeader>
+            <CardTitle className="text-base">Tuỳ chọn</CardTitle>
+            <CardDescription>Bật để mở thêm tính năng. Mặc định tắt.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ConsentCheckboxList items={OPTIONAL_ITEMS} onChange={(s) => setChecked((p) => ({ ...p, ...s }))} />
           </CardContent>
         </Card>
       </div>
 
-      <TgMainButton text="Tiếp tục" onClick={onSubmit} disabled={!allChecked} />
+      <TgMainButton text="Tiếp tục" onClick={onSubmit} disabled={!canSubmit} />
     </main>
   );
 }

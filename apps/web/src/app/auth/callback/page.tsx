@@ -159,7 +159,7 @@ export default function AuthCallbackPage() {
     <main className="min-h-screen bg-ink text-cream flex items-center justify-center">
       <div className="text-center">
         <p className="font-heading text-gold text-lg">Đang xác thực…</p>
-        <p className="mt-2 text-sm text-cream/60">
+        <p className="mt-2 text-sm text-cream/75">
           Vui lòng chờ trong giây lát.
         </p>
       </div>

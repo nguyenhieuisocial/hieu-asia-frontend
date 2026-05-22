@@ -15,6 +15,7 @@ import {
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { StructuredChart } from '@/components/reading/StructuredChart';
 
 interface DecisionOption {
   label: string;
@@ -30,9 +31,18 @@ interface DecisionBrief {
   caveats: string[];
   generatedAt: string;
 }
+interface DecisionChart {
+  palaces: string[];
+  mainStars: string[];
+  auxStars: string[];
+  transformations: string[];
+}
 interface StoredDecision {
   id: string;
   brief: DecisionBrief;
+  // Wave 18 — typed chart envelope the worker now echoes back on
+  // /decisions/brief. Older records won't have it; the renderer no-ops then.
+  chart?: DecisionChart;
   question: string;
   topic: string;
   createdAt: string;
@@ -192,7 +202,7 @@ export default function DecisionBriefPage() {
     );
   }
 
-  const { brief, question, topic, createdAt } = record;
+  const { brief, chart, question, topic, createdAt } = record;
   const topicLabel = TOPIC_LABELS[topic] ?? 'Tổng quát';
 
   return (
@@ -254,6 +264,7 @@ export default function DecisionBriefPage() {
           <p className="mt-3 text-base leading-relaxed text-cream/85">
             {brief.chartSignal}
           </p>
+          {chart && <StructuredChart chart={chart} className="mt-4" />}
         </section>
 
         <section aria-labelledby="options" className="mb-12">

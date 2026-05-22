@@ -53,6 +53,12 @@ interface DecisionBrief {
   caveats: string[];
   generatedAt: string;
 }
+interface StructuredChart {
+  palaces: string[];
+  mainStars: string[];
+  auxStars: string[];
+  transformations: string[];
+}
 
 function isTopicId(v: string | null): v is TopicId {
   return v === 'career' || v === 'relationship' || v === 'finance' || v === 'family' || v === 'general';
@@ -151,6 +157,7 @@ function NewDecisionInner() {
             reply?: string;
             followUps?: string[];
             brief?: DecisionBrief;
+            chart?: StructuredChart;
             error?: string;
             kind?: string;
           })
@@ -187,6 +194,10 @@ function NewDecisionInner() {
       const record = {
         id,
         brief,
+        // Persist the structured chart (when the worker echoed one back) so
+        // the detail page can render the StructuredChart panel without
+        // re-fetching.
+        chart: data.chart ?? undefined,
         question: question.trim(),
         topic,
         createdAt: new Date().toISOString(),

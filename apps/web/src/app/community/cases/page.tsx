@@ -51,7 +51,7 @@ export default function CaseStudiesIndexPage() {
               — chia sẻ cách người đó nhìn lá số, kết hợp với hoàn cảnh, rồi đi
               tới quyết định mà họ thấy thoải mái nhất.
             </p>
-            <p className="mt-3 text-sm text-cream/60">
+            <p className="mt-3 text-sm text-cream/75">
               Tất cả case đều được ẩn danh và xin phép trước khi xuất bản.
             </p>
           </div>

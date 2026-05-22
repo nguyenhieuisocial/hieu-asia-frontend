@@ -1,81 +1,106 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, Checkbox, Label } from '@hieu-asia/ui';
+import { Check } from 'lucide-react';
 import { ZaloHeader } from '../components/zalo-header';
 import { ZaloBottomCta } from '../components/zalo-bottom-cta';
 
-const PURPOSES = [
-  { id: 'birth', label: 'Ngày giờ sinh', required: true },
-  { id: 'palm', label: 'Ảnh bàn tay', required: true },
-  { id: 'survey', label: 'Câu trả lời khảo sát', required: true },
-  { id: 'context', label: 'Bối cảnh nghề nghiệp / mối quan tâm', required: false },
+// Wave 16 standard: 1 mandatory (birth_data) + 1 optional (improve_optin).
+// Palm / khảo sát quyền sẽ hỏi sau, chỉ khi user dùng đến.
+const USE_CASES = [
+  'Tạo báo cáo phân tích cá nhân hoá',
+  'Duy trì phiên chat Mentor AI',
 ];
 
 export function ConsentPage() {
   const navigate = useNavigate();
-  const [accepted, setAccepted] = useState<Record<string, boolean>>({
-    birth: true,
-    palm: true,
-    survey: true,
-    context: false,
-  });
-
-  const allRequiredOk = PURPOSES.filter((p) => p.required).every((p) => accepted[p.id]);
+  const [birthData, setBirthData] = useState(false);
+  const [improveOptin, setImproveOptin] = useState(false);
 
   const onContinue = () => {
-    const payload = {
-      accepted: true as const,
-      accepted_at: new Date().toISOString(),
-      version: 'v1.0',
-      purposes: PURPOSES.filter((p) => accepted[p.id]).map((p) => p.id),
-    };
-    window.sessionStorage.setItem('hieu.consent', JSON.stringify(payload));
+    const acceptedAt = new Date().toISOString();
+    const purposes = [
+      'personalized_reading',
+      'mentor_chat',
+      ...(improveOptin ? ['quality_improvement'] : []),
+    ];
+    window.sessionStorage.setItem(
+      'hieu.consent',
+      JSON.stringify({ accepted: true, accepted_at: acceptedAt, version: 'v2.0', purposes }),
+    );
     navigate('/reading/new');
   };
 
   return (
     <main className="min-h-screen bg-ink-radial pb-24">
       <ZaloHeader title="Trước khi bắt đầu" step="Bước 1 / 4" backTo="/" />
-      <section className="px-4 pt-5">
+      <section className="space-y-4 px-4 pt-5">
         <Card>
           <CardHeader>
-            <CardTitle>Đồng ý xử lý dữ liệu</CardTitle>
+            <CardTitle>Mục đích sử dụng dữ liệu</CardTitle>
             <CardDescription>
-              Hệ thống xử lý các dữ liệu sau để tạo báo cáo cá nhân hóa. Bạn có thể rút lại đồng ý
-              bất cứ lúc nào trong phần Cài đặt.
+              Bạn có thể rút lại đồng ý bất cứ lúc nào trong phần Tài khoản.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3">
-            {PURPOSES.map((p) => (
-              <label
-                key={p.id}
-                htmlFor={`consent-${p.id}`}
-                className="flex items-start gap-3 rounded-md border border-gold/10 bg-ink/40 p-3"
-              >
-                <Checkbox
-                  id={`consent-${p.id}`}
-                  checked={accepted[p.id] ?? false}
-                  onChange={(e) =>
-                    setAccepted((prev) => ({ ...prev, [p.id]: e.target.checked }))
-                  }
-                />
-                <div>
-                  <Label htmlFor={`consent-${p.id}`} className="text-sm text-cream">
-                    {p.label}
-                  </Label>
-                  {p.required ? (
-                    <p className="text-[11px] text-gold/70">Bắt buộc</p>
-                  ) : (
-                    <p className="text-[11px] text-cream/45">Tuỳ chọn</p>
-                  )}
-                </div>
-              </label>
-            ))}
+          <CardContent>
+            <ul className="space-y-2.5">
+              {USE_CASES.map((p) => (
+                <li key={p} className="flex items-start gap-2 text-sm text-cream/85">
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-jade" aria-hidden="true" />
+                  <span>{p}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-3 text-[11px] leading-relaxed text-cream/55">
+              Các quyền tuỳ chọn khác (ảnh bàn tay, khảo sát, lịch sử Mentor) sẽ hỏi sau, chỉ khi
+              bạn dùng đến.
+            </p>
           </CardContent>
         </Card>
+
+        <label
+          htmlFor="consent-birth"
+          className="flex items-start gap-3 rounded-md border border-gold/30 bg-ink/40 p-4"
+        >
+          <Checkbox
+            id="consent-birth"
+            checked={birthData}
+            onChange={(e) => setBirthData(e.target.checked)}
+          />
+          <div className="flex-1">
+            <Label htmlFor="consent-birth" className="text-sm font-medium text-cream">
+              Tôi đồng ý cho hieu.asia xử lý ngày sinh + giờ sinh để tạo lá số
+            </Label>
+            <p className="mt-1 text-[11px] text-cream/75">
+              Theo Nghị định 13/2023/NĐ-CP. Mã hoá AES-256, không bán dữ liệu, có quyền rút lại bất
+              cứ lúc nào.
+            </p>
+          </div>
+        </label>
+
+        <label
+          htmlFor="consent-improve"
+          className="flex items-start gap-3 rounded-md border border-gold/10 bg-ink/30 p-3"
+        >
+          <Checkbox
+            id="consent-improve"
+            checked={improveOptin}
+            onChange={(e) => setImproveOptin(e.target.checked)}
+          />
+          <span className="text-sm text-cream/80">
+            Cho phép dùng dữ liệu ẨN DANH để cải thiện sản phẩm
+            <span className="ml-1 text-[11px] text-cream/55">
+              (tuỳ chọn — mặc định TẮT, không ảnh hưởng trải nghiệm)
+            </span>
+          </span>
+        </label>
+
+        <p className="px-1 text-[11px] text-cream/50">
+          Bạn có thể yêu cầu xoá toàn bộ dữ liệu cá nhân bất cứ lúc nào.
+        </p>
       </section>
 
-      <ZaloBottomCta onClick={onContinue} disabled={!allRequiredOk}>
+      <ZaloBottomCta onClick={onContinue} disabled={!birthData}>
         Đồng ý &amp; Tiếp tục
       </ZaloBottomCta>
     </main>

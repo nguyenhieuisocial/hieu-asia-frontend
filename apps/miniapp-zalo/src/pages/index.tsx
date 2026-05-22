@@ -60,6 +60,15 @@ export function WelcomePage() {
         <p className="mt-4 text-center text-[11px] text-cream/45">
           Không định mệnh hóa · Dữ liệu được mã hoá · Kết quả tham khảo
         </p>
+        <p className="mt-2 text-center text-[11px] text-cream/45">
+          <button
+            type="button"
+            onClick={() => navigate('/privacy')}
+            className="underline-offset-4 hover:text-gold hover:underline"
+          >
+            Chính sách bảo mật
+          </button>
+        </p>
       </section>
     </main>
   );
