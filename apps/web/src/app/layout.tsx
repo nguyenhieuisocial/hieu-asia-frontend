@@ -102,7 +102,7 @@ export const metadata: Metadata = {
       'Hệ thống AI phân tích Tử Vi, Bát Tự, MBTI và lòng bàn tay. Người bạn đồng hành giúp bạn hiểu chính mình.',
     images: [
       {
-        url: '/opengraph-image',
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'hieu.asia — Cẩm nang AI giúp hiểu mình và ra quyết định',
@@ -115,7 +115,7 @@ export const metadata: Metadata = {
     description: 'Tử Vi · MBTI · Palm Reading bằng AI',
     images: [
       {
-        url: '/opengraph-image',
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'hieu.asia — Cẩm nang AI giúp hiểu mình và ra quyết định',

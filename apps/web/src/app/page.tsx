@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/opengraph-image',
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'hieu.asia — Cẩm nang AI giúp hiểu mình và ra quyết định',
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
       'Cẩm nang AI cá nhân hoá bằng cổ học Á Đông và tâm lý hiện đại — trình bày bằng tiếng Việt.',
     images: [
       {
-        url: '/opengraph-image',
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'hieu.asia — Cẩm nang AI giúp hiểu mình và ra quyết định',
@@ -61,7 +61,7 @@ const ORGANIZATION_JSONLD = {
   '@type': 'Organization',
   name: 'hieu.asia',
   url: 'https://hieu.asia',
-  logo: 'https://hieu.asia/icon',
+  logo: 'https://hieu.asia/icon-512.png',
   sameAs: ['https://t.me/hieuasiabot'],
   description:
     'Hiểu mình. Quyết định mình. AI giải mã Tử Vi, Bát Tự, MBTI và tướng tay theo tri thức cổ học Á Đông, trình bày bằng tiếng Việt cho người Việt.',
