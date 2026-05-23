@@ -40,16 +40,34 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify(body),
       cache: 'no-store',
     });
+    // Wave 52.fix (#257): swallow upstream 5xx as 204 best-effort silent fail.
+    // Analytics is fire-and-forget; surfacing upstream errors (e.g. KV daily
+    // quota exhausted → "KV put() limit exceeded") pollutes browser console
+    // and Sentry monitoring without giving the user any actionable signal.
+    // The body is dropped client-side anyway (`.catch(() => {})` in analytics.ts).
+    // Still log to backend console for Sentry auto-capture.
+    if (res.status >= 500) {
+      try {
+        const detail = await res.text();
+        console.error('[analytics/event proxy] upstream 5xx swallowed', {
+          status: res.status,
+          detail: detail.slice(0, 200),
+        });
+      } catch {
+        /* ignore */
+      }
+      return new NextResponse(null, { status: 204 });
+    }
     const text = await res.text();
     return new NextResponse(text, {
       status: res.status,
       headers: { 'content-type': res.headers.get('content-type') ?? 'application/json' },
     });
   } catch (e: unknown) {
-    // Fire-and-forget: don't surface upstream errors to client
-    return NextResponse.json(
-      { ok: false, error: (e as Error).message ?? 'upstream_error' },
-      { status: 502 },
-    );
+    // Fire-and-forget: don't surface upstream network errors to client
+    console.error('[analytics/event proxy] upstream network error swallowed', {
+      message: (e as Error).message,
+    });
+    return new NextResponse(null, { status: 204 });
   }
 }
