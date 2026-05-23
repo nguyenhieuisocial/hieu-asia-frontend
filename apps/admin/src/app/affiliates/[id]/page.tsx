@@ -9,7 +9,10 @@
 import * as React from 'react';
 import { use } from 'react';
 import Link from 'next/link';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input } from '@hieu-asia/ui';
+import { Button, Card, CardContent, CardHeader, CardTitle, Input, StatusBadge } from '@hieu-asia/ui';
+
+type PreferredRail = 'manual_csv' | 'wise' | 'stripe_connect';
+type RailStatus = 'pending' | 'verified' | 'rejected' | 'manual_only';
 
 interface AffiliateRecord {
   id: string;
@@ -22,6 +25,10 @@ interface AffiliateRecord {
   commission_rate_first_month: number;
   commission_rate_recurring: number;
   created_at: string;
+  preferred_rail?: PreferredRail;
+  rail_account_external_id?: string | null;
+  rail_account_verified_at?: string | null;
+  rail_account_status?: RailStatus;
 }
 
 interface Stats {
@@ -150,6 +157,27 @@ export default function AdminAffiliateDetailPage({
     }
   }
 
+  async function verifyRail(status: RailStatus) {
+    // Confirm before flipping to verified or manual_only (semi-irreversible).
+    if (status === 'verified' || status === 'manual_only') {
+      const label = status === 'verified' ? 'Verified' : 'Manual only';
+      if (!window.confirm(`Đặt trạng thái rail thành "${label}"? Hành động sẽ ghi audit log.`)) {
+        return;
+      }
+    }
+    setBusy(true);
+    try {
+      await fetch(`/api/admin/affiliates/${id}/verify-rail`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      await load();
+    } finally {
+      setBusy(false);
+    }
+  }
+
   if (loading) return <main className="p-6 text-foreground">Loading…</main>;
   if (error || !data)
     return (
@@ -254,6 +282,77 @@ export default function AdminAffiliateDetailPage({
               <b className={a.status === 'active' ? 'text-green-400' : 'text-red-400'}>
                 {a.status}
               </b>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Payout Rail (Wave 45) */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Payout Rail</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="grid gap-2 text-sm sm:grid-cols-2">
+              <div>
+                <span className="text-muted-foreground">Rail ưu tiên:</span>{' '}
+                <b>{(a.preferred_rail ?? 'manual_csv').toUpperCase()}</b>
+              </div>
+              <div>
+                <span className="text-muted-foreground">External ID:</span>{' '}
+                <span className="font-mono text-xs">
+                  {a.rail_account_external_id ?? '—'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground">Trạng thái:</span>{' '}
+                {(() => {
+                  const st = a.rail_account_status ?? 'pending';
+                  const tone: 'success' | 'warning' | 'error' | 'info' | 'neutral' =
+                    st === 'verified'
+                      ? 'success'
+                      : st === 'rejected'
+                        ? 'error'
+                        : st === 'manual_only'
+                          ? 'info'
+                          : 'warning';
+                  return <StatusBadge status={tone} label={st} />;
+                })()}
+              </div>
+              <div>
+                <span className="text-muted-foreground">Verified at:</span>{' '}
+                {a.rail_account_verified_at ? dt(a.rail_account_verified_at) : '—'}
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2 border-t border-border pt-3">
+              <Button
+                size="sm"
+                disabled={busy || a.rail_account_status === 'verified'}
+                onClick={() => verifyRail('verified')}
+              >
+                Verify
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={busy || a.rail_account_status === 'manual_only'}
+                onClick={() => verifyRail('manual_only')}
+              >
+                Manual only
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                disabled={busy || (a.rail_account_status ?? 'pending') === 'pending'}
+                onClick={() => verifyRail('pending')}
+              >
+                Reset to pending
+              </Button>
+              <Link
+                href={`/audit-log?action=affiliate_rail_verified&resource_id=${encodeURIComponent(id)}`}
+                className="ml-auto self-center text-xs text-muted-foreground hover:text-gold"
+              >
+                Xem audit log →
+              </Link>
             </div>
           </CardContent>
         </Card>

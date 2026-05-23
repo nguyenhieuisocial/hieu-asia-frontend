@@ -48,6 +48,9 @@ export interface AffiliatesListResponse {
   pending_payouts: PendingPayout[];
 }
 
+export type PreferredRail = 'manual_csv' | 'wise' | 'stripe_connect';
+export type RailAccountStatus = 'pending' | 'verified' | 'rejected' | 'manual_only';
+
 export interface AffiliateRecord {
   id: string;
   code: string;
@@ -59,6 +62,11 @@ export interface AffiliateRecord {
   commission_rate_first_month: number;
   commission_rate_recurring: number;
   created_at: string;
+  /** Wave 45 — payout rail fields. Optional for backward compat. */
+  preferred_rail?: PreferredRail;
+  rail_account_external_id?: string | null;
+  rail_account_verified_at?: string | null;
+  rail_account_status?: RailAccountStatus;
 }
 
 export interface AffiliateStats {
