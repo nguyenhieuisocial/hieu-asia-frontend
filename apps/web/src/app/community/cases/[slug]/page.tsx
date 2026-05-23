@@ -24,7 +24,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const c = getCaseStudy(slug);
-  if (!c) return { title: 'Case study không tìm thấy | hieu.asia' };
+  if (!c) return { title: 'Case study không tìm thấy' };
   return {
     title: `${c.title} — case study`,
     description: c.excerpt,

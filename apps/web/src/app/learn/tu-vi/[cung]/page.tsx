@@ -17,9 +17,9 @@ export async function generateMetadata(
   { params }: { params: Promise<{ cung: string }> },
 ): Promise<Metadata> {
   const { cung } = await params;
-  if (!CUNG_SLUG_REGEX.test(cung)) return { title: 'Không tìm thấy cung Tử Vi | hieu.asia' };
+  if (!CUNG_SLUG_REGEX.test(cung)) return { title: 'Không tìm thấy cung Tử Vi' };
   const data = findPalaceReading(cung);
-  if (!data) return { title: 'Không tìm thấy cung Tử Vi | hieu.asia' };
+  if (!data) return { title: 'Không tìm thấy cung Tử Vi' };
   return {
     title: `Cung ${data.name} — đọc lá số Tử Vi để ra quyết định`,
     description: data.governs.slice(0, 158),
