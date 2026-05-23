@@ -24,6 +24,7 @@ import {
 } from '@hieu-asia/ui';
 import { ChevronLeft, Eye, GitCompare } from 'lucide-react';
 import { PromptEditor } from '@/components/prompts/PromptEditor';
+import { formatDateOrEmpty } from '@/lib/format-date';
 
 const ROLES = ['vision', 'logic', 'psychology', 'alignment', 'report', 'mentor', 'judge'] as const;
 type Role = (typeof ROLES)[number];
@@ -78,10 +79,9 @@ async function resetPrompt(role: string): Promise<PromptDetail> {
   return data.prompt;
 }
 
-function fmtDate(iso: string | null) {
-  if (!iso) return '—';
-  return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
-}
+// Wave 52-C — Delegate to shared util so 0 / "" / null all render
+// "Chưa override" instead of "08:00 1/1/70".
+const fmtDate = (iso: string | null) => formatDateOrEmpty(iso, 'Chưa override');
 
 /** Tiny line-diff for hint panel — counts +/- lines vs default. */
 function diffSummary(a: string, b: string): { added: number; removed: number } {

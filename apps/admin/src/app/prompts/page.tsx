@@ -27,6 +27,11 @@ import {
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
+import {
+  formatDateOrEmpty,
+  formatRelativeOrEmpty,
+  isMissingDate,
+} from '@/lib/format-date';
 
 /** Canonical agent roles. Must match Worker KV keys. */
 const ROLES = [
@@ -74,28 +79,11 @@ async function fetchPrompts(): Promise<PromptSummary[]> {
   return data.prompts ?? [];
 }
 
-function fmtDate(iso: string | null) {
-  if (!iso) return '—';
-  return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
-}
-
-function fmtRelative(iso: string | null) {
-  if (!iso) return '';
-  try {
-    const diff = Date.now() - new Date(iso).getTime();
-    const d = Math.floor(diff / 86_400_000);
-    if (d < 1) {
-      const h = Math.floor(diff / 3_600_000);
-      if (h < 1) return 'vừa cập nhật';
-      return `${h}h trước`;
-    }
-    if (d < 7) return `${d} ngày trước`;
-    if (d < 30) return `${Math.floor(d / 7)} tuần trước`;
-    return `${Math.floor(d / 30)} tháng trước`;
-  } catch {
-    return '';
-  }
-}
+// Wave 52-C — Date formatters live in `@/lib/format-date` now so the
+// "1970-01-01" leak fix (treat 0/null/"" as missing → "Chưa override")
+// applies consistently across every admin page.
+const fmtDate = (iso: string | null) => formatDateOrEmpty(iso, 'Chưa override');
+const fmtRelative = (iso: string | null) => formatRelativeOrEmpty(iso);
 
 export default function PromptsListPage() {
   const { data, isLoading, error } = useQuery({
@@ -113,9 +101,13 @@ export default function PromptsListPage() {
   const customCount = (data ?? []).filter((p) => p.is_custom).length;
   const totalVersions = (data ?? []).reduce((s, p) => s + p.version, 0);
   const lastUpdate = (data ?? []).reduce<string | null>((acc, p) => {
-    if (!p.updated_at) return acc;
+    // Skip epoch / null / "" sentinels — they would otherwise resolve to
+    // 1970-01-01 and either never beat real timestamps (silent miss) or,
+    // in odd corner cases, get picked when all values are missing and
+    // leak "08:00 1/1/70" into the KPI tile (Wave 52-C bug #4).
+    if (isMissingDate(p.updated_at)) return acc;
     if (!acc) return p.updated_at;
-    return new Date(p.updated_at) > new Date(acc) ? p.updated_at : acc;
+    return new Date(p.updated_at as string) > new Date(acc) ? p.updated_at : acc;
   }, null);
 
   return (
@@ -229,9 +221,9 @@ export default function PromptsListPage() {
                       <span className="text-foreground/85" title={p?.updated_at ?? ''}>
                         {fmtDate(p?.updated_at ?? null)}
                       </span>
-                      {p?.updated_at && (
+                      {!isMissingDate(p?.updated_at) && (
                         <span className="ml-1.5 font-mono text-[10px] text-muted-foreground">
-                          ({fmtRelative(p.updated_at)})
+                          ({fmtRelative(p?.updated_at ?? null)})
                         </span>
                       )}
                     </div>
