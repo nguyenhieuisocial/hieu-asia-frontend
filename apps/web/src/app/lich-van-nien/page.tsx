@@ -115,14 +115,14 @@ export default async function LichVanNienPage() {
       ]}
       heroAction={
         <div className="flex flex-wrap items-center gap-3">
-          <Link href="/lich-van-nien/today">
-            <Button size="sm">Xem hôm nay</Button>
-          </Link>
-          <Link href="/lich-van-nien/ngay-tot-xau">
-            <Button variant="outline" size="sm">
+          <Button asChild size="sm"><Link href="/lich-van-nien/today">
+            Xem hôm nay
+          </Link></Button>
+          <Button asChild variant="outline" size="sm"><Link href="/lich-van-nien/ngay-tot-xau">
+            
               Kiểm tra ngày tốt
-            </Button>
-          </Link>
+            
+          </Link></Button>
         </div>
       }
     >
@@ -178,11 +178,11 @@ export default async function LichVanNienPage() {
               <CardContent className="text-sm text-muted-foreground">
                 <p className="leading-relaxed">{c.desc}</p>
                 <div className="mt-4">
-                  <Link href={c.href}>
-                    <Button variant="outline" size="sm">
+                  <Button asChild variant="outline" size="sm"><Link href={c.href}>
+                    
                       {c.cta} →
-                    </Button>
-                  </Link>
+                    
+                  </Link></Button>
                 </div>
               </CardContent>
             </Card>

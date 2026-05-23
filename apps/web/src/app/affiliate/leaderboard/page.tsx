@@ -233,11 +233,11 @@ export default async function AffiliateLeaderboardPage() {
           )}
 
           <div className="mt-12 text-center">
-            <Link href="/affiliate">
-              <Button variant="ghost" className="border border-border">
+            <Button asChild variant="ghost" className="border border-border"><Link href="/affiliate">
+              
                 Đăng ký affiliate
-              </Button>
-            </Link>
+              
+            </Link></Button>
           </div>
         </section>
 

@@ -193,9 +193,9 @@ export default function AffiliateNetworkPage() {
             <p className="mb-6 text-muted-foreground">
               Bạn cần đăng nhập để xem mạng lưới affiliate của mình.
             </p>
-            <Link href="/signin?next=/affiliate/network">
-              <Button className="bg-gold text-ink hover:bg-gold/90">Đăng nhập</Button>
-            </Link>
+            <Button asChild className="bg-gold text-ink hover:bg-gold/90"><Link href="/signin?next=/affiliate/network">
+              Đăng nhập
+            </Link></Button>
           </div>
         </main>
         <SiteFooter />
@@ -217,14 +217,14 @@ export default function AffiliateNetworkPage() {
               Đăng ký miễn phí để mở mạng lưới giới thiệu của bạn.
             </p>
             <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
-              <Link href="/affiliate/signup">
-                <Button className="bg-gold text-ink hover:bg-gold/90">
+              <Button asChild className="bg-gold text-ink hover:bg-gold/90"><Link href="/affiliate/signup">
+                
                   Đăng ký affiliate
-                </Button>
-              </Link>
-              <Link href="/affiliate">
-                <Button variant="outline">Tìm hiểu chương trình</Button>
-              </Link>
+                
+              </Link></Button>
+              <Button asChild variant="outline"><Link href="/affiliate">
+                Tìm hiểu chương trình
+              </Link></Button>
             </div>
           </div>
         </main>
@@ -390,11 +390,11 @@ export default function AffiliateNetworkPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Link href="/affiliate/signup">
-                <Button className="bg-gold text-ink hover:bg-gold/90">
+              <Button asChild className="bg-gold text-ink hover:bg-gold/90"><Link href="/affiliate/signup">
+                
                   Đăng ký affiliate
-                </Button>
-              </Link>
+                
+              </Link></Button>
             </CardContent>
           </Card>
         )}
@@ -487,13 +487,13 @@ export default function AffiliateNetworkPage() {
         {/* CTAs */}
         <div className="mt-8 flex flex-wrap gap-3">
           {!network && (
-            <Link href="/affiliate/signup">
-              <Button className="bg-gold text-ink hover:bg-gold/90">Đăng ký affiliate</Button>
-            </Link>
+            <Button asChild className="bg-gold text-ink hover:bg-gold/90"><Link href="/affiliate/signup">
+              Đăng ký affiliate
+            </Link></Button>
           )}
-          <Link href="/affiliate/commissions">
-            <Button variant="outline">Xem hoa hồng</Button>
-          </Link>
+          <Button asChild variant="outline"><Link href="/affiliate/commissions">
+            Xem hoa hồng
+          </Link></Button>
         </div>
 
         <p className="mt-6 text-xs text-muted-foreground">

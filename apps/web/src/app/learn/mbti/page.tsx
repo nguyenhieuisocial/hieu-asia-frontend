@@ -120,9 +120,9 @@ export default function LearnMBTIPage() {
           thiên hướng tự nhiên của bạn.
         </p>
         <div className="mt-6">
-          <Link href="/reading/new?method=mbti">
-            <Button size="lg">Làm trắc nghiệm MBTI</Button>
-          </Link>
+          <Button asChild size="lg"><Link href="/reading/new?method=mbti">
+            Làm trắc nghiệm MBTI
+          </Link></Button>
         </div>
       </section>
     </main>

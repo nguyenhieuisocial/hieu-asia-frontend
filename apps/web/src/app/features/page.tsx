@@ -196,11 +196,11 @@ export default function FeaturesPage() {
                     {desc}
                   </p>
                   {cta && (
-                    <Link href={cta.href} className="mt-5">
-                      <Button variant="outline" size="sm" className="w-full">
+                    <Button asChild variant="outline" size="sm" className="w-full"><Link href={cta.href} className="mt-5">
+                      
                         {cta.label}
-                      </Button>
-                    </Link>
+                      
+                    </Link></Button>
                   )}
                 </article>
               ))}
@@ -218,16 +218,16 @@ export default function FeaturesPage() {
               Mở khoá lá số trong 3 phút — khảo sát đầu vào miễn phí.
             </p>
             <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-              <Link href="/onboarding">
-                <Button size="lg" className="min-w-[200px]">
+              <Button asChild size="lg" className="min-w-[200px]"><Link href="/onboarding">
+                
                   Mở khóa lá số
-                </Button>
-              </Link>
-              <Link href="/pricing">
-                <Button size="lg" variant="outline" className="min-w-[200px]">
+                
+              </Link></Button>
+              <Button asChild size="lg" variant="outline" className="min-w-[200px]"><Link href="/pricing">
+                
                   Xem bảng giá
-                </Button>
-              </Link>
+                
+              </Link></Button>
             </div>
           </div>
         </section>

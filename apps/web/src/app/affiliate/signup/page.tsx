@@ -138,11 +138,11 @@ export default function AffiliateSignupPage() {
                 clicks/conversions trong dashboard.
               </div>
 
-              <Link href="/affiliate/dashboard">
-                <Button className="w-full bg-gold text-ink hover:bg-gold/90" size="lg">
+              <Button asChild className="w-full bg-gold text-ink hover:bg-gold/90" size="lg"><Link href="/affiliate/dashboard">
+                
                   Vào dashboard
-                </Button>
-              </Link>
+                
+              </Link></Button>
             </CardContent>
           </Card>
           </div>

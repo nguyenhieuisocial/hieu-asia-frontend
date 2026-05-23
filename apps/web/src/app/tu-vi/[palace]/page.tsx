@@ -108,9 +108,9 @@ export default async function PalacePage({
           <p className="mt-5 text-base leading-relaxed text-foreground/80 sm:text-lg">{data.overview}</p>
 
           <div className="mt-7 flex flex-wrap gap-3">
-            <Link href="/onboarding">
-              <Button size="lg">Lập lá số xem cung {data.name} của tôi</Button>
-            </Link>
+            <Button asChild size="lg"><Link href="/onboarding">
+              Lập lá số xem cung {data.name} của tôi
+            </Link></Button>
           </div>
         </section>
 
@@ -246,9 +246,9 @@ export default async function PalacePage({
               phút, không cần đăng ký).
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <Link href="/onboarding">
-                <Button size="lg">Lập lá số miễn phí</Button>
-              </Link>
+              <Button asChild size="lg"><Link href="/onboarding">
+                Lập lá số miễn phí
+              </Link></Button>
               <Link
                 href="/tu-vi"
                 className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"

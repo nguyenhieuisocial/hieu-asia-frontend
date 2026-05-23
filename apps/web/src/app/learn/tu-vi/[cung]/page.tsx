@@ -202,9 +202,9 @@ export default async function LearnPalacePage({
           vận hiện tại ra sao — lập lá số mất khoảng 30 giây, không cần đăng ký.
         </p>
         <div className="mt-5 flex flex-wrap justify-center gap-3">
-          <Link href="/reading/new?method=tu-vi">
-            <Button size="lg">Lập lá số Tử Vi</Button>
-          </Link>
+          <Button asChild size="lg"><Link href="/reading/new?method=tu-vi">
+            Lập lá số Tử Vi
+          </Link></Button>
           <Link
             href="/learn/tu-vi"
             className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"

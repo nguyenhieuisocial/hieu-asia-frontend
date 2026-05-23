@@ -203,9 +203,9 @@ export default function AffiliateCommissionsPage() {
             <p className="mb-6 text-muted-foreground">
               Bạn cần đăng nhập để xem lịch sử hoa hồng affiliate.
             </p>
-            <Link href="/signin?next=/affiliate/commissions">
-              <Button className="bg-gold text-ink hover:bg-gold/90">Đăng nhập</Button>
-            </Link>
+            <Button asChild className="bg-gold text-ink hover:bg-gold/90"><Link href="/signin?next=/affiliate/commissions">
+              Đăng nhập
+            </Link></Button>
           </div>
         </main>
         <SiteFooter />
@@ -227,14 +227,14 @@ export default function AffiliateCommissionsPage() {
               Đăng ký miễn phí để nhận link giới thiệu + theo dõi hoa hồng.
             </p>
             <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
-              <Link href="/affiliate/signup">
-                <Button className="bg-gold text-ink hover:bg-gold/90">
+              <Button asChild className="bg-gold text-ink hover:bg-gold/90"><Link href="/affiliate/signup">
+                
                   Đăng ký affiliate
-                </Button>
-              </Link>
-              <Link href="/affiliate">
-                <Button variant="outline">Tìm hiểu chương trình</Button>
-              </Link>
+                
+              </Link></Button>
+              <Button asChild variant="outline"><Link href="/affiliate">
+                Tìm hiểu chương trình
+              </Link></Button>
             </div>
             <p className="mt-6 text-xs text-muted-foreground">
               Đối tác cấp cao (Mentor / nhóm KOL) vui lòng dùng{' '}
@@ -451,9 +451,9 @@ export default function AffiliateCommissionsPage() {
         {/* Payout button */}
         <div className="mt-6 flex flex-wrap items-center gap-3">
           {stats.totalPaid >= MIN_PAYOUT_VND ? (
-            <Link href="/affiliate/dashboard">
-              <Button className="bg-gold text-ink hover:bg-gold/90">Yêu cầu rút</Button>
-            </Link>
+            <Button asChild className="bg-gold text-ink hover:bg-gold/90"><Link href="/affiliate/dashboard">
+              Yêu cầu rút
+            </Link></Button>
           ) : (
             <Button disabled className="bg-muted/10 text-muted-foreground">
               Yêu cầu rút (tối thiểu {vnd(MIN_PAYOUT_VND)})

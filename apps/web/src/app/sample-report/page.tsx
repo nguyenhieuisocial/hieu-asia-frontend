@@ -382,14 +382,14 @@ export default function SampleReportPage() {
               giờ nếu báo cáo chưa được tạo.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <Link href="/onboarding">
-                <Button size="lg">Lập lá số của tôi</Button>
-              </Link>
-              <Link href="/pricing">
-                <Button size="lg" variant="outline">
+              <Button asChild size="lg"><Link href="/onboarding">
+                Lập lá số của tôi
+              </Link></Button>
+              <Button asChild size="lg" variant="outline"><Link href="/pricing">
+                
                   Xem gói
-                </Button>
-              </Link>
+                
+              </Link></Button>
               <Link
                 href="/methodology"
                 className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"

@@ -74,12 +74,12 @@ export default function ReadingHubPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="mb-5 text-sm leading-relaxed text-muted-foreground">{m.blurb}</p>
-                  <Link href={`/reading/new?method=${m.method}`}>
-                    <Button variant="outline" size="sm" className="w-full">
+                  <Button asChild variant="outline" size="sm" className="w-full"><Link href={`/reading/new?method=${m.method}`}>
+                    
                       Bắt đầu
                       <ArrowRight className="ml-1 h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-                    </Button>
-                  </Link>
+                    
+                  </Link></Button>
                 </CardContent>
               </Card>
             ))}

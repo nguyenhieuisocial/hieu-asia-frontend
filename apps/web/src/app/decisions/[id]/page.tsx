@@ -183,12 +183,12 @@ export default function DecisionBriefPage() {
             mới.
           </p>
           <div className="mt-8 flex items-center justify-center gap-3">
-            <Link href="/decisions/new">
-              <Button>
+            <Button asChild><Link href="/decisions/new">
+              
                 Tạo Decision Brief mới
                 <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-              </Button>
-            </Link>
+              
+            </Link></Button>
             <Link
               href="/decisions"
               className="text-sm text-muted-foreground hover:text-gold"
@@ -420,12 +420,12 @@ export default function DecisionBriefPage() {
           >
             ← Quay lại danh sách
           </button>
-          <Link href="/reading">
-            <Button variant="outline">
+          <Button asChild variant="outline"><Link href="/reading">
+            
               <MessageCircle className="mr-1.5 h-4 w-4" aria-hidden="true" />
               Hỏi Mentor về quyết định này
-            </Button>
-          </Link>
+            
+          </Link></Button>
         </footer>
       </main>
 

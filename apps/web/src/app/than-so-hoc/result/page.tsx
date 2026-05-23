@@ -396,11 +396,11 @@ function ResultActions({ data }: { data: ThanSoHocResult }) {
         <Button variant="outline" size="sm" onClick={onShare}>
           <Share2 className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" /> Chia sẻ
         </Button>
-        <Link href="/than-so-hoc">
-          <Button variant="ghost" size="sm">
+        <Button asChild variant="ghost" size="sm"><Link href="/than-so-hoc">
+          
             <ArrowLeft className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" /> Tính số khác
-          </Button>
-        </Link>
+          
+        </Link></Button>
       </div>
     </div>
   );
@@ -432,9 +432,9 @@ function PremiumCta() {
             đi kèm chat với AI Mentor không giới hạn.
           </p>
         </div>
-        <Link href="/pricing?from=than-so-hoc" onClick={onClick} className="shrink-0">
-          <Button size="lg">Xem các gói báo cáo →</Button>
-        </Link>
+        <Button asChild size="lg"><Link href="/pricing?from=than-so-hoc" onClick={onClick} className="shrink-0">
+          Xem các gói báo cáo →
+        </Link></Button>
       </CardContent>
     </Card>
   );
@@ -451,11 +451,11 @@ function ErrorState({ message, onRetry }: { message: string; onRetry: () => void
           <Button onClick={onRetry} size="sm">
             <RefreshCw className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" /> Thử lại
           </Button>
-          <Link href="/than-so-hoc">
-            <Button variant="outline" size="sm">
+          <Button asChild variant="outline" size="sm"><Link href="/than-so-hoc">
+            
               <ArrowLeft className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" /> Quay lại form
-            </Button>
-          </Link>
+            
+          </Link></Button>
         </div>
       </CardContent>
     </Card>

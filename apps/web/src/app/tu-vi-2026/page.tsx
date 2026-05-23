@@ -112,14 +112,14 @@ export default function TuVi2026Page() {
             này dễ tiếc nuối.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <Link href="/onboarding">
-              <Button size="lg">Xem tử vi 2026 của tôi</Button>
-            </Link>
-            <Link href="/sample-report">
-              <Button size="lg" variant="outline">
+            <Button asChild size="lg"><Link href="/onboarding">
+              Xem tử vi 2026 của tôi
+            </Link></Button>
+            <Button asChild size="lg" variant="outline"><Link href="/sample-report">
+              
                 Mẫu báo cáo
-              </Button>
-            </Link>
+              
+            </Link></Button>
           </div>
         </section>
 
@@ -204,9 +204,9 @@ export default function TuVi2026Page() {
               Lập lá số 2 phút để xem chi tiết.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <Link href="/onboarding">
-                <Button size="lg">Lập lá số miễn phí</Button>
-              </Link>
+              <Button asChild size="lg"><Link href="/onboarding">
+                Lập lá số miễn phí
+              </Link></Button>
               <Link
                 href="/tu-vi"
                 className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"

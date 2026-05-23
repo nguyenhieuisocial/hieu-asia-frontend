@@ -338,9 +338,9 @@ export default async function ArchiveDayPage({
               của bạn không (cung Mệnh, đại vận, lưu niên), lập lá số 2 phút.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <Link href="/onboarding">
-                <Button size="lg">Lập lá số cá nhân hoá</Button>
-              </Link>
+              <Button asChild size="lg"><Link href="/onboarding">
+                Lập lá số cá nhân hoá
+              </Link></Button>
               <Link
                 href="/lich-van-nien"
                 className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"

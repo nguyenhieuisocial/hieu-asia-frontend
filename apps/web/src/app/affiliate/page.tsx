@@ -44,16 +44,16 @@ export default function AffiliateLandingPage() {
             Cookie 30 ngày · QR code riêng · Dashboard real-time · Rút tiền từ 500.000đ.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/affiliate/signup">
-              <Button size="lg" className="bg-gold text-ink hover:bg-gold/90">
+            <Button asChild size="lg" className="bg-gold text-ink hover:bg-gold/90"><Link href="/affiliate/signup">
+              
                 Đăng ký ngay
-              </Button>
-            </Link>
-            <Link href="/affiliate/dashboard">
-              <Button size="lg" variant="ghost" className="border border-border">
+              
+            </Link></Button>
+            <Button asChild size="lg" variant="ghost" className="border border-border"><Link href="/affiliate/dashboard">
+              
                 Đăng nhập affiliate
-              </Button>
-            </Link>
+              
+            </Link></Button>
           </div>
         </div>
         </div>
@@ -173,11 +173,11 @@ export default function AffiliateLandingPage() {
             ))}
           </div>
           <div className="mt-12 text-center">
-            <Link href="/affiliate/signup">
-              <Button size="lg" className="bg-gold text-ink hover:bg-gold/90">
+            <Button asChild size="lg" className="bg-gold text-ink hover:bg-gold/90"><Link href="/affiliate/signup">
+              
                 Bắt đầu kiếm tiền ngay
-              </Button>
-            </Link>
+              
+            </Link></Button>
           </div>
         </div>
       </section>

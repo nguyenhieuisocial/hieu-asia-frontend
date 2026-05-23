@@ -131,9 +131,9 @@ export default function LearnThanSoHocPage() {
           hồn — kèm diễn giải năng lượng từng số.
         </p>
         <div className="mt-6">
-          <Link href="/reading/new?method=numerology">
-            <Button size="lg">Khám phá Thần Số Học</Button>
-          </Link>
+          <Button asChild size="lg"><Link href="/reading/new?method=numerology">
+            Khám phá Thần Số Học
+          </Link></Button>
         </div>
       </section>
     </main>

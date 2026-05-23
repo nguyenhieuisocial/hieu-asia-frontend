@@ -94,14 +94,14 @@ export default function TuViTinhYeuPage() {
             trong quan hệ — không phải để "đoán" đối tác.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <Link href="/onboarding">
-              <Button size="lg">Xem tử vi tình cảm của tôi</Button>
-            </Link>
-            <Link href="/tu-vi/cung-phu-the">
-              <Button size="lg" variant="outline">
+            <Button asChild size="lg"><Link href="/onboarding">
+              Xem tử vi tình cảm của tôi
+            </Link></Button>
+            <Button asChild size="lg" variant="outline"><Link href="/tu-vi/cung-phu-the">
+              
                 Cung Phu Thê là gì
-              </Button>
-            </Link>
+              
+            </Link></Button>
           </div>
         </section>
 
@@ -166,9 +166,9 @@ export default function TuViTinhYeuPage() {
               gì trong quan hệ" và "tôi dễ gặp rủi ro giao tiếp gì".
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <Link href="/onboarding">
-                <Button size="lg">Lập lá số miễn phí</Button>
-              </Link>
+              <Button asChild size="lg"><Link href="/onboarding">
+                Lập lá số miễn phí
+              </Link></Button>
               <Link
                 href="/hop-tuoi"
                 className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"

@@ -95,14 +95,14 @@ export default function TuViTaiChinhPage() {
             </CardContent>
           </Card>
           <div className="mt-7 flex flex-wrap gap-3">
-            <Link href="/onboarding">
-              <Button size="lg">Xem tử vi tài chính của tôi</Button>
-            </Link>
-            <Link href="/tu-vi/cung-tai-bach">
-              <Button size="lg" variant="outline">
+            <Button asChild size="lg"><Link href="/onboarding">
+              Xem tử vi tài chính của tôi
+            </Link></Button>
+            <Button asChild size="lg" variant="outline"><Link href="/tu-vi/cung-tai-bach">
+              
                 Cung Tài Bạch là gì
-              </Button>
-            </Link>
+              
+            </Link></Button>
           </div>
         </section>
 
@@ -160,9 +160,9 @@ export default function TuViTaiChinhPage() {
               thành thói quen tài chính nên có (và nên tránh) trong 90 ngày tới.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <Link href="/onboarding">
-                <Button size="lg">Lập lá số miễn phí</Button>
-              </Link>
+              <Button asChild size="lg"><Link href="/onboarding">
+                Lập lá số miễn phí
+              </Link></Button>
               <Link
                 href="/tu-vi-2026"
                 className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"

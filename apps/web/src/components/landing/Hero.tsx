@@ -75,20 +75,20 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
           className="mt-10 flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row"
         >
-          <Link href="/onboarding" className="w-full sm:w-auto">
-            <Button size="lg" className="group w-full min-w-[200px] sm:w-auto">
+          <Button asChild size="lg" className="group w-full min-w-[200px] sm:w-auto"><Link href="/onboarding" className="w-full sm:w-auto">
+            
               Bắt đầu phân tích
               <ArrowRight
                 className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5"
                 aria-hidden="true"
               />
-            </Button>
-          </Link>
-          <Link href="#how" className="w-full sm:w-auto">
-            <Button size="lg" variant="outline" className="w-full min-w-[200px] sm:w-auto">
+            
+          </Link></Button>
+          <Button asChild size="lg" variant="outline" className="w-full min-w-[200px] sm:w-auto"><Link href="#how" className="w-full sm:w-auto">
+            
               Xem cách hoạt động
-            </Button>
-          </Link>
+            
+          </Link></Button>
         </motion.div>
 
         <motion.div

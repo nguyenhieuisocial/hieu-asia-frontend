@@ -113,9 +113,9 @@ export default function LearnBatTuPage() {
           Ngũ Hành. Bạn xem Bát Tự đầy đủ trước khi đọc luận giải chi tiết.
         </p>
         <div className="mt-6">
-          <Link href="/reading/new?method=bat-tu">
-            <Button size="lg">Xem Bát Tự của bạn</Button>
-          </Link>
+          <Button asChild size="lg"><Link href="/reading/new?method=bat-tu">
+            Xem Bát Tự của bạn
+          </Link></Button>
         </div>
       </section>
     </main>

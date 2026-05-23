@@ -187,9 +187,9 @@ export default function AffiliateDashboardPage() {
             <p className="mb-6 text-muted-foreground">
               Đăng ký affiliate để xem dashboard hoặc khôi phục session từ email.
             </p>
-            <Link href="/affiliate/signup">
-              <Button className="bg-gold text-ink hover:bg-gold/90">Đăng ký ngay</Button>
-            </Link>
+            <Button asChild className="bg-gold text-ink hover:bg-gold/90"><Link href="/affiliate/signup">
+              Đăng ký ngay
+            </Link></Button>
           </div>
         </main>
         <SiteFooter />

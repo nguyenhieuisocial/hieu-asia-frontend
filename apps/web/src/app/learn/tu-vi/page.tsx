@@ -153,9 +153,9 @@ export default function LearnTuViPage() {
           lá số đầy đủ trước khi quyết định mở khóa luận giải sâu.
         </p>
         <div className="mt-6">
-          <Link href="/reading/new?method=tu-vi">
-            <Button size="lg">Lập lá số Tử Vi của bạn</Button>
-          </Link>
+          <Button asChild size="lg"><Link href="/reading/new?method=tu-vi">
+            Lập lá số Tử Vi của bạn
+          </Link></Button>
         </div>
       </section>
     </main>

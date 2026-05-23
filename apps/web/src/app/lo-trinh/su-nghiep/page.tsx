@@ -149,14 +149,14 @@ export default function SuNghiepPage() {
           </p>
 
           <div className="mt-7 flex flex-wrap gap-3">
-            <Link href={`/onboarding/topic?topic=${TOPIC}`}>
-              <Button size="lg">Bắt đầu lập lá số</Button>
-            </Link>
-            <Link href="/decisions/new?topic=career">
-              <Button size="lg" variant="outline">
+            <Button asChild size="lg"><Link href={`/onboarding/topic?topic=${TOPIC}`}>
+              Bắt đầu lập lá số
+            </Link></Button>
+            <Button asChild size="lg" variant="outline"><Link href="/decisions/new?topic=career">
+              
                 Ghi quyết định sự nghiệp
-              </Button>
-            </Link>
+              
+            </Link></Button>
           </div>
         </section>
 
@@ -263,9 +263,9 @@ export default function SuNghiepPage() {
               biết kết quả trông như thế nào.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <Link href={`/onboarding/topic?topic=${TOPIC}`}>
-                <Button size="lg">Bắt đầu lập lá số</Button>
-              </Link>
+              <Button asChild size="lg"><Link href={`/onboarding/topic?topic=${TOPIC}`}>
+                Bắt đầu lập lá số
+              </Link></Button>
               <Link
                 href="/sample-report"
                 className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"

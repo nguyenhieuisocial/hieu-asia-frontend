@@ -270,17 +270,17 @@ export default function MonthlyPlanningPage() {
             của bạn — thay vì chủ đề tham chiếu chung.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
-            <Link href="/onboarding/topic">
-              <Button size="lg">
+            <Button asChild size="lg"><Link href="/onboarding/topic">
+              
                 Lập lá số cá nhân hoá
                 <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-              </Button>
-            </Link>
-            <Link href="/journal/new">
-              <Button size="lg" variant="outline">
+              
+            </Link></Button>
+            <Button asChild size="lg" variant="outline"><Link href="/journal/new">
+              
                 Tạo decision journal đầu tháng
-              </Button>
-            </Link>
+              
+            </Link></Button>
           </div>
         </section>
       </section>

@@ -119,12 +119,12 @@ export default function JournalHubPage() {
               mình tốt hơn. Lưu trên trình duyệt, không gửi server.
             </p>
           </div>
-          <Link href="/journal/new" className="shrink-0">
-            <Button className="min-w-[180px]">
+          <Button asChild className="min-w-[180px]"><Link href="/journal/new" className="shrink-0">
+            
               <Plus className="mr-1.5 h-4 w-4" aria-hidden="true" />
               Quyết định mới
-            </Button>
-          </Link>
+            
+          </Link></Button>
         </header>
 
         {hydrated && stats.total > 0 && (
@@ -206,12 +206,12 @@ export default function JournalHubPage() {
                 <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
                 Lưu trên trình duyệt của bạn — không gửi server
               </div>
-              <Link href="/journal/new" className="mt-8">
-                <Button>
+              <Button asChild><Link href="/journal/new" className="mt-8">
+                
                   Tạo quyết định đầu tiên
                   <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-                </Button>
-              </Link>
+                
+              </Link></Button>
             </CardContent>
           </Card>
         )}

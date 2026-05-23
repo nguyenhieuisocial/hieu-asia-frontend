@@ -148,14 +148,14 @@ export default function HangNgayPage() {
           </p>
 
           <div className="mt-7 flex flex-wrap gap-3">
-            <Link href={`/onboarding/topic?topic=${TOPIC}`}>
-              <Button size="lg">Bắt đầu lập lá số</Button>
-            </Link>
-            <Link href="/tu-vi-hom-nay">
-              <Button size="lg" variant="outline">
+            <Button asChild size="lg"><Link href={`/onboarding/topic?topic=${TOPIC}`}>
+              Bắt đầu lập lá số
+            </Link></Button>
+            <Button asChild size="lg" variant="outline"><Link href="/tu-vi-hom-nay">
+              
                 Xem Tử Vi hôm nay
-              </Button>
-            </Link>
+              
+            </Link></Button>
           </div>
         </section>
 
@@ -245,9 +245,9 @@ export default function HangNgayPage() {
               biết kết quả trông như thế nào.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <Link href={`/onboarding/topic?topic=${TOPIC}`}>
-                <Button size="lg">Bắt đầu lập lá số</Button>
-              </Link>
+              <Button asChild size="lg"><Link href={`/onboarding/topic?topic=${TOPIC}`}>
+                Bắt đầu lập lá số
+              </Link></Button>
               <Link
                 href="/sample-report"
                 className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"

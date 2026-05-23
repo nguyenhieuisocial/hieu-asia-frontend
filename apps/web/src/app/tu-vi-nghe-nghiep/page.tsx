@@ -87,14 +87,14 @@ export default function TuViNgheNghiepPage() {
             nghiệp của bạn.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <Link href="/onboarding">
-              <Button size="lg">Xem tử vi nghề nghiệp của tôi</Button>
-            </Link>
-            <Link href="/tu-vi/cung-quan-loc">
-              <Button size="lg" variant="outline">
+            <Button asChild size="lg"><Link href="/onboarding">
+              Xem tử vi nghề nghiệp của tôi
+            </Link></Button>
+            <Button asChild size="lg" variant="outline"><Link href="/tu-vi/cung-quan-loc">
+              
                 Cung Quan Lộc là gì
-              </Button>
-            </Link>
+              
+            </Link></Button>
           </div>
         </section>
 
@@ -159,9 +159,9 @@ export default function TuViNgheNghiepPage() {
               định nghề cụ thể của bạn.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <Link href="/onboarding">
-                <Button size="lg">Lập lá số miễn phí</Button>
-              </Link>
+              <Button asChild size="lg"><Link href="/onboarding">
+                Lập lá số miễn phí
+              </Link></Button>
               <Link
                 href="/sample-report"
                 className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"

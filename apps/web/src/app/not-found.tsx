@@ -28,19 +28,19 @@ export default function NotFound() {
           báo cáo của bạn.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Link href="/">
-            <Button size="lg">Về trang chủ</Button>
-          </Link>
-          <Link href="/account">
-            <Button size="lg" variant="outline">
+          <Button asChild size="lg"><Link href="/">
+            Về trang chủ
+          </Link></Button>
+          <Button asChild size="lg" variant="outline"><Link href="/account">
+            
               Tài khoản
-            </Button>
-          </Link>
-          <Link href="/onboarding">
-            <Button size="lg" variant="ghost">
+            
+          </Link></Button>
+          <Button asChild size="lg" variant="ghost"><Link href="/onboarding">
+            
               Bắt đầu luận giải
-            </Button>
-          </Link>
+            
+          </Link></Button>
         </div>
       </div>
     </main>

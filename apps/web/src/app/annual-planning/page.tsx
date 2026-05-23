@@ -242,22 +242,22 @@ export default function AnnualPlanningPage() {
             Đào sâu kế hoạch năm
           </h2>
           <div className="mt-5 flex flex-wrap gap-3">
-            <Link href="/tu-vi-2026">
-              <Button size="lg">
+            <Button asChild size="lg"><Link href="/tu-vi-2026">
+              
                 Tử vi 2026 — full reading
                 <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-              </Button>
-            </Link>
-            <Link href="/ban-do">
-              <Button size="lg" variant="outline">
+              
+            </Link></Button>
+            <Button asChild size="lg" variant="outline"><Link href="/ban-do">
+              
                 Bản đồ — dashboard cá nhân
-              </Button>
-            </Link>
-            <Link href="/decisions/new">
-              <Button size="lg" variant="outline">
+              
+            </Link></Button>
+            <Button asChild size="lg" variant="outline"><Link href="/decisions/new">
+              
                 Lập decision brief
-              </Button>
-            </Link>
+              
+            </Link></Button>
           </div>
         </section>
       </section>

@@ -159,9 +159,9 @@ export default function JournalEntryPage() {
                 bạn đã xoá, hoặc đang ở một thiết bị khác — dữ liệu Journal được
                 lưu cục bộ.
               </p>
-              <Link href="/journal" className="mt-6">
-                <Button variant="outline">Về Decision Journal</Button>
-              </Link>
+              <Button asChild variant="outline"><Link href="/journal" className="mt-6">
+                Về Decision Journal
+              </Link></Button>
             </CardContent>
           </Card>
         )}

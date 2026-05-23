@@ -341,12 +341,12 @@ export default function DecisionSimulatorPage() {
             </p>
 
             <div className="mt-6">
-              <Link href="/journal/new">
-                <Button size="lg" variant="outline">
+              <Button asChild size="lg" variant="outline"><Link href="/journal/new">
+                
                   Lập decision journal
                   <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-                </Button>
-              </Link>
+                
+              </Link></Button>
             </div>
           </section>
         )}

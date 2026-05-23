@@ -158,12 +158,12 @@ export default function LoTrinhHubPage() {
                         </li>
                       ))}
                     </ul>
-                    <Link href={`/lo-trinh/${r.slug}`}>
-                      <Button variant="outline" className="w-full justify-between">
+                    <Button asChild variant="outline" className="w-full justify-between"><Link href={`/lo-trinh/${r.slug}`}>
+                      
                         Bắt đầu lộ trình
                         <ArrowRight className="ml-2 h-4 w-4" aria-hidden />
-                      </Button>
-                    </Link>
+                      
+                    </Link></Button>
                   </CardContent>
                 </Card>
               );
@@ -186,9 +186,9 @@ export default function LoTrinhHubPage() {
                   </p>
                 </div>
               </div>
-              <Link href="/onboarding/topic" className="shrink-0">
-                <Button>Lập lá số tổng quan</Button>
-              </Link>
+              <Button asChild><Link href="/onboarding/topic" className="shrink-0">
+                Lập lá số tổng quan
+              </Link></Button>
             </div>
           </div>
         </section>

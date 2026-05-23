@@ -138,15 +138,15 @@ export function MethodChooser() {
               </dl>
 
               <div className="mt-6 flex flex-col gap-2">
-                <Link href={href}>
-                  <Button size="sm" className="group/btn w-full">
+                <Button asChild size="sm" className="group/btn w-full"><Link href={href}>
+                  
                     {ctaLabel}
                     <ArrowRight
                       className="ml-1 h-4 w-4 transition-transform group-hover/btn:translate-x-0.5"
                       aria-hidden={true}
                     />
-                  </Button>
-                </Link>
+                  
+                </Link></Button>
                 <div className="flex items-center justify-center gap-3 text-xs">
                   <Link
                     href={sampleHref}

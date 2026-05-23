@@ -266,9 +266,9 @@ export function DaiVanHienTaiForm() {
                 </div>
 
                 <div className="flex flex-wrap gap-3">
-                  <Link href="/onboarding">
-                    <Button size="lg">Lập lá số đầy đủ</Button>
-                  </Link>
+                  <Button asChild size="lg"><Link href="/onboarding">
+                    Lập lá số đầy đủ
+                  </Link></Button>
                   <Link
                     href="/tu-vi-2026"
                     className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"

@@ -209,15 +209,15 @@ export default function ChangelogPage() {
               hieu.asia. Bạn không phải user — bạn là đồng tác giả.
             </p>
             <div className="mt-7 flex flex-wrap justify-center gap-3">
-              <Link href="/community#newsletter">
-                <Button>
+              <Button asChild><Link href="/community#newsletter">
+                
                   Đăng ký newsletter
                   <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-                </Button>
-              </Link>
-              <Link href="mailto:hi@hieu.asia">
-                <Button variant="outline">Email đội ngũ</Button>
-              </Link>
+                
+              </Link></Button>
+              <Button asChild variant="outline"><Link href="mailto:hi@hieu.asia">
+                Email đội ngũ
+              </Link></Button>
             </div>
           </div>
         </section>

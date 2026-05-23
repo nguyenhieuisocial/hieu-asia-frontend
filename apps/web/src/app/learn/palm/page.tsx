@@ -101,9 +101,9 @@ export default function LearnPalmPage() {
           nhân. Không cần giờ sinh chính xác.
         </p>
         <div className="mt-6">
-          <Link href="/reading/new?method=palm">
-            <Button size="lg">Upload ảnh chỉ tay</Button>
-          </Link>
+          <Button asChild size="lg"><Link href="/reading/new?method=palm">
+            Upload ảnh chỉ tay
+          </Link></Button>
         </div>
       </section>
     </main>

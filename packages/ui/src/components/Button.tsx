@@ -1,11 +1,8 @@
 import * as React from 'react';
+import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../lib/utils';
 
-/**
- * Minimal Button stub. Replace with `pnpm dlx shadcn add button` after install.
- * Kept here so packages compile cleanly before shadcn init.
- */
 const buttonVariants = cva(
   'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ' +
     'transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold ' +
@@ -32,15 +29,23 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   /**
-   * Reserved for shadcn/ui parity. Stub ignores it — when shadcn is added
-   * post-install, this gets a real Slot implementation.
+   * Render the child as the root element (Radix Slot pattern).
+   * Use with `<Link>` to avoid nested interactive elements (WCAG SC 4.1.2):
+   *   <Button asChild><Link href="/x">Go</Link></Button>
    */
   asChild?: boolean;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { className, variant, size, asChild: _asChild, ...props },
+  { className, variant, size, asChild = false, ...props },
   ref,
 ) {
-  return <button ref={ref} className={cn(buttonVariants({ variant, size }), className)} {...props} />;
+  const Comp = asChild ? Slot : 'button';
+  return (
+    <Comp
+      ref={ref as React.Ref<HTMLButtonElement>}
+      className={cn(buttonVariants({ variant, size }), className)}
+      {...props}
+    />
+  );
 });

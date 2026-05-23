@@ -47,11 +47,11 @@ export default function ErrorPage({
           <Button size="lg" onClick={reset}>
             Thử lại
           </Button>
-          <Link href="/">
-            <Button size="lg" variant="outline">
+          <Button asChild size="lg" variant="outline"><Link href="/">
+            
               Về trang chủ
-            </Button>
-          </Link>
+            
+          </Link></Button>
         </div>
       </div>
     </main>

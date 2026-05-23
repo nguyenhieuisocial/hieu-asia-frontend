@@ -93,12 +93,12 @@ export function PricingPreview() {
         </div>
 
         <div className="mt-12 text-center">
-          <Link href="/pricing">
-            <Button variant="outline" size="lg" className="group">
+          <Button asChild variant="outline" size="lg" className="group"><Link href="/pricing">
+            
               Xem chi tiết các gói
               <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-            </Button>
-          </Link>
+            
+          </Link></Button>
         </div>
       </div>
     </section>

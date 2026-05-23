@@ -248,18 +248,18 @@ export default function AboutPage() {
               đọc tất cả email.
             </p>
             <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-              <Link href="mailto:hi@hieu.asia">
-                <Button size="lg" className="min-w-[200px]">
+              <Button asChild size="lg" className="min-w-[200px]"><Link href="mailto:hi@hieu.asia">
+                
                   <Mail className="mr-1.5 h-4 w-4" aria-hidden={true} />
                   hi@hieu.asia
-                </Button>
-              </Link>
-              <Link href="https://t.me/hieuasiabot">
-                <Button size="lg" variant="outline" className="min-w-[200px]">
+                
+              </Link></Button>
+              <Button asChild size="lg" variant="outline" className="min-w-[200px]"><Link href="https://t.me/hieuasiabot">
+                
                   <MessageCircle className="mr-1.5 h-4 w-4" aria-hidden={true} />
                   Telegram bot
-                </Button>
-              </Link>
+                
+              </Link></Button>
             </div>
           </div>
         </section>

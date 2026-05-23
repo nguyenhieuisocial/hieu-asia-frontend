@@ -100,14 +100,14 @@ export default function AffiliateAssetsPage() {
                   nhân hoá với mã giới thiệu của bạn.
                 </p>
                 <div className="mt-6 flex flex-wrap justify-center gap-3">
-                  <Link href="/affiliate/signup">
-                    <Button className="bg-gold text-ink hover:bg-gold/90">
+                  <Button asChild className="bg-gold text-ink hover:bg-gold/90"><Link href="/affiliate/signup">
+                    
                       Đăng ký affiliate
-                    </Button>
-                  </Link>
-                  <Link href="/affiliate/dashboard">
-                    <Button variant="outline">Đã có tài khoản</Button>
-                  </Link>
+                    
+                  </Link></Button>
+                  <Button asChild variant="outline"><Link href="/affiliate/dashboard">
+                    Đã có tài khoản
+                  </Link></Button>
                 </div>
               </CardContent>
             </Card>

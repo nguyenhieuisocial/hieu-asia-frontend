@@ -146,14 +146,14 @@ export function PricingTeaser() {
                   </li>
                 ))}
               </ul>
-              <Link href={tier.ctaHref} className="mt-6">
-                <Button
+              <Button asChild
                   variant={tier.highlighted ? 'default' : 'outline'}
                   className="w-full"
-                >
+                ><Link href={tier.ctaHref} className="mt-6">
+                
                   {tier.ctaLabel}
-                </Button>
-              </Link>
+                
+              </Link></Button>
             </article>
           ))}
         </div>

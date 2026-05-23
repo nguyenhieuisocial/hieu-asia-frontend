@@ -187,9 +187,9 @@ export default async function StarPage({
               tứ hoá không, đại vận đến hỗ trợ hay xung khắc.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <Link href="/onboarding">
-                <Button size="lg">Lập lá số miễn phí</Button>
-              </Link>
+              <Button asChild size="lg"><Link href="/onboarding">
+                Lập lá số miễn phí
+              </Link></Button>
               <Link
                 href="/tu-vi"
                 className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"

@@ -142,16 +142,16 @@ export default function CommunityPage() {
               Đó là tiêu chuẩn cho mọi thứ chúng tôi viết và xây.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link href="/about">
-                <Button variant="outline" size="sm">
+              <Button asChild variant="outline" size="sm"><Link href="/about">
+                
                   Về đội ngũ
-                </Button>
-              </Link>
-              <Link href="/changelog">
-                <Button variant="ghost" size="sm">
+                
+              </Link></Button>
+              <Button asChild variant="ghost" size="sm"><Link href="/changelog">
+                
                   Lộ trình sản phẩm
-                </Button>
-              </Link>
+                
+              </Link></Button>
             </div>
           </div>
         </section>
