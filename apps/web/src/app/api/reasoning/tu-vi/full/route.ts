@@ -200,9 +200,10 @@ export async function POST(req: NextRequest) {
       synthesis: finalState.synthesis,
       crossReference: finalState.crossReference,
       elapsedMs,
-      // Wave 58 — expose user's plan so the client can render PostReadingUpsell
-      // with the right copy (subscriber → affiliate, free → variant headline).
-      plan: quota.plan,
+      // Wave 58 + 58.1 P2-1: expose only the coarse upsell variant, never
+      // the literal plan name (would leak "this account paid 4.99M" for
+      // lifetime tier — phishing seed).
+      upsell_variant: quota.upsellVariant,
       palaces: finalState.palaces.map((p) => ({
         palace: p.palace,
         hasAnalysis: p.analysis !== null,

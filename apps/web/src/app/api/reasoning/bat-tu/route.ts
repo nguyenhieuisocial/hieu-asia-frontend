@@ -155,7 +155,7 @@ export async function POST(req: NextRequest) {
       synthesis: finalState.synthesis,
       fiveElements: finalState.fiveElements,
       elapsedMs,
-      plan: quota.plan, // Wave 58 — for PostReadingUpsell branching
+      upsell_variant: quota.upsellVariant, // Wave 58.1 P2-1 — coarse enum, not literal plan
       pillars: finalState.pillars.map((p) => ({
         pillar: p.pillar,
         hasAnalysis: p.analysis !== null,

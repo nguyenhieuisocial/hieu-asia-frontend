@@ -32,11 +32,13 @@ import { formatVND, PRICING } from '@/lib/pricing';
 import { trackPixelViewContent } from '@/lib/marketing-pixels';
 
 interface Props {
-  /** Plan returned by /api/reasoning/* response or assertFreeQuota.plan. */
-  plan: 'free' | 'premium' | 'subscription_monthly' | 'subscription_yearly' | 'lifetime' | string;
-  /** True if THIS reading was the last allowed in the rolling window
-   * (i.e. the next attempt will 402). Drives "ngay" CTA copy. */
-  quotaExhausted?: boolean;
+  /**
+   * Coarse upsell variant from the route response (`upsell_variant` field).
+   * Wave 58.1 P2-1: replaces the literal plan name to avoid leaking lifetime-
+   * tier status to anyone viewing the response (DevTools, shared links, proxy
+   * logs) — that would be a phishing seed.
+   */
+  upsellVariant: 'subscriber' | 'free' | 'free_quota_exhausted';
   /** Stable per-reading id for analytics correlation. */
   runId: string;
   /** Graph kind for analytics dimension. */
@@ -96,7 +98,9 @@ function copyForVariant(variant: Variant, quotaExhausted: boolean): CopyBlock | 
 
 const SESSION_DISMISS_KEY = 'hieu:upsell-post-reading:dismissed';
 
-export function PostReadingUpsell({ plan, quotaExhausted = false, runId, graphKind }: Props) {
+export function PostReadingUpsell({ upsellVariant, runId, graphKind }: Props) {
+  const isSubscriber = upsellVariant === 'subscriber';
+  const quotaExhausted = upsellVariant === 'free_quota_exhausted';
   const variant = useFeatureFlag<Variant>(FLAGS.UPSELL_POST_READING_V1, 'control');
   const [dismissed, setDismissed] = React.useState(false);
 
@@ -106,10 +110,6 @@ export function PostReadingUpsell({ plan, quotaExhausted = false, runId, graphKi
     if (typeof window === 'undefined') return;
     if (sessionStorage.getItem(SESSION_DISMISS_KEY) === '1') setDismissed(true);
   }, []);
-
-  // Subscribers + lifetime see an affiliate prompt, not an upsell.
-  const isSubscriber =
-    plan === 'subscription_monthly' || plan === 'subscription_yearly' || plan === 'lifetime';
 
   const copy = isSubscriber ? null : copyForVariant(variant, quotaExhausted);
 
@@ -125,7 +125,7 @@ export function PostReadingUpsell({ plan, quotaExhausted = false, runId, graphKi
       viewedRef.current = true;
       track('upsell_view', {
         variant: 'affiliate-referral',
-        plan,
+        upsell_variant: upsellVariant,
         graph_kind: graphKind,
         run_id: runId,
       });
@@ -137,7 +137,7 @@ export function PostReadingUpsell({ plan, quotaExhausted = false, runId, graphKi
     track('upsell_view', {
       variant,
       target_tier: copy.targetTier,
-      plan,
+      upsell_variant: upsellVariant,
       quota_exhausted: quotaExhausted,
       graph_kind: graphKind,
       run_id: runId,
@@ -160,7 +160,7 @@ export function PostReadingUpsell({ plan, quotaExhausted = false, runId, graphKi
       },
       { eventId: `vc-${runId}` }, // idempotency for CAPI dedup with client pixel
     );
-  }, [dismissed, isSubscriber, copy, variant, plan, quotaExhausted, graphKind, runId]);
+  }, [dismissed, isSubscriber, copy, variant, upsellVariant, quotaExhausted, graphKind, runId]);
 
   if (dismissed) return null;
 
@@ -170,7 +170,7 @@ export function PostReadingUpsell({ plan, quotaExhausted = false, runId, graphKi
       target_tier: copy?.targetTier ?? 'affiliate',
       cta_label: label,
       cta_href: href,
-      plan,
+      upsell_variant: upsellVariant,
       graph_kind: graphKind,
       run_id: runId,
     });
@@ -179,7 +179,7 @@ export function PostReadingUpsell({ plan, quotaExhausted = false, runId, graphKi
   const handleDismiss = () => {
     track('upsell_dismissed', {
       variant: isSubscriber ? 'affiliate-referral' : variant,
-      plan,
+      upsell_variant: upsellVariant,
       graph_kind: graphKind,
       run_id: runId,
     });

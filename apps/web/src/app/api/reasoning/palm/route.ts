@@ -174,7 +174,7 @@ export async function POST(req: NextRequest) {
       synthesis: finalState.synthesis,
       classification: finalState.classification,
       elapsedMs,
-      plan: quota.plan, // Wave 58 — for PostReadingUpsell branching
+      upsell_variant: quota.upsellVariant, // Wave 58.1 P2-1 — coarse enum, not literal plan
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

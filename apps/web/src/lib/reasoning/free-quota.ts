@@ -33,8 +33,24 @@ function getServiceRoleClient() {
   return _supabase;
 }
 
+/**
+ * Coarse upsell-variant enum derived from the plan string. Used as the
+ * route's public-facing surface instead of leaking the literal plan
+ * (`/ultrareview Wave 58 P2-1`: `plan='lifetime'` in a response body tells an
+ * attacker this account paid 4.99M VND → targeted phishing seed). The UI only
+ * branches on three states anyway.
+ */
+export type UpsellVariant = 'subscriber' | 'free' | 'free_quota_exhausted';
+
+function planToUpsellVariant(plan: string, quotaExhausted: boolean): UpsellVariant {
+  if (plan === 'subscription_monthly' || plan === 'subscription_yearly' || plan === 'lifetime') {
+    return 'subscriber';
+  }
+  return quotaExhausted ? 'free_quota_exhausted' : 'free';
+}
+
 export type QuotaResult =
-  | { ok: true; plan: string }
+  | { ok: true; upsellVariant: UpsellVariant }
   | { ok: false; response: NextResponse };
 
 interface RpcShape {
@@ -61,17 +77,24 @@ export async function assertFreeQuota(userId: string): Promise<QuotaResult> {
       { p_user_id: userId } as never,
     );
     if (error) {
+      // /ultrareview Wave 58 P3 fix: don't leak Supabase internals to the
+      // client. Log server-side; client gets a generic message.
+      console.error('[free-quota] supabase rpc error:', error.message);
       return {
         ok: false,
         response: NextResponse.json(
-          { ok: false, error: 'quota_check_unavailable', detail: error.message },
+          { ok: false, error: 'quota_check_unavailable' },
           { status: 503, headers: { 'Retry-After': '30' } },
         ),
       };
     }
     const parsed = data as RpcShape;
     if (parsed.allowed) {
-      return { ok: true, plan: parsed.plan };
+      // P2-1: emit the coarse upsell variant — never the literal plan name.
+      return {
+        ok: true,
+        upsellVariant: planToUpsellVariant(parsed.plan, false),
+      };
     }
     // Free quota exhausted. Compose a Vietnamese upsell.
     const used = parsed.used_count ?? 1;
