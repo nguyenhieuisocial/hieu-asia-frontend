@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     'Tử vi 2026 (năm Bính Ngọ): chủ đề năm, sự nghiệp, tài chính, tình cảm, sức khoẻ — cá nhân hoá theo lá số Tử Vi Đẩu Số và đại vận hiện tại.',
   alternates: { canonical: 'https://hieu.asia/tu-vi-2026' },
   openGraph: {
-    title: 'Tử vi năm 2026 · hieu.asia',
+    title: 'Tử vi năm 2026',
     description: 'Năm Bính Ngọ — chủ đề năm + 12 tháng + 3 quyết định nên cân nhắc.',
     url: 'https://hieu.asia/tu-vi-2026',
     type: 'article',

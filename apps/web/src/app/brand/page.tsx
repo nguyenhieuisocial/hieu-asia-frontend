@@ -32,7 +32,7 @@ import { IconShowcase } from '@/components/brand/IconShowcase';
 import { PhotoDirection } from '@/components/brand/PhotoDirection';
 
 export const metadata: Metadata = {
-  title: 'Brand System — hieu.asia',
+  title: 'Brand System',
   description:
     'Hệ thống nhận diện hieu.asia — logo, màu, typography, spacing, icon, photo direction, ứng dụng và giọng nói thương hiệu.',
   alternates: { canonical: 'https://hieu.asia/brand' },

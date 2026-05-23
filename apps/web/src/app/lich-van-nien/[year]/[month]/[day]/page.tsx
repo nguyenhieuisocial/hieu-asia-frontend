@@ -84,7 +84,7 @@ export async function generateMetadata({
     description: `Lịch vạn niên ngày ${d}/${m}/${y}: âm lịch, Thiên Can Địa Chi, Hoàng/Hắc đạo, Trực, sao tốt sao xấu, giờ hoàng đạo và việc nên/kiêng.`,
     alternates: { canonical: url },
     openGraph: {
-      title: `Lịch ngày ${d}/${m}/${y} · hieu.asia`,
+      title: `Lịch ngày ${d}/${m}/${y}`,
       description: 'Tra cứu âm lịch + Can Chi + giờ tốt cho ngày này.',
       url,
       type: 'article',

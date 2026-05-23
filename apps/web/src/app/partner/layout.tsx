@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'Cổng Partner — hieu.asia',
+  title: 'Cổng Partner',
   description:
     'Cổng affiliate partner hieu.asia: dashboard subtree, commission ledger, payout history, KYC profile.',
   robots: { index: false, follow: false },

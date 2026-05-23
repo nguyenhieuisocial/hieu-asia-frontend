@@ -22,12 +22,12 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Family Profiles — Hiểu cả nhà · hieu.asia',
+  title: 'Family Profiles — Hiểu cả nhà',
   description:
     'Tạo profile cho người thân (cha mẹ, vợ/chồng, con) để hiểu giao tiếp và lập kế hoạch chung. Privacy-first: phân tích basic, không deep reading khi chưa có sự đồng ý.',
   alternates: { canonical: 'https://hieu.asia/family-profiles' },
   openGraph: {
-    title: 'Family Profiles — Hiểu cả nhà · hieu.asia',
+    title: 'Family Profiles — Hiểu cả nhà',
     description: 'Profile thành viên gia đình để hiểu giao tiếp và tránh xung đột.',
     url: 'https://hieu.asia/family-profiles',
     type: 'article',

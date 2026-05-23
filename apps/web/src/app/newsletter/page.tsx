@@ -6,7 +6,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 
 export const metadata: Metadata = {
-  title: 'Bản tin hieu.asia — Tử Vi hàng tuần',
+  title: 'Bản tin — Tử Vi hàng tuần',
   description:
     'Mỗi tuần một bài viết ngắn về cách dùng Tử Vi để ra quyết định tốt hơn, kèm cập nhật sản phẩm. Không spam, không bán hàng, huỷ bất cứ lúc nào.',
   alternates: { canonical: 'https://hieu.asia/newsletter' },

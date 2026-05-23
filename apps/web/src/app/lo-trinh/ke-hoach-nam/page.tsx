@@ -21,12 +21,12 @@ const SLUG = 'ke-hoach-nam';
 const TOPIC = 'general';
 
 export const metadata: Metadata = {
-  title: 'Lập kế hoạch năm — lộ trình · hieu.asia',
+  title: 'Lập kế hoạch năm — lộ trình',
   description:
     'Một bản đồ thời điểm cho 12 tháng tới: đại vận hiện tại, lưu niên 2026, planner năm và review tháng — bạn biết tháng nào nên đẩy, tháng nào nên giữ.',
   alternates: { canonical: `https://hieu.asia/lo-trinh/${SLUG}` },
   openGraph: {
-    title: 'Lập kế hoạch năm — lộ trình · hieu.asia',
+    title: 'Lập kế hoạch năm — lộ trình',
     description:
       'Đại vận + lưu niên 2026 + planner + review — bản đồ thời điểm cho 12 tháng tới.',
     url: `https://hieu.asia/lo-trinh/${SLUG}`,

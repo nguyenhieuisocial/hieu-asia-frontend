@@ -22,7 +22,7 @@ export async function generateMetadata(
     description: `${data.overview.slice(0, 155)}`,
     alternates: { canonical: `https://hieu.asia/tu-vi/${data.slug}` },
     openGraph: {
-      title: `Cung ${data.name} · hieu.asia`,
+      title: `Cung ${data.name}`,
       description: data.overview.slice(0, 200),
       url: `https://hieu.asia/tu-vi/${data.slug}`,
       type: 'article',

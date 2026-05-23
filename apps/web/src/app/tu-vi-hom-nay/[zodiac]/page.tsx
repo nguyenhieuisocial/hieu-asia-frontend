@@ -72,7 +72,7 @@ export async function generateMetadata({ params }: { params: Promise<{ zodiac: s
     description: `Tử vi hôm nay cho tuổi ${label}: tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe, giờ tốt, hướng tốt.`,
     alternates: { canonical: `https://hieu.asia/tu-vi-hom-nay/${zodiac}` },
     openGraph: {
-      title: `Tử vi tuổi ${label} hôm nay · hieu.asia`,
+      title: `Tử vi tuổi ${label} hôm nay`,
       description: `4 lĩnh vực, số/màu/hướng may mắn và lưu ý cho tuổi ${label}.`,
       url: `https://hieu.asia/tu-vi-hom-nay/${zodiac}`,
       type: 'article',

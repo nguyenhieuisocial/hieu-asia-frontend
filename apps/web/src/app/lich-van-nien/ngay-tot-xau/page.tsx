@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     'Kiểm tra ngày tốt cho cưới hỏi, khai trương, động thổ, nhập trạch, xuất hành. Chấm điểm 0-100, hiển thị lý do và gợi ý ngày tốt hơn.',
   alternates: { canonical: 'https://hieu.asia/lich-van-nien/ngay-tot-xau' },
   openGraph: {
-    title: 'Kiểm tra ngày tốt — Lịch Vạn Niên · hieu.asia',
+    title: 'Kiểm tra ngày tốt — Lịch Vạn Niên',
     description:
       'Chấm điểm ngày tốt cho cưới hỏi, khai trương, động thổ. Cá nhân hoá theo tuổi.',
     url: 'https://hieu.asia/lich-van-nien/ngay-tot-xau',

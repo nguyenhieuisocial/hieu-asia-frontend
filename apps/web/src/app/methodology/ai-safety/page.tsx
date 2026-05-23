@@ -22,12 +22,12 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'AI Safety Policy · hieu.asia',
+  title: 'AI Safety Policy',
   description:
     'AI Safety Policy của hieu.asia — guardrails OWASP LLM Top 10, refusal policy 6 categories, 4 layer validation, adversarial testing 600 prompts, SLA báo cáo lỗi.',
   alternates: { canonical: 'https://hieu.asia/methodology/ai-safety' },
   openGraph: {
-    title: 'AI Safety Policy · hieu.asia',
+    title: 'AI Safety Policy',
     description:
       'Guardrails, refusal policy, adversarial testing và quy trình kiểm chứng AI.',
     url: 'https://hieu.asia/methodology/ai-safety',

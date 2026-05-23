@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     'Cẩm nang Tử Vi Đẩu Số: lập lá số 12 cung theo trường phái Bắc phái 114 sao, tra cứu ý nghĩa từng cung và từng sao, luận đại vận lưu niên. Miễn phí cốt lõi, AI Mentor tuỳ chọn.',
   alternates: { canonical: 'https://hieu.asia/tu-vi' },
   openGraph: {
-    title: 'Tử Vi Đẩu Số · hieu.asia',
+    title: 'Tử Vi Đẩu Số',
     description:
       'Lập lá số 12 cung, tra cung tra sao, luận đại vận — AI Mentor cá nhân hoá.',
     url: 'https://hieu.asia/tu-vi',

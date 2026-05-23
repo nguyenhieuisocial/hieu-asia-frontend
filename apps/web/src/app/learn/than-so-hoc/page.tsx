@@ -9,7 +9,7 @@ import {
 } from '@hieu-asia/ui';
 
 export const metadata: Metadata = {
-  title: 'Thần Số Học Pythagoras — Học huyền học | hieu.asia',
+  title: 'Thần Số Học Pythagoras — Học huyền học',
   description:
     'Thần Số Học (Numerology) theo trường phái Pythagoras: rút số chủ đạo từ ngày sinh và tên, mỗi số mang một năng lượng riêng.',
   alternates: { canonical: 'https://hieu.asia/learn/than-so-hoc' },

@@ -13,12 +13,12 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Timeline — Đại vận + Lưu niên · hieu.asia',
+  title: 'Timeline — Đại vận + Lưu niên',
   description:
     'Timeline đại vận của bạn: 10 đại vận theo Tử Vi Đẩu Số, lưu niên năm hiện tại, lưu nguyệt tháng hiện tại. Demo content — lập lá số để cá nhân hoá.',
   alternates: { canonical: 'https://hieu.asia/timeline' },
   openGraph: {
-    title: 'Timeline đại vận · hieu.asia',
+    title: 'Timeline đại vận',
     description:
       'Đại vận = 10 năm. Lưu niên = năm hiện tại. Lưu nguyệt = tháng hiện tại.',
     url: 'https://hieu.asia/timeline',

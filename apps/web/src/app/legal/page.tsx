@@ -10,7 +10,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Pháp lý — hieu.asia',
+  title: 'Pháp lý',
   description:
     'Tổng hợp tài liệu pháp lý của hieu.asia: chính sách bảo mật, điều khoản, xuất và xoá dữ liệu cá nhân theo GDPR và Nghị định 13/2023.',
   alternates: { canonical: 'https://hieu.asia/legal' },

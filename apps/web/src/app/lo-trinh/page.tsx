@@ -21,12 +21,12 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Lộ trình theo nhu cầu · hieu.asia',
+  title: 'Lộ trình theo nhu cầu',
   description:
     'Chọn lộ trình theo nhu cầu thực tế: hiểu bản thân, sự nghiệp, tình cảm, kế hoạch năm, hoặc tra cứu hằng ngày. Mỗi lộ trình gợi ý đúng công cụ — bạn không phải đọc hết menu sản phẩm.',
   alternates: { canonical: 'https://hieu.asia/lo-trinh' },
   openGraph: {
-    title: 'Lộ trình theo nhu cầu · hieu.asia',
+    title: 'Lộ trình theo nhu cầu',
     description:
       'Năm lộ trình theo nhu cầu thực tế — từ hiểu bản thân đến lập kế hoạch năm và tra cứu nhanh hằng ngày.',
     url: 'https://hieu.asia/lo-trinh',

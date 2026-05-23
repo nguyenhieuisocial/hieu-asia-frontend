@@ -6,7 +6,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Lá số của bạn — hieu.asia',
+  title: 'Lá số của bạn',
   description:
     'Bắt đầu lá số mới hoặc xem lại các báo cáo trước. Tử Vi · MBTI · Numerology · Palm.',
   alternates: { canonical: 'https://hieu.asia/reading' },

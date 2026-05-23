@@ -11,12 +11,12 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { AffiliateSubNav } from '@/components/affiliate/AffiliateSubNav';
 
 export const metadata: Metadata = {
-  title: 'Điều khoản chương trình affiliate · hieu.asia',
+  title: 'Điều khoản chương trình affiliate',
   description:
     'Điều khoản, quyền lợi và nghĩa vụ thuế khi tham gia chương trình affiliate hieu.asia.',
   alternates: { canonical: 'https://hieu.asia/affiliate/terms' },
   openGraph: {
-    title: 'Điều khoản chương trình affiliate · hieu.asia',
+    title: 'Điều khoản chương trình affiliate',
     description:
       'Cơ cấu hoa hồng tier-based, cookie 30 ngày, nghĩa vụ thuế VN và quy trình payout.',
     url: 'https://hieu.asia/affiliate/terms',

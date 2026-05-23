@@ -21,12 +21,12 @@ const SLUG = 'su-nghiep';
 const TOPIC = 'career';
 
 export const metadata: Metadata = {
-  title: 'Sự nghiệp — lộ trình · hieu.asia',
+  title: 'Sự nghiệp — lộ trình',
   description:
     'Đang phân vân sự nghiệp? Lộ trình đọc cung Quan Lộc, Tài Bạch, Thiên Di kết hợp đại vận để giúp bạn tách "cảm giác mệt" khỏi "cơ hội thật" — và lập một Decision Brief có rủi ro kèm.',
   alternates: { canonical: `https://hieu.asia/lo-trinh/${SLUG}` },
   openGraph: {
-    title: 'Sự nghiệp — lộ trình · hieu.asia',
+    title: 'Sự nghiệp — lộ trình',
     description:
       'Hiểu để chuyển động đúng: Quan Lộc, Tài Bạch, Thiên Di + Decision Brief có rủi ro kèm.',
     url: `https://hieu.asia/lo-trinh/${SLUG}`,

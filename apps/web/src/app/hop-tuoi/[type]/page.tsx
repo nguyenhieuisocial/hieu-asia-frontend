@@ -56,7 +56,7 @@ export async function generateMetadata({
     description: m.description,
     alternates: { canonical: `https://hieu.asia/hop-tuoi/${type}` },
     openGraph: {
-      title: `${m.title} · hieu.asia`,
+      title: `${m.title}`,
       description: m.description,
       url: `https://hieu.asia/hop-tuoi/${type}`,
       type: 'website' as const,

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     'Tra cứu đại vận hiện tại miễn phí: chu kỳ 10 năm bạn đang ở, chủ đề chính, cơ hội + rủi ro chính. Theo lá số Tử Vi Đẩu Số.',
   alternates: { canonical: 'https://hieu.asia/dai-van-hien-tai' },
   openGraph: {
-    title: 'Đại vận hiện tại · hieu.asia',
+    title: 'Đại vận hiện tại',
     description: 'Chu kỳ 10 năm + chủ đề chính — rút gọn, 30 giây.',
     url: 'https://hieu.asia/dai-van-hien-tai',
     type: 'website',

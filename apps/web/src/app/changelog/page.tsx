@@ -13,12 +13,12 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Changelog — hieu.asia',
+  title: 'Changelog',
   description:
     'Lộ trình sản phẩm hieu.asia từ V1.0 đến hiện tại. Tử Vi · MBTI · Palm Reading · Mentor AI.',
   alternates: { canonical: 'https://hieu.asia/changelog' },
   openGraph: {
-    title: 'Changelog hieu.asia',
+    title: 'Changelog',
     description: 'Lộ trình sản phẩm và tính năng đã ra mắt.',
     url: 'https://hieu.asia/changelog',
     type: 'website',

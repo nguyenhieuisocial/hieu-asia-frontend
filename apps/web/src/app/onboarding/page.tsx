@@ -6,12 +6,12 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { OnboardingRecap, OnboardingStepBadge } from '@/components/onboarding-recap';
 
 export const metadata: Metadata = {
-  title: 'Mở khóa lá số — hieu.asia',
+  title: 'Mở khóa lá số',
   description:
     'Bắt đầu lá số cá nhân hoá — bước 1/4. Đồng ý xử lý dữ liệu theo Nghị định 13/2023/NĐ-CP. Mã hoá AES-256, không bán dữ liệu, có quyền rút lại bất cứ lúc nào.',
   alternates: { canonical: 'https://hieu.asia/onboarding' },
   openGraph: {
-    title: 'Mở khóa lá số · hieu.asia',
+    title: 'Mở khóa lá số',
     description:
       'Bắt đầu hành trình hiểu chính mình — bước 1/4. Đồng ý xử lý dữ liệu để tạo lá số.',
     url: 'https://hieu.asia/onboarding',

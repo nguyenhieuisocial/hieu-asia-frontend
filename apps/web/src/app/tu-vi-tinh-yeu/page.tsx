@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     'Tử Vi tình cảm — đọc cung Phu Thê, Phúc Đức + tâm lý gắn bó hiện đại. Không phán "hợp/khắc tuyệt đối", chỉ giúp hiểu chính mình và đối tác.',
   alternates: { canonical: 'https://hieu.asia/tu-vi-tinh-yeu' },
   openGraph: {
-    title: 'Tử Vi tình yêu · hieu.asia',
+    title: 'Tử Vi tình yêu',
     description: 'Phu Thê + Phúc Đức + kiểu gắn bó — bản đồ quan hệ thân mật.',
     url: 'https://hieu.asia/tu-vi-tinh-yeu',
     type: 'article',

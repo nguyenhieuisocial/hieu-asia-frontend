@@ -10,7 +10,7 @@ import {
 import { InfographicMBTI } from '@/components/learn/InfographicMBTI';
 
 export const metadata: Metadata = {
-  title: 'MBTI 16 loại tính cách — Học huyền học | hieu.asia',
+  title: 'MBTI 16 loại tính cách — Học huyền học',
   description:
     'MBTI dựa trên 4 trục: Hướng nội/ngoại (I/E), Trực giác/Cảm nhận (N/S), Lý trí/Cảm xúc (T/F), Nguyên tắc/Linh hoạt (J/P) — 16 nhóm tính cách.',
   alternates: { canonical: 'https://hieu.asia/learn/mbti' },

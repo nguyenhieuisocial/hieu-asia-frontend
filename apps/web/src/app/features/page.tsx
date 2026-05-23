@@ -18,12 +18,12 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 
 export const metadata: Metadata = {
-  title: 'Tính năng — hieu.asia',
+  title: 'Tính năng',
   description:
     'Tử Vi 12 cung, Bát Tự, MBTI, Thần Số Học, Palm Reading, AI Mentor, PDF Cẩm Nang, Tử Vi hôm nay, đa ngôn ngữ. Mọi tính năng của hieu.asia.',
   alternates: { canonical: 'https://hieu.asia/features' },
   openGraph: {
-    title: 'Tính năng — hieu.asia',
+    title: 'Tính năng',
     description:
       'Khám phá đầy đủ tính năng: Tử Vi 12 cung, Bát Tự, MBTI, Palm Reading, AI Mentor và nhiều hơn.',
     url: 'https://hieu.asia/features',

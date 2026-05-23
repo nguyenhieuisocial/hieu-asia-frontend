@@ -9,7 +9,7 @@ export const metadata = {
     'Nhập ngày, giờ và nơi sinh để dựng lá số Tử Vi và Bát Tự. Bạn có thể chỉnh sửa sau, trước khi báo cáo được tạo.',
   alternates: { canonical: 'https://hieu.asia/reading/new' },
   openGraph: {
-    title: 'Thông tin ngày sinh · hieu.asia',
+    title: 'Thông tin ngày sinh',
     description:
       'Bước 2 / 4 — nhập ngày, giờ, nơi sinh để dựng lá số Tử Vi và Bát Tự.',
     url: 'https://hieu.asia/reading/new',

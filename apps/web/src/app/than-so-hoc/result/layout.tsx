@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Kết quả Thần số học | hieu.asia',
+  title: 'Kết quả Thần số học',
   robots: { index: false, follow: true },
 };
 

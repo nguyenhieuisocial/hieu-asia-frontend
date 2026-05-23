@@ -24,12 +24,12 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Monthly Planning — Lập kế hoạch tháng theo lá số · hieu.asia',
+  title: 'Monthly Planning — Lập kế hoạch tháng theo lá số',
   description:
     'Lập kế hoạch tháng theo lá số: chia chủ đề tháng thành 4 tuần. Premium tự fill dữ liệu từ đại vận và lưu nguyệt của bạn.',
   alternates: { canonical: 'https://hieu.asia/monthly-planning' },
   openGraph: {
-    title: 'Monthly Planning — Lập kế hoạch tháng · hieu.asia',
+    title: 'Monthly Planning — Lập kế hoạch tháng',
     description:
       'Chia chủ đề tháng thành 4 tuần — định hướng theo đại vận và lưu nguyệt cá nhân.',
     url: 'https://hieu.asia/monthly-planning',

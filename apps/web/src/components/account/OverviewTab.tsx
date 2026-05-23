@@ -179,10 +179,12 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
     user.email ??
     'bạn';
 
+  // Wave 52-C — chốt VN cho mọi sub-label (trước đây mix EN/VN:
+  // "Saved chart" cạnh "Brief đã tạo" cạnh "Tuần đã review").
   const stats: QuickStat[] = [
-    { label: 'Lá số đã lập', value: data.chartCount, hint: 'Saved chart' },
+    { label: 'Lá số đã lập', value: data.chartCount, hint: 'Lá số đã lưu' },
     { label: 'Quyết định', value: data.decisionCount, hint: 'Brief đã tạo' },
-    { label: 'Weekly review', value: data.weeklyCount, hint: 'Tuần đã review' },
+    { label: 'Tuần đã nhìn lại', value: data.weeklyCount, hint: 'Số lần ôn lại tuần' },
     { label: 'Tier hiện tại', value: TIER_LABEL[data.tier] ?? data.tier },
   ];
 

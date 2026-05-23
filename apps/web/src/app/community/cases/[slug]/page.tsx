@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const c = getCaseStudy(slug);
   if (!c) return { title: 'Case study không tìm thấy | hieu.asia' };
   return {
-    title: `${c.title} — case study | hieu.asia`,
+    title: `${c.title} — case study`,
     description: c.excerpt,
     alternates: { canonical: `https://hieu.asia/community/cases/${c.slug}` },
     openGraph: {

@@ -10,7 +10,7 @@ import {
 import { InfographicBatTu } from '@/components/learn/InfographicBatTu';
 
 export const metadata: Metadata = {
-  title: 'Bát Tự Tứ Trụ — Học huyền học | hieu.asia',
+  title: 'Bát Tự Tứ Trụ — Học huyền học',
   description:
     'Bát Tự Tứ Trụ: 4 trụ Năm – Tháng – Ngày – Giờ với Thiên Can + Địa Chi tạo nên 8 chữ định mệnh cách theo Ngũ Hành.',
   alternates: { canonical: 'https://hieu.asia/learn/bat-tu' },
@@ -33,6 +33,14 @@ export default function LearnBatTuPage() {
         </p>
         <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
           Bát Tự <span className="bg-gold-gradient bg-clip-text text-transparent">Tứ Trụ</span>
+          {/* Wave 52-C — consistent BETA badge: nav dropdown labels "Bát Tự (beta)"
+              and methodology table marks the row beta, so this page should match. */}
+          <span
+            className="ml-3 inline-flex translate-y-[-4px] items-center rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 align-middle font-mono text-[10px] uppercase tracking-[0.18em] text-amber-300"
+            aria-label="Tính năng đang trong giai đoạn beta"
+          >
+            beta
+          </span>
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
           "Bát Tự" = 8 chữ. Đây là 4 cặp Thiên Can + Địa Chi tương ứng với Năm, Tháng, Ngày,

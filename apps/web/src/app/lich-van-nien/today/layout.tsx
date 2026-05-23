@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Lịch vạn niên hôm nay | hieu.asia',
+  title: 'Lịch vạn niên hôm nay',
   alternates: { canonical: 'https://hieu.asia/lich-van-nien/today' },
 };
 

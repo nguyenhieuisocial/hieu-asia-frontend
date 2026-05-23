@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Đăng ký affiliate · hieu.asia',
+  title: 'Đăng ký affiliate',
   description:
     'Đăng ký affiliate hieu.asia — kiếm 30% tháng đầu + 10% recurring 6 tháng. Cookie 30 ngày.',
   alternates: { canonical: 'https://hieu.asia/affiliate/signup' },

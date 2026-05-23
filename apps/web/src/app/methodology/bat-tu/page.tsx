@@ -21,12 +21,12 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Bát Tự — Beta · hieu.asia',
+  title: 'Bát Tự — Beta',
   description:
     'Bát Tự ở hieu.asia hiện ở trạng thái beta — engine tính được 4 trụ, thập thần và ngũ hành nhưng chỉ đóng vai trò lớp đối chiếu phụ với Tử Vi, không tự quyết định kết luận.',
   alternates: { canonical: 'https://hieu.asia/methodology/bat-tu' },
   openGraph: {
-    title: 'Bát Tự — Beta · hieu.asia',
+    title: 'Bát Tự — Beta',
     description:
       'Trạng thái beta, khái niệm cơ bản, limitations cụ thể và roadmap graduation.',
     url: 'https://hieu.asia/methodology/bat-tu',

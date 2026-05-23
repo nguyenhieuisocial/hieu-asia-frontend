@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 export const metadata: Metadata = {
-  title: 'Ghi quyết định mới · hieu.asia',
+  title: 'Ghi quyết định mới',
   description: 'Form nhập một quyết định mới để theo dõi và đối chiếu sau 30 ngày.',
   alternates: { canonical: 'https://hieu.asia/decisions' },
   robots: { index: false, follow: false },

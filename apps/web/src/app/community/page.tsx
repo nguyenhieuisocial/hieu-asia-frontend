@@ -14,12 +14,12 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 
 export const metadata: Metadata = {
-  title: 'Cộng đồng — hieu.asia',
+  title: 'Cộng đồng',
   description:
     'Theo dõi hieu.asia trên Telegram, đăng ký newsletter hàng tuần và tham gia các vòng học huyền học thực hành.',
   alternates: { canonical: 'https://hieu.asia/community' },
   openGraph: {
-    title: 'Cộng đồng hieu.asia',
+    title: 'Cộng đồng',
     description:
       'Nhận một bài viết ngắn mỗi tuần — cách dùng cổ học để ra quyết định tốt hơn.',
     url: 'https://hieu.asia/community',

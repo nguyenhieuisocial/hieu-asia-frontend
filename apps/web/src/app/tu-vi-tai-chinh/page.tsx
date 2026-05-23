@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     'Tử Vi tài chính — đọc cung Tài Bạch, Điền Trạch + đại vận để hiểu khuynh hướng kiếm tiền và quản lý tài chính cá nhân. KHÔNG phải tư vấn đầu tư.',
   alternates: { canonical: 'https://hieu.asia/tu-vi-tai-chinh' },
   openGraph: {
-    title: 'Tử Vi tài chính · hieu.asia',
+    title: 'Tử Vi tài chính',
     description: 'Tài Bạch + Điền Trạch — khuynh hướng tài chính cá nhân.',
     url: 'https://hieu.asia/tu-vi-tai-chinh',
     type: 'article',

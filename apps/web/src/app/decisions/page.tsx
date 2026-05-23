@@ -21,12 +21,12 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Decision Brief — Quyết định bớt mơ hồ · hieu.asia',
+  title: 'Decision Brief — Quyết định bớt mơ hồ',
   description:
     'Decision Brief tách vấn đề thật khỏi cảm xúc, đưa 2–4 lựa chọn có rủi ro kèm, gợi ý bước nhỏ nhất bạn có thể làm trong 7 ngày. Bạn vẫn là người quyết định.',
   alternates: { canonical: 'https://hieu.asia/decisions' },
   openGraph: {
-    title: 'Decision Brief — hieu.asia',
+    title: 'Decision Brief',
     description:
       'Quyết định bớt mơ hồ — không phải tiên đoán số phận, mà giúp bạn reframe vấn đề.',
     url: 'https://hieu.asia/decisions',

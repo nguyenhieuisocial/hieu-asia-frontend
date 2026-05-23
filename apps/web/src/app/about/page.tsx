@@ -6,12 +6,12 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Về chúng tôi — hieu.asia',
+  title: 'Về chúng tôi',
   description:
     'hieu.asia là người bạn đồng hành cho mỗi quyết định quan trọng — tri thức cổ học Á Đông trình bày bằng tiếng Việt, AI hiện đại, văn phong calm, không định mệnh hoá.',
   alternates: { canonical: 'https://hieu.asia/about' },
   openGraph: {
-    title: 'Về chúng tôi — hieu.asia',
+    title: 'Về chúng tôi',
     description:
       'Sứ mệnh, công nghệ, đạo đức và đội ngũ phía sau hieu.asia.',
     url: 'https://hieu.asia/about',

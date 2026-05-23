@@ -29,12 +29,12 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Phương pháp luận hieu.asia — Engine tính gì, AI luận gì',
+  title: 'Phương pháp luận — Engine tính gì, AI luận gì',
   description:
     'hieu.asia không "phán mệnh": engine deterministic lập lá số, AI diễn giải dữ liệu, người dùng quyết định. 5 nguyên tắc, 6 tầng pipeline, confidence score, validation snapshot, quality rubric.',
   alternates: { canonical: 'https://hieu.asia/methodology' },
   openGraph: {
-    title: 'Phương pháp luận · hieu.asia',
+    title: 'Phương pháp luận',
     description:
       'Engine deterministic lập lá số, AI diễn giải, người dùng quyết định.',
     url: 'https://hieu.asia/methodology',
@@ -458,7 +458,7 @@ export default function MethodologyPage() {
             </nav>
 
             <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
-              Methodology
+              Phương pháp luận
             </p>
             <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
               Phương pháp luận hieu.asia

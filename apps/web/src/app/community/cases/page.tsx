@@ -13,12 +13,12 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { listCaseStudies } from '@/lib/case-studies';
 
 export const metadata: Metadata = {
-  title: 'Case studies — quyết định thực tế qua Tử Vi | hieu.asia',
+  title: 'Case studies — quyết định thực tế qua Tử Vi',
   description:
     'Bộ câu chuyện đã được ẩn danh: người dùng đã ra quyết định nghề nghiệp, gia đình, tài chính như thế nào sau khi đọc lá số.',
   alternates: { canonical: 'https://hieu.asia/community/cases' },
   openGraph: {
-    title: 'Case studies hieu.asia',
+    title: 'Case studies',
     description: 'Quy trình ra quyết định thực tế, không phải lời hứa kết quả.',
     url: 'https://hieu.asia/community/cases',
     type: 'website',

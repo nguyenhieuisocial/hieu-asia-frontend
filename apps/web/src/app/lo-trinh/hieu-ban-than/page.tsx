@@ -25,12 +25,12 @@ const SLUG = 'hieu-ban-than';
 const TOPIC = 'self';
 
 export const metadata: Metadata = {
-  title: 'Hiểu bản thân — lộ trình · hieu.asia',
+  title: 'Hiểu bản thân — lộ trình',
   description:
     'Lộ trình hiểu bản thân: lập lá số, đọc cung Mệnh–Thân, đối chiếu MBTI và Thần Số Học để có một bức chân dung trung thực — không tô hồng, không doạ nạt.',
   alternates: { canonical: `https://hieu.asia/lo-trinh/${SLUG}` },
   openGraph: {
-    title: 'Hiểu bản thân — lộ trình · hieu.asia',
+    title: 'Hiểu bản thân — lộ trình',
     description:
       'Một bức chân dung trung thực về điểm mạnh, vùng tối, và kiểu năng lượng của bạn.',
     url: `https://hieu.asia/lo-trinh/${SLUG}`,

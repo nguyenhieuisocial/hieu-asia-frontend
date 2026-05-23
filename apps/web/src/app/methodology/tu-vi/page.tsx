@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     'Chi tiết phương pháp Tử Vi Bắc phái dùng tại hieu.asia: 114 sao chính/phụ, cách an Mệnh-Thân-Cục, đại vận, lưu niên, và đường phân định engine vs AI.',
   alternates: { canonical: 'https://hieu.asia/methodology/tu-vi' },
   openGraph: {
-    title: 'Methodology Tử Vi · hieu.asia',
+    title: 'Methodology Tử Vi',
     description:
       'Tử Vi Bắc phái: cách an sao, đại vận, lưu niên — và lằn ranh engine deterministic vs AI/LLM.',
     url: 'https://hieu.asia/methodology/tu-vi',

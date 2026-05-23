@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Tài khoản của bạn — hieu.asia',
+  title: 'Tài khoản của bạn',
   description:
     'Trung tâm quản lý tài khoản hieu.asia: lá số, quyết định, mentor, thanh toán, affiliate, quyền riêng tư.',
   robots: { index: false, follow: false },

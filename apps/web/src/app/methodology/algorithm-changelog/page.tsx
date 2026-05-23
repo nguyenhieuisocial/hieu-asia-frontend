@@ -12,14 +12,14 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Algorithm changelog · hieu.asia',
+  title: 'Algorithm changelog',
   description:
     'Lịch sử các thay đổi tới engine an sao, lịch âm, tính đại vận và luận giải tại hieu.asia — theo dõi tính chính xác của thuật toán huyền học.',
   alternates: {
     canonical: 'https://hieu.asia/methodology/algorithm-changelog',
   },
   openGraph: {
-    title: 'Algorithm changelog · hieu.asia',
+    title: 'Algorithm changelog',
     description:
       'Mỗi thay đổi tới thuật toán an sao, lịch âm và luận giải — ghi lại tại đây.',
     url: 'https://hieu.asia/methodology/algorithm-changelog',

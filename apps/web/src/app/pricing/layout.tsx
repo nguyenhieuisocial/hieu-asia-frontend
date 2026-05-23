@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Bảng giá — hieu.asia',
+  title: 'Bảng giá',
   description:
     'Standard 99.000đ một lần · Premium 199.000đ / tháng (hoặc 1.990.000đ / năm — tiết kiệm 17%) · Lifetime 4.990.000đ trọn đời.',
   alternates: { canonical: 'https://hieu.asia/pricing' },
   openGraph: {
-    title: 'Bảng giá — hieu.asia',
+    title: 'Bảng giá',
     description:
       'Standard 99.000đ · Premium 199.000đ/tháng · Lifetime 4.990.000đ. Mở khóa góc nhìn sâu cho mỗi quyết định.',
     url: 'https://hieu.asia/pricing',

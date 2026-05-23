@@ -3,6 +3,7 @@ import { ZodiacCard } from '@/components/daily/ZodiacCard';
 import { SubscribePush } from '@/components/daily/SubscribePush';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { getVietnamTodayISO } from '@/lib/vn-date';
+import { generateZodiacBlurb, isGenericSummary } from '@/lib/zodiac-blurb';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 600;
@@ -100,6 +101,15 @@ export default async function Page() {
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {ZODIACS.map((z) => {
             const h = byKey.get(z.key);
+            // Upstream sometimes ships the same fallback summary for all 12 signs
+            // (e.g. "Ngày khá thuận, giữ năng lượng cho việc quan trọng."). When
+            // that happens, fall back to a deterministic per-zodiac blurb keyed
+            // by (zodiac, date, score). Keeps every card unique even if upstream
+            // is degraded. Deterministic so SSR == CSR == cache.
+            const upstream = h?.overall.summary;
+            const summary = isGenericSummary(upstream)
+              ? generateZodiacBlurb(z.key, h?.overall.score, today)
+              : upstream;
             return (
               <ZodiacCard
                 key={z.key}
@@ -107,7 +117,7 @@ export default async function Page() {
                 zodiacName={z.label}
                 icon={z.icon}
                 overallScore={h?.overall.score}
-                summary={h?.overall.summary}
+                summary={summary}
               />
             );
           })}

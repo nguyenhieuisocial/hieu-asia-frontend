@@ -11,7 +11,7 @@ import { InfographicTuVi } from '@/components/learn/InfographicTuVi';
 import { PALACE_READINGS } from '@/lib/palace-readings';
 
 export const metadata: Metadata = {
-  title: 'Tử Vi 12 cung — Học huyền học | hieu.asia',
+  title: 'Tử Vi 12 cung — Học huyền học',
   description:
     'Tìm hiểu 12 cung Tử Vi: Mệnh, Tài Bạch, Phu Thê, Quan Lộc... Mỗi cung phản ánh một lĩnh vực đời sống cụ thể.',
   alternates: { canonical: 'https://hieu.asia/learn/tu-vi' },

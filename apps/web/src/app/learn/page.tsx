@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu
 import { EOSIDIN } from '@/components/learn/EOSIDIN';
 
 export const metadata: Metadata = {
-  title: 'Học huyền học hiện đại — hieu.asia',
+  title: 'Học huyền học hiện đại',
   description:
     'Tìm hiểu Tử Vi, Bát Tự, Thần Số Học, MBTI và xem chỉ tay — kiến thức nền tảng cho người mới, infographic trực quan, ngôn ngữ Việt dễ hiểu.',
   alternates: { canonical: 'https://hieu.asia/learn' },

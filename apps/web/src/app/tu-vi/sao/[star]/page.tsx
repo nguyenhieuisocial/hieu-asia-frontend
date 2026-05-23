@@ -22,7 +22,7 @@ export async function generateMetadata(
     description: `${data.archetype} Ý nghĩa khi đứng tại cung Mệnh, Quan Lộc, Tài Bạch — hieu.asia`,
     alternates: { canonical: `https://hieu.asia/tu-vi/sao/${data.slug}` },
     openGraph: {
-      title: `Sao ${data.name} · hieu.asia`,
+      title: `Sao ${data.name}`,
       description: data.archetype,
       url: `https://hieu.asia/tu-vi/sao/${data.slug}`,
       type: 'article',

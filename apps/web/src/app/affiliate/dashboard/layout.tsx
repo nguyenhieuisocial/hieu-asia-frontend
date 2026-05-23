@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Dashboard affiliate · hieu.asia',
+  title: 'Dashboard affiliate',
   description: 'Theo dõi KPI affiliate, hoa hồng, sự kiện gần đây và share toolkit của bạn.',
   alternates: { canonical: 'https://hieu.asia/affiliate/dashboard' },
   robots: { index: false, follow: true },

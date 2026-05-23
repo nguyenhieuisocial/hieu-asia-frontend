@@ -21,11 +21,11 @@ export async function generateMetadata(
   const data = findPalaceReading(cung);
   if (!data) return { title: 'Không tìm thấy cung Tử Vi | hieu.asia' };
   return {
-    title: `Cung ${data.name} — đọc lá số Tử Vi để ra quyết định | hieu.asia`,
+    title: `Cung ${data.name} — đọc lá số Tử Vi để ra quyết định`,
     description: data.governs.slice(0, 158),
     alternates: { canonical: `https://hieu.asia/learn/tu-vi/${data.slug}` },
     openGraph: {
-      title: `Cung ${data.name} · hieu.asia`,
+      title: `Cung ${data.name}`,
       description: data.governs.slice(0, 200),
       url: `https://hieu.asia/learn/tu-vi/${data.slug}`,
       type: 'article',

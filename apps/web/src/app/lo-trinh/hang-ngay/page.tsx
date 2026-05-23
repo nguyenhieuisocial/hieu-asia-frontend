@@ -21,12 +21,12 @@ const SLUG = 'hang-ngay';
 const TOPIC = 'general';
 
 export const metadata: Metadata = {
-  title: 'Tra cứu hằng ngày — lộ trình · hieu.asia',
+  title: 'Tra cứu hằng ngày — lộ trình',
   description:
     'Một câu gợi ý đúng buổi sáng, một ngày tốt cho cuộc họp, một lời nhắc khi vận chuyển pha — tra cứu nhanh hằng ngày qua web hoặc Telegram bot @hieuasiabot.',
   alternates: { canonical: `https://hieu.asia/lo-trinh/${SLUG}` },
   openGraph: {
-    title: 'Tra cứu hằng ngày — lộ trình · hieu.asia',
+    title: 'Tra cứu hằng ngày — lộ trình',
     description:
       'Tử Vi hôm nay + Lịch Vạn Niên + Ngày tốt + Telegram bot — gợi ý ngắn, đủ dùng.',
     url: `https://hieu.asia/lo-trinh/${SLUG}`,

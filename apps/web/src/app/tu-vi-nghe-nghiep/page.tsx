@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     'Tử Vi sự nghiệp — đọc cung Quan Lộc, Tài Bạch, Thiên Di + đại vận để tìm môi trường + vai trò hợp với thiên hướng cá nhân. Miễn phí lập lá số.',
   alternates: { canonical: 'https://hieu.asia/tu-vi-nghe-nghiep' },
   openGraph: {
-    title: 'Tử Vi nghề nghiệp · hieu.asia',
+    title: 'Tử Vi nghề nghiệp',
     description: 'Quan Lộc + Tài Bạch + Thiên Di — bản đồ thiên hướng sự nghiệp.',
     url: 'https://hieu.asia/tu-vi-nghe-nghiep',
     type: 'article',

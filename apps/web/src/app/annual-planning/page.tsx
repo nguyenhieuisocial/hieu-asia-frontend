@@ -13,12 +13,12 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Annual Planning — Kế hoạch năm 2026 theo lá số · hieu.asia',
+  title: 'Annual Planning — Kế hoạch năm 2026 theo lá số',
   description:
     'Kế hoạch năm 2026 theo lá số Tử Vi Đẩu Số: chủ đề lưu niên + 4 quý + decisions lớn nên chuẩn bị. Lập lá số để cá nhân hoá.',
   alternates: { canonical: 'https://hieu.asia/annual-planning' },
   openGraph: {
-    title: 'Annual Planning — Kế hoạch năm 2026 · hieu.asia',
+    title: 'Annual Planning — Kế hoạch năm 2026',
     description: 'Chủ đề năm Bính Ngọ + 4 quý + 5 decisions lớn — tham chiếu chung.',
     url: 'https://hieu.asia/annual-planning',
     type: 'article',

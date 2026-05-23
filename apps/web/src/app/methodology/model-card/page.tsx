@@ -25,12 +25,12 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Model Card — AI Mentor · hieu.asia',
+  title: 'Model Card — AI Mentor',
   description:
     'Model card cho AI Mentor + Composer của hieu.asia: mục đích, input/output, guardrails, human review, known limitations, evaluation, data handling, model routing.',
   alternates: { canonical: 'https://hieu.asia/methodology/model-card' },
   openGraph: {
-    title: 'Model Card — AI Mentor · hieu.asia',
+    title: 'Model Card — AI Mentor',
     description:
       'Mục đích, guardrails, evaluation và data handling cho AI Mentor + Composer.',
     url: 'https://hieu.asia/methodology/model-card',
