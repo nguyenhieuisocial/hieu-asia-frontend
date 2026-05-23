@@ -6,10 +6,17 @@
  *
  * Admin-only: owner email IS shown here. Do not reuse this route in any
  * non-admin surface.
+ *
+ * Auth: defense-in-depth — middleware.ts already gates /api/admin/*, but we
+ * re-verify the session inside the handler so that if the middleware matcher
+ * ever changes (e.g. excludes /api/admin/* by mistake), this service-role
+ * lookup remains protected. See Wave 48 P2-B audit.
  */
 
+import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 import { sbServer } from '@/lib/supabase-server';
+import { ADMIN_SESSION_COOKIE, verifySession } from '@/lib/auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -31,6 +38,20 @@ interface UserRow {
 }
 
 export async function GET(req: NextRequest) {
+  // Defense-in-depth: re-verify session inside the handler. Middleware also
+  // gates this path, but a matcher regression must not expose service-role
+  // data.
+  const cookieStore = await cookies();
+  const session = await verifySession(
+    cookieStore.get(ADMIN_SESSION_COOKIE)?.value,
+  );
+  if (!session) {
+    return NextResponse.json(
+      { ok: false, error: 'unauthenticated' },
+      { status: 401 },
+    );
+  }
+
   const url = new URL(req.url);
   const limit = Math.min(
     50,

@@ -16,6 +16,12 @@ export const contentType = 'image/png';
 
 const HIEU_API_URL = process.env.HIEU_API_URL ?? 'https://api.hieu.asia';
 
+// NOTE (Wave 48 P2-C): mirrors `revalidate = 60` from page.tsx. The two ISR
+// caches are independent, so crawlers fetching the HTML and OG image seconds
+// apart can see slightly different snapshots. Acceptable: social platforms
+// cache OG images far longer than 60s, so crawler-side cache dominates the
+// observable drift. Do not couple via unstable_cache — added complexity, no
+// crawler-visible benefit.
 export const revalidate = 60;
 
 interface Row {

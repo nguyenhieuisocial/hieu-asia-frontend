@@ -19,6 +19,13 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { AffiliateSubNav } from '@/components/affiliate/AffiliateSubNav';
 import { LeaderboardPodium } from '@/components/affiliate/LeaderboardPodium';
 
+// NOTE (Wave 48 P2-C): page.tsx and opengraph-image.tsx each declare their own
+// `revalidate = 60`. Crawlers fetching seconds apart can see slightly mismatched
+// snapshots between the HTML and the OG card. We accept this drift: (a) social
+// platforms cache OG images far longer than 60s (Twitter ~7d, FB hours), so the
+// crawler-side cache dominates anyway; (b) sharing an `unstable_cache` between
+// the page and the OG image route adds complexity without changing the
+// crawler-observable behaviour. Keep both at 60s independently.
 export const revalidate = 60;
 
 const HIEU_API_URL = process.env.HIEU_API_URL ?? 'https://api.hieu.asia';
@@ -72,9 +79,19 @@ export default async function AffiliateLeaderboardPage() {
   const top3 = rows.slice(0, 3);
   const rest = rows.slice(3);
 
-  // JSON-LD payload — server-rendered, all values are numbers/static strings
-  // (no untrusted user input flows into HTML — affiliate codes are not embedded
-  // in the LD-JSON below).
+  // JSON-LD payload — server-rendered.
+  //
+  // Cache layering (Wave 48 P2-A note):
+  //   worker Cache API (60s) → page revalidate (60s) → social crawler cache (varies).
+  // Worst-case staleness on first commission landing is ~2 min (worker miss +
+  // ISR miss happen in sequence). Acceptable given the materialised view
+  // refreshes hourly on the worker side and crawlers re-fetch on share.
+  //
+  // PII guard: affiliate_code is a public non-PII slug (Wave 43 design — it's
+  // the slug used in shareable affiliate links). Embedding it in
+  // ItemList.name is safe. user_id, email, payout rails never enter LD-JSON.
+  // All numeric fields go through Number(). No untrusted strings reach the
+  // LD-JSON literal.
   const ldJson = JSON.stringify({
     '@context': 'https://schema.org',
     '@graph': [
@@ -92,6 +109,17 @@ export default async function AffiliateLeaderboardPage() {
             ? `Cộng đồng affiliate hieu.asia đã kiếm tổng cộng ${vnd(totalEarned)}.`
             : 'Bảng xếp hạng top 50 affiliate hieu.asia, cập nhật mỗi giờ.',
         numberOfItems: rows.length,
+        mainEntity: {
+          '@type': 'ItemList',
+          name: 'Top 10 affiliate hieu.asia',
+          numberOfItems: Math.min(rows.length, 10),
+          itemListOrder: 'https://schema.org/ItemListOrderDescending',
+          itemListElement: rows.slice(0, 10).map((r, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: r.affiliate_code,
+          })),
+        },
       },
     ],
   });
