@@ -17,7 +17,11 @@ import { QRDisplay, type PaymentIntent } from '@/components/payment/QRDisplay';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
 
-type Tier = 'premium' | 'subscription_monthly' | 'subscription_yearly';
+type Tier =
+  | 'premium'
+  | 'subscription_monthly'
+  | 'subscription_yearly'
+  | 'lifetime_onetime';
 
 const POLL_INTERVAL_MS = 5_000;
 

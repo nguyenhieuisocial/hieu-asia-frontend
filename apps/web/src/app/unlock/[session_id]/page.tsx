@@ -10,12 +10,17 @@ import Link from 'next/link';
 import { PaymentClient } from './PaymentClient';
 import { SiteNav } from '@/components/home/SiteNav';
 
-type Tier = 'premium' | 'subscription_monthly' | 'subscription_yearly';
+type Tier =
+  | 'premium'
+  | 'subscription_monthly'
+  | 'subscription_yearly'
+  | 'lifetime_onetime';
 
 const VALID_TIERS: ReadonlySet<Tier> = new Set([
   'premium',
   'subscription_monthly',
   'subscription_yearly',
+  'lifetime_onetime',
 ]);
 
 function parseTier(value: string | string[] | undefined): Tier | null {

@@ -7,8 +7,8 @@
  * Mentor Monthly is the gold "Phổ biến nhất" tier.
  *
  * CTA wiring maps display IDs → wire IDs accepted by /unlock:
- *   premium → premium · monthly → subscription_monthly · yearly → subscription_yearly.
- * Lifetime is NOT yet accepted by /unlock — flagged for founder follow-up.
+ *   premium → premium · monthly → subscription_monthly ·
+ *   yearly → subscription_yearly · lifetime → lifetime_onetime (#267).
  *
  * Reads optional `?session=<reading_id>` — passed through to /unlock so a
  * payment is bound to a specific reading; absent → fallback to /account.
@@ -47,7 +47,7 @@ type Period = 'monthly' | 'annual';
  *
  * Tier IDs are display-only here. CTA wiring maps them to the wire IDs that
  * `/unlock/[session_id]` validates (`premium`, `subscription_monthly`,
- * `subscription_yearly`). Lifetime is not yet wired into /unlock; flagged.
+ * `subscription_yearly`, `lifetime_onetime`).
  */
 type TierId = 'free' | 'premium' | 'monthly' | 'yearly' | 'lifetime';
 
@@ -283,7 +283,10 @@ function monthlyEquivalent(tier: Tier): string | null {
 /**
  * Wave 52-A — map a display TierId to the wire tier accepted by
  * `/unlock/[session_id]/page.tsx` (`premium`, `subscription_monthly`,
- * `subscription_yearly`). Lifetime is not wired yet — flagged for founder.
+ * `subscription_yearly`, `lifetime_onetime`).
+ *
+ * Wave 52 follow-up (#267) — Lifetime now wires to `lifetime_onetime`
+ * (worker `TIER_PRICES_VND` accepts this id at 4.99M VND).
  */
 function toWireTier(tier: TierId): string | null {
   switch (tier) {
@@ -294,7 +297,7 @@ function toWireTier(tier: TierId): string | null {
     case 'yearly':
       return 'subscription_yearly';
     case 'lifetime':
-      return 'lifetime'; // TODO(wave-52-followup): /unlock does not yet accept this.
+      return 'lifetime_onetime';
     default:
       return null;
   }
