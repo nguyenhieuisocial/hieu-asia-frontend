@@ -52,6 +52,20 @@ function getSupabase() {
 function validateChart(c: unknown): c is ChartInput {
   if (!c || typeof c !== 'object') return false;
   const chart = c as ChartInput;
+  // /ultrareview Phase 2.2 P2-2 fix: cap mainStars length + per-string length
+  // to prevent OOM via 12 palaces × 1M-string mainStars OOM attack.
+  // iztro never emits >4-5 chính tinh per palace; 8 is generous headroom.
+  const palacesOk =
+    Array.isArray(chart.palaces) &&
+    chart.palaces.length === 12 &&
+    chart.palaces.every(
+      (p) =>
+        typeof p.name === 'string' &&
+        p.name.length <= 50 &&
+        Array.isArray(p.mainStars) &&
+        p.mainStars.length <= 8 &&
+        p.mainStars.every((s) => typeof s === 'string' && s.length <= 50),
+    );
   return (
     typeof chart.displayName === 'string' &&
     chart.displayName.length > 0 &&
@@ -60,14 +74,7 @@ function validateChart(c: unknown): c is ChartInput {
     typeof chart.birthYear === 'number' &&
     chart.birthYear >= 1900 &&
     chart.birthYear <= 2100 &&
-    Array.isArray(chart.palaces) &&
-    chart.palaces.length === 12 &&
-    chart.palaces.every(
-      (p) =>
-        typeof p.name === 'string' &&
-        Array.isArray(p.mainStars) &&
-        p.mainStars.every((s) => typeof s === 'string'),
-    )
+    palacesOk
   );
 }
 
@@ -96,10 +103,14 @@ export async function POST(req: NextRequest) {
   // 3. Create agent_runs row — graph nodes update cost via RPC; Realtime
   // publishes UPDATE so client progress UI tracks live (Phase 2.3).
   const supabase = getSupabase();
+  // /ultrareview Phase 2.2 P2-3 fix: do NOT trust body.userId — caller could
+  // impersonate any user. Phase 2.4 will wire server-side session via cookie
+  // auth (NextAuth `auth()` or Supabase server helper). Until then, runs are
+  // guest-mode (user_id NULL) and accessed via the unguessable run_id.
   const { data: runRow, error: runErr } = await supabase
     .from('agent_runs')
     .insert({
-      user_id: body.userId ?? null,
+      user_id: null,
       graph_name: 'tu-vi-full',
       current_node: 'parse_input',
       state: { chart: { displayName: chart.displayName, birthYear: chart.birthYear } },

@@ -14,10 +14,12 @@
  * Provider/model strings use the AI Gateway naming convention:
  *   `<provider>/<model-id>` — Gateway resolves to the actual endpoint.
  *
- * Pricing is roughly:
- *   - tier:`cheap`  → Gemini 3.5 Flash  (~$0.05/M in, $0.20/M out)
- *   - tier:`mid`    → Claude Sonnet 4   (~$3/M in, $15/M out)
- *   - tier:`top`    → Claude Opus 4.7   (~$15/M in, $75/M out)
+ * Pricing (canonical — kept in sync with `TIER_COST_PER_M_TOKENS` in
+ * tu-vi-graph.ts; Phase 2.6 will move both to Edge Config so drift becomes
+ * impossible):
+ *   - tier:`cheap`  → Gemini 3.5 Flash   ($0.075/M in, $0.30/M out)
+ *   - tier:`mid`    → Claude Sonnet 4    ($3/M in, $15/M out)
+ *   - tier:`top`    → Claude Opus 4.7    ($15/M in, $75/M out)
  *
  * Sub-graphs should use `cheap` for extraction/lookup, `mid` for per-section
  * analysis, and `top` only for the final synthesis. Mis-tiering is the most
