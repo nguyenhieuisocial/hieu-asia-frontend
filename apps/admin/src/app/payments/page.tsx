@@ -133,7 +133,11 @@ export default function AdminPaymentsPage() {
   ];
 
   // KPIs aggregated from the current page (post-filter).
-  const allRows = tx.data?.rows ?? [];
+  // #280 (HIEU-ASIA-WORKER-4): Sentry caught `TypeError: ... .filter is not a function`
+  // when upstream returned a non-array shape (e.g., `{error: "..."}` instead of
+  // `{rows: [...]}`). The `?? []` only catches null/undefined — defensive
+  // `Array.isArray()` guard protects against shape drift on both data sources.
+  const allRows = Array.isArray(tx.data?.rows) ? tx.data.rows : [];
   const rows = React.useMemo(
     () =>
       allRows.filter((t) => {
@@ -148,7 +152,7 @@ export default function AdminPaymentsPage() {
     .reduce((s, t) => s + t.amount_usd, 0);
   const refundedCount = rows.filter((t) => t.status === 'refunded').length;
   const succeededCount = rows.filter((t) => t.status === 'succeeded').length;
-  const activeCoupons = (coupons.data ?? []).filter((c) => c.active).length;
+  const activeCoupons = (Array.isArray(coupons.data) ? coupons.data : []).filter((c) => c.active).length;
 
   const applyPreset = (name: string) => {
     const p = loadPreset(name);
