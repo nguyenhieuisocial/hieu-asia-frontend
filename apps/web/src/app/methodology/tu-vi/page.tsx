@@ -20,13 +20,16 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata: Metadata = {
+  // Wave 54 BUG-034: rename "Methodology" → "Phương pháp" for VN consistency
+  // (matches Wave 52.1 + 52 close-out sublink renames). Template appends
+  // " · hieu.asia" automatically from root layout, so don't include it here.
   title:
-    'Methodology Tử Vi — Trường phái, an sao, đại vận, lưu niên · hieu.asia',
+    'Phương pháp Tử Vi — Trường phái, an sao, đại vận, lưu niên',
   description:
     'Chi tiết phương pháp Tử Vi Bắc phái dùng tại hieu.asia: 114 sao chính/phụ, cách an Mệnh-Thân-Cục, đại vận, lưu niên, và đường phân định engine vs AI.',
   alternates: { canonical: 'https://hieu.asia/methodology/tu-vi' },
   openGraph: {
-    title: 'Methodology Tử Vi',
+    title: 'Phương pháp Tử Vi',
     description:
       'Tử Vi Bắc phái: cách an sao, đại vận, lưu niên — và lằn ranh engine deterministic vs AI/LLM.',
     url: 'https://hieu.asia/methodology/tu-vi',

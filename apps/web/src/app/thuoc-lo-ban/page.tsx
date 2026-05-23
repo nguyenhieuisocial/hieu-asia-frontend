@@ -125,9 +125,11 @@ export default function ThuocLoBanPage() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-foreground/85">Loại thước</Label>
+                  {/* Wave 54 BUG-032: bind Label → SelectTrigger via htmlFor/id
+                      so screen-readers + form-autofill announce the field name. */}
+                  <Label htmlFor="lo-ban-type" className="text-foreground/85">Loại thước</Label>
                   <Select value={type} onValueChange={(v) => setType(v as LoBanType)}>
-                    <SelectTrigger className="bg-card/60">
+                    <SelectTrigger id="lo-ban-type" aria-label="Loại thước" className="bg-card/60">
                       <SelectValue>{selectedLabel}</SelectValue>
                     </SelectTrigger>
                     <SelectContent>
