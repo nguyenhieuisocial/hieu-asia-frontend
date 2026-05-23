@@ -42,20 +42,43 @@ function AccountLoader() {
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <main id="main-content" className="pt-16">
-        <div
-          role="status"
-          aria-live="polite"
-          aria-busy="true"
-          className="mx-auto max-w-3xl px-6 py-20 text-center"
-        >
-          <div
-            aria-hidden
-            className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-gold/30 border-t-gold"
-          />
-          <span className="sr-only">Đang tải trang tài khoản…</span>
-        </div>
+        <AccountSkeleton />
       </main>
       <SiteFooter />
+    </div>
+  );
+}
+
+// Wave 54 — skeleton matches AccountPageInner outer wrapper + first-paint
+// blocks (hero ~240px, amber-notice reserve ~80px, tabs ~64px, content
+// ~400px) so the swap from loading → authed UI doesn't shift layout.
+// Target CLS < 0.1 (was 0.67 with the narrow centered spinner).
+function AccountSkeleton({ message }: { message?: string } = {}) {
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+      className="mx-auto max-w-5xl px-6 pb-20 pt-12 sm:pt-16"
+    >
+      {/* Hero placeholder — reserves eyebrow (16px) + h1 (~56px) + description (~44px) + paddings ≈ 240px */}
+      <div aria-hidden className="space-y-3">
+        <div className="h-3 w-24 animate-pulse rounded bg-card/30" />
+        <div className="h-9 w-3/4 animate-pulse rounded-lg bg-card/30 sm:h-12" />
+        <div className="h-4 w-2/3 animate-pulse rounded bg-card/30" />
+      </div>
+
+      {/* Invalid-tab notice reserve — always present so the real notice
+          (conditional in AccountPageInner) doesn't push content down */}
+      <div aria-hidden className="mt-6 min-h-[80px]" />
+
+      {/* Tabs bar placeholder ≈ 64px */}
+      <div aria-hidden className="mt-2 h-12 w-full animate-pulse rounded-lg bg-card/30" />
+
+      {/* Content area placeholder ≈ 400px */}
+      <div aria-hidden className="mt-8 h-[400px] w-full animate-pulse rounded-xl bg-card/30" />
+
+      <span className="sr-only">{message ?? 'Đang tải trang tài khoản…'}</span>
     </div>
   );
 }
@@ -81,8 +104,10 @@ function AccountPageInner() {
   const rawTab = search.get('tab');
   const initialTab: AccountTabId = isAccountTabId(rawTab) ? rawTab : 'overview';
   const [tab, setTab] = React.useState<AccountTabId>(initialTab);
+  // /ultrareview P2 — cap stored raw param at 32 chars to bound DOM payload
+  // when someone hits ?tab=<arbitrarily-long-string>.
   const [invalidTabKey, setInvalidTabKey] = React.useState<string | null>(
-    rawTab && !isAccountTabId(rawTab) ? rawTab : null,
+    rawTab && !isAccountTabId(rawTab) ? rawTab.slice(0, 32) : null,
   );
 
   React.useEffect(() => {
@@ -117,22 +142,13 @@ function AccountPageInner() {
       <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
         <main id="main-content" className="pt-16">
-          <div
-            role="status"
-            aria-live="polite"
-            aria-busy={auth.loading}
-            className="mx-auto max-w-3xl px-6 py-20 text-center"
-          >
-            <div
-              aria-hidden
-              className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-gold/30 border-t-gold"
-            />
-            <p className="mt-4 font-mono text-xs uppercase tracking-[0.28em] text-muted-foreground">
-              {auth.loading
+          <AccountSkeleton
+            message={
+              auth.loading
                 ? 'Đang kiểm tra phiên đăng nhập…'
-                : 'Chuyển hướng đến trang đăng nhập…'}
-            </p>
-          </div>
+                : 'Chuyển hướng đến trang đăng nhập…'
+            }
+          />
         </main>
         <SiteFooter />
       </div>
@@ -166,26 +182,32 @@ function AccountPageInner() {
             Dữ liệu của bạn được lưu lại — không cần nhập lại mỗi lần.
           </p>
 
-          {invalidTabKey && (
-            <div
-              role="status"
-              aria-live="polite"
-              className="mt-6 rounded-lg border border-amber-700/40 bg-amber-900/15 px-4 py-3 text-sm text-amber-100"
-            >
-              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-amber-300/80">
-                Tab không tồn tại
-              </span>
-              <p className="mt-1 text-foreground/85">
-                Không tìm thấy tab{' '}
-                <code className="rounded bg-black/30 px-1.5 py-0.5 font-mono text-xs text-amber-200">
-                  {invalidTabKey}
-                </code>
-                . Đã chuyển về <strong>Tổng quan</strong>.
-              </p>
-            </div>
-          )}
+          {/* Fixed-height reservation prevents CLS from the conditional
+              amber notice — the wrapper always occupies ≥80px so the
+              tabs/content below it stay stable whether or not the notice
+              renders. */}
+          <div className="mt-6 min-h-[80px]">
+            {invalidTabKey && (
+              <div
+                role="status"
+                aria-live="polite"
+                className="rounded-lg border border-amber-700/40 bg-amber-900/15 px-4 py-3 text-sm text-amber-100"
+              >
+                <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-amber-300/80">
+                  Tab không tồn tại
+                </span>
+                <p className="mt-1 text-foreground/85">
+                  Không tìm thấy tab{' '}
+                  <code className="rounded bg-black/30 px-1.5 py-0.5 font-mono text-xs text-amber-200">
+                    {invalidTabKey}
+                  </code>
+                  . Đã chuyển về <strong>Tổng quan</strong>.
+                </p>
+              </div>
+            )}
+          </div>
 
-          <div className="mt-8">
+          <div className="mt-2">
             <AccountTabs active={tab} onChange={setTab} />
 
             <div className="mt-8">
