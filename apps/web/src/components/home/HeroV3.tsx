@@ -99,7 +99,7 @@ export function HeroV3() {
           aria-label="Tin cậy"
         >
           <TrustBadge Icon={Users}>Tử Vi Bắc phái 114 sao · validation 4 tầng</TrustBadge>
-          <TrustBadge Icon={ShieldCheck}>Privacy-first · Tải/xoá dữ liệu</TrustBadge>
+          <TrustBadge Icon={ShieldCheck}>AES-256 · TLS 1.3 · NĐ 13 / GDPR-friendly</TrustBadge>
           <TrustBadge Icon={Globe2}>Hỗ trợ Tiếng Việt + English</TrustBadge>
         </motion.ul>
       </div>

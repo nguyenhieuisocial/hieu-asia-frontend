@@ -166,6 +166,23 @@ export function MethodChooser() {
             </article>
           ))}
         </div>
+
+        {/*
+          Wave 57.1 §3.1 disclaimer (founder-requested combo of "no accuracy %"
+          + "tham khảo, không phải chẩn đoán"). Placed once under all 4 cards
+          since the same caveat applies to every divination method — keeps
+          per-card copy clean and avoids legal risk on fortune-telling claims.
+        */}
+        <p
+          className="mt-10 text-center text-xs leading-relaxed text-muted-foreground/80"
+          role="note"
+          aria-label="Lưu ý"
+        >
+          Cả 4 phương pháp đều là góc nhìn để bạn{' '}
+          <strong className="text-foreground/90">tham khảo và tự ra quyết định</strong>, không phải
+          chẩn đoán y khoa, tài chính hay pháp lý. Kết quả phụ thuộc vào độ chính xác của ngày–giờ
+          sinh và cách bạn lựa chọn áp dụng.
+        </p>
       </div>
     </section>
   );
