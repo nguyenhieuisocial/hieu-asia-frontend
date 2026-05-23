@@ -5,7 +5,9 @@
  * POST /admin/affiliates/payouts/batches/:id/approve.
  */
 
+import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import { ADMIN_SESSION_COOKIE, verifySession } from '@/lib/auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -24,6 +26,9 @@ export async function POST(
     );
   }
   const { id } = await params;
+  // Wave 45.2 P3-2 — forward admin email for audit attribution.
+  const cookieStore = await cookies();
+  const session = await verifySession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
   try {
     const r = await fetch(
       `${GATEWAY}/admin/affiliates/payouts/batches/${encodeURIComponent(id)}/approve`,
@@ -32,6 +37,7 @@ export async function POST(
         headers: {
           'X-Admin-Token': TOKEN,
           'content-type': 'application/json',
+          ...(session?.email ? { 'x-admin-email': session.email } : {}),
         },
         cache: 'no-store',
       },

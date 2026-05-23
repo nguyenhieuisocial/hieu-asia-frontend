@@ -6,7 +6,9 @@
  * Returns { ok, url, key, row_count, expires_in }.
  */
 
+import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import { ADMIN_SESSION_COOKIE, verifySession } from '@/lib/auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -25,12 +27,18 @@ export async function GET(
     );
   }
   const { id } = await params;
+  // Wave 45.2 P3-2 — forward admin email for audit attribution.
+  const cookieStore = await cookies();
+  const session = await verifySession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
   try {
     const r = await fetch(
       `${GATEWAY}/admin/affiliates/payouts/batches/${encodeURIComponent(id)}/csv`,
       {
         method: 'GET',
-        headers: { 'X-Admin-Token': TOKEN },
+        headers: {
+          'X-Admin-Token': TOKEN,
+          ...(session?.email ? { 'x-admin-email': session.email } : {}),
+        },
         cache: 'no-store',
       },
     );

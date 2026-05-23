@@ -86,10 +86,20 @@ export default function AdminBatchesPage() {
       });
       const d = await r.json();
       if (!r.ok || !d.ok) throw new Error(d.error ?? `HTTP ${r.status}`);
-      return d as { ok: true; url: string; key: string; row_count: number };
+      return d as {
+        ok: true;
+        url: string;
+        key: string;
+        row_count: number;
+        warning?: string | null;
+      };
     },
     onSuccess: (d) => {
       toast.success(`CSV ${d.row_count} dòng đã sẵn sàng`);
+      // Wave 45.2 P2-5 — surface missing-bank-info warning before download.
+      if (d.warning) {
+        toast.error(d.warning);
+      }
       window.open(d.url, '_blank', 'noopener,noreferrer');
     },
     onError: (e: Error) => toast.error(e.message),
@@ -185,7 +195,10 @@ export default function AdminBatchesPage() {
                           </Button>
                         )}
                         {b.rail === 'manual_csv' &&
-                          ['in_progress', 'completed', 'approved'].includes(b.status) && (
+                          // Wave 45.2 P3-3 — CSV button only after dispatch
+                          // has flipped the batch to in_progress/completed.
+                          // 'approved' is a transient pre-dispatch state.
+                          ['in_progress', 'completed'].includes(b.status) && (
                             <Button
                               size="sm"
                               variant="outline"

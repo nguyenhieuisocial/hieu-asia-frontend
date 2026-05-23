@@ -5,7 +5,9 @@
  * Body: { rail: 'manual_csv'|'wise'|'stripe_connect', min_amount_vnd?: number }
  */
 
+import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import { ADMIN_SESSION_COOKIE, verifySession } from '@/lib/auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -21,12 +23,17 @@ export async function POST(req: NextRequest) {
     );
   }
   const body = await req.text();
+  // Wave 45.2 P3-2 — forward admin email so the worker logs the real actor
+  // (not "admin" literal).  Multiple admins → preserved attribution.
+  const cookieStore = await cookies();
+  const session = await verifySession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
   try {
     const r = await fetch(`${GATEWAY}/admin/affiliates/payouts/build-batch`, {
       method: 'POST',
       headers: {
         'X-Admin-Token': TOKEN,
         'content-type': 'application/json',
+        ...(session?.email ? { 'x-admin-email': session.email } : {}),
       },
       body,
       cache: 'no-store',
