@@ -9,7 +9,7 @@ export const metadata = {
     'Xem hợp tuổi miễn phí cho cưới hỏi, hợp tác kinh doanh, sinh con, xông đất. Phân tích Thiên Can, Địa Chi, Tam hợp, Tứ hành xung, Cung Phi 8 trạch.',
   alternates: { canonical: 'https://hieu.asia/hop-tuoi' },
   openGraph: {
-    title: 'Hợp tuổi cưới hỏi, làm ăn, sinh con · hieu.asia',
+    title: 'Hợp tuổi cưới hỏi, làm ăn, sinh con',
     description:
       'Tương hợp Can Chi theo từng việc cụ thể — Tam Hợp, Lục Hợp, Tứ Hành Xung. Miễn phí.',
     url: 'https://hieu.asia/hop-tuoi',
@@ -77,7 +77,13 @@ export default function HopTuoiLandingPage() {
         { label: 'Hợp tuổi' },
       ]}
     >
-      <section className="mt-6 grid gap-4 sm:grid-cols-2">
+      <h2 className="mt-8 font-heading text-xl font-semibold text-foreground sm:text-2xl">
+        Chọn việc cần xem hợp tuổi
+      </h2>
+      <section
+        className="mt-6 grid gap-4 sm:grid-cols-2"
+        aria-label="Danh sách công cụ xem hợp tuổi"
+      >
         {CARDS.map((c) => (
           <Link
             key={c.href}

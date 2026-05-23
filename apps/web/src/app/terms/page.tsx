@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 
 export const metadata = {
-  title: 'Điều khoản dịch vụ — hieu.asia',
+  title: 'Điều khoản dịch vụ',
   description: 'Điều khoản sử dụng dịch vụ hieu.asia.',
 };
 
@@ -32,6 +32,7 @@ export default function TermsPage() {
           </p>
         </div>
 
+        <h2 className="sr-only">1. Định nghĩa</h2>
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-xl">1. Định nghĩa</CardTitle>
@@ -54,6 +55,7 @@ export default function TermsPage() {
           </CardContent>
         </Card>
 
+        <h2 className="sr-only">2. Phạm vi dịch vụ</h2>
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-xl">2. Phạm vi dịch vụ</CardTitle>
@@ -76,6 +78,7 @@ export default function TermsPage() {
           </CardContent>
         </Card>
 
+        <h2 className="sr-only">3. DISCLAIMER quan trọng</h2>
         <Card className="mb-6 border-gold/40">
           <CardHeader>
             <CardTitle className="text-xl text-gold">3. DISCLAIMER quan trọng</CardTitle>
@@ -98,6 +101,7 @@ export default function TermsPage() {
           </CardContent>
         </Card>
 
+        <h2 className="sr-only">4. Thanh toán và hoàn tiền</h2>
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-xl">4. Thanh toán và hoàn tiền</CardTitle>
@@ -132,6 +136,7 @@ export default function TermsPage() {
           </CardContent>
         </Card>
 
+        <h2 className="sr-only">5. Tài khoản người dùng</h2>
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-xl">5. Tài khoản người dùng</CardTitle>
@@ -146,6 +151,7 @@ export default function TermsPage() {
           </CardContent>
         </Card>
 
+        <h2 className="sr-only">6. Hành vi bị cấm</h2>
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-xl">6. Hành vi bị cấm</CardTitle>
@@ -162,6 +168,7 @@ export default function TermsPage() {
           </CardContent>
         </Card>
 
+        <h2 className="sr-only">7. Giới hạn trách nhiệm</h2>
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-xl">7. Giới hạn trách nhiệm</CardTitle>
@@ -182,6 +189,7 @@ export default function TermsPage() {
           </CardContent>
         </Card>
 
+        <h2 className="sr-only">8. Luật áp dụng</h2>
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-xl">8. Luật áp dụng</CardTitle>
@@ -195,6 +203,7 @@ export default function TermsPage() {
           </CardContent>
         </Card>
 
+        <h2 className="sr-only">9. Cập nhật điều khoản</h2>
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-xl">9. Cập nhật điều khoản</CardTitle>

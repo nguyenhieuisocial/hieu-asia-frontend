@@ -22,53 +22,100 @@ interface NavLink {
   label: string;
 }
 
-const LEARN_LINKS: readonly NavLink[] = [
-  { href: '/methodology', label: 'Methodology tổng quan' },
-  { href: '/methodology/tu-vi', label: 'Methodology Tử Vi' },
-  { href: '/methodology/bat-tu', label: 'Methodology Bát Tự (beta)' },
-  { href: '/methodology/model-card', label: 'AI Model Card' },
-  { href: '/methodology/ai-safety', label: 'AI Safety Policy' },
-  { href: '/methodology/algorithm-changelog', label: 'Algorithm changelog' },
-  { href: '/learn/tu-vi', label: 'Tử Vi Đẩu Số' },
-  { href: '/learn/bat-tu', label: 'Bát Tự Tứ Trụ' },
-  { href: '/learn/than-so-hoc', label: 'Thần Số Học' },
-  { href: '/learn/mbti', label: 'MBTI' },
-  { href: '/learn/palm', label: 'Palm Reading' },
+interface NavSection {
+  title: string;
+  items: readonly NavLink[];
+}
+
+/** Học dropdown — 2 sections (Methodology + Khái niệm) — Wave 52. */
+const LEARN_SECTIONS: readonly NavSection[] = [
+  {
+    title: 'Methodology',
+    items: [
+      { href: '/methodology', label: 'Methodology tổng quan' },
+      { href: '/methodology/tu-vi', label: 'Methodology Tử Vi' },
+      { href: '/methodology/bat-tu', label: 'Methodology Bát Tự (beta)' },
+      { href: '/methodology/model-card', label: 'AI Model Card' },
+      { href: '/methodology/ai-safety', label: 'AI Safety Policy' },
+      { href: '/methodology/algorithm-changelog', label: 'Algorithm changelog' },
+    ],
+  },
+  {
+    title: 'Khái niệm nền tảng',
+    items: [
+      { href: '/learn/tu-vi', label: 'Tử Vi Đẩu Số' },
+      { href: '/learn/bat-tu', label: 'Bát Tự Tứ Trụ' },
+      { href: '/learn/than-so-hoc', label: 'Thần Số Học' },
+      { href: '/learn/mbti', label: 'MBTI' },
+      { href: '/learn/palm', label: 'Palm Reading' },
+    ],
+  },
 ];
 
-const TOOLS_LINKS: readonly NavLink[] = [
-  { href: '/decisions', label: 'Quyết định (Hub)' },
-  { href: '/decision-simulator', label: 'Decision Simulator' },
-  { href: '/journal', label: 'Decision Journal' },
-  { href: '/weekly-review', label: 'Weekly Review' },
-  { href: '/ban-do', label: 'Bản đồ của bạn' },
-  { href: '/sample-report', label: 'Báo cáo mẫu' },
-  { href: '/monthly-planning', label: 'Monthly Planning' },
-  { href: '/annual-planning', label: 'Annual Planning' },
-  { href: '/timeline', label: 'Đại vận timeline' },
-  { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại' },
-  { href: '/compatibility', label: 'Hợp đôi 2 lá số' },
-  { href: '/career-fit', label: 'Career Fit' },
-  { href: '/family-profiles', label: 'Family Profiles' },
-  { href: '/affiliate/network', label: 'Affiliate · Mạng lưới' },
-  { href: '/affiliate/commissions', label: 'Affiliate · Hoa hồng' },
-  { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay' },
-  { href: '/tu-vi-2026', label: 'Tử Vi 2026' },
-  { href: '/tu-vi-nghe-nghiep', label: 'Tử Vi · Nghề nghiệp' },
-  { href: '/tu-vi-tinh-yeu', label: 'Tử Vi · Tình yêu' },
-  { href: '/tu-vi-tai-chinh', label: 'Tử Vi · Tài chính' },
-  { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
-  { href: '/hop-tuoi', label: 'Hợp tuổi (12 con giáp)' },
-  { href: '/than-so-hoc', label: 'Thần Số Học' },
-  { href: '/tinh-menh-cuc', label: 'Tính Mệnh Cục' },
-  { href: '/can-xuong', label: 'Cân Xương Đoán Số' },
-  { href: '/thuoc-lo-ban', label: 'Thước Lỗ Ban' },
+/**
+ * Công cụ mega-menu — 4 columns — Wave 52.
+ * Affiliate items removed (relocated to authed account dropdown).
+ */
+const TOOLS_SECTIONS: readonly NavSection[] = [
+  {
+    title: 'Quyết định',
+    items: [
+      { href: '/decisions', label: 'Quyết định (Hub)' },
+      { href: '/decision-simulator', label: 'Decision Simulator' },
+      { href: '/journal', label: 'Decision Journal' },
+      { href: '/weekly-review', label: 'Weekly Review' },
+    ],
+  },
+  {
+    title: 'Lá số & Báo cáo',
+    items: [
+      { href: '/ban-do', label: 'Bản đồ của bạn' },
+      { href: '/sample-report', label: 'Báo cáo mẫu' },
+      { href: '/compatibility', label: 'Hợp đôi 2 lá số' },
+      { href: '/family-profiles', label: 'Family Profiles' },
+      { href: '/career-fit', label: 'Career Fit' },
+    ],
+  },
+  {
+    title: 'Kế hoạch & Đại vận',
+    items: [
+      { href: '/monthly-planning', label: 'Monthly Planning' },
+      { href: '/annual-planning', label: 'Annual Planning' },
+      { href: '/timeline', label: 'Đại vận timeline' },
+      { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại' },
+    ],
+  },
+  {
+    title: 'Tra cứu nhanh',
+    items: [
+      { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay' },
+      { href: '/tu-vi-2026', label: 'Tử Vi 2026' },
+      { href: '/tu-vi-nghe-nghiep', label: 'Tử Vi · Nghề nghiệp' },
+      { href: '/tu-vi-tinh-yeu', label: 'Tử Vi · Tình yêu' },
+      { href: '/tu-vi-tai-chinh', label: 'Tử Vi · Tài chính' },
+      { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
+      { href: '/hop-tuoi', label: 'Hợp tuổi' },
+      { href: '/than-so-hoc', label: 'Thần Số Học' },
+      { href: '/tinh-menh-cuc', label: 'Tính Mệnh Cục' },
+      { href: '/can-xuong', label: 'Cân Xương Đoán Số' },
+      { href: '/thuoc-lo-ban', label: 'Thước Lỗ Ban' },
+    ],
+  },
 ];
 
+/** Flattened for mobile drawer rendering. */
+const TOOLS_LINKS_FLAT: readonly NavLink[] = TOOLS_SECTIONS.flatMap((s) => s.items);
+const LEARN_LINKS_FLAT: readonly NavLink[] = LEARN_SECTIONS.flatMap((s) => s.items);
+
+/**
+ * Top-level nav links — Wave 52-A renamed "Pricing" → "Giá" to keep all 4
+ * primary entries in Vietnamese. Round-2 audit found the lone English word
+ * in an otherwise Vietnamese nav was jarring to VN-locale users.
+ */
 const PRIMARY_LINKS: readonly NavLink[] = [
   { href: '/lo-trinh', label: 'Lộ trình' },
   { href: '/features', label: 'Tính năng' },
-  { href: '/pricing', label: 'Pricing' },
+  { href: '/pricing', label: 'Giá' },
   { href: '/about', label: 'Về chúng tôi' },
 ];
 
@@ -101,7 +148,7 @@ export function SiteNav() {
               {l.label}
             </Link>
           ))}
-          <ToolsDropdown />
+          <ToolsMegaMenu />
           <LearnDropdown />
         </nav>
 
@@ -215,6 +262,26 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
             Lá số của bạn
           </Link>
           <div className="my-1 h-px bg-muted/5" />
+          <p className="px-3 py-1 font-mono text-[9px] uppercase tracking-[0.24em] text-gold/60">
+            Affiliate
+          </p>
+          <Link
+            href="/affiliate/network"
+            onClick={() => setOpen(false)}
+            className="block rounded-md px-3 py-2 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
+            role="menuitem"
+          >
+            Mạng lưới
+          </Link>
+          <Link
+            href="/affiliate/commissions"
+            onClick={() => setOpen(false)}
+            className="block rounded-md px-3 py-2 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
+            role="menuitem"
+          >
+            Hoa hồng
+          </Link>
+          <div className="my-1 h-px bg-muted/5" />
           <button
             type="button"
             onClick={onSignOut}
@@ -232,21 +299,24 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
 }
 
 /**
- * Generic click-toggle dropdown (Wave 38.3 fix).
- * Replaces the previous group-hover CSS-only pattern which was broken on
- * touch devices and frustrating for click-instead-of-hover users.
- * Same pattern as AuthedMenu — state + click-outside + Escape + auto-close
- * on item nav.
+ * Sectioned mega-menu dropdown (Wave 52).
+ * Renders sections as columns on desktop, stacked on small screens.
+ * - aria-controls links trigger ↔ panel
+ * - aria-hidden on panel when closed (extra screen-reader safety)
  */
-function ClickDropdown({
+function SectionedDropdown({
   label,
-  items,
-  widthClass,
+  sections,
+  panelId,
+  panelWidthClass,
+  alignClass = 'left-1/2 -translate-x-1/2',
   footer,
 }: {
   label: string;
-  items: readonly NavLink[];
-  widthClass: string;
+  sections: readonly NavSection[];
+  panelId: string;
+  panelWidthClass: string;
+  alignClass?: string;
   footer?: { href: string; label: string };
 }) {
   const [open, setOpen] = React.useState(false);
@@ -276,6 +346,7 @@ function ClickDropdown({
         className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-gold"
         aria-haspopup="true"
         aria-expanded={open}
+        aria-controls={panelId}
       >
         {label}
         <ChevronDown
@@ -286,54 +357,86 @@ function ClickDropdown({
           aria-hidden="true"
         />
       </button>
-      {open && (
+      <div
+        id={panelId}
+        role="menu"
+        aria-hidden={!open}
+        className={cn(
+          'absolute top-full z-50 mt-1 rounded-xl border border-border bg-card/95 p-4 shadow-2xl backdrop-blur-md',
+          alignClass,
+          panelWidthClass,
+          open ? 'block' : 'hidden',
+        )}
+      >
         <div
           className={cn(
-            'absolute left-1/2 top-full z-50 mt-1 -translate-x-1/2 rounded-xl border border-border bg-card/95 p-2 shadow-2xl backdrop-blur-md',
-            widthClass,
+            'grid gap-x-6 gap-y-4',
+            sections.length >= 4
+              ? 'sm:grid-cols-2 lg:grid-cols-4'
+              : sections.length === 2
+                ? 'sm:grid-cols-2'
+                : 'grid-cols-1',
           )}
-          role="menu"
         >
-          {items.map((l) => (
+          {sections.map((section) => (
+            <div key={section.title} className="min-w-0">
+              <p className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.24em] text-gold/70">
+                {section.title}
+              </p>
+              <ul className="space-y-0.5">
+                {section.items.map((l) => (
+                  <li key={l.href}>
+                    <Link
+                      href={l.href}
+                      onClick={() => setOpen(false)}
+                      className="block rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-gold/10 hover:text-gold"
+                      role="menuitem"
+                    >
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        {footer && (
+          <>
+            <div className="my-3 h-px bg-muted/5" />
             <Link
-              key={l.href}
-              href={l.href}
+              href={footer.href}
               onClick={() => setOpen(false)}
-              className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-gold/10 hover:text-gold"
+              className="block rounded-md px-2 py-1.5 text-sm font-medium text-gold transition-colors hover:bg-gold/10"
               role="menuitem"
             >
-              {l.label}
+              {footer.label}
             </Link>
-          ))}
-          {footer && (
-            <>
-              <div className="my-1 h-px bg-muted/5" />
-              <Link
-                href={footer.href}
-                onClick={() => setOpen(false)}
-                className="block rounded-md px-3 py-2 text-sm font-medium text-gold transition-colors hover:bg-gold/10"
-                role="menuitem"
-              >
-                {footer.label}
-              </Link>
-            </>
-          )}
-        </div>
-      )}
+          </>
+        )}
+      </div>
     </div>
   );
 }
 
-function ToolsDropdown() {
-  return <ClickDropdown label="Công cụ" items={TOOLS_LINKS} widthClass="w-64" />;
+function ToolsMegaMenu() {
+  return (
+    <SectionedDropdown
+      label="Công cụ"
+      sections={TOOLS_SECTIONS}
+      panelId="menu-tools"
+      panelWidthClass="w-[min(92vw,860px)]"
+      alignClass="right-0 sm:left-1/2 sm:-translate-x-1/2"
+    />
+  );
 }
 
 function LearnDropdown() {
   return (
-    <ClickDropdown
+    <SectionedDropdown
       label="Học"
-      items={LEARN_LINKS}
-      widthClass="w-60"
+      sections={LEARN_SECTIONS}
+      panelId="menu-learn"
+      panelWidthClass="w-[min(92vw,520px)]"
       footer={{ href: '/learn', label: 'Tất cả bài học →' }}
     />
   );
@@ -425,7 +528,7 @@ function MobileDrawer({
           <p className="px-3 pb-1 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/60">
             Công cụ
           </p>
-          {TOOLS_LINKS.map((l) => (
+          {TOOLS_LINKS_FLAT.map((l) => (
             <Link
               key={l.href}
               href={l.href}
@@ -439,7 +542,7 @@ function MobileDrawer({
           <p className="px-3 pb-1 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/60">
             Học
           </p>
-          {LEARN_LINKS.map((l) => (
+          {LEARN_LINKS_FLAT.map((l) => (
             <Link
               key={l.href}
               href={l.href}

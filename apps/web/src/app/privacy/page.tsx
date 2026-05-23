@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 
 export const metadata = {
-  title: 'Chính sách bảo mật — hieu.asia',
+  title: 'Chính sách bảo mật',
   description:
     'Cam kết bảo vệ dữ liệu cá nhân tại hieu.asia, tuân thủ Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân.',
 };
@@ -285,6 +285,7 @@ export default function PrivacyPage() {
           </p>
         </div>
 
+        <h2 className="sr-only">1. Người thu thập dữ liệu</h2>
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-xl">1. Người thu thập dữ liệu</CardTitle>
@@ -302,6 +303,7 @@ export default function PrivacyPage() {
           </CardContent>
         </Card>
 
+        <h2 className="sr-only">2. Loại dữ liệu chúng tôi thu thập</h2>
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-xl">2. Loại dữ liệu chúng tôi thu thập</CardTitle>
@@ -318,6 +320,7 @@ export default function PrivacyPage() {
           </CardContent>
         </Card>
 
+        <h2 className="sr-only">3. Mục đích sử dụng</h2>
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-xl">3. Mục đích sử dụng</CardTitle>
@@ -341,6 +344,7 @@ export default function PrivacyPage() {
           </CardContent>
         </Card>
 
+        <h2 className="sr-only">4. Thời gian lưu trữ</h2>
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-xl">4. Thời gian lưu trữ</CardTitle>
@@ -362,6 +366,7 @@ export default function PrivacyPage() {
           </CardContent>
         </Card>
 
+        <h2 className="sr-only">5. Quyền của bạn</h2>
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-xl">5. Quyền của bạn</CardTitle>
@@ -438,6 +443,7 @@ export default function PrivacyPage() {
           </CardContent>
         </Card>
 
+        <h2 className="sr-only">6. Bảo mật dữ liệu</h2>
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-xl">6. Bảo mật dữ liệu</CardTitle>
@@ -497,6 +503,7 @@ export default function PrivacyPage() {
           </CardContent>
         </Card>
 
+        <h2 className="sr-only">7. Cookies + dữ liệu thiết bị</h2>
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-xl">7. Cookies + dữ liệu thiết bị (Wave 41)</CardTitle>
@@ -575,6 +582,7 @@ export default function PrivacyPage() {
           </CardContent>
         </Card>
 
+        <h2 className="sr-only">8. Thay đổi chính sách</h2>
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-xl">8. Thay đổi chính sách</CardTitle>
@@ -591,6 +599,7 @@ export default function PrivacyPage() {
           </CardContent>
         </Card>
 
+        <h2 className="sr-only">9. Liên hệ</h2>
         <Card className="mb-6 border-gold/30">
           <CardHeader>
             <CardTitle className="text-xl">9. Liên hệ</CardTitle>
