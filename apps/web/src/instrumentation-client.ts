@@ -27,5 +27,13 @@ initBotId({
       path: '/api/payment/intent',
       method: 'POST',
     },
+    {
+      // Wave 56 — reasoning routes call AI Gateway per request. Each LLM
+      // call costs real money + counts toward provider rate limits. Bot
+      // abuse here would drain budget without producing legitimate output.
+      // Wildcard covers /api/reasoning/* (hello pilot + Phase 2+ graphs).
+      path: '/api/reasoning/*',
+      method: 'POST',
+    },
   ],
 });
