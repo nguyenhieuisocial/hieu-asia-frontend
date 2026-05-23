@@ -3,9 +3,15 @@
  *
  * Hides HIEU_API_SERVICE_TOKEN from the browser. Forwards body to
  * `${HIEU_API_URL}/payment/intent` with the service-token header.
+ *
+ * Wave 55 — Vercel BotID guard. `checkBotId()` reads the classification
+ * headers attached by the client (see `src/instrumentation-client.ts` for
+ * the matching `protect` entry). Bot-classified requests get a 403 instead
+ * of consuming an intent slot. Pro feature; no-op in non-Vercel previews.
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
+import { checkBotId } from 'botid/server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -15,6 +21,17 @@ const HIEU_API_URL =
 const HIEU_API_SERVICE_TOKEN = process.env.HIEU_API_SERVICE_TOKEN;
 
 export async function POST(req: NextRequest) {
+  // Wave 55 BotID — reject bot-classified requests before they touch the
+  // worker or mint an intent. The client `initBotId` declares this path in
+  // its protect list, so legitimate browser users carry the right headers.
+  const botCheck = await checkBotId();
+  if (botCheck.isBot) {
+    return NextResponse.json(
+      { ok: false, error: 'bot_detected' },
+      { status: 403 },
+    );
+  }
+
   if (!HIEU_API_SERVICE_TOKEN) {
     return NextResponse.json(
       { ok: false, error: 'server_misconfigured: HIEU_API_SERVICE_TOKEN missing' },

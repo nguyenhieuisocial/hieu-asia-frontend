@@ -2,6 +2,7 @@ import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 import bundleAnalyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
+import { withBotId } from 'botid/next/config';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
@@ -110,8 +111,15 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withSentryConfig(withBundleAnalyzer(withNextIntl(nextConfig)), {
-  silent: true,
-  org: 'hieuasia',
-  project: 'hieu-asia-web',
-});
+// Wave 55 — wrap with Vercel BotID. `withBotId` injects the proxy rewrites
+// the BotID client needs to attach classification headers. Server check lives
+// in route handlers via `checkBotId()` from 'botid/server'. The client init
+// is in `src/instrumentation-client.ts` — keep the protect list there in
+// sync with route handlers that call checkBotId.
+export default withBotId(
+  withSentryConfig(withBundleAnalyzer(withNextIntl(nextConfig)), {
+    silent: true,
+    org: 'hieuasia',
+    project: 'hieu-asia-web',
+  }),
+);
