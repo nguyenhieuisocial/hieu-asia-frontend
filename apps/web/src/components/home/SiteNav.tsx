@@ -221,6 +221,11 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
     }
   }
 
+  // BUG-011 (Wave 52, /ultrareview follow-up): same panel-id + aria-controls
+  // pattern Agent B applied to SectionedDropdown — keeps account menu a11y
+  // consistent with Tools / Learn dropdowns.
+  const panelId = 'menu-account';
+
   return (
     <div ref={containerRef} className="relative hidden sm:block">
       <button
@@ -229,6 +234,7 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
         className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
         aria-haspopup="true"
         aria-expanded={open}
+        aria-controls={panelId}
       >
         <UserCircle2 className="h-4 w-4" aria-hidden="true" />
         <span className="max-w-[120px] truncate">{user.email ?? 'Tài khoản'}</span>
@@ -240,11 +246,15 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
           aria-hidden="true"
         />
       </button>
-      {open && (
-        <div
-          className="absolute right-0 top-full z-50 mt-1 w-56 rounded-xl border border-border bg-card/95 p-1.5 shadow-2xl backdrop-blur-md"
-          role="menu"
-        >
+      <div
+        id={panelId}
+        className={cn(
+          'absolute right-0 top-full z-50 mt-1 w-56 rounded-xl border border-border bg-card/95 p-1.5 shadow-2xl backdrop-blur-md',
+          !open && 'hidden',
+        )}
+        role="menu"
+        aria-hidden={!open}
+      >
           <Link
             href="/account"
             onClick={() => setOpen(false)}
@@ -292,8 +302,7 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
             <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
             {pending ? 'Đang thoát…' : 'Đăng xuất'}
           </button>
-        </div>
-      )}
+      </div>
     </div>
   );
 }
