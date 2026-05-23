@@ -123,7 +123,10 @@ export default function SignInPage() {
     } catch {
       /* ignore */
     }
-    const result = await sendMagicLink(email.trim());
+    // Wave 44.4 (#251): pass `?next=` through magic-link roundtrip so
+    // signup-from-partner flow lands back on `/partner` after callback.
+    const next = searchParams.get('next');
+    const result = await sendMagicLink(email.trim(), next);
     setEmailLoading(false);
     if (result.ok) {
       setSent(true);
@@ -140,7 +143,9 @@ export default function SignInPage() {
     } catch {
       /* ignore */
     }
-    const result = await signInWithOAuth(provider);
+    // Wave 44.4 (#251): pass `?next=` through OAuth roundtrip.
+    const next = searchParams.get('next');
+    const result = await signInWithOAuth(provider, next);
     // On success Supabase redirects the tab away; we only land here on error.
     if (!result.ok) {
       setOauthLoading(null);

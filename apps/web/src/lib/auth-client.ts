@@ -122,14 +122,28 @@ function resolveSiteOrigin(): string | undefined {
   return undefined;
 }
 
+/**
+ * Append `?next=<encoded>` to a callback URL when `next` is a same-origin
+ * relative path. Defends against open-redirect by requiring `/`-prefix.
+ * Wave 44.4 (#251): closes /ultrareview P1#1 — magic-link/OAuth roundtrips
+ * now carry the original signin `next` param all the way to /auth/callback.
+ */
+function withNextParam(callbackUrl: string | undefined, next: string | null | undefined): string | undefined {
+  if (!callbackUrl) return undefined;
+  if (!next || typeof next !== 'string' || !next.startsWith('/')) return callbackUrl;
+  const sep = callbackUrl.includes('?') ? '&' : '?';
+  return `${callbackUrl}${sep}next=${encodeURIComponent(next)}`;
+}
+
 export async function sendMagicLink(
   email: string,
+  next?: string | null,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const supabase = getSupabaseAuth();
   if (!supabase) return { ok: false, error: 'auth_unavailable' };
 
   const origin = resolveSiteOrigin();
-  const redirectTo = origin ? `${origin}/auth/callback` : undefined;
+  const redirectTo = withNextParam(origin ? `${origin}/auth/callback` : undefined, next);
 
   const { error } = await supabase.auth.signInWithOtp({
     email,
@@ -151,12 +165,13 @@ export async function sendMagicLink(
  */
 export async function signInWithOAuth(
   provider: 'google' | 'facebook' | 'apple',
+  next?: string | null,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const supabase = getSupabaseAuth();
   if (!supabase) return { ok: false, error: 'auth_unavailable' };
 
   const origin = resolveSiteOrigin();
-  const redirectTo = origin ? `${origin}/auth/callback` : undefined;
+  const redirectTo = withNextParam(origin ? `${origin}/auth/callback` : undefined, next);
 
   const { error } = await supabase.auth.signInWithOAuth({
     provider,

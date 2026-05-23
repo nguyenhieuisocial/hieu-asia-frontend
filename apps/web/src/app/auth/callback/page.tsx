@@ -158,7 +158,15 @@ export default function AuthCallbackPage() {
         /* ignore */
       }
 
-      router.replace('/account');
+      // Wave 44.4 (#251): honor `?next=` param from signin → magic-link
+      // → callback roundtrip. Open-redirect guard: only allow same-origin
+      // relative paths (must start with `/`); fallback to `/account`.
+      const nextParam = searchParams.get('next');
+      const dest =
+        nextParam && typeof nextParam === 'string' && nextParam.startsWith('/')
+          ? nextParam
+          : '/account';
+      router.replace(dest);
     })();
 
     return () => {

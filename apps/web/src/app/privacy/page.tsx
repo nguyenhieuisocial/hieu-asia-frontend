@@ -20,9 +20,9 @@ interface CookieRow {
 // Wave 41 — full cookie inventory documented per NĐ 13/2023.
 const COOKIES: CookieRow[] = [
   {
-    name: 'hieu_session',
-    purpose: 'Phiên đăng nhập (authentication)',
-    retention: '7 ngày trượt',
+    name: 'hieu_authed',
+    purpose: 'Cờ "đã đăng nhập" cho SSR partner gate (chỉ giá trị "1", KHÔNG chứa token/JWT)',
+    retention: '90 ngày',
     optOut: 'Đăng xuất',
     category: 'necessary',
   },
