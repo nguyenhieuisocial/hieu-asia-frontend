@@ -15,16 +15,17 @@
  * before consuming a Gateway quota slot.
  */
 
-import { NextResponse, type NextRequest } from 'next/server';
+import { NextResponse, after, type NextRequest } from 'next/server';
 import { checkBotId } from 'botid/server';
 import { reasoningGenerate } from '@/lib/reasoning/llm';
 import { startTrace } from '@/lib/reasoning/observability';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-// Wave 56 — bump function maxDuration for reasoning routes. Default is
-// 300s on Pro Fluid Compute; we don't need that here but Phase 2 graphs
-// will. Setting up-front keeps the contract consistent.
+// Wave 56 Phase 1 — pilot route only. 60s is plenty for 1 cheap-tier call.
+// Phase 2 multi-step graphs (12-palace Tử Vi etc.) MUST set
+// `maxDuration = 300` (Pro Fluid Compute ceiling). Do NOT copy this value
+// blindly — choose per route based on expected graph depth.
 export const maxDuration = 60;
 
 interface HelloRequest {
@@ -81,7 +82,11 @@ export async function POST(req: NextRequest) {
     const elapsedMs = Date.now() - startedAt;
     span.end({ text: result.text, usage: result.usage });
     trace.end({ text: result.text, elapsedMs });
-    await trace.flush();
+    // /ultrareview P1-1 fix: defer Langfuse flush so it doesn't block the
+    // response. Vercel Fluid Compute holds the function instance open via
+    // `after()` until the flush resolves. For 12-palace graphs this saves
+    // 100–500ms × N spans = visible UX win.
+    after(() => trace.flush());
     return NextResponse.json({
       ok: true,
       text: result.text,
@@ -92,7 +97,7 @@ export async function POST(req: NextRequest) {
     const message = err instanceof Error ? err.message : String(err);
     span.end({ error: message });
     trace.end({ error: message });
-    await trace.flush();
+    after(() => trace.flush());
     return NextResponse.json({ ok: false, error: 'llm_failed', detail: message }, { status: 502 });
   }
 }

@@ -40,13 +40,20 @@ export const MODELS = {
 export type Tier = keyof typeof MODELS;
 
 /**
- * Fallback ordering when a provider 5xx's or is rate-limited. Same tier
- * stays close in capability so output quality doesn't crater if we drop.
+ * Fallback ordering when the primary tier provider 5xx's or rate-limits.
+ * IMPORTANT: this list contains FALLBACKS ONLY — the primary tier model
+ * (from MODELS[tier]) is set via the `model:` arg in buildArgs and Gateway
+ * tries it first. Listing it again here would double-count one retry slot.
+ * Same-tier-or-adjacent picks so output quality doesn't crater on failover.
+ *
+ * Slug validity verified 2026-05-23 against
+ * `GET https://ai-gateway.vercel.sh/v1/models` (Wave 56 Phase 1 /ultrareview
+ * P0-1 fix — `openai/gpt-5.5-mini` doesn't exist; downgraded to gpt-5.4-mini).
  */
 const FALLBACK: Record<Tier, readonly string[]> = {
-  cheap: ['google/gemini-3.5-flash', 'openai/gpt-5.5-mini'],
-  mid: ['anthropic/claude-sonnet-4', 'openai/gpt-5.5', 'google/gemini-3.1-pro-preview'],
-  top: ['anthropic/claude-opus-4.7', 'openai/gpt-5.5', 'google/gemini-3.1-pro-preview'],
+  cheap: ['openai/gpt-5.4-mini'],
+  mid: ['openai/gpt-5.5', 'google/gemini-3.1-pro-preview'],
+  top: ['openai/gpt-5.5', 'google/gemini-3.1-pro-preview'],
 };
 
 /**
