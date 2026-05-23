@@ -56,6 +56,20 @@ export function track(event: string, properties?: Record<string, unknown>): void
 export function track(event: string, properties?: Record<string, unknown>): void {
   if (typeof window === 'undefined') return;
 
+  // BUG-028 (Wave 54): drop empty event names BEFORE we POST so the worker
+  // never has to 400 our own client. V2 audit observed several
+  // `event_name required` 400s per session caused by auto-track helpers
+  // firing with `undefined`/empty strings (e.g. unnamed buttons). Without
+  // this guard the worker returns 400 and the failure pollutes Sentry +
+  // browser console without any actionable signal.
+  if (typeof event !== 'string' || event.trim().length === 0) {
+    if (process.env.NODE_ENV !== 'production') {
+      // eslint-disable-next-line no-console
+      console.warn('[analytics] dropped event with empty name', { event, properties });
+    }
+    return;
+  }
+
   // 1. Plausible (custom event tag) — silent no-op if script absent
   try {
     if (typeof window.plausible === 'function') {

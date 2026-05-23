@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import * as React from 'react';
 import Link from 'next/link';
 import { GitCommit, Calendar, ChevronRight, Cpu } from 'lucide-react';
 import {
@@ -251,8 +252,12 @@ export default function AlgorithmChangelogPage() {
 
         <section className="relative mx-auto max-w-3xl space-y-5 px-6 pb-20">
           {CHANGELOG.map((release) => (
+            <React.Fragment key={release.version}>
+              {/* BUG-031 (Wave 54): sr-only h2 per release — CardTitle is <h3>. */}
+              <h2 className="sr-only">
+                Engine v{release.version} — {formatDate(release.date)}
+              </h2>
             <Card
-              key={release.version}
               id={`v${release.version}`}
               className="border-border bg-card/40"
             >
@@ -297,6 +302,7 @@ export default function AlgorithmChangelogPage() {
                 </ul>
               </CardContent>
             </Card>
+            </React.Fragment>
           ))}
 
           {/* CTA */}

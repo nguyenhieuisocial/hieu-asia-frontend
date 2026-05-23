@@ -388,6 +388,7 @@ export default function MethodologyTuViPage() {
         <div className="relative mx-auto max-w-6xl px-6 pb-20 lg:grid lg:grid-cols-[1fr_240px] lg:gap-8">
           <section className="space-y-6">
           {/* 1. Trường phái */}
+          <h2 className="sr-only">Trường phái dùng tại hieu.asia</h2>
           <Card id="truong-phai" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-heading text-xl text-foreground sm:text-2xl">
@@ -420,6 +421,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 2. Danh sách sao */}
+          <h2 className="sr-only">Danh sách sao sử dụng</h2>
           <Card id="danh-sach-sao" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-heading text-xl text-foreground sm:text-2xl">
@@ -484,6 +486,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* §5.1 — Danh sách 114 sao đầy đủ */}
+          <h2 className="sr-only">Danh sách 114 sao đầy đủ</h2>
           <Card id="danh-sach-114" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
@@ -551,6 +554,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 3. An Mệnh & Thân */}
+          <h2 className="sr-only">Cách an cung Mệnh và Thân</h2>
           <Card id="menh-than" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
@@ -580,6 +584,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 4. An chính tinh */}
+          <h2 className="sr-only">Cách an chính tinh</h2>
           <Card id="an-chinh-tinh" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
@@ -609,6 +614,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 5. Phụ tinh + Tứ Hoá */}
+          <h2 className="sr-only">Cách an phụ tinh và Tứ Hoá</h2>
           <Card id="phu-tinh-tu-hoa" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
@@ -641,6 +647,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 6. Đại vận */}
+          <h2 className="sr-only">Cách tính Đại Vận</h2>
           <Card id="dai-van" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
@@ -689,6 +696,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 7. Lưu niên */}
+          <h2 className="sr-only">Cách tính Lưu Niên</h2>
           <Card id="luu-nien" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
@@ -716,6 +724,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* §5.2 — Dị bản và nguồn quy tắc */}
+          <h2 className="sr-only">Dị bản và nguồn quy tắc</h2>
           <Card id="nguon-quy-tac" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
@@ -758,6 +767,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* §5.3 — Cung nào dùng cho chủ đề nào */}
+          <h2 className="sr-only">Cung nào dùng cho chủ đề nào</h2>
           <Card id="cung-chu-de" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
@@ -822,6 +832,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* §5.5 — Trường hợp đặc biệt */}
+          <h2 className="sr-only">Trường hợp đặc biệt</h2>
           <Card id="edge-cases" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
@@ -879,6 +890,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* §5.6 — Quy tắc khi AI nhắc thời gian cụ thể */}
+          <h2 className="sr-only">Quy tắc khi AI nhắc năm/quý/tháng cụ thể</h2>
           <Card id="rule-time-claims" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
@@ -912,6 +924,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* §5.7 — Hai chế độ diễn giải */}
+          <h2 className="sr-only">Hai chế độ diễn giải</h2>
           <Card id="modes" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
@@ -949,6 +962,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 8. AI vs Engine */}
+          <h2 className="sr-only">AI làm gì, engine làm gì</h2>
           <Card id="ai-vs-engine" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-heading text-xl text-foreground sm:text-2xl">
@@ -1004,6 +1018,7 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 9. Giới hạn */}
+          <h2 className="sr-only">Giới hạn và sự thật</h2>
           <Card id="gioi-han" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">

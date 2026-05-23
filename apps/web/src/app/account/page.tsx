@@ -42,11 +42,17 @@ function AccountLoader() {
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <main id="main-content" className="pt-16">
-        <div className="mx-auto max-w-3xl px-6 py-20 text-center">
+        <div
+          role="status"
+          aria-live="polite"
+          aria-busy="true"
+          className="mx-auto max-w-3xl px-6 py-20 text-center"
+        >
           <div
             aria-hidden
             className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-gold/30 border-t-gold"
           />
+          <span className="sr-only">Đang tải trang tài khoản…</span>
         </div>
       </main>
       <SiteFooter />
@@ -68,10 +74,16 @@ function AccountPageInner() {
   const [feedbackArmed, setFeedbackArmed] = React.useState(false);
 
   // Tab state: URL ?tab=... → state. Updates back to URL on change.
-  const initialTab: AccountTabId = isAccountTabId(search.get('tab'))
-    ? (search.get('tab') as AccountTabId)
-    : 'overview';
+  // BUG-030 (Wave 54): also remember when the requested key was invalid
+  // so we can surface "Tab '<key>' không tồn tại" instead of silently
+  // dumping the user on Overview. BUG-037: invalid keys persist across
+  // reload — we rewrite the URL to ?tab=overview to fix bookmark drift.
+  const rawTab = search.get('tab');
+  const initialTab: AccountTabId = isAccountTabId(rawTab) ? rawTab : 'overview';
   const [tab, setTab] = React.useState<AccountTabId>(initialTab);
+  const [invalidTabKey, setInvalidTabKey] = React.useState<string | null>(
+    rawTab && !isAccountTabId(rawTab) ? rawTab : null,
+  );
 
   React.useEffect(() => {
     setUserId(getOrCreateAnonUserId() || null);
@@ -86,6 +98,13 @@ function AccountPageInner() {
     window.history.replaceState(null, '', url.toString());
   }, [tab]);
 
+  // Auto-dismiss the "invalid tab" notice after 6s so it doesn't linger.
+  React.useEffect(() => {
+    if (!invalidTabKey) return;
+    const id = window.setTimeout(() => setInvalidTabKey(null), 6_000);
+    return () => window.clearTimeout(id);
+  }, [invalidTabKey]);
+
   // Auth gate
   React.useEffect(() => {
     if (!auth.loading && !auth.user) {
@@ -98,7 +117,12 @@ function AccountPageInner() {
       <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
         <main id="main-content" className="pt-16">
-          <div className="mx-auto max-w-3xl px-6 py-20 text-center">
+          <div
+            role="status"
+            aria-live="polite"
+            aria-busy={auth.loading}
+            className="mx-auto max-w-3xl px-6 py-20 text-center"
+          >
             <div
               aria-hidden
               className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-gold/30 border-t-gold"
@@ -141,6 +165,25 @@ function AccountPageInner() {
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-foreground/75 sm:text-base">
             Dữ liệu của bạn được lưu lại — không cần nhập lại mỗi lần.
           </p>
+
+          {invalidTabKey && (
+            <div
+              role="status"
+              aria-live="polite"
+              className="mt-6 rounded-lg border border-amber-700/40 bg-amber-900/15 px-4 py-3 text-sm text-amber-100"
+            >
+              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-amber-300/80">
+                Tab không tồn tại
+              </span>
+              <p className="mt-1 text-foreground/85">
+                Không tìm thấy tab{' '}
+                <code className="rounded bg-black/30 px-1.5 py-0.5 font-mono text-xs text-amber-200">
+                  {invalidTabKey}
+                </code>
+                . Đã chuyển về <strong>Tổng quan</strong>.
+              </p>
+            </div>
+          )}
 
           <div className="mt-8">
             <AccountTabs active={tab} onChange={setTab} />

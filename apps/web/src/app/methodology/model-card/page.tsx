@@ -155,6 +155,10 @@ function ListSection({
   const bulletColor = tone === 'rose' ? 'text-rose-400/80' : 'text-gold/70';
   return (
     <section className="relative mx-auto max-w-4xl px-6 py-8">
+      {/* BUG-031 (Wave 54): a11y/SEO h2 — CardTitle inside renders <h3>. */}
+      <h2 className="sr-only">
+        {n}. {title}
+      </h2>
       <Card className="border-border bg-card/40">
         <CardHeader>
           <div className="flex items-center gap-3">

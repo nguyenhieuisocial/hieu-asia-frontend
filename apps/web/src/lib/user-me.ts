@@ -7,9 +7,18 @@
  * mounts the effect in dev). OverviewTab / PaymentsTab add their own fetch
  * on top.
  *
- * Solution: a tiny module-scoped cache + in-flight promise dedupe. All
- * callers go through `fetchUserMe()`; concurrent calls share a single
- * Response, and subsequent calls within `TTL_MS` reuse the cached payload.
+ * BUG-027 (Wave 54): V2 audit measured 8 calls + 1 × 503 per page load.
+ * Root cause: the success-only cache let failure paths bypass the dedupe —
+ * each 503 retry hit the network because `cache` was never populated. Also
+ * `inflight` was cleared in `finally` AFTER `cache` was set, leaving a tiny
+ * window where two callers in the same micro-task could both miss the cache.
+ *
+ * Fix:
+ *   1. Cache failures briefly (5s) so a single 503/network blip stops the
+ *      thundering-herd of identity callers.
+ *   2. Resolve from cache BEFORE awaiting `inflight` so the cached-success
+ *      fast path doesn't accidentally start a parallel fetch.
+ *   3. Persist `inflight` until the json() body resolves AND cache is set.
  *
  * `invalidateUserMe()` lets explicit refresh paths bust the cache (e.g.
  * after a tier upgrade webhook lands).
@@ -23,8 +32,13 @@ export interface UserMeResponse {
 }
 
 const TTL_MS = 30_000;
+const ERROR_TTL_MS = 5_000;
 
-let cache: { at: number; data: UserMeResponse } | null = null;
+type CacheEntry =
+  | { kind: 'ok'; at: number; data: UserMeResponse }
+  | { kind: 'err'; at: number };
+
+let cache: CacheEntry | null = null;
 let inflight: Promise<UserMeResponse | null> | null = null;
 
 async function doFetch(): Promise<UserMeResponse | null> {
@@ -32,11 +46,15 @@ async function doFetch(): Promise<UserMeResponse | null> {
     const res = await fetch('/api/user/me', { cache: 'no-store' });
     // Content-type guard — never feed an HTML error page to JSON.parse.
     const ct = res.headers.get('content-type') ?? '';
-    if (!res.ok || !/\bjson\b/i.test(ct)) return null;
+    if (!res.ok || !/\bjson\b/i.test(ct)) {
+      cache = { kind: 'err', at: Date.now() };
+      return null;
+    }
     const data = (await res.json()) as UserMeResponse;
-    cache = { at: Date.now(), data };
+    cache = { kind: 'ok', at: Date.now(), data };
     return data;
   } catch {
+    cache = { kind: 'err', at: Date.now() };
     return null;
   } finally {
     inflight = null;
@@ -46,11 +64,18 @@ async function doFetch(): Promise<UserMeResponse | null> {
 /**
  * Fetch `/api/user/me`, deduping concurrent calls and reusing a recent
  * response for up to `TTL_MS`. Returns `null` on any non-JSON / error
- * response so callers can fall back to safe defaults.
+ * response so callers can fall back to safe defaults. Failed lookups are
+ * cached for `ERROR_TTL_MS` to prevent retry storms during outages.
  */
 export function fetchUserMe(): Promise<UserMeResponse | null> {
-  if (cache && Date.now() - cache.at < TTL_MS) {
-    return Promise.resolve(cache.data);
+  if (cache) {
+    const age = Date.now() - cache.at;
+    if (cache.kind === 'ok' && age < TTL_MS) {
+      return Promise.resolve(cache.data);
+    }
+    if (cache.kind === 'err' && age < ERROR_TTL_MS) {
+      return Promise.resolve(null);
+    }
   }
   if (inflight) return inflight;
   inflight = doFetch();

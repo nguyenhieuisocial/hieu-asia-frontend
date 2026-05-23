@@ -154,7 +154,14 @@ export function PaymentsTab() {
         </CardHeader>
         <CardContent>
           {!loaded ? (
-            <p className="text-sm text-muted-foreground">Đang tải…</p>
+            <p
+              role="status"
+              aria-live="polite"
+              aria-busy="true"
+              className="text-sm text-muted-foreground"
+            >
+              Đang tải…
+            </p>
           ) : history.length === 0 ? (
             <p className="text-sm text-muted-foreground">Chưa có giao dịch nào.</p>
           ) : (

@@ -85,7 +85,14 @@ export function AffiliateTab() {
 
       {!loaded ? (
         <Card>
-          <CardContent className="py-8 text-center text-sm text-muted-foreground">Đang tải…</CardContent>
+          <CardContent
+            role="status"
+            aria-live="polite"
+            aria-busy="true"
+            className="py-8 text-center text-sm text-muted-foreground"
+          >
+            Đang tải…
+          </CardContent>
         </Card>
       ) : notSignedUp || !data ? (
         <Card>

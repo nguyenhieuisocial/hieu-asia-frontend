@@ -107,7 +107,14 @@ export default function SignInPage() {
       <>
         <SiteNav />
         <main className="flex min-h-screen items-center justify-center bg-background text-foreground">
-          <p className="font-heading text-gold">Đang kiểm tra phiên đăng nhập…</p>
+          <p
+            role="status"
+            aria-live="polite"
+            aria-busy="true"
+            className="font-heading text-gold"
+          >
+            Đang kiểm tra phiên đăng nhập…
+          </p>
         </main>
         <SiteFooter />
       </>
