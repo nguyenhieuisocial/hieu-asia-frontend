@@ -150,7 +150,7 @@ export function MethodChooser() {
                 <div className="flex items-center justify-center gap-3 text-xs">
                   <Link
                     href={sampleHref}
-                    className="text-gold/85 transition-colors hover:text-gold"
+                    className="font-medium text-gold transition-colors hover:text-gold-300"
                   >
                     Xem mẫu →
                   </Link>

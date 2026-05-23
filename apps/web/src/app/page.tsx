@@ -13,7 +13,12 @@ import { PricingTeaser } from '@/components/home/PricingTeaser';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 
 export const metadata: Metadata = {
-  title: 'hieu.asia — Cẩm nang AI giúp hiểu mình và ra quyết định',
+  // Homepage title already contains the brand → bypass the layout
+  // template `%s · hieu.asia` via `{ absolute: ... }` to avoid the
+  // "hieu.asia ... · hieu.asia" duplication.
+  title: {
+    absolute: 'hieu.asia — Cẩm nang AI giúp hiểu mình và ra quyết định',
+  },
   description:
     'Kết hợp Tử Vi, Bát Tự, Thần Số Học, MBTI và AI Mentor để giúp bạn hiểu bản thân, đặt câu hỏi đúng và tự ra quyết định có trách nhiệm.',
   alternates: { canonical: 'https://hieu.asia/' },
@@ -226,6 +231,15 @@ export default function LandingPage() {
       <SiteNav />
       <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
         <HeroV3 />
+        {/* Wave 52 — persistent disclaimer chip surfaced near hero (also in footer). */}
+        <div
+          role="note"
+          className="mx-auto -mt-6 flex max-w-3xl items-center justify-center px-6"
+        >
+          <p className="rounded-full border border-gold/20 bg-card/50 px-4 py-1.5 text-center text-[11px] leading-snug text-muted-foreground backdrop-blur-sm sm:text-xs">
+            Kết quả mang tính tham khảo — không thay thế tư vấn y tế, pháp lý hay tài chính.
+          </p>
+        </div>
         <WhyTrust />
         <HowToStart />
         <MethodChooser />

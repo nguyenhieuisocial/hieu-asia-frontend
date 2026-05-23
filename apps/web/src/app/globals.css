@@ -19,6 +19,17 @@
     --border: 40 30% 75%;
     --ring: 40 51% 48%;
     --radius: 0.625rem;
+
+    /* Wave 52 — RGB anchors for proper alpha tokens.
+     * Use `rgb(var(--gold-rgb) / <alpha>)` instead of ad-hoc `bg-gold/N` so
+     * alpha steps stay consistent across the codebase. */
+    --gold-rgb: 184 146 61;          /* #B8923D */
+    --ink-rgb: 15 15 18;             /* #0F0F12 */
+    --gold-5: rgb(var(--gold-rgb) / 0.05);
+    --gold-10: rgb(var(--gold-rgb) / 0.10);
+    --gold-20: rgb(var(--gold-rgb) / 0.20);
+    --gold-40: rgb(var(--gold-rgb) / 0.40);
+    --gold-80: rgb(var(--gold-rgb) / 0.80);
   }
 
   .dark {
