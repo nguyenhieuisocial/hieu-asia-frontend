@@ -23,7 +23,11 @@ interface Customer {
   email?: string | null;
   telegram_id?: string | null;
   avatar_url?: string | null;
-  plan?: 'free' | 'premium' | 'subscription' | null;
+  // Wave 54 (#269 follow-up): `lifetime` added per #267 Lifetime tier wiring.
+  // sepay.ts mapTierToPlan writes 'lifetime' to users.plan when buyer pays
+  // the 4.99M one-time tier. Subscription kept as catch-all for legacy rows
+  // (pre-Wave-52 didn't split monthly/yearly).
+  plan?: 'free' | 'premium' | 'subscription' | 'lifetime' | null;
   created_at?: string | null;
   last_active?: string | null;
   sessions_count?: number | null;
@@ -38,19 +42,22 @@ interface CustomersResponse {
   error?: string;
 }
 
-type PlanFilter = 'all' | 'free' | 'premium' | 'subscription';
+type PlanFilter = 'all' | 'free' | 'premium' | 'subscription' | 'lifetime';
 
 const PLAN_LABEL: Record<PlanFilter, string> = {
   all: 'Tất cả',
   free: 'Miễn phí',
   premium: 'Premium',
   subscription: 'Subscription',
+  lifetime: 'Lifetime',
 };
 
 const PLAN_TONE: Record<NonNullable<Customer['plan']>, string> = {
   free: 'bg-muted/40 text-muted-foreground border-border',
   premium: 'bg-gold/15 text-gold border-gold/30',
   subscription: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30',
+  // Wave 54 — Lifetime uses purple to distinguish from time-bound subscription tones.
+  lifetime: 'bg-purple-500/15 text-purple-300 border-purple-500/40',
 };
 
 function fmtDate(iso: string | null | undefined) {
@@ -127,7 +134,7 @@ export default function CustomersPage() {
 
   // Aggregate stat strip
   const totalShown = customers.length;
-  const paying = customers.filter((c) => c.plan === 'premium' || c.plan === 'subscription').length;
+  const paying = customers.filter((c) => c.plan === 'premium' || c.plan === 'subscription' || c.plan === 'lifetime').length;
   const free = customers.filter((c) => !c.plan || c.plan === 'free').length;
   const last7 = customers.filter((c) => {
     if (!c.last_active) return false;
