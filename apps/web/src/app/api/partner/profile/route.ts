@@ -48,6 +48,7 @@ function sanitizePayoutDetails(input: unknown): Record<string, string> | null {
 
 interface NetworkRow {
   user_id: string;
+  affiliate_code: string;
 }
 
 export async function PATCH(req: NextRequest) {
@@ -70,8 +71,17 @@ export async function PATCH(req: NextRequest) {
   }
   const details = sanitizePayoutDetails(body.payout_details) ?? {};
 
-  // Verify the JWT maps to an affiliate row first (RLS does the scoping).
-  const meR = await sbUser<NetworkRow[]>('affiliate_network?select=user_id&limit=1', jwt);
+  // Wave 45-fix (#236): payout_method + payout_details columns live on
+  // `hieu_asia.affiliates` (PK=code), NOT `affiliate_network` (PK=user_id).
+  // Previous Wave 44 implementation PATCHed the wrong table — UPDATE
+  // returned 0 rows silently (no error) but data never persisted. Wave 45
+  // CSV builder reads from `affiliates`, so this fix restores the contract:
+  // (1) lookup affiliate_code via affiliate_network using JWT-scoped RLS,
+  // (2) PATCH affiliates WHERE code = <verified code>.
+  const meR = await sbUser<NetworkRow[]>(
+    'affiliate_network?select=user_id,affiliate_code&limit=1',
+    jwt,
+  );
   const meRow = meR.ok && meR.body && meR.body.length > 0 ? meR.body[0] : null;
   if (!meRow) {
     return NextResponse.json(
@@ -79,10 +89,17 @@ export async function PATCH(req: NextRequest) {
       { status: 404 },
     );
   }
-  const userId = meRow.user_id;
+  const affiliateCode = meRow.affiliate_code;
+  if (!affiliateCode) {
+    return NextResponse.json(
+      { ok: false, error: 'affiliate_code missing for this user' },
+      { status: 404 },
+    );
+  }
 
-  // Update via service-role (RLS UPDATE policy not yet defined). Scoped to
-  // the verified user_id from the JWT lookup — cannot patch other rows.
+  // Update via service-role (RLS UPDATE policy not yet defined on `affiliates`).
+  // Scoped to the verified affiliate_code from the JWT lookup — cannot patch
+  // other rows because the lookup was RLS-gated.
   const url =
     process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || '';
   const svcKey =
@@ -96,7 +113,7 @@ export async function PATCH(req: NextRequest) {
     );
   }
   const r = await fetch(
-    `${url.replace(/\/+$/, '')}/rest/v1/affiliate_network?user_id=eq.${encodeURIComponent(userId)}`,
+    `${url.replace(/\/+$/, '')}/rest/v1/affiliates?code=eq.${encodeURIComponent(affiliateCode)}`,
     {
       method: 'PATCH',
       headers: {
@@ -119,7 +136,7 @@ export async function PATCH(req: NextRequest) {
     );
   }
   const updated = (await r.json()) as Array<{
-    user_id: string;
+    code: string;
     payout_method: string;
     payout_details: Record<string, unknown> | null;
   }>;
