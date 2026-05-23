@@ -60,21 +60,21 @@ export function usePartnerGuard(): GuardState {
       if (loading) return;
       if (!user) {
         setState({ status: 'redirecting' });
-        router.replace('/signin?redirect=/partner');
+        router.replace('/signin?next=/partner');
         return;
       }
       try {
         const supabase = getSupabaseAuth();
         if (!supabase) {
           setState({ status: 'redirecting' });
-          router.replace('/signin?redirect=/partner');
+          router.replace('/signin?next=/partner');
           return;
         }
         const { data: sessionData } = await supabase.auth.getSession();
         const token = sessionData.session?.access_token;
         if (!token) {
           setState({ status: 'redirecting' });
-          router.replace('/signin?redirect=/partner');
+          router.replace('/signin?next=/partner');
           return;
         }
         const r = await fetch('/api/partner/me', {
@@ -84,7 +84,7 @@ export function usePartnerGuard(): GuardState {
         if (cancelled) return;
         if (r.status === 401) {
           setState({ status: 'redirecting' });
-          router.replace('/signin?redirect=/partner');
+          router.replace('/signin?next=/partner');
           return;
         }
         const d = (await r.json()) as { ok: boolean; me?: PartnerMe; error?: string };
