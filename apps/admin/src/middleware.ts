@@ -84,7 +84,14 @@ export async function middleware(request: NextRequest) {
 export const config = {
   // Skip Next internals + static assets + login API (needs to be reachable
   // without session) + admin-proxy (does its own HMAC check at the route).
+  //
+  // Wave 57.4.2 addition: PWA manifest + brand assets (favicon-32, icon-192/512,
+  // icon-maskable-*, apple-icon, og-image) MUST be reachable without auth
+  // so browsers can fetch them for tab favicon, "Add to Home Screen", and
+  // social share unfurl. The original matcher only excluded `favicon.ico`
+  // + `icon` route prefix — missed manifest.webmanifest + new static PNGs
+  // → all returned 307 to /login.
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|icon|api/health|api/admin/login|api/admin/logout).*)',
+    '/((?!_next/static|_next/image|favicon|icon|apple-icon|manifest|og-|robots|sitemap|api/health|api/admin/login|api/admin/logout).*)',
   ],
 };
