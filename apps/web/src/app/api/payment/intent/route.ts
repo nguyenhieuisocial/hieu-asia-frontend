@@ -32,12 +32,21 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Wave 53 P1 (#272) — IDOR fix. Forward the caller's Supabase access token
+  // so the worker can verify identity and derive user_id server-side, instead
+  // of trusting the client-supplied user_id field. The worker treats body.user_id
+  // as authoritative only when the Authorization header is absent (anonymous
+  // flow), and even then enforces the `anon-*` shape so a logged-in attacker
+  // can no longer POST `{ user_id: <victim_uuid> }` to bind unlocks to others.
+  const authz = req.headers.get('authorization');
+
   try {
     const res = await fetch(`${HIEU_API_URL}/payment/intent`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
         'X-Service-Token': HIEU_API_SERVICE_TOKEN,
+        ...(authz ? { authorization: authz } : {}),
       },
       body: JSON.stringify(body),
       cache: 'no-store',

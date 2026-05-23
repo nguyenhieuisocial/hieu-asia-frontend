@@ -32,10 +32,20 @@ import { PRICING } from '@/lib/pricing';
 
 /**
  * Launch promotion — matches the `hieu_asia.coupons` table seed.
- * Set `code` to null (or remove the banner) when the campaign ends.
+ *
+ * Wave 53 P1 (#272) — DISABLED. The banner advertised 30% off but the
+ * `/payment/intent` worker still charged the full `TIER_PRICES_VND[tier]`
+ * because there was no `coupon_code` field on the intent contract and no
+ * server-side validation against the `coupons` table. Showing the banner
+ * without the discount applying = customer pays full price + complaints +
+ * chargeback fraud risk. Set `code: null` to suppress the banner until the
+ * coupon flow ships (see follow-up: wire body.coupon_code → worker validates
+ * against `hieu_asia.coupons` from migration 0010 → applies discount to
+ * amount_due → re-validates in webhook). Founder can flip back via flag once
+ * the wire is in place.
  */
 const LAUNCH_PROMO = {
-  code: 'LAUNCH30',
+  code: null as string | null,
   percentOff: 30,
   endsAt: '2026-06-30',
 } as const;

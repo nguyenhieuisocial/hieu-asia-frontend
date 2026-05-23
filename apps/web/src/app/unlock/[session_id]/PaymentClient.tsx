@@ -16,6 +16,7 @@ import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { QRDisplay, type PaymentIntent } from '@/components/payment/QRDisplay';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
+import { getSupabaseAuth } from '@/lib/auth-client';
 
 type Tier =
   | 'premium'
@@ -36,22 +37,44 @@ interface IntentEnvelope {
   error?: string;
 }
 
-function resolveUserId(sessionId: string): string {
-  if (typeof window === 'undefined') return `anon-${sessionId}`;
-  return (
-    window.sessionStorage.getItem('hieu.user_id') ?? `anon-${sessionId}`
-  );
+/**
+ * Wave 53 P1 (#272) — IDOR fix. Authenticated callers send a Bearer token so
+ * the worker derives user_id from the verified JWT instead of trusting the
+ * client. Anonymous callers fall back to an `anon-<sessionId>` shape which
+ * the worker accepts only when no Authorization header is present.
+ */
+async function resolveAuth(
+  sessionId: string,
+): Promise<{ token: string | null; anonUserId: string }> {
+  const anonUserId = `anon-${sessionId}`;
+  if (typeof window === 'undefined') return { token: null, anonUserId };
+  try {
+    const supa = getSupabaseAuth();
+    if (!supa) return { token: null, anonUserId };
+    const { data } = await supa.auth.getSession();
+    const token = data.session?.access_token ?? null;
+    return { token, anonUserId };
+  } catch {
+    return { token: null, anonUserId };
+  }
 }
 
 async function createIntent(
   sessionId: string,
   tier: Tier,
 ): Promise<PaymentIntent> {
+  const { token, anonUserId } = await resolveAuth(sessionId);
   const res = await fetch('/api/payment/intent', {
     method: 'POST',
-    headers: { 'content-type': 'application/json' },
+    headers: {
+      'content-type': 'application/json',
+      ...(token ? { authorization: `Bearer ${token}` } : {}),
+    },
     body: JSON.stringify({
-      user_id: resolveUserId(sessionId),
+      // user_id is only consulted by the worker when no Authorization header
+      // is present. Authenticated callers' user_id is overridden server-side
+      // from the verified JWT (see worker /payment/intent handler).
+      user_id: anonUserId,
       session_id: sessionId,
       tier,
     }),
