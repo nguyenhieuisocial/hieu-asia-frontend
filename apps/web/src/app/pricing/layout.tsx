@@ -59,17 +59,11 @@ const PRODUCT_JSONLD = {
       url: 'https://hieu.asia/pricing',
       category: 'one-time',
     },
-    // Launch promo — drop this entry when LAUNCH30 ends.
-    {
-      '@type': 'Offer',
-      name: 'Ưu đãi ra mắt LAUNCH30 — giảm 30% mọi gói trả phí',
-      priceCurrency: 'VND',
-      availability: 'https://schema.org/InStock',
-      url: 'https://hieu.asia/pricing',
-      validFrom: '2026-05-01',
-      validThrough: '2026-06-30',
-      eligibleCustomerType: 'NewCustomer',
-    },
+    // Wave 54 #282 (/ultrareview P1): LAUNCH30 Offer dropped. Commit e370aaf
+    // removed the on-page banner because the worker had no coupon validation
+    // — the JSON-LD entry was still being indexed by Google rich results
+    // and re-opened the same "advertise discount that doesn't apply" fraud
+    // risk via SERP. Re-add only when the coupon flow is wired end-to-end.
   ],
 };
 
