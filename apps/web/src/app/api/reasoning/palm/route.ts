@@ -29,23 +29,45 @@ function getSupabase() {
   return createClient(url, key, { auth: { persistSession: false } });
 }
 
+/**
+ * imageUrl must be HTTPS with hostname strictly under .supabase.co or .hieu.asia
+ * (defense against arbitrary remote URL — could be used to scan internal hosts
+ * via SSRF).
+ *
+ * /ultrareview Phase 2.4+2.5 caught the previous version (2026-05-23): substring
+ * `.includes('supabase.co')` accepts `https://evil.com/?x=supabase.co` because
+ * "supabase.co" appears anywhere in the string. Replaced with WHATWG URL parse +
+ * `hostname.endsWith('.supabase.co')` proper host check. Leading dot prevents
+ * "evilsupabase.co" suffix match.
+ */
+function isAllowedImageUrl(s: unknown): s is string {
+  if (typeof s !== 'string' || s.length > 500 || !s.startsWith('https://')) return false;
+  let u: URL;
+  try {
+    u = new URL(s);
+  } catch {
+    return false;
+  }
+  if (u.protocol !== 'https:') return false;
+  const h = u.hostname.toLowerCase();
+  return (
+    h === 'supabase.co' ||
+    h.endsWith('.supabase.co') ||
+    h === 'hieu.asia' ||
+    h.endsWith('.hieu.asia')
+  );
+}
+
 function validateInput(i: unknown): i is PalmInput {
   if (!i || typeof i !== 'object') return false;
   const inp = i as PalmInput;
-  // imageUrl must be HTTPS Supabase Storage URL (defense against arbitrary
-  // remote URL — could be used to scan internal hosts via SSRF)
-  const urlOk =
-    typeof inp.imageUrl === 'string' &&
-    inp.imageUrl.startsWith('https://') &&
-    (inp.imageUrl.includes('supabase.co') || inp.imageUrl.includes('hieu.asia')) &&
-    inp.imageUrl.length <= 500;
   return (
     typeof inp.displayName === 'string' &&
     inp.displayName.length > 0 &&
     inp.displayName.length <= 100 &&
     ['M', 'F', 'NB'].includes(inp.gender) &&
     ['left', 'right'].includes(inp.hand) &&
-    urlOk
+    isAllowedImageUrl(inp.imageUrl)
   );
 }
 

@@ -124,26 +124,48 @@ ${args.context ? `## Input context\n${args.context}\n\n` : ''}## Rubric
     label: `eval.score.${args.kind}`,
   });
 
-  // Parse — strip markdown fences if model wrapped output despite instruction
-  let raw = result.text.trim();
-  if (raw.startsWith('```')) {
-    raw = raw.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
+  // Parse — extract first JSON object from raw text.
+  //
+  // /ultrareview Phase 2.4+2.5 caught (2026-05-23): the previous markdown-fence
+  // strip only handled leading ```` ```json ```` and trailing ```` ``` ````
+  // perfectly aligned to string boundaries. A judge that prefixed prose ("Đây là
+  // đánh giá: { ... }") or appended a follow-up sentence broke parse. Regex
+  // first-`{...}` match is more forgiving: greedy `[\s\S]*` extends to last `}`,
+  // covering nested objects in `reasoning` strings.
+  const raw = result.text.trim();
+  const jsonMatch = raw.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) {
+    throw new Error(
+      `eval.scoreReading: judge output contains no JSON object. Raw: ${raw.slice(0, 200)}`,
+    );
   }
   let parsed: { coverage: number; tone: number; accuracy: number; voice: number; reasoning: string };
   try {
-    parsed = JSON.parse(raw);
+    parsed = JSON.parse(jsonMatch[0]);
   } catch (err) {
     throw new Error(
       `eval.scoreReading: judge output not valid JSON — ${err instanceof Error ? err.message : err}. Raw: ${raw.slice(0, 200)}`,
     );
   }
 
-  // Clamp + average
-  const clamp = (n: unknown) => Math.max(1, Math.min(5, Number(n) || 1));
-  const coverage = clamp(parsed.coverage);
-  const tone = clamp(parsed.tone);
-  const accuracy = clamp(parsed.accuracy);
-  const voice = clamp(parsed.voice);
+  // Clamp + average.
+  //
+  // /ultrareview Phase 2.4+2.5 caught (2026-05-23): the previous `Number(n) || 1`
+  // silently floored ANY malformed value (NaN, null, undefined, "high") to 1.
+  // That corrupts the eval signal — a judge format regression looks like a
+  // model quality regression. Throw instead, so the cron alerts loud and the
+  // judge prompt gets fixed.
+  const clamp = (n: unknown, dim: string) => {
+    const v = Number(n);
+    if (!Number.isFinite(v)) {
+      throw new Error(`eval.scoreReading: judge returned non-numeric ${dim}=${JSON.stringify(n)}`);
+    }
+    return Math.max(1, Math.min(5, v));
+  };
+  const coverage = clamp(parsed.coverage, 'coverage');
+  const tone = clamp(parsed.tone, 'tone');
+  const accuracy = clamp(parsed.accuracy, 'accuracy');
+  const voice = clamp(parsed.voice, 'voice');
   const average = Math.round(((coverage + tone + accuracy + voice) / 4) * 100) / 100;
 
   return {
