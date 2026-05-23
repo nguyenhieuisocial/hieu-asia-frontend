@@ -13,6 +13,7 @@ import {
 } from '@/lib/api-client';
 import { CautionBanner } from '@/components/caution-banner';
 import { ReportContextSummary } from '@/components/report-context-summary';
+import { ResultDisclaimer } from '@/components/ResultDisclaimer';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { ReportSkeleton } from '@/components/skeletons/ReportSkeleton';
 import { TuViChartSection } from '@/components/tuvi/TuViChartSection';
@@ -179,6 +180,9 @@ function ReportContent() {
       </header>
 
       <div className="space-y-6">
+        {/* Wave 52.1 — per-report disclaimer at top of report (BUG-018). */}
+        <ResultDisclaimer />
+
         <ReportContextSummary
           displayName={(session?.inputs?.display_name as string) ?? 'Bạn'}
           role={(session?.inputs?.role as string) ?? 'Người dùng'}

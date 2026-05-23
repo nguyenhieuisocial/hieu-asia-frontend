@@ -120,10 +120,22 @@ export function NewsletterSignup({
               <Button
                 type="submit"
                 disabled={state === 'loading' || !email}
-                className="w-full"
+                aria-describedby={
+                  !email && state !== 'loading' ? `${id}-hint` : undefined
+                }
+                className="w-full disabled:border disabled:border-gold/40"
               >
                 {state === 'loading' ? 'Đang đăng ký…' : 'Đăng ký miễn phí'}
               </Button>
+              {/* Wave 52.1 — visible helper text when button is disabled (BUG-019). */}
+              {!email && state !== 'loading' && (
+                <p
+                  id={`${id}-hint`}
+                  className="text-[11px] text-muted-foreground"
+                >
+                  Nhập email trước để đăng ký.
+                </p>
+              )}
               {error && (
                 <p
                   id={`${id}-error`}

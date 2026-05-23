@@ -32,12 +32,12 @@ const LEARN_SECTIONS: readonly NavSection[] = [
   {
     title: 'Methodology',
     items: [
-      { href: '/methodology', label: 'Methodology tổng quan' },
-      { href: '/methodology/tu-vi', label: 'Methodology Tử Vi' },
-      { href: '/methodology/bat-tu', label: 'Methodology Bát Tự (beta)' },
+      { href: '/methodology', label: 'Phương pháp luận' },
+      { href: '/methodology/tu-vi', label: 'Phương pháp Tử Vi' },
+      { href: '/methodology/bat-tu', label: 'Phương pháp Bát Tự (beta)' },
       { href: '/methodology/model-card', label: 'AI Model Card' },
       { href: '/methodology/ai-safety', label: 'AI Safety Policy' },
-      { href: '/methodology/algorithm-changelog', label: 'Algorithm changelog' },
+      { href: '/methodology/algorithm-changelog', label: 'Lịch sử thuật toán' },
     ],
   },
   {

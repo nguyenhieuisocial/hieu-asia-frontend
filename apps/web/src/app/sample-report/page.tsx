@@ -16,6 +16,7 @@ import {
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { ResultDisclaimer } from '@/components/ResultDisclaimer';
 
 export const metadata: Metadata = {
   title: 'Mẫu báo cáo Tử Vi — xem trước trải nghiệm Premium',
@@ -199,6 +200,11 @@ export default function SampleReportPage() {
               Tử Vi Bắc phái 114 sao
             </span>
           </div>
+        </section>
+
+        {/* Wave 52.1 — per-report disclaimer at top of result preview (BUG-018). */}
+        <section className="relative mx-auto max-w-3xl px-6 pb-4">
+          <ResultDisclaimer />
         </section>
 
         {/* Executive summary */}

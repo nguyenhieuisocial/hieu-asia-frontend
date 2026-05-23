@@ -18,6 +18,7 @@ import {
   PinnedInsights,
   type PinnedInsight,
 } from '@/components/pinned-insights';
+import { ResultDisclaimer } from '@/components/ResultDisclaimer';
 import {
   appendMessage as appendStoredMessage,
   clearHistory,
@@ -340,6 +341,10 @@ export default function MentorChatPage() {
         <section className="flex flex-1 flex-col">
           <div className="flex-1 overflow-y-auto">
             <div className="mx-auto w-full max-w-3xl">
+              {/* Wave 52.1 — per-report disclaimer at top of mentor area (BUG-018). */}
+              <div className="px-4 pt-3">
+                <ResultDisclaimer />
+              </div>
               <ChatMessageList
                 messages={messages}
                 isTyping={showTyping}
