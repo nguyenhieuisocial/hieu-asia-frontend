@@ -38,7 +38,7 @@ export function ZodiacCard({ zodiacKey, zodiacName, icon, overallScore, summary,
       <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
         {loading ? 'Đang tải…' : summary ?? 'Bấm để xem chi tiết.'}
       </p>
-      <div className="mt-3 text-xs text-gold/70 transition-colors group-hover:text-gold">
+      <div className="mt-3 text-xs text-gold/85 transition-colors group-hover:text-gold">
         Xem chi tiết →
       </div>
     </Link>

@@ -94,7 +94,7 @@ export default async function Page() {
           <h2 className="font-heading text-lg font-semibold text-foreground">
             Chọn tuổi của bạn
           </h2>
-          <p className="hidden font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/40 sm:block">
+          <p className="hidden font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/75 sm:block">
             12 con giáp · điểm 1–10
           </p>
         </div>

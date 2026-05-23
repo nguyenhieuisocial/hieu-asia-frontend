@@ -170,7 +170,11 @@ export function SubscribePush({ defaultZodiac, vapidPublicKey }: SubscribePushPr
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <label htmlFor="subscribe-zodiac" className="sr-only">
+            Chọn tuổi của bạn
+          </label>
           <select
+            id="subscribe-zodiac"
             value={zodiac}
             onChange={(e) => setZodiac(e.target.value)}
             disabled={busy || subscribed}
