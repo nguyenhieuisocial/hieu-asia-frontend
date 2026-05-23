@@ -26,17 +26,37 @@ function vnd(n: number) {
 
 export function LeaderboardPodium({ top3 }: Props) {
   if (top3.length === 0) return null;
-  // Desktop ordering: #2, #1, #3
-  const order = top3.length >= 3 ? [1, 0, 2] : top3.map((_, i) => i);
+  // Desktop ordering: #2, #1, #3 (visual). Semantic order in the <ol> remains
+  // #1, #2, #3 so screen readers and search engines read the podium ranked,
+  // not visually-positioned (Wave 48 P3-B a11y fix).
+  // visualOrder[i] = which rank slot the i-th visual column shows.
+  const visualOrder = top3.length >= 3 ? [1, 0, 2] : top3.map((_, i) => i);
+  // Map rank-index (0,1,2) → visual column (0,1,2) so we can set CSS `order`
+  // on each <li> and keep DOM order = semantic rank order.
+  const columnFor = new Map<number, number>();
+  visualOrder.forEach((rankIdx, col) => columnFor.set(rankIdx, col));
 
   return (
-    <div className="grid items-end gap-4 sm:grid-cols-3">
-      {order.map((i) => {
-        const row = top3[i];
-        if (!row) return null;
-        return <PodiumCard key={row.affiliate_code || i} row={row} rank={i + 1} />;
-      })}
-    </div>
+    <>
+      <h2 className="sr-only">Top 3 affiliate</h2>
+      <ol
+        aria-label="Top 3 affiliate"
+        className="grid list-none items-end gap-4 p-0 sm:grid-cols-3"
+      >
+        {top3.map((row, rankIdx) => {
+          const col = columnFor.get(rankIdx) ?? rankIdx;
+          return (
+            <li
+              key={row.affiliate_code || rankIdx}
+              style={{ order: col }}
+              className="contents sm:block"
+            >
+              <PodiumCard row={row} rank={rankIdx + 1} />
+            </li>
+          );
+        })}
+      </ol>
+    </>
   );
 }
 
