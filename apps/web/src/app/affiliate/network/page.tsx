@@ -131,7 +131,9 @@ export default function AffiliateNetworkPage() {
         fetch(`${API_BASE}/aff/children`, { headers, cache: 'no-store' }),
       ]);
       if (meRes.status === 401 || chRes.status === 401) {
-        setError('not_signed_in');
+        // Wave 55 BUG-A: token validated above; 401 means user has no affiliate
+        // enrollment row. Route to "đăng ký affiliate" CTA, not signin.
+        setError('not_enrolled');
         return;
       }
       const meJson = await safeJson<MeResponse>(meRes);
@@ -191,9 +193,39 @@ export default function AffiliateNetworkPage() {
             <p className="mb-6 text-muted-foreground">
               Bạn cần đăng nhập để xem mạng lưới affiliate của mình.
             </p>
-            <Link href="/signin">
+            <Link href="/signin?next=/affiliate/network">
               <Button className="bg-gold text-ink hover:bg-gold/90">Đăng nhập</Button>
             </Link>
+          </div>
+        </main>
+        <SiteFooter />
+      </div>
+    );
+  }
+
+  if (error === 'not_enrolled') {
+    return (
+      <div className="min-h-screen bg-background text-foreground">
+        <SiteNav />
+        <main className="mx-auto max-w-5xl px-6 pt-16 pb-20">
+          <div className="mx-auto max-w-md text-center">
+            <h1 className="mb-2 font-heading text-2xl font-bold">
+              Bạn chưa đăng ký <span className="text-gold">affiliate</span>
+            </h1>
+            <p className="mb-6 text-muted-foreground">
+              Bạn đã đăng nhập, nhưng chưa tham gia chương trình affiliate.
+              Đăng ký miễn phí để mở mạng lưới giới thiệu của bạn.
+            </p>
+            <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
+              <Link href="/affiliate/signup">
+                <Button className="bg-gold text-ink hover:bg-gold/90">
+                  Đăng ký affiliate
+                </Button>
+              </Link>
+              <Link href="/affiliate">
+                <Button variant="outline">Tìm hiểu chương trình</Button>
+              </Link>
+            </div>
           </div>
         </main>
         <SiteFooter />

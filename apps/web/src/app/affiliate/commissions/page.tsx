@@ -144,7 +144,11 @@ export default function AffiliateCommissionsPage() {
         cache: 'no-store',
       });
       if (res.status === 401) {
-        setError('not_signed_in');
+        // Wave 55 BUG-A: token was already validated by getSession() above; reaching
+        // here with a 401 means the worker rejected because the user has no
+        // `affiliates` enrollment row. Surface as "not enrolled" (link to
+        // /affiliate/signup) instead of misleading "đăng nhập" CTA.
+        setError('not_enrolled');
         return;
       }
       const j = await safeJson<CommissionsResponse>(res);
@@ -199,9 +203,46 @@ export default function AffiliateCommissionsPage() {
             <p className="mb-6 text-muted-foreground">
               Bạn cần đăng nhập để xem lịch sử hoa hồng affiliate.
             </p>
-            <Link href="/signin">
+            <Link href="/signin?next=/affiliate/commissions">
               <Button className="bg-gold text-ink hover:bg-gold/90">Đăng nhập</Button>
             </Link>
+          </div>
+        </main>
+        <SiteFooter />
+      </div>
+    );
+  }
+
+  if (error === 'not_enrolled') {
+    return (
+      <div className="min-h-screen bg-background text-foreground">
+        <SiteNav />
+        <main className="mx-auto max-w-5xl px-6 pt-16 pb-20">
+          <div className="mx-auto max-w-md text-center">
+            <h1 className="mb-2 font-heading text-2xl font-bold">
+              Bạn chưa đăng ký <span className="text-gold">affiliate</span>
+            </h1>
+            <p className="mb-6 text-muted-foreground">
+              Bạn đã đăng nhập, nhưng chưa tham gia chương trình affiliate.
+              Đăng ký miễn phí để nhận link giới thiệu + theo dõi hoa hồng.
+            </p>
+            <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
+              <Link href="/affiliate/signup">
+                <Button className="bg-gold text-ink hover:bg-gold/90">
+                  Đăng ký affiliate
+                </Button>
+              </Link>
+              <Link href="/affiliate">
+                <Button variant="outline">Tìm hiểu chương trình</Button>
+              </Link>
+            </div>
+            <p className="mt-6 text-xs text-muted-foreground">
+              Đối tác cấp cao (Mentor / nhóm KOL) vui lòng dùng{' '}
+              <Link href="/partner" className="underline hover:text-gold">
+                Cổng đối tác
+              </Link>
+              .
+            </p>
           </div>
         </main>
         <SiteFooter />
