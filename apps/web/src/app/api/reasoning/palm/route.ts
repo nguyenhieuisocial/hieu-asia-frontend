@@ -174,6 +174,7 @@ export async function POST(req: NextRequest) {
       synthesis: finalState.synthesis,
       classification: finalState.classification,
       elapsedMs,
+      plan: quota.plan, // Wave 58 — for PostReadingUpsell branching
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

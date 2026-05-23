@@ -155,6 +155,7 @@ export async function POST(req: NextRequest) {
       synthesis: finalState.synthesis,
       fiveElements: finalState.fiveElements,
       elapsedMs,
+      plan: quota.plan, // Wave 58 — for PostReadingUpsell branching
       pillars: finalState.pillars.map((p) => ({
         pillar: p.pillar,
         hasAnalysis: p.analysis !== null,

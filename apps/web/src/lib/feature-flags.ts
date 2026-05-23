@@ -110,6 +110,30 @@ export const FLAGS = {
    * officially launches. Flip ON to reveal L2 metrics network-wide.
    */
   AFFILIATE_L2_VISIBLE: "affiliate_l2_visible",
+
+  /**
+   * `upsell_post_reading_v1` — multivariate string.
+   *
+   * Variants for the PostReadingUpsell banner headline (Wave 58):
+   *  - `control`            → banner hidden (baseline conversion)
+   *  - `mentor-focus`       → "Mở khoá Mentor chat — Hỏi sâu bất kỳ lúc nào"
+   *  - `unlimited-focus`    → "Đọc không giới hạn — 199.000đ/tháng"
+   *  - `lifetime-discount`  → "Trọn đời 4.990.000đ — Tiết kiệm 60% so với 2 năm"
+   *
+   * Defaults to `control` so the banner stays hidden until the flag is
+   * configured in PostHog. Founder decision: aggressive upsell after every
+   * reading. Each variant tracks `upsell_clicked` and `upsell_dismissed`.
+   */
+  UPSELL_POST_READING_V1: "upsell_post_reading_v1",
+
+  /**
+   * `reading_engine_v2` — multivariate string.
+   *
+   * Wave 56 Phase 2.7 rollout of the LangGraph reasoning engine.
+   * Variants: `control` (worker-based legacy) | `v2` (Next.js LangGraph).
+   * Default control. Canary ramp: 10% → 50% → 100% over 4 days.
+   */
+  READING_ENGINE_V2: "reading_engine_v2",
 } as const;
 
 export type FlagKey = (typeof FLAGS)[keyof typeof FLAGS];

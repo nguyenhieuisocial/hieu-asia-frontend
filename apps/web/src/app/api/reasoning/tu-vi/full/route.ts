@@ -200,6 +200,9 @@ export async function POST(req: NextRequest) {
       synthesis: finalState.synthesis,
       crossReference: finalState.crossReference,
       elapsedMs,
+      // Wave 58 — expose user's plan so the client can render PostReadingUpsell
+      // with the right copy (subscriber → affiliate, free → variant headline).
+      plan: quota.plan,
       palaces: finalState.palaces.map((p) => ({
         palace: p.palace,
         hasAnalysis: p.analysis !== null,
