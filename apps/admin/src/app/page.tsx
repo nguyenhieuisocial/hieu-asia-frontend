@@ -35,12 +35,18 @@ import { QuickActions } from '@/components/admin/quick-actions';
 import { ActivityFeed } from '@/components/admin/activity-feed';
 import { LiveBadge } from '@/components/admin/live-badge';
 import { PageHeader } from '@/components/admin/page-header';
+import { EmptyState } from '@/components/admin/empty-state';
+import Link from 'next/link';
+import { AlertTriangle, LineChart as LineChartIcon } from 'lucide-react';
 import {
   getCostByDay,
   getKpis,
   getQueueDepth,
   getReadingsPerDay,
 } from '@/lib/admin-api';
+
+/** BUG-022: surface a visual alert + Triage CTA when oldest pending > 60 min. */
+const QUEUE_ALERT_AGE_SECONDS = 60 * 60;
 
 function fmtUsd(v: number) {
   return `$${v.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
@@ -76,6 +82,14 @@ export default function AdminOverviewPage() {
   // Active queue items
   const activeJobs =
     (queue.data?.default ?? 0) + (queue.data?.high_priority ?? 0) + (queue.data?.rag ?? 0);
+  // BUG-022 — queue alert: oldest pending older than threshold needs human triage.
+  const oldestAgeSec = queue.data?.oldest_pending_age_seconds ?? 0;
+  const queueAlerting = oldestAgeSec > QUEUE_ALERT_AGE_SECONDS;
+  const oldestAgeLabel = oldestAgeSec
+    ? oldestAgeSec >= 3600
+      ? `${Math.floor(oldestAgeSec / 3600)}h${Math.round((oldestAgeSec % 3600) / 60)}m`
+      : `${Math.round(oldestAgeSec / 60)}m`
+    : null;
 
   return (
     <div className="space-y-6">
@@ -92,6 +106,30 @@ export default function AdminOverviewPage() {
       />
 
       <MockBanner source={kpis.data?._source ?? readings.data?._source} />
+
+      {queueAlerting && (
+        <div
+          role="alert"
+          className="flex items-center justify-between gap-3 rounded-xl border border-red-500/40 bg-red-500/[0.07] px-4 py-3 text-sm"
+        >
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-red-400" aria-hidden />
+            <div>
+              <p className="font-semibold text-red-200">Queue đang đọng</p>
+              <p className="text-xs text-red-100/80">
+                Tác vụ chờ lâu nhất {oldestAgeLabel} · pending {queue.data?.default ?? 0}.
+                Cần triage ngay.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/sessions"
+            className="inline-flex h-9 shrink-0 items-center justify-center whitespace-nowrap rounded-md border border-red-400/50 bg-red-500/10 px-3 text-xs font-medium text-red-100 transition-colors hover:bg-red-500/20"
+          >
+            Triage queue
+          </Link>
+        </div>
+      )}
 
       {/* Hero KPI strip */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -113,14 +151,21 @@ export default function AdminOverviewPage() {
         <KpiCard
           label="Đang xử lý"
           value={activeJobs}
-          icon={<ListChecks className="h-4 w-4" />}
-          accent={activeJobs > 0 ? 'gold' : 'jade'}
+          icon={
+            queueAlerting ? (
+              <AlertTriangle className="h-4 w-4" />
+            ) : (
+              <ListChecks className="h-4 w-4" />
+            )
+          }
+          accent={queueAlerting ? 'red' : activeJobs > 0 ? 'gold' : 'jade'}
           delta={
-            queue.data?.oldest_pending_age_seconds && queue.data.oldest_pending_age_seconds > 3600
-              ? { value: `${Math.round(queue.data.oldest_pending_age_seconds / 60)}m`, direction: 'down' }
+            oldestAgeLabel
+              ? { value: oldestAgeLabel, direction: queueAlerting ? 'down' : 'flat' }
               : null
           }
           hint={queue.data ? `${queue.data.default ?? 0} pending` : 'queue'}
+          href={queueAlerting ? '/sessions' : undefined}
         />
         <KpiCard
           label="Doanh thu 7 ngày"
@@ -150,6 +195,21 @@ export default function AdminOverviewPage() {
           <CardContent>
             {readings.isLoading ? (
               <div className="h-72 animate-pulse rounded bg-muted/30" />
+            ) : (readings.data ?? []).length === 0 ? (
+              // BUG-024 — never render an empty axis grid; use brand empty-state.
+              <EmptyState
+                className="border-none bg-transparent py-10"
+                illustration={
+                  <div className="relative mx-auto h-16 w-16" aria-hidden>
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-gold/20 via-purple/15 to-jade/15 blur-xl" />
+                    <div className="relative flex h-full w-full items-center justify-center rounded-full border border-gold/30 bg-card/60">
+                      <LineChartIcon className="h-7 w-7 text-gold/70" />
+                    </div>
+                  </div>
+                }
+                title="Chưa có dữ liệu trong 30 ngày"
+                description="Khi có phiên phân tích, biểu đồ sẽ hiển thị số lượng theo ngày."
+              />
             ) : (
               <ReadingsChart data={readings.data ?? []} />
             )}
