@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { PRICING } from '@/lib/pricing';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { HeroV3 } from '@/components/home/HeroV3';
@@ -30,6 +31,28 @@ export const metadata: Metadata = {
     siteName: 'hieu.asia',
     locale: 'vi_VN',
     type: 'website',
+    images: [
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'hieu.asia — Cẩm nang AI giúp hiểu mình và ra quyết định',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'hieu.asia — Hiểu mình. Quyết định mình.',
+    description:
+      'Cẩm nang AI cá nhân hoá bằng cổ học Á Đông và tâm lý hiện đại — trình bày bằng tiếng Việt.',
+    images: [
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'hieu.asia — Cẩm nang AI giúp hiểu mình và ra quyết định',
+      },
+    ],
   },
 };
 
@@ -135,6 +158,105 @@ const SERVICES_JSONLD = {
   ],
 };
 
+// FAQPage JSON-LD — answers ≤200 chars each, mirror the visible FAQ semantics
+// but trimmed for crawlers (rich-result eligibility). Keep in sync with HOME_FAQ
+// below: if you change the visible Q&A, update this block too.
+const FAQ_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  inLanguage: 'vi-VN',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'hieu.asia có dự đoán tương lai không?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Không. Chúng tôi không dự đoán tương lai. Mục tiêu là giúp bạn nhìn rõ mẫu hình hành vi và động lực bẩm sinh để tự ra quyết định tốt hơn.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Tôi không có giờ sinh chính xác thì có dùng được không?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Có. Bạn vẫn dùng được MBTI, Thần Số Học và Palm Reading mà không cần giờ sinh. Có thể cập nhật lá số bất cứ lúc nào sau đó.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Dữ liệu cá nhân được bảo vệ thế nào?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Mã hoá AES-256 khi lưu trữ, TLS 1.3 khi truyền. Không bán dữ liệu, không dùng để huấn luyện mô hình. Tuân thủ GDPR. Xoá tài khoản trong trang Tài khoản.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Giá bao nhiêu? Có dùng thử miễn phí không?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Khảo sát đầu vào miễn phí. Premium 99.000đ một lần, Mentor 199.000đ/tháng hoặc 1.990.000đ/năm, Lifetime 4.990.000đ một lần.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Tôi có thể huỷ gói subscription bất cứ lúc nào?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Có. Huỷ trong trang Tài khoản, gói dùng hết kỳ đã thanh toán, không tự gia hạn. Hoàn tiền 100% trong 24h nếu báo cáo chưa tạo.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'hieu.asia có khác gì với các app xem bói khác?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Tử Vi và Bát Tự tính theo Bắc phái với 114 sao (không tra bảng), Mentor AI đối thoại có ngữ cảnh, văn phong calm không định mệnh hoá.',
+      },
+    },
+  ],
+};
+
+// SoftwareApplication JSON-LD — offers sourced from PRICING (lib/pricing.ts).
+// No aggregateRating: we have no audited review data and refuse to fabricate.
+const SOFTWARE_APP_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'hieu.asia',
+  url: 'https://hieu.asia',
+  applicationCategory: 'LifestyleApplication',
+  operatingSystem: 'Web',
+  description:
+    'Kết hợp Tử Vi, Bát Tự, Thần Số Học, MBTI và AI Mentor để giúp bạn hiểu bản thân, đặt câu hỏi đúng và tự ra quyết định có trách nhiệm.',
+  inLanguage: 'vi-VN',
+  offers: [
+    {
+      '@type': 'Offer',
+      name: PRICING.premium.label,
+      price: String(PRICING.premium.vnd),
+      priceCurrency: 'VND',
+    },
+    {
+      '@type': 'Offer',
+      name: PRICING.monthly.label,
+      price: String(PRICING.monthly.vnd),
+      priceCurrency: 'VND',
+    },
+    {
+      '@type': 'Offer',
+      name: PRICING.yearly.label,
+      price: String(PRICING.yearly.vnd),
+      priceCurrency: 'VND',
+    },
+    {
+      '@type': 'Offer',
+      name: PRICING.lifetime.label,
+      price: String(PRICING.lifetime.vnd),
+      priceCurrency: 'VND',
+    },
+  ],
+};
+
 const HOME_FAQ: readonly FaqItem[] = [
   {
     q: 'hieu.asia có dự đoán tương lai không?',
@@ -227,6 +349,14 @@ export default function LandingPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(SERVICES_JSONLD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(SOFTWARE_APP_JSONLD) }}
       />
       <SiteNav />
       <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">

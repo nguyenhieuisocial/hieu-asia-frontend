@@ -10,8 +10,8 @@ interface Proof {
 const PROOFS: readonly Proof[] = [
   {
     Icon: Cpu,
-    title: 'Engine deterministic chạy trước AI',
-    desc: 'AI không được tự an sao — `iztro` + `vn-lunar` lập lá số, AI chỉ diễn giải structured JSON đã có.',
+    title: 'AI không tự bịa lá số',
+    desc: 'Hệ thống tính lá số từ ngày–giờ sinh của bạn theo đúng phương pháp truyền thống, sau đó AI chỉ giải thích kết quả cho bạn hiểu.',
   },
   {
     Icon: FileSearch,
@@ -20,8 +20,8 @@ const PROOFS: readonly Proof[] = [
   },
   {
     Icon: ShieldCheck,
-    title: 'Validation 4 tầng + 600 adversarial tests',
-    desc: '500/500 lịch âm-dương, 100/100 an sao vàng, ≥99% pass rate trên 600 prompts jailbreak.',
+    title: 'Đã kiểm thử kỹ trước khi đến tay bạn',
+    desc: 'Đối chiếu 500 ngày âm–dương lịch và 600 tình huống cố tình đánh lừa AI. Kết quả: trên 99% chính xác.',
   },
 ];
 

@@ -100,11 +100,27 @@ export const metadata: Metadata = {
     title: 'hieu.asia — Tử Vi & MBTI bằng AI',
     description:
       'Hệ thống AI phân tích Tử Vi, Bát Tự, MBTI và lòng bàn tay. Người bạn đồng hành giúp bạn hiểu chính mình.',
+    images: [
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'hieu.asia — Cẩm nang AI giúp hiểu mình và ra quyết định',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'hieu.asia — Tử Vi & MBTI bằng AI',
     description: 'Tử Vi · MBTI · Palm Reading bằng AI',
+    images: [
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'hieu.asia — Cẩm nang AI giúp hiểu mình và ra quyết định',
+      },
+    ],
   },
   robots: {
     index: true,

@@ -93,7 +93,7 @@ export function PricingTeaser() {
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
-            Pricing · hoàn tiền 24h trước-inference
+            Pricing · hoàn tiền 100% trong 24h
           </p>
           <h2
             id="pricing-teaser-heading"
