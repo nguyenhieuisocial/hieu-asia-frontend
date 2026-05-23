@@ -14,6 +14,8 @@ import { createClient } from '@supabase/supabase-js';
 import { buildPalmGraph, type PalmInput } from '@/lib/reasoning/palm-graph';
 import { startTrace } from '@/lib/reasoning/observability';
 import { assertCostGuard } from '@/lib/reasoning/cost-guard';
+import { getSessionFromRequest } from '@/lib/reasoning/session-auth';
+import { assertFreeQuota } from '@/lib/reasoning/free-quota';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -76,6 +78,20 @@ export async function POST(req: NextRequest) {
   const bot = await checkBotId();
   if (bot.isBot) return NextResponse.json({ ok: false, error: 'forbidden' }, { status: 403 });
 
+  // Wave 58 — authed-only.
+  const session = await getSessionFromRequest(req);
+  if (!session) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: 'auth_required',
+        message: 'Đăng nhập miễn phí (10 giây) để xem phân tích chi tiết.',
+        signin_url: '/signin?next=/palm/upload',
+      },
+      { status: 401 },
+    );
+  }
+
   let body: Req;
   try {
     body = (await req.json()) as Req;
@@ -94,15 +110,17 @@ export async function POST(req: NextRequest) {
   }
   const input = body.input;
 
-  // Phase 2.6 cost guard.
-  const guard = await assertCostGuard({ graph: 'palm', userId: null, headers: req.headers });
+  // Wave 58 free quota + Phase 2.6 cost guard.
+  const quota = await assertFreeQuota(session.userId);
+  if (!quota.ok) return quota.response;
+  const guard = await assertCostGuard({ graph: 'palm', userId: session.userId, headers: req.headers });
   if (!guard.ok) return guard.response;
 
   const supabase = getSupabase();
   const { data: runRow, error: runErr } = await supabase
     .from('agent_runs')
     .insert({
-      user_id: null,
+      user_id: session.userId,
       graph_name: 'palm',
       current_node: 'parse_input',
       state: { displayName: input.displayName, hand: input.hand },

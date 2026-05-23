@@ -31,6 +31,8 @@ import { createClient } from '@supabase/supabase-js';
 import { buildTuViGraph, type ChartInput } from '@/lib/reasoning/tu-vi-graph';
 import { startTrace } from '@/lib/reasoning/observability';
 import { assertCostGuard } from '@/lib/reasoning/cost-guard';
+import { getSessionFromRequest } from '@/lib/reasoning/session-auth';
+import { assertFreeQuota } from '@/lib/reasoning/free-quota';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -86,7 +88,24 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: 'forbidden' }, { status: 403 });
   }
 
-  // 2. Parse + validate body
+  // 2. Wave 58 — authed-only. Anon callers get 401 with a signin redirect URL
+  // so the client can pop a login modal (Founder decision: capture all reader
+  // identities for upsell sequence). Verified via Supabase JWT in
+  // Authorization: Bearer header. NO anon path.
+  const session = await getSessionFromRequest(req);
+  if (!session) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: 'auth_required',
+        message: 'Đăng nhập miễn phí (10 giây) để xem phân tích chi tiết.',
+        signin_url: '/signin?next=/reading/new',
+      },
+      { status: 401 },
+    );
+  }
+
+  // 3. Parse + validate body
   let body: ReasoningRequest;
   try {
     body = (await req.json()) as ReasoningRequest;
@@ -101,28 +120,31 @@ export async function POST(req: NextRequest) {
   }
   const chart = body.chart;
 
-  // 2b. Phase 2.6 cost guard — kill switch + per-day cap. Fails CLOSED on
-  // Supabase blip (503 + Retry-After). subjectKey returned for downstream
-  // logging, but agent_runs row is the primary cost ledger; this guard is
-  // only a *gate*, not the source of truth for spend.
+  // 4. Wave 58 free quota — 1 reading per 30 days for free tier; subs unlimited.
+  // Runs BEFORE cost-guard so the upsell message is more useful than "daily $5
+  // cap" for users who've used their free reading.
+  const quota = await assertFreeQuota(session.userId);
+  if (!quota.ok) return quota.response;
+
+  // 5. Phase 2.6 cost guard — kill switch + per-day cap. Fails CLOSED on
+  // Supabase blip (503 + Retry-After). agent_runs row is the primary cost
+  // ledger; this guard is only a *gate*, not the source of truth for spend.
   const guard = await assertCostGuard({
     graph: 'tu-vi',
-    userId: null, // /ultrareview Phase 2.2 P2-3: don't trust body.userId yet
+    userId: session.userId,
     headers: req.headers,
   });
   if (!guard.ok) return guard.response;
 
-  // 3. Create agent_runs row — graph nodes update cost via RPC; Realtime
+  // 6. Create agent_runs row — graph nodes update cost via RPC; Realtime
   // publishes UPDATE so client progress UI tracks live (Phase 2.3).
+  // Wave 58: user_id now derived from verified Bearer JWT (session.userId),
+  // not from body — replaces /ultrareview Phase 2.2 P2-3 null guard.
   const supabase = getSupabase();
-  // /ultrareview Phase 2.2 P2-3 fix: do NOT trust body.userId — caller could
-  // impersonate any user. Phase 2.4 will wire server-side session via cookie
-  // auth (NextAuth `auth()` or Supabase server helper). Until then, runs are
-  // guest-mode (user_id NULL) and accessed via the unguessable run_id.
   const { data: runRow, error: runErr } = await supabase
     .from('agent_runs')
     .insert({
-      user_id: null,
+      user_id: session.userId,
       graph_name: 'tu-vi-full',
       current_node: 'parse_input',
       state: { chart: { displayName: chart.displayName, birthYear: chart.birthYear } },

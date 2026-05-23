@@ -1,0 +1,118 @@
+/**
+ * Wave 58 Phase A — Free reading quota helper.
+ *
+ * Calls the `check_free_reading_quota(uuid)` SECURITY DEFINER RPC and shapes
+ * its result into a typed `{ok, response?}` that reasoning routes can return
+ * directly on rejection.
+ *
+ * Quota policy (canonical in SQL migration 0032):
+ *   - Subscription tiers (monthly / yearly / lifetime): unlimited reads up to
+ *     the per-day cost-guard cap (Phase 2.6).
+ *   - Free tier: 1 reading per rolling 30 days. After exhaustion → 402 with
+ *     Vietnamese upsell message + Premium/Monthly comparison.
+ *   - Premium (one-shot 99k): currently treated as 'free' here — the
+ *     pay-per-reading flow at unlock time bypasses this gate via a separate
+ *     code path (deferred to Wave 58.1 credit ledger).
+ *
+ * Why a thin wrapper:
+ *   - Reasoning routes shouldn't know about jsonb/RPC shapes
+ *   - Vietnamese error copy lives next to the upsell URL in one place
+ *   - Easier to swap to a credit-based ledger later (only this file changes)
+ */
+
+import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+
+let _supabase: ReturnType<typeof createClient> | null = null;
+function getServiceRoleClient() {
+  if (_supabase) return _supabase;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) throw new Error('free-quota: SUPABASE service-role env required');
+  _supabase = createClient(url, key, { auth: { persistSession: false } });
+  return _supabase;
+}
+
+export type QuotaResult =
+  | { ok: true; plan: string }
+  | { ok: false; response: NextResponse };
+
+interface RpcShape {
+  allowed: boolean;
+  plan: string;
+  reason: string;
+  used_count?: number;
+  limit?: number;
+  window_days?: number;
+}
+
+/**
+ * Check whether `userId` may consume one more reading right now.
+ *
+ * Returns ok:true with the plan name (for telemetry/agent_runs tagging) when
+ * the user is allowed. Returns ok:false with a ready-to-return 402 NextResponse
+ * when the free quota is exhausted, or 503 if the RPC errors (fail closed —
+ * a billing leak is worse than a few denied legit calls).
+ */
+export async function assertFreeQuota(userId: string): Promise<QuotaResult> {
+  try {
+    const { data, error } = await getServiceRoleClient().rpc(
+      'check_free_reading_quota' as never,
+      { p_user_id: userId } as never,
+    );
+    if (error) {
+      return {
+        ok: false,
+        response: NextResponse.json(
+          { ok: false, error: 'quota_check_unavailable', detail: error.message },
+          { status: 503, headers: { 'Retry-After': '30' } },
+        ),
+      };
+    }
+    const parsed = data as RpcShape;
+    if (parsed.allowed) {
+      return { ok: true, plan: parsed.plan };
+    }
+    // Free quota exhausted. Compose a Vietnamese upsell.
+    const used = parsed.used_count ?? 1;
+    const limit = parsed.limit ?? 1;
+    const window = parsed.window_days ?? 30;
+    return {
+      ok: false,
+      response: NextResponse.json(
+        {
+          ok: false,
+          error: 'free_quota_exhausted',
+          plan: parsed.plan,
+          used_count: used,
+          limit,
+          window_days: window,
+          message: `Bạn đã dùng hết ${limit} lượt phân tích miễn phí trong ${window} ngày. Mở khoá Premium để xem thêm — hoặc đăng ký Monthly để không giới hạn.`,
+          upgrade_url: '/pricing',
+          // Also include 99k single-shot and monthly comparison so the client
+          // UI can render two buttons without another fetch.
+          options: [
+            { tier: 'premium', vnd: 99_000, label: '1 reading sâu (99.000đ)', href: '/pricing#premium' },
+            { tier: 'monthly', vnd: 199_000, label: 'Unlimited tháng (199.000đ)', href: '/pricing#monthly' },
+          ],
+        },
+        {
+          status: 402,
+          headers: { 'Cache-Control': 'no-store' },
+        },
+      ),
+    };
+  } catch (err) {
+    return {
+      ok: false,
+      response: NextResponse.json(
+        {
+          ok: false,
+          error: 'quota_check_unavailable',
+          detail: err instanceof Error ? err.message : String(err),
+        },
+        { status: 503, headers: { 'Retry-After': '30' } },
+      ),
+    };
+  }
+}

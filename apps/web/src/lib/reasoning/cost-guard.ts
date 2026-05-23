@@ -71,9 +71,15 @@ export type GraphKind = 'tu-vi' | 'bat-tu' | 'palm';
 
 interface AssertArgs {
   graph: GraphKind;
-  /** Authed user UUID, or null/undefined for anonymous visitors. */
-  userId?: string | null;
-  /** Request headers — for IP-hash subject key on anon. */
+  /**
+   * Authed user UUID. REQUIRED in Wave 58 — anon callers are rejected by
+   * the route's session-auth gate before reaching this guard. Kept as a
+   * required string (not nullable) so a future refactor that drops the
+   * route-level gate fails the type check instead of silently going anon.
+   */
+  userId: string;
+  /** Request headers — currently only used for IP-hash fallback paths
+   * (none today; kept for forward-compat with admin overrides etc.). */
   headers: Headers;
 }
 

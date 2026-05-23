@@ -11,6 +11,8 @@ import { createClient } from '@supabase/supabase-js';
 import { buildBatTuGraph, type BatTuInput } from '@/lib/reasoning/bat-tu-graph';
 import { startTrace } from '@/lib/reasoning/observability';
 import { assertCostGuard } from '@/lib/reasoning/cost-guard';
+import { getSessionFromRequest } from '@/lib/reasoning/session-auth';
+import { assertFreeQuota } from '@/lib/reasoning/free-quota';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -61,6 +63,20 @@ export async function POST(req: NextRequest) {
   const bot = await checkBotId();
   if (bot.isBot) return NextResponse.json({ ok: false, error: 'forbidden' }, { status: 403 });
 
+  // Wave 58 — authed-only.
+  const session = await getSessionFromRequest(req);
+  if (!session) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: 'auth_required',
+        message: 'Đăng nhập miễn phí (10 giây) để xem phân tích chi tiết.',
+        signin_url: '/signin?next=/reading/new',
+      },
+      { status: 401 },
+    );
+  }
+
   let body: Req;
   try {
     body = (await req.json()) as Req;
@@ -75,15 +91,17 @@ export async function POST(req: NextRequest) {
   }
   const input = body.input;
 
-  // Phase 2.6 cost guard — see tu-vi full route for context on why null userId.
-  const guard = await assertCostGuard({ graph: 'bat-tu', userId: null, headers: req.headers });
+  // Wave 58 free quota + Phase 2.6 cost guard.
+  const quota = await assertFreeQuota(session.userId);
+  if (!quota.ok) return quota.response;
+  const guard = await assertCostGuard({ graph: 'bat-tu', userId: session.userId, headers: req.headers });
   if (!guard.ok) return guard.response;
 
   const supabase = getSupabase();
   const { data: runRow, error: runErr } = await supabase
     .from('agent_runs')
     .insert({
-      user_id: null, // Phase 2.4 follow-up: server-side session auth
+      user_id: session.userId,
       graph_name: 'bat-tu',
       current_node: 'parse_input',
       state: { displayName: input.displayName, dayMaster: input.dayMaster },
