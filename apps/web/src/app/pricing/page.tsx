@@ -633,7 +633,7 @@ function ComparisonTable({
               <tr className="border-t border-border">
                 <td
                   colSpan={tiers.length + 1}
-                  className="bg-card/60 px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/70"
+                  className="bg-card/60 px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85"
                 >
                   {groupName}
                 </td>

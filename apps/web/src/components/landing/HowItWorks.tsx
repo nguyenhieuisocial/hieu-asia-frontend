@@ -66,7 +66,7 @@ export function HowItWorks() {
                 <div className="relative z-10 flex h-24 w-24 items-center justify-center rounded-full border border-gold/30 bg-background shadow-[0_0_40px_-12px_rgba(184,146,61,0.45)]">
                   <Icon className="h-7 w-7 text-gold" aria-hidden="true" />
                 </div>
-                <span className="mt-5 font-mono text-xs uppercase tracking-[0.28em] text-gold/70">
+                <span className="mt-5 font-mono text-xs uppercase tracking-[0.28em] text-gold/85">
                   Bước {n}
                 </span>
                 <h3 className="mt-2 font-heading text-lg font-semibold text-foreground">{title}</h3>

@@ -118,7 +118,7 @@ export function MethodChooser() {
               <h3 className="font-heading text-lg font-semibold leading-tight text-foreground">
                 {name}
               </h3>
-              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-gold/60">
+              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-gold/85">
                 {origin}
               </p>
 

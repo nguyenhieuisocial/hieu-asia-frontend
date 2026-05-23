@@ -239,7 +239,7 @@ export function DaiVanHienTaiForm() {
 
                 {result.palace.majorStars.length > 0 && (
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-gold/70">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-gold/85">
                       Chính tinh tại đại vận
                     </p>
                     <div className="mt-2 flex flex-wrap gap-2">

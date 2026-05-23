@@ -272,7 +272,7 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
             Lá số của bạn
           </Link>
           <div className="my-1 h-px bg-muted/5" />
-          <p className="px-3 py-1 font-mono text-[9px] uppercase tracking-[0.24em] text-gold/60">
+          <p className="px-3 py-1 font-mono text-[9px] uppercase tracking-[0.24em] text-gold/85">
             Affiliate
           </p>
           <Link
@@ -389,7 +389,7 @@ function SectionedDropdown({
         >
           {sections.map((section) => (
             <div key={section.title} className="min-w-0">
-              <p className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.24em] text-gold/70">
+              <p className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.24em] text-gold/85">
                 {section.title}
               </p>
               <ul className="space-y-0.5">
@@ -492,7 +492,7 @@ function MobileDrawer({
         >
           {isAuthed && userEmail && (
             <div className="mb-2 rounded-md border border-gold/15 bg-gold/5 px-3 py-2">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-gold/60">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-gold/85">
                 Đã đăng nhập
               </p>
               <p className="mt-0.5 truncate text-xs text-foreground/85">{userEmail}</p>
@@ -534,7 +534,7 @@ function MobileDrawer({
             </Link>
           ))}
           <div className="my-2 h-px bg-muted/5" />
-          <p className="px-3 pb-1 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/60">
+          <p className="px-3 pb-1 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
             Công cụ
           </p>
           {TOOLS_LINKS_FLAT.map((l) => (
@@ -548,7 +548,7 @@ function MobileDrawer({
             </Link>
           ))}
           <div className="my-2 h-px bg-muted/5" />
-          <p className="px-3 pb-1 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/60">
+          <p className="px-3 pb-1 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
             Học
           </p>
           {LEARN_LINKS_FLAT.map((l) => (

@@ -241,7 +241,7 @@ export default function SuNghiepPage() {
             href="/community/cases/khoi-nghiep-lan-thu-3"
             className="group block rounded-xl border border-border bg-card/30 p-5 transition-colors hover:border-gold/40"
           >
-            <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/70">
+            <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
               Đọc case study tương tự
             </p>
             <p className="mt-2 font-heading text-base font-semibold text-foreground group-hover:text-gold">

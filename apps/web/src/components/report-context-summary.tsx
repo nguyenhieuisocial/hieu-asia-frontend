@@ -18,7 +18,7 @@ export function ReportContextSummary({
     <Card className="border-gold/20">
       <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
-          <p className="font-mono text-xs uppercase tracking-wider text-gold/70">
+          <p className="font-mono text-xs uppercase tracking-wider text-gold/85">
             Báo cáo cá nhân hóa
           </p>
           <h2 className="font-heading text-2xl text-foreground sm:text-3xl">

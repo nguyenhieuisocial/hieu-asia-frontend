@@ -70,7 +70,7 @@ export function StoryTestimonials() {
               style={{ backgroundColor: 'rgba(20, 20, 26, 0.4)' }}
             >
               <Quote className="absolute right-5 top-5 h-6 w-6 text-gold/20" aria-hidden="true" />
-              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/70">
+              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
                 {s.context}
               </p>
               <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-foreground/85 sm:text-base">

@@ -152,7 +152,7 @@ function ListSection({
   tone = 'default',
 }: SectionProps) {
   const iconColor = tone === 'rose' ? 'text-rose-400' : 'text-gold/80';
-  const bulletColor = tone === 'rose' ? 'text-rose-400/80' : 'text-gold/70';
+  const bulletColor = tone === 'rose' ? 'text-rose-400/80' : 'text-gold/85';
   return (
     <section className="relative mx-auto max-w-4xl px-6 py-8">
       {/* BUG-031 (Wave 54): a11y/SEO h2 — CardTitle inside renders <h3>. */}

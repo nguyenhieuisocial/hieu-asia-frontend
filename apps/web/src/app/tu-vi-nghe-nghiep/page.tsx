@@ -133,7 +133,7 @@ export default function TuViNgheNghiepPage() {
               <ol className="space-y-2 text-sm leading-relaxed text-foreground/80 sm:text-base">
                 {QUESTIONS.map((q, i) => (
                   <li key={i} className="flex gap-3">
-                    <span className="shrink-0 font-mono text-gold/70">
+                    <span className="shrink-0 font-mono text-gold/85">
                       {String(i + 1).padStart(2, '0')}
                     </span>
                     <span>{q}</span>

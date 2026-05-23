@@ -77,7 +77,7 @@ export default function AboutPage() {
         <section className="relative bg-background py-16 sm:py-20">
           <div className="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-2">
             <article className="rounded-2xl border border-border bg-card/40 p-7">
-              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/70">
+              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
                 Sứ mệnh
               </p>
               <h2 className="mt-3 font-heading text-2xl font-bold text-foreground">
@@ -91,7 +91,7 @@ export default function AboutPage() {
               </p>
             </article>
             <article className="rounded-2xl border border-border bg-card/40 p-7">
-              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/70">
+              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
                 Tầm nhìn
               </p>
               <h2 className="mt-3 font-heading text-2xl font-bold text-foreground">
@@ -113,7 +113,7 @@ export default function AboutPage() {
               className="rounded-2xl border border-gold/20 p-8 sm:p-10"
               style={{ backgroundColor: 'rgba(20, 20, 26, 0.5)' }}
             >
-              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/70">
+              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
                 Lời từ người sáng lập
               </p>
 
@@ -173,7 +173,7 @@ export default function AboutPage() {
             <div className="flex items-start gap-3">
               <Cpu className="mt-1 h-5 w-5 text-gold" aria-hidden={true} />
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/70">
+                <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
                   Công nghệ
                 </p>
                 <h2 className="mt-2 font-heading text-2xl font-bold text-foreground sm:text-3xl">
@@ -209,7 +209,7 @@ export default function AboutPage() {
         <section className="relative bg-background py-16 sm:py-20">
           <div className="mx-auto max-w-5xl px-6">
             <div className="text-center">
-              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/70">
+              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
                 Quyền riêng tư & đạo đức
               </p>
               <h2 className="mt-2 font-heading text-2xl font-bold text-foreground sm:text-3xl">

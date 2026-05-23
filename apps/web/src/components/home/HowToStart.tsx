@@ -79,7 +79,7 @@ export function HowToStart() {
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-gold/30 bg-gold/5">
                   <Icon className="h-5 w-5 text-gold" aria-hidden={true} />
                 </div>
-                <span className="font-mono text-xs uppercase tracking-[0.28em] text-gold/70">
+                <span className="font-mono text-xs uppercase tracking-[0.28em] text-gold/85">
                   Bước {n}
                 </span>
               </div>

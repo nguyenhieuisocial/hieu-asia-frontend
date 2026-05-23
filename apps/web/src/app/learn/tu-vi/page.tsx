@@ -81,7 +81,7 @@ export default function LearnTuViPage() {
               href={`/learn/tu-vi/${p.slug}`}
               className="group rounded-lg border border-border bg-card/40 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-gold/40 hover:bg-card/60"
             >
-              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold/70">
+              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold/85">
                 {p.domain}
               </p>
               <p className="mt-1.5 font-heading text-base font-semibold text-foreground group-hover:text-gold">

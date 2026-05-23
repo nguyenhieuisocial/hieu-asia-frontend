@@ -122,7 +122,7 @@ function PalaceDetail({ palace }: { palace: TuViPalace }) {
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
         {palace.majorStars.length > 0 && (
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-widest text-gold/70">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-gold/85">
               Chính tinh
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">

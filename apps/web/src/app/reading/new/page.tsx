@@ -31,7 +31,7 @@ export default function NewReadingPage() {
             <span className="mx-1.5">/</span>
             <span className="text-muted-foreground">Thông tin sinh</span>
           </nav>
-          <span className="font-mono text-xs uppercase tracking-widest text-gold/70">
+          <span className="font-mono text-xs uppercase tracking-widest text-gold/85">
             Bước 2 / 4
           </span>
         </header>

@@ -66,7 +66,7 @@ export default function CaseStudiesIndexPage() {
                   className="group rounded-2xl border border-border bg-card/40 p-6 transition-all hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)] sm:p-8"
                 >
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    <span className="font-mono uppercase tracking-[0.2em] text-gold/70">
+                    <span className="font-mono uppercase tracking-[0.2em] text-gold/85">
                       {c.year}
                     </span>
                     <span aria-hidden>·</span>

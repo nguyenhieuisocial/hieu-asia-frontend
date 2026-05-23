@@ -565,7 +565,7 @@ export default function MethodologyPage() {
                 <li key={step.label} className="relative">
                   <div className="flex h-full flex-col rounded-xl border border-border bg-card/40 p-5">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-[11px] text-gold/70">
+                      <span className="font-mono text-[11px] text-gold/85">
                         0{idx + 1}
                       </span>
                       <Icon className="h-4 w-4 text-gold/80" aria-hidden />
@@ -722,7 +722,7 @@ export default function MethodologyPage() {
           </div>
 
           <div className="mt-6 rounded-xl border border-border bg-card/30 p-5">
-            <p className="font-mono text-[11px] uppercase tracking-wider text-gold/70">
+            <p className="font-mono text-[11px] uppercase tracking-wider text-gold/85">
               Ví dụ
             </p>
             <p className="mt-2 text-sm italic leading-relaxed text-foreground/80 sm:text-base">
@@ -745,7 +745,7 @@ export default function MethodologyPage() {
           <Card className="mt-6 border-border bg-card/40">
             <CardContent className="space-y-5 p-5 sm:p-6">
               <div>
-                <p className="font-mono text-[11px] uppercase tracking-wider text-gold/70">
+                <p className="font-mono text-[11px] uppercase tracking-wider text-gold/85">
                   Claim
                 </p>
                 <p className="mt-2 font-heading text-base text-foreground sm:text-lg">

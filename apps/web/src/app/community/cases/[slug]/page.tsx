@@ -88,7 +88,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
 
           <header className="mt-8">
             <div className="flex items-center gap-3 text-xs text-muted-foreground">
-              <span className="font-mono uppercase tracking-[0.2em] text-gold/70">
+              <span className="font-mono uppercase tracking-[0.2em] text-gold/85">
                 {c.year}
               </span>
               <span aria-hidden>·</span>

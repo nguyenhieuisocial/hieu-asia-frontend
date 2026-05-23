@@ -296,7 +296,7 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
           {current && (
             <Card key={current.id} className="border-border bg-card/50 backdrop-blur-sm">
               <CardHeader>
-                <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/70">
+                <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
                   {AXIS_LABEL[current.axis]}
                 </p>
                 <CardTitle className="font-heading text-lg text-foreground sm:text-xl">
@@ -425,7 +425,7 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
                 >
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/70">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
                         Hạng #{i + 1}
                       </p>
                       <span className="font-mono text-xs text-muted-foreground">

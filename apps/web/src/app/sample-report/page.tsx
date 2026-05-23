@@ -256,7 +256,7 @@ export default function SampleReportPage() {
                     <ul className="space-y-1.5 text-sm text-muted-foreground">
                       {p.insights.map((s, j) => (
                         <li key={j} className="flex gap-2">
-                          <span className="text-gold/70">·</span>
+                          <span className="text-gold/85">·</span>
                           <span>{s}</span>
                         </li>
                       ))}
@@ -336,7 +336,7 @@ export default function SampleReportPage() {
                   <ul className="space-y-2 text-sm text-muted-foreground">
                     {p.items.map((it, j) => (
                       <li key={j} className="flex gap-2">
-                        <span className="text-gold/70">→</span>
+                        <span className="text-gold/85">→</span>
                         <span>{it}</span>
                       </li>
                     ))}

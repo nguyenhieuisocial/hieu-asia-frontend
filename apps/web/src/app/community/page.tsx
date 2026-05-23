@@ -193,7 +193,7 @@ function ChannelCard({
           <Icon className="h-5 w-5 text-gold" aria-hidden="true" />
         </div>
         {isSoon && (
-          <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-gold/70">
+          <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-gold/85">
             Sắp ra mắt
           </span>
         )}

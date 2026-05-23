@@ -103,7 +103,7 @@ export default function BrandPage() {
           {/* TOC */}
           <aside className="hidden lg:block">
             <nav className="sticky top-24 space-y-1" aria-label="Mục lục">
-              <div className="px-3 pb-2 font-mono text-[10px] uppercase tracking-[0.3em] text-gold/70">
+              <div className="px-3 pb-2 font-mono text-[10px] uppercase tracking-[0.3em] text-gold/85">
                 Mục lục
               </div>
               {TOC.map(({ id, label, Icon }) => (
@@ -390,7 +390,7 @@ function Section({
 }) {
   return (
     <section id={id} className="scroll-mt-24">
-      <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/70">
+      <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/85">
         {eyebrow}
       </div>
       <h2 className="mt-2 font-heading text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
