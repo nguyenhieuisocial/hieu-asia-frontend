@@ -29,6 +29,7 @@ import Link from 'next/link';
 import { useFeatureFlag, FLAGS } from '@/lib/feature-flags';
 import { track } from '@/lib/analytics';
 import { formatVND, PRICING } from '@/lib/pricing';
+import { trackPixelViewContent } from '@/lib/marketing-pixels';
 
 interface Props {
   /** Plan returned by /api/reasoning/* response or assertFreeQuota.plan. */
@@ -113,6 +114,9 @@ export function PostReadingUpsell({ plan, quotaExhausted = false, runId, graphKi
   const copy = isSubscriber ? null : copyForVariant(variant, quotaExhausted);
 
   // Fire `upsell_view` once per mount when something will actually render.
+  // Wave 58 — ALSO fire Meta CAPI ViewContent (mirrors to server CAPI for
+  // retargeting; FB iOS14 blocks ~30% client pixel hits so server mirror is
+  // critical). Reading completion is the highest-intent signal we have.
   const viewedRef = React.useRef(false);
   React.useEffect(() => {
     if (viewedRef.current) return;
@@ -125,6 +129,7 @@ export function PostReadingUpsell({ plan, quotaExhausted = false, runId, graphKi
         graph_kind: graphKind,
         run_id: runId,
       });
+      // Don't fire ViewContent for subs — they're not in the upsell funnel.
       return;
     }
     if (!copy) return; // control variant + not quota-exhausted = nothing to show
@@ -137,6 +142,24 @@ export function PostReadingUpsell({ plan, quotaExhausted = false, runId, graphKi
       graph_kind: graphKind,
       run_id: runId,
     });
+    // Pixel + CAPI mirror. `value` = the target tier price (in 1000s of VND
+    // converted to USD-equivalent ~$8/$40/$200 for $-based bidding).
+    const tierVnd =
+      copy.targetTier === 'premium'
+        ? PRICING.premium.vnd
+        : copy.targetTier === 'monthly'
+          ? PRICING.monthly.vnd
+          : copy.targetTier === 'yearly'
+            ? PRICING.yearly.vnd
+            : PRICING.lifetime.vnd;
+    trackPixelViewContent(
+      {
+        content_name: `reading-${graphKind}-${copy.targetTier}-upsell`,
+        value: Math.round((tierVnd / 24_500) * 100) / 100, // VND→USD est for ad bidding
+        currency: 'USD',
+      },
+      { eventId: `vc-${runId}` }, // idempotency for CAPI dedup with client pixel
+    );
   }, [dismissed, isSubscriber, copy, variant, plan, quotaExhausted, graphKind, runId]);
 
   if (dismissed) return null;

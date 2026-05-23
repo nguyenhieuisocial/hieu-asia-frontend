@@ -293,10 +293,23 @@ export function trackPixelPageView(): void {
   window.ttq?.page?.();
 }
 
-export function trackPixelViewContent(params: { content_name?: string; value?: number } = {}): void {
+export function trackPixelViewContent(
+  params: { content_name?: string; value?: number; currency?: string } = {},
+  ctx?: ServerSideEventCtx,
+): void {
   if (!hasMarketingConsent()) return;
-  window.fbq?.("track", "ViewContent", params);
+  window.fbq?.(
+    "track",
+    "ViewContent",
+    params,
+    ctx?.eventId ? { eventID: ctx.eventId } : undefined,
+  );
   window.ttq?.track?.("ViewContent", params);
+  // Wave 58 — mirror reading-completion ViewContent to CAPI for custom-audience
+  // retargeting ("Free reader, no purchase D+7"). High-intent event worth the
+  // extra HTTP round-trip; client-side iOS14 blocks would otherwise hide ~30%
+  // of conversions from FB.
+  mirrorToCAPI("ViewContent", params, ctx);
 }
 
 export function trackPixelLead(params: { content_name?: string } = {}, ctx?: ServerSideEventCtx): void {

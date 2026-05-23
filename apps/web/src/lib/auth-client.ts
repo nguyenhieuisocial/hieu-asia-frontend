@@ -90,9 +90,39 @@ export function getSupabaseAuth(): SupabaseClient | null {
       /* ignore — best-effort cookie sync */
     });
   // Reactive updates: SIGNED_IN / TOKEN_REFRESHED / SIGNED_OUT all flow here.
-  _client.auth.onAuthStateChange((_event, session) => {
+  // Wave 58 — also fire Meta CAPI `Lead` on the user's first SIGNED_IN of
+  // the device. Uses localStorage flag so we don't fire on every reload (which
+  // would also fire SIGNED_IN as Supabase restores the session). User clearing
+  // localStorage re-fires once — acceptable noise; FB dedups by event_id +
+  // email_hash anyway.
+  _client.auth.onAuthStateChange(async (event, session) => {
     if (session) setAuthMarkerCookie();
     else clearAuthMarkerCookie();
+    if (event === 'SIGNED_IN' && session?.user) {
+      try {
+        const FIRED_KEY = 'hieu:capi:lead-fired:v1';
+        if (typeof window !== 'undefined' && !localStorage.getItem(FIRED_KEY)) {
+          localStorage.setItem(FIRED_KEY, '1');
+          const { trackPixelLead } = await import('./marketing-pixels');
+          // hash email for CAPI matching (FB requires sha256 lowercase)
+          const email = session.user.email?.trim().toLowerCase();
+          let emailHash: string | undefined;
+          if (email && typeof crypto !== 'undefined' && crypto.subtle) {
+            const bytes = new TextEncoder().encode(email);
+            const buf = await crypto.subtle.digest('SHA-256', bytes);
+            emailHash = Array.from(new Uint8Array(buf))
+              .map((b) => b.toString(16).padStart(2, '0'))
+              .join('');
+          }
+          trackPixelLead(
+            { content_name: 'signin-first-time' },
+            { emailHash, eventId: `lead-${session.user.id}` },
+          );
+        }
+      } catch {
+        /* never block auth on telemetry failure */
+      }
+    }
   });
 
   return _client;
