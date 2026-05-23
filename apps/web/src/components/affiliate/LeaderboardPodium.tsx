@@ -26,17 +26,35 @@ function vnd(n: number) {
 
 export function LeaderboardPodium({ top3 }: Props) {
   if (top3.length === 0) return null;
-  // Desktop ordering: #2, #1, #3
-  const order = top3.length >= 3 ? [1, 0, 2] : top3.map((_, i) => i);
+  // Desktop ordering: #2, #1, #3 (visual). Semantic order in the <ol> remains
+  // #1, #2, #3 so screen readers and search engines read the podium ranked,
+  // not visually-positioned (Wave 48 P3-B a11y fix).
+  const visualOrder = top3.length >= 3 ? [1, 0, 2] : top3.map((_, i) => i);
 
   return (
-    <div className="grid items-end gap-4 sm:grid-cols-3">
-      {order.map((i) => {
-        const row = top3[i];
-        if (!row) return null;
-        return <PodiumCard key={row.affiliate_code || i} row={row} rank={i + 1} />;
-      })}
-    </div>
+    <>
+      <h2 className="sr-only">Top 3 affiliate</h2>
+      <ol
+        aria-label="Top 3 affiliate"
+        className="grid list-none items-end gap-4 p-0 sm:grid-cols-3"
+      >
+        {visualOrder.map((i, visualIdx) => {
+          const row = top3[i];
+          if (!row) return null;
+          // Use CSS order to keep the visual "#2, #1, #3" layout on desktop
+          // while preserving the semantic #1, #2, #3 order in the DOM.
+          return (
+            <li
+              key={row.affiliate_code || i}
+              style={{ order: visualIdx }}
+              className="contents sm:block"
+            >
+              <PodiumCard row={row} rank={i + 1} />
+            </li>
+          );
+        })}
+      </ol>
+    </>
   );
 }
 
