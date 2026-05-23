@@ -27,10 +27,10 @@ interface NavSection {
   items: readonly NavLink[];
 }
 
-/** Học dropdown — 2 sections (Methodology + Khái niệm) — Wave 52. */
+/** Học dropdown — 2 sections (Phương pháp luận + Khái niệm) — Wave 52. */
 const LEARN_SECTIONS: readonly NavSection[] = [
   {
-    title: 'Methodology',
+    title: 'Phương pháp luận',
     items: [
       { href: '/methodology', label: 'Phương pháp luận' },
       { href: '/methodology/tu-vi', label: 'Phương pháp Tử Vi' },

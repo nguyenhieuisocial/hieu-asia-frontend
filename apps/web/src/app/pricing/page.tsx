@@ -311,6 +311,12 @@ export default function PricingPage() {
   // `monthly`, `yearly`, `lifetime`, `free`). Used only to scroll the matched
   // card into view; no taxonomy logic depends on it.
   const intentTier = searchParams?.get('tier') ?? '';
+  // Wave 52 follow-up (Agent A Q3): legacy `?period=monthly|annual` query
+  // params from pre-Wave-52-A marketing links are silently IGNORED here.
+  // The Monthly/Yearly period toggle was removed when Mentor became its own
+  // tier per the canonical taxonomy in `lib/pricing.ts`. Old links still
+  // resolve to /pricing — they just stop affecting layout. Acceptable no-op
+  // per spec; tracked in vault 94 §Wave 52.
   // Default to TRUE so the campaign banner still shows when PostHog is down /
   // blocked. Set the PostHog flag to `false` to kill the banner remotely.
   const showLaunchBanner = useFeatureFlag<boolean>(

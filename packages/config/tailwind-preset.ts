@@ -73,6 +73,17 @@ const preset = {
         heading: ['var(--font-outfit)', 'var(--font-be-vietnam)', 'system-ui', 'sans-serif'],
         mono: ['var(--font-jetbrains-mono)', 'ui-monospace', 'monospace'],
       },
+      // Wave 52 follow-up (BUG-012/013): named tokens for the 2 sub-xs sizes
+      // that audit flagged across 269 occurrences (123 files). These are
+      // intentional design choices, not magic numbers:
+      // - micro (10px): uppercase mono tracking labels ("CẨM NANG QUYẾT ĐỊNH BẰNG AI")
+      // - mini  (11px): helper / legal / metadata text below body
+      // Existing usage of `text-[10px]` / `text-[11px]` is left as-is to avoid
+      // 123-file refactor + visual regression risk; new code should use these tokens.
+      fontSize: {
+        micro: ['10px', { lineHeight: '14px', letterSpacing: '0.06em' }],
+        mini: ['11px', { lineHeight: '16px' }],
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
