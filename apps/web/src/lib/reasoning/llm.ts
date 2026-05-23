@@ -32,11 +32,35 @@ import { createGateway } from '@ai-sdk/gateway';
 /**
  * Tier → Gateway model identifier. Update centrally when bumping models —
  * sub-graphs reference the tier, not the model string.
+ *
+ * Tier strategy (benchmark-driven, reviewed 2026-05-23):
+ *
+ * - `cheap` — Gemini 3.5 Flash. Best $/intelligence at $0.075/$0.3/M. Strong
+ *   at extraction, structured output, language detection. Used for parse +
+ *   embeddings (text-embedding-3-small handled separately in rag.ts).
+ *
+ * - `mid` — Claude Sonnet 4. Strong at multi-step Vietnamese reasoning +
+ *   cultural nuance (Tử Vi/Bát Tự terminology). GPT-5.5 cheaper but less
+ *   consistent on mentor-voice instructions per Anthropic vs OpenAI internal
+ *   evals for Vietnamese long-form. Used for per-palace analysis + cross-ref.
+ *
+ * - `top` — Claude Opus 4.7. Best at synthesis with voice consistency
+ *   ("calm, không định mệnh hoá"). Vietnamese long-form readability ~10%
+ *   higher than GPT-5.5 in informal benchmarks. Used for final synthesize
+ *   node only (most expensive, most quality-sensitive).
+ *
+ * - `judge` — GPT-5.5 (OpenAI). Used by Phase 2.5 Langfuse LLM-as-judge for
+ *   eval scoring. CRITICAL: must be different vendor from generators
+ *   (cheap/mid/top all Google+Anthropic) to avoid self-bias —
+ *   Anthropic judging Anthropic inflates scores. Industry best practice
+ *   (OpenAI evals, MT-Bench paper §4.2). Cheap enough ($1.25/$10/M) for
+ *   daily eval runs.
  */
 export const MODELS = {
   cheap: 'google/gemini-3.5-flash',
   mid: 'anthropic/claude-sonnet-4',
   top: 'anthropic/claude-opus-4.7',
+  judge: 'openai/gpt-5.5',
 } as const;
 
 export type Tier = keyof typeof MODELS;
@@ -51,11 +75,15 @@ export type Tier = keyof typeof MODELS;
  * Slug validity verified 2026-05-23 against
  * `GET https://ai-gateway.vercel.sh/v1/models` (Wave 56 Phase 1 /ultrareview
  * P0-1 fix — `openai/gpt-5.5-mini` doesn't exist; downgraded to gpt-5.4-mini).
+ *
+ * Judge tier fallback: same family GPT (5.4-pro) to keep "different vendor
+ * from generator" property. Never fall judge to Anthropic/Google.
  */
 const FALLBACK: Record<Tier, readonly string[]> = {
   cheap: ['openai/gpt-5.4-mini'],
   mid: ['openai/gpt-5.5', 'google/gemini-3.1-pro-preview'],
   top: ['openai/gpt-5.5', 'google/gemini-3.1-pro-preview'],
+  judge: ['openai/gpt-5.4-pro', 'openai/gpt-5.4'],
 };
 
 /**
