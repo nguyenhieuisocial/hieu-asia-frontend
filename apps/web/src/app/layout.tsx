@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from 'next';
 import { Suspense } from 'react';
-import { Be_Vietnam_Pro, Inter, Outfit, JetBrains_Mono } from 'next/font/google';
+// Wave 55 LCP #1 — dropped Inter import. Inter only sat in the `sans` fallback
+// chain (`var(--font-be-vietnam), var(--font-inter), ...`) and almost never
+// actually rendered because Be Vietnam Pro already covers latin. Removing it
+// drops ~1 woff2 file from the critical-path font fan-out.
+import { Be_Vietnam_Pro, Outfit, JetBrains_Mono } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { ThemeProvider } from '@/components/providers/theme-provider';
@@ -20,16 +24,14 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import './globals.css';
 
+// Wave 55 LCP #1 — trimmed weight 300 (light). Body text uses 400+; the few
+// places that wanted ultra-light were dropping into the wrong weight anyway
+// due to fallback. Dropping 300 removes 2 woff2 files (latin + vietnamese
+// subsets each load one file per weight).
 const beVietnam = Be_Vietnam_Pro({
   subsets: ['vietnamese', 'latin'],
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['400', '500', '600', '700'],
   variable: '--font-be-vietnam',
-  display: 'swap',
-});
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
   display: 'swap',
 });
 
@@ -137,12 +139,15 @@ export default async function RootLayout({
     <html
       lang={locale}
       suppressHydrationWarning
-      className={`${beVietnam.variable} ${inter.variable} ${outfit.variable} ${mono.variable}`}
+      className={`${beVietnam.variable} ${outfit.variable} ${mono.variable}`}
     >
       <head>
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://fvftbqairezsybasqsek.supabase.co" />
-        <link rel="preconnect" href="https://api.hieu.asia" />
+        {/* Wave 55 LCP #3 — dropped 3 unused preconnects.
+            • fonts.gstatic.com: fonts self-hosted via next/font/google now.
+            • supabase.co: only hit on auth/data click, not initial render.
+            • api.hieu.asia: same — server-action / fetch on user interaction.
+            Wasted preconnects burn DNS/TLS slots that the browser needs for
+            critical-path resources. -0.2 to -0.5 s LCP. */}
         <meta name="format-detection" content="telephone=no" />
       </head>
       <body>

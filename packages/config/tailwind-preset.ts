@@ -69,7 +69,10 @@ const preset = {
         ring: 'hsl(var(--ring) / <alpha-value>)',
       },
       fontFamily: {
-        sans: ['var(--font-be-vietnam)', 'var(--font-inter)', 'system-ui', 'sans-serif'],
+        // Wave 55 LCP #1 — dropped Inter from fallback chain (no longer imported
+        // in layout.tsx). Be Vietnam Pro covers latin already; Inter rarely
+        // rendered. Keeping `system-ui` as the real fallback.
+        sans: ['var(--font-be-vietnam)', 'system-ui', 'sans-serif'],
         heading: ['var(--font-outfit)', 'var(--font-be-vietnam)', 'system-ui', 'sans-serif'],
         mono: ['var(--font-jetbrains-mono)', 'ui-monospace', 'monospace'],
       },
