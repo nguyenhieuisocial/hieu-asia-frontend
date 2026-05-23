@@ -39,7 +39,17 @@ import { get } from '@vercel/edge-config';
 /** Shape of the `reasoning` key in Edge Config. All fields optional. */
 interface EdgeConfigShape {
   reasoning?: {
-    /** Force every call to this tier. `null` = use call-site default. */
+    /**
+     * Force every reasoning call to this tier. `null` = use call-site
+     * default. Read by `llm.ts:resolveTier()` on every reasoningGenerate
+     * call — wired Phase 2.6.1 after /ultrareview flagged it dead code.
+     *
+     * Caveat: the cost-guard estimate (ESTIMATED_COST_USD per graph) is
+     * NOT tier-aware. With tierOverride='cheap', actual cost drops ~20×
+     * but estimate stays pessimistic → cap rejects ~20× sooner than real
+     * spend. Acceptable trade-off for an emergency knob; document if you
+     * use it for normal operation.
+     */
     tierOverride?: 'cheap' | 'mid' | 'top' | null;
     /** Global kill switch — reasoning routes return 503. */
     killSwitch?: boolean;
@@ -47,7 +57,15 @@ interface EdgeConfigShape {
     capUsdPerDayAnon?: number;
     /** Per-day $ cap for authenticated users. */
     capUsdPerDayAuthed?: number;
-    /** Optional global $ cap (all users combined) per day. 0 = disabled. */
+    /**
+     * Optional global $ cap (all users combined) per day.
+     *
+     * NOT YET ENFORCED — queued as Phase 2.6.1 follow-up. The field is
+     * accepted from Edge Config but cost-guard only enforces per-subject
+     * caps. Setting this today is silent no-op. Wiring requires a second
+     * RPC (or extending the existing one) to SUM today's row. Don't rely
+     * on this as a circuit breaker yet.
+     */
     capUsdGlobalDay?: number;
     /** Human-readable reason shown when killSwitch is true. */
     killSwitchReason?: string;
@@ -60,6 +78,7 @@ export interface ReasoningRuntimeConfig {
   killSwitchReason: string;
   capUsdPerDayAnon: number;
   capUsdPerDayAuthed: number;
+  /** NOT YET ENFORCED — see EdgeConfigShape comment. Reserved for Phase 2.6.1. */
   capUsdGlobalDay: number;
 }
 

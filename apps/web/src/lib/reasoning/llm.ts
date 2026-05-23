@@ -28,6 +28,7 @@
 
 import { generateText, streamText, type ModelMessage } from 'ai';
 import { createGateway } from '@ai-sdk/gateway';
+import { getReasoningConfig } from './runtime-config';
 
 /**
  * Tier → Gateway model identifier. Update centrally when bumping models —
@@ -114,17 +115,42 @@ export interface ReasoningCallOpts {
   label?: string;
 }
 
+/**
+ * Resolve the effective tier honoring Edge Config `tierOverride`.
+ *
+ * Phase 2.6.1 fix (was P1-1 dead code): runtime-config exposes a
+ * `tierOverride` knob for "cost panic — force cheap" or "quality test —
+ * force top" scenarios. Until now nothing read it, so flipping it in Edge
+ * Config did nothing. This resolver runs on every reasoningGenerate call.
+ *
+ * Judge tier is INTENTIONALLY exempt — judges must stay cross-vendor from
+ * generators (MT-Bench §4.2 self-bias). Overriding judge would corrupt the
+ * eval signal.
+ */
+async function resolveTier(requested: Tier): Promise<Tier> {
+  if (requested === 'judge') return 'judge'; // never override the eval judge
+  try {
+    const cfg = await getReasoningConfig();
+    if (cfg.tierOverride && cfg.tierOverride !== requested) return cfg.tierOverride;
+  } catch {
+    // runtime-config has its own fallback to DEFAULTS; this catch is
+    // defense-in-depth against a future change that might throw.
+  }
+  return requested;
+}
+
 /** Build the shared part of the args object — discriminated on prompt vs messages. */
-function buildArgs(opts: ReasoningCallOpts) {
+async function buildArgs(opts: ReasoningCallOpts) {
   if (!opts.prompt && !opts.messages) {
     throw new Error('reasoning_llm: prompt OR messages required');
   }
   if (opts.prompt && opts.messages) {
     throw new Error('reasoning_llm: pass prompt OR messages, not both');
   }
-  const fallbackChain = FALLBACK[opts.tier];
+  const effectiveTier = await resolveTier(opts.tier);
+  const fallbackChain = FALLBACK[effectiveTier];
   const base = {
-    model: gateway(MODELS[opts.tier]),
+    model: gateway(MODELS[effectiveTier]),
     system: opts.system,
     maxOutputTokens: opts.maxOutputTokens,
     temperature: opts.temperature ?? 0.4,
@@ -145,13 +171,13 @@ function buildArgs(opts: ReasoningCallOpts) {
  * (return null, queue retry, surface partial result).
  */
 export async function reasoningGenerate(opts: ReasoningCallOpts) {
-  return generateText(buildArgs(opts));
+  return generateText(await buildArgs(opts));
 }
 
 /**
  * Streaming variant — for routes that push tokens to the client via SSE.
  * Same fallback chain semantics.
  */
-export function reasoningStream(opts: ReasoningCallOpts) {
-  return streamText(buildArgs(opts));
+export async function reasoningStream(opts: ReasoningCallOpts) {
+  return streamText(await buildArgs(opts));
 }

@@ -25,14 +25,24 @@
  *
  * Subject key derivation:
  *   - authed: "user:<uuid>"
- *   - anon: "anon:<sha256(ip + UTC date)>". The UTC date salt rotates the
- *     hash daily — useful because (a) it limits how long an abusive IP is
- *     trackable, (b) it caps the table growth even with millions of unique
- *     IPs over a year.
+ *   - anon: "anon:<sha256(ip [+visitorId] + 'reasoning-cost-guard-v1')>".
+ *     /ultrareview Phase 2.6.1 fix: REMOVED the UTC date salt that used to
+ *     be inside the hash. The (subject_key, day) primary key on
+ *     reasoning_daily_cost already rotates the bucket daily. Putting date
+ *     in the hash AS WELL created a dual-clock bug — JS computed yesterday
+ *     pre-midnight, RPC computed today post-midnight, and the cap was
+ *     bypassed for the ~1s window per day. Drop the date from the hash;
+ *     row key alone handles rotation.
+ *
+ *     If a `hieu_visitor` cookie is present (set by Wave 41 attribution),
+ *     mix it into the hash so 50 office workers behind one NAT don't share
+ *     one $0.50 bucket. Cookie is opaque (no PII) and resets with browser.
  *
  * IP source: prefer `x-real-ip`, then first `x-forwarded-for`, then a
  * sentinel. Vercel sets `x-real-ip` for every request behind the edge —
- * spoofing requires Vercel's infra cooperation, so we treat it as trusted.
+ * spoofing requires Vercel's infra cooperation. We still cap the value at
+ * 64 chars before hashing (sha256 doesn't care, but a 64KB header would
+ * burn CPU on no-op).
  *
  * Failure modes:
  *   - Edge Config down → DEFAULTS used (see runtime-config.ts)
@@ -80,13 +90,27 @@ async function sha256Hex(s: string): Promise<string> {
     .join('');
 }
 
+/** Cap at 64 chars — IPv6 max is 45, so this is generous and prevents
+ * accidental 64KB-header CPU burn. /ultrareview Phase 2.6.1 P1-5 fix. */
 function getClientIp(headers: Headers): string {
-  // Vercel-trusted. `x-real-ip` is set on every request behind the edge.
   const real = headers.get('x-real-ip');
-  if (real) return real;
+  if (real) return real.slice(0, 64);
   const fwd = headers.get('x-forwarded-for');
-  if (fwd) return fwd.split(',')[0]!.trim();
+  if (fwd) return fwd.split(',')[0]!.trim().slice(0, 64);
   return 'unknown';
+}
+
+/** Read the opaque `hieu_visitor` cookie (set by Wave 41 attribution). */
+function getVisitorId(headers: Headers): string {
+  const cookie = headers.get('cookie') ?? '';
+  const match = cookie.match(/(?:^|;\s*)hieu_visitor=([^;]+)/);
+  if (!match) return '';
+  // Strip URL-encoding + cap at 64 chars (visitor IDs are sha256-hex = 64 chars).
+  try {
+    return decodeURIComponent(match[1]!).slice(0, 64);
+  } catch {
+    return match[1]!.slice(0, 64);
+  }
 }
 
 let _supabase: ReturnType<typeof createClient> | null = null;
@@ -125,18 +149,30 @@ export async function assertCostGuard(args: AssertArgs): Promise<AssertResult> {
   }
 
   // ─── Subject key + cap pick ──────────────────────────────────────────
+  //
+  // Phase 2.6.1 fix (P1-4): NO date salt in the hash. The (subject_key, day)
+  // PK on reasoning_daily_cost handles daily rotation by row keying. Putting
+  // date in the hash too created a midnight-rollover race where JS computed
+  // yesterday's date and SQL computed today's — for ~1s/day the cap could
+  // be bypassed.
+  //
+  // P2-1 fix: mix in `hieu_visitor` cookie when present so 50 office workers
+  // behind one NAT don't share one $0.50 bucket. Cookie is opaque attribution
+  // ID set by Wave 41; resets with browser. No PII.
   let subjectKey: string;
   let capUsd: number;
-  if (args.userId && /^[0-9a-f-]{36}$/i.test(args.userId)) {
+  // Proper UUID v4-style regex (Phase 2.6.1 P2-5): the old /^[0-9a-f-]{36}$/i
+  // accepted 36 hyphens. Strict shape now: 8-4-4-4-12 hex.
+  if (
+    args.userId &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(args.userId)
+  ) {
     subjectKey = `user:${args.userId}`;
     capUsd = cfg.capUsdPerDayAuthed;
   } else {
     const ip = getClientIp(args.headers);
-    // Daily-rotating salt: hash inputs include UTC date so the same IP gets
-    // a fresh subject_key tomorrow. Caps table cardinality + limits how long
-    // an abuser is tracked. The date format YYYY-MM-DD is deterministic.
-    const utcDate = new Date().toISOString().slice(0, 10);
-    const hash = await sha256Hex(`${ip}|${utcDate}|reasoning-cost-guard-v1`);
+    const visitorId = getVisitorId(args.headers);
+    const hash = await sha256Hex(`${ip}|${visitorId}|reasoning-cost-guard-v1`);
     subjectKey = `anon:${hash}`;
     capUsd = cfg.capUsdPerDayAnon;
   }
