@@ -23,17 +23,11 @@
 
 import { Annotation, StateGraph, Send, START, END } from '@langchain/langgraph';
 import { createClient } from '@supabase/supabase-js';
-import { reasoningGenerate } from './llm';
+import { reasoningGenerate, type Tier } from './llm';
 import { retrieveContext, type CorpusChunk } from './rag';
+import { computeCostUsd } from './cost';
 
-/* ─── Cost helper (same pattern as tu-vi-graph) ──────────────────────── */
-
-const TIER_COST_PER_M_TOKENS = {
-  cheap: { input: 0.075, output: 0.3 },
-  mid: { input: 3, output: 15 },
-  top: { input: 15, output: 75 },
-} as const;
-type Tier = keyof typeof TIER_COST_PER_M_TOKENS;
+/* ─── Cost helper (Phase 2.6 dedupe — pricing now in cost.ts) ─────────── */
 
 let _supabase: ReturnType<typeof createClient> | null = null;
 function getServiceRoleClient() {
@@ -54,9 +48,7 @@ function incrementCost(
   if (!runId) return;
   const tIn = usage?.inputTokens ?? 0;
   const tOut = usage?.outputTokens ?? 0;
-  const cost =
-    (tIn / 1_000_000) * TIER_COST_PER_M_TOKENS[tier].input +
-    (tOut / 1_000_000) * TIER_COST_PER_M_TOKENS[tier].output;
+  const cost = computeCostUsd(tier, usage);
   const ac = new AbortController();
   const timer = setTimeout(() => ac.abort(), 2000);
   const rpc = getServiceRoleClient().rpc(

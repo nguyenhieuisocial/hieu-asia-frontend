@@ -30,6 +30,7 @@ import { checkBotId } from 'botid/server';
 import { createClient } from '@supabase/supabase-js';
 import { buildTuViGraph, type ChartInput } from '@/lib/reasoning/tu-vi-graph';
 import { startTrace } from '@/lib/reasoning/observability';
+import { assertCostGuard } from '@/lib/reasoning/cost-guard';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -99,6 +100,17 @@ export async function POST(req: NextRequest) {
     );
   }
   const chart = body.chart;
+
+  // 2b. Phase 2.6 cost guard — kill switch + per-day cap. Fails CLOSED on
+  // Supabase blip (503 + Retry-After). subjectKey returned for downstream
+  // logging, but agent_runs row is the primary cost ledger; this guard is
+  // only a *gate*, not the source of truth for spend.
+  const guard = await assertCostGuard({
+    graph: 'tu-vi',
+    userId: null, // /ultrareview Phase 2.2 P2-3: don't trust body.userId yet
+    headers: req.headers,
+  });
+  if (!guard.ok) return guard.response;
 
   // 3. Create agent_runs row — graph nodes update cost via RPC; Realtime
   // publishes UPDATE so client progress UI tracks live (Phase 2.3).

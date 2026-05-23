@@ -13,6 +13,7 @@ import { checkBotId } from 'botid/server';
 import { createClient } from '@supabase/supabase-js';
 import { buildPalmGraph, type PalmInput } from '@/lib/reasoning/palm-graph';
 import { startTrace } from '@/lib/reasoning/observability';
+import { assertCostGuard } from '@/lib/reasoning/cost-guard';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -92,6 +93,10 @@ export async function POST(req: NextRequest) {
     );
   }
   const input = body.input;
+
+  // Phase 2.6 cost guard.
+  const guard = await assertCostGuard({ graph: 'palm', userId: null, headers: req.headers });
+  if (!guard.ok) return guard.response;
 
   const supabase = getSupabase();
   const { data: runRow, error: runErr } = await supabase

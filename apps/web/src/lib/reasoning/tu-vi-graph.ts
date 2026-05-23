@@ -42,26 +42,13 @@
 
 import { Annotation, StateGraph, Send, START, END } from '@langchain/langgraph';
 import { createClient } from '@supabase/supabase-js';
-import { reasoningGenerate } from './llm';
+import { reasoningGenerate, type Tier } from './llm';
 import { retrieveContext, type CorpusChunk } from './rag';
+import { computeCostUsd } from './cost';
 
-/**
- * Per-tier USD cost per 1M tokens. Used to estimate cost from `usage` returned
- * by reasoningGenerate and push to agent_runs.cost_usd via RPC.
- *
- * /ultrareview Phase 2.2 P1-1 reconciliation: numbers were drifting between
- * llm.ts comment ($0.05/$0.20 for cheap) and this file. Canonical source =
- * Vercel AI Gateway pricing page checked 2026-05-23. llm.ts comment also
- * updated to match. Phase 2.6 will pull these from Edge Config so cost
- * drift across files becomes impossible.
- */
-const TIER_COST_PER_M_TOKENS = {
-  cheap: { input: 0.075, output: 0.3 },   // google/gemini-3.5-flash
-  mid:   { input: 3,     output: 15 },    // anthropic/claude-sonnet-4
-  top:   { input: 15,    output: 75 },    // anthropic/claude-opus-4.7
-} as const;
-
-type Tier = keyof typeof TIER_COST_PER_M_TOKENS;
+/* Pricing now lives in `./cost.ts` (Phase 2.6 dedupe — was duplicated across
+ * bat-tu, palm, and this file). Bump tiers there; this graph stays in sync
+ * automatically. */
 
 let _supabase: ReturnType<typeof createClient> | null = null;
 function getServiceRoleClient() {
@@ -93,9 +80,7 @@ function incrementCost(
   if (!runId) return;
   const tIn = usage?.inputTokens ?? 0;
   const tOut = usage?.outputTokens ?? 0;
-  const cost =
-    (tIn / 1_000_000) * TIER_COST_PER_M_TOKENS[tier].input +
-    (tOut / 1_000_000) * TIER_COST_PER_M_TOKENS[tier].output;
+  const cost = computeCostUsd(tier, usage);
   // 2-second hard ceiling on the telemetry RPC — if Supabase doesn't ACK in
   // time the call is abandoned. Cost row may be slightly stale; the worst
   // case is one node's tokens missing from running total. Acceptable.

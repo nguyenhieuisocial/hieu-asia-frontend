@@ -10,6 +10,7 @@ import { checkBotId } from 'botid/server';
 import { createClient } from '@supabase/supabase-js';
 import { buildBatTuGraph, type BatTuInput } from '@/lib/reasoning/bat-tu-graph';
 import { startTrace } from '@/lib/reasoning/observability';
+import { assertCostGuard } from '@/lib/reasoning/cost-guard';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -73,6 +74,10 @@ export async function POST(req: NextRequest) {
     );
   }
   const input = body.input;
+
+  // Phase 2.6 cost guard — see tu-vi full route for context on why null userId.
+  const guard = await assertCostGuard({ graph: 'bat-tu', userId: null, headers: req.headers });
+  if (!guard.ok) return guard.response;
 
   const supabase = getSupabase();
   const { data: runRow, error: runErr } = await supabase
