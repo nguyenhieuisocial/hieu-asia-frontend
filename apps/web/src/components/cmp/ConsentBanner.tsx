@@ -3,8 +3,13 @@
 /**
  * Wave 41 Track E — Consent banner.
  *
- * Bottom-right toast on first visit (or when re-opened via /privacy footer
- * link). Granular toggles: Necessary (always on), Analytics (default ON),
+ * Wave 52-A — repositioned from bottom-right to bottom-CENTER + wider max
+ * width so the banner can never overlap right-edge CTAs (the "Tiếp tục lập
+ * lá số" button on /onboarding and the Premium card CTA on /pricing). Audit
+ * found the prior bottom-right placement hid conversion-critical actions
+ * until the user dismissed the banner.
+ *
+ * Granular toggles: Necessary (always on), Analytics (default ON),
  * Marketing (default OFF), Personalization (default ON).
  *
  * Buttons:
@@ -100,7 +105,10 @@ export function ConsentBanner(): React.ReactElement | null {
       role="dialog"
       aria-label="Cookie consent"
       aria-live="polite"
-      className="fixed bottom-4 right-4 z-50 w-[min(420px,calc(100vw-2rem))] rounded-lg border border-gold/30 bg-card/95 p-5 text-sm text-foreground shadow-2xl backdrop-blur"
+      // Wave 52-A — bottom-center positioning. `left-1/2 -translate-x-1/2`
+      // anchors the banner away from the right edge so it never covers
+      // primary CTAs on /onboarding, /pricing, or /tu-vi-hom-nay.
+      className="fixed bottom-4 left-1/2 z-50 w-[min(640px,calc(100vw-2rem))] -translate-x-1/2 rounded-lg border border-gold/30 bg-card/95 p-5 text-sm text-foreground shadow-2xl backdrop-blur"
     >
       <h2 className="font-heading text-base font-semibold text-gold">
         Cookie & dữ liệu

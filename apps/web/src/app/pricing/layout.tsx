@@ -3,12 +3,12 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Bảng giá',
   description:
-    'Standard 99.000đ một lần · Premium 199.000đ / tháng (hoặc 1.990.000đ / năm — tiết kiệm 17%) · Lifetime 4.990.000đ trọn đời.',
+    'Premium 99.000đ một lần · Mentor Monthly 199.000đ / tháng · Mentor Yearly 1.990.000đ / năm (tiết kiệm 17%) · Lifetime 4.990.000đ trọn đời.',
   alternates: { canonical: 'https://hieu.asia/pricing' },
   openGraph: {
     title: 'Bảng giá',
     description:
-      'Standard 99.000đ · Premium 199.000đ/tháng · Lifetime 4.990.000đ. Mở khóa góc nhìn sâu cho mỗi quyết định.',
+      'Premium 99.000đ · Mentor Monthly 199.000đ/tháng · Mentor Yearly 1.990.000đ/năm · Lifetime 4.990.000đ. Mở khóa góc nhìn sâu cho mỗi quyết định.',
     url: 'https://hieu.asia/pricing',
     type: 'website',
   },
@@ -19,12 +19,12 @@ const PRODUCT_JSONLD = {
   '@type': 'Product',
   name: 'hieu.asia — Báo cáo Tử Vi & AI Mentor',
   description:
-    'Báo cáo Tử Vi, Bát Tự, MBTI và Mentor AI cá nhân hóa. 4 gói: Free, Standard (một lá số, một lần), Premium (subscription tháng / năm), Lifetime (trọn đời).',
+    'Báo cáo Tử Vi, Bát Tự, MBTI và Mentor AI cá nhân hóa. 5 gói: Free, Premium (một lá số, một lần), Mentor Monthly (subscription /tháng), Mentor Yearly (subscription /năm), Lifetime (trọn đời).',
   brand: { '@type': 'Brand', name: 'hieu.asia' },
   offers: [
     {
       '@type': 'Offer',
-      name: 'Standard — một lá số (một lần)',
+      name: 'Premium — một lá số (một lần)',
       price: '99000',
       priceCurrency: 'VND',
       availability: 'https://schema.org/InStock',
@@ -33,7 +33,7 @@ const PRODUCT_JSONLD = {
     },
     {
       '@type': 'Offer',
-      name: 'Premium Monthly',
+      name: 'Mentor Monthly',
       price: '199000',
       priceCurrency: 'VND',
       availability: 'https://schema.org/InStock',
@@ -42,7 +42,7 @@ const PRODUCT_JSONLD = {
     },
     {
       '@type': 'Offer',
-      name: 'Premium Yearly',
+      name: 'Mentor Yearly',
       price: '1990000',
       priceCurrency: 'VND',
       availability: 'https://schema.org/InStock',

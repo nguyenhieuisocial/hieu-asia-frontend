@@ -1,13 +1,19 @@
 /**
- * /pricing — redesigned comparison table.
+ * /pricing — canonical comparison page.
  *
- * 4 tiers: Free · Standard · Premium · Lifetime.
- * Annual / Monthly toggle (annual saves 17%).
- * Mobile: stacked cards. Desktop: table.
- * Premium gets a gold "Phổ biến nhất" ribbon.
+ * Wave 52-A — taxonomy synced with `lib/pricing.ts` + home `PricingTeaser`:
+ * 5 tiers: Free · Premium (99k one-time) · Mentor Monthly (199k/mo) ·
+ * Mentor Yearly (1.99M/yr · saves 17%) · Lifetime (4.99M one-time).
+ * Mentor Monthly is the gold "Phổ biến nhất" tier.
  *
- * Reads optional `?session=<reading_id>` — passes through to /unlock so a
- * payment is bound to a specific reading; absent → fallback to dashboard.
+ * CTA wiring maps display IDs → wire IDs accepted by /unlock:
+ *   premium → premium · monthly → subscription_monthly · yearly → subscription_yearly.
+ * Lifetime is NOT yet accepted by /unlock — flagged for founder follow-up.
+ *
+ * Reads optional `?session=<reading_id>` — passed through to /unlock so a
+ * payment is bound to a specific reading; absent → fallback to /account.
+ * Reads optional `?tier=<id>` — used to spotlight the deep-linked tier from
+ * the home teaser.
  */
 
 'use client';
@@ -35,20 +41,28 @@ const LAUNCH_PROMO = {
 } as const;
 
 type Period = 'monthly' | 'annual';
-type TierId = 'free' | 'standard' | 'premium' | 'lifetime';
+/**
+ * Wave 52-A — canonical pricing taxonomy. MUST match `lib/pricing.ts` AND
+ * `components/home/PricingTeaser.tsx` so the home → /pricing flow is coherent.
+ *
+ * Tier IDs are display-only here. CTA wiring maps them to the wire IDs that
+ * `/unlock/[session_id]` validates (`premium`, `subscription_monthly`,
+ * `subscription_yearly`). Lifetime is not yet wired into /unlock; flagged.
+ */
+type TierId = 'free' | 'premium' | 'monthly' | 'yearly' | 'lifetime';
 
 interface Tier {
   id: TierId;
   name: string;
-  /** Monthly price in VND. 0 = free. */
+  /** Monthly price in VND. 0 = free or n/a (one-time tiers). */
   monthly: number;
-  /** Annual price in VND (full year). Lifetime uses this as one-time. */
+  /** Annual price in VND. One-time tiers (`isOneTime`) use this as the price. */
   annual: number;
   description: string;
   cta: string;
   highlighted?: boolean;
   badge?: string;
-  /** If true, `annual` is a one-time payment, not /year. */
+  /** True for one-time payments (no monthly/annual split). */
   isOneTime?: boolean;
 }
 
@@ -62,28 +76,37 @@ const TIERS: readonly Tier[] = [
     cta: 'Bắt đầu miễn phí',
   },
   {
-    id: 'standard',
-    name: 'Standard',
+    id: 'premium',
+    name: 'Premium',
     monthly: 0,
     annual: PRICING.premium.vnd,
     description: 'Một lá số đầy đủ, không tự gia hạn.',
-    cta: 'Chọn Standard',
+    cta: 'Chọn Premium',
     isOneTime: true,
   },
   {
-    id: 'premium',
-    name: 'Premium',
+    id: 'monthly',
+    name: 'Mentor Monthly',
     monthly: PRICING.monthly.vnd,
-    annual: PRICING.yearly.vnd,
+    annual: PRICING.monthly.vnd, // Monthly tier has no annual variant
     description: 'Mentor không giới hạn — phổ biến nhất.',
-    cta: 'Chọn Premium',
+    cta: 'Chọn gói tháng',
     highlighted: true,
     badge: 'Phổ biến nhất',
   },
   {
+    id: 'yearly',
+    name: 'Mentor Yearly',
+    monthly: 0,
+    annual: PRICING.yearly.vnd,
+    description: 'Trả 1 lần / năm — rẻ hơn 17% so với gói tháng.',
+    cta: 'Chọn gói năm',
+    isOneTime: true,
+  },
+  {
     id: 'lifetime',
     name: 'Lifetime',
-    monthly: 0, // Lifetime ignores monthly view
+    monthly: 0,
     annual: PRICING.lifetime.vnd,
     description: 'Một lần thanh toán, dùng trọn đời.',
     cta: 'Chọn Lifetime',
@@ -102,65 +125,65 @@ const FEATURE_ROWS: readonly FeatureRow[] = [
   {
     label: 'Khảo sát đầu vào',
     group: 'Cốt lõi',
-    values: { free: true, standard: true, premium: true, lifetime: true },
+    values: { free: true, premium: true, monthly: true, yearly: true, lifetime: true },
   },
   {
     label: 'Số lá số được tạo',
     group: 'Cốt lõi',
-    values: { free: '1', standard: '1', premium: 'Không giới hạn', lifetime: 'Không giới hạn' },
+    values: { free: '1', premium: '1', monthly: 'Không giới hạn', yearly: 'Không giới hạn', lifetime: 'Không giới hạn' },
   },
   {
     label: 'Phân tích Tử Vi 12 cung',
     group: 'Cốt lõi',
-    values: { free: 'Rút gọn', standard: true, premium: true, lifetime: true },
+    values: { free: 'Rút gọn', premium: true, monthly: true, yearly: true, lifetime: true },
   },
   {
     label: 'Bát Tự, MBTI, Thần Số Học',
     group: 'Cốt lõi',
-    values: { free: 'Rút gọn', standard: true, premium: true, lifetime: true },
+    values: { free: 'Rút gọn', premium: true, monthly: true, yearly: true, lifetime: true },
   },
   {
     label: 'Palm Reading (upload ảnh)',
     group: 'Cốt lõi',
-    values: { free: false, standard: true, premium: true, lifetime: true },
+    values: { free: false, premium: true, monthly: true, yearly: true, lifetime: true },
   },
   // Mentor
   {
     label: 'Số câu hỏi với Mentor',
     group: 'Mentor AI',
-    values: { free: '0', standard: '3', premium: 'Không giới hạn', lifetime: 'Không giới hạn' },
+    values: { free: '0', premium: '3', monthly: 'Không giới hạn', yearly: 'Không giới hạn', lifetime: 'Không giới hạn' },
   },
   {
     label: 'Cập nhật đại vận & lưu niên',
     group: 'Mentor AI',
-    values: { free: false, standard: false, premium: true, lifetime: true },
+    values: { free: false, premium: false, monthly: true, yearly: true, lifetime: true },
   },
   // Export
   {
     label: 'Tải PDF Cẩm Nang',
     group: 'Xuất bản',
-    values: { free: false, standard: true, premium: true, lifetime: true },
+    values: { free: false, premium: true, monthly: true, yearly: true, lifetime: true },
   },
   {
     label: 'Tử Vi hôm nay cá nhân hoá',
     group: 'Xuất bản',
-    values: { free: false, standard: false, premium: true, lifetime: true },
+    values: { free: false, premium: false, monthly: true, yearly: true, lifetime: true },
   },
   // Family & extras
   {
     label: 'Phân tích người thân',
     group: 'Mở rộng',
-    values: { free: false, standard: false, premium: '3 lá số', lifetime: '10 lá số' },
+    values: { free: false, premium: false, monthly: '3 lá số', yearly: '3 lá số', lifetime: '10 lá số' },
   },
   {
     label: 'Hỗ trợ ưu tiên',
     group: 'Mở rộng',
-    values: { free: false, standard: false, premium: true, lifetime: true },
+    values: { free: false, premium: false, monthly: true, yearly: true, lifetime: true },
   },
   {
     label: 'Truy cập sớm tính năng mới',
     group: 'Mở rộng',
-    values: { free: false, standard: false, premium: true, lifetime: true },
+    values: { free: false, premium: false, monthly: true, yearly: true, lifetime: true },
   },
 ];
 
@@ -177,22 +200,23 @@ const PRICING_FAQ: readonly FaqItem[] = [
     ),
   },
   {
-    q: 'Gói năm rẻ hơn bao nhiêu so với gói tháng?',
+    q: 'Mentor Yearly rẻ hơn bao nhiêu so với Mentor Monthly?',
     a: (
       <p>
-        Khi chọn gói năm Premium, bạn tiết kiệm 17% so với 12 tháng cộng lại —
+        Khi chọn Mentor Yearly, bạn tiết kiệm 17% so với 12 tháng cộng lại —
         tương đương 2 tháng miễn phí. Cụ thể: 199.000đ × 12 = 2.388.000đ, gói
         năm chỉ 1.990.000đ (tức ~165.833đ / tháng).
       </p>
     ),
   },
   {
-    q: 'Sự khác biệt giữa Premium và Lifetime?',
+    q: 'Sự khác biệt giữa Premium, Mentor và Lifetime?',
     a: (
       <p>
-        Premium là subscription — bạn trả theo tháng hoặc năm. Lifetime là một
-        lần thanh toán, dùng mãi mãi, kèm bonus phân tích đến 10 lá số người
-        thân.
+        Premium 99.000đ là một lá số đầy đủ trả một lần (không tự gia hạn).
+        Mentor Monthly / Mentor Yearly là subscription cho Mentor AI không
+        giới hạn và đại vận / lưu niên. Lifetime là một lần thanh toán,
+        dùng mãi mãi, kèm bonus phân tích đến 10 lá số người thân.
       </p>
     ),
   },
@@ -221,56 +245,69 @@ function formatVND(amount: number): string {
   return new Intl.NumberFormat('vi-VN').format(amount) + '₫';
 }
 
-function priceFor(tier: Tier, period: Period): { display: string; cadence: string } {
+function priceFor(tier: Tier, _period: Period): { display: string; cadence: string } {
   if (tier.id === 'free') return { display: 'Miễn phí', cadence: '' };
+  // Wave 52-A — Mentor Monthly / Mentor Yearly are now sibling tiers
+  // (matching the home teaser). Yearly / Premium / Lifetime are all
+  // one-time-style cadences; Monthly is the lone /tháng subscription card.
+  if (tier.id === 'monthly') return { display: formatVND(tier.monthly), cadence: '/ tháng' };
+  if (tier.id === 'yearly') return { display: formatVND(tier.annual), cadence: '/ năm' };
   if (tier.isOneTime) return { display: formatVND(tier.annual), cadence: 'một lần' };
-  if (period === 'monthly') return { display: formatVND(tier.monthly), cadence: '/ tháng' };
-  return { display: formatVND(tier.annual), cadence: '/ năm' };
+  return { display: formatVND(tier.annual), cadence: '' };
 }
 
 /**
- * Compute the annual discount vs. 12× monthly. Returns null for tiers that
- * don't have both monthly + annual pricing (free, one-time).
+ * Wave 52-A — Mentor Yearly discount vs 12× Mentor Monthly. Only meaningful
+ * for the `yearly` tier card now that subscriptions are split into siblings.
  *
- * Premium today: monthly 199k × 12 = 2,388k, annual 1,990k → saves 398k ≈ 16.7%
- * → rounds to 17%, equivalent to "2 tháng miễn phí" (2/12 = 16.7%).
+ * 199.000 × 12 = 2.388.000; 1.990.000 / 2.388.000 ≈ 0.833 → 17% off
+ * → "2 tháng miễn phí" (2/12 ≈ 16.7%).
  */
 function annualDiscount(tier: Tier): { percent: number; monthsFree: number; saved: number } | null {
-  if (tier.isOneTime || tier.monthly <= 0 || tier.annual <= 0) return null;
-  const twelve = tier.monthly * 12;
+  if (tier.id !== 'yearly') return null;
+  const twelve = PRICING.monthly.vnd * 12;
   if (twelve <= tier.annual) return null;
   const saved = twelve - tier.annual;
   const percent = Math.round((saved / twelve) * 100);
-  const monthsFree = Math.round((saved / tier.monthly) * 10) / 10;
+  const monthsFree = Math.round((saved / PRICING.monthly.vnd) * 10) / 10;
   return { percent, monthsFree, saved };
 }
 
-/** Equivalent monthly cost for an annual subscription — for the "~165.833/tháng" hint. */
+/** Equivalent monthly cost for Mentor Yearly — drives the "~165.833₫/tháng" hint. */
 function monthlyEquivalent(tier: Tier): string | null {
-  if (tier.isOneTime || tier.annual <= 0) return null;
+  if (tier.id !== 'yearly' || tier.annual <= 0) return null;
   const perMonth = Math.round(tier.annual / 12);
   return `~${new Intl.NumberFormat('vi-VN').format(perMonth)}₫ / tháng`;
 }
 
 /**
- * Best annual discount across all subscription tiers — drives the period
- * toggle badge so the copy stays in sync with the underlying numbers.
+ * Wave 52-A — map a display TierId to the wire tier accepted by
+ * `/unlock/[session_id]/page.tsx` (`premium`, `subscription_monthly`,
+ * `subscription_yearly`). Lifetime is not wired yet — flagged for founder.
  */
-function bestAnnualDiscountPercent(tiers: readonly Tier[]): number {
-  let best = 0;
-  for (const t of tiers) {
-    const d = annualDiscount(t);
-    if (d && d.percent > best) best = d.percent;
+function toWireTier(tier: TierId): string | null {
+  switch (tier) {
+    case 'premium':
+      return 'premium';
+    case 'monthly':
+      return 'subscription_monthly';
+    case 'yearly':
+      return 'subscription_yearly';
+    case 'lifetime':
+      return 'lifetime'; // TODO(wave-52-followup): /unlock does not yet accept this.
+    default:
+      return null;
   }
-  return best;
 }
 
 export default function PricingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const sessionId = searchParams?.get('session') ?? '';
-  const [period, setPeriod] = React.useState<Period>('annual');
-  const bestDiscount = React.useMemo(() => bestAnnualDiscountPercent(TIERS), []);
+  // Wave 52-A — accept `?tier=` deep link from the home teaser (`premium`,
+  // `monthly`, `yearly`, `lifetime`, `free`). Used only to scroll the matched
+  // card into view; no taxonomy logic depends on it.
+  const intentTier = searchParams?.get('tier') ?? '';
   // Default to TRUE so the campaign banner still shows when PostHog is down /
   // blocked. Set the PostHog flag to `false` to kill the banner remotely.
   const showLaunchBanner = useFeatureFlag<boolean>(
@@ -305,9 +342,14 @@ export default function PricingPage() {
         router.push('/account?need_reading=1');
         return;
       }
-      router.push(`/unlock/${encodeURIComponent(sessionId)}?tier=${tier}&period=${period}`);
+      const wireTier = toWireTier(tier);
+      if (!wireTier) {
+        router.push('/account?need_reading=1');
+        return;
+      }
+      router.push(`/unlock/${encodeURIComponent(sessionId)}?tier=${wireTier}`);
     },
-    [router, sessionId, period],
+    [router, sessionId],
   );
 
   return (
@@ -340,20 +382,11 @@ export default function PricingPage() {
               </p>
             )}
 
-            {/* Period toggle */}
-            <div className="mt-8 inline-flex items-center gap-1 rounded-full border border-border bg-card/60 p-1">
-              <PeriodButton current={period} value="monthly" onClick={setPeriod}>
-                Hàng tháng
-              </PeriodButton>
-              <PeriodButton current={period} value="annual" onClick={setPeriod}>
-                Hàng năm{' '}
-                {bestDiscount > 0 && (
-                  <span className="ml-1 rounded-full bg-gold/20 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-gold">
-                    Tiết kiệm {bestDiscount}%
-                  </span>
-                )}
-              </PeriodButton>
-            </div>
+            {/*
+              Wave 52-A — period toggle removed: Mentor Monthly and Mentor
+              Yearly are now sibling cards (one per cadence) so the toggle was
+              redundant. The taxonomy now matches the home teaser exactly.
+            */}
 
             {/* Launch promo banner — gated by `pricing-launch50-banner` flag */}
             {LAUNCH_PROMO.code && showLaunchBanner && (
@@ -380,7 +413,7 @@ export default function PricingPage() {
                 <TierCard
                   key={tier.id}
                   tier={tier}
-                  period={period}
+                  highlight={intentTier === tier.id}
                   onSelect={() => handleSelect(tier.id)}
                 />
               ))}
@@ -393,16 +426,15 @@ export default function PricingPage() {
               {pricingVariant === 'comparison-table' ? (
                 <ComparisonTable
                   tiers={TIERS}
-                  period={period}
                   onSelect={handleSelect}
                 />
               ) : (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-5">
                   {TIERS.map((tier) => (
                     <TierCard
                       key={tier.id}
                       tier={tier}
-                      period={period}
+                      highlight={intentTier === tier.id}
                       onSelect={() => handleSelect(tier.id)}
                     />
                   ))}
@@ -435,47 +467,19 @@ export default function PricingPage() {
   );
 }
 
-function PeriodButton({
-  current,
-  value,
-  onClick,
-  children,
-}: {
-  current: Period;
-  value: Period;
-  onClick: (v: Period) => void;
-  children: React.ReactNode;
-}) {
-  const active = current === value;
-  return (
-    <button
-      type="button"
-      onClick={() => onClick(value)}
-      className={[
-        'inline-flex items-center rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
-        active
-          ? 'bg-gold text-ink'
-          : 'text-muted-foreground hover:text-foreground',
-      ].join(' ')}
-      aria-pressed={active}
-    >
-      {children}
-    </button>
-  );
-}
-
 function TierCard({
   tier,
-  period,
+  highlight,
   onSelect,
 }: {
   tier: Tier;
-  period: Period;
+  /** When true, draw extra gold ring — used to spotlight the tier deep-linked from `?tier=`. */
+  highlight?: boolean;
   onSelect: () => void;
 }) {
-  const { display, cadence } = priceFor(tier, period);
+  const { display, cadence } = priceFor(tier, 'annual');
   const discount = annualDiscount(tier);
-  const perMonth = period === 'annual' ? monthlyEquivalent(tier) : null;
+  const perMonth = monthlyEquivalent(tier);
   return (
     <article
       className={[
@@ -483,6 +487,7 @@ function TierCard({
         tier.highlighted
           ? 'border-gold/60 bg-gradient-to-b from-gold/[0.06] to-transparent shadow-[0_0_60px_-20px_rgba(184,146,61,0.5)]'
           : 'border-border bg-card/40',
+        highlight && !tier.highlighted ? 'ring-2 ring-gold/40' : '',
       ].join(' ')}
     >
       {tier.badge && (
@@ -496,10 +501,10 @@ function TierCard({
         <span className="font-heading text-3xl font-bold text-foreground">{display}</span>
         {cadence && <span className="text-sm text-muted-foreground">{cadence}</span>}
       </div>
-      {period === 'annual' && perMonth && (
+      {perMonth && (
         <p className="mt-1 text-xs text-muted-foreground">{perMonth}</p>
       )}
-      {period === 'annual' && discount && (
+      {discount && (
         <p className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[11px] font-medium text-emerald-300">
           Tiết kiệm {discount.percent}% · {discount.monthsFree} tháng miễn phí
         </p>
@@ -530,11 +535,9 @@ function TierCard({
 
 function ComparisonTable({
   tiers,
-  period,
   onSelect,
 }: {
   tiers: readonly Tier[];
-  period: Period;
   onSelect: (id: TierId) => void;
 }) {
   const groups = React.useMemo(() => {
@@ -556,9 +559,9 @@ function ComparisonTable({
               Tính năng
             </th>
             {tiers.map((tier) => {
-              const { display, cadence } = priceFor(tier, period);
+              const { display, cadence } = priceFor(tier, 'annual');
               const discount = annualDiscount(tier);
-              const perMonth = period === 'annual' ? monthlyEquivalent(tier) : null;
+              const perMonth = monthlyEquivalent(tier);
               return (
                 <th
                   key={tier.id}
@@ -584,10 +587,10 @@ function ComparisonTable({
                       <span className="text-xs text-muted-foreground">{cadence}</span>
                     )}
                   </div>
-                  {period === 'annual' && perMonth && (
+                  {perMonth && (
                     <p className="mt-1 text-[11px] text-muted-foreground">{perMonth}</p>
                   )}
-                  {period === 'annual' && discount && (
+                  {discount && (
                     <p className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
                       −{discount.percent}% · {discount.monthsFree} tháng miễn phí
                     </p>
