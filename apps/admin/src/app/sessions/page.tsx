@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
@@ -66,6 +67,26 @@ function fmtDuration(sec: number | null) {
 const PAGE_SIZE = 20;
 const CONFIRM_PHRASE = 'XÓA HÀNG LOẠT';
 
+type SortOrder = 'newest' | 'oldest';
+
+/**
+ * Wave 52.1 — accept `?status=pending` as a deeplink alias for the actual
+ * enum value `queued`. Lets the dashboard "Triage queue" CTA stay readable
+ * (`?status=pending&sort=oldest`) while the type system stays canonical.
+ */
+function parseStatusParam(raw: string | null): TaskStatus | '' {
+  if (!raw) return '';
+  if (raw === 'pending') return 'queued';
+  if (raw === 'queued' || raw === 'running' || raw === 'completed' || raw === 'failed') {
+    return raw;
+  }
+  return '';
+}
+
+function parseSortParam(raw: string | null): SortOrder {
+  return raw === 'oldest' ? 'oldest' : 'newest';
+}
+
 /** Trigger a browser download for a URL. Browser will use Content-Disposition filename. */
 function downloadUrl(url: string) {
   const a = document.createElement('a');
@@ -97,7 +118,19 @@ async function bulkDelete(sessionIds: string[]) {
 
 export default function AdminSessionsPage() {
   const qc = useQueryClient();
-  const [status, setStatus] = React.useState<TaskStatus | ''>('');
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Wave 52.1 — hydrate filter + sort from URL on mount so dashboard CTAs
+  // like `/sessions?status=pending&sort=oldest` deeplink straight into a
+  // filtered, oldest-first view. Reads once; URL.replace() keeps it in sync
+  // afterward without triggering router re-render storms.
+  const [status, setStatus] = React.useState<TaskStatus | ''>(() =>
+    parseStatusParam(searchParams?.get('status') ?? null),
+  );
+  const [sort, setSort] = React.useState<SortOrder>(() =>
+    parseSortParam(searchParams?.get('sort') ?? null),
+  );
   const [search, setSearch] = React.useState('');
   const [page, setPage] = React.useState(1);
   const [selected, setSelected] = React.useState<Set<string>>(new Set());
@@ -105,13 +138,32 @@ export default function AdminSessionsPage() {
   const [bulkConfirmText, setBulkConfirmText] = React.useState('');
   const [confirmSingleId, setConfirmSingleId] = React.useState<string | null>(null);
 
+  // Persist filter/sort to URL so reloads + bookmarks keep state.
+  React.useEffect(() => {
+    const next = new URLSearchParams();
+    if (status) next.set('status', status);
+    if (sort !== 'newest') next.set('sort', sort);
+    const qs = next.toString();
+    router.replace(qs ? `?${qs}` : '?', { scroll: false });
+  }, [status, sort, router]);
+
   const { data, isLoading } = useQuery({
     queryKey: ['admin', 'sessions', { status, search, page }],
     queryFn: () =>
       listSessions({ status: status || undefined, search, page, page_size: PAGE_SIZE }),
   });
 
-  const rows = data?.rows ?? [];
+  const rawRows = data?.rows ?? [];
+  // Client-side sort on the current page; server pagination is independent.
+  const rows = React.useMemo(() => {
+    const copy = [...rawRows];
+    copy.sort((a, b) => {
+      const ta = new Date(a.created_at).getTime();
+      const tb = new Date(b.created_at).getTime();
+      return sort === 'oldest' ? ta - tb : tb - ta;
+    });
+    return copy;
+  }, [rawRows, sort]);
   const total = data?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
@@ -234,6 +286,32 @@ export default function AdminSessionsPage() {
                   </button>
                 );
               })}
+            </div>
+            {/* Wave 52.1 — sort toggle, URL-synced via ?sort= */}
+            <div className="flex items-center gap-2 text-xs">
+              <span className="font-mono uppercase tracking-wider text-muted-foreground">
+                Sắp xếp:
+              </span>
+              <div className="flex gap-1.5">
+                {(['newest', 'oldest'] as const).map((o) => {
+                  const active = sort === o;
+                  return (
+                    <button
+                      key={o}
+                      type="button"
+                      onClick={() => setSort(o)}
+                      className={cn(
+                        'rounded-full border px-3 py-1 font-medium transition-colors',
+                        active
+                          ? 'border-gold/60 bg-gold/15 text-gold'
+                          : 'border-border bg-card/60 text-muted-foreground hover:border-gold/30 hover:text-foreground',
+                      )}
+                    >
+                      {o === 'newest' ? 'Mới nhất' : 'Cũ nhất'}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </CardHeader>

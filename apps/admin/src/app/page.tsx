@@ -123,7 +123,7 @@ export default function AdminOverviewPage() {
             </div>
           </div>
           <Link
-            href="/sessions"
+            href="/sessions?status=pending&sort=oldest"
             className="inline-flex h-9 shrink-0 items-center justify-center whitespace-nowrap rounded-md border border-red-400/50 bg-red-500/10 px-3 text-xs font-medium text-red-100 transition-colors hover:bg-red-500/20"
           >
             Triage queue
