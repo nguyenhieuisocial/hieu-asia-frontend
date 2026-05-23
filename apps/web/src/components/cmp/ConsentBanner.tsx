@@ -9,6 +9,14 @@
  * found the prior bottom-right placement hid conversion-critical actions
  * until the user dismissed the banner.
  *
+ * Wave 55 BUG-002 — mobile pill mode. On <512px the Wave 52-A banner
+ * collapsed to ~full width via `min(640px, 100vw-2rem)` and `fixed bottom-4`
+ * combined to cover "Chọn gói tháng" CTA on /pricing while scrolling. Fix:
+ * on mobile show a narrow 1-line pill ("🍪 Cookies · OK · Tuỳ chỉnh"); tap
+ * "Tuỳ chỉnh" to expand to the full layout (which auto-jumps to the
+ * granular-toggles state so user can save in one step). Desktop is
+ * unaffected — `sm:` breakpoint forces the full layout.
+ *
  * Granular toggles: Necessary (always on), Analytics (default ON),
  * Marketing (default OFF), Personalization (default ON).
  *
@@ -32,6 +40,10 @@ import {
 export function ConsentBanner(): React.ReactElement | null {
   const [visible, setVisible] = React.useState(false);
   const [expanded, setExpanded] = React.useState(false);
+  // Wave 55 BUG-002 — mobile pill mode. Default collapsed=true so first-time
+  // mobile visitors see the slim pill; tapping "Tuỳ chỉnh" expands into the
+  // existing full layout (and skips straight to granular toggles).
+  const [collapsed, setCollapsed] = React.useState(true);
   const [draft, setDraft] = React.useState<Pick<ConsentState, "analytics" | "marketing" | "personalization">>(
     {
       analytics: true,
@@ -108,8 +120,47 @@ export function ConsentBanner(): React.ReactElement | null {
       // Wave 52-A — bottom-center positioning. `left-1/2 -translate-x-1/2`
       // anchors the banner away from the right edge so it never covers
       // primary CTAs on /onboarding, /pricing, or /tu-vi-hom-nay.
-      className="fixed bottom-4 left-1/2 z-50 w-[min(640px,calc(100vw-2rem))] -translate-x-1/2 rounded-lg border border-gold/30 bg-card/95 p-5 text-sm text-foreground shadow-2xl backdrop-blur"
+      //
+      // Wave 55 BUG-002 — mobile collapsed gets a narrow pill; sm+ always
+      // gets the full 640px width. Width selector splits on `collapsed` to
+      // shrink mobile footprint when collapsed.
+      className={[
+        "fixed bottom-4 left-1/2 z-50 -translate-x-1/2",
+        "rounded-lg border border-gold/30 bg-card/95 text-sm text-foreground shadow-2xl backdrop-blur",
+        collapsed
+          ? "w-[min(340px,calc(100vw-2rem))] px-3 py-2 sm:w-[min(640px,calc(100vw-2rem))] sm:p-5"
+          : "w-[min(640px,calc(100vw-2rem))] p-5",
+      ].join(" ")}
     >
+      {/* Wave 55 BUG-002 — mobile compact pill. Hidden on sm+ (desktop
+          always sees the full layout via the second block below). */}
+      <div className={`flex items-center justify-between gap-2 sm:hidden ${collapsed ? "" : "hidden"}`}>
+        <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-gold/85">
+          🍪 Cookies
+        </span>
+        <div className="flex shrink-0 gap-1.5">
+          <button
+            type="button"
+            onClick={() => {
+              setCollapsed(false);
+              setExpanded(true);
+            }}
+            className="rounded-md border border-border px-2.5 py-1 text-[11px] font-medium text-foreground/85 hover:bg-card"
+          >
+            Tuỳ chỉnh
+          </button>
+          <button
+            type="button"
+            onClick={acceptAll}
+            className="rounded-md bg-gold px-2.5 py-1 text-[11px] font-semibold text-ink hover:bg-gold/90"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+
+      {/* Full layout — always on sm+, only on mobile when expanded. */}
+      <div className={collapsed ? "hidden sm:block" : ""}>
       <h2 className="font-heading text-base font-semibold text-gold">
         Cookie & dữ liệu
       </h2>
@@ -186,6 +237,7 @@ export function ConsentBanner(): React.ReactElement | null {
             Tuỳ chỉnh
           </button>
         )}
+      </div>
       </div>
     </div>
   );
