@@ -17,6 +17,40 @@ import { clearAnonState } from './anon-cleanup';
 let _client: SupabaseClient | null = null;
 let _disabled = false;
 
+/**
+ * Wave 44.2 — Cookie hint for SSR partner-gate.
+ *
+ * The real Supabase JWT lives in localStorage (`hieu.auth.session`) and is
+ * NOT readable from the server. We mirror its presence into a non-httpOnly
+ * cookie so Next.js server components can decide whether to render the
+ * partner shell or 302-redirect to /signin BEFORE shipping HTML.
+ *
+ * Security model:
+ *   - Cookie contains NO token — value is the constant string `1`.
+ *   - SSR uses it only as a hint to render shell vs redirect.
+ *   - Real auth boundary remains the worker JWT verify on /api/partner/*.
+ *   - Defense-in-depth: client-side `usePartnerGuard()` still runs and
+ *     enforces the affiliate_partner role check post-hydration.
+ *
+ * Full cookie-session migration (httpOnly JWT cookie + ssr-helpers) is
+ * deferred to Wave 52+ when full SSG/ISR partner pages are needed.
+ */
+const AUTH_MARKER_COOKIE = 'hieu_authed';
+const AUTH_MARKER_MAX_AGE = 60 * 60 * 24 * 90; // 90 days
+
+function setAuthMarkerCookie(): void {
+  if (typeof document === 'undefined') return;
+  const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+  document.cookie =
+    `${AUTH_MARKER_COOKIE}=1; Path=/; Max-Age=${AUTH_MARKER_MAX_AGE}; SameSite=Lax${secure}`;
+}
+
+function clearAuthMarkerCookie(): void {
+  if (typeof document === 'undefined') return;
+  const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+  document.cookie = `${AUTH_MARKER_COOKIE}=; Path=/; Max-Age=0; SameSite=Lax${secure}`;
+}
+
 export function getSupabaseAuth(): SupabaseClient | null {
   if (_disabled) return null;
   if (_client) return _client;
@@ -41,6 +75,26 @@ export function getSupabaseAuth(): SupabaseClient | null {
       storageKey: 'hieu.auth.session',
     },
   });
+
+  // Wave 44.2 — sync `hieu_authed` cookie with session lifecycle so SSR
+  // partner-gate can short-circuit unauthenticated requests.
+  // Initial state: if there's already a restored session (page reload after
+  // sign-in), set the cookie. Otherwise leave it absent.
+  _client.auth
+    .getSession()
+    .then(({ data }) => {
+      if (data.session) setAuthMarkerCookie();
+      else clearAuthMarkerCookie();
+    })
+    .catch(() => {
+      /* ignore — best-effort cookie sync */
+    });
+  // Reactive updates: SIGNED_IN / TOKEN_REFRESHED / SIGNED_OUT all flow here.
+  _client.auth.onAuthStateChange((_event, session) => {
+    if (session) setAuthMarkerCookie();
+    else clearAuthMarkerCookie();
+  });
+
   return _client;
 }
 
@@ -118,8 +172,16 @@ export async function signInWithOAuth(
 
 export async function signOut(): Promise<void> {
   const supabase = getSupabaseAuth();
-  if (!supabase) return;
+  if (!supabase) {
+    // Wave 44.2 — clear SSR hint even when no client (lingers from prior session).
+    clearAuthMarkerCookie();
+    return;
+  }
   await supabase.auth.signOut();
+  // Wave 44.2 — explicit cookie clear. onAuthStateChange should also fire
+  // SIGNED_OUT but we don't rely on listener ordering for the redirect that
+  // typically follows sign-out.
+  clearAuthMarkerCookie();
   // Reset PostHog distinct_id so the next anonymous session is a new visitor.
   try {
     const ph = getPostHog();
