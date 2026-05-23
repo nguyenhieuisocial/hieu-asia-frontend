@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Compass, Calendar, Hash, Hand } from 'lucide-react';
+import { ArrowRight, Compass, Calendar, Calculator, Brain, Hand } from 'lucide-react';
 import { Button } from '@hieu-asia/ui';
 
 interface Method {
@@ -47,15 +47,27 @@ const METHODS: readonly Method[] = [
   },
   {
     key: 'numerology',
-    Icon: Hash,
-    name: 'Thần Số Học & MBTI',
-    origin: 'Tây phương — Pythagoras & Carl Jung',
-    tells: 'Số chủ đạo từ ngày sinh và 16 nhóm tính cách MBTI.',
-    bestFor: 'Bạn muốn một khung tự nhận thức nhanh, kết hợp với tâm lý hiện đại.',
-    ctaLabel: 'Khám phá Số học & MBTI',
+    Icon: Calculator,
+    name: 'Thần Số Học',
+    origin: 'Pythagoras (Số học cổ Hy Lạp)',
+    tells: 'Tính từ ngày sinh: Đường đời, Vận mệnh, Linh hồn, Năm cá nhân. Cho biết bài học cuộc đời và nhịp năm.',
+    bestFor: 'Tự khám phá cấu trúc cá tính qua con số.',
+    ctaLabel: 'Khám phá Số học',
     href: '/reading/new?method=numerology',
     learnHref: '/learn/than-so-hoc',
     sampleHref: '/sample-report#numerology',
+  },
+  {
+    key: 'mbti',
+    Icon: Brain,
+    name: 'MBTI',
+    origin: 'Carl Jung (16 Tính cách)',
+    tells: 'Test 16 tính cách giúp hiểu cách bạn suy nghĩ, ra quyết định, giao tiếp. Bổ sung góc nhìn tâm lý hiện đại bên cạnh Tử Vi/Bát Tự.',
+    bestFor: 'Bạn muốn cross-validate góc nhìn Đông + Tây.',
+    ctaLabel: 'Làm test MBTI',
+    href: '/reading/new?method=mbti',
+    learnHref: '/learn/mbti',
+    sampleHref: '/sample-report#mbti',
   },
   {
     key: 'palm',
@@ -87,7 +99,7 @@ export function MethodChooser() {
             id="methods-heading"
             className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
           >
-            Bốn góc nhìn, một con người
+            Năm góc nhìn, một con người
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
             Mỗi phương pháp soi một lát cắt khác nhau. Bạn có thể bắt đầu từ một phương pháp,
@@ -95,7 +107,7 @@ export function MethodChooser() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {METHODS.map(({ key, Icon, name, origin, tells, bestFor, ctaLabel, href, learnHref, sampleHref, recommended }) => (
             <article
               key={key}
@@ -169,7 +181,7 @@ export function MethodChooser() {
 
         {/*
           Wave 57.1 §3.1 disclaimer (founder-requested combo of "no accuracy %"
-          + "tham khảo, không phải chẩn đoán"). Placed once under all 4 cards
+          + "tham khảo, không phải chẩn đoán"). Placed once under all 5 cards
           since the same caveat applies to every divination method — keeps
           per-card copy clean and avoids legal risk on fortune-telling claims.
         */}
@@ -177,7 +189,7 @@ export function MethodChooser() {
           aria-label="Lưu ý về phương pháp"
           className="mt-10 text-center text-xs leading-relaxed text-muted-foreground/80"
         >
-          Cả 4 phương pháp đều là góc nhìn để bạn{' '}
+          Cả 5 phương pháp đều là góc nhìn để bạn{' '}
           <strong className="text-foreground/90">tham khảo và tự ra quyết định</strong>, không phải
           chẩn đoán y khoa, tài chính hay pháp lý. Kết quả phụ thuộc vào độ chính xác của ngày–giờ
           sinh và cách bạn lựa chọn áp dụng.

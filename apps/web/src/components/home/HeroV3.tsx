@@ -74,20 +74,25 @@ export function HeroV3() {
           transition={{ duration: 0.65, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
           className="mt-10 flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row"
         >
-          <Button asChild size="lg" className="group w-full min-w-[260px] sm:w-auto"><Link href="/onboarding" className="w-full sm:w-auto">
-            
-              Mở khóa lá số đầu tiên (miễn phí thử)
-              <ArrowRight
-                className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
-            
-          </Link></Button>
+          <div className="flex w-full flex-col items-center gap-1.5 sm:w-auto">
+            <Button asChild size="lg" className="group w-full min-w-[260px] sm:w-auto"><Link href="/onboarding" className="w-full sm:w-auto">
+
+                Lập lá số miễn phí trong 1 phút
+                <ArrowRight
+                  className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+
+            </Link></Button>
+            <span className="text-[11px] text-muted-foreground/80 sm:text-xs">
+              Không cần thẻ tín dụng · Không gửi email
+            </span>
+          </div>
           <Button asChild size="lg" variant="outline" className="group w-full min-w-[220px] sm:w-auto"><Link href="/sample-report" className="w-full sm:w-auto">
-            
+
               <FileText className="mr-1.5 h-4 w-4" aria-hidden="true" />
-              Xem báo cáo mẫu
-            
+              Xem báo cáo mẫu trước
+
           </Link></Button>
         </motion.div>
 

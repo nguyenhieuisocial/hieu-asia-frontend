@@ -22,6 +22,8 @@ interface TeaserTier {
   pitch: string;
   features: readonly string[];
   highlighted?: boolean;
+  /** Small recommendation badge shown above the card (overrides default "Phổ biến nhất"). */
+  badge?: string;
   ctaHref: string;
   ctaLabel: string;
 }
@@ -46,7 +48,12 @@ const TIERS: readonly TeaserTier[] = [
     price: formatVND(PRICING.premium.vnd),
     cadence: 'một lần',
     pitch: 'Một lá số đầy đủ, không tự gia hạn.',
-    features: ['1 lá số đầy đủ', '3 câu hỏi Mentor', 'PDF Cẩm Nang'],
+    features: [
+      'Lá số 114 sao (Tử Vi) + 4 trụ Bát Tự',
+      'Thần Số Học + đại vận 12 tháng',
+      '3 câu hỏi Mentor',
+      'PDF Cẩm Nang 15–20 trang',
+    ],
     ctaHref: '/pricing?tier=premium',
     ctaLabel: 'Chọn Premium',
   },
@@ -63,6 +70,7 @@ const TIERS: readonly TeaserTier[] = [
       'PDF Cẩm Nang xuất bản',
     ],
     highlighted: true,
+    badge: 'Phổ biến nhất — thử 1 tháng',
     ctaHref: '/pricing?tier=premium&period=monthly',
     ctaLabel: 'Chọn gói tháng',
   },
@@ -78,6 +86,7 @@ const TIERS: readonly TeaserTier[] = [
       `Tiết kiệm ${SAVE_PERCENT}% so với gói tháng`,
       'Tương đương 2 tháng miễn phí',
     ],
+    badge: `Tiết kiệm ${SAVE_PERCENT}% · gói khuyến nghị`,
     ctaHref: '/pricing?tier=premium&period=annual',
     ctaLabel: 'Chọn gói năm',
   },
@@ -122,9 +131,16 @@ export function PricingTeaser() {
                   : 'border-border bg-card/40',
               ].join(' ')}
             >
-              {tier.highlighted && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gold px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-ink whitespace-nowrap">
-                  Phổ biến nhất
+              {tier.badge && (
+                <span
+                  className={[
+                    'absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] whitespace-nowrap',
+                    tier.highlighted
+                      ? 'bg-gold text-ink'
+                      : 'border border-gold/40 bg-card text-gold',
+                  ].join(' ')}
+                >
+                  {tier.badge}
                 </span>
               )}
               <h3 className="font-heading text-lg font-semibold text-foreground">{tier.name}</h3>

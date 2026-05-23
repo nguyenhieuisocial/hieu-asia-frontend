@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   // template `%s · hieu.asia` via `{ absolute: ... }` to avoid the
   // "hieu.asia ... · hieu.asia" duplication.
   title: {
-    absolute: 'hieu.asia — Cẩm nang AI giúp hiểu mình và ra quyết định',
+    absolute: 'Tử Vi & Bát Tự AI — hieu.asia | Cẩm nang hiểu mình',
   },
   description:
     'Kết hợp Tử Vi, Bát Tự, Thần Số Học, MBTI và AI Mentor để giúp bạn hiểu bản thân, đặt câu hỏi đúng và tự ra quyết định có trách nhiệm.',

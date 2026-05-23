@@ -28,7 +28,7 @@ const REASONS: readonly Reason[] = [
   {
     Icon: MessageSquareHeart,
     title: 'Mentor đồng hành mỗi ngày',
-    desc: 'Khi bạn đứng trước một quyết định, Mentor đặt câu hỏi và gợi ý — bạn vẫn là người chọn con đường.',
+    desc: 'Mentor là AI Coach cá nhân của bạn. Khi bạn gặp quyết định khó: Mentor hỏi để hiểu vấn đề sâu hơn, kết hợp lá số của bạn với ngữ cảnh hiện tại, và gợi ý các bước hành động cụ thể. Không dự đoán, chỉ hỗ trợ bạn tự quyết định.',
   },
 ];
 
