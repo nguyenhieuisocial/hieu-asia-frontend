@@ -147,20 +147,34 @@ export default function CanXuongPage() {
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="birth_hour" className="text-foreground/85">
-                    Giờ sinh (0–23)
+                    Giờ sinh
                   </Label>
-                  <Input
+                  <select
                     id="birth_hour"
-                    type="number"
-                    min={0}
-                    max={23}
                     value={birthHour}
                     onChange={(e) => setBirthHour(e.target.value)}
                     required
-                    className="bg-card/60"
-                  />
+                    className="flex h-10 w-full rounded-md border border-border bg-card/60 px-3 py-2 text-sm text-foreground"
+                  >
+                    {Array.from({ length: 24 }, (_, h) => {
+                      const label =
+                        h === 0
+                          ? '00:00 (nửa đêm)'
+                          : h < 12
+                            ? `${String(h).padStart(2, '0')}:00 sáng`
+                            : h === 12
+                              ? '12:00 trưa'
+                              : `${String(h).padStart(2, '0')}:00 chiều/tối`;
+                      return (
+                        <option key={h} value={h}>
+                          {label}
+                        </option>
+                      );
+                    })}
+                  </select>
                   <p className="text-xs text-muted-foreground">
-                    Giờ dương lịch — ví dụ 10 (10h sáng), 14 (2h chiều).
+                    Cân Xương chỉ dùng cấp giờ (không cần phút). Nếu không nhớ giờ chính
+                    xác, có thể chọn giờ gần đúng nhất.
                   </p>
                 </div>
                 <div className="space-y-2">
