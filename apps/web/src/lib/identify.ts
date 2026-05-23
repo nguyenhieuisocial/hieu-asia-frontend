@@ -7,6 +7,7 @@
 import type { User } from '@supabase/supabase-js';
 import { getPostHog } from './posthog';
 import type { MembershipTier } from './event-taxonomy';
+import { fetchUserMe } from './user-me';
 
 const ANON_USER_KEY = 'hieu.user_id';
 const AFFILIATE_KEY = 'hieu.affiliate.signup';
@@ -39,17 +40,11 @@ function readPersona(): string | null {
 }
 
 async function readMembershipTier(): Promise<MembershipTier> {
-  try {
-    const res = await fetch('/api/user/me', { cache: 'no-store' });
-    // Content-type guard: even if /api/user/me ever 404s and Next renders
-    // an HTML error page, we never feed it to JSON.parse.
-    const ct = res.headers.get('content-type') ?? '';
-    if (!res.ok || !/\bjson\b/i.test(ct)) return 'free';
-    const data = (await res.json()) as { membership_tier?: MembershipTier };
-    return data?.membership_tier ?? 'free';
-  } catch {
-    return 'free';
-  }
+  // Deduped via fetchUserMe — PostHogProvider triggers identifyUser twice
+  // (getSession + INITIAL_SESSION event) and React Strict double-mounts in
+  // dev; without dedupe this hits `/api/user/me` 3-4x per page load.
+  const data = await fetchUserMe();
+  return (data?.membership_tier as MembershipTier | undefined) ?? 'free';
 }
 
 /**

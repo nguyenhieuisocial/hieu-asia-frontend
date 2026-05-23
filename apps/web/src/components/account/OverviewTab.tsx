@@ -14,6 +14,7 @@ import {
 } from '@hieu-asia/ui';
 import { readJournalEntries, readWeeklyReviews } from '@/lib/journal-storage';
 import { buildOperatingManual } from '@/lib/operating-manual';
+import { fetchUserMe } from '@/lib/user-me';
 import { ExpertModeToggle } from './ExpertModeToggle';
 
 interface QuickStat {
@@ -161,9 +162,8 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
       setManualState({ ready: false });
     }
 
-    // Best-effort: fetch tier + chart count from /api/user/me
-    fetch('/api/user/me', { cache: 'no-store' })
-      .then((r) => (r.ok ? r.json() : null))
+    // Best-effort: tier from shared, deduped /api/user/me cache (BUG-009).
+    fetchUserMe()
       .then((j) => {
         if (j && typeof j.membership_tier === 'string') {
           setData((prev) => ({ ...prev, tier: j.membership_tier }));

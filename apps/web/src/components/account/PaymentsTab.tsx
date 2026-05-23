@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from '@hieu-asia/ui';
 import { safeJson } from '@/lib/safe-json';
+import { fetchUserMe } from '@/lib/user-me';
 import { getSupabaseAuth } from '@/lib/auth-client';
 
 interface PaymentRow {
@@ -76,15 +77,14 @@ export function PaymentsTab() {
 
   React.useEffect(() => {
     (async () => {
-      // Tier from /api/user/me
+      // Tier from shared, deduped /api/user/me cache (BUG-009).
       try {
-        const r = await fetch('/api/user/me', { cache: 'no-store' });
-        const j = await safeJson<{ ok: boolean; membership_tier?: string }>(r);
-        if (j.ok && j.data.membership_tier) {
+        const data = await fetchUserMe();
+        if (data?.membership_tier) {
           setSub((prev) => ({
             ...prev,
-            tier: j.data.membership_tier ?? 'free',
-            status: j.data.membership_tier === 'free' ? 'inactive' : 'active',
+            tier: data.membership_tier ?? 'free',
+            status: data.membership_tier === 'free' ? 'inactive' : 'active',
           }));
         }
       } catch {
