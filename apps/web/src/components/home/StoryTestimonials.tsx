@@ -73,6 +73,18 @@ export function StoryTestimonials() {
           <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
             Tên đã được thay đổi để tôn trọng quyền riêng tư.
           </p>
+          {/*
+            Wave 57.1.6 /ultrareview P2: pseudonym testimonials with technical
+            specifics ("cung Quan Tuần Triệt", "Mộc Vượng") could surface a
+            real Minh A./Lan H./Đức T. who'd dispute the story. Add visible
+            placeholder disclosure until founder collects real consented users
+            (queued Wave 57.2). Keeps the section live for hero conversion
+            without misrepresenting.
+          */}
+          <p className="mt-2 text-xs text-muted-foreground/70 sm:text-sm">
+            Câu chuyện minh hoạ — chúng tôi đang thu thập feedback từ người
+            dùng thực (Q2/2026) và sẽ thay thế khi có sự đồng ý chia sẻ.
+          </p>
         </div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-3">

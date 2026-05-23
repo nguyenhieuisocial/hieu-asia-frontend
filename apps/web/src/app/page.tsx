@@ -187,7 +187,7 @@ const FAQ_JSONLD = {
       name: 'Dữ liệu cá nhân được bảo vệ thế nào?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Mã hoá AES-256 khi lưu trữ, TLS 1.3 khi truyền. Không bán dữ liệu, không dùng để huấn luyện mô hình. Tuân thủ GDPR. Xoá tài khoản trong trang Tài khoản.',
+        text: 'Mã hoá AES-256 khi lưu trữ, TLS 1.3 khi truyền. Không bán dữ liệu, không dùng để huấn luyện mô hình. Tuân thủ Nghị định 13/2023/NĐ-CP. Xoá tài khoản trong trang Tài khoản.',
       },
     },
     {
@@ -195,7 +195,7 @@ const FAQ_JSONLD = {
       name: 'Giá bao nhiêu? Có dùng thử miễn phí không?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Khảo sát đầu vào miễn phí. Premium 99.000đ một lần, Mentor 199.000đ/tháng hoặc 1.990.000đ/năm, Lifetime 4.990.000đ một lần.',
+        text: 'Tier Standard miễn phí gồm 6 công cụ tra cứu. Premium 99.000đ một lần, Mentor Monthly 199.000đ/tháng hoặc Mentor Yearly 1.990.000đ/năm, Lifetime 4.990.000đ một lần.',
       },
     },
     {
@@ -289,7 +289,7 @@ const HOME_FAQ: readonly FaqItem[] = [
         </p>
         <p className="mt-2">
           Bạn có thể yêu cầu xoá toàn bộ tài khoản trong trang Tài khoản. Tuân
-          thủ GDPR và các tiêu chuẩn bảo mật phổ biến.
+          thủ Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân của Việt Nam.
         </p>
       </>
     ),
@@ -298,10 +298,12 @@ const HOME_FAQ: readonly FaqItem[] = [
     q: 'Giá bao nhiêu? Có dùng thử miễn phí không?',
     a: (
       <p>
-        Khảo sát đầu vào miễn phí. Gói Standard 99.000đ một lần (1 lá số đầy
-        đủ + PDF + 3 câu hỏi Mentor), Premium 199.000đ/tháng hoặc 1.990.000đ/năm
-        (Mentor không giới hạn + đại vận/lưu niên), hoặc Lifetime 4.990.000đ
-        một lần. Xem chi tiết tại trang Pricing.
+        Tier <strong>Standard miễn phí</strong> gồm khảo sát đầu vào và 6 công cụ
+        tra cứu. <strong>Premium 99.000đ một lần</strong> (1 lá số đầy đủ + PDF
+        + 3 câu hỏi Mentor). <strong>Mentor Monthly 199.000đ/tháng</strong> hoặc{' '}
+        <strong>Mentor Yearly 1.990.000đ/năm</strong> (Mentor không giới hạn +
+        đại vận/lưu niên). <strong>Lifetime 4.990.000đ một lần</strong>. Xem chi
+        tiết tại trang Pricing.
       </p>
     ),
   },
