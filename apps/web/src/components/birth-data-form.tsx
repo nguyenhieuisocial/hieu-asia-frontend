@@ -21,6 +21,68 @@ import { createReading, getOrCreateAnonUserId, type BirthData } from '@hieu-asia
 
 const CONFIDENCE_LABELS = ['Đoán', 'Không chắc', 'Tương đối', 'Khá chắc', 'Chính xác'];
 
+/**
+ * Saved chart profile key — written by `/account → MyChartTab` and by this
+ * form on successful submit. Wave 55 BUG-B: read it on mount so users who
+ * already entered birth data don't have to re-type at `/reading/new`.
+ *
+ * Same key + shape are consumed by `/decisions/new` (see `readBirthInputs`)
+ * — keep changes in sync if the schema evolves.
+ */
+const CHART_PROFILE_KEY = 'hieu:chart:profile:v1';
+
+type Gender = BirthDataValues['gender'];
+const GENDERS: readonly Gender[] = ['nam', 'nữ', 'khác', 'không nói'];
+
+interface SavedChartDefaults {
+  display_name: string;
+  birth_date: string;
+  birth_time: string;
+  unknown_birth_time: boolean;
+  birth_place: string;
+  gender?: Gender;
+}
+
+/**
+ * Read the saved chart profile from localStorage and map it onto the
+ * `BirthDataValues` shape used by this form. Returns null if nothing
+ * usable is stored (no birth_date — the only field the form requires
+ * before any other interaction can occur).
+ */
+function readSavedDefaults(): SavedChartDefaults | null {
+  if (typeof window === 'undefined') return null;
+  let raw: string | null = null;
+  try {
+    raw = window.localStorage.getItem(CHART_PROFILE_KEY);
+  } catch {
+    return null;
+  }
+  if (!raw) return null;
+  let obj: Record<string, unknown>;
+  try {
+    obj = JSON.parse(raw) as Record<string, unknown>;
+  } catch {
+    return null;
+  }
+  const birth_date = typeof obj.birth_date === 'string' ? obj.birth_date : '';
+  if (!birth_date) return null;
+  const display_name = typeof obj.full_name === 'string' ? obj.full_name : '';
+  const birth_time = typeof obj.birth_time === 'string' ? obj.birth_time : '';
+  const birth_place = typeof obj.birth_place === 'string' ? obj.birth_place : '';
+  const rawGender = typeof obj.gender === 'string' ? obj.gender : '';
+  const gender = (GENDERS as readonly string[]).includes(rawGender)
+    ? (rawGender as Gender)
+    : undefined;
+  return {
+    display_name,
+    birth_date,
+    birth_time,
+    unknown_birth_time: !birth_time,
+    birth_place,
+    gender,
+  };
+}
+
 function buildBirthData(values: BirthDataValues): BirthData {
   return {
     birth_date: values.birth_date,
@@ -37,12 +99,14 @@ function buildBirthData(values: BirthDataValues): BirthData {
 export function BirthDataForm() {
   const router = useRouter();
   const [consented, setConsented] = React.useState(false);
+  const [prefilled, setPrefilled] = React.useState(false);
   const {
     register,
     handleSubmit,
     control,
     watch,
     setValue,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<BirthDataValues>({
     resolver: zodResolver(birthDataSchema),
@@ -58,6 +122,30 @@ export function BirthDataForm() {
       time_confidence: 3,
     },
   });
+
+  // Wave 55 BUG-B: pre-fill from saved chart profile (set by /account →
+  // MyChartTab) so returning users don't re-enter name/dob/time/gender.
+  // Only the common fields are seeded — calendar + time_confidence keep
+  // their schema defaults. We guard with a one-shot ref so HMR / strict
+  // mode double-mounts don't overwrite user edits.
+  const hydratedRef = React.useRef(false);
+  React.useEffect(() => {
+    if (hydratedRef.current) return;
+    hydratedRef.current = true;
+    const saved = readSavedDefaults();
+    if (!saved) return;
+    reset({
+      display_name: saved.display_name,
+      birth_date: saved.birth_date,
+      birth_time: saved.birth_time,
+      unknown_birth_time: saved.unknown_birth_time,
+      birth_place: saved.birth_place,
+      gender: saved.gender,
+      calendar: 'duong',
+      time_confidence: 3,
+    });
+    setPrefilled(true);
+  }, [reset]);
 
   const unknownTime = watch('unknown_birth_time');
   const birthTime = watch('birth_time');
@@ -103,6 +191,22 @@ export function BirthDataForm() {
 
   return (
     <form onSubmit={onSubmit} className="space-y-7">
+      {prefilled && (
+        <div
+          role="status"
+          className="flex items-start gap-3 rounded-md border border-gold/30 bg-gold/5 p-3 text-xs text-foreground/85"
+        >
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden="true" />
+          <p className="leading-relaxed">
+            Đã dùng thông tin từ trang{' '}
+            <Link href="/account?tab=chart" className="text-gold underline hover:text-gold/80">
+              Tài khoản
+            </Link>{' '}
+            — sửa nếu cần.
+          </p>
+        </div>
+      )}
+
       {/* Display name */}
       <Field
         id="display_name"
