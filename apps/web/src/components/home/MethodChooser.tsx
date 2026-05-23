@@ -64,8 +64,12 @@ const METHODS: readonly Method[] = [
     origin: 'Carl Jung (16 Tính cách)',
     tells: 'Test 16 tính cách giúp hiểu cách bạn suy nghĩ, ra quyết định, giao tiếp. Bổ sung góc nhìn tâm lý hiện đại bên cạnh Tử Vi/Bát Tự.',
     bestFor: 'Bạn muốn cross-validate góc nhìn Đông + Tây.',
-    ctaLabel: 'Làm test MBTI',
-    href: '/reading/new?method=mbti',
+    // /ultrareview P0 fix Wave 57.1.9: dedicated MBTI test flow chưa
+    // tồn tại — CTA dẫn qua /learn/mbti (đã có) thay vì hứa hẹn rồi
+    // dead-end ở birth-date form. Wave 57.3 roadmap: build MBTI test
+    // page + flip href back to /mbti-test/start.
+    ctaLabel: 'Tìm hiểu MBTI',
+    href: '/learn/mbti',
     learnHref: '/learn/mbti',
     sampleHref: '/sample-report#mbti',
   },
@@ -76,8 +80,12 @@ const METHODS: readonly Method[] = [
     origin: 'Phổ quát — 7 đường chỉ tay',
     tells: 'Bạn tự chụp ảnh lòng bàn tay bằng điện thoại và tải lên. AI đọc 7 đường chỉ tay — tâm đạo, trí đạo, sinh đạo cùng 4 đường phụ — rồi trả về báo cáo về tình cảm, tư duy, sức khoẻ và năng lượng cá nhân.',
     bestFor: 'Bạn không nhớ chính xác giờ sinh, hoặc muốn một góc nhìn bổ sung cạnh lá số.',
-    ctaLabel: 'Upload ảnh chỉ tay',
-    href: '/reading/new?method=palm',
+    // /ultrareview P0 fix Wave 57.1.9: upload-ảnh flow chưa được build
+    // — CTA dẫn qua /learn/palm để giải thích phương pháp thay vì
+    // hứa "Upload" rồi dump qua birth-date form. Wave 57.3 roadmap:
+    // build /palm/upload page + flip href.
+    ctaLabel: 'Tìm hiểu Palm Reading',
+    href: '/learn/palm',
     learnHref: '/learn/palm',
     sampleHref: '/sample-report#palm',
   },
@@ -107,7 +115,13 @@ export function MethodChooser() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {/*
+          /ultrareview P1 fix Wave 57.1.9: original `lg:grid-cols-3 xl:grid-cols-5`
+          made an ugly 3+2 layout at the 1024–1279px window (orphan row of 2 cards).
+          New: keep 1/2 at mobile/sm, jump straight to 5 columns at lg+. Cards
+          tighten slightly (~190px @ lg=1024px) but balanced over jankiness.
+        */}
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
           {METHODS.map(({ key, Icon, name, origin, tells, bestFor, ctaLabel, href, learnHref, sampleHref, recommended }) => (
             <article
               key={key}

@@ -19,7 +19,7 @@ const STEPS: readonly Step[] = [
     n: '01',
     Icon: ClipboardEdit,
     title: 'Nhập thông tin cơ bản',
-    desc: 'Ngày–giờ sinh và giới tính (~1 phút). Có thể chỉnh sửa sau bất cứ lúc nào miễn phí — nếu đổi ngày sinh, toàn bộ lá số sẽ tự cập nhật.',
+    desc: 'Ngày–giờ sinh và giới tính (~1 phút). Có thể chỉnh sửa sau bất cứ lúc nào miễn phí trong trang Tài khoản; khi đổi ngày sinh, bạn yêu cầu tạo lại lá số để cập nhật.',
     ctaLabel: 'Nhập thông tin',
     href: '/onboarding',
   },

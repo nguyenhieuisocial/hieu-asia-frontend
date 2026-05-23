@@ -49,8 +49,12 @@ const TIERS: readonly TeaserTier[] = [
     cadence: 'một lần',
     pitch: 'Một lá số đầy đủ, không tự gia hạn.',
     features: [
+      // /ultrareview P2 fix Wave 57.1.9: removed "đại vận 12 tháng" — per canonical
+      // /pricing page tier matrix, "Cập nhật đại vận & lưu niên" is Mentor-only
+      // (monthly/yearly/lifetime), NOT included in Premium. Original Batch D copy
+      // over-promised.
       'Lá số 114 sao (Tử Vi) + 4 trụ Bát Tự',
-      'Thần Số Học + đại vận 12 tháng',
+      'Thần Số Học + MBTI',
       '3 câu hỏi Mentor',
       'PDF Cẩm Nang 15–20 trang',
     ],
@@ -70,7 +74,10 @@ const TIERS: readonly TeaserTier[] = [
       'PDF Cẩm Nang xuất bản',
     ],
     highlighted: true,
-    badge: 'Phổ biến nhất — thử 1 tháng',
+    // /ultrareview P1 fix Wave 57.1.9: shortened from "Phổ biến nhất — thử 1 tháng"
+    // (26 chars) which overflows card width at lg breakpoint due to mono-uppercase
+    // tracking [0.2em] + whitespace-nowrap.
+    badge: 'Phổ biến nhất',
     ctaHref: '/pricing?tier=premium&period=monthly',
     ctaLabel: 'Chọn gói tháng',
   },
@@ -86,7 +93,9 @@ const TIERS: readonly TeaserTier[] = [
       `Tiết kiệm ${SAVE_PERCENT}% so với gói tháng`,
       'Tương đương 2 tháng miễn phí',
     ],
-    badge: `Tiết kiệm ${SAVE_PERCENT}% · gói khuyến nghị`,
+    // /ultrareview P1 fix Wave 57.1.9: shortened from "Tiết kiệm 17% · gói khuyến nghị"
+    // (25 chars) — same overflow risk as Monthly badge.
+    badge: `Tiết kiệm ${SAVE_PERCENT}%`,
     ctaHref: '/pricing?tier=premium&period=annual',
     ctaLabel: 'Chọn gói năm',
   },
