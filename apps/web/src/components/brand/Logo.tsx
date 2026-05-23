@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Logo system cho hieu.asia.
  *
