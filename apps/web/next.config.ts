@@ -16,6 +16,15 @@ const nextConfig: NextConfig = {
   experimental: {
     typedRoutes: true,
   },
+  // Wave 55 — BUG-044. Force blocking <head> metadata for unfurl/preview bots
+  // so they see complete OG tags (og:title, og:description, og:image, og:url)
+  // before any streamed body content. Specifying this option OVERRIDES the
+  // Next.js default list — this regex is a strict superset of the default
+  // (`node_modules/next/dist/shared/lib/router/utils/html-bots.js`) plus the
+  // additional unfurl bots we care about: TelegramBot, Discordbot is already
+  // in the default but we list it for documentation.
+  htmlLimitedBots:
+    /[\w-]+-Google|Google-[\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight|TelegramBot/i,
   async redirects() {
     return [
       // Vanity / legacy URL aliases — keep canonical Vietnamese slugs.
