@@ -514,7 +514,12 @@ function TierCard({
           {tier.badge}
         </span>
       )}
-      <h3 className="font-heading text-lg font-semibold text-foreground">{tier.name}</h3>
+      {/* V4-FIX BUG-NEW2: was <h3> — but the pricing page hero uses <h1> and
+          the next heading was this tier name, skipping <h2>. axe heading-order
+          flagged the jump (h1 → h3). Bumping to <h2> makes each tier card a
+          top-level section under the page hero; FAQ below also uses <h2>
+          (from FaqAccordion), which is consistent. */}
+      <h2 className="font-heading text-lg font-semibold text-foreground">{tier.name}</h2>
       <p className="mt-1 text-sm text-muted-foreground">{tier.description}</p>
       <div className="mt-4 flex items-baseline gap-1.5">
         <span className="font-heading text-3xl font-bold text-foreground">{display}</span>

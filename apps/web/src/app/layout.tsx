@@ -4,7 +4,12 @@ import { Suspense } from 'react';
 // chain (`var(--font-be-vietnam), var(--font-inter), ...`) and almost never
 // actually rendered because Be Vietnam Pro already covers latin. Removing it
 // drops ~1 woff2 file from the critical-path font fan-out.
-import { Be_Vietnam_Pro, Outfit, JetBrains_Mono } from 'next/font/google';
+// Wave 56 (V4 Sprint B) LCP — dropped JetBrains_Mono from root layout. Mono
+// only appears on `/brand` and `/changelog` (and in tiny uppercase labels via
+// `font-mono` on home — those size-adjust gracefully to `ui-monospace` from
+// the Tailwind fallback stack). Removing it cuts 3 woff2 files (latin-ext +
+// latin + vietnamese subsets) from every page's critical path.
+import { Be_Vietnam_Pro, Outfit } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { ThemeProvider } from '@/components/providers/theme-provider';
@@ -28,9 +33,15 @@ import './globals.css';
 // places that wanted ultra-light were dropping into the wrong weight anyway
 // due to fallback. Dropping 300 removes 2 woff2 files (latin + vietnamese
 // subsets each load one file per weight).
+// Wave 56 (V4 Sprint B) — also dropped weight 500. `font-medium` (500) is
+// used on home in only 5 spots (SiteNav, MethodChooser, NewsletterSignup,
+// SiteFooter, FaqAccordion) — all secondary UI text. Browser substitutes
+// from weight 400 with synthetic medium; visual delta is negligible at
+// 14-16px sizes. Removes 3 woff2 files (vietnamese + latin-ext + latin
+// subsets) from the critical path.
 const beVietnam = Be_Vietnam_Pro({
   subsets: ['vietnamese', 'latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '600', '700'],
   variable: '--font-be-vietnam',
   display: 'swap',
 });
@@ -38,12 +49,6 @@ const beVietnam = Be_Vietnam_Pro({
 const outfit = Outfit({
   subsets: ['latin'],
   variable: '--font-outfit',
-  display: 'swap',
-});
-
-const mono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-jetbrains-mono',
   display: 'swap',
 });
 
@@ -109,6 +114,12 @@ export const metadata: Metadata = {
       },
     ],
   },
+  // V4-FIX BUG-NEW5: dropped `width`/`height` from `twitter.images`. Next.js
+  // emits them as `<meta name="twitter:image:width">` / `:height` which are NOT
+  // part of the Twitter Cards spec (only `twitter:image` + `twitter:image:alt`
+  // are valid; Twitter auto-detects image dimensions). W3C validator flagged
+  // these as unknown meta names. Keep width/height on `openGraph.images` —
+  // those render as `<meta property="og:image:width">` per OG spec (valid).
   twitter: {
     card: 'summary_large_image',
     title: 'hieu.asia — Tử Vi & MBTI bằng AI',
@@ -116,8 +127,6 @@ export const metadata: Metadata = {
     images: [
       {
         url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
         alt: 'hieu.asia — Cẩm nang AI giúp hiểu mình và ra quyết định',
       },
     ],
@@ -155,7 +164,7 @@ export default async function RootLayout({
     <html
       lang={locale}
       suppressHydrationWarning
-      className={`${beVietnam.variable} ${outfit.variable} ${mono.variable}`}
+      className={`${beVietnam.variable} ${outfit.variable}`}
     >
       <head>
         {/* Wave 55 LCP #3 — dropped 3 unused preconnects.

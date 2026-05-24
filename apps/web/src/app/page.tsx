@@ -40,6 +40,8 @@ export const metadata: Metadata = {
       },
     ],
   },
+  // V4-FIX BUG-NEW5: see note in app/layout.tsx — Twitter Cards spec doesn't
+  // define `twitter:image:width` / `:height`; only `:alt` is allowed.
   twitter: {
     card: 'summary_large_image',
     title: 'hieu.asia — Hiểu mình. Quyết định mình.',
@@ -48,8 +50,6 @@ export const metadata: Metadata = {
     images: [
       {
         url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
         alt: 'hieu.asia — Cẩm nang AI giúp hiểu mình và ra quyết định',
       },
     ],

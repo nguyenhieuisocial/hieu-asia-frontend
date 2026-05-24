@@ -139,6 +139,10 @@ export function QRDisplay({ intent, onExpire }: QRDisplayProps) {
             <h2 className="font-heading text-lg text-foreground">
               Quét QR để thanh toán
             </h2>
+            {/* V4-FIX BUG-NEW4: <div aria-label> needs a role. This is a
+                live-updating countdown → `role="timer"` is the correct ARIA
+                role. aria-live="polite" so screen readers don't spam every
+                second tick. */}
             <div
               className={cn(
                 'rounded-md border px-3 py-1 text-sm font-mono',
@@ -146,6 +150,8 @@ export function QRDisplay({ intent, onExpire }: QRDisplayProps) {
                   ? 'border-gold/40 text-gold'
                   : 'border-border text-muted-foreground',
               )}
+              role="timer"
+              aria-live="polite"
               aria-label="Thời gian còn lại"
             >
               {countdown}

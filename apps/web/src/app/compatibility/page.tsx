@@ -249,8 +249,13 @@ export default function CompatibilityPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-4">
+                  {/* V4-FIX BUG-NEW4: <div aria-label> needs a role (W3C). This
+                      is a single numeric stat with visible "/10" suffix and an
+                      accessible name, so `role="img"` (a self-contained graphical
+                      figure) matches semantics best. */}
                   <div
                     className="flex h-24 w-24 items-center justify-center rounded-full border border-gold/40 bg-gold/10 font-heading text-4xl text-gold"
+                    role="img"
                     aria-label={`Điểm tổng ${report.overallScore} trên 10`}
                   >
                     {report.overallScore}

@@ -198,16 +198,18 @@ export function MethodChooser() {
           + "tham khảo, không phải chẩn đoán"). Placed once under all 5 cards
           since the same caveat applies to every divination method — keeps
           per-card copy clean and avoids legal risk on fortune-telling claims.
+
+          V4-FIX BUG-NEW1: was `<aside>` — but a complementary landmark nested
+          inside the home `<main>` triggers axe `landmark-complementary-is-top-level`.
+          This is just an inline disclaimer for the section, not standalone
+          complementary content, so plain `<p>` is correct semantically.
         */}
-        <aside
-          aria-label="Lưu ý về phương pháp"
-          className="mt-10 text-center text-xs leading-relaxed text-muted-foreground/80"
-        >
+        <p className="mt-10 text-center text-xs leading-relaxed text-muted-foreground/80">
           Cả 5 phương pháp đều là góc nhìn để bạn{' '}
           <strong className="text-foreground/90">tham khảo và tự ra quyết định</strong>, không phải
           chẩn đoán y khoa, tài chính hay pháp lý. Kết quả phụ thuộc vào độ chính xác của ngày–giờ
           sinh và cách bạn lựa chọn áp dụng.
-        </aside>
+        </p>
       </div>
     </section>
   );

@@ -105,7 +105,11 @@ export function StoryTestimonials() {
                 <div className="font-heading text-sm font-semibold text-foreground">{s.name}</div>
                 <div className="text-xs text-muted-foreground">{s.role}</div>
                 {s.detail ? (
-                  <div className="mt-2 text-xs text-gold/85" aria-label="Kết quả">
+                  // V4-FIX BUG-NEW4: dropped aria-label="Kết quả" on a plain
+                  // <div> (no role → W3C error). The detail text reads itself
+                  // — labelling it "Kết quả" added nothing for screen readers
+                  // and the standalone label was semantically invalid.
+                  <div className="mt-2 text-xs text-gold/85">
                     {s.detail}
                   </div>
                 ) : null}

@@ -55,7 +55,10 @@ export function Testimonials() {
               style={{ backgroundColor: 'rgba(20, 20, 26, 0.4)' }}
             >
               <Quote className="absolute right-5 top-5 h-6 w-6 text-gold/20" aria-hidden="true" />
-              <div className="flex gap-0.5" aria-label={`${t.rating} trên 5 sao`}>
+              {/* V4-FIX BUG-NEW4: <div aria-label> needs a role (W3C). Star
+                  rating is a self-contained graphical group with an accessible
+                  name → `role="img"`. */}
+              <div className="flex gap-0.5" role="img" aria-label={`${t.rating} trên 5 sao`}>
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
