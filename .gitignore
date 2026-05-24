@@ -46,3 +46,6 @@ coverage
 *.pem
 
 .vercel
+
+# Wave 58.2 — local screenshot evidence captured during /ultrareview sessions
+_evidence/
