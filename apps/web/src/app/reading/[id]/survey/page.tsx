@@ -137,9 +137,9 @@ export default function SurveyPage() {
               <span className="mx-1.5">/</span>
               <span className="text-muted-foreground">Khảo sát</span>
             </span>
-            <span className="font-mono tracking-[0.24em] text-gold/80">Bước 3 / 3</span>
+            <span className="font-mono tracking-[0.12em] font-medium text-gold/80">Bước 3 / 3</span>
           </nav>
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-[11px] tracking-[0.12em] font-medium text-gold/80">
             Khảo sát tính cách
           </p>
           <h1 className="mt-3 font-heading text-3xl font-semibold leading-tight text-foreground sm:text-4xl">

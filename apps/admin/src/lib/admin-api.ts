@@ -241,9 +241,28 @@ export async function listSessions(
   if (q.status) qs.set('status', uiStatusToBackend(q.status));
   if (q.from) qs.set('from', q.from);
   if (q.to) qs.set('to', q.to);
-  const real = await proxyFetch<SessionsEnvelope>(`/admin/sessions?${qs.toString()}`);
-  if (real?.ok !== false && Array.isArray(real?.sessions)) {
-    let rows = real.sessions.map(mapBackendSession);
+  const real = await proxyFetch<any>(`/admin/sessions?${qs.toString()}`);
+  const sessionsList = real?.sessions || real?.items;
+  if (real?.ok !== false && Array.isArray(sessionsList)) {
+    let rows = sessionsList.map((row: any) => {
+      if (row.state_json) {
+        return mapBackendSession(row);
+      }
+      // If it's a TaskModel row (e.g. from postgres_store list_sessions)
+      return {
+        session_id: row.session_id,
+        task_id: row.task_id || row.session_id,
+        user_id: `anon-${row.session_id}`,
+        user_email: `anon-${row.session_id}`,
+        status: normalizeStatus(row.status),
+        created_at: row.created_at || new Date().toISOString(),
+        completed_at: row.status === 'completed' ? row.updated_at : null,
+        duration_seconds: null,
+        cost_usd: 0,
+        primary_concern: '—',
+        error: row.error || null,
+      };
+    });
     // Search filter is applied client-side because Postgres needs a full-text
     // index for `state_json` deep search; cheap for the current row volume.
     if (q.search) {
@@ -282,7 +301,32 @@ export async function listSessions(
 }
 
 export async function getSession(id: string) {
-  return delay(MOCK_SESSIONS.find((s) => s.session_id === id) ?? null);
+  const real = await proxyFetch<any>(`/admin/sessions/${encodeURIComponent(id)}`);
+  if (real) {
+    // Map backend response fields to the frontend AdminSession shape
+    return {
+      session_id: real.session_id,
+      task_id: real.task_id || real.session_id,
+      user_id: real.user_id || '',
+      user_email: real.user_email || real.user_id || '—',
+      status: normalizeStatus(real.pipeline_status),
+      created_at: real.created_at || new Date().toISOString(),
+      completed_at: real.pipeline_status === 'completed' ? real.updated_at : null,
+      duration_seconds: null,
+      cost_usd: Number(real.cost_usd ?? 0) || 0,
+      primary_concern: real.primary_concern || '—',
+      error: real.error || null,
+      final_report_markdown: real.final_report_markdown || null,
+      chat_history: real.chat_history || [],
+      _source: { isMock: false } as DataSource,
+    };
+  }
+  // Try fallback in mock sessions
+  const mockSess = MOCK_SESSIONS.find((s) => s.session_id === id);
+  if (mockSess) {
+    return delay(mock(mockSess, 'gateway unreachable; showing mock'));
+  }
+  return delay(null);
 }
 
 // ---------- Tasks ----------
