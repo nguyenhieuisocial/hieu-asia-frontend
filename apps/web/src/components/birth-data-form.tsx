@@ -155,7 +155,17 @@ export function BirthDataForm() {
     if (!consented) return;
     const consentTimestamp = new Date().toISOString();
     const userId = getOrCreateAnonUserId();
-    const res = await createReading(userId, buildBirthData(values));
+    let res: Awaited<ReturnType<typeof createReading>>;
+    try {
+      res = await createReading(userId, buildBirthData(values));
+    } catch (err) {
+      // #295 HIEU-ASIA-WORKER-5 — when the user navigates away before
+      // createReading resolves, Next.js cancels the in-flight fetch and the
+      // promise rejects with an AbortError. That's intentional — swallow it
+      // so it doesn't bubble to window.onunhandledrejection / Sentry.
+      if ((err as Error)?.name === 'AbortError') return;
+      throw err;
+    }
     if (typeof window !== 'undefined') {
       window.sessionStorage.setItem(
         'hieu.reading.session',
