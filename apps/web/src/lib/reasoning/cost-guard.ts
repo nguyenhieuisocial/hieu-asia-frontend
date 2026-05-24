@@ -86,7 +86,10 @@ export type AssertResult =
   | { ok: true; subjectKey: string; reservedUsd: number; capUsd: number }
   | { ok: false; response: NextResponse };
 
-/** Hash for anonymous subject key (daily-rotating salt baked into hash input). */
+/** SHA-256 hex digest. No date salt — daily rotation is handled by the
+ * (subject_key, day) primary key on reasoning_daily_cost (see top-of-file
+ * docstring). Re-adding a date salt here would re-open the Phase 2.6.1 P1-4
+ * midnight-rollover race. */
 async function sha256Hex(s: string): Promise<string> {
   const bytes = new TextEncoder().encode(s);
   const buf = await crypto.subtle.digest('SHA-256', bytes);
