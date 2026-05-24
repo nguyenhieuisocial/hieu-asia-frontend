@@ -77,7 +77,7 @@ export function OnboardingRecap() {
   return (
     <div className="mt-6 space-y-4">
       <div className="rounded-lg border border-gold/20 bg-card/40 p-4">
-        <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-gold/80">
+        <p className="font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-gold/80">
           Bạn đã chọn:
         </p>
         <ul className="mt-3 space-y-2 text-sm text-foreground/80">
@@ -121,7 +121,7 @@ export function OnboardingStepBadge() {
   }, []);
 
   return (
-    <span className="font-mono tracking-[0.24em] text-gold/80">
+    <span className="font-mono font-medium tracking-[0.12em] text-gold/80">
       {hasPreStep ? 'Bước 4 / 4 · Lập lá số' : 'Bước 1 / 4'}
     </span>
   );

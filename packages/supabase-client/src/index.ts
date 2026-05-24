@@ -59,7 +59,17 @@ export function getOrCreateAnonUserId(): string {
   if (typeof window === 'undefined') return '';
   let id = window.localStorage.getItem(USER_ID_KEY);
   if (!id) {
-    const uuid = crypto.randomUUID();
+    let uuid: string;
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+      uuid = crypto.randomUUID();
+    } else {
+      // Fallback pseudo-UUID v4 generator for non-secure HTTP contexts
+      uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        const r = (Math.random() * 16) | 0;
+        const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+    }
     id = `anon_${uuid}`;
     window.localStorage.setItem(USER_ID_KEY, id);
   }

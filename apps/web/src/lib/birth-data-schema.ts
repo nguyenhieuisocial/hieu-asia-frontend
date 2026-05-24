@@ -21,7 +21,7 @@ export const birthDataSchema = z
     unknown_birth_time: z.boolean().default(false),
     birth_time: z
       .string()
-      .regex(/^\d{2}:\d{2}$/, 'Định dạng phải là HH:MM')
+      .regex(/^\d{2}:\d{2}(:\d{2})?$/, 'Định dạng phải là HH:MM')
       .optional()
       .or(z.literal('')),
     birth_place: z

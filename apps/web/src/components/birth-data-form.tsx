@@ -14,6 +14,7 @@ import {
   RadioGroupItem,
   Slider,
   Switch,
+  toast,
 } from '@hieu-asia/ui';
 import { Info } from 'lucide-react';
 import { birthDataSchema, VN_PROVINCES, type BirthDataValues } from '@/lib/birth-data-schema';
@@ -85,9 +86,13 @@ function readSavedDefaults(): SavedChartDefaults | null {
 }
 
 function buildBirthData(values: BirthDataValues): BirthData {
+  let birthTime = values.unknown_birth_time ? null : values.birth_time || null;
+  if (birthTime && birthTime.length > 5) {
+    birthTime = birthTime.slice(0, 5); // Slice "HH:MM:SS" -> "HH:MM"
+  }
   return {
     birth_date: values.birth_date,
-    birth_time: values.unknown_birth_time ? null : values.birth_time || null,
+    birth_time: birthTime,
     birth_place: values.birth_place,
     gender: values.gender ?? null,
     display_name: values.display_name || null,
@@ -102,6 +107,25 @@ export function BirthDataForm() {
   const [consented, setConsented] = React.useState(false);
   const [improveOptIn, setImproveOptIn] = React.useState(false);
   const [prefilled, setPrefilled] = React.useState(false);
+  const [consentError, setConsentError] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handleError = (event: ErrorEvent) => {
+      const msg = event.error?.message || event.message || 'Lỗi runtime không rõ';
+      toast.error(`Lỗi hệ thống: ${msg}`);
+    };
+    const handleRejection = (event: PromiseRejectionEvent) => {
+      const msg = event.reason?.message || String(event.reason) || 'Lỗi bất đồng bộ';
+      toast.error(`Sự cố kết nối: ${msg}`);
+    };
+    window.addEventListener('error', handleError);
+    window.addEventListener('unhandledrejection', handleRejection);
+    return () => {
+      window.removeEventListener('error', handleError);
+      window.removeEventListener('unhandledrejection', handleRejection);
+    };
+  }, []);
 
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -179,7 +203,15 @@ export function BirthDataForm() {
   const showConfidence = !unknownTime && birthTime && birthTime.length > 0;
 
   const onSubmit = handleSubmit(async (values) => {
-    if (!consented) return;
+    if (!consented) {
+      setConsentError('Vui lòng đồng ý với Điều khoản dịch vụ và Chính sách bảo mật để tiếp tục.');
+      const consentCard = document.getElementById('consent-container');
+      if (consentCard) {
+        consentCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+    setConsentError(null);
     const consentTimestamp = new Date().toISOString();
     const userId = getOrCreateAnonUserId();
 
@@ -217,6 +249,7 @@ export function BirthDataForm() {
       // promise rejects with an AbortError. That's intentional — swallow it
       // so it doesn't bubble to window.onunhandledrejection / Sentry.
       if ((err as Error)?.name === 'AbortError') return;
+      toast.error('Có lỗi xảy ra khi khởi tạo lá số. Vui lòng kiểm tra kết nối và thử lại.');
       throw err;
     }
     if (typeof window !== 'undefined') {
@@ -254,6 +287,19 @@ export function BirthDataForm() {
 
   return (
     <form onSubmit={onSubmit} className="space-y-7">
+      {Object.keys(errors).length > 0 && (
+        <div className="rounded-md border border-red-500/30 bg-red-500/5 p-4 text-sm text-red-400">
+          <p className="font-semibold mb-2">Vui lòng kiểm tra lại các thông tin sau:</p>
+          <ul className="list-disc list-inside space-y-1">
+            {errors.display_name && <li>Họ tên: {errors.display_name.message}</li>}
+            {errors.birth_date && <li>Ngày sinh: {errors.birth_date.message}</li>}
+            {errors.birth_time && <li>Giờ sinh: {errors.birth_time.message}</li>}
+            {errors.birth_place && <li>Nơi sinh: {errors.birth_place.message}</li>}
+            {errors.gender && <li>Giới tính: {errors.gender.message}</li>}
+          </ul>
+        </div>
+      )}
+
       {prefilled && (
         <div
           role="status"
@@ -444,7 +490,14 @@ export function BirthDataForm() {
       </div>
 
       {/* Dynamic Consent Box (Decree 13/2023/NĐ-CP Compliant & CRO Optimized) */}
-      <div className="space-y-4 rounded-xl border border-gold/20 bg-gold/5 p-5 backdrop-blur-sm transition-all duration-300 hover:border-gold/30 hover:shadow-md">
+      <div
+        id="consent-container"
+        className={`space-y-4 rounded-xl border p-5 backdrop-blur-sm transition-all duration-300 ${
+          consentError
+            ? 'border-red-500 bg-red-500/5 shadow-md animate-pulse'
+            : 'border-gold/20 bg-gold/5 hover:border-gold/30 hover:shadow-md'
+        }`}
+      >
         <h4 className="font-heading text-sm font-semibold text-gold tracking-wide">
           Quyền riêng tư & Bảo mật dữ liệu
         </h4>
@@ -454,8 +507,11 @@ export function BirthDataForm() {
           <label className="flex cursor-pointer items-start gap-3 text-sm text-foreground/85">
             <Checkbox
               checked={consented}
-              onChange={(e) => setConsented((e.target as HTMLInputElement).checked)}
-              required
+              onChange={(e) => {
+                const isChecked = (e.target as HTMLInputElement).checked;
+                setConsented(isChecked);
+                if (isChecked) setConsentError(null);
+              }}
               aria-required="true"
               className="mt-1 border-gold/40 data-[state=checked]:bg-gold data-[state=checked]:text-ink"
             />
@@ -497,11 +553,25 @@ export function BirthDataForm() {
             </span>
           </label>
         </div>
+        {consentError && (
+          <p className="text-xs font-semibold text-red-400 mt-2" role="alert">
+            {consentError}
+          </p>
+        )}
       </div>
 
       <div className="flex justify-end border-t border-gold/15 pt-6">
-        <Button type="submit" size="lg" disabled={isSubmitting || !consented}>
-          {isSubmitting ? 'Đang xử lý...' : 'Tiếp theo'}
+        <Button
+          type="submit"
+          size="lg"
+          disabled={isSubmitting}
+          onClick={() => {
+            if (Object.keys(errors).length > 0) {
+              toast.error('Vui lòng kiểm tra và điền đầy đủ thông tin bắt buộc.');
+            }
+          }}
+        >
+          {isSubmitting ? 'Đang xử lý...' : 'Tiếp tục'}
         </Button>
       </div>
     </form>

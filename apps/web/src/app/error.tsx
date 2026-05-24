@@ -30,7 +30,7 @@ export default function ErrorPage({
       className="flex min-h-screen items-center justify-center bg-background px-6 py-16 text-foreground"
     >
       <div className="mx-auto max-w-lg space-y-6 text-center">
-        <p className="font-mono text-xs uppercase tracking-[0.3em] text-gold/80">
+        <p className="font-mono text-xs font-medium uppercase tracking-[0.12em] text-gold/80">
           500 · server error
         </p>
         <h1 className="font-heading text-3xl font-semibold text-foreground sm:text-4xl">
