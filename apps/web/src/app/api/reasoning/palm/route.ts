@@ -51,7 +51,9 @@ function isAllowedImageUrl(s: unknown): s is string {
   } catch {
     return false;
   }
-  if (u.protocol !== 'https:') return false;
+  // Protocol check is redundant with `startsWith('https://')` above (URL
+  // parser canonicalises scheme), but harmless defense-in-depth — left out
+  // per /ultrareview Wave 58.1 F4. Hostname check below is the real gate.
   const h = u.hostname.toLowerCase();
   return (
     h === 'supabase.co' ||

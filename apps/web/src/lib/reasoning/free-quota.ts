@@ -97,6 +97,11 @@ export async function assertFreeQuota(userId: string): Promise<QuotaResult> {
       };
     }
     // Free quota exhausted. Compose a Vietnamese upsell.
+    // /ultrareview Wave 58.1 F1 fix: do NOT emit `parsed.plan` literal here.
+    // Subscriber early-return at line 92 means this branch only fires for
+    // 'free'/'premium' today, but a future tier added between early-return and
+    // this point would leak. Use the coarse upsell_variant enum, consistent
+    // with the success path.
     const used = parsed.used_count ?? 1;
     const limit = parsed.limit ?? 1;
     const window = parsed.window_days ?? 30;
@@ -106,7 +111,7 @@ export async function assertFreeQuota(userId: string): Promise<QuotaResult> {
         {
           ok: false,
           error: 'free_quota_exhausted',
-          plan: parsed.plan,
+          upsell_variant: 'free_quota_exhausted' as const,
           used_count: used,
           limit,
           window_days: window,
@@ -126,14 +131,15 @@ export async function assertFreeQuota(userId: string): Promise<QuotaResult> {
       ),
     };
   } catch (err) {
+    // /ultrareview Wave 58.1 F2 fix: log server-side only. The JS-throw path
+    // (Supabase client constructor failure, network reject pre-RPC) shouldn't
+    // contain SQL fragments, but stack traces and env-var error messages still
+    // leak infra hints. Generic 503 + retry; ops see detail in Vercel logs.
+    console.error('[free-quota] exception:', err instanceof Error ? err.message : err);
     return {
       ok: false,
       response: NextResponse.json(
-        {
-          ok: false,
-          error: 'quota_check_unavailable',
-          detail: err instanceof Error ? err.message : String(err),
-        },
+        { ok: false, error: 'quota_check_unavailable' },
         { status: 503, headers: { 'Retry-After': '30' } },
       ),
     };

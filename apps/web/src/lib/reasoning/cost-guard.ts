@@ -25,14 +25,13 @@
  *
  * Subject key derivation:
  *   - authed: "user:<uuid>"
- *   - anon: "anon:<sha256(ip [+visitorId] + 'reasoning-cost-guard-v1')>".
- *     /ultrareview Phase 2.6.1 fix: REMOVED the UTC date salt that used to
- *     be inside the hash. The (subject_key, day) primary key on
- *     reasoning_daily_cost already rotates the bucket daily. Putting date
- *     in the hash AS WELL created a dual-clock bug — JS computed yesterday
- *     pre-midnight, RPC computed today post-midnight, and the cap was
- *     bypassed for the ~1s window per day. Drop the date from the hash;
- *     row key alone handles rotation.
+ *   - anon: "anon:<sha256(ip + visitorId + 'reasoning-cost-guard-v1')>".
+ *     NO date salt inside the hash — the (subject_key, day) primary key on
+ *     reasoning_daily_cost is the SOLE daily-rotation mechanism. /ultrareview
+ *     Phase 2.6.1 P1-4 removed an earlier date-in-hash variant that created
+ *     a dual-clock midnight-rollover race (JS computed yesterday pre-midnight
+ *     while the RPC computed today post-midnight → cap bypass for ~1s/day).
+ *     Re-introducing date here would re-open that race.
  *
  *     If a `hieu_visitor` cookie is present (set by Wave 41 attribution),
  *     mix it into the hash so 50 office workers behind one NAT don't share
