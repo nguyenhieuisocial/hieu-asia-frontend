@@ -16,15 +16,31 @@ const nextConfig: NextConfig = {
   experimental: {
     typedRoutes: true,
   },
-  // Wave 55 — BUG-044. Force blocking <head> metadata for unfurl/preview bots
-  // so they see complete OG tags (og:title, og:description, og:image, og:url)
-  // before any streamed body content. Specifying this option OVERRIDES the
-  // Next.js default list — this regex is a strict superset of the default
-  // (`node_modules/next/dist/shared/lib/router/utils/html-bots.js`) plus the
-  // additional unfurl bots we care about: TelegramBot, Discordbot is already
-  // in the default but we list it for documentation.
+  // Wave 55 + V4-FIX BUG-044. Force blocking <head> metadata for:
+  //   1. unfurl/preview bots → complete OG tags before any streamed body
+  //   2. SEO/a11y/validator tools (Lighthouse, axe-core, W3C nu, curl) →
+  //      title appears in <head> not <body>, satisfies W3C "title not
+  //      allowed as child of body" + "head missing title" errors
+  //   3. AI crawlers (GPTBot, ClaudeBot, Perplexity, CCBot) → consistent
+  //      metadata indexing
+  //
+  // Specifying this option OVERRIDES the Next.js default list. This regex
+  // expands the default (`node_modules/next/dist/shared/lib/router/utils/
+  // html-bots.js`) with:
+  //   - validator.w3.org user agents (`Validator.nu`, `W3C_Validator`)
+  //   - Lighthouse + Lighthouse-CI (already had Chrome-Lighthouse — kept)
+  //   - generic `curl/` and `wget/` (audit/CI/manual smoke tests should
+  //     see canonical static HTML, not a streamed shell)
+  //   - axe-core's Puppeteer UA fingerprint
+  //   - Modern AI crawlers (Claude-Web/ClaudeBot, GPTBot, PerplexityBot,
+  //     OAI-SearchBot, CCBot, AnthropicBot) for stable indexing
+  //
+  // We do NOT use `/.*/ ` (all-UAs) per V4 report — that would disable
+  // streaming for real users and crater TTFB. Targeted whitelist keeps
+  // browser users on the streaming fast path while audit/bot traffic gets
+  // static head-first HTML.
   htmlLimitedBots:
-    /[\w-]+-Google|Google-[\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight|TelegramBot/i,
+    /[\w-]+-Google|Google-[\w-]+|Chrome-Lighthouse|Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight|TelegramBot|Validator\.nu|W3C_Validator|curl\/|wget\/|axe-core|HeadlessChrome|GPTBot|ClaudeBot|Claude-Web|PerplexityBot|OAI-SearchBot|CCBot|AnthropicBot/i,
   async redirects() {
     return [
       // Vanity / legacy URL aliases — keep canonical Vietnamese slugs.

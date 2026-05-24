@@ -8,8 +8,14 @@ export const metadata: Metadata = {
 };
 
 export default function NotFound() {
+  // V4-FIX BUG-029: was <main>. not-found.tsx renders alongside route segments
+  // during streaming so duplicates the page's <main> landmark. Use <section>
+  // — Next.js sets the document status to 404 via the App Router, and the
+  // h1 below ("Trang không tồn tại") still provides the page-level heading.
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background px-6 py-16 text-foreground">
+    <section
+      className="flex min-h-screen items-center justify-center bg-background px-6 py-16 text-foreground"
+    >
       <div className="mx-auto max-w-lg text-center">
         <p
           aria-hidden
@@ -43,6 +49,6 @@ export default function NotFound() {
           </Link></Button>
         </div>
       </div>
-    </main>
+    </section>
   );
 }

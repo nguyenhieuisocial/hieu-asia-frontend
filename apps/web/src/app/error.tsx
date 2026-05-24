@@ -19,7 +19,16 @@ export default function ErrorPage({
   }, [error]);
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background px-6 py-16 text-foreground">
+    // V4-FIX BUG-029: was <main>. error.tsx is a Suspense error boundary that
+    // can render alongside the page's own <main> during streaming, causing
+    // duplicate-main a11y violations. Use <section role="alert"> instead —
+    // the page's own <main> remains the sole landmark; the error UI is
+    // announced via role="alert" for screen readers.
+    <section
+      role="alert"
+      aria-live="assertive"
+      className="flex min-h-screen items-center justify-center bg-background px-6 py-16 text-foreground"
+    >
       <div className="mx-auto max-w-lg space-y-6 text-center">
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-gold/80">
           500 · server error
@@ -54,6 +63,6 @@ export default function ErrorPage({
           </Link></Button>
         </div>
       </div>
-    </main>
+    </section>
   );
 }
