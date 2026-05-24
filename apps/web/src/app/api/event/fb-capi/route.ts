@@ -20,6 +20,7 @@
  */
 
 import { NextResponse, type NextRequest } from "next/server";
+import { checkBotId } from 'botid/server';
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -28,6 +29,11 @@ const HIEU_API_URL = process.env.HIEU_API_URL ?? "https://api.hieu.asia";
 const HIEU_API_SERVICE_TOKEN = process.env.HIEU_API_SERVICE_TOKEN;
 
 export async function POST(req: NextRequest) {
+  const botCheck = await checkBotId();
+  if (botCheck.isBot) {
+    return NextResponse.json({ ok: false, error: 'bot_detected' }, { status: 403 });
+  }
+
   if (!HIEU_API_SERVICE_TOKEN) {
     return new NextResponse(null, { status: 204 });
   }
