@@ -108,8 +108,8 @@ export default function ProcessingPage() {
           <span className="mx-1.5">/</span>
           <span className="text-muted-foreground">Phân tích</span>
         </nav>
-        <p className="font-mono text-xs uppercase tracking-widest text-gold">
-          Bước 4 / 4
+        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+          Biên tập cẩm nang
         </p>
         <h1 className="mt-2 font-heading text-3xl font-semibold text-foreground sm:text-4xl">
           Hội đồng Agent đang phân tích

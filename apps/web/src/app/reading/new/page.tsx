@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { BirthDataForm } from '@/components/birth-data-form';
 import { SiteNav } from '@/components/home/SiteNav';
+import { OnboardingStepBadge } from '@/components/onboarding-recap';
 
 export const metadata = {
   title: 'Thông tin ngày sinh',
@@ -31,9 +32,7 @@ export default function NewReadingPage() {
             <span className="mx-1.5">/</span>
             <span className="text-muted-foreground">Thông tin sinh</span>
           </nav>
-          <span className="font-mono text-xs uppercase tracking-widest text-gold/85">
-            Bước 2 / 4
-          </span>
+          <OnboardingStepBadge />
         </header>
 
         <section className="container mx-auto max-w-2xl px-6 pb-20 pt-2">

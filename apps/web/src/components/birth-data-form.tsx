@@ -17,7 +17,8 @@ import {
 } from '@hieu-asia/ui';
 import { Info } from 'lucide-react';
 import { birthDataSchema, VN_PROVINCES, type BirthDataValues } from '@/lib/birth-data-schema';
-import { createReading, getOrCreateAnonUserId, type BirthData } from '@hieu-asia/supabase';
+import { createReading, getOrCreateAnonUserId, logAudit, type BirthData } from '@hieu-asia/supabase';
+import { track } from '@/lib/analytics';
 
 const CONFIDENCE_LABELS = ['Đoán', 'Không chắc', 'Tương đối', 'Khá chắc', 'Chính xác'];
 
@@ -99,7 +100,33 @@ function buildBirthData(values: BirthDataValues): BirthData {
 export function BirthDataForm() {
   const router = useRouter();
   const [consented, setConsented] = React.useState(false);
+  const [improveOptIn, setImproveOptIn] = React.useState(false);
   const [prefilled, setPrefilled] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hasConsent = window.sessionStorage.getItem('hieu.consent');
+      const hasWizard = window.localStorage.getItem('hieu:onboarding:v2');
+      if (hasConsent || hasWizard) {
+        setConsented(true);
+        if (hasConsent) {
+          try {
+            const parsed = JSON.parse(hasConsent);
+            if (parsed.purposes?.includes('quality_improvement')) {
+              setImproveOptIn(true);
+            }
+          } catch {}
+        } else if (hasWizard) {
+          try {
+            const parsed = JSON.parse(hasWizard);
+            if (parsed.consent?.training) {
+              setImproveOptIn(true);
+            }
+          } catch {}
+        }
+      }
+    }
+  }, []);
   const {
     register,
     handleSubmit,
@@ -155,6 +182,32 @@ export function BirthDataForm() {
     if (!consented) return;
     const consentTimestamp = new Date().toISOString();
     const userId = getOrCreateAnonUserId();
+
+    const purposes = [
+      'personalized_reading',
+      'mentor_chat',
+      ...(improveOptIn ? ['quality_improvement'] : []),
+    ];
+
+    if (typeof window !== 'undefined') {
+      window.sessionStorage.setItem(
+        'hieu.consent',
+        JSON.stringify({ accepted: true, accepted_at: consentTimestamp, version: 'v2.0', purposes }),
+      );
+    }
+
+    try {
+      await logAudit({
+        user_id: userId,
+        action: 'consent_accepted',
+        audit_metadata: { boxes: 1, version: 'v2.0', purposes, accepted_at: consentTimestamp },
+      });
+    } catch (e) {
+      console.warn('audit log failed:', e);
+    }
+
+    track('consent_given', { purposes_count: purposes.length, improve_optin: !!improveOptIn });
+
     let res: Awaited<ReturnType<typeof createReading>>;
     try {
       res = await createReading(userId, buildBirthData(values));
@@ -390,37 +443,60 @@ export function BirthDataForm() {
         </p>
       </div>
 
-      {/* Consent — required before submit */}
-      <div className="rounded-md border border-gold/20 bg-card/40 p-4">
-        <label className="flex cursor-pointer items-start gap-3 text-sm text-foreground/85">
-          <Checkbox
-            checked={consented}
-            onChange={(e) => setConsented((e.target as HTMLInputElement).checked)}
-            required
-            aria-required="true"
-          />
-          <span className="leading-relaxed">
-            Tôi đồng ý với{' '}
-            <Link
-              href="/privacy"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gold underline hover:text-gold/80"
-            >
-              Chính sách bảo mật
-            </Link>{' '}
-            và{' '}
-            <Link
-              href="/terms"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gold underline hover:text-gold/80"
-            >
-              Điều khoản dịch vụ
-            </Link>
-            . Tôi hiểu rằng báo cáo có tính chất tham khảo, không thay thế tư vấn chuyên môn.
-          </span>
-        </label>
+      {/* Dynamic Consent Box (Decree 13/2023/NĐ-CP Compliant & CRO Optimized) */}
+      <div className="space-y-4 rounded-xl border border-gold/20 bg-gold/5 p-5 backdrop-blur-sm transition-all duration-300 hover:border-gold/30 hover:shadow-md">
+        <h4 className="font-heading text-sm font-semibold text-gold tracking-wide">
+          Quyền riêng tư & Bảo mật dữ liệu
+        </h4>
+        
+        <div className="space-y-3.5">
+          {/* Required Consent Checkbox */}
+          <label className="flex cursor-pointer items-start gap-3 text-sm text-foreground/85">
+            <Checkbox
+              checked={consented}
+              onChange={(e) => setConsented((e.target as HTMLInputElement).checked)}
+              required
+              aria-required="true"
+              className="mt-1 border-gold/40 data-[state=checked]:bg-gold data-[state=checked]:text-ink"
+            />
+            <span className="leading-relaxed">
+              Tôi đồng ý cho hieu.asia xử lý ngày sinh, giờ sinh, nơi sinh và thông tin đi kèm để thiết lập lá số và phân tích bản thân của tôi theo{' '}
+              <span className="font-medium text-foreground">Nghị định 13/2023/NĐ-CP</span>. Tôi cũng đồng ý với{' '}
+              <Link
+                href="/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gold underline underline-offset-4 hover:text-gold/80"
+              >
+                Điều khoản dịch vụ
+              </Link>{' '}
+              và{' '}
+              <Link
+                href="/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gold underline underline-offset-4 hover:text-gold/80"
+              >
+                Chính sách bảo mật
+              </Link>
+              . <span className="text-muted-foreground text-xs">(Dữ liệu được mã hoá AES-256, không bán/chia sẻ, dễ dàng rút lại bất kỳ lúc nào tại trang Tài khoản)</span>.
+            </span>
+          </label>
+
+          {/* Optional Product Improvement Checkbox */}
+          <label className="flex cursor-pointer items-start gap-3 text-sm text-foreground/85 border-t border-gold/10 pt-3.5">
+            <Checkbox
+              checked={improveOptIn}
+              onChange={(e) => setImproveOptIn((e.target as HTMLInputElement).checked)}
+              className="mt-1 border-gold/20 data-[state=checked]:bg-gold data-[state=checked]:text-ink"
+            />
+            <span className="leading-relaxed text-foreground/75">
+              Cho phép sử dụng dữ liệu{' '}
+              <span className="font-medium text-foreground">ẩn danh</span> để cải thiện prompt và chất lượng phân tích của Mentor AI.{' '}
+              <span className="text-muted-foreground text-xs">(Tùy chọn — mặc định tắt, không ảnh hưởng tới kết quả của bạn)</span>.
+            </span>
+          </label>
+        </div>
       </div>
 
       <div className="flex justify-end border-t border-gold/15 pt-6">

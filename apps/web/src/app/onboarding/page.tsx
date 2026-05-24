@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
-import { ConsentForm } from '@/components/consent-form';
+import { BirthDataForm } from '@/components/birth-data-form';
 import { SiteNav } from '@/components/home/SiteNav';
 import { OnboardingRecap, OnboardingStepBadge } from '@/components/onboarding-recap';
 
@@ -63,14 +63,18 @@ export default function OnboardingPage() {
 
           <Card className="mt-8 border-gold/20 bg-card/60 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle className="font-heading text-2xl">Đồng ý xử lý dữ liệu sinh</CardTitle>
+              <CardTitle className="font-heading text-2xl">
+                <span className="bg-gold-gradient bg-clip-text text-transparent">
+                  Thông tin
+                </span>{' '}
+                ngày sinh
+              </CardTitle>
               <CardDescription className="text-muted-foreground">
-                Bước này chỉ hỏi quyền tối thiểu cần để lập lá số. Quyền tuỳ chọn
-                (Palm, MBTI, lưu chat) sẽ hỏi sau khi bạn dùng đến.
+                Dữ liệu này dùng để dựng lá số và mốc thời gian luận giải. Bạn có thể chỉnh sửa lại sau, trước khi báo cáo được tạo.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ConsentForm />
+              <BirthDataForm />
             </CardContent>
           </Card>
 
