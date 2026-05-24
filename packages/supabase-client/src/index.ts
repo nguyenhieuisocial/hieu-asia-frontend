@@ -12,6 +12,17 @@ const ANON_KEY = 'NEXT_PUBLIC_SUPABASE_ANON_KEY';
 const FN_KEY = 'NEXT_PUBLIC_EDGE_FN_URL';
 
 function readEnv(name: string): string {
+  // Explicit literal references are mandatory for Next.js compile-time static inlining in client-side bundles.
+  if (name === 'NEXT_PUBLIC_SUPABASE_URL') {
+    return (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_SUPABASE_URL || '').trim();
+  }
+  if (name === 'NEXT_PUBLIC_SUPABASE_ANON_KEY') {
+    return (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_SUPABASE_ANON_KEY || '').trim();
+  }
+  if (name === 'NEXT_PUBLIC_EDGE_FN_URL') {
+    return (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_EDGE_FN_URL || '').trim();
+  }
+
   const v =
     (typeof process !== 'undefined' && process.env?.[name]) ||
     undefined;
