@@ -63,7 +63,6 @@ export const SURVEY_SCHEMA = {
           type: 'rating',
           name: 'q_decision_logic',
           title: 'Bạn dựa vào lý trí hay cảm xúc khi quyết định?',
-          description: 'axis:T-F',
           rateMin: 1,
           rateMax: 5,
           minRateDescription: 'Hoàn toàn cảm xúc',

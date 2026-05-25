@@ -1,0 +1,61 @@
+/**
+ * Wave 60.21.b — Scoped CSS overrides patching SurveyJS default-theme tokens
+ * that don't reach into nested selectors.
+ *
+ * MOVED HERE from `<style jsx global>` in personality-survey.tsx because
+ * styled-jsx's global block was being beaten by SurveyJS's own runtime-injected
+ * styles in the production bundle (sub-agent C verified "Tiếp theo" button
+ * still rendered with the old 5%-gold transparent bg = 1.00 contrast). A
+ * real .css file delivered as a static asset takes precedence in the
+ * cascade + survives SurveyJS's own injection.
+ *
+ * Fixes 4 critical rendering bugs identified by Chrome MCP investigation
+ * (Wave 60.21 original sub-agent report):
+ *   1. Primary action button used 5%-opacity gold bg → 1.00 contrast
+ *      (text-on-self, invisible). Force solid gold bg + ink text.
+ *   2. Radio decorator had 0px border → user can't see option circles.
+ *   3. Rating widget items had transparent border → floating numbers.
+ *   4. .sd-question__title wrapper had font-size:0px → required asterisk
+ *      + spacing broken; restore to 1rem / leading-1.5.
+ */
+
+.survey-host .sd-question__title,
+.survey-host .sv-title-actions {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.survey-host .sd-btn--action {
+  background: #B8923D !important;
+  color: #0F0F12 !important;
+  border: 1px solid #B8923D !important;
+  font-weight: 600;
+}
+
+.survey-host .sd-btn--action:hover {
+  background: #C49E46 !important;
+  border-color: #C49E46 !important;
+}
+
+.survey-host .sd-radio__decorator {
+  border: 1.5px solid rgba(184, 146, 61, 0.5) !important;
+  background: rgba(15, 15, 18, 0.6) !important;
+}
+
+.survey-host .sd-radio--checked .sd-radio__decorator {
+  border-color: #B8923D !important;
+}
+
+.survey-host .sd-radio--checked .sd-radio__decorator::after {
+  background: #B8923D !important;
+}
+
+.survey-host .sd-rating__item {
+  border: 1.5px solid rgba(184, 146, 61, 0.3) !important;
+  background: rgba(15, 15, 18, 0.6) !important;
+}
+
+.survey-host .sd-rating__item--selected {
+  border-color: #B8923D !important;
+  background: rgba(184, 146, 61, 0.2) !important;
+}
