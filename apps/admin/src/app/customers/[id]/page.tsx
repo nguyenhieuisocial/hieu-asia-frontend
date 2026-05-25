@@ -26,8 +26,24 @@ interface CustomerDetail {
   last_active?: string | null;
 }
 
+/**
+ * Wave 59 fix — backend `handleCustomerDetail` returns `reading_sessions`
+ * rows with `session_id` + nested `state_json` JSONB. Old `{id, topic,
+ * status, created_at}` flat shape was silently broken (every row rendered
+ * `(không topic)` + `—`). Frontend now reads from state_json with fallback.
+ */
 interface SessionRow {
-  id: string;
+  session_id: string;
+  updated_at?: string | null;
+  state_json?: {
+    topic?: string | null;
+    status?: string | null;
+    pipeline_status?: string | null;
+    created_at?: string | null;
+    birth_data?: { display_name?: string | null; primary_concern?: string | null } | null;
+  } | null;
+  /** Legacy fields for back-compat — older list endpoints may flatten. */
+  id?: string;
   topic?: string | null;
   created_at?: string | null;
   status?: string | null;
@@ -275,22 +291,44 @@ export default function CustomerDetailPage() {
               />
             ) : (
               <ul className="space-y-2 text-sm">
-                {sessions.map((s) => (
-                  <li
-                    key={s.id}
-                    className="flex items-center justify-between border-b border-gold/10 pb-2 last:border-0"
-                  >
-                    <div className="min-w-0">
-                      <div className="truncate text-foreground">{s.topic ?? '(không topic)'}</div>
-                      <div className="font-mono text-xs text-muted-foreground" title={s.created_at ?? ''}>
-                        {fmtDate(s.created_at)} · {fmtRelative(s.created_at)}
-                      </div>
-                    </div>
-                    <span className="shrink-0 rounded border border-gold/20 bg-gold/5 px-2 py-0.5 text-xs text-muted-foreground">
-                      {s.status ?? '—'}
-                    </span>
-                  </li>
-                ))}
+                {sessions.map((s) => {
+                  // Wave 59: read from state_json (real backend shape) with
+                  // legacy flat-fields fallback for back-compat with mocks.
+                  const sid = s.session_id ?? s.id ?? '';
+                  const sj = s.state_json ?? null;
+                  const topic =
+                    sj?.topic ??
+                    sj?.birth_data?.primary_concern ??
+                    sj?.birth_data?.display_name ??
+                    s.topic ??
+                    '(không topic)';
+                  const status = sj?.status ?? sj?.pipeline_status ?? s.status ?? '—';
+                  const createdAt = sj?.created_at ?? s.created_at ?? s.updated_at ?? null;
+                  return (
+                    <li
+                      key={sid}
+                      className="flex items-center justify-between border-b border-gold/10 pb-2 last:border-0"
+                    >
+                      <Link
+                        href={`/sessions/${encodeURIComponent(sid)}`}
+                        className="min-w-0 flex-1 group"
+                      >
+                        <div className="truncate text-foreground group-hover:text-gold">
+                          {topic}
+                        </div>
+                        <div
+                          className="font-mono text-xs text-muted-foreground"
+                          title={createdAt ?? ''}
+                        >
+                          {fmtDate(createdAt)} · {fmtRelative(createdAt)}
+                        </div>
+                      </Link>
+                      <span className="shrink-0 rounded border border-gold/20 bg-gold/5 px-2 py-0.5 text-xs text-muted-foreground">
+                        {status}
+                      </span>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </CardContent>
