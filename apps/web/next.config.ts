@@ -81,6 +81,11 @@ const nextConfig: NextConfig = {
       "script-src 'self' 'unsafe-inline'",
       isDev ? "'unsafe-eval'" : '',
       'https://us.i.posthog.com https://*.posthog.com https://browser.sentry-cdn.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io',
+      // Wave 60.29 — Vercel Speed Insights script. Pre-existing gap on web app
+      // CSP (since Wave 41.4) caught when adding admin CSP this wave. Without
+      // this, `@vercel/speed-insights/next` is CSP-blocked silently → Wave 59
+      // Speed Insights produces zero metrics on web.
+      'https://va.vercel-scripts.com',
       pixelScriptHosts,
     ]
       .filter(Boolean)
