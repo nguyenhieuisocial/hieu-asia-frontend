@@ -251,7 +251,11 @@ const FEATURES_FAQ: readonly FaqItem[] = [
 function FeatureBadge({ badge }: { badge: Exclude<Badge, null> }) {
   if (badge === 'premium') {
     return (
-      <span className="inline-flex items-center rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-gold">
+      // /ultrareview HIGH-2: `text-gold` (#B8923D) on `bg-gold/10` over cream
+      // light bg lands ~2.8:1 — FAILS WCAG AA for small text. `text-gold-700`
+      // (#6B5424) clears AA (~6.5:1) in light mode while dark mode keeps the
+      // brand gold via `dark:text-gold` override.
+      <span className="inline-flex items-center rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-gold-700 dark:text-gold">
         Premium
       </span>
     );
@@ -364,40 +368,66 @@ export default function FeaturesPage() {
         </section>
 
         {/* Categorised feature buckets */}
-        {BUCKETS.map((bucket, bucketIdx) => (
-          <section
-            key={bucket.id}
-            id={bucket.id}
-            className="relative bg-background py-12 sm:py-16"
-          >
-            <div className="mx-auto max-w-6xl px-6">
-              {/* Bucket header — editorial chapter marker */}
-              <header className="mx-auto max-w-2xl text-center">
-                <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
-                  {bucket.eyebrow}
-                </p>
-                <h2 className="mt-3 font-heading text-2xl font-bold leading-tight tracking-tight text-foreground sm:text-3xl">
-                  {bucket.title}
-                </h2>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  {bucket.blurb}
-                </p>
-              </header>
+        {BUCKETS.map((bucket, bucketIdx) => {
+          // /ultrareview HIGH-3 fix: pick grid columns from the actual
+          // shape of each bucket so we never orphan a cell on `lg`.
+          //   - bucket with featured tile (2×2) + 3 normals (4 cells used,
+          //     4 cells available in 2 rows of 4-col) → lg:grid-cols-4.
+          //   - bucket without featured + 3 normals → lg:grid-cols-3.
+          //   - bucket without featured + 4 normals → lg:grid-cols-4.
+          // Anything else (2 features) keeps sm:grid-cols-2 only.
+          const hasFeatured = bucket.features.some((f) => f.featured);
+          const n = bucket.features.length;
+          const lgCols =
+            hasFeatured && n >= 4
+              ? 'lg:grid-cols-4'
+              : n >= 4
+                ? 'lg:grid-cols-4'
+                : n === 3
+                  ? 'lg:grid-cols-3'
+                  : '';
+          return (
+            <section
+              key={bucket.id}
+              id={bucket.id}
+              className="relative bg-background py-12 sm:py-16"
+            >
+              <div className="mx-auto max-w-6xl px-6">
+                {/* Bucket header — editorial chapter marker */}
+                <header className="mx-auto max-w-2xl text-center">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
+                    {bucket.eyebrow}
+                  </p>
+                  <h2 className="mt-3 font-heading text-2xl font-bold leading-tight tracking-tight text-foreground sm:text-3xl">
+                    {bucket.title}
+                  </h2>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                    {bucket.blurb}
+                  </p>
+                </header>
 
-              {/* Feature grid — featured tile uses col-span-2 row-span-2 on lg */}
-              <div className="mt-10 grid auto-rows-fr gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                {bucket.features.map((feature) => (
-                  <FeatureCard key={feature.anchor} feature={feature} />
-                ))}
+                {/* Feature grid — columns adapt to bucket shape (see comment above) */}
+                <div
+                  className={[
+                    'mt-10 grid auto-rows-fr gap-5 sm:grid-cols-2',
+                    lgCols,
+                  ]
+                    .join(' ')
+                    .trim()}
+                >
+                  {bucket.features.map((feature) => (
+                    <FeatureCard key={feature.anchor} feature={feature} />
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Ornament between buckets — skip after the last one */}
-            {bucketIdx < BUCKETS.length - 1 && (
-              <OrnamentDivider className="mt-16" glyph="❖" />
-            )}
-          </section>
-        ))}
+              {/* Ornament between buckets — skip after the last one */}
+              {bucketIdx < BUCKETS.length - 1 && (
+                <OrnamentDivider className="mt-16" glyph="❖" />
+              )}
+            </section>
+          );
+        })}
 
         {/* CTA strip */}
         <section className="relative bg-background py-20">
