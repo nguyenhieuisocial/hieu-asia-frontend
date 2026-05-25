@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import dynamic from 'next/dynamic';
 import {
   Button,
   Card,
@@ -15,7 +16,14 @@ import { Users, Crown, Shield, Eye, Plus, Pencil, Trash2, Search, Download, Hist
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
-import { AuditLogDrawer } from '@/components/admin/audit-drawer';
+// Wave 60.18 — AuditLogDrawer only renders when a user clicks "Log" on a
+// row. Lazy-import keeps the drawer (+ its react-query / sentry imports)
+// out of the initial users-page bundle. SSR off because the drawer is
+// purely an on-demand admin UI element.
+const AuditLogDrawer = dynamic(
+  () => import('@/components/admin/audit-drawer').then((m) => m.AuditLogDrawer),
+  { ssr: false },
+);
 import { EditableCell } from '@/components/admin/EditableCell';
 import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
 import { useBulkSelection } from '@/lib/bulk-action';
