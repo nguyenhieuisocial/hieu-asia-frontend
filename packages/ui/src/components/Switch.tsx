@@ -3,14 +3,29 @@
 import * as React from 'react';
 import { cn } from '../lib/utils';
 
+/**
+ * Wave 60.34b — A11y fix. The previous implementation nested a
+ * hidden `<input type="checkbox">` inside the `<button role="switch">`.
+ * Axe-core flagged it as `nested-interactive` (sub-agent Playwright
+ * repro on /onboarding via BirthDataForm). The hidden input was
+ * unnecessary: a `<button role="switch" aria-checked>` is a valid
+ * ARIA pattern on its own — screen readers + keyboard work without
+ * a backing checkbox (matches Radix / shadcn `Switch` convention).
+ *
+ * Breaking change: ref type changed `HTMLInputElement` → `HTMLButtonElement`.
+ * No callers in apps/web or apps/admin use `ref` on `<Switch>` (verified
+ * via grep) so the type bump is safe today. If form submission ever
+ * needs the value, render a sibling `<input type="hidden" name=... value=...>`
+ * outside the button (kept hidden = non-interactive = axe-safe).
+ */
 export interface SwitchProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange'> {
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type' | 'onClick' | 'onChange'> {
   checked?: boolean;
   defaultChecked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
 }
 
-export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(function Switch(
+export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function Switch(
   { className, checked, defaultChecked, onCheckedChange, disabled, ...props },
   ref,
 ) {
@@ -27,6 +42,7 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(function S
 
   return (
     <button
+      ref={ref}
       type="button"
       role="switch"
       aria-checked={isOn}
@@ -39,6 +55,7 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(function S
         isOn ? 'bg-gold' : 'bg-card',
         className,
       )}
+      {...props}
     >
       <span
         className={cn(
@@ -46,7 +63,6 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(function S
           isOn ? 'translate-x-6' : 'translate-x-1',
         )}
       />
-      <input ref={ref} type="checkbox" className="sr-only" checked={isOn} readOnly {...props} />
     </button>
   );
 });
