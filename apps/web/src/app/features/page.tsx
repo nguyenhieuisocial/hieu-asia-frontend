@@ -29,10 +29,10 @@ import {
   Hand,
   MessageSquareHeart,
   FileText,
-  Sun,
+  Sunrise,
   Share2,
   Globe2,
-  Activity,
+  CalendarClock,
 } from 'lucide-react';
 import { Button } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
@@ -150,7 +150,7 @@ const BUCKETS: readonly Bucket[] = [
         badge: 'premium',
       },
       {
-        Icon: Sun,
+        Icon: Sunrise,
         anchor: 'daily',
         title: 'Tử Vi hôm nay',
         desc: 'Mỗi sáng một thông điệp ngắn dựa trên lá số của bạn. Không phải tử vi chung chung — cá nhân hoá theo cung mệnh và đại vận hiện tại.',
@@ -162,9 +162,12 @@ const BUCKETS: readonly Bucket[] = [
   {
     id: 'extensions',
     eyebrow: 'Bucket 03',
-    title: 'Mở rộng',
+    // Wave 60.37.c HIGH-5 (sub-agent B): "Mở rộng" read as a junk drawer
+    // — affiliate (community) + i18n + realtime (infra) had no shared axis.
+    // Rename to a defensible 2-word grouping that legitimizes the cluster.
+    title: 'Cộng đồng & hạ tầng',
     blurb:
-      'Hạ tầng và công cụ xung quanh sản phẩm cốt lõi — chia sẻ với cộng đồng, dùng bằng ngôn ngữ của bạn, và luôn cập nhật theo thời gian.',
+      'Cộng đồng chia sẻ và hạ tầng vận hành — affiliate hoa hồng minh bạch, đa ngôn ngữ, đại vận lưu niên cập nhật theo thời gian thực.',
     features: [
       {
         Icon: Share2,
@@ -182,7 +185,7 @@ const BUCKETS: readonly Bucket[] = [
         cta: { href: '/?lang=en', label: 'View in English' },
       },
       {
-        Icon: Activity,
+        Icon: CalendarClock,
         anchor: 'realtime',
         title: 'Cập nhật theo thời gian thực',
         desc: 'Đại vận và lưu niên thay đổi theo ngày tháng. Hệ thống tự động cập nhật để bạn luôn có góc nhìn mới nhất.',
@@ -255,17 +258,18 @@ const FEATURES_FAQ: readonly FaqItem[] = [
 function FeatureBadge({ badge }: { badge: Exclude<Badge, null> }) {
   if (badge === 'premium') {
     return (
-      // /ultrareview HIGH-2: `text-gold` (#B8923D) on `bg-gold/10` over cream
-      // light bg lands ~2.8:1 — FAILS WCAG AA for small text. `text-gold-700`
-      // (#6B5424) clears AA (~6.5:1) in light mode while dark mode keeps the
-      // brand gold via `dark:text-gold` override.
-      <span className="inline-flex items-center rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-gold-700 dark:text-gold">
+      // /ultrareview HIGH-2: `text-gold` failed AA on cream → `text-gold-700`
+      // in light, `text-gold` in dark. Wave 60.37.c HIGH-6 (sub-agent B):
+      // drop `bg-gold/10` cream-on-cream blob, keep `border-gold/60` only —
+      // reads more architectural and competes less with the card's own bg.
+      <span className="inline-flex items-center rounded-full border border-gold/60 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-gold-700 dark:text-gold">
         Premium
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center rounded-full border border-jade/40 bg-jade/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-jade">
+    // Wave 60.37.c HIGH-6: same border-only treatment for symmetry.
+    <span className="inline-flex items-center rounded-full border border-jade/60 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-jade">
       Mới
     </span>
   );
@@ -360,7 +364,7 @@ export default function FeaturesPage() {
             className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,_rgba(59,39,84,0.4)_0%,_transparent_55%)]"
           />
           <div className="mx-auto max-w-4xl px-6 py-20 text-center sm:py-28">
-            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
+            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
               Sản phẩm — 10 tính năng · 3 chương
             </p>
             <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
@@ -403,7 +407,7 @@ export default function FeaturesPage() {
               <div className="mx-auto max-w-6xl px-6">
                 {/* Bucket header — editorial chapter marker */}
                 <header className="mx-auto max-w-2xl text-center">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
                     {bucket.eyebrow}
                   </p>
                   <h2 className="mt-3 font-heading text-2xl font-bold leading-tight tracking-tight text-foreground sm:text-3xl">
@@ -442,10 +446,18 @@ export default function FeaturesPage() {
         })}
 
         {/* CTA strip */}
-        <section className="relative bg-background py-20">
+        {/* Wave 60.37.c SUGGEST-13 (sub-agent B): add subtle gold radial
+            behind the CTA so the section reads as a "moment", not just
+            another row. Vercel/Linear pattern — single accent gradient
+            to mark the climax of the page. */}
+        <section className="relative isolate overflow-hidden bg-background py-20">
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(184,146,61,0.07),transparent_70%)]"
+          />
           <OrnamentDivider className="mb-12" glyph="❖" />
           <div className="mx-auto max-w-3xl px-6 text-center">
-            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
+            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
               Bắt đầu
             </p>
             <h2 className="mt-4 font-heading text-3xl font-bold text-foreground sm:text-4xl">
