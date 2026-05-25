@@ -12,7 +12,6 @@
  */
 
 import * as React from 'react';
-import * as Sentry from '@sentry/nextjs';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
@@ -38,6 +37,7 @@ import { EmptyState } from '@/components/admin/empty-state';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
 import { useBulkSelection } from '@/lib/bulk-action';
+import { trackAdminMutation } from '@/lib/admin-breadcrumb';
 
 interface Coupon {
   code: string;
@@ -207,24 +207,14 @@ export default function CouponsPage() {
   const revokeMut = useMutation({
     mutationFn: revokeCoupon,
     onSuccess: () => {
-      // Wave 60.15 — destructive coupon action — breadcrumb for incident trace.
-      // No code/value in data (coupon codes can leak campaign info).
-      Sentry.addBreadcrumb({
-        category: 'admin.mutation',
-        message: 'coupons.revoke:success',
-        level: 'info',
-      });
+      // Wave 60.15/60.16 — destructive action. No coupon code in data.
+      trackAdminMutation('coupons.revoke', 'success');
       toast.success('Đã revoke coupon');
       qc.invalidateQueries({ queryKey: ['admin', 'coupons'] });
     },
     onError: (e) => {
       const msg = (e as Error).message;
-      Sentry.addBreadcrumb({
-        category: 'admin.mutation',
-        message: 'coupons.revoke:failure',
-        level: 'warning',
-        data: { error: msg.slice(0, 200) },
-      });
+      trackAdminMutation('coupons.revoke', 'failure', { error: msg.slice(0, 200) });
       toast.error('Revoke thất bại', { description: msg });
     },
   });

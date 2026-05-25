@@ -8,7 +8,6 @@
  */
 
 import * as React from 'react';
-import * as Sentry from '@sentry/nextjs';
 import { useQuery } from '@tanstack/react-query';
 import {
   Card,
@@ -23,6 +22,7 @@ import { Flag } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
 import { useOptimisticMutation } from '@/lib/optimistic-mutation';
+import { trackAdminMutation } from '@/lib/admin-breadcrumb';
 
 interface FeatureFlag {
   key: string;
@@ -99,24 +99,16 @@ export default function FeatureFlagsPage() {
       };
     },
     onSuccess: (flag) => {
-      // Wave 60.15 — feature-flag toggle is reversible but high-blast-radius.
-      // Flag key + enabled state in breadcrumb data is operational config,
-      // not PII — safe to capture for incident reconstruction.
-      Sentry.addBreadcrumb({
-        category: 'admin.mutation',
-        message: 'feature-flags.toggle:success',
-        level: 'info',
-        data: { key: flag.key, enabled: flag.enabled },
+      // Wave 60.15/60.16 — flag key + enabled state IS operational config,
+      // not PII — safe to capture for "which flag flipped before incident?" trace.
+      trackAdminMutation('feature-flags.toggle', 'success', {
+        key: flag.key,
+        enabled: flag.enabled,
       });
       toast.success(`Đã ${flag.enabled ? 'bật' : 'tắt'} flag`, { description: flag.key });
     },
     onError: (e) => {
-      Sentry.addBreadcrumb({
-        category: 'admin.mutation',
-        message: 'feature-flags.toggle:failure',
-        level: 'warning',
-        data: { error: e.message.slice(0, 200) },
-      });
+      trackAdminMutation('feature-flags.toggle', 'failure', { error: e.message.slice(0, 200) });
       toast.error('Toggle thất bại', { description: e.message });
     },
   });
