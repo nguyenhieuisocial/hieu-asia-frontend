@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
+import { ReopenCmpButton } from '@/components/cmp/ReopenCmpButton';
 
 export const metadata = {
   title: 'Chính sách bảo mật',
@@ -542,33 +543,11 @@ export default function PrivacyPage() {
               <p className="mt-1 text-foreground/80">
                 Bạn có thể mở lại banner cookie và đổi tuỳ chọn bất cứ lúc nào:
               </p>
-              <button
-                type="button"
-                data-action="reopen-cmp"
-                className="mt-2 rounded-md border border-gold/40 px-3 py-1.5 text-xs font-semibold text-gold hover:bg-gold/10"
-              >
-                Quản lý cookies →
-              </button>
-              <script
-                dangerouslySetInnerHTML={{
-                  __html: `
-                    document.addEventListener('click', function(e) {
-                      var t = e.target;
-                      while (t && t.getAttribute) {
-                        if (t.getAttribute('data-action') === 'reopen-cmp') {
-                          try {
-                            window.localStorage.removeItem('hieu.consent.shown');
-                            document.cookie = 'hieu_consent_shown=false; Path=/; Max-Age=0; SameSite=Lax';
-                            window.dispatchEvent(new CustomEvent('hieu:consent:reopen'));
-                          } catch(e) {}
-                          return;
-                        }
-                        t = t.parentNode;
-                      }
-                    });
-                  `,
-                }}
-              />
+              {/* Wave 60.31 — extracted from inline <script dangerouslySetInnerHTML>.
+                  Same behaviour (clear consent localStorage+cookie, dispatch
+                  hieu:consent:reopen) via real React onClick + existing
+                  reopenBanner() helper. Removes XSS pattern footgun. */}
+              <ReopenCmpButton />
             </div>
             <div className="mt-4 rounded-md border border-jade/20 bg-jade/5 p-4 text-xs">
               <p className="font-semibold text-foreground">Sử dụng địa chỉ IP</p>
