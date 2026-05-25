@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
+import { colors } from '@hieu-asia/ui';
 
 export interface VendorCost {
   vendor: string;
@@ -10,8 +11,10 @@ export interface VendorCost {
   requests: number;
 }
 
+// Wave 60.9 — brand `anthropic` from shared token; non-brand vendors stay
+// on Tailwind defaults (intentional third-party visual distinction).
 const COLORS: Record<string, string> = {
-  anthropic: '#B8923D',
+  anthropic: colors.gold.DEFAULT,
   openai: '#4ADE80',
   google: '#60A5FA',
   cloudflare: '#F87171',

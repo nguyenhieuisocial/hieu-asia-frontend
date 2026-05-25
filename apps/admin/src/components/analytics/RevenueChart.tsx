@@ -2,6 +2,10 @@
 
 import * as React from 'react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import { colors } from '@hieu-asia/ui';
+
+// Wave 60.9 — labelStyle + Bar fill use shared `colors.gold.DEFAULT` token.
+const GOLD = colors.gold.DEFAULT;
 
 export interface RevenueDay {
   date: string;
@@ -25,13 +29,13 @@ export function RevenueChart({ data }: { data: RevenueDay[] }) {
               borderRadius: 8,
               fontSize: 12,
             }}
-            labelStyle={{ color: '#B8923D' }}
+            labelStyle={{ color: GOLD }}
             formatter={(value: unknown) => {
               const n = typeof value === 'number' ? value : Number(value);
               return [new Intl.NumberFormat('vi-VN').format(n) + ' đ', 'Doanh thu'];
             }}
           />
-          <Bar dataKey="amount" fill="#B8923D" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="amount" fill={GOLD} radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

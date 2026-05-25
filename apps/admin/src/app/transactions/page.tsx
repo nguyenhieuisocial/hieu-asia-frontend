@@ -386,7 +386,7 @@ export default function AdminTransactionsPage() {
                               ? 'border-jade/40 bg-jade/10 text-jade'
                               : r.type === 'refund'
                               ? 'border-red-400/40 bg-red-500/10 text-red-200'
-                              : 'border-[#B8923D]/30 bg-[#B8923D]/10 text-[#B8923D]'
+                              : 'border-gold/30 bg-gold/10 text-gold'
                           }`}
                         >
                           {r.type}

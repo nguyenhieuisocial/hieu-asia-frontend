@@ -233,12 +233,12 @@ export default function CustomersPage() {
               value={searchInput}
               onChange={(e) => { setSearchInput(e.target.value); setCursor(undefined); }}
               placeholder="Tìm theo tên, email hoặc telegram_id…"
-              className="rounded-md border border-gold/20 bg-card/60 px-3 py-2 text-sm text-foreground placeholder:text-foreground/30 focus:border-[#B8923D] focus:outline-none"
+              className="rounded-md border border-gold/20 bg-card/60 px-3 py-2 text-sm text-foreground placeholder:text-foreground/30 focus:border-gold focus:outline-none"
             />
             <select
               value={plan}
               onChange={(e) => { setPlan(e.target.value as PlanFilter); setCursor(undefined); }}
-              className="h-10 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground focus:border-[#B8923D] focus:outline-none"
+              className="h-10 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground focus:border-gold focus:outline-none"
             >
               {(Object.keys(PLAN_LABEL) as PlanFilter[]).map(p => (
                 <option key={p} value={p}>{PLAN_LABEL[p]}</option>

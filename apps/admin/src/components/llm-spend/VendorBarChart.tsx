@@ -11,10 +11,13 @@ import {
   CartesianGrid,
   Cell,
 } from 'recharts';
+import { colors } from '@hieu-asia/ui';
 import type { LlmDailyRow } from '@/lib/llm-spend-api';
 
+// Wave 60.9 — brand `anthropic` from shared token; non-brand vendors stay
+// on Tailwind defaults (intentional third-party visual distinction).
 const VENDOR_COLORS: Record<string, string> = {
-  anthropic: '#B8923D',
+  anthropic: colors.gold.DEFAULT,
   openai: '#4ADE80',
   google: '#60A5FA',
   'workers-ai': '#A78BFA',
@@ -58,7 +61,7 @@ export function VendorBarChart({ data }: { data: LlmDailyRow[] }) {
               borderRadius: 8,
               fontSize: 12,
             }}
-            labelStyle={{ color: '#B8923D' }}
+            labelStyle={{ color: colors.gold.DEFAULT }}
             formatter={(value: unknown, name) => {
               if (name === 'cost') {
                 const n = typeof value === 'number' ? value : Number(value);
@@ -69,7 +72,7 @@ export function VendorBarChart({ data }: { data: LlmDailyRow[] }) {
           />
           <Bar dataKey="cost" radius={[4, 4, 0, 0]}>
             {rows.map((r) => (
-              <Cell key={r.vendor} fill={VENDOR_COLORS[r.vendor] ?? '#D5B057'} />
+              <Cell key={r.vendor} fill={VENDOR_COLORS[r.vendor] ?? colors.gold[300]} />
             ))}
           </Bar>
         </BarChart>

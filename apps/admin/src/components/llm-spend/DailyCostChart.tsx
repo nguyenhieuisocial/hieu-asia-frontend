@@ -11,10 +11,14 @@ import {
   CartesianGrid,
   Legend,
 } from 'recharts';
+import { colors } from '@hieu-asia/ui';
 import type { LlmDailyRow } from '@/lib/llm-spend-api';
 
+// Wave 60.9 — brand-aligned `anthropic` color routes through shared `colors`
+// token from @hieu-asia/ui. Non-brand vendors (openai/google/cloudflare/groq)
+// stay on Tailwind defaults since they're meant to read as third-party.
 const VENDOR_COLORS: Record<string, string> = {
-  anthropic: '#B8923D',
+  anthropic: colors.gold.DEFAULT,
   openai: '#4ADE80',
   google: '#60A5FA',
   'workers-ai': '#A78BFA',
@@ -23,7 +27,7 @@ const VENDOR_COLORS: Record<string, string> = {
 };
 
 function colorFor(vendor: string): string {
-  return VENDOR_COLORS[vendor] ?? '#D5B057';
+  return VENDOR_COLORS[vendor] ?? colors.gold[300];
 }
 
 export function DailyCostChart({ data }: { data: LlmDailyRow[] }) {
@@ -70,7 +74,7 @@ export function DailyCostChart({ data }: { data: LlmDailyRow[] }) {
               borderRadius: 8,
               fontSize: 12,
             }}
-            labelStyle={{ color: '#B8923D' }}
+            labelStyle={{ color: colors.gold.DEFAULT }}
             formatter={(value: unknown, name) => {
               const n = typeof value === 'number' ? value : Number(value);
               return [`$${n.toFixed(4)}`, name];

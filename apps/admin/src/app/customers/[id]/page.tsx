@@ -509,7 +509,7 @@ export default function CustomerDetailPage() {
                         {fmtDate(t.created_at)}
                       </td>
                       <td className="px-4 py-2">
-                        <span className="rounded border border-[#B8923D]/30 bg-[#B8923D]/10 px-2 py-0.5 font-mono text-xs text-[#B8923D]">
+                        <span className="rounded border border-gold/30 bg-gold/10 px-2 py-0.5 font-mono text-xs text-gold">
                           {t.type}
                         </span>
                       </td>

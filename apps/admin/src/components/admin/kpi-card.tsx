@@ -11,7 +11,7 @@
  */
 
 import * as React from 'react';
-import { cn } from '@hieu-asia/ui';
+import { cn, colors } from '@hieu-asia/ui';
 
 export interface KpiCardProps {
   label: string;
@@ -36,10 +36,12 @@ const ACCENT_BAR: Record<NonNullable<KpiCardProps['accent']>, string> = {
   red: 'from-red-500/40 via-red-500/10 to-transparent',
 };
 
+// Wave 60.9 — accent stroke values sourced from shared brand tokens; `red`
+// stays on Tailwind red-500 hex (not a brand colour).
 const ACCENT_STROKE: Record<NonNullable<KpiCardProps['accent']>, string> = {
-  gold: '#B8923D',
-  jade: '#2D5F5A',
-  purple: '#3B2754',
+  gold: colors.gold.DEFAULT,
+  jade: colors.jade.DEFAULT,
+  purple: colors.purple.DEFAULT,
   red: '#ef4444',
 };
 

@@ -296,7 +296,7 @@ export default function VendorsPage() {
                       <tr key={r} className="hover:bg-gold/[0.03]">
                         <td className="px-3 py-2 font-mono text-xs text-foreground/85">{ROLE_LABEL[r]}</td>
                         <td className="px-3 py-2">
-                          <span className="rounded border border-[#B8923D]/30 bg-[#B8923D]/10 px-2 py-0.5 font-mono text-xs text-[#B8923D]">
+                          <span className="rounded border border-gold/30 bg-gold/10 px-2 py-0.5 font-mono text-xs text-gold">
                             {route.primary}
                           </span>
                         </td>

@@ -28,7 +28,7 @@ export function FunnelChart({ stages }: { stages: FunnelStage[] }) {
             </div>
             <div className="h-7 w-full overflow-hidden rounded bg-card/60">
               <div
-                className="h-full rounded bg-gradient-to-r from-[#B8923D] to-[#D5B057] transition-all"
+                className="h-full rounded bg-gradient-to-r from-gold to-gold-300 transition-all"
                 style={{ width: `${pct}%` }}
               />
             </div>
