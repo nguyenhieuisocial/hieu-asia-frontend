@@ -196,9 +196,210 @@ export default function SessionDetailPage() {
           <CardDescription>Mối quan tâm chính từ survey + input ban đầu.</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm leading-relaxed text-foreground/90">{s.primary_concern}</p>
+          <p className="text-sm leading-relaxed text-foreground/90">
+            {s.primary_concern && s.primary_concern !== '—'
+              ? s.primary_concern
+              : (
+                <span className="italic text-muted-foreground">
+                  (User chưa nhập mối quan tâm — survey/input ban đầu để trống.)
+                </span>
+              )}
+          </p>
         </CardContent>
       </Card>
+
+      {/* Wave 58.12 — Birth data, Tử Vi chart, Final Report, Insights chi tiết. */}
+      {s.state_json &&
+        (() => {
+          const sj = s.state_json as Record<string, unknown>;
+          const birth = (sj.birth_data ?? {}) as Record<string, unknown>;
+          const tuvi = (sj.tuvi_chart ?? {}) as Record<string, unknown>;
+          const insights = (sj.insights ?? {}) as Record<string, unknown>;
+          const reportMeta = (sj.report_meta ?? {}) as Record<string, unknown>;
+          const logicMeta = (sj.logic_meta ?? {}) as Record<string, unknown>;
+          const psychMeta = (sj.psychology_meta ?? {}) as Record<string, unknown>;
+          const alignMeta = (sj.alignment_meta ?? {}) as Record<string, unknown>;
+
+          const hasBirth = Object.keys(birth).length > 0;
+          const hasTuvi = Object.keys(tuvi).length > 0;
+          const hasInsights = Object.keys(insights).length > 0;
+          const hasMeta =
+            Object.keys(reportMeta).length > 0 ||
+            Object.keys(logicMeta).length > 0 ||
+            Object.keys(psychMeta).length > 0 ||
+            Object.keys(alignMeta).length > 0;
+
+          return (
+            <>
+              {hasBirth && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Dữ liệu sinh trắc</CardTitle>
+                    <CardDescription>Birth data đầu vào để lập lá số.</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <dl className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm sm:grid-cols-4">
+                      {Object.entries({
+                        display_name: 'Tên hiển thị',
+                        gender: 'Giới tính',
+                        birth_date: 'Ngày sinh',
+                        birth_time: 'Giờ sinh',
+                        birth_place: 'Nơi sinh',
+                        calendar: 'Lịch',
+                        timezone: 'Múi giờ',
+                        time_confidence: 'Độ chắc giờ',
+                      }).map(([key, label]) => {
+                        const v = birth[key];
+                        if (v == null || v === '') return null;
+                        return (
+                          <div key={key}>
+                            <dt className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                              {label}
+                            </dt>
+                            <dd className="mt-1 font-mono text-sm text-foreground">{String(v)}</dd>
+                          </div>
+                        );
+                      })}
+                    </dl>
+                  </CardContent>
+                </Card>
+              )}
+
+              {hasTuvi && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Tử Vi — Tứ Trụ</CardTitle>
+                    <CardDescription>4 trụ Năm · Tháng · Ngày · Giờ tính từ birth data.</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                      {['year', 'month', 'day', 'hour'].map((k) => {
+                        const labelMap: Record<string, string> = {
+                          year: 'Năm',
+                          month: 'Tháng',
+                          day: 'Ngày',
+                          hour: 'Giờ',
+                        };
+                        const v = tuvi[k];
+                        return (
+                          <div
+                            key={k}
+                            className="rounded-md border border-gold/20 bg-gold/5 px-3 py-2 text-center"
+                          >
+                            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                              {labelMap[k]}
+                            </div>
+                            <div className="mt-1 font-mono text-base text-gold">
+                              {(v as string) || '—'}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {s.final_report_markdown && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Báo cáo cuối</CardTitle>
+                    <CardDescription>
+                      {s.final_report_markdown.length} ký tự · sinh từ pipeline `report`.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="prose prose-sm prose-invert max-w-none whitespace-pre-wrap rounded-md border border-gold/10 bg-card/40 p-4 text-sm leading-relaxed text-foreground/90">
+                      {s.final_report_markdown}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {hasInsights && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Insights chi tiết</CardTitle>
+                    <CardDescription>
+                      Output thô của các step pipeline (logic · psychology · alignment · report).
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {(['logic', 'psychology', 'alignment', 'report'] as const).map((role) => {
+                        const txt = insights[role];
+                        if (typeof txt !== 'string' || !txt.trim()) return null;
+                        const titleMap = {
+                          logic: 'Logic Expert',
+                          psychology: 'Psychology Expert',
+                          alignment: 'Alignment Expert',
+                          report: 'Report Writer',
+                        } as const;
+                        return (
+                          <details
+                            key={role}
+                            className="rounded-md border border-gold/15 bg-card/30 px-3 py-2"
+                          >
+                            <summary className="cursor-pointer text-sm font-medium text-foreground/90">
+                              {titleMap[role]}{' '}
+                              <span className="text-[10px] text-muted-foreground">
+                                ({txt.length} chars)
+                              </span>
+                            </summary>
+                            <div className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-foreground/80">
+                              {txt}
+                            </div>
+                          </details>
+                        );
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {hasMeta && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Pipeline meta</CardTitle>
+                    <CardDescription>Vendor + model dùng cho từng role.</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
+                      {(
+                        [
+                          ['logic', logicMeta],
+                          ['psychology', psychMeta],
+                          ['alignment', alignMeta],
+                          ['report', reportMeta],
+                        ] as const
+                      ).map(([role, meta]) => {
+                        if (Object.keys(meta).length === 0) return null;
+                        return (
+                          <div
+                            key={role}
+                            className="rounded-md border border-gold/10 bg-card/40 px-3 py-2"
+                          >
+                            <dt className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                              {role}
+                            </dt>
+                            <dd className="mt-1 space-y-0.5 font-mono text-xs text-foreground/80">
+                              {Object.entries(meta).map(([k, v]) => (
+                                <div key={k} className="flex gap-2">
+                                  <span className="text-muted-foreground">{k}:</span>
+                                  <span className="truncate">{String(v)}</span>
+                                </div>
+                              ))}
+                            </dd>
+                          </div>
+                        );
+                      })}
+                    </dl>
+                  </CardContent>
+                </Card>
+              )}
+            </>
+          );
+        })()}
 
       {s.error && (
         <Card className="border-red-500/30">

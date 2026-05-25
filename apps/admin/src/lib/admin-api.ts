@@ -208,11 +208,14 @@ interface BackendSessionDetail {
   pipeline_status?: string;
   created_at?: string;
   updated_at?: string;
+  duration_seconds?: number | null;
   cost_usd?: number | string;
   primary_concern?: string;
   error?: string | null;
   final_report_markdown?: string | null;
   chat_history?: unknown[];
+  /** Full raw state_json for admin debugging (Wave 58.12 — Birth/Tử Vi/Insights). */
+  state_json?: Record<string, unknown>;
   [extra: string]: unknown;
 }
 
@@ -345,7 +348,9 @@ export async function getSession(id: string) {
     `/admin/sessions/${encodeURIComponent(id)}`,
   );
   if (real) {
-    // Map backend response fields to the frontend AdminSession shape
+    // Map backend response fields to the frontend AdminSession shape.
+    // Wave 58.12: also pass through state_json + duration_seconds for the
+    // detail page's new Birth/Tử Vi/Final Report/Insights sections.
     return {
       session_id: real.session_id,
       task_id: real.task_id || real.session_id,
@@ -355,19 +360,33 @@ export async function getSession(id: string) {
       created_at: real.created_at || new Date().toISOString(),
       completed_at:
         real.pipeline_status === 'completed' ? (real.updated_at ?? null) : null,
-      duration_seconds: null,
+      duration_seconds:
+        typeof real.duration_seconds === 'number' ? real.duration_seconds : null,
       cost_usd: Number(real.cost_usd ?? 0) || 0,
       primary_concern: real.primary_concern || '—',
       error: real.error || null,
       final_report_markdown: real.final_report_markdown || null,
       chat_history: real.chat_history || [],
+      state_json: real.state_json ?? null,
       _source: { isMock: false } as DataSource,
     };
   }
-  // Try fallback in mock sessions
+  // Try fallback in mock sessions. Enrich with the same shape as the real
+  // path so callers can read state_json/final_report_markdown without
+  // narrowing — they just see null/[]/null defaults in mock mode.
   const mockSess = MOCK_SESSIONS.find((s) => s.session_id === id);
   if (mockSess) {
-    return delay(mock(mockSess, 'gateway unreachable; showing mock'));
+    return delay(
+      mock(
+        {
+          ...mockSess,
+          final_report_markdown: null as string | null,
+          chat_history: [] as unknown[],
+          state_json: null as Record<string, unknown> | null,
+        },
+        'gateway unreachable; showing mock',
+      ),
+    );
   }
   return delay(null);
 }
