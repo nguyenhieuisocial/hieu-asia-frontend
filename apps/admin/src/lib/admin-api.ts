@@ -171,11 +171,49 @@ interface BackendSessionRow {
   updated_at: string;
 }
 
+/**
+ * Legacy `TaskModel` row returned by `postgres_store.list_sessions`. Has no
+ * `state_json` — `listSessions` distinguishes by checking that field.
+ */
+interface LegacyTaskRow {
+  session_id: string;
+  task_id?: string;
+  status?: string;
+  created_at?: string;
+  updated_at?: string;
+  error?: string | null;
+}
+
+type BackendSessionListRow = BackendSessionRow | LegacyTaskRow;
+
 interface SessionsEnvelope {
-  ok: boolean;
-  sessions?: BackendSessionRow[];
+  ok?: boolean;
+  sessions?: BackendSessionListRow[];
+  /** Legacy worker path may return `items` instead of `sessions`. */
+  items?: BackendSessionListRow[];
   total?: number;
   next_cursor?: string | null;
+}
+
+/**
+ * Detail returned by `GET /admin/sessions/:id`. Superset of list row + a few
+ * presentation fields. Uses index signature for forward-compat fields not
+ * yet pinned down.
+ */
+interface BackendSessionDetail {
+  session_id: string;
+  task_id?: string;
+  user_id?: string;
+  user_email?: string;
+  pipeline_status?: string;
+  created_at?: string;
+  updated_at?: string;
+  cost_usd?: number | string;
+  primary_concern?: string;
+  error?: string | null;
+  final_report_markdown?: string | null;
+  chat_history?: unknown[];
+  [extra: string]: unknown;
 }
 
 /** Map backend status strings → UI TaskStatus. */
@@ -241,26 +279,28 @@ export async function listSessions(
   if (q.status) qs.set('status', uiStatusToBackend(q.status));
   if (q.from) qs.set('from', q.from);
   if (q.to) qs.set('to', q.to);
-  const real = await proxyFetch<any>(`/admin/sessions?${qs.toString()}`);
+  const real = await proxyFetch<SessionsEnvelope>(`/admin/sessions?${qs.toString()}`);
   const sessionsList = real?.sessions || real?.items;
-  if (real?.ok !== false && Array.isArray(sessionsList)) {
-    let rows = sessionsList.map((row: any) => {
-      if (row.state_json) {
-        return mapBackendSession(row);
+  if (real && real.ok !== false && Array.isArray(sessionsList)) {
+    let rows = sessionsList.map((row): AdminSession => {
+      // BackendSessionRow has state_json (modern path); LegacyTaskRow doesn't.
+      if ('state_json' in row && row.state_json) {
+        return mapBackendSession(row as BackendSessionRow);
       }
-      // If it's a TaskModel row (e.g. from postgres_store list_sessions)
+      // Legacy TaskModel row (e.g. from postgres_store list_sessions)
+      const legacy = row as LegacyTaskRow;
       return {
-        session_id: row.session_id,
-        task_id: row.task_id || row.session_id,
-        user_id: `anon-${row.session_id}`,
-        user_email: `anon-${row.session_id}`,
-        status: normalizeStatus(row.status),
-        created_at: row.created_at || new Date().toISOString(),
-        completed_at: row.status === 'completed' ? row.updated_at : null,
+        session_id: legacy.session_id,
+        task_id: legacy.task_id || legacy.session_id,
+        user_id: `anon-${legacy.session_id}`,
+        user_email: `anon-${legacy.session_id}`,
+        status: normalizeStatus(legacy.status),
+        created_at: legacy.created_at || new Date().toISOString(),
+        completed_at: legacy.status === 'completed' ? (legacy.updated_at ?? null) : null,
         duration_seconds: null,
         cost_usd: 0,
         primary_concern: '—',
-        error: row.error || null,
+        error: legacy.error ?? null,
       };
     });
     // Search filter is applied client-side because Postgres needs a full-text
@@ -301,7 +341,9 @@ export async function listSessions(
 }
 
 export async function getSession(id: string) {
-  const real = await proxyFetch<any>(`/admin/sessions/${encodeURIComponent(id)}`);
+  const real = await proxyFetch<BackendSessionDetail>(
+    `/admin/sessions/${encodeURIComponent(id)}`,
+  );
   if (real) {
     // Map backend response fields to the frontend AdminSession shape
     return {
@@ -311,7 +353,8 @@ export async function getSession(id: string) {
       user_email: real.user_email || real.user_id || '—',
       status: normalizeStatus(real.pipeline_status),
       created_at: real.created_at || new Date().toISOString(),
-      completed_at: real.pipeline_status === 'completed' ? real.updated_at : null,
+      completed_at:
+        real.pipeline_status === 'completed' ? (real.updated_at ?? null) : null,
       duration_seconds: null,
       cost_usd: Number(real.cost_usd ?? 0) || 0,
       primary_concern: real.primary_concern || '—',
