@@ -70,6 +70,31 @@ function fmtDuration(sec: number | null) {
   return `${Math.floor(sec / 60)}m ${sec % 60}s`;
 }
 
+// Wave 60.20 — Compact label/value pair for the Request meta dl grid.
+// `value === undefined` renders as a muted "—" so missing fields stay
+// visible (helps the admin distinguish "no data captured" from "field
+// removed from API"). `mono` is used for IP / UA / referrer.
+function Field({
+  label,
+  value,
+  mono,
+  className,
+}: {
+  label: string;
+  value?: string;
+  mono?: boolean;
+  className?: string;
+}) {
+  return (
+    <div className={cn('space-y-0.5', className)}>
+      <dt className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{label}</dt>
+      <dd className={cn('text-sm text-foreground/90', mono && 'font-mono', !value && 'text-muted-foreground')}>
+        {value || '—'}
+      </dd>
+    </div>
+  );
+}
+
 export default function SessionDetailPage() {
   const params = useParams<{ id: string }>();
   const id = params?.id ?? '';
@@ -137,7 +162,9 @@ export default function SessionDetailPage() {
         Quay lại danh sách
       </Link>
 
-      {/* Header */}
+      {/* Wave 60.20 — Header refactor. Admin needs USER identity prominent
+          (email = the human), not the opaque session UUID. UUID demoted to
+          a small copy-chip below for support-ticket cross-reference. */}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
@@ -147,23 +174,29 @@ export default function SessionDetailPage() {
             </span>
             <StatusBadge status={STATUS_TONE[s.status]} label={STATUS_LABEL[s.status]} />
           </div>
-          <div className="mt-2 flex items-center gap-2">
-            <h1 className="truncate font-mono text-2xl font-semibold text-gold" title={s.session_id}>
+          <h1 className="mt-2 truncate text-2xl font-semibold text-foreground" title={s.user_email || 'Người dùng ẩn danh'}>
+            {s.user_email || <span className="italic text-muted-foreground">Người dùng ẩn danh</span>}
+          </h1>
+          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs">
+            <span className="rounded border border-gold/30 bg-gold/5 px-2 py-0.5 font-mono text-gold/80" title={s.session_id}>
               {s.session_id}
-            </h1>
+            </span>
             <button
               type="button"
               onClick={copyId}
-              className="inline-flex h-7 w-7 items-center justify-center rounded text-muted-foreground hover:bg-gold/10 hover:text-gold"
+              className="inline-flex h-6 items-center gap-1 rounded border border-border px-2 text-muted-foreground hover:bg-gold/10 hover:text-gold"
               aria-label="Copy session ID"
-              title="Copy session ID"
+              title="Copy full session ID"
             >
-              <Copy className="h-3.5 w-3.5" />
+              <Copy className="h-3 w-3" />
+              <span className="hidden sm:inline">Copy ID</span>
             </button>
+            {s.user_id && (
+              <span className="rounded border border-border px-2 py-0.5 font-mono text-muted-foreground" title={`user_id: ${s.user_id}`}>
+                u: {s.user_id.slice(0, 8)}…
+              </span>
+            )}
           </div>
-          <p className="mt-1 text-sm text-muted-foreground">
-            User: <span className="text-foreground">{s.user_email}</span>
-          </p>
         </div>
       </div>
 
@@ -208,6 +241,64 @@ export default function SessionDetailPage() {
           </p>
         </CardContent>
       </Card>
+
+      {/* Wave 60.20 — Request metadata card. Extracts IP / geo / user-agent /
+          referrer from state_json if the Worker captured them at session
+          creation. Missing fields show as "—" with a hint that Worker logging
+          needs to be extended (vault 94 deferred item). */}
+      {s.state_json && (() => {
+        const sj = s.state_json as Record<string, unknown>;
+        // Worker may write these under flat keys or under a `request` envelope.
+        const reqEnv = (sj.request ?? sj.client ?? {}) as Record<string, unknown>;
+        const ip = (sj.ip as string | undefined) ?? (sj.ip_address as string | undefined)
+          ?? (reqEnv.ip as string | undefined) ?? (reqEnv.cf_connecting_ip as string | undefined);
+        const country = (sj.country as string | undefined) ?? (reqEnv.country as string | undefined)
+          ?? (reqEnv.cf_country as string | undefined);
+        const city = (sj.city as string | undefined) ?? (reqEnv.city as string | undefined)
+          ?? (reqEnv.cf_city as string | undefined);
+        const region = (sj.region as string | undefined) ?? (reqEnv.region as string | undefined);
+        const ua = (sj.user_agent as string | undefined) ?? (reqEnv.user_agent as string | undefined)
+          ?? (reqEnv.ua as string | undefined);
+        const referrer = (sj.referrer as string | undefined) ?? (reqEnv.referrer as string | undefined)
+          ?? (reqEnv.referer as string | undefined);
+        const hasAny = ip || country || city || ua || referrer;
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 text-gold/70" aria-hidden />
+                Yêu cầu HTTP & vị trí
+              </CardTitle>
+              <CardDescription>
+                IP, vị trí địa lý, user-agent, và referrer của request tạo session. Cần thiết
+                cho audit, fraud check, và GDPR-DSAR exports.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {!hasAny ? (
+                <p className="text-xs italic text-muted-foreground">
+                  Worker chưa log request metadata vào <code className="font-mono text-gold/70">state_json</code>.
+                  Để hiển thị IP/geo/UA, cần extend Worker <code className="font-mono text-gold/70">handleReadingCreate</code>
+                  để ghi <code className="font-mono text-gold/70">ip / country / city / user_agent / referrer</code>
+                  từ Cloudflare request headers (<code className="font-mono text-gold/70">cf-connecting-ip</code>,{' '}
+                  <code className="font-mono text-gold/70">cf-ipcountry</code>,{' '}
+                  <code className="font-mono text-gold/70">request.cf.city</code>, etc.) vào reading_sessions.state_json.
+                  Tracked as Wave 60.20 follow-up in vault 94.
+                </p>
+              ) : (
+                <dl className="grid gap-3 sm:grid-cols-2">
+                  <Field label="IP" value={ip} mono />
+                  <Field label="Quốc gia" value={country} />
+                  <Field label="Thành phố" value={city} />
+                  <Field label="Vùng" value={region} />
+                  <Field label="User-Agent" value={ua} mono className="sm:col-span-2 break-all" />
+                  <Field label="Referrer" value={referrer} mono className="sm:col-span-2 break-all" />
+                </dl>
+              )}
+            </CardContent>
+          </Card>
+        );
+      })()}
 
       {/* Wave 58.12 — Birth data, Tử Vi chart, Final Report, Insights chi tiết. */}
       {s.state_json &&
