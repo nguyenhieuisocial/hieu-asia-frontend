@@ -59,6 +59,10 @@ const nextConfig: NextConfig = {
       // Speed Insights initiative produces zero metrics. /ultrareview sub-agent
       // caught this gap in Wave 60.29 pre-push audit.
       'https://va.vercel-scripts.com',
+      // Wave 60.34 — Cloudflare Web Analytics beacon (Playwright final-verify
+      // sub-agent flagged CSP block on /login). Cloudflare auto-injects the
+      // beacon script if CF Analytics is enabled on the zone proxy.
+      'https://static.cloudflareinsights.com',
     ]
       .filter(Boolean)
       .join(' ');
