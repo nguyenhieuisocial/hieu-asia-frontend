@@ -341,16 +341,28 @@ export default function SessionDetailPage() {
                           em: ({ children }) => (
                             <em className="italic text-foreground/90">{children}</em>
                           ),
-                          a: ({ href, children }) => (
-                            <a
-                              href={href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-gold underline-offset-2 hover:underline"
-                            >
-                              {children}
-                            </a>
-                          ),
+                          a: ({ href, children }) => {
+                            // Wave 60.4 retroactive /ultrareview fix —
+                            // final_report_markdown is LLM-generated. A
+                            // prompt-injected user concern could leak a
+                            // `javascript:` URI through to the report
+                            // markdown. react-markdown 10.x doesn't sanitize
+                            // href by default — allowlist safe protocols.
+                            const safe =
+                              href && /^(https?:|mailto:|\/|#)/i.test(href)
+                                ? href
+                                : undefined;
+                            return (
+                              <a
+                                href={safe}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-gold underline-offset-2 hover:underline"
+                              >
+                                {children}
+                              </a>
+                            );
+                          },
                           ul: ({ children }) => (
                             <ul className="my-3 ml-6 list-disc space-y-1 marker:text-gold/60">
                               {children}
