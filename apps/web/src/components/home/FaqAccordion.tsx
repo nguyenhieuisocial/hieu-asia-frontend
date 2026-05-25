@@ -62,13 +62,12 @@ export function FaqAccordion({
         </div>
 
         <div
-          /* Wave 60.35.a — first attempt was `bg-muted/40` which collapsed in
-             light mode (muted 36 20% 88% vs background 36 30% 92% = only 4%
-             lightness apart, 40% alpha kills the rest = invisible card).
-             /ultrareview HIGH-1: switch to `bg-card/60`. Light: card pure
-             white #FFF over cream bg → visible. Dark: card 240 10% 9% over
-             ink 240 8% 6% → visible. 60% alpha keeps both modes airy. */
-          className="mt-12 rounded-2xl border border-border bg-card/60 px-6"
+          /* Wave 60.35.a then 60.37 HIGH-5 (sub-agent A): `bg-card/60` read
+             as a pure white callout panel on cream in light mode — too
+             different from the rest of the page sections. Soften to /40
+             on mobile (less prominent), keep /60 from sm+ where the card
+             needs to anchor the FAQ as a distinct region. */
+          className="mt-12 rounded-2xl border border-border bg-card/40 sm:bg-card/60 px-6"
         >
           <Accordion type="single" collapsible className="w-full">
             {items.map((item, i) => (
