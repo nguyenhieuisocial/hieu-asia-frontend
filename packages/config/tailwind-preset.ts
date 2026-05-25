@@ -102,6 +102,13 @@ const preset = {
         'ink-radial':
           'radial-gradient(ellipse at top, rgba(184,146,61,0.10) 0%, hsl(var(--background)) 60%)',
       },
+      boxShadow: {
+        // Wave 60.11 — replaces the last hand-rolled `shadow-[inset_2px_0_0_0_#B8923D]`
+        // arbitrary utility in admin sidebar. A named shadow keeps the brand
+        // gold hex inside the preset (single source of truth) so a future
+        // gold palette tweak updates the rail too.
+        'gold-rail': 'inset 2px 0 0 0 #B8923D',
+      },
     },
   },
   plugins: [],

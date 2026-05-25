@@ -261,7 +261,7 @@ export function Sidebar() {
                           className={cn(
                             'flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors',
                             active
-                              ? 'bg-gradient-to-r from-gold/15 via-gold/5 to-transparent text-gold shadow-[inset_2px_0_0_0_#B8923D]'
+                              ? 'bg-gradient-to-r from-gold/15 via-gold/5 to-transparent text-gold shadow-gold-rail'
                               : 'text-foreground/75 hover:bg-gold/5 hover:text-foreground',
                           )}
                         >
