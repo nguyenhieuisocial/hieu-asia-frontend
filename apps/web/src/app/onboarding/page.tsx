@@ -53,7 +53,7 @@ export default function OnboardingPage() {
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-foreground/75">
             Trước khi bắt đầu, vui lòng xem các mục dữ liệu hieu.asia sẽ xử lý.
             Bạn có quyền từ chối hoặc rút lại đồng ý bất cứ lúc nào tại trang{' '}
-            <Link href="/account" className="text-gold underline-offset-4 hover:underline">
+            <Link href="/account" className="text-gold underline underline-offset-4 hover:opacity-80">
               Tài khoản
             </Link>
             .
@@ -86,7 +86,7 @@ export default function OnboardingPage() {
 
           <p className="mt-4 text-center text-xs text-muted-foreground">
             Chưa muốn quyết định ngay?{' '}
-            <Link href="/sample-report" className="text-gold underline-offset-4 hover:underline">
+            <Link href="/sample-report" className="text-gold underline underline-offset-4 hover:opacity-80">
               Xem báo cáo mẫu trước →
             </Link>
           </p>

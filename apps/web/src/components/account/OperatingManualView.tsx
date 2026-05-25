@@ -240,7 +240,7 @@ function SectionBlock({ section }: { section: ManualSection }) {
           {section.emptyHref ? (
             <Link
               href={section.emptyHref}
-              className="text-gold underline-offset-4 hover:underline"
+              className="text-gold underline underline-offset-4 hover:opacity-80"
             >
               {section.emptyLabel ?? 'bổ sung'}
             </Link>
@@ -426,7 +426,7 @@ function EmptyState({
                   {!c.done && (
                     <Link
                       href={c.href}
-                      className="text-xs text-gold underline-offset-4 hover:underline"
+                      className="text-xs text-gold underline underline-offset-4 hover:opacity-80"
                     >
                       {c.hint ?? 'Bắt đầu →'}
                     </Link>

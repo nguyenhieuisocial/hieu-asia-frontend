@@ -287,7 +287,7 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
               <button
                 type="button"
                 onClick={() => onNavigate('chart')}
-                className="text-gold underline-offset-4 hover:underline"
+                className="text-gold underline underline-offset-4 hover:opacity-80"
               >
                 lập lá số
               </button>

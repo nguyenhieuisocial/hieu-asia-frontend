@@ -321,14 +321,14 @@ export default function ModelCardPage() {
                 Model card này được review cùng với prompt version. Đọc thêm{' '}
                 <Link
                   href="/methodology"
-                  className="text-gold underline-offset-4 hover:underline"
+                  className="text-gold underline underline-offset-4 hover:opacity-80"
                 >
                   /methodology
                 </Link>{' '}
                 cho tổng quan và{' '}
                 <Link
                   href="/methodology/ai-safety"
-                  className="text-gold underline-offset-4 hover:underline"
+                  className="text-gold underline underline-offset-4 hover:opacity-80"
                 >
                   /methodology/ai-safety
                 </Link>{' '}

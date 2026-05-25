@@ -993,7 +993,7 @@ export default function MethodologyPage() {
             Bảng sub-processor đầy đủ và quyền user xem tại{' '}
             <Link
               href="/privacy"
-              className="text-gold underline-offset-4 hover:underline"
+              className="text-gold underline underline-offset-4 hover:opacity-80"
             >
               /privacy
             </Link>
@@ -1106,7 +1106,7 @@ export default function MethodologyPage() {
               <span>
                 Có thắc mắc về phương pháp?{' '}
                 <a
-                  className="text-gold underline-offset-4 hover:underline"
+                  className="text-gold underline underline-offset-4 hover:opacity-80"
                   href="mailto:methodology@hieu.asia"
                 >
                   methodology@hieu.asia
@@ -1114,7 +1114,7 @@ export default function MethodologyPage() {
                 . Báo cáo mẫu công khai tại{' '}
                 <Link
                   href="/sample-report"
-                  className="text-gold underline-offset-4 hover:underline"
+                  className="text-gold underline underline-offset-4 hover:opacity-80"
                 >
                   /sample-report
                 </Link>

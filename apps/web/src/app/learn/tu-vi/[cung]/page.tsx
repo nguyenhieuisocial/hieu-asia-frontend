@@ -176,13 +176,13 @@ export default async function LearnPalacePage({
               Nội dung trong trang này là kiến thức nền tảng để bạn tự đối chiếu — không phải
               dự đoán định mệnh, không thay thế lời khuyên y tế, pháp lý hay tài chính
               chuyên môn. Đọc thêm{' '}
-              <Link href="/methodology" className="text-gold underline-offset-4 hover:underline">
+              <Link href="/methodology" className="text-gold underline underline-offset-4 hover:opacity-80">
                 phương pháp đầy đủ
               </Link>{' '}
               và{' '}
               <Link
                 href="/methodology/tu-vi"
-                className="text-gold underline-offset-4 hover:underline"
+                className="text-gold underline underline-offset-4 hover:opacity-80"
               >
                 trường phái Tử Vi
               </Link>{' '}

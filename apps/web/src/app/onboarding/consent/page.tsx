@@ -165,11 +165,11 @@ export default function OnboardingConsentPage() {
           </h1>
           <p className="mt-4 text-sm leading-relaxed text-foreground/75 sm:text-base">
             hieu.asia tách rõ dữ liệu bắt buộc và dữ liệu tuỳ chọn. Bạn có thể đổi lựa chọn bất kỳ lúc nào trong{' '}
-            <Link href="/account" className="text-gold underline-offset-4 hover:underline">
+            <Link href="/account" className="text-gold underline underline-offset-4 hover:opacity-80">
               Tài khoản
             </Link>
             . Chi tiết tại{' '}
-            <Link href="/privacy" className="text-gold underline-offset-4 hover:underline">
+            <Link href="/privacy" className="text-gold underline underline-offset-4 hover:opacity-80">
               Chính sách bảo mật
             </Link>
             .

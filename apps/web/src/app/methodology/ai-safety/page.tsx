@@ -320,7 +320,7 @@ export default function AiSafetyPage() {
                       href={o.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-3 inline-flex items-center gap-1 text-xs text-gold underline-offset-4 hover:underline"
+                      className="mt-3 inline-flex items-center gap-1 text-xs text-gold underline underline-offset-4 hover:opacity-80"
                     >
                       Xem framework
                       <ExternalLink className="h-3 w-3" aria-hidden />
@@ -547,14 +547,14 @@ export default function AiSafetyPage() {
                 Liên quan:{' '}
                 <Link
                   href="/methodology/model-card"
-                  className="text-gold underline-offset-4 hover:underline"
+                  className="text-gold underline underline-offset-4 hover:opacity-80"
                 >
                   /methodology/model-card
                 </Link>{' '}
                 ·{' '}
                 <Link
                   href="/methodology"
-                  className="text-gold underline-offset-4 hover:underline"
+                  className="text-gold underline underline-offset-4 hover:opacity-80"
                 >
                   /methodology
                 </Link>

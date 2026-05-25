@@ -684,7 +684,7 @@ export default function MethodologyTuViPage() {
                     Nếu công thức này thay đổi,{' '}
                     <Link
                       href="/methodology/algorithm-changelog"
-                      className="text-gold underline-offset-4 hover:underline"
+                      className="text-gold underline underline-offset-4 hover:opacity-80"
                     >
                       /methodology/algorithm-changelog
                     </Link>{' '}
@@ -1037,7 +1037,7 @@ export default function MethodologyTuViPage() {
                   Mentor sẽ ưu tiên hỏi lại thay vì đoán cứng. Bạn có thể dùng{' '}
                   <Link
                     href="/tu-vi/rectify"
-                    className="text-gold underline-offset-4 hover:underline"
+                    className="text-gold underline underline-offset-4 hover:opacity-80"
                   >
                     /tu-vi/rectify
                   </Link>{' '}

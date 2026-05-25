@@ -136,7 +136,7 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
               setComment(existing.comment ?? '');
               setEditing(true);
             }}
-            className="text-gold underline-offset-2 hover:underline"
+            className="text-gold underline underline-offset-2 hover:opacity-80"
           >
             Sửa
           </button>

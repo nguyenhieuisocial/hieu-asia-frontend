@@ -33,7 +33,7 @@ export function SharedManualView({ manual }: { manual: OperatingManual }) {
             Để tạo sổ tay của riêng bạn,{' '}
             <Link
               href="/account/operating-manual"
-              className="text-gold underline-offset-4 hover:underline"
+              className="text-gold underline underline-offset-4 hover:opacity-80"
               onClick={(e) => {
                 // Strip the hash so the view reloads in "own data" mode.
                 if (typeof window !== 'undefined') {

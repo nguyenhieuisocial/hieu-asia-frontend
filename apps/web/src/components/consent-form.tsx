@@ -103,7 +103,7 @@ export function ConsentForm() {
             </span>
             <span className="mt-1 block text-xs text-foreground/75">
               Theo Nghị định 13/2023/NĐ-CP. Mã hoá AES-256, không bán dữ liệu, có quyền rút lại bất cứ lúc nào tại{' '}
-              <a href="/account" className="text-gold underline-offset-4 hover:underline">trang Tài khoản</a>.
+              <a href="/account" className="text-gold underline underline-offset-4 hover:opacity-80">trang Tài khoản</a>.
             </span>
           </span>
         </label>

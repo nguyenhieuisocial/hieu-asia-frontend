@@ -354,7 +354,7 @@ export default function PrivacyPage() {
           <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/85">
             <div className="rounded-md border border-jade/30 bg-jade/10 p-4">
               <p>
-                <strong className="text-jade">Ảnh bàn tay và ảnh chân dung:</strong>{' '}
+                <strong className="text-foreground">Ảnh bàn tay và ảnh chân dung:</strong>{' '}
                 <strong className="text-foreground">TỰ ĐỘNG XÓA SAU 7 NGÀY</strong> kể từ khi báo cáo
                 được xử lý xong. Sau khi vision AI trích xuất đặc điểm, ảnh gốc sẽ bị xóa vĩnh viễn.
               </p>
