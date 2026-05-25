@@ -16,6 +16,7 @@ import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
 import { AuditLogDrawer } from '@/components/admin/audit-drawer';
+import { EditableCell } from '@/components/admin/EditableCell';
 import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
 import { useBulkSelection } from '@/lib/bulk-action';
 import { useSavedFilters } from '@/lib/saved-filters';
@@ -459,7 +460,9 @@ export default function AdminUsersPage() {
                 </thead>
                 <tbody>
                   {filtered.map((u) => {
-                    const RoleIcon = ROLE_ICON[u.role];
+                    // Wave 60.10 — RoleIcon now lives inside EditableCell `display`
+                    // renderer below; removed from outer scope to keep this map
+                    // tight (was: const RoleIcon = ROLE_ICON[u.role];).
                     const isOwner = u.role === 'owner';
                     const isSelected = bulk.isSelected(u.id);
                     return (
@@ -483,15 +486,49 @@ export default function AdminUsersPage() {
                         </td>
                         <td className="px-4 py-3 text-foreground">{u.email}</td>
                         <td className="px-4 py-3">
-                          <span
-                            className={cn(
-                              'inline-flex items-center gap-1.5 rounded border px-2 py-0.5 text-xs font-medium',
-                              ROLE_TONE[u.role],
-                            )}
-                          >
-                            <RoleIcon className="h-3 w-3" />
-                            {ROLE_LABEL[u.role]}
-                          </span>
+                          {/* Wave 60.10 — inline-edit role (admin↔viewer only).
+                              Owner stays modal-only because promote/demote-owner
+                              needs the existing confirmation flow. */}
+                          <EditableCell
+                            variant="select"
+                            value={u.role}
+                            disabled={isOwner}
+                            disabledReason="Owner role chỉ đổi qua modal Sửa"
+                            ariaLabel="Role"
+                            options={[
+                              { value: 'admin', label: ROLE_LABEL.admin },
+                              { value: 'viewer', label: ROLE_LABEL.viewer },
+                            ]}
+                            onSave={async (newRole) => {
+                              const role = newRole as AdminRole;
+                              const r = await fetch(`/api/admin/users/${u.id}`, {
+                                method: 'PATCH',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ role }),
+                              });
+                              const data = await r.json().catch(() => ({}));
+                              if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
+                              // Optimistic local update + flash; full refresh
+                              // happens via existing mutation refresh path on
+                              // next user action (avoids extra fetch per cell).
+                              setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, role } : x)));
+                              showFlash('ok', `${u.email} → ${ROLE_LABEL[role]}`);
+                            }}
+                            display={(v) => {
+                              const Icon = ROLE_ICON[v as AdminRole];
+                              return (
+                                <span
+                                  className={cn(
+                                    'inline-flex items-center gap-1.5 rounded border px-2 py-0.5 text-xs font-medium',
+                                    ROLE_TONE[v as AdminRole],
+                                  )}
+                                >
+                                  <Icon className="h-3 w-3" />
+                                  {ROLE_LABEL[v as AdminRole]}
+                                </span>
+                              );
+                            }}
+                          />
                         </td>
                         <td className="px-4 py-3">
                           <div className="font-mono text-xs text-foreground/85" title={u.created_at}>
