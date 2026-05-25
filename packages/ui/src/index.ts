@@ -1,6 +1,30 @@
 // Utilities
 export { cn } from './lib/utils';
 
+// Design tokens (Wave 60 — programmatic counterpart of tailwind-preset).
+// Use for charts/SVG/PDF/non-Tailwind contexts. JSX should prefer Tailwind
+// utility classes (bg-ink, text-gold, etc.). See `tokens.ts` for full docs.
+export {
+  colors,
+  chartSeries,
+  states as brandStates,
+  fontFamilies,
+  fontSizes,
+  lineHeights,
+  spacing,
+  maxWidths,
+  radii,
+  durations,
+  easings,
+  breakpoints,
+  shadows,
+  forbiddenPhrases,
+  wordmark,
+  tagline,
+  tokens,
+} from './tokens';
+export type { Tokens } from './tokens';
+
 // shadcn/ui primitives (re-export — actual components added by `pnpm dlx shadcn add`
 // at install-time. Stubs below are minimal so the package builds before that.)
 export { Button } from './components/Button';
