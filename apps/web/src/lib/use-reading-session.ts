@@ -126,47 +126,59 @@ export function useReadingSession(
         return;
       }
 
-      channel = supabase
-        .channel(`reading-session-${readingId}`)
-        .on(
-          'postgres_changes',
-          {
-            event: 'UPDATE',
-            schema: 'hieu_asia',
-            table: 'reading_sessions',
-            filter: `session_id=eq.${readingId}`,
-          },
-          (payload: { new?: Record<string, unknown> }) => {
+      // iOS WebKit (and other strict contexts) can throw DOMException
+      // SecurityError synchronously from `new WebSocket(...)` inside Supabase
+      // Realtime's `.subscribe()` / reconnect path. Wrap to fall back to
+      // polling instead of bubbling to the React commit phase.
+      // Fixes HIEU-ASIA-WORKER-7 + HIEU-ASIA-WORKER-8.
+      try {
+        channel = supabase
+          .channel(`reading-session-${readingId}`)
+          .on(
+            'postgres_changes',
+            {
+              event: 'UPDATE',
+              schema: 'hieu_asia',
+              table: 'reading_sessions',
+              filter: `session_id=eq.${readingId}`,
+            },
+            (payload: { new?: Record<string, unknown> }) => {
+              if (cancelled) return;
+              const nextState = extractStateFromRow(payload.new);
+              if (nextState) setState(nextState);
+              // Re-fetch the shaped Reading so consumers always see a
+              // consistent view (insights/report fields, not raw JSONB).
+              void fetchOnce();
+            },
+          )
+          .subscribe((status: string) => {
             if (cancelled) return;
-            const nextState = extractStateFromRow(payload.new);
-            if (nextState) setState(nextState);
-            // Re-fetch the shaped Reading so consumers always see a
-            // consistent view (insights/report fields, not raw JSONB).
-            void fetchOnce();
-          },
-        )
-        .subscribe((status: string) => {
-          if (cancelled) return;
-          if (status === 'SUBSCRIBED') {
-            setTransport('realtime');
-            if (graceTimer) {
-              window.clearTimeout(graceTimer);
-              graceTimer = undefined;
+            if (status === 'SUBSCRIBED') {
+              setTransport('realtime');
+              if (graceTimer) {
+                window.clearTimeout(graceTimer);
+                graceTimer = undefined;
+              }
+            } else if (
+              status === 'CHANNEL_ERROR' ||
+              status === 'TIMED_OUT' ||
+              status === 'CLOSED'
+            ) {
+              startPolling();
             }
-          } else if (
-            status === 'CHANNEL_ERROR' ||
-            status === 'TIMED_OUT' ||
-            status === 'CLOSED'
-          ) {
-            startPolling();
-          }
-        });
+          });
 
-      // Grace window: if Realtime doesn't reach SUBSCRIBED, switch to polling.
-      graceTimer = window.setTimeout(() => {
-        if (cancelled) return;
+        // Grace window: if Realtime doesn't reach SUBSCRIBED, switch to polling.
+        graceTimer = window.setTimeout(() => {
+          if (cancelled) return;
+          startPolling();
+        }, REALTIME_CONNECT_GRACE_MS);
+      } catch {
+        // WebSocket constructor or subscribe threw synchronously
+        // (iOS Safari/Chrome-iOS WebKit SecurityError). Fall back to polling.
+        channel = null;
         startPolling();
-      }, REALTIME_CONNECT_GRACE_MS);
+      }
     });
 
     return () => {
