@@ -17,16 +17,20 @@
  * inflation, no fake review stars.
  */
 
-import { ShieldCheck, Globe2, ScrollText } from 'lucide-react';
+import { ShieldCheck, Globe2, ScrollText, Layers, CreditCard } from 'lucide-react';
 
-interface Pillar {
+export interface Pillar {
   Icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
   value: string;
   label: string;
   detail: string;
 }
 
-const PILLARS: readonly Pillar[] = [
+/**
+ * Default pillars — pricing-flavored (refund safety, infra, methodology).
+ * Optimized for the conversion-decision moment on `/pricing`.
+ */
+export const PRICING_PILLARS: readonly Pillar[] = [
   {
     Icon: ShieldCheck,
     value: '24 giờ',
@@ -47,11 +51,43 @@ const PILLARS: readonly Pillar[] = [
   },
 ];
 
+/**
+ * Wave 60.37.d HIGH-8 (sub-agent B): features-flavored pillars — product-
+ * discovery focused, not conversion-safety focused. Users on /features are
+ * exploring, not paying yet. Pillars match the page topic:
+ *   - "10 tính năng" mirrors the hero eyebrow.
+ *   - "Không cần thẻ" matches the CTA strip promise ("Miễn phí, không cần thẻ").
+ *   - "Phương pháp minh bạch" kept — most relevant trust signal for a
+ *     methodology-driven product on its capabilities page.
+ */
+export const FEATURES_PILLARS: readonly Pillar[] = [
+  {
+    Icon: Layers,
+    value: '10',
+    label: 'Tính năng · 3 chương',
+    detail: 'Tử Vi · Bát Tự · MBTI · Palm · Mentor và 5 cái khác.',
+  },
+  {
+    Icon: CreditCard,
+    value: 'Miễn phí',
+    label: 'Không yêu cầu thẻ',
+    detail: 'Khảo sát đầu vào không thu phí, không cần đăng ký tài khoản.',
+  },
+  {
+    Icon: ScrollText,
+    value: 'Mở',
+    label: 'Phương pháp minh bạch',
+    detail: 'Mỗi báo cáo kèm prompt + dữ liệu nguồn. Không hộp đen.',
+  },
+];
+
 interface TrustStripProps {
   className?: string;
+  /** Custom 3-pillar set. Defaults to PRICING_PILLARS (refund safety). */
+  pillars?: readonly Pillar[];
 }
 
-export function TrustStrip({ className }: TrustStripProps) {
+export function TrustStrip({ className, pillars = PRICING_PILLARS }: TrustStripProps) {
   return (
     <ul
       className={[
@@ -59,7 +95,7 @@ export function TrustStrip({ className }: TrustStripProps) {
         className ?? '',
       ].join(' ')}
     >
-      {PILLARS.map(({ Icon, value, label, detail }) => (
+      {pillars.map(({ Icon, value, label, detail }) => (
         // Wave 60.37 — Sub-agent A CRIT-3 + HIGH-3: bg-card/30 invisible in
         // both modes, value text-xl orphans short labels like "Edge"/"Mở".
         // Bump bg → bg-card/70 (sharp contrast in dark over ink, clear white

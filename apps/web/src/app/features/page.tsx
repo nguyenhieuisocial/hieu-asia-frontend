@@ -40,7 +40,9 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 // Wave 60.35 — editorial refinement (refined-minimalism direction).
 import { OrnamentDivider } from '@/components/marketing/OrnamentDivider';
-import { TrustStrip } from '@/components/marketing/TrustStrip';
+// Wave 60.37.d — page-specific pillars so /features doesn't duplicate
+// the conversion-safety pillars users already saw on /pricing.
+import { TrustStrip, FEATURES_PILLARS } from '@/components/marketing/TrustStrip';
 
 export const metadata: Metadata = {
   title: 'Tính năng',
@@ -376,7 +378,7 @@ export default function FeaturesPage() {
               vào cùng một người. AI Mentor ngồi cạnh để hỏi tiếp khi bạn cần
               chiều sâu. Bạn vẫn là người quyết định.
             </p>
-            <TrustStrip className="mt-10" />
+            <TrustStrip className="mt-10" pillars={FEATURES_PILLARS} />
           </div>
           <OrnamentDivider className="mt-2 mb-12" />
         </section>
