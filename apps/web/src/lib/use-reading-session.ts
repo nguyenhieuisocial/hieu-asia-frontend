@@ -13,6 +13,7 @@
  */
 
 import * as React from 'react';
+import * as Sentry from '@sentry/nextjs';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import {
   ApiClientError,
@@ -173,9 +174,15 @@ export function useReadingSession(
           if (cancelled) return;
           startPolling();
         }, REALTIME_CONNECT_GRACE_MS);
-      } catch {
+      } catch (err) {
         // WebSocket constructor or subscribe threw synchronously
         // (iOS Safari/Chrome-iOS WebKit SecurityError). Fall back to polling.
+        // Capture to Sentry so we can monitor fallback rate per device/region
+        // and detect new SecurityError variants slipping through.
+        Sentry.captureException(err, {
+          tags: { area: 'realtime-fallback', hook: 'useReadingSession' },
+          extra: { readingId },
+        });
         channel = null;
         startPolling();
       }
