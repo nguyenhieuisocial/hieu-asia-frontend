@@ -1,15 +1,36 @@
 # Lint + test + build affected packages for the pnpm/turbo monorepo.
 # Secrets required: none.
+#
+# Wave 60.25 — quota trim. Free-plan private-repo Actions quota is 2,000
+# min/month and this workflow runs full pnpm install (~60s) + turbo
+# lint/test/build (~90s) per commit. Two efficiency gates:
+#   1. `paths-ignore` skips runs on pure-docs commits (README/markdown/
+#      vault sync) and workflow-only edits since they can't change code
+#      behaviour. Saves ~150s × every docs commit.
+#   2. `concurrency` cancels in-flight runs when a newer commit lands on
+#      the same ref, so rapid pushes don't queue redundant builds.
 name: ci
 
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - 'LICENSE'
   pull_request:
     branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - 'LICENSE'
 
 permissions:
   contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   ci:
