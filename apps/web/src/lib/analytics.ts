@@ -90,6 +90,18 @@ export function track(event: string, properties?: Record<string, unknown>): void
   }
 
   // 3. Worker KV via Next.js proxy
+  //
+  // Wave 60.36 — skip $-prefix events. PostHog reserves the `$` prefix for
+  // system events (`$web_vitals`, `$pageview`, `$autocapture`, ...). Our
+  // Worker `/analytics/event` validates `event_name` against the typed
+  // business-funnel vocabulary and returns 400 for anything starting with
+  // `$`. Before the guard, every page load fired 2-3× $web_vitals (TTFB,
+  // FCP, LCP, CLS, INP) which all 400'd — polluting the browser console
+  // and Sentry without any actionable signal. Layers 1/2/4 still fire so
+  // PostHog cohort analysis on $web_vitals is unaffected.
+  if (event.startsWith('$')) {
+    return;
+  }
   try {
     const userId = (() => {
       try {
