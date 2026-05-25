@@ -495,6 +495,7 @@ export default function AdminUsersPage() {
                             disabled={isOwner}
                             disabledReason="Owner role chỉ đổi qua modal Sửa"
                             ariaLabel="Role"
+                            breadcrumbTag="users.role"
                             options={[
                               { value: 'admin', label: ROLE_LABEL.admin },
                               { value: 'viewer', label: ROLE_LABEL.viewer },

@@ -36,6 +36,11 @@ interface EditableCellBaseProps<T extends string> {
   disabledReason?: string;
   /** ARIA label for the editor input. */
   ariaLabel?: string;
+  /** Wave 60.13 — forwards to `useInlineEdit` Sentry breadcrumb (e.g.
+   * "users.role", "coupons.notes"). Lets Sentry post-mortem filter
+   * inline-edit events by surface. Falsy = no tag emitted. Values NEVER
+   * appear in breadcrumb data (PII-safe). */
+  breadcrumbTag?: string;
   className?: string;
 }
 
@@ -59,12 +64,13 @@ export type EditableCellProps<T extends string = string> =
   | EditableSelectCellProps<T>;
 
 export function EditableCell<T extends string = string>(props: EditableCellProps<T>) {
-  const { value, onSave, display, disabled, disabledReason, ariaLabel, className } = props;
+  const { value, onSave, display, disabled, disabledReason, ariaLabel, breadcrumbTag, className } = props;
   // Internal hook uses T (or string for text variant); cast at this single
   // boundary lets the public API stay generic without leaking `as T` to JSX.
   const edit = useInlineEdit<T | string>({
     initialValue: value,
     onSave: onSave as (v: T | string) => Promise<void>,
+    breadcrumbTag,
   });
 
   // Discriminant-narrowed display caller. Without this helper, calling

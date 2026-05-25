@@ -19,6 +19,7 @@
  */
 
 import * as React from 'react';
+import * as Sentry from '@sentry/nextjs';
 
 export interface UseInlineEditOptions<T> {
   initialValue: T;
@@ -26,6 +27,10 @@ export interface UseInlineEditOptions<T> {
   /** Reset draft to `initialValue` after a failed save. Default: false (keep
    * draft so user can retry / edit further). Set true for one-shot saves. */
   rollbackOnError?: boolean;
+  /** Optional breadcrumb tag — appears in Sentry breadcrumb `data.tag` so
+   * post-mortem search can filter inline-edit events by surface (e.g.
+   * "users.role", "coupons.notes"). Falsy = no tag emitted. */
+  breadcrumbTag?: string;
 }
 
 export interface UseInlineEdit<T> {
@@ -43,6 +48,7 @@ export function useInlineEdit<T>({
   initialValue,
   onSave,
   rollbackOnError = false,
+  breadcrumbTag,
 }: UseInlineEditOptions<T>): UseInlineEdit<T> {
   const [editing, setEditing] = React.useState(false);
   const [draft, setDraft] = React.useState<T>(initialValue);
@@ -70,17 +76,40 @@ export function useInlineEdit<T>({
   const save = React.useCallback(async () => {
     setSaving(true);
     setError(null);
+    // Wave 60.13 — Sentry breadcrumb for post-mortem reconstruction of admin
+    // action flows. We log only a `changed` boolean + the caller-supplied tag,
+    // NEVER raw values, so adopting this hook on PII-bearing fields (email,
+    // name) stays GDPR/CCPA-safe out of the box.
+    const t0 = Date.now();
+    const changed = draft !== initialValue;
     try {
       await onSave(draft);
+      Sentry.addBreadcrumb({
+        category: 'admin.inline-edit',
+        message: 'save:success',
+        level: 'info',
+        data: { tag: breadcrumbTag, changed, duration_ms: Date.now() - t0 },
+      });
       setEditing(false);
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Lưu thất bại';
+      Sentry.addBreadcrumb({
+        category: 'admin.inline-edit',
+        message: 'save:failure',
+        level: 'warning',
+        data: {
+          tag: breadcrumbTag,
+          changed,
+          duration_ms: Date.now() - t0,
+          error: msg.slice(0, 200), // cap message length to avoid breadcrumb bloat
+        },
+      });
       setError(msg);
       if (rollbackOnError) setDraft(initialValue);
     } finally {
       setSaving(false);
     }
-  }, [draft, onSave, initialValue, rollbackOnError]);
+  }, [draft, onSave, initialValue, rollbackOnError, breadcrumbTag]);
 
   return { editing, draft, saving, error, startEdit, cancel, setDraft, save };
 }
