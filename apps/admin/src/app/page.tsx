@@ -19,6 +19,7 @@
 
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
+import dynamic from 'next/dynamic';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 import {
   Users,
@@ -27,7 +28,18 @@ import {
   DollarSign,
   Coins,
 } from 'lucide-react';
-import { ReadingsChart } from '@/components/cost-chart';
+// Wave 60.12 — ReadingsChart lazy-loaded so Recharts (~150KB gzipped) is
+// no longer in the initial bundle. KPI cards above-fold paint first; chart
+// chunk loads in parallel and hydrates when the user scrolls past the KPIs.
+// `ssr: false` because admin is auth-gated and not SEO-indexed — saves a
+// server-side render pass on a non-critical widget.
+const ReadingsChart = dynamic(
+  () => import('@/components/cost-chart').then((m) => m.ReadingsChart),
+  {
+    ssr: false,
+    loading: () => <div className="h-72 animate-pulse rounded bg-muted/30" aria-hidden />,
+  },
+);
 import { MockBanner } from '@/components/mock-banner';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { HealthWidget } from '@/components/admin/health-widget';
