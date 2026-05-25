@@ -49,7 +49,7 @@ export function CostChart({ data }: CostChartProps) {
               borderRadius: 8,
               fontSize: 12,
             }}
-            labelStyle={{ color: '#B8923D' }}
+            labelStyle={{ color: GOLD }}
           />
           <Legend wrapperStyle={{ fontSize: 11, color: 'rgba(242,237,227,0.7)' }} />
           {models.map((m, i) => (
@@ -81,7 +81,7 @@ export function ReadingsChart({ data }: ReadingsChartProps) {
               borderRadius: 8,
               fontSize: 12,
             }}
-            labelStyle={{ color: '#B8923D' }}
+            labelStyle={{ color: GOLD }}
           />
           <Line type="monotone" dataKey="count" stroke={GOLD} strokeWidth={2} dot={false} name="Tổng" />
           <Line type="monotone" dataKey="failed" stroke={RED_FAIL} strokeWidth={1.5} dot={false} name="Lỗi" />
