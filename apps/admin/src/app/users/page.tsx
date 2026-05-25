@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import * as Sentry from '@sentry/nextjs';
 import {
   Button,
   Card,
@@ -181,6 +182,15 @@ export default function AdminUsersPage() {
   const runBulkSuspend = React.useCallback(async () => {
     setBulkPending(true);
     const ids = Array.from(bulk.selected);
+    const t0 = Date.now();
+    // Wave 60.14 — Sentry breadcrumb for incident reconstruction. PII-safe:
+    // only logs count + ok/fail aggregates, never per-user IDs/emails.
+    Sentry.addBreadcrumb({
+      category: 'admin.mutation',
+      message: 'users.bulk-suspend:attempt',
+      level: 'info',
+      data: { count: ids.length },
+    });
     let ok = 0;
     let fail = 0;
     for (const id of ids) {
@@ -197,6 +207,12 @@ export default function AdminUsersPage() {
         fail += 1;
       }
     }
+    Sentry.addBreadcrumb({
+      category: 'admin.mutation',
+      message: 'users.bulk-suspend:result',
+      level: fail > 0 ? 'warning' : 'info',
+      data: { ok, fail, duration_ms: Date.now() - t0 },
+    });
     setBulkPending(false);
     setBulkSuspendOpen(false);
     bulk.clear();
@@ -637,12 +653,32 @@ export default function AdminUsersPage() {
           user={deleting}
           onClose={() => setDeleting(null)}
           onConfirm={async () => {
-            const r = await fetch(`/api/admin/users/${deleting.id}`, { method: 'DELETE' });
-            const data = await r.json();
-            if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
-            setDeleting(null);
-            showFlash('ok', `Đã xóa ${deleting.email}`);
-            await refreshAfterMutation();
+            // Wave 60.14 — Sentry breadcrumb for destructive admin action.
+            // PII-safe: no email in breadcrumb data; only outcome tag.
+            const t0 = Date.now();
+            try {
+              const r = await fetch(`/api/admin/users/${deleting.id}`, { method: 'DELETE' });
+              const data = await r.json();
+              if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
+              Sentry.addBreadcrumb({
+                category: 'admin.mutation',
+                message: 'users.delete:success',
+                level: 'info',
+                data: { duration_ms: Date.now() - t0 },
+              });
+              setDeleting(null);
+              showFlash('ok', `Đã xóa ${deleting.email}`);
+              await refreshAfterMutation();
+            } catch (err) {
+              const msg = err instanceof Error ? err.message : 'Xóa thất bại';
+              Sentry.addBreadcrumb({
+                category: 'admin.mutation',
+                message: 'users.delete:failure',
+                level: 'warning',
+                data: { duration_ms: Date.now() - t0, error: msg.slice(0, 200) },
+              });
+              throw err; // re-throw so ConfirmDeleteModal still surfaces the error
+            }
           }}
         />
       )}
