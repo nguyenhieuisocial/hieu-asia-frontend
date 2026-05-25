@@ -9,6 +9,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { sbServer } from '@/lib/supabase-server';
+import { requireAdminSession } from '@/lib/auth-server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -25,6 +26,10 @@ interface PayoutRow {
 }
 
 export async function GET(req: NextRequest) {
+  // Wave 60.28 — RULE AUTH-1 defense-in-depth (vault 94).
+  const auth = await requireAdminSession();
+  if ('error' in auth) return auth.error;
+
   const url = new URL(req.url);
   const status = url.searchParams.get('status'); // 'pending' | 'paid' | null
   const limit = Math.min(Number(url.searchParams.get('limit') ?? 200) || 200, 500);

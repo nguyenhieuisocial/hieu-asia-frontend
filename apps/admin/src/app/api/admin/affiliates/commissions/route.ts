@@ -7,6 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { sbServer } from '@/lib/supabase-server';
+import { requireAdminSession } from '@/lib/auth-server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -40,6 +41,13 @@ const ALLOWED_STATUSES = new Set([
 ]);
 
 export async function GET(req: NextRequest) {
+  // Wave 60.28 — defense-in-depth: middleware HMAC-verifies the cookie
+  // globally, but adding the explicit guard here protects against future
+  // middleware regressions / matcher drift exposing this service-role
+  // query path. RULE AUTH-1 (vault 94).
+  const auth = await requireAdminSession();
+  if ('error' in auth) return auth.error;
+
   const url = new URL(req.url);
   const statusParam = url.searchParams.get('status') ?? 'held,available';
   const statuses = statusParam
@@ -88,6 +96,11 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  // Wave 60.28 — RULE AUTH-1 defense-in-depth. PATCH is mutation
+  // (manual commission clawback), so require admin+ role for safety.
+  const auth = await requireAdminSession('admin');
+  if ('error' in auth) return auth.error;
+
   const body = (await req.json().catch(() => ({}))) as { id?: string; status?: string };
   if (!body.id || !body.status) {
     return NextResponse.json({ ok: false, error: 'id + status required' }, { status: 400 });

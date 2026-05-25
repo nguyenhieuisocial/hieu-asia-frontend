@@ -7,8 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { sbServer } from '@/lib/supabase-server';
-import { cookies } from 'next/headers';
-import { ADMIN_SESSION_COOKIE, verifySession } from '@/lib/auth';
+import { requireAdminSession } from '@/lib/auth-server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -30,6 +29,10 @@ interface BatchRow {
 const ALLOWED_NEXT = new Set(['approved', 'rejected']);
 
 export async function GET() {
+  // Wave 60.28 — RULE AUTH-1 defense-in-depth (vault 94).
+  const auth = await requireAdminSession();
+  if ('error' in auth) return auth.error;
+
   const r = await sbServer<BatchRow[]>(
     'affiliate_payout_batches?select=*&order=created_at.desc&limit=200',
   );
@@ -43,6 +46,15 @@ export async function GET() {
 }
 
 export async function PATCH(req: NextRequest) {
+  // Wave 60.28 — RULE AUTH-1 STRENGTHENED: previous code used
+  // `verifySession()` only for email attribution with `?? 'admin'` fallback,
+  // which meant unauthenticated PATCH would silently write `approved_by='admin'`
+  // (weak defense-in-depth). New helper fail-closes on missing/invalid session.
+  // PATCH = batch approval (financial mutation) → require admin+ role.
+  const auth = await requireAdminSession('admin');
+  if ('error' in auth) return auth.error;
+  const adminEmail = auth.session.email;
+
   const body = (await req.json().catch(() => ({}))) as { id?: string; status?: string };
   if (!body.id || !body.status) {
     return NextResponse.json({ ok: false, error: 'id + status required' }, { status: 400 });
@@ -50,10 +62,6 @@ export async function PATCH(req: NextRequest) {
   if (!ALLOWED_NEXT.has(body.status)) {
     return NextResponse.json({ ok: false, error: `status must be one of ${[...ALLOWED_NEXT].join(',')}` }, { status: 400 });
   }
-
-  const cookieStore = await cookies();
-  const session = await verifySession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
-  const adminEmail = session?.email ?? 'admin';
 
   const payload: Record<string, unknown> = {
     status: body.status,

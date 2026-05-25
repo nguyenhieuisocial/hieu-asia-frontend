@@ -6,6 +6,7 @@
 
 import { NextResponse } from 'next/server';
 import { sbServer } from '@/lib/supabase-server';
+import { requireAdminSession } from '@/lib/auth-server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -21,6 +22,10 @@ interface AuditRow {
 }
 
 export async function GET() {
+  // Wave 60.28 — RULE AUTH-1 defense-in-depth (vault 94).
+  const auth = await requireAdminSession();
+  if ('error' in auth) return auth.error;
+
   const r = await sbServer<AuditRow[]>(
     'audit_log?select=*&action=like.affiliate*&order=timestamp.desc&limit=10',
   );

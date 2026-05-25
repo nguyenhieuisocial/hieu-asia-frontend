@@ -7,6 +7,7 @@
 
 import { NextResponse } from 'next/server';
 import { sbServer } from '@/lib/supabase-server';
+import { requireAdminSession } from '@/lib/auth-server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -37,6 +38,10 @@ interface UserRow {
 }
 
 export async function GET() {
+  // Wave 60.28 — RULE AUTH-1 defense-in-depth (vault 94).
+  const auth = await requireAdminSession();
+  if ('error' in auth) return auth.error;
+
   const [netR, subR] = await Promise.all([
     sbServer<NetworkRow[]>('affiliate_network?select=*&order=created_at.desc&limit=500'),
     sbServer<SubtreeRow[]>('affiliate_subtree_stats?select=*'),
