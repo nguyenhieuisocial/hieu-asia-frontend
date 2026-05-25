@@ -8,6 +8,7 @@
  */
 
 import * as React from 'react';
+import * as Sentry from '@sentry/nextjs';
 import { useQuery } from '@tanstack/react-query';
 import {
   Card,
@@ -98,9 +99,26 @@ export default function FeatureFlagsPage() {
       };
     },
     onSuccess: (flag) => {
+      // Wave 60.15 — feature-flag toggle is reversible but high-blast-radius.
+      // Flag key + enabled state in breadcrumb data is operational config,
+      // not PII — safe to capture for incident reconstruction.
+      Sentry.addBreadcrumb({
+        category: 'admin.mutation',
+        message: 'feature-flags.toggle:success',
+        level: 'info',
+        data: { key: flag.key, enabled: flag.enabled },
+      });
       toast.success(`Đã ${flag.enabled ? 'bật' : 'tắt'} flag`, { description: flag.key });
     },
-    onError: (e) => toast.error('Toggle thất bại', { description: e.message }),
+    onError: (e) => {
+      Sentry.addBreadcrumb({
+        category: 'admin.mutation',
+        message: 'feature-flags.toggle:failure',
+        level: 'warning',
+        data: { error: e.message.slice(0, 200) },
+      });
+      toast.error('Toggle thất bại', { description: e.message });
+    },
   });
 
   const enabledCount = flags.filter((f) => f.enabled).length;
