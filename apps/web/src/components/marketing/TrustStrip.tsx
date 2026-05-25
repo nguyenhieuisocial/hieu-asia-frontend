@@ -60,19 +60,22 @@ export function TrustStrip({ className }: TrustStripProps) {
       ].join(' ')}
     >
       {PILLARS.map(({ Icon, value, label, detail }) => (
+        // Wave 60.37 — Sub-agent A CRIT-3 + HIGH-3: bg-card/30 invisible in
+        // both modes, value text-xl orphans short labels like "Edge"/"Mở".
+        // Bump bg → bg-card/70 (sharp contrast in dark over ink, clear white
+        // card over cream in light). Combine value+label into one heading
+        // line so short labels never sit alone in dead vertical space.
         <li
           key={label}
-          className="flex flex-col gap-2 rounded-xl border border-border/60 bg-card/30 p-4 backdrop-blur-sm"
+          className="flex flex-col gap-2 rounded-xl border border-border bg-card/70 p-4"
         >
           <div className="flex items-center gap-2">
-            <Icon className="h-4 w-4 shrink-0 text-gold/80" aria-hidden={true} />
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-              {label}
+            <Icon className="h-4 w-4 shrink-0 text-gold" aria-hidden={true} />
+            <p className="font-heading text-base font-semibold leading-tight text-foreground">
+              <span className="text-gold">{value}</span>
+              <span className="font-normal text-muted-foreground"> · {label}</span>
             </p>
           </div>
-          <p className="font-heading text-xl font-semibold leading-none text-foreground">
-            {value}
-          </p>
           <p className="text-xs leading-relaxed text-muted-foreground">{detail}</p>
         </li>
       ))}

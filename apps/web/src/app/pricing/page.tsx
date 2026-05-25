@@ -397,12 +397,10 @@ export default function PricingPage() {
               cáo chưa được tạo; sau đó vẫn xem xét hoàn tiền 14 ngày khi có lỗi
               kỹ thuật hoặc trải nghiệm không đúng mô tả.
             </p>
-            {!sessionId && (
-              <p className="mx-auto mt-5 inline-flex items-center gap-2 rounded-full border border-gold/25 bg-gold/5 px-4 py-1.5 text-xs text-gold/90">
-                <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
-                Hoàn tiền 24h trước-inference · Bảo vệ thanh toán
-              </p>
-            )}
+            {/* Wave 60.37 CRIT-4 (sub-agent A) — pill removed: refund fact
+                is already stated in the hero body AND in TrustStrip pillar 1
+                ("24 giờ · Hoàn tiền không hỏi"). Same fact three times in
+                200px = noise. Keep TrustStrip as the canonical trust signal. */}
 
             {/*
               Wave 52-A — period toggle removed: Mentor Monthly and Mentor
@@ -522,11 +520,14 @@ function TierCard({
       className={[
         'relative flex flex-col rounded-2xl border p-6 transition-transform duration-300',
         // Wave 60.35 — featured tier ("Phổ biến nhất") gets thicker gold
-        // border, ink-tinted background and a desktop-only visual lift
-        // (translate-y + subtle scale). Mobile keeps it flush — saves
-        // vertical scroll on phones where every tier is already stacked.
+        // border + desktop-only lift (translate + scale). Mobile flush.
+        // Wave 60.37 HIGH-1 (sub-agent A): light-mode shadow added so the
+        // lifted card is anchored visually (dark mode glow already did this).
+        // Wave 60.37 HIGH-6: gold gradient bumped from /[0.08] → /15 in
+        // light because /[0.08] over cream was visually invisible — border
+        // was carrying all the differentiation alone.
         tier.highlighted
-          ? 'border-gold/70 border-2 bg-gradient-to-b from-gold/[0.08] via-gold/[0.03] to-transparent shadow-[0_0_80px_-20px_rgba(184,146,61,0.55)] lg:-translate-y-3 lg:scale-[1.02]'
+          ? 'border-gold/70 border-2 bg-gradient-to-b from-gold/15 via-gold/[0.04] to-transparent shadow-[0_24px_60px_-30px_rgba(184,146,61,0.45)] dark:from-gold/[0.08] dark:via-gold/[0.03] dark:shadow-[0_0_80px_-20px_rgba(184,146,61,0.55)] lg:-translate-y-3 lg:scale-[1.02]'
           : 'border-border bg-card/40',
         highlight && !tier.highlighted ? 'ring-2 ring-gold/40' : '',
       ].join(' ')}
@@ -551,8 +552,14 @@ function TierCard({
         <p className="mt-1 text-xs text-muted-foreground">{perMonth}</p>
       )}
       {discount && (
-        <p className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[11px] font-medium text-emerald-300">
-          Tiết kiệm {discount.percent}% · {discount.monthsFree} tháng miễn phí
+        // Wave 60.37 CRIT-2 (sub-agent A): emerald pill on cream/ink was the
+        // loudest pixel — overshouted the gold "Phổ biến nhất" badge on
+        // featured tier. Brand spec is 90/8/2 (ink·gold·purple), no jade-
+        // leak. Tone down to gold so featured stays dominant. Detail
+        // "X tháng miễn phí" already covered by `perMonth` line above —
+        // keep just the % saving to avoid triple-stated math.
+        <p className="mt-2 inline-flex w-fit items-center gap-1 rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[11px] font-medium text-gold-700 dark:text-gold">
+          Tiết kiệm {discount.percent}%
         </p>
       )}
       <ul className="mt-5 space-y-2 text-sm">
@@ -572,7 +579,14 @@ function TierCard({
           );
         })}
       </ul>
-      <Button onClick={onSelect} className="mt-6 w-full">
+      {/* Wave 60.37 CRIT-1 (sub-agent A): non-highlighted tiers use outline
+          variant so the featured "Phổ biến nhất" tier's solid gold CTA wins
+          the eye. Pattern is already used in ComparisonTable (line 661). */}
+      <Button
+        onClick={onSelect}
+        variant={tier.highlighted ? 'default' : 'outline'}
+        className="mt-6 w-full"
+      >
         {tier.cta}
       </Button>
     </article>

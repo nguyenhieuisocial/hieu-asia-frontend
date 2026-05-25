@@ -90,12 +90,16 @@ const BUCKETS: readonly Bucket[] = [
     blurb:
       'Nền tảng Đông phương truyền thống kết hợp khung tâm lý hiện đại. Bốn lăng kính độc lập — bạn so sánh, không bị một nguồn duy nhất chi phối.',
     features: [
+      // Wave 60.37 CRIT-3 (sub-agent B): 3/4 CTAs in this bucket all said
+      // "Tìm hiểu/Khám phá X" — eye reads them as identical buttons. Rewrite
+      // each to hint at the concrete action so users see destination
+      // diversity (sample lá số · interpretation · calculator · upload).
       {
         Icon: Compass,
         anchor: 'tu-vi',
         title: 'Tử Vi Đẩu Số 12 cung',
         desc: 'Lá số Bắc phái với 114 sao chính và phụ. Bản đồ 12 lĩnh vực đời sống — sự nghiệp, tài chính, tình cảm, sức khoẻ — kèm đại vận và lưu niên.',
-        cta: { href: '/learn/tu-vi', label: 'Tìm hiểu Tử Vi' },
+        cta: { href: '/learn/tu-vi', label: 'Xem lá số mẫu' },
         featured: true,
       },
       {
@@ -103,21 +107,21 @@ const BUCKETS: readonly Bucket[] = [
         anchor: 'bat-tu',
         title: 'Bát Tự Tứ Trụ',
         desc: 'Bốn trụ Năm – Tháng – Ngày – Giờ theo Ngũ Hành. Hiểu năng lượng bẩm sinh và cách cân bằng Kim, Mộc, Thuỷ, Hoả, Thổ.',
-        cta: { href: '/learn/bat-tu', label: 'Tìm hiểu Bát Tự' },
+        cta: { href: '/learn/bat-tu', label: 'Đọc giải nghĩa' },
       },
       {
         Icon: Hash,
         anchor: 'numerology-mbti',
         title: 'Thần Số Học & MBTI',
         desc: 'Số chủ đạo từ ngày sinh kết hợp 16 nhóm tính cách MBTI — khung tự nhận thức nhanh, dễ áp dụng vào công việc và quan hệ.',
-        cta: { href: '/learn/than-so-hoc', label: 'Khám phá Số học' },
+        cta: { href: '/learn/than-so-hoc', label: 'Tính số chủ đạo' },
       },
       {
         Icon: Hand,
         anchor: 'palm',
         title: 'Palm Reading AI',
         desc: 'Upload ảnh lòng bàn tay — AI vision phân tích đường tâm đạo, trí đạo, sinh đạo. Dùng được khi không có giờ sinh.',
-        cta: { href: '/learn/palm', label: 'Tìm hiểu Palm' },
+        cta: { href: '/learn/palm', label: 'Tải ảnh bàn tay' },
         badge: 'premium',
       },
     ],
@@ -283,10 +287,13 @@ function FeatureCard({ feature }: { feature: Feature }) {
         'group relative flex flex-col overflow-hidden rounded-2xl border bg-card/40 p-6 transition-all duration-300',
         'hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]',
         // Featured tile spans 2×2 on lg+. Border bumped to gold to mark it
-        // as the cluster anchor without resorting to scale tricks that
-        // wreck the grid math.
+        // as the cluster anchor.
+        // Wave 60.37 HIGH-4 (sub-agent B): the gold/purple gradient at
+        // /[0.06] + /[0.04] was visually invisible in light mode (gold-on-
+        // cream at 6% alpha = no diff). Bump light to /15 + /6 so the
+        // "this is the flagship" signal survives both themes.
         featured
-          ? 'border-gold/50 bg-gradient-to-br from-gold/[0.06] via-card/40 to-purple/[0.04] lg:col-span-2 lg:row-span-2 lg:p-8'
+          ? 'border-gold/50 bg-gradient-to-br from-gold/15 via-card/40 to-purple/[0.06] dark:from-gold/[0.06] dark:to-purple/[0.04] lg:col-span-2 lg:row-span-2 lg:p-8'
           : 'border-border',
       ].join(' ')}
     >
@@ -306,7 +313,10 @@ function FeatureCard({ feature }: { feature: Feature }) {
         {badge && <FeatureBadge badge={badge} />}
       </div>
 
-      <h2
+      {/* Wave 60.37 HIGH-7 (sub-agent B): card titles nested inside an h2-headed
+          bucket should be h3 not h2 — WCAG 1.3.1 heading hierarchy. Visual
+          weight unchanged (Tailwind classes drive style, not the tag). */}
+      <h3
         className={[
           'font-heading font-bold leading-tight text-foreground',
           // Vault 102 typography — body cards 20px/700, featured 28px on lg.
@@ -314,7 +324,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
         ].join(' ')}
       >
         {title}
-      </h2>
+      </h3>
       <p
         className={[
           'mt-2 flex-1 leading-relaxed text-muted-foreground',
@@ -369,22 +379,20 @@ export default function FeaturesPage() {
 
         {/* Categorised feature buckets */}
         {BUCKETS.map((bucket, bucketIdx) => {
-          // /ultrareview HIGH-3 fix: pick grid columns from the actual
-          // shape of each bucket so we never orphan a cell on `lg`.
-          //   - bucket with featured tile (2×2) + 3 normals (4 cells used,
-          //     4 cells available in 2 rows of 4-col) → lg:grid-cols-4.
-          //   - bucket without featured + 3 normals → lg:grid-cols-3.
-          //   - bucket without featured + 4 normals → lg:grid-cols-4.
-          // Anything else (2 features) keeps sm:grid-cols-2 only.
+          // Wave 60.37 CRIT-1 (sub-agent B): bucket-02/03 had `sm:grid-cols-2`
+          // which orphaned card #3 alone on row 2 of the tablet viewport
+          // (768px). Promote to `md:grid-cols-3` for 3-card buckets so the
+          // orphan never exists between sm and lg. Featured-bucket keeps
+          // lg:grid-cols-4 (the 2×2 anchor + 3 normals math).
           const hasFeatured = bucket.features.some((f) => f.featured);
           const n = bucket.features.length;
           const lgCols =
             hasFeatured && n >= 4
               ? 'lg:grid-cols-4'
               : n >= 4
-                ? 'lg:grid-cols-4'
+                ? 'md:grid-cols-3 lg:grid-cols-4'
                 : n === 3
-                  ? 'lg:grid-cols-3'
+                  ? 'md:grid-cols-3'
                   : '';
           return (
             <section
@@ -421,9 +429,13 @@ export default function FeaturesPage() {
                 </div>
               </div>
 
-              {/* Ornament between buckets — skip after the last one */}
+              {/* Wave 60.37 CRIT-2 (sub-agent B): glyph hierarchy was inverted —
+                  heavier ❖ was used BETWEEN buckets (transitional) while the
+                  lighter default ◆ landed before the CTA strip (the climax).
+                  Swap: ◆ for transitions, ❖ for the climax (matches
+                  OrnamentDivider's own JSDoc "❖ for sections with more weight"). */}
               {bucketIdx < BUCKETS.length - 1 && (
-                <OrnamentDivider className="mt-16" glyph="❖" />
+                <OrnamentDivider className="mt-16" />
               )}
             </section>
           );
@@ -431,7 +443,7 @@ export default function FeaturesPage() {
 
         {/* CTA strip */}
         <section className="relative bg-background py-20">
-          <OrnamentDivider className="mb-12" />
+          <OrnamentDivider className="mb-12" glyph="❖" />
           <div className="mx-auto max-w-3xl px-6 text-center">
             <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
               Bắt đầu
