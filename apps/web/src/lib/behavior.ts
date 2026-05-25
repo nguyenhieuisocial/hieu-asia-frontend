@@ -272,12 +272,15 @@ export function wireBehaviorTracking(): void {
   document.addEventListener(
     "focusin",
     (e) => {
-      const t = e.target as HTMLElement | null;
-      if (!t) return;
+      // Guard: synthetic focusin can fire with target === document/window
+      // (esp. Android Chrome 148+). Document has no .closest() method, so
+      // unguarded cast caused HIEU-ASIA-WORKER-9 TypeError.
+      const t = e.target;
+      if (!(t instanceof Element)) return;
       const form = t.closest("form") as HTMLFormElement | null;
       if (!form) return;
       const s = getOrInitFormState(form);
-      const field = fieldIdentity(t);
+      const field = fieldIdentity(t as HTMLElement);
       if (field) s.lastFocusField = field;
       if (s.startedAt === 0) {
         s.startedAt = Date.now();
