@@ -44,11 +44,27 @@ export function ConsentBanner(): React.ReactElement | null {
   // mobile visitors see the slim pill; tapping "Tuỳ chỉnh" expands into the
   // existing full layout (and skips straight to granular toggles).
   const [collapsed, setCollapsed] = React.useState(true);
+  // Wave 60.19 — GDPR/Vietnam-PDPD compliance. Per CJEU Planet49
+  // (C-673/17, 2019) pre-ticked consent boxes are INVALID consent for
+  // non-essential cookies in the EU. VN Decree 13/2023 Art. 11 requires
+  // consent be expressed clearly via an opt-in action — pre-ticked fails.
+  // Banner shows in VN + EU + UK + BR + CA (per `shouldShowBanner()`);
+  // remaining jurisdictions get silent legitimate-interest defaults
+  // applied without a banner. Defensible under opt-out regimes
+  // (CCPA/CPRA, Switzerland revFADP) but a KNOWN GAP for emerging opt-in
+  // regimes (India DPDPA 2023, Australia tightening, future expansion
+  // tracked in vault 94 Wave 60.19 entry).
+  //
+  // When the banner IS rendered, all optional toggles default to unchecked.
+  // Two one-click escape paths:
+  //   - "Chấp nhận tất cả" → opts in to analytics+marketing+personalization
+  //   - "Chỉ cần thiết"     → keeps everything off
+  // …with "Tuỳ chỉnh" + "Lưu" available for granular per-category opt-in.
   const [draft, setDraft] = React.useState<Pick<ConsentState, "analytics" | "marketing" | "personalization">>(
     {
-      analytics: true,
+      analytics: false,
       marketing: false,
-      personalization: true,
+      personalization: false,
     },
   );
 

@@ -182,12 +182,21 @@ export async function shouldShowBanner(): Promise<boolean> {
     if (res.ok) {
       const data = (await res.json()) as { country?: string };
       const country = (data.country ?? "").toUpperCase();
-      const EU = new Set([
+      // Wave 60.19 — expanded from EU-only to "opt-in regime" set. Includes
+      // EU/EEA + UK (UK GDPR) + Switzerland (revFADP) + Vietnam (Decree
+      // 13/2023) + Brazil (LGPD Art. 7) + Canada (Quebec Law 25 / PIPEDA
+      // tightening). Future: India DPDPA 2023, Australia Privacy Act
+      // reform — tracked as known gap in vault 94 (Wave 60.19).
+      const REQUIRES_BANNER = new Set([
+        // EU/EEA
         "AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR","HU","IE",
         "IT","LV","LT","LU","MT","NL","PL","PT","RO","SK","SI","ES","SE",
         "IS","LI","NO","CH","GB",
+        // Non-EU opt-in regimes
+        "BR", // Brazil LGPD
+        "CA", // Canada — Quebec Law 25 strictest; PIPEDA federal baseline
       ]);
-      const requiresBanner = country === "VN" || EU.has(country);
+      const requiresBanner = country === "VN" || REQUIRES_BANNER.has(country);
       if (!requiresBanner) {
         // Auto-apply legitimate-interest defaults silently.
         setConsent(
