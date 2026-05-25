@@ -533,7 +533,13 @@ function TierCard({
       ].join(' ')}
     >
       {tier.badge && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gold px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-ink">
+        // Wave 60.37.e HIGH-9 (sub-agent A): mono `text-[10px] tracking-[0.20em]`
+        // read as system label, not brand stamp. Lift to `text-[11px]`,
+        // tighten tracking to `0.12em` for editorial badge feel — premium
+        // publications use slightly less aggressive tracking. Also bump
+        // padding slightly so the badge has room to breathe alongside the
+        // lifted card without looking detached from the row baseline.
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gold px-3.5 py-1 font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-ink shadow-[0_6px_16px_-6px_rgba(184,146,61,0.6)]">
           {tier.badge}
         </span>
       )}
