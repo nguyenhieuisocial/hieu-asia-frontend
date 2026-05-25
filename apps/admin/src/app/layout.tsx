@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { cookies } from 'next/headers';
 import { Be_Vietnam_Pro, Inter, Outfit, JetBrains_Mono } from 'next/font/google';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { PostHogProvider } from '@/components/posthog-provider';
@@ -49,6 +50,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               </PostHogProvider>
             </Suspense>
           </ThemeProvider>
+          <SpeedInsights />
         </body>
       </html>
     );
@@ -78,6 +80,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </Suspense>
           <Toaster />
         </ThemeProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
