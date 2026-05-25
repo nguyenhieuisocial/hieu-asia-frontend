@@ -4,13 +4,35 @@
  * 5 cụm × 12-15 câu V1 — map sang trục MBTI E/I/S/N/T/F/J/P khi áp dụng được.
  * Câu free-text đẩy vào `user_context.personality_raw` ở backend.
  *
- * Axis tag stored in `description` so the scorer service can read it without
- * polluting the user-facing label.
+ * Wave 60.21 — Axis tags MOVED OUT of question `description` field.
+ * SurveyJS renders `description` as user-visible text below the title, so
+ * the prior "axis:J-P" string was leaking internal scoring metadata into
+ * the UI. Now stored in `QUESTION_AXIS_MAP` keyed by question name;
+ * backend scorer service should import/lookup by question name.
  */
 
 export interface SurveyAnswers {
   [key: string]: string | number | string[] | undefined;
 }
+
+/**
+ * MBTI-axis annotation per question name. Backend scorer reads this map
+ * (or maintains its own server-side copy) to weight responses into the
+ * E/I, S/N, T/F, J/P axes. Values use the canonical MBTI dyad letters
+ * separated by `-` (e.g. `J-P` means responses bias the J↔P axis).
+ *
+ * Questions NOT in this map are free-text or descriptive — not scored.
+ */
+export const QUESTION_AXIS_MAP: Record<string, 'E-I' | 'S-N' | 'T-F' | 'J-P'> = {
+  q_decision_speed: 'J-P',
+  q_decision_logic: 'T-F',
+  q_decision_risk: 'S-N',
+  q_pressure_energy: 'E-I',
+  q_pressure_response: 'J-P',
+  q_team_style: 'E-I',
+  q_team_feedback: 'T-F',
+  q_team_conflict: 'T-F',
+};
 
 export const SURVEY_SCHEMA = {
   title: 'Khảo sát Tính cách & Bối cảnh',
@@ -29,7 +51,6 @@ export const SURVEY_SCHEMA = {
           type: 'radiogroup',
           name: 'q_decision_speed',
           title: 'Khi đứng trước một quyết định quan trọng, bạn thường:',
-          description: 'axis:J-P',
           isRequired: true,
           choices: [
             'Quyết nhanh theo trực giác rồi điều chỉnh sau',
@@ -53,7 +74,6 @@ export const SURVEY_SCHEMA = {
           type: 'radiogroup',
           name: 'q_decision_risk',
           title: 'Khi cơ hội có rủi ro, bạn nghiêng về:',
-          description: 'axis:S-N',
           isRequired: true,
           choices: [
             'Thử ngay nếu lợi ích lớn',
@@ -72,7 +92,6 @@ export const SURVEY_SCHEMA = {
           type: 'rating',
           name: 'q_pressure_energy',
           title: 'Khi căng thẳng, bạn nạp năng lượng bằng:',
-          description: 'axis:E-I',
           rateMin: 1,
           rateMax: 5,
           minRateDescription: 'Ở một mình',
@@ -83,7 +102,6 @@ export const SURVEY_SCHEMA = {
           type: 'radiogroup',
           name: 'q_pressure_response',
           title: 'Khi mọi thứ trật khỏi kế hoạch, phản ứng đầu tiên của bạn là:',
-          description: 'axis:J-P',
           isRequired: true,
           choices: [
             'Lập kế hoạch mới ngay lập tức',
@@ -116,7 +134,6 @@ export const SURVEY_SCHEMA = {
           type: 'rating',
           name: 'q_team_style',
           title: 'Trong nhóm, bạn thường là:',
-          description: 'axis:E-I',
           rateMin: 1,
           rateMax: 5,
           minRateDescription: 'Người lắng nghe',
@@ -127,7 +144,6 @@ export const SURVEY_SCHEMA = {
           type: 'radiogroup',
           name: 'q_team_feedback',
           title: 'Khi cần đưa phản hồi tiêu cực cho cộng sự, bạn:',
-          description: 'axis:T-F',
           isRequired: true,
           choices: [
             'Nói thẳng, đi vào vấn đề',
@@ -140,7 +156,6 @@ export const SURVEY_SCHEMA = {
           type: 'radiogroup',
           name: 'q_team_conflict',
           title: 'Khi có xung đột, bạn thường:',
-          description: 'axis:T-F',
           isRequired: true,
           choices: [
             'Đối mặt và giải quyết ngay',
