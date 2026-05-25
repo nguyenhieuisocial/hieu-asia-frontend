@@ -24,6 +24,12 @@ on:
       - '**/*.md'
       - 'docs/**'
       - 'LICENSE'
+  # Wave 60.28b — manual trigger so we can test workflow once billing
+  # quota refills (currently runs fail at runner allocation: "Job is
+  # waiting for a hosted runner to come online" → 2s timeout with no
+  # steps executed = hosted-runner provisioning blocked by exhausted
+  # Free-plan minutes on private repo).
+  workflow_dispatch: {}
 
 permissions:
   contents: read
