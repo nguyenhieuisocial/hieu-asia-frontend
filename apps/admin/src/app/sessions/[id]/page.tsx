@@ -14,6 +14,7 @@ import {
   cn,
 } from '@hieu-asia/ui';
 import { ChevronLeft, Clock, DollarSign, ListTodo, Copy, AlertCircle } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import { getSession } from '@/lib/admin-api';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
@@ -309,8 +310,80 @@ export default function SessionDetailPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="prose prose-sm prose-invert max-w-none whitespace-pre-wrap rounded-md border border-gold/10 bg-card/40 p-4 text-sm leading-relaxed text-foreground/90">
-                      {s.final_report_markdown}
+                    {/* Wave 60.1 — real markdown render via react-markdown.
+                        Admin doesn't have @tailwindcss/typography plugin so we
+                        pass custom components map with brand-aligned styles
+                        (gold headings, strong = foreground, links = gold). */}
+                    <div className="rounded-md border border-gold/10 bg-card/40 p-4 text-sm leading-relaxed text-foreground/90">
+                      <ReactMarkdown
+                        components={{
+                          h1: ({ children }) => (
+                            <h1 className="mt-0 mb-4 font-heading text-xl font-semibold text-gold">
+                              {children}
+                            </h1>
+                          ),
+                          h2: ({ children }) => (
+                            <h2 className="mt-6 mb-3 font-heading text-lg font-semibold text-gold">
+                              {children}
+                            </h2>
+                          ),
+                          h3: ({ children }) => (
+                            <h3 className="mt-4 mb-2 font-heading text-base font-semibold text-gold/90">
+                              {children}
+                            </h3>
+                          ),
+                          p: ({ children }) => (
+                            <p className="my-3 text-foreground/85">{children}</p>
+                          ),
+                          strong: ({ children }) => (
+                            <strong className="font-semibold text-foreground">{children}</strong>
+                          ),
+                          em: ({ children }) => (
+                            <em className="italic text-foreground/90">{children}</em>
+                          ),
+                          a: ({ href, children }) => (
+                            <a
+                              href={href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-gold underline-offset-2 hover:underline"
+                            >
+                              {children}
+                            </a>
+                          ),
+                          ul: ({ children }) => (
+                            <ul className="my-3 ml-6 list-disc space-y-1 marker:text-gold/60">
+                              {children}
+                            </ul>
+                          ),
+                          ol: ({ children }) => (
+                            <ol className="my-3 ml-6 list-decimal space-y-1 marker:text-gold/60">
+                              {children}
+                            </ol>
+                          ),
+                          li: ({ children }) => (
+                            <li className="text-foreground/85">{children}</li>
+                          ),
+                          code: ({ children }) => (
+                            <code className="rounded bg-gold/10 px-1 py-0.5 font-mono text-xs text-gold">
+                              {children}
+                            </code>
+                          ),
+                          pre: ({ children }) => (
+                            <pre className="my-3 overflow-x-auto rounded-md border border-gold/15 bg-card/60 p-3 font-mono text-xs">
+                              {children}
+                            </pre>
+                          ),
+                          blockquote: ({ children }) => (
+                            <blockquote className="my-3 border-l-2 border-gold/40 pl-3 italic text-foreground/75">
+                              {children}
+                            </blockquote>
+                          ),
+                          hr: () => <hr className="my-4 border-gold/15" />,
+                        }}
+                      >
+                        {s.final_report_markdown}
+                      </ReactMarkdown>
                     </div>
                   </CardContent>
                 </Card>
