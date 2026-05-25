@@ -13,9 +13,16 @@ import {
   LineChart,
   Line,
 } from 'recharts';
+import { chartSeries, colors } from '@hieu-asia/ui';
 import type { CostByDay, ReadingsPerDay } from '@/lib/mock-data';
 
-const COLORS = ['#B8923D', '#D5B057', '#3B2754', '#2D5F5A'];
+// Wave 60.7 — replaced hardcoded ['#B8923D','#D5B057','#3B2754','#2D5F5A']
+// with shared `chartSeries` token from @hieu-asia/ui. Brand palette drift
+// risk gone — if tailwind-preset.gold.DEFAULT changes, both charts +
+// CSS utility colors update together.
+const COLORS = chartSeries;
+const GOLD = colors.gold.DEFAULT;
+const RED_FAIL = '#ef4444';
 
 interface CostChartProps {
   data: CostByDay[];
@@ -76,8 +83,8 @@ export function ReadingsChart({ data }: ReadingsChartProps) {
             }}
             labelStyle={{ color: '#B8923D' }}
           />
-          <Line type="monotone" dataKey="count" stroke="#B8923D" strokeWidth={2} dot={false} name="Tổng" />
-          <Line type="monotone" dataKey="failed" stroke="#ef4444" strokeWidth={1.5} dot={false} name="Lỗi" />
+          <Line type="monotone" dataKey="count" stroke={GOLD} strokeWidth={2} dot={false} name="Tổng" />
+          <Line type="monotone" dataKey="failed" stroke={RED_FAIL} strokeWidth={1.5} dot={false} name="Lỗi" />
         </LineChart>
       </ResponsiveContainer>
     </div>

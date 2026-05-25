@@ -273,7 +273,7 @@ export const forbiddenPhrases = [
   'không thể thay đổi',
   // Medical / legal / financial claims
   'chữa bệnh',
-  'cam kết lời nhuận',
+  'cam kết lợi nhuận',
   'tư vấn pháp lý',
 ] as const;
 
