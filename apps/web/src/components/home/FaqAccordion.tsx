@@ -62,8 +62,11 @@ export function FaqAccordion({
         </div>
 
         <div
-          className="mt-12 rounded-2xl border border-border px-6"
-          style={{ backgroundColor: 'rgba(20, 20, 26, 0.4)' }}
+          /* Wave 60.35 — was inline `style={{ backgroundColor: 'rgba(20,20,26,0.4)' }}`
+             which is the dark ink token at 40% opacity. Stayed dark in light
+             mode → invisible text (sub-agent B WCAG fail). Swap to semantic
+             `bg-muted/40` so theme adapter handles both modes. */
+          className="mt-12 rounded-2xl border border-border bg-muted/40 px-6"
         >
           <Accordion type="single" collapsible className="w-full">
             {items.map((item, i) => (

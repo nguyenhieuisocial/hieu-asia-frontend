@@ -29,6 +29,9 @@ import { useFeatureFlag, FLAGS } from '@/lib/feature-flags';
 import { SurveyPrompt } from '@/components/survey/SurveyPrompt';
 import { SURVEY_IDS } from '@/lib/survey';
 import { PRICING } from '@/lib/pricing';
+// Wave 60.35 — editorial refinement (refined-minimalism direction).
+import { OrnamentDivider } from '@/components/marketing/OrnamentDivider';
+import { TrustStrip } from '@/components/marketing/TrustStrip';
 
 /**
  * Launch promotion — matches the `hieu_asia.coupons` table seed.
@@ -420,7 +423,16 @@ export default function PricingPage() {
                 </p>
               </div>
             )}
+
+            {/* Wave 60.35 — 3 fact-based trust pillars right under hero to
+                reduce CTA hesitation. Not fabricated stats — every claim
+                maps to a real policy/infra fact (vault 80, vault 88). */}
+            <TrustStrip className="mt-10" />
           </div>
+
+          {/* Wave 60.35 — editorial ornament closes the hero, opens the
+              pricing grid. Vietnamese ledger / woodcut visual idiom. */}
+          <OrnamentDivider className="mt-2 mb-10" />
         </section>
 
         {/* Mobile cards / Desktop table */}
@@ -463,6 +475,12 @@ export default function PricingPage() {
           </div>
         </section>
 
+        {/* Wave 60.35 — anchor between grid and FAQ. Mirrors the hero
+            ornament so the page reads as ledger-like editorial spread. */}
+        <div className="bg-background pt-2">
+          <OrnamentDivider />
+        </div>
+
         <FaqAccordion
           items={PRICING_FAQ}
           id="pricing-faq"
@@ -502,9 +520,13 @@ function TierCard({
   return (
     <article
       className={[
-        'relative flex flex-col rounded-2xl border p-6',
+        'relative flex flex-col rounded-2xl border p-6 transition-transform duration-300',
+        // Wave 60.35 — featured tier ("Phổ biến nhất") gets thicker gold
+        // border, ink-tinted background and a desktop-only visual lift
+        // (translate-y + subtle scale). Mobile keeps it flush — saves
+        // vertical scroll on phones where every tier is already stacked.
         tier.highlighted
-          ? 'border-gold/60 bg-gradient-to-b from-gold/[0.06] to-transparent shadow-[0_0_60px_-20px_rgba(184,146,61,0.5)]'
+          ? 'border-gold/70 border-2 bg-gradient-to-b from-gold/[0.08] via-gold/[0.03] to-transparent shadow-[0_0_80px_-20px_rgba(184,146,61,0.55)] lg:-translate-y-3 lg:scale-[1.02]'
           : 'border-border bg-card/40',
         highlight && !tier.highlighted ? 'ring-2 ring-gold/40' : '',
       ].join(' ')}
