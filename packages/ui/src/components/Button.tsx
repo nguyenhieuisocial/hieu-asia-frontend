@@ -11,8 +11,12 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: 'bg-gold text-ink hover:bg-gold-400',
-        outline: 'border border-gold/40 bg-transparent text-gold hover:bg-gold/10',
-        ghost: 'hover:bg-gold/10 text-cream',
+        // Wave 60.22 — `text-gold` on `bg-transparent` over cream background
+        // failed WCAG AA contrast (per Chrome MCP audit). Switched to
+        // `text-foreground` so the button reads in both themes; hover keeps
+        // gold tint via bg + border accent.
+        outline: 'border border-gold/40 bg-transparent text-foreground hover:bg-gold/10 hover:text-gold',
+        ghost: 'hover:bg-gold/10 text-foreground',
         link: 'text-gold underline-offset-4 hover:underline',
       },
       size: {

@@ -24,7 +24,7 @@ export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(function S
         {...props}
       />
       {ticks && ticks.length > 0 && (
-        <div className="mt-2 flex justify-between text-xs text-cream/60">
+        <div className="mt-2 flex justify-between text-xs text-muted-foreground">
           {ticks.map((t, i) => (
             <span key={i}>{t}</span>
           ))}

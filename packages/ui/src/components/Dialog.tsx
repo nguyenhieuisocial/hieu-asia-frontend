@@ -18,7 +18,7 @@ export const DialogOverlay = React.forwardRef<
     <DialogPrimitive.Overlay
       ref={ref}
       className={cn(
-        'fixed inset-0 z-50 bg-ink/80 backdrop-blur-sm transition-opacity duration-200',
+        'fixed inset-0 z-50 bg-black/80 backdrop-blur-sm transition-opacity duration-200',
         'data-[state=closed]:opacity-0 data-[state=open]:opacity-100',
         className,
       )}
@@ -41,7 +41,7 @@ export const DialogContent = React.forwardRef<
         ref={ref}
         className={cn(
           'fixed left-1/2 top-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4',
-          'rounded-lg border border-gold/20 bg-ink p-6 text-cream shadow-2xl',
+          'rounded-lg border border-gold/20 bg-card p-6 text-foreground shadow-2xl',
           'duration-200 data-[state=closed]:opacity-0 data-[state=open]:opacity-100',
           className,
         )}
@@ -51,7 +51,7 @@ export const DialogContent = React.forwardRef<
         {!hideClose && (
           <DialogPrimitive.Close
             className={cn(
-              'absolute right-4 top-4 rounded-sm text-cream/60 transition-colors',
+              'absolute right-4 top-4 rounded-sm text-muted-foreground transition-colors',
               'hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold',
               'disabled:pointer-events-none',
             )}
@@ -100,7 +100,7 @@ export const DialogTitle = React.forwardRef<
     <DialogPrimitive.Title
       ref={ref}
       className={cn(
-        'font-heading text-lg font-semibold leading-none tracking-tight text-cream',
+        'font-heading text-lg font-semibold leading-none tracking-tight text-foreground',
         className,
       )}
       {...props}
@@ -115,7 +115,7 @@ export const DialogDescription = React.forwardRef<
   return (
     <DialogPrimitive.Description
       ref={ref}
-      className={cn('text-sm text-cream/70', className)}
+      className={cn('text-sm text-foreground/70', className)}
       {...props}
     />
   );

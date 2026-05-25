@@ -19,12 +19,12 @@ export function Toaster(props: ToasterProps) {
       toastOptions={{
         classNames: {
           toast:
-            'group toast bg-ink border border-gold/25 text-cream shadow-2xl',
-          title: 'text-cream font-semibold',
-          description: 'text-cream/70',
+            'group toast bg-card border border-gold/25 text-foreground shadow-2xl',
+          title: 'text-foreground font-semibold',
+          description: 'text-foreground/70',
           actionButton: 'bg-gold text-ink hover:bg-gold-400',
-          cancelButton: 'bg-ink border border-gold/25 text-cream',
-          closeButton: 'bg-ink border border-gold/25 text-cream',
+          cancelButton: 'bg-card border border-gold/25 text-foreground',
+          closeButton: 'bg-card border border-gold/25 text-foreground',
         },
       }}
       {...props}

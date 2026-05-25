@@ -25,30 +25,30 @@ export function InsightCard({ insight, className }: InsightCardProps) {
   return (
     <article
       className={cn(
-        'rounded-lg border border-gold/15 bg-ink/60 p-5 text-cream shadow-sm backdrop-blur-sm',
+        'rounded-lg border border-gold/15 bg-card p-5 text-foreground shadow-sm backdrop-blur-sm',
         className,
       )}
     >
       {title && (
-        <h3 className="mb-3 font-heading text-lg font-semibold text-cream">{title}</h3>
+        <h3 className="mb-3 font-heading text-lg font-semibold text-foreground">{title}</h3>
       )}
 
       <section className="space-y-3 text-sm leading-relaxed">
         <div>
           <p className="mb-1 font-medium text-gold">📌 Nhận định</p>
-          <p className="text-cream/90">{assessment}</p>
+          <p className="text-foreground/90">{assessment}</p>
         </div>
 
         {risk && (
           <div>
             <p className="mb-1 font-medium text-gold">⚠️ Rủi ro</p>
-            <p className="text-cream/80">{risk}</p>
+            <p className="text-foreground/80">{risk}</p>
           </div>
         )}
 
         <div>
           <p className="mb-1 font-medium text-gold">🎯 Hành động</p>
-          <p className="text-cream/90">{action}</p>
+          <p className="text-foreground/90">{action}</p>
         </div>
       </section>
     </article>

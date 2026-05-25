@@ -43,7 +43,7 @@ export function ConsentCheckboxList({ items, onChange, className }: ConsentCheck
   return (
     <ul className={cn('space-y-3', className)}>
       {items.map((item) => (
-        <li key={item.id} className="rounded-md border border-gold/15 bg-ink/40 p-4">
+        <li key={item.id} className="rounded-md border border-gold/15 bg-card p-4">
           <label className="flex cursor-pointer items-start gap-3">
             <input
               type="checkbox"
@@ -53,12 +53,12 @@ export function ConsentCheckboxList({ items, onChange, className }: ConsentCheck
               onChange={(e) => handle(item.id, e.target.checked)}
             />
             <span className="flex-1">
-              <span className="block font-medium text-cream">
+              <span className="block font-medium text-foreground">
                 {item.label}
                 {item.required && <span className="ml-1 text-gold">*</span>}
               </span>
               {item.purpose && (
-                <span className="mt-1 block text-sm text-cream/60">{item.purpose}</span>
+                <span className="mt-1 block text-sm text-muted-foreground">{item.purpose}</span>
               )}
             </span>
           </label>

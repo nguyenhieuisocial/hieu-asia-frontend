@@ -54,7 +54,7 @@ export function DataTable<T>({
   const totalPages = hasPagination ? Math.max(1, Math.ceil(total / pageSize)) : 1;
 
   return (
-    <div className={cn('rounded-lg border border-gold/15 bg-ink/40 backdrop-blur-sm', className)}>
+    <div className={cn('rounded-lg border border-gold/15 bg-card backdrop-blur-sm', className)}>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
@@ -79,7 +79,7 @@ export function DataTable<T>({
           <tbody>
             {rows.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} className="px-4 py-12 text-center text-cream/50">
+                <td colSpan={columns.length} className="px-4 py-12 text-center text-muted-foreground">
                   {emptyState ?? 'Không có dữ liệu.'}
                 </td>
               </tr>
@@ -97,7 +97,7 @@ export function DataTable<T>({
                     <td
                       key={col.key}
                       className={cn(
-                        'px-4 py-3 text-cream/90',
+                        'px-4 py-3 text-foreground/90',
                         col.align === 'right' && 'text-right',
                         col.align === 'center' && 'text-center',
                         col.className,
@@ -114,10 +114,10 @@ export function DataTable<T>({
       </div>
 
       {hasPagination && (
-        <div className="flex items-center justify-between border-t border-gold/15 px-4 py-3 text-xs text-cream/70">
+        <div className="flex items-center justify-between border-t border-gold/15 px-4 py-3 text-xs text-foreground/70">
           <span>
             Trang <span className="text-gold">{page}</span> / {totalPages} ·{' '}
-            <span className="text-cream/50">{total} bản ghi</span>
+            <span className="text-muted-foreground">{total} bản ghi</span>
           </span>
           <div className="flex gap-1">
             <button
@@ -156,7 +156,7 @@ export function StatusBadge({
     warning: 'border-gold/40 bg-gold/10 text-gold-200',
     error: 'border-red-500/40 bg-red-500/10 text-red-300',
     info: 'border-purple/40 bg-purple/15 text-purple-50',
-    neutral: 'border-cream/15 bg-cream/5 text-cream/70',
+    neutral: 'border-border/40 bg-cream/5 text-foreground/70',
   }[status];
   return (
     <span className={cn('inline-flex items-center rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider', tone)}>

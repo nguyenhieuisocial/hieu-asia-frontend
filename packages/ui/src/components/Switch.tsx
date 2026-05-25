@@ -36,7 +36,7 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(function S
         'relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border border-gold/30 transition-colors',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold',
         'disabled:cursor-not-allowed disabled:opacity-50',
-        isOn ? 'bg-gold' : 'bg-ink/60',
+        isOn ? 'bg-gold' : 'bg-card',
         className,
       )}
     >

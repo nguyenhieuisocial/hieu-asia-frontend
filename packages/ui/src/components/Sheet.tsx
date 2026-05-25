@@ -19,7 +19,7 @@ export const SheetOverlay = React.forwardRef<
     <DialogPrimitive.Overlay
       ref={ref}
       className={cn(
-        'fixed inset-0 z-50 bg-ink/80 backdrop-blur-sm transition-opacity duration-200',
+        'fixed inset-0 z-50 bg-black/80 backdrop-blur-sm transition-opacity duration-200',
         'data-[state=closed]:opacity-0 data-[state=open]:opacity-100',
         className,
       )}
@@ -29,7 +29,7 @@ export const SheetOverlay = React.forwardRef<
 });
 
 const sheetVariants = cva(
-  'fixed z-50 gap-4 bg-ink border-gold/20 p-6 text-cream shadow-2xl transition-transform duration-300 ease-in-out',
+  'fixed z-50 gap-4 bg-card border-gold/20 p-6 text-foreground shadow-2xl transition-transform duration-300 ease-in-out',
   {
     variants: {
       side: {
@@ -67,7 +67,7 @@ export const SheetContent = React.forwardRef<
         {!hideClose && (
           <DialogPrimitive.Close
             className={cn(
-              'absolute right-4 top-4 rounded-sm text-cream/60 transition-colors',
+              'absolute right-4 top-4 rounded-sm text-muted-foreground transition-colors',
               'hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold',
             )}
             aria-label="Đóng"
@@ -114,7 +114,7 @@ export const SheetTitle = React.forwardRef<
   return (
     <DialogPrimitive.Title
       ref={ref}
-      className={cn('font-heading text-lg font-semibold text-cream', className)}
+      className={cn('font-heading text-lg font-semibold text-foreground', className)}
       {...props}
     />
   );
@@ -127,7 +127,7 @@ export const SheetDescription = React.forwardRef<
   return (
     <DialogPrimitive.Description
       ref={ref}
-      className={cn('text-sm text-cream/70', className)}
+      className={cn('text-sm text-foreground/70', className)}
       {...props}
     />
   );
