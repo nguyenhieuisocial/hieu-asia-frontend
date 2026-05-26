@@ -1,555 +1,455 @@
 'use client';
 
 /**
- * /admin/connect — third-party connection control panel.
+ * /admin/connect — Wave 60.81.D rebuild (vault 107 §5.7).
  *
- * Two sections:
- *   1. AI providers (Anthropic / OpenAI / Google) — API key / OAuth wire-up
- *   2. Service integrations (Resend / Langfuse / SePay / Sentry / PostHog)
- *      — each row has a "Test connection" button that pings the worker
- *        `/admin/<service>/health` endpoint. If the worker hasn't wired
- *        that route, the UI shows "Health check chưa wire" instead of a
- *        hard error.
+ * Tier 2 substitute for the blocked /secrets work. Original page was a
+ * 555-LOC single-file mess mixing AI provider cards + service health checks
+ * + inline OAuth code-paste UI. Splits into:
  *
- * Styling matches the premium ink/gold theme used elsewhere in admin.
+ *   ├─ This file (~180 LOC: queries, KPI strip, ProductTabs orchestration)
+ *   ├─ <AdminTable> primitive (Wave 60.71.T2.customers extract)
+ *   ├─ <ProviderRowActions> DropdownMenu (Wave 60.68)
+ *   ├─ <ConnectProviderDialog> + <DisconnectDialog> + <ScopesDialog>
+ *   ├─ <OAuthAuditTab> + <WebhooksTab> (data-fed)
+ *   └─ types.ts (PROVIDER_CATALOGUE + ConnectAction union)
+ *
+ * RSC discipline:
+ *   - Pre-rendered Lucide icons at module scope (Wave 60.65.P0a)
+ *   - No inline arrow fns in props (Wave 60.66.HF1)
+ *   - Defensive `Array.isArray` on async data (Wave 60.65.P0c)
+ *
+ * Mutation flow:
+ *   - Connect new → ConnectProviderDialog → POST oauth/[vendor]/start
+ *   - Disconnect → DisconnectDialog → DELETE keys/[vendor] → audit_log
+ *   - Reauth → reuses Connect flow with `initial` set
+ *   - View scopes → ScopesDialog (read-only)
  */
 
 import * as React from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Button,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  cn,
 } from '@hieu-asia/ui';
 import {
-  Plug,
+  AlertOctagon,
   CheckCircle2,
-  XCircle,
-  Loader2,
-  AlertTriangle,
-  ExternalLink,
+  Plug,
+  PlugZap,
+  Wrench,
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
+import { EmptyState } from '@/components/admin/empty-state';
+import { ErrorBlock } from '@/components/admin/error-block';
+import { KpiCard } from '@/components/admin/kpi-card';
+import { ProductTabs, type ProductTab } from '@/components/admin/product-tabs';
+import {
+  AdminTable,
+  type AdminTableColumn,
+} from '@/components/admin/table/AdminTable';
+import { ProviderRowActions } from '@/components/admin/connect/ProviderRowActions';
+import { ConnectProviderDialog } from '@/components/admin/connect/ConnectProviderDialog';
+import { DisconnectDialog } from '@/components/admin/connect/DisconnectDialog';
+import { ScopesDialog } from '@/components/admin/connect/ScopesDialog';
+import { OAuthAuditTab } from '@/components/admin/connect/OAuthAuditTab';
+import { WebhooksTab } from '@/components/admin/connect/WebhooksTab';
+import {
+  PROVIDER_CATALOGUE,
+  type ConnectAction,
+  type ProviderCatalogueEntry,
+  type ProviderRow,
+} from '@/components/admin/connect/types';
+import { Button } from '@hieu-asia/ui';
 
-type AiVendorId = 'anthropic' | 'openai' | 'google';
-type Providers = Record<
-  AiVendorId | 'cloudflare',
-  { api_key: boolean; oauth: boolean }
->;
+const TAB_PROVIDERS = 'providers';
+const TAB_AUDIT = 'audit';
+const TAB_WEBHOOKS = 'webhooks';
 
-interface AiVendor {
-  id: AiVendorId;
-  name: string;
-  roles: string;
-  model: string;
-  keyHint: string;
-  keyUrl: string;
-  oauth: boolean;
-  oauthLabel: string;
-  oauthHint: string;
-}
-
-const AI_VENDORS: ReadonlyArray<AiVendor> = [
-  {
-    id: 'anthropic',
-    name: 'Anthropic Claude',
-    roles: 'psychology · report · mentor · judge',
-    model: 'claude-opus-4-7',
-    keyHint: 'sk-ant-api03-...',
-    keyUrl: 'https://console.anthropic.com/settings/keys',
-    oauth: false,
-    oauthLabel: '',
-    oauthHint: '',
-  },
-  {
-    id: 'openai',
-    name: 'OpenAI GPT',
-    roles: 'logic · alignment',
-    model: 'gpt-5.5',
-    keyHint: 'sk-...',
-    keyUrl: 'https://platform.openai.com/api-keys',
-    oauth: false,
-    oauthLabel: '',
-    oauthHint: '',
-  },
-  {
-    id: 'google',
-    name: 'Google Gemini',
-    roles: 'vision (palm / face)',
-    model: 'gemini-3.5-flash',
-    keyHint: 'AI...',
-    keyUrl: 'https://aistudio.google.com/app/apikey',
-    oauth: true,
-    oauthLabel: 'Login với Google (Gemini OAuth)',
-    oauthHint:
-      'Tab mới mở accounts.google.com → authorize → copy code từ codeassist.google.com → paste vào ô bên dưới.',
-  },
-];
-
-interface ServiceIntegration {
-  id: string;
-  name: string;
-  hint: string;
-  /** Path appended to /api/admin-proxy/admin/ for health check. */
-  healthPath: string;
-  /** Optional doc link (opens external). */
-  docUrl?: string;
-}
-
-const SERVICES: ReadonlyArray<ServiceIntegration> = [
-  {
-    id: 'resend',
-    name: 'Resend (email)',
-    hint: 'Transactional email — confirmations, magic-link, reports.',
-    healthPath: 'resend/health',
-    docUrl: 'https://resend.com/docs',
-  },
-  {
-    id: 'langfuse',
-    name: 'Langfuse (LLM tracing)',
-    hint: 'Traces & evals cho mọi cuộc gọi LLM (latency, cost, prompts).',
-    healthPath: 'langfuse/health',
-    docUrl: 'https://langfuse.com/docs',
-  },
-  {
-    id: 'sepay',
-    name: 'SePay (payment)',
-    hint: 'Webhook & intent flow cho gói trả phí (VNĐ).',
-    healthPath: 'sepay/health',
-    docUrl: 'https://docs.sepay.vn',
-  },
-  {
-    id: 'sentry',
-    name: 'Sentry (error tracking)',
-    hint: 'Capture exception, performance, session replay.',
-    healthPath: 'sentry/health',
-    docUrl: 'https://docs.sentry.io',
-  },
-  {
-    id: 'posthog',
-    name: 'PostHog (analytics)',
-    hint: 'Product analytics + feature flag + recording.',
-    healthPath: 'posthog/health',
-    docUrl: 'https://posthog.com/docs',
-  },
-];
-
-type HealthResult =
-  | { kind: 'ok'; detail?: string }
-  | { kind: 'down'; detail: string }
-  | { kind: 'not_wired'; detail: string };
-
-async function pingHealth(path: string): Promise<HealthResult> {
-  try {
-    const r = await fetch(`/api/admin-proxy/admin/${path}`, { cache: 'no-store' });
-    if (r.status === 404) {
-      return { kind: 'not_wired', detail: 'Health check chưa wire ở worker.' };
-    }
-    const text = await r.text();
-    let data: { ok?: boolean; status?: string; error?: string } = {};
-    try {
-      data = JSON.parse(text);
-    } catch {
-      // non-JSON response — treat as down
-      return { kind: 'down', detail: `HTTP ${r.status} (non-JSON)` };
-    }
-    if (r.ok && data.ok !== false) {
-      return { kind: 'ok', detail: data.status ?? 'reachable' };
-    }
-    return { kind: 'down', detail: data.error ?? `HTTP ${r.status}` };
-  } catch (e) {
-    return { kind: 'down', detail: (e as Error).message };
-  }
-}
-
-function ServiceRow({ service }: { service: ServiceIntegration }) {
-  const [result, setResult] = React.useState<HealthResult | null>(null);
-  const [testing, setTesting] = React.useState(false);
-
-  const runTest = async () => {
-    setTesting(true);
-    setResult(null);
-    const r = await pingHealth(service.healthPath);
-    setResult(r);
-    setTesting(false);
-  };
-
-  const dotCls =
-    result?.kind === 'ok'
-      ? 'bg-emerald-400'
-      : result?.kind === 'down'
-        ? 'bg-red-400'
-        : result?.kind === 'not_wired'
-          ? 'bg-amber-400'
-          : 'bg-muted/60';
-
-  return (
-    <div className="flex items-start justify-between gap-3 rounded-lg border border-gold/15 bg-card/60 px-4 py-3 transition-colors hover:border-gold/25">
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <span className={cn('h-2 w-2 shrink-0 rounded-full', dotCls)} aria-hidden />
-          <p className="truncate font-medium text-foreground">{service.name}</p>
-          {service.docUrl && (
-            <a
-              href={service.docUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="text-muted-foreground hover:text-gold"
-              aria-label={`docs ${service.name}`}
-            >
-              <ExternalLink className="h-3 w-3" />
-            </a>
-          )}
-        </div>
-        <p className="mt-0.5 text-xs text-muted-foreground">{service.hint}</p>
-        {result && (
-          <p
-            className={cn(
-              'mt-1.5 font-mono text-[11px]',
-              result.kind === 'ok' && 'text-emerald-300',
-              result.kind === 'down' && 'text-red-300',
-              result.kind === 'not_wired' && 'text-amber-300',
-            )}
-          >
-            {result.kind === 'ok' && (
-              <>
-                <CheckCircle2 className="-mt-0.5 mr-1 inline h-3 w-3" />
-                OK — {result.detail}
-              </>
-            )}
-            {result.kind === 'down' && (
-              <>
-                <XCircle className="-mt-0.5 mr-1 inline h-3 w-3" />
-                {result.detail}
-              </>
-            )}
-            {result.kind === 'not_wired' && (
-              <>
-                <AlertTriangle className="-mt-0.5 mr-1 inline h-3 w-3" />
-                {result.detail}
-              </>
-            )}
-          </p>
-        )}
-      </div>
-      <Button
-        size="sm"
-        variant="outline"
-        onClick={runTest}
-        disabled={testing}
-        className="shrink-0"
-      >
-        {testing ? (
-          <>
-            <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
-            Đang test…
-          </>
-        ) : (
-          'Test connection'
-        )}
-      </Button>
-    </div>
-  );
-}
-
-interface AiCardProps {
-  vendor: AiVendor;
-  providers: Providers | null;
-  model: string | undefined;
-  onChange: () => void;
-}
-
-function AiVendorCard({ vendor, providers, model, onChange }: AiCardProps) {
-  const st = providers?.[vendor.id];
-  const connected = !!(st?.api_key || st?.oauth);
-  const [busy, setBusy] = React.useState(false);
-  const [status, setStatus] = React.useState<{ kind: 'ok' | 'err' | 'pending'; text: string } | null>(
-    null,
-  );
-  const [oauthState, setOAuthState] = React.useState<string | null>(null);
-  const [oauthVisible, setOAuthVisible] = React.useState(false);
-
-  const setSt = (kind: 'ok' | 'err' | 'pending', text: string) => setStatus({ kind, text });
-
-  const onConnectKey = async () => {
-    const input = document.getElementById(`key-${vendor.id}`) as HTMLInputElement;
-    const key = input.value.trim();
-    if (!key) return setSt('err', 'Vui lòng nhập API key');
-    setBusy(true);
-    setSt('pending', 'Đang validate với vendor…');
-    try {
-      const r = await fetch(`/api/admin/integrations/keys/${vendor.id}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ api_key: key }),
-      });
-      const d = await r.json();
-      if (d.ok) {
-        input.value = '';
-        setSt('ok', `Đã kết nối ${vendor.name} (API key)`);
-        onChange();
-      } else {
-        setSt('err', d.error ?? 'Lỗi không xác định');
-      }
-    } catch (err) {
-      setSt('err', (err as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const onOAuthStart = async () => {
-    setBusy(true);
-    setSt('pending', 'Đang tạo OAuth flow…');
-    try {
-      const r = await fetch(`/api/admin/integrations/oauth/${vendor.id}/start`, {
-        method: 'POST',
-      });
-      const d = await r.json();
-      if (!d.ok) return setSt('err', d.error ?? 'Lỗi');
-      setOAuthState(d.state);
-      setOAuthVisible(true);
-      setSt('pending', 'Mở tab mới → quay lại paste code bên dưới');
-      window.open(d.auth_url, '_blank', 'noopener,noreferrer');
-    } catch (err) {
-      setSt('err', (err as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const onOAuthExchange = async () => {
-    const input = document.getElementById(`oauth-code-${vendor.id}`) as HTMLInputElement;
-    const code = input.value.trim();
-    if (!code) return setSt('err', 'Paste code trước khi exchange');
-    if (!oauthState) return setSt('err', 'OAuth state hết hạn — bấm lại OAuth');
-    setBusy(true);
-    setSt('pending', 'Đang exchange code…');
-    try {
-      const r = await fetch(`/api/admin/integrations/oauth/${vendor.id}/exchange`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ state: oauthState, code }),
-      });
-      const d = await r.json();
-      if (d.ok) {
-        input.value = '';
-        setOAuthVisible(false);
-        setSt('ok', `Đã kết nối ${vendor.name} qua OAuth`);
-        onChange();
-      } else {
-        setSt('err', d.error ?? 'Lỗi exchange');
-      }
-    } catch (err) {
-      setSt('err', (err as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const onRevoke = async () => {
-    if (!confirm(`Revoke ${vendor.name} API key?`)) return;
-    await fetch(`/api/admin/integrations/keys/${vendor.id}`, { method: 'DELETE' });
-    onChange();
-  };
-
-  return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <CardTitle className="flex items-center gap-2 text-base">
-              <span
-                className={cn(
-                  'inline-block h-2 w-2 rounded-full',
-                  connected ? 'bg-emerald-400' : 'bg-muted/60',
-                )}
-              />
-              {vendor.name}
-            </CardTitle>
-            <CardDescription className="mt-1 font-mono text-xs">
-              {model ?? vendor.model}
-            </CardDescription>
-          </div>
-          {connected && (
-            <span className="rounded border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-emerald-300">
-              {st?.oauth ? 'OAuth' : 'API key'}
-            </span>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <p className="text-xs text-muted-foreground">Roles: {vendor.roles}</p>
-
-        {vendor.oauth && (
-          <div>
-            <Button
-              size="sm"
-              onClick={onOAuthStart}
-              disabled={busy}
-              className="bg-gold/20 text-gold hover:bg-gold/30"
-            >
-              {vendor.oauthLabel}
-            </Button>
-            {oauthVisible && (
-              <div className="mt-2 rounded border border-gold/15 bg-card/60 p-2 text-xs">
-                <p className="text-muted-foreground">{vendor.oauthHint}</p>
-                <div className="mt-2 flex gap-2">
-                  <input
-                    id={`oauth-code-${vendor.id}`}
-                    type="text"
-                    placeholder="paste OAuth code"
-                    className="flex-1 rounded-md border border-gold/20 bg-card/60 px-2 py-1.5 font-mono text-xs text-foreground placeholder:text-foreground/30 focus:border-gold/50 focus:outline-none"
-                  />
-                  <Button size="sm" onClick={onOAuthExchange} disabled={busy}>
-                    Exchange
-                  </Button>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        <div>
-          <p className="text-xs text-muted-foreground">
-            API key:{' '}
-            <a href={vendor.keyUrl} target="_blank" rel="noreferrer" className="text-gold hover:underline">
-              {vendor.keyUrl.replace('https://', '')}
-            </a>
-          </p>
-          <div className="mt-1.5 flex gap-2">
-            <input
-              id={`key-${vendor.id}`}
-              type="password"
-              placeholder={vendor.keyHint}
-              className="flex-1 rounded-md border border-gold/20 bg-card/60 px-2 py-1.5 font-mono text-xs text-foreground placeholder:text-foreground/30 focus:border-gold/50 focus:outline-none"
-            />
-            <Button size="sm" onClick={onConnectKey} disabled={busy}>
-              Connect
-            </Button>
-            {st?.api_key && (
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={onRevoke}
-                className="border-red-400/40 text-red-300 hover:bg-red-500/10"
-              >
-                Revoke
-              </Button>
-            )}
-          </div>
-        </div>
-
-        {status && (
-          <div
-            className={cn(
-              'rounded border px-2 py-1 text-xs',
-              status.kind === 'ok' && 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300',
-              status.kind === 'err' && 'border-red-500/40 bg-red-500/10 text-red-300',
-              status.kind === 'pending' && 'border-gold/30 bg-gold/5 text-foreground/85',
-            )}
-          >
-            {status.text}
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
+const ICON_CONNECTED = <CheckCircle2 className="h-4 w-4" aria-hidden />;
+const ICON_INACTIVE = <Wrench className="h-4 w-4" aria-hidden />;
+const ICON_FAILED = <AlertOctagon className="h-4 w-4" aria-hidden />;
+const ICON_PLUG = <Plug className="h-4 w-4" aria-hidden />;
 
 interface ProvidersResp {
-  providers?: Providers;
+  ok?: boolean;
+  rows?: ProviderRow[];
+  /** Legacy shape returned by /api/admin/integrations/providers — flat map. */
+  providers?: Record<string, { api_key?: boolean; oauth?: boolean }>;
   default_models?: Record<string, string>;
+  error?: string;
 }
 
 async function fetchProviders(): Promise<ProvidersResp> {
-  const r = await fetch('/api/admin/integrations/providers', { cache: 'no-store' });
-  if (!r.ok) return {};
-  return (await r.json()) as ProvidersResp;
+  const r = await fetch('/api/admin/integrations/providers', {
+    cache: 'no-store',
+  });
+  const text = await r.text();
+  try {
+    return JSON.parse(text) as ProvidersResp;
+  } catch {
+    return { ok: false, error: `Invalid JSON (status ${r.status})` };
+  }
+}
+
+/**
+ * Merge the worker `providers` map into a full row list seeded from the
+ * static catalogue. Catalogue entries missing from the response surface as
+ * `disconnected` so admins can click "Kết nối" without backend bootstrap.
+ */
+function mergeRows(resp: ProvidersResp | undefined): ProviderRow[] {
+  // Worker returns the new shape (`rows`) once /admin/integrations/providers
+  // is upgraded; until then the legacy `providers` map is reshaped here.
+  if (Array.isArray(resp?.rows)) return resp.rows;
+  const map = resp?.providers ?? {};
+  return PROVIDER_CATALOGUE.map((cat): ProviderRow => {
+    const st = map[cat.id];
+    const connected = !!(st?.api_key || st?.oauth);
+    return {
+      id: cat.id,
+      name: cat.name,
+      category: cat.category,
+      status: cat.category === 'native' ? 'connected' : connected ? 'connected' : 'disconnected',
+      scopes: cat.scopes,
+      hint: cat.hint,
+      docUrl: cat.docUrl,
+      oauth: cat.oauth,
+    };
+  });
+}
+
+function fmtDateShort(s: string | null | undefined): string {
+  if (!s) return '—';
+  try {
+    return new Date(s).toLocaleDateString('vi-VN');
+  } catch {
+    return s;
+  }
+}
+
+function daysSince(s: string | null | undefined): number | null {
+  if (!s) return null;
+  const t = new Date(s).getTime();
+  if (Number.isNaN(t)) return null;
+  return Math.floor((Date.now() - t) / (24 * 3600 * 1000));
 }
 
 export default function ConnectPage() {
-  const { data, refetch } = useQuery({
+  const router = useRouter();
+  const search = useSearchParams();
+  const initialTab = search?.get('tab') ?? TAB_PROVIDERS;
+  const [tab, setTab] = React.useState(initialTab);
+  const [connectState, setConnectState] = React.useState<{
+    open: boolean;
+    initial: ProviderCatalogueEntry | null;
+  }>({ open: false, initial: null });
+  const [disconnectRow, setDisconnectRow] = React.useState<ProviderRow | null>(
+    null,
+  );
+  const [scopesRow, setScopesRow] = React.useState<ProviderRow | null>(null);
+
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['admin', 'connect', 'providers'],
     queryFn: fetchProviders,
   });
+
+  const rows = React.useMemo(() => mergeRows(data), [data]);
+
+  const connectedIds = React.useMemo(
+    () => new Set(rows.filter((r) => r.status === 'connected').map((r) => r.id)),
+    [rows],
+  );
+
+  const kpi = React.useMemo(() => {
+    const total = rows.filter((r) => r.status === 'connected').length;
+    const inactive = rows.filter((r) => {
+      if (r.status !== 'connected') return false;
+      const d = daysSince(r.last_used);
+      return d != null && d > 30;
+    }).length;
+    const failed = rows.reduce((acc, r) => acc + (r.failures_24h ?? 0), 0);
+    const available = PROVIDER_CATALOGUE.filter((p) => p.category !== 'native')
+      .length;
+    return { total, inactive, failed, available };
+  }, [rows]);
+
+  const showError = !!error || data?.ok === false;
+  const errorMsg = (error as Error | undefined)?.message ?? data?.error;
+
+  const handleAction = React.useCallback(
+    (action: ConnectAction) => {
+      switch (action.kind) {
+        case 'connect':
+          setConnectState({ open: true, initial: action.provider });
+          break;
+        case 'reauth': {
+          const entry = PROVIDER_CATALOGUE.find((p) => p.id === action.row.id);
+          if (entry) setConnectState({ open: true, initial: entry });
+          break;
+        }
+        case 'disconnect':
+          setDisconnectRow(action.row);
+          break;
+        case 'scopes':
+          setScopesRow(action.row);
+          break;
+      }
+    },
+    [],
+  );
+
+  const handleOpenConnect = React.useCallback(() => {
+    setConnectState({ open: true, initial: null });
+  }, []);
+
+  const handleConnectOpenChange = React.useCallback((open: boolean) => {
+    setConnectState((prev) => ({ open, initial: open ? prev.initial : null }));
+  }, []);
+
+  const handleDisconnectOpenChange = React.useCallback((open: boolean) => {
+    if (!open) setDisconnectRow(null);
+  }, []);
+
+  const handleScopesOpenChange = React.useCallback((open: boolean) => {
+    if (!open) setScopesRow(null);
+  }, []);
+
+  const handleRetry = React.useCallback(() => {
+    refetch();
+  }, [refetch]);
+
+  const handleTabChange = React.useCallback(
+    (id: string) => {
+      setTab(id);
+      const next = new URLSearchParams(search?.toString() ?? '');
+      if (id === TAB_PROVIDERS) next.delete('tab');
+      else next.set('tab', id);
+      const qs = next.toString();
+      router.replace(qs ? `/connect?${qs}` : '/connect', { scroll: false });
+    },
+    [router, search],
+  );
+
+  const columns = React.useMemo<AdminTableColumn<ProviderRow>[]>(
+    () => [
+      {
+        id: 'name',
+        header: 'Provider',
+        sortKey: 'name',
+        cell: (r) => (
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 font-medium text-foreground">
+              <span
+                className={
+                  r.status === 'connected'
+                    ? 'h-2 w-2 shrink-0 rounded-full bg-jade'
+                    : r.status === 'failed'
+                      ? 'h-2 w-2 shrink-0 rounded-full bg-red-400'
+                      : 'h-2 w-2 shrink-0 rounded-full bg-muted/40'
+                }
+                aria-hidden
+              />
+              <span className="truncate">{r.name}</span>
+            </div>
+            <div className="mt-0.5 truncate text-xs text-muted-foreground">
+              {r.hint ?? '—'}
+            </div>
+          </div>
+        ),
+      },
+      {
+        id: 'category',
+        header: 'Loại',
+        sortKey: 'category',
+        width: '110px',
+        hideOnMobile: true,
+        cell: (r) => (
+          <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+            {r.category}
+          </span>
+        ),
+      },
+      {
+        id: 'status',
+        header: 'Status',
+        sortKey: 'status',
+        width: '120px',
+        cell: (r) => {
+          if (r.status === 'connected') {
+            return (
+              <span className="inline-flex items-center gap-1 rounded border border-jade/30 bg-jade/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-jade-50">
+                connected
+              </span>
+            );
+          }
+          if (r.status === 'failed') {
+            return (
+              <span className="inline-flex items-center gap-1 rounded border border-red-500/30 bg-red-500/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-red-200">
+                failed
+              </span>
+            );
+          }
+          return (
+            <span className="inline-flex items-center gap-1 rounded border border-muted/40 bg-muted/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              disconnected
+            </span>
+          );
+        },
+      },
+      {
+        id: 'connected_by',
+        header: 'Connected by',
+        width: '160px',
+        hideOnMobile: true,
+        cell: (r) => (
+          <span className="font-mono text-xs text-muted-foreground">
+            {r.connected_by ?? '—'}
+          </span>
+        ),
+      },
+      {
+        id: 'last_used',
+        header: 'Last used',
+        sortKey: 'last_used',
+        width: '120px',
+        hideOnMobile: true,
+        cell: (r) => (
+          <span className="font-mono text-xs text-muted-foreground">
+            {fmtDateShort(r.last_used)}
+          </span>
+        ),
+      },
+      {
+        id: 'actions',
+        header: '',
+        width: '48px',
+        cell: (r) => <ProviderRowActions row={r} onAction={handleAction} />,
+      },
+    ],
+    [handleAction],
+  );
+
+  const providersContent = (
+    <Card>
+      <CardHeader>
+        <CardTitle>Danh sách provider</CardTitle>
+        <CardDescription>
+          {rows.length} vendor — click <code className="font-mono text-foreground/85">Hành động</code>{' '}
+          để connect, reauth hoặc xem scope.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {showError && (
+          <div className="mb-4">
+            <ErrorBlock
+              compact
+              message={errorMsg ?? 'Không tải được danh sách provider.'}
+              onRetry={handleRetry}
+            />
+          </div>
+        )}
+        <AdminTable<ProviderRow>
+          rows={rows}
+          columns={columns}
+          loading={isLoading}
+          caption="Danh sách provider"
+          empty={
+            <EmptyState
+              title="Chưa có provider nào trong catalogue"
+              description="Vault 107 §5.7: PROVIDER_CATALOGUE seed missing — verify build."
+              className="border-0 bg-transparent"
+            />
+          }
+        />
+      </CardContent>
+    </Card>
+  );
+
+  const tabs: ProductTab[] = [
+    {
+      id: TAB_PROVIDERS,
+      label: 'Providers',
+      icon: <Plug className="h-3.5 w-3.5" aria-hidden />,
+      content: providersContent,
+    },
+    {
+      id: TAB_AUDIT,
+      label: 'OAuth audit',
+      icon: <PlugZap className="h-3.5 w-3.5" aria-hidden />,
+      content: <OAuthAuditTab />,
+    },
+    {
+      id: TAB_WEBHOOKS,
+      label: 'Webhooks',
+      icon: <Wrench className="h-3.5 w-3.5" aria-hidden />,
+      content: <WebhooksTab />,
+    },
+  ];
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Kết nối"
-        description="Wire-up các vendor AI và service tích hợp. Keys lưu encrypted trong Cloudflare KV."
-        icon={<Plug className="h-5 w-5" />}
+        description="OAuth + API-key wire-up cho vendor AI và service tích hợp. Audit log + webhook deliveries ở tab kế."
+        icon={<Plug className="h-5 w-5" aria-hidden />}
+        actions={
+          <Button onClick={handleOpenConnect} size="sm">
+            {ICON_PLUG}
+            <span className="ml-1.5">Kết nối mới</span>
+          </Button>
+        }
       />
 
-      <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-foreground/85">
-        <b className="text-gold">Lưu ý:</b> Google Gemini hỗ trợ OAuth. Anthropic và OpenAI chỉ
-        chấp nhận API key — Anthropic disable OAuth cho Messages API từ Feb 2026, OpenAI Codex
-        chỉ accept <code className="font-mono">localhost:1455</code> callback nên không web-paste
-        được.
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <KpiCard
+          label="Đã kết nối"
+          value={kpi.total}
+          icon={ICON_CONNECTED}
+          accent="jade"
+          hint={`/ ${kpi.available} khả dụng`}
+        />
+        <KpiCard
+          label="Inactive >30d"
+          value={kpi.inactive}
+          icon={ICON_INACTIVE}
+          accent="purple"
+          hint="cần kiểm tra"
+        />
+        <KpiCard
+          label="Failed 24h"
+          value={kpi.failed}
+          icon={ICON_FAILED}
+          accent="red"
+          hint="OAuth + webhook"
+        />
+        <KpiCard
+          label="Catalogue"
+          value={kpi.available}
+          icon={ICON_PLUG}
+          accent="gold"
+          hint="vendor sẵn sàng"
+        />
       </div>
 
-      <section className="space-y-3">
-        <h2 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/85">
-          Vendor AI
-        </h2>
-        <div className="grid gap-4 lg:grid-cols-3">
-          {AI_VENDORS.map((v) => (
-            <AiVendorCard
-              key={v.id}
-              vendor={v}
-              providers={data?.providers ?? null}
-              model={data?.default_models?.[v.id]}
-              onChange={refetch}
-            />
-          ))}
-        </div>
+      <ProductTabs tabs={tabs} value={tab} onValueChange={handleTabChange} />
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <span className="inline-block h-2 w-2 rounded-full bg-emerald-400" />
-              Cloudflare Workers AI
-              <span className="rounded border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-emerald-300">
-                Native
-              </span>
-            </CardTitle>
-            <CardDescription className="font-mono text-xs">
-              llama-3.3-70b-instruct · llama-3.2-vision-11b
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-xs text-muted-foreground">
-              Active mặc định, không cần key. Dùng làm fallback khi vendor key chưa set hoặc bị
-              rate-limit.
-            </p>
-          </CardContent>
-        </Card>
-      </section>
-
-      <section className="space-y-3">
-        <h2 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/85">
-          Service tích hợp
-        </h2>
-        <Card>
-          <CardHeader>
-            <CardTitle>Health checks</CardTitle>
-            <CardDescription>
-              Ping <code className="font-mono text-foreground/85">/admin/&lt;service&gt;/health</code>{' '}
-              qua worker để kiểm tra kết nối thực tế.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {SERVICES.map((s) => (
-              <ServiceRow key={s.id} service={s} />
-            ))}
-          </CardContent>
-        </Card>
-      </section>
+      <ConnectProviderDialog
+        open={connectState.open}
+        initial={connectState.initial}
+        connectedIds={connectedIds}
+        onOpenChange={handleConnectOpenChange}
+        onConnected={refetch}
+      />
+      <DisconnectDialog
+        row={disconnectRow}
+        onOpenChange={handleDisconnectOpenChange}
+        onConfirmed={refetch}
+      />
+      <ScopesDialog row={scopesRow} onOpenChange={handleScopesOpenChange} />
     </div>
   );
 }

@@ -1,301 +1,107 @@
 'use client';
 
-import * as React from 'react';
-import Link from 'next/link';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@hieu-asia/ui';
-import { Settings, ToggleLeft, Server, Bell, Shield, KeyRound, Cpu, Palette } from 'lucide-react';
-import { useTheme } from 'next-themes';
-import { PageHeader } from '@/components/admin/page-header';
+/**
+ * /admin/settings — Wave 60.81.D rebuild (vault 107 §5.7).
+ *
+ * Tier 2 paired with /connect — substitute for the blocked /secrets work.
+ * Splits the old "general / notifications / integrations / security" tabs
+ * (which mostly contained Link grids) into purpose-built tabs:
+ *
+ *   ├─ Profile — read-only admin info + theme preference
+ *   ├─ Notifications — email digest + Slack + Telegram + critical alerts
+ *   ├─ API keys — AdminTable + Generate Dialog (show once) + Revoke
+ *   └─ Retention — audit log retention window + confirm Dialog
+ *
+ * Each tab component lives in components/admin/settings/* and writes to
+ * its own API endpoint with audit_log on mutation.
+ *
+ * RSC discipline: pre-rendered icons, no inline arrow props, defensive
+ * Array.isArray on async data.
+ */
 
-const ENV_DISPLAY: { key: string; value: string }[] = [
-  { key: 'NEXT_PUBLIC_API_URL', value: process.env.NEXT_PUBLIC_API_URL ?? '(unset → mock mode)' },
-  { key: 'NEXT_PUBLIC_TELEGRAM_BOT', value: process.env.NEXT_PUBLIC_TELEGRAM_BOT ?? '(unset)' },
-  { key: 'NEXT_PUBLIC_SUPABASE_URL', value: process.env.NEXT_PUBLIC_SUPABASE_URL ?? '(unset)' },
-  { key: 'NEXT_PUBLIC_POSTHOG_KEY', value: process.env.NEXT_PUBLIC_POSTHOG_KEY ? '(set)' : '(unset)' },
-  { key: 'NODE_ENV', value: process.env.NODE_ENV ?? 'development' },
-];
+import * as React from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Settings, Bell, KeyRound, Clock, UserCircle2 } from 'lucide-react';
+import { PageHeader } from '@/components/admin/page-header';
+import { ProductTabs, type ProductTab } from '@/components/admin/product-tabs';
+import { ProfileTab } from '@/components/admin/settings/ProfileTab';
+import { NotificationsTab } from '@/components/admin/settings/NotificationsTab';
+import { ApiKeysTab } from '@/components/admin/settings/ApiKeysTab';
+import { RetentionTab } from '@/components/admin/settings/RetentionTab';
+
+const TAB_PROFILE = 'profile';
+const TAB_NOTIFICATIONS = 'notifications';
+const TAB_API_KEYS = 'api-keys';
+const TAB_RETENTION = 'retention';
+
+const VALID_TABS = new Set([
+  TAB_PROFILE,
+  TAB_NOTIFICATIONS,
+  TAB_API_KEYS,
+  TAB_RETENTION,
+]);
+
+const ICON_PROFILE = <UserCircle2 className="h-3.5 w-3.5" aria-hidden />;
+const ICON_BELL = <Bell className="h-3.5 w-3.5" aria-hidden />;
+const ICON_KEY = <KeyRound className="h-3.5 w-3.5" aria-hidden />;
+const ICON_CLOCK = <Clock className="h-3.5 w-3.5" aria-hidden />;
 
 export default function AdminSettingsPage() {
+  const router = useRouter();
+  const search = useSearchParams();
+
+  const param = search?.get('tab') ?? '';
+  const initialTab = VALID_TABS.has(param) ? param : TAB_PROFILE;
+  const [tab, setTab] = React.useState(initialTab);
+
+  const handleTabChange = React.useCallback(
+    (id: string) => {
+      setTab(id);
+      const next = new URLSearchParams(search?.toString() ?? '');
+      if (id === TAB_PROFILE) next.delete('tab');
+      else next.set('tab', id);
+      const qs = next.toString();
+      router.replace(qs ? `/settings?${qs}` : '/settings', { scroll: false });
+    },
+    [router, search],
+  );
+
+  const tabs: ProductTab[] = [
+    {
+      id: TAB_PROFILE,
+      label: 'Profile',
+      icon: ICON_PROFILE,
+      content: <ProfileTab />,
+    },
+    {
+      id: TAB_NOTIFICATIONS,
+      label: 'Notifications',
+      icon: ICON_BELL,
+      content: <NotificationsTab />,
+    },
+    {
+      id: TAB_API_KEYS,
+      label: 'API keys',
+      icon: ICON_KEY,
+      content: <ApiKeysTab />,
+    },
+    {
+      id: TAB_RETENTION,
+      label: 'Retention',
+      icon: ICON_CLOCK,
+      content: <RetentionTab />,
+    },
+  ];
+
   return (
     <div className="space-y-6">
       <PageHeader
         title="Cài đặt"
-        description="Feature flags + biến môi trường + đường dẫn nhanh tới các module quản trị."
-        icon={<Settings className="h-5 w-5" />}
+        description="Profile + notifications + admin API keys + audit log retention. Mọi mutation ghi audit_log."
+        icon={<Settings className="h-5 w-5" aria-hidden />}
       />
 
-      <Tabs defaultValue="general">
-        <TabsList>
-          <TabsTrigger value="general">General</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-          <TabsTrigger value="integrations">Integrations</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="general" className="space-y-6">
-          <ThemePreferenceCard />
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <ToggleLeft className="h-4 w-4 text-gold" />
-                Feature flags
-              </CardTitle>
-              <CardDescription>
-                Feature flags được quản lý ở trang{' '}
-                <Link href="/feature-flags" className="text-gold hover:underline">
-                  Feature Flags
-                </Link>
-                . Toggle ở đây gây drift schema — đã gỡ bỏ.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Link
-                href="/feature-flags"
-                className="flex items-center justify-between rounded-md border border-gold/15 bg-card/60 px-4 py-3 transition-colors hover:border-gold/30"
-              >
-                <div>
-                  <p className="font-medium text-foreground">Mở Feature Flags</p>
-                  <p className="text-xs text-muted-foreground">
-                    Bật/tắt tính năng runtime, persist qua Worker.
-                  </p>
-                </div>
-                <span className="font-mono text-xs text-gold">→</span>
-              </Link>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Server className="h-4 w-4 text-gold" />
-                Biến môi trường (read-only)
-              </CardTitle>
-              <CardDescription>
-                Hiển thị các biến runtime quan trọng. Đổi giá trị qua{' '}
-                <Link href="/secrets" className="text-gold hover:underline">
-                  /secrets
-                </Link>{' '}
-                hoặc deploy config.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <dl className="space-y-1 font-mono text-xs">
-                {ENV_DISPLAY.map((row) => (
-                  <div
-                    key={row.key}
-                    className="flex items-center justify-between border-b border-gold/10 py-2 last:border-0"
-                  >
-                    <dt className="text-muted-foreground">{row.key}</dt>
-                    <dd className="text-foreground">{row.value}</dd>
-                  </div>
-                ))}
-              </dl>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="notifications" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell className="h-4 w-4 text-gold" />
-                Email & Push
-              </CardTitle>
-              <CardDescription>
-                Cấu hình kênh notification. Resend cho email, Web Push cho browser, Telegram cho
-                bot.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3 text-sm">
-                <div className="rounded-md border border-gold/15 bg-card/60 px-4 py-3">
-                  <p className="font-medium text-foreground">Resend (email)</p>
-                  <p className="text-xs text-muted-foreground">
-                    Cần <code className="font-mono text-foreground/85">RESEND_API_KEY</code> trên Worker.
-                    Set ở{' '}
-                    <Link href="/secrets" className="text-gold hover:underline">
-                      /secrets
-                    </Link>
-                    .
-                  </p>
-                </div>
-                <div className="rounded-md border border-gold/15 bg-card/60 px-4 py-3">
-                  <p className="font-medium text-foreground">Web Push (VAPID)</p>
-                  <p className="text-xs text-muted-foreground">
-                    Cần <code className="font-mono text-foreground/85">VAPID_PUBLIC_KEY</code> +{' '}
-                    <code className="font-mono text-foreground/85">VAPID_PRIVATE_KEY</code>.
-                  </p>
-                </div>
-                <div className="rounded-md border border-gold/15 bg-card/60 px-4 py-3">
-                  <p className="font-medium text-foreground">Telegram bot</p>
-                  <p className="text-xs text-muted-foreground">
-                    Bot deep-link qua{' '}
-                    <code className="font-mono text-foreground/85">NEXT_PUBLIC_TELEGRAM_BOT</code>.
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="integrations" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Cpu className="h-4 w-4 text-gold" />
-                Vendor integrations
-              </CardTitle>
-              <CardDescription>Trạng thái connect các LLM provider + payments.</CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-3 sm:grid-cols-2">
-              <Link
-                href="/vendors"
-                className="flex items-center justify-between rounded-md border border-gold/15 bg-card/60 px-4 py-3 transition-colors hover:border-gold/30"
-              >
-                <div>
-                  <p className="font-medium text-foreground">LLM Vendors</p>
-                  <p className="text-xs text-muted-foreground">Anthropic, OpenAI, Google, Cloudflare</p>
-                </div>
-                <span className="font-mono text-xs text-gold">→</span>
-              </Link>
-              <Link
-                href="/posthog"
-                className="flex items-center justify-between rounded-md border border-gold/15 bg-card/60 px-4 py-3 transition-colors hover:border-gold/30"
-              >
-                <div>
-                  <p className="font-medium text-foreground">PostHog Analytics</p>
-                  <p className="text-xs text-muted-foreground">Funnel, replay, feature flag</p>
-                </div>
-                <span className="font-mono text-xs text-gold">→</span>
-              </Link>
-              <Link
-                href="/connect"
-                className="flex items-center justify-between rounded-md border border-gold/15 bg-card/60 px-4 py-3 transition-colors hover:border-gold/30"
-              >
-                <div>
-                  <p className="font-medium text-foreground">OAuth Connect</p>
-                  <p className="text-xs text-muted-foreground">Wire OAuth flow cho vendor</p>
-                </div>
-                <span className="font-mono text-xs text-gold">→</span>
-              </Link>
-              <Link
-                href="/payments"
-                className="flex items-center justify-between rounded-md border border-gold/15 bg-card/60 px-4 py-3 transition-colors hover:border-gold/30"
-              >
-                <div>
-                  <p className="font-medium text-foreground">Payments</p>
-                  <p className="text-xs text-muted-foreground">SePay webhook + coupon</p>
-                </div>
-                <span className="font-mono text-xs text-gold">→</span>
-              </Link>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="security" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-4 w-4 text-gold" />
-                Bảo mật
-              </CardTitle>
-              <CardDescription>
-                Rotate secrets, kiểm tra audit log, quản lý admin user.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-3 sm:grid-cols-2">
-              <Link
-                href="/secrets"
-                className="flex items-center justify-between rounded-md border border-gold/15 bg-card/60 px-4 py-3 transition-colors hover:border-gold/30"
-              >
-                <div className="flex items-center gap-2">
-                  <KeyRound className="h-4 w-4 text-gold/70" />
-                  <div>
-                    <p className="font-medium text-foreground">API Keys</p>
-                    <p className="text-xs text-muted-foreground">Worker + Vercel secrets</p>
-                  </div>
-                </div>
-                <span className="font-mono text-xs text-gold">→</span>
-              </Link>
-              <Link
-                href="/users"
-                className="flex items-center justify-between rounded-md border border-gold/15 bg-card/60 px-4 py-3 transition-colors hover:border-gold/30"
-              >
-                <div>
-                  <p className="font-medium text-foreground">Admin users</p>
-                  <p className="text-xs text-muted-foreground">RBAC: owner / admin / viewer</p>
-                </div>
-                <span className="font-mono text-xs text-gold">→</span>
-              </Link>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+      <ProductTabs tabs={tabs} value={tab} onValueChange={handleTabChange} />
     </div>
-  );
-}
-
-/**
- * Theme picker tied to next-themes + localStorage (next-themes persists by
- * default). Three options: dark (default), light, system.
- */
-function ThemePreferenceCard() {
-  const { theme, setTheme, resolvedTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
-  React.useEffect(() => setMounted(true), []);
-
-  const options: { value: 'dark' | 'light' | 'system'; label: string }[] = [
-    { value: 'dark', label: 'Tối (mặc định)' },
-    { value: 'light', label: 'Sáng' },
-    { value: 'system', label: 'Theo hệ thống' },
-  ];
-
-  const active = mounted ? (theme ?? 'system') : 'dark';
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Palette className="h-4 w-4 text-gold" />
-          Giao diện
-        </CardTitle>
-        <CardDescription>
-          Lưu trong <code className="font-mono text-foreground/85">localStorage</code> qua next-themes.
-          Mặc định khi chưa chọn:{' '}
-          <span className="text-foreground/85">tối</span>. Đang dùng:{' '}
-          <span className="text-gold">{resolvedTheme ?? 'dark'}</span>.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="inline-flex rounded-md border border-gold/20 bg-card/60 p-0.5">
-          {options.map((o) => (
-            <button
-              key={o.value}
-              type="button"
-              onClick={() => setTheme(o.value)}
-              className={
-                'rounded px-3 py-1.5 text-xs transition-colors ' +
-                (active === o.value
-                  ? 'bg-gold/20 text-gold'
-                  : 'text-muted-foreground hover:bg-gold/5')
-              }
-            >
-              {o.label}
-            </button>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
   );
 }
