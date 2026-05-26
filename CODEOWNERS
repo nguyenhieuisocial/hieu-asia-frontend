@@ -1,0 +1,10 @@
+# Wave 60.44 — Default owner for everything: founder. Adjust when team grows.
+*  @nguyenhieuisocial
+
+# Critical surface — touch with explicit approval
+/.github/                            @nguyenhieuisocial
+/vercel.json                         @nguyenhieuisocial
+/packages/ui/                        @nguyenhieuisocial
+/apps/web/src/app/api/               @nguyenhieuisocial
+/apps/web/src/lib/security*          @nguyenhieuisocial
+/apps/web/src/lib/auth*              @nguyenhieuisocial
