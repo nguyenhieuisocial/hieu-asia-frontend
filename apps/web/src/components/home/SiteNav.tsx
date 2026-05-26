@@ -6,6 +6,12 @@ import { useRouter } from 'next/navigation';
 import { Menu, ChevronDown, LogOut, UserCircle2 } from 'lucide-react';
 import {
   Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
   Sheet,
   SheetContent,
   SheetHeader,
@@ -183,31 +189,14 @@ export function SiteNav() {
  * Authed user menu (desktop) — shows email + Dashboard + Sign-out.
  * Wave 36: replace static "Đăng nhập" link so logged-in users see session state.
  * Wave 38.1: click-toggle (not hover) — fixes touch devices + click-instead-of-hover users.
+ * Wave 60.69: DropdownMenu primitive adoption (vault 109 §4.4) replaces the
+ * manual `useState` + click-outside + Esc + role="menu" wiring. Radix gives
+ * us roving-focus a11y + portal rendering + ESC dismiss for free.
  */
 function AuthedMenu({ user }: { user: { email?: string } }) {
   const router = useRouter();
   const [pending, setPending] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
-
-  // Close on outside click + Esc.
-  React.useEffect(() => {
-    if (!open) return;
-    function onDocClick(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setOpen(false);
-    }
-    document.addEventListener('mousedown', onDocClick);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onDocClick);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [open]);
 
   async function onSignOut() {
     setPending(true);
@@ -221,88 +210,54 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
     }
   }
 
-  // BUG-011 (Wave 52, /ultrareview follow-up): same panel-id + aria-controls
-  // pattern Agent B applied to SectionedDropdown — keeps account menu a11y
-  // consistent with Tools / Learn dropdowns.
-  const panelId = 'menu-account';
-
   return (
-    <div ref={containerRef} className="relative hidden sm:block">
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
-        aria-haspopup="true"
-        aria-expanded={open}
-        aria-controls={panelId}
-      >
-        <UserCircle2 className="h-4 w-4" aria-hidden="true" />
-        <span className="max-w-[120px] truncate">{user.email ?? 'Tài khoản'}</span>
-        <ChevronDown
-          className={cn(
-            'h-3.5 w-3.5 transition-transform',
-            open && 'rotate-180',
-          )}
-          aria-hidden="true"
-        />
-      </button>
-      <div
-        id={panelId}
-        className={cn(
-          'absolute right-0 top-full z-50 mt-1 w-56 rounded-xl border border-border bg-card/95 p-1.5 shadow-2xl backdrop-blur-md',
-          !open && 'hidden',
-        )}
-        role="menu"
-        aria-hidden={!open}
-      >
-          <Link
-            href="/account"
-            onClick={() => setOpen(false)}
-            className="block rounded-md px-3 py-2 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
-            role="menuitem"
-          >
-            Tài khoản
-          </Link>
-          <Link
-            href="/reading"
-            onClick={() => setOpen(false)}
-            className="block rounded-md px-3 py-2 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
-            role="menuitem"
-          >
-            Lá số của bạn
-          </Link>
-          <div className="my-1 h-px bg-muted/5" />
-          <p className="px-3 py-1 font-mono text-[9px] uppercase tracking-[0.24em] text-gold/85">
-            Cộng tác viên
-          </p>
-          <Link
-            href="/affiliate/network"
-            onClick={() => setOpen(false)}
-            className="block rounded-md px-3 py-2 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
-            role="menuitem"
-          >
-            Mạng lưới
-          </Link>
-          <Link
-            href="/affiliate/commissions"
-            onClick={() => setOpen(false)}
-            className="block rounded-md px-3 py-2 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
-            role="menuitem"
-          >
-            Hoa hồng
-          </Link>
-          <div className="my-1 h-px bg-muted/5" />
+    <div className="hidden sm:block">
+      <DropdownMenu open={open} onOpenChange={setOpen}>
+        <DropdownMenuTrigger asChild>
           <button
             type="button"
-            onClick={onSignOut}
+            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
+          >
+            <UserCircle2 className="h-4 w-4" aria-hidden="true" />
+            <span className="max-w-[120px] truncate">{user.email ?? 'Tài khoản'}</span>
+            <ChevronDown
+              className={cn(
+                'h-3.5 w-3.5 transition-transform',
+                open && 'rotate-180',
+              )}
+              aria-hidden="true"
+            />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuItem asChild>
+            <Link href="/account">Tài khoản</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/reading">Lá số của bạn</Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel className="text-gold/85">Cộng tác viên</DropdownMenuLabel>
+          <DropdownMenuItem asChild>
+            <Link href="/affiliate/network">Mạng lưới</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/affiliate/commissions">Hoa hồng</Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onSelect={(e) => {
+              e.preventDefault();
+              if (!pending) void onSignOut();
+            }}
             disabled={pending}
-            className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-foreground/85 transition-colors hover:bg-rose-500/10 hover:text-rose-300 disabled:opacity-50"
-            role="menuitem"
+            className="text-foreground/85 focus:bg-rose-500/10 focus:text-rose-300"
           >
             <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
             {pending ? 'Đang thoát…' : 'Đăng xuất'}
-          </button>
-      </div>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

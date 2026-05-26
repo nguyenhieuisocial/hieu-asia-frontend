@@ -35,6 +35,15 @@ export type MarketingHeroProps = {
   trustLine?: string;
   /** Right-side decorative double-ring with center gold dot. */
   ornament?: 'gold-ring' | 'none';
+  /**
+   * Wave 60.69 — optional pre-rendered JSX slot rendered in place of `ornament`
+   * (typically `<LotusLottie />`). RSC-safe — pass JSX, never a Component
+   * reference, so the Server→Client boundary doesn't choke on function values
+   * (same pattern as Wave 60.65.P0a Lucide icons + Wave 60.66.HF1 BigNumberRow
+   * `decimalPlaces` fix). When provided, `ornament` is ignored. Renders only
+   * on `lg:` viewport to keep mobile lean — matches the gold-ring breakpoint.
+   */
+  lottie?: ReactNode;
   /** Italic serif watermark (e.g. "Tử Vi"), rendered behind content at low opacity. */
   watermark?: string;
   /** Background variant (Wave 60.66.P2). `flat` (default) = solid warm-dark-50; `painted` = atmospheric SVG-noise + gold radial + glassmorphism CTAs. */
@@ -49,6 +58,7 @@ export function MarketingHero({
   secondaryCta,
   trustLine,
   ornament = 'none',
+  lottie,
   watermark,
   bg = 'flat',
 }: MarketingHeroProps) {
@@ -66,16 +76,25 @@ export function MarketingHero({
         </span>
       )}
 
-      {ornament === 'gold-ring' && (
+      {lottie ? (
         <div
           aria-hidden
-          className="pointer-events-none absolute right-[8%] top-[32%] z-0 hidden lg:block"
+          className="pointer-events-none absolute right-[8%] top-[28%] z-0 hidden lg:block"
         >
-          <div className="relative size-[220px] rounded-full border border-gold/30">
-            <div className="absolute inset-3 rounded-full border border-gold/15" />
-            <div className="absolute left-1/2 top-1/2 size-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold-dot shadow-gold-dot-glow" />
-          </div>
+          {lottie}
         </div>
+      ) : (
+        ornament === 'gold-ring' && (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute right-[8%] top-[32%] z-0 hidden lg:block"
+          >
+            <div className="relative size-[220px] rounded-full border border-gold/30">
+              <div className="absolute inset-3 rounded-full border border-gold/15" />
+              <div className="absolute left-1/2 top-1/2 size-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold-dot shadow-gold-dot-glow" />
+            </div>
+          </div>
+        )
       )}
 
       <div className="relative z-10 mx-auto max-w-marketing px-6 lg:px-12">

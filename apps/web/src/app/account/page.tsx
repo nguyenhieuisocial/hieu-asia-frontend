@@ -46,6 +46,10 @@ import { PinnedInsights } from '@/components/account/PinnedInsights';
 import { QuickActions } from '@/components/account/QuickActions';
 import { SurveyPrompt } from '@/components/survey/SurveyPrompt';
 import { SURVEY_IDS } from '@/lib/survey';
+// Wave 60.69 (vault 109 §4.3 + §4.5)
+import { PwaInstallPrompt } from '@/components/product/PwaInstallPrompt';
+import { Fab } from '@/components/product/Fab';
+import { Sparkles } from 'lucide-react';
 
 export default function AccountPage() {
   return (
@@ -162,6 +166,12 @@ function AccountPageInner() {
           <PinnedInsights />
           <QuickActions />
 
+          {/* Wave 60.69 (vault 109 §4.3) — PWA Add-to-Home-Screen prompt. Self-
+              gates on `beforeinstallprompt` event + localStorage flag + standalone
+              mode, so renders nothing in browser-tab mode on iOS Safari /
+              Firefox or after the user has answered once. */}
+          <PwaInstallPrompt />
+
           <section aria-labelledby="account-settings-h">
             <div className="mb-4 flex items-baseline justify-between">
               <h2
@@ -223,6 +233,15 @@ function AccountPageInner() {
           armed={feedbackArmed}
         />
       </main>
+      {/* Wave 60.69 (vault 109 §4.5) — FAB mounting. Primary persistent action
+          on /account is "Tra cứu mới" → /onboarding. Bottom-right with
+          safe-area respect inherited from Fab.tsx. */}
+      <Fab
+        href="/onboarding"
+        icon={<Sparkles className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />}
+        label="Tra cứu mới"
+        trackId="fab_account_new_reading"
+      />
       <SiteFooter />
     </div>
   );

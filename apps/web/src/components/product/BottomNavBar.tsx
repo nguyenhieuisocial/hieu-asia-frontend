@@ -105,6 +105,24 @@ export function BottomNavBar({ items }: BottomNavBarProps) {
               <Link
                 href={item.href}
                 aria-current={active ? 'page' : undefined}
+                // Wave 60.69 (vault 109 §4.6) — analytics on PWA bottom-nav taps.
+                // Feature-detect window.posthog so we never crash when PostHog
+                // hasn't loaded (consent denied, blocked by ad-blocker, SSR).
+                // `data-track-id` doubles as a Sentry breadcrumb hook + manual
+                // QA selector.
+                data-track-id={item.id}
+                onClick={() => {
+                  try {
+                    const ph = (
+                      window as unknown as {
+                        posthog?: { capture: (n: string, p?: unknown) => void };
+                      }
+                    ).posthog;
+                    ph?.capture('bottom_nav_tap', { item: item.id });
+                  } catch {
+                    /* never crash navigation over analytics */
+                  }
+                }}
                 className={cn(
                   'flex h-full flex-col items-center justify-center gap-0.5 px-2 text-xs transition-colors duration-200',
                   active

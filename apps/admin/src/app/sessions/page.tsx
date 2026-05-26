@@ -17,10 +17,12 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
   Input,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
   StatusBadge,
   cn,
   toast,
@@ -555,6 +557,12 @@ export default function AdminSessionsPage() {
   );
 }
 
+/**
+ * Wave 60.69 (vault 109 §4.4) — DropdownMenu primitive adoption. Replaces the
+ * previous `Popover` + manual button list with Radix DropdownMenu so we get
+ * keyboard roving-focus + ESC dismiss + portal rendering for free, matching
+ * the UsersList pattern (Wave 60.68).
+ */
 function RowMenu({
   sessionId,
   onReOrchestrate,
@@ -566,51 +574,40 @@ function RowMenu({
   onDelete: () => void;
   reOrchPending: boolean;
 }) {
-  const [open, setOpen] = React.useState(false);
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
         <button
           type="button"
-          aria-label="Thao tác"
+          aria-label={`Mở menu thao tác cho ${sessionId}`}
           className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-gold/10 hover:text-gold"
         >
           <MoreVertical className="h-4 w-4" />
         </button>
-      </PopoverTrigger>
-      <PopoverContent align="end" className="w-44 p-1">
-        <Link
-          href={`/sessions/${sessionId}`}
-          onClick={() => setOpen(false)}
-          className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-sm text-foreground hover:bg-gold/10"
-        >
-          <Eye className="h-3.5 w-3.5" />
-          Xem chi tiết
-        </Link>
-        <button
-          type="button"
-          onClick={() => {
-            setOpen(false);
-            onReOrchestrate();
-          }}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-44">
+        <DropdownMenuItem asChild>
+          <Link href={`/sessions/${sessionId}`}>
+            <Eye className="h-3.5 w-3.5 text-muted-foreground" />
+            Xem chi tiết
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem
           disabled={reOrchPending}
-          className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm text-foreground hover:bg-gold/10 disabled:opacity-50"
+          onSelect={() => onReOrchestrate()}
         >
-          <RotateCcw className="h-3.5 w-3.5" />
+          <RotateCcw className="h-3.5 w-3.5 text-gold" />
           Re-run pipeline
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setOpen(false);
-            onDelete();
-          }}
-          className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm text-red-300 hover:bg-red-500/10"
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onSelect={() => onDelete()}
+          className="text-red-300 focus:bg-red-500/10 focus:text-red-200"
         >
           <Trash2 className="h-3.5 w-3.5" />
           Xóa
-        </button>
-      </PopoverContent>
-    </Popover>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

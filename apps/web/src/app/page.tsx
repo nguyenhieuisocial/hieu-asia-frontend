@@ -9,6 +9,7 @@ import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 import { MarketingHero } from '@/components/marketing/MarketingHero';
 import { LiveCounterEyebrow } from '@/components/marketing/LiveCounterEyebrow';
+import { LotusLottie } from '@/components/marketing/LotusLottie';
 import { BentoLens } from '@/components/marketing/BentoLens';
 import { PhilosophyBlock } from '@/components/marketing/PhilosophyBlock';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
@@ -391,6 +392,12 @@ export default function LandingPage() {
           secondaryCta={{ label: 'Xem phương pháp', href: '/methodology' }}
           trustLine="5 phút · miễn phí · không cần thẻ · 14 ngày hoàn tiền"
           ornament="gold-ring"
+          // Wave 60.69 — Lottie lotus rotation intro (vault 109 §4.1). LotusLottie
+          // is a client component dynamically imported with ssr:false so its
+          // ~30 KB chunk is LAZY-only. Pre-rendered JSX here so the RSC boundary
+          // sees a child element value (not a Component reference) — same RSC
+          // pattern as Wave 60.65.P0a / 60.66.HF1.
+          lottie={<LotusLottie />}
           watermark="Tử Vi"
         />
 
