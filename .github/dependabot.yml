@@ -1,0 +1,74 @@
+# Wave 60.42 — GitHub Pro Dependabot (auto-PR for dependency updates).
+#
+# Strategy:
+# - pnpm (npm ecosystem) on root + each app/package — minor + patch only,
+#   monthly cadence to avoid PR noise. Major bumps deferred to manual
+#   review (we hit webpack 5.94+ wave 60.39 manually after audit).
+# - GitHub Actions — weekly, all updates (low blast radius).
+# - Group related ecosystem deps to reduce PR count (Next.js + React,
+#   Tailwind + tooling).
+#
+# Reviewers: nguyenhieuisocial (founder solo); auto-approve disabled —
+# every Dependabot PR still needs human eyeballs before merge.
+
+version: 2
+updates:
+  # === Root workspace + each app/package ===
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "tuesday"
+      time: "09:00"
+      timezone: "Asia/Ho_Chi_Minh"
+    open-pull-requests-limit: 5
+    versioning-strategy: "increase-if-necessary"
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+    ignore:
+      # Major bumps require manual review (per Wave 60.30 footnote pattern)
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      next-react:
+        patterns:
+          - "next"
+          - "next-*"
+          - "react"
+          - "react-*"
+          - "@next/*"
+      tailwind:
+        patterns:
+          - "tailwindcss"
+          - "tailwindcss-*"
+          - "@tailwindcss/*"
+          - "postcss"
+          - "postcss-*"
+          - "autoprefixer"
+      sentry:
+        patterns:
+          - "@sentry/*"
+      langchain:
+        patterns:
+          - "@langchain/*"
+          - "langchain"
+      types:
+        patterns:
+          - "@types/*"
+    labels:
+      - "dependencies"
+      - "dependabot"
+
+  # === GitHub Actions ===
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Ho_Chi_Minh"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "github-actions"
