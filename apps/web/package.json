@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@ai-sdk/gateway": "^3.0.120",
-    "@auth/core": "^0.37.2",
+    "@auth/core": "^0.41.2",
     "@hieu-asia/api-client": "workspace:*",
     "@hieu-asia/supabase": "workspace:*",
     "@hieu-asia/types": "workspace:*",
