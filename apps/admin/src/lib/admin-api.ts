@@ -55,7 +55,6 @@ import {
   type AdminTransaction,
   type AdminCoupon,
   type AdminSubscription,
-  type AdminFailedPayment,
   type MrrByMonth,
 } from './mock-data';
 

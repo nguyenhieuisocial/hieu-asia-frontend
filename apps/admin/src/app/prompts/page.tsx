@@ -22,7 +22,9 @@ import {
   GraduationCap,
   Scale,
   ChevronRight,
+  Search,
   Sparkles,
+  X,
   type LucideIcon,
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
@@ -85,17 +87,49 @@ async function fetchPrompts(): Promise<PromptSummary[]> {
 const fmtDate = (iso: string | null) => formatDateOrEmpty(iso, 'Chưa override');
 const fmtRelative = (iso: string | null) => formatRelativeOrEmpty(iso);
 
+type FilterMode = 'all' | 'custom' | 'default';
+
 export default function PromptsListPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['admin', 'prompts'],
     queryFn: fetchPrompts,
   });
 
+  // Wave 60.71.T2.prompts polish — search + custom/default filter so the
+  // 7-role grid scales when we add more agents (e.g. specialised
+  // judges/critics). State is local; no URL sync because the grid is small.
+  const [search, setSearch] = React.useState('');
+  const [filterMode, setFilterMode] = React.useState<FilterMode>('all');
+
   const byRole = React.useMemo(() => {
     const m = new Map<Role, PromptSummary>();
     for (const p of data ?? []) m.set(p.role, p);
     return m;
   }, [data]);
+
+  const visibleRoles = React.useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return ROLES.filter((role) => {
+      const meta = ROLE_META[role];
+      const p = byRole.get(role);
+      if (filterMode === 'custom' && !p?.is_custom) return false;
+      if (filterMode === 'default' && p?.is_custom) return false;
+      if (q) {
+        const haystack = `${role} ${meta.label} ${meta.tagline}`.toLowerCase();
+        if (!haystack.includes(q)) return false;
+      }
+      return true;
+    });
+  }, [search, filterMode, byRole]);
+
+  const handleSearchChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value),
+    [],
+  );
+  const handleClearSearch = React.useCallback(() => setSearch(''), []);
+  const handleFilterAll = React.useCallback(() => setFilterMode('all'), []);
+  const handleFilterCustom = React.useCallback(() => setFilterMode('custom'), []);
+  const handleFilterDefault = React.useCallback(() => setFilterMode('default'), []);
 
   const workerMissing = !isLoading && !error && (data?.length ?? 0) === 0;
   const customCount = (data ?? []).filter((p) => p.is_custom).length;
@@ -177,8 +211,61 @@ export default function PromptsListPage() {
         </Alert>
       )}
 
+      {/* Search + filter chrome — Wave 60.71.T2.prompts polish. Small footprint
+          on desktop, full-width on mobile so the input is easy to tap. */}
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="relative flex-1 sm:max-w-xs">
+          <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" aria-hidden />
+          <input
+            type="search"
+            value={search}
+            onChange={handleSearchChange}
+            placeholder="Tìm role / mô tả…"
+            className="h-9 w-full rounded-md border border-gold/20 bg-card/60 pl-8 pr-8 text-sm text-foreground placeholder:text-muted-foreground focus:border-gold/60 focus:outline-none"
+            aria-label="Tìm prompt theo tên hoặc mô tả"
+          />
+          {search && (
+            <button
+              type="button"
+              onClick={handleClearSearch}
+              aria-label="Xoá tìm kiếm"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-gold"
+            >
+              <X className="h-3.5 w-3.5" aria-hidden />
+            </button>
+          )}
+        </div>
+        <FilterChip
+          label="Tất cả"
+          count={ROLES.length}
+          active={filterMode === 'all'}
+          onClick={handleFilterAll}
+        />
+        <FilterChip
+          label="Custom"
+          count={customCount}
+          active={filterMode === 'custom'}
+          onClick={handleFilterCustom}
+        />
+        <FilterChip
+          label="Default"
+          count={ROLES.length - customCount}
+          active={filterMode === 'default'}
+          onClick={handleFilterDefault}
+        />
+      </div>
+
+      {visibleRoles.length === 0 && !isLoading && (
+        <Alert variant="default">
+          <AlertTitle>Không có prompt khớp bộ lọc</AlertTitle>
+          <AlertDescription>
+            Thử xóa từ khoá hoặc chuyển sang "Tất cả".
+          </AlertDescription>
+        </Alert>
+      )}
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {ROLES.map((role) => {
+        {visibleRoles.map((role) => {
           const meta = ROLE_META[role];
           const p = byRole.get(role);
           return (
@@ -238,5 +325,35 @@ export default function PromptsListPage() {
         })}
       </div>
     </div>
+  );
+}
+
+interface FilterChipProps {
+  label: string;
+  count: number;
+  active: boolean;
+  onClick: () => void;
+}
+
+/**
+ * Tiny pill toggle used for the All/Custom/Default filter. Extracted so
+ * the click handler doesn't need an inline arrow fn (Wave 60.70 ESLint
+ * rule). `onClick` already stable via parent useCallback.
+ */
+function FilterChip({ label, count, active, onClick }: FilterChipProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={
+        active
+          ? 'inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/60 bg-gold/15 px-3 text-xs text-gold'
+          : 'inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-xs text-muted-foreground hover:border-gold/40 hover:text-foreground'
+      }
+    >
+      <span>{label}</span>
+      <span className="rounded bg-card/80 px-1.5 py-0.5 font-mono text-[10px]">{count}</span>
+    </button>
   );
 }
