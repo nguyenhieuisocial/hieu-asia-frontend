@@ -30,7 +30,7 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
-import { MarketingHero } from '@/components/marketing/MarketingHero';
+import { Scrollyteller } from '@/components/marketing/Scrollyteller';
 
 export const metadata: Metadata = {
   title: 'Phương pháp luận — Engine tính gì, AI luận gì',
@@ -426,9 +426,571 @@ function StatusBadge({
   );
 }
 
+// ─────────────────────────────────────────────────────────────
+// Wave 60.67 — Chapter content builders
+//
+// Each chapter renders the same long-form body once consumed by Scrollyteller.
+// Kept as inline JSX (vs separate component files) to preserve the historical
+// "everything for /methodology in one file" convention and minimize moving
+// parts during the Wave 60.66.P3.6 accordion → scrollytelling pivot.
+// ─────────────────────────────────────────────────────────────
+
+function Chapter1Content() {
+  return (
+    <div className="space-y-12">
+      <p className="font-sans text-lg leading-relaxed text-cream-300">
+        5 nguyên tắc định hình mọi quyết định sản phẩm của hieu.asia — từ cách
+        engine tính toán đến cách AI diễn giải và cách dữ liệu được lưu trữ.
+      </p>
+
+      <ol className="space-y-4">
+        {PRINCIPLES.map((p) => {
+          const Icon = p.icon;
+          return (
+            <li key={p.n}>
+              <Card className="border-border bg-card/40">
+                <CardContent className="flex gap-4 p-5 sm:p-6">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 font-mono text-sm font-bold text-gold">
+                    {p.n}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <Icon className="h-4 w-4 text-gold/80" aria-hidden />
+                      <h3 className="font-sans text-base font-semibold text-cream-50 sm:text-lg">
+                        {p.title}
+                      </h3>
+                    </div>
+                    <p className="mt-1.5 font-sans text-sm leading-relaxed text-cream-300">
+                      {p.body}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </li>
+          );
+        })}
+      </ol>
+
+      <div>
+        <h3 className="font-sans text-xl font-bold text-cream-50 sm:text-2xl">
+          Quy trình tạo một báo cáo
+        </h3>
+        <p className="mt-2 font-sans text-sm text-cream-500">
+          6 tầng pipeline — từ input của user tới quyết định cuối cùng.
+        </p>
+
+        <ol className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {PIPELINE.map((step, idx) => {
+            const Icon = step.icon;
+            return (
+              <li key={step.label} className="relative">
+                <div className="flex h-full flex-col rounded-xl border border-warm-dark-300 bg-warm-dark-100 p-5">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[11px] text-gold-soft">
+                      0{idx + 1}
+                    </span>
+                    <Icon className="h-4 w-4 text-gold/80" aria-hidden />
+                    <h4 className="font-sans text-sm font-semibold text-cream-50">
+                      {step.label}
+                    </h4>
+                  </div>
+                  <p className="mt-2 font-sans text-sm leading-relaxed text-cream-300">
+                    {step.desc}
+                  </p>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </div>
+  );
+}
+
+function Chapter2Content() {
+  return (
+    <div className="space-y-12">
+      <p className="font-sans text-lg leading-relaxed text-cream-300">
+        Ranh giới rõ ràng giữa diễn giải và phán định. AI được phép đọc structured
+        chart; AI không được phép tự tạo dữ kiện lá số hay phán định mệnh.
+      </p>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card className="border-jade/25 bg-jade/5">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-jade">
+              <CheckCircle2 className="h-5 w-5" aria-hidden />
+              AI được phép
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2.5 font-sans text-sm leading-relaxed text-cream-300">
+              {AI_CAN.map((item) => (
+                <li key={item} className="flex gap-2">
+                  <CheckCircle2
+                    className="mt-0.5 h-4 w-4 shrink-0 text-jade"
+                    aria-hidden
+                  />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+
+        <Card className="border-rose-500/30 bg-rose-950/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-rose-300">
+              <XCircle className="h-5 w-5" aria-hidden />
+              AI KHÔNG được phép
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2.5 font-sans text-sm leading-relaxed text-cream-300">
+              {AI_CANNOT.map((item) => (
+                <li key={item} className="flex gap-2">
+                  <XCircle
+                    className="mt-0.5 h-4 w-4 shrink-0 text-rose-400"
+                    aria-hidden
+                  />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div>
+        <h3 className="font-sans text-xl font-bold text-cream-50">
+          Dữ liệu dùng để luận
+        </h3>
+        <p className="mt-2 font-sans text-sm text-cream-500">
+          Mỗi phương pháp có engine riêng, AI chỉ đọc output structured.
+        </p>
+
+        <div className="mt-4 overflow-x-auto rounded-xl border border-warm-dark-300 bg-warm-dark-100">
+          <table className="w-full min-w-[720px] text-sm">
+            <thead>
+              <tr className="border-b border-warm-dark-300 text-left font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
+                <th className="px-4 py-3 font-medium">Phương pháp</th>
+                <th className="px-4 py-3 font-medium">Dữ liệu dùng</th>
+                <th className="px-4 py-3 font-medium">Engine tính?</th>
+                <th className="px-4 py-3 font-medium">AI làm gì</th>
+                <th className="px-4 py-3 font-medium">Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              {DATA_ROWS.map((row) => (
+                <tr
+                  key={row.method}
+                  className="border-b border-warm-dark-300 last:border-b-0"
+                >
+                  <td className="px-4 py-3 font-medium text-cream-50">
+                    {row.method}
+                  </td>
+                  <td className="px-4 py-3 text-cream-300">{row.data}</td>
+                  <td className="px-4 py-3 text-cream-300">{row.engine}</td>
+                  <td className="px-4 py-3 text-cream-300">{row.ai}</td>
+                  <td className="px-4 py-3">
+                    <StatusBadge status={row.status} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Chapter3Content() {
+  return (
+    <div className="space-y-12">
+      <p className="font-sans text-lg leading-relaxed text-cream-300">
+        Mỗi report có confidence score. Khi thiếu dữ liệu, hieu.asia không
+        &quot;đoán cứng&quot; — hệ thống nói rõ độ không chắc.
+      </p>
+
+      <div>
+        <h3 className="font-sans text-xl font-bold text-cream-50">
+          Mức tin cậy của kết luận
+        </h3>
+
+        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+          {CONFIDENCE.map((c) => {
+            const palette =
+              c.color === 'jade'
+                ? 'border-jade/30 bg-jade/5 text-jade'
+                : c.color === 'amber'
+                  ? 'border-amber-500/30 bg-amber-500/5 text-amber-300'
+                  : 'border-rose-500/30 bg-rose-950/20 text-rose-300';
+            return (
+              <div
+                key={c.level}
+                className={`rounded-xl border p-5 ${palette}`}
+              >
+                <div className="font-sans text-base font-semibold">
+                  {c.level}
+                </div>
+                <p className="mt-2 font-sans text-sm leading-relaxed text-cream-300">
+                  {c.desc}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-4 rounded-xl border border-warm-dark-300 bg-warm-dark-100 p-5">
+          <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
+            Ví dụ
+          </p>
+          <p className="mt-2 font-sans text-sm italic leading-relaxed text-cream-300 sm:text-base">
+            &quot;Mức tin cậy: Trung bình. Lý do: bạn nhập giờ sinh khoảng 23:30,
+            gần ranh giờ Tý. Một số cung có thể thay đổi nếu giờ sinh lệch 20-30
+            phút.&quot;
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <h3 className="font-sans text-xl font-bold text-cream-50">
+          Vì sao kết luận này?
+        </h3>
+        <p className="mt-2 font-sans text-sm text-cream-500">
+          Mỗi kết luận quan trọng đều có thể bung ra phần căn cứ.
+        </p>
+
+        <Card className="mt-4 border-warm-dark-300 bg-warm-dark-100">
+          <CardContent className="space-y-5 p-5 sm:p-6">
+            <div>
+              <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
+                Claim
+              </p>
+              <p className="mt-2 font-sans text-base text-cream-50 sm:text-lg">
+                &quot;Bạn nên kiểm chứng cơ hội mới trong 60 ngày trước khi nghỉ
+                việc.&quot;
+              </p>
+            </div>
+
+            <div>
+              <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-jade/80">
+                Dựa trên
+              </p>
+              <ul className="mt-2 space-y-1.5 font-sans text-sm leading-relaxed text-cream-300">
+                <li className="flex gap-2">
+                  <ChevronRight
+                    className="mt-0.5 h-4 w-4 shrink-0 text-jade/70"
+                    aria-hidden
+                  />
+                  <span>Cung Quan Lộc: xu hướng mở rộng vai trò</span>
+                </li>
+                <li className="flex gap-2">
+                  <ChevronRight
+                    className="mt-0.5 h-4 w-4 shrink-0 text-jade/70"
+                    aria-hidden
+                  />
+                  <span>Tài Bạch: cần biên an toàn tài chính</span>
+                </li>
+                <li className="flex gap-2">
+                  <ChevronRight
+                    className="mt-0.5 h-4 w-4 shrink-0 text-jade/70"
+                    aria-hidden
+                  />
+                  <span>
+                    Đại vận hiện tại: chủ đề xây nền trước khi mở rộng
+                  </span>
+                </li>
+                <li className="flex gap-2">
+                  <ChevronRight
+                    className="mt-0.5 h-4 w-4 shrink-0 text-jade/70"
+                    aria-hidden
+                  />
+                  <span>Bối cảnh user: đang cân nhắc startup mới</span>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-rose-300/80">
+                Không kết luận
+              </p>
+              <ul className="mt-2 space-y-1.5 font-sans text-sm leading-relaxed text-cream-300">
+                <li className="flex gap-2">
+                  <XCircle
+                    className="mt-0.5 h-4 w-4 shrink-0 text-rose-400/80"
+                    aria-hidden
+                  />
+                  <span>Không nói bạn chắc chắn nên nghỉ</span>
+                </li>
+                <li className="flex gap-2">
+                  <XCircle
+                    className="mt-0.5 h-4 w-4 shrink-0 text-rose-400/80"
+                    aria-hidden
+                  />
+                  <span>Không nói startup chắc chắn tốt/xấu</span>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
+                Bước kiểm chứng
+              </p>
+              <ul className="mt-2 space-y-1.5 font-sans text-sm leading-relaxed text-cream-300">
+                <li className="flex gap-2">
+                  <Sparkles
+                    className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
+                    aria-hidden
+                  />
+                  <span>Tính runway</span>
+                </li>
+                <li className="flex gap-2">
+                  <Sparkles
+                    className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
+                    aria-hidden
+                  />
+                  <span>Nói chuyện với 2 người trong ngành</span>
+                </li>
+                <li className="flex gap-2">
+                  <Sparkles
+                    className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
+                    aria-hidden
+                  />
+                  <span>Đàm phán vai trò hiện tại</span>
+                </li>
+              </ul>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div>
+        <h3 className="font-sans text-xl font-bold text-cream-50">
+          Kiểm chứng thuật toán
+        </h3>
+        <p className="mt-2 font-sans text-sm text-cream-500">
+          Snapshot test suite tại lần verify gần nhất ({LAST_VERIFIED}).
+        </p>
+
+        <div className="mt-4 overflow-x-auto rounded-xl border border-warm-dark-300 bg-warm-dark-100">
+          <table className="w-full min-w-[560px] text-sm">
+            <thead>
+              <tr className="border-b border-warm-dark-300 text-left font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
+                <th className="px-4 py-3 font-medium">Hạng mục</th>
+                <th className="px-4 py-3 font-medium">Kết quả</th>
+                <th className="px-4 py-3 font-medium">Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              {VALIDATION_ROWS.map((row) => (
+                <tr
+                  key={row.label}
+                  className="border-b border-warm-dark-300 last:border-b-0"
+                >
+                  <td className="px-4 py-3 text-cream-300">{row.label}</td>
+                  <td className="px-4 py-3 font-mono text-cream-500">
+                    {row.result}
+                  </td>
+                  <td className="px-4 py-3">
+                    {row.status === 'pass' ? (
+                      <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade">
+                        <CheckCircle2 className="h-3 w-3" aria-hidden />
+                        pass
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-300">
+                        <Info className="h-3 w-3" aria-hidden />
+                        partial — 2 case đang review do dị biệt trường phái
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <p className="mt-4 font-sans text-sm leading-relaxed text-cream-500">
+          Golden dataset đang mở rộng từ 32 lên 100 lá số ground-truth. Mỗi
+          release engine chạy lại regression test.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function Chapter4Content() {
+  return (
+    <div className="space-y-12">
+      <p className="font-sans text-lg leading-relaxed text-cream-300">
+        Human-in-the-loop ở 4 vai trò review, kích hoạt theo 4 trigger. Dữ liệu
+        cá nhân được tối thiểu hoá và có thể xoá bất cứ lúc nào.
+      </p>
+
+      <div>
+        <h3 className="font-sans text-xl font-bold text-cream-50">
+          Human review
+        </h3>
+        <p className="mt-2 font-sans text-sm text-cream-500">
+          4 vai trò review, 4 trigger trigger, SLA xử lý phản hồi.
+        </p>
+
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <Card className="border-warm-dark-300 bg-warm-dark-100">
+            <CardHeader>
+              <CardTitle className="text-base text-cream-50">
+                Vai trò review
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2.5 font-sans text-sm leading-relaxed text-cream-300">
+                {REVIEW_ROLES.map((r) => (
+                  <li key={r.role} className="flex gap-2">
+                    <Eye
+                      className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
+                      aria-hidden
+                    />
+                    <span>
+                      <span className="font-medium text-cream-50">
+                        {r.role}:
+                      </span>{' '}
+                      {r.desc}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+
+          <Card className="border-warm-dark-300 bg-warm-dark-100">
+            <CardHeader>
+              <CardTitle className="text-base text-cream-50">
+                Khi nào review được kích hoạt
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2.5 font-sans text-sm leading-relaxed text-cream-300">
+                {REVIEW_TRIGGERS.map((t) => (
+                  <li key={t} className="flex gap-2">
+                    <ChevronRight
+                      className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
+                      aria-hidden
+                    />
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="mt-4 rounded-xl border border-gold/20 bg-gold/5 p-5">
+          <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
+            SLA
+          </p>
+          <p className="mt-2 font-sans text-sm leading-relaxed text-cream-300">
+            Xác nhận tiếp nhận trong 72h. Xử lý hoàn tất trong tối đa 30 ngày
+            làm việc (yêu cầu xoá/xuất dữ liệu).
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <h3 className="font-sans text-xl font-bold text-cream-50">
+          Privacy-first methodology
+        </h3>
+        <p className="mt-2 font-sans text-sm text-cream-500">
+          Tóm tắt cách hieu.asia xử lý dữ liệu cá nhân.
+        </p>
+
+        <ul className="mt-4 space-y-2.5 font-sans text-sm leading-relaxed text-cream-300">
+          {PRIVACY_BULLETS.map((b) => (
+            <li key={b} className="flex gap-2">
+              <Lock
+                className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
+                aria-hidden
+              />
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+
+        <p className="mt-5 font-sans text-sm text-cream-500">
+          Bảng sub-processor đầy đủ và quyền user xem tại{' '}
+          <Link
+            href="/privacy"
+            className="text-gold-soft underline underline-offset-4 hover:text-gold"
+          >
+            /privacy
+          </Link>
+          .
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function Chapter5Content() {
+  return (
+    <div className="space-y-12">
+      <p className="font-sans text-lg leading-relaxed text-cream-300">
+        Quality rubric 8 tiêu chí — mỗi tiêu chí kèm câu hỏi xác minh. Bên dưới
+        là 6 câu hỏi thường gặp nhất về phương pháp luận hieu.asia.
+      </p>
+
+      <div>
+        <h3 className="font-sans text-xl font-bold text-cream-50">
+          Một luận giải tốt cần 8 tiêu chí
+        </h3>
+
+        <ol className="mt-4 grid gap-3 sm:grid-cols-2">
+          {RUBRIC.map((r) => (
+            <li key={r.n}>
+              <div className="flex h-full gap-3 rounded-xl border border-warm-dark-300 bg-warm-dark-100 p-4">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 font-mono text-xs font-bold text-gold">
+                  {r.n}
+                </span>
+                <div className="min-w-0">
+                  <p className="font-sans text-sm font-semibold text-cream-50">
+                    {r.name}
+                  </p>
+                  <p className="mt-1 font-sans text-sm leading-relaxed text-cream-300">
+                    {r.q}
+                  </p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <div>
+        <h3 className="font-sans text-xl font-bold text-cream-50">
+          Câu hỏi thường gặp
+        </h3>
+
+        <Accordion type="single" collapsible className="mt-4 w-full">
+          {FAQ.map((f, i) => (
+            <AccordionItem key={f.q} value={`faq-${i}`}>
+              <AccordionTrigger className="text-left font-sans text-base font-medium text-cream-50">
+                {f.q}
+              </AccordionTrigger>
+              <AccordionContent className="font-sans leading-relaxed text-cream-300">
+                {f.a}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
+    </div>
+  );
+}
+
 export default function MethodologyPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-warm-dark-50 text-cream-50">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -442,786 +1004,137 @@ export default function MethodologyPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
       />
-      <main id="main-content" className="relative pt-16">
-        {/* Wave 60.56 P3.6 — MarketingHero replaces custom bg-ink-radial hero */}
-        <MarketingHero
-          eyebrow="PHƯƠNG PHÁP LUẬN · HIEU.ASIA"
-          title={
-            <>
-              Engine tính gì, AI luận gì,{' '}
-              <em className="font-marketing-display italic text-gold-soft">
-                người dùng quyết gì
-              </em>
-              <span className="text-gold-dot">.</span>
-            </>
-          }
-          subtitle="hieu.asia không dùng AI để phán mệnh. Engine deterministic lập lá số, AI diễn giải bằng tiếng Việt, người dùng quyết định. Lá số là bản đồ tham chiếu — không phải lời tiên tri."
-          primaryCta={{ label: 'Xem báo cáo mẫu', href: '/sample-report' }}
-          secondaryCta={{ label: 'Tạo lá số của bạn', href: '/onboarding' }}
-          trustLine={`LAST VERIFIED · ${LAST_VERIFIED}`}
-          ornament="gold-ring"
-          watermark="Phương Pháp"
-        />
-
-        {/* Breadcrumb strip under hero */}
-        <section className="relative mx-auto max-w-4xl px-6 pt-8">
-          <nav
-            aria-label="Breadcrumb"
-            className="text-xs text-muted-foreground"
-          >
-            <Link href="/" className="hover:text-gold">
-              Trang chủ
-            </Link>
-            <span className="mx-1.5">/</span>
-            <span className="text-muted-foreground">Phương pháp luận</span>
-          </nav>
-
-          <div className="mt-6 flex flex-wrap gap-2 text-xs">
-            {[
-              'Engine deterministic',
-              'Tử Vi Bắc phái 114 sao',
-              'AI không tự an sao',
-              'Có confidence score',
-              'Có algorithm changelog',
-              'Privacy-first',
-            ].map((pill) => (
-              <span
-                key={pill}
-                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-3 py-1 text-muted-foreground"
-              >
-                {pill}
-              </span>
-            ))}
-          </div>
-        </section>
-
+      <main id="main-content" className="relative">
         {/* ─────────────────────────────────────────────────────────────
-           Chapter 1 — Triết lý + Nguyên tắc + Pipeline (ALWAYS VISIBLE)
-           Sets the tone. Warm-dark tonal layer 1.
+           Wave 60.67 — Page hero (Option E typography pivot, vault 109 §4).
+           Replaces the previous MarketingHero rendering — scrollytelling
+           subsection below benefits from a more concise, scan-fast hero
+           that doesn't compete with the sticky chapter title.
            ───────────────────────────────────────────────────────────── */}
-        <section className="relative bg-background">
-          <div className="mx-auto max-w-4xl px-6 py-16">
-            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
-              Chương 1 · Triết lý
+        <section className="bg-warm-dark-50 px-6 py-16 pt-32 md:py-24">
+          <div className="mx-auto max-w-marketing-tight">
+            <p className="mb-6 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
+              <span className="mr-2 inline-block h-px w-6 bg-gold align-middle" />
+              PHƯƠNG PHÁP · 2026
             </p>
-            <h2 className="mt-3 font-heading text-2xl font-bold text-foreground sm:text-3xl">
-              Nguyên tắc nền tảng
-            </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              5 nguyên tắc định hình mọi quyết định sản phẩm của hieu.asia.
+            <h1 className="font-sans text-hero-display font-bold tracking-tight text-cream-50">
+              Engine tính gì, AI luận gì,{' '}
+              <u className="underline decoration-gold decoration-2 underline-offset-[6px]">
+                bạn quyết định
+              </u>{' '}
+              gì
+              <span className="text-gold-dot">.</span>
+            </h1>
+            <p className="mt-8 max-w-marketing-text text-pretty font-sans text-lg leading-relaxed text-cream-300">
+              Năm chương ngắn: triết lý, giới hạn của AI, cách chúng tôi kiểm
+              chứng, quy trình + privacy, và rubric chất lượng.
             </p>
 
-            <ol className="mt-8 space-y-4">
-              {PRINCIPLES.map((p) => {
-                const Icon = p.icon;
-                return (
-                  <li key={p.n}>
-                    <Card className="border-border bg-card/40">
-                      <CardContent className="flex gap-4 p-5 sm:p-6">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 font-mono text-sm font-bold text-gold">
-                          {p.n}
-                        </div>
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-2">
-                            <Icon
-                              className="h-4 w-4 text-gold/80"
-                              aria-hidden
-                            />
-                            <h3 className="font-heading text-base font-semibold text-foreground sm:text-lg">
-                              {p.title}
-                            </h3>
-                          </div>
-                          <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                            {p.body}
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </li>
-                );
-              })}
-            </ol>
+            {/* Breadcrumb + trust pills under hero */}
+            <nav
+              aria-label="Breadcrumb"
+              className="mt-10 font-mono text-eyebrow uppercase tracking-[0.12em] text-cream-500"
+            >
+              <Link href="/" className="hover:text-gold-soft">
+                Trang chủ
+              </Link>
+              <span className="mx-2">/</span>
+              <span className="text-cream-300">Phương pháp luận</span>
+              <span className="mx-2">·</span>
+              <span>LAST VERIFIED {LAST_VERIFIED}</span>
+            </nav>
 
-            <div className="mt-16">
-              <h3 className="font-heading text-xl font-bold text-foreground sm:text-2xl">
-                Quy trình tạo một báo cáo
-              </h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                6 tầng pipeline — từ input của user tới quyết định cuối cùng.
-              </p>
-
-              <ol className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {PIPELINE.map((step, idx) => {
-                  const Icon = step.icon;
-                  return (
-                    <li key={step.label} className="relative">
-                      <div className="flex h-full flex-col rounded-xl border border-border bg-card/40 p-5">
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-[11px] text-gold/85">
-                            0{idx + 1}
-                          </span>
-                          <Icon
-                            className="h-4 w-4 text-gold/80"
-                            aria-hidden
-                          />
-                          <h4 className="font-heading text-sm font-semibold text-foreground">
-                            {step.label}
-                          </h4>
-                        </div>
-                        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                          {step.desc}
-                        </p>
-                      </div>
-                      {idx < PIPELINE.length - 1 && (
-                        <ArrowRight
-                          className="absolute -right-3 top-1/2 hidden h-4 w-4 -translate-y-1/2 text-gold/40 lg:block"
-                          aria-hidden
-                        />
-                      )}
-                    </li>
-                  );
-                })}
-              </ol>
+            <div className="mt-6 flex flex-wrap gap-2 font-sans text-xs">
+              {[
+                'Engine deterministic',
+                'Tử Vi Bắc phái 114 sao',
+                'AI không tự an sao',
+                'Có confidence score',
+                'Có algorithm changelog',
+                'Privacy-first',
+              ].map((pill) => (
+                <span
+                  key={pill}
+                  className="inline-flex items-center gap-1.5 rounded-pill border border-warm-dark-300 bg-warm-dark-100 px-3 py-1 text-cream-300"
+                >
+                  {pill}
+                </span>
+              ))}
             </div>
           </div>
         </section>
 
         {/* ─────────────────────────────────────────────────────────────
-           Chapters 2-5 — Progressive disclosure via Radix Accordion
-           Default collapsed. Tonal layer 2 (subtle muted-50).
+           Wave 60.67 — Scrollytelling section (5 chapters).
+           Sticky 40% left column on desktop, single stack on mobile.
            ───────────────────────────────────────────────────────────── */}
-        <section className="relative bg-muted/5">
-          <div className="mx-auto max-w-4xl px-6 py-16">
-            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
-              Chi tiết phương pháp
-            </p>
-            <h2 className="mt-3 font-heading text-2xl font-bold text-foreground sm:text-3xl">
-              Mở rộng từng chương để xem chi tiết
-            </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              4 chương sau giải thích sâu hơn về dữ liệu, ranh giới AI,
-              validation và quy trình review.
-            </p>
-
-            <Accordion
-              type="multiple"
-              className="mt-8 w-full space-y-3"
-            >
-              {/* ───── Chapter 2 — AI làm được + Không làm được ───── */}
-              <AccordionItem
-                value="chapter-2"
-                className="overflow-hidden rounded-2xl border border-border bg-card/40 px-5"
-              >
-                <AccordionTrigger className="text-left">
-                  <div>
-                    <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/70">
-                      Chương 2
-                    </p>
-                    <h3 className="mt-1 font-heading text-base font-semibold text-foreground sm:text-lg">
-                      AI làm được + Không làm được
-                    </h3>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-8 pb-6 pt-2">
-                    <p className="text-sm text-muted-foreground">
-                      Ranh giới rõ ràng giữa diễn giải và phán định.
-                    </p>
-
-                    <div className="grid gap-4 lg:grid-cols-2">
-                      <Card className="border-jade/25 bg-jade/5">
-                        <CardHeader>
-                          <CardTitle className="flex items-center gap-2 text-jade">
-                            <CheckCircle2 className="h-5 w-5" aria-hidden />
-                            AI được phép
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <ul className="space-y-2.5 text-sm leading-relaxed text-foreground/80">
-                            {AI_CAN.map((item) => (
-                              <li key={item} className="flex gap-2">
-                                <CheckCircle2
-                                  className="mt-0.5 h-4 w-4 shrink-0 text-jade"
-                                  aria-hidden
-                                />
-                                <span>{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </CardContent>
-                      </Card>
-
-                      <Card className="border-rose-500/30 bg-rose-950/20">
-                        <CardHeader>
-                          <CardTitle className="flex items-center gap-2 text-rose-300">
-                            <XCircle className="h-5 w-5" aria-hidden />
-                            AI KHÔNG được phép
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <ul className="space-y-2.5 text-sm leading-relaxed text-foreground/80">
-                            {AI_CANNOT.map((item) => (
-                              <li key={item} className="flex gap-2">
-                                <XCircle
-                                  className="mt-0.5 h-4 w-4 shrink-0 text-rose-400"
-                                  aria-hidden
-                                />
-                                <span>{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </CardContent>
-                      </Card>
-                    </div>
-
-                    <div>
-                      <h4 className="font-heading text-base font-semibold text-foreground">
-                        Dữ liệu dùng để luận
-                      </h4>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        Mỗi phương pháp có engine riêng, AI chỉ đọc output
-                        structured.
-                      </p>
-
-                      <div className="mt-4 overflow-x-auto rounded-xl border border-border bg-card/40">
-                        <table className="w-full min-w-[720px] text-sm">
-                          <thead>
-                            <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
-                              <th className="px-4 py-3 font-medium">
-                                Phương pháp
-                              </th>
-                              <th className="px-4 py-3 font-medium">
-                                Dữ liệu dùng
-                              </th>
-                              <th className="px-4 py-3 font-medium">
-                                Engine tính?
-                              </th>
-                              <th className="px-4 py-3 font-medium">
-                                AI làm gì
-                              </th>
-                              <th className="px-4 py-3 font-medium">
-                                Trạng thái
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {DATA_ROWS.map((row) => (
-                              <tr
-                                key={row.method}
-                                className="border-b border-border last:border-b-0"
-                              >
-                                <td className="px-4 py-3 font-medium text-foreground">
-                                  {row.method}
-                                </td>
-                                <td className="px-4 py-3 text-muted-foreground">
-                                  {row.data}
-                                </td>
-                                <td className="px-4 py-3 text-muted-foreground">
-                                  {row.engine}
-                                </td>
-                                <td className="px-4 py-3 text-muted-foreground">
-                                  {row.ai}
-                                </td>
-                                <td className="px-4 py-3">
-                                  <StatusBadge status={row.status} />
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              {/* ───── Chapter 3 — Validation + Bằng chứng ───── */}
-              <AccordionItem
-                value="chapter-3"
-                className="overflow-hidden rounded-2xl border border-border bg-card/40 px-5"
-              >
-                <AccordionTrigger className="text-left">
-                  <div>
-                    <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/70">
-                      Chương 3
-                    </p>
-                    <h3 className="mt-1 font-heading text-base font-semibold text-foreground sm:text-lg">
-                      Validation + Bằng chứng
-                    </h3>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-8 pb-6 pt-2">
-                    <div>
-                      <h4 className="font-heading text-base font-semibold text-foreground">
-                        Mức tin cậy của kết luận
-                      </h4>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        Mỗi report có confidence score. Khi thiếu dữ liệu,
-                        hieu.asia không &quot;đoán cứng&quot; — hệ thống nói
-                        rõ độ không chắc.
-                      </p>
-
-                      <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                        {CONFIDENCE.map((c) => {
-                          const palette =
-                            c.color === 'jade'
-                              ? 'border-jade/30 bg-jade/5 text-jade'
-                              : c.color === 'amber'
-                                ? 'border-amber-500/30 bg-amber-500/5 text-amber-300'
-                                : 'border-rose-500/30 bg-rose-950/20 text-rose-300';
-                          return (
-                            <div
-                              key={c.level}
-                              className={`rounded-xl border p-5 ${palette}`}
-                            >
-                              <div className="font-heading text-base font-semibold">
-                                {c.level}
-                              </div>
-                              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                                {c.desc}
-                              </p>
-                            </div>
-                          );
-                        })}
-                      </div>
-
-                      <div className="mt-4 rounded-xl border border-border bg-card/30 p-5">
-                        <p className="font-mono text-[11px] uppercase tracking-wider text-gold/85">
-                          Ví dụ
-                        </p>
-                        <p className="mt-2 text-sm italic leading-relaxed text-foreground/80 sm:text-base">
-                          &quot;Mức tin cậy: Trung bình. Lý do: bạn nhập giờ
-                          sinh khoảng 23:30, gần ranh giờ Tý. Một số cung có
-                          thể thay đổi nếu giờ sinh lệch 20-30 phút.&quot;
-                        </p>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h4 className="font-heading text-base font-semibold text-foreground">
-                        Vì sao kết luận này?
-                      </h4>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        Mỗi kết luận quan trọng đều có thể bung ra phần căn
-                        cứ.
-                      </p>
-
-                      <Card className="mt-4 border-border bg-card/40">
-                        <CardContent className="space-y-5 p-5 sm:p-6">
-                          <div>
-                            <p className="font-mono text-[11px] uppercase tracking-wider text-gold/85">
-                              Claim
-                            </p>
-                            <p className="mt-2 font-heading text-base text-foreground sm:text-lg">
-                              &quot;Bạn nên kiểm chứng cơ hội mới trong 60 ngày
-                              trước khi nghỉ việc.&quot;
-                            </p>
-                          </div>
-
-                          <div>
-                            <p className="font-mono text-[11px] uppercase tracking-wider text-jade/80">
-                              Dựa trên
-                            </p>
-                            <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-foreground/80">
-                              <li className="flex gap-2">
-                                <ChevronRight
-                                  className="mt-0.5 h-4 w-4 shrink-0 text-jade/70"
-                                  aria-hidden
-                                />
-                                <span>
-                                  Cung Quan Lộc: xu hướng mở rộng vai trò
-                                </span>
-                              </li>
-                              <li className="flex gap-2">
-                                <ChevronRight
-                                  className="mt-0.5 h-4 w-4 shrink-0 text-jade/70"
-                                  aria-hidden
-                                />
-                                <span>
-                                  Tài Bạch: cần biên an toàn tài chính
-                                </span>
-                              </li>
-                              <li className="flex gap-2">
-                                <ChevronRight
-                                  className="mt-0.5 h-4 w-4 shrink-0 text-jade/70"
-                                  aria-hidden
-                                />
-                                <span>
-                                  Đại vận hiện tại: chủ đề xây nền trước khi
-                                  mở rộng
-                                </span>
-                              </li>
-                              <li className="flex gap-2">
-                                <ChevronRight
-                                  className="mt-0.5 h-4 w-4 shrink-0 text-jade/70"
-                                  aria-hidden
-                                />
-                                <span>
-                                  Bối cảnh user: đang cân nhắc startup mới
-                                </span>
-                              </li>
-                            </ul>
-                          </div>
-
-                          <div>
-                            <p className="font-mono text-[11px] uppercase tracking-wider text-rose-300/80">
-                              Không kết luận
-                            </p>
-                            <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-foreground/80">
-                              <li className="flex gap-2">
-                                <XCircle
-                                  className="mt-0.5 h-4 w-4 shrink-0 text-rose-400/80"
-                                  aria-hidden
-                                />
-                                <span>Không nói bạn chắc chắn nên nghỉ</span>
-                              </li>
-                              <li className="flex gap-2">
-                                <XCircle
-                                  className="mt-0.5 h-4 w-4 shrink-0 text-rose-400/80"
-                                  aria-hidden
-                                />
-                                <span>
-                                  Không nói startup chắc chắn tốt/xấu
-                                </span>
-                              </li>
-                            </ul>
-                          </div>
-
-                          <div>
-                            <p className="font-mono text-[11px] uppercase tracking-wider text-gold/80">
-                              Bước kiểm chứng
-                            </p>
-                            <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-foreground/80">
-                              <li className="flex gap-2">
-                                <Sparkles
-                                  className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
-                                  aria-hidden
-                                />
-                                <span>Tính runway</span>
-                              </li>
-                              <li className="flex gap-2">
-                                <Sparkles
-                                  className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
-                                  aria-hidden
-                                />
-                                <span>
-                                  Nói chuyện với 2 người trong ngành
-                                </span>
-                              </li>
-                              <li className="flex gap-2">
-                                <Sparkles
-                                  className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
-                                  aria-hidden
-                                />
-                                <span>Đàm phán vai trò hiện tại</span>
-                              </li>
-                            </ul>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-
-                    <div>
-                      <h4 className="font-heading text-base font-semibold text-foreground">
-                        Kiểm chứng thuật toán
-                      </h4>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        Snapshot test suite tại lần verify gần nhất (
-                        {LAST_VERIFIED}).
-                      </p>
-
-                      <div className="mt-4 overflow-x-auto rounded-xl border border-border bg-card/40">
-                        <table className="w-full min-w-[560px] text-sm">
-                          <thead>
-                            <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
-                              <th className="px-4 py-3 font-medium">
-                                Hạng mục
-                              </th>
-                              <th className="px-4 py-3 font-medium">
-                                Kết quả
-                              </th>
-                              <th className="px-4 py-3 font-medium">
-                                Trạng thái
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {VALIDATION_ROWS.map((row) => (
-                              <tr
-                                key={row.label}
-                                className="border-b border-border last:border-b-0"
-                              >
-                                <td className="px-4 py-3 text-foreground/85">
-                                  {row.label}
-                                </td>
-                                <td className="px-4 py-3 font-mono text-muted-foreground">
-                                  {row.result}
-                                </td>
-                                <td className="px-4 py-3">
-                                  {row.status === 'pass' ? (
-                                    <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade">
-                                      <CheckCircle2
-                                        className="h-3 w-3"
-                                        aria-hidden
-                                      />
-                                      pass
-                                    </span>
-                                  ) : (
-                                    <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-300">
-                                      <Info className="h-3 w-3" aria-hidden />
-                                      partial — 2 case đang review do dị biệt
-                                      trường phái
-                                    </span>
-                                  )}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-
-                      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                        Golden dataset đang mở rộng từ 32 lên 100 lá số
-                        ground-truth. Mỗi release engine chạy lại regression
-                        test.
-                      </p>
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              {/* ───── Chapter 4 — Quy trình + Privacy ───── */}
-              <AccordionItem
-                value="chapter-4"
-                className="overflow-hidden rounded-2xl border border-border bg-card/40 px-5"
-              >
-                <AccordionTrigger className="text-left">
-                  <div>
-                    <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/70">
-                      Chương 4
-                    </p>
-                    <h3 className="mt-1 font-heading text-base font-semibold text-foreground sm:text-lg">
-                      Quy trình + Privacy
-                    </h3>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-8 pb-6 pt-2">
-                    <div>
-                      <h4 className="font-heading text-base font-semibold text-foreground">
-                        Human review
-                      </h4>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        4 vai trò review, 4 trigger trigger, SLA xử lý phản
-                        hồi.
-                      </p>
-
-                      <div className="mt-4 grid gap-4 lg:grid-cols-2">
-                        <Card className="border-border bg-card/40">
-                          <CardHeader>
-                            <CardTitle className="text-base text-foreground">
-                              Vai trò review
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <ul className="space-y-2.5 text-sm leading-relaxed text-foreground/80">
-                              {REVIEW_ROLES.map((r) => (
-                                <li key={r.role} className="flex gap-2">
-                                  <Eye
-                                    className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
-                                    aria-hidden
-                                  />
-                                  <span>
-                                    <span className="font-medium text-foreground">
-                                      {r.role}:
-                                    </span>{' '}
-                                    {r.desc}
-                                  </span>
-                                </li>
-                              ))}
-                            </ul>
-                          </CardContent>
-                        </Card>
-
-                        <Card className="border-border bg-card/40">
-                          <CardHeader>
-                            <CardTitle className="text-base text-foreground">
-                              Khi nào review được kích hoạt
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <ul className="space-y-2.5 text-sm leading-relaxed text-foreground/80">
-                              {REVIEW_TRIGGERS.map((t) => (
-                                <li key={t} className="flex gap-2">
-                                  <ChevronRight
-                                    className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
-                                    aria-hidden
-                                  />
-                                  <span>{t}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </CardContent>
-                        </Card>
-                      </div>
-
-                      <div className="mt-4 rounded-xl border border-gold/20 bg-gold/5 p-5">
-                        <p className="font-mono text-[11px] uppercase tracking-wider text-gold/80">
-                          SLA
-                        </p>
-                        <p className="mt-2 text-sm leading-relaxed text-foreground/80">
-                          Xác nhận tiếp nhận trong 72h. Xử lý hoàn tất trong
-                          tối đa 30 ngày làm việc (yêu cầu xoá/xuất dữ liệu).
-                        </p>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h4 className="font-heading text-base font-semibold text-foreground">
-                        Privacy-first methodology
-                      </h4>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        Tóm tắt cách hieu.asia xử lý dữ liệu cá nhân.
-                      </p>
-
-                      <ul className="mt-4 space-y-2.5 text-sm leading-relaxed text-foreground/80">
-                        {PRIVACY_BULLETS.map((b) => (
-                          <li key={b} className="flex gap-2">
-                            <Lock
-                              className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
-                              aria-hidden
-                            />
-                            <span>{b}</span>
-                          </li>
-                        ))}
-                      </ul>
-
-                      <p className="mt-5 text-sm text-muted-foreground">
-                        Bảng sub-processor đầy đủ và quyền user xem tại{' '}
-                        <Link
-                          href="/privacy"
-                          className="text-gold underline underline-offset-4 hover:opacity-80"
-                        >
-                          /privacy
-                        </Link>
-                        .
-                      </p>
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              {/* ───── Chapter 5 — Đánh giá chất lượng + FAQ ───── */}
-              <AccordionItem
-                value="chapter-5"
-                className="overflow-hidden rounded-2xl border border-border bg-card/40 px-5"
-              >
-                <AccordionTrigger className="text-left">
-                  <div>
-                    <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/70">
-                      Chương 5
-                    </p>
-                    <h3 className="mt-1 font-heading text-base font-semibold text-foreground sm:text-lg">
-                      Đánh giá chất lượng + FAQ
-                    </h3>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-8 pb-6 pt-2">
-                    <div>
-                      <h4 className="font-heading text-base font-semibold text-foreground">
-                        Một luận giải tốt cần 8 tiêu chí
-                      </h4>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        Quality rubric — mỗi tiêu chí kèm câu hỏi xác minh.
-                      </p>
-
-                      <ol className="mt-4 grid gap-3 sm:grid-cols-2">
-                        {RUBRIC.map((r) => (
-                          <li key={r.n}>
-                            <div className="flex h-full gap-3 rounded-xl border border-border bg-card/40 p-4">
-                              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 font-mono text-xs font-bold text-gold">
-                                {r.n}
-                              </span>
-                              <div className="min-w-0">
-                                <p className="font-heading text-sm font-semibold text-foreground">
-                                  {r.name}
-                                </p>
-                                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                                  {r.q}
-                                </p>
-                              </div>
-                            </div>
-                          </li>
-                        ))}
-                      </ol>
-                    </div>
-
-                    <div>
-                      <h4 className="font-heading text-base font-semibold text-foreground">
-                        Câu hỏi thường gặp
-                      </h4>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        Những câu hỏi thường gặp nhất về phương pháp luận
-                        hieu.asia.
-                      </p>
-
-                      <Accordion
-                        type="single"
-                        collapsible
-                        className="mt-4 w-full"
-                      >
-                        {FAQ.map((f, i) => (
-                          <AccordionItem key={f.q} value={`faq-${i}`}>
-                            <AccordionTrigger className="text-left text-base font-medium">
-                              {f.q}
-                            </AccordionTrigger>
-                            <AccordionContent className="leading-relaxed text-muted-foreground">
-                              {f.a}
-                            </AccordionContent>
-                          </AccordionItem>
-                        ))}
-                      </Accordion>
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
-        </section>
+        <Scrollyteller
+          fallbackEyebrow="PHƯƠNG PHÁP · HIEU.ASIA"
+          chapters={[
+            {
+              id: 'chapter-philosophy',
+              eyebrow: 'CHƯƠNG 1 · TRIẾT LÝ',
+              title: 'Bốn ống kính, một con người',
+              content: <Chapter1Content />,
+            },
+            {
+              id: 'chapter-limits',
+              eyebrow: 'CHƯƠNG 2 · GIỚI HẠN',
+              title: 'Cái AI biết & cái AI không thể biết',
+              content: <Chapter2Content />,
+            },
+            {
+              id: 'chapter-validation',
+              eyebrow: 'CHƯƠNG 3 · KIỂM CHỨNG',
+              title: 'Confidence không phải tin cậy',
+              content: <Chapter3Content />,
+            },
+            {
+              id: 'chapter-process',
+              eyebrow: 'CHƯƠNG 4 · CÁCH LÀM',
+              title: 'Human-in-the-loop · Privacy-first',
+              content: <Chapter4Content />,
+            },
+            {
+              id: 'chapter-rubric',
+              eyebrow: 'CHƯƠNG 5 · CHẤT LƯỢNG',
+              title: 'Rubric chất lượng + câu hỏi thường gặp',
+              content: <Chapter5Content />,
+            },
+          ]}
+        />
 
         {/* ─────────────────────────────────────────────────────────────
-           Related — outside collapse, always visible footer CTA
-           Warm-dark tonal layer 3 — return to background.
+           Related — always-visible footer CTA grid + contact callout.
            ───────────────────────────────────────────────────────────── */}
-        <section className="relative bg-background">
-          <div className="mx-auto max-w-5xl px-6 pb-20 pt-16">
-            <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
-              Đọc tiếp
-            </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Tài liệu chi tiết hơn về từng phần.
+        <section className="relative bg-warm-dark-100">
+          <div className="mx-auto max-w-marketing px-6 pb-20 pt-16 lg:px-12">
+            <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
+              <span className="mr-2 inline-block h-px w-6 bg-gold align-middle" />
+              ĐỌC TIẾP
             </p>
+            <h2 className="mt-4 font-sans text-section-display font-bold tracking-tight text-cream-50">
+              Tài liệu chi tiết hơn về từng phần
+            </h2>
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {RELATED.map((r) => {
                 const Icon = r.icon;
                 return (
                   <Link
                     key={r.href}
                     href={r.href}
-                    className="group flex items-center gap-3 rounded-xl border border-border bg-card/40 p-4 transition-colors hover:border-gold/30 hover:bg-card/60"
+                    className="group flex items-center gap-3 rounded-card-editorial border border-warm-dark-300 bg-warm-dark-100 p-4 transition-colors duration-300 ease-editorial hover:border-gold/30 hover:bg-warm-dark-200"
                   >
                     <Icon
                       className="h-5 w-5 shrink-0 text-gold/80"
                       aria-hidden
                     />
-                    <span className="flex-1 font-heading text-sm font-semibold text-foreground">
+                    <span className="flex-1 font-sans text-sm font-semibold text-cream-50">
                       {r.title}
                     </span>
                     <ArrowRight
-                      className="h-4 w-4 shrink-0 text-foreground/40 transition-transform group-hover:translate-x-1 group-hover:text-gold"
+                      className="h-4 w-4 shrink-0 text-cream-500 transition-transform group-hover:translate-x-1 group-hover:text-gold"
                       aria-hidden
                     />
                   </Link>
@@ -1229,7 +1142,7 @@ export default function MethodologyPage() {
               })}
             </div>
 
-            <div className="mt-10 rounded-xl border border-border bg-card/40 p-5 text-sm leading-relaxed text-muted-foreground">
+            <div className="mt-10 rounded-card-editorial border border-warm-dark-300 bg-warm-dark-100 p-5 font-sans text-sm leading-relaxed text-cream-300">
               <p className="flex items-start gap-2">
                 <AlertTriangle
                   className="mt-0.5 h-4 w-4 shrink-0 text-amber-300"
@@ -1238,7 +1151,7 @@ export default function MethodologyPage() {
                 <span>
                   Có thắc mắc về phương pháp?{' '}
                   <a
-                    className="text-gold underline underline-offset-4 hover:opacity-80"
+                    className="text-gold-soft underline underline-offset-4 hover:text-gold"
                     href="mailto:methodology@hieu.asia"
                   >
                     methodology@hieu.asia
@@ -1246,7 +1159,7 @@ export default function MethodologyPage() {
                   . Báo cáo mẫu công khai tại{' '}
                   <Link
                     href="/sample-report"
-                    className="text-gold underline underline-offset-4 hover:opacity-80"
+                    className="text-gold-soft underline underline-offset-4 hover:text-gold"
                   >
                     /sample-report
                   </Link>
