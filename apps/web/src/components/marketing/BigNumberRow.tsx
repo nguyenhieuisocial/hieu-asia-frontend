@@ -57,8 +57,16 @@ export type BigNumber = {
   suffix?: string;
   /** Caption below number, mono uppercase eyebrow style. */
   caption: string;
-  /** Optional formatter override (e.g. for "4.8" / "14 ngày"). Default Intl.NumberFormat('vi-VN'). */
-  format?: (n: number) => string;
+  /**
+   * Decimal places to display (e.g. 1 for 4.8, 0 for integer 1.243).
+   * Default 0 (integer with vi-VN thousand separators).
+   *
+   * Wave 60.66.HF1: replaced `format?: (n: number) => string` arrow-fn
+   * prop which couldn't serialize across the Server → Client RSC boundary
+   * (BigNumberRow is `'use client'`). Same pattern fixed for Lucide refs
+   * in Wave 60.65.P0a (commit 4954a71).
+   */
+  decimalPlaces?: number;
 };
 
 export type BigNumberRowProps = {
@@ -162,12 +170,15 @@ function BigNumberCell({ item, delayMs }: { item: BigNumber; delayMs: number }) 
     };
   }, [inView, item.value, delayMs, reducedMotion]);
 
-  // Formatter: caller-provided override OR default vi-VN integer formatter
-  // (e.g. 1243 → "1.243"). Round before formatting so int-default doesn't
-  // emit decimals during the animation tween.
-  const formatter =
-    item.format ??
-    ((n: number) => new Intl.NumberFormat('vi-VN').format(Math.round(n)));
+  // Formatter: vi-VN locale with caller-controlled decimal precision
+  // (e.g. 1243 → "1.243" at decimalPlaces=0; 4.8 → "4,8" at decimalPlaces=1).
+  // No inline arrow-fn prop — Wave 60.66.HF1 fix for RSC serialization.
+  const decimalPlaces = item.decimalPlaces ?? 0;
+  const formatter = (n: number) =>
+    new Intl.NumberFormat('vi-VN', {
+      minimumFractionDigits: decimalPlaces,
+      maximumFractionDigits: decimalPlaces,
+    }).format(n);
   const display = formatter(current);
 
   // CSS-only reveal — opacity + translateY transition triggered by toggling

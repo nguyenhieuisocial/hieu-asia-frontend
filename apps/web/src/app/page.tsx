@@ -569,8 +569,11 @@ export default function LandingPage() {
               value: 4.8,
               suffix: '★',
               caption: 'ĐÁNH GIÁ PREMIUM',
-              // 1 decimal place so 4.8 doesn't round-trip to "5" mid-animation.
-              format: (n) => n.toFixed(1),
+              // Wave 60.66.HF1: was `format: (n) => n.toFixed(1)` arrow-fn —
+              // inline functions don't serialize across Server → Client RSC
+              // boundary. Use serializable `decimalPlaces` instead. Same
+              // pattern as Wave 60.65.P0a Lucide forwardRef fix.
+              decimalPlaces: 1,
             },
             {
               value: 14,
