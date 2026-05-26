@@ -1,28 +1,32 @@
 'use client';
 
 /**
- * /signin — Sign-in page (Wave 14).
+ * /signin — Sign-in page (Wave 60.56 P3.4 rebuild).
  *
- * Layout (top to bottom):
- *   1. OAuth providers (Google, Facebook, Apple) — priority order.
- *   2. "hoặc" divider.
- *   3. Email magic-link form (existing flow).
- *   4. Terms / privacy disclaimer.
+ * R1 forensic audit verdict B: REBUILD. Previous Card-in-cream layout scored
+ * DNA 3.1/5 (weakest page in marketing funnel) — asks for credentials before
+ * demonstrating value. This rebuild splits the surface:
+ *   - LEFT (form):   existing OAuth + magic-link auth (logic untouched).
+ *   - RIGHT (sell):  <PreviewReadingCard> showing a real Tử Vi cung preview
+ *                    with insight quote — the payoff before the gate.
+ *   - Mobile:        preview on TOP, form below (sell-first ordering).
  *
- * NOTE: OAuth providers must be enabled + credentials configured in the
- * Supabase dashboard (Auth → Providers). If a provider is disabled there,
- * clicking the button will surface a Supabase error in the banner. The UI
- * does not gate buttons on provider availability — that requires a server
- * fetch we currently avoid for snappy first paint.
+ * Hero copy: "Đăng nhập để được *hiểu*." — italic span signature ties to
+ * the Wave 60.56 "warm-dark editorial" voice used across marketing surfaces.
+ *
+ * Auth logic preserved 100%: OAuth providers (Google, Facebook, Apple),
+ * magic-link form, `?next=` roundtrip, redirect-if-authed guard, env-missing
+ * fallback. Only the visual wrapper changed.
  */
 
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Facebook, Apple, ShieldCheck, Sparkles } from 'lucide-react';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
+import { Facebook, Apple, ShieldCheck } from 'lucide-react';
+import { Button, Input, Label } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { PreviewReadingCard } from '@/components/marketing/PreviewReadingCard';
 import { sendMagicLink, signInWithOAuth } from '@/lib/auth-client';
 import { useAuth } from '@/hooks/use-auth';
 import { track } from '@/lib/analytics';
@@ -106,12 +110,12 @@ export default function SignInPage() {
     return (
       <>
         <SiteNav />
-        <main className="flex min-h-screen items-center justify-center bg-background text-foreground">
+        <main className="flex min-h-screen items-center justify-center bg-warm-dark-50 text-cream-50">
           <p
             role="status"
             aria-live="polite"
             aria-busy="true"
-            className="font-heading text-gold"
+            className="font-marketing-display italic text-gold"
           >
             Đang kiểm tra phiên đăng nhập…
           </p>
@@ -165,177 +169,202 @@ export default function SignInPage() {
       <SiteNav />
       <main
         id="main-content"
-        className="relative isolate flex min-h-screen flex-col items-center justify-center bg-background px-4 py-12 pt-24 text-foreground"
+        className="relative isolate min-h-screen bg-warm-dark-50 px-6 py-12 pt-24 text-cream-50"
       >
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.15)_0%,_transparent_55%)]"
-        />
-        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
-          <Link href="/" className="hover:text-gold">
-            Trang chủ
-          </Link>
-          <span className="mx-1.5">/</span>
-          <span className="text-muted-foreground">Đăng nhập</span>
-        </nav>
-        <Card className="w-full max-w-md border-gold/20 bg-card/80 backdrop-blur">
-          <CardHeader>
-            <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gold/30 bg-gold/10">
-              <Sparkles className="h-4 w-4 text-gold" aria-hidden="true" />
-            </div>
-            <CardTitle className="font-heading text-2xl">
-              <span className="bg-gold-gradient bg-clip-text text-transparent">
-                Đăng nhập
-              </span>{' '}
-              hieu.asia
-            </CardTitle>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Chọn nhà cung cấp hoặc dùng email — không cần mật khẩu.
+        <div className="mx-auto max-w-marketing">
+          <nav aria-label="Breadcrumb" className="mb-8 text-xs text-cream-500">
+            <Link href="/" className="hover:text-gold">
+              Trang chủ
+            </Link>
+            <span className="mx-1.5">/</span>
+            <span className="text-cream-300">Đăng nhập</span>
+          </nav>
+
+          <header className="mb-10 max-w-marketing-text">
+            <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
+              — HIEU.ASIA · ĐĂNG NHẬP
             </p>
-          </CardHeader>
-          <CardContent>
-            {!authAvailable ? (
-              <div className="rounded-lg border border-amber-500/40 bg-amber-950/30 p-4 text-sm text-amber-200">
-                <p className="font-medium">Đăng nhập tạm thời chưa khả dụng</p>
-                <p className="mt-1 text-amber-200/80">
-                  Hệ thống xác thực đang được cấu hình. Vui lòng quay lại sau ít
-                  phút hoặc liên hệ{' '}
-                  <a href="mailto:hi@hieu.asia" className="underline hover:text-gold">
-                    hi@hieu.asia
-                  </a>
-                  .
-                </p>
-              </div>
-            ) : sent ? (
-              <div className="rounded-lg border border-emerald-500/40 bg-emerald-950/30 p-4 text-sm text-emerald-200">
-                <p className="font-medium">Đã gửi liên kết đăng nhập</p>
-                <p className="mt-1 text-emerald-200/80">
-                  Kiểm tra hộp thư <strong>{email}</strong> và nhấp vào liên kết
-                  để hoàn tất đăng nhập. Liên kết có hiệu lực trong 15 phút.
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {/* OAuth providers — priority order: Google, Facebook, Apple */}
-                <div className="space-y-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => onOAuthClick('google')}
-                    disabled={anyLoading}
-                    className="h-12 w-full justify-start gap-3 border-border bg-card/40 text-foreground hover:border-gold/40 hover:bg-card/60"
-                  >
-                    <GoogleIcon className="h-5 w-5 shrink-0" />
-                    <span className="flex-1 text-left text-sm">
-                      {oauthLoading === 'google' ? 'Đang chuyển hướng…' : PROVIDER_LABEL.google}
-                    </span>
-                  </Button>
+            <h1 className="mt-4 font-marketing-display text-4xl leading-tight text-cream-50 md:text-5xl">
+              Đăng nhập để được{' '}
+              <span className="italic text-gold">hiểu</span>.
+            </h1>
+            <p className="mt-4 font-sans text-base text-cream-300">
+              Không cần mật khẩu. Chọn nhà cung cấp hoặc nhận liên kết qua email.
+            </p>
+          </header>
 
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => onOAuthClick('facebook')}
-                    disabled={anyLoading}
-                    className="h-12 w-full justify-start gap-3 border-border bg-card/40 text-foreground hover:border-gold/40 hover:bg-card/60"
-                  >
-                    <Facebook
-                      className="h-5 w-5 shrink-0 text-[#1877F2]"
-                      aria-hidden="true"
-                      fill="currentColor"
-                    />
-                    <span className="flex-1 text-left text-sm">
-                      {oauthLoading === 'facebook'
-                        ? 'Đang chuyển hướng…'
-                        : PROVIDER_LABEL.facebook}
-                    </span>
-                  </Button>
+          <div className="grid gap-12 md:grid-cols-2 md:items-start">
+            {/* RIGHT in DOM order but `order-` flips so mobile shows preview ON TOP. */}
+            <div className="order-1 md:order-2">
+              <PreviewReadingCard
+                cungName="Cung Mệnh"
+                cungSubtitle="Tử Vi · Bản đồ sao thời điểm sinh"
+                starList={['Tử Vi', 'Thiên Tướng', 'Hữu Bật']}
+                insightQuote="Bạn có Mệnh Vô Chính Diệu — sao chính cung Mệnh trống, ưu thế ở khả năng tự định hình bản thân không bị áp đặt bởi định khuôn."
+                insightAuthor="Hệ thống Tử Vi · Đối chiếu 2026"
+                ctaLabel="Tiếp tục đăng nhập để xem lá số của bạn"
+                ctaHref="#signin-form"
+              />
+            </div>
 
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => onOAuthClick('apple')}
-                    disabled={anyLoading}
-                    className="h-12 w-full justify-start gap-3 border-border bg-card/40 text-foreground hover:border-gold/40 hover:bg-card/60"
-                  >
-                    <Apple
-                      className="h-5 w-5 shrink-0 text-foreground"
-                      aria-hidden="true"
-                      fill="currentColor"
-                    />
-                    <span className="flex-1 text-left text-sm">
-                      {oauthLoading === 'apple' ? 'Đang chuyển hướng…' : PROVIDER_LABEL.apple}
-                    </span>
-                  </Button>
-                </div>
-
-                {/* Divider */}
-                <div className="relative my-2" aria-hidden="true">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-border" />
-                  </div>
-                  <div className="relative flex justify-center text-xs">
-                    <span className="bg-card/80 px-3 uppercase tracking-wider text-muted-foreground">
-                      hoặc
-                    </span>
-                  </div>
-                </div>
-
-                {/* Magic-link form */}
-                <form onSubmit={onSubmit} className="space-y-4">
-                  <div className="space-y-1">
-                    <Label htmlFor="email" className="text-foreground/80">
-                      Email
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      required
-                      autoComplete="email"
-                      placeholder="ban@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      disabled={anyLoading}
-                      className="min-h-[44px]"
-                    />
-                  </div>
-
-                  {error && (
-                    <div
-                      role="alert"
-                      className="rounded-md border border-rose-500/40 bg-rose-950/30 p-3 text-sm text-rose-200"
-                    >
-                      {error}
-                    </div>
-                  )}
-
-                  <Button
-                    type="submit"
-                    disabled={anyLoading || !email}
-                    className="h-12 w-full bg-gold text-ink hover:bg-gold/90"
-                  >
-                    {emailLoading ? 'Đang gửi…' : 'Gửi liên kết đăng nhập'}
-                  </Button>
-
-                  <p className="text-center text-xs text-muted-foreground">
-                    Bằng cách đăng nhập, bạn đồng ý với{' '}
-                    <a href="/terms" className="underline hover:text-gold">
-                      Điều khoản
-                    </a>{' '}
-                    và{' '}
-                    <a href="/privacy" className="underline hover:text-gold">
-                      Chính sách bảo mật
+            {/* LEFT in DOM order but `order-` puts form BELOW preview on mobile. */}
+            <div id="signin-form" className="order-2 md:order-1">
+              {!authAvailable ? (
+                <div className="rounded-card-editorial border border-amber-500/40 bg-warm-dark-200 p-6 text-sm text-amber-200">
+                  <p className="font-marketing-display text-lg italic">
+                    Đăng nhập tạm thời chưa khả dụng
+                  </p>
+                  <p className="mt-2 text-amber-200/80">
+                    Hệ thống xác thực đang được cấu hình. Vui lòng quay lại sau
+                    ít phút hoặc liên hệ{' '}
+                    <a href="mailto:hi@hieu.asia" className="underline hover:text-gold">
+                      hi@hieu.asia
                     </a>
                     .
                   </p>
-                </form>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-        <p className="mt-6 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-          <ShieldCheck className="h-3.5 w-3.5 text-gold/80" aria-hidden="true" />
-          Liên kết chỉ dùng được một lần · hết hạn sau 15 phút
-        </p>
+                </div>
+              ) : sent ? (
+                <div className="rounded-card-editorial border border-emerald-500/40 bg-warm-dark-200 p-6 text-sm text-emerald-200">
+                  <p className="font-marketing-display text-lg italic">
+                    Đã gửi liên kết đăng nhập
+                  </p>
+                  <p className="mt-2 text-emerald-200/80">
+                    Kiểm tra hộp thư <strong>{email}</strong> và nhấp vào liên
+                    kết để hoàn tất đăng nhập. Liên kết có hiệu lực trong 15
+                    phút.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-5">
+                  {/* OAuth providers — priority order: Google, Facebook, Apple */}
+                  <div className="space-y-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => onOAuthClick('google')}
+                      disabled={anyLoading}
+                      className="h-12 w-full justify-start gap-3 rounded-pill border-warm-dark-300 bg-warm-dark-200 text-cream-100 hover:border-gold-soft hover:bg-warm-dark-300"
+                    >
+                      <GoogleIcon className="h-5 w-5 shrink-0" />
+                      <span className="flex-1 text-left text-sm">
+                        {oauthLoading === 'google'
+                          ? 'Đang chuyển hướng…'
+                          : PROVIDER_LABEL.google}
+                      </span>
+                    </Button>
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => onOAuthClick('facebook')}
+                      disabled={anyLoading}
+                      className="h-12 w-full justify-start gap-3 rounded-pill border-warm-dark-300 bg-warm-dark-200 text-cream-100 hover:border-gold-soft hover:bg-warm-dark-300"
+                    >
+                      <Facebook
+                        className="h-5 w-5 shrink-0 text-[#1877F2]"
+                        aria-hidden="true"
+                        fill="currentColor"
+                      />
+                      <span className="flex-1 text-left text-sm">
+                        {oauthLoading === 'facebook'
+                          ? 'Đang chuyển hướng…'
+                          : PROVIDER_LABEL.facebook}
+                      </span>
+                    </Button>
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => onOAuthClick('apple')}
+                      disabled={anyLoading}
+                      className="h-12 w-full justify-start gap-3 rounded-pill border-warm-dark-300 bg-warm-dark-200 text-cream-100 hover:border-gold-soft hover:bg-warm-dark-300"
+                    >
+                      <Apple
+                        className="h-5 w-5 shrink-0 text-cream-100"
+                        aria-hidden="true"
+                        fill="currentColor"
+                      />
+                      <span className="flex-1 text-left text-sm">
+                        {oauthLoading === 'apple'
+                          ? 'Đang chuyển hướng…'
+                          : PROVIDER_LABEL.apple}
+                      </span>
+                    </Button>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="relative my-2" aria-hidden="true">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-warm-dark-300" />
+                    </div>
+                    <div className="relative flex justify-center text-xs">
+                      <span className="bg-warm-dark-50 px-3 font-mono uppercase tracking-wider text-cream-500">
+                        hoặc
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Magic-link form */}
+                  <form onSubmit={onSubmit} className="space-y-4">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="email" className="text-cream-300">
+                        Email
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        required
+                        autoComplete="email"
+                        placeholder="ban@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        disabled={anyLoading}
+                        className="min-h-[44px] rounded-pill border-warm-dark-300 bg-warm-dark-200 px-5 text-cream-50 placeholder:text-cream-500"
+                      />
+                    </div>
+
+                    {error && (
+                      <div
+                        role="alert"
+                        className="rounded-card-editorial border border-rose-500/40 bg-warm-dark-200 p-3 text-sm text-rose-200"
+                      >
+                        {error}
+                      </div>
+                    )}
+
+                    <Button
+                      type="submit"
+                      disabled={anyLoading || !email}
+                      className="h-12 w-full rounded-pill bg-gold text-warm-dark-50 transition-all duration-300 ease-editorial hover:bg-gold-soft"
+                    >
+                      {emailLoading ? 'Đang gửi…' : 'Gửi liên kết đăng nhập'}
+                    </Button>
+
+                    <p className="text-center text-xs text-cream-500">
+                      Bằng cách đăng nhập, bạn đồng ý với{' '}
+                      <a href="/terms" className="underline hover:text-gold">
+                        Điều khoản
+                      </a>{' '}
+                      và{' '}
+                      <a href="/privacy" className="underline hover:text-gold">
+                        Chính sách bảo mật
+                      </a>
+                      .
+                    </p>
+                  </form>
+                </div>
+              )}
+
+              <p className="mt-6 inline-flex items-center gap-1.5 text-xs text-cream-500">
+                <ShieldCheck
+                  className="h-3.5 w-3.5 text-gold-soft"
+                  aria-hidden="true"
+                />
+                Liên kết chỉ dùng được một lần · hết hạn sau 15 phút
+              </p>
+            </div>
+          </div>
+        </div>
       </main>
       <SiteFooter />
     </>
