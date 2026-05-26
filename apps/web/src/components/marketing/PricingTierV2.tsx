@@ -72,7 +72,7 @@ export function PricingTierV2({
   const [period, setPeriod] = useState<'monthly' | 'yearly'>(defaultPeriod);
 
   return (
-    <section className="bg-warm-dark-50 py-24 md:py-32">
+    <section className="bg-warm-dark-50 py-16 md:py-20">
       <div className="mx-auto max-w-marketing px-6">
         {/* Header */}
         <div className="text-center">

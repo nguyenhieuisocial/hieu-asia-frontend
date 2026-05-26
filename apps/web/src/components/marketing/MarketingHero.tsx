@@ -178,7 +178,7 @@ export function MarketingHero({
     return (
       <PaintedCanvas
         tone="soft"
-        className="relative py-32 md:pt-[29vh] md:pb-32"
+        className="relative py-16 md:pt-[10vh] md:pb-20 lg:pt-[14vh] lg:pb-24"
       >
         {innerContent}
       </PaintedCanvas>
@@ -186,7 +186,7 @@ export function MarketingHero({
   }
 
   return (
-    <section className="relative overflow-hidden bg-warm-dark-50 py-32 md:pt-[29vh] md:pb-32">
+    <section className="relative overflow-hidden bg-warm-dark-50 py-16 md:pt-[10vh] md:pb-20 lg:pt-[14vh] lg:pb-24">
       {innerContent}
     </section>
   );

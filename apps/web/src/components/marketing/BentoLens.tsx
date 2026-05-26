@@ -125,7 +125,7 @@ export function BentoLens({
   const containerMaxWidth = isHeterogeneous ? 'max-w-marketing' : 'max-w-marketing-tight';
 
   return (
-    <section className={`${bgClass} py-24 md:py-32`}>
+    <section className={`${bgClass} py-16 md:py-20`}>
       <div className={`mx-auto ${containerMaxWidth} px-6`}>
         {eyebrow && (
           <p className="mb-6 text-center font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">

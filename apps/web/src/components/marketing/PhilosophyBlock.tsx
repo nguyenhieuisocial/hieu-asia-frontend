@@ -51,7 +51,7 @@ export function PhilosophyBlock({
   const paragraphs = Array.isArray(body) ? body : [body];
 
   return (
-    <section className={`${BG_CLASS[bg]} py-24 md:py-32`}>
+    <section className={`${BG_CLASS[bg]} py-16 md:py-20`}>
       <div className={`mx-auto max-w-marketing-text px-6 ${ALIGN_CLASS[align]}`}>
         {eyebrow && (
           <p className="mb-6 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">

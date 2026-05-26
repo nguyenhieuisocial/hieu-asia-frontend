@@ -74,7 +74,7 @@ export function PullQuote({
   }, []);
 
   return (
-    <section className={`${bgClass} py-20 md:py-28`}>
+    <section className={`${bgClass} py-12 md:py-16`}>
       <div
         ref={ref}
         data-in-view={inView ? 'true' : 'false'}

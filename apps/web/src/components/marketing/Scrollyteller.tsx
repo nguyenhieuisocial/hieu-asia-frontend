@@ -121,7 +121,7 @@ export function Scrollyteller({
   );
 
   return (
-    <section className="relative bg-warm-dark-50 py-16 md:py-24 lg:py-32">
+    <section className="relative bg-warm-dark-50 py-12 md:py-16 lg:py-20">
       <div className="mx-auto grid max-w-marketing grid-cols-1 gap-12 px-6 lg:grid-cols-[40%_60%] lg:gap-16 lg:px-12">
         {/* ─── LEFT sticky column (desktop/tablet) ─── */}
         <aside
