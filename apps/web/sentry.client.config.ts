@@ -4,6 +4,23 @@ Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
   tracesSampleRate: 0.1,
   environment: process.env.NODE_ENV,
+  // Wave 60.46.b — Session Replay (Sentry Free tier: 50 replays/mo).
+  // Domain handles Vietnamese PII (birth data, addresses), so:
+  //   - maskAllText: true       → all text masked by default (override per-element via `data-sentry-unmask`)
+  //   - blockAllMedia: true     → no images/videos captured (avatars, uploaded photos)
+  //   - networkDetailAllowUrls  → only our `/api/` routes get request/response detail
+  // Quota math (Free 50/mo):
+  //   - replaysSessionSampleRate: 0    → no random session sampling (would blow quota immediately at 1k+ sessions/day)
+  //   - replaysOnErrorSampleRate: 0.5  → 50% of error sessions only (~100/mo budget at current error rate)
+  integrations: [
+    Sentry.replayIntegration({
+      maskAllText: true,
+      blockAllMedia: true,
+      networkDetailAllowUrls: ['/api/'],
+    }),
+  ],
+  replaysSessionSampleRate: 0,
+  replaysOnErrorSampleRate: 0.5,
   beforeSend(event) {
     if (process.env.NODE_ENV !== 'production') return null;
 
