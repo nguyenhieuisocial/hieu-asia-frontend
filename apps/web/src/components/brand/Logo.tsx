@@ -1,5 +1,3 @@
-'use client';
-
 /**
  * Logo system cho hieu.asia.
  *
@@ -8,7 +6,10 @@
  *   - size: number — kích thước height tính bằng px
  *   - kind: 'wordmark' (text "hieu.asia") | 'symbol' (H mark) | 'lockup' (symbol + wordmark)
  *
- * Mỗi SVG dùng unique gradient ID để render nhiều logo cùng trang không bị conflict.
+ * Mỗi SVG dùng React.useId() để gradient ID stable giữa server + client (render
+ * nhiều logo cùng trang không bị conflict, không bị hydration mismatch). Server
+ * Component safe — không có 'use client' để bot crawl /brand không gãy
+ * useRef polyfill. Fixes HIEU-ASIA-WORKER-2 + HIEU-ASIA-WORKER-3.
  */
 
 import * as React from 'react';
@@ -24,14 +25,11 @@ interface LogoProps {
   title?: string;
 }
 
-let __uidCounter = 0;
 function useUid(prefix: string) {
-  const ref = React.useRef<string>('');
-  if (!ref.current) {
-    __uidCounter += 1;
-    ref.current = `${prefix}-${__uidCounter}`;
-  }
-  return ref.current;
+  // useId is stable across SSR + hydration, works in Server Components, and
+  // doesn't depend on module-level mutable state.
+  const id = React.useId();
+  return `${prefix}-${id.replace(/:/g, '')}`;
 }
 
 export function Logo({
