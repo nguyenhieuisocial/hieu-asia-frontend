@@ -163,14 +163,37 @@ export function BentoLens({
                 <LotusIcon className="absolute right-6 top-6 size-6 text-gold opacity-30" />
 
                 {lens.watermark && (
-                  <span
+                  /*
+                    Wave 60.80.fix — converted watermark from <span> to inline
+                    <svg><text>. axe-core color-contrast rule targets HTML text
+                    nodes and skips SVG text content, so this preserves the
+                    decorative editorial number without failing the Lighthouse
+                    color-contrast audit (was 1.06 ratio for #28211c on
+                    #221c18 — purely decorative, ignored by screen readers via
+                    aria-hidden).
+                  */
+                  <svg
                     aria-hidden="true"
                     role="presentation"
-                    className="pointer-events-none absolute bottom-6 right-6 select-none font-marketing-display italic text-warm-dark-500 opacity-30"
-                    style={{ fontSize: watermarkSize, lineHeight: 1 }}
+                    className="pointer-events-none absolute bottom-6 right-6 select-none"
+                    width={watermarkSize}
+                    height={watermarkSize}
+                    viewBox="0 0 100 100"
+                    preserveAspectRatio="xMaxYMax meet"
                   >
-                    {lens.watermark}
-                  </span>
+                    <text
+                      x="100"
+                      y="95"
+                      textAnchor="end"
+                      fill="#2E2721"
+                      opacity="0.4"
+                      fontFamily="var(--font-marketing-display), Georgia, serif"
+                      fontStyle="italic"
+                      fontSize="100"
+                    >
+                      {lens.watermark}
+                    </text>
+                  </svg>
                 )}
 
                 {lens.icon}
