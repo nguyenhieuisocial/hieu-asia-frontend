@@ -27,9 +27,13 @@
       "axios": "^1.7.0",
       "braces": "^3.0.3",
       "nth-check": "^2.1.1",
-      "serialize-javascript": "^6.0.2",
+      "serialize-javascript": "^7.0.3",
       "ansi-html": "npm:ansi-html-community@^0.0.8",
-      "webpack": "^5.94.0"
+      "webpack": "^5.94.0",
+      "webpack-dev-middleware": "^5.3.4",
+      "rollup": "^2.80.0",
+      "micromatch": "^4.0.8",
+      "tar": "^6.2.2"
     }
   }
 }
