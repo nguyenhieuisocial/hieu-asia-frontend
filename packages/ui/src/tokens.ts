@@ -70,6 +70,55 @@ export const colors = {
     700: '#1F423F',
     900: '#0F2120',
   },
+
+  // ==========================================================================
+  // Wave 60.56 — Option D "Warm-Dark Editorial" marketing palette extensions.
+  // Founder-locked 2026-05-26. Used ONLY by marketing surfaces (landing /
+  // pricing / features). In-app UI continues to use ink/cream/gold/purple/jade
+  // above. See vault `105 - Marketing Redesign Plan` Section 4.
+  // ==========================================================================
+
+  /**
+   * Warm-dark sepia scale — candlelight-feel dark backgrounds for editorial
+   * marketing pages. Replaces `ink` (cold near-black) where Option D's warmer
+   * mood is desired.
+   */
+  warmDark: {
+    50: '#13110D', // body bg (candlelight feel)
+    100: '#1B1714', // section layer 1
+    200: '#221C18', // card surface
+    300: '#2E2620', // elevated card / border default
+    400: '#3A302A', // muted text on dark
+    500: '#4A3F36', // border emphasis
+  },
+
+  /**
+   * Cream scale — light-theme parity for warm-dark editorial. Existing top-
+   * level `cream: '#F2EDE3'` token retained for back-compat (Wave 60 era);
+   * this nested scale is the Wave 60.56 marketing source.
+   */
+  creamScale: {
+    50: '#F5F0E6', // body bg light
+    100: '#EFE7D6', // section layer 1 light
+    300: '#C9BFB0', // body text on dark / muted text on light
+    500: '#8A8275', // secondary text
+  },
+
+  /**
+   * Gold extensions for Option D signature treatments — italic verb spans,
+   * signature periods/dots, glow shadow. Layer atop existing `gold.*` scale.
+   */
+  goldSoft: '#D4B373', // italic verb span color, hover
+  goldDot: '#E5C68A', // signature period/dot accent
+  goldGlow: 'rgba(229,198,138,0.18)', // gold-dot glow shadow
+
+  /**
+   * Semantic refresh — lightened jade + purple for warm-dark contrast on
+   * Option D surfaces (success badge, premium tier highlight). Original
+   * `jade.DEFAULT` / `purple.DEFAULT` preserved for in-app UI.
+   */
+  jadeMarketing: '#5BA89F',
+  purpleMarketing: '#8366A8',
 } as const;
 
 /**

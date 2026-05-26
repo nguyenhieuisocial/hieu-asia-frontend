@@ -9,7 +9,7 @@ import { Suspense } from 'react';
 // `font-mono` on home — those size-adjust gracefully to `ui-monospace` from
 // the Tailwind fallback stack). Removing it cuts 3 woff2 files (latin-ext +
 // latin + vietnamese subsets) from every page's critical path.
-import { Be_Vietnam_Pro, Outfit } from 'next/font/google';
+import { Be_Vietnam_Pro, Instrument_Serif, Outfit } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { ThemeProvider } from '@/components/providers/theme-provider';
@@ -49,6 +49,20 @@ const beVietnam = Be_Vietnam_Pro({
 const outfit = Outfit({
   subsets: ['latin'],
   variable: '--font-outfit',
+  display: 'swap',
+});
+
+// Wave 60.56 Phase 1 — Option D "Warm-Dark Editorial" marketing display serif.
+// Italic-capable (signature `<em>verb</em>` spans in hero/section headers).
+// Google Fonts only ships latin + latin-ext for Instrument Serif (no
+// `vietnamese` subset upstream); VN diacritics that fall outside latin-ext
+// fall back gracefully to Be Vietnam Pro via the `font-marketing-display`
+// Tailwind fallback chain. Marketing surfaces only; in-app UI uses Outfit.
+const instrumentSerif = Instrument_Serif({
+  weight: '400',
+  subsets: ['latin', 'latin-ext'],
+  style: ['normal', 'italic'],
+  variable: '--font-marketing-display',
   display: 'swap',
 });
 
@@ -164,7 +178,7 @@ export default async function RootLayout({
     <html
       lang={locale}
       suppressHydrationWarning
-      className={`${beVietnam.variable} ${outfit.variable}`}
+      className={`${beVietnam.variable} ${outfit.variable} ${instrumentSerif.variable}`}
     >
       <head>
         {/* Wave 55 LCP #3 — dropped 3 unused preconnects.
