@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Cpu, FileSearch, ShieldCheck, ArrowRight } from 'lucide-react';
+import { MarketingCard } from '@/components/marketing/MarketingCard';
 
 interface Proof {
   Icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
@@ -63,22 +64,28 @@ export function WhyTrust() {
 
         {/* Wave 60.79.T2 (vault 112 P1): `auto-rows-fr` + `h-full flex flex-col`
             so the 3 proof cards stay equal-height even when descriptions
-            differ in line count (especially proof 3 which is longest). */}
+            differ in line count (especially proof 3 which is longest).
+
+            Wave 60.83 — proof cards migrated to MarketingCard primitive (was
+            `border-border bg-card/40 p-6`). MarketingCard emits identical
+            `h-full flex flex-col`, swaps bg to `warm-dark-200` so cards layer
+            cleanly on the wrapping `bg-warm-dark-100` section shell, and adds
+            `hover:border-gold/40` for editorial polish. MarketingCard's
+            primitive doc explicitly lists WhyTrust as a canonical consumer. */}
         <ul className="mt-10 grid auto-rows-fr gap-4 sm:grid-cols-3">
           {PROOFS.map(({ Icon, title, desc }) => (
-            <li
-              key={title}
-              className="flex h-full flex-col rounded-2xl border border-border bg-card/40 p-6"
-            >
-              <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-gold/30 bg-gold/5">
-                <Icon className="h-4 w-4 text-gold" aria-hidden={true} />
-              </div>
-              <h3 className="mt-4 font-heading text-sm font-semibold leading-snug text-foreground">
-                {title}
-              </h3>
-              <p className="mt-2 flex-1 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                {desc}
-              </p>
+            <li key={title} className="h-full">
+              <MarketingCard padding="standard" bg="warm-dark-200">
+                <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-gold/30 bg-gold/5">
+                  <Icon className="h-4 w-4 text-gold" aria-hidden={true} />
+                </div>
+                <h3 className="mt-4 font-heading text-sm font-semibold leading-snug text-foreground">
+                  {title}
+                </h3>
+                <p className="mt-2 flex-1 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                  {desc}
+                </p>
+              </MarketingCard>
             </li>
           ))}
         </ul>

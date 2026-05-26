@@ -2,7 +2,17 @@
 
 import * as React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+  StatusBadge,
+} from '@hieu-asia/ui';
 import { upsertApiBudget, type ApiBudgetRow, type BudgetUpsert } from '@/lib/llm-spend-api';
 
 interface Props {
@@ -71,16 +81,18 @@ export function BudgetsManager({ rows, isLoading }: Props) {
             return (
               <li
                 key={b.id ?? `${b.user_id ?? 'global'}-${b.period}`}
-                className="rounded-md border border-gold/15 bg-card/60 px-3 py-3 text-sm"
+                // Wave 60.83 — ease-editorial transition for the budget row hover
+                // (Wave 60.81.B Tier 3 canonical pattern, matches /coupons rows).
+                className="rounded-md border border-gold/15 bg-card/60 px-3 py-3 text-sm transition-all duration-300 ease-editorial hover:border-gold/30"
               >
                 <div className="flex items-center justify-between">
-                  <div>
+                  <div className="flex items-center gap-2">
                     <span className="font-mono text-xs text-gold">
                       {b.user_id ? `user:${b.user_id.slice(0, 12)}` : b.team_id ? `team:${b.team_id}` : 'global'}
                     </span>
-                    <span className="ml-2 rounded bg-muted/30 px-1.5 py-0.5 font-mono text-[10px] uppercase text-muted-foreground">
-                      {b.period}
-                    </span>
+                    {/* Wave 60.83 — period chip → canonical StatusBadge (neutral),
+                        same pill component used in /coupons /sessions /audit. */}
+                    <StatusBadge status="neutral" label={b.period} />
                   </div>
                   <span className="font-mono text-foreground">
                     {fmtUsd(b.current_usage_usd)} / {fmtUsd(b.limit_usd)}

@@ -4,6 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { ArrowRight, ClipboardEdit, Cpu, MessageCircle } from 'lucide-react';
 import { Button } from '@hieu-asia/ui';
+import { MarketingCard } from '@/components/marketing/MarketingCard';
 
 interface Step {
   n: string;
@@ -73,32 +74,39 @@ export function HowToStart() {
 
         {/* Wave 60.79.T2 (vault 112 P1 #3): `auto-rows-fr` + `h-full` on each
             <li> so step-02's shorter `desc` doesn't leave a height gap below
-            its CTA. CSS Grid stretches row heights uniformly when explicit. */}
+            its CTA. CSS Grid stretches row heights uniformly when explicit.
+
+            Wave 60.83 — cards migrated to MarketingCard primitive (was
+            `border-border bg-card/40 p-6 hover:border-gold/40`). MarketingCard
+            emits identical `h-full flex flex-col` + `hover:border-gold/40`
+            (Wave 60.79.T2 spec), and shifts bg from theme-card to
+            `warm-dark-200` so cards align with the home page's warm-dark-50
+            section wrapper — matches the editorial palette used by BentoLens
+            and PricingTierV2 on the same surface. */}
         <ol className="mt-12 grid auto-rows-fr gap-6 md:grid-cols-3">
           {STEPS.map(({ n, Icon, title, desc, ctaLabel, href }) => (
-            <li
-              key={n}
-              className="flex h-full flex-col rounded-2xl border border-border bg-card/40 p-6 transition-colors hover:border-gold/40"
-            >
-              <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-gold/30 bg-gold/5">
-                  <Icon className="h-5 w-5 text-gold" aria-hidden={true} />
+            <li key={n} className="h-full">
+              <MarketingCard padding="standard" bg="warm-dark-200">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-gold/30 bg-gold/5">
+                    <Icon className="h-5 w-5 text-gold" aria-hidden={true} />
+                  </div>
+                  <span className="font-mono text-xs uppercase tracking-[0.28em] text-gold/85">
+                    Bước {n}
+                  </span>
                 </div>
-                <span className="font-mono text-xs uppercase tracking-[0.28em] text-gold/85">
-                  Bước {n}
-                </span>
-              </div>
-              <h3 className="mt-5 font-heading text-lg font-semibold text-foreground">{title}</h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{desc}</p>
-              <Button asChild variant="outline" size="sm" className="group w-full"><Link href={href} className="mt-5">
-                
-                  {ctaLabel}
-                  <ArrowRight
-                    className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5"
-                    aria-hidden={true}
-                  />
-                
-              </Link></Button>
+                <h3 className="mt-5 font-heading text-lg font-semibold text-foreground">{title}</h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{desc}</p>
+                <Button asChild variant="outline" size="sm" className="group w-full"><Link href={href} className="mt-5">
+
+                    {ctaLabel}
+                    <ArrowRight
+                      className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5"
+                      aria-hidden={true}
+                    />
+
+                </Link></Button>
+              </MarketingCard>
             </li>
           ))}
         </ol>

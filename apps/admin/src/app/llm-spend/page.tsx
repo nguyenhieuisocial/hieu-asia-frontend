@@ -160,7 +160,10 @@ export default function LlmSpendPage() {
       />
 
       {!configured && (
-        <div className="rounded-md border border-amber-400/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
+        // Wave 60.83 — replace raw amber-* with Wave 60.81.B WarnToken semantic
+        // (warn-500/40 + warn-300 text). Matches the same warn banner pattern
+        // used in /admin home + /feature-flags + /migrations.
+        <div className="rounded-md border border-warn-500/40 bg-warn-500/10 px-3 py-2 text-sm text-warn-300 transition-all duration-300 ease-editorial">
           Thiếu <code className="font-mono">NEXT_PUBLIC_SUPABASE_URL</code> hoặc{' '}
           <code className="font-mono">NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY</code>.
           Dashboard hiện hiển thị 0 — set env trên Vercel để bật.
@@ -220,7 +223,8 @@ export default function LlmSpendPage() {
                 {(topUsers.data ?? []).map((u, i) => (
                   <li
                     key={u.user_id}
-                    className="flex items-center justify-between rounded-md border border-gold/10 bg-card/60 px-3 py-2 text-sm"
+                    // Wave 60.83 — ease-editorial hover per Wave 60.81.B Tier 3 pattern.
+                    className="flex items-center justify-between rounded-md border border-gold/10 bg-card/60 px-3 py-2 text-sm transition-all duration-300 ease-editorial hover:border-gold/30"
                   >
                     <span className="flex items-center gap-3">
                       <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-gold/15 font-mono text-xs text-gold">
