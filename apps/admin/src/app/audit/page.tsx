@@ -40,6 +40,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   Input,
+  StatusBadge,
 } from '@hieu-asia/ui';
 import {
   Activity,
@@ -197,18 +198,16 @@ const COLUMNS: AdminTableColumn<AuditEntry>[] = [
     sortKey: 'action',
     width: '220px',
     cell: (e) => {
+      // Wave 60.81.B Tier 3 polish — delegate to canonical StatusBadge so the
+      // action pill matches the look used on /coupons, /tasks, /sessions.
+      // Critical actions (erase/rotate/revoke/role-change) = error tone; the
+      // rest get a neutral info tone tuned for read-heavy log scanning.
       const critical = isCritical(e.action);
       return (
-        <span
-          className={
-            'inline-flex items-center rounded border px-2 py-0.5 font-mono text-xs ' +
-            (critical
-              ? 'border-red-400/40 bg-red-500/10 text-red-200'
-              : 'border-gold/20 bg-gold/5 text-gold')
-          }
-        >
-          {e.action ?? '—'}
-        </span>
+        <StatusBadge
+          status={critical ? 'error' : 'warning'}
+          label={e.action ?? '—'}
+        />
       );
     },
   },
@@ -398,7 +397,7 @@ export default function AuditPage() {
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="inline-flex h-10 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground hover:border-gold/50"
+                  className="inline-flex h-10 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground transition-all duration-300 ease-editorial hover:border-gold/50"
                   aria-label="Lọc theo action"
                 >
                   {ICON_FILTER}

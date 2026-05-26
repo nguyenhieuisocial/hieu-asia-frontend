@@ -203,7 +203,7 @@ export default function AdminTasksPage() {
                     type="button"
                     onClick={() => setFilter(f.value)}
                     className={
-                      'rounded-full border px-3 py-1 text-xs font-medium transition-colors ' +
+                      'rounded-full border px-3 py-1 text-xs font-medium transition-all duration-300 ease-editorial ' +
                       (active
                         ? 'border-gold/60 bg-gold/15 text-gold'
                         : 'border-border bg-card/60 text-muted-foreground hover:border-gold/30 hover:text-foreground')

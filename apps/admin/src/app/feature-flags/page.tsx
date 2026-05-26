@@ -167,19 +167,19 @@ export default function FeatureFlagsPage() {
               {flags.map((f) => (
                 <div
                   key={f.key}
-                  className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gold/15 bg-card/60 px-4 py-3"
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gold/15 bg-card/60 px-4 py-3 transition-all duration-300 ease-editorial hover:border-gold/30 hover:bg-gold/[0.03]"
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <code className="font-mono text-sm text-gold">{f.key}</code>
                       {f.rollout_pct < 100 && (
-                        <span className="rounded border border-purple/30 bg-purple/10 px-1.5 py-0.5 font-mono text-[10px] text-purple-200">
+                        <span className="inline-flex items-center rounded-full border border-warn-500/40 bg-warn-500/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-warn-300">
                           {f.rollout_pct}% rollout
                         </span>
                       )}
                     </div>
-                    <p className="mt-0.5 text-xs text-muted-foreground">{f.description}</p>
-                    <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                    <p className="mt-1 text-xs text-muted-foreground">{f.description}</p>
+                    <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                       Cập nhật: {fmtDate(f.last_modified)}
                     </p>
                   </div>
@@ -187,8 +187,8 @@ export default function FeatureFlagsPage() {
                     <span
                       className={
                         f.enabled
-                          ? 'font-mono text-xs uppercase tracking-wider text-jade'
-                          : 'font-mono text-xs uppercase tracking-wider text-muted-foreground'
+                          ? 'font-mono text-xs uppercase tracking-wider text-jade-300 transition-colors duration-300 ease-editorial'
+                          : 'font-mono text-xs uppercase tracking-wider text-muted-foreground transition-colors duration-300 ease-editorial'
                       }
                     >
                       {f.enabled ? 'ON' : 'OFF'}

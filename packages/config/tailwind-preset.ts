@@ -52,6 +52,18 @@ const preset = {
           700: '#1F423F',
           900: '#0F2120',
         },
+        // Wave 60.81.B/C — semantic WarnToken for admin status surfaces.
+        // Brand-aligned amber (not generic Tailwind yellow): hue 38 sits
+        // between gold.500 (#B8923D, hue 41) and a slightly warmer caution.
+        // Use for "degraded but not failing": queue backlog, secrets partially
+        // set, migration pending, service warn dot. 300 = on-dark-text
+        // contrast >=4.5; 500 = fill / dot.
+        warn: {
+          DEFAULT: '#D4923A',
+          300: '#E7B36B',
+          500: '#D4923A',
+          700: '#8F6224',
+        },
         // Semantic aliases for shadcn/ui tokens (mapped in app globals.css)
         cream: '#F2EDE3',
         // Theme-aware tokens — resolve via CSS vars defined in app globals.css.
@@ -113,6 +125,14 @@ const preset = {
         // gold hex inside the preset (single source of truth) so a future
         // gold palette tweak updates the rail too.
         'gold-rail': 'inset 2px 0 0 0 #B8923D',
+      },
+      // Wave 60.81.B — editorial easing curve, promoted from apps/web's
+      // tailwind config (Wave 60.56) into the shared preset so admin can
+      // adopt the same hover/transition feel. Soft entry, firm settle.
+      // Use via `transition-all duration-300 ease-editorial` on cards,
+      // badges, table rows, filter pills.
+      transitionTimingFunction: {
+        editorial: 'cubic-bezier(0.165, 0.85, 0.45, 1)',
       },
     },
   },

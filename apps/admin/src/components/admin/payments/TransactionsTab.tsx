@@ -51,6 +51,7 @@ import {
   Download,
   Filter,
   Trash2,
+  Undo2,
 } from 'lucide-react';
 import { listTransactions, refundTransaction } from '@/lib/admin-api';
 import { ErrorBlock } from '@/components/admin/error-block';
@@ -245,8 +246,20 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
       {
         key: 'status',
         header: 'Trạng thái',
-        width: '120px',
-        cell: (t) => <StatusBadge status={STATUS_TONE[t.status]} label={t.status} />,
+        width: '140px',
+        cell: (t) =>
+          // Wave 60.81.B Tier 3 polish — refunded rows get an Undo2 leader
+          // icon so the warning-tone pill reads instantly as "money returned"
+          // (not "approval pending"). Other statuses keep the plain badge so
+          // the icon stays a meaningful diff, not noise.
+          t.status === 'refunded' ? (
+            <span className="inline-flex items-center gap-1.5">
+              <Undo2 className="h-3 w-3 text-warn-300" aria-hidden />
+              <StatusBadge status={STATUS_TONE[t.status]} label={t.status} />
+            </span>
+          ) : (
+            <StatusBadge status={STATUS_TONE[t.status]} label={t.status} />
+          ),
       },
       {
         key: 'created_at',
@@ -307,7 +320,7 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
                 <DropdownMenuTrigger asChild>
                   <button
                     type="button"
-                    className="inline-flex h-8 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-2.5 text-xs text-foreground hover:border-gold/50"
+                    className="inline-flex h-8 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-2.5 text-xs text-foreground transition-all duration-300 ease-editorial hover:border-gold/50"
                     aria-label="Lọc theo trạng thái"
                   >
                     <Filter className="h-3 w-3 text-muted-foreground" aria-hidden />
@@ -335,7 +348,7 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
                 <DropdownMenuTrigger asChild>
                   <button
                     type="button"
-                    className="inline-flex h-8 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-2.5 text-xs text-foreground hover:border-gold/50"
+                    className="inline-flex h-8 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-2.5 text-xs text-foreground transition-all duration-300 ease-editorial hover:border-gold/50"
                     aria-label="Lọc theo gói"
                   >
                     <Filter className="h-3 w-3 text-muted-foreground" aria-hidden />
@@ -364,7 +377,7 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
                   <DropdownMenuTrigger asChild>
                     <button
                       type="button"
-                      className="inline-flex h-8 items-center gap-1.5 rounded-md border border-gold/30 bg-card/60 px-2.5 text-xs text-gold hover:border-gold/60"
+                      className="inline-flex h-8 items-center gap-1.5 rounded-md border border-gold/30 bg-card/60 px-2.5 text-xs text-gold transition-all duration-300 ease-editorial hover:border-gold/60"
                       aria-label="Bộ lọc đã lưu"
                     >
                       <BookmarkPlus className="h-3 w-3" aria-hidden />

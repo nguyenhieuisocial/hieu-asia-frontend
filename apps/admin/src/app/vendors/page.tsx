@@ -72,11 +72,15 @@ async function fetchVendors(): Promise<VendorsResponse> {
   }
 }
 
+// Wave 60.81.B Tier 3 polish — replace raw emerald/red Tailwind defaults with
+// brand-aligned jade (active) and shared red ramp (not-connected). Dot color
+// + textual label both stay in one record so callers can render either.
 function statusOf(p: ProviderRow): { color: string; label: string } {
-  if (p.vendor === 'cloudflare') return { color: 'bg-emerald-500', label: '🟢 active (free tier)' };
+  if (p.vendor === 'cloudflare')
+    return { color: 'bg-jade-300', label: 'active (free tier)' };
   const hasCred = p.api_key || p.oauth;
-  if (!hasCred) return { color: 'bg-red-500', label: '🔴 chưa kết nối' };
-  return { color: 'bg-emerald-500', label: '🟢 active' };
+  if (!hasCred) return { color: 'bg-red-400', label: 'chưa kết nối' };
+  return { color: 'bg-jade-300', label: 'active' };
 }
 
 function VendorCard({ p }: { p: ProviderRow }) {
@@ -141,9 +145,9 @@ function VendorCard({ p }: { p: ProviderRow }) {
 
         {testResult && (
           <div
-            className={`rounded border px-2 py-1 text-xs ${
+            className={`rounded border px-2 py-1 text-xs transition-all duration-300 ease-editorial ${
               testResult.ok
-                ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300'
+                ? 'border-jade/40 bg-jade/10 text-jade-300'
                 : 'border-red-500/40 bg-red-500/10 text-red-300'
             }`}
           >
@@ -155,14 +159,14 @@ function VendorCard({ p }: { p: ProviderRow }) {
           <button
             onClick={testConnection}
             disabled={testing}
-            className="rounded border border-gold/30 px-2.5 py-1 text-xs text-gold hover:bg-gold/10 disabled:opacity-50"
+            className="rounded border border-gold/30 px-2.5 py-1 text-xs text-gold transition-all duration-300 ease-editorial hover:bg-gold/10 disabled:opacity-50"
           >
             {testing ? 'Đang test…' : 'Test connection'}
           </button>
           {p.vendor !== 'cloudflare' && (
             <Link
               href="/connect"
-              className="rounded border border-border px-2.5 py-1 text-xs text-foreground/85 hover:bg-muted/30"
+              className="rounded border border-border px-2.5 py-1 text-xs text-foreground/85 transition-all duration-300 ease-editorial hover:bg-muted/30"
             >
               Reconfigure
             </Link>
@@ -296,7 +300,7 @@ export default function VendorsPage() {
                     const route = routing[r];
                     if (!route) return null;
                     return (
-                      <tr key={r} className="hover:bg-gold/[0.03]">
+                      <tr key={r} className="transition-all duration-300 ease-editorial hover:bg-gold/[0.03]">
                         <td className="px-3 py-2 font-mono text-xs text-foreground/85">{ROLE_LABEL[r]}</td>
                         <td className="px-3 py-2">
                           <span className="rounded border border-gold/30 bg-gold/10 px-2 py-0.5 font-mono text-xs text-gold">

@@ -574,7 +574,7 @@ export default function AdminSessionsPage() {
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="inline-flex h-10 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground hover:border-gold/50"
+                  className="inline-flex h-10 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground transition-all duration-300 ease-editorial hover:border-gold/50"
                   aria-label="Lọc theo trạng thái"
                 >
                   {ICON_FILTER}
@@ -604,7 +604,7 @@ export default function AdminSessionsPage() {
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="inline-flex h-10 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground hover:border-gold/50"
+                  className="inline-flex h-10 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground transition-all duration-300 ease-editorial hover:border-gold/50"
                   aria-label="Sắp xếp"
                 >
                   <span>{sortLabel}</span>
@@ -685,7 +685,7 @@ export default function AdminSessionsPage() {
                 type="button"
                 onClick={handlePrevPage}
                 disabled={page <= 1}
-                className="rounded border border-gold/20 px-2.5 py-1 hover:border-gold/40 disabled:opacity-40"
+                className="rounded border border-gold/20 px-2.5 py-1 transition-all duration-300 ease-editorial hover:border-gold/40 disabled:opacity-40"
               >
                 ← Trước
               </button>
@@ -693,7 +693,7 @@ export default function AdminSessionsPage() {
                 type="button"
                 onClick={handleNextPage}
                 disabled={page >= totalPages}
-                className="rounded border border-gold/20 px-2.5 py-1 hover:border-gold/40 disabled:opacity-40"
+                className="rounded border border-gold/20 px-2.5 py-1 transition-all duration-300 ease-editorial hover:border-gold/40 disabled:opacity-40"
               >
                 Sau →
               </button>

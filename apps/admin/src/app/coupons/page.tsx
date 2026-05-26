@@ -28,6 +28,7 @@ import {
   DialogTitle,
   Input,
   Label,
+  StatusBadge,
   cn,
   toast,
 } from '@hieu-asia/ui';
@@ -77,20 +78,20 @@ function fmtDate(iso?: string | null) {
   }
 }
 
+// Wave 60.81.B Tier 3 polish — delegate to canonical `StatusBadge` (success /
+// warning / error / info / neutral) so coupons/sessions/tasks/payments share
+// one pill component. Expired = neutral (information-only), revoked = error.
+const STATUS_TONE: Record<
+  Coupon['status'],
+  React.ComponentProps<typeof StatusBadge>['status']
+> = {
+  active: 'success',
+  expired: 'neutral',
+  revoked: 'error',
+};
+
 function statusPill(s: Coupon['status']) {
-  const cls =
-    s === 'active'
-      ? 'border-jade/40 bg-jade/10 text-jade'
-      : s === 'expired'
-      ? 'border-border bg-muted/30 text-muted-foreground'
-      : 'border-red-400/40 bg-red-500/10 text-red-200';
-  return (
-    <span
-      className={`inline-flex items-center rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider ${cls}`}
-    >
-      {s}
-    </span>
-  );
+  return <StatusBadge status={STATUS_TONE[s]} label={s} />;
 }
 
 async function fetchCoupons(): Promise<CouponsResponse> {
@@ -379,7 +380,7 @@ export default function CouponsPage() {
                     type="button"
                     onClick={() => setStatusFilter(f.value)}
                     className={cn(
-                      'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
+                      'rounded-full border px-3 py-1 text-xs font-medium transition-all duration-300 ease-editorial',
                       active
                         ? 'border-gold/60 bg-gold/15 text-gold'
                         : 'border-border bg-card/60 text-muted-foreground hover:border-gold/30 hover:text-foreground',
@@ -462,7 +463,7 @@ export default function CouponsPage() {
                       <tr
                         key={c.code}
                         className={cn(
-                          'border-b border-gold/10 transition-colors last:border-0 hover:bg-gold/[0.03]',
+                          'border-b border-gold/10 transition-all duration-300 ease-editorial last:border-0 hover:bg-gold/[0.03]',
                           isSelected && 'bg-gold/5',
                         )}
                       >
