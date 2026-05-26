@@ -48,7 +48,7 @@ export function WhyTrust() {
       />
       <div className="mx-auto max-w-5xl px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
+          <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/90 sm:text-xs">
             Vì sao tin được
           </p>
           <h2

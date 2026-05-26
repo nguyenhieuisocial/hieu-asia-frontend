@@ -106,11 +106,12 @@ function loadFacebookPixel(): void {
   // — sets up the `fbq` queue before the SDK loads.
   const n = function (...args: unknown[]) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (n as any).callMethod
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, prefer-spread
-      ? (n as any).callMethod.apply(n, args)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      : (n as any).queue.push(args);
+    const stub = n as any;
+    if (stub.callMethod) {
+      stub.callMethod.apply(n, args);
+    } else {
+      stub.queue.push(args);
+    }
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (n as any).push = n;
@@ -147,7 +148,6 @@ function loadGoogleAds(): void {
   if (window.gtag) return;
 
   window.dataLayer = window.dataLayer || [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   window.gtag = function gtag(...args: unknown[]) {
     (window.dataLayer as unknown[]).push(args);
   };

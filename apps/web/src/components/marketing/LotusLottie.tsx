@@ -83,7 +83,11 @@ export function LotusLottie({
   // so the dotlottie player mounts; the IntersectionObserver re-evaluates).
   const [reduceMotion, setReduceMotion] = React.useState(true);
   const [visible, setVisible] = React.useState(true);
-  const [failed, setFailed] = React.useState(false);
+  // Wave 60.88.B: default `failed=true` so the CSS-SVG fallback renders first
+  // and we never trigger a 404 console error (Lighthouse BP audit) when the
+  // optional `.lottie` asset isn't shipped. A silent HEAD probe upgrades to
+  // the real player when the asset exists.
+  const [failed, setFailed] = React.useState(true);
   const containerRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
@@ -93,6 +97,24 @@ export function LotusLottie({
     mq.addEventListener('change', onChange);
     return () => mq.removeEventListener('change', onChange);
   }, []);
+
+  // Wave 60.88.B: silent HEAD probe. If the `.lottie` exists, flip `failed`
+  // back to false and the DotLottieReact player mounts on the next render.
+  // If absent (404 / network error), we stay on the CSS-SVG fallback with
+  // ZERO console.error noise (the dotlottie-react fetch path always logs).
+  React.useEffect(() => {
+    let cancelled = false;
+    fetch(src, { method: 'HEAD' })
+      .then((r) => {
+        if (!cancelled && r.ok) setFailed(false);
+      })
+      .catch(() => {
+        /* keep fallback */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [src]);
 
   React.useEffect(() => {
     const el = containerRef.current;

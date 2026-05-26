@@ -61,6 +61,8 @@ export function SubscribePush({ defaultZodiac, vapidPublicKey }: SubscribePushPr
     const savedZ = savedZRaw === 'ty2' ? 'ti' : savedZRaw;
     if (savedZ && !zodiac) setZodiac(savedZ);
     if (localStorage.getItem(LS_SUBBED) === '1') setSubscribed(true);
+    // Mount-only: hydrate from localStorage once. Adding `zodiac` would re-run on every change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleSubscribe() {

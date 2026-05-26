@@ -27,7 +27,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createClient, type RealtimeChannel } from '@supabase/supabase-js';
 
 // Match Phase 2.2 graph node order — used to compute progress fraction
-const TU_VI_NODE_ORDER = [
+const _TU_VI_NODE_ORDER = [
   'parse_input',
   // analyze_palace.<Name> — 12 parallel, treated as single "stage" at 0.2-0.85
   'cross_reference',

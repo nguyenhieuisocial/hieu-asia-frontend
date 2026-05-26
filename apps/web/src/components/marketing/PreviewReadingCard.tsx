@@ -95,7 +95,7 @@ export function PreviewReadingCard({
           {insightQuote}
         </p>
         {insightAuthor && (
-          <footer className="mt-3 font-mono text-xs uppercase tracking-wider text-cream-500">
+          <footer className="mt-3 font-mono text-xs uppercase tracking-wider text-cream-300">
             — {insightAuthor}
           </footer>
         )}

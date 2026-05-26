@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
-import { Calendar, Briefcase, Heart, Wallet, Activity, ArrowRight } from 'lucide-react';
+import { Briefcase, Heart, Wallet, Activity, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 

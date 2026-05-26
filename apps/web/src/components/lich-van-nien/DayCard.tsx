@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, cn } from '@hieu-asia/ui';
+import { Card, CardContent, CardTitle, cn } from '@hieu-asia/ui';
 
 export interface VanNienDayDTO {
   solarDate: {

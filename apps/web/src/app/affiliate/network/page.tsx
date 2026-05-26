@@ -258,7 +258,6 @@ export default function AffiliateNetworkPage() {
       <SiteNav />
       <script
         type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
       />
       <main className="mx-auto max-w-5xl px-6 pt-16 pb-20">

@@ -64,7 +64,6 @@ export function track(event: string, properties?: Record<string, unknown>): void
   // browser console without any actionable signal.
   if (typeof event !== 'string' || event.trim().length === 0) {
     if (process.env.NODE_ENV !== 'production') {
-      // eslint-disable-next-line no-console
       console.warn('[analytics] dropped event with empty name', { event, properties });
     }
     return;

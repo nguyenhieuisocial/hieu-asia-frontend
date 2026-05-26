@@ -28,7 +28,7 @@ const SAFE_TARGETS = new Set([
   '/than-so-hoc', '/can-xuong', '/thuoc-lo-ban', '/hop-tuoi',
 ]);
 
-interface AffiliateLite {
+interface _AffiliateLite {
   ok: boolean;
   affiliate?: { code: string; display_name: string };
 }

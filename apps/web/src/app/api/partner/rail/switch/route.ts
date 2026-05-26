@@ -6,7 +6,7 @@
  * Body: { rail: 'manual_csv'|'wise'|'stripe_connect', account_external_id?: string }
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { extractBearer } from '@/lib/supabase-server';
 
 export const runtime = 'nodejs';

@@ -34,6 +34,15 @@ for (const p of PAGES) {
       .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
       .analyze();
 
+    const all = results.violations; // all severities (Wave 60.88.B)
+    // eslint-disable-next-line no-console
+    console.log(
+      `[${p.name}] violations:`,
+      all
+        .map((v) => `${v.impact}: ${v.id} (${v.nodes.length})`)
+        .join("; ") || "none",
+    );
+
     const blocking = results.violations.filter(
       (v) => v.impact === "serious" || v.impact === "critical",
     );

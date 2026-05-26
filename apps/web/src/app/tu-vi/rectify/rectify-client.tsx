@@ -142,7 +142,6 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
   const total = questions.length;
   const current = questions[stepIndex];
   const answeredCount = Object.keys(answers).length;
-  const allAnswered = answeredCount >= total && total > 0;
 
   function selectOption(qid: string, oid: string) {
     setAnswers((prev) => ({ ...prev, [qid]: oid }));
