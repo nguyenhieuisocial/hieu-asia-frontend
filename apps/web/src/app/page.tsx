@@ -659,6 +659,10 @@ export default function LandingPage() {
               nameDisplay: 'Đối thoại',
               description: 'Một lá số đầy đủ kèm PDF và 3 câu hỏi Mentor AI.',
               priceMonthly: PRICING.premium.vnd,
+              // Wave 60.89.HF1 — Premium = one-time purchase (vault 105 §5.2),
+              // not a subscription. Without this override the component
+              // defaults to "/ tháng" which misleads buyers.
+              priceUnit: 'một lần',
               features: [
                 'Một lá số Tử Vi đầy đủ',
                 'PDF báo cáo có thể tải về',

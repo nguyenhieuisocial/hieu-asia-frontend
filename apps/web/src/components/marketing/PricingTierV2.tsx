@@ -38,6 +38,14 @@ export type PricingTierV2Tier = {
   yearlyDiscount?: string;
   /** Bullet list of features. */
   features: string[];
+  /**
+   * Wave 60.89.HF1 — explicit unit suffix override. Defaults follow the legacy
+   * heuristic (`priceMonthly === 0` → "vĩnh viễn", yearly toggle → "năm",
+   * otherwise → "tháng"). Pass `'một lần'` for one-time purchases (Premium
+   * ₫99.000) so the suffix doesn't mislead customers into thinking it's a
+   * monthly subscription.
+   */
+  priceUnit?: 'tháng' | 'năm' | 'một lần' | 'vĩnh viễn';
   ctaLabel: string;
   ctaHref: string;
   /** Filled gold CTA when true, ghost when false/undefined. */
@@ -152,11 +160,14 @@ export function PricingTierV2({
           {tiers.map((tier) => {
             const isYearly = period === 'yearly' && tier.priceYearly !== undefined;
             const amount = isYearly ? tier.priceYearly! : tier.priceMonthly;
-            const unit = tier.priceMonthly === 0
-              ? '/ vĩnh viễn'
-              : isYearly
-                ? '/ năm'
-                : '/ tháng';
+            // Wave 60.89.HF1 — explicit `priceUnit` wins over the legacy heuristic.
+            // When yearly toggle flips a subscription tier, keep showing "/ năm"
+            // even if `priceUnit: 'tháng'` was passed (the toggle is the source
+            // of truth for monthly/yearly tiers).
+            const resolvedUnit = isYearly
+              ? 'năm'
+              : tier.priceUnit ?? (tier.priceMonthly === 0 ? 'vĩnh viễn' : 'tháng');
+            const unit = `/ ${resolvedUnit}`;
 
             const baseCard =
               'relative flex flex-col rounded-card-editorial border bg-warm-dark-100 p-8 md:p-12 transition-all duration-300 ease-editorial';
