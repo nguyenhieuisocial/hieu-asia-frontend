@@ -33,7 +33,7 @@
       "webpack-dev-middleware": "^5.3.4",
       "rollup": "^2.80.0",
       "micromatch": "^4.0.8",
-      "tar": "^6.2.2"
+      "tar": "^6.2.1"
     }
   }
 }
