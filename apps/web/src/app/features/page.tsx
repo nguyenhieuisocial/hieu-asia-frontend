@@ -273,7 +273,7 @@ function FeatureBadge({ badge }: { badge: Exclude<Badge, null> }) {
   }
   return (
     // Wave 60.37.c HIGH-6: same border-only treatment for symmetry.
-    <span className="inline-flex items-center rounded-full border border-jade/60 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-jade">
+    <span className="inline-flex items-center rounded-full border border-jade/60 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-jade-300">
       Mới
     </span>
   );

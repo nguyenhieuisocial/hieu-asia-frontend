@@ -16,25 +16,25 @@
 
 ## Key pages
 
-- Trang chủ: https://hieu.asia/
-- Bảng giá: https://hieu.asia/pricing
-- Tính năng: https://hieu.asia/features
-- Phương pháp luận: https://hieu.asia/methodology
-- Về chúng tôi: https://hieu.asia/about
-- Tử Vi hôm nay: https://hieu.asia/tu-vi-hom-nay
-- Lịch vạn niên: https://hieu.asia/lich-van-nien
-- Học Tử Vi: https://hieu.asia/learn/tu-vi
-- Học Bát Tự: https://hieu.asia/learn/bat-tu
-- Học Thần Số Học: https://hieu.asia/learn/than-so-hoc
-- Học MBTI: https://hieu.asia/learn/mbti
-- Học Palm Reading: https://hieu.asia/learn/palm
-- Hợp tuổi: https://hieu.asia/hop-tuoi
-- Cân Xương Đoán Số: https://hieu.asia/can-xuong
-- Thước Lỗ Ban: https://hieu.asia/thuoc-lo-ban
-- Báo cáo mẫu: https://hieu.asia/sample-report
-- Tử Vi 2026: https://hieu.asia/tu-vi-2026
-- Chính sách bảo mật: https://hieu.asia/privacy
-- Điều khoản: https://hieu.asia/terms
+- [Trang chủ](https://hieu.asia/)
+- [Bảng giá](https://hieu.asia/pricing)
+- [Tính năng](https://hieu.asia/features)
+- [Phương pháp luận](https://hieu.asia/methodology)
+- [Về chúng tôi](https://hieu.asia/about)
+- [Tử Vi hôm nay](https://hieu.asia/tu-vi-hom-nay)
+- [Lịch vạn niên](https://hieu.asia/lich-van-nien)
+- [Học Tử Vi](https://hieu.asia/learn/tu-vi)
+- [Học Bát Tự](https://hieu.asia/learn/bat-tu)
+- [Học Thần Số Học](https://hieu.asia/learn/than-so-hoc)
+- [Học MBTI](https://hieu.asia/learn/mbti)
+- [Học Palm Reading](https://hieu.asia/learn/palm)
+- [Hợp tuổi](https://hieu.asia/hop-tuoi)
+- [Cân Xương Đoán Số](https://hieu.asia/can-xuong)
+- [Thước Lỗ Ban](https://hieu.asia/thuoc-lo-ban)
+- [Báo cáo mẫu](https://hieu.asia/sample-report)
+- [Tử Vi 2026](https://hieu.asia/tu-vi-2026)
+- [Chính sách bảo mật](https://hieu.asia/privacy)
+- [Điều khoản](https://hieu.asia/terms)
 
 ## Bốn lăng kính (Four lenses)
 

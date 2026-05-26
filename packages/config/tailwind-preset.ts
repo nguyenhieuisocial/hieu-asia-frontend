@@ -39,10 +39,15 @@ const preset = {
           700: '#281A3A',
           900: '#160E20',
         },
-        // Accent jade (calm, trust)
+        // Accent jade (calm, trust).
+        // Wave 60.80.fix: added 300/400 light variants for dark-bg legibility
+        // (Lighthouse color-contrast required >=4.5 for body / 3.0 for large
+        // text; old jade.500 #2D5F5A failed 2.5-2.6 on warm-dark-* surfaces).
         jade: {
           DEFAULT: '#2D5F5A',
           50: '#E6F0EE',
+          300: '#5BA89F',
+          400: '#3F8782',
           500: '#2D5F5A',
           700: '#1F423F',
           900: '#0F2120',

@@ -164,8 +164,9 @@ export function BentoLens({
 
                 {lens.watermark && (
                   <span
-                    aria-hidden
-                    className="pointer-events-none absolute bottom-6 right-6 select-none font-marketing-display italic text-warm-dark-300 opacity-50"
+                    aria-hidden="true"
+                    role="presentation"
+                    className="pointer-events-none absolute bottom-6 right-6 select-none font-marketing-display italic text-warm-dark-500 opacity-30"
                     style={{ fontSize: watermarkSize, lineHeight: 1 }}
                   >
                     {lens.watermark}
@@ -174,7 +175,7 @@ export function BentoLens({
 
                 {lens.icon}
 
-                <p className="relative z-10 mt-8 font-mono text-eyebrow uppercase tracking-wider text-cream-500">
+                <p className="relative z-10 mt-8 font-mono text-eyebrow uppercase tracking-wider text-cream-300">
                   {lens.name}
                   {lens.subname && ` · ${lens.subname}`}
                 </p>

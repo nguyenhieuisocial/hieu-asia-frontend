@@ -406,7 +406,7 @@ export default function BatTuMethodologyPage() {
                         {e.name}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-jade">{e.sinh}</td>
+                    <td className="px-4 py-3 text-jade-300">{e.sinh}</td>
                     <td className="px-4 py-3 text-rose-300">{e.khac}</td>
                   </tr>
                 ))}
@@ -486,7 +486,7 @@ export default function BatTuMethodologyPage() {
           </h2>
           <Card className="mt-4 border-jade/25 bg-jade/5">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base text-jade">
+              <CardTitle className="flex items-center gap-2 text-base text-jade-300">
                 <Map className="h-5 w-5" aria-hidden />
                 Điều kiện để chuyển sang production
               </CardTitle>
@@ -496,7 +496,7 @@ export default function BatTuMethodologyPage() {
                 {ROADMAP.map((item) => (
                   <li key={item} className="flex gap-2">
                     <ChevronRight
-                      className="mt-0.5 h-4 w-4 shrink-0 text-jade/80"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-jade-300/80"
                       aria-hidden
                     />
                     <span>{item}</span>

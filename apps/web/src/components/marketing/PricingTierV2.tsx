@@ -16,7 +16,7 @@ import { track } from '@/lib/analytics';
  * Visual matches `/tmp/wave-60-56-option-d/pricing.png`. Tokens from
  * `apps/web/tailwind.config.ts` (Wave 60.56 P1 commit 0b38173):
  *   bg-warm-dark-50/100/200/300 / text-cream-50/100/300/500
- *   text-gold / text-gold-soft / text-jade / bg-jade
+ *   text-gold / text-gold-soft / text-jade-300 / bg-jade
  *   font-marketing-display / text-section-display / text-price-amount
  *   text-eyebrow / rounded-pill / rounded-card-editorial
  *   max-w-marketing / ease-editorial
@@ -140,7 +140,7 @@ export function PricingTierV2({
               </button>
             </div>
             {period === 'yearly' && (
-              <p className="mt-2 font-mono text-xs uppercase tracking-wider text-jade">
+              <p className="mt-2 font-mono text-xs uppercase tracking-wider text-jade-300">
                 NĂM — TIẾT KIỆM 20%
               </p>
             )}
@@ -204,7 +204,7 @@ export function PricingTierV2({
                     <li key={feature} className="flex items-start gap-3">
                       <Check
                         size={14}
-                        className="mt-1 shrink-0 text-jade"
+                        className="mt-1 shrink-0 text-jade-300"
                         aria-hidden
                       />
                       <span className="font-sans text-sm text-cream-100">
@@ -223,7 +223,7 @@ export function PricingTierV2({
                 </Link>
 
                 {tier.refundDays !== undefined && (
-                  <p className="mt-3 flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-wider text-jade">
+                  <p className="mt-3 flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-wider text-jade-300">
                     <span className="size-1.5 rounded-full bg-jade" aria-hidden />
                     {tier.refundDays} NGÀY HOÀN TIỀN
                   </p>

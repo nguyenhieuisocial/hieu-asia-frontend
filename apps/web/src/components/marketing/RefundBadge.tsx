@@ -13,7 +13,7 @@ export type RefundBadgeProps = {
 export function RefundBadge({ days, className }: RefundBadgeProps) {
   return (
     <span
-      className={`inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-jade ${className ?? ''}`}
+      className={`inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-jade-300 ${className ?? ''}`}
     >
       <span className="size-1.5 rounded-full bg-jade" aria-hidden />
       {days} NGÀY HOÀN TIỀN

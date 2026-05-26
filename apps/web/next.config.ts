@@ -103,7 +103,10 @@ const nextConfig: NextConfig = {
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' data: https://fonts.gstatic.com",
       `img-src 'self' data: blob: https: ${pixelImgHosts}`,
-      `connect-src 'self' https://api.hieu.asia https://*.hieu.asia https://*.supabase.co https://*.supabase.in https://us.i.posthog.com https://*.posthog.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cloud.langfuse.com https://api.vietqr.io ${pixelConnectHosts}`,
+      // Wave 60.80.fix — added unpkg.com + cdn.jsdelivr.net for dotlottie WASM
+      // fallback fetches. Lighthouse best-practices flagged CSP-blocked errors
+      // when primary WASM source failed; library retries from these CDNs.
+      `connect-src 'self' https://api.hieu.asia https://*.hieu.asia https://*.supabase.co https://*.supabase.in https://us.i.posthog.com https://*.posthog.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cloud.langfuse.com https://api.vietqr.io https://unpkg.com https://cdn.jsdelivr.net ${pixelConnectHosts}`,
       // Wave 60.62 — Cloudflare Turnstile renders its widget inside an iframe
       // hosted at challenges.cloudflare.com — must allow frame-src in addition
       // to script-src above. Both needed for captcha to work.

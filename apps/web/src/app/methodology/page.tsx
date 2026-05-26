@@ -407,7 +407,7 @@ function StatusBadge({
 }) {
   if (status === 'production') {
     return (
-      <span className="inline-flex rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade">
+      <span className="inline-flex rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade-300">
         production
       </span>
     );
@@ -518,7 +518,7 @@ function Chapter2Content() {
       <div className="grid gap-4 lg:grid-cols-2">
         <Card className="border-jade/25 bg-jade/5">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-jade">
+            <CardTitle className="flex items-center gap-2 text-jade-300">
               <CheckCircle2 className="h-5 w-5" aria-hidden />
               AI được phép
             </CardTitle>
@@ -528,7 +528,7 @@ function Chapter2Content() {
               {AI_CAN.map((item) => (
                 <li key={item} className="flex gap-2">
                   <CheckCircle2
-                    className="mt-0.5 h-4 w-4 shrink-0 text-jade"
+                    className="mt-0.5 h-4 w-4 shrink-0 text-jade-300"
                     aria-hidden
                   />
                   <span>{item}</span>
@@ -622,7 +622,7 @@ function Chapter3Content() {
           {CONFIDENCE.map((c) => {
             const palette =
               c.color === 'jade'
-                ? 'border-jade/30 bg-jade/5 text-jade'
+                ? 'border-jade/30 bg-jade/5 text-jade-300'
                 : c.color === 'amber'
                   ? 'border-amber-500/30 bg-amber-500/5 text-amber-300'
                   : 'border-rose-500/30 bg-rose-950/20 text-rose-300';
@@ -675,27 +675,27 @@ function Chapter3Content() {
             </div>
 
             <div>
-              <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-jade/80">
+              <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-jade-300/80">
                 Dựa trên
               </p>
               <ul className="mt-2 space-y-1.5 font-sans text-sm leading-relaxed text-cream-300">
                 <li className="flex gap-2">
                   <ChevronRight
-                    className="mt-0.5 h-4 w-4 shrink-0 text-jade/70"
+                    className="mt-0.5 h-4 w-4 shrink-0 text-jade-300/70"
                     aria-hidden
                   />
                   <span>Cung Quan Lộc: xu hướng mở rộng vai trò</span>
                 </li>
                 <li className="flex gap-2">
                   <ChevronRight
-                    className="mt-0.5 h-4 w-4 shrink-0 text-jade/70"
+                    className="mt-0.5 h-4 w-4 shrink-0 text-jade-300/70"
                     aria-hidden
                   />
                   <span>Tài Bạch: cần biên an toàn tài chính</span>
                 </li>
                 <li className="flex gap-2">
                   <ChevronRight
-                    className="mt-0.5 h-4 w-4 shrink-0 text-jade/70"
+                    className="mt-0.5 h-4 w-4 shrink-0 text-jade-300/70"
                     aria-hidden
                   />
                   <span>
@@ -704,7 +704,7 @@ function Chapter3Content() {
                 </li>
                 <li className="flex gap-2">
                   <ChevronRight
-                    className="mt-0.5 h-4 w-4 shrink-0 text-jade/70"
+                    className="mt-0.5 h-4 w-4 shrink-0 text-jade-300/70"
                     aria-hidden
                   />
                   <span>Bối cảnh user: đang cân nhắc startup mới</span>
@@ -795,7 +795,7 @@ function Chapter3Content() {
                   </td>
                   <td className="px-4 py-3">
                     {row.status === 'pass' ? (
-                      <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade-300">
                         <CheckCircle2 className="h-3 w-3" aria-hidden />
                         pass
                       </span>

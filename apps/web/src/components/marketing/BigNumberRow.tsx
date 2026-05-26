@@ -192,13 +192,20 @@ function BigNumberCell({ item, delayMs }: { item: BigNumber; delayMs: number }) 
       style={{ transitionDelay: `${delayMs}ms` }}
       className="flex translate-y-6 flex-col items-center text-center opacity-0 transition-[opacity,transform] duration-[600ms] ease-editorial data-[in-view=true]:translate-y-0 data-[in-view=true]:opacity-100 md:items-start md:text-left"
     >
-      <p
-        className="font-marketing-display text-[64px] font-semibold leading-none tracking-tight text-cream-50 md:text-[96px]"
-        aria-label={`${item.prefix ?? ''}${formatter(item.value)}${item.suffix ?? ''} ${item.caption}`}
-      >
-        {item.prefix}
-        <span aria-hidden>{display}</span>
-        {item.suffix}
+      {/*
+        Wave 60.80.fix — aria-label is prohibited on non-interactive <p>.
+        Use sr-only span for the screen-reader-friendly final value, and
+        mark the animated decorative number aria-hidden.
+      */}
+      <p className="font-marketing-display text-[64px] font-semibold leading-none tracking-tight text-cream-50 md:text-[96px]">
+        <span className="sr-only">
+          {`${item.prefix ?? ''}${formatter(item.value)}${item.suffix ?? ''} ${item.caption}`}
+        </span>
+        <span aria-hidden="true">
+          {item.prefix}
+          {display}
+          {item.suffix}
+        </span>
       </p>
       <p className="mt-3 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
         {item.caption}

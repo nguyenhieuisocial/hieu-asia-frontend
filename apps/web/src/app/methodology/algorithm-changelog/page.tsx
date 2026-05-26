@@ -179,7 +179,7 @@ const TYPE_STYLE: Record<
   },
   feat: {
     label: 'feat',
-    className: 'border-jade/40 bg-jade/15 text-jade',
+    className: 'border-jade/40 bg-jade/15 text-jade-300',
   },
   note: {
     label: 'note',

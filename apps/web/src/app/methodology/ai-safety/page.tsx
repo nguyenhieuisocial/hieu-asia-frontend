@@ -361,7 +361,7 @@ export default function AiSafetyPage() {
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">{row.measure}</td>
                     <td className="px-4 py-3">
-                      <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade-300">
                         <CheckCircle2 className="h-3 w-3" aria-hidden />
                         {row.status}
                       </span>
@@ -406,7 +406,7 @@ export default function AiSafetyPage() {
                     <p className="mt-1 italic text-muted-foreground">{c.example}</p>
                   </div>
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-wider text-jade/80">
+                    <p className="font-mono text-[10px] uppercase tracking-wider text-jade-300/80">
                       Reply mẫu
                     </p>
                     <p className="mt-1 leading-relaxed">{c.reply}</p>
