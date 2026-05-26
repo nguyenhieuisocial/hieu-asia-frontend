@@ -1,0 +1,53 @@
+# Wave 60.80 — Lighthouse CI on PR + manual dispatch.
+#
+# Free quality tool. No account required (uses temporary-public-storage).
+# Asserts performance / a11y / best-practices / SEO budgets defined in
+# apps/web/.lighthouserc.json.
+#
+# Founder note: a11y is the only ERROR-level budget (fails CI on regression).
+# Performance + best-practices + SEO are WARN-level for now.
+
+name: Lighthouse CI
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: lighthouse-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    name: Lighthouse audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Wait for Vercel preview to settle
+        run: sleep 60
+      - name: Run Lighthouse CI
+        run: pnpm --filter web exec lhci autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: apps/web/.lighthouseci/
+          retention-days: 14

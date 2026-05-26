@@ -49,3 +49,10 @@ coverage
 
 # Wave 58.2 — local screenshot evidence captured during /ultrareview sessions
 _evidence/
+
+# Wave 60.80 — Playwright + Lighthouse CI outputs (NOT baselines)
+# Baselines in `apps/web/tests/*-snapshots/` MUST be committed for diff to work.
+apps/web/test-results/
+apps/web/playwright-report/
+apps/web/.lighthouseci/
+
