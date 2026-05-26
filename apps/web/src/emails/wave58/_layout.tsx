@@ -65,8 +65,8 @@ export function DripLayout({ preview, unsubscribeUrl, children }: LayoutProps) {
           <Section>
             <Text style={footerTextStyle}>
               Bạn nhận email này vì đã đăng ký hieu.asia. Tắt nhận email tại{' '}
-              <Link href="https://hieu.asia/account?tab=preferences" style={footerLinkStyle}>
-                /account?tab=preferences
+              <Link href="https://hieu.asia/account/profile" style={footerLinkStyle}>
+                /account/profile
               </Link>
               .
             </Text>

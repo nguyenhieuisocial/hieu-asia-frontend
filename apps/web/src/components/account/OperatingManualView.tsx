@@ -356,7 +356,7 @@ function EmptyState({
         {
           done: inputs.profileComplete,
           label: 'Lá số đã lưu (ngày sinh + giới tính)',
-          href: '/account?tab=chart',
+          href: '/account/chart',
           hint: 'Vào tab "Lá số của tôi" để bổ sung',
         },
         {

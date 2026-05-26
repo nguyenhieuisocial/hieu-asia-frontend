@@ -261,7 +261,7 @@ function buildIdentitySection(id: ManualIdentityCore): ManualSection {
     title: 'Định danh cốt lõi',
     lines,
     kind: 'prose',
-    emptyHref: '/account?tab=chart',
+    emptyHref: '/account/chart',
     emptyLabel: 'Bổ sung thông tin sinh',
   };
 }

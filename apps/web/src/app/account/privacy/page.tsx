@@ -4,9 +4,8 @@
  * Wave 60.58 T2.1 — /account/privacy
  *
  * Hierarchical deep route extracted from the former PrivacyTab. Note that
- * `/settings` already redirects to `/account?tab=privacy` (see
- * apps/web/src/app/settings/page.tsx) — that redirect target is updated in
- * the same wave to point here.
+ * `/settings` already redirects to `/account/privacy` (see
+ * apps/web/src/app/settings/page.tsx).
  */
 
 import * as React from 'react';

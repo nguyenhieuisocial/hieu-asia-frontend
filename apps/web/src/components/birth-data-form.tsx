@@ -308,7 +308,7 @@ export function BirthDataForm() {
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden="true" />
           <p className="leading-relaxed">
             Đã dùng thông tin từ trang{' '}
-            <Link href="/account?tab=chart" className="text-gold underline hover:text-gold/80">
+            <Link href="/account/chart" className="text-gold underline hover:text-gold/80">
               Tài khoản
             </Link>{' '}
             — sửa nếu cần.

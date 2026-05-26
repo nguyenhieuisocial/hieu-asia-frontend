@@ -115,7 +115,7 @@ export async function GET(req: NextRequest) {
     console.warn('[unsubscribe] update failed', { userId, err: error.message });
     return new NextResponse(
       htmlPage(
-        'Hệ thống đang bảo trì — vui lòng thử lại sau ít phút, hoặc tắt email trong /account?tab=preferences.',
+        'Hệ thống đang bảo trì — vui lòng thử lại sau ít phút, hoặc tắt email trong /account/profile.',
         false,
       ),
       { status: 503, headers: { 'content-type': 'text/html; charset=utf-8' } },
