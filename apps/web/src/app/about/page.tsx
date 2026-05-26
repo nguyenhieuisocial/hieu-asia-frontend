@@ -74,7 +74,9 @@ export default function AboutPage() {
       />
       <SiteNav />
       <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
-        {/* Section 1 — Hero + Founder face placeholder */}
+        {/* Section 1 — Hero + Founder face placeholder.
+            Wave 60.79.T1 (vault 112 P0-03): add gold-ring ornament so the
+            right ~50% of viewport at lg+ is no longer dead space. */}
         <MarketingHero
           eyebrow="VỀ CHÚNG TÔI"
           title={
@@ -86,6 +88,7 @@ export default function AboutPage() {
           subtitle="Một sản phẩm Việt Nam, xây cho người Việt — và bất cứ ai muốn hiểu mình rõ hơn để ra quyết định tốt hơn."
           primaryCta={{ label: 'Liên hệ', href: 'mailto:hi@hieu.asia' }}
           secondaryCta={{ label: 'Telegram bot', href: 'https://t.me/hieuasiabot' }}
+          ornament="gold-ring"
         />
 
         <section className="relative bg-warm-dark-50 pb-20">
@@ -109,8 +112,10 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Section 2 — Mission + Vision merged */}
-        <section className="relative bg-background py-20 sm:py-24">
+        {/* Section 2 — Mission + Vision merged.
+            Wave 60.79.T1 (vault 112 P0): tighten from py-20 sm:py-24 → py-16
+            md:py-20 so 3 stacked sections don't pile up 530px of vertical air. */}
+        <section className="relative bg-background py-16 md:py-20">
           <div className="mx-auto max-w-5xl px-6">
             <div className="mb-12 text-center">
               <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">

@@ -221,11 +221,12 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
           {/* Wave 60.60.d — Captcha mounted FIRST so it gates both
               OAuth buttons + magic-link submit. Token resets after
               every attempt (single-use). Widget itself stays
-              visible-but-rendered-once across the session. */}
-          <div className="rounded-card-editorial border border-warm-dark-300 bg-warm-dark-200 p-4">
-            <p className="mb-3 text-center text-xs text-cream-500">
-              Xác thực bạn không phải robot trước khi tiếp tục:
-            </p>
+              visible-but-rendered-once across the session.
+              Wave 60.79.T1 (vault 112 P0-06): removed descriptive label +
+              tightened wrapper to `p-1 min-h-0` so the box doesn't reserve
+              ~150px of empty whitespace before Turnstile script loads. The
+              widget itself self-labels (Cloudflare branding) when rendered. */}
+          <div className="flex min-h-0 justify-center rounded-card-editorial border border-warm-dark-300 bg-warm-dark-200 p-1">
             <TurnstileWidget
               onVerify={(token) => {
                 setCaptchaToken(token);

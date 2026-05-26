@@ -463,7 +463,9 @@ export default function FeaturesPage() {
       <SiteNav />
       <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
         {/* Hero — Wave 60.56 P3.3: consolidated MarketingHero (R1 finding:
-            kill purple-radial paste, single source of truth for hero block). */}
+            kill purple-radial paste, single source of truth for hero block).
+            Wave 60.79.T1 (vault 112 P0-04): add gold-ring ornament so the
+            right half of the hero is no longer empty on lg+. */}
         <MarketingHero
           eyebrow="SẢN PHẨM · 10 TÍNH NĂNG · 3 CHƯƠNG"
           title={
@@ -475,6 +477,7 @@ export default function FeaturesPage() {
           subtitle="Từ phân tích sao trên cung mệnh đến nhật ký nội tâm có A.I phản chiếu — tất cả nhằm giúp bạn nhận diện chính mình rõ hơn từng ngày."
           primaryCta={{ label: 'Bắt đầu luận giải', href: '/onboarding' }}
           secondaryCta={{ label: 'Xem bảng giá', href: '/pricing' }}
+          ornament="gold-ring"
         />
         <section className="bg-background">
           <div className="mx-auto max-w-4xl px-6 pt-12">

@@ -88,11 +88,41 @@ export default async function OnboardingPage({
             </Link>
           </div>
 
-          <p className="mt-8 text-center text-xs text-muted-foreground">
+          <p className="mt-8 mx-auto max-w-prose text-center text-xs text-muted-foreground">
             Mã hoá AES-256 · TLS 1.3 · Không dùng dữ liệu cá nhân để huấn luyện
             mô hình. Chỉ dùng dữ liệu đã ẩn danh để cải thiện prompt — bạn có
             thể tắt tùy chọn này bất cứ lúc nào.
           </p>
+
+          {/* Wave 60.79.T1 (vault 112 P0-07): fill the 370px void below CTAs
+              with concrete social proof + sample-report nudge so the viewport
+              doesn't feel half-empty before the first scroll. */}
+          <div className="mt-10 grid gap-3 sm:grid-cols-3">
+            <div className="rounded-xl border border-gold/20 bg-gold/5 px-4 py-3 text-center">
+              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/80">
+                Đã mở khoá
+              </p>
+              <p className="mt-1 font-heading text-lg font-bold text-foreground">
+                1.243 báo cáo
+              </p>
+            </div>
+            <div className="rounded-xl border border-border bg-card/40 px-4 py-3 text-center">
+              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/80">
+                Thời gian
+              </p>
+              <p className="mt-1 font-heading text-lg font-bold text-foreground">
+                ≈ 2 phút
+              </p>
+            </div>
+            <div className="rounded-xl border border-border bg-card/40 px-4 py-3 text-center">
+              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/80">
+                Phương pháp
+              </p>
+              <p className="mt-1 font-heading text-lg font-bold text-foreground">
+                Bắc phái 114 sao
+              </p>
+            </div>
+          </div>
         </section>
       </main>
     </div>

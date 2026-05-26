@@ -1011,7 +1011,10 @@ export default function MethodologyPage() {
            subsection below benefits from a more concise, scan-fast hero
            that doesn't compete with the sticky chapter title.
            ───────────────────────────────────────────────────────────── */}
-        <section className="bg-warm-dark-50 px-6 py-16 pt-32 md:py-24">
+        {/* Wave 60.79.T1 (vault 112 P0-10): tighten pt-32 → pt-24 + md:py-24 →
+            md:py-20 so the 200+px tag-to-body gap shrinks. pt accounts for
+            fixed SiteNav (h-16 = 64px) + breathing room. */}
+        <section className="bg-warm-dark-50 px-6 py-12 pt-24 md:py-20">
           <div className="mx-auto max-w-marketing-tight">
             <p className="mb-6 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
               <span className="mr-2 inline-block h-px w-6 bg-gold align-middle" />

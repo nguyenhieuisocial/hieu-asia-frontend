@@ -38,7 +38,9 @@ export function FaqAccordion({
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className={['relative bg-background py-20 sm:py-28', className ?? ''].join(' ').trim()}
+      // Wave 60.79.T1 (vault 112 P0-09): tighten from sm:py-28 → md:py-24 so
+      // section padding cascade doesn't pile up 200+px gaps between H2s.
+      className={['relative bg-background py-16 md:py-20', className ?? ''].join(' ').trim()}
     >
       <div className="mx-auto max-w-3xl px-6">
         <div className="text-center">

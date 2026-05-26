@@ -45,7 +45,11 @@ export function HeroV3() {
       {/* Layer 3: floating gold ornaments */}
       <GoldOrnaments />
 
-      <div className="relative mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl flex-col items-center justify-center px-6 py-24 text-center sm:py-32">
+      {/* Wave 60.79.T1 (vault 112 P0-02): drop `min-h-[calc(100vh-4rem)]` so the
+          hero sizes to content + padding, not viewport. Cap padding at
+          `py-16 md:py-20` (down from `py-24 sm:py-32`) so the next section
+          peeks into the first viewport (~600-680px hero, not 900px+). */}
+      <div className="relative mx-auto flex max-w-6xl flex-col items-center justify-center px-6 py-16 text-center md:py-20">
         <div className="inline-flex items-center gap-2 rounded-full border border-gold/25 bg-card/60 px-4 py-1.5 backdrop-blur-sm">
           <span className="h-1.5 w-1.5 rounded-full bg-gold" aria-hidden="true" />
           <span className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/90 sm:text-xs">
