@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SiteNav } from '@/components/home/SiteNav';
 import { OnboardingRecap, OnboardingStepBadge } from '@/components/onboarding-recap';
+import { OnboardingIntentTracker } from '@/components/onboarding-intent-tracker';
 
 export const metadata: Metadata = {
   title: 'Mở khóa lá số',
@@ -18,9 +19,22 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-export default function OnboardingPage() {
+export default async function OnboardingPage({
+  searchParams,
+}: {
+  // Next.js 15 — searchParams is now a Promise. Awaiting once is safe (the
+  // value is cached per request).
+  searchParams?: Promise<{ intent?: string }>;
+}) {
+  // Wave 60.66.P3 — read ?intent=<slug> from IntentChips on the homepage so
+  // we can fire a PostHog `onboarding_intent_seed` event for funnel analysis.
+  // Pure analytics signal — doesn't gate the onboarding flow.
+  const params = await searchParams;
+  const intent = params?.intent;
+
   return (
     <div className="min-h-screen bg-background text-foreground">
+      {intent && <OnboardingIntentTracker intent={intent} />}
       <SiteNav />
       <main id="main-content" className="relative overflow-hidden bg-background pt-20 pb-20">
         <div

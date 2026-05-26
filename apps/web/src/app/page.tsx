@@ -12,6 +12,8 @@ import { LiveCounterEyebrow } from '@/components/marketing/LiveCounterEyebrow';
 import { BentoLens } from '@/components/marketing/BentoLens';
 import { PhilosophyBlock } from '@/components/marketing/PhilosophyBlock';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
+import { ScanRow } from '@/components/marketing/ScanRow';
+import { IntentChips } from '@/components/marketing/IntentChips';
 
 export const metadata: Metadata = {
   // Homepage title already contains the brand → bypass the layout
@@ -389,15 +391,83 @@ export default function LandingPage() {
           watermark="Tử Vi"
         />
 
+        {/* Wave 60.66.P3 — IntentChips (vault 109 §3 Phase 3 + vault 108 §5).
+            Perplexity-style intent capture below hero — 6 entry points each
+            deep-linking to /onboarding?intent=<slug>. Glassmorphism panel
+            (cap respected: hero CTAs use 1 panel via PaintedCanvas + this = 2). */}
+        <div className="mx-auto -mt-2 max-w-marketing px-6 lg:px-12">
+          <IntentChips
+            eyebrow="HOẶC BẮT ĐẦU TỪ"
+            chips={[
+              { slug: 'cung-menh', label: 'Cung mệnh' },
+              { slug: 'dai-van', label: 'Đại vận' },
+              { slug: 'ngu-hanh', label: 'Ngũ hành' },
+              { slug: 'duong-doi', label: 'Đường đời' },
+              { slug: 'mbti', label: 'MBTI' },
+              { slug: 'tuong-tay', label: 'Tướng tay' },
+            ]}
+            glass
+          />
+        </div>
+
         {/* Wave 52 — persistent disclaimer chip surfaced near hero (also in footer). */}
         <div
           role="note"
-          className="mx-auto -mt-6 flex max-w-3xl items-center justify-center px-6"
+          className="mx-auto mt-4 flex max-w-3xl items-center justify-center px-6"
         >
           <p className="rounded-full border border-gold/20 bg-warm-dark-100/60 px-4 py-1.5 text-center text-[11px] leading-snug text-cream-500 backdrop-blur-sm sm:text-xs">
             Kết quả mang tính tham khảo — không thay thế tư vấn y tế, pháp lý hay tài chính.
           </p>
         </div>
+
+        {/* Wave 60.66.P3 — ScanRow (vault 109 §3 Phase 3 + vault 108 §5).
+            Mobile top-of-fold scan-fast pattern (Basecamp): 4 ống kính cards in
+            horizontal scroll on mobile, 4-col grid on desktop. Pre-rendered Lucide
+            icons (Wave 60.65.P0a RSC pattern). */}
+        <ScanRow
+          eyebrow="ĐỌC NHANH"
+          title={
+            <>
+              Bạn quan tâm{' '}
+              <u className="underline decoration-gold decoration-2 underline-offset-[6px]">
+                điều gì
+              </u>{' '}
+              nhất
+              <span className="text-gold-dot">.</span>
+            </>
+          }
+          items={[
+            {
+              id: 'tu-vi',
+              icon: <Sparkles className="size-5 text-gold" strokeWidth={1.5} />,
+              label: 'Tử Vi cung mệnh',
+              body: 'Bản đồ 12 cung — đọc cung mệnh + cung tài + cung quan.',
+              href: '/learn/tu-vi',
+            },
+            {
+              id: 'bat-tu',
+              icon: <Calendar className="size-5 text-gold" strokeWidth={1.5} />,
+              label: 'Bát Tự ngũ hành',
+              body: 'Cân ngũ hành bẩm sinh + dụng thần năm sinh.',
+              href: '/learn/bat-tu',
+            },
+            {
+              id: 'than-so',
+              icon: <Hash className="size-5 text-gold" strokeWidth={1.5} />,
+              label: 'Thần Số đời',
+              body: 'Numerology — đường đời + ngày sinh + tên.',
+              href: '/learn/than-so-hoc',
+            },
+            {
+              id: 'mbti',
+              icon: <Brain className="size-5 text-gold" strokeWidth={1.5} />,
+              label: 'MBTI 16 loại',
+              body: '4 trục Jung — INTJ, ENFP, ISTP, ESFJ...',
+              href: '/learn/mbti',
+            },
+          ]}
+          bg="warm-dark-100"
+        />
 
         {/* 2. WhyTrust — existing 3-pillar, wrap in warm-dark-100 shell */}
         <div className="bg-warm-dark-100">
@@ -409,8 +479,12 @@ export default function LandingPage() {
           <HowToStart />
         </div>
 
-        {/* 4. BentoLens — replaces MethodChooser + FreeTools (R3 diff #3) */}
+        {/* 4. BentoLens — replaces MethodChooser + FreeTools (R3 diff #3).
+            Wave 60.66.P3: layout="heterogeneous" → Tử Vi hero tile (8x4) +
+            BátTự/ThầnSố (4x2 each) + MBTI full-width (12x2) per vault 109 §3
+            Phase 3 + R4 #1 + R6 #7. */}
         <BentoLens
+          layout="heterogeneous"
           eyebrow="BỐN ỐNG KÍNH"
           title={
             <>
