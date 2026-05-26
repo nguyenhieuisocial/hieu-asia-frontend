@@ -417,7 +417,10 @@ export default function LandingPage() {
               id: 'tuvi',
               name: 'TỬ VI',
               subname: 'CUNG MỆNH',
-              icon: Sparkles,
+              // Wave 60.65.P0 — pre-render icon as JSX element instead of passing
+              // the Lucide forwardRef component reference. See BentoLens.tsx
+              // header for full rationale (Sentry HIEU-ASIA-WORKER-A).
+              icon: <Sparkles className="text-gold size-9" strokeWidth={1.25} />,
               action: 'Đọc',
               title: 'cung mệnh',
               body: 'Bản đồ sao thời điểm sinh — không phải lời tiên tri, mà là bản đồ ưu thế và bóng tối tự nhiên.',
@@ -428,7 +431,7 @@ export default function LandingPage() {
               id: 'battu',
               name: 'BÁT TỰ',
               subname: 'NGŨ HÀNH',
-              icon: Calendar,
+              icon: <Calendar className="text-gold size-9" strokeWidth={1.25} />,
               action: 'Cân',
               title: 'ngũ hành',
               body: 'Tám chữ năm-tháng-ngày-giờ — đo nội lực và cân bằng nguyên tố.',
@@ -438,7 +441,7 @@ export default function LandingPage() {
               id: 'thanso',
               name: 'THẦN SỐ',
               subname: 'NUMEROLOGY',
-              icon: Hash,
+              icon: <Hash className="text-gold size-9" strokeWidth={1.25} />,
               action: 'Đếm',
               title: 'con số đời',
               body: 'Numerology phương Tây — đường đời, ngày sinh, tên gọi cộng dồn thành mật mã hành trình.',
@@ -448,7 +451,7 @@ export default function LandingPage() {
               id: 'mbti',
               name: 'MBTI',
               subname: 'TÂM LÝ HỌC',
-              icon: Brain,
+              icon: <Brain className="text-gold size-9" strokeWidth={1.25} />,
               action: 'Gọi tên',
               title: 'tâm trí',
               body: '16 kiểu Myers-Briggs — không nhãn dán, mà là ngôn ngữ để nhận diện thiên hướng nội tại.',
