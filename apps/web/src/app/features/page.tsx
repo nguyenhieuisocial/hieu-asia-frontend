@@ -43,6 +43,8 @@ import { OrnamentDivider } from '@/components/marketing/OrnamentDivider';
 // Wave 60.37.d — page-specific pillars so /features doesn't duplicate
 // the conversion-safety pillars users already saw on /pricing.
 import { TrustStrip, FEATURES_PILLARS } from '@/components/marketing/TrustStrip';
+// Wave 60.56 P3.3 — consolidated hero (kills purple-radial paste L366).
+import { MarketingHero } from '@/components/marketing/MarketingHero';
 
 export const metadata: Metadata = {
   title: 'Tính năng',
@@ -354,33 +356,54 @@ function FeatureCard({ feature }: { feature: Feature }) {
   );
 }
 
+/**
+ * Wave 60.56 P3.3 — italic verb span on bucket H2 lead noun.
+ * Pattern matches MarketingHero (`<em class="italic text-gold-soft">`).
+ * Keeps bucket.title string-typed in the BUCKETS array (no JSX in data).
+ */
+function renderBucketTitle(id: string, title: string) {
+  // analysis: "Phân tích lá số"   → italicise "Phân tích"
+  // personalization: "Cá nhân hoá & AI" → italicise "Cá nhân hoá"
+  // extensions: "Cộng đồng & hạ tầng" → italicise "Cộng đồng"
+  const splitAt: Record<string, number> = {
+    analysis: 'Phân tích'.length,
+    personalization: 'Cá nhân hoá'.length,
+    extensions: 'Cộng đồng'.length,
+  };
+  const cut = splitAt[id];
+  if (!cut) return title;
+  return (
+    <>
+      <em className="italic text-gold-soft">{title.slice(0, cut)}</em>
+      {title.slice(cut)}
+    </>
+  );
+}
+
 export default function FeaturesPage() {
   return (
     <>
       <SiteNav />
       <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
-        {/* Hero */}
-        <section className="relative isolate overflow-hidden bg-background">
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,_rgba(59,39,84,0.4)_0%,_transparent_55%)]"
-          />
-          <div className="mx-auto max-w-4xl px-6 py-20 text-center sm:py-28">
-            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
-              Sản phẩm — 10 tính năng · 3 chương
-            </p>
-            <h1 className="mt-4 text-balance font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Hiểu mình.{' '}
-              <span className="bg-gold-gradient bg-clip-text text-transparent">Quyết định mình.</span>
-            </h1>
-            <p className="mt-6 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Bốn lăng kính Đông phương — Tử Vi, Bát Tự, Thần Số Học, MBTI — soi
-              vào cùng một người. AI Mentor ngồi cạnh để hỏi tiếp khi bạn cần
-              chiều sâu. Bạn vẫn là người quyết định.
-            </p>
-            <TrustStrip className="mt-10" pillars={FEATURES_PILLARS} />
+        {/* Hero — Wave 60.56 P3.3: consolidated MarketingHero (R1 finding:
+            kill purple-radial paste, single source of truth for hero block). */}
+        <MarketingHero
+          eyebrow="SẢN PHẨM · 10 TÍNH NĂNG · 3 CHƯƠNG"
+          title={
+            <>
+              Bốn ống kính, <em className="italic text-gold-soft">mười</em> ngôn
+              ngữ tự hiểu<span className="text-gold-dot">.</span>
+            </>
+          }
+          subtitle="Từ phân tích sao trên cung mệnh đến nhật ký nội tâm có A.I phản chiếu — tất cả nhằm giúp bạn nhận diện chính mình rõ hơn từng ngày."
+          primaryCta={{ label: 'Bắt đầu luận giải', href: '/onboarding' }}
+          secondaryCta={{ label: 'Xem bảng giá', href: '/pricing' }}
+        />
+        <section className="bg-background">
+          <div className="mx-auto max-w-4xl px-6 pt-12">
+            <TrustStrip pillars={FEATURES_PILLARS} />
           </div>
-          <OrnamentDivider className="mt-2 mb-12" />
+          <OrnamentDivider className="mt-12 mb-12" />
         </section>
 
         {/* Categorised feature buckets */}
@@ -407,13 +430,15 @@ export default function FeaturesPage() {
               className="relative bg-background py-12 sm:py-16"
             >
               <div className="mx-auto max-w-6xl px-6">
-                {/* Bucket header — editorial chapter marker */}
+                {/* Bucket header — editorial chapter marker.
+                    Wave 60.56 P3.3: italic verb spans on lead noun match the
+                    MarketingHero idiom (Instrument-serif italic in gold-soft). */}
                 <header className="mx-auto max-w-2xl text-center">
                   <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
                     {bucket.eyebrow}
                   </p>
                   <h2 className="mt-3 font-heading text-2xl font-bold leading-tight tracking-tight text-foreground sm:text-3xl">
-                    {bucket.title}
+                    {renderBucketTitle(bucket.id, bucket.title)}
                   </h2>
                   <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
                     {bucket.blurb}
