@@ -14,11 +14,14 @@
 import { Button, Section, Text } from '@react-email/components';
 import {
   DripLayout,
-  BRAND_AMBER,
+  BRAND_GOLD,
+  GoldDot,
+  ItalicVerb,
   bodyTextStyle,
   ctaButtonStyle,
   ctaWrapStyle,
   h1Style,
+  refundBadgeStyle,
   subtleNoteStyle,
 } from './_layout';
 import type { Wave58EmailProps } from './welcome';
@@ -33,7 +36,10 @@ export default function LifetimeOfferEmail({
       unsubscribeUrl={unsubscribeUrl}
     >
       <Section>
-        <Text style={h1Style}>Phép tính đơn giản</Text>
+        <Text style={h1Style}>
+          Phép tính <ItalicVerb>đơn giản</ItalicVerb>
+          <GoldDot />
+        </Text>
         <Text style={bodyTextStyle}>Chào {userName},</Text>
         <Text style={bodyTextStyle}>
           Nếu bạn dùng hieu.asia đều đặn hơn 2 năm, Lifetime gần như chắc chắn
@@ -41,23 +47,23 @@ export default function LifetimeOfferEmail({
         </Text>
 
         <Text style={bodyTextStyle}>
-          <span style={{ color: BRAND_AMBER, fontWeight: 600 }}>Monthly:</span>
+          <span style={{ color: BRAND_GOLD, fontWeight: 600 }}>Monthly:</span>
           {' '}199.000đ × 24 tháng ={' '}
           <strong>4.776.000đ</strong>
           <br />
-          <span style={{ color: BRAND_AMBER, fontWeight: 600 }}>Lifetime:</span>
+          <span style={{ color: BRAND_GOLD, fontWeight: 600 }}>Lifetime:</span>
           {' '}<strong>4.990.000đ</strong> — trả một lần, dùng mãi mãi
         </Text>
 
         <Text style={bodyTextStyle}>
           Từ tháng thứ 25 trở đi, Lifetime tiết kiệm cho bạn 199.000đ mỗi tháng
-          — và khoá luôn giá hiện tại trước các đợt tăng giá tiếp theo (giá nền
-          tảng đã tăng 2 lần kể từ Q1).
+          — và <ItalicVerb>khoá luôn</ItalicVerb> giá hiện tại trước các đợt
+          tăng giá tiếp theo (giá nền tảng đã tăng 2 lần kể từ Q1).
         </Text>
 
         <Text style={bodyTextStyle}>
           Bạn không cần quyết ngay. Nhưng nếu đã chắc rằng bạn sẽ còn quay lại
-          xem lại đại vận, hỏi Mentor về quyết định lớn, đọc cho người thân —
+          xem lại đại vận, hỏi Hieu về quyết định lớn, đọc cho người thân —
           Lifetime hợp lý hơn.
         </Text>
 
@@ -65,6 +71,10 @@ export default function LifetimeOfferEmail({
           <Button href="https://hieu.asia/pricing#lifetime" style={ctaButtonStyle}>
             Xem gói Lifetime
           </Button>
+        </Section>
+
+        <Section style={{ margin: '12px 0 0', textAlign: 'center' }}>
+          <span style={refundBadgeStyle}>30 ngày hoàn tiền</span>
         </Section>
 
         <Text style={subtleNoteStyle}>

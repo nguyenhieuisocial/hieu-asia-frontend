@@ -11,7 +11,9 @@
 import { Button, Section, Text } from '@react-email/components';
 import {
   DripLayout,
-  BRAND_AMBER,
+  BRAND_GOLD,
+  GoldDot,
+  ItalicVerb,
   bodyTextStyle,
   ctaButtonStyle,
   ctaWrapStyle,
@@ -31,7 +33,10 @@ export default function PremiumDrillEmail({
       unsubscribeUrl={unsubscribeUrl}
     >
       <Section>
-        <Text style={h1Style}>2 thứ Premium làm được</Text>
+        <Text style={h1Style}>
+          Hai điều Premium <ItalicVerb>làm được</ItalicVerb>
+          <GoldDot />
+        </Text>
         <Text style={bodyTextStyle}>Chào {userName},</Text>
         <Text style={bodyTextStyle}>
           Bản đọc <strong>{planSnapshot}</strong> của bạn đã đầy đủ phần lõi.
@@ -40,17 +45,22 @@ export default function PremiumDrillEmail({
         </Text>
 
         <Text style={bodyTextStyle}>
-          <span style={{ color: BRAND_AMBER, fontWeight: 600 }}>1. Xuất PDF bản đọc.</span>
+          <span style={{ color: BRAND_GOLD, fontWeight: 600 }}>
+            1. Xuất PDF bản đọc.
+          </span>
           <br />
-          Cả lá số, lời luận giải, và biểu đồ — gói gọn trong một file để in,
-          gửi cho người lớn trong nhà, hoặc lưu lại đọc khi không có mạng.
+          Cả lá số, lời luận giải, và biểu đồ — gói gọn trong một file để{' '}
+          <ItalicVerb>in, gửi, lưu lại</ItalicVerb> đọc khi không có mạng.
         </Text>
 
         <Text style={bodyTextStyle}>
-          <span style={{ color: BRAND_AMBER, fontWeight: 600 }}>2. Mentor 30 câu/ngày.</span>
+          <span style={{ color: BRAND_GOLD, fontWeight: 600 }}>
+            2. Hỏi Hieu 30 câu/ngày.
+          </span>
           <br />
-          Bản miễn phí dừng sau vài câu. Premium cho bạn chat sâu — đào xuống
-          từng cung, từng đại vận, từng năm cụ thể bạn đang quan tâm.
+          Bản miễn phí dừng sau vài câu. Premium cho bạn{' '}
+          <ItalicVerb>đào sâu</ItalicVerb> — từng cung, từng đại vận, từng
+          năm cụ thể bạn đang quan tâm.
         </Text>
 
         <Section style={ctaWrapStyle}>

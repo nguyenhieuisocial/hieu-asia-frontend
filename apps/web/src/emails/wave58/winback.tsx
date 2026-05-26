@@ -14,11 +14,14 @@
 import { Button, Section, Text } from '@react-email/components';
 import {
   DripLayout,
-  BRAND_AMBER,
+  BRAND_GOLD,
+  GoldDot,
+  ItalicVerb,
   bodyTextStyle,
   ctaButtonStyle,
   ctaWrapStyle,
   h1Style,
+  refundBadgeStyle,
   subtleNoteStyle,
 } from './_layout';
 import type { Wave58EmailProps } from './welcome';
@@ -35,22 +38,25 @@ export default function WinbackEmail({
       unsubscribeUrl={unsubscribeUrl}
     >
       <Section>
-        <Text style={h1Style}>Cảm ơn bạn đã đồng hành</Text>
+        <Text style={h1Style}>
+          Cảm ơn bạn đã <ItalicVerb>đồng hành</ItalicVerb>
+          <GoldDot />
+        </Text>
         <Text style={bodyTextStyle}>Chào {userName},</Text>
         <Text style={bodyTextStyle}>
-          Hai tuần trước bạn đã thử bản đọc đầu tiên trên hieu.asia. Cảm ơn vì
-          đã cho chúng tôi cơ hội.
+          Hai tuần trước bạn đã thử bản đọc đầu tiên trên hieu.asia. Cảm ơn
+          vì đã cho chúng tôi cơ hội.
         </Text>
         <Text style={bodyTextStyle}>
-          Nếu bạn còn đang cân nhắc nâng cấp, đây là mã giảm 10% — chỉ gửi cho
-          người đã đọc xong bản phân tích đầu tiên:
+          Nếu bạn còn đang cân nhắc nâng cấp, đây là mã giảm 10% — chỉ gửi
+          cho người đã đọc xong bản phân tích đầu tiên:
         </Text>
 
         <Section
           style={{
-            backgroundColor: '#fdf8ec',
-            border: `1px dashed ${BRAND_AMBER}`,
-            borderRadius: '6px',
+            backgroundColor: '#FBF6EA',
+            border: `1px dashed ${BRAND_GOLD}`,
+            borderRadius: '8px',
             margin: '20px 0',
             padding: '16px',
             textAlign: 'center',
@@ -58,7 +64,7 @@ export default function WinbackEmail({
         >
           <Text
             style={{
-              color: BRAND_AMBER,
+              color: BRAND_GOLD,
               fontFamily: 'Menlo, Consolas, monospace',
               fontSize: '18px',
               fontWeight: 700,
@@ -70,7 +76,7 @@ export default function WinbackEmail({
           </Text>
           <Text
             style={{
-              color: '#6b6b6b',
+              color: '#8A8275',
               fontSize: '12px',
               margin: '6px 0 0',
             }}
@@ -80,8 +86,8 @@ export default function WinbackEmail({
         </Section>
 
         <Text style={bodyTextStyle}>
-          Sau đó, đây là email cuối cùng trong chuỗi giới thiệu — chúng tôi sẽ
-          không làm phiền bạn thêm trừ khi bạn quay lại.
+          Sau đó, đây là email cuối cùng trong chuỗi giới thiệu — chúng tôi
+          sẽ không làm phiền bạn thêm trừ khi bạn quay lại.
         </Text>
 
         <Section style={ctaWrapStyle}>
@@ -91,6 +97,10 @@ export default function WinbackEmail({
           >
             Dùng mã ngay
           </Button>
+        </Section>
+
+        <Section style={{ margin: '12px 0 0', textAlign: 'center' }}>
+          <span style={refundBadgeStyle}>30 ngày hoàn tiền</span>
         </Section>
 
         <Text style={subtleNoteStyle}>

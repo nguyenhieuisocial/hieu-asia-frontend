@@ -11,6 +11,8 @@
 import { Button, Section, Text } from '@react-email/components';
 import {
   DripLayout,
+  GoldDot,
+  ItalicVerb,
   bodyTextStyle,
   ctaButtonStyle,
   ctaWrapStyle,
@@ -40,25 +42,29 @@ export default function WelcomeEmail({
 }: Wave58EmailProps) {
   return (
     <DripLayout
-      preview={`${userName}, bản phân tích của bạn đã sẵn sàng`}
+      preview={`${userName}, lá số của bạn đã sẵn sàng`}
       unsubscribeUrl={unsubscribeUrl}
     >
       <Section>
-        <Text style={h1Style}>Bản phân tích của bạn đã sẵn sàng</Text>
+        <Text style={h1Style}>
+          Lá số của bạn đã <ItalicVerb>sẵn sàng</ItalicVerb>
+          <GoldDot />
+        </Text>
         <Text style={bodyTextStyle}>Chào {userName},</Text>
         <Text style={bodyTextStyle}>
           Cảm ơn bạn đã tin tưởng hieu.asia. Bản đọc{' '}
-          <strong>{planSnapshot}</strong> của bạn vừa hoàn thành và đang chờ bạn xem
-          chi tiết.
+          <strong>{planSnapshot}</strong> vừa hoàn thành và đang chờ bạn{' '}
+          <ItalicVerb>mở ra</ItalicVerb>.
         </Text>
         <Text style={bodyTextStyle}>
-          Mỗi bản đọc là một góc nhìn — không phải lời tiên tri. Hãy đọc với tâm
-          thế quan sát, rồi đối chiếu với điều bạn đã sống qua.
+          Mỗi bản đọc là một góc nhìn — không phải lời tiên tri. Hãy đọc với
+          tâm thế <ItalicVerb>quan sát</ItalicVerb>, rồi đối chiếu với điều
+          bạn đã sống qua.
         </Text>
 
         <Section style={ctaWrapStyle}>
           <Button href={syntheticUrl} style={ctaButtonStyle}>
-            Xem bản phân tích
+            Xem lá số
           </Button>
         </Section>
 

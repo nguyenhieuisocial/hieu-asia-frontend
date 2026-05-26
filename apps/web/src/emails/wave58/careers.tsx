@@ -11,6 +11,8 @@
 import { Button, Section, Text } from '@react-email/components';
 import {
   DripLayout,
+  GoldDot,
+  ItalicVerb,
   bodyTextStyle,
   ctaButtonStyle,
   ctaWrapStyle,
@@ -31,15 +33,19 @@ export default function CareersEmail({
       unsubscribeUrl={unsubscribeUrl}
     >
       <Section>
-        <Text style={h1Style}>Reading nói gì về sự nghiệp?</Text>
+        <Text style={h1Style}>
+          Lá số nói gì về <ItalicVerb>sự nghiệp</ItalicVerb>
+          <GoldDot />
+        </Text>
         <Text style={bodyTextStyle}>Chào {userName},</Text>
         <Text style={bodyTextStyle}>
           Trong bản đọc <strong>{planSnapshot}</strong>, phần Quan-Tài Lộc-Mã
-          thường gợi ý hướng nghề và thời điểm thuận lợi để chuyển hướng — nhưng
-          một câu trả lời chung không thay được câu hỏi cụ thể của bạn.
+          thường gợi ý hướng nghề và thời điểm thuận lợi để{' '}
+          <ItalicVerb>chuyển hướng</ItalicVerb> — nhưng một câu trả lời chung
+          không thay được câu hỏi cụ thể của bạn.
         </Text>
         <Text style={bodyTextStyle}>
-          Bạn có thể hỏi Mentor:
+          Bạn có thể hỏi Hieu:
         </Text>
         <Text style={bodyTextStyle}>
           • &ldquo;Sự nghiệp của tôi giai đoạn 30-40 nên ưu tiên điều gì?&rdquo;
@@ -49,17 +55,17 @@ export default function CareersEmail({
           • &ldquo;Mệnh tôi hợp khởi nghiệp hay làm thuê dài hạn?&rdquo;
         </Text>
         <Text style={bodyTextStyle}>
-          Mentor sẽ trả lời dựa trên lá số của bạn, không phải đoán mò.
+          Hieu sẽ trả lời dựa trên lá số của bạn, không phải đoán mò.
         </Text>
 
         <Section style={ctaWrapStyle}>
           <Button href={syntheticUrl} style={ctaButtonStyle}>
-            Mở Mentor
+            Hỏi Hieu
           </Button>
         </Section>
 
         <Text style={subtleNoteStyle}>
-          Mentor là gợi ý — không phải định mệnh. Quyết định luôn là của bạn.
+          Hieu là gợi ý — không phải định mệnh. Quyết định luôn là của bạn.
         </Text>
       </Section>
     </DripLayout>
