@@ -23,6 +23,23 @@ const COOKIE_TTL = 60 * 60 * 24 * 30; // 30 days
 // scheme so we don't reject codes minted by the new affiliate worker.
 const CODE_REGEX = /^[A-Za-z0-9_-]{3,32}$/;
 
+// Wave 60.60.a — Marketing routes that need bf-cache. next-intl's
+// `getRequestConfig` calls `cookies()` + `headers()` → Next.js auto-marks
+// the page dynamic → Vercel injects `private, no-cache, no-store` which
+// kills bf-cache. We override Cache-Control here AFTER page render so
+// Lighthouse's `CacheControlNoStoreCookieModified` audit passes.
+// `public, max-age=0, must-revalidate` → browser revalidates on every load
+// but bf-cache can restore in-memory snapshot on back-nav (instant).
+const MARKETING_ROUTES = new Set(['/', '/pricing', '/features']);
+const MARKETING_CACHE_CONTROL = 'public, max-age=0, must-revalidate';
+
+function applyMarketingCache(pathname: string, res: NextResponse): NextResponse {
+  if (MARKETING_ROUTES.has(pathname)) {
+    res.headers.set('Cache-Control', MARKETING_CACHE_CONTROL);
+  }
+  return res;
+}
+
 function cookieOpts() {
   return {
     httpOnly: false as const, // readable client-side for analytics/signup attach
@@ -45,6 +62,16 @@ export function middleware(req: NextRequest) {
     pathname === '/favicon.ico'
   ) {
     return NextResponse.next();
+  }
+
+  // Wave 60.60.a — Anonymous + no-ref fast path for marketing routes.
+  // Avoids any cookie writes (which would trigger Vercel's
+  // `private, no-cache, no-store`) and override Cache-Control so bf-cache works.
+  if (MARKETING_ROUTES.has(pathname) && !req.nextUrl.searchParams.get('ref')) {
+    const existing = req.cookies.get(COOKIE_NAME)?.value;
+    if (!existing || !CODE_REGEX.test(existing)) {
+      return applyMarketingCache(pathname, NextResponse.next());
+    }
   }
 
   // Legacy slug — the Tỵ canh used to live at /tu-vi-hom-nay/ty2 to avoid
@@ -77,6 +104,8 @@ export function middleware(req: NextRequest) {
   const existing = req.cookies.get(COOKIE_NAME)?.value;
 
   // --- No ?ref= → pass through, refresh cookie if it's valid. ---
+  // (Marketing routes without ?ref were already handled in the fast path
+  // at the top; this branch covers non-marketing pages.)
   if (!refRaw) {
     if (existing && CODE_REGEX.test(existing)) {
       const res = NextResponse.next();
