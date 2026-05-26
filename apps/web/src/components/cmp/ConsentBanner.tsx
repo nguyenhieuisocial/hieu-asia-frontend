@@ -154,7 +154,7 @@ export function ConsentBanner(): React.ReactElement | null {
       // gets the full 640px width. Width selector splits on `collapsed` to
       // shrink mobile footprint when collapsed.
       className={[
-        "fixed bottom-4 left-1/2 z-50 -translate-x-1/2",
+        "fixed bottom-4 left-1/2 z-50 -translate-x-1/2 lg:top-20 lg:bottom-auto",
         "rounded-lg border border-gold/30 bg-card/95 text-sm text-foreground shadow-2xl backdrop-blur",
         collapsed
           ? "w-[min(340px,calc(100vw-2rem))] px-3 py-2 sm:w-[min(640px,calc(100vw-2rem))] sm:p-5"

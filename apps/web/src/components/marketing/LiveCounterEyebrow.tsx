@@ -43,8 +43,10 @@ export function LiveCounterEyebrow({
 
   return (
     <>
-      {formatted} BÁO CÁO {period.toUpperCase()}
-      {rating !== undefined && ` · ${rating.toFixed(1)}★`}
+      <span>
+        {formatted} BÁO CÁO {period.toUpperCase()}
+      </span>
+      {rating !== undefined && <span>· {rating.toFixed(1)}★</span>}
     </>
   );
 }

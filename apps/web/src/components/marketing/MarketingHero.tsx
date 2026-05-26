@@ -105,8 +105,8 @@ export function MarketingHero({
 
       <div className="relative z-10 mx-auto max-w-marketing px-6 lg:px-12">
         {eyebrow && (
-          <p className="mb-8 font-mono text-eyebrow uppercase text-gold">
-            <span className="mr-2 inline-block h-px w-6 bg-gold align-middle" />
+          <p className="mb-8 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-eyebrow uppercase text-gold">
+            <span className="inline-block h-px w-6 bg-gold align-middle" />
             {eyebrow}
           </p>
         )}

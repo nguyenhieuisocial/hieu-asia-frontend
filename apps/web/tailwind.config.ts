@@ -66,7 +66,7 @@ const config: Config = {
       },
       fontSize: {
         'hero-display': [
-          'clamp(54px, 8vw, 92px)',
+          'clamp(40px, 8vw, 92px)',
           { lineHeight: '1.06', letterSpacing: '-0.02em' },
         ],
         'section-display': [
