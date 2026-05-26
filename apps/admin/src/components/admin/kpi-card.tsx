@@ -23,7 +23,7 @@ export interface KpiCardProps {
   delta?: { value: string; direction: 'up' | 'down' | 'flat' } | null;
   icon?: React.ReactNode;
   /** Visual accent — affects the gold corner ribbon. */
-  accent?: 'gold' | 'jade' | 'purple' | 'red';
+  accent?: 'gold' | 'jade' | 'purple' | 'red' | 'warn';
   className?: string;
   /** Render as a clickable card. */
   href?: string;
@@ -34,6 +34,10 @@ const ACCENT_BAR: Record<NonNullable<KpiCardProps['accent']>, string> = {
   jade: 'from-jade/40 via-jade/10 to-transparent',
   purple: 'from-purple/40 via-purple/10 to-transparent',
   red: 'from-red-500/40 via-red-500/10 to-transparent',
+  // Wave 60.81.C — warn accent ties into the shared WarnToken (preset.warn.500
+  // = #D4923A). Use for "degraded but not failing" KPI tiles (queue backlog,
+  // pending migrations, etc).
+  warn: 'from-warn-500/40 via-warn-500/10 to-transparent',
 };
 
 // Wave 60.9 — accent stroke values sourced from shared brand tokens; `red`
@@ -43,6 +47,9 @@ const ACCENT_STROKE: Record<NonNullable<KpiCardProps['accent']>, string> = {
   jade: colors.jade.DEFAULT,
   purple: colors.purple.DEFAULT,
   red: '#ef4444',
+  // Mirrors preset.warn.500 — kept inline because the colors export from
+  // @hieu-asia/ui hasn't been extended to warn yet (TODO follow-up wave).
+  warn: '#D4923A',
 };
 
 function Sparkline({
@@ -114,7 +121,7 @@ export function KpiCard({
   const inner = (
     <div
       className={cn(
-        'relative overflow-hidden rounded-xl border border-gold/15 bg-gradient-to-br from-ink/70 via-ink/60 to-ink/40 p-5 backdrop-blur-sm transition-all',
+        'relative overflow-hidden rounded-xl border border-gold/15 bg-gradient-to-br from-ink/70 via-ink/60 to-ink/40 p-5 backdrop-blur-sm transition-all duration-300 ease-editorial',
         'hover:border-gold/30 hover:shadow-[0_8px_28px_-12px_rgba(184,146,61,0.25)]',
         href && 'cursor-pointer',
         className,

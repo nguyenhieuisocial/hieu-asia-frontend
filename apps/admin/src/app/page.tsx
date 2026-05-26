@@ -59,6 +59,11 @@ import {
 
 /** BUG-022: surface a visual alert + Triage CTA when oldest pending > 60 min. */
 const QUEUE_ALERT_AGE_SECONDS = 60 * 60;
+/**
+ * Wave 60.81.C — second threshold for "critical" tone. < critical = warn (amber);
+ * > critical = red. Keeps the queue card from screaming red on every brief blip.
+ */
+const QUEUE_CRITICAL_AGE_SECONDS = 4 * 60 * 60;
 
 function fmtUsd(v: number) {
   return `$${v.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
@@ -95,8 +100,11 @@ export default function AdminOverviewPage() {
   const activeJobs =
     (queue.data?.default ?? 0) + (queue.data?.high_priority ?? 0) + (queue.data?.rag ?? 0);
   // BUG-022 — queue alert: oldest pending older than threshold needs human triage.
+  // Wave 60.81.C: split into warn vs critical so we don't burn red attention
+  // on every 65-minute blip. < critical = amber/warn, > critical = red.
   const oldestAgeSec = queue.data?.oldest_pending_age_seconds ?? 0;
   const queueAlerting = oldestAgeSec > QUEUE_ALERT_AGE_SECONDS;
+  const queueCritical = oldestAgeSec > QUEUE_CRITICAL_AGE_SECONDS;
   const oldestAgeLabel = oldestAgeSec
     ? oldestAgeSec >= 3600
       ? `${Math.floor(oldestAgeSec / 3600)}h${Math.round((oldestAgeSec % 3600) / 60)}m`
@@ -122,21 +130,50 @@ export default function AdminOverviewPage() {
       {queueAlerting && (
         <div
           role="alert"
-          className="flex items-center justify-between gap-3 rounded-xl border border-red-500/40 bg-red-500/[0.07] px-4 py-3 text-sm"
+          className={
+            queueCritical
+              ? 'flex items-center justify-between gap-3 rounded-xl border border-red-500/40 bg-red-500/[0.07] px-4 py-3 text-sm transition-all duration-300 ease-editorial'
+              : 'flex items-center justify-between gap-3 rounded-xl border border-warn-500/40 bg-warn-500/[0.07] px-4 py-3 text-sm transition-all duration-300 ease-editorial'
+          }
         >
           <div className="flex items-start gap-3">
-            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-red-400" aria-hidden />
+            <AlertTriangle
+              className={
+                queueCritical
+                  ? 'mt-0.5 h-5 w-5 shrink-0 text-red-400'
+                  : 'mt-0.5 h-5 w-5 shrink-0 text-warn-300'
+              }
+              aria-hidden
+            />
             <div>
-              <p className="font-semibold text-red-200">Queue đang đọng</p>
-              <p className="text-xs text-red-100/80">
+              <p
+                className={
+                  queueCritical
+                    ? 'font-semibold text-red-200'
+                    : 'font-semibold text-warn-300'
+                }
+              >
+                Queue đang đọng
+              </p>
+              <p
+                className={
+                  queueCritical
+                    ? 'text-xs text-red-100/80'
+                    : 'text-xs text-warn-300/85'
+                }
+              >
                 Tác vụ chờ lâu nhất {oldestAgeLabel} · pending {queue.data?.default ?? 0}.
-                Cần triage ngay.
+                {queueCritical ? ' Cần triage ngay.' : ' Theo dõi, có thể tự thoát.'}
               </p>
             </div>
           </div>
           <Link
             href="/sessions?status=pending&sort=oldest"
-            className="inline-flex h-9 shrink-0 items-center justify-center whitespace-nowrap rounded-md border border-red-400/50 bg-red-500/10 px-3 text-xs font-medium text-red-100 transition-colors hover:bg-red-500/20"
+            className={
+              queueCritical
+                ? 'inline-flex h-9 shrink-0 items-center justify-center whitespace-nowrap rounded-md border border-red-400/50 bg-red-500/10 px-3 text-xs font-medium text-red-100 transition-all duration-300 ease-editorial hover:bg-red-500/20'
+                : 'inline-flex h-9 shrink-0 items-center justify-center whitespace-nowrap rounded-md border border-warn-500/50 bg-warn-500/10 px-3 text-xs font-medium text-warn-300 transition-all duration-300 ease-editorial hover:bg-warn-500/20'
+            }
           >
             Triage queue
           </Link>
@@ -170,7 +207,7 @@ export default function AdminOverviewPage() {
               <ListChecks className="h-4 w-4" />
             )
           }
-          accent={queueAlerting ? 'red' : activeJobs > 0 ? 'gold' : 'jade'}
+          accent={queueCritical ? 'red' : queueAlerting ? 'warn' : activeJobs > 0 ? 'gold' : 'jade'}
           delta={
             oldestAgeLabel
               ? { value: oldestAgeLabel, direction: queueAlerting ? 'down' : 'flat' }

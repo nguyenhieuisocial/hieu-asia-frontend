@@ -317,7 +317,7 @@ const AdminTableRow = React.memo(function AdminTableRow<TRow>({
       tabIndex={onRowClick ? 0 : undefined}
       role={onRowClick ? 'button' : undefined}
       className={cn(
-        'transition-colors',
+        'transition-all duration-300 ease-editorial',
         onRowClick && 'cursor-pointer hover:bg-gold/[0.04] focus-visible:bg-gold/[0.06] focus-visible:outline-none',
         isSelected && 'bg-gold/[0.06]',
       )}

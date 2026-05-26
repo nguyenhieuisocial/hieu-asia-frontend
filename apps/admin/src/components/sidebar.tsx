@@ -44,6 +44,10 @@ import {
   Flag,
   Ticket,
   Shield,
+  Heart,
+  Database,
+  MessageSquare,
+  ServerCog,
 } from 'lucide-react';
 
 interface NavItem {
@@ -68,6 +72,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/tasks', label: 'Task / Lỗi', Icon: Bot },
       { href: '/audit', label: 'Audit log', Icon: ScrollText },
       { href: '/metrics', label: 'Metrics', Icon: LineChart },
+      { href: '/feedback', label: 'Phản hồi', Icon: MessageSquare },
     ],
   },
   {
@@ -102,6 +107,9 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/secrets', label: 'API Keys', Icon: Key },
       { href: '/feature-flags', label: 'Feature flags', Icon: Flag },
       { href: '/users', label: 'Người dùng admin', Icon: Users },
+      { href: '/system', label: 'Trạng thái dịch vụ', Icon: ServerCog },
+      { href: '/health', label: 'Uptime', Icon: Heart },
+      { href: '/migrations', label: 'Migrations', Icon: Database },
       { href: '/settings', label: 'Cài đặt', Icon: Settings },
     ],
   },

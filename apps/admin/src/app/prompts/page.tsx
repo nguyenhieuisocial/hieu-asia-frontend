@@ -270,7 +270,7 @@ export default function PromptsListPage() {
           const p = byRole.get(role);
           return (
             <Link key={role} href={`/prompts/${role}`} className="group focus:outline-none">
-              <Card className="h-full border-gold/15 transition-colors group-hover:border-gold/40 group-focus-visible:border-gold/60">
+              <Card className="h-full border-gold/15 transition-all duration-300 ease-editorial group-hover:border-gold/40 group-hover:shadow-[0_8px_28px_-12px_rgba(184,146,61,0.18)] group-focus-visible:border-gold/60">
                 <CardHeader className="flex flex-row items-start gap-3">
                   <div className="rounded-md border border-gold/25 bg-gold/10 p-2 text-gold">
                     <meta.Icon className="h-5 w-5" />
@@ -348,8 +348,8 @@ function FilterChip({ label, count, active, onClick }: FilterChipProps) {
       aria-pressed={active}
       className={
         active
-          ? 'inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/60 bg-gold/15 px-3 text-xs text-gold'
-          : 'inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-xs text-muted-foreground hover:border-gold/40 hover:text-foreground'
+          ? 'inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/60 bg-gold/15 px-3 text-xs text-gold transition-all duration-300 ease-editorial'
+          : 'inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-xs text-muted-foreground transition-all duration-300 ease-editorial hover:border-gold/40 hover:text-foreground'
       }
     >
       <span>{label}</span>
