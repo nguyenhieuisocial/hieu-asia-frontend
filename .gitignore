@@ -56,3 +56,8 @@ apps/web/test-results/
 apps/web/playwright-report/
 apps/web/.lighthouseci/
 
+# Wave 60.90 cleanup — Storybook build output + supabase CLI scratch
+apps/web/storybook-static/
+supabase/.temp/
+supabase/.temp*/
+

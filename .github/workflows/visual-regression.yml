@@ -1,0 +1,105 @@
+# Wave 60.57.f — Local Playwright visual regression (Chromatic alternative).
+#
+# Purpose: catch color/layout regressions on public marketing + auth pages
+# without requiring a Chromatic SaaS account. Uses Playwright's built-in
+# screenshot diffing against committed PNG baselines in
+# e2e/tests/web/visual-regression.spec.ts-snapshots/.
+#
+# Founder rationale (security boundary): "Never create accounts on the
+# user's behalf." Chromatic signup is blocked; Playwright achieves the
+# same GOAL (regression detection in CI) using already-installed tooling.
+#
+# Failure mode: PR comment "visual diff detected" + uploaded artifact
+# (test-results/) containing actual vs expected PNGs. Reviewer either
+# accepts (run --update-snapshots locally + commit) or fixes the bug.
+#
+# First run: workflow will FAIL because no baselines exist. Founder must:
+#   1. Pull this branch locally
+#   2. Run `cd e2e && WEB_URL=https://hieu.asia pnpm exec playwright test visual-regression --update-snapshots`
+#   3. Commit the generated -snapshots/ folder
+#   4. Push → subsequent runs diff against these baselines.
+
+name: Visual Regression
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - 'LICENSE'
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - 'LICENSE'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: visual-regression-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  visual:
+    name: Playwright screenshot diff
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+
+      - name: Install dependencies (e2e workspace)
+        working-directory: ../e2e
+        # The e2e workspace lives at repo root sibling to `frontend/`.
+        # `actions/checkout` puts us at `frontend/`, so step up.
+        run: |
+          if [ ! -d "../e2e" ]; then
+            echo "::error::e2e/ workspace not found at expected sibling path. Repo layout changed."
+            exit 1
+          fi
+          pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers (chromium only)
+        working-directory: ../e2e
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run visual regression tests
+        working-directory: ../e2e
+        env:
+          # Default target: production. For PRs, override with preview URL
+          # via Vercel preview-comment integration (future wave).
+          WEB_URL: ${{ vars.VISUAL_REGRESSION_URL || 'https://hieu.asia' }}
+        run: pnpm exec playwright test visual-regression --project=web --project=web-mobile
+
+      - name: Upload diff artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-visual-diff
+          path: ../e2e/test-results/
+          retention-days: 14
+
+      - name: Upload Playwright HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: ../e2e/playwright-report/
+          retention-days: 7
