@@ -174,11 +174,15 @@ export function MarketingHero({
     </>
   );
 
+  // Wave 60.79.T1 (vault 112 P0-02): replaced viewport-relative padding
+  // (`md:pt-[10vh] lg:pt-[14vh]` = 90-126px) with content-relative caps so the
+  // hero sizes to its content + a fixed editorial rhythm. Home page hero now
+  // ~600-680px, leaving room for next section to peek into first viewport.
   if (isPainted) {
     return (
       <PaintedCanvas
         tone="soft"
-        className="relative py-16 md:pt-[10vh] md:pb-20 lg:pt-[14vh] lg:pb-24"
+        className="relative py-16 md:py-20 lg:py-24"
       >
         {innerContent}
       </PaintedCanvas>
@@ -186,7 +190,7 @@ export function MarketingHero({
   }
 
   return (
-    <section className="relative overflow-hidden bg-warm-dark-50 py-16 md:pt-[10vh] md:pb-20 lg:pt-[14vh] lg:pb-24">
+    <section className="relative overflow-hidden bg-warm-dark-50 py-16 md:py-20 lg:py-24">
       {innerContent}
     </section>
   );
