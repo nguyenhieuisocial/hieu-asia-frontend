@@ -45,7 +45,7 @@
     "lucide-react": "^0.453.0",
     "motion": "^12.40.0",
     "next": "^15.0.0",
-    "next-auth": "5.0.0-beta.22",
+    "next-auth": "5.0.0-beta.30",
     "next-intl": "^3.26.0",
     "next-themes": "^0.3.0",
     "posthog-js": "^1.374.3",
