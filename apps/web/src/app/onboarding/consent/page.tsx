@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, Checkbox, Label } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { WizardFooter } from '@/components/onboarding/WizardFooter';
 import { useFeatureFlag, FLAGS } from '@/lib/feature-flags';
 import { track } from '@/lib/analytics';
 
@@ -127,7 +128,7 @@ export default function OnboardingConsentPage() {
         auto_value: item.key === 'training' ? false : true,
       });
     }
-    const target = stored.topic === 'decision' ? '/decisions/new' : '/reading/new';
+    const target = stored.topic === 'decision' ? '/decisions/new' : '/onboarding/birth';
     router.replace(target);
   }, [ready, skipOptional, router]);
 
@@ -140,7 +141,23 @@ export default function OnboardingConsentPage() {
     writeStored({ ...stored, consent });
     // Wave 30 W-D — was '/onboarding' which is the legacy consent page and
     // caused a double-consent loop. Route to the actual reading/decision flow.
-    const target = stored.topic === 'decision' ? '/decisions/new' : '/reading/new';
+    // Wave 60.58 T1.2 — birth form moved from /reading/new to /onboarding/birth.
+    const target = stored.topic === 'decision' ? '/decisions/new' : '/onboarding/birth';
+    router.push(target);
+  }
+
+  function handleSkipOptional() {
+    // Power-user skip: persist empty/false optional consents but keep the
+    // user moving. Mirrors the auto-advance fast-path above but as an
+    // explicit user action so non-flagged users can also skip.
+    const stored = readStored();
+    const skipState: ConsentState = { mbti: false, palm: false, mentor: false, training: false };
+    writeStored({ ...stored, consent: skipState });
+    track('onboarding_step_skipped', {
+      step: 'consent.all_optional',
+      reason: 'user:skip_optional_button',
+    });
+    const target = stored.topic === 'decision' ? '/decisions/new' : '/onboarding/birth';
     router.push(target);
   }
 
@@ -231,22 +248,14 @@ export default function OnboardingConsentPage() {
             </CardContent>
           </Card>
 
-          <div className="mt-10 flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={() => router.push('/onboarding/situation')}
-              className="inline-flex items-center gap-2 rounded-md border border-gold/30 px-4 py-2 text-sm text-foreground transition-colors hover:bg-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-            >
-              ← Quay lại
-            </button>
-            <button
-              type="button"
-              onClick={handleContinue}
-              className="inline-flex items-center gap-2 rounded-md bg-gold px-5 py-2 text-sm font-medium text-ink transition-colors hover:bg-gold-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-            >
-              Tiếp tục →
-            </button>
-          </div>
+          <WizardFooter
+            currentStep={3}
+            totalSteps={4}
+            previousHref="/onboarding/situation"
+            onNext={handleContinue}
+            showSkipOptional={skipOptional}
+            onSkipOptional={handleSkipOptional}
+          />
         </section>
       </main>
       <SiteFooter />

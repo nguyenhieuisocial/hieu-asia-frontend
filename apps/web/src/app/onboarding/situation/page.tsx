@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Textarea } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { WizardFooter } from '@/components/onboarding/WizardFooter';
 
 const STORAGE_KEY = 'hieu:onboarding:v2';
 const MAX_LEN = 500;
@@ -84,8 +85,7 @@ export default function OnboardingSituationPage() {
       <SiteNav />
       <main className="min-h-screen">
         <section className="mx-auto max-w-3xl px-6 pt-24 pb-20">
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">Bước 2 / 4</p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">
+          <h1 className="font-heading text-3xl font-bold leading-tight sm:text-4xl">
             Bạn đang ở tình huống nào?
           </h1>
           <p className="mt-4 text-sm leading-relaxed text-foreground/75 sm:text-base">
@@ -128,29 +128,22 @@ export default function OnboardingSituationPage() {
             </div>
           </div>
 
-          <div className="mt-10 flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={() => router.push('/onboarding/topic')}
-              className="inline-flex items-center gap-2 rounded-md border border-gold/30 px-4 py-2 text-sm text-foreground transition-colors hover:bg-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-            >
-              ← Quay lại
-            </button>
-            <button
-              type="button"
-              onClick={handleContinue}
-              className="inline-flex items-center gap-2 rounded-md bg-gold px-5 py-2 text-sm font-medium text-ink transition-colors hover:bg-gold-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-            >
-              Tiếp tục →
-            </button>
+          <div className="mt-10 flex justify-start">
             <button
               type="button"
               onClick={handleSkip}
               className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-gold/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
             >
-              Bỏ qua
+              Bỏ qua bước này
             </button>
           </div>
+
+          <WizardFooter
+            currentStep={2}
+            totalSteps={4}
+            previousHref="/onboarding/topic"
+            onNext={handleContinue}
+          />
         </section>
       </main>
       <SiteFooter />

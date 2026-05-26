@@ -1,19 +1,17 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
-import { BirthDataForm } from '@/components/birth-data-form';
 import { SiteNav } from '@/components/home/SiteNav';
 import { OnboardingRecap, OnboardingStepBadge } from '@/components/onboarding-recap';
 
 export const metadata: Metadata = {
   title: 'Mở khóa lá số',
   description:
-    'Bắt đầu lá số cá nhân hoá — bước 1/4. Đồng ý xử lý dữ liệu theo Nghị định 13/2023/NĐ-CP. Mã hoá AES-256, không bán dữ liệu, có quyền rút lại bất cứ lúc nào.',
+    'Bắt đầu lá số cá nhân hoá — 4 bước. Đồng ý xử lý dữ liệu theo Nghị định 13/2023/NĐ-CP. Mã hoá AES-256, không bán dữ liệu, có quyền rút lại bất cứ lúc nào.',
   alternates: { canonical: 'https://hieu.asia/onboarding' },
   openGraph: {
     title: 'Mở khóa lá số',
     description:
-      'Bắt đầu hành trình hiểu chính mình — bước 1/4. Đồng ý xử lý dữ liệu để tạo lá số.',
+      'Bắt đầu hành trình hiểu chính mình — 4 bước. Đồng ý xử lý dữ liệu để tạo lá số.',
     url: 'https://hieu.asia/onboarding',
     type: 'website',
   },
@@ -51,7 +49,7 @@ export default function OnboardingPage() {
             Mở khóa <span className="bg-gold-gradient bg-clip-text text-transparent">lá số</span>
           </h1>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-foreground/75">
-            Trước khi bắt đầu, vui lòng xem các mục dữ liệu hieu.asia sẽ xử lý.
+            4 bước, khoảng 2 phút. Trước khi bắt đầu, vui lòng xem các mục dữ liệu hieu.asia sẽ xử lý.
             Bạn có quyền từ chối hoặc rút lại đồng ý bất cứ lúc nào tại trang{' '}
             <Link href="/account" className="text-gold underline underline-offset-4 hover:opacity-80">
               Tài khoản
@@ -61,34 +59,25 @@ export default function OnboardingPage() {
 
           <OnboardingRecap />
 
-          <Card className="mt-8 border-gold/20 bg-card/60 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="font-heading text-2xl">
-                <span className="bg-gold-gradient bg-clip-text text-transparent">
-                  Thông tin
-                </span>{' '}
-                ngày sinh
-              </CardTitle>
-              <CardDescription className="text-muted-foreground">
-                Dữ liệu này dùng để dựng lá số và mốc thời gian luận giải. Bạn có thể chỉnh sửa lại sau, trước khi báo cáo được tạo.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <BirthDataForm />
-            </CardContent>
-          </Card>
+          <div className="mt-10 flex flex-wrap items-center gap-3">
+            <Link
+              href="/onboarding/topic"
+              className="inline-flex items-center gap-2 rounded-md bg-gold px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-gold-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+            >
+              Bắt đầu — Bước 1 / 4 →
+            </Link>
+            <Link
+              href="/sample-report"
+              className="inline-flex items-center gap-2 rounded-md border border-gold/30 px-4 py-2.5 text-sm text-foreground transition-colors hover:bg-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+            >
+              Xem báo cáo mẫu trước →
+            </Link>
+          </div>
 
-          <p className="mt-6 text-center text-xs text-muted-foreground">
+          <p className="mt-8 text-center text-xs text-muted-foreground">
             Mã hoá AES-256 · TLS 1.3 · Không dùng dữ liệu cá nhân để huấn luyện
             mô hình. Chỉ dùng dữ liệu đã ẩn danh để cải thiện prompt — bạn có
             thể tắt tùy chọn này bất cứ lúc nào.
-          </p>
-
-          <p className="mt-4 text-center text-xs text-muted-foreground">
-            Chưa muốn quyết định ngay?{' '}
-            <Link href="/sample-report" className="text-gold underline underline-offset-4 hover:opacity-80">
-              Xem báo cáo mẫu trước →
-            </Link>
           </p>
         </section>
       </main>

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Briefcase, Heart, Wallet, Users, Compass, Crosshair, type LucideIcon } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { WizardFooter } from '@/components/onboarding/WizardFooter';
 
 type TopicId = 'career' | 'love' | 'finance' | 'family' | 'self' | 'decision';
 
@@ -96,8 +97,7 @@ function OnboardingTopicInner() {
       <SiteNav />
       <main className="min-h-screen">
         <section className="mx-auto max-w-3xl px-6 pt-24 pb-20">
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">Bước 1 / 4</p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">
+          <h1 className="font-heading text-3xl font-bold leading-tight sm:text-4xl">
             Hôm nay bạn muốn hiểu điều gì?
           </h1>
           <p className="mt-4 text-sm leading-relaxed text-foreground/75 sm:text-base">
@@ -138,18 +138,21 @@ function OnboardingTopicInner() {
 
           <div className="mt-10 flex flex-wrap items-center gap-3">
             <Link
-              href="/onboarding"
-              className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-gold/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-            >
-              Bỏ qua, đến lập lá số →
-            </Link>
-            <Link
               href="/tu-vi/rectify"
               className="inline-flex items-center gap-2 rounded-md border border-gold/25 px-3 py-2 text-sm text-gold/90 transition-colors hover:bg-gold/10 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
             >
               Không biết giờ sinh? → Làm Hồi cứu (BTR)
             </Link>
           </div>
+
+          <WizardFooter
+            currentStep={1}
+            totalSteps={4}
+            previousHref="/onboarding"
+            nextHref="/onboarding/situation"
+            nextDisabled={!selected}
+            nextLabel={selected ? 'Tiếp tục' : 'Chọn chủ đề để tiếp tục'}
+          />
         </section>
       </main>
       <SiteFooter />
