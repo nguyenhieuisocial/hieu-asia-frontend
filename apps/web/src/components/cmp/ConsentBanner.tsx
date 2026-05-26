@@ -44,27 +44,32 @@ export function ConsentBanner(): React.ReactElement | null {
   // mobile visitors see the slim pill; tapping "Tuỳ chỉnh" expands into the
   // existing full layout (and skips straight to granular toggles).
   const [collapsed, setCollapsed] = React.useState(true);
-  // Wave 60.19 — GDPR/Vietnam-PDPD compliance. Per CJEU Planet49
-  // (C-673/17, 2019) pre-ticked consent boxes are INVALID consent for
-  // non-essential cookies in the EU. VN Decree 13/2023 Art. 11 requires
-  // consent be expressed clearly via an opt-in action — pre-ticked fails.
+  // Wave 60.19 + 60.73 — pre-checked defaults per founder business decision
+  // (2026-05-26). All toggles default to TRUE so first-time visitors see
+  // every box pre-ticked; they can still untick + Lưu, or click "Chỉ cần
+  // thiết" for the necessary-only path.
+  //
+  // KNOWN LEGAL RISK: pre-ticked boxes for non-essential cookies are
+  // technically invalid consent under CJEU Planet49 (C-673/17, 2019) for
+  // EU users + VN Decree 13/2023 Art. 11 (consent must be expressed
+  // through an "opt-in action"). Per founder authority this is acceptable
+  // for the VN-first launch; EU exposure mitigated by the banner being
+  // shown in EU geo per `shouldShowBanner()` so users have explicit
+  // opt-out option before any tracker fires. Founder accepts the regulatory
+  // risk; defer formal pre-tick removal to a future EU launch wave.
+  //
   // Banner shows in VN + EU + UK + BR + CA (per `shouldShowBanner()`);
   // remaining jurisdictions get silent legitimate-interest defaults
-  // applied without a banner. Defensible under opt-out regimes
-  // (CCPA/CPRA, Switzerland revFADP) but a KNOWN GAP for emerging opt-in
-  // regimes (India DPDPA 2023, Australia tightening, future expansion
-  // tracked in vault 94 Wave 60.19 entry).
+  // applied without a banner.
   //
-  // When the banner IS rendered, all optional toggles default to unchecked.
-  // Two one-click escape paths:
-  //   - "Chấp nhận tất cả" → opts in to analytics+marketing+personalization
-  //   - "Chỉ cần thiết"     → keeps everything off
-  // …with "Tuỳ chỉnh" + "Lưu" available for granular per-category opt-in.
+  // RETURNING USERS: if `consent.shown=true` in storage, the draft is
+  // hydrated from the persisted choice in `useEffect` below — pre-ticked
+  // defaults only apply on the FIRST visit.
   const [draft, setDraft] = React.useState<Pick<ConsentState, "analytics" | "marketing" | "personalization">>(
     {
-      analytics: false,
-      marketing: false,
-      personalization: false,
+      analytics: true,
+      marketing: true,
+      personalization: true,
     },
   );
 
@@ -74,20 +79,28 @@ export function ConsentBanner(): React.ReactElement | null {
       if (cancelled) return;
       if (show) {
         const current = getConsent();
-        setDraft({
-          analytics: current.analytics,
-          marketing: current.marketing,
-          personalization: current.personalization,
-        });
+        // Wave 60.73: only hydrate draft from storage if user has previously
+        // made a choice. First-time visitors keep the all-true useState
+        // defaults (founder decision — see comment block above).
+        if (current.shown) {
+          setDraft({
+            analytics: current.analytics,
+            marketing: current.marketing,
+            personalization: current.personalization,
+          });
+        }
         setVisible(true);
       }
     });
     const onReopen = () => {
       const current = getConsent();
+      // Reopen path: always hydrate from storage so user sees their last
+      // saved choice. If never saved (shown=false somehow reached this
+      // path), fall back to all-true defaults per founder policy.
       setDraft({
-        analytics: current.analytics,
-        marketing: current.marketing,
-        personalization: current.personalization,
+        analytics: current.shown ? current.analytics : true,
+        marketing: current.shown ? current.marketing : true,
+        personalization: current.shown ? current.personalization : true,
       });
       setVisible(true);
     };
