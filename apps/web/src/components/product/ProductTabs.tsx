@@ -60,7 +60,7 @@ export function ProductTabs({
       <div className="hidden md:block">
         <TabsPrimitive.Root defaultValue={active}>
           <TabsPrimitive.List
-            className="mb-6 flex flex-wrap gap-1 border-b border-warm-dark-300"
+            className="mb-6 flex flex-wrap gap-1 border-b border-gold/15"
             aria-label="Mục báo cáo"
           >
             {tabs.map((tab) => (
@@ -68,8 +68,8 @@ export function ProductTabs({
                 key={tab.id}
                 value={tab.id}
                 className={cn(
-                  'inline-flex items-center gap-2 px-4 py-3 font-sans text-sm font-medium text-cream-300 transition-all duration-300 ease-editorial',
-                  'hover:text-cream-50',
+                  'inline-flex items-center gap-2 px-4 py-3 font-sans text-sm font-medium text-muted-foreground transition-colors duration-200',
+                  'hover:text-foreground',
                   'data-[state=active]:border-b-2 data-[state=active]:border-gold data-[state=active]:text-gold',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40',
                 )}
@@ -107,12 +107,12 @@ export function ProductTabs({
             <AccordionPrimitive.Item
               key={tab.id}
               value={tab.id}
-              className="border-b border-warm-dark-300"
+              className="border-b border-gold/15"
             >
               <AccordionPrimitive.Header className="flex">
                 <AccordionPrimitive.Trigger
                   className={cn(
-                    'group flex w-full items-center justify-between py-4 font-sans text-sm font-medium text-cream-50 transition-all duration-300 ease-editorial',
+                    'group flex w-full items-center justify-between py-4 font-sans text-sm font-medium text-foreground transition-colors duration-200',
                     'hover:text-gold',
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40',
                   )}
@@ -127,7 +127,7 @@ export function ProductTabs({
                     ) : null}
                   </span>
                   <ChevronDown
-                    className="size-4 shrink-0 transition-transform duration-300 ease-editorial group-data-[state=open]:rotate-180"
+                    className="size-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180"
                     aria-hidden="true"
                   />
                 </AccordionPrimitive.Trigger>
