@@ -29,9 +29,13 @@ const config: Config = {
           400: '#3A302A',
           500: '#4A3F36',
         },
-        // Cream scale — light-theme parity (preset's flat `cream: '#F2EDE3'`
-        // preserved; this scale is additive under a distinct key namespace).
-        'cream-scale': {
+        // Cream scale — light-theme parity. Wave 60.56 P1.1 rename
+        // (cream-scale → cream) per /ultrareview must-fix: components used
+        // text-cream-{50,100,300,500} but JIT only generated text-cream-scale-*.
+        // DEFAULT preserves preset's flat `cream: '#F2EDE3'` for back-compat
+        // (existing utilities `text-cream`, `bg-cream` keep working).
+        cream: {
+          DEFAULT: '#F2EDE3',
           50: '#F5F0E6',
           100: '#EFE7D6',
           300: '#C9BFB0',
