@@ -7,7 +7,7 @@
  *   - Vận hành (operations): dashboard, sessions, tasks
  *   - Doanh thu (growth):    customers, transactions, payments, affiliates, analytics, posthog
  *   - Tri thức (knowledge):  rag, prompts
- *   - Hệ thống (system):     vendors, cost, llm-spend, secrets, users (admin), settings
+ *   - Hệ thống (system):     vendors, cost, llm-spend, keystore, users (admin), settings
  *
  * Each group expands by default on desktop; mobile-first paint collapses
  * `system` + `knowledge` to keep the off-canvas drawer scrollable on small
@@ -104,7 +104,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/cost', label: 'Chi phí AI', Icon: DollarSign },
       { href: '/llm-spend', label: 'Chi phí LLM', Icon: DollarSign },
       { href: '/ai-quality', label: 'Chất lượng AI', Icon: Shield },
-      { href: '/secrets', label: 'API Keys', Icon: Key },
+      { href: '/keystore', label: 'Keystore', Icon: Key },
       { href: '/feature-flags', label: 'Feature flags', Icon: Flag },
       { href: '/users', label: 'Người dùng admin', Icon: Users },
       { href: '/system', label: 'Trạng thái dịch vụ', Icon: ServerCog },

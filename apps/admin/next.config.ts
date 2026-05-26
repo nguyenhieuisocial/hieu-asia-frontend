@@ -43,6 +43,16 @@ const nextConfig: NextConfig = {
   //
   // unsafe-eval only in dev (Next.js Fast Refresh). frame-ancestors none
   // blocks clickjacking; upgrade-insecure-requests forces HTTPS.
+  // Wave 60.81.A.v2 — redirect old vault path to new /keystore route.
+  // The legacy /admin/src/app/secrets/ subtree is left intact (sandbox
+  // immutable rule blocks edits to that path); these redirects ensure
+  // the route is unreachable in prod before founder removes the dir.
+  async redirects() {
+    return [
+      { source: '/secrets', destination: '/keystore', permanent: true },
+      { source: '/secrets/:path*', destination: '/keystore/:path*', permanent: true },
+    ];
+  },
   async headers() {
     const isDev = process.env.NODE_ENV === 'development';
     const scriptSrc = [
