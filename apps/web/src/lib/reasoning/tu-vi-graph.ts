@@ -106,11 +106,11 @@ function incrementCost(
 
 /* ─── Palace catalog ────────────────────────────────────────────────── */
 
-const PALACE_NAMES = [
+const _PALACE_NAMES = [
   'Mệnh', 'Phụ Mẫu', 'Phúc Đức', 'Điền Trạch', 'Quan Lộc', 'Nô Bộc',
   'Thiên Di', 'Tật Ách', 'Tài Bạch', 'Tử Tức', 'Phu Thê', 'Huynh Đệ',
 ] as const;
-type PalaceName = (typeof PALACE_NAMES)[number];
+type PalaceName = (typeof _PALACE_NAMES)[number];
 
 export interface PalaceInput {
   name: PalaceName;
@@ -220,7 +220,7 @@ async function analyzePalace(args: AnalyzePalaceArgs): Promise<{ palaces: Palace
       k: 3,
       tags: ['tu-vi', `cung-${palace.name.toLowerCase().replace(/\s+/g, '-')}`],
     });
-  } catch (err) {
+  } catch {
     // RAG miss is non-fatal — analyze without context using model prior knowledge
     context = [];
   }

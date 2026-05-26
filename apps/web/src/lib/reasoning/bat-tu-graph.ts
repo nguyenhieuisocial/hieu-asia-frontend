@@ -70,8 +70,8 @@ function incrementCost(
 
 /* ─── Pillar catalog ─────────────────────────────────────────────────── */
 
-const PILLAR_NAMES = ['Năm', 'Tháng', 'Ngày', 'Giờ'] as const;
-type PillarName = (typeof PILLAR_NAMES)[number];
+const _PILLAR_NAMES = ['Năm', 'Tháng', 'Ngày', 'Giờ'] as const;
+type PillarName = (typeof _PILLAR_NAMES)[number];
 
 export interface PillarInput {
   name: PillarName;

@@ -2,7 +2,7 @@
  * Admin proxy: GET /api/admin/affiliates/[id] — affiliate detail.
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { requireAdminSession } from '@/lib/auth-server';
 
 const GATEWAY = process.env.HIEU_API_GATEWAY_URL ?? 'https://api.hieu.asia';

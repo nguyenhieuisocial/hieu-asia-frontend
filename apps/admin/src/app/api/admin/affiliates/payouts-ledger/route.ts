@@ -7,7 +7,7 @@
  * structure.
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { sbServer } from '@/lib/supabase-server';
 import { requireAdminSession } from '@/lib/auth-server';
 

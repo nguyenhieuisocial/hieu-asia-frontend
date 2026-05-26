@@ -76,7 +76,7 @@ export interface UseSavedFiltersResult<F> {
 
 export function useSavedFilters<F>(
   storageScope: string,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- reserved for future "default preset" feature
+  // Reserved for future "default preset" feature
   _defaultFilter?: F,
 ): UseSavedFiltersResult<F> {
   const [presets, setPresets] = React.useState<FilterPreset<F>[]>([]);

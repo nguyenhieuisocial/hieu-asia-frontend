@@ -151,7 +151,7 @@ export default function AdminTransactionsPage() {
     queryFn: () => fetchTransactions({ limit: LIMIT, userId: userIdFilter }),
   });
 
-  const allRecords: TransactionRecord[] = data?.records ?? [];
+  const allRecords: TransactionRecord[] = React.useMemo(() => data?.records ?? [], [data?.records]);
   const records = React.useMemo(() => {
     if (!typeFilter) return allRecords;
     return allRecords.filter((r) => r.type === typeFilter);
@@ -170,7 +170,6 @@ export default function AdminTransactionsPage() {
     if (!confirm(`Refund giao dịch ${maskId(r.intent_id ?? r.id)}?`)) return;
     const result = await refundTransaction(r);
     if (result.status === 'not_implemented') {
-      // eslint-disable-next-line no-console
       console.warn('[refund] NotImplemented — worker endpoint /payment/refund chưa wire', r);
       toast.error('Refund chưa wire', {
         description: 'Worker endpoint /payment/refund chưa sẵn sàng. Đã log NotImplemented.',

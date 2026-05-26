@@ -27,7 +27,6 @@ function getClient(): Langfuse | null {
   if (!publicKey || !secretKey) {
     // Silent no-op when keys are missing. Don't spam console in prod.
     if (process.env.NODE_ENV !== 'production') {
-      // eslint-disable-next-line no-console
       console.warn('[reasoning/observability] LANGFUSE_* env missing — tracing disabled');
     }
     return null;

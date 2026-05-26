@@ -7,7 +7,7 @@
  */
 
 import { cookies } from 'next/headers';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { ADMIN_SESSION_COOKIE, verifySession } from '@/lib/auth';
 
 export const runtime = 'nodejs';

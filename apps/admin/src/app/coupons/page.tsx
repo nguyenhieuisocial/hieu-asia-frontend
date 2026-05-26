@@ -17,7 +17,6 @@ import {
   Button,
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
   Dialog,
@@ -141,7 +140,7 @@ export default function CouponsPage() {
     queryFn: fetchCoupons,
   });
 
-  const coupons = data?.coupons ?? [];
+  const coupons = React.useMemo(() => data?.coupons ?? [], [data?.coupons]);
   const showError = !!error || data?.ok === false;
   const errorMsg = (error as Error | undefined)?.message ?? data?.error;
   const note = data?.note;

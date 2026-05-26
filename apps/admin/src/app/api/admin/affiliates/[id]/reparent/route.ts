@@ -5,7 +5,7 @@
  * Body: { new_parent_user_id: uuid | null }
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { requireAdminSession } from '@/lib/auth-server';
 
 export const runtime = 'nodejs';

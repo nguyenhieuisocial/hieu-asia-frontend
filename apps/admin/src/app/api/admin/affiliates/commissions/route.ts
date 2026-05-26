@@ -5,7 +5,7 @@
  * Wave 43.2 — read + manual clawback for hieu_asia.affiliate_commissions.
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { sbServer } from '@/lib/supabase-server';
 import { requireAdminSession } from '@/lib/auth-server';
 
