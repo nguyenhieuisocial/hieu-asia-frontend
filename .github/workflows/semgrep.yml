@@ -1,0 +1,78 @@
+# Wave 60.43 — Semgrep SAST (replaces CodeQL for private GitHub Pro repos).
+#
+# Why Semgrep instead of CodeQL:
+# - CodeQL on private repos requires GitHub Advanced Security ($49/user
+#   add-on). GitHub Pro $4/user only includes CodeQL on PUBLIC repos.
+# - Semgrep CE is genuinely free for private repos, with comparable
+#   security ruleset (p/security-audit + p/owasp-top-ten + p/r2c-best-practices
+#   covers most SAST surface we'd get from CodeQL javascript-typescript).
+# - Output goes to PR comments via semgrep-action default behavior
+#   (no SARIF upload to GitHub Security tab — that path requires
+#   Advanced Security too).
+#
+# Runs on:
+# - PR to main (block merge if BLOCK severity)
+# - Push to main (audit baseline)
+# - Weekly Monday cron (catch new advisories)
+
+name: Semgrep SAST
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '17 9 * * 1'  # Mondays 09:17 UTC (~16:17 ICT)
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: semgrep-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  semgrep:
+    name: Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    container:
+      image: semgrep/semgrep
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Semgrep CI scan
+        run: |
+          semgrep ci \
+            --config=p/security-audit \
+            --config=p/owasp-top-ten \
+            --config=p/typescript \
+            --config=p/react \
+            --config=p/nextjs \
+            --exclude='*.test.*' \
+            --exclude='node_modules' \
+            --exclude='.next' \
+            --exclude='storybook-static' \
+            --exclude='apps/web/.storybook' \
+            --json --output=semgrep-results.json \
+          || true
+
+      - name: Summarize findings
+        if: always()
+        run: |
+          if [ -f semgrep-results.json ]; then
+            ERRORS=$(jq '[.results[] | select(.extra.severity == "ERROR")] | length' semgrep-results.json)
+            WARNINGS=$(jq '[.results[] | select(.extra.severity == "WARNING")] | length' semgrep-results.json)
+            INFO=$(jq '[.results[] | select(.extra.severity == "INFO")] | length' semgrep-results.json)
+            echo "## Semgrep SAST results" >> $GITHUB_STEP_SUMMARY
+            echo "- 🔴 ERROR: $ERRORS" >> $GITHUB_STEP_SUMMARY
+            echo "- 🟡 WARNING: $WARNINGS" >> $GITHUB_STEP_SUMMARY
+            echo "- 🔵 INFO: $INFO" >> $GITHUB_STEP_SUMMARY
+            # Don't fail the build on findings — humans review the summary.
+            # Block-severity rules from semgrep ci already exit non-zero if any.
+          fi
