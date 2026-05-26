@@ -1,5 +1,10 @@
-import type { StorybookConfig } from '@storybook/nextjs';
-import path from 'node:path';
+// This file has been automatically migrated to valid ESM format by Storybook.
+import { fileURLToPath } from "node:url";
+import type { StorybookConfig } from '@storybook/nextjs-vite';
+import path, { dirname } from 'node:path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 /**
  * Wave 60.42 — Storybook config for visual regression testing.
@@ -8,7 +13,7 @@ import path from 'node:path';
  *  1. `packages/ui/src/components/**` — shared design system (Button, Card, …)
  *  2. `apps/web/src/components/**` — app-specific (TrustStrip, OrnamentDivider, …)
  *
- * Framework `@storybook/nextjs` reuses the web app's Next.js config (PostCSS
+ * Framework `@storybook/nextjs-vite` reuses the web app's Next.js config (PostCSS
  * with `@tailwindcss/postcss`, tsconfig paths, transpilePackages for
  * `@hieu-asia/ui`). Stories import from the shared globals.css so brand
  * tokens and dark-mode CSS vars match what production renders.
@@ -18,13 +23,9 @@ const config: StorybookConfig = {
     '../src/**/*.stories.@(ts|tsx|mdx)',
     '../../../packages/ui/src/**/*.stories.@(ts|tsx|mdx)',
   ],
-  addons: [
-    '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
-    '@storybook/addon-themes',
-  ],
+  addons: [getAbsolutePath("@storybook/addon-themes"), getAbsolutePath("@storybook/addon-docs")],
   framework: {
-    name: '@storybook/nextjs',
+    name: getAbsolutePath("@storybook/nextjs-vite"),
     options: {
       // Point to the web app's next.config.ts so Storybook inherits the same
       // PostCSS pipeline (Tailwind v4 beta), webpack tweaks, and image
@@ -41,3 +42,7 @@ const config: StorybookConfig = {
 };
 
 export default config;
+
+function getAbsolutePath(value: string): any {
+  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)));
+}

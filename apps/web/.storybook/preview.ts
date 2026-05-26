@@ -1,4 +1,4 @@
-import type { Preview } from '@storybook/react';
+import type { Preview } from '@storybook/nextjs-vite';
 import { withThemeByClassName } from '@storybook/addon-themes';
 
 // Brand tokens + Tailwind layer. This is the same stylesheet the production
@@ -25,20 +25,26 @@ const preview: Preview = {
       },
     },
     backgrounds: {
-      default: 'light',
-      values: [
-        { name: 'light', value: 'hsl(36 30% 92%)' },
-        { name: 'dark', value: 'hsl(240 8% 6%)' },
-      ],
+      options: {
+        light: { name: 'light', value: 'hsl(36 30% 92%)' },
+        dark: { name: 'dark', value: 'hsl(240 8% 6%)' }
+      }
     },
     layout: 'centered',
   },
+
   decorators: [
     withThemeByClassName({
       themes: { light: '', dark: 'dark' },
       defaultTheme: 'light',
     }),
   ],
+
+  initialGlobals: {
+    backgrounds: {
+      value: 'light'
+    }
+  }
 };
 
 export default preview;

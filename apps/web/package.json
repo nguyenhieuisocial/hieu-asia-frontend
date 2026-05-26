@@ -57,12 +57,10 @@
   "devDependencies": {
     "@hieu-asia/config": "workspace:*",
     "@next/bundle-analyzer": "^15.0.0",
-    "@storybook/addon-essentials": "^8.4.0",
-    "@storybook/addon-interactions": "^8.4.0",
-    "@storybook/addon-themes": "^8.4.0",
-    "@storybook/nextjs": "^8.4.0",
-    "@storybook/react": "^8.4.0",
-    "@storybook/test": "^8.4.0",
+    "@storybook/addon-docs": "10.4.1",
+    "@storybook/addon-themes": "10.4.1",
+    "@storybook/nextjs-vite": "10.4.1",
+    "@storybook/react": "10.4.1",
     "@tailwindcss/postcss": "^4.0.0-beta.3",
     "@types/node": "^22.7.4",
     "@types/react": "^19.0.0",
@@ -72,9 +70,11 @@
     "cross-env": "^7.0.3",
     "eslint": "^9.12.0",
     "eslint-config-next": "^15.0.0",
+    "eslint-plugin-storybook": "10.4.1",
     "postcss": "^8.4.47",
-    "storybook": "^8.4.0",
+    "storybook": "10.4.1",
     "tailwindcss": "^4.0.0-beta.3",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "vite": "^7.0.0"
   }
 }
