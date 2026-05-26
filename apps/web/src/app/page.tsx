@@ -1,17 +1,16 @@
 import type { Metadata } from 'next';
+import { Sparkles, Calendar, Hash, Brain } from 'lucide-react';
 import { PRICING } from '@/lib/pricing';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
-import { HeroV3 } from '@/components/home/HeroV3';
 import { WhyTrust } from '@/components/home/WhyTrust';
 import { HowToStart } from '@/components/home/HowToStart';
-import { MethodChooser } from '@/components/home/MethodChooser';
-import { FreeTools } from '@/components/home/FreeTools';
-import { WhyChoose } from '@/components/home/WhyChoose';
-import { StoryTestimonials } from '@/components/home/StoryTestimonials';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
-import { PricingTeaser } from '@/components/home/PricingTeaser';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
+import { MarketingHero } from '@/components/marketing/MarketingHero';
+import { BentoLens } from '@/components/marketing/BentoLens';
+import { PhilosophyBlock } from '@/components/marketing/PhilosophyBlock';
+import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 
 export const metadata: Metadata = {
   // Homepage title already contains the brand → bypass the layout
@@ -361,26 +360,192 @@ export default function LandingPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(SOFTWARE_APP_JSONLD) }}
       />
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
-        <HeroV3 />
+      <main id="main-content" className="min-h-screen bg-warm-dark-50 text-cream-50 pt-16">
+        {/* 1. Hero — Option D MarketingHero */}
+        <MarketingHero
+          eyebrow="A.I · LUẬN GIẢI · 2026"
+          title={
+            <>
+              Hiểu mình.{' '}
+              <em className="italic text-gold-soft">Quyết định</em>{' '}
+              mình
+              <span className="text-gold-dot drop-shadow-[0_0_16px_rgba(229,198,138,0.18)]">
+                .
+              </span>
+            </>
+          }
+          subtitle="Bốn ống kính — Tử Vi, Bát Tự, Thần Số, MBTI — đọc lên trong một khoảng lặng. Không tiên tri. Không định mệnh hoá. Chỉ một ngôn ngữ để bạn đối thoại với chính mình."
+          primaryCta={{ label: 'Bắt đầu luận giải', href: '/onboarding' }}
+          secondaryCta={{ label: 'Xem phương pháp', href: '/methodology' }}
+          trustLine="5 phút · miễn phí · không cần thẻ"
+          ornament="gold-ring"
+          watermark="Tử Vi"
+        />
+
         {/* Wave 52 — persistent disclaimer chip surfaced near hero (also in footer). */}
         <div
           role="note"
           className="mx-auto -mt-6 flex max-w-3xl items-center justify-center px-6"
         >
-          <p className="rounded-full border border-gold/20 bg-card/50 px-4 py-1.5 text-center text-[11px] leading-snug text-muted-foreground backdrop-blur-sm sm:text-xs">
+          <p className="rounded-full border border-gold/20 bg-warm-dark-100/60 px-4 py-1.5 text-center text-[11px] leading-snug text-cream-500 backdrop-blur-sm sm:text-xs">
             Kết quả mang tính tham khảo — không thay thế tư vấn y tế, pháp lý hay tài chính.
           </p>
         </div>
-        <WhyTrust />
-        <HowToStart />
-        <MethodChooser />
-        <FreeTools />
-        <WhyChoose />
-        <PricingTeaser />
-        <StoryTestimonials />
-        <FaqAccordion items={HOME_FAQ} id="faq" />
-        <NewsletterSignup id="newsletter" />
+
+        {/* 2. WhyTrust — existing 3-pillar, wrap in warm-dark-100 shell */}
+        <div className="bg-warm-dark-100">
+          <WhyTrust />
+        </div>
+
+        {/* 3. HowToStart — existing, warm-dark-50 tonal shift */}
+        <div className="bg-warm-dark-50">
+          <HowToStart />
+        </div>
+
+        {/* 4. BentoLens — replaces MethodChooser + FreeTools (R3 diff #3) */}
+        <BentoLens
+          eyebrow="BỐN ỐNG KÍNH"
+          title={
+            <>
+              Một con người, <em className="italic text-gold-soft">soi</em> từ bốn góc
+              <span className="text-gold-dot">.</span>
+            </>
+          }
+          bg="warm-dark-100"
+          lenses={[
+            {
+              id: 'tuvi',
+              name: 'TỬ VI',
+              subname: 'CUNG MỆNH',
+              icon: Sparkles,
+              action: 'Đọc',
+              title: 'cung mệnh',
+              body: 'Bản đồ sao thời điểm sinh — không phải lời tiên tri, mà là bản đồ ưu thế và bóng tối tự nhiên.',
+              watermark: 'Tử Vi',
+              recommended: true,
+            },
+            {
+              id: 'battu',
+              name: 'BÁT TỰ',
+              subname: 'NGŨ HÀNH',
+              icon: Calendar,
+              action: 'Cân',
+              title: 'ngũ hành',
+              body: 'Tám chữ năm-tháng-ngày-giờ — đo nội lực và cân bằng nguyên tố.',
+              watermark: 'Bát Tự',
+            },
+            {
+              id: 'thanso',
+              name: 'THẦN SỐ',
+              subname: 'NUMEROLOGY',
+              icon: Hash,
+              action: 'Đếm',
+              title: 'con số đời',
+              body: 'Numerology phương Tây — đường đời, ngày sinh, tên gọi cộng dồn thành mật mã hành trình.',
+              watermark: 'Thần Số',
+            },
+            {
+              id: 'mbti',
+              name: 'MBTI',
+              subname: 'TÂM LÝ HỌC',
+              icon: Brain,
+              action: 'Gọi tên',
+              title: 'tâm trí',
+              body: '16 kiểu Myers-Briggs — không nhãn dán, mà là ngôn ngữ để nhận diện thiên hướng nội tại.',
+              watermark: 'MBTI',
+            },
+          ]}
+        />
+
+        {/* 5. PhilosophyBlock — replaces fake StoryTestimonials (R3 diff #2) */}
+        <PhilosophyBlock
+          eyebrow="TRIẾT LÝ"
+          title={
+            <>
+              Bạn vẫn là <em className="italic text-gold-soft">người quyết định</em>
+              <span className="text-gold-dot">.</span>
+            </>
+          }
+          body={[
+            'Tử Vi không tiên tri. MBTI không nhãn dán. Bát Tự không định mệnh.',
+            'Đây chỉ là bốn ngôn ngữ — bốn ống kính — giúp bạn nhìn rõ hơn về chính mình. Quyết định cuối cùng luôn là của bạn.',
+          ]}
+          bg="warm-dark-50"
+        />
+
+        {/* 6. PricingTierV2 — 3 tiers replace 4 (Notion-style toggle + KHUYÊN DÙNG + refund) */}
+        <PricingTierV2
+          eyebrow="GÓI THÀNH VIÊN"
+          title={
+            <>
+              Đi <em className="italic text-gold-soft">sâu</em> theo nhịp của bạn
+              <span className="text-gold-dot">.</span>
+            </>
+          }
+          tiers={[
+            {
+              id: 'free',
+              name: 'MIỄN PHÍ',
+              nameDisplay: 'Khởi đầu',
+              description: 'Khảo sát đầu vào và 6 công cụ tra cứu — không cần thẻ.',
+              priceMonthly: PRICING.standard.vnd,
+              features: [
+                'Khảo sát đầu vào',
+                '6 công cụ tra cứu cơ bản',
+                'Tử Vi · Bát Tự · MBTI · Thần Số',
+                'Lưu hồ sơ cá nhân',
+              ],
+              ctaLabel: 'Bắt đầu miễn phí',
+              ctaHref: '/onboarding',
+            },
+            {
+              id: 'premium',
+              name: 'PREMIUM · 1 LÁ SỐ',
+              nameDisplay: 'Đối thoại',
+              description: 'Một lá số đầy đủ kèm PDF và 3 câu hỏi Mentor AI.',
+              priceMonthly: PRICING.premium.vnd,
+              features: [
+                'Một lá số Tử Vi đầy đủ',
+                'PDF báo cáo có thể tải về',
+                '3 câu hỏi với AI Mentor',
+                'Lưu trữ vĩnh viễn trong tài khoản',
+              ],
+              ctaLabel: 'Mua Premium',
+              ctaHref: '/pricing#premium',
+              primary: true,
+              recommended: true,
+              refundDays: 14,
+            },
+            {
+              id: 'mentor',
+              name: 'MENTOR · KHÔNG GIỚI HẠN',
+              nameDisplay: 'Đồng hành',
+              description: 'Mentor AI không giới hạn, đại vận và lưu niên hàng năm.',
+              priceMonthly: PRICING.monthly.vnd,
+              priceYearly: PRICING.yearly.vnd,
+              yearlyDiscount: 'Tiết kiệm ~17%',
+              features: [
+                'Mentor AI không giới hạn câu hỏi',
+                'Đại vận và lưu niên hàng năm',
+                'Tất cả 4 ống kính sâu',
+                'Huỷ bất cứ lúc nào',
+              ],
+              ctaLabel: 'Đăng ký Mentor',
+              ctaHref: '/pricing#mentor',
+              refundDays: 14,
+            },
+          ]}
+        />
+
+        {/* 7. FaqAccordion — existing 6 Q, warm-dark-100 */}
+        <div className="bg-warm-dark-100">
+          <FaqAccordion items={HOME_FAQ} id="faq" />
+        </div>
+
+        {/* 8. NewsletterSignup — existing, warm-dark-50 */}
+        <div className="bg-warm-dark-50">
+          <NewsletterSignup id="newsletter" />
+        </div>
       </main>
       <SiteFooter />
     </>
