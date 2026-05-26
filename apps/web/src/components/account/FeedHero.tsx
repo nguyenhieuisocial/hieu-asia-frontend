@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Wave 60.58 T2.1 — FeedHero
+ * Wave 60.58 T2.1 — FeedHero (real-data wire: Wave 60.59.c)
  *
  * Dynamic greeting + single CTA. Replaces the static "Trung tâm tài khoản"
  * page header that opened the previous 8-tab settings UI. The companion
@@ -14,14 +14,21 @@
  *   3. No recent decision brief  → "Tạo decision brief mới"     → /decisions/new
  *   4. Fallback                  → "Tiếp tục với mentor"        → /reading
  *
- * Inputs are derived from cheap localStorage probes (synchronous after
- * hydration) — Wave 60.59 will wire to real DB once schema lands.
+ * Inputs (Wave 60.59.c):
+ *   - hasSavedChart   → `public.charts` row for user.id (RLS-scoped);
+ *                       falls back to localStorage if Supabase unavailable
+ *   - membershipTier  → GET /api/user/me (server-side fact; today stubbed
+ *                       to 'free' but the read path is now wired so the
+ *                       day the worker fills it in we get gating for free)
+ *   - hasPinnedInsight / hasRecentBrief → still localStorage probes
+ *     (no DB tables yet; deferred Wave 60.60+)
  */
 
 import * as React from 'react';
 import Link from 'next/link';
 import type { User } from '@supabase/supabase-js';
 import { ArrowRight } from 'lucide-react';
+import { getSupabaseAuth } from '@/lib/auth-client';
 
 const CHART_KEY = 'hieu:chart:profile:v1';
 const ONBOARDING_KEY = 'hieu:onboarding:v2';
@@ -61,7 +68,7 @@ const CTAS: Record<CtaKey, CtaDef> = {
   },
 };
 
-function hasSavedChart(): boolean {
+function hasSavedChartLocal(): boolean {
   if (typeof window === 'undefined') return true; // be conservative pre-hydrate
   try {
     const direct = window.localStorage.getItem(CHART_KEY);
@@ -78,6 +85,49 @@ function hasSavedChart(): boolean {
     /* ignore */
   }
   return false;
+}
+
+/**
+ * DB-backed chart check: 1 row in `public.charts` for the authed user is
+ * enough. RLS already constrains by `user_id = auth.uid`, so we can do a
+ * count(*) limit 1 without an explicit eq filter on user_id.
+ */
+async function hasSavedChartDb(): Promise<boolean | null> {
+  const supabase = getSupabaseAuth();
+  if (!supabase) return null;
+  try {
+    const { data, error } = await supabase
+      .from('charts')
+      .select('id')
+      .limit(1);
+    if (error) return null;
+    return Array.isArray(data) && data.length > 0;
+  } catch {
+    return null;
+  }
+}
+
+interface UserMeResponse {
+  ok?: boolean;
+  user_id?: string | null;
+  email?: string | null;
+  membership_tier?: 'free' | 'standard' | 'premium' | 'lifetime';
+}
+
+/**
+ * Server-side membership tier. Today this is a stub returning 'free' (see
+ * `/api/user/me/route.ts`) — but wiring it now means the day the worker
+ * fills in real data, the CTA priority responds without another deploy.
+ */
+async function fetchMembershipTier(): Promise<UserMeResponse['membership_tier']> {
+  try {
+    const res = await fetch('/api/user/me', { cache: 'no-store' });
+    if (!res.ok) return 'free';
+    const json = (await res.json()) as UserMeResponse;
+    return json.membership_tier ?? 'free';
+  } catch {
+    return 'free';
+  }
 }
 
 function hasRecentBrief(): boolean {
@@ -123,8 +173,8 @@ function hasPinnedInsight(): boolean {
   return false;
 }
 
-function pickCta(): CtaKey {
-  if (!hasSavedChart()) return 'complete-chart';
+function pickCta(opts: { hasChart: boolean }): CtaKey {
+  if (!opts.hasChart) return 'complete-chart';
   if (hasPinnedInsight()) return 'read-pinned';
   if (!hasRecentBrief()) return 'create-brief';
   return 'continue-mentor';
@@ -136,11 +186,28 @@ export interface FeedHeroProps {
 
 export function FeedHero({ user }: FeedHeroProps) {
   // Default CTA picked deterministically pre-hydrate to avoid layout shift;
-  // refined client-side once localStorage is available.
+  // refined client-side once we've consulted Supabase + /api/user/me +
+  // localStorage. Membership tier is fetched but doesn't drive the CTA
+  // today (stub returns 'free' for everyone) — see header comment.
   const [ctaKey, setCtaKey] = React.useState<CtaKey>('continue-mentor');
 
   React.useEffect(() => {
-    setCtaKey(pickCta());
+    let cancelled = false;
+    (async () => {
+      const [dbChart, _tier] = await Promise.all([
+        hasSavedChartDb(),
+        fetchMembershipTier(),
+      ]);
+      // Prefer DB truth; fall back to localStorage probe when Supabase is
+      // unavailable or returns no rows (anon mid-session, fresh sign-in
+      // before chart sync, etc.).
+      const hasChart = dbChart === null ? hasSavedChartLocal() : dbChart;
+      if (cancelled) return;
+      setCtaKey(pickCta({ hasChart }));
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const cta = CTAS[ctaKey];

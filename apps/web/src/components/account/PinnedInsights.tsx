@@ -1,25 +1,33 @@
 'use client';
 
 /**
- * Wave 60.58 T2.1 — PinnedInsights
+ * Wave 60.58 T2.1 — PinnedInsights (real-data wire: Wave 60.59.c)
  *
  * Top 3 quotable mentor reflections — the "why come back" surface for the
  * companion product. Renders as editorial pull-quotes rather than chat
  * bubbles so the page feels like a journal, not a SaaS dashboard.
  *
- * Data: schema-less heuristic until DB pinning ships. We scan mentor
- * histories in localStorage, pick assistant messages ≥ 200 chars that
- * don't end with a question mark, dedupe by prefix, sort by recency,
- * cap at 3.
+ * Data source (Wave 60.59.c): `public.chat_messages` (RLS-scoped to the
+ * authed user's charts), filtered to assistant messages, then heuristic
+ * passes (≥ 200 chars, doesn't end in a question mark, dedup by 64-char
+ * prefix). Sorted by created_at DESC, capped at 3.
  *
- * TODO Wave 60.59: replace with
- *   `select content,ts from mentor_messages where pinned=true order by ts desc limit 3`
- * (and add a pin/unpin affordance to the mentor chat UI).
+ * TODO Wave 60.60 (deferred): add a `pinned boolean default false` column
+ * to `public.chat_messages` + a pin/unpin affordance in the mentor chat
+ * UI. Once that lands the query becomes
+ *   `select content, created_at from chat_messages
+ *      where pinned = true order by created_at desc limit 3`
+ * and the in-component heuristic below can be dropped.
+ *
+ * Fallback: if Supabase client is unavailable (e.g. signed-out, env-missing
+ * preview build), we fall back to the original localStorage heuristic so the
+ * surface still renders for anon users mid-session.
  */
 
 import * as React from 'react';
 import Link from 'next/link';
 import { Quote } from 'lucide-react';
+import { getSupabaseAuth } from '@/lib/auth-client';
 
 interface Insight {
   id: string;
@@ -32,7 +40,74 @@ const HISTORY_PREFIX = 'hieu.mentor.history.';
 const MIN_LEN = 200;
 const MAX_LEN = 320;
 
-function loadInsights(): Insight[] {
+/** Heuristic shared by DB + localStorage paths. */
+function pickInsight(raw: {
+  id: string;
+  content: string;
+  ts: string;
+  readingId?: string;
+}): Insight | null {
+  const c = typeof raw.content === 'string' ? raw.content.trim() : '';
+  if (c.length < MIN_LEN) return null;
+  if (c.endsWith('?') || c.endsWith('？')) return null;
+  return {
+    id: raw.id,
+    text: c.length > MAX_LEN ? c.slice(0, MAX_LEN).trimEnd() + '…' : c,
+    ts: raw.ts,
+    readingId: raw.readingId,
+  };
+}
+
+function dedupAndCap(items: Insight[]): Insight[] {
+  const seen = new Set<string>();
+  const dedup: Insight[] = [];
+  for (const it of items) {
+    const key = it.text.slice(0, 64);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    dedup.push(it);
+  }
+  dedup.sort((a, b) => (a.ts < b.ts ? 1 : -1));
+  return dedup.slice(0, 3);
+}
+
+async function loadInsightsFromDb(): Promise<Insight[] | null> {
+  const supabase = getSupabaseAuth();
+  if (!supabase) return null;
+  try {
+    // RLS limits rows to chat_messages whose chart_id ∈ user's charts.
+    // We pull a modest window (50) of recent assistant messages and run
+    // the quotable heuristic client-side until a `pinned` column exists.
+    const { data, error } = await supabase
+      .from('chat_messages')
+      .select('id, chart_id, content, created_at')
+      .eq('role', 'assistant')
+      .order('created_at', { ascending: false })
+      .limit(50);
+    if (error || !data) return null;
+    const picked = data
+      .map((row) => {
+        const r = row as {
+          id: string;
+          chart_id: string | null;
+          content: string;
+          created_at: string | null;
+        };
+        return pickInsight({
+          id: r.id,
+          content: r.content,
+          ts: r.created_at ?? new Date().toISOString(),
+          readingId: r.chart_id ?? undefined,
+        });
+      })
+      .filter((x): x is Insight => x !== null);
+    return dedupAndCap(picked);
+  } catch {
+    return null;
+  }
+}
+
+function loadInsightsFromLocal(): Insight[] {
   if (typeof window === 'undefined') return [];
   const out: Insight[] = [];
   try {
@@ -51,16 +126,13 @@ function loadInsights(): Insight[] {
         if (!Array.isArray(arr)) continue;
         for (const m of arr) {
           if (m?.role !== 'assistant') continue;
-          const c = typeof m.content === 'string' ? m.content.trim() : '';
-          if (c.length < MIN_LEN) continue;
-          // Skip messages that are mostly questions back to the user.
-          if (c.endsWith('?') || c.endsWith('？')) continue;
-          out.push({
-            id: `${readingId}-${m.ts ?? c.slice(0, 16)}`,
-            text: c.length > MAX_LEN ? c.slice(0, MAX_LEN).trimEnd() + '…' : c,
+          const picked = pickInsight({
+            id: `${readingId}-${m.ts ?? (m.content ?? '').slice(0, 16)}`,
+            content: m.content ?? '',
             ts: m.ts ?? new Date().toISOString(),
             readingId,
           });
+          if (picked) out.push(picked);
         }
       } catch {
         /* ignore one bad bucket */
@@ -69,17 +141,7 @@ function loadInsights(): Insight[] {
   } catch {
     /* ignore */
   }
-  // Dedupe by first 64 chars
-  const seen = new Set<string>();
-  const dedup: Insight[] = [];
-  for (const it of out) {
-    const key = it.text.slice(0, 64);
-    if (seen.has(key)) continue;
-    seen.add(key);
-    dedup.push(it);
-  }
-  dedup.sort((a, b) => (a.ts < b.ts ? 1 : -1));
-  return dedup.slice(0, 3);
+  return dedupAndCap(out);
 }
 
 export function PinnedInsights() {
@@ -87,8 +149,18 @@ export function PinnedInsights() {
   const [loaded, setLoaded] = React.useState(false);
 
   React.useEffect(() => {
-    setItems(loadInsights());
-    setLoaded(true);
+    let cancelled = false;
+    (async () => {
+      const fromDb = await loadInsightsFromDb();
+      const next = fromDb ?? loadInsightsFromLocal();
+      if (!cancelled) {
+        setItems(next);
+        setLoaded(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Hide entirely when there's nothing quotable yet — empty pinned section
