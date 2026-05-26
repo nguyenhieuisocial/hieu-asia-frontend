@@ -1,0 +1,80 @@
+# Wave 60.42 — Chromatic visual regression CI.
+#
+# Catches color/layout regressions automatically by snapshotting every story
+# on every PR and diffing against the baseline. Triggered by the same kind
+# of bug that prompted Wave 60.41 (Button disabled state cream-on-cream
+# invisible on /signin light mode).
+#
+# Chromatic free tier: 5000 snapshots/mo. With ~5 stories × theme switcher
+# (light+dark) × 5 PRs/week = ~100 snapshots/week = ~400/mo. Well under cap.
+#
+# Setup steps for founder (one-time, ~3 min):
+# 1. Go to chromatic.com → sign in with GitHub
+# 2. Create project linked to nguyenhieuisocial/hieu-asia-frontend
+# 3. Copy project token
+# 4. Add to repo secrets: Settings → Secrets → Actions → add
+#    CHROMATIC_PROJECT_TOKEN
+# 5. First push to main runs baseline build; subsequent PRs auto-diff.
+
+name: Chromatic
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pull-requests: write   # Chromatic posts a comment on PRs
+
+concurrency:
+  group: chromatic-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  visual:
+    name: Visual regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Chromatic skips PRs from forks (no secret access) — that's fine for
+    # a private repo with no external contributors.
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository || github.event_name != 'pull_request' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # Chromatic needs full history to baseline
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Storybook
+        working-directory: apps/web
+        run: pnpm build-storybook
+
+      - name: Publish to Chromatic
+        uses: chromaui/action@v11
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          workingDir: apps/web
+          storybookBuildDir: storybook-static
+          # Don't fail CI on visual changes — let humans review the
+          # Chromatic UI to accept/reject. Build fails only on technical
+          # errors (build break, missing token).
+          exitZeroOnChanges: true
+          onlyChanged: true   # Turbo-snap: only re-snap stories whose
+                              # dependencies actually changed
