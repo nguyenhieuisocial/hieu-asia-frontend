@@ -1,11 +1,16 @@
-'use client';
-
 import type { ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { ItalicSpan } from './ItalicSpan';
 
 /**
  * Wave 60.56 P2.5 — BentoLens (Option D R3 differentiation #3).
+ *
+ * Wave 60.59.b fix — drop `'use client'`. Page.tsx passes `lenses[].icon`
+ * as Lucide component references; those are functions and cannot cross the
+ * Server→Client serialization boundary (Sentry HIEU-ASIA-WORKER-A, 901 evt
+ * /h on `GET /`). Component is purely presentational — no hooks, no events,
+ * no browser APIs — so a Server Component renders identically without
+ * triggering RSC payload rules.
  *
  * 2×2 bento grid of "ống kính" (lenses) — Notion-style cards meet Eastern
  * wisdom motifs. Each card combines a thin-line lucide icon, mono eyebrow
