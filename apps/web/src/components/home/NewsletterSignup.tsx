@@ -68,10 +68,10 @@ export function NewsletterSignup({
           <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
             Newsletter · mỗi tuần một bài
           </p>
-          <h2 className="mt-4 font-heading text-2xl font-bold leading-tight text-foreground sm:text-3xl">
+          <h2 className="mt-4 text-balance font-heading text-2xl font-bold leading-tight text-foreground sm:text-3xl">
             Theo dõi tri thức <span className="bg-gold-gradient bg-clip-text text-transparent">hàng tuần</span>
           </h2>
-          <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+          <p className="mt-4 text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
             Một bài viết ngắn về cách dùng cổ học để ra quyết định tốt hơn. Không
             spam, không bán hàng, huỷ bất cứ lúc nào.
           </p>

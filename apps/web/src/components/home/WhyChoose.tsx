@@ -50,14 +50,14 @@ export function WhyChoose() {
           </p>
           <h2
             id="why-heading"
-            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
+            className="mt-4 text-balance font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
           >
             Bốn lý do để bắt đầu{' '}
             <span className="bg-gold-gradient bg-clip-text text-transparent">ngay hôm nay</span>
           </h2>
         </div>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {REASONS.map(({ Icon, title, desc }) => (
             <article
               key={title}
@@ -72,7 +72,7 @@ export function WhyChoose() {
                 }}
               />
               <div className="relative">
-                <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-gold/30 bg-gold/5 transition-colors group-hover:border-gold/60 group-hover:bg-gold/10">
+                <div className="mb-6 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-gold/30 bg-gold/5 transition-colors group-hover:border-gold/60 group-hover:bg-gold/10">
                   <Icon className="h-5 w-5 text-gold" aria-hidden={true} />
                 </div>
                 <h3 className="font-heading text-base font-semibold leading-tight text-foreground">

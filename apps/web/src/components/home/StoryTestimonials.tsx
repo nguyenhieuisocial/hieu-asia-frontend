@@ -65,12 +65,12 @@ export function StoryTestimonials() {
           </p>
           <h2
             id="stories-heading"
-            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
+            className="mt-4 text-balance font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
           >
             Họ đã{' '}
             <span className="bg-gold-gradient bg-clip-text text-transparent">tự chọn con đường</span>
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
             Tên đã được thay đổi để tôn trọng quyền riêng tư.
           </p>
           {/*
@@ -94,7 +94,7 @@ export function StoryTestimonials() {
               className="relative flex h-full flex-col rounded-2xl border border-border p-6"
               style={{ backgroundColor: 'rgba(20, 20, 26, 0.4)' }}
             >
-              <Quote className="absolute right-5 top-5 h-6 w-6 text-gold/20" aria-hidden="true" />
+              <Quote className="absolute right-6 top-6 h-6 w-6 text-gold/20" aria-hidden="true" />
               <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
                 {s.context}
               </p>

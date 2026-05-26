@@ -65,11 +65,11 @@ export function FreeTools() {
           </p>
           <h2
             id="tools-heading"
-            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
+            className="mt-4 text-balance font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
           >
             Tra cứu nhanh, ngay <span className="bg-gold-gradient bg-clip-text text-transparent">hôm nay</span>
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
             Sáu công cụ độc lập cho những câu hỏi thường ngày — không cần lập lá số đầy đủ.
           </p>
         </div>
@@ -79,7 +79,7 @@ export function FreeTools() {
             <Link
               key={t.href}
               href={t.href}
-              className="group relative flex items-start gap-4 overflow-hidden rounded-2xl border border-border bg-card/40 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]"
+              className="group relative flex items-start gap-4 overflow-hidden rounded-2xl border border-border bg-card/40 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]"
             >
               <div
                 aria-hidden="true"

@@ -46,11 +46,11 @@ export function WhyTrust() {
           </p>
           <h2
             id="why-trust-heading"
-            className="mt-3 font-heading text-2xl font-bold leading-tight tracking-tight text-foreground sm:text-3xl"
+            className="mt-4 text-balance font-heading text-2xl font-bold leading-tight tracking-tight text-foreground sm:text-3xl"
           >
             Không phải "AI nói vậy thì tin vậy"
           </h2>
-          <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+          <p className="mt-4 text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
             Ba lớp phòng vệ kỹ thuật cụ thể, không chung chung.
           </p>
         </div>
@@ -59,7 +59,7 @@ export function WhyTrust() {
           {PROOFS.map(({ Icon, title, desc }) => (
             <li
               key={title}
-              className="rounded-2xl border border-border bg-card/40 p-5"
+              className="rounded-2xl border border-border bg-card/40 p-6"
             >
               <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-gold/30 bg-gold/5">
                 <Icon className="h-4 w-4 text-gold" aria-hidden={true} />

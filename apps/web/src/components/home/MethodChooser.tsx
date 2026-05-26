@@ -105,11 +105,11 @@ export function MethodChooser() {
           </p>
           <h2
             id="methods-heading"
-            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
+            className="mt-4 text-balance font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
           >
             Năm góc nhìn, một con người
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
             Mỗi phương pháp soi một lát cắt khác nhau. Bạn có thể bắt đầu từ một phương pháp,
             kết hợp thêm sau.
           </p>
@@ -121,7 +121,7 @@ export function MethodChooser() {
           New: keep 1/2 at mobile/sm, jump straight to 5 columns at lg+. Cards
           tighten slightly (~190px @ lg=1024px) but balanced over jankiness.
         */}
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {METHODS.map(({ key, Icon, name, origin, tells, bestFor, ctaLabel, href, learnHref, sampleHref, recommended }) => (
             <article
               key={key}
@@ -133,11 +133,11 @@ export function MethodChooser() {
               ].join(' ')}
             >
               {recommended && (
-                <span className="absolute -top-2.5 left-5 inline-flex items-center rounded-full border border-gold/50 bg-background px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-gold">
+                <span className="absolute -top-2.5 left-6 inline-flex items-center rounded-full border border-gold/50 bg-background px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-gold">
                   Gợi ý
                 </span>
               )}
-              <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-gold/30 bg-gold/5 transition-colors group-hover:border-gold/60 group-hover:bg-gold/10">
+              <div className="mb-6 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-gold/30 bg-gold/5 transition-colors group-hover:border-gold/60 group-hover:bg-gold/10">
                 <Icon className="h-5 w-5 text-gold" aria-hidden={true} />
               </div>
 
@@ -204,7 +204,7 @@ export function MethodChooser() {
           This is just an inline disclaimer for the section, not standalone
           complementary content, so plain `<p>` is correct semantically.
         */}
-        <p className="mt-10 text-center text-xs leading-relaxed text-muted-foreground/80">
+        <p className="mt-12 text-center text-xs leading-relaxed text-muted-foreground/80">
           Cả 5 phương pháp đều là góc nhìn để bạn{' '}
           <strong className="text-foreground/90">tham khảo và tự ra quyết định</strong>, không phải
           chẩn đoán y khoa, tài chính hay pháp lý. Kết quả phụ thuộc vào độ chính xác của ngày–giờ
