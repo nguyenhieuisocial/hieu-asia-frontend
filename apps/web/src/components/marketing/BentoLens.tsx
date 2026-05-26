@@ -116,9 +116,11 @@ export function BentoLens({
     'md:col-span-4 md:row-span-2', // supporting 2
     'md:col-span-12 md:row-span-2', // full-width bottom
   ];
+  // Wave 60.79.T2 (vault 112 P1): uniform mode adds `auto-rows-fr` so 4 lenses
+  // in a 2×2 grid stay equal-height regardless of body line count.
   const gridClass = isHeterogeneous
     ? 'mt-12 grid grid-cols-1 gap-6 md:grid-cols-12 md:auto-rows-[minmax(120px,auto)]'
-    : 'mt-12 grid grid-cols-1 gap-6 md:grid-cols-2';
+    : 'mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 md:auto-rows-fr';
   // In uniform mode, max-w-marketing-tight (980px) keeps cards comfortable. In
   // heterogeneous mode, widen to max-w-marketing (1280px) so the 8x4 hero tile
   // breathes.
@@ -158,7 +160,7 @@ export function BentoLens({
             return (
               <article
                 key={lens.id}
-                className={`group relative overflow-hidden rounded-card-editorial border bg-warm-dark-200 transition-all duration-300 ease-editorial hover:-translate-y-0.5 hover:border-gold hover:bg-warm-dark-300 hover:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.12)] ${tilePadding} ${cellClass} ${containerClass} ${lens.recommended ? 'border-gold' : 'border-warm-dark-300'}`}
+                className={`group relative flex h-full flex-col overflow-hidden rounded-card-editorial border bg-warm-dark-200 transition-all duration-300 ease-editorial hover:-translate-y-0.5 hover:border-gold hover:bg-warm-dark-300 hover:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.12)] ${tilePadding} ${cellClass} ${containerClass} ${lens.recommended ? 'border-gold' : 'border-warm-dark-300'}`}
               >
                 <LotusIcon className="absolute right-6 top-6 size-6 text-gold opacity-30" />
 

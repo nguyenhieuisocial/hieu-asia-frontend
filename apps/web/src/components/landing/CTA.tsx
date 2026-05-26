@@ -28,14 +28,15 @@ export function CTA() {
             Miễn phí khảo sát đầu tiên · không cần đăng ký · 30 giây để bắt đầu.
           </p>
           <div className="mt-10">
-            <Button asChild size="lg" className="group min-w-[220px]"><Link href="/onboarding">
-              
+            {/* Wave 60.79.T2 (vault 112 P1): primary CTA min-h-12 (48px tap target). */}
+            <Button asChild size="lg" className="group min-h-12 min-w-[220px]"><Link href="/onboarding">
+
                 Bắt đầu ngay
                 <ArrowRight
                   className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5"
                   aria-hidden="true"
                 />
-              
+
             </Link></Button>
           </div>
         </div>

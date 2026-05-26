@@ -73,9 +73,13 @@ export function HeroV3() {
           Việt cho người Việt, được AI giải mã rõ ràng, và để bạn tự chọn con đường.
         </p>
 
+        {/* Wave 60.79.T2 (vault 112 P1): standardize button heights — primary
+            CTA `h-12` (48px mobile tap target), secondary `h-11` (44px). The
+            shadcn Button `lg` size is h-11 by default; the primary keeps an
+            explicit `min-h-12` so it remains ≥ secondary for visual hierarchy. */}
         <div className="mt-10 flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row">
           <div className="flex w-full flex-col items-center gap-1.5 sm:w-auto">
-            <Button asChild size="lg" className="group w-full min-w-[260px] sm:w-auto"><Link href="/onboarding" className="w-full sm:w-auto">
+            <Button asChild size="lg" className="group min-h-12 w-full min-w-[260px] sm:w-auto"><Link href="/onboarding" className="w-full sm:w-auto">
 
                 Lập lá số miễn phí trong 1 phút
                 <ArrowRight
@@ -88,7 +92,7 @@ export function HeroV3() {
               Không cần thẻ tín dụng · Không gửi email
             </span>
           </div>
-          <Button asChild size="lg" variant="outline" className="group w-full min-w-[220px] sm:w-auto"><Link href="/sample-report" className="w-full sm:w-auto">
+          <Button asChild size="lg" variant="outline" className="group min-h-11 w-full min-w-[220px] sm:w-auto"><Link href="/sample-report" className="w-full sm:w-auto">
 
               <FileText className="mr-1.5 h-4 w-4" aria-hidden="true" />
               Xem báo cáo mẫu trước

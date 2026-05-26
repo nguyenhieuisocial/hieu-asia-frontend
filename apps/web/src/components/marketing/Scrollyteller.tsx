@@ -148,16 +148,19 @@ export function Scrollyteller({
                 </span>
                 <div className="h-px flex-1 bg-warm-dark-300" />
               </div>
-              {/* Mini chapter list — clickable nav */}
-              <ol className="mt-6 space-y-3">
+              {/* Mini chapter list — clickable nav.
+                  Wave 60.79.T2 (vault 112 P1 #3): active chapter gets bg-warm-
+                  dark-200 outline + gold text (NYT/Pudding pattern) so the
+                  LEFT column isn't visually empty mid-scroll. */}
+              <ol className="mt-6 space-y-2">
                 {chapters.map((c, i) => (
                   <li key={c.id}>
                     <a
                       href={`#${c.id}`}
-                      className={`block font-sans text-sm leading-snug transition-colors ${
+                      className={`block rounded-lg px-3 py-2 font-sans text-sm leading-snug transition-colors ${
                         i === activeIdx
-                          ? 'text-gold-soft'
-                          : 'text-cream-500 hover:text-cream-300'
+                          ? 'bg-warm-dark-200 text-gold-soft ring-1 ring-gold/30'
+                          : 'text-cream-500 hover:bg-warm-dark-200/40 hover:text-cream-300'
                       }`}
                     >
                       <span className="mr-2 font-mono text-[10px] tracking-[0.18em]">

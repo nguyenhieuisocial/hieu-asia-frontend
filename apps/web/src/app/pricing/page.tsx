@@ -98,8 +98,6 @@ export default function PricingPage() {
           trustLine="30 ngày hoàn tiền · Không cần thẻ trước"
         />
 
-        <TrustStrip className="bg-warm-dark-50 pb-4" />
-
         <OrnamentDivider />
 
         <PricingTierV2
@@ -164,6 +162,18 @@ export default function PricingPage() {
             },
           ]}
         />
+
+        {/* Wave 60.79.T2 (vault 112 P1 #6): TrustStrip lifted FROM between
+            hero and pricing tiers TO right after the tiers + before FAQ. The
+            audit caught the strip sitting ~120px below the hero CTA in a dead
+            zone; placing it AFTER conversion-decision-time reframes it as
+            reinforcement ("you saw the prices, here's why it's safe") rather
+            than pre-CTA filler. */}
+        <section className="bg-warm-dark-50 pt-4 pb-12">
+          <div className="mx-auto max-w-marketing px-6">
+            <TrustStrip />
+          </div>
+        </section>
 
         <OrnamentDivider />
 

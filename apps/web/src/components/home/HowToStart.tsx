@@ -71,11 +71,14 @@ export function HowToStart() {
           </p>
         </div>
 
-        <ol className="mt-12 grid gap-6 md:grid-cols-3">
+        {/* Wave 60.79.T2 (vault 112 P1 #3): `auto-rows-fr` + `h-full` on each
+            <li> so step-02's shorter `desc` doesn't leave a height gap below
+            its CTA. CSS Grid stretches row heights uniformly when explicit. */}
+        <ol className="mt-12 grid auto-rows-fr gap-6 md:grid-cols-3">
           {STEPS.map(({ n, Icon, title, desc, ctaLabel, href }) => (
             <li
               key={n}
-              className="flex flex-col rounded-2xl border border-border bg-card/40 p-6 transition-colors hover:border-gold/40"
+              className="flex h-full flex-col rounded-2xl border border-border bg-card/40 p-6 transition-colors hover:border-gold/40"
             >
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-gold/30 bg-gold/5">

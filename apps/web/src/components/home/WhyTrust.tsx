@@ -55,11 +55,14 @@ export function WhyTrust() {
           </p>
         </div>
 
-        <ul className="mt-10 grid gap-4 sm:grid-cols-3">
+        {/* Wave 60.79.T2 (vault 112 P1): `auto-rows-fr` + `h-full flex flex-col`
+            so the 3 proof cards stay equal-height even when descriptions
+            differ in line count (especially proof 3 which is longest). */}
+        <ul className="mt-10 grid auto-rows-fr gap-4 sm:grid-cols-3">
           {PROOFS.map(({ Icon, title, desc }) => (
             <li
               key={title}
-              className="rounded-2xl border border-border bg-card/40 p-6"
+              className="flex h-full flex-col rounded-2xl border border-border bg-card/40 p-6"
             >
               <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-gold/30 bg-gold/5">
                 <Icon className="h-4 w-4 text-gold" aria-hidden={true} />
@@ -67,7 +70,7 @@ export function WhyTrust() {
               <h3 className="mt-4 font-heading text-sm font-semibold leading-snug text-foreground">
                 {title}
               </h3>
-              <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+              <p className="mt-2 flex-1 text-xs leading-relaxed text-muted-foreground sm:text-sm">
                 {desc}
               </p>
             </li>
