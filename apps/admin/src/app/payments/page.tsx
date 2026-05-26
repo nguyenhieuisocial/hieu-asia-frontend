@@ -206,7 +206,7 @@ export default function AdminPaymentsPage() {
           value={activeCoupons}
           icon={<Ticket className="h-4 w-4" />}
           accent="purple"
-          hint={`${(coupons.data ?? []).length} tổng`}
+          hint={`${(Array.isArray(coupons.data) ? coupons.data : []).length} tổng`}
         />
       </div>
 
@@ -339,7 +339,10 @@ export default function AdminPaymentsPage() {
         </CardContent>
       </Card>
 
-      <CouponManager coupons={coupons.data ?? []} loading={coupons.isLoading} />
+      <CouponManager
+        coupons={Array.isArray(coupons.data) ? coupons.data : []}
+        loading={coupons.isLoading}
+      />
     </div>
   );
 }
