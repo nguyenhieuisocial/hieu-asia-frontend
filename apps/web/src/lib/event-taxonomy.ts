@@ -58,6 +58,15 @@ export interface EventPropertyMap {
     method: ReadingMethod;
     last_step: string;
   };
+  /**
+   * Wave 60.77 — fires when a reading-session row is created server-side
+   * (i.e. `createReading` resolves with a session_id). Secondary metric for
+   * PostHog experiment 373562 (upsell banner).
+   */
+  reading_session_created: {
+    session_id: string;
+    source: 'onboarding' | 'survey' | 'admin' | 'mobile-deeplink';
+  };
 
   // ── Mentor ──────────────────────────────────────────────────────
   mentor_chat_message_sent: {
@@ -72,6 +81,16 @@ export interface EventPropertyMap {
   // ── Commerce ────────────────────────────────────────────────────
   pricing_page_viewed: { tier_viewed: string[] };
   pricing_tier_clicked: { tier: MembershipTier };
+  /**
+   * Wave 60.77 — fires on PricingTierV2 CTA `<Link>` click. Secondary metric
+   * for PostHog experiment 373563 (pricing display). Distinct from
+   * `pricing_tier_clicked` which targets the older tier picker.
+   */
+  pricing_cta_clicked: {
+    tier: string;
+    page: string;
+    position?: 'card' | 'hero' | 'footer';
+  };
   payment_failed: {
     tier?: MembershipTier;
     reason?: string;

@@ -252,6 +252,13 @@ export default function SurveyPage() {
           hand_image_url: upload.public_read_url,
           consent,
         });
+        // Wave 60.77 — secondary metric for PostHog experiment 373562
+        // (upsell banner). Mirrors the onboarding-form site so the survey
+        // → palm flow also feeds the experiment.
+        track('reading_session_created', {
+          session_id: resp.session_id,
+          source: 'survey',
+        });
         window.sessionStorage.setItem(
           `hieu.reading.${readingId}`,
           JSON.stringify(resp),

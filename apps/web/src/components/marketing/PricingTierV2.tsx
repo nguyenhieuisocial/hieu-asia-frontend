@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Check } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
+import { track } from '@/lib/analytics';
 
 /**
  * Wave 60.56 P2.2 — PricingTierV2 (Option D "Warm-Dark Editorial").
@@ -56,6 +57,13 @@ export type PricingTierV2Props = {
   eyebrow?: string;
   /** H2 ReactNode. Pass `<em class="italic text-gold-soft">` for highlighted spans. */
   title?: ReactNode;
+  /**
+   * Wave 60.77 — page slug forwarded into `pricing_cta_clicked`. Defaults to
+   * `window.location.pathname` at click time when omitted. Pass `/` for the
+   * landing page and `/pricing` for the dedicated pricing page so the
+   * PostHog experiment (373563) can segment without parsing the URL.
+   */
+  page?: string;
 };
 
 function formatVND(n: number): string {
@@ -68,8 +76,23 @@ export function PricingTierV2({
   defaultPeriod = 'monthly',
   eyebrow,
   title,
+  page,
 }: PricingTierV2Props) {
   const [period, setPeriod] = useState<'monthly' | 'yearly'>(defaultPeriod);
+
+  // Wave 60.77 — fires when a user clicks a tier CTA `<Link>`. Secondary
+  // metric for PostHog experiment 373563 (pricing display). Resolved lazily
+  // inside the click handler so the call site doesn't need to know the
+  // current pathname.
+  const handleCtaClick = (tierId: string) => {
+    track('pricing_cta_clicked', {
+      tier: tierId,
+      page:
+        page ??
+        (typeof window !== 'undefined' ? window.location.pathname : 'unknown'),
+      position: 'card',
+    });
+  };
 
   return (
     <section className="bg-warm-dark-50 py-16 md:py-20">
@@ -191,7 +214,11 @@ export function PricingTierV2({
                   ))}
                 </ul>
 
-                <Link href={tier.ctaHref} className={`${ctaBase} ${ctaVariant}`}>
+                <Link
+                  href={tier.ctaHref}
+                  className={`${ctaBase} ${ctaVariant}`}
+                  onClick={() => handleCtaClick(tier.id)}
+                >
                   {tier.ctaLabel}
                 </Link>
 

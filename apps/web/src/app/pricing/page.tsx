@@ -104,6 +104,7 @@ export default function PricingPage() {
 
         <PricingTierV2
           eyebrow="GÓI"
+          page="/pricing"
           title={
             <>
               Đi <em className="italic text-gold-soft">sâu</em> theo nhịp của bạn

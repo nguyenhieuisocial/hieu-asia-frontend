@@ -630,6 +630,7 @@ export default function LandingPage() {
         {/* 6. PricingTierV2 — 3 tiers replace 4 (Notion-style toggle + KHUYÊN DÙNG + refund) */}
         <PricingTierV2
           eyebrow="GÓI THÀNH VIÊN"
+          page="/"
           title={
             <>
               Đi <em className="italic text-gold-soft">sâu</em> theo nhịp của bạn

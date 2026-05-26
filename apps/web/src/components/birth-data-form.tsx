@@ -252,6 +252,14 @@ export function BirthDataForm() {
       toast.error('Có lỗi xảy ra khi khởi tạo lá số. Vui lòng kiểm tra kết nối và thử lại.');
       throw err;
     }
+    // Wave 60.77 — secondary metric for PostHog experiment 373562
+    // (upsell banner). Fired once per reading-session row creation, after
+    // the Edge function returns a session_id.
+    track('reading_session_created', {
+      session_id: res.session_id,
+      source: 'onboarding',
+    });
+
     if (typeof window !== 'undefined') {
       window.sessionStorage.setItem(
         'hieu.reading.session',
