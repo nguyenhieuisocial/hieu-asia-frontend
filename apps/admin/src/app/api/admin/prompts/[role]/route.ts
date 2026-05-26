@@ -6,6 +6,7 @@
  * - POST (with `?reset=1`) → reset to default
  */
 import { type NextRequest, NextResponse } from 'next/server';
+import { requireAdminSession, type AdminSession } from '@/lib/auth-server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -21,6 +22,11 @@ async function forward(
   method: 'GET' | 'PUT' | 'POST',
   pathSuffix = '',
 ) {
+  // Wave 60.62.T1.4 — defense-in-depth verifySession backfill.
+  // GET = read (viewer+), PUT/POST = prompt mutation (admin+).
+  const minRole: AdminSession['role'] = method === 'GET' ? 'viewer' : 'admin';
+  const auth = await requireAdminSession(minRole);
+  if ('error' in auth) return auth.error;
   if (!TOKEN) {
     return NextResponse.json(
       { ok: false, error: 'HIEU_API_ADMIN_TOKEN not configured on the admin app' },

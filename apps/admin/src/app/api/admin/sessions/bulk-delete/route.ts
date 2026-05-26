@@ -4,6 +4,7 @@
  * Body forwarded verbatim — UI must include `{ session_ids, confirm: "DELETE_BULK" }`.
  */
 import { type NextRequest, NextResponse } from 'next/server';
+import { requireAdminSession } from '@/lib/auth-server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -12,6 +13,9 @@ const GATEWAY = process.env.HIEU_API_GATEWAY_URL ?? 'https://api.hieu.asia';
 const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
 
 export async function POST(req: NextRequest) {
+  // Wave 60.62.T1.4 — defense-in-depth verifySession backfill (destructive bulk delete → admin+).
+  const auth = await requireAdminSession('admin');
+  if ('error' in auth) return auth.error;
   if (!TOKEN) {
     return NextResponse.json(
       { ok: false, error: 'HIEU_API_ADMIN_TOKEN not configured on the admin app' },

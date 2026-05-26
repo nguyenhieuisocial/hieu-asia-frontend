@@ -6,6 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdminSession } from '@/lib/auth-server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -17,6 +18,9 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  // Wave 60.62.T1.4 — defense-in-depth verifySession backfill (reparent tree → admin+).
+  const auth = await requireAdminSession('admin');
+  if ('error' in auth) return auth.error;
   if (!TOKEN) {
     return NextResponse.json(
       { ok: false, error: 'HIEU_API_ADMIN_TOKEN not configured on the admin app' },

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdminSession } from '@/lib/auth-server';
 
 const GATEWAY = process.env.HIEU_API_GATEWAY_URL ?? 'https://api.hieu.asia';
 const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
@@ -6,6 +7,9 @@ const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
 type Ctx = { params: Promise<{ id: string }> };
 
 async function proxy(req: NextRequest, ctx: Ctx, method: 'PATCH' | 'DELETE') {
+  // Wave 60.62.T1.4 — defense-in-depth verifySession backfill (user mgmt → owner only).
+  const auth = await requireAdminSession('owner');
+  if ('error' in auth) return auth.error;
   if (!TOKEN) {
     return NextResponse.json(
       { ok: false, error: 'HIEU_API_ADMIN_TOKEN not configured on the admin app' },

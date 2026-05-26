@@ -4,6 +4,7 @@
  * Returns list of 7 prompts (one per role). UI handles 404 if Worker not deployed.
  */
 import { NextResponse } from 'next/server';
+import { requireAdminSession } from '@/lib/auth-server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -12,6 +13,9 @@ const GATEWAY = process.env.HIEU_API_GATEWAY_URL ?? 'https://api.hieu.asia';
 const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
 
 export async function GET() {
+  // Wave 60.62.T1.4 — defense-in-depth verifySession backfill (prompt list read → viewer+).
+  const auth = await requireAdminSession();
+  if ('error' in auth) return auth.error;
   if (!TOKEN) {
     return NextResponse.json(
       { ok: false, error: 'HIEU_API_ADMIN_TOKEN not configured on the admin app' },

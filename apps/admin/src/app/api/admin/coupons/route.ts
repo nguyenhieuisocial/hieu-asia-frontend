@@ -5,6 +5,7 @@
  */
 
 import { type NextRequest, NextResponse } from 'next/server';
+import { requireAdminSession } from '@/lib/auth-server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -20,6 +21,9 @@ function missingToken() {
 }
 
 export async function GET() {
+  // Wave 60.62.T1.4 — defense-in-depth verifySession backfill (coupon list read → viewer+).
+  const auth = await requireAdminSession();
+  if ('error' in auth) return auth.error;
   if (!TOKEN) return missingToken();
   try {
     const r = await fetch(`${GATEWAY}/admin/coupons`, {
@@ -44,6 +48,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  // Wave 60.62.T1.4 — defense-in-depth verifySession backfill (coupon create → admin+).
+  const auth = await requireAdminSession('admin');
+  if ('error' in auth) return auth.error;
   if (!TOKEN) return missingToken();
   const body = await req.text();
   try {
