@@ -25,6 +25,7 @@ import {
 import { ChevronLeft, Eye, GitCompare } from 'lucide-react';
 import { PromptEditor } from '@/components/prompts/PromptEditor';
 import { formatDateOrEmpty } from '@/lib/format-date';
+import { trackAdminMutation } from '@/lib/admin-breadcrumb';
 
 const ROLES = ['vision', 'logic', 'psychology', 'alignment', 'report', 'mentor', 'judge'] as const;
 type Role = (typeof ROLES)[number];
@@ -153,6 +154,12 @@ export default function PromptEditPage() {
   const saveMut = useMutation({
     mutationFn: () => savePrompt(role, draft),
     onSuccess: (updated) => {
+      // Wave 60.62.T1.1 — backfill audit breadcrumb. Changes LLM behaviour
+      // globally. PII-safe: role + new version only, no prompt body.
+      trackAdminMutation('prompts.save', 'success', {
+        role,
+        version: updated.version,
+      });
       toast.success('Đã lưu prompt', { description: `Phiên bản v${updated.version}` });
       qc.setQueryData(['admin', 'prompts', role], updated);
       qc.invalidateQueries({ queryKey: ['admin', 'prompts'] });
@@ -160,13 +167,21 @@ export default function PromptEditPage() {
       setConfirmSaveOpen(false);
     },
     onError: (e) => {
-      toast.error('Lưu thất bại', { description: (e as Error).message });
+      const msg = (e as Error).message;
+      trackAdminMutation('prompts.save', 'failure', {
+        role,
+        error: msg.slice(0, 200),
+      });
+      toast.error('Lưu thất bại', { description: msg });
     },
   });
 
   const resetMut = useMutation({
     mutationFn: () => resetPrompt(role),
     onSuccess: (updated) => {
+      // Wave 60.62.T1.1 — backfill audit breadcrumb. Destructive
+      // (wipes custom prompt back to default).
+      trackAdminMutation('prompts.reset', 'success', { role });
       toast.success('Đã khôi phục mặc định');
       qc.setQueryData(['admin', 'prompts', role], updated);
       qc.invalidateQueries({ queryKey: ['admin', 'prompts'] });
@@ -175,7 +190,12 @@ export default function PromptEditPage() {
       setConfirmResetOpen(false);
     },
     onError: (e) => {
-      toast.error('Khôi phục thất bại', { description: (e as Error).message });
+      const msg = (e as Error).message;
+      trackAdminMutation('prompts.reset', 'failure', {
+        role,
+        error: msg.slice(0, 200),
+      });
+      toast.error('Khôi phục thất bại', { description: msg });
     },
   });
 

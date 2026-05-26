@@ -27,6 +27,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui'
 import { Activity, RefreshCw } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
+import { ErrorBlock } from '@/components/admin/error-block';
 
 interface MetricsSummary {
   ok: true;
@@ -190,9 +191,11 @@ export default function AdminMetricsPage() {
       </div>
 
       {error && (
-        <p className="rounded border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300">
-          Không tải được dữ liệu: {error}
-        </p>
+        <ErrorBlock
+          compact
+          message={`Không tải được dữ liệu: ${error}`}
+          onRetry={load}
+        />
       )}
 
       <Card>

@@ -23,6 +23,7 @@ import {
   SheetTitle,
 } from '@hieu-asia/ui';
 import { Activity, AlertTriangle, ExternalLink } from 'lucide-react';
+import { ErrorBlock } from './error-block';
 
 interface AuditEntry {
   id?: string;
@@ -112,7 +113,7 @@ export function AuditLogDrawer({
   onClose,
 }: AuditLogDrawerProps): React.ReactElement {
   const enabled = open && !!resourceId;
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['admin', 'audit-log', 'drawer', resourceId, limit],
     queryFn: () => fetchAudit(resourceId!, limit),
     enabled,
@@ -139,9 +140,11 @@ export function AuditLogDrawer({
         </SheetHeader>
 
         {showError && (
-          <div className="rounded-md border border-red-400/40 bg-red-500/10 px-3 py-2 text-sm text-red-200">
-            {errorMsg ?? 'Không tải được audit log.'}
-          </div>
+          <ErrorBlock
+            compact
+            message={errorMsg ?? 'Không tải được audit log.'}
+            onRetry={() => refetch()}
+          />
         )}
 
         {note && !showError && (

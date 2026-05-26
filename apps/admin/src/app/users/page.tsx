@@ -16,6 +16,7 @@ import { Users, Crown, Shield, Eye, Plus, Pencil, Trash2, Search, Download, Hist
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
+import { ErrorBlock } from '@/components/admin/error-block';
 // Wave 60.18 — AuditLogDrawer only renders when a user clicks "Log" on a
 // row. Lazy-import keeps the drawer (+ its react-query / sentry imports)
 // out of the initial users-page bundle. SSR off because the drawer is
@@ -420,9 +421,9 @@ export default function AdminUsersPage() {
         </CardHeader>
         <CardContent>
           {error && (
-            <p className="mb-4 rounded border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300">
-              {error}
-            </p>
+            <div className="mb-4">
+              <ErrorBlock compact message={error} onRetry={load} />
+            </div>
           )}
           {loading ? (
             <div className="space-y-2 py-2">
@@ -891,11 +892,7 @@ function UserFormModal({
               </p>
             )}
           </div>
-          {err && (
-            <p className="rounded border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300">
-              {err}
-            </p>
-          )}
+          {err && <ErrorBlock compact message={err} />}
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" size="sm" onClick={onClose}>
               Hủy
@@ -956,9 +953,9 @@ function ConfirmDeleteModal({
           User này sẽ không đăng nhập được nữa.
         </p>
         {err && (
-          <p className="mt-3 rounded border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300">
-            {err}
-          </p>
+          <div className="mt-3">
+            <ErrorBlock compact message={err} />
+          </div>
         )}
         <div className="mt-5 flex justify-end gap-2">
           <Button variant="outline" size="sm" onClick={onClose}>

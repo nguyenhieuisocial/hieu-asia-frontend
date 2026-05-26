@@ -14,6 +14,7 @@ import {
 import { Users, UserCheck, Crown, Filter, Download } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
+import { ErrorBlock } from '@/components/admin/error-block';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
 
@@ -257,8 +258,12 @@ export default function CustomersPage() {
         </CardHeader>
         <CardContent>
           {showError && (
-            <div className="mb-4 rounded-md border border-red-400/40 bg-red-500/10 px-3 py-2 text-sm text-red-200">
-              {errorMsg ?? 'Không tải được dữ liệu khách hàng.'}
+            <div className="mb-4">
+              <ErrorBlock
+                compact
+                message={errorMsg ?? 'Không tải được dữ liệu khách hàng.'}
+                onRetry={() => refetch()}
+              />
             </div>
           )}
           {note && !showError && (

@@ -21,6 +21,7 @@ import {
 import { Flag } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
+import { ErrorBlock } from '@/components/admin/error-block';
 import { useOptimisticMutation } from '@/lib/optimistic-mutation';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
 
@@ -70,7 +71,7 @@ async function toggleFlag(input: { key: string; enabled: boolean }): Promise<Fea
 const FLAGS_QUERY_KEY = ['admin', 'feature-flags'] as const;
 
 export default function FeatureFlagsPage() {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: FLAGS_QUERY_KEY,
     queryFn: fetchFlags,
   });
@@ -140,8 +141,12 @@ export default function FeatureFlagsPage() {
         </CardHeader>
         <CardContent>
           {showError && (
-            <div className="mb-4 rounded-md border border-red-400/40 bg-red-500/10 px-3 py-2 text-sm text-red-200">
-              {errorMsg ?? 'Không tải được danh sách flag.'}
+            <div className="mb-4">
+              <ErrorBlock
+                compact
+                message={errorMsg ?? 'Không tải được danh sách flag.'}
+                onRetry={() => refetch()}
+              />
             </div>
           )}
 

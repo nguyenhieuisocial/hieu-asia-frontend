@@ -24,6 +24,7 @@ import {
   DialogFooter,
   toast,
 } from '@hieu-asia/ui';
+import { trackAdminMutation } from '@/lib/admin-breadcrumb';
 
 interface PromoterRow {
   user_id: string;
@@ -77,11 +78,19 @@ export default function AdminPromotersPage() {
       if (!r.ok || !d.ok) throw new Error(d.error ?? `HTTP ${r.status}`);
       return d;
     },
-    onSuccess: () => {
+    onSuccess: (_d, vars) => {
+      // Wave 60.62.T1.1 — backfill audit breadcrumb. Destructive (ban/unban).
+      // PII-safe: only the action flag, no affiliate id.
+      trackAdminMutation('affiliates.promoters.ban', 'success', { banned: vars.banned });
       toast.success('Đã cập nhật trạng thái');
       qc.invalidateQueries({ queryKey: ['affiliate-promoters'] });
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: (e: Error) => {
+      trackAdminMutation('affiliates.promoters.ban', 'failure', {
+        error: e.message.slice(0, 200),
+      });
+      toast.error(e.message);
+    },
   });
 
   const filtered = React.useMemo(() => {

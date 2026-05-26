@@ -20,6 +20,7 @@ import {
 import { ShieldAlert, Download, Activity, Users, AlertTriangle, Clock } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
+import { ErrorBlock } from '@/components/admin/error-block';
 import { KpiCard } from '@/components/admin/kpi-card';
 
 interface AuditEntry {
@@ -267,8 +268,12 @@ export default function AuditPage() {
         </CardHeader>
         <CardContent>
           {showError && (
-            <div className="mb-4 rounded-md border border-red-400/40 bg-red-500/10 px-3 py-2 text-sm text-red-200">
-              {errorMsg ?? 'Không tải được audit log.'}
+            <div className="mb-4">
+              <ErrorBlock
+                compact
+                message={errorMsg ?? 'Không tải được audit log.'}
+                onRetry={() => refetch()}
+              />
             </div>
           )}
           {note && !showError && (

@@ -11,6 +11,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Card, CardContent, toast } from '@hieu-asia/ui';
+import { trackAdminMutation } from '@/lib/admin-breadcrumb';
 
 interface Commission {
   id: string;
@@ -73,10 +74,18 @@ export default function AdminCommissionsPage() {
       return d;
     },
     onSuccess: () => {
+      // Wave 60.62.T1.1 — backfill audit breadcrumb. Destructive (financial).
+      // No commission id / amount in `data` per PII contract.
+      trackAdminMutation('affiliates.commissions.clawback', 'success');
       toast.success('Đã clawback');
       qc.invalidateQueries({ queryKey: ['affiliate-commissions'] });
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: (e: Error) => {
+      trackAdminMutation('affiliates.commissions.clawback', 'failure', {
+        error: e.message.slice(0, 200),
+      });
+      toast.error(e.message);
+    },
   });
 
   function toggleState(s: StateKey) {

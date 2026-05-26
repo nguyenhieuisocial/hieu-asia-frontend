@@ -21,6 +21,7 @@ import { MockBanner } from '@/components/mock-banner';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
+import { ErrorBlock } from '@/components/admin/error-block';
 import { BookOpen, FileText, Database, Layers, RotateCw } from 'lucide-react';
 import type { RagChunk } from '@/lib/mock-data';
 
@@ -300,9 +301,12 @@ function IngestForm({ onIngested }: { onIngested: () => void }) {
             </p>
           </div>
           {mutation.isError && (
-            <p className="sm:col-span-2 rounded border border-red-500/40 bg-red-500/10 p-2 text-sm text-red-300">
-              {(mutation.error as Error).message}
-            </p>
+            <div className="sm:col-span-2">
+              <ErrorBlock
+                compact
+                message={(mutation.error as Error).message}
+              />
+            </div>
           )}
           {mutation.isSuccess && (
             <p className="sm:col-span-2 rounded border border-jade/40 bg-jade/10 p-2 text-sm text-jade-50">

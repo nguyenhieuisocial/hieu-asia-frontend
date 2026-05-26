@@ -15,6 +15,7 @@ import {
 import { ChevronLeft, User, Receipt, ListTodo, ShieldAlert, Copy } from 'lucide-react';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
+import { ErrorBlock } from '@/components/admin/error-block';
 
 /**
  * Wave 60.2 — extended to cover the full backend `users.*` shape.
@@ -224,9 +225,11 @@ export default function CustomerDetailPage() {
       </div>
 
       {showError && (
-        <div className="rounded-md border border-red-400/40 bg-red-500/10 px-3 py-2 text-sm text-red-200">
-          {errorMsg ?? 'Không tải được chi tiết khách hàng.'}
-        </div>
+        <ErrorBlock
+          compact
+          message={errorMsg ?? 'Không tải được chi tiết khách hàng.'}
+          onRetry={() => refetch()}
+        />
       )}
       {note && !showError && (
         <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-muted-foreground">
