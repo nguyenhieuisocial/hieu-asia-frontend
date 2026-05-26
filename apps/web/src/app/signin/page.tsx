@@ -27,6 +27,7 @@ import { Button, Input, Label } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { PreviewReadingCard } from '@/components/marketing/PreviewReadingCard';
+import { TurnstileWidget } from '@/components/auth/TurnstileWidget';
 import { sendMagicLink, signInWithOAuth } from '@/lib/auth-client';
 import { useAuth } from '@/hooks/use-auth';
 import { track } from '@/lib/analytics';
@@ -101,6 +102,10 @@ export default function SignInPage() {
   const [oauthLoading, setOauthLoading] = React.useState<OAuthProvider | null>(null);
   const [sent, setSent] = React.useState(false);
   const [error, setError] = React.useState<string | null>(initialError);
+  // Wave 60.60.d — Cloudflare Turnstile token. Required for both magic-link
+  // and OAuth submit when Supabase captcha is enabled. Single-use, reset
+  // after every submit attempt regardless of outcome.
+  const [captchaToken, setCaptchaToken] = React.useState<string | null>(null);
 
   const anyLoading = emailLoading || oauthLoading !== null;
 
@@ -127,6 +132,10 @@ export default function SignInPage() {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!captchaToken) {
+      setError('Vui lòng hoàn tất bước xác thực bên dưới.');
+      return;
+    }
     setEmailLoading(true);
     setError(null);
     try {
@@ -137,7 +146,10 @@ export default function SignInPage() {
     // Wave 44.4 (#251): pass `?next=` through magic-link roundtrip so
     // signup-from-partner flow lands back on `/partner` after callback.
     const next = searchParams.get('next');
-    const result = await sendMagicLink(email.trim(), next);
+    // Wave 60.60.d — forward Turnstile token to Supabase; reset after attempt
+    // since token is single-use (replay would 400 on next try).
+    const result = await sendMagicLink(email.trim(), next, captchaToken);
+    setCaptchaToken(null);
     setEmailLoading(false);
     if (result.ok) {
       setSent(true);
@@ -147,6 +159,10 @@ export default function SignInPage() {
   }
 
   async function onOAuthClick(provider: OAuthProvider) {
+    if (!captchaToken) {
+      setError('Vui lòng hoàn tất bước xác thực bên dưới.');
+      return;
+    }
     setOauthLoading(provider);
     setError(null);
     try {
@@ -156,7 +172,9 @@ export default function SignInPage() {
     }
     // Wave 44.4 (#251): pass `?next=` through OAuth roundtrip.
     const next = searchParams.get('next');
-    const result = await signInWithOAuth(provider, next);
+    // Wave 60.60.d — pass Turnstile token; reset post-attempt.
+    const result = await signInWithOAuth(provider, next, captchaToken);
+    setCaptchaToken(null);
     // On success Supabase redirects the tab away; we only land here on error.
     if (!result.ok) {
       setOauthLoading(null);
@@ -236,13 +254,37 @@ export default function SignInPage() {
                 </div>
               ) : (
                 <div className="space-y-5">
+                  {/* Wave 60.60.d — Captcha mounted FIRST so it gates both
+                      OAuth buttons + magic-link submit. Token resets after
+                      every attempt (single-use). Widget itself stays
+                      visible-but-rendered-once across the session. */}
+                  <div className="rounded-card-editorial border border-warm-dark-300 bg-warm-dark-200 p-4">
+                    <p className="mb-3 text-center text-xs text-cream-500">
+                      Xác thực bạn không phải robot trước khi tiếp tục:
+                    </p>
+                    <TurnstileWidget
+                      onVerify={(token) => {
+                        setCaptchaToken(token);
+                        setError(null);
+                      }}
+                      onError={() =>
+                        setError(
+                          'Captcha không tải được. Vui lòng tải lại trang.',
+                        )
+                      }
+                      onExpire={() => setCaptchaToken(null)}
+                      theme="dark"
+                      className="flex justify-center"
+                    />
+                  </div>
+
                   {/* OAuth providers — priority order: Google, Facebook, Apple */}
                   <div className="space-y-3">
                     <Button
                       type="button"
                       variant="outline"
                       onClick={() => onOAuthClick('google')}
-                      disabled={anyLoading}
+                      disabled={anyLoading || !captchaToken}
                       className="h-12 w-full justify-start gap-3 rounded-pill border-warm-dark-300 bg-warm-dark-200 text-cream-100 hover:border-gold-soft hover:bg-warm-dark-300"
                     >
                       <GoogleIcon className="h-5 w-5 shrink-0" />
@@ -257,7 +299,7 @@ export default function SignInPage() {
                       type="button"
                       variant="outline"
                       onClick={() => onOAuthClick('facebook')}
-                      disabled={anyLoading}
+                      disabled={anyLoading || !captchaToken}
                       className="h-12 w-full justify-start gap-3 rounded-pill border-warm-dark-300 bg-warm-dark-200 text-cream-100 hover:border-gold-soft hover:bg-warm-dark-300"
                     >
                       <Facebook
@@ -276,7 +318,7 @@ export default function SignInPage() {
                       type="button"
                       variant="outline"
                       onClick={() => onOAuthClick('apple')}
-                      disabled={anyLoading}
+                      disabled={anyLoading || !captchaToken}
                       className="h-12 w-full justify-start gap-3 rounded-pill border-warm-dark-300 bg-warm-dark-200 text-cream-100 hover:border-gold-soft hover:bg-warm-dark-300"
                     >
                       <Apple
@@ -334,7 +376,7 @@ export default function SignInPage() {
 
                     <Button
                       type="submit"
-                      disabled={anyLoading || !email}
+                      disabled={anyLoading || !email || !captchaToken}
                       className="h-12 w-full rounded-pill bg-gold text-warm-dark-50 transition-all duration-300 ease-editorial hover:bg-gold-soft"
                     >
                       {emailLoading ? 'Đang gửi…' : 'Gửi liên kết đăng nhập'}

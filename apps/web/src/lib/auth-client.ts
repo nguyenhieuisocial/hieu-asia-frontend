@@ -168,6 +168,7 @@ function withNextParam(callbackUrl: string | undefined, next: string | null | un
 export async function sendMagicLink(
   email: string,
   next?: string | null,
+  captchaToken?: string | null,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const supabase = getSupabaseAuth();
   if (!supabase) return { ok: false, error: 'auth_unavailable' };
@@ -175,9 +176,16 @@ export async function sendMagicLink(
   const origin = resolveSiteOrigin();
   const redirectTo = withNextParam(origin ? `${origin}/auth/callback` : undefined, next);
 
+  // Wave 60.60.d — pass Cloudflare Turnstile token to Supabase. When Supabase
+  // captcha is enabled (Auth → Bot Detection), missing token → 400; bad
+  // token → 400. Forward only when present so we stay forward-compatible
+  // with both enabled/disabled captcha states.
   const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: { emailRedirectTo: redirectTo },
+    options: {
+      emailRedirectTo: redirectTo,
+      ...(captchaToken ? { captchaToken } : {}),
+    },
   });
   if (error) return { ok: false, error: error.message };
   return { ok: true };
@@ -196,6 +204,7 @@ export async function sendMagicLink(
 export async function signInWithOAuth(
   provider: 'google' | 'facebook' | 'apple',
   next?: string | null,
+  captchaToken?: string | null,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const supabase = getSupabaseAuth();
   if (!supabase) return { ok: false, error: 'auth_unavailable' };
@@ -203,12 +212,15 @@ export async function signInWithOAuth(
   const origin = resolveSiteOrigin();
   const redirectTo = withNextParam(origin ? `${origin}/auth/callback` : undefined, next);
 
+  // Wave 60.60.d — same captcha forwarding pattern as sendMagicLink.
+  // Supabase OAuth endpoint accepts `captchaToken` in options too.
   const { error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
       redirectTo,
       // Force account selection so users on shared devices can pick.
       queryParams: provider === 'google' ? { prompt: 'select_account' } : undefined,
+      ...(captchaToken ? { captchaToken } : {}),
     },
   });
   if (error) return { ok: false, error: error.message };
