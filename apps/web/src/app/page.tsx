@@ -15,6 +15,8 @@ import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { ScanRow } from '@/components/marketing/ScanRow';
 import { IntentChips } from '@/components/marketing/IntentChips';
 import { BigNumberRow } from '@/components/marketing/BigNumberRow';
+import { PullQuote } from '@/components/marketing/PullQuote';
+import { SectionDivider } from '@/components/marketing/SectionDivider';
 
 export const metadata: Metadata = {
   // Homepage title already contains the brand → bypass the layout
@@ -585,6 +587,11 @@ export default function LandingPage() {
           bg="warm-dark-50"
         />
 
+        {/* Wave 60.66.P5 — lotus SectionDivider between social proof and
+            philosophy stance. Visual breath + cultural mark (vault 109 §3
+            Phase 5 ENRICHED). */}
+        <SectionDivider variant="lotus" />
+
         {/* 5. PhilosophyBlock — replaces fake StoryTestimonials (R3 diff #2) */}
         <PhilosophyBlock
           eyebrow="TRIẾT LÝ"
@@ -600,6 +607,15 @@ export default function LandingPage() {
           ]}
           bg="warm-dark-50"
         />
+
+        {/* Wave 60.66.P5 — Editorial PullQuote between philosophy and pricing
+            (vault 109 §3 Phase 5 ENRICHED). Motion `whileInView` fade-in via
+            LazyMotion provider (Phase 2 root setup). One of 3 preserved
+            Instrument Serif decorative roles. */}
+        <PullQuote attribution="— Triết lý hieu.asia" bg="warm-dark-100">
+          Trí tuệ phương Đông không phải lời tiên tri.{' '}
+          Đó là <em className="text-gold-soft">khoảng lặng</em> để bạn nghe rõ chính mình.
+        </PullQuote>
 
         {/* 6. PricingTierV2 — 3 tiers replace 4 (Notion-style toggle + KHUYÊN DÙNG + refund) */}
         <PricingTierV2

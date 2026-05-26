@@ -83,7 +83,7 @@ export function PricingTierV2({
             </p>
           )}
           {title && (
-            <h2 className="mt-6 text-balance font-marketing-display text-section-display font-normal text-cream-50">
+            <h2 className="mt-6 text-balance font-sans text-section-display font-bold tracking-tight text-cream-50">
               {title}
             </h2>
           )}
@@ -162,7 +162,7 @@ export function PricingTierV2({
                 >
                   {tier.name}
                 </p>
-                <h3 className="mt-4 font-marketing-display text-3xl italic text-cream-50">
+                <h3 className="mt-4 font-sans text-3xl font-bold tracking-tight text-cream-50">
                   {tier.nameDisplay}
                 </h3>
                 <p className="mt-2 font-sans text-sm text-cream-300">

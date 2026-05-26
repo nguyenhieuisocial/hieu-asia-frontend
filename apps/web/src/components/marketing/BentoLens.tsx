@@ -133,7 +133,7 @@ export function BentoLens({
           </p>
         )}
         {title && (
-          <h2 className="text-balance text-center font-marketing-display text-section-display text-cream-50">
+          <h2 className="text-balance text-center font-sans text-section-display font-bold tracking-tight text-cream-50">
             {title}
           </h2>
         )}
@@ -179,7 +179,7 @@ export function BentoLens({
                   {lens.subname && ` · ${lens.subname}`}
                 </p>
 
-                <h3 className={`relative z-10 mt-4 font-marketing-display text-cream-50 ${headingClass}`}>
+                <h3 className={`relative z-10 mt-4 font-sans font-bold tracking-tight text-cream-50 ${headingClass}`}>
                   <ItalicSpan>{lens.action}</ItalicSpan> {lens.title}
                 </h3>
 

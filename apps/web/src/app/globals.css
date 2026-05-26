@@ -214,3 +214,26 @@ body {
     -webkit-backdrop-filter: none !important;
   }
 }
+
+/* ==========================================================================
+ * Wave 60.66.P5 — Global button micro-press (vault 109 §3 Phase 5 ENRICHED).
+ * Apple HIG / Material 3 tactile feedback — every interactive button scales
+ * down to 0.97 on press, returns via editorial ease 250ms. Scoped to
+ * non-disabled `<button>`, `<a role="button">`, and submit inputs so the rule
+ * doesn't fight disabled-state visuals. Respects `prefers-reduced-motion`.
+ * ========================================================================== */
+button:not([disabled]):active,
+a[role='button']:not([disabled]):active,
+[type='submit']:not([disabled]):active {
+  transform: scale(0.97);
+  transition: transform 250ms cubic-bezier(0.165, 0.85, 0.45, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button:active,
+  a[role='button']:active,
+  [type='submit']:active {
+    transform: none;
+    transition: none;
+  }
+}

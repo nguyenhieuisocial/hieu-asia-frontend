@@ -59,7 +59,7 @@ export function PhilosophyBlock({
           </p>
         )}
 
-        <h2 className="text-balance font-marketing-display text-section-display leading-tight text-cream-50">
+        <h2 className="text-balance font-sans text-section-display font-bold tracking-tight leading-tight text-cream-50">
           {title}
         </h2>
 
