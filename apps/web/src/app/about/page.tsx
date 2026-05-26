@@ -5,6 +5,7 @@ import { Button } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { MarketingHero } from '@/components/marketing/MarketingHero';
+import { MarketingCard } from '@/components/marketing/MarketingCard';
 import { PhilosophyBlock } from '@/components/marketing/PhilosophyBlock';
 
 export const metadata: Metadata = {
@@ -91,20 +92,24 @@ export default function AboutPage() {
           ornament="gold-ring"
         />
 
+        {/* Wave 60.79.T3 (vault 112 P1 #7): founder block — bumped avatar
+            20→28 mobile / 28→32 desktop, centered vertically with text, added
+            ring-2 ring-gold/30 (Option D brand). Block centered on row so it
+            doesn't read as orphan against full-width section. */}
         <section className="relative bg-warm-dark-50 pb-20">
           <div className="mx-auto max-w-3xl px-6">
-            <div className="flex items-center gap-5">
+            <div className="flex flex-col items-center gap-5 text-center sm:flex-row sm:items-center sm:gap-7 sm:text-left">
               <div
                 aria-hidden="true"
-                className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-gold/40 bg-gradient-to-br from-gold/20 via-background to-purple/30 font-heading text-2xl text-gold"
+                className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full border border-gold/40 bg-gradient-to-br from-gold/20 via-background to-purple/30 font-heading text-4xl text-gold ring-2 ring-gold/30 ring-offset-2 ring-offset-warm-dark-50 sm:h-28 sm:w-28 sm:text-5xl"
               >
                 H
               </div>
               <div className="flex-1">
-                <p className="font-heading text-base font-semibold text-cream-50">
+                <p className="font-heading text-lg font-semibold text-cream-50">
                   Hiệu
                 </p>
-                <p className="text-xs text-cream-500">
+                <p className="mt-1 text-sm text-cream-500">
                   Một engineer + Tử Vi practitioner ở TP.HCM
                 </p>
               </div>
@@ -125,8 +130,12 @@ export default function AboutPage() {
                 Hiểu mình. Quyết định mình.
               </h2>
             </div>
+            {/* Wave 60.83 — Mission/Vision cards migrated to MarketingCard
+                primitive (Wave 60.79.T2). Was: rounded-2xl border-border bg-warm-dark-200 p-7.
+                Primitive gives standard p-6 + h-full grid alignment + hover:border-gold/40
+                for free, consistent with HowToStart/WhyTrust cards. */}
             <div className="grid gap-10 md:grid-cols-2">
-              <article className="rounded-2xl border border-border bg-warm-dark-200 p-7">
+              <MarketingCard padding="standard" bg="warm-dark-200">
                 <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
                   Sứ mệnh
                 </p>
@@ -136,8 +145,8 @@ export default function AboutPage() {
                   bằng tiếng Việt cho người Việt, được AI giải mã rõ ràng, và để
                   bạn tự chọn con đường.
                 </p>
-              </article>
-              <article className="rounded-2xl border border-border bg-warm-dark-200 p-7">
+              </MarketingCard>
+              <MarketingCard padding="standard" bg="warm-dark-200">
                 <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
                   Tầm nhìn
                 </p>
@@ -146,7 +155,7 @@ export default function AboutPage() {
                   hạn, không bán bùa — chỉ có tri thức được trình bày rõ ràng để
                   bạn có thêm một góc nhìn cho cuộc đời mình.
                 </p>
-              </article>
+              </MarketingCard>
             </div>
           </div>
         </section>

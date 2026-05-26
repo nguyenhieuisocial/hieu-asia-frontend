@@ -15,6 +15,7 @@
 
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Info } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { PreviewReadingCard } from '@/components/marketing/PreviewReadingCard';
@@ -30,13 +31,16 @@ export const metadata: Metadata = {
 interface SignInPageProps {
   // Next.js 15 — searchParams is a Promise. Server component awaits it once
   // before passing primitives down to the SignInForm client island.
-  searchParams?: Promise<{ error?: string; next?: string }>;
+  // Wave 60.79.T3 (vault 112 P1 #11): `reason=auth` triggers session-timeout
+  // banner so middleware redirects after session expiry give clear feedback.
+  searchParams?: Promise<{ error?: string; next?: string; reason?: string }>;
 }
 
 export default async function SignInPage({ searchParams }: SignInPageProps) {
   const params = (await searchParams) ?? {};
   const initialError = params.error;
   const next = params.next;
+  const reason = params.reason;
 
   return (
     <>
@@ -53,6 +57,20 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
             <span className="mx-1.5">/</span>
             <span className="text-cream-300">Đăng nhập</span>
           </nav>
+
+          {/* Wave 60.79.T3 (vault 112 P1 #11): post-timeout banner so users
+              redirected by middleware know why they landed back on /signin. */}
+          {reason === 'auth' && (
+            <div
+              role="status"
+              className="mb-6 flex items-start gap-3 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200"
+            >
+              <Info className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" aria-hidden />
+              <p>
+                Phiên đăng nhập đã hết. Vui lòng đăng nhập lại.
+              </p>
+            </div>
+          )}
 
           <header className="mb-10 max-w-marketing-text">
             <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">

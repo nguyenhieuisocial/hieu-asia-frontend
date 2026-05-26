@@ -30,10 +30,16 @@ const PROOFS: readonly Proof[] = [
  * Surfaces methodology moat concretely on homepage instead of burying it.
  */
 export function WhyTrust() {
+  // Wave 60.79.T3 (vault 112 P1 #13): removed `bg-background` so the inner
+  // section inherits the page wrapper bg (currently bg-warm-dark-100 on home).
+  // Previously `bg-background` did not match `bg-warm-dark-100` in dark mode,
+  // creating a visible seam at y≈1620 between this section and adjacent
+  // ScanRow / "VÌ SAO TIN ĐƯỢC" bands. Callers that need a specific bg can
+  // wrap this component as the home page already does.
   return (
     <section
       aria-labelledby="why-trust-heading"
-      className="relative bg-background py-14 sm:py-20"
+      className="relative py-14 sm:py-20"
     >
       <div
         aria-hidden="true"

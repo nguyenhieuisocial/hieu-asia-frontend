@@ -150,6 +150,10 @@ export function BentoLens({
             const containerClass = isHeterogeneous ? '[container-type:inline-size]' : '';
             // In heterogeneous mode the hero tile (idx 0) is taller — bump
             // padding & heading size. The other tiles keep compact spacing.
+            // Wave 60.79.T3 (vault 112 P0-05): the [56|56]/[40|40] padding diff
+            // at home y=2850 is INTENTIONAL — hero tile differentiation per
+            // Phase 3 spec. Not a regression. Supporting tiles + uniform mode
+            // already standardized.
             const tilePadding = isHeterogeneous && idx === 0 ? 'p-10 md:p-14' : 'p-8 md:p-10';
             const headingClass =
               isHeterogeneous && idx === 0
@@ -187,8 +191,8 @@ export function BentoLens({
                       x="100"
                       y="95"
                       textAnchor="end"
-                      fill="#2E2721"
-                      opacity="0.4"
+                      fill="#3F362D"
+                      opacity="0.55"
                       fontFamily="var(--font-marketing-display), Georgia, serif"
                       fontStyle="italic"
                       fontSize="100"

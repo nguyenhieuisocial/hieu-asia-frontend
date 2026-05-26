@@ -569,7 +569,46 @@ function Chapter2Content() {
           Mỗi phương pháp có engine riêng, AI chỉ đọc output structured.
         </p>
 
-        <div className="mt-4 overflow-x-auto rounded-xl border border-warm-dark-300 bg-warm-dark-100">
+        {/* Wave 60.79.T3 (vault 112 P1 #8): 5-col table overflows on 375px.
+            Mobile shows stacked card-per-row with label-value pairs (<md);
+            md+ keeps the original table. Both render the same DATA_ROWS so
+            content stays in sync. */}
+        {/* Mobile: stacked cards */}
+        <div className="mt-4 grid gap-3 md:hidden">
+          {DATA_ROWS.map((row) => (
+            <div
+              key={`m-${row.method}`}
+              className="rounded-xl border border-warm-dark-300 bg-warm-dark-100 p-4"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <p className="font-medium text-cream-50">{row.method}</p>
+                <StatusBadge status={row.status} />
+              </div>
+              <dl className="mt-3 space-y-2 text-sm">
+                <div>
+                  <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-soft">
+                    Dữ liệu dùng
+                  </dt>
+                  <dd className="mt-0.5 text-cream-300">{row.data}</dd>
+                </div>
+                <div>
+                  <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-soft">
+                    Engine tính?
+                  </dt>
+                  <dd className="mt-0.5 text-cream-300">{row.engine}</dd>
+                </div>
+                <div>
+                  <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-soft">
+                    AI làm gì
+                  </dt>
+                  <dd className="mt-0.5 text-cream-300">{row.ai}</dd>
+                </div>
+              </dl>
+            </div>
+          ))}
+        </div>
+        {/* md+: original table */}
+        <div className="mt-4 hidden overflow-x-auto rounded-xl border border-warm-dark-300 bg-warm-dark-100 md:block">
           <table className="w-full min-w-[720px] text-sm">
             <thead>
               <tr className="border-b border-warm-dark-300 text-left font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
@@ -774,7 +813,40 @@ function Chapter3Content() {
           Snapshot test suite tại lần verify gần nhất ({LAST_VERIFIED}).
         </p>
 
-        <div className="mt-4 overflow-x-auto rounded-xl border border-warm-dark-300 bg-warm-dark-100">
+        {/* Wave 60.79.T3 (vault 112 P1 #8): validation table mobile-responsive
+            — stacked cards <md, original table md+. */}
+        {/* Mobile: stacked cards */}
+        <div className="mt-4 grid gap-3 md:hidden">
+          {VALIDATION_ROWS.map((row) => (
+            <div
+              key={`vm-${row.label}`}
+              className="rounded-xl border border-warm-dark-300 bg-warm-dark-100 p-4"
+            >
+              <p className="text-sm text-cream-300">{row.label}</p>
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                <p className="font-mono text-sm text-cream-500">{row.result}</p>
+                {row.status === 'pass' ? (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade-300">
+                    <CheckCircle2 className="h-3 w-3" aria-hidden />
+                    pass
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-300">
+                    <Info className="h-3 w-3" aria-hidden />
+                    partial
+                  </span>
+                )}
+              </div>
+              {row.status === 'partial' && (
+                <p className="mt-2 text-[11px] text-cream-500">
+                  2 case đang review do dị biệt trường phái
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+        {/* md+: original table */}
+        <div className="mt-4 hidden overflow-x-auto rounded-xl border border-warm-dark-300 bg-warm-dark-100 md:block">
           <table className="w-full min-w-[560px] text-sm">
             <thead>
               <tr className="border-b border-warm-dark-300 text-left font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">

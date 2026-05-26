@@ -67,9 +67,15 @@ export function MarketingHero({
   const innerContent = (
     <>
       {watermark && (
+        // Wave 60.79.T3 (vault 112 P1 #4 + P2 #2): bumped opacity 40% → 55%
+        // so "Tử Vi" / "soi" watermarks read as decorative editorial element
+        // rather than faint noise. warm-dark-200 = light brown vs warm-dark-50
+        // bg = enough contrast to be visible without dominating. Still
+        // aria-hidden + pointer-events-none = purely decorative (WCAG decorative
+        // exception applies).
         <span
           aria-hidden
-          className="pointer-events-none absolute -right-5 bottom-0 z-0 select-none font-marketing-display italic text-warm-dark-200/40"
+          className="pointer-events-none absolute -right-5 bottom-0 z-0 select-none font-marketing-display italic text-warm-dark-200/55"
           style={{ fontSize: 'clamp(240px, 30vw, 400px)', lineHeight: 0.9 }}
         >
           {watermark}
