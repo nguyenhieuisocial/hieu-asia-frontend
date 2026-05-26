@@ -21,9 +21,57 @@ export const metadata: Metadata = {
   },
 };
 
+// Wave 60.60.b — SEO + GEO structured data.
+// AboutPage schema with mainEntity Organization (signals trust + entity
+// identity to Google KG + AI assistants). Breadcrumb keeps navigation
+// clarity in search results.
+const ABOUT_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
+        { '@type': 'ListItem', position: 2, name: 'Về chúng tôi', item: 'https://hieu.asia/about' },
+      ],
+    },
+    {
+      '@type': 'AboutPage',
+      url: 'https://hieu.asia/about',
+      name: 'Về hieu.asia',
+      inLanguage: 'vi-VN',
+      description:
+        'Sứ mệnh, triết lý và cam kết phía sau hieu.asia — sản phẩm Việt Nam giúp bạn hiểu mình và ra quyết định có trách nhiệm.',
+      mainEntity: {
+        '@type': 'Organization',
+        name: 'hieu.asia',
+        url: 'https://hieu.asia',
+        logo: 'https://hieu.asia/icon-512.png',
+        slogan: 'Hiểu mình. Quyết định mình.',
+        foundingDate: '2025',
+        founder: { '@type': 'Person', name: 'Hiệu' },
+        description:
+          'AI cá nhân hoá Tử Vi, Bát Tự, Thần Số Học, MBTI và Palm Reading bằng tiếng Việt — không tiên tri, không định mệnh hoá, AI làm reflection, user quyết định.',
+        sameAs: ['https://t.me/hieuasiabot'],
+        contactPoint: {
+          '@type': 'ContactPoint',
+          email: 'hi@hieu.asia',
+          contactType: 'customer support',
+          areaServed: 'VN',
+          availableLanguage: ['Vietnamese'],
+        },
+      },
+    },
+  ],
+};
+
 export default function AboutPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ABOUT_JSON_LD) }}
+      />
       <SiteNav />
       <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
         {/* Section 1 — Hero + Founder face placeholder */}

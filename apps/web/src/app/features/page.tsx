@@ -380,9 +380,86 @@ function renderBucketTitle(id: string, title: string) {
   );
 }
 
+// Wave 60.60.b — SEO + GEO structured data.
+// ItemList of the four lenses (Tử Vi, Bát Tự, Thần Số, MBTI) for Google
+// Rich Results + AI assistants (ChatGPT/Claude/Perplexity/Gemini) so they
+// can cite each lens by name with a stable URL.
+const FEATURES_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Tính năng hieu.asia — bốn lăng kính tự nhận thức',
+  description:
+    'Tử Vi 12 cung, Bát Tự Tứ Trụ, Thần Số Học, MBTI và Palm Reading — bốn lăng kính độc lập giúp bạn nhìn chính mình từ nhiều góc.',
+  inLanguage: 'vi-VN',
+  itemListOrder: 'https://schema.org/ItemListOrderAscending',
+  numberOfItems: 4,
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      item: {
+        '@type': 'Service',
+        name: 'Tử Vi Đẩu Số',
+        url: 'https://hieu.asia/learn/tu-vi',
+        description:
+          'Lá số Tử Vi 12 cung với 114 sao (chính tinh + phụ tinh) theo trường phái Bắc phái — bản đồ 12 lĩnh vực đời sống.',
+        provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
+        areaServed: 'VN',
+        inLanguage: 'vi-VN',
+      },
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      item: {
+        '@type': 'Service',
+        name: 'Bát Tự Tứ Trụ',
+        url: 'https://hieu.asia/learn/bat-tu',
+        description:
+          'Bát Tự 4 trụ Năm-Tháng-Ngày-Giờ theo Ngũ Hành (Kim Mộc Thủy Hỏa Thổ) — cân bằng năng lượng bẩm sinh + dụng thần.',
+        provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
+        areaServed: 'VN',
+        inLanguage: 'vi-VN',
+      },
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      item: {
+        '@type': 'Service',
+        name: 'Thần Số Học',
+        url: 'https://hieu.asia/learn/than-so-hoc',
+        description:
+          'Thần Số Học theo Pythagoras — số chủ đạo (Life Path) 1-9 + 11, 22, 33, phân tích chu kỳ 9 năm.',
+        provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
+        areaServed: 'VN',
+        inLanguage: 'vi-VN',
+      },
+    },
+    {
+      '@type': 'ListItem',
+      position: 4,
+      item: {
+        '@type': 'Service',
+        name: 'MBTI 16 loại tính cách',
+        url: 'https://hieu.asia/learn/mbti',
+        description:
+          'MBTI dựa trên 4 trục của Carl Jung (E/I, S/N, T/F, J/P) — khung tự nhận thức về cách bạn vận hành tự nhiên.',
+        provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
+        areaServed: 'VN',
+        inLanguage: 'vi-VN',
+      },
+    },
+  ],
+};
+
 export default function FeaturesPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FEATURES_JSON_LD) }}
+      />
       <SiteNav />
       <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
         {/* Hero — Wave 60.56 P3.3: consolidated MarketingHero (R1 finding:
