@@ -31,7 +31,6 @@
       "ansi-html": "npm:ansi-html-community@^0.0.8",
       "webpack": "^5.94.0",
       "webpack-dev-middleware": "^5.3.4",
-      "rollup": "^2.80.0",
       "micromatch": "^4.0.8",
       "tar": "^6.2.1"
     }

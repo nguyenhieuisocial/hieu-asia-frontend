@@ -23,9 +23,12 @@ const config: StorybookConfig = {
     '../src/**/*.stories.@(ts|tsx|mdx)',
     '../../../packages/ui/src/**/*.stories.@(ts|tsx|mdx)',
   ],
-  addons: [getAbsolutePath("@storybook/addon-themes"), getAbsolutePath("@storybook/addon-docs")],
+  // Wave 60.51.b — use string package names (not getAbsolutePath helper) for Storybook 10
+  // strict ESM resolution. SB 10 internally appends /preset to the path; the absolute
+  // dir-path returned by getAbsolutePath caused ERR_MODULE_NOT_FOUND (preset vs preset.js).
+  addons: ["@storybook/addon-themes", "@storybook/addon-docs"],
   framework: {
-    name: getAbsolutePath("@storybook/nextjs-vite"),
+    name: "@storybook/nextjs-vite",
     options: {
       // Point to the web app's next.config.ts so Storybook inherits the same
       // PostCSS pipeline (Tailwind v4 beta), webpack tweaks, and image
