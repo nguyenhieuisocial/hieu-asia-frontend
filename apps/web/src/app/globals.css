@@ -184,3 +184,33 @@ body {
   color: var(--color-gold-dot);
   text-shadow: 0 0 16px var(--color-gold-glow);
 }
+
+/* ==========================================================================
+ * Wave 60.66.P2 — Accessibility commitment (vault 109 §3 Phase 2).
+ *
+ * 1) `prefers-reduced-motion` — global override for any animated child. The
+ *    existing `[data-reduced-motion='true']` rule above stays (user opt-in
+ *    from /settings). This block honors the OS-level preference too.
+ * 2) `prefers-reduced-transparency` — fall back GlassPanel to opaque warm-dark
+ *    when the user (or platform — e.g. Windows transparency disabled) asks
+ *    for it. Without this, glassmorphism becomes a contrast failure.
+ * ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass-panel {
+    background: rgba(27, 23, 20, 0.95) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}

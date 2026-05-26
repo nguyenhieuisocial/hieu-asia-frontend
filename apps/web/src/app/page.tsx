@@ -362,8 +362,12 @@ export default function LandingPage() {
       />
       <SiteNav />
       <main id="main-content" className="min-h-screen bg-warm-dark-50 text-cream-50 pt-16">
-        {/* 1. Hero — Wave 60.66.P1 Option E "Editorial Live" (vault 108) */}
+        {/* 1. Hero — Wave 60.66.P2 Option E (vault 109 §3 Phase 2)
+            bg="painted" enables PaintedCanvas (SVG noise + radial gold + linear
+            warm-dark fade) + GlassPanel CTA overlay. Other heroes (/pricing,
+            /features, /about, /methodology, /checkout) keep default bg="flat". */}
         <MarketingHero
+          bg="painted"
           eyebrow={<LiveCounterEyebrow count={1243} period="trong tuần" rating={4.8} />}
           title={
             <>

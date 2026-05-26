@@ -14,6 +14,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { QueryProvider } from '@/components/providers/query-provider';
+import { LazyMotionProvider } from '@/components/providers/lazy-motion-provider';
 import { PlausibleScript } from '@/components/analytics/PlausibleScript';
 import { PostHogProvider } from '@/components/PostHogProvider';
 import { ConsentBanner } from '@/components/cmp/ConsentBanner';
@@ -199,13 +200,15 @@ export default async function RootLayout({
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
             <QueryProvider>
-              <Suspense fallback={null}>
-                <PostHogProvider>{children}</PostHogProvider>
-              </Suspense>
-              {/* Wave 41 Track E — CMP cookie consent banner. Renders only
-                  on first visit (geo-aware: VN + EU always; auto-accept
-                  legitimate-interest defaults elsewhere). */}
-              <ConsentBanner />
+              <LazyMotionProvider>
+                <Suspense fallback={null}>
+                  <PostHogProvider>{children}</PostHogProvider>
+                </Suspense>
+                {/* Wave 41 Track E — CMP cookie consent banner. Renders only
+                    on first visit (geo-aware: VN + EU always; auto-accept
+                    legitimate-interest defaults elsewhere). */}
+                <ConsentBanner />
+              </LazyMotionProvider>
             </QueryProvider>
             <Toaster />
           </ThemeProvider>
