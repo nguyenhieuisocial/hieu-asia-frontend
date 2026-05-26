@@ -42,6 +42,9 @@ import {
   MOCK_TRANSACTIONS,
   MOCK_COUPONS,
   MOCK_QUEUE_DEPTH,
+  MOCK_SUBSCRIPTIONS,
+  MOCK_FAILED_PAYMENTS,
+  MOCK_MRR_BY_MONTH,
   getOverviewKpis,
   type AdminUser,
   type AdminSession,
@@ -51,6 +54,9 @@ import {
   type RagChunk,
   type AdminTransaction,
   type AdminCoupon,
+  type AdminSubscription,
+  type AdminFailedPayment,
+  type MrrByMonth,
 } from './mock-data';
 
 const PROXY = '/api/admin-proxy';
@@ -246,6 +252,26 @@ function mapBackendSession(row: BackendSessionRow): AdminSession {
     const dt = Math.floor((new Date(row.updated_at).getTime() - new Date(createdAt).getTime()) / 1000);
     duration = Number.isFinite(dt) && dt >= 0 ? dt : null;
   }
+  // Wave 60.20-fu — Worker writes request metadata under flat keys or a nested
+  // `request` / `client` envelope. Fall through both. Mirrors the extractor
+  // already used in /sessions/[id] detail card.
+  const reqEnv = (st.request ?? st.client ?? {}) as Record<string, unknown>;
+  const ip = (st.ip as string | undefined)
+    ?? (st.ip_address as string | undefined)
+    ?? (reqEnv.ip as string | undefined)
+    ?? (reqEnv.cf_connecting_ip as string | undefined)
+    ?? null;
+  const country = (st.country as string | undefined)
+    ?? (reqEnv.country as string | undefined)
+    ?? (reqEnv.cf_country as string | undefined)
+    ?? null;
+  const city = (st.city as string | undefined)
+    ?? (reqEnv.city as string | undefined)
+    ?? (reqEnv.cf_city as string | undefined)
+    ?? null;
+  const region = (st.region as string | undefined)
+    ?? (reqEnv.region as string | undefined)
+    ?? null;
   return {
     session_id: row.session_id,
     task_id: (st.task_id as string | undefined) ?? row.session_id,
@@ -258,6 +284,10 @@ function mapBackendSession(row: BackendSessionRow): AdminSession {
     cost_usd: Number(st.cost_usd ?? 0) || 0,
     primary_concern: primary,
     error: (st.error as string | undefined) ?? null,
+    ip,
+    country,
+    city,
+    region,
   };
 }
 
@@ -763,3 +793,48 @@ export async function toggleCoupon(code: string, active: boolean) {
 // The old mock-only `getFeatureFlags` / `updateFeatureFlags` were removed because
 // they wrote to a module-level object that never persisted and used a stale
 // 4-flag schema that drifted from the worker's real 6-flag schema.
+
+// ---------- Billing / Subscriptions (Wave 60.71.T2.billing) ----------
+//
+// All four helpers are mock-only until the worker exposes `/admin/billing/*`.
+// Shape is locked to match the eventual Stripe-backed envelope so the swap
+// is type-safe (just delete the mock branch).
+
+export async function listSubscriptions(
+  q: PageQuery & { status?: AdminSubscription['status']; plan?: AdminSubscription['plan'] } = {},
+) {
+  // TODO(wave-D): /admin/subscriptions not shipped — replace with proxyFetch
+  // once backend exposes Stripe subscription pull.
+  let rows = MOCK_SUBSCRIPTIONS;
+  if (q.status) rows = rows.filter((s) => s.status === q.status);
+  if (q.plan) rows = rows.filter((s) => s.plan === q.plan);
+  return delay(mock(paginate(rows, q), '/admin/subscriptions not shipped'));
+}
+
+export async function cancelSubscription(id: string) {
+  // TODO(wave-D): POST /admin/subscriptions/:id/cancel not shipped.
+  return delay({ id, status: 'canceled' as const, isMock: true });
+}
+
+export async function listFailedPayments() {
+  // TODO(wave-D): /admin/billing/failed not shipped.
+  return delay(
+    Object.assign([...MOCK_FAILED_PAYMENTS], {
+      _source: { isMock: true, reason: '/admin/billing/failed not shipped' } as DataSource,
+    }),
+  );
+}
+
+export async function retryFailedPayment(id: string) {
+  // TODO(wave-D): POST /admin/billing/failed/:id/retry not shipped.
+  return delay({ id, status: 'pending' as const, isMock: true });
+}
+
+export async function getMrrByMonth(): Promise<MrrByMonth[] & { _source: DataSource }> {
+  // TODO(wave-D): /admin/billing/mrr_by_month not shipped.
+  return delay(
+    Object.assign([...MOCK_MRR_BY_MONTH], {
+      _source: { isMock: true, reason: '/admin/billing/mrr_by_month not shipped' } as DataSource,
+    }),
+  );
+}

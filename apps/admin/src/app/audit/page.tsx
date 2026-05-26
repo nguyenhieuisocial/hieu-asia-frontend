@@ -1,10 +1,26 @@
 'use client';
 
 /**
- * /admin/audit — Audit log viewer (Postgres `hieu_asia.audit_log`).
+ * /admin/audit — Wave 60.71.T2.audit redesign.
  *
- * Filters by action / actor / date range. Defaults to newest 100. Shows an
- * empty state with the worker note when the table isn't provisioned yet.
+ * Vault 107 §5.7 Tier 2. Audit log viewer rebuilt on AdminTable primitive
+ * (Wave 60.71.T2.customers) with DropdownMenu filter chrome (Wave 60.68)
+ * and a collapsible JSON popover for row metadata.
+ *
+ *   ├─ This file (~270 LOC orchestration: query, KPI strip, filter chrome)
+ *   ├─ <AdminTable> primitive (components/admin/table/AdminTable.tsx)
+ *   ├─ <AuditDetailsMenu> JSON popover (components/admin/audit/)
+ *   └─ format.ts helpers (date, criticality taxonomy)
+ *
+ * RSC discipline:
+ *   - Icons pre-rendered at the call site (Wave 60.65.P0a)
+ *   - No inline arrow fns in props (Wave 60.66.HF1) — page stays Client
+ *     because it owns interactive filter state
+ *   - Defensive `Array.isArray` on entries (Wave 60.65.P0c)
+ *
+ * Compliance:
+ *   - Lưu 12 tháng theo Nghị định 13/2023 (PDPL VN)
+ *   - CSV export proxy via /api/admin/audit-log → Worker
  */
 
 import * as React from 'react';
@@ -16,12 +32,39 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  Input,
 } from '@hieu-asia/ui';
-import { ShieldAlert, Download, Activity, Users, AlertTriangle, Clock } from 'lucide-react';
+import {
+  Activity,
+  AlertTriangle,
+  ChevronDown,
+  Clock,
+  Download,
+  Filter,
+  ShieldAlert,
+  Users,
+} from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { KpiCard } from '@/components/admin/kpi-card';
+import {
+  AdminTable,
+  type AdminTableColumn,
+} from '@/components/admin/table/AdminTable';
+import { AuditDetailsMenu } from '@/components/admin/audit/AuditDetailsMenu';
+import {
+  fmtAuditDate,
+  fmtRelative,
+  isCritical,
+} from '@/components/admin/audit/format';
 
 interface AuditEntry {
   id?: string;
@@ -41,45 +84,27 @@ interface AuditResponse {
   error?: string;
 }
 
-const ACTION_OPTIONS = [
-  { value: '', label: 'Tất cả action' },
+const ACTION_OPTIONS: Array<{ value: string; label: string }> = [
+  { value: '__all', label: 'Tất cả action' },
   { value: 'admin_login', label: 'admin_login' },
   { value: 'user_export_requested', label: 'user_export_requested' },
   { value: 'user_erased', label: 'user_erased' },
   { value: 'secret_rotated', label: 'secret_rotated' },
   { value: 'coupon_revoked', label: 'coupon_revoked' },
+  { value: 'admin_user_role_changed', label: 'admin_user_role_changed' },
 ];
 
-const HIGH_RISK_ACTIONS = new Set([
-  'user_erased',
-  'secret_rotated',
-  'coupon_revoked',
-  'admin_user_deleted',
-]);
+const LIMIT = 100;
 
-function fmtDate(iso: string | null | undefined) {
-  if (!iso) return '—';
-  try {
-    return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'medium' });
-  } catch {
-    return iso;
-  }
-}
-
-function fmtRelative(iso: string | null | undefined) {
-  if (!iso) return '';
-  try {
-    const diff = Date.now() - new Date(iso).getTime();
-    const m = Math.floor(diff / 60_000);
-    if (m < 1) return 'vừa xong';
-    if (m < 60) return `${m}m`;
-    const h = Math.floor(m / 60);
-    if (h < 24) return `${h}h`;
-    return `${Math.floor(h / 24)}d`;
-  } catch {
-    return '';
-  }
-}
+// Pre-rendered icons (Wave 60.65.P0a)
+const ICON_SHIELD = <ShieldAlert className="h-5 w-5" aria-hidden />;
+const ICON_DOWNLOAD = <Download className="mr-1.5 h-3.5 w-3.5" aria-hidden />;
+const ICON_ACTIVITY = <Activity className="h-4 w-4" aria-hidden />;
+const ICON_CLOCK = <Clock className="h-4 w-4" aria-hidden />;
+const ICON_USERS = <Users className="h-4 w-4" aria-hidden />;
+const ICON_ALERT = <AlertTriangle className="h-4 w-4" aria-hidden />;
+const ICON_FILTER = <Filter className="h-3 w-3 text-muted-foreground" aria-hidden />;
+const ICON_CHEVRON = <ChevronDown className="h-3 w-3 text-muted-foreground" aria-hidden />;
 
 async function fetchAudit(params: {
   action: string;
@@ -89,7 +114,7 @@ async function fetchAudit(params: {
   limit: number;
 }): Promise<AuditResponse> {
   const qs = new URLSearchParams();
-  if (params.action) qs.set('action', params.action);
+  if (params.action && params.action !== '__all') qs.set('action', params.action);
   if (params.actor) qs.set('actor', params.actor);
   if (params.from) qs.set('from', new Date(params.from).toISOString());
   if (params.to) qs.set('to', new Date(params.to).toISOString());
@@ -131,10 +156,95 @@ function exportCsv(entries: AuditEntry[]) {
   URL.revokeObjectURL(url);
 }
 
-const LIMIT = 100;
+/** Stable row id — fall back to ts+actor when DB-generated id missing. */
+function getAuditId(e: AuditEntry): string {
+  return e.id ?? `${e.ts ?? ''}-${e.actor ?? ''}-${e.action ?? ''}`;
+}
+
+const COLUMNS: AdminTableColumn<AuditEntry>[] = [
+  {
+    id: 'ts',
+    header: 'Thời gian',
+    sortKey: 'ts',
+    width: '170px',
+    cell: (e) => (
+      <div title={e.ts ?? ''}>
+        <div className="font-mono text-xs text-foreground/85">{fmtAuditDate(e.ts)}</div>
+        <div className="text-[10px] text-muted-foreground">{fmtRelative(e.ts)}</div>
+      </div>
+    ),
+  },
+  {
+    id: 'actor',
+    header: 'Actor',
+    sortKey: 'actor',
+    cell: (e) => (
+      <div className="min-w-0">
+        <div className="truncate text-foreground" title={e.actor ?? ''}>
+          {e.actor ?? '—'}
+        </div>
+        {e.actor_type && (
+          <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+            {e.actor_type}
+          </div>
+        )}
+      </div>
+    ),
+  },
+  {
+    id: 'action',
+    header: 'Action',
+    sortKey: 'action',
+    width: '220px',
+    cell: (e) => {
+      const critical = isCritical(e.action);
+      return (
+        <span
+          className={
+            'inline-flex items-center rounded border px-2 py-0.5 font-mono text-xs ' +
+            (critical
+              ? 'border-red-400/40 bg-red-500/10 text-red-200'
+              : 'border-gold/20 bg-gold/5 text-gold')
+          }
+        >
+          {e.action ?? '—'}
+        </span>
+      );
+    },
+  },
+  {
+    id: 'resource',
+    header: 'Resource',
+    width: '160px',
+    hideOnMobile: true,
+    cell: (e) => (
+      <span
+        className="block truncate font-mono text-xs text-muted-foreground"
+        title={e.resource_id ?? ''}
+      >
+        {e.resource_id ?? '—'}
+      </span>
+    ),
+  },
+  {
+    id: 'ip',
+    header: 'IP',
+    width: '130px',
+    hideOnMobile: true,
+    cell: (e) => (
+      <span className="font-mono text-xs text-muted-foreground">{e.ip ?? '—'}</span>
+    ),
+  },
+  {
+    id: 'metadata',
+    header: 'Details',
+    width: '120px',
+    cell: (e) => <AuditDetailsMenu metadata={e.metadata} />,
+  },
+];
 
 export default function AuditPage() {
-  const [action, setAction] = React.useState('');
+  const [action, setAction] = React.useState('__all');
   const [actorInput, setActorInput] = React.useState('');
   const [actor, setActor] = React.useState('');
   const [from, setFrom] = React.useState('');
@@ -150,37 +260,94 @@ export default function AuditPage() {
     queryFn: () => fetchAudit({ action, actor, from, to, limit: LIMIT }),
   });
 
-  const entries = data?.entries ?? [];
+  // Defensive Array.isArray (Wave 60.65.P0c)
+  const entries = React.useMemo<AuditEntry[]>(
+    () => (Array.isArray(data?.entries) ? data.entries : []),
+    [data?.entries],
+  );
+
   const showError = !!error || data?.ok === false;
   const errorMsg = (error as Error | undefined)?.message ?? data?.error;
   const note = data?.note;
 
-  // KPIs
+  // KPI aggregates — page slice only (no backend totals endpoint yet)
   const uniqueActors = new Set(entries.map((e) => e.actor).filter(Boolean)).size;
-  const highRiskCount = entries.filter((e) => HIGH_RISK_ACTIONS.has(e.action ?? '')).length;
-  const last24h = entries.filter((e) => {
+  const criticalCount = entries.filter((e) => isCritical(e.action)).length;
+  const todayCount = entries.filter((e) => {
     if (!e.ts) return false;
     return Date.now() - new Date(e.ts).getTime() < 24 * 3600 * 1000;
   }).length;
+
+  // Most active admin actor for KPI (small N — page slice).
+  const actorCounts = entries.reduce<Record<string, number>>((acc, e) => {
+    const key = e.actor ?? '';
+    if (!key) return acc;
+    acc[key] = (acc[key] ?? 0) + 1;
+    return acc;
+  }, {});
+  const topActor =
+    Object.entries(actorCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+
+  // ---- Stable callbacks ----
+  const handleActionChange = React.useCallback((v: string) => {
+    setAction(v);
+  }, []);
+
+  const handleActorChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setActorInput(e.target.value);
+    },
+    [],
+  );
+
+  const handleFromChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFrom(e.target.value);
+    },
+    [],
+  );
+
+  const handleToChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setTo(e.target.value);
+    },
+    [],
+  );
+
+  const handleRefresh = React.useCallback(() => {
+    refetch();
+  }, [refetch]);
+
+  const handleExport = React.useCallback(() => {
+    exportCsv(entries);
+  }, [entries]);
+
+  const actionLabel =
+    ACTION_OPTIONS.find((o) => o.value === action)?.label ?? 'Tất cả action';
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Audit log"
         description="Bản ghi hoạt động — admin actions + GDPR-related events. Lưu 12 tháng theo Nghị định 13/2023."
-        icon={<ShieldAlert className="h-5 w-5" />}
+        icon={ICON_SHIELD}
         actions={
           <>
             <Button
               variant="outline"
               size="sm"
-              onClick={() => exportCsv(entries)}
+              onClick={handleExport}
               disabled={entries.length === 0}
             >
-              <Download className="mr-1.5 h-3.5 w-3.5" />
+              {ICON_DOWNLOAD}
               Xuất CSV
             </Button>
-            <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={isFetching}
+            >
               {isFetching ? 'Đang tải…' : 'Làm mới'}
             </Button>
           </>
@@ -191,30 +358,30 @@ export default function AuditPage() {
         <KpiCard
           label="Hiển thị / trang"
           value={entries.length}
-          icon={<Activity className="h-4 w-4" />}
+          icon={ICON_ACTIVITY}
           accent="gold"
           hint={`tối đa ${LIMIT}`}
         />
         <KpiCard
           label="24h gần nhất"
-          value={last24h}
-          icon={<Clock className="h-4 w-4" />}
+          value={todayCount}
+          icon={ICON_CLOCK}
           accent="purple"
           hint="event"
         />
         <KpiCard
           label="Actor unique"
           value={uniqueActors}
-          icon={<Users className="h-4 w-4" />}
+          icon={ICON_USERS}
           accent="jade"
-          hint="người thao tác"
+          hint={topActor ? `top: ${topActor}` : 'người thao tác'}
         />
         <KpiCard
-          label="High-risk"
-          value={highRiskCount}
-          icon={<AlertTriangle className="h-4 w-4" />}
-          accent={highRiskCount > 0 ? 'red' : 'jade'}
-          hint="erase / rotate / revoke"
+          label="Critical"
+          value={criticalCount}
+          icon={ICON_ALERT}
+          accent={criticalCount > 0 ? 'red' : 'jade'}
+          hint="erase / rotate / revoke / role-change"
         />
       </div>
 
@@ -227,35 +394,47 @@ export default function AuditPage() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <select
-              value={action}
-              onChange={(e) => setAction(e.target.value)}
-              className="h-10 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground focus:border-gold focus:outline-none"
-            >
-              {ACTION_OPTIONS.map((o) => (
-                <option key={o.value || 'all'} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
-            <input
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="inline-flex h-10 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground hover:border-gold/50"
+                  aria-label="Lọc theo action"
+                >
+                  {ICON_FILTER}
+                  <span className="flex-1 truncate text-left">{actionLabel}</span>
+                  {ICON_CHEVRON}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="min-w-[16rem]">
+                <DropdownMenuLabel>Action</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup value={action} onValueChange={handleActionChange}>
+                  {ACTION_OPTIONS.map((opt) => (
+                    <DropdownMenuRadioItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Input
               type="text"
               value={actorInput}
-              onChange={(e) => setActorInput(e.target.value)}
+              onChange={handleActorChange}
               placeholder="Actor (email / user_id)…"
-              className="rounded-md border border-gold/20 bg-card/60 px-3 py-2 text-sm text-foreground placeholder:text-foreground/30 focus:border-gold focus:outline-none"
             />
-            <input
+            <Input
               type="datetime-local"
               value={from}
-              onChange={(e) => setFrom(e.target.value)}
-              className="rounded-md border border-gold/20 bg-card/60 px-3 py-2 text-sm text-foreground focus:border-gold focus:outline-none"
+              onChange={handleFromChange}
+              aria-label="Từ thời điểm"
             />
-            <input
+            <Input
               type="datetime-local"
               value={to}
-              onChange={(e) => setTo(e.target.value)}
-              className="rounded-md border border-gold/20 bg-card/60 px-3 py-2 text-sm text-foreground focus:border-gold focus:outline-none"
+              onChange={handleToChange}
+              aria-label="Đến thời điểm"
             />
           </div>
         </CardContent>
@@ -264,7 +443,7 @@ export default function AuditPage() {
       <Card>
         <CardHeader>
           <CardTitle>Hoạt động ({entries.length})</CardTitle>
-          <CardDescription>Sắp xếp theo timestamp giảm dần.</CardDescription>
+          <CardDescription>Sắp xếp theo timestamp giảm dần (mới nhất trên cùng).</CardDescription>
         </CardHeader>
         <CardContent>
           {showError && (
@@ -272,7 +451,7 @@ export default function AuditPage() {
               <ErrorBlock
                 compact
                 message={errorMsg ?? 'Không tải được audit log.'}
-                onRetry={() => refetch()}
+                onRetry={handleRefresh}
               />
             </div>
           )}
@@ -282,90 +461,22 @@ export default function AuditPage() {
             </div>
           )}
 
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-zinc-800 text-sm">
-              <thead>
-                <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
-                  <th className="px-3 py-2 font-medium">Thời gian</th>
-                  <th className="px-3 py-2 font-medium">Actor</th>
-                  <th className="px-3 py-2 font-medium">Action</th>
-                  <th className="px-3 py-2 font-medium">Resource</th>
-                  <th className="px-3 py-2 font-medium">IP</th>
-                  <th className="px-3 py-2 font-medium">Details</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-zinc-800">
-                {isLoading && (
-                  <tr>
-                    <td colSpan={6} className="px-3 py-6 text-center text-muted-foreground">
-                      Đang tải…
-                    </td>
-                  </tr>
-                )}
-                {!isLoading && entries.length === 0 && (
-                  <tr>
-                    <td colSpan={6} className="px-3 py-2">
-                      <EmptyState
-                        title={note ? 'Bảng audit_log chưa được tạo' : 'Không có entry khớp bộ lọc'}
-                        description={
-                          note ?? 'Thử bỏ filter hoặc mở rộng date range để xem thêm dữ liệu.'
-                        }
-                        className="my-2 border-0 bg-transparent"
-                      />
-                    </td>
-                  </tr>
-                )}
-                {entries.map((e, i) => {
-                  const highRisk = HIGH_RISK_ACTIONS.has(e.action ?? '');
-                  return (
-                    <tr key={e.id ?? `${e.ts ?? ''}-${i}`} className="hover:bg-gold/[0.03]">
-                      <td className="px-3 py-2 font-mono text-xs text-foreground/85" title={e.ts ?? ''}>
-                        <div>{fmtDate(e.ts)}</div>
-                        <div className="text-[10px] text-muted-foreground">{fmtRelative(e.ts)}</div>
-                      </td>
-                      <td className="px-3 py-2 text-foreground/85">
-                        <div className="truncate" title={e.actor ?? ''}>
-                          {e.actor ?? '—'}
-                        </div>
-                        {e.actor_type && (
-                          <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                            {e.actor_type}
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-3 py-2">
-                        <span
-                          className={`inline-flex items-center rounded border px-2 py-0.5 font-mono text-xs ${
-                            highRisk
-                              ? 'border-red-400/40 bg-red-500/10 text-red-200'
-                              : 'border-gold/20 bg-gold/5 text-gold'
-                          }`}
-                        >
-                          {e.action ?? '—'}
-                        </span>
-                      </td>
-                      <td
-                        className="max-w-[18ch] truncate px-3 py-2 font-mono text-xs text-muted-foreground"
-                        title={e.resource_id ?? ''}
-                      >
-                        {e.resource_id ?? '—'}
-                      </td>
-                      <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{e.ip ?? '—'}</td>
-                      <td className="px-3 py-2">
-                        {e.metadata && Object.keys(e.metadata).length > 0 ? (
-                          <code className="line-clamp-2 max-w-md font-mono text-[11px] text-muted-foreground">
-                            {JSON.stringify(e.metadata)}
-                          </code>
-                        ) : (
-                          <span className="text-muted-foreground">—</span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          <AdminTable<AuditEntry>
+            rows={entries}
+            columns={COLUMNS}
+            loading={isLoading}
+            getRowId={getAuditId}
+            caption="Audit log entries"
+            empty={
+              <EmptyState
+                title={note ? 'Bảng audit_log chưa được tạo' : 'Không có entry khớp bộ lọc'}
+                description={
+                  note ?? 'Thử bỏ filter hoặc mở rộng date range để xem thêm dữ liệu.'
+                }
+                className="border-0 bg-transparent"
+              />
+            }
+          />
         </CardContent>
       </Card>
     </div>

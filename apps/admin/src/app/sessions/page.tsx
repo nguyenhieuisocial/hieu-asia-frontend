@@ -1,16 +1,43 @@
 'use client';
 
+/**
+ * /admin/sessions — Wave 60.71.T2.sessions redesign.
+ *
+ * Vault 107 §5.6 Tier 2. Replaces the Wave 60.20 hand-rolled table + dialog
+ * stack with the AdminTable primitive (Wave 60.71.T2.customers), KpiCard
+ * strip (Wave 60.9), and a flag/IP/city column powered by Wave 60.20-fu
+ * Worker `request_metadata` capture.
+ *
+ *   ├─ This file (~280 LOC orchestration: queries, KPI strip, filter chrome,
+ *   │            bulk action bar, confirm dialogs)
+ *   ├─ <AdminTable> primitive (components/admin/table/AdminTable.tsx)
+ *   ├─ <SessionRowActions> DropdownMenu (Wave 60.68)
+ *   └─ format.ts helpers (humanize id, country flag, duration)
+ *
+ * RSC discipline:
+ *   - Icons pre-rendered at the call site (Wave 60.65.P0a)
+ *   - No inline arrow fns in Server→Client props (Wave 60.66.HF1) — page
+ *     stays Client because it owns interactive filter state
+ *   - Defensive `Array.isArray` on data crossing the React Query boundary
+ *     (Wave 60.65.P0c)
+ *
+ * Behavioural parity with the pre-redesign page:
+ *   - Bulk select + CSV export of selection
+ *   - Export-all CSV (proxied through /api/admin/sessions/export)
+ *   - Re-orchestrate single + bulk-delete with confirm phrase
+ *   - URL-synced filter (?status=…&sort=…) for dashboard CTAs
+ */
+
 import * as React from 'react';
-import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  Checkbox,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -19,21 +46,52 @@ import {
   DialogTitle,
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   Input,
   StatusBadge,
-  cn,
   toast,
 } from '@hieu-asia/ui';
-import { Download, MoreVertical, RotateCcw, Trash2, Eye } from 'lucide-react';
+import {
+  Activity,
+  ChevronDown,
+  Clock,
+  Download,
+  Filter,
+  Globe,
+  ListTodo,
+  Trash2,
+  Users,
+} from 'lucide-react';
+import type { TaskStatus } from '@hieu-asia/types';
 import { listSessions } from '@/lib/admin-api';
+import type { AdminSession } from '@/lib/mock-data';
 import { MockBanner } from '@/components/mock-banner';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
-import { ListTodo } from 'lucide-react';
-import type { TaskStatus } from '@hieu-asia/types';
+import { ErrorBlock } from '@/components/admin/error-block';
+import { KpiCard } from '@/components/admin/kpi-card';
+import {
+  AdminTable,
+  type AdminTableColumn,
+} from '@/components/admin/table/AdminTable';
+import { SessionRowActions } from '@/components/admin/sessions/SessionRowActions';
+import {
+  countryFlag,
+  fmtDateTime,
+  fmtDuration,
+  fmtRelative,
+  humanizeSessionId,
+} from '@/components/admin/sessions/format';
+
+const PAGE_SIZE = 20;
+const CONFIRM_PHRASE = 'XÓA HÀNG LOẠT';
+
+type SortOrder = 'newest' | 'oldest';
+type StatusFilter = TaskStatus | '';
 
 const STATUS_TONE: Record<TaskStatus, React.ComponentProps<typeof StatusBadge>['status']> = {
   queued: 'neutral',
@@ -49,36 +107,28 @@ const STATUS_LABEL: Record<TaskStatus, string> = {
   failed: 'Lỗi',
 };
 
-const STATUS_FILTERS: Array<{ value: '' | TaskStatus; label: string }> = [
-  { value: '', label: 'Tất cả' },
+const STATUS_OPTIONS: Array<{ value: StatusFilter; label: string }> = [
+  { value: '', label: 'Tất cả trạng thái' },
   { value: 'queued', label: 'Đang chờ' },
   { value: 'running', label: 'Đang chạy' },
   { value: 'completed', label: 'Hoàn tất' },
   { value: 'failed', label: 'Lỗi' },
 ];
 
-function fmtDateTime(iso: string) {
-  return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
-}
-function fmtDuration(sec: number | null) {
-  if (sec == null) return '—';
-  if (sec < 60) return `${sec}s`;
-  return `${Math.floor(sec / 60)}m ${sec % 60}s`;
-}
+// Pre-render icons at module scope (Wave 60.65.P0a).
+const ICON_USERS = <Users className="h-4 w-4" aria-hidden />;
+const ICON_ACTIVITY = <Activity className="h-4 w-4" aria-hidden />;
+const ICON_CLOCK = <Clock className="h-4 w-4" aria-hidden />;
+const ICON_GLOBE = <Globe className="h-4 w-4" aria-hidden />;
+const ICON_LIST = <ListTodo className="h-5 w-5" aria-hidden />;
+const ICON_DOWNLOAD = <Download className="mr-1.5 h-3.5 w-3.5" aria-hidden />;
+const ICON_FILTER = <Filter className="h-3 w-3 text-muted-foreground" aria-hidden />;
+const ICON_CHEVRON = <ChevronDown className="h-3 w-3 text-muted-foreground" aria-hidden />;
+const ICON_TRASH = <Trash2 className="mr-1.5 h-3.5 w-3.5" aria-hidden />;
 
-const PAGE_SIZE = 20;
-const CONFIRM_PHRASE = 'XÓA HÀNG LOẠT';
-
-type SortOrder = 'newest' | 'oldest';
-
-/**
- * Wave 52.1 — accept `?status=pending` as a deeplink alias for the actual
- * enum value `queued`. Lets the dashboard "Triage queue" CTA stay readable
- * (`?status=pending&sort=oldest`) while the type system stays canonical.
- */
-function parseStatusParam(raw: string | null): TaskStatus | '' {
+function parseStatusParam(raw: string | null): StatusFilter {
   if (!raw) return '';
-  if (raw === 'pending') return 'queued';
+  if (raw === 'pending') return 'queued'; // Wave 52.1 deeplink alias
   if (raw === 'queued' || raw === 'running' || raw === 'completed' || raw === 'failed') {
     return raw;
   }
@@ -89,11 +139,10 @@ function parseSortParam(raw: string | null): SortOrder {
   return raw === 'oldest' ? 'oldest' : 'newest';
 }
 
-/** Trigger a browser download for a URL. Browser will use Content-Disposition filename. */
+/** Trigger a browser download — proxy may not set Content-Disposition. */
 function downloadUrl(url: string) {
   const a = document.createElement('a');
   a.href = url;
-  // Hint a filename in case proxy doesn't set Content-Disposition
   a.download = `hieu-asia-sessions-${new Date().toISOString().slice(0, 10)}.csv`;
   document.body.appendChild(a);
   a.click();
@@ -125,9 +174,8 @@ export default function AdminSessionsPage() {
 
   // Wave 52.1 — hydrate filter + sort from URL on mount so dashboard CTAs
   // like `/sessions?status=pending&sort=oldest` deeplink straight into a
-  // filtered, oldest-first view. Reads once; URL.replace() keeps it in sync
-  // afterward without triggering router re-render storms.
-  const [status, setStatus] = React.useState<TaskStatus | ''>(() =>
+  // filtered, oldest-first view.
+  const [status, setStatus] = React.useState<StatusFilter>(() =>
     parseStatusParam(searchParams?.get('status') ?? null),
   );
   const [sort, setSort] = React.useState<SortOrder>(() =>
@@ -135,7 +183,7 @@ export default function AdminSessionsPage() {
   );
   const [search, setSearch] = React.useState('');
   const [page, setPage] = React.useState(1);
-  const [selected, setSelected] = React.useState<Set<string>>(new Set());
+  const [selected, setSelected] = React.useState<string[]>([]);
   const [confirmBulkOpen, setConfirmBulkOpen] = React.useState(false);
   const [bulkConfirmText, setBulkConfirmText] = React.useState('');
   const [confirmSingleId, setConfirmSingleId] = React.useState<string | null>(null);
@@ -149,13 +197,18 @@ export default function AdminSessionsPage() {
     router.replace(qs ? `?${qs}` : '?', { scroll: false });
   }, [status, sort, router]);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch, isFetching, error } = useQuery({
     queryKey: ['admin', 'sessions', { status, search, page }],
     queryFn: () =>
       listSessions({ status: status || undefined, search, page, page_size: PAGE_SIZE }),
   });
 
-  const rawRows = data?.rows ?? [];
+  // Defensive Array.isArray (Wave 60.65.P0c) on async data
+  const rawRows: AdminSession[] = React.useMemo(
+    () => (Array.isArray(data?.rows) ? data.rows : []),
+    [data?.rows],
+  );
+
   // Client-side sort on the current page; server pagination is independent.
   const rows = React.useMemo(() => {
     const copy = [...rawRows];
@@ -166,35 +219,26 @@ export default function AdminSessionsPage() {
     });
     return copy;
   }, [rawRows, sort]);
+
   const total = data?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
-  // Drop selections that aren't on current page (visual hygiene only; bulk still works across pages).
-  const allOnPageSelected = rows.length > 0 && rows.every((r) => selected.has(r.session_id));
-  const someOnPageSelected = rows.some((r) => selected.has(r.session_id));
-
-  const toggleOne = (id: string) => {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
-
-  const togglePage = () => {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (allOnPageSelected) {
-        for (const r of rows) next.delete(r.session_id);
-      } else {
-        for (const r of rows) next.add(r.session_id);
-      }
-      return next;
-    });
-  };
-
-  const clearSelection = () => setSelected(new Set());
+  // KPI aggregates — page slice only until backend exposes global totals.
+  const completedCount = rows.filter((r) => r.status === 'completed').length;
+  const runningCount = rows.filter((r) => r.status === 'running').length;
+  const last1hCount = rows.filter((r) => {
+    const t = new Date(r.created_at).getTime();
+    return !Number.isNaN(t) && Date.now() - t < 3600 * 1000;
+  }).length;
+  const uniqueUsers = new Set(rows.map((r) => r.user_id || r.user_email).filter(Boolean)).size;
+  const completedDurations = rows
+    .filter((r) => r.status === 'completed' && r.duration_seconds != null)
+    .map((r) => r.duration_seconds as number);
+  const avgDuration = completedDurations.length
+    ? Math.round(
+        completedDurations.reduce((sum, d) => sum + d, 0) / completedDurations.length,
+      )
+    : null;
 
   const reOrchestrateMut = useMutation({
     mutationFn: reOrchestrate,
@@ -202,14 +246,15 @@ export default function AdminSessionsPage() {
       toast.success('Đã trigger re-orchestrate', { description: `Session ${id}` });
       qc.invalidateQueries({ queryKey: ['admin', 'sessions'] });
     },
-    onError: (e) => toast.error('Re-orchestrate thất bại', { description: (e as Error).message }),
+    onError: (e) =>
+      toast.error('Re-orchestrate thất bại', { description: (e as Error).message }),
   });
 
   const bulkDeleteMut = useMutation({
     mutationFn: bulkDelete,
     onSuccess: (_d, ids) => {
       toast.success(`Đã xóa ${ids.length} phiên`);
-      clearSelection();
+      setSelected([]);
       setConfirmBulkOpen(false);
       setBulkConfirmText('');
       qc.invalidateQueries({ queryKey: ['admin', 'sessions'] });
@@ -217,32 +262,261 @@ export default function AdminSessionsPage() {
     onError: (e) => toast.error('Xóa thất bại', { description: (e as Error).message }),
   });
 
-  const handleExportAll = () => {
+  // ---- Stable callbacks (no inline arrow fns in row-action props) ----
+
+  const handleStatusChange = React.useCallback((v: string) => {
+    setStatus(v === '__all' ? '' : (v as StatusFilter));
+    setPage(1);
+  }, []);
+
+  const handleSortChange = React.useCallback((v: string) => {
+    setSort(v as SortOrder);
+  }, []);
+
+  const handleSearch = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+    setPage(1);
+  }, []);
+
+  const handleRefresh = React.useCallback(() => {
+    refetch();
+  }, [refetch]);
+
+  const handleExportAll = React.useCallback(() => {
     const qs = new URLSearchParams({ format: 'csv' });
     if (status) qs.set('status', status);
     if (search) qs.set('search', search);
     downloadUrl(`/api/admin/sessions/export?${qs.toString()}`);
     toast.success('Đang tải CSV…');
-  };
+  }, [status, search]);
 
-  const handleExportSelected = () => {
-    if (selected.size === 0) return;
+  const handleExportSelected = React.useCallback(() => {
+    if (selected.length === 0) return;
     const qs = new URLSearchParams({ format: 'csv' });
-    qs.set('session_ids', Array.from(selected).join(','));
+    qs.set('session_ids', selected.join(','));
     downloadUrl(`/api/admin/sessions/export?${qs.toString()}`);
-    toast.success(`Đang tải CSV ${selected.size} phiên đã chọn…`);
-  };
+    toast.success(`Đang tải CSV ${selected.length} phiên đã chọn…`);
+  }, [selected]);
+
+  const handleClearSelected = React.useCallback(() => {
+    setSelected([]);
+  }, []);
+
+  const handleOpenBulkConfirm = React.useCallback(() => {
+    setConfirmBulkOpen(true);
+  }, []);
+
+  const handleBulkDialogChange = React.useCallback((o: boolean) => {
+    setConfirmBulkOpen(o);
+    if (!o) setBulkConfirmText('');
+  }, []);
+
+  const handleBulkConfirmTextChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setBulkConfirmText(e.target.value);
+    },
+    [],
+  );
+
+  const handleBulkDeleteCancel = React.useCallback(() => {
+    setConfirmBulkOpen(false);
+  }, []);
+
+  const handleBulkDeleteConfirm = React.useCallback(() => {
+    bulkDeleteMut.mutate(selected);
+  }, [bulkDeleteMut, selected]);
+
+  const handleSingleDialogChange = React.useCallback((o: boolean) => {
+    if (!o) setConfirmSingleId(null);
+  }, []);
+
+  const handleSingleDeleteCancel = React.useCallback(() => {
+    setConfirmSingleId(null);
+  }, []);
+
+  const handleSingleDeleteConfirm = React.useCallback(() => {
+    if (confirmSingleId) {
+      bulkDeleteMut.mutate([confirmSingleId]);
+      setConfirmSingleId(null);
+    }
+  }, [bulkDeleteMut, confirmSingleId]);
+
+  const handlePrevPage = React.useCallback(() => {
+    setPage((p) => Math.max(1, p - 1));
+  }, []);
+
+  const handleNextPage = React.useCallback(() => {
+    setPage((p) => Math.min(totalPages, p + 1));
+  }, [totalPages]);
+
+  const handleRowClick = React.useCallback(
+    (row: AdminSession) => {
+      router.push(`/sessions/${encodeURIComponent(row.session_id)}`);
+    },
+    [router],
+  );
+
+  const handleReOrchestrate = React.useCallback(
+    (id: string) => {
+      reOrchestrateMut.mutate(id);
+    },
+    [reOrchestrateMut],
+  );
+
+  const handleAskDelete = React.useCallback((id: string) => {
+    setConfirmSingleId(id);
+  }, []);
+
+  // ---- Column config ----
+
+  const columns = React.useMemo<AdminTableColumn<AdminSession>[]>(
+    () => [
+      {
+        id: 'created_at',
+        header: 'Tạo',
+        sortKey: 'created_at',
+        width: '140px',
+        cell: (s) => (
+          <div>
+            <div className="font-mono text-xs text-foreground/85">{fmtDateTime(s.created_at)}</div>
+            <div className="text-[10px] text-muted-foreground">{fmtRelative(s.created_at)}</div>
+          </div>
+        ),
+      },
+      {
+        id: 'session_id',
+        header: 'Session',
+        sortKey: 'session_id',
+        width: '140px',
+        cell: (s) => (
+          <span
+            className="font-mono text-xs text-gold"
+            title={s.session_id}
+          >
+            {humanizeSessionId(s.session_id)}
+          </span>
+        ),
+      },
+      {
+        id: 'user',
+        header: 'User',
+        sortKey: 'user_email',
+        cell: (s) => (
+          <div className="min-w-0">
+            <div className="truncate text-foreground">{s.user_email || '—'}</div>
+            <div className="truncate font-mono text-[10px] text-muted-foreground">
+              {s.user_id || ''}
+            </div>
+          </div>
+        ),
+      },
+      {
+        id: 'concern',
+        header: 'Mối quan tâm',
+        hideOnMobile: true,
+        cell: (s) => (
+          <span className="line-clamp-1 text-foreground/85">{s.primary_concern}</span>
+        ),
+      },
+      {
+        id: 'geo',
+        header: 'Vị trí',
+        width: '160px',
+        hideOnMobile: true,
+        cell: (s) => {
+          const flag = countryFlag(s.country);
+          if (!s.country && !s.city) {
+            return <span className="text-muted-foreground">—</span>;
+          }
+          return (
+            <div className="min-w-0">
+              <div className="truncate text-foreground/90">
+                <span className="mr-1.5" aria-hidden>
+                  {flag}
+                </span>
+                {s.city ?? s.country}
+              </div>
+              {s.ip && (
+                <div
+                  className="truncate font-mono text-[10px] text-muted-foreground"
+                  title={s.ip}
+                >
+                  {s.ip}
+                </div>
+              )}
+            </div>
+          );
+        },
+      },
+      {
+        id: 'duration',
+        header: 'Thời lượng',
+        sortKey: 'duration_seconds',
+        width: '90px',
+        className: 'text-right tabular-nums',
+        hideOnMobile: true,
+        cell: (s) => (
+          <span className="text-foreground/90">{fmtDuration(s.duration_seconds)}</span>
+        ),
+      },
+      {
+        id: 'status',
+        header: 'Trạng thái',
+        sortKey: 'status',
+        width: '120px',
+        cell: (s) => (
+          <StatusBadge status={STATUS_TONE[s.status]} label={STATUS_LABEL[s.status]} />
+        ),
+      },
+      {
+        id: 'actions',
+        header: '',
+        width: '48px',
+        cell: (s) => (
+          <SessionRowActions
+            sessionId={s.session_id}
+            onReOrchestrate={handleReOrchestrate}
+            onDelete={handleAskDelete}
+            reOrchPending={reOrchestrateMut.isPending}
+          />
+        ),
+      },
+    ],
+    [handleReOrchestrate, handleAskDelete, reOrchestrateMut.isPending],
+  );
+
+  const statusLabel =
+    STATUS_OPTIONS.find((o) => o.value === status)?.label ?? 'Tất cả trạng thái';
+  const sortLabel = sort === 'oldest' ? 'Cũ nhất' : 'Mới nhất';
+  const showError = !!error;
+  const errorMsg = (error as Error | undefined)?.message;
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Phiên phân tích"
-        description={<>Mỗi phiên = 1 task pipeline + 1 báo cáo. Click vào session_id để xem state JSON đầy đủ và lifecycle timeline.</>}
-        icon={<ListTodo className="h-5 w-5" />}
-        badge={total > 0 ? <span className="rounded-full border border-gold/20 bg-gold/10 px-2 py-0.5 font-mono text-[10px] text-gold">{total} phiên</span> : null}
+        description={
+          <>
+            Mỗi phiên = 1 task pipeline + 1 báo cáo. Click row để xem state JSON đầy đủ
+            và lifecycle timeline.
+          </>
+        }
+        icon={ICON_LIST}
+        badge={
+          total > 0 ? (
+            <span className="rounded-full border border-gold/20 bg-gold/10 px-2 py-0.5 font-mono text-[10px] text-gold">
+              {total} phiên
+            </span>
+          ) : null
+        }
         actions={
-          <Button variant="outline" size="sm" onClick={handleExportAll}>
-            <Download className="mr-1.5 h-3.5 w-3.5" />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportAll}
+            disabled={rows.length === 0}
+          >
+            {ICON_DOWNLOAD}
             Xuất CSV tất cả
           </Button>
         }
@@ -250,238 +524,204 @@ export default function AdminSessionsPage() {
 
       <MockBanner source={data?._source} />
 
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <KpiCard
+          label="Phiên trang này"
+          value={rows.length}
+          icon={ICON_USERS}
+          accent="gold"
+          hint={`/ tổng ${total}`}
+        />
+        <KpiCard
+          label="Đang chạy"
+          value={runningCount}
+          icon={ICON_ACTIVITY}
+          accent={runningCount > 0 ? 'jade' : 'purple'}
+          hint="hot pipeline"
+        />
+        <KpiCard
+          label="1h gần nhất"
+          value={last1hCount}
+          icon={ICON_CLOCK}
+          accent="purple"
+          hint="phiên mới"
+        />
+        <KpiCard
+          label="Thời lượng TB"
+          value={avgDuration != null ? fmtDuration(avgDuration) : '—'}
+          icon={ICON_GLOBE}
+          accent="gold"
+          hint={`${completedCount} hoàn tất · ${uniqueUsers} user`}
+        />
+      </div>
+
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Bộ lọc</CardTitle>
-          <div className="mt-2 flex flex-col gap-3">
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <Input
-                placeholder="Tìm session_id / email / nội dung…"
-                value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  setPage(1);
-                }}
-                className="sm:max-w-md"
-              />
-            </div>
-            {/* Filter pills */}
-            <div className="flex flex-wrap gap-1.5">
-              {STATUS_FILTERS.map((f) => {
-                const active = status === f.value;
-                return (
-                  <button
-                    key={f.value || 'all'}
-                    type="button"
-                    onClick={() => {
-                      setStatus(f.value);
-                      setPage(1);
-                    }}
-                    className={cn(
-                      'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
-                      active
-                        ? 'border-gold/60 bg-gold/15 text-gold'
-                        : 'border-border bg-card/60 text-muted-foreground hover:border-gold/30 hover:text-foreground',
-                    )}
-                  >
-                    {f.label}
-                  </button>
-                );
-              })}
-            </div>
-            {/* Wave 52.1 — sort toggle, URL-synced via ?sort= */}
-            <div className="flex items-center gap-2 text-xs">
-              <span className="font-mono uppercase tracking-wider text-muted-foreground">
-                Sắp xếp:
-              </span>
-              <div className="flex gap-1.5">
-                {(['newest', 'oldest'] as const).map((o) => {
-                  const active = sort === o;
-                  return (
-                    <button
-                      key={o}
-                      type="button"
-                      onClick={() => setSort(o)}
-                      className={cn(
-                        'rounded-full border px-3 py-1 font-medium transition-colors',
-                        active
-                          ? 'border-gold/60 bg-gold/15 text-gold'
-                          : 'border-border bg-card/60 text-muted-foreground hover:border-gold/30 hover:text-foreground',
-                      )}
-                    >
-                      {o === 'newest' ? 'Mới nhất' : 'Cũ nhất'}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+          <CardTitle>Bộ lọc</CardTitle>
+          <CardDescription>
+            Tìm theo session_id, email, hoặc nội dung mối quan tâm.
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          {/* Selectable table (custom, since DataTable doesn't support row selection). */}
-          <div className="rounded-lg border border-gold/15 bg-card/60 backdrop-blur-sm">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gold/15 text-left">
-                    <th className="w-10 px-4 py-3">
-                      <Checkbox
-                        checked={allOnPageSelected}
-                        onChange={togglePage}
-                        aria-label="Chọn tất cả trên trang"
-                        ref={(el) => {
-                          if (el) el.indeterminate = !allOnPageSelected && someOnPageSelected;
-                        }}
-                      />
-                    </th>
-                    <th className="px-4 py-3 font-mono text-xs uppercase tracking-wider text-gold/80" style={{ width: '110px' }}>
-                      Session
-                    </th>
-                    <th className="px-4 py-3 font-mono text-xs uppercase tracking-wider text-gold/80">User</th>
-                    <th className="px-4 py-3 font-mono text-xs uppercase tracking-wider text-gold/80">Mối quan tâm</th>
-                    <th className="px-4 py-3 font-mono text-xs uppercase tracking-wider text-gold/80" style={{ width: '110px' }}>
-                      Trạng thái
-                    </th>
-                    <th className="px-4 py-3 font-mono text-xs uppercase tracking-wider text-gold/80" style={{ width: '140px' }}>
-                      Tạo
-                    </th>
-                    <th className="px-4 py-3 text-right font-mono text-xs uppercase tracking-wider text-gold/80" style={{ width: '90px' }}>
-                      Thời lượng
-                    </th>
-                    <th className="px-4 py-3 text-right font-mono text-xs uppercase tracking-wider text-gold/80" style={{ width: '80px' }}>
-                      Cost
-                    </th>
-                    <th className="w-12 px-2 py-3" />
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.length === 0 ? (
-                    <tr>
-                      <td colSpan={9} className="px-4 py-2">
-                        {isLoading ? (
-                          <div className="py-10 text-center text-muted-foreground">Đang tải…</div>
-                        ) : (
-                          <EmptyState
-                            title={search || status ? 'Không có phiên khớp bộ lọc' : 'Chưa có phiên phân tích nào'}
-                            description={
-                              search || status
-                                ? 'Thử bỏ bớt filter để xem nhiều dữ liệu hơn.'
-                                : 'Khi user bắt đầu một phiên đọc bài, dòng đầu tiên sẽ xuất hiện ở đây kèm trạng thái real-time.'
-                            }
-                            className="my-2 border-0 bg-transparent"
-                          />
-                        )}
-                      </td>
-                    </tr>
-                  ) : (
-                    rows.map((s) => {
-                      const isSelected = selected.has(s.session_id);
-                      return (
-                        <tr
-                          key={s.session_id}
-                          className={cn(
-                            'border-b border-gold/10 transition-colors last:border-0',
-                            isSelected && 'bg-gold/5',
-                          )}
-                        >
-                          <td className="px-4 py-3">
-                            <Checkbox
-                              checked={isSelected}
-                              onChange={() => toggleOne(s.session_id)}
-                              aria-label={`Chọn ${s.session_id}`}
-                            />
-                          </td>
-                          <td className="px-4 py-3">
-                            <Link
-                              href={`/sessions/${s.session_id}`}
-                              className="font-mono text-xs text-gold hover:underline"
-                            >
-                              {s.session_id}
-                            </Link>
-                          </td>
-                          <td className="px-4 py-3 text-foreground">{s.user_email}</td>
-                          <td className="px-4 py-3">
-                            <span className="line-clamp-1 text-foreground/85">{s.primary_concern}</span>
-                          </td>
-                          <td className="px-4 py-3">
-                            <StatusBadge
-                              status={STATUS_TONE[s.status]}
-                              label={STATUS_LABEL[s.status]}
-                            />
-                          </td>
-                          <td className="px-4 py-3 text-foreground/90">{fmtDateTime(s.created_at)}</td>
-                          <td className="px-4 py-3 text-right text-foreground/90">
-                            {fmtDuration(s.duration_seconds)}
-                          </td>
-                          <td className="px-4 py-3 text-right text-foreground/90">
-                            ${s.cost_usd.toFixed(3)}
-                          </td>
-                          <td className="px-2 py-3">
-                            <RowMenu
-                              sessionId={s.session_id}
-                              onReOrchestrate={() => reOrchestrateMut.mutate(s.session_id)}
-                              onDelete={() => setConfirmSingleId(s.session_id)}
-                              reOrchPending={reOrchestrateMut.isPending}
-                            />
-                          </td>
-                        </tr>
-                      );
-                    })
-                  )}
-                </tbody>
-              </table>
-            </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <Input
+              placeholder="Tìm session_id / email / nội dung…"
+              value={search}
+              onChange={handleSearch}
+              className="min-w-0 flex-1 sm:max-w-md"
+            />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="inline-flex h-10 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground hover:border-gold/50"
+                  aria-label="Lọc theo trạng thái"
+                >
+                  {ICON_FILTER}
+                  <span>{statusLabel}</span>
+                  {ICON_CHEVRON}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="min-w-[12rem]">
+                <DropdownMenuLabel>Trạng thái</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup
+                  value={status || '__all'}
+                  onValueChange={handleStatusChange}
+                >
+                  {STATUS_OPTIONS.map((opt) => (
+                    <DropdownMenuRadioItem
+                      key={opt.value || '__all'}
+                      value={opt.value || '__all'}
+                    >
+                      {opt.label}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="inline-flex h-10 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground hover:border-gold/50"
+                  aria-label="Sắp xếp"
+                >
+                  <span>{sortLabel}</span>
+                  {ICON_CHEVRON}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="min-w-[10rem]">
+                <DropdownMenuLabel>Sắp xếp</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup value={sort} onValueChange={handleSortChange}>
+                  <DropdownMenuRadioItem value="newest">Mới nhất</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="oldest">Cũ nhất</DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={isFetching}
+            >
+              {isFetching ? 'Đang tải…' : 'Làm mới'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
-            <div className="flex items-center justify-between border-t border-gold/15 px-4 py-3 text-xs text-muted-foreground">
-              <span>
-                Trang <span className="text-gold">{page}</span> / {totalPages} ·{' '}
-                <span className="text-muted-foreground">{total} bản ghi</span>
-              </span>
-              <div className="flex gap-1">
-                <button
-                  type="button"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  disabled={page <= 1}
-                  className="rounded border border-gold/20 px-2.5 py-1 hover:border-gold/40 disabled:opacity-40"
-                >
-                  ← Trước
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={page >= totalPages}
-                  className="rounded border border-gold/20 px-2.5 py-1 hover:border-gold/40 disabled:opacity-40"
-                >
-                  Sau →
-                </button>
-              </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Danh sách</CardTitle>
+          <CardDescription>
+            Hiển thị {rows.length} / {total} phiên. Click row để xem chi tiết.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {showError && (
+            <div className="mb-4">
+              <ErrorBlock
+                compact
+                message={errorMsg ?? 'Không tải được dữ liệu phiên.'}
+                onRetry={handleRefresh}
+              />
+            </div>
+          )}
+
+          <AdminTable<AdminSession>
+            rows={rows}
+            columns={columns}
+            onRowClick={handleRowClick}
+            loading={isLoading}
+            onBulkSelect={setSelected}
+            getRowId={getSessionId}
+            caption="Danh sách phiên phân tích"
+            empty={
+              <EmptyState
+                title={
+                  search || status
+                    ? 'Không có phiên khớp bộ lọc'
+                    : 'Chưa có phiên phân tích nào'
+                }
+                description={
+                  search || status
+                    ? 'Thử bỏ filter hoặc reset search query.'
+                    : 'Khi user bắt đầu một phiên đọc bài, dòng đầu tiên sẽ xuất hiện ở đây kèm trạng thái real-time.'
+                }
+                className="border-0 bg-transparent"
+              />
+            }
+          />
+
+          <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
+            <span>
+              Trang <span className="text-gold">{page}</span> / {totalPages} ·{' '}
+              <span className="text-muted-foreground">{total} bản ghi</span>
+            </span>
+            <div className="flex gap-1">
+              <button
+                type="button"
+                onClick={handlePrevPage}
+                disabled={page <= 1}
+                className="rounded border border-gold/20 px-2.5 py-1 hover:border-gold/40 disabled:opacity-40"
+              >
+                ← Trước
+              </button>
+              <button
+                type="button"
+                onClick={handleNextPage}
+                disabled={page >= totalPages}
+                className="rounded border border-gold/20 px-2.5 py-1 hover:border-gold/40 disabled:opacity-40"
+              >
+                Sau →
+              </button>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Floating action bar */}
-      {selected.size > 0 && (
+      {/* Floating bulk-action bar */}
+      {selected.length > 0 && (
         <div className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2 lg:left-[calc(50%+8rem)]">
           <div className="flex items-center gap-2 rounded-full border border-gold/40 bg-card/95 px-3 py-2 shadow-2xl backdrop-blur">
-            <span className="px-2 font-mono text-xs text-gold">{selected.size} đã chọn</span>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={handleExportSelected}
-            >
-              <Download className="mr-1.5 h-3.5 w-3.5" />
-              Xuất CSV {selected.size}
+            <span className="px-2 font-mono text-xs text-gold">
+              {selected.length} đã chọn
+            </span>
+            <Button size="sm" variant="outline" onClick={handleExportSelected}>
+              {ICON_DOWNLOAD}
+              Xuất CSV {selected.length}
             </Button>
             <Button
               size="sm"
-              onClick={() => setConfirmBulkOpen(true)}
+              onClick={handleOpenBulkConfirm}
               className="bg-red-500/90 text-foreground hover:bg-red-500"
             >
-              <Trash2 className="mr-1.5 h-3.5 w-3.5" />
-              Xóa {selected.size} phiên
+              {ICON_TRASH}
+              Xóa {selected.length} phiên
             </Button>
-            <Button size="sm" variant="ghost" onClick={clearSelection}>
+            <Button size="sm" variant="ghost" onClick={handleClearSelected}>
               Bỏ chọn
             </Button>
           </div>
@@ -489,16 +729,10 @@ export default function AdminSessionsPage() {
       )}
 
       {/* Bulk delete confirm */}
-      <Dialog
-        open={confirmBulkOpen}
-        onOpenChange={(o) => {
-          setConfirmBulkOpen(o);
-          if (!o) setBulkConfirmText('');
-        }}
-      >
+      <Dialog open={confirmBulkOpen} onOpenChange={handleBulkDialogChange}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Xóa {selected.size} phiên?</DialogTitle>
+            <DialogTitle>Xóa {selected.length} phiên?</DialogTitle>
             <DialogDescription>
               Hành động không hoàn tác. Xóa luôn báo cáo và metadata. Gõ{' '}
               <code className="font-mono text-gold">{CONFIRM_PHRASE}</code> để xác nhận.
@@ -506,16 +740,16 @@ export default function AdminSessionsPage() {
           </DialogHeader>
           <Input
             value={bulkConfirmText}
-            onChange={(e) => setBulkConfirmText(e.target.value)}
+            onChange={handleBulkConfirmTextChange}
             placeholder={CONFIRM_PHRASE}
             autoFocus
           />
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setConfirmBulkOpen(false)}>
+            <Button variant="ghost" onClick={handleBulkDeleteCancel}>
               Hủy
             </Button>
             <Button
-              onClick={() => bulkDeleteMut.mutate(Array.from(selected))}
+              onClick={handleBulkDeleteConfirm}
               disabled={bulkConfirmText !== CONFIRM_PHRASE || bulkDeleteMut.isPending}
               className="bg-red-500/90 text-foreground hover:bg-red-500"
             >
@@ -526,26 +760,21 @@ export default function AdminSessionsPage() {
       </Dialog>
 
       {/* Single-row delete confirm (reuses bulk endpoint with one id) */}
-      <Dialog open={!!confirmSingleId} onOpenChange={(o) => !o && setConfirmSingleId(null)}>
+      <Dialog open={!!confirmSingleId} onOpenChange={handleSingleDialogChange}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Xóa phiên?</DialogTitle>
             <DialogDescription>
-              Session <code className="font-mono text-gold">{confirmSingleId}</code> sẽ bị xóa vĩnh
-              viễn.
+              Session <code className="font-mono text-gold">{confirmSingleId}</code> sẽ
+              bị xóa vĩnh viễn.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setConfirmSingleId(null)}>
+            <Button variant="ghost" onClick={handleSingleDeleteCancel}>
               Hủy
             </Button>
             <Button
-              onClick={() => {
-                if (confirmSingleId) {
-                  bulkDeleteMut.mutate([confirmSingleId]);
-                  setConfirmSingleId(null);
-                }
-              }}
+              onClick={handleSingleDeleteConfirm}
               className="bg-red-500/90 text-foreground hover:bg-red-500"
             >
               Xóa
@@ -557,57 +786,7 @@ export default function AdminSessionsPage() {
   );
 }
 
-/**
- * Wave 60.69 (vault 109 §4.4) — DropdownMenu primitive adoption. Replaces the
- * previous `Popover` + manual button list with Radix DropdownMenu so we get
- * keyboard roving-focus + ESC dismiss + portal rendering for free, matching
- * the UsersList pattern (Wave 60.68).
- */
-function RowMenu({
-  sessionId,
-  onReOrchestrate,
-  onDelete,
-  reOrchPending,
-}: {
-  sessionId: string;
-  onReOrchestrate: () => void;
-  onDelete: () => void;
-  reOrchPending: boolean;
-}) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button
-          type="button"
-          aria-label={`Mở menu thao tác cho ${sessionId}`}
-          className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-gold/10 hover:text-gold"
-        >
-          <MoreVertical className="h-4 w-4" />
-        </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-44">
-        <DropdownMenuItem asChild>
-          <Link href={`/sessions/${sessionId}`}>
-            <Eye className="h-3.5 w-3.5 text-muted-foreground" />
-            Xem chi tiết
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          disabled={reOrchPending}
-          onSelect={() => onReOrchestrate()}
-        >
-          <RotateCcw className="h-3.5 w-3.5 text-gold" />
-          Re-run pipeline
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onSelect={() => onDelete()}
-          className="text-red-300 focus:bg-red-500/10 focus:text-red-200"
-        >
-          <Trash2 className="h-3.5 w-3.5" />
-          Xóa
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+/** Stable row-id extractor for AdminTable. */
+function getSessionId(s: AdminSession): string {
+  return s.session_id;
 }

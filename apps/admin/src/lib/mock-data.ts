@@ -72,6 +72,13 @@ export interface AdminSession {
   cost_usd: number;
   primary_concern: string;
   error: string | null;
+  // Wave 60.20-fu — request metadata logged by Worker (cf-connecting-ip,
+  // cf-ipcountry, request.cf.city). Optional because legacy rows + mocks
+  // don't have these. Surface in /sessions list column post-redesign.
+  ip?: string | null;
+  country?: string | null;
+  city?: string | null;
+  region?: string | null;
 }
 
 const CONCERNS = [
@@ -85,6 +92,18 @@ const CONCERNS = [
   'Mở rộng team marketing, lo overhead',
 ];
 
+// Wave 60.71.T2.sessions — seed mock with IP/geo so the redesigned list
+// renders flag column + filter even when Worker proxy is unreachable.
+const MOCK_GEO = [
+  { country: 'VN', city: 'Hồ Chí Minh', region: 'SG' },
+  { country: 'VN', city: 'Hà Nội', region: 'HN' },
+  { country: 'VN', city: 'Đà Nẵng', region: 'DN' },
+  { country: 'US', city: 'San Francisco', region: 'CA' },
+  { country: 'SG', city: 'Singapore', region: 'SG' },
+  { country: 'JP', city: 'Tokyo', region: '13' },
+  { country: 'KR', city: 'Seoul', region: '11' },
+];
+
 export const MOCK_SESSIONS: AdminSession[] = Array.from({ length: 200 }, (_, i) => {
   const userIdx = i % MOCK_USERS.length;
   const user = MOCK_USERS[userIdx]!;
@@ -94,6 +113,7 @@ export const MOCK_SESSIONS: AdminSession[] = Array.from({ length: 200 }, (_, i) 
   const createdDays = Math.floor(i / 7);
   const createdHours = (i * 5) % 24;
   const duration = status === 'completed' ? 60 + ((i * 17) % 240) : status === 'failed' ? 30 + (i % 60) : null;
+  const geo = MOCK_GEO[i % MOCK_GEO.length]!;
   return {
     session_id: `sess_${pad(i + 1, 4)}`,
     task_id: `task_${pad(i + 1, 4)}`,
@@ -106,6 +126,10 @@ export const MOCK_SESSIONS: AdminSession[] = Array.from({ length: 200 }, (_, i) 
     cost_usd: status === 'completed' ? Math.round((0.08 + (i % 11) * 0.013) * 1000) / 1000 : 0,
     primary_concern: CONCERNS[i % CONCERNS.length]!,
     error: status === 'failed' ? ['VisionAgent timeout', 'Qdrant unreachable', 'LLM rate limit'][i % 3]! : null,
+    ip: `${(i * 13 + 23) % 255}.${(i * 7) % 255}.${(i * 3) % 255}.${(i * 11 + 5) % 255}`,
+    country: geo.country,
+    city: geo.city,
+    region: geo.region,
   };
 });
 
@@ -287,6 +311,160 @@ export const MOCK_COUPONS: AdminCoupon[] = [
   { code: 'EARLYBIRD', discount_percent: 30, max_redemptions: 200, redeemed: 200, active: false, expires_at: isoDaysAgo(15) },
   { code: 'INFLUENCER10', discount_percent: 10, max_redemptions: 1000, redeemed: 89, active: true, expires_at: isoDaysAgo(-60) },
 ];
+
+// ---------- Subscriptions / Billing (Wave 60.71.T2.billing) ----------
+
+/**
+ * Subscription row surfaced on /billing.
+ *
+ * Status mirrors Stripe's lifecycle so we can swap mocks for real data
+ * without renaming. `trialing` → 14-day free trial; `past_due` → first
+ * charge failed but auto-retry pending; `canceled` → cancel_at_period_end
+ * or admin-cancelled.
+ */
+export interface AdminSubscription {
+  id: string;
+  user_email: string;
+  user_id: string;
+  plan: 'mentor_month' | 'mentor_year' | 'lifetime';
+  status: 'active' | 'trialing' | 'past_due' | 'canceled';
+  started_at: string;
+  /** Next billing date — null for lifetime + canceled. */
+  next_bill_at: string | null;
+  /** Monthly recurring revenue contribution (USD). lifetime amortised over 24mo. */
+  mrr_contribution: number;
+  stripe_subscription_id: string;
+}
+
+const PLAN_PRICE_USD: Record<AdminSubscription['plan'], number> = {
+  mentor_month: 9.9,
+  mentor_year: 89,
+  lifetime: 199,
+};
+
+const PLAN_MRR: Record<AdminSubscription['plan'], number> = {
+  mentor_month: 9.9,
+  mentor_year: 89 / 12,
+  lifetime: 199 / 24,
+};
+
+export const MOCK_SUBSCRIPTIONS: AdminSubscription[] = Array.from(
+  { length: 60 },
+  (_, i) => {
+    const user = MOCK_USERS[i % MOCK_USERS.length]!;
+    const planRoll = i % 6;
+    const plan: AdminSubscription['plan'] =
+      planRoll === 0 ? 'lifetime' : planRoll <= 1 ? 'mentor_year' : 'mentor_month';
+    const statusRoll = i % 17;
+    const status: AdminSubscription['status'] =
+      statusRoll === 0 ? 'past_due'
+        : statusRoll === 1 ? 'canceled'
+        : statusRoll === 2 ? 'trialing'
+        : 'active';
+    const startedDaysAgo = 5 + ((i * 13) % 180);
+    // `next_bill_at` only makes sense for active + trialing + past_due monthly/yearly.
+    const next =
+      status === 'canceled' || plan === 'lifetime'
+        ? null
+        : status === 'trialing'
+          ? isoDaysAgo(-14 + (i % 14))
+          : plan === 'mentor_month'
+            ? isoDaysAgo(-1 * ((30 - (i % 30)) || 1))
+            : isoDaysAgo(-1 * ((365 - (i % 365)) || 1));
+    return {
+      id: `sub_${pad(i + 1, 4)}`,
+      user_email: user.email,
+      user_id: user.id,
+      plan,
+      status,
+      started_at: isoDaysAgo(startedDaysAgo),
+      next_bill_at: next,
+      mrr_contribution: status === 'canceled' ? 0 : PLAN_MRR[plan],
+      stripe_subscription_id: `sub_${Math.random().toString(36).slice(2, 14)}`,
+    };
+  },
+);
+
+/**
+ * Failed payment row. Distinct from `AdminTransaction.status === 'failed'`
+ * because retries + manual recovery require their own surface (operator
+ * can re-attempt, contact user, or write off).
+ */
+export interface AdminFailedPayment {
+  id: string;
+  user_email: string;
+  user_id: string;
+  amount_usd: number;
+  plan: 'mentor_month' | 'mentor_year' | 'lifetime';
+  /** Stripe decline reason (`card_declined`, `insufficient_funds`, etc). */
+  reason: string;
+  /** Human-friendly reason summary. */
+  reason_label: string;
+  failed_at: string;
+  /** How many retries have run so far. */
+  retry_count: number;
+  /** When the next automatic retry will fire — null if exhausted. */
+  next_retry_at: string | null;
+  stripe_id: string;
+}
+
+const FAIL_REASONS: Array<{ code: string; label: string }> = [
+  { code: 'card_declined', label: 'Thẻ bị từ chối' },
+  { code: 'insufficient_funds', label: 'Không đủ số dư' },
+  { code: 'expired_card', label: 'Thẻ hết hạn' },
+  { code: 'authentication_required', label: 'Yêu cầu xác thực 3DS' },
+  { code: 'processing_error', label: 'Lỗi xử lý ngân hàng' },
+];
+
+export const MOCK_FAILED_PAYMENTS: AdminFailedPayment[] = Array.from(
+  { length: 12 },
+  (_, i) => {
+    const user = MOCK_USERS[(i * 3) % MOCK_USERS.length]!;
+    const planRoll = i % 4;
+    const plan: AdminFailedPayment['plan'] =
+      planRoll === 0 ? 'mentor_year' : 'mentor_month';
+    const reason = FAIL_REASONS[i % FAIL_REASONS.length]!;
+    const retries = i % 4;
+    return {
+      id: `fp_${pad(i + 1, 4)}`,
+      user_email: user.email,
+      user_id: user.id,
+      amount_usd: PLAN_PRICE_USD[plan],
+      plan,
+      reason: reason.code,
+      reason_label: reason.label,
+      failed_at: isoDaysAgo(i % 30, (i * 7) % 24),
+      retry_count: retries,
+      next_retry_at: retries >= 3 ? null : isoDaysAgo(-2 - (i % 5)),
+      stripe_id: `pi_${Math.random().toString(36).slice(2, 14)}`,
+    };
+  },
+);
+
+/** Monthly MRR datapoint for the revenue analytics chart (last 12 months). */
+export interface MrrByMonth {
+  month: string; // YYYY-MM
+  mrr_usd: number;
+  new_subs: number;
+  churned_subs: number;
+}
+
+export const MOCK_MRR_BY_MONTH: MrrByMonth[] = Array.from({ length: 12 }, (_, i) => {
+  const d = new Date();
+  d.setMonth(d.getMonth() - (11 - i));
+  // Growth curve: roughly +12% per month with noise + small dips.
+  const base = 380 * Math.pow(1.12, i);
+  const noise = Math.sin(i * 1.3) * 40;
+  const mrr_usd = Math.max(150, Math.round(base + noise));
+  const new_subs = 6 + (i % 4) + Math.floor(i / 2);
+  const churned_subs = Math.max(0, 1 + (i % 3) - (i === 11 ? 1 : 0));
+  return {
+    month: d.toISOString().slice(0, 7),
+    mrr_usd,
+    new_subs,
+    churned_subs,
+  };
+});
 
 // ---------- Overview KPIs ----------
 
