@@ -6,11 +6,23 @@ import { cn } from '../lib/utils';
 const buttonVariants = cva(
   'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ' +
     'transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold ' +
-    'disabled:pointer-events-none disabled:opacity-50',
+    // Wave 60.41 — `disabled:opacity-50` on `default` variant made the
+    // primary gold button render as washed-out tan on cream light bg
+    // (≈ #DCC99E text-ink at 50% opacity → invisible on cream). Bump
+    // global opacity-50 → opacity-70 so disabled state is more visible.
+    // Default variant ALSO gets explicit `disabled:bg-muted text-muted-
+    // foreground` (per-variant override below) so primary CTA in disabled
+    // state shows a clear inactive block, not a faded gold ghost.
+    'disabled:pointer-events-none disabled:opacity-70',
   {
     variants: {
       variant: {
-        default: 'bg-gold text-ink hover:bg-gold-400',
+        // Wave 60.41 (sub-agent + user report "Ux/ui lỗi màu sắc khi bật
+        // light/dark"): primary CTA in disabled state was unreadable on
+        // /signin, /onboarding, /tu-vi-hom-nay because email/form not
+        // filled yet. Add explicit muted-bg fallback so users see "yes
+        // this is a button, no it's not active yet".
+        default: 'bg-gold text-ink hover:bg-gold-400 disabled:bg-muted disabled:text-muted-foreground',
         // Wave 60.22 — `text-gold` on `bg-transparent` over cream background
         // failed WCAG AA contrast (per Chrome MCP audit). Switched to
         // `text-foreground` so the button reads in both themes; hover keeps
