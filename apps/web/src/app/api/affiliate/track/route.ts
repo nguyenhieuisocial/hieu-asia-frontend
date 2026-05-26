@@ -5,12 +5,22 @@
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
+import { z } from 'zod';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const HIEU_API_URL = process.env.HIEU_API_URL ?? 'https://api.hieu.asia';
 const HIEU_API_SERVICE_TOKEN = process.env.HIEU_API_SERVICE_TOKEN;
+
+// Wave 60.49.b — Validate the referral-tracking payload before proxying.
+// Shape matches `middleware.ts` (event=click) and the `r/[code]` page worker
+// call. event is open-ended so future event types (signup, purchase) don't
+// require a schema bump; just bound the length.
+const TrackSchema = z.object({
+  event: z.string().min(1).max(40),
+  referral_code: z.string().min(1).max(80),
+}).passthrough();
 
 export async function POST(req: NextRequest) {
   if (!HIEU_API_SERVICE_TOKEN) {
@@ -19,12 +29,20 @@ export async function POST(req: NextRequest) {
       { status: 503 },
     );
   }
-  let body: unknown;
+  let raw: unknown;
   try {
-    body = await req.json();
+    raw = await req.json();
   } catch {
     return NextResponse.json({ ok: false, error: 'invalid_json' }, { status: 400 });
   }
+  const parsed = TrackSchema.safeParse(raw);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { ok: false, error: 'invalid_input', issues: parsed.error.flatten() },
+      { status: 400 },
+    );
+  }
+  const body = parsed.data;
   try {
     const res = await fetch(`${HIEU_API_URL}/affiliate/track`, {
       method: 'POST',

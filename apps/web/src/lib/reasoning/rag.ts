@@ -16,6 +16,7 @@
 import { embed } from 'ai';
 import { createGateway } from '@ai-sdk/gateway';
 import { createClient } from '@supabase/supabase-js';
+import type { Database } from '@hieu-asia/types/database.types';
 
 const EMBEDDING_MODEL = 'openai/text-embedding-3-small';
 const EMBEDDING_DIM = 1536;
@@ -28,7 +29,7 @@ const gateway = createGateway({
   headers: { 'http-referer': 'https://hieu.asia', 'x-title': 'hieu.asia' },
 });
 
-let _supabase: ReturnType<typeof createClient> | null = null;
+let _supabase: ReturnType<typeof createClient<Database>> | null = null;
 function getSupabase() {
   if (_supabase) return _supabase;
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -36,7 +37,7 @@ function getSupabase() {
   if (!url || !key) {
     throw new Error('rag: NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY required');
   }
-  _supabase = createClient(url, key, { auth: { persistSession: false } });
+  _supabase = createClient<Database>(url, key, { auth: { persistSession: false } });
   return _supabase;
 }
 
@@ -81,26 +82,18 @@ export async function retrieveContext(opts: RetrieveContextOpts): Promise<Corpus
     );
   }
 
-  // 2. RPC call to Postgres
-  // Cast to any because generated Supabase types haven't been regenerated
-  // since the Wave 56 Phase 2.1 migration added retrieve_context — Phase 2.7
-  // rollout includes a type regen step. Until then the cast is intentional.
+  // 2. RPC call to Postgres — Wave 60.49.b: generated Database types now
+  // include `retrieve_context`, so the cast that lived here pre-regen is gone.
   const supabase = getSupabase();
-  const { data, error } = await (supabase.rpc as unknown as (
-    name: string,
-    args: Record<string, unknown>,
-  ) => Promise<{ data: CorpusChunk[] | null; error: { message: string } | null }>)(
-    'retrieve_context',
-    {
-      query_embedding: embedding,
-      match_count: opts.k ?? 5,
-      filter_tags: opts.tags ?? null,
-    },
-  );
+  const { data, error } = await supabase.rpc('retrieve_context', {
+    query_embedding: embedding as unknown as string,
+    match_count: opts.k ?? 5,
+    filter_tags: opts.tags ?? undefined,
+  });
   if (error) {
     throw new Error(`rag: retrieve_context RPC failed — ${error.message}`);
   }
-  return data ?? [];
+  return (data ?? []) as CorpusChunk[];
 }
 
 /**

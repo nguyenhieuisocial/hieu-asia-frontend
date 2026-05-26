@@ -6,6 +6,7 @@
  */
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from '@hieu-asia/types/database.types';
 
 const URL_KEY = 'NEXT_PUBLIC_SUPABASE_URL';
 const ANON_KEY = 'NEXT_PUBLIC_SUPABASE_ANON_KEY';
@@ -35,9 +36,9 @@ export interface SupabaseConfig {
   edgeFnUrl?: string;
 }
 
-let _client: SupabaseClient | null = null;
+let _client: SupabaseClient<Database> | null = null;
 
-export function getSupabase(config: SupabaseConfig = {}): SupabaseClient {
+export function getSupabase(config: SupabaseConfig = {}): SupabaseClient<Database> {
   if (_client) return _client;
   const url = config.url || readEnv(URL_KEY);
   const anon = config.anonKey || readEnv(ANON_KEY);
@@ -46,7 +47,7 @@ export function getSupabase(config: SupabaseConfig = {}): SupabaseClient {
       `[@hieu-asia/supabase] missing ${URL_KEY} or ${ANON_KEY} env vars`,
     );
   }
-  _client = createClient(url, anon, {
+  _client = createClient<Database>(url, anon, {
     auth: { persistSession: false },
   });
   return _client;

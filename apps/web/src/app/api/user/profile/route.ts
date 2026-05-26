@@ -14,6 +14,7 @@
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
+import { z } from 'zod';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -25,6 +26,20 @@ interface ProfileResponse {
   error?: string;
 }
 
+// Wave 60.49.b — Validate the chart profile shape. Mirrors `ChartProfile`
+// in `components/account/MyChartTab.tsx`; all fields optional because the
+// account page allows partial updates.
+const ProfileSchema = z.object({
+  full_name: z.string().max(120).optional(),
+  gender: z.enum(['nam', 'nữ', 'khác', 'không nói', '']).optional(),
+  birth_date: z.string().max(20).optional(),
+  birth_time: z.string().max(10).optional(),
+  birth_place: z.string().max(200).optional(),
+  birth_date_lunar: z.string().max(40).optional(),
+  latest_reading_id: z.string().max(120).optional(),
+  updated_at: z.string().max(40).optional(),
+}).passthrough();
+
 export function GET(): NextResponse<ProfileResponse> {
   return NextResponse.json({
     ok: true,
@@ -34,19 +49,26 @@ export function GET(): NextResponse<ProfileResponse> {
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse<ProfileResponse>> {
-  let body: unknown;
+  let raw: unknown;
   try {
-    body = await req.json();
+    raw = await req.json();
   } catch {
     return NextResponse.json(
       { ok: false, profile: null, updated_at: null, error: 'invalid_json' },
       { status: 400 },
     );
   }
+  const parsed = ProfileSchema.safeParse(raw);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { ok: false, profile: null, updated_at: null, error: 'invalid_input' },
+      { status: 400 },
+    );
+  }
   // Echo back with a fresh updated_at. Worker integration replaces this.
   return NextResponse.json({
     ok: true,
-    profile: body,
+    profile: parsed.data,
     updated_at: new Date().toISOString(),
   });
 }

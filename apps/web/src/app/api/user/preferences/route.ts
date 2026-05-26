@@ -8,12 +8,21 @@
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
+import { z } from 'zod';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const HIEU_API_URL = process.env.HIEU_API_URL ?? 'https://api.hieu.asia';
 const HIEU_API_SERVICE_TOKEN = process.env.HIEU_API_SERVICE_TOKEN;
+
+// Wave 60.49.b — Bound the prefs payload at the proxy edge. The worker is
+// authoritative for nested-field validation; here we only enforce that the
+// body is well-formed JSON with a user_id and an object-shaped prefs bag.
+const PrefsSchema = z.object({
+  user_id: z.string().min(1).max(120),
+  prefs: z.record(z.string(), z.unknown()),
+}).passthrough();
 
 function unconfigured() {
   return NextResponse.json(
@@ -25,12 +34,20 @@ function unconfigured() {
 export async function POST(req: NextRequest) {
   if (!HIEU_API_SERVICE_TOKEN) return unconfigured();
 
-  let body: unknown;
+  let raw: unknown;
   try {
-    body = await req.json();
+    raw = await req.json();
   } catch {
     return NextResponse.json({ ok: false, error: 'invalid_json' }, { status: 400 });
   }
+  const parsed = PrefsSchema.safeParse(raw);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { ok: false, error: 'invalid_input', issues: parsed.error.flatten() },
+      { status: 400 },
+    );
+  }
+  const body = parsed.data;
 
   try {
     const res = await fetch(`${HIEU_API_URL}/user/preferences`, {

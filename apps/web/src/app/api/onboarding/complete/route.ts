@@ -37,111 +37,52 @@
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
+import { z } from 'zod';
 import { extractBearer } from '@/lib/supabase-server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-type Gender = 'M' | 'F' | 'NB';
+// Wave 60.49.b — zod schema replaces the hand-rolled validator.
+// Same rules (Vietnam phone regex, 1900–2100 year window, 0–23 hour),
+// same response contract (`{ ok: false, error: string }` on failure),
+// stricter parsing now bubbles up the first issue as `error` for back-compat.
+const ConsentFlagsSchema = z.object({
+  sms_anniversary: z.boolean().optional().default(false),
+  zalo_optin: z.boolean().optional().default(false),
+  email_tips: z.boolean().optional().default(false),
+  meta_retargeting: z.boolean().optional().default(false),
+  google_retargeting: z.boolean().optional().default(false),
+  zalo_oa_broadcast: z.boolean().optional().default(false),
+});
 
-interface ConsentFlags {
-  sms_anniversary: boolean;
-  zalo_optin: boolean;
-  email_tips: boolean;
-  meta_retargeting: boolean;
-  google_retargeting: boolean;
-  zalo_oa_broadcast: boolean;
-}
+const VN_PHONE_RE = /^(\+84|0)\d{9}$/;
 
-interface WizardPayload {
-  full_name: string;
-  gender: Gender;
-  birth_year: number;
-  birth_month: number;
-  birth_day: number;
-  birth_hour: number | null;
-  phone: string | null;
-  consent_flags: ConsentFlags;
-}
-
-const VALID_GENDERS: ReadonlySet<Gender> = new Set<Gender>(['M', 'F', 'NB']);
-
-function asBool(v: unknown): boolean {
-  return v === true;
-}
-
-function validate(raw: unknown): { ok: true; data: WizardPayload } | { ok: false; error: string } {
-  if (!raw || typeof raw !== 'object') return { ok: false, error: 'invalid_body' };
-  const r = raw as Record<string, unknown>;
-
-  const full_name = typeof r.full_name === 'string' ? r.full_name.trim() : '';
-  if (full_name.length < 1 || full_name.length > 120) {
-    return { ok: false, error: 'full_name must be 1-120 chars' };
-  }
-
-  const gender = r.gender as Gender;
-  if (!VALID_GENDERS.has(gender)) {
-    return { ok: false, error: 'gender must be M | F | NB' };
-  }
-
-  const birth_year = Number(r.birth_year);
-  if (!Number.isInteger(birth_year) || birth_year < 1900 || birth_year > 2100) {
-    return { ok: false, error: 'birth_year must be 1900-2100' };
-  }
-  const birth_month = Number(r.birth_month);
-  if (!Number.isInteger(birth_month) || birth_month < 1 || birth_month > 12) {
-    return { ok: false, error: 'birth_month must be 1-12' };
-  }
-  const birth_day = Number(r.birth_day);
-  if (!Number.isInteger(birth_day) || birth_day < 1 || birth_day > 31) {
-    return { ok: false, error: 'birth_day must be 1-31' };
-  }
-
-  let birth_hour: number | null = null;
-  if (r.birth_hour !== null && r.birth_hour !== undefined) {
-    const h = Number(r.birth_hour);
-    if (!Number.isInteger(h) || h < 0 || h > 23) {
-      return { ok: false, error: 'birth_hour must be 0-23 or null' };
-    }
-    birth_hour = h;
-  }
-
-  let phone: string | null = null;
-  if (typeof r.phone === 'string') {
-    const trimmed = r.phone.trim();
-    if (trimmed.length > 0) {
-      // Vietnam: +84 followed by 9 digits, OR 0 followed by 9 digits.
-      if (!/^(\+84|0)\d{9}$/.test(trimmed)) {
-        return { ok: false, error: 'phone must be Vietnam format (+84XXXXXXXXX or 0XXXXXXXXX)' };
-      }
-      phone = trimmed;
-    }
-  }
-
-  const cf = (r.consent_flags ?? {}) as Record<string, unknown>;
-  const consent_flags: ConsentFlags = {
-    sms_anniversary: asBool(cf.sms_anniversary),
-    zalo_optin: asBool(cf.zalo_optin),
-    email_tips: asBool(cf.email_tips),
-    meta_retargeting: asBool(cf.meta_retargeting),
-    google_retargeting: asBool(cf.google_retargeting),
-    zalo_oa_broadcast: asBool(cf.zalo_oa_broadcast),
-  };
-
-  return {
-    ok: true,
-    data: {
-      full_name,
-      gender,
-      birth_year,
-      birth_month,
-      birth_day,
-      birth_hour,
-      phone,
-      consent_flags,
-    },
-  };
-}
+const WizardSchema = z.object({
+  full_name: z.string().trim().min(1, 'full_name must be 1-120 chars').max(120, 'full_name must be 1-120 chars'),
+  gender: z.enum(['M', 'F', 'NB'], { message: 'gender must be M | F | NB' }),
+  birth_year: z.number().int().min(1900, 'birth_year must be 1900-2100').max(2100, 'birth_year must be 1900-2100'),
+  birth_month: z.number().int().min(1, 'birth_month must be 1-12').max(12, 'birth_month must be 1-12'),
+  birth_day: z.number().int().min(1, 'birth_day must be 1-31').max(31, 'birth_day must be 1-31'),
+  birth_hour: z.number().int().min(0, 'birth_hour must be 0-23 or null').max(23, 'birth_hour must be 0-23 or null').nullable(),
+  phone: z
+    .string()
+    .trim()
+    .nullable()
+    .transform((v) => (v === null || v.length === 0 ? null : v))
+    .refine(
+      (v) => v === null || VN_PHONE_RE.test(v),
+      'phone must be Vietnam format (+84XXXXXXXXX or 0XXXXXXXXX)',
+    ),
+  consent_flags: ConsentFlagsSchema.optional().default({
+    sms_anniversary: false,
+    zalo_optin: false,
+    email_tips: false,
+    meta_retargeting: false,
+    google_retargeting: false,
+    zalo_oa_broadcast: false,
+  }),
+});
 
 /**
  * Verify the bearer token by calling Supabase's /auth/v1/user endpoint and
@@ -180,9 +121,15 @@ export async function POST(req: NextRequest) {
   }
 
   const raw = await req.json().catch(() => null);
-  const result = validate(raw);
-  if (!result.ok) {
-    return NextResponse.json({ ok: false, error: result.error }, { status: 400 });
+  const result = WizardSchema.safeParse(raw);
+  if (!result.success) {
+    // First issue's message preserves the prior `{ ok: false, error: <human msg> }`
+    // contract used by the onboarding wizard's error toast.
+    const firstIssue = result.error.issues[0];
+    return NextResponse.json(
+      { ok: false, error: firstIssue?.message ?? 'invalid_input' },
+      { status: 400 },
+    );
   }
   const payload = result.data;
 

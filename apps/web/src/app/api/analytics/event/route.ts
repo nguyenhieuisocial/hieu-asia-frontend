@@ -10,6 +10,7 @@
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
+import { z } from 'zod';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -17,18 +18,37 @@ export const dynamic = 'force-dynamic';
 const HIEU_API_URL = process.env.HIEU_API_URL ?? 'https://api.hieu.asia';
 const HIEU_API_SERVICE_TOKEN = process.env.HIEU_API_SERVICE_TOKEN;
 
+// Wave 60.49.b — Defense-in-depth: reject malformed bodies before they reach
+// the worker. Keeps the upstream payload shape backwards-compatible with
+// `lib/analytics.ts:fireEvent`. `properties` is an arbitrary metadata bag
+// (caps at 200 entries to bound KV storage).
+const EventSchema = z.object({
+  event_name: z.string().min(1).max(120),
+  user_id: z.string().max(120).optional(),
+  session_id: z.string().max(120).optional(),
+  properties: z.record(z.string(), z.unknown()).optional(),
+}).passthrough();
+
 export async function POST(req: NextRequest) {
   // Silently drop when token unset — events are best-effort.
   if (!HIEU_API_SERVICE_TOKEN) {
     return new NextResponse(null, { status: 204 });
   }
 
-  let body: unknown;
+  let raw: unknown;
   try {
-    body = await req.json();
+    raw = await req.json();
   } catch {
     return NextResponse.json({ ok: false, error: 'invalid_json' }, { status: 400 });
   }
+  const parsed = EventSchema.safeParse(raw);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { ok: false, error: 'invalid_input', issues: parsed.error.flatten() },
+      { status: 400 },
+    );
+  }
+  const body = parsed.data;
 
   try {
     const res = await fetch(`${HIEU_API_URL}/analytics/event`, {
