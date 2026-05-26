@@ -66,7 +66,24 @@ jobs:
         working-directory: apps/web
         run: pnpm build-storybook
 
+      # Wave 60.51.b — gate Chromatic action behind token presence check so
+      # the workflow gracefully no-ops (warning only, exit 0) when the
+      # CHROMATIC_PROJECT_TOKEN secret hasn't been set yet. Previously the
+      # action crashed with "Missing project token" → red X on every PR.
+      - name: Check Chromatic token
+        id: token_check
+        env:
+          TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+        run: |
+          if [ -n "$TOKEN" ]; then
+            echo "has_token=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::CHROMATIC_PROJECT_TOKEN secret not set — skipping visual regression upload. Founder one-time: chromatic.com signup → Settings → Secrets → Actions → add CHROMATIC_PROJECT_TOKEN."
+            echo "has_token=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Publish to Chromatic
+        if: steps.token_check.outputs.has_token == 'true'
         uses: chromaui/action@v11
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
