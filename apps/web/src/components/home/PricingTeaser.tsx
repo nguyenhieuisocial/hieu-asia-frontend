@@ -115,21 +115,21 @@ export function PricingTeaser() {
           </p>
           <h2
             id="pricing-teaser-heading"
-            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
+            className="mt-4 text-balance font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
           >
             Chọn mức độ{' '}
             <span className="bg-gold-gradient bg-clip-text text-transparent">
               đồng hành phù hợp
             </span>
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
             Khảo sát đầu vào miễn phí. Bạn chỉ thanh toán khi muốn mở khoá luận
             giải đầy đủ hoặc Mentor cá nhân hoá. Hoàn tiền 100% trong 24 giờ
             nếu báo cáo chưa được tạo.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {TIERS.map((tier) => (
             <article
               key={tier.id}

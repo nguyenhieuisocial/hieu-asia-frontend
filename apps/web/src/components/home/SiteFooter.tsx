@@ -7,7 +7,7 @@ import { Mail, MessageCircle, Facebook, Heart, ArrowRight } from 'lucide-react';
 const PRODUCT_LINKS = [
   { href: '/reading', label: 'Phân tích lá số' },
   { href: '/onboarding?cta=mentor', label: 'AI Mentor' },
-  { href: '/affiliate', label: 'Affiliate' },
+  { href: '/affiliate', label: 'Cộng tác viên' },
 ];
 
 const TOOLS_LINKS = [
@@ -22,10 +22,10 @@ const TOOLS_LINKS = [
 const RESOURCE_LINKS = [
   { href: '/learn', label: 'Học huyền học' },
   { href: '/features', label: 'Tính năng' },
-  { href: '/pricing', label: 'Pricing' },
+  { href: '/pricing', label: 'Giá' },
   { href: '/about', label: 'Về chúng tôi' },
   { href: '/community', label: 'Cộng đồng' },
-  { href: '/changelog', label: 'Changelog' },
+  { href: '/changelog', label: 'Nhật ký thay đổi' },
 ];
 
 const LEGAL_LINKS = [
@@ -40,7 +40,7 @@ export function SiteFooter() {
   return (
     <footer className="relative border-t border-gold/15 bg-background">
       <div className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
-        <div className="grid gap-10 md:grid-cols-12">
+        <div className="grid gap-8 md:grid-cols-12">
           {/* Sản phẩm */}
           <FooterCol title="Sản phẩm" links={PRODUCT_LINKS} className="md:col-span-2" />
           {/* Công cụ miễn phí */}

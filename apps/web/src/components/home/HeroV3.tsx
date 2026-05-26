@@ -55,7 +55,7 @@ export function HeroV3() {
 
         <h1
           id="hero-heading"
-          className="mt-8 max-w-4xl font-heading text-5xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-6xl lg:text-7xl"
+          className="mt-8 max-w-4xl text-balance font-heading text-5xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-6xl lg:text-7xl"
         >
           Hiểu mình.{' '}
           <span className="bg-gold-gradient bg-clip-text text-transparent">
@@ -63,7 +63,7 @@ export function HeroV3() {
           </span>
         </h1>
 
-        <p className="mt-7 max-w-2xl text-base leading-relaxed text-foreground/80 sm:text-lg">
+        <p className="mt-8 max-w-2xl text-pretty text-base leading-relaxed text-foreground/80 sm:text-lg">
           Mỗi khi bạn đứng trước một quyết định quan trọng, hieu.asia cho bạn một
           góc nhìn sâu hơn — bằng tri thức cổ học Á Đông, trình bày bằng tiếng
           Việt cho người Việt, được AI giải mã rõ ràng, và để bạn tự chọn con đường.

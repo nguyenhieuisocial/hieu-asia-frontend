@@ -369,11 +369,11 @@ export default function FeaturesPage() {
             <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
               Sản phẩm — 10 tính năng · 3 chương
             </p>
-            <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+            <h1 className="mt-4 text-balance font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               Hiểu mình.{' '}
               <span className="bg-gold-gradient bg-clip-text text-transparent">Quyết định mình.</span>
             </h1>
-            <p className="mt-6 text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <p className="mt-6 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
               Bốn lăng kính Đông phương — Tử Vi, Bát Tự, Thần Số Học, MBTI — soi
               vào cùng một người. AI Mentor ngồi cạnh để hỏi tiếp khi bạn cần
               chiều sâu. Bạn vẫn là người quyết định.
@@ -423,7 +423,7 @@ export default function FeaturesPage() {
                 {/* Feature grid — columns adapt to bucket shape (see comment above) */}
                 <div
                   className={[
-                    'mt-10 grid auto-rows-fr gap-5 sm:grid-cols-2',
+                    'mt-10 grid auto-rows-fr gap-6 sm:grid-cols-2',
                     lgCols,
                   ]
                     .join(' ')
@@ -462,11 +462,11 @@ export default function FeaturesPage() {
             <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
               Bắt đầu
             </p>
-            <h2 className="mt-4 font-heading text-3xl font-bold text-foreground sm:text-4xl">
+            <h2 className="mt-4 text-balance font-heading text-3xl font-bold text-foreground sm:text-4xl">
               Khảo sát đầu vào{' '}
               <span className="bg-gold-gradient bg-clip-text text-transparent">3 phút</span>
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
               Miễn phí, không cần thẻ. Hoàn tiền 24 giờ nếu báo cáo chưa được tạo.
             </p>
             <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">

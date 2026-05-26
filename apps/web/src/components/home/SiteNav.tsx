@@ -35,8 +35,8 @@ const LEARN_SECTIONS: readonly NavSection[] = [
       { href: '/methodology', label: 'Phương pháp luận' },
       { href: '/methodology/tu-vi', label: 'Phương pháp Tử Vi' },
       { href: '/methodology/bat-tu', label: 'Phương pháp Bát Tự (beta)' },
-      { href: '/methodology/model-card', label: 'AI Model Card' },
-      { href: '/methodology/ai-safety', label: 'AI Safety Policy' },
+      { href: '/methodology/model-card', label: 'Thẻ mô hình AI' },
+      { href: '/methodology/ai-safety', label: 'Chính sách an toàn AI' },
       { href: '/methodology/algorithm-changelog', label: 'Lịch sử thuật toán' },
     ],
   },
@@ -47,7 +47,7 @@ const LEARN_SECTIONS: readonly NavSection[] = [
       { href: '/learn/bat-tu', label: 'Bát Tự Tứ Trụ' },
       { href: '/learn/than-so-hoc', label: 'Thần Số Học' },
       { href: '/learn/mbti', label: 'MBTI' },
-      { href: '/learn/palm', label: 'Palm Reading' },
+      { href: '/learn/palm', label: 'Xem chỉ tay' },
     ],
   },
 ];
@@ -61,9 +61,9 @@ const TOOLS_SECTIONS: readonly NavSection[] = [
     title: 'Quyết định',
     items: [
       { href: '/decisions', label: 'Quyết định (Hub)' },
-      { href: '/decision-simulator', label: 'Decision Simulator' },
-      { href: '/journal', label: 'Decision Journal' },
-      { href: '/weekly-review', label: 'Weekly Review' },
+      { href: '/decision-simulator', label: 'Mô phỏng quyết định' },
+      { href: '/journal', label: 'Nhật ký quyết định' },
+      { href: '/weekly-review', label: 'Review tuần' },
     ],
   },
   {
@@ -72,15 +72,15 @@ const TOOLS_SECTIONS: readonly NavSection[] = [
       { href: '/ban-do', label: 'Bản đồ của bạn' },
       { href: '/sample-report', label: 'Báo cáo mẫu' },
       { href: '/compatibility', label: 'Hợp đôi 2 lá số' },
-      { href: '/family-profiles', label: 'Family Profiles' },
-      { href: '/career-fit', label: 'Career Fit' },
+      { href: '/family-profiles', label: 'Hồ sơ gia đình' },
+      { href: '/career-fit', label: 'Hợp nghề' },
     ],
   },
   {
     title: 'Kế hoạch & Đại vận',
     items: [
-      { href: '/monthly-planning', label: 'Monthly Planning' },
-      { href: '/annual-planning', label: 'Annual Planning' },
+      { href: '/monthly-planning', label: 'Kế hoạch tháng' },
+      { href: '/annual-planning', label: 'Kế hoạch năm' },
       { href: '/timeline', label: 'Đại vận timeline' },
       { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại' },
     ],
@@ -136,7 +136,7 @@ export function SiteNav() {
         </Link>
 
         <nav
-          className="hidden items-center gap-7 md:flex"
+          className="hidden items-center gap-6 md:flex"
           aria-label="Điều hướng chính"
         >
           {PRIMARY_LINKS.map((l) => (
@@ -273,7 +273,7 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
           </Link>
           <div className="my-1 h-px bg-muted/5" />
           <p className="px-3 py-1 font-mono text-[9px] uppercase tracking-[0.24em] text-gold/85">
-            Affiliate
+            Cộng tác viên
           </p>
           <Link
             href="/affiliate/network"

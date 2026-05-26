@@ -388,11 +388,11 @@ export default function PricingPage() {
             <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
               Pricing
             </p>
-            <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
+            <h1 className="mt-4 text-balance font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
               Chọn gói phù hợp{' '}
               <span className="bg-gold-gradient bg-clip-text text-transparent">với bạn</span>
             </h1>
-            <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <p className="mt-6 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
               Khảo sát đầu vào luôn miễn phí. Hoàn tiền 100% trong 24 giờ nếu báo
               cáo chưa được tạo; sau đó vẫn xem xét hoàn tiền 14 ngày khi có lỗi
               kỹ thuật hoặc trải nghiệm không đúng mô tả.
@@ -463,7 +463,7 @@ export default function PricingPage() {
                   onSelect={handleSelect}
                 />
               ) : (
-                <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-5">
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
                   {TIERS.map((tier) => (
                     <TierCard
                       key={tier.id}
@@ -628,7 +628,7 @@ function ComparisonTable({
       <table className="w-full border-collapse text-left">
         <thead>
           <tr>
-            <th className="sticky left-0 z-10 w-1/4 bg-card/80 p-5 text-sm font-medium text-muted-foreground backdrop-blur">
+            <th className="sticky left-0 z-10 w-1/4 bg-card/80 p-6 text-sm font-medium text-muted-foreground backdrop-blur">
               Tính năng
             </th>
             {tiers.map((tier) => {
@@ -639,7 +639,7 @@ function ComparisonTable({
                 <th
                   key={tier.id}
                   className={[
-                    'relative p-5 align-top',
+                    'relative p-6 align-top',
                     tier.highlighted ? 'bg-gold/[0.06]' : '',
                   ].join(' ')}
                 >
@@ -687,7 +687,7 @@ function ComparisonTable({
               <tr className="border-t border-border">
                 <td
                   colSpan={tiers.length + 1}
-                  className="bg-card/60 px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85"
+                  className="bg-card/60 px-6 py-2.5 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85"
                 >
                   {groupName}
                 </td>
