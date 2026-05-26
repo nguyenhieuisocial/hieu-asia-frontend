@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import ReactMarkdown from 'react-markdown';
-import { Button, Card, CardContent, cn } from '@hieu-asia/ui';
+import { Button, Card, CardContent } from '@hieu-asia/ui';
 import {
   getReading,
   type ApiClientError,
@@ -18,6 +18,7 @@ import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { ReportSkeleton } from '@/components/skeletons/ReportSkeleton';
 import { TuViChartSection } from '@/components/tuvi/TuViChartSection';
 import { SectionFeedback } from '@/components/report/SectionFeedback';
+import { ProductTabs, type ProductTab } from '@/components/product/ProductTabs';
 import { SurveyPrompt } from '@/components/survey/SurveyPrompt';
 import { SURVEY_IDS } from '@/lib/survey';
 import { track } from '@/lib/analytics';
@@ -225,8 +226,27 @@ function ReportContent() {
 }
 
 function ReportSections({ sections }: { sections: MarkdownSection[] }) {
-  const [active, setActive] = React.useState<string | null>(
-    sections[0]?.title ?? null,
+  // Wave 60.58 T1.3 — ad-hoc tablist + parallel mobile accordion replaced
+  // by shared <ProductTabs> (Radix Tabs desktop + Accordion mobile from a
+  // single source of truth). Section ordering and per-section feedback are
+  // preserved; ProductTabs handles active state, keyboard a11y, and the
+  // responsive desktop/mobile branching.
+  const tabs = React.useMemo<ProductTab[]>(
+    () =>
+      sections.map((s) => {
+        const sectionId = `reading-${slugifySectionId(s.title)}`;
+        return {
+          id: sectionId,
+          label: s.title,
+          content: (
+            <div className="space-y-4">
+              <SectionBody content={s.body} />
+              <SectionFeedback sectionId={sectionId} />
+            </div>
+          ),
+        };
+      }),
+    [sections],
   );
 
   if (!sections.length) {
@@ -237,87 +257,7 @@ function ReportSections({ sections }: { sections: MarkdownSection[] }) {
     );
   }
 
-  return (
-    <div className="space-y-6">
-      <nav
-        role="tablist"
-        aria-label="Mục báo cáo"
-        className="hidden flex-wrap gap-2 border-b border-gold/15 pb-3 md:flex"
-      >
-        {sections.map((s) => (
-          <button
-            key={s.title}
-            role="tab"
-            aria-selected={active === s.title}
-            onClick={() => setActive(s.title)}
-            className={cn(
-              'rounded-md px-3 py-2 text-sm font-medium transition-colors',
-              active === s.title
-                ? 'bg-gold/15 text-gold'
-                : 'text-muted-foreground hover:bg-gold/5 hover:text-foreground',
-            )}
-          >
-            {s.title}
-          </button>
-        ))}
-      </nav>
-
-      <div className="space-y-3 md:hidden">
-        {sections.map((s) => {
-          const open = active === s.title;
-          return (
-            <div
-              key={s.title}
-              className="rounded-md border border-gold/15 bg-card/40"
-            >
-              <button
-                type="button"
-                aria-expanded={open}
-                onClick={() => setActive(open ? null : s.title)}
-                className="flex w-full items-center justify-between px-4 py-3 text-left"
-              >
-                <span
-                  className={cn(
-                    'text-sm font-medium',
-                    open ? 'text-gold' : 'text-foreground/80',
-                  )}
-                >
-                  {s.title}
-                </span>
-                <span aria-hidden className="text-gold/60">
-                  {open ? '▾' : '▸'}
-                </span>
-              </button>
-              {open && (
-                <div className="border-t border-gold/10 p-4">
-                  <SectionBody content={s.body} />
-                  <SectionFeedback sectionId={`reading-${slugifySectionId(s.title)}`} />
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="hidden md:block" role="tabpanel">
-        {active && (
-          <ActiveDesktopSection
-            section={sections.find((s) => s.title === active)}
-          />
-        )}
-      </div>
-    </div>
-  );
-}
-
-function ActiveDesktopSection({ section }: { section: MarkdownSection | undefined }) {
-  if (!section) return null;
-  return (
-    <div className="space-y-4">
-      <SectionBody content={section.body} />
-      <SectionFeedback sectionId={`reading-${slugifySectionId(section.title)}`} />
-    </div>
-  );
+  return <ProductTabs tabs={tabs} />;
 }
 
 function SectionBody({ content }: { content: string }) {
