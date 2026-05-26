@@ -78,7 +78,11 @@ const nextConfig: NextConfig = {
     const pixelImgHosts = 'https://*.facebook.com https://www.google.com https://www.googleadservices.com https://www.google-analytics.com';
 
     const scriptSrc = [
-      "script-src 'self' 'unsafe-inline'",
+      // Wave 60.80.fix — added 'wasm-unsafe-eval' to allow dotlottie-web
+      // WebAssembly.instantiate() for Lottie animations. Without it, browser
+      // blocks WASM compilation with CSP error surfaced in Lighthouse
+      // errors-in-console audit.
+      "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'",
       isDev ? "'unsafe-eval'" : '',
       'https://us.i.posthog.com https://*.posthog.com https://browser.sentry-cdn.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io',
       // Wave 60.29 — Vercel Speed Insights script. Pre-existing gap on web app
@@ -111,6 +115,10 @@ const nextConfig: NextConfig = {
       // hosted at challenges.cloudflare.com — must allow frame-src in addition
       // to script-src above. Both needed for captcha to work.
       "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://challenges.cloudflare.com",
+      // Wave 60.80.fix — allow blob: workers for libraries that spawn Web
+      // Workers via Blob URLs (e.g. dotlottie internal worker). Lighthouse
+      // surfaced "Creating a worker from 'blob:...' violates CSP".
+      "worker-src 'self' blob:",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
