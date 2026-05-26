@@ -104,6 +104,13 @@ const nextConfig: NextConfig = {
       "frame-ancestors 'none'",
       "upgrade-insecure-requests",
     ].join('; ');
+    // Wave 60.50.a — Cache-Control for marketing routes to enable browser
+    // back/forward cache (bf-cache). bf-cache requires Cache-Control to NOT
+    // be `no-store`. `public, max-age=0, must-revalidate` tells the browser
+    // to revalidate on every load but still allow bf-cache restoration on
+    // back-nav (instant restore from in-memory snapshot).
+    // Authed/dynamic routes keep their per-route `no-store` from API handlers.
+    const marketingCacheControl = 'public, max-age=0, must-revalidate';
     return [
       {
         source: '/(.*)',
@@ -114,6 +121,19 @@ const nextConfig: NextConfig = {
             value: 'max-age=63072000; includeSubDomains; preload',
           },
         ],
+      },
+      // Marketing routes — enable bf-cache for instant back-nav.
+      {
+        source: '/',
+        headers: [{ key: 'Cache-Control', value: marketingCacheControl }],
+      },
+      {
+        source: '/pricing',
+        headers: [{ key: 'Cache-Control', value: marketingCacheControl }],
+      },
+      {
+        source: '/features',
+        headers: [{ key: 'Cache-Control', value: marketingCacheControl }],
       },
     ];
   },
@@ -151,5 +171,18 @@ export default withBotId(
     silent: true,
     org: 'hieuasia',
     project: 'hieu-asia-web',
+    // Wave 60.50.a — Sentry payload reduction.
+    //   hideSourceMaps: don't ship maps to the browser (keep for upload).
+    //   bundleSizeOptimizations: tree-shakes debug logging + drops dev-only
+    //     Sentry features for ~5–10kB savings (replaces deprecated
+    //     `disableLogger` option in @sentry/nextjs ≥ 10).
+    //   tunnelRoute: routes Sentry envelopes through /monitoring on our
+    //     own origin, dodging ad-blockers that nuke *.ingest.sentry.io —
+    //     gives us full error visibility without an extra dropped-error tax.
+    hideSourceMaps: true,
+    bundleSizeOptimizations: {
+      excludeDebugStatements: true,
+    },
+    tunnelRoute: '/monitoring',
   }),
 );
