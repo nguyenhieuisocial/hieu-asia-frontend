@@ -86,6 +86,13 @@ const nextConfig: NextConfig = {
       // this, `@vercel/speed-insights/next` is CSP-blocked silently → Wave 59
       // Speed Insights produces zero metrics on web.
       'https://va.vercel-scripts.com',
+      // Wave 60.62 — Cloudflare Turnstile captcha (Wave 60.60.d wired
+      // TurnstileWidget on /signin). CSP must allow script-src for
+      // `challenges.cloudflare.com/turnstile/v0/api.js` to execute, otherwise
+      // `window.turnstile` never defined and widget never renders → Supabase
+      // signin fails because no captchaToken passed. Caught Wave 60.62.verify
+      // Playwright check (browser console "violates CSP directive").
+      'https://challenges.cloudflare.com',
       pixelScriptHosts,
     ]
       .filter(Boolean)
@@ -97,7 +104,10 @@ const nextConfig: NextConfig = {
       "font-src 'self' data: https://fonts.gstatic.com",
       `img-src 'self' data: blob: https: ${pixelImgHosts}`,
       `connect-src 'self' https://api.hieu.asia https://*.hieu.asia https://*.supabase.co https://*.supabase.in https://us.i.posthog.com https://*.posthog.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cloud.langfuse.com https://api.vietqr.io ${pixelConnectHosts}`,
-      "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
+      // Wave 60.62 — Cloudflare Turnstile renders its widget inside an iframe
+      // hosted at challenges.cloudflare.com — must allow frame-src in addition
+      // to script-src above. Both needed for captcha to work.
+      "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://challenges.cloudflare.com",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
