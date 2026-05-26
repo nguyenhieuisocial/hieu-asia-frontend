@@ -5,23 +5,27 @@ import type { ReactNode } from 'react';
 
 /**
  * Wave 60.56 P2.1 — MarketingHero (Option D "Warm-Dark Editorial").
+ * Wave 60.66.P1 — Option E "Editorial Live" typography pivot (vault 108).
  *
  * Consolidates the 4× pasted purple-radial hero blocks (Wave 60.55 R1 finding)
- * into one typed component. Visual matches `/tmp/wave-60-56-option-d/hero-v2.png`
- * — Anthropic-style generous top padding (~29vh), Instrument Serif display,
- * italic spans inheriting `text-gold-soft`, trailing gold-dot period with
- * 16px glow, optional double-ring ornament and italic watermark.
+ * into one typed component. Phase 1 swaps h1 font from Instrument Serif 400 to
+ * Be Vietnam Pro 700 tracking-tight (scan-fast, per founder feedback Wave
+ * 60.63 "đọc được nhanh"). Existing `<em>` italic spans in title prop keep
+ * working for backward compat (Phase 5 will sweep). Eyebrow widens from
+ * `string` → `ReactNode` so `<LiveCounterEyebrow>` can render. Anthropic-style
+ * generous top padding (~29vh), gold-dot signature period preserved, optional
+ * double-ring ornament and italic watermark preserved.
  *
  * Tokens (from `apps/web/tailwind.config.ts`, Wave 60.56 P1 commit 0b38173):
  *   bg-warm-dark-50 / text-cream-50 / text-cream-300 / text-cream-500
  *   text-gold / text-gold-soft / text-gold-dot / shadow-gold-dot-glow
- *   font-marketing-display / text-hero-display / text-eyebrow
+ *   font-sans (Be Vietnam Pro) / text-hero-display / text-eyebrow
  *   rounded-pill / max-w-marketing / max-w-marketing-text / ease-editorial
  */
 export type MarketingHeroProps = {
-  /** Mono uppercase gold eyebrow, e.g. "A.I · LUẬN GIẢI · 2026". */
-  eyebrow?: string;
-  /** H1 ReactNode — pass `<em>` for italic gold spans, `<span class="text-gold-dot">.</span>` for the signature period. */
+  /** Mono uppercase gold eyebrow. Accepts ReactNode (Wave 60.66.P1) so live counter component can render; plain string still works for backward compat. */
+  eyebrow?: ReactNode;
+  /** H1 ReactNode — pass `<u>` for underline accent (Option E), `<span class="text-gold-dot">.</span>` for the signature period. */
   title: ReactNode;
   /** Body subtitle, capped at `max-w-marketing-text` (540px). */
   subtitle?: string;
@@ -77,7 +81,7 @@ export function MarketingHero({
           </p>
         )}
 
-        <h1 className="text-balance font-marketing-display text-hero-display font-normal text-cream-50">
+        <h1 className="text-balance font-sans text-hero-display font-bold tracking-tight text-cream-50">
           {title}
         </h1>
 

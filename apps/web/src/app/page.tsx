@@ -8,6 +8,7 @@ import { HowToStart } from '@/components/home/HowToStart';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 import { MarketingHero } from '@/components/marketing/MarketingHero';
+import { LiveCounterEyebrow } from '@/components/marketing/LiveCounterEyebrow';
 import { BentoLens } from '@/components/marketing/BentoLens';
 import { PhilosophyBlock } from '@/components/marketing/PhilosophyBlock';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
@@ -361,23 +362,25 @@ export default function LandingPage() {
       />
       <SiteNav />
       <main id="main-content" className="min-h-screen bg-warm-dark-50 text-cream-50 pt-16">
-        {/* 1. Hero — Option D MarketingHero */}
+        {/* 1. Hero — Wave 60.66.P1 Option E "Editorial Live" (vault 108) */}
         <MarketingHero
-          eyebrow="A.I · LUẬN GIẢI · 2026"
+          eyebrow={<LiveCounterEyebrow count={1243} period="trong tuần" rating={4.8} />}
           title={
             <>
               Hiểu mình.{' '}
-              <em className="italic text-gold-soft">Quyết định</em>{' '}
+              <u className="underline decoration-gold decoration-2 underline-offset-[6px]">
+                Quyết định
+              </u>{' '}
               mình
               <span className="text-gold-dot drop-shadow-[0_0_16px_rgba(229,198,138,0.18)]">
                 .
               </span>
             </>
           }
-          subtitle="Bốn ống kính — Tử Vi, Bát Tự, Thần Số, MBTI — đọc lên trong một khoảng lặng. Không tiên tri. Không định mệnh hoá. Chỉ một ngôn ngữ để bạn đối thoại với chính mình."
+          subtitle="Bốn ống kính cổ học · một khoảng lặng · bạn vẫn chọn."
           primaryCta={{ label: 'Bắt đầu luận giải', href: '/onboarding' }}
           secondaryCta={{ label: 'Xem phương pháp', href: '/methodology' }}
-          trustLine="5 phút · miễn phí · không cần thẻ"
+          trustLine="5 phút · miễn phí · không cần thẻ · 14 ngày hoàn tiền"
           ornament="gold-ring"
           watermark="Tử Vi"
         />
