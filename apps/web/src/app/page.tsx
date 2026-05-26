@@ -14,6 +14,7 @@ import { PhilosophyBlock } from '@/components/marketing/PhilosophyBlock';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { ScanRow } from '@/components/marketing/ScanRow';
 import { IntentChips } from '@/components/marketing/IntentChips';
+import { BigNumberRow } from '@/components/marketing/BigNumberRow';
 
 export const metadata: Metadata = {
   // Homepage title already contains the brand → bypass the layout
@@ -539,6 +540,49 @@ export default function LandingPage() {
               watermark: 'MBTI',
             },
           ]}
+        />
+
+        {/* Wave 60.66.P4 — BigNumberRow social proof + risk-reversal (vault 109
+            §3 Phase 4 ENRICHED + vault 108 §5 Phase 4). 3-col big numerals with
+            count-up reveal via Motion `useInView` + 14-day refund block below.
+            Seed values 1243 / 4.8 / 14 — founder can adjust. Reuses existing
+            LazyMotion `m` (Phase 2 root setup) → 0 KB initial bundle delta. */}
+        <BigNumberRow
+          eyebrow="MINH CHỨNG"
+          title={
+            <>
+              Người Việt{' '}
+              <u className="underline decoration-gold decoration-2 underline-offset-[6px]">
+                tin tưởng
+              </u>{' '}
+              hieu.asia<span className="text-gold-dot">.</span>
+            </>
+          }
+          numbers={[
+            {
+              value: 1243,
+              caption: 'BÁO CÁO MỘT THÁNG QUA',
+            },
+            {
+              value: 4.8,
+              suffix: '★',
+              caption: 'ĐÁNH GIÁ PREMIUM',
+              // 1 decimal place so 4.8 doesn't round-trip to "5" mid-animation.
+              format: (n) => n.toFixed(1),
+            },
+            {
+              value: 14,
+              suffix: ' NGÀY',
+              caption: 'HOÀN TIỀN 100%',
+            },
+          ]}
+          riskReversal={{
+            headline: 'Không hài lòng? Hoàn tiền trong 14 ngày.',
+            body: 'Không cần lý do. Chuyển khoản trong 24h sau khi yêu cầu. Bạn vẫn giữ được PDF báo cáo đã tải.',
+            cta: 'Xem chính sách hoàn tiền',
+            href: '/pricing#refund',
+          }}
+          bg="warm-dark-50"
         />
 
         {/* 5. PhilosophyBlock — replaces fake StoryTestimonials (R3 diff #2) */}
