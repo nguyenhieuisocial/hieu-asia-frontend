@@ -239,8 +239,8 @@ function SingleChoice({
           <label
             key={c.value}
             className={[
-              'group flex cursor-pointer items-start gap-3 rounded-md border bg-warm-dark-200/60 px-4 py-3 text-sm text-foreground transition-all',
-              'hover:-translate-y-px hover:border-gold/40 hover:bg-warm-dark-200',
+              'group flex cursor-pointer items-start gap-3 rounded-md border bg-card/60 px-4 py-3 text-sm text-foreground transition-all',
+              'hover:-translate-y-px hover:border-gold/40 hover:bg-card',
               'focus-within:ring-2 focus-within:ring-gold',
               checked ? 'border-gold bg-gold/10 shadow-[0_0_0_1px_rgba(184,146,61,0.4)]' : 'border-gold/15',
             ].join(' ')}
@@ -295,8 +295,8 @@ function MultiChoice({
           <label
             key={c.value}
             className={[
-              'flex cursor-pointer items-start gap-3 rounded-md border bg-warm-dark-200/60 px-3 py-2.5 text-sm text-foreground transition-all',
-              'hover:border-gold/40 hover:bg-warm-dark-200',
+              'flex cursor-pointer items-start gap-3 rounded-md border bg-card/60 px-3 py-2.5 text-sm text-foreground transition-all',
+              'hover:border-gold/40 hover:bg-card',
               'focus-within:ring-2 focus-within:ring-gold',
               checked ? 'border-gold bg-gold/10' : 'border-gold/15',
             ].join(' ')}
@@ -354,7 +354,7 @@ function TextInput({
         placeholder={question.placeholder}
         maxLength={max}
         rows={5}
-        className="w-full resize-y rounded-md border border-gold/20 bg-warm-dark-200/60 px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/70 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/40"
+        className="w-full resize-y rounded-md border border-gold/20 bg-card/60 px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/70 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/40"
       />
       {max !== undefined && (
         <span className="self-end font-mono text-[11px] text-muted-foreground">
@@ -398,7 +398,7 @@ function ScaleInput({
                 'focus-within:ring-2 focus-within:ring-gold',
                 checked
                   ? 'border-gold bg-gold text-ink shadow-[0_0_0_1px_rgba(184,146,61,0.5)]'
-                  : 'border-gold/20 bg-warm-dark-200/60 text-foreground',
+                  : 'border-gold/20 bg-card/60 text-foreground',
               ].join(' ')}
             >
               <input
