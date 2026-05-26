@@ -434,7 +434,12 @@ export default function PricingPage() {
         </section>
 
         {/* Mobile cards / Desktop table */}
-        <section className="relative bg-background pb-16 sm:pb-24">
+        {/* Wave 60.37.f (sub-agent A HIGH-7): grid bottom padding was
+            pb-16 sm:pb-24 which created dead space between the last tier
+            card and the post-grid ornament — ornament read as floating.
+            Tighten to pb-12 sm:pb-16 + ornament container goes pt-0
+            (was pt-2) so the diamond sits as an explicit chapter-end. */}
+        <section className="relative bg-background pb-12 sm:pb-16">
           <div className="mx-auto max-w-6xl px-6">
             {/* Mobile: stacked cards */}
             <div className="space-y-6 md:hidden">
@@ -474,8 +479,10 @@ export default function PricingPage() {
         </section>
 
         {/* Wave 60.35 — anchor between grid and FAQ. Mirrors the hero
-            ornament so the page reads as ledger-like editorial spread. */}
-        <div className="bg-background pt-2">
+            ornament so the page reads as ledger-like editorial spread.
+            Wave 60.37.f: pt-2 → pt-0 so the diamond kisses the grid as
+            an explicit chapter-end (paired with grid pb tightening). */}
+        <div className="bg-background pt-0">
           <OrnamentDivider />
         </div>
 
