@@ -78,7 +78,7 @@ jobs:
         # pnpm version pinned via `packageManager` in package.json (pnpm@9.12.0).
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
         # No `cache: pnpm` — the remote-build deploy doesn't run `pnpm install`
