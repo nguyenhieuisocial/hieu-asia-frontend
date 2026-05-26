@@ -101,11 +101,26 @@ html {
   }
 }
 
-/* Safe-area-inset for iPhone notch / Android gesture nav */
+/* Safe-area-inset for iPhone notch / Android gesture nav.
+ *
+ * Wave 60.68 — added `padding-bottom` so the iPhone home-indicator no longer
+ * overlaps in-page content. Routes that mount sticky bottom UI (FAB, chat
+ * composer, BottomNavBar) set `data-has-sticky-bottom="true"` on <body> via
+ * a client-side effect and we drop the body-level padding to avoid double-
+ * counting (those components handle their own safe-area math inline).
+ *
+ * Paired with the `viewport-fit=cover` viewport meta declaration in
+ * layout.tsx — without that, env(safe-area-inset-bottom) resolves to 0px on
+ * iPhone Safari.
+ */
 @supports (padding: max(0px)) {
   body {
     padding-left: max(0px, env(safe-area-inset-left));
     padding-right: max(0px, env(safe-area-inset-right));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+  body[data-has-sticky-bottom='true'] {
+    padding-bottom: 0;
   }
 }
 

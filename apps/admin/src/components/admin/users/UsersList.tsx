@@ -1,8 +1,30 @@
 'use client';
 
 import * as React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, Input, cn } from '@hieu-asia/ui';
-import { Crown, Shield, Eye, Pencil, Trash2, Search, History, BookmarkPlus } from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  Input,
+  cn,
+} from '@hieu-asia/ui';
+import {
+  Crown,
+  Shield,
+  Eye,
+  Pencil,
+  Trash2,
+  Search,
+  History,
+  BookmarkPlus,
+  MoreHorizontal,
+} from 'lucide-react';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { EditableCell } from '@/components/admin/EditableCell';
@@ -340,35 +362,41 @@ export function UsersList({
                         </div>
                       </td>
                       <td className="px-4 py-3 text-right">
-                        <div className="inline-flex gap-1.5">
-                          <button
-                            type="button"
-                            onClick={() => onOpenAudit(u)}
-                            className="inline-flex items-center gap-1 rounded border border-border px-2 py-1 text-xs text-muted-foreground hover:bg-muted/30 hover:text-foreground"
-                            title="Xem audit log"
-                          >
-                            <History className="h-3 w-3" />
-                            Log
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => onOpenEdit(u)}
-                            className="inline-flex items-center gap-1 rounded border border-gold/30 px-2 py-1 text-xs text-gold hover:bg-gold/10"
-                          >
-                            <Pencil className="h-3 w-3" />
-                            Sửa
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => onOpenDelete(u)}
-                            disabled={u.role === 'owner'}
-                            className="inline-flex items-center gap-1 rounded border border-red-500/30 px-2 py-1 text-xs text-red-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-30"
-                            title={u.role === 'owner' ? 'Không thể xóa owner' : 'Xóa'}
-                          >
-                            <Trash2 className="h-3 w-3" />
-                            Xóa
-                          </button>
-                        </div>
+                        {/* Wave 60.68 — DropdownMenu primitive replaces the
+                            3-button inline row. Keyboard-roving focus +
+                            ESC dismiss come free from Radix; visual surface
+                            matches the gold/15 border + bg-card chrome used
+                            elsewhere (Dialog/Sheet). */}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button
+                              type="button"
+                              aria-label={`Mở menu thao tác cho ${u.email}`}
+                              className="inline-flex h-8 w-8 items-center justify-center rounded border border-gold/20 bg-card/60 text-muted-foreground hover:border-gold/50 hover:text-foreground"
+                            >
+                              <MoreHorizontal className="h-4 w-4" />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="min-w-[10rem]">
+                            <DropdownMenuItem onSelect={() => onOpenAudit(u)}>
+                              <History className="h-4 w-4 text-muted-foreground" />
+                              Xem audit log
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => onOpenEdit(u)}>
+                              <Pencil className="h-4 w-4 text-gold" />
+                              Sửa user
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              disabled={u.role === 'owner'}
+                              onSelect={() => onOpenDelete(u)}
+                              className="text-red-300 focus:bg-red-500/10 focus:text-red-200"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              {u.role === 'owner' ? 'Không thể xóa owner' : 'Xóa user'}
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </td>
                     </tr>
                   );

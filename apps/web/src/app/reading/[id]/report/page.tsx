@@ -5,7 +5,16 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import ReactMarkdown from 'react-markdown';
-import { Button, Card, CardContent } from '@hieu-asia/ui';
+import {
+  Button,
+  Card,
+  CardContent,
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+} from '@hieu-asia/ui';
+import { MoreVertical, Share2, Download, MessageCircle } from 'lucide-react';
 import {
   getReading,
   type ApiClientError,
@@ -314,20 +323,68 @@ function ReportFooter({ readingId }: { readingId: string }) {
     }
   };
 
+  const onPrint = () => window.print();
+
   return (
-    <div className="flex flex-col gap-3 border-t border-gold/15 pt-6 sm:flex-row sm:items-center sm:justify-between print:hidden">
-      <Button variant="outline" onClick={() => window.print()}>
-        Tải PDF báo cáo
-      </Button>
-      <div className="flex gap-3">
-        <Button variant="outline" onClick={onShare}>
-          {copied ? 'Đã chép link' : 'Chia sẻ'}
+    <div className="border-t border-gold/15 pt-6 print:hidden">
+      {/* Mobile (<lg): collapse the 3 actions into a Material 3 bottom-sheet.
+          Avoids the awkward wrap on <360 px screens where buttons collide. */}
+      <div className="lg:hidden">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" className="w-full justify-center gap-2">
+              <MoreVertical className="size-4" aria-hidden="true" />
+              Tác vụ báo cáo
+            </Button>
+          </SheetTrigger>
+          <SheetContent
+            side="bottom"
+            className="rounded-t-card-editorial"
+          >
+            <SheetTitle className="sr-only">Tác vụ báo cáo</SheetTitle>
+            <div className="flex flex-col gap-2 pb-[max(1rem,env(safe-area-inset-bottom))]">
+              <Button
+                variant="ghost"
+                onClick={onShare}
+                className="h-14 justify-start gap-3 text-base"
+              >
+                <Share2 className="size-5" aria-hidden="true" />
+                {copied ? 'Đã chép link' : 'Chia sẻ báo cáo'}
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={onPrint}
+                className="h-14 justify-start gap-3 text-base"
+              >
+                <Download className="size-5" aria-hidden="true" />
+                Tải PDF báo cáo
+              </Button>
+              <Button asChild className="h-14 justify-start gap-3 text-base">
+                <Link href={`/reading/${readingId}/mentor`}>
+                  <MessageCircle className="size-5" aria-hidden="true" />
+                  Chat với Mentor
+                </Link>
+              </Button>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      {/* Desktop (lg+): existing inline row. */}
+      <div className="hidden lg:flex lg:items-center lg:justify-between">
+        <Button variant="outline" onClick={onPrint}>
+          Tải PDF báo cáo
         </Button>
-        <Button asChild={false}>
-          <Link href={`/reading/${readingId}/mentor`}>
-            Bắt đầu chat với Mentor →
-          </Link>
-        </Button>
+        <div className="flex gap-3">
+          <Button variant="outline" onClick={onShare}>
+            {copied ? 'Đã chép link' : 'Chia sẻ'}
+          </Button>
+          <Button asChild={false}>
+            <Link href={`/reading/${readingId}/mentor`}>
+              Bắt đầu chat với Mentor →
+            </Link>
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -19,6 +19,7 @@ import { PlausibleScript } from '@/components/analytics/PlausibleScript';
 import { PostHogProvider } from '@/components/PostHogProvider';
 import { ConsentBanner } from '@/components/cmp/ConsentBanner';
 import { Toaster } from '@hieu-asia/ui';
+import { AppShell } from '@/components/product/AppShell';
 // Wave 21 — Vercel telemetry (customer-facing web only).
 // Phân vai analytics:
 //   - PostHog:               business events, feature flags, session replay, exceptions
@@ -167,6 +168,14 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
+  // Wave 60.68 — PWA / iOS notch + home-indicator support.
+  // `viewport-fit=cover` lets `env(safe-area-inset-*)` resolve to actual
+  // insets on iPhone (otherwise the page treats the notch as part of the
+  // safe area and our bottom-nav / FAB pad-bottom math is a no-op).
+  // `interactiveWidget=resizes-content` (Chromium) keeps the iOS-style
+  // keyboard-resize behavior so floating chat composers don't clip.
+  viewportFit: 'cover',
+  interactiveWidget: 'resizes-content',
 };
 
 export default async function RootLayout({
@@ -208,6 +217,10 @@ export default async function RootLayout({
                     on first visit (geo-aware: VN + EU always; auto-accept
                     legitimate-interest defaults elsewhere). */}
                 <ConsentBanner />
+                {/* Wave 60.68 — PWA bottom-nav. Renders ONLY in standalone
+                    display-mode AND on in-app routes (/account, /reading,
+                    /dashboard, /journal, /decisions). No-op otherwise. */}
+                <AppShell />
               </LazyMotionProvider>
             </QueryProvider>
             <Toaster />

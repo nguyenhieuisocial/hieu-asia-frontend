@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, Sparkles, MessageCircle, LayoutDashboard } from 'lucide-react';
+import { ArrowRight, Plus, Sparkles, MessageCircle, LayoutDashboard } from 'lucide-react';
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { Fab } from '@/components/product/Fab';
 
 export const metadata: Metadata = {
   title: 'Lá số của bạn',
@@ -122,6 +123,17 @@ export default function ReadingHubPage() {
       </main>
 
       <SiteFooter />
+
+      {/* Wave 60.68 — Material 3 Extended FAB. Primary persistent action on
+          the reading hub: "Lá số mới" → onboarding flow (which routes to the
+          appropriate method picker per Wave 60.58). Mounted as a sibling of
+          <main>; respects safe-area-inset-bottom on iPhone home indicator. */}
+      <Fab
+        href="/onboarding"
+        label="Lá số mới"
+        trackId="fab_reading_new"
+        icon={<Plus className="h-5 w-5" aria-hidden="true" />}
+      />
     </div>
   );
 }
