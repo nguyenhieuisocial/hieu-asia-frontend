@@ -54,6 +54,12 @@ export type PricingTierV2Tier = {
   recommended?: boolean;
   /** If set, render the "{n} NGÀY HOÀN TIỀN" jade caption beneath the CTA. */
   refundDays?: number;
+  /**
+   * Wave 60.95.a — "Bạn nên chọn gói này nếu..." guidance line (vault 130
+   * §3 P1-9). Rendered as a muted italic block between description and price
+   * so buyers can self-select against the persona that matches them.
+   */
+  bestFor?: string;
 };
 
 export type PricingTierV2Props = {
@@ -202,6 +208,15 @@ export function PricingTierV2({
                 <p className="mt-2 font-sans text-sm text-cream-300">
                   {tier.description}
                 </p>
+
+                {tier.bestFor && (
+                  <p className="mt-4 border-l-2 border-gold/40 pl-3 font-sans text-xs italic leading-relaxed text-cream-500">
+                    <span className="font-mono uppercase tracking-wider text-gold-soft not-italic">
+                      Nên chọn nếu
+                    </span>{' '}
+                    {tier.bestFor}
+                  </p>
+                )}
 
                 <div className="mt-8 flex items-baseline gap-2">
                   <span className="font-marketing-display text-price-amount text-cream-50">

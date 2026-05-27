@@ -644,6 +644,8 @@ export default function LandingPage() {
               nameDisplay: 'Khởi đầu',
               description: 'Khảo sát đầu vào và 6 công cụ tra cứu — không cần thẻ.',
               priceMonthly: PRICING.standard.vnd,
+              bestFor:
+                'bạn muốn thử công cụ và xem tổng quan trước khi quyết định.',
               features: [
                 'Khảo sát đầu vào',
                 '6 công cụ tra cứu cơ bản',
@@ -663,13 +665,15 @@ export default function LandingPage() {
               // not a subscription. Without this override the component
               // defaults to "/ tháng" which misleads buyers.
               priceUnit: 'một lần',
+              bestFor:
+                'bạn muốn báo cáo đầy đủ một lần + PDF để giữ lại.',
               features: [
                 'Một lá số Tử Vi đầy đủ',
                 'PDF báo cáo có thể tải về',
                 '3 câu hỏi với AI Mentor',
                 'Lưu trữ vĩnh viễn trong tài khoản',
               ],
-              ctaLabel: 'Mua Premium',
+              ctaLabel: 'Mở khóa 1 lá số',
               ctaHref: '/pricing#premium',
               primary: true,
               recommended: true,
@@ -683,13 +687,15 @@ export default function LandingPage() {
               priceMonthly: PRICING.monthly.vnd,
               priceYearly: PRICING.yearly.vnd,
               yearlyDiscount: 'Tiết kiệm ~17%',
+              bestFor:
+                'bạn thường xuyên hỏi về quyết định, công việc, quan hệ, kế hoạch năm.',
               features: [
                 'Mentor AI không giới hạn câu hỏi',
                 'Đại vận và lưu niên hàng năm',
                 'Tất cả 4 ống kính sâu',
                 'Huỷ bất cứ lúc nào',
               ],
-              ctaLabel: 'Đăng ký Mentor',
+              ctaLabel: 'Dùng Mentor không giới hạn',
               ctaHref: '/pricing#mentor',
               refundDays: 14,
             },

@@ -24,6 +24,7 @@ import { MarketingHero } from '@/components/marketing/MarketingHero';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { OrnamentDivider } from '@/components/marketing/OrnamentDivider';
 import { TrustStrip } from '@/components/marketing/TrustStrip';
+import { PRICING } from '@/lib/pricing';
 
 const PRICING_FAQ: readonly FaqItem[] = [
   {
@@ -39,11 +40,11 @@ const PRICING_FAQ: readonly FaqItem[] = [
     q: 'Mentor có gì khác so với Premium?',
     a: (
       <p>
-        Premium cho bạn bốn ống kính đầy đủ (Tử Vi · Bát Tự · MBTI · Thần Số Học)
-        không giới hạn, nhật ký nội tâm có A.I phản chiếu, và xuất PDF chia sẻ.
-        Mentor là Premium <b>cộng thêm</b> một buổi 1-1 video 60 phút với chuyên
-        gia mỗi quý, hỗ trợ ưu tiên trong 4 giờ, và bản luận giải năm in thành
-        sách giấy gửi tận nhà.
+        <b>Premium 99.000đ một lần</b> cho bạn một lá số Tử Vi đầy đủ, PDF báo
+        cáo và 3 câu hỏi với AI Mentor — phù hợp khi bạn cần báo cáo trọn vẹn
+        một lần. <b>Mentor 199.000đ/tháng</b> (hoặc 1.990.000đ/năm) mở khóa AI
+        Mentor không giới hạn, đại vận và lưu niên hàng năm — phù hợp khi bạn
+        muốn đồng hành dài hạn.
       </p>
     ),
   },
@@ -114,51 +115,84 @@ export default function PricingPage() {
               id: 'free',
               name: 'MIỄN PHÍ',
               nameDisplay: 'Khởi đầu',
-              description: 'Một lát cắt đầu — đủ để cảm nhận giọng nói.',
-              priceMonthly: 0,
+              description: 'Khảo sát đầu vào và 6 công cụ tra cứu — không cần thẻ.',
+              priceMonthly: PRICING.standard.vnd,
+              bestFor:
+                'bạn muốn thử công cụ và xem tổng quan trước khi quyết định.',
               features: [
-                '1 ống kính / tháng',
-                'Luận giải tóm tắt',
-                'Lưu 30 ngày gần nhất',
+                'Khảo sát đầu vào',
+                '6 công cụ tra cứu cơ bản',
+                'Tử Vi · Bát Tự · MBTI · Thần Số',
+                'Lưu hồ sơ cá nhân',
               ],
               ctaLabel: 'Bắt đầu miễn phí',
               ctaHref: '/onboarding',
             },
             {
               id: 'premium',
-              name: 'PREMIUM',
+              name: 'PREMIUM · 1 LÁ SỐ',
               nameDisplay: 'Đối thoại',
-              description: 'Bốn ống kính đầy đủ — đi sâu, đi đều, đi dài.',
-              priceMonthly: 199000,
-              priceYearly: 1990000,
-              yearlyDiscount: 'Tiết kiệm 20%',
+              description: 'Một lá số đầy đủ kèm PDF và 3 câu hỏi Mentor AI.',
+              priceMonthly: PRICING.premium.vnd,
+              // Wave 60.95.a — Premium is one-time (vault 81 V1 postmortem +
+              // canonical PRICING). Was previously mis-rendered as a 199.000₫/
+              // tháng subscription which caused the homepage ↔ /pricing
+              // mismatch flagged in the founder audit.
+              priceUnit: 'một lần',
+              bestFor:
+                'bạn muốn báo cáo đầy đủ một lần + PDF để giữ lại.',
               features: [
-                '4 ống kính, không giới hạn',
-                'Luận giải sâu, có ngữ cảnh',
-                'Nhật ký nội tâm có A.I phản chiếu',
-                'Xuất PDF chia sẻ',
+                'Một lá số Tử Vi đầy đủ',
+                'PDF báo cáo có thể tải về',
+                '3 câu hỏi với AI Mentor',
+                'Lưu trữ vĩnh viễn trong tài khoản',
               ],
-              ctaLabel: 'Chọn Premium',
+              ctaLabel: 'Mở khóa 1 lá số',
               ctaHref: '/checkout/premium',
               primary: true,
               recommended: true,
-              refundDays: 30,
+              refundDays: 14,
             },
             {
               id: 'mentor',
-              name: 'MENTOR',
+              name: 'MENTOR · KHÔNG GIỚI HẠN',
               nameDisplay: 'Đồng hành',
               description:
-                'Premium + một cuộc hẹn 1-1 với chuyên gia mỗi quý.',
-              priceMonthly: 499000,
+                'Mentor AI không giới hạn, đại vận và lưu niên hàng năm.',
+              priceMonthly: PRICING.monthly.vnd,
+              priceYearly: PRICING.yearly.vnd,
+              yearlyDiscount: 'Tiết kiệm ~17%',
+              bestFor:
+                'bạn thường xuyên hỏi về quyết định, công việc, quan hệ, kế hoạch năm.',
               features: [
-                'Toàn bộ tính năng Premium',
-                '1 buổi 1-1 video / quý (60 phút)',
-                'Ưu tiên hỗ trợ trong 4 giờ',
-                'Bản luận giải năm dạng sách in',
+                'Mentor AI không giới hạn câu hỏi',
+                'Đại vận và lưu niên hàng năm',
+                'Tất cả 4 ống kính sâu',
+                'Huỷ bất cứ lúc nào',
               ],
-              ctaLabel: 'Chọn Mentor',
+              ctaLabel: 'Dùng Mentor không giới hạn',
               ctaHref: '/checkout/mentor',
+              refundDays: 14,
+            },
+            {
+              id: 'lifetime',
+              name: 'LIFETIME · VĨNH VIỄN',
+              nameDisplay: 'Trọn đời',
+              description:
+                'Mở khóa Mentor không giới hạn — vĩnh viễn, không phí định kỳ.',
+              priceMonthly: PRICING.lifetime.vnd,
+              priceUnit: 'một lần',
+              bestFor:
+                'bạn muốn truy cập mọi tính năng dài hạn không lo phí định kỳ.',
+              features: [
+                'Toàn bộ tính năng Mentor không giới hạn',
+                'Truy cập trọn đời, không gia hạn',
+                'Ưu tiên hỗ trợ trong 24 giờ',
+                'Cập nhật tính năng mới miễn phí',
+              ],
+              ctaLabel: 'Mua Lifetime',
+              ctaHref: '/checkout/lifetime',
+              refundDays: 14,
             },
           ]}
         />
