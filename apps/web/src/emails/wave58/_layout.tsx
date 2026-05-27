@@ -223,7 +223,7 @@ export const subtleNoteStyle: CSSProperties = {
 };
 
 /**
- * Refund jade badge — "30 ngày hoàn tiền" reassurance chip for payment/upsell emails.
+ * Refund jade badge — "14 ngày hoàn tiền" reassurance chip for payment/upsell emails.
  * Jade hue (#2D7A6B) reads as "safe / verified" cross-culture.
  */
 export const refundBadgeStyle: CSSProperties = {

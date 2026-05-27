@@ -100,7 +100,7 @@ export default function WinbackEmail({
         </Section>
 
         <Section style={{ margin: '12px 0 0', textAlign: 'center' }}>
-          <span style={refundBadgeStyle}>30 ngày hoàn tiền</span>
+          <span style={refundBadgeStyle}>14 ngày hoàn tiền</span>
         </Section>
 
         <Text style={subtleNoteStyle}>
