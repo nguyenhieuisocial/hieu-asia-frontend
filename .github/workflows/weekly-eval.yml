@@ -1,0 +1,81 @@
+name: weekly-eval
+
+# Wave 60.94.n — Weekly eval gate per [[80 - Master Plan V1]] P4.5 quality target.
+# Runs eval framework against production. If avg score < 9.0, alert via Sentry.
+
+on:
+  schedule:
+    # Mon 00:00 UTC = Mon 07:00 ICT
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+    inputs:
+      persona_filter:
+        description: 'Persona filter (e.g. anh_khoa). Empty = all.'
+        required: false
+        default: ''
+      judge_mode:
+        description: 'rubric-only | rubric-plus-llm | llm-only'
+        required: false
+        default: 'rubric-plus-llm'
+
+permissions:
+  contents: read
+  issues: write # to file alert issue on regression
+
+concurrency:
+  group: weekly-eval
+  cancel-in-progress: false
+
+jobs:
+  eval:
+    name: Eval run + alert on regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ADMIN_TOKEN: ${{ secrets.HIEU_API_ADMIN_TOKEN }}
+      EVAL_API_URL: https://api.hieu.asia
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v5
+        with:
+          version: 10
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile --filter web
+
+      - name: Run eval
+        id: run
+        run: |
+          cd apps/web
+          PERSONA_ARG=""
+          if [ -n "${{ inputs.persona_filter }}" ]; then
+            PERSONA_ARG="--persona ${{ inputs.persona_filter }}"
+          fi
+          JUDGE_ARG="--judge-mode ${{ inputs.judge_mode || 'rubric-plus-llm' }}"
+          pnpm tsx tests/eval/runner.ts $PERSONA_ARG $JUDGE_ARG
+        continue-on-error: true
+
+      - name: Upload eval results
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: eval-results-${{ github.run_id }}
+          path: apps/web/tests/eval/results/
+          retention-days: 90
+
+      - name: Alert on regression
+        if: steps.run.outcome == 'failure'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Weekly eval regression — ${new Date().toISOString().slice(0, 10)}`,
+              body: `Eval avg score dropped below P4.5 gate (target ≥ 9.0).\n\nArtifacts: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n\n**Action required**: download eval-results artifact, review per-sample failures, identify prompt regression OR Iztro tool drift OR model regression.\n\nCC @nguyenhieuisocial`,
+              labels: ['eval', 'quality-gate', 'p1'],
+            });
