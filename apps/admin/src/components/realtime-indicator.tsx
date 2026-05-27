@@ -1,0 +1,84 @@
+'use client';
+
+// Wave 60.94.o — RealtimeIndicator component for admin layout.
+// Wires useRealtime hook to admin chrome — displays WS connection status
+// + invalidates React Query caches on relevant events.
+
+import { useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useRealtime, type RealtimeEvent } from '@/hooks/useRealtime';
+
+const STATUS_COLORS: Record<string, string> = {
+  connecting: 'bg-amber-500',
+  open: 'bg-green-500',
+  closing: 'bg-orange-500',
+  closed: 'bg-zinc-500',
+  error: 'bg-red-500',
+};
+
+const STATUS_LABELS: Record<string, string> = {
+  connecting: 'Đang kết nối',
+  open: 'Trực tiếp',
+  closing: 'Đang đóng',
+  closed: 'Mất kết nối',
+  error: 'Lỗi',
+};
+
+/**
+ * Triggers React Query invalidations on realtime events.
+ * Per-event mapping below — extend as more admin views adopt RT updates.
+ */
+function invalidateOnEvent(qc: ReturnType<typeof useQueryClient>, event: RealtimeEvent) {
+  switch (event.type) {
+    case 'new_reading':
+      qc.invalidateQueries({ queryKey: ['sessions'] });
+      qc.invalidateQueries({ queryKey: ['readings'] });
+      qc.invalidateQueries({ queryKey: ['metrics'] });
+      break;
+    case 'payment_received':
+      qc.invalidateQueries({ queryKey: ['payments'] });
+      qc.invalidateQueries({ queryKey: ['customers'] });
+      qc.invalidateQueries({ queryKey: ['metrics'] });
+      break;
+    case 'error_threshold':
+      qc.invalidateQueries({ queryKey: ['errors'] });
+      qc.invalidateQueries({ queryKey: ['metrics'] });
+      break;
+    case 'admin_action':
+      qc.invalidateQueries({ queryKey: ['audit'] });
+      break;
+  }
+}
+
+export function RealtimeIndicator() {
+  const qc = useQueryClient();
+  const { events, status, peerCount } = useRealtime([
+    'new_reading',
+    'payment_received',
+    'error_threshold',
+    'admin_action',
+  ]);
+
+  // React Query invalidation on each new event
+  useEffect(() => {
+    if (events.length === 0) return;
+    const latest = events[events.length - 1];
+    invalidateOnEvent(qc, latest);
+  }, [events, qc]);
+
+  const dotColor = STATUS_COLORS[status] ?? 'bg-zinc-500';
+  const label = STATUS_LABELS[status] ?? status;
+
+  return (
+    <div
+      className="inline-flex items-center gap-2 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 px-3 py-1.5 text-xs"
+      title={`WebSocket: ${label}${peerCount > 1 ? ` · ${peerCount} admins online` : ''}${events.length > 0 ? ` · ${events.length} events buffered` : ''}`}
+    >
+      <span className={`h-2 w-2 rounded-full ${dotColor} ${status === 'open' ? 'animate-pulse' : ''}`} aria-hidden="true" />
+      <span className="text-zinc-600 dark:text-zinc-400">{label}</span>
+      {peerCount > 1 && (
+        <span className="text-zinc-400 dark:text-zinc-500">· {peerCount}</span>
+      )}
+    </div>
+  );
+}

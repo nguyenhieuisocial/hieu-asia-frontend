@@ -4,6 +4,7 @@ import * as React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { RealtimeIndicator } from '@/components/realtime-indicator';
 import { ChevronRight, LogOut } from 'lucide-react';
 
 const SEG_LABEL: Record<string, string> = {
@@ -79,6 +80,7 @@ export function Topbar({ adminEmail }: { adminEmail: string }) {
         </ol>
       </nav>
       <div className="flex items-center gap-2">
+        <RealtimeIndicator />
         <ThemeToggle />
         <div className="hidden items-center gap-2 rounded-md border border-gold/15 bg-card/60 px-3 py-1.5 text-xs text-foreground/75 sm:flex">
           <span

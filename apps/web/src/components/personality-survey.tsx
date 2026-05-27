@@ -13,17 +13,28 @@ import 'survey-core/i18n/vietnamese';
 // CSS file that wins the cascade.
 import './personality-survey.css';
 import { SURVEY_SCHEMA, type SurveyAnswers } from '@/lib/survey-schema';
+import { EXTENDED_SURVEY_SCHEMA } from '@/lib/survey-schema-extended';
+
+export type SurveyVariant = 'mbti' | 'extended';
 
 export interface PersonalitySurveyProps {
   onComplete: (answers: SurveyAnswers) => void;
+  /**
+   * Wave 60.94.o — survey variant selection.
+   * - 'mbti' (default, V1.0-V1.4 backward compat): 12 MBTI-axis questions
+   * - 'extended' (Premium tier opt-in): 20 IPIP-NEO (Big Five) + 16 DiSC = 36 items
+   * See: [[81 - V1 Postmortem]] §item 10 + lib/survey-schema-extended.ts.
+   */
+  variant?: SurveyVariant;
 }
 
-export function PersonalitySurvey({ onComplete }: PersonalitySurveyProps) {
+export function PersonalitySurvey({ onComplete, variant = 'mbti' }: PersonalitySurveyProps) {
   const model = React.useMemo(() => {
     // Wave 60.21 — set default locale before constructing the model so
     // built-in strings (progress, required, validator messages) localise.
     surveyLocalization.defaultLocale = 'vi';
-    const m = new Model(SURVEY_SCHEMA);
+    const schema = variant === 'extended' ? EXTENDED_SURVEY_SCHEMA : SURVEY_SCHEMA;
+    const m = new Model(schema);
     m.locale = 'vi';
     // Brand-aligned overrides: SurveyJS default theme is too light for our dark UI.
     m.applyTheme({
@@ -49,7 +60,7 @@ export function PersonalitySurvey({ onComplete }: PersonalitySurveyProps) {
     });
 
     return m;
-  }, []);
+  }, [variant]);
 
   React.useEffect(() => {
     const handler = (sender: Model) => {
