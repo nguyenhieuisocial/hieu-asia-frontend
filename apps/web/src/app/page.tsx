@@ -13,6 +13,7 @@ import { LotusLottie } from '@/components/marketing/LotusLottie';
 import { BentoLens } from '@/components/marketing/BentoLens';
 import { PhilosophyBlock } from '@/components/marketing/PhilosophyBlock';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
+import { SampleOutputShowcase } from '@/components/marketing/SampleOutputShowcase';
 import { ScanRow } from '@/components/marketing/ScanRow';
 import { IntentChips } from '@/components/marketing/IntentChips';
 import { BigNumberRow } from '@/components/marketing/BigNumberRow';
@@ -646,6 +647,14 @@ export default function LandingPage() {
           Trí tuệ phương Đông không phải lời tiên tri.{' '}
           Đó là <em className="text-gold-soft">khoảng lặng</em> để bạn nghe rõ chính mình.
         </PullQuote>
+
+        {/* Wave 60.95.c P1-6 — SampleOutputShowcase (vault 130 §III P1-6, biggest
+            conversion lever per ChatGPT R6 §3.2). Surfaces 4 illustrative report
+            chunks (Cung Mệnh + Đại vận + Mentor + Kế hoạch 30d) BEFORE PricingTierV2
+            so user sees what they get before seeing the price. Server component,
+            no client state — keeps initial bundle flat. Primary CTA →/onboarding,
+            secondary →/sample-report (full demo). */}
+        <SampleOutputShowcase />
 
         {/* 6. PricingTierV2 — 3 tiers replace 4 (Notion-style toggle + KHUYÊN DÙNG + refund) */}
         <PricingTierV2
