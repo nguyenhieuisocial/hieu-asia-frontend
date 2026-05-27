@@ -7,10 +7,12 @@ import { Mail, MessageCircle, Facebook, Heart, ArrowRight } from 'lucide-react';
 const PRODUCT_LINKS = [
   { href: '/reading', label: 'Phân tích lá số' },
   { href: '/onboarding?cta=mentor', label: 'AI Mentor' },
-  { href: '/affiliate', label: 'Cộng tác viên' },
+  { href: '/features', label: 'Tính năng' },
+  { href: '/pricing', label: 'Giá' },
 ];
 
-const TOOLS_LINKS = [
+const LEARN_LINKS = [
+  { href: '/learn', label: 'Học huyền học' },
   { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay' },
   { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
   { href: '/hop-tuoi', label: 'Hợp tuổi' },
@@ -19,16 +21,11 @@ const TOOLS_LINKS = [
   { href: '/thuoc-lo-ban', label: 'Thước Lỗ Ban' },
 ];
 
-const RESOURCE_LINKS = [
-  { href: '/learn', label: 'Học huyền học' },
-  { href: '/features', label: 'Tính năng' },
-  { href: '/pricing', label: 'Giá' },
+const LEGAL_LINKS = [
   { href: '/about', label: 'Về chúng tôi' },
   { href: '/community', label: 'Cộng đồng' },
   { href: '/changelog', label: 'Nhật ký thay đổi' },
-];
-
-const LEGAL_LINKS = [
+  { href: '/affiliate', label: 'Cộng tác viên' },
   { href: '/legal', label: 'Pháp lý' },
   { href: '/privacy', label: 'Quyền riêng tư' },
   { href: '/terms', label: 'Điều khoản' },
@@ -40,16 +37,32 @@ export function SiteFooter() {
   return (
     <footer className="relative border-t border-gold/15 bg-background">
       <div className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
+        {/* Final wayfinding CTA — vault 130 §14 terminus */}
+        <div className="mb-14 rounded-2xl border border-gold/20 bg-gradient-to-br from-gold/[0.06] to-transparent px-6 py-10 text-center sm:px-10 sm:py-12">
+          <h2 className="font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+            Sẵn sàng hiểu bản đồ của bạn?
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground sm:text-base">
+            Lập lá số trong 60 giây — miễn phí, không cần thẻ.
+          </p>
+          <Link
+            href="/onboarding"
+            data-analytics-id="footer_final_cta"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-gold px-6 py-3 text-sm font-semibold text-background transition-colors hover:bg-gold/90 sm:text-base"
+          >
+            Lập lá số miễn phí
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </div>
+
         <div className="grid gap-8 md:grid-cols-12">
-          {/* Sản phẩm */}
-          <FooterCol title="Sản phẩm" links={PRODUCT_LINKS} className="md:col-span-2" />
-          {/* Công cụ miễn phí */}
-          <FooterCol title="Công cụ" links={TOOLS_LINKS} className="md:col-span-3" />
-          {/* Tài nguyên */}
-          <FooterCol title="Tài nguyên" links={RESOURCE_LINKS} className="md:col-span-2" />
-          {/* Pháp lý */}
-          <FooterCol title="Pháp lý" links={LEGAL_LINKS} className="md:col-span-2" />
-          {/* Theo dõi + signup */}
+          {/* Sản phẩm — core user-product links */}
+          <FooterCol title="Sản phẩm" links={PRODUCT_LINKS} className="md:col-span-3" />
+          {/* Học — Tài nguyên + learning-related tools */}
+          <FooterCol title="Học" links={LEARN_LINKS} className="md:col-span-3" />
+          {/* Pháp lý & Công ty — legal + about/community/changelog/partner */}
+          <FooterCol title="Pháp lý & Công ty" links={LEGAL_LINKS} className="md:col-span-3" />
+          {/* Theo dõi — newsletter + social (non-nav block) */}
           <div className="md:col-span-3">
             <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/90">
               Theo dõi
