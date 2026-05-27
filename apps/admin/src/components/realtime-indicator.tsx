@@ -59,10 +59,13 @@ export function RealtimeIndicator() {
     'admin_action',
   ]);
 
-  // React Query invalidation on each new event
+  // React Query invalidation on each new event.
+  // Wave 60.95.fix: explicit undefined guard for TS `noUncheckedIndexedAccess`
+  // strict mode — `events[length-1]` returns `T | undefined` even when length>0.
   useEffect(() => {
     if (events.length === 0) return;
     const latest = events[events.length - 1];
+    if (!latest) return;
     invalidateOnEvent(qc, latest);
   }, [events, qc]);
 

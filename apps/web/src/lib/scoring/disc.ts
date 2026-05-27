@@ -62,12 +62,16 @@ export function scoreDisc(answers: Record<string, number>): DiscScoreWithMeta {
     scores[dim] = Math.round(((raw_per_dim[dim] - min) / (max - min)) * 100);
   }
 
-  // Sort dimensions by score descending to find primary + secondary
+  // Sort dimensions by score descending to find primary + secondary.
+  // Wave 60.95.fix: explicit non-null assertion + fallback for TS strict mode
+  // (`noUncheckedIndexedAccess`). Object.entries always returns 4 entries for
+  // 4-dimension DiscScore so sortedDims[0]/[1] are guaranteed defined, but TS
+  // can't prove it from the type. Use `!` + fallback to satisfy compiler.
   const sortedDims = (Object.entries(scores) as Array<[DiscDimension, number]>).sort(
     (a, b) => b[1] - a[1],
   );
-  const primary_style = sortedDims[0][0];
-  const secondary_style = sortedDims[1][0];
+  const primary_style: DiscDimension = sortedDims[0]?.[0] ?? 'dominance';
+  const secondary_style: DiscDimension = sortedDims[1]?.[0] ?? 'influence';
 
   return {
     scores,
