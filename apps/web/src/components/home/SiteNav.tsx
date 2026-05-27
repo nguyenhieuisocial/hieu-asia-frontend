@@ -33,34 +33,13 @@ interface NavSection {
   items: readonly NavLink[];
 }
 
-/** Học dropdown — 2 sections (Phương pháp luận + Khái niệm) — Wave 52. */
-const LEARN_SECTIONS: readonly NavSection[] = [
-  {
-    title: 'Phương pháp luận',
-    items: [
-      { href: '/methodology', label: 'Phương pháp luận' },
-      { href: '/methodology/tu-vi', label: 'Phương pháp Tử Vi' },
-      { href: '/methodology/bat-tu', label: 'Phương pháp Bát Tự (beta)' },
-      { href: '/methodology/model-card', label: 'Thẻ mô hình AI' },
-      { href: '/methodology/ai-safety', label: 'Chính sách an toàn AI' },
-      { href: '/methodology/algorithm-changelog', label: 'Lịch sử thuật toán' },
-    ],
-  },
-  {
-    title: 'Khái niệm nền tảng',
-    items: [
-      { href: '/learn/tu-vi', label: 'Tử Vi Đẩu Số' },
-      { href: '/learn/bat-tu', label: 'Bát Tự Tứ Trụ' },
-      { href: '/learn/than-so-hoc', label: 'Thần Số Học' },
-      { href: '/learn/mbti', label: 'MBTI' },
-      { href: '/learn/palm', label: 'Xem chỉ tay' },
-    ],
-  },
-];
-
 /**
- * Công cụ mega-menu — 4 columns — Wave 52.
- * Affiliate items removed (relocated to authed account dropdown).
+ * Công cụ mega-menu — Wave 60.95.a — collapsed nav per founder + ChatGPT 5.5
+ * audit + vault 130 (15-role design audit). Previously 30+ entries across 7
+ * top-level groups was P0 trust/UX overload for first-time visitors.
+ *
+ * Primary nav now = 5 entries (Bắt đầu / Tính năng / Giá / Phương pháp / Học).
+ * Everything else relocated into this single discoverable mega-menu.
  */
 const TOOLS_SECTIONS: readonly NavSection[] = [
   {
@@ -107,22 +86,47 @@ const TOOLS_SECTIONS: readonly NavSection[] = [
       { href: '/thuoc-lo-ban', label: 'Thước Lỗ Ban' },
     ],
   },
+  {
+    title: 'Phương pháp luận',
+    items: [
+      { href: '/methodology/tu-vi', label: 'Phương pháp Tử Vi' },
+      { href: '/methodology/bat-tu', label: 'Phương pháp Bát Tự (beta)' },
+      { href: '/methodology/model-card', label: 'Thẻ mô hình AI' },
+      { href: '/methodology/ai-safety', label: 'Chính sách an toàn AI' },
+      { href: '/methodology/algorithm-changelog', label: 'Lịch sử thuật toán' },
+    ],
+  },
+  {
+    title: 'Khái niệm nền tảng',
+    items: [
+      { href: '/learn/tu-vi', label: 'Tử Vi Đẩu Số' },
+      { href: '/learn/bat-tu', label: 'Bát Tự Tứ Trụ' },
+      { href: '/learn/than-so-hoc', label: 'Thần Số Học' },
+      { href: '/learn/mbti', label: 'MBTI' },
+      { href: '/learn/palm', label: 'Xem chỉ tay' },
+    ],
+  },
+  {
+    title: 'Khám phá',
+    items: [
+      { href: '/lo-trinh', label: 'Lộ trình' },
+      { href: '/about', label: 'Về chúng tôi' },
+    ],
+  },
 ];
 
-/** Flattened for mobile drawer rendering. */
-const TOOLS_LINKS_FLAT: readonly NavLink[] = TOOLS_SECTIONS.flatMap((s) => s.items);
-const LEARN_LINKS_FLAT: readonly NavLink[] = LEARN_SECTIONS.flatMap((s) => s.items);
-
 /**
- * Top-level nav links — Wave 52-A renamed "Pricing" → "Giá" to keep all 4
- * primary entries in Vietnamese. Round-2 audit found the lone English word
- * in an otherwise Vietnamese nav was jarring to VN-locale users.
+ * Top-level nav links — Wave 60.95.a P0 collapse from 30+ to 5 primary entries.
+ * Founder hieu.asia audit + ChatGPT 5.5 review + vault 130 design audit flagged
+ * "nav overload" as a P0 trust/UX issue for first-time visitors.
+ * Everything not in this list lives in the Công cụ mega-menu.
  */
 const PRIMARY_LINKS: readonly NavLink[] = [
-  { href: '/lo-trinh', label: 'Lộ trình' },
+  { href: '/onboarding', label: 'Bắt đầu' },
   { href: '/features', label: 'Tính năng' },
   { href: '/pricing', label: 'Giá' },
-  { href: '/about', label: 'Về chúng tôi' },
+  { href: '/methodology', label: 'Phương pháp' },
+  { href: '/learn', label: 'Học' },
 ];
 
 /**
@@ -155,7 +159,6 @@ export function SiteNav() {
             </Link>
           ))}
           <ToolsMegaMenu />
-          <LearnDropdown />
         </nav>
 
         <div className="flex items-center gap-2">
@@ -388,21 +391,58 @@ function ToolsMegaMenu() {
       label="Công cụ"
       sections={TOOLS_SECTIONS}
       panelId="menu-tools"
-      panelWidthClass="w-[min(92vw,860px)]"
+      panelWidthClass="w-[min(92vw,960px)]"
       alignClass="right-0 sm:left-1/2 sm:-translate-x-1/2"
     />
   );
 }
 
-function LearnDropdown() {
+/**
+ * Mobile "Công cụ" expandable submenu — Wave 60.95.a.
+ * Collapsed by default to keep the drawer scan-friendly for first-time users.
+ * Tapping the header expands sectioned links matching desktop TOOLS_SECTIONS.
+ */
+function MobileToolsAccordion({ onNavigate }: { onNavigate: () => void }) {
+  const [expanded, setExpanded] = React.useState(false);
+  const panelId = 'mobile-tools-panel';
   return (
-    <SectionedDropdown
-      label="Học"
-      sections={LEARN_SECTIONS}
-      panelId="menu-learn"
-      panelWidthClass="w-[min(92vw,520px)]"
-      footer={{ href: '/learn', label: 'Tất cả bài học →' }}
-    />
+    <>
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        aria-expanded={expanded}
+        aria-controls={panelId}
+        className="flex items-center justify-between rounded-md px-3 py-2.5 text-left text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
+      >
+        <span>Công cụ</span>
+        <ChevronDown
+          className={cn(
+            'h-3.5 w-3.5 transition-transform',
+            expanded && 'rotate-180',
+          )}
+          aria-hidden="true"
+        />
+      </button>
+      <div id={panelId} hidden={!expanded} className="pb-1">
+        {TOOLS_SECTIONS.map((section) => (
+          <div key={section.title} className="mb-2">
+            <p className="px-3 pb-1 pt-2 font-mono text-[10px] uppercase tracking-[0.24em] text-gold/85">
+              {section.title}
+            </p>
+            {section.items.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                onClick={onNavigate}
+                className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-gold/10 hover:text-gold"
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 
@@ -489,33 +529,7 @@ function MobileDrawer({
             </Link>
           ))}
           <div className="my-2 h-px bg-muted/5" />
-          <p className="px-3 pb-1 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
-            Công cụ
-          </p>
-          {TOOLS_LINKS_FLAT.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              onClick={() => setOpen(false)}
-              className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-gold/10 hover:text-gold"
-            >
-              {l.label}
-            </Link>
-          ))}
-          <div className="my-2 h-px bg-muted/5" />
-          <p className="px-3 pb-1 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
-            Học
-          </p>
-          {LEARN_LINKS_FLAT.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              onClick={() => setOpen(false)}
-              className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-gold/10 hover:text-gold"
-            >
-              {l.label}
-            </Link>
-          ))}
+          <MobileToolsAccordion onNavigate={() => setOpen(false)} />
           <div className="my-2 h-px bg-muted/5" />
           {isAuthed ? (
             <button
