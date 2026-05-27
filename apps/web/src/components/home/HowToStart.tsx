@@ -15,13 +15,19 @@ interface Step {
   href: string;
 }
 
+// Wave 60.95.b P1 — Polypane P1-V3 + ChatGPT external review §3.1: 3-step CTAs
+// were inconsistent ("Nhập thông tin" / "Xem cách hoạt động" / "Bắt đầu trò
+// chuyện"). Bước 02 "Xem cách hoạt động" diverted user OUT of conversion path
+// (jumping to anchor #how breaks the flow). Now all 3 steps share the SAME
+// `ctaLabel: 'Lập lá số miễn phí'` + same `href: '/onboarding'` — vault 130
+// §3 P0 #3 standardize → "one action, one label" pattern.
 const STEPS: readonly Step[] = [
   {
     n: '01',
     Icon: ClipboardEdit,
     title: 'Nhập thông tin cơ bản',
     desc: 'Ngày–giờ sinh và giới tính (~1 phút). Có thể chỉnh sửa sau bất cứ lúc nào miễn phí trong trang Tài khoản; khi đổi ngày sinh, bạn yêu cầu tạo lại lá số để cập nhật.',
-    ctaLabel: 'Nhập thông tin',
+    ctaLabel: 'Lập lá số miễn phí',
     href: '/onboarding',
   },
   {
@@ -29,15 +35,15 @@ const STEPS: readonly Step[] = [
     Icon: Cpu,
     title: 'AI phân tích trong 30 giây',
     desc: 'Hệ thống tổng hợp Tử Vi, Bát Tự, Thần Số Học và MBTI thành một bức tranh rõ ràng.',
-    ctaLabel: 'Xem cách hoạt động',
-    href: '#how',
+    ctaLabel: 'Lập lá số miễn phí',
+    href: '/onboarding',
   },
   {
     n: '03',
     Icon: MessageCircle,
     title: 'Trò chuyện với AI Mentor để hành động',
     desc: 'Đặt câu hỏi cụ thể về quyết định bạn đang cân nhắc — Mentor gợi ý các bước tiếp theo.',
-    ctaLabel: 'Bắt đầu trò chuyện',
+    ctaLabel: 'Lập lá số miễn phí',
     href: '/onboarding',
   },
 ];
