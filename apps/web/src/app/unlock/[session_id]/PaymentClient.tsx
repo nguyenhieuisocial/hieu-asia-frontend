@@ -4,16 +4,18 @@
  * 1. On mount, POSTs `/api/payment/intent` once to obtain a SePay/VietQR intent.
  * 2. Renders the QR + bank info via <QRDisplay />.
  * 3. Polls `/api/payment/intent/{id}` every 5s, refreshing local state.
- * 4. On `status === 'paid'` → redirect to `/reading/{session_id}/report`.
+ * 4. On `status === 'paid'` → fire `payment_completed`, then show the
+ *    <PreparingArrival /> arrival state (~3.5s warm-dark pause) which then
+ *    redirects to `/reading/{session_id}/report` (Wave 60.95.d P1-13).
  * 5. On `status === 'expired'` or countdown 0 → show retry CTA.
  */
 
 'use client';
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
 import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { QRDisplay, type PaymentIntent } from '@/components/payment/QRDisplay';
+import { PreparingArrival } from '@/components/checkout/PreparingArrival';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
 import { getSupabaseAuth } from '@/lib/auth-client';
@@ -108,7 +110,6 @@ async function pollIntent(id: string): Promise<PaymentIntent> {
 }
 
 export function PaymentClient({ sessionId, tier }: PaymentClientProps) {
-  const router = useRouter();
   const [intent, setIntent] = React.useState<PaymentIntent | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -164,17 +165,18 @@ export function PaymentClient({ sessionId, tier }: PaymentClientProps) {
     };
   }, [intent, expired]);
 
-  // 3. On `paid` → redirect to report.
+  // 3. On `paid` → fire `payment_completed` analytics immediately (so it is
+  //    not lost if the user closes the tab during the arrival pause), then
+  //    let <PreparingArrival /> own the redirect. Wave 60.95.d P1-13: replace
+  //    the instant navigation with a ~3.5s branded "moment of arrival"
+  //    rendered below; the actual `router.push` happens inside that component.
   const paidTrackedRef = React.useRef<string | null>(null);
   React.useEffect(() => {
-    if (intent?.status === 'paid') {
-      if (paidTrackedRef.current !== intent.id) {
-        paidTrackedRef.current = intent.id;
-        track('payment_completed', { session_id: sessionId, tier, intent_id: intent.id, amount: intent.amount_due });
-      }
-      router.push(`/reading/${encodeURIComponent(sessionId)}/report`);
+    if (intent?.status === 'paid' && paidTrackedRef.current !== intent.id) {
+      paidTrackedRef.current = intent.id;
+      track('payment_completed', { session_id: sessionId, tier, intent_id: intent.id, amount: intent.amount_due });
     }
-  }, [intent?.status, intent?.id, intent?.amount_due, router, sessionId, tier]);
+  }, [intent?.status, intent?.id, intent?.amount_due, sessionId, tier]);
 
   const handleRetry = React.useCallback(() => {
     setAttempt((n) => n + 1);
@@ -216,6 +218,17 @@ export function PaymentClient({ sessionId, tier }: PaymentClientProps) {
           Không có dữ liệu giao dịch.
         </CardContent>
       </Card>
+    );
+  }
+
+  // Paid → swap the QR card for the branded arrival pause. The component
+  // owns the timer + redirect; `payment_completed` analytics has already
+  // been fired in the effect above.
+  if (intent.status === 'paid') {
+    return (
+      <PreparingArrival
+        redirectTo={`/reading/${encodeURIComponent(sessionId)}/report`}
+      />
     );
   }
 
