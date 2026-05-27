@@ -374,9 +374,14 @@ export default function LandingPage() {
             bg="painted" enables PaintedCanvas (SVG noise + radial gold + linear
             warm-dark fade) + GlassPanel CTA overlay. Other heroes (/pricing,
             /features, /about, /methodology, /checkout) keep default bg="flat". */}
+        {/* Wave 60.95.g P2-V3 (vault 130 §V) — period consistency fix:
+            hero LiveCounterEyebrow (1.243 / period) MUST match below-fold
+            BigNumberRow ("BÁO CÁO MỘT THÁNG QUA") since both surfaces show
+            the same 1.243 + 4.8★. Changed "trong tuần" → "trong tháng qua"
+            to align with the analytics window BigNumberRow already advertises. */}
         <MarketingHero
           bg="painted"
-          eyebrow={<LiveCounterEyebrow count={1243} period="trong tuần" rating={4.8} />}
+          eyebrow={<LiveCounterEyebrow count={1243} period="trong tháng qua" rating={4.8} />}
           title={
             // Wave 60.95.a P0 — Polypane P1-V1 fix: mobile 320px wrapped headline
             // as 3 lines ("Hiểu mình. / Quyết / định mình."). Wrap second clause
