@@ -88,7 +88,7 @@ export type BigNumberRowProps = {
   bg?: 'warm-dark-50' | 'warm-dark-100';
 };
 
-const DURATION_MS = 1200;
+const DURATION_MS = 600;
 const STAGGER_MS = 80;
 // Editorial ease curve — y-control points of cubic-bezier(0.165, 0.85, 0.45, 1).
 // Matches Tailwind token `transitionTimingFunction.editorial`.
