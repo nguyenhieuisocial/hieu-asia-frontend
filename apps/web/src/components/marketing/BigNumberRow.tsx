@@ -104,17 +104,22 @@ function easeEditorial(t: number): number {
 function BigNumberCell({ item, delayMs }: { item: BigNumber; delayMs: number }) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [inView, setInView] = useState(false);
-  const [current, setCurrent] = useState<number>(0);
+  // Wave 60.95 BUG FIX: initial state = item.value (NOT 0).
+  // Why: SSR renders this component; if we start at 0, the rendered HTML
+  // shows "0" until JS hydrates + IntersectionObserver fires. Crawlers
+  // (Google bot, AI auditors) and users with JS disabled saw "0" forever.
+  // Original audit found: "1.243 BÁO CÁO MỘT THÁNG QUA 0" appearing as
+  // social-proof bug. Default to final value; reset to 0 only on the
+  // animation tick AFTER inView triggers (covered by opacity-0 reveal).
+  const [current, setCurrent] = useState<number>(item.value);
   const [reducedMotion, setReducedMotion] = useState(false);
 
   // Read OS-level reduced-motion preference on mount.
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     setReducedMotion(mq.matches);
-    if (mq.matches) {
-      setCurrent(item.value);
-    }
-  }, [item.value]);
+    // No need to setCurrent — already at item.value via initial state.
+  }, []);
 
   // IntersectionObserver fires once at 50% visibility. We disconnect after
   // the first hit so re-scroll doesn't restart the count-up (`once: true`).
@@ -140,10 +145,15 @@ function BigNumberCell({ item, delayMs }: { item: BigNumber; delayMs: number }) 
 
   useEffect(() => {
     if (reducedMotion) {
-      setCurrent(item.value);
+      // Reduced motion: stay at item.value (already initial state).
       return;
     }
     if (!inView) return;
+
+    // Reset to 0 for the count-up animation start. The container is still
+    // opacity-0 at this exact moment (data-in-view toggles after CSS commit),
+    // so users do not see a flash of "0".
+    setCurrent(0);
 
     let raf = 0;
     let startTs: number | null = null;
@@ -198,8 +208,15 @@ function BigNumberCell({ item, delayMs }: { item: BigNumber; delayMs: number }) 
         mark the animated decorative number aria-hidden.
       */}
       <p className="font-marketing-display text-[64px] font-semibold leading-none tracking-tight text-cream-50 md:text-[96px]">
+        {/*
+          Wave 60.95 BUG FIX — sr-only previously contained "1.243 BÁO CÁO MỘT
+          THÁNG QUA" (number + label). The label is also rendered visibly in
+          the <p> below, so screen readers announced the label TWICE. Now
+          sr-only only carries the final number value; the visible <p> below
+          is the single source of the caption for assistive tech.
+        */}
         <span className="sr-only">
-          {`${item.prefix ?? ''}${formatter(item.value)}${item.suffix ?? ''} ${item.caption}`}
+          {`${item.prefix ?? ''}${formatter(item.value)}${item.suffix ?? ''}`}
         </span>
         <span aria-hidden="true">
           {item.prefix}
