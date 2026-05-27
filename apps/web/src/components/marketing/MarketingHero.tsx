@@ -31,8 +31,14 @@ export type MarketingHeroProps = {
   subtitle?: string;
   primaryCta: { label: string; href: string };
   secondaryCta?: { label: string; href: string };
-  /** Mono uppercase cream-500 trust line, e.g. "5 phút · miễn phí · không cần thẻ". */
-  trustLine?: string;
+  /**
+   * Mono uppercase cream-500 trust line.
+   * Accepts a single string (e.g. "5 phút · miễn phí · không cần thẻ") OR an
+   * array of strings (2-line stack — Wave 60.95.a P0 fix per vault 130 §3 P0 #5
+   * "free + 14-day-refund cạnh nhau gây nhầm lẫn"). When array, each entry
+   * renders as its own line.
+   */
+  trustLine?: string | string[];
   /** Right-side decorative double-ring with center gold dot. */
   ornament?: 'gold-ring' | 'none';
   /**
@@ -145,9 +151,17 @@ export function MarketingHero({
                 )}
               </div>
               {trustLine && (
-                <span className="font-mono text-xs uppercase tracking-wider text-cream-500 sm:ml-2">
-                  {trustLine}
-                </span>
+                Array.isArray(trustLine) ? (
+                  <div className="flex flex-col gap-1 font-mono text-xs uppercase tracking-wider text-cream-500 sm:ml-2">
+                    {trustLine.map((line, i) => (
+                      <span key={i}>{line}</span>
+                    ))}
+                  </div>
+                ) : (
+                  <span className="font-mono text-xs uppercase tracking-wider text-cream-500 sm:ml-2">
+                    {trustLine}
+                  </span>
+                )
               )}
             </div>
           </GlassPanel>

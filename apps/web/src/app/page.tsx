@@ -376,21 +376,40 @@ export default function LandingPage() {
           bg="painted"
           eyebrow={<LiveCounterEyebrow count={1243} period="trong tuần" rating={4.8} />}
           title={
+            // Wave 60.95.a P0 — Polypane P1-V1 fix: mobile 320px wrapped headline
+            // as 3 lines ("Hiểu mình. / Quyết / định mình."). Wrap second clause
+            // in `inline-block` span so `text-balance` treats it as one unit;
+            // result: clean 2-line break ("Hiểu mình." / "Quyết định mình.").
             <>
               Hiểu mình.{' '}
-              <u className="underline decoration-gold decoration-2 underline-offset-[6px]">
-                Quyết định
-              </u>{' '}
-              mình
-              <span className="text-gold-dot drop-shadow-[0_0_16px_rgba(229,198,138,0.18)]">
-                .
+              <span className="inline-block">
+                <u className="underline decoration-gold decoration-2 underline-offset-[6px]">
+                  Quyết định
+                </u>{' '}
+                mình
+                <span className="text-gold-dot drop-shadow-[0_0_16px_rgba(229,198,138,0.18)]">
+                  .
+                </span>
               </span>
             </>
           }
           subtitle="Bốn ống kính cổ học · một khoảng lặng · bạn vẫn chọn."
-          primaryCta={{ label: 'Bắt đầu luận giải', href: '/onboarding' }}
-          secondaryCta={{ label: 'Xem phương pháp', href: '/methodology' }}
-          trustLine="5 phút · miễn phí · không cần thẻ · 14 ngày hoàn tiền"
+          // Wave 60.95.a P0 — CTA unified to "Lập lá số miễn phí" per vault 130 §3
+          // P0 #3 (was "Bắt đầu luận giải"). Standardize across site → single
+          // primary action verb so users not confused between 5 CTA variants.
+          // Secondary CTA pointed to /sample-report (vault 130 P1-6 "show before
+          // pricing"). Old "Xem phương pháp" link still discoverable via nav.
+          primaryCta={{ label: 'Lập lá số miễn phí', href: '/onboarding' }}
+          secondaryCta={{ label: 'Xem báo cáo mẫu', href: '/sample-report' }}
+          // Wave 60.95.a P0 — split free/refund into 2 stacked lines per vault 130
+          // §3 P0 #5 + Polypane P1-V2 ("free + 14-day-refund cạnh nhau gây nhầm
+          // lẫn — miễn phí thì hoàn tiền cái gì?"). Now reads:
+          //   Line 1: free trial copy
+          //   Line 2: refund applies to paid tiers only
+          trustLine={[
+            '5 phút · miễn phí · không cần thẻ',
+            'Gói trả phí có hoàn tiền trong 14 ngày',
+          ]}
           ornament="gold-ring"
           // Wave 60.69 — Lottie lotus rotation intro (vault 109 §4.1). LotusLottie
           // is a client component dynamically imported with ssr:false so its
