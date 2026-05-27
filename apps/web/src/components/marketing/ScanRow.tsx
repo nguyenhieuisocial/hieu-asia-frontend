@@ -36,6 +36,14 @@ export type ScanRowItem = {
   body: string;
   /** CTA destination. */
   href: string;
+  /**
+   * Wave 60.95.d P1-11 — Optional small mono tag rendered ABOVE the label as a
+   * subtle eyebrow. Used by the intent-based home cards to surface the
+   * underlying discipline (e.g. "TỬ VI CUNG QUAN") while the label itself
+   * stays user-intent phrased ("Tôi đang chọn nghề"). Vault 130 §1 +
+   * ChatGPT review §2.2.
+   */
+  tag?: string;
 };
 
 export type ScanRowProps = {
@@ -58,10 +66,15 @@ export function ScanRow({
   // Tailwind JIT requires literal mapping (Wave 60.56 P1 pattern).
   const bgClass = bg === 'warm-dark-50' ? 'bg-warm-dark-50' : 'bg-warm-dark-100';
 
-  // Desktop column count: 3 for ≤3 items, 4 for ≥4. Mobile always horizontal
-  // scroll regardless.
+  // Desktop column count: 3 for ≤3 items, 4 for 4 items, 5 for ≥5 (Wave
+  // 60.95.d P1-11 — intent cards need 5-col grid on xl so the 5th card
+  // doesn't orphan onto row 2). Mobile always horizontal scroll regardless.
   const desktopColsClass =
-    items.length >= 4 ? 'md:grid-cols-3 lg:grid-cols-4' : 'md:grid-cols-3';
+    items.length >= 5
+      ? 'md:grid-cols-3 lg:grid-cols-5'
+      : items.length === 4
+        ? 'md:grid-cols-3 lg:grid-cols-4'
+        : 'md:grid-cols-3';
 
   return (
     <section className={`${bgClass} py-16 md:py-24`}>
@@ -90,6 +103,11 @@ export function ScanRow({
               className="group relative flex h-full min-h-[180px] min-w-[78vw] shrink-0 snap-start flex-col rounded-card-editorial border border-gold/15 bg-warm-dark-200 p-6 transition-all duration-300 ease-editorial hover:-translate-y-0.5 hover:border-gold/30 hover:bg-warm-dark-300 sm:min-w-[60vw] md:min-w-0"
             >
               <div className="mb-4">{item.icon}</div>
+              {item.tag && (
+                <p className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-gold-soft/70">
+                  {item.tag}
+                </p>
+              )}
               <p className="font-sans text-base font-semibold leading-tight text-cream-50">
                 {item.label}
               </p>

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Sparkles, Calendar, Hash, Brain } from 'lucide-react';
+import { Sparkles, Calendar, Hash, Brain, User, Briefcase, HelpCircle, Heart } from 'lucide-react';
 import { PRICING } from '@/lib/pricing';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
@@ -451,50 +451,63 @@ export default function LandingPage() {
           </p>
         </div>
 
-        {/* Wave 60.66.P3 — ScanRow (vault 109 §3 Phase 3 + vault 108 §5).
-            Mobile top-of-fold scan-fast pattern (Basecamp): 4 ống kính cards in
-            horizontal scroll on mobile, 4-col grid on desktop. Pre-rendered Lucide
-            icons (Wave 60.65.P0a RSC pattern). */}
+        {/* Wave 60.95.d P1-11 — ScanRow refactored taxonomy → user intent.
+            Vault 130 §1 + ChatGPT review §2.2: user intent first, discipline
+            as secondary mono-tag. 5 intent cards mapping question-as-card →
+            tool deep-link. Mobile horizontal scroll + desktop 4-col grid
+            (5th card wraps to 2nd row on lg). Pre-rendered Lucide icons
+            (Wave 60.65.P0a RSC pattern). */}
         <ScanRow
-          eyebrow="ĐỌC NHANH"
+          eyebrow="TÔI MUỐN..."
           title={
             <>
-              Bạn quan tâm{' '}
+              Bạn đang phân vân{' '}
               <u className="underline decoration-gold decoration-2 underline-offset-[6px]">
-                điều gì
-              </u>{' '}
-              nhất
+                về điều gì
+              </u>
               <span className="text-gold-dot">.</span>
             </>
           }
           items={[
             {
-              id: 'tu-vi',
-              icon: <Sparkles className="size-5 text-gold" strokeWidth={1.5} />,
-              label: 'Tử Vi cung mệnh',
-              body: 'Bản đồ 12 cung — đọc cung mệnh + cung tài + cung quan.',
-              href: '/learn/tu-vi',
+              id: 'intent-self',
+              icon: <User className="size-5 text-gold" strokeWidth={1.5} />,
+              tag: 'LÁ SỐ TỔNG QUAN',
+              label: 'Tôi muốn hiểu bản thân',
+              body: 'Lá số Tử Vi + Bát Tự + MBTI gộp lại — một bức tranh tổng thể về thiên hướng và năng lượng bẩm sinh.',
+              href: '/onboarding?intent=self',
             },
             {
-              id: 'bat-tu',
+              id: 'intent-career',
+              icon: <Briefcase className="size-5 text-gold" strokeWidth={1.5} />,
+              tag: 'TỬ VI CUNG QUAN',
+              label: 'Tôi đang chọn nghề',
+              body: 'Đọc cung Quan + cung Tài trong bản đồ 12 cung — gợi ý hướng nghề phù hợp ưu thế tự nhiên.',
+              href: '/onboarding?intent=career',
+            },
+            {
+              id: 'intent-decision',
+              icon: <HelpCircle className="size-5 text-gold" strokeWidth={1.5} />,
+              tag: 'AI MENTOR',
+              label: 'Tôi đang phân vân quyết định',
+              body: 'Mentor AI đặt câu hỏi mở dựa trên lá số — soi rõ giả định và rủi ro thay vì phán quyết hộ bạn.',
+              href: '/onboarding?intent=decision',
+            },
+            {
+              id: 'intent-year',
               icon: <Calendar className="size-5 text-gold" strokeWidth={1.5} />,
-              label: 'Bát Tự ngũ hành',
-              body: 'Cân ngũ hành bẩm sinh + dụng thần năm sinh.',
-              href: '/learn/bat-tu',
+              tag: 'LƯU NIÊN · ĐẠI VẬN',
+              label: 'Tôi muốn xem năm 2026',
+              body: 'Đại vận 10 năm + lưu niên Bính Ngọ 2026 — chu kỳ thời gian áp lên lá số gốc.',
+              href: '/tu-vi-2026',
             },
             {
-              id: 'than-so',
-              icon: <Hash className="size-5 text-gold" strokeWidth={1.5} />,
-              label: 'Thần Số đời',
-              body: 'Numerology — đường đời + ngày sinh + tên.',
-              href: '/learn/than-so-hoc',
-            },
-            {
-              id: 'mbti',
-              icon: <Brain className="size-5 text-gold" strokeWidth={1.5} />,
-              label: 'MBTI 16 loại',
-              body: '4 trục Jung — INTJ, ENFP, ISTP, ESFJ...',
-              href: '/learn/mbti',
+              id: 'intent-relationship',
+              icon: <Heart className="size-5 text-gold" strokeWidth={1.5} />,
+              tag: 'HỢP ĐÔI · BÁT TỰ',
+              label: 'Tôi muốn xem quan hệ',
+              body: 'So sánh Bát Tự ngũ hành hai người — nhận diện nơi tương sinh và nơi cần kiên nhẫn.',
+              href: '/onboarding?intent=relationship',
             },
           ]}
           bg="warm-dark-100"
