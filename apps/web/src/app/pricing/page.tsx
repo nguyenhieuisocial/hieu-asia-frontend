@@ -4,9 +4,9 @@
  * R1 verdict B applied: visual polish + reduce 5→3 anchors.
  *   - MarketingHero replaces the 4× pasted purple-radial hero block (R1 finding).
  *   - PricingTierV2 replaces the 5-tier Stripe-template row (3 tiers + Monthly/
- *     Yearly toggle + "KHUYÊN DÙNG" gold badge + 30-day refund slot).
- *   - VN content-typed FAQ with explicit refund answer (Q3 founder approval:
- *     "3 ngày tháng / 30 ngày năm").
+ *     Yearly toggle + "KHUYÊN DÙNG" gold badge + 14-day refund slot).
+ *   - VN content-typed FAQ with explicit refund answer (canonical policy:
+ *     "14 ngày cho mọi gói trả phí; Mentor tính từ kỳ thanh toán đầu tiên").
  *   - All raw `rgba(184,146,61,...)` strings removed (R1 finding).
  *   - `bg-warm-dark-50` on <main> to anchor Option D background tone.
  *
@@ -31,8 +31,11 @@ const PRICING_FAQ: readonly FaqItem[] = [
     q: 'Có hoàn tiền không?',
     a: (
       <p>
-        Có. Gói tháng: 3 ngày đầu hoàn 100%. Gói năm: 30 ngày đầu hoàn 100%.
-        Không cần lý do — gửi email là được xử lý trong vòng 3 ngày làm việc.
+        Có. Mọi gói trả phí (Premium / Mentor / Lifetime) đều có 14 ngày để
+        yêu cầu hoàn tiền 100%, không cần lý do. Riêng Mentor subscription:
+        14 ngày tính từ lần thanh toán đầu tiên, không áp dụng cho các kỳ gia
+        hạn. Gói miễn phí không có hoàn tiền. Email gửi đi được xử lý trong
+        24 giờ.
       </p>
     ),
   },
@@ -96,7 +99,7 @@ export default function PricingPage() {
           }
           subtitle="Bắt đầu miễn phí — chuyển gói khi sẵn sàng. Mọi gói trả phí đều bảo đảm hoàn tiền."
           primaryCta={{ label: 'Bắt đầu miễn phí', href: '/onboarding' }}
-          trustLine="30 ngày hoàn tiền · Không cần thẻ trước"
+          trustLine="14 ngày hoàn tiền · Không cần thẻ trước"
         />
 
         <OrnamentDivider />

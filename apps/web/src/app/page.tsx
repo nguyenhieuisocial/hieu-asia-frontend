@@ -318,9 +318,10 @@ const HOME_FAQ: readonly FaqItem[] = [
     a: (
       <p>
         Có. Bạn huỷ trong trang Tài khoản — gói vẫn dùng được đến hết kỳ đã
-        thanh toán, không tự gia hạn. Hoàn tiền 100% trong 24 giờ nếu báo cáo
-        chưa được tạo; sau đó vẫn xem xét hoàn tiền trong 14 ngày khi có lỗi
-        kỹ thuật hoặc trải nghiệm không đúng mô tả.
+        thanh toán, không tự gia hạn. Bạn có 24h sau khi mua để hoàn tiền
+        instant nếu báo cáo chưa tạo. Sau đó, mọi gói trả phí (Premium /
+        Mentor / Lifetime) đều có 14 ngày để yêu cầu hoàn tiền nếu không hài
+        lòng. Hoàn tiền trong 24h sau khi yêu cầu, không cần lý do.
       </p>
     ),
   },
