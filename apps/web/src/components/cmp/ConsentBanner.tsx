@@ -63,13 +63,15 @@ export function ConsentBanner(): React.ReactElement | null {
   // applied without a banner.
   //
   // RETURNING USERS: if `consent.shown=true` in storage, the draft is
-  // hydrated from the persisted choice in `useEffect` below — pre-ticked
-  // defaults only apply on the FIRST visit.
+  // hydrated from the persisted choice in `useEffect` below.
+  // FIRST-TIME VISITORS: defaults are UNCHECKED (Wave 60.94.l — GDPR/Planet49
+  // C-673/17 + VN Decree 13/2023 Art. 11 compliance; previous pre-tick was
+  // Wave 60.73 founder accepted but vault 119 P1-1 flagged invalid consent).
   const [draft, setDraft] = React.useState<Pick<ConsentState, "analytics" | "marketing" | "personalization">>(
     {
-      analytics: true,
-      marketing: true,
-      personalization: true,
+      analytics: false,
+      marketing: false,
+      personalization: false,
     },
   );
 

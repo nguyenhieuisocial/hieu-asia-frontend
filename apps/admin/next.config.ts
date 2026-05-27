@@ -102,4 +102,8 @@ export default withSentryConfig(withBundleAnalyzer(nextConfig), {
   silent: true,
   org: 'hieuasia',
   project: 'hieu-asia-admin',
+  // Wave 60.94.l — Vercel build reads SENTRY_AUTH_TOKEN env to upload source
+  // maps to Sentry. Without it, prod stack traces remain minified. Token is
+  // sntryu_* user auth token created Wave 60.93. NEVER expose to browser.
+  authToken: process.env.SENTRY_AUTH_TOKEN,
 });

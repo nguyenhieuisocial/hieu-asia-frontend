@@ -192,6 +192,12 @@ export default withBotId(
     silent: true,
     org: 'hieuasia',
     project: 'hieu-asia-web',
+    // Wave 60.94.l — authToken from Vercel env enables source-map upload
+    // at build time. Token is sntryu_* user auth token created Wave 60.93.
+    // Without it, source maps generate but are NOT uploaded to Sentry,
+    // leaving production stack traces unminified. authToken is read-only
+    // server-side env (NEVER expose to browser).
+    authToken: process.env.SENTRY_AUTH_TOKEN,
     // Wave 60.50.a — Sentry payload reduction.
     //   hideSourceMaps: don't ship maps to the browser (keep for upload).
     //   bundleSizeOptimizations: tree-shakes debug logging + drops dev-only
