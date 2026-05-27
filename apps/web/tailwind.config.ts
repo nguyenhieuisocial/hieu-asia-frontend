@@ -65,8 +65,15 @@ const config: Config = {
         ],
       },
       fontSize: {
+        // Wave 60.95.g P2 (vault 130 §V Polypane): bumped clamp floor 40px→3rem (48px)
+        // and ceiling 92px→6rem (96px) so the curve matches the previous fixed
+        // mobile `text-[64px]` / desktop `text-[96px]` endpoints. The middle is
+        // now a smooth 8vw ramp instead of an abrupt jump at the `md:` breakpoint
+        // (Polypane audit flagged 720-820px as jarring). Scale at key widths:
+        // 320px→3rem (48px) · 768px→~3.83rem (~61px) · 1024px→~5.12rem (~82px) ·
+        // 1200px+→6rem (96px). h1 ergonomics: ~30 chars/line at lg, ~14 at sm.
         'hero-display': [
-          'clamp(40px, 8vw, 92px)',
+          'clamp(3rem, 8vw, 6rem)',
           { lineHeight: '1.06', letterSpacing: '-0.02em' },
         ],
         'section-display': [

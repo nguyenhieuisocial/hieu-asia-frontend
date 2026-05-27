@@ -207,7 +207,14 @@ function BigNumberCell({ item, delayMs }: { item: BigNumber; delayMs: number }) 
         Use sr-only span for the screen-reader-friendly final value, and
         mark the animated decorative number aria-hidden.
       */}
-      <p className="font-marketing-display text-[64px] font-semibold leading-none tracking-tight text-cream-50 md:text-[96px]">
+      {/*
+        Wave 60.95.g P2 (vault 130 §V Polypane): replaced fixed `text-[64px] md:text-[96px]`
+        with `clamp(3rem, 8vw, 6rem)` to remove the abrupt jump at the md: breakpoint
+        (Polypane flagged 720-820px as jarring). Same endpoints (48px floor / 96px
+        ceiling) but smooth 8vw ramp through the middle. Consistent with hero-display
+        token bump in tailwind.config.ts.
+      */}
+      <p className="font-marketing-display text-[clamp(3rem,8vw,6rem)] font-semibold leading-none tracking-tight text-cream-50">
         {/*
           Wave 60.95 BUG FIX — sr-only previously contained "1.243 BÁO CÁO MỘT
           THÁNG QUA" (number + label). The label is also rendered visibly in
