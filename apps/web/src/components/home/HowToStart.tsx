@@ -55,7 +55,13 @@ export function HowToStart() {
       aria-labelledby="how-to-start-heading"
       // Wave 60.79.T1 (vault 112 P0-09): tighten from sm:py-28 → md:py-20 so
       // section padding cascade doesn't pile up 200+px gaps between H2s.
-      className="relative bg-background py-16 md:py-20"
+      // Wave 60.95.ae (founder bug report): removed `bg-background` — in dark
+      // theme `bg-background` resolves to `rgb(14,14,17)` (đen than ink) which
+      // creates a visible color seam against the parent wrapper bg-warm-dark-50
+      // `rgb(19,17,13)` set in page.tsx line 531. Same fix as Wave 60.79.T3
+      // applied to WhyTrust earlier — inherit page wrapper bg for tonal
+      // consistency. Callers that need a specific bg can wrap this component.
+      className="relative py-16 md:py-20"
     >
       <div
         aria-hidden="true"
