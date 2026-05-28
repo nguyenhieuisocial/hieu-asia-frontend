@@ -9,6 +9,7 @@ import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 import { MarketingHero } from '@/components/marketing/MarketingHero';
 import { LiveCounterEyebrow } from '@/components/marketing/LiveCounterEyebrow';
+import { HeroBadgeScroll } from '@/components/marketing/HeroBadgeScroll';
 import { LotusLottie } from '@/components/marketing/LotusLottie';
 import { BentoLens } from '@/components/marketing/BentoLens';
 import { PhilosophyBlock } from '@/components/marketing/PhilosophyBlock';
@@ -382,7 +383,16 @@ export default function LandingPage() {
             to align with the analytics window BigNumberRow already advertises. */}
         <MarketingHero
           bg="painted"
-          eyebrow={<LiveCounterEyebrow count={1243} period="trong tháng qua" rating={4.8} />}
+          eyebrow={
+            // Wave 60.95.j P2-#18 (vault 130 §III) — scroll-linked editorial
+            // parallax on hero badge: opacity 1→0.4 + translateY 0→40px over
+            // the first ~200vh of page scroll. Client wrapper preserves the
+            // RSC-safe LiveCounterEyebrow render and leaves MarketingHero
+            // untouched (HIGH-risk shared component, 6 page callers).
+            <HeroBadgeScroll>
+              <LiveCounterEyebrow count={1243} period="trong tháng qua" rating={4.8} />
+            </HeroBadgeScroll>
+          }
           title={
             // Wave 60.95.a P0 — Polypane P1-V1 fix: mobile 320px wrapped headline
             // as 3 lines ("Hiểu mình. / Quyết / định mình."). Wrap second clause
