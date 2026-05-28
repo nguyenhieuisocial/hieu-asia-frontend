@@ -11,9 +11,8 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@hieu-asia/ui', '@hieu-asia/types', '@hieu-asia/api-client'],
-  experimental: {
-    typedRoutes: true,
-  },
+  // Next.js 15.5+: typedRoutes moved out of `experimental` to stable top-level.
+  typedRoutes: true,
   async headers() {
     return [
       {
