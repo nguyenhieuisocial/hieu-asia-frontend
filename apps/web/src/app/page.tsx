@@ -538,11 +538,14 @@ export default function LandingPage() {
         </div>
 
         {/* 4. BentoLens — replaces MethodChooser + FreeTools (R3 diff #3).
-            Wave 60.66.P3: layout="heterogeneous" → Tử Vi hero tile (8x4) +
-            BátTự/ThầnSố (4x2 each) + MBTI full-width (12x2) per vault 109 §3
-            Phase 3 + R4 #1 + R6 #7. */}
+            Wave 60.95.q — switched layout="heterogeneous" → "uniform". The
+            heterogeneous variant gave the Tử Vi hero tile (8x4) far more
+            vertical space than the content needed at PC viewports — visible
+            empty dark space below the body copy. Uniform 2×2 with
+            auto-rows-fr (Wave 60.79.T2) keeps the 4 lenses equal-height +
+            scans cleaner on both PC (2×2) and mobile (single column). */}
         <BentoLens
-          layout="heterogeneous"
+          layout="uniform"
           eyebrow="BỐN ỐNG KÍNH"
           title={
             <>
