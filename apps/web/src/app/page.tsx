@@ -14,6 +14,7 @@ import { BentoLens } from '@/components/marketing/BentoLens';
 import { PhilosophyBlock } from '@/components/marketing/PhilosophyBlock';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { SampleOutputShowcase } from '@/components/marketing/SampleOutputShowcase';
+import { MentorSampleInteractive } from '@/components/marketing/MentorSampleInteractive';
 import { ScanRow } from '@/components/marketing/ScanRow';
 import { IntentChips } from '@/components/marketing/IntentChips';
 import { BigNumberRow } from '@/components/marketing/BigNumberRow';
@@ -673,6 +674,16 @@ export default function LandingPage() {
             no client state — keeps initial bundle flat. Primary CTA →/onboarding,
             secondary →/sample-report (full demo). */}
         <SampleOutputShowcase />
+
+        {/* Wave 60.95.i P2 — MentorSampleInteractive (vault 130 §interaction
+            designer). Companion to the static SampleOutputShowcase above:
+            3 pre-canned Mentor Q&A buttons let user click → reveal a hand-
+            written response, zero LLM cost. Sits between "what you'll get"
+            (showcase) and "what it costs" (pricing) so curiosity is closed
+            with a touch interaction before price friction. Client component
+            (useState for active question), no Motion runtime — pure CSS
+            grid-row trick for reveal. */}
+        <MentorSampleInteractive />
 
         {/* 6. PricingTierV2 — 3 tiers replace 4 (Notion-style toggle + KHUYÊN DÙNG + refund) */}
         <PricingTierV2
