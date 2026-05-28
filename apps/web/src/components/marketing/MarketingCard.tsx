@@ -33,8 +33,10 @@ const PADDING_CLASS: Record<NonNullable<MarketingCardProps['padding']>, string> 
 
 const BG_CLASS: Record<NonNullable<MarketingCardProps['bg']>, string> = {
   // Tailwind JIT needs literal class names — never interpolate.
-  'warm-dark-100': 'bg-warm-dark-100',
-  'warm-dark-200': 'bg-warm-dark-200',
+  // Wave 60.83 Phase 1 — theme-aware tokens. Names preserved for backward compat
+  // with consumer props; values point at semantic surface vars instead.
+  'warm-dark-100': 'bg-muted/40',
+  'warm-dark-200': 'bg-card',
 };
 
 export function MarketingCard({
@@ -46,7 +48,7 @@ export function MarketingCard({
   return (
     <article
       className={[
-        'relative flex h-full flex-col overflow-hidden rounded-card-editorial border border-warm-dark-300',
+        'relative flex h-full flex-col overflow-hidden rounded-card-editorial border border-border',
         BG_CLASS[bg],
         PADDING_CLASS[padding],
         'transition-colors duration-300 ease-editorial hover:border-gold/40',
