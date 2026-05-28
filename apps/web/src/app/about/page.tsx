@@ -5,6 +5,7 @@ import { Button } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { MarketingHero } from '@/components/marketing/MarketingHero';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { MarketingCard } from '@/components/marketing/MarketingCard';
 import { PhilosophyBlock } from '@/components/marketing/PhilosophyBlock';
 
@@ -227,6 +228,7 @@ export default function AboutPage() {
         </section>
       </main>
       <SiteFooter />
+      <StickyMobileCta trackId="about" />
     </>
   );
 }

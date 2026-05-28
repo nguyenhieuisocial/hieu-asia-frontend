@@ -38,6 +38,7 @@ import { Button } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 // Wave 60.35 — editorial refinement (refined-minimalism direction).
 import { OrnamentDivider } from '@/components/marketing/OrnamentDivider';
 // Wave 60.37.d — page-specific pillars so /features doesn't duplicate
@@ -593,6 +594,7 @@ export default function FeaturesPage() {
         />
       </main>
       <SiteFooter />
+      <StickyMobileCta trackId="features" />
     </>
   );
 }
