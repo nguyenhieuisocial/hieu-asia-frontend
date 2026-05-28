@@ -107,9 +107,17 @@ export default async function OnboardingPage({
         />
 
         <section className="relative mx-auto max-w-2xl px-6">
+          {/* Wave 60.95.m P2-a11y — WCAG 2.5.5 ≥44×44 tap targets. Breadcrumb
+              link wrapped in inline-flex with min-h/min-w 44px + px-2 padding so
+              the hit area meets the spec without visually enlarging the text. */}
           <nav aria-label="Breadcrumb" className="mb-4 flex items-center justify-between text-xs text-muted-foreground">
-            <span>
-              <Link href="/" className="hover:text-gold">Trang chủ</Link>
+            <span className="inline-flex items-center">
+              <Link
+                href="/"
+                className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center px-2 hover:text-gold"
+              >
+                Trang chủ
+              </Link>
               <span className="mx-1.5">/</span>
               <span className="text-muted-foreground">Mở khóa lá số</span>
             </span>
@@ -125,6 +133,9 @@ export default async function OnboardingPage({
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-foreground/75">
             4 bước, khoảng 2 phút. Trước khi bắt đầu, vui lòng xem các mục dữ liệu hieu.asia sẽ xử lý.
             Bạn có quyền từ chối hoặc rút lại đồng ý bất cứ lúc nào tại trang{' '}
+            {/* Inline-in-prose link — WCAG 2.5.5 SC has an explicit
+                exception for links inside a sentence of flowing text, so we
+                don't inflate the line box with min-h-[44px] here. */}
             <Link href="/account" className="text-gold underline underline-offset-4 hover:opacity-80">
               Tài khoản
             </Link>
@@ -136,13 +147,13 @@ export default async function OnboardingPage({
           <div className="mt-10 flex flex-wrap items-center gap-3">
             <Link
               href="/onboarding/topic"
-              className="inline-flex items-center gap-2 rounded-md bg-gold px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-gold-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-md bg-gold px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-gold-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
             >
               Bắt đầu — Bước 1 / 4 →
             </Link>
             <Link
               href="/sample-report"
-              className="inline-flex items-center gap-2 rounded-md border border-gold/30 px-4 py-2.5 text-sm text-foreground transition-colors hover:bg-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-md border border-gold/30 px-4 py-2.5 text-sm text-foreground transition-colors hover:bg-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
             >
               Xem báo cáo mẫu trước →
             </Link>
