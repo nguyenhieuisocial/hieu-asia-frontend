@@ -81,9 +81,14 @@ export function useAdminDashboard() {
     queryFn: fetchOverview,
     refetchInterval: ADMIN_DASHBOARD_REFETCH_MS,
     refetchOnWindowFocus: true,
-    // Don't spam retries when the endpoint is 404 — Worker may not be
-    // deployed yet; the placeholder grid covers the gap.
-    retry: 1,
+    // Wave 60.95.ad — exponential backoff retry on Worker failure (vault 95
+    // §11 #6). Replaces the static R2 snapshot fallback proposal. 3 attempts
+    // total, doubling delay (1s, 2s, 4s ... capped at 30s) so a transient
+    // Worker blip doesn't immediately strand the dashboard on the placeholder
+    // grid. A 404 (endpoint not deployed) still falls through after 3 retries
+    // and renders the placeholder — same UX, just slower to land.
+    retry: 3,
+    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 30_000),
     staleTime: ADMIN_DASHBOARD_REFETCH_MS / 2,
   });
 }
