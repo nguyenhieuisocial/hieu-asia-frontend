@@ -78,6 +78,18 @@ export function FaqAccordion({
           className="mt-12 rounded-2xl border border-border bg-card/40 sm:bg-card/60 px-6"
         >
           {items.map((item, i) => (
+            // Wave 60.95.m P2-a11y (Sub-agent Y audit closeout):
+            // Native <details>/<summary> handles disclosure state announcement
+            // automatically via the browser's built-in disclosure-widget role.
+            // The chevron rotation below is purely visual (CSS `group-open:rotate-180`)
+            // and the icon is `aria-hidden="true"` so SR users hear only the
+            // summary text + native expanded/collapsed state — no double-narration.
+            //
+            // We intentionally do NOT add aria-expanded on <summary>. Doing so
+            // would (a) duplicate the native state, (b) require client JS to
+            // sync with the `toggle` event (drops progressive enhancement), and
+            // (c) conflict with the ARIA-in-HTML spec which discourages
+            // overriding implicit roles/states on native disclosure elements.
             <details
               key={i}
               // First item open by default so an answer is visible above-the-fold
