@@ -19,7 +19,7 @@ import { GlassPanel } from './GlassPanel';
  * rendering for /pricing /features /about /methodology /checkout (backward
  * compat — gitnexus impact analysis confirmed 7 direct callers).
  *
- * Tokens (Wave 60.56 P1, no new colors): bg-warm-dark-50 / text-cream-50/300/500 /
+ * Tokens (Wave 60.56 P1, no new colors): bg-background / text-foreground/300/500 /
  * text-gold / text-gold-soft / text-gold-dot / shadow-gold-dot-glow.
  */
 export type MarketingHeroProps = {

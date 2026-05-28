@@ -15,7 +15,7 @@ import { track } from '@/lib/analytics';
  *
  * Visual matches `/tmp/wave-60-56-option-d/pricing.png`. Tokens from
  * `apps/web/tailwind.config.ts` (Wave 60.56 P1 commit 0b38173):
- *   bg-warm-dark-50/100/200/300 / text-cream-50/100/300/500
+ *   bg-background/100/200/300 / text-foreground/100/300/500
  *   text-gold / text-gold-soft / text-jade-300 / bg-jade
  *   font-marketing-display / text-section-display / text-price-amount
  *   text-eyebrow / rounded-pill / rounded-card-editorial
@@ -139,7 +139,7 @@ export function PricingTierV2({
   };
 
   return (
-    <section className="bg-warm-dark-50 py-16 md:py-20">
+    <section className="bg-background py-16 md:py-20">
       <div className="mx-auto max-w-marketing px-6">
         {/* Header */}
         <div className="text-center">
@@ -150,7 +150,7 @@ export function PricingTierV2({
             </p>
           )}
           {title && (
-            <h2 className="mt-6 text-balance font-sans text-section-display font-bold tracking-tight text-cream-50">
+            <h2 className="mt-6 text-balance font-sans text-section-display font-bold tracking-tight text-foreground">
               {title}
             </h2>
           )}
@@ -160,7 +160,7 @@ export function PricingTierV2({
             <div
               role="tablist"
               aria-label="Chu kỳ thanh toán"
-              className="inline-flex rounded-pill bg-warm-dark-200 p-1"
+              className="inline-flex rounded-pill bg-card p-1"
             >
               <button
                 type="button"
@@ -168,7 +168,7 @@ export function PricingTierV2({
                 aria-selected={period === 'monthly'}
                 data-active={period === 'monthly'}
                 onClick={() => setPeriod('monthly')}
-                className="rounded-pill px-6 py-2 font-sans text-sm font-medium transition-all duration-300 ease-editorial data-[active=true]:bg-cream-50 data-[active=true]:text-warm-dark-50 data-[active=false]:text-cream-300"
+                className="rounded-pill px-6 py-2 font-sans text-sm font-medium transition-all duration-300 ease-editorial data-[active=true]:bg-cream-50 data-[active=true]:text-ink data-[active=false]:text-muted-foreground"
               >
                 Theo tháng
               </button>
@@ -178,7 +178,7 @@ export function PricingTierV2({
                 aria-selected={period === 'yearly'}
                 data-active={period === 'yearly'}
                 onClick={() => setPeriod('yearly')}
-                className="rounded-pill px-6 py-2 font-sans text-sm font-medium transition-all duration-300 ease-editorial data-[active=true]:bg-cream-50 data-[active=true]:text-warm-dark-50 data-[active=false]:text-cream-300"
+                className="rounded-pill px-6 py-2 font-sans text-sm font-medium transition-all duration-300 ease-editorial data-[active=true]:bg-cream-50 data-[active=true]:text-ink data-[active=false]:text-muted-foreground"
               >
                 Theo năm
               </button>
@@ -206,16 +206,16 @@ export function PricingTierV2({
             const unit = `/ ${resolvedUnit}`;
 
             const baseCard =
-              'relative flex flex-col rounded-card-editorial border bg-warm-dark-100 p-8 md:p-12 transition-all duration-300 ease-editorial';
+              'relative flex flex-col rounded-card-editorial border bg-muted/40 p-8 md:p-12 transition-all duration-300 ease-editorial';
             const cardBorder = tier.recommended
               ? 'border-gold bg-gradient-to-b from-gold/5 to-warm-dark-100'
-              : 'border-warm-dark-300 hover:border-warm-dark-500';
+              : 'border-border hover:border-border/80';
 
             const ctaBase =
               'mt-8 inline-flex w-full items-center justify-center rounded-pill px-7 py-4 font-sans text-sm font-medium transition-all duration-300 ease-editorial';
             const ctaVariant = tier.primary
-              ? 'bg-gold text-warm-dark-50 hover:bg-gold-soft'
-              : 'border border-warm-dark-300 text-cream-50 hover:bg-warm-dark-200';
+              ? 'bg-gold text-ink hover:bg-gold-soft'
+              : 'border border-border text-foreground hover:bg-card';
 
             return (
               <article
@@ -225,27 +225,27 @@ export function PricingTierV2({
                 className={`${baseCard} ${cardBorder} translate-y-3 opacity-0 [transition-duration:600ms] data-[in-view=true]:translate-y-0 data-[in-view=true]:opacity-100`}
               >
                 {tier.recommended && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-pill bg-gold px-4 py-1 font-mono text-xs uppercase tracking-wider text-warm-dark-50">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-pill bg-gold px-4 py-1 font-mono text-xs uppercase tracking-wider text-ink">
                     KHUYÊN DÙNG
                   </span>
                 )}
 
                 <p
                   className={`font-mono text-eyebrow uppercase tracking-wider ${
-                    tier.recommended ? 'text-gold' : 'text-cream-500'
+                    tier.recommended ? 'text-gold' : 'text-muted-foreground/70'
                   }`}
                 >
                   {tier.name}
                 </p>
-                <h3 className="mt-4 font-sans text-3xl font-bold tracking-tight text-cream-50">
+                <h3 className="mt-4 font-sans text-3xl font-bold tracking-tight text-foreground">
                   {tier.nameDisplay}
                 </h3>
-                <p className="mt-2 font-sans text-sm text-cream-300">
+                <p className="mt-2 font-sans text-sm text-muted-foreground">
                   {tier.description}
                 </p>
 
                 {tier.bestFor && (
-                  <p className="mt-4 border-l-2 border-gold/40 pl-3 font-sans text-xs italic leading-relaxed text-cream-500">
+                  <p className="mt-4 border-l-2 border-gold/40 pl-3 font-sans text-xs italic leading-relaxed text-muted-foreground/70">
                     <span className="font-mono uppercase tracking-wider text-gold-soft not-italic">
                       Nên chọn nếu
                     </span>{' '}
@@ -254,10 +254,10 @@ export function PricingTierV2({
                 )}
 
                 <div className="mt-8 flex items-baseline gap-2">
-                  <span className="font-marketing-display text-price-amount text-cream-50">
+                  <span className="font-marketing-display text-price-amount text-foreground">
                     {formatVND(amount)}
                   </span>
-                  <span className="font-mono text-xs text-cream-500">{unit}</span>
+                  <span className="font-mono text-xs text-muted-foreground/70">{unit}</span>
                 </div>
 
                 <ul className="mt-8 flex-grow space-y-3">
@@ -268,7 +268,7 @@ export function PricingTierV2({
                         className="mt-1 shrink-0 text-jade-300"
                         aria-hidden
                       />
-                      <span className="font-sans text-sm text-cream-100">
+                      <span className="font-sans text-sm text-foreground/95">
                         {feature}
                       </span>
                     </li>

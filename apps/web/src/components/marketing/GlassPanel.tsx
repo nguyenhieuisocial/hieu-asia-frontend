@@ -35,7 +35,7 @@ export function GlassPanel({
   const tintClass =
     tint === 'light'
       ? 'bg-white/55 border-white/20'
-      : 'bg-warm-dark-100/55 border-warm-dark-300/30';
+      : 'bg-muted/40/55 border-border/30';
   const borderClass = border === 'gold' ? 'border-gold/20' : '';
 
   return (

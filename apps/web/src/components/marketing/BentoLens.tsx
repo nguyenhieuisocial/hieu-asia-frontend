@@ -32,7 +32,7 @@ import { ItalicSpan } from './ItalicSpan';
  * as a unifying cultural mark.
  *
  * Tokens (Wave 60.56 P1):
- *   bg-warm-dark-{50,100,200,300} / border-warm-dark-300 / border-gold
+ *   bg-warm-dark-{50,100,200,300} / border-border / border-gold
  *   text-cream-{50,300,500} / text-gold / text-gold-soft
  *   rounded-card-editorial / ease-editorial / font-marketing-display
  *   text-section-display / text-eyebrow / max-w-marketing-tight
@@ -102,7 +102,7 @@ export function BentoLens({
 }: BentoLensProps) {
   // Tailwind can't statically infer `bg-${bg}` — use a literal mapping so the
   // JIT keeps both classes in the output bundle.
-  const bgClass = bg === 'warm-dark-100' ? 'bg-warm-dark-100' : 'bg-warm-dark-50';
+  const bgClass = bg === 'warm-dark-100' ? 'bg-muted/40' : 'bg-background';
 
   // Wave 60.66.P3 — heterogeneous grid: hero tile (recommended) 8x4 + 2 supporting
   // 4x2 + 1 full-width 12x2. Pre-compute cell classes per index so Tailwind JIT
@@ -135,7 +135,7 @@ export function BentoLens({
           </p>
         )}
         {title && (
-          <h2 className="text-balance text-center font-sans text-section-display font-bold tracking-tight text-cream-50">
+          <h2 className="text-balance text-center font-sans text-section-display font-bold tracking-tight text-foreground">
             {title}
           </h2>
         )}
@@ -164,7 +164,7 @@ export function BentoLens({
             return (
               <article
                 key={lens.id}
-                className={`group relative flex h-full flex-col overflow-hidden rounded-card-editorial border bg-warm-dark-200 transition-all duration-300 ease-editorial hover:-translate-y-0.5 hover:border-gold hover:bg-warm-dark-300 hover:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.12)] ${tilePadding} ${cellClass} ${containerClass} ${lens.recommended ? 'border-gold' : 'border-warm-dark-300'}`}
+                className={`group relative flex h-full flex-col overflow-hidden rounded-card-editorial border bg-card transition-all duration-300 ease-editorial hover:-translate-y-0.5 hover:border-gold hover:bg-muted hover:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.12)] ${tilePadding} ${cellClass} ${containerClass} ${lens.recommended ? 'border-gold' : 'border-border'}`}
               >
                 <LotusIcon className="absolute right-6 top-6 size-6 text-gold opacity-30" />
 
@@ -204,16 +204,16 @@ export function BentoLens({
 
                 {lens.icon}
 
-                <p className="relative z-10 mt-8 font-mono text-eyebrow uppercase tracking-wider text-cream-300">
+                <p className="relative z-10 mt-8 font-mono text-eyebrow uppercase tracking-wider text-muted-foreground">
                   {lens.name}
                   {lens.subname && ` · ${lens.subname}`}
                 </p>
 
-                <h3 className={`relative z-10 mt-4 font-sans font-bold tracking-tight text-cream-50 ${headingClass}`}>
+                <h3 className={`relative z-10 mt-4 font-sans font-bold tracking-tight text-foreground ${headingClass}`}>
                   <ItalicSpan>{lens.action}</ItalicSpan> {lens.title}
                 </h3>
 
-                <p className="relative z-10 mt-3 max-w-md font-sans text-base leading-relaxed text-cream-300">
+                <p className="relative z-10 mt-3 max-w-md font-sans text-base leading-relaxed text-muted-foreground">
                   {lens.body}
                 </p>
               </article>

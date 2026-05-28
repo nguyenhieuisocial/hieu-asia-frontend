@@ -26,7 +26,7 @@ import { useEffect, useRef, useState } from 'react';
  * Phase 5 budget gate. CSS + IntersectionObserver = 0 KB delta, same visual.
  *
  * Tokens (Wave 60.56 P1, no new colors): bg-warm-dark-{50,100} /
- * text-cream-50 / text-gold / text-gold-soft / font-marketing-display /
+ * text-foreground / text-gold / text-gold-soft / font-marketing-display /
  * max-w-marketing-text / ease-editorial.
  */
 
@@ -45,7 +45,7 @@ export function PullQuote({
   bg = 'warm-dark-50',
 }: PullQuoteProps) {
   // Tailwind JIT needs literal class names (Wave 60.56 P1 pattern).
-  const bgClass = bg === 'warm-dark-100' ? 'bg-warm-dark-100' : 'bg-warm-dark-50';
+  const bgClass = bg === 'warm-dark-100' ? 'bg-muted/40' : 'bg-background';
 
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
@@ -93,7 +93,7 @@ export function PullQuote({
         >
           “
         </span>
-        <blockquote className="mt-2 font-marketing-display text-3xl italic leading-relaxed text-cream-50 md:text-4xl">
+        <blockquote className="mt-2 font-marketing-display text-3xl italic leading-relaxed text-foreground md:text-4xl">
           {children}
         </blockquote>
         {attribution && (

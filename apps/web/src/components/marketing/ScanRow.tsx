@@ -64,7 +64,7 @@ export function ScanRow({
   bg = 'warm-dark-100',
 }: ScanRowProps) {
   // Tailwind JIT requires literal mapping (Wave 60.56 P1 pattern).
-  const bgClass = bg === 'warm-dark-50' ? 'bg-warm-dark-50' : 'bg-warm-dark-100';
+  const bgClass = bg === 'warm-dark-50' ? 'bg-background' : 'bg-muted/40';
 
   // Desktop column count: 3 for ≤3 items, 4 for 4 items, 5 for ≥5 (Wave
   // 60.95.d P1-11 — intent cards need 5-col grid on xl so the 5th card
@@ -85,7 +85,7 @@ export function ScanRow({
           </p>
         )}
         {title && (
-          <h2 className="text-balance font-sans text-section-display font-bold tracking-tight text-cream-50">
+          <h2 className="text-balance font-sans text-section-display font-bold tracking-tight text-foreground">
             {title}
           </h2>
         )}
@@ -107,7 +107,7 @@ export function ScanRow({
               // and clipping the first card's right edge. line-clamp-2 doesn't
               // help here because it clips display, not width. Desktop keeps
               // `md:min-w-0 md:max-w-none` (grid sizing takes over).
-              className="group relative flex h-full min-h-[180px] w-[78vw] max-w-[78vw] shrink-0 snap-start flex-col rounded-card-editorial border border-gold/15 bg-warm-dark-200 p-6 transition-all duration-300 ease-editorial hover:-translate-y-0.5 hover:border-gold/30 hover:bg-warm-dark-300 sm:w-[60vw] sm:max-w-[60vw] md:w-auto md:max-w-none"
+              className="group relative flex h-full min-h-[180px] w-[78vw] max-w-[78vw] shrink-0 snap-start flex-col rounded-card-editorial border border-gold/15 bg-card p-6 transition-all duration-300 ease-editorial hover:-translate-y-0.5 hover:border-gold/30 hover:bg-muted sm:w-[60vw] sm:max-w-[60vw] md:w-auto md:max-w-none"
             >
               <div className="mb-4">{item.icon}</div>
               {item.tag && (
@@ -115,10 +115,10 @@ export function ScanRow({
                   {item.tag}
                 </p>
               )}
-              <p className="font-sans text-base font-semibold leading-tight text-cream-50">
+              <p className="font-sans text-base font-semibold leading-tight text-foreground">
                 {item.label}
               </p>
-              <p className="mt-2 line-clamp-2 font-sans text-sm leading-relaxed text-cream-300">
+              <p className="mt-2 line-clamp-2 font-sans text-sm leading-relaxed text-muted-foreground">
                 {item.body}
               </p>
               <p className="mt-auto pt-4 font-sans text-sm font-medium text-gold-soft transition-colors group-hover:text-gold">

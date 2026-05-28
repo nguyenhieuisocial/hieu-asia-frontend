@@ -57,7 +57,7 @@ export function HowToStart() {
       // section padding cascade doesn't pile up 200+px gaps between H2s.
       // Wave 60.95.ae (founder bug report): removed `bg-background` — in dark
       // theme `bg-background` resolves to `rgb(14,14,17)` (đen than ink) which
-      // creates a visible color seam against the parent wrapper bg-warm-dark-50
+      // creates a visible color seam against the parent wrapper bg-background
       // `rgb(19,17,13)` set in page.tsx line 531. Same fix as Wave 60.79.T3
       // applied to WhyTrust earlier — inherit page wrapper bg for tonal
       // consistency. Callers that need a specific bg can wrap this component.

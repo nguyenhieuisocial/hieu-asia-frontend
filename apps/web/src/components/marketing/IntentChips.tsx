@@ -71,7 +71,7 @@ export function IntentChips({ chips, eyebrow, glass = true }: IntentChipsProps) 
             key={chip.slug}
             type="button"
             onClick={() => handleClick(chip.slug)}
-            className="rounded-pill border border-gold/15 bg-warm-dark-200 px-4 py-2 font-sans text-sm font-medium text-gold-soft transition-all duration-300 ease-editorial hover:border-gold/30 hover:bg-warm-dark-300 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50"
+            className="rounded-pill border border-gold/15 bg-card px-4 py-2 font-sans text-sm font-medium text-gold-soft transition-all duration-300 ease-editorial hover:border-gold/30 hover:bg-muted hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50"
           >
             {chip.label}
           </button>

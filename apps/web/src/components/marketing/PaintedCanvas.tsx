@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
  * Wave 60.66.P2 — PaintedCanvas (Option E "Editorial Live" atmosphere layer).
  *
  * Reusable background composition for marketing surfaces. Composes:
- *   1. Base solid `bg-warm-dark-50` (Wave 60.56 P1 token).
+ *   1. Base solid `bg-background` (Wave 60.56 P1 token).
  *   2. Inline SVG `<feTurbulence baseFrequency="0.012" numOctaves="2">` paper-
  *      grain noise (5% opacity) — paint-light, mobile-safe (R6 finding: octaves
  *      >2 tanks paint perf on mid Android).
@@ -40,7 +40,7 @@ export function PaintedCanvas({
 
   return (
     <div
-      className={`relative isolate overflow-hidden bg-warm-dark-50 ${className ?? ''}`}
+      className={`relative isolate overflow-hidden bg-background ${className ?? ''}`}
     >
       {/* Layer 1: Linear vertical fade warm-dark-200 → warm-dark-100 */}
       <div
@@ -83,7 +83,7 @@ export function PaintedCanvas({
       {watermark === 'lotus' && (
         <svg
           aria-hidden
-          className="pointer-events-none absolute -right-12 bottom-0 z-0 h-[480px] w-[480px] text-warm-dark-200/30"
+          className="pointer-events-none absolute -right-12 bottom-0 z-0 h-[480px] w-[480px] text-ink/80/30"
           viewBox="0 0 200 200"
           fill="none"
           stroke="currentColor"

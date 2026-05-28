@@ -217,7 +217,7 @@ function BigNumberCell({ item, delayMs }: { item: BigNumber; delayMs: number }) 
         ceiling) but smooth 8vw ramp through the middle. Consistent with hero-display
         token bump in tailwind.config.ts.
       */}
-      <p className="font-marketing-display text-[clamp(3rem,8vw,6rem)] font-semibold leading-none tracking-tight text-cream-50">
+      <p className="font-marketing-display text-[clamp(3rem,8vw,6rem)] font-semibold leading-none tracking-tight text-foreground">
         {/*
           Wave 60.95 BUG FIX — sr-only previously contained "1.243 BÁO CÁO MỘT
           THÁNG QUA" (number + label). The label is also rendered visibly in
@@ -250,7 +250,7 @@ export function BigNumberRow({
 }: BigNumberRowProps) {
   // Tailwind JIT requires literal class mapping (Wave 60.56 P1 pattern,
   // matches ScanRow.tsx).
-  const bgClass = bg === 'warm-dark-50' ? 'bg-warm-dark-50' : 'bg-warm-dark-100';
+  const bgClass = bg === 'warm-dark-50' ? 'bg-background' : 'bg-muted/40';
 
   return (
     <section className={`${bgClass} py-16 md:py-20`}>
@@ -261,7 +261,7 @@ export function BigNumberRow({
           </p>
         )}
         {title && (
-          <h2 className="text-balance text-center font-sans text-section-display font-bold tracking-tight text-cream-50 md:text-left">
+          <h2 className="text-balance text-center font-sans text-section-display font-bold tracking-tight text-foreground md:text-left">
             {title}
           </h2>
         )}
@@ -278,10 +278,10 @@ export function BigNumberRow({
 
         {riskReversal && (
           <div className="mx-auto mt-20 max-w-marketing-text text-center md:mt-24">
-            <p className="font-sans text-xl font-semibold leading-snug text-cream-50 md:text-2xl">
+            <p className="font-sans text-xl font-semibold leading-snug text-foreground md:text-2xl">
               {riskReversal.headline}
             </p>
-            <p className="mt-3 font-sans text-base leading-relaxed text-cream-300">
+            <p className="mt-3 font-sans text-base leading-relaxed text-muted-foreground">
               {riskReversal.body}
             </p>
             {riskReversal.href && riskReversal.cta && (

@@ -38,8 +38,8 @@ const PROOFS: readonly Proof[] = [
  */
 export function WhyTrust() {
   // Wave 60.79.T3 (vault 112 P1 #13): removed `bg-background` so the inner
-  // section inherits the page wrapper bg (currently bg-warm-dark-100 on home).
-  // Previously `bg-background` did not match `bg-warm-dark-100` in dark mode,
+  // section inherits the page wrapper bg (currently bg-muted/40 on home).
+  // Previously `bg-background` did not match `bg-muted/40` in dark mode,
   // creating a visible seam at y≈1620 between this section and adjacent
   // ScanRow / "VÌ SAO TIN ĐƯỢC" bands. Callers that need a specific bg can
   // wrap this component as the home page already does.
@@ -75,7 +75,7 @@ export function WhyTrust() {
             Wave 60.83 — proof cards migrated to MarketingCard primitive (was
             `border-border bg-card/40 p-6`). MarketingCard emits identical
             `h-full flex flex-col`, swaps bg to `warm-dark-200` so cards layer
-            cleanly on the wrapping `bg-warm-dark-100` section shell, and adds
+            cleanly on the wrapping `bg-muted/40` section shell, and adds
             `hover:border-gold/40` for editorial polish. MarketingCard's
             primitive doc explicitly lists WhyTrust as a canonical consumer. */}
         <ul className="mt-10 grid auto-rows-fr gap-4 sm:grid-cols-3">

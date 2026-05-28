@@ -19,7 +19,7 @@ import { Sparkles, Calendar, MessageSquareQuote, ListChecks, ArrowRight } from '
  * /sample-report (full 12-cung + Mentor + 30-60-90 plan).
  *
  * Brand tokens (Wave 60.56 P1 — vault 108 Option E):
- *   bg-warm-dark-50 / text-cream-{50,300,500} / text-gold / text-gold-soft
+ *   bg-background / text-cream-{50,300,500} / text-gold / text-gold-soft
  *   font-marketing-display / Instrument Serif italic for sample year numerals
  *   rounded-card-editorial / max-w-marketing
  *
@@ -86,10 +86,10 @@ const CARDS: SampleCard[] = [
     body: (
       <div className="space-y-2.5">
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-widest text-cream-500">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/70">
             Bạn hỏi
           </p>
-          <p className="text-cream-300 text-[13px] leading-relaxed">
+          <p className="text-muted-foreground text-[13px] leading-relaxed">
             Có nên mở rộng chi nhánh ngay bây giờ không?
           </p>
         </div>
@@ -97,7 +97,7 @@ const CARDS: SampleCard[] = [
           <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">
             Mentor
           </p>
-          <p className="text-cream-300 text-[13px] leading-relaxed">
+          <p className="text-muted-foreground text-[13px] leading-relaxed">
             Trước khi trả lời, runway tài chính của bạn còn bao tháng? Lá số
             cho thấy chủ đề năm nay là “củng cố trước khi mở rộng”…
           </p>
@@ -111,7 +111,7 @@ const CARDS: SampleCard[] = [
     eyebrow: 'KẾ HOẠCH 30 NGÀY',
     title: 'Bước hành động cụ thể',
     body: (
-      <ul className="space-y-1.5 text-[13px] leading-relaxed text-cream-300">
+      <ul className="space-y-1.5 text-[13px] leading-relaxed text-muted-foreground">
         <li className="flex gap-2">
           <span className="text-gold/85" aria-hidden>→</span>
           <span>Mở quỹ dự phòng đến 3 tháng chi tiêu.</span>
@@ -159,7 +159,7 @@ export function SampleOutputShowcase() {
   return (
     <section
       aria-label="Báo cáo mẫu (minh hoạ)"
-      className="bg-warm-dark-50 py-16 md:py-20"
+      className="bg-background py-16 md:py-20"
     >
       <div className="mx-auto max-w-marketing px-6 lg:px-12">
         {/* Header */}
@@ -167,13 +167,13 @@ export function SampleOutputShowcase() {
           <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
             — BẠN SẼ NHẬN ĐƯỢC GÌ
           </p>
-          <h2 className="text-balance font-sans text-section-display font-bold tracking-tight leading-tight text-cream-50">
+          <h2 className="text-balance font-sans text-section-display font-bold tracking-tight leading-tight text-foreground">
             Báo cáo{' '}
             <em className="italic text-gold-soft">cá nhân hoá</em> theo từng
             câu hỏi của bạn
             <span className="text-gold-dot">.</span>
           </h2>
-          <p className="mt-4 text-pretty text-base leading-relaxed text-cream-300 sm:text-lg">
+          <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
             Bốn trích đoạn dưới đây minh hoạ một báo cáo thật trả về điều gì —
             không phải dữ liệu của bạn, là persona giả định.
           </p>
@@ -186,18 +186,18 @@ export function SampleOutputShowcase() {
               key={c.id}
               data-in-view={inView ? 'true' : 'false'}
               style={{ transitionDelay: `${i * 80}ms` }}
-              className="group relative flex scale-95 flex-col rounded-card-editorial border border-warm-dark-300 bg-warm-dark-100 p-6 opacity-0 transition-[opacity,transform,border-color] duration-[600ms] ease-editorial hover:border-gold/40 data-[in-view=true]:scale-100 data-[in-view=true]:opacity-100"
+              className="group relative flex scale-95 flex-col rounded-card-editorial border border-border bg-muted/40 p-6 opacity-0 transition-[opacity,transform,border-color] duration-[600ms] ease-editorial hover:border-gold/40 data-[in-view=true]:scale-100 data-[in-view=true]:opacity-100"
             >
               <div className="mb-3 flex items-center gap-2">
                 {c.icon}
-                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-cream-500">
+                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground/70">
                   {c.eyebrow}
                 </p>
               </div>
-              <h3 className="mb-3 font-sans text-lg font-semibold leading-snug text-cream-50">
+              <h3 className="mb-3 font-sans text-lg font-semibold leading-snug text-foreground">
                 {c.title}
               </h3>
-              <div className="flex-1 text-[14px] leading-relaxed text-cream-300">
+              <div className="flex-1 text-[14px] leading-relaxed text-muted-foreground">
                 {c.body}
               </div>
               {c.footer && <div className="mt-4">{c.footer}</div>}
@@ -209,20 +209,20 @@ export function SampleOutputShowcase() {
         <div className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
           <Link
             href="/onboarding"
-            className="inline-flex items-center justify-center rounded-full bg-gold px-6 py-3 font-sans text-sm font-semibold text-warm-dark-50 transition-colors duration-200 hover:bg-gold-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50"
+            className="inline-flex items-center justify-center rounded-full bg-gold px-6 py-3 font-sans text-sm font-semibold text-ink transition-colors duration-200 hover:bg-gold-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50"
           >
             Lập lá số miễn phí
           </Link>
           <Link
             href="/sample-report"
-            className="inline-flex items-center justify-center gap-1.5 rounded-full border border-gold/40 px-6 py-3 font-sans text-sm font-medium text-cream-50 transition-colors duration-200 hover:border-gold hover:bg-gold/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50"
+            className="inline-flex items-center justify-center gap-1.5 rounded-full border border-gold/40 px-6 py-3 font-sans text-sm font-medium text-foreground transition-colors duration-200 hover:border-gold hover:bg-gold/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50"
           >
             Xem báo cáo mẫu đầy đủ
             <ArrowRight className="size-4" aria-hidden />
           </Link>
         </div>
 
-        <p className="mt-6 text-center font-mono text-[11px] uppercase tracking-widest text-cream-500">
+        <p className="mt-6 text-center font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">
           Persona demo · không phải dữ liệu thật
         </p>
       </div>

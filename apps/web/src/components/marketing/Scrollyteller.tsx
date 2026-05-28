@@ -121,7 +121,7 @@ export function Scrollyteller({
   );
 
   return (
-    <section className="relative bg-warm-dark-50 py-12 md:py-16 lg:py-20">
+    <section className="relative bg-background py-12 md:py-16 lg:py-20">
       <div className="mx-auto grid max-w-marketing grid-cols-1 gap-12 px-6 lg:grid-cols-[40%_60%] lg:gap-16 lg:px-12">
         {/* ─── LEFT sticky column (desktop/tablet) ─── */}
         <aside
@@ -139,14 +139,14 @@ export function Scrollyteller({
                   {stickyEyebrow}
                 </p>
               )}
-              <h3 className="mt-6 font-sans text-section-display font-bold tracking-tight text-cream-50">
+              <h3 className="mt-6 font-sans text-section-display font-bold tracking-tight text-foreground">
                 {activeChapter?.title}
               </h3>
               <div className="mt-10 flex items-center gap-3">
-                <span className="font-mono text-xs uppercase tracking-[0.18em] text-cream-500">
+                <span className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground/70">
                   {String(activeIdx + 1).padStart(2, '0')} / {String(chapters.length).padStart(2, '0')}
                 </span>
-                <div className="h-px flex-1 bg-warm-dark-300" />
+                <div className="h-px flex-1 bg-muted" />
               </div>
               {/* Mini chapter list — clickable nav.
                   Wave 60.79.T2 (vault 112 P1 #3): active chapter gets bg-warm-
@@ -159,8 +159,8 @@ export function Scrollyteller({
                       href={`#${c.id}`}
                       className={`block rounded-lg px-3 py-2 font-sans text-sm leading-snug transition-colors ${
                         i === activeIdx
-                          ? 'bg-warm-dark-200 text-gold-soft ring-1 ring-gold/30'
-                          : 'text-cream-500 hover:bg-warm-dark-200/40 hover:text-cream-300'
+                          ? 'bg-card text-gold-soft ring-1 ring-gold/30'
+                          : 'text-muted-foreground/70 hover:bg-card/40 hover:text-muted-foreground'
                       }`}
                     >
                       <span className="mr-2 font-mono text-[10px] tracking-[0.18em]">
@@ -198,7 +198,7 @@ export function Scrollyteller({
                 )}
                 <h2
                   id={`${chapter.id}-title`}
-                  className="mt-4 font-sans text-section-display font-bold tracking-tight text-cream-50"
+                  className="mt-4 font-sans text-section-display font-bold tracking-tight text-foreground"
                 >
                   {chapter.title}
                 </h2>

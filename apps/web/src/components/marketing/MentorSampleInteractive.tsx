@@ -32,8 +32,8 @@ import { MessageSquareQuote, ArrowRight } from 'lucide-react';
  * same question collapses it.
  *
  * Brand tokens (vault 108 Option E, matching SampleOutputShowcase):
- *   bg-warm-dark-50 / text-cream-{50,300,500} / text-gold / text-gold-soft
- *   border-warm-dark-300 / border-gold/40 / rounded-card-editorial
+ *   bg-background / text-cream-{50,300,500} / text-gold / text-gold-soft
+ *   border-border / border-gold/40 / rounded-card-editorial
  *   font-marketing-display Instrument Serif italics for emphasis spans
  *
  * Pure CSS transitions — no Motion runtime added. Reveal uses height/opacity
@@ -145,7 +145,7 @@ export function MentorSampleInteractive() {
   return (
     <section
       aria-label="Thử Mentor AI — ví dụ mẫu (không tốn lượt hỏi)"
-      className="bg-warm-dark-50 py-16 md:py-20"
+      className="bg-background py-16 md:py-20"
     >
       <div className="mx-auto max-w-marketing px-6 lg:px-12">
         {/* Header */}
@@ -153,12 +153,12 @@ export function MentorSampleInteractive() {
           <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
             — THỬ MENTOR AI
           </p>
-          <h2 className="text-balance font-sans text-section-display font-bold tracking-tight leading-tight text-cream-50">
+          <h2 className="text-balance font-sans text-section-display font-bold tracking-tight leading-tight text-foreground">
             Chọn một câu hỏi để{' '}
             <em className="italic text-gold-soft">xem ví dụ</em>
             <span className="text-gold-dot">.</span>
           </h2>
-          <p className="mt-4 text-pretty text-base leading-relaxed text-cream-300 sm:text-lg">
+          <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
             Ba câu hỏi mẫu — bấm vào để xem Mentor trả lời thế nào. Không cần
             đăng ký, không tốn lượt hỏi.
           </p>
@@ -185,7 +185,7 @@ export function MentorSampleInteractive() {
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50',
                   isActive
                     ? 'border-gold bg-gold/[0.08] text-gold'
-                    : 'border-gold/25 bg-warm-dark-200 text-gold-soft hover:border-gold/45 hover:bg-warm-dark-300 hover:text-gold',
+                    : 'border-gold/25 bg-card text-gold-soft hover:border-gold/45 hover:bg-muted hover:text-gold',
                 ].join(' ')}
               >
                 {q.question}
@@ -210,7 +210,7 @@ export function MentorSampleInteractive() {
         >
           <div className="overflow-hidden">
             {active && (
-              <article className="rounded-card-editorial border border-gold/30 bg-warm-dark-100 p-6 md:p-8">
+              <article className="rounded-card-editorial border border-gold/30 bg-muted/40 p-6 md:p-8">
                 {/* User question label */}
                 <div className="mb-4 flex items-start gap-2">
                   <MessageSquareQuote
@@ -219,10 +219,10 @@ export function MentorSampleInteractive() {
                     aria-hidden
                   />
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-cream-500">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/70">
                       Bạn hỏi
                     </p>
-                    <p className="mt-1 font-sans text-[15px] font-medium leading-snug text-cream-50">
+                    <p className="mt-1 font-sans text-[15px] font-medium leading-snug text-foreground">
                       {active.question}
                     </p>
                   </div>
@@ -232,7 +232,7 @@ export function MentorSampleInteractive() {
                   <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">
                     Mentor
                   </p>
-                  <div className="mt-2 space-y-3 text-[14px] leading-relaxed text-cream-300 md:text-[15px]">
+                  <div className="mt-2 space-y-3 text-[14px] leading-relaxed text-muted-foreground md:text-[15px]">
                     {active.response}
                   </div>
                 </div>
@@ -243,13 +243,13 @@ export function MentorSampleInteractive() {
 
         {/* Footer note + CTA */}
         <div className="mx-auto mt-10 max-w-marketing-tight text-center">
-          <p className="mb-5 text-pretty text-sm leading-relaxed text-cream-500">
+          <p className="mb-5 text-pretty text-sm leading-relaxed text-muted-foreground/70">
             Đây là ví dụ mẫu. Mentor thật sẽ trả lời dựa trên lá số của bạn —
             cung mệnh, đại vận, ngũ hành cá nhân.
           </p>
           <Link
             href="/onboarding"
-            className="inline-flex items-center justify-center gap-1.5 rounded-full bg-gold px-6 py-3 font-sans text-sm font-semibold text-warm-dark-50 transition-colors duration-200 hover:bg-gold-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50"
+            className="inline-flex items-center justify-center gap-1.5 rounded-full bg-gold px-6 py-3 font-sans text-sm font-semibold text-ink transition-colors duration-200 hover:bg-gold-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50"
           >
             Lập lá số miễn phí
             <ArrowRight className="size-4" aria-hidden />

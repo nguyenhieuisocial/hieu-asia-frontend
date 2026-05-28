@@ -10,9 +10,9 @@ import type { ReactNode } from 'react';
  * trust-negative). Will be wired into / + /about pages by Phase 3.
  *
  * Tokens (Wave 60.56 P1 commit 0b38173):
- *   bg-warm-dark-50 / bg-warm-dark-100
+ *   bg-background / bg-muted/40
  *   font-marketing-display / text-section-display / text-eyebrow
- *   text-cream-50 / text-cream-300 / text-cream-500
+ *   text-foreground / text-muted-foreground / text-muted-foreground/70
  *   text-gold / max-w-marketing-text
  */
 export type PhilosophyBlockProps = {
@@ -31,8 +31,8 @@ export type PhilosophyBlockProps = {
 };
 
 const BG_CLASS: Record<NonNullable<PhilosophyBlockProps['bg']>, string> = {
-  'warm-dark-50': 'bg-warm-dark-50',
-  'warm-dark-100': 'bg-warm-dark-100',
+  'warm-dark-50': 'bg-background',
+  'warm-dark-100': 'bg-muted/40',
 };
 
 const ALIGN_CLASS: Record<NonNullable<PhilosophyBlockProps['align']>, string> = {
@@ -59,7 +59,7 @@ export function PhilosophyBlock({
           </p>
         )}
 
-        <h2 className="text-balance font-sans text-section-display font-bold tracking-tight leading-tight text-cream-50">
+        <h2 className="text-balance font-sans text-section-display font-bold tracking-tight leading-tight text-foreground">
           {title}
         </h2>
 
@@ -67,7 +67,7 @@ export function PhilosophyBlock({
           {paragraphs.map((para, i) => (
             <p
               key={i}
-              className="text-pretty font-sans text-lg leading-relaxed text-cream-300"
+              className="text-pretty font-sans text-lg leading-relaxed text-muted-foreground"
             >
               {para}
             </p>
@@ -75,7 +75,7 @@ export function PhilosophyBlock({
         </div>
 
         {citation && (
-          <p className="mt-8 font-mono text-xs uppercase tracking-wider text-cream-500">
+          <p className="mt-8 font-mono text-xs uppercase tracking-wider text-muted-foreground/70">
             {citation}
           </p>
         )}

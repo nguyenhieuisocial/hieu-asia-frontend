@@ -13,8 +13,8 @@ import Link from 'next/link';
  * sketching the payoff before the gate.
  *
  * Tokens (from `apps/web/tailwind.config.ts`, Wave 60.56 P1 commit 0b38173):
- *   bg-warm-dark-200 / border-warm-dark-300 / text-cream-50 / text-cream-100 /
- *   text-cream-300 / text-cream-500 / text-gold / text-gold-soft /
+ *   bg-card / border-border / text-foreground / text-foreground/95 /
+ *   text-muted-foreground / text-muted-foreground/70 / text-gold / text-gold-soft /
  *   border-gold-soft / font-marketing-display / font-mono / text-eyebrow /
  *   rounded-card-editorial / rounded-pill / ease-editorial
  */
@@ -61,7 +61,7 @@ export function PreviewReadingCard({
 }: PreviewReadingCardProps) {
   return (
     <div
-      className={`relative bg-warm-dark-200 rounded-card-editorial border border-warm-dark-300 p-8 md:p-12 ${className ?? ''}`}
+      className={`relative bg-card rounded-card-editorial border border-border p-8 md:p-12 ${className ?? ''}`}
     >
       <LotusIcon className="absolute right-6 top-6 size-8 text-gold opacity-10" />
 
@@ -69,12 +69,12 @@ export function PreviewReadingCard({
         — LÁ SỐ MẪU · DEMO
       </p>
 
-      <h3 className="mt-4 font-marketing-display text-3xl italic text-cream-50">
+      <h3 className="mt-4 font-marketing-display text-3xl italic text-foreground">
         {cungName}
       </h3>
 
       {cungSubtitle && (
-        <p className="mt-1 font-sans text-sm text-cream-300">{cungSubtitle}</p>
+        <p className="mt-1 font-sans text-sm text-muted-foreground">{cungSubtitle}</p>
       )}
 
       {starList && starList.length > 0 && (
@@ -82,7 +82,7 @@ export function PreviewReadingCard({
           {starList.map((star) => (
             <li
               key={star}
-              className="rounded-pill bg-warm-dark-300 px-3 py-1 font-mono text-xs uppercase tracking-wider text-cream-300"
+              className="rounded-pill bg-muted px-3 py-1 font-mono text-xs uppercase tracking-wider text-muted-foreground"
             >
               {star}
             </li>
@@ -91,11 +91,11 @@ export function PreviewReadingCard({
       )}
 
       <blockquote className="mt-8 border-l-2 border-gold-soft pl-6">
-        <p className="font-marketing-display text-xl italic leading-relaxed text-cream-100">
+        <p className="font-marketing-display text-xl italic leading-relaxed text-foreground/95">
           {insightQuote}
         </p>
         {insightAuthor && (
-          <footer className="mt-3 font-mono text-xs uppercase tracking-wider text-cream-300">
+          <footer className="mt-3 font-mono text-xs uppercase tracking-wider text-muted-foreground">
             — {insightAuthor}
           </footer>
         )}
@@ -103,7 +103,7 @@ export function PreviewReadingCard({
 
       <Link
         href={ctaHref}
-        className="mt-8 inline-flex w-full items-center justify-center rounded-pill bg-gold px-7 py-4 font-sans text-sm font-medium text-warm-dark-50 transition-all duration-300 ease-editorial hover:bg-gold-soft"
+        className="mt-8 inline-flex w-full items-center justify-center rounded-pill bg-gold px-7 py-4 font-sans text-sm font-medium text-ink transition-all duration-300 ease-editorial hover:bg-gold-soft"
       >
         {ctaLabel}
       </Link>
