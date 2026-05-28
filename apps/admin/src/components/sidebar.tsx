@@ -49,6 +49,7 @@ import {
   Database,
   MessageSquare,
   ServerCog,
+  FileText,
 } from 'lucide-react';
 
 interface NavItem {
@@ -97,6 +98,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: '/rag', label: 'RAG', Icon: BookOpen },
       { href: '/prompts', label: 'Prompt Editor', Icon: Sparkles },
+      { href: '/content', label: 'Nội dung', Icon: FileText },
     ],
   },
   {
