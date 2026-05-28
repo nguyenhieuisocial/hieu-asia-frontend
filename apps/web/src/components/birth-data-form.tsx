@@ -17,7 +17,13 @@ import {
   toast,
 } from '@hieu-asia/ui';
 import { Info } from 'lucide-react';
-import { birthDataSchema, VN_PROVINCES, type BirthDataValues } from '@/lib/birth-data-schema';
+import {
+  birthDataSchema,
+  birthDateIssueMessage,
+  validateBirthDate,
+  VN_PROVINCES,
+  type BirthDataValues,
+} from '@/lib/birth-data-schema';
 import { createReading, getOrCreateAnonUserId, logAudit, type BirthData } from '@hieu-asia/supabase';
 import { track } from '@/lib/analytics';
 
@@ -161,7 +167,11 @@ export function BirthDataForm() {
     formState: { errors, isSubmitting },
   } = useForm<BirthDataValues>({
     resolver: zodResolver(birthDataSchema),
-    mode: 'onBlur',
+    // Wave 60.95.i P2 — `onTouched` keeps the first hint at blur but then
+    // re-validates on each keystroke so errors clear the moment the user
+    // fixes them (was `onBlur`, which waited for the next blur).
+    mode: 'onTouched',
+    reValidateMode: 'onChange',
     defaultValues: {
       display_name: '',
       birth_date: '',
@@ -200,7 +210,29 @@ export function BirthDataForm() {
 
   const unknownTime = watch('unknown_birth_time');
   const birthTime = watch('birth_time');
+  const birthDateRaw = watch('birth_date');
+  const calendar = watch('calendar');
   const showConfidence = !unknownTime && birthTime && birthTime.length > 0;
+
+  // Wave 60.95.i P2 — live (debounced ~300ms) sanity check on birth_date.
+  // Surfaces issues *before* blur so users catch typos (e.g. 1899, Feb 30,
+  // tomorrow's date) as they finish typing. The same rules run again at
+  // submit-time inside the Zod schema, so this is purely UX sugar.
+  const [liveDateIssue, setLiveDateIssue] = React.useState<string | null>(null);
+  React.useEffect(() => {
+    if (!birthDateRaw) {
+      setLiveDateIssue(null);
+      return;
+    }
+    const t = setTimeout(() => {
+      const issue = validateBirthDate(birthDateRaw);
+      // Hide the "format" issue while typing — `<input type="date">` only
+      // emits well-formed strings anyway, and intermediate states would
+      // flash noise. Real errors (future, leap-day, year<1900) still show.
+      setLiveDateIssue(issue && issue.code !== 'format' ? birthDateIssueMessage(issue) : null);
+    }, 300);
+    return () => clearTimeout(t);
+  }, [birthDateRaw]);
 
   const onSubmit = handleSubmit(async (values) => {
     if (!consented) {
@@ -344,7 +376,28 @@ export function BirthDataForm() {
       {/* Birth date */}
       <Field id="birth_date" label="Ngày sinh" required error={errors.birth_date?.message}>
         {(ariaProps) => (
-          <Input type="date" {...ariaProps} {...register('birth_date')} />
+          <>
+            <Input
+              type="date"
+              min="1900-01-01"
+              max={new Date().toISOString().slice(0, 10)}
+              {...ariaProps}
+              {...register('birth_date')}
+            />
+            {/* Wave 60.95.i P2 — live (debounced 300ms) sanity warning.
+                Suppressed when react-hook-form already has a `birth_date`
+                error so we don't double-print the same message. */}
+            {!errors.birth_date && liveDateIssue && (
+              <p
+                id="birth_date-live"
+                role="alert"
+                aria-live="polite"
+                className="text-xs text-gold-400/90"
+              >
+                {liveDateIssue}
+              </p>
+            )}
+          </>
         )}
       </Field>
 
@@ -357,12 +410,24 @@ export function BirthDataForm() {
           error={errors.birth_time?.message}
         >
           {(ariaProps) => (
-            <Input
-              type="time"
-              disabled={unknownTime}
-              {...ariaProps}
-              {...register('birth_time')}
-            />
+            <>
+              <Input
+                type="time"
+                disabled={unknownTime}
+                {...ariaProps}
+                {...register('birth_time')}
+              />
+              {/* Wave 60.95.i P2 — timezone clarification once the user
+                  enters a time. Subtle (muted) — never an error. */}
+              {!unknownTime && birthTime && birthTime.length > 0 && (
+                <p
+                  className="text-xs text-muted-foreground"
+                  aria-live="polite"
+                >
+                  Giờ địa phương nơi sinh — không phải giờ hiện tại của bạn.
+                </p>
+              )}
+            </>
           )}
         </Field>
         <label className="flex cursor-pointer items-center gap-2.5 text-sm text-foreground/80">
@@ -487,6 +552,15 @@ export function BirthDataForm() {
           />
         )}
       </Field>
+
+      {/* Wave 60.95.i P2 — lunar→solar consistency hint. Subtle (not an
+          error) so users picking âm lịch know the chart engine will still
+          do the right thing. */}
+      {calendar === 'am' && (
+        <p className="text-xs text-muted-foreground" role="status" aria-live="polite">
+          Sẽ tự động chuyển sang dương lịch khi tính lá số.
+        </p>
+      )}
 
       {/* Hint banner */}
       <div className="flex items-start gap-3 rounded-md border border-jade/30 bg-jade/10 p-4">
