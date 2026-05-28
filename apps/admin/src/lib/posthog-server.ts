@@ -454,6 +454,19 @@ export interface PostHogFlag {
   rollout_percentage: number | null;
   filters?: unknown;
   variants?: Array<{ key: string; rollout_percentage: number; name?: string }>;
+  /** Wave 61.11 — extended fields for richer admin display. */
+  tags: string[];
+  /** ISO timestamp of last flag evaluation (PostHog `last_called_at`). */
+  last_called_at: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+  /** Number of release-condition groups (>1 means complex targeting). */
+  group_count: number;
+  /** PostHog UI lifecycle: ACTIVE / STALE / DELETED. */
+  status: string;
+  evaluation_runtime: string;
+  /** True iff the flag has multivariate variants (not a boolean flag). */
+  is_multivariate: boolean;
 }
 
 interface FlagListResponse {
@@ -463,7 +476,18 @@ interface FlagListResponse {
     name?: string;
     active?: boolean;
     rollout_percentage?: number | null;
-    filters?: { groups?: Array<{ rollout_percentage?: number }>; multivariate?: { variants?: Array<{ key: string; rollout_percentage: number; name?: string }> } };
+    tags?: string[];
+    last_called_at?: string | null;
+    created_at?: string | null;
+    updated_at?: string | null;
+    status?: string;
+    evaluation_runtime?: string;
+    filters?: {
+      groups?: Array<{ rollout_percentage?: number; properties?: unknown[] }>;
+      multivariate?: {
+        variants?: Array<{ key: string; rollout_percentage: number; name?: string }>;
+      };
+    };
   }>;
 }
 
@@ -471,6 +495,11 @@ interface FlagListResponse {
  * List the project's feature flags via REST. Returns null on any failure.
  * Rollout-% is normalised: prefer top-level field, fallback to first
  * release-condition group's `rollout_percentage`, then 0.
+ *
+ * Wave 61.11 — richer field mapping (tags, last_called_at, dates, status,
+ * group_count, evaluation_runtime, is_multivariate) so the admin
+ * /experiments page can render comprehensive info per flag without
+ * additional round-trips.
  */
 export async function fetchPostHogFeatureFlags(): Promise<PostHogFlag[] | null> {
   if (!KEY) return null;
@@ -489,6 +518,7 @@ export async function fetchPostHogFeatureFlags(): Promise<PostHogFlag[] | null> 
         typeof f.rollout_percentage === 'number'
           ? f.rollout_percentage
           : f.filters?.groups?.[0]?.rollout_percentage ?? 0;
+      const variants = f.filters?.multivariate?.variants;
       return {
         id: f.id,
         key: f.key,
@@ -496,7 +526,15 @@ export async function fetchPostHogFeatureFlags(): Promise<PostHogFlag[] | null> 
         active: f.active ?? false,
         rollout_percentage: rollout,
         filters: f.filters,
-        variants: f.filters?.multivariate?.variants,
+        variants,
+        tags: f.tags ?? [],
+        last_called_at: f.last_called_at ?? null,
+        created_at: f.created_at ?? null,
+        updated_at: f.updated_at ?? null,
+        group_count: f.filters?.groups?.length ?? 0,
+        status: f.status ?? (f.active ? 'ACTIVE' : 'INACTIVE'),
+        evaluation_runtime: f.evaluation_runtime ?? 'all',
+        is_multivariate: Boolean(variants && variants.length > 0),
       };
     });
   } catch {
