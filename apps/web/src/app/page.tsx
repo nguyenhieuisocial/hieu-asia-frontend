@@ -11,7 +11,6 @@ import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 import { MarketingHero } from '@/components/marketing/MarketingHero';
 import { LotusLottie } from '@/components/marketing/LotusLottie';
 import { BentoLens } from '@/components/marketing/BentoLens';
-import { PhilosophyBlock } from '@/components/marketing/PhilosophyBlock';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { SampleOutputShowcase } from '@/components/marketing/SampleOutputShowcase';
 import { MentorSampleInteractive } from '@/components/marketing/MentorSampleInteractive';
@@ -606,27 +605,14 @@ export default function LandingPage() {
             wrong-proof. 14-day refund promise lives on /pricing CTA and as
             MarketingHero trustLine, so the risk-reversal is not lost. */}
 
-        {/* Wave 60.66.P5 — lotus SectionDivider between previous social-proof
-            slot and philosophy stance. Visual breath + cultural mark (vault
-            109 §3 Phase 5 ENRICHED). Kept post-.o cleanup as the rhythm
-            divider between BentoLens and PhilosophyBlock. */}
+        {/* Wave 60.95.ak — PhilosophyBlock removed per founder direction
+            (TRIẾT LÝ block "Bạn vẫn là người quyết định" + body "Tử Vi không
+            tiên tri..."). Philosophy stance now lives entirely in the PullQuote
+            below (same message, denser editorial format). Kept the
+            SectionDivider as visual breath between BentoLens and PullQuote;
+            PhilosophyBlock component itself stays in `marketing/` and renders
+            on /about page (gitnexus impact confirmed LOW + isolated usage). */}
         <SectionDivider variant="lotus" />
-
-        {/* 5. PhilosophyBlock — replaces fake StoryTestimonials (R3 diff #2) */}
-        <PhilosophyBlock
-          eyebrow="TRIẾT LÝ"
-          title={
-            <>
-              Bạn vẫn là <em className="italic text-gold-soft">người quyết định</em>
-              <span className="text-gold-dot">.</span>
-            </>
-          }
-          body={[
-            'Tử Vi không tiên tri. MBTI không nhãn dán. Bát Tự không định mệnh.',
-            'Đây chỉ là bốn ngôn ngữ — bốn ống kính — giúp bạn nhìn rõ hơn về chính mình. Quyết định cuối cùng luôn là của bạn.',
-          ]}
-          bg="warm-dark-50"
-        />
 
         {/* Wave 60.66.P5 — Editorial PullQuote between philosophy and pricing
             (vault 109 §3 Phase 5 ENRICHED). Motion `whileInView` fade-in via
