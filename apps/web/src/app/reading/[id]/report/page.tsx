@@ -28,8 +28,7 @@ import { ReportSkeleton } from '@/components/skeletons/ReportSkeleton';
 import { TuViChartSection } from '@/components/tuvi/TuViChartSection';
 import { SectionFeedback } from '@/components/report/SectionFeedback';
 import { ProductTabs, type ProductTab } from '@/components/product/ProductTabs';
-import { SurveyPrompt } from '@/components/survey/SurveyPrompt';
-import { SURVEY_IDS } from '@/lib/survey';
+import { PostReadingSurvey } from '@/components/feedback/PostReadingSurvey';
 import { track } from '@/lib/analytics';
 
 /** Slugify Vietnamese section title for a stable, URL-safe sectionId. */
@@ -220,16 +219,14 @@ function ReportContent() {
       </div>
 
       {/*
-        Wave 39 W-B — post-reading satisfaction survey.
-        Arms 30s after the report renders (PostHog itself dedupes per user;
-        `useSurveyPrompt` also localStorage-flags to avoid double-render
-        on remount). Only arms once a `report_ready` markdown exists.
+        Wave 60.95.w — replaces deferred "5-user moderated UX test" (Vault
+        130 P1) with PostHog Surveys. Lightweight 3-CTA toast arms 30s
+        after report mount. Production-only by default (skipped in dev/
+        preview to avoid spam). Supersedes the Wave 39 W-B <SurveyPrompt>
+        mount at this location; the dashboard-driven `SurveyPrompt` is
+        still used on /account for the NPS + Feature Request surveys.
       */}
-      <SurveyPrompt
-        surveyId={SURVEY_IDS.READING_SATISFACTION}
-        armed
-        delayMs={30_000}
-      />
+      <PostReadingSurvey readingId={readingId} />
     </main>
   );
 }

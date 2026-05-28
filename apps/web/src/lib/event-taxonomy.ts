@@ -106,6 +106,17 @@ export interface EventPropertyMap {
     error_message_hash?: string;
     page: string;
   };
+  /**
+   * Wave 60.95.w — quick post-reading rating (3-CTA toast on
+   * /reading/[id]/report). Distinct from PostHog's standard `survey sent`
+   * so the dashboard can filter for the one-tap feedback channel.
+   */
+  post_reading_feedback: {
+    rating: "positive" | "unclear" | "detail";
+    survey_id: string;
+    reading_id: string;
+    comment?: string;
+  };
 
   // ── Auth ────────────────────────────────────────────────────────
   signup_started: { method: AuthMethod };
