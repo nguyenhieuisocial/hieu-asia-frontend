@@ -10,11 +10,33 @@ export const metadata: Metadata = {
   description:
     'Tử Vi tình cảm — đọc cung Phu Thê, Phúc Đức + tâm lý gắn bó hiện đại. Không phán "hợp/khắc tuyệt đối", chỉ giúp hiểu chính mình và đối tác.',
   alternates: { canonical: 'https://hieu.asia/tu-vi-tinh-yeu' },
+  // Wave 60.96.2 — route-level openGraph REPLACES root-layout openGraph; must
+  // re-declare `images` or social preview cards render blank.
   openGraph: {
     title: 'Tử Vi tình yêu',
     description: 'Phu Thê + Phúc Đức + kiểu gắn bó — bản đồ quan hệ thân mật.',
     url: 'https://hieu.asia/tu-vi-tinh-yeu',
     type: 'article',
+    locale: 'vi_VN',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'hieu.asia — Tử Vi tình yêu: Phu Thê + Phúc Đức',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Tử Vi tình yêu',
+    description: 'Phu Thê + Phúc Đức + kiểu gắn bó — bản đồ quan hệ thân mật.',
+    images: [
+      {
+        url: '/og-image.jpg',
+        alt: 'hieu.asia — Tử Vi tình yêu',
+      },
+    ],
   },
 };
 
@@ -65,6 +87,24 @@ const BREADCRUMB_JSONLD = {
   ],
 };
 
+const ARTICLE_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  '@id': 'https://hieu.asia/tu-vi-tinh-yeu',
+  headline: 'Tử Vi tình yêu — Phu Thê + Phúc Đức + kiểu gắn bó',
+  description:
+    'Tử Vi tình cảm — đọc cung Phu Thê, Phúc Đức + tâm lý gắn bó hiện đại. Không phán "hợp/khắc tuyệt đối", chỉ giúp hiểu chính mình.',
+  inLanguage: 'vi-VN',
+  author: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
+  publisher: {
+    '@type': 'Organization',
+    name: 'hieu.asia',
+    logo: { '@type': 'ImageObject', url: 'https://hieu.asia/icon-512.png' },
+  },
+  image: ['https://hieu.asia/og-image.jpg'],
+  mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://hieu.asia/tu-vi-tinh-yeu' },
+};
+
 export default function TuViTinhYeuPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -72,6 +112,10 @@ export default function TuViTinhYeuPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_JSONLD) }}
       />
 
       <main id="main-content" className="relative overflow-hidden pt-16">

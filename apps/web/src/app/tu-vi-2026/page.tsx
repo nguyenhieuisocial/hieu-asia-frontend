@@ -10,11 +10,33 @@ export const metadata: Metadata = {
   description:
     'Tử vi 2026 (năm Bính Ngọ): chủ đề năm, sự nghiệp, tài chính, tình cảm, sức khoẻ — cá nhân hoá theo lá số Tử Vi Đẩu Số và đại vận hiện tại.',
   alternates: { canonical: 'https://hieu.asia/tu-vi-2026' },
+  // Wave 60.96.2 — route-level openGraph REPLACES root-layout openGraph; must
+  // re-declare `images` or Zalo/FB/Telegram/Slack previews render blank.
   openGraph: {
     title: 'Tử vi năm 2026',
     description: 'Năm Bính Ngọ — chủ đề năm + 12 tháng + 3 quyết định nên cân nhắc.',
     url: 'https://hieu.asia/tu-vi-2026',
     type: 'article',
+    locale: 'vi_VN',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'hieu.asia — Tử vi 2026 năm Bính Ngọ hành Hoả',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Tử vi năm 2026',
+    description: 'Năm Bính Ngọ hành Hoả — chủ đề năm + 12 tháng + 3 quyết định cân nhắc.',
+    images: [
+      {
+        url: '/og-image.jpg',
+        alt: 'hieu.asia — Tử vi 2026 năm Bính Ngọ hành Hoả',
+      },
+    ],
   },
 };
 
@@ -83,6 +105,28 @@ const BREADCRUMB_JSONLD = {
   ],
 };
 
+// Wave 60.96.2 — type=article in openGraph signals editorial yearly outlook;
+// pair with Article JSON-LD so Google can render rich snippets correctly.
+const ARTICLE_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  '@id': 'https://hieu.asia/tu-vi-2026',
+  headline: 'Tử vi 2026 — chủ đề năm Bính Ngọ hành Hoả',
+  description:
+    'Tử vi 2026 (năm Bính Ngọ): chủ đề năm, sự nghiệp, tài chính, tình cảm, sức khoẻ — cá nhân hoá theo lá số.',
+  inLanguage: 'vi-VN',
+  author: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
+  publisher: {
+    '@type': 'Organization',
+    name: 'hieu.asia',
+    logo: { '@type': 'ImageObject', url: 'https://hieu.asia/icon-512.png' },
+  },
+  image: ['https://hieu.asia/og-image.jpg'],
+  datePublished: '2025-12-01',
+  dateModified: '2026-05-28',
+  mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://hieu.asia/tu-vi-2026' },
+};
+
 export default function TuVi2026Page() {
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -90,6 +134,10 @@ export default function TuVi2026Page() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_JSONLD) }}
       />
 
       <main id="main-content" className="relative overflow-hidden pt-16">

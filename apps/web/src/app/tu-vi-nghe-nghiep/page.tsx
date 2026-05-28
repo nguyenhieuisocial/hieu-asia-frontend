@@ -10,11 +10,33 @@ export const metadata: Metadata = {
   description:
     'Tử Vi sự nghiệp — đọc cung Quan Lộc, Tài Bạch, Thiên Di + đại vận để tìm môi trường + vai trò hợp với thiên hướng cá nhân. Miễn phí lập lá số.',
   alternates: { canonical: 'https://hieu.asia/tu-vi-nghe-nghiep' },
+  // Wave 60.96.2 — route-level openGraph REPLACES root-layout openGraph; must
+  // re-declare `images` or social preview cards render blank.
   openGraph: {
     title: 'Tử Vi nghề nghiệp',
     description: 'Quan Lộc + Tài Bạch + Thiên Di — bản đồ thiên hướng sự nghiệp.',
     url: 'https://hieu.asia/tu-vi-nghe-nghiep',
     type: 'article',
+    locale: 'vi_VN',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'hieu.asia — Tử Vi nghề nghiệp: Quan Lộc + Tài Bạch + Thiên Di',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Tử Vi nghề nghiệp',
+    description: 'Quan Lộc + Tài Bạch + Thiên Di — bản đồ thiên hướng sự nghiệp.',
+    images: [
+      {
+        url: '/og-image.jpg',
+        alt: 'hieu.asia — Tử Vi nghề nghiệp',
+      },
+    ],
   },
 };
 
@@ -58,6 +80,24 @@ const BREADCRUMB_JSONLD = {
   ],
 };
 
+const ARTICLE_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  '@id': 'https://hieu.asia/tu-vi-nghe-nghiep',
+  headline: 'Tử Vi nghề nghiệp — Quan Lộc + Tài Bạch + Thiên Di',
+  description:
+    'Tử Vi sự nghiệp — đọc cung Quan Lộc, Tài Bạch, Thiên Di + đại vận để tìm môi trường + vai trò hợp với thiên hướng cá nhân.',
+  inLanguage: 'vi-VN',
+  author: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
+  publisher: {
+    '@type': 'Organization',
+    name: 'hieu.asia',
+    logo: { '@type': 'ImageObject', url: 'https://hieu.asia/icon-512.png' },
+  },
+  image: ['https://hieu.asia/og-image.jpg'],
+  mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://hieu.asia/tu-vi-nghe-nghiep' },
+};
+
 export default function TuViNgheNghiepPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -65,6 +105,10 @@ export default function TuViNgheNghiepPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_JSONLD) }}
       />
 
       <main id="main-content" className="relative overflow-hidden pt-16">

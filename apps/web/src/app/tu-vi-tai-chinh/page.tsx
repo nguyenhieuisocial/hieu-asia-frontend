@@ -10,11 +10,33 @@ export const metadata: Metadata = {
   description:
     'Tử Vi tài chính — đọc cung Tài Bạch, Điền Trạch + đại vận để hiểu khuynh hướng kiếm tiền và quản lý tài chính cá nhân. KHÔNG phải tư vấn đầu tư.',
   alternates: { canonical: 'https://hieu.asia/tu-vi-tai-chinh' },
+  // Wave 60.96.2 — route-level openGraph REPLACES root-layout openGraph; must
+  // re-declare `images` or social preview cards render blank.
   openGraph: {
     title: 'Tử Vi tài chính',
     description: 'Tài Bạch + Điền Trạch — khuynh hướng tài chính cá nhân.',
     url: 'https://hieu.asia/tu-vi-tai-chinh',
     type: 'article',
+    locale: 'vi_VN',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'hieu.asia — Tử Vi tài chính: Tài Bạch + Điền Trạch',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Tử Vi tài chính',
+    description: 'Tài Bạch + Điền Trạch — khuynh hướng tài chính cá nhân.',
+    images: [
+      {
+        url: '/og-image.jpg',
+        alt: 'hieu.asia — Tử Vi tài chính',
+      },
+    ],
   },
 };
 
@@ -57,6 +79,24 @@ const BREADCRUMB_JSONLD = {
   ],
 };
 
+const ARTICLE_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  '@id': 'https://hieu.asia/tu-vi-tai-chinh',
+  headline: 'Tử Vi tài chính — Tài Bạch + Điền Trạch + đại vận',
+  description:
+    'Tử Vi tài chính — đọc cung Tài Bạch, Điền Trạch + đại vận để hiểu khuynh hướng kiếm tiền và quản lý tài chính cá nhân.',
+  inLanguage: 'vi-VN',
+  author: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
+  publisher: {
+    '@type': 'Organization',
+    name: 'hieu.asia',
+    logo: { '@type': 'ImageObject', url: 'https://hieu.asia/icon-512.png' },
+  },
+  image: ['https://hieu.asia/og-image.jpg'],
+  mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://hieu.asia/tu-vi-tai-chinh' },
+};
+
 export default function TuViTaiChinhPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -64,6 +104,10 @@ export default function TuViTaiChinhPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_JSONLD) }}
       />
 
       <main id="main-content" className="relative overflow-hidden pt-16">

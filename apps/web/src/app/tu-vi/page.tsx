@@ -10,12 +10,34 @@ export const metadata: Metadata = {
   description:
     'Cẩm nang Tử Vi Đẩu Số: lập lá số 12 cung theo trường phái Bắc phái 114 sao, tra cứu ý nghĩa từng cung và từng sao, luận đại vận lưu niên. Miễn phí cốt lõi, AI Mentor tuỳ chọn.',
   alternates: { canonical: 'https://hieu.asia/tu-vi' },
+  // Wave 60.96.2 — route-level openGraph REPLACES root-layout openGraph; must
+  // re-declare `images` or Zalo/FB/Telegram/Slack previews render blank.
   openGraph: {
     title: 'Tử Vi Đẩu Số',
     description:
       'Lập lá số 12 cung, tra cung tra sao, luận đại vận — AI Mentor cá nhân hoá.',
     url: 'https://hieu.asia/tu-vi',
     type: 'website',
+    locale: 'vi_VN',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'hieu.asia — Tử Vi Đẩu Số: 12 cung, 114 sao, AI Mentor',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Tử Vi Đẩu Số',
+    description: 'Lập lá số 12 cung, tra cung tra sao — AI Mentor cá nhân hoá.',
+    images: [
+      {
+        url: '/og-image.jpg',
+        alt: 'hieu.asia — Tử Vi Đẩu Số: 12 cung, 114 sao, AI Mentor',
+      },
+    ],
   },
 };
 
@@ -73,6 +95,18 @@ const BREADCRUMB_JSONLD = {
   ],
 };
 
+const WEBPAGE_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': 'https://hieu.asia/tu-vi',
+  url: 'https://hieu.asia/tu-vi',
+  name: 'Tử Vi Đẩu Số — lập lá số, tra cung, tra sao',
+  description:
+    'Cẩm nang Tử Vi Đẩu Số 12 cung 114 sao Bắc phái — lập lá số AI miễn phí, tra ý nghĩa cung, ý nghĩa sao, luận đại vận lưu niên.',
+  inLanguage: 'vi-VN',
+  isPartOf: { '@type': 'WebSite', name: 'hieu.asia', url: 'https://hieu.asia' },
+};
+
 export default function TuViHubPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -80,6 +114,10 @@ export default function TuViHubPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }}
       />
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
