@@ -53,9 +53,28 @@ flow still works for dev.
 | `/reading/:id/mentor` | `pages/reading/[id]/mentor.tsx` | Live mentor chat (90 §8) |
 | `/dashboard` | `pages/dashboard.tsx` | History + plan (90 §9) |
 
-## Required setup before publishing
+## Required setup before publishing (founder action items)
 
-- Register Mini App in <https://mini.zalo.me/> to get an App ID
-- Configure `app-config.json` `app.id` if Zalo provisions a fixed ID
-- Allowlist backend domain in Zalo Console (Mini Apps block arbitrary fetch URLs)
-- Wire Zalo Pay merchant credentials (Phase 2 — currently stubbed in `src/lib/zalo-payment.ts`)
+These steps are not code changes — they live in the Zalo Mini App Console and
+local `.env`. The scaffold (auth + share + payment fallbacks) keeps working in
+guest mode until each is wired.
+
+1. **Register the Mini App** at <https://mini.zalo.me/>.
+   - Category: `Tiện ích` (utility) or `Sức khoẻ / Lối sống` (lifestyle).
+   - Upload icon: 192×192 PNG (use the brand kit logo on `#0F0F12` ink background).
+   - Privacy policy URL: `https://hieu.asia/privacy` (already shipped on web).
+2. **Set env vars** (local + CI):
+   - `ZMP_APP_ID` — assigned by Zalo on registration. Required for `zmp deploy` /
+     `zmp login`. Read by `zmp-cli`; not bundled into the JS.
+   - `VITE_API_URL` — backend FastAPI base (production: `https://api.hieu.asia`).
+   - `VITE_SUPABASE_ANON_KEY` + `VITE_EDGE_FN_URL` — Supabase audit-log endpoint
+     for NĐ 13/2023 consent receipts (silent no-op when unset).
+   - `VITE_PUBLIC_POSTHOG_KEY` (optional) — analytics.
+3. **Allowlist backend domains** in Zalo Console → Mini App → Configure →
+   `request_domain`. Zalo blocks arbitrary `fetch()` URLs at runtime.
+   - Add: `api.hieu.asia`, `*.supabase.co` (if using Supabase Edge Functions).
+4. **Wire Zalo Pay credentials** when ready (currently `src/lib/zalo-payment.ts`
+   returns mock orders). The `mac` HMAC must be signed server-side — never
+   bundled — via `POST /v1/payments/zalopay/sign` (backend endpoint TBD).
+5. **Submit for review** (typically 1–2 week approval). After approval, publish
+   via console — Zalo does not auto-deploy from git.
