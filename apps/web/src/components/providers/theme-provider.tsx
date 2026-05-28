@@ -1,53 +1,29 @@
 'use client';
 
 import * as React from 'react';
-import { usePathname } from 'next/navigation';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 
 type ThemeProviderProps = React.ComponentProps<typeof NextThemesProvider>;
 
 /**
- * Wave 60.95.aj — route-aware forcedTheme.
+ * Wave 60.83.4 — removed Wave 60.95.aj route-aware `forcedTheme="dark"`
+ * override now that Phase 1-3 of Wave 60.83 migrated all marketing,
+ * audience, and home tokens to theme-aware. Light mode renders correctly
+ * site-wide so the override is no longer needed.
  *
- * Vault 108 brand-locks the marketing surfaces to "Warm-Dark Editorial"
- * (founder decision 2026-05-26). Wave 60.82.B unhid the ThemeToggle on
- * product routes (/account, /reading, /onboarding, /dashboard, /journal,
- * /decisions). Problem: if a user toggles to light on product, the
- * `theme=light` value persists in localStorage and applies even when
- * navigating back to marketing — which renders dark text on hardcoded
- * `bg-warm-dark-*` = invisible (founder report 2026-05-28).
+ * Defaults preserved at the layout call-site:
+ * - `defaultTheme="dark"` — first-visit users land on dark (vault 108 brand
+ *   default identity)
+ * - `enableSystem={false}` — does NOT auto-follow OS preference; light
+ *   mode is purely opt-in via the toggle in SiteNav
  *
- * Fix: pass `forcedTheme="dark"` to next-themes when the current pathname
- * is a marketing route. next-themes honours forcedTheme by ignoring
- * stored user preference + system preference, so marketing always renders
- * with the dark CSS variables regardless of what the user picked elsewhere.
- *
- * Product routes get a normal toggle experience (no forcedTheme passed) so
- * the persisted user preference applies as usual.
- *
- * When Wave 60.83 ships full-site light-mode migration (per Option 2),
- * this forcedTheme override can be removed.
+ * History:
+ *  - Wave 60.95.aj (hotfix): pathname-gated forcedTheme="dark" on marketing
+ *    routes to mask the dark-text-on-dark-bg bug when localStorage
+ *    `theme=light` from a product toggle bled into marketing.
+ *  - Wave 60.83.4 (this commit): override removed — root cause fixed at the
+ *    component level instead of papered over at the provider level.
  */
-const PRODUCT_ROUTE_PREFIXES = [
-  '/account',
-  '/reading',
-  '/onboarding',
-  '/dashboard',
-  '/journal',
-  '/decisions',
-];
-
-function isProductRoute(pathname: string | null): boolean {
-  if (!pathname) return false;
-  return PRODUCT_ROUTE_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
-}
-
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  const pathname = usePathname();
-  const forced = isProductRoute(pathname) ? undefined : 'dark';
-  return (
-    <NextThemesProvider {...props} forcedTheme={forced}>
-      {children}
-    </NextThemesProvider>
-  );
+  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
 }

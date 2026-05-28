@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { Moon, Sun } from 'lucide-react';
 import { Button } from '@hieu-asia/ui';
@@ -9,67 +8,35 @@ import { Button } from '@hieu-asia/ui';
 /**
  * Theme toggle — wired to next-themes (`attribute="class"` in layout).
  *
- * Wave 60.82.B: live for the first time on product surfaces (`/account`,
- * `/reading`, `/onboarding` and admin app). Light mode is opt-in via this
- * toggle — `enableSystem={false}` stays in root layout so OS-level
- * `prefers-color-scheme: light` does NOT auto-flip marketing pages.
- *
- * Marketing surfaces stay dark-locked per vault 108 (Warm-Dark Editorial
- * brand identity, founder-locked 2026-05-26). This component short-circuits
- * to null on marketing routes so even though `SiteNav` mounts it everywhere,
- * the toggle only renders inside product/admin chrome.
- *
- * Wave 60.82.A migrated the remaining product-chrome tokens (BottomNavBar
- * + Fab). Wave 60.95.w PoC migrated `/account` hub + `PwaInstallPrompt`.
- * Earlier Wave 60.58-60.69 refactors brought the bulk of product UI to
- * semantic tokens already.
+ * Wave 60.83.4: light/dark works site-wide (founder Option 2). All marketing
+ * + product + audience routes use theme-aware tokens after Wave 60.83.1-.3
+ * token migration. Toggle renders unconditionally in `SiteNav` chrome and
+ * persists user choice via next-themes localStorage.
  *
  * History:
- *  - Wave 60.79.T1: env-gated to NULL render (vault 112 P0-01 visual
- *    sandwich regression). Gate removed in 60.82.B now that product
- *    surfaces are theme-aware.
+ *  - Wave 60.79.T1: env-gated to NULL render (vault 112 P0-01 visual sandwich
+ *    regression — marketing components were hardcoded dark, light flip broke
+ *    them).
+ *  - Wave 60.82.B: unhid on product routes only via PRODUCT_ROUTE_PREFIXES
+ *    allowlist + `isProductRoute` check.
+ *  - Wave 60.95.aj: ThemeProvider passed `forcedTheme="dark"` on marketing
+ *    routes as a hotfix when user toggle on product caused localStorage
+ *    `theme=light` to bleed onto marketing pages (dark text on hardcoded
+ *    dark bg = invisible).
+ *  - Wave 60.83.4 (this commit): removed the route allowlist; toggle is
+ *    site-wide. Forcedtheme override in ThemeProvider also reverted in the
+ *    same wave. Vault 108 dark-as-default still applies (defaultTheme="dark"
+ *    + enableSystem={false}) — light mode is opt-in via this toggle.
  *
- * QA kill-switch: if a regression is found post-launch, re-enable the
- * env-gate by uncommenting the early-return in this file, OR set the
- * `NEXT_PUBLIC_THEME_TOGGLE=0` env var on Vercel and add a check here.
- * (Currently the toggle is unconditionally live on product routes.)
+ * QA kill-switch: if a regression appears, re-add the `PRODUCT_ROUTE_PREFIXES`
+ * + `usePathname()` gate from Wave 60.82.B (git history `b1dc28b`).
  */
-
-/**
- * Route prefixes where the theme toggle renders. Must match the product
- * scope from `AppShell.tsx` (kept in sync manually — this list is short
- * enough that a shared constant adds more indirection than it saves).
- * Marketing routes (/, /pricing, /sample-report, …) are intentionally
- * excluded per vault 108 brand lock.
- */
-const PRODUCT_ROUTE_PREFIXES = [
-  '/account',
-  '/reading',
-  '/onboarding',
-  '/dashboard',
-  '/journal',
-  '/decisions',
-];
-
-function isProductRoute(pathname: string | null): boolean {
-  if (!pathname) return false;
-  return PRODUCT_ROUTE_PREFIXES.some(
-    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
-  );
-}
 
 export function ThemeToggle() {
   const { theme, setTheme, resolvedTheme } = useTheme();
-  const pathname = usePathname();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => setMounted(true), []);
-
-  // Marketing surfaces are dark-locked per vault 108. SiteNav is shared
-  // between marketing and product so the toggle must self-gate here.
-  if (!isProductRoute(pathname)) {
-    return null;
-  }
 
   const current = mounted ? (resolvedTheme ?? theme) : 'dark';
   const next = current === 'dark' ? 'light' : 'dark';
@@ -83,13 +50,6 @@ export function ThemeToggle() {
       className="relative"
     >
       {current === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-      {/* Wave 60.82.B — Beta badge to signal opt-in status. Dot, not pill,
-          to keep header chrome lightweight. */}
-      <span
-        aria-hidden="true"
-        className="absolute -right-0.5 -top-0.5 inline-flex h-1.5 w-1.5 rounded-full bg-gold"
-        title="Beta"
-      />
     </Button>
   );
 }
