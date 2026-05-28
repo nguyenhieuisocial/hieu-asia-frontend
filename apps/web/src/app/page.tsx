@@ -9,6 +9,7 @@ import { HowToStart } from '@/components/home/HowToStart';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 import { MarketingHero } from '@/components/marketing/MarketingHero';
+import { HomeHeroEyebrow } from '@/components/home/HomeHeroEyebrow';
 import { LotusLottie } from '@/components/marketing/LotusLottie';
 import { BentoLens } from '@/components/marketing/BentoLens';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
@@ -383,8 +384,13 @@ export default function LandingPage() {
             up the above-the-fold real estate. The HeroBadgeScroll motion
             wrapper is dropped here too — without an eyebrow child it has
             nothing to animate. */}
+        {/* Wave 61.07 — `eyebrow` re-wired conditionally via PostHog flag
+            `home-hero-eyebrow` (Wave 60.95.w registry, default false). When
+            flag is off, HomeHeroEyebrow returns null and Wave 60.95.r state
+            is preserved. Founder sets rollout % in PostHog dashboard. */}
         <MarketingHero
           bg="painted"
+          eyebrow={<HomeHeroEyebrow />}
           title={
             // Wave 60.95.a P0 — Polypane P1-V1 fix: mobile 320px wrapped headline
             // as 3 lines ("Hiểu mình. / Quyết / định mình."). Wrap second clause

@@ -164,3 +164,65 @@ export async function fetchTopPageviews(): Promise<PageviewRow[] | null> {
 export function isPostHogServerConfigured(): boolean {
   return !!KEY;
 }
+
+/* -------------------------------------------------------------------------
+ * Wave 61.07 — Feature flag REST helper (not HogQL).
+ * --------------------------------------------------------------------- */
+
+export interface PostHogFlag {
+  id: number;
+  key: string;
+  name: string;
+  active: boolean;
+  rollout_percentage: number | null;
+  filters?: unknown;
+  variants?: Array<{ key: string; rollout_percentage: number; name?: string }>;
+}
+
+interface FlagListResponse {
+  results?: Array<{
+    id: number;
+    key: string;
+    name?: string;
+    active?: boolean;
+    rollout_percentage?: number | null;
+    filters?: { groups?: Array<{ rollout_percentage?: number }>; multivariate?: { variants?: Array<{ key: string; rollout_percentage: number; name?: string }> } };
+  }>;
+}
+
+/**
+ * List the project's feature flags via REST. Returns null on any failure.
+ * Rollout-% is normalised: prefer top-level field, fallback to first
+ * release-condition group's `rollout_percentage`, then 0.
+ */
+export async function fetchPostHogFeatureFlags(): Promise<PostHogFlag[] | null> {
+  if (!KEY) return null;
+  try {
+    const res = await fetch(
+      `${HOST}/api/projects/${PROJECT_ID}/feature_flags/?limit=100`,
+      {
+        headers: { Authorization: `Bearer ${KEY}` },
+        next: { revalidate: REVALIDATE_SECONDS, tags: ['posthog'] },
+      },
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as FlagListResponse;
+    return (data.results ?? []).map((f) => {
+      const rollout =
+        typeof f.rollout_percentage === 'number'
+          ? f.rollout_percentage
+          : f.filters?.groups?.[0]?.rollout_percentage ?? 0;
+      return {
+        id: f.id,
+        key: f.key,
+        name: f.name ?? f.key,
+        active: f.active ?? false,
+        rollout_percentage: rollout,
+        filters: f.filters,
+        variants: f.filters?.multivariate?.variants,
+      };
+    });
+  } catch {
+    return null;
+  }
+}
