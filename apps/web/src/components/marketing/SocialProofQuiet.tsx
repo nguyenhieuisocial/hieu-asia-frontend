@@ -1,7 +1,7 @@
 /**
  * Wave 62.07 — SocialProofQuiet (vault 138 "Social proof khoảng lặng").
  *
- * Anti-testimonial section: 3-4 anonymous excerpts in magazine pull-quote
+ * Anti-testimonial section: 4 anonymous excerpts in magazine pull-quote
  * style. NO stars, NO faces, NO names. Each ~30-60 words, italic Newsreader,
  * decorative ochre opening quote mark, attribution as "— Một người đã đặt
  * câu hỏi về [topic]".

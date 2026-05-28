@@ -147,7 +147,9 @@ function FooterCol({
   twoCol?: boolean;
 }) {
   return (
-    <div className={className}>
+    // Wave 62.05d — wrap in <nav aria-label> so each footer column is a
+    // distinct navigation region for screen readers (/ultrareview pass 2 P1).
+    <nav className={className} aria-label={title}>
       <div className="border-t-2 border-primary/30 pt-3">
         <h3 className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-primary">
           {title}
@@ -171,13 +173,14 @@ function FooterCol({
           </li>
         ))}
       </ul>
-    </div>
+    </nav>
   );
 }
 
 /**
  * Legal column — Wave 62.10. Same editorial frame as FooterCol but tail
  * includes social + newsletter mini-CTA per founder vault 138 spec.
+ * Wave 62.05d — wrapped in <nav aria-label> for a11y per /ultrareview P1.
  */
 function FooterColLegal({
   links,
@@ -187,7 +190,7 @@ function FooterColLegal({
   year: number;
 }) {
   return (
-    <div>
+    <nav aria-label="Pháp lý">
       <div className="border-t-2 border-primary/30 pt-3">
         <h3 className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-primary">
           Pháp lý
@@ -224,7 +227,7 @@ function FooterColLegal({
           <Facebook className="h-4 w-4" aria-hidden="true" />
         </SocialLink>
       </div>
-    </div>
+    </nav>
   );
 }
 
