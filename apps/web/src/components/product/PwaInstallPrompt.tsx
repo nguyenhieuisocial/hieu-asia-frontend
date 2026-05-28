@@ -3,6 +3,17 @@
 /**
  * Wave 60.69 — PWA Add-to-Home-Screen prompt (vault 109 §4.3).
  *
+ * Wave 60.95.w PoC (vault [[93i - Light Mode Refactor Wave 60.82 Plan]]):
+ * Converted `bg-warm-dark-200/80` → `bg-card/80` and `text-warm-dark-50`
+ * → `text-ink` so this card responds to light mode. This is a *scoped* PoC
+ * for the /account hub only — sibling product surfaces (/reading, /onboarding,
+ * /account/*) get migrated in Wave 60.82 per the plan above. Dark mode
+ * shifts the card from warm-brown #221C18 to cooler `hsl(240 10% 9%)`, which
+ * is the same cool-dark surface the rest of /account already uses — so this
+ * actually *removes* an existing inconsistency (warm-brown panel on a
+ * cool-dark page). Cream-on-gold pill text becomes `text-ink` (theme-stable,
+ * identical hex in both modes).
+ *
  * Renders a small editorial-styled card on `/account` after the user has at
  * least one reading in their feed — soft, contextual ask rather than a
  * page-load interrupt. Listens to the `beforeinstallprompt` event (Chromium
@@ -133,7 +144,7 @@ export function PwaInstallPrompt() {
       role="region"
       aria-label="Cài đặt hieu.asia"
       className={cn(
-        'rounded-xl border border-gold/30 bg-warm-dark-200/80 p-4 backdrop-blur-sm',
+        'rounded-xl border border-gold/30 bg-card/80 p-4 backdrop-blur-sm',
         'sm:flex sm:items-center sm:justify-between sm:gap-4',
       )}
     >
@@ -156,7 +167,7 @@ export function PwaInstallPrompt() {
           onClick={onInstall}
           disabled={pending}
           className={cn(
-            'inline-flex items-center gap-1.5 rounded-pill bg-gold px-4 py-2 text-xs font-semibold text-warm-dark-50',
+            'inline-flex items-center gap-1.5 rounded-pill bg-gold px-4 py-2 text-xs font-semibold text-ink',
             'transition-colors duration-200 hover:bg-gold-soft disabled:opacity-50',
           )}
         >
