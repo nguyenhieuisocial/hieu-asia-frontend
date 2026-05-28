@@ -1,7 +1,7 @@
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **hieu-asia-frontend**. Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **hieu-asia-frontend** (11318 symbols, 18039 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 
@@ -41,3 +41,23 @@ This project is indexed by GitNexus as **hieu-asia-frontend**. Use the GitNexus 
 | Index, status, clean, wiki CLI commands | `.claude/skills/gitnexus/gitnexus-cli/SKILL.md` |
 
 <!-- gitnexus:end -->
+
+## Cross-repo map (read BEFORE searching for backend code)
+
+This frontend monorepo (`apps/web` + `apps/admin` + `apps/miniapp-*`) calls `https://api.hieu.asia`. **That worker's source is NOT in this repo.** It lives in the sibling `backend/` repo at:
+
+```
+/Users/quinngan/Documents/hieu.asia/backend/infra/cloudflare/workers/api-gateway/src/index.ts
+```
+
+(~4800 LOC monolith with route handlers inside the `fetch` method, plus `src/content/`, `src/daily/`, `src/admin/`, `src/llm/`, `src/tools/` modules.)
+
+Telegram bot @hieuasiabot handler is in **Supabase Edge Function** (Deno runtime, NOT the Cloudflare Worker):
+
+```
+/Users/quinngan/Documents/hieu.asia/backend/infra/supabase/functions/telegram-webhook/index.ts
+```
+
+Don't waste time looking for a `hieu-asia-worker` repo — there isn't one. Historical naming: the repo is called "backend" because it used to host a now-retired Python/FastAPI tree.
+
+Full repo + folder tree + deploy mechanics: vault `82 - Monorepo Structure & Auto-sync.md`. Headline cross-repo map: vault `94 - Master Infrastructure Reference.md` (top of file).
