@@ -75,6 +75,13 @@ export function NewsletterSignup({
             Một bài viết ngắn về cách dùng cổ học để ra quyết định tốt hơn. Không
             spam, không bán hàng, huỷ bất cứ lúc nào.
           </p>
+          <a
+            href="/newsletter/archive"
+            className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-gold/90 underline-offset-4 hover:text-gold hover:underline sm:text-sm"
+          >
+            Xem các bài trước
+            <span aria-hidden="true">→</span>
+          </a>
         </div>
 
         <div>
