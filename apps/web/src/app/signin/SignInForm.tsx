@@ -243,6 +243,16 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
             />
           </div>
 
+          {/* Wave 60.95.m — proactive Turnstile hint so users on slow
+              connections understand why OAuth buttons + submit start
+              disabled, instead of seeing four greyed-out buttons with
+              no upfront explanation. Disappears once captcha resolves. */}
+          {!captchaToken && (
+            <p className="text-center font-mono text-[11px] uppercase tracking-wider text-cream-500">
+              Hoàn tất xác thực Cloudflare bên dưới để mở tuỳ chọn đăng nhập
+            </p>
+          )}
+
           {/* OAuth providers — priority order: Google, Facebook, Apple */}
           <div className="space-y-3">
             <Button
@@ -322,6 +332,8 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
                 type="email"
                 required
                 autoComplete="email"
+                inputMode="email"
+                enterKeyHint="send"
                 placeholder="ban@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -368,6 +380,20 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
           aria-hidden="true"
         />
         Liên kết chỉ dùng được một lần · hết hạn sau 15 phút
+      </p>
+
+      {/* Wave 60.95.m — permanent escape hatch so users who can't
+          receive the magic link (spam filter, typo, blocked OAuth)
+          always have a contact path. Previously only surfaced in the
+          !authAvailable fallback. */}
+      <p className="mt-4 text-center text-xs text-cream-500">
+        Cần trợ giúp đăng nhập?{' '}
+        <a
+          href="mailto:hi@hieu.asia"
+          className="underline hover:text-gold"
+        >
+          hi@hieu.asia
+        </a>
       </p>
     </>
   );
