@@ -198,6 +198,45 @@ export default withBotId(
     // leaving production stack traces unminified. authToken is read-only
     // server-side env (NEVER expose to browser).
     authToken: process.env.SENTRY_AUTH_TOKEN,
+    // Wave 60.95.w — Releases + deploy tracking. Three jobs:
+    //   1. `name` — pins the release identifier to the deploy's commit SHA
+    //      (matches the runtime `release` in sentry.{client,server,edge}.config.ts).
+    //      Vercel sets VERCEL_GIT_COMMIT_SHA at build time; we read it server-
+    //      side here (next.config runs in Node, not the browser, so the
+    //      non-NEXT_PUBLIC variant works and is safer). Fallback chain handles
+    //      preview deploys that still expose only NEXT_PUBLIC_* and local builds.
+    //   2. `setCommits.auto: true` — annotates the release with every commit
+    //      since the previous release in Sentry. Lets the "Suspect Commits"
+    //      feature attribute new errors to the actual code change.
+    //      `ignoreMissing: true` prevents build failure on the FIRST release
+    //      (no previous release exists yet → would otherwise abort).
+    //   3. `deploy.env` — marks the release as deployed to production/preview
+    //      so Sentry's "Release Health" tab can compute crash-free-sessions
+    //      per environment. We skip `url` here because the Vercel deploy URL
+    //      isn't available at build time (build runs BEFORE deployment URL
+    //      is assigned); founder can drill into the deploy via the commit SHA
+    //      shown on the release page.
+    // When SENTRY_AUTH_TOKEN is missing (local builds), withSentryConfig skips
+    // the entire release upload phase, so this config is safe in dev.
+    release: {
+      name:
+        process.env.VERCEL_GIT_COMMIT_SHA ??
+        process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ??
+        undefined,
+      setCommits: {
+        auto: true,
+        ignoreMissing: true,
+        ignoreEmpty: true,
+      },
+      deploy: {
+        env:
+          process.env.VERCEL_ENV === 'production'
+            ? 'production'
+            : process.env.VERCEL_ENV === 'preview'
+              ? 'preview'
+              : 'development',
+      },
+    },
     // Wave 60.50.a — Sentry payload reduction.
     //   hideSourceMaps: don't ship maps to the browser (keep for upload).
     //   bundleSizeOptimizations: tree-shakes debug logging + drops dev-only

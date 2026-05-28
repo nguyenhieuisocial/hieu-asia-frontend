@@ -4,6 +4,14 @@ Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
   tracesSampleRate: 0.1,
   environment: process.env.NODE_ENV,
+  // Wave 60.95.w — Tag every event with the deploy's commit SHA so the
+  // Sentry "Releases" page can correlate errors to the deploy that
+  // introduced them. Vercel auto-injects NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA
+  // at build time (browser-inlined). Falls back to 'dev' for local runs so
+  // dev errors don't pollute the release list with a missing-release tag.
+  // Must match the `release.name` passed to withSentryConfig in next.config.ts
+  // so the runtime tag aligns with the build-time release object.
+  release: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ?? 'dev',
   // Wave 60.46.b — Session Replay (Sentry Free tier: 50 replays/mo).
   // Domain handles Vietnamese PII (birth data, addresses), so:
   //   - maskAllText: true       → all text masked by default (override per-element via `data-sentry-unmask`)
