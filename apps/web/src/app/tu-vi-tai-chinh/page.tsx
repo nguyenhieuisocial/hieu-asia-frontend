@@ -4,6 +4,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui'
 import { Wallet, PiggyBank, TrendingUp, AlertTriangle, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
   title: 'Tử Vi tài chính: cách bạn kiếm tiền, quản lý tiền và rủi ro',
@@ -218,6 +219,7 @@ export default function TuViTaiChinhPage() {
         </section>
       </main>
       <SiteFooter />
+      <StickyMobileCta href="/onboarding?intent=tai-chinh" trackId="tu-vi-tai-chinh" />
     </div>
   );
 }

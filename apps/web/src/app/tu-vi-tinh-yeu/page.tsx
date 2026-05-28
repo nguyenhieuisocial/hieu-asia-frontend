@@ -4,6 +4,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui'
 import { Heart, MessageCircle, Users, ShieldAlert, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
   title: 'Tử Vi tình yêu: kiểu gắn bó, nhu cầu cảm xúc, mẫu xung đột',
@@ -224,6 +225,7 @@ export default function TuViTinhYeuPage() {
         </section>
       </main>
       <SiteFooter />
+      <StickyMobileCta href="/onboarding?intent=tinh-cam" trackId="tu-vi-tinh-yeu" />
     </div>
   );
 }

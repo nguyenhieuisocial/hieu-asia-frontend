@@ -4,6 +4,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui'
 import { Briefcase, Heart, Wallet, Activity, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
   title: 'Tử vi 2026 cá nhân hoá theo ngày sinh — Bính Ngọ năm hành Hoả',
@@ -266,6 +267,7 @@ export default function TuVi2026Page() {
         </section>
       </main>
       <SiteFooter />
+      <StickyMobileCta href="/onboarding?intent=ke-hoach-nam" trackId="tu-vi-2026" />
     </div>
   );
 }

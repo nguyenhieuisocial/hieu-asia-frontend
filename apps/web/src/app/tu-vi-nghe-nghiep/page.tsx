@@ -4,6 +4,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui'
 import { Briefcase, Compass, Target, AlertTriangle, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
   title: 'Tử Vi nghề nghiệp: bạn hợp ngành nào, vai trò gì, môi trường nào?',
@@ -217,6 +218,7 @@ export default function TuViNgheNghiepPage() {
         </section>
       </main>
       <SiteFooter />
+      <StickyMobileCta href="/onboarding?intent=su-nghiep" trackId="tu-vi-nghe-nghiep" />
     </div>
   );
 }
