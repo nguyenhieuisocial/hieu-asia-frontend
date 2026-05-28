@@ -166,6 +166,144 @@ export function isPostHogServerConfigured(): boolean {
 }
 
 /* -------------------------------------------------------------------------
+ * Wave 61.08 — Cohort retention + acquisition channel + funnel.
+ * --------------------------------------------------------------------- */
+
+export interface CohortRow {
+  /** ISO Monday of the cohort week (week user first appeared). */
+  cohort_week: string;
+  /** Distinct users in the cohort (first-event users that week). */
+  cohort_size: number;
+  /** Distinct users that returned 1, 2, 3, 4 weeks later (raw counts). */
+  w1: number;
+  w2: number;
+  w3: number;
+  w4: number;
+}
+
+/**
+ * Weekly retention cohorts — past 8 weeks.
+ *
+ * Buckets users into the week of their FIRST event (cohort_week), then counts
+ * how many came back in weeks 1-4 after. UI converts to percentages. Uses a
+ * conservative `toMonday()` bucket so weeks line up regardless of TZ.
+ */
+export async function fetchCohortRetention(): Promise<CohortRow[] | null> {
+  const sql = `
+    WITH cohort AS (
+      SELECT person_id, toMonday(min(timestamp)) AS cohort_week
+      FROM events
+      WHERE timestamp > now() - INTERVAL 60 DAY
+      GROUP BY person_id
+    )
+    SELECT
+      cohort.cohort_week AS cohort,
+      count(DISTINCT cohort.person_id) AS cohort_size,
+      count(DISTINCT IF(toMonday(e.timestamp) = cohort.cohort_week + INTERVAL 7 DAY, e.person_id, NULL)) AS w1,
+      count(DISTINCT IF(toMonday(e.timestamp) = cohort.cohort_week + INTERVAL 14 DAY, e.person_id, NULL)) AS w2,
+      count(DISTINCT IF(toMonday(e.timestamp) = cohort.cohort_week + INTERVAL 21 DAY, e.person_id, NULL)) AS w3,
+      count(DISTINCT IF(toMonday(e.timestamp) = cohort.cohort_week + INTERVAL 28 DAY, e.person_id, NULL)) AS w4
+    FROM cohort
+    JOIN events AS e ON e.person_id = cohort.person_id
+    GROUP BY cohort
+    ORDER BY cohort DESC
+    LIMIT 8
+  `;
+  const rows = await runHogQL(sql);
+  if (!rows) return null;
+  return rows.map((r) => ({
+    cohort_week: String(r[0] ?? ''),
+    cohort_size: Number(r[1] ?? 0),
+    w1: Number(r[2] ?? 0),
+    w2: Number(r[3] ?? 0),
+    w3: Number(r[4] ?? 0),
+    w4: Number(r[5] ?? 0),
+  }));
+}
+
+export interface AcquisitionChannelRow {
+  channel: string;
+  users: number;
+}
+
+/**
+ * Acquisition split — distinct users by initial UTM source (or referring
+ * domain when UTM is missing) over the last 30 days. `$direct` means no
+ * referrer (typed URL, bookmark, deep-link).
+ */
+export async function fetchAcquisitionChannels(): Promise<
+  AcquisitionChannelRow[] | null
+> {
+  const sql = `
+    SELECT
+      coalesce(
+        nullIf(properties.$initial_utm_source, ''),
+        nullIf(properties.$initial_referring_domain, ''),
+        'unknown'
+      ) AS channel,
+      count(DISTINCT person_id) AS users
+    FROM events
+    WHERE timestamp > now() - INTERVAL 30 DAY
+    GROUP BY channel
+    ORDER BY users DESC
+    LIMIT 10
+  `;
+  const rows = await runHogQL(sql);
+  if (!rows) return null;
+  return rows
+    .map((r) => ({ channel: String(r[0] ?? ''), users: Number(r[1] ?? 0) }))
+    .filter((r) => r.channel);
+}
+
+export interface FunnelStepRow {
+  /** Step name (matches event taxonomy). */
+  step: string;
+  /** Distinct users that reached this step within the funnel window. */
+  users: number;
+  /** Conversion vs first step (0-1). UI multiplies × 100. */
+  rate: number;
+}
+
+/**
+ * Acquisition funnel — last 30 days.
+ *
+ * Each step counts distinct persons that fired the matching event AFTER they
+ * fired the previous step. PostHog has a richer funnel API, but for an
+ * at-a-glance KPI tile a per-step distinct-count is sufficient and far
+ * simpler to render. UI shows step name, count, conv-% vs step 1.
+ *
+ * Events used (event-taxonomy.ts):
+ *   1. $pageview                 — landed on any page
+ *   2. survey_completed          — finished onboarding survey
+ *   3. reading_started           — started a reading
+ *   4. reading_completed         — completed a reading
+ */
+export async function fetchAcquisitionFunnel(): Promise<FunnelStepRow[] | null> {
+  const sql = `
+    SELECT
+      count(DISTINCT IF(event = '$pageview', person_id, NULL))           AS s1,
+      count(DISTINCT IF(event = 'survey_completed', person_id, NULL))    AS s2,
+      count(DISTINCT IF(event = 'reading_started', person_id, NULL))     AS s3,
+      count(DISTINCT IF(event = 'reading_completed', person_id, NULL))   AS s4
+    FROM events
+    WHERE timestamp > now() - INTERVAL 30 DAY
+  `;
+  const rows = await runHogQL(sql);
+  if (!rows || !rows[0]) return null;
+  const s1 = Number(rows[0][0] ?? 0);
+  const s2 = Number(rows[0][1] ?? 0);
+  const s3 = Number(rows[0][2] ?? 0);
+  const s4 = Number(rows[0][3] ?? 0);
+  const safeRate = (n: number) => (s1 > 0 ? n / s1 : 0);
+  return [
+    { step: 'Pageview', users: s1, rate: 1 },
+    { step: 'Survey hoàn tất', users: s2, rate: safeRate(s2) },
+    { step: 'Reading bắt đầu', users: s3, rate: safeRate(s3) },
+    { step: 'Reading hoàn tất', users: s4, rate: safeRate(s4) },
+  ];
+}
+
+/* -------------------------------------------------------------------------
  * Wave 61.07 — Feature flag REST helper (not HogQL).
  * --------------------------------------------------------------------- */
 

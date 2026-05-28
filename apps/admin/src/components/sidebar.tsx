@@ -86,6 +86,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'Doanh thu',
     items: [
       { href: '/customers', label: 'Khách hàng', Icon: User },
+      { href: '/cohorts', label: 'Cohorts & Retention', Icon: BarChart3 },
       { href: '/affiliates', label: 'Affiliate', Icon: HandCoins },
       { href: '/coupons', label: 'Coupons', Icon: Ticket },
       { href: '/transactions', label: 'Giao dịch', Icon: Receipt },
