@@ -19,6 +19,7 @@
 
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 import { MarketingHero } from '@/components/marketing/MarketingHero';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
@@ -222,6 +223,7 @@ export default function PricingPage() {
         />
       </main>
       <SiteFooter />
+      <StickyMobileCta label="Bắt đầu miễn phí" trackId="pricing" />
     </>
   );
 }

@@ -17,6 +17,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui'
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { ResultDisclaimer } from '@/components/ResultDisclaimer';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
   title: 'Mẫu báo cáo Tử Vi — xem trước trải nghiệm Premium',
@@ -424,6 +425,7 @@ export default function SampleReportPage() {
         </section>
       </main>
       <SiteFooter />
+      <StickyMobileCta trackId="sample-report" />
     </div>
   );
 }

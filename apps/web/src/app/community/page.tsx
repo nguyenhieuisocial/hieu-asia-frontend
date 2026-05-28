@@ -12,6 +12,7 @@ import { Button } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
   title: 'Cộng đồng',
@@ -157,6 +158,7 @@ export default function CommunityPage() {
         </section>
       </main>
       <SiteFooter />
+      <StickyMobileCta trackId="community" />
     </>
   );
 }

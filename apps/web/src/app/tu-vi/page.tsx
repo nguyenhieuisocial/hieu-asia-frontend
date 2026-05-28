@@ -4,6 +4,7 @@ import { Sparkles, BookOpen, Map, ArrowRight } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
   title: 'Tử Vi Đẩu Số: lập lá số, tra cung, tra sao bằng AI miễn phí',
@@ -280,6 +281,7 @@ export default function TuViHubPage() {
         </section>
       </main>
       <SiteFooter />
+      <StickyMobileCta trackId="tu-vi-hub" />
     </div>
   );
 }

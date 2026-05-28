@@ -31,6 +31,7 @@ import {
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { Scrollyteller } from '@/components/marketing/Scrollyteller';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
   title: 'Phương pháp luận — Engine tính gì, AI luận gì',
@@ -1274,6 +1275,7 @@ export default function MethodologyPage() {
         </section>
       </main>
       <SiteFooter />
+      <StickyMobileCta trackId="methodology" />
     </div>
   );
 }
