@@ -90,9 +90,25 @@ const PRODUCT_JSONLD = {
   ],
 };
 
+// Wave 60.96.4 — add BreadcrumbList JSON-LD. /pricing had Product schema but
+// no breadcrumb navigation signal — flagged in the audit alongside the rest
+// of the top-9 worst-defect routes.
+const BREADCRUMB_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
+    { '@type': 'ListItem', position: 2, name: 'Bảng giá', item: 'https://hieu.asia/pricing' },
+  ],
+};
+
 export default function PricingLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(PRODUCT_JSONLD) }}

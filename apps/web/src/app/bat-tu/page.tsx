@@ -40,6 +40,41 @@ const WEBPAGE_JSONLD = {
   isPartOf: { '@type': 'WebSite', name: 'hieu.asia', url: 'https://hieu.asia' },
 };
 
+// Wave 60.96.4 — FAQPage JSON-LD mirrors the visible <FaqAccordion> below.
+// JSX answers above use <em> + <Link> for visual hierarchy; the schema needs
+// plain-text equivalents, so we write parallel strings here. Schema.org spec:
+// answers ≤ ~300 chars rank best in Google rich results.
+const FAQ_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Bát Tự khác Tử Vi thế nào?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Tử Vi đọc qua hệ thống sao trên 12 cung. Bát Tự đọc qua quan hệ ngũ hành và thập thần giữa 4 trụ. Tử Vi mạnh ở chi tiết lĩnh vực (sự nghiệp, hôn nhân, tài chính); Bát Tự mạnh ở cân bằng năng lượng tổng thể. hieu.asia đọc cả hai để cross-check kết luận.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Có cần biết giờ sinh chính xác không?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Có, càng chính xác càng tốt. Trụ giờ quyết định hậu vận và nhật can ổn định khi giờ rõ. Nếu chỉ biết khoảng (sáng/trưa/chiều/tối), hieu.asia vẫn lập được 3 trụ chính với confidence thấp hơn cho phần liên quan giờ. Sinh quanh 23:00–01:00 cần xác định kỹ.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Bát Tự ở hieu.asia có phải bản hoàn chỉnh chưa?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Engine đang ở trạng thái beta: tính được 4 trụ, thập thần và ngũ hành mệnh nạp âm, đóng vai trò lớp đối chiếu phụ với Tử Vi — chưa tự sinh kết luận Bát Tự thuần. Khi đạt 100 lá số validate bởi chuyên gia thì graduation sang production.',
+      },
+    },
+  ],
+};
+
 const PILLARS: { name: string; role: string }[] = [
   { name: 'Trụ năm', role: 'Tổ tiên, bối cảnh sinh — gốc rễ.' },
   { name: 'Trụ tháng', role: 'Cha mẹ, anh chị — thân tộc gần.' },
@@ -98,6 +133,10 @@ export default function BatTuLandingPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
       />
 
       <main id="main-content" className="relative pt-16">

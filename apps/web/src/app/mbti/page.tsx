@@ -108,6 +108,22 @@ const WEBPAGE_JSONLD = {
   },
 };
 
+// Wave 60.96.4 — FAQPage JSON-LD mirrors visible FAQ accordion. MBTI FAQ
+// strings are already plain text (vs bat-tu which uses JSX <em>), so the
+// schema text can mirror the source FAQ array directly.
+const FAQ_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: f.a,
+    },
+  })),
+};
+
 export default function MbtiHubPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -119,6 +135,10 @@ export default function MbtiHubPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
       />
 
       <main id="main-content" className="relative">
