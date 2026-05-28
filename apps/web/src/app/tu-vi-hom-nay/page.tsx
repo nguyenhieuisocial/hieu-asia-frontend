@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { ZodiacCard } from '@/components/daily/ZodiacCard';
 import { SubscribePush } from '@/components/daily/SubscribePush';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { getVietnamTodayISO } from '@/lib/vn-date';
 import { generateZodiacBlurb, isGenericSummary } from '@/lib/zodiac-blurb';
 
@@ -184,6 +185,7 @@ export default async function Page() {
         </div>
       </section>
     </ToolPageShell>
+    <StickyMobileCta trackId="tu-vi-hom-nay" />
     </>
   );
 }

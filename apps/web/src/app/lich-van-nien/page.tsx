@@ -4,6 +4,7 @@ import { Calendar, CalendarCheck, ListChecks } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { DayCard, type VanNienDayDTO } from '@/components/lich-van-nien/DayCard';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
   title: 'Lịch Vạn Niên 2026 — Tra cứu ngày giờ tốt xấu',
@@ -100,6 +101,7 @@ export default async function LichVanNienPage() {
   const today = await getToday();
 
   return (
+    <>
     <ToolPageShell
       eyebrow="Lịch Vạn Niên · 2026"
       icon={<span aria-hidden="true">📅</span>}
@@ -214,5 +216,7 @@ export default async function LichVanNienPage() {
         </div>
       </section>
     </ToolPageShell>
+    <StickyMobileCta trackId="lich-van-nien" />
+    </>
   );
 }
