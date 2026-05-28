@@ -63,3 +63,31 @@ export const Inline: Story = {
     days: 14,
   },
 };
+
+/**
+ * Wave 60.95.j P2-#17 — Tablet 768 VRT baseline.
+ *
+ * The jade-tinted mono pill + dot leader should render identically across
+ * widths, but the surrounding warm-dark-50 frame padding may shift at the
+ * tablet break — this guards the framing.
+ */
+export const Tablet768: Story = {
+  ...Default,
+  parameters: {
+    ...Default.parameters,
+    viewport: { value: 'tablet768' },
+    chromatic: { viewports: [768] },
+  },
+};
+
+/**
+ * Wave 60.95.j P2-#17 — Tablet 1024 VRT baseline.
+ */
+export const Tablet1024: Story = {
+  ...Default,
+  parameters: {
+    ...Default.parameters,
+    viewport: { value: 'tablet1024' },
+    chromatic: { viewports: [1024] },
+  },
+};

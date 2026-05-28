@@ -153,3 +153,34 @@ export const LargeNumbers: Story = {
     bg: 'warm-dark-50',
   },
 };
+
+/**
+ * Wave 60.95.j P2-#17 — Tablet 768 VRT baseline.
+ *
+ * 3-col big-number grid is the most fragile layout at tablet break — verifies
+ * column gutters, count-up digit cap-height alignment, and the refund-block
+ * stacking under the numerals at iPad portrait width.
+ */
+export const Tablet768: Story = {
+  ...Default,
+  parameters: {
+    ...Default.parameters,
+    viewport: { value: 'tablet768' },
+    chromatic: { viewports: [768] },
+  },
+};
+
+/**
+ * Wave 60.95.j P2-#17 — Tablet 1024 VRT baseline.
+ *
+ * Wide-tablet break — the numerals should retain their hero-sized weight
+ * here (close to desktop typography), distinct from the compressed 768 stack.
+ */
+export const Tablet1024: Story = {
+  ...Default,
+  parameters: {
+    ...Default.parameters,
+    viewport: { value: 'tablet1024' },
+    chromatic: { viewports: [1024] },
+  },
+};

@@ -61,3 +61,34 @@ export const DarkBackground: Story = {
     bg: 'warm-dark-100',
   },
 };
+
+/**
+ * Wave 60.95.j P2-#17 — Tablet 768 VRT baseline.
+ *
+ * Italic Instrument Serif body should hold its measure (line-length) at
+ * iPad portrait — guards against the italic em tag breaking onto an awkward
+ * single-word last line at this width.
+ */
+export const Tablet768: Story = {
+  ...Default,
+  parameters: {
+    ...Default.parameters,
+    viewport: { value: 'tablet768' },
+    chromatic: { viewports: [768] },
+  },
+};
+
+/**
+ * Wave 60.95.j P2-#17 — Tablet 1024 VRT baseline.
+ *
+ * Wide-tablet break — pull-quote measure should approach desktop max-width;
+ * verifies attribution mono line keeps right alignment at this width.
+ */
+export const Tablet1024: Story = {
+  ...Default,
+  parameters: {
+    ...Default.parameters,
+    viewport: { value: 'tablet1024' },
+    chromatic: { viewports: [1024] },
+  },
+};

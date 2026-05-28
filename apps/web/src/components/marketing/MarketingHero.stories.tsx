@@ -60,3 +60,35 @@ export const MinimalCTA: Story = {
     ornament: 'none',
   },
 };
+
+/**
+ * Wave 60.95.j P2-#17 — Tablet 768 (iPad portrait) VRT baseline.
+ *
+ * Composes the canonical Default render and pins the iframe to 768×1024 so
+ * Chromatic snaps the hero at the iPad portrait break. Catches layout drift
+ * in the headline lockup, dual-CTA stack, and gold-ring ornament at the
+ * primary tablet width.
+ */
+export const Tablet768: Story = {
+  ...Default,
+  parameters: {
+    ...Default.parameters,
+    viewport: { value: 'tablet768' },
+    chromatic: { viewports: [768] },
+  },
+};
+
+/**
+ * Wave 60.95.j P2-#17 — Tablet 1024 (iPad Pro portrait) VRT baseline.
+ *
+ * Wide-tablet / small-desktop break — guards the transition between mobile
+ * stacked CTAs and the desktop side-by-side layout.
+ */
+export const Tablet1024: Story = {
+  ...Default,
+  parameters: {
+    ...Default.parameters,
+    viewport: { value: 'tablet1024' },
+    chromatic: { viewports: [1024] },
+  },
+};

@@ -26,6 +26,11 @@ const config: StorybookConfig = {
   // Wave 60.51.b — use string package names (not getAbsolutePath helper) for Storybook 10
   // strict ESM resolution. SB 10 internally appends /preset to the path; the absolute
   // dir-path returned by getAbsolutePath caused ERR_MODULE_NOT_FOUND (preset vs preset.js).
+  //
+  // Wave 60.95.j P2-#17 — viewport addon is NOT listed here because Storybook 10
+  // ships viewport inside the core `storybook` package (`storybook/viewport`); no
+  // separate `@storybook/addon-viewport` package is published for v10. Custom
+  // viewports are registered in `.storybook/preview.ts` via `parameters.viewport.options`.
   addons: ["@storybook/addon-themes", "@storybook/addon-docs"],
   framework: {
     name: "@storybook/nextjs-vite",

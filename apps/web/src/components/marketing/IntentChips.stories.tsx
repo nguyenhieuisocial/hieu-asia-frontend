@@ -66,3 +66,34 @@ export const MobileSingleRow: Story = {
     viewport: { defaultViewport: 'mobile1' },
   },
 };
+
+/**
+ * Wave 60.95.j P2-#17 — Tablet 768 VRT baseline.
+ *
+ * Verifies the 6-chip Perplexity-style row keeps a single rounded-pill row at
+ * iPad portrait (chips should NOT wrap until ~640px). Glass panel border
+ * stays crisp, hover gold-transition unaffected by viewport.
+ */
+export const Tablet768: Story = {
+  ...Default,
+  parameters: {
+    ...Default.parameters,
+    viewport: { value: 'tablet768' },
+    chromatic: { viewports: [768] },
+  },
+};
+
+/**
+ * Wave 60.95.j P2-#17 — Tablet 1024 VRT baseline.
+ *
+ * Wide-tablet break — confirms the glass panel maxes out width and the chip
+ * row remains centered within the editorial column.
+ */
+export const Tablet1024: Story = {
+  ...Default,
+  parameters: {
+    ...Default.parameters,
+    viewport: { value: 'tablet1024' },
+    chromatic: { viewports: [1024] },
+  },
+};
