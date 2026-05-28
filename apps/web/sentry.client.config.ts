@@ -12,13 +12,15 @@ Sentry.init({
   // Quota math (Free 50/mo):
   //   - replaysSessionSampleRate: 0    → no random session sampling (would blow quota immediately at 1k+ sessions/day)
   //   - replaysOnErrorSampleRate: 0.5  → 50% of error sessions only (~100/mo budget at current error rate)
-  integrations: [
-    Sentry.replayIntegration({
-      maskAllText: true,
-      blockAllMedia: true,
-      networkDetailAllowUrls: ['/api/'],
-    }),
-  ],
+  //
+  // Wave 60.95.m P1-perf — Replay integration is now lazy-loaded via
+  // `Sentry.lazyLoadIntegration('replayIntegration')` below. The replay
+  // bundle (~50-100 KB br) was previously part of the eager Sentry init in
+  // the 180-* vendor chunk; deferring it to `requestIdleCallback` shrinks
+  // initial JS payload without affecting error capture (errors thrown before
+  // replay loads still go through Sentry — they just won't have a replay
+  // attached, which is acceptable given we only sample 50% of errors anyway).
+  integrations: [],
   replaysSessionSampleRate: 0,
   replaysOnErrorSampleRate: 0.5,
   beforeSend(event) {
@@ -68,3 +70,43 @@ Sentry.init({
     return event;
   },
 });
+
+// Wave 60.95.m P1-perf — Lazy-load Session Replay on idle.
+// `lazyLoadIntegration` fetches the replay code in a separate chunk only
+// after the page is interactive, removing ~50-100 KB br from the eager
+// vendor bundle (`180-*.js`). Sentry's official API: docs.sentry.io/platforms/javascript/configuration/integrations/plugin/#lazy-loading-integrations
+// `requestIdleCallback` defers further until the browser is idle; we fall
+// back to `setTimeout` for Safari (which still lacks `requestIdleCallback`
+// as of WebKit 17). If `lazyLoadIntegration` rejects (network blocked, CDN
+// down) we swallow silently — replay is best-effort, error capture is
+// already wired through the synchronous `Sentry.init()` above.
+if (typeof window !== 'undefined') {
+  const scheduleReplayLoad = (cb: () => void) => {
+    const ric = (window as Window & { requestIdleCallback?: (cb: () => void) => void })
+      .requestIdleCallback;
+    if (typeof ric === 'function') {
+      ric(cb);
+    } else {
+      setTimeout(cb, 2000);
+    }
+  };
+
+  scheduleReplayLoad(() => {
+    Sentry.lazyLoadIntegration('replayIntegration')
+      .then((replayIntegration) => {
+        const client = Sentry.getClient();
+        if (!client) return;
+        client.addIntegration(
+          replayIntegration({
+            maskAllText: true,
+            blockAllMedia: true,
+            networkDetailAllowUrls: ['/api/'],
+          }),
+        );
+      })
+      .catch(() => {
+        // Best-effort: if the replay chunk fails to load, error capture
+        // still works — just no session replay attached to errors.
+      });
+  });
+}
