@@ -65,11 +65,11 @@ export function HowToStart() {
     >
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent"
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"
       />
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/90 sm:text-xs">
+          <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-primary/90 sm:text-xs">
             Hướng dẫn bắt đầu
           </p>
           <h2
@@ -77,7 +77,7 @@ export function HowToStart() {
             className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
           >
             Bắt đầu trong{' '}
-            <span className="bg-gold-gradient bg-clip-text text-transparent">3 phút</span>
+            <span className="text-primary">3 phút</span>
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
             Ba bước rõ ràng — bạn luôn biết mình đang ở đâu và bước tiếp theo là gì.
@@ -89,8 +89,8 @@ export function HowToStart() {
             its CTA. CSS Grid stretches row heights uniformly when explicit.
 
             Wave 60.83 — cards migrated to MarketingCard primitive (was
-            `border-border bg-card/40 p-6 hover:border-gold/40`). MarketingCard
-            emits identical `h-full flex flex-col` + `hover:border-gold/40`
+            `border-border bg-card/40 p-6 hover:border-primary/40`). MarketingCard
+            emits identical `h-full flex flex-col` + `hover:border-primary/40`
             (Wave 60.79.T2 spec), and shifts bg from theme-card to
             `warm-dark-200` so cards align with the home page's warm-dark-50
             section wrapper — matches the editorial palette used by BentoLens
@@ -100,10 +100,10 @@ export function HowToStart() {
             <li key={n} className="h-full">
               <MarketingCard padding="standard" bg="warm-dark-200">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-gold/30 bg-gold/5">
-                    <Icon className="h-5 w-5 text-gold" aria-hidden={true} />
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-primary/30 bg-primary/5">
+                    <Icon className="h-5 w-5 text-primary" aria-hidden={true} />
                   </div>
-                  <span className="font-mono text-xs uppercase tracking-[0.28em] text-gold/85">
+                  <span className="font-mono text-xs uppercase tracking-[0.28em] text-primary/85">
                     Bước {n}
                   </span>
                 </div>

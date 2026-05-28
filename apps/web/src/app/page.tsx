@@ -433,7 +433,7 @@ export default function LandingPage() {
           role="note"
           className="mx-auto mt-4 flex max-w-3xl items-center justify-center px-6"
         >
-          <p className="rounded-full border border-gold/20 bg-muted/60 px-4 py-1.5 text-center text-[11px] leading-snug text-muted-foreground/70 backdrop-blur-sm sm:text-xs">
+          <p className="rounded-full border border-primary/20 bg-muted/60 px-4 py-1.5 text-center text-[11px] leading-snug text-muted-foreground/70 backdrop-blur-sm sm:text-xs">
             Kết quả mang tính tham khảo — không thay thế tư vấn y tế, pháp lý hay tài chính.
           </p>
         </div>
@@ -449,16 +449,16 @@ export default function LandingPage() {
           title={
             <>
               Bạn đang phân vân{' '}
-              <u className="underline decoration-gold decoration-2 underline-offset-[6px]">
+              <u className="underline decoration-primary decoration-2 underline-offset-[6px]">
                 về điều gì
               </u>
-              <span className="text-gold-dot">.</span>
+              <span className="text-primary">.</span>
             </>
           }
           items={[
             {
               id: 'intent-self',
-              icon: <User className="size-5 text-gold" strokeWidth={1.5} />,
+              icon: <User className="size-5 text-primary" strokeWidth={1.5} />,
               tag: 'LÁ SỐ TỔNG QUAN',
               label: 'Tôi muốn hiểu bản thân',
               body: 'Lá số Tử Vi + Bát Tự + MBTI gộp lại — một bức tranh tổng thể về thiên hướng và năng lượng bẩm sinh.',
@@ -466,7 +466,7 @@ export default function LandingPage() {
             },
             {
               id: 'intent-career',
-              icon: <Briefcase className="size-5 text-gold" strokeWidth={1.5} />,
+              icon: <Briefcase className="size-5 text-primary" strokeWidth={1.5} />,
               tag: 'TỬ VI CUNG QUAN',
               label: 'Tôi đang chọn nghề',
               body: 'Đọc cung Quan + cung Tài trong bản đồ 12 cung — gợi ý hướng nghề phù hợp ưu thế tự nhiên.',
@@ -474,7 +474,7 @@ export default function LandingPage() {
             },
             {
               id: 'intent-decision',
-              icon: <HelpCircle className="size-5 text-gold" strokeWidth={1.5} />,
+              icon: <HelpCircle className="size-5 text-primary" strokeWidth={1.5} />,
               tag: 'AI MENTOR',
               label: 'Tôi đang phân vân quyết định',
               body: 'Mentor AI đặt câu hỏi mở dựa trên lá số — soi rõ giả định và rủi ro thay vì phán quyết hộ bạn.',
@@ -482,7 +482,7 @@ export default function LandingPage() {
             },
             {
               id: 'intent-year',
-              icon: <Calendar className="size-5 text-gold" strokeWidth={1.5} />,
+              icon: <Calendar className="size-5 text-primary" strokeWidth={1.5} />,
               tag: 'LƯU NIÊN · ĐẠI VẬN',
               label: 'Tôi muốn xem năm 2026',
               body: 'Đại vận 10 năm + lưu niên Bính Ngọ 2026 — chu kỳ thời gian áp lên lá số gốc.',
@@ -490,7 +490,7 @@ export default function LandingPage() {
             },
             {
               id: 'intent-relationship',
-              icon: <Heart className="size-5 text-gold" strokeWidth={1.5} />,
+              icon: <Heart className="size-5 text-primary" strokeWidth={1.5} />,
               tag: 'HỢP ĐÔI · BÁT TỰ',
               label: 'Tôi muốn xem quan hệ',
               body: 'So sánh Bát Tự ngũ hành hai người — nhận diện nơi tương sinh và nơi cần kiên nhẫn.',
@@ -522,8 +522,8 @@ export default function LandingPage() {
           eyebrow="BỐN ỐNG KÍNH"
           title={
             <>
-              Một con người, <em className="italic text-gold-soft">soi</em> từ bốn góc
-              <span className="text-gold-dot">.</span>
+              Một con người, <em className="italic text-primary/80">soi</em> từ bốn góc
+              <span className="text-primary">.</span>
             </>
           }
           bg="warm-dark-100"
@@ -536,7 +536,7 @@ export default function LandingPage() {
               // replaces generic Lucide Sparkles. See DisciplineGlyphs.tsx
               // for design rationale per discipline. Pre-rendered JSX per
               // Wave 60.65.P0 convention (Sentry HIEU-ASIA-WORKER-A).
-              icon: <TuViGlyph className="text-gold size-9" />,
+              icon: <TuViGlyph className="text-primary size-9" />,
               action: 'Đọc',
               title: 'cung mệnh',
               body: 'Bản đồ sao thời điểm sinh — không phải lời tiên tri, mà là bản đồ ưu thế và bóng tối tự nhiên.',
@@ -547,7 +547,7 @@ export default function LandingPage() {
               id: 'battu',
               name: 'BÁT TỰ',
               subname: 'NGŨ HÀNH',
-              icon: <BatTuGlyph className="text-gold size-9" />,
+              icon: <BatTuGlyph className="text-primary size-9" />,
               action: 'Cân',
               title: 'ngũ hành',
               body: 'Tám chữ năm-tháng-ngày-giờ — đo nội lực và cân bằng nguyên tố.',
@@ -557,7 +557,7 @@ export default function LandingPage() {
               id: 'thanso',
               name: 'THẦN SỐ',
               subname: 'NUMEROLOGY',
-              icon: <ThanSoGlyph className="text-gold size-9" />,
+              icon: <ThanSoGlyph className="text-primary size-9" />,
               action: 'Đếm',
               title: 'con số đời',
               body: 'Numerology phương Tây — đường đời, ngày sinh, tên gọi cộng dồn thành mật mã hành trình.',
@@ -567,7 +567,7 @@ export default function LandingPage() {
               id: 'mbti',
               name: 'MBTI',
               subname: 'TÂM LÝ HỌC',
-              icon: <MbtiGlyph className="text-gold size-9" />,
+              icon: <MbtiGlyph className="text-primary size-9" />,
               action: 'Gọi tên',
               title: 'tâm trí',
               body: '16 kiểu Myers-Briggs — không nhãn dán, mà là ngôn ngữ để nhận diện thiên hướng nội tại.',
@@ -599,7 +599,7 @@ export default function LandingPage() {
             Instrument Serif decorative roles. */}
         <PullQuote attribution="— Triết lý hieu.asia" bg="warm-dark-100">
           Trí tuệ phương Đông không phải lời tiên tri.{' '}
-          Đó là <em className="text-gold-soft">khoảng lặng</em> để bạn nghe rõ chính mình.
+          Đó là <em className="text-primary/80">khoảng lặng</em> để bạn nghe rõ chính mình.
         </PullQuote>
 
         {/* Wave 60.95.c P1-6 — SampleOutputShowcase (vault 130 §III P1-6, biggest
@@ -626,8 +626,8 @@ export default function LandingPage() {
           page="/"
           title={
             <>
-              Đi <em className="italic text-gold-soft">sâu</em> theo nhịp của bạn
-              <span className="text-gold-dot">.</span>
+              Đi <em className="italic text-primary/80">sâu</em> theo nhịp của bạn
+              <span className="text-primary">.</span>
             </>
           }
           tiers={[

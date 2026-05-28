@@ -32,8 +32,8 @@ import { MessageSquareQuote, ArrowRight } from 'lucide-react';
  * same question collapses it.
  *
  * Brand tokens (vault 108 Option E, matching SampleOutputShowcase):
- *   bg-background / text-cream-{50,300,500} / text-gold / text-gold-soft
- *   border-border / border-gold/40 / rounded-card-editorial
+ *   bg-background / text-cream-{50,300,500} / text-primary/ text-primary/80
+ *   border-border / border-primary/40 / rounded-card-editorial
  *   font-marketing-display Instrument Serif italics for emphasis spans
  *
  * Pure CSS transitions — no Motion runtime added. Reveal uses height/opacity
@@ -55,7 +55,7 @@ const QUESTIONS: SampleQuestion[] = [
       <>
         <p>
           Trước khi so sánh hai lựa chọn, bạn hãy thử trả lời:{' '}
-          <em className="font-marketing-display italic text-gold-soft">
+          <em className="font-marketing-display italic text-primary/80">
             cái nào bạn thấy nhẹ lòng khi tưởng tượng mình đã chọn nó rồi?
           </em>{' '}
           Cảm giác đầu tiên thường nói thật hơn lập luận về sau.
@@ -82,7 +82,7 @@ const QUESTIONS: SampleQuestion[] = [
       <>
         <p>
           Câu hỏi nên đổi một chút trước:{' '}
-          <em className="font-marketing-display italic text-gold-soft">
+          <em className="font-marketing-display italic text-primary/80">
             năm 2026 bạn muốn cuối năm nhìn lại và tự hào về điều gì?
           </em>{' '}
           “Cải thiện” dễ trở thành một danh sách dài không ai làm hết — chọn
@@ -109,7 +109,7 @@ const QUESTIONS: SampleQuestion[] = [
       <>
         <p>
           Trước khi trả lời nên hay không,{' '}
-          <em className="font-marketing-display italic text-gold-soft">
+          <em className="font-marketing-display italic text-primary/80">
             bạn đang ở thời điểm nào trong mối quan hệ — đang yêu nhưng mệt,
             đã hết yêu nhưng quen, hay vẫn còn hy vọng?
           </em>{' '}
@@ -150,13 +150,13 @@ export function MentorSampleInteractive() {
       <div className="mx-auto max-w-marketing px-6 lg:px-12">
         {/* Header */}
         <div className="mx-auto max-w-marketing-tight text-center">
-          <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
+          <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
             — THỬ MENTOR AI
           </p>
           <h2 className="text-balance font-sans text-section-display font-bold tracking-tight leading-tight text-foreground">
             Chọn một câu hỏi để{' '}
-            <em className="italic text-gold-soft">xem ví dụ</em>
-            <span className="text-gold-dot">.</span>
+            <em className="italic text-primary/80">xem ví dụ</em>
+            <span className="text-primary">.</span>
           </h2>
           <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
             Ba câu hỏi mẫu — bấm vào để xem Mentor trả lời thế nào. Không cần
@@ -185,10 +185,10 @@ export function MentorSampleInteractive() {
                 // `active:bg-muted` adds touch feedback for iOS/Android.
                 className={[
                   'rounded-pill border px-4 py-2.5 font-sans text-sm font-medium transition-all duration-300 ease-editorial min-h-11 touch-manipulation',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50',
                   isActive
-                    ? 'border-gold bg-gold/[0.08] text-gold'
-                    : 'border-gold/25 bg-card text-gold-soft hover:border-gold/45 hover:bg-muted hover:text-gold active:bg-muted',
+                    ? 'border-primary bg-primary/[0.08] text-primary'
+                    : 'border-primary/25 bg-card text-primary/80 hover:border-primary/45 hover:bg-muted hover:text-primary active:bg-muted',
                 ].join(' ')}
               >
                 {q.question}
@@ -213,11 +213,11 @@ export function MentorSampleInteractive() {
         >
           <div className="overflow-hidden">
             {active && (
-              <article className="rounded-card-editorial border border-gold/30 bg-muted/40 p-6 md:p-8">
+              <article className="rounded-card-editorial border border-primary/30 bg-muted/40 p-6 md:p-8">
                 {/* User question label */}
                 <div className="mb-4 flex items-start gap-2">
                   <MessageSquareQuote
-                    className="mt-0.5 size-4 shrink-0 text-gold/70"
+                    className="mt-0.5 size-4 shrink-0 text-primary/70"
                     strokeWidth={1.5}
                     aria-hidden
                   />
@@ -232,7 +232,7 @@ export function MentorSampleInteractive() {
                 </div>
                 {/* Mentor response */}
                 <div>
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-primary/80">
                     Mentor
                   </p>
                   <div className="mt-2 space-y-3 text-[14px] leading-relaxed text-muted-foreground md:text-[15px]">
@@ -252,7 +252,7 @@ export function MentorSampleInteractive() {
           </p>
           <Link
             href="/onboarding"
-            className="inline-flex items-center justify-center gap-1.5 rounded-full bg-gold px-6 py-3 font-sans text-sm font-semibold text-ink transition-colors duration-200 hover:bg-gold-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50"
+            className="inline-flex items-center justify-center gap-1.5 rounded-full bg-primary px-6 py-3 font-sans text-sm font-semibold text-ink transition-colors duration-200 hover:bg-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50"
           >
             Lập lá số miễn phí
             <ArrowRight className="size-4" aria-hidden />

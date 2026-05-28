@@ -33,7 +33,7 @@ import { ItalicSpan } from './ItalicSpan';
  *
  * Tokens (Wave 60.56 P1):
  *   bg-warm-dark-{50,100,200,300} / border-border / border-gold
- *   text-cream-{50,300,500} / text-gold / text-gold-soft
+ *   text-cream-{50,300,500} / text-primary/ text-gold-soft
  *   rounded-card-editorial / ease-editorial / font-marketing-display
  *   text-section-display / text-eyebrow / max-w-marketing-tight
  */
@@ -46,7 +46,7 @@ export type Lens = {
   /** Mono uppercase qualifier, e.g. "CUNG MỆNH". Rendered as `NAME · SUBNAME`. */
   subname?: string;
   /**
-   * Pre-rendered icon JSX, e.g. `<Sparkles className="text-gold size-9" strokeWidth={1.25} />`.
+   * Pre-rendered icon JSX, e.g. `<Sparkles className="text-primarysize-9" strokeWidth={1.25} />`.
    * Pass the element (not the component reference) — see Wave 60.65.P0 fix.
    */
   icon: ReactNode;
@@ -130,7 +130,7 @@ export function BentoLens({
     <section className={`${bgClass} py-16 md:py-20`}>
       <div className={`mx-auto ${containerMaxWidth} px-6`}>
         {eyebrow && (
-          <p className="mb-6 text-center font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
+          <p className="mb-6 text-center font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
             — {eyebrow}
           </p>
         )}
@@ -164,9 +164,9 @@ export function BentoLens({
             return (
               <article
                 key={lens.id}
-                className={`group relative flex h-full flex-col overflow-hidden rounded-card-editorial border bg-card transition-all duration-300 ease-editorial hover:-translate-y-0.5 hover:border-gold hover:bg-muted hover:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.12)] ${tilePadding} ${cellClass} ${containerClass} ${lens.recommended ? 'border-gold' : 'border-border'}`}
+                className={`group relative flex h-full flex-col overflow-hidden rounded-card-editorial border bg-card transition-all duration-300 ease-editorial hover:-translate-y-0.5 hover:border-primary hover:bg-muted hover:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.12)] ${tilePadding} ${cellClass} ${containerClass} ${lens.recommended ? 'border-primary' : 'border-border'}`}
               >
-                <LotusIcon className="absolute right-6 top-6 size-6 text-gold opacity-30" />
+                <LotusIcon className="absolute right-6 top-6 size-6 text-primary opacity-30" />
 
                 {lens.watermark && (
                   /*

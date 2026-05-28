@@ -147,7 +147,7 @@ export function SiteNav() {
           // Wave 60.97.1 — `inline-flex min-h-11` lifts the brand link to
           // 44px tap target (was 28px). Logo is the universal "back home"
           // affordance on mobile; needs reliable hit area.
-          className="inline-flex min-h-11 items-center font-heading text-lg font-bold text-gold transition-colors hover:text-gold-soft sm:text-xl touch-manipulation"
+          className="inline-flex min-h-11 items-center font-heading text-lg font-bold text-primary transition-colors hover:text-primary/80 sm:text-xl touch-manipulation"
         >
           hieu.asia
         </Link>
@@ -160,7 +160,7 @@ export function SiteNav() {
             <Link
               key={l.href}
               href={l.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-gold"
+              className="text-sm text-muted-foreground transition-colors hover:text-primary"
             >
               {l.label}
             </Link>
@@ -178,7 +178,7 @@ export function SiteNav() {
               {!loading && (
                 <Link
                   href="/signin"
-                  className="hidden text-sm text-muted-foreground transition-colors hover:text-gold sm:inline-flex sm:px-2"
+                  className="hidden text-sm text-muted-foreground transition-colors hover:text-primary sm:inline-flex sm:px-2"
                 >
                   Đăng nhập
                 </Link>
@@ -226,7 +226,7 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
         <DropdownMenuTrigger asChild>
           <button
             type="button"
-            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
+            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
           >
             <UserCircle2 className="h-4 w-4" aria-hidden="true" />
             <span className="max-w-[120px] truncate">{user.email ?? 'Tài khoản'}</span>
@@ -247,7 +247,7 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
             <Link href="/reading">Lá số của bạn</Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuLabel className="text-gold/85">Cộng tác viên</DropdownMenuLabel>
+          <DropdownMenuLabel className="text-primary/85">Cộng tác viên</DropdownMenuLabel>
           <DropdownMenuItem asChild>
             <Link href="/affiliate/network">Mạng lưới</Link>
           </DropdownMenuItem>
@@ -317,7 +317,7 @@ function SectionedDropdown({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-gold"
+        className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-primary"
         aria-haspopup="true"
         aria-expanded={open}
         aria-controls={panelId}
@@ -354,7 +354,7 @@ function SectionedDropdown({
         >
           {sections.map((section) => (
             <div key={section.title} className="min-w-0">
-              <p className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.24em] text-gold/85">
+              <p className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.24em] text-primary/85">
                 {section.title}
               </p>
               <ul className="space-y-0.5">
@@ -363,7 +363,7 @@ function SectionedDropdown({
                     <Link
                       href={l.href}
                       onClick={() => setOpen(false)}
-                      className="block rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-gold/10 hover:text-gold"
+                      className="block rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
                       role="menuitem"
                     >
                       {l.label}
@@ -380,7 +380,7 @@ function SectionedDropdown({
             <Link
               href={footer.href}
               onClick={() => setOpen(false)}
-              className="block rounded-md px-2 py-1.5 text-sm font-medium text-gold transition-colors hover:bg-gold/10"
+              className="block rounded-md px-2 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/10"
               role="menuitem"
             >
               {footer.label}
@@ -419,7 +419,7 @@ function MobileToolsAccordion({ onNavigate }: { onNavigate: () => void }) {
         onClick={() => setExpanded((v) => !v)}
         aria-expanded={expanded}
         aria-controls={panelId}
-        className="flex items-center justify-between rounded-md px-3 py-2.5 text-left text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
+        className="flex items-center justify-between rounded-md px-3 py-2.5 text-left text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
       >
         <span>Công cụ</span>
         <ChevronDown
@@ -433,7 +433,7 @@ function MobileToolsAccordion({ onNavigate }: { onNavigate: () => void }) {
       <div id={panelId} hidden={!expanded} className="pb-1">
         {TOOLS_SECTIONS.map((section) => (
           <div key={section.title} className="mb-2">
-            <p className="px-3 pb-1 pt-2 font-mono text-[10px] uppercase tracking-[0.24em] text-gold/85">
+            <p className="px-3 pb-1 pt-2 font-mono text-[10px] uppercase tracking-[0.24em] text-primary/85">
               {section.title}
             </p>
             {section.items.map((l) => (
@@ -441,7 +441,7 @@ function MobileToolsAccordion({ onNavigate }: { onNavigate: () => void }) {
                 key={l.href}
                 href={l.href}
                 onClick={onNavigate}
-                className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-gold/10 hover:text-gold"
+                className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
               >
                 {l.label}
               </Link>
@@ -479,22 +479,22 @@ function MobileDrawer({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger
-        className="inline-flex h-11 w-11 items-center justify-center rounded-md text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold md:hidden"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-md text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary md:hidden"
         aria-label="Mở menu"
       >
         <Menu className="h-5 w-5" />
       </SheetTrigger>
       <SheetContent side="right" className="w-72 border-border bg-background text-foreground">
         <SheetHeader>
-          <SheetTitle className="font-heading text-gold">hieu.asia</SheetTitle>
+          <SheetTitle className="font-heading text-primary">hieu.asia</SheetTitle>
         </SheetHeader>
         <nav
           className="mt-6 flex max-h-[calc(100vh-8rem)] flex-col gap-1 overflow-y-auto pb-6"
           aria-label="Điều hướng di động"
         >
           {isAuthed && userEmail && (
-            <div className="mb-2 rounded-md border border-gold/15 bg-gold/5 px-3 py-2">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-gold/85">
+            <div className="mb-2 rounded-md border border-primary/15 bg-primary/5 px-3 py-2">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-primary/85">
                 Đã đăng nhập
               </p>
               <p className="mt-0.5 truncate text-xs text-foreground/85">{userEmail}</p>
@@ -503,7 +503,7 @@ function MobileDrawer({
           <Link
             href="/"
             onClick={() => setOpen(false)}
-            className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
+            className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
           >
             Trang chủ
           </Link>
@@ -512,14 +512,14 @@ function MobileDrawer({
               <Link
                 href="/account"
                 onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
+                className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
               >
                 Tài khoản
               </Link>
               <Link
                 href="/reading"
                 onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
+                className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
               >
                 Lá số của bạn
               </Link>
@@ -530,7 +530,7 @@ function MobileDrawer({
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
+              className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
             >
               {l.label}
             </Link>
@@ -552,7 +552,7 @@ function MobileDrawer({
             <Link
               href="/signin"
               onClick={() => setOpen(false)}
-              className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-gold/10 hover:text-gold"
+              className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
             >
               Đăng nhập
             </Link>

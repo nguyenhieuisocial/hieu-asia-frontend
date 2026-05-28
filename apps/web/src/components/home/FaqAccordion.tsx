@@ -50,7 +50,7 @@ export function FaqAccordion({
     >
       <div className="mx-auto max-w-3xl px-6">
         <div className="text-center">
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/90 sm:text-xs">
+          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-primary/90 sm:text-xs">
             {eyebrow}
           </p>
           <h2
@@ -60,7 +60,7 @@ export function FaqAccordion({
             {title ?? (
               <>
                 Mọi thứ bạn muốn{' '}
-                <span className="bg-gold-gradient bg-clip-text text-transparent">hỏi trước</span>
+                <span className="text-primary">hỏi trước</span>
               </>
             )}
           </h2>
@@ -95,13 +95,13 @@ export function FaqAccordion({
               // First item open by default so an answer is visible above-the-fold
               // for first-time visitors + helps SEO "visible content" heuristics.
               open={i === 0}
-              className="group border-b border-gold/15 last:border-b-0"
+              className="group border-b border-primary/15 last:border-b-0"
             >
               <summary
                 className={[
                   'flex cursor-pointer list-none items-center justify-between gap-4 py-4',
                   'text-left text-base font-medium text-foreground transition-colors',
-                  'hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                  'hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
                   '[&::-webkit-details-marker]:hidden',
                 ].join(' ')}
               >

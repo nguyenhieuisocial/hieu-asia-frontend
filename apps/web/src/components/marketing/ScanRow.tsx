@@ -26,7 +26,7 @@ export type ScanRowItem = {
   /** Stable key. */
   id: string;
   /**
-   * Pre-rendered icon JSX, e.g. `<Sparkles className="size-5 text-gold" strokeWidth={1.5} />`.
+   * Pre-rendered icon JSX, e.g. `<Sparkles className="size-5 text-primary" strokeWidth={1.5} />`.
    * Pass the element, not the component reference (Wave 60.65.P0a fix).
    */
   icon: ReactNode;
@@ -80,7 +80,7 @@ export function ScanRow({
     <section className={`${bgClass} py-16 md:py-24`}>
       <div className="mx-auto max-w-marketing px-6 lg:px-12">
         {eyebrow && (
-          <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
+          <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
             — {eyebrow}
           </p>
         )}
@@ -107,11 +107,11 @@ export function ScanRow({
               // and clipping the first card's right edge. line-clamp-2 doesn't
               // help here because it clips display, not width. Desktop keeps
               // `md:min-w-0 md:max-w-none` (grid sizing takes over).
-              className="group relative flex h-full min-h-[180px] w-[78vw] max-w-[78vw] shrink-0 snap-start flex-col rounded-card-editorial border border-gold/15 bg-card p-6 transition-all duration-300 ease-editorial hover:-translate-y-0.5 hover:border-gold/30 hover:bg-muted sm:w-[60vw] sm:max-w-[60vw] md:w-auto md:max-w-none"
+              className="group relative flex h-full min-h-[180px] w-[78vw] max-w-[78vw] shrink-0 snap-start flex-col rounded-card-editorial border border-primary/15 bg-card p-6 transition-all duration-300 ease-editorial hover:-translate-y-0.5 hover:border-primary/30 hover:bg-muted sm:w-[60vw] sm:max-w-[60vw] md:w-auto md:max-w-none"
             >
               <div className="mb-4">{item.icon}</div>
               {item.tag && (
-                <p className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-gold-soft/70">
+                <p className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-primary/80/70">
                   {item.tag}
                 </p>
               )}
@@ -121,7 +121,7 @@ export function ScanRow({
               <p className="mt-2 line-clamp-2 font-sans text-sm leading-relaxed text-muted-foreground">
                 {item.body}
               </p>
-              <p className="mt-auto pt-4 font-sans text-sm font-medium text-gold-soft transition-colors group-hover:text-gold">
+              <p className="mt-auto pt-4 font-sans text-sm font-medium text-primary/80 transition-colors group-hover:text-primary">
                 Xem ngay →
               </p>
             </Link>

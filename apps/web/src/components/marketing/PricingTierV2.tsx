@@ -16,7 +16,7 @@ import { track } from '@/lib/analytics';
  * Visual matches `/tmp/wave-60-56-option-d/pricing.png`. Tokens from
  * `apps/web/tailwind.config.ts` (Wave 60.56 P1 commit 0b38173):
  *   bg-background/100/200/300 / text-foreground/100/300/500
- *   text-gold / text-gold-soft / text-jade-300 / bg-jade
+ *   text-primary/ text-primary/80 / text-jade-300 / bg-jade
  *   font-marketing-display / text-section-display / text-price-amount
  *   text-eyebrow / rounded-pill / rounded-card-editorial
  *   max-w-marketing / ease-editorial
@@ -69,7 +69,7 @@ export type PricingTierV2Props = {
   defaultPeriod?: 'monthly' | 'yearly';
   /** Mono uppercase gold eyebrow, prefixed by a "—" rule. */
   eyebrow?: string;
-  /** H2 ReactNode. Pass `<em class="italic text-gold-soft">` for highlighted spans. */
+  /** H2 ReactNode. Pass `<em class="italic text-primary/80">` for highlighted spans. */
   title?: ReactNode;
   /**
    * Wave 60.77 — page slug forwarded into `pricing_cta_clicked`. Defaults to
@@ -144,8 +144,8 @@ export function PricingTierV2({
         {/* Header */}
         <div className="text-center">
           {eyebrow && (
-            <p className="font-mono text-eyebrow uppercase text-gold">
-              <span className="mr-2 inline-block h-px w-6 bg-gold align-middle" />
+            <p className="font-mono text-eyebrow uppercase text-primary">
+              <span className="mr-2 inline-block h-px w-6 bg-primary align-middle" />
               {eyebrow}
             </p>
           )}
@@ -212,13 +212,13 @@ export function PricingTierV2({
             const baseCard =
               'relative flex flex-col rounded-card-editorial border bg-muted/40 p-8 md:p-12 transition-all duration-300 ease-editorial';
             const cardBorder = tier.recommended
-              ? 'border-gold bg-gradient-to-b from-gold/5 to-warm-dark-100'
+              ? 'border-primary bg-gradient-to-b from-primary/5 to-warm-dark-100'
               : 'border-border hover:border-border/80';
 
             const ctaBase =
               'mt-8 inline-flex w-full items-center justify-center rounded-pill px-7 py-4 font-sans text-sm font-medium transition-all duration-300 ease-editorial';
             const ctaVariant = tier.primary
-              ? 'bg-gold text-ink hover:bg-gold-soft'
+              ? 'bg-primary text-ink hover:bg-primary/80'
               : 'border border-border text-foreground hover:bg-card';
 
             return (
@@ -229,14 +229,14 @@ export function PricingTierV2({
                 className={`${baseCard} ${cardBorder} translate-y-3 opacity-0 [transition-duration:600ms] data-[in-view=true]:translate-y-0 data-[in-view=true]:opacity-100`}
               >
                 {tier.recommended && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-pill bg-gold px-4 py-1 font-mono text-xs uppercase tracking-wider text-ink">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-pill bg-primary px-4 py-1 font-mono text-xs uppercase tracking-wider text-ink">
                     KHUYÊN DÙNG
                   </span>
                 )}
 
                 <p
                   className={`font-mono text-eyebrow uppercase tracking-wider ${
-                    tier.recommended ? 'text-gold' : 'text-muted-foreground/70'
+                    tier.recommended ? 'text-primary' : 'text-muted-foreground/70'
                   }`}
                 >
                   {tier.name}
@@ -249,8 +249,8 @@ export function PricingTierV2({
                 </p>
 
                 {tier.bestFor && (
-                  <p className="mt-4 border-l-2 border-gold/40 pl-3 font-sans text-xs italic leading-relaxed text-muted-foreground/70">
-                    <span className="font-mono uppercase tracking-wider text-gold-soft not-italic">
+                  <p className="mt-4 border-l-2 border-primary/40 pl-3 font-sans text-xs italic leading-relaxed text-muted-foreground/70">
+                    <span className="font-mono uppercase tracking-wider text-primary/80 not-italic">
                       Nên chọn nếu
                     </span>{' '}
                     {tier.bestFor}

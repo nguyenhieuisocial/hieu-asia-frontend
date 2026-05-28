@@ -35,10 +35,10 @@ const LEGAL_LINKS = [
 export function SiteFooter() {
   const year = new Date().getFullYear();
   return (
-    <footer className="relative border-t border-gold/15 bg-background">
+    <footer className="relative border-t border-primary/15 bg-background">
       <div className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
         {/* Final wayfinding CTA — vault 130 §14 terminus */}
-        <div className="mb-14 rounded-2xl border border-gold/20 bg-gradient-to-br from-gold/[0.06] to-transparent px-6 py-10 text-center sm:px-10 sm:py-12">
+        <div className="mb-14 rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.06] to-transparent px-6 py-10 text-center sm:px-10 sm:py-12">
           <h2 className="font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             Sẵn sàng hiểu bản đồ của bạn?
           </h2>
@@ -48,7 +48,7 @@ export function SiteFooter() {
           <Link
             href="/onboarding"
             data-analytics-id="footer_final_cta"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-gold px-6 py-3 text-sm font-semibold text-background transition-colors hover:bg-gold/90 sm:text-base"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-primarypx-6 py-3 text-sm font-semibold text-background transition-colors hover:bg-primary/90 sm:text-base"
           >
             Lập lá số miễn phí
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -75,7 +75,7 @@ export function SiteFooter() {
                 link in the footer "Theo dõi" column hits 44px on mobile. */}
             <Link
               href="/community#newsletter"
-              className="mt-4 inline-flex min-h-11 items-center gap-1.5 rounded-full border border-gold/30 bg-gold/5 px-4 py-2 text-sm font-medium text-gold transition-colors hover:bg-gold/10 active:bg-gold/15 touch-manipulation"
+              className="mt-4 inline-flex min-h-11 items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/10 active:bg-primary/15 touch-manipulation"
             >
               Đăng ký newsletter
               <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -101,13 +101,13 @@ export function SiteFooter() {
                 it hits 44px on mobile (was 24px). */}
             <Link
               href="/"
-              className="inline-flex min-h-11 items-center py-2.5 font-heading text-base font-bold text-gold transition-colors hover:text-gold-soft active:text-gold-soft touch-manipulation"
+              className="inline-flex min-h-11 items-center py-2.5 font-heading text-base font-bold text-primary transition-colors hover:text-primary/80 active:text-primary/80 touch-manipulation"
             >
               hieu.asia · Hiểu mình. Quyết định mình.
             </Link>
             <p className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
               Made in HCM with
-              <Heart className="h-3.5 w-3.5 fill-gold text-gold" aria-hidden="true" />
+              <Heart className="h-3.5 w-3.5 fill-primary text-primary" aria-hidden="true" />
             </p>
           </div>
           <div className="mt-3 flex flex-col gap-2 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
@@ -139,14 +139,14 @@ function FooterCol({
         fails WCAG 2.5.5 (44px) on mobile. Replace `space-y-2.5` text rows
         with a vertical column where each <Link> has `inline-flex min-h-11
         py-2.5` — full-width tap target + visual line-height unchanged. The
-        `active:text-gold` state surfaces touch feedback on iOS/Android.
+        `active:text-primary` state surfaces touch feedback on iOS/Android.
       */}
       <ul className="mt-2 sm:mt-4 sm:space-y-2.5">
         {links.map((link) => (
           <li key={link.href}>
             <Link
               href={link.href}
-              className="inline-flex min-h-11 w-full items-center py-2.5 text-sm text-muted-foreground transition-colors hover:text-gold active:text-gold touch-manipulation sm:min-h-0 sm:w-auto sm:py-0"
+              className="inline-flex min-h-11 w-full items-center py-2.5 text-sm text-muted-foreground transition-colors hover:text-primary active:text-primary touch-manipulation sm:min-h-0 sm:w-auto sm:py-0"
             >
               {link.label}
             </Link>
@@ -170,7 +170,7 @@ function SocialLink({
     <Link
       href={href}
       aria-label={label}
-      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold sm:h-9 sm:w-9"
+      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary sm:h-9 sm:w-9"
     >
       {children}
     </Link>

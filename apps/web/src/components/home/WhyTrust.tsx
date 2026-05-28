@@ -50,11 +50,11 @@ export function WhyTrust() {
     >
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/15 to-transparent"
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent"
       />
       <div className="mx-auto max-w-5xl px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/90 sm:text-xs">
+          <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-primary/90 sm:text-xs">
             Vì sao tin được
           </p>
           <h2
@@ -76,14 +76,14 @@ export function WhyTrust() {
             `border-border bg-card/40 p-6`). MarketingCard emits identical
             `h-full flex flex-col`, swaps bg to `warm-dark-200` so cards layer
             cleanly on the wrapping `bg-muted/40` section shell, and adds
-            `hover:border-gold/40` for editorial polish. MarketingCard's
+            `hover:border-primary/40` for editorial polish. MarketingCard's
             primitive doc explicitly lists WhyTrust as a canonical consumer. */}
         <ul className="mt-10 grid auto-rows-fr gap-4 sm:grid-cols-3">
           {PROOFS.map(({ Icon, title, desc }) => (
             <li key={title} className="h-full">
               <MarketingCard padding="standard" bg="warm-dark-200">
-                <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-gold/30 bg-gold/5">
-                  <Icon className="h-4 w-4 text-gold" aria-hidden={true} />
+                <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-primary/30 bg-primary/5">
+                  <Icon className="h-4 w-4 text-primary" aria-hidden={true} />
                 </div>
                 <h3 className="mt-4 font-heading text-sm font-semibold leading-snug text-foreground">
                   {title}
@@ -101,7 +101,7 @@ export function WhyTrust() {
               wayfinding link hits 44px on mobile. */}
           <Link
             href="/methodology"
-            className="inline-flex min-h-11 items-center gap-1.5 px-3 py-2.5 text-sm text-gold/90 transition-colors hover:text-gold active:text-gold touch-manipulation"
+            className="inline-flex min-h-11 items-center gap-1.5 px-3 py-2.5 text-sm text-primary/90 transition-colors hover:text-primary active:text-primary touch-manipulation"
           >
             Đọc phương pháp luận đầy đủ
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

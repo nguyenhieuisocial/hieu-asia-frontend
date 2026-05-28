@@ -53,10 +53,10 @@ export function NewsletterSignup({
   }
 
   const card = (
-    <div className="relative isolate overflow-hidden rounded-3xl border border-gold/20 bg-gradient-to-br from-gold/[0.07] via-background to-purple/15 p-8 sm:p-12">
+    <div className="relative isolate overflow-hidden rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/[0.07] via-background to-purple/15 p-8 sm:p-12">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-gold/15 blur-3xl"
+        className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/15 blur-3xl"
       />
       <div
         aria-hidden="true"
@@ -65,11 +65,11 @@ export function NewsletterSignup({
 
       <div className="relative grid items-center gap-8 md:grid-cols-[1.2fr_1fr]">
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/90 sm:text-xs">
+          <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-primary/90 sm:text-xs">
             Newsletter · mỗi tuần một bài
           </p>
           <h2 className="mt-4 text-balance font-heading text-2xl font-bold leading-tight text-foreground sm:text-3xl">
-            Theo dõi tri thức <span className="bg-gold-gradient bg-clip-text text-transparent">hàng tuần</span>
+            Theo dõi tri thức <span className="text-primary">hàng tuần</span>
           </h2>
           <p className="mt-4 text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
             Một bài viết ngắn về cách dùng cổ học để ra quyết định tốt hơn. Không
@@ -79,7 +79,7 @@ export function NewsletterSignup({
               tertiary link reaches 44px on mobile (was 16px). */}
           <a
             href="/newsletter/archive"
-            className="mt-2 inline-flex min-h-11 items-center gap-1.5 py-2.5 text-xs font-medium text-gold/90 underline-offset-4 hover:text-gold hover:underline active:text-gold touch-manipulation sm:text-sm"
+            className="mt-2 inline-flex min-h-11 items-center gap-1.5 py-2.5 text-xs font-medium text-primary/90 underline-offset-4 hover:text-primary hover:underline active:text-primary touch-manipulation sm:text-sm"
           >
             Xem các bài trước
             <span aria-hidden="true">→</span>
@@ -134,7 +134,7 @@ export function NewsletterSignup({
                 }
                 // Wave 60.97.1 — `min-h-11 touch-manipulation` so the newsletter
                 // CTA reaches the 44px mobile tap target (Button default = 40px).
-                className="w-full min-h-11 touch-manipulation disabled:border disabled:border-gold/40"
+                className="w-full min-h-11 touch-manipulation disabled:border disabled:border-primary/40"
               >
                 {state === 'loading' ? 'Đang đăng ký…' : 'Đăng ký miễn phí'}
               </Button>
@@ -158,7 +158,7 @@ export function NewsletterSignup({
               )}
               <p className="text-[11px] leading-relaxed text-muted-foreground">
                 Bằng cách đăng ký bạn đồng ý với{' '}
-                <a href="/privacy" className="underline hover:text-gold">
+                <a href="/privacy" className="underline hover:text-primary">
                   Chính sách bảo mật
                 </a>
                 . Email không được chia sẻ cho bên thứ ba.
