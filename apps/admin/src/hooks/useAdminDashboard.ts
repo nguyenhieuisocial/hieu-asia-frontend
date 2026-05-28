@@ -31,8 +31,11 @@ export interface Kpi {
   key: string;
   /** Mono uppercase label, e.g. "DEPLOYS HÔM NAY". */
   label: string;
-  /** Raw value — number for numerics, string for currency-formatted etc. */
-  value: number | string;
+  /** Raw value — number for numerics, string for currency-formatted, OR null
+   * when the upstream source failed (Worker `safe()` helper degrades to null).
+   * Wave 60.95.ai — null was missing here while Worker actually returns it,
+   * causing `formatValue` to crash on `null.toFixed()` → admin /overview 500. */
+  value: number | string | null;
   /** Optional subtitle, e.g. "12 trong 7 ngày". */
   subtitle?: string;
   /** Which 3rd-party emitted this metric. */

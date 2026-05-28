@@ -94,6 +94,11 @@ const PLACEHOLDERS: PlaceholderCard[] = [
 ];
 
 function formatValue(raw: Kpi['value'], key: string): React.ReactNode {
+  // Wave 60.95.ai — Worker `safe()` returns `null` when an upstream source
+  // (Cloudflare GraphQL, GitHub REST, etc.) fails; render an em-dash so the
+  // tile degrades gracefully instead of throwing `null.toFixed is not a function`
+  // which surfaced as admin /overview 500 (founder report 2026-05-28).
+  if (raw === null) return '—';
   if (typeof raw === 'string') return raw;
   // Currency keys get a USD prefix; everything else stays as a locale-formatted int.
   if (key === 'llm_cost_today') {
