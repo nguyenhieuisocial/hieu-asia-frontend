@@ -9,7 +9,6 @@ import { HowToStart } from '@/components/home/HowToStart';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 import { MarketingHero } from '@/components/marketing/MarketingHero';
-import { HeroBadgeScroll } from '@/components/marketing/HeroBadgeScroll';
 import { LotusLottie } from '@/components/marketing/LotusLottie';
 import { BentoLens } from '@/components/marketing/BentoLens';
 import { PhilosophyBlock } from '@/components/marketing/PhilosophyBlock';
@@ -375,22 +374,18 @@ export default function LandingPage() {
             bg="painted" enables PaintedCanvas (SVG noise + radial gold + linear
             warm-dark fade) + GlassPanel CTA overlay. Other heroes (/pricing,
             /features, /about, /methodology, /checkout) keep default bg="flat". */}
-        {/* Wave 60.95.o — removed seeded LiveCounterEyebrow (1.243 reports +
-            4.8★) per founder direction: numbers were placeholder seed values
-            and "founder must be able to defend the number; if not, swap to
-            neutral copy" (vault 108 §5 Risk 3). Replaced with the factual
-            4-discipline value-prop eyebrow that matches what the product
-            actually delivers. HeroBadgeScroll wrapper preserves the Wave
-            60.95.j #18 scroll-linked editorial parallax. */}
+        {/* Wave 60.95.r — removed hero eyebrow slot entirely per founder
+            direction. Wave 60.95.o removed the seeded LiveCounterEyebrow
+            (1.243 reports / 4.8★) and replaced with a factual "4 ỐNG KÍNH
+            · MỘT BỨC TRANH" eyebrow, but founder requested removing the
+            slot itself for a tighter hero. The 4-discipline value-prop is
+            already communicated via the BentoLens section below the hero
+            (BỐN ỐNG KÍNH eyebrow + 4 lens cards), so deduplicating cleans
+            up the above-the-fold real estate. The HeroBadgeScroll motion
+            wrapper is dropped here too — without an eyebrow child it has
+            nothing to animate. */}
         <MarketingHero
           bg="painted"
-          eyebrow={
-            <HeroBadgeScroll>
-              <span className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
-                — 4 ỐNG KÍNH · MỘT BỨC TRANH
-              </span>
-            </HeroBadgeScroll>
-          }
           title={
             // Wave 60.95.a P0 — Polypane P1-V1 fix: mobile 320px wrapped headline
             // as 3 lines ("Hiểu mình. / Quyết / định mình."). Wrap second clause
