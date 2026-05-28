@@ -199,11 +199,18 @@ export default async function RootLayout({
             critical-path resources. -0.2 to -0.5 s LCP. */}
         {/* Wave 60.95.m perf — preconnect to PostHog (fires on initial render
             via PostHogProvider). Saves ~100-300 ms first analytics flush vs
-            cold DNS+TLS. Sub-agent Z perf audit finding. Sentry ingest
-            preconnect skipped pending confirmation of exact host
-            (browser.sentry-cdn.com is CDN; events go to *.ingest.us.sentry.io
-            with project-specific subdomain — adding wrong host wastes a slot). */}
+            cold DNS+TLS. Sub-agent Z perf audit finding.
+            Wave 60.95.ao perf — add browser.sentry-cdn.com preconnect.
+            Sentry session replay is lazy-loaded via
+            `Sentry.lazyLoadIntegration('replayIntegration')` from this CDN
+            (sentry.client.config.ts, Wave 60.95.m). Preconnect saves the
+            TLS handshake when `requestIdleCallback` fires (~100-200 ms on
+            slow networks). Event ingest still flows through our own
+            `/monitoring` tunnel (next.config.ts tunnelRoute) so the
+            *.ingest.us.sentry.io subdomain is intentionally NOT preconnected
+            — that host is never hit from the browser in production. */}
         <link rel="preconnect" href="https://us.i.posthog.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://browser.sentry-cdn.com" crossOrigin="anonymous" />
         <meta name="format-detection" content="telephone=no" />
       </head>
       <body>
