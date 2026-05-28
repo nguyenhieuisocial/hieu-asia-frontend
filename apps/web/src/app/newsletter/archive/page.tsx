@@ -22,6 +22,46 @@ export const metadata: Metadata = {
   description:
     'Đọc các bài tuần đã xuất bản — tự nhận thức, ra quyết định, ngôn ngữ cổ học hiện đại.',
   alternates: { canonical: 'https://hieu.asia/newsletter/archive' },
+  // Wave 60.96.3 — root-layout openGraph is replaced when a route declares its
+  // own block. Without `images`, social preview cards (Zalo/FB/Telegram/Slack)
+  // render blank for the archive page even though /newsletter has its own.
+  openGraph: {
+    title: 'Lưu trữ Newsletter — hieu.asia',
+    description:
+      'Đọc các bài tuần đã xuất bản — tự nhận thức, ra quyết định, ngôn ngữ cổ học hiện đại.',
+    url: 'https://hieu.asia/newsletter/archive',
+    type: 'website',
+    locale: 'vi_VN',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'hieu.asia — Newsletter: mỗi tuần một bài calm-editorial',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Lưu trữ Newsletter — hieu.asia',
+    description: 'Bản tin tuần: tự nhận thức, ra quyết định, ngôn ngữ cổ học hiện đại.',
+    images: [
+      {
+        url: '/og-image.jpg',
+        alt: 'hieu.asia — Newsletter calm-editorial',
+      },
+    ],
+  },
+};
+
+const BREADCRUMB_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
+    { '@type': 'ListItem', position: 2, name: 'Newsletter', item: 'https://hieu.asia/newsletter' },
+    { '@type': 'ListItem', position: 3, name: 'Lưu trữ', item: 'https://hieu.asia/newsletter/archive' },
+  ],
 };
 
 interface Issue {
@@ -114,6 +154,10 @@ export default function NewsletterArchivePage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

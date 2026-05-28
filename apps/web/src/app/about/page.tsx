@@ -13,12 +13,34 @@ export const metadata: Metadata = {
   description:
     'hieu.asia là người bạn đồng hành cho mỗi quyết định quan trọng — tri thức cổ học Á Đông trình bày bằng tiếng Việt, AI hiện đại, văn phong calm, không định mệnh hoá.',
   alternates: { canonical: 'https://hieu.asia/about' },
+  // Wave 60.96.3 — route-level openGraph REPLACES root-layout openGraph; must
+  // re-declare `images` or social preview cards render blank.
   openGraph: {
     title: 'Về chúng tôi',
     description:
       'Sứ mệnh, triết lý và cam kết phía sau hieu.asia.',
     url: 'https://hieu.asia/about',
     type: 'website',
+    locale: 'vi_VN',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'hieu.asia — Hiểu mình. Quyết định mình. Cẩm nang AI giúp ra quyết định.',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Về hieu.asia',
+    description: 'Sứ mệnh, triết lý và cam kết phía sau hieu.asia.',
+    images: [
+      {
+        url: '/og-image.jpg',
+        alt: 'hieu.asia — Hiểu mình. Quyết định mình.',
+      },
+    ],
   },
 };
 

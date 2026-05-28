@@ -64,6 +64,48 @@ export const metadata: Metadata = {
   },
 };
 
+// Wave 60.96.3 — add BreadcrumbList + WebPage JSON-LD. The page itself was
+// missing both — only OG/Twitter were set. Pairs with Google rich-snippet
+// expectations and clarifies the navigation hierarchy in SERP.
+const BREADCRUMB_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
+    { '@type': 'ListItem', position: 2, name: 'Reading', item: 'https://hieu.asia/reading' },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: 'Mẫu Tử Vi',
+      item: 'https://hieu.asia/reading/sample-tu-vi',
+    },
+  ],
+};
+
+const WEBPAGE_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': 'https://hieu.asia/reading/sample-tu-vi',
+  url: 'https://hieu.asia/reading/sample-tu-vi',
+  name: 'Mẫu báo cáo Tử Vi — xem trước trải nghiệm',
+  description:
+    'Lá số Tử Vi mẫu công khai trên hieu.asia: 12 cung, đối thoại Mentor, kế hoạch 30-60-90 ngày. Xem trước trải nghiệm trước khi lập lá số của riêng bạn.',
+  inLanguage: 'vi-VN',
+  isPartOf: { '@type': 'WebSite', name: 'hieu.asia', url: 'https://hieu.asia' },
+};
+
 export default function SampleTuViLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }}
+      />
+      {children}
+    </>
+  );
 }
