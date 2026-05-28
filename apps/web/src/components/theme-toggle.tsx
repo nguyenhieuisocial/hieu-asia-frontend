@@ -47,7 +47,12 @@ export function ThemeToggle() {
       size="sm"
       onClick={() => setTheme(next)}
       aria-label={`Chuyển sang chế độ ${next === 'dark' ? 'tối' : 'sáng'}`}
-      className="relative"
+      // Wave 60.97.1 — bump hit area to 44×44 (WCAG 2.5.5 + Apple HIG). The
+      // `size="sm"` variant ships at 36×36, below the mobile tap-target
+      // minimum. `min-h-11 min-w-11` enlarges the hit area without changing
+      // the visible icon size. `touch-manipulation` blocks double-tap-zoom
+      // delay on iOS so the toggle feels native.
+      className="relative min-h-11 min-w-11 touch-manipulation"
     >
       {current === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
     </Button>

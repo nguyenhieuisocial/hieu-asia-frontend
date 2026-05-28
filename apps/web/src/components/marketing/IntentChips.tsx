@@ -71,7 +71,11 @@ export function IntentChips({ chips, eyebrow, glass = true }: IntentChipsProps) 
             key={chip.slug}
             type="button"
             onClick={() => handleClick(chip.slug)}
-            className="rounded-pill border border-gold/15 bg-card px-4 py-2 font-sans text-sm font-medium text-gold-soft transition-all duration-300 ease-editorial hover:border-gold/30 hover:bg-muted hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50"
+            // Wave 60.97.1 — `min-h-11` + `touch-manipulation` so each chip
+            // hits the 44px tap-target minimum on mobile (was 38px → fail
+            // WCAG 2.5.5). `active:bg-muted` gives instant touch feedback on
+            // iOS/Android. Visible padding (px-4 py-2) unchanged.
+            className="rounded-pill border border-gold/15 bg-card px-4 py-2 font-sans text-sm font-medium text-gold-soft transition-all duration-300 ease-editorial hover:border-gold/30 hover:bg-muted hover:text-gold active:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50 min-h-11 touch-manipulation"
           >
             {chip.label}
           </button>

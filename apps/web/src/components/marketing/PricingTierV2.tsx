@@ -168,7 +168,9 @@ export function PricingTierV2({
                 aria-selected={period === 'monthly'}
                 data-active={period === 'monthly'}
                 onClick={() => setPeriod('monthly')}
-                className="rounded-pill px-6 py-2 font-sans text-sm font-medium transition-all duration-300 ease-editorial data-[active=true]:bg-cream-50 data-[active=true]:text-ink data-[active=false]:text-muted-foreground"
+                // Wave 60.97.1 — `min-h-11 touch-manipulation` so toggle
+                // reaches 44px tap target on mobile.
+                className="rounded-pill px-6 py-2 font-sans text-sm font-medium transition-all duration-300 ease-editorial data-[active=true]:bg-cream-50 data-[active=true]:text-ink data-[active=false]:text-muted-foreground min-h-11 touch-manipulation"
               >
                 Theo tháng
               </button>
@@ -178,7 +180,9 @@ export function PricingTierV2({
                 aria-selected={period === 'yearly'}
                 data-active={period === 'yearly'}
                 onClick={() => setPeriod('yearly')}
-                className="rounded-pill px-6 py-2 font-sans text-sm font-medium transition-all duration-300 ease-editorial data-[active=true]:bg-cream-50 data-[active=true]:text-ink data-[active=false]:text-muted-foreground"
+                // Wave 60.97.1 — `min-h-11 touch-manipulation` so toggle
+                // reaches 44px tap target on mobile.
+                className="rounded-pill px-6 py-2 font-sans text-sm font-medium transition-all duration-300 ease-editorial data-[active=true]:bg-cream-50 data-[active=true]:text-ink data-[active=false]:text-muted-foreground min-h-11 touch-manipulation"
               >
                 Theo năm
               </button>

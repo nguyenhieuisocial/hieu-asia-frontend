@@ -97,9 +97,11 @@ export function WhyTrust() {
         </ul>
 
         <div className="mt-8 text-center">
+          {/* Wave 60.97.1 — `min-h-11 px-3 py-2.5` so the methodology
+              wayfinding link hits 44px on mobile. */}
           <Link
             href="/methodology"
-            className="inline-flex items-center gap-1.5 text-sm text-gold/90 transition-colors hover:text-gold"
+            className="inline-flex min-h-11 items-center gap-1.5 px-3 py-2.5 text-sm text-gold/90 transition-colors hover:text-gold active:text-gold touch-manipulation"
           >
             Đọc phương pháp luận đầy đủ
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

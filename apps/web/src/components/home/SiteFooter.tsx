@@ -71,9 +71,11 @@ export function SiteFooter() {
               Một bài viết ngắn mỗi tuần — cách dùng cổ học để ra quyết định
               tốt hơn. Không spam, huỷ bất cứ lúc nào.
             </p>
+            {/* Wave 60.97.1 — `min-h-11 touch-manipulation` so the newsletter
+                link in the footer "Theo dõi" column hits 44px on mobile. */}
             <Link
               href="/community#newsletter"
-              className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/5 px-4 py-2 text-sm font-medium text-gold transition-colors hover:bg-gold/10"
+              className="mt-4 inline-flex min-h-11 items-center gap-1.5 rounded-full border border-gold/30 bg-gold/5 px-4 py-2 text-sm font-medium text-gold transition-colors hover:bg-gold/10 active:bg-gold/15 touch-manipulation"
             >
               Đăng ký newsletter
               <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -95,7 +97,12 @@ export function SiteFooter() {
         {/* Brand strip + bottom row */}
         <div className="mt-14 border-t border-border pt-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <Link href="/" className="font-heading text-base font-bold text-gold">
+            {/* Wave 60.97.1 — bottom brand link gets `min-h-11 py-2.5` so
+                it hits 44px on mobile (was 24px). */}
+            <Link
+              href="/"
+              className="inline-flex min-h-11 items-center py-2.5 font-heading text-base font-bold text-gold transition-colors hover:text-gold-soft active:text-gold-soft touch-manipulation"
+            >
               hieu.asia · Hiểu mình. Quyết định mình.
             </Link>
             <p className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -127,12 +134,19 @@ function FooterCol({
       <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/90">
         {title}
       </h3>
-      <ul className="mt-4 space-y-2.5">
+      {/*
+        Wave 60.97.1 — Footer link rows ship at h:18 (text-sm only) which
+        fails WCAG 2.5.5 (44px) on mobile. Replace `space-y-2.5` text rows
+        with a vertical column where each <Link> has `inline-flex min-h-11
+        py-2.5` — full-width tap target + visual line-height unchanged. The
+        `active:text-gold` state surfaces touch feedback on iOS/Android.
+      */}
+      <ul className="mt-2 sm:mt-4 sm:space-y-2.5">
         {links.map((link) => (
           <li key={link.href}>
             <Link
               href={link.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-gold"
+              className="inline-flex min-h-11 w-full items-center py-2.5 text-sm text-muted-foreground transition-colors hover:text-gold active:text-gold touch-manipulation sm:min-h-0 sm:w-auto sm:py-0"
             >
               {link.label}
             </Link>

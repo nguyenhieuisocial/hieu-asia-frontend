@@ -1133,7 +1133,12 @@ export default function MethodologyPage() {
               aria-label="Breadcrumb"
               className="mt-10 font-mono text-eyebrow uppercase tracking-[0.12em] text-muted-foreground/70"
             >
-              <Link href="/" className="hover:text-gold-soft">
+              {/* Wave 60.97.1 — breadcrumb link gets `min-h-11 py-2.5` so
+                  it reaches 44px on mobile (was 14px). */}
+              <Link
+                href="/"
+                className="inline-flex min-h-11 items-center py-2.5 transition-colors hover:text-gold-soft active:text-gold-soft touch-manipulation"
+              >
                 Trang chủ
               </Link>
               <span className="mx-2">/</span>

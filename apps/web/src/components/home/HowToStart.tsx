@@ -109,7 +109,11 @@ export function HowToStart() {
                 </div>
                 <h3 className="mt-5 font-heading text-lg font-semibold text-foreground">{title}</h3>
                 <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{desc}</p>
-                <Button asChild variant="outline" size="sm" className="group w-full"><Link href={href} className="mt-5">
+                {/* Wave 60.97.1 — `min-h-11 touch-manipulation` lifts the
+                    `size="sm"` (h-9 = 36px) CTA to the 44px tap-target
+                    minimum. Keeps "sm" visual padding but ensures the hit
+                    area passes WCAG 2.5.5 on mobile. */}
+                <Button asChild variant="outline" size="sm" className="group w-full min-h-11 touch-manipulation"><Link href={href} className="mt-5">
 
                     {ctaLabel}
                     <ArrowRight

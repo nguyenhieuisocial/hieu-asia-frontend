@@ -75,9 +75,11 @@ export function NewsletterSignup({
             Một bài viết ngắn về cách dùng cổ học để ra quyết định tốt hơn. Không
             spam, không bán hàng, huỷ bất cứ lúc nào.
           </p>
+          {/* Wave 60.97.1 — `min-h-11 py-2.5` so "Xem các bài trước"
+              tertiary link reaches 44px on mobile (was 16px). */}
           <a
             href="/newsletter/archive"
-            className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-gold/90 underline-offset-4 hover:text-gold hover:underline sm:text-sm"
+            className="mt-2 inline-flex min-h-11 items-center gap-1.5 py-2.5 text-xs font-medium text-gold/90 underline-offset-4 hover:text-gold hover:underline active:text-gold touch-manipulation sm:text-sm"
           >
             Xem các bài trước
             <span aria-hidden="true">→</span>
@@ -130,7 +132,9 @@ export function NewsletterSignup({
                 aria-describedby={
                   !email && state !== 'loading' ? `${id}-hint` : undefined
                 }
-                className="w-full disabled:border disabled:border-gold/40"
+                // Wave 60.97.1 — `min-h-11 touch-manipulation` so the newsletter
+                // CTA reaches the 44px mobile tap target (Button default = 40px).
+                className="w-full min-h-11 touch-manipulation disabled:border disabled:border-gold/40"
               >
                 {state === 'loading' ? 'Đang đăng ký…' : 'Đăng ký miễn phí'}
               </Button>

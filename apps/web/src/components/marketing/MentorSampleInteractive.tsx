@@ -180,12 +180,15 @@ export function MentorSampleInteractive() {
                 aria-pressed={isActive}
                 aria-controls="mentor-sample-panel"
                 onClick={() => handleClick(q.id)}
+                // Wave 60.97.1 — `min-h-11 touch-manipulation` so chip reaches
+                // 44px tap target on mobile (was 42px → just missed WCAG 2.5.5).
+                // `active:bg-muted` adds touch feedback for iOS/Android.
                 className={[
-                  'rounded-pill border px-4 py-2.5 font-sans text-sm font-medium transition-all duration-300 ease-editorial',
+                  'rounded-pill border px-4 py-2.5 font-sans text-sm font-medium transition-all duration-300 ease-editorial min-h-11 touch-manipulation',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50',
                   isActive
                     ? 'border-gold bg-gold/[0.08] text-gold'
-                    : 'border-gold/25 bg-card text-gold-soft hover:border-gold/45 hover:bg-muted hover:text-gold',
+                    : 'border-gold/25 bg-card text-gold-soft hover:border-gold/45 hover:bg-muted hover:text-gold active:bg-muted',
                 ].join(' ')}
               >
                 {q.question}

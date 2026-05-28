@@ -141,7 +141,14 @@ export function SiteNav() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-card/70 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <Link href="/" className="font-heading text-lg font-bold text-gold sm:text-xl">
+        <Link
+          href="/"
+          aria-label="hieu.asia · Trang chủ"
+          // Wave 60.97.1 — `inline-flex min-h-11` lifts the brand link to
+          // 44px tap target (was 28px). Logo is the universal "back home"
+          // affordance on mobile; needs reliable hit area.
+          className="inline-flex min-h-11 items-center font-heading text-lg font-bold text-gold transition-colors hover:text-gold-soft sm:text-xl touch-manipulation"
+        >
           hieu.asia
         </Link>
 
