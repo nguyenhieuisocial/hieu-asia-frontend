@@ -28,6 +28,13 @@ import {
 } from '@/lib/mentor-history';
 import { track } from '@/lib/analytics';
 import { useFeatureFlag, FLAGS } from '@/lib/feature-flags';
+// Wave 61.02 — Mentor conversation persistence (Supabase) + resume hydration.
+import {
+  appendMentorMessage,
+  ensureMentorConversation,
+  getMentorConversation,
+  type MentorConversation,
+} from '@/lib/mentor-conversations';
 
 const QUICK_PROMPTS = [
   'Tôi nên xử lý nhân sự chống đối thế nào?',
@@ -94,6 +101,12 @@ export default function MentorChatPage() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [streaming, setStreaming] = React.useState(false);
   const abortRef = React.useRef<AbortController | null>(null);
+  // Wave 61.02 — Supabase-backed conversation id + summary for resume.
+  // Lazy creation: stays null until the user sends their first message OR a
+  // `?conversation=<id>` query param hydrates an existing thread.
+  const conversationIdRef = React.useRef<string | null>(null);
+  const [conversationSummary, setConversationSummary] = React.useState<string | null>(null);
+  const [summaryCollapsed, setSummaryCollapsed] = React.useState(false);
 
   // Gate quick-prompt "skills" surface behind `mentor-skills-rollout`. Default
   // ON since the UI is already shipped; toggle in PostHog to roll back fast.
@@ -126,6 +139,40 @@ export default function MentorChatPage() {
       /* ignore */
     }
   }, [readingId]);
+
+  // Wave 61.02 — When `?conversation=<id>` is present, override local history
+  // with the persisted thread from Supabase so the user resumes from the same
+  // point they left off on another device. Best effort: any fetch failure
+  // falls back silently to whatever localStorage already loaded.
+  React.useEffect(() => {
+    const convQuery = search?.get('conversation');
+    if (!convQuery) return;
+    let cancelled = false;
+    (async () => {
+      const env = await getMentorConversation(convQuery);
+      if (cancelled || !env) return;
+      conversationIdRef.current = env.conversation.id;
+      setConversationSummary(env.conversation.summary ?? null);
+      // Replace in-memory messages. Filter out 'system' rows — those are not
+      // surfaced in the chat UI. Map mentor role to keep ChatMessage typing.
+      const hydrated: ChatMessage[] = env.messages
+        .filter((m): m is typeof m & { role: 'user' | 'mentor' } =>
+          m.role === 'user' || m.role === 'mentor',
+        )
+        .map((m) => ({
+          id: m.id,
+          role: m.role,
+          content: m.content,
+          ts: Date.parse(m.created_at) || Date.now(),
+        }));
+      if (hydrated.length > 0) {
+        setMessages([WELCOME, ...hydrated]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [search]);
 
   // Persist history when not actively streaming (avoid spamming localStorage
   // on every token; we flush once the stream finishes).
@@ -186,6 +233,24 @@ export default function MentorChatPage() {
     setMessages([...conversation, mentorMsg]);
     setInput('');
     appendStoredMessage(readingId, toStored(userMsg));
+
+    // Wave 61.02 — lazily create a Supabase conversation on first send + persist
+    // the user message. We don't block the chat on this; failures degrade to
+    // localStorage-only mode (existing behaviour).
+    const persistUser = async () => {
+      try {
+        const convId = await ensureMentorConversation(conversationIdRef.current, {
+          title: text.slice(0, 120),
+          reading_session_id: readingId,
+        });
+        if (!convId) return;
+        conversationIdRef.current = convId;
+        await appendMentorMessage(convId, { role: 'user', content: text });
+      } catch {
+        /* swallow — chat continues regardless */
+      }
+    };
+    void persistUser();
     track('mentor_message_sent', {
       reading_id: readingId,
       message_count: conversation.filter(m => m.role === 'user').length,

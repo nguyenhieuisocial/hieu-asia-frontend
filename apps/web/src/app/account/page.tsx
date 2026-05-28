@@ -44,6 +44,8 @@ import { FeedHero } from '@/components/account/FeedHero';
 import { ActivityFeed } from '@/components/account/ActivityFeed';
 import { PinnedInsights } from '@/components/account/PinnedInsights';
 import { QuickActions } from '@/components/account/QuickActions';
+// Wave 61.02 — Mentor conversation persistence + resume.
+import { RecentConversations } from '@/components/account/RecentConversations';
 import { SurveyPrompt } from '@/components/survey/SurveyPrompt';
 import { SURVEY_IDS } from '@/lib/survey';
 // Wave 60.69 (vault 109 §4.3 + §4.5)
@@ -109,6 +111,7 @@ const SETTINGS_LINKS: readonly {
   { href: '/account/operating-manual', label: 'Sổ tay cá nhân', icon: BookOpen },
   { href: '/account/decisions', label: 'Quyết định', icon: FileText },
   { href: '/account/mentor', label: 'Mentor', icon: MessageCircle },
+  { href: '/account/conversations', label: 'Cuộc trò chuyện', icon: MessageCircle },
   { href: '/account/payments', label: 'Thanh toán', icon: CreditCard },
   { href: '/account/affiliate', label: 'Affiliate', icon: Network },
   { href: '/account/privacy', label: 'Quyền riêng tư', icon: ShieldCheck },
@@ -163,6 +166,7 @@ function AccountPageInner() {
         <section className="relative mx-auto max-w-3xl space-y-12 px-6 pb-20 pt-12 sm:pt-16">
           <FeedHero user={auth.user} />
           <ActivityFeed />
+          <RecentConversations />
           <PinnedInsights />
           <QuickActions />
 
