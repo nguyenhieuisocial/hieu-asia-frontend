@@ -98,23 +98,16 @@ export function LotusLottie({
     return () => mq.removeEventListener('change', onChange);
   }, []);
 
-  // Wave 60.88.B: silent HEAD probe. If the `.lottie` exists, flip `failed`
-  // back to false and the DotLottieReact player mounts on the next render.
-  // If absent (404 / network error), we stay on the CSS-SVG fallback with
-  // ZERO console.error noise (the dotlottie-react fetch path always logs).
-  React.useEffect(() => {
-    let cancelled = false;
-    fetch(src, { method: 'HEAD' })
-      .then((r) => {
-        if (!cancelled && r.ok) setFailed(false);
-      })
-      .catch(() => {
-        /* keep fallback */
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [src]);
+  // Wave 60.95.s: removed the HEAD probe. Chrome logs network 404s at the
+  // Network panel layer regardless of JS-side .catch() suppression — the
+  // probe was generating a Lighthouse "Browser errors logged to the console"
+  // hit every page load because `/lotus-spin.lottie` is intentionally not
+  // shipped (vault 60.88.B docs the asset as "founder-add when ready").
+  //
+  // The CSS-SVG fallback (`failed=true` default) is already the production
+  // path; the probe only mattered if someone shipped the .lottie later.
+  // Re-add this block (gated on a build-time check that the asset exists)
+  // if/when /public/lotus-spin.lottie is added.
 
   React.useEffect(() => {
     const el = containerRef.current;
