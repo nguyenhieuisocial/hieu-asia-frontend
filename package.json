@@ -40,7 +40,8 @@
       "multer": "^2.0.0",
       "postcss": "^8.5.10",
       "cookie": "^0.7.0",
-      "next-auth": "5.0.0-beta.31"
+      "next-auth": "5.0.0-beta.31",
+      "tmp": "^0.2.6"
     }
   }
 }
