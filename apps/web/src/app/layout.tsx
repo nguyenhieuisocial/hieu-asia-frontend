@@ -197,16 +197,16 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   // Wave 62.02 — theme-color updated to vault 138 "Như giấy cũ" palette.
-  // Wave 62.04b — colorScheme reverted to "dark" pending legacy gold sweep:
-  // Day mode default exposed 121 instances of legacy text-gold/bg-gold tokens
-  // across 15 homepage components rendering at <2.5:1 contrast on Paper bg.
-  // theme-color values STAY updated (Charcoal + Paper) so the browser chrome
-  // paints correctly when users opt into either mode via the toggle.
+  // Wave 62.05b — colorScheme RE-FLIPPED to "light" now that Wave 62.05a
+  // swept 121 legacy gold tokens to semantic primary. Marketing surfaces
+  // greet first-visit users on Paper "Giấy thấm"; experience surfaces
+  // (/reading, /dashboard, /tu-vi-*, /dai-van-hien-tai, /mentor) get
+  // force-dark via the ThemeProvider pathname check (Night "Khoảng lặng").
   themeColor: [
     { media: '(prefers-color-scheme: dark)', color: '#15110C' },
     { media: '(prefers-color-scheme: light)', color: '#F3ECDD' },
   ],
-  colorScheme: 'dark',
+  colorScheme: 'light',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
@@ -263,23 +263,24 @@ export default async function RootLayout({
           Bỏ qua đến nội dung chính
         </a>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          {/* Wave 62.04b — defaultTheme REVERTED from "light" back to "dark"
-              pending Wave 62.05a legacy gold token sweep. Wave 62.02 tried
-              to flip default to light (Paper "Giấy thấm" first-visit) but
-              /ultrareview caught 121 instances of `text-gold/bg-gold/
-              text-gold-soft/text-gold-dot` legacy tokens across 15 homepage
-              components rendering at 1.4-2.5:1 contrast on Paper bg (FAIL
-              WCAG AA). The token infrastructure (Paper/Charcoal/Ochre +
-              Bone + Gold-soft + 5 hành) STAYS upgraded so the sweep can
-              proceed without rework — only the *default* reverts so
-              first-visit users don't land on a contrast-broken page.
+          {/* Wave 62.05b — defaultTheme RE-FLIPPED "dark" → "light" now
+              that Wave 62.05a swept 121 legacy gold tokens to semantic
+              primary. First-visit users now greet hieu.asia on Paper
+              "Giấy thấm" (#F3ECDD bg) per vault 138 spec, with HeroV4
+              editorial split layout + 12-cung neo thị giác in the new
+              palette.
 
-              Wave 62.05a will sweep `text-gold*` → `text-primary` + `text-
-              foreground` semantic tokens (theme-aware via CSS vars), then
-              re-flip defaultTheme to "light" with confidence.
+              Experience routes (/reading, /dashboard, /tu-vi-*,
+              /dai-van-hien-tai, /mentor) force-dark via the ThemeProvider
+              pathname check — those surfaces render Night "Khoảng lặng"
+              (Charcoal × Bone × Gold-soft) regardless of user toggle,
+              honoring the editorial intent that the reading itself is a
+              dark, contemplative experience.
 
-              `enableSystem={false}` stays — light is opt-in via toggle. */}
-          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+              `enableSystem={false}` STAYS — OS preference doesn't
+              auto-flip the theme. Users who explicitly toggle to dark
+              via SiteNav stay dark across sessions. */}
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
             <QueryProvider>
               <LazyMotionProvider>
                 <Suspense fallback={null}>
