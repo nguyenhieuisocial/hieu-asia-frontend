@@ -8,10 +8,14 @@ import { WhyTrust } from '@/components/home/WhyTrust';
 import { HowToStart } from '@/components/home/HowToStart';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
-import { MarketingHero } from '@/components/marketing/MarketingHero';
+// Wave 62.04 — homepage swapped from MarketingHero → HeroV4 (split layout
+// + 12-cung neo thị giác + 2 entry points). MarketingHero stays the
+// canonical reusable hero for /pricing /features /about /methodology
+// /checkout. HomeHeroEyebrow + LotusLottie removed here — neither has a
+// home in the editorial hero (eyebrow text is inline, lotus motion
+// replaced by static 12-cung schematic per founder spec).
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
-import { HomeHeroEyebrow } from '@/components/home/HomeHeroEyebrow';
-import { LotusLottie } from '@/components/marketing/LotusLottie';
+import { HeroV4 } from '@/components/home/HeroV4';
 import { BentoLens } from '@/components/marketing/BentoLens';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { SampleOutputShowcase } from '@/components/marketing/SampleOutputShowcase';
@@ -385,57 +389,25 @@ export default function LandingPage() {
             up the above-the-fold real estate. The HeroBadgeScroll motion
             wrapper is dropped here too — without an eyebrow child it has
             nothing to animate. */}
-        {/* Wave 61.07 — `eyebrow` re-wired conditionally via PostHog flag
-            `home-hero-eyebrow` (Wave 60.95.w registry, default false). When
-            flag is off, HomeHeroEyebrow returns null and Wave 60.95.r state
-            is preserved. Founder sets rollout % in PostHog dashboard. */}
-        <MarketingHero
-          bg="painted"
-          eyebrow={<HomeHeroEyebrow />}
-          title={
-            // Wave 60.95.a P0 — Polypane P1-V1 fix: mobile 320px wrapped headline
-            // as 3 lines ("Hiểu mình. / Quyết / định mình."). Wrap second clause
-            // in `inline-block` span so `text-balance` treats it as one unit;
-            // result: clean 2-line break ("Hiểu mình." / "Quyết định mình.").
-            <>
-              Hiểu mình.{' '}
-              <span className="inline-block">
-                <u className="underline decoration-gold decoration-2 underline-offset-[6px]">
-                  Quyết định
-                </u>{' '}
-                mình
-                <span className="text-gold-dot drop-shadow-[0_0_16px_rgba(229,198,138,0.18)]">
-                  .
-                </span>
-              </span>
-            </>
-          }
-          subtitle="Bốn ống kính cổ học · một khoảng lặng · bạn vẫn chọn."
-          // Wave 60.95.a P0 — CTA unified to "Lập lá số miễn phí" per vault 130 §3
-          // P0 #3 (was "Bắt đầu luận giải"). Standardize across site → single
-          // primary action verb so users not confused between 5 CTA variants.
-          // Secondary CTA pointed to /sample-report (vault 130 P1-6 "show before
-          // pricing"). Old "Xem phương pháp" link still discoverable via nav.
-          primaryCta={{ label: 'Lập lá số miễn phí', href: '/onboarding' }}
-          secondaryCta={{ label: 'Xem báo cáo mẫu', href: '/sample-report' }}
-          // Wave 60.95.a P0 — split free/refund into 2 stacked lines per vault 130
-          // §3 P0 #5 + Polypane P1-V2 ("free + 14-day-refund cạnh nhau gây nhầm
-          // lẫn — miễn phí thì hoàn tiền cái gì?"). Now reads:
-          //   Line 1: free trial copy
-          //   Line 2: refund applies to paid tiers only
-          trustLine={[
-            '5 phút · miễn phí · không cần thẻ',
-            'Gói trả phí có hoàn tiền trong 14 ngày',
-          ]}
-          ornament="gold-ring"
-          // Wave 60.69 — Lottie lotus rotation intro (vault 109 §4.1). LotusLottie
-          // is a client component dynamically imported with ssr:false so its
-          // ~30 KB chunk is LAZY-only. Pre-rendered JSX here so the RSC boundary
-          // sees a child element value (not a Component reference) — same RSC
-          // pattern as Wave 60.65.P0a / 60.66.HF1.
-          lottie={<LotusLottie />}
-          watermark="Tử Vi"
-        />
+        {/* Wave 62.04 — HeroV4 ("Như giấy cũ" editorial hero). Split layout
+            with 12-cung schematic SVG as visual anchor, two entry points
+            for two-audience problem (modern AI vs traditional cổ học),
+            Newsreader italic accent on signature headline. Replaces
+            MarketingHero(bg="painted") which served the previous warm-dark
+            casino-adjacent direction. Wave 62 master plan in
+            docs/superpowers/plans/2026-05-28-wave-62-homepage-redesign.md.
+
+            Wave 61.07 PostHog flag `home-hero-eyebrow` (eyebrow A/B test)
+            is now part of HeroV4 internal eyebrow text — no external prop
+            needed. The eyebrow copy in HeroV4 reads
+            "Cẩm nang quyết định bằng AI" which aligns with the founder
+            signature copy and supersedes the old A/B variant.
+
+            Old `secondaryCta` "Xem báo cáo mẫu" deferred — the new hero
+            uses /tu-vi-2026 as secondary destination for the traditional
+            audience. Sample report still discoverable via inline CTA at
+            the BentoLens "Bốn ống kính" section closing line. */}
+        <HeroV4 />
 
         {/* Wave 60.66.P3 — IntentChips (vault 109 §3 Phase 3 + vault 108 §5).
             Perplexity-style intent capture below hero — 6 entry points each
