@@ -234,6 +234,77 @@ export async function fetchWebVitals(): Promise<WebVitalSampleRow[] | null> {
 }
 
 /* -------------------------------------------------------------------------
+ * Wave 61.10 — Sticky CTA conversion (closes the loop on 60.97.B-H rollout).
+ *
+ * The StickyMobileCta component (apps/web/src/components/marketing/
+ * StickyMobileCta.tsx) emits three events keyed by `track_id`:
+ *   - sticky_cta_shown      (first reveal per page-load)
+ *   - sticky_cta_clicked    (primary CTA tap)
+ *   - sticky_cta_dismissed  (user closed the bar)
+ *
+ * trackIds in use (Wave 60.97.B-H): home, bat-tu, mbti, sample-tu-vi,
+ * tu-vi-2026, tu-vi-tinh-yeu, tu-vi-nghe-nghiep, tu-vi-tai-chinh, pricing,
+ * tu-vi-hub, sample-report, methodology, community, features, about,
+ * lich-van-nien, tu-vi-hom-nay, hop-tuoi, thuoc-lo-ban, can-xuong,
+ * than-so-hoc, lo-trinh, timeline, monthly-planning, annual-planning,
+ * weekly-review, decision-simulator (27 routes).
+ *
+ * Founder sees per-route CTR (click / shown) + DR (dismiss / shown) so they
+ * can decide where the bar earns its keep vs. where it should be muted via
+ * a route-specific PostHog flag.
+ * --------------------------------------------------------------------- */
+
+export interface StickyCtaRow {
+  track_id: string;
+  shown: number;
+  clicked: number;
+  dismissed: number;
+  /** Click-through rate = clicked / shown (0-1). 0 when shown is 0. */
+  ctr: number;
+  /** Dismissal rate = dismissed / shown (0-1). */
+  dr: number;
+}
+
+/**
+ * Per-trackId sticky CTA funnel over the last 30 days. Joins three event
+ * counts in a single HogQL aggregate; UI sorts by shown DESC so the
+ * highest-traffic routes float to the top.
+ */
+export async function fetchStickyCtaFunnel(): Promise<StickyCtaRow[] | null> {
+  const sql = `
+    SELECT
+      properties.track_id AS track_id,
+      count(DISTINCT IF(event = 'sticky_cta_shown',     person_id, NULL)) AS shown,
+      count(DISTINCT IF(event = 'sticky_cta_clicked',   person_id, NULL)) AS clicked,
+      count(DISTINCT IF(event = 'sticky_cta_dismissed', person_id, NULL)) AS dismissed
+    FROM events
+    WHERE event IN ('sticky_cta_shown', 'sticky_cta_clicked', 'sticky_cta_dismissed')
+      AND timestamp > now() - INTERVAL 30 DAY
+    GROUP BY track_id
+    HAVING shown > 0
+    ORDER BY shown DESC
+    LIMIT 40
+  `;
+  const rows = await runHogQL(sql);
+  if (!rows) return null;
+  return rows
+    .map((r) => {
+      const shown = Number(r[1] ?? 0);
+      const clicked = Number(r[2] ?? 0);
+      const dismissed = Number(r[3] ?? 0);
+      return {
+        track_id: String(r[0] ?? ''),
+        shown,
+        clicked,
+        dismissed,
+        ctr: shown > 0 ? clicked / shown : 0,
+        dr: shown > 0 ? dismissed / shown : 0,
+      };
+    })
+    .filter((r) => r.track_id);
+}
+
+/* -------------------------------------------------------------------------
  * Wave 61.08 — Cohort retention + acquisition channel + funnel.
  * --------------------------------------------------------------------- */
 

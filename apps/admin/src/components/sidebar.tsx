@@ -39,6 +39,7 @@ import {
   Activity,
   Gauge,
   LineChart,
+  MousePointerClick,
   Menu,
   X,
   ChevronDown,
@@ -89,6 +90,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: '/customers', label: 'Khách hàng', Icon: User },
       { href: '/cohorts', label: 'Cohorts & Retention', Icon: BarChart3 },
+      { href: '/sticky-cta', label: 'Sticky CTA', Icon: MousePointerClick },
       { href: '/affiliates', label: 'Affiliate', Icon: HandCoins },
       { href: '/coupons', label: 'Coupons', Icon: Ticket },
       { href: '/transactions', label: 'Giao dịch', Icon: Receipt },
