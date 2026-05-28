@@ -11,7 +11,10 @@
  *   - `bottom-center`: centered horizontally — use when the FAB is the only
  *     CTA on the page (e.g. blank-state screens).
  *
- * Brand: pill-shape gold with cream-ink text (matches signin button geometry).
+ * Brand: pill-shape gold with `text-ink` body (theme-stable brand black,
+ * same hex in light + dark; matches signin button geometry). Wave 60.82:
+ * migrated from `text-warm-dark-50` → `text-ink` per vault [[93i - Light
+ * Mode Refactor Wave 60.82 Plan]] §1 edge case rule (ink stable on gold).
  * Press feedback comes from the global `button:active` rule in globals.css
  * (Wave 60.66.P5) — no per-component scale needed. `transition-all` covers
  * background-color hover; `prefers-reduced-motion` is respected globally.
@@ -51,7 +54,7 @@ export function Fab({
       href={href}
       data-track-id={trackId}
       className={cn(
-        'fixed z-30 inline-flex items-center gap-2 rounded-pill bg-gold px-6 text-warm-dark-50 shadow-lg shadow-gold/20',
+        'fixed z-30 inline-flex items-center gap-2 rounded-pill bg-gold px-6 text-ink shadow-lg shadow-gold/20',
         'h-14 font-heading text-sm font-semibold',
         'transition-all duration-300 ease-editorial hover:bg-gold-soft hover:shadow-gold/30',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background',

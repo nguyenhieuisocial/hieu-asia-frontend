@@ -16,9 +16,11 @@
  * `null` on first render and flip after `useEffect`. Skipping SSR matters
  * because the bottom-bar would otherwise flash for non-PWA users for a frame.
  *
- * Tokens: warm-dark-50/95 + gold/15 border match the editorial in-app palette
- * (see vault 109 §4 — Tier 2 patterns). Safe-area-inset-bottom respected so
- * the bar doesn't sit under the iOS home indicator.
+ * Tokens (Wave 60.82): theme-aware `bg-background/95` + `border-gold/15` so
+ * the bar adapts in light mode on product surfaces. Previously hardcoded
+ * `bg-warm-dark-50/95` + `text-cream-{500,100}` — vault [[93i - Light Mode
+ * Refactor Wave 60.82 Plan]] migration map. Safe-area-inset-bottom respected
+ * so the bar doesn't sit under the iOS home indicator.
  */
 
 import * as React from 'react';
@@ -93,7 +95,7 @@ export function BottomNavBar({ items }: BottomNavBarProps) {
       aria-label="Điều hướng chính"
       className={cn(
         'fixed inset-x-0 bottom-0 z-40',
-        'border-t border-gold/15 bg-warm-dark-50/95 backdrop-blur-sm',
+        'border-t border-gold/15 bg-background/95 backdrop-blur-sm',
         'pb-[env(safe-area-inset-bottom)]',
       )}
     >
@@ -127,7 +129,7 @@ export function BottomNavBar({ items }: BottomNavBarProps) {
                   'flex h-full flex-col items-center justify-center gap-0.5 px-2 text-xs transition-colors duration-200',
                   active
                     ? 'text-gold'
-                    : 'text-cream-500 hover:text-cream-100',
+                    : 'text-muted-foreground/70 hover:text-foreground/90',
                 )}
               >
                 <span className="grid place-items-center" aria-hidden="true">
