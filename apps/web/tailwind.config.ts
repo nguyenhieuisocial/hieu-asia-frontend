@@ -107,6 +107,72 @@ const config: Config = {
         ],
         'price-amount': ['40px', { lineHeight: '1.2' }],
         'tier-name': ['28px', { lineHeight: '1.3' }],
+
+        // Wave 62.03 — 9-bậc editorial type scale per "Như giấy cũ" spec.
+        // Use these for new editorial surfaces; legacy hero/section-display
+        // kept for back-compat. Naming reflects semantic role, not size.
+        //
+        // bậc · size · line-height · letter-spacing · usage
+        //   1 · 88px · 0.95 · -0.02em · "Display" — Hero only (Hiểu mình.)
+        //   2 · 64px · 1.0  · -0.02em · "H1" — Section opener
+        //   3 · 48px · 1.05 · -0.02em · "H2" — Block heading
+        //   4 · 32px · 1.15 · -0.01em · "H3" — Sub-block (alias section-display)
+        //   5 · 24px · 1.2  ·  0      · "H4" — Card / pricing tier name
+        //   6 · 19px · 1.45 ·  0      · "Lede" — Sub-deck paragraph
+        //   7 · 16px · 1.55 ·  0      · "Body" — Default (use text-base)
+        //   8 · 13px · 1.5  ·  0.02em · "Caption" — Meta / helper
+        //   9 · 11px · 1.4  ·  0.12em · "Mono" — Label (alias eyebrow)
+        //
+        // Display fluid via clamp on smaller breakpoints to prevent overflow
+        // on mobile. Body + Mono are intentionally fixed (don't fluid-shrink
+        // legibility-critical sizes).
+        'editorial-display': [
+          'clamp(3rem, 6vw, 5.5rem)', // 48→88px
+          { lineHeight: '0.95', letterSpacing: '-0.02em' },
+        ],
+        'editorial-h1': [
+          'clamp(2.5rem, 4.5vw, 4rem)', // 40→64px
+          { lineHeight: '1.0', letterSpacing: '-0.02em' },
+        ],
+        'editorial-h2': [
+          'clamp(2rem, 3.5vw, 3rem)', // 32→48px
+          { lineHeight: '1.05', letterSpacing: '-0.02em' },
+        ],
+        'editorial-h3': [
+          'clamp(1.625rem, 2.5vw, 2rem)', // 26→32px
+          { lineHeight: '1.15', letterSpacing: '-0.01em' },
+        ],
+        'editorial-h4': [
+          '1.5rem', // 24px
+          { lineHeight: '1.2', letterSpacing: '0' },
+        ],
+        'editorial-lede': [
+          'clamp(1.0625rem, 1.4vw, 1.1875rem)', // 17→19px (alias body-large)
+          { lineHeight: '1.45', letterSpacing: '0' },
+        ],
+        'editorial-caption': [
+          '13px',
+          { lineHeight: '1.5', letterSpacing: '0.02em' },
+        ],
+        'editorial-mono': [
+          '11px',
+          { lineHeight: '1.4', letterSpacing: '0.12em' },
+        ],
+      },
+      // Wave 62.03 — semantic spacing tokens for vertical rhythm.
+      // Spec: "Trang phải thở" — section gap 88px base, hero ↔ first
+      // section 128px. Use `py-section`, `mt-hero`, `gap-block` etc.
+      // These supplement Tailwind defaults (1=4px, 2=8px, ..., 32=128px).
+      // The named tokens make intent explicit at the call site:
+      //   - card     = 32px  (card internal padding)
+      //   - block    = 48px  (block heading → body)
+      //   - section  = 88px  (section vertical baseline)
+      //   - hero     = 128px (hero ↔ next section)
+      spacing: {
+        card: '2rem',     // 32
+        block: '3rem',    // 48
+        section: '5.5rem', // 88
+        hero: '8rem',     // 128
       },
       maxWidth: {
         // Wave 60.95.am — tighten marketing-tight to 1024px so body copy
