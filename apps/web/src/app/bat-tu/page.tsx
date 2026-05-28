@@ -89,7 +89,7 @@ const FAQ: readonly FaqItem[] = [
 
 export default function BatTuLandingPage() {
   return (
-    <div className="min-h-screen bg-warm-dark-50 text-cream-50">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -102,9 +102,9 @@ export default function BatTuLandingPage() {
 
       <main id="main-content" className="relative pt-16">
         {/* Hero */}
-        <section className="relative overflow-hidden bg-warm-dark-50 py-16 md:py-20 lg:py-24">
+        <section className="relative overflow-hidden bg-background py-16 md:py-20 lg:py-24">
           <div className="relative mx-auto max-w-marketing px-6 lg:px-12">
-            <nav aria-label="Breadcrumb" className="mb-6 text-xs text-cream-500">
+            <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground/70">
               <Link href="/" className="hover:text-gold">
                 Trang chủ
               </Link>
@@ -117,11 +117,11 @@ export default function BatTuLandingPage() {
               Bát Tự · Tứ Trụ · 八字
             </p>
 
-            <h1 className="text-balance font-sans text-hero-display font-bold tracking-tight text-cream-50">
+            <h1 className="text-balance font-sans text-hero-display font-bold tracking-tight text-foreground">
               Bát Tự — Tám chữ <ItalicSpan goldDotAfter>định mệnh</ItalicSpan>
             </h1>
 
-            <p className="mt-8 max-w-marketing-text text-pretty text-lg leading-relaxed text-cream-300">
+            <p className="mt-8 max-w-marketing-text text-pretty text-lg leading-relaxed text-muted-foreground">
               Bát Tự đọc bản đồ ngũ hành từ tám chữ Thiên Can + Địa Chi của năm-tháng-ngày-giờ
               sinh. hieu.asia kết hợp engine deterministic tính 4 trụ + thập thần với AI Mentor
               đối chiếu cùng Tử Vi, MBTI và Thần Số Học — để bạn ra quyết định, không phải để
@@ -131,17 +131,17 @@ export default function BatTuLandingPage() {
             <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
               <Link
                 href="/onboarding?intent=ngu-hanh"
-                className="inline-flex items-center justify-center rounded-pill bg-gold px-7 py-4 font-sans text-sm font-medium text-warm-dark-50 transition-all duration-300 ease-editorial hover:bg-gold-soft"
+                className="inline-flex items-center justify-center rounded-pill bg-gold px-7 py-4 font-sans text-sm font-medium text-ink transition-all duration-300 ease-editorial hover:bg-gold-soft"
               >
                 Xem Bát Tự của tôi
               </Link>
               <Link
                 href="/methodology/bat-tu"
-                className="inline-flex items-center justify-center rounded-pill border border-warm-dark-300 px-7 py-4 font-sans text-sm font-medium text-cream-50 transition-all duration-300 ease-editorial hover:border-warm-dark-500 hover:bg-warm-dark-200"
+                className="inline-flex items-center justify-center rounded-pill border border-border px-7 py-4 font-sans text-sm font-medium text-foreground transition-all duration-300 ease-editorial hover:border-border/80 hover:bg-card"
               >
                 Phương pháp luận
               </Link>
-              <span className="font-mono text-xs uppercase tracking-wider text-cream-500 sm:ml-2">
+              <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground/70 sm:ml-2">
                 Engine beta · đối chiếu với Tử Vi
               </span>
             </div>
@@ -149,16 +149,16 @@ export default function BatTuLandingPage() {
         </section>
 
         {/* What it is */}
-        <section className="relative bg-warm-dark-100 py-16 md:py-20">
+        <section className="relative bg-muted/40 py-16 md:py-20">
           <div className="mx-auto max-w-marketing-tight px-6">
             <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
               — Bát Tự là gì
             </p>
-            <h2 className="text-balance font-sans text-section-display font-bold tracking-tight text-cream-50">
+            <h2 className="text-balance font-sans text-section-display font-bold tracking-tight text-foreground">
               Tám chữ, bốn trụ, năm <ItalicSpan>nguyên tố</ItalicSpan>
             </h2>
 
-            <div className="mt-8 grid gap-6 text-base leading-relaxed text-cream-300 md:grid-cols-2">
+            <div className="mt-8 grid gap-6 text-base leading-relaxed text-muted-foreground md:grid-cols-2">
               <p>
                 Bát Tự (八字, nghĩa đen "tám chữ") lấy năm-tháng-ngày-giờ sinh, mỗi mốc một
                 cặp Thiên Can + Địa Chi — tổng cộng 4 trụ × 2 chữ = 8 chữ. Mỗi chữ mang một
@@ -178,12 +178,12 @@ export default function BatTuLandingPage() {
               {PILLARS.map((p) => (
                 <li
                   key={p.name}
-                  className="flex gap-3 rounded-card-editorial border border-warm-dark-300 bg-warm-dark-200 p-5"
+                  className="flex gap-3 rounded-card-editorial border border-border bg-card p-5"
                 >
                   <Columns3 className="mt-0.5 size-5 shrink-0 text-gold-soft" strokeWidth={1.5} aria-hidden />
                   <div>
-                    <p className="font-sans text-base font-semibold text-cream-50">{p.name}</p>
-                    <p className="mt-1 font-sans text-sm leading-relaxed text-cream-300">{p.role}</p>
+                    <p className="font-sans text-base font-semibold text-foreground">{p.name}</p>
+                    <p className="mt-1 font-sans text-sm leading-relaxed text-muted-foreground">{p.role}</p>
                   </div>
                 </li>
               ))}
@@ -192,42 +192,42 @@ export default function BatTuLandingPage() {
         </section>
 
         {/* How hieu.asia analyzes it */}
-        <section className="relative bg-warm-dark-50 py-16 md:py-20">
+        <section className="relative bg-background py-16 md:py-20">
           <div className="mx-auto max-w-marketing-tight px-6">
             <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
               — Cách hieu.asia đọc
             </p>
-            <h2 className="text-balance font-sans text-section-display font-bold tracking-tight text-cream-50">
+            <h2 className="text-balance font-sans text-section-display font-bold tracking-tight text-foreground">
               Một lá số, <ItalicSpan>bốn ống kính</ItalicSpan>
             </h2>
 
             <div className="mt-8 grid gap-6 md:grid-cols-3">
-              <div className="rounded-card-editorial border border-warm-dark-300 bg-warm-dark-200 p-6">
+              <div className="rounded-card-editorial border border-border bg-card p-6">
                 <Flame className="size-6 text-gold-soft" strokeWidth={1.5} aria-hidden />
-                <h3 className="mt-4 font-sans text-lg font-semibold text-cream-50">
+                <h3 className="mt-4 font-sans text-lg font-semibold text-foreground">
                   Engine tính 4 trụ
                 </h3>
-                <p className="mt-2 font-sans text-sm leading-relaxed text-cream-300">
+                <p className="mt-2 font-sans text-sm leading-relaxed text-muted-foreground">
                   Deterministic — Can-Chi, thập thần, ngũ hành mệnh nạp âm, tiết khí. Cùng dữ
                   liệu vào luôn cho cùng kết quả.
                 </p>
               </div>
-              <div className="rounded-card-editorial border border-warm-dark-300 bg-warm-dark-200 p-6">
+              <div className="rounded-card-editorial border border-border bg-card p-6">
                 <Sparkles className="size-6 text-gold-soft" strokeWidth={1.5} aria-hidden />
-                <h3 className="mt-4 font-sans text-lg font-semibold text-cream-50">
+                <h3 className="mt-4 font-sans text-lg font-semibold text-foreground">
                   AI đối chiếu chéo
                 </h3>
-                <p className="mt-2 font-sans text-sm leading-relaxed text-cream-300">
+                <p className="mt-2 font-sans text-sm leading-relaxed text-muted-foreground">
                   Nếu Tử Vi cho thấy chủ đề Tài Bạch và Bát Tự cho thấy thiếu Chính Tài →
                   confidence tăng. Không có thì giảm.
                 </p>
               </div>
-              <div className="rounded-card-editorial border border-gold/40 bg-warm-dark-200 p-6">
+              <div className="rounded-card-editorial border border-gold/40 bg-card p-6">
                 <ArrowRight className="size-6 text-gold" strokeWidth={1.5} aria-hidden />
-                <h3 className="mt-4 font-sans text-lg font-semibold text-cream-50">
+                <h3 className="mt-4 font-sans text-lg font-semibold text-foreground">
                   Bạn quyết định
                 </h3>
-                <p className="mt-2 font-sans text-sm leading-relaxed text-cream-300">
+                <p className="mt-2 font-sans text-sm leading-relaxed text-muted-foreground">
                   Báo cáo kết thúc bằng kế hoạch hành động + câu hỏi tự phản tư, không phải
                   lời tiên tri.
                 </p>
@@ -237,12 +237,12 @@ export default function BatTuLandingPage() {
         </section>
 
         {/* Sample insight */}
-        <section className="relative bg-warm-dark-100 py-16 md:py-20">
+        <section className="relative bg-muted/40 py-16 md:py-20">
           <div className="mx-auto max-w-marketing-tight px-6">
             <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
               — Một đoạn đọc Bát Tự nghe thế nào
             </p>
-            <blockquote className="mt-6 border-l-2 border-gold/50 pl-6 font-marketing-display text-xl leading-relaxed text-cream-50 md:text-2xl">
+            <blockquote className="mt-6 border-l-2 border-gold/50 pl-6 font-marketing-display text-xl leading-relaxed text-foreground md:text-2xl">
               <p>
                 "Nhật can Giáp Mộc sinh tháng Thân — Kim vượng khắc Mộc. Bạn cần Thuỷ để hoá
                 Kim sinh Mộc; điều đó đọc thành xu hướng tìm cố vấn, học vấn, môi trường ôn
@@ -253,7 +253,7 @@ export default function BatTuLandingPage() {
                 căng với cấp trên (khắc Quan). Mẫu này hợp công việc chuyên môn hơn quản lý
                 trực tiếp."
               </p>
-              <footer className="mt-6 font-sans text-sm font-normal text-cream-500">
+              <footer className="mt-6 font-sans text-sm font-normal text-muted-foreground/70">
                 — Trích mẫu báo cáo Bát Tự, đối chiếu cùng Tử Vi cung Quan Lộc + Tài Bạch.
               </footer>
             </blockquote>
@@ -261,25 +261,25 @@ export default function BatTuLandingPage() {
         </section>
 
         {/* CTA */}
-        <section className="relative bg-warm-dark-50 py-16 md:py-20">
+        <section className="relative bg-background py-16 md:py-20">
           <div className="mx-auto max-w-marketing-tight px-6 text-center">
-            <h2 className="text-balance font-sans text-section-display font-bold tracking-tight text-cream-50">
+            <h2 className="text-balance font-sans text-section-display font-bold tracking-tight text-foreground">
               Đọc <ItalicSpan goldDotAfter>tám chữ</ItalicSpan> của bạn
             </h2>
-            <p className="mx-auto mt-6 max-w-marketing-text text-pretty text-base leading-relaxed text-cream-300">
+            <p className="mx-auto mt-6 max-w-marketing-text text-pretty text-base leading-relaxed text-muted-foreground">
               Onboarding 5 phút. Engine tính 4 trụ, AI đối chiếu cùng Tử Vi, MBTI và Thần Số
               Học — bạn đọc lá số đầy đủ trước khi xem luận giải.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link
                 href="/onboarding?intent=ngu-hanh"
-                className="inline-flex items-center justify-center rounded-pill bg-gold px-7 py-4 font-sans text-sm font-medium text-warm-dark-50 transition-all duration-300 ease-editorial hover:bg-gold-soft"
+                className="inline-flex items-center justify-center rounded-pill bg-gold px-7 py-4 font-sans text-sm font-medium text-ink transition-all duration-300 ease-editorial hover:bg-gold-soft"
               >
                 Bắt đầu — miễn phí cốt lõi
               </Link>
               <Link
                 href="/sample-report"
-                className="inline-flex items-center text-sm text-cream-500 hover:text-gold"
+                className="inline-flex items-center text-sm text-muted-foreground/70 hover:text-gold"
               >
                 Xem mẫu báo cáo
                 <ArrowRight className="ml-1 size-4" aria-hidden />

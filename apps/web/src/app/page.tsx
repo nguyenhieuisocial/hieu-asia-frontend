@@ -368,7 +368,7 @@ export default function LandingPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(SOFTWARE_APP_JSONLD) }}
       />
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-warm-dark-50 text-cream-50 pt-16">
+      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
         {/* 1. Hero — Wave 60.66.P2 Option E (vault 109 §3 Phase 2)
             bg="painted" enables PaintedCanvas (SVG noise + radial gold + linear
             warm-dark fade) + GlassPanel CTA overlay. Other heroes (/pricing,
@@ -454,7 +454,7 @@ export default function LandingPage() {
           role="note"
           className="mx-auto mt-4 flex max-w-3xl items-center justify-center px-6"
         >
-          <p className="rounded-full border border-gold/20 bg-warm-dark-100/60 px-4 py-1.5 text-center text-[11px] leading-snug text-cream-500 backdrop-blur-sm sm:text-xs">
+          <p className="rounded-full border border-gold/20 bg-muted/60 px-4 py-1.5 text-center text-[11px] leading-snug text-muted-foreground/70 backdrop-blur-sm sm:text-xs">
             Kết quả mang tính tham khảo — không thay thế tư vấn y tế, pháp lý hay tài chính.
           </p>
         </div>
@@ -522,12 +522,12 @@ export default function LandingPage() {
         />
 
         {/* 2. WhyTrust — existing 3-pillar, wrap in warm-dark-100 shell */}
-        <div className="bg-warm-dark-100">
+        <div className="bg-muted/40">
           <WhyTrust />
         </div>
 
         {/* 3. HowToStart — existing, warm-dark-50 tonal shift */}
-        <div className="bg-warm-dark-50">
+        <div className="bg-background">
           <HowToStart />
         </div>
 
@@ -717,12 +717,12 @@ export default function LandingPage() {
         />
 
         {/* 7. FaqAccordion — existing 6 Q, warm-dark-100 */}
-        <div className="bg-warm-dark-100">
+        <div className="bg-muted/40">
           <FaqAccordion items={HOME_FAQ} id="faq" />
         </div>
 
         {/* 8. NewsletterSignup — existing, warm-dark-50 */}
-        <div className="bg-warm-dark-50">
+        <div className="bg-background">
           <NewsletterSignup id="newsletter" />
         </div>
       </main>

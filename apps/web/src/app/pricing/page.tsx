@@ -8,7 +8,7 @@
  *   - VN content-typed FAQ with explicit refund answer (canonical policy:
  *     "14 ngày cho mọi gói trả phí; Mentor tính từ kỳ thanh toán đầu tiên").
  *   - All raw `rgba(184,146,61,...)` strings removed (R1 finding).
- *   - `bg-warm-dark-50` on <main> to anchor Option D background tone.
+ *   - `bg-background` on <main> to anchor Option D background tone.
  *
  * Old Wave 52-A 5-tier taxonomy (free/premium/monthly/yearly/lifetime) collapsed
  * to the 3-anchor model (free/premium/mentor); deep-link `?tier=` and `?session=`
@@ -87,7 +87,7 @@ export default function PricingPage() {
   return (
     <>
       <SiteNav />
-      <main id="main-content" className="bg-warm-dark-50">
+      <main id="main-content" className="bg-background">
         <MarketingHero
           eyebrow="GÓI THÀNH VIÊN · 2026"
           title={
@@ -206,7 +206,7 @@ export default function PricingPage() {
             zone; placing it AFTER conversion-decision-time reframes it as
             reinforcement ("you saw the prices, here's why it's safe") rather
             than pre-CTA filler. */}
-        <section className="bg-warm-dark-50 pt-4 pb-12">
+        <section className="bg-background pt-4 pb-12">
           <div className="mx-auto max-w-marketing px-6">
             <TrustStrip />
           </div>

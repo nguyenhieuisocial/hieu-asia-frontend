@@ -96,7 +96,7 @@ export default function AboutPage() {
             20→28 mobile / 28→32 desktop, centered vertically with text, added
             ring-2 ring-gold/30 (Option D brand). Block centered on row so it
             doesn't read as orphan against full-width section. */}
-        <section className="relative bg-warm-dark-50 pb-20">
+        <section className="relative bg-background pb-20">
           <div className="mx-auto max-w-3xl px-6">
             <div className="flex flex-col items-center gap-5 text-center sm:flex-row sm:items-center sm:gap-7 sm:text-left">
               <div
@@ -106,10 +106,10 @@ export default function AboutPage() {
                 H
               </div>
               <div className="flex-1">
-                <p className="font-heading text-lg font-semibold text-cream-50">
+                <p className="font-heading text-lg font-semibold text-foreground">
                   Hiệu
                 </p>
-                <p className="mt-1 text-sm text-cream-500">
+                <p className="mt-1 text-sm text-muted-foreground/70">
                   Một engineer + Tử Vi practitioner ở TP.HCM
                 </p>
               </div>
@@ -131,7 +131,7 @@ export default function AboutPage() {
               </h2>
             </div>
             {/* Wave 60.83 — Mission/Vision cards migrated to MarketingCard
-                primitive (Wave 60.79.T2). Was: rounded-2xl border-border bg-warm-dark-200 p-7.
+                primitive (Wave 60.79.T2). Was: rounded-2xl border-border bg-card p-7.
                 Primitive gives standard p-6 + h-full grid alignment + hover:border-gold/40
                 for free, consistent with HowToStart/WhyTrust cards. */}
             <div className="grid gap-10 md:grid-cols-2">

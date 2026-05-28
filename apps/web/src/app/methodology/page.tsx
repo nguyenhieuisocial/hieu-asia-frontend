@@ -461,7 +461,7 @@ function StatusBadge({
 function Chapter1Content() {
   return (
     <div className="space-y-12">
-      <p className="font-sans text-lg leading-relaxed text-cream-300">
+      <p className="font-sans text-lg leading-relaxed text-muted-foreground">
         5 nguyên tắc định hình mọi quyết định sản phẩm của hieu.asia — từ cách
         engine tính toán đến cách AI diễn giải và cách dữ liệu được lưu trữ.
       </p>
@@ -479,11 +479,11 @@ function Chapter1Content() {
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <Icon className="h-4 w-4 text-gold/80" aria-hidden />
-                      <h3 className="font-sans text-base font-semibold text-cream-50 sm:text-lg">
+                      <h3 className="font-sans text-base font-semibold text-foreground sm:text-lg">
                         {p.title}
                       </h3>
                     </div>
-                    <p className="mt-1.5 font-sans text-sm leading-relaxed text-cream-300">
+                    <p className="mt-1.5 font-sans text-sm leading-relaxed text-muted-foreground">
                       {p.body}
                     </p>
                   </div>
@@ -495,10 +495,10 @@ function Chapter1Content() {
       </ol>
 
       <div>
-        <h3 className="font-sans text-xl font-bold text-cream-50 sm:text-2xl">
+        <h3 className="font-sans text-xl font-bold text-foreground sm:text-2xl">
           Quy trình tạo một báo cáo
         </h3>
-        <p className="mt-2 font-sans text-sm text-cream-500">
+        <p className="mt-2 font-sans text-sm text-muted-foreground/70">
           6 tầng pipeline — từ input của user tới quyết định cuối cùng.
         </p>
 
@@ -507,17 +507,17 @@ function Chapter1Content() {
             const Icon = step.icon;
             return (
               <li key={step.label} className="relative">
-                <div className="flex h-full flex-col rounded-xl border border-warm-dark-300 bg-warm-dark-100 p-5">
+                <div className="flex h-full flex-col rounded-xl border border-border bg-muted/40 p-5">
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-[11px] text-gold-soft">
                       0{idx + 1}
                     </span>
                     <Icon className="h-4 w-4 text-gold/80" aria-hidden />
-                    <h4 className="font-sans text-sm font-semibold text-cream-50">
+                    <h4 className="font-sans text-sm font-semibold text-foreground">
                       {step.label}
                     </h4>
                   </div>
-                  <p className="mt-2 font-sans text-sm leading-relaxed text-cream-300">
+                  <p className="mt-2 font-sans text-sm leading-relaxed text-muted-foreground">
                     {step.desc}
                   </p>
                 </div>
@@ -533,7 +533,7 @@ function Chapter1Content() {
 function Chapter2Content() {
   return (
     <div className="space-y-12">
-      <p className="font-sans text-lg leading-relaxed text-cream-300">
+      <p className="font-sans text-lg leading-relaxed text-muted-foreground">
         Ranh giới rõ ràng giữa diễn giải và phán định. AI được phép đọc structured
         chart; AI không được phép tự tạo dữ kiện lá số hay phán định mệnh.
       </p>
@@ -547,7 +547,7 @@ function Chapter2Content() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-2.5 font-sans text-sm leading-relaxed text-cream-300">
+            <ul className="space-y-2.5 font-sans text-sm leading-relaxed text-muted-foreground">
               {AI_CAN.map((item) => (
                 <li key={item} className="flex gap-2">
                   <CheckCircle2
@@ -569,7 +569,7 @@ function Chapter2Content() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-2.5 font-sans text-sm leading-relaxed text-cream-300">
+            <ul className="space-y-2.5 font-sans text-sm leading-relaxed text-muted-foreground">
               {AI_CANNOT.map((item) => (
                 <li key={item} className="flex gap-2">
                   <XCircle
@@ -585,10 +585,10 @@ function Chapter2Content() {
       </div>
 
       <div>
-        <h3 className="font-sans text-xl font-bold text-cream-50">
+        <h3 className="font-sans text-xl font-bold text-foreground">
           Dữ liệu dùng để luận
         </h3>
-        <p className="mt-2 font-sans text-sm text-cream-500">
+        <p className="mt-2 font-sans text-sm text-muted-foreground/70">
           Mỗi phương pháp có engine riêng, AI chỉ đọc output structured.
         </p>
 
@@ -601,10 +601,10 @@ function Chapter2Content() {
           {DATA_ROWS.map((row) => (
             <div
               key={`m-${row.method}`}
-              className="rounded-xl border border-warm-dark-300 bg-warm-dark-100 p-4"
+              className="rounded-xl border border-border bg-muted/40 p-4"
             >
               <div className="flex items-center justify-between gap-3">
-                <p className="font-medium text-cream-50">{row.method}</p>
+                <p className="font-medium text-foreground">{row.method}</p>
                 <StatusBadge status={row.status} />
               </div>
               <dl className="mt-3 space-y-2 text-sm">
@@ -612,29 +612,29 @@ function Chapter2Content() {
                   <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-soft">
                     Dữ liệu dùng
                   </dt>
-                  <dd className="mt-0.5 text-cream-300">{row.data}</dd>
+                  <dd className="mt-0.5 text-muted-foreground">{row.data}</dd>
                 </div>
                 <div>
                   <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-soft">
                     Engine tính?
                   </dt>
-                  <dd className="mt-0.5 text-cream-300">{row.engine}</dd>
+                  <dd className="mt-0.5 text-muted-foreground">{row.engine}</dd>
                 </div>
                 <div>
                   <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-soft">
                     AI làm gì
                   </dt>
-                  <dd className="mt-0.5 text-cream-300">{row.ai}</dd>
+                  <dd className="mt-0.5 text-muted-foreground">{row.ai}</dd>
                 </div>
               </dl>
             </div>
           ))}
         </div>
         {/* md+: original table */}
-        <div className="mt-4 hidden overflow-x-auto rounded-xl border border-warm-dark-300 bg-warm-dark-100 md:block">
+        <div className="mt-4 hidden overflow-x-auto rounded-xl border border-border bg-muted/40 md:block">
           <table className="w-full min-w-[720px] text-sm">
             <thead>
-              <tr className="border-b border-warm-dark-300 text-left font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
+              <tr className="border-b border-border text-left font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
                 <th className="px-4 py-3 font-medium">Phương pháp</th>
                 <th className="px-4 py-3 font-medium">Dữ liệu dùng</th>
                 <th className="px-4 py-3 font-medium">Engine tính?</th>
@@ -646,14 +646,14 @@ function Chapter2Content() {
               {DATA_ROWS.map((row) => (
                 <tr
                   key={row.method}
-                  className="border-b border-warm-dark-300 last:border-b-0"
+                  className="border-b border-border last:border-b-0"
                 >
-                  <td className="px-4 py-3 font-medium text-cream-50">
+                  <td className="px-4 py-3 font-medium text-foreground">
                     {row.method}
                   </td>
-                  <td className="px-4 py-3 text-cream-300">{row.data}</td>
-                  <td className="px-4 py-3 text-cream-300">{row.engine}</td>
-                  <td className="px-4 py-3 text-cream-300">{row.ai}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{row.data}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{row.engine}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{row.ai}</td>
                   <td className="px-4 py-3">
                     <StatusBadge status={row.status} />
                   </td>
@@ -670,13 +670,13 @@ function Chapter2Content() {
 function Chapter3Content() {
   return (
     <div className="space-y-12">
-      <p className="font-sans text-lg leading-relaxed text-cream-300">
+      <p className="font-sans text-lg leading-relaxed text-muted-foreground">
         Mỗi report có confidence score. Khi thiếu dữ liệu, hieu.asia không
         &quot;đoán cứng&quot; — hệ thống nói rõ độ không chắc.
       </p>
 
       <div>
-        <h3 className="font-sans text-xl font-bold text-cream-50">
+        <h3 className="font-sans text-xl font-bold text-foreground">
           Mức tin cậy của kết luận
         </h3>
 
@@ -696,7 +696,7 @@ function Chapter3Content() {
                 <div className="font-sans text-base font-semibold">
                   {c.level}
                 </div>
-                <p className="mt-2 font-sans text-sm leading-relaxed text-cream-300">
+                <p className="mt-2 font-sans text-sm leading-relaxed text-muted-foreground">
                   {c.desc}
                 </p>
               </div>
@@ -704,11 +704,11 @@ function Chapter3Content() {
           })}
         </div>
 
-        <div className="mt-4 rounded-xl border border-warm-dark-300 bg-warm-dark-100 p-5">
+        <div className="mt-4 rounded-xl border border-border bg-muted/40 p-5">
           <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
             Ví dụ
           </p>
-          <p className="mt-2 font-sans text-sm italic leading-relaxed text-cream-300 sm:text-base">
+          <p className="mt-2 font-sans text-sm italic leading-relaxed text-muted-foreground sm:text-base">
             &quot;Mức tin cậy: Trung bình. Lý do: bạn nhập giờ sinh khoảng 23:30,
             gần ranh giờ Tý. Một số cung có thể thay đổi nếu giờ sinh lệch 20-30
             phút.&quot;
@@ -717,20 +717,20 @@ function Chapter3Content() {
       </div>
 
       <div>
-        <h3 className="font-sans text-xl font-bold text-cream-50">
+        <h3 className="font-sans text-xl font-bold text-foreground">
           Vì sao kết luận này?
         </h3>
-        <p className="mt-2 font-sans text-sm text-cream-500">
+        <p className="mt-2 font-sans text-sm text-muted-foreground/70">
           Mỗi kết luận quan trọng đều có thể bung ra phần căn cứ.
         </p>
 
-        <Card className="mt-4 border-warm-dark-300 bg-warm-dark-100">
+        <Card className="mt-4 border-border bg-muted/40">
           <CardContent className="space-y-5 p-5 sm:p-6">
             <div>
               <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
                 Claim
               </p>
-              <p className="mt-2 font-sans text-base text-cream-50 sm:text-lg">
+              <p className="mt-2 font-sans text-base text-foreground sm:text-lg">
                 &quot;Bạn nên kiểm chứng cơ hội mới trong 60 ngày trước khi nghỉ
                 việc.&quot;
               </p>
@@ -740,7 +740,7 @@ function Chapter3Content() {
               <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-jade-300/80">
                 Dựa trên
               </p>
-              <ul className="mt-2 space-y-1.5 font-sans text-sm leading-relaxed text-cream-300">
+              <ul className="mt-2 space-y-1.5 font-sans text-sm leading-relaxed text-muted-foreground">
                 <li className="flex gap-2">
                   <ChevronRight
                     className="mt-0.5 h-4 w-4 shrink-0 text-jade-300/70"
@@ -778,7 +778,7 @@ function Chapter3Content() {
               <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-rose-300/80">
                 Không kết luận
               </p>
-              <ul className="mt-2 space-y-1.5 font-sans text-sm leading-relaxed text-cream-300">
+              <ul className="mt-2 space-y-1.5 font-sans text-sm leading-relaxed text-muted-foreground">
                 <li className="flex gap-2">
                   <XCircle
                     className="mt-0.5 h-4 w-4 shrink-0 text-rose-400/80"
@@ -800,7 +800,7 @@ function Chapter3Content() {
               <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
                 Bước kiểm chứng
               </p>
-              <ul className="mt-2 space-y-1.5 font-sans text-sm leading-relaxed text-cream-300">
+              <ul className="mt-2 space-y-1.5 font-sans text-sm leading-relaxed text-muted-foreground">
                 <li className="flex gap-2">
                   <Sparkles
                     className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
@@ -829,10 +829,10 @@ function Chapter3Content() {
       </div>
 
       <div>
-        <h3 className="font-sans text-xl font-bold text-cream-50">
+        <h3 className="font-sans text-xl font-bold text-foreground">
           Kiểm chứng thuật toán
         </h3>
-        <p className="mt-2 font-sans text-sm text-cream-500">
+        <p className="mt-2 font-sans text-sm text-muted-foreground/70">
           Snapshot test suite tại lần verify gần nhất ({LAST_VERIFIED}).
         </p>
 
@@ -843,11 +843,11 @@ function Chapter3Content() {
           {VALIDATION_ROWS.map((row) => (
             <div
               key={`vm-${row.label}`}
-              className="rounded-xl border border-warm-dark-300 bg-warm-dark-100 p-4"
+              className="rounded-xl border border-border bg-muted/40 p-4"
             >
-              <p className="text-sm text-cream-300">{row.label}</p>
+              <p className="text-sm text-muted-foreground">{row.label}</p>
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-                <p className="font-mono text-sm text-cream-500">{row.result}</p>
+                <p className="font-mono text-sm text-muted-foreground/70">{row.result}</p>
                 {row.status === 'pass' ? (
                   <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade-300">
                     <CheckCircle2 className="h-3 w-3" aria-hidden />
@@ -861,7 +861,7 @@ function Chapter3Content() {
                 )}
               </div>
               {row.status === 'partial' && (
-                <p className="mt-2 text-[11px] text-cream-500">
+                <p className="mt-2 text-[11px] text-muted-foreground/70">
                   2 case đang review do dị biệt trường phái
                 </p>
               )}
@@ -869,10 +869,10 @@ function Chapter3Content() {
           ))}
         </div>
         {/* md+: original table */}
-        <div className="mt-4 hidden overflow-x-auto rounded-xl border border-warm-dark-300 bg-warm-dark-100 md:block">
+        <div className="mt-4 hidden overflow-x-auto rounded-xl border border-border bg-muted/40 md:block">
           <table className="w-full min-w-[560px] text-sm">
             <thead>
-              <tr className="border-b border-warm-dark-300 text-left font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
+              <tr className="border-b border-border text-left font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
                 <th className="px-4 py-3 font-medium">Hạng mục</th>
                 <th className="px-4 py-3 font-medium">Kết quả</th>
                 <th className="px-4 py-3 font-medium">Trạng thái</th>
@@ -882,10 +882,10 @@ function Chapter3Content() {
               {VALIDATION_ROWS.map((row) => (
                 <tr
                   key={row.label}
-                  className="border-b border-warm-dark-300 last:border-b-0"
+                  className="border-b border-border last:border-b-0"
                 >
-                  <td className="px-4 py-3 text-cream-300">{row.label}</td>
-                  <td className="px-4 py-3 font-mono text-cream-500">
+                  <td className="px-4 py-3 text-muted-foreground">{row.label}</td>
+                  <td className="px-4 py-3 font-mono text-muted-foreground/70">
                     {row.result}
                   </td>
                   <td className="px-4 py-3">
@@ -907,7 +907,7 @@ function Chapter3Content() {
           </table>
         </div>
 
-        <p className="mt-4 font-sans text-sm leading-relaxed text-cream-500">
+        <p className="mt-4 font-sans text-sm leading-relaxed text-muted-foreground/70">
           Golden dataset đang mở rộng từ 32 lên 100 lá số ground-truth. Mỗi
           release engine chạy lại regression test.
         </p>
@@ -919,28 +919,28 @@ function Chapter3Content() {
 function Chapter4Content() {
   return (
     <div className="space-y-12">
-      <p className="font-sans text-lg leading-relaxed text-cream-300">
+      <p className="font-sans text-lg leading-relaxed text-muted-foreground">
         Human-in-the-loop ở 4 vai trò review, kích hoạt theo 4 trigger. Dữ liệu
         cá nhân được tối thiểu hoá và có thể xoá bất cứ lúc nào.
       </p>
 
       <div>
-        <h3 className="font-sans text-xl font-bold text-cream-50">
+        <h3 className="font-sans text-xl font-bold text-foreground">
           Human review
         </h3>
-        <p className="mt-2 font-sans text-sm text-cream-500">
+        <p className="mt-2 font-sans text-sm text-muted-foreground/70">
           4 vai trò review, 4 trigger trigger, SLA xử lý phản hồi.
         </p>
 
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
-          <Card className="border-warm-dark-300 bg-warm-dark-100">
+          <Card className="border-border bg-muted/40">
             <CardHeader>
-              <CardTitle className="text-base text-cream-50">
+              <CardTitle className="text-base text-foreground">
                 Vai trò review
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2.5 font-sans text-sm leading-relaxed text-cream-300">
+              <ul className="space-y-2.5 font-sans text-sm leading-relaxed text-muted-foreground">
                 {REVIEW_ROLES.map((r) => (
                   <li key={r.role} className="flex gap-2">
                     <Eye
@@ -948,7 +948,7 @@ function Chapter4Content() {
                       aria-hidden
                     />
                     <span>
-                      <span className="font-medium text-cream-50">
+                      <span className="font-medium text-foreground">
                         {r.role}:
                       </span>{' '}
                       {r.desc}
@@ -959,14 +959,14 @@ function Chapter4Content() {
             </CardContent>
           </Card>
 
-          <Card className="border-warm-dark-300 bg-warm-dark-100">
+          <Card className="border-border bg-muted/40">
             <CardHeader>
-              <CardTitle className="text-base text-cream-50">
+              <CardTitle className="text-base text-foreground">
                 Khi nào review được kích hoạt
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2.5 font-sans text-sm leading-relaxed text-cream-300">
+              <ul className="space-y-2.5 font-sans text-sm leading-relaxed text-muted-foreground">
                 {REVIEW_TRIGGERS.map((t) => (
                   <li key={t} className="flex gap-2">
                     <ChevronRight
@@ -985,7 +985,7 @@ function Chapter4Content() {
           <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
             SLA
           </p>
-          <p className="mt-2 font-sans text-sm leading-relaxed text-cream-300">
+          <p className="mt-2 font-sans text-sm leading-relaxed text-muted-foreground">
             Xác nhận tiếp nhận trong 72h. Xử lý hoàn tất trong tối đa 30 ngày
             làm việc (yêu cầu xoá/xuất dữ liệu).
           </p>
@@ -993,14 +993,14 @@ function Chapter4Content() {
       </div>
 
       <div>
-        <h3 className="font-sans text-xl font-bold text-cream-50">
+        <h3 className="font-sans text-xl font-bold text-foreground">
           Privacy-first methodology
         </h3>
-        <p className="mt-2 font-sans text-sm text-cream-500">
+        <p className="mt-2 font-sans text-sm text-muted-foreground/70">
           Tóm tắt cách hieu.asia xử lý dữ liệu cá nhân.
         </p>
 
-        <ul className="mt-4 space-y-2.5 font-sans text-sm leading-relaxed text-cream-300">
+        <ul className="mt-4 space-y-2.5 font-sans text-sm leading-relaxed text-muted-foreground">
           {PRIVACY_BULLETS.map((b) => (
             <li key={b} className="flex gap-2">
               <Lock
@@ -1012,7 +1012,7 @@ function Chapter4Content() {
           ))}
         </ul>
 
-        <p className="mt-5 font-sans text-sm text-cream-500">
+        <p className="mt-5 font-sans text-sm text-muted-foreground/70">
           Bảng sub-processor đầy đủ và quyền user xem tại{' '}
           <Link
             href="/privacy"
@@ -1030,28 +1030,28 @@ function Chapter4Content() {
 function Chapter5Content() {
   return (
     <div className="space-y-12">
-      <p className="font-sans text-lg leading-relaxed text-cream-300">
+      <p className="font-sans text-lg leading-relaxed text-muted-foreground">
         Quality rubric 8 tiêu chí — mỗi tiêu chí kèm câu hỏi xác minh. Bên dưới
         là 6 câu hỏi thường gặp nhất về phương pháp luận hieu.asia.
       </p>
 
       <div>
-        <h3 className="font-sans text-xl font-bold text-cream-50">
+        <h3 className="font-sans text-xl font-bold text-foreground">
           Một luận giải tốt cần 8 tiêu chí
         </h3>
 
         <ol className="mt-4 grid gap-3 sm:grid-cols-2">
           {RUBRIC.map((r) => (
             <li key={r.n}>
-              <div className="flex h-full gap-3 rounded-xl border border-warm-dark-300 bg-warm-dark-100 p-4">
+              <div className="flex h-full gap-3 rounded-xl border border-border bg-muted/40 p-4">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 font-mono text-xs font-bold text-gold">
                   {r.n}
                 </span>
                 <div className="min-w-0">
-                  <p className="font-sans text-sm font-semibold text-cream-50">
+                  <p className="font-sans text-sm font-semibold text-foreground">
                     {r.name}
                   </p>
-                  <p className="mt-1 font-sans text-sm leading-relaxed text-cream-300">
+                  <p className="mt-1 font-sans text-sm leading-relaxed text-muted-foreground">
                     {r.q}
                   </p>
                 </div>
@@ -1062,17 +1062,17 @@ function Chapter5Content() {
       </div>
 
       <div>
-        <h3 className="font-sans text-xl font-bold text-cream-50">
+        <h3 className="font-sans text-xl font-bold text-foreground">
           Câu hỏi thường gặp
         </h3>
 
         <Accordion type="single" collapsible className="mt-4 w-full">
           {FAQ.map((f, i) => (
             <AccordionItem key={f.q} value={`faq-${i}`}>
-              <AccordionTrigger className="text-left font-sans text-base font-medium text-cream-50">
+              <AccordionTrigger className="text-left font-sans text-base font-medium text-foreground">
                 {f.q}
               </AccordionTrigger>
-              <AccordionContent className="font-sans leading-relaxed text-cream-300">
+              <AccordionContent className="font-sans leading-relaxed text-muted-foreground">
                 {f.a}
               </AccordionContent>
             </AccordionItem>
@@ -1085,7 +1085,7 @@ function Chapter5Content() {
 
 export default function MethodologyPage() {
   return (
-    <div className="min-h-screen bg-warm-dark-50 text-cream-50">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -1109,13 +1109,13 @@ export default function MethodologyPage() {
         {/* Wave 60.79.T1 (vault 112 P0-10): tighten pt-32 → pt-24 + md:py-24 →
             md:py-20 so the 200+px tag-to-body gap shrinks. pt accounts for
             fixed SiteNav (h-16 = 64px) + breathing room. */}
-        <section className="bg-warm-dark-50 px-6 py-12 pt-24 md:py-20">
+        <section className="bg-background px-6 py-12 pt-24 md:py-20">
           <div className="mx-auto max-w-marketing-tight">
             <p className="mb-6 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
               <span className="mr-2 inline-block h-px w-6 bg-gold align-middle" />
               PHƯƠNG PHÁP · 2026
             </p>
-            <h1 className="font-sans text-hero-display font-bold tracking-tight text-cream-50">
+            <h1 className="font-sans text-hero-display font-bold tracking-tight text-foreground">
               Engine tính gì, AI luận gì,{' '}
               <u className="underline decoration-gold decoration-2 underline-offset-[6px]">
                 bạn quyết định
@@ -1123,7 +1123,7 @@ export default function MethodologyPage() {
               gì
               <span className="text-gold-dot">.</span>
             </h1>
-            <p className="mt-8 max-w-marketing-text text-pretty font-sans text-lg leading-relaxed text-cream-300">
+            <p className="mt-8 max-w-marketing-text text-pretty font-sans text-lg leading-relaxed text-muted-foreground">
               Năm chương ngắn: triết lý, giới hạn của AI, cách chúng tôi kiểm
               chứng, quy trình + privacy, và rubric chất lượng.
             </p>
@@ -1131,13 +1131,13 @@ export default function MethodologyPage() {
             {/* Breadcrumb + trust pills under hero */}
             <nav
               aria-label="Breadcrumb"
-              className="mt-10 font-mono text-eyebrow uppercase tracking-[0.12em] text-cream-500"
+              className="mt-10 font-mono text-eyebrow uppercase tracking-[0.12em] text-muted-foreground/70"
             >
               <Link href="/" className="hover:text-gold-soft">
                 Trang chủ
               </Link>
               <span className="mx-2">/</span>
-              <span className="text-cream-300">Phương pháp luận</span>
+              <span className="text-muted-foreground">Phương pháp luận</span>
               <span className="mx-2">·</span>
               <span>LAST VERIFIED {LAST_VERIFIED}</span>
             </nav>
@@ -1153,7 +1153,7 @@ export default function MethodologyPage() {
               ].map((pill) => (
                 <span
                   key={pill}
-                  className="inline-flex items-center gap-1.5 rounded-pill border border-warm-dark-300 bg-warm-dark-100 px-3 py-1 text-cream-300"
+                  className="inline-flex items-center gap-1.5 rounded-pill border border-border bg-muted/40 px-3 py-1 text-muted-foreground"
                 >
                   {pill}
                 </span>
@@ -1205,13 +1205,13 @@ export default function MethodologyPage() {
         {/* ─────────────────────────────────────────────────────────────
            Related — always-visible footer CTA grid + contact callout.
            ───────────────────────────────────────────────────────────── */}
-        <section className="relative bg-warm-dark-100">
+        <section className="relative bg-muted/40">
           <div className="mx-auto max-w-marketing px-6 pb-20 pt-16 lg:px-12">
             <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
               <span className="mr-2 inline-block h-px w-6 bg-gold align-middle" />
               ĐỌC TIẾP
             </p>
-            <h2 className="mt-4 font-sans text-section-display font-bold tracking-tight text-cream-50">
+            <h2 className="mt-4 font-sans text-section-display font-bold tracking-tight text-foreground">
               Tài liệu chi tiết hơn về từng phần
             </h2>
 
@@ -1222,17 +1222,17 @@ export default function MethodologyPage() {
                   <Link
                     key={r.href}
                     href={r.href}
-                    className="group flex items-center gap-3 rounded-card-editorial border border-warm-dark-300 bg-warm-dark-100 p-4 transition-colors duration-300 ease-editorial hover:border-gold/30 hover:bg-warm-dark-200"
+                    className="group flex items-center gap-3 rounded-card-editorial border border-border bg-muted/40 p-4 transition-colors duration-300 ease-editorial hover:border-gold/30 hover:bg-card"
                   >
                     <Icon
                       className="h-5 w-5 shrink-0 text-gold/80"
                       aria-hidden
                     />
-                    <span className="flex-1 font-sans text-sm font-semibold text-cream-50">
+                    <span className="flex-1 font-sans text-sm font-semibold text-foreground">
                       {r.title}
                     </span>
                     <ArrowRight
-                      className="h-4 w-4 shrink-0 text-cream-500 transition-transform group-hover:translate-x-1 group-hover:text-gold"
+                      className="h-4 w-4 shrink-0 text-muted-foreground/70 transition-transform group-hover:translate-x-1 group-hover:text-gold"
                       aria-hidden
                     />
                   </Link>
@@ -1240,7 +1240,7 @@ export default function MethodologyPage() {
               })}
             </div>
 
-            <div className="mt-10 rounded-card-editorial border border-warm-dark-300 bg-warm-dark-100 p-5 font-sans text-sm leading-relaxed text-cream-300">
+            <div className="mt-10 rounded-card-editorial border border-border bg-muted/40 p-5 font-sans text-sm leading-relaxed text-muted-foreground">
               <p className="flex items-start gap-2">
                 <AlertTriangle
                   className="mt-0.5 h-4 w-4 shrink-0 text-amber-300"

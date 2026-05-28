@@ -110,7 +110,7 @@ const WEBPAGE_JSONLD = {
 
 export default function MbtiHubPage() {
   return (
-    <div className="min-h-screen bg-warm-dark-50 text-cream-50">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <script
         type="application/ld+json"
@@ -123,18 +123,18 @@ export default function MbtiHubPage() {
 
       <main id="main-content" className="relative">
         {/* Hero */}
-        <section className="bg-warm-dark-50 px-6 py-12 pt-24 md:py-20">
+        <section className="bg-background px-6 py-12 pt-24 md:py-20">
           <div className="mx-auto max-w-marketing-tight">
             <p className="mb-6 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
               <span className="mr-2 inline-block h-px w-6 bg-gold align-middle" />
               MBTI · TÂM LÝ HỌC
             </p>
-            <h1 className="font-sans text-hero-display font-bold tracking-tight text-cream-50">
+            <h1 className="font-sans text-hero-display font-bold tracking-tight text-foreground">
               MBTI — 16 kiểu, 4 trục,{' '}
               <ItalicSpan>một bản đồ tâm trí</ItalicSpan>
               <span className="text-gold-dot">.</span>
             </h1>
-            <p className="mt-8 max-w-marketing-text text-pretty font-sans text-lg leading-relaxed text-cream-300">
+            <p className="mt-8 max-w-marketing-text text-pretty font-sans text-lg leading-relaxed text-muted-foreground">
               MBTI tại hieu.asia không phải bài test để dán nhãn bạn. Đây là một ngôn
               ngữ để <ItalicSpan>gọi tên</ItalicSpan> thiên hướng nội tại — cách bạn nạp năng lượng, xử lý
               thông tin, ra quyết định, tổ chức đời sống — để cuộc đối thoại với chính
@@ -143,13 +143,13 @@ export default function MbtiHubPage() {
 
             <nav
               aria-label="Breadcrumb"
-              className="mt-10 font-mono text-eyebrow uppercase tracking-[0.12em] text-cream-500"
+              className="mt-10 font-mono text-eyebrow uppercase tracking-[0.12em] text-muted-foreground/70"
             >
               <Link href="/" className="hover:text-gold-soft">
                 Trang chủ
               </Link>
               <span className="mx-2">/</span>
-              <span className="text-cream-300">MBTI</span>
+              <span className="text-muted-foreground">MBTI</span>
             </nav>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -164,15 +164,15 @@ export default function MbtiHubPage() {
         </section>
 
         {/* What it is — 4 axes */}
-        <section className="bg-warm-dark-50 px-6 py-12 md:py-16">
+        <section className="bg-background px-6 py-12 md:py-16">
           <div className="mx-auto max-w-marketing-tight">
             <div className="mb-6 flex items-center gap-3">
               <Compass className="h-5 w-5 text-gold" aria-hidden />
-              <h2 className="font-sans text-section-display font-bold tracking-tight text-cream-50">
+              <h2 className="font-sans text-section-display font-bold tracking-tight text-foreground">
                 4 trục nhị phân, 16 kiểu kết hợp
               </h2>
             </div>
-            <p className="max-w-marketing-text font-sans text-base leading-relaxed text-cream-300">
+            <p className="max-w-marketing-text font-sans text-base leading-relaxed text-muted-foreground">
               MBTI (Myers-Briggs Type Indicator) phân tâm trí theo bốn trục đối lập.
               Mỗi trục cho một chữ — bốn chữ ghép lại thành một trong 16 kiểu (INFJ,
               ENTP, ISFP…). Không có kiểu &quot;tốt&quot; hay &quot;xấu&quot; — chỉ có
@@ -183,14 +183,14 @@ export default function MbtiHubPage() {
               {AXES.map((axis) => (
                 <div
                   key={axis.id}
-                  className="rounded-xl border border-warm-dark-300 bg-warm-dark-100 p-5"
+                  className="rounded-xl border border-border bg-muted/40 p-5"
                 >
                   <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-gold-soft">
                     <span>{axis.left}</span>
-                    <span className="text-cream-500">·</span>
+                    <span className="text-muted-foreground/70">·</span>
                     <span>{axis.right}</span>
                   </div>
-                  <p className="mt-3 font-sans text-sm leading-relaxed text-cream-300">
+                  <p className="mt-3 font-sans text-sm leading-relaxed text-muted-foreground">
                     {axis.pitch}
                   </p>
                 </div>
@@ -200,15 +200,15 @@ export default function MbtiHubPage() {
         </section>
 
         {/* How hieu.asia uses it */}
-        <section className="bg-warm-dark-100 px-6 py-12 md:py-16">
+        <section className="bg-muted/40 px-6 py-12 md:py-16">
           <div className="mx-auto max-w-marketing-tight">
             <div className="mb-6 flex items-center gap-3">
               <Brain className="h-5 w-5 text-gold" aria-hidden />
-              <h2 className="font-sans text-section-display font-bold tracking-tight text-cream-50">
+              <h2 className="font-sans text-section-display font-bold tracking-tight text-foreground">
                 hieu.asia <ItalicSpan>kết hợp</ItalicSpan> MBTI với 3 ống kính khác
               </h2>
             </div>
-            <p className="max-w-marketing-text font-sans text-base leading-relaxed text-cream-300">
+            <p className="max-w-marketing-text font-sans text-base leading-relaxed text-muted-foreground">
               MBTI một mình là một chân dung tâm lý hiện đại. Khi đặt cạnh Tử Vi, Bát
               Tự, Thần Số Học — mỗi ống kính trả lời một câu hỏi khác về cùng một con
               người. AI Mentor đối chiếu cả bốn để gợi ý hành động cụ thể, chứ không
@@ -219,12 +219,12 @@ export default function MbtiHubPage() {
               {LENS_INTEGRATION.map((lens) => (
                 <div
                   key={lens.title}
-                  className="rounded-xl border border-warm-dark-300 bg-warm-dark-50 p-5"
+                  className="rounded-xl border border-border bg-background p-5"
                 >
-                  <h3 className="font-sans text-base font-semibold text-cream-50">
+                  <h3 className="font-sans text-base font-semibold text-foreground">
                     {lens.title}
                   </h3>
-                  <p className="mt-2 font-sans text-sm leading-relaxed text-cream-300">
+                  <p className="mt-2 font-sans text-sm leading-relaxed text-muted-foreground">
                     {lens.body}
                   </p>
                 </div>
@@ -234,31 +234,31 @@ export default function MbtiHubPage() {
         </section>
 
         {/* MBTI vs Eastern systems — honest framing */}
-        <section className="bg-warm-dark-50 px-6 py-12 md:py-16">
+        <section className="bg-background px-6 py-12 md:py-16">
           <div className="mx-auto max-w-marketing-tight">
             <div className="mb-6 flex items-center gap-3">
               <Sparkles className="h-5 w-5 text-gold" aria-hidden />
-              <h2 className="font-sans text-section-display font-bold tracking-tight text-cream-50">
+              <h2 className="font-sans text-section-display font-bold tracking-tight text-foreground">
                 MBTI và chiêm tinh Đông phương — khác chỗ nào?
               </h2>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="rounded-xl border border-warm-dark-300 bg-warm-dark-100 p-5">
+              <div className="rounded-xl border border-border bg-muted/40 p-5">
                 <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
                   MBTI
                 </p>
-                <p className="mt-3 font-sans text-sm leading-relaxed text-cream-300">
+                <p className="mt-3 font-sans text-sm leading-relaxed text-muted-foreground">
                   Là <ItalicSpan>tự thuật tâm lý</ItalicSpan> — bạn trả lời câu hỏi, hệ thống suy ra kiểu.
                   Phản ánh cách bạn <em>nghĩ</em> về mình ở thời điểm trả lời. Không
                   phải định mệnh, có thể trôi theo giai đoạn đời.
                 </p>
               </div>
-              <div className="rounded-xl border border-warm-dark-300 bg-warm-dark-100 p-5">
+              <div className="rounded-xl border border-border bg-muted/40 p-5">
                 <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
                   Tử Vi · Bát Tự
                 </p>
-                <p className="mt-3 font-sans text-sm leading-relaxed text-cream-300">
+                <p className="mt-3 font-sans text-sm leading-relaxed text-muted-foreground">
                   Dựa trên <ItalicSpan>thời điểm sinh</ItalicSpan> — engine deterministic lập lá số từ ngày
                   giờ sinh, không thay đổi theo tâm trạng. Cho chiều sâu lịch sử và
                   bối cảnh văn hoá mà MBTI không có.
@@ -266,7 +266,7 @@ export default function MbtiHubPage() {
               </div>
             </div>
 
-            <p className="mt-6 max-w-marketing-text font-sans text-sm italic leading-relaxed text-cream-500">
+            <p className="mt-6 max-w-marketing-text font-sans text-sm italic leading-relaxed text-muted-foreground/70">
               Cả hai đều là ống kính — không phải đáp án. hieu.asia ghép chúng lại để
               bạn nhìn mình từ nhiều phía, rồi tự quyết định.
             </p>
@@ -274,11 +274,11 @@ export default function MbtiHubPage() {
         </section>
 
         {/* FAQ */}
-        <section className="bg-warm-dark-100 px-6 py-12 md:py-16">
+        <section className="bg-muted/40 px-6 py-12 md:py-16">
           <div className="mx-auto max-w-marketing-tight">
             <div className="mb-6 flex items-center gap-3">
               <BookOpen className="h-5 w-5 text-gold" aria-hidden />
-              <h2 className="font-sans text-section-display font-bold tracking-tight text-cream-50">
+              <h2 className="font-sans text-section-display font-bold tracking-tight text-foreground">
                 Câu hỏi thường gặp
               </h2>
             </div>
@@ -286,10 +286,10 @@ export default function MbtiHubPage() {
             <Accordion type="single" collapsible className="w-full">
               {FAQ.map((f, i) => (
                 <AccordionItem key={f.q} value={`mbti-faq-${i}`}>
-                  <AccordionTrigger className="text-left font-sans text-base font-medium text-cream-50">
+                  <AccordionTrigger className="text-left font-sans text-base font-medium text-foreground">
                     {f.q}
                   </AccordionTrigger>
-                  <AccordionContent className="font-sans leading-relaxed text-cream-300">
+                  <AccordionContent className="font-sans leading-relaxed text-muted-foreground">
                     {f.a}
                   </AccordionContent>
                 </AccordionItem>
@@ -305,7 +305,7 @@ export default function MbtiHubPage() {
               </Button>
               <Link
                 href="/methodology"
-                className="inline-flex items-center text-sm text-cream-500 hover:text-gold-soft"
+                className="inline-flex items-center text-sm text-muted-foreground/70 hover:text-gold-soft"
               >
                 Cách AI luận giải
                 <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
