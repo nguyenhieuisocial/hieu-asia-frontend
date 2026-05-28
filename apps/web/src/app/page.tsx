@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { Sparkles, Calendar, Hash, Brain, User, Briefcase, HelpCircle, Heart } from 'lucide-react';
+import { Calendar, User, Briefcase, HelpCircle, Heart } from 'lucide-react';
+import { TuViGlyph, BatTuGlyph, ThanSoGlyph, MbtiGlyph } from '@/components/marketing/DisciplineGlyphs';
 import { PRICING } from '@/lib/pricing';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
@@ -558,10 +559,11 @@ export default function LandingPage() {
               id: 'tuvi',
               name: 'TỬ VI',
               subname: 'CUNG MỆNH',
-              // Wave 60.65.P0 — pre-render icon as JSX element instead of passing
-              // the Lucide forwardRef component reference. See BentoLens.tsx
-              // header for full rationale (Sentry HIEU-ASIA-WORKER-A).
-              icon: <Sparkles className="text-gold size-9" strokeWidth={1.25} />,
+              // Wave 60.95.n P2 — custom discipline glyph (vault 130 #20)
+              // replaces generic Lucide Sparkles. See DisciplineGlyphs.tsx
+              // for design rationale per discipline. Pre-rendered JSX per
+              // Wave 60.65.P0 convention (Sentry HIEU-ASIA-WORKER-A).
+              icon: <TuViGlyph className="text-gold size-9" />,
               action: 'Đọc',
               title: 'cung mệnh',
               body: 'Bản đồ sao thời điểm sinh — không phải lời tiên tri, mà là bản đồ ưu thế và bóng tối tự nhiên.',
@@ -572,7 +574,7 @@ export default function LandingPage() {
               id: 'battu',
               name: 'BÁT TỰ',
               subname: 'NGŨ HÀNH',
-              icon: <Calendar className="text-gold size-9" strokeWidth={1.25} />,
+              icon: <BatTuGlyph className="text-gold size-9" />,
               action: 'Cân',
               title: 'ngũ hành',
               body: 'Tám chữ năm-tháng-ngày-giờ — đo nội lực và cân bằng nguyên tố.',
@@ -582,7 +584,7 @@ export default function LandingPage() {
               id: 'thanso',
               name: 'THẦN SỐ',
               subname: 'NUMEROLOGY',
-              icon: <Hash className="text-gold size-9" strokeWidth={1.25} />,
+              icon: <ThanSoGlyph className="text-gold size-9" />,
               action: 'Đếm',
               title: 'con số đời',
               body: 'Numerology phương Tây — đường đời, ngày sinh, tên gọi cộng dồn thành mật mã hành trình.',
@@ -592,7 +594,7 @@ export default function LandingPage() {
               id: 'mbti',
               name: 'MBTI',
               subname: 'TÂM LÝ HỌC',
-              icon: <Brain className="text-gold size-9" strokeWidth={1.25} />,
+              icon: <MbtiGlyph className="text-gold size-9" />,
               action: 'Gọi tên',
               title: 'tâm trí',
               body: '16 kiểu Myers-Briggs — không nhãn dán, mà là ngôn ngữ để nhận diện thiên hướng nội tại.',
