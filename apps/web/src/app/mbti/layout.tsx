@@ -9,7 +9,7 @@ import type { Metadata } from 'next';
  * `images` here or social-card previews render blank.
  */
 export const metadata: Metadata = {
-  title: 'MBTI — 16 kiểu tâm trí · hieu.asia',
+  title: 'MBTI — 16 kiểu tâm trí',
   description:
     'MBTI tại hieu.asia: 16 kiểu tâm trí trên 4 trục E/I · N/S · T/F · J/P — không nhãn dán, mà là ngôn ngữ tự nhận diện thiên hướng. Kết hợp với Tử Vi, Bát Tự, Thần Số Học qua AI Mentor.',
   alternates: { canonical: 'https://hieu.asia/mbti' },

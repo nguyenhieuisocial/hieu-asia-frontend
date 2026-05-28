@@ -2,7 +2,7 @@ import { MarketingHero } from '@/components/marketing/MarketingHero';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata = {
-  title: 'Checkout Premium · hieu.asia',
+  title: 'Checkout Premium',
   description: 'Hoàn tất đăng ký gói Premium hieu.asia',
 };
 

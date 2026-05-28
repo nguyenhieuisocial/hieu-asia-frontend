@@ -18,7 +18,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 
 export const metadata: Metadata = {
-  title: 'Lưu trữ Newsletter · hieu.asia',
+  title: 'Lưu trữ Newsletter',
   description:
     'Đọc các bài tuần đã xuất bản — tự nhận thức, ra quyết định, ngôn ngữ cổ học hiện đại.',
   alternates: { canonical: 'https://hieu.asia/newsletter/archive' },

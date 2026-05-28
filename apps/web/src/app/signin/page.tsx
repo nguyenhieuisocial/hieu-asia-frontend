@@ -22,7 +22,7 @@ import { PreviewReadingCard } from '@/components/marketing/PreviewReadingCard';
 import { SignInForm } from './SignInForm';
 
 export const metadata: Metadata = {
-  title: 'Đăng nhập · hieu.asia',
+  title: 'Đăng nhập',
   description:
     'Đăng nhập để xem lá số Tử Vi của bạn. Magic link hoặc OAuth (Google / Facebook / Apple).',
   alternates: { canonical: 'https://hieu.asia/signin' },

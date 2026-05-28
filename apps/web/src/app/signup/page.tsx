@@ -18,7 +18,7 @@ import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Đăng ký · hieu.asia',
+  title: 'Đăng ký',
   description: 'Tạo tài khoản miễn phí qua email hoặc OAuth (Google / Facebook / Apple).',
   robots: { index: false, follow: true },
 };

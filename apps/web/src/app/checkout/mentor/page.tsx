@@ -2,7 +2,7 @@ import { MarketingHero } from '@/components/marketing/MarketingHero';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata = {
-  title: 'Checkout Mentor · hieu.asia',
+  title: 'Checkout Mentor',
   description: 'Hoàn tất đăng ký gói Mentor 1:1 hieu.asia',
 };
 

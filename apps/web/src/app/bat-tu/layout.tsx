@@ -13,7 +13,7 @@ import type { Metadata } from 'next';
  * Beta-engine page is still indexed (matches /methodology/bat-tu policy).
  */
 export const metadata: Metadata = {
-  title: 'Bát Tự — Tám chữ định mệnh · hieu.asia',
+  title: 'Bát Tự — Tám chữ định mệnh',
   description:
     'Bát Tự (Tứ Trụ) đọc bản đồ ngũ hành từ 8 chữ năm-tháng-ngày-giờ sinh. hieu.asia kết hợp engine deterministic với AI để đối chiếu Bát Tự + Tử Vi + MBTI + Thần Số Học.',
   alternates: { canonical: 'https://hieu.asia/bat-tu' },
