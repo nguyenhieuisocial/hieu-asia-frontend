@@ -374,12 +374,12 @@ export default function SampleReportPage() {
         <section className="relative mx-auto max-w-3xl px-6 pb-20">
           <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent p-6 sm:p-8">
             <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
-              Sẵn sàng nhận Cẩm Nang của bạn?
+              Báo cáo thật của bạn sẽ khác — và sâu hơn.
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-foreground/85 sm:text-base">
-              Mẫu trên là persona giả định. Báo cáo thật của bạn sẽ cá nhân hoá theo
-              ngày–giờ sinh, MBTI (nếu có), bối cảnh đời sống. Hoàn tiền 100% trong 24
-              giờ nếu báo cáo chưa được tạo.
+              Mẫu trên là persona giả định. Bản của bạn cá nhân hoá theo
+              ngày–giờ sinh, MBTI (nếu có), và bối cảnh đời sống hiện tại. Hoàn tiền 100%
+              trong 24 giờ nếu báo cáo chưa được tạo.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <Button asChild size="lg"><Link href="/onboarding">
