@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { Calendar, User, Briefcase, HelpCircle, Heart } from 'lucide-react';
-import { TuViGlyph, BatTuGlyph, ThanSoGlyph, MbtiGlyph } from '@/components/marketing/DisciplineGlyphs';
 import { PRICING } from '@/lib/pricing';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
@@ -14,9 +13,17 @@ import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 // /checkout. HomeHeroEyebrow + LotusLottie removed here — neither has a
 // home in the editorial hero (eyebrow text is inline, lotus motion
 // replaced by static 12-cung schematic per founder spec).
+// Wave 62.08 — BentoLens swapped to EditorialList for the "Bốn ống kính"
+// section per founder vault 138 spec "đa số section 4 thẻ vuông có thể
+// chuyển sang editorial list dọc với số thứ tự". BentoLens component stays
+// available for other pages. DisciplineGlyph imports dropped here — the
+// new EditorialList doesn't surface icons (editorial restraint per spec).
+// Wave 62.07 — SocialProofQuiet added between Pricing + FAQ as anti-
+// testimonial "khoảng lặng" section (4 anonymous decision excerpts in
+// founder voice, no stars/faces).
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { HeroV4 } from '@/components/home/HeroV4';
-import { BentoLens } from '@/components/marketing/BentoLens';
+import { EditorialList } from '@/components/marketing/EditorialList';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { SampleOutputShowcase } from '@/components/marketing/SampleOutputShowcase';
 import { MentorSampleInteractive } from '@/components/marketing/MentorSampleInteractive';
@@ -24,6 +31,7 @@ import { ScanRow } from '@/components/marketing/ScanRow';
 import { IntentChips } from '@/components/marketing/IntentChips';
 import { PullQuote } from '@/components/marketing/PullQuote';
 import { SectionDivider } from '@/components/marketing/SectionDivider';
+import { SocialProofQuiet } from '@/components/marketing/SocialProofQuiet';
 
 export const metadata: Metadata = {
   // Homepage title already contains the brand → bypass the layout
@@ -510,68 +518,49 @@ export default function LandingPage() {
           <HowToStart />
         </div>
 
-        {/* 4. BentoLens — replaces MethodChooser + FreeTools (R3 diff #3).
-            Wave 60.95.q — switched layout="heterogeneous" → "uniform". The
-            heterogeneous variant gave the Tử Vi hero tile (8x4) far more
-            vertical space than the content needed at PC viewports — visible
-            empty dark space below the body copy. Uniform 2×2 with
-            auto-rows-fr (Wave 60.79.T2) keeps the 4 lenses equal-height +
-            scans cleaner on both PC (2×2) and mobile (single column). */}
-        <BentoLens
-          layout="uniform"
+        {/* Wave 62.08 — EditorialList replaces BentoLens 2×2 grid here.
+            Founder vault 138 spec: "Đa số section '4 thẻ vuông' có thể
+            chuyển sang editorial list dọc với số thứ tự — tận dụng được
+            italic display, tạo nhịp đọc rõ, giảm cảm giác feature dump."
+            Each lens now reads as one chapter in a sequence, with mono
+            ordinal number + italic display heading + body + inline editorial
+            CTA. Removes the 4 implicit "click anywhere" CTAs from the old
+            grid tiles (Wave 62.06 conversion architecture). */}
+        <EditorialList
           eyebrow="BỐN ỐNG KÍNH"
           title={
             <>
-              Một con người, <em className="italic text-primary/80">soi</em> từ bốn góc
-              <span className="text-primary">.</span>
+              Một con người, <em className="italic text-primary">soi</em> từ bốn góc.
             </>
           }
-          bg="warm-dark-100"
-          lenses={[
+          items={[
             {
-              id: 'tuvi',
-              name: 'TỬ VI',
-              subname: 'CUNG MỆNH',
-              // Wave 60.95.n P2 — custom discipline glyph (vault 130 #20)
-              // replaces generic Lucide Sparkles. See DisciplineGlyphs.tsx
-              // for design rationale per discipline. Pre-rendered JSX per
-              // Wave 60.65.P0 convention (Sentry HIEU-ASIA-WORKER-A).
-              icon: <TuViGlyph className="text-primary size-9" />,
-              action: 'Đọc',
-              title: 'cung mệnh',
-              body: 'Bản đồ sao thời điểm sinh — không phải lời tiên tri, mà là bản đồ ưu thế và bóng tối tự nhiên.',
-              watermark: 'Tử Vi',
-              recommended: true,
+              eyebrow: 'TỬ VI · CUNG MỆNH',
+              title: 'Đọc cung mệnh',
+              body: 'Bản đồ sao thời điểm sinh — không phải lời tiên tri, mà là bản đồ ưu thế và bóng tối tự nhiên. Tử Vi Đẩu Số tổng hợp 14 chính tinh trên 12 cung.',
+              href: '/learn/tu-vi',
+              cta: 'Đọc về Tử Vi',
             },
             {
-              id: 'battu',
-              name: 'BÁT TỰ',
-              subname: 'NGŨ HÀNH',
-              icon: <BatTuGlyph className="text-primary size-9" />,
-              action: 'Cân',
-              title: 'ngũ hành',
-              body: 'Tám chữ năm-tháng-ngày-giờ — đo nội lực và cân bằng nguyên tố.',
-              watermark: 'Bát Tự',
+              eyebrow: 'BÁT TỰ · NGŨ HÀNH',
+              title: 'Cân ngũ hành',
+              body: 'Tám chữ năm-tháng-ngày-giờ — đo nội lực và cân bằng nguyên tố qua quan hệ tương sinh tương khắc.',
+              href: '/learn/bat-tu',
+              cta: 'Đọc về Bát Tự',
             },
             {
-              id: 'thanso',
-              name: 'THẦN SỐ',
-              subname: 'NUMEROLOGY',
-              icon: <ThanSoGlyph className="text-primary size-9" />,
-              action: 'Đếm',
-              title: 'con số đời',
-              body: 'Numerology phương Tây — đường đời, ngày sinh, tên gọi cộng dồn thành mật mã hành trình.',
-              watermark: 'Thần Số',
+              eyebrow: 'THẦN SỐ · NUMEROLOGY',
+              title: 'Đếm con số đời',
+              body: 'Numerology phương Tây — đường đời, ngày sinh, tên gọi cộng dồn thành mật mã hành trình cá nhân.',
+              href: '/learn/than-so',
+              cta: 'Đọc về Thần Số',
             },
             {
-              id: 'mbti',
-              name: 'MBTI',
-              subname: 'TÂM LÝ HỌC',
-              icon: <MbtiGlyph className="text-primary size-9" />,
-              action: 'Gọi tên',
-              title: 'tâm trí',
+              eyebrow: 'MBTI · TÂM LÝ HỌC',
+              title: 'Gọi tên tâm trí',
               body: '16 kiểu Myers-Briggs — không nhãn dán, mà là ngôn ngữ để nhận diện thiên hướng nội tại.',
-              watermark: 'MBTI',
+              href: '/learn/mbti',
+              cta: 'Đọc về MBTI',
             },
           ]}
         />
@@ -677,9 +666,12 @@ export default function LandingPage() {
               name: 'MENTOR · KHÔNG GIỚI HẠN',
               nameDisplay: 'Đồng hành',
               description: 'Mentor AI không giới hạn, đại vận và lưu niên hàng năm.',
+              // Wave 62.05 — yearly toggle removed on homepage. Yearly +
+              // Lifetime live in the /pricing "Tuỳ chọn nâng cao" expandable;
+              // the homepage anchor stays on the 199.000₫/tháng entry price
+              // so the 3 tiers read as a clean ladder without an extra
+              // toggle to evaluate.
               priceMonthly: PRICING.monthly.vnd,
-              priceYearly: PRICING.yearly.vnd,
-              yearlyDiscount: 'Tiết kiệm ~17%',
               bestFor:
                 'bạn thường xuyên hỏi về quyết định, công việc, quan hệ, kế hoạch năm.',
               features: [
@@ -694,6 +686,14 @@ export default function LandingPage() {
             },
           ]}
         />
+
+        {/* Wave 62.07 — SocialProofQuiet between Pricing and FAQ.
+            Anti-testimonial "khoảng lặng" section — 4 anonymous excerpts
+            in founder voice about real decisions (changing jobs, marriage,
+            sending child abroad, leaving the city). Italic Newsreader,
+            ochre quote marks, NO stars/faces/names. Editorial pulse
+            between high-friction pricing and FAQ that closes objections. */}
+        <SocialProofQuiet />
 
         {/* 7. FaqAccordion — existing 6 Q, warm-dark-100 */}
         <div className="bg-muted/40">

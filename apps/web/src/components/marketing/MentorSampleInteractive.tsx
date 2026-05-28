@@ -2,149 +2,601 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { MessageSquareQuote, ArrowRight } from 'lucide-react';
+import { MessageSquareQuote, ArrowRight, RotateCcw, Send } from 'lucide-react';
 
 /**
- * Wave 60.95.i P2 — MentorSampleInteractive (vault 130 §interaction designer).
+ * Wave 62.11 — MentorSampleInteractive (vault 138 §mentor demo free-input).
  *
- * Companion to SampleOutputShowcase (Wave 60.95.c), which shows a STATIC Mentor
- * Q&A card. This block adds an INTERACTIVE 3-question demo: user clicks a
- * question pill, the Mentor's pre-written response expands below. Zero LLM
- * cost — all responses hard-coded so user can feel "what does Mentor feel
- * like?" without paying or signing up.
+ * Replaces the Wave 60.95.i 3-button scripted demo with a FREE-TEXT input
+ * backed by a fixed Chi Lan ENFP persona. The 3-pill version "felt scripted"
+ * (vault 138 critique: "đây là chatbot scripted, đúng cái mà FAQ đang phủ
+ * nhận"). This version lets the user type anything; we match against ~8
+ * decision-shape keywords client-side and return a thoughtfully-templated
+ * Mentor response — no API call, no auth, no cost.
  *
- * Why interactive after static? The static showcase says "this is what you'll
- * get"; the interactive sample says "go ahead, try it" — closes the click-gap
- * between curiosity and onboarding without burning a Mentor turn on the
- * backend. Calibrates expectation: Mentor reframes first, then suggests.
+ * The matcher is deliberately dumb: case-insensitive String.includes() against
+ * a handful of Vietnamese keywords per template. Real Mentor on the backend
+ * does semantic routing; this demo only needs to feel "Mentor reframes, not
+ * prescribes" so the visitor calibrates expectation before onboarding.
  *
- * Response copy register (matches /sample-report Mentor block + Mentor channel
- * UX on Telegram):
- *   - Open with a clarifying question (reframe, not prescribe)
- *   - Give 2-3 specific considerations (not generic advice)
- *   - End with one concrete next action
- *   - 100-150 words VN, calm-editorial, no fortune-telling vocabulary
+ * Categories (priority order — first match wins):
+ *   1. CRISIS (self-harm / suicide) → hard deflection to 113 + 1900 599956
+ *   2. INVESTMENT (specific financial advice) → explicit "tôi không tư vấn
+ *      đầu tư" deflection
+ *   3. CAREER CHANGE — "đổi nghề", "chuyển việc", "nghỉ việc"
+ *   4. MARRIAGE — "kết hôn", "lấy chồng", "lấy vợ", "cưới"
+ *   5. RELATIONSHIP — "yêu", "thích người", "tình cảm"
+ *   6. MONEY — "tiền", "kinh doanh" (non-investment money questions)
+ *   7. EMOTIONAL — "buồn", "stress", "lo lắng", "bế tắc"
+ *   8. STUDY — "học", "thi", "đại học"
+ *   9. FAMILY — "bố mẹ", "gia đình", "cha mẹ"
+ *   0. FALLBACK — "kể thêm hoàn cảnh, điều bạn đã thử, điều bạn đang sợ"
  *
- * A11y: each pill has aria-pressed reflecting the active question; the
- * response panel uses aria-expanded + role=region with aria-labelledby
- * pointing at the active pill. Only one answer is visible at a time —
- * clicking a different question replaces the previous reveal; clicking the
- * same question collapses it.
+ * Persona block (fixed for all demo answers):
+ *   Chi Lan, 29 tuổi · ENFP · Mệnh Hoả · Tử Vi mẫu
+ *   Disclaimer: real account personalises to caller's chart.
  *
- * Brand tokens (vault 108 Option E, matching SampleOutputShowcase):
- *   bg-background / text-cream-{50,300,500} / text-primary/ text-primary/80
- *   border-border / border-primary/40 / rounded-card-editorial
- *   font-marketing-display Instrument Serif italics for emphasis spans
- *
- * Pure CSS transitions — no Motion runtime added. Reveal uses height/opacity
- * via grid-template-rows trick so the panel can be animated without measuring.
+ * Brand tokens stay aligned with the Wave 60.95.i version:
+ *   bg-card border-border/30 rounded-[2px] for the persona card
+ *   font-mono eyebrow + editorial-lede body for the response
+ *   font-sans for the input, theme-aware day+night
  */
 
-type SampleQuestion = {
-  id: string;
-  question: string;
-  /** Mentor's pre-written response — 100-150 words, calm-editorial register. */
-  response: React.ReactNode;
+type TemplateId =
+  | 'crisis'
+  | 'investment'
+  | 'career-change'
+  | 'marriage'
+  | 'relationship'
+  | 'money'
+  | 'emotional'
+  | 'study'
+  | 'family'
+  | 'fallback';
+
+type Template = {
+  id: TemplateId;
+  /** Keywords matched against lowercased user input via String.includes(). */
+  keywords: string[];
+  /** Mentor response — acknowledge → 3-4 reframes → write-down prompt → CTA. */
+  body: React.ReactNode;
 };
 
-const QUESTIONS: SampleQuestion[] = [
+const SIGN_OFF = (
+  <p className="mt-4 font-mono text-[11px] uppercase tracking-widest text-primary/80">
+    Sẵn sàng lập lá số thật sự?{' '}
+    <Link
+      href="/onboarding"
+      className="underline decoration-primary/40 underline-offset-4 hover:decoration-primary"
+    >
+      → /onboarding
+    </Link>
+  </p>
+);
+
+const TEMPLATES: Template[] = [
+  // Priority 1 — Crisis. Match before anything else.
   {
-    id: 'q1-two-jobs',
-    question: 'Tôi đang phân vân giữa 2 công việc',
-    response: (
+    id: 'crisis',
+    keywords: [
+      'tự tử',
+      'tu tu',
+      'tự sát',
+      'tu sat',
+      'tự hại',
+      'tu hai',
+      'chết',
+      'muốn chết',
+      'không muốn sống',
+      'kết thúc cuộc đời',
+      'cắt tay',
+      'cat tay',
+    ],
+    body: (
       <>
         <p>
-          Trước khi so sánh hai lựa chọn, bạn hãy thử trả lời:{' '}
-          <em className="font-marketing-display italic text-primary/80">
-            cái nào bạn thấy nhẹ lòng khi tưởng tượng mình đã chọn nó rồi?
-          </em>{' '}
-          Cảm giác đầu tiên thường nói thật hơn lập luận về sau.
+          Tôi nghe được điều bạn vừa nói, và tôi muốn dừng lại ở đây một chút.
         </p>
         <p>
-          Ba điểm nên cân nhắc cùng lúc: (1) công việc nào cho bạn cơ hội học
-          một kỹ năng còn thiếu, không chỉ lặp lại điều đã giỏi; (2) môi trường
-          nào có người bạn muốn trở nên giống — đồng nghiệp định hình mình hơn
-          ta tưởng; (3) lương cao hơn 15% trở xuống thường không đủ bù cho một
-          văn hoá lệch tone với bạn.
+          <strong className="text-foreground">
+            Tôi không thay thế nhà tâm lý hoặc đường dây cấp cứu.
+          </strong>{' '}
+          Nếu bạn đang nguy hiểm, vui lòng gọi{' '}
+          <strong className="text-foreground">113 (cấp cứu)</strong> hoặc nhắn{' '}
+          <strong className="text-foreground">“help”</strong> đến{' '}
+          <strong className="text-foreground">1900 599956</strong> (đường dây
+          an toàn).
         </p>
         <p>
-          Việc cụ thể: viết ra 1 trang A4, mỗi công việc một cột, ba dòng —
-          điều mình học, người mình gặp, điều mình hy sinh. Đọc lại sau 48 giờ
-          rồi quyết.
+          Tôi ở đây để lắng nghe, nhưng không phải lúc khẩn cấp. Khi bạn an
+          toàn rồi, tôi sẵn sàng cùng bạn nhìn lại điều đang nặng nhất.
         </p>
       </>
     ),
   },
+
+  // Priority 2 — Investment. Match before generic "tiền".
   {
-    id: 'q2-improve-2026',
-    question: 'Tôi nên cải thiện điều gì năm 2026?',
-    response: (
+    id: 'investment',
+    keywords: [
+      'đầu tư',
+      'dau tu',
+      'chứng khoán',
+      'chung khoan',
+      'crypto',
+      'bitcoin',
+      'cổ phiếu',
+      'co phieu',
+      'mua đất',
+      'mua dat',
+      'bất động sản',
+      'bat dong san',
+      'forex',
+    ],
+    body: (
       <>
         <p>
-          Câu hỏi nên đổi một chút trước:{' '}
-          <em className="font-marketing-display italic text-primary/80">
-            năm 2026 bạn muốn cuối năm nhìn lại và tự hào về điều gì?
-          </em>{' '}
-          “Cải thiện” dễ trở thành một danh sách dài không ai làm hết — chọn
-          một chủ đề thì khả thi hơn.
+          Tôi hiểu bạn đang muốn một câu trả lời rõ ràng cho quyết định tài
+          chính.
         </p>
         <p>
-          Ba hướng thường có sức nặng cao nhất: (1) một thói quen sức khoẻ duy
-          trì được 90 ngày liên tiếp — nền tảng của mọi thứ khác; (2) một mối
-          quan hệ bạn muốn đầu tư hơn, có thể là bố mẹ, bạn cũ, hoặc cộng sự;
-          (3) một kỹ năng chuyên môn đủ sâu để được giới thiệu khi không có
-          mặt.
+          <strong className="text-foreground">
+            Tôi không tư vấn đầu tư cụ thể.
+          </strong>{' '}
+          Lá số có thể cho thấy giai đoạn thuận hay khó, tâm lý ra quyết định
+          của bạn, nhưng quyết định đầu tư cần kế toán và chuyên gia tài chính
+          của bạn — không phải Tử Vi.
         </p>
+        <p>Điều tôi có thể hỏi lại bạn:</p>
+        <ul className="ml-4 list-disc space-y-1.5">
+          <li>Số tiền này nếu mất hết, cuộc sống bạn có gãy không?</li>
+          <li>
+            Bạn đang đầu tư vì muốn giàu hơn, hay vì sợ bị bỏ lại phía sau?
+          </li>
+          <li>
+            Quyết định này nếu hoãn 30 ngày, bạn mất gì cụ thể — hay chỉ là
+            cảm giác FOMO?
+          </li>
+        </ul>
         <p>
-          Việc cụ thể: chọn 1 trong 3 ở trên, viết ra giấy, dán nơi bạn nhìn
-          hằng ngày. Quý 1 chỉ làm điều đó.
+          Viết câu trả lời ra giấy. Đọc lại sau 48 giờ. Câu thứ hai thường là
+          câu thật nhất.
         </p>
+        {SIGN_OFF}
       </>
     ),
   },
+
+  // Career change.
   {
-    id: 'q3-relationship',
-    question: 'Mối quan hệ này có nên giữ không?',
-    response: (
+    id: 'career-change',
+    keywords: [
+      'đổi nghề',
+      'doi nghe',
+      'chuyển việc',
+      'chuyen viec',
+      'nghỉ việc',
+      'nghi viec',
+      'bỏ việc',
+      'bo viec',
+      'chuyển ngành',
+      'chuyen nganh',
+    ],
+    body: (
       <>
         <p>
-          Trước khi trả lời nên hay không,{' '}
-          <em className="font-marketing-display italic text-primary/80">
-            bạn đang ở thời điểm nào trong mối quan hệ — đang yêu nhưng mệt,
-            đã hết yêu nhưng quen, hay vẫn còn hy vọng?
-          </em>{' '}
-          Mỗi tình huống có câu trả lời khác.
+          Phân vân chuyển nghề là một trong những quyết định nặng nhất — không
+          chỉ vì lương, mà vì danh tính.
         </p>
+        <p>Trước khi quyết, bạn thử trả lời 4 câu này cho riêng mình:</p>
+        <ul className="ml-4 list-disc space-y-1.5">
+          <li>
+            Bạn muốn rời công việc cũ, hay đang muốn chạy khỏi một con
+            người/môi trường cụ thể trong đó?
+          </li>
+          <li>
+            Nghề mới bạn đang nghĩ tới — bạn đã thử nó ở dạng nhỏ chưa (side
+            project, học một khoá, nói chuyện với người trong nghề)?
+          </li>
+          <li>
+            Nếu 5 năm sau bạn vẫn ở nghề cũ, điều gì khiến bạn tiếc nhất —
+            tiền, kỹ năng, hay phiên bản mình không trở thành?
+          </li>
+          <li>
+            Quyết định này nếu hoãn 90 ngày để chuẩn bị tài chính + portfolio,
+            bạn mất gì thật sự?
+          </li>
+        </ul>
         <p>
-          Ba dấu hiệu đáng giữ lại: (1) bạn vẫn cười khi nghĩ về người ấy ở
-          một khoảnh khắc cụ thể, không phải ý tưởng chung chung; (2) sau cãi
-          nhau, cả hai cùng quay lại bàn — không phải chỉ một bên; (3) bạn
-          được là phiên bản mình thấy đáng quý khi ở cạnh họ. Thiếu cả ba, kéo
-          dài sẽ làm cả hai mòn hơn.
+          Viết câu trả lời ra một trang A4, mỗi câu một đoạn ngắn. Đọc lại sau
+          48 giờ. Câu nào bạn né tránh viết — câu đó quan trọng nhất.
         </p>
+        {SIGN_OFF}
+      </>
+    ),
+  },
+
+  // Marriage commitment.
+  {
+    id: 'marriage',
+    keywords: [
+      'kết hôn',
+      'ket hon',
+      'lấy chồng',
+      'lay chong',
+      'lấy vợ',
+      'lay vo',
+      'cưới',
+      'cuoi',
+      'đám cưới',
+      'dam cuoi',
+      'cầu hôn',
+      'cau hon',
+    ],
+    body: (
+      <>
         <p>
-          Việc cụ thể: viết một lá thư cho chính mình 5 năm tới — bạn muốn người
-          ấy có còn trong đó không? Câu trả lời thường rõ hơn ta nghĩ.
+          Cưới không phải là kết thúc một câu chuyện tình — nó là bắt đầu một
+          dự án 30-40 năm.
         </p>
+        <p>Bốn câu hỏi nên trả lời thẳng với chính mình:</p>
+        <ul className="ml-4 list-disc space-y-1.5">
+          <li>
+            Bạn muốn cưới người này, hay đang muốn cưới — và người này tiện
+            nhất?
+          </li>
+          <li>
+            Lần cãi nhau gần nhất, cả hai xử lý thế nào — ai xin lỗi trước, ai
+            chịu nhường, hay cả hai cùng quay lại bàn?
+          </li>
+          <li>
+            Nếu người ấy không bao giờ đổi (không bớt nóng tính, không kiếm
+            nhiều tiền hơn, không quan tâm hơn) — bạn vẫn cưới chứ?
+          </li>
+          <li>
+            Bạn có chia sẻ được với người ấy về tiền, gia đình hai bên, và con
+            cái — ba chủ đề làm tan vỡ phần lớn hôn nhân?
+          </li>
+        </ul>
+        <p>
+          Viết câu trả lời cho riêng mình, không cho người ấy đọc. Câu nào bạn
+          ngần ngại viết — đó là câu cần nói với họ trước khi cưới.
+        </p>
+        {SIGN_OFF}
+      </>
+    ),
+  },
+
+  // Relationship dynamic.
+  {
+    id: 'relationship',
+    keywords: [
+      'yêu',
+      'yeu',
+      'thích người',
+      'thich nguoi',
+      'tình cảm',
+      'tinh cam',
+      'người yêu',
+      'nguoi yeu',
+      'bạn trai',
+      'ban trai',
+      'bạn gái',
+      'ban gai',
+      'chia tay',
+      'crush',
+    ],
+    body: (
+      <>
+        <p>
+          Chuyện tình cảm hiếm khi là “nên hay không nên” — thường là “mình
+          đang ở đâu trong nó”.
+        </p>
+        <p>Trước khi quyết, bạn thử nhìn lại:</p>
+        <ul className="ml-4 list-disc space-y-1.5">
+          <li>
+            Khi nghĩ về người ấy, cảm giác đầu tiên là gì — nhẹ lòng, hồi hộp,
+            mệt, hay sợ?
+          </li>
+          <li>
+            Bạn được là phiên bản mình thấy đáng quý khi ở cạnh họ, hay phải
+            gồng một chút?
+          </li>
+          <li>
+            Bạn đang muốn cảm xúc này tiếp tục, hay đang muốn không phải mất
+            công bắt đầu lại với người khác?
+          </li>
+          <li>
+            Nếu mối quan hệ này kết thúc tuần sau, điều bạn tiếc nhất là gì —
+            người ấy, hay khoảng thời gian đã đầu tư?
+          </li>
+        </ul>
+        <p>
+          Viết một lá thư cho chính mình 5 năm tới — bạn muốn người ấy có còn
+          trong đó không. Câu trả lời thường rõ hơn ta nghĩ.
+        </p>
+        {SIGN_OFF}
+      </>
+    ),
+  },
+
+  // Money — non-investment money questions.
+  {
+    id: 'money',
+    keywords: [
+      'tiền',
+      'tien',
+      'kinh doanh',
+      'mở quán',
+      'mo quan',
+      'startup',
+      'làm ăn',
+      'lam an',
+      'lương',
+      'luong',
+    ],
+    body: (
+      <>
+        <p>
+          Khi câu hỏi là tiền, thường câu hỏi thật ẩn dưới nó là một điều
+          khác.
+        </p>
+        <p>Bạn thử trả lời:</p>
+        <ul className="ml-4 list-disc space-y-1.5">
+          <li>
+            Bạn đang muốn nhiều tiền hơn, hay đang muốn cảm giác kiểm soát mà
+            tiền mang lại?
+          </li>
+          <li>
+            Khoản chi nào trong tháng vừa qua bạn tiếc nhất — và nó có lặp
+            lại không?
+          </li>
+          <li>
+            Nếu kiếm gấp đôi, ba điều đầu tiên bạn làm là gì? (Câu này tiết
+            lộ giá trị thật của bạn hơn bạn nghĩ.)
+          </li>
+          <li>
+            Bạn đang né một quyết định gì bằng cách tập trung vào tiền — bỏ
+            việc, đầu tư mạo hiểm, hay tránh xin gia đình giúp?
+          </li>
+        </ul>
+        <p>
+          Viết câu trả lời ra giấy, không gõ trên điện thoại. Tay viết chậm
+          hơn — và trung thực hơn.
+        </p>
+        {SIGN_OFF}
+      </>
+    ),
+  },
+
+  // Emotional state — must include safety net for sustained low mood.
+  {
+    id: 'emotional',
+    keywords: [
+      'buồn',
+      'buon',
+      'stress',
+      'lo lắng',
+      'lo lang',
+      'bế tắc',
+      'be tac',
+      'mệt mỏi',
+      'met moi',
+      'trầm cảm',
+      'tram cam',
+      'cô đơn',
+      'co don',
+    ],
+    body: (
+      <>
+        <p>
+          Tôi nghe được. Cảm giác này nặng — và bạn không phải tự gồng một
+          mình.
+        </p>
+        <p>Trước khi tìm “giải pháp”, bạn thử dừng lại một chút:</p>
+        <ul className="ml-4 list-disc space-y-1.5">
+          <li>
+            Cảm giác này bắt đầu từ khoảng nào — một sự kiện cụ thể, hay nó
+            âm ỉ lâu rồi?
+          </li>
+          <li>
+            Hôm nào trong tuần bạn thấy đỡ nhất — và ngày đó khác gì những
+            ngày còn lại?
+          </li>
+          <li>
+            Bạn đang giấu cảm giác này với ai — và sao bạn chọn giấu họ?
+          </li>
+          <li>
+            Nếu một người bạn thân kể với bạn đúng điều bạn đang trải qua,
+            bạn sẽ nói gì với họ?
+          </li>
+        </ul>
+        <p>
+          Viết câu trả lời ra giấy, dù chỉ vài dòng. Nếu cảm giác kéo dài hơn
+          2 tuần hoặc bạn thấy không vượt qua được một mình —{' '}
+          <strong className="text-foreground">
+            xin hãy nói chuyện với chuyên gia tâm lý hoặc bác sĩ
+          </strong>
+          . Tôi giúp được phần nhìn lại, không thay thế phần chăm sóc.
+        </p>
+        {SIGN_OFF}
+      </>
+    ),
+  },
+
+  // Study / academic planning.
+  {
+    id: 'study',
+    keywords: [
+      'học',
+      'hoc',
+      'thi',
+      'đại học',
+      'dai hoc',
+      'du học',
+      'du hoc',
+      'cao học',
+      'cao hoc',
+      'thạc sĩ',
+      'thac si',
+      'chọn ngành',
+      'chon nganh',
+    ],
+    body: (
+      <>
+        <p>
+          Học tiếp hay không không phải câu hỏi về điểm — câu hỏi về định
+          hướng 5-10 năm.
+        </p>
+        <p>Bạn thử nhìn lại:</p>
+        <ul className="ml-4 list-disc space-y-1.5">
+          <li>
+            Bạn muốn học vì thấy ngành đó hấp dẫn, hay vì chưa biết làm gì
+            tiếp?
+          </li>
+          <li>
+            Bạn đã trò chuyện với 3 người đang làm trong ngành chưa — họ nói
+            ngày làm việc của họ trông thế nào?
+          </li>
+          <li>
+            Nếu không học bằng cấp, bạn có thể tự học cùng kỹ năng đó trong
+            12 tháng không (qua online, mentor, side project)?
+          </li>
+          <li>
+            Quyết định này ai sẽ vui hơn — bạn, hay gia đình bạn? (Câu này
+            quan trọng nếu chênh lệch lớn.)
+          </li>
+        </ul>
+        <p>
+          Viết câu trả lời ra giấy. Câu nào bạn cảm thấy phải biện minh nhiều
+          nhất — đó là câu cần xem lại đầu tiên.
+        </p>
+        {SIGN_OFF}
+      </>
+    ),
+  },
+
+  // Family dynamics.
+  {
+    id: 'family',
+    keywords: [
+      'bố mẹ',
+      'bo me',
+      'gia đình',
+      'gia dinh',
+      'cha mẹ',
+      'cha me',
+      'ba mẹ',
+      'ba me',
+      'anh chị em',
+      'anh chi em',
+      'mẹ chồng',
+      'me chong',
+    ],
+    body: (
+      <>
+        <p>
+          Mối quan hệ với gia đình thường là mối quan hệ khó nhất — vì không
+          chọn được, không bỏ được, và đụng đến danh tính.
+        </p>
+        <p>Bạn thử trả lời:</p>
+        <ul className="ml-4 list-disc space-y-1.5">
+          <li>
+            Cụ thể, điều gì làm bạn nặng lòng nhất gần đây — một lời nói, một
+            việc, hay một kỳ vọng?
+          </li>
+          <li>
+            Bạn đang muốn họ thay đổi, hay muốn họ hiểu — hai điều này cần
+            cách nói khác nhau hoàn toàn.
+          </li>
+          <li>
+            Lần gần nhất bạn nói thật cảm giác của mình với họ là khi nào? Nếu
+            chưa bao giờ, vì sao?
+          </li>
+          <li>
+            Nếu mối quan hệ này không bao giờ tốt hơn — bạn có thể sống với
+            điều đó không, hay cần tìm cách đặt khoảng cách?
+          </li>
+        </ul>
+        <p>
+          Viết câu trả lời ra giấy. Đọc lại sau 48 giờ rồi hãy quyết có nói
+          chuyện với họ không — và nói cái gì.
+        </p>
+        {SIGN_OFF}
+      </>
+    ),
+  },
+
+  // Fallback — no keyword matched.
+  {
+    id: 'fallback',
+    keywords: [],
+    body: (
+      <>
+        <p>
+          Câu hỏi này tôi cần thêm bối cảnh trước khi phản hồi đúng được.
+        </p>
+        <p>Bạn có thể kể thêm:</p>
+        <ul className="ml-4 list-disc space-y-1.5">
+          <li>
+            <strong className="text-foreground">Hoàn cảnh hiện tại</strong> —
+            bạn đang ở giai đoạn nào, ai liên quan, thời gian gấp đến đâu?
+          </li>
+          <li>
+            <strong className="text-foreground">Điều bạn đã thử</strong> — bạn
+            đã làm gì, đã hỏi ai, đã thử cách nào và kết quả ra sao?
+          </li>
+          <li>
+            <strong className="text-foreground">Điều bạn đang sợ</strong> —
+            kết quả tệ nhất bạn đang né, hay điều bạn ngại phải đối mặt?
+          </li>
+        </ul>
+        <p>
+          Viết lại câu hỏi với 3 phần trên, tôi sẽ phản hồi có trọng tâm hơn.
+          Mentor đọc bối cảnh, không đoán mò.
+        </p>
+        {SIGN_OFF}
       </>
     ),
   },
 ];
 
+/**
+ * Pick the first template whose keywords appear in the lowercased input.
+ * Crisis + investment sit at the top so they win against generic matches like
+ * "tiền" or "buồn". Fallback (empty keywords[]) always matches last.
+ */
+function pickTemplate(input: string): Template {
+  const lower = input.toLowerCase();
+  for (const t of TEMPLATES) {
+    if (t.keywords.length === 0) continue;
+    if (t.keywords.some((k) => lower.includes(k))) return t;
+  }
+  return TEMPLATES[TEMPLATES.length - 1]!; // fallback
+}
+
 export function MentorSampleInteractive() {
-  // null = nothing revealed; otherwise the question id currently open.
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [input, setInput] = useState('');
+  const [submitted, setSubmitted] = useState<{
+    question: string;
+    template: Template;
+  } | null>(null);
 
-  const active = QUESTIONS.find((q) => q.id === activeId) ?? null;
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = input.trim();
+    if (!trimmed) return;
+    setSubmitted({ question: trimmed, template: pickTemplate(trimmed) });
+  };
 
-  const handleClick = (id: string) => {
-    // Click same pill → collapse. Click different → switch.
-    setActiveId((prev) => (prev === id ? null : id));
+  const handleReset = () => {
+    setSubmitted(null);
+    setInput('');
   };
 
   return (
     <section
-      aria-label="Thử Mentor AI — ví dụ mẫu (không tốn lượt hỏi)"
+      aria-label="Thử Mentor AI — nhập câu hỏi tự do trên persona mẫu"
       className="bg-background py-16 md:py-20"
     >
       <div className="mx-auto max-w-marketing px-6 lg:px-12">
@@ -154,67 +606,86 @@ export function MentorSampleInteractive() {
             — THỬ MENTOR AI
           </p>
           <h2 className="text-balance font-sans text-section-display font-bold tracking-tight leading-tight text-foreground">
-            Chọn một câu hỏi để{' '}
-            <em className="italic text-primary/80">xem ví dụ</em>
+            Hỏi Mentor{' '}
+            <em className="italic text-primary/80">bất cứ điều gì</em>
             <span className="text-primary">.</span>
           </h2>
           <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Ba câu hỏi mẫu — bấm vào để xem Mentor trả lời thế nào. Không cần
-            đăng ký, không tốn lượt hỏi.
+            Demo này trả lời trên một persona mẫu cố định. Không cần đăng ký,
+            không tốn lượt hỏi.
           </p>
         </div>
 
-        {/* Question pills */}
-        <div
-          role="group"
-          aria-label="Ba câu hỏi mẫu"
-          className="mt-10 flex flex-wrap items-center justify-center gap-2.5 md:gap-3"
-        >
-          {QUESTIONS.map((q) => {
-            const isActive = activeId === q.id;
-            return (
-              <button
-                key={q.id}
-                id={`mentor-q-${q.id}`}
-                type="button"
-                aria-pressed={isActive}
-                aria-controls="mentor-sample-panel"
-                onClick={() => handleClick(q.id)}
-                // Wave 60.97.1 — `min-h-11 touch-manipulation` so chip reaches
-                // 44px tap target on mobile (was 42px → just missed WCAG 2.5.5).
-                // `active:bg-muted` adds touch feedback for iOS/Android.
-                className={[
-                  'rounded-pill border px-4 py-2.5 font-sans text-sm font-medium transition-all duration-300 ease-editorial min-h-11 touch-manipulation',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50',
-                  isActive
-                    ? 'border-primary bg-primary/[0.08] text-primary'
-                    : 'border-primary/25 bg-card text-primary/80 hover:border-primary/45 hover:bg-muted hover:text-primary active:bg-muted',
-                ].join(' ')}
-              >
-                {q.question}
-              </button>
-            );
-          })}
+        {/* Persona card — fixed Chi Lan ENFP for demo */}
+        <div className="mx-auto mt-10 max-w-marketing-tight">
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground/70">
+            BƯỚC 01 · PERSONA MẪU
+          </p>
+          <div className="rounded-[2px] border border-border/30 bg-card p-5 md:p-6">
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <span className="font-sans text-lg font-semibold text-foreground">
+                Chi Lan
+              </span>
+              <span className="font-sans text-sm text-muted-foreground">
+                29 tuổi
+              </span>
+              <span className="text-muted-foreground/40">·</span>
+              <span className="font-mono text-xs uppercase tracking-wider text-primary/80">
+                ENFP
+              </span>
+              <span className="text-muted-foreground/40">·</span>
+              <span className="font-mono text-xs uppercase tracking-wider text-primary/80">
+                Mệnh Hoả
+              </span>
+              <span className="text-muted-foreground/40">·</span>
+              <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground/70">
+                Tử Vi mẫu
+              </span>
+            </div>
+            <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground/80">
+              Đây là Mentor demo, trả lời theo persona giả lập. Tài khoản thật
+              cá nhân hoá theo lá số của bạn — cung mệnh, đại vận, ngũ hành
+              riêng.
+            </p>
+          </div>
         </div>
 
-        {/* Reveal panel — grid trick lets us animate height without measurement. */}
-        <div
-          id="mentor-sample-panel"
-          role="region"
-          aria-live="polite"
-          aria-expanded={active !== null}
-          aria-labelledby={active ? `mentor-q-${active.id}` : undefined}
-          className={[
-            'mx-auto mt-6 grid max-w-marketing-tight transition-all duration-500 ease-editorial',
-            active
-              ? 'grid-rows-[1fr] opacity-100'
-              : 'grid-rows-[0fr] opacity-0',
-          ].join(' ')}
-        >
-          <div className="overflow-hidden">
-            {active && (
-              <article className="rounded-card-editorial border border-primary/30 bg-muted/40 p-6 md:p-8">
-                {/* User question label */}
+        {/* Input + response */}
+        <div className="mx-auto mt-8 max-w-marketing-tight">
+          {!submitted ? (
+            <form onSubmit={handleSubmit}>
+              <label
+                htmlFor="mentor-demo-input"
+                className="mb-2 block font-mono text-[10px] uppercase tracking-widest text-muted-foreground/70"
+              >
+                BƯỚC 02 · CÂU HỎI CỦA BẠN
+              </label>
+              <textarea
+                id="mentor-demo-input"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                rows={3}
+                placeholder="VD: Tôi đang phân vân có nên đổi nghề không..."
+                className="min-h-[100px] w-full rounded-[2px] border border-border/40 bg-card p-4 font-sans text-[15px] leading-relaxed text-foreground placeholder:text-muted-foreground/50 focus:border-primary/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+              />
+              <div className="mt-3 flex items-center justify-between gap-3">
+                <p className="text-[11px] text-muted-foreground/60">
+                  Demo client-side · không gửi lên server
+                </p>
+                <button
+                  type="submit"
+                  disabled={!input.trim()}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 font-sans text-sm font-semibold text-ink transition-colors duration-200 hover:bg-primary/80 disabled:cursor-not-allowed disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                >
+                  Gửi câu hỏi
+                  <Send className="size-4" aria-hidden strokeWidth={2} />
+                </button>
+              </div>
+            </form>
+          ) : (
+            <div aria-live="polite">
+              {/* User question echo */}
+              <article className="rounded-[2px] border border-border/30 bg-card p-5 md:p-6">
                 <div className="mb-4 flex items-start gap-2">
                   <MessageSquareQuote
                     className="mt-0.5 size-4 shrink-0 text-primary/70"
@@ -226,33 +697,47 @@ export function MentorSampleInteractive() {
                       Bạn hỏi
                     </p>
                     <p className="mt-1 font-sans text-[15px] font-medium leading-snug text-foreground">
-                      {active.question}
+                      {submitted.question}
                     </p>
                   </div>
                 </div>
                 {/* Mentor response */}
-                <div>
+                <div className="mt-5 border-t border-border/30 pt-5">
                   <p className="font-mono text-[10px] uppercase tracking-widest text-primary/80">
-                    Mentor
+                    Mentor · Chi Lan persona
                   </p>
-                  <div className="mt-2 space-y-3 text-[14px] leading-relaxed text-muted-foreground md:text-[15px]">
-                    {active.response}
+                  <div className="mt-3 space-y-3 font-editorial-display text-[15px] leading-relaxed text-muted-foreground md:text-[16px]">
+                    {submitted.template.body}
                   </div>
                 </div>
               </article>
-            )}
-          </div>
+
+              <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-card px-4 py-2 font-sans text-sm text-muted-foreground transition-colors duration-200 hover:border-primary/40 hover:text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+                >
+                  <RotateCcw className="size-3.5" aria-hidden strokeWidth={2} />
+                  Hỏi câu khác
+                </button>
+                <p className="text-[11px] text-muted-foreground/60">
+                  Phản hồi dựa trên persona Chi Lan · ENFP · Mệnh Hoả
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Footer note + CTA */}
-        <div className="mx-auto mt-10 max-w-marketing-tight text-center">
+        {/* Footer CTA */}
+        <div className="mx-auto mt-12 max-w-marketing-tight text-center">
           <p className="mb-5 text-pretty text-sm leading-relaxed text-muted-foreground/70">
-            Đây là ví dụ mẫu. Mentor thật sẽ trả lời dựa trên lá số của bạn —
-            cung mệnh, đại vận, ngũ hành cá nhân.
+            Đây là demo trên persona mẫu. Mentor thật sẽ trả lời dựa trên lá
+            số của bạn — cung mệnh, đại vận, ngũ hành cá nhân.
           </p>
           <Link
             href="/onboarding"
-            className="inline-flex items-center justify-center gap-1.5 rounded-full bg-primary px-6 py-3 font-sans text-sm font-semibold text-ink transition-colors duration-200 hover:bg-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50"
+            className="inline-flex items-center justify-center gap-1.5 rounded-full bg-primary px-6 py-3 font-sans text-sm font-semibold text-ink transition-colors duration-200 hover:bg-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             Lập lá số miễn phí
             <ArrowRight className="size-4" aria-hidden />

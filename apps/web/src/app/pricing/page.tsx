@@ -1,10 +1,18 @@
 /**
  * /pricing — Wave 60.56 Phase 3.2 rebuild (Option D "Warm-Dark Editorial").
  *
+ * Wave 62.05 — "Như giấy cũ" pricing simplification (vault 138). The 4-tier
+ * grid (free + premium + mentor + lifetime, with mentor exposing a yearly
+ * toggle) collapses to **3 primary anchors** (free + premium + mentor) +
+ * an expandable "Tuỳ chọn nâng cao" section that holds yearly + lifetime.
+ * Founder spec: "Pricing 5 bậc gây tê liệt lựa chọn ... quá nhiều SKU cho
+ * một quyết định cảm xúc." The advanced tiers stay sellable — they just
+ * stop competing for the buyer's attention above the fold.
+ *
  * R1 verdict B applied: visual polish + reduce 5→3 anchors.
  *   - MarketingHero replaces the 4× pasted purple-radial hero block (R1 finding).
- *   - PricingTierV2 replaces the 5-tier Stripe-template row (3 tiers + Monthly/
- *     Yearly toggle + "KHUYÊN DÙNG" gold badge + 14-day refund slot).
+ *   - PricingTierV2 renders the 3 primary tiers; AdvancedOptions handles the
+ *     yearly/lifetime expandable below the grid.
  *   - VN content-typed FAQ with explicit refund answer (canonical policy:
  *     "14 ngày cho mọi gói trả phí; Mentor tính từ kỳ thanh toán đầu tiên").
  *   - All raw `rgba(184,146,61,...)` strings removed (R1 finding).
@@ -25,7 +33,13 @@ import { MarketingHero } from '@/components/marketing/MarketingHero';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { OrnamentDivider } from '@/components/marketing/OrnamentDivider';
 import { TrustStrip } from '@/components/marketing/TrustStrip';
-import { PRICING } from '@/lib/pricing';
+import {
+  PRICING,
+  ADVANCED_PRICING,
+  formatVND,
+  monthlyEquivalent,
+  yearlyDiscount,
+} from '@/lib/pricing';
 
 const PRICING_FAQ: readonly FaqItem[] = [
   {
@@ -83,6 +97,98 @@ const PRICING_FAQ: readonly FaqItem[] = [
     ),
   },
 ];
+
+/**
+ * Wave 62.05 — Tuỳ chọn nâng cao (Yearly + Lifetime).
+ *
+ * Native <details>/<summary> so we don't pay client-runtime cost for a
+ * section most buyers never open. Two compact paper-corner cards inside;
+ * both link to the same /checkout routes the legacy 5th/4th tiers did.
+ *
+ * Server component — no useState, no Link import needed for plain <a>.
+ * Founder spec calls for "editorial corners" (rounded-[2px]) consistent
+ * with the new PricingTierV2 card shape.
+ */
+function AdvancedOptions() {
+  return (
+    <section className="bg-background pb-12">
+      <div className="mx-auto max-w-marketing px-6">
+        <details className="group rounded-[2px] border border-border/60 bg-muted/30 transition-colors duration-300 ease-editorial open:border-border">
+          <summary className="flex cursor-pointer items-center justify-between gap-4 px-6 py-5 font-sans text-sm text-foreground/80 transition-colors hover:text-foreground md:px-8 [&::-webkit-details-marker]:hidden">
+            <span className="flex flex-col gap-1">
+              <span className="font-mono text-eyebrow uppercase tracking-wider text-primary">
+                — Tuỳ chọn nâng cao
+              </span>
+              <span className="font-editorial-display text-lg font-normal text-foreground">
+                Cam kết dài hơn, giá tốt hơn
+              </span>
+            </span>
+            <span
+              aria-hidden
+              className="font-mono text-xs uppercase tracking-wider text-muted-foreground transition-transform duration-300 ease-editorial group-open:rotate-180"
+            >
+              ▾
+            </span>
+          </summary>
+
+          <div className="grid gap-4 px-6 pb-8 md:grid-cols-2 md:px-8">
+            {/* Yearly */}
+            <article className="flex flex-col rounded-[2px] border border-border/60 bg-background p-6 md:p-8">
+              <p className="font-mono text-eyebrow uppercase tracking-wider text-muted-foreground/70">
+                MENTOR · NĂM
+              </p>
+              <h3 className="mt-3 font-editorial-display text-2xl font-normal tracking-tight text-foreground">
+                Đồng hành cả năm
+              </h3>
+              <p className="mt-2 font-sans text-sm text-muted-foreground">
+                Mentor không giới hạn — thanh toán một năm, tiết kiệm ~{yearlyDiscount()}% so với theo tháng.
+              </p>
+              <p className="mt-6 font-editorial-display text-price-amount text-foreground">
+                {formatVND(PRICING.yearly.vnd)}{' '}
+                <span className="text-muted-foreground/80">/ năm</span>
+              </p>
+              <p className="mt-1 font-sans text-xs text-muted-foreground/70">
+                ≈ {formatVND(monthlyEquivalent(PRICING.yearly.vnd))} / tháng
+              </p>
+              <a
+                href="/checkout/yearly"
+                className="mt-6 inline-flex w-full items-center justify-center rounded-pill border border-border px-6 py-3 font-sans text-sm font-medium text-foreground transition-colors duration-300 ease-editorial hover:bg-card"
+              >
+                Chọn gói năm
+              </a>
+            </article>
+
+            {/* Lifetime */}
+            <article className="flex flex-col rounded-[2px] border border-border/60 bg-background p-6 md:p-8">
+              <p className="font-mono text-eyebrow uppercase tracking-wider text-muted-foreground/70">
+                LIFETIME · VĨNH VIỄN
+              </p>
+              <h3 className="mt-3 font-editorial-display text-2xl font-normal tracking-tight text-foreground">
+                Trọn đời
+              </h3>
+              <p className="mt-2 font-sans text-sm text-muted-foreground">
+                Một lần thanh toán — mở khóa Mentor mãi mãi, không gia hạn.
+              </p>
+              <p className="mt-6 font-editorial-display text-price-amount text-foreground">
+                {formatVND(ADVANCED_PRICING.lifetime.vnd)}{' '}
+                <span className="text-muted-foreground/80">/ một lần</span>
+              </p>
+              <p className="mt-1 font-sans text-xs text-muted-foreground/70">
+                Tương đương ~25 tháng Mentor
+              </p>
+              <a
+                href="/checkout/lifetime"
+                className="mt-6 inline-flex w-full items-center justify-center rounded-pill border border-border px-6 py-3 font-sans text-sm font-medium text-foreground transition-colors duration-300 ease-editorial hover:bg-card"
+              >
+                Mua Lifetime
+              </a>
+            </article>
+          </div>
+        </details>
+      </div>
+    </section>
+  );
+}
 
 export default function PricingPage() {
   return (
@@ -163,9 +269,11 @@ export default function PricingPage() {
               nameDisplay: 'Đồng hành',
               description:
                 'Mentor AI không giới hạn, đại vận và lưu niên hàng năm.',
+              // Wave 62.05 — yearly toggle stripped from the primary card.
+              // Yearly + Lifetime live below the grid in <AdvancedOptions/>;
+              // putting them back in the card brings the decision-paralysis
+              // problem we just fixed. Monthly stays as the single anchor.
               priceMonthly: PRICING.monthly.vnd,
-              priceYearly: PRICING.yearly.vnd,
-              yearlyDiscount: 'Tiết kiệm ~17%',
               bestFor:
                 'bạn thường xuyên hỏi về quyết định, công việc, quan hệ, kế hoạch năm.',
               features: [
@@ -178,28 +286,14 @@ export default function PricingPage() {
               ctaHref: '/checkout/mentor',
               refundDays: 14,
             },
-            {
-              id: 'lifetime',
-              name: 'LIFETIME · VĨNH VIỄN',
-              nameDisplay: 'Trọn đời',
-              description:
-                'Mở khóa Mentor không giới hạn — vĩnh viễn, không phí định kỳ.',
-              priceMonthly: PRICING.lifetime.vnd,
-              priceUnit: 'một lần',
-              bestFor:
-                'bạn muốn truy cập mọi tính năng dài hạn không lo phí định kỳ.',
-              features: [
-                'Toàn bộ tính năng Mentor không giới hạn',
-                'Truy cập trọn đời, không gia hạn',
-                'Ưu tiên hỗ trợ trong 24 giờ',
-                'Cập nhật tính năng mới miễn phí',
-              ],
-              ctaLabel: 'Mua Lifetime',
-              ctaHref: '/checkout/lifetime',
-              refundDays: 14,
-            },
           ]}
         />
+
+        {/* Wave 62.05 — "Tuỳ chọn nâng cao" expandable. Yearly + Lifetime
+            stay sellable but stop competing with the 3 primary anchors for
+            attention. Native <details> = zero JS, accessible by default,
+            collapses on mobile so the section adds ~24px when closed. */}
+        <AdvancedOptions />
 
         {/* Wave 60.79.T2 (vault 112 P1 #6): TrustStrip lifted FROM between
             hero and pricing tiers TO right after the tiers + before FAQ. The

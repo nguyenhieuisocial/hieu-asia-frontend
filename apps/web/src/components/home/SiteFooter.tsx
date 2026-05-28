@@ -4,32 +4,56 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Mail, MessageCircle, Facebook, Heart, ArrowRight } from 'lucide-react';
 
-const PRODUCT_LINKS = [
-  { href: '/reading', label: 'Phân tích lá số' },
-  { href: '/onboarding?cta=mentor', label: 'AI Mentor' },
-  { href: '/features', label: 'Tính năng' },
-  { href: '/pricing', label: 'Giá' },
+interface FooterLink {
+  href: string;
+  label: string;
+}
+
+/**
+ * Mega-footer columns — Wave 62.10 per founder vault 138.
+ * Previously SiteNav.tsx carried 26 sub-routes across 7 mega-menu sections —
+ * crushing first-time-visitor scan-ability. We trimmed top nav to 6 primary
+ * links and relocated the 11 tra-cứu-nhanh tools + product/learning/legal
+ * reference shortcuts here. Footer is now the discovery surface for ad-hoc
+ * tool lookups; top nav is the trust/conversion path.
+ */
+
+const COL_PRODUCT: readonly FooterLink[] = [
+  { href: '/onboarding', label: 'Lá số tử vi' },
+  { href: '/mentor', label: 'AI Mentor' },
+  { href: '/sample-report', label: 'Báo cáo mẫu' },
+  { href: '/cam-nang', label: 'Cẩm nang' },
+  { href: '/pricing', label: 'Bảng giá' },
 ];
 
-const LEARN_LINKS = [
-  { href: '/learn', label: 'Học huyền học' },
+const COL_QUICK_LOOKUP: readonly FooterLink[] = [
+  { href: '/tu-vi-2026', label: 'Tử Vi 2026' },
   { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay' },
-  { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
   { href: '/hop-tuoi', label: 'Hợp tuổi' },
-  { href: '/than-so-hoc', label: 'Thần Số Học' },
   { href: '/can-xuong', label: 'Cân Xương Đoán Số' },
+  { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
+  { href: '/bat-tu', label: 'Bát Tự' },
+  { href: '/mbti', label: 'MBTI' },
+  { href: '/than-so-hoc', label: 'Thần số học' },
   { href: '/thuoc-lo-ban', label: 'Thước Lỗ Ban' },
+  { href: '/tinh-menh-cuc', label: 'Tuổi mệnh cục' },
+  { href: '/ban-do', label: 'Bản đồ sao' },
+  { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại' },
 ];
 
-const LEGAL_LINKS = [
-  { href: '/about', label: 'Về chúng tôi' },
-  { href: '/community', label: 'Cộng đồng' },
-  { href: '/changelog', label: 'Nhật ký thay đổi' },
-  { href: '/affiliate', label: 'Cộng tác viên' },
-  { href: '/legal', label: 'Pháp lý' },
-  { href: '/privacy', label: 'Quyền riêng tư' },
-  { href: '/terms', label: 'Điều khoản' },
-  { href: '/account', label: 'Tài khoản & xoá dữ liệu' },
+const COL_DOCS: readonly FooterLink[] = [
+  { href: '/methodology', label: 'Phương pháp' },
+  { href: '/sample-report', label: 'Báo cáo mẫu' },
+  { href: '/cam-nang', label: 'Cẩm nang' },
+  { href: '/changelog', label: 'Changelog' },
+  { href: '/learn', label: 'Learn' },
+];
+
+const COL_LEGAL: readonly FooterLink[] = [
+  { href: '/privacy', label: 'Privacy' },
+  { href: '/terms', label: 'Terms' },
+  { href: '/privacy#nd-13-2023', label: 'NĐ 13/2023' },
+  { href: 'mailto:hi@hieu.asia', label: 'Liên hệ' },
 ];
 
 export function SiteFooter() {
@@ -48,50 +72,31 @@ export function SiteFooter() {
           <Link
             href="/onboarding"
             data-analytics-id="footer_final_cta"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-primarypx-6 py-3 text-sm font-semibold text-background transition-colors hover:bg-primary/90 sm:text-base"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-background transition-colors hover:bg-primary/90 sm:text-base"
           >
             Lập lá số miễn phí
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-12">
-          {/* Sản phẩm — core user-product links */}
-          <FooterCol title="Sản phẩm" links={PRODUCT_LINKS} className="md:col-span-3" />
-          {/* Học — Tài nguyên + learning-related tools */}
-          <FooterCol title="Học" links={LEARN_LINKS} className="md:col-span-3" />
-          {/* Pháp lý & Công ty — legal + about/community/changelog/partner */}
-          <FooterCol title="Pháp lý & Công ty" links={LEGAL_LINKS} className="md:col-span-3" />
-          {/* Theo dõi — newsletter + social (non-nav block) */}
-          <div className="md:col-span-3">
-            <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/90">
-              Theo dõi
-            </h3>
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Một bài viết ngắn mỗi tuần — cách dùng cổ học để ra quyết định
-              tốt hơn. Không spam, huỷ bất cứ lúc nào.
-            </p>
-            {/* Wave 60.97.1 — `min-h-11 touch-manipulation` so the newsletter
-                link in the footer "Theo dõi" column hits 44px on mobile. */}
-            <Link
-              href="/community#newsletter"
-              className="mt-4 inline-flex min-h-11 items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/10 active:bg-primary/15 touch-manipulation"
-            >
-              Đăng ký newsletter
-              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </Link>
-            <div className="mt-5 flex items-center gap-3">
-              <SocialLink href="mailto:hi@hieu.asia" label="Email">
-                <Mail className="h-4 w-4" aria-hidden="true" />
-              </SocialLink>
-              <SocialLink href="https://t.me/hieuasiabot" label="Telegram bot">
-                <MessageCircle className="h-4 w-4" aria-hidden="true" />
-              </SocialLink>
-              <SocialLink href="https://facebook.com/hieu.asia" label="Facebook">
-                <Facebook className="h-4 w-4" aria-hidden="true" />
-              </SocialLink>
-            </div>
-          </div>
+        {/*
+          Mega-footer 4-column grid — Wave 62.10.
+          Mobile: stack vertically with gap-12 (~48px editorial gap).
+          lg breakpoint: 4 equal columns with gap-12.
+          Column 2 (Tra cứu nhanh) is wider on lg because of 11 tool routes —
+          using col-span-2 on lg keeps it readable as a 2-column sublist while
+          the other 3 columns stay single-line.
+        */}
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-5 lg:gap-12">
+          <FooterCol title="Sản phẩm" links={COL_PRODUCT} />
+          <FooterCol
+            title="Tra cứu nhanh"
+            links={COL_QUICK_LOOKUP}
+            className="lg:col-span-2"
+            twoCol
+          />
+          <FooterCol title="Tài liệu" links={COL_DOCS} />
+          <FooterColLegal links={COL_LEGAL} year={year} />
         </div>
 
         {/* Brand strip + bottom row */}
@@ -120,39 +125,105 @@ export function SiteFooter() {
   );
 }
 
+/**
+ * Mega-footer column — editorial spacing, day/night-mode aware.
+ *
+ * - Column heading: text-editorial-mono uppercase text-primary (gold) with
+ *   6px ochre rule above (border-t-2 border-primary/30).
+ * - Items: text-base text-muted-foreground, hover:text-foreground.
+ * - 44px tap target on mobile preserved (Wave 60.97.1 a11y baseline).
+ * - `twoCol` splits a long list into 2 sublists at sm+ — used for the 12-item
+ *   Tra cứu nhanh column so it doesn't tower over its neighbors.
+ */
 function FooterCol({
   title,
   links,
   className,
+  twoCol = false,
 }: {
   title: string;
-  links: { href: string; label: string }[];
+  links: readonly FooterLink[];
   className?: string;
+  twoCol?: boolean;
 }) {
   return (
     <div className={className}>
-      <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/90">
-        {title}
-      </h3>
-      {/*
-        Wave 60.97.1 — Footer link rows ship at h:18 (text-sm only) which
-        fails WCAG 2.5.5 (44px) on mobile. Replace `space-y-2.5` text rows
-        with a vertical column where each <Link> has `inline-flex min-h-11
-        py-2.5` — full-width tap target + visual line-height unchanged. The
-        `active:text-primary` state surfaces touch feedback on iOS/Android.
-      */}
-      <ul className="mt-2 sm:mt-4 sm:space-y-2.5">
+      <div className="border-t-2 border-primary/30 pt-3">
+        <h3 className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-primary">
+          {title}
+        </h3>
+      </div>
+      <ul
+        className={
+          twoCol
+            ? 'mt-2 sm:mt-4 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:gap-y-2.5'
+            : 'mt-2 sm:mt-4 sm:space-y-2.5'
+        }
+      >
         {links.map((link) => (
           <li key={link.href}>
             <Link
               href={link.href}
-              className="inline-flex min-h-11 w-full items-center py-2.5 text-sm text-muted-foreground transition-colors hover:text-primary active:text-primary touch-manipulation sm:min-h-0 sm:w-auto sm:py-0"
+              className="inline-flex min-h-11 w-full items-center py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground active:text-foreground touch-manipulation sm:min-h-0 sm:w-auto sm:py-0"
             >
               {link.label}
             </Link>
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+/**
+ * Legal column — Wave 62.10. Same editorial frame as FooterCol but tail
+ * includes social + newsletter mini-CTA per founder vault 138 spec.
+ */
+function FooterColLegal({
+  links,
+  year: _year,
+}: {
+  links: readonly FooterLink[];
+  year: number;
+}) {
+  return (
+    <div>
+      <div className="border-t-2 border-primary/30 pt-3">
+        <h3 className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-primary">
+          Pháp lý
+        </h3>
+      </div>
+      <ul className="mt-2 sm:mt-4 sm:space-y-2.5">
+        {links.map((link) => (
+          <li key={link.href}>
+            <Link
+              href={link.href}
+              className="inline-flex min-h-11 w-full items-center py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground active:text-foreground touch-manipulation sm:min-h-0 sm:w-auto sm:py-0"
+            >
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+      {/* Newsletter mini-CTA — small per spec */}
+      <Link
+        href="/community#newsletter"
+        className="mt-5 inline-flex min-h-11 items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3.5 py-2 text-xs font-medium text-primary transition-colors hover:bg-primary/10 active:bg-primary/15 touch-manipulation"
+      >
+        Newsletter
+        <ArrowRight className="h-3 w-3" aria-hidden="true" />
+      </Link>
+      <div className="mt-4 flex items-center gap-3">
+        <SocialLink href="mailto:hi@hieu.asia" label="Email">
+          <Mail className="h-4 w-4" aria-hidden="true" />
+        </SocialLink>
+        <SocialLink href="https://t.me/hieuasiabot" label="Telegram bot">
+          <MessageCircle className="h-4 w-4" aria-hidden="true" />
+        </SocialLink>
+        <SocialLink href="https://facebook.com/hieu.asia" label="Facebook">
+          <Facebook className="h-4 w-4" aria-hidden="true" />
+        </SocialLink>
+      </div>
     </div>
   );
 }

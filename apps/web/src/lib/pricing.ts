@@ -10,6 +10,13 @@
  * - Mentor Monthly:  199.000đ / month → unlimited mentor.
  * - Mentor Yearly:   1.990.000đ / year (~165.833đ/tháng, saves ~17%).
  * - Lifetime:        4.990.000đ one-time → forever access.
+ *
+ * Wave 62.05 — "Như giấy cũ" decision paralysis fix (vault 138). UI now shows
+ * 3 PRIMARY anchors on /pricing + homepage. Yearly + Lifetime are still sold
+ * (and SEO offers still list all 4 paid SKUs), but live in an expandable
+ * "Tuỳ chọn nâng cao" section on /pricing. The `PRICING` const stays
+ * untouched so admin/checkout/post-reading-upsell continue to resolve all
+ * tiers by key. The split below is for UI semantics only.
  */
 
 export const PRICING = {
@@ -18,6 +25,27 @@ export const PRICING = {
   monthly: { vnd: 199_000, label: 'Mentor Monthly', cadence: 'monthly' },
   yearly: { vnd: 1_990_000, label: 'Mentor Yearly', cadence: 'yearly' },
   lifetime: { vnd: 4_990_000, label: 'Lifetime', cadence: 'one-time' },
+} as const;
+
+/**
+ * Wave 62.05 — semantic split for the homepage + /pricing primary anchors.
+ *
+ * `PRIMARY_PRICING` = the 3 tiers we lead with (the only ones shown above the
+ * fold). `ADVANCED_PRICING` = the deeper commitments (yearly + lifetime)
+ * surfaced only when the buyer expands "Tuỳ chọn nâng cao".
+ *
+ * Both objects are derived from `PRICING` to keep one source of truth — do
+ * NOT inline new numbers here; edit `PRICING` above and the split follows.
+ */
+export const PRIMARY_PRICING = {
+  standard: PRICING.standard,
+  premium: PRICING.premium,
+  monthly: PRICING.monthly,
+} as const;
+
+export const ADVANCED_PRICING = {
+  yearly: PRICING.yearly,
+  lifetime: PRICING.lifetime,
 } as const;
 
 /**
