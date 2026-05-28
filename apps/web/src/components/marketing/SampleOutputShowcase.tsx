@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 import { Sparkles, Calendar, MessageSquareQuote, ListChecks, ArrowRight } from 'lucide-react';
 
 /**
@@ -20,7 +23,11 @@ import { Sparkles, Calendar, MessageSquareQuote, ListChecks, ArrowRight } from '
  *   font-marketing-display / Instrument Serif italic for sample year numerals
  *   rounded-card-editorial / max-w-marketing
  *
- * Server component (no client state). No motion — keeps initial bundle flat.
+ * Wave 60.95.j P2-#19 — converted to `'use client'` to apply scale-up reveal
+ * (0.95 → 1 + opacity) on the 4 cards. Distinguishes the "showcase" surface
+ * grammar from the opacity-only stat blocks (BigNumberRow) and slide-from-left
+ * testimonial (PullQuote). IntersectionObserver gates the reveal once at 25%
+ * visibility; CSS handles the transition (0 KB JS runtime delta — no Motion).
  */
 type SampleCard = {
   id: string;
@@ -123,6 +130,32 @@ const CARDS: SampleCard[] = [
 ];
 
 export function SampleOutputShowcase() {
+  // Wave 60.95.j P2-#19 — gate scale-up reveal on first in-view via single
+  // IntersectionObserver at the grid level (cheaper than 4 observers). Cards
+  // stagger via inline `transitionDelay` so the eye reads left-to-right.
+  const gridRef = useRef<HTMLDivElement | null>(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const node = gridRef.current;
+    if (!node || inView) return;
+    if (typeof IntersectionObserver === 'undefined') {
+      setInView(true);
+      return;
+    }
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry?.isIntersecting) {
+          setInView(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.25 },
+    );
+    obs.observe(node);
+    return () => obs.disconnect();
+  }, [inView]);
+
   return (
     <section
       aria-label="Báo cáo mẫu (minh hoạ)"
@@ -146,12 +179,14 @@ export function SampleOutputShowcase() {
           </p>
         </div>
 
-        {/* Cards */}
-        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {CARDS.map((c) => (
+        {/* Cards — scale-up reveal (vault 130 §III P2-#19). */}
+        <div ref={gridRef} className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {CARDS.map((c, i) => (
             <article
               key={c.id}
-              className="group relative flex flex-col rounded-card-editorial border border-warm-dark-300 bg-warm-dark-100 p-6 transition-colors duration-300 ease-editorial hover:border-gold/40"
+              data-in-view={inView ? 'true' : 'false'}
+              style={{ transitionDelay: `${i * 80}ms` }}
+              className="group relative flex scale-95 flex-col rounded-card-editorial border border-warm-dark-300 bg-warm-dark-100 p-6 opacity-0 transition-[opacity,transform,border-color] duration-[600ms] ease-editorial hover:border-gold/40 data-[in-view=true]:scale-100 data-[in-view=true]:opacity-100"
             >
               <div className="mb-3 flex items-center gap-2">
                 {c.icon}

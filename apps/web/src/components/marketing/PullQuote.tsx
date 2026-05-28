@@ -75,10 +75,17 @@ export function PullQuote({
 
   return (
     <section className={`${bgClass} py-12 md:py-16`}>
+      {/*
+        Wave 60.95.j P2-#19 — testimonial-like pull-quote uses slide-from-left
+        reveal (translateX -2.5rem → 0) to differentiate from the opacity-only
+        stat blocks (BigNumberRow) and scale-up showcase grids
+        (SampleOutputShowcase). Duration 600ms (was 400) to match the other
+        section variants and feel calm rather than snappy.
+      */}
       <div
         ref={ref}
         data-in-view={inView ? 'true' : 'false'}
-        className="mx-auto max-w-marketing-text translate-y-4 px-6 text-center opacity-0 transition-[opacity,transform] duration-[400ms] ease-editorial data-[in-view=true]:translate-y-0 data-[in-view=true]:opacity-100"
+        className="mx-auto max-w-marketing-text -translate-x-10 px-6 text-center opacity-0 transition-[opacity,transform] duration-[600ms] ease-editorial data-[in-view=true]:translate-x-0 data-[in-view=true]:opacity-100"
       >
         <span
           aria-hidden

@@ -191,16 +191,19 @@ function BigNumberCell({ item, delayMs }: { item: BigNumber; delayMs: number }) 
     }).format(n);
   const display = formatter(current);
 
-  // CSS-only reveal — opacity + translateY transition triggered by toggling
-  // the `data-in-view` attribute. Editorial ease + 600ms duration matches the
-  // count-up's first half (visually feels like one motion). Stagger delay
-  // applied inline so each cell starts at i*80ms.
+  // Wave 60.95.j P2-#19 — stat blocks use opacity-only reveal (no translate).
+  // Rationale: the count-up itself IS the motion. Adding translateY on top
+  // double-animated the surface and competed for attention. Other home
+  // sections now use slide-left (PullQuote) / scale-up (SampleOutputShowcase)
+  // / staggered fade (PricingTierV2) so each section type has a distinct
+  // reveal grammar. Stagger delay still applied inline so each cell fades in
+  // at i*80ms in step with the count-up start.
   return (
     <div
       ref={ref}
       data-in-view={inView ? 'true' : 'false'}
       style={{ transitionDelay: `${delayMs}ms` }}
-      className="flex translate-y-6 flex-col items-center text-center opacity-0 transition-[opacity,transform] duration-[600ms] ease-editorial data-[in-view=true]:translate-y-0 data-[in-view=true]:opacity-100 md:items-start md:text-left"
+      className="flex flex-col items-center text-center opacity-0 transition-opacity duration-[600ms] ease-editorial data-[in-view=true]:opacity-100 md:items-start md:text-left"
     >
       {/*
         Wave 60.80.fix — aria-label is prohibited on non-interactive <p>.

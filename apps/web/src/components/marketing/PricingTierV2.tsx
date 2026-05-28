@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Check } from 'lucide-react';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { track } from '@/lib/analytics';
 
 /**
@@ -94,6 +94,36 @@ export function PricingTierV2({
 }: PricingTierV2Props) {
   const [period, setPeriod] = useState<'monthly' | 'yearly'>(defaultPeriod);
 
+  // Wave 60.95.j P2-#19 — staggered fade-in reveal for the tier cards. Single
+  // IntersectionObserver at the grid level (cheaper than one per card); each
+  // card fades + lifts with `index * 100ms` delay so the eye reads the
+  // recommended middle tier last. Pure CSS transition + native IO = 0 KB
+  // runtime delta. Distinguishes pricing-card section grammar from
+  // opacity-only stat blocks (BigNumberRow) / slide-left testimonial (PullQuote) /
+  // scale-up showcase (SampleOutputShowcase).
+  const gridRef = useRef<HTMLDivElement | null>(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const node = gridRef.current;
+    if (!node || inView) return;
+    if (typeof IntersectionObserver === 'undefined') {
+      setInView(true);
+      return;
+    }
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry?.isIntersecting) {
+          setInView(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+    obs.observe(node);
+    return () => obs.disconnect();
+  }, [inView]);
+
   // Wave 60.77 — fires when a user clicks a tier CTA `<Link>`. Secondary
   // metric for PostHog experiment 373563 (pricing display). Resolved lazily
   // inside the click handler so the call site doesn't need to know the
@@ -161,9 +191,9 @@ export function PricingTierV2({
           </div>
         </div>
 
-        {/* Tier grid */}
-        <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
-          {tiers.map((tier) => {
+        {/* Tier grid — staggered fade reveal (vault 130 §III P2-#19). */}
+        <div ref={gridRef} className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+          {tiers.map((tier, tierIdx) => {
             const isYearly = period === 'yearly' && tier.priceYearly !== undefined;
             const amount = isYearly ? tier.priceYearly! : tier.priceMonthly;
             // Wave 60.89.HF1 — explicit `priceUnit` wins over the legacy heuristic.
@@ -188,7 +218,12 @@ export function PricingTierV2({
               : 'border border-warm-dark-300 text-cream-50 hover:bg-warm-dark-200';
 
             return (
-              <article key={tier.id} className={`${baseCard} ${cardBorder}`}>
+              <article
+                key={tier.id}
+                data-in-view={inView ? 'true' : 'false'}
+                style={{ transitionDelay: `${tierIdx * 100}ms` }}
+                className={`${baseCard} ${cardBorder} translate-y-3 opacity-0 [transition-duration:600ms] data-[in-view=true]:translate-y-0 data-[in-view=true]:opacity-100`}
+              >
                 {tier.recommended && (
                   <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-pill bg-gold px-4 py-1 font-mono text-xs uppercase tracking-wider text-warm-dark-50">
                     KHUYÊN DÙNG
