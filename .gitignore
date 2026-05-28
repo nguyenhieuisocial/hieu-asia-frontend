@@ -61,3 +61,6 @@ apps/web/storybook-static/
 supabase/.temp/
 supabase/.temp*/
 
+
+# Wave 60.95.ah — local Claude Code launch config (developer machine, do not share)
+.claude/launch.json
