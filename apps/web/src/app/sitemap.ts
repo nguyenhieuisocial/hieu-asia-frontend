@@ -145,6 +145,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/hop-tuoi/xong-dat`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/newsletter`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
   ];
+
+  // Wave 60.96.5 — audit found 4 audience landings + 1 sample preview were
+  // shipped (Wave 60.95.u + 60.95.m) but never added to sitemap. Without
+  // these entries Google Search Console can't discover them and the OG/
+  // BreadcrumbList/Article schema added in Wave 60.96.{1..4} never reaches
+  // the SERP rich-snippet pipeline.
+  const wave60_96Additions: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/bat-tu`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE_URL}/mbti`, lastModified: now, changeFrequency: 'monthly', priority: 0.75 },
+    { url: `${BASE_URL}/newsletter/archive`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
+    { url: `${BASE_URL}/reading/sample-tu-vi`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+  ];
   const learnPalaceUrls: MetadataRoute.Sitemap = PALACE_READINGS.map((p) => ({
     url: `${BASE_URL}/learn/tu-vi/${p.slug}`,
     lastModified: now,
@@ -152,5 +164,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...learnPalaceUrls];
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls];
 }
