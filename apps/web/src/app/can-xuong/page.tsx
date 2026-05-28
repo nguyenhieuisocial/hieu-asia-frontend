@@ -14,6 +14,7 @@ import {
   Skeleton,
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
 
@@ -110,6 +111,7 @@ export default function CanXuongPage() {
   const style = result ? LEVEL_STYLE[result.fortune_level] : null;
 
   return (
+    <>
     <ToolPageShell
       eyebrow="Cổ truyền Việt Nam"
       icon={<span aria-hidden="true">⚖️</span>}
@@ -289,6 +291,8 @@ export default function CanXuongPage() {
         </div>
       </section>
     </ToolPageShell>
+    <StickyMobileCta trackId="can-xuong" />
+    </>
   );
 }
 

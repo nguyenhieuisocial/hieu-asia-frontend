@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 
 const FEATURES: { title: string; body: string; icon: string }[] = [
@@ -36,6 +37,7 @@ export default function ThanSoHocLandingPage() {
   };
 
   return (
+    <>
     <ToolPageShell
       eyebrow="Numerology · Pythagoras"
       icon={<span aria-hidden="true">🔢</span>}
@@ -127,5 +129,7 @@ export default function ThanSoHocLandingPage() {
         </aside>
       </section>
     </ToolPageShell>
+    <StickyMobileCta trackId="than-so-hoc" />
+    </>
   );
 }

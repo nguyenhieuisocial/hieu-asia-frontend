@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata = {
   title: 'Hợp tuổi cưới hỏi, làm ăn, sinh con — Phân tích AI',
@@ -120,6 +121,7 @@ export default function HopTuoiLandingPage() {
         Công cụ tham khảo — không thay thế tư vấn chuyên gia. Quyết định cuối cùng thuộc về bạn.
       </p>
     </ToolPageShell>
+    <StickyMobileCta trackId="hop-tuoi" />
     </>
   );
 }

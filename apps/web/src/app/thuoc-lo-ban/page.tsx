@@ -18,6 +18,7 @@ import {
   Skeleton,
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
 
@@ -87,6 +88,7 @@ export default function ThuocLoBanPage() {
   const isGood = result?.fortune === 'Tốt';
 
   return (
+    <>
     <ToolPageShell
       eyebrow="Phong thủy · Lỗ Ban"
       icon={<span aria-hidden="true">📏</span>}
@@ -242,6 +244,8 @@ export default function ThuocLoBanPage() {
         </div>
       </section>
     </ToolPageShell>
+    <StickyMobileCta trackId="thuoc-lo-ban" />
+    </>
   );
 }
 
