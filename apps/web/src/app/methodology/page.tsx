@@ -37,12 +37,35 @@ export const metadata: Metadata = {
   description:
     'hieu.asia không "phán mệnh": engine deterministic lập lá số, AI diễn giải dữ liệu, người dùng quyết định. 5 nguyên tắc, 6 tầng pipeline, confidence score, validation snapshot, quality rubric.',
   alternates: { canonical: 'https://hieu.asia/methodology' },
+  // Wave 60.95.k P1-SEO — route-level openGraph REPLACES root-layout
+  // openGraph (Next.js merge semantics), so we must re-declare `images` here
+  // or Zalo/Facebook/Telegram/Slack previews render blank. Same for `twitter`.
   openGraph: {
     title: 'Phương pháp luận',
     description:
       'Engine deterministic lập lá số, AI diễn giải, người dùng quyết định.',
     url: 'https://hieu.asia/methodology',
     type: 'article',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'hieu.asia — Phương pháp luận: Engine tính, AI luận, người dùng quyết',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Phương pháp luận',
+    description:
+      'Engine deterministic lập lá số, AI diễn giải, người dùng quyết định.',
+    images: [
+      {
+        url: '/og-image.jpg',
+        alt: 'hieu.asia — Phương pháp luận: Engine tính, AI luận, người dùng quyết',
+      },
+    ],
   },
 };
 

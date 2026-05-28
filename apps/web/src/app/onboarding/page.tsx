@@ -9,14 +9,66 @@ export const metadata: Metadata = {
   description:
     'Bắt đầu lá số cá nhân hoá — 4 bước. Đồng ý xử lý dữ liệu theo Nghị định 13/2023/NĐ-CP. Mã hoá AES-256, không bán dữ liệu, có quyền rút lại bất cứ lúc nào.',
   alternates: { canonical: 'https://hieu.asia/onboarding' },
+  // Wave 60.95.k P1-SEO — route-level openGraph REPLACES root-layout
+  // openGraph (Next.js merge semantics), so we must re-declare `images` here
+  // or Zalo/Facebook/Telegram/Slack previews render blank. Same for `twitter`.
   openGraph: {
     title: 'Mở khóa lá số',
     description:
       'Bắt đầu hành trình hiểu chính mình — 4 bước. Đồng ý xử lý dữ liệu để tạo lá số.',
     url: 'https://hieu.asia/onboarding',
     type: 'website',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'hieu.asia — Mở khóa lá số Tử Vi cá nhân hoá trong 4 bước',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Mở khóa lá số',
+    description:
+      'Bắt đầu hành trình hiểu chính mình — 4 bước.',
+    images: [
+      {
+        url: '/og-image.jpg',
+        alt: 'hieu.asia — Mở khóa lá số Tử Vi cá nhân hoá trong 4 bước',
+      },
+    ],
   },
   robots: { index: false, follow: true },
+};
+
+// Wave 60.95.k P1-SEO — JSON-LD parity with /pricing /sample-report
+// /methodology. WebPage + BreadcrumbList signals to crawlers that
+// /onboarding is a discoverable VN-language entry-point even though
+// `robots.index: false` keeps it out of SERP (BreadcrumbList still
+// surfaces in site-link context when referenced from indexed pages).
+const BREADCRUMB_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
+    { '@type': 'ListItem', position: 2, name: 'Mở khóa lá số', item: 'https://hieu.asia/onboarding' },
+  ],
+};
+
+const WEBPAGE_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Mở khóa lá số — hieu.asia',
+  description:
+    'Bắt đầu lá số cá nhân hoá — 4 bước. Đồng ý xử lý dữ liệu theo Nghị định 13/2023/NĐ-CP.',
+  url: 'https://hieu.asia/onboarding',
+  inLanguage: 'vi-VN',
+  isPartOf: {
+    '@type': 'WebSite',
+    name: 'hieu.asia',
+    url: 'https://hieu.asia',
+  },
 };
 
 export default async function OnboardingPage({
@@ -36,6 +88,14 @@ export default async function OnboardingPage({
     <div className="min-h-screen bg-background text-foreground">
       {intent && <OnboardingIntentTracker intent={intent} />}
       <SiteNav />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }}
+      />
       <main id="main-content" className="relative overflow-hidden bg-background pt-20 pb-20">
         <div
           aria-hidden="true"

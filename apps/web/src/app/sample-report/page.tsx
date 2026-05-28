@@ -23,11 +23,33 @@ export const metadata: Metadata = {
   description:
     'Báo cáo Tử Vi mẫu công khai: 12 cung, Mệnh — Thân, đại vận, lưu niên, kế hoạch 30-60-90 ngày. Xem trước trước khi quyết định lập lá số.',
   alternates: { canonical: 'https://hieu.asia/sample-report' },
+  // Wave 60.95.k P1-SEO — route-level openGraph REPLACES root-layout
+  // openGraph (Next.js merge semantics), so we must re-declare `images` here
+  // or Zalo/Facebook/Telegram/Slack previews render blank. Same for `twitter`.
   openGraph: {
     title: 'Mẫu báo cáo Tử Vi',
     description: 'Cẩm Nang cá nhân hoá: 12 cung + Mentor + kế hoạch hành động.',
     url: 'https://hieu.asia/sample-report',
     type: 'article',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'hieu.asia — Mẫu báo cáo Tử Vi: 12 cung + Mentor + kế hoạch 30-60-90',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Mẫu báo cáo Tử Vi',
+    description: 'Cẩm Nang cá nhân hoá: 12 cung + Mentor + kế hoạch hành động.',
+    images: [
+      {
+        url: '/og-image.jpg',
+        alt: 'hieu.asia — Mẫu báo cáo Tử Vi: 12 cung + Mentor + kế hoạch 30-60-90',
+      },
+    ],
   },
 };
 

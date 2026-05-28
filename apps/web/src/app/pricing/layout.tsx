@@ -5,12 +5,35 @@ export const metadata: Metadata = {
   description:
     'Premium 99.000đ một lần · Mentor Monthly 199.000đ / tháng · Mentor Yearly 1.990.000đ / năm (tiết kiệm 17%) · Lifetime 4.990.000đ trọn đời.',
   alternates: { canonical: 'https://hieu.asia/pricing' },
+  // Wave 60.95.k P1-SEO — route-level openGraph REPLACES root-layout
+  // openGraph (Next.js merge semantics), so we must re-declare `images` here
+  // or Zalo/Facebook/Telegram/Slack previews render blank. Same for `twitter`.
   openGraph: {
     title: 'Bảng giá',
     description:
       'Premium 99.000đ · Mentor Monthly 199.000đ/tháng · Mentor Yearly 1.990.000đ/năm · Lifetime 4.990.000đ. Mở khóa góc nhìn sâu cho mỗi quyết định.',
     url: 'https://hieu.asia/pricing',
     type: 'website',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'hieu.asia — Bảng giá Premium / Mentor / Lifetime',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Bảng giá',
+    description:
+      'Premium 99.000đ · Mentor 199.000đ/tháng · Lifetime 4.990.000đ.',
+    images: [
+      {
+        url: '/og-image.jpg',
+        alt: 'hieu.asia — Bảng giá Premium / Mentor / Lifetime',
+      },
+    ],
   },
 };
 
