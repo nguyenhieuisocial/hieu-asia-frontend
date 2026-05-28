@@ -412,3 +412,38 @@ Total Wave 62 runtime payload: **+~15-20 KB gzipped** — mostly Newsreader font
 12. ThemeToggle hidden on force-dark routes.
 
 Wave 62 plan: **COMPLETE**.
+
+---
+
+## Late additions (autonomous-mode post-completion)
+
+After plan marked COMPLETE, founder triggered autonomous mode 3 more times. Each iteration found a slice of marginal-but-real value:
+
+| Wave | Commit | Outcome |
+|------|--------|---------|
+| 62.05e | `5f441d2` | Wired 4 of 6 custom icons into EditorialList items on home + `preload: false` on Outfit + Instrument Serif (LCP critical-path optimization, ~5-8 woff2 files removed from preload) |
+| 62.05f | `a10c1a0` | Deleted DisciplineGlyphs.tsx + .stories.tsx (full-repo orphan after Wave 62.04 + 62.08 + 62.05e wired new icons). Swept 3 stale "BentoLens" references in page.tsx comments to "EditorialList". -269 LOC net. |
+
+### EditorialList icon API addition
+
+Added optional `icon?: ReactNode` to `EditorialListItem`. When set, REPLACES the number in the first column (editorial restraint — one focal element per item). Backward-compatible: existing items without `icon` continue rendering numbers as before.
+
+### Remaining 2 unwired icons (DaiVanIcon, DuongDoiIcon)
+
+These are NOT orphan — they're staged-but-unused, ready for future routes:
+- `DaiVanIcon` → fits `/timeline`, `/dai-van-hien-tai`, `/lo-trinh/ke-hoach-nam`
+- `DuongDoiIcon` → fits `/than-so-hoc/result`, `/lo-trinh/hieu-ban-than`
+
+A future polish wave can integrate them when those routes touch design.
+
+### Final session totals
+
+- **14 frontend commits** (894e757 → a10c1a0)
+- **2 vault commits** (5720a64 + future)
+- **8 sub-agents** dispatched (2 sweep + 5 batch + 1 ultrareview-pass-3-with-icons)
+- **3 /ultrareview cycles** (all caught real issues, all fixed pre-push)
+- **11 new components** shipped (HeroV4 + EditorialList + SocialProofQuiet + 6 icons + 2 helpers)
+- **5 orphans deleted** (HeroV3 + HomeHeroEyebrow + LotusLottie + DisciplineGlyphs + DisciplineGlyphs.stories)
+- **Net LOC delta**: ~+1700 / -1100 = +600 LOC net (excluding deleted noise)
+
+Wave 62 plan + autonomous extensions: **TRULY COMPLETE**.
