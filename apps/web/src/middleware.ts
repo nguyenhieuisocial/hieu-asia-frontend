@@ -55,10 +55,23 @@ export function middleware(req: NextRequest) {
 
   // Skip excluded paths. The matcher already filters most of these but we
   // double-check here for safety (matcher patterns can drift).
+  //
+  // Wave 60.95.ao — also skip telemetry tunnel paths. `/monitoring` is the
+  // Sentry tunnel (next.config.ts → withSentryConfig tunnelRoute). Vercel's
+  // platform-side Web Analytics + Speed Insights proxy injects an opaque
+  // per-project tunnel path (e.g. `/8f07c64b561fde03/{vitals,script.js}`) to
+  // dodge ad-blockers; running middleware on the `sendBeacon` POST adds Edge
+  // cold-start latency and causes `net::ERR_ABORTED` on slow connections,
+  // losing CWV telemetry. Both paths are pure beacon endpoints — nothing
+  // affiliate-attribution or marketing-cache related runs there.
   if (
     pathname.startsWith('/api/') ||
     pathname.startsWith('/_next/') ||
     pathname.startsWith('/admin/') ||
+    pathname.startsWith('/monitoring') ||
+    pathname.startsWith('/_vercel/') ||
+    // Vercel auto-tunnel: 16-hex prefix → /vitals | /script.js | /event
+    /^\/[0-9a-f]{16}\/(vitals|script\.js|event)/.test(pathname) ||
     pathname === '/favicon.ico'
   ) {
     return NextResponse.next();
@@ -158,6 +171,14 @@ export function middleware(req: NextRequest) {
 }
 
 // Run on every page request — skip API/_next/static/admin/files-with-extension.
+// Wave 60.95.ao — also skip `/monitoring` (Sentry tunnel) and `/_vercel/*`
+// (Vercel platform Analytics + Speed Insights). The Vercel platform also
+// rewrites those to opaque per-project tunnel paths at the edge before the
+// matcher runs in some deploys; the in-function regex guard above catches
+// those. Skipping at the matcher level prevents the Edge worker from cold-
+// starting for telemetry beacons (root cause of `vitals` net::ERR_ABORTED).
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|admin|favicon.ico|robots.txt|sitemap.xml).*)'],
+  matcher: [
+    '/((?!api|_next/static|_next/image|_vercel|monitoring|admin|favicon.ico|robots.txt|sitemap.xml).*)',
+  ],
 };
