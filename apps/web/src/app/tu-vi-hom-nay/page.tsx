@@ -34,6 +34,57 @@ export const metadata: Metadata = {
   description:
     'Tử vi hàng ngày cho 12 con giáp: tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe. Đăng ký nhận thông báo mỗi sáng 6h.',
   alternates: { canonical: 'https://hieu.asia/tu-vi-hom-nay' },
+  // Wave 60.96.1 — route-level openGraph REPLACES root-layout openGraph
+  // (Next.js merge semantics), so we must re-declare `images` here or Zalo/
+  // Facebook/Telegram/Slack previews render blank. Same for `twitter`.
+  openGraph: {
+    title: 'Tử vi 12 con giáp hôm nay',
+    description:
+      'Tử vi hàng ngày 12 con giáp — tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe.',
+    url: 'https://hieu.asia/tu-vi-hom-nay',
+    type: 'website',
+    locale: 'vi_VN',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'hieu.asia — Tử vi hôm nay cho 12 con giáp',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Tử vi 12 con giáp hôm nay',
+    description: 'Tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe — cập nhật mỗi ngày.',
+    images: [
+      {
+        url: '/og-image.jpg',
+        alt: 'hieu.asia — Tử vi hôm nay cho 12 con giáp',
+      },
+    ],
+  },
+};
+
+const BREADCRUMB_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
+    { '@type': 'ListItem', position: 2, name: 'Tử vi hôm nay', item: 'https://hieu.asia/tu-vi-hom-nay' },
+  ],
+};
+
+const WEBPAGE_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': 'https://hieu.asia/tu-vi-hom-nay',
+  url: 'https://hieu.asia/tu-vi-hom-nay',
+  name: 'Tử vi 12 con giáp hôm nay',
+  description:
+    'Tử vi hàng ngày cho 12 con giáp — tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe. Đăng ký push notification mỗi sáng 6h.',
+  inLanguage: 'vi-VN',
+  isPartOf: { '@type': 'WebSite', name: 'hieu.asia', url: 'https://hieu.asia' },
 };
 
 interface DailyHoroscope {
@@ -74,6 +125,15 @@ export default async function Page() {
   const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }}
+      />
     <ToolPageShell
       eyebrow={`Tử vi · ${today}`}
       icon={<span aria-hidden="true">🐲</span>}
@@ -124,5 +184,6 @@ export default async function Page() {
         </div>
       </section>
     </ToolPageShell>
+    </>
   );
 }
