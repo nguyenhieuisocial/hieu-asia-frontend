@@ -8,51 +8,77 @@
 
 @layer base {
   /*
-   * Wave 60.95.al — palette REDESIGN aligned with vault 108 "Warm-Dark
-   * Editorial" brand identity. Previous tokens used `hue 240` (cold
-   * blue/grey) which clashed with the brand's warm sepia direction.
-   * All ink/cream tokens now use the warm-dark + cream HSL scales from
-   * `packages/config/tailwind-preset.ts`.
+   * Wave 62.02 — palette REFINED toward vault 138 "Như giấy cũ" spec.
+   * Supersedes vault 108 "Warm-Dark Editorial" (which locked marketing
+   * to dark). HSL shifts are SUBTLE — current warm-dark + cream + gold
+   * scales were already 90% aligned; Wave 62 nudges them the final 10%:
    *
-   * Light = warm cream paper · Dark = warm ink editorial
-   * Gold accent `#B8923D` unchanged (theme-stable brand color).
+   * Day "Giấy thấm" — Paper #F3ECDD bg, Ink #171411 text, Ochre #A47532 accent
+   * Night "Khoảng lặng" — Charcoal #15110C bg, Bone #E8DCC1 text, Gold-soft #D4A261 accent
+   *
+   * 5 hành (kim/mộc/thuỷ/hoả/thổ) added as theme-stable functional CSS vars
+   * for chip/data-viz only — NEVER for backgrounds (founder spec rule).
+   *
+   * Default theme flipped from "dark" to "light" at the layout.tsx ThemeProvider
+   * call-site so Paper "Giấy thấm" greets first-visit users. Existing users
+   * with localStorage `theme=dark` stay on dark — no surprise flip.
    */
   :root {
-    --background: 36 38% 93%;        /* cream-50 #F5F0E6 */
-    --foreground: 40 19% 6%;         /* warm-dark-50 #13110D (warm near-black) */
-    --card: 0 0% 100%;               /* pure white for elevation lift on cream */
-    --card-foreground: 40 19% 6%;
-    --primary: 40 51% 48%;           /* gold #B8923D */
-    --primary-foreground: 0 0% 100%; /* white text on gold for CTA legibility */
-    --muted: 37 47% 89%;             /* cream-100 #EFE7D6 (warm muted surface) */
-    --muted-foreground: 28 16% 25%;  /* warm-dark-500 #4A3F36 (warm muted text) */
-    --border: 33 22% 73%;            /* cream-300 #C9BFB0 (warm subtle border) */
-    --ring: 40 51% 48%;               /* gold */
+    --background: 41 48% 91%;        /* Paper #F3ECDD — Giấy thấm */
+    --foreground: 30 15% 8%;         /* Ink #171411 — chữ chính trên paper */
+    --card: 38 60% 95%;              /* Paper-50 #FAF6EC for elevation lift on paper */
+    --card-foreground: 30 15% 8%;
+    --primary: 35 53% 42%;           /* Ochre #A47532 — day accent (single accent on paper) */
+    --primary-foreground: 38 60% 95%; /* paper-50 text on ochre CTA */
+    --muted: 38 36% 86%;             /* Paper-200 / Bone #EBE2CD — surface lift */
+    --muted-foreground: 33 9% 39%;   /* Paper-700 / Ink-meta #6B6358 */
+    --border: 41 25% 73%;            /* Paper-300 / Rule #CCC0A6 */
+    --ring: 35 53% 42%;              /* ochre */
     --radius: 0.625rem;
 
-    /* Wave 52 — RGB anchors for proper alpha tokens.
-     * Use `rgb(var(--gold-rgb) / <alpha>)` instead of ad-hoc `bg-gold/N` so
-     * alpha steps stay consistent across the codebase. */
-    --gold-rgb: 184 146 61;          /* #B8923D */
-    --ink-rgb: 19 17 13;             /* warm-dark-50 #13110D (Wave 60.95.al — warmer than cold #0F0F12) */
+    /* RGB anchors for alpha tokens. Wave 62.02 — added --ochre-rgb (day
+     * accent) and --paper-rgb (day bg). Existing --gold-rgb + --ink-rgb
+     * kept as-is for back-compat with rgb()-based utilities sprinkled
+     * across 100+ files. */
+    --gold-rgb: 184 146 61;          /* #B8923D — legacy */
+    --ink-rgb: 23 20 17;             /* Ink #171411 */
+    --ochre-rgb: 164 117 50;         /* Ochre #A47532 — day accent */
+    --paper-rgb: 243 236 221;        /* Paper #F3ECDD — day bg */
+    --bone-rgb: 232 220 193;         /* Bone #E8DCC1 — night text */
+    --charcoal-rgb: 21 17 12;        /* Charcoal #15110C — night bg */
     --gold-5: rgb(var(--gold-rgb) / 0.05);
     --gold-10: rgb(var(--gold-rgb) / 0.10);
     --gold-20: rgb(var(--gold-rgb) / 0.20);
     --gold-40: rgb(var(--gold-rgb) / 0.40);
     --gold-80: rgb(var(--gold-rgb) / 0.80);
+
+    /* Wave 62.02 — Five-element functional accents (theme-stable).
+     * RULE: chip + accent + data viz ONLY. NEVER as background.
+     * Use via `color: var(--hanh-kim)` or `bg-[var(--hanh-kim)]/10` for
+     * tinted chip backgrounds. Identical values in day + night modes. */
+    --hanh-kim: #7D8A98;             /* Kim · METAL */
+    --hanh-moc: #6B8154;             /* Mộc · WOOD */
+    --hanh-thuy: #3F5D6F;            /* Thuỷ · WATER */
+    --hanh-hoa: #A44A36;             /* Hoả · FIRE */
+    --hanh-tho: #A07842;             /* Thổ · EARTH */
   }
 
   .dark {
-    --background: 40 19% 6%;         /* warm-dark-50 #13110D (warm ink, not cold blue-grey) */
-    --foreground: 36 38% 93%;        /* cream-50 #F5F0E6 */
-    --card: 24 16% 11%;              /* warm-dark-200 #221C18 (warm card surface) */
-    --card-foreground: 36 38% 93%;
-    --primary: 40 51% 48%;           /* gold */
-    --primary-foreground: 40 19% 6%; /* warm-dark on gold (dark text on gold pill) */
-    --muted: 30 17% 9%;              /* warm-dark-100 #1B1714 */
-    --muted-foreground: 33 22% 73%;  /* cream-300 #C9BFB0 (warm muted text) */
-    --border: 27 18% 15%;            /* warm-dark-300 #2E2620 (warm subtle border) */
-    --ring: 40 51% 48%;              /* gold */
+    --background: 33 27% 6%;         /* Charcoal #15110C — Khoảng lặng */
+    --foreground: 41 46% 83%;        /* Bone #E8DCC1 — chữ chính on charcoal */
+    --card: 30 17% 10%;              /* Bark #1F1A13 — surface lift on charcoal */
+    --card-foreground: 41 46% 83%;
+    --primary: 34 57% 60%;           /* Gold-soft #D4A261 — night accent (softer than #B8923D) */
+    --primary-foreground: 33 27% 6%; /* charcoal text on gold-soft */
+    --muted: 32 16% 9%;              /* Charcoal-200 #1B1714 */
+    --muted-foreground: 41 11% 53%;  /* Bone-soft #9A8D72 */
+    --border: 33 26% 18%;            /* Rule #3A3122 */
+    --ring: 34 57% 60%;              /* gold-soft */
+
+    /* RGB anchors flip for dark mode where ink/paper semantic flips.
+     * --ochre-rgb in dark mode resolves to gold-night for consistent
+     * alpha math. */
+    --ochre-rgb: 212 162 97;         /* Gold-soft #D4A261 in night mode */
   }
 
   * {

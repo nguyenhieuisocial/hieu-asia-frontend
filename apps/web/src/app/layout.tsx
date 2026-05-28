@@ -196,11 +196,15 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
+  // Wave 62.02 — theme-color updated to vault 138 "Như giấy cũ" palette.
+  // Dark: Charcoal #15110C (was #0F0F12). Light: Paper #F3ECDD (was gold
+  // #B8923D — which was wrong because theme-color paints the browser
+  // chrome to MATCH the page background, not accent it).
   themeColor: [
-    { media: '(prefers-color-scheme: dark)', color: '#0F0F12' },
-    { media: '(prefers-color-scheme: light)', color: '#B8923D' },
+    { media: '(prefers-color-scheme: dark)', color: '#15110C' },
+    { media: '(prefers-color-scheme: light)', color: '#F3ECDD' },
   ],
-  colorScheme: 'dark',
+  colorScheme: 'light',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
@@ -257,19 +261,19 @@ export default async function RootLayout({
           Bỏ qua đến nội dung chính
         </a>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          {/* Wave 60.82.B — `enableSystem={false}` STAYS even though light
-              mode is now live on product surfaces. Reason: marketing pages
-              are dark-locked per vault 108 (Warm-Dark Editorial brand
-              identity); if `enableSystem={true}` flipped the whole site to
-              light for users with OS-level `prefers-color-scheme: light`,
-              marketing would render as a broken visual sandwich (cream nav +
-              dark hero + cream content bands per vault 112 P0-01 audit).
-              Light mode is opt-in only via `<ThemeToggle />`, which itself
-              short-circuits to null on marketing routes. The
-              miniapp-telegram layout uses `enableSystem={false}` for the
-              same brand-lock reason. Re-evaluate only if marketing brand
-              lock is ever lifted. */}
-          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          {/* Wave 62.02 — defaultTheme flipped from "dark" to "light".
+              Vault 138 "Như giấy cũ" supersedes vault 108 "Warm-Dark
+              Editorial" — marketing now greets first-visit users on
+              Paper (Giấy thấm) bg, not Charcoal. Existing users with
+              localStorage `theme=dark` stay on dark (no surprise flip).
+              `enableSystem={false}` STAYS — light remains opt-in for
+              consistency: users who toggled to dark previously don't get
+              forced back to light by OS preference. Night-mode pages
+              (/reading, /mentor, /tu-vi-2026, /dai-van-hien-tai) will
+              force dark via per-route logic in Wave 62.04 (paired with
+              hero rewrite). Until then, those pages default to whatever
+              the user's localStorage says (light for new visitors). */}
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
             <QueryProvider>
               <LazyMotionProvider>
                 <Suspense fallback={null}>

@@ -2,9 +2,18 @@ import type { Config } from 'tailwindcss';
 
 /**
  * Shared Tailwind preset for hieu.asia frontend.
- * Brand palette per [[90 - Frontend Design Spec]].
+ * Brand palette per vault 138 — "Như giấy cũ, không như app bói" (Wave 62).
  *
- * Premium mood: đen than / vàng đồng / tím trầm — không mê tín rẻ tiền.
+ * Day mode "Giấy thấm" — Paper × Ink × Ochre.
+ * Night mode "Khoảng lặng" — Charcoal × Bone × Gold (softened from harsh #B8923D
+ * to #D4A261 for editorial calm on dark surfaces).
+ *
+ * Supersedes vault 108 "Warm-Dark Editorial" which locked marketing to dark.
+ * Founder rationale: "Sản phẩm là một bài đọc, không phải slot machine."
+ *
+ * Legacy `cream/warm-dark/gold` scales kept as transitional aliases so the
+ * site can ship incrementally without sweeping every utility class. Wave 62.04
+ * (hero rewrite) starts the migration; Wave 62.10 finishes it.
  */
 const preset = {
   darkMode: 'class',
@@ -13,11 +22,72 @@ const preset = {
       colors: {
         // Background neutrals
         ink: {
-          DEFAULT: '#0F0F12', // Đen than — primary dark background
+          DEFAULT: '#0F0F12', // Đen than — primary dark background (legacy)
           night: '#0B1326', // Xanh đêm — alt primary
-          50: '#F2EDE3', // Kem ngà — light mode background
+          50: '#F2EDE3', // Kem ngà — light mode background (legacy)
         },
-        // Accent gold (primary CTA, highlight)
+        // Wave 62.02 — Paper × Ink × Ochre day-mode scale.
+        // Paper (default bg), Bone (surface lift), Ink (text), Ink-soft (meta),
+        // Rule (border). Use these as the canonical day-mode palette going
+        // forward; cream/warm-dark/gold remain for back-compat.
+        paper: {
+          DEFAULT: '#F3ECDD', // Nền chính — Giấy thấm
+          50: '#FAF6EC', // Highlight (above paper)
+          100: '#F3ECDD', // Default paper (same as DEFAULT, semantic alias)
+          200: '#EBE2CD', // Bone — surface lift on paper
+          300: '#CCC0A6', // Rule — border on paper
+          500: '#A39A86', // Ink-soft on paper background
+          700: '#6B6358', // Ink-meta phụ đề
+          900: '#171411', // Ink — text on paper
+        },
+        // Wave 62.02 — Charcoal × Bone × Gold night-mode scale.
+        // Charcoal (default bg), Bark (surface lift), Bone (text), Bone-soft (meta),
+        // Rule (border). Replaces warm-dark scale going forward.
+        charcoal: {
+          DEFAULT: '#15110C', // Nền chính — Khoảng lặng
+          50: '#1F1A13', // Bark — surface lift on charcoal
+          100: '#15110C', // Default charcoal (semantic alias)
+          200: '#1B1714', // Mid surface
+          300: '#3A3122', // Rule — border on charcoal
+          500: '#9A8D72', // Bone-soft on charcoal background
+          700: '#E8DCC1', // Bone — text on charcoal
+        },
+        // Wave 62.02 — Bone family for night-mode text/surface.
+        // Direct hex aliases for the common cases — most surfaces just need
+        // bone-DEFAULT (text on charcoal) and bone-soft (meta on charcoal).
+        bone: {
+          DEFAULT: '#E8DCC1', // Chữ chính on charcoal
+          soft: '#9A8D72',
+          rule: '#3A3122',
+        },
+        // Wave 62.02 — Ochre (day-mode accent) + softer Gold (night-mode accent).
+        // Spec calls Ochre #A47532 the "single accent" on paper, while night
+        // uses a softer Gold #D4A261 that doesn't burn against charcoal.
+        // Original `gold` scale (centered on #B8923D) kept for back-compat;
+        // surfaces migrating to vault 138 should reference `ochre` or
+        // `gold-night` explicitly.
+        ochre: {
+          DEFAULT: '#A47532', // Day accent — single accent on paper
+          50: '#F3E7D0',
+          100: '#E2C792',
+          300: '#C29053',
+          500: '#A47532',
+          700: '#73522A',
+          900: '#3A2914',
+        },
+        'gold-night': '#D4A261', // Night accent — softer than #B8923D
+        // Wave 62.02 — Five-element (ngũ hành) functional accents.
+        // RULE: chip + accent + data viz only. NEVER use as background.
+        // Founder spec: "5 hành chỉ dùng functional, không dùng cho hero".
+        hanh: {
+          kim: '#7D8A98', // Kim · METAL
+          moc: '#6B8154', // Mộc · WOOD
+          thuy: '#3F5D6F', // Thuỷ · WATER
+          hoa: '#A44A36', // Hoả · FIRE
+          tho: '#A07842', // Thổ · EARTH
+        },
+        // Accent gold (primary CTA, highlight) — LEGACY (use `ochre` for day,
+        // `gold-night` for night going forward).
         gold: {
           DEFAULT: '#B8923D',
           50: '#FBF6EC',
