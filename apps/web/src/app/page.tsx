@@ -397,7 +397,7 @@ export default function LandingPage() {
             (1.243 reports / 4.8★) and replaced with a factual "4 ỐNG KÍNH
             · MỘT BỨC TRANH" eyebrow, but founder requested removing the
             slot itself for a tighter hero. The 4-discipline value-prop is
-            already communicated via the BentoLens section below the hero
+            already communicated via the EditorialList section below the hero
             (BỐN ỐNG KÍNH eyebrow + 4 lens cards), so deduplicating cleans
             up the above-the-fold real estate. The HeroBadgeScroll motion
             wrapper is dropped here too — without an eyebrow child it has
@@ -419,7 +419,7 @@ export default function LandingPage() {
             Old `secondaryCta` "Xem báo cáo mẫu" deferred — the new hero
             uses /tu-vi-2026 as secondary destination for the traditional
             audience. Sample report still discoverable via inline CTA at
-            the BentoLens "Bốn ống kính" section closing line. */}
+            the EditorialList "Bốn ống kính" section closing line. */}
         <HeroV4 />
 
         {/* Wave 60.66.P3 — IntentChips (vault 109 §3 Phase 3 + vault 108 §5).
@@ -586,7 +586,7 @@ export default function LandingPage() {
             (TRIẾT LÝ block "Bạn vẫn là người quyết định" + body "Tử Vi không
             tiên tri..."). Philosophy stance now lives entirely in the PullQuote
             below (same message, denser editorial format). Kept the
-            SectionDivider as visual breath between BentoLens and PullQuote;
+            SectionDivider as visual breath between EditorialList and PullQuote;
             PhilosophyBlock component itself stays in `marketing/` and renders
             on /about page (gitnexus impact confirmed LOW + isolated usage). */}
         <SectionDivider variant="lotus" />
