@@ -166,6 +166,74 @@ export function isPostHogServerConfigured(): boolean {
 }
 
 /* -------------------------------------------------------------------------
+ * Wave 61.09 — Core Web Vitals.
+ *
+ * Reads from the `$web_vitals` event emitted by apps/web/src/lib/web-vitals.ts
+ * (which forwards web-vitals package metrics — LCP/CLS/INP/FCP/TTFB — to
+ * PostHog). Device split uses PostHog's auto-captured `properties.$device_type`
+ * (Mobile / Tablet / Desktop).
+ *
+ * Why this matters for the founder dashboard: mobile-first launch means the
+ * mobile LCP/INP/CLS are the conversion-critical numbers — Google ranks them
+ * directly for SEO, and they directly affect Vietnamese 4G/3G users on
+ * mid-range Androids. Headline KPI is mobile p75 — that's the Core Web
+ * Vitals "good/needs-improvement/poor" boundary Google uses.
+ * --------------------------------------------------------------------- */
+
+export type WebVitalMetric = 'LCP' | 'CLS' | 'INP' | 'FCP' | 'TTFB';
+
+export interface WebVitalSampleRow {
+  metric: WebVitalMetric;
+  device: 'Mobile' | 'Desktop' | 'Tablet' | 'Unknown';
+  /** 75th-percentile of the metric value (CWV passes use p75). */
+  p75: number;
+  /** 50th-percentile (median). */
+  p50: number;
+  /** 95th-percentile (worst-case). */
+  p95: number;
+  /** Sample size across the 7-day window. */
+  samples: number;
+}
+
+/**
+ * Per-metric × device p50/p75/p95 from $web_vitals events over the last
+ * 7 days. Units: LCP/FCP/TTFB = ms, INP = ms, CLS = unitless (×1000 → score).
+ *
+ * The frontend emits `metric` + `value` props. `$device_type` is set by
+ * PostHog's auto-capture from user agent — fall back to "Unknown" when
+ * absent so the bucket count stays accurate.
+ */
+export async function fetchWebVitals(): Promise<WebVitalSampleRow[] | null> {
+  const sql = `
+    SELECT
+      properties.metric AS metric,
+      coalesce(nullIf(properties.$device_type, ''), 'Unknown') AS device,
+      quantile(0.5)(toFloat(properties.value))  AS p50,
+      quantile(0.75)(toFloat(properties.value)) AS p75,
+      quantile(0.95)(toFloat(properties.value)) AS p95,
+      count() AS samples
+    FROM events
+    WHERE event = '$web_vitals'
+      AND timestamp > now() - INTERVAL 7 DAY
+    GROUP BY metric, device
+    HAVING samples >= 5
+    ORDER BY metric, device
+  `;
+  const rows = await runHogQL(sql);
+  if (!rows) return null;
+  return rows
+    .map((r) => ({
+      metric: String(r[0] ?? '') as WebVitalMetric,
+      device: String(r[1] ?? 'Unknown') as WebVitalSampleRow['device'],
+      p50: Number(r[2] ?? 0),
+      p75: Number(r[3] ?? 0),
+      p95: Number(r[4] ?? 0),
+      samples: Number(r[5] ?? 0),
+    }))
+    .filter((r) => r.metric);
+}
+
+/* -------------------------------------------------------------------------
  * Wave 61.08 — Cohort retention + acquisition channel + funnel.
  * --------------------------------------------------------------------- */
 
