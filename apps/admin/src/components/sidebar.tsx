@@ -68,6 +68,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'Vận hành',
     items: [
       { href: '/', label: 'Tổng quan', Icon: LayoutDashboard },
+      { href: '/overview', label: 'Overview (3rd-party)', Icon: LineChart },
       { href: '/sessions', label: 'Phiên phân tích', Icon: ListTodo },
       { href: '/tasks', label: 'Task / Lỗi', Icon: Bot },
       { href: '/audit', label: 'Audit log', Icon: ScrollText },
