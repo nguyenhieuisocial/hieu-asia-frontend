@@ -9,7 +9,7 @@ import { Suspense } from 'react';
 // `font-mono` on home — those size-adjust gracefully to `ui-monospace` from
 // the Tailwind fallback stack). Removing it cuts 3 woff2 files (latin-ext +
 // latin + vietnamese subsets) from every page's critical path.
-import { Be_Vietnam_Pro, Instrument_Serif, Outfit } from 'next/font/google';
+import { Be_Vietnam_Pro, Instrument_Serif, JetBrains_Mono, Newsreader, Outfit } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { ThemeProvider } from '@/components/providers/theme-provider';
@@ -41,9 +41,17 @@ import './globals.css';
 // from weight 400 with synthetic medium; visual delta is negligible at
 // 14-16px sizes. Removes 3 woff2 files (vietnamese + latin-ext + latin
 // subsets) from the critical path.
+// Wave 62.01 — expanded weight set (400→500/600/700) and added italic style.
+// Spec "Như giấy cũ" calls for italic-driven editorial voice; Be Vietnam Pro
+// now serves italic body emphasis without falling back to synthetic italic.
+// Weight 500 re-added (was dropped Wave 56) — used for nav + button labels in
+// the new editorial system. The weight cost is ~1 woff2 file per subset
+// (vietnamese + latin) per added weight, but the editorial direction makes
+// the type system unworkable without 500.
 const beVietnam = Be_Vietnam_Pro({
   subsets: ['vietnamese', 'latin'],
-  weight: ['400', '600', '700'],
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
   variable: '--font-be-vietnam',
   display: 'swap',
 });
@@ -56,15 +64,43 @@ const outfit = Outfit({
 
 // Wave 60.56 Phase 1 — Option D "Warm-Dark Editorial" marketing display serif.
 // Italic-capable (signature `<em>verb</em>` spans in hero/section headers).
-// Google Fonts only ships latin + latin-ext for Instrument Serif (no
-// `vietnamese` subset upstream); VN diacritics that fall outside latin-ext
-// fall back gracefully to Be Vietnam Pro via the `font-marketing-display`
-// Tailwind fallback chain. Marketing surfaces only; in-app UI uses Outfit.
+// Wave 62.01 — kept as TRANSITIONAL fallback alongside Newsreader Variable.
+// Existing `font-marketing-display` consumers (BentoLens, PullQuote, MarketingHero)
+// continue rendering Instrument Serif until 62.04 (hero rewrite) migrates them
+// to `font-editorial-display`. Removal scheduled with 62.04 cleanup.
 const instrumentSerif = Instrument_Serif({
   weight: '400',
   subsets: ['latin', 'latin-ext'],
   style: ['normal', 'italic'],
   variable: '--font-marketing-display',
+  display: 'swap',
+});
+
+// Wave 62.01 — Newsreader Variable. Founder-locked editorial display serif
+// per spec "Như giấy cũ": italic 300–800 with full diacritics, free via
+// Google Fonts. Replaces Instrument Serif's role for hero + H1/H2 + pull
+// quotes going forward. Three weights chosen for the 9-bậc type scale:
+// - 300 (display 88px hero), 400 (H1-H3 normal), 500 (button label), 700 (H2 emphasis).
+// Italic enabled for the signature `<em>verb</em>` accent inside headlines.
+const newsreader = Newsreader({
+  subsets: ['latin', 'latin-ext'],
+  weight: ['300', '400', '500', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-newsreader',
+  display: 'swap',
+});
+
+// Wave 62.01 — JetBrains Mono. Re-added after Wave 56 dropped it. Spec uses
+// mono only for labels/meta ("BƯỚC 01", "₫99.000", "CUNG MỆNH") at 11px —
+// a third typographic voice that lifts the editorial system. Latin subset
+// only (no Vietnamese characters appear in mono surfaces). Weight 400 +
+// 500 covers default + emphasis. Variable token used by Tailwind preset's
+// existing `font-mono` chain (var(--font-jetbrains-mono) was already wired
+// but the underlying font file was missing — now resolved).
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-jetbrains-mono',
   display: 'swap',
 });
 
@@ -188,7 +224,7 @@ export default async function RootLayout({
     <html
       lang={locale}
       suppressHydrationWarning
-      className={`${beVietnam.variable} ${outfit.variable} ${instrumentSerif.variable}`}
+      className={`${beVietnam.variable} ${outfit.variable} ${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable}`}
     >
       <head>
         {/* Wave 55 LCP #3 — dropped 3 unused preconnects.

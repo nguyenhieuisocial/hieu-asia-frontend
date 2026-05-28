@@ -63,6 +63,19 @@ const config: Config = {
           'Georgia',
           'serif',
         ],
+        // Wave 62.01 — editorial display serif per "Như giấy cũ" spec.
+        // Newsreader Variable (300–800, normal+italic) replaces Instrument
+        // Serif's role for hero / H1 / H2 / pull quote. VN diacritics outside
+        // latin-ext fall back to Be Vietnam Pro (already loaded in root layout).
+        // Use via `font-editorial-display` Tailwind class on Newsreader-led
+        // surfaces. `font-marketing-display` kept transitional until 62.04
+        // hero rewrite migrates BentoLens + MarketingHero + PullQuote.
+        'editorial-display': [
+          'var(--font-newsreader)',
+          'var(--font-be-vietnam)',
+          'Georgia',
+          'serif',
+        ],
       },
       fontSize: {
         // Wave 60.95.am — type scale REDESIGN per founder reference
