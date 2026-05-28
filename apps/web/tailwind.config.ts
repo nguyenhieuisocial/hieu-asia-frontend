@@ -65,32 +65,43 @@ const config: Config = {
         ],
       },
       fontSize: {
-        // Wave 60.95.g P2 (vault 130 §V Polypane): bumped clamp floor 40px→3rem (48px)
-        // and ceiling 92px→6rem (96px) so the curve matches the previous fixed
-        // mobile `text-[64px]` / desktop `text-[96px]` endpoints. The middle is
-        // now a smooth 8vw ramp instead of an abrupt jump at the `md:` breakpoint
-        // (Polypane audit flagged 720-820px as jarring). Scale at key widths:
-        // 320px→3rem (48px) · 768px→~3.83rem (~61px) · 1024px→~5.12rem (~82px) ·
-        // 1200px+→6rem (96px). h1 ergonomics: ~30 chars/line at lg, ~14 at sm.
+        // Wave 60.95.am — type scale REDESIGN per founder reference
+        // (numerologycalculators.org typography pattern). Brought hero down
+        // from 48-96px → 44-72px and section down from 34-48px → 30-40px for
+        // a more measured editorial rhythm. Body-large added as standardized
+        // lead paragraph size with 1.65 line-height (matches ref site).
+        //
+        // Scale at key widths:
+        //   hero-display: 320px→44px · 768px→~58px · 1280px+→72px
+        //   section-display: 320px→30px · 768px→~36px · 1280px+→40px
+        //   body-large: 320px→17px · 1280px+→19px
+        // h1 ergonomics: ~30 chars/line at lg, ~14 at sm (unchanged from prior).
         'hero-display': [
-          'clamp(3rem, 8vw, 6rem)',
-          { lineHeight: '1.06', letterSpacing: '-0.02em' },
+          'clamp(2.75rem, 5.5vw, 4.5rem)',
+          { lineHeight: '1.08', letterSpacing: '-0.02em' },
         ],
         'section-display': [
-          'clamp(34px, 4vw, 48px)',
-          { lineHeight: '1.15', letterSpacing: '-0.01em' },
+          'clamp(30px, 3vw, 40px)',
+          { lineHeight: '1.18', letterSpacing: '-0.01em' },
+        ],
+        'body-large': [
+          'clamp(17px, 1.2vw, 19px)',
+          { lineHeight: '1.65', letterSpacing: '0' },
         ],
         eyebrow: [
           '11px',
           { lineHeight: '1.4', letterSpacing: '0.12em' },
         ],
-        'price-amount': ['44px', { lineHeight: '1.2' }],
-        'tier-name': ['32px', { lineHeight: '1.3' }],
+        'price-amount': ['40px', { lineHeight: '1.2' }],
+        'tier-name': ['28px', { lineHeight: '1.3' }],
       },
       maxWidth: {
-        marketing: '1280px',
-        'marketing-tight': '980px',
-        'marketing-text': '540px',
+        // Wave 60.95.am — tighten marketing-tight to 1024px so body copy
+        // hits ~65-75 chars per line (ideal measure per typography research).
+        // Marketing 1280 kept for hero/full-bleed surfaces.
+        marketing: '1200px',
+        'marketing-tight': '1024px',
+        'marketing-text': '640px',
       },
       borderRadius: {
         pill: '9999px',
