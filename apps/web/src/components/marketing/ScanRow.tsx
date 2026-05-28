@@ -100,7 +100,14 @@ export function ScanRow({
             <Link
               key={item.id}
               href={item.href}
-              className="group relative flex h-full min-h-[180px] min-w-[78vw] shrink-0 snap-start flex-col rounded-card-editorial border border-gold/15 bg-warm-dark-200 p-6 transition-all duration-300 ease-editorial hover:-translate-y-0.5 hover:border-gold/30 hover:bg-warm-dark-300 sm:min-w-[60vw] md:min-w-0"
+              // Wave 60.95.t — Mobile fix: pair min-w with max-w to LOCK the
+              // card width on mobile (78vw / 60vw). Without max-w, the card
+              // flex item expanded to fit the body copy on one line — 728px
+              // on a 375 viewport — making it impossible to see card 2 peek,
+              // and clipping the first card's right edge. line-clamp-2 doesn't
+              // help here because it clips display, not width. Desktop keeps
+              // `md:min-w-0 md:max-w-none` (grid sizing takes over).
+              className="group relative flex h-full min-h-[180px] w-[78vw] max-w-[78vw] shrink-0 snap-start flex-col rounded-card-editorial border border-gold/15 bg-warm-dark-200 p-6 transition-all duration-300 ease-editorial hover:-translate-y-0.5 hover:border-gold/30 hover:bg-warm-dark-300 sm:w-[60vw] sm:max-w-[60vw] md:w-auto md:max-w-none"
             >
               <div className="mb-4">{item.icon}</div>
               {item.tag && (
