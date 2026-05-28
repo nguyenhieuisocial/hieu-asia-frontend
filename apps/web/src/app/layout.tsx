@@ -214,16 +214,18 @@ export default async function RootLayout({
           Bỏ qua đến nội dung chính
         </a>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          {/* Wave 60.95.p — `enableSystem={false}` so OS-level
-              `prefers-color-scheme: light` does NOT auto-switch the site to
-              light mode. Light mode is feature-gated to null render in
-              ThemeToggle (Wave 60.79.T1, vault 112 P0-01): ~2,300 hardcoded
-              `bg-warm-dark-*` / `text-cream-*` tokens across 182 pages would
-              produce a broken visual sandwich (dark hero + light WhyTrust +
-              dark FAQ wrapper) for users whose OS prefers light. The
-              miniapp-telegram layout already uses `enableSystem={false}` for
-              the same reason. Re-enable when warm-dark light variants ship
-              Wave 60.82+ and the dark-locked tokens are migrated. */}
+          {/* Wave 60.82.B — `enableSystem={false}` STAYS even though light
+              mode is now live on product surfaces. Reason: marketing pages
+              are dark-locked per vault 108 (Warm-Dark Editorial brand
+              identity); if `enableSystem={true}` flipped the whole site to
+              light for users with OS-level `prefers-color-scheme: light`,
+              marketing would render as a broken visual sandwich (cream nav +
+              dark hero + cream content bands per vault 112 P0-01 audit).
+              Light mode is opt-in only via `<ThemeToggle />`, which itself
+              short-circuits to null on marketing routes. The
+              miniapp-telegram layout uses `enableSystem={false}` for the
+              same brand-lock reason. Re-evaluate only if marketing brand
+              lock is ever lifted. */}
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
             <QueryProvider>
               <LazyMotionProvider>
