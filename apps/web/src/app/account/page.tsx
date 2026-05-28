@@ -52,6 +52,10 @@ import { SURVEY_IDS } from '@/lib/survey';
 import { PwaInstallPrompt } from '@/components/product/PwaInstallPrompt';
 import { Fab } from '@/components/product/Fab';
 import { Sparkles } from 'lucide-react';
+// Wave 61.00 — Daily ritual hook (push notification subscribe).
+import { SubscribePush } from '@/components/daily/SubscribePush';
+
+const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 
 export default function AccountPage() {
   return (
@@ -169,6 +173,13 @@ function AccountPageInner() {
           <RecentConversations />
           <PinnedInsights />
           <QuickActions />
+
+          {/* Wave 61.00 — Daily ritual hook. Web Push subscribe for "Tử vi
+              6h sáng" — infra (worker fanout + KV subs + sw.js) already
+              shipped; this is the discovery surface for logged-in users.
+              Component self-gates on browser support and remembers state
+              in localStorage so returning subscribers see "đã đăng ký". */}
+          <SubscribePush vapidPublicKey={VAPID_PUBLIC_KEY} />
 
           {/* Wave 60.69 (vault 109 §4.3) — PWA Add-to-Home-Screen prompt. Self-
               gates on `beforeinstallprompt` event + localStorage flag + standalone
