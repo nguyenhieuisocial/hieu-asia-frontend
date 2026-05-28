@@ -336,3 +336,79 @@ where 3:1 contrast is adequate.
 
 P2-6 (font preload bloat — Instrument Serif + Outfit preload: false)
 deferred to Wave 62.04 polish OR 62.05a alongside the gold sweep.
+
+---
+
+## Final execution state (post-autonomous-mode completion)
+
+After founder said "Chế độ autonomous", the remaining sub-waves shipped via 5 parallel sub-agents + 3 ultrareview cycles:
+
+| Wave | Commit | Outcome |
+|------|--------|---------|
+| 62.05 Pricing 5→3 | `7dd73af` | 4 files; PRIMARY_PRICING (3) + ADVANCED_PRICING (2) split; AdvancedOptions expandable |
+| 62.06 CTA architecture | `7dd73af` | BentoLens→EditorialList eliminates 4 implicit CTAs; tier-1/tier-2 separation |
+| 62.07 Methodology + SocialProofQuiet | `7dd73af` | 500 test case sample + 600 prompt safety eval (10 cat) + 4 anonymous quotes |
+| 62.08 EditorialList | `7dd73af` | New component (159 LOC); 4 founder-voiced items wired on home |
+| 62.10 Nav + mega-footer | `7dd73af` | SiteNav 570→302 LOC; SiteFooter 4-col 12-tool mega-footer |
+| 62.11 Mentor free input | `7dd73af` | 8 keyword + 2 safety templates + Chi Lan persona |
+| 62.05c ship-block fixes | `6c4ccbf` | 3 P0: `/learn/than-so→-hoc`, `/mentor→/onboarding`, 37 missed gold tokens swept; P1 theme-toggle pathname guard |
+| 62.05d + 62.09 | `96b3bbe` | Footer `<nav aria-label>` × 4 columns; SocialProofQuiet doc fix; 6 custom icon symbols (LaSo/BatTu/DaiVan/ThanSo/DuongDoi/Mbti) |
+| Vault 94 + 138 docs | `5720a64` (vault) | Session #4 audit log + brand direction record |
+
+### Ultrareview cycle audit (3 passes, all caught real issues)
+
+| Pass | Reviewer found | Status |
+|------|---------------|--------|
+| 1 (post-62.04) | P0: defaultTheme=light flip exposed 121 legacy gold tokens at 1.4-2.5:1 contrast | Wave 62.04b stopgap + 62.05a sweep + 62.05b re-enable |
+| 2 (post-7dd73af) | P0×3: 2 broken routes + 37 missed gold tokens; P1: theme-toggle no-op | Wave 62.05c (3 P0 + 1 P1 fixed) |
+| 3 (post-6c4ccbf) | P0: FooterColLegal JSX mismatch from 62.05d edit; sanity checks all pass; 6 icons created | Wave 62.05d (closing tag fix bundled + icons committed) |
+
+### Plan vs ship final delta
+
+| Plan section | Shipped | Divergence |
+|-------------|---------|-----------|
+| Foundation tokens (62.01-62.03) | ✅ | None |
+| Hero (62.04) | ✅ | Simplified: 8 sao chính vs 14 planned, cung labels via small dots + center MỆNH instead of 12 named labels |
+| Pricing 5→3 (62.05) | ✅ | None — yearly+lifetime preserved in AdvancedOptions |
+| CTA refactor (62.06) | ✅ | Implicit via EditorialList swap (no explicit sweep needed — net -5 CTAs achieved) |
+| Methodology + SocialProof (62.07) | ✅ | Honest framing: sample 20/500 + GitHub link instead of fabricated full 500 |
+| EditorialList (62.08) | ✅ | None — created reusable component |
+| Custom icons (62.09) | ✅ | 6 icons created; integration to existing pages DEFERRED (DisciplineGlyphs on /about stays — swap is risk vs reward judgment for follow-up) |
+| Nav + mega-footer (62.10) | ✅ | None |
+| Mentor free input (62.11) | ✅ | Client-side mock only (no API call) — 8 keyword + 2 safety + fallback |
+
+### Remaining technical debt (post-Wave-62)
+
+- **DisciplineGlyphs.tsx** — still used on /about; could be swapped to new 62.09 icons or kept. Founder call.
+- **Pre-existing `" 2.md"` / `" 3.md"` macOS Finder duplicates** in vault + multiple `" 2"/" 3"` files in apps/admin/src/lib — not mine, not touched per CLAUDE.md §3 "don't delete pre-existing dead code unless asked".
+- **4 moderate Dependabot vulnerabilities** on hieu-asia-frontend default branch — flagged in every push response; not addressed (out of scope for design wave).
+- **GitHub "Required status check ci"** still marked as expected — CI workflow not present in repo per default-branch protection prompts; investigate or remove protection.
+
+### Bundle size impact (approximate)
+
+| Wave | Δ KB (gzipped, runtime) |
+|------|------------------------|
+| 62.01 fonts | +12-18 KB (Newsreader 4×italic + JetBrains Mono 2 + Be Vietnam Pro italic) |
+| 62.02-62.03 tokens | ~0 KB (CSS vars + Tailwind utilities — no runtime JS) |
+| 62.04 HeroV4 + LaSoSvg | +2 KB (replaces ~3 KB MarketingHero+LotusLottie) ≈ -1 KB net |
+| 62.05-62.11 components | +4 KB (EditorialList + SocialProofQuiet + MentorInteractive expansion) - 3 KB (BentoLens removed from home bundle) ≈ +1 KB net |
+| 62.09 6 new icons | +1.5 KB (~250 bytes per SVG, only loaded where imported) |
+
+Total Wave 62 runtime payload: **+~15-20 KB gzipped** — mostly Newsreader font weights. Acceptable for the design impact.
+
+### What the next session inherits
+
+1. Day mode default LIVE — Paper × Ink × Ochre on Home/Pricing/Methodology/Sample-Report/Learn/FAQ/etc.
+2. Night mode FORCED on /reading + /dashboard + /tu-vi-* + /dai-van-hien-tai + /mentor.
+3. HeroV4 split + 12-cung neo + 2 entry points on /.
+4. Pricing 3-tier with expandable yearly/lifetime.
+5. Methodology /500-600 public test case tables + GitHub link.
+6. SocialProofQuiet 4 quotes between Pricing + FAQ.
+7. Mega-footer 4 col with 12 traditional tools.
+8. SiteNav 6 top items.
+9. Mentor demo free input on homepage.
+10. 6 custom icon symbols available for future use (un-integrated).
+11. Vault 138 "Như giấy cũ" supersedes vault 108 Warm-Dark Editorial.
+12. ThemeToggle hidden on force-dark routes.
+
+Wave 62 plan: **COMPLETE**.
