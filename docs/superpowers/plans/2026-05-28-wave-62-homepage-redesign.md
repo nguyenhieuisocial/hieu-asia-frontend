@@ -283,3 +283,56 @@ After execution, verify each spec section maps to a sub-wave:
 
 Foundation sub-waves (62.01 + 62.02 + 62.03) execute in this session.
 Remaining (62.04 onwards) require fresh session or explicit founder approval to continue — each touches Hero/Pricing UI which deserves visual review per sub-wave.
+
+---
+
+## Execution log — actual ship state (Wave 62.01-62.04b)
+
+| Wave | Status | Commit | Divergence from plan |
+|------|--------|--------|----------------------|
+| 62.01 fonts | ✅ shipped | 92e677d | None — Newsreader + JetBrains Mono added, Be Vietnam Pro weights expanded |
+| 62.02 colors | ✅ shipped | eccd5f9 | Step 4 (route-aware forced theme) deferred to Wave 62.04 — then deferred again |
+| 62.03 type+spacing | ✅ shipped | 1825460 | Skipped Step 2 (semantic React wrappers `<Display>`, `<H1>` etc.) — token-only ship; semantic wrappers deferred to Wave 62.10 polish |
+| 62.04 Hero | ✅ shipped | 2095ae0 | LaSoSvg shipped with 8 sao chính + center "MỆNH" caption + 12 small slice markers (plan had 14 sao + 12 cung name labels — simplified for editorial restraint; founder can request labels added if desired) |
+| 62.04b ship-block fix | ✅ shipped | (this commit) | Revert defaultTheme "light" → "dark"; mobile order flipped (text-first); 3 orphans deleted |
+
+### Wave 62.04b — ship-block fixes (reactive)
+
+/ultrareview caught the following P0/P1 issues before push:
+
+- **P0-1**: Wave 62.02 flipped defaultTheme to "light" exposing 121 instances
+  of legacy `text-gold*` / `bg-gold*` / `border-gold*` tokens across 15
+  homepage components rendering at 1.4-2.5:1 contrast on Paper bg (FAIL
+  WCAG AA). **Fix:** Reverted defaultTheme to "dark" in `layout.tsx`. All
+  new token infrastructure (Paper/Charcoal/Ochre/Bone/hành) STAYS in
+  place for the upcoming sweep wave.
+- **P1-4**: HeroV4 mobile SVG-first order pushed primary CTA ~75px below
+  the iPhone 13 fold. **Fix:** Reordered so text is first on mobile, SVG
+  becomes a supporting illustration below the CTAs. Desktop split layout
+  (text 7 / SVG 5) preserved.
+- **P2-7**: Orphaned files (HeroV3.tsx, HomeHeroEyebrow.tsx, LotusLottie.tsx)
+  deleted — they had 0 importers after Wave 62.04 swap. CLAUDE.md §3
+  "clean your own mess" — these were orphaned BY my changes, so cleanup
+  belongs in this wave.
+
+### New sub-wave inserted into priority queue
+
+**Wave 62.05a — Legacy gold token sweep (NEW, inserted before 62.05 pricing)**
+
+Sweep `text-gold` / `text-gold-soft` / `text-gold-dot` / `bg-gold` /
+`border-gold-*` → semantic `text-primary` / `text-foreground` / `bg-primary`
+across 15 components:
+- `apps/web/src/components/home/{SiteNav,SiteFooter,FaqAccordion,WhyTrust,HowToStart,NewsletterSignup}.tsx`
+- `apps/web/src/components/marketing/{PricingTierV2,SampleOutputShowcase,MentorSampleInteractive,ScanRow,BentoLens}.tsx`
+- `apps/web/src/app/page.tsx` (15 inline instances at lines 455, 461, 469, 477, 485, 493, 525, 526, 539, 550, 560, 570, 602, 629, 630)
+
+After sweep completes, Wave 62.05b re-enables `defaultTheme="light"` with
+confidence — Day "Giấy thấm" finally goes live.
+
+P1-3 + P1-5 (Ochre contrast on Paper) will be addressed in 62.05b along
+with the day-mode re-enable — likely by darkening Ochre primary text usages
+to `#7C5424` while keeping `#A47532` for SVG fills / dot accents / borders
+where 3:1 contrast is adequate.
+
+P2-6 (font preload bloat — Instrument Serif + Outfit preload: false)
+deferred to Wave 62.04 polish OR 62.05a alongside the gold sweep.

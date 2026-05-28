@@ -197,14 +197,16 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   // Wave 62.02 — theme-color updated to vault 138 "Như giấy cũ" palette.
-  // Dark: Charcoal #15110C (was #0F0F12). Light: Paper #F3ECDD (was gold
-  // #B8923D — which was wrong because theme-color paints the browser
-  // chrome to MATCH the page background, not accent it).
+  // Wave 62.04b — colorScheme reverted to "dark" pending legacy gold sweep:
+  // Day mode default exposed 121 instances of legacy text-gold/bg-gold tokens
+  // across 15 homepage components rendering at <2.5:1 contrast on Paper bg.
+  // theme-color values STAY updated (Charcoal + Paper) so the browser chrome
+  // paints correctly when users opt into either mode via the toggle.
   themeColor: [
     { media: '(prefers-color-scheme: dark)', color: '#15110C' },
     { media: '(prefers-color-scheme: light)', color: '#F3ECDD' },
   ],
-  colorScheme: 'light',
+  colorScheme: 'dark',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
@@ -261,19 +263,23 @@ export default async function RootLayout({
           Bỏ qua đến nội dung chính
         </a>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          {/* Wave 62.02 — defaultTheme flipped from "dark" to "light".
-              Vault 138 "Như giấy cũ" supersedes vault 108 "Warm-Dark
-              Editorial" — marketing now greets first-visit users on
-              Paper (Giấy thấm) bg, not Charcoal. Existing users with
-              localStorage `theme=dark` stay on dark (no surprise flip).
-              `enableSystem={false}` STAYS — light remains opt-in for
-              consistency: users who toggled to dark previously don't get
-              forced back to light by OS preference. Night-mode pages
-              (/reading, /mentor, /tu-vi-2026, /dai-van-hien-tai) will
-              force dark via per-route logic in Wave 62.04 (paired with
-              hero rewrite). Until then, those pages default to whatever
-              the user's localStorage says (light for new visitors). */}
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          {/* Wave 62.04b — defaultTheme REVERTED from "light" back to "dark"
+              pending Wave 62.05a legacy gold token sweep. Wave 62.02 tried
+              to flip default to light (Paper "Giấy thấm" first-visit) but
+              /ultrareview caught 121 instances of `text-gold/bg-gold/
+              text-gold-soft/text-gold-dot` legacy tokens across 15 homepage
+              components rendering at 1.4-2.5:1 contrast on Paper bg (FAIL
+              WCAG AA). The token infrastructure (Paper/Charcoal/Ochre +
+              Bone + Gold-soft + 5 hành) STAYS upgraded so the sweep can
+              proceed without rework — only the *default* reverts so
+              first-visit users don't land on a contrast-broken page.
+
+              Wave 62.05a will sweep `text-gold*` → `text-primary` + `text-
+              foreground` semantic tokens (theme-aware via CSS vars), then
+              re-flip defaultTheme to "light" with confidence.
+
+              `enableSystem={false}` stays — light is opt-in via toggle. */}
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
             <QueryProvider>
               <LazyMotionProvider>
                 <Suspense fallback={null}>

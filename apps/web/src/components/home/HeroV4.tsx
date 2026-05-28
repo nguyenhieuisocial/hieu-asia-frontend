@@ -39,16 +39,16 @@ export function HeroV4() {
       className="relative overflow-hidden bg-background py-section lg:py-hero"
     >
       <div className="mx-auto max-w-marketing px-6 lg:px-12">
-        <div className="grid items-center gap-block lg:grid-cols-12 lg:gap-12">
-          {/* Right column on desktop, top on mobile — Lá số schematic neo */}
-          <div className="order-1 flex justify-center lg:order-2 lg:col-span-5">
-            <LaSoSvg
-              className="aspect-square w-3/5 max-w-[300px] text-primary sm:w-1/2 lg:w-full lg:max-w-[420px]"
-            />
-          </div>
-
-          {/* Left column on desktop, below SVG on mobile — text + CTAs */}
-          <div className="order-2 lg:order-1 lg:col-span-7">
+        <div className="grid items-center gap-card lg:gap-12 lg:grid-cols-12">
+          {/* Wave 62.04b /ultrareview P1-4 fix — mobile order swapped:
+              text FIRST, SVG below. The 300×300 SVG on a 375×812 viewport
+              was pushing primary CTA ~75px below the fold; founder spec
+              demanded "2 entry points at hero" stays above fold. Editorial
+              "Hiểu mình. Quyết định mình." moment now lands top of mobile
+              fold; SVG becomes a supporting illustration below the buttons.
+              Desktop split layout (text 7 / SVG 5) preserved. */}
+          {/* Text column — first on mobile, left on desktop */}
+          <div className="order-1 lg:col-span-7">
             {/* Eyebrow */}
             <p className="mb-8 flex items-center gap-x-3 font-mono text-editorial-mono uppercase text-primary">
               <span className="inline-block h-px w-6 bg-primary" aria-hidden="true" />
@@ -100,6 +100,15 @@ export function HeroV4() {
             <p className="mt-block font-mono text-editorial-mono uppercase text-muted-foreground/80">
               Miễn phí · không cần thẻ · 1 phút
             </p>
+          </div>
+
+          {/* Lá số schematic — second on mobile (below CTAs), right column on desktop.
+              Smaller on mobile (max 240px) since it's a supporting illustration there,
+              not the primary visual anchor. */}
+          <div className="order-2 flex justify-center pt-card lg:order-2 lg:col-span-5 lg:pt-0">
+            <LaSoSvg
+              className="aspect-square w-1/2 max-w-[240px] text-primary sm:w-2/5 lg:w-full lg:max-w-[420px]"
+            />
           </div>
         </div>
       </div>
