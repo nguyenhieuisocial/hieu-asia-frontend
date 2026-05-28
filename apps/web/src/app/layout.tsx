@@ -56,24 +56,32 @@ const beVietnam = Be_Vietnam_Pro({
   display: 'swap',
 });
 
+// Wave 62.05e — `preload: false` on Outfit. Wave 56 LCP audit had already
+// dropped Outfit from preload via dropping the import on most routes; this
+// belt-and-suspenders confirms it doesn't get auto-preloaded by next/font
+// even on routes that import the variable. Outfit appears in heading slots
+// only (e.g. some admin chrome) and `display: swap` ensures graceful render.
 const outfit = Outfit({
   subsets: ['latin'],
   variable: '--font-outfit',
   display: 'swap',
+  preload: false,
 });
 
 // Wave 60.56 Phase 1 — Option D "Warm-Dark Editorial" marketing display serif.
 // Italic-capable (signature `<em>verb</em>` spans in hero/section headers).
 // Wave 62.01 — kept as TRANSITIONAL fallback alongside Newsreader Variable.
-// Existing `font-marketing-display` consumers (BentoLens, PullQuote, MarketingHero)
-// continue rendering Instrument Serif until 62.04 (hero rewrite) migrates them
-// to `font-editorial-display`. Removal scheduled with 62.04 cleanup.
+// Wave 62.05e — `preload: false`. Newsreader is now the canonical editorial
+// display; Instrument Serif only sits in `font-marketing-display` fallback
+// chain for legacy consumers (BentoLens, PullQuote, MarketingHero). Don't
+// burn critical-path preload budget on a transitional fallback.
 const instrumentSerif = Instrument_Serif({
   weight: '400',
   subsets: ['latin', 'latin-ext'],
   style: ['normal', 'italic'],
   variable: '--font-marketing-display',
   display: 'swap',
+  preload: false,
 });
 
 // Wave 62.01 — Newsreader Variable. Founder-locked editorial display serif

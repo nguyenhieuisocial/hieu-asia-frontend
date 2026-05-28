@@ -24,6 +24,11 @@ import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { HeroV4 } from '@/components/home/HeroV4';
 import { EditorialList } from '@/components/marketing/EditorialList';
+// Wave 62.09 — custom discipline icons (vault 138 "đừng dùng icon set").
+import { LaSoIcon } from '@/components/marketing/icons/LaSoIcon';
+import { BatTuIcon } from '@/components/marketing/icons/BatTuIcon';
+import { ThanSoIcon } from '@/components/marketing/icons/ThanSoIcon';
+import { MbtiIcon } from '@/components/marketing/icons/MbtiIcon';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { SampleOutputShowcase } from '@/components/marketing/SampleOutputShowcase';
 import { MentorSampleInteractive } from '@/components/marketing/MentorSampleInteractive';
@@ -535,6 +540,7 @@ export default function LandingPage() {
           }
           items={[
             {
+              icon: <LaSoIcon className="h-full w-full" />,
               eyebrow: 'TỬ VI · CUNG MỆNH',
               title: 'Đọc cung mệnh',
               body: 'Bản đồ sao thời điểm sinh — không phải lời tiên tri, mà là bản đồ ưu thế và bóng tối tự nhiên. Tử Vi Đẩu Số tổng hợp 14 chính tinh trên 12 cung.',
@@ -542,6 +548,7 @@ export default function LandingPage() {
               cta: 'Đọc về Tử Vi',
             },
             {
+              icon: <BatTuIcon className="h-full w-full" />,
               eyebrow: 'BÁT TỰ · NGŨ HÀNH',
               title: 'Cân ngũ hành',
               body: 'Tám chữ năm-tháng-ngày-giờ — đo nội lực và cân bằng nguyên tố qua quan hệ tương sinh tương khắc.',
@@ -549,6 +556,7 @@ export default function LandingPage() {
               cta: 'Đọc về Bát Tự',
             },
             {
+              icon: <ThanSoIcon className="h-full w-full" />,
               eyebrow: 'THẦN SỐ · NUMEROLOGY',
               title: 'Đếm con số đời',
               body: 'Numerology phương Tây — đường đời, ngày sinh, tên gọi cộng dồn thành mật mã hành trình cá nhân.',
@@ -556,6 +564,7 @@ export default function LandingPage() {
               cta: 'Đọc về Thần Số',
             },
             {
+              icon: <MbtiIcon className="h-full w-full" />,
               eyebrow: 'MBTI · TÂM LÝ HỌC',
               title: 'Gọi tên tâm trí',
               body: '16 kiểu Myers-Briggs — không nhãn dán, mà là ngôn ngữ để nhận diện thiên hướng nội tại.',

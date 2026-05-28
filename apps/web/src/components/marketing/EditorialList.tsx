@@ -41,6 +41,11 @@ export type EditorialListItem = {
   href?: string;
   /** Optional CTA label override; defaults to "Đọc tiếp →" when `href` set. */
   cta?: string;
+  /** Optional Wave 62.09 custom icon (LaSoIcon, BatTuIcon, etc.). When set,
+   * REPLACES the number in the first column — keeps the editorial restraint
+   * (one focal element per item). Icon inherits text-primary from parent so
+   * theme switches automatically. */
+  icon?: ReactNode;
 };
 
 export type EditorialListProps = {
@@ -102,7 +107,17 @@ export function EditorialList({
                 key={idx}
                 className={`grid grid-cols-[auto_1fr] gap-x-8 md:gap-x-12 ${itemSpacing}`}
               >
-                {showNumbers ? (
+                {item.icon ? (
+                  // Wave 62.09 — custom icon takes precedence over number when
+                  // set. 32×32 render box (icons are viewBox 48 but we scale down
+                  // to keep them flush with the editorial column rhythm).
+                  <div
+                    aria-hidden="true"
+                    className="h-8 w-8 pt-1 text-primary"
+                  >
+                    {item.icon}
+                  </div>
+                ) : showNumbers ? (
                   numberStyle === 'serif-italic' ? (
                     <span
                       aria-hidden="true"
