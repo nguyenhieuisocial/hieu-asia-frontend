@@ -7,24 +7,34 @@
  */
 
 @layer base {
+  /*
+   * Wave 60.95.al — palette REDESIGN aligned with vault 108 "Warm-Dark
+   * Editorial" brand identity. Previous tokens used `hue 240` (cold
+   * blue/grey) which clashed with the brand's warm sepia direction.
+   * All ink/cream tokens now use the warm-dark + cream HSL scales from
+   * `packages/config/tailwind-preset.ts`.
+   *
+   * Light = warm cream paper · Dark = warm ink editorial
+   * Gold accent `#B8923D` unchanged (theme-stable brand color).
+   */
   :root {
-    --background: 36 30% 92%;        /* Kem ngà #F2EDE3 */
-    --foreground: 240 10% 6%;        /* Đen than */
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 6%;
-    --primary: 40 51% 48%;           /* Vàng đồng #B8923D */
-    --primary-foreground: 240 10% 6%;
-    --muted: 36 20% 88%;
-    --muted-foreground: 240 5% 30%;
-    --border: 40 30% 75%;
-    --ring: 40 51% 48%;
+    --background: 36 38% 93%;        /* cream-50 #F5F0E6 */
+    --foreground: 40 19% 6%;         /* warm-dark-50 #13110D (warm near-black) */
+    --card: 0 0% 100%;               /* pure white for elevation lift on cream */
+    --card-foreground: 40 19% 6%;
+    --primary: 40 51% 48%;           /* gold #B8923D */
+    --primary-foreground: 0 0% 100%; /* white text on gold for CTA legibility */
+    --muted: 37 47% 89%;             /* cream-100 #EFE7D6 (warm muted surface) */
+    --muted-foreground: 28 16% 25%;  /* warm-dark-500 #4A3F36 (warm muted text) */
+    --border: 33 22% 73%;            /* cream-300 #C9BFB0 (warm subtle border) */
+    --ring: 40 51% 48%;               /* gold */
     --radius: 0.625rem;
 
     /* Wave 52 — RGB anchors for proper alpha tokens.
      * Use `rgb(var(--gold-rgb) / <alpha>)` instead of ad-hoc `bg-gold/N` so
      * alpha steps stay consistent across the codebase. */
     --gold-rgb: 184 146 61;          /* #B8923D */
-    --ink-rgb: 15 15 18;             /* #0F0F12 */
+    --ink-rgb: 19 17 13;             /* warm-dark-50 #13110D (Wave 60.95.al — warmer than cold #0F0F12) */
     --gold-5: rgb(var(--gold-rgb) / 0.05);
     --gold-10: rgb(var(--gold-rgb) / 0.10);
     --gold-20: rgb(var(--gold-rgb) / 0.20);
@@ -33,16 +43,16 @@
   }
 
   .dark {
-    --background: 240 8% 6%;         /* Đen than #0F0F12 */
-    --foreground: 36 30% 92%;        /* Kem ngà */
-    --card: 240 10% 9%;
-    --card-foreground: 36 30% 92%;
-    --primary: 40 51% 48%;
-    --primary-foreground: 240 10% 6%;
-    --muted: 240 6% 14%;
-    --muted-foreground: 36 15% 65%;
-    --border: 40 30% 25%;
-    --ring: 40 51% 48%;
+    --background: 40 19% 6%;         /* warm-dark-50 #13110D (warm ink, not cold blue-grey) */
+    --foreground: 36 38% 93%;        /* cream-50 #F5F0E6 */
+    --card: 24 16% 11%;              /* warm-dark-200 #221C18 (warm card surface) */
+    --card-foreground: 36 38% 93%;
+    --primary: 40 51% 48%;           /* gold */
+    --primary-foreground: 40 19% 6%; /* warm-dark on gold (dark text on gold pill) */
+    --muted: 30 17% 9%;              /* warm-dark-100 #1B1714 */
+    --muted-foreground: 33 22% 73%;  /* cream-300 #C9BFB0 (warm muted text) */
+    --border: 27 18% 15%;            /* warm-dark-300 #2E2620 (warm subtle border) */
+    --ring: 40 51% 48%;              /* gold */
   }
 
   * {
