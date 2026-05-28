@@ -200,8 +200,8 @@ export default function PricingPage() {
           title={
             <>
               Chọn gói phù hợp với{' '}
-              <em className="italic text-gold-soft">nhịp sống</em> của bạn
-              <span className="text-gold-dot">.</span>
+              <em className="italic text-primary/80">nhịp sống</em> của bạn
+              <span className="text-primary">.</span>
             </>
           }
           subtitle="Bắt đầu miễn phí — chuyển gói khi sẵn sàng. Mọi gói trả phí đều bảo đảm hoàn tiền."
@@ -216,8 +216,8 @@ export default function PricingPage() {
           page="/pricing"
           title={
             <>
-              Đi <em className="italic text-gold-soft">sâu</em> theo nhịp của bạn
-              <span className="text-gold-dot">.</span>
+              Đi <em className="italic text-primary/80">sâu</em> theo nhịp của bạn
+              <span className="text-primary">.</span>
             </>
           }
           tiers={[

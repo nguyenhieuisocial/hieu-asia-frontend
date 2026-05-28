@@ -39,7 +39,7 @@ interface NavLink {
  */
 const PRIMARY_LINKS: readonly NavLink[] = [
   { href: '/onboarding', label: 'Lá số' },
-  { href: '/mentor', label: 'Mentor' },
+  { href: '/onboarding', label: 'Mentor' },
   { href: '/methodology', label: 'Phương pháp' },
   { href: '/pricing', label: 'Giá' },
   { href: '/about', label: 'Về chúng tôi' },

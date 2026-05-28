@@ -542,12 +542,12 @@ function Chapter1Content() {
             <li key={p.n}>
               <Card className="border-border bg-card/40">
                 <CardContent className="flex gap-4 p-5 sm:p-6">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 font-mono text-sm font-bold text-gold">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-primary/10 font-mono text-sm font-bold text-primary">
                     {p.n}
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <Icon className="h-4 w-4 text-gold/80" aria-hidden />
+                      <Icon className="h-4 w-4 text-primary/80" aria-hidden />
                       <h3 className="font-sans text-base font-semibold text-foreground sm:text-lg">
                         {p.title}
                       </h3>
@@ -578,10 +578,10 @@ function Chapter1Content() {
               <li key={step.label} className="relative">
                 <div className="flex h-full flex-col rounded-xl border border-border bg-muted/40 p-5">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-[11px] text-gold-soft">
+                    <span className="font-mono text-[11px] text-primary/80">
                       0{idx + 1}
                     </span>
-                    <Icon className="h-4 w-4 text-gold/80" aria-hidden />
+                    <Icon className="h-4 w-4 text-primary/80" aria-hidden />
                     <h4 className="font-sans text-sm font-semibold text-foreground">
                       {step.label}
                     </h4>
@@ -678,19 +678,19 @@ function Chapter2Content() {
               </div>
               <dl className="mt-3 space-y-2 text-sm">
                 <div>
-                  <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-soft">
+                  <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-primary/80">
                     Dữ liệu dùng
                   </dt>
                   <dd className="mt-0.5 text-muted-foreground">{row.data}</dd>
                 </div>
                 <div>
-                  <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-soft">
+                  <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-primary/80">
                     Engine tính?
                   </dt>
                   <dd className="mt-0.5 text-muted-foreground">{row.engine}</dd>
                 </div>
                 <div>
-                  <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-soft">
+                  <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-primary/80">
                     AI làm gì
                   </dt>
                   <dd className="mt-0.5 text-muted-foreground">{row.ai}</dd>
@@ -703,7 +703,7 @@ function Chapter2Content() {
         <div className="mt-4 hidden overflow-x-auto rounded-xl border border-border bg-muted/40 md:block">
           <table className="w-full min-w-[720px] text-sm">
             <thead>
-              <tr className="border-b border-border text-left font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
+              <tr className="border-b border-border text-left font-mono text-eyebrow uppercase tracking-[0.12em] text-primary/80">
                 <th className="px-4 py-3 font-medium">Phương pháp</th>
                 <th className="px-4 py-3 font-medium">Dữ liệu dùng</th>
                 <th className="px-4 py-3 font-medium">Engine tính?</th>
@@ -774,7 +774,7 @@ function Chapter3Content() {
         </div>
 
         <div className="mt-4 rounded-xl border border-border bg-muted/40 p-5">
-          <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
+          <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-primary/80">
             Ví dụ
           </p>
           <p className="mt-2 font-sans text-sm italic leading-relaxed text-muted-foreground sm:text-base">
@@ -796,7 +796,7 @@ function Chapter3Content() {
         <Card className="mt-4 border-border bg-muted/40">
           <CardContent className="space-y-5 p-5 sm:p-6">
             <div>
-              <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
+              <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-primary/80">
                 Claim
               </p>
               <p className="mt-2 font-sans text-base text-foreground sm:text-lg">
@@ -866,27 +866,27 @@ function Chapter3Content() {
             </div>
 
             <div>
-              <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
+              <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-primary/80">
                 Bước kiểm chứng
               </p>
               <ul className="mt-2 space-y-1.5 font-sans text-sm leading-relaxed text-muted-foreground">
                 <li className="flex gap-2">
                   <Sparkles
-                    className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
+                    className="mt-0.5 h-4 w-4 shrink-0 text-primary/80"
                     aria-hidden
                   />
                   <span>Tính runway</span>
                 </li>
                 <li className="flex gap-2">
                   <Sparkles
-                    className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
+                    className="mt-0.5 h-4 w-4 shrink-0 text-primary/80"
                     aria-hidden
                   />
                   <span>Nói chuyện với 2 người trong ngành</span>
                 </li>
                 <li className="flex gap-2">
                   <Sparkles
-                    className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
+                    className="mt-0.5 h-4 w-4 shrink-0 text-primary/80"
                     aria-hidden
                   />
                   <span>Đàm phán vai trò hiện tại</span>
@@ -941,7 +941,7 @@ function Chapter3Content() {
         <div className="mt-4 hidden overflow-x-auto rounded-xl border border-border bg-muted/40 md:block">
           <table className="w-full min-w-[560px] text-sm">
             <thead>
-              <tr className="border-b border-border text-left font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
+              <tr className="border-b border-border text-left font-mono text-eyebrow uppercase tracking-[0.12em] text-primary/80">
                 <th className="px-4 py-3 font-medium">Hạng mục</th>
                 <th className="px-4 py-3 font-medium">Kết quả</th>
                 <th className="px-4 py-3 font-medium">Trạng thái</th>
@@ -1013,7 +1013,7 @@ function Chapter4Content() {
                 {REVIEW_ROLES.map((r) => (
                   <li key={r.role} className="flex gap-2">
                     <Eye
-                      className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-primary/80"
                       aria-hidden
                     />
                     <span>
@@ -1039,7 +1039,7 @@ function Chapter4Content() {
                 {REVIEW_TRIGGERS.map((t) => (
                   <li key={t} className="flex gap-2">
                     <ChevronRight
-                      className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-primary/80"
                       aria-hidden
                     />
                     <span>{t}</span>
@@ -1050,8 +1050,8 @@ function Chapter4Content() {
           </Card>
         </div>
 
-        <div className="mt-4 rounded-xl border border-gold/20 bg-gold/5 p-5">
-          <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-soft">
+        <div className="mt-4 rounded-xl border border-primary/20 bg-primary/5 p-5">
+          <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-primary/80">
             SLA
           </p>
           <p className="mt-2 font-sans text-sm leading-relaxed text-muted-foreground">
@@ -1073,7 +1073,7 @@ function Chapter4Content() {
           {PRIVACY_BULLETS.map((b) => (
             <li key={b} className="flex gap-2">
               <Lock
-                className="mt-0.5 h-4 w-4 shrink-0 text-gold/80"
+                className="mt-0.5 h-4 w-4 shrink-0 text-primary/80"
                 aria-hidden
               />
               <span>{b}</span>
@@ -1085,7 +1085,7 @@ function Chapter4Content() {
           Bảng sub-processor đầy đủ và quyền user xem tại{' '}
           <Link
             href="/privacy"
-            className="text-gold-soft underline underline-offset-4 hover:text-gold"
+            className="text-primary/80 underline underline-offset-4 hover:text-primary"
           >
             /privacy
           </Link>
@@ -1113,7 +1113,7 @@ function Chapter5Content() {
           {RUBRIC.map((r) => (
             <li key={r.n}>
               <div className="flex h-full gap-3 rounded-xl border border-border bg-muted/40 p-4">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 font-mono text-xs font-bold text-gold">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-primary/10 font-mono text-xs font-bold text-primary">
                   {r.n}
                 </span>
                 <div className="min-w-0">
@@ -1180,17 +1180,17 @@ export default function MethodologyPage() {
             fixed SiteNav (h-16 = 64px) + breathing room. */}
         <section className="bg-background px-6 py-12 pt-24 md:py-20">
           <div className="mx-auto max-w-marketing-tight">
-            <p className="mb-6 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
-              <span className="mr-2 inline-block h-px w-6 bg-gold align-middle" />
+            <p className="mb-6 font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
+              <span className="mr-2 inline-block h-px w-6 bg-primary align-middle" />
               PHƯƠNG PHÁP · 2026
             </p>
             <h1 className="font-sans text-hero-display font-bold tracking-tight text-foreground">
               Engine tính gì, AI luận gì,{' '}
-              <u className="underline decoration-gold decoration-2 underline-offset-[6px]">
+              <u className="underline decoration-primary decoration-2 underline-offset-[6px]">
                 bạn quyết định
               </u>{' '}
               gì
-              <span className="text-gold-dot">.</span>
+              <span className="text-primary">.</span>
             </h1>
             <p className="mt-8 max-w-marketing-text text-pretty font-sans text-lg leading-relaxed text-muted-foreground">
               Năm chương ngắn: triết lý, giới hạn của AI, cách chúng tôi kiểm
@@ -1206,7 +1206,7 @@ export default function MethodologyPage() {
                   it reaches 44px on mobile (was 14px). */}
               <Link
                 href="/"
-                className="inline-flex min-h-11 items-center py-2.5 transition-colors hover:text-gold-soft active:text-gold-soft touch-manipulation"
+                className="inline-flex min-h-11 items-center py-2.5 transition-colors hover:text-primary/80 active:text-primary/80 touch-manipulation"
               >
                 Trang chủ
               </Link>
@@ -1543,8 +1543,8 @@ export default function MethodologyPage() {
            ───────────────────────────────────────────────────────────── */}
         <section className="relative bg-muted/40">
           <div className="mx-auto max-w-marketing px-6 pb-20 pt-16 lg:px-12">
-            <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
-              <span className="mr-2 inline-block h-px w-6 bg-gold align-middle" />
+            <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
+              <span className="mr-2 inline-block h-px w-6 bg-primary align-middle" />
               ĐỌC TIẾP
             </p>
             <h2 className="mt-4 font-sans text-section-display font-bold tracking-tight text-foreground">
@@ -1558,17 +1558,17 @@ export default function MethodologyPage() {
                   <Link
                     key={r.href}
                     href={r.href}
-                    className="group flex items-center gap-3 rounded-card-editorial border border-border bg-muted/40 p-4 transition-colors duration-300 ease-editorial hover:border-gold/30 hover:bg-card"
+                    className="group flex items-center gap-3 rounded-card-editorial border border-border bg-muted/40 p-4 transition-colors duration-300 ease-editorial hover:border-primary/30 hover:bg-card"
                   >
                     <Icon
-                      className="h-5 w-5 shrink-0 text-gold/80"
+                      className="h-5 w-5 shrink-0 text-primary/80"
                       aria-hidden
                     />
                     <span className="flex-1 font-sans text-sm font-semibold text-foreground">
                       {r.title}
                     </span>
                     <ArrowRight
-                      className="h-4 w-4 shrink-0 text-muted-foreground/70 transition-transform group-hover:translate-x-1 group-hover:text-gold"
+                      className="h-4 w-4 shrink-0 text-muted-foreground/70 transition-transform group-hover:translate-x-1 group-hover:text-primary"
                       aria-hidden
                     />
                   </Link>
@@ -1585,7 +1585,7 @@ export default function MethodologyPage() {
                 <span>
                   Có thắc mắc về phương pháp?{' '}
                   <a
-                    className="text-gold-soft underline underline-offset-4 hover:text-gold"
+                    className="text-primary/80 underline underline-offset-4 hover:text-primary"
                     href="mailto:methodology@hieu.asia"
                   >
                     methodology@hieu.asia
@@ -1593,7 +1593,7 @@ export default function MethodologyPage() {
                   . Báo cáo mẫu công khai tại{' '}
                   <Link
                     href="/sample-report"
-                    className="text-gold-soft underline underline-offset-4 hover:text-gold"
+                    className="text-primary/80 underline underline-offset-4 hover:text-primary"
                   >
                     /sample-report
                   </Link>

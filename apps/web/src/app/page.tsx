@@ -552,7 +552,7 @@ export default function LandingPage() {
               eyebrow: 'THẦN SỐ · NUMEROLOGY',
               title: 'Đếm con số đời',
               body: 'Numerology phương Tây — đường đời, ngày sinh, tên gọi cộng dồn thành mật mã hành trình cá nhân.',
-              href: '/learn/than-so',
+              href: '/learn/than-so-hoc',
               cta: 'Đọc về Thần Số',
             },
             {
