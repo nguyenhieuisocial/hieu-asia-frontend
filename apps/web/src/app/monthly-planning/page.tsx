@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
   title: 'Monthly Planning — Lập kế hoạch tháng theo lá số',
@@ -286,6 +287,7 @@ export default function MonthlyPlanningPage() {
       </section>
 
       <SiteFooter />
+      <StickyMobileCta trackId="monthly-planning" />
     </div>
   );
 }

@@ -11,6 +11,7 @@ import {
 import { ArrowRight, Calendar, Sparkles } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
   title: 'Timeline — Đại vận + Lưu niên',
@@ -274,6 +275,7 @@ export default function TimelinePage() {
       </section>
 
       <SiteFooter />
+      <StickyMobileCta trackId="timeline" />
     </div>
   );
 }

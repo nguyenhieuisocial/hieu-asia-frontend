@@ -22,6 +22,7 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import {
   makeId,
   mondayOfWeekVN,
@@ -477,6 +478,7 @@ export default function WeeklyReviewPage() {
       </section>
 
       <SiteFooter />
+      <StickyMobileCta trackId="weekly-review" />
     </main>
   );
 }

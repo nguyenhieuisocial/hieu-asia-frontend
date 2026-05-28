@@ -11,6 +11,7 @@ import {
 import { ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
   title: 'Annual Planning — Kế hoạch năm 2026 theo lá số',
@@ -263,6 +264,7 @@ export default function AnnualPlanningPage() {
       </section>
 
       <SiteFooter />
+      <StickyMobileCta trackId="annual-planning" />
     </div>
   );
 }

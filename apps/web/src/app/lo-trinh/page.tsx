@@ -19,6 +19,7 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
   title: 'Lộ trình theo nhu cầu',
@@ -194,6 +195,7 @@ export default function LoTrinhHubPage() {
         </section>
       </main>
       <SiteFooter />
+      <StickyMobileCta trackId="lo-trinh" />
     </div>
   );
 }
