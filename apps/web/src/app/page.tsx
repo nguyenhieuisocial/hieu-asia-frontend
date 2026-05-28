@@ -9,7 +9,6 @@ import { HowToStart } from '@/components/home/HowToStart';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 import { MarketingHero } from '@/components/marketing/MarketingHero';
-import { LiveCounterEyebrow } from '@/components/marketing/LiveCounterEyebrow';
 import { HeroBadgeScroll } from '@/components/marketing/HeroBadgeScroll';
 import { LotusLottie } from '@/components/marketing/LotusLottie';
 import { BentoLens } from '@/components/marketing/BentoLens';
@@ -19,7 +18,6 @@ import { SampleOutputShowcase } from '@/components/marketing/SampleOutputShowcas
 import { MentorSampleInteractive } from '@/components/marketing/MentorSampleInteractive';
 import { ScanRow } from '@/components/marketing/ScanRow';
 import { IntentChips } from '@/components/marketing/IntentChips';
-import { BigNumberRow } from '@/components/marketing/BigNumberRow';
 import { PullQuote } from '@/components/marketing/PullQuote';
 import { SectionDivider } from '@/components/marketing/SectionDivider';
 
@@ -377,21 +375,20 @@ export default function LandingPage() {
             bg="painted" enables PaintedCanvas (SVG noise + radial gold + linear
             warm-dark fade) + GlassPanel CTA overlay. Other heroes (/pricing,
             /features, /about, /methodology, /checkout) keep default bg="flat". */}
-        {/* Wave 60.95.g P2-V3 (vault 130 §V) — period consistency fix:
-            hero LiveCounterEyebrow (1.243 / period) MUST match below-fold
-            BigNumberRow ("BÁO CÁO MỘT THÁNG QUA") since both surfaces show
-            the same 1.243 + 4.8★. Changed "trong tuần" → "trong tháng qua"
-            to align with the analytics window BigNumberRow already advertises. */}
+        {/* Wave 60.95.o — removed seeded LiveCounterEyebrow (1.243 reports +
+            4.8★) per founder direction: numbers were placeholder seed values
+            and "founder must be able to defend the number; if not, swap to
+            neutral copy" (vault 108 §5 Risk 3). Replaced with the factual
+            4-discipline value-prop eyebrow that matches what the product
+            actually delivers. HeroBadgeScroll wrapper preserves the Wave
+            60.95.j #18 scroll-linked editorial parallax. */}
         <MarketingHero
           bg="painted"
           eyebrow={
-            // Wave 60.95.j P2-#18 (vault 130 §III) — scroll-linked editorial
-            // parallax on hero badge: opacity 1→0.4 + translateY 0→40px over
-            // the first ~200vh of page scroll. Client wrapper preserves the
-            // RSC-safe LiveCounterEyebrow render and leaves MarketingHero
-            // untouched (HIGH-risk shared component, 6 page callers).
             <HeroBadgeScroll>
-              <LiveCounterEyebrow count={1243} period="trong tháng qua" rating={4.8} />
+              <span className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
+                — 4 ỐNG KÍNH · MỘT BỨC TRANH
+              </span>
             </HeroBadgeScroll>
           }
           title={
@@ -603,55 +600,18 @@ export default function LandingPage() {
           ]}
         />
 
-        {/* Wave 60.66.P4 — BigNumberRow social proof + risk-reversal (vault 109
-            §3 Phase 4 ENRICHED + vault 108 §5 Phase 4). 3-col big numerals with
-            count-up reveal via Motion `useInView` + 14-day refund block below.
-            Seed values 1243 / 4.8 / 14 — founder can adjust. Reuses existing
-            LazyMotion `m` (Phase 2 root setup) → 0 KB initial bundle delta. */}
-        <BigNumberRow
-          eyebrow="MINH CHỨNG"
-          title={
-            <>
-              Người Việt{' '}
-              <u className="underline decoration-gold decoration-2 underline-offset-[6px]">
-                tin tưởng
-              </u>{' '}
-              hieu.asia<span className="text-gold-dot">.</span>
-            </>
-          }
-          numbers={[
-            {
-              value: 1243,
-              caption: 'BÁO CÁO MỘT THÁNG QUA',
-            },
-            {
-              value: 4.8,
-              suffix: '★',
-              caption: 'ĐÁNH GIÁ PREMIUM',
-              // Wave 60.66.HF1: was `format: (n) => n.toFixed(1)` arrow-fn —
-              // inline functions don't serialize across Server → Client RSC
-              // boundary. Use serializable `decimalPlaces` instead. Same
-              // pattern as Wave 60.65.P0a Lucide forwardRef fix.
-              decimalPlaces: 1,
-            },
-            {
-              value: 14,
-              suffix: ' NGÀY',
-              caption: 'HOÀN TIỀN 100%',
-            },
-          ]}
-          riskReversal={{
-            headline: 'Không hài lòng? Hoàn tiền trong 14 ngày.',
-            body: 'Không cần lý do. Chuyển khoản trong 24h sau khi yêu cầu. Bạn vẫn giữ được PDF báo cáo đã tải.',
-            cta: 'Xem chính sách hoàn tiền',
-            href: '/pricing#refund',
-          }}
-          bg="warm-dark-50"
-        />
+        {/* Wave 60.95.o — removed BigNumberRow section per founder direction.
+            The block advertised seed numbers (1243 reports/4.8★) that the
+            product can't yet defend; per vault 108 §5 Risk 3 ("Founder must
+            be able to defend the number; if not, swap to neutral copy"),
+            replacing fake social proof with no-proof is more honest than
+            wrong-proof. 14-day refund promise lives on /pricing CTA and as
+            MarketingHero trustLine, so the risk-reversal is not lost. */}
 
-        {/* Wave 60.66.P5 — lotus SectionDivider between social proof and
-            philosophy stance. Visual breath + cultural mark (vault 109 §3
-            Phase 5 ENRICHED). */}
+        {/* Wave 60.66.P5 — lotus SectionDivider between previous social-proof
+            slot and philosophy stance. Visual breath + cultural mark (vault
+            109 §3 Phase 5 ENRICHED). Kept post-.o cleanup as the rhythm
+            divider between BentoLens and PhilosophyBlock. */}
         <SectionDivider variant="lotus" />
 
         {/* 5. PhilosophyBlock — replaces fake StoryTestimonials (R3 diff #2) */}
