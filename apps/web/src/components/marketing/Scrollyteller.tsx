@@ -204,17 +204,17 @@ export function Scrollyteller({
                 </h2>
               </header>
 
-              {/* SR-only desktop h2 keeps semantic outline + deep-link target. */}
-              <h2
-                id={`${chapter.id}-title-sr`}
-                className="sr-only hidden lg:block"
-              >
-                {/* Desktop screen-readers read the chapter title even though
-                    it's also rendered in the sticky aside. */}
-                {typeof chapter.title === 'string'
-                  ? chapter.title
-                  : chapter.eyebrow ?? chapter.id}
-              </h2>
+              {/* Wave 60.95.an — removed redundant sr-only H2 clone (was id
+                  `${chapter.id}-title-sr` with `sr-only hidden lg:block`).
+                  The pattern was buggy:
+                  · At <lg: `hidden` (display:none) wins → invisible to BOTH
+                    sighted AND screen readers — contributed nothing
+                  · At ≥lg: `lg:block` overrides hidden, `sr-only` stays →
+                    SR reads chapter title TWICE (visible H2 above already
+                    reads it). Founder audit Wave 60.95.an + Sub-agent V
+                    Wave 60.95.k flagged this; V's fix targeted the wrong
+                    file (methodology/page.tsx) so this stayed. Root cause
+                    now removed at the Scrollyteller component level. */}
 
               <div className="mt-8 lg:mt-0">{chapter.content}</div>
             </section>
