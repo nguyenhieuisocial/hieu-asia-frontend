@@ -9,6 +9,7 @@ import { HowToStart } from '@/components/home/HowToStart';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 import { MarketingHero } from '@/components/marketing/MarketingHero';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { HomeHeroEyebrow } from '@/components/home/HomeHeroEyebrow';
 import { LotusLottie } from '@/components/marketing/LotusLottie';
 import { BentoLens } from '@/components/marketing/BentoLens';
@@ -733,6 +734,7 @@ export default function LandingPage() {
         </div>
       </main>
       <SiteFooter />
+      <StickyMobileCta trackId="home" />
     </>
   );
 }

@@ -12,6 +12,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui'
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { ResultDisclaimer } from '@/components/ResultDisclaimer';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 /**
  * Wave 60.95.m P0 — public SSR teaser at `/reading/sample-tu-vi`.
@@ -294,6 +295,7 @@ export default function SampleTuViPage() {
         </section>
       </main>
       <SiteFooter />
+      <StickyMobileCta trackId="sample-tu-vi" />
     </div>
   );
 }

@@ -10,6 +10,7 @@ import {
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { ItalicSpan } from '@/components/marketing/ItalicSpan';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 /**
  * Wave 60.95.u P1 (vault 130 P1) — /mbti audience landing.
@@ -336,6 +337,7 @@ export default function MbtiHubPage() {
       </main>
 
       <SiteFooter />
+      <StickyMobileCta href="/onboarding?intent=quan-he" trackId="mbti" />
     </div>
   );
 }

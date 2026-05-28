@@ -3,6 +3,7 @@ import { ArrowRight, Columns3, Flame, Sparkles } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { ItalicSpan } from '@/components/marketing/ItalicSpan';
+import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 
 /**
@@ -341,6 +342,7 @@ export default function BatTuLandingPage() {
         />
       </main>
       <SiteFooter />
+      <StickyMobileCta href="/onboarding?intent=ngu-hanh" trackId="bat-tu" />
     </div>
   );
 }
