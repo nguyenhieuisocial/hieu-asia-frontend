@@ -214,7 +214,17 @@ export default async function RootLayout({
           Bỏ qua đến nội dung chính
         </a>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          {/* Wave 60.95.p — `enableSystem={false}` so OS-level
+              `prefers-color-scheme: light` does NOT auto-switch the site to
+              light mode. Light mode is feature-gated to null render in
+              ThemeToggle (Wave 60.79.T1, vault 112 P0-01): ~2,300 hardcoded
+              `bg-warm-dark-*` / `text-cream-*` tokens across 182 pages would
+              produce a broken visual sandwich (dark hero + light WhyTrust +
+              dark FAQ wrapper) for users whose OS prefers light. The
+              miniapp-telegram layout already uses `enableSystem={false}` for
+              the same reason. Re-enable when warm-dark light variants ship
+              Wave 60.82+ and the dark-locked tokens are migrated. */}
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
             <QueryProvider>
               <LazyMotionProvider>
                 <Suspense fallback={null}>
