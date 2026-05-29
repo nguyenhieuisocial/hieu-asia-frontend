@@ -121,8 +121,13 @@ export function KpiCard({
   const inner = (
     <div
       className={cn(
-        'relative overflow-hidden rounded-xl border border-gold/15 bg-gradient-to-br from-ink/70 via-ink/60 to-ink/40 p-5 backdrop-blur-sm transition-all duration-300 ease-editorial',
-        'hover:border-gold/30 hover:shadow-[0_8px_28px_-12px_rgba(184,146,61,0.25)]',
+        // Wave 63.2 — bg was hardcoded `from-ink/70 via-ink/60 to-ink/40`
+        // (ink #0F0F12) → on a light page these KPI cards rendered dark-on-
+        // light with washed-out labels (the bug in the founder's /sessions +
+        // /tasks screenshots). Now theme-aware `card` token (Bark in dark /
+        // Paper-50 in light) + ochre border so the cards follow the palette.
+        'relative overflow-hidden rounded-xl border border-primary/15 bg-gradient-to-br from-card via-card to-card/80 p-5 backdrop-blur-sm transition-all duration-300 ease-editorial',
+        'hover:border-primary/30 hover:shadow-[0_8px_28px_-12px_rgba(164,117,50,0.25)]',
         href && 'cursor-pointer',
         className,
       )}

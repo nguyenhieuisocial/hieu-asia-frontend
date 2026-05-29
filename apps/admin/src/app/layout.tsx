@@ -43,7 +43,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         className={`${beVietnam.variable} ${inter.variable} ${outfit.variable} ${mono.variable}`}
       >
         <body>
-          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          {/* Wave 63.2 — enableSystem OFF: admin is an ops console, dark-built
+              (KPI cards, charts, tables all designed for the Night palette). It
+              was following the OS, so a light-mode laptop rendered admin in
+              light → dark-built KpiCards became dark-on-light + unreadable
+              ("đa số pages lỗi màu"). Force dark; the SiteNav toggle still
+              lets an admin opt into light, but the default no longer flips
+              with the OS. */}
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
             <Suspense fallback={null}>
               <PostHogProvider>
                 <QueryProvider>{children}</QueryProvider>
