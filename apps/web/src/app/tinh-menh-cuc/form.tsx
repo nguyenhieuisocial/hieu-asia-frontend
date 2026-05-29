@@ -77,7 +77,7 @@ export function TinhMenhCucForm() {
             <span className="text-muted-foreground">Tính Mệnh Cục</span>
           </nav>
 
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
             Free tool · Bước 1 của Tử Vi
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -260,19 +260,19 @@ export function TinhMenhCucForm() {
               </p>
               <ul className="ml-5 list-disc space-y-1">
                 <li>
-                  <strong className="text-gold">Thủy nhị cục</strong> — đại vận từ 2 tuổi
+                  <strong className="text-gold-700">Thủy nhị cục</strong> — đại vận từ 2 tuổi
                 </li>
                 <li>
-                  <strong className="text-gold">Mộc tam cục</strong> — đại vận từ 3 tuổi
+                  <strong className="text-gold-700">Mộc tam cục</strong> — đại vận từ 3 tuổi
                 </li>
                 <li>
-                  <strong className="text-gold">Kim tứ cục</strong> — đại vận từ 4 tuổi
+                  <strong className="text-gold-700">Kim tứ cục</strong> — đại vận từ 4 tuổi
                 </li>
                 <li>
-                  <strong className="text-gold">Thổ ngũ cục</strong> — đại vận từ 5 tuổi
+                  <strong className="text-gold-700">Thổ ngũ cục</strong> — đại vận từ 5 tuổi
                 </li>
                 <li>
-                  <strong className="text-gold">Hỏa lục cục</strong> — đại vận từ 6 tuổi
+                  <strong className="text-gold-700">Hỏa lục cục</strong> — đại vận từ 6 tuổi
                 </li>
               </ul>
               <p className="text-muted-foreground">
@@ -293,7 +293,7 @@ function ResultRow({ label, value, hint }: { label: string; value: string; hint:
   return (
     <div className="rounded-md border border-border bg-card/40 p-3">
       <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
-      <p className="mt-1 font-heading text-lg font-semibold text-gold">{value}</p>
+      <p className="mt-1 font-heading text-lg font-semibold text-gold-700">{value}</p>
       <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
     </div>
   );

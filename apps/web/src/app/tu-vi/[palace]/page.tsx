@@ -99,7 +99,7 @@ export default async function PalacePage({
             <span className="text-muted-foreground">Cung {data.name}</span>
           </nav>
 
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
             {data.fullName} · {data.domain}
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -145,7 +145,7 @@ export default async function PalacePage({
               <ul className="space-y-2 text-sm leading-relaxed text-foreground/80 sm:text-base">
                 {data.howToRead.map((p, i) => (
                   <li key={i} className="flex gap-2">
-                    <span className="text-gold/80">{i + 1}.</span>
+                    <span className="text-gold-700">{i + 1}.</span>
                     <span>{p}</span>
                   </li>
                 ))}
@@ -171,7 +171,7 @@ export default async function PalacePage({
                 {data.trigon.map((t) => (
                   <span
                     key={t}
-                    className="rounded-full border border-gold/30 bg-gold/5 px-3 py-1 font-mono text-xs text-gold"
+                    className="rounded-full border border-gold/30 bg-gold/5 px-3 py-1 font-mono text-xs text-gold-700"
                   >
                     {t}
                   </span>

@@ -110,7 +110,7 @@ export default function AffiliateSignupPage() {
             <CardContent className="space-y-6">
               <div>
                 <Label className="text-xs uppercase text-muted-foreground">Mã affiliate của bạn</Label>
-                <div className="mt-1 rounded border border-gold/30 bg-gold/10 p-3 text-center font-mono text-2xl font-bold text-gold">
+                <div className="mt-1 rounded border border-gold/30 bg-gold/10 p-3 text-center font-mono text-2xl font-bold text-gold-700">
                   {result.code}
                 </div>
               </div>
@@ -134,7 +134,7 @@ export default function AffiliateSignupPage() {
                 <a
                   href={result.qr_url}
                   download={`hieu-asia-${result.code}.png`}
-                  className="mt-2 block text-center text-sm text-gold hover:underline"
+                  className="mt-2 block text-center text-sm text-gold-700 hover:underline"
                 >
                   Tải QR code
                 </a>
@@ -256,11 +256,11 @@ export default function AffiliateSignupPage() {
 
               <p className="text-xs text-muted-foreground">
                 Khi đăng ký bạn đồng ý với{' '}
-                <Link href="/terms" className="text-gold hover:underline">
+                <Link href="/terms" className="text-gold-700 hover:underline">
                   Điều khoản
                 </Link>{' '}
                 và{' '}
-                <Link href="/affiliate/terms" className="text-gold hover:underline">
+                <Link href="/affiliate/terms" className="text-gold-700 hover:underline">
                   quy chế Affiliate
                 </Link>{' '}
                 (không spam, không mạo danh, hoa hồng có thể điều chỉnh).

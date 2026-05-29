@@ -97,7 +97,7 @@ export default function InsightMapPage() {
     <main id="main-content" className="min-h-screen bg-background pb-24 pt-16">
       <div className="mx-auto max-w-3xl px-6">
         <header className="mb-10">
-          <p className="font-mono text-eyebrow uppercase tracking-[0.32em] text-gold/90">
+          <p className="font-mono text-eyebrow uppercase tracking-[0.32em] text-gold-700">
             BẢN ĐỒ NHẬN THỨC
           </p>
           <h1 className="mt-3 font-heading text-section-display font-bold tracking-tight text-foreground">

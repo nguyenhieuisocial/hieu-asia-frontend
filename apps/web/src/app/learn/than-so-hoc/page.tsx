@@ -45,7 +45,7 @@ export default function LearnThanSoHocPage() {
       </nav>
 
       <header className="mb-10 text-center">
-        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
           Tây phương · Pythagoras
         </p>
         <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
@@ -58,7 +58,7 @@ export default function LearnThanSoHocPage() {
       </header>
 
       <section className="rounded-xl border border-border bg-card/40 p-6 sm:p-8">
-        <h2 className="mb-4 text-center font-heading text-lg font-semibold text-gold">
+        <h2 className="mb-4 text-center font-heading text-lg font-semibold text-gold-700">
           9 số chủ đạo
         </h2>
         <div className="grid gap-3 sm:grid-cols-3">
@@ -68,7 +68,7 @@ export default function LearnThanSoHocPage() {
               className="rounded-lg border border-border bg-card/40 p-4 transition-colors hover:border-gold/40"
             >
               <div className="flex items-baseline gap-3">
-                <span className="font-heading text-3xl font-bold text-gold">{n.num}</span>
+                <span className="font-heading text-3xl font-bold text-gold-700">{n.num}</span>
                 <span className="text-sm font-semibold text-foreground">{n.name}</span>
               </div>
               <p className="mt-1 text-xs text-muted-foreground">{n.keywords}</p>

@@ -97,7 +97,7 @@ const AXIS_LABEL: Record<BtrQuestion['axis'], string> = {
 function ConfidenceBadge({ value }: { value: BtrResult['confidence'] }) {
   const map = {
     high: { label: 'Cao', cls: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300' },
-    medium: { label: 'Trung bình', cls: 'border-gold/40 bg-gold/10 text-gold' },
+    medium: { label: 'Trung bình', cls: 'border-gold/40 bg-gold/10 text-gold-700' },
     low: { label: 'Thấp', cls: 'border-rose-500/40 bg-rose-500/10 text-rose-300' },
   } as const;
   const m = map[value];
@@ -261,7 +261,7 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
     >
       {/* Caveat banner — always visible */}
       <div className="mt-6 rounded-md border border-gold/25 bg-gold/5 px-4 py-3 text-xs text-muted-foreground">
-        <strong className="text-gold">Lưu ý:</strong> Kết quả là <em>ước lượng</em> dựa
+        <strong className="text-gold-700">Lưu ý:</strong> Kết quả là <em>ước lượng</em> dựa
         trên hồi cứu sự kiện đời, <strong>không thay thế</strong> việc xác định chính
         xác giờ sinh từ chuyên gia Tử Vi hoặc giấy khai sinh. Dùng để thu hẹp khung
         giờ khả dĩ — bạn nên đối chiếu thêm với người thân nếu có thể.
@@ -273,7 +273,7 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
           {/* Progress bar */}
           <div className="mb-6">
             <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span className="font-mono uppercase tracking-[0.28em] text-gold/80">
+              <span className="font-mono uppercase tracking-[0.28em] text-gold-700">
                 Câu {stepIndex + 1}/{total}
               </span>
               <span>{answeredCount}/{total} đã trả lời</span>
@@ -295,7 +295,7 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
           {current && (
             <Card key={current.id} className="border-border bg-card/50 backdrop-blur-sm">
               <CardHeader>
-                <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
+                <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold-700">
                   {AXIS_LABEL[current.axis]}
                 </p>
                 <CardTitle className="font-heading text-lg text-foreground sm:text-xl">
@@ -424,7 +424,7 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
                 >
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold-700">
                         Hạng #{i + 1}
                       </p>
                       <span className="font-mono text-xs text-muted-foreground">
@@ -435,9 +435,9 @@ export function RectifyClient({ initialQuestions, apiBase }: RectifyClientProps)
                       Giờ {c.canh}
                     </CardTitle>
                     <CardDescription className="text-muted-foreground">
-                      Khung: <span className="text-gold">{c.range}</span>
+                      Khung: <span className="text-gold-700">{c.range}</span>
                       <span className="mx-1">·</span>
-                      Giờ đại diện: <span className="text-gold">{c.hour}</span>
+                      Giờ đại diện: <span className="text-gold-700">{c.hour}</span>
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-3">

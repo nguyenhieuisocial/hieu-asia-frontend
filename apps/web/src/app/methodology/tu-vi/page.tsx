@@ -360,7 +360,7 @@ export default function MethodologyTuViPage() {
             <span className="text-muted-foreground">Methodology Tử Vi</span>
           </nav>
 
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
             Methodology · Tử Vi
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -373,7 +373,7 @@ export default function MethodologyTuViPage() {
           </p>
 
           <div className="mt-8 flex flex-wrap gap-2 text-xs">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/25 bg-gold/5 px-3 py-1 text-gold/90">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/25 bg-gold/5 px-3 py-1 text-gold-700">
               <BookOpen className="h-3.5 w-3.5" aria-hidden /> Bắc phái Trần Đoàn
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-3 py-1 text-muted-foreground">
@@ -412,7 +412,7 @@ export default function MethodologyTuViPage() {
                 deterministic.
               </p>
               <p className="rounded-lg border border-gold/20 bg-gold/5 p-3 text-foreground/85">
-                <strong className="text-gold">Caveat.</strong> Với một số luận điểm có dị
+                <strong className="text-gold-700">Caveat.</strong> Với một số luận điểm có dị
                 biệt giữa <em>phái Trung Châu</em>, <em>Tử Vân</em>, <em>Liễu Vô</em> —
                 chúng tôi ghi rõ ngay trong báo cáo, kèm chú thích chỗ nào engine theo
                 Bắc phái mainstream và chỗ nào có dị bản.
@@ -442,7 +442,7 @@ export default function MethodologyTuViPage() {
                     <li key={s.slug}>
                       <Link
                         href={`/tu-vi/sao/${s.slug}`}
-                        className="inline-flex items-center gap-1 rounded-full border border-gold/25 bg-gold/5 px-3 py-1 text-xs text-gold/90 hover:bg-gold/10"
+                        className="inline-flex items-center gap-1 rounded-full border border-gold/25 bg-gold/5 px-3 py-1 text-xs text-gold-700 hover:bg-gold/10"
                       >
                         {s.name}
                         <ChevronRight className="h-3 w-3" aria-hidden />
@@ -522,7 +522,7 @@ export default function MethodologyTuViPage() {
                 </table>
               </div>
               <details className="rounded-lg border border-border bg-card/40 p-3">
-                <summary className="cursor-pointer text-sm text-gold/90 hover:text-gold">
+                <summary className="cursor-pointer text-sm text-gold-700 hover:text-gold">
                   Xem {STARS_114.length - 30} sao còn lại
                 </summary>
                 <div className="mt-3 overflow-x-auto rounded-lg border border-border">
@@ -605,7 +605,7 @@ export default function MethodologyTuViPage() {
                 Môn, Thiên Tướng, Thiên Lương, Thất Sát, Phá Quân.
               </p>
               <p className="rounded-lg border border-gold/20 bg-gold/5 p-3 text-foreground/85">
-                <strong className="text-gold">Caveat.</strong> Hệ thống không tự nội suy
+                <strong className="text-gold-700">Caveat.</strong> Hệ thống không tự nội suy
                 nếu ngày âm {'>'} 30 trong tháng nhuận — engine có check và sẽ trả lỗi
                 yêu cầu user xác nhận lại ngày âm. Tránh trường hợp "đoán" ngày 31 thành
                 ngày 1 tháng sau và sai toàn bộ lá số.
@@ -636,7 +636,7 @@ export default function MethodologyTuViPage() {
                 Vũ Khúc, Hoá Kỵ tại Thái Dương.
               </p>
               <p className="rounded-lg border border-gold/20 bg-gold/5 p-3 text-foreground/85">
-                <strong className="text-gold">Caveat — dị biệt giữa nhánh.</strong> Phái{' '}
+                <strong className="text-gold-700">Caveat — dị biệt giữa nhánh.</strong> Phái{' '}
                 <em>Tử Vân</em> dùng <em>can ngày</em> để an Tứ Hoá (tạo ra "Tứ Hoá phi
                 tinh"). Phái <em>Liễu Vô Cư Sĩ</em> dùng cả <em>can năm</em> và{' '}
                 <em>can ngày</em> đối chiếu chéo. Engine hieu.asia mặc định dùng{' '}
@@ -684,7 +684,7 @@ export default function MethodologyTuViPage() {
                     Nếu công thức này thay đổi,{' '}
                     <Link
                       href="/methodology/algorithm-changelog"
-                      className="text-gold underline underline-offset-4 hover:opacity-80"
+                      className="text-gold-700 underline underline-offset-4 hover:opacity-80"
                     >
                       /methodology/algorithm-changelog
                     </Link>{' '}
@@ -715,7 +715,7 @@ export default function MethodologyTuViPage() {
                 hưởng giảm dần.
               </p>
               <p className="rounded-lg border border-gold/20 bg-gold/5 p-3 text-foreground/85">
-                <strong className="text-gold">Caveat.</strong> Lưu niên chỉ <em>gợi mở
+                <strong className="text-gold-700">Caveat.</strong> Lưu niên chỉ <em>gợi mở
                 chủ đề năm</em> — không quyết định cụ thể "việc gì xảy ra". Engine sẽ tô
                 đậm chủ đề năm trong báo cáo, nhưng luôn kèm câu "đây là bối cảnh, không
                 phải kết quả".
@@ -937,7 +937,7 @@ export default function MethodologyTuViPage() {
             <CardContent className="space-y-4 text-sm leading-relaxed text-foreground/80 sm:text-base">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="rounded-lg border border-border bg-card/60 p-4">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
                     Mode dễ hiểu
                   </p>
                   <p className="mt-2 text-foreground/85">
@@ -945,7 +945,7 @@ export default function MethodologyTuViPage() {
                   </p>
                 </div>
                 <div className="rounded-lg border border-border bg-card/60 p-4">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
                     Mode chuyên sâu
                   </p>
                   <p className="mt-2 text-foreground/85">
@@ -1037,7 +1037,7 @@ export default function MethodologyTuViPage() {
                   Mentor sẽ ưu tiên hỏi lại thay vì đoán cứng. Bạn có thể dùng{' '}
                   <Link
                     href="/tu-vi/rectify"
-                    className="text-gold underline underline-offset-4 hover:opacity-80"
+                    className="text-gold-700 underline underline-offset-4 hover:opacity-80"
                   >
                     /tu-vi/rectify
                   </Link>{' '}
@@ -1064,7 +1064,7 @@ export default function MethodologyTuViPage() {
               href="/sample-report"
               className="group rounded-xl border border-border bg-card/40 p-5 transition hover:border-gold/40"
             >
-              <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+              <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
                 Xem trước
               </p>
               <h3 className="mt-2 font-heading text-lg text-foreground">
@@ -1073,7 +1073,7 @@ export default function MethodologyTuViPage() {
               <p className="mt-2 text-sm text-muted-foreground">
                 Một lá số được luận đầy đủ — để bạn biết kết quả thật trông như thế nào.
               </p>
-              <span className="mt-3 inline-flex items-center gap-1 text-sm text-gold group-hover:underline">
+              <span className="mt-3 inline-flex items-center gap-1 text-sm text-gold-700 group-hover:underline">
                 /sample-report <ChevronRight className="h-4 w-4" aria-hidden />
               </span>
             </Link>
@@ -1081,7 +1081,7 @@ export default function MethodologyTuViPage() {
               href="/onboarding/topic"
               className="group rounded-xl border border-gold/30 bg-gold/10 p-5 transition hover:border-gold/60 hover:bg-gold/15"
             >
-              <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+              <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
                 Bắt đầu
               </p>
               <h3 className="mt-2 font-heading text-lg text-foreground">
@@ -1090,7 +1090,7 @@ export default function MethodologyTuViPage() {
               <p className="mt-2 text-sm text-muted-foreground">
                 Trả lời 4 câu hỏi ngắn để engine an sao và soạn báo cáo riêng cho bạn.
               </p>
-              <span className="mt-3 inline-flex items-center gap-1 text-sm text-gold group-hover:underline">
+              <span className="mt-3 inline-flex items-center gap-1 text-sm text-gold-700 group-hover:underline">
                 /onboarding/topic <ChevronRight className="h-4 w-4" aria-hidden />
               </span>
             </Link>
@@ -1103,7 +1103,7 @@ export default function MethodologyTuViPage() {
               aria-label="Mục lục"
               className="sticky top-20 rounded-lg border border-border bg-card/40 p-4"
             >
-              <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.28em] text-gold/80">
+              <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.28em] text-gold-700">
                 Mục lục
               </p>
               <ul className="space-y-1.5 text-xs">

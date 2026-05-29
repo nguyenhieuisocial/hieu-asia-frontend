@@ -204,7 +204,7 @@ export default function SampleReportPage() {
         />
 
         <section className="relative mx-auto max-w-3xl px-6 pb-10 pt-12 sm:pt-16">
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
             Mẫu báo cáo · Cẩm nang cá nhân hoá
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -216,7 +216,7 @@ export default function SampleReportPage() {
           </p>
 
           <div className="mt-7 flex flex-wrap gap-2 text-xs">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/25 bg-gold/5 px-3 py-1 text-gold/90">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/25 bg-gold/5 px-3 py-1 text-gold-700">
               <ShieldCheck className="h-3.5 w-3.5" aria-hidden /> Persona demo · không có dữ liệu thật
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-3 py-1 text-muted-foreground">
@@ -308,7 +308,7 @@ export default function SampleReportPage() {
                 </p>
               </div>
               <div className="rounded-lg bg-gold/[0.06] p-3">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-gold-700">
                   Mentor
                 </p>
                 <p className="mt-1 text-foreground/85">
@@ -322,7 +322,7 @@ export default function SampleReportPage() {
                   Nhưng Tài Bạch không hợp rủi ro cao.
                 </p>
                 <p className="mt-3 text-foreground/85">
-                  <strong className="text-gold/90">3 kịch bản để bạn cân nhắc:</strong>
+                  <strong className="text-gold-700">3 kịch bản để bạn cân nhắc:</strong>
                 </p>
                 <ol className="ml-4 mt-2 list-decimal space-y-1 text-foreground/85">
                   <li>Ở lại + đàm phán vai trò mới (ít rủi ro, tận dụng Quan Lộc tốt).</li>
@@ -348,7 +348,7 @@ export default function SampleReportPage() {
             {PLAN_30_60_90.map((p, i) => (
               <Card key={i} className="border-border bg-card/40">
                 <CardHeader className="pb-3">
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-gold-700">
                     {p.period}
                   </p>
                   <CardTitle className="mt-1 font-heading text-base text-foreground">

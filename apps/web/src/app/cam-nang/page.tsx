@@ -85,7 +85,7 @@ export default async function CamNangIndexPage() {
               <BookOpen className="h-5 w-5" aria-hidden />
             </div>
             <div>
-              <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
+              <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-700">
                 Cẩm nang · hieu.asia
               </p>
               <h1 className="mt-2 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">

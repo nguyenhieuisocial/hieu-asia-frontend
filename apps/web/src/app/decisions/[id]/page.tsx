@@ -220,7 +220,7 @@ export default function DecisionBriefPage() {
 
         <header className="mb-10">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center rounded-full border border-gold/30 bg-gold/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-gold">
+            <span className="inline-flex items-center rounded-full border border-gold/30 bg-gold/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-gold-700">
               {topicLabel}
             </span>
             <span className="text-xs text-muted-foreground">
@@ -245,7 +245,7 @@ export default function DecisionBriefPage() {
         <section aria-labelledby="real-problem" className="mb-12">
           <h2
             id="real-problem"
-            className="font-mono text-xs uppercase tracking-[0.32em] text-gold/80"
+            className="font-mono text-xs uppercase tracking-[0.32em] text-gold-700"
           >
             Vấn đề thật sự
           </h2>
@@ -257,7 +257,7 @@ export default function DecisionBriefPage() {
         <section aria-labelledby="chart-signal" className="mb-12">
           <h2
             id="chart-signal"
-            className="font-mono text-xs uppercase tracking-[0.32em] text-gold/80"
+            className="font-mono text-xs uppercase tracking-[0.32em] text-gold-700"
           >
             Lá số nói gì
           </h2>

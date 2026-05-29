@@ -134,7 +134,7 @@ export default function TimelinePage() {
         </nav>
 
         <header className="mb-10">
-          <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold-700">
             Timeline
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">
@@ -175,7 +175,7 @@ export default function TimelinePage() {
                 >
                   <CardContent className="p-4">
                     {active && (
-                      <span className="mb-2 inline-flex rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-gold">
+                      <span className="mb-2 inline-flex rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-gold-700">
                         Hiện tại
                       </span>
                     )}
@@ -203,7 +203,7 @@ export default function TimelinePage() {
           <CardHeader>
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-gold" aria-hidden="true" />
-              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
                 Lưu niên
               </p>
             </div>
@@ -232,7 +232,7 @@ export default function TimelinePage() {
             {upcoming.map((u) => (
               <Card key={u.year} className="border-border bg-card/40">
                 <CardHeader>
-                  <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
                     Năm {u.year}
                   </p>
                   <CardDescription className="text-muted-foreground">
@@ -247,7 +247,7 @@ export default function TimelinePage() {
         <section className="rounded-xl border border-gold/25 bg-gold/[0.04] p-6 sm:p-8">
           <div className="flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-gold" aria-hidden="true" />
-            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
               Tiếp theo
             </p>
           </div>

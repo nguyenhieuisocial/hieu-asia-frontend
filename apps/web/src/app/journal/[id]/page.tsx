@@ -170,7 +170,7 @@ export default function JournalEntryPage() {
           <article>
             <header className="mb-8">
               <div className="mb-3 flex flex-wrap items-center gap-2">
-                <span className="rounded-full border border-gold/30 bg-gold/10 px-2.5 py-0.5 text-xs font-medium text-gold">
+                <span className="rounded-full border border-gold/30 bg-gold/10 px-2.5 py-0.5 text-xs font-medium text-gold-700">
                   {TOPIC_LABEL[entry.topic]}
                 </span>
                 <span className="text-xs text-muted-foreground">
@@ -378,7 +378,7 @@ export default function JournalEntryPage() {
 
               <aside className="space-y-4 sm:sticky sm:top-24">
                 <div className="rounded-lg border border-gold/25 bg-gold/[0.04] p-4">
-                  <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-gold/80">
+                  <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-gold-700">
                     <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
                     Review sau
                   </div>
@@ -396,7 +396,7 @@ export default function JournalEntryPage() {
                   </p>
                   <Link
                     href="/lo-trinh"
-                    className="mt-2 inline-flex items-center gap-1 text-xs text-gold/90 hover:text-gold"
+                    className="mt-2 inline-flex items-center gap-1 text-xs text-gold-700 hover:text-gold"
                   >
                     Xem Lộ trình
                     <ArrowRight className="h-3 w-3" aria-hidden="true" />

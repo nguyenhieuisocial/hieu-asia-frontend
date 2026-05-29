@@ -210,7 +210,7 @@ export default function AffiliateNetworkPage() {
         <main className="mx-auto max-w-5xl px-6 pt-16 pb-20">
           <div className="mx-auto max-w-md text-center">
             <h1 className="mb-2 font-heading text-2xl font-bold">
-              Bạn chưa đăng ký <span className="text-gold">affiliate</span>
+              Bạn chưa đăng ký <span className="text-gold-700">affiliate</span>
             </h1>
             <p className="mb-6 text-muted-foreground">
               Bạn đã đăng nhập, nhưng chưa tham gia chương trình affiliate.
@@ -273,7 +273,7 @@ export default function AffiliateNetworkPage() {
 
         {/* Hero */}
         <header className="mb-10">
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
             Affiliate · Network
           </p>
           <h1 className="mt-2 font-heading text-3xl font-bold sm:text-4xl">
@@ -302,7 +302,7 @@ export default function AffiliateNetworkPage() {
               <CardDescription>30% hoa hồng</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-gold">{stats.l1_count}</div>
+              <div className="text-3xl font-bold text-gold-700">{stats.l1_count}</div>
               <div className="mt-1 text-xs text-muted-foreground">người mời trực tiếp</div>
             </CardContent>
           </Card>
@@ -347,7 +347,7 @@ export default function AffiliateNetworkPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex flex-wrap items-center gap-3">
-                <div className="font-mono text-2xl font-bold tracking-wider text-gold">
+                <div className="font-mono text-2xl font-bold tracking-wider text-gold-700">
                   {code}
                 </div>
                 <Button
@@ -429,7 +429,7 @@ export default function AffiliateNetworkPage() {
                         <td className="py-2 pr-3 font-mono text-foreground/80">
                           {maskUserId(c.user_id)}
                         </td>
-                        <td className="py-2 pr-3 font-mono text-gold">{c.affiliate_code}</td>
+                        <td className="py-2 pr-3 font-mono text-gold-700">{c.affiliate_code}</td>
                         <td className="py-2 pr-3">{TIER_LABEL[c.tier]}</td>
                         <td className="py-2 pr-3">
                           <span

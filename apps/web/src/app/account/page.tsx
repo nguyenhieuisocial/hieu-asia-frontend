@@ -220,7 +220,7 @@ function AccountPageInner() {
           <div className="rounded-xl border border-border bg-card/40 p-4 text-xs text-muted-foreground">
             Cần hỗ trợ?{' '}
             <a
-              className="text-gold underline underline-offset-4 hover:opacity-80"
+              className="text-gold-700 underline underline-offset-4 hover:opacity-80"
               href="mailto:privacy@hieu.asia"
             >
               privacy@hieu.asia
@@ -229,7 +229,7 @@ function AccountPageInner() {
             <button
               type="button"
               onClick={() => setFeedbackArmed(true)}
-              className="text-gold underline underline-offset-4 hover:opacity-80"
+              className="text-gold-700 underline underline-offset-4 hover:opacity-80"
             >
               Góp ý tính năng
             </button>

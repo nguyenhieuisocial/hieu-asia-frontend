@@ -256,7 +256,7 @@ function BirthChildFlow() {
                     <span className="text-sm">
                       {y.year} — {y.canChi} ({y.animal})
                     </span>
-                    <span className="font-mono text-sm font-semibold text-gold">{y.score}/100</span>
+                    <span className="font-mono text-sm font-semibold text-gold-700">{y.score}/100</span>
                   </div>
                 ))}
               </div>
@@ -355,7 +355,7 @@ function XongDatFlow() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg text-gold">Gia chủ</CardTitle>
+          <CardTitle className="text-lg text-gold-700">Gia chủ</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
@@ -396,7 +396,7 @@ function XongDatFlow() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg text-gold">Ứng viên xông đất</CardTitle>
+          <CardTitle className="text-lg text-gold-700">Ứng viên xông đất</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           {candidates.map((c, idx) => (
@@ -477,7 +477,7 @@ function XongDatFlow() {
                       </div>
                       <div className="text-sm text-muted-foreground">{r.rating}</div>
                     </div>
-                    <div className="font-mono text-2xl font-bold text-gold">{r.score}</div>
+                    <div className="font-mono text-2xl font-bold text-gold-700">{r.score}</div>
                   </div>
                   <p className="mt-2 text-sm text-muted-foreground">{r.summary}</p>
                 </div>
@@ -547,7 +547,7 @@ function ResultView({ result, onShare }: { result: CompatibilityResult; onShare:
 function PersonInfo({ p }: { p: CompatibilityResult['person1'] }) {
   return (
     <div className="rounded-md border border-border bg-muted/5 p-3">
-      <div className="font-medium text-gold">{p.name || 'Người'}</div>
+      <div className="font-medium text-gold-700">{p.name || 'Người'}</div>
       <div className="mt-1 text-foreground/80">
         {p.canChi} — {p.animal}
       </div>

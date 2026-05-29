@@ -136,7 +136,7 @@ export default function SuNghiepPage() {
           <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-lg bg-gold/10 text-gold">
             <Briefcase className="h-5 w-5" aria-hidden />
           </div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
             Lộ trình · Tôi đang phân vân sự nghiệp
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -241,7 +241,7 @@ export default function SuNghiepPage() {
             href="/community/cases/khoi-nghiep-lan-thu-3"
             className="group block rounded-xl border border-border bg-card/30 p-5 transition-colors hover:border-gold/40"
           >
-            <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
+            <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold-700">
               Đọc case study tương tự
             </p>
             <p className="mt-2 font-heading text-base font-semibold text-foreground group-hover:text-gold">

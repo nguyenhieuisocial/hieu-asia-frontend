@@ -130,7 +130,7 @@ export default function DecisionsHubPage() {
 
       <main className="mx-auto max-w-6xl px-6 py-16 sm:py-24">
         <header className="mb-14 max-w-3xl">
-          <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold-700">
             Bản tóm tắt quyết định
           </p>
           <h1 className="mt-3 font-heading text-4xl font-bold leading-tight sm:text-5xl">
@@ -201,7 +201,7 @@ export default function DecisionsHubPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <span className="inline-flex items-center text-sm text-gold/90 transition-transform group-hover:translate-x-0.5">
+                    <span className="inline-flex items-center text-sm text-gold-700 transition-transform group-hover:translate-x-0.5">
                       Bắt đầu
                       <ArrowRight className="ml-1 h-3.5 w-3.5" aria-hidden="true" />
                     </span>
@@ -257,7 +257,7 @@ export default function DecisionsHubPage() {
           <div className="mt-6">
             <Link
               href="/onboarding/topic"
-              className="inline-flex items-center gap-2 rounded-md border border-gold/50 bg-card/60 px-5 py-2.5 text-sm font-medium text-gold transition hover:bg-gold/10"
+              className="inline-flex items-center gap-2 rounded-md border border-gold/50 bg-card/60 px-5 py-2.5 text-sm font-medium text-gold-700 transition hover:bg-gold/10"
             >
               Lập lá số trước
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
