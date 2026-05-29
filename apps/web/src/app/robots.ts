@@ -28,6 +28,10 @@ export default function robots(): MetadataRoute.Robots {
           '/signin',
           '/auth/',
           '/onboarding/',
+          // Wave 64 — thin-content / near-duplicate / dead-shell routes.
+          '/checkout/',         // thanh toán thin-content ("Sắp ra mắt")
+          '/r/',                // affiliate referral redirect (near-duplicate)
+          '/onboarding-wizard', // shell rỗng "Đang chuẩn bị…" (Wave 58 in-flight)
           // Wave 6 — private detail URLs (localStorage-only, would soft-404 for crawlers)
           '/decisions/d_',
           '/journal/jr_',
@@ -62,6 +66,10 @@ export default function robots(): MetadataRoute.Robots {
           '/signin',
           '/auth/',
           '/onboarding/',
+          // Wave 64 — thin-content / near-duplicate / dead-shell routes.
+          '/checkout/',
+          '/r/',
+          '/onboarding-wizard',
           '/decisions/d_',
           '/journal/jr_',
         ],

@@ -13,7 +13,6 @@ import { redirect } from 'next/navigation';
  */
 export const metadata = {
   title: 'Thông tin ngày sinh',
-  alternates: { canonical: 'https://hieu.asia/onboarding/birth' },
   robots: { index: false, follow: false },
 };
 
