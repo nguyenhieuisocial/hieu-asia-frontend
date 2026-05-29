@@ -179,7 +179,7 @@ function RevealModal({
           </DialogTitle>
           <DialogDescription>
             <code className="font-mono text-primary">{name}</code> — modal tự đóng sau{' '}
-            <span className="font-semibold text-amber-300">{remaining}s</span>. Đừng paste vào
+            <span className="font-semibold text-amber-700 dark:text-amber-300">{remaining}s</span>. Đừng paste vào
             chat / chỗ công cộng.
           </DialogDescription>
         </DialogHeader>
@@ -434,21 +434,21 @@ export default function SecretsPage() {
       {bootstrap && (!bootstrap.cf_token_set || !bootstrap.vercel_token_set) && (
         <Alert className="border-amber-700/50 bg-amber-900/20">
           <ShieldAlert className="h-4 w-4 text-amber-400" />
-          <AlertTitle className="text-amber-200">Cần bootstrap 2 token một lần</AlertTitle>
-          <AlertDescription className="space-y-2 text-amber-100/90">
+          <AlertTitle className="text-amber-700 dark:text-amber-200">Cần bootstrap 2 token một lần</AlertTitle>
+          <AlertDescription className="space-y-2 text-amber-700/90 dark:text-amber-100/90">
             <p>
               Trước khi UI này hoạt động, set 2 token Cloudflare + Vercel cho Worker (1 lần
               duy nhất). Sau đó tất cả keys khác đều rotate được qua trang này.
             </p>
             <ul className="space-y-1 font-mono text-xs">
               <li>
-                <span className={bootstrap.cf_token_set ? 'text-emerald-300' : 'text-red-300'}>
+                <span className={bootstrap.cf_token_set ? 'text-emerald-700 dark:text-emerald-300' : 'text-red-700 dark:text-red-300'}>
                   {bootstrap.cf_token_set ? '✓' : '✗'}
                 </span>{' '}
                 <code>{bootstrap.cli_hints.cf}</code>
               </li>
               <li>
-                <span className={bootstrap.vercel_token_set ? 'text-emerald-300' : 'text-red-300'}>
+                <span className={bootstrap.vercel_token_set ? 'text-emerald-700 dark:text-emerald-300' : 'text-red-700 dark:text-red-300'}>
                   {bootstrap.vercel_token_set ? '✓' : '✗'}
                 </span>{' '}
                 <code>{bootstrap.cli_hints.vercel}</code>
