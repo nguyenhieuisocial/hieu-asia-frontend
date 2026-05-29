@@ -15,7 +15,7 @@ import dynamic from 'next/dynamic';
  */
 
 const PAPER = '#F3ECDD';
-const GOLD = '#D4A261';
+const ACCENT = '#6fe0ef';
 const SOFT = '#8a93a8';
 const SCROLL_SPAN = 2;
 
@@ -94,7 +94,7 @@ export function CosmosHero(): React.JSX.Element {
                 fontSize: 'clamp(11px, 1.4vw, 13px)',
                 letterSpacing: '0.3em',
                 textTransform: 'uppercase',
-                color: GOLD,
+                color: ACCENT,
               }}
             >
               Cẩm nang quyết định bằng AI
@@ -112,7 +112,7 @@ export function CosmosHero(): React.JSX.Element {
               }}
             >
               Hiểu mình.<br />
-              <span style={{ color: GOLD, fontStyle: 'italic' }}>Quyết định mình.</span>
+              <span style={{ color: ACCENT }}>Quyết định mình.</span>
             </h1>
             <p
               style={{
@@ -125,8 +125,8 @@ export function CosmosHero(): React.JSX.Element {
                 opacity: 0.82,
               }}
             >
-              Giữa muôn vàn vì sao, có một bản đồ của riêng bạn — tri thức cổ học Á Đông,
-              được AI giải mã rõ ràng, để bạn tự chọn con đường.
+              Mỗi người sinh ra dưới một cấu trúc sao riêng. hieu.asia giải mã cấu trúc ấy
+              bằng AI — để bạn nhìn rõ chính mình, và tự quyết định.
             </p>
           </div>
 
@@ -143,8 +143,8 @@ export function CosmosHero(): React.JSX.Element {
                 textShadow: '0 2px 40px rgba(0,0,0,0.6)',
               }}
             >
-              Mười hai cung,<br />
-              <span style={{ color: GOLD, fontStyle: 'italic' }}>một bản đồ sao</span> cho đời bạn.
+              Mười hai cung —<br />
+              <span style={{ color: ACCENT }}>cấu trúc của một đời người</span>.
             </h2>
           </div>
 
@@ -161,23 +161,25 @@ export function CosmosHero(): React.JSX.Element {
                 textShadow: '0 2px 40px rgba(0,0,0,0.6)',
               }}
             >
-              Lá số của bạn <span style={{ color: GOLD, fontStyle: 'italic' }}>đang chờ</span>.
+              Lá số của bạn,<br /><span style={{ color: ACCENT }}>giải mã bằng AI</span>.
             </h2>
             <span
               style={{
                 pointerEvents: 'auto',
                 display: 'inline-block',
                 fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-                fontSize: 14,
-                letterSpacing: '0.08em',
-                color: '#04060d',
-                background: GOLD,
-                padding: '14px 28px',
-                borderRadius: 4,
+                fontSize: 13,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                color: ACCENT,
+                background: 'transparent',
+                border: `1px solid ${ACCENT}`,
+                padding: '14px 30px',
+                borderRadius: 2,
                 cursor: 'pointer',
               }}
             >
-              Mở lá số của bạn
+              Bắt đầu giải mã
             </span>
           </div>
         </div>
@@ -211,7 +213,7 @@ export function CosmosHero(): React.JSX.Element {
         >
           Cuộn để kết chòm sao
         </span>
-        <span style={{ fontSize: 16, color: GOLD, animation: 'cosmos-bob 1.8s ease-in-out infinite' }}>↓</span>
+        <span style={{ fontSize: 16, color: ACCENT, animation: 'cosmos-bob 1.8s ease-in-out infinite' }}>↓</span>
       </div>
 
       <style>{`

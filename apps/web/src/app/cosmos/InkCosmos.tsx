@@ -7,28 +7,28 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 
 /**
- * InkCosmos — "Vũ trụ" SCI-FI (WebGL/Three.js thuần) cho hieu.asia.
+ * InkCosmos — "Vũ trụ" SCI-FI × TÂM LINH (techno-mysticism) cho hieu.asia.
  *
- * Deep-space navy + cyan, điểm vàng (warm signal). Bloom thật (UnrealBloomPass) → phát sáng.
- * ~3500 sao WARP bay về phía camera (xuyên không gian) + twinkle · tinh vân fbm xanh/tím ·
- * CUỘN → 12 sao tụ về vành "lá số" 12 cung + vành radar đồng tâm + nan sáng dần
- * (như bảng định vị thiên hà / nav-console). Camera trôi + parallax theo chuột + dolly theo cuộn.
+ * Không sến: hư không lạnh (void) + cyan/tím, hình học THIÊNG chính xác phát sáng (bloom).
+ * ~2600 sao lạnh, ít lấp lánh (nghiêm) · tinh vân lạnh rất tiết chế (nhiều void) ·
+ * CUỘN → 12 điểm tụ thành MANDALA chính xác: vành 12 cung + sao 12 cánh {12/5} (dodecagram)
+ * + nan + vành đồng tâm + vành khắc-vạch xoay chậm (cơ chế vũ trụ). Như glyph trong "Arrival".
+ * Camera trôi tỉnh + parallax + dolly theo cuộn.
  *
- * Three.js nạp tách rời (ssr:false bên CosmosHero). prefers-reduced-motion: 1 khung tĩnh, không loop.
- * Không hỗ trợ WebGL → onUnsupported (CSS fallback). Bloom lỗi (GPU yếu) → tự hạ về render thường.
- * Dọn tài nguyên đầy đủ khi unmount.
+ * Three.js nạp tách rời (ssr:false). reduced-motion = khung tĩnh. Không WebGL → onUnsupported.
+ * Bloom lỗi GPU → hạ về render thường. Dọn tài nguyên đầy đủ khi unmount.
  */
 
-const BG = new THREE.Color('#04060d');
-const WHITE = new THREE.Color('#dfe9ff');
-const CYAN = new THREE.Color('#5fd7e8');
-const GOLD = new THREE.Color('#e8b765');
+const BG = new THREE.Color('#03050c');
+const WHITE = new THREE.Color('#cfe0ff');
+const CYAN = new THREE.Color('#6fe0ef');
+const VIOLET = new THREE.Color('#8f7be0');
 
-const STAR_COUNT = 3500;
+const STAR_COUNT = 2600;
 const CUNG = 12;
 const RING_R = 2.4;
 const SCROLL_SPAN = 2;
-const WARP_DEPTH = 34; // độ sâu vùng sao để wrap
+const WARP_DEPTH = 34;
 
 const SNOISE = `
 vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
@@ -58,21 +58,20 @@ float snoise(vec2 v){
 const NEBULA_VERT = `varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`;
 const NEBULA_FRAG = `
 precision highp float;
-uniform float uTime; uniform vec3 uBlue; uniform vec3 uTeal; uniform vec3 uViolet; uniform vec3 uGold;
+uniform float uTime; uniform vec3 uBlue; uniform vec3 uTeal; uniform vec3 uViolet;
 varying vec2 vUv;
 ${SNOISE}
 float fbm(vec2 p){ float v=0.0,a=0.55; for(int i=0;i<5;i++){ v+=a*snoise(p); p*=2.02; a*=0.5;} return v; }
 void main(){
   vec2 p=(vUv-0.5)*vec2(3.6,2.3);
-  float t=uTime*0.02;
+  float t=uTime*0.016;
   vec2 q=vec2(fbm(p+vec2(0.0,t)), fbm(p+vec2(4.7,-t*0.7)));
-  float n=fbm(p+1.7*q+vec2(t*0.35,0.0)); n=n*0.5+0.5;
-  float clouds=smoothstep(0.4,0.95,n);
-  vec3 col=mix(uBlue,uTeal,smoothstep(0.32,0.66,n));
-  col=mix(col,uViolet,smoothstep(0.5,0.85,n)*0.6);
-  col=mix(col,uGold,smoothstep(0.82,0.99,n)*0.5);
-  float vig=smoothstep(1.05,0.12,length(vUv-0.5)*1.7);
-  gl_FragColor=vec4(col, clouds*vig*0.4);
+  float n=fbm(p+1.7*q+vec2(t*0.3,0.0)); n=n*0.5+0.5;
+  float clouds=smoothstep(0.5,0.97,n);
+  vec3 col=mix(uBlue,uTeal,smoothstep(0.4,0.7,n));
+  col=mix(col,uViolet,smoothstep(0.62,0.92,n)*0.7);
+  float vig=smoothstep(1.0,0.1,length(vUv-0.5)*1.8);
+  gl_FragColor=vec4(col, clouds*vig*0.28);
 }`;
 
 const STAR_VERT = `
@@ -82,9 +81,9 @@ varying vec3 vColor; varying float vTw;
 void main(){
   vec4 mv=modelViewMatrix*vec4(position,1.0);
   gl_Position=projectionMatrix*mv;
-  float tw=0.5+0.5*sin(uTime*1.5*aPhase+aPhase*6.2831);
+  float tw=0.68+0.32*sin(uTime*1.2*aPhase+aPhase*6.2831);
   vTw=tw; vColor=aColor;
-  gl_PointSize=uSize*aScale*uPR*(18.0/max(-mv.z,0.1));
+  gl_PointSize=uSize*aScale*uPR*(16.0/max(-mv.z,0.1));
 }`;
 const STAR_FRAG = `
 precision highp float;
@@ -92,14 +91,14 @@ varying vec3 vColor; varying float vTw;
 void main(){
   float d=length(gl_PointCoord-vec2(0.5));
   if(d>0.5) discard;
-  float a=smoothstep(0.5,0.0,d); a=pow(a,1.7);
-  gl_FragColor=vec4(vColor*(0.5+vTw), a*(0.4+0.6*vTw));
+  float a=smoothstep(0.5,0.0,d); a=pow(a,1.8);
+  gl_FragColor=vec4(vColor*(0.6+vTw*0.7), a*(0.5+0.5*vTw));
 }`;
 
 const easeInOut = (x: number): number => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
 const clamp01 = (x: number): number => (x < 0 ? 0 : x > 1 ? 1 : x);
 
-function ringPositions(radius: number, segs: number): Float32Array {
+function circlePositions(radius: number, segs: number): Float32Array {
   const arr = new Float32Array(segs * 3);
   for (let i = 0; i < segs; i++) {
     const a = (i / segs) * Math.PI * 2;
@@ -147,37 +146,35 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
     const camera = new THREE.PerspectiveCamera(62, w / h, 0.1, 100);
     camera.position.set(0, 0, 6);
 
-    // ── Bloom (sci-fi glow) — tự hạ cấp nếu GPU không kham ──
     let composer: EffectComposer | null = null;
     let bloom: UnrealBloomPass | null = null;
     try {
       composer = new EffectComposer(renderer);
       composer.addPass(new RenderPass(scene, camera));
-      bloom = new UnrealBloomPass(new THREE.Vector2(w, h), 0.95, 0.6, 0.12);
+      bloom = new UnrealBloomPass(new THREE.Vector2(w, h), 0.8, 0.55, 0.16);
       composer.addPass(bloom);
     } catch {
       composer = null;
     }
     const renderScene = () => { if (composer) composer.render(); else renderer.render(scene, camera); };
 
-    // ── Nebula ──
+    // ── Nebula lạnh, tiết chế ──
     const nebGeo = new THREE.PlaneGeometry(80, 52, 1, 1);
     const nebMat = new THREE.ShaderMaterial({
       vertexShader: NEBULA_VERT, fragmentShader: NEBULA_FRAG,
       transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
       uniforms: {
         uTime: { value: 0 },
-        uBlue: { value: new THREE.Color('#0b1f44') },
-        uTeal: { value: new THREE.Color('#155e6b') },
-        uViolet: { value: new THREE.Color('#2a1f5a') },
-        uGold: { value: new THREE.Color('#6e4f24') },
+        uBlue: { value: new THREE.Color('#0a1b3e') },
+        uTeal: { value: new THREE.Color('#114e5e') },
+        uViolet: { value: new THREE.Color('#271a52') },
       },
     });
     const nebula = new THREE.Mesh(nebGeo, nebMat);
     nebula.position.set(0, 0, -16);
     scene.add(nebula);
 
-    // ── Trường sao WARP (~3500) ──
+    // ── Trường sao lạnh (~2600) ──
     const starPos = new Float32Array(STAR_COUNT * 3);
     const starScale = new Float32Array(STAR_COUNT);
     const starPhase = new Float32Array(STAR_COUNT);
@@ -187,11 +184,11 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
       starPos[i * 3] = (Math.random() - 0.5) * 30;
       starPos[i * 3 + 1] = (Math.random() - 0.5) * 20;
       starPos[i * 3 + 2] = -Math.random() * WARP_DEPTH + 4;
-      starScale[i] = 0.45 + Math.random() * 1.6;
-      starPhase[i] = 0.3 + Math.random() * 1.3;
+      starScale[i] = 0.4 + Math.random() * 1.5;
+      starPhase[i] = 0.3 + Math.random() * 1.1;
       const r = Math.random();
-      tmp.copy(r < 0.12 ? GOLD : r < 0.4 ? CYAN : WHITE);
-      tmp.multiplyScalar(0.7 + Math.random() * 0.3);
+      tmp.copy(r < 0.15 ? VIOLET : r < 0.45 ? CYAN : WHITE);
+      tmp.multiplyScalar(0.65 + Math.random() * 0.35);
       starColor[i * 3] = tmp.r; starColor[i * 3 + 1] = tmp.g; starColor[i * 3 + 2] = tmp.b;
     }
     const starGeo = new THREE.BufferGeometry();
@@ -202,13 +199,13 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
     const starMat = new THREE.ShaderMaterial({
       vertexShader: STAR_VERT, fragmentShader: STAR_FRAG,
       transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
-      uniforms: { uTime: { value: 0 }, uPR: { value: dpr }, uSize: { value: 1.3 } },
+      uniforms: { uTime: { value: 0 }, uPR: { value: dpr }, uSize: { value: 1.25 } },
     });
     const stars = new THREE.Points(starGeo, starMat);
     const starAttr = starGeo.getAttribute('position') as THREE.BufferAttribute;
     scene.add(stars);
 
-    // ── Chòm 12 cung ──
+    // ── 12 điểm cung (tụ về vành) ──
     const cungScatter = new Float32Array(CUNG * 3);
     const cungTarget = new Float32Array(CUNG * 3);
     const cungPos = new Float32Array(CUNG * 3);
@@ -226,9 +223,9 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
       cungPos[i * 3] = cungScatter[i * 3]!;
       cungPos[i * 3 + 1] = cungScatter[i * 3 + 1]!;
       cungPos[i * 3 + 2] = cungScatter[i * 3 + 2]!;
-      cungScale[i] = 3.6 + Math.random() * 1.2;
-      cungPhase[i] = 0.5 + Math.random() * 0.8;
-      tmp.copy(i === 0 ? GOLD : CYAN);
+      cungScale[i] = 3.4 + Math.random() * 1.0;
+      cungPhase[i] = 0.5 + Math.random() * 0.7;
+      tmp.copy(i === 0 ? WHITE : CYAN); // Mệnh = trắng sáng nhất
       cungColor[i * 3] = tmp.r; cungColor[i * 3 + 1] = tmp.g; cungColor[i * 3 + 2] = tmp.b;
     }
     const cungGeo = new THREE.BufferGeometry();
@@ -239,16 +236,16 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
     const cungMat = new THREE.ShaderMaterial({
       vertexShader: STAR_VERT, fragmentShader: STAR_FRAG,
       transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
-      uniforms: { uTime: { value: 0 }, uPR: { value: dpr }, uSize: { value: 3.2 } },
+      uniforms: { uTime: { value: 0 }, uPR: { value: dpr }, uSize: { value: 3.0 } },
     });
     const cungStars = new THREE.Points(cungGeo, cungMat);
     const cungAttr = cungGeo.getAttribute('position') as THREE.BufferAttribute;
     scene.add(cungStars);
 
-    // vành 12 cung + nan
+    // ── Mandala: vành 12 cung + nan + sao 12 cánh {12/5} (theo vị trí cung, hé dần) ──
     const ringGeo = new THREE.BufferGeometry();
     ringGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(CUNG * 3), 3));
-    const ringMat = new THREE.LineBasicMaterial({ color: GOLD.clone(), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+    const ringMat = new THREE.LineBasicMaterial({ color: CYAN.clone(), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
     const ring = new THREE.LineLoop(ringGeo, ringMat);
     scene.add(ring);
     const ringAttr = ringGeo.getAttribute('position') as THREE.BufferAttribute;
@@ -260,21 +257,42 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
     scene.add(spokes);
     const spokeAttr = spokeGeo.getAttribute('position') as THREE.BufferAttribute;
 
-    // ── Vành radar đồng tâm (nav-console) ──
+    const dodecaGeo = new THREE.BufferGeometry();
+    dodecaGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(CUNG * 2 * 3), 3));
+    const dodecaMat = new THREE.LineBasicMaterial({ color: VIOLET.clone(), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+    const dodeca = new THREE.LineSegments(dodecaGeo, dodecaMat);
+    scene.add(dodeca);
+    const dodecaAttr = dodecaGeo.getAttribute('position') as THREE.BufferAttribute;
+
+    // ── Vành đồng tâm chính xác (static) ──
     const radarMats: THREE.LineBasicMaterial[] = [];
     const radarGeos: THREE.BufferGeometry[] = [];
-    [1.2, 3.3, 4.4].forEach((rad) => {
+    [0.7, 1.5, 3.4].forEach((rad) => {
       const g = new THREE.BufferGeometry();
-      g.setAttribute('position', new THREE.BufferAttribute(ringPositions(rad, 96), 3));
+      g.setAttribute('position', new THREE.BufferAttribute(circlePositions(rad, 120), 3));
       const m = new THREE.LineBasicMaterial({ color: CYAN.clone(), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
-      const loop = new THREE.LineLoop(g, m);
-      scene.add(loop);
+      scene.add(new THREE.LineLoop(g, m));
       radarMats.push(m); radarGeos.push(g);
     });
 
-    // tia quét radar
+    // ── Vành khắc-vạch xoay chậm (48 vạch) ──
+    const TICKS = 48;
+    const tickArr = new Float32Array(TICKS * 2 * 3);
+    for (let i = 0; i < TICKS; i++) {
+      const a = (i / TICKS) * Math.PI * 2;
+      const r1 = i % 4 === 0 ? 2.62 : 2.7, r2 = 2.84;
+      tickArr[i * 6] = r1 * Math.cos(a); tickArr[i * 6 + 1] = r1 * Math.sin(a); tickArr[i * 6 + 2] = 0;
+      tickArr[i * 6 + 3] = r2 * Math.cos(a); tickArr[i * 6 + 4] = r2 * Math.sin(a); tickArr[i * 6 + 5] = 0;
+    }
+    const tickGeo = new THREE.BufferGeometry();
+    tickGeo.setAttribute('position', new THREE.BufferAttribute(tickArr, 3));
+    const tickMat = new THREE.LineBasicMaterial({ color: CYAN.clone(), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+    const tickRing = new THREE.LineSegments(tickGeo, tickMat);
+    scene.add(tickRing);
+
+    // tia quét
     const sweepGeo = new THREE.BufferGeometry();
-    sweepGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array([0, 0, 0, 4.4, 0, 0]), 3));
+    sweepGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array([0, 0, 0, 3.4, 0, 0]), 3));
     const sweepMat = new THREE.LineBasicMaterial({ color: CYAN.clone(), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
     const sweep = new THREE.Line(sweepGeo, sweepMat);
     scene.add(sweep);
@@ -306,8 +324,7 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
       starMat.uniforms.uTime!.value = time;
       cungMat.uniforms.uTime!.value = time;
 
-      // WARP: sao trôi về phía camera (+z), nhanh hơn khi cuộn; wrap khi qua camera
-      const warp = (0.5 + prog * 7.0) * dt;
+      const warp = (0.45 + prog * 6.0) * dt;
       for (let i = 0; i < STAR_COUNT; i++) {
         let z = starPos[i * 3 + 2]! + warp;
         if (z > 7) z -= WARP_DEPTH;
@@ -315,7 +332,6 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
       }
       starAttr.needsUpdate = true;
 
-      // 12 sao cung tụ về vành
       const e = easeInOut(prog);
       for (let i = 0; i < CUNG; i++) {
         const x = cungScatter[i * 3]! + (cungTarget[i * 3]! - cungScatter[i * 3]!) * e;
@@ -326,20 +342,28 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
         spokeAttr.setXYZ(i * 2, x, y, z);
         spokeAttr.setXYZ(i * 2 + 1, 0, 0, 0);
       }
-      cungAttr.needsUpdate = true; ringAttr.needsUpdate = true; spokeAttr.needsUpdate = true;
+      // dodecagram {12/5}: nối cung i → (i+5)%12
+      for (let i = 0; i < CUNG; i++) {
+        const j = (i + 5) % CUNG;
+        dodecaAttr.setXYZ(i * 2, cungPos[i * 3]!, cungPos[i * 3 + 1]!, cungPos[i * 3 + 2]!);
+        dodecaAttr.setXYZ(i * 2 + 1, cungPos[j * 3]!, cungPos[j * 3 + 1]!, cungPos[j * 3 + 2]!);
+      }
+      cungAttr.needsUpdate = true; ringAttr.needsUpdate = true; spokeAttr.needsUpdate = true; dodecaAttr.needsUpdate = true;
 
-      const lineOp = Math.pow(clamp01((prog - 0.45) / 0.55), 1.5);
-      ringMat.opacity = lineOp; spokeMat.opacity = lineOp * 0.55;
-      const radarOp = Math.pow(clamp01((prog - 0.55) / 0.45), 1.5);
-      for (const m of radarMats) m.opacity = radarOp * 0.4;
-      sweepMat.opacity = radarOp * 0.5;
-      sweep.rotation.z = -time * 0.6;
+      const lineOp = Math.pow(clamp01((prog - 0.4) / 0.55), 1.4);
+      ringMat.opacity = lineOp; spokeMat.opacity = lineOp * 0.5; dodecaMat.opacity = lineOp * 0.7;
+      const navOp = Math.pow(clamp01((prog - 0.6) / 0.4), 1.5);
+      for (const m of radarMats) m.opacity = navOp * 0.32;
+      tickMat.opacity = navOp * 0.5;
+      sweepMat.opacity = navOp * 0.4;
+      tickRing.rotation.z = time * 0.05; // cơ chế xoay chậm
+      sweep.rotation.z = -time * 0.5;
 
-      mouse.x += (mouseTarget.x - mouse.x) * 0.04;
-      mouse.y += (mouseTarget.y - mouse.y) * 0.04;
-      camera.position.x = Math.sin(time * 0.05) * 0.4 + mouse.x * 0.9;
-      camera.position.y = Math.cos(time * 0.04) * 0.3 - mouse.y * 0.6;
-      camera.position.z = 6 - prog * 1.4;
+      mouse.x += (mouseTarget.x - mouse.x) * 0.035;
+      mouse.y += (mouseTarget.y - mouse.y) * 0.035;
+      camera.position.x = Math.sin(time * 0.04) * 0.3 + mouse.x * 0.8;
+      camera.position.y = Math.cos(time * 0.035) * 0.22 - mouse.y * 0.5;
+      camera.position.z = 6 - prog * 1.3;
       camera.lookAt(0, 0, 0);
 
       renderScene();
@@ -365,7 +389,9 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
       cungGeo.dispose(); cungMat.dispose();
       ringGeo.dispose(); ringMat.dispose();
       spokeGeo.dispose(); spokeMat.dispose();
+      dodecaGeo.dispose(); dodecaMat.dispose();
       radarGeos.forEach((g) => g.dispose()); radarMats.forEach((m) => m.dispose());
+      tickGeo.dispose(); tickMat.dispose();
       sweepGeo.dispose(); sweepMat.dispose();
       bloom?.dispose(); composer?.dispose();
       renderer.dispose();
@@ -373,8 +399,8 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
     };
 
     if (reduced) {
-      renderFrame(0, 0.6, 0);
-      const roR = new ResizeObserver(() => { resize(); renderFrame(0, 0.6, 0); });
+      renderFrame(0, 0.62, 0);
+      const roR = new ResizeObserver(() => { resize(); renderFrame(0, 0.62, 0); });
       roR.observe(mount);
       return () => { roR.disconnect(); disposeAll(); };
     }
