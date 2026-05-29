@@ -17,6 +17,10 @@
  * per viewport, so consumers only pass `tabs` once.
  *
  * Use `defaultActive` to seed initial selection (default: first tab id).
+ *
+ * Wave 64.x — optional controlled mode: pass `value` + `onValueChange` to
+ * drive the active section externally (e.g. a floating table-of-contents).
+ * Omitting them preserves the original uncontrolled behavior byte-for-byte.
  */
 
 import * as React from 'react';
@@ -43,22 +47,44 @@ export type ProductTabsProps = {
   /** Initial active tab id. Defaults to first tab. */
   defaultActive?: string;
   className?: string;
+  /**
+   * Controlled active tab id. When provided, ProductTabs becomes controlled
+   * (both the desktop Tabs and the mobile Accordion follow `value`), enabling
+   * external navigation such as a floating table-of-contents. Omit for the
+   * existing uncontrolled behavior.
+   */
+  value?: string;
+  /** Called with the new active id when controlled. */
+  onValueChange?: (id: string) => void;
 };
 
 export function ProductTabs({
   tabs,
   defaultActive,
   className,
+  value,
+  onValueChange,
 }: ProductTabsProps) {
   const active = defaultActive ?? tabs[0]?.id;
+  const isControlled = value !== undefined;
 
   if (!tabs.length || !active) return null;
+
+  // Tabs require exactly one active value; fall back to the first tab if a
+  // controlled empty value comes through (e.g. the mobile accordion collapsed).
+  const tabsRootProps = isControlled
+    ? { value: value || active, onValueChange }
+    : { defaultValue: active };
+  // Accordion is collapsible, so an empty controlled value (all-closed) is fine.
+  const accordionRootProps = isControlled
+    ? { value: value ?? '', onValueChange }
+    : { defaultValue: active };
 
   return (
     <div className={className}>
       {/* Desktop: horizontal tabs */}
       <div className="hidden md:block">
-        <TabsPrimitive.Root defaultValue={active}>
+        <TabsPrimitive.Root {...tabsRootProps}>
           <TabsPrimitive.List
             className="mb-6 flex flex-wrap gap-1 border-b border-gold/15"
             aria-label="Mục báo cáo"
@@ -98,16 +124,13 @@ export function ProductTabs({
 
       {/* Mobile: accordion (single-open, collapsible) */}
       <div className="md:hidden">
-        <AccordionPrimitive.Root
-          type="single"
-          collapsible
-          defaultValue={active}
-        >
+        <AccordionPrimitive.Root type="single" collapsible {...accordionRootProps}>
           {tabs.map((tab) => (
             <AccordionPrimitive.Item
               key={tab.id}
               value={tab.id}
-              className="border-b border-gold/15"
+              id={tab.id}
+              className="scroll-mt-24 border-b border-gold/15"
             >
               <AccordionPrimitive.Header className="flex">
                 <AccordionPrimitive.Trigger
