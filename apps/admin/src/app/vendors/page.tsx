@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@hieu-asia/ui';
-import { Cpu, CheckCircle2, AlertCircle, Activity, Zap } from 'lucide-react';
+import { Cpu, CheckCircle2, AlertCircle, Activity, Zap, BarChart2 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { ErrorBlock } from '@/components/admin/error-block';
@@ -61,6 +61,34 @@ const ROLE_LABEL: Record<Role, string> = {
   mentor: 'mentor',
   judge: 'judge',
 };
+
+interface LangfuseTrace {
+  id: string;
+  name: string | null;
+  timestamp: string | null;
+  latency_ms: number | null;
+  total_cost: number | null;
+  observation_count: number | null;
+}
+
+interface LangfuseTracesResponse {
+  ok: boolean;
+  configured?: boolean;
+  host?: string;
+  total_items?: number;
+  traces?: LangfuseTrace[];
+  error?: string;
+}
+
+async function fetchLangfuseTraces(): Promise<LangfuseTracesResponse> {
+  const res = await fetch('/api/admin-proxy/admin/langfuse/traces?limit=20', { cache: 'no-store' });
+  const text = await res.text();
+  try {
+    return JSON.parse(text) as LangfuseTracesResponse;
+  } catch {
+    return { ok: false, error: `Invalid JSON (status ${res.status})` };
+  }
+}
 
 async function fetchVendors(): Promise<VendorsResponse> {
   const res = await fetch('/api/admin/vendors', { cache: 'no-store' });
@@ -186,6 +214,11 @@ export default function VendorsPage() {
     queryFn: fetchVendors,
   });
 
+  const { data: lfData, isLoading: lfLoading } = useQuery({
+    queryKey: ['admin', 'langfuse-traces'],
+    queryFn: fetchLangfuseTraces,
+  });
+
   const showError = !!error || data?.ok === false;
   const errorMsg = (error as Error | undefined)?.message ?? data?.error;
   const providers = data?.providers ?? [];
@@ -210,11 +243,6 @@ export default function VendorsPage() {
           message={errorMsg ?? 'Không tải được vendor status.'}
           onRetry={() => refetch()}
         />
-      )}
-      {data?.sources && !data.sources.langfuse && (
-        <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-muted-foreground">
-          Langfuse chưa wire — latency / fallback metrics hiển thị 0.
-        </div>
       )}
 
       {!isLoading && providers.length > 0 && (() => {
@@ -328,6 +356,79 @@ export default function VendorsPage() {
               </table>
             </div>
           )}
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart2 className="h-4 w-4" />
+            Langfuse traces
+          </CardTitle>
+          <CardDescription>20 traces gần nhất từ Langfuse.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {lfLoading ? (
+            <p className="py-4 text-center text-sm text-muted-foreground">Đang tải…</p>
+          ) : lfData?.configured === false ? (
+            <div className="rounded-md border border-border bg-card px-3 py-2 text-xs text-muted-foreground">
+              Langfuse chưa cấu hình: {lfData.error}
+            </div>
+          ) : lfData?.ok === false ? (
+            <div className="rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2 text-xs text-destructive">
+              {lfData.error ?? 'Lỗi khi tải traces.'}
+            </div>
+          ) : lfData?.ok ? (
+            <div className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <KpiCard
+                  label="Tổng traces"
+                  value={(lfData.total_items ?? 0).toLocaleString('vi-VN')}
+                  icon={<BarChart2 className="h-4 w-4" />}
+                  accent="gold"
+                  hint="trong Langfuse"
+                />
+                <KpiCard
+                  label="Hiển thị"
+                  value={(lfData.traces?.length ?? 0).toLocaleString('vi-VN')}
+                  icon={<Activity className="h-4 w-4" />}
+                  accent="purple"
+                  hint="traces gần nhất"
+                />
+              </div>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-border text-sm">
+                  <thead>
+                    <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
+                      <th className="px-3 py-2 font-medium">Tên</th>
+                      <th className="px-3 py-2 font-medium">Thời gian</th>
+                      <th className="px-3 py-2 font-medium">Latency</th>
+                      <th className="px-3 py-2 font-medium">Chi phí</th>
+                      <th className="px-3 py-2 font-medium">Observations</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {(lfData.traces ?? []).map((t) => (
+                      <tr key={t.id} className="transition-all duration-300 ease-editorial hover:bg-gold/[0.03]">
+                        <td className="px-3 py-2 font-mono text-xs text-foreground/85">{t.name ?? '—'}</td>
+                        <td className="px-3 py-2 font-mono text-xs text-muted-foreground">
+                          {t.timestamp ? new Date(t.timestamp).toLocaleString('vi-VN') : '—'}
+                        </td>
+                        <td className="px-3 py-2 tabular-nums text-xs text-foreground/85">
+                          {t.latency_ms != null ? `${t.latency_ms} ms` : '—'}
+                        </td>
+                        <td className="px-3 py-2 tabular-nums text-xs text-foreground/85">
+                          {t.total_cost != null ? `$${t.total_cost.toFixed(4)}` : '—'}
+                        </td>
+                        <td className="px-3 py-2 tabular-nums text-xs text-foreground/85">
+                          {t.observation_count ?? '—'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : null}
         </CardContent>
       </Card>
     </div>

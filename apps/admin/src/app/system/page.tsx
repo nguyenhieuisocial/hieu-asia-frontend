@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
-import { ServerCog, Activity, Sparkles, ShieldCheck, Database, Layers } from 'lucide-react';
+import { ServerCog, Activity, Sparkles, ShieldCheck, Database, Layers, Mail, Globe, Megaphone, Users } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { LiveBadge } from '@/components/admin/live-badge';
@@ -101,6 +101,169 @@ const STATUS_LABEL: Record<SvcStatus, string> = {
   unknown: 'Chưa wired',
 };
 
+// ─── Resend types ────────────────────────────────────────────────────────────
+
+interface ResendDomain {
+  id: string;
+  name: string | null;
+  status: string | null;
+  region: string | null;
+  created_at: string | null;
+}
+
+interface ResendBroadcast {
+  id: string;
+  name: string | null;
+  status: string | null;
+  created_at: string | null;
+}
+
+interface ResendStatusOk {
+  ok: true;
+  configured: true;
+  domains: ResendDomain[];
+  broadcasts: ResendBroadcast[];
+  audience: { id: string; name: string | null; contacts: number | null } | null;
+  verified_domains: number;
+}
+
+interface ResendStatusNotConfigured {
+  ok: false;
+  configured: false;
+  error: string;
+}
+
+type ResendStatus = ResendStatusOk | ResendStatusNotConfigured;
+
+async function fetchResendStatus(): Promise<ResendStatus> {
+  const r = await fetch('/api/admin-proxy/admin/resend/status', { cache: 'no-store' });
+  return r.json() as Promise<ResendStatus>;
+}
+
+function ResendPanel() {
+  const { data, isLoading } = useQuery<ResendStatus>({
+    queryKey: ['admin', 'resend-status'],
+    queryFn: fetchResendStatus,
+    refetchInterval: 30_000,
+  });
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <span className="rounded-md border border-gold/15 bg-card/60 p-2 text-gold/80">
+            <Mail className="h-4 w-4" />
+          </span>
+          <div>
+            <CardTitle>Resend (Email)</CardTitle>
+            <CardDescription>Trạng thái gửi email — domains, broadcasts, audience.</CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {isLoading && (
+          <p className="text-xs text-muted-foreground">Đang tải…</p>
+        )}
+
+        {data && !data.configured && (
+          <p className="text-xs text-muted-foreground">
+            Resend chưa cấu hình: {(data as ResendStatusNotConfigured).error}
+          </p>
+        )}
+
+        {data && data.configured && (() => {
+          const d = data as ResendStatusOk;
+          return (
+            <div className="space-y-6">
+              {/* KPI row */}
+              <div className="grid gap-4 sm:grid-cols-3">
+                <KpiCard
+                  label="Domains verified"
+                  value={`${d.verified_domains}/${d.domains.length}`}
+                  icon={<Globe className="h-4 w-4" />}
+                  accent="jade"
+                  hint="domains"
+                />
+                <KpiCard
+                  label="Broadcasts"
+                  value={d.broadcasts.length}
+                  icon={<Megaphone className="h-4 w-4" />}
+                  accent="gold"
+                  hint="campaigns"
+                />
+                <KpiCard
+                  label="Audience"
+                  value={d.audience?.contacts ?? '—'}
+                  icon={<Users className="h-4 w-4" />}
+                  accent="purple"
+                  hint={d.audience?.name ?? 'contacts'}
+                />
+              </div>
+
+              {/* Domains table */}
+              {d.domains.length > 0 && (
+                <div>
+                  <p className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wide">Domains</p>
+                  <ul className="divide-y divide-gold/10">
+                    {d.domains.map((domain) => (
+                      <li key={domain.id} className="flex items-center justify-between gap-4 py-3 text-sm">
+                        <div className="min-w-0">
+                          <p className="truncate text-foreground">{domain.name ?? domain.id}</p>
+                          <p className="truncate text-xs text-muted-foreground">{domain.region ?? '—'}</p>
+                        </div>
+                        <div className="flex shrink-0 items-center gap-2">
+                          <span
+                            className={
+                              domain.status === 'verified'
+                                ? 'font-mono text-xs text-green-500'
+                                : 'font-mono text-xs text-muted-foreground'
+                            }
+                          >
+                            {domain.status ?? '—'}
+                          </span>
+                          {domain.created_at && (
+                            <span className="font-mono text-xs text-muted-foreground">
+                              {new Date(domain.created_at).toLocaleDateString('vi-VN')}
+                            </span>
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Broadcasts list */}
+              {d.broadcasts.length > 0 && (
+                <div>
+                  <p className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wide">Broadcasts</p>
+                  <ul className="divide-y divide-gold/10">
+                    {d.broadcasts.map((bc) => (
+                      <li key={bc.id} className="flex items-center justify-between gap-4 py-3 text-sm">
+                        <p className="truncate text-foreground">{bc.name ?? bc.id}</p>
+                        <div className="flex shrink-0 items-center gap-2">
+                          <span className="font-mono text-xs text-muted-foreground">{bc.status ?? '—'}</span>
+                          {bc.created_at && (
+                            <span className="font-mono text-xs text-muted-foreground">
+                              {new Date(bc.created_at).toLocaleDateString('vi-VN')}
+                            </span>
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          );
+        })()}
+      </CardContent>
+    </Card>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function SystemPage() {
   const results = useQuery({
     queryKey: ['admin', 'system-services'],
@@ -158,6 +321,8 @@ export default function SystemPage() {
           hint="endpoint TBD"
         />
       </div>
+
+      <ResendPanel />
 
       <Card>
         <CardHeader>

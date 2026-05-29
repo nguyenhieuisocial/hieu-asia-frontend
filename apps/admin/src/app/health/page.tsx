@@ -18,7 +18,7 @@
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, cn } from '@hieu-asia/ui';
-import { Heart, AlertTriangle, CheckCircle2, TrendingUp } from 'lucide-react';
+import { Heart, AlertTriangle, CheckCircle2, TrendingUp, ShieldAlert } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { LiveBadge } from '@/components/admin/live-badge';
@@ -87,6 +87,45 @@ function fmtDate(iso: string) {
   });
 }
 
+interface WafEvent {
+  action: string;
+  source: string;
+  clientIP: string;
+  clientCountryName: string;
+  datetime: string;
+  rayName: string;
+  clientRequestPath: string;
+  clientRequestHTTPHost: string;
+  userAgent: string;
+}
+
+interface WafResponse {
+  ok: boolean;
+  configured: boolean;
+  events?: WafEvent[];
+  error?: string;
+}
+
+function wafActionBadge(action: string) {
+  const lower = action.toLowerCase();
+  const cls =
+    lower === 'block' || lower === 'drop'
+      ? 'border-red-500/40 bg-red-500/10 text-destructive'
+      : lower === 'challenge' || lower === 'managed_challenge' || lower === 'js_challenge'
+        ? 'border-warn-500/30 bg-warn-500/10 text-warn-300'
+        : 'border-border bg-muted/40 text-muted-foreground';
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider',
+        cls,
+      )}
+    >
+      {action}
+    </span>
+  );
+}
+
 function uptimeColor(pct: number): string {
   if (pct >= 99.95) return 'bg-jade-300';
   if (pct >= 99) return 'bg-jade-500';
@@ -129,6 +168,54 @@ export default function HealthPage() {
   const worst = rows.length > 0 ? Math.min(...rows.map((d) => d.uptime_pct)) : 0;
   const okDays = rows.filter((d) => d.uptime_pct >= 99.95).length;
   const incidentCount = incidents.data?.rows.length ?? 0;
+
+  const waf = useQuery({
+    queryKey: ['admin', 'waf-events'],
+    queryFn: async () => {
+      const r = await fetch('/api/admin-proxy/admin/waf/events?limit=20', { cache: 'no-store' });
+      const data = (await r.json()) as WafResponse;
+      return data;
+    },
+  });
+
+  const wafCols: AdminTableColumn<WafEvent>[] = [
+    {
+      id: 'action',
+      header: 'Hành động',
+      width: '120px',
+      cell: (r) => wafActionBadge(r.action),
+    },
+    {
+      id: 'clientIP',
+      header: 'IP',
+      width: '140px',
+      cell: (r) => <span className="font-mono text-xs text-foreground/90">{r.clientIP}</span>,
+    },
+    {
+      id: 'clientCountryName',
+      header: 'Quốc gia',
+      width: '120px',
+      cell: (r) => <span className="text-sm text-foreground">{r.clientCountryName}</span>,
+    },
+    {
+      id: 'clientRequestPath',
+      header: 'Đường dẫn',
+      cell: (r) => (
+        <span className="font-mono text-xs text-foreground/85 break-all">
+          {r.clientRequestPath}
+        </span>
+      ),
+    },
+    {
+      id: 'datetime',
+      header: 'Thời gian',
+      width: '150px',
+      hideOnMobile: true,
+      cell: (r) => (
+        <span className="font-mono text-xs text-foreground/90">{fmtDate(r.datetime)}</span>
+      ),
+    },
+  ];
 
   const incidentCols: AdminTableColumn<Incident>[] = [
     {
@@ -244,6 +331,61 @@ export default function HealthPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* ── Cloudflare WAF ──────────────────────────────────────────── */}
+      {waf.data?.configured === true ? (
+        <>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <KpiCard
+              label="Sự kiện 24h"
+              value={waf.data.events?.length ?? 0}
+              icon={<ShieldAlert className="h-4 w-4" />}
+              accent={waf.data.events && waf.data.events.length > 0 ? 'red' : 'jade'}
+              hint="Cloudflare WAF"
+            />
+          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Cloudflare WAF — sự kiện gần nhất</CardTitle>
+              <CardDescription>20 sự kiện WAF mới nhất từ Cloudflare Analytics.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AdminTable
+                rows={waf.data.events ?? []}
+                columns={wafCols}
+                loading={waf.isLoading}
+                empty={
+                  <span className="text-sm text-muted-foreground">
+                    Không có sự kiện WAF trong khoảng thời gian này.
+                  </span>
+                }
+                caption="Danh sách sự kiện WAF gần nhất"
+              />
+            </CardContent>
+          </Card>
+        </>
+      ) : (
+        <Card className="border-border">
+          <CardHeader className="flex flex-row items-center gap-3 pb-3">
+            <ShieldAlert className="h-5 w-5 text-muted-foreground shrink-0" />
+            <div>
+              <CardTitle className="text-base">Cloudflare WAF — chưa cấu hình</CardTitle>
+              <CardDescription>
+                {waf.isLoading
+                  ? 'Đang tải dữ liệu WAF…'
+                  : 'Endpoint trả về 503 — xem hướng dẫn cấu hình bên dưới.'}
+              </CardDescription>
+            </div>
+          </CardHeader>
+          {!waf.isLoading && waf.data?.error && (
+            <CardContent>
+              <pre className="rounded-md border border-border bg-muted/40 px-4 py-3 font-mono text-xs text-muted-foreground whitespace-pre-wrap break-all">
+                {waf.data.error}
+              </pre>
+            </CardContent>
+          )}
+        </Card>
+      )}
 
       <Card>
         <CardHeader>

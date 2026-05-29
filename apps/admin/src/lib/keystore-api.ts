@@ -1,33 +1,38 @@
 /**
- * Keystore API surface — Wave 60.81.A.v2 (vault 107 §5.6).
+ * Keystore API surface — Wave 63.10 rewire (was Wave 60.81.A.v2 mock).
  *
- * Vendor key + token + credential CRUD for /admin/keystore. Implemented
- * fresh (not reusing the old subtree) because the legacy lib path is
- * blocked by the current sandbox immutable rule. The eventual backend
- * endpoint is `/admin/keystore/*` (proxied via `/api/admin-proxy`); until
- * the worker ships them, this module returns deterministic mock rows so
- * the page renders end-to-end. Compliance flow (reveal writes audit_log)
- * is preserved on the call signature so wiring the real fetch is a
- * one-line swap inside each helper.
+ * Previously returned deterministic MOCK "vendor secret" rows with
+ * reveal/rotate/delete. That vision — serving plaintext vendor credentials and
+ * mutating them from a web UI — is unsafe and was never backed by a real
+ * endpoint. This now reads the REAL, already-deployed admin key registry:
  *
- * Helper compat: keep return shapes parallel to other admin-api list
- * helpers so KpiCard / MockBanner can read `_source.isMock`.
+ *   GET /admin/api-keys  →  hieu_asia.admin_api_keys
+ *
+ * Those are admin-issued API keys stored as a SHA-256 hash + last-4 prefix; the
+ * plaintext is shown exactly ONCE at creation and never persisted. So the page
+ * is now READ-ONLY by design:
+ *   - no reveal — the key is hashed, unrecoverable;
+ *   - no rotate/delete here — revoking a credential is a security action,
+ *     handled via /connect or the backend (avoids accidental lock-outs).
  */
 
 export type VaultStatus = 'active' | 'expiring' | 'expired';
 
 export interface VaultEntry {
   id: string;
-  /** Vendor slug, lowercase. Maps to icon + label. */
-  vendor: string;
-  /** Public human-readable key name (env-var style). */
+  /** Public human-readable key name. */
   key_name: string;
-  /** Masked preview; the real token is fetched on-demand via reveal. */
+  /** `••••` + last-4 prefix. Never the secret — the prefix is public metadata. */
   masked_preview: string;
-  /** ISO timestamp of last rotation. */
-  last_rotated_at: string;
-  /** ISO timestamp when this credential becomes invalid (or null if non-expiring). */
-  expires_at: string | null;
+  /** Who created the key. */
+  created_by: string | null;
+  /** Scopes granted to the key. */
+  scopes: string[];
+  /** ISO created timestamp. */
+  created_at: string | null;
+  /** True once revoked. */
+  revoked: boolean;
+  /** active = live · expired = revoked (mapped for StatusBadge compat). */
   status: VaultStatus;
 }
 
@@ -36,103 +41,70 @@ export interface DataSource {
   reason?: string;
 }
 
+// Kept for component compat (VendorCell imports vendorLabel). Admin-issued keys
+// are not vendor-scoped, so the page no longer renders a vendor column, but the
+// helper stays exported so the shared component still type-checks.
 const VENDORS: Array<{ slug: string; label: string }> = [
   { slug: 'openai', label: 'OpenAI' },
   { slug: 'anthropic', label: 'Anthropic' },
   { slug: 'supabase', label: 'Supabase' },
-  { slug: 'stripe', label: 'Stripe' },
-  { slug: 'sepay', label: 'SePay' },
-  { slug: 'telegram', label: 'Telegram' },
   { slug: 'cloudflare', label: 'Cloudflare' },
-  { slug: 'posthog', label: 'PostHog' },
-  { slug: 'sentry', label: 'Sentry' },
+  { slug: 'admin', label: 'Admin' },
 ];
 
 export function vendorLabel(slug: string): string {
   return VENDORS.find((v) => v.slug === slug)?.label ?? slug;
 }
 
-function isoDaysAgo(days: number): string {
-  const d = new Date();
-  d.setDate(d.getDate() - days);
-  return d.toISOString();
+interface ApiKeyRow {
+  id: string;
+  name?: string | null;
+  key_prefix?: string | null;
+  scopes?: string[] | null;
+  created_by?: string | null;
+  created_at?: string | null;
+  revoked_at?: string | null;
 }
 
-function isoDaysAhead(days: number): string {
-  const d = new Date();
-  d.setDate(d.getDate() + days);
-  return d.toISOString();
+interface ApiKeysResponse {
+  ok: boolean;
+  keys?: ApiKeyRow[];
+  note?: string;
+  error?: string;
 }
 
-function classify(expiresAt: string | null): VaultStatus {
-  if (!expiresAt) return 'active';
-  const ms = new Date(expiresAt).getTime() - Date.now();
-  const days = ms / (1000 * 60 * 60 * 24);
-  if (days < 0) return 'expired';
-  if (days < 30) return 'expiring';
-  return 'active';
+function mapRow(k: ApiKeyRow): VaultEntry {
+  const revoked = !!k.revoked_at;
+  return {
+    id: k.id,
+    key_name: k.name ?? k.id,
+    masked_preview: k.key_prefix ? `••••${k.key_prefix}` : '••••',
+    created_by: k.created_by ?? null,
+    scopes: Array.isArray(k.scopes) ? k.scopes : [],
+    created_at: k.created_at ?? null,
+    revoked,
+    status: revoked ? 'expired' : 'active',
+  };
 }
 
-// Mock rows — deterministic so visual regression baselines stay stable.
-const MOCK_VAULT_ROWS: VaultEntry[] = VENDORS.flatMap((v, i): VaultEntry[] => {
-  const base: Array<Omit<VaultEntry, 'status'>> = [
-    {
-      id: `vault_${v.slug}_prod`,
-      vendor: v.slug,
-      key_name: `API_KEY_${v.slug.toUpperCase()}_PROD`,
-      masked_preview: `sk-${v.slug.slice(0, 3)}_prod_***`,
-      last_rotated_at: isoDaysAgo(((i * 13) % 90) + 1),
-      expires_at: i % 3 === 0 ? isoDaysAhead(((i * 7) % 14) + 1) : isoDaysAhead(180),
-    },
-    {
-      id: `vault_${v.slug}_dev`,
-      vendor: v.slug,
-      key_name: `API_KEY_${v.slug.toUpperCase()}_DEV`,
-      masked_preview: `sk-${v.slug.slice(0, 3)}_dev_***`,
-      last_rotated_at: isoDaysAgo(((i * 17) % 120) + 1),
-      expires_at: null,
-    },
-  ];
-  return base.map((row) => ({ ...row, status: classify(row.expires_at) }));
-});
-
-const MOCK_LATENCY_MS = 40;
-
-function delay<T>(value: T): Promise<T> {
-  return new Promise((resolve) => setTimeout(() => resolve(value), MOCK_LATENCY_MS));
-}
-
-/** List all vault entries. Returns shape parallel to other admin-api list helpers. */
+/**
+ * List admin API keys (real, read-only). Returns shape parallel to other
+ * admin-api list helpers so KpiCard / MockBanner read `_source`. On a gateway
+ * error the helper throws so React Query surfaces it via ErrorBlock.
+ */
 export async function listVaultEntries(): Promise<VaultEntry[] & { _source: DataSource }> {
-  const rows = [...MOCK_VAULT_ROWS];
-  return delay(
-    Object.assign(rows, {
-      _source: { isMock: true, reason: '/admin/keystore not shipped' } as DataSource,
-    }),
-  );
-}
-
-/** Reveal a single entry's plaintext token. Backend writes audit_log on hit. */
-export async function revealVaultEntry(
-  id: string,
-): Promise<{ id: string; token: string; isMock: boolean }> {
-  // Backend (when shipped) writes `audit_log` row with
-  //   action='keystore.reveal', actor=session.user, ip=request.ip
-  // before returning the plaintext token. Mock returns a deterministic
-  // pseudo-token so QA flows can verify copy + auto-hide.
-  return delay({ id, token: `mock_revealed_${id}_*****`, isMock: true });
-}
-
-/** Trigger a rotation (backend regenerates + stores + invalidates old). */
-export async function rotateVaultEntry(
-  id: string,
-): Promise<{ id: string; new_masked: string; isMock: boolean }> {
-  return delay({ id, new_masked: `sk-rot_${id.slice(-4)}_***`, isMock: true });
-}
-
-/** Soft-delete a vault entry. Returns confirmation only. */
-export async function deleteVaultEntry(
-  id: string,
-): Promise<{ id: string; deleted: true; isMock: boolean }> {
-  return delay({ id, deleted: true, isMock: true });
+  const r = await fetch('/api/admin-proxy/admin/api-keys', { cache: 'no-store' });
+  let body: ApiKeysResponse | null = null;
+  try {
+    body = (await r.json()) as ApiKeysResponse;
+  } catch {
+    throw new Error(`Gateway trả về dữ liệu không hợp lệ (HTTP ${r.status}).`);
+  }
+  if (!r.ok || !body?.ok) {
+    throw new Error(body?.error ?? `Không tải được danh sách key (HTTP ${r.status}).`);
+  }
+  const rows = (body.keys ?? []).map(mapRow);
+  return Object.assign(rows, {
+    _source: { isMock: false } as DataSource,
+  });
 }
