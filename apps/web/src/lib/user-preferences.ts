@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { getSupabaseAuth } from './auth-client';
 
 const STORAGE_KEY = 'hieu.user.preferences';
 
@@ -94,11 +95,23 @@ export function savePreferences(prefs: UserPreferences, userId?: string | null):
 
   // Fire-and-forget sync to Worker if analytics opted in.
   if (prefs.privacy.analytics_opt_in && userId) {
-    fetch('/api/user/preferences', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: userId, prefs }),
-    }).catch(() => {
+    (async () => {
+      const sb = getSupabaseAuth();
+      let token: string | undefined;
+      if (sb) {
+        const { data } = await sb.auth.getSession();
+        token = data.session?.access_token;
+      }
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      fetch('/api/user/preferences', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ user_id: userId, prefs }),
+      }).catch(() => {
+        /* best-effort */
+      });
+    })().catch(() => {
       /* best-effort */
     });
   }

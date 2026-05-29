@@ -12,6 +12,7 @@ import {
 } from '@hieu-asia/ui';
 import { DataExportSection } from '@/components/account/DataExportSection';
 import { DeleteAccountSection } from '@/components/account/DeleteAccountSection';
+import { getSupabaseAuth } from '@/lib/auth-client';
 
 const ONBOARDING_KEY = 'hieu:onboarding:v2';
 
@@ -96,9 +97,17 @@ export function PrivacyTab({ userId }: PrivacyTabProps) {
 
     if (userId) {
       try {
+        const sb = getSupabaseAuth();
+        let token: string | undefined;
+        if (sb) {
+          const { data } = await sb.auth.getSession();
+          token = data.session?.access_token;
+        }
+        const headers: Record<string, string> = { 'content-type': 'application/json' };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
         await fetch('/api/user/preferences', {
           method: 'POST',
-          headers: { 'content-type': 'application/json' },
+          headers,
           body: JSON.stringify({ user_id: userId, consent: next }),
         });
         toast.success('Đã lưu');
