@@ -106,9 +106,9 @@ function circlePositions(radius: number, segs: number): Float32Array {
   return arr;
 }
 
-export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Element {
+export function InkCosmos(props: { onUnsupported?: () => void; ambient?: number }): React.JSX.Element {
   const mountRef = React.useRef<HTMLDivElement>(null);
-  const { onUnsupported } = props;
+  const { onUnsupported, ambient } = props;
 
   React.useEffect(() => {
     const mount = mountRef.current;
@@ -288,7 +288,9 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
     // ── state ──
     let progress = 0, smoothProg = 0;
     const mouse = { x: 0, y: 0 }, mouseTarget = { x: 0, y: 0 };
+    const isAmbient = typeof ambient === 'number';
     const readScroll = () => {
+      if (isAmbient) { progress = ambient as number; return; } // hero homepage: mandala kết 1 lần lúc load, không bám cuộn
       const span = window.innerHeight * SCROLL_SPAN;
       progress = span > 0 ? clamp01(window.scrollY / span) : 0;
     };
@@ -384,8 +386,9 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
     };
 
     if (reduced) {
-      renderFrame(0, 0.62, 0);
-      const roR = new ResizeObserver(() => { resize(); renderFrame(0, 0.62, 0); });
+      const rp = typeof ambient === 'number' ? ambient : 0.62;
+      renderFrame(0, rp, 0);
+      const roR = new ResizeObserver(() => { resize(); renderFrame(0, rp, 0); });
       roR.observe(mount);
       return () => { roR.disconnect(); disposeAll(); };
     }
@@ -408,7 +411,7 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
       ro.disconnect(); io.disconnect();
       disposeAll();
     };
-  }, [onUnsupported]);
+  }, [onUnsupported, ambient]);
 
   return <div ref={mountRef} aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />;
 }
