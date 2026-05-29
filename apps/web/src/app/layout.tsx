@@ -20,6 +20,8 @@ import { PostHogProvider } from '@/components/PostHogProvider';
 import { ConsentBanner } from '@/components/cmp/ConsentBanner';
 import { Toaster } from '@hieu-asia/ui';
 import { AppShell } from '@/components/product/AppShell';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { siteGraph } from '@/lib/seo/jsonld';
 // Wave 21 — Vercel telemetry (customer-facing web only).
 // Phân vai analytics:
 //   - PostHog:               business events, feature flags, session replay, exceptions
@@ -264,6 +266,10 @@ export default async function RootLayout({
         <meta name="format-detection" content="telephone=no" />
       </head>
       <body>
+        {/* Site-wide structured data (Organization + WebSite) — centralized via
+            lib/seo so answer engines (ChatGPT/Perplexity/Google AI Overviews)
+            get a consistent, correct brand description on every page. */}
+        <JsonLd data={siteGraph()} />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-gold focus:px-4 focus:py-2 focus:text-ink focus:outline-none focus:ring-2 focus:ring-cream"
