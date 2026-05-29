@@ -33,7 +33,6 @@ import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { SampleOutputShowcase } from '@/components/marketing/SampleOutputShowcase';
 import { MentorSampleInteractive } from '@/components/marketing/MentorSampleInteractive';
 import { ScanRow } from '@/components/marketing/ScanRow';
-import { IntentChips } from '@/components/marketing/IntentChips';
 import { PullQuote } from '@/components/marketing/PullQuote';
 import { SectionDivider } from '@/components/marketing/SectionDivider';
 import { SocialProofQuiet } from '@/components/marketing/SocialProofQuiet';
@@ -422,24 +421,16 @@ export default function LandingPage() {
             the EditorialList "Bốn ống kính" section closing line. */}
         <HeroV4 />
 
-        {/* Wave 60.66.P3 — IntentChips (vault 109 §3 Phase 3 + vault 108 §5).
-            Perplexity-style intent capture below hero — 6 entry points each
-            deep-linking to /onboarding?intent=<slug>. Glassmorphism panel
-            (cap respected: hero CTAs use 1 panel via PaintedCanvas + this = 2). */}
-        <div className="mx-auto -mt-2 max-w-marketing px-6 lg:px-12">
-          <IntentChips
-            eyebrow="HOẶC BẮT ĐẦU TỪ"
-            chips={[
-              { slug: 'cung-menh', label: 'Cung mệnh' },
-              { slug: 'dai-van', label: 'Đại vận' },
-              { slug: 'ngu-hanh', label: 'Ngũ hành' },
-              { slug: 'duong-doi', label: 'Đường đời' },
-              { slug: 'mbti', label: 'MBTI' },
-              { slug: 'tuong-tay', label: 'Tướng tay' },
-            ]}
-            glass
-          />
-        </div>
+        {/* Wave 63.4 — removed the IntentChips "HOẶC BẮT ĐẦU TỪ" 6-lens strip.
+            Founder (vault 138 review #2): the hero had THREE stacked start
+            mechanisms — HeroV4's 2 CTAs, this 6-lens strip, and the ScanRow
+            "TÔI MUỐN" intent cards below. (2) and (3) did the same job and
+            "Đại vận"/"MBTI" appeared in both → choice overload + redundancy.
+            Kept ScanRow as the single primary intent router; the lenses are
+            still explorable via the "Bốn ống kính" EditorialList section.
+            This also removes "Tướng tay"/Palm from the hero, where it sat as
+            a peer of the 4 canonical ống kính despite being a secondary
+            (no-birth-time) entry — keeping the "bốn ống kính" message clean. */}
 
         {/* Wave 52 — persistent disclaimer chip surfaced near hero (also in footer). */}
         <div
@@ -633,13 +624,13 @@ export default function LandingPage() {
               id: 'free',
               name: 'MIỄN PHÍ',
               nameDisplay: 'Khởi đầu',
-              description: 'Khảo sát đầu vào và 6 công cụ tra cứu — không cần thẻ.',
+              description: 'Khảo sát đầu vào và các công cụ tra cứu cơ bản — không cần thẻ.',
               priceMonthly: PRICING.standard.vnd,
               bestFor:
                 'bạn muốn thử công cụ và xem tổng quan trước khi quyết định.',
               features: [
                 'Khảo sát đầu vào',
-                '6 công cụ tra cứu cơ bản',
+                'Công cụ tra cứu cơ bản',
                 'Tử Vi · Bát Tự · MBTI · Thần Số',
                 'Lưu hồ sơ cá nhân',
               ],
@@ -695,6 +686,28 @@ export default function LandingPage() {
             },
           ]}
         />
+
+        {/* Wave 63.4 — pricing reconciliation + single refund guarantee.
+            Founder review #2: (a) the 3-tier table omitted Mentor-Yearly +
+            Lifetime that the FAQ lists → "bảng nói 3, FAQ liệt kê 5 = thiếu
+            minh bạch". One line now points to the full /pricing page as the
+            single source of truth. (b) the refund policy was told 3× in 3
+            wordings (hero + FAQ) → one calm "thẻ bảo đảm" line beside pricing;
+            the 24h-instant nuance stays in FAQ as a detail. */}
+        <div className="mx-auto mt-6 flex max-w-marketing-tight flex-col items-center gap-3 px-6 text-center">
+          <p className="font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
+            14 ngày hoàn tiền · không cần lý do · hoàn trong 24h
+          </p>
+          <p className="text-editorial-caption text-muted-foreground">
+            Có gói Mentor theo năm (₫1.990.000) và Lifetime (₫4.990.000) —{' '}
+            <a
+              href="/pricing"
+              className="text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
+            >
+              xem tất cả tại trang Giá →
+            </a>
+          </p>
+        </div>
 
         {/* Wave 62.07 — SocialProofQuiet between Pricing and FAQ.
             Anti-testimonial "khoảng lặng" section — 4 anonymous excerpts
