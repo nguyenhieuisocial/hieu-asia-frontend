@@ -237,8 +237,18 @@ export function PricingTierV2({
             // re-reads as a sheet of layered paper.
             const baseCard =
               'relative flex flex-col rounded-[2px] border bg-muted/40 p-8 md:p-12 transition-all duration-300 ease-editorial';
+            // Wave 62.05h — recommended card was `bg-gradient-to-b from-primary/5
+            // to-warm-dark-100` (#1B1714). Two problems: (1) spec "Như giấy cũ"
+            // bans gradients ("Tránh gradient, glow, particle" ×2) + a dark card
+            // on a Paper page is the "dark casino" energy the spec rejects; pricing
+            // is a *reasoning* surface = Day mode. (2) the card's feature bullets
+            // use text-foreground (Ink #171411, dark) which on the gradient's dark
+            // lower half rendered dark-on-dark (~unreadable). Flat `bg-card`
+            // (Paper-50 lifted) + ochre border + the existing "KHUYÊN DÙNG" badge
+            // marks the recommended tier without gradient OR contrast risk — all
+            // text stays Ink-on-Paper (AA-safe).
             const cardBorder = tier.recommended
-              ? 'border-primary bg-gradient-to-b from-primary/5 to-warm-dark-100'
+              ? 'border-primary bg-card'
               : 'border-border hover:border-border/80';
 
             // Wave 62.05g — finish founder spec "3 components done carefully":
