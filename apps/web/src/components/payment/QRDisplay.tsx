@@ -9,6 +9,7 @@
 
 import * as React from 'react';
 import { Card, CardContent, cn } from '@hieu-asia/ui';
+import { formatVND } from '@/lib/pricing';
 
 export type PaymentStatus =
   | 'pending'
@@ -33,10 +34,6 @@ export interface QRDisplayProps {
   intent: PaymentIntent;
   /** Countdown reaching zero → caller can flip UI to "expired". */
   onExpire?: () => void;
-}
-
-function formatVnd(amount: number): string {
-  return new Intl.NumberFormat('vi-VN').format(amount) + ' VND';
 }
 
 function pad2(n: number): string {
@@ -174,7 +171,7 @@ export function QRDisplay({ intent, onExpire }: QRDisplayProps) {
 
             <dt className="text-muted-foreground">Số tiền</dt>
             <dd className="font-mono text-gold">
-              {formatVnd(intent.amount_due)}
+              {formatVND(intent.amount_due)}
             </dd>
 
             <dt className="text-muted-foreground">Nội dung</dt>
