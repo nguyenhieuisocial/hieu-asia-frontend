@@ -233,7 +233,7 @@ export default function AffiliateDashboardPage() {
         </nav>
         <header className="flex items-center justify-between">
           <div>
-            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
               Affiliate · Dashboard
             </p>
             <h1 className="mt-2 font-heading text-2xl font-bold sm:text-3xl">
@@ -241,7 +241,7 @@ export default function AffiliateDashboardPage() {
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
               Mã của bạn:{' '}
-              <span className="font-mono text-gold">{a.code}</span>
+              <span className="font-mono text-gold-700">{a.code}</span>
               {a.status === 'banned' && (
                 <span className="ml-2 rounded bg-rose-500/20 px-2 py-0.5 text-xs text-rose-300">
                   ĐÃ BAN
@@ -261,7 +261,7 @@ export default function AffiliateDashboardPage() {
               <CardTitle className="text-xs uppercase text-muted-foreground">Tổng kiếm được</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-gold">{vnd(s.total_earned)}</div>
+              <div className="text-2xl font-bold text-gold-700">{vnd(s.total_earned)}</div>
               <div className="text-xs text-muted-foreground">Đã trả: {vnd(s.paid_total)}</div>
             </CardContent>
           </Card>
@@ -322,7 +322,7 @@ export default function AffiliateDashboardPage() {
                   </div>
                   <div className="mt-1 text-muted-foreground">{n.message}</div>
                   {n.link && (
-                    <Link href={n.link} className="mt-1 inline-block text-xs text-gold hover:underline">
+                    <Link href={n.link} className="mt-1 inline-block text-xs text-gold-700 hover:underline">
                       Xem chi tiết →
                     </Link>
                   )}
@@ -335,7 +335,7 @@ export default function AffiliateDashboardPage() {
         {/* Quick links to assets / leaderboard / terms */}
         <Card>
           <CardContent className="flex flex-wrap gap-3 pt-6 text-sm">
-            <Link href="/affiliate/assets" className="rounded bg-gold/10 px-3 py-1.5 text-gold hover:bg-gold/20">
+            <Link href="/affiliate/assets" className="rounded bg-gold/10 px-3 py-1.5 text-gold-700 hover:bg-gold/20">
               Marketing assets
             </Link>
             <Link

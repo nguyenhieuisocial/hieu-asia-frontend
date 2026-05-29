@@ -87,7 +87,7 @@ const STATUS_LABEL: Record<Status, string> = {
 
 const STATUS_CLASS: Record<Status, string> = {
   pending: 'bg-amber-500/15 text-amber-300',
-  locked: 'bg-gold/15 text-gold',
+  locked: 'bg-gold/15 text-gold-700',
   paid: 'bg-jade-500/15 text-jade-300',
   clawback: 'bg-rose-500/15 text-rose-300',
   void: 'bg-muted/10 text-muted-foreground',
@@ -220,7 +220,7 @@ export default function AffiliateCommissionsPage() {
         <main className="mx-auto max-w-5xl px-6 pt-16 pb-20">
           <div className="mx-auto max-w-md text-center">
             <h1 className="mb-2 font-heading text-2xl font-bold">
-              Bạn chưa đăng ký <span className="text-gold">affiliate</span>
+              Bạn chưa đăng ký <span className="text-gold-700">affiliate</span>
             </h1>
             <p className="mb-6 text-muted-foreground">
               Bạn đã đăng nhập, nhưng chưa tham gia chương trình affiliate.
@@ -270,7 +270,7 @@ export default function AffiliateCommissionsPage() {
 
         {/* Hero */}
         <header className="mb-10">
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
             Affiliate · Commissions
           </p>
           <h1 className="mt-2 font-heading text-3xl font-bold sm:text-4xl">
@@ -348,7 +348,7 @@ export default function AffiliateCommissionsPage() {
                 onClick={() => setFilter(f.key)}
                 className={`rounded-full border px-4 py-1.5 text-sm transition ${
                   active
-                    ? 'border-gold/60 bg-gold/15 text-gold'
+                    ? 'border-gold/60 bg-gold/15 text-gold-700'
                     : 'border-border text-muted-foreground hover:border-border hover:text-foreground'
                 }`}
               >
@@ -424,7 +424,7 @@ export default function AffiliateCommissionsPage() {
                         <td className="py-2 pr-3 text-right tabular-nums text-muted-foreground">
                           {pct(r.commission_rate)}
                         </td>
-                        <td className="py-2 pr-3 text-right font-semibold tabular-nums text-gold">
+                        <td className="py-2 pr-3 text-right font-semibold tabular-nums text-gold-700">
                           {vnd(r.commission_vnd)}
                         </td>
                         <td className="py-2 pr-3">

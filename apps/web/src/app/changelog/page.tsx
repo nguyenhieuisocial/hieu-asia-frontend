@@ -121,7 +121,7 @@ const RELEASES: readonly ReleaseEntry[] = [
 ];
 
 const TAG_LABELS: Record<NonNullable<ReleaseEntry['tag']>, { label: string; cls: string }> = {
-  major: { label: 'Major', cls: 'border-gold/40 bg-gold/10 text-gold' },
+  major: { label: 'Major', cls: 'border-gold/40 bg-gold/10 text-gold-700' },
   feature: { label: 'Tính năng', cls: 'border-purple/40 bg-purple/10 text-purple-200' },
   polish: { label: 'Polish', cls: 'border-jade/40 bg-jade/10 text-emerald-200' },
   infra: { label: 'Hạ tầng', cls: 'border-border bg-muted/5 text-muted-foreground' },
@@ -139,7 +139,7 @@ export default function ChangelogPage() {
             className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.18)_0%,_transparent_55%)]"
           />
           <div className="mx-auto max-w-4xl px-6 py-16 text-center sm:py-20">
-            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
+            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold-700 sm:text-xs">
               Changelog · lộ trình minh bạch
             </p>
             <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">

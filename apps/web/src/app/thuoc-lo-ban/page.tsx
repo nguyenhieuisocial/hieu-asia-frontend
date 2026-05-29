@@ -225,7 +225,7 @@ export default function ThuocLoBanPage() {
               {(result.next_good || result.prev_good) && (
                 <Card className="border-border bg-card/50">
                   <CardHeader>
-                    <CardTitle className="text-base text-gold">
+                    <CardTitle className="text-base text-gold-700">
                       Gợi ý kích thước tốt gần nhất
                     </CardTitle>
                   </CardHeader>

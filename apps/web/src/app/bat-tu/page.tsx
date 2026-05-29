@@ -152,7 +152,7 @@ export default function BatTuLandingPage() {
               <span>Bát Tự</span>
             </nav>
 
-            <p className="mb-8 flex flex-wrap items-center gap-x-3 font-mono text-eyebrow uppercase text-gold">
+            <p className="mb-8 flex flex-wrap items-center gap-x-3 font-mono text-eyebrow uppercase text-gold-700">
               <span className="inline-block h-px w-6 bg-gold align-middle" />
               Bát Tự · Tứ Trụ · 八字
             </p>
@@ -191,7 +191,7 @@ export default function BatTuLandingPage() {
         {/* What it is */}
         <section className="relative bg-muted/40 py-16 md:py-20">
           <div className="mx-auto max-w-marketing-tight px-6">
-            <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
+            <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-700">
               — Bát Tự là gì
             </p>
             <h2 className="text-balance font-sans text-section-display font-bold tracking-tight text-foreground">
@@ -234,7 +234,7 @@ export default function BatTuLandingPage() {
         {/* How hieu.asia analyzes it */}
         <section className="relative bg-background py-16 md:py-20">
           <div className="mx-auto max-w-marketing-tight px-6">
-            <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
+            <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-700">
               — Cách hieu.asia đọc
             </p>
             <h2 className="text-balance font-sans text-section-display font-bold tracking-tight text-foreground">
@@ -279,7 +279,7 @@ export default function BatTuLandingPage() {
         {/* Sample insight */}
         <section className="relative bg-muted/40 py-16 md:py-20">
           <div className="mx-auto max-w-marketing-tight px-6">
-            <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
+            <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-700">
               — Một đoạn đọc Bát Tự nghe thế nào
             </p>
             <blockquote className="mt-6 border-l-2 border-gold/50 pl-6 font-marketing-display text-xl leading-relaxed text-foreground md:text-2xl">

@@ -81,11 +81,11 @@ export default function BrandPage() {
           className="absolute inset-0 -z-10 [background-image:linear-gradient(rgba(184,146,61,0.5)_1px,transparent_1px),linear-gradient(90deg,rgba(184,146,61,0.5)_1px,transparent_1px)] [background-size:48px_48px] opacity-[0.06] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]"
         />
         <div className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
-          <div className="font-mono text-xs uppercase tracking-[0.32em] text-gold">
+          <div className="font-mono text-xs uppercase tracking-[0.32em] text-gold-700">
             Brand System v1
           </div>
           <h1 className="mt-4 font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl">
-            Hệ thống nhận diện <span className="text-gold">hieu.asia</span>
+            Hệ thống nhận diện <span className="text-gold-700">hieu.asia</span>
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-foreground/85">
             Tài liệu sống — mọi designer, marketer và LLM dùng cho hieu.asia
@@ -103,7 +103,7 @@ export default function BrandPage() {
           {/* TOC */}
           <aside className="hidden lg:block">
             <nav className="sticky top-24 space-y-1" aria-label="Mục lục">
-              <div className="px-3 pb-2 font-mono text-[10px] uppercase tracking-[0.3em] text-gold/85">
+              <div className="px-3 pb-2 font-mono text-[10px] uppercase tracking-[0.3em] text-gold-700">
                 Mục lục
               </div>
               {TOC.map(({ id, label, Icon }) => (
@@ -198,7 +198,7 @@ export default function BrandPage() {
             <Section id="colors" title="Màu sắc" eyebrow="02">
               <p className="text-muted-foreground">
                 Click vào ô màu để copy mã hex. Mỗi tier đặt tên Tailwind tương
-                ứng — dùng trực tiếp class <code className="rounded bg-gold/10 px-1 font-mono text-xs text-gold">bg-gold-500</code>.
+                ứng — dùng trực tiếp class <code className="rounded bg-gold/10 px-1 font-mono text-xs text-gold-700">bg-gold-500</code>.
               </p>
               <div className="mt-8">
                 <ColorPalette />
@@ -311,7 +311,7 @@ export default function BrandPage() {
                 <CardContent>
                   <ul className="space-y-3 text-foreground/85">
                     <li>
-                      <span className="font-heading text-xl font-semibold text-gold">
+                      <span className="font-heading text-xl font-semibold text-gold-700">
                         Tự hiểu mình. Quyết định tốt hơn.
                       </span>
                       <div className="text-xs text-muted-foreground">Tagline chính</div>
@@ -323,7 +323,7 @@ export default function BrandPage() {
                       <div className="text-xs text-muted-foreground">Mô tả ngắn</div>
                     </li>
                     <li>
-                      <span className="font-mono text-sm uppercase tracking-[0.3em] text-gold">
+                      <span className="font-mono text-sm uppercase tracking-[0.3em] text-gold-700">
                         Premium AI insight platform
                       </span>
                       <div className="text-xs text-muted-foreground">Eyebrow tiếng Anh</div>
@@ -352,7 +352,7 @@ export default function BrandPage() {
                 <DownloadItem title="Brand book PDF" hint="Toàn bộ guideline · 20 trang" />
               </div>
               <div className="mt-8 rounded-lg border border-gold/15 bg-card/40 p-5 text-sm text-muted-foreground">
-                Liên hệ <a className="text-gold underline" href="mailto:brand@hieu.asia">brand@hieu.asia</a> nếu cần file gốc hoặc đặt request tuỳ biến.
+                Liên hệ <a className="text-gold-700 underline" href="mailto:brand@hieu.asia">brand@hieu.asia</a> nếu cần file gốc hoặc đặt request tuỳ biến.
               </div>
             </Section>
           </main>
@@ -390,7 +390,7 @@ function Section({
 }) {
   return (
     <section id={id} className="scroll-mt-24">
-      <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/85">
+      <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
         {eyebrow}
       </div>
       <h2 className="mt-2 font-heading text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">

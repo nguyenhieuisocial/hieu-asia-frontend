@@ -141,7 +141,7 @@ export default function ThanSoHocResultPage() {
           {(data.master_numbers.length > 0 || data.karmic_debt) && (
             <div className="flex flex-wrap items-center gap-2">
               {data.master_numbers.length > 0 && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/15 px-3 py-1 text-xs font-medium text-gold">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/15 px-3 py-1 text-xs font-medium text-gold-700">
                   <Sparkles className="h-3 w-3" aria-hidden="true" />
                   Master Numbers: {data.master_numbers.join(', ')}
                 </span>
@@ -199,7 +199,7 @@ export default function ThanSoHocResultPage() {
                   <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
                     Đỉnh {p.index} · {p.age_range}
                   </div>
-                  <div className="mt-2 font-heading text-3xl font-bold text-gold">{p.number}</div>
+                  <div className="mt-2 font-heading text-3xl font-bold text-gold-700">{p.number}</div>
                   <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{p.meaning}</p>
                 </div>
               ))}
@@ -281,7 +281,7 @@ function HeroLifePath({ card, year }: { card: NumberCard; year: number }) {
       <CardContent className="relative p-6 sm:p-8">
         <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-8">
           <div className="flex flex-col items-start">
-            <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/85">
+            <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold-700">
               Đường đời · Life Path
             </div>
             <div className="bg-gold-gradient bg-clip-text font-heading text-7xl font-extrabold leading-none text-transparent sm:text-8xl">
@@ -296,7 +296,7 @@ function HeroLifePath({ card, year }: { card: NumberCard; year: number }) {
               {card.meaning}
             </p>
             <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-3 py-1 font-mono text-[11px] tracking-wide text-muted-foreground">
-              Năm cá nhân hiện tại · <span className="font-bold text-gold">{year}</span>
+              Năm cá nhân hiện tại · <span className="font-bold text-gold-700">{year}</span>
             </p>
           </div>
         </div>
@@ -324,7 +324,7 @@ function NumberCardView({ card, highlight }: { card: NumberCard; highlight?: boo
           <div
             className={
               'font-heading text-4xl font-bold leading-none ' +
-              (highlight ? 'text-gold' : 'text-foreground')
+              (highlight ? 'text-gold-700' : 'text-foreground')
             }
           >
             {card.number}
@@ -421,7 +421,7 @@ function PremiumCta() {
       />
       <CardContent className="relative flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
         <div className="max-w-xl">
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.24em] text-gold">
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.24em] text-gold-700">
             <Crown className="h-3 w-3" aria-hidden="true" /> Premium
           </div>
           <h3 className="mt-2 font-heading text-xl font-semibold text-foreground sm:text-2xl">

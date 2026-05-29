@@ -135,7 +135,7 @@ export default function HangNgayPage() {
           <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-lg bg-gold/10 text-gold">
             <Coffee className="h-5 w-5" aria-hidden />
           </div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
             Lộ trình · Tra cứu nhanh hằng ngày
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">

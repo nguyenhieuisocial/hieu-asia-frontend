@@ -86,7 +86,7 @@ export default async function LearnPalacePage({
       </nav>
 
       <header className="mb-10">
-        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
           {data.fullName} · {data.domain}
         </p>
         <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
@@ -110,7 +110,7 @@ export default async function LearnPalacePage({
         <ul className="space-y-3 rounded-xl border border-border bg-card/40 p-5 sm:p-6">
           {data.keyStars.map((s) => (
             <li key={s.name} className="flex flex-col gap-1 sm:flex-row sm:gap-3">
-              <span className="shrink-0 font-mono text-xs font-semibold uppercase tracking-wider text-gold sm:w-28">
+              <span className="shrink-0 font-mono text-xs font-semibold uppercase tracking-wider text-gold-700 sm:w-28">
                 {s.name}
               </span>
               <span className="text-sm leading-relaxed text-foreground/80">{s.signal}</span>
@@ -129,7 +129,7 @@ export default async function LearnPalacePage({
               key={i}
               className="flex gap-3 rounded-lg border border-border bg-card/30 p-4"
             >
-              <span className="shrink-0 font-mono text-xs font-bold text-gold">
+              <span className="shrink-0 font-mono text-xs font-bold text-gold-700">
                 {String(i + 1).padStart(2, '0')}
               </span>
               <span className="text-sm leading-relaxed text-foreground/80">{step}</span>
@@ -176,13 +176,13 @@ export default async function LearnPalacePage({
               Nội dung trong trang này là kiến thức nền tảng để bạn tự đối chiếu — không phải
               dự đoán định mệnh, không thay thế lời khuyên y tế, pháp lý hay tài chính
               chuyên môn. Đọc thêm{' '}
-              <Link href="/methodology" className="text-gold underline underline-offset-4 hover:opacity-80">
+              <Link href="/methodology" className="text-gold-700 underline underline-offset-4 hover:opacity-80">
                 phương pháp đầy đủ
               </Link>{' '}
               và{' '}
               <Link
                 href="/methodology/tu-vi"
-                className="text-gold underline underline-offset-4 hover:opacity-80"
+                className="text-gold-700 underline underline-offset-4 hover:opacity-80"
               >
                 trường phái Tử Vi
               </Link>{' '}

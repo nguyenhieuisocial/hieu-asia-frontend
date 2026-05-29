@@ -33,14 +33,14 @@ export default function AffiliateLandingPage() {
         <div aria-hidden className="pointer-events-none absolute -top-20 right-[-10%] h-[360px] w-[360px] rounded-full bg-gold/10 blur-3xl" />
         <div className="relative">
         <div className="mx-auto max-w-4xl text-center">
-          <div className="mb-4 inline-flex rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-xs text-gold">
+          <div className="mb-4 inline-flex rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-xs text-gold-700">
             Chương trình affiliate — cấu trúc 3 tầng minh bạch, tuân thủ Nghị định 40/2018
           </div>
           <h1 className="mb-6 text-4xl font-bold leading-tight sm:text-5xl">
-            Kiếm tiền cùng <span className="text-gold">hieu.asia</span>
+            Kiếm tiền cùng <span className="text-gold-700">hieu.asia</span>
           </h1>
           <p className="mx-auto mb-8 max-w-2xl text-lg text-foreground/80">
-            Hoa hồng <b className="text-gold">30%</b> cho doanh thu tháng đầu, <b className="text-gold">10%</b> recurring 6 tháng tiếp.
+            Hoa hồng <b className="text-gold-700">30%</b> cho doanh thu tháng đầu, <b className="text-gold-700">10%</b> recurring 6 tháng tiếp.
             Cookie 30 ngày · QR code riêng · Dashboard real-time · Rút tiền từ 500.000đ.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
@@ -105,7 +105,7 @@ export default function AffiliateLandingPage() {
           <Card className="border-gold/30 bg-background">
             <CardContent className="pt-6">
               <label className="mb-2 block text-sm">
-                Số conversion / tháng: <span className="font-bold text-gold">{conversions}</span>
+                Số conversion / tháng: <span className="font-bold text-gold-700">{conversions}</span>
               </label>
               <Slider
                 value={conversions}
@@ -118,15 +118,15 @@ export default function AffiliateLandingPage() {
               <div className="grid gap-4 sm:grid-cols-3">
                 <div>
                   <div className="text-xs uppercase text-muted-foreground">Tháng đầu (30%)</div>
-                  <div className="text-xl font-bold text-gold">{formatVND(monthlyFirst)}</div>
+                  <div className="text-xl font-bold text-gold-700">{formatVND(monthlyFirst)}</div>
                 </div>
                 <div>
                   <div className="text-xs uppercase text-muted-foreground">Recurring 6 tháng (10%)</div>
-                  <div className="text-xl font-bold text-gold">{formatVND(recurring)}</div>
+                  <div className="text-xl font-bold text-gold-700">{formatVND(recurring)}</div>
                 </div>
                 <div>
                   <div className="text-xs uppercase text-muted-foreground">Tiềm năng cả năm</div>
-                  <div className="text-xl font-bold text-gold">{formatVND(yearTotal)}</div>
+                  <div className="text-xl font-bold text-gold-700">{formatVND(yearTotal)}</div>
                 </div>
               </div>
               <p className="mt-4 text-xs text-muted-foreground">

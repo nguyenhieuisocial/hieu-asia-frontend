@@ -234,7 +234,7 @@ export default function ModelCardPage() {
               <span className="text-muted-foreground">Model card</span>
             </nav>
 
-            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
               Model Card
             </p>
             <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -321,14 +321,14 @@ export default function ModelCardPage() {
                 Model card này được review cùng với prompt version. Đọc thêm{' '}
                 <Link
                   href="/methodology"
-                  className="text-gold underline underline-offset-4 hover:opacity-80"
+                  className="text-gold-700 underline underline-offset-4 hover:opacity-80"
                 >
                   /methodology
                 </Link>{' '}
                 cho tổng quan và{' '}
                 <Link
                   href="/methodology/ai-safety"
-                  className="text-gold underline underline-offset-4 hover:opacity-80"
+                  className="text-gold-700 underline underline-offset-4 hover:opacity-80"
                 >
                   /methodology/ai-safety
                 </Link>{' '}

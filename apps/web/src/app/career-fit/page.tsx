@@ -101,7 +101,7 @@ function FitBadge({ score }: { score: number }) {
     score >= 8
       ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300'
       : score >= 5
-        ? 'border-gold/40 bg-gold/10 text-gold'
+        ? 'border-gold/40 bg-gold/10 text-gold-700'
         : 'border-rose-500/40 bg-rose-500/10 text-rose-300';
   return (
     <span
@@ -301,13 +301,13 @@ export default function CareerFitPage() {
               <CardContent className="pt-6">
                 <p className="text-sm leading-relaxed text-foreground/80">{report.summary}</p>
                 <p className="mt-2 text-xs text-muted-foreground">
-                  Mệnh theo địa chi năm sinh: <span className="text-gold">{report.elementOfZodiac}</span>
+                  Mệnh theo địa chi năm sinh: <span className="text-gold-700">{report.elementOfZodiac}</span>
                 </p>
               </CardContent>
             </Card>
 
             <div>
-              <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
                 Top 3 nhóm phù hợp
               </h2>
               <div className="grid gap-4 md:grid-cols-3">
@@ -338,7 +338,7 @@ export default function CareerFitPage() {
             </div>
 
             <div>
-              <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
                 Toàn bộ 5 nhóm — xếp hạng
               </h2>
               <div className="overflow-hidden rounded-xl border border-border bg-card/40">

@@ -200,7 +200,7 @@ export default function WeeklyReviewPage() {
         </nav>
 
         <header className="mb-8">
-          <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold-700">
             Đánh giá tuần
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">
@@ -257,7 +257,7 @@ export default function WeeklyReviewPage() {
                     </CardTitle>
                     <p className="mt-1 text-xs text-muted-foreground">
                       {formatWeek(thisWeekReview.weekStart)} ·{' '}
-                      <span className="rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[10px] font-medium text-gold">
+                      <span className="rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[10px] font-medium text-gold-700">
                         {TOPIC_LABEL[thisWeekReview.topicFocus]}
                       </span>
                     </p>
@@ -428,7 +428,7 @@ export default function WeeklyReviewPage() {
                                 <span className="text-sm font-medium text-foreground">
                                   {formatWeek(r.weekStart)}
                                 </span>
-                                <span className="rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[10px] font-medium text-gold">
+                                <span className="rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[10px] font-medium text-gold-700">
                                   {TOPIC_LABEL[r.topicFocus]}
                                 </span>
                               </div>
@@ -467,7 +467,7 @@ export default function WeeklyReviewPage() {
               </p>
               <Link
                 href="/journal"
-                className="mt-5 inline-flex items-center gap-2 rounded-md border border-gold/50 bg-card/60 px-4 py-2 text-sm font-medium text-gold transition hover:bg-gold/10"
+                className="mt-5 inline-flex items-center gap-2 rounded-md border border-gold/50 bg-card/60 px-4 py-2 text-sm font-medium text-gold-700 transition hover:bg-gold/10"
               >
                 Mở Decision Journal
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />

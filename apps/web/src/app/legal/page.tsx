@@ -54,7 +54,7 @@ export default function LegalHubPage() {
             className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,_rgba(59,39,84,0.4)_0%,_transparent_55%)]"
           />
           <div className="mx-auto max-w-4xl px-6 py-16 text-center sm:py-20">
-            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
+            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold-700 sm:text-xs">
               Pháp lý
             </p>
             <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
@@ -92,7 +92,7 @@ export default function LegalHubPage() {
                       <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                         {s.desc}
                       </p>
-                      <p className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-gold/90 transition-colors group-hover:text-gold">
+                      <p className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-gold-700 transition-colors group-hover:text-gold">
                         Mở
                         <ArrowRight className="h-3 w-3" aria-hidden="true" />
                       </p>
@@ -106,7 +106,7 @@ export default function LegalHubPage() {
               <p className="font-heading text-base text-foreground">Liên hệ DPO</p>
               <p className="mt-2 leading-relaxed">
                 Câu hỏi về dữ liệu cá nhân hoặc khiếu nại GDPR: gửi email tới{' '}
-                <a href="mailto:privacy@hieu.asia" className="text-gold hover:underline">
+                <a href="mailto:privacy@hieu.asia" className="text-gold-700 hover:underline">
                   privacy@hieu.asia
                 </a>
                 . Chúng tôi cam kết trả lời trong 72 giờ làm việc.

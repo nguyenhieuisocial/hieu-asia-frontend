@@ -195,7 +195,7 @@ export default function DecisionSimulatorPage() {
         </div>
 
         <header className="mb-8">
-          <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold-700">
             Mô phỏng quyết định
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">
@@ -378,7 +378,7 @@ function ChoiceFields({
   const descLen = desc.length;
   return (
     <fieldset className="space-y-3">
-      <legend className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+      <legend className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
         {heading}
       </legend>
       <div>

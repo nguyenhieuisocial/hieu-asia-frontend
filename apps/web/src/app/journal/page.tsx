@@ -168,7 +168,7 @@ export default function JournalHubPage() {
                 className={[
                   'rounded-md px-4 py-2 text-sm font-medium transition sm:py-1.5 sm:text-xs',
                   filter === t.id
-                    ? 'bg-gold/15 text-gold'
+                    ? 'bg-gold/15 text-gold-700'
                     : 'text-muted-foreground hover:text-foreground',
                 ].join(' ')}
               >
@@ -201,7 +201,7 @@ export default function JournalHubPage() {
                 Bắt đầu bằng một quyết định bạn đang phân vân. 30 ngày sau, bạn
                 có thể quay lại xem mình đã chọn vì lý do gì — và rút ra điều gì.
               </p>
-              <div className="mt-6 inline-flex items-center gap-2 rounded-md border border-gold/30 bg-gold/[0.06] px-3 py-1.5 text-xs text-gold/90">
+              <div className="mt-6 inline-flex items-center gap-2 rounded-md border border-gold/30 bg-gold/[0.06] px-3 py-1.5 text-xs text-gold-700">
                 <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
                 Lưu trên trình duyệt của bạn — không gửi server
               </div>
@@ -235,7 +235,7 @@ export default function JournalHubPage() {
                       <CardContent className="flex flex-col gap-3 p-5 sm:flex-row sm:items-start sm:justify-between">
                         <div className="min-w-0 flex-1">
                           <div className="mb-2 flex flex-wrap items-center gap-2">
-                            <span className="rounded-full border border-gold/30 bg-gold/10 px-2.5 py-0.5 text-xs font-medium text-gold">
+                            <span className="rounded-full border border-gold/30 bg-gold/10 px-2.5 py-0.5 text-xs font-medium text-gold-700">
                               {TOPIC_LABEL[e.topic]}
                             </span>
                             {reviewed ? (
@@ -293,7 +293,7 @@ export default function JournalHubPage() {
           </p>
           <Link
             href="/weekly-review"
-            className="mt-5 inline-flex items-center gap-2 rounded-md border border-gold/50 bg-card/60 px-4 py-2 text-sm font-medium text-gold transition hover:bg-gold/10"
+            className="mt-5 inline-flex items-center gap-2 rounded-md border border-gold/50 bg-card/60 px-4 py-2 text-sm font-medium text-gold-700 transition hover:bg-gold/10"
           >
             Mở Weekly Review
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

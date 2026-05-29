@@ -153,7 +153,7 @@ export default function MonthlyPlanningPage() {
 
         <header className="mb-10">
           <div className="flex items-center gap-3">
-            <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold/80">
+            <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold-700">
               Kế hoạch tháng
             </p>
             <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/40 bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-amber-200">
@@ -173,7 +173,7 @@ export default function MonthlyPlanningPage() {
 
         <Card className="mb-10 border-gold/25 bg-gold/[0.05]">
           <CardHeader>
-            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
               Chủ đề tháng
             </p>
             <CardTitle className="font-heading text-xl capitalize sm:text-2xl">
@@ -202,7 +202,7 @@ export default function MonthlyPlanningPage() {
                   <CardHeader>
                     <div className="flex items-center gap-2">
                       <Icon className="h-4 w-4 text-gold" aria-hidden="true" />
-                      <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+                      <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
                         {w.label}
                       </p>
                     </div>
@@ -259,7 +259,7 @@ export default function MonthlyPlanningPage() {
         <section className="rounded-xl border border-gold/25 bg-gold/[0.04] p-6 sm:p-8">
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-gold" aria-hidden="true" />
-            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
               Tiếp theo
             </p>
           </div>

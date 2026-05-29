@@ -269,7 +269,7 @@ export default function CanXuongPage() {
 
               <Card className="border-border bg-card/50">
                 <CardHeader>
-                  <CardTitle className="text-base text-gold">Câu thơ luận số</CardTitle>
+                  <CardTitle className="text-base text-gold-700">Câu thơ luận số</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="whitespace-pre-line font-heading text-base italic leading-relaxed text-foreground/90">
@@ -280,7 +280,7 @@ export default function CanXuongPage() {
 
               <Card className="border-border bg-card/50">
                 <CardHeader>
-                  <CardTitle className="text-base text-gold">Luận giải</CardTitle>
+                  <CardTitle className="text-base text-gold-700">Luận giải</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm leading-relaxed text-foreground/85">{result.interpretation}</p>

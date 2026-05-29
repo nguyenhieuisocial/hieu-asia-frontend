@@ -244,9 +244,9 @@ const FEATURES_FAQ: readonly FaqItem[] = [
       <p>
         Khảo sát đầu vào và bản rút gọn Tử Vi / Bát Tự / MBTI / Thần Số Học luôn
         miễn phí. Palm Reading, PDF Cẩm Nang và Tử Vi hôm nay (badge{' '}
-        <span className="font-medium text-gold">Premium</span>) yêu cầu một
+        <span className="font-medium text-gold-700">Premium</span>) yêu cầu một
         trong các gói trả phí. Xem chi tiết tại{' '}
-        <Link href="/pricing" className="text-gold underline-offset-2 hover:underline">
+        <Link href="/pricing" className="text-gold-700 underline-offset-2 hover:underline">
           /pricing
         </Link>
         .
@@ -516,7 +516,7 @@ export default function FeaturesPage() {
                     Wave 60.56 P3.3: italic verb spans on lead noun match the
                     MarketingHero idiom (Instrument-serif italic in gold-soft). */}
                 <header className="mx-auto max-w-2xl text-center">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700 sm:text-xs">
                     {bucket.eyebrow}
                   </p>
                   <h2 className="mt-3 font-heading text-2xl font-bold leading-tight tracking-tight text-foreground sm:text-3xl">
@@ -566,7 +566,7 @@ export default function FeaturesPage() {
           />
           <OrnamentDivider className="mb-12" glyph="❖" />
           <div className="mx-auto max-w-3xl px-6 text-center">
-            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
+            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700 sm:text-xs">
               Bắt đầu
             </p>
             <h2 className="mt-4 text-balance font-heading text-3xl font-bold text-foreground sm:text-4xl">

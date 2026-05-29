@@ -280,7 +280,7 @@ export default function AiSafetyPage() {
               <span className="text-muted-foreground">AI Safety</span>
             </nav>
 
-            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
               AI Safety
             </p>
             <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -320,7 +320,7 @@ export default function AiSafetyPage() {
                       href={o.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-3 inline-flex items-center gap-1 text-xs text-gold underline underline-offset-4 hover:opacity-80"
+                      className="mt-3 inline-flex items-center gap-1 text-xs text-gold-700 underline underline-offset-4 hover:opacity-80"
                     >
                       Xem framework
                       <ExternalLink className="h-3 w-3" aria-hidden />
@@ -434,7 +434,7 @@ export default function AiSafetyPage() {
               >
                 <div className="flex items-center gap-2">
                   <Layers className="h-4 w-4 text-gold/80" aria-hidden />
-                  <span className="font-mono text-xs font-bold text-gold">
+                  <span className="font-mono text-xs font-bold text-gold-700">
                     {l.n}
                   </span>
                 </div>
@@ -547,14 +547,14 @@ export default function AiSafetyPage() {
                 Liên quan:{' '}
                 <Link
                   href="/methodology/model-card"
-                  className="text-gold underline underline-offset-4 hover:opacity-80"
+                  className="text-gold-700 underline underline-offset-4 hover:opacity-80"
                 >
                   /methodology/model-card
                 </Link>{' '}
                 ·{' '}
                 <Link
                   href="/methodology"
-                  className="text-gold underline underline-offset-4 hover:opacity-80"
+                  className="text-gold-700 underline underline-offset-4 hover:opacity-80"
                 >
                   /methodology
                 </Link>

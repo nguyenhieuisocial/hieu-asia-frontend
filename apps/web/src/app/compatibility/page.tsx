@@ -313,7 +313,7 @@ export default function CompatibilityPage() {
                         <p className="mt-1 text-sm text-foreground/85">{tip.reframe}</p>
                       </div>
                       <div>
-                        <div className="text-[10px] uppercase tracking-wider text-gold/80">
+                        <div className="text-[10px] uppercase tracking-wider text-gold-700">
                           Thử nói
                         </div>
                         <p className="mt-1 rounded-md border border-gold/20 bg-gold/5 px-3 py-2 text-sm italic text-foreground/90">

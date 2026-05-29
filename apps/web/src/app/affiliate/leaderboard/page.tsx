@@ -156,7 +156,7 @@ export default async function AffiliateLeaderboardPage() {
             >
               <Trophy className="h-5 w-5 text-gold" aria-hidden="true" />
             </div>
-            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
               Affiliate · Bảng vàng
             </p>
             <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
@@ -170,7 +170,7 @@ export default async function AffiliateLeaderboardPage() {
               tính được ẩn, chỉ hiển thị mã affiliate công khai.
             </p>
             {totalEarned > 0 && (
-              <p className="mt-3 text-sm text-gold">
+              <p className="mt-3 text-sm text-gold-700">
                 Tổng cộng cộng đồng đã kiếm được{' '}
                 <strong className="font-semibold">{vnd(totalEarned)}</strong>
               </p>
@@ -208,7 +208,7 @@ export default async function AffiliateLeaderboardPage() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="font-semibold text-gold">{vnd(r.total_earned_vnd)}</div>
+                    <div className="font-semibold text-gold-700">{vnd(r.total_earned_vnd)}</div>
                     <div className="text-xs text-muted-foreground">
                       {r.total_orders.toLocaleString('vi-VN')} đơn
                     </div>
@@ -258,7 +258,7 @@ function TierBadge({ tier }: { tier: string }) {
   const colors: Record<string, string> = {
     bronze: 'bg-orange-500/15 text-orange-200 border-orange-500/30',
     silver: 'bg-slate-400/15 text-slate-200 border-slate-400/30',
-    gold: 'bg-gold/15 text-gold border-gold/30',
+    gold: 'bg-gold/15 text-gold-700 border-gold/30',
     platinum: 'bg-purple/15 text-purple-200 border-purple/30',
   };
   const cls = colors[tier.toLowerCase()] ?? 'bg-muted/30 text-muted-foreground border-border';

@@ -135,7 +135,7 @@ export default function TuViHubPage() {
             <span className="text-muted-foreground">Tử Vi</span>
           </nav>
 
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
             Tử Vi Đẩu Số · Bắc phái 114 sao
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">

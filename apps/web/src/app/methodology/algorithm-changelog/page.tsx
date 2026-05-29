@@ -223,7 +223,7 @@ export default function AlgorithmChangelogPage() {
             <span className="text-muted-foreground">Algorithm changelog</span>
           </nav>
 
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
             Methodology · Algorithm changelog
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -236,7 +236,7 @@ export default function AlgorithmChangelogPage() {
           </p>
 
           <div className="mt-8 flex flex-wrap gap-2 text-xs">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/25 bg-gold/5 px-3 py-1 text-gold/90">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/25 bg-gold/5 px-3 py-1 text-gold-700">
               <Cpu className="h-3.5 w-3.5" aria-hidden /> Engine versions
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-3 py-1 text-muted-foreground">
@@ -263,7 +263,7 @@ export default function AlgorithmChangelogPage() {
             >
               <CardHeader>
                 <div className="flex flex-wrap items-center gap-3">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 font-mono text-xs text-gold">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 font-mono text-xs text-gold-700">
                     <GitCommit className="h-3.5 w-3.5" aria-hidden /> v
                     {release.version}
                   </span>
@@ -311,7 +311,7 @@ export default function AlgorithmChangelogPage() {
               href="/methodology/tu-vi"
               className="group rounded-xl border border-border bg-card/40 p-5 transition hover:border-gold/40"
             >
-              <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+              <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
                 Đọc thêm
               </p>
               <h3 className="mt-2 font-heading text-lg text-foreground">
@@ -321,7 +321,7 @@ export default function AlgorithmChangelogPage() {
                 Trường phái Bắc phái, cách an sao, đại vận, lưu niên — và lằn ranh engine
                 vs AI.
               </p>
-              <span className="mt-3 inline-flex items-center gap-1 text-sm text-gold group-hover:underline">
+              <span className="mt-3 inline-flex items-center gap-1 text-sm text-gold-700 group-hover:underline">
                 /methodology/tu-vi <ChevronRight className="h-4 w-4" aria-hidden />
               </span>
             </Link>

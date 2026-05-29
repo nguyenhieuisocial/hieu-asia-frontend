@@ -144,7 +144,7 @@ function ConversationCard({ conv }: { conv: MentorConversation }) {
         </div>
         <Link
           href={href}
-          className="shrink-0 rounded-md border border-gold/40 px-3 py-1.5 text-xs text-gold hover:bg-gold/10"
+          className="shrink-0 rounded-md border border-gold/40 px-3 py-1.5 text-xs text-gold-700 hover:bg-gold/10"
         >
           Tiếp tục
         </Link>
@@ -172,7 +172,7 @@ function EmptyState() {
       </p>
       <Link
         href="/reading"
-        className="mt-4 inline-flex items-center gap-1.5 rounded-md border border-gold/40 px-3 py-1.5 text-xs text-gold hover:bg-gold/10"
+        className="mt-4 inline-flex items-center gap-1.5 rounded-md border border-gold/40 px-3 py-1.5 text-xs text-gold-700 hover:bg-gold/10"
       >
         <Sparkles className="h-3 w-3" aria-hidden />
         Đi đến báo cáo của tôi

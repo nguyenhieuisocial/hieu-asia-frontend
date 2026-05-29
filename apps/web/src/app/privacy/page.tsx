@@ -265,7 +265,7 @@ export default function PrivacyPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <header className="container mx-auto flex items-center justify-between px-6 py-5">
-        <Link href="/" className="font-heading text-xl font-semibold text-gold">
+        <Link href="/" className="font-heading text-xl font-semibold text-gold-700">
           hieu.asia
         </Link>
         <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Chính sách bảo mật</span>
@@ -277,11 +277,11 @@ export default function PrivacyPage() {
             Chính sách bảo mật dữ liệu cá nhân
           </h1>
           <p className="mt-3 text-sm text-muted-foreground">
-            Cập nhật lần cuối: <span className="text-gold">{LAST_UPDATED}</span>
+            Cập nhật lần cuối: <span className="text-gold-700">{LAST_UPDATED}</span>
           </p>
           <p className="mt-4 text-sm leading-relaxed text-foreground/80">
             Chính sách này mô tả cách hieu.asia thu thập, lưu trữ và sử dụng dữ liệu cá nhân của bạn,
-            tuân thủ <strong className="text-gold">Nghị định 13/2023/NĐ-CP</strong> của Chính phủ Việt
+            tuân thủ <strong className="text-gold-700">Nghị định 13/2023/NĐ-CP</strong> của Chính phủ Việt
             Nam về bảo vệ dữ liệu cá nhân.
           </p>
         </div>
@@ -297,7 +297,7 @@ export default function PrivacyPage() {
             </p>
             <p>
               Mọi câu hỏi về dữ liệu, vui lòng liên hệ:{' '}
-              <a className="text-gold underline" href="mailto:privacy@hieu.asia">
+              <a className="text-gold-700 underline" href="mailto:privacy@hieu.asia">
                 privacy@hieu.asia
               </a>
             </p>
@@ -333,13 +333,13 @@ export default function PrivacyPage() {
                 <strong className="text-foreground">Không dùng dữ liệu cá nhân để huấn luyện mô hình.</strong>{' '}
                 Chỉ dùng dữ liệu đã ẩn danh để cải thiện prompt — bạn có thể tắt
                 tùy chọn này bất cứ lúc nào trong{' '}
-                <Link href="/account" className="text-gold underline">
+                <Link href="/account" className="text-gold-700 underline">
                   Tài khoản
                 </Link>
                 .
               </li>
               <li>
-                <strong className="text-gold">Chúng tôi KHÔNG bán dữ liệu cá nhân cho bất kỳ bên thứ ba nào.</strong>
+                <strong className="text-gold-700">Chúng tôi KHÔNG bán dữ liệu cá nhân cho bất kỳ bên thứ ba nào.</strong>
               </li>
             </ul>
           </CardContent>
@@ -379,7 +379,7 @@ export default function PrivacyPage() {
               <ul className="mt-2 list-disc space-y-1 pl-5">
                 <li>
                   Email DPO:{' '}
-                  <a className="text-gold underline" href="mailto:privacy@hieu.asia">
+                  <a className="text-gold-700 underline" href="mailto:privacy@hieu.asia">
                     privacy@hieu.asia
                   </a>
                 </li>
@@ -412,7 +412,7 @@ export default function PrivacyPage() {
               <li>
                 <strong className="text-foreground">Quyền chuyển giao dữ liệu (portability):</strong>{' '}
                 tải xuống dữ liệu của bạn ở định dạng JSON máy đọc được qua{' '}
-                <Link href="/account" className="text-gold underline">
+                <Link href="/account" className="text-gold-700 underline">
                   /account → Xuất dữ liệu
                 </Link>
                 . (Wired qua Worker endpoint <code className="font-mono text-[11px]">/user/export</code>.)
@@ -420,7 +420,7 @@ export default function PrivacyPage() {
               <li>
                 <strong className="text-foreground">Quyền hạn chế xử lý (restriction):</strong>{' '}
                 tắt analytics + marketing trong CMP banner hoặc{' '}
-                <Link href="/account" className="text-gold underline">
+                <Link href="/account" className="text-gold-700 underline">
                   /account → Privacy
                 </Link>
                 . Khi tắt, mọi sự kiện đều bị PostHog opt-out và pixel marketing
@@ -429,12 +429,12 @@ export default function PrivacyPage() {
             </ul>
             <p className="mt-3">
               <strong>Cách thực hiện:</strong>{' '}
-              <Link href="/account" className="text-gold underline">
+              <Link href="/account" className="text-gold-700 underline">
                 Truy cập trang Tài khoản
               </Link>{' '}
               để tải xuống bản sao dữ liệu hoặc xóa tài khoản tức thì. Hoặc gửi
               email tới{' '}
-              <a className="text-gold underline" href="mailto:privacy@hieu.asia">
+              <a className="text-gold-700 underline" href="mailto:privacy@hieu.asia">
                 privacy@hieu.asia
               </a>
               . Chúng tôi xác nhận đã nhận yêu cầu trong vòng 72 giờ làm việc. Việc xử lý, xuất dữ
@@ -462,7 +462,7 @@ export default function PrivacyPage() {
               <p className="mt-1 text-xs text-muted-foreground">
                 Bảng cập nhật mỗi lần thay đổi nhà cung cấp. Bạn có quyền phản đối việc xử lý dữ liệu
                 bởi bất kỳ vendor nào dưới đây — vui lòng email{' '}
-                <a className="text-gold underline" href="mailto:privacy@hieu.asia">
+                <a className="text-gold-700 underline" href="mailto:privacy@hieu.asia">
                   privacy@hieu.asia
                 </a>
                 .
@@ -573,7 +573,7 @@ export default function PrivacyPage() {
               ít nhất 14 ngày trước khi có hiệu lực.
             </p>
             <p className="mt-3">
-              Bản cập nhật gần nhất: <span className="text-gold">{LAST_UPDATED}</span>.
+              Bản cập nhật gần nhất: <span className="text-gold-700">{LAST_UPDATED}</span>.
             </p>
           </CardContent>
         </Card>
@@ -590,13 +590,13 @@ export default function PrivacyPage() {
             <ul className="space-y-1 pl-1">
               <li>
                 Email:{' '}
-                <a className="text-gold underline" href="mailto:privacy@hieu.asia">
+                <a className="text-gold-700 underline" href="mailto:privacy@hieu.asia">
                   privacy@hieu.asia
                 </a>
               </li>
               <li>
                 Hỗ trợ:{' '}
-                <a className="text-gold underline" href="mailto:support@hieu.asia">
+                <a className="text-gold-700 underline" href="mailto:support@hieu.asia">
                   support@hieu.asia
                 </a>
               </li>
@@ -611,7 +611,7 @@ export default function PrivacyPage() {
         <div className="mt-10 flex flex-col items-center gap-3 border-t border-gold/15 pt-8 text-center text-xs text-muted-foreground">
           <p>
             Xem thêm:{' '}
-            <Link href="/terms" className="text-gold underline">
+            <Link href="/terms" className="text-gold-700 underline">
               Điều khoản dịch vụ
             </Link>
           </p>

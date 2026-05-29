@@ -28,7 +28,7 @@ export default function LearnBatTuPage() {
       </nav>
 
       <header className="mb-10 text-center">
-        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
           Đông phương · Trung Hoa
         </p>
         <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">

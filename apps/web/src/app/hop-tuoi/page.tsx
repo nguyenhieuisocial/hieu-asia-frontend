@@ -107,7 +107,7 @@ export default function HopTuoiLandingPage() {
                 <CardDescription className="text-muted-foreground">{c.desc}</CardDescription>
               </CardHeader>
               <CardContent>
-                <span className="inline-flex items-center gap-1 text-sm font-medium text-gold transition-transform group-hover:gap-2">
+                <span className="inline-flex items-center gap-1 text-sm font-medium text-gold-700 transition-transform group-hover:gap-2">
                   Bắt đầu
                   <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                 </span>

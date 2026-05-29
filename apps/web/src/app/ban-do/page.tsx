@@ -153,7 +153,7 @@ export default function BanDoPage() {
             </CardHeader>
             <CardContent className="space-y-5 text-foreground/85">
               <div>
-                <h3 className="text-sm font-medium text-gold/90 uppercase tracking-wide mb-1">
+                <h3 className="text-sm font-medium text-gold-700 uppercase tracking-wide mb-1">
                   Insight ngắn
                 </h3>
                 <p>
