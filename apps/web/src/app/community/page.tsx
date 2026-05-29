@@ -13,6 +13,8 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { webPage, breadcrumb } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   title: 'Cộng đồng',
@@ -89,6 +91,20 @@ export default function CommunityPage() {
   return (
     <>
       <SiteNav />
+      <JsonLd
+        data={[
+          webPage({
+            name: 'Cộng đồng',
+            description:
+              'Theo dõi hieu.asia trên Telegram, đăng ký newsletter hàng tuần và tham gia các vòng học huyền học thực hành.',
+            url: '/community',
+          }),
+          breadcrumb([
+            { name: 'Trang chủ', url: '/' },
+            { name: 'Cộng đồng', url: '/community' },
+          ]),
+        ]}
+      />
       <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
         {/* Hero */}
         <section className="relative isolate overflow-hidden bg-background">

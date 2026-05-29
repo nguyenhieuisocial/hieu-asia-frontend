@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation';
 import { HopTuoiClient } from './HopTuoiClient';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb, webPage } from '@/lib/seo/jsonld';
 
 export const dynamic = 'force-dynamic';
 
@@ -75,6 +77,17 @@ export default async function HopTuoiTypePage({
   const m = META[t];
 
   return (
+    <>
+    <JsonLd
+      data={[
+        webPage({ name: m.title, description: m.description, url: `/hop-tuoi/${type}` }),
+        breadcrumb([
+          { name: 'Trang chủ', url: '/' },
+          { name: 'Hợp tuổi', url: '/hop-tuoi' },
+          { name: m.title, url: `/hop-tuoi/${type}` },
+        ]),
+      ]}
+    />
     <ToolPageShell
       eyebrow={m.eyebrow}
       icon={<span aria-hidden="true">{m.icon}</span>}
@@ -93,5 +106,6 @@ export default async function HopTuoiTypePage({
     >
       <HopTuoiClient type={t} />
     </ToolPageShell>
+    </>
   );
 }
