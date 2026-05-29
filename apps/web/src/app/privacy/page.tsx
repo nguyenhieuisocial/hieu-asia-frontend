@@ -271,7 +271,7 @@ export default function PrivacyPage() {
         <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Chính sách bảo mật</span>
       </header>
 
-      <section className="container mx-auto max-w-3xl px-6 pb-20 pt-6">
+      <section id="nd-13-2023" className="container mx-auto max-w-3xl scroll-mt-24 px-6 pb-20 pt-6">
         <div className="mb-10">
           <h1 className="font-heading text-3xl font-semibold text-foreground sm:text-4xl">
             Chính sách bảo mật dữ liệu cá nhân

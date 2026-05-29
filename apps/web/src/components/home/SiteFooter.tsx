@@ -240,10 +240,12 @@ function SocialLink({
   label: string;
   children: React.ReactNode;
 }) {
+  const isExternal = href.startsWith('http');
   return (
     <Link
       href={href}
       aria-label={label}
+      {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
       className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary sm:h-9 sm:w-9"
     >
       {children}

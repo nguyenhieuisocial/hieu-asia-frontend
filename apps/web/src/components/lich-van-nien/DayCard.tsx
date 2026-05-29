@@ -75,7 +75,7 @@ export function DayCard({ day, className }: Props) {
             </div>
           </div>
         </div>
-        <div className="mt-3 inline-block rounded-full bg-white/20 px-3 py-1 text-sm font-medium backdrop-blur">
+        <div className="mt-3 inline-flex w-fit max-w-full shrink-0 self-start whitespace-nowrap rounded-full bg-white/20 px-3 py-1 text-sm font-medium backdrop-blur">
           {day.isHoangDao
             ? `Hoàng Đạo — ${day.hoangDaoLevel}`
             : day.isHacDao
