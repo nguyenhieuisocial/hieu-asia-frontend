@@ -99,17 +99,21 @@ function getCookieSecret(): string | null {
  *
  * Format: `<email>:<role>.<hmac_hex>`
  *
- * If `ADMIN_COOKIE_SECRET` is not set, falls back to unsigned (legacy) format.
- * This fallback is INSECURE — only used during the rollout grace period.
- * Once the secret is deployed everywhere, remove the fallback.
+ * Fail-closed: if `ADMIN_COOKIE_SECRET` is not set this THROWS rather than
+ * minting an unsigned (forgeable) cookie. The secret must be present for login
+ * to work — there is no insecure fallback.
  */
 export async function encodeSession(email: string, role: AdminRole): Promise<string> {
   const payload = `${email}:${role}`;
   const secret = getCookieSecret();
   if (!secret) {
-    // Legacy unsigned format — log a warning so ops sees this in Vercel logs.
-    console.warn('[auth] ADMIN_COOKIE_SECRET not set; issuing UNSIGNED session (insecure)');
-    return payload;
+    // Fail-closed (Wave 64 security audit P0): NEVER issue an unsigned session.
+    // An unsigned cookie is trivially forgeable (`attacker@evil.com:owner`) → full
+    // admin/owner bypass. Refuse to mint a session rather than mint an insecure one.
+    throw new Error(
+      '[auth] ADMIN_COOKIE_SECRET not set — refusing to issue an unsigned session. ' +
+        'Set ADMIN_COOKIE_SECRET on the admin app (Vercel env) before login can work.',
+    );
   }
   const sig = await hmacSha256Hex(secret, payload);
   return `${payload}${SIG_SEPARATOR}${sig}`;
@@ -136,25 +140,24 @@ export async function verifySession(
   // structure issues; role is in {owner,admin,viewer}, never has a dot).
   const sigSplit = cookieValue.lastIndexOf(SIG_SEPARATOR);
 
-  // If we have a secret configured, require a signature. Otherwise, fall back
-  // to legacy unsigned format. This is the migration grace period.
-  if (secret) {
-    if (sigSplit === -1) {
-      // No signature in cookie but server requires one → reject.
-      return null;
-    }
-    const payload = cookieValue.slice(0, sigSplit);
-    const providedSig = cookieValue.slice(sigSplit + 1);
-    if (!/^[0-9a-f]{64}$/.test(providedSig)) return null;
-    const expectedSig = await hmacSha256Hex(secret, payload);
-    if (!constantTimeEqual(providedSig, expectedSig)) return null;
-    return parseAuthPayload(payload);
+  // Fail-closed (Wave 64 security audit P0): without a signing secret we CANNOT
+  // trust any cookie — an unsigned value is trivially forgeable
+  // (`attacker@evil.com:owner`). Reject everything rather than fall back to the
+  // old unsigned grace-period path that allowed full admin/owner bypass.
+  if (!secret) {
+    console.error(
+      '[auth] ADMIN_COOKIE_SECRET not set — rejecting ALL admin sessions (fail-closed)',
+    );
+    return null;
   }
 
-  // Legacy fallback — no secret, accept unsigned cookies.
-  return parseAuthPayload(
-    sigSplit === -1 ? cookieValue : cookieValue.slice(0, sigSplit),
-  );
+  if (sigSplit === -1) return null; // signature required but absent → reject
+  const payload = cookieValue.slice(0, sigSplit);
+  const providedSig = cookieValue.slice(sigSplit + 1);
+  if (!/^[0-9a-f]{64}$/.test(providedSig)) return null;
+  const expectedSig = await hmacSha256Hex(secret, payload);
+  if (!constantTimeEqual(providedSig, expectedSig)) return null;
+  return parseAuthPayload(payload);
 }
 
 function parseAuthPayload(
@@ -172,14 +175,14 @@ function parseAuthPayload(
 }
 
 /**
- * @deprecated Use `verifySession` instead. Kept temporarily for callers being
- * migrated; this version skips HMAC verification (INSECURE).
+ * @deprecated Removed (Wave 64 security audit P0). This skipped HMAC verification
+ * and accepted unsigned/forged cookies, so it is now neutered to always return
+ * `null` (fail-closed). Any auth decision MUST use the async `verifySession()`,
+ * which enforces the signature. Kept as an export only so stray imports fail
+ * safely (reject) instead of failing to build.
  */
 export function decodeSession(
-  cookieValue: string | undefined | null,
+  _cookieValue?: string | undefined | null,
 ): { email: string; role: AdminRole } | null {
-  if (!cookieValue) return null;
-  const sigSplit = cookieValue.lastIndexOf(SIG_SEPARATOR);
-  const payload = sigSplit === -1 ? cookieValue : cookieValue.slice(0, sigSplit);
-  return parseAuthPayload(payload);
+  return null;
 }

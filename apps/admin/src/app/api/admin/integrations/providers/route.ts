@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { requireAdminSession } from '@/lib/auth-server';
 
 const GATEWAY = process.env.HIEU_API_GATEWAY_URL ?? 'https://api.hieu.asia';
 const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
@@ -6,6 +7,8 @@ const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
 // Read-only providers status. Gated by admin cookie at middleware layer; the
 // Worker itself requires X-Admin-Token (admin endpoint), so we forward it here.
 export async function GET() {
+  const auth = await requireAdminSession();
+  if ('error' in auth) return auth.error;
   if (!TOKEN) {
     return NextResponse.json(
       { ok: false, error: 'HIEU_API_ADMIN_TOKEN not configured on the admin app' },
