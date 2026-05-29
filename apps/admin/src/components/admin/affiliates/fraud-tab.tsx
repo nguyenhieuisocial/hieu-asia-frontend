@@ -35,9 +35,9 @@ const REASON_LABEL: Record<FraudFlag['reason'], string> = {
 };
 
 const REASON_TONE: Record<FraudFlag['reason'], string> = {
-  ip_duplicate: 'bg-orange-500/15 text-orange-300',
-  self_referral: 'bg-red-500/20 text-red-300',
-  velocity: 'bg-yellow-500/15 text-yellow-300',
+  ip_duplicate: 'bg-orange-500/15 text-orange-700 dark:text-orange-300',
+  self_referral: 'bg-red-500/20 text-red-700 dark:text-red-300',
+  velocity: 'bg-yellow-500/15 text-yellow-700 dark:text-yellow-300',
   manual: 'bg-muted/40 text-muted-foreground',
 };
 
@@ -103,7 +103,7 @@ export function FraudTab() {
         <Button onClick={load}>Làm mới</Button>
       </div>
 
-      {error && <p className="text-sm text-red-300">{error}</p>}
+      {error && <p className="text-sm text-red-700 dark:text-red-300">{error}</p>}
 
       <Card>
         <CardHeader>

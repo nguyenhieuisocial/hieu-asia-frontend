@@ -113,7 +113,7 @@ export default function AdminTasksPage() {
       header: 'Lỗi',
       cell: (t) =>
         t.error ? (
-          <span className="line-clamp-1 font-mono text-xs text-red-300">{t.error}</span>
+          <span className="line-clamp-1 font-mono text-xs text-red-700 dark:text-red-300">{t.error}</span>
         ) : (
           <span className="text-foreground/30">—</span>
         ),
@@ -181,7 +181,7 @@ export default function AdminTasksPage() {
       </div>
 
       {oldestAlert && (
-        <div className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+        <div className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-700 dark:text-red-200">
           <strong>Cảnh báo:</strong> task chờ lâu nhất đã quá 1 giờ ({fmtAge(oldestAge)}). Kiểm tra
           worker logs hoặc retry các task failed bên dưới.
         </div>

@@ -142,7 +142,7 @@ export function ReferralsTab() {
           {q.isLoading ? (
             <p className="text-sm text-muted-foreground">Đang tải…</p>
           ) : q.error ? (
-            <p className="text-sm text-red-300">{(q.error as Error).message}</p>
+            <p className="text-sm text-red-700 dark:text-red-300">{(q.error as Error).message}</p>
           ) : visibleTrees.length === 0 ? (
             <p className="text-sm text-muted-foreground">Không có node nào khớp.</p>
           ) : (
@@ -200,12 +200,12 @@ function TreeNodeView({
         <span
           className={`ml-1 rounded px-1.5 py-0.5 text-[10px] uppercase ${
             node.tier === 'platinum'
-              ? 'bg-purple-500/20 text-purple-300'
+              ? 'bg-purple-500/20 text-purple-700 dark:text-purple-300'
               : node.tier === 'gold'
                 ? 'bg-gold/20 text-gold'
                 : node.tier === 'silver'
                   ? 'bg-zinc-400/20 text-zinc-300'
-                  : 'bg-amber-700/20 text-amber-300'
+                  : 'bg-amber-700/20 text-amber-700 dark:text-amber-300'
           }`}
         >
           {node.tier}

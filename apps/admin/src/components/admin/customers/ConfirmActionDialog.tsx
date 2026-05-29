@@ -79,7 +79,7 @@ export function ConfirmActionDialog({
             onClick={onConfirm}
             className={
               copy.danger
-                ? 'bg-red-500/20 text-red-200 hover:bg-red-500/30'
+                ? 'bg-red-500/20 text-red-700 dark:text-red-200 hover:bg-red-500/30'
                 : undefined
             }
           >

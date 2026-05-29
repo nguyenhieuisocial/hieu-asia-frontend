@@ -281,14 +281,14 @@ export default function ConnectPage() {
         cell: (r) => {
           if (r.status === 'connected') {
             return (
-              <span className="inline-flex items-center gap-1 rounded border border-jade/30 bg-jade/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-jade-50">
+              <span className="inline-flex items-center gap-1 rounded border border-jade/30 bg-jade/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-jade-700 dark:text-jade-50">
                 connected
               </span>
             );
           }
           if (r.status === 'failed') {
             return (
-              <span className="inline-flex items-center gap-1 rounded border border-red-500/30 bg-red-500/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-red-200">
+              <span className="inline-flex items-center gap-1 rounded border border-red-500/30 bg-red-500/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-red-700 dark:text-red-200">
                 failed
               </span>
             );

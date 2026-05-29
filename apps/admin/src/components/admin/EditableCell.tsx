@@ -115,7 +115,7 @@ export function EditableCell<T extends string = string>(props: EditableCellProps
           'cursor-pointer rounded transition-colors',
           'hover:underline hover:underline-offset-2 hover:decoration-dotted hover:decoration-gold/60',
           'focus:outline-none focus:ring-1 focus:ring-gold/40',
-          edit.error && 'text-red-300',
+          edit.error && 'text-red-700 dark:text-red-300',
           className,
         )}
         title={edit.error ?? 'Nhấn để sửa'}
@@ -125,7 +125,7 @@ export function EditableCell<T extends string = string>(props: EditableCellProps
         {edit.error && (
           <>
             {/* Visual glyph */}
-            <span className="ml-1 font-mono text-[10px] text-red-300" aria-hidden>
+            <span className="ml-1 font-mono text-[10px] text-red-700 dark:text-red-300" aria-hidden>
               ⚠
             </span>
             {/* Screen-reader announcement carries the actual error string,

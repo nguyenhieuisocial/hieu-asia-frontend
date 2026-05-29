@@ -377,7 +377,7 @@ export function SubscriptionsTab({ onRowsChange, onTotalChange }: SubscriptionsT
             <Button
               onClick={handleCancelConfirm}
               disabled={cancel.isPending}
-              className="border-red-400/40 bg-red-500/10 text-red-200 hover:bg-red-500/20"
+              className="border-red-500/40 dark:border-red-400/40 bg-red-500/10 text-red-700 dark:text-red-200 hover:bg-red-500/20"
             >
               <XCircle className="mr-1.5 h-3.5 w-3.5" aria-hidden />
               {cancel.isPending ? 'Đang hủy…' : 'Xác nhận hủy'}
@@ -419,7 +419,7 @@ function SubscriptionRowActions({ sub, onCancel }: SubscriptionRowActionsProps) 
         <DropdownMenuItem
           onSelect={handleCancel}
           disabled={!canCancel}
-          className="text-red-300 focus:bg-red-500/10 focus:text-red-200"
+          className="text-red-700 dark:text-red-300 focus:bg-red-500/10 focus:text-red-700 dark:focus:text-red-200"
         >
           <XCircle className="h-3.5 w-3.5" aria-hidden />
           Hủy subscription

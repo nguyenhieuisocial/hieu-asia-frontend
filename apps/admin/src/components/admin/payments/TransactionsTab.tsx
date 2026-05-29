@@ -254,7 +254,7 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
           // the icon stays a meaningful diff, not noise.
           t.status === 'refunded' ? (
             <span className="inline-flex items-center gap-1.5">
-              <Undo2 className="h-3 w-3 text-warn-300" aria-hidden />
+              <Undo2 className="h-3 w-3 text-warn-700 dark:text-warn-300" aria-hidden />
               <StatusBadge status={STATUS_TONE[t.status]} label={t.status} />
             </span>
           ) : (
@@ -399,7 +399,7 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
                       <DropdownMenuItem
                         key={`del-${p.name}`}
                         onSelect={() => onDeletePreset(p.name)}
-                        className="text-red-300 focus:bg-red-500/10 focus:text-red-200"
+                        className="text-red-700 dark:text-red-300 focus:bg-red-500/10 focus:text-red-700 dark:focus:text-red-200"
                       >
                         <Trash2 className="h-3 w-3" aria-hidden />
                         {p.name}

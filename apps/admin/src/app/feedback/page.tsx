@@ -47,8 +47,8 @@ const SURFACE_LABEL: Record<FeedbackSurface, string> = {
 
 const STATUS_CLASS: Record<FeedbackStatus, string> = {
   new: 'border-gold/40 bg-gold/10 text-gold',
-  triaged: 'border-warn-500/40 bg-warn-500/10 text-warn-300',
-  resolved: 'border-jade-300/40 bg-jade-500/15 text-jade-300',
+  triaged: 'border-warn-500/40 bg-warn-500/10 text-warn-700 dark:text-warn-300',
+  resolved: 'border-jade-300/40 bg-jade-500/15 text-jade-700 dark:text-jade-300',
 };
 
 const MOCK_FEEDBACK: Feedback[] = [
@@ -170,7 +170,7 @@ export default function FeedbackPage() {
       sortKey: 'surface',
       width: '110px',
       cell: (r) => (
-        <span className="inline-flex items-center rounded-md border border-purple/40 bg-purple/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-purple-50">
+        <span className="inline-flex items-center rounded-md border border-purple/40 bg-purple/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-purple-700 dark:text-purple-50">
           {SURFACE_LABEL[r.surface]}
         </span>
       ),

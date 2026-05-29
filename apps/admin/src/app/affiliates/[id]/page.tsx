@@ -182,7 +182,7 @@ export default function AdminAffiliateDetailPage({
   if (error || !data)
     return (
       <main className="p-6 text-foreground">
-        <p className="text-red-300">{error ?? 'Not found'}</p>
+        <p className="text-red-700 dark:text-red-300">{error ?? 'Not found'}</p>
         <Link href="/affiliates" className="text-gold hover:underline">
           ← Quay lại
         </Link>
@@ -210,7 +210,7 @@ export default function AdminAffiliateDetailPage({
             variant={a.status === 'active' ? 'outline' : 'default'}
             onClick={toggleBan}
             disabled={busy}
-            className={a.status === 'active' ? 'border-red-500/40 text-red-300 hover:bg-red-500/10' : ''}
+            className={a.status === 'active' ? 'border-red-500/40 text-red-700 dark:text-red-300 hover:bg-red-500/10' : ''}
           >
             {a.status === 'active' ? 'Ban' : 'Unban'}
           </Button>

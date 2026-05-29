@@ -389,7 +389,7 @@ export default function AdminTransactionsPage() {
                             r.type === 'intent_paid'
                               ? 'border-jade/40 bg-jade/10 text-jade'
                               : r.type === 'refund'
-                              ? 'border-red-400/40 bg-red-500/10 text-red-200'
+                              ? 'border-red-400/40 bg-red-500/10 text-red-700 dark:text-red-200'
                               : 'border-gold/30 bg-gold/10 text-gold'
                           }`}
                         >
@@ -438,7 +438,7 @@ export default function AdminTransactionsPage() {
                             size="sm"
                             variant="outline"
                             onClick={() => handleRefund(r)}
-                            className="border-red-400/30 text-red-300 hover:bg-red-500/10"
+                            className="border-red-500/30 text-red-700 dark:text-red-300 hover:bg-red-500/10"
                           >
                             <Undo2 className="mr-1 h-3 w-3" />
                             Refund

@@ -69,9 +69,9 @@ const MOCK_INCIDENTS: Incident[] = [
 ];
 
 const SEV_CLASS: Record<Incident['severity'], string> = {
-  minor: 'border-warn-500/30 bg-warn-500/10 text-warn-300',
-  major: 'border-red-500/40 bg-red-500/10 text-red-300',
-  critical: 'border-red-500/60 bg-red-500/20 text-red-200',
+  minor: 'border-warn-500/30 bg-warn-500/10 text-warn-700 dark:text-warn-300',
+  major: 'border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300',
+  critical: 'border-red-500/60 bg-red-500/20 text-red-700 dark:text-red-200',
 };
 
 function fmtPct(v: number) {
@@ -112,7 +112,7 @@ function wafActionBadge(action: string) {
     lower === 'block' || lower === 'drop'
       ? 'border-red-500/40 bg-red-500/10 text-destructive'
       : lower === 'challenge' || lower === 'managed_challenge' || lower === 'js_challenge'
-        ? 'border-warn-500/30 bg-warn-500/10 text-warn-300'
+        ? 'border-warn-500/30 bg-warn-500/10 text-warn-700 dark:text-warn-300'
         : 'border-border bg-muted/40 text-muted-foreground';
   return (
     <span
@@ -260,9 +260,9 @@ export default function HealthPage() {
       hideOnMobile: true,
       cell: (r) =>
         r.resolved_at ? (
-          <span className="font-mono text-xs text-jade-300">{fmtDate(r.resolved_at)}</span>
+          <span className="font-mono text-xs text-jade-700 dark:text-jade-300">{fmtDate(r.resolved_at)}</span>
         ) : (
-          <span className="font-mono text-xs text-warn-300">đang xử lý</span>
+          <span className="font-mono text-xs text-warn-700 dark:text-warn-300">đang xử lý</span>
         ),
     },
   ];

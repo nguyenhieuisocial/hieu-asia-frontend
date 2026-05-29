@@ -175,8 +175,8 @@ function VendorCard({ p }: { p: ProviderRow }) {
           <div
             className={`rounded border px-2 py-1 text-xs transition-all duration-300 ease-editorial ${
               testResult.ok
-                ? 'border-jade/40 bg-jade/10 text-jade-300'
-                : 'border-red-500/40 bg-red-500/10 text-red-300'
+                ? 'border-jade/40 bg-jade/10 text-jade-700 dark:text-jade-300'
+                : 'border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300'
             }`}
           >
             {testResult.msg}

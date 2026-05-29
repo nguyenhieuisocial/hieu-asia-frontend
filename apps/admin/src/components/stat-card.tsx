@@ -28,8 +28,8 @@ export function StatCard({ label, value, hint, delta, icon, className }: StatCar
           <span
             className={cn(
               'rounded px-1.5 py-0.5 font-mono',
-              delta.direction === 'up' && 'bg-jade/15 text-jade-50',
-              delta.direction === 'down' && 'bg-red-500/15 text-red-300',
+              delta.direction === 'up' && 'bg-jade/15 text-jade-700 dark:text-jade-50',
+              delta.direction === 'down' && 'bg-red-500/15 text-red-700 dark:text-red-300',
               delta.direction === 'flat' && 'bg-muted/30 text-muted-foreground',
             )}
           >

@@ -444,10 +444,10 @@ export default function AiQualityPage() {
                           <span
                             className={cn(
                               s.final_pass_rate >= 0.9
-                                ? 'text-jade-50'
+                                ? 'text-jade-700 dark:text-jade-50'
                                 : s.final_pass_rate >= 0.7
                                   ? 'text-gold'
-                                  : 'text-red-300',
+                                  : 'text-red-700 dark:text-red-300',
                             )}
                           >
                             {fmtPct(s.final_pass_rate)}

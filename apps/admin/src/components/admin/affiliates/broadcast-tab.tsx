@@ -182,7 +182,7 @@ export function BroadcastTab() {
               {submitting ? 'Đang gửi…' : 'Gửi broadcast'}
             </Button>
             {msg && (
-              <span className={`text-sm ${msg.ok ? 'text-green-400' : 'text-red-300'}`}>
+              <span className={`text-sm ${msg.ok ? 'text-green-400' : 'text-red-700 dark:text-red-300'}`}>
                 {msg.text}
               </span>
             )}
@@ -216,10 +216,10 @@ export function BroadcastTab() {
                     <span
                       className={`ml-auto rounded px-2 py-0.5 text-[10px] uppercase ${
                         b.status === 'sent'
-                          ? 'bg-green-500/15 text-green-300'
+                          ? 'bg-green-500/15 text-green-700 dark:text-green-300'
                           : b.status === 'queued'
-                            ? 'bg-yellow-500/15 text-yellow-300'
-                            : 'bg-red-500/15 text-red-300'
+                            ? 'bg-yellow-500/15 text-yellow-700 dark:text-yellow-300'
+                            : 'bg-red-500/15 text-red-700 dark:text-red-300'
                       }`}
                     >
                       {b.status}

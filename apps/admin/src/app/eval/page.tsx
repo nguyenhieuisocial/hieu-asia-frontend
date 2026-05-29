@@ -75,7 +75,7 @@ interface StatusPillProps {
 const PILL_STYLE: Record<Status, string> = {
   green: 'border-jade/40 bg-jade/10 text-jade',
   amber: 'border-gold/40 bg-gold/10 text-gold',
-  red: 'border-red-400/40 bg-red-500/10 text-red-200',
+  red: 'border-red-400/40 bg-red-500/10 text-red-700 dark:text-red-200',
 };
 
 function StatusPill({ status, children }: StatusPillProps) {
@@ -198,7 +198,7 @@ function HeroCard({ latest, yesterday }: HeroCardProps) {
       : delta >= 0.1
         ? 'text-jade'
         : delta <= -0.1
-          ? 'text-red-300'
+          ? 'text-red-700 dark:text-red-300'
           : 'text-muted-foreground';
 
   const pillContent =
@@ -290,7 +290,7 @@ function AlertBanner({ latest }: AlertBannerProps) {
       className={cn(
         'flex items-start gap-3 rounded-lg border px-4 py-3 text-sm',
         alertSent
-          ? 'border-red-400/40 bg-red-500/10 text-red-100'
+          ? 'border-red-400/40 bg-red-500/10 text-red-700 dark:text-red-100'
           : 'border-gold/40 bg-gold/10 text-gold',
       )}
     >
@@ -447,7 +447,7 @@ function FailureList({ failures }: FailureListProps) {
                   {f.persona_id}
                 </div>
               </td>
-              <td className="px-3 py-2.5 text-right font-mono text-red-300">
+              <td className="px-3 py-2.5 text-right font-mono text-red-700 dark:text-red-300">
                 {fmtScore(f.score)}
               </td>
               <td className="px-3 py-2.5 text-foreground/80">
@@ -496,7 +496,7 @@ function RunHistory({ runs }: RunHistoryProps) {
                     'px-3 py-2 text-right font-mono font-semibold',
                     s === 'green' && 'text-jade',
                     s === 'amber' && 'text-gold',
-                    s === 'red' && 'text-red-300',
+                    s === 'red' && 'text-red-700 dark:text-red-300',
                   )}
                 >
                   {fmtScore(r.judge_avg)}

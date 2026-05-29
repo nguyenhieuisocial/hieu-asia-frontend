@@ -71,16 +71,16 @@ function fmtNum(n: number) {
 // Color thresholds: green < 500ms, gold 500-1500ms, red > 1500ms.
 function latencyClass(ms: number | null): string {
   if (ms === null) return 'text-muted-foreground';
-  if (ms < 500) return 'text-jade-50';
+  if (ms < 500) return 'text-jade-700 dark:text-jade-50';
   if (ms <= 1500) return 'text-gold';
-  return 'text-red-300';
+  return 'text-red-700 dark:text-red-300';
 }
 
 // Color thresholds: green = 0, gold 0 < x < 2%, red >= 2%.
 function errorRateClass(rate: number): string {
-  if (rate <= 0) return 'text-jade-50';
+  if (rate <= 0) return 'text-jade-700 dark:text-jade-50';
   if (rate < 0.02) return 'text-gold';
-  return 'text-red-300';
+  return 'text-red-700 dark:text-red-300';
 }
 
 export default function AdminMetricsPage() {
@@ -183,7 +183,7 @@ export default function AdminMetricsPage() {
             Tỷ lệ lỗi (5xx) hôm nay
           </span>
           <span
-            className={`font-mono ${errorRate >= 0.05 ? 'text-red-300' : errorRate > 0 ? 'text-gold' : 'text-jade-50'}`}
+            className={`font-mono ${errorRate >= 0.05 ? 'text-red-700 dark:text-red-300' : errorRate > 0 ? 'text-gold' : 'text-jade-700 dark:text-jade-50'}`}
           >
             {data ? `${fmtPct(errorRate)} (${fmtNum(totalErrors)}/${fmtNum(totalRequests)})` : '—'}
           </span>

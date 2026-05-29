@@ -435,7 +435,7 @@ export default function PromptEditPage() {
               variant="outline"
               onClick={() => resetMut.mutate()}
               disabled={resetMut.isPending}
-              className="border-red-400/40 text-red-200 hover:bg-red-500/10"
+              className="border-red-500/40 text-red-700 dark:text-red-200 hover:bg-red-500/10"
             >
               {resetMut.isPending ? 'Đang khôi phục…' : 'Khôi phục'}
             </Button>
@@ -460,9 +460,9 @@ export default function PromptEditPage() {
                   key={i}
                   className={
                     row.kind === 'add'
-                      ? 'bg-emerald-500/10 px-3 py-0.5 text-emerald-200'
+                      ? 'bg-emerald-500/10 px-3 py-0.5 text-emerald-700 dark:text-emerald-200'
                       : row.kind === 'remove'
-                        ? 'bg-red-500/10 px-3 py-0.5 text-red-200'
+                        ? 'bg-red-500/10 px-3 py-0.5 text-red-700 dark:text-red-200'
                         : 'px-3 py-0.5 text-muted-foreground'
                   }
                 >
