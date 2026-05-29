@@ -31,11 +31,11 @@ export function NotificationPreferences({ prefs, onChange }: NotificationPrefere
       description="Quyết định cách hieu.asia liên lạc với bạn."
     >
       <PrefRow
-        label="Tử vi hằng ngày qua web push"
+        label="Tử Vi hằng ngày qua web push"
         description={
           <>
             Đăng ký push trên{' '}
-            <Link href="/tu-vi-hom-nay" className="text-gold underline">
+            <Link href="/tu-vi-hom-nay" className="text-gold-700 underline">
               /tu-vi-hom-nay
             </Link>{' '}
             để kích hoạt.

@@ -245,7 +245,7 @@ export default function AnnualPlanningPage() {
           <div className="mt-5 flex flex-wrap gap-3">
             <Button asChild size="lg"><Link href="/tu-vi-2026">
               
-                Tử vi 2026 — full reading
+                Tử Vi 2026 — full reading
                 <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
               
             </Link></Button>

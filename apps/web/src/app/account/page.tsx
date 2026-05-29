@@ -174,7 +174,7 @@ function AccountPageInner() {
           <PinnedInsights />
           <QuickActions />
 
-          {/* Wave 61.00 — Daily ritual hook. Web Push subscribe for "Tử vi
+          {/* Wave 61.00 — Daily ritual hook. Web Push subscribe for "Tử Vi
               6h sáng" — infra (worker fanout + KV subs + sw.js) already
               shipped; this is the discovery surface for logged-in users.
               Component self-gates on browser support and remembers state

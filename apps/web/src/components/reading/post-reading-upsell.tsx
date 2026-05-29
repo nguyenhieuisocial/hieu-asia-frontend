@@ -78,7 +78,7 @@ function copyForVariant(variant: Variant, quotaExhausted: boolean): CopyBlock | 
     case 'unlimited-focus':
       return {
         headline: 'Đọc không giới hạn — chỉ 199.000đ/tháng',
-        subtext: `Bản đọc của bạn hôm nay chỉ là 1/7 sản phẩm. Mở khoá Bát Tự, Palm, MBTI, Hợp Tuổi, Đại Vận, Lưu Niên trong cùng một gói đăng ký.`,
+        subtext: `Bản đọc của bạn hôm nay chỉ là 1/7 sản phẩm. Mở khoá Bát Tự, Palm, MBTI, Hợp Tuổi, Đại vận, Lưu niên trong cùng một gói đăng ký.`,
         ctaLabel: 'Xem tất cả gói',
         ctaHref: '/pricing',
         targetTier: 'monthly',

@@ -373,10 +373,10 @@ export default function BatTuMethodologyPage() {
           </ol>
         </section>
 
-        {/* 5. Ngũ hành */}
+        {/* 5. Ngũ Hành */}
         <section className="relative mx-auto max-w-5xl px-6 py-8">
           <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
-            5. Ngũ hành
+            5. Ngũ Hành
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
             5 nguyên tố với quan hệ tương sinh + tương khắc.

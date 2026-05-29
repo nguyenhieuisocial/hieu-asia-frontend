@@ -31,17 +31,17 @@ function formatToday(): string {
 }
 
 export const metadata: Metadata = {
-  title: 'Tử vi 12 con giáp hôm nay',
+  title: 'Tử Vi 12 con giáp hôm nay',
   description:
-    'Tử vi hàng ngày cho 12 con giáp: tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe. Đăng ký nhận thông báo mỗi sáng 6h.',
+    'Tử Vi hàng ngày cho 12 con giáp: tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe. Đăng ký nhận thông báo mỗi sáng 6h.',
   alternates: { canonical: 'https://hieu.asia/tu-vi-hom-nay' },
   // Wave 60.96.1 — route-level openGraph REPLACES root-layout openGraph
   // (Next.js merge semantics), so we must re-declare `images` here or Zalo/
   // Facebook/Telegram/Slack previews render blank. Same for `twitter`.
   openGraph: {
-    title: 'Tử vi 12 con giáp hôm nay',
+    title: 'Tử Vi 12 con giáp hôm nay',
     description:
-      'Tử vi hàng ngày 12 con giáp — tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe.',
+      'Tử Vi hàng ngày 12 con giáp — tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe.',
     url: 'https://hieu.asia/tu-vi-hom-nay',
     type: 'website',
     locale: 'vi_VN',
@@ -50,18 +50,18 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'hieu.asia — Tử vi hôm nay cho 12 con giáp',
+        alt: 'hieu.asia — Tử Vi hôm nay cho 12 con giáp',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Tử vi 12 con giáp hôm nay',
+    title: 'Tử Vi 12 con giáp hôm nay',
     description: 'Tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe — cập nhật mỗi ngày.',
     images: [
       {
         url: '/og-image.jpg',
-        alt: 'hieu.asia — Tử vi hôm nay cho 12 con giáp',
+        alt: 'hieu.asia — Tử Vi hôm nay cho 12 con giáp',
       },
     ],
   },
@@ -72,7 +72,7 @@ const BREADCRUMB_JSONLD = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
-    { '@type': 'ListItem', position: 2, name: 'Tử vi hôm nay', item: 'https://hieu.asia/tu-vi-hom-nay' },
+    { '@type': 'ListItem', position: 2, name: 'Tử Vi hôm nay', item: 'https://hieu.asia/tu-vi-hom-nay' },
   ],
 };
 
@@ -81,9 +81,9 @@ const WEBPAGE_JSONLD = {
   '@type': 'WebPage',
   '@id': 'https://hieu.asia/tu-vi-hom-nay',
   url: 'https://hieu.asia/tu-vi-hom-nay',
-  name: 'Tử vi 12 con giáp hôm nay',
+  name: 'Tử Vi 12 con giáp hôm nay',
   description:
-    'Tử vi hàng ngày cho 12 con giáp — tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe. Đăng ký push notification mỗi sáng 6h.',
+    'Tử Vi hàng ngày cho 12 con giáp — tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe. Đăng ký push notification mỗi sáng 6h.',
   inLanguage: 'vi-VN',
   isPartOf: { '@type': 'WebSite', name: 'hieu.asia', url: 'https://hieu.asia' },
 };
@@ -136,17 +136,17 @@ export default async function Page() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }}
       />
     <ToolPageShell
-      eyebrow={`Tử vi · ${today}`}
+      eyebrow={`Tử Vi · ${today}`}
       icon={<span aria-hidden="true">🐲</span>}
       title={
         <>
-          Tử vi <GoldAccent>12 con giáp</GoldAccent> hôm nay
+          Tử Vi <GoldAccent>12 con giáp</GoldAccent> hôm nay
         </>
       }
       description="Tổng quan, sự nghiệp, tình duyên, tài lộc và sức khỏe cho từng tuổi. Đăng ký để nhận thông báo mỗi sáng 6h."
       breadcrumb={[
         { label: 'Trang chủ', href: '/' },
-        { label: 'Tử vi hôm nay' },
+        { label: 'Tử Vi hôm nay' },
       ]}
       heroAction={<SubscribePush vapidPublicKey={vapidKey} />}
     >

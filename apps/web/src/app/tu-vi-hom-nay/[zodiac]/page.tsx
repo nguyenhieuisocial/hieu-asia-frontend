@@ -68,17 +68,17 @@ export async function generateMetadata({ params }: { params: Promise<{ zodiac: s
   const { zodiac } = await params;
   const label = ZODIAC_LABEL[zodiac] ?? zodiac;
   return {
-    title: `Tử vi tuổi ${label} hôm nay`,
-    description: `Tử vi hôm nay cho tuổi ${label}: tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe, giờ tốt, hướng tốt.`,
+    title: `Tử Vi tuổi ${label} hôm nay`,
+    description: `Tử Vi hôm nay cho tuổi ${label}: tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe, giờ tốt, hướng tốt.`,
     alternates: { canonical: `https://hieu.asia/tu-vi-hom-nay/${zodiac}` },
     openGraph: {
-      title: `Tử vi tuổi ${label} hôm nay`,
+      title: `Tử Vi tuổi ${label} hôm nay`,
       description: `4 lĩnh vực, số/màu/hướng may mắn và lưu ý cho tuổi ${label}.`,
       url: `https://hieu.asia/tu-vi-hom-nay/${zodiac}`,
       type: 'article',
-      images: [{ url: 'https://hieu.asia/og-image.jpg', width: 1200, height: 630, alt: `Tử vi tuổi ${label} hôm nay` }],
+      images: [{ url: 'https://hieu.asia/og-image.jpg', width: 1200, height: 630, alt: `Tử Vi tuổi ${label} hôm nay` }],
     },
-    twitter: { card: 'summary_large_image', title: `Tử vi tuổi ${label} hôm nay`, images: ['https://hieu.asia/og-image.jpg'] },
+    twitter: { card: 'summary_large_image', title: `Tử Vi tuổi ${label} hôm nay`, images: ['https://hieu.asia/og-image.jpg'] },
   };
 }
 
@@ -139,18 +139,18 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
           <nav aria-label="Breadcrumb" className="mb-4 text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">Trang chủ</Link>
             <span className="mx-1.5">/</span>
-            <Link href="/tu-vi-hom-nay" className="hover:text-gold">Tử vi hôm nay</Link>
+            <Link href="/tu-vi-hom-nay" className="hover:text-gold">Tử Vi hôm nay</Link>
             <span className="mx-1.5">/</span>
             <span className="text-muted-foreground">Tuổi {label}</span>
           </nav>
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
-            Tử vi hằng ngày
+            Tử Vi hằng ngày
           </p>
           <div className="mt-3 flex items-start gap-4">
             <div className="text-5xl sm:text-6xl" aria-hidden>{icon}</div>
             <div>
               <h1 className="font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
-                Tử vi tuổi{' '}
+                Tử Vi tuổi{' '}
                 <span className="bg-gold-gradient bg-clip-text text-transparent">{label}</span>{' '}
                 hôm nay
               </h1>
@@ -256,7 +256,7 @@ function Info({ label, value }: { label: string; value: string }) {
 
 function ShareButton({ zodiac, label, score }: { zodiac: string; label: string; score: number }) {
   const url = `https://hieu.asia/tu-vi-hom-nay/${zodiac}`;
-  const text = `Tử vi tuổi ${label} hôm nay ${score}/10 — hieu.asia`;
+  const text = `Tử Vi tuổi ${label} hôm nay ${score}/10 — hieu.asia`;
   const href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
   return (
     <a

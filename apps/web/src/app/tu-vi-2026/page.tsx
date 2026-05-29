@@ -7,14 +7,14 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
-  title: 'Tử vi 2026 cá nhân hoá theo ngày sinh — Bính Ngọ năm hành Hoả',
+  title: 'Tử Vi 2026 cá nhân hoá theo ngày sinh (Bính Ngọ)',
   description:
-    'Tử vi 2026 (năm Bính Ngọ): chủ đề năm, sự nghiệp, tài chính, tình cảm, sức khoẻ — cá nhân hoá theo lá số Tử Vi Đẩu Số và đại vận hiện tại.',
+    'Tử Vi 2026 (năm Bính Ngọ): chủ đề năm, sự nghiệp, tài chính, tình cảm, sức khoẻ — cá nhân hoá theo lá số Tử Vi Đẩu Số và đại vận hiện tại.',
   alternates: { canonical: 'https://hieu.asia/tu-vi-2026' },
   // Wave 60.96.2 — route-level openGraph REPLACES root-layout openGraph; must
   // re-declare `images` or Zalo/FB/Telegram/Slack previews render blank.
   openGraph: {
-    title: 'Tử vi năm 2026',
+    title: 'Tử Vi năm 2026',
     description: 'Năm Bính Ngọ — chủ đề năm + 12 tháng + 3 quyết định nên cân nhắc.',
     url: 'https://hieu.asia/tu-vi-2026',
     type: 'article',
@@ -24,18 +24,18 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'hieu.asia — Tử vi 2026 năm Bính Ngọ hành Hoả',
+        alt: 'hieu.asia — Tử Vi 2026 năm Bính Ngọ hành Hoả',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Tử vi năm 2026',
+    title: 'Tử Vi năm 2026',
     description: 'Năm Bính Ngọ hành Hoả — chủ đề năm + 12 tháng + 3 quyết định cân nhắc.',
     images: [
       {
         url: '/og-image.jpg',
-        alt: 'hieu.asia — Tử vi 2026 năm Bính Ngọ hành Hoả',
+        alt: 'hieu.asia — Tử Vi 2026 năm Bính Ngọ hành Hoả',
       },
     ],
   },
@@ -102,7 +102,7 @@ const BREADCRUMB_JSONLD = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
-    { '@type': 'ListItem', position: 2, name: 'Tử vi 2026', item: 'https://hieu.asia/tu-vi-2026' },
+    { '@type': 'ListItem', position: 2, name: 'Tử Vi 2026', item: 'https://hieu.asia/tu-vi-2026' },
   ],
 };
 
@@ -112,9 +112,9 @@ const ARTICLE_JSONLD = {
   '@context': 'https://schema.org',
   '@type': 'Article',
   '@id': 'https://hieu.asia/tu-vi-2026',
-  headline: 'Tử vi 2026 — chủ đề năm Bính Ngọ hành Hoả',
+  headline: 'Tử Vi 2026 — chủ đề năm Bính Ngọ hành Hoả',
   description:
-    'Tử vi 2026 (năm Bính Ngọ): chủ đề năm, sự nghiệp, tài chính, tình cảm, sức khoẻ — cá nhân hoá theo lá số.',
+    'Tử Vi 2026 (năm Bính Ngọ): chủ đề năm, sự nghiệp, tài chính, tình cảm, sức khoẻ — cá nhân hoá theo lá số.',
   inLanguage: 'vi-VN',
   author: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
   publisher: {
@@ -152,7 +152,7 @@ export default function TuVi2026Page() {
             Năm Bính Ngọ · hành Hoả · 17/02/2026 → 05/02/2027
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
-            Tử vi 2026 — chủ đề năm Bính Ngọ
+            Tử Vi 2026 — chủ đề năm Bính Ngọ
           </h1>
           <p className="mt-5 text-base leading-relaxed text-foreground/80 sm:text-lg">
             2026 là năm Bính Ngọ — hành Hoả vượng. Đây là năm năng lượng cao: thuận cho
@@ -248,7 +248,7 @@ export default function TuVi2026Page() {
               Xem tử vi 2026 cá nhân hoá theo lá số của bạn
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-foreground/80 sm:text-base">
-              Khung trên là chung cho năm Bính Ngọ. Tử vi 2026 RIÊNG bạn phụ thuộc vào đại
+              Khung trên là chung cho năm Bính Ngọ. Tử Vi 2026 RIÊNG bạn phụ thuộc vào đại
               vận hiện tại + lưu niên cá nhân + cung Quan/Tài/Phu Thê của riêng bạn.
               Lập lá số 2 phút để xem chi tiết.
             </p>

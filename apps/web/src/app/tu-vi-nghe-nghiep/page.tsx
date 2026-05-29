@@ -7,7 +7,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
-  title: 'Tử Vi nghề nghiệp: bạn hợp ngành nào, vai trò gì, môi trường nào?',
+  title: 'Tử Vi nghề nghiệp: hợp ngành nào, vai trò gì?',
   description:
     'Tử Vi sự nghiệp — đọc cung Quan Lộc, Tài Bạch, Thiên Di + đại vận để tìm môi trường + vai trò hợp với thiên hướng cá nhân. Miễn phí lập lá số.',
   alternates: { canonical: 'https://hieu.asia/tu-vi-nghe-nghiep' },

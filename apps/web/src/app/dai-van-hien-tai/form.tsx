@@ -273,7 +273,7 @@ export function DaiVanHienTaiForm() {
                     href="/tu-vi-2026"
                     className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"
                   >
-                    Tử vi 2026 <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
+                    Tử Vi 2026 <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
                   </Link>
                 </div>
               </CardContent>

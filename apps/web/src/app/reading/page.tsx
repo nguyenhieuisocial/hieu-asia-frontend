@@ -23,7 +23,7 @@ const METHOD_CARDS = [
   {
     method: 'bat-tu',
     name: 'Bát Tự',
-    blurb: 'Tứ trụ Can-Chi — vận trình theo Đại Hạn / Lưu Niên.',
+    blurb: 'Tứ trụ Can-Chi — vận trình theo Đại Hạn / Lưu niên.',
     minutes: '3–5 phút',
   },
   {

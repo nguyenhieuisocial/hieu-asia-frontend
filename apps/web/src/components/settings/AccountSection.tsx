@@ -36,7 +36,7 @@ export function AccountSection({ userId }: AccountSectionProps) {
       description="Thông tin định danh và liên kết tới các tác vụ quản lý tài khoản."
     >
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <Field label="User ID" value={<span className="font-mono text-xs text-gold">{userId ?? '—'}</span>} />
+        <Field label="User ID" value={<span className="font-mono text-xs text-gold-700">{userId ?? '—'}</span>} />
         <Field
           label="Loại tài khoản"
           value={
@@ -67,7 +67,7 @@ export function AccountSection({ userId }: AccountSectionProps) {
             <span className="text-muted-foreground">Sắp ra mắt (sau khi bật email auth).</span>
           </li>
           <li>
-            <Link href="/account" className="text-gold underline">
+            <Link href="/account" className="text-gold-700 underline">
               Tải xuống dữ liệu cá nhân (GDPR export)
             </Link>
           </li>

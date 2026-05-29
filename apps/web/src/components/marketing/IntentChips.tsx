@@ -28,7 +28,7 @@ import { GlassPanel } from './GlassPanel';
 export type IntentChip = {
   /** Slug for /onboarding?intent= URL param. */
   slug: string;
-  /** Chip label, e.g. "Cung mệnh", "Đại vận". */
+  /** Chip label, e.g. "Cung Mệnh", "Đại vận". */
   label: string;
 };
 
