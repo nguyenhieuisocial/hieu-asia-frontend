@@ -215,7 +215,7 @@ export default function FeedbackPage() {
         title="Phản hồi người dùng"
         description="Feedback gửi từ báo cáo, modal pricing, onboarding. Triage thành new → triaged → resolved."
         icon={<MessageSquare className="h-5 w-5" />}
-        badge={<LiveBadge />}
+        badge={<LiveBadge isMock={list.data?.isMock} />}
       />
 
       <MockBanner

@@ -128,7 +128,7 @@ export default function AdminRagPage() {
         icon={<BookOpen className="h-5 w-5" />}
       />
 
-      <MockBanner source={chunks.data?._source ?? stats.data?._source} />
+      <MockBanner source={[chunks.data?._source, stats.data?._source].find((s) => s?.isMock) ?? chunks.data?._source ?? stats.data?._source} />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard

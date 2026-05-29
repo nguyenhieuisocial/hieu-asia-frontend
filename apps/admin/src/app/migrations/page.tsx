@@ -203,7 +203,7 @@ export default function MigrationsPage() {
         title="Migrations"
         description="Lịch sử migration cho D1 (Cloudflare KV/SQL) và Supabase Postgres."
         icon={<Database className="h-5 w-5" />}
-        badge={<LiveBadge />}
+        badge={<LiveBadge isMock={list.data?.isMock} />}
       />
 
       <MockBanner

@@ -273,7 +273,7 @@ export default function HealthPage() {
         title="Uptime & sự cố"
         description="Theo dõi tính khả dụng 30 ngày qua và danh sách sự cố gần nhất."
         icon={<Heart className="h-5 w-5" />}
-        badge={<LiveBadge />}
+        badge={<LiveBadge isMock={uptime.data?.isMock || incidents.data?.isMock} />}
       />
 
       <MockBanner source={{ isMock: uptime.data?.isMock ?? false, reason: 'endpoint TBD' }} />

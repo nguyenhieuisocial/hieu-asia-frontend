@@ -9,22 +9,27 @@ import * as React from 'react';
 import { cn } from '@hieu-asia/ui';
 
 export function LiveBadge({
-  label = 'LIVE',
+  label,
   className,
-  tone = 'jade',
+  tone,
+  isMock = false,
 }: {
   label?: string;
   className?: string;
   tone?: 'jade' | 'gold' | 'red';
+  isMock?: boolean;
 }) {
+  const effLabel = label ?? (isMock ? 'DEMO' : 'LIVE');
+  const effTone = tone ?? (isMock ? 'gold' : 'jade');
+
   const toneClass =
-    tone === 'red'
+    effTone === 'red'
       ? 'border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300'
-      : tone === 'gold'
+      : effTone === 'gold'
         ? 'border-gold/40 bg-gold/10 text-gold'
         : 'border-jade/40 bg-jade/10 text-jade-700 dark:text-jade-50';
   const dotClass =
-    tone === 'red' ? 'bg-red-400' : tone === 'gold' ? 'bg-gold' : 'bg-jade-50';
+    effTone === 'red' ? 'bg-red-400' : effTone === 'gold' ? 'bg-gold' : 'bg-jade-50';
 
   return (
     <span
@@ -38,7 +43,7 @@ export function LiveBadge({
         <span className={cn('absolute inline-flex h-full w-full animate-ping rounded-full opacity-60', dotClass)} />
         <span className={cn('relative inline-flex h-2 w-2 rounded-full', dotClass)} />
       </span>
-      {label}
+      {effLabel}
     </span>
   );
 }
