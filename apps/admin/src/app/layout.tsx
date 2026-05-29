@@ -70,7 +70,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       className={`${beVietnam.variable} ${inter.variable} ${outfit.variable} ${mono.variable}`}
     >
       <body>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+        {/* Wave 63.9 — enableSystem OFF here too. The login branch (above) was
+            fixed in 63.2 but this authenticated branch — which renders every
+            dark-built KpiCard, chart + table — still followed the OS. A light
+            laptop could flip the whole ops console to light and re-break the
+            dark-on-light contrast 63.2 set out to fix. Match the login branch:
+            force dark, toggle still allows opt-in light. */}
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <Suspense fallback={null}>
             <PostHogProvider>
               <QueryProvider>
