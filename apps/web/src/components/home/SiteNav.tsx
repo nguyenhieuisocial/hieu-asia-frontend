@@ -46,6 +46,37 @@ const PRIMARY_LINKS: readonly NavLink[] = [
 ];
 
 /**
+ * Wave 64.13 — Công cụ + Học shown ONLY in the mobile drawer (collapsible).
+ * Desktop nav stays trimmed to PRIMARY_LINKS (Wave 62.10 "Như giấy cũ"); the
+ * mega-footer remains the desktop discovery surface. This gives MOBILE users
+ * in-menu access to the 12 lookup tools + learning topics instead of having to
+ * scroll to the footer. Mirrors SiteFooter COL_QUICK_LOOKUP + learn topics.
+ */
+const MOBILE_TOOLS: readonly NavLink[] = [
+  { href: '/tu-vi-2026', label: 'Tử Vi 2026' },
+  { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay' },
+  { href: '/hop-tuoi', label: 'Hợp tuổi' },
+  { href: '/can-xuong', label: 'Cân Xương Đoán Số' },
+  { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
+  { href: '/bat-tu', label: 'Bát Tự' },
+  { href: '/mbti', label: 'MBTI' },
+  { href: '/than-so-hoc', label: 'Thần số học' },
+  { href: '/thuoc-lo-ban', label: 'Thước Lỗ Ban' },
+  { href: '/tinh-menh-cuc', label: 'Tuổi mệnh cục' },
+  { href: '/ban-do', label: 'Bản đồ sao' },
+  { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại' },
+];
+
+const MOBILE_LEARN: readonly NavLink[] = [
+  { href: '/learn', label: 'Tất cả bài học' },
+  { href: '/learn/tu-vi', label: 'Tử Vi' },
+  { href: '/learn/bat-tu', label: 'Bát Tự' },
+  { href: '/learn/than-so-hoc', label: 'Thần Số Học' },
+  { href: '/learn/mbti', label: 'MBTI' },
+  { href: '/learn/palm', label: 'Tướng tay' },
+];
+
+/**
  * Top navigation bar — fixed, glass background.
  * Desktop: 5 inline links (Lá số / Mentor / Phương pháp / Giá / Về chúng tôi).
  * Mobile: hamburger drawer (Sheet).
@@ -187,6 +218,41 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
   );
 }
 
+/** Wave 64.13 — collapsible link group for the mobile drawer (native <details>). */
+function DrawerGroup({
+  title,
+  links,
+  onNavigate,
+}: {
+  title: string;
+  links: readonly NavLink[];
+  onNavigate: () => void;
+}) {
+  return (
+    <details className="group">
+      <summary className="flex cursor-pointer list-none items-center justify-between rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary [&::-webkit-details-marker]:hidden">
+        {title}
+        <ChevronDown
+          className="h-4 w-4 transition-transform group-open:rotate-180"
+          aria-hidden="true"
+        />
+      </summary>
+      <div className="mb-1 flex flex-col gap-0.5 pl-2">
+        {links.map((l) => (
+          <Link
+            key={l.href}
+            href={l.href}
+            onClick={onNavigate}
+            className="rounded-md px-3 py-2 text-sm text-foreground/70 transition-colors hover:bg-primary/10 hover:text-primary"
+          >
+            {l.label}
+          </Link>
+        ))}
+      </div>
+    </details>
+  );
+}
+
 function MobileDrawer({
   isAuthed,
   userEmail,
@@ -269,6 +335,17 @@ function MobileDrawer({
               {l.label}
             </Link>
           ))}
+          <div className="my-2 h-px bg-muted/5" />
+          <DrawerGroup
+            title="Công cụ tra cứu"
+            links={MOBILE_TOOLS}
+            onNavigate={() => setOpen(false)}
+          />
+          <DrawerGroup
+            title="Học"
+            links={MOBILE_LEARN}
+            onNavigate={() => setOpen(false)}
+          />
           <div className="my-2 h-px bg-muted/5" />
           {isAuthed ? (
             <button
