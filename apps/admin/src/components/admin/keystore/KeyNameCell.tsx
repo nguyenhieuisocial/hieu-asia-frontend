@@ -50,7 +50,7 @@ export function KeyNameCell({
         type="button"
         onClick={handleCopy}
         aria-label={`Copy ${keyName}`}
-        className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded text-muted-foreground hover:bg-gold/10 hover:text-gold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/40"
+        className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded text-muted-foreground hover:bg-gold/10 hover:text-gold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ochre dark:focus-visible:ring-gold"
       >
         <Copy className="h-3 w-3" aria-hidden />
       </button>

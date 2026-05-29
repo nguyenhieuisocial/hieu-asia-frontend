@@ -183,7 +183,7 @@ export function KpiCard({
     return (
       <a
         href={href}
-        className="block rounded-xl focus:outline-none focus:ring-2 focus:ring-gold/40"
+        className="block rounded-xl focus:outline-none focus:ring-2 focus:ring-ochre dark:focus:ring-gold"
       >
         {inner}
       </a>

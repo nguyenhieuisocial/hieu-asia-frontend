@@ -204,7 +204,7 @@ function TreeNodeView({
               : node.tier === 'gold'
                 ? 'bg-gold/20 text-gold'
                 : node.tier === 'silver'
-                  ? 'bg-zinc-400/20 text-zinc-300'
+                  ? 'bg-zinc-400/20 text-zinc-700 dark:text-zinc-300'
                   : 'bg-amber-700/20 text-amber-700 dark:text-amber-300'
           }`}
         >
