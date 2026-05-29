@@ -82,22 +82,29 @@ export function PullQuote({
         (SampleOutputShowcase). Duration 600ms (was 400) to match the other
         section variants and feel calm rather than snappy.
       */}
+      {/* Wave 62.05g — finish founder spec "pull quote": Newsreader (was
+          Instrument Serif), wider measure (max-w-3xl vs marketing-text 640),
+          softer italic (font-light), ochre quote mark (text-primary, theme-
+          aware), and attribution moved off legacy `text-gold` (which was
+          missed by the 62.05a sweep and rendered ~2.5:1 on Day Paper) to
+          `text-muted-foreground` (Ink-soft, AA-safe + calm). Spec: "quote
+          rộng hơn, italic mềm hơn, dấu nháy ochre — tách hẳn khỏi flow đọc". */}
       <div
         ref={ref}
         data-in-view={inView ? 'true' : 'false'}
-        className="mx-auto max-w-marketing-text -translate-x-10 px-6 text-center opacity-0 transition-[opacity,transform] duration-[600ms] ease-editorial data-[in-view=true]:translate-x-0 data-[in-view=true]:opacity-100"
+        className="mx-auto max-w-3xl -translate-x-10 px-6 text-center opacity-0 transition-[opacity,transform] duration-[600ms] ease-editorial data-[in-view=true]:translate-x-0 data-[in-view=true]:opacity-100"
       >
         <span
           aria-hidden
-          className="block font-marketing-display text-5xl leading-none text-gold/50 md:text-6xl"
+          className="block font-editorial-display text-6xl leading-none text-primary/50 md:text-7xl"
         >
           “
         </span>
-        <blockquote className="mt-2 font-marketing-display text-3xl italic leading-relaxed text-foreground md:text-4xl">
+        <blockquote className="mt-2 font-editorial-display text-3xl font-light italic leading-relaxed text-foreground md:text-4xl">
           {children}
         </blockquote>
         {attribution && (
-          <p className="mt-6 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
+          <p className="mt-6 font-mono text-eyebrow uppercase tracking-[0.12em] text-muted-foreground">
             {attribution}
           </p>
         )}

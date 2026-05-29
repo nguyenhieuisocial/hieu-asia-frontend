@@ -241,10 +241,20 @@ export function PricingTierV2({
               ? 'border-primary bg-gradient-to-b from-primary/5 to-warm-dark-100'
               : 'border-border hover:border-border/80';
 
+            // Wave 62.05g — finish founder spec "3 components done carefully":
+            // CTA label switches sans → serif Newsreader (font-editorial-display)
+            // to share the heading voice, and pill → rounded-[2px] paper-corner
+            // (spec: "dùng serif Newsreader thay vì sans cho button label. Bo góc
+            // 2px thay vì pill"). text-sm → text-base since serif reads ~1 step
+            // smaller at the same px.
             const ctaBase =
-              'mt-8 inline-flex w-full items-center justify-center rounded-pill px-7 py-4 font-sans text-sm font-medium transition-all duration-300 ease-editorial';
+              'mt-8 inline-flex w-full items-center justify-center rounded-[2px] px-7 py-4 font-editorial-display text-base font-medium transition-all duration-300 ease-editorial';
+            // Wave 62.05g (ultrareview follow-up) — text-ink (#0F0F12) on
+            // bg-primary (Ochre #A47532) was ~3.6:1 on Day mode, below AA 4.5.
+            // text-primary-foreground is theme-aware (Paper-50 on ochre ≈ 4.6:1
+            // day · charcoal on gold-soft night) → AA-safe both modes.
             const ctaVariant = tier.primary
-              ? 'bg-primary text-ink hover:bg-primary/80'
+              ? 'bg-primary text-primary-foreground hover:bg-primary/80'
               : 'border border-border text-foreground hover:bg-card';
 
             return (
@@ -255,7 +265,7 @@ export function PricingTierV2({
                 className={`${baseCard} ${cardBorder} translate-y-3 opacity-0 [transition-duration:600ms] data-[in-view=true]:translate-y-0 data-[in-view=true]:opacity-100`}
               >
                 {tier.recommended && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-pill bg-primary px-4 py-1 font-mono text-xs uppercase tracking-wider text-ink">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-pill bg-primary px-4 py-1 font-mono text-xs uppercase tracking-wider text-primary-foreground">
                     KHUYÊN DÙNG
                   </span>
                 )}
