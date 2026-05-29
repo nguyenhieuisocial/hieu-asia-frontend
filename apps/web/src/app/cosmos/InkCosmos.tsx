@@ -2,9 +2,6 @@
 
 import * as React from 'react';
 import * as THREE from 'three';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 
 /**
  * InkCosmos — "Vũ trụ" SCI-FI × TÂM LINH (techno-mysticism) cho hieu.asia.
@@ -24,7 +21,7 @@ const WHITE = new THREE.Color('#cfe0ff');
 const CYAN = new THREE.Color('#6fe0ef');
 const VIOLET = new THREE.Color('#8f7be0');
 
-const STAR_COUNT = 2600;
+const STAR_COUNT = 1800;
 const CUNG = 12;
 const RING_R = 2.4;
 const SCROLL_SPAN = 2;
@@ -92,7 +89,7 @@ void main(){
   float d=length(gl_PointCoord-vec2(0.5));
   if(d>0.5) discard;
   float a=smoothstep(0.5,0.0,d); a=pow(a,1.8);
-  gl_FragColor=vec4(vColor*(0.6+vTw*0.7), a*(0.5+0.5*vTw));
+  gl_FragColor=vec4(vColor*(0.9+vTw*0.7), a*(0.6+0.4*vTw));
 }`;
 
 const easeInOut = (x: number): number => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
@@ -130,7 +127,7 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
       return;
     }
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.6);
     renderer.setPixelRatio(dpr);
     let w = mount.clientWidth || window.innerWidth;
     let h = mount.clientHeight || window.innerHeight;
@@ -146,17 +143,8 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
     const camera = new THREE.PerspectiveCamera(62, w / h, 0.1, 100);
     camera.position.set(0, 0, 6);
 
-    let composer: EffectComposer | null = null;
-    let bloom: UnrealBloomPass | null = null;
-    try {
-      composer = new EffectComposer(renderer);
-      composer.addPass(new RenderPass(scene, camera));
-      bloom = new UnrealBloomPass(new THREE.Vector2(w, h), 0.8, 0.55, 0.16);
-      composer.addPass(bloom);
-    } catch {
-      composer = null;
-    }
-    const renderScene = () => { if (composer) composer.render(); else renderer.render(scene, camera); };
+    // Glow bằng additive blending (bỏ postprocessing bloom → nhẹ bundle + nhanh runtime).
+    const renderScene = () => renderer.render(scene, camera);
 
     // ── Nebula lạnh, tiết chế ──
     const nebGeo = new THREE.PlaneGeometry(80, 52, 1, 1);
@@ -315,8 +303,6 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
       h = mount.clientHeight || window.innerHeight;
       camera.aspect = w / h; camera.updateProjectionMatrix();
       renderer.setSize(w, h, false);
-      composer?.setSize(w, h);
-      bloom?.setSize(w, h);
     };
 
     const renderFrame = (time: number, prog: number, dt: number) => {
@@ -375,7 +361,7 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
       if (!running) return;
       const dt = Math.min(clock.getDelta(), 0.05);
       const t = clock.getElapsedTime();
-      smoothProg += (progress - smoothProg) * 0.06;
+      smoothProg += (progress - smoothProg) * 0.1;
       renderFrame(t, smoothProg, dt);
       raf = requestAnimationFrame(loop);
     };
@@ -393,7 +379,6 @@ export function InkCosmos(props: { onUnsupported?: () => void }): React.JSX.Elem
       radarGeos.forEach((g) => g.dispose()); radarMats.forEach((m) => m.dispose());
       tickGeo.dispose(); tickMat.dispose();
       sweepGeo.dispose(); sweepMat.dispose();
-      bloom?.dispose(); composer?.dispose();
       renderer.dispose();
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     };

@@ -21,10 +21,25 @@ const SCROLL_SPAN = 2;
 
 const InkCosmos = dynamic(() => import('./InkCosmos').then((m) => m.InkCosmos), {
   ssr: false,
-  loading: () => null,
+  loading: () => <Backdrop />,
 });
 
 const clamp01 = (x: number): number => (x < 0 ? 0 : x > 1 ? 1 : x);
+
+/** Nền deep-space tức thì — hiện trong lúc nạp 3D & khi máy không hỗ trợ WebGL. */
+function Backdrop(): React.JSX.Element {
+  return (
+    <div
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        inset: 0,
+        background:
+          'radial-gradient(ellipse 80% 60% at 50% 38%, rgba(95,215,232,0.12), rgba(4,6,13,0) 70%), radial-gradient(circle at 70% 72%, rgba(143,123,224,0.1), rgba(4,6,13,0) 55%), #04060d',
+      }}
+    />
+  );
+}
 
 export function CosmosHero(): React.JSX.Element {
   const [unsupported, setUnsupported] = React.useState(false);
@@ -55,19 +70,7 @@ export function CosmosHero(): React.JSX.Element {
     <div style={{ position: 'relative', background: '#04060d', color: PAPER }}>
       {/* Nền vũ trụ — cố định, phủ toàn màn, sau chữ */}
       <div style={{ position: 'fixed', inset: 0, zIndex: 0, background: '#04060d' }}>
-        {unsupported ? (
-          <div
-            aria-hidden="true"
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background:
-                'radial-gradient(ellipse 80% 60% at 50% 40%, rgba(95,215,232,0.14), rgba(4,6,13,0) 70%), radial-gradient(circle at 72% 72%, rgba(232,183,101,0.08), rgba(4,6,13,0) 55%), #04060d',
-            }}
-          />
-        ) : (
-          <InkCosmos onUnsupported={onUnsupported} />
-        )}
+        {unsupported ? <Backdrop /> : <InkCosmos onUnsupported={onUnsupported} />}
       </div>
 
       {/* Vùng cuộn + lớp chữ sticky */}
