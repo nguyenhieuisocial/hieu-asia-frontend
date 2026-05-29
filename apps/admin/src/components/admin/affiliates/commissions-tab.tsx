@@ -125,7 +125,7 @@ export function CommissionsTab() {
           ) : q.error ? (
             <p className="text-sm text-red-700 dark:text-red-300">{(q.error as Error).message}</p>
           ) : (
-            <table className="w-full text-sm">
+            <table className="w-full min-w-[760px] text-sm">
               <thead className="border-b border-border text-left text-xs uppercase text-muted-foreground">
                 <tr>
                   <th className="pb-2 pr-3">ID</th>

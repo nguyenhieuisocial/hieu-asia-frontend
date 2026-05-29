@@ -60,7 +60,10 @@ export function Topbar({ adminEmail }: { adminEmail: string }) {
           {crumbs.map((c, i) => {
             const isLast = i === crumbs.length - 1;
             return (
-              <li key={c.href + i} className="flex shrink-0 items-center gap-1.5">
+              <li
+                key={c.href + i}
+                className={`flex items-center gap-1.5 ${isLast ? 'min-w-0' : 'shrink-0'}`}
+              >
                 {i > 0 && <ChevronRight className="h-3 w-3 text-muted-foreground" />}
                 {isLast ? (
                   <span className="truncate font-mono uppercase tracking-wider text-foreground/85">
