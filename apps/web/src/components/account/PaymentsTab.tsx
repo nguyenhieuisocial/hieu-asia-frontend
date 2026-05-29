@@ -13,6 +13,7 @@ import {
 import { safeJson } from '@/lib/safe-json';
 import { fetchUserMe } from '@/lib/user-me';
 import { getSupabaseAuth } from '@/lib/auth-client';
+import { formatVND } from '@/lib/pricing';
 
 interface PaymentRow {
   id: string;
@@ -44,14 +45,6 @@ const STATUS_LABEL: Record<string, string> = {
   inactive: 'Không hoạt động',
   cancelled: 'Đã hủy',
 };
-
-function fmtVnd(n: number): string {
-  try {
-    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n);
-  } catch {
-    return `${n} ₫`;
-  }
-}
 
 function fmtDate(iso: string | null | undefined): string {
   if (!iso) return '—';
@@ -181,7 +174,7 @@ export function PaymentsTab() {
                       <td className="py-2.5 pr-4 text-foreground/85">{fmtDate(p.created_at)}</td>
                       <td className="py-2.5 pr-4 text-foreground/85">{p.description ?? '—'}</td>
                       <td className="py-2.5 pr-4 text-right text-foreground font-mono">
-                        {fmtVnd(p.amount_vnd)}
+                        {formatVND(p.amount_vnd)}
                       </td>
                       <td className="py-2.5 pr-4 text-muted-foreground">
                         {STATUS_LABEL[p.status] ?? p.status}
