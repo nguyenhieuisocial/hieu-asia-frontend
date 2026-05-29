@@ -9,6 +9,7 @@
 
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
+import { getSessionFromRequest } from '@/lib/reasoning/session-auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -34,6 +35,16 @@ function unconfigured() {
 export async function POST(req: NextRequest) {
   if (!HIEU_API_SERVICE_TOKEN) return unconfigured();
 
+  let session: { userId: string; email: string | null } | null;
+  try {
+    session = await getSessionFromRequest(req);
+  } catch {
+    return NextResponse.json({ ok: false, error: 'auth_unavailable' }, { status: 503 });
+  }
+  if (!session) {
+    return NextResponse.json({ ok: false, error: 'auth_required' }, { status: 401 });
+  }
+
   let raw: unknown;
   try {
     raw = await req.json();
@@ -49,6 +60,9 @@ export async function POST(req: NextRequest) {
   }
   const body = parsed.data;
 
+  // Override user_id with the verified session identity — never trust the client-supplied value.
+  const forwardBody = { ...body, user_id: session.userId };
+
   try {
     const res = await fetch(`${HIEU_API_URL}/user/preferences`, {
       method: 'POST',
@@ -56,7 +70,7 @@ export async function POST(req: NextRequest) {
         'content-type': 'application/json',
         'X-Service-Token': HIEU_API_SERVICE_TOKEN,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(forwardBody),
       cache: 'no-store',
     });
     const text = await res.text();
@@ -83,14 +97,19 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   if (!HIEU_API_SERVICE_TOKEN) return unconfigured();
 
-  const userId = req.nextUrl.searchParams.get('user_id');
-  if (!userId) {
-    return NextResponse.json({ ok: false, error: 'missing user_id' }, { status: 400 });
+  let session: { userId: string; email: string | null } | null;
+  try {
+    session = await getSessionFromRequest(req);
+  } catch {
+    return NextResponse.json({ ok: false, error: 'auth_unavailable' }, { status: 503 });
+  }
+  if (!session) {
+    return NextResponse.json({ ok: false, error: 'auth_required' }, { status: 401 });
   }
 
   try {
     const res = await fetch(
-      `${HIEU_API_URL}/user/preferences?user_id=${encodeURIComponent(userId)}`,
+      `${HIEU_API_URL}/user/preferences?user_id=${encodeURIComponent(session.userId)}`,
       {
         method: 'GET',
         headers: { 'X-Service-Token': HIEU_API_SERVICE_TOKEN },
