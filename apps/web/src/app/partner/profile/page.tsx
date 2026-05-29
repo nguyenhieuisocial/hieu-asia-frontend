@@ -94,7 +94,7 @@ function ProfileView({ me }: { me: PartnerMe }) {
 
   async function saveRail() {
     if (rail === 'stripe_connect' && !externalId) {
-      toast.info('Stripe Connect Express OAuth sẽ available trong Wave 51 — coming soon.');
+      toast.info('Thanh toán qua Stripe sẽ sớm ra mắt.');
       return;
     }
     setSavingRail(true);
@@ -296,14 +296,14 @@ function ProfileView({ me }: { me: PartnerMe }) {
                   Wise → Recipients
                 </a>{' '}
                 rồi copy ID vào đây. Trạng thái sẽ ở &quot;pending&quot; cho đến khi
-                team verify (Wave 51).
+                team verify.
               </p>
             </div>
           )}
 
           {rail === 'stripe_connect' && (
             <div className="rounded-md border border-dashed border-foreground/20 bg-foreground/5 p-3 text-sm">
-              <p className="font-medium text-foreground/80">Stripe Connect Express — coming Wave 51</p>
+              <p className="font-medium text-foreground/80">Stripe Connect Express — sắp ra mắt</p>
               <p className="mt-1 text-xs text-foreground/60">
                 Sẽ có nút &quot;Connect Stripe Express&quot; → redirect sang OAuth flow
                 của Stripe. Hiện tại bạn vẫn có thể switch sang manual_csv hoặc wise.
