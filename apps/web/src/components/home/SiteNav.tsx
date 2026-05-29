@@ -38,17 +38,16 @@ interface NavLink {
  * mega-footer where they belong as reference shortcuts, not primary surfaces.
  */
 const PRIMARY_LINKS: readonly NavLink[] = [
-  { href: '/onboarding', label: 'Lá số' },
-  { href: '/onboarding', label: 'Mentor' },
+  { href: '/onboarding?intent=self', label: 'Lá số' },
+  { href: '/onboarding?intent=decision', label: 'Mentor' },
   { href: '/methodology', label: 'Phương pháp' },
   { href: '/pricing', label: 'Giá' },
   { href: '/about', label: 'Về chúng tôi' },
-  { href: '/cam-nang', label: 'Cẩm nang' },
 ];
 
 /**
  * Top navigation bar — fixed, glass background.
- * Desktop: 6 inline links (Lá số / Mentor / Phương pháp / Giá / Về chúng tôi / Cẩm nang).
+ * Desktop: 5 inline links (Lá số / Mentor / Phương pháp / Giá / Về chúng tôi).
  * Mobile: hamburger drawer (Sheet).
  */
 export function SiteNav() {
@@ -75,7 +74,7 @@ export function SiteNav() {
         >
           {PRIMARY_LINKS.map((l) => (
             <Link
-              key={l.href}
+              key={l.label}
               href={l.href}
               className="text-sm text-muted-foreground transition-colors hover:text-primary"
             >
@@ -262,7 +261,7 @@ function MobileDrawer({
           )}
           {PRIMARY_LINKS.map((l) => (
             <Link
-              key={l.href}
+              key={l.label}
               href={l.href}
               onClick={() => setOpen(false)}
               className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"

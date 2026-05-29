@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Calendar, User, Briefcase, HelpCircle, Heart } from 'lucide-react';
-import { PRICING } from '@/lib/pricing';
+import { PRICING, formatVND } from '@/lib/pricing';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { WhyTrust } from '@/components/home/WhyTrust';
@@ -219,7 +219,7 @@ const FAQ_JSONLD = {
       name: 'Giá bao nhiêu? Có dùng thử miễn phí không?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Tier Standard miễn phí gồm 6 công cụ tra cứu. Premium 99.000đ một lần, Mentor Monthly 199.000đ/tháng hoặc Mentor Yearly 1.990.000đ/năm, Lifetime 4.990.000đ một lần.',
+        text: `Tier Standard miễn phí gồm các công cụ tra cứu cơ bản. Premium ${formatVND(PRICING.premium.vnd)} một lần, Mentor Monthly ${formatVND(PRICING.monthly.vnd)}/tháng hoặc Mentor Yearly ${formatVND(PRICING.yearly.vnd)}/năm, Lifetime ${formatVND(PRICING.lifetime.vnd)} một lần.`,
       },
     },
     {
@@ -322,12 +322,14 @@ const HOME_FAQ: readonly FaqItem[] = [
     q: 'Giá bao nhiêu? Có dùng thử miễn phí không?',
     a: (
       <p>
-        Tier <strong>Standard miễn phí</strong> gồm khảo sát đầu vào và 6 công cụ
-        tra cứu. <strong>Premium 99.000đ một lần</strong> (1 lá số đầy đủ + PDF
-        + 3 câu hỏi Mentor). <strong>Mentor Monthly 199.000đ/tháng</strong> hoặc{' '}
-        <strong>Mentor Yearly 1.990.000đ/năm</strong> (Mentor không giới hạn +
-        đại vận/lưu niên). <strong>Lifetime 4.990.000đ một lần</strong>. Xem chi
-        tiết tại trang Pricing.
+        Tier <strong>Standard miễn phí</strong> gồm khảo sát đầu vào và các công
+        cụ tra cứu cơ bản. <strong>Premium {formatVND(PRICING.premium.vnd)} một lần</strong>{' '}
+        (1 lá số đầy đủ + PDF + 3 câu hỏi Mentor).{' '}
+        <strong>Mentor Monthly {formatVND(PRICING.monthly.vnd)}/tháng</strong> hoặc{' '}
+        <strong>Mentor Yearly {formatVND(PRICING.yearly.vnd)}/năm</strong> (Mentor
+        không giới hạn + đại vận/lưu niên).{' '}
+        <strong>Lifetime {formatVND(PRICING.lifetime.vnd)} một lần</strong>. Xem
+        chi tiết tại trang Pricing.
       </p>
     ),
   },
@@ -437,7 +439,7 @@ export default function LandingPage() {
           role="note"
           className="mx-auto mt-4 flex max-w-3xl items-center justify-center px-6"
         >
-          <p className="rounded-full border border-primary/20 bg-muted/60 px-4 py-1.5 text-center text-[11px] leading-snug text-muted-foreground/70 backdrop-blur-sm sm:text-xs">
+          <p className="rounded-full border border-primary/20 bg-muted/60 px-4 py-1.5 text-center text-[11px] leading-snug text-muted-foreground backdrop-blur-sm sm:text-xs">
             Kết quả mang tính tham khảo — không thay thế tư vấn y tế, pháp lý hay tài chính.
           </p>
         </div>
@@ -728,7 +730,7 @@ export default function LandingPage() {
         </div>
       </main>
       <SiteFooter />
-      <StickyMobileCta trackId="home" />
+      <StickyMobileCta trackId="home" label="Lập lá số của tôi" />
     </>
   );
 }

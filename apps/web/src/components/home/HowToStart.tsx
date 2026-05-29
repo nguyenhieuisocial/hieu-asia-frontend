@@ -27,7 +27,7 @@ const STEPS: readonly Step[] = [
     Icon: ClipboardEdit,
     title: 'Nhập thông tin cơ bản',
     desc: 'Ngày–giờ sinh và giới tính (~1 phút). Có thể chỉnh sửa sau bất cứ lúc nào miễn phí trong trang Tài khoản; khi đổi ngày sinh, bạn yêu cầu tạo lại lá số để cập nhật.',
-    ctaLabel: 'Bắt đầu bước 01 →',
+    ctaLabel: 'Nhập thông tin của tôi →',
     href: '/onboarding',
   },
   {
@@ -35,7 +35,7 @@ const STEPS: readonly Step[] = [
     Icon: Cpu,
     title: 'AI phân tích trong 30 giây',
     desc: 'Hệ thống tổng hợp Tử Vi, Bát Tự, Thần Số Học và MBTI thành một bức tranh rõ ràng.',
-    ctaLabel: 'Bắt đầu bước 01 →',
+    ctaLabel: 'Xem AI phân tích thử →',
     href: '/onboarding',
   },
   {
@@ -43,7 +43,7 @@ const STEPS: readonly Step[] = [
     Icon: MessageCircle,
     title: 'Trò chuyện với AI Mentor để hành động',
     desc: 'Đặt câu hỏi cụ thể về quyết định bạn đang cân nhắc — Mentor gợi ý các bước tiếp theo.',
-    ctaLabel: 'Bắt đầu bước 01 →',
+    ctaLabel: 'Trò chuyện với Mentor →',
     href: '/onboarding',
   },
 ];

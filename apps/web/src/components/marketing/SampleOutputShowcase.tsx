@@ -86,7 +86,7 @@ const CARDS: SampleCard[] = [
     body: (
       <div className="space-y-2.5">
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/70">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
             Bạn hỏi
           </p>
           <p className="text-muted-foreground text-[13px] leading-relaxed">
@@ -190,7 +190,7 @@ export function SampleOutputShowcase() {
             >
               <div className="mb-3 flex items-center gap-2">
                 {c.icon}
-                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground/70">
+                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
                   {c.eyebrow}
                 </p>
               </div>
@@ -225,7 +225,7 @@ export function SampleOutputShowcase() {
           </Link>
         </div>
 
-        <p className="mt-6 text-center font-mono text-[11px] uppercase tracking-widest text-muted-foreground/70">
+        <p className="mt-6 text-center font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
           Persona demo · không phải dữ liệu thật
         </p>
       </div>

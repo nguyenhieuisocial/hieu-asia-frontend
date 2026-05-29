@@ -7,6 +7,10 @@ import { Mail, MessageCircle, Facebook, Heart, ArrowRight } from 'lucide-react';
 interface FooterLink {
   href: string;
   label: string;
+  /** B4 (design handoff) — free/paid badge for the "Tra cứu nhanh" lookup
+   *  tools so visitors know which need a paid tier before clicking, instead
+   *  of hitting a surprise paywall. Only set on COL_QUICK_LOOKUP items. */
+  tag?: 'free' | 'premium';
 }
 
 /**
@@ -19,26 +23,29 @@ interface FooterLink {
  */
 
 const COL_PRODUCT: readonly FooterLink[] = [
-  { href: '/onboarding', label: 'Lá số tử vi' },
-  { href: '/onboarding', label: 'AI Mentor' },
+  { href: '/onboarding?intent=self', label: 'Lá số tử vi' },
+  { href: '/onboarding?intent=decision', label: 'AI Mentor' },
   { href: '/sample-report', label: 'Báo cáo mẫu' },
   { href: '/cam-nang', label: 'Cẩm nang' },
   { href: '/pricing', label: 'Bảng giá' },
 ];
 
+// B4 — free vs paid lookup tools (verified against route gating + vault 100
+// §9 free-tools list + /pricing tier copy). All are free-to-use except
+// /ban-do (Bản đồ sao = personalised weekly map, a Premium feature).
 const COL_QUICK_LOOKUP: readonly FooterLink[] = [
-  { href: '/tu-vi-2026', label: 'Tử Vi 2026' },
-  { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay' },
-  { href: '/hop-tuoi', label: 'Hợp tuổi' },
-  { href: '/can-xuong', label: 'Cân Xương Đoán Số' },
-  { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
-  { href: '/bat-tu', label: 'Bát Tự' },
-  { href: '/mbti', label: 'MBTI' },
-  { href: '/than-so-hoc', label: 'Thần số học' },
-  { href: '/thuoc-lo-ban', label: 'Thước Lỗ Ban' },
-  { href: '/tinh-menh-cuc', label: 'Tuổi mệnh cục' },
-  { href: '/ban-do', label: 'Bản đồ sao' },
-  { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại' },
+  { href: '/tu-vi-2026', label: 'Tử Vi 2026', tag: 'free' },
+  { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay', tag: 'free' },
+  { href: '/hop-tuoi', label: 'Hợp tuổi', tag: 'free' },
+  { href: '/can-xuong', label: 'Cân Xương Đoán Số', tag: 'free' },
+  { href: '/lich-van-nien', label: 'Lịch Vạn Niên', tag: 'free' },
+  { href: '/bat-tu', label: 'Bát Tự', tag: 'free' },
+  { href: '/mbti', label: 'MBTI', tag: 'free' },
+  { href: '/than-so-hoc', label: 'Thần số học', tag: 'free' },
+  { href: '/thuoc-lo-ban', label: 'Thước Lỗ Ban', tag: 'free' },
+  { href: '/tinh-menh-cuc', label: 'Tuổi mệnh cục', tag: 'free' },
+  { href: '/ban-do', label: 'Bản đồ sao', tag: 'premium' },
+  { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại', tag: 'free' },
 ];
 
 const COL_DOCS: readonly FooterLink[] = [
@@ -163,12 +170,23 @@ function FooterCol({
         }
       >
         {links.map((link) => (
-          <li key={link.href}>
+          <li key={link.label}>
             <Link
               href={link.href}
-              className="inline-flex min-h-11 w-full items-center py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground active:text-foreground touch-manipulation sm:min-h-0 sm:w-auto sm:py-0"
+              className="inline-flex min-h-11 w-full items-center gap-2 py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground active:text-foreground touch-manipulation sm:min-h-0 sm:w-auto sm:py-0"
             >
               {link.label}
+              {link.tag && (
+                <span
+                  className={`shrink-0 font-mono text-[9px] uppercase tracking-wider ${
+                    link.tag === 'premium'
+                      ? 'text-[hsl(var(--primary-cta))]'
+                      : 'text-muted-foreground'
+                  }`}
+                >
+                  {link.tag === 'premium' ? 'Premium' : 'Miễn phí'}
+                </span>
+              )}
             </Link>
           </li>
         ))}
@@ -198,12 +216,23 @@ function FooterColLegal({
       </div>
       <ul className="mt-2 sm:mt-4 sm:space-y-2.5">
         {links.map((link) => (
-          <li key={link.href}>
+          <li key={link.label}>
             <Link
               href={link.href}
-              className="inline-flex min-h-11 w-full items-center py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground active:text-foreground touch-manipulation sm:min-h-0 sm:w-auto sm:py-0"
+              className="inline-flex min-h-11 w-full items-center gap-2 py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground active:text-foreground touch-manipulation sm:min-h-0 sm:w-auto sm:py-0"
             >
               {link.label}
+              {link.tag && (
+                <span
+                  className={`shrink-0 font-mono text-[9px] uppercase tracking-wider ${
+                    link.tag === 'premium'
+                      ? 'text-[hsl(var(--primary-cta))]'
+                      : 'text-muted-foreground'
+                  }`}
+                >
+                  {link.tag === 'premium' ? 'Premium' : 'Miễn phí'}
+                </span>
+              )}
             </Link>
           </li>
         ))}
