@@ -160,8 +160,8 @@ export function KpiCard({
             <span
               className={cn(
                 'rounded px-1.5 py-0.5 font-mono text-[10px]',
-                effDelta.direction === 'up' && 'bg-jade/15 text-jade-50',
-                effDelta.direction === 'down' && 'bg-red-500/15 text-red-300',
+                effDelta.direction === 'up' && 'bg-jade/15 text-jade-700 dark:text-jade-50',
+                effDelta.direction === 'down' && 'bg-red-500/15 text-red-700 dark:text-red-300',
                 effDelta.direction === 'flat' && 'bg-muted/30 text-muted-foreground',
               )}
             >

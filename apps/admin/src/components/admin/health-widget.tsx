@@ -57,9 +57,9 @@ async function fetchHealth(): Promise<{ version?: string; commit?: string; uptim
 }
 
 function StatusDot({ status }: { status: Status }) {
-  if (status === 'ok') return <CheckCircle2 className="h-3.5 w-3.5 text-jade-50" />;
-  if (status === 'warn') return <AlertTriangle className="h-3.5 w-3.5 text-gold" />;
-  if (status === 'down') return <AlertTriangle className="h-3.5 w-3.5 text-red-400" />;
+  if (status === 'ok') return <CheckCircle2 className="h-3.5 w-3.5 text-jade-700 dark:text-jade-300" />;
+  if (status === 'warn') return <AlertTriangle className="h-3.5 w-3.5 text-warn-700 dark:text-gold" />;
+  if (status === 'down') return <AlertTriangle className="h-3.5 w-3.5 text-red-600 dark:text-red-400" />;
   return <MinusCircle className="h-3.5 w-3.5 text-muted-foreground" />;
 }
 
@@ -156,9 +156,9 @@ export function HealthWidget() {
             </span>
             <span
               className={cn(
-                'min-w-0 truncate text-right font-mono text-[11px]',
-                r.status === 'warn' && 'text-gold',
-                r.status === 'down' && 'text-red-300',
+                'min-w-0 text-right font-mono text-[11px]',
+                r.status === 'warn' && 'text-warn-700 dark:text-gold',
+                r.status === 'down' && 'text-red-700 dark:text-red-300',
                 (r.status === 'ok' || r.status === 'unknown') && 'text-muted-foreground',
               )}
             >
