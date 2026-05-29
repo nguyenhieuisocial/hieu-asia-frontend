@@ -72,6 +72,16 @@ export function RealtimeIndicator() {
   const dotColor = STATUS_COLORS[status] ?? 'bg-zinc-500';
   const label = STATUS_LABELS[status] ?? status;
 
+  // Wave 63.7 — realtime is a NON-CRITICAL background cache-sync (AdminRealtime
+  // DO). The admin works fully without it. When the socket can't connect it was
+  // showing a red "● Lỗi" badge in the topbar — a false alarm that reads like
+  // the whole admin is broken (founder flagged it). Hide the badge entirely
+  // unless the socket is live ('open') or actively connecting; the feature
+  // degrades silently instead of crying error.
+  if (status === 'error' || status === 'closed' || status === 'closing') {
+    return null;
+  }
+
   return (
     <div
       className="inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-3 py-1.5 text-xs"
