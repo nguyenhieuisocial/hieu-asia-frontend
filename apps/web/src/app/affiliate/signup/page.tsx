@@ -64,12 +64,19 @@ export default function AffiliateSignupPage() {
         setError(data.error);
         return;
       }
-      // Set affiliate cookie so /dashboard works
-      await fetch('/api/affiliate/me', {
+      // Set affiliate cookie so /dashboard works. If this fails we must NOT
+      // show the success screen — the cookie wouldn't be set and the dashboard
+      // would reject the user (false "you're an affiliate" state).
+      const meRes = await fetch('/api/affiliate/me', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ affiliate_id: data.affiliate_id }),
       });
+      if (!meRes.ok) {
+        throw new Error(
+          'Tạo tài khoản thành công nhưng không thể đăng nhập affiliate. Vui lòng thử lại.',
+        );
+      }
       setResult(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Lỗi không xác định');

@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import * as Sentry from '@sentry/nextjs';
 import { Alert } from '@hieu-asia/ui';
 
 interface ErrorBoundaryProps {
@@ -30,8 +31,11 @@ export class ErrorBoundary extends React.Component<
   }
 
   override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Surface to console for now. Future: forward to Sentry / PostHog.
+    // Surface to console for visibility, then report to Sentry.
     console.error('[ErrorBoundary]', error, errorInfo);
+    Sentry.captureException(error, {
+      contexts: { react: { componentStack: errorInfo.componentStack } },
+    });
   }
 
   reset = () => {

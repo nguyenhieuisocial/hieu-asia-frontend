@@ -265,10 +265,13 @@ export default function SurveyPage() {
         );
         router.push(`/reading/${readingId}/processing?session_id=${resp.session_id}`);
       } catch (e) {
-        // Fallback: continue in mock mode so demo flow doesn't dead-end.
-        console.warn('[survey] createReading failed, mock continue:', e);
-        setError(null);
-        router.push(`/reading/${readingId}/processing`);
+        // Real session (userContext + non-mock upload present) — do NOT silently
+        // fall back to mock processing, which would drop the session_id and
+        // dead-end the reading. Surface the error so the user can retry.
+        console.error('[survey] createReading failed:', e);
+        setError(
+          'Không thể tạo phiên đọc lá số. Vui lòng kiểm tra kết nối và bấm "Hoàn tất khảo sát" để thử lại.',
+        );
       } finally {
         setSubmitting(false);
       }
