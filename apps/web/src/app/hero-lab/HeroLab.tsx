@@ -9,12 +9,15 @@ const OCHRE = '#A47532';
 const PAPER = '#F3ECDD';
 const SOFT = '#6B6358';
 
+// Làm tròn toạ độ → SSR & client ra chuỗi giống hệt (tránh hydration mismatch do ULP của Math.cos/sin).
+const R = (n: number) => Math.round(n * 100) / 100;
+
 // 12 spoke boundaries → sector "Mệnh" centered at top.
 const SPOKES = Array.from({ length: 12 }, (_, k) => {
   const r = ((-75 + 30 * k) * Math.PI) / 180;
   return {
-    x1: 200 + 95 * Math.cos(r), y1: 200 + 95 * Math.sin(r),
-    x2: 200 + 180 * Math.cos(r), y2: 200 + 180 * Math.sin(r),
+    x1: R(200 + 95 * Math.cos(r)), y1: R(200 + 95 * Math.sin(r)),
+    x2: R(200 + 180 * Math.cos(r)), y2: R(200 + 180 * Math.sin(r)),
     delay: 0.55 + k * 0.05,
   };
 });
@@ -23,8 +26,8 @@ const SPOKES = Array.from({ length: 12 }, (_, k) => {
 const TICKS = Array.from({ length: 24 }, (_, k) => {
   const r = ((k * 15) * Math.PI) / 180;
   return {
-    x1: 200 + 169 * Math.cos(r), y1: 200 + 169 * Math.sin(r),
-    x2: 200 + 180 * Math.cos(r), y2: 200 + 180 * Math.sin(r),
+    x1: R(200 + 169 * Math.cos(r)), y1: R(200 + 169 * Math.sin(r)),
+    x2: R(200 + 180 * Math.cos(r)), y2: R(200 + 180 * Math.sin(r)),
   };
 });
 

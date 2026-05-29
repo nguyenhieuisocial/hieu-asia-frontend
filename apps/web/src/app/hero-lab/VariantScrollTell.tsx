@@ -87,12 +87,15 @@ const STEPS: Cung[] = [
   },
 ];
 
+// Làm tròn toạ độ → SSR & client ra chuỗi giống hệt (tránh hydration mismatch do ULP của Math.cos/sin).
+const R = (n: number) => Math.round(n * 100) / 100;
+
 // outer ring tick marks (static, light astrolabe texture)
 const TICKS = Array.from({ length: 24 }, (_, k) => {
   const a = (k * 15 * Math.PI) / 180;
   return {
-    x1: C + 169 * Math.cos(a), y1: C + 169 * Math.sin(a),
-    x2: C + RO * Math.cos(a), y2: C + RO * Math.sin(a),
+    x1: R(C + 169 * Math.cos(a)), y1: R(C + 169 * Math.sin(a)),
+    x2: R(C + RO * Math.cos(a)), y2: R(C + RO * Math.sin(a)),
   };
 });
 
@@ -100,8 +103,8 @@ const TICKS = Array.from({ length: 24 }, (_, k) => {
 const SPOKES = Array.from({ length: 12 }, (_, k) => {
   const a = ((-105 + 30 * k) * Math.PI) / 180;
   return {
-    x1: C + RI * Math.cos(a), y1: C + RI * Math.sin(a),
-    x2: C + RO * Math.cos(a), y2: C + RO * Math.sin(a),
+    x1: R(C + RI * Math.cos(a)), y1: R(C + RI * Math.sin(a)),
+    x2: R(C + RO * Math.cos(a)), y2: R(C + RO * Math.sin(a)),
   };
 });
 
