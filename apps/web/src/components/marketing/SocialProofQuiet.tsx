@@ -103,7 +103,7 @@ export function SocialProofQuiet() {
           ))}
         </ul>
 
-        <p className="mt-block max-w-marketing-text font-sans text-editorial-caption text-muted-foreground/70">
+        <p className="mt-block max-w-marketing-text font-sans text-editorial-caption text-muted-foreground">
           Chính sách trích dẫn: chỉ đăng khi người dùng chủ động gửi và đồng ý
           ẩn danh. Không tên, không ảnh, không công ty. Nội dung có thể được
           biên tập nhẹ để bảo vệ danh tính — không thay đổi ý.
