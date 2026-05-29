@@ -12,6 +12,7 @@
  */
 
 import { NextResponse } from 'next/server';
+import { checkBotId } from 'botid/server';
 import type {
   MentorMessage,
   Reading,
@@ -95,6 +96,16 @@ function buildSystemPrompt(session: Reading): string {
 }
 
 export async function POST(req: Request) {
+  // Bot guard (Wave 64 audit P0): mentor is anon-capable (the reading→mentor
+  // funnel isn't login-gated), so we can't hard-require a session without
+  // breaking it — but we MUST block automated abuse of the paid LLM. BotID
+  // classifies scripted clients; pairs with the protect-list entry in
+  // instrumentation-client.ts.
+  const bot = await checkBotId();
+  if (bot.isBot) {
+    return NextResponse.json({ ok: false, error: 'forbidden' }, { status: 403 });
+  }
+
   if (!HIEU_API_SERVICE_TOKEN) {
     return NextResponse.json(
       {
@@ -134,11 +145,14 @@ export async function POST(req: Request) {
     }
   }
 
-  // Prepend system message if caller didn't already include one.
-  const hasSystem = incomingMessages.some((m) => m.role === 'system');
-  const finalMessages: MentorMessage[] = hasSystem
-    ? incomingMessages
-    : [{ role: 'system', content: systemPrompt }, ...incomingMessages];
+  // Always use the server-built system prompt and STRIP any client-supplied
+  // system messages (Wave 64 audit P1): otherwise a caller could include their
+  // own role:"system" entry to override the guardrails ("AI chỉ gợi mở").
+  const userMessages = incomingMessages.filter((m) => m.role !== 'system');
+  const finalMessages: MentorMessage[] = [
+    { role: 'system', content: systemPrompt },
+    ...userMessages,
+  ];
 
   const forwardBody = {
     ...body,

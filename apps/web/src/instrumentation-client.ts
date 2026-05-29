@@ -35,5 +35,17 @@ initBotId({
       path: '/api/reasoning/*',
       method: 'POST',
     },
+    {
+      // Wave 64 audit — mentor LLM proxy. Anon-capable (the reading→mentor
+      // funnel isn't login-gated), so BotID is the funnel-safe control against
+      // automated abuse of the paid LLM. Pairs with checkBotId() in both
+      // /api/mentor and /api/mentor/stream handlers.
+      path: '/api/mentor',
+      method: 'POST',
+    },
+    {
+      path: '/api/mentor/stream',
+      method: 'POST',
+    },
   ],
 });
