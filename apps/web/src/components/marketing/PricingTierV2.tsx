@@ -116,27 +116,39 @@ export function PricingTierV2({
   // opacity-only stat blocks (BigNumberRow) / slide-left testimonial (PullQuote) /
   // scale-up showcase (SampleOutputShowcase).
   const gridRef = useRef<HTMLDivElement | null>(null);
-  const [inView, setInView] = useState(false);
+  // V2 fix (design handoff #1 priority): tier cards MUST be visible even when
+  // JS / the IntersectionObserver never runs. Default to REVEALED so SSR,
+  // no-JS, reduced-motion and short-viewport visitors always see all 3 cards
+  // (the prior `useState(false)` + opacity-0 left the pricing band blank until
+  // the IO crossed its 0.2 threshold — on screenshots it looked empty). The
+  // observer now only *delays* the entrance stagger when the grid starts below
+  // the fold; a timeout fallback guarantees reveal regardless of IO behaviour.
+  const [inView, setInView] = useState(true);
   useEffect(() => {
     const node = gridRef.current;
-    if (!node || inView) return;
-    if (typeof IntersectionObserver === 'undefined') {
-      setInView(true);
-      return;
-    }
+    if (!node || typeof IntersectionObserver === 'undefined') return;
+    // Already on-screen at mount → stay revealed (no hide, so no flash).
+    if (node.getBoundingClientRect().top <= window.innerHeight) return;
+    // Below the fold → hide now, fade in on scroll (or after the fallback).
+    setInView(false);
+    const reveal = () => setInView(true);
+    const fallback = setTimeout(reveal, 1500);
     const obs = new IntersectionObserver(
       (entries) => {
-        const entry = entries[0];
-        if (entry?.isIntersecting) {
-          setInView(true);
+        if (entries[0]?.isIntersecting) {
+          reveal();
           obs.disconnect();
+          clearTimeout(fallback);
         }
       },
-      { threshold: 0.2 },
+      { threshold: 0.15 },
     );
     obs.observe(node);
-    return () => obs.disconnect();
-  }, [inView]);
+    return () => {
+      obs.disconnect();
+      clearTimeout(fallback);
+    };
+  }, []);
 
   // Wave 60.77 — fires when a user clicks a tier CTA `<Link>`. Secondary
   // metric for PostHog experiment 373563 (pricing display). Resolved lazily
@@ -270,9 +282,10 @@ export function PricingTierV2({
             return (
               <article
                 key={tier.id}
+                id={tier.id}
                 data-in-view={inView ? 'true' : 'false'}
                 style={{ transitionDelay: `${tierIdx * 100}ms` }}
-                className={`${baseCard} ${cardBorder} translate-y-3 opacity-0 [transition-duration:600ms] data-[in-view=true]:translate-y-0 data-[in-view=true]:opacity-100`}
+                className={`scroll-mt-24 ${baseCard} ${cardBorder} translate-y-3 opacity-0 [transition-duration:600ms] data-[in-view=true]:translate-y-0 data-[in-view=true]:opacity-100`}
               >
                 {tier.recommended && (
                   <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-pill bg-primary px-4 py-1 font-mono text-xs uppercase tracking-wider text-primary-foreground">
