@@ -236,7 +236,7 @@ export default async function RootLayout({
 
   return (
     <html
-      lang={locale}
+      lang="vi"
       suppressHydrationWarning
       className={`${beVietnam.variable} ${outfit.variable} ${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable}`}
     >

@@ -1,7 +1,13 @@
 'use client';
 
 import * as React from 'react';
-import { Button } from '@hieu-asia/ui';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from '@hieu-asia/ui';
 
 export interface DataDeletionDialogProps {
   open: boolean;
@@ -9,6 +15,13 @@ export interface DataDeletionDialogProps {
   onConfirm: () => Promise<void> | void;
 }
 
+/**
+ * Wave 64.6 (audit 2026-05-29): migrated from a hand-rolled `<div role="dialog">`
+ * (no focus-trap, no Esc-to-close, no aria-labelledby) to the Radix-backed Dialog
+ * primitive so this DESTRUCTIVE confirm is keyboard-accessible (focus trap + Esc +
+ * aria wiring handled by Radix). Delete logic (type "XOÁ", pending guard, onConfirm)
+ * is unchanged.
+ */
 export function DataDeletionDialog({
   open,
   onClose,
@@ -17,28 +30,25 @@ export function DataDeletionDialog({
   const [confirmText, setConfirmText] = React.useState('');
   const [pending, setPending] = React.useState(false);
 
-  if (!open) return null;
-
   const canConfirm = confirmText.trim().toUpperCase() === 'XOÁ';
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
-      onClick={onClose}
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        // Don't allow dismiss (Esc / backdrop) mid-delete.
+        if (!next && !pending) onClose();
+      }}
     >
-      <div
-        className="w-full max-w-md rounded-lg border border-gold/30 bg-background p-6 shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
+      <DialogContent
+        hideClose
+        className="max-w-md max-h-[calc(100dvh-2rem)] overflow-y-auto"
       >
-        <h2 className="mb-3 font-heading text-xl text-gold">
-          Xác nhận xoá dữ liệu
-        </h2>
-        <p className="mb-4 text-sm text-foreground/80">
+        <DialogTitle className="text-gold">Xác nhận xoá dữ liệu</DialogTitle>
+        <DialogDescription className="text-foreground/80">
           Hành động này không thể hoàn tác. Tất cả báo cáo và lịch sử chat sẽ bị
           xoá vĩnh viễn.
-        </p>
+        </DialogDescription>
         <label className="block">
           <span className="text-xs text-muted-foreground">
             Gõ <code className="rounded bg-card/80 px-1 text-gold">XOÁ</code> để
@@ -48,11 +58,11 @@ export function DataDeletionDialog({
             type="text"
             value={confirmText}
             onChange={(e) => setConfirmText(e.target.value)}
-            className="mt-1 w-full rounded-md border border-gold/20 bg-card/60 px-3 py-2 text-sm text-foreground focus:border-gold focus:outline-none"
+            className="mt-1 w-full rounded-md border border-gold/20 bg-card/60 px-3 py-2 text-sm text-foreground focus:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
             autoFocus
           />
         </label>
-        <div className="mt-5 flex justify-end gap-2">
+        <div className="mt-2 flex justify-end gap-2">
           <Button variant="outline" onClick={onClose} disabled={pending}>
             Huỷ
           </Button>
@@ -71,7 +81,7 @@ export function DataDeletionDialog({
             {pending ? 'Đang xoá…' : 'Xoá vĩnh viễn'}
           </Button>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -51,7 +51,7 @@ export const DialogContent = React.forwardRef<
         {!hideClose && (
           <DialogPrimitive.Close
             className={cn(
-              'absolute right-4 top-4 rounded-sm text-muted-foreground transition-colors',
+              'absolute right-2 top-2 inline-flex h-11 w-11 items-center justify-center rounded-sm text-muted-foreground transition-colors',
               'hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold',
               'disabled:pointer-events-none',
             )}
