@@ -31,6 +31,7 @@
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { ShortId } from '@/components/admin/ShortId';
 import {
   Button,
   Card,
@@ -390,7 +391,7 @@ export default function AdminSessionsPage() {
         width: '140px',
         cell: (s) => (
           <span
-            className="font-mono text-xs text-gold"
+            className="font-mono text-xs text-primary"
             title={s.session_id}
           >
             {humanizeSessionId(s.session_id)}
@@ -401,12 +402,18 @@ export default function AdminSessionsPage() {
         id: 'user',
         header: 'User',
         sortKey: 'user_email',
+        // Wave 63 — was showing the raw user_id UUID under the email +
+        // "—" for anonymous sessions ("tên user không chính xác / ID quá
+        // dài"). Now: real email (or "Khách ẩn danh" for guest sessions) +
+        // a short, copyable user_id chip instead of the full 36-char UUID.
         cell: (s) => (
           <div className="min-w-0">
-            <div className="truncate text-foreground">{s.user_email || '—'}</div>
-            <div className="truncate font-mono text-[10px] text-muted-foreground">
-              {s.user_id || ''}
+            <div className="truncate text-foreground">
+              {s.user_email || (
+                <span className="italic text-muted-foreground">Khách ẩn danh</span>
+              )}
             </div>
+            {s.user_id && <ShortId id={s.user_id} className="mt-0.5" />}
           </div>
         ),
       },

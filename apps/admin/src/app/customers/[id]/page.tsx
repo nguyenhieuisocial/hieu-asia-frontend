@@ -216,7 +216,7 @@ export default function CustomerDetailPage() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <User className="h-5 w-5 text-gold" aria-hidden />
+            <User className="h-5 w-5 text-primary" aria-hidden />
             <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
               Khách hàng
             </span>
@@ -226,13 +226,15 @@ export default function CustomerDetailPage() {
             {customer?.display_name ?? `Khách hàng ${id.slice(0, 8)}…`}
           </h1>
           <div className="mt-1 flex items-center gap-2">
+            {/* Wave 63 — show first 8 chars (founder: full UUID too long);
+                full id stays in title + the copy button beside it. */}
             <p className="font-mono text-xs text-muted-foreground" title={id}>
-              {id}
+              {id.slice(0, 8)}…
             </p>
             <button
               type="button"
               onClick={copyId}
-              className="inline-flex h-6 w-6 items-center justify-center rounded text-muted-foreground hover:bg-gold/10 hover:text-gold"
+              className="inline-flex h-6 w-6 items-center justify-center rounded text-muted-foreground hover:bg-primary/10 hover:text-primary"
               aria-label="Copy ID"
               title="Copy ID"
             >
