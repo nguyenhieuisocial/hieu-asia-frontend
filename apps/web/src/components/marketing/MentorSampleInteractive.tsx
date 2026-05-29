@@ -735,11 +735,14 @@ export function MentorSampleInteractive() {
             Đây là demo trên persona mẫu. Mentor thật sẽ trả lời dựa trên lá
             số của bạn — cung mệnh, đại vận, ngũ hành cá nhân.
           </p>
+          {/* Wave 63.4 — contextual CTA (founder review #2): after the Mentor
+              demo, "ask Mentor about MY chart" not generic "Lập lá số miễn phí".
+              text-ink → text-primary-foreground (AA on ochre). */}
           <Link
             href="/onboarding"
-            className="inline-flex items-center justify-center gap-1.5 rounded-full bg-primary px-6 py-3 font-sans text-sm font-semibold text-ink transition-colors duration-200 hover:bg-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="inline-flex items-center justify-center gap-1.5 rounded-full bg-primary px-6 py-3 font-sans text-sm font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            Lập lá số miễn phí
+            Hỏi Mentor về lá số của tôi
             <ArrowRight className="size-4" aria-hidden />
           </Link>
         </div>

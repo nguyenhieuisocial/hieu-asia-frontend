@@ -207,11 +207,14 @@ export function SampleOutputShowcase() {
 
         {/* Footer CTA pair */}
         <div className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+          {/* Wave 63.4 — contextual CTA (founder review #2): after the sample
+              report, "see MY own report" not the generic "Lập lá số miễn phí".
+              text-ink → text-primary-foreground (AA on ochre). */}
           <Link
             href="/onboarding"
-            className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 font-sans text-sm font-semibold text-ink transition-colors duration-200 hover:bg-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50"
+            className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 font-sans text-sm font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            Lập lá số miễn phí
+            Xem báo cáo của chính tôi
           </Link>
           <Link
             href="/sample-report"
