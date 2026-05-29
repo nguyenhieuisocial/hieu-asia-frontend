@@ -160,9 +160,12 @@ export function EditableCell<T extends string = string>(props: EditableCellProps
           onChange={(e) => {
             // `e.target.value` is always a string; safe to widen because
             // <option> values come from props.options where value: T extends string.
-            edit.setDraft(e.target.value as T);
+            const next = e.target.value as T;
+            edit.setDraft(next);
             // Save immediately on select-change — matches native dropdown UX.
-            queueMicrotask(() => edit.save());
+            // Pass `next` explicitly: setDraft hasn't flushed yet, so calling
+            // save() bare would read the previous draft and persist it.
+            edit.save(next);
           }}
           onBlur={() => {
             if (!edit.saving && edit.draft === value) edit.cancel();

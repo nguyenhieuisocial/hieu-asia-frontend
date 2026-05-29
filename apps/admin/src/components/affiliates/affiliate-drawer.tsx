@@ -44,14 +44,20 @@ export function AffiliateDrawer({ affiliateId, onClose, onChange }: AffiliateDra
   });
 
   const [busy, setBusy] = React.useState(false);
+  const [actionError, setActionError] = React.useState<string | null>(null);
 
   async function handleApprove(payoutId: string) {
     if (!affiliateId) return;
     setBusy(true);
+    setActionError(null);
     try {
       await approvePayout(affiliateId, payoutId);
       await refetch();
       onChange?.();
+    } catch (e) {
+      // approvePayout now throws on HTTP/!ok — surface it instead of the old
+      // silent "success" that left the payout unpaid while the UI moved on.
+      setActionError(e instanceof Error ? e.message : 'Duyệt payout thất bại');
     } finally {
       setBusy(false);
     }
@@ -60,10 +66,13 @@ export function AffiliateDrawer({ affiliateId, onClose, onChange }: AffiliateDra
   async function handleToggleBan() {
     if (!data || !affiliateId) return;
     setBusy(true);
+    setActionError(null);
     try {
       await suspendAffiliate(affiliateId, data.affiliate.status === 'active');
       await refetch();
       onChange?.();
+    } catch (e) {
+      setActionError(e instanceof Error ? e.message : 'Cập nhật trạng thái thất bại');
     } finally {
       setBusy(false);
     }
@@ -225,6 +234,15 @@ export function AffiliateDrawer({ affiliateId, onClose, onChange }: AffiliateDra
                 {data.affiliate.status === 'active' ? 'Suspend' : 'Unsuspend'}
               </Button>
             </div>
+
+            {actionError && (
+              <p
+                role="alert"
+                className="mt-2 rounded border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-700 dark:text-red-300"
+              >
+                {actionError}
+              </p>
+            )}
           </>
         )}
       </SheetContent>

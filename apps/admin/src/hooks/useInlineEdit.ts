@@ -41,7 +41,7 @@ export interface UseInlineEdit<T> {
   startEdit: () => void;
   cancel: () => void;
   setDraft: (v: T) => void;
-  save: () => Promise<void>;
+  save: (overrideValue?: T) => Promise<void>;
 }
 
 export function useInlineEdit<T>({
@@ -73,7 +73,11 @@ export function useInlineEdit<T>({
     setDraft(initialValue);
   }, [initialValue]);
 
-  const save = React.useCallback(async () => {
+  const save = React.useCallback(async (overrideValue?: T) => {
+    // `overrideValue` lets a caller that sets the draft and saves in the same
+    // tick (e.g. <select> onChange) pass the new value explicitly — `draft`
+    // state hasn't flushed yet, so reading it here would persist the STALE value.
+    const valueToSave = overrideValue !== undefined ? overrideValue : draft;
     setSaving(true);
     setError(null);
     // Wave 60.13 — Sentry breadcrumb for post-mortem reconstruction of admin
@@ -81,9 +85,9 @@ export function useInlineEdit<T>({
     // NEVER raw values, so adopting this hook on PII-bearing fields (email,
     // name) stays GDPR/CCPA-safe out of the box.
     const t0 = Date.now();
-    const changed = draft !== initialValue;
+    const changed = valueToSave !== initialValue;
     try {
-      await onSave(draft);
+      await onSave(valueToSave);
       Sentry.addBreadcrumb({
         category: 'admin.inline-edit',
         message: 'save:success',
