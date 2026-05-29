@@ -276,7 +276,7 @@ export function PricingTierV2({
             // text-primary-foreground is theme-aware (Paper-50 on ochre ≈ 4.6:1
             // day · charcoal on gold-soft night) → AA-safe both modes.
             const ctaVariant = tier.primary
-              ? 'bg-primary text-primary-foreground hover:bg-primary/80'
+              ? 'bg-[hsl(var(--primary-cta))] text-primary-foreground hover:brightness-110'
               : 'border border-border text-foreground hover:bg-card';
 
             return (
@@ -288,14 +288,14 @@ export function PricingTierV2({
                 className={`scroll-mt-24 ${baseCard} ${cardBorder} translate-y-3 opacity-0 [transition-duration:600ms] data-[in-view=true]:translate-y-0 data-[in-view=true]:opacity-100`}
               >
                 {tier.recommended && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-pill bg-primary px-4 py-1 font-mono text-xs uppercase tracking-wider text-primary-foreground">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-pill bg-[hsl(var(--primary-cta))] px-4 py-1 font-mono text-xs uppercase tracking-wider text-primary-foreground">
                     KHUYÊN DÙNG
                   </span>
                 )}
 
                 <p
                   className={`font-mono text-eyebrow uppercase tracking-wider ${
-                    tier.recommended ? 'text-primary' : 'text-muted-foreground/70'
+                    tier.recommended ? 'text-primary' : 'text-muted-foreground'
                   }`}
                 >
                   {tier.name}

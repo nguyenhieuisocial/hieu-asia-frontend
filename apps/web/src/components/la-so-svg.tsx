@@ -15,15 +15,15 @@ import * as React from 'react';
  *   - 2 concentric inner rings (center halo)
  *   - 12 small markers at slice centers (each = one of the 12 cung)
  *   - 8 sao chính (star) dots scattered between inner + outer rings
+ *   - Cung Mệnh highlight: filled arc sector at top slice (ochre accent)
  *   - Center: filled dot + "MỆNH" mono caption (the self palace anchor)
  *
- * Theming:
- *   Uses `currentColor` throughout so the parent controls hue via
- *   `text-primary` / `text-ochre` / `text-gold-night`. Renders in
- *   - Day mode: Ochre #A47532 on Paper bg
- *   - Night mode: Gold-soft #D4A261 on Charcoal bg
- *   Alpha is hard-coded per element so the layering effect (faint outer
- *   ring vs prominent dividers) survives across themes.
+ * Theming (two-layer colour split):
+ *   - Structural strokes (rings, dividers): `text-foreground` group →
+ *     ink #171411 day / bone #E8DCC1 night — always legible on bg.
+ *   - Accent elements (Mệnh sector, star dots, labels): inherit parent
+ *     `text-primary` = ochre #A47532 day / gold-soft #D4A261 night.
+ *   Alpha is hard-coded per element so layering survives both themes.
  *
  * Pure SVG, no external asset, no JS runtime — server-component safe.
  */
@@ -56,6 +56,7 @@ export function LaSoSvg({ className }: { className?: string }) {
     return {
       cx: cx + r * Math.cos(angle),
       cy: cy + r * Math.sin(angle),
+      angle,
     };
   });
 
@@ -75,6 +76,31 @@ export function LaSoSvg({ className }: { className?: string }) {
     [95, 92, 2.2],     // upper-left (Thái Âm)
   ];
 
+  // Cung Mệnh highlight — top slice (between divider 11 and divider 0).
+  // Arc sector from angle (-π/2 - π/12) to (-π/2 + π/12) = ±15° around top.
+  const methStartAngle = -Math.PI / 2 - Math.PI / 12;
+  const methEndAngle   = -Math.PI / 2 + Math.PI / 12;
+  const methArcPath = [
+    `M ${cx + rInner * Math.cos(methStartAngle)} ${cy + rInner * Math.sin(methStartAngle)}`,
+    `L ${cx + rOuter * Math.cos(methStartAngle)} ${cy + rOuter * Math.sin(methStartAngle)}`,
+    `A ${rOuter} ${rOuter} 0 0 1 ${cx + rOuter * Math.cos(methEndAngle)} ${cy + rOuter * Math.sin(methEndAngle)}`,
+    `L ${cx + rInner * Math.cos(methEndAngle)} ${cy + rInner * Math.sin(methEndAngle)}`,
+    `A ${rInner} ${rInner} 0 0 0 ${cx + rInner * Math.cos(methStartAngle)} ${cy + rInner * Math.sin(methStartAngle)}`,
+    'Z',
+  ].join(' ');
+
+  // Label positions for faint cung labels — computed from slice angle (same
+  // formula as cungMarkers) so they stay type-safe without array indexing.
+  const labelRadius = (rOuter + rInner) / 2;
+  const cungLabelAngle = (i: number) => ((i + 0.5) * Math.PI * 2) / 12 - Math.PI / 2;
+  const methLabelX = cx + labelRadius * Math.cos(-Math.PI / 2);
+  const methLabelY = cy + labelRadius * Math.sin(-Math.PI / 2);
+  // Quan ≈ slice 8 (lower-left), Tài ≈ slice 2 (upper-right).
+  const quanLabelX = cx + labelRadius * Math.cos(cungLabelAngle(8));
+  const quanLabelY = cy + labelRadius * Math.sin(cungLabelAngle(8));
+  const taiLabelX = cx + labelRadius * Math.cos(cungLabelAngle(2));
+  const taiLabelY = cy + labelRadius * Math.sin(cungLabelAngle(2));
+
   return (
     <svg
       viewBox="0 0 400 400"
@@ -83,59 +109,76 @@ export function LaSoSvg({ className }: { className?: string }) {
       aria-label="Sơ đồ 12 cung lá số tử vi — mỗi cung là một lĩnh vực đời sống"
       className={className}
     >
-      {/* Outer ring frame — pair of concentric rings for depth */}
-      <circle
-        cx={cx}
-        cy={cy}
-        r={rOuterEdge}
-        fill="none"
-        stroke="currentColor"
-        strokeOpacity="0.12"
-        strokeWidth="0.5"
-      />
-      <circle
-        cx={cx}
-        cy={cy}
-        r={rOuter}
-        fill="none"
-        stroke="currentColor"
-        strokeOpacity="0.35"
-        strokeWidth="1"
-      />
-
-      {/* Inner ring (center halo) */}
-      <circle
-        cx={cx}
-        cy={cy}
-        r={rInner}
-        fill="none"
-        stroke="currentColor"
-        strokeOpacity="0.35"
-        strokeWidth="1"
-      />
-      <circle
-        cx={cx}
-        cy={cy}
-        r={rInnerEdge}
-        fill="none"
-        stroke="currentColor"
-        strokeOpacity="0.15"
-        strokeWidth="0.5"
-      />
-
-      {/* 12 cung dividers */}
-      {dividers.map((d, i) => (
-        <line
-          key={`divider-${i}`}
-          x1={d.x1}
-          y1={d.y1}
-          x2={d.x2}
-          y2={d.y2}
+      {/* ── STRUCTURAL LAYER: foreground colour (ink day / bone night) ── */}
+      <g className="text-foreground">
+        {/* Outer hairline edge — stays faint */}
+        <circle
+          cx={cx}
+          cy={cy}
+          r={rOuterEdge}
+          fill="none"
           stroke="currentColor"
-          strokeOpacity="0.22"
-          strokeWidth="0.75"
+          strokeOpacity="0.15"
+          strokeWidth="0.5"
         />
-      ))}
+        {/* Main outer ring — raised to anchor weight */}
+        <circle
+          cx={cx}
+          cy={cy}
+          r={rOuter}
+          fill="none"
+          stroke="currentColor"
+          strokeOpacity="0.7"
+          strokeWidth="1.75"
+        />
+
+        {/* Main inner ring — raised to anchor weight */}
+        <circle
+          cx={cx}
+          cy={cy}
+          r={rInner}
+          fill="none"
+          stroke="currentColor"
+          strokeOpacity="0.7"
+          strokeWidth="1.75"
+        />
+        {/* Inner hairline edge — stays faint */}
+        <circle
+          cx={cx}
+          cy={cy}
+          r={rInnerEdge}
+          fill="none"
+          stroke="currentColor"
+          strokeOpacity="0.15"
+          strokeWidth="0.5"
+        />
+
+        {/* 12 cung dividers — raised from 0.22 to 0.65 */}
+        {dividers.map((d, i) => (
+          <line
+            key={`divider-${i}`}
+            x1={d.x1}
+            y1={d.y1}
+            x2={d.x2}
+            y2={d.y2}
+            stroke="currentColor"
+            strokeOpacity="0.55"
+            strokeWidth="1.25"
+          />
+        ))}
+      </g>
+
+      {/* ── ACCENT LAYER: ochre / gold-soft (inherits text-primary from parent) ── */}
+
+      {/* Cung Mệnh sector fill — top slice at ~35% opacity */}
+      <path
+        d={methArcPath}
+        fill="currentColor"
+        fillOpacity="0.18"
+        stroke="currentColor"
+        strokeOpacity="0.55"
+        strokeWidth="1.25"
+      />
 
       {/* 12 cung markers at slice centers */}
       {cungMarkers.map((m, i) => (
@@ -145,7 +188,7 @@ export function LaSoSvg({ className }: { className?: string }) {
           cy={m.cy}
           r="1.2"
           fill="currentColor"
-          fillOpacity="0.35"
+          fillOpacity="0.45"
         />
       ))}
 
@@ -161,7 +204,50 @@ export function LaSoSvg({ className }: { className?: string }) {
         />
       ))}
 
-      {/* Center anchor — small filled dot + MỆNH caption */}
+      {/* Cung Mệnh label — readable at mid-radius of the top slice */}
+      <text
+        x={methLabelX}
+        y={methLabelY + 5}
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fontSize="8"
+        fontFamily="var(--font-jetbrains-mono), ui-monospace, monospace"
+        letterSpacing="0.12em"
+        fill="currentColor"
+        fillOpacity="0.9"
+      >
+        Mệnh
+      </text>
+
+      {/* Faint cung labels — gesture "12-palace map" for newcomers */}
+      {/* Quan = cungMarkers[8] (~8 o'clock, lower-left quadrant) */}
+      <text
+        x={quanLabelX}
+        y={quanLabelY + 4}
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fontSize="7"
+        fontFamily="var(--font-jetbrains-mono), ui-monospace, monospace"
+        fill="currentColor"
+        fillOpacity="0.3"
+      >
+        Quan
+      </text>
+      {/* Tài = cungMarkers[2] (~2 o'clock, upper-right quadrant) */}
+      <text
+        x={taiLabelX}
+        y={taiLabelY + 4}
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fontSize="7"
+        fontFamily="var(--font-jetbrains-mono), ui-monospace, monospace"
+        fill="currentColor"
+        fillOpacity="0.3"
+      >
+        Tài
+      </text>
+
+      {/* Center anchor — small filled dot + MỆNH mono caption */}
       <circle cx={cx} cy={cy} r="3" fill="currentColor" fillOpacity="0.85" />
       <text
         x={cx}

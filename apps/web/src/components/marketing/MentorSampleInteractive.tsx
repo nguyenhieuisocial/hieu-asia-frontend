@@ -597,7 +597,7 @@ export function MentorSampleInteractive() {
   return (
     <section
       aria-label="Thử Mentor AI — nhập câu hỏi tự do trên persona mẫu"
-      className="bg-background py-16 md:py-20"
+      className="bg-muted/50 py-16 md:py-20"
     >
       <div className="mx-auto max-w-marketing px-6 lg:px-12">
         {/* Header */}
@@ -618,7 +618,7 @@ export function MentorSampleInteractive() {
 
         {/* Persona card — fixed Chi Lan ENFP for demo */}
         <div className="mx-auto mt-10 max-w-marketing-tight">
-          <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground/70">
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
             BƯỚC 01 · PERSONA MẪU
           </p>
           <div className="rounded-[2px] border border-border/30 bg-card p-5 md:p-6">
@@ -638,11 +638,11 @@ export function MentorSampleInteractive() {
                 Mệnh Hoả
               </span>
               <span className="text-muted-foreground/40">·</span>
-              <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground/70">
+              <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
                 Tử Vi mẫu
               </span>
             </div>
-            <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground/80">
+            <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">
               Đây là Mentor demo, trả lời theo persona giả lập. Tài khoản thật
               cá nhân hoá theo lá số của bạn — cung mệnh, đại vận, ngũ hành
               riêng.
@@ -656,7 +656,7 @@ export function MentorSampleInteractive() {
             <form onSubmit={handleSubmit}>
               <label
                 htmlFor="mentor-demo-input"
-                className="mb-2 block font-mono text-[10px] uppercase tracking-widest text-muted-foreground/70"
+                className="mb-2 block font-mono text-[10px] uppercase tracking-widest text-muted-foreground"
               >
                 BƯỚC 02 · CÂU HỎI CỦA BẠN
               </label>
@@ -669,7 +669,7 @@ export function MentorSampleInteractive() {
                 className="min-h-[100px] w-full rounded-[2px] border border-border/40 bg-card p-4 font-sans text-[15px] leading-relaxed text-foreground placeholder:text-muted-foreground/50 focus:border-primary/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
               />
               <div className="mt-3 flex items-center justify-between gap-3">
-                <p className="text-[11px] text-muted-foreground/60">
+                <p className="text-[11px] text-muted-foreground">
                   Demo client-side · không gửi lên server
                 </p>
                 <button
@@ -693,7 +693,7 @@ export function MentorSampleInteractive() {
                     aria-hidden
                   />
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/70">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                       Bạn hỏi
                     </p>
                     <p className="mt-1 font-sans text-[15px] font-medium leading-snug text-foreground">
@@ -721,7 +721,7 @@ export function MentorSampleInteractive() {
                   <RotateCcw className="size-3.5" aria-hidden strokeWidth={2} />
                   Hỏi câu khác
                 </button>
-                <p className="text-[11px] text-muted-foreground/60">
+                <p className="text-[11px] text-muted-foreground">
                   Phản hồi dựa trên persona Chi Lan · ENFP · Mệnh Hoả
                 </p>
               </div>
@@ -731,7 +731,7 @@ export function MentorSampleInteractive() {
 
         {/* Footer CTA */}
         <div className="mx-auto mt-12 max-w-marketing-tight text-center">
-          <p className="mb-5 text-pretty text-sm leading-relaxed text-muted-foreground/70">
+          <p className="mb-5 text-pretty text-sm leading-relaxed text-muted-foreground">
             Đây là demo trên persona mẫu. Mentor thật sẽ trả lời dựa trên lá
             số của bạn — cung mệnh, đại vận, ngũ hành cá nhân.
           </p>

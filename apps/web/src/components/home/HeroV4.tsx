@@ -81,7 +81,7 @@ export function HeroV4() {
             <div className="mt-block flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <Link
                 href="/onboarding?intent=decision"
-                className="inline-flex min-h-12 items-center justify-center rounded-[2px] bg-primary px-7 py-4 font-editorial-display text-editorial-lede font-medium text-primary-foreground transition-all duration-300 ease-editorial hover:bg-primary/90"
+                className="inline-flex min-h-12 items-center justify-center rounded-[2px] bg-[hsl(var(--primary-cta))] px-7 py-4 font-editorial-display text-editorial-lede font-medium text-primary-foreground transition-all duration-300 ease-editorial hover:brightness-110"
               >
                 Tôi đang phân vân một quyết định
               </Link>
@@ -97,7 +97,7 @@ export function HeroV4() {
             </div>
 
             {/* Microcopy — JetBrains Mono editorial label */}
-            <p className="mt-block font-mono text-editorial-mono uppercase text-muted-foreground/80">
+            <p className="mt-block font-mono text-editorial-mono uppercase text-muted-foreground">
               Miễn phí · không cần thẻ · 1 phút
             </p>
           </div>
