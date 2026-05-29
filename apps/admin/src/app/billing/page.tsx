@@ -33,7 +33,7 @@ import {
   Users,
 } from 'lucide-react';
 import { getMrrByMonth, listFailedPayments, listSubscriptions } from '@/lib/admin-api';
-import { MockBanner } from '@/components/mock-banner';
+import { MockBanner, SkeletonBlock } from '@/components/mock-banner';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { LiveBadge } from '@/components/admin/live-badge';
@@ -194,7 +194,7 @@ export default function AdminBillingPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <KpiCard
           label="MRR (tháng này)"
-          value={`$${latestMonthMrr.toLocaleString('en-US') || visibleMrr.toFixed(0)}`}
+          value={mrrProbe.isLoading ? <SkeletonBlock /> : `$${latestMonthMrr.toLocaleString('en-US') || visibleMrr.toFixed(0)}`}
           icon={dollarIcon}
           accent="gold"
           sparkline={sparkline.length >= 2 ? sparkline : undefined}
@@ -202,7 +202,7 @@ export default function AdminBillingPage() {
         />
         <KpiCard
           label="ARR"
-          value={`$${arr.toLocaleString('en-US')}`}
+          value={mrrProbe.isLoading ? <SkeletonBlock /> : `$${arr.toLocaleString('en-US')}`}
           icon={trendingUpIcon}
           accent="jade"
           hint="MRR × 12"
