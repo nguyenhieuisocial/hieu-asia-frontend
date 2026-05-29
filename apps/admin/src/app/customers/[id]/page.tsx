@@ -269,7 +269,7 @@ export default function CustomerDetailPage() {
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-gold/20 bg-card/60 text-muted-foreground hover:border-gold/50 hover:text-gold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/40"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-gold/20 bg-card/60 text-muted-foreground hover:border-gold/50 hover:text-gold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ochre dark:focus-visible:ring-gold"
                 aria-label="Hành động"
                 disabled={!confirmTarget}
               >

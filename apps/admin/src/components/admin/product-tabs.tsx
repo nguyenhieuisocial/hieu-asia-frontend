@@ -81,7 +81,7 @@ export function ProductTabs({
                 onClick={() => onValueChange(tab.id)}
                 className={cn(
                   'inline-flex items-center gap-2 px-4 py-3 font-sans text-sm font-medium transition-colors duration-200',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ochre dark:focus-visible:ring-gold',
                   value === tab.id
                     ? 'border-b-2 border-gold text-gold'
                     : 'text-muted-foreground hover:text-foreground',
@@ -126,7 +126,7 @@ export function ProductTabs({
                 onClick={() => onValueChange(tab.id)}
                 className={cn(
                   'flex w-full items-center justify-between py-4 font-sans text-sm font-medium text-foreground transition-colors duration-200',
-                  'hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40',
+                  'hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ochre dark:focus-visible:ring-gold',
                 )}
               >
                 <span className="inline-flex items-center gap-2">

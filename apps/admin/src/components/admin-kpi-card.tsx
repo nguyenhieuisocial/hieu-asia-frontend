@@ -113,8 +113,8 @@ export function AdminKpiCard({
             <span
               className={cn(
                 'rounded px-1.5 py-0.5 font-mono text-[10px]',
-                trend.direction === 'up' && 'bg-jade/15 text-jade-50',
-                trend.direction === 'down' && 'bg-red-500/15 text-red-300',
+                trend.direction === 'up' && 'bg-jade/15 text-jade-700 dark:text-jade-50',
+                trend.direction === 'down' && 'bg-red-500/15 text-red-700 dark:text-red-300',
                 trend.direction === 'flat' && 'bg-muted/30 text-muted-foreground',
               )}
               title={trend.label}
@@ -141,7 +141,7 @@ export function AdminKpiCard({
             href={sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-mono text-[10px] text-gold/70 hover:text-gold focus:outline-none focus:ring-2 focus:ring-gold/40"
+            className="font-mono text-[10px] text-gold/70 hover:text-gold focus:outline-none focus:ring-2 focus:ring-ochre dark:focus:ring-gold"
             aria-label={`Mở dashboard ${SOURCE_LABEL[source]} (mở tab mới)`}
           >
             → {SOURCE_LABEL[source]}

@@ -54,7 +54,7 @@ export function ApiKeyRowActions({ apiKey, onRevoke }: ApiKeyRowActionsProps) {
         <button
           type="button"
           onClick={stopRowClick}
-          className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-gold/10 hover:text-gold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/40"
+          className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-gold/10 hover:text-gold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ochre dark:focus-visible:ring-gold"
           aria-label={`Hành động ${apiKey.name}`}
         >
           {ICON_MORE}

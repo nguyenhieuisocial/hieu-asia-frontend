@@ -51,7 +51,7 @@ export function AuditDetailsMenu({ metadata }: AuditDetailsMenuProps) {
           type="button"
           onClick={stopRowClick}
           aria-label={`Mở metadata (${summary})`}
-          className="inline-flex h-7 items-center gap-1 rounded-md border border-gold/20 bg-card/40 px-2 font-mono text-[11px] text-foreground/80 hover:border-gold/40 hover:text-gold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/40"
+          className="inline-flex h-7 items-center gap-1 rounded-md border border-gold/20 bg-card/40 px-2 font-mono text-[11px] text-foreground/80 hover:border-gold/40 hover:text-gold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ochre dark:focus-visible:ring-gold"
         >
           {summary}
           {ICON_CHEVRON}

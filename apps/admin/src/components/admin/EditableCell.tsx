@@ -114,7 +114,7 @@ export function EditableCell<T extends string = string>(props: EditableCellProps
           'group inline-flex items-center gap-1 text-left',
           'cursor-pointer rounded transition-colors',
           'hover:underline hover:underline-offset-2 hover:decoration-dotted hover:decoration-gold/60',
-          'focus:outline-none focus:ring-1 focus:ring-gold/40',
+          'focus:outline-none focus:ring-1 focus:ring-ochre dark:focus:ring-gold',
           edit.error && 'text-red-700 dark:text-red-300',
           className,
         )}

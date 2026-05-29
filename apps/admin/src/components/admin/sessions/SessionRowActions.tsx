@@ -63,7 +63,7 @@ export function SessionRowActions({
           type="button"
           onClick={stopRowClick}
           aria-label={`Mở menu thao tác cho ${sessionId}`}
-          className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-gold/10 hover:text-gold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/40"
+          className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-gold/10 hover:text-gold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ochre dark:focus-visible:ring-gold"
         >
           {ICON_MORE}
         </button>

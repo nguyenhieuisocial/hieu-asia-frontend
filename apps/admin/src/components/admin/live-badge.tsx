@@ -29,7 +29,7 @@ export function LiveBadge({
         ? 'border-gold/40 bg-gold/10 text-gold'
         : 'border-jade/40 bg-jade/10 text-jade-700 dark:text-jade-50';
   const dotClass =
-    effTone === 'red' ? 'bg-red-400' : effTone === 'gold' ? 'bg-gold' : 'bg-jade-50';
+    effTone === 'red' ? 'bg-red-400' : effTone === 'gold' ? 'bg-gold' : 'bg-jade-400 dark:bg-jade-50';
 
   return (
     <span
