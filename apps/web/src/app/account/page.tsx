@@ -132,7 +132,7 @@ function AccountPageInner() {
   // Auth gate — same contract as the previous tabbed page.
   React.useEffect(() => {
     if (!auth.loading && !auth.user) {
-      router.replace('/signin?returnTo=' + encodeURIComponent('/account'));
+      router.replace('/signin?next=' + encodeURIComponent('/account'));
     }
   }, [auth.loading, auth.user, router]);
 

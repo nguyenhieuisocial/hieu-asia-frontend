@@ -27,7 +27,7 @@ export default function AccountPaymentsPage() {
   React.useEffect(() => {
     if (!auth.loading && !auth.user) {
       router.replace(
-        '/signin?returnTo=' + encodeURIComponent('/account/payments'),
+        '/signin?next=' + encodeURIComponent('/account/payments'),
       );
     }
   }, [auth.loading, auth.user, router]);

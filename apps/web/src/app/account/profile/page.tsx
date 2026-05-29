@@ -40,7 +40,7 @@ export default function AccountProfilePage() {
   React.useEffect(() => {
     if (!auth.loading && !auth.user) {
       router.replace(
-        '/signin?returnTo=' + encodeURIComponent('/account/profile'),
+        '/signin?next=' + encodeURIComponent('/account/profile'),
       );
     }
   }, [auth.loading, auth.user, router]);

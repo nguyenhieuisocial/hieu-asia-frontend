@@ -300,7 +300,7 @@ export function BirthDataForm() {
           session_id: res.session_id,
           status: 'queued',
           consent_timestamp: consentTimestamp,
-          consent_version: 'v1.0',
+          consent_version: 'v2.0',
         }),
       );
       // Wave 30 W-D — persist birth inputs to the chart-hydration key so

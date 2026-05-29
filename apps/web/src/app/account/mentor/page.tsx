@@ -22,7 +22,7 @@ export default function AccountMentorPage() {
   React.useEffect(() => {
     if (!auth.loading && !auth.user) {
       router.replace(
-        '/signin?returnTo=' + encodeURIComponent('/account/mentor'),
+        '/signin?next=' + encodeURIComponent('/account/mentor'),
       );
     }
   }, [auth.loading, auth.user, router]);

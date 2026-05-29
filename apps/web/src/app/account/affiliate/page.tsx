@@ -21,7 +21,7 @@ export default function AccountAffiliatePage() {
   React.useEffect(() => {
     if (!auth.loading && !auth.user) {
       router.replace(
-        '/signin?returnTo=' + encodeURIComponent('/account/affiliate'),
+        '/signin?next=' + encodeURIComponent('/account/affiliate'),
       );
     }
   }, [auth.loading, auth.user, router]);
