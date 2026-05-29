@@ -3,34 +3,55 @@
 
 /*
  * shadcn/ui design tokens — mapped to hieu.asia brand palette.
+ *
+ * Wave 62.13 — aligned admin to vault 138 "Như giấy cũ" palette. The admin
+ * console was still on the pre-warm cold scale (hue 240 blue-grey bg +
+ * legacy gold #B8923D) — it was never carried through the Wave 60.95.al
+ * warm-editorial align that the web app got, so it read cold + off-brand.
+ *
+ * Admin is an ops console (long sessions, dense data) → defaults to
+ * Night "Khoảng lặng" (Charcoal × Bone × Gold-soft). Light = Day "Giấy thấm"
+ * (Paper × Ink × Ochre) for users who toggle. HSL values match
+ * apps/web/src/app/globals.css exactly so the two surfaces are coherent.
  */
 
 @layer base {
   :root {
-    --background: 36 30% 92%;
-    --foreground: 240 10% 6%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 6%;
-    --primary: 40 51% 48%;
-    --primary-foreground: 240 10% 6%;
-    --muted: 36 20% 88%;
-    --muted-foreground: 240 5% 30%;
-    --border: 40 30% 75%;
-    --ring: 40 51% 48%;
+    /* Day "Giấy thấm" — Paper × Ink × Ochre */
+    --background: 41 48% 91%;        /* Paper #F3ECDD */
+    --foreground: 30 15% 8%;         /* Ink #171411 (warm, was cold hue-240) */
+    --card: 38 60% 95%;              /* Paper-50 #FAF6EC */
+    --card-foreground: 30 15% 8%;
+    --primary: 35 53% 42%;           /* Ochre #A47532 (was gold #B8923D) */
+    --primary-foreground: 38 60% 95%; /* Paper-50 on ochre */
+    --muted: 38 36% 86%;             /* Bone #EBE2CD */
+    --muted-foreground: 33 9% 39%;   /* Ink-meta #6B6358 */
+    --border: 41 25% 73%;            /* Rule #CCC0A6 */
+    --ring: 35 53% 42%;              /* ochre */
     --radius: 0.625rem;
+
+    /* Wave 62.13 — five-element functional accents (theme-stable). For admin
+     * data-viz / status chips ONLY (e.g. cost-by-model bars, health dots) —
+     * never as a page/card background. Identical in both modes. */
+    --hanh-kim: #7D8A98;             /* Kim · METAL */
+    --hanh-moc: #6B8154;             /* Mộc · WOOD */
+    --hanh-thuy: #3F5D6F;            /* Thuỷ · WATER */
+    --hanh-hoa: #A44A36;             /* Hoả · FIRE */
+    --hanh-tho: #A07842;             /* Thổ · EARTH */
   }
 
   .dark {
-    --background: 240 8% 6%;
-    --foreground: 36 30% 92%;
-    --card: 240 10% 9%;
-    --card-foreground: 36 30% 92%;
-    --primary: 40 51% 48%;
-    --primary-foreground: 240 10% 6%;
-    --muted: 240 6% 14%;
-    --muted-foreground: 36 15% 65%;
-    --border: 40 30% 25%;
-    --ring: 40 51% 48%;
+    /* Night "Khoảng lặng" — Charcoal × Bone × Gold-soft */
+    --background: 33 27% 6%;         /* Charcoal #15110C (warm, was cold hue-240) */
+    --foreground: 41 46% 83%;        /* Bone #E8DCC1 */
+    --card: 30 17% 10%;              /* Bark #1F1A13 */
+    --card-foreground: 41 46% 83%;
+    --primary: 34 57% 60%;           /* Gold-soft #D4A261 (was harsh #B8923D) */
+    --primary-foreground: 33 27% 6%; /* charcoal on gold-soft */
+    --muted: 32 16% 9%;              /* Charcoal-200 #1B1714 */
+    --muted-foreground: 41 11% 53%;  /* Bone-soft #9A8D72 */
+    --border: 33 26% 18%;            /* Rule #3A3122 */
+    --ring: 34 57% 60%;              /* gold-soft */
   }
 
   * {

@@ -74,13 +74,13 @@ export function RealtimeIndicator() {
 
   return (
     <div
-      className="inline-flex items-center gap-2 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 px-3 py-1.5 text-xs"
+      className="inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-3 py-1.5 text-xs"
       title={`WebSocket: ${label}${peerCount > 1 ? ` · ${peerCount} admins online` : ''}${events.length > 0 ? ` · ${events.length} events buffered` : ''}`}
     >
       <span className={`h-2 w-2 rounded-full ${dotColor} ${status === 'open' ? 'animate-pulse' : ''}`} aria-hidden="true" />
-      <span className="text-zinc-600 dark:text-zinc-400">{label}</span>
+      <span className="text-muted-foreground">{label}</span>
       {peerCount > 1 && (
-        <span className="text-zinc-400 dark:text-zinc-500">· {peerCount}</span>
+        <span className="text-muted-foreground/70">· {peerCount}</span>
       )}
     </div>
   );

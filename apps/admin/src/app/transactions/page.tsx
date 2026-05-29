@@ -337,7 +337,7 @@ export default function AdminTransactionsPage() {
           )}
 
           <div className="overflow-x-auto rounded-lg border border-gold/15 bg-card/60">
-            <table className="min-w-full divide-y divide-zinc-800 text-sm">
+            <table className="min-w-full divide-y divide-border text-sm">
               <thead>
                 <tr className="text-left text-xs uppercase tracking-wider text-gold/80">
                   <th className="px-3 py-2 font-medium">Thời gian</th>
@@ -349,7 +349,7 @@ export default function AdminTransactionsPage() {
                   <th className="px-3 py-2 text-right font-medium">Hành động</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-800">
+              <tbody className="divide-y divide-border">
                 {isLoading && (
                   <tr>
                     <td colSpan={7} className="px-3 py-6 text-center text-muted-foreground">

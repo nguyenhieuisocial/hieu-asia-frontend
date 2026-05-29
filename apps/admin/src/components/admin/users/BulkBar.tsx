@@ -58,7 +58,7 @@ export function BulkSuspendConfirm({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 px-4"
       onClick={pending ? undefined : onClose}
     >
       <div

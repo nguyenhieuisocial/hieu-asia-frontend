@@ -212,7 +212,7 @@ export function Sidebar() {
       {/* Backdrop (mobile) */}
       {openMobile && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
+          className="fixed inset-0 z-40 bg-background/60 lg:hidden"
           onClick={() => setOpenMobile(false)}
           aria-hidden="true"
         />

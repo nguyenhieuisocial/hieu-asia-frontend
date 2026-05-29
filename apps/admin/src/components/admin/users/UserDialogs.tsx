@@ -73,7 +73,7 @@ export function UserFormModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 px-4"
       onClick={onClose}
     >
       <div
@@ -179,7 +179,7 @@ export function ConfirmDeleteModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 px-4"
       onClick={onClose}
     >
       <div

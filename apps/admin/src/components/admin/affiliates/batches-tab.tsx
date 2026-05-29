@@ -284,7 +284,7 @@ function BuildBatchModal({ onClose, onBuilt }: { onClose: () => void; onBuilt: (
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-background/60 p-4"
       onClick={onClose}
     >
       <Card className="w-full max-w-md" onClick={(e: React.MouseEvent) => e.stopPropagation()}>

@@ -287,7 +287,7 @@ export default function VendorsPage() {
             <p className="py-4 text-center text-sm text-muted-foreground">Chưa có routing.</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-zinc-800 text-sm">
+              <table className="min-w-full divide-y divide-border text-sm">
                 <thead>
                   <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
                     <th className="px-3 py-2 font-medium">Role</th>
@@ -295,7 +295,7 @@ export default function VendorsPage() {
                     <th className="px-3 py-2 font-medium">Fallback chain</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-800">
+                <tbody className="divide-y divide-border">
                   {ROLES_ORDER.map(r => {
                     const route = routing[r];
                     if (!route) return null;
