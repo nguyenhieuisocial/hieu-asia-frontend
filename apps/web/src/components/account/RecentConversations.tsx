@@ -11,6 +11,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { MessageCircle } from 'lucide-react';
+import { Skeleton } from '@hieu-asia/ui';
 import {
   listMentorConversations,
   type MentorConversation,
@@ -58,8 +59,8 @@ export function RecentConversations() {
     };
   }, []);
 
-  // Render nothing until we know whether there's content — keeps CLS low
-  // and avoids flashing an empty section on first paint.
+  // Render a shape-matched skeleton until we know whether there's content —
+  // keeps CLS low and avoids flashing an empty section on first paint.
   if (loading) {
     return (
       <section aria-labelledby="account-recent-conversations-h">
@@ -67,8 +68,22 @@ export function RecentConversations() {
           role="status"
           aria-live="polite"
           aria-busy="true"
-          className="h-32 w-full animate-pulse rounded-xl bg-card/30"
-        />
+          className="space-y-2"
+        >
+          <span className="sr-only">Đang tải cuộc trò chuyện gần đây…</span>
+          {Array.from({ length: PREVIEW_COUNT }).map((_, i) => (
+            <div
+              key={i}
+              className="flex items-start gap-3 rounded-lg border border-border bg-card/30 px-3 py-3"
+            >
+              <Skeleton className="mt-0.5 h-4 w-4 shrink-0 rounded" />
+              <div className="min-w-0 flex-1 space-y-2">
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-2.5 w-32" />
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
     );
   }

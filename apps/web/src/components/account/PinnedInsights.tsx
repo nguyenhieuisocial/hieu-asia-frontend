@@ -28,6 +28,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Quote } from 'lucide-react';
 import { getSupabaseAuth } from '@/lib/auth-client';
+import { Skeleton } from '@hieu-asia/ui';
 
 interface Insight {
   id: string;
@@ -186,8 +187,23 @@ export function PinnedInsights() {
           role="status"
           aria-live="polite"
           aria-busy="true"
-          className="h-32 animate-pulse rounded-xl bg-card/30"
-        />
+          className="space-y-3"
+        >
+          <span className="sr-only">Đang tải ghim từ trò chuyện…</span>
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className="relative overflow-hidden rounded-xl border border-border bg-card/40 p-5"
+            >
+              <Skeleton className="absolute left-3 top-3 h-4 w-4 rounded" />
+              <div className="space-y-2 pl-7">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-11/12" />
+                <Skeleton className="h-4 w-2/3" />
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
         <ul className="space-y-3">
           {items.map((it) => (

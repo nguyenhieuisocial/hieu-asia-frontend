@@ -29,6 +29,7 @@ import { TuViChartSection } from '@/components/tuvi/TuViChartSection';
 import { SectionFeedback } from '@/components/report/SectionFeedback';
 import { ProductTabs, type ProductTab } from '@/components/product/ProductTabs';
 import { ReportTOC } from '@/components/report/ReportTOC';
+import { ReadingProgress } from '@/components/report/ReadingProgress';
 import { PostReadingSurvey } from '@/components/feedback/PostReadingSurvey';
 import { track } from '@/lib/analytics';
 
@@ -179,6 +180,9 @@ function ReportContent() {
 
   return (
     <main className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+      {/* Wave UX — thanh tiến độ đọc (scroll-driven). Chỉ render khi báo cáo
+          đã sẵn sàng (nhánh này), tránh hiển thị trên trạng thái lỗi/loading. */}
+      <ReadingProgress />
       <header className="mb-6 flex items-center justify-between">
         <Link
           href="/account"
