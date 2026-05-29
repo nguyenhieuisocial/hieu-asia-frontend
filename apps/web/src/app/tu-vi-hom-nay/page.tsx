@@ -5,6 +5,8 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { getVietnamTodayISO } from '@/lib/vn-date';
 import { generateZodiacBlurb, isGenericSummary } from '@/lib/zodiac-blurb';
+import { breadcrumb, webPage } from '@/lib/seo/jsonld';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 600;
@@ -67,26 +69,18 @@ export const metadata: Metadata = {
   },
 };
 
-const BREADCRUMB_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
-    { '@type': 'ListItem', position: 2, name: 'Tử Vi hôm nay', item: 'https://hieu.asia/tu-vi-hom-nay' },
-  ],
-};
-
-const WEBPAGE_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'WebPage',
-  '@id': 'https://hieu.asia/tu-vi-hom-nay',
-  url: 'https://hieu.asia/tu-vi-hom-nay',
-  name: 'Tử Vi 12 con giáp hôm nay',
-  description:
-    'Tử Vi hàng ngày cho 12 con giáp — tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe. Đăng ký push notification mỗi sáng 6h.',
-  inLanguage: 'vi-VN',
-  isPartOf: { '@type': 'WebSite', name: 'hieu.asia', url: 'https://hieu.asia' },
-};
+const JSONLD = [
+  breadcrumb([
+    { name: 'Trang chủ', url: '/' },
+    { name: 'Tử Vi hôm nay', url: '/tu-vi-hom-nay' },
+  ]),
+  webPage({
+    name: 'Tử Vi 12 con giáp hôm nay',
+    description:
+      'Tử Vi hàng ngày cho 12 con giáp — tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe. Đăng ký push notification mỗi sáng 6h.',
+    url: '/tu-vi-hom-nay',
+  }),
+];
 
 interface DailyHoroscope {
   zodiac_key: string;
@@ -127,14 +121,7 @@ export default async function Page() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }}
-      />
+      <JsonLd data={JSONLD} />
     <ToolPageShell
       eyebrow={`Tử Vi · ${today}`}
       icon={<span aria-hidden="true">🐲</span>}

@@ -5,6 +5,8 @@ import { Briefcase, Heart, Wallet, Activity, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { article, breadcrumb } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   title: 'Tử Vi 2026 cá nhân hoá theo ngày sinh (Bính Ngọ)',
@@ -97,49 +99,32 @@ const DECISIONS = [
   },
 ];
 
-const BREADCRUMB_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
-    { '@type': 'ListItem', position: 2, name: 'Tử Vi 2026', item: 'https://hieu.asia/tu-vi-2026' },
-  ],
-};
-
 // Wave 60.96.2 — type=article in openGraph signals editorial yearly outlook;
 // pair with Article JSON-LD so Google can render rich snippets correctly.
-const ARTICLE_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  '@id': 'https://hieu.asia/tu-vi-2026',
-  headline: 'Tử Vi 2026 — chủ đề năm Bính Ngọ hành Hoả',
-  description:
-    'Tử Vi 2026 (năm Bính Ngọ): chủ đề năm, sự nghiệp, tài chính, tình cảm, sức khoẻ — cá nhân hoá theo lá số.',
-  inLanguage: 'vi-VN',
-  author: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
-  publisher: {
-    '@type': 'Organization',
-    name: 'hieu.asia',
-    logo: { '@type': 'ImageObject', url: 'https://hieu.asia/icon-512.png' },
-  },
-  image: ['https://hieu.asia/og-image.jpg'],
-  datePublished: '2025-12-01',
-  dateModified: '2026-05-28',
-  mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://hieu.asia/tu-vi-2026' },
-};
+// Organization (author/publisher) is site-wide in layout.tsx → referenced by
+// @id inside article(); not repeated here.
+const JSONLD = [
+  article({
+    headline: 'Tử Vi 2026 — chủ đề năm Bính Ngọ hành Hoả',
+    description:
+      'Tử Vi 2026 (năm Bính Ngọ): chủ đề năm, sự nghiệp, tài chính, tình cảm, sức khoẻ — cá nhân hoá theo lá số.',
+    url: '/tu-vi-2026',
+    image: '/og-image.jpg',
+    datePublished: '2025-12-01',
+    dateModified: '2026-05-28',
+    type: 'Article',
+  }),
+  breadcrumb([
+    { name: 'Trang chủ', url: '/' },
+    { name: 'Tử Vi 2026', url: '/tu-vi-2026' },
+  ]),
+];
 
 export default function TuVi2026Page() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_JSONLD) }}
-      />
+      <JsonLd data={JSONLD} />
 
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
