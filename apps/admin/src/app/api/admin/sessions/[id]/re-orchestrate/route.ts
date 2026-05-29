@@ -4,6 +4,7 @@
  * Re-runs the full agent pipeline for a session. No body required.
  */
 import { type NextRequest, NextResponse } from 'next/server';
+import { requireAdminSession } from '@/lib/auth-server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -14,6 +15,8 @@ const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
 type Ctx = { params: Promise<{ id: string }> };
 
 export async function POST(_req: NextRequest, ctx: Ctx) {
+  const auth = await requireAdminSession();
+  if ('error' in auth) return auth.error;
   if (!TOKEN) {
     return NextResponse.json(
       { ok: false, error: 'HIEU_API_ADMIN_TOKEN not configured on the admin app' },

@@ -7,6 +7,7 @@
  */
 
 import { NextResponse } from 'next/server';
+import { requireAdminSession } from '@/lib/auth-server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -15,6 +16,8 @@ const GATEWAY = process.env.HIEU_API_GATEWAY_URL ?? 'https://api.hieu.asia';
 const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
 
 export async function GET(req: Request) {
+  const auth = await requireAdminSession();
+  if ('error' in auth) return auth.error;
   if (!TOKEN) {
     return NextResponse.json(
       {
