@@ -47,8 +47,19 @@ export function useRealtime(topics: RealtimeTopic[]) {
   const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closedByCallerRef = useRef<boolean>(false);
 
+  // Stable primitive key — `topics` is a fresh array literal on every render at
+  // the call site, so depending on the array reference rebuilt the socket on
+  // EVERY render (infinite reconnect). Depend on the joined string instead.
+  const topicsKey = topics.join(',');
+
   const connect = useCallback(() => {
     if (typeof window === 'undefined') return; // SSR guard
+
+    // Clear any pending backoff reconnect so timers/sockets never stack.
+    if (reconnectTimerRef.current) {
+      clearTimeout(reconnectTimerRef.current);
+      reconnectTimerRef.current = null;
+    }
 
     const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
     const wsUrl = apiUrl.replace(/^http/, 'ws') + '/admin/realtime/connect';
@@ -63,7 +74,7 @@ export function useRealtime(topics: RealtimeTopic[]) {
       return;
     }
 
-    const url = `${wsUrl}?token=${encodeURIComponent(token)}&admin_email=${encodeURIComponent(adminEmail)}&topics=${topics.join(',')}`;
+    const url = `${wsUrl}?token=${encodeURIComponent(token)}&admin_email=${encodeURIComponent(adminEmail)}&topics=${topicsKey}`;
     const ws = new WebSocket(url);
     wsRef.current = ws;
     setStatus('connecting');
@@ -92,6 +103,9 @@ export function useRealtime(topics: RealtimeTopic[]) {
     });
 
     ws.addEventListener('close', () => {
+      // Ignore the close of a socket already superseded by a reconnect — else its
+      // async close would schedule a duplicate reconnect racing the new socket.
+      if (wsRef.current !== ws) return;
       setStatus('closed');
       if (closedByCallerRef.current) return; // intentional close, no reconnect
       // Exponential backoff reconnect
@@ -105,12 +119,17 @@ export function useRealtime(topics: RealtimeTopic[]) {
     ws.addEventListener('error', () => {
       setStatus('error');
     });
-  }, [topics]);
+  }, [topicsKey]);
 
   const reconnect = useCallback(() => {
+    if (reconnectTimerRef.current) {
+      clearTimeout(reconnectTimerRef.current);
+      reconnectTimerRef.current = null;
+    }
     if (wsRef.current) {
       closedByCallerRef.current = true;
       wsRef.current.close();
+      wsRef.current = null; // mark superseded so the old close handler no-ops
     }
     closedByCallerRef.current = false;
     backoffRef.current = INITIAL_BACKOFF_MS;

@@ -378,19 +378,22 @@ export async function fetchFraudReport(): Promise<FraudReportResponse> {
 }
 
 export async function approvePayout(affiliateId: string, payoutId: string): Promise<void> {
-  await fetch(`/api/admin/affiliates/${affiliateId}/approve-payout`, {
+  const r = await fetch(`/api/admin/affiliates/${affiliateId}/approve-payout`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ payout_id: payoutId }),
   });
+  // Throw on HTTP error / {ok:false} — never silently report success on a money op.
+  await jsonOk<{ ok: boolean }>(r);
 }
 
 export async function suspendAffiliate(affiliateId: string, banned: boolean): Promise<void> {
-  await fetch(`/api/admin/affiliates/${affiliateId}/ban`, {
+  const r = await fetch(`/api/admin/affiliates/${affiliateId}/ban`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ banned }),
   });
+  await jsonOk<{ ok: boolean }>(r);
 }
 
 // ----- Fraud analysis (client-side aggregation) -----
