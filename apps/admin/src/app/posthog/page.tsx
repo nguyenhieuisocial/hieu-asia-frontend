@@ -119,7 +119,7 @@ function Tile({
 }) {
   return (
     <div
-      className="rounded-xl border border-gold/15 bg-gradient-to-br from-ink/70 via-ink/60 to-ink/40 p-5 backdrop-blur-sm"
+      className="rounded-xl border border-gold/15 bg-card p-5 backdrop-blur-sm"
       title={hint}
     >
       <div className="flex items-start justify-between gap-2">

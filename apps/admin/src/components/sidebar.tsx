@@ -3,16 +3,19 @@
 /**
  * Admin sidebar — grouped, collapsible, mobile off-canvas.
  *
- * Groups follow the operating-model split:
- *   - Vận hành (operations): dashboard, sessions, tasks
- *   - Doanh thu (growth):    customers, transactions, payments, affiliates, analytics, posthog
- *   - Tri thức (knowledge):  rag, prompts
- *   - Hệ thống (system):     vendors, cost, llm-spend, keystore, users (admin), settings
+ * Groups follow the operating-model split (Wave 63.3 IA regroup):
+ *   - Tổng quan (overview):    dashboard, 3rd-party overview, service status, uptime
+ *   - Phiên & Khách (sessions): sessions, customers, feedback, tasks/errors
+ *   - Doanh thu (revenue):     transactions, payments, billing, coupons, affiliate, sticky-cta
+ *   - Analytics:               analytics, metrics, web-vitals, cohorts, posthog, experiments
+ *   - AI & Chi phí (ai/cost):  cost, llm-spend, ai-quality, eval, vendors, prompts, rag
+ *   - Nội dung (content):      content
+ *   - Hệ thống (system):       keystore, secrets, connect, feature-flags, users, migrations, audit, settings
  *
  * Each group expands by default on desktop; mobile-first paint collapses
- * `system` + `knowledge` to keep the off-canvas drawer scrollable on small
- * screens. The user's last collapse state is kept in localStorage so reloads
- * don't disrupt navigation.
+ * the bulkier `ai` + `system` groups to keep the off-canvas drawer scrollable
+ * on small screens. The user's last collapse state is kept in localStorage so
+ * reloads don't disrupt navigation.
  */
 
 import * as React from 'react';
@@ -53,6 +56,9 @@ import {
   MessageSquare,
   ServerCog,
   FileText,
+  Wallet,
+  Lock,
+  Plug,
 } from 'lucide-react';
 
 interface NavItem {
@@ -69,59 +75,78 @@ interface NavGroup {
 
 const NAV_GROUPS: NavGroup[] = [
   {
-    id: 'ops',
-    label: 'Vận hành',
+    id: 'overview',
+    label: 'Tổng quan',
     items: [
       { href: '/', label: 'Tổng quan', Icon: LayoutDashboard },
       { href: '/overview', label: 'Overview (3rd-party)', Icon: LineChart },
-      { href: '/sessions', label: 'Phiên phân tích', Icon: ListTodo },
-      { href: '/tasks', label: 'Task / Lỗi', Icon: Bot },
-      { href: '/audit', label: 'Audit log', Icon: ScrollText },
-      { href: '/metrics', label: 'Metrics', Icon: LineChart },
-      { href: '/web-vitals', label: 'Web Vitals', Icon: Gauge },
-      { href: '/eval', label: 'Eval framework', Icon: Brain },
-      { href: '/experiments', label: 'Experiments', Icon: FlaskConical },
-      { href: '/feedback', label: 'Phản hồi', Icon: MessageSquare },
+      { href: '/system', label: 'Trạng thái dịch vụ', Icon: ServerCog },
+      { href: '/health', label: 'Uptime', Icon: Heart },
     ],
   },
   {
-    id: 'growth',
+    id: 'sessions',
+    label: 'Phiên & Khách',
+    items: [
+      { href: '/sessions', label: 'Phiên phân tích', Icon: ListTodo },
+      { href: '/customers', label: 'Khách hàng', Icon: User },
+      { href: '/feedback', label: 'Phản hồi', Icon: MessageSquare },
+      { href: '/tasks', label: 'Task / Lỗi', Icon: Bot },
+    ],
+  },
+  {
+    id: 'revenue',
     label: 'Doanh thu',
     items: [
-      { href: '/customers', label: 'Khách hàng', Icon: User },
-      { href: '/cohorts', label: 'Cohorts & Retention', Icon: BarChart3 },
-      { href: '/sticky-cta', label: 'Sticky CTA', Icon: MousePointerClick },
-      { href: '/affiliates', label: 'Affiliate', Icon: HandCoins },
-      { href: '/coupons', label: 'Coupons', Icon: Ticket },
       { href: '/transactions', label: 'Giao dịch', Icon: Receipt },
       { href: '/payments', label: 'Thanh toán', Icon: CreditCard },
-      { href: '/analytics', label: 'Analytics', Icon: BarChart3 },
-      { href: '/posthog', label: 'PostHog', Icon: Activity },
+      { href: '/billing', label: 'Billing', Icon: Wallet },
+      { href: '/coupons', label: 'Coupons', Icon: Ticket },
+      { href: '/affiliates', label: 'Affiliate', Icon: HandCoins },
+      { href: '/sticky-cta', label: 'Sticky CTA', Icon: MousePointerClick },
     ],
   },
   {
-    id: 'knowledge',
-    label: 'Tri thức',
+    id: 'analytics',
+    label: 'Analytics',
     items: [
-      { href: '/rag', label: 'RAG', Icon: BookOpen },
-      { href: '/prompts', label: 'Prompt Editor', Icon: Sparkles },
-      { href: '/content', label: 'Nội dung', Icon: FileText },
+      { href: '/analytics', label: 'Analytics', Icon: BarChart3 },
+      { href: '/metrics', label: 'Metrics', Icon: LineChart },
+      { href: '/web-vitals', label: 'Web Vitals', Icon: Gauge },
+      { href: '/cohorts', label: 'Cohorts & Retention', Icon: BarChart3 },
+      { href: '/posthog', label: 'PostHog', Icon: Activity },
+      { href: '/experiments', label: 'Experiments', Icon: FlaskConical },
     ],
+  },
+  {
+    id: 'ai',
+    label: 'AI & Chi phí',
+    items: [
+      { href: '/cost', label: 'Chi phí AI', Icon: DollarSign },
+      { href: '/llm-spend', label: 'Chi phí LLM', Icon: DollarSign },
+      { href: '/ai-quality', label: 'Chất lượng AI', Icon: Shield },
+      { href: '/eval', label: 'Eval framework', Icon: Brain },
+      { href: '/vendors', label: 'Vendors', Icon: Cpu },
+      { href: '/prompts', label: 'Prompt Editor', Icon: Sparkles },
+      { href: '/rag', label: 'RAG', Icon: BookOpen },
+    ],
+  },
+  {
+    id: 'content',
+    label: 'Nội dung',
+    items: [{ href: '/content', label: 'Nội dung', Icon: FileText }],
   },
   {
     id: 'system',
     label: 'Hệ thống',
     items: [
-      { href: '/vendors', label: 'Vendors', Icon: Cpu },
-      { href: '/cost', label: 'Chi phí AI', Icon: DollarSign },
-      { href: '/llm-spend', label: 'Chi phí LLM', Icon: DollarSign },
-      { href: '/ai-quality', label: 'Chất lượng AI', Icon: Shield },
       { href: '/keystore', label: 'Keystore', Icon: Key },
+      { href: '/secrets', label: 'Secrets', Icon: Lock },
+      { href: '/connect', label: 'Kết nối (OAuth)', Icon: Plug },
       { href: '/feature-flags', label: 'Feature flags', Icon: Flag },
       { href: '/users', label: 'Người dùng admin', Icon: Users },
-      { href: '/system', label: 'Trạng thái dịch vụ', Icon: ServerCog },
-      { href: '/health', label: 'Uptime', Icon: Heart },
       { href: '/migrations', label: 'Migrations', Icon: Database },
+      { href: '/audit', label: 'Audit log', Icon: ScrollText },
       { href: '/settings', label: 'Cài đặt', Icon: Settings },
     ],
   },
@@ -137,14 +162,14 @@ export function Sidebar() {
 
   // Persist collapse state in localStorage. On mobile first-paint with no
   // stored state, default-collapse the bulkier groups so the drawer is
-  // immediately scannable instead of dumping 22 items.
+  // immediately scannable instead of dumping every item at once.
   React.useEffect(() => {
     try {
       const stored = window.localStorage.getItem(COLLAPSED_KEY);
       if (stored) {
         setCollapsed(new Set(JSON.parse(stored)));
       } else if (window.innerWidth < 768) {
-        setCollapsed(new Set(['system', 'knowledge']));
+        setCollapsed(new Set(['ai', 'system']));
       }
     } catch {
       /* noop */
