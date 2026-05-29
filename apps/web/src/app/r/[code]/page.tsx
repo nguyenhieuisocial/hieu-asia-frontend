@@ -18,6 +18,11 @@ import { safeJson } from '@/lib/safe-json';
 
 export const dynamic = 'force-dynamic';
 
+// Wave 64 — referral redirect / near-duplicate landing: keep out of the index.
+export const metadata = {
+  robots: { index: false, follow: false },
+};
+
 // NOTE: cookie set lives in `middleware.ts` for /r/<CODE>. Next 15 forbids
 // cookies().set() inside Server Components during render. The page component
 // now just renders + redirects.

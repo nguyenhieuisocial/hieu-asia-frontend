@@ -25,7 +25,6 @@ export const metadata: Metadata = {
   title: 'Đăng nhập',
   description:
     'Đăng nhập để xem lá số Tử Vi của bạn. Magic link hoặc OAuth (Google / Facebook / Apple).',
-  alternates: { canonical: 'https://hieu.asia/signin' },
 };
 
 interface SignInPageProps {

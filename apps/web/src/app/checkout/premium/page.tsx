@@ -4,6 +4,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 export const metadata = {
   title: 'Checkout Premium',
   description: 'Hoàn tất đăng ký gói Premium hieu.asia',
+  robots: { index: false, follow: false },
 };
 
 /**
