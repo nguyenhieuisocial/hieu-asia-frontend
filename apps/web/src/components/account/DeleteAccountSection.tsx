@@ -13,6 +13,7 @@ import {
   Input,
   toast,
 } from '@hieu-asia/ui';
+import { getSupabaseAuth } from '@/lib/auth-client';
 
 const CONFIRM_TYPED = 'XÓA TÀI KHOẢN';
 const CONFIRM_BACKEND = 'DELETE_MY_DATA_FOREVER';
@@ -59,9 +60,19 @@ export function DeleteAccountSection({ userId }: DeleteAccountSectionProps) {
     }
     setPending(true);
     try {
+      // Attach the Supabase access token — the server verifies it and erases
+      // ONLY the authenticated user's data (the route ignores the body user_id).
+      const sb = getSupabaseAuth();
+      let token: string | undefined;
+      if (sb) {
+        const { data } = await sb.auth.getSession();
+        token = data.session?.access_token;
+      }
+      const headers: Record<string, string> = { 'content-type': 'application/json' };
+      if (token) headers.authorization = `Bearer ${token}`;
       const res = await fetch('/api/account/erase', {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers,
         body: JSON.stringify({ user_id: userId, confirm: CONFIRM_BACKEND }),
       });
       // Guard against HTML error pages (Vercel 502, gateway timeout) —

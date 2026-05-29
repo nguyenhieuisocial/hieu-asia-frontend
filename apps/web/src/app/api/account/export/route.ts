@@ -8,6 +8,7 @@
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
+import { getSessionFromRequest } from '@/lib/reasoning/session-auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -23,12 +24,31 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let body: unknown;
+  // Auth (Wave 64 security audit P0): this proxy attaches the privileged
+  // service token, so it MUST authenticate the caller and act ONLY on their own
+  // data. Verify the Supabase JWT and derive user_id from it — never trust a
+  // client-supplied user_id (was an unauth IDOR: any caller could export any
+  // user's full PII by POSTing their UUID, because the backend trusts
+  // body.user_id when the service token is present).
+  let session: { userId: string; email: string | null } | null;
   try {
-    body = await req.json();
+    session = await getSessionFromRequest(req);
+  } catch {
+    return NextResponse.json({ ok: false, error: 'auth_unavailable' }, { status: 503 });
+  }
+  if (!session) {
+    return NextResponse.json({ ok: false, error: 'auth_required' }, { status: 401 });
+  }
+
+  let body: Record<string, unknown>;
+  try {
+    body = (await req.json()) as Record<string, unknown>;
   } catch {
     return NextResponse.json({ ok: false, error: 'invalid_json' }, { status: 400 });
   }
+
+  // Force user_id to the authenticated user; ignore any client-supplied value.
+  const forwardBody = { ...body, user_id: session.userId };
 
   try {
     const res = await fetch(`${HIEU_API_URL}/user/export`, {
@@ -37,7 +57,7 @@ export async function POST(req: NextRequest) {
         'content-type': 'application/json',
         'X-Service-Token': HIEU_API_SERVICE_TOKEN,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(forwardBody),
       cache: 'no-store',
     });
     const text = await res.text();

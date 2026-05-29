@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, toast } from '@hieu-asia/ui';
+import { getSupabaseAuth } from '@/lib/auth-client';
 
 const LAST_EXPORT_KEY = 'hieu_last_export_at';
 
@@ -51,9 +52,19 @@ export function DataExportSection({ userId }: DataExportSectionProps) {
     }
     setPending(true);
     try {
+      // Attach the Supabase access token — the server verifies it and exports
+      // ONLY the authenticated user's data (the route ignores the body user_id).
+      const sb = getSupabaseAuth();
+      let token: string | undefined;
+      if (sb) {
+        const { data } = await sb.auth.getSession();
+        token = data.session?.access_token;
+      }
+      const headers: Record<string, string> = { 'content-type': 'application/json' };
+      if (token) headers.authorization = `Bearer ${token}`;
       const res = await fetch('/api/account/export', {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers,
         body: JSON.stringify({ user_id: userId }),
       });
       // Guard against HTML error pages.
