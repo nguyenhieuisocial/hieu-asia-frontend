@@ -295,6 +295,26 @@ export default function PricingPage() {
             collapses on mobile so the section adds ~24px when closed. */}
         <AdvancedOptions />
 
+        {/* 1:1 founder session — a SEPARATE product from the AI Mentor
+            subscription above (human 60-min consult vs unlimited AI). Surfaced
+            discreetly so it's discoverable without competing with the 3
+            self-serve tiers. Lives at /checkout/founder-1on1. */}
+        <div className="mx-auto mt-6 max-w-marketing px-6 text-center">
+          <p className="text-sm text-muted-foreground">
+            Muốn đối thoại{' '}
+            <strong className="font-medium text-foreground">
+              1:1 trực tiếp 60 phút với founder
+            </strong>{' '}
+            về một quyết định cụ thể?{' '}
+            <a
+              href="/checkout/founder-1on1"
+              className="text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
+            >
+              Xem buổi tư vấn riêng →
+            </a>
+          </p>
+        </div>
+
         {/* Wave 60.79.T2 (vault 112 P1 #6): TrustStrip lifted FROM between
             hero and pricing tiers TO right after the tiers + before FAQ. The
             audit caught the strip sitting ~120px below the hero CTA in a dead
