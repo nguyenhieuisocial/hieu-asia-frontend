@@ -23,7 +23,7 @@ export default function NotFound() {
         >
           404
         </p>
-        <p className="mt-2 font-mono text-xs font-medium uppercase tracking-[0.12em] text-gold/80">
+        <p className="mt-2 font-mono text-xs font-medium uppercase tracking-[0.12em] text-gold-700">
           không tìm thấy trang này
         </p>
         <h1 className="mt-6 font-heading text-3xl font-semibold text-foreground sm:text-4xl">

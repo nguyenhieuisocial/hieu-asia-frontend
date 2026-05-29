@@ -267,7 +267,7 @@ export default function CompatibilityPage() {
             </Card>
 
             <div>
-              <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
                 Năm chiều cộng hưởng
               </h2>
               <div className="space-y-4">
@@ -293,7 +293,7 @@ export default function CompatibilityPage() {
             </div>
 
             <div>
-              <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
                 Gợi ý giao tiếp
               </h2>
               <div className="grid gap-4 md:grid-cols-2">

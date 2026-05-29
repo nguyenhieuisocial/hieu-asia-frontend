@@ -105,7 +105,7 @@ export default function JournalHubPage() {
 
         <header className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
-            <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold/80">
+            <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold-700">
               Nhật ký Quyết định
             </p>
             <h1 className="mt-3 font-heading text-4xl font-bold leading-tight sm:text-5xl">
