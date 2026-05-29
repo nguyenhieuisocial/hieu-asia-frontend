@@ -60,7 +60,7 @@ export default function LearnLandingPage() {
       </nav>
 
       <section className="text-center">
-        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
           Học huyền học
         </p>
         <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -81,7 +81,7 @@ export default function LearnLandingPage() {
           <Link key={t.href} href={t.href} className="group">
             <Card className="h-full border-border bg-card/40 backdrop-blur-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:border-gold/40 group-hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]">
               <CardHeader>
-                <CardTitle className="font-heading text-lg text-gold group-hover:text-gold">
+                <CardTitle className="font-heading text-lg text-gold-700 group-hover:text-gold">
                   {t.title}
                 </CardTitle>
                 <CardDescription className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
@@ -90,7 +90,7 @@ export default function LearnLandingPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm leading-relaxed text-muted-foreground">{t.blurb}</p>
-                <span className="mt-4 inline-block text-xs font-semibold text-gold/80 group-hover:text-gold">
+                <span className="mt-4 inline-block text-xs font-semibold text-gold-700 group-hover:text-gold">
                   Đọc giải thích →
                 </span>
               </CardContent>

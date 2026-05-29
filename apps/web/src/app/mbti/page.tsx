@@ -146,7 +146,7 @@ export default function MbtiHubPage() {
         {/* Hero */}
         <section className="bg-background px-6 py-12 pt-24 md:py-20">
           <div className="mx-auto max-w-marketing-tight">
-            <p className="mb-6 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
+            <p className="mb-6 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-700">
               <span className="mr-2 inline-block h-px w-6 bg-gold align-middle" />
               MBTI · TÂM LÝ HỌC
             </p>
