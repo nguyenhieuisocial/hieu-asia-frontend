@@ -18,6 +18,7 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { FloatingTOC } from '@/components/ui/FloatingTOC';
 
 export const metadata: Metadata = {
   // Wave 54 BUG-034: rename "Methodology" → "Phương pháp" for VN consistency
@@ -1121,6 +1122,9 @@ export default function MethodologyTuViPage() {
             </nav>
           </aside>
         </div>
+
+        {/* Mobile-only floating TOC — desktop uses the sticky <aside> above. */}
+        <FloatingTOC items={TOC} />
       </main>
       <SiteFooter />
     </div>

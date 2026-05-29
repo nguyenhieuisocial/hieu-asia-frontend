@@ -28,6 +28,7 @@ import { getSupabaseAuth } from '@/lib/auth-client';
 // Wrong specifier broke `pnpm --filter web build`, blocking all deploys
 // after Wave 60.58 T2.1.
 import { listReadings } from '@hieu-asia/supabase';
+import { Skeleton } from '@hieu-asia/ui';
 
 type ItemKind = 'reading' | 'decision' | 'mentor' | 'journal';
 
@@ -251,8 +252,20 @@ export function ActivityFeed() {
           role="status"
           aria-live="polite"
           aria-busy="true"
-          className="h-32 animate-pulse rounded-xl bg-card/30"
-        />
+          className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card/30"
+        >
+          <span className="sr-only">Đang tải hoạt động gần đây…</span>
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-3 px-4 py-4">
+              <Skeleton className="h-9 w-9 shrink-0 rounded-full" />
+              <div className="min-w-0 flex-1 space-y-2">
+                <Skeleton className="h-2.5 w-28" />
+                <Skeleton className="h-4 w-3/4" />
+              </div>
+              <Skeleton className="h-4 w-4 shrink-0 rounded" />
+            </div>
+          ))}
+        </div>
       ) : items.length === 0 ? (
         <div className="rounded-xl border border-border bg-card/30 p-6 text-sm text-muted-foreground">
           Chưa có hoạt động. Hãy{' '}
