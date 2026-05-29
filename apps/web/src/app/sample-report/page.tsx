@@ -94,8 +94,8 @@ const PALACE_PREVIEWS: { icon: IconType; palace: string; summary: string; insigh
       'Thiên Phủ giữ tài, có Khoa hỗ trợ. Phong cách quản lý tiền: cẩn trọng nhưng có tích luỹ.',
     insights: [
       'Khuynh hướng tiết kiệm tự nhiên, dễ tích luỹ qua chuyên môn.',
-      'Cẩn trọng với "all-in" đầu tư — không hợp khuynh hướng tài chính của bạn.',
-      'Lộ trình tài chính 2026: ưu tiên emergency fund 6 tháng trước khi mở rộng.',
+      'Cẩn trọng với "dồn toàn lực" đầu tư — không hợp khuynh hướng tài chính của bạn.',
+      'Lộ trình tài chính 2026: ưu tiên quỹ dự phòng 6 tháng trước khi mở rộng.',
     ],
   },
   {
@@ -147,7 +147,7 @@ const PLAN_30_60_90: { period: string; title: string; items: string[] }[] = [
     title: 'Củng cố vai trò chuyên môn',
     items: [
       'Liệt kê 3 việc bạn làm tốt nhất trong vai trò hiện tại — yêu cầu mở rộng phạm vi cho 2 trong số đó.',
-      'Mở emergency fund đến 3 tháng chi tiêu (nếu chưa có).',
+      'Mở quỹ dự phòng đến 3 tháng chi tiêu (nếu chưa có).',
       'Đặt 1 cuộc nói chuyện với người làm cùng ngành 2 cấp trên bạn.',
     ],
   },
@@ -157,7 +157,7 @@ const PLAN_30_60_90: { period: string; title: string; items: string[] }[] = [
     items: [
       'Viết tiêu chí công việc lý tưởng (5 dòng) — đánh giá công việc hiện tại theo tiêu chí đó.',
       'Hoàn tất 1 dự án có deliverable rõ — có thể show ngoài team.',
-      'Tăng emergency fund lên 6 tháng.',
+      'Tăng quỹ dự phòng lên 6 tháng.',
     ],
   },
   {
@@ -249,8 +249,8 @@ export default function SampleReportPage() {
               </div>
               <p className="border-l-2 border-gold/40 pl-4">
                 Bạn ở giai đoạn cần củng cố vai trò chuyên môn trước khi mở rộng. Quan
-                Lộc tốt + Tài Bạch cẩn trọng — không hợp all-in đầu tư. Phu Thê cần
-                học giao tiếp kỳ vọng sớm. 3 tháng tới: ưu tiên emergency fund, không
+                Lộc tốt + Tài Bạch cẩn trọng — không hợp dồn toàn lực đầu tư. Phu Thê cần
+                học giao tiếp kỳ vọng sớm. 3 tháng tới: ưu tiên quỹ dự phòng, không
                 quyết định nghề nóng vội.
               </p>
             </CardContent>

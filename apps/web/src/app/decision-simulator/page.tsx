@@ -103,7 +103,7 @@ function buildResult(
   const summary =
     `Cân nhắc: Lựa chọn A ("${titleA}") thiên về điều kiện ổn định hơn; ` +
     `lựa chọn B ("${titleB}") thiên về cơ hội học nhanh nhưng đi kèm áp lực. ` +
-    `Quyết định phụ thuộc bạn đang ở giai đoạn nào — Phase 1 chỉ hỗ trợ tư duy, ` +
+    `Quyết định phụ thuộc bạn đang ở giai đoạn nào — Giai đoạn 1 chỉ hỗ trợ tư duy, ` +
     `chưa phải gợi ý đúng/sai.`;
   return { rows, summary };
 }
@@ -196,7 +196,7 @@ export default function DecisionSimulatorPage() {
 
         <header className="mb-8">
           <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold/80">
-            Decision Simulator
+            Mô phỏng quyết định
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">
             <span className="bg-gold-gradient bg-clip-text text-transparent">

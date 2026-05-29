@@ -154,7 +154,7 @@ export default function MonthlyPlanningPage() {
         <header className="mb-10">
           <div className="flex items-center gap-3">
             <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold/80">
-              Monthly Planning
+              Kế hoạch tháng
             </p>
             <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/40 bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-amber-200">
               Demo

@@ -129,7 +129,7 @@ export default function JournalEntryPage() {
           </Link>
           <span className="mx-1.5">/</span>
           <Link href="/journal" className="hover:text-gold">
-            Decision Journal
+            Nhật ký Quyết định
           </Link>
           <span className="mx-1.5">/</span>
           <span className="text-muted-foreground">Chi tiết</span>
@@ -160,7 +160,7 @@ export default function JournalEntryPage() {
                 lưu cục bộ.
               </p>
               <Button asChild variant="outline"><Link href="/journal" className="mt-6">
-                Về Decision Journal
+                Về Nhật ký Quyết định
               </Link></Button>
             </CardContent>
           </Card>
@@ -363,7 +363,7 @@ export default function JournalEntryPage() {
                     href="/journal"
                     className="text-sm text-muted-foreground hover:text-gold"
                   >
-                    ← Về Decision Journal
+                    ← Về Nhật ký Quyết định
                   </Link>
                   <button
                     type="button"
