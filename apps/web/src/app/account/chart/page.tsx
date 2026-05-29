@@ -21,7 +21,7 @@ export default function AccountChartPage() {
   React.useEffect(() => {
     if (!auth.loading && !auth.user) {
       router.replace(
-        '/signin?returnTo=' + encodeURIComponent('/account/chart'),
+        '/signin?next=' + encodeURIComponent('/account/chart'),
       );
     }
   }, [auth.loading, auth.user, router]);

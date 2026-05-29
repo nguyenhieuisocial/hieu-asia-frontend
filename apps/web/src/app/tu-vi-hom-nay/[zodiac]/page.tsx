@@ -76,7 +76,9 @@ export async function generateMetadata({ params }: { params: Promise<{ zodiac: s
       description: `4 lĩnh vực, số/màu/hướng may mắn và lưu ý cho tuổi ${label}.`,
       url: `https://hieu.asia/tu-vi-hom-nay/${zodiac}`,
       type: 'article',
+      images: [{ url: 'https://hieu.asia/og-image.jpg', width: 1200, height: 630, alt: `Tử vi tuổi ${label} hôm nay` }],
     },
+    twitter: { card: 'summary_large_image', title: `Tử vi tuổi ${label} hôm nay`, images: ['https://hieu.asia/og-image.jpg'] },
   };
 }
 

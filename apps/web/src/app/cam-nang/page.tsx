@@ -33,7 +33,9 @@ export const metadata: Metadata = {
     description: 'Chuyên đề Tử Vi, Bát Tự, MBTI, Thần Số Học cho người Việt.',
     url: 'https://hieu.asia/cam-nang',
     type: 'website',
+    images: [{ url: 'https://hieu.asia/og-image.jpg', width: 1200, height: 630, alt: 'Cẩm nang hieu.asia — Tử Vi, Bát Tự, MBTI, Thần Số Học' }],
   },
+  twitter: { card: 'summary_large_image', images: ['https://hieu.asia/og-image.jpg'] },
 };
 
 interface PillarSummary {

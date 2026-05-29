@@ -25,7 +25,7 @@ export default function AccountDecisionsPage() {
   React.useEffect(() => {
     if (!auth.loading && !auth.user) {
       router.replace(
-        '/signin?returnTo=' + encodeURIComponent('/account/decisions'),
+        '/signin?next=' + encodeURIComponent('/account/decisions'),
       );
     }
   }, [auth.loading, auth.user, router]);

@@ -337,7 +337,7 @@ export default function MbtiHubPage() {
       </main>
 
       <SiteFooter />
-      <StickyMobileCta href="/onboarding?intent=quan-he" trackId="mbti" />
+      <StickyMobileCta href="/onboarding?intent=mbti" trackId="mbti" />
     </div>
   );
 }

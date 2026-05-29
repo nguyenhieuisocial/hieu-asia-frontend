@@ -30,7 +30,7 @@ export default function AccountPrivacyPage() {
   React.useEffect(() => {
     if (!auth.loading && !auth.user) {
       router.replace(
-        '/signin?returnTo=' + encodeURIComponent('/account/privacy'),
+        '/signin?next=' + encodeURIComponent('/account/privacy'),
       );
     }
   }, [auth.loading, auth.user, router]);

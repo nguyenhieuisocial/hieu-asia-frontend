@@ -12,7 +12,7 @@ const FEATURES: { title: string; body: string; icon: string }[] = [
   { title: 'Số biểu đạt', body: 'Tài năng và xu hướng nghề nghiệp dựa trên tên đầy đủ.', icon: '⚡' },
   { title: 'Linh hồn', body: 'Khao khát sâu thẳm và động lực bên trong.', icon: '✨' },
   { title: 'Tính cách', body: 'Cách người khác cảm nhận về bạn.', icon: '👤' },
-  { title: 'Năm cá nhân 2026', body: 'Chu kỳ năng lượng năm nay dành cho bạn.', icon: '📅' },
+  { title: 'Năm cá nhân hiện tại', body: 'Chu kỳ năng lượng năm nay dành cho bạn.', icon: '📅' },
   { title: 'Chu kỳ đỉnh cao', body: '4 đỉnh cao và 4 thử thách trong cuộc đời.', icon: '⛰️' },
 ];
 

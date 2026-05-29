@@ -55,7 +55,7 @@ export default function AccountConversationsPage() {
   React.useEffect(() => {
     if (!auth.loading && !auth.user) {
       router.replace(
-        '/signin?returnTo=' + encodeURIComponent('/account/conversations'),
+        '/signin?next=' + encodeURIComponent('/account/conversations'),
       );
     }
   }, [auth.loading, auth.user, router]);
