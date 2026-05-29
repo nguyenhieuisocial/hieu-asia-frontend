@@ -71,6 +71,7 @@ export function MentorTab() {
   const [memoryError, setMemoryError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
+    let cancelled = false;
     setSessions(loadLocalSessions());
 
     // Fetch mentor memory snapshot using user JWT (Supabase access_token)
@@ -86,15 +87,18 @@ export function MentorTab() {
           cache: 'no-store',
         });
         const j = await safeJson<{ ok: boolean; memory?: MentorMemory; error?: string }>(res);
+        if (cancelled) return;
         if (j.ok && j.data.memory) {
           setMemory(j.data.memory);
         } else if (!j.ok) {
           setMemoryError(`HTTP ${j.status}`);
         }
       } catch (err) {
+        if (cancelled) return;
         setMemoryError(err instanceof Error ? err.message : String(err));
       }
     })();
+    return () => { cancelled = true; };
   }, []);
 
   return (

@@ -10,18 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@hieu-asia/ui';
-import { safeJson } from '@/lib/safe-json';
 import { fetchUserMe } from '@/lib/user-me';
-import { getSupabaseAuth } from '@/lib/auth-client';
-import { formatVND } from '@/lib/pricing';
-
-interface PaymentRow {
-  id: string;
-  amount_vnd: number;
-  status: 'paid' | 'pending' | 'failed' | 'refunded' | string;
-  created_at: string;
-  description?: string;
-}
 
 interface Subscription {
   status: 'active' | 'inactive' | 'cancelled' | string;
@@ -37,10 +26,6 @@ const TIER_LABEL: Record<string, string> = {
 };
 
 const STATUS_LABEL: Record<string, string> = {
-  paid: 'Đã thanh toán',
-  pending: 'Đang chờ',
-  failed: 'Thất bại',
-  refunded: 'Đã hoàn tiền',
   active: 'Đang hoạt động',
   inactive: 'Không hoạt động',
   cancelled: 'Đã hủy',
@@ -65,14 +50,14 @@ export function PaymentsTab() {
     tier: 'free',
     next_billing_at: null,
   });
-  const [history, setHistory] = React.useState<PaymentRow[]>([]);
-  const [loaded, setLoaded] = React.useState(false);
 
   React.useEffect(() => {
+    let cancelled = false;
     (async () => {
       // Tier from shared, deduped /api/user/me cache (BUG-009).
       try {
         const data = await fetchUserMe();
+        if (cancelled) return;
         if (data?.membership_tier) {
           setSub((prev) => ({
             ...prev,
@@ -83,23 +68,8 @@ export function PaymentsTab() {
       } catch {
         /* ignore */
       }
-
-      // Payment history (worker may or may not exist yet)
-      try {
-        const supa = getSupabaseAuth();
-        const token = supa ? (await supa.auth.getSession()).data.session?.access_token : null;
-        const headers: HeadersInit = token ? { authorization: `Bearer ${token}` } : {};
-        const r = await fetch('/api/payment/history', { headers, cache: 'no-store' });
-        const j = await safeJson<{ ok: boolean; items?: PaymentRow[] }>(r);
-        if (j.ok && Array.isArray(j.data.items)) {
-          setHistory(j.data.items);
-        }
-      } catch {
-        /* best-effort — empty stub */
-      } finally {
-        setLoaded(true);
-      }
     })();
+    return () => { cancelled = true; };
   }, []);
 
   return (
@@ -146,45 +116,7 @@ export function PaymentsTab() {
           <CardDescription>Các giao dịch SePay đã ghi nhận.</CardDescription>
         </CardHeader>
         <CardContent>
-          {!loaded ? (
-            <p
-              role="status"
-              aria-live="polite"
-              aria-busy="true"
-              className="text-sm text-muted-foreground"
-            >
-              Đang tải…
-            </p>
-          ) : history.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Chưa có giao dịch nào.</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="text-left font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                  <tr className="border-b border-border">
-                    <th className="py-2 pr-4">Ngày</th>
-                    <th className="py-2 pr-4">Mô tả</th>
-                    <th className="py-2 pr-4 text-right">Số tiền</th>
-                    <th className="py-2 pr-4">Trạng thái</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {history.map((p) => (
-                    <tr key={p.id} className="border-b border-border">
-                      <td className="py-2.5 pr-4 text-foreground/85">{fmtDate(p.created_at)}</td>
-                      <td className="py-2.5 pr-4 text-foreground/85">{p.description ?? '—'}</td>
-                      <td className="py-2.5 pr-4 text-right text-foreground font-mono">
-                        {formatVND(p.amount_vnd)}
-                      </td>
-                      <td className="py-2.5 pr-4 text-muted-foreground">
-                        {STATUS_LABEL[p.status] ?? p.status}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+          <p className="text-sm text-muted-foreground">Lịch sử giao dịch sẽ sớm có.</p>
         </CardContent>
       </Card>
     </div>

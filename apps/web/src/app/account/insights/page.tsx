@@ -15,26 +15,26 @@ import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { InsightTimeline, type InsightItem } from '@/components/account/InsightTimeline';
 import { listMentorConversations } from '@/lib/mentor-conversations';
-
-interface ReadingsResponse {
-  readings?: Array<{ id: string; title?: string; created_at: string }>;
-}
-
-interface DecisionsResponse {
-  decisions?: Array<{ id: string; title?: string; summary?: string; created_at: string }>;
-}
+import { listReadings } from '@hieu-asia/supabase';
+import { getSupabaseAuth } from '@/lib/auth-client';
 
 async function fetchReadings(): Promise<InsightItem[]> {
   try {
-    const r = await fetch('/api/account/readings');
-    if (!r.ok) return [];
-    const data = (await r.json()) as ReadingsResponse;
-    return (data.readings ?? []).map((x) => ({
-      id: `reading-${x.id}`,
+    const supabase = getSupabaseAuth();
+    if (!supabase) return [];
+    const { data } = await supabase.auth.getSession();
+    const userId = data.session?.user?.id;
+    if (!userId) return [];
+    const sessions = await listReadings(userId);
+    return sessions.map((x) => ({
+      id: `reading-${x.session_id}`,
       kind: 'reading' as const,
-      title: x.title ?? 'Báo cáo Tử Vi',
-      ts: x.created_at,
-      href: `/reading/${x.id}`,
+      title:
+        typeof x.state_json?.birth_data?.primary_concern === 'string'
+          ? x.state_json.birth_data.primary_concern.slice(0, 80)
+          : 'Lá số đã lập',
+      ts: x.updated_at,
+      href: `/reading/${x.session_id}`,
     }));
   } catch {
     return [];
@@ -59,33 +59,44 @@ async function fetchConversations(): Promise<InsightItem[]> {
   }
 }
 
-async function fetchDecisions(): Promise<InsightItem[]> {
+function fetchDecisions(): InsightItem[] {
+  if (typeof window === 'undefined') return [];
+  const out: InsightItem[] = [];
   try {
-    const r = await fetch('/api/account/decisions');
-    if (!r.ok) return [];
-    const data = (await r.json()) as DecisionsResponse;
-    return (data.decisions ?? []).map((x) => ({
-      id: `decision-${x.id}`,
-      kind: 'decision' as const,
-      title: x.title ?? 'Quyết định',
-      excerpt: x.summary,
-      ts: x.created_at,
-      href: `/decisions/${x.id}`,
-    }));
+    for (let i = 0; i < window.localStorage.length; i++) {
+      const k = window.localStorage.key(i);
+      if (!k || !k.startsWith('hieu:decisions:') || k.endsWith(':checked')) continue;
+      try {
+        const raw = window.localStorage.getItem(k);
+        if (!raw) continue;
+        const rec = JSON.parse(raw) as { id?: string; question?: string; createdAt?: string };
+        if (!rec.id || !rec.createdAt || !rec.question) continue;
+        out.push({
+          id: `decision-${rec.id}`,
+          kind: 'decision' as const,
+          title: rec.question.slice(0, 80),
+          ts: rec.createdAt,
+          href: `/decisions/${rec.id}`,
+        });
+      } catch {
+        /* ignore one bad bucket */
+      }
+    }
   } catch {
-    return [];
+    /* ignore */
   }
+  return out;
 }
 
 export default function InsightMapPage() {
   const { data, isLoading } = useQuery({
     queryKey: ['account', 'insights'],
     queryFn: async () => {
-      const [readings, conversations, decisions] = await Promise.all([
+      const [readings, conversations] = await Promise.all([
         fetchReadings(),
         fetchConversations(),
-        fetchDecisions(),
       ]);
+      const decisions = fetchDecisions();
       const merged = [...readings, ...conversations, ...decisions];
       merged.sort((a, b) => (a.ts < b.ts ? 1 : -1));
       return merged;
