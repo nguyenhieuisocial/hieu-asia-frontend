@@ -101,6 +101,7 @@ export default function MentorChatPage() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [streaming, setStreaming] = React.useState(false);
   const abortRef = React.useRef<AbortController | null>(null);
+  const drawerPanelRef = React.useRef<HTMLDivElement | null>(null);
   // Wave 61.02 — Supabase-backed conversation id + summary for resume.
   // Lazy creation: stays null until the user sends their first message OR a
   // `?conversation=<id>` query param hydrates an existing thread.
@@ -188,6 +189,19 @@ export default function MentorChatPage() {
   React.useEffect(() => {
     return () => abortRef.current?.abort();
   }, []);
+
+  // A11y (WCAG 2.1.1/2.1.2) — when the mobile pinned-insights drawer is open,
+  // close it on Escape and move keyboard focus into the panel so screen-reader
+  // / keyboard users aren't trapped. Listener is only attached while open.
+  React.useEffect(() => {
+    if (!drawerOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setDrawerOpen(false);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    drawerPanelRef.current?.focus();
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [drawerOpen]);
 
   React.useEffect(() => {
     const q = search?.get('q');
@@ -446,7 +460,12 @@ export default function MentorChatPage() {
             onClick={() => setDrawerOpen(false)}
           >
             <div
-              className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-background shadow-2xl"
+              ref={drawerPanelRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Ghi chú đã ghim"
+              tabIndex={-1}
+              className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-background shadow-2xl outline-none"
               onClick={(e) => e.stopPropagation()}
             >
               <PinnedInsights
