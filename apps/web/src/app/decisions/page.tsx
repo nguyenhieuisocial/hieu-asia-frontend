@@ -131,7 +131,7 @@ export default function DecisionsHubPage() {
       <main className="mx-auto max-w-6xl px-6 py-16 sm:py-24">
         <header className="mb-14 max-w-3xl">
           <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold/80">
-            Decision Brief
+            Bản tóm tắt quyết định
           </p>
           <h1 className="mt-3 font-heading text-4xl font-bold leading-tight sm:text-5xl">
             Quyết định{' '}

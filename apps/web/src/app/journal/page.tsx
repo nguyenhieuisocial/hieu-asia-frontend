@@ -100,17 +100,17 @@ export default function JournalHubPage() {
             Trang chủ
           </Link>
           <span className="mx-1.5">/</span>
-          <span className="text-muted-foreground">Decision Journal</span>
+          <span className="text-muted-foreground">Nhật ký Quyết định</span>
         </nav>
 
         <header className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
             <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold/80">
-              Decision Journal
+              Nhật ký Quyết định
             </p>
             <h1 className="mt-3 font-heading text-4xl font-bold leading-tight sm:text-5xl">
               <span className="bg-gold-gradient bg-clip-text text-transparent">
-                Decision Journal
+                Nhật ký Quyết định
               </span>
             </h1>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">

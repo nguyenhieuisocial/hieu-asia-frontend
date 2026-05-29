@@ -296,10 +296,10 @@ function NewDecisionInner() {
 
         <header className="mb-8">
           <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold/80">
-            Decision Brief
+            Bản tóm tắt quyết định
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">
-            Tạo Decision Brief
+            Tạo Bản tóm tắt quyết định
           </h1>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
             Mô tả ngắn gọn câu hỏi và tình huống. Hệ thống sẽ trả về một bản

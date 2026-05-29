@@ -102,7 +102,7 @@ export default function NewJournalEntryPage() {
           </Link>
           <span className="mx-1.5">/</span>
           <Link href="/journal" className="hover:text-gold">
-            Decision Journal
+            Nhật ký Quyết định
           </Link>
           <span className="mx-1.5">/</span>
           <span className="text-muted-foreground">Quyết định mới</span>
@@ -110,7 +110,7 @@ export default function NewJournalEntryPage() {
 
         <header className="mb-8">
           <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold/80">
-            Decision Journal
+            Nhật ký Quyết định
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">
             Ghi một quyết định

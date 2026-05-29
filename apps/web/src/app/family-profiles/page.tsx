@@ -22,13 +22,13 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Family Profiles — Hiểu cả nhà',
+  title: 'Hồ sơ gia đình — Hiểu cả nhà',
   description:
-    'Tạo profile cho người thân (cha mẹ, vợ/chồng, con) để hiểu giao tiếp và lập kế hoạch chung. Privacy-first: phân tích basic, không deep reading khi chưa có sự đồng ý.',
+    'Tạo hồ sơ cho người thân (cha mẹ, vợ/chồng, con) để hiểu giao tiếp và lập kế hoạch chung. Ưu tiên riêng tư: phân tích cơ bản, không luận giải chuyên sâu khi chưa có sự đồng ý.',
   alternates: { canonical: 'https://hieu.asia/family-profiles' },
   openGraph: {
-    title: 'Family Profiles — Hiểu cả nhà',
-    description: 'Profile thành viên gia đình để hiểu giao tiếp và tránh xung đột.',
+    title: 'Hồ sơ gia đình — Hiểu cả nhà',
+    description: 'Hồ sơ thành viên gia đình để hiểu giao tiếp và tránh xung đột.',
     url: 'https://hieu.asia/family-profiles',
     type: 'article',
   },
@@ -42,7 +42,7 @@ const BREADCRUMB_JSONLD = {
     {
       '@type': 'ListItem',
       position: 2,
-      name: 'Family Profiles',
+      name: 'Hồ sơ gia đình',
       item: 'https://hieu.asia/family-profiles',
     },
   ],
@@ -53,19 +53,19 @@ const STEPS = [
     n: 1,
     title: 'Nhập thông tin cơ bản',
     body:
-      'User nhập ngày sinh + tên gọi (không cần tên thật) của thành viên gia đình.',
+      'Bạn nhập ngày sinh + tên gọi (không cần tên thật) của thành viên gia đình.',
   },
   {
     n: 2,
-    title: 'Tạo profile basic',
+    title: 'Tạo hồ sơ cơ bản',
     body:
-      'Hệ thống tạo profile cơ bản: zodiac, ngũ hành, tổng quát tính cách. Không deep reading.',
+      'Hệ thống tạo hồ sơ cơ bản: con giáp, ngũ hành, tổng quát tính cách. Không luận giải chuyên sâu.',
   },
   {
     n: 3,
     title: 'Ghép với lá số của bạn',
     body:
-      'Hệ thống ghép profile với lá số user → gợi ý giao tiếp + tránh xung đột.',
+      'Hệ thống ghép hồ sơ với lá số của bạn → gợi ý giao tiếp + tránh xung đột.',
   },
 ];
 
@@ -73,21 +73,21 @@ const PRIVACY_BULLETS: { icon: typeof Lock; text: string }[] = [
   {
     icon: Lock,
     text:
-      'Profile thành viên chỉ lưu trong tài khoản của bạn (không share, không index).',
+      'Hồ sơ thành viên chỉ lưu trong tài khoản của bạn (không chia sẻ, không lập chỉ mục).',
   },
   {
     icon: ShieldCheck,
     text:
-      'Chỉ làm phân tích basic, không deep reading khi chưa có sự đồng ý của họ.',
+      'Chỉ làm phân tích cơ bản, không luận giải chuyên sâu khi chưa có sự đồng ý của họ.',
   },
   {
     icon: Trash2,
-    text: 'Bạn có thể xoá profile bất cứ lúc nào — không giữ bản backup.',
+    text: 'Bạn có thể xoá hồ sơ bất cứ lúc nào — không giữ bản sao lưu.',
   },
   {
     icon: UserPlus,
     text:
-      'Mời thành viên tự tạo tài khoản nếu muốn deep reading dành riêng cho họ.',
+      'Mời thành viên tự tạo tài khoản nếu muốn luận giải chuyên sâu dành riêng cho họ.',
   },
 ];
 
@@ -130,12 +130,12 @@ export default function FamilyProfilesPage() {
             Trang chủ
           </Link>
           <span className="mx-1.5">/</span>
-          <span className="text-muted-foreground">Family Profiles</span>
+          <span className="text-muted-foreground">Hồ sơ gia đình</span>
         </nav>
 
         <header className="mb-10">
           <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold/80">
-            Family Profiles
+            Hồ sơ gia đình
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">
             <span className="bg-gold-gradient bg-clip-text text-transparent">
@@ -157,7 +157,7 @@ export default function FamilyProfilesPage() {
             <p>
               <strong className="text-amber-200">Lưu ý.</strong> KHÔNG luận sâu lá
               số người thân khi chưa có sự đồng ý của họ. Tính năng này chỉ làm
-              phân tích basic và gợi ý giao tiếp.
+              phân tích cơ bản và gợi ý giao tiếp.
             </p>
           </div>
         </header>
@@ -226,7 +226,7 @@ export default function FamilyProfilesPage() {
               id="demo-heading"
               className="font-heading text-lg font-semibold sm:text-xl"
             >
-              Demo profiles
+              Hồ sơ minh hoạ
             </h2>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
@@ -249,7 +249,7 @@ export default function FamilyProfilesPage() {
                   </p>
                   <p className="mt-4 text-xs text-muted-foreground">
                     Tính năng đang phát triển. Đăng ký để được thông báo khi
-                    launch.
+                    ra mắt.
                   </p>
                 </CardContent>
               </Card>
