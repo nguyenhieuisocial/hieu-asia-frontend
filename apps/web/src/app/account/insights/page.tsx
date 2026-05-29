@@ -109,18 +109,7 @@ export default function InsightMapPage() {
           </p>
         </header>
 
-        {isLoading ? (
-          <div className="space-y-4">
-            {[0, 1, 2].map((i) => (
-              <div
-                key={i}
-                className="h-24 animate-pulse rounded-card-editorial border border-border bg-card"
-              />
-            ))}
-          </div>
-        ) : (
-          <InsightTimeline items={data ?? []} />
-        )}
+        <InsightTimeline items={data ?? []} loading={isLoading} />
       </div>
     </main>
   );
