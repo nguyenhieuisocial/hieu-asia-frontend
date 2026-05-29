@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
-import { HeroLab } from './HeroLab';
+import { Gallery } from './Gallery';
 
 /**
  * /hero-lab — PROTOTYPE NỘI BỘ (không phải hero thật).
- * Demo concept "Lập lá số" P1: lá số 12 cung tự vẽ + tiêu đề mực-loang +
- * cung Mệnh thở + vòng tick xoay chậm (astrolabe) + pointer-tilt.
- * SVG + CSS thuần, tôn trọng prefers-reduced-motion, không đụng hero thật.
+ * Gallery 4 concept hero để so sánh: P1 "Lập lá số" · P2 scroll-telling 12 cung ·
+ * 3D thiên bàn (CSS-3D depth) · Tinh vân khẽ thở (canvas sao nền).
+ * Tất cả SVG/CSS(+canvas) thuần, tôn trọng prefers-reduced-motion, không đụng hero thật.
  * noindex — chỉ để founder xem & cảm trên Vercel preview.
  */
 export const metadata: Metadata = {
@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 };
 
 export default function HeroLabPage() {
-  return <HeroLab />;
+  return <Gallery />;
 }
