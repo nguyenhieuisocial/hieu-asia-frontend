@@ -17,6 +17,8 @@ import { ArrowLeft } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { article, breadcrumb } from '@/lib/seo/jsonld';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -147,23 +149,27 @@ export default async function PillarPage({
   const pillar = await fetchPillar(slug);
   if (!pillar) notFound();
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: pillar.topic,
-    datePublished: pillar.published_at,
-    dateModified: pillar.updated_at,
-    author: { '@type': 'Organization', name: 'hieu.asia' },
-    publisher: { '@type': 'Organization', name: 'hieu.asia' },
-    mainEntityOfPage: `https://hieu.asia/cam-nang/${pillar.slug}`,
-  };
+  const articleDescription = pillar.content.slice(0, 160).replace(/\s+/g, ' ').trim();
 
   return (
     <>
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      <JsonLd
+        data={[
+          article({
+            headline: pillar.topic,
+            description: articleDescription,
+            url: `/cam-nang/${pillar.slug}`,
+            datePublished: pillar.published_at ?? undefined,
+            dateModified: pillar.updated_at,
+            type: 'Article',
+          }),
+          breadcrumb([
+            { name: 'Trang chủ', url: '/' },
+            { name: 'Cẩm nang', url: '/cam-nang' },
+            { name: pillar.topic, url: `/cam-nang/${pillar.slug}` },
+          ]),
+        ]}
       />
       <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
         <article className="mx-auto max-w-3xl px-6 py-16">

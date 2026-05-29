@@ -18,6 +18,8 @@ import { BookOpen, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb, webPage } from '@/lib/seo/jsonld';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -80,6 +82,20 @@ export default async function CamNangIndexPage() {
   return (
     <>
       <SiteNav />
+      <JsonLd
+        data={[
+          webPage({
+            name: 'Cẩm nang hieu.asia — Tử Vi, Bát Tự, MBTI, Thần Số Học',
+            description:
+              'Cẩm nang chuyên đề về Tử Vi, Bát Tự, MBTI và Thần Số Học cho người Việt hiện đại. Viết bởi multi-LLM (Claude + GPT + Gemini), founder kiểm duyệt từng bài.',
+            url: '/cam-nang',
+          }),
+          breadcrumb([
+            { name: 'Trang chủ', url: '/' },
+            { name: 'Cẩm nang', url: '/cam-nang' },
+          ]),
+        ]}
+      />
       <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
         <section className="mx-auto max-w-4xl px-6 py-16">
           <div className="flex items-start gap-3">
