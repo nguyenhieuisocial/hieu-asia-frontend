@@ -116,24 +116,6 @@ export function BirthDataForm() {
   const [consentError, setConsentError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const handleError = (event: ErrorEvent) => {
-      const msg = event.error?.message || event.message || 'Lỗi runtime không rõ';
-      toast.error(`Lỗi hệ thống: ${msg}`);
-    };
-    const handleRejection = (event: PromiseRejectionEvent) => {
-      const msg = event.reason?.message || String(event.reason) || 'Lỗi bất đồng bộ';
-      toast.error(`Sự cố kết nối: ${msg}`);
-    };
-    window.addEventListener('error', handleError);
-    window.addEventListener('unhandledrejection', handleRejection);
-    return () => {
-      window.removeEventListener('error', handleError);
-      window.removeEventListener('unhandledrejection', handleRejection);
-    };
-  }, []);
-
-  React.useEffect(() => {
     if (typeof window !== 'undefined') {
       const hasConsent = window.sessionStorage.getItem('hieu.consent');
       const hasWizard = window.localStorage.getItem('hieu:onboarding:v2');

@@ -310,6 +310,14 @@ export default function MentorChatPage() {
         readingId,
         toStored({ ...mentorMsg, content: acc }),
       );
+      // Wave 61.02 — persist the completed mentor reply to Supabase so
+      // cross-device resume shows both sides of the conversation.
+      if (conversationIdRef.current) {
+        void appendMentorMessage(conversationIdRef.current, {
+          role: 'mentor',
+          content: acc,
+        }).catch(() => { /* swallow — localStorage is already written */ });
+      }
     } catch (err) {
       if ((err as Error).name === 'AbortError') return;
       toast.error('Mentor không phản hồi', {

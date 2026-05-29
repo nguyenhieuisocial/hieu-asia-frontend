@@ -148,7 +148,7 @@ export async function POST(req: NextRequest) {
     return new Response(
       JSON.stringify({
         ok: false,
-        error: 'server_misconfigured: HIEU_API_SERVICE_TOKEN missing',
+        error: 'service_unavailable',
       }),
       { status: 500, headers: { 'content-type': 'application/json' } },
     );

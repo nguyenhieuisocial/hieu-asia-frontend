@@ -27,7 +27,7 @@ const PrefsSchema = z.object({
 
 function unconfigured() {
   return NextResponse.json(
-    { ok: false, error: 'server_misconfigured: HIEU_API_SERVICE_TOKEN missing' },
+    { ok: false, error: 'service_unavailable' },
     { status: 503 },
   );
 }

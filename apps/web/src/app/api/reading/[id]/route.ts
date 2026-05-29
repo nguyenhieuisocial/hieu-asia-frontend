@@ -28,7 +28,7 @@ export async function GET(
 
   if (!SUPABASE_ANON_KEY) {
     return NextResponse.json(
-      { ok: false, error: 'server_misconfigured: SUPABASE_ANON_KEY missing' },
+      { ok: false, error: 'service_unavailable' },
       { status: 500 },
     );
   }

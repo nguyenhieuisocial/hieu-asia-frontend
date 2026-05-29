@@ -25,7 +25,7 @@ const TrackSchema = z.object({
 export async function POST(req: NextRequest) {
   if (!HIEU_API_SERVICE_TOKEN) {
     return NextResponse.json(
-      { ok: false, error: 'server_misconfigured: HIEU_API_SERVICE_TOKEN missing' },
+      { ok: false, error: 'service_unavailable' },
       { status: 503 },
     );
   }
