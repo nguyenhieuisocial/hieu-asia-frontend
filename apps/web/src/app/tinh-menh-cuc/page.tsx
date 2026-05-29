@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { TinhMenhCucForm } from './form';
 
 export const metadata: Metadata = {
-  title: 'Tính Mệnh Cục online: tra cung Mệnh, cung Thân, cục, âm dương',
+  title: 'Tính Mệnh Cục: cung Mệnh, cung Thân, cục, âm dương',
   description:
     'Tra cứu miễn phí cung Mệnh, cung Thân, Cục (Mộc/Hỏa/Thổ/Kim/Thủy) và âm dương theo ngày–giờ sinh. Bước đầu để hiểu lá số Tử Vi của bạn.',
   alternates: { canonical: 'https://hieu.asia/tinh-menh-cuc' },

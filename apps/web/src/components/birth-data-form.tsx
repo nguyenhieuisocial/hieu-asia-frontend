@@ -392,7 +392,7 @@ export function BirthDataForm() {
                 id="birth_date-live"
                 role="alert"
                 aria-live="polite"
-                className="text-xs text-gold-400/90"
+                className="text-xs text-gold-700"
               >
                 {liveDateIssue}
               </p>

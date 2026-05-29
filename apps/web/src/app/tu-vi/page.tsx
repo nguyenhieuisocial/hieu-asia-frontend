@@ -7,7 +7,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
-  title: 'Tử Vi Đẩu Số: lập lá số, tra cung, tra sao bằng AI miễn phí',
+  title: 'Tử Vi Đẩu Số: lập lá số, tra cung và sao bằng AI',
   description:
     'Cẩm nang Tử Vi Đẩu Số: lập lá số 12 cung theo trường phái Bắc phái 114 sao, tra cứu ý nghĩa từng cung và từng sao, luận đại vận lưu niên. Miễn phí cốt lõi, AI Mentor tuỳ chọn.',
   alternates: { canonical: 'https://hieu.asia/tu-vi' },

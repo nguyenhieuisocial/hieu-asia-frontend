@@ -647,11 +647,11 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 6. Đại vận */}
-          <h2 className="sr-only">Cách tính Đại Vận</h2>
+          <h2 className="sr-only">Cách tính Đại vận</h2>
           <Card id="dai-van" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
-                Cách tính Đại Vận
+                Cách tính Đại vận
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/80 sm:text-base">
@@ -696,11 +696,11 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* 7. Lưu niên */}
-          <h2 className="sr-only">Cách tính Lưu Niên</h2>
+          <h2 className="sr-only">Cách tính Lưu niên</h2>
           <Card id="luu-nien" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
-                Cách tính Lưu Niên
+                Cách tính Lưu niên
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/80 sm:text-base">

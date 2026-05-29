@@ -195,7 +195,7 @@ export function TinhMenhCucForm() {
                   <ResultRow
                     label="Cục"
                     value={result.meta.fiveElementsClass}
-                    hint="Ngũ hành chủ + chu kỳ đại vận"
+                    hint="Ngũ Hành chủ + chu kỳ đại vận"
                   />
                   <ResultRow
                     label="Can Chi năm"

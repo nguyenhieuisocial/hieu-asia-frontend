@@ -24,7 +24,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Bản đồ của bạn — Dashboard cá nhân theo tuần · tháng · năm',
+  title: 'Bản đồ của bạn — dashboard cá nhân tuần/tháng/năm',
   description:
     'Insight cá nhân hoá theo ngày, tuần, tháng và năm dựa trên lá số của bạn. Premium subscription đồng hành mỗi tuần.',
   alternates: { canonical: 'https://hieu.asia/ban-do' },

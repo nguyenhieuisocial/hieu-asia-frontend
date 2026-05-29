@@ -7,7 +7,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
-  title: 'Tử Vi tài chính: cách bạn kiếm tiền, quản lý tiền và rủi ro',
+  title: 'Tử Vi tài chính: kiếm tiền, quản lý, rủi ro',
   description:
     'Tử Vi tài chính — đọc cung Tài Bạch, Điền Trạch + đại vận để hiểu khuynh hướng kiếm tiền và quản lý tài chính cá nhân. KHÔNG phải tư vấn đầu tư.',
   alternates: { canonical: 'https://hieu.asia/tu-vi-tai-chinh' },
@@ -212,7 +212,7 @@ export default function TuViTaiChinhPage() {
                 href="/tu-vi-2026"
                 className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"
               >
-                Tử vi 2026 <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
+                Tử Vi 2026 <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
               </Link>
             </div>
           </div>

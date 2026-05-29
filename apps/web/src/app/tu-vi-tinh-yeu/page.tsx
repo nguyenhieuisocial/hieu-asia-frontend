@@ -7,7 +7,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
-  title: 'Tử Vi tình yêu: kiểu gắn bó, nhu cầu cảm xúc, mẫu xung đột',
+  title: 'Tử Vi tình yêu: gắn bó, cảm xúc, mẫu xung đột',
   description:
     'Tử Vi tình cảm — đọc cung Phu Thê, Phúc Đức + tâm lý gắn bó hiện đại. Không phán "hợp/khắc tuyệt đối", chỉ giúp hiểu chính mình và đối tác.',
   alternates: { canonical: 'https://hieu.asia/tu-vi-tinh-yeu' },
