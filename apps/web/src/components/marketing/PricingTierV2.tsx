@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { track } from '@/lib/analytics';
+import { formatVND } from '@/lib/pricing';
 
 /**
  * Wave 60.56 P2.2 — PricingTierV2 (Option D "Warm-Dark Editorial").
@@ -88,10 +89,8 @@ export type PricingTierV2Props = {
   page?: string;
 };
 
-function formatVND(n: number): string {
-  if (n === 0) return '₫0';
-  return '₫' + n.toLocaleString('vi-VN');
-}
+// Wave 64.12: formatVND moved to @/lib/pricing (single source of truth, suffix ₫)
+// so /pricing, homepage, payment + account screens all render VND identically.
 
 export function PricingTierV2({
   tiers,
