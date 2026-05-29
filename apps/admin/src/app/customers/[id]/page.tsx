@@ -125,6 +125,25 @@ export default function CustomerDetailPage() {
 
   const totalSpend = transactions.reduce((s, t) => s + (t.amount ?? 0), 0);
 
+  // Wave 63.6 — enrich the customer with birth_date / birth_place /
+  // primary_concern pulled from the most recent reading session's
+  // state_json.birth_data. These live per-reading (not on the users row), so
+  // without this the profile/compliance tab showed empty birth fields even
+  // though the data exists (founder: "/customers chưa đầy đủ thông tin").
+  const enrichedCustomer = React.useMemo(() => {
+    if (!customer) return customer;
+    const bd = sessions.find((s) => s.state_json?.birth_data)?.state_json
+      ?.birth_data;
+    if (!bd) return customer;
+    return {
+      ...customer,
+      display_name: customer.display_name ?? bd.display_name ?? null,
+      birth_date: customer.birth_date ?? bd.birth_date ?? null,
+      birth_place: customer.birth_place ?? bd.birth_place ?? null,
+      primary_concern: customer.primary_concern ?? bd.primary_concern ?? null,
+    };
+  }, [customer, sessions]);
+
   const copyId = React.useCallback(() => {
     navigator.clipboard
       .writeText(id)
@@ -330,7 +349,7 @@ export default function CustomerDetailPage() {
       <Card>
         <CardContent className="pt-6">
           <CustomerDetailTabs
-            customer={customer}
+            customer={enrichedCustomer ?? customer}
             sessions={sessions}
             transactions={transactions}
             auditTrail={auditTrail}

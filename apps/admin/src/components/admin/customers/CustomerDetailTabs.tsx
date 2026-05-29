@@ -338,7 +338,17 @@ function ComplianceTab({ customer }: { customer: CustomerDetail }) {
       {customer.country && <Field label="Quốc gia" value={customer.country} mono />}
       {customer.phone && <Field label="Số điện thoại" value={customer.phone} mono />}
       {customer.gender && <Field label="Giới tính" value={customer.gender} />}
-      {birthSummary && <Field label="Ngày sinh" value={birthSummary} mono />}
+      {/* Wave 63.6 — prefer the per-reading birth_date (from session
+          state_json, enriched on the page) over the often-empty users-row
+          birth_year/month/day summary; also surface birth place + the
+          customer's most recent concern. */}
+      {(customer.birth_date || birthSummary) && (
+        <Field label="Ngày sinh" value={customer.birth_date ?? birthSummary!} mono />
+      )}
+      {customer.birth_place && <Field label="Nơi sinh" value={customer.birth_place} />}
+      {customer.primary_concern && (
+        <Field label="Mối quan tâm gần nhất" value={customer.primary_concern} />
+      )}
       {customer.marketing_opt_in != null && (
         <Field
           label="Marketing email"
@@ -368,7 +378,7 @@ function ComplianceTab({ customer }: { customer: CustomerDetail }) {
           <dd className="mt-1">
             <Link
               href={`/affiliates/${encodeURIComponent(customer.partner_id)}`}
-              className="font-mono text-xs text-gold underline-offset-2 hover:underline"
+              className="font-mono text-xs text-primary underline-offset-2 hover:underline"
             >
               {customer.partner_id}
             </Link>

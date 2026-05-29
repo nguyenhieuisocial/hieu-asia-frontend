@@ -27,6 +27,13 @@ export interface CustomerDetail {
   birth_month?: number | null;
   birth_day?: number | null;
   gender?: string | null;
+  // Wave 63.6 — birth info lives per-reading in reading_sessions.state_json,
+  // NOT on the users row (founder: "/customers chưa đầy đủ thông tin"). The
+  // detail page enriches the customer from the latest session so the profile
+  // surfaces birth date/place + what the customer actually asked about.
+  birth_date?: string | null;
+  birth_place?: string | null;
+  primary_concern?: string | null;
   [extra: string]: unknown;
 }
 
@@ -41,6 +48,9 @@ export interface SessionRow {
     birth_data?: {
       display_name?: string | null;
       primary_concern?: string | null;
+      birth_date?: string | null;
+      birth_time?: string | null;
+      birth_place?: string | null;
     } | null;
   } | null;
   id?: string;
