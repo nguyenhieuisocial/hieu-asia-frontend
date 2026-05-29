@@ -5,6 +5,8 @@ import { Heart, MessageCircle, Users, ShieldAlert, ArrowRight } from 'lucide-rea
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { article, breadcrumb } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   title: 'Tử Vi tình yêu: gắn bó, cảm xúc, mẫu xung đột',
@@ -79,45 +81,25 @@ const DOS_DONTS = [
   },
 ];
 
-const BREADCRUMB_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
-    { '@type': 'ListItem', position: 2, name: 'Tử Vi tình yêu', item: 'https://hieu.asia/tu-vi-tinh-yeu' },
-  ],
-};
-
-const ARTICLE_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  '@id': 'https://hieu.asia/tu-vi-tinh-yeu',
-  headline: 'Tử Vi tình yêu — Phu Thê + Phúc Đức + kiểu gắn bó',
-  description:
-    'Tử Vi tình cảm — đọc cung Phu Thê, Phúc Đức + tâm lý gắn bó hiện đại. Không phán "hợp/khắc tuyệt đối", chỉ giúp hiểu chính mình.',
-  inLanguage: 'vi-VN',
-  author: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
-  publisher: {
-    '@type': 'Organization',
-    name: 'hieu.asia',
-    logo: { '@type': 'ImageObject', url: 'https://hieu.asia/icon-512.png' },
-  },
-  image: ['https://hieu.asia/og-image.jpg'],
-  mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://hieu.asia/tu-vi-tinh-yeu' },
-};
+const JSONLD = [
+  article({
+    headline: 'Tử Vi tình yêu — Phu Thê + Phúc Đức + kiểu gắn bó',
+    description:
+      'Tử Vi tình cảm — đọc cung Phu Thê, Phúc Đức + tâm lý gắn bó hiện đại. Không phán "hợp/khắc tuyệt đối", chỉ giúp hiểu chính mình.',
+    url: '/tu-vi-tinh-yeu',
+    image: '/og-image.jpg',
+  }),
+  breadcrumb([
+    { name: 'Trang chủ', url: '/' },
+    { name: 'Tử Vi tình yêu', url: '/tu-vi-tinh-yeu' },
+  ]),
+];
 
 export default function TuViTinhYeuPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_JSONLD) }}
-      />
+      <JsonLd data={JSONLD} />
 
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div

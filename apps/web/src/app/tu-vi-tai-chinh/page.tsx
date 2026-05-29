@@ -5,6 +5,8 @@ import { Wallet, PiggyBank, TrendingUp, AlertTriangle, ArrowRight } from 'lucide
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { article, breadcrumb } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   title: 'Tử Vi tài chính: kiếm tiền, quản lý, rủi ro',
@@ -71,45 +73,25 @@ const REMINDERS = [
   'Tài Bạch tốt không đảm bảo giàu; Tài Bạch yếu không đảm bảo nghèo — kỷ luật mới là yếu tố quyết định.',
 ];
 
-const BREADCRUMB_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
-    { '@type': 'ListItem', position: 2, name: 'Tử Vi tài chính', item: 'https://hieu.asia/tu-vi-tai-chinh' },
-  ],
-};
-
-const ARTICLE_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  '@id': 'https://hieu.asia/tu-vi-tai-chinh',
-  headline: 'Tử Vi tài chính — Tài Bạch + Điền Trạch + đại vận',
-  description:
-    'Tử Vi tài chính — đọc cung Tài Bạch, Điền Trạch + đại vận để hiểu khuynh hướng kiếm tiền và quản lý tài chính cá nhân.',
-  inLanguage: 'vi-VN',
-  author: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
-  publisher: {
-    '@type': 'Organization',
-    name: 'hieu.asia',
-    logo: { '@type': 'ImageObject', url: 'https://hieu.asia/icon-512.png' },
-  },
-  image: ['https://hieu.asia/og-image.jpg'],
-  mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://hieu.asia/tu-vi-tai-chinh' },
-};
+const JSONLD = [
+  article({
+    headline: 'Tử Vi tài chính — Tài Bạch + Điền Trạch + đại vận',
+    description:
+      'Tử Vi tài chính — đọc cung Tài Bạch, Điền Trạch + đại vận để hiểu khuynh hướng kiếm tiền và quản lý tài chính cá nhân.',
+    url: '/tu-vi-tai-chinh',
+    image: '/og-image.jpg',
+  }),
+  breadcrumb([
+    { name: 'Trang chủ', url: '/' },
+    { name: 'Tử Vi tài chính', url: '/tu-vi-tai-chinh' },
+  ]),
+];
 
 export default function TuViTaiChinhPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_JSONLD) }}
-      />
+      <JsonLd data={JSONLD} />
 
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div

@@ -5,6 +5,8 @@ import { Briefcase, Compass, Target, AlertTriangle, ArrowRight } from 'lucide-re
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { article, breadcrumb } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   title: 'Tử Vi nghề nghiệp: hợp ngành nào, vai trò gì?',
@@ -72,45 +74,25 @@ const QUESTIONS = [
   'Năm 2026 nên đẩy hay giữ vai trò hiện tại?',
 ];
 
-const BREADCRUMB_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
-    { '@type': 'ListItem', position: 2, name: 'Tử Vi nghề nghiệp', item: 'https://hieu.asia/tu-vi-nghe-nghiep' },
-  ],
-};
-
-const ARTICLE_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  '@id': 'https://hieu.asia/tu-vi-nghe-nghiep',
-  headline: 'Tử Vi nghề nghiệp — Quan Lộc + Tài Bạch + Thiên Di',
-  description:
-    'Tử Vi sự nghiệp — đọc cung Quan Lộc, Tài Bạch, Thiên Di + đại vận để tìm môi trường + vai trò hợp với thiên hướng cá nhân.',
-  inLanguage: 'vi-VN',
-  author: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
-  publisher: {
-    '@type': 'Organization',
-    name: 'hieu.asia',
-    logo: { '@type': 'ImageObject', url: 'https://hieu.asia/icon-512.png' },
-  },
-  image: ['https://hieu.asia/og-image.jpg'],
-  mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://hieu.asia/tu-vi-nghe-nghiep' },
-};
+const JSONLD = [
+  article({
+    headline: 'Tử Vi nghề nghiệp — Quan Lộc + Tài Bạch + Thiên Di',
+    description:
+      'Tử Vi sự nghiệp — đọc cung Quan Lộc, Tài Bạch, Thiên Di + đại vận để tìm môi trường + vai trò hợp với thiên hướng cá nhân.',
+    url: '/tu-vi-nghe-nghiep',
+    image: '/og-image.jpg',
+  }),
+  breadcrumb([
+    { name: 'Trang chủ', url: '/' },
+    { name: 'Tử Vi nghề nghiệp', url: '/tu-vi-nghe-nghiep' },
+  ]),
+];
 
 export default function TuViNgheNghiepPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_JSONLD) }}
-      />
+      <JsonLd data={JSONLD} />
 
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
