@@ -15,6 +15,7 @@
  */
 
 import type { NextRequest } from 'next/server';
+import { checkBotId } from 'botid/server';
 import type {
   MentorMessage,
   MentorResponse,
@@ -132,6 +133,17 @@ function sseLine(event: string, data: string): string {
 }
 
 export async function POST(req: NextRequest) {
+  // Bot guard (Wave 64 audit P0) — same rationale as /api/mentor: anon-capable
+  // funnel, so block automated abuse of the paid LLM via BotID rather than a
+  // hard session requirement.
+  const bot = await checkBotId();
+  if (bot.isBot) {
+    return new Response(JSON.stringify({ ok: false, error: 'forbidden' }), {
+      status: 403,
+      headers: { 'content-type': 'application/json' },
+    });
+  }
+
   if (!HIEU_API_SERVICE_TOKEN) {
     return new Response(
       JSON.stringify({
@@ -170,10 +182,13 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const hasSystem = incomingMessages.some((m) => m.role === 'system');
-  const finalMessages: MentorMessage[] = hasSystem
-    ? incomingMessages
-    : [{ role: 'system', content: systemPrompt }, ...incomingMessages];
+  // Always use the server-built system prompt and STRIP any client-supplied
+  // system messages (Wave 64 audit P1) — prevents guardrail override.
+  const userMessages = incomingMessages.filter((m) => m.role !== 'system');
+  const finalMessages: MentorMessage[] = [
+    { role: 'system', content: systemPrompt },
+    ...userMessages,
+  ];
 
   const headers: Record<string, string> = {
     'content-type': 'application/json',
