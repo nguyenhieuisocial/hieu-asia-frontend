@@ -73,7 +73,7 @@ interface Feature {
   title: string;
   desc: string;
   anchor: string;
-  cta: { href: string; label: string };
+  cta?: { href: string; label: string };
   badge?: Badge;
   /** Optional 2×2 hero tile — only one feature per bucket should be `featured`. */
   featured?: boolean;
@@ -186,8 +186,7 @@ const BUCKETS: readonly Bucket[] = [
         Icon: Globe2,
         anchor: 'i18n',
         title: 'Đa ngôn ngữ',
-        desc: 'Giao diện và phân tích bằng Tiếng Việt và English. Thêm ngôn ngữ khác đang được phát triển.',
-        cta: { href: '/?lang=en', label: 'View in English' },
+        desc: 'Hiện hỗ trợ Tiếng Việt. Đa ngôn ngữ đang được phát triển.',
       },
       {
         Icon: CalendarClock,
@@ -345,14 +344,16 @@ function FeatureCard({ feature }: { feature: Feature }) {
 
       {/* WCAG 2.5.5 target size — min-h-11 = 44px tap target. asChild keeps
           the underlying <Link> for client-side routing and prefetch. */}
-      <Button
-        asChild
-        variant={featured ? 'default' : 'outline'}
-        size="sm"
-        className="mt-5 min-h-11 w-full"
-      >
-        <Link href={cta.href}>{cta.label}</Link>
-      </Button>
+      {cta && (
+        <Button
+          asChild
+          variant={featured ? 'default' : 'outline'}
+          size="sm"
+          className="mt-5 min-h-11 w-full"
+        >
+          <Link href={cta.href}>{cta.label}</Link>
+        </Button>
+      )}
     </article>
   );
 }

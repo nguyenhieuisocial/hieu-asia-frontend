@@ -16,7 +16,7 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 export const metadata: Metadata = {
   title: 'Timeline — Đại vận + Lưu niên',
   description:
-    'Timeline đại vận của bạn: 10 đại vận theo Tử Vi Đẩu Số, lưu niên năm hiện tại, lưu nguyệt tháng hiện tại. Demo content — lập lá số để cá nhân hoá.',
+    'Timeline đại vận của bạn: 10 đại vận theo Tử Vi Đẩu Số, lưu niên năm hiện tại, lưu nguyệt tháng hiện tại. Dữ liệu minh hoạ — lập lá số để cá nhân hoá.',
   alternates: { canonical: 'https://hieu.asia/timeline' },
   openGraph: {
     title: 'Timeline đại vận',
@@ -144,7 +144,7 @@ export default function TimelinePage() {
           </h1>
           <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
             Đại vận = giai đoạn 10 năm. Lưu niên = năm hiện tại. Lưu nguyệt = tháng
-            hiện tại. Demo content — lập lá số để cá nhân hoá theo cung an mệnh
+            hiện tại. Đây là minh hoạ — lập lá số để cá nhân hoá theo cung an mệnh
             của bạn.
           </p>
         </header>
