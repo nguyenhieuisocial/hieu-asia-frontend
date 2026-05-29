@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import { ChevronRight, ArrowRight, Shield } from 'lucide-react';
 import { Button } from '@hieu-asia/ui';
 import { PALACE_READINGS, findPalaceReading } from '@/lib/palace-readings';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { article, breadcrumb } from '@/lib/seo/jsonld';
 
 // Closed whitelist of the 12 palace slugs. Defence-in-depth alongside
 // findPalaceReading() — rejects malformed input before lookup.
@@ -45,29 +47,25 @@ export default async function LearnPalacePage({
   const data = findPalaceReading(cung);
   if (!data) notFound();
 
-  const articleJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: `Cung ${data.name} trong Tử Vi — luận theo hướng ra quyết định`,
-    description: data.governs,
-    url: `https://hieu.asia/learn/tu-vi/${data.slug}`,
-    datePublished: PUBLISHED_AT,
-    dateModified: PUBLISHED_AT,
-    inLanguage: 'vi-VN',
-    author: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
-    publisher: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `https://hieu.asia/learn/tu-vi/${data.slug}`,
-    },
-  };
+  const jsonLd = [
+    article({
+      headline: `Cung ${data.name} trong Tử Vi — luận theo hướng ra quyết định`,
+      description: data.governs,
+      url: `/learn/tu-vi/${data.slug}`,
+      datePublished: PUBLISHED_AT,
+      dateModified: PUBLISHED_AT,
+    }),
+    breadcrumb([
+      { name: 'Trang chủ', url: '/' },
+      { name: 'Học huyền học', url: '/learn' },
+      { name: 'Tử Vi 12 cung', url: '/learn/tu-vi' },
+      { name: `Cung ${data.name}`, url: `/learn/tu-vi/${data.slug}` },
+    ]),
+  ];
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-12 sm:py-16">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
 
       <nav aria-label="Breadcrumb" className="mb-6 flex items-center text-xs text-muted-foreground">
         <Link href="/" className="hover:text-gold">
