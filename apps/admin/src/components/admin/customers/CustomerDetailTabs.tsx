@@ -294,9 +294,9 @@ function AuditTab({ rows }: { rows: AuditRow[] }) {
 
 function ComplianceTab({ customer }: { customer: CustomerDetail }) {
   const kycToneMap: Record<string, string> = {
-    verified: 'border-jade/40 bg-jade/15 text-jade-50',
+    verified: 'border-jade/40 bg-jade/15 text-jade-700 dark:text-jade-50',
     pending: 'border-gold/40 bg-gold/10 text-gold',
-    rejected: 'border-red-500/40 bg-red-500/10 text-red-300',
+    rejected: 'border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300',
   };
   const kycTone =
     kycToneMap[(customer.kyc_status ?? '').toLowerCase()]

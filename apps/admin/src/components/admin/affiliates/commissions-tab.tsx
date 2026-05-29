@@ -123,7 +123,7 @@ export function CommissionsTab() {
           {q.isLoading ? (
             <p className="text-sm text-muted-foreground">Đang tải…</p>
           ) : q.error ? (
-            <p className="text-sm text-red-300">{(q.error as Error).message}</p>
+            <p className="text-sm text-red-700 dark:text-red-300">{(q.error as Error).message}</p>
           ) : (
             <table className="w-full text-sm">
               <thead className="border-b border-border text-left text-xs uppercase text-muted-foreground">
@@ -175,7 +175,7 @@ export function CommissionsTab() {
                               clawback.mutate(c.id);
                             }
                           }}
-                          className="border border-red-500/30 text-red-300"
+                          className="border border-red-500/30 text-red-700 dark:text-red-300"
                         >
                           Clawback
                         </Button>
@@ -202,13 +202,13 @@ export function CommissionsTab() {
 function StatusBadge({ status }: { status: string }) {
   const cls =
     status === 'available'
-      ? 'bg-jade/20 text-jade-50'
+      ? 'bg-jade/20 text-jade-700 dark:text-jade-50'
       : status === 'paid'
-        ? 'bg-green-500/20 text-green-300'
+        ? 'bg-green-500/20 text-green-700 dark:text-green-300'
         : status === 'held' || status === 'pending'
-          ? 'bg-yellow-500/20 text-yellow-300'
+          ? 'bg-yellow-500/20 text-yellow-700 dark:text-yellow-300'
           : status === 'clawed_back'
-            ? 'bg-red-500/20 text-red-300'
+            ? 'bg-red-500/20 text-red-700 dark:text-red-300'
             : 'bg-muted/40 text-muted-foreground';
   return (
     <span className={`rounded px-2 py-0.5 text-[10px] uppercase ${cls}`}>{status}</span>

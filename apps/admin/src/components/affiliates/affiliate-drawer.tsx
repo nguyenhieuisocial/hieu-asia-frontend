@@ -89,7 +89,7 @@ export function AffiliateDrawer({ affiliateId, onClose, onChange }: AffiliateDra
         {isLoading ? (
           <p className="text-sm text-muted-foreground">Đang tải hồ sơ…</p>
         ) : error || !data ? (
-          <p className="text-sm text-red-300">
+          <p className="text-sm text-red-700 dark:text-red-300">
             {error instanceof Error ? error.message : 'Không tải được hồ sơ.'}
           </p>
         ) : (
@@ -218,7 +218,7 @@ export function AffiliateDrawer({ affiliateId, onClose, onChange }: AffiliateDra
                 disabled={busy}
                 className={
                   data.affiliate.status === 'active'
-                    ? 'border-red-500/40 text-red-300 hover:bg-red-500/10'
+                    ? 'border-red-500/40 text-red-700 dark:text-red-300 hover:bg-red-500/10'
                     : ''
                 }
               >

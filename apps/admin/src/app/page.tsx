@@ -140,8 +140,8 @@ export default function AdminOverviewPage() {
             <AlertTriangle
               className={
                 queueCritical
-                  ? 'mt-0.5 h-5 w-5 shrink-0 text-red-400'
-                  : 'mt-0.5 h-5 w-5 shrink-0 text-warn-300'
+                  ? 'mt-0.5 h-5 w-5 shrink-0 text-red-600 dark:text-red-400'
+                  : 'mt-0.5 h-5 w-5 shrink-0 text-warn-700 dark:text-warn-300'
               }
               aria-hidden
             />
@@ -149,8 +149,8 @@ export default function AdminOverviewPage() {
               <p
                 className={
                   queueCritical
-                    ? 'font-semibold text-red-200'
-                    : 'font-semibold text-warn-300'
+                    ? 'font-semibold text-red-700 dark:text-red-200'
+                    : 'font-semibold text-warn-700 dark:text-warn-300'
                 }
               >
                 Queue đang đọng
@@ -158,8 +158,8 @@ export default function AdminOverviewPage() {
               <p
                 className={
                   queueCritical
-                    ? 'text-xs text-red-100/80'
-                    : 'text-xs text-warn-300/85'
+                    ? 'text-xs text-red-700/90 dark:text-red-100/80'
+                    : 'text-xs text-warn-700/90 dark:text-warn-300/85'
                 }
               >
                 Tác vụ chờ lâu nhất {oldestAgeLabel} · pending {queue.data?.default ?? 0}.
@@ -171,8 +171,8 @@ export default function AdminOverviewPage() {
             href="/sessions?status=pending&sort=oldest"
             className={
               queueCritical
-                ? 'inline-flex h-9 shrink-0 items-center justify-center whitespace-nowrap rounded-md border border-red-400/50 bg-red-500/10 px-3 text-xs font-medium text-red-100 transition-all duration-300 ease-editorial hover:bg-red-500/20'
-                : 'inline-flex h-9 shrink-0 items-center justify-center whitespace-nowrap rounded-md border border-warn-500/50 bg-warn-500/10 px-3 text-xs font-medium text-warn-300 transition-all duration-300 ease-editorial hover:bg-warn-500/20'
+                ? 'inline-flex h-9 shrink-0 items-center justify-center whitespace-nowrap rounded-md border border-red-500/50 bg-red-500/10 px-3 text-xs font-medium text-red-700 transition-all duration-300 ease-editorial hover:bg-red-500/20 dark:border-red-400/50 dark:text-red-100'
+                : 'inline-flex h-9 shrink-0 items-center justify-center whitespace-nowrap rounded-md border border-warn-500/50 bg-warn-500/10 px-3 text-xs font-medium text-warn-700 transition-all duration-300 ease-editorial hover:bg-warn-500/20 dark:text-warn-300'
             }
           >
             Triage queue

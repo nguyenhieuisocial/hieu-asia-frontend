@@ -48,7 +48,7 @@ export const ROLE_LABEL: Record<AdminRole, string> = {
 
 const ROLE_TONE: Record<AdminRole, string> = {
   owner: 'bg-gold/15 text-gold border-gold/30',
-  admin: 'bg-blue-500/10 text-blue-300 border-blue-500/30',
+  admin: 'bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30',
   viewer: 'bg-muted/40 text-muted-foreground border-border',
 };
 
@@ -206,7 +206,7 @@ export function UsersList({
                     e.target.value = '';
                   }}
                   defaultValue=""
-                  className="h-7 rounded-md border border-red-400/20 bg-card/60 px-2 text-xs text-red-300 focus:border-red-400 focus:outline-none"
+                  className="h-7 rounded-md border border-red-400/20 bg-card/60 px-2 text-xs text-red-700 dark:text-red-300 focus:border-red-400 focus:outline-none"
                   aria-label="Xoá bộ lọc đã lưu"
                 >
                   <option value="" disabled>
@@ -390,7 +390,7 @@ export function UsersList({
                             <DropdownMenuItem
                               disabled={u.role === 'owner'}
                               onSelect={() => onOpenDelete(u)}
-                              className="text-red-300 focus:bg-red-500/10 focus:text-red-200"
+                              className="text-red-700 dark:text-red-300 focus:bg-red-500/10 focus:text-red-700 dark:focus:text-red-200"
                             >
                               <Trash2 className="h-4 w-4" />
                               {u.role === 'owner' ? 'Không thể xóa owner' : 'Xóa user'}

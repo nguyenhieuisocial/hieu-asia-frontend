@@ -133,7 +133,7 @@ export function PromotersTab() {
           {q.isLoading ? (
             <p className="text-sm text-muted-foreground">Đang tải…</p>
           ) : q.error ? (
-            <p className="text-sm text-red-300">{(q.error as Error).message}</p>
+            <p className="text-sm text-red-700 dark:text-red-300">{(q.error as Error).message}</p>
           ) : (
             <table className="w-full text-sm">
               <thead className="border-b border-border text-left text-xs uppercase text-muted-foreground">
@@ -305,7 +305,7 @@ function ReparentDialog({
                 </p>
               )}
             </div>
-            <p className="rounded border border-yellow-500/30 bg-yellow-500/5 p-2 text-xs text-yellow-200">
+            <p className="rounded border border-yellow-500/30 bg-yellow-500/5 p-2 text-xs text-yellow-700 dark:text-yellow-200">
               Cảnh báo: RPC sẽ recompute path + depth toàn bộ subtree. Cycle detect tự động.
             </p>
           </div>

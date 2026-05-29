@@ -355,11 +355,11 @@ export default function SystemPage() {
                     <span
                       className={
                         status === 'ok'
-                          ? 'font-mono text-xs text-jade-300'
+                          ? 'font-mono text-xs text-jade-700 dark:text-jade-300'
                           : status === 'warn'
-                            ? 'font-mono text-xs text-warn-300'
+                            ? 'font-mono text-xs text-warn-700 dark:text-warn-300'
                             : status === 'down'
-                              ? 'font-mono text-xs text-red-300'
+                              ? 'font-mono text-xs text-red-700 dark:text-red-300'
                               : 'font-mono text-xs text-muted-foreground'
                       }
                     >

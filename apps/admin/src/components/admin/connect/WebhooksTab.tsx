@@ -90,10 +90,10 @@ const COLUMNS: AdminTableColumn<WebhookDelivery>[] = [
     cell: (r) => {
       const cls =
         r.status === 'ok'
-          ? 'text-jade-50 bg-jade/10 border-jade/30'
+          ? 'text-jade-700 dark:text-jade-50 bg-jade/10 border-jade/30'
           : r.status === 'retry'
-            ? 'text-amber-200 bg-amber-500/10 border-amber-500/30'
-            : 'text-red-200 bg-red-500/10 border-red-500/30';
+            ? 'text-amber-700 dark:text-amber-200 bg-amber-500/10 border-amber-500/30'
+            : 'text-red-700 dark:text-red-200 bg-red-500/10 border-red-500/30';
       return (
         <span
           className={`inline-flex rounded border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider ${cls}`}

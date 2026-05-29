@@ -134,7 +134,7 @@ export function BatchesTab() {
           {q.isLoading ? (
             <p className="text-sm text-muted-foreground">Đang tải…</p>
           ) : q.error ? (
-            <p className="text-sm text-red-300">{(q.error as Error).message}</p>
+            <p className="text-sm text-red-700 dark:text-red-300">{(q.error as Error).message}</p>
           ) : (
             <table className="w-full text-sm">
               <thead className="border-b border-border text-left text-xs uppercase text-muted-foreground">
@@ -234,15 +234,15 @@ export function BatchesTab() {
 function StatusBadge({ status }: { status: string }) {
   const cls =
     status === 'approved'
-      ? 'bg-jade/20 text-jade-50'
+      ? 'bg-jade/20 text-jade-700 dark:text-jade-50'
       : status === 'completed' || status === 'paid'
-        ? 'bg-green-500/20 text-green-300'
+        ? 'bg-green-500/20 text-green-700 dark:text-green-300'
         : status === 'in_progress'
-          ? 'bg-blue-500/20 text-blue-300'
+          ? 'bg-blue-500/20 text-blue-700 dark:text-blue-300'
           : status === 'pending_approval'
-            ? 'bg-yellow-500/20 text-yellow-300'
+            ? 'bg-yellow-500/20 text-yellow-700 dark:text-yellow-300'
             : status === 'failed' || status === 'rejected'
-              ? 'bg-red-500/20 text-red-300'
+              ? 'bg-red-500/20 text-red-700 dark:text-red-300'
               : 'bg-muted/40 text-muted-foreground';
   return <span className={`rounded px-2 py-0.5 text-[10px] uppercase ${cls}`}>{status}</span>;
 }

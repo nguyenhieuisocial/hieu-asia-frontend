@@ -108,7 +108,7 @@ export function RevokeKeyDialog({
           <Button
             onClick={handleConfirm}
             disabled={busy}
-            className="bg-red-500/20 text-red-200 hover:bg-red-500/30"
+            className="bg-red-500/20 text-red-700 dark:text-red-200 hover:bg-red-500/30"
           >
             {ICON_REVOKE}
             <span className="ml-1.5">

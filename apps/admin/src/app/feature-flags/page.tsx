@@ -173,7 +173,7 @@ export default function FeatureFlagsPage() {
                     <div className="flex items-center gap-2">
                       <code className="font-mono text-sm text-gold">{f.key}</code>
                       {f.rollout_pct < 100 && (
-                        <span className="inline-flex items-center rounded-full border border-warn-500/40 bg-warn-500/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-warn-300">
+                        <span className="inline-flex items-center rounded-full border border-warn-500/40 bg-warn-500/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-warn-700 dark:text-warn-300">
                           {f.rollout_pct}% rollout
                         </span>
                       )}
@@ -187,7 +187,7 @@ export default function FeatureFlagsPage() {
                     <span
                       className={
                         f.enabled
-                          ? 'font-mono text-xs uppercase tracking-wider text-jade-300 transition-colors duration-300 ease-editorial'
+                          ? 'font-mono text-xs uppercase tracking-wider text-jade-700 dark:text-jade-300 transition-colors duration-300 ease-editorial'
                           : 'font-mono text-xs uppercase tracking-wider text-muted-foreground transition-colors duration-300 ease-editorial'
                       }
                     >

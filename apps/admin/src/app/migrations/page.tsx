@@ -79,9 +79,9 @@ const MOCK_MIGRATIONS: Migration[] = [
 ];
 
 const STATUS_CLASS: Record<MigrationStatus, string> = {
-  applied: 'border-jade-300/40 bg-jade-500/15 text-jade-300',
-  pending: 'border-warn-500/40 bg-warn-500/10 text-warn-300',
-  failed: 'border-red-500/50 bg-red-500/15 text-red-300',
+  applied: 'border-jade-300/40 bg-jade-500/15 text-jade-700 dark:text-jade-300',
+  pending: 'border-warn-500/40 bg-warn-500/10 text-warn-700 dark:text-warn-300',
+  failed: 'border-red-500/50 bg-red-500/15 text-red-700 dark:text-red-300',
 };
 
 const STATUS_ICON: Record<MigrationStatus, React.ComponentType<{ className?: string }>> = {

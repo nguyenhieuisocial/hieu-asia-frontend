@@ -19,10 +19,10 @@ export function LiveBadge({
 }) {
   const toneClass =
     tone === 'red'
-      ? 'border-red-500/40 bg-red-500/10 text-red-300'
+      ? 'border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300'
       : tone === 'gold'
         ? 'border-gold/40 bg-gold/10 text-gold'
-        : 'border-jade/40 bg-jade/10 text-jade-50';
+        : 'border-jade/40 bg-jade/10 text-jade-700 dark:text-jade-50';
   const dotClass =
     tone === 'red' ? 'bg-red-400' : tone === 'gold' ? 'bg-gold' : 'bg-jade-50';
 

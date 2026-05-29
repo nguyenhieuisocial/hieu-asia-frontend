@@ -162,20 +162,20 @@ export function ApiKeysTab() {
         cell: (k) => {
           if (k.revoked_at) {
             return (
-              <span className="inline-flex rounded border border-red-500/30 bg-red-500/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-red-200">
+              <span className="inline-flex rounded border border-red-500/30 bg-red-500/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-red-700 dark:text-red-200">
                 revoked
               </span>
             );
           }
           if (k.expires_at && new Date(k.expires_at).getTime() < Date.now()) {
             return (
-              <span className="inline-flex rounded border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-amber-200">
+              <span className="inline-flex rounded border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-amber-700 dark:text-amber-200">
                 expired
               </span>
             );
           }
           return (
-            <span className="inline-flex rounded border border-jade/30 bg-jade/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-jade-50">
+            <span className="inline-flex rounded border border-jade/30 bg-jade/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-jade-700 dark:text-jade-50">
               active
             </span>
           );

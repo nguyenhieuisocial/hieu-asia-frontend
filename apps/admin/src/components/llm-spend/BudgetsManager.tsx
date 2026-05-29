@@ -175,7 +175,7 @@ export function BudgetsManager({ rows, isLoading }: Props) {
                 }
               />
             </div>
-            {error && <p className="text-xs text-red-300">{error}</p>}
+            {error && <p className="text-xs text-red-700 dark:text-red-300">{error}</p>}
             <Button type="submit" disabled={upsert.isPending}>
               {upsert.isPending ? 'Đang lưu…' : 'Lưu budget'}
             </Button>

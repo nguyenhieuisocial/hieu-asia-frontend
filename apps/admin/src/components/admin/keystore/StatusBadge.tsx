@@ -20,11 +20,11 @@ const TONE: Record<VaultStatus, { label: string; className: string }> = {
   },
   expiring: {
     label: 'Expiring',
-    className: 'bg-warn-300/10 text-warn-300 border-warn-500/40',
+    className: 'bg-warn-300/10 text-warn-700 dark:text-warn-300 border-warn-500/40',
   },
   expired: {
     label: 'Expired',
-    className: 'bg-red-500/15 text-red-300 border-red-400/40',
+    className: 'bg-red-500/15 text-red-700 dark:text-red-300 border-red-400/40',
   },
 };
 

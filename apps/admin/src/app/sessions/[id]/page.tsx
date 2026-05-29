@@ -580,13 +580,13 @@ export default function SessionDetailPage() {
       {s.error && (
         <Card className="border-red-500/30">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base text-red-300">
+            <CardTitle className="flex items-center gap-2 text-base text-red-700 dark:text-red-300">
               <AlertCircle className="h-4 w-4" />
               Lỗi pipeline
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <pre className="overflow-x-auto rounded border border-red-500/30 bg-red-500/5 p-3 font-mono text-xs leading-relaxed text-red-200">
+            <pre className="overflow-x-auto rounded border border-red-500/30 bg-red-500/5 p-3 font-mono text-xs leading-relaxed text-red-700 dark:text-red-200">
               {s.error}
             </pre>
           </CardContent>

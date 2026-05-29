@@ -36,8 +36,8 @@ const ACTIONS: Action[] = [
 
 const TONE_CLASS: Record<Action['tone'], string> = {
   gold: 'text-gold border-gold/25 group-hover:border-gold/50 bg-gold/5',
-  jade: 'text-jade-50 border-jade/25 group-hover:border-jade/50 bg-jade/5',
-  purple: 'text-purple-50 border-purple/25 group-hover:border-purple/50 bg-purple/15',
+  jade: 'text-jade-700 dark:text-jade-50 border-jade/25 group-hover:border-jade/50 bg-jade/5',
+  purple: 'text-purple-700 dark:text-purple-50 border-purple/25 group-hover:border-purple/50 bg-purple/15',
 };
 
 export function QuickActions() {
