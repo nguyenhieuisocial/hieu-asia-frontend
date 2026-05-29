@@ -23,7 +23,7 @@ const TOPIC = 'love';
 export const metadata: Metadata = {
   title: 'Tình cảm & gia đình — lộ trình',
   description:
-    'Đang nặng lòng vì một mối quan hệ? Lộ trình đọc cung Phu Thê, Phúc Đức, Nô Bộc kết hợp tương hợp tuổi để bạn hiểu kiểu gắn bó của mình và người kia — trước khi quyết định bước tiếp.',
+    'Nặng lòng vì một mối quan hệ? Lộ trình đọc cung Phu Thê, Phúc Đức, Nô Bộc kết hợp tương hợp tuổi, giúp bạn hiểu kiểu gắn bó trước khi quyết định bước tiếp.',
   alternates: { canonical: `https://hieu.asia/lo-trinh/${SLUG}` },
   openGraph: {
     title: 'Tình cảm & gia đình — lộ trình',

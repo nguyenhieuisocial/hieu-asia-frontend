@@ -38,7 +38,7 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 export const metadata: Metadata = {
   title: 'Phương pháp luận — Engine tính gì, AI luận gì',
   description:
-    'hieu.asia không "phán mệnh": engine deterministic lập lá số, AI diễn giải dữ liệu, người dùng quyết định. 5 nguyên tắc, 6 tầng pipeline, confidence score, validation snapshot, quality rubric.',
+    'hieu.asia không "phán mệnh": engine deterministic lập lá số, AI diễn giải, người dùng quyết định. 6 tầng pipeline, confidence score, quality rubric.',
   alternates: { canonical: 'https://hieu.asia/methodology' },
   // Wave 60.95.k P1-SEO — route-level openGraph REPLACES root-layout
   // openGraph (Next.js merge semantics), so we must re-declare `images` here
