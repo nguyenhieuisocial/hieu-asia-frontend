@@ -28,6 +28,7 @@ import { ReportSkeleton } from '@/components/skeletons/ReportSkeleton';
 import { TuViChartSection } from '@/components/tuvi/TuViChartSection';
 import { SectionFeedback } from '@/components/report/SectionFeedback';
 import { ProductTabs, type ProductTab } from '@/components/product/ProductTabs';
+import { ReportTOC } from '@/components/report/ReportTOC';
 import { PostReadingSurvey } from '@/components/feedback/PostReadingSurvey';
 import { track } from '@/lib/analytics';
 
@@ -255,6 +256,31 @@ function ReportSections({ sections }: { sections: MarkdownSection[] }) {
     [sections],
   );
 
+  const [activeSection, setActiveSection] = React.useState(tabs[0]?.id ?? '');
+
+  // Keep a valid active section if the report content changes under us.
+  React.useEffect(() => {
+    if (tabs.length && !tabs.some((t) => t.id === activeSection)) {
+      setActiveSection(tabs[0]!.id);
+    }
+  }, [tabs, activeSection]);
+
+  const tocItems = React.useMemo(
+    () => tabs.map((t) => ({ id: t.id, label: t.label })),
+    [tabs],
+  );
+
+  const handleSelect = React.useCallback((id: string) => {
+    setActiveSection(id);
+    // Defer the scroll until the accordion open/close + sheet close animations
+    // have settled, otherwise the target's position shifts mid-scroll.
+    window.setTimeout(() => {
+      document
+        .getElementById(id)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 380);
+  }, []);
+
   if (!sections.length) {
     return (
       <p className="text-center text-sm text-muted-foreground">
@@ -263,7 +289,20 @@ function ReportSections({ sections }: { sections: MarkdownSection[] }) {
     );
   }
 
-  return <ProductTabs tabs={tabs} />;
+  return (
+    <>
+      <ProductTabs
+        tabs={tabs}
+        value={activeSection}
+        onValueChange={setActiveSection}
+      />
+      <ReportTOC
+        items={tocItems}
+        activeId={activeSection}
+        onSelect={handleSelect}
+      />
+    </>
+  );
 }
 
 function SectionBody({ content }: { content: string }) {
