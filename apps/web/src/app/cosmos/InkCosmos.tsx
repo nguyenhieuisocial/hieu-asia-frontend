@@ -106,9 +106,20 @@ function circlePositions(radius: number, segs: number): Float32Array {
   return arr;
 }
 
-export function InkCosmos(props: { onUnsupported?: () => void; ambient?: number }): React.JSX.Element {
+export function InkCosmos(props: {
+  onUnsupported?: () => void;
+  ambient?: number;
+  pulseCung?: number | null;
+  onProject?: (pts: Array<{ x: number; y: number; vis: boolean }>) => void;
+}): React.JSX.Element {
   const mountRef = React.useRef<HTMLDivElement>(null);
   const { onUnsupported, ambient } = props;
+
+  // Ref đồng bộ prop → đọc trong loop mà KHÔNG re-init scene mỗi lần tương tác.
+  const pulseRef = React.useRef<number | null>(props.pulseCung ?? null);
+  const onProjectRef = React.useRef(props.onProject);
+  React.useEffect(() => { pulseRef.current = props.pulseCung ?? null; }, [props.pulseCung]);
+  React.useEffect(() => { onProjectRef.current = props.onProject; }, [props.onProject]);
 
   React.useEffect(() => {
     const mount = mountRef.current;
@@ -285,6 +296,15 @@ export function InkCosmos(props: { onUnsupported?: () => void; ambient?: number 
     const sweep = new THREE.Line(sweepGeo, sweepMat);
     scene.add(sweep);
 
+    // Ping radar tại cung được "pulse" (oracle / hotspot)
+    const pingGeo = new THREE.BufferGeometry();
+    pingGeo.setAttribute('position', new THREE.BufferAttribute(circlePositions(1, 48), 3));
+    const pingMat = new THREE.LineBasicMaterial({ color: WHITE.clone(), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+    const ping = new THREE.LineLoop(pingGeo, pingMat);
+    ping.visible = false;
+    scene.add(ping);
+    const projV = new THREE.Vector3();
+
     // ── state ──
     let progress = 0, smoothProg = 0;
     const mouse = { x: 0, y: 0 }, mouseTarget = { x: 0, y: 0 };
@@ -354,6 +374,28 @@ export function InkCosmos(props: { onUnsupported?: () => void; ambient?: number 
       camera.position.z = 6 - prog * 1.3;
       camera.lookAt(0, 0, 0);
 
+      // Ping tại cung được chọn (oracle / hotspot)
+      const pc = pulseRef.current;
+      if (pc != null && pc >= 0 && pc < CUNG) {
+        ping.visible = true;
+        ping.position.set(cungPos[pc * 3]!, cungPos[pc * 3 + 1]!, cungPos[pc * 3 + 2]!);
+        const ph = (time % 1.3) / 1.3;
+        ping.scale.setScalar(0.12 + ph * 0.6);
+        pingMat.opacity = (1 - ph) * 0.95;
+      } else if (ping.visible) {
+        ping.visible = false;
+      }
+      // Báo vị trí 12 cung lên màn (px) cho overlay tương tác
+      const op = onProjectRef.current;
+      if (op) {
+        const pts: Array<{ x: number; y: number; vis: boolean }> = [];
+        for (let i = 0; i < CUNG; i++) {
+          projV.set(cungPos[i * 3]!, cungPos[i * 3 + 1]!, cungPos[i * 3 + 2]!).project(camera);
+          pts.push({ x: (projV.x * 0.5 + 0.5) * w, y: (-projV.y * 0.5 + 0.5) * h, vis: projV.z < 1 });
+        }
+        op(pts);
+      }
+
       renderScene();
     };
 
@@ -381,6 +423,7 @@ export function InkCosmos(props: { onUnsupported?: () => void; ambient?: number 
       radarGeos.forEach((g) => g.dispose()); radarMats.forEach((m) => m.dispose());
       tickGeo.dispose(); tickMat.dispose();
       sweepGeo.dispose(); sweepMat.dispose();
+      pingGeo.dispose(); pingMat.dispose();
       renderer.dispose();
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     };
