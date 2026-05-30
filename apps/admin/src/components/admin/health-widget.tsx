@@ -15,7 +15,7 @@ import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { CheckCircle2, AlertTriangle, MinusCircle, Loader2 } from 'lucide-react';
 import { cn } from '@hieu-asia/ui';
-import { getQueueDepth } from '@/lib/admin-api';
+import { useQueueDepth } from '@/hooks/useQueueDepth';
 
 type Status = 'ok' | 'warn' | 'down' | 'unknown';
 
@@ -64,11 +64,7 @@ function StatusDot({ status }: { status: Status }) {
 }
 
 export function HealthWidget() {
-  const queue = useQuery({
-    queryKey: ['admin', 'queue-depth-health'],
-    queryFn: getQueueDepth,
-    refetchInterval: 30_000,
-  });
+  const queue = useQueueDepth();
   const secrets = useQuery({
     queryKey: ['admin', 'secrets-bootstrap'],
     queryFn: fetchSecretsBootstrap,

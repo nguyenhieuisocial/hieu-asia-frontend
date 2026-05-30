@@ -56,6 +56,8 @@ const nextConfig: NextConfig = {
       // Wave 65 — /health + /metrics folded into the /system tabbed page.
       { source: '/health', destination: '/system?tab=uptime', permanent: false },
       { source: '/metrics', destination: '/system?tab=performance', permanent: false },
+      // Wave 65 — /overview folded into the main dashboard (/).
+      { source: '/overview', destination: '/', permanent: false },
     ];
   },
   async headers() {

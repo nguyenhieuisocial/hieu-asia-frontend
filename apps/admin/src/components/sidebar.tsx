@@ -42,7 +42,6 @@ import {
   Key,
   Activity,
   Gauge,
-  LineChart,
   MousePointerClick,
   Menu,
   X,
@@ -79,7 +78,6 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'Tổng quan',
     items: [
       { href: '/', label: 'Tổng quan', Icon: LayoutDashboard },
-      { href: '/overview', label: 'Overview (3rd-party)', Icon: LineChart },
       { href: '/system', label: 'Trạng thái hệ thống', Icon: ServerCog },
     ],
   },
