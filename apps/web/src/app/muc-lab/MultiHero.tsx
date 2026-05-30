@@ -99,7 +99,7 @@ const CSS = `
 .mh { font-family: 'Newsreader', Georgia, serif; overflow-x: hidden; }
 .mh-grain { position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .05; mix-blend-mode: multiply; background-image: ${NOISE}; }
 .mh-wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 80px 56px 24px; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 48px; align-items: center; }
-@media (max-width: 880px) { .mh-wrap { grid-template-columns: 1fr; padding: 44px 24px 8px; } .mh-vis { order: -1; } .mh-rot { display: block; } .mh-soi { min-height: 3.9em; } }
+@media (max-width: 880px) { .mh-wrap { grid-template-columns: 1fr; padding: 44px 24px 8px; } .mh-vis { order: -1; } .mh-l2 .mh-rot { display: block; } .mh-vis .mh-soi { min-height: 4.5em; } }
 
 .mh-eyebrow { display: flex; align-items: center; font-family: 'JetBrains Mono', monospace; letter-spacing: .2em; font-size: 11.5px; color: ${SOFT}; margin: 0; }
 .mh-livedot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: ${OCHRE}; margin-right: 9px; }

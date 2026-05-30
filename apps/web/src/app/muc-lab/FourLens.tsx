@@ -101,9 +101,9 @@ export function FourLens(props: {
             type="button"
             className={`fl-ibtn${on(i) ? ' fl-on' : ''}`}
             style={{ left: `${l.leftPct}%`, top: `${l.topPct}%` }}
-            onMouseEnter={() => onHover?.(i)}
-            onMouseLeave={() => onHover?.(null)}
-            onFocus={() => onHover?.(i)}
+            onPointerEnter={(e) => { if (e.pointerType === 'mouse') onHover?.(i); }}
+            onPointerLeave={(e) => { if (e.pointerType === 'mouse') onHover?.(null); }}
+            onFocus={(e) => { if (e.currentTarget.matches(':focus-visible')) onHover?.(i); }}
             onBlur={() => onHover?.(null)}
             onClick={() => onPick?.(i)}
             aria-label={`Hệ ${NAMES[i]} — xem chi tiết`}
