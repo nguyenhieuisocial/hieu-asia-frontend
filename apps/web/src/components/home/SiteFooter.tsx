@@ -46,6 +46,9 @@ const COL_QUICK_LOOKUP: readonly FooterLink[] = [
   { href: '/tinh-menh-cuc', label: 'Tuổi mệnh cục', tag: 'free' },
   { href: '/ban-do', label: 'Bản đồ sao', tag: 'premium' },
   { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại', tag: 'free' },
+  { href: '/gieo-que', label: 'Gieo Quẻ Kinh Dịch', tag: 'free' },
+  { href: '/big-five', label: 'Big Five (OCEAN)', tag: 'free' },
+  { href: '/disc', label: 'Trắc nghiệm DiSC', tag: 'free' },
 ];
 
 const COL_DOCS: readonly FooterLink[] = [
