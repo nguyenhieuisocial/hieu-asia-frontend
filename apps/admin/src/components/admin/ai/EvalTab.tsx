@@ -21,7 +21,7 @@
  */
 
 import * as React from 'react';
-import { Brain, RefreshCw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import {
   ResponsiveContainer,
   LineChart,
@@ -41,7 +41,6 @@ import {
   CardTitle,
   cn,
 } from '@hieu-asia/ui';
-import { PageHeader } from '@/components/admin/page-header';
 import { LiveBadge } from '@/components/admin/live-badge';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { EmptyState } from '@/components/admin/empty-state';
@@ -539,7 +538,7 @@ function EvalEmptyState() {
 
 /* --------------------------------- page --------------------------------- */
 
-export default function EvalPage() {
+export function EvalTab() {
   const { data, isLoading, isError, error, refetch, isFetching } =
     useEvalTrend();
 
@@ -569,12 +568,13 @@ export default function EvalPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Eval framework — AI Mentor quality"
-        description="Điểm chất lượng AI Mentor đánh giá bởi 3 judge LLM (Claude · OpenAI · Google). Cron nightly 01:00 VN, polling mỗi 5 phút."
-        icon={<Brain className="h-5 w-5" />}
-        badge={hasData ? <LiveBadge /> : null}
-        actions={
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <p className="text-sm text-muted-foreground">
+          Điểm chất lượng AI Mentor đánh giá bởi 3 judge LLM (Claude · OpenAI ·
+          Google). Cron nightly 01:00 VN, polling mỗi 5 phút.
+        </p>
+        <div className="flex shrink-0 items-center gap-2">
+          {hasData ? <LiveBadge /> : null}
           <Button
             type="button"
             variant="outline"
@@ -587,8 +587,8 @@ export default function EvalPage() {
             />
             {isFetching ? 'Đang tải…' : 'Làm mới'}
           </Button>
-        }
-      />
+        </div>
+      </div>
 
       {showError && (
         <ErrorBlock compact message={errorMsg} onRetry={() => refetch()} />
