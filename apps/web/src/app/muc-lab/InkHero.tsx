@@ -34,9 +34,10 @@ const SPOKES = Array.from({ length: 12 }, (_, k) => {
   return { x1, y1, x2, y2, delay: 0.55 + k * 0.045 };
 });
 const TICKS = Array.from({ length: 24 }, (_, k) => {
-  const [x1, y1] = P(169, 15 * k);
+  const inner = k % 3 === 0 ? 159 : 170; // bất đối xứng → thấy được khi xoay
+  const [x1, y1] = P(inner, 15 * k);
   const [x2, y2] = P(RO, 15 * k);
-  return { x1, y1, x2, y2 };
+  return { x1, y1, x2, y2, long: k % 3 === 0 };
 });
 // sao rải trong vòng (lấp lánh)
 const STARS = ([
@@ -45,9 +46,10 @@ const STARS = ([
 ] as const).map(([x, y], i) => ({ x, y, ochre: i % 3 === 0, d: 1.15 + i * 0.05, tw: 3 + (i % 5) }));
 // quỹ đạo: sao bay quanh tâm (đặt ở bán kính r trên trục đứng, group xoay quanh tâm)
 const ORBITS = [
-  { r: 132, dur: 46, rev: false, ochre: true, size: 2.4 },
-  { r: 108, dur: 64, rev: true, ochre: false, size: 1.9 },
-  { r: 150, dur: 30, rev: false, ochre: false, size: 1.7 },
+  { r: 134, dur: 14, rev: false, ochre: true, size: 3.4 },
+  { r: 110, dur: 20, rev: true, ochre: true, size: 2.8 },
+  { r: 152, dur: 10, rev: false, ochre: false, size: 2.4 },
+  { r: 88, dur: 17, rev: true, ochre: true, size: 2.4 },
 ];
 
 type Cung = { d: string; lx: number; ly: number; n: string; dm: string; b: string };
@@ -184,8 +186,11 @@ export function InkHero(): React.JSX.Element {
                 ))}
               </g>
 
-              {/* kim quét astrolabe */}
-              <line className="ih-sweep" x1={C} y1={C} x2={C} y2={20} stroke={OCHRE} strokeWidth={0.8} />
+              {/* kim quét astrolabe — đậm, có đầu sáng */}
+              <g className="ih-sweep">
+                <line x1={C} y1={C} x2={C} y2={24} stroke={OCHRE} strokeWidth={1.5} strokeLinecap="round" />
+                <circle cx={C} cy={24} r={3.4} fill={OCHRE} />
+              </g>
 
               {SPOKES.map((s, i) => (
                 <line key={`s${i}`} className="ih-draw" pathLength={1} x1={s.x1} y1={s.y1} x2={s.x2} y2={s.y2} stroke={INK} strokeWidth={0.7} style={cssVar(s.delay)} />
@@ -304,16 +309,16 @@ const CSS = `
   .ih-deck { animation: ihFade 1s ease .9s both; }
   .ih-cta-row { animation: ihFade 1s ease 1.1s both; }
 
-  /* CHUYỂN ĐỘNG LIÊN TỤC — vào sau khi vẽ xong (~2s) */
-  .ih-spin { animation: ihSpin 200s linear 2s infinite; }
-  .ih-sweep { animation: ihFade 1.2s ease 2s forwards, ihSpin 70s linear 2s infinite; opacity: .28; }
-  .ih-orbit { opacity: 0; animation: ihFade 1.4s ease 2s forwards, ihSpin var(--dur, 50s) linear 2s infinite; }
-  .ih-orbit.ih-rev { animation: ihFade 1.4s ease 2s forwards, ihSpin var(--dur, 50s) linear 2s infinite reverse; }
-  .ih-breathe { animation: ihBreathe 5s ease-in-out 2s infinite; }
+  /* CHUYỂN ĐỘNG LIÊN TỤC — vào sớm (~1.4s), RÕ & nhanh hơn hẳn */
+  .ih-spin { animation: ihSpin 50s linear 1.4s infinite; }
+  .ih-sweep { animation: ihFade 1s ease 1.4s forwards, ihSpin 14s linear 1.4s infinite; opacity: .55; }
+  .ih-orbit { opacity: 0; animation: ihFade 1.1s ease 1.4s forwards, ihSpin var(--dur, 16s) linear 1.4s infinite; }
+  .ih-orbit.ih-rev { animation: ihFade 1.1s ease 1.4s forwards, ihSpin var(--dur, 16s) linear 1.4s infinite reverse; }
+  .ih-breathe { animation: ihBreathe 4.2s ease-in-out 1.4s infinite; }
   .ih-center { animation: ihFade 1s ease 1.3s both; }
-  .ih-star { animation: ihPop .5s ease both var(--d,0s), ihTwinkle var(--tw, 4s) ease-in-out 2s infinite; }
-  .ih-glowwedge { animation: ihFlow 11s linear infinite; animation-delay: calc(var(--i) * -0.916s + 2s); }
-  .ih-float { animation: ihFloat 9s ease-in-out 2s infinite; }
+  .ih-star { animation: ihPop .5s ease both var(--d,0s), ihTwinkle var(--tw, 4s) ease-in-out 1.4s infinite; }
+  .ih-glowwedge { animation: ihFlow 6s linear infinite; animation-delay: calc(var(--i) * -0.5s + 1.4s); }
+  .ih-float { animation: ihFloat 6.5s ease-in-out 1.4s infinite; }
 }
 @keyframes ihDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes ihInk { to { clip-path: inset(0 0 0 0); } }
@@ -322,8 +327,8 @@ const CSS = `
 @keyframes ihBreathe { 0%,100% { opacity: .45; transform: scale(1); } 50% { opacity: 1; transform: scale(1.7); } }
 @keyframes ihSpin { to { transform: rotate(360deg); } }
 @keyframes ihTwinkle { 0%,100% { opacity: .35; } 50% { opacity: 1; } }
-@keyframes ihFlow { 0% { fill-opacity: 0; } 6% { fill-opacity: .16; } 18% { fill-opacity: 0; } 100% { fill-opacity: 0; } }
-@keyframes ihFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes ihFlow { 0% { fill-opacity: 0; } 5% { fill-opacity: .3; } 17% { fill-opacity: 0; } 100% { fill-opacity: 0; } }
+@keyframes ihFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
 @keyframes ihStain { from { transform: translate(0,0); } to { transform: translate(8%, 6%); } }
 
 .ih-annot { min-height: 1.4em; margin: 0; text-align: center; font-size: .98rem; color: ${INK}; max-width: 30em; }
