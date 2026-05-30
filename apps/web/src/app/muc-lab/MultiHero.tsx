@@ -33,7 +33,7 @@ const reduceMotion = () =>
   typeof window !== 'undefined' && typeof window.matchMedia === 'function' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-export function MultiHero(): React.JSX.Element {
+export function MultiHero({ concept = false }: { concept?: boolean }): React.JSX.Element {
   const [run, setRun] = React.useState(0);
   const [autoActive, setAutoActive] = React.useState(4); // 0..3 soi 1 hệ; 4 = hội tụ
   const [hover, setHover] = React.useState<number | null>(null);
@@ -90,10 +90,12 @@ export function MultiHero(): React.JSX.Element {
         </div>
       </div>
 
-      <div className="mh-bar">
-        <button className="mh-replay" onClick={() => { setHover(null); setAutoActive(4); setRun((r) => r + 1); }}>↻ Xem lại</button>
-        <span className="mh-note">Concept "Bốn lăng kính" · AI hợp nhất Tử Vi + Bát Tự + Thần Số + MBTI → một bức tranh · mobile-first · SVG/CSS thuần · /muc-lab (noindex)</span>
-      </div>
+      {concept && (
+        <div className="mh-bar">
+          <button className="mh-replay" onClick={() => { setHover(null); setAutoActive(4); setRun((r) => r + 1); }}>↻ Xem lại</button>
+          <span className="mh-note">Concept "Bốn lăng kính" · AI hợp nhất Tử Vi + Bát Tự + Thần Số + MBTI → một bức tranh · mobile-first · SVG/CSS thuần · /muc-lab (noindex)</span>
+        </div>
+      )}
     </section>
   );
 }
@@ -110,11 +112,11 @@ const CSS = `
 
 .mh-eyebrow { display: flex; align-items: center; font-family: 'JetBrains Mono', monospace; letter-spacing: .16em; font-size: 11px; color: ${SOFT}; margin: 0; }
 .mh-livedot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: ${OCHRE}; margin-right: 9px; flex: none; }
-.mh-h1 { font-size: clamp(2.4rem, 9.5vw, 3rem); line-height: 1.02; margin: .28em 0 .36em; font-weight: 400; letter-spacing: -.02em; }
+.mh-h1 { font-size: clamp(3rem, 12.5vw, 3.9rem); line-height: 1.0; margin: .22em 0 .32em; font-weight: 400; letter-spacing: -.025em; }
 .mh-line { display: block; }
 .mh-l2 { color: ${OCHRE}; font-style: italic; }
 .mh-rot { display: block; background-image: linear-gradient(${OCHRE}, ${OCHRE}); background-repeat: no-repeat; background-position: 0 96%; background-size: 100% 2px; }
-.mh-deck { font-size: 1.04rem; line-height: 1.55; color: ${INK}; opacity: .82; margin: 0; max-width: 34em; }
+.mh-deck { font-size: .9rem; line-height: 1.5; color: ${INK}; opacity: .76; margin: 0; max-width: 32em; }
 
 .mh-vis { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .mh-soi { margin: 0; text-align: center; min-height: 4.5em; max-width: 32em; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; letter-spacing: .01em; line-height: 1.5; }
@@ -160,8 +162,8 @@ const CSS = `
   .mh-copy { grid-area: copy; align-self: end; }
   .mh-vis { grid-area: vis; }
   .mh-act { grid-area: act; align-self: start; }
-  .mh-h1 { font-size: clamp(3rem, 6vw, 5rem); line-height: .99; }
-  .mh-deck { font-size: 1.06rem; }
+  .mh-h1 { font-size: clamp(3.8rem, 7.2vw, 6.2rem); line-height: .94; }
+  .mh-deck { font-size: .96rem; max-width: 30em; }
   .mh-soi { min-height: 3em; }
   .mh-cta-row { flex-direction: row; flex-wrap: wrap; }
   .mh-cta { justify-content: flex-start; }
