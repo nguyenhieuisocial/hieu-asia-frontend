@@ -284,7 +284,11 @@ export default function AdminSepayPage() {
         [t.transaction_date, t.bank_brand_name ?? '', t.account_number ?? '', t.amount_in ?? '',
          orderCode(t.transaction_content) ?? '', t.reference_number ?? '',
          (t.transaction_content ?? '').replace(/,/g, ';')]
-          .map((v) => `"${String(v).replace(/"/g, '""')}"`).join(','),
+          .map((v) => {
+            let s = String(v);
+            if (/^[=+\-@]/.test(s)) s = `'${s}`; // chống CSV/formula injection khi mở Excel
+            return `"${s.replace(/"/g, '""')}"`;
+          }).join(','),
       ),
     ].join('\n');
     const blob = new Blob([rows], { type: 'text/csv;charset=utf-8;' });
@@ -494,7 +498,7 @@ export default function AdminSepayPage() {
                                   <Button size="sm" variant="outline" disabled={busy} onClick={() => actionMut.mutate({ id: r.id, action: 'accept' })}>
                                     <Check className="mr-1 h-3 w-3" />Duyệt
                                   </Button>
-                                  <Button size="sm" variant="ghost" disabled={busy} onClick={() => actionMut.mutate({ id: r.id, action: 'reject' })}>
+                                  <Button size="sm" variant="ghost" disabled={busy} onClick={() => { if (confirm('Từ chối yêu cầu hoàn tiền này?')) actionMut.mutate({ id: r.id, action: 'reject' }); }}>
                                     <XIcon className="h-3 w-3" />
                                   </Button>
                                 </>
