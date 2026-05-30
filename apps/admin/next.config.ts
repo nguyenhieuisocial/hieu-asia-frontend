@@ -63,6 +63,8 @@ const nextConfig: NextConfig = {
       // Wave 66 — /keystore (read-only API-key viewer) folded into /settings
       // "API keys" tab (read-write management of the same admin_api_keys registry).
       { source: '/keystore', destination: '/settings?tab=api-keys', permanent: false },
+      // Wave 66 — /eval folded into /ai-quality ("Chất lượng AI") as a tab.
+      { source: '/eval', destination: '/ai-quality?tab=eval', permanent: false },
     ];
   },
   async headers() {
