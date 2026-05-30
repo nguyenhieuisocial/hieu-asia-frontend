@@ -11,6 +11,7 @@ import {
   Skeleton,
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
@@ -209,6 +210,15 @@ export default function GieoQuePage() {
                     </CardContent>
                   </Card>
                 )}
+
+                <div className="pt-1">
+                  <ShareResultButton
+                    path="/gieo-que"
+                    title="Gieo quẻ Kinh Dịch — hieu.asia"
+                    text={`Tôi vừa gieo được quẻ ${result.hexagramPrimary.nameVi}. Bạn thử gieo một quẻ xem?`}
+                    trackId="gieo-que"
+                  />
+                </div>
 
                 <p className="px-1 text-xs leading-relaxed text-muted-foreground">
                   Quẻ Dịch là công cụ gợi mở suy ngẫm để bạn nhìn việc rõ hơn rồi tự quyết — không

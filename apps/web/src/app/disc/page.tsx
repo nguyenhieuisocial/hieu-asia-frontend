@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { PersonalityQuiz, type QuizPage } from '@/components/tools/PersonalityQuiz';
+import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { EXTENDED_SURVEY_SCHEMA, type DiscDimension } from '@/lib/survey-schema-extended';
@@ -23,6 +24,25 @@ const DIM_ORDER: DiscDimension[] = ['dominance', 'influence', 'steadiness', 'com
 
 export default function DiscPage() {
   const [result, setResult] = React.useState<DiscScoreWithMeta | null>(null);
+
+  // Mở link chia sẻ "/disc?r=d-i-s-c" → dựng lại kết quả để hiển thị ngay.
+  React.useEffect(() => {
+    const r = new URLSearchParams(window.location.search).get('r');
+    if (!r) return;
+    const p = r.split('-').map((x) => parseInt(x, 10));
+    if (p.length !== 4 || p.some((n) => !Number.isFinite(n) || n < 0 || n > 100)) return;
+    const [d, i, s, c] = p;
+    const scores = { dominance: d ?? 0, influence: i ?? 0, steadiness: s ?? 0, compliance: c ?? 0 };
+    const sorted = (Object.entries(scores) as Array<[DiscDimension, number]>).sort((a, b) => b[1] - a[1]);
+    setResult({
+      scores,
+      primary_style: sorted[0]?.[0] ?? 'dominance',
+      secondary_style: sorted[1]?.[0] ?? 'influence',
+      items_per_dimension: { dominance: 4, influence: 4, steadiness: 4, compliance: 4 },
+      total_items: 16,
+      total_answered: 16,
+    });
+  }, []);
 
   const onComplete = (answers: Record<string, number>) => {
     setResult(scoreDisc(answers));
@@ -110,6 +130,12 @@ export default function DiscPage() {
               })}
 
               <div className="flex flex-wrap gap-3 pt-1">
+                <ShareResultButton
+                  path={`/disc?r=${result.scores.dominance}-${result.scores.influence}-${result.scores.steadiness}-${result.scores.compliance}`}
+                  title="Kết quả DiSC của tôi — hieu.asia"
+                  text={`Phong cách hành vi của tôi là ${styleCode} (DiSC). Bạn thử xem mình thế nào?`}
+                  trackId="disc"
+                />
                 <Button variant="outline" onClick={() => setResult(null)}>
                   Làm lại
                 </Button>

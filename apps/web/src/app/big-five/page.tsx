@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { PersonalityQuiz, type QuizPage } from '@/components/tools/PersonalityQuiz';
+import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { EXTENDED_SURVEY_SCHEMA, type BigFiveTrait } from '@/lib/survey-schema-extended';
@@ -29,6 +30,21 @@ function level(score: number): 'Cao' | 'Trung bình' | 'Thấp' {
 
 export default function BigFivePage() {
   const [result, setResult] = React.useState<BigFiveScoreWithMeta | null>(null);
+
+  // Mở link chia sẻ "/big-five?r=o-c-e-a-n" → dựng lại kết quả để hiển thị ngay.
+  React.useEffect(() => {
+    const r = new URLSearchParams(window.location.search).get('r');
+    if (!r) return;
+    const p = r.split('-').map((x) => parseInt(x, 10));
+    if (p.length !== 5 || p.some((n) => !Number.isFinite(n) || n < 0 || n > 100)) return;
+    const [o, c, e, a, n] = p;
+    setResult({
+      scores: { openness: o ?? 0, conscientiousness: c ?? 0, extraversion: e ?? 0, agreeableness: a ?? 0, neuroticism: n ?? 0 },
+      items_per_trait: { openness: 4, conscientiousness: 4, extraversion: 4, agreeableness: 4, neuroticism: 4 },
+      total_items: 20,
+      total_answered: 20,
+    });
+  }, []);
 
   const onComplete = (answers: Record<string, number>) => {
     setResult(scoreBigFive(answers));
@@ -107,6 +123,12 @@ export default function BigFivePage() {
               })}
 
               <div className="flex flex-wrap gap-3 pt-1">
+                <ShareResultButton
+                  path={`/big-five?r=${result.scores.openness}-${result.scores.conscientiousness}-${result.scores.extraversion}-${result.scores.agreeableness}-${result.scores.neuroticism}`}
+                  title="Kết quả Big Five của tôi — hieu.asia"
+                  text="Tôi vừa làm trắc nghiệm tính cách Big Five (OCEAN). Bạn thử xem mình thế nào?"
+                  trackId="big-five"
+                />
                 <Button variant="outline" onClick={() => setResult(null)}>
                   Làm lại
                 </Button>
