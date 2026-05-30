@@ -85,7 +85,6 @@ export function InkHero(): React.JSX.Element {
   const [run, setRun] = React.useState(0);
   const [hover, setHover] = React.useState<number | null>(null);
   const wrap = React.useRef<HTMLDivElement>(null);
-  const trail = React.useRef<HTMLCanvasElement>(null);
 
   const onMove = (e: React.PointerEvent) => {
     const el = wrap.current;
@@ -100,52 +99,6 @@ export function InkHero(): React.JSX.Element {
     el.style.setProperty('--rx', '0deg');
     el.style.setProperty('--ry', '0deg');
   };
-
-  // Con trỏ = ngòi bút: vệt mực mờ tan dần
-  React.useEffect(() => {
-    const cv = trail.current;
-    if (!cv) return;
-    const reduce = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) return;
-    const ctx = cv.getContext('2d');
-    if (!ctx) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    type Dot = { x: number; y: number; life: number };
-    let dots: Dot[] = [];
-    let raf = 0;
-    const resize = () => {
-      const r = cv.getBoundingClientRect();
-      cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-    resize();
-    const ro = new ResizeObserver(resize); ro.observe(cv);
-    let lx = 0, ly = 0;
-    const onPt = (e: PointerEvent) => {
-      if (e.pointerType !== 'mouse') return;
-      const r = cv.getBoundingClientRect();
-      const x = e.clientX - r.left, y = e.clientY - r.top;
-      if (Math.hypot(x - lx, y - ly) > 5) { dots.push({ x, y, life: 1 }); lx = x; ly = y; }
-      if (dots.length > 40) dots = dots.slice(-40);
-    };
-    const loop = () => {
-      const r = cv.getBoundingClientRect();
-      ctx.clearRect(0, 0, r.width, r.height);
-      for (const d of dots) {
-        d.life -= 0.045;
-        if (d.life <= 0) continue;
-        ctx.beginPath();
-        ctx.arc(d.x, d.y, 2.6 * d.life + 0.5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(23,20,17,${(0.16 * d.life).toFixed(3)})`;
-        ctx.fill();
-      }
-      dots = dots.filter((d) => d.life > 0);
-      raf = requestAnimationFrame(loop);
-    };
-    window.addEventListener('pointermove', onPt, { passive: true });
-    raf = requestAnimationFrame(loop);
-    return () => { window.removeEventListener('pointermove', onPt); cancelAnimationFrame(raf); ro.disconnect(); };
-  }, [run]);
 
   // Kim quét quay MƯỢT (rAF) + trỏ theo chuột khi hover (đường ngắn). Cung kim đang chỉ = cung "đọc".
   const [active, setActive] = React.useState(0);
@@ -184,7 +137,6 @@ export function InkHero(): React.JSX.Element {
     <main className="ih" style={{ background: PAPER, color: INK, minHeight: '100vh', position: 'relative' }}>
       <style>{CSS}</style>
       <div className="ih-grain" aria-hidden="true" />
-      <canvas className="ih-trail" ref={trail} aria-hidden="true" />
 
       <div className="ih-wrap" key={run}>
         <div className="ih-copy">
@@ -290,7 +242,6 @@ const CSS = `
 .ih-grain { position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .055; mix-blend-mode: multiply; background-image: ${NOISE}; }
 .ih-grain::after { content: ''; position: absolute; inset: -20%; background: radial-gradient(40% 30% at 30% 40%, rgba(164,117,50,.06), transparent 70%); }
 @media (prefers-reduced-motion: no-preference) { .ih-grain::after { animation: ihStain 80s ease-in-out infinite alternate; } }
-.ih-trail { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
 
 .ih-wrap { position: relative; z-index: 2; max-width: 1180px; margin: 0 auto; padding: 88px 56px 24px; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 40px; align-items: center; }
 @media (max-width: 880px) { .ih-wrap { grid-template-columns: 1fr; padding: 48px 24px 8px; } .ih-chart-wrap { order: -1; } }
@@ -318,16 +269,17 @@ const CSS = `
 
 /* defaults = trạng thái cuối (reduced-motion / no-JS) */
 .ih-draw { stroke-dasharray: 1; stroke-dashoffset: 0; }
-.ih-wedge { fill-opacity: 0; cursor: pointer; transition: fill-opacity .35s ease; }
+.ih-wedge { fill-opacity: 0; cursor: pointer; pointer-events: all; transition: fill-opacity .35s ease; }
 .ih-wedge.ih-menh { fill-opacity: .08; }
 .ih-wedge:hover, .ih-wedge.ih-won { fill-opacity: .28; }
 .ih-glowwedge { fill-opacity: 0; }
 .ih-wlabel { fill: ${INK}; font-family: 'JetBrains Mono', monospace; letter-spacing: .04em; opacity: 0; transition: opacity .3s ease; pointer-events: none; }
 .ih-wlabel.ih-lon { opacity: .9; }
 .ih-center, .ih-l1, .ih-l2 { opacity: 1; }
-.ih-star, .ih-breathe { transform-box: fill-box; transform-origin: center; }
+.ih-star, .ih-breathe { transform-box: fill-box; transform-origin: center; pointer-events: none; }
 /* nhóm xoay quanh tâm 200,200 */
-.ih-spin, .ih-sweep, .ih-orbit { transform-box: view-box; transform-origin: 200px 200px; }
+.ih-spin, .ih-sweep, .ih-orbit { transform-box: view-box; transform-origin: 200px 200px; pointer-events: none; }
+.ih-center { pointer-events: none; }
 .ih-sweep { opacity: 0; }
 
 @media (prefers-reduced-motion: no-preference) {
