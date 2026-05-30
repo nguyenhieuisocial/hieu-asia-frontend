@@ -72,7 +72,7 @@ export function MultiHero(): React.JSX.Element {
             <span className="mh-line mh-l1">Hiểu mình.</span>
             <span className="mh-line mh-l2">Quyết định <span key={wordIdx} className="mh-rot">{WORDS[wordIdx] ?? 'mình.'}</span></span>
           </h1>
-          <p className="mh-deck">Tử Vi, Bát Tự, Thần Số và MBTI — bốn lăng kính nhìn về bạn. AI đọc cả bốn, hợp thành một bức tranh rõ ràng để bạn tự quyết.</p>
+          <p className="mh-deck">Tử Vi, Bát Tự, Thần Số, MBTI — bốn lăng kính cho bức tranh sâu nhất, cùng cả bộ công cụ cổ học &amp; hiện đại. AI hợp nhất để bạn tự quyết.</p>
         </div>
 
         <div className="mh-vis">

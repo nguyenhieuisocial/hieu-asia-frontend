@@ -8,6 +8,7 @@ import { Methodology } from './sections/Methodology';
 import { FreeReadingTeaser } from './sections/FreeReadingTeaser';
 import { PricingLite } from './sections/PricingLite';
 import { MissionNote } from './sections/MissionNote';
+import { ToolkitSection } from './sections/ToolkitSection';
 
 import { ScanRow } from '@/components/marketing/ScanRow';
 import { WhyTrust } from '@/components/home/WhyTrust';
@@ -133,6 +134,8 @@ export default function MucLabHomePage(): React.JSX.Element {
 
         {/* Methodology trước trust/how — giải thích cơ chế trước khi build trust (review #23). */}
         <Methodology />
+        {/* Breadth — chống undersell: KHÔNG chỉ 4 lăng kính, có cả bộ công cụ */}
+        <ToolkitSection />
 
         <div className="bg-muted/40">
           <WhyTrust />
