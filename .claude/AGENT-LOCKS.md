@@ -6,7 +6,7 @@ Mục đích: mỗi agent đăng ký file/vùng đang giữ + handoff cross-agen
 ## 🔁 Handoff đang chờ owner thực hiện
 | Ngày | Từ | Cho | Việc | Tài liệu |
 |---|---|---|---|---|
-| 2026-05-30 | hero-lab (`feat/hero-lab-prototype`) | owner `app/page.tsx` / homepage-wave | **Promote homepage "Bốn lăng kính → AI" → production** (founder DUYỆT — chọn promote). Branch đã revert swap cosmos (`page.tsx` == main, đã xoá HeroCosmos), KHÔNG đụng file khoá; owner lấy component từ `app/muc-lab/`. Gate: sau wave-64/CMS merge. | `docs/superpowers/plans/HANDOFF-homepage-promotion.md` · demo `/muc-lab/home` · GH issue (link khi tạo) |
+| 2026-05-30 | hero-lab (`feat/hero-lab-prototype`) | owner `app/page.tsx` / homepage-wave | **Promote homepage "Bốn lăng kính → AI" → production** (founder DUYỆT — chọn promote). Branch đã revert swap cosmos (`page.tsx` == main, đã xoá HeroCosmos), KHÔNG đụng file khoá; owner lấy component từ `app/muc-lab/`. Gate: sau wave-64/CMS merge. | `docs/superpowers/plans/HANDOFF-homepage-promotion.md` · demo `/muc-lab/home` · [GH issue #48](https://github.com/nguyenhieuisocial/hieu-asia-frontend/issues/48) |
 
 ## 🔒 Vùng đang giữ (tự đăng ký)
 | Agent | Vùng | Ghi chú |
