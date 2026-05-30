@@ -65,6 +65,9 @@ const nextConfig: NextConfig = {
       { source: '/keystore', destination: '/settings?tab=api-keys', permanent: false },
       // Wave 66 — /eval folded into /ai-quality ("Chất lượng AI") as a tab.
       { source: '/eval', destination: '/ai-quality?tab=eval', permanent: false },
+      // Wave 66 — /transactions trùng /payments tab Giao dịch (cùng /payment/transactions,
+      // tab payments có refund đầy đủ hơn) → gộp về tab.
+      { source: '/transactions', destination: '/payments?tab=transactions', permanent: false },
     ];
   },
   async headers() {

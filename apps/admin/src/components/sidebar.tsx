@@ -34,7 +34,6 @@ import {
   DollarSign,
   BookOpen,
   CreditCard,
-  Receipt,
   Landmark,
   Settings,
   Sparkles,
@@ -92,7 +91,6 @@ const NAV_GROUPS: NavGroup[] = [
     id: 'revenue',
     label: 'Doanh thu',
     items: [
-      { href: '/transactions', label: 'Giao dịch', Icon: Receipt },
       { href: '/sepay', label: 'SePay đối soát', Icon: Landmark },
       { href: '/payments', label: 'Thanh toán', Icon: CreditCard },
       { href: '/billing', label: 'Billing', Icon: Wallet },
