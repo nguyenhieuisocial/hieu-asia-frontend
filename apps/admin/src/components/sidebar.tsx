@@ -39,7 +39,6 @@ import {
   Landmark,
   Settings,
   Sparkles,
-  Key,
   Activity,
   Gauge,
   MousePointerClick,
@@ -136,7 +135,6 @@ const NAV_GROUPS: NavGroup[] = [
     id: 'system',
     label: 'Hệ thống',
     items: [
-      { href: '/keystore', label: 'Keystore', Icon: Key },
       { href: '/secrets', label: 'Secrets', Icon: Lock },
       { href: '/connect', label: 'Kết nối (OAuth)', Icon: Plug },
       { href: '/feature-flags', label: 'Feature flags', Icon: Flag },
