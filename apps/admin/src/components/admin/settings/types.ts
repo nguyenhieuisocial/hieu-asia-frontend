@@ -6,11 +6,14 @@ export interface AdminApiKey {
   id: string;
   name: string;
   scopes: string[];
-  prefix: string;
+  /** Worker returns `key_prefix` (last 4 chars) — was mistyped as `prefix`. */
+  key_prefix: string;
+  created_by: string | null;
   created_at: string;
-  last_used_at: string | null;
-  expires_at: string | null;
   revoked_at: string | null;
+  /** Not tracked by migration 0041 yet — optional so the UI degrades to "—". */
+  last_used_at?: string | null;
+  expires_at?: string | null;
 }
 
 export interface NotificationPrefs {
