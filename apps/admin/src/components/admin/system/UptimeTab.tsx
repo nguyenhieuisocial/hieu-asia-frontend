@@ -22,6 +22,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, cn } from '@
 import { AlertTriangle, CheckCircle2, TrendingUp, ShieldAlert } from 'lucide-react';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
+import { adminFetch } from '@/lib/admin-fetch';
 
 interface UptimeDay {
   date: string;
@@ -110,7 +111,7 @@ export function UptimeTab() {
     queryKey: ['admin', 'uptime-30d'],
     queryFn: async (): Promise<{ rows: UptimeDay[]; configured: boolean; reason?: string }> => {
       try {
-        const r = await fetch('/api/admin-proxy/admin/uptime?days=30', { cache: 'no-store' });
+        const r = await adminFetch('/api/admin-proxy/admin/uptime?days=30');
         const data = (await r.json().catch(() => null)) as
           | { ok?: boolean; rows?: UptimeDay[]; note?: string; error?: string }
           | null;
@@ -139,7 +140,7 @@ export function UptimeTab() {
     queryKey: ['admin', 'incidents'],
     queryFn: async (): Promise<{ rows: Incident[]; configured: boolean; reason?: string }> => {
       try {
-        const r = await fetch('/api/admin-proxy/admin/incidents?limit=20', { cache: 'no-store' });
+        const r = await adminFetch('/api/admin-proxy/admin/incidents?limit=20');
         const data = (await r.json().catch(() => null)) as
           | { ok?: boolean; rows?: Incident[]; note?: string; error?: string }
           | null;
@@ -150,12 +151,16 @@ export function UptimeTab() {
             reason: data?.note ?? data?.error ?? 'Better Stack chưa cấu hình',
           };
         }
-        // `note` present = not configured. No note + empty rows = genuinely
-        // no incidents (a good state → render the empty table, not the card).
-        if (data.note) {
-          return { rows: data.rows ?? [], configured: false, reason: data.note };
+        // `note` only signals "not configured" when it comes WITH empty rows
+        // (mirrors the uptime query's contract). A 200 envelope that carries
+        // real incident rows AND an informational note (e.g. a pagination/cache
+        // hint) must still render the incidents — never hide real data behind
+        // the "chưa cấu hình" card.
+        const okRows = data.rows ?? [];
+        if (data.note && okRows.length === 0) {
+          return { rows: [], configured: false, reason: data.note };
         }
-        return { rows: data.rows ?? [], configured: true };
+        return { rows: okRows, configured: true };
       } catch {
         return { rows: [], configured: false, reason: 'không kết nối' };
       }
@@ -174,7 +179,7 @@ export function UptimeTab() {
   const waf = useQuery({
     queryKey: ['admin', 'waf-events'],
     queryFn: async () => {
-      const r = await fetch('/api/admin-proxy/admin/waf/events?limit=20', { cache: 'no-store' });
+      const r = await adminFetch('/api/admin-proxy/admin/waf/events?limit=20');
       const data = (await r.json()) as WafResponse;
       return data;
     },

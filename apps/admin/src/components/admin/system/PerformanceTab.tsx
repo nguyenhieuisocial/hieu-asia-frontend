@@ -27,6 +27,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui'
 import { RefreshCw } from 'lucide-react';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
+import { adminFetch } from '@/lib/admin-fetch';
 
 interface MetricsSummary {
   ok: true;
@@ -93,8 +94,8 @@ export function PerformanceTab() {
     setError(null);
     try {
       const [metricsRes, healthRes] = await Promise.all([
-        fetch('/api/admin-proxy/admin/metrics', { cache: 'no-store' }),
-        fetch('/api/admin-proxy/health', { cache: 'no-store' }),
+        adminFetch('/api/admin-proxy/admin/metrics'),
+        adminFetch('/api/admin-proxy/health'),
       ]);
       if (!metricsRes.ok) {
         throw new Error(`Metrics HTTP ${metricsRes.status}`);

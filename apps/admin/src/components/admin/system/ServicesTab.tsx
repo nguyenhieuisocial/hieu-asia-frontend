@@ -19,6 +19,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { ServerCog, Activity, Sparkles, ShieldCheck, Database, Layers, Mail, Globe, Megaphone, Users } from 'lucide-react';
 import { KpiCard } from '@/components/admin/kpi-card';
+import { adminFetch } from '@/lib/admin-fetch';
 
 type SvcStatus = 'ok' | 'warn' | 'down' | 'unknown';
 
@@ -122,7 +123,7 @@ const HEALTH_STATUS_MAP: Record<HealthEnvelope['status'], SvcStatus> = {
  */
 async function pingService(endpoint: string): Promise<SvcResult> {
   try {
-    const r = await fetch(endpoint, { cache: 'no-store' });
+    const r = await adminFetch(endpoint);
     if (r.ok) return { status: 'ok' };
     if (r.status === 404) return { status: 'unknown' };
     if (r.status >= 500) return { status: 'down' };
@@ -140,7 +141,7 @@ async function pingService(endpoint: string): Promise<SvcResult> {
  */
 async function fetchHealth(endpoint: string): Promise<SvcResult> {
   try {
-    const r = await fetch(endpoint, { cache: 'no-store' });
+    const r = await adminFetch(endpoint);
     const body = (await r.json()) as Partial<HealthEnvelope>;
     const mapped = body?.status ? HEALTH_STATUS_MAP[body.status] : undefined;
     return {
@@ -214,7 +215,7 @@ interface ResendStatusNotConfigured {
 type ResendStatus = ResendStatusOk | ResendStatusNotConfigured;
 
 async function fetchResendStatus(): Promise<ResendStatus> {
-  const r = await fetch('/api/admin-proxy/admin/resend/status', { cache: 'no-store' });
+  const r = await adminFetch('/api/admin-proxy/admin/resend/status');
   return r.json() as Promise<ResendStatus>;
 }
 
