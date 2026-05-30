@@ -22,9 +22,7 @@ import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 // testimonial "khoảng lặng" section (4 anonymous decision excerpts in
 // founder voice, no stars/faces).
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
-// PREVIEW (nội bộ, chưa merge): homepage hero đổi sang HeroCosmos (Vũ trụ sci-fi WebGL).
-// HeroV4 giữ nguyên file để dễ revert.
-import { HeroCosmos } from '@/components/home/HeroCosmos';
+import { HeroV4 } from '@/components/home/HeroV4';
 import { EditorialList } from '@/components/marketing/EditorialList';
 // Wave 62.09 — custom discipline icons (vault 138 "đừng dùng icon set").
 import { LaSoIcon } from '@/components/marketing/icons/LaSoIcon';
@@ -423,7 +421,7 @@ export default function LandingPage() {
             uses /tu-vi-2026 as secondary destination for the traditional
             audience. Sample report still discoverable via inline CTA at
             the EditorialList "Bốn ống kính" section closing line. */}
-        <HeroCosmos />
+        <HeroV4 />
 
         {/* Wave 63.4 — removed the IntentChips "HOẶC BẮT ĐẦU TỪ" 6-lens strip.
             Founder (vault 138 review #2): the hero had THREE stacked start
