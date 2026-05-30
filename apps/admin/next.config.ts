@@ -58,6 +58,8 @@ const nextConfig: NextConfig = {
       { source: '/metrics', destination: '/system?tab=performance', permanent: false },
       // Wave 65 — /overview folded into the main dashboard (/).
       { source: '/overview', destination: '/', permanent: false },
+      // Wave 66 — /migrations folded into /audit ("Logs & sự cố") as a tab.
+      { source: '/migrations', destination: '/audit?tab=migrations', permanent: false },
     ];
   },
   async headers() {
