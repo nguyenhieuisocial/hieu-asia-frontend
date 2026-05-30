@@ -5,8 +5,9 @@ import { FourLens } from './FourLens';
 
 /**
  * MultiHero — hero ĐÚNG ĐỊNH VỊ: "Bốn lăng kính (Tử Vi · Bát Tự · Thần Số · MBTI),
- * AI hợp nhất thành MỘT bức tranh". Thay bản InkHero cũ (chỉ lá số tử vi).
- * Editorial giấy-mực-ochre, SVG/CSS thuần, prefers-reduced-motion-safe (SSR = trạng thái hội tụ).
+ * AI hợp nhất thành MỘT bức tranh". Editorial giấy-mực-ochre, SVG/CSS thuần.
+ * - Lăng kính tự soi lần lượt 4 hệ → hội tụ; HOVER/CLICK một lăng kính để xem chi tiết (pause auto).
+ * - Headline: từ cuối "Quyết định ___" đổi liên tục. prefers-reduced-motion-safe (SSR = hội tụ tĩnh).
  */
 
 const INK = '#171411';
@@ -15,12 +16,12 @@ const PAPER = '#F3ECDD';
 const SOFT = '#6B6358';
 
 const SYSTEMS = [
-  { n: 'Tử Vi', r: 'bản đồ ưu thế & vùng tối' },
-  { n: 'Bát Tự', r: 'cân bằng ngũ hành' },
-  { n: 'Thần Số', r: 'con số đường đời' },
-  { n: 'MBTI', r: 'cách bạn ra quyết định' },
+  { n: 'Tử Vi', r: 'bản đồ ưu thế & vùng tối', full: 'Lá số 12 cung — ưu thế, vùng tối và thời vận của bạn.' },
+  { n: 'Bát Tự', r: 'cân bằng ngũ hành', full: 'Tứ Trụ can-chi — cân bằng ngũ hành & nhịp thịnh–suy theo thời gian.' },
+  { n: 'Thần Số', r: 'con số đường đời', full: 'Con số đường đời — động lực gốc và bài học của đời bạn.' },
+  { n: 'MBTI', r: 'cách bạn ra quyết định', full: '16 kiểu tính cách — cách bạn tiếp nhận, suy nghĩ và ra quyết định.' },
 ];
-const SITU = ['chuyển việc', 'ở hay đi', 'cưới', 'khởi nghiệp', 'chọn ngành', 'bắt đầu lại'];
+const WORDS = ['mình.', 'đời mình.', 'con đường.', 'tương lai.', 'hướng đi.'];
 
 const reduceMotion = () =>
   typeof window !== 'undefined' && typeof window.matchMedia === 'function' &&
@@ -28,19 +29,27 @@ const reduceMotion = () =>
 
 export function MultiHero(): React.JSX.Element {
   const [run, setRun] = React.useState(0);
-  const [active, setActive] = React.useState(4); // 0..3 = soi 1 hệ; 4 = hội tụ (SSR/reduced)
-  const [situ, setSitu] = React.useState(0);
+  const [autoActive, setAutoActive] = React.useState(4); // 0..3 soi 1 hệ; 4 = hội tụ (SSR/reduced)
+  const [hover, setHover] = React.useState<number | null>(null);
+  const [wordIdx, setWordIdx] = React.useState(0);
+  const hoverRef = React.useRef<number | null>(null);
+  React.useEffect(() => { hoverRef.current = hover; }, [hover]);
 
   React.useEffect(() => {
     if (reduceMotion()) return;
-    const a = window.setInterval(() => setActive((x) => (x + 1) % 5), 2400);
-    const s = window.setInterval(() => setSitu((x) => (x + 1) % SITU.length), 2800);
+    const a = window.setInterval(() => { if (hoverRef.current == null) setAutoActive((x) => (x + 1) % 5); }, 2400);
+    const s = window.setInterval(() => setWordIdx((x) => (x + 1) % WORDS.length), 2800);
     return () => { window.clearInterval(a); window.clearInterval(s); };
   }, [run]);
 
+  const active = hover != null ? hover : autoActive;
   const sys = active >= 0 && active < 4 ? SYSTEMS[active] : null;
   const soi = sys ? (
-    <><span className="mh-soi-k">đang soi ·</span> <b className="mh-soi-n">{sys.n}</b> <span className="mh-soi-r">→ {sys.r}</span></>
+    hover != null ? (
+      <><b className="mh-soi-n">{sys.n}</b> <span className="mh-soi-r">· {sys.full}</span></>
+    ) : (
+      <><span className="mh-soi-k">đang soi ·</span> <b className="mh-soi-n">{sys.n}</b> <span className="mh-soi-r">→ {sys.r}</span></>
+    )
   ) : (
     <><span className="mh-soi-k">AI hợp nhất ·</span> <b className="mh-soi-n">một bức tranh</b> <span className="mh-soi-r">của riêng bạn</span></>
   );
@@ -51,19 +60,15 @@ export function MultiHero(): React.JSX.Element {
       <div className="mh-grain" aria-hidden="true" />
 
       <div className="mh-wrap" key={run}>
-        {/* Cột chữ */}
         <div className="mh-copy">
           <p className="mh-eyebrow"><span className="mh-livedot" aria-hidden="true" />BỐN LĂNG KÍNH · AI HỢP NHẤT THÀNH MỘT</p>
           <h1 className="mh-h1">
             <span className="mh-line mh-l1">Hiểu mình.</span>
-            <span className="mh-line mh-l2"><span className="mh-uline">Quyết định mình.</span></span>
+            <span className="mh-line mh-l2">Quyết định <span key={wordIdx} className="mh-rot">{WORDS[wordIdx] ?? 'mình.'}</span></span>
           </h1>
           <p className="mh-deck">
             Tử Vi, Bát Tự, Thần Số Học và MBTI — bốn cách cổ học và hiện đại nhìn về bạn.
             AI đọc cả bốn, hợp lại thành một bức tranh rõ ràng để bạn tự quyết định.
-          </p>
-          <p className="mh-situ">
-            Đang phân vân <b className="mh-situ-w" key={situ}>{SITU[situ] ?? SITU[0]}</b>?
           </p>
           <div className="mh-cta-row">
             <a className="mh-cta mh-cta-primary" href="#"><span className="mh-cta-num">①</span>Tôi đang phân vân một quyết định</a>
@@ -72,15 +77,15 @@ export function MultiHero(): React.JSX.Element {
           <p className="mh-micro">MIỄN PHÍ · KHÔNG CẦN THẺ · 1 PHÚT</p>
         </div>
 
-        {/* Visual: 4 lăng kính hội tụ + dòng đang soi */}
         <div className="mh-vis">
-          <FourLens active={active} />
-          <p className="mh-soi" aria-live="off"><span key={active} className="mh-soi-in">{soi}</span></p>
+          <FourLens active={active} onHover={setHover} onPick={(i) => setHover((h) => (h === i ? null : i))} />
+          <p className="mh-soi" aria-live="off"><span key={`${active}-${hover != null}`} className="mh-soi-in">{soi}</span></p>
+          <p className="mh-hint">{hover != null ? 'bấm/để chuột ra để tiếp tục' : 'di chuột hoặc bấm một lăng kính để xem'}</p>
         </div>
       </div>
 
       <div className="mh-bar">
-        <button className="mh-replay" onClick={() => { setActive(4); setRun((r) => r + 1); }}>↻ Xem lại</button>
+        <button className="mh-replay" onClick={() => { setHover(null); setAutoActive(4); setRun((r) => r + 1); }}>↻ Xem lại</button>
         <span className="mh-note">Concept "Bốn lăng kính" · AI hợp nhất Tử Vi + Bát Tự + Thần Số + MBTI → một bức tranh · SVG/CSS thuần · /muc-lab (noindex)</span>
       </div>
     </main>
@@ -101,12 +106,10 @@ const CSS = `
 .mh-h1 { font-size: clamp(2.6rem, 6vw, 5rem); line-height: .99; margin: .35em 0 .45em; font-weight: 400; letter-spacing: -.02em; }
 .mh-line { display: block; }
 .mh-l2 { color: ${OCHRE}; font-style: italic; }
-.mh-uline { display: inline-block; background-image: linear-gradient(${OCHRE}, ${OCHRE}); background-repeat: no-repeat; background-position: 0 96%; background-size: 100% 2px; }
+.mh-rot { display: inline-block; background-image: linear-gradient(${OCHRE}, ${OCHRE}); background-repeat: no-repeat; background-position: 0 96%; background-size: 100% 2px; }
 .mh-deck { max-width: 30em; font-size: 1.06rem; line-height: 1.58; color: ${INK}; opacity: .82; margin: 0; }
-.mh-situ { margin: 1.1em 0 0; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: ${SOFT}; }
-.mh-situ-w { display: inline-block; color: ${OCHRE}; font-weight: 500; animation: mhFadeUp .5s ease both; }
 
-.mh-cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 1.6em; }
+.mh-cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 1.8em; }
 .mh-cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; border-radius: 2px; padding: 14px 24px; font-size: 1rem; text-decoration: none; }
 .mh-cta::before { content: ''; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle, rgba(23,20,17,.4), rgba(23,20,17,0) 70%); transform: translate(-50%,-50%) scale(0); transition: transform .55s cubic-bezier(.2,.7,.2,1); }
 .mh-cta:hover::before { transform: translate(-50%,-50%) scale(34); }
@@ -118,23 +121,22 @@ const CSS = `
 .mh-cta-sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: ${SOFT}; margin-left: .4em; }
 .mh-micro { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .16em; color: ${SOFT}; margin-top: 1.5em; }
 
-.mh-vis { display: grid; place-items: center; gap: 14px; }
-.mh-vis .fl { width: min(440px, 82vw); }
-.mh-soi { margin: 0; text-align: center; min-height: 1.3em; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; letter-spacing: .02em; }
+.mh-vis { display: grid; place-items: center; gap: 12px; }
+.mh-soi { margin: 0; text-align: center; min-height: 1.3em; max-width: 30em; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; letter-spacing: .02em; line-height: 1.5; }
 .mh-soi-in { display: inline-block; animation: mhFadeUp .5s ease both; }
 .mh-soi-k { color: ${SOFT}; }
 .mh-soi-n { color: ${OCHRE}; font-weight: 500; font-family: 'Newsreader', Georgia, serif; font-size: 1.15em; font-style: italic; }
 .mh-soi-r { color: ${SOFT}; }
+.mh-hint { margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: ${SOFT}; opacity: .6; }
 
-/* defaults visible (SSR / reduced-motion) */
 .mh-l1, .mh-l2 { opacity: 1; }
 @media (prefers-reduced-motion: no-preference) {
   .mh-l1 { clip-path: inset(0 100% 0 0); animation: mhInk .85s cubic-bezier(.2,.7,.2,1) .15s both; }
   .mh-l2 { clip-path: inset(0 100% 0 0); animation: mhInk .9s cubic-bezier(.2,.7,.2,1) .45s both; }
-  .mh-uline { background-size: 0% 2px; animation: mhUline .9s cubic-bezier(.2,.7,.2,1) 1.05s both; }
+  .mh-rot { background-size: 0% 2px; animation: mhFadeUp .55s cubic-bezier(.2,.7,.2,1) both, mhUline .7s cubic-bezier(.2,.7,.2,1) .12s both; }
   .mh-eyebrow { animation: mhFade .8s ease both; }
   .mh-deck { animation: mhFade 1s ease .85s both; }
-  .mh-situ, .mh-cta-row { animation: mhFade 1s ease 1.05s both; }
+  .mh-cta-row { animation: mhFade 1s ease 1.05s both; }
   .mh-livedot { animation: mhPulse 1.8s ease-in-out 1.4s infinite; }
 }
 @keyframes mhInk { to { clip-path: inset(0 0 0 0); } }
