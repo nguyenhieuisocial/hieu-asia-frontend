@@ -30,6 +30,7 @@ import {
   X as XIcon,
   Clock,
   Tag,
+  AlertTriangle,
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
@@ -165,7 +166,7 @@ const PRESETS: { label: string; days: number | 'today' | null }[] = [
 
 export default function AdminSepayPage() {
   const qc = useQueryClient();
-  const [tab, setTab] = React.useState<'tx' | 'refunds'>('tx');
+  const [tab, setTab] = React.useState<'tx' | 'reconcile' | 'refunds'>('tx');
   const [draft, setDraft] = React.useState<Filters>(EMPTY_FILTERS);
   const [filters, setFilters] = React.useState<Filters>(EMPTY_FILTERS);
   const [preset, setPreset] = React.useState<string>('Tất cả');
@@ -323,7 +324,7 @@ export default function AdminSepayPage() {
 
       {/* Tabs */}
       <div className="inline-flex rounded-lg border border-border/60 bg-card/40 p-1">
-        {([['tx', 'Giao dịch ngân hàng'], ['refunds', `Hoàn tiền${pendingRefunds ? ` · ${pendingRefunds}` : ''}`]] as const).map(([k, label]) => (
+        {([['tx', 'Giao dịch ngân hàng'], ['reconcile', 'Đối soát'], ['refunds', `Hoàn tiền${pendingRefunds ? ` · ${pendingRefunds}` : ''}`]] as const).map(([k, label]) => (
           <button
             key={k}
             type="button"
@@ -451,6 +452,8 @@ export default function AdminSepayPage() {
             </Card>
           )}
         </>
+      ) : tab === 'reconcile' ? (
+        <ReconcileView />
       ) : (
         <Card>
           <CardHeader>
@@ -551,6 +554,152 @@ export default function AdminSepayPage() {
             </CardContent>
           </Card>
         </div>
+      )}
+    </div>
+  );
+}
+
+// ── Tab Đối soát: ghép tiền ngân hàng ↔ đơn (GET /admin/sepay/reconcile) ──────
+interface ReconTxn {
+  id: string;
+  transaction_date: string;
+  amount_in: string;
+  transaction_content: string | null;
+  reference_number: string | null;
+  bank_brand_name: string | null;
+}
+interface ReconOrder {
+  id: string;
+  tier: string;
+  user_id: string;
+  amount_due: number;
+  status: string;
+  paid_at: string | null;
+  underpaid: boolean;
+}
+interface ReconEnvelope {
+  ok: boolean;
+  summary?: { matched: number; orphan: number; other: number };
+  matched?: { txn: ReconTxn; code: string; order: ReconOrder | null }[];
+  orphan?: { txn: ReconTxn; code: string }[];
+  other?: { txn: ReconTxn }[];
+  error?: string;
+}
+
+function ReconcileView() {
+  const q = useQuery({
+    queryKey: ['admin', 'sepay', 'reconcile'],
+    queryFn: async (): Promise<ReconEnvelope> => {
+      const r = await fetch(`${PROXY}/reconcile?limit=100`, { cache: 'no-store' });
+      const t = await r.text();
+      try {
+        return JSON.parse(t) as ReconEnvelope;
+      } catch {
+        return { ok: false, error: `Invalid JSON (HTTP ${r.status})` };
+      }
+    },
+    refetchInterval: 30_000,
+  });
+  const d = q.data;
+  if (q.isLoading) {
+    return <Card><CardContent className="p-8 text-center text-sm text-muted-foreground">Đang đối soát…</CardContent></Card>;
+  }
+  if (!d?.ok) {
+    return <ErrorBlock message={d?.error === 'sepay_api_error' ? 'Lỗi gọi SePay API' : d?.error ?? 'Không đối soát được'} onRetry={() => q.refetch()} />;
+  }
+  const matched = d.matched ?? [];
+  const orphan = d.orphan ?? [];
+  const other = d.other ?? [];
+  return (
+    <div className="space-y-4">
+      <div className="grid gap-3 sm:grid-cols-3">
+        <KpiCard label="Khớp đơn" value={matched.length} icon={<CheckCircle2 className="h-4 w-4" />} accent="jade" />
+        <KpiCard label="Tiền mồ côi" value={orphan.length} hint="có mã nhưng không thấy đơn" icon={<AlertTriangle className="h-4 w-4" />} accent={orphan.length ? 'red' : undefined} />
+        <KpiCard label="Khác (không mã đơn)" value={other.length} icon={<Landmark className="h-4 w-4" />} />
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-sm">
+            <CheckCircle2 className="h-4 w-4 text-emerald-500" />Khớp đơn ({matched.length})
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          {matched.length === 0 ? (
+            <p className="px-6 py-8 text-center text-sm text-muted-foreground">
+              Chưa có giao dịch khớp đơn. Sẽ xuất hiện khi có thanh toán thật mang mã HIEUASIA.
+            </p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="border-b border-border/60 text-left text-xs text-muted-foreground">
+                  <tr>
+                    <th className="px-4 py-2.5 font-medium">Thời gian</th>
+                    <th className="px-4 py-2.5 font-medium">Mã đơn</th>
+                    <th className="px-4 py-2.5 font-medium">Gói</th>
+                    <th className="px-4 py-2.5 font-medium">Khách</th>
+                    <th className="px-4 py-2.5 text-right font-medium">Tiền vào</th>
+                    <th className="px-4 py-2.5 font-medium">Trạng thái</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {matched.map((r, i) => (
+                    <tr key={r.txn.id ?? i} className="border-b border-border/40 transition-colors last:border-0 hover:bg-muted/[0.04]">
+                      <td className="whitespace-nowrap px-4 py-2.5 text-foreground/80">{fmtTs(r.txn.transaction_date)}</td>
+                      <td className="px-4 py-2.5"><span className="inline-flex items-center gap-1 rounded bg-gold/15 px-2 py-0.5 font-mono text-xs text-gold"><Tag className="h-3 w-3" />{r.code}</span></td>
+                      <td className="px-4 py-2.5">{r.order?.tier ?? '—'}</td>
+                      <td className="px-4 py-2.5 font-mono text-xs">{r.order?.user_id ? `${r.order.user_id.slice(0, 12)}…` : '—'}</td>
+                      <td className="px-4 py-2.5 text-right font-mono text-emerald-500">+{new Intl.NumberFormat('vi-VN').format(parseFloat(r.txn.amount_in || '0'))}</td>
+                      <td className="px-4 py-2.5">
+                        {r.order?.underpaid ? (
+                          <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-xs text-red-500">Thiếu tiền</span>
+                        ) : r.order?.status === 'paid' ? (
+                          <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs text-emerald-500">Đã trả</span>
+                        ) : (
+                          <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs text-amber-500">{r.order?.status ?? '—'}</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {orphan.length > 0 && (
+        <Card className="border-red-500/30">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-sm text-red-500">
+              <AlertTriangle className="h-4 w-4" />Tiền mồ côi ({orphan.length}) — có mã nhưng không thấy đơn (đơn hết hạn?)
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="border-b border-border/60 text-left text-xs text-muted-foreground">
+                  <tr>
+                    <th className="px-4 py-2.5 font-medium">Thời gian</th>
+                    <th className="px-4 py-2.5 font-medium">Mã</th>
+                    <th className="px-4 py-2.5 text-right font-medium">Tiền vào</th>
+                    <th className="px-4 py-2.5 font-medium">Tham chiếu</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orphan.map((r, i) => (
+                    <tr key={r.txn.id ?? i} className="border-b border-border/40 last:border-0">
+                      <td className="whitespace-nowrap px-4 py-2.5 text-foreground/80">{fmtTs(r.txn.transaction_date)}</td>
+                      <td className="px-4 py-2.5 font-mono text-xs">{r.code}</td>
+                      <td className="px-4 py-2.5 text-right font-mono">+{new Intl.NumberFormat('vi-VN').format(parseFloat(r.txn.amount_in || '0'))}</td>
+                      <td className="px-4 py-2.5 font-mono text-xs">{r.txn.reference_number ?? '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );
