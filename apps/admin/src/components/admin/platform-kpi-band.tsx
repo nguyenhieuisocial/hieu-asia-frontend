@@ -21,14 +21,14 @@ const PLACEHOLDERS: PlaceholderCard[] = [
     key: 'deploys_today',
     label: 'Deploys hôm nay',
     source: 'vercel',
-    sourceUrl: 'https://vercel.com/hieu-asia',
+    sourceUrl: 'https://vercel.com/nguyenhieuisocial-4628s-projects',
     subtitle: 'Vercel · production deploys',
   },
   {
     key: 'errors_today',
     label: 'Lỗi hôm nay',
     source: 'sentry',
-    sourceUrl: 'https://sentry.io/organizations/hieu-asia/issues/',
+    sourceUrl: 'https://sentry.io/organizations/hieuasia/issues/',
     subtitle: 'Sentry · sự kiện unresolved',
   },
   {
@@ -63,7 +63,7 @@ const PLACEHOLDERS: PlaceholderCard[] = [
     key: 'dependabot_alerts',
     label: 'Dependabot alerts',
     source: 'github',
-    sourceUrl: 'https://github.com/hieu-asia/frontend/security/dependabot',
+    sourceUrl: 'https://github.com/nguyenhieuisocial/hieu-asia-frontend/security/dependabot',
     subtitle: 'GitHub · open alerts',
   },
 ];
