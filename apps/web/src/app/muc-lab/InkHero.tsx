@@ -147,29 +147,38 @@ export function InkHero(): React.JSX.Element {
     return () => { window.removeEventListener('pointermove', onPt); cancelAnimationFrame(raf); ro.disconnect(); };
   }, [run]);
 
-  // Tự cuốn chiếu: lần lượt "đọc" 12 cung → đổi tên ở tâm + ý nghĩa bên dưới. Hover để giữ.
-  const [auto, setAuto] = React.useState(0);
+  // Kim quét quay MƯỢT (rAF) + trỏ theo chuột khi hover (đường ngắn). Cung kim đang chỉ = cung "đọc".
+  const [active, setActive] = React.useState(0);
   const hoverRef = React.useRef<number | null>(null);
+  const sweepEl = React.useRef<SVGGElement>(null);
   React.useEffect(() => { hoverRef.current = hover; }, [hover]);
   React.useEffect(() => {
     const reduce = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) return;
-    const id = window.setInterval(() => { if (hoverRef.current == null) setAuto((a) => (a + 1) % 12); }, 2600);
-    return () => window.clearInterval(id);
+    const el = sweepEl.current;
+    if (reduce) { if (el) el.style.transform = 'rotate(0deg)'; setActive(0); return; }
+    let cur = 0, tgt = 0, lastA = -1, raf = 0;
+    let last = performance.now();
+    const SPEED = 360 / 31; // ~31s/vòng → ~2.6s mỗi cung
+    const loop = (now: number) => {
+      const dt = Math.min((now - last) / 1000, 0.05); last = now;
+      const h = hoverRef.current;
+      if (h != null) {
+        const base = 30 * h;
+        tgt = base + 360 * Math.round((cur - base) / 360); // cung gần nhất → quay đường ngắn tới chuột
+      } else {
+        tgt += SPEED * dt; // quay đều liên tục
+      }
+      cur += (tgt - cur) * Math.min(1, dt * 6); // theo mượt
+      if (el) el.style.transform = `rotate(${cur.toFixed(2)}deg)`;
+      const a = (((Math.round(cur / 30) % 12) + 12) % 12);
+      if (a !== lastA) { lastA = a; setActive(a); }
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
   }, [run]);
-  const cung = hover != null ? hover : auto;
+  const cung = hover != null ? hover : active;
   const cur = CUNG[cung] ?? CUNG[0]!;
-
-  // Kim quét trỏ tới cung đang đọc — góc luỹ tiến (luôn quay tới, không giật ngược).
-  const sweepEl = React.useRef<SVGGElement>(null);
-  const sweepAngle = React.useRef(0);
-  const prevCung = React.useRef(0);
-  React.useEffect(() => {
-    const fwd = (((cung - prevCung.current) % 12) + 12) % 12;
-    sweepAngle.current += fwd * 30;
-    prevCung.current = cung;
-    if (sweepEl.current) sweepEl.current.style.transform = `rotate(${sweepAngle.current}deg)`;
-  }, [cung]);
 
   return (
     <main className="ih" style={{ background: PAPER, color: INK, minHeight: '100vh', position: 'relative' }}>
@@ -319,7 +328,7 @@ const CSS = `
 .ih-star, .ih-breathe { transform-box: fill-box; transform-origin: center; }
 /* nhóm xoay quanh tâm 200,200 */
 .ih-spin, .ih-sweep, .ih-orbit { transform-box: view-box; transform-origin: 200px 200px; }
-.ih-sweep { opacity: 0; transition: transform 1.1s cubic-bezier(.2,.7,.2,1); }
+.ih-sweep { opacity: 0; }
 
 @media (prefers-reduced-motion: no-preference) {
   .ih-draw { animation: ihDraw 1.25s ease both var(--d, 0s); }
