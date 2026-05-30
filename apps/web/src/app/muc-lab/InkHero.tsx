@@ -168,7 +168,7 @@ export function InkHero(): React.JSX.Element {
       } else {
         tgt += SPEED * dt; // quay đều liên tục
       }
-      cur += (tgt - cur) * Math.min(1, dt * 6); // theo mượt
+      cur += (tgt - cur) * (h != null ? Math.min(1, dt * 30) : Math.min(1, dt * 8)); // hover: bám gần tức thì; auto: mượt
       if (el) el.style.transform = `rotate(${cur.toFixed(2)}deg)`;
       const a = (((Math.round(cur / 30) % 12) + 12) % 12);
       if (a !== lastA) { lastA = a; setActive(a); }
@@ -241,8 +241,8 @@ export function InkHero(): React.JSX.Element {
                   className={`ih-wedge${cung === i ? ' ih-won' : ''}`}
                   d={c.d}
                   fill={OCHRE}
-                  onMouseEnter={() => setHover(i)}
-                  onMouseLeave={() => setHover((h) => (h === i ? null : h))}
+                  onMouseEnter={() => { hoverRef.current = i; setHover(i); }}
+                  onMouseLeave={() => { hoverRef.current = null; setHover((h) => (h === i ? null : h)); }}
                 />
               ))}
               {CUNG.map((c, i) => (
