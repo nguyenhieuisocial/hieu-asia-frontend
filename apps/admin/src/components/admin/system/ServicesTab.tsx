@@ -22,12 +22,25 @@ import { KpiCard } from '@/components/admin/kpi-card';
 
 type SvcStatus = 'ok' | 'warn' | 'down' | 'unknown';
 
+interface SvcResult {
+  status: SvcStatus;
+  latencyMs?: number;
+  detail?: string;
+}
+
 interface ServiceRow {
   id: string;
   label: string;
   description: string;
   endpoint: string;
   Icon: React.ComponentType<{ className?: string }>;
+  /**
+   * When set, the row is checked via GET /admin/<healthSvc>/health, which
+   * returns HTTP 200 ALWAYS and encodes the real signal in the JSON `status`
+   * field. When unset, the row falls back to {@link pingService} (HTTP-status
+   * heuristic) — used for worker + supabase, which have no /health route.
+   */
+  healthSvc?: 'resend' | 'langfuse' | 'sepay' | 'sentry' | 'posthog';
 }
 
 const SERVICES: ServiceRow[] = [
@@ -49,27 +62,94 @@ const SERVICES: ServiceRow[] = [
     id: 'sentry',
     label: 'Sentry',
     description: 'Error tracking — frontend + worker DSN',
-    endpoint: '/api/admin-proxy/admin/sentry/ping',
+    endpoint: '/api/admin-proxy/admin/sentry/health',
     Icon: ShieldCheck,
+    healthSvc: 'sentry',
   },
   {
     id: 'posthog',
     label: 'PostHog',
     description: 'Product analytics — event ingest',
-    endpoint: '/api/admin-proxy/admin/posthog/ping',
+    endpoint: '/api/admin-proxy/admin/posthog/health',
     Icon: Activity,
+    healthSvc: 'posthog',
+  },
+  {
+    id: 'resend',
+    label: 'Resend',
+    description: 'Email API — domains + broadcasts',
+    endpoint: '/api/admin-proxy/admin/resend/health',
+    Icon: Mail,
+    healthSvc: 'resend',
+  },
+  {
+    id: 'langfuse',
+    label: 'Langfuse',
+    description: 'LLM observability — traces + prompts',
+    endpoint: '/api/admin-proxy/admin/langfuse/health',
+    Icon: Sparkles,
+    healthSvc: 'langfuse',
+  },
+  {
+    id: 'sepay',
+    label: 'SePay',
+    description: 'Cổng thanh toán — webhook + pull API',
+    endpoint: '/api/admin-proxy/admin/sepay/health',
+    Icon: Layers,
+    healthSvc: 'sepay',
   },
 ];
 
-async function pingService(endpoint: string): Promise<SvcStatus> {
+// Backend /admin/<svc>/health envelope (api-gateway HealthResult).
+interface HealthEnvelope {
+  ok: boolean;
+  service: string;
+  status: 'healthy' | 'degraded' | 'unhealthy' | 'not_configured';
+  detail?: string;
+  latency_ms?: number;
+}
+
+const HEALTH_STATUS_MAP: Record<HealthEnvelope['status'], SvcStatus> = {
+  healthy: 'ok',
+  degraded: 'warn',
+  unhealthy: 'down',
+  not_configured: 'unknown',
+};
+
+/**
+ * Fallback check for services with no /health route (worker, supabase).
+ * Inspects ONLY the HTTP status.
+ */
+async function pingService(endpoint: string): Promise<SvcResult> {
   try {
     const r = await fetch(endpoint, { cache: 'no-store' });
-    if (r.ok) return 'ok';
-    if (r.status === 404) return 'unknown';
-    if (r.status >= 500) return 'down';
-    return 'warn';
+    if (r.ok) return { status: 'ok' };
+    if (r.status === 404) return { status: 'unknown' };
+    if (r.status >= 500) return { status: 'down' };
+    return { status: 'warn' };
   } catch {
-    return 'down';
+    return { status: 'down' };
+  }
+}
+
+/**
+ * Check for services with a /admin/<svc>/health route. CRITICAL: this endpoint
+ * returns HTTP 200 ALWAYS (even when not configured) — the real signal is the
+ * JSON `status` field, so we branch on the parsed body, never on r.status.
+ * Any parse failure or missing/invalid `status` falls back to 'unknown'.
+ */
+async function fetchHealth(endpoint: string): Promise<SvcResult> {
+  try {
+    const r = await fetch(endpoint, { cache: 'no-store' });
+    const body = (await r.json()) as Partial<HealthEnvelope>;
+    const mapped = body?.status ? HEALTH_STATUS_MAP[body.status] : undefined;
+    return {
+      status: mapped ?? 'unknown',
+      latencyMs: typeof body?.latency_ms === 'number' ? body.latency_ms : undefined,
+      detail: typeof body?.detail === 'string' ? body.detail : undefined,
+    };
+  } catch {
+    return { status: 'unknown' };
   }
 }
 
@@ -268,17 +348,20 @@ export function ServicesTab() {
     refetchInterval: 30_000,
     queryFn: async () => {
       const entries = await Promise.all(
-        SERVICES.map(async (s) => [s.id, await pingService(s.endpoint)] as const),
+        SERVICES.map(
+          async (s) =>
+            [s.id, s.healthSvc ? await fetchHealth(s.endpoint) : await pingService(s.endpoint)] as const,
+        ),
       );
-      return Object.fromEntries(entries) as Record<string, SvcStatus>;
+      return Object.fromEntries(entries) as Record<string, SvcResult>;
     },
   });
 
   const statuses = results.data ?? {};
-  const okCount = Object.values(statuses).filter((s) => s === 'ok').length;
-  const warnCount = Object.values(statuses).filter((s) => s === 'warn').length;
-  const downCount = Object.values(statuses).filter((s) => s === 'down').length;
-  const unknownCount = Object.values(statuses).filter((s) => s === 'unknown').length;
+  const okCount = Object.values(statuses).filter((s) => s.status === 'ok').length;
+  const warnCount = Object.values(statuses).filter((s) => s.status === 'warn').length;
+  const downCount = Object.values(statuses).filter((s) => s.status === 'down').length;
+  const unknownCount = Object.values(statuses).filter((s) => s.status === 'unknown').length;
 
   return (
     <div className="space-y-6">
@@ -326,7 +409,8 @@ export function ServicesTab() {
         <CardContent>
           <ul className="divide-y divide-gold/10">
             {SERVICES.map((svc) => {
-              const status = statuses[svc.id] ?? 'unknown';
+              const result = statuses[svc.id] ?? { status: 'unknown' as SvcStatus };
+              const status = result.status;
               return (
                 <li
                   key={svc.id}
@@ -338,10 +422,16 @@ export function ServicesTab() {
                     </span>
                     <div className="min-w-0">
                       <p className="truncate font-heading text-sm text-foreground">{svc.label}</p>
-                      <p className="truncate text-xs text-muted-foreground">{svc.description}</p>
+                      <p className="truncate text-xs text-muted-foreground">
+                        {svc.description}
+                        {result.detail ? ` · ${result.detail}` : ''}
+                      </p>
                     </div>
                   </div>
                   <div className="flex shrink-0 items-center gap-2">
+                    {typeof result.latencyMs === 'number' && (
+                      <span className="font-mono text-xs text-muted-foreground">· {result.latencyMs}ms</span>
+                    )}
                     <StatusDot status={status} />
                     <span
                       className={
