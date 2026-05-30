@@ -166,7 +166,7 @@ const PRESETS: { label: string; days: number | 'today' | null }[] = [
 
 export default function AdminSepayPage() {
   const qc = useQueryClient();
-  const [tab, setTab] = React.useState<'tx' | 'reconcile' | 'refunds'>('tx');
+  const [tab, setTab] = React.useState<'dashboard' | 'tx' | 'reconcile' | 'refunds'>('dashboard');
   const [draft, setDraft] = React.useState<Filters>(EMPTY_FILTERS);
   const [filters, setFilters] = React.useState<Filters>(EMPTY_FILTERS);
   const [preset, setPreset] = React.useState<string>('Tất cả');
@@ -328,7 +328,7 @@ export default function AdminSepayPage() {
 
       {/* Tabs */}
       <div className="inline-flex rounded-lg border border-border/60 bg-card/40 p-1">
-        {([['tx', 'Giao dịch ngân hàng'], ['reconcile', 'Đối soát'], ['refunds', `Hoàn tiền${pendingRefunds ? ` · ${pendingRefunds}` : ''}`]] as const).map(([k, label]) => (
+        {([['dashboard', 'Tổng quan'], ['tx', 'Giao dịch ngân hàng'], ['reconcile', 'Đối soát'], ['refunds', `Hoàn tiền${pendingRefunds ? ` · ${pendingRefunds}` : ''}`]] as const).map(([k, label]) => (
           <button
             key={k}
             type="button"
@@ -343,7 +343,9 @@ export default function AdminSepayPage() {
         ))}
       </div>
 
-      {tab === 'tx' ? (
+      {tab === 'dashboard' ? (
+        <DashboardView />
+      ) : tab === 'tx' ? (
         <>
           {/* Filters */}
           <Card>
@@ -705,6 +707,122 @@ function ReconcileView() {
           </CardContent>
         </Card>
       )}
+    </div>
+  );
+}
+
+// ── Tab Tổng quan: doanh thu từ audit /payment/transactions ───────────────────
+const TIER_LABEL: Record<string, string> = {
+  premium: 'Premium',
+  subscription_monthly: 'Mentor tháng',
+  subscription_yearly: 'Mentor năm',
+  lifetime: 'Lifetime',
+  lifetime_onetime: 'Lifetime',
+};
+interface AuditRecord {
+  id: string;
+  ts: string;
+  type: string;
+  amount?: number | null;
+  metadata?: { tier?: string } | null;
+}
+
+function DashboardView() {
+  const q = useQuery({
+    queryKey: ['admin', 'sepay', 'revenue'],
+    queryFn: async (): Promise<{ ok: boolean; records?: AuditRecord[]; error?: string }> => {
+      const r = await fetch('/api/admin-proxy/payment/transactions?limit=500', { cache: 'no-store' });
+      const t = await r.text();
+      try {
+        return JSON.parse(t);
+      } catch {
+        return { ok: false, error: `Invalid JSON (HTTP ${r.status})` };
+      }
+    },
+    refetchInterval: 60_000,
+  });
+  const d = q.data;
+  if (q.isLoading) return <Card><CardContent className="p-8 text-center text-sm text-muted-foreground">Đang tải…</CardContent></Card>;
+  if (!d?.ok) return <ErrorBlock message={d?.error ?? 'Không tải được số liệu'} onRetry={() => q.refetch()} />;
+  const recs = d.records ?? [];
+  const paid = recs.filter((r) => r.type === 'intent_paid');
+  const created = recs.filter((r) => r.type === 'intent_created');
+  const revenue = paid.reduce((s, r) => s + (r.amount ?? 0), 0);
+  const aov = paid.length ? Math.round(revenue / paid.length) : 0;
+  const conv = created.length ? Math.round((paid.length / created.length) * 100) : 0;
+
+  const byTier: Record<string, { count: number; rev: number }> = {};
+  for (const r of paid) {
+    const tier = (r.metadata?.tier as string) || 'khác';
+    byTier[tier] = byTier[tier] || { count: 0, rev: 0 };
+    byTier[tier].count += 1;
+    byTier[tier].rev += r.amount ?? 0;
+  }
+  const tierRows = Object.entries(byTier).sort((a, b) => b[1].rev - a[1].rev);
+  const maxTierRev = Math.max(1, ...tierRows.map(([, v]) => v.rev));
+
+  const days: { day: string; rev: number }[] = [];
+  for (let i = 13; i >= 0; i--) days.push({ day: new Date(Date.now() - i * 86_400_000).toISOString().slice(0, 10), rev: 0 });
+  for (const r of paid) {
+    const slot = days.find((x) => x.day === (r.ts || '').slice(0, 10));
+    if (slot) slot.rev += r.amount ?? 0;
+  }
+  const maxDayRev = Math.max(1, ...days.map((x) => x.rev));
+
+  return (
+    <div className="space-y-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <KpiCard label="Doanh thu" value={fmtVnd(revenue)} icon={<DollarSign className="h-4 w-4" />} accent="gold" />
+        <KpiCard label="Đơn đã trả" value={paid.length} icon={<CheckCircle2 className="h-4 w-4" />} accent="jade" />
+        <KpiCard label="Giá TB / đơn" value={fmtVnd(aov)} icon={<Tag className="h-4 w-4" />} accent="purple" />
+        <KpiCard label="Tỉ lệ chốt" value={`${conv}%`} hint={`${paid.length}/${created.length} đơn`} icon={<Activity className="h-4 w-4" />} />
+      </div>
+
+      {paid.length === 0 && (
+        <p className="rounded bg-amber-500/10 px-4 py-3 text-sm text-amber-500">
+          Chưa có đơn đã thanh toán nào — biểu đồ sẽ hiện khi có giao dịch thật.
+        </p>
+      )}
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card>
+          <CardHeader><CardTitle className="text-sm">Doanh thu 14 ngày</CardTitle></CardHeader>
+          <CardContent>
+            <div className="flex h-32 items-end gap-1">
+              {days.map((x) => (
+                <div key={x.day} className="group flex flex-1 flex-col items-center justify-end" title={`${x.day}: ${fmtVnd(x.rev)}`}>
+                  <div className="w-full rounded-t bg-gold/60 transition-all group-hover:bg-gold" style={{ height: `${Math.max(2, (x.rev / maxDayRev) * 100)}%` }} />
+                </div>
+              ))}
+            </div>
+            <div className="mt-1.5 flex justify-between text-[10px] text-muted-foreground">
+              <span>{days[0]?.day.slice(5)}</span>
+              <span>{days[days.length - 1]?.day.slice(5)}</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader><CardTitle className="text-sm">Doanh thu theo gói</CardTitle></CardHeader>
+          <CardContent className="space-y-2.5">
+            {tierRows.length === 0 ? (
+              <p className="py-4 text-center text-sm text-muted-foreground">—</p>
+            ) : (
+              tierRows.map(([tier, v]) => (
+                <div key={tier}>
+                  <div className="flex justify-between text-xs">
+                    <span>{TIER_LABEL[tier] ?? tier} <span className="text-muted-foreground">({v.count})</span></span>
+                    <span className="font-mono text-foreground/80">{fmtVnd(v.rev)}</span>
+                  </div>
+                  <div className="mt-0.5 h-1.5 rounded bg-muted/10">
+                    <div className="h-1.5 rounded bg-gold/70" style={{ width: `${(v.rev / maxTierRev) * 100}%` }} />
+                  </div>
+                </div>
+              ))
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
