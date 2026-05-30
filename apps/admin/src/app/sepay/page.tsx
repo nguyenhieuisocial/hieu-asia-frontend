@@ -1,13 +1,13 @@
 'use client';
 
 /**
- * SePay đối soát — đọc giao dịch ngân hàng THẬT từ Worker `/admin/sepay/*`
- * (pull SePay User API). Khác trang "Giao dịch" (`/payment/transactions`,
- * audit nội bộ): đây là tiền vào tài khoản thật, dùng để đối soát đơn.
+ * SePay đối soát — giao dịch ngân hàng thật từ Worker `/admin/sepay/*`.
+ * + Refund workflow (duyệt + theo dõi): SePay không tự chuyển tiền, admin
+ *   chuyển khoản trả lại thủ công; trang này quản lý yêu cầu + accept + audit.
  */
 
 import * as React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Card,
@@ -16,8 +16,20 @@ import {
   CardTitle,
   Input,
   cn,
+  toast,
 } from '@hieu-asia/ui';
-import { Landmark, Download, Search, Activity, DollarSign, CheckCircle2 } from 'lucide-react';
+import {
+  Landmark,
+  Download,
+  Search,
+  Activity,
+  DollarSign,
+  CheckCircle2,
+  Undo2,
+  Check,
+  X as XIcon,
+  Clock,
+} from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
@@ -45,6 +57,28 @@ interface ListEnvelope {
   error?: string;
 }
 
+type RefundStatus = 'requested' | 'approved' | 'completed' | 'rejected';
+interface RefundRecord {
+  id: string;
+  intent_id?: string;
+  reference?: string;
+  amount: number;
+  reason: string;
+  status: RefundStatus;
+  requested_by: string;
+  requested_at: string;
+  accepted_by?: string;
+  completed_by?: string;
+  rejected_by?: string;
+  note?: string;
+}
+interface RefundsEnvelope {
+  ok: boolean;
+  count?: number;
+  refunds?: RefundRecord[];
+  error?: string;
+}
+
 interface Filters {
   account_number: string;
   amount_in: string;
@@ -62,6 +96,7 @@ const EMPTY_FILTERS: Filters = {
 };
 
 const LIMIT = 100;
+const PROXY = '/api/admin-proxy/admin/sepay';
 
 async function fetchSepayList(filters: Filters): Promise<ListEnvelope> {
   const qs = new URLSearchParams();
@@ -71,7 +106,7 @@ async function fetchSepayList(filters: Filters): Promise<ListEnvelope> {
   if (filters.reference_number) qs.set('reference_number', filters.reference_number);
   if (filters.date_min) qs.set('date_min', filters.date_min);
   if (filters.date_max) qs.set('date_max', filters.date_max);
-  const res = await fetch(`/api/admin-proxy/admin/sepay/transactions?${qs.toString()}`, {
+  const res = await fetch(`${PROXY}/transactions?${qs.toString()}`, {
     method: 'GET',
     headers: { accept: 'application/json' },
     cache: 'no-store',
@@ -86,29 +121,56 @@ async function fetchSepayList(filters: Filters): Promise<ListEnvelope> {
   }
 }
 
+async function fetchRefunds(): Promise<RefundsEnvelope> {
+  const res = await fetch(`${PROXY}/refunds?limit=100`, { cache: 'no-store' });
+  const text = await res.text();
+  try {
+    return JSON.parse(text) as RefundsEnvelope;
+  } catch {
+    return { ok: false, error: `Invalid JSON (HTTP ${res.status})` };
+  }
+}
+
 function fmtTs(ts: string) {
   const d = new Date(ts.replace(' ', 'T'));
   if (Number.isNaN(d.getTime())) return ts;
   return d.toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'medium' });
 }
-
 function fmtVnd(amount: number) {
   return new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(amount);
 }
 
+const STATUS_STYLE: Record<RefundStatus, { label: string; cls: string }> = {
+  requested: { label: 'Chờ duyệt', cls: 'bg-amber-500/15 text-amber-500' },
+  approved: { label: 'Đã duyệt — chờ chuyển', cls: 'bg-blue-500/15 text-blue-500' },
+  completed: { label: 'Đã hoàn tiền', cls: 'bg-emerald-500/15 text-emerald-500' },
+  rejected: { label: 'Từ chối', cls: 'bg-red-500/15 text-red-500' },
+};
+
 export default function AdminSepayPage() {
+  const qc = useQueryClient();
   const [draft, setDraft] = React.useState<Filters>(EMPTY_FILTERS);
   const [filters, setFilters] = React.useState<Filters>(EMPTY_FILTERS);
-  // Client-side reconcile highlight: nội dung chứa chuỗi này (vd "HIEUASIA …").
   const [contentMatch, setContentMatch] = React.useState('');
+
+  // Refund modal state.
+  const [refundTxn, setRefundTxn] = React.useState<SepayTransaction | null>(null);
+  const [refundAmount, setRefundAmount] = React.useState('');
+  const [refundReason, setRefundReason] = React.useState('');
 
   const { data, isLoading, isFetching, refetch, error } = useQuery({
     queryKey: ['admin', 'sepay', filters],
     queryFn: () => fetchSepayList(filters),
     refetchInterval: 30_000,
   });
+  const refundsQ = useQuery({
+    queryKey: ['admin', 'sepay', 'refunds'],
+    queryFn: fetchRefunds,
+    refetchInterval: 30_000,
+  });
 
   const txns: SepayTransaction[] = React.useMemo(() => data?.transactions ?? [], [data?.transactions]);
+  const refunds: RefundRecord[] = React.useMemo(() => refundsQ.data?.refunds ?? [], [refundsQ.data?.refunds]);
   const showError = !!error || data?.ok === false;
   const errorMsg =
     (error as Error | undefined)?.message ??
@@ -116,36 +178,78 @@ export default function AdminSepayPage() {
       ? 'Lỗi gọi SePay API (kiểm tra SEPAY_API_TOKEN trên Worker).'
       : data?.error);
 
-  // KPIs (trên tập đang hiển thị)
   const totalIn = txns.reduce((s, t) => s + parseFloat(t.amount_in || '0'), 0);
   const incomingCount = txns.filter((t) => parseFloat(t.amount_in || '0') > 0).length;
-  const accounts = new Set(txns.map((t) => t.account_number).filter(Boolean)).size;
+  const pendingRefunds = refunds.filter((r) => r.status === 'requested' || r.status === 'approved').length;
 
   const needle = contentMatch.trim().toUpperCase();
   const isMatch = (t: SepayTransaction) =>
     needle.length > 0 && (t.transaction_content ?? '').toUpperCase().includes(needle);
 
-  const applyFilters = () => setFilters(draft);
-  const resetFilters = () => {
-    setDraft(EMPTY_FILTERS);
-    setFilters(EMPTY_FILTERS);
+  // ── Refund mutations ──────────────────────────────────────────────────
+  const createMut = useMutation({
+    mutationFn: async (payload: { reference?: string; amount: number; reason: string }) => {
+      const res = await fetch(`${PROXY}/refund`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const body = await res.json().catch(() => ({ ok: false, error: `HTTP ${res.status}` }));
+      if (!res.ok || !body.ok) throw new Error(body.error ?? `HTTP ${res.status}`);
+      return body;
+    },
+    onSuccess: () => {
+      toast.success('Đã tạo yêu cầu hoàn tiền', { description: 'Chờ admin duyệt (accept).' });
+      setRefundTxn(null);
+      setRefundReason('');
+      setRefundAmount('');
+      qc.invalidateQueries({ queryKey: ['admin', 'sepay', 'refunds'] });
+    },
+    onError: (e: unknown) => toast.error('Tạo yêu cầu thất bại', { description: (e as Error).message }),
+  });
+
+  const actionMut = useMutation({
+    mutationFn: async ({ id, action }: { id: string; action: 'accept' | 'complete' | 'reject' }) => {
+      const res = await fetch(`${PROXY}/refund/${encodeURIComponent(id)}/${action}`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({}),
+      });
+      const body = await res.json().catch(() => ({ ok: false, error: `HTTP ${res.status}` }));
+      if (!res.ok || !body.ok) throw new Error(body.error ?? `HTTP ${res.status}`);
+      return body;
+    },
+    onSuccess: (_d, v) => {
+      const map = { accept: 'Đã duyệt', complete: 'Đã đánh dấu hoàn tất', reject: 'Đã từ chối' };
+      toast.success(map[v.action]);
+      qc.invalidateQueries({ queryKey: ['admin', 'sepay', 'refunds'] });
+    },
+    onError: (e: unknown) => toast.error('Thao tác thất bại', { description: (e as Error).message }),
+  });
+
+  const openRefund = (t: SepayTransaction) => {
+    setRefundTxn(t);
+    setRefundAmount(String(Math.round(parseFloat(t.amount_in || '0'))));
+    setRefundReason('');
   };
+  const submitRefund = () => {
+    const amt = Number(refundAmount);
+    if (!Number.isFinite(amt) || amt <= 0) return toast.error('Số tiền không hợp lệ');
+    if (!refundReason.trim()) return toast.error('Nhập lý do hoàn tiền');
+    createMut.mutate({ reference: refundTxn?.reference_number ?? undefined, amount: amt, reason: refundReason.trim() });
+  };
+
+  const applyFilters = () => setFilters(draft);
+  const resetFilters = () => { setDraft(EMPTY_FILTERS); setFilters(EMPTY_FILTERS); };
 
   const exportCsv = () => {
     if (txns.length === 0) return;
     const rows = [
       ['Thời gian', 'Ngân hàng', 'Tài khoản', 'Tiền vào', 'Mã tham chiếu', 'Nội dung'].join(','),
       ...txns.map((t) =>
-        [
-          t.transaction_date,
-          t.bank_brand_name ?? '',
-          t.account_number ?? '',
-          t.amount_in ?? '',
-          t.reference_number ?? '',
-          (t.transaction_content ?? '').replace(/,/g, ';'),
-        ]
-          .map((v) => `"${String(v).replace(/"/g, '""')}"`)
-          .join(','),
+        [t.transaction_date, t.bank_brand_name ?? '', t.account_number ?? '', t.amount_in ?? '',
+         t.reference_number ?? '', (t.transaction_content ?? '').replace(/,/g, ';')]
+          .map((v) => `"${String(v).replace(/"/g, '""')}"`).join(','),
       ),
     ].join('\n');
     const blob = new Blob([rows], { type: 'text/csv;charset=utf-8;' });
@@ -164,8 +268,8 @@ export default function AdminSepayPage() {
         description={
           <>
             Giao dịch ngân hàng thật từ Worker{' '}
-            <code className="font-mono text-foreground/85">/admin/sepay/transactions</code> (SePay
-            User API). Nhập nội dung/mã đơn để soi tiền vào.
+            <code className="font-mono text-foreground/85">/admin/sepay/transactions</code>. Soi nội
+            dung CK + tạo yêu cầu hoàn tiền.
           </>
         }
         icon={<Landmark className="h-5 w-5" />}
@@ -176,76 +280,123 @@ export default function AdminSepayPage() {
               <Download className="mr-1.5 h-3.5 w-3.5" />
               Xuất CSV
             </Button>
-            <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
+            <Button variant="outline" size="sm" onClick={() => { refetch(); refundsQ.refetch(); }} disabled={isFetching}>
               {isFetching ? 'Đang tải…' : 'Làm mới'}
             </Button>
           </>
         }
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard label="Giao dịch tiền vào" value={incomingCount} icon={<Activity className="h-4 w-4" />} />
         <KpiCard label="Tổng tiền vào (VND)" value={fmtVnd(totalIn)} icon={<DollarSign className="h-4 w-4" />} />
-        <KpiCard label="Số tài khoản" value={accounts} icon={<Landmark className="h-4 w-4" />} />
+        <KpiCard label="Hoàn tiền chờ xử lý" value={pendingRefunds} icon={<Clock className="h-4 w-4" />} accent={pendingRefunds > 0 ? 'warn' : undefined} />
+        <KpiCard label="Tổng yêu cầu hoàn" value={refunds.length} icon={<Undo2 className="h-4 w-4" />} />
       </div>
 
-      {/* Bộ lọc + soi đối soát */}
+      {/* Refund requests panel */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-sm">
+            <Undo2 className="h-4 w-4" /> Yêu cầu hoàn tiền
+            <span className="font-normal text-xs text-muted-foreground">
+              — SePay không tự chuyển tiền; admin chuyển khoản thủ công rồi đánh dấu hoàn tất
+            </span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          {refunds.length === 0 ? (
+            <p className="px-6 py-6 text-center text-sm text-muted-foreground">Chưa có yêu cầu hoàn tiền nào.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="border-b border-border/60 text-left text-xs text-muted-foreground">
+                  <tr>
+                    <th className="px-4 py-2 font-medium">Thời gian</th>
+                    <th className="px-4 py-2 text-right font-medium">Số tiền</th>
+                    <th className="px-4 py-2 font-medium">Lý do</th>
+                    <th className="px-4 py-2 font-medium">Trạng thái</th>
+                    <th className="px-4 py-2 text-right font-medium">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {refunds.map((r) => {
+                    const st = STATUS_STYLE[r.status];
+                    const busy = actionMut.isPending;
+                    return (
+                      <tr key={r.id} className="border-b border-border/40 last:border-0">
+                        <td className="whitespace-nowrap px-4 py-2 text-foreground/80">{fmtTs(r.requested_at)}</td>
+                        <td className="px-4 py-2 text-right font-mono text-red-400">−{fmtVnd(r.amount)}</td>
+                        <td className="max-w-xs px-4 py-2"><span className="line-clamp-2 text-foreground/75">{r.reason}</span></td>
+                        <td className="px-4 py-2">
+                          <span className={cn('rounded px-2 py-0.5 text-xs font-medium', st.cls)}>{st.label}</span>
+                        </td>
+                        <td className="px-4 py-2">
+                          <div className="flex justify-end gap-1.5">
+                            {r.status === 'requested' && (
+                              <>
+                                <Button size="sm" variant="outline" disabled={busy}
+                                  onClick={() => actionMut.mutate({ id: r.id, action: 'accept' })}>
+                                  <Check className="mr-1 h-3 w-3" />Duyệt
+                                </Button>
+                                <Button size="sm" variant="ghost" disabled={busy}
+                                  onClick={() => actionMut.mutate({ id: r.id, action: 'reject' })}>
+                                  <XIcon className="h-3 w-3" />
+                                </Button>
+                              </>
+                            )}
+                            {r.status === 'approved' && (
+                              <Button size="sm" disabled={busy}
+                                onClick={() => {
+                                  if (confirm('Xác nhận ĐÃ chuyển khoản trả lại cho khách?')) actionMut.mutate({ id: r.id, action: 'complete' });
+                                }}>
+                                <CheckCircle2 className="mr-1 h-3 w-3" />Đã hoàn tiền
+                              </Button>
+                            )}
+                            {(r.status === 'completed' || r.status === 'rejected') && (
+                              <span className="text-xs text-muted-foreground">{r.completed_by ?? r.rejected_by ?? '—'}</span>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Filters + reconcile */}
       <Card>
         <CardHeader>
           <CardTitle className="text-sm">Bộ lọc & đối soát</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <Input
-              placeholder="Số tài khoản"
-              value={draft.account_number}
-              onChange={(e) => setDraft({ ...draft, account_number: e.target.value })}
-            />
-            <Input
-              placeholder="Số tiền vào (khớp chính xác)"
-              inputMode="numeric"
-              value={draft.amount_in}
-              onChange={(e) => setDraft({ ...draft, amount_in: e.target.value })}
-            />
-            <Input
-              placeholder="Mã tham chiếu"
-              value={draft.reference_number}
-              onChange={(e) => setDraft({ ...draft, reference_number: e.target.value })}
-            />
-            <Input
-              type="date"
-              value={draft.date_min}
-              onChange={(e) => setDraft({ ...draft, date_min: e.target.value })}
-            />
-            <Input
-              type="date"
-              value={draft.date_max}
-              onChange={(e) => setDraft({ ...draft, date_max: e.target.value })}
-            />
+            <Input placeholder="Số tài khoản" value={draft.account_number}
+              onChange={(e) => setDraft({ ...draft, account_number: e.target.value })} />
+            <Input placeholder="Số tiền vào (khớp chính xác)" inputMode="numeric" value={draft.amount_in}
+              onChange={(e) => setDraft({ ...draft, amount_in: e.target.value })} />
+            <Input placeholder="Mã tham chiếu" value={draft.reference_number}
+              onChange={(e) => setDraft({ ...draft, reference_number: e.target.value })} />
+            <Input type="date" value={draft.date_min} onChange={(e) => setDraft({ ...draft, date_min: e.target.value })} />
+            <Input type="date" value={draft.date_max} onChange={(e) => setDraft({ ...draft, date_max: e.target.value })} />
             <div className="flex gap-2">
-              <Button size="sm" onClick={applyFilters} disabled={isFetching}>
-                <Search className="mr-1.5 h-3.5 w-3.5" />
-                Lọc
-              </Button>
-              <Button variant="ghost" size="sm" onClick={resetFilters}>
-                Xoá
-              </Button>
+              <Button size="sm" onClick={applyFilters} disabled={isFetching}><Search className="mr-1.5 h-3.5 w-3.5" />Lọc</Button>
+              <Button variant="ghost" size="sm" onClick={resetFilters}>Xoá</Button>
             </div>
           </div>
-          <Input
-            placeholder='Soi nội dung CK (vd "HIEUASIA A2B3C4D5") — highlight dòng khớp'
-            value={contentMatch}
-            onChange={(e) => setContentMatch(e.target.value)}
-          />
+          <Input placeholder='Soi nội dung CK (vd "HIEUASIA A2B3C4D5") — highlight dòng khớp'
+            value={contentMatch} onChange={(e) => setContentMatch(e.target.value)} />
         </CardContent>
       </Card>
 
       {showError ? (
         <ErrorBlock message={errorMsg ?? 'Không tải được giao dịch SePay'} onRetry={() => refetch()} />
       ) : isLoading ? (
-        <Card>
-          <CardContent className="p-8 text-center text-sm text-muted-foreground">Đang tải…</CardContent>
-        </Card>
+        <Card><CardContent className="p-8 text-center text-sm text-muted-foreground">Đang tải…</CardContent></Card>
       ) : txns.length === 0 ? (
         <EmptyState title="Chưa có giao dịch" description="Không có giao dịch khớp bộ lọc hiện tại." />
       ) : (
@@ -260,6 +411,7 @@ export default function AdminSepayPage() {
                   <th className="px-4 py-3 text-right font-medium">Tiền vào</th>
                   <th className="px-4 py-3 font-medium">Mã tham chiếu</th>
                   <th className="px-4 py-3 font-medium">Nội dung</th>
+                  <th className="px-4 py-3 text-right font-medium">Hoàn</th>
                 </tr>
               </thead>
               <tbody>
@@ -267,36 +419,26 @@ export default function AdminSepayPage() {
                   const matched = isMatch(t);
                   const amtIn = parseFloat(t.amount_in || '0');
                   return (
-                    <tr
-                      key={t.id}
-                      className={cn(
-                        'border-b border-border/40 last:border-0',
-                        matched && 'bg-gold/10',
-                      )}
-                    >
-                      <td className="whitespace-nowrap px-4 py-3 text-foreground/80">
-                        {fmtTs(t.transaction_date)}
-                      </td>
+                    <tr key={t.id} className={cn('border-b border-border/40 last:border-0', matched && 'bg-gold/10')}>
+                      <td className="whitespace-nowrap px-4 py-3 text-foreground/80">{fmtTs(t.transaction_date)}</td>
                       <td className="px-4 py-3">{t.bank_brand_name ?? '—'}</td>
                       <td className="px-4 py-3 font-mono text-xs">{t.account_number ?? '—'}</td>
-                      <td
-                        className={cn(
-                          'px-4 py-3 text-right font-mono',
-                          amtIn > 0 ? 'text-emerald-500' : 'text-muted-foreground',
-                        )}
-                      >
+                      <td className={cn('px-4 py-3 text-right font-mono', amtIn > 0 ? 'text-emerald-500' : 'text-muted-foreground')}>
                         {amtIn > 0 ? `+${fmtVnd(amtIn)}` : '—'}
                       </td>
                       <td className="px-4 py-3 font-mono text-xs">{t.reference_number ?? '—'}</td>
                       <td className="max-w-md px-4 py-3">
                         <span className="flex items-start gap-1.5">
-                          {matched && (
-                            <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold" />
-                          )}
-                          <span className="line-clamp-2 text-foreground/75">
-                            {t.transaction_content ?? '—'}
-                          </span>
+                          {matched && <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold" />}
+                          <span className="line-clamp-2 text-foreground/75">{t.transaction_content ?? '—'}</span>
                         </span>
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        {amtIn > 0 && (
+                          <Button size="sm" variant="ghost" onClick={() => openRefund(t)} title="Tạo yêu cầu hoàn tiền">
+                            <Undo2 className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
                       </td>
                     </tr>
                   );
@@ -305,6 +447,41 @@ export default function AdminSepayPage() {
             </table>
           </CardContent>
         </Card>
+      )}
+
+      {/* Refund modal */}
+      {refundTxn && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 p-4" onClick={() => setRefundTxn(null)}>
+          <Card className="w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-sm"><Undo2 className="h-4 w-4" />Tạo yêu cầu hoàn tiền</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-xs text-muted-foreground">
+                GD gốc: <span className="font-mono">{refundTxn.reference_number ?? '—'}</span> · nội dung{' '}
+                <span className="line-clamp-1 inline font-mono">{refundTxn.transaction_content ?? '—'}</span>
+              </p>
+              <div>
+                <label className="mb-1 block text-xs text-muted-foreground">Số tiền hoàn (VND)</label>
+                <Input inputMode="numeric" value={refundAmount} onChange={(e) => setRefundAmount(e.target.value)} />
+              </div>
+              <div>
+                <label className="mb-1 block text-xs text-muted-foreground">Lý do</label>
+                <Input placeholder="vd: khách yêu cầu huỷ, chuyển nhầm…" value={refundReason}
+                  onChange={(e) => setRefundReason(e.target.value)} />
+              </div>
+              <p className="rounded bg-amber-500/10 px-3 py-2 text-xs text-amber-500">
+                ⚠️ Đây chỉ tạo yêu cầu chờ duyệt. SePay không tự chuyển tiền — sau khi duyệt, admin tự chuyển khoản trả lại rồi bấm "Đã hoàn tiền".
+              </p>
+              <div className="flex justify-end gap-2 pt-1">
+                <Button variant="ghost" size="sm" onClick={() => setRefundTxn(null)}>Huỷ</Button>
+                <Button size="sm" onClick={submitRefund} disabled={createMut.isPending}>
+                  {createMut.isPending ? 'Đang tạo…' : 'Tạo yêu cầu'}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       )}
     </div>
   );
