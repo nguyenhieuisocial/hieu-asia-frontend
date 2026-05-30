@@ -4,8 +4,9 @@ import * as React from 'react';
  * NotOraclesStrip — dải định vị ngay dưới hero: "editorial decoder, không oracle".
  * Nâng disclaimer chip thành tuyên ngôn tự tin (kiểu The Pattern "we do not make predictions").
  */
+const PILLS = ['Không bói toán', 'AI giải mã rõ ràng', 'Quyết định là của bạn'];
+
 export function NotOraclesStrip(): React.JSX.Element {
-  const PILLS = ['Không bói toán', 'AI giải mã rõ ràng', 'Quyết định là của bạn'];
   return (
     <section aria-label="Định vị" className="mx-auto max-w-marketing-tight px-6 pb-12 pt-2 sm:px-8">
       <p className="max-w-[30em] font-editorial-display text-2xl leading-snug text-foreground sm:text-[1.6rem]">

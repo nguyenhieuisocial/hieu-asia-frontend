@@ -17,16 +17,16 @@ const PAPER = '#F3ECDD';
 const SOFT = '#6B6358';
 
 const SYSTEMS = [
-  { n: 'Tử Vi', r: 'bản đồ ưu thế & vùng tối', full: 'Lá số 12 cung — ưu thế, vùng tối và thời vận của bạn.' },
+  { n: 'Tử Vi', r: 'bản đồ ưu thế & điểm mù', full: 'Lá số 12 cung — ưu thế, điểm mù và chu kỳ của bạn.' },
   { n: 'Bát Tự', r: 'cân bằng ngũ hành', full: 'Tứ Trụ can-chi — cân bằng ngũ hành & nhịp thịnh–suy theo thời gian.' },
   { n: 'Thần Số', r: 'con số đường đời', full: 'Con số đường đời — động lực gốc và bài học của đời bạn.' },
   { n: 'MBTI', r: 'cách bạn ra quyết định', full: '16 kiểu tính cách — cách bạn tiếp nhận, suy nghĩ và ra quyết định.' },
 ];
-const WORDS = ['mình.', 'đời mình.', 'con đường.', 'tương lai.', 'hướng đi.'];
+const WORDS = ['mình.', 'đời mình.', 'con đường.', 'hướng đi.', 'bước tiếp theo.'];
 const SAMPLES = [
   'Hợp quyết nhanh, nhưng nên hoãn việc lớn khi đang mệt.',
   'Mạnh ở tầm nhìn xa; điểm cần giữ là kiên nhẫn với chi tiết.',
-  'Nửa cuối năm thuận khởi sự; tránh quyết lớn lúc nóng vội.',
+  'Xu hướng: cần đủ dữ kiện mới quyết, dễ trì hoãn khi áp lực — đặt mốc cứng sẽ giúp.',
 ];
 
 const reduceMotion = () =>
@@ -61,7 +61,7 @@ export function MultiHero(): React.JSX.Element {
   );
 
   return (
-    <main className="mh" style={{ background: PAPER, color: INK, minHeight: '100vh', position: 'relative' }}>
+    <section className="mh" aria-label="Giới thiệu hieu.asia" style={{ background: PAPER, color: INK, minHeight: '100vh', position: 'relative' }}>
       <style>{CSS}</style>
       <div className="mh-grain" aria-hidden="true" />
 
@@ -83,8 +83,8 @@ export function MultiHero(): React.JSX.Element {
 
         <div className="mh-act">
           <div className="mh-cta-row">
-            <a className="mh-cta mh-cta-primary" href="#"><span className="mh-cta-num">①</span>Tôi đang phân vân một quyết định</a>
-            <a className="mh-cta mh-cta-ghost" href="#"><span className="mh-cta-num">②</span>Xem nhanh<span className="mh-cta-sub">· Tử Vi 2026 · Hợp tuổi</span></a>
+            <a className="mh-cta mh-cta-primary" href="/onboarding?intent=decision"><span className="mh-cta-num">①</span>Tôi đang phân vân một quyết định</a>
+            <a className="mh-cta mh-cta-ghost" href="/tu-vi-2026"><span className="mh-cta-num">②</span>Xem nhanh<span className="mh-cta-sub">· Tử Vi 2026 · Hợp tuổi</span></a>
           </div>
           <p className="mh-micro">MIỄN PHÍ · KHÔNG CẦN THẺ · 1 PHÚT</p>
         </div>
@@ -94,7 +94,7 @@ export function MultiHero(): React.JSX.Element {
         <button className="mh-replay" onClick={() => { setHover(null); setAutoActive(4); setRun((r) => r + 1); }}>↻ Xem lại</button>
         <span className="mh-note">Concept "Bốn lăng kính" · AI hợp nhất Tử Vi + Bát Tự + Thần Số + MBTI → một bức tranh · mobile-first · SVG/CSS thuần · /muc-lab (noindex)</span>
       </div>
-    </main>
+    </section>
   );
 }
 
@@ -118,7 +118,7 @@ const CSS = `
 
 .mh-vis { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .mh-soi { margin: 0; text-align: center; min-height: 4.5em; max-width: 32em; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; letter-spacing: .01em; line-height: 1.5; }
-.mh-soi-in { display: inline-block; animation: mhFadeUp .5s ease both; }
+.mh-soi-in { display: inline-block; }
 .mh-soi-k { color: ${SOFT}; }
 .mh-soi-n { color: ${OCHRE}; font-weight: 500; font-family: 'Newsreader', Georgia, serif; font-size: 1.15em; font-style: italic; }
 .mh-soi-r { color: ${SOFT}; }
@@ -129,7 +129,7 @@ const CSS = `
 .mh-cta-row { display: flex; flex-direction: column; gap: 10px; }
 .mh-cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; border-radius: 3px; padding: 15px 22px; font-size: 1.02rem; text-decoration: none; }
 .mh-cta::before { content: ''; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle, rgba(23,20,17,.4), rgba(23,20,17,0) 70%); transform: translate(-50%,-50%) scale(0); transition: transform .55s cubic-bezier(.2,.7,.2,1); }
-.mh-cta-primary { background: ${OCHRE}; color: ${PAPER}; }
+.mh-cta-primary { background: #8A6128; color: #FAF4EB; }
 .mh-cta-ghost { border: 1px solid rgba(164,117,50,.35); color: ${INK}; }
 .mh-cta-ghost::before { background: radial-gradient(circle, rgba(164,117,50,.5), rgba(164,117,50,0) 70%); }
 .mh-cta > * { position: relative; z-index: 1; }
@@ -146,6 +146,7 @@ const CSS = `
   .mh-deck { animation: mhFade 1s ease .85s both; }
   .mh-act { animation: mhFade 1s ease 1.05s both; }
   .mh-livedot { animation: mhPulse 1.8s ease-in-out 1.4s infinite; }
+  .mh-soi-in { animation: mhFadeUp .5s ease both; }
 }
 @keyframes mhInk { to { clip-path: inset(0 0 0 0); } }
 @keyframes mhUline { to { background-size: 100% 2px; } }
@@ -170,6 +171,7 @@ const CSS = `
 .mh-bar { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 8px 22px 40px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
 @media (min-width: 880px) { .mh-bar { padding: 8px 56px 48px; } }
 .mh-replay { font-family: 'JetBrains Mono', monospace; font-size: 13px; border: 1px solid ${OCHRE}; color: ${OCHRE}; background: transparent; padding: 9px 16px; border-radius: 4px; cursor: pointer; }
+.mh-replay:focus-visible { outline: 2px solid ${OCHRE}; outline-offset: 2px; }
 .mh-note { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: ${SOFT}; }
 
 @media (hover: hover) {

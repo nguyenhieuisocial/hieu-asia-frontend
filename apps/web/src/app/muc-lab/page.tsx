@@ -15,5 +15,9 @@ export const metadata: Metadata = {
 };
 
 export default function MucLabPage() {
-  return <MultiHero />;
+  return (
+    <main>
+      <MultiHero />
+    </main>
+  );
 }
