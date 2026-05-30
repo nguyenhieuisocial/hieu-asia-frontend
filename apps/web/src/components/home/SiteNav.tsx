@@ -40,6 +40,7 @@ interface NavLink {
 const PRIMARY_LINKS: readonly NavLink[] = [
   { href: '/onboarding?intent=self', label: 'Lá số' },
   { href: '/onboarding?intent=decision', label: 'Mentor' },
+  { href: '/cong-cu', label: 'Công cụ' },
   { href: '/methodology', label: 'Phương pháp' },
   { href: '/pricing', label: 'Giá' },
   { href: '/about', label: 'Về chúng tôi' },
