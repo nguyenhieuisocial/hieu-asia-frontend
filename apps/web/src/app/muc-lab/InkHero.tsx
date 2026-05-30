@@ -140,18 +140,21 @@ export function InkHero(): React.JSX.Element {
 
       <div className="ih-wrap" key={run}>
         <div className="ih-copy">
-          <p className="ih-eyebrow">CẨM NANG QUYẾT ĐỊNH BẰNG AI</p>
+          <p className="ih-eyebrow"><span className="ih-livedot" aria-hidden="true" />CẨM NANG QUYẾT ĐỊNH BẰNG AI</p>
           <h1 className="ih-h1">
             <span className="ih-line ih-l1">Hiểu mình.</span>
-            <span className="ih-line ih-l2">Quyết định mình.</span>
+            <span className="ih-line ih-l2"><span className="ih-uline">Quyết định mình.</span></span>
           </h1>
           <p className="ih-deck">
             Mỗi khi bạn đứng trước một quyết định quan trọng, hieu.asia cho bạn một góc nhìn
             sâu hơn — bằng tri thức cổ học Á Đông, được AI giải mã rõ ràng, để bạn tự chọn con đường.
           </p>
+          <p className="ih-soi">
+            <span key={cung} className="ih-soi-in">✦ đang soi · <b className="ih-soi-n">{cur.n}</b> · {cur.dm}</span>
+          </p>
           <div className="ih-cta-row">
-            <a className="ih-cta ih-cta-primary" href="#">Tôi đang phân vân một quyết định</a>
-            <a className="ih-cta ih-cta-ghost" href="#">Tôi muốn xem nhanh <span className="ih-cta-sub">(Tử Vi 2026 · Hợp tuổi)</span></a>
+            <a className="ih-cta ih-cta-primary" href="#"><span className="ih-cta-num">①</span>Tôi đang phân vân một quyết định</a>
+            <a className="ih-cta ih-cta-ghost" href="#"><span className="ih-cta-num">②</span>Tôi muốn xem nhanh <span className="ih-cta-sub">(Tử Vi 2026 · Hợp tuổi)</span></a>
           </div>
           <p className="ih-micro">MIỄN PHÍ · KHÔNG CẦN THẺ · 1 PHÚT</p>
         </div>
@@ -247,10 +250,15 @@ const CSS = `
 @media (max-width: 880px) { .ih-wrap { grid-template-columns: 1fr; padding: 48px 24px 8px; } .ih-chart-wrap { order: -1; } }
 
 .ih-eyebrow { font-family: 'JetBrains Mono', monospace; letter-spacing: .24em; font-size: 12px; color: ${SOFT}; margin: 0; }
+.ih-livedot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: ${OCHRE}; margin-right: 9px; vertical-align: middle; }
 .ih-h1 { font-size: clamp(2.7rem, 6.2vw, 5.2rem); line-height: .98; margin: .35em 0 .5em; font-weight: 400; letter-spacing: -.02em; }
 .ih-line { display: block; }
 .ih-l2 { color: ${OCHRE}; font-style: italic; }
+.ih-uline { background-image: linear-gradient(${OCHRE}, ${OCHRE}); background-repeat: no-repeat; background-position: 0 94%; background-size: 100% 2px; }
 .ih-deck { max-width: 30em; font-size: 1.06rem; line-height: 1.58; color: ${INK}; opacity: .82; }
+.ih-soi { margin: 1.1em 0 0; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .03em; color: ${SOFT}; min-height: 1.3em; }
+.ih-soi-in { display: inline-block; animation: ihAnnotFade .5s ease both; }
+.ih-soi-n { color: ${OCHRE}; font-weight: 500; }
 
 .ih-cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 2em; }
 .ih-cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: .5em; border-radius: 2px; padding: 14px 24px; font-size: 1rem; text-decoration: none; }
@@ -261,6 +269,7 @@ const CSS = `
 .ih-cta-ghost::before { background: radial-gradient(circle, rgba(164,117,50,.5), rgba(164,117,50,0) 70%); }
 .ih-cta > * { position: relative; z-index: 1; }
 .ih-cta-sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: ${SOFT}; }
+.ih-cta-num { font-family: 'JetBrains Mono', monospace; margin-right: .6em; opacity: .85; }
 .ih-micro { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .16em; color: ${SOFT}; margin-top: 1.6em; }
 
 .ih-chart-wrap { perspective: 1100px; display: grid; place-items: center; gap: 14px; }
@@ -289,6 +298,8 @@ const CSS = `
   .ih-eyebrow { animation: ihFade .8s ease both; }
   .ih-deck { animation: ihFade 1s ease .9s both; }
   .ih-cta-row { animation: ihFade 1s ease 1.1s both; }
+  .ih-livedot { animation: ihPulse 1.8s ease-in-out 1.4s infinite; }
+  .ih-uline { background-size: 0% 2px; animation: ihUnderline .9s cubic-bezier(.2,.7,.2,1) 1.15s both; }
 
   /* CHUYỂN ĐỘNG LIÊN TỤC — vào sớm (~1.4s), RÕ & nhanh hơn hẳn */
   .ih-spin { animation: ihSpin 50s linear 1.4s infinite; }
@@ -311,6 +322,8 @@ const CSS = `
 @keyframes ihFlow { 0% { fill-opacity: 0; } 5% { fill-opacity: .3; } 17% { fill-opacity: 0; } 100% { fill-opacity: 0; } }
 @keyframes ihFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
 @keyframes ihStain { from { transform: translate(0,0); } to { transform: translate(8%, 6%); } }
+@keyframes ihPulse { 0%,100% { opacity: .35; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.15); } }
+@keyframes ihUnderline { to { background-size: 100% 2px; } }
 
 .ih-annot { min-height: 1.4em; margin: 0; text-align: center; font-size: .98rem; color: ${INK}; max-width: 30em; }
 .ih-annot-line { display: inline-block; animation: ihAnnotFade .5s ease both; }
