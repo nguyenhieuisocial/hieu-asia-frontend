@@ -1,15 +1,12 @@
 'use client';
 
 import * as React from 'react';
-import { LaSoIcon } from '@/components/marketing/icons/LaSoIcon';
-import { BatTuIcon } from '@/components/marketing/icons/BatTuIcon';
-import { ThanSoIcon } from '@/components/marketing/icons/ThanSoIcon';
-import { MbtiIcon } from '@/components/marketing/icons/MbtiIcon';
+import { TuViEmblem, BatTuEmblem, ThanSoEmblem, MbtiEmblem } from './LensGlyphs';
 
 /**
- * FourLens — "Bốn lăng kính hội tụ về một lõi AI" (icon thật + tương tác).
+ * FourLens — "Bốn lăng kính hội tụ về một lõi AI" (emblem cao cấp + tương tác).
  * 4 hệ (Tử Vi · Bát Tự · Thần Số · MBTI) ở 4 hướng, đường mực nối về LÕI AI ở tâm.
- * Dùng 4 ICON THẬT của site (linework, currentColor) làm NÚT — hover/click "xem" được.
+ * Dùng 4 EMBLEM SVG khắc nét (LensGlyphs, currentColor) làm NÚT — hover/click "xem" được.
  * `active` 0..3 = soi 1 hệ (lăng kính phóng to + glow + luồng sáng chạy về lõi); 4 = HỘI TỤ.
  * onHover(i|null) / onPick(i) báo lên cha. SVG/CSS thuần. SSR/reduced-motion = hội tụ tĩnh.
  */
@@ -26,7 +23,7 @@ const P = (r: number, deg: number): [number, number] => {
 
 const ANGLES = [-90, 0, 90, 180];
 const NAMES = ['Tử Vi', 'Bát Tự', 'Thần Số', 'MBTI'];
-const ICONS = [LaSoIcon, BatTuIcon, ThanSoIcon, MbtiIcon];
+const ICONS = [TuViEmblem, BatTuEmblem, ThanSoEmblem, MbtiEmblem];
 const LENSES = ANGLES.map((deg) => {
   const [cx, cy] = P(R_LENS, deg);
   const [hsx, hsy] = P(R_LENS - LENS_R - 2, deg);
@@ -95,7 +92,7 @@ export function FourLens(props: {
         </text>
       </svg>
 
-      {/* 4 icon THẬT làm nút — hover/click xem được */}
+      {/* 4 emblem cao cấp làm nút — hover/click xem được */}
       {ICONS.map((Icon, i) => {
         const l = LENSES[i]!;
         return (
@@ -149,7 +146,7 @@ const FL_CSS = `
 .fl-ibtn.fl-on { color: ${OCHRE}; opacity: 1; transform: translate(-50%, -50%) scale(1.14); }
 .fl-ibtn:hover { opacity: 1; }
 .fl-ibtn:focus-visible { outline: 1px solid ${OCHRE}; outline-offset: 2px; border-radius: 50%; }
-.fl-icon { width: 46%; height: 46%; }
+.fl-icon { width: 54%; height: 54%; }
 
 @media (prefers-reduced-motion: no-preference) {
   .fl-spin { animation: flSpin 90s linear infinite; }
