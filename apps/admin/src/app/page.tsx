@@ -50,10 +50,11 @@ import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
 import Link from 'next/link';
 import { AlertTriangle, LineChart as LineChartIcon } from 'lucide-react';
+import { PlatformKpiBand } from '@/components/admin/platform-kpi-band';
+import { useQueueDepth } from '@/hooks/useQueueDepth';
 import {
   getCostByDay,
   getKpis,
-  getQueueDepth,
   getReadingsPerDay,
 } from '@/lib/admin-api';
 
@@ -84,11 +85,7 @@ export default function AdminOverviewPage() {
     queryKey: ['admin', 'cost-by-day-overview'],
     queryFn: () => getCostByDay(14),
   });
-  const queue = useQuery({
-    queryKey: ['admin', 'queue-depth-overview'],
-    queryFn: getQueueDepth,
-    refetchInterval: 30_000,
-  });
+  const queue = useQueueDepth();
 
   // Build sparklines from existing series.
   const readingsSpark = (readings.data ?? []).slice(-14).map((d) => d.count);
@@ -181,6 +178,9 @@ export default function AdminOverviewPage() {
       )}
 
       {/* Hero KPI strip */}
+      <h2 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/85">
+        Vận hành
+      </h2>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <KpiCard
           label="Tổng người dùng"
@@ -268,6 +268,9 @@ export default function AdminOverviewPage() {
           <HealthWidget />
         </div>
       </div>
+
+      {/* Platform KPI band */}
+      <PlatformKpiBand />
 
       {/* Activity feed + quick actions */}
       <div className="grid gap-4 lg:grid-cols-3">

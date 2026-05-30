@@ -24,10 +24,10 @@
 
 import * as React from 'react';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
-import { Activity, RefreshCw } from 'lucide-react';
-import { PageHeader } from '@/components/admin/page-header';
+import { RefreshCw } from 'lucide-react';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
+import { adminFetch } from '@/lib/admin-fetch';
 
 interface MetricsSummary {
   ok: true;
@@ -83,7 +83,7 @@ function errorRateClass(rate: number): string {
   return 'text-red-700 dark:text-red-300';
 }
 
-export default function AdminMetricsPage() {
+export function PerformanceTab() {
   const [data, setData] = React.useState<MetricsSummary | null>(null);
   const [health, setHealth] = React.useState<HealthInfo | null>(null);
   const [loading, setLoading] = React.useState(true);
@@ -94,8 +94,8 @@ export default function AdminMetricsPage() {
     setError(null);
     try {
       const [metricsRes, healthRes] = await Promise.all([
-        fetch('/api/admin-proxy/admin/metrics', { cache: 'no-store' }),
-        fetch('/api/admin-proxy/health', { cache: 'no-store' }),
+        adminFetch('/api/admin-proxy/admin/metrics'),
+        adminFetch('/api/admin-proxy/health'),
       ]);
       if (!metricsRes.ok) {
         throw new Error(`Metrics HTTP ${metricsRes.status}`);
@@ -131,23 +131,17 @@ export default function AdminMetricsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Metrics"
-        description={
-          <>
-            Số liệu request volume từ Cloudflare Worker (KV counter, cập nhật mỗi
-            request, TTL 90 ngày). Latency p50/p95 lấy từ ring buffer 500 mẫu/
-            endpoint; cần ≥ 10 mẫu để hiển thị.
-          </>
-        }
-        icon={<Activity className="h-5 w-5" />}
-        actions={
-          <Button size="sm" onClick={load} disabled={loading}>
-            <RefreshCw className={`mr-1.5 h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
-            Làm mới
-          </Button>
-        }
-      />
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-sm text-muted-foreground">
+          Số liệu request volume từ Cloudflare Worker (KV counter, cập nhật mỗi request,
+          TTL 90 ngày). Latency p50/p95 lấy từ ring buffer 500 mẫu/endpoint; cần ≥ 10 mẫu
+          để hiển thị.
+        </p>
+        <Button size="sm" onClick={load} disabled={loading} className="shrink-0">
+          <RefreshCw className={`mr-1.5 h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
+          Làm mới
+        </Button>
+      </div>
 
       {/* Worker version / health banner */}
       <div className="flex flex-wrap items-center gap-3 rounded-md border border-gold/15 bg-card/60 px-4 py-2.5 text-xs">

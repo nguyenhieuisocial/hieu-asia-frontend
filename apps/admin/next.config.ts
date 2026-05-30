@@ -49,8 +49,15 @@ const nextConfig: NextConfig = {
   // the route is unreachable in prod before founder removes the dir.
   async redirects() {
     return [
-      { source: '/secrets', destination: '/keystore', permanent: true },
-      { source: '/secrets/:path*', destination: '/keystore/:path*', permanent: true },
+      // Wave 65 — /secrets redirect REMOVED. /secrets was re-shipped as a real
+      // Worker+Vercel secret-management page (Wave 63.8); the stale 308→/keystore
+      // (added Wave 60.81 when /secrets was a dead mock) made it unreachable.
+      // /keystore stays as the separate read-only admin-API-keys viewer.
+      // Wave 65 — /health + /metrics folded into the /system tabbed page.
+      { source: '/health', destination: '/system?tab=uptime', permanent: false },
+      { source: '/metrics', destination: '/system?tab=performance', permanent: false },
+      // Wave 65 — /overview folded into the main dashboard (/).
+      { source: '/overview', destination: '/', permanent: false },
     ];
   },
   async headers() {

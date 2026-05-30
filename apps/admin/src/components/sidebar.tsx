@@ -42,7 +42,6 @@ import {
   Key,
   Activity,
   Gauge,
-  LineChart,
   MousePointerClick,
   Menu,
   X,
@@ -52,7 +51,6 @@ import {
   Flag,
   Ticket,
   Shield,
-  Heart,
   Database,
   MessageSquare,
   ServerCog,
@@ -80,9 +78,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'Tổng quan',
     items: [
       { href: '/', label: 'Tổng quan', Icon: LayoutDashboard },
-      { href: '/overview', label: 'Overview (3rd-party)', Icon: LineChart },
-      { href: '/system', label: 'Trạng thái dịch vụ', Icon: ServerCog },
-      { href: '/health', label: 'Uptime', Icon: Heart },
+      { href: '/system', label: 'Trạng thái hệ thống', Icon: ServerCog },
     ],
   },
   {
@@ -113,7 +109,6 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'Analytics',
     items: [
       { href: '/analytics', label: 'Analytics', Icon: BarChart3 },
-      { href: '/metrics', label: 'Metrics', Icon: LineChart },
       { href: '/web-vitals', label: 'Web Vitals', Icon: Gauge },
       { href: '/cohorts', label: 'Cohorts & Retention', Icon: BarChart3 },
       { href: '/posthog', label: 'PostHog', Icon: Activity },

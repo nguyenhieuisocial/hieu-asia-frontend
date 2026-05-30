@@ -6,24 +6,23 @@
  * Wave 60.81.C Tier 3 polish batch 2. Uses AdminTable for the incident
  * log (vault 107 §5.5) and a 30-day square strip for at-a-glance uptime.
  *
- * Data sources (best-effort, with mock fallback):
+ * Data sources (real — proxy Better Stack at the worker level):
  *   GET /api/admin-proxy/admin/uptime?days=30   → daily uptime % series
  *   GET /api/admin-proxy/admin/incidents?limit=20 → recent incidents
  *
- * Both endpoints are TODO at the worker level — until they ship we render
- * a deterministic mock (same approach as MockBanner pattern across admin)
- * so the shell + design stays exercised.
+ * Both endpoints return HTTP 503 when BETTERSTACK_API_TOKEN is unset. We
+ * classify the response (configured vs. not) instead of faking data, and
+ * render an honest "chưa cấu hình" empty-state — same pattern as the
+ * Cloudflare WAF card below.
  */
 
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, cn } from '@hieu-asia/ui';
-import { Heart, AlertTriangle, CheckCircle2, TrendingUp, ShieldAlert } from 'lucide-react';
-import { PageHeader } from '@/components/admin/page-header';
+import { AlertTriangle, CheckCircle2, TrendingUp, ShieldAlert } from 'lucide-react';
 import { KpiCard } from '@/components/admin/kpi-card';
-import { LiveBadge } from '@/components/admin/live-badge';
-import { MockBanner } from '@/components/mock-banner';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
+import { adminFetch } from '@/lib/admin-fetch';
 
 interface UptimeDay {
   date: string;
@@ -38,35 +37,6 @@ interface Incident {
   summary: string;
   resolved_at: string | null;
 }
-
-// Mock data — Wave 60.81.C scaffold-as-needed. Deterministic so the grid
-// renders consistently while worker endpoints are TBD.
-const MOCK_UPTIME: UptimeDay[] = Array.from({ length: 30 }, (_, i) => {
-  const d = new Date();
-  d.setUTCDate(d.getUTCDate() - (29 - i));
-  // Bias to 100% with occasional dips so the grid shows variety.
-  const noise = i === 11 ? 92.4 : i === 22 ? 99.1 : 100;
-  return { date: d.toISOString().slice(0, 10), uptime_pct: noise };
-});
-
-const MOCK_INCIDENTS: Incident[] = [
-  {
-    id: 'inc-001',
-    ts: new Date(Date.now() - 1000 * 60 * 60 * 24 * 11).toISOString(),
-    service: 'Worker API',
-    severity: 'minor',
-    summary: 'Queue depth backlog 12m — cleared after retry sweep',
-    resolved_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 11 + 1000 * 60 * 18).toISOString(),
-  },
-  {
-    id: 'inc-002',
-    ts: new Date(Date.now() - 1000 * 60 * 60 * 24 * 22).toISOString(),
-    service: 'Supabase',
-    severity: 'minor',
-    summary: 'Slow query on /admin/customers — index added',
-    resolved_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 22 + 1000 * 60 * 30).toISOString(),
-  },
-];
 
 const SEV_CLASS: Record<Incident['severity'], string> = {
   minor: 'border-warn-500/30 bg-warn-500/10 text-warn-700 dark:text-warn-300',
@@ -133,46 +103,83 @@ function uptimeColor(pct: number): string {
   return 'bg-red-500';
 }
 
-export default function HealthPage() {
-  // Try real endpoints first; fall back to mock when 404.
+export function UptimeTab() {
+  // Real endpoints — proxy Better Stack. They return HTTP 503 when the
+  // BETTERSTACK_API_TOKEN is unset, so classify the response (configured vs.
+  // not) instead of substituting fake data.
   const uptime = useQuery({
     queryKey: ['admin', 'uptime-30d'],
-    queryFn: async () => {
+    queryFn: async (): Promise<{ rows: UptimeDay[]; configured: boolean; reason?: string }> => {
       try {
-        const r = await fetch('/api/admin-proxy/admin/uptime?days=30', { cache: 'no-store' });
-        if (!r.ok) return { rows: MOCK_UPTIME, isMock: true };
-        const data = (await r.json()) as { rows?: UptimeDay[] };
-        return { rows: data.rows ?? MOCK_UPTIME, isMock: !data.rows };
+        const r = await adminFetch('/api/admin-proxy/admin/uptime?days=30');
+        const data = (await r.json().catch(() => null)) as
+          | { ok?: boolean; rows?: UptimeDay[]; note?: string; error?: string }
+          | null;
+        if (!r.ok || !data?.ok) {
+          return {
+            rows: [],
+            configured: false,
+            reason: data?.note ?? data?.error ?? 'Better Stack chưa cấu hình',
+          };
+        }
+        // Backend degrade-soft: trả HTTP 200 + rows:[] + `note` khi
+        // BETTERSTACK_API_TOKEN chưa set (xem daily/betterstack.ts). Coi như
+        // "chưa cấu hình" thay vì hiện uptime 0% giả.
+        const okRows = data.rows ?? [];
+        if (okRows.length === 0) {
+          return { rows: [], configured: false, reason: data.note ?? 'Better Stack chưa cấu hình' };
+        }
+        return { rows: okRows, configured: true };
       } catch {
-        return { rows: MOCK_UPTIME, isMock: true };
+        return { rows: [], configured: false, reason: 'không kết nối' };
       }
     },
   });
 
   const incidents = useQuery({
     queryKey: ['admin', 'incidents'],
-    queryFn: async () => {
+    queryFn: async (): Promise<{ rows: Incident[]; configured: boolean; reason?: string }> => {
       try {
-        const r = await fetch('/api/admin-proxy/admin/incidents?limit=20', { cache: 'no-store' });
-        if (!r.ok) return { rows: MOCK_INCIDENTS, isMock: true };
-        const data = (await r.json()) as { rows?: Incident[] };
-        return { rows: data.rows ?? MOCK_INCIDENTS, isMock: !data.rows };
+        const r = await adminFetch('/api/admin-proxy/admin/incidents?limit=20');
+        const data = (await r.json().catch(() => null)) as
+          | { ok?: boolean; rows?: Incident[]; note?: string; error?: string }
+          | null;
+        if (!r.ok || !data?.ok) {
+          return {
+            rows: [],
+            configured: false,
+            reason: data?.note ?? data?.error ?? 'Better Stack chưa cấu hình',
+          };
+        }
+        // `note` only signals "not configured" when it comes WITH empty rows
+        // (mirrors the uptime query's contract). A 200 envelope that carries
+        // real incident rows AND an informational note (e.g. a pagination/cache
+        // hint) must still render the incidents — never hide real data behind
+        // the "chưa cấu hình" card.
+        const okRows = data.rows ?? [];
+        if (data.note && okRows.length === 0) {
+          return { rows: [], configured: false, reason: data.note };
+        }
+        return { rows: okRows, configured: true };
       } catch {
-        return { rows: MOCK_INCIDENTS, isMock: true };
+        return { rows: [], configured: false, reason: 'không kết nối' };
       }
     },
   });
 
   const rows = uptime.data?.rows ?? [];
+  const uptimeConfigured = uptime.data?.configured === true || rows.length > 0;
+  const incidentRows = incidents.data?.rows ?? [];
+  const incidentsConfigured = incidents.data?.configured === true || incidentRows.length > 0;
   const avg = rows.length > 0 ? rows.reduce((s, d) => s + d.uptime_pct, 0) / rows.length : 0;
   const worst = rows.length > 0 ? Math.min(...rows.map((d) => d.uptime_pct)) : 0;
   const okDays = rows.filter((d) => d.uptime_pct >= 99.95).length;
-  const incidentCount = incidents.data?.rows.length ?? 0;
+  const incidentCount = incidentRows.length;
 
   const waf = useQuery({
     queryKey: ['admin', 'waf-events'],
     queryFn: async () => {
-      const r = await fetch('/api/admin-proxy/admin/waf/events?limit=20', { cache: 'no-store' });
+      const r = await adminFetch('/api/admin-proxy/admin/waf/events?limit=20');
       const data = (await r.json()) as WafResponse;
       return data;
     },
@@ -269,68 +276,84 @@ export default function HealthPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Uptime & sự cố"
-        description="Theo dõi tính khả dụng 30 ngày qua và danh sách sự cố gần nhất."
-        icon={<Heart className="h-5 w-5" />}
-        badge={<LiveBadge isMock={uptime.data?.isMock || incidents.data?.isMock} />}
-      />
-
-      <MockBanner source={{ isMock: uptime.data?.isMock ?? false, reason: 'endpoint TBD' }} />
-
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <KpiCard
-          label="Uptime trung bình"
-          value={fmtPct(avg)}
-          icon={<CheckCircle2 className="h-4 w-4" />}
-          accent="jade"
-          hint="30 ngày"
-        />
-        <KpiCard
-          label="Ngày hoàn hảo"
-          value={`${okDays}/${rows.length}`}
-          icon={<TrendingUp className="h-4 w-4" />}
-          accent="gold"
-          hint=">=99.95%"
-        />
-        <KpiCard
-          label="Thấp nhất"
-          value={fmtPct(worst)}
-          icon={<AlertTriangle className="h-4 w-4" />}
-          accent={worst < 99 ? 'red' : 'gold'}
-          hint="worst day"
-        />
-        <KpiCard
-          label="Sự cố"
-          value={incidentCount}
-          icon={<AlertTriangle className="h-4 w-4" />}
-          accent={incidentCount > 0 ? 'gold' : 'jade'}
-          hint="30 ngày"
-        />
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Lưới uptime 30 ngày</CardTitle>
-          <CardDescription>
-            Mỗi ô = 1 ngày. Xanh = 100% / 99.95%+, xanh đậm = 99%+, vàng = 95%+, đỏ = thấp hơn.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-[repeat(15,minmax(0,1fr))] gap-2 sm:grid-cols-[repeat(30,minmax(0,1fr))]">
-            {rows.map((d) => (
-              <div
-                key={d.date}
-                title={`${d.date} — ${fmtPct(d.uptime_pct)}`}
-                className={cn(
-                  'aspect-square rounded-sm transition-all duration-300 ease-editorial hover:scale-110',
-                  uptimeColor(d.uptime_pct),
-                )}
-              />
-            ))}
+      {uptimeConfigured ? (
+        <>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <KpiCard
+              label="Uptime trung bình"
+              value={fmtPct(avg)}
+              icon={<CheckCircle2 className="h-4 w-4" />}
+              accent="jade"
+              hint="30 ngày"
+            />
+            <KpiCard
+              label="Ngày hoàn hảo"
+              value={`${okDays}/${rows.length}`}
+              icon={<TrendingUp className="h-4 w-4" />}
+              accent="gold"
+              hint=">=99.95%"
+            />
+            <KpiCard
+              label="Thấp nhất"
+              value={fmtPct(worst)}
+              icon={<AlertTriangle className="h-4 w-4" />}
+              accent={worst < 99 ? 'red' : 'gold'}
+              hint="worst day"
+            />
+            <KpiCard
+              label="Sự cố"
+              value={incidentCount}
+              icon={<AlertTriangle className="h-4 w-4" />}
+              accent={incidentCount > 0 ? 'gold' : 'jade'}
+              hint="30 ngày"
+            />
           </div>
-        </CardContent>
-      </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Lưới uptime 30 ngày</CardTitle>
+              <CardDescription>
+                Mỗi ô = 1 ngày. Xanh = 100% / 99.95%+, xanh đậm = 99%+, vàng = 95%+, đỏ = thấp hơn.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-[repeat(15,minmax(0,1fr))] gap-2 sm:grid-cols-[repeat(30,minmax(0,1fr))]">
+                {rows.map((d) => (
+                  <div
+                    key={d.date}
+                    title={`${d.date} — ${fmtPct(d.uptime_pct)}`}
+                    className={cn(
+                      'aspect-square rounded-sm transition-all duration-300 ease-editorial hover:scale-110',
+                      uptimeColor(d.uptime_pct),
+                    )}
+                  />
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </>
+      ) : (
+        <Card className="border-border">
+          <CardHeader className="flex flex-row items-center gap-3 pb-3">
+            <ShieldAlert className="h-5 w-5 text-muted-foreground shrink-0" />
+            <div>
+              <CardTitle className="text-base">Better Stack uptime — chưa cấu hình</CardTitle>
+              <CardDescription>
+                {uptime.isLoading
+                  ? 'Đang tải dữ liệu uptime…'
+                  : 'Endpoint trả về 503 — đặt BETTERSTACK_API_TOKEN để bật lưới uptime 30 ngày.'}
+              </CardDescription>
+            </div>
+          </CardHeader>
+          {!uptime.isLoading && uptime.data?.reason && (
+            <CardContent>
+              <pre className="rounded-md border border-border bg-muted/40 px-4 py-3 font-mono text-xs text-muted-foreground whitespace-pre-wrap break-all">
+                {uptime.data.reason}
+              </pre>
+            </CardContent>
+          )}
+        </Card>
+      )}
 
       {/* ── Cloudflare WAF ──────────────────────────────────────────── */}
       {waf.data?.configured === true ? (
@@ -387,25 +410,48 @@ export default function HealthPage() {
         </Card>
       )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Sự cố gần đây</CardTitle>
-          <CardDescription>20 sự cố mới nhất, theo thứ tự ngược thời gian.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <AdminTable
-            rows={incidents.data?.rows ?? []}
-            columns={incidentCols}
-            loading={incidents.isLoading}
-            empty={
-              <span className="text-sm text-muted-foreground">
-                Không có sự cố trong 30 ngày qua.
-              </span>
-            }
-            caption="Danh sách sự cố gần nhất"
-          />
-        </CardContent>
-      </Card>
+      {incidentsConfigured ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Sự cố gần đây</CardTitle>
+            <CardDescription>20 sự cố mới nhất, theo thứ tự ngược thời gian.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <AdminTable
+              rows={incidentRows}
+              columns={incidentCols}
+              loading={incidents.isLoading}
+              empty={
+                <span className="text-sm text-muted-foreground">
+                  Không có sự cố trong 30 ngày qua.
+                </span>
+              }
+              caption="Danh sách sự cố gần nhất"
+            />
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="border-border">
+          <CardHeader className="flex flex-row items-center gap-3 pb-3">
+            <ShieldAlert className="h-5 w-5 text-muted-foreground shrink-0" />
+            <div>
+              <CardTitle className="text-base">Better Stack sự cố — chưa cấu hình</CardTitle>
+              <CardDescription>
+                {incidents.isLoading
+                  ? 'Đang tải dữ liệu sự cố…'
+                  : 'Endpoint trả về 503 — đặt BETTERSTACK_API_TOKEN để bật nhật ký sự cố.'}
+              </CardDescription>
+            </div>
+          </CardHeader>
+          {!incidents.isLoading && incidents.data?.reason && (
+            <CardContent>
+              <pre className="rounded-md border border-border bg-muted/40 px-4 py-3 font-mono text-xs text-muted-foreground whitespace-pre-wrap break-all">
+                {incidents.data.reason}
+              </pre>
+            </CardContent>
+          )}
+        </Card>
+      )}
     </div>
   );
 }
