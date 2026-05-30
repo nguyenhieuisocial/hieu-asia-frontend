@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { Button, cn } from '@hieu-asia/ui';
 import { ThumbsUp, ThumbsDown, Meh, MessageSquare } from 'lucide-react';
+import { track } from '@/lib/analytics';
 
 export type FeedbackRating = 'accurate' | 'partial' | 'inaccurate';
 export type FeedbackAdjust = 'deeper' | 'practical' | 'softer' | 'examples';
@@ -108,6 +109,14 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
     setRating(null);
     setAdjust(undefined);
     setComment('');
+    // Gửi đánh giá ẩn danh (rating + hướng điều chỉnh) để ĐO tỉ lệ "luận đúng"
+    // — chỉ số chất lượng tổng hợp. KHÔNG gửi ghi chú tự do (có thể chứa thông
+    // tin cá nhân) — ghi chú giữ trên máy người dùng.
+    track('section_feedback', {
+      section: sectionId,
+      rating: payload.rating,
+      adjust: payload.adjust ?? null,
+    });
     onSubmit?.(payload);
   }
 
@@ -142,8 +151,8 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
           </button>
         </div>
         <p className="mt-2 text-[11px] text-muted-foreground">
-          Feedback lưu trên máy của bạn để cải thiện trải nghiệm cá nhân. Chỉ
-          chia sẻ tới hệ thống khi bạn xác nhận (chưa tự động gửi đi).
+          Đánh giá đúng/không được gửi ẩn danh để cải thiện chất lượng luận
+          giải. Ghi chú tự do của bạn giữ trên máy, không gửi đi.
         </p>
       </div>
     );
@@ -247,8 +256,8 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
       )}
 
       <p className="mt-3 text-[11px] text-muted-foreground">
-        Feedback lưu trên máy của bạn để cải thiện trải nghiệm cá nhân. Chỉ
-        chia sẻ tới hệ thống khi bạn xác nhận (chưa tự động gửi đi).
+        Đánh giá đúng/không được gửi ẩn danh để cải thiện chất lượng luận giải.
+        Ghi chú tự do của bạn giữ trên máy, không gửi đi.
       </p>
     </div>
   );
