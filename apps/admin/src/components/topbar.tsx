@@ -14,7 +14,6 @@ const SEG_LABEL: Record<string, string> = {
   '/sessions': 'Phiên phân tích',
   '/tasks': 'Task / Lỗi',
   '/vendors': 'Vendors',
-  '/transactions': 'Giao dịch',
   '/payments': 'Thanh toán',
   '/affiliates': 'Affiliate',
   '/analytics': 'Analytics',

@@ -23,7 +23,7 @@ interface Tab {
 const TABS: Tab[] = [
   { href: '/', label: 'Tổng quan', Icon: LayoutDashboard },
   { href: '/sessions', label: 'Phiên', Icon: ListTodo },
-  { href: '/transactions', label: 'Giao dịch', Icon: Receipt },
+  { href: '/payments', label: 'Giao dịch', Icon: Receipt },
   { href: '/llm-spend', label: 'Chi phí', Icon: DollarSign },
   { href: '/settings', label: 'Cài đặt', Icon: Settings },
 ];
