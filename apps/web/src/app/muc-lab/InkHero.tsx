@@ -147,7 +147,29 @@ export function InkHero(): React.JSX.Element {
     return () => { window.removeEventListener('pointermove', onPt); cancelAnimationFrame(raf); ro.disconnect(); };
   }, [run]);
 
-  const cur = hover != null ? CUNG[hover] : null;
+  // Tự cuốn chiếu: lần lượt "đọc" 12 cung → đổi tên ở tâm + ý nghĩa bên dưới. Hover để giữ.
+  const [auto, setAuto] = React.useState(0);
+  const hoverRef = React.useRef<number | null>(null);
+  React.useEffect(() => { hoverRef.current = hover; }, [hover]);
+  React.useEffect(() => {
+    const reduce = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+    const id = window.setInterval(() => { if (hoverRef.current == null) setAuto((a) => (a + 1) % 12); }, 2600);
+    return () => window.clearInterval(id);
+  }, [run]);
+  const cung = hover != null ? hover : auto;
+  const cur = CUNG[cung] ?? CUNG[0]!;
+
+  // Kim quét trỏ tới cung đang đọc — góc luỹ tiến (luôn quay tới, không giật ngược).
+  const sweepEl = React.useRef<SVGGElement>(null);
+  const sweepAngle = React.useRef(0);
+  const prevCung = React.useRef(0);
+  React.useEffect(() => {
+    const fwd = (((cung - prevCung.current) % 12) + 12) % 12;
+    sweepAngle.current += fwd * 30;
+    prevCung.current = cung;
+    if (sweepEl.current) sweepEl.current.style.transform = `rotate(${sweepAngle.current}deg)`;
+  }, [cung]);
 
   return (
     <main className="ih" style={{ background: PAPER, color: INK, minHeight: '100vh', position: 'relative' }}>
@@ -186,8 +208,8 @@ export function InkHero(): React.JSX.Element {
                 ))}
               </g>
 
-              {/* kim quét astrolabe — đậm, có đầu sáng */}
-              <g className="ih-sweep">
+              {/* kim quét astrolabe — trỏ tới cung đang đọc */}
+              <g className="ih-sweep" ref={sweepEl}>
                 <line x1={C} y1={C} x2={C} y2={24} stroke={OCHRE} strokeWidth={1.5} strokeLinecap="round" />
                 <circle cx={C} cy={24} r={3.4} fill={OCHRE} />
               </g>
@@ -207,7 +229,7 @@ export function InkHero(): React.JSX.Element {
               {CUNG.map((c, i) => (
                 <path
                   key={`w${i}`}
-                  className={`ih-wedge${hover === i ? ' ih-won' : ''}${i === 0 ? ' ih-menh' : ''}`}
+                  className={`ih-wedge${cung === i ? ' ih-won' : ''}`}
                   d={c.d}
                   fill={OCHRE}
                   onMouseEnter={() => setHover(i)}
@@ -215,7 +237,7 @@ export function InkHero(): React.JSX.Element {
                 />
               ))}
               {CUNG.map((c, i) => (
-                <text key={`l${i}`} className={`ih-wlabel${hover === i ? ' ih-lon' : ''}`} x={c.lx} y={c.ly} fontSize={8.5} textAnchor="middle" dominantBaseline="middle">{c.n}</text>
+                <text key={`l${i}`} className={`ih-wlabel${cung === i ? ' ih-lon' : ''}`} x={c.lx} y={c.ly} fontSize={8.5} textAnchor="middle" dominantBaseline="middle">{c.n}</text>
               ))}
 
               {/* sao lấp lánh */}
@@ -231,23 +253,21 @@ export function InkHero(): React.JSX.Element {
               ))}
 
               <circle className="ih-breathe" cx={C} cy={C} r={3} fill={OCHRE} />
-              <text className="ih-center" x={C} y={C + 5} fill={INK} fontSize={14} letterSpacing={3} textAnchor="middle">MỆNH</text>
+              <text className="ih-center" x={C} y={C + 5} fill={INK} fontSize={12.5} letterSpacing={1.5} textAnchor="middle">{cur.n.toUpperCase()}</text>
             </svg>
           </div>
 
           <p className="ih-annot" aria-live="polite">
-            {cur ? (
-              <><span className="ih-annot-n">{cur.n}</span> · <span className="ih-annot-d">{cur.dm}</span> — {cur.b}</>
-            ) : (
-              <span className="ih-annot-hint">Lá số 12 cung sống · di chuột lên một cung để đọc ý nghĩa</span>
-            )}
+            <span key={cung} className="ih-annot-line">
+              <span className="ih-annot-n">{cur.n}</span> · <span className="ih-annot-d">{cur.dm}</span> — {cur.b}
+            </span>
           </p>
         </div>
       </div>
 
       <div className="ih-bar">
         <button className="ih-replay" onClick={() => { resetTilt(); setRun((r) => r + 1); }}>↻ Xem lại hiệu ứng</button>
-        <span className="ih-note">Demo "Mực sống" động · lá số tự chuyển động (SVG/CSS thuần, không ảnh) · tôn trọng prefers-reduced-motion</span>
+        <span className="ih-note">Demo "Mực sống" · lá số TỰ ĐỌC lần lượt 12 cung (kim quét trỏ + tâm + ý nghĩa đổi theo) · chạm để giữ · SVG/CSS thuần</span>
       </div>
     </main>
   );
@@ -291,7 +311,7 @@ const CSS = `
 .ih-draw { stroke-dasharray: 1; stroke-dashoffset: 0; }
 .ih-wedge { fill-opacity: 0; cursor: pointer; transition: fill-opacity .35s ease; }
 .ih-wedge.ih-menh { fill-opacity: .08; }
-.ih-wedge:hover, .ih-wedge.ih-won { fill-opacity: .2; }
+.ih-wedge:hover, .ih-wedge.ih-won { fill-opacity: .28; }
 .ih-glowwedge { fill-opacity: 0; }
 .ih-wlabel { fill: ${INK}; font-family: 'JetBrains Mono', monospace; letter-spacing: .04em; opacity: 0; transition: opacity .3s ease; pointer-events: none; }
 .ih-wlabel.ih-lon { opacity: .9; }
@@ -299,7 +319,7 @@ const CSS = `
 .ih-star, .ih-breathe { transform-box: fill-box; transform-origin: center; }
 /* nhóm xoay quanh tâm 200,200 */
 .ih-spin, .ih-sweep, .ih-orbit { transform-box: view-box; transform-origin: 200px 200px; }
-.ih-sweep { opacity: 0; }
+.ih-sweep { opacity: 0; transition: transform 1.1s cubic-bezier(.2,.7,.2,1); }
 
 @media (prefers-reduced-motion: no-preference) {
   .ih-draw { animation: ihDraw 1.25s ease both var(--d, 0s); }
@@ -311,7 +331,7 @@ const CSS = `
 
   /* CHUYỂN ĐỘNG LIÊN TỤC — vào sớm (~1.4s), RÕ & nhanh hơn hẳn */
   .ih-spin { animation: ihSpin 50s linear 1.4s infinite; }
-  .ih-sweep { animation: ihFade 1s ease 1.4s forwards, ihSpin 14s linear 1.4s infinite; opacity: .55; }
+  .ih-sweep { animation: ihFade 1s ease 1.4s forwards; opacity: .55; }
   .ih-orbit { opacity: 0; animation: ihFade 1.1s ease 1.4s forwards, ihSpin var(--dur, 16s) linear 1.4s infinite; }
   .ih-orbit.ih-rev { animation: ihFade 1.1s ease 1.4s forwards, ihSpin var(--dur, 16s) linear 1.4s infinite reverse; }
   .ih-breathe { animation: ihBreathe 4.2s ease-in-out 1.4s infinite; }
@@ -332,6 +352,8 @@ const CSS = `
 @keyframes ihStain { from { transform: translate(0,0); } to { transform: translate(8%, 6%); } }
 
 .ih-annot { min-height: 1.4em; margin: 0; text-align: center; font-size: .98rem; color: ${INK}; max-width: 30em; }
+.ih-annot-line { display: inline-block; animation: ihAnnotFade .5s ease both; }
+@keyframes ihAnnotFade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 .ih-annot-n { color: ${OCHRE}; font-style: italic; }
 .ih-annot-d { font-family: 'JetBrains Mono', monospace; font-size: .8em; color: ${SOFT}; letter-spacing: .02em; }
 .ih-annot-hint { color: ${SOFT}; font-family: 'JetBrains Mono', monospace; font-size: .8rem; letter-spacing: .04em; }
