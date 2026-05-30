@@ -7,8 +7,7 @@ import { NotOraclesStrip } from './sections/NotOraclesStrip';
 import { Methodology } from './sections/Methodology';
 import { FreeReadingTeaser } from './sections/FreeReadingTeaser';
 import { PricingLite } from './sections/PricingLite';
-// FounderNote tạm ẩn — chờ content founder thật (tên/ảnh/bio); không render placeholder ra user.
-// import { FounderNote } from './sections/FounderNote';
+import { MissionNote } from './sections/MissionNote';
 
 import { ScanRow } from '@/components/marketing/ScanRow';
 import { WhyTrust } from '@/components/home/WhyTrust';
@@ -148,7 +147,7 @@ export default function MucLabHomePage(): React.JSX.Element {
         <FreeReadingTeaser />
 
         <SocialProofQuiet />
-        {/* <FounderNote /> — ẩn tới khi có content founder thật */}
+        <MissionNote />{/* founder ẩn danh → trust qua sứ mệnh */}
 
         <div className="bg-muted/40">
           <FaqAccordion items={STAGING_FAQ} id="faq" />
