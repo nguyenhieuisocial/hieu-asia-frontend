@@ -81,6 +81,8 @@ const CUNG: Cung[] = CUNG_META.map((m, i) => {
 const cssVar = (d: number, extra?: Record<string, string | number>) =>
   ({ ['--d']: `${d}s`, ...extra } as React.CSSProperties);
 
+const WORDS = ['mình.', 'đời mình.', 'con đường.', 'tương lai.', 'hướng đi.'];
+
 export function InkHero(): React.JSX.Element {
   const [run, setRun] = React.useState(0);
   const [hover, setHover] = React.useState<number | null>(null);
@@ -133,6 +135,15 @@ export function InkHero(): React.JSX.Element {
   const cung = hover != null ? hover : active;
   const cur = CUNG[cung] ?? CUNG[0]!;
 
+  // Từ cuối "Quyết định ___" đổi liên tục (độc lập với dial).
+  const [wordIdx, setWordIdx] = React.useState(0);
+  React.useEffect(() => {
+    const reduce = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+    const id = window.setInterval(() => setWordIdx((w) => (w + 1) % WORDS.length), 2800);
+    return () => window.clearInterval(id);
+  }, [run]);
+
   return (
     <main className="ih" style={{ background: PAPER, color: INK, minHeight: '100vh', position: 'relative' }}>
       <style>{CSS}</style>
@@ -143,7 +154,7 @@ export function InkHero(): React.JSX.Element {
           <p className="ih-eyebrow"><span className="ih-livedot" aria-hidden="true" />CẨM NANG QUYẾT ĐỊNH BẰNG AI</p>
           <h1 className="ih-h1">
             <span className="ih-line ih-l1">Hiểu mình.</span>
-            <span className="ih-line ih-l2"><span className="ih-uline">Quyết định mình.</span></span>
+            <span className="ih-line ih-l2">Quyết định <span key={wordIdx} className="ih-rot">{WORDS[wordIdx] ?? 'mình.'}</span></span>
           </h1>
           <p className="ih-deck">
             Mỗi khi bạn đứng trước một quyết định quan trọng, hieu.asia cho bạn một góc nhìn
@@ -254,7 +265,7 @@ const CSS = `
 .ih-h1 { font-size: clamp(2.7rem, 6.2vw, 5.2rem); line-height: .98; margin: .35em 0 .5em; font-weight: 400; letter-spacing: -.02em; }
 .ih-line { display: block; }
 .ih-l2 { color: ${OCHRE}; font-style: italic; }
-.ih-uline { background-image: linear-gradient(${OCHRE}, ${OCHRE}); background-repeat: no-repeat; background-position: 0 94%; background-size: 100% 2px; }
+.ih-rot { display: inline-block; background-image: linear-gradient(${OCHRE}, ${OCHRE}); background-repeat: no-repeat; background-position: 0 96%; background-size: 100% 2px; }
 .ih-deck { max-width: 30em; font-size: 1.06rem; line-height: 1.58; color: ${INK}; opacity: .82; }
 .ih-soi { margin: 1.1em 0 0; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .03em; color: ${SOFT}; min-height: 1.3em; }
 .ih-soi-in { display: inline-block; animation: ihAnnotFade .5s ease both; }
@@ -299,7 +310,7 @@ const CSS = `
   .ih-deck { animation: ihFade 1s ease .9s both; }
   .ih-cta-row { animation: ihFade 1s ease 1.1s both; }
   .ih-livedot { animation: ihPulse 1.8s ease-in-out 1.4s infinite; }
-  .ih-uline { background-size: 0% 2px; animation: ihUnderline .9s cubic-bezier(.2,.7,.2,1) 1.15s both; }
+  .ih-rot { background-size: 0% 2px; animation: ihRotIn .55s cubic-bezier(.2,.7,.2,1) both, ihUnderline .7s cubic-bezier(.2,.7,.2,1) .12s both; }
 
   /* CHUYỂN ĐỘNG LIÊN TỤC — vào sớm (~1.4s), RÕ & nhanh hơn hẳn */
   .ih-spin { animation: ihSpin 50s linear 1.4s infinite; }
@@ -324,6 +335,7 @@ const CSS = `
 @keyframes ihStain { from { transform: translate(0,0); } to { transform: translate(8%, 6%); } }
 @keyframes ihPulse { 0%,100% { opacity: .35; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.15); } }
 @keyframes ihUnderline { to { background-size: 100% 2px; } }
+@keyframes ihRotIn { from { opacity: 0; transform: translateY(.5em); } to { opacity: 1; transform: translateY(0); } }
 
 .ih-annot { min-height: 1.4em; margin: 0; text-align: center; font-size: .98rem; color: ${INK}; max-width: 30em; }
 .ih-annot-line { display: inline-block; animation: ihAnnotFade .5s ease both; }
