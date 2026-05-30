@@ -68,6 +68,8 @@ const nextConfig: NextConfig = {
       // Wave 66 — /transactions trùng /payments tab Giao dịch (cùng /payment/transactions,
       // tab payments có refund đầy đủ hơn) → gộp về tab.
       { source: '/transactions', destination: '/payments?tab=transactions', permanent: false },
+      // Wave 66 — /billing folded into /payments hub ("Thanh toán & Doanh thu").
+      { source: '/billing', destination: '/payments?tab=subscriptions', permanent: false },
     ];
   },
   async headers() {

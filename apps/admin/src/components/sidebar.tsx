@@ -92,8 +92,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'Doanh thu',
     items: [
       { href: '/sepay', label: 'SePay đối soát', Icon: Landmark },
-      { href: '/payments', label: 'Thanh toán', Icon: CreditCard },
-      { href: '/billing', label: 'Billing', Icon: Wallet },
+      { href: '/payments', label: 'Thanh toán & Doanh thu', Icon: CreditCard },
       { href: '/coupons', label: 'Coupons', Icon: Ticket },
       { href: '/affiliates', label: 'Affiliate', Icon: HandCoins },
       { href: '/sticky-cta', label: 'Sticky CTA', Icon: MousePointerClick },
