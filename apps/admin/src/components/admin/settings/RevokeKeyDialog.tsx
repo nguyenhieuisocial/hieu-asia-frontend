@@ -92,7 +92,7 @@ export function RevokeKeyDialog({
           </div>
           <div className="flex justify-between gap-3">
             <span className="text-muted-foreground">Prefix</span>
-            <span className="font-mono text-xs">{apiKey.prefix}…</span>
+            <span className="font-mono text-xs">{apiKey.key_prefix}…</span>
           </div>
           <div className="flex justify-between gap-3">
             <span className="text-muted-foreground">Scopes</span>

@@ -1,27 +1,24 @@
 'use client';
 
 /**
- * /migrations — D1 + Supabase migration history.
+ * Migrations tab — D1 + Supabase migration history.
  *
- * Wave 60.81.C Tier 3 polish batch 2. Lists migrations with timestamp +
- * applied/pending/failed status. Uses AdminTable (vault 107 §5.5) so the
- * grid is sortable + has consistent skeleton/empty states.
+ * Wave 66 IA: extracted from the former /migrations page into a tab body of
+ * /audit ("Logs & sự cố"). Lists migrations with timestamp + applied/pending/
+ * failed status on AdminTable (vault 107 §5.5).
  *
  * Data source (best-effort):
  *   GET /api/admin-proxy/admin/migrations?limit=50
  *
- * Worker endpoint TODO — until shipped, mock list renders so the shell
- * is exercised. Status badges use WarnToken (Wave 60.81.B preset) for
- * "pending" and red for "failed".
+ * Worker endpoint TODO — until shipped, mock list renders so the shell is
+ * exercised (MockBanner surfaces the mock state).
  */
 
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, cn } from '@hieu-asia/ui';
 import { Database, CheckCircle2, AlertTriangle, Clock } from 'lucide-react';
-import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
-import { LiveBadge } from '@/components/admin/live-badge';
 import { MockBanner } from '@/components/mock-banner';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
@@ -107,7 +104,7 @@ function fmtDuration(ms: number | null) {
   return `${(ms / 1000).toFixed(2)}s`;
 }
 
-export default function MigrationsPage() {
+export function MigrationsTab() {
   const list = useQuery({
     queryKey: ['admin', 'migrations'],
     queryFn: async () => {
@@ -199,13 +196,6 @@ export default function MigrationsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Migrations"
-        description="Lịch sử migration cho D1 (Cloudflare KV/SQL) và Supabase Postgres."
-        icon={<Database className="h-5 w-5" />}
-        badge={<LiveBadge isMock={list.data?.isMock} />}
-      />
-
       <MockBanner
         source={{ isMock: list.data?.isMock ?? false, reason: 'endpoint /admin/migrations TBD' }}
       />

@@ -40,7 +40,8 @@ const ICON_KEY = <KeyRound className="h-10 w-10 text-gold/60" aria-hidden />;
 
 interface ApiKeysResp {
   ok?: boolean;
-  api_keys?: AdminApiKey[];
+  /** Worker returns `keys` (hieu_asia.admin_api_keys) — was mis-read as `api_keys`. */
+  keys?: AdminApiKey[];
   error?: string;
   note?: string;
 }
@@ -81,8 +82,8 @@ export function ApiKeysTab() {
 
   // Defensive Array.isArray — guards against drift in {error:'...'} shapes.
   const apiKeys = React.useMemo(
-    () => (Array.isArray(data?.api_keys) ? data.api_keys : []),
-    [data?.api_keys],
+    () => (Array.isArray(data?.keys) ? data.keys : []),
+    [data?.keys],
   );
 
   const showError = !!error || (data?.ok === false && !data?.note);
@@ -116,7 +117,7 @@ export function ApiKeysTab() {
           <div className="min-w-0">
             <div className="truncate font-medium text-foreground">{k.name}</div>
             <div className="truncate font-mono text-xs text-muted-foreground">
-              {k.prefix}…
+              {k.key_prefix}…
             </div>
           </div>
         ),
