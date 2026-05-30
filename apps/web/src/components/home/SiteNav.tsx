@@ -65,6 +65,9 @@ const MOBILE_TOOLS: readonly NavLink[] = [
   { href: '/tinh-menh-cuc', label: 'Tuổi mệnh cục' },
   { href: '/ban-do', label: 'Bản đồ sao' },
   { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại' },
+  { href: '/gieo-que', label: 'Gieo Quẻ Kinh Dịch' },
+  { href: '/big-five', label: 'Big Five (OCEAN)' },
+  { href: '/disc', label: 'Trắc nghiệm DiSC' },
 ];
 
 const MOBILE_LEARN: readonly NavLink[] = [
