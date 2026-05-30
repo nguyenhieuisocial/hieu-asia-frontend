@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { InkHero } from './InkHero';
+// Bản mới ĐÚNG ĐỊNH VỊ "4 lăng kính → AI hợp nhất" (InkHero cũ giữ làm tham chiếu).
+import { MultiHero } from './MultiHero';
 
 /**
  * /muc-lab — DEMO NỘI BỘ (noindex) "Mực sống" (Đợt 1 gộp).
@@ -14,5 +15,5 @@ export const metadata: Metadata = {
 };
 
 export default function MucLabPage() {
-  return <InkHero />;
+  return <MultiHero />;
 }
