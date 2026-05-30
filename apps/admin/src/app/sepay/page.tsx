@@ -741,6 +741,22 @@ function DashboardView() {
     },
     refetchInterval: 60_000,
   });
+  const healthQ = useQuery({
+    queryKey: ['admin', 'sepay', 'webhook-health'],
+    queryFn: async (): Promise<{ ok: boolean; last_webhook_at?: string | null; webhooks_24h?: number; last_paid_at?: string | null; total_webhooks?: number }> => {
+      const r = await fetch('/api/admin-proxy/admin/sepay/webhook-health', { cache: 'no-store' });
+      try { return JSON.parse(await r.text()); } catch { return { ok: false }; }
+    },
+    refetchInterval: 60_000,
+  });
+  const subsQ = useQuery({
+    queryKey: ['admin', 'sepay', 'subscriptions'],
+    queryFn: async (): Promise<{ ok: boolean; subscriptions?: { id: string; plan: string; plan_expires_at: string | null; days_left: number | null; expired: boolean }[] }> => {
+      const r = await fetch('/api/admin-proxy/admin/sepay/subscriptions', { cache: 'no-store' });
+      try { return JSON.parse(await r.text()); } catch { return { ok: false }; }
+    },
+    refetchInterval: 120_000,
+  });
   const d = q.data;
   if (q.isLoading) return <Card><CardContent className="p-8 text-center text-sm text-muted-foreground">Đang tải…</CardContent></Card>;
   if (!d?.ok) return <ErrorBlock message={d?.error ?? 'Không tải được số liệu'} onRetry={() => q.refetch()} />;
@@ -820,6 +836,58 @@ function DashboardView() {
                 </div>
               ))
             )}
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-sm">
+              Webhook SePay
+              {healthQ.data?.ok && (healthQ.data.webhooks_24h ?? 0) > 0 ? (
+                <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs text-emerald-500">Đang nhận</span>
+              ) : (
+                <span className="rounded-full bg-muted/20 px-2 py-0.5 text-xs text-muted-foreground">Chưa có webhook</span>
+              )}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-1.5 text-sm">
+            <div className="flex justify-between"><span className="text-muted-foreground">Webhook cuối</span><span className="font-mono">{healthQ.data?.last_webhook_at ? fmtTs(healthQ.data.last_webhook_at) : '—'}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">Webhook 24h</span><span className="font-mono">{healthQ.data?.webhooks_24h ?? 0}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">Thanh toán cuối</span><span className="font-mono">{healthQ.data?.last_paid_at ? fmtTs(healthQ.data.last_paid_at) : '—'}</span></div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader><CardTitle className="flex items-center gap-2 text-sm"><Clock className="h-4 w-4" />Subscription sắp/đã hết hạn</CardTitle></CardHeader>
+          <CardContent className="p-0">
+            {(() => {
+              if (!subsQ.data?.ok) return <p className="px-4 py-6 text-center text-sm text-muted-foreground">—</p>;
+              const subs = (subsQ.data.subscriptions ?? [])
+                .filter((s) => s.plan !== 'lifetime' && s.days_left !== null && s.days_left <= 14)
+                .sort((a, b) => (a.days_left ?? 0) - (b.days_left ?? 0));
+              if (subs.length === 0) return <p className="px-4 py-6 text-center text-sm text-muted-foreground">Không có sub sắp hết hạn (14 ngày).</p>;
+              return (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm"><tbody>
+                    {subs.map((s) => (
+                      <tr key={s.id} className="border-b border-border/40 last:border-0">
+                        <td className="px-4 py-2 font-mono text-xs">{s.id.slice(0, 12)}…</td>
+                        <td className="px-4 py-2">{TIER_LABEL[s.plan] ?? s.plan}</td>
+                        <td className="px-4 py-2 text-right">
+                          {s.expired ? (
+                            <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-xs text-red-500">Hết hạn</span>
+                          ) : (
+                            <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs text-amber-500">còn {s.days_left} ngày</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody></table>
+                </div>
+              );
+            })()}
           </CardContent>
         </Card>
       </div>
