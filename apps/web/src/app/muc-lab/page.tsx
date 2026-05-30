@@ -17,7 +17,8 @@ export const metadata: Metadata = {
 export default function MucLabPage() {
   return (
     <main>
-      <MultiHero />
+      {/* concept = hiện thanh "↻ Xem lại" + note concept (chỉ demo nội bộ này, KHÔNG lên production) */}
+      <MultiHero concept />
     </main>
   );
 }
