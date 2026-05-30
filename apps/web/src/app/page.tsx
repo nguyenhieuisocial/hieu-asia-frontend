@@ -22,7 +22,17 @@ import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 // testimonial "khoảng lặng" section (4 anonymous decision excerpts in
 // founder voice, no stars/faces).
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
-import { HeroV4 } from '@/components/home/HeroV4';
+// Wave 64.x — homepage hero swapped HeroV4 → MultiHero ("4 lăng kính → AI"
+// editorial) + new editorial sections (NotOraclesStrip / Methodology /
+// ToolkitSection / FreeReadingTeaser / MissionNote). Components currently live
+// under app/muc-lab/ (shared with the /muc-lab/home staging preview) — relocate
+// to components/ in a follow-up. HeroV4 stays available for other surfaces.
+import { MultiHero } from './muc-lab/MultiHero';
+import { NotOraclesStrip } from './muc-lab/home/sections/NotOraclesStrip';
+import { Methodology } from './muc-lab/home/sections/Methodology';
+import { ToolkitSection } from './muc-lab/home/sections/ToolkitSection';
+import { FreeReadingTeaser } from './muc-lab/home/sections/FreeReadingTeaser';
+import { MissionNote } from './muc-lab/home/sections/MissionNote';
 import { EditorialList } from '@/components/marketing/EditorialList';
 // Wave 62.09 — custom discipline icons (vault 138 "đừng dùng icon set").
 import { LaSoIcon } from '@/components/marketing/icons/LaSoIcon';
@@ -421,7 +431,10 @@ export default function LandingPage() {
             uses /tu-vi-2026 as secondary destination for the traditional
             audience. Sample report still discoverable via inline CTA at
             the EditorialList "Bốn ống kính" section closing line. */}
-        <HeroV4 />
+        <MultiHero />
+
+        {/* Brand "không phải oracle" — editorial decoder strip ngay dưới hero */}
+        <NotOraclesStrip />
 
         {/* Wave 63.4 — removed the IntentChips "HOẶC BẮT ĐẦU TỪ" 6-lens strip.
             Founder (vault 138 review #2): the hero had THREE stacked start
@@ -505,6 +518,11 @@ export default function LandingPage() {
           ]}
           bg="warm-dark-100"
         />
+
+        {/* Methodology — show-your-work: cơ chế 4 lăng kính → AI, đặt trước trust (review #23). */}
+        <Methodology />
+        {/* Breadth — chống undersell (founder feedback): KHÔNG chỉ 4 lăng kính, có cả bộ 12 công cụ. */}
+        <ToolkitSection />
 
         {/* 2. WhyTrust — existing 3-pillar, wrap in warm-dark-100 shell */}
         <div className="bg-muted/40">
@@ -610,6 +628,9 @@ export default function LandingPage() {
             (useState for active question), no Motion runtime — pure CSS
             grid-row trick for reveal. */}
         <MentorSampleInteractive />
+
+        {/* FreeReadingTeaser — lời mời đọc thử miễn phí trước khi tới giá */}
+        <FreeReadingTeaser />
 
         {/* 6. PricingTierV2 — 3 tiers replace 4 (Notion-style toggle + KHUYÊN DÙNG + refund) */}
         <PricingTierV2
@@ -718,6 +739,8 @@ export default function LandingPage() {
             ochre quote marks, NO stars/faces/names. Editorial pulse
             between high-friction pricing and FAQ that closes objections. */}
         <SocialProofQuiet />
+        {/* MissionNote — founder ẩn danh → trust qua sứ mệnh (không testimonial mặt/sao) */}
+        <MissionNote />
 
         {/* 7. FaqAccordion — existing 6 Q, warm-dark-100 */}
         <div className="bg-muted/40">
@@ -728,6 +751,24 @@ export default function LandingPage() {
         <div className="bg-background">
           <NewsletterSignup id="newsletter" />
         </div>
+
+        {/* Final CTA — lời mời hành động đóng trang (review: thiếu CTA cuối trước footer) */}
+        <section aria-label="Bắt đầu" className="py-16 text-center sm:py-20">
+          <div className="mx-auto max-w-marketing-tight px-6 sm:px-8">
+            <h2 className="font-marketing-display text-3xl leading-tight text-foreground sm:text-4xl">
+              Bắt đầu hiểu mình hôm nay.
+            </h2>
+            <a
+              href="/onboarding"
+              className="mt-5 inline-flex items-center justify-center rounded-md bg-[hsl(var(--primary-cta))] px-8 py-3.5 font-medium text-primary-foreground transition-opacity hover:opacity-90"
+            >
+              Lập lá số của tôi →
+            </a>
+            <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+              Miễn phí · không cần thẻ · 1 phút
+            </p>
+          </div>
+        </section>
       </main>
       <SiteFooter />
       <StickyMobileCta trackId="home" label="Lập lá số của tôi" />
