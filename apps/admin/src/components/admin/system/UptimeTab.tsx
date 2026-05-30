@@ -18,10 +18,8 @@
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, cn } from '@hieu-asia/ui';
-import { Heart, AlertTriangle, CheckCircle2, TrendingUp, ShieldAlert } from 'lucide-react';
-import { PageHeader } from '@/components/admin/page-header';
+import { AlertTriangle, CheckCircle2, TrendingUp, ShieldAlert } from 'lucide-react';
 import { KpiCard } from '@/components/admin/kpi-card';
-import { LiveBadge } from '@/components/admin/live-badge';
 import { MockBanner } from '@/components/mock-banner';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
@@ -133,7 +131,7 @@ function uptimeColor(pct: number): string {
   return 'bg-red-500';
 }
 
-export default function HealthPage() {
+export function UptimeTab() {
   // Try real endpoints first; fall back to mock when 404.
   const uptime = useQuery({
     queryKey: ['admin', 'uptime-30d'],
@@ -269,13 +267,6 @@ export default function HealthPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Uptime & sự cố"
-        description="Theo dõi tính khả dụng 30 ngày qua và danh sách sự cố gần nhất."
-        icon={<Heart className="h-5 w-5" />}
-        badge={<LiveBadge isMock={uptime.data?.isMock || incidents.data?.isMock} />}
-      />
-
       <MockBanner source={{ isMock: uptime.data?.isMock ?? false, reason: 'endpoint TBD' }} />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

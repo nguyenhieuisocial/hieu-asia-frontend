@@ -51,6 +51,9 @@ const nextConfig: NextConfig = {
     return [
       { source: '/secrets', destination: '/keystore', permanent: true },
       { source: '/secrets/:path*', destination: '/keystore/:path*', permanent: true },
+      // Wave 65 — /health + /metrics folded into the /system tabbed page.
+      { source: '/health', destination: '/system?tab=uptime', permanent: false },
+      { source: '/metrics', destination: '/system?tab=performance', permanent: false },
     ];
   },
   async headers() {
