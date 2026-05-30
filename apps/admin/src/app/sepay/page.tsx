@@ -654,7 +654,7 @@ function ReconcileView() {
                       <td className="whitespace-nowrap px-4 py-2.5 text-foreground/80">{fmtTs(r.txn.transaction_date)}</td>
                       <td className="px-4 py-2.5"><span className="inline-flex items-center gap-1 rounded bg-gold/15 px-2 py-0.5 font-mono text-xs text-gold"><Tag className="h-3 w-3" />{r.code}</span></td>
                       <td className="px-4 py-2.5">{r.order?.tier ?? '—'}</td>
-                      <td className="px-4 py-2.5 font-mono text-xs">{r.order?.user_id ? `${r.order.user_id.slice(0, 12)}…` : '—'}</td>
+                      <td className="px-4 py-2.5 font-mono text-xs">{r.order?.user_id ? <a href={`/customers/${r.order.user_id}`} className="text-gold hover:underline">{r.order.user_id.slice(0, 12)}…</a> : '—'}</td>
                       <td className="px-4 py-2.5 text-right font-mono text-emerald-500">+{new Intl.NumberFormat('vi-VN').format(parseFloat(r.txn.amount_in || '0'))}</td>
                       <td className="px-4 py-2.5">
                         {r.order?.underpaid ? (
@@ -757,6 +757,14 @@ function DashboardView() {
     },
     refetchInterval: 120_000,
   });
+  const driftQ = useQuery({
+    queryKey: ['admin', 'sepay', 'drift'],
+    queryFn: async (): Promise<{ ok: boolean; checked?: number; drifts?: { user_id: string; expected_plan: string; actual_plan: string | null; tier: string; last_paid_at: string }[] }> => {
+      const r = await fetch('/api/admin-proxy/admin/sepay/drift', { cache: 'no-store' });
+      try { return JSON.parse(await r.text()); } catch { return { ok: false }; }
+    },
+    refetchInterval: 300_000,
+  });
   const d = q.data;
   if (q.isLoading) return <Card><CardContent className="p-8 text-center text-sm text-muted-foreground">Đang tải…</CardContent></Card>;
   if (!d?.ok) return <ErrorBlock message={d?.error ?? 'Không tải được số liệu'} onRetry={() => q.refetch()} />;
@@ -794,6 +802,28 @@ function DashboardView() {
         <KpiCard label="Tỉ lệ chốt" value={`${conv}%`} hint={`${paid.length}/${created.length} đơn`} icon={<Activity className="h-4 w-4" />} />
       </div>
 
+      {driftQ.data?.ok && (driftQ.data.drifts?.length ?? 0) > 0 && (
+        <Card className="border-red-500/40">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-sm text-red-500">
+              <AlertTriangle className="h-4 w-4" />Lệch thanh toán ({driftQ.data.drifts!.length}) — đã trả tiền nhưng gói chưa đúng
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm"><tbody>
+                {driftQ.data.drifts!.map((x) => (
+                  <tr key={x.user_id} className="border-b border-border/40 last:border-0">
+                    <td className="px-4 py-2"><a href={`/customers/${x.user_id}`} className="font-mono text-xs text-gold hover:underline">{x.user_id.slice(0, 12)}…</a></td>
+                    <td className="px-4 py-2 text-xs">cần <span className="text-emerald-500">{x.expected_plan}</span> · đang <span className="text-red-500">{x.actual_plan ?? 'free'}</span></td>
+                    <td className="px-4 py-2 text-right text-xs text-muted-foreground">{fmtTs(x.last_paid_at)}</td>
+                  </tr>
+                ))}
+              </tbody></table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
       {paid.length === 0 && (
         <p className="rounded bg-amber-500/10 px-4 py-3 text-sm text-amber-500">
           Chưa có đơn đã thanh toán nào — biểu đồ sẽ hiện khi có giao dịch thật.
