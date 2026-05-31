@@ -22,17 +22,15 @@ import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 // testimonial "khoảng lặng" section (4 anonymous decision excerpts in
 // founder voice, no stars/faces).
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
-// Wave 64.x — homepage hero swapped HeroV4 → MultiHero ("4 lăng kính → AI"
-// editorial) + new editorial sections (NotOraclesStrip / Methodology /
-// ToolkitSection / FreeReadingTeaser / MissionNote). Components currently live
-// under app/muc-lab/ (shared with the /muc-lab/home staging preview) — relocate
-// to components/ in a follow-up. HeroV4 stays available for other surfaces.
-import { MultiHero } from './muc-lab/MultiHero';
-import { NotOraclesStrip } from './muc-lab/home/sections/NotOraclesStrip';
-import { Methodology } from './muc-lab/home/sections/Methodology';
-import { ToolkitSection } from './muc-lab/home/sections/ToolkitSection';
-import { FreeReadingTeaser } from './muc-lab/home/sections/FreeReadingTeaser';
-import { MissionNote } from './muc-lab/home/sections/MissionNote';
+// Homepage hero "4 lăng kính → AI" (MultiHero) + editorial sections. Moved out
+// of the retired /muc-lab demo into components/home-hero/. HeroV4 stays
+// available for other surfaces.
+import { MultiHero } from '@/components/home-hero/MultiHero';
+import { NotOraclesStrip } from '@/components/home-hero/NotOraclesStrip';
+import { Methodology } from '@/components/home-hero/Methodology';
+import { ToolkitSection } from '@/components/home-hero/ToolkitSection';
+import { FreeReadingTeaser } from '@/components/home-hero/FreeReadingTeaser';
+import { MissionNote } from '@/components/home-hero/MissionNote';
 import { EditorialList } from '@/components/marketing/EditorialList';
 // Wave 62.09 — custom discipline icons (vault 138 "đừng dùng icon set").
 import { LaSoIcon } from '@/components/marketing/icons/LaSoIcon';
