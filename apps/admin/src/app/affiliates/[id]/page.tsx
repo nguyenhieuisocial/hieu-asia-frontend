@@ -193,7 +193,7 @@ export default function AdminAffiliateDetailPage({
   const s = data.stats;
 
   return (
-    <main className="min-h-screen bg-card p-6 text-foreground">
+    <main className="min-h-dvh bg-card p-6 text-foreground">
       <div className="mx-auto max-w-5xl space-y-6">
         <header className="flex items-center justify-between">
           <div>

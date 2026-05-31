@@ -67,6 +67,16 @@ function isValidTab(v: string | null): v is TabId {
 }
 
 export default function AdminAffiliatesPage() {
+  // useSearchParams() requires a Suspense boundary (App Router CSR bailout).
+  // Local boundary keeps sidebar/topbar mounted while ?tab= resolves.
+  return (
+    <React.Suspense fallback={<div className="h-72 animate-pulse rounded bg-muted/30" />}>
+      <AdminAffiliatesPageInner />
+    </React.Suspense>
+  );
+}
+
+function AdminAffiliatesPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();

@@ -90,6 +90,16 @@ const ICON_TRASH = <Trash2 className="h-3.5 w-3.5" aria-hidden />;
 const ICON_MORE = <MoreHorizontal className="h-4 w-4" aria-hidden />;
 
 export default function CustomerDetailPage() {
+  // useSearchParams() requires a Suspense boundary (App Router CSR bailout).
+  // Local boundary keeps sidebar/topbar mounted while ?tab= resolves.
+  return (
+    <React.Suspense fallback={<div className="h-72 animate-pulse rounded bg-muted/30" />}>
+      <CustomerDetailPageInner />
+    </React.Suspense>
+  );
+}
+
+function CustomerDetailPageInner() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const searchParams = useSearchParams();

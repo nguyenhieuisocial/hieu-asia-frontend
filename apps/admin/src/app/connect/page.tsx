@@ -139,6 +139,16 @@ function daysSince(s: string | null | undefined): number | null {
 }
 
 export default function ConnectPage() {
+  // useSearchParams() requires a Suspense boundary (App Router CSR bailout).
+  // Local boundary keeps sidebar/topbar mounted while ?tab= resolves.
+  return (
+    <React.Suspense fallback={<div className="h-72 animate-pulse rounded bg-muted/30" />}>
+      <ConnectPageInner />
+    </React.Suspense>
+  );
+}
+
+function ConnectPageInner() {
   const router = useRouter();
   const search = useSearchParams();
   const initialTab = search?.get('tab') ?? TAB_PROVIDERS;

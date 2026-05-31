@@ -548,7 +548,9 @@ export function EvalTab() {
     data?.error ??
     'Không tải được dữ liệu eval. Worker endpoint có thể chưa deploy.';
 
-  const runs = data?.runs ?? [];
+  // useMemo so the reference is stable when data.runs is unchanged — `?? []`
+  // would otherwise mint a new array each render and defeat the sort memo below.
+  const runs = React.useMemo(() => data?.runs ?? [], [data?.runs]);
   const failures = data?.latest_failures ?? [];
 
   // Latest = most recent by created_at. Worker may return either ordering;

@@ -7,7 +7,7 @@
  *   - Tổng quan (overview):    dashboard, 3rd-party overview, service status, uptime
  *   - Phiên & Khách (sessions): sessions, customers, feedback, tasks/errors
  *   - Doanh thu (revenue):     transactions, payments, billing, coupons, affiliate
- *   - Analytics:               analytics, metrics, web-vitals, cohorts, posthog, experiments
+ *   - Analytics:               analytics, posthog, experiments
  *   - AI & Chi phí (ai/cost):  cost, llm-spend, ai-quality, eval, vendors, prompts, rag
  *   - Nội dung (content):      content
  *   - Hệ thống (system):       keystore, secrets, connect, feature-flags, users, migrations, audit, settings
@@ -38,7 +38,6 @@ import {
   Settings,
   Sparkles,
   Activity,
-  Gauge,
   Menu,
   X,
   ChevronDown,
@@ -50,7 +49,6 @@ import {
   MessageSquare,
   ServerCog,
   FileText,
-  Wallet,
   Lock,
   Plug,
 } from 'lucide-react';
@@ -101,8 +99,6 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'Analytics',
     items: [
       { href: '/analytics', label: 'Analytics', Icon: BarChart3 },
-      { href: '/web-vitals', label: 'Web Vitals', Icon: Gauge },
-      { href: '/cohorts', label: 'Cohorts & Retention', Icon: BarChart3 },
       { href: '/posthog', label: 'PostHog', Icon: Activity },
       { href: '/experiments', label: 'Experiments', Icon: FlaskConical },
     ],
