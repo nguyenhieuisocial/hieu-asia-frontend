@@ -113,7 +113,6 @@ const NAV_GROUPS: NavGroup[] = [
     id: 'ai',
     label: 'AI & Chi phí',
     items: [
-      { href: '/cost', label: 'Chi phí AI', Icon: DollarSign },
       { href: '/llm-spend', label: 'Chi phí LLM', Icon: DollarSign },
       { href: '/ai-quality', label: 'Chất lượng AI', Icon: Shield },
       { href: '/vendors', label: 'Vendors', Icon: Cpu },

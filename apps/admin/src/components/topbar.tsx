@@ -18,7 +18,6 @@ const SEG_LABEL: Record<string, string> = {
   '/affiliates': 'Affiliate',
   '/analytics': 'Analytics',
   '/posthog': 'PostHog',
-  '/cost': 'Chi phí AI',
   '/llm-spend': 'Chi phí LLM',
   '/rag': 'RAG',
   '/prompts': 'Prompt Editor',
