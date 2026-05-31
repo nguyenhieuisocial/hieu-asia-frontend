@@ -31,6 +31,7 @@ import { DailyCostChart } from '@/components/llm-spend/DailyCostChart';
 import { VendorBarChart } from '@/components/llm-spend/VendorBarChart';
 import { RecentTracesTable } from '@/components/llm-spend/RecentTracesTable';
 import { BudgetsManager } from '@/components/llm-spend/BudgetsManager';
+import { CostPanel } from '@/components/llm-spend/CostPanel';
 import { PageHeader } from '@/components/admin/page-header';
 import { LiveBadge } from '@/components/admin/live-badge';
 import { DollarSign } from 'lucide-react';
@@ -277,6 +278,10 @@ export default function LlmSpendPage() {
               <BudgetsManager rows={budgets.data ?? []} isLoading={budgets.isLoading} />
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="cost">
+          <CostPanel />
         </TabsContent>
       </Tabs>
     </div>

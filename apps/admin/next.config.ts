@@ -70,6 +70,8 @@ const nextConfig: NextConfig = {
       { source: '/transactions', destination: '/payments?tab=transactions', permanent: false },
       // Wave 66 — /billing folded into /payments hub ("Thanh toán & Doanh thu").
       { source: '/billing', destination: '/payments?tab=subscriptions', permanent: false },
+      // Wave 66 — /cost gộp vào /llm-spend tab "Theo model (Worker)".
+      { source: '/cost', destination: '/llm-spend?tab=cost', permanent: false },
     ];
   },
   async headers() {

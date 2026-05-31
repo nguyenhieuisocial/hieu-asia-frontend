@@ -15,10 +15,8 @@ import { DollarSign, Activity, TrendingUp, Calendar, Download } from 'lucide-rea
 import { CostChart } from '@/components/cost-chart';
 import { getCostByDay, getTopSpenders } from '@/lib/admin-api';
 import { MockBanner } from '@/components/mock-banner';
-import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
-import { LiveBadge } from '@/components/admin/live-badge';
 
 function fmtUsd(v: number) {
   return `$${v.toFixed(2)}`;
@@ -53,7 +51,7 @@ function downloadCsv(filename: string, rows: Array<Record<string, string | numbe
   URL.revokeObjectURL(url);
 }
 
-export default function AdminCostPage() {
+export function CostPanel() {
   const [days, setDays] = React.useState<Range>(30);
 
   const cost = useQuery({
@@ -82,47 +80,40 @@ export default function AdminCostPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Chi phí AI"
-        description={
-          <>
-            Tổng hợp từ <code className="font-mono text-foreground/85">llm_trace_daily</code> — gộp
-            theo ngày + theo model.
-          </>
-        }
-        icon={<DollarSign className="h-5 w-5" />}
-        badge={hasData ? <LiveBadge /> : null}
-        actions={
-          <>
-            <div className="inline-flex rounded-md border border-gold/20 bg-card/60 p-0.5">
-              {RANGE_OPTIONS.map((r) => (
-                <button
-                  key={r.value}
-                  type="button"
-                  onClick={() => setDays(r.value)}
-                  className={cn(
-                    'rounded px-3 py-1 text-xs transition-colors',
-                    days === r.value
-                      ? 'bg-gold/20 text-gold'
-                      : 'text-muted-foreground hover:bg-gold/5',
-                  )}
-                >
-                  {r.label}
-                </button>
-              ))}
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={exportCsv}
-              disabled={data.length === 0}
-            >
-              <Download className="mr-1.5 h-3.5 w-3.5" />
-              Xuất CSV
-            </Button>
-          </>
-        }
-      />
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-muted-foreground">
+          Tổng hợp từ <code className="font-mono text-foreground/85">llm_trace_daily</code> — gộp
+          theo ngày + theo model.
+        </p>
+        <div className="flex shrink-0 items-center gap-2">
+          <div className="inline-flex rounded-md border border-gold/20 bg-card/60 p-0.5">
+            {RANGE_OPTIONS.map((r) => (
+              <button
+                key={r.value}
+                type="button"
+                onClick={() => setDays(r.value)}
+                className={cn(
+                  'rounded px-3 py-1 text-xs transition-colors',
+                  days === r.value
+                    ? 'bg-gold/20 text-gold'
+                    : 'text-muted-foreground hover:bg-gold/5',
+                )}
+              >
+                {r.label}
+              </button>
+            ))}
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={exportCsv}
+            disabled={data.length === 0}
+          >
+            <Download className="mr-1.5 h-3.5 w-3.5" />
+            Xuất CSV
+          </Button>
+        </div>
+      </div>
 
       <MockBanner source={cost.data?._source ?? top.data?._source} />
 
