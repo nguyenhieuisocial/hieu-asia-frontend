@@ -74,18 +74,20 @@ export function MultiHero(): React.JSX.Element {
           <p className="mh-deck">Tử Vi, Bát Tự, Thần Số, MBTI — bốn lăng kính cho bức tranh sâu nhất, cùng cả bộ công cụ cổ học &amp; hiện đại. AI hợp nhất để bạn tự quyết.</p>
         </div>
 
-        <div className="mh-vis">
-          <FourLens active={active} onHover={setHover} onPick={(i) => setHover((h) => (h === i ? null : i))} />
-          <p className="mh-soi"><span key={`${active}-${hover != null}-${sample}`} className="mh-soi-in">{soi}</span></p>
-          <p className="mh-hint">{hover != null ? 'chạm lại để tiếp tục' : 'chạm một lăng kính để xem từng hệ'}</p>
-        </div>
-
+        {/* mobile-first: CTA TRƯỚC la bàn → user bấm được ngay màn 1 (above-fold).
+            Desktop grid-template-areas ("copy vis" / "act vis") đặt lại vị trí nên không đổi. */}
         <div className="mh-act">
           <div className="mh-cta-row">
             <a className="mh-cta mh-cta-primary" href="/onboarding?intent=decision"><span className="mh-cta-num">①</span>Tôi đang phân vân một quyết định</a>
             <a className="mh-cta mh-cta-ghost" href="/tu-vi-2026"><span className="mh-cta-num">②</span>Xem nhanh<span className="mh-cta-sub">· Tử Vi 2026 · Hợp tuổi</span></a>
           </div>
           <p className="mh-micro">MIỄN PHÍ · KHÔNG CẦN THẺ · 1 PHÚT</p>
+        </div>
+
+        <div className="mh-vis">
+          <FourLens active={active} onHover={setHover} onPick={(i) => setHover((h) => (h === i ? null : i))} />
+          <p className="mh-soi"><span key={`${active}-${hover != null}-${sample}`} className="mh-soi-in">{soi}</span></p>
+          <p className="mh-hint">{hover != null ? 'chạm lại để tiếp tục' : 'chạm một lăng kính để xem từng hệ'}</p>
         </div>
       </div>
 
