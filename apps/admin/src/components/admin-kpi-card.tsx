@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * AdminKpiCard — single-pane operational tile for `/overview`.
+ * AdminKpiCard — single-pane operational tile for the `/` dashboard.
  *
  * Wave 60.95.x — surfaces a single 3rd-party metric (Vercel deploys, Sentry
  * errors, Resend volume, …) in a compact tile that links back to the original
