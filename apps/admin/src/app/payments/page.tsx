@@ -67,6 +67,16 @@ function isValidTab(v: string | null): v is TabId {
 }
 
 export default function AdminPaymentsPage() {
+  // useSearchParams() requires a Suspense boundary (App Router CSR bailout).
+  // Local boundary keeps sidebar/topbar mounted while ?tab= resolves.
+  return (
+    <React.Suspense fallback={<div className="h-72 animate-pulse rounded bg-muted/30" />}>
+      <AdminPaymentsPageInner />
+    </React.Suspense>
+  );
+}
+
+function AdminPaymentsPageInner() {
   // KPI tracking surfaces — kept in the page so the strip updates as
   // children filter / mutate. Children call back with current rows; we
   // derive aggregates here.

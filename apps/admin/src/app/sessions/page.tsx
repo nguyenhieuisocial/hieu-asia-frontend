@@ -169,6 +169,16 @@ async function bulkDelete(sessionIds: string[]) {
 }
 
 export default function AdminSessionsPage() {
+  // useSearchParams() requires a Suspense boundary (App Router CSR bailout).
+  // Local boundary keeps sidebar/topbar mounted while ?tab= resolves.
+  return (
+    <React.Suspense fallback={<div className="h-72 animate-pulse rounded bg-muted/30" />}>
+      <AdminSessionsPageInner />
+    </React.Suspense>
+  );
+}
+
+function AdminSessionsPageInner() {
   const qc = useQueryClient();
   const router = useRouter();
   const searchParams = useSearchParams();

@@ -47,6 +47,16 @@ const ICON_KEY = <KeyRound className="h-3.5 w-3.5" aria-hidden />;
 const ICON_CLOCK = <Clock className="h-3.5 w-3.5" aria-hidden />;
 
 export default function AdminSettingsPage() {
+  // useSearchParams() requires a Suspense boundary (App Router CSR bailout).
+  // Local boundary keeps sidebar/topbar mounted while ?tab= resolves.
+  return (
+    <React.Suspense fallback={<div className="h-72 animate-pulse rounded bg-muted/30" />}>
+      <AdminSettingsPageInner />
+    </React.Suspense>
+  );
+}
+
+function AdminSettingsPageInner() {
   const router = useRouter();
   const search = useSearchParams();
 

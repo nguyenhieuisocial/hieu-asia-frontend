@@ -5,6 +5,15 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
 
 export default function AdminLoginPage() {
+  // useSearchParams() requires a Suspense boundary (App Router CSR bailout).
+  return (
+    <React.Suspense fallback={null}>
+      <AdminLoginPageInner />
+    </React.Suspense>
+  );
+}
+
+function AdminLoginPageInner() {
   const router = useRouter();
   const search = useSearchParams();
   const next = search.get('next') ?? '/';
