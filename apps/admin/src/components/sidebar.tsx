@@ -6,7 +6,7 @@
  * Groups follow the operating-model split (Wave 63.3 IA regroup):
  *   - Tổng quan (overview):    dashboard, 3rd-party overview, service status, uptime
  *   - Phiên & Khách (sessions): sessions, customers, feedback, tasks/errors
- *   - Doanh thu (revenue):     transactions, payments, billing, coupons, affiliate, sticky-cta
+ *   - Doanh thu (revenue):     transactions, payments, billing, coupons, affiliate
  *   - Analytics:               analytics, metrics, web-vitals, cohorts, posthog, experiments
  *   - AI & Chi phí (ai/cost):  cost, llm-spend, ai-quality, eval, vendors, prompts, rag
  *   - Nội dung (content):      content
@@ -39,7 +39,6 @@ import {
   Sparkles,
   Activity,
   Gauge,
-  MousePointerClick,
   Menu,
   X,
   ChevronDown,
@@ -95,7 +94,6 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/payments', label: 'Thanh toán & Doanh thu', Icon: CreditCard },
       { href: '/coupons', label: 'Coupons', Icon: Ticket },
       { href: '/affiliates', label: 'Affiliate', Icon: HandCoins },
-      { href: '/sticky-cta', label: 'Sticky CTA', Icon: MousePointerClick },
     ],
   },
   {
@@ -232,7 +230,7 @@ export function Sidebar() {
 
       <aside
         className={cn(
-          'fixed left-0 top-0 z-50 flex h-screen w-64 flex-col border-r border-gold/15 bg-card/95 px-3 py-4 backdrop-blur-md transition-transform',
+          'fixed left-0 top-0 z-50 flex h-dvh w-64 flex-col border-r border-gold/15 bg-card/95 px-3 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur-md transition-transform',
           'lg:translate-x-0',
           openMobile ? 'translate-x-0' : '-translate-x-full',
         )}
