@@ -25,24 +25,41 @@ import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import {
+  AlertTriangle,
   CreditCard,
   DollarSign,
+  LineChart,
   Receipt,
   Ticket,
   TrendingUp,
   Undo2,
+  Users,
 } from 'lucide-react';
-import { listCoupons, listTransactions } from '@/lib/admin-api';
-import { MockBanner } from '@/components/mock-banner';
+import {
+  getMrrByMonth,
+  listCoupons,
+  listFailedPayments,
+  listSubscriptions,
+  listTransactions,
+} from '@/lib/admin-api';
+import { MockBanner, SkeletonBlock } from '@/components/mock-banner';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { LiveBadge } from '@/components/admin/live-badge';
 import { ProductTabs, type ProductTab } from '@/components/admin/product-tabs';
 import { TransactionsTab } from '@/components/admin/payments/TransactionsTab';
 import { CouponsTab } from '@/components/admin/payments/CouponsTab';
-import type { AdminCoupon, AdminTransaction } from '@/lib/mock-data';
+import { SubscriptionsTab } from '@/components/admin/billing/SubscriptionsTab';
+import { FailedPaymentsTab } from '@/components/admin/billing/FailedPaymentsTab';
+import { RevenueAnalyticsTab } from '@/components/admin/billing/RevenueAnalyticsTab';
+import type {
+  AdminCoupon,
+  AdminFailedPayment,
+  AdminSubscription,
+  AdminTransaction,
+} from '@/lib/mock-data';
 
-const VALID_TABS = ['transactions', 'coupons'] as const;
+const VALID_TABS = ['transactions', 'subscriptions', 'failed', 'revenue', 'coupons'] as const;
 type TabId = (typeof VALID_TABS)[number];
 
 function isValidTab(v: string | null): v is TabId {
@@ -56,6 +73,9 @@ export default function AdminPaymentsPage() {
   const [txRows, setTxRows] = React.useState<AdminTransaction[]>([]);
   const [txTotal, setTxTotal] = React.useState(0);
   const [couponRows, setCouponRows] = React.useState<AdminCoupon[]>([]);
+  const [subRows, setSubRows] = React.useState<AdminSubscription[]>([]);
+  const [subTotal, setSubTotal] = React.useState(0);
+  const [failedRows, setFailedRows] = React.useState<AdminFailedPayment[]>([]);
 
   // Mock banner needs to know source even when its tab is not active.
   // Cheap to pre-fetch — React Query dedupes inside the tabs.
@@ -64,6 +84,18 @@ export default function AdminPaymentsPage() {
     queryFn: () => listTransactions({ page: 1, page_size: 15 }),
   });
   const couponProbe = useQuery({ queryKey: ['admin', 'coupons'], queryFn: listCoupons });
+  const subProbe = useQuery({
+    queryKey: ['admin', 'subscriptions', 1, 'all', 'all'],
+    queryFn: () => listSubscriptions({ page: 1, page_size: 15 }),
+  });
+  const failedProbe = useQuery({
+    queryKey: ['admin', 'failed-payments'],
+    queryFn: listFailedPayments,
+  });
+  const mrrProbe = useQuery({
+    queryKey: ['admin', 'mrr-by-month'],
+    queryFn: getMrrByMonth,
+  });
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -92,13 +124,33 @@ export default function AdminPaymentsPage() {
         ),
       },
       {
+        id: 'subscriptions',
+        label: 'Subscription',
+        icon: <Users size={16} />,
+        content: <SubscriptionsTab onRowsChange={setSubRows} onTotalChange={setSubTotal} />,
+        badge: subTotal > 0 ? String(subTotal) : undefined,
+      },
+      {
+        id: 'failed',
+        label: 'Thanh toán fail',
+        icon: <AlertTriangle size={16} />,
+        content: <FailedPaymentsTab onRowsChange={setFailedRows} />,
+        badge: failedRows.length > 0 ? String(failedRows.length) : undefined,
+      },
+      {
+        id: 'revenue',
+        label: 'Doanh thu',
+        icon: <LineChart size={16} />,
+        content: <RevenueAnalyticsTab />,
+      },
+      {
         id: 'coupons',
         label: 'Coupon',
         icon: <Ticket size={16} />,
         content: <CouponsTab onCouponsChange={setCouponRows} />,
       },
     ],
-    [],
+    [subTotal, failedRows.length],
   );
 
   // KPI aggregates — derived from current filter state on the active tab.
@@ -108,6 +160,11 @@ export default function AdminPaymentsPage() {
   const rowsForKpi = txRows.length > 0 ? txRows : fallbackRows;
   const fallbackCoupons = Array.isArray(couponProbe.data) ? couponProbe.data : [];
   const couponsForKpi = couponRows.length > 0 ? couponRows : fallbackCoupons;
+  const fallbackSubs = Array.isArray(subProbe.data?.rows) ? subProbe.data.rows : [];
+  const subsForKpi = subRows.length > 0 ? subRows : fallbackSubs;
+  const fallbackFailed = Array.isArray(failedProbe.data) ? failedProbe.data : [];
+  const failedForKpi = failedRows.length > 0 ? failedRows : fallbackFailed;
+  const mrrSeries = Array.isArray(mrrProbe.data) ? mrrProbe.data : [];
 
   const totalRevenue = rowsForKpi
     .filter((t) => t.status === 'succeeded')
@@ -117,38 +174,67 @@ export default function AdminPaymentsPage() {
   const activeCoupons = couponsForKpi.filter((c) => c.active).length;
   const totalTx = txTotal || txProbe.data?.total || 0;
 
-  const liveBadge = rowsForKpi.length > 0 ? <LiveBadge /> : null;
+  const activeSubs = subsForKpi.filter((s) => s.status === 'active' || s.status === 'past_due');
+  const latestMonthMrr = mrrSeries.at(-1)?.mrr_usd ?? 0;
+  const previousMonthMrr = mrrSeries.at(-2)?.mrr_usd ?? 0;
+  const mrrGrowthPct =
+    previousMonthMrr > 0
+      ? Math.round(((latestMonthMrr - previousMonthMrr) / previousMonthMrr) * 1000) / 10
+      : null;
+  const sparkline = mrrSeries.map((m) => m.mrr_usd);
+
+  const liveBadge = rowsForKpi.length > 0 || subsForKpi.length > 0 ? <LiveBadge /> : null;
   const headerIcon = <CreditCard className="h-5 w-5" />;
   const dollarIcon = <DollarSign className="h-4 w-4" />;
   const trendingIcon = <TrendingUp className="h-4 w-4" />;
   const undoIcon = <Undo2 className="h-4 w-4" />;
   const ticketIcon = <Ticket className="h-4 w-4" />;
+  const usersIcon = <Users className="h-4 w-4" />;
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Thanh toán"
-        description="Giao dịch SePay + quản lý coupon. Mỗi tab giữ filter riêng qua `?tab=…`."
+        title="Thanh toán & Doanh thu"
+        description="Giao dịch SePay/Stripe, subscription, doanh thu (MRR/ARR), thanh toán fail và coupon — gộp trong một trang. Mỗi tab giữ filter riêng qua `?tab=…`."
         icon={headerIcon}
         badge={liveBadge}
       />
 
-      <MockBanner source={txProbe.data?._source ?? couponProbe.data?._source} />
+      <MockBanner
+        source={
+          txProbe.data?._source ??
+          subProbe.data?._source ??
+          (failedProbe.data as { _source?: { isMock: boolean; reason?: string } } | undefined)?._source ??
+          couponProbe.data?._source
+        }
+      />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <KpiCard
+          label="MRR (tháng này)"
+          value={mrrProbe.isLoading ? <SkeletonBlock /> : `$${latestMonthMrr.toLocaleString('en-US')}`}
+          icon={dollarIcon}
+          accent="gold"
+          sparkline={sparkline.length >= 2 ? sparkline : undefined}
+          hint={
+            mrrGrowthPct !== null
+              ? `${mrrGrowthPct >= 0 ? '+' : ''}${mrrGrowthPct}% vs tháng trước`
+              : 'Monthly Recurring Revenue'
+          }
+        />
         <KpiCard
           label="Doanh thu (trang)"
           value={`$${totalRevenue.toFixed(2)}`}
-          icon={dollarIcon}
-          accent="gold"
-          hint={`${succeededCount} succeeded`}
-        />
-        <KpiCard
-          label="Tổng giao dịch"
-          value={totalTx}
           icon={trendingIcon}
           accent="jade"
-          hint="all-time"
+          hint={`${succeededCount} succeeded · ${totalTx} giao dịch`}
+        />
+        <KpiCard
+          label="Active subs"
+          value={activeSubs.length}
+          icon={usersIcon}
+          accent="gold"
+          hint={`${subTotal || subsForKpi.length} tổng`}
         />
         <KpiCard
           label="Refunded (trang)"
@@ -162,7 +248,7 @@ export default function AdminPaymentsPage() {
           value={activeCoupons}
           icon={ticketIcon}
           accent="purple"
-          hint={`${couponsForKpi.length} tổng`}
+          hint={`${couponsForKpi.length} tổng · ${failedForKpi.length} fail`}
         />
       </div>
 
