@@ -72,6 +72,11 @@ const nextConfig: NextConfig = {
       { source: '/billing', destination: '/payments?tab=subscriptions', permanent: false },
       // Wave 66 — /cost gộp vào /llm-spend tab "Theo model (Worker)".
       { source: '/cost', destination: '/llm-spend?tab=cost', permanent: false },
+      // Wave 66 — /cohorts, /web-vitals, /sticky-cta gộp vào PostHog hub (#66 —
+      // sót redirect khi merge → 3 route 404, middleware bounce về /login).
+      { source: '/cohorts', destination: '/posthog?tab=cohorts', permanent: false },
+      { source: '/web-vitals', destination: '/posthog?tab=web-vitals', permanent: false },
+      { source: '/sticky-cta', destination: '/posthog?tab=sticky-cta', permanent: false },
     ];
   },
   async headers() {
