@@ -6,7 +6,7 @@
 
 > Nguồn: Phương pháp luận hieu.asia · _Phương pháp luận hieu.asia_
 
-Tử Vi tọa Phu Thê đặt năng lượng lãnh đạo vào không gian thân mật — và đây là nơi mà phong cách tự nhiên của họ gặp thách thức lớn nhất, vì tình yêu không vận hành theo thứ bậc. Xu hướng của người này là tìm bạn đời có chiều sâu — năng lực, địa vị, hoặc nội tâm đủ mạnh để họ cảm thấy đáng kính trọng. Người không có chiều sâu, theo nghĩa thiếu cá tính hoặc thiếu quan điểm riêng, thường sớm khiến họ mất hứng thú dù mọi thứ khác ổn thỏa. Thách thức cốt lõi: trong quan hệ đôi, Tử Vi dễ vô tình biến không gian bình đẳng thành không gian có thứ bậc — họ tự nhiên là người đề xuất, quyết định, định hướng, và bạn đời dần chuyển sang vai cận thần hơn là đối tác thực sự. Điều này không xuất phát từ ý xấu mà từ phong cách vận hành bình thường của họ. Khi bạn đời thiếu đủ mạnh để phản bác, quan hệ mất cân bằng ngầm theo thời gian và thường kết thúc bằng cảm giác cô đơn của cả hai phía. Cách ứng xử thực tế: chủ động tạo những không gian cụ thể mà bạn đời có quyền quyết định và được lắng nghe thật sự — điều này không làm mất đi phong cách lãnh đạo của bạn mà là nền tảng để quan hệ có chiều sâu thật.
+Tử Vi tọa Phu Thê đặt năng lượng lãnh đạo vào không gian thân mật — và đây là nơi mà phong cách tự nhiên của họ gặp thách thức lớn nhất, vì tình yêu không vận hành theo thứ bậc. Xu hướng của người này là tìm bạn đời có chiều sâu — năng lực, địa vị, hoặc nội tâm đủ mạnh để họ cảm thấy đáng kính trọng. Người không có chiều sâu, theo nghĩa thiếu cá tính hoặc thiếu quan điểm riêng, thường sớm khiến họ mất hứng thú dù mọi thứ khác ổn thỏa. Thách thức cốt lõi: trong quan hệ đôi, Tử Vi dễ vô tình biến không gian bình đẳng thành không gian có thứ bậc — họ tự nhiên là người đề xuất, quyết định, định hướng, và bạn đời dần chuyển sang vai cận thần hơn là đối tác thực sự. Điều này không xuất phát từ ý xấu mà từ phong cách vận hành bình thường của họ. Khi bạn đời thiếu đủ mạnh để phản bác, quan hệ có xu hướng mất cân bằng ngầm theo thời gian — và nếu không được nhận ra sớm, cả hai dễ rơi vào cảm giác cô đơn ngay trong một mối quan hệ. Cách ứng xử thực tế: chủ động tạo những không gian cụ thể mà bạn đời có quyền quyết định và được lắng nghe thật sự — điều này không làm mất đi phong cách lãnh đạo của bạn mà là nền tảng để quan hệ có chiều sâu thật.
 
 ## Thiên Cơ tại cung Phu Thê
 
@@ -56,7 +56,9 @@ Thiên Phủ tọa Phu Thê gợi quan hệ hôn nhân thiên về bền vững,
 
 ## Thái Âm tại cung Phu Thê
 
-> Nguồn: Thái Vi Phú · _Đối chiếu cổ thư_
+> Nguồn: Phương pháp luận hieu.asia · _Phương pháp luận hieu.asia_
+
+> Nguồn: Phương pháp luận hieu.asia · _Phương pháp luận hieu.asia_
 
 Thái Âm ở cung Phu Thê được nhắc đến trong các phú cổ với ý nghĩa về sự dịu dàng và chiều sâu trong mối quan hệ thân mật. Người có cấu hình này thường tìm kiếm bạn đời theo chiều sâu cảm xúc và sự an toàn hơn là sức hút bề ngoài hay địa vị xã hội. Họ biểu đạt tình cảm qua sự chăm sóc âm thầm, qua sự hiện diện nhất quán, qua những điều nhỏ bé nhưng đều đặn.
 

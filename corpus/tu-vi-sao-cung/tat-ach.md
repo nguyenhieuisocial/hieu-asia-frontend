@@ -92,7 +92,7 @@ Thiên Lương tại Tật Ách gợi ý một sức đề kháng nền tảng k
 
 Nét đặc thù khác của Thiên Lương Tật Ách: người này có xu hướng chịu đựng thầm lặng trước khi thừa nhận mình không ổn — đặc điểm "che chở" của sao quay vào trong, trở thành sự khắt khe với bản thân. Họ thường trì hoãn đi khám hoặc nhờ trợ giúp vì không muốn làm phiền người khác, điều này khiến vấn đề sức khoẻ dễ bị phát hiện muộn.
 
-Khi Thiên Lương hội thêm Tả Phụ hay Thiên Đức, khả năng phục hồi sau bệnh tật thường tốt hơn — và người này dễ tìm được môi trường chăm sóc sức khoẻ phù hợp. Hội Hóa Kỵ hay Kình Đà gợi ý cần chú ý thêm đến sức khoẻ gan, tỳ vị và cột sống.
+Khi Thiên Lương hội thêm Tả Phụ hay Thiên Đức, khả năng phục hồi sau bệnh tật thường tốt hơn — và người này dễ tìm được môi trường chăm sóc sức khoẻ phù hợp. Khi hội thêm hung tinh như Hóa Kỵ hay Kình Đà, đây là tín hiệu để chú ý toàn diện đến sức khoẻ — nên kiểm tra định kỳ thường xuyên hơn, không tự suy luận vùng cụ thể vì cần đọc kết hợp toàn bàn.
 
 Cách ứng xử thực tế: đặt lịch kiểm tra sức khoẻ định kỳ như một cam kết không thể huỷ — thực hành "chăm sóc bản thân" không kém gì chăm sóc người khác.
 
