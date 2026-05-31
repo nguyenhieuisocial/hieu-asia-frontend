@@ -33,8 +33,7 @@ const reduceMotion = () =>
   typeof window !== 'undefined' && typeof window.matchMedia === 'function' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-export function MultiHero({ concept = false }: { concept?: boolean }): React.JSX.Element {
-  const [run, setRun] = React.useState(0);
+export function MultiHero(): React.JSX.Element {
   const [autoActive, setAutoActive] = React.useState(4); // 0..3 soi 1 hệ; 4 = hội tụ
   const [hover, setHover] = React.useState<number | null>(null);
   const [wordIdx, setWordIdx] = React.useState(0);
@@ -48,7 +47,7 @@ export function MultiHero({ concept = false }: { concept?: boolean }): React.JSX
     const w = window.setInterval(() => setWordIdx((x) => (x + 1) % WORDS.length), 2800);
     const s = window.setInterval(() => setSample((x) => (x + 1) % SAMPLES.length), 3600);
     return () => { window.clearInterval(a); window.clearInterval(w); window.clearInterval(s); };
-  }, [run]);
+  }, []);
 
   const active = hover != null ? hover : autoActive;
   const sys = active >= 0 && active < 4 ? SYSTEMS[active] : null;
@@ -65,7 +64,7 @@ export function MultiHero({ concept = false }: { concept?: boolean }): React.JSX
       <style>{CSS}</style>
       <div className="mh-grain" aria-hidden="true" />
 
-      <div className="mh-wrap" key={run}>
+      <div className="mh-wrap">
         <div className="mh-copy">
           <p className="mh-eyebrow"><span className="mh-livedot" aria-hidden="true" />BỐN LĂNG KÍNH · AI HỢP NHẤT THÀNH MỘT</p>
           <h1 className="mh-h1">
@@ -90,12 +89,6 @@ export function MultiHero({ concept = false }: { concept?: boolean }): React.JSX
         </div>
       </div>
 
-      {concept && (
-        <div className="mh-bar">
-          <button className="mh-replay" onClick={() => { setHover(null); setAutoActive(4); setRun((r) => r + 1); }}>↻ Xem lại</button>
-          <span className="mh-note">Concept "Bốn lăng kính" · AI hợp nhất Tử Vi + Bát Tự + Thần Số + MBTI → một bức tranh · mobile-first · SVG/CSS thuần · /muc-lab (noindex)</span>
-        </div>
-      )}
     </section>
   );
 }
@@ -170,14 +163,7 @@ const CSS = `
   .mh-micro { text-align: left; }
 }
 
-.mh-bar { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 8px 22px 40px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
-@media (min-width: 880px) { .mh-bar { padding: 8px 56px 48px; } }
-.mh-replay { font-family: 'JetBrains Mono', monospace; font-size: 13px; border: 1px solid ${OCHRE}; color: ${OCHRE}; background: transparent; padding: 9px 16px; border-radius: 4px; cursor: pointer; }
-.mh-replay:focus-visible { outline: 2px solid ${OCHRE}; outline-offset: 2px; }
-.mh-note { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: ${SOFT}; }
-
 @media (hover: hover) {
   .mh-cta:hover::before { transform: translate(-50%,-50%) scale(34); }
-  .mh-replay:hover { background: rgba(164,117,50,.08); }
 }
 `;
