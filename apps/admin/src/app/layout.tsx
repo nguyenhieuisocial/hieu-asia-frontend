@@ -80,7 +80,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Suspense fallback={null}>
             <PostHogProvider>
               <QueryProvider>
-                <div className="min-h-screen bg-background">
+                <div className="min-h-dvh bg-background">
                   <Sidebar />
                   <div className="lg:pl-64">
                     <Topbar adminEmail={adminEmail} />
