@@ -36,9 +36,10 @@ jobs:
       EVAL_API_URL: https://api.hieu.asia
     steps:
       - uses: actions/checkout@v6
-      - uses: pnpm/action-setup@v5
-        with:
-          version: 10
+      # action-setup@v4 with NO version key — defers to packageManager
+      # (pnpm@9.12.0) in root package.json, matching ci.yml. v5 + an explicit
+      # `version: 10` hard-errors ERR_PNPM_BAD_PM_VERSION (dual-spec conflict).
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v6
         with:
           node-version: '22'
@@ -56,7 +57,7 @@ jobs:
             PERSONA_ARG="--persona ${{ inputs.persona_filter }}"
           fi
           JUDGE_ARG="--judge-mode ${{ inputs.judge_mode || 'rubric-plus-llm' }}"
-          pnpm tsx tests/eval/runner.ts $PERSONA_ARG $JUDGE_ARG
+          pnpm dlx tsx tests/eval/runner.ts $PERSONA_ARG $JUDGE_ARG
         continue-on-error: true
 
       - name: Upload eval results
