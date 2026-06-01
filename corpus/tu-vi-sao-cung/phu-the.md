@@ -94,7 +94,7 @@ Thiên Lương tại Phu Thê mang đến một phong thái trong tình yêu và
 
 Đây vừa là sức mạnh vừa là thử thách. Mặt mạnh: người Thiên Lương Phu Thê thường tạo được cảm giác an toàn sâu sắc cho bạn đời — họ ổn định, đáng tin cậy, không bỏ cuộc giữa chừng. Mặt cần lưu ý: họ đôi khi tiếp cận quan hệ theo kiểu "quản lý" hơn là "kết nối" — lo lắng thay đối phương, can thiệp vào quyết định của bạn đời với ý định tốt nhưng có thể tạo cảm giác ngột ngạt.
 
-Thiên Lương Phu Thê cũng gợi ý xu hướng chọn bạn đời có khoảng cách tuổi tác hoặc chênh lệch kinh nghiệm sống — mối quan hệ thường có chiều sâu hơn so với những cặp đôi "ngang nhau mọi thứ". Khi hội Hóa Lộc hay Tả Phụ, bạn đời thường là nguồn hỗ trợ tinh thần vững chắc. Khi hội Hóa Kỵ, cần nhận ra xu hướng kiểm soát dưới danh nghĩa quan tâm — và tự điều chỉnh trước khi nó tạo khoảng cách.
+Thiên Lương Phu Thê cũng gợi ý xu hướng chọn bạn đời có khoảng cách tuổi tác hoặc chênh lệch kinh nghiệm sống — mối quan hệ thường có chiều sâu hơn so với những cặp đôi "ngang nhau mọi thứ". Khi hội Hóa Lộc hay Tả Phù, bạn đời thường là nguồn hỗ trợ tinh thần vững chắc. Khi hội Hóa Kỵ, cần nhận ra xu hướng kiểm soát dưới danh nghĩa quan tâm — và tự điều chỉnh trước khi nó tạo khoảng cách.
 
 Cách ứng xử thực tế: học cách diễn đạt sự quan tâm bằng hỏi han và lắng nghe thay vì bằng giải pháp — đối phương cần được cảm thấy bình đẳng, không phải được bảo hộ.
 

@@ -92,7 +92,7 @@ Thiên Lương tại Tài Bạch khắc hoạ một mối quan hệ với tiền
 
 Người này ít bị cuốn vào đầu cơ hay cơ hội 'giàu nhanh' — họ có sự hoài nghi tự nhiên với những lời hứa quá hấp dẫn và xu hướng bảo toàn vốn liếng thường cao hơn trung bình. Điểm mạnh này có thể trở thành lợi thế trong những chu kỳ kinh tế biến động, khi sự thận trọng giúp hạn chế thiệt hại — dù kết quả thực tế vẫn phụ thuộc vào nhiều yếu tố khác ngoài lá số.
 
-Tuy nhiên mặt kia là xu hướng quá dè dặt, bỏ lỡ cơ hội tăng trưởng hợp lý vì sợ rủi ro. Nếu hội thêm Hóa Lộc hay Tả Phụ, tài chính thường được hỗ trợ tốt từ người lớn tuổi hoặc từ công việc ổn định lâu dài. Hội Hóa Kỵ đòi hỏi thận trọng hơn trong các giao dịch pháp lý hay đầu tư dài hạn, đặc biệt với hợp đồng có điều khoản phức tạp.
+Tuy nhiên mặt kia là xu hướng quá dè dặt, bỏ lỡ cơ hội tăng trưởng hợp lý vì sợ rủi ro. Nếu hội thêm Hóa Lộc hay Tả Phù, tài chính thường được hỗ trợ tốt từ người lớn tuổi hoặc từ công việc ổn định lâu dài. Hội Hóa Kỵ đòi hỏi thận trọng hơn trong các giao dịch pháp lý hay đầu tư dài hạn, đặc biệt với hợp đồng có điều khoản phức tạp.
 
 Cách ứng xử thực tế: xây dựng kế hoạch tài chính phân tầng rõ ràng — phần bảo tồn (điểm mạnh tự nhiên) và phần tăng trưởng có kiểm soát — thay vì để cả danh mục ở chế độ 'an toàn tuyệt đối'.
 

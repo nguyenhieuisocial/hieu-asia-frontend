@@ -5,9 +5,9 @@
 | Mảng | File | Thẻ |
 |---|---|---|
 | Tứ Hóa | `tu-hoa.md` | 4 (Hóa Lộc/Quyền/Khoa/Kỵ) |
-| Lục cát tinh | `luc-cat.md` | 6 (Tả Phụ/Hữu Bật/Văn Xương/Văn Khúc/Thiên Khôi/Thiên Việt) |
+| Lục cát tinh | `luc-cat.md` | 6 (Tả Phù/Hữu Bật/Văn Xương/Văn Khúc/Thiên Khôi/Thiên Việt) |
 | Lục sát tinh | `luc-sat.md` | 6 (Kình Dương/Đà La/Hỏa Tinh/Linh Tinh/Địa Không/Địa Kiếp) |
-| Phụ tinh khác | `phu-tinh-khac.md` | 6 (Lộc Tồn/Thiên Mã/Hồng Loan/Thiên Hỉ/Thiên Hình/Thiên Diêu) |
+| Phụ tinh khác | `phu-tinh-khac.md` | 6 (Lộc Tồn/Thiên Mã/Hồng Loan/Thiên Hỷ/Thiên Hình/Thiên Diêu) |
 
 Pipeline: **cổ thư-grounded + LLM Agent + adversarial-review-fix baked-in**.
 

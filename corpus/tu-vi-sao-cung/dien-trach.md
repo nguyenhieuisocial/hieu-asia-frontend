@@ -92,7 +92,7 @@ Thiên Lương tại Điền Trạch biểu hiện qua một quan hệ rất có
 
 Người có Thiên Lương đắc tại Điền Trạch thường chú trọng chất lượng hơn số lượng: ưu tiên một nơi ở thực sự thoải mái và an toàn hơn là sở hữu nhiều bất động sản mà không gắn bó. Ngôi nhà với họ là "căn cứ địa" của gia đình — nơi các thế hệ quy tụ — chứ không đơn thuần là tài sản.
 
-Nếu Thiên Lương hội thêm Tả Phụ, Hữu Bật hay cát hóa, người này thường có thiên hướng chăm chút và bảo tồn tài sản gia đình một cách bền bỉ hơn. Nếu hội Hóa Kỵ hay Kình Đà, đôi khi xuất hiện mâu thuẫn tài sản liên quan đến gia đình — thường là bài toán phân chia hoặc gánh vác di sản nặng hơn kỳ vọng.
+Nếu Thiên Lương hội thêm Tả Phù, Hữu Bật hay cát hóa, người này thường có thiên hướng chăm chút và bảo tồn tài sản gia đình một cách bền bỉ hơn. Nếu hội Hóa Kỵ hay Kình Đà, đôi khi xuất hiện mâu thuẫn tài sản liên quan đến gia đình — thường là bài toán phân chia hoặc gánh vác di sản nặng hơn kỳ vọng.
 
 Cách ứng xử thực tế: định kỳ đánh giá xem không gian sống có thực sự phục vụ nhu cầu hiện tại không, thay vì giữ mọi thứ vì thói quen "an toàn" hay vì áp lực gia đình đặt lên vai.
 
