@@ -6,7 +6,7 @@ Nhóm sao do Tử Vi đứng đầu. Các thẻ diễn giải dưới đây là 
 
 Ngũ hành: Thổ (âm). Hóa khí: tôn quý, lãnh đạo. Từ khóa: uy nghi, chủ quản, chuẩn mực.
 
-Bản chất: Tử Vi là sao đế vương — biểu trưng cho khả năng đứng đầu, điều phối và gánh trách nhiệm. Người có Tử Vi tọa Mệnh thường mang phong thái đĩnh đạc, coi trọng thể diện và muốn làm chủ tình huống. Tử Vi cần được "phò tá" (Tả Phụ, Hữu Bật, Văn Xương, Văn Khúc) mới phát huy; đứng một mình dễ thành "cô quân" — có uy nhưng thiếu trợ lực.
+Bản chất: Tử Vi là sao đế vương — biểu trưng cho khả năng đứng đầu, điều phối và gánh trách nhiệm. Người có Tử Vi tọa Mệnh thường mang phong thái đĩnh đạc, coi trọng thể diện và muốn làm chủ tình huống. Tử Vi cần được "phò tá" (Tả Phù, Hữu Bật, Văn Xương, Văn Khúc) mới phát huy; đứng một mình dễ thành "cô quân" — có uy nhưng thiếu trợ lực.
 
 Điểm mạnh: tầm nhìn tổng thể, khả năng tổ chức, giữ được bình tĩnh khi người khác rối. Phù hợp vai trò quản trị, điều hành.
 

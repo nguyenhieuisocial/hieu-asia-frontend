@@ -1,28 +1,28 @@
 # Lục cát tinh
 
-> 6 sao phù trợ chính tinh — trợ giúp (Tả Phụ/Hữu Bật), văn tài (Văn Xương/Văn Khúc), quý nhân (Thiên Khôi/Thiên Việt). Văn phong hieu.asia "không bói toán": mô tả xu hướng/năng lượng + cách ứng xử, KHÔNG phán định mệnh/họa-phúc/đạo đức.
+> 6 sao phù trợ chính tinh — trợ giúp (Tả Phù/Hữu Bật), văn tài (Văn Xương/Văn Khúc), quý nhân (Thiên Khôi/Thiên Việt). Văn phong hieu.asia "không bói toán": mô tả xu hướng/năng lượng + cách ứng xử, KHÔNG phán định mệnh/họa-phúc/đạo đức.
 
-## Tả Phụ
+## Tả Phù
 
 > Nguồn: Phương pháp luận hieu.asia · _Phương pháp luận hieu.asia_
 
-Tả Phụ là sao phù tá thuộc Bắc Đẩu, ngũ hành Thổ (dương), đứng bên tả (trái) trong nhóm Lục Cát tinh. Tên gọi đã nói lên bản chất: "phụ" là nâng đỡ, hỗ trợ từ phía sau. Khi Tả Phụ đồng cung hoặc hội chiếu với chính tinh, năng lượng của chính tinh có xu hướng được ổn định hơn — như người chủ có hậu phương vững, vẫn là mình ra quyết định nhưng rủi ro bộc phát giảm đi đáng kể.
+Tả Phù là sao phù tá thuộc Bắc Đẩu, ngũ hành Thổ (dương), đứng bên tả (trái) trong nhóm Lục Cát tinh. Tên gọi đã nói lên bản chất: "phụ" là nâng đỡ, hỗ trợ từ phía sau. Khi Tả Phù đồng cung hoặc hội chiếu với chính tinh, năng lượng của chính tinh có xu hướng được ổn định hơn — như người chủ có hậu phương vững, vẫn là mình ra quyết định nhưng rủi ro bộc phát giảm đi đáng kể.
 
-Biểu hiện thực tế: người có Tả Phụ nổi trong lá số thường dễ nhận được thiện chí từ người xung quanh mà không cần gồng sức tranh giành. Trong nhóm, họ hay là "chỗ dựa thầm lặng" mà ai cũng muốn có trong đội. Tả Phụ tọa Mệnh cũng gợi xu hướng xây dựng mối quan hệ bền, trọng lòng tin hơn lợi ích ngắn hạn — đây là xu hướng hành vi, không phải đảm bảo kết quả.
+Biểu hiện thực tế: người có Tả Phù nổi trong lá số thường dễ nhận được thiện chí từ người xung quanh mà không cần gồng sức tranh giành. Trong nhóm, họ hay là "chỗ dựa thầm lặng" mà ai cũng muốn có trong đội. Tả Phù tọa Mệnh cũng gợi xu hướng xây dựng mối quan hệ bền, trọng lòng tin hơn lợi ích ngắn hạn — đây là xu hướng hành vi, không phải đảm bảo kết quả.
 
 Sắc thái khi kết hợp: gặp Tử Vi — có thể hỗ trợ khả năng tập hợp người. Gặp Vũ Khúc — xu hướng vừa thực dụng vừa không bỏ lại cộng sự. Gặp sát tinh (Kình, Đà, Hỏa, Linh) — hiệu ứng phù trợ có thể giảm hoặc đến từ người không như kỳ vọng; cần xét toàn cục lá số.
 
-Cần lưu ý: Tả Phụ không đảm bảo "chắc chắn có người cứu" hay môi trường luôn thuận lợi. Đây là xu hướng — xác suất nhận được hỗ trợ cao hơn mức bình thường, nhưng phụ thuộc lớn vào việc chủ nhân lá số có chủ động vun đắp quan hệ hay không. Không có sao nào thay thế được nỗ lực xây dựng tin tưởng hai chiều.
+Cần lưu ý: Tả Phù không đảm bảo "chắc chắn có người cứu" hay môi trường luôn thuận lợi. Đây là xu hướng — xác suất nhận được hỗ trợ cao hơn mức bình thường, nhưng phụ thuộc lớn vào việc chủ nhân lá số có chủ động vun đắp quan hệ hay không. Không có sao nào thay thế được nỗ lực xây dựng tin tưởng hai chiều.
 
-Gợi ý: đầu tư vào các mối quan hệ hai chiều — cho đi trước, nhận lại sau. Tả Phụ có xu hướng phát huy nhất khi người có sao này cũng là chỗ dựa cho người khác, không chỉ chờ được dựa vào.
+Gợi ý: đầu tư vào các mối quan hệ hai chiều — cho đi trước, nhận lại sau. Tả Phù có xu hướng phát huy nhất khi người có sao này cũng là chỗ dựa cho người khác, không chỉ chờ được dựa vào.
 
 ## Hữu Bật
 
 > Nguồn: Phương pháp luận hieu.asia · _Phương pháp luận hieu.asia_
 
-Hữu Bật là sao phù tá đứng bên hữu (phải), đối ứng với Tả Phụ trong nhóm Lục Cát. Cùng ngũ hành Thổ (âm), Hữu Bật mang tính mềm hơn Tả Phụ — thiên về hòa giải, ngoại giao, và khả năng kéo người về cùng hướng mà không cần áp lực trực tiếp.
+Hữu Bật là sao phù tá đứng bên hữu (phải), đối ứng với Tả Phù trong nhóm Lục Cát. Cùng ngũ hành Thổ (âm), Hữu Bật mang tính mềm hơn Tả Phù — thiên về hòa giải, ngoại giao, và khả năng kéo người về cùng hướng mà không cần áp lực trực tiếp.
 
-Bản chất sao: Hữu Bật gợi xu hướng trung gian và liên kết. Nếu Tả Phụ là năng lượng "giữ hậu phương", thì Hữu Bật là năng lượng "kết nối ra ngoài". Người có Hữu Bật nổi thường có xu hướng được người khác tin tưởng chia sẻ và nhờ vả — không phải vì quyền lực, mà vì tạo được cảm giác an toàn khi tiếp cận. Điều này có thể khiến họ trở thành cầu nối tự nhiên giữa các nhóm.
+Bản chất sao: Hữu Bật gợi xu hướng trung gian và liên kết. Nếu Tả Phù là năng lượng "giữ hậu phương", thì Hữu Bật là năng lượng "kết nối ra ngoài". Người có Hữu Bật nổi thường có xu hướng được người khác tin tưởng chia sẻ và nhờ vả — không phải vì quyền lực, mà vì tạo được cảm giác an toàn khi tiếp cận. Điều này có thể khiến họ trở thành cầu nối tự nhiên giữa các nhóm.
 
 Biểu hiện thực tế: trong công việc, Hữu Bật có xu hướng giúp dịu tình huống căng thẳng, kéo về đồng thuận. Trong cuộc sống cá nhân, người có sao này thường duy trì được mạng lưới quan hệ rộng dù không cố sức. Khi Hữu Bật hội chiếu với chính tinh trong cung Quan Lộc, xu hướng phát triển thông qua uy tín cá nhân và quan hệ — thay vì kỹ thuật thuần túy — có thể rõ hơn.
 

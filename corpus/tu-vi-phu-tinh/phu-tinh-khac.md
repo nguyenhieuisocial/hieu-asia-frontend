@@ -1,6 +1,6 @@
 # Phụ tinh khác
 
-> Lộc Tồn (tài lộc) · Thiên Mã (dịch chuyển) · Hồng Loan/Thiên Hỉ/Thiên Diêu (đào hoa/sức hút) · Thiên Hình (kỷ luật/nguyên tắc). Văn phong hieu.asia "không bói toán": mô tả xu hướng/năng lượng + cách ứng xử, KHÔNG phán định mệnh/họa-phúc/đạo đức.
+> Lộc Tồn (tài lộc) · Thiên Mã (dịch chuyển) · Hồng Loan/Thiên Hỷ/Thiên Diêu (đào hoa/sức hút) · Thiên Hình (kỷ luật/nguyên tắc). Văn phong hieu.asia "không bói toán": mô tả xu hướng/năng lượng + cách ứng xử, KHÔNG phán định mệnh/họa-phúc/đạo đức.
 
 ## Lộc Tồn
 
@@ -32,23 +32,23 @@ Mặt khác, Thiên Mã gặp Không/Kiếp có thể làm năng lượng dịch
 
 Hồng Loan là phụ tinh mang năng lượng duyên cảm trong các mối quan hệ gần gũi. Nó không báo hiệu sự kiện kết hôn, yêu đương hay sinh nở cụ thể nào, mà phản ánh một xu hướng: ở giai đoạn hoặc vùng trong lá số có Hồng Loan, người đó có thể nhạy cảm hơn với cảm xúc, dễ bị thu hút và đôi khi dễ thu hút người khác hơn bình thường. Đây là xu hướng năng lượng, không phải tiên đoán về mối quan hệ cụ thể.
 
-Khi Hồng Loan đóng ở Mệnh hay Phu Thê, có thể gặp xu hướng tạo ra cảm giác gần gũi, dễ chịu trong không gian cá nhân — không phải theo nghĩa ngoại hình mà là kiểu từ trường cảm xúc. Gặp Thiên Hỉ (cặp sao đối xứng), hai năng lượng này bổ trợ nhau và thường đi kèm với những giai đoạn cảm xúc có nhiều màu sắc hơn trong cuộc sống — không phải hứa hẹn hạnh phúc liên tục, mà là biên độ cảm xúc rộng hơn.
+Khi Hồng Loan đóng ở Mệnh hay Phu Thê, có thể gặp xu hướng tạo ra cảm giác gần gũi, dễ chịu trong không gian cá nhân — không phải theo nghĩa ngoại hình mà là kiểu từ trường cảm xúc. Gặp Thiên Hỷ (cặp sao đối xứng), hai năng lượng này bổ trợ nhau và thường đi kèm với những giai đoạn cảm xúc có nhiều màu sắc hơn trong cuộc sống — không phải hứa hẹn hạnh phúc liên tục, mà là biên độ cảm xúc rộng hơn.
 
 Hồng Loan không phán xét về đạo đức hay chất lượng của các mối quan hệ. Gặp sao hỗ trợ, năng lượng này có thể biểu hiện qua sự chăm sóc và kết nối sâu; gặp sao căng thẳng, nó có thể là xu hướng đầu tư cảm xúc quá nhanh hoặc bị phân tâm bởi các mối quan hệ — đây là thông tin để nhận biết, không phải phán xét.
 
 Ứng xử thực tế: Hồng Loan gợi ý năng lực cảm xúc trong quan hệ là tài nguyên thật. Câu hỏi hữu ích không phải "khi nào yêu" mà là "tôi đang đầu tư cảm xúc vào đúng hướng không?" Nhận biết xu hướng này giúp chủ động hơn thay vì bị cuốn theo.
 
-## Thiên Hỉ
+## Thiên Hỷ
 
 > Nguồn: Phương pháp luận hieu.asia · _Phương pháp luận hieu.asia_
 
-Thiên Hỉ là phụ tinh đối diện với Hồng Loan trên vòng an sao — hai sao này tạo thành một cặp năng lượng xúc cảm bổ trợ nhau. Nếu Hồng Loan nghiêng về phía thu hút và cảm nhận riêng tư, Thiên Hỉ mang thêm sắc thái hân hoan và những khoảnh khắc có chiều kích cộng đồng — xu hướng trải nghiệm những giai đoạn "lên" rõ ràng và muốn chia sẻ chúng ra xung quanh. Đây không phải đảm bảo hạnh phúc liên tục, mà là một kiểu năng lượng dễ bộc lộ.
+Thiên Hỷ là phụ tinh đối diện với Hồng Loan trên vòng an sao — hai sao này tạo thành một cặp năng lượng xúc cảm bổ trợ nhau. Nếu Hồng Loan nghiêng về phía thu hút và cảm nhận riêng tư, Thiên Hỷ mang thêm sắc thái hân hoan và những khoảnh khắc có chiều kích cộng đồng — xu hướng trải nghiệm những giai đoạn "lên" rõ ràng và muốn chia sẻ chúng ra xung quanh. Đây không phải đảm bảo hạnh phúc liên tục, mà là một kiểu năng lượng dễ bộc lộ.
 
-Trong thực tế, Thiên Hỉ ở một cung nào đó có thể gợi lên xu hướng người đó trải nghiệm và lan tỏa cảm xúc tích cực ở vùng đó — không phải mọi lúc, không phải được đảm bảo. Gặp chính tinh có tính xã hội cao như Thiên Phủ hay Thái Dương, năng lượng này có thể tạo ra sức hút tập thể tự nhiên, khả năng kết nối nhiều người cùng lúc.
+Trong thực tế, Thiên Hỷ ở một cung nào đó có thể gợi lên xu hướng người đó trải nghiệm và lan tỏa cảm xúc tích cực ở vùng đó — không phải mọi lúc, không phải được đảm bảo. Gặp chính tinh có tính xã hội cao như Thiên Phủ hay Thái Dương, năng lượng này có thể tạo ra sức hút tập thể tự nhiên, khả năng kết nối nhiều người cùng lúc.
 
-Mặt cần chú ý: Thiên Hỉ cũng có thể làm người ta dễ bị cuốn vào phấn khích tức thời mà bỏ qua đánh giá dài hạn — mọi thứ có thể trông hứa hẹn hơn thực tế ở thời điểm phấn khích. Đây không phải khuyết điểm đạo đức, mà là xu hướng cần được nhận ra để điều chỉnh.
+Mặt cần chú ý: Thiên Hỷ cũng có thể làm người ta dễ bị cuốn vào phấn khích tức thời mà bỏ qua đánh giá dài hạn — mọi thứ có thể trông hứa hẹn hơn thực tế ở thời điểm phấn khích. Đây không phải khuyết điểm đạo đức, mà là xu hướng cần được nhận ra để điều chỉnh.
 
-Ứng xử thực tế: Thiên Hỉ nhắc rằng năng lực tạo ra và lan tỏa niềm vui là một dạng sức mạnh xã hội thật. Câu hỏi hữu ích là "tôi đang ăn mừng điều gì và vì sao?" — giúp phân biệt niềm vui thật sự với phấn khích bề mặt.
+Ứng xử thực tế: Thiên Hỷ nhắc rằng năng lực tạo ra và lan tỏa niềm vui là một dạng sức mạnh xã hội thật. Câu hỏi hữu ích là "tôi đang ăn mừng điều gì và vì sao?" — giúp phân biệt niềm vui thật sự với phấn khích bề mặt.
 
 ## Thiên Hình
 
