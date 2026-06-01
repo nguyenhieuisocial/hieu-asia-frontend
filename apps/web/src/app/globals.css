@@ -28,7 +28,7 @@
     --foreground: 30 15% 8%;         /* Ink #171411 — chữ chính trên paper */
     --card: 38 60% 95%;              /* Paper-50 #FAF6EC for elevation lift on paper */
     --card-foreground: 30 15% 8%;
-    --primary: 35 53% 42%;           /* Ochre #A47532 — day accent (single accent on paper) */
+    --primary: 35 53% 35%;           /* Ochre-deep #89612A — day accent. WCAG AA fix: was 42% (#A47532, 3.45:1 on paper, fails as small text). Same hue/sat, deepened to 35% → 4.7:1 AA. */
     --primary-foreground: 38 60% 95%; /* paper-50 text on ochre CTA */
     /* V4 a11y fix (design handoff): the *brand* ochre #A47532 above stays the
      * single accent for text / borders / dots. But paper-50 text ON solid
@@ -37,9 +37,9 @@
      * Use `bg-[hsl(var(--primary-cta))]` on filled CTAs, keep paper text. */
     --primary-cta: 35 55% 35%;       /* Ochre-deep #8A6128 — filled CTA surface */
     --muted: 38 36% 86%;             /* Paper-200 / Bone #EBE2CD — surface lift */
-    --muted-foreground: 33 9% 39%;   /* Paper-700 / Ink-meta #6B6358 */
+    --muted-foreground: 33 9% 38%;   /* Paper-700 / Ink-meta #6A6258 — WCAG AA fix: 39%→38% (4.40→4.55 on muted) */
     --border: 41 25% 73%;            /* Paper-300 / Rule #CCC0A6 */
-    --ring: 35 53% 42%;              /* ochre */
+    --ring: 35 53% 35%;              /* ochre — synced to deepened --primary (focus ring) */
     --radius: 0.625rem;
 
     /* RGB anchors for alpha tokens. Wave 62.02 — added --ochre-rgb (day

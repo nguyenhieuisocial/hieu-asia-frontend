@@ -22,12 +22,12 @@
     --foreground: 30 15% 8%;         /* Ink #171411 (warm, was cold hue-240) */
     --card: 38 60% 95%;              /* Paper-50 #FAF6EC */
     --card-foreground: 30 15% 8%;
-    --primary: 35 53% 42%;           /* Ochre #A47532 (was gold #B8923D) */
+    --primary: 35 53% 35%;           /* Ochre-deep #89612A. WCAG AA fix: was 42% (3.45:1 light, fails small text). Same hue/sat, deepened → 4.7:1 AA. */
     --primary-foreground: 38 60% 95%; /* Paper-50 on ochre */
     --muted: 38 36% 86%;             /* Bone #EBE2CD */
-    --muted-foreground: 33 9% 39%;   /* Ink-meta #6B6358 */
+    --muted-foreground: 33 9% 38%;   /* Ink-meta #6A6258 — WCAG AA fix: 39%→38% (light mode) */
     --border: 41 25% 73%;            /* Rule #CCC0A6 */
-    --ring: 35 53% 42%;              /* ochre */
+    --ring: 35 53% 35%;              /* ochre — synced to deepened --primary (focus ring) */
     --radius: 0.625rem;
 
     /* Wave 62.13 — five-element functional accents (theme-stable). For admin
