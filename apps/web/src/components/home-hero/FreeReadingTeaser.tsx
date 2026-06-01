@@ -43,8 +43,13 @@ export function FreeReadingTeaser(): React.JSX.Element {
             Chỉ dùng để tính toán · không lưu nếu bạn chưa đăng ký · không bán hay chia sẻ.
           </p>
 
+          {/* When collapsed, `inert` removes the whole subtree from the focus
+              order + a11y tree — otherwise the /onboarding link inside stays
+              tabbable while visually hidden (axe aria-hidden-focus violation).
+              inert supersedes aria-hidden here, so we drop aria-hidden to avoid
+              the "aria-hidden contains focusable" rule firing on stale browsers. */}
           <div
-            aria-hidden={!shown}
+            inert={!shown}
             className={`grid grid-cols-1 transition-all duration-500 ${
               shown ? 'mt-5 grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
             }`}
