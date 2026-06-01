@@ -53,6 +53,7 @@ const WORKER_KEYS: WorkerKeyDef[] = [
   { name: 'SUPABASE_SERVICE_ROLE_KEY',desc: 'Supabase service role JWT — RLS bypass for admin queries.' },
   { name: 'SUPABASE_ANON_KEY',        desc: 'Supabase anon JWT — fallback when service role unavailable.' },
   { name: 'RESEND_API_KEY',           desc: 'Resend HTTP API — transactional email.' },
+  { name: 'RESEND_NEWSLETTER_AUDIENCE_ID', desc: 'Resend Audience ID — publish newsletter qua Broadcast (/content publish).' },
   { name: 'ANTHROPIC_API_KEY',        desc: 'Anthropic Claude — primary LLM for reading + mentor.' },
   { name: 'OPENAI_API_KEY',           desc: 'OpenAI GPT — fallback LLM, embeddings.' },
   { name: 'GOOGLE_API_KEY',           desc: 'Google Gemini — Vision / OCR for palm reading.' },

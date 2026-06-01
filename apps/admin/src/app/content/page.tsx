@@ -155,7 +155,8 @@ export default function ContentListPage() {
       onSuccess: (res) => {
         if (res.ok) {
           toast.success(`Đã queue ${res.queued ?? 10} pillar`, {
-            description: 'Poll danh sách sau ~5 phút.',
+            description:
+              'Chạy ngầm ~5-10 phút. Tải lại danh sách để xem tiến độ. Nếu sau 10 phút vẫn rỗng → kiểm tra LLM keys (Anthropic/OpenAI/Google) + Supabase trên Worker.',
           });
         } else {
           toast.error('Bulk generate thất bại', { description: res.error });
