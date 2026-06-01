@@ -18,9 +18,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@hieu-asia/ui';
-import { Eye, MoreVertical, RotateCcw, Trash2 } from 'lucide-react';
+import { Eye, MoreVertical, Pencil, RotateCcw, Trash2 } from 'lucide-react';
 
 const ICON_VIEW = <Eye className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />;
+const ICON_RENAME = <Pencil className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />;
 const ICON_RERUN = <RotateCcw className="h-3.5 w-3.5 text-gold" aria-hidden />;
 const ICON_TRASH = <Trash2 className="h-3.5 w-3.5" aria-hidden />;
 const ICON_MORE = <MoreVertical className="h-4 w-4" aria-hidden />;
@@ -29,6 +30,7 @@ export interface SessionRowActionsProps {
   sessionId: string;
   onReOrchestrate: (id: string) => void;
   onDelete: (id: string) => void;
+  onRename: (id: string) => void;
   reOrchPending: boolean;
 }
 
@@ -36,6 +38,7 @@ export function SessionRowActions({
   sessionId,
   onReOrchestrate,
   onDelete,
+  onRename,
   reOrchPending,
 }: SessionRowActionsProps) {
   const router = useRouter();
@@ -43,6 +46,10 @@ export function SessionRowActions({
   const handleView = React.useCallback(() => {
     router.push(`/sessions/${encodeURIComponent(sessionId)}`);
   }, [router, sessionId]);
+
+  const handleRename = React.useCallback(() => {
+    onRename(sessionId);
+  }, [onRename, sessionId]);
 
   const handleReRun = React.useCallback(() => {
     onReOrchestrate(sessionId);
@@ -72,6 +79,10 @@ export function SessionRowActions({
         <DropdownMenuItem onSelect={handleView}>
           {ICON_VIEW}
           Xem chi tiết
+        </DropdownMenuItem>
+        <DropdownMenuItem onSelect={handleRename}>
+          {ICON_RENAME}
+          Đặt tên / ghi chú
         </DropdownMenuItem>
         <DropdownMenuItem
           disabled={reOrchPending}

@@ -79,6 +79,12 @@ export interface AdminSession {
   country?: string | null;
   city?: string | null;
   region?: string | null;
+  // Wave 65 — friendly identifiers (migration 0053). short_code is the public
+  // "HA-XXXXX" id shown instead of the raw session_id; label/note are
+  // admin-editable. Optional because legacy rows + mocks predate them.
+  short_code?: string | null;
+  label?: string | null;
+  note?: string | null;
 }
 
 const CONCERNS = [
