@@ -174,6 +174,10 @@ interface BackendSessionRow {
   session_id: string;
   state_json?: Record<string, unknown> | null;
   updated_at: string;
+  // Wave 65 — friendly identifiers (migration 0053).
+  short_code?: string | null;
+  label?: string | null;
+  note?: string | null;
 }
 
 /**
@@ -287,6 +291,9 @@ function mapBackendSession(row: BackendSessionRow): AdminSession {
     country,
     city,
     region,
+    short_code: row.short_code ?? null,
+    label: row.label ?? null,
+    note: row.note ?? null,
   };
 }
 
@@ -342,6 +349,8 @@ export async function listSessions(
       rows = rows.filter(
         (r) =>
           r.session_id.toLowerCase().includes(s) ||
+          (r.short_code?.toLowerCase().includes(s) ?? false) ||
+          (r.label?.toLowerCase().includes(s) ?? false) ||
           r.user_email.toLowerCase().includes(s) ||
           r.primary_concern.toLowerCase().includes(s),
       );
@@ -370,6 +379,42 @@ export async function listSessions(
   if (q.from) rows = rows.filter((s) => s.created_at >= q.from!);
   if (q.to) rows = rows.filter((s) => s.created_at <= q.to!);
   return delay(mock(paginate(rows, q), 'gateway unreachable; showing mock'));
+}
+
+/**
+ * Wave 65 — whole-DB session aggregates (GET /admin/sessions/stats).
+ * The list endpoint paginates, so the KPI strip could only sum the current
+ * page; this returns true totals. Returns null on gateway failure (caller
+ * falls back to page-slice aggregates).
+ */
+export interface SessionsStats {
+  total: number;
+  last_1h: number;
+  by_status: Partial<Record<'queued' | 'running' | 'completed' | 'failed', number>>;
+}
+
+export async function getSessionsStats(): Promise<SessionsStats | null> {
+  const real = await proxyFetch<{ ok?: boolean } & SessionsStats>('/admin/sessions/stats');
+  if (real && real.ok !== false && typeof real.total === 'number') {
+    return { total: real.total, last_1h: real.last_1h ?? 0, by_status: real.by_status ?? {} };
+  }
+  return null;
+}
+
+/**
+ * Wave 65 — set the human label / note on a session
+ * (PATCH /admin/sessions/:id). Empty string clears to null server-side.
+ */
+export async function patchSession(
+  sessionId: string,
+  patch: { label?: string | null; note?: string | null },
+): Promise<{ ok: boolean; error?: string }> {
+  const real = await proxyFetch<{ ok?: boolean; error?: string }>(
+    `/admin/sessions/${encodeURIComponent(sessionId)}`,
+    { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(patch) },
+  );
+  if (real && real.ok !== false) return { ok: true };
+  return { ok: false, error: real?.error ?? 'gateway unreachable' };
 }
 
 export async function getSession(id: string) {

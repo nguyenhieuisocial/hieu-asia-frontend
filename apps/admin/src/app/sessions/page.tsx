@@ -68,7 +68,7 @@ import {
   Users,
 } from 'lucide-react';
 import type { TaskStatus } from '@hieu-asia/types';
-import { listSessions } from '@/lib/admin-api';
+import { listSessions, getSessionsStats, patchSession } from '@/lib/admin-api';
 import type { AdminSession } from '@/lib/mock-data';
 import { MockBanner } from '@/components/mock-banner';
 import { PageHeader } from '@/components/admin/page-header';
@@ -198,6 +198,10 @@ function AdminSessionsPageInner() {
   const [confirmBulkOpen, setConfirmBulkOpen] = React.useState(false);
   const [bulkConfirmText, setBulkConfirmText] = React.useState('');
   const [confirmSingleId, setConfirmSingleId] = React.useState<string | null>(null);
+  // Wave 65 — rename/note dialog state.
+  const [renameId, setRenameId] = React.useState<string | null>(null);
+  const [renameLabel, setRenameLabel] = React.useState('');
+  const [renameNote, setRenameNote] = React.useState('');
 
   // Persist filter/sort to URL so reloads + bookmarks keep state.
   React.useEffect(() => {
@@ -212,6 +216,15 @@ function AdminSessionsPageInner() {
     queryKey: ['admin', 'sessions', { status, search, page }],
     queryFn: () =>
       listSessions({ status: status || undefined, search, page, page_size: PAGE_SIZE }),
+  });
+
+  // Wave 65 — whole-DB KPI totals (the page-slice aggregates below only see
+  // the current 20 rows). Falls back to page-slice when the endpoint is down.
+  const { data: stats } = useQuery({
+    queryKey: ['admin', 'sessions', 'stats'],
+    queryFn: getSessionsStats,
+    staleTime: 30_000,
+    refetchInterval: 30_000,
   });
 
   // Defensive Array.isArray (Wave 60.65.P0c) on async data
@@ -231,16 +244,22 @@ function AdminSessionsPageInner() {
     return copy;
   }, [rawRows, sort]);
 
-  const total = data?.total ?? 0;
-  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const total = stats?.total ?? data?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil((data?.total ?? total) / PAGE_SIZE));
 
-  // KPI aggregates — page slice only until backend exposes global totals.
-  const completedCount = rows.filter((r) => r.status === 'completed').length;
-  const runningCount = rows.filter((r) => r.status === 'running').length;
-  const last1hCount = rows.filter((r) => {
+  // Page-slice aggregates — fallback when /stats endpoint is unavailable.
+  const completedCountPage = rows.filter((r) => r.status === 'completed').length;
+  const runningCountPage = rows.filter((r) => r.status === 'running').length;
+  const last1hCountPage = rows.filter((r) => {
     const t = new Date(r.created_at).getTime();
     return !Number.isNaN(t) && Date.now() - t < 3600 * 1000;
   }).length;
+
+  // Whole-DB KPI values when /stats is available; else page-slice fallback.
+  const kpiRunning = stats?.by_status?.running ?? runningCountPage;
+  const kpiLast1h = stats?.last_1h ?? last1hCountPage;
+  const kpiCompleted = stats?.by_status?.completed ?? completedCountPage;
+
   const uniqueUsers = new Set(rows.map((r) => r.user_id || r.user_email).filter(Boolean)).size;
   const completedDurations = rows
     .filter((r) => r.status === 'completed' && r.duration_seconds != null)
@@ -259,6 +278,22 @@ function AdminSessionsPageInner() {
     },
     onError: (e) =>
       toast.error('Re-orchestrate thất bại', { description: (e as Error).message }),
+  });
+
+  // Wave 65 — set label/note on a session.
+  const renameMut = useMutation({
+    mutationFn: (vars: { id: string; label: string; note: string }) =>
+      patchSession(vars.id, { label: vars.label, note: vars.note }),
+    onSuccess: (res) => {
+      if (res.ok) {
+        toast.success('Đã lưu tên / ghi chú');
+        setRenameId(null);
+        qc.invalidateQueries({ queryKey: ['admin', 'sessions'] });
+      } else {
+        toast.error('Lưu thất bại', { description: res.error });
+      }
+    },
+    onError: (e) => toast.error('Lưu thất bại', { description: (e as Error).message }),
   });
 
   const bulkDeleteMut = useMutation({
@@ -378,6 +413,22 @@ function AdminSessionsPageInner() {
     setConfirmSingleId(id);
   }, []);
 
+  const handleAskRename = React.useCallback(
+    (id: string) => {
+      const row = rows.find((r) => r.session_id === id);
+      setRenameLabel(row?.label ?? '');
+      setRenameNote(row?.note ?? '');
+      setRenameId(id);
+    },
+    [rows],
+  );
+
+  const handleRenameSave = React.useCallback(() => {
+    if (renameId) {
+      renameMut.mutate({ id: renameId, label: renameLabel, note: renameNote });
+    }
+  }, [renameId, renameLabel, renameNote, renameMut]);
+
   // ---- Column config ----
 
   const columns = React.useMemo<AdminTableColumn<AdminSession>[]>(
@@ -398,14 +449,21 @@ function AdminSessionsPageInner() {
         id: 'session_id',
         header: 'Session',
         sortKey: 'session_id',
-        width: '140px',
+        width: '200px',
         cell: (s) => (
-          <span
-            className="font-mono text-xs text-primary"
-            title={s.session_id}
-          >
-            {humanizeSessionId(s.session_id)}
-          </span>
+          <div className="min-w-0">
+            <span
+              className="inline-flex items-center rounded border border-gold/25 bg-gold/10 px-1.5 py-0.5 font-mono text-[11px] font-medium text-gold"
+              title={`session_id: ${s.session_id}`}
+            >
+              {s.short_code ?? humanizeSessionId(s.session_id)}
+            </span>
+            {s.label ? (
+              <div className="mt-0.5 truncate text-xs text-foreground/85" title={s.label}>
+                {s.label}
+              </div>
+            ) : null}
+          </div>
         ),
       },
       {
@@ -494,12 +552,13 @@ function AdminSessionsPageInner() {
             sessionId={s.session_id}
             onReOrchestrate={handleReOrchestrate}
             onDelete={handleAskDelete}
+            onRename={handleAskRename}
             reOrchPending={reOrchestrateMut.isPending}
           />
         ),
       },
     ],
-    [handleReOrchestrate, handleAskDelete, reOrchestrateMut.isPending],
+    [handleReOrchestrate, handleAskDelete, handleAskRename, reOrchestrateMut.isPending],
   );
 
   const statusLabel =
@@ -543,32 +602,32 @@ function AdminSessionsPageInner() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard
-          label="Phiên trang này"
-          value={rows.length}
+          label="Tổng phiên"
+          value={total}
           icon={ICON_USERS}
           accent="gold"
-          hint={`/ tổng ${total}`}
+          hint={stats ? 'toàn hệ thống' : `trang này: ${rows.length}`}
         />
         <KpiCard
           label="Đang chạy"
-          value={runningCount}
+          value={kpiRunning}
           icon={ICON_ACTIVITY}
-          accent={runningCount > 0 ? 'jade' : 'purple'}
-          hint="hot pipeline"
+          accent={kpiRunning > 0 ? 'jade' : 'purple'}
+          hint={stats ? 'toàn hệ thống' : 'trang này'}
         />
         <KpiCard
           label="1h gần nhất"
-          value={last1hCount}
+          value={kpiLast1h}
           icon={ICON_CLOCK}
           accent="purple"
-          hint="phiên mới"
+          hint={stats ? 'toàn hệ thống' : 'trang này'}
         />
         <KpiCard
           label="Thời lượng TB"
           value={avgDuration != null ? fmtDuration(avgDuration) : '—'}
           icon={ICON_GLOBE}
           accent="gold"
-          hint={`${completedCount} hoàn tất · ${uniqueUsers} user`}
+          hint={`${kpiCompleted} hoàn tất · ${uniqueUsers} user`}
         />
       </div>
 
@@ -795,6 +854,47 @@ function AdminSessionsPageInner() {
               className="bg-red-500/90 text-foreground hover:bg-red-500"
             >
               Xóa
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Wave 65 — set label / note */}
+      <Dialog open={!!renameId} onOpenChange={(o) => !o && setRenameId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Đặt tên / ghi chú phiên</DialogTitle>
+            <DialogDescription>
+              Tên gợi nhớ + ghi chú nội bộ cho phiên này. Không đổi ID gốc — chỉ là nhãn hiển thị.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-muted-foreground">Tên gợi nhớ</label>
+              <Input
+                value={renameLabel}
+                onChange={(e) => setRenameLabel(e.target.value)}
+                placeholder="vd: Chị Lan – tài chính"
+                maxLength={120}
+                autoFocus
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-muted-foreground">Ghi chú</label>
+              <Input
+                value={renameNote}
+                onChange={(e) => setRenameNote(e.target.value)}
+                placeholder="vd: khách VIP, cần follow-up"
+                maxLength={280}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setRenameId(null)} disabled={renameMut.isPending}>
+              Hủy
+            </Button>
+            <Button onClick={handleRenameSave} disabled={renameMut.isPending}>
+              {renameMut.isPending ? 'Đang lưu…' : 'Lưu'}
             </Button>
           </DialogFooter>
         </DialogContent>
