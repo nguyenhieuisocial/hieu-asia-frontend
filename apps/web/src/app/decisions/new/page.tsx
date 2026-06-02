@@ -47,6 +47,8 @@ const API_BASE =
  * the birth inputs to cast a Tử Vi chart on demand — the chart itself is
  * not persisted under this key, just the birth data.
  */
+import { getPersonalitySummary } from '@/lib/personality-store';
+
 const CHART_PROFILE_KEY = 'hieu:chart:profile:v1';
 const ONBOARDING_KEY = 'hieu:onboarding:v2';
 
@@ -192,6 +194,10 @@ function NewDecisionInner() {
             // Wave 19 — attach structured chart when available so the worker
             // can echo a typed envelope back for the detail page renderer.
             chart: chart ?? undefined,
+            // Personality context from MBTI / Big Five / DISC if the user
+            // completed any of those tools this session. Backend (decision-brief)
+            // uses it to personalise options + surface relevant blind spots.
+            personalitySummary: getPersonalitySummary() || undefined,
           }),
         });
         // Rate limit (429) → friendly message, do not throw.

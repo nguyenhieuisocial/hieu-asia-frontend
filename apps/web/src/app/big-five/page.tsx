@@ -8,6 +8,7 @@ import { PersonalityQuiz, type QuizPage } from '@/components/tools/PersonalityQu
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
+import { savePersonalityResult, buildBigFiveSummary } from '@/lib/personality-store';
 import { safeJson } from '@/lib/safe-json';
 import { EXTENDED_SURVEY_SCHEMA, type BigFiveTrait } from '@/lib/survey-schema-extended';
 import { scoreBigFive, type BigFiveScoreWithMeta } from '@/lib/scoring/big-five';
@@ -88,7 +89,9 @@ export default function BigFivePage() {
   }, []);
 
   const onComplete = (answers: Record<string, number>) => {
-    setResult(scoreBigFive(answers));
+    const scored = scoreBigFive(answers);
+    setResult(scored);
+    savePersonalityResult('big-five', buildBigFiveSummary(scored.scores));
     track('tool_used', { tool: 'big-five', result: 'ok' });
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
   };
