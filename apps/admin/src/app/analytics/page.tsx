@@ -139,6 +139,12 @@ export default function AnalyticsPage() {
           onRetry={() => refetch()}
         />
       )}
+      {sessions.error_rate > 0.02 && (
+        <div className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-xs text-red-100">
+          Tỉ lệ lỗi hôm nay cao: {(sessions.error_rate * 100).toFixed(1)}% (5xx / tổng
+          request). Kiểm tra trang Trạng thái hệ thống.
+        </div>
+      )}
       {data?.sources && !data.sources.langfuse && (
         <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-muted-foreground">
           Langfuse chưa wire — chi phí LLM thật xem ở /llm-spend. Đặt LANGFUSE_PUBLIC_KEY/SECRET_KEY để bật nguồn này.
