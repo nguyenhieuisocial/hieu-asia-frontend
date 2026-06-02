@@ -159,6 +159,48 @@ export async function fetchTopPageviews(): Promise<PageviewRow[] | null> {
     .filter((r) => r.url);
 }
 
+export interface ToolUsageRow {
+  /** Tool slug from the `tool_used` event (e.g. gieo-que, big-five, vision-read). */
+  tool: string;
+  /** Total uses in the window. */
+  uses: number;
+  /** Error rate = result='error' / uses (0-1). */
+  errorRate: number;
+}
+
+/**
+ * Top tools by usage over the last 30 days, from the `tool_used` event
+ * (apps/web fires `track('tool_used', { tool, result })` — event-taxonomy.ts;
+ * track() forwards props to posthog.capture, so `properties.tool` is queryable).
+ *
+ * Surfaces which mini-tools actually get used + their error rate, so the founder
+ * can see where to deepen vs prune (the "deepen-first lăng kính" call) instead
+ * of guessing. Returns null on any PostHog failure (UI shows a placeholder).
+ */
+export async function fetchTopTools(): Promise<ToolUsageRow[] | null> {
+  const rows = await runHogQL(
+    `SELECT
+       properties.tool AS tool,
+       count() AS uses,
+       countIf(properties.result = 'error') AS errors
+     FROM events
+     WHERE event = 'tool_used'
+       AND timestamp > now() - INTERVAL 30 DAY
+     GROUP BY tool
+     ORDER BY uses DESC
+     LIMIT 15`,
+  );
+  if (!rows) return null;
+  return rows
+    .map((r) => {
+      const tool = String(r[0] ?? '');
+      const uses = Number(r[1] ?? 0);
+      const errors = Number(r[2] ?? 0);
+      return { tool, uses, errorRate: uses > 0 ? errors / uses : 0 };
+    })
+    .filter((r) => r.tool);
+}
+
 /** True iff the personal API key is set; used by the admin page to show a
  *  config warning when live tiles are unavailable. */
 export function isPostHogServerConfigured(): boolean {
