@@ -34,6 +34,7 @@ import {
 import { PageHeader } from '@/components/admin/page-header';
 import {
   fetchPostHogFeatureFlags,
+  fetchVariantConversions,
   isPostHogServerConfigured,
   type PostHogFlag,
 } from '@/lib/posthog-server';
@@ -101,7 +102,13 @@ function isRecentlyCalled(iso: string | null): boolean {
 // Component
 // ───────────────────────────────────────────────────────────────────────────
 
-function FlagRow({ flag }: { flag: PostHogFlag }) {
+function FlagRow({
+  flag,
+  conv,
+}: {
+  flag: PostHogFlag;
+  conv?: Map<string, { exposed: number; converted: number }>;
+}) {
   const rollout = flag.rollout_percentage ?? 0;
   const recentlyCalled = isRecentlyCalled(flag.last_called_at);
 
@@ -215,20 +222,32 @@ function FlagRow({ flag }: { flag: PostHogFlag }) {
       {flag.is_multivariate && flag.variants && flag.variants.length > 0 && (
         <div className="mt-4">
           <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            Variant breakdown
+            Variant breakdown · <span className="text-emerald-400">xanh</span> = % người thấy biến thể rồi trả tiền (30d)
           </div>
           <div className="mt-2 flex flex-wrap gap-1.5">
-            {flag.variants.map((v) => (
-              <span
-                key={v.key}
-                className="inline-flex items-center gap-1 rounded-md border border-border bg-muted/30 px-2 py-1 text-xs"
-              >
-                <code className="font-mono text-foreground">{v.key}</code>
-                <span className="font-mono text-muted-foreground">
-                  {v.rollout_percentage}%
+            {flag.variants.map((v) => {
+              const c = conv?.get(v.key);
+              const rate = c && c.exposed > 0 ? c.converted / c.exposed : null;
+              return (
+                <span
+                  key={v.key}
+                  className="inline-flex items-center gap-1.5 rounded-md border border-border bg-muted/30 px-2 py-1 text-xs"
+                >
+                  <code className="font-mono text-foreground">{v.key}</code>
+                  <span className="font-mono text-muted-foreground">
+                    {v.rollout_percentage}%
+                  </span>
+                  {rate !== null && (
+                    <span
+                      className="font-mono text-emerald-400"
+                      title={`${c!.converted}/${c!.exposed} người thấy biến thể này rồi trả tiền (30 ngày) — tương quan, không phải significance`}
+                    >
+                      · {(rate * 100).toFixed(0)}% 💰
+                    </span>
+                  )}
                 </span>
-              </span>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
@@ -261,7 +280,15 @@ function FlagRow({ flag }: { flag: PostHogFlag }) {
 
 export default async function ExperimentsPage() {
   const configured = isPostHogServerConfigured();
-  const flags = configured ? await fetchPostHogFeatureFlags() : null;
+  const [flags, variantConv] = configured
+    ? await Promise.all([fetchPostHogFeatureFlags(), fetchVariantConversions()])
+    : [null, null];
+  // Lookup: flag key → variant key → { exposed, converted } (last 30 days).
+  const convByFlag = new Map<string, Map<string, { exposed: number; converted: number }>>();
+  for (const r of variantConv ?? []) {
+    if (!convByFlag.has(r.flag)) convByFlag.set(r.flag, new Map());
+    convByFlag.get(r.flag)!.set(r.variant, { exposed: r.exposed, converted: r.converted });
+  }
   const fetchedAt = new Date();
 
   // Summary stats (only when we have data)
@@ -377,7 +404,7 @@ export default async function ExperimentsPage() {
       {sorted && sorted.length > 0 && (
         <div className="mt-8 overflow-hidden rounded-card-editorial border border-border bg-card">
           {sorted.map((f) => (
-            <FlagRow key={f.id} flag={f} />
+            <FlagRow key={f.id} flag={f} conv={convByFlag.get(f.key)} />
           ))}
         </div>
       )}
