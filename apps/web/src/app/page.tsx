@@ -178,6 +178,17 @@ const SERVICES_JSONLD = {
     },
     {
       '@type': 'Service',
+      name: 'Big Five (OCEAN)',
+      serviceType: 'Big Five (OCEAN) personality assessment',
+      provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
+      areaServed: 'VN',
+      inLanguage: 'vi-VN',
+      url: 'https://hieu.asia/big-five',
+      description:
+        'Trắc nghiệm Big Five (OCEAN) — 5 chiều tính cách có cơ sở khoa học vững nhất, kèm bản đọc sâu cá nhân hoá.',
+    },
+    {
+      '@type': 'Service',
       name: 'Palm Reading AI',
       serviceType: 'Palmistry / chiromancy AI analysis',
       provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
