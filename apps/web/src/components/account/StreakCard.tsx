@@ -12,7 +12,8 @@
  *    flashes a skeleton at the (mostly anonymous) public-page audience.
  *
  * Reads the user's streak from the worker on mount and lets them check in once
- * per day. No rewards economy — the consecutive-day count is the loop itself.
+ * per day. Milestones (7/30/100/365 days) earn a recognition badge + a congrats
+ * line on the day they're hit — recognition only, still NO rewards economy.
  *
  * Degrades silently: if the user isn't signed in or the endpoint is briefly
  * unavailable (e.g. before the backend deploy lands), it renders nothing rather
@@ -21,7 +22,7 @@
 
 import * as React from 'react';
 import { Flame } from 'lucide-react';
-import { getStreak, checkin, type StreakView } from '@/lib/daily-checkin';
+import { getStreak, checkin, streakMilestone, type StreakView } from '@/lib/daily-checkin';
 
 export function StreakCard({ variant = 'card' }: { variant?: 'card' | 'compact' } = {}) {
   const [phase, setPhase] = React.useState<'loading' | 'ready' | 'hidden'>('loading');
@@ -70,6 +71,7 @@ export function StreakCard({ variant = 'card' }: { variant?: 'card' | 'compact' 
 
   const { current, best, total, checkedInToday } = streak;
   const fresh = total === 0;
+  const ms = streakMilestone(current);
   const ctaLabel = submitting
     ? 'Đang điểm danh…'
     : fresh
@@ -92,6 +94,16 @@ export function StreakCard({ variant = 'card' }: { variant?: 'card' | 'compact' 
           <span className="font-heading text-foreground">{current}</span> ngày liên tiếp
           {best > 0 && <span className="text-muted-foreground"> · kỷ lục {best}</span>}
         </p>
+        {ms.reached && (
+          <span
+            className={`inline-flex items-center gap-1 rounded-full border border-gold/40 px-2 py-0.5 text-[11px] font-medium text-gold-700 ${
+              ms.justHit ? 'bg-gold/15' : ''
+            }`}
+          >
+            <span aria-hidden>{ms.justHit ? '🎉' : '🏅'}</span>
+            {ms.justHit ? `Vừa đạt mốc ${ms.reached.label}!` : `Mốc ${ms.reached.label}`}
+          </span>
+        )}
         <div className="ml-auto">
           {checkedInToday ? (
             <span className="flex items-center gap-1.5 text-sm text-gold-700">
@@ -122,10 +134,25 @@ export function StreakCard({ variant = 'card' }: { variant?: 'card' | 'compact' 
       aria-labelledby="streak-h"
       className="rounded-xl border border-border bg-card/30 p-5"
     >
+      {ms.justHit && ms.reached && (
+        <p className="mb-3 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-sm text-gold-700">
+          <span aria-hidden>🎉</span> Chúc mừng! Bạn vừa giữ chuỗi đủ{' '}
+          <strong className="font-semibold">{ms.reached.label}</strong> liên tiếp.
+        </p>
+      )}
+
       <div className="mb-3 flex items-baseline justify-between">
-        <h2 id="streak-h" className="font-heading text-base text-foreground/80 sm:text-lg">
-          Chuỗi ngày của bạn
-        </h2>
+        <div className="flex items-center gap-2">
+          <h2 id="streak-h" className="font-heading text-base text-foreground/80 sm:text-lg">
+            Chuỗi ngày của bạn
+          </h2>
+          {ms.reached && (
+            <span className="inline-flex items-center gap-1 rounded-full border border-gold/40 px-2 py-0.5 text-[11px] font-medium text-gold-700">
+              <span aria-hidden>🏅</span>
+              {ms.reached.label}
+            </span>
+          )}
+        </div>
         <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
           Điểm danh
         </span>
@@ -172,6 +199,11 @@ export function StreakCard({ variant = 'card' }: { variant?: 'card' | 'compact' 
               </p>
             )}
           </>
+        )}
+        {ms.next && (
+          <p className="mt-2 text-xs text-muted-foreground">
+            Còn <span className="text-foreground/80">{ms.toNext}</span> ngày tới mốc {ms.next.label}.
+          </p>
         )}
       </div>
     </section>

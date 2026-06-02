@@ -225,6 +225,55 @@ export async function fetchTopTools(): Promise<ToolUsageRow[] | null> {
     .filter((r) => r.tool);
 }
 
+export interface VariantConversionRow {
+  /** The feature-flag key ($feature_flag). */
+  flag: string;
+  /** The variant the user was shown ($feature_flag_response). */
+  variant: string;
+  /** Distinct persons exposed to this variant in the window. */
+  exposed: number;
+  /** Of those, distinct persons who also paid (payment_completed). */
+  converted: number;
+}
+
+/**
+ * Per-variant conversion for every multivariate flag, last 30 days. For each
+ * (flag, variant): how many distinct users saw that variant
+ * ($feature_flag_called → $feature_flag_response) and how many of THOSE also
+ * fired payment_completed. That's the experiment signal the flag roster lacked
+ * — "which variant actually leads to paying", not just rollout %.
+ *
+ * Correlation, not statistical significance (a paying user may have seen
+ * several variants) — a directional at-a-glance read. Same proven IN-subquery
+ * shape as fetchTopTools. Returns null on any PostHog failure.
+ */
+export async function fetchVariantConversions(): Promise<VariantConversionRow[] | null> {
+  const rows = await runHogQL(
+    `SELECT
+       properties.$feature_flag AS flag,
+       properties.$feature_flag_response AS variant,
+       count(DISTINCT person_id) AS exposed,
+       count(DISTINCT IF(person_id IN (
+         SELECT DISTINCT person_id FROM events
+         WHERE event = 'payment_completed'
+           AND timestamp > now() - INTERVAL 30 DAY
+       ), person_id, NULL)) AS converted
+     FROM events
+     WHERE event = '$feature_flag_called'
+       AND timestamp > now() - INTERVAL 30 DAY
+     GROUP BY flag, variant`,
+  );
+  if (!rows) return null;
+  return rows
+    .map((r) => ({
+      flag: String(r[0] ?? ''),
+      variant: String(r[1] ?? ''),
+      exposed: Number(r[2] ?? 0),
+      converted: Number(r[3] ?? 0),
+    }))
+    .filter((r) => r.flag && r.variant);
+}
+
 /** True iff the personal API key is set; used by the admin page to show a
  *  config warning when live tiles are unavailable. */
 export function isPostHogServerConfigured(): boolean {
