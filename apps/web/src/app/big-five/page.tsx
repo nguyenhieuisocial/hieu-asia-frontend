@@ -1,14 +1,18 @@
 'use client';
 
 import * as React from 'react';
-import { Button, Card, CardContent } from '@hieu-asia/ui';
+import ReactMarkdown from 'react-markdown';
+import { Button, Card, CardContent, Skeleton } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { PersonalityQuiz, type QuizPage } from '@/components/tools/PersonalityQuiz';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
+import { safeJson } from '@/lib/safe-json';
 import { EXTENDED_SURVEY_SCHEMA, type BigFiveTrait } from '@/lib/survey-schema-extended';
 import { scoreBigFive, type BigFiveScoreWithMeta } from '@/lib/scoring/big-five';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
 const BIG_FIVE_PAGES = EXTENDED_SURVEY_SCHEMA.pages.filter((p) =>
   p.name.startsWith('big_five'),
@@ -30,6 +34,43 @@ function level(score: number): 'Cao' | 'Trung bình' | 'Thấp' {
 
 export default function BigFivePage() {
   const [result, setResult] = React.useState<BigFiveScoreWithMeta | null>(null);
+  const [reading, setReading] = React.useState<string | null>(null);
+  const [readingLoading, setReadingLoading] = React.useState(false);
+
+  // Part 3 — bản đọc sâu cá nhân hoá từ điểm số (backend `/tools/bigfive-read`,
+  // contract ở corpus/big-five/README.md). Fallback an toàn: endpoint chưa có /
+  // lỗi → ẩn mục đọc, trang vẫn giữ nguyên thanh điểm + mô tả như cũ.
+  React.useEffect(() => {
+    if (!result) return;
+    let cancelled = false;
+    setReading(null);
+    setReadingLoading(true);
+    void (async () => {
+      try {
+        const res = await fetch(`${API_BASE}/tools/bigfive-read`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            scores: result.scores,
+            confidence: result.total_answered / result.total_items,
+          }),
+        });
+        const parsed = await safeJson<{ ok: true; reading: string } | { ok: false; error: string }>(res);
+        if (!parsed.ok) throw new Error(`HTTP ${parsed.status}`);
+        const json = parsed.data as { ok: true; reading: string } | { ok: false; error: string };
+        if (!json.ok || !json.reading) throw new Error('empty reading');
+        if (!cancelled) setReading(json.reading);
+      } catch {
+        // Silent fallback — thanh điểm + mô tả vẫn là trải nghiệm cho tới khi endpoint sống.
+        if (!cancelled) setReading(null);
+      } finally {
+        if (!cancelled) setReadingLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [result]);
 
   // Mở link chia sẻ "/big-five?r=o-c-e-a-n" → dựng lại kết quả để hiển thị ngay.
   React.useEffect(() => {
@@ -121,6 +162,42 @@ export default function BigFivePage() {
                   </Card>
                 );
               })}
+
+              {(readingLoading || reading) && (
+                <Card className="relative overflow-hidden border border-gold/20 bg-gradient-to-br from-gold/5 to-transparent">
+                  <CardContent className="p-6">
+                    <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                      Luận giải sâu
+                    </div>
+                    {readingLoading && !reading ? (
+                      <div className="mt-3 space-y-2">
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-[92%]" />
+                        <Skeleton className="h-4 w-3/4" />
+                      </div>
+                    ) : reading ? (
+                      <article className="markdown-report mt-3 space-y-3 text-sm leading-relaxed text-foreground/90">
+                        <ReactMarkdown
+                          components={{
+                            h1: ({ ...props }) => <h2 className="mt-4 font-heading text-xl text-gold" {...props} />,
+                            h2: ({ ...props }) => <h3 className="mt-3 font-heading text-lg text-foreground" {...props} />,
+                            h3: ({ ...props }) => <h4 className="mt-3 font-heading text-base text-foreground" {...props} />,
+                            p: ({ ...props }) => <p className="leading-relaxed" {...props} />,
+                            ul: ({ ...props }) => <ul className="ml-5 list-disc space-y-1" {...props} />,
+                            ol: ({ ...props }) => <ol className="ml-5 list-decimal space-y-1" {...props} />,
+                            strong: ({ ...props }) => <strong className="text-gold" {...props} />,
+                          }}
+                        >
+                          {reading}
+                        </ReactMarkdown>
+                      </article>
+                    ) : null}
+                    <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
+                      Cơ sở: mô hình Big Five (IPIP, miền công cộng). Mô tả xu hướng, không phán định mệnh.
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
 
               <div className="flex flex-wrap gap-3 pt-1">
                 <ShareResultButton
