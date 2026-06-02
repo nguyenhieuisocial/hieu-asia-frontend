@@ -477,7 +477,9 @@ function AdminSessionsPageInner() {
         cell: (s) => (
           <div className="min-w-0">
             <div className="truncate text-foreground">
-              {s.user_email || (
+              {s.user_email && s.user_email.includes('@') ? (
+                s.user_email
+              ) : (
                 <span className="italic text-muted-foreground">Khách ẩn danh</span>
               )}
             </div>

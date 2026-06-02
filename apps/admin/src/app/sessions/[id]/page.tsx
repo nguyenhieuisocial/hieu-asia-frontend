@@ -174,8 +174,8 @@ export default function SessionDetailPage() {
             </span>
             <StatusBadge status={STATUS_TONE[s.status]} label={STATUS_LABEL[s.status]} />
           </div>
-          <h1 className="mt-2 truncate text-2xl font-semibold text-foreground" title={s.user_email || 'Người dùng ẩn danh'}>
-            {s.user_email || <span className="italic text-muted-foreground">Người dùng ẩn danh</span>}
+          <h1 className="mt-2 truncate text-2xl font-semibold text-foreground" title={s.user_email && s.user_email.includes('@') ? s.user_email : 'Người dùng ẩn danh'}>
+            {s.user_email && s.user_email.includes('@') ? s.user_email : <span className="italic text-muted-foreground">Người dùng ẩn danh</span>}
           </h1>
           <div className="mt-1 flex flex-wrap items-center gap-2 text-xs">
             <span className="rounded border border-gold/30 bg-gold/5 px-2 py-0.5 font-mono text-gold/80" title={s.session_id}>
