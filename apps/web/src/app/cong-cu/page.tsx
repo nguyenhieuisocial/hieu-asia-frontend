@@ -69,6 +69,12 @@ const TOOLS = [
     desc: 'Kiểm tra hợp tuổi vợ chồng, xây dựng, xuất hành theo tam hợp.',
   },
   {
+    href: '/xem-hop-nhom',
+    emoji: '👨‍👩‍👧‍👦',
+    name: 'Xem Hợp Nhóm',
+    desc: 'Thêm 3–6 người (gia đình, nhóm bạn) — điểm hoà hợp chung, từng cặp và gợi ý phối hợp.',
+  },
+  {
     href: '/lich-van-nien',
     emoji: '📅',
     name: 'Lịch Vạn Niên',

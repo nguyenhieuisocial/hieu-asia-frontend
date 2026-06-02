@@ -50,6 +50,7 @@ const COL_QUICK_LOOKUP: readonly FooterLink[] = [
   { href: '/big-five', label: 'Big Five (OCEAN)', tag: 'free' },
   { href: '/disc', label: 'Trắc nghiệm DiSC', tag: 'free' },
   { href: '/xem-tuong', label: 'Xem Chỉ Tay & Tướng Mặt', tag: 'free' },
+  { href: '/xem-hop-nhom', label: 'Xem hợp nhóm / gia đình', tag: 'free' },
 ];
 
 const COL_DOCS: readonly FooterLink[] = [
