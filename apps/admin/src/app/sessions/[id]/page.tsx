@@ -2,20 +2,43 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useParams, useRouter } from 'next/navigation';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  Button,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Input,
   StatusBadge,
   cn,
+  toast,
 } from '@hieu-asia/ui';
-import { ChevronLeft, Clock, DollarSign, ListTodo, Copy, AlertCircle, CreditCard, ExternalLink } from 'lucide-react';
+import {
+  ChevronLeft,
+  Clock,
+  DollarSign,
+  ListTodo,
+  Copy,
+  AlertCircle,
+  CreditCard,
+  ExternalLink,
+  RotateCcw,
+  Pencil,
+  Trash2,
+  UserRound,
+  Link2,
+} from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import { getSession } from '@/lib/admin-api';
+import { getSession, patchSession } from '@/lib/admin-api';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
 import type { TaskStatus } from '@hieu-asia/types';
@@ -82,6 +105,27 @@ async function fetchSessionAudit(id: string): Promise<SessionAuditResp> {
   }
 }
 
+// Re-orchestrate + bulk-delete mirror the /sessions list helpers verbatim
+// (same Next API routes → Worker). Single-delete reuses the bulk route with a
+// one-id array because no dedicated single-delete endpoint exists.
+async function reOrchestrate(sessionId: string) {
+  const r = await fetch(`/api/admin/sessions/${sessionId}/re-orchestrate`, { method: 'POST' });
+  const data = await r.json().catch(() => ({ ok: false, error: `HTTP ${r.status}` }));
+  if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
+  return data;
+}
+
+async function bulkDelete(sessionIds: string[]) {
+  const r = await fetch('/api/admin/sessions/bulk-delete', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ session_ids: sessionIds, confirm: 'DELETE_BULK' }),
+  });
+  const data = await r.json().catch(() => ({ ok: false, error: `HTTP ${r.status}` }));
+  if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
+  return data;
+}
+
 function fmtDateTime(iso: string) {
   return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'medium' });
 }
@@ -119,6 +163,8 @@ function Field({
 
 export default function SessionDetailPage() {
   const params = useParams<{ id: string }>();
+  const router = useRouter();
+  const qc = useQueryClient();
   const id = params?.id ?? '';
   const session = useQuery({
     queryKey: ['admin', 'session', id],
@@ -134,6 +180,82 @@ export default function SessionDetailPage() {
     if (!session.data) return;
     navigator.clipboard.writeText(session.data.session_id).catch(() => {});
   }, [session.data]);
+
+  // Actions toolbar — mirrors the per-row actions on the /sessions list so the
+  // detail page is operationally complete (re-run / rename / delete / view
+  // customer / copy public link). Reuses the same backend calls + confirm
+  // patterns as the list (no new endpoints).
+  const [renameOpen, setRenameOpen] = React.useState(false);
+  const [renameLabel, setRenameLabel] = React.useState('');
+  const [renameNote, setRenameNote] = React.useState('');
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = React.useState(false);
+
+  const reOrchestrateMut = useMutation({
+    mutationFn: reOrchestrate,
+    onSuccess: () => {
+      toast.success('Đã trigger re-orchestrate', { description: `Session ${id}` });
+      qc.invalidateQueries({ queryKey: ['admin', 'session', id] });
+      qc.invalidateQueries({ queryKey: ['admin', 'session', id, 'audit'] });
+    },
+    onError: (e) =>
+      toast.error('Re-orchestrate thất bại', { description: (e as Error).message }),
+  });
+
+  const renameMut = useMutation({
+    mutationFn: (vars: { label: string; note: string }) =>
+      patchSession(id, { label: vars.label, note: vars.note }),
+    onSuccess: (res) => {
+      if (res.ok) {
+        toast.success('Đã lưu tên / ghi chú');
+        setRenameOpen(false);
+        qc.invalidateQueries({ queryKey: ['admin', 'session', id] });
+      } else {
+        toast.error('Lưu thất bại', { description: res.error });
+      }
+    },
+    onError: (e) => toast.error('Lưu thất bại', { description: (e as Error).message }),
+  });
+
+  const deleteMut = useMutation({
+    // Single-row delete reuses the bulk-delete route with a one-id array — the
+    // same mechanism the list page's per-row "Xóa" uses (no single-delete
+    // endpoint exists). On success we leave the (now-gone) detail page.
+    mutationFn: () => bulkDelete([id]),
+    onSuccess: () => {
+      toast.success('Đã xóa phiên');
+      setConfirmDeleteOpen(false);
+      qc.invalidateQueries({ queryKey: ['admin', 'sessions'] });
+      router.push('/sessions');
+    },
+    onError: (e) => toast.error('Xóa thất bại', { description: (e as Error).message }),
+  });
+
+  const copyReportLink = React.useCallback(() => {
+    if (!session.data) return;
+    const url = `${PUBLIC_WEB_URL}/reading/${encodeURIComponent(session.data.session_id)}/report`;
+    navigator.clipboard
+      .writeText(url)
+      .then(() => toast.success('Đã copy link báo cáo'))
+      .catch(() => toast.error('Copy link thất bại'));
+  }, [session.data]);
+
+  const openRename = React.useCallback(() => {
+    setRenameLabel(session.data?.label ?? '');
+    setRenameNote(session.data?.note ?? '');
+    setRenameOpen(true);
+  }, [session.data]);
+
+  const handleReOrchestrate = React.useCallback(() => {
+    reOrchestrateMut.mutate(id);
+  }, [reOrchestrateMut, id]);
+
+  const handleRenameSave = React.useCallback(() => {
+    renameMut.mutate({ label: renameLabel, note: renameNote });
+  }, [renameMut, renameLabel, renameNote]);
+
+  const handleDeleteConfirm = React.useCallback(() => {
+    deleteMut.mutate();
+  }, [deleteMut]);
 
   if (session.isLoading) {
     return (
@@ -182,6 +304,17 @@ export default function SessionDetailPage() {
     Number.isFinite(createdMs) &&
     Date.now() - createdMs > STUCK_THRESHOLD_MS;
   const hasPayment = s.paid != null || s.tier != null || s.paid_at != null;
+
+  // "Xem khách hàng" target. The customer detail route (/customers/[id]) is
+  // keyed by user_id; prefer it when present. Else fall back to the customers
+  // list pre-filtered by the email search. Anonymous sessions (no id, no real
+  // email) get no link — the button is hidden.
+  const hasRealEmail = !!(s.user_email && s.user_email.includes('@'));
+  const customerHref = s.user_id
+    ? `/customers/${encodeURIComponent(s.user_id)}`
+    : hasRealEmail
+      ? `/customers?search=${encodeURIComponent(s.user_email)}`
+      : null;
 
   return (
     <div className="space-y-6">
@@ -246,19 +379,74 @@ export default function SessionDetailPage() {
           </div>
         </div>
 
-        {/* Sessions polish — open the customer-facing report (public web app)
-            in a new tab. Keyed by session_id; the /report sub-route renders
-            the finished reading (and shows a "chưa sẵn sàng" state if not). */}
-        <a
-          href={`${PUBLIC_WEB_URL}/reading/${encodeURIComponent(s.session_id)}/report`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-gold/30 bg-gold/10 px-3 text-sm font-medium text-gold transition-all duration-300 ease-editorial hover:border-gold/50 hover:bg-gold/15"
-          title="Mở báo cáo khách nhìn thấy (tab mới)"
-        >
-          <ExternalLink className="h-4 w-4" aria-hidden />
-          Xem báo cáo
-        </a>
+        {/* Actions toolbar — re-run / rename / delete / view customer / copy
+            link, alongside the existing report-open + copy buttons. Mirrors the
+            per-row actions on the /sessions list so the detail page is
+            operationally complete. */}
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleReOrchestrate}
+            disabled={reOrchestrateMut.isPending}
+            title="Chạy lại pipeline cho phiên này"
+          >
+            <RotateCcw className="mr-1.5 h-3.5 w-3.5 text-gold" aria-hidden />
+            {reOrchestrateMut.isPending ? 'Đang chạy…' : 'Chạy lại'}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={openRename}
+            title="Đặt tên gợi nhớ / ghi chú nội bộ"
+          >
+            <Pencil className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+            Sửa tên / ghi chú
+          </Button>
+          {customerHref && (
+            <Link
+              href={customerHref}
+              className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm font-medium text-foreground transition-all duration-300 ease-editorial hover:border-gold/50"
+              title="Mở hồ sơ khách hàng của phiên này"
+            >
+              <UserRound className="h-4 w-4" aria-hidden />
+              Xem khách hàng
+            </Link>
+          )}
+          <button
+            type="button"
+            onClick={copyReportLink}
+            className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm font-medium text-foreground transition-all duration-300 ease-editorial hover:border-gold/50"
+            title="Copy link báo cáo khách nhìn thấy"
+          >
+            <Link2 className="h-4 w-4" aria-hidden />
+            Copy link
+          </button>
+
+          {/* Sessions polish — open the customer-facing report (public web app)
+              in a new tab. Keyed by session_id; the /report sub-route renders
+              the finished reading (and shows a "chưa sẵn sàng" state if not). */}
+          <a
+            href={`${PUBLIC_WEB_URL}/reading/${encodeURIComponent(s.session_id)}/report`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-gold/30 bg-gold/10 px-3 text-sm font-medium text-gold transition-all duration-300 ease-editorial hover:border-gold/50 hover:bg-gold/15"
+            title="Mở báo cáo khách nhìn thấy (tab mới)"
+          >
+            <ExternalLink className="h-4 w-4" aria-hidden />
+            Xem báo cáo
+          </a>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setConfirmDeleteOpen(true)}
+            className="border-red-500/40 text-red-700 hover:bg-red-500/10 dark:text-red-300"
+            title="Xóa phiên vĩnh viễn"
+          >
+            <Trash2 className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+            Xoá
+          </Button>
+        </div>
       </div>
 
       {isStuck && (
@@ -763,6 +951,82 @@ export default function SessionDetailPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Sửa tên / ghi chú — same label+note edit as the list (patchSession),
+          prefilled from the current values, refetches the detail on success. */}
+      <Dialog open={renameOpen} onOpenChange={(o) => !o && setRenameOpen(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Đặt tên / ghi chú phiên</DialogTitle>
+            <DialogDescription>
+              Tên gợi nhớ + ghi chú nội bộ cho phiên này. Không đổi ID gốc — chỉ là nhãn hiển thị.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-muted-foreground">Tên gợi nhớ</label>
+              <Input
+                value={renameLabel}
+                onChange={(e) => setRenameLabel(e.target.value)}
+                placeholder="vd: Chị Lan – tài chính"
+                maxLength={120}
+                autoFocus
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-muted-foreground">Ghi chú</label>
+              <Input
+                value={renameNote}
+                onChange={(e) => setRenameNote(e.target.value)}
+                placeholder="vd: khách VIP, cần follow-up"
+                maxLength={280}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="ghost"
+              onClick={() => setRenameOpen(false)}
+              disabled={renameMut.isPending}
+            >
+              Hủy
+            </Button>
+            <Button onClick={handleRenameSave} disabled={renameMut.isPending}>
+              {renameMut.isPending ? 'Đang lưu…' : 'Lưu'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Xoá — destructive confirm. Reuses the bulk-delete route with one id;
+          on success leaves the (now-gone) detail page back to the list. */}
+      <Dialog open={confirmDeleteOpen} onOpenChange={(o) => !o && setConfirmDeleteOpen(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Xóa phiên?</DialogTitle>
+            <DialogDescription>
+              Session <code className="font-mono text-gold">{s.session_id}</code> sẽ bị xóa
+              vĩnh viễn (kèm báo cáo và metadata). Hành động không hoàn tác.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="ghost"
+              onClick={() => setConfirmDeleteOpen(false)}
+              disabled={deleteMut.isPending}
+            >
+              Hủy
+            </Button>
+            <Button
+              onClick={handleDeleteConfirm}
+              disabled={deleteMut.isPending}
+              className="bg-red-500/90 text-foreground hover:bg-red-500"
+            >
+              {deleteMut.isPending ? 'Đang xóa…' : 'Xóa'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
