@@ -97,7 +97,7 @@ function ConnectInner() {
             <p>Bạn cần đăng nhập tài khoản hieu.asia trước khi nối.</p>
             <Button
               onClick={() => {
-                window.location.href = `/signin?return=${encodeURIComponent(state.returnTo)}`;
+                window.location.href = `/signin?next=${encodeURIComponent(state.returnTo)}`;
               }}
             >
               Đăng nhập
