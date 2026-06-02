@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ZodiacCard } from '@/components/daily/ZodiacCard';
 import { SubscribePush } from '@/components/daily/SubscribePush';
+import { StreakCard } from '@/components/account/StreakCard';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { getVietnamTodayISO } from '@/lib/vn-date';
@@ -137,6 +138,10 @@ export default async function Page() {
       ]}
       heroAction={<SubscribePush vapidPublicKey={vapidKey} />}
     >
+      {/* Daily-return habit loop: returning signed-in users can keep their
+          streak right where the daily ritual happens. Self-hides for anonymous
+          / signed-out visitors (the SEO-traffic majority). */}
+      <StreakCard variant="compact" />
       <section className="mt-8">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="font-heading text-lg font-semibold text-foreground">
