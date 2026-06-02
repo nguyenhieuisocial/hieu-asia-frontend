@@ -100,6 +100,7 @@ type StatusFilter = TaskStatus | '';
 type PaidFilter = '' | '1' | '0';
 type ReadingTypeFilter = string; // '' = all
 type ChannelFilter = string; // '' = all
+type CountryFilter = string; // '' = all; otherwise an ISO-3166-1 alpha-2 code
 
 // Today there is effectively ONE reading pipeline, so these mostly read
 // "tuvi_batu" / "web". The option lists are intentionally small + extendable —
@@ -251,6 +252,11 @@ function AdminSessionsPageInner() {
   const [channel, setChannel] = React.useState<ChannelFilter>(
     () => searchParams?.get('channel') ?? '',
   );
+  // Sessions polish — country filter (backend `country` param = ISO alpha-2,
+  // e.g. VN). Stored uppercase so it matches the cf-ipcountry-derived values.
+  const [country, setCountry] = React.useState<CountryFilter>(
+    () => (searchParams?.get('country') ?? '').toUpperCase(),
+  );
   const [fromDate, setFromDate] = React.useState<string>(
     () => searchParams?.get('from') ?? '',
   );
@@ -275,18 +281,19 @@ function AdminSessionsPageInner() {
     if (paid) next.set('paid', paid);
     if (readingType) next.set('reading_type', readingType);
     if (channel) next.set('channel', channel);
+    if (country) next.set('country', country);
     if (fromDate) next.set('from', fromDate);
     if (toDate) next.set('to', toDate);
     if (userId) next.set('user_id', userId);
     const qs = next.toString();
     router.replace(qs ? `?${qs}` : '?', { scroll: false });
-  }, [status, sort, paid, readingType, channel, fromDate, toDate, userId, router]);
+  }, [status, sort, paid, readingType, channel, country, fromDate, toDate, userId, router]);
 
   const { data, isLoading, refetch, isFetching, error } = useQuery({
     queryKey: [
       'admin',
       'sessions',
-      { status, search, page, paid, readingType, channel, fromDate, toDate, userId },
+      { status, search, page, paid, readingType, channel, country, fromDate, toDate, userId },
     ],
     queryFn: () =>
       listSessions({
@@ -297,6 +304,7 @@ function AdminSessionsPageInner() {
         paid: paid || undefined,
         reading_type: readingType || undefined,
         channel: channel || undefined,
+        country: country || undefined,
         from: fromDate || undefined,
         to: toDate || undefined,
         user_id: userId || undefined,
@@ -429,6 +437,11 @@ function AdminSessionsPageInner() {
 
   const handleChannelChange = React.useCallback((v: string) => {
     setChannel(v === '__all' ? '' : v);
+    setPage(1);
+  }, []);
+
+  const handleCountryChange = React.useCallback((v: string) => {
+    setCountry(v === '__all' ? '' : v);
     setPage(1);
   }, []);
 
@@ -806,12 +819,28 @@ function AdminSessionsPageInner() {
     READING_TYPE_OPTIONS.find((o) => o.value === readingType)?.label ?? 'Tất cả loại';
   const channelLabelSel =
     CHANNEL_OPTIONS.find((o) => o.value === channel)?.label ?? 'Tất cả kênh';
+  // Sessions polish — country options derived from the distinct `country`
+  // values on the current page (plus the active selection so it never drops
+  // out of its own dropdown). Sorted alphabetically; flag emoji via the
+  // shared countryFlag() helper. Empty list ⇒ the dropdown is hidden below.
+  const countryOptions = React.useMemo<CountryFilter[]>(() => {
+    const set = new Set<string>();
+    for (const r of rows) {
+      if (r.country) set.add(r.country.toUpperCase());
+    }
+    if (country) set.add(country);
+    return Array.from(set).sort();
+  }, [rows, country]);
+  const countryLabelSel = country
+    ? `${countryFlag(country)} ${country}`.trim()
+    : 'Tất cả quốc gia';
   const hasActiveFilter = !!(
     search ||
     status ||
     paid ||
     readingType ||
     channel ||
+    country ||
     fromDate ||
     toDate ||
     userId
@@ -1039,6 +1068,41 @@ function AdminSessionsPageInner() {
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
+            {/* Sessions polish — country filter. Options come from the distinct
+                country codes on the current page; hidden entirely when none are
+                present so the chrome stays clean for single-market traffic. */}
+            {countryOptions.length > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className="inline-flex h-10 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground transition-all duration-300 ease-editorial hover:border-gold/50"
+                    aria-label="Lọc theo quốc gia"
+                  >
+                    {ICON_FILTER}
+                    <span>{countryLabelSel}</span>
+                    {ICON_CHEVRON}
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="min-w-[12rem]">
+                  <DropdownMenuLabel>Quốc gia</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuRadioGroup
+                    value={country || '__all'}
+                    onValueChange={handleCountryChange}
+                  >
+                    <DropdownMenuRadioItem value="__all">
+                      Tất cả quốc gia
+                    </DropdownMenuRadioItem>
+                    {countryOptions.map((cc) => (
+                      <DropdownMenuRadioItem key={cc} value={cc}>
+                        {countryFlag(cc)} {cc}
+                      </DropdownMenuRadioItem>
+                    ))}
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
             <div className="flex items-center gap-1.5">
               <label className="text-[11px] uppercase tracking-wider text-muted-foreground">
                 Từ

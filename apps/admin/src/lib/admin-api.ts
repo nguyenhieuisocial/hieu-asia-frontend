@@ -338,6 +338,8 @@ export async function listSessions(
     channel?: string;
     /** '1' (paid) | '0' (unpaid). */
     paid?: '1' | '0';
+    /** ISO-3166-1 alpha-2 country code (e.g. "VN"). */
+    country?: string;
     /** Group-by-user: scope the list to a single user_id. */
     user_id?: string;
   } = {},
@@ -355,6 +357,7 @@ export async function listSessions(
   if (q.reading_type) qs.set('reading_type', q.reading_type);
   if (q.channel) qs.set('channel', q.channel);
   if (q.paid) qs.set('paid', q.paid);
+  if (q.country) qs.set('country', q.country);
   if (q.user_id) qs.set('user_id', q.user_id);
   const real = await proxyFetch<SessionsEnvelope>(`/admin/sessions?${qs.toString()}`);
   const sessionsList = real?.sessions || real?.items;
@@ -409,6 +412,10 @@ export async function listSessions(
   if (q.reading_type) rows = rows.filter((s) => s.reading_type === q.reading_type);
   if (q.channel) rows = rows.filter((s) => s.channel === q.channel);
   if (q.paid) rows = rows.filter((s) => (s.paid ? '1' : '0') === q.paid);
+  if (q.country) {
+    const cc = q.country.toUpperCase();
+    rows = rows.filter((s) => (s.country ?? '').toUpperCase() === cc);
+  }
   if (q.search) {
     const s = q.search.toLowerCase();
     rows = rows.filter(
