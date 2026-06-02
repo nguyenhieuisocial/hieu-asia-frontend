@@ -42,6 +42,15 @@ export interface EventPropertyMap {
   };
   affiliate_link_clicked: { affiliate_code?: string; target?: string };
   daily_horoscope_subscribed: { channel?: "email" | "telegram" | "push" };
+  daily_checkin: {
+    /** Consecutive-day count AFTER this check-in. */
+    streak_current: number;
+    streak_best?: number;
+    /** Set only when this check-in lands exactly on a milestone (7/30/100/365). */
+    milestone_days?: number;
+    /** Which surface the check-in happened from. */
+    surface?: "card" | "compact";
+  };
   tool_used: { tool: string; result?: "ok" | "error" };
 
   // ── Reading lifecycle ───────────────────────────────────────────
