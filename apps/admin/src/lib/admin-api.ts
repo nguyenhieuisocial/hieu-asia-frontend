@@ -240,6 +240,17 @@ interface BackendSessionDetail {
   paid_at?: string | null;
   reading_type?: string | null;
   channel?: string | null;
+  // Detail-only enrichments (BE PR #45): per-session paid amount + txn ref, and
+  // the customer's recent feedback (user-scoped by email, NOT per-session).
+  paid_amount_vnd?: number | null;
+  paid_txn_ref?: string | null;
+  user_feedback?: Array<{
+    ts?: string;
+    surface?: string;
+    rating?: number | null;
+    message?: string | null;
+    status?: string | null;
+  }>;
   // Wave 65 — friendly identifiers (migration 0053). Returned by the detail
   // endpoint alongside the list; surfaced so the detail page can prefill its
   // rename/note dialog.
@@ -540,6 +551,9 @@ export async function getSession(id: string) {
       reading_type:
         real.reading_type ?? (real.state_json?.reading_type as string | undefined) ?? null,
       channel: real.channel ?? (real.state_json?.channel as string | undefined) ?? null,
+      paid_amount_vnd: typeof real.paid_amount_vnd === 'number' ? real.paid_amount_vnd : null,
+      paid_txn_ref: real.paid_txn_ref ?? null,
+      user_feedback: Array.isArray(real.user_feedback) ? real.user_feedback : [],
       // Wave 65 — friendly identifiers, surfaced for the detail page's
       // rename/note dialog (mirrors the list row mapping).
       short_code: real.short_code ?? null,
@@ -560,6 +574,15 @@ export async function getSession(id: string) {
           final_report_markdown: null as string | null,
           chat_history: [] as unknown[],
           state_json: null as Record<string, unknown> | null,
+          paid_amount_vnd: null as number | null,
+          paid_txn_ref: null as string | null,
+          user_feedback: [] as Array<{
+            ts?: string;
+            surface?: string;
+            rating?: number | null;
+            message?: string | null;
+            status?: string | null;
+          }>,
         },
         'gateway unreachable; showing mock',
       ),
