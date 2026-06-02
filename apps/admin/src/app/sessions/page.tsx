@@ -346,6 +346,16 @@ function AdminSessionsPageInner() {
     return copy;
   }, [rawRows, sort]);
 
+  // STT (số thứ tự) — running ordinal continuous across pages (page 2 → 21,22…),
+  // newest-first. Display-only: HA-XXXXX (short_code) stays the stable per-session id.
+  const sttById = React.useMemo(() => {
+    const m: Record<string, number> = {};
+    rows.forEach((r, i) => {
+      m[r.session_id] = (page - 1) * PAGE_SIZE + i + 1;
+    });
+    return m;
+  }, [rows, page]);
+
   const total = stats?.total ?? data?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil((data?.total ?? total) / PAGE_SIZE));
 
@@ -592,6 +602,13 @@ function AdminSessionsPageInner() {
   const columns = React.useMemo<AdminTableColumn<AdminSession>[]>(
     () => [
       {
+        id: 'stt',
+        header: 'STT',
+        width: '48px',
+        className: 'text-right tabular-nums text-muted-foreground',
+        cell: (s) => sttById[s.session_id] ?? '',
+      },
+      {
         id: 'created_at',
         header: 'Tạo',
         sortKey: 'created_at',
@@ -803,6 +820,7 @@ function AdminSessionsPageInner() {
       },
     ],
     [
+      sttById,
       handleReOrchestrate,
       handleAskDelete,
       handleAskRename,
