@@ -1,6 +1,6 @@
 # HANDOFF — Đợt-1 Feedback Loop (wire SectionFeedback → Supabase)
 
-**Trạng thái:** SPEC ONLY — chưa apply. Cần migration DB prod trước khi apply code.
+**Trạng thái:** ⏸️ PARKED (2026-05-31). agent upgrade-dot1 đã ship feedback **analytics PostHog** (rating ẩn danh, privacy-safe) làm mặc định LIVE. Bản DB này (lưu comment + user_id = PII) **chỉ apply nếu founder muốn lưu comment để phân tích sâu** — ĐỪNG chạy cả hai (double-write). Cần migration DB prod trước khi apply code.
 **Worktree:** `hieu-frontend/ux-batch1`
 **Ngày tạo:** 2026-05-30
 

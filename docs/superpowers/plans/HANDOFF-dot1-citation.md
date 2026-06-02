@@ -1,6 +1,8 @@
 # HANDOFF Đợt-1 — Citation UI
 
-**Mục tiêu:** Surface citation metadata (nguồn RAG corpus) trong báo cáo để tăng tin cậy và minh bạch. Component `CitationBar` đã tạo sẵn. Phần này spec các bước còn lại để wire đầu cuối.
+> ✅ **SUPERSEDED (2026-05-31)** — Citation đã giải khác cách: agent upgrade-dot1 làm ở **backend markdown** (`reading-orchestrate` chèn `_Theo:/_Đối chiếu:` per-section — ĐƯỜNG A, BE PR #12/#18, live + verified). Component `CitationBar` frontend **không dùng nữa → đã gỡ**. Doc giữ làm lịch sử; KHÔNG cần wire thêm gì.
+
+**Mục tiêu (lịch sử):** Surface citation metadata (nguồn RAG corpus) trong báo cáo để tăng tin cậy và minh bạch. Component `CitationBar` đã tạo sẵn. Phần này spec các bước còn lại để wire đầu cuối.
 
 ---
 
