@@ -262,9 +262,9 @@ export default async function CohortsPage() {
       <p className="mt-8 text-xs text-muted-foreground">
         Sources: PostHog HogQL Query API (project 434217). Cohort = week of
         person's first event. Channels = $initial_utm_source ∨
-        $initial_referring_domain. Funnel events khớp{' '}
-        <code className="font-mono">event-taxonomy.ts</code>: $pageview →
-        survey_completed → reading_started → reading_completed.
+        $initial_referring_domain. Funnel (event đã fire thật ở apps/web):
+        $pageview → reading_session_created → survey_completed → report_viewed →
+        payment_completed.
       </p>
     </main>
   );
