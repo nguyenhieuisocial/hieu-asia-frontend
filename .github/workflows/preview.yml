@@ -75,7 +75,7 @@ jobs:
           echo "url=$url" >> "$GITHUB_OUTPUT"
 
       - name: Comment URL on PR
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         with:
           header: vercel-preview-${{ matrix.app.name }}
           message: |
