@@ -35,6 +35,20 @@ export function fmtDuration(sec: number | null | undefined): string {
   return `${Math.floor(sec / 60)}m ${sec % 60}s`;
 }
 
+/** VND amount → "1.234.567 ₫" (vi-VN grouping). Null/undefined → "—". */
+export function fmtVnd(amount: number | null | undefined): string {
+  if (amount == null || !Number.isFinite(amount)) return '—';
+  try {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+      maximumFractionDigits: 0,
+    }).format(amount);
+  } catch {
+    return `${Math.round(amount).toLocaleString('vi-VN')} ₫`;
+  }
+}
+
 /**
  * Humanize a UUID-ish session_id. Vault 107 §5.6 spec — show first 8 chars
  * with a `…` ellipsis so the table doesn't blow up to 36 chars wide.

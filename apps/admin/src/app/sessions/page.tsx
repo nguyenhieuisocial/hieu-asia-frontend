@@ -58,14 +58,17 @@ import {
 } from '@hieu-asia/ui';
 import {
   Activity,
+  AlertTriangle,
   ChevronDown,
   Clock,
+  CreditCard,
   Download,
   Filter,
   Globe,
   ListTodo,
   Trash2,
   Users,
+  Wallet,
 } from 'lucide-react';
 import type { TaskStatus } from '@hieu-asia/types';
 import { listSessions, getSessionsStats, patchSession } from '@/lib/admin-api';
@@ -85,6 +88,7 @@ import {
   fmtDateTime,
   fmtDuration,
   fmtRelative,
+  fmtVnd,
   humanizeSessionId,
 } from '@/components/admin/sessions/format';
 
@@ -93,6 +97,44 @@ const CONFIRM_PHRASE = 'XÓA HÀNG LOẠT';
 
 type SortOrder = 'newest' | 'oldest';
 type StatusFilter = TaskStatus | '';
+type PaidFilter = '' | '1' | '0';
+type ReadingTypeFilter = string; // '' = all
+type ChannelFilter = string; // '' = all
+
+// Today there is effectively ONE reading pipeline, so these mostly read
+// "tuvi_batu" / "web". The option lists are intentionally small + extendable —
+// variety grows as more reading types / channels launch.
+const READING_TYPE_OPTIONS: Array<{ value: ReadingTypeFilter; label: string }> = [
+  { value: '', label: 'Tất cả loại' },
+  { value: 'tuvi_batu', label: 'Tử Vi · Bát Tự' },
+  { value: 'palmistry', label: 'Xem tướng tay' },
+  { value: 'face', label: 'Xem tướng mặt' },
+];
+
+const CHANNEL_OPTIONS: Array<{ value: ChannelFilter; label: string }> = [
+  { value: '', label: 'Tất cả kênh' },
+  { value: 'web', label: 'Web' },
+  { value: 'telegram', label: 'Telegram' },
+  { value: 'zalo', label: 'Zalo' },
+];
+
+const PAID_OPTIONS: Array<{ value: PaidFilter; label: string }> = [
+  { value: '', label: 'Tất cả thanh toán' },
+  { value: '1', label: 'Đã trả' },
+  { value: '0', label: 'Chưa trả' },
+];
+
+/** Human label for a reading_type code; falls back to the raw code. */
+function readingTypeLabel(rt: string | null | undefined): string {
+  if (!rt) return '—';
+  return READING_TYPE_OPTIONS.find((o) => o.value === rt)?.label ?? rt;
+}
+
+/** Human label for a channel code; falls back to the raw code. */
+function channelLabel(ch: string | null | undefined): string {
+  if (!ch) return '—';
+  return CHANNEL_OPTIONS.find((o) => o.value === ch)?.label ?? ch;
+}
 
 const STATUS_TONE: Record<TaskStatus, React.ComponentProps<typeof StatusBadge>['status']> = {
   queued: 'neutral',
@@ -126,6 +168,9 @@ const ICON_DOWNLOAD = <Download className="mr-1.5 h-3.5 w-3.5" aria-hidden />;
 const ICON_FILTER = <Filter className="h-3 w-3 text-muted-foreground" aria-hidden />;
 const ICON_CHEVRON = <ChevronDown className="h-3 w-3 text-muted-foreground" aria-hidden />;
 const ICON_TRASH = <Trash2 className="mr-1.5 h-3.5 w-3.5" aria-hidden />;
+const ICON_WALLET = <Wallet className="h-4 w-4" aria-hidden />;
+const ICON_CREDIT = <CreditCard className="h-4 w-4" aria-hidden />;
+const ICON_WARN = <AlertTriangle className="h-4 w-4" aria-hidden />;
 
 function parseStatusParam(raw: string | null): StatusFilter {
   if (!raw) return '';
@@ -194,6 +239,25 @@ function AdminSessionsPageInner() {
   );
   const [search, setSearch] = React.useState('');
   const [page, setPage] = React.useState(1);
+  // Sessions enrichment wave — payment / type / channel + date-range + the
+  // group-by-user scope. Hydrated from URL so dashboard CTAs + bookmarks
+  // deeplink into a pre-filtered view.
+  const [paid, setPaid] = React.useState<PaidFilter>(
+    () => (searchParams?.get('paid') as PaidFilter) || '',
+  );
+  const [readingType, setReadingType] = React.useState<ReadingTypeFilter>(
+    () => searchParams?.get('reading_type') ?? '',
+  );
+  const [channel, setChannel] = React.useState<ChannelFilter>(
+    () => searchParams?.get('channel') ?? '',
+  );
+  const [fromDate, setFromDate] = React.useState<string>(
+    () => searchParams?.get('from') ?? '',
+  );
+  const [toDate, setToDate] = React.useState<string>(() => searchParams?.get('to') ?? '');
+  const [userId, setUserId] = React.useState<string>(
+    () => searchParams?.get('user_id') ?? '',
+  );
   const [selected, setSelected] = React.useState<string[]>([]);
   const [confirmBulkOpen, setConfirmBulkOpen] = React.useState(false);
   const [bulkConfirmText, setBulkConfirmText] = React.useState('');
@@ -208,14 +272,44 @@ function AdminSessionsPageInner() {
     const next = new URLSearchParams();
     if (status) next.set('status', status);
     if (sort !== 'newest') next.set('sort', sort);
+    if (paid) next.set('paid', paid);
+    if (readingType) next.set('reading_type', readingType);
+    if (channel) next.set('channel', channel);
+    if (fromDate) next.set('from', fromDate);
+    if (toDate) next.set('to', toDate);
+    if (userId) next.set('user_id', userId);
     const qs = next.toString();
     router.replace(qs ? `?${qs}` : '?', { scroll: false });
-  }, [status, sort, router]);
+  }, [status, sort, paid, readingType, channel, fromDate, toDate, userId, router]);
 
   const { data, isLoading, refetch, isFetching, error } = useQuery({
-    queryKey: ['admin', 'sessions', { status, search, page }],
+    queryKey: [
+      'admin',
+      'sessions',
+      { status, search, page, paid, readingType, channel, fromDate, toDate, userId },
+    ],
     queryFn: () =>
-      listSessions({ status: status || undefined, search, page, page_size: PAGE_SIZE }),
+      listSessions({
+        status: status || undefined,
+        search,
+        page,
+        page_size: PAGE_SIZE,
+        paid: paid || undefined,
+        reading_type: readingType || undefined,
+        channel: channel || undefined,
+        from: fromDate || undefined,
+        to: toDate || undefined,
+        user_id: userId || undefined,
+      }),
+    // Real-time: poll every 15s ONLY while a session is still running (queue is
+    // live). Idle pages don't poll. The fn reads the latest fetched rows so the
+    // interval flips itself off once the last running session settles.
+    refetchInterval: (query) => {
+      const liveRows = query.state.data?.rows;
+      const hasRunning =
+        Array.isArray(liveRows) && liveRows.some((r) => r.status === 'running');
+      return hasRunning ? 15_000 : false;
+    },
   });
 
   // Wave 65 — whole-DB KPI totals (the page-slice aggregates below only see
@@ -259,6 +353,14 @@ function AdminSessionsPageInner() {
   const kpiRunning = stats?.by_status?.running ?? runningCountPage;
   const kpiLast1h = stats?.last_1h ?? last1hCountPage;
   const kpiCompleted = stats?.by_status?.completed ?? completedCountPage;
+
+  // Sessions enrichment wave — payment + health KPIs. Whole-DB from /stats when
+  // present; else page-slice fallback (revenue can't be page-summed without an
+  // amount field, so revenue shows "—" until the backend ships revenue_vnd).
+  const paidCountPage = rows.filter((r) => r.paid === true).length;
+  const kpiRevenueVnd = stats?.revenue_vnd; // undefined → "—"
+  const kpiPaidCount = stats?.paid_count ?? paidCountPage;
+  const kpiStuckCount = stats?.stuck_count; // undefined → "—" (needs backend)
 
   const uniqueUsers = new Set(rows.map((r) => r.user_id || r.user_email).filter(Boolean)).size;
   const completedDurations = rows
@@ -312,6 +414,49 @@ function AdminSessionsPageInner() {
 
   const handleStatusChange = React.useCallback((v: string) => {
     setStatus(v === '__all' ? '' : (v as StatusFilter));
+    setPage(1);
+  }, []);
+
+  const handlePaidChange = React.useCallback((v: string) => {
+    setPaid(v === '__all' ? '' : (v as PaidFilter));
+    setPage(1);
+  }, []);
+
+  const handleReadingTypeChange = React.useCallback((v: string) => {
+    setReadingType(v === '__all' ? '' : v);
+    setPage(1);
+  }, []);
+
+  const handleChannelChange = React.useCallback((v: string) => {
+    setChannel(v === '__all' ? '' : v);
+    setPage(1);
+  }, []);
+
+  const handleFromDateChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFromDate(e.target.value);
+      setPage(1);
+    },
+    [],
+  );
+
+  const handleToDateChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setToDate(e.target.value);
+      setPage(1);
+    },
+    [],
+  );
+
+  // Group-by-user: clicking a user cell scopes the list to that user_id. Click
+  // the active chip again (handled in the cell) to clear.
+  const handleFilterByUser = React.useCallback((id: string) => {
+    setUserId((prev) => (prev === id ? '' : id));
+    setPage(1);
+  }, []);
+
+  const handleClearUserFilter = React.useCallback(() => {
+    setUserId('');
     setPage(1);
   }, []);
 
@@ -474,18 +619,62 @@ function AdminSessionsPageInner() {
         // "—" for anonymous sessions ("tên user không chính xác / ID quá
         // dài"). Now: real email (or "Khách ẩn danh" for guest sessions) +
         // a short, copyable user_id chip instead of the full 36-char UUID.
+        // Sessions enrichment wave — clicking the email filters the list to
+        // that user (group-by-user). stopPropagation so it doesn't also open
+        // the row detail.
         cell: (s) => (
           <div className="min-w-0">
-            <div className="truncate text-foreground">
-              {s.user_email && s.user_email.includes('@') ? (
-                s.user_email
-              ) : (
-                <span className="italic text-muted-foreground">Khách ẩn danh</span>
-              )}
-            </div>
+            {s.user_email && s.user_email.includes('@') && s.user_id ? (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleFilterByUser(s.user_id);
+                }}
+                className="truncate text-left text-foreground underline-offset-2 hover:text-gold hover:underline"
+                title={`Lọc theo user: ${s.user_email}`}
+              >
+                {s.user_email}
+              </button>
+            ) : (
+              <div className="truncate text-foreground">
+                {s.user_email && s.user_email.includes('@') ? (
+                  s.user_email
+                ) : (
+                  <span className="italic text-muted-foreground">Khách ẩn danh</span>
+                )}
+              </div>
+            )}
             {s.user_id && <ShortId id={s.user_id} className="mt-0.5" />}
           </div>
         ),
+      },
+      {
+        id: 'paid',
+        header: 'Thanh toán',
+        width: '120px',
+        cell: (s) => {
+          // null → not enriched by backend yet → "—". true → green badge +
+          // tier. false → muted "Chưa".
+          if (s.paid == null) {
+            return <span className="text-muted-foreground">—</span>;
+          }
+          if (s.paid) {
+            return (
+              <div className="min-w-0">
+                <span className="inline-flex items-center rounded border border-jade/30 bg-jade/10 px-1.5 py-0.5 text-[11px] font-medium text-jade-700 dark:text-jade-50">
+                  Đã trả
+                </span>
+                {s.tier ? (
+                  <div className="mt-0.5 truncate text-[10px] text-muted-foreground" title={s.tier}>
+                    {s.tier}
+                  </div>
+                ) : null}
+              </div>
+            );
+          }
+          return <span className="text-xs text-muted-foreground">Chưa</span>;
+        },
       },
       {
         id: 'concern',
@@ -494,6 +683,32 @@ function AdminSessionsPageInner() {
         cell: (s) => (
           <span className="line-clamp-1 text-foreground/85">{s.primary_concern}</span>
         ),
+      },
+      {
+        id: 'reading_type',
+        header: 'Loại',
+        width: '130px',
+        hideOnMobile: true,
+        cell: (s) =>
+          s.reading_type ? (
+            <span className="inline-flex items-center rounded border border-gold/20 bg-gold/5 px-1.5 py-0.5 text-[11px] text-foreground/85">
+              {readingTypeLabel(s.reading_type)}
+            </span>
+          ) : (
+            <span className="text-muted-foreground">—</span>
+          ),
+      },
+      {
+        id: 'channel',
+        header: 'Kênh',
+        width: '100px',
+        hideOnMobile: true,
+        cell: (s) =>
+          s.channel ? (
+            <span className="text-foreground/85">{channelLabel(s.channel)}</span>
+          ) : (
+            <span className="text-muted-foreground">—</span>
+          ),
       },
       {
         id: 'geo',
@@ -540,9 +755,23 @@ function AdminSessionsPageInner() {
         id: 'status',
         header: 'Trạng thái',
         sortKey: 'status',
-        width: '120px',
+        width: '150px',
+        // Failed sessions surface the error inline (red icon + truncated msg,
+        // full text in the title tooltip) so operators can triage without
+        // opening the detail page.
         cell: (s) => (
-          <StatusBadge status={STATUS_TONE[s.status]} label={STATUS_LABEL[s.status]} />
+          <div className="min-w-0">
+            <StatusBadge status={STATUS_TONE[s.status]} label={STATUS_LABEL[s.status]} />
+            {s.status === 'failed' && s.error ? (
+              <div
+                className="mt-0.5 flex items-center gap-1 text-[10px] text-red-600 dark:text-red-400"
+                title={s.error}
+              >
+                <AlertTriangle className="h-3 w-3 shrink-0" aria-hidden />
+                <span className="truncate">{s.error}</span>
+              </div>
+            ) : null}
+          </div>
         ),
       },
       {
@@ -560,12 +789,33 @@ function AdminSessionsPageInner() {
         ),
       },
     ],
-    [handleReOrchestrate, handleAskDelete, handleAskRename, reOrchestrateMut.isPending],
+    [
+      handleReOrchestrate,
+      handleAskDelete,
+      handleAskRename,
+      handleFilterByUser,
+      reOrchestrateMut.isPending,
+    ],
   );
 
   const statusLabel =
     STATUS_OPTIONS.find((o) => o.value === status)?.label ?? 'Tất cả trạng thái';
   const sortLabel = sort === 'oldest' ? 'Cũ nhất' : 'Mới nhất';
+  const paidLabel = PAID_OPTIONS.find((o) => o.value === paid)?.label ?? 'Tất cả thanh toán';
+  const readingTypeLabelSel =
+    READING_TYPE_OPTIONS.find((o) => o.value === readingType)?.label ?? 'Tất cả loại';
+  const channelLabelSel =
+    CHANNEL_OPTIONS.find((o) => o.value === channel)?.label ?? 'Tất cả kênh';
+  const hasActiveFilter = !!(
+    search ||
+    status ||
+    paid ||
+    readingType ||
+    channel ||
+    fromDate ||
+    toDate ||
+    userId
+  );
   const showError = !!error;
   const errorMsg = (error as Error | undefined)?.message;
 
@@ -631,6 +881,27 @@ function AdminSessionsPageInner() {
           accent="gold"
           hint={`${kpiCompleted} hoàn tất · ${uniqueUsers} user`}
         />
+        <KpiCard
+          label="Doanh thu"
+          value={fmtVnd(kpiRevenueVnd)}
+          icon={ICON_WALLET}
+          accent="jade"
+          hint={kpiRevenueVnd != null ? 'toàn hệ thống' : 'chờ backend'}
+        />
+        <KpiCard
+          label="Đã thanh toán"
+          value={kpiPaidCount}
+          icon={ICON_CREDIT}
+          accent="gold"
+          hint={stats?.paid_count != null ? 'toàn hệ thống' : 'trang này'}
+        />
+        <KpiCard
+          label="Phiên treo"
+          value={kpiStuckCount != null ? kpiStuckCount : '—'}
+          icon={ICON_WARN}
+          accent={kpiStuckCount != null && kpiStuckCount > 0 ? 'red' : 'purple'}
+          hint={kpiStuckCount != null ? 'chạy quá lâu' : 'chờ backend'}
+        />
       </div>
 
       <Card>
@@ -683,6 +954,118 @@ function AdminSessionsPageInner() {
                 <button
                   type="button"
                   className="inline-flex h-10 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground transition-all duration-300 ease-editorial hover:border-gold/50"
+                  aria-label="Lọc theo thanh toán"
+                >
+                  {ICON_FILTER}
+                  <span>{paidLabel}</span>
+                  {ICON_CHEVRON}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="min-w-[12rem]">
+                <DropdownMenuLabel>Thanh toán</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup
+                  value={paid || '__all'}
+                  onValueChange={handlePaidChange}
+                >
+                  {PAID_OPTIONS.map((opt) => (
+                    <DropdownMenuRadioItem
+                      key={opt.value || '__all'}
+                      value={opt.value || '__all'}
+                    >
+                      {opt.label}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="inline-flex h-10 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground transition-all duration-300 ease-editorial hover:border-gold/50"
+                  aria-label="Lọc theo loại"
+                >
+                  {ICON_FILTER}
+                  <span>{readingTypeLabelSel}</span>
+                  {ICON_CHEVRON}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="min-w-[12rem]">
+                <DropdownMenuLabel>Loại</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup
+                  value={readingType || '__all'}
+                  onValueChange={handleReadingTypeChange}
+                >
+                  {READING_TYPE_OPTIONS.map((opt) => (
+                    <DropdownMenuRadioItem
+                      key={opt.value || '__all'}
+                      value={opt.value || '__all'}
+                    >
+                      {opt.label}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="inline-flex h-10 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground transition-all duration-300 ease-editorial hover:border-gold/50"
+                  aria-label="Lọc theo kênh"
+                >
+                  {ICON_FILTER}
+                  <span>{channelLabelSel}</span>
+                  {ICON_CHEVRON}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="min-w-[12rem]">
+                <DropdownMenuLabel>Kênh</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup
+                  value={channel || '__all'}
+                  onValueChange={handleChannelChange}
+                >
+                  {CHANNEL_OPTIONS.map((opt) => (
+                    <DropdownMenuRadioItem
+                      key={opt.value || '__all'}
+                      value={opt.value || '__all'}
+                    >
+                      {opt.label}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <div className="flex items-center gap-1.5">
+              <label className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                Từ
+              </label>
+              <Input
+                type="date"
+                value={fromDate}
+                onChange={handleFromDateChange}
+                aria-label="Lọc từ ngày"
+                className="h-10 w-[9.5rem]"
+              />
+              <label className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                Đến
+              </label>
+              <Input
+                type="date"
+                value={toDate}
+                onChange={handleToDateChange}
+                aria-label="Lọc đến ngày"
+                className="h-10 w-[9.5rem]"
+              />
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="inline-flex h-10 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground transition-all duration-300 ease-editorial hover:border-gold/50"
                   aria-label="Sắp xếp"
                 >
                   <span>{sortLabel}</span>
@@ -707,6 +1090,22 @@ function AdminSessionsPageInner() {
               {isFetching ? 'Đang tải…' : 'Làm mới'}
             </Button>
           </div>
+          {userId ? (
+            <div className="mt-3 flex items-center gap-2 text-xs">
+              <span className="text-muted-foreground">Đang lọc theo user:</span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 font-mono text-gold">
+                {userId.slice(0, 8)}…
+                <button
+                  type="button"
+                  onClick={handleClearUserFilter}
+                  className="text-gold/70 hover:text-gold"
+                  aria-label="Bỏ lọc theo user"
+                >
+                  ×
+                </button>
+              </span>
+            </div>
+          ) : null}
         </CardContent>
       </Card>
 
@@ -739,12 +1138,12 @@ function AdminSessionsPageInner() {
             empty={
               <EmptyState
                 title={
-                  search || status
+                  hasActiveFilter
                     ? 'Không có phiên khớp bộ lọc'
                     : 'Chưa có phiên phân tích nào'
                 }
                 description={
-                  search || status
+                  hasActiveFilter
                     ? 'Thử bỏ filter hoặc reset search query.'
                     : 'Khi user bắt đầu một phiên đọc bài, dòng đầu tiên sẽ xuất hiện ở đây kèm trạng thái real-time.'
                 }

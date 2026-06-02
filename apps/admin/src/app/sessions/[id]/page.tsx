@@ -13,7 +13,7 @@ import {
   StatusBadge,
   cn,
 } from '@hieu-asia/ui';
-import { ChevronLeft, Clock, DollarSign, ListTodo, Copy, AlertCircle } from 'lucide-react';
+import { ChevronLeft, Clock, DollarSign, ListTodo, Copy, AlertCircle, CreditCard } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { getSession } from '@/lib/admin-api';
 import { KpiCard } from '@/components/admin/kpi-card';
@@ -33,6 +33,22 @@ const STATUS_LABEL: Record<TaskStatus, string> = {
   completed: 'Hoàn tất',
   failed: 'Lỗi',
 };
+
+// Sessions enrichment wave — human labels for reading_type / channel codes.
+// Falls back to the raw code so unknown future values still render.
+const READING_TYPE_LABEL: Record<string, string> = {
+  tuvi_batu: 'Tử Vi · Bát Tự',
+  palmistry: 'Xem tướng tay',
+  face: 'Xem tướng mặt',
+};
+const CHANNEL_LABEL: Record<string, string> = {
+  web: 'Web',
+  telegram: 'Telegram',
+  zalo: 'Zalo',
+};
+
+/** How long (ms) a running session may sit before we flag it as stuck. */
+const STUCK_THRESHOLD_MS = 30 * 60 * 1000;
 
 interface AuditEntry {
   ts: string;
@@ -152,6 +168,15 @@ export default function SessionDetailPage() {
   const s = session.data;
   const entries = audit.data?.entries ?? [];
 
+  // Sessions enrichment wave — flag a session that's still "running" long after
+  // creation (>30min) so the operator can investigate a stuck pipeline.
+  const createdMs = new Date(s.created_at).getTime();
+  const isStuck =
+    s.status === 'running' &&
+    Number.isFinite(createdMs) &&
+    Date.now() - createdMs > STUCK_THRESHOLD_MS;
+  const hasPayment = s.paid != null || s.tier != null || s.paid_at != null;
+
   return (
     <div className="space-y-6">
       <Link
@@ -173,6 +198,22 @@ export default function SessionDetailPage() {
               Session detail
             </span>
             <StatusBadge status={STATUS_TONE[s.status]} label={STATUS_LABEL[s.status]} />
+            {s.reading_type ? (
+              <span
+                className="inline-flex items-center rounded border border-gold/25 bg-gold/10 px-1.5 py-0.5 text-[11px] text-gold"
+                title={`reading_type: ${s.reading_type}`}
+              >
+                {READING_TYPE_LABEL[s.reading_type] ?? s.reading_type}
+              </span>
+            ) : null}
+            {s.channel ? (
+              <span
+                className="inline-flex items-center rounded border border-border bg-card/60 px-1.5 py-0.5 text-[11px] text-muted-foreground"
+                title={`channel: ${s.channel}`}
+              >
+                {CHANNEL_LABEL[s.channel] ?? s.channel}
+              </span>
+            ) : null}
           </div>
           <h1 className="mt-2 truncate text-2xl font-semibold text-foreground" title={s.user_email && s.user_email.includes('@') ? s.user_email : 'Người dùng ẩn danh'}>
             {s.user_email && s.user_email.includes('@') ? s.user_email : <span className="italic text-muted-foreground">Người dùng ẩn danh</span>}
@@ -199,6 +240,19 @@ export default function SessionDetailPage() {
           </div>
         </div>
       </div>
+
+      {isStuck && (
+        <div className="flex items-start gap-2.5 rounded-md border border-red-500/40 bg-red-500/5 px-4 py-3 text-sm text-red-700 dark:text-red-300">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+          <div>
+            <p className="font-medium">Phiên có thể đang treo</p>
+            <p className="mt-0.5 text-xs text-red-700/80 dark:text-red-300/80">
+              Đang ở trạng thái “đang chạy” hơn 30 phút kể từ lúc tạo. Pipeline có thể đã
+              kẹt — cân nhắc re-orchestrate hoặc kiểm tra log.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-3">
         <KpiCard
@@ -241,6 +295,49 @@ export default function SessionDetailPage() {
           </p>
         </CardContent>
       </Card>
+
+      {/* Sessions enrichment wave — payment status. Display-only: paid flag +
+          tier + unlock timestamp, derived backend-side from the
+          session-unlocked KV key. Hidden entirely when the backend hasn't
+          enriched this row (no paid/tier/paid_at). */}
+      {hasPayment && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <CreditCard className="h-4 w-4 text-gold/70" aria-hidden />
+              Thanh toán
+            </CardTitle>
+            <CardDescription>
+              Trạng thái thanh toán + gói đã mua cho phiên này.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <dl className="grid gap-3 sm:grid-cols-3">
+              <div className="space-y-0.5">
+                <dt className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                  Trạng thái
+                </dt>
+                <dd>
+                  {s.paid == null ? (
+                    <span className="text-sm text-muted-foreground">—</span>
+                  ) : s.paid ? (
+                    <span className="inline-flex items-center rounded border border-jade/30 bg-jade/10 px-1.5 py-0.5 text-xs font-medium text-jade-700 dark:text-jade-50">
+                      Đã trả
+                    </span>
+                  ) : (
+                    <span className="text-sm text-muted-foreground">Chưa trả</span>
+                  )}
+                </dd>
+              </div>
+              <Field label="Gói" value={s.tier ?? undefined} />
+              <Field
+                label="Thanh toán lúc"
+                value={s.paid_at ? fmtDateTime(s.paid_at) : undefined}
+              />
+            </dl>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Wave 60.20 — Request metadata card. Extracts IP / geo / user-agent /
           referrer from state_json if the Worker captured them at session
