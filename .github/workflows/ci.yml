@@ -4,9 +4,15 @@
 # Wave 60.25 — quota trim. Free-plan private-repo Actions quota is 2,000
 # min/month and this workflow runs full pnpm install (~60s) + turbo
 # lint/test/build (~90s) per commit. Two efficiency gates:
-#   1. `paths-ignore` skips runs on pure-docs commits (README/markdown/
-#      vault sync) and workflow-only edits since they can't change code
-#      behaviour. Saves ~150s × every docs commit.
+#   1. The job ALWAYS runs (so the required "turbo lint + test + build"
+#      status is always reported and branch protection can never deadlock),
+#      but the heavy steps (install + turbo) are skipped when a change
+#      touches only docs (`**/*.md`, `docs/**`, `LICENSE`). A docs-only PR
+#      therefore reports a green required check in a few seconds.
+#      NOTE: do NOT reintroduce top-level `paths-ignore` here — that skips
+#      the whole workflow, so the required check is never reported and
+#      docs-only PRs stay BLOCKED forever (GitHub treats a required check
+#      from a skipped workflow as permanently "expected").
 #   2. `concurrency` cancels in-flight runs when a newer commit lands on
 #      the same ref, so rapid pushes don't queue redundant builds.
 name: ci
@@ -14,21 +20,9 @@ name: ci
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - '**/*.md'
-      - 'docs/**'
-      - 'LICENSE'
   pull_request:
     branches: [main]
-    paths-ignore:
-      - '**/*.md'
-      - 'docs/**'
-      - 'LICENSE'
-  # Wave 60.28b — manual trigger so we can test workflow once billing
-  # quota refills (currently runs fail at runner allocation: "Job is
-  # waiting for a hosted runner to come online" → 2s timeout with no
-  # steps executed = hosted-runner provisioning blocked by exhausted
-  # Free-plan minutes on private repo).
+  # Manual trigger for ad-hoc verification.
   workflow_dispatch: {}
 
 permissions:
@@ -47,22 +41,59 @@ jobs:
         uses: actions/checkout@v6
         with:
           # Need history for `--filter='[origin/main]'` affected detection
+          # and for the docs-only diff below.
           fetch-depth: 0
 
+      - name: Detect non-docs changes
+        id: detect
+        # Sets outputs.code=true when the change touches anything other than
+        # docs (**/*.md, docs/**, LICENSE). Fail-safe: any uncertainty (no
+        # usable base, missing commit) → code=true so real CI always runs.
+        run: |
+          set -uo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+          else
+            BASE="${{ github.event.before }}"
+          fi
+          CODE=true
+          if [ -n "$BASE" ] \
+            && [ "$BASE" != "0000000000000000000000000000000000000000" ] \
+            && git cat-file -e "$BASE" 2>/dev/null; then
+            CODE=false
+            while IFS= read -r f; do
+              [ -z "$f" ] && continue
+              case "$f" in
+                *.md | docs/* | LICENSE) : ;;   # docs-only → ignore
+                *) CODE=true ;;
+              esac
+            done < <(git diff --name-only "$BASE" HEAD)
+          fi
+          echo "code=$CODE" >> "$GITHUB_OUTPUT"
+          if [ "$CODE" = "true" ]; then
+            echo "Non-docs changes detected → running full CI."
+          else
+            echo "Docs-only change → skipping heavy steps, reporting check as passed."
+          fi
+
       - name: Setup pnpm
+        if: steps.detect.outputs.code == 'true'
         uses: pnpm/action-setup@v4
         # pnpm version pinned via `packageManager` in package.json (pnpm@9.12.0).
 
       - name: Setup Node
+        if: steps.detect.outputs.code == 'true'
         uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: pnpm
 
       - name: Install dependencies
+        if: steps.detect.outputs.code == 'true'
         run: pnpm install --frozen-lockfile
 
       - name: Cache turbo
+        if: steps.detect.outputs.code == 'true'
         uses: actions/cache@v4
         with:
           path: .turbo
@@ -71,6 +102,7 @@ jobs:
             turbo-${{ runner.os }}-
 
       - name: Turbo lint/test/build (affected)
+        if: steps.detect.outputs.code == 'true'
         # Exclude `@hieu-asia/miniapp-zalo` — `zmp build` requires `zmp login`
         # (Zalo developer portal auth) which CI cannot perform. Local devs
         # build it manually after `zmp login`.
