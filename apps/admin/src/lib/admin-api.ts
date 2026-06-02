@@ -240,6 +240,12 @@ interface BackendSessionDetail {
   paid_at?: string | null;
   reading_type?: string | null;
   channel?: string | null;
+  // Wave 65 — friendly identifiers (migration 0053). Returned by the detail
+  // endpoint alongside the list; surfaced so the detail page can prefill its
+  // rename/note dialog.
+  short_code?: string | null;
+  label?: string | null;
+  note?: string | null;
   [extra: string]: unknown;
 }
 
@@ -511,6 +517,11 @@ export async function getSession(id: string) {
       reading_type:
         real.reading_type ?? (real.state_json?.reading_type as string | undefined) ?? null,
       channel: real.channel ?? (real.state_json?.channel as string | undefined) ?? null,
+      // Wave 65 — friendly identifiers, surfaced for the detail page's
+      // rename/note dialog (mirrors the list row mapping).
+      short_code: real.short_code ?? null,
+      label: real.label ?? null,
+      note: real.note ?? null,
       _source: { isMock: false } as DataSource,
     };
   }
