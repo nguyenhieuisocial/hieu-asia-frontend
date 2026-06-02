@@ -151,12 +151,16 @@ export function StatusBadge({
   status: 'success' | 'warning' | 'error' | 'info' | 'neutral';
   label: React.ReactNode;
 }) {
+  // Text tone is deep enough to read on the tinted bg in LIGHT mode, with a
+  // lighter dark: variant for dark mode. The old jade-50/purple-50 were near
+  // white — fine on dark bg, illegible on light (e.g. PUBLISHED badge on the
+  // light /content table). warning/error already used this readable pattern.
   const tone = {
-    success: 'border-jade/40 bg-jade/15 text-jade-50',
-    warning: 'border-gold/40 bg-gold/10 text-gold-200',
-    error: 'border-red-500/40 bg-red-500/10 text-red-300',
-    info: 'border-purple/40 bg-purple/15 text-purple-50',
-    neutral: 'border-border/40 bg-cream/5 text-foreground/70',
+    success: 'border-jade/40 bg-jade/15 text-jade-700 dark:text-jade-50',
+    warning: 'border-gold/40 bg-gold/10 text-gold-700 dark:text-gold-200',
+    error: 'border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300',
+    info: 'border-purple/40 bg-purple/15 text-purple-700 dark:text-purple-50',
+    neutral: 'border-border/40 bg-cream/5 text-foreground/80',
   }[status];
   return (
     <span className={cn('inline-flex items-center rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider', tone)}>
