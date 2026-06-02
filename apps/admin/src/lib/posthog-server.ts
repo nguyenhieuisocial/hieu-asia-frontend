@@ -162,32 +162,47 @@ export async function fetchTopPageviews(): Promise<PageviewRow[] | null> {
 export interface ToolUsageRow {
   /** Tool slug from the `tool_used` event (e.g. gieo-que, big-five, vision-read). */
   tool: string;
-  /** Total uses in the window. */
+  /** Total uses (events) in the window. */
   uses: number;
+  /** Distinct persons who used the tool. */
+  users: number;
+  /** Distinct persons who used the tool AND also paid (payment_completed) in the window. */
+  paidUsers: number;
+  /** Conversion = paidUsers / users (0-1). Correlation (used + paid), not causation. */
+  conversionRate: number;
   /** Error rate = result='error' / uses (0-1). */
   errorRate: number;
 }
 
 /**
- * Top tools by usage over the last 30 days, from the `tool_used` event
- * (apps/web fires `track('tool_used', { tool, result })` — event-taxonomy.ts;
- * track() forwards props to posthog.capture, so `properties.tool` is queryable).
+ * Top tools over the last 30 days, from the `tool_used` event (apps/web fires
+ * `track('tool_used', { tool, result })` — event-taxonomy.ts; track() forwards
+ * props to posthog.capture, so `properties.tool` is queryable).
  *
- * Surfaces which mini-tools actually get used + their error rate, so the founder
- * can see where to deepen vs prune (the "deepen-first lăng kính" call) instead
- * of guessing. Returns null on any PostHog failure (UI shows a placeholder).
+ * Beyond raw usage, this also correlates each tool with payment: per tool, how
+ * many distinct users also fired `payment_completed` in the window. That's the
+ * deepen-first signal — not just "which tools get used" but "which tools sit on
+ * the path to paying customers" — so investment goes where it converts, not
+ * just where it's busy. (Correlation, not causation: a paying user may have
+ * touched several tools.) Returns null on any PostHog failure (UI placeholder).
  */
 export async function fetchTopTools(): Promise<ToolUsageRow[] | null> {
   const rows = await runHogQL(
     `SELECT
        properties.tool AS tool,
        count() AS uses,
+       count(DISTINCT person_id) AS users,
+       count(DISTINCT IF(person_id IN (
+         SELECT DISTINCT person_id FROM events
+         WHERE event = 'payment_completed'
+           AND timestamp > now() - INTERVAL 30 DAY
+       ), person_id, NULL)) AS paid_users,
        countIf(properties.result = 'error') AS errors
      FROM events
      WHERE event = 'tool_used'
        AND timestamp > now() - INTERVAL 30 DAY
      GROUP BY tool
-     ORDER BY uses DESC
+     ORDER BY users DESC
      LIMIT 15`,
   );
   if (!rows) return null;
@@ -195,8 +210,17 @@ export async function fetchTopTools(): Promise<ToolUsageRow[] | null> {
     .map((r) => {
       const tool = String(r[0] ?? '');
       const uses = Number(r[1] ?? 0);
-      const errors = Number(r[2] ?? 0);
-      return { tool, uses, errorRate: uses > 0 ? errors / uses : 0 };
+      const users = Number(r[2] ?? 0);
+      const paidUsers = Number(r[3] ?? 0);
+      const errors = Number(r[4] ?? 0);
+      return {
+        tool,
+        uses,
+        users,
+        paidUsers,
+        conversionRate: users > 0 ? paidUsers / users : 0,
+        errorRate: uses > 0 ? errors / uses : 0,
+      };
     })
     .filter((r) => r.tool);
 }
