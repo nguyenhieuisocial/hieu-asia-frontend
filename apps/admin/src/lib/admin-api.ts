@@ -484,6 +484,29 @@ export async function patchSession(
   return { ok: false, error: real?.error ?? 'gateway unreachable' };
 }
 
+/**
+ * Manual paid-access override (POST /admin/sessions/:id/access — backend #41).
+ * Reaches the worker the same way as patchSession: via the generic
+ * `/api/admin-proxy/*` route, which injects X-Admin-Token server-side.
+ *
+ * - grant: write the `session:unlocked:<id>` signal (tier defaults to "premium"
+ *   server-side when omitted) so the paid-reading gate accepts the session.
+ * - revoke: delete that signal. ACCESS-ONLY — moves no money; SePay refunds are
+ *   manual bank transfers done by the founder. `reason` is recorded in the audit
+ *   log only.
+ */
+export async function setSessionAccess(
+  sessionId: string,
+  body: { action: 'grant' | 'revoke'; tier?: string; reason?: string },
+): Promise<{ ok: boolean; error?: string }> {
+  const real = await proxyFetch<{ ok?: boolean; error?: string }>(
+    `/admin/sessions/${encodeURIComponent(sessionId)}/access`,
+    { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) },
+  );
+  if (real && real.ok !== false) return { ok: true };
+  return { ok: false, error: real?.error ?? 'gateway unreachable' };
+}
+
 export async function getSession(id: string) {
   const real = await proxyFetch<BackendSessionDetail>(
     `/admin/sessions/${encodeURIComponent(id)}`,
