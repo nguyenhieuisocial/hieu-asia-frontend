@@ -20,6 +20,7 @@ export function StreakCard() {
   const [phase, setPhase] = React.useState<'loading' | 'ready' | 'hidden'>('loading');
   const [streak, setStreak] = React.useState<StreakView | null>(null);
   const [submitting, setSubmitting] = React.useState(false);
+  const [error, setError] = React.useState(false);
 
   React.useEffect(() => {
     let alive = true;
@@ -44,9 +45,11 @@ export function StreakCard() {
   async function handleCheckin() {
     if (submitting || streak?.checkedInToday) return;
     setSubmitting(true);
+    setError(false);
     const res = await checkin();
     setSubmitting(false);
     if (res) setStreak(res.streak);
+    else setError(true);
   }
 
   if (phase === 'hidden') return null;
@@ -98,20 +101,27 @@ export function StreakCard() {
             Đã điểm danh hôm nay — quay lại ngày mai để giữ chuỗi.
           </p>
         ) : (
-          <button
-            type="button"
-            onClick={handleCheckin}
-            disabled={submitting}
-            className="rounded-lg border border-gold/40 bg-gold/10 px-4 py-2 text-sm font-medium text-gold-700 transition hover:border-gold/60 hover:bg-gold/15 disabled:opacity-60"
-          >
-            {submitting
-              ? 'Đang điểm danh…'
-              : fresh
-                ? 'Bắt đầu chuỗi ngày'
-                : current > 0
-                  ? 'Điểm danh hôm nay'
-                  : 'Điểm danh lại'}
-          </button>
+          <>
+            <button
+              type="button"
+              onClick={handleCheckin}
+              disabled={submitting}
+              className="rounded-lg border border-gold/40 bg-gold/10 px-4 py-2 text-sm font-medium text-gold-700 transition hover:border-gold/60 hover:bg-gold/15 disabled:opacity-60"
+            >
+              {submitting
+                ? 'Đang điểm danh…'
+                : fresh
+                  ? 'Bắt đầu chuỗi ngày'
+                  : current > 0
+                    ? 'Điểm danh hôm nay'
+                    : 'Điểm danh lại'}
+            </button>
+            {error && (
+              <p role="alert" className="mt-2 text-xs text-red-400">
+                Chưa điểm danh được — kiểm tra kết nối và thử lại.
+              </p>
+            )}
+          </>
         )}
       </div>
     </section>
