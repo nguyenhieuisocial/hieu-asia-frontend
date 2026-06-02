@@ -35,7 +35,7 @@ import { EditorialList } from '@/components/marketing/EditorialList';
 // Wave 62.09 — custom discipline icons (vault 138 "đừng dùng icon set").
 import { LaSoIcon } from '@/components/marketing/icons/LaSoIcon';
 import { BatTuIcon } from '@/components/marketing/icons/BatTuIcon';
-import { ThanSoIcon } from '@/components/marketing/icons/ThanSoIcon';
+import { BigFiveEmblem, XemTuongEmblem } from '@/components/home-hero/LensGlyphs';
 import { MbtiIcon } from '@/components/marketing/icons/MbtiIcon';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { SampleOutputShowcase } from '@/components/marketing/SampleOutputShowcase';
@@ -175,6 +175,17 @@ const SERVICES_JSONLD = {
       url: 'https://hieu.asia/learn/mbti',
       description:
         'MBTI dựa trên 4 trục của Carl Jung — khung tự nhận thức về cách bạn vận hành tự nhiên.',
+    },
+    {
+      '@type': 'Service',
+      name: 'Big Five (OCEAN)',
+      serviceType: 'Big Five (OCEAN) personality assessment',
+      provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
+      areaServed: 'VN',
+      inLanguage: 'vi-VN',
+      url: 'https://hieu.asia/big-five',
+      description:
+        'Trắc nghiệm Big Five (OCEAN) — 5 chiều tính cách có cơ sở khoa học vững nhất, kèm bản đọc sâu cá nhân hoá.',
     },
     {
       '@type': 'Service',
@@ -541,10 +552,10 @@ export default function LandingPage() {
             CTA. Removes the 4 implicit "click anywhere" CTAs from the old
             grid tiles (Wave 62.06 conversion architecture). */}
         <EditorialList
-          eyebrow="BỐN ỐNG KÍNH"
+          eyebrow="NĂM ỐNG KÍNH"
           title={
             <>
-              Một con người, <em className="italic text-primary">soi</em> từ bốn góc.
+              Một con người, <em className="italic text-primary">soi</em> từ năm góc.
             </>
           }
           items={[
@@ -565,20 +576,28 @@ export default function LandingPage() {
               cta: 'Đọc về Bát Tự',
             },
             {
-              icon: <ThanSoIcon className="h-full w-full" />,
-              eyebrow: 'THẦN SỐ · NUMEROLOGY',
-              title: 'Đếm con số đời',
-              body: 'Numerology phương Tây — đường đời, ngày sinh, tên gọi cộng dồn thành mật mã hành trình cá nhân.',
-              href: '/learn/than-so-hoc',
-              cta: 'Đọc về Thần Số',
-            },
-            {
               icon: <MbtiIcon className="h-full w-full" />,
               eyebrow: 'MBTI · TÂM LÝ HỌC',
               title: 'Gọi tên tâm trí',
               body: '16 kiểu Myers-Briggs — không nhãn dán, mà là ngôn ngữ để nhận diện thiên hướng nội tại.',
               href: '/learn/mbti',
               cta: 'Đọc về MBTI',
+            },
+            {
+              icon: <BigFiveEmblem className="h-full w-full" />,
+              eyebrow: 'BIG FIVE · OCEAN',
+              title: 'Đo 5 chiều',
+              body: 'Năm chiều tính cách (OCEAN) — mô hình tâm lý có cơ sở thực nghiệm vững nhất; đo xu hướng, không dán nhãn.',
+              href: '/big-five',
+              cta: 'Làm trắc nghiệm Big Five',
+            },
+            {
+              icon: <XemTuongEmblem className="h-full w-full" />,
+              eyebrow: 'XEM TƯỚNG · AI',
+              title: 'Đọc chỉ tay & tướng',
+              body: 'Chỉ tay và tướng mặt đọc từ ảnh — AI thị giác nhận diện nét tướng, mô tả xu hướng, không phán số phận.',
+              href: '/xem-tuong',
+              cta: 'Thử xem tướng',
             },
           ]}
         />
@@ -652,7 +671,7 @@ export default function LandingPage() {
               features: [
                 'Khảo sát đầu vào',
                 'Công cụ tra cứu cơ bản',
-                'Tử Vi · Bát Tự · MBTI · Thần Số',
+                'Tử Vi · Bát Tự · MBTI · Big Five · Xem Tướng',
                 'Lưu hồ sơ cá nhân',
               ],
               ctaLabel: 'Bắt đầu miễn phí',
@@ -698,7 +717,7 @@ export default function LandingPage() {
               features: [
                 'Mentor AI không giới hạn câu hỏi',
                 'Đại vận và lưu niên hàng năm',
-                'Tất cả 4 ống kính sâu',
+                'Tất cả 5 ống kính sâu',
                 'Huỷ bất cứ lúc nào',
               ],
               ctaLabel: 'Dùng Mentor không giới hạn',

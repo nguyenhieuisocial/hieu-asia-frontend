@@ -1,13 +1,14 @@
 'use client';
 
 import * as React from 'react';
-import { TuViEmblem, BatTuEmblem, ThanSoEmblem, MbtiEmblem } from './LensGlyphs';
+import { EMBLEMS } from './LensGlyphs';
+import { LENSES } from '@/lib/catalog/lenses';
 
 /**
- * FourLens — "Bốn lăng kính hội tụ về một lõi AI" (emblem cao cấp + tương tác).
- * 4 hệ (Tử Vi · Bát Tự · Thần Số · MBTI) ở 4 hướng, đường mực nối về LÕI AI ở tâm.
- * Dùng 4 EMBLEM SVG khắc nét (LensGlyphs, currentColor) làm NÚT — hover/click "xem" được.
- * `active` 0..3 = soi 1 hệ (lăng kính phóng to + glow + luồng sáng chạy về lõi); 4 = HỘI TỤ.
+ * LensConstellation — "N lăng kính hội tụ về một lõi AI" (emblem cao cấp + tương tác).
+ * Các hệ flagship (catalog lib/catalog/lenses) ở N hướng đều quanh vòng, đường mực nối về
+ * LÕI AI ở tâm. Emblem SVG khắc nét (LensGlyphs EMBLEMS theo slug) làm NÚT — hover/click được.
+ * `active` 0..N-1 = soi 1 hệ (phóng to + glow + luồng sáng về lõi); ≥N = HỘI TỤ.
  * onHover(i|null) / onPick(i) báo lên cha. SVG/CSS thuần. SSR/reduced-motion = hội tụ tĩnh.
  */
 
@@ -21,10 +22,10 @@ const P = (r: number, deg: number): [number, number] => {
   return [R2(C + r * Math.cos(a)), R2(C + r * Math.sin(a))];
 };
 
-const ANGLES = [-90, 0, 90, 180];
-const NAMES = ['Tử Vi', 'Bát Tự', 'Thần Số', 'MBTI'];
-const ICONS = [TuViEmblem, BatTuEmblem, ThanSoEmblem, MbtiEmblem];
-const LENSES = ANGLES.map((deg) => {
+const LENS_N = LENSES.length;
+// N hệ chia đều quanh vòng, hệ đầu ở đỉnh (−90°). 5 lăng kính flagship = ngũ giác.
+const ANGLES = LENSES.map((_, k) => -90 + (360 / LENS_N) * k);
+const NODES = ANGLES.map((deg) => {
   const [cx, cy] = P(R_LENS, deg);
   const [hsx, hsy] = P(R_LENS - LENS_R - 2, deg);
   const [hex, hey] = P(CORE_R + 2, deg);
@@ -41,13 +42,13 @@ const LENS_TICKS = Array.from({ length: 12 }, (_, k) => {
   return { x1: R2((LENS_R - 4) * Math.cos(a)), y1: R2((LENS_R - 4) * Math.sin(a)), x2: R2(LENS_R * Math.cos(a)), y2: R2(LENS_R * Math.sin(a)) };
 });
 
-export function FourLens(props: {
+export function LensConstellation(props: {
   active: number;
   onHover?: (i: number | null) => void;
   onPick?: (i: number) => void;
 }): React.JSX.Element {
   const { active, onHover, onPick } = props;
-  const converge = active >= 4;
+  const converge = active >= LENS_N;
   const on = (i: number) => active === i || converge;
   return (
     <div className="fl-box">
@@ -60,14 +61,14 @@ export function FourLens(props: {
         </g>
         <circle cx={C} cy={C} r={R_LENS} fill="none" stroke={SOFT} strokeWidth={0.6} strokeDasharray="1.5 5" opacity={0.3} />
 
-        {LENSES.map((l, i) => (
+        {NODES.map((l, i) => (
           <line key={`h${i}`} className={`fl-hair${on(i) ? ' fl-on' : ''}`} x1={l.hsx} y1={l.hsy} x2={l.hex} y2={l.hey} stroke={OCHRE} strokeWidth={1.1} strokeLinecap="round" />
         ))}
-        {LENSES.map((l, i) => (
+        {NODES.map((l, i) => (
           <line key={`f${i}`} className={`fl-flow${on(i) ? ' fl-on' : ''}`} x1={l.hsx} y1={l.hsy} x2={l.hex} y2={l.hey} stroke={OCHRE} strokeWidth={1.6} strokeLinecap="round" />
         ))}
 
-        {LENSES.map((l, i) => (
+        {NODES.map((l, i) => (
           <g key={`l${i}`} transform={`translate(${l.cx} ${l.cy})`}>
             <g className={`fl-lens${on(i) ? ' fl-on' : ''}`}>
               <circle className="fl-lensbg" r={LENS_R} fill={OCHRE} fillOpacity={0} />
@@ -92,9 +93,9 @@ export function FourLens(props: {
         </text>
       </svg>
 
-      {/* 4 emblem cao cấp làm nút — hover/click xem được */}
-      {ICONS.map((Icon, i) => {
-        const l = LENSES[i]!;
+      {/* N emblem cao cấp làm nút — hover/click xem được */}
+      {NODES.map((l, i) => {
+        const Icon = EMBLEMS[LENSES[i]!.slug] ?? EMBLEMS['tu-vi']!;
         return (
           <button
             key={i}
@@ -106,7 +107,7 @@ export function FourLens(props: {
             onFocus={(e) => { if (e.currentTarget.matches(':focus-visible')) onHover?.(i); }}
             onBlur={() => onHover?.(null)}
             onClick={() => onPick?.(i)}
-            aria-label={`Hệ ${NAMES[i]} — xem chi tiết`}
+            aria-label={`Hệ ${LENSES[i]!.name} — xem chi tiết`}
           >
             <Icon className="fl-icon" />
           </button>

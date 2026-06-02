@@ -22,6 +22,7 @@ import {
 import { ThemeToggle } from '@/components/theme-toggle';
 import { useAuth } from '@/hooks/use-auth';
 import { signOut } from '@/lib/auth-client';
+import { QUICK_LOOKUP } from '@/lib/catalog/tools';
 
 interface NavLink {
   href: string;
@@ -53,25 +54,8 @@ const PRIMARY_LINKS: readonly NavLink[] = [
  * in-menu access to the 12 lookup tools + learning topics instead of having to
  * scroll to the footer. Mirrors SiteFooter COL_QUICK_LOOKUP + learn topics.
  */
-const MOBILE_TOOLS: readonly NavLink[] = [
-  { href: '/tu-vi-2026', label: 'Tử Vi 2026' },
-  { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay' },
-  { href: '/hop-tuoi', label: 'Hợp tuổi' },
-  { href: '/can-xuong', label: 'Cân Xương Đoán Số' },
-  { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
-  { href: '/bat-tu', label: 'Bát Tự' },
-  { href: '/mbti', label: 'MBTI' },
-  { href: '/than-so-hoc', label: 'Thần số học' },
-  { href: '/thuoc-lo-ban', label: 'Thước Lỗ Ban' },
-  { href: '/tinh-menh-cuc', label: 'Tuổi mệnh cục' },
-  { href: '/ban-do', label: 'Bản đồ sao' },
-  { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại' },
-  { href: '/gieo-que', label: 'Gieo Quẻ Kinh Dịch' },
-  { href: '/big-five', label: 'Big Five (OCEAN)' },
-  { href: '/disc', label: 'Trắc nghiệm DiSC' },
-  { href: '/xem-tuong', label: 'Xem Chỉ Tay & Tướng Mặt' },
-  { href: '/xem-hop-nhom', label: 'Xem hợp nhóm / gia đình' },
-];
+// Tra cứu nhanh — từ catalog (lib/catalog/tools), khớp 1-1 với footer (hết trùng lặp).
+const MOBILE_TOOLS: readonly NavLink[] = QUICK_LOOKUP.map(({ href, label }) => ({ href, label }));
 
 const MOBILE_LEARN: readonly NavLink[] = [
   { href: '/learn', label: 'Tất cả bài học' },

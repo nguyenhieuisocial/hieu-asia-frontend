@@ -1,15 +1,17 @@
 import * as React from 'react';
+import { LENSES as CATALOG } from '@/lib/catalog/lenses';
 
 /**
  * Methodology — "show your work": differentiator anti-bói-toán mạnh nhất (research).
- * Kể chuyện HỢP NHẤT: 4 lớp → 1 lời khuyên, con số cụ thể (precision framing). Editorial.
+ * Kể chuyện HỢP NHẤT: N lớp → 1 lời khuyên, con số cụ thể (precision framing). Editorial.
+ * Lăng kính lấy từ catalog (lib/catalog/lenses) — 1 nguồn sự thật.
  */
-const LENSES = [
-  { n: '01', name: 'Tử Vi', give: 'bản đồ ưu thế & chu kỳ', meta: 'lá số 12 cung · 14 chính tinh' },
-  { n: '02', name: 'Bát Tự', give: 'nhịp thịnh–suy theo thời gian', meta: 'Tứ Trụ can-chi · ngũ hành' },
-  { n: '03', name: 'Thần Số', give: 'động lực gốc & bài học đời', meta: 'con số đường đời' },
-  { n: '04', name: 'MBTI', give: 'cách bạn tiếp nhận & ra quyết định', meta: '16 kiểu · 4 trục Jung' },
-];
+const LENSES = CATALOG.map((l, i) => ({
+  n: String(i + 1).padStart(2, '0'),
+  name: l.name,
+  give: l.give,
+  meta: l.meta,
+}));
 
 export function Methodology(): React.JSX.Element {
   return (
@@ -19,10 +21,10 @@ export function Methodology(): React.JSX.Element {
           CÁCH HIEU.ASIA GIẢI MÃ
         </p>
         <h2 className="mt-3 font-marketing-display text-3xl leading-tight text-foreground sm:text-4xl">
-          Bốn lăng kính, <em className="italic text-primary">một bức tranh</em>.
+          Năm lăng kính, <em className="italic text-primary">một bức tranh</em>.
         </h2>
         <p className="mt-3 max-w-[34em] leading-relaxed text-muted-foreground">
-          Mỗi hệ nhìn bạn từ một phía. AI đọc cả bốn rồi hợp thành một góc nhìn bạn dùng được — để
+          Mỗi hệ nhìn bạn từ một phía. AI đọc cả năm rồi hợp thành một góc nhìn bạn dùng được — để
           tự quyết, không phụ thuộc phán đoán bên ngoài.
         </p>
 
@@ -40,7 +42,7 @@ export function Methodology(): React.JSX.Element {
         </ol>
 
         <p className="mt-8 max-w-[32em] font-editorial-display text-xl leading-snug text-foreground sm:text-2xl">
-          <span className="text-primary">→</span> AI hợp nhất bốn lớp thành{' '}
+          <span className="text-primary">→</span> AI hợp nhất năm lớp thành{' '}
           <em className="italic text-primary">một lời khuyên thực tế</em>, có thể hành động.
         </p>
       </div>
