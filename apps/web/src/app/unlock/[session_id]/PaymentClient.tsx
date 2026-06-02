@@ -19,6 +19,7 @@ import { PreparingArrival } from '@/components/checkout/PreparingArrival';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
 import { getSupabaseAuth } from '@/lib/auth-client';
+import { getVoucher, type VoucherInfo } from '@/lib/daily-checkin';
 
 type Tier =
   | 'premium'
@@ -64,6 +65,7 @@ async function resolveAuth(
 async function createIntent(
   sessionId: string,
   tier: Tier,
+  applyVoucher = false,
 ): Promise<PaymentIntent> {
   const { token, anonUserId } = await resolveAuth(sessionId);
   const res = await fetch('/api/payment/intent', {
@@ -78,6 +80,7 @@ async function createIntent(
       // from the verified JWT (see worker /payment/intent handler).
       user_id: anonUserId,
       session_id: sessionId,
+      ...(applyVoucher ? { streak_voucher: true } : {}),
       tier,
     }),
     cache: 'no-store',
@@ -115,15 +118,28 @@ export function PaymentClient({ sessionId, tier }: PaymentClientProps) {
   const [error, setError] = React.useState<string | null>(null);
   const [expired, setExpired] = React.useState(false);
   const [attempt, setAttempt] = React.useState(0);
+  // Voucher: null = still checking, false = none, VoucherInfo = available
+  const [voucher, setVoucher] = React.useState<VoucherInfo | false | null>(null);
+  // Whether user chose to apply the voucher (null = undecided, shown as prompt)
+  const [applyVoucher, setApplyVoucher] = React.useState<boolean | null>(null);
 
-  // 1. Create intent once per (session, tier, attempt) tuple.
+  // 0. Check for streak voucher on mount (runs once, independent of attempt).
   React.useEffect(() => {
+    getVoucher().then((v) => setVoucher(v ?? false)).catch(() => setVoucher(false));
+  }, []);
+
+  // 1. Create intent once per (session, tier, attempt, applyVoucher decision).
+  //    Waits until voucher check resolves AND user has decided (or no voucher).
+  const voucherDecided = voucher === false || applyVoucher !== null;
+
+  React.useEffect(() => {
+    if (!voucherDecided) return; // still waiting for user's voucher decision
     let cancelled = false;
     setLoading(true);
     setError(null);
     setExpired(false);
     setIntent(null);
-    createIntent(sessionId, tier)
+    createIntent(sessionId, tier, applyVoucher === true)
       .then((i) => {
         if (cancelled) return;
         setIntent(i);
@@ -140,7 +156,8 @@ export function PaymentClient({ sessionId, tier }: PaymentClientProps) {
     return () => {
       cancelled = true;
     };
-  }, [sessionId, tier, attempt]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionId, tier, attempt, voucherDecided, applyVoucher]);
 
   // 2. Poll status every 5s while pending.
   React.useEffect(() => {
@@ -185,6 +202,39 @@ export function PaymentClient({ sessionId, tier }: PaymentClientProps) {
   const handleExpire = React.useCallback(() => {
     setExpired(true);
   }, []);
+
+  // Voucher prompt — shown while voucher is available and user hasn't decided yet.
+  // This momentarily delays QR creation so the user can consciously apply the discount.
+  if (voucher && applyVoucher === null) {
+    return (
+      <Card className="border-gold/30 bg-gold/[0.05]">
+        <CardContent className="space-y-4 p-8 text-center">
+          <p className="font-heading text-xl text-foreground">
+            <span aria-hidden>🎁</span> Bạn có voucher streak!
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Chuỗi điểm danh của bạn đã đạt mốc phần thưởng.
+            Voucher giảm <strong className="text-gold-700 font-semibold">{voucher.discount_pct}%</strong> cho gói này.
+          </p>
+          <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
+            <Button
+              onClick={() => setApplyVoucher(true)}
+              className="bg-gold text-black hover:bg-gold/90"
+            >
+              Áp dụng -{voucher.discount_pct}%
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setApplyVoucher(false)}
+              className="border-border text-muted-foreground"
+            >
+              Bỏ qua, dùng sau
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (loading) {
     return (
