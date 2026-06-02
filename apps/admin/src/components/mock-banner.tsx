@@ -10,12 +10,12 @@ import type { DataSource } from '@/lib/admin-api';
 export function MockBanner({ source, prefix }: { source?: DataSource; prefix?: string }) {
   if (!source?.isMock) return null;
   return (
-    <div className="mb-4 rounded-md border border-amber-400/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+    <div className="mb-4 rounded-md border border-amber-400/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-700 dark:text-amber-200">
       <span className="font-medium">{prefix ?? 'Đang dùng dữ liệu mock.'}</span>{' '}
       {source.reason ? (
-        <span className="text-amber-100/75">({source.reason})</span>
+        <span className="text-amber-700 dark:text-amber-200/75">({source.reason})</span>
       ) : (
-        <span className="text-amber-100/75">
+        <span className="text-amber-700 dark:text-amber-200/75">
           Đặt <code className="font-mono">HIEU_API_ADMIN_TOKEN</code> và đợi backend ship endpoint
           tương ứng để xem dữ liệu thật.
         </span>
