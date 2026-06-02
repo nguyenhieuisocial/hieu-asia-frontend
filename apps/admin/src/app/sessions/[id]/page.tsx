@@ -395,8 +395,8 @@ export default function SessionDetailPage() {
       {/* Wave 60.20 — Header refactor. Admin needs USER identity prominent
           (email = the human), not the opaque session UUID. UUID demoted to
           a small copy-chip below for support-ticket cross-reference. */}
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="min-w-0 flex-1">
+      <div className="flex flex-col gap-4">
+        <div className="min-w-0">
           <div className="flex items-center gap-2">
             <ListTodo className="h-5 w-5 text-gold" />
             <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
