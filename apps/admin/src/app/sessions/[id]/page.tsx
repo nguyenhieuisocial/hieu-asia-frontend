@@ -18,7 +18,13 @@ import {
   DialogHeader,
   DialogTitle,
   Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   StatusBadge,
+  Textarea,
   cn,
   toast,
 } from '@hieu-asia/ui';
@@ -36,9 +42,11 @@ import {
   Trash2,
   UserRound,
   Link2,
+  KeyRound,
+  ShieldOff,
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import { getSession, patchSession } from '@/lib/admin-api';
+import { getSession, patchSession, setSessionAccess } from '@/lib/admin-api';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
 import type { TaskStatus } from '@hieu-asia/types';
@@ -189,6 +197,12 @@ export default function SessionDetailPage() {
   const [renameLabel, setRenameLabel] = React.useState('');
   const [renameNote, setRenameNote] = React.useState('');
   const [confirmDeleteOpen, setConfirmDeleteOpen] = React.useState(false);
+  // Manual paid-access override (backend #41). Grant comps / fixes a missed
+  // bank-transfer unlock; revoke removes access (ACCESS-only — never refunds).
+  const [grantOpen, setGrantOpen] = React.useState(false);
+  const [grantTier, setGrantTier] = React.useState('premium');
+  const [revokeOpen, setRevokeOpen] = React.useState(false);
+  const [revokeReason, setRevokeReason] = React.useState('');
 
   const reOrchestrateMut = useMutation({
     mutationFn: reOrchestrate,
@@ -230,6 +244,40 @@ export default function SessionDetailPage() {
     onError: (e) => toast.error('Xóa thất bại', { description: (e as Error).message }),
   });
 
+  // Mở khoá thủ công (grant) — write the paid-access signal for this session.
+  const grantMut = useMutation({
+    mutationFn: (tier: string) => setSessionAccess(id, { action: 'grant', tier }),
+    onSuccess: (res) => {
+      if (res.ok) {
+        toast.success('Đã mở khoá quyền xem trả phí');
+        setGrantOpen(false);
+        qc.invalidateQueries({ queryKey: ['admin', 'session', id] });
+        qc.invalidateQueries({ queryKey: ['admin', 'session', id, 'audit'] });
+      } else {
+        toast.error('Mở khoá thất bại', { description: res.error });
+      }
+    },
+    onError: (e) => toast.error('Mở khoá thất bại', { description: (e as Error).message }),
+  });
+
+  // Thu hồi quyền (revoke) — delete the paid-access signal. Records `reason` in
+  // the audit log only; does NOT move money (SePay refunds are manual).
+  const revokeMut = useMutation({
+    mutationFn: (reason: string) =>
+      setSessionAccess(id, { action: 'revoke', reason: reason || undefined }),
+    onSuccess: (res) => {
+      if (res.ok) {
+        toast.success('Đã thu hồi quyền xem trả phí');
+        setRevokeOpen(false);
+        qc.invalidateQueries({ queryKey: ['admin', 'session', id] });
+        qc.invalidateQueries({ queryKey: ['admin', 'session', id, 'audit'] });
+      } else {
+        toast.error('Thu hồi thất bại', { description: res.error });
+      }
+    },
+    onError: (e) => toast.error('Thu hồi thất bại', { description: (e as Error).message }),
+  });
+
   const copyReportLink = React.useCallback(() => {
     if (!session.data) return;
     const url = `${PUBLIC_WEB_URL}/reading/${encodeURIComponent(session.data.session_id)}/report`;
@@ -256,6 +304,24 @@ export default function SessionDetailPage() {
   const handleDeleteConfirm = React.useCallback(() => {
     deleteMut.mutate();
   }, [deleteMut]);
+
+  const openGrant = React.useCallback(() => {
+    setGrantTier('premium');
+    setGrantOpen(true);
+  }, []);
+
+  const openRevoke = React.useCallback(() => {
+    setRevokeReason('');
+    setRevokeOpen(true);
+  }, []);
+
+  const handleGrantConfirm = React.useCallback(() => {
+    grantMut.mutate(grantTier);
+  }, [grantMut, grantTier]);
+
+  const handleRevokeConfirm = React.useCallback(() => {
+    revokeMut.mutate(revokeReason);
+  }, [revokeMut, revokeReason]);
 
   if (session.isLoading) {
     return (
@@ -436,6 +502,33 @@ export default function SessionDetailPage() {
             <ExternalLink className="h-4 w-4" aria-hidden />
             Xem báo cáo
           </a>
+          {/* Manual paid-access override (backend #41). Grant shown until the
+              session is paid; revoke once it is. Both require explicit confirm —
+              grant comps access, revoke is sensitive (and never refunds money). */}
+          {!s.paid && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={openGrant}
+              className="border-jade/40 text-jade-700 hover:bg-jade/10 dark:text-jade-50"
+              title="Cấp quyền xem trả phí cho phiên này"
+            >
+              <KeyRound className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+              Mở khoá thủ công
+            </Button>
+          )}
+          {s.paid && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={openRevoke}
+              className="border-red-500/40 text-red-700 hover:bg-red-500/10 dark:text-red-300"
+              title="Gỡ quyền xem trả phí của phiên này (không hoàn tiền)"
+            >
+              <ShieldOff className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+              Thu hồi quyền
+            </Button>
+          )}
           <Button
             variant="outline"
             size="sm"
@@ -1023,6 +1116,84 @@ export default function SessionDetailPage() {
               className="bg-red-500/90 text-foreground hover:bg-red-500"
             >
               {deleteMut.isPending ? 'Đang xóa…' : 'Xóa'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Mở khoá thủ công — grant paid access (backend #41). Optional tier
+          (defaults to premium). On success refetches the session so the payment
+          card flips to "Đã trả". */}
+      <Dialog open={grantOpen} onOpenChange={(o) => !o && setGrantOpen(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Mở khoá quyền xem trả phí?</DialogTitle>
+            <DialogDescription>
+              Cấp quyền xem trả phí cho phiên này (vd: khách đã chuyển khoản mà hệ thống
+              chưa tự mở, hoặc tặng).
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-muted-foreground">Gói</label>
+            <Select value={grantTier} onValueChange={setGrantTier}>
+              <SelectTrigger aria-label="Gói">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="premium">premium</SelectItem>
+                <SelectItem value="mentor_month">mentor_month</SelectItem>
+                <SelectItem value="mentor_year">mentor_year</SelectItem>
+                <SelectItem value="lifetime">lifetime</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setGrantOpen(false)} disabled={grantMut.isPending}>
+              Hủy
+            </Button>
+            <Button
+              onClick={handleGrantConfirm}
+              disabled={grantMut.isPending}
+              className="border border-jade/40 bg-jade/15 text-jade-700 hover:bg-jade/25 dark:text-jade-50"
+            >
+              {grantMut.isPending ? 'Đang mở khoá…' : 'Mở khoá'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Thu hồi quyền — revoke paid access (backend #41). Sensitive: the warning
+          MUST make clear this never refunds money. Optional reason recorded in
+          the audit log. On success refetches the session. */}
+      <Dialog open={revokeOpen} onOpenChange={(o) => !o && setRevokeOpen(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Thu hồi quyền xem trả phí?</DialogTitle>
+            <DialogDescription>
+              Gỡ quyền xem trả phí của phiên này. ⚠️ Nếu cần HOÀN TIỀN, bạn phải tự chuyển
+              khoản trả lại — nút này KHÔNG tự hoàn tiền.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-muted-foreground">Lý do (tuỳ chọn)</label>
+            <Textarea
+              value={revokeReason}
+              onChange={(e) => setRevokeReason(e.target.value)}
+              placeholder="vd: đã hoàn tiền qua chuyển khoản, khách yêu cầu huỷ"
+              maxLength={500}
+              rows={3}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setRevokeOpen(false)} disabled={revokeMut.isPending}>
+              Hủy
+            </Button>
+            <Button
+              onClick={handleRevokeConfirm}
+              disabled={revokeMut.isPending}
+              className="bg-red-500/90 text-foreground hover:bg-red-500"
+            >
+              {revokeMut.isPending ? 'Đang thu hồi…' : 'Thu hồi quyền'}
             </Button>
           </DialogFooter>
         </DialogContent>
