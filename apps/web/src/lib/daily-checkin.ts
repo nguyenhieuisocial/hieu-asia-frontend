@@ -73,3 +73,46 @@ export async function checkin(): Promise<{ streak: StreakView; alreadyCheckedIn:
     return null;
   }
 }
+
+/**
+ * Streak milestones — the free "celebrate the chain" cue. Still NO rewards
+ * economy: recognition only (a badge + a congrats line), derived purely on the
+ * client from the consecutive-day count. No API or payment change.
+ */
+export const STREAK_MILESTONES: readonly { days: number; label: string }[] = [
+  { days: 7, label: '1 tuần' },
+  { days: 30, label: '1 tháng' },
+  { days: 100, label: '100 ngày' },
+  { days: 365, label: '1 năm' },
+];
+
+export interface MilestoneState {
+  /** Highest milestone the streak has reached (persistent badge), or null. */
+  reached: { days: number; label: string } | null;
+  /** True when `current` lands exactly on a milestone (reached it today). */
+  justHit: boolean;
+  /** Next milestone ahead, or null once past the last one. */
+  next: { days: number; label: string } | null;
+  /** Days remaining until `next` (0 when there is none). */
+  toNext: number;
+}
+
+/** Derive milestone state from the current consecutive-day count. Pure. */
+export function streakMilestone(current: number): MilestoneState {
+  let reached: MilestoneState['reached'] = null;
+  let next: MilestoneState['next'] = null;
+  for (const m of STREAK_MILESTONES) {
+    if (current >= m.days) {
+      reached = { days: m.days, label: m.label };
+    } else {
+      next = { days: m.days, label: m.label };
+      break;
+    }
+  }
+  return {
+    reached,
+    justHit: STREAK_MILESTONES.some((m) => m.days === current),
+    next,
+    toNext: next ? next.days - current : 0,
+  };
+}
