@@ -254,6 +254,8 @@ export function AuditTab() {
   const { data, isLoading, isFetching, refetch, error } = useQuery({
     queryKey: ['admin', 'audit-log', { action, actor, from, to }],
     queryFn: () => fetchAudit({ action, actor, from, to, limit: LIMIT }),
+    staleTime: 60_000,
+    placeholderData: (prev) => prev,
   });
 
   // Defensive Array.isArray (Wave 60.65.P0c)

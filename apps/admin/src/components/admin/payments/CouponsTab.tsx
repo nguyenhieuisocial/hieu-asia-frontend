@@ -38,7 +38,7 @@ export interface CouponsTabProps {
 
 export function CouponsTab({ onCouponsChange }: CouponsTabProps) {
   const qc = useQueryClient();
-  const coupons = useQuery({ queryKey: ['admin', 'coupons'], queryFn: listCoupons });
+  const coupons = useQuery({ queryKey: ['admin', 'coupons'], queryFn: listCoupons, staleTime: 60_000 });
 
   // Wave 60.65.P0c defensive guard — `?? []` only catches null/undefined; if
   // the worker returns `{error: "…"}` the array fallback prevents a TypeError.

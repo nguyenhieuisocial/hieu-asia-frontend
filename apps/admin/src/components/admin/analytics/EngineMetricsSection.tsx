@@ -53,6 +53,7 @@ export function EngineMetricsSection() {
   const { data, isLoading } = useQuery({
     queryKey: ['admin', 'engine', 24],
     queryFn: () => fetchEngine(24),
+    staleTime: 60_000,
   });
 
   const notConfigured = data && data.ok === false && data.configured === false;

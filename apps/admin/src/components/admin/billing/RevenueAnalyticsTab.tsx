@@ -48,6 +48,7 @@ export function RevenueAnalyticsTab() {
   const mrr = useQuery({
     queryKey: ['admin', 'mrr-by-month'],
     queryFn: getMrrByMonth,
+    staleTime: 60_000,
   });
 
   const data = React.useMemo<ChartRow[]>(() => {

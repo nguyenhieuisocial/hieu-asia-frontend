@@ -141,6 +141,8 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
   const tx = useQuery({
     queryKey: ['admin', 'transactions', page],
     queryFn: () => listTransactions({ page, page_size: 15 }),
+    staleTime: 60_000,
+    placeholderData: (prev) => prev,
   });
 
   const refund = useMutation({

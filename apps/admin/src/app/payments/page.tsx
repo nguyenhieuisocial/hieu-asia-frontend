@@ -92,19 +92,23 @@ function AdminPaymentsPageInner() {
   const txProbe = useQuery({
     queryKey: ['admin', 'transactions', 1],
     queryFn: () => listTransactions({ page: 1, page_size: 15 }),
+    staleTime: 60_000,
   });
-  const couponProbe = useQuery({ queryKey: ['admin', 'coupons'], queryFn: listCoupons });
+  const couponProbe = useQuery({ queryKey: ['admin', 'coupons'], queryFn: listCoupons, staleTime: 60_000 });
   const subProbe = useQuery({
     queryKey: ['admin', 'subscriptions', 1, 'all', 'all'],
     queryFn: () => listSubscriptions({ page: 1, page_size: 15 }),
+    staleTime: 60_000,
   });
   const failedProbe = useQuery({
     queryKey: ['admin', 'failed-payments'],
     queryFn: listFailedPayments,
+    staleTime: 60_000,
   });
   const mrrProbe = useQuery({
     queryKey: ['admin', 'mrr-by-month'],
     queryFn: getMrrByMonth,
+    staleTime: 60_000,
   });
 
   const searchParams = useSearchParams();

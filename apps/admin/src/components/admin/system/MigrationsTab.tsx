@@ -119,6 +119,7 @@ export function MigrationsTab() {
         return { rows: MOCK_MIGRATIONS, isMock: true };
       }
     },
+    staleTime: 60_000,
   });
 
   const rows = list.data?.rows ?? [];

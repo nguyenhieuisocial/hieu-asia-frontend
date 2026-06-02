@@ -110,6 +110,7 @@ function CustomerDetailPageInner() {
     queryKey: ['admin', 'customer', id],
     queryFn: () => fetchCustomer(id),
     enabled: !!id,
+    staleTime: 60_000,
   });
 
   const [confirm, setConfirm] = React.useState<ConfirmState | null>(null);

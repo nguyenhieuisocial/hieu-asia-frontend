@@ -97,6 +97,7 @@ export function OAuthAuditTab() {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['admin', 'connect', 'oauth-audit'],
     queryFn: fetchOAuthAudit,
+    staleTime: 60_000,
   });
 
   const rows = React.useMemo(

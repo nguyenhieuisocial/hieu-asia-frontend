@@ -52,26 +52,31 @@ export default function LlmSpendPage() {
     queryKey: ['llm-spend', 'daily', 30],
     queryFn: () => getLlmSpendDaily(30),
     enabled: configured,
+    staleTime: 60_000,
   });
   const kpiToday = useQuery({
     queryKey: ['llm-spend', 'kpi', 'today'],
     queryFn: () => getLlmSpendKpis({ since: isoStartOfToday() }),
     enabled: configured,
+    staleTime: 60_000,
   });
   const kpi7 = useQuery({
     queryKey: ['llm-spend', 'kpi', '7d'],
     queryFn: () => getLlmSpendKpis({ since: isoNDaysAgo(7) }),
     enabled: configured,
+    staleTime: 60_000,
   });
   const kpi30 = useQuery({
     queryKey: ['llm-spend', 'kpi', '30d'],
     queryFn: () => getLlmSpendKpis({ since: isoNDaysAgo(30) }),
     enabled: configured,
+    staleTime: 60_000,
   });
   const kpiMtd = useQuery({
     queryKey: ['llm-spend', 'kpi', 'mtd'],
     queryFn: () => getLlmSpendKpis({ since: isoStartOfMonth() }),
     enabled: configured,
+    staleTime: 60_000,
   });
   const traces = useQuery({
     queryKey: ['llm-spend', 'traces', vendorFilter, roleFilter],
@@ -82,16 +87,20 @@ export default function LlmSpendPage() {
         role: roleFilter || undefined,
       }),
     enabled: configured,
+    staleTime: 60_000,
+    placeholderData: (prev) => prev,
   });
   const topUsers = useQuery({
     queryKey: ['llm-spend', 'top-users'],
     queryFn: () => getTopUsers(30, 20),
     enabled: configured,
+    staleTime: 60_000,
   });
   const budgets = useQuery({
     queryKey: ['llm-spend', 'budgets'],
     queryFn: () => getApiBudgets(),
     enabled: configured,
+    staleTime: 60_000,
   });
 
   const refreshAll = React.useCallback(() => {

@@ -89,6 +89,7 @@ export function ActivityFeed() {
     queryKey: ['admin', 'recent-sessions'],
     queryFn: () => listSessions({ page_size: 10, page: 1 }),
     enabled: !audit.data,
+    staleTime: 60_000,
   });
 
   // Map sessions → activity entries (fallback)

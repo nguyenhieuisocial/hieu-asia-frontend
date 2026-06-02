@@ -59,8 +59,8 @@ const LICENSE_TONE: Record<RagChunk['license_status'], React.ComponentProps<type
 
 export default function AdminRagPage() {
   const qc = useQueryClient();
-  const chunks = useQuery({ queryKey: ['admin', 'rag', 'chunks'], queryFn: listRagChunks });
-  const stats = useQuery({ queryKey: ['admin', 'rag', 'qdrant'], queryFn: getQdrantStats });
+  const chunks = useQuery({ queryKey: ['admin', 'rag', 'chunks'], queryFn: listRagChunks, staleTime: 60_000 });
+  const stats = useQuery({ queryKey: ['admin', 'rag', 'qdrant'], queryFn: getQdrantStats, staleTime: 60_000 });
 
   const reindex = useMutation({
     mutationFn: reindexDocument,
