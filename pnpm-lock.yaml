@@ -264,7 +264,7 @@ importers:
         version: 7.16.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       zmp-sdk:
         specifier: ^2.0.0
-        version: 2.51.1(@babel/core@7.29.0)
+        version: 2.51.3(@babel/core@7.29.0)
       zmp-ui:
         specifier: ^1.0.0
         version: 1.11.14(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -642,8 +642,8 @@ packages:
     peerDependencies:
       playwright-core: '>= 1.0.0'
 
-  '@babel/cli@7.28.6':
-    resolution: {integrity: sha512-6EUNcuBbNkj08Oj4gAZ+BUU8yLCgKzgVX4gaTh09Ya2C8ICM4P+G30g4m3akRxSYAp3A/gnWchrNst7px4/nUQ==}
+  '@babel/cli@7.29.7':
+    resolution: {integrity: sha512-/75HwRbAYPqXv/Ax1h7Fg3IZfXgdU98jnA8H93/m/QBaPV3Hp5ICoLqzGYye1yHBCgpmXvtqgSUN8oOKX5tojQ==}
     engines: {node: '>=6.9.0'}
     hasBin: true
     peerDependencies:
@@ -8887,8 +8887,8 @@ packages:
     resolution: {integrity: sha512-GwoCpGwNRLmu8OY/1KupU6byj4qkXkdNJdK2HKkLhRvezsVI+kv5+O/3jUECWhfvoQDAtnFNjaJvko06XRu9Hg==}
     hasBin: true
 
-  zmp-sdk@2.51.1:
-    resolution: {integrity: sha512-E5EKWkG49J35BpFILDevCjBECEnQLJoUO3oiKLMPs7hH8oysOfRIt5i4nHAVI55uOuELnErNq0KwTaGHVXiz5g==}
+  zmp-sdk@2.51.3:
+    resolution: {integrity: sha512-E9XakNbs79D51aI6qd+l/PcDczD137a1n6beTfOUa+9W2lsYxCRNNi0I1ptjf10m9jQ9ywAXeJvnZDtwxU3QAA==}
 
   zmp-ui@1.11.14:
     resolution: {integrity: sha512-BN2YjNfxyjeXSABOkB04eU7wN2iOA4CRQGuX2a5fGGRCtMyNngiYhCv6n0CyNaviSoZj0htowccDNXr4zWUcCg==}
@@ -8936,7 +8936,7 @@ snapshots:
       axe-core: 4.11.4
       playwright-core: 1.60.0
 
-  '@babel/cli@7.28.6(@babel/core@7.29.0)':
+  '@babel/cli@7.29.7(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
       '@jridgewell/trace-mapping': 0.3.31
@@ -18027,9 +18027,9 @@ snapshots:
       - webpack-plugin-serve
       - yaml
 
-  zmp-sdk@2.51.1(@babel/core@7.29.0):
+  zmp-sdk@2.51.3(@babel/core@7.29.0):
     dependencies:
-      '@babel/cli': 7.28.6(@babel/core@7.29.0)
+      '@babel/cli': 7.29.7(@babel/core@7.29.0)
       '@sentry/browser': 6.19.7
       '@sentry/tracing': 6.19.7
       '@swc/helpers': 0.4.37
