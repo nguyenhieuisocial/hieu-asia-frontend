@@ -378,7 +378,8 @@ async function ToolUsageTile() {
           Top công cụ (30 ngày)
         </CardTitle>
         <CardDescription>
-          Lượt dùng <code>tool_used</code> theo từng công cụ (+ tỉ lệ lỗi nếu có).
+          Người dùng <code>tool_used</code> + tỉ lệ{' '}
+          <span className="text-emerald-400">→ trả tiền</span> theo công cụ (deepen-first).
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
@@ -402,7 +403,27 @@ async function ToolUsageTile() {
                     {(r.errorRate * 100).toFixed(0)}% lỗi
                   </span>
                 )}
-                <span className="font-mono text-sm text-foreground">{fmtNum(r.uses)}</span>
+                {r.paidUsers > 0 ? (
+                  <span
+                    className="font-mono text-[11px] text-emerald-400"
+                    title={`${r.paidUsers}/${r.users} người dùng công cụ này rồi trả tiền (30 ngày)`}
+                  >
+                    {(r.conversionRate * 100).toFixed(0)}% → trả tiền
+                  </span>
+                ) : (
+                  <span
+                    className="font-mono text-[11px] text-muted-foreground"
+                    title="Chưa có người dùng công cụ này trả tiền trong 30 ngày"
+                  >
+                    —
+                  </span>
+                )}
+                <span
+                  className="font-mono text-sm text-foreground"
+                  title={`${r.users} người · ${r.uses} lượt`}
+                >
+                  {fmtNum(r.users)}
+                </span>
               </div>
             </div>
           ))

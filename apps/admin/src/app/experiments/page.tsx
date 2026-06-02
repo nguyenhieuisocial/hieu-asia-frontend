@@ -291,7 +291,7 @@ export default async function ExperimentsPage() {
       <PageHeader
         icon={<FlaskConical className="h-5 w-5" aria-hidden />}
         title="A/B Testing — Feature Flags"
-        description="Danh sách feature flag PostHog đang đăng ký + rollout % + đánh giá gần nhất. Đây là trang read-only audit; founder chỉnh trực tiếp trên PostHog dashboard."
+        description="Cờ PostHog — A/B phía NGƯỜI DÙNG (client-eval) + rollout % + đánh giá gần nhất. Read-only audit; founder chỉnh trực tiếp trên PostHog dashboard. (Khác cờ phía server / Worker KV ở /feature-flags.)"
       />
 
       {!configured && (
