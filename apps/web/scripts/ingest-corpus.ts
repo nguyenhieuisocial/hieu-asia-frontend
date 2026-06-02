@@ -141,6 +141,13 @@ function splitSectionsByHeading(text: string): { chapter: string; text: string }
   return out.filter((s) => s.text.length >= MIN_CHARS);
 }
 
+// Corpus content files only — skip README / doc files (meta, not interpretive
+// content meant for embedding). Prevents README sections becoming junk "cards"
+// under --split-by-heading.
+function isCorpusFile(name: string): boolean {
+  return ['.md', '.txt'].includes(extname(name)) && name.toLowerCase() !== 'readme.md';
+}
+
 function walkCorpusDir(dir: string): { path: string; chapter: string | null }[] {
   const out: { path: string; chapter: string | null }[] = [];
   const entries = readdirSync(dir);
@@ -152,11 +159,11 @@ function walkCorpusDir(dir: string): { path: string; chapter: string | null }[] 
       const chapter = entry;
       for (const sub of readdirSync(full)) {
         const subFull = join(full, sub);
-        if (statSync(subFull).isFile() && ['.md', '.txt'].includes(extname(sub))) {
+        if (statSync(subFull).isFile() && isCorpusFile(sub)) {
           out.push({ path: subFull, chapter });
         }
       }
-    } else if (['.md', '.txt'].includes(extname(entry))) {
+    } else if (isCorpusFile(entry)) {
       out.push({ path: full, chapter: basename(entry, extname(entry)) });
     }
   }
