@@ -63,6 +63,7 @@ const MOBILE_LEARN: readonly NavLink[] = [
   { href: '/learn/bat-tu', label: 'Bát Tự' },
   { href: '/learn/than-so-hoc', label: 'Thần Số Học' },
   { href: '/learn/mbti', label: 'MBTI' },
+  { href: '/learn/big-five', label: 'Big Five' },
   { href: '/learn/palm', label: 'Tướng tay' },
 ];
 
