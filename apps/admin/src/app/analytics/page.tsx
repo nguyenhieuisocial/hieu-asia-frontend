@@ -25,6 +25,7 @@ import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { LiveBadge } from '@/components/admin/live-badge';
 import { ErrorBlock } from '@/components/admin/error-block';
+import { EngineMetricsSection } from '@/components/admin/analytics/EngineMetricsSection';
 
 interface AnalyticsResponse {
   ok: boolean;
@@ -256,6 +257,8 @@ export default function AnalyticsPage() {
           </CardContent>
         </Card>
       </div>
+
+      <EngineMetricsSection />
     </div>
   );
 }
