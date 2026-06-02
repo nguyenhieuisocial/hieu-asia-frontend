@@ -1,10 +1,11 @@
 'use client';
 
 import * as React from 'react';
-import { FourLens } from './FourLens';
+import { LensConstellation } from './FourLens';
+import { LENSES } from '@/lib/catalog/lenses';
 
 /**
- * MultiHero — hero "Bốn lăng kính (Tử Vi · Bát Tự · Thần Số · MBTI) → AI hợp nhất một bức tranh".
+ * MultiHero — hero "Năm lăng kính (Tử Vi · Bát Tự · MBTI · Big Five · Xem Tướng) → AI hợp nhất một bức tranh".
  * MOBILE-FIRST: base CSS = điện thoại; desktop là `@media (min-width:880px)` enhancement.
  * Thứ tự mobile: bối cảnh (eyebrow → headline → deck) → lăng kính tương tác → CTA chính.
  * Hội tụ → xoay vài "ví dụ" nhận định AI (biến lời hứa thành cụ thể, giọng phân tích, không bói).
@@ -16,12 +17,9 @@ const OCHRE = '#A47532';
 const PAPER = '#F3ECDD';
 const SOFT = '#6B6358';
 
-const SYSTEMS = [
-  { n: 'Tử Vi', r: 'bản đồ ưu thế & điểm mù', full: 'Lá số 12 cung — ưu thế, điểm mù và chu kỳ của bạn.' },
-  { n: 'Bát Tự', r: 'cân bằng ngũ hành', full: 'Tứ Trụ can-chi — cân bằng ngũ hành & nhịp thịnh–suy theo thời gian.' },
-  { n: 'Thần Số', r: 'con số đường đời', full: 'Con số đường đời — động lực gốc và bài học của đời bạn.' },
-  { n: 'MBTI', r: 'cách bạn ra quyết định', full: '16 kiểu tính cách — cách bạn tiếp nhận, suy nghĩ và ra quyết định.' },
-];
+// Flagship lenses từ catalog (lib/catalog/lenses) — 1 nguồn sự thật, hết drift.
+const SYSTEMS = LENSES.map((l) => ({ n: l.name, r: l.role, full: l.full }));
+const LENS_N = SYSTEMS.length;
 const WORDS = ['mình.', 'đời mình.', 'con đường.', 'hướng đi.', 'bước tiếp theo.'];
 const SAMPLES = [
   'Hợp quyết nhanh, nhưng nên hoãn việc lớn khi đang mệt.',
@@ -34,7 +32,7 @@ const reduceMotion = () =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export function MultiHero(): React.JSX.Element {
-  const [autoActive, setAutoActive] = React.useState(4); // 0..3 soi 1 hệ; 4 = hội tụ
+  const [autoActive, setAutoActive] = React.useState(LENS_N); // 0..N-1 soi 1 hệ; N = hội tụ
   const [hover, setHover] = React.useState<number | null>(null);
   const [wordIdx, setWordIdx] = React.useState(0);
   const [sample, setSample] = React.useState(0);
@@ -43,14 +41,14 @@ export function MultiHero(): React.JSX.Element {
 
   React.useEffect(() => {
     if (reduceMotion()) return;
-    const a = window.setInterval(() => { if (hoverRef.current == null) setAutoActive((x) => (x + 1) % 5); }, 2400);
+    const a = window.setInterval(() => { if (hoverRef.current == null) setAutoActive((x) => (x + 1) % (LENS_N + 1)); }, 2400);
     const w = window.setInterval(() => setWordIdx((x) => (x + 1) % WORDS.length), 2800);
     const s = window.setInterval(() => setSample((x) => (x + 1) % SAMPLES.length), 3600);
     return () => { window.clearInterval(a); window.clearInterval(w); window.clearInterval(s); };
   }, []);
 
   const active = hover != null ? hover : autoActive;
-  const sys = active >= 0 && active < 4 ? SYSTEMS[active] : null;
+  const sys = active >= 0 && active < LENS_N ? SYSTEMS[active] : null;
   const soi = sys ? (
     hover != null
       ? <><b className="mh-soi-n">{sys.n}</b> <span className="mh-soi-r">· {sys.full}</span></>
@@ -66,12 +64,12 @@ export function MultiHero(): React.JSX.Element {
 
       <div className="mh-wrap">
         <div className="mh-copy">
-          <p className="mh-eyebrow"><span className="mh-livedot" aria-hidden="true" />BỐN LĂNG KÍNH · AI HỢP NHẤT THÀNH MỘT</p>
+          <p className="mh-eyebrow"><span className="mh-livedot" aria-hidden="true" />NĂM LĂNG KÍNH · AI HỢP NHẤT THÀNH MỘT</p>
           <h1 className="mh-h1">
             <span className="mh-line mh-l1">Hiểu mình.</span>
             <span className="mh-line mh-l2">Quyết định <span key={wordIdx} className="mh-rot">{WORDS[wordIdx] ?? 'mình.'}</span></span>
           </h1>
-          <p className="mh-deck">Tử Vi, Bát Tự, Thần Số, MBTI — bốn lăng kính cho bức tranh sâu nhất, cùng cả bộ công cụ cổ học &amp; hiện đại. AI hợp nhất để bạn tự quyết.</p>
+          <p className="mh-deck">Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng — năm lăng kính cho bức tranh sâu nhất, cùng cả bộ công cụ cổ học &amp; hiện đại. AI hợp nhất để bạn tự quyết.</p>
         </div>
 
         {/* mobile-first: CTA TRƯỚC la bàn → user bấm được ngay màn 1 (above-fold).
@@ -85,7 +83,7 @@ export function MultiHero(): React.JSX.Element {
         </div>
 
         <div className="mh-vis">
-          <FourLens active={active} onHover={setHover} onPick={(i) => setHover((h) => (h === i ? null : i))} />
+          <LensConstellation active={active} onHover={setHover} onPick={(i) => setHover((h) => (h === i ? null : i))} />
           <p className="mh-soi"><span key={`${active}-${hover != null}-${sample}`} className="mh-soi-in">{soi}</span></p>
           <p className="mh-hint">{hover != null ? 'chạm lại để tiếp tục' : 'chạm một lăng kính để xem từng hệ'}</p>
         </div>
