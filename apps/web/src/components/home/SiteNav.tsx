@@ -182,6 +182,9 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
           <DropdownMenuItem asChild>
             <Link href="/reading">Lá số của bạn</Link>
           </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/account#streak">Điểm danh</Link>
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuLabel className="text-primary/85">Cộng tác viên</DropdownMenuLabel>
           <DropdownMenuItem asChild>
@@ -312,6 +315,13 @@ function MobileDrawer({
                 className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
               >
                 Lá số của bạn
+              </Link>
+              <Link
+                href="/account#streak"
+                onClick={() => setOpen(false)}
+                className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
+              >
+                Điểm danh
               </Link>
             </>
           )}

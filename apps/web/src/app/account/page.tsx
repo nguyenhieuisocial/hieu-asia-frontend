@@ -170,7 +170,9 @@ function AccountPageInner() {
 
         <section className="relative mx-auto max-w-3xl space-y-12 px-6 pb-20 pt-12 sm:pt-16">
           <FeedHero user={auth.user} />
-          <StreakCard />
+          <div id="streak" className="scroll-mt-24">
+            <StreakCard />
+          </div>
           <ActivityFeed />
           <RecentConversations />
           <PinnedInsights />
