@@ -411,19 +411,25 @@ export interface FunnelStepRow {
  * at-a-glance KPI tile a per-step distinct-count is sufficient and far
  * simpler to render. UI shows step name, count, conv-% vs step 1.
  *
- * Events used (event-taxonomy.ts):
+ * Events used — all VERIFIED to fire from apps/web (not aspirational). The
+ * previous version queried `reading_started` / `reading_completed`, which are
+ * defined in event-taxonomy.ts but never actually `track()`-ed anywhere, so
+ * steps 3-4 always returned 0. Rewired to the real session/report/payment
+ * events so the funnel reflects historical data immediately (no backfill).
  *   1. $pageview                 — landed on any page
- *   2. survey_completed          — finished onboarding survey
- *   3. reading_started           — started a reading
- *   4. reading_completed         — completed a reading
+ *   2. reading_session_created   — created a reading session (started)
+ *   3. survey_completed          — finished the onboarding survey
+ *   4. report_viewed             — viewed the finished report (completed)
+ *   5. payment_completed         — unlocked / paid
  */
 export async function fetchAcquisitionFunnel(): Promise<FunnelStepRow[] | null> {
   const sql = `
     SELECT
-      count(DISTINCT IF(event = '$pageview', person_id, NULL))           AS s1,
-      count(DISTINCT IF(event = 'survey_completed', person_id, NULL))    AS s2,
-      count(DISTINCT IF(event = 'reading_started', person_id, NULL))     AS s3,
-      count(DISTINCT IF(event = 'reading_completed', person_id, NULL))   AS s4
+      count(DISTINCT IF(event = '$pageview', person_id, NULL))                AS s1,
+      count(DISTINCT IF(event = 'reading_session_created', person_id, NULL))  AS s2,
+      count(DISTINCT IF(event = 'survey_completed', person_id, NULL))         AS s3,
+      count(DISTINCT IF(event = 'report_viewed', person_id, NULL))            AS s4,
+      count(DISTINCT IF(event = 'payment_completed', person_id, NULL))        AS s5
     FROM events
     WHERE timestamp > now() - INTERVAL 30 DAY
   `;
@@ -433,12 +439,14 @@ export async function fetchAcquisitionFunnel(): Promise<FunnelStepRow[] | null> 
   const s2 = Number(rows[0][1] ?? 0);
   const s3 = Number(rows[0][2] ?? 0);
   const s4 = Number(rows[0][3] ?? 0);
+  const s5 = Number(rows[0][4] ?? 0);
   const safeRate = (n: number) => (s1 > 0 ? n / s1 : 0);
   return [
-    { step: 'Pageview', users: s1, rate: 1 },
-    { step: 'Survey hoàn tất', users: s2, rate: safeRate(s2) },
-    { step: 'Reading bắt đầu', users: s3, rate: safeRate(s3) },
-    { step: 'Reading hoàn tất', users: s4, rate: safeRate(s4) },
+    { step: 'Ghé trang', users: s1, rate: 1 },
+    { step: 'Bắt đầu phiên đọc', users: s2, rate: safeRate(s2) },
+    { step: 'Hoàn tất khảo sát', users: s3, rate: safeRate(s3) },
+    { step: 'Xem báo cáo', users: s4, rate: safeRate(s4) },
+    { step: 'Thanh toán', users: s5, rate: safeRate(s5) },
   ];
 }
 
