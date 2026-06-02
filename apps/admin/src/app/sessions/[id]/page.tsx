@@ -13,7 +13,7 @@ import {
   StatusBadge,
   cn,
 } from '@hieu-asia/ui';
-import { ChevronLeft, Clock, DollarSign, ListTodo, Copy, AlertCircle, CreditCard } from 'lucide-react';
+import { ChevronLeft, Clock, DollarSign, ListTodo, Copy, AlertCircle, CreditCard, ExternalLink } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { getSession } from '@/lib/admin-api';
 import { KpiCard } from '@/components/admin/kpi-card';
@@ -49,6 +49,12 @@ const CHANNEL_LABEL: Record<string, string> = {
 
 /** How long (ms) a running session may sit before we flag it as stuck. */
 const STUCK_THRESHOLD_MS = 30 * 60 * 1000;
+
+// Public customer-facing report lives on the web app, keyed by session_id at
+// /reading/<id>/report (the bare /reading/<id> only redirects into the upload
+// flow, so we link the /report sub-route directly). Origin is the canonical
+// public site; overridable for preview/staging via NEXT_PUBLIC_WEB_URL.
+const PUBLIC_WEB_URL = process.env.NEXT_PUBLIC_WEB_URL ?? 'https://hieu.asia';
 
 interface AuditEntry {
   ts: string;
@@ -239,6 +245,20 @@ export default function SessionDetailPage() {
             )}
           </div>
         </div>
+
+        {/* Sessions polish — open the customer-facing report (public web app)
+            in a new tab. Keyed by session_id; the /report sub-route renders
+            the finished reading (and shows a "chưa sẵn sàng" state if not). */}
+        <a
+          href={`${PUBLIC_WEB_URL}/reading/${encodeURIComponent(s.session_id)}/report`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-gold/30 bg-gold/10 px-3 text-sm font-medium text-gold transition-all duration-300 ease-editorial hover:border-gold/50 hover:bg-gold/15"
+          title="Mở báo cáo khách nhìn thấy (tab mới)"
+        >
+          <ExternalLink className="h-4 w-4" aria-hidden />
+          Xem báo cáo
+        </a>
       </div>
 
       {isStuck && (
