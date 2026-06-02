@@ -120,7 +120,7 @@ export default function FeatureFlagsPage() {
     <div className="space-y-6">
       <PageHeader
         title="Feature flags"
-        description="Bật / tắt tính năng runtime. State lưu trong Cloudflare KV (CACHE namespace, prefix `feature-flag:`)."
+        description="Cờ phía SERVER (Worker) — bật / tắt tính năng runtime, state trong Cloudflare KV (prefix `feature-flag:`). (Khác A/B test phía người dùng / PostHog ở /experiments.)"
         icon={<Flag className="h-5 w-5" />}
         badge={
           flags.length > 0 ? (
