@@ -49,6 +49,7 @@ const COL_QUICK_LOOKUP: readonly FooterLink[] = [
   { href: '/gieo-que', label: 'Gieo Quẻ Kinh Dịch', tag: 'free' },
   { href: '/big-five', label: 'Big Five (OCEAN)', tag: 'free' },
   { href: '/disc', label: 'Trắc nghiệm DiSC', tag: 'free' },
+  { href: '/xem-tuong', label: 'Xem Chỉ Tay & Tướng Mặt', tag: 'free' },
 ];
 
 const COL_DOCS: readonly FooterLink[] = [

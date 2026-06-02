@@ -69,6 +69,7 @@ const MOBILE_TOOLS: readonly NavLink[] = [
   { href: '/gieo-que', label: 'Gieo Quẻ Kinh Dịch' },
   { href: '/big-five', label: 'Big Five (OCEAN)' },
   { href: '/disc', label: 'Trắc nghiệm DiSC' },
+  { href: '/xem-tuong', label: 'Xem Chỉ Tay & Tướng Mặt' },
 ];
 
 const MOBILE_LEARN: readonly NavLink[] = [

@@ -74,6 +74,12 @@ const TOOLS = [
     name: 'Lịch Vạn Niên',
     desc: 'Tra cứu ngày tốt xấu, giờ hoàng đạo, lịch âm dương đầy đủ.',
   },
+  {
+    href: '/xem-tuong',
+    emoji: '🖐️',
+    name: 'Xem Chỉ Tay & Tướng Mặt',
+    desc: 'Tải ảnh lòng bàn tay hoặc khuôn mặt — AI phân tích xu hướng tính cách theo tướng số học.',
+  },
 ] as const;
 
 export default function CongCuPage() {
