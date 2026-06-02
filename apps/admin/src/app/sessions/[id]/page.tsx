@@ -635,7 +635,70 @@ export default function SessionDetailPage() {
                 label="Thanh toán lúc"
                 value={s.paid_at ? fmtDateTime(s.paid_at) : undefined}
               />
+              <Field
+                label="Số tiền"
+                value={
+                  s.paid_amount_vnd != null
+                    ? `${s.paid_amount_vnd.toLocaleString('vi-VN')} ₫`
+                    : undefined
+                }
+              />
+              <Field label="Mã giao dịch" value={s.paid_txn_ref ?? undefined} mono />
             </dl>
+          </CardContent>
+        </Card>
+      )}
+
+      {s.user_feedback && s.user_feedback.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Phản hồi của khách</CardTitle>
+            <CardDescription>
+              Phản hồi gần đây của khách này (khớp theo email — không riêng phiên này).
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {s.user_feedback.map((f, i) => (
+              <div
+                key={i}
+                className="rounded border border-border/60 bg-muted/30 px-3 py-2 text-sm"
+              >
+                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                  {f.rating != null && (
+                    <span className="text-gold">
+                      {'★'.repeat(Math.max(0, Math.min(5, f.rating)))}
+                    </span>
+                  )}
+                  {f.surface && <span className="font-mono">{f.surface}</span>}
+                  {f.ts && <span>{fmtDateTime(f.ts)}</span>}
+                  {f.status && (
+                    <span className="rounded bg-border/50 px-1">{f.status}</span>
+                  )}
+                </div>
+                {f.message && <p className="mt-1 text-foreground/90">{f.message}</p>}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {s.state_json && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Dữ liệu thô (JSON)</CardTitle>
+            <CardDescription>
+              Toàn bộ state_json của phiên — để soi sâu khi cần.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <details>
+              <summary className="cursor-pointer text-sm text-gold/80 hover:text-gold">
+                Hiện / ẩn JSON
+              </summary>
+              <pre className="mt-2 max-h-96 overflow-auto rounded border border-border/60 bg-muted/30 p-3 font-mono text-[11px] leading-relaxed text-foreground/85">
+                {JSON.stringify(s.state_json, null, 2)}
+              </pre>
+            </details>
           </CardContent>
         </Card>
       )}
