@@ -67,9 +67,10 @@ export function EngineMetricsSection() {
           Engine — telemetry thật theo request (24h)
         </CardTitle>
         <CardDescription>
-          Mọi request (admin · bot · cron · tool · LLM) qua Analytics Engine — chi phí, độ
-          trễ và lỗi THẬT. Khác <code>llm_traces</code> (chỉ call LLM), nguồn này có dữ liệu
-          ngay cả khi traffic thấp.
+          Mọi request (admin · bot · cron · tool · LLM) qua Analytics Engine — lưu lượng, độ
+          trễ và lỗi THẬT theo từng endpoint, có dữ liệu ngay cả khi traffic thấp. (Chi phí
+          LLM theo vendor chưa tag per-request ở tầng này — xem <code>/llm-spend</code> cho
+          chi phí thật.)
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -87,19 +88,12 @@ export function EngineMetricsSection() {
           </div>
         ) : (
           <div className="space-y-5">
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 sm:grid-cols-3">
               <KpiCard
                 label="Tổng request"
                 value={fmt(t?.requests ?? 0)}
                 icon={<Activity className="h-4 w-4" />}
                 accent="purple"
-              />
-              <KpiCard
-                label="Chi phí AI (thật)"
-                value={`$${(t?.cost_usd ?? 0).toFixed(4)}`}
-                icon={<Cpu className="h-4 w-4" />}
-                accent="gold"
-                hint="tổng cost_usd các request"
               />
               <KpiCard
                 label="Tỉ lệ lỗi"
