@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import {
   Button,
@@ -96,6 +97,11 @@ export default function AnalyticsPage() {
   const sessions = data?.sessions ?? { total: 0, completed: 0, conversion_rate: 0, error_rate: 0 };
   const totalLLMCost = vendorCost.reduce((s, v) => s + v.cost_usd, 0);
   const avgCost = sessions.total > 0 ? totalLLMCost / sessions.total : 0;
+  // Vendor cost here comes from Langfuse, which is usually NOT wired (keys live
+  // off the worker). The real, realtime LLM cost truth is /llm-spend (Supabase
+  // llm_traces). When Langfuse is unconfigured, rendering "$0.000" reads as
+  // "AI is free" — so show a pointer to /llm-spend instead of a misleading zero.
+  const costUnavailable = !!data && data.vendor_cost_meta?.configured === false;
 
   return (
     <div className="space-y-6">
@@ -135,7 +141,7 @@ export default function AnalyticsPage() {
       )}
       {data?.sources && !data.sources.langfuse && (
         <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-muted-foreground">
-          Langfuse chưa wire — vendor cost hiển thị 0. Đặt LANGFUSE_PUBLIC_KEY/SECRET_KEY để bật.
+          Langfuse chưa wire — chi phí LLM thật xem ở /llm-spend. Đặt LANGFUSE_PUBLIC_KEY/SECRET_KEY để bật nguồn này.
         </div>
       )}
       {data?.funnel_v2 && data.funnel_v2.total_events === 0 && (
@@ -183,10 +189,10 @@ export default function AnalyticsPage() {
         />
         <KpiCard
           label="Avg LLM cost/phiên"
-          value={`$${avgCost.toFixed(3)}`}
+          value={costUnavailable ? '—' : `$${avgCost.toFixed(3)}`}
           icon={<Activity className="h-4 w-4" />}
           accent="gold"
-          hint={`tổng $${totalLLMCost.toFixed(2)}`}
+          hint={costUnavailable ? 'Chi phí thật ở /llm-spend' : `tổng $${totalLLMCost.toFixed(2)}`}
         />
       </div>
 
@@ -211,7 +217,22 @@ export default function AnalyticsPage() {
             <CardDescription>Phân bổ LLM cost (USD).</CardDescription>
           </CardHeader>
           <CardContent>
-            <VendorCostChart data={vendorCost} />
+            {costUnavailable ? (
+              <div className="flex flex-col items-start gap-2 py-6 text-sm text-muted-foreground">
+                <p>
+                  Nguồn Langfuse chưa cấu hình nên chi phí ở đây trống. Chi phí LLM
+                  thật (realtime, theo từng request) sống ở trang riêng.
+                </p>
+                <Link
+                  href="/llm-spend"
+                  className="inline-flex items-center gap-1 rounded-md border border-gold/30 bg-gold/5 px-3 py-1.5 text-xs text-gold transition-colors hover:bg-gold/10"
+                >
+                  Mở Chi phí LLM →
+                </Link>
+              </div>
+            ) : (
+              <VendorCostChart data={vendorCost} />
+            )}
           </CardContent>
         </Card>
 
