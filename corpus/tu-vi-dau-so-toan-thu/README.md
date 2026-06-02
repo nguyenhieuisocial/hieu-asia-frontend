@@ -10,17 +10,21 @@ Lớp **`_Đối chiếu cổ thư_`** cho Tử Vi, bổ sung lên trên lớp p
 
 ## Nội dung
 
-- `chinh-tinh.md` — 14 chính tinh (Tử Vi, Thiên Cơ, Thái Dương, Vũ Khúc, Thiên Đồng, Liêm Trinh, Thiên Phủ, Thái Âm, Tham Lang, Cự Môn, Thiên Tướng, Thiên Lương, Thất Sát, Phá Quân). Mỗi sao = 1 thẻ luận tính sao (khí chất → xu hướng).
+- `chinh-tinh.md` — 14 chính tinh (Tử Vi, Thiên Cơ, Thái Dương, Vũ Khúc, Thiên Đồng, Liêm Trinh, Thiên Phủ, Thái Âm, Tham Lang, Cự Môn, Thiên Tướng, Thiên Lương, Thất Sát, Phá Quân). Từ *Chư Tinh Vấn Đáp Luận* (卷一).
+- `phu-tinh.md` — 6 Lục cát (Tả Phù, Hữu Bật, Văn Xương, Văn Khúc, Thiên Khôi, Thiên Việt) + 6 Lục sát (Kình Dương, Đà La, Hỏa Tinh, Linh Tinh, Địa Không, Địa Kiếp) + 4 Tứ Hóa (Hóa Lộc, Hóa Quyền, Hóa Khoa, Hóa Kỵ). Từ 卷二. Mỗi sao = 1 thẻ; tên thẻ khớp chính tả iztro.
 
 ## Ingest (việc của upgrade-dot1)
 
-Nhãn nguồn user thấy = giá trị `--source` (đặt nhãn CÓ NGHĨA, không để slug):
+Nhãn nguồn user thấy = giá trị `--source` (đặt nhãn CÓ NGHĨA). Dùng `--split-by-heading` (PR #97) để mỗi sao = 1 row, `chapter` = tên sao → khớp exact-match `retrieveTuViClassic`:
 
 ```
 pnpm -F web tsx scripts/ingest-corpus.ts \
   ../../corpus/tu-vi-dau-so-toan-thu \
   --source "Tử Vi Đẩu Số Toàn Thư" \
-  --tags tu-vi,classic
+  --tags tu-vi,classic \
+  --split-by-heading
 ```
 
-**Cần xác nhận về retrieval:** các thẻ này là **luận tính SAO** (không gắn cung), nên không khớp kiểu exact-match `<sao> tại cung <cung>` của pipeline Tử Vi hiện tại. Cần upgrade-dot1 xác nhận thẻ `tu-vi,classic` được retrieve theo **semantic** (như các thẻ Bát Tự classical đang chạy), hoặc thêm một lượt match cấp-sao khi sao đó xuất hiện trong lá số.
+**Retrieval:**
+- **Chính tinh — ĐÃ LIVE:** `retrieveTuViClassic` (orchestrate, PR #31) exact-match `chapter = <chính tinh>` theo top chính tinh của lá số. ⚠️ Phải ingest `--split-by-heading` (chapter = tên sao bare); re-run size-chunk sẽ phá exact-match (xem `scripts/ingest-corpus.ts`).
+- **Phụ tinh / Tứ Hóa — CẦN MỞ retrieval:** thẻ đã sẵn (chapter = tên phụ tinh / tên Tứ Hóa khớp iztro). Cần upgrade-dot1 mở `retrieveTuViClassic` (hoặc lượt riêng) để match **phụ tinh có trong lá số** + **Tứ Hóa qua mutagen** (sao nào hóa Lộc/Quyền/Khoa/Kỵ), giống cách phụ tinh + Tứ Hóa đang được xử ở pipeline chính.
