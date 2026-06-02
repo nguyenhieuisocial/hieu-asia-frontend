@@ -23,6 +23,7 @@
 import * as React from 'react';
 import { Flame } from 'lucide-react';
 import { getStreak, checkin, streakMilestone, type StreakView } from '@/lib/daily-checkin';
+import { track } from '@/lib/analytics';
 
 export function StreakCard({ variant = 'card' }: { variant?: 'card' | 'compact' } = {}) {
   const [phase, setPhase] = React.useState<'loading' | 'ready' | 'hidden'>('loading');
@@ -56,8 +57,22 @@ export function StreakCard({ variant = 'card' }: { variant?: 'card' | 'compact' 
     setError(false);
     const res = await checkin();
     setSubmitting(false);
-    if (res) setStreak(res.streak);
-    else setError(true);
+    if (!res) {
+      setError(true);
+      return;
+    }
+    setStreak(res.streak);
+    // Measure real check-ins (not idempotent re-clicks) so we can see whether
+    // the streak loop drives return visits — informs any future rewards call.
+    if (!res.alreadyCheckedIn) {
+      const m = streakMilestone(res.streak.current);
+      track('daily_checkin', {
+        streak_current: res.streak.current,
+        streak_best: res.streak.best,
+        milestone_days: m.justHit ? m.reached?.days : undefined,
+        surface: variant,
+      });
+    }
   }
 
   if (phase === 'hidden') return null;

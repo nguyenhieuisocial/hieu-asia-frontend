@@ -15,12 +15,13 @@
  * never crashes the page.
  */
 
-import { Users2, TrendingUp, Filter } from 'lucide-react';
+import { Users2, TrendingUp, Filter, Coins } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import {
   fetchCohortRetention,
   fetchAcquisitionChannels,
   fetchAcquisitionFunnel,
+  fetchPaidAttribution,
   isPostHogServerConfigured,
 } from '@/lib/posthog-server';
 
@@ -43,15 +44,20 @@ function weekLabel(iso: string): string {
   return `${Number(m[3])}/${Number(m[2])}`;
 }
 
+function vnd(n: number): string {
+  return `${new Intl.NumberFormat('vi-VN').format(Math.round(n))} đ`;
+}
+
 export default async function CohortsPage() {
   const configured = isPostHogServerConfigured();
-  const [cohorts, channels, funnel] = configured
+  const [cohorts, channels, funnel, paid] = configured
     ? await Promise.all([
         fetchCohortRetention(),
         fetchAcquisitionChannels(),
         fetchAcquisitionFunnel(),
+        fetchPaidAttribution(),
       ])
-    : [null, null, null];
+    : [null, null, null, null];
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
@@ -200,6 +206,65 @@ export default async function CohortsPage() {
               )}
             </tbody>
           </table>
+        </div>
+      </section>
+
+      {/* ──────────────── 2b. Doanh thu theo kênh & gói ──────────────── */}
+      <section className="mt-10">
+        <h2 className="mb-3 flex items-center gap-2 font-heading text-xl text-foreground">
+          <Coins className="h-5 w-5 text-gold" aria-hidden />
+          Doanh thu theo kênh &amp; gói (30 ngày)
+        </h2>
+        <p className="mb-3 text-xs text-muted-foreground">
+          Từ sự kiện <code className="font-mono">payment_completed</code> — khách trả tiền đến từ
+          kênh nào + mua gói nào. Là cận dưới định hướng (event phía client, sau consent); tổng
+          tiền chuẩn xác xem ở <code className="font-mono">/payments</code>.
+        </p>
+        <div className="grid gap-4 lg:grid-cols-2">
+          {[
+            { title: 'Theo kênh', col: 'Kênh', rows: paid?.by_channel },
+            { title: 'Theo gói', col: 'Gói', rows: paid?.by_tier },
+          ].map((t) => (
+            <div
+              key={t.title}
+              className="overflow-hidden rounded-card-editorial border border-border bg-card"
+            >
+              <table className="w-full text-sm">
+                <thead className="border-b border-border bg-muted/40 text-left">
+                  <tr>
+                    <th className="px-4 py-3 font-medium text-muted-foreground">{t.col}</th>
+                    <th className="px-4 py-3 text-right font-medium text-muted-foreground">
+                      Khách trả
+                    </th>
+                    <th className="px-4 py-3 text-right font-medium text-muted-foreground">
+                      Doanh thu
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {!t.rows || t.rows.length === 0 ? (
+                    <tr>
+                      <td colSpan={3} className="px-4 py-6 text-center text-muted-foreground">
+                        {paid === null ? '— (lỗi PostHog hoặc thiếu key)' : 'Chưa có thanh toán'}
+                      </td>
+                    </tr>
+                  ) : (
+                    t.rows.map((r) => (
+                      <tr key={r.key} className="border-b border-border/40 last:border-0">
+                        <td className="px-4 py-3 font-mono text-foreground">{r.key}</td>
+                        <td className="px-4 py-3 text-right text-foreground">
+                          {r.paid_users.toLocaleString('vi-VN')}
+                        </td>
+                        <td className="px-4 py-3 text-right font-mono text-foreground">
+                          {vnd(r.revenue)}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          ))}
         </div>
       </section>
 
