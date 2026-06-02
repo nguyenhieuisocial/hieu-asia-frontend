@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, RadioGroup, RadioGroupItem } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { safeJson } from '@/lib/safe-json';
@@ -232,6 +233,13 @@ export default function CompatibilityPage() {
             {loading ? 'Đang phân tích...' : 'Phân tích tương hợp →'}
           </Button>
         </form>
+
+        <p className="mt-3 text-sm text-muted-foreground">
+          Có từ 3 người trở lên (gia đình, nhóm bạn)?{' '}
+          <Link href="/xem-hop-nhom" className="text-gold underline-offset-2 hover:underline">
+            Xem hợp cả nhóm →
+          </Link>
+        </p>
 
         {!report && !loading && (
           <p className="mt-10 rounded-md border border-border bg-card/40 px-4 py-6 text-center text-sm text-muted-foreground">

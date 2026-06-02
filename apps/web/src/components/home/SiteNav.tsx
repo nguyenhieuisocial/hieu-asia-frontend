@@ -70,6 +70,7 @@ const MOBILE_TOOLS: readonly NavLink[] = [
   { href: '/big-five', label: 'Big Five (OCEAN)' },
   { href: '/disc', label: 'Trắc nghiệm DiSC' },
   { href: '/xem-tuong', label: 'Xem Chỉ Tay & Tướng Mặt' },
+  { href: '/xem-hop-nhom', label: 'Xem hợp nhóm / gia đình' },
 ];
 
 const MOBILE_LEARN: readonly NavLink[] = [
