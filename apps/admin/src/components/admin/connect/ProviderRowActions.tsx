@@ -107,7 +107,7 @@ export function ProviderRowActions({ row, onAction }: ProviderRowActionsProps) {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onSelect={handleDisconnect}
-              className="text-red-300 focus:bg-red-500/10 focus:text-red-200"
+              className="text-red-700 dark:text-red-300 focus:bg-red-500/10 focus:text-red-700 dark:focus:text-red-200"
             >
               {ICON_DISCONNECT}
               Disconnect
