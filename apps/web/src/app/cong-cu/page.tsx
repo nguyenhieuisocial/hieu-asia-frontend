@@ -81,6 +81,24 @@ const TOOLS = [
     desc: 'Tra sao chiếu mệnh (Cửu Diệu) theo tuổi và giới tính — tham khảo theo phong tục.',
   },
   {
+    href: '/ngay-kieng-ky',
+    emoji: '🗓️',
+    name: 'Ngày Kiêng Kỵ',
+    desc: 'Tra ngày Tam Nương, Nguyệt Kỵ, Dương Công Kỵ Nhật — ngày nên tránh việc lớn theo phong tục.',
+  },
+  {
+    href: '/gio-hoang-dao',
+    emoji: '🕐',
+    name: 'Giờ Hoàng Đạo',
+    desc: 'Tra giờ tốt (hoàng đạo) trong ngày — đổi theo từng ngày, kèm gợi ý giờ tốt kế tiếp.',
+  },
+  {
+    href: '/dat-ten-ngu-hanh',
+    emoji: '🌱',
+    name: 'Đặt Tên Ngũ Hành',
+    desc: 'Tra mệnh ngũ hành của bé theo ngày sinh + gợi ý tên hợp mệnh — gợi ý tham khảo.',
+  },
+  {
     href: '/hop-tuoi',
     emoji: '💑',
     name: 'Hợp Tuổi',

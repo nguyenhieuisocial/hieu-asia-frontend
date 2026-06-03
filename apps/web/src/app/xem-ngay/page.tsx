@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage } from '@/lib/seo/jsonld';
 import { PURPOSES } from './purposes';
@@ -77,20 +78,14 @@ export default function XemNgayHubPage() {
           .
         </p>
 
-        <p className="mt-3 text-sm text-muted-foreground">
-          Xem thêm:{' '}
-          <Link href="/ngay-kieng-ky" className="text-gold hover:underline">
-            Ngày kiêng kỵ (Tam Nương, Nguyệt Kỵ)
-          </Link>{' '}
-          ·{' '}
-          <Link href="/sao-han" className="text-gold hover:underline">
-            Xem sao hạn
-          </Link>{' '}
-          ·{' '}
-          <Link href="/gio-hoang-dao" className="text-gold hover:underline">
-            Giờ hoàng đạo
-          </Link>
-        </p>
+        <RelatedTools
+          links={[
+            { href: '/ngay-kieng-ky', label: 'Ngày kiêng kỵ' },
+            { href: '/sao-han', label: 'Xem sao hạn' },
+            { href: '/gio-hoang-dao', label: 'Giờ hoàng đạo' },
+            { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
+          ]}
+        />
       </ToolPageShell>
     </>
   );

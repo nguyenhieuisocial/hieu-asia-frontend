@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { GioHoangDaoChecker } from '@/components/gio-hoang-dao/GioHoangDaoChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -129,24 +129,14 @@ export default function GioHoangDaoPage() {
             </dl>
           </section>
 
-          <nav aria-label="Công cụ liên quan" className="text-sm text-muted-foreground">
-            Xem thêm:{' '}
-            <Link href="/xem-ngay" className="text-gold hover:underline">
-              Xem ngày tốt
-            </Link>{' '}
-            ·{' '}
-            <Link href="/ngay-kieng-ky" className="text-gold hover:underline">
-              Ngày kiêng kỵ
-            </Link>{' '}
-            ·{' '}
-            <Link href="/sao-han" className="text-gold hover:underline">
-              Xem sao hạn
-            </Link>{' '}
-            ·{' '}
-            <Link href="/lich-van-nien" className="text-gold hover:underline">
-              Lịch Vạn Niên
-            </Link>
-          </nav>
+          <RelatedTools
+            links={[
+              { href: '/xem-ngay', label: 'Xem ngày tốt' },
+              { href: '/ngay-kieng-ky', label: 'Ngày kiêng kỵ' },
+              { href: '/sao-han', label: 'Xem sao hạn' },
+              { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
+            ]}
+          />
         </section>
       </ToolPageShell>
     </>
