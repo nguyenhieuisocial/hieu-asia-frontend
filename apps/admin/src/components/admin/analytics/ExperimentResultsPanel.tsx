@@ -38,6 +38,14 @@ function daysSince(iso: string | null): number | null {
   return Math.max(0, Math.floor(ms / 86_400_000));
 }
 
+/** Plain-Vietnamese "last called" label for a flag's last_called_at. */
+function agoLabel(iso: string | null): string {
+  const dd = daysSince(iso);
+  if (dd === null) return 'chưa từng';
+  if (dd === 0) return 'hôm nay';
+  return `${dd} ngày trước`;
+}
+
 function statusLabel(status: string): string {
   switch (status) {
     case 'running':
@@ -78,10 +86,13 @@ function looksBoolean(stats: VariantStat[]): boolean {
 function ExperimentCard({
   exp,
   stats,
+  lastCalled,
   dashboardUrl,
 }: {
   exp: PostHogExperiment;
   stats: VariantStat[];
+  /** Linked flag's last evaluation timestamp (null = never called). */
+  lastCalled: string | null;
   dashboardUrl?: string;
 }) {
   const totalExposed = stats.reduce((s, v) => s + v.exposed, 0);
@@ -94,11 +105,14 @@ function ExperimentCard({
   let detail: string;
   if (totalExposed === 0) {
     title = '⏳ Chưa có dữ liệu phân nhóm';
-    detail =
-      (exp.status === 'running' && d !== null
+    const ran =
+      exp.status === 'running' && d !== null
         ? `Chạy ${d} ngày`
-        : statusLabel(exp.status)) +
-      ' nhưng 0 lượt phơi nhiễm trong 30 ngày — chưa đủ traffic, hoặc cờ chưa phát biến thể đúng chỗ.';
+        : statusLabel(exp.status);
+    detail =
+      lastCalled == null
+        ? `${ran} nhưng cờ chưa từng được gọi lần nào → chưa người dùng nào kích hoạt (thiếu traffic, hoặc cờ chưa nối vào trang). Có lượt đầu tiên là dữ liệu bắt đầu chảy.`
+        : `${ran} nhưng 0 lượt phơi nhiễm vào biến thể trong 30 ngày (cờ gọi lần cuối ${agoLabel(lastCalled)}) → khả năng trang chưa đọc đúng biến thể, hoặc traffic quá ít.`;
   } else if (totalExposed < MIN_FOR_VERDICT) {
     title = `📊 Quá ít dữ liệu — ${totalExposed} lượt`;
     detail =
@@ -222,10 +236,13 @@ function ExperimentCard({
 export default function ExperimentResultsPanel({
   experiments,
   convByFlag,
+  lastCalledByFlag,
   dashboardUrl,
 }: {
   experiments: PostHogExperiment[] | null;
   convByFlag: ConvByFlag;
+  /** Flag key → last_called_at, to explain *why* an experiment has 0 data. */
+  lastCalledByFlag?: Map<string, string | null>;
   dashboardUrl?: string;
 }) {
   // null = PostHog down / not configured; the flag roster already shows that
@@ -253,6 +270,7 @@ export default function ExperimentResultsPanel({
               key={exp.id}
               exp={exp}
               stats={buildStats(convByFlag.get(exp.flagKey))}
+              lastCalled={lastCalledByFlag?.get(exp.flagKey) ?? null}
               dashboardUrl={dashboardUrl}
             />
           ))}
