@@ -11,6 +11,7 @@ import type {
   MentorResponse,
   Reading,
 } from '@hieu-asia/types';
+import { getPersonalitySummary } from '@/lib/personality-store';
 
 export type {
   MentorMessage,
@@ -107,7 +108,11 @@ export async function chatMentor(
       'content-type': 'application/json',
       accept: 'application/json',
     },
-    body: JSON.stringify({ messages, session_id: sessionId }),
+    body: JSON.stringify({
+      messages,
+      session_id: sessionId,
+      personalitySummary: getPersonalitySummary() || undefined,
+    }),
     cache: 'no-store',
   });
 
@@ -172,6 +177,7 @@ export async function* chatMentorStream(
       messages,
       session_id: sessionId,
       model_variant: modelVariant,
+      personalitySummary: getPersonalitySummary() || undefined,
     }),
     cache: 'no-store',
     signal,
