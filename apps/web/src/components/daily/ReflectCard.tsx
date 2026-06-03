@@ -99,11 +99,11 @@ export function ReflectCard({ date }: { date: string }) {
         onChange={handleChange}
         rows={3}
         placeholder="Viết vài dòng cho riêng bạn… (chỉ mình bạn thấy)"
-        className="w-full resize-none rounded-lg border border-border bg-background/40 px-3.5 py-2.5 text-sm leading-relaxed text-foreground placeholder:text-foreground/35 focus:outline-none focus:ring-1 focus:ring-gold/40"
+        className="w-full resize-none rounded-lg border border-border bg-background/40 px-3.5 py-2.5 text-sm leading-relaxed text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-gold/40"
         aria-label="Ghi chú cá nhân cho câu hỏi suy ngẫm hôm nay"
       />
 
-      <p className="mt-2 font-mono text-[10px] text-foreground/30">
+      <p className="mt-2 font-mono text-[10px] text-muted-foreground">
         Lưu tự động · chỉ mình bạn thấy
       </p>
     </section>

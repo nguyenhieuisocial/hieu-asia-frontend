@@ -104,6 +104,18 @@ const TOOLS = [
     name: 'Xem Chỉ Tay & Tướng Mặt',
     desc: 'Tải ảnh lòng bàn tay hoặc khuôn mặt — AI phân tích xu hướng tính cách theo tướng số học.',
   },
+  {
+    href: '/so-sanh',
+    emoji: '🪞',
+    name: 'So Sánh Lăng Kính',
+    desc: 'Đặt hai lăng kính cạnh nhau — MBTI vs Big Five, Tử Vi vs Bát Tự… thấy rõ mỗi hệ soi sáng điều gì.',
+  },
+  {
+    href: '/hoi-dap',
+    emoji: '💬',
+    name: 'Hỏi Đáp',
+    desc: 'Giải đáp ngắn gọn những thắc mắc thường gặp về tử vi, bát tự và các công cụ tâm lý.',
+  },
 ] as const;
 
 export default function CongCuPage() {

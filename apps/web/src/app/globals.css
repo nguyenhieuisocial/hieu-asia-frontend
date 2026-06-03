@@ -144,6 +144,22 @@ html {
   }
 }
 
+/* AA-safe gold headings on the light "Giấy thấm" theme.
+ *
+ * The brand `gold-gradient` (#B8923D→#D5B057) clipped into heading text sits
+ * at ~2.0–2.5:1 on the cream Paper background — below WCAG 1.4.3 large-text
+ * 3:1. Deepen it to antique-ochre on LIGHT only (≥3.6:1 at every stop, and
+ * it reads true to the "giấy cũ" aged-paper spec). DARK keeps the bright gold
+ * (already ~6:1 on charcoal). Scoped to `.bg-clip-text` so gold *fills* —
+ * CTA buttons + progress bars that carry dark ink text — are untouched.
+ * Unlayered rule → wins over Tailwind's utilities layer. */
+.bg-gold-gradient.bg-clip-text {
+  background-image: linear-gradient(135deg, #7a5a1f 0%, #9a6f28 50%, #7a5a1f 100%);
+}
+.dark .bg-gold-gradient.bg-clip-text {
+  background-image: linear-gradient(135deg, #b8923d 0%, #d5b057 50%, #b8923d 100%);
+}
+
 /* Safe-area-inset for iPhone notch / Android gesture nav.
  *
  * Wave 60.68 — added `padding-bottom` so the iPhone home-indicator no longer
