@@ -15,9 +15,9 @@
  */
 
 import * as React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
-import { ServerCog, Activity, Sparkles, ShieldCheck, Database, Layers, Mail, Globe, Megaphone, Users } from 'lucide-react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, toast } from '@hieu-asia/ui';
+import { ServerCog, Activity, Sparkles, ShieldCheck, Database, Layers, Mail, Globe, Megaphone, Users, Brain } from 'lucide-react';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { adminFetch } from '@/lib/admin-fetch';
 
@@ -341,6 +341,135 @@ function ResendPanel() {
   );
 }
 
+// ─── Eval LLM selector ───────────────────────────────────────────────────────
+
+type EvalMode = 'off' | 'free' | 'premium';
+
+interface EvalLlmResponse {
+  ok: boolean;
+  mode: EvalMode;
+  options?: EvalMode[];
+  error?: string;
+}
+
+const EVAL_LLM_QUERY_KEY = ['admin', 'eval-llm'] as const;
+
+const MODE_LABELS: Record<EvalMode, string> = {
+  off: 'Tắt',
+  free: 'Free (Llama)',
+  premium: 'Premium (trả phí)',
+};
+
+const MODE_ACCENTS: Record<EvalMode, string> = {
+  off: 'border-muted text-muted-foreground',
+  free: 'border-jade-500/40 text-jade-700 dark:text-jade-300',
+  premium: 'border-gold/40 text-gold',
+};
+
+const MODE_ACTIVE: Record<EvalMode, string> = {
+  off: 'bg-muted/30 border-muted-foreground/40 text-foreground',
+  free: 'bg-jade-500/10 border-jade-500/60 text-jade-700 dark:text-jade-300',
+  premium: 'bg-gold/10 border-gold/60 text-gold',
+};
+
+async function fetchEvalMode(): Promise<EvalLlmResponse> {
+  const r = await adminFetch('/api/admin-proxy/admin/eval-llm');
+  return r.json() as Promise<EvalLlmResponse>;
+}
+
+async function setEvalMode(mode: EvalMode): Promise<EvalLlmResponse> {
+  const r = await adminFetch('/api/admin-proxy/admin/eval-llm', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mode }),
+  });
+  const data = (await r.json()) as EvalLlmResponse;
+  if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
+  return data;
+}
+
+function EvalLlmCard() {
+  const queryClient = useQueryClient();
+  const [saved, setSaved] = React.useState(false);
+
+  const { data, isLoading } = useQuery({
+    queryKey: EVAL_LLM_QUERY_KEY,
+    queryFn: fetchEvalMode,
+  });
+
+  const mutation = useMutation({
+    mutationFn: setEvalMode,
+    onMutate: async (newMode) => {
+      await queryClient.cancelQueries({ queryKey: EVAL_LLM_QUERY_KEY });
+      const prev = queryClient.getQueryData<EvalLlmResponse>(EVAL_LLM_QUERY_KEY);
+      queryClient.setQueryData<EvalLlmResponse>(EVAL_LLM_QUERY_KEY, (old) =>
+        old ? { ...old, mode: newMode } : old,
+      );
+      return { prev };
+    },
+    onError: (err, _vars, ctx) => {
+      if (ctx?.prev) queryClient.setQueryData(EVAL_LLM_QUERY_KEY, ctx.prev);
+      toast.error('Cập nhật thất bại', { description: (err as Error).message });
+    },
+    onSuccess: () => {
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+      void queryClient.invalidateQueries({ queryKey: EVAL_LLM_QUERY_KEY });
+    },
+  });
+
+  const currentMode = data?.mode ?? 'off';
+  const options: EvalMode[] = data?.options ?? ['off', 'free', 'premium'];
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <span className="rounded-md border border-gold/15 bg-card/60 p-2 text-gold/80">
+            <Brain className="h-4 w-4" />
+          </span>
+          <div>
+            <CardTitle>Eval LLM (chi phí review đêm)</CardTitle>
+            <CardDescription>
+              Chọn model cho nightly eval. free = Llama miễn phí · premium = panel trả phí · off = tắt eval.
+            </CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {isLoading && (
+          <p className="text-xs text-muted-foreground">Đang tải…</p>
+        )}
+        {!isLoading && (
+          <div className="flex flex-wrap items-center gap-2">
+            {options.map((mode) => {
+              const isActive = currentMode === mode;
+              return (
+                <button
+                  key={mode}
+                  disabled={mutation.isPending}
+                  onClick={() => { if (!isActive) mutation.mutate(mode); }}
+                  className={[
+                    'rounded-full border px-4 py-1.5 font-mono text-xs font-medium transition-all duration-200',
+                    'disabled:cursor-not-allowed disabled:opacity-50',
+                    isActive ? MODE_ACTIVE[mode] : MODE_ACCENTS[mode] + ' hover:opacity-80 bg-transparent',
+                  ].join(' ')}
+                >
+                  {MODE_LABELS[mode]}
+                  {isActive && ' ✓'}
+                </button>
+              );
+            })}
+            {saved && (
+              <span className="font-mono text-xs text-jade-700 dark:text-jade-300">đã lưu</span>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function ServicesTab() {
@@ -398,6 +527,8 @@ export function ServicesTab() {
       </div>
 
       <ResendPanel />
+
+      <EvalLlmCard />
 
       <Card>
         <CardHeader>
