@@ -3,6 +3,7 @@ import { PALACES_CONTENT, ALL_STARS_CONTENT } from '@/lib/tuvi-content';
 import { listCaseStudies } from '@/lib/case-studies';
 import { PALACE_READINGS } from '@/lib/palace-readings';
 import { PURPOSES } from './xem-ngay/purposes';
+import { ZODIAC, canonicalPairSlug } from '@/lib/hop-tuoi-pairs';
 
 const BASE_URL = 'https://hieu.asia';
 
@@ -208,6 +209,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   } catch { /* non-fatal */ }
 
+  // Hợp tuổi 12 con giáp theo cặp — chỉ liệt kê bản canonical (đã sort) để tránh
+  // trùng nội dung: 78 cặp (66 khác tuổi + 12 cùng tuổi) + trang hub.
+  const seenPair = new Set<string>();
+  const hopTuoiPairUrls: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/hop-tuoi/tuoi`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.6 },
+  ];
+  for (const za of ZODIAC) {
+    for (const zb of ZODIAC) {
+      const slug = canonicalPairSlug(za.slug, zb.slug);
+      if (seenPair.has(slug)) continue;
+      seenPair.add(slug);
+      hopTuoiPairUrls.push({
+        url: `${BASE_URL}/hop-tuoi/tuoi/${slug}`,
+        lastModified: now,
+        changeFrequency: 'monthly' as const,
+        priority: 0.5,
+      });
+    }
+  }
+
   // Sao hạn theo từng con giáp (12 trang SEO mùa vụ).
   const saoHanTuoi: MetadataRoute.Sitemap = [
     'ty', 'suu', 'dan', 'mao', 'thin', 'ti', 'ngo', 'mui', 'than', 'dau', 'tuat', 'hoi',
@@ -218,5 +239,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...pillarUrls];
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...pillarUrls, ...hopTuoiPairUrls];
 }
