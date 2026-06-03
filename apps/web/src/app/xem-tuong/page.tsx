@@ -17,6 +17,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
+import { markVisionDone } from '@/lib/personality-store';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -117,6 +118,7 @@ export default function XemTuongPage() {
       if (!json.ok) throw new Error((json as { ok: false; error: string }).error ?? 'Không phân tích được ảnh');
 
       setReading((json as VisionReadResult).reading);
+      markVisionDone();
       track('tool_used', { tool: 'vision-read', kind, result: 'ok' });
     } catch (err) {
       setError((err as Error).message);
