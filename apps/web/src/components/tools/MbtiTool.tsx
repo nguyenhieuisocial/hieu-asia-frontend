@@ -6,6 +6,7 @@ import { Button, Card, CardContent, Skeleton } from '@hieu-asia/ui';
 import { PersonalityQuiz } from '@/components/tools/PersonalityQuiz';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { track } from '@/lib/analytics';
+import { savePersonalityResult, buildMbtiSummary } from '@/lib/personality-store';
 import { safeJson } from '@/lib/safe-json';
 import {
   MBTI_PAGES,
@@ -71,7 +72,9 @@ export function MbtiTool() {
   }, []);
 
   const onComplete = (answers: Record<string, number>) => {
-    setResult(scoreMbti(answers));
+    const scored = scoreMbti(answers);
+    setResult(scored);
+    savePersonalityResult('mbti', buildMbtiSummary(scored.type));
     track('tool_used', { tool: 'mbti', result: 'ok' });
     if (typeof window !== 'undefined') {
       document.getElementById('mbti-test')?.scrollIntoView({ behavior: 'smooth', block: 'start' });

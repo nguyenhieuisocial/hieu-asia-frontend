@@ -420,6 +420,78 @@ export async function fetchStickyCtaFunnel(): Promise<StickyCtaRow[] | null> {
 }
 
 /* -------------------------------------------------------------------------
+ * Paid attribution — revenue + paying customers by channel and by tier.
+ * --------------------------------------------------------------------- */
+
+export interface PaidByDimensionRow {
+  /** Channel name or product tier. */
+  key: string;
+  /** Distinct persons who fired payment_completed in this bucket. */
+  paid_users: number;
+  /** Sum of the event's `amount` property (VND). */
+  revenue: number;
+}
+
+export interface PaidAttribution {
+  by_channel: PaidByDimensionRow[];
+  by_tier: PaidByDimensionRow[];
+}
+
+/**
+ * Revenue + paying customers by acquisition channel and by product tier, last
+ * 30 days. From the `payment_completed` event, which apps/web fires with
+ * { amount, tier } (PaymentClient) — so `properties.amount` (VND) and
+ * `properties.tier` are summable, and PostHog auto-captures the person's
+ * $initial_utm_source / $initial_referring_domain for channel.
+ *
+ * NOTE: PostHog payment_completed is client-fired + consent-gated, so this is a
+ * directional LOWER BOUND, not the canonical revenue (that's the worker's
+ * txn:log). The value here is the BREAKDOWN — which channel / tier brings
+ * paying customers + how much — which the KV total can't give. Null on failure.
+ */
+export async function fetchPaidAttribution(): Promise<PaidAttribution | null> {
+  const byChannelSql = `
+    SELECT
+      coalesce(
+        nullIf(properties.$initial_utm_source, ''),
+        nullIf(properties.$initial_referring_domain, ''),
+        'direct'
+      ) AS channel,
+      count(DISTINCT person_id) AS paid_users,
+      sum(toFloat(properties.amount)) AS revenue
+    FROM events
+    WHERE event = 'payment_completed'
+      AND timestamp > now() - INTERVAL 30 DAY
+    GROUP BY channel
+    ORDER BY revenue DESC
+    LIMIT 12
+  `;
+  const byTierSql = `
+    SELECT
+      coalesce(nullIf(properties.tier, ''), '(không rõ)') AS tier,
+      count(DISTINCT person_id) AS paid_users,
+      sum(toFloat(properties.amount)) AS revenue
+    FROM events
+    WHERE event = 'payment_completed'
+      AND timestamp > now() - INTERVAL 30 DAY
+    GROUP BY tier
+    ORDER BY revenue DESC
+    LIMIT 12
+  `;
+  const [chRows, tiRows] = await Promise.all([runHogQL(byChannelSql), runHogQL(byTierSql)]);
+  if (!chRows && !tiRows) return null;
+  const project = (rows: unknown[][] | null): PaidByDimensionRow[] =>
+    (rows ?? [])
+      .map((r) => ({
+        key: String(r[0] ?? ''),
+        paid_users: Number(r[1] ?? 0),
+        revenue: Number(r[2] ?? 0),
+      }))
+      .filter((r) => r.key);
+  return { by_channel: project(chRows), by_tier: project(tiRows) };
+}
+
+/* -------------------------------------------------------------------------
  * Wave 61.08 — Cohort retention + acquisition channel + funnel.
  * --------------------------------------------------------------------- */
 
@@ -660,6 +732,74 @@ export async function fetchPostHogFeatureFlags(): Promise<PostHogFlag[] | null> 
         is_multivariate: Boolean(variants && variants.length > 0),
       };
     });
+  } catch {
+    return null;
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * P1 — PostHog Experiments (the actual A/B tests, distinct from raw flags).
+ *
+ * The /experiments page listed feature FLAGS but never the formal PostHog
+ * Experiment entities — so a founder running an A/B test couldn't see, from
+ * the admin, whether it was even collecting data. This list-only REST read
+ * surfaces each experiment's name, linked flag, status and start date; the
+ * page cross-references the linked flag against the existing per-variant
+ * conversion read (fetchVariantConversions) to show exposure + conversion,
+ * and links out to PostHog for rigorous Bayesian significance.
+ * --------------------------------------------------------------------- */
+
+export interface PostHogExperiment {
+  id: number;
+  name: string;
+  /** Linked feature-flag key — joins to VariantConversionRow.flag. */
+  flagKey: string;
+  /** running / draft / stopped / complete / paused. */
+  status: string;
+  /** ISO launch timestamp; null while still a draft. */
+  startDate: string | null;
+  /** Primary metric label (e.g. "Sign-up completion"), best-effort. */
+  primaryMetricName: string | null;
+}
+
+interface ExperimentListResponse {
+  results?: Array<{
+    id: number;
+    name?: string;
+    feature_flag_key?: string | null;
+    start_date?: string | null;
+    archived?: boolean;
+    status?: string;
+    metrics?: Array<{ name?: string }>;
+  }>;
+}
+
+/**
+ * List the project's (non-archived) experiments via REST. Returns null on any
+ * failure so the page degrades to the flag roster alone. Newest first.
+ */
+export async function fetchPostHogExperiments(): Promise<PostHogExperiment[] | null> {
+  if (!KEY) return null;
+  try {
+    const res = await fetch(
+      `${HOST}/api/projects/${PROJECT_ID}/experiments/?limit=100`,
+      {
+        headers: { Authorization: `Bearer ${KEY}` },
+        next: { revalidate: REVALIDATE_SECONDS, tags: ['posthog'] },
+      },
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as ExperimentListResponse;
+    return (data.results ?? [])
+      .filter((e) => !e.archived && e.feature_flag_key)
+      .map((e) => ({
+        id: e.id,
+        name: e.name ?? `Experiment ${e.id}`,
+        flagKey: e.feature_flag_key as string,
+        status: e.status ?? 'unknown',
+        startDate: e.start_date ?? null,
+        primaryMetricName: e.metrics?.[0]?.name ?? null,
+      }));
   } catch {
     return null;
   }

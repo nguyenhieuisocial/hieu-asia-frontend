@@ -78,6 +78,8 @@ export default function AnalyticsPage() {
   const { data, isLoading, refetch, isFetching, error } = useQuery({
     queryKey: ['admin', 'analytics', days],
     queryFn: () => fetchAnalytics(days),
+    staleTime: 60_000,          // keep cached 60s — no loading flash on revisit
+    placeholderData: (prev) => prev, // show old data while refetching days switch
   });
 
   const showError = !!error || data?.ok === false;
@@ -141,7 +143,7 @@ export default function AnalyticsPage() {
         />
       )}
       {sessions.error_rate > 0.02 && (
-        <div className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-xs text-red-100">
+        <div className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-xs text-red-700 dark:text-red-200">
           Tỉ lệ lỗi hôm nay cao: {(sessions.error_rate * 100).toFixed(1)}% (5xx / tổng
           request). Kiểm tra trang Trạng thái hệ thống.
         </div>
@@ -158,7 +160,7 @@ export default function AnalyticsPage() {
         </div>
       )}
       {data?.funnel_v2 && data.funnel_v2.drop_off_points.length > 0 && (
-        <div className="rounded-md border border-amber-400/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+        <div className="rounded-md border border-amber-400/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-700 dark:text-amber-200">
           Drop-off &gt;30% phát hiện tại:{' '}
           {data.funnel_v2.drop_off_points
             .map(p => FUNNEL_LABELS[p] ?? p)

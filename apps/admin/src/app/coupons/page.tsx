@@ -404,7 +404,7 @@ export default function CouponsPage() {
           )}
 
           {note && (
-            <div className="mb-4 flex items-start gap-2 rounded-md border border-amber-400/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
+            <div className="mb-4 flex items-start gap-2 rounded-md border border-amber-400/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-700 dark:text-amber-200">
               <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" />
               <span>{note}</span>
             </div>

@@ -9,6 +9,7 @@ import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
+import { savePersonalityResult, buildDiscSummary } from '@/lib/personality-store';
 import { EXTENDED_SURVEY_SCHEMA, type DiscDimension } from '@/lib/survey-schema-extended';
 import { scoreDisc, type DiscScoreWithMeta } from '@/lib/scoring/disc';
 
@@ -81,7 +82,9 @@ export default function DiscPage() {
   }, []);
 
   const onComplete = (answers: Record<string, number>) => {
-    setResult(scoreDisc(answers));
+    const scored = scoreDisc(answers);
+    setResult(scored);
+    savePersonalityResult('disc', buildDiscSummary(scored.primary_style, scored.secondary_style));
     track('tool_used', { tool: 'disc', result: 'ok' });
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
   };
