@@ -18,7 +18,7 @@ import {
 } from '@hieu-asia/ui';
 import { safeJson } from '@/lib/safe-json';
 
-type Activity =
+export type Activity =
   | 'cuoi_hoi'
   | 'khai_truong'
   | 'dong_tho'
@@ -57,13 +57,16 @@ function getApiBase(): string {
   return 'https://api.hieu.asia';
 }
 
-export function ActivityChecker({ defaultDate }: { defaultDate?: string } = {}) {
+export function ActivityChecker({
+  defaultDate,
+  defaultActivity,
+}: { defaultDate?: string; defaultActivity?: Activity } = {}) {
   const today = new Date();
   const todayIso = `${today.getUTCFullYear()}-${String(today.getUTCMonth() + 1).padStart(2, '0')}-${String(
     today.getUTCDate(),
   ).padStart(2, '0')}`;
 
-  const [activity, setActivity] = React.useState<Activity>('cuoi_hoi');
+  const [activity, setActivity] = React.useState<Activity>(defaultActivity ?? 'cuoi_hoi');
   const [date, setDate] = React.useState(defaultDate ?? todayIso);
   const [birthYear, setBirthYear] = React.useState<string>('');
   const [loading, setLoading] = React.useState(false);
