@@ -84,7 +84,7 @@ export function EngineMetricsSection() {
             trễ/lỗi thật theo từng request + vendor + endpoint.
           </div>
         ) : errored ? (
-          <div className="rounded-md border border-amber-400/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+          <div className="rounded-md border border-amber-400/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-700 dark:text-amber-200">
             {data?.error ?? 'Không tải được engine metrics.'}
           </div>
         ) : (

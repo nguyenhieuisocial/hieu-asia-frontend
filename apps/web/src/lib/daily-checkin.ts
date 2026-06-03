@@ -51,8 +51,20 @@ export async function getStreak(): Promise<StreakView | null> {
   }
 }
 
+export interface VoucherInfo {
+  /** "v30" = 30% off (7-day milestone), "v50" = 50% off (30-day milestone). */
+  type: 'v30' | 'v50';
+  discount_pct: 30 | 50;
+  issued_at: string;
+}
+
 /** POST /daily/checkin — idempotent per ICT day. */
-export async function checkin(): Promise<{ streak: StreakView; alreadyCheckedIn: boolean } | null> {
+export async function checkin(): Promise<{
+  streak: StreakView;
+  alreadyCheckedIn: boolean;
+  /** Non-null only on the exact day a voucher milestone is hit for the first time. */
+  voucher_issued: VoucherInfo | null;
+} | null> {
   const headers = await authHeader();
   if (!headers) return null;
   try {
@@ -66,9 +78,28 @@ export async function checkin(): Promise<{ streak: StreakView; alreadyCheckedIn:
       ok?: boolean;
       streak?: StreakView;
       alreadyCheckedIn?: boolean;
+      voucher_issued?: VoucherInfo | null;
     };
     if (!body?.ok || !body.streak) return null;
-    return { streak: body.streak, alreadyCheckedIn: Boolean(body.alreadyCheckedIn) };
+    return {
+      streak: body.streak,
+      alreadyCheckedIn: Boolean(body.alreadyCheckedIn),
+      voucher_issued: body.voucher_issued ?? null,
+    };
+  } catch {
+    return null;
+  }
+}
+
+/** GET /daily/voucher — fetch the user's best unused streak voucher, if any. */
+export async function getVoucher(): Promise<VoucherInfo | null> {
+  const headers = await authHeader();
+  if (!headers) return null;
+  try {
+    const res = await fetch(`${API_BASE}/daily/voucher`, { headers, cache: 'no-store' });
+    if (!res.ok) return null;
+    const body = (await res.json()) as { ok?: boolean; voucher?: VoucherInfo | null };
+    return body?.ok && body.voucher ? body.voucher : null;
   } catch {
     return null;
   }

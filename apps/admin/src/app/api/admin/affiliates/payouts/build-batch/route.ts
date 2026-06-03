@@ -27,6 +27,12 @@ export async function POST(req: NextRequest) {
   // (not "admin" literal).  Multiple admins → preserved attribution.
   const cookieStore = await cookies();
   const session = await verifySession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
+  // Defense-in-depth: don't forward the admin token to the worker without a valid
+  // admin session in-handler (middleware HMAC gate is the primary; this is the backstop
+  // if the matcher ever regresses). Payout routes move money — fail closed.
+  if (!session) {
+    return NextResponse.json({ ok: false, error: 'unauthenticated' }, { status: 401 });
+  }
   try {
     const r = await fetch(`${GATEWAY}/admin/affiliates/payouts/build-batch`, {
       method: 'POST',
