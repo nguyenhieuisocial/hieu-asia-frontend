@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { DatTenNguHanhChecker } from '@/components/dat-ten-ngu-hanh/DatTenNguHanhChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -135,20 +135,14 @@ export default function DatTenNguHanhPage() {
             </dl>
           </section>
 
-          <nav aria-label="Công cụ liên quan" className="text-sm text-muted-foreground">
-            Xem thêm:{' '}
-            <Link href="/xem-ngay" className="text-gold hover:underline">
-              Xem ngày tốt
-            </Link>{' '}
-            ·{' '}
-            <Link href="/hop-tuoi" className="text-gold hover:underline">
-              Xem hợp tuổi
-            </Link>{' '}
-            ·{' '}
-            <Link href="/lich-van-nien" className="text-gold hover:underline">
-              Lịch Vạn Niên
-            </Link>
-          </nav>
+          <RelatedTools
+            links={[
+              { href: '/xem-ngay', label: 'Xem ngày tốt' },
+              { href: '/hop-tuoi', label: 'Xem hợp tuổi' },
+              { href: '/sao-han', label: 'Xem sao hạn' },
+              { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
+            ]}
+          />
         </section>
       </ToolPageShell>
     </>

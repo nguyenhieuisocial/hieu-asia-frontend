@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { KiengKyChecker } from '@/components/ngay-kieng-ky/KiengKyChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -135,24 +135,14 @@ export default function NgayKiengKyPage() {
             </dl>
           </section>
 
-          <nav aria-label="Công cụ liên quan" className="text-sm text-muted-foreground">
-            Xem thêm:{' '}
-            <Link href="/xem-ngay" className="text-gold hover:underline">
-              Xem ngày tốt theo mục đích
-            </Link>{' '}
-            ·{' '}
-            <Link href="/sao-han" className="text-gold hover:underline">
-              Xem sao hạn
-            </Link>{' '}
-            ·{' '}
-            <Link href="/gio-hoang-dao" className="text-gold hover:underline">
-              Giờ hoàng đạo
-            </Link>{' '}
-            ·{' '}
-            <Link href="/lich-van-nien" className="text-gold hover:underline">
-              Lịch Vạn Niên
-            </Link>
-          </nav>
+          <RelatedTools
+            links={[
+              { href: '/xem-ngay', label: 'Xem ngày tốt' },
+              { href: '/sao-han', label: 'Xem sao hạn' },
+              { href: '/gio-hoang-dao', label: 'Giờ hoàng đạo' },
+              { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
+            ]}
+          />
         </section>
       </ToolPageShell>
     </>

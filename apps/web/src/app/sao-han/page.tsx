@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SaoHanCalculator } from '@/components/sao-han/SaoHanCalculator';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { SAO_ORDER, SAO_INFO, TYPE_LABEL, type SaoType } from '@/lib/sao-han';
@@ -149,24 +150,14 @@ export default function SaoHanPage() {
             </div>
           </section>
 
-          <nav aria-label="Công cụ liên quan" className="text-sm text-muted-foreground">
-            Xem thêm:{' '}
-            <Link href="/xem-ngay" className="text-gold hover:underline">
-              Xem ngày tốt theo mục đích
-            </Link>{' '}
-            ·{' '}
-            <Link href="/ngay-kieng-ky" className="text-gold hover:underline">
-              Ngày kiêng kỵ
-            </Link>{' '}
-            ·{' '}
-            <Link href="/gio-hoang-dao" className="text-gold hover:underline">
-              Giờ hoàng đạo
-            </Link>{' '}
-            ·{' '}
-            <Link href="/lich-van-nien" className="text-gold hover:underline">
-              Lịch Vạn Niên
-            </Link>
-          </nav>
+          <RelatedTools
+            links={[
+              { href: '/xem-ngay', label: 'Xem ngày tốt' },
+              { href: '/ngay-kieng-ky', label: 'Ngày kiêng kỵ' },
+              { href: '/gio-hoang-dao', label: 'Giờ hoàng đạo' },
+              { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
+            ]}
+          />
         </section>
       </ToolPageShell>
     </>
