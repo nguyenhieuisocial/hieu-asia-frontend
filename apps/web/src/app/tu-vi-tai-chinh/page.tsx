@@ -4,6 +4,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui'
 import { Wallet, PiggyBank, TrendingUp, AlertTriangle, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb } from '@/lib/seo/jsonld';
@@ -199,6 +200,9 @@ export default function TuViTaiChinhPage() {
             </div>
           </div>
         </section>
+        <div className="mx-auto max-w-6xl px-6 pb-12">
+          <RelatedTools current="/tu-vi-tai-chinh" />
+        </div>
       </main>
       <SiteFooter />
       <StickyMobileCta href="/onboarding?intent=tai-chinh" trackId="tu-vi-tai-chinh" />

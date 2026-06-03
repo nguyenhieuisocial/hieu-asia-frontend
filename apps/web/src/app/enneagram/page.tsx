@@ -81,6 +81,7 @@ export default function EnneagramPage() {
     <>
       <ToolPageShell
         eyebrow="Trắc nghiệm tính cách · Enneagram"
+        relatedSlug="/enneagram"
         icon={<span aria-hidden="true">🌀</span>}
         title={
           <>

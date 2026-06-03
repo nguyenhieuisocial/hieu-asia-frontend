@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 
 export interface ToolPageShellProps {
   eyebrow: string;
@@ -13,6 +14,8 @@ export interface ToolPageShellProps {
   breadcrumb?: { label: string; href?: string }[];
   /** Optional CTA row in the hero, e.g. quick action buttons. */
   heroAction?: React.ReactNode;
+  /** Khi set, render khối "Công cụ liên quan" (tra RELATED_TOOLS theo route) ở cuối trang. */
+  relatedSlug?: string;
   /** Page content below the hero. */
   children: React.ReactNode;
 }
@@ -33,6 +36,7 @@ export function ToolPageShell({
   icon,
   breadcrumb,
   heroAction,
+  relatedSlug,
   children,
 }: ToolPageShellProps) {
   return (
@@ -102,7 +106,14 @@ export function ToolPageShell({
           </div>
         </section>
 
-        <div className="relative mx-auto max-w-6xl px-6 pb-20 sm:pb-24">{children}</div>
+        <div className="relative mx-auto max-w-6xl px-6 pb-20 sm:pb-24">
+          {children}
+          {relatedSlug && (
+            <div className="mt-12 border-t border-border pt-6">
+              <RelatedTools current={relatedSlug} />
+            </div>
+          )}
+        </div>
       </main>
 
       <SiteFooter />

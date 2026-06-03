@@ -249,6 +249,7 @@ export default function XemHopNhomPage() {
     <>
       <ToolPageShell
         eyebrow="So hợp nhóm · gia đình"
+        relatedSlug="/xem-hop-nhom"
         icon={<span aria-hidden="true">👨‍👩‍👧‍👦</span>}
         title={
           <>

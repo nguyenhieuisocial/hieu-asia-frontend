@@ -91,6 +91,7 @@ export default function ThuocLoBanPage() {
     <>
     <ToolPageShell
       eyebrow="Phong thủy · Lỗ Ban"
+        relatedSlug="/thuoc-lo-ban"
       icon={<span aria-hidden="true">📏</span>}
       title={
         <>

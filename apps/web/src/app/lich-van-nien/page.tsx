@@ -104,6 +104,7 @@ export default async function LichVanNienPage() {
     <>
     <ToolPageShell
       eyebrow="Lịch Vạn Niên · 2026"
+        relatedSlug="/lich-van-nien"
       icon={<span aria-hidden="true">📅</span>}
       title={
         <>

@@ -36,6 +36,7 @@ export default function SoSanhHubPage() {
       />
       <ToolPageShell
         eyebrow="So sánh lăng kính"
+        relatedSlug="/so-sanh"
         icon={<span aria-hidden="true">⚖️</span>}
         title={
           <>
