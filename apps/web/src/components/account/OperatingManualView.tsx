@@ -369,6 +369,11 @@ function EmptyState({
           label: `1+ Weekly Review (hiện ${inputs.weekly})`,
           href: '/weekly-review',
         },
+        {
+          done: (inputs.personality ?? 0) >= 1,
+          label: `Trắc nghiệm tính cách (hiện ${inputs.personality ?? 0})`,
+          href: '/cong-cu',
+        },
       ]
     : [];
 
