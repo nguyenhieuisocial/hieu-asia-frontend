@@ -22,7 +22,7 @@
 
 import * as React from 'react';
 import { Flame } from 'lucide-react';
-import { getStreak, checkin, streakMilestone, type StreakView } from '@/lib/daily-checkin';
+import { getStreak, checkin, streakMilestone, type StreakView, type VoucherInfo } from '@/lib/daily-checkin';
 import { track } from '@/lib/analytics';
 
 export function StreakCard({ variant = 'card' }: { variant?: 'card' | 'compact' } = {}) {
@@ -30,6 +30,8 @@ export function StreakCard({ variant = 'card' }: { variant?: 'card' | 'compact' 
   const [streak, setStreak] = React.useState<StreakView | null>(null);
   const [submitting, setSubmitting] = React.useState(false);
   const [error, setError] = React.useState(false);
+  /** Voucher issued on today's check-in — shown as a special banner. */
+  const [newVoucher, setNewVoucher] = React.useState<VoucherInfo | null>(null);
 
   React.useEffect(() => {
     let alive = true;
@@ -62,8 +64,6 @@ export function StreakCard({ variant = 'card' }: { variant?: 'card' | 'compact' 
       return;
     }
     setStreak(res.streak);
-    // Measure real check-ins (not idempotent re-clicks) so we can see whether
-    // the streak loop drives return visits — informs any future rewards call.
     if (!res.alreadyCheckedIn) {
       const m = streakMilestone(res.streak.current);
       track('daily_checkin', {
@@ -72,6 +72,8 @@ export function StreakCard({ variant = 'card' }: { variant?: 'card' | 'compact' 
         milestone_days: m.justHit ? m.reached?.days : undefined,
         surface: variant,
       });
+      // Surface a voucher banner if one was issued on this check-in.
+      if (res.voucher_issued) setNewVoucher(res.voucher_issued);
     }
   }
 
@@ -154,6 +156,19 @@ export function StreakCard({ variant = 'card' }: { variant?: 'card' | 'compact' 
           <span aria-hidden>🎉</span> Chúc mừng! Bạn vừa giữ chuỗi đủ{' '}
           <strong className="font-semibold">{ms.reached.label}</strong> liên tiếp.
         </p>
+      )}
+      {newVoucher && (
+        <div className="mb-3 rounded-lg border border-gold bg-gold/10 px-3 py-2.5">
+          <p className="text-sm font-semibold text-gold-700">
+            <span aria-hidden>🎁</span> Voucher -{newVoucher.discount_pct}% vừa được tặng!
+          </p>
+          <p className="mt-0.5 text-xs text-foreground/70">
+            Áp dụng khi thanh toán gói bất kỳ. Dùng 1 lần.{' '}
+            <a href="/pricing" className="underline hover:text-gold-700">
+              Xem gói ngay →
+            </a>
+          </p>
+        </div>
       )}
 
       <div className="mb-3 flex items-baseline justify-between">
