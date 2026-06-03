@@ -736,3 +736,71 @@ export async function fetchPostHogFeatureFlags(): Promise<PostHogFlag[] | null> 
     return null;
   }
 }
+
+/* -------------------------------------------------------------------------
+ * P1 — PostHog Experiments (the actual A/B tests, distinct from raw flags).
+ *
+ * The /experiments page listed feature FLAGS but never the formal PostHog
+ * Experiment entities — so a founder running an A/B test couldn't see, from
+ * the admin, whether it was even collecting data. This list-only REST read
+ * surfaces each experiment's name, linked flag, status and start date; the
+ * page cross-references the linked flag against the existing per-variant
+ * conversion read (fetchVariantConversions) to show exposure + conversion,
+ * and links out to PostHog for rigorous Bayesian significance.
+ * --------------------------------------------------------------------- */
+
+export interface PostHogExperiment {
+  id: number;
+  name: string;
+  /** Linked feature-flag key — joins to VariantConversionRow.flag. */
+  flagKey: string;
+  /** running / draft / stopped / complete / paused. */
+  status: string;
+  /** ISO launch timestamp; null while still a draft. */
+  startDate: string | null;
+  /** Primary metric label (e.g. "Sign-up completion"), best-effort. */
+  primaryMetricName: string | null;
+}
+
+interface ExperimentListResponse {
+  results?: Array<{
+    id: number;
+    name?: string;
+    feature_flag_key?: string | null;
+    start_date?: string | null;
+    archived?: boolean;
+    status?: string;
+    metrics?: Array<{ name?: string }>;
+  }>;
+}
+
+/**
+ * List the project's (non-archived) experiments via REST. Returns null on any
+ * failure so the page degrades to the flag roster alone. Newest first.
+ */
+export async function fetchPostHogExperiments(): Promise<PostHogExperiment[] | null> {
+  if (!KEY) return null;
+  try {
+    const res = await fetch(
+      `${HOST}/api/projects/${PROJECT_ID}/experiments/?limit=100`,
+      {
+        headers: { Authorization: `Bearer ${KEY}` },
+        next: { revalidate: REVALIDATE_SECONDS, tags: ['posthog'] },
+      },
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as ExperimentListResponse;
+    return (data.results ?? [])
+      .filter((e) => !e.archived && e.feature_flag_key)
+      .map((e) => ({
+        id: e.id,
+        name: e.name ?? `Experiment ${e.id}`,
+        flagKey: e.feature_flag_key as string,
+        status: e.status ?? 'unknown',
+        startDate: e.start_date ?? null,
+        primaryMetricName: e.metrics?.[0]?.name ?? null,
+      }));
+  } catch {
+    return null;
+  }
+}
