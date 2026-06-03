@@ -132,6 +132,23 @@ export default function SaoHanPage() {
             </dl>
           </section>
 
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Xem sao hạn theo tuổi (con giáp)
+            </h2>
+            <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1.5 text-sm">
+              {[
+                ['ty', 'Tý'], ['suu', 'Sửu'], ['dan', 'Dần'], ['mao', 'Mão'],
+                ['thin', 'Thìn'], ['ti', 'Tỵ'], ['ngo', 'Ngọ'], ['mui', 'Mùi'],
+                ['than', 'Thân'], ['dau', 'Dậu'], ['tuat', 'Tuất'], ['hoi', 'Hợi'],
+              ].map(([slug, ten]) => (
+                <Link key={slug} href={`/sao-han/${slug}`} className="text-gold hover:underline">
+                  Tuổi {ten}
+                </Link>
+              ))}
+            </div>
+          </section>
+
           <nav aria-label="Công cụ liên quan" className="text-sm text-muted-foreground">
             Xem thêm:{' '}
             <Link href="/xem-ngay" className="text-gold hover:underline">
