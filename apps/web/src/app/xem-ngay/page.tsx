@@ -85,6 +85,10 @@ export default function XemNgayHubPage() {
           ·{' '}
           <Link href="/sao-han" className="text-gold hover:underline">
             Xem sao hạn
+          </Link>{' '}
+          ·{' '}
+          <Link href="/gio-hoang-dao" className="text-gold hover:underline">
+            Giờ hoàng đạo
           </Link>
         </p>
       </ToolPageShell>
