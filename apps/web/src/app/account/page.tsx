@@ -36,6 +36,7 @@ import {
   CreditCard,
   Network,
   ShieldCheck,
+  Sparkle,
 } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
@@ -111,6 +112,7 @@ const SETTINGS_LINKS: readonly {
   label: string;
   icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
 }[] = [
+  { href: '/account/journey', label: 'Hành trình 5 lăng kính', icon: Sparkle },
   { href: '/account/profile', label: 'Hồ sơ', icon: UserIcon },
   { href: '/account/chart', label: 'Lá số của tôi', icon: UserIcon },
   { href: '/account/operating-manual', label: 'Sổ tay cá nhân', icon: BookOpen },
