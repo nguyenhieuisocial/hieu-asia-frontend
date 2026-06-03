@@ -140,6 +140,24 @@ export function SaoHanCalculator() {
               </div>
             </div>
 
+            <div className="rounded-md border bg-card/40 p-3 text-sm">
+              <div className="font-medium">Sao hạn các năm tới</div>
+              <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5">
+                {[1, 2, 3, 4].map((d) => {
+                  const yr = result.viewYear + d;
+                  const by = result.viewYear - result.tuoiMu + 1;
+                  const next = computeSaoHan(by, result.gender, yr);
+                  if (!next) return null;
+                  return (
+                    <span key={yr} className="tabular-nums">
+                      <span className="text-muted-foreground">{yr}:</span>{' '}
+                      <span className={TYPE_TEXT[next.sao.type]}>{next.sao.name}</span>
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+
             <p className="text-xs leading-relaxed text-muted-foreground">
               Đây là cách tra cứu theo phong tục dân gian, mang tính <strong>tham khảo</strong> — không
               phải lời phán số mệnh. Sao tốt hay xấu không quyết định cuộc đời bạn; sống cẩn trọng, tử
