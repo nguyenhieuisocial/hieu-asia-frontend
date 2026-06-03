@@ -177,11 +177,13 @@ export default function SessionDetailPage() {
   const session = useQuery({
     queryKey: ['admin', 'session', id],
     queryFn: () => getSession(id),
+    staleTime: 60_000,
   });
   const audit = useQuery({
     queryKey: ['admin', 'session', id, 'audit'],
     queryFn: () => fetchSessionAudit(id),
     enabled: !!id,
+    staleTime: 60_000,
   });
 
   const copyId = React.useCallback(() => {

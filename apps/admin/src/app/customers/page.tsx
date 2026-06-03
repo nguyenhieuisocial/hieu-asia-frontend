@@ -137,6 +137,8 @@ export default function CustomersPage() {
   const { data, isLoading, isFetching, refetch, error } = useQuery({
     queryKey: ['admin', 'customers', { search, plan, cursor, limit: LIMIT }],
     queryFn: () => fetchCustomers({ search, plan, limit: LIMIT, cursor }),
+    staleTime: 60_000,
+    placeholderData: (prev) => prev,
   });
 
   // Defensive Array.isArray — Wave 60.65.P0c lesson: `?? []` only catches

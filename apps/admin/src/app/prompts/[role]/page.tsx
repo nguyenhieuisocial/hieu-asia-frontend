@@ -135,6 +135,7 @@ export default function PromptEditPage() {
     queryKey: ['admin', 'prompts', role],
     queryFn: () => fetchPrompt(role),
     enabled: isValidRole,
+    staleTime: 60_000,
   });
 
   const [draft, setDraft] = React.useState<string>('');

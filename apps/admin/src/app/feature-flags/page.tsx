@@ -74,6 +74,7 @@ export default function FeatureFlagsPage() {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: FLAGS_QUERY_KEY,
     queryFn: fetchFlags,
+    staleTime: 60_000,
   });
 
   const flags = data?.flags ?? [];

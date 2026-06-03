@@ -212,11 +212,13 @@ export default function VendorsPage() {
   const { data, isLoading, refetch, isFetching, error } = useQuery({
     queryKey: ['admin', 'vendors'],
     queryFn: fetchVendors,
+    staleTime: 60_000,
   });
 
   const { data: lfData, isLoading: lfLoading } = useQuery({
     queryKey: ['admin', 'langfuse-traces'],
     queryFn: fetchLangfuseTraces,
+    staleTime: 60_000,
   });
 
   const showError = !!error || data?.ok === false;

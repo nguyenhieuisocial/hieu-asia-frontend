@@ -165,6 +165,7 @@ function ConnectPageInner() {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['admin', 'connect', 'providers'],
     queryFn: fetchProviders,
+    staleTime: 60_000,
   });
 
   const rows = React.useMemo(() => mergeRows(data), [data]);

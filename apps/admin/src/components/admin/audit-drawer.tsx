@@ -117,6 +117,7 @@ export function AuditLogDrawer({
     queryKey: ['admin', 'audit-log', 'drawer', resourceId, limit],
     queryFn: () => fetchAudit(resourceId!, limit),
     enabled,
+    staleTime: 60_000,
   });
 
   const entries = data?.entries ?? [];

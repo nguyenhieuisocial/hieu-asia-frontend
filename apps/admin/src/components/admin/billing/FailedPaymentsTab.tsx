@@ -48,6 +48,7 @@ export function FailedPaymentsTab({ onRowsChange }: FailedPaymentsTabProps) {
   const failed = useQuery({
     queryKey: ['admin', 'failed-payments'],
     queryFn: listFailedPayments,
+    staleTime: 60_000,
   });
 
   const retry = useMutation({

@@ -74,6 +74,7 @@ export function RetentionTab() {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['admin', 'settings', 'retention'],
     queryFn: fetchRetention,
+    staleTime: 60_000,
   });
 
   const [picked, setPicked] = React.useState<RetentionDays>(90);

@@ -78,6 +78,7 @@ export function ApiKeysTab() {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['admin', 'settings', 'api-keys'],
     queryFn: fetchApiKeys,
+    staleTime: 60_000,
   });
 
   // Defensive Array.isArray — guards against drift in {error:'...'} shapes.
