@@ -4,7 +4,7 @@ import { GioHoangDaoChecker } from '@/components/gio-hoang-dao/GioHoangDaoChecke
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
-import { HOANG_DAO_STARS } from '@/lib/gio-hoang-dao';
+import { HOANG_DAO_STARS, HAC_DAO_STARS } from '@/lib/gio-hoang-dao';
 
 const DESC =
   'Xem giờ hoàng đạo (giờ tốt) trong ngày theo lịch pháp truyền thống: mỗi ngày có 6 giờ hoàng đạo và 6 giờ hắc đạo, đổi theo Địa Chi của ngày. Nhập ngày để xem giờ tốt — tham khảo, không bói toán.';
@@ -96,6 +96,25 @@ export default function GioHoangDaoPage() {
                       {s.suits}
                     </p>
                   )}
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* 6 sao hắc đạo */}
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              6 sao hắc đạo (giờ nên tránh)
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              Sáu canh giờ còn lại ứng với 6 sao hắc đạo — theo phong tục nên tránh khởi sự việc
+              trọng đại. Đây là lời nhắc thận trọng để tham khảo, không phải điều chắc chắn.
+            </p>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {HAC_DAO_STARS.map((s) => (
+                <div key={s.name} className="rounded-xl border border-border bg-background/40 p-4">
+                  <div className="font-heading text-base font-semibold text-foreground">{s.name}</div>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.meaning}</p>
                 </div>
               ))}
             </div>

@@ -25,6 +25,8 @@ const HIT_BADGE: Record<KiengKyKey, string> = {
     'border-amber-300 bg-amber-50 text-amber-700 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-300',
   duong_cong:
     'border-violet-300 bg-violet-50 text-violet-700 dark:border-violet-700 dark:bg-violet-950/40 dark:text-violet-300',
+  nguyet_tan:
+    'border-slate-300 bg-slate-50 text-slate-700 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-300',
 };
 
 function todayISO(): string {

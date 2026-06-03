@@ -147,7 +147,7 @@ export function solarToLunar(dd: number, mm: number, yy: number): LunarDate {
 
 // ── Ngày kiêng kỵ ─────────────────────────────────────────────────────────
 
-export type KiengKyKey = 'tam_nuong' | 'nguyet_ky' | 'duong_cong';
+export type KiengKyKey = 'tam_nuong' | 'nguyet_ky' | 'duong_cong' | 'nguyet_tan';
 
 /** Tam Nương: 6 ngày âm cố định mỗi tháng. */
 export const TAM_NUONG_DAYS = [3, 7, 13, 18, 22, 27];
@@ -188,7 +188,7 @@ export const KIENG_KY_INFO: Record<KiengKyKey, KiengKyInfo> = {
     name: 'Tam Nương',
     days: 'Mùng 3, 7, 13, 18, 22, 27 (âm lịch)',
     summary:
-      'Sáu ngày trong mỗi tháng âm mà theo phong tục người xưa thường tránh khởi sự việc lớn như cưới hỏi, khai trương, động thổ, đi xa. Tên gọi gắn với điển tích về ba người phụ nữ trong sử Trung Hoa.',
+      'Sáu ngày trong mỗi tháng âm mà theo phong tục người xưa thường tránh khởi sự việc lớn như cưới hỏi, khai trương, động thổ, đi xa. Tên gọi gắn với điển tích ba người phụ nữ trong sử Trung Hoa — Muội Hỷ, Đát Kỷ, Bao Tự — vốn gắn với sự suy vong của các triều đại Hạ, Thương, Chu.',
     advice:
       'Nếu lịch linh hoạt, nhiều người dời việc trọng sang ngày khác cho an tâm. Việc thường ngày thì không cần kiêng.',
   },
@@ -197,7 +197,7 @@ export const KIENG_KY_INFO: Record<KiengKyKey, KiengKyInfo> = {
     name: 'Nguyệt Kỵ',
     days: 'Mùng 5, 14, 23 (âm lịch)',
     summary:
-      'Ba ngày mà cộng các chữ số đều ra 5 — dân gian có câu "Mùng năm, mười bốn, hai ba; đi chơi cũng thiệt nữa là đi buôn". Thường được nhắc khi xuất hành, buôn bán, ký kết.',
+      'Ba ngày mà cộng các chữ số đều ra 5 — dân gian có câu "Mùng năm, mười bốn, hai ba; đi chơi cũng thiệt nữa là đi buôn" (dị bản: "…làm gì cũng bại, chẳng ra việc gì"). Thường được nhắc khi xuất hành, buôn bán, ký kết.',
     advice:
       'Người xưa kiêng xuất hành xa, giao dịch lớn vào ngày này. Bạn có thể cân nhắc tuỳ việc, không cần quá lo.',
   },
@@ -209,6 +209,15 @@ export const KIENG_KY_INFO: Record<KiengKyKey, KiengKyInfo> = {
       'Bộ 13 ngày được nhắc trong lịch pháp cổ (gắn với tên Dương Quân Tùng), thường được khuyên tránh khởi công, xây dựng, cưới hỏi vào những việc trọng đại.',
     advice:
       'Mang tính nhắc nhở thận trọng cho việc lớn; sinh hoạt thường nhật không bị ảnh hưởng.',
+  },
+  nguyet_tan: {
+    key: 'nguyet_tan',
+    name: 'Nguyệt Tận',
+    days: 'Ngày cuối cùng của tháng âm lịch (30 hoặc 29 âm)',
+    summary:
+      '"Nguyệt tận" nghĩa là trăng đã hết — ngày khép lại tháng âm. Theo phong tục, người xưa tránh khởi sự việc lớn, xuất hành, cưới hỏi vào ngày này vì coi là thời điểm "tận", chưa trọn vẹn để bắt đầu.',
+    advice:
+      'Nhiều người tránh bắt đầu việc trọng vào ngày cuối tháng âm; việc thường ngày thì không cần kiêng.',
   },
 };
 
@@ -239,6 +248,10 @@ export function checkKiengKy(dd: number, mm: number, yy: number): KiengKyResult 
   if (TAM_NUONG_DAYS.includes(lunar.day)) hits.push('tam_nuong');
   if (NGUYET_KY_DAYS.includes(lunar.day)) hits.push('nguyet_ky');
   if ((DUONG_CONG_BY_MONTH[lunar.month] ?? []).includes(lunar.day)) hits.push('duong_cong');
+  // Nguyệt Tận: ngày cuối tháng âm — hôm sau là mùng 1 âm lịch.
+  const next = new Date(Date.UTC(yy, mm - 1, dd + 1));
+  const nextLunar = solarToLunar(next.getUTCDate(), next.getUTCMonth() + 1, next.getUTCFullYear());
+  if (nextLunar.day === 1) hits.push('nguyet_tan');
   return { solar: { day: dd, month: mm, year: yy }, lunar, hits };
 }
 
