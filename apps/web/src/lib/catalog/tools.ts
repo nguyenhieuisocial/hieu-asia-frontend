@@ -22,6 +22,7 @@ export const QUICK_LOOKUP: QuickTool[] = [
   { href: '/hop-tuoi', label: 'Hợp tuổi', tier: 'free' },
   { href: '/can-xuong', label: 'Cân Xương Đoán Số', tier: 'free' },
   { href: '/lich-van-nien', label: 'Lịch Vạn Niên', tier: 'free' },
+  { href: '/xem-ngay', label: 'Xem ngày tốt', tier: 'free' },
   { href: '/bat-tu', label: 'Bát Tự', tier: 'free' },
   { href: '/mbti', label: 'MBTI', tier: 'free' },
   { href: '/than-so-hoc', label: 'Thần số học', tier: 'free' },
@@ -34,6 +35,8 @@ export const QUICK_LOOKUP: QuickTool[] = [
   { href: '/disc', label: 'Trắc nghiệm DiSC', tier: 'free' },
   { href: '/xem-tuong', label: 'Xem Chỉ Tay & Tướng Mặt', tier: 'free' },
   { href: '/xem-hop-nhom', label: 'Xem hợp nhóm / gia đình', tier: 'free' },
+  { href: '/so-sanh', label: 'So sánh lăng kính', tier: 'free' },
+  { href: '/hoi-dap', label: 'Hỏi đáp', tier: 'free' },
 ];
 
 export interface ToolChip {
@@ -59,6 +62,7 @@ export const TOOLKIT_GROUPS: ToolGroup[] = [
       { n: 'Thước Lỗ Ban', href: '/thuoc-lo-ban' },
       { n: 'Hợp tuổi', href: '/hop-tuoi' },
       { n: 'Lịch vạn niên', href: '/lich-van-nien' },
+      { n: 'Xem ngày tốt', href: '/xem-ngay' },
     ],
   },
   {
@@ -70,4 +74,11 @@ export const TOOLKIT_GROUPS: ToolGroup[] = [
     ],
   },
   { label: 'Trực giác', tools: [{ n: 'Tarot', href: '/tarot' }] },
+  {
+    label: 'Khám phá & so sánh',
+    tools: [
+      { n: 'So sánh lăng kính', href: '/so-sanh' },
+      { n: 'Hỏi đáp', href: '/hoi-dap' },
+    ],
+  },
 ];
