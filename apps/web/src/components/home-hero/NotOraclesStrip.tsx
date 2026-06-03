@@ -11,7 +11,7 @@ export function NotOraclesStrip(): React.JSX.Element {
     <section aria-label="Định vị" className="mx-auto max-w-marketing-tight px-6 pb-12 pt-2 sm:px-8">
       <p className="max-w-[30em] font-editorial-display text-2xl leading-snug text-foreground sm:text-[1.6rem]">
         Không đoán số. Không “vận hạn”. hieu.asia{' '}
-        <em className="italic text-primary">giải mã bối cảnh</em> từ bốn lăng kính để{' '}
+        <em className="italic text-primary">giải mã bối cảnh</em> từ năm lăng kính để{' '}
         <em className="italic text-primary">bạn tự quyết</em>.
       </p>
       <div className="mt-4 flex flex-wrap gap-2">
