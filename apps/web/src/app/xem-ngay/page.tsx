@@ -76,6 +76,17 @@ export default function XemNgayHubPage() {
           </Link>
           .
         </p>
+
+        <p className="mt-3 text-sm text-muted-foreground">
+          Xem thêm:{' '}
+          <Link href="/ngay-kieng-ky" className="text-gold hover:underline">
+            Ngày kiêng kỵ (Tam Nương, Nguyệt Kỵ)
+          </Link>{' '}
+          ·{' '}
+          <Link href="/sao-han" className="text-gold hover:underline">
+            Xem sao hạn
+          </Link>
+        </p>
       </ToolPageShell>
     </>
   );

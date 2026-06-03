@@ -155,6 +155,10 @@ export default function SaoHanPage() {
               Xem ngày tốt theo mục đích
             </Link>{' '}
             ·{' '}
+            <Link href="/ngay-kieng-ky" className="text-gold hover:underline">
+              Ngày kiêng kỵ
+            </Link>{' '}
+            ·{' '}
             <Link href="/lich-van-nien" className="text-gold hover:underline">
               Lịch Vạn Niên
             </Link>
