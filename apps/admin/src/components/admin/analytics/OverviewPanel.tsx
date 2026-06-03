@@ -397,7 +397,7 @@ async function ToolUsageTile() {
               <div className="flex shrink-0 items-center gap-3">
                 {r.errorRate > 0 && (
                   <span
-                    className="font-mono text-[10px] text-amber-300"
+                    className="font-mono text-[10px] text-amber-700 dark:text-amber-300"
                     title="Tỉ lệ lỗi của công cụ"
                   >
                     {(r.errorRate * 100).toFixed(0)}% lỗi
@@ -508,7 +508,7 @@ export default function AdminPostHogPage() {
           fullyConfigured ? (
             <LiveBadge tone="jade" />
           ) : (
-            <span className="rounded-full border border-amber-400/30 bg-amber-500/10 px-2 py-0.5 font-mono text-[10px] text-amber-200">
+            <span className="rounded-full border border-amber-400/30 bg-amber-500/10 px-2 py-0.5 font-mono text-[10px] text-amber-700 dark:text-amber-200">
               {configuredCount}/{status.length} cấu hình
             </span>
           )
