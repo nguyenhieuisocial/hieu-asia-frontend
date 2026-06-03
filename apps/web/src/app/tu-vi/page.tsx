@@ -4,6 +4,7 @@ import { Sparkles, BookOpen, Map, ArrowRight } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
@@ -279,6 +280,9 @@ export default function TuViHubPage() {
             />
           </div>
         </section>
+        <div className="mx-auto max-w-6xl px-6 pb-12">
+          <RelatedTools current="/tu-vi" />
+        </div>
       </main>
       <SiteFooter />
       <StickyMobileCta trackId="tu-vi-hub" />

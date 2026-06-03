@@ -114,6 +114,7 @@ export default function HoiDapPage() {
       />
       <ToolPageShell
         eyebrow="Hỏi đáp"
+        relatedSlug="/hoi-dap"
         icon={<span aria-hidden="true">💬</span>}
         title={
           <>

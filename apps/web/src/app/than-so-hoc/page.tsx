@@ -40,6 +40,7 @@ export default function ThanSoHocLandingPage() {
     <>
     <ToolPageShell
       eyebrow="Numerology · Pythagoras"
+        relatedSlug="/than-so-hoc"
       icon={<span aria-hidden="true">🔢</span>}
       title={
         <>

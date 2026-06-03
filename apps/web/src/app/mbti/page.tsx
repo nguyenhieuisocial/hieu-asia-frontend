@@ -9,6 +9,7 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { ItalicSpan } from '@/components/marketing/ItalicSpan';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { MbtiTool } from '@/components/tools/MbtiTool';
@@ -352,6 +353,9 @@ export default function MbtiHubPage() {
             </div>
           </div>
         </section>
+        <div className="mx-auto max-w-6xl px-6 pb-12">
+          <RelatedTools current="/mbti" />
+        </div>
       </main>
 
       <SiteFooter />

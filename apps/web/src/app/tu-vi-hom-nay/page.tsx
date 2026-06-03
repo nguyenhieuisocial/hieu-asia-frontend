@@ -126,6 +126,7 @@ export default async function Page() {
       <JsonLd data={JSONLD} />
     <ToolPageShell
       eyebrow={`Tử Vi · ${today}`}
+        relatedSlug="/tu-vi-hom-nay"
       icon={<span aria-hidden="true">🐲</span>}
       title={
         <>
