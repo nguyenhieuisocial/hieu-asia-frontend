@@ -160,6 +160,28 @@ html {
   background-image: linear-gradient(135deg, #b8923d 0%, #d5b057 50%, #b8923d 100%);
 }
 
+/* Same rationale for faint-gold LABEL text — the mono "eyebrow" tags above
+ * headings (`text-gold/80|85|90`, ~11px) sit at ~2:1 on cream (gold #B8923D
+ * at 0.8 over Paper), failing WCAG 1.4.3 small-text 4.5:1. Deepen to
+ * antique-ochre on LIGHT (#7A5A1F ≈ 5:1); DARK restores the brand gold (fine
+ * on charcoal). Only the label opacities /80–/90 are swept; decorative gold
+ * (≤/70 dots/arrows, many aria-hidden) stays intentionally subtle.
+ * Unlayered + descendant selector → wins over Tailwind's utility. */
+:root .text-gold\/80,
+:root .text-gold\/85,
+:root .text-gold\/90 {
+  color: #7a5a1f;
+}
+.dark .text-gold\/80 {
+  color: rgb(184 146 61 / 0.8);
+}
+.dark .text-gold\/85 {
+  color: rgb(184 146 61 / 0.85);
+}
+.dark .text-gold\/90 {
+  color: rgb(184 146 61 / 0.9);
+}
+
 /* Safe-area-inset for iPhone notch / Android gesture nav.
  *
  * Wave 60.68 — added `padding-bottom` so the iPhone home-indicator no longer
