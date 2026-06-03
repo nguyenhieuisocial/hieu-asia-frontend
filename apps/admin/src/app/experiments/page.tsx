@@ -35,9 +35,11 @@ import { PageHeader } from '@/components/admin/page-header';
 import {
   fetchPostHogFeatureFlags,
   fetchVariantConversions,
+  fetchPostHogExperiments,
   isPostHogServerConfigured,
   type PostHogFlag,
 } from '@/lib/posthog-server';
+import ExperimentResultsPanel from '@/components/admin/analytics/ExperimentResultsPanel';
 
 const DASHBOARD_URL = process.env.NEXT_PUBLIC_POSTHOG_DASHBOARD_URL;
 
@@ -280,9 +282,13 @@ function FlagRow({
 
 export default async function ExperimentsPage() {
   const configured = isPostHogServerConfigured();
-  const [flags, variantConv] = configured
-    ? await Promise.all([fetchPostHogFeatureFlags(), fetchVariantConversions()])
-    : [null, null];
+  const [flags, variantConv, experiments] = configured
+    ? await Promise.all([
+        fetchPostHogFeatureFlags(),
+        fetchVariantConversions(),
+        fetchPostHogExperiments(),
+      ])
+    : [null, null, null];
   // Lookup: flag key → variant key → { exposed, converted } (last 30 days).
   const convByFlag = new Map<string, Map<string, { exposed: number; converted: number }>>();
   for (const r of variantConv ?? []) {
@@ -338,6 +344,24 @@ export default async function ExperimentsPage() {
             <code className="font-mono">POSTHOG_PERSONAL_API_KEY</code> sai/hết
             hạn, hoặc PostHog đang downtime. Kiểm tra Sentry để biết chi tiết.
           </p>
+        </div>
+      )}
+
+      {/* P1 — A/B experiment results, shown above the raw flag roster. */}
+      <ExperimentResultsPanel
+        experiments={experiments}
+        convByFlag={convByFlag}
+        dashboardUrl={DASHBOARD_URL}
+      />
+
+      {configured && (
+        <div className="mt-10 flex flex-wrap items-baseline gap-2 border-t border-border/60 pt-6">
+          <h2 className="font-heading text-lg font-semibold text-foreground">
+            Feature Flags
+          </h2>
+          <span className="text-xs text-muted-foreground">
+            công tắc tính năng — gồm cả các cờ được thử nghiệm ở trên
+          </span>
         </div>
       )}
 
