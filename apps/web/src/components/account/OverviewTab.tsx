@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from '@hieu-asia/ui';
 import { readJournalEntries, readWeeklyReviews } from '@/lib/journal-storage';
-import { buildOperatingManual } from '@/lib/operating-manual';
+import { buildOperatingManual, countManualInputs } from '@/lib/operating-manual';
 import { fetchUserMe } from '@/lib/user-me';
 import { ExpertModeToggle } from './ExpertModeToggle';
 
@@ -148,7 +148,7 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
     activity: [],
   });
   const [manualState, setManualState] = React.useState<
-    { ready: true; filled: number; total: number } | { ready: false } | null
+    { ready: true; filled: number; total: number } | { ready: false; progress: number } | null
   >(null);
 
   React.useEffect(() => {
@@ -159,7 +159,8 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
     if (m) {
       setManualState({ ready: true, filled: m.filledCount, total: m.totalCount });
     } else {
-      setManualState({ ready: false });
+      const ci = countManualInputs();
+      setManualState({ ready: false, progress: ci.total });
     }
 
     // Best-effort: tier from shared, deduped /api/user/me cache (BUG-009).
@@ -236,6 +237,32 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
             </span>
             <span className="mt-0.5 block text-xs text-muted-foreground">
               Một trang tổng hợp về bạn — in được, xuất Markdown được.
+            </span>
+          </span>
+          <ChevronRight
+            className="h-5 w-5 shrink-0 text-gold/70 transition group-hover:translate-x-0.5"
+            aria-hidden
+          />
+        </button>
+      )}
+      {manualState && !manualState.ready && (
+        <button
+          type="button"
+          onClick={() => onNavigate('manual')}
+          className="group flex w-full items-center gap-4 rounded-xl border border-gold/30 bg-gold/[0.06] p-4 text-left transition hover:border-gold/60 hover:bg-gold/[0.10]"
+        >
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold/40 bg-card/60">
+            <BookOpen className="h-5 w-5 text-gold" aria-hidden />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-heading text-base text-foreground">
+              Sổ tay cá nhân của bạn
+            </span>
+            <span className="mt-0.5 block text-xs text-muted-foreground">
+              Còn {Math.max(1, 3 - manualState.progress)} bước nữa để mở khoá — một trang tổng hợp về chính bạn (in &amp; chia sẻ được).
+            </span>
+            <span className="mt-1 block text-[11px] text-gold/70">
+              {manualState.progress}/3
             </span>
           </span>
           <ChevronRight
