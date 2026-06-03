@@ -159,6 +159,10 @@ export default function SaoHanPage() {
               Ngày kiêng kỵ
             </Link>{' '}
             ·{' '}
+            <Link href="/gio-hoang-dao" className="text-gold hover:underline">
+              Giờ hoàng đạo
+            </Link>{' '}
+            ·{' '}
             <Link href="/lich-van-nien" className="text-gold hover:underline">
               Lịch Vạn Niên
             </Link>

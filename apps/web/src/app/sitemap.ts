@@ -179,6 +179,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/gieo-que`, lastModified: now, changeFrequency: 'monthly', priority: 0.65 },
     { url: `${BASE_URL}/big-five`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/disc`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/enneagram`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/tarot`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/sao-han`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/cong-cu`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
@@ -257,5 +258,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/ngay-kieng-ky`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
   ];
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls];
+  // Giờ hoàng đạo — SEO mùa vụ (giờ tốt trong ngày).
+  const gioHoangDao: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/gio-hoang-dao`, lastModified: now, changeFrequency: 'daily', priority: 0.7 },
+  ];
+
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls];
 }

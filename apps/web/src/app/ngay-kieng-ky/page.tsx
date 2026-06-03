@@ -145,6 +145,10 @@ export default function NgayKiengKyPage() {
               Xem sao hạn
             </Link>{' '}
             ·{' '}
+            <Link href="/gio-hoang-dao" className="text-gold hover:underline">
+              Giờ hoàng đạo
+            </Link>{' '}
+            ·{' '}
             <Link href="/lich-van-nien" className="text-gold hover:underline">
               Lịch Vạn Niên
             </Link>
