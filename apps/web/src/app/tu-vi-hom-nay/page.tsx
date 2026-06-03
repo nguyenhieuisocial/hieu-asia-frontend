@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ZodiacCard } from '@/components/daily/ZodiacCard';
 import { SubscribePush } from '@/components/daily/SubscribePush';
+import { ReflectCard } from '@/components/daily/ReflectCard';
 import { StreakCard } from '@/components/account/StreakCard';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
@@ -142,6 +143,12 @@ export default async function Page() {
           streak right where the daily ritual happens. Self-hides for anonymous
           / signed-out visitors (the SEO-traffic majority). */}
       <StreakCard variant="compact" />
+
+      {/* Reflective prompt — calm editorial card, private textarea (localStorage). */}
+      <div className="mt-6">
+        <ReflectCard date={today} />
+      </div>
+
       <section className="mt-8">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="font-heading text-lg font-semibold text-foreground">
