@@ -208,5 +208,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   } catch { /* non-fatal */ }
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...pillarUrls];
+  // Sao hạn theo từng con giáp (12 trang SEO mùa vụ).
+  const saoHanTuoi: MetadataRoute.Sitemap = [
+    'ty', 'suu', 'dan', 'mao', 'thin', 'ti', 'ngo', 'mui', 'than', 'dau', 'tuat', 'hoi',
+  ].map((t) => ({
+    url: `${BASE_URL}/sao-han/${t}`,
+    lastModified: now,
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }));
+
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...pillarUrls];
 }
