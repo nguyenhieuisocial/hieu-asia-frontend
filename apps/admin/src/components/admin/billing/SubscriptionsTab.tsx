@@ -126,6 +126,8 @@ export function SubscriptionsTab({ onRowsChange, onTotalChange }: SubscriptionsT
         status: status === 'all' ? undefined : status,
         plan: plan === 'all' ? undefined : plan,
       }),
+    staleTime: 60_000,
+    placeholderData: (prev) => prev,
   });
 
   const cancel = useMutation({

@@ -2,6 +2,9 @@ import type { MetadataRoute } from 'next';
 import { PALACES_CONTENT, ALL_STARS_CONTENT } from '@/lib/tuvi-content';
 import { listCaseStudies } from '@/lib/case-studies';
 import { PALACE_READINGS } from '@/lib/palace-readings';
+import { PURPOSES } from './xem-ngay/purposes';
+import { ZODIAC, canonicalPairSlug } from '@/lib/hop-tuoi-pairs';
+import { COMPARISONS } from '@/lib/so-sanh';
 
 const BASE_URL = 'https://hieu.asia';
 
@@ -176,7 +179,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/big-five`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/disc`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/tarot`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/sao-han`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/cong-cu`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+  ];
+
+  // Xem ngày tốt theo mục đích — SEO landings (engine: worker /tools/lich-van-nien/check).
+  const xemNgay: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/xem-ngay`, lastModified: now, changeFrequency: 'monthly', priority: 0.75 },
+    ...PURPOSES.map((p) => ({
+      url: `${BASE_URL}/xem-ngay/${p.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
   ];
 
   // Dynamic cam-nang article URLs — fetched from the worker public endpoint.
@@ -195,5 +210,51 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   } catch { /* non-fatal */ }
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...pillarUrls];
+  // Hợp tuổi 12 con giáp theo cặp — chỉ liệt kê bản canonical (đã sort) để tránh
+  // trùng nội dung: 78 cặp (66 khác tuổi + 12 cùng tuổi) + trang hub.
+  const seenPair = new Set<string>();
+  const hopTuoiPairUrls: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/hop-tuoi/tuoi`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.6 },
+  ];
+  for (const za of ZODIAC) {
+    for (const zb of ZODIAC) {
+      const slug = canonicalPairSlug(za.slug, zb.slug);
+      if (seenPair.has(slug)) continue;
+      seenPair.add(slug);
+      hopTuoiPairUrls.push({
+        url: `${BASE_URL}/hop-tuoi/tuoi/${slug}`,
+        lastModified: now,
+        changeFrequency: 'monthly' as const,
+        priority: 0.5,
+      });
+    }
+  }
+
+  // Sao hạn theo từng con giáp (12 trang SEO mùa vụ).
+  const saoHanTuoi: MetadataRoute.Sitemap = [
+    'ty', 'suu', 'dan', 'mao', 'thin', 'ti', 'ngo', 'mui', 'than', 'dau', 'tuat', 'hoi',
+  ].map((t) => ({
+    url: `${BASE_URL}/sao-han/${t}`,
+    lastModified: now,
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }));
+
+  // Trang so sánh lăng kính (MBTI vs Big Five, Tử Vi vs Bát Tự, MBTI vs DISC) + hub.
+  const soSanhUrls: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/so-sanh`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.6 },
+    ...COMPARISONS.map((c) => ({
+      url: `${BASE_URL}/so-sanh/${c.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    })),
+  ];
+
+  // Ngày kiêng kỵ dân gian (Tam Nương, Nguyệt Kỵ, Dương Công Kỵ Nhật) — SEO mùa vụ.
+  const ngayKiengKy: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/ngay-kieng-ky`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+  ];
+
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls];
 }

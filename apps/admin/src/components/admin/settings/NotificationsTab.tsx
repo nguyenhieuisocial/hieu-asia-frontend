@@ -79,6 +79,7 @@ export function NotificationsTab() {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['admin', 'settings', 'notifications'],
     queryFn: fetchPrefs,
+    staleTime: 60_000,
   });
 
   const [form, setForm] = React.useState<NotificationPrefs>(DEFAULT_PREFS);

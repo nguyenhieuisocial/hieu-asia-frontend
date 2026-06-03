@@ -274,6 +274,43 @@ export async function fetchVariantConversions(): Promise<VariantConversionRow[] 
     .filter((r) => r.flag && r.variant);
 }
 
+export interface RecentEventRow {
+  /** ISO timestamp of the event. */
+  timestamp: string;
+  /** Event name (e.g. $pageview, tool_used, payment_completed). */
+  event: string;
+  /** $pathname when present (pageviews / autocapture), else null. */
+  pathname: string | null;
+  /** distinct_id of the actor (anon hash or authed id). */
+  distinctId: string | null;
+}
+
+/**
+ * The 30 most recent events across the project (last 7 days), newest first.
+ * A raw "is tracking alive?" feed for the admin — at low traffic it doubles as
+ * a diagnostic (e.g. it makes obvious when an expected event, like a feature-
+ * flag exposure, never fires). Returns null on any PostHog failure so the
+ * panel degrades to a placeholder.
+ */
+export async function fetchRecentEvents(): Promise<RecentEventRow[] | null> {
+  const rows = await runHogQL(
+    `SELECT timestamp, event, properties.$pathname AS path, distinct_id
+     FROM events
+     WHERE timestamp > now() - INTERVAL 7 DAY
+     ORDER BY timestamp DESC
+     LIMIT 30`,
+  );
+  if (!rows) return null;
+  return rows
+    .map((r) => ({
+      timestamp: String(r[0] ?? ''),
+      event: String(r[1] ?? ''),
+      pathname: r[2] != null && r[2] !== '' ? String(r[2]) : null,
+      distinctId: r[3] != null && r[3] !== '' ? String(r[3]) : null,
+    }))
+    .filter((r) => r.event);
+}
+
 /** True iff the personal API key is set; used by the admin page to show a
  *  config warning when live tiles are unavailable. */
 export function isPostHogServerConfigured(): boolean {

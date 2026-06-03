@@ -76,14 +76,16 @@ function fmtUsdSmall(v: number) {
 }
 
 export default function AdminOverviewPage() {
-  const kpis = useQuery({ queryKey: ['admin', 'kpis'], queryFn: getKpis });
+  const kpis = useQuery({ queryKey: ['admin', 'kpis'], queryFn: getKpis, staleTime: 60_000 });
   const readings = useQuery({
     queryKey: ['admin', 'readings-per-day'],
     queryFn: () => getReadingsPerDay(30),
+    staleTime: 60_000,
   });
   const cost = useQuery({
     queryKey: ['admin', 'cost-by-day-overview'],
     queryFn: () => getCostByDay(14),
+    staleTime: 60_000,
   });
   const queue = useQueueDepth();
 

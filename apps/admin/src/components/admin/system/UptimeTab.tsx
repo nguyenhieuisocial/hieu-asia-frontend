@@ -134,6 +134,7 @@ export function UptimeTab() {
         return { rows: [], configured: false, reason: 'không kết nối' };
       }
     },
+    staleTime: 60_000,
   });
 
   const incidents = useQuery({
@@ -165,6 +166,7 @@ export function UptimeTab() {
         return { rows: [], configured: false, reason: 'không kết nối' };
       }
     },
+    staleTime: 60_000,
   });
 
   const rows = uptime.data?.rows ?? [];
@@ -183,6 +185,7 @@ export function UptimeTab() {
       const data = (await r.json()) as WafResponse;
       return data;
     },
+    staleTime: 60_000,
   });
 
   const wafCols: AdminTableColumn<WafEvent>[] = [

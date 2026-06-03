@@ -138,6 +138,7 @@ export default function CouponsPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['admin', 'coupons'],
     queryFn: fetchCoupons,
+    staleTime: 60_000,
   });
 
   const coupons = React.useMemo(() => data?.coupons ?? [], [data?.coupons]);

@@ -63,6 +63,18 @@ const TOOLS = [
     desc: 'Đo kích thước cát hung theo thước phong thủy truyền thống.',
   },
   {
+    href: '/xem-ngay',
+    emoji: '📅',
+    name: 'Xem Ngày Tốt',
+    desc: 'Chọn ngày đẹp cho cưới hỏi, khai trương, động thổ, nhập trạch… theo lịch vạn niên.',
+  },
+  {
+    href: '/sao-han',
+    emoji: '⭐',
+    name: 'Xem Sao Hạn',
+    desc: 'Tra sao chiếu mệnh (Cửu Diệu) theo tuổi và giới tính — tham khảo theo phong tục.',
+  },
+  {
     href: '/hop-tuoi',
     emoji: '💑',
     name: 'Hợp Tuổi',
