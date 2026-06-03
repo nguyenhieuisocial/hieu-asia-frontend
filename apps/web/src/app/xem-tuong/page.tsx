@@ -140,6 +140,7 @@ export default function XemTuongPage() {
     <>
       <ToolPageShell
         eyebrow="Tướng số học"
+        relatedSlug="/xem-tuong"
         icon={<span aria-hidden="true">🖐️</span>}
         title={
           <>

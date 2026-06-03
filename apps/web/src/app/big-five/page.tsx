@@ -101,6 +101,7 @@ export default function BigFivePage() {
     <>
       <ToolPageShell
         eyebrow="Trắc nghiệm tính cách · IPIP-NEO"
+        relatedSlug="/big-five"
         icon={<span aria-hidden="true">🧭</span>}
         title={
           <>

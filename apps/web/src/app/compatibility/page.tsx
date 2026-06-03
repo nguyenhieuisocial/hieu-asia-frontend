@@ -204,6 +204,7 @@ export default function CompatibilityPage() {
       />
       <ToolPageShell
         eyebrow="So sánh 2 người · Compatibility Pair"
+        relatedSlug="/compatibility"
         icon={<span aria-hidden="true">🤝</span>}
         title={
           <>

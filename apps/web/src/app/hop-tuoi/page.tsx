@@ -66,6 +66,7 @@ export default function HopTuoiLandingPage() {
     />
     <ToolPageShell
       eyebrow="Hợp tuổi · Tương hợp Can Chi"
+        relatedSlug="/hop-tuoi"
       icon={<span aria-hidden="true">☯</span>}
       title={
         <>

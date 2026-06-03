@@ -194,6 +194,7 @@ export default function CareerFitPage() {
       />
       <ToolPageShell
         eyebrow="Career Fit · Định hướng nghề"
+        relatedSlug="/career-fit"
         icon={<span aria-hidden="true">🧭</span>}
         title={
           <>

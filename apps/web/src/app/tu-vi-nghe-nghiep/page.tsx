@@ -4,6 +4,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui'
 import { Briefcase, Compass, Target, AlertTriangle, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb } from '@/lib/seo/jsonld';
@@ -198,6 +199,9 @@ export default function TuViNgheNghiepPage() {
             </div>
           </div>
         </section>
+        <div className="mx-auto max-w-6xl px-6 pb-12">
+          <RelatedTools current="/tu-vi-nghe-nghiep" />
+        </div>
       </main>
       <SiteFooter />
       <StickyMobileCta href="/onboarding?intent=su-nghiep" trackId="tu-vi-nghe-nghiep" />

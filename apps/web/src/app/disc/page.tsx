@@ -98,6 +98,7 @@ export default function DiscPage() {
     <>
       <ToolPageShell
         eyebrow="Trắc nghiệm hành vi · DiSC"
+        relatedSlug="/disc"
         icon={<span aria-hidden="true">🎯</span>}
         title={
           <>
