@@ -30,6 +30,12 @@ export async function GET(
   // Wave 45.2 P3-2 — forward admin email for audit attribution.
   const cookieStore = await cookies();
   const session = await verifySession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
+  // Defense-in-depth: don't forward the admin token to the worker without a valid
+  // admin session in-handler (middleware HMAC gate is the primary; this is the backstop
+  // if the matcher ever regresses). Payout routes move money — fail closed.
+  if (!session) {
+    return NextResponse.json({ ok: false, error: 'unauthenticated' }, { status: 401 });
+  }
   try {
     const r = await fetch(
       `${GATEWAY}/admin/affiliates/payouts/batches/${encodeURIComponent(id)}/csv`,
