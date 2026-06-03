@@ -238,7 +238,7 @@ function SummaryRow({ label, value, badge, accent }: SummaryRowProps) {
       ? 'text-gold'
       : accent === 'jade'
         ? 'text-jade'
-        : 'text-red-300';
+        : 'text-red-700 dark:text-red-300';
   return (
     <div className="flex items-center justify-between border-b border-gold/10 pb-3 last:border-0 last:pb-0">
       <span className="text-xs uppercase tracking-wider text-muted-foreground">{label}</span>

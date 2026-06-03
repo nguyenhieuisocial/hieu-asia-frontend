@@ -276,8 +276,8 @@ export default function AdminUsersPage() {
           className={cn(
             'rounded-md border px-3 py-2 text-sm',
             flash.kind === 'ok'
-              ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300'
-              : 'border-red-500/40 bg-red-500/10 text-red-300',
+              ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
+              : 'border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300',
           )}
         >
           {flash.msg}
