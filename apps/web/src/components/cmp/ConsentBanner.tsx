@@ -155,8 +155,13 @@ export function ConsentBanner(): React.ReactElement | null {
       // Wave 55 BUG-002 — mobile collapsed gets a narrow pill; sm+ always
       // gets the full 640px width. Width selector splits on `collapsed` to
       // shrink mobile footprint when collapsed.
+      //
+      // Desktop (lg): anchored BOTTOM-LEFT (was `lg:top-20` top-center, which
+      // overlapped the hero title on every page). Bottom-left clears both the
+      // hero (top) and the center/right-aligned primary CTAs on
+      // /onboarding · /pricing.
       className={[
-        "fixed bottom-4 left-1/2 z-50 -translate-x-1/2 lg:top-20 lg:bottom-auto",
+        "fixed bottom-4 left-1/2 z-50 -translate-x-1/2 lg:left-6 lg:translate-x-0 lg:max-w-[420px]",
         "rounded-lg border border-gold/30 bg-card/95 text-sm text-foreground shadow-2xl backdrop-blur",
         collapsed
           ? "w-[min(340px,calc(100vw-2rem))] px-3 py-2 sm:w-[min(640px,calc(100vw-2rem))] sm:p-5"

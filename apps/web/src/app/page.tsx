@@ -769,23 +769,6 @@ export default function LandingPage() {
           <NewsletterSignup id="newsletter" />
         </div>
 
-        {/* Final CTA — lời mời hành động đóng trang (review: thiếu CTA cuối trước footer) */}
-        <section aria-label="Bắt đầu" className="py-16 text-center sm:py-20">
-          <div className="mx-auto max-w-marketing-tight px-6 sm:px-8">
-            <h2 className="font-marketing-display text-3xl leading-tight text-foreground sm:text-4xl">
-              Bắt đầu hiểu mình hôm nay.
-            </h2>
-            <a
-              href="/onboarding"
-              className="mt-5 inline-flex items-center justify-center rounded-md bg-[hsl(var(--primary-cta))] px-8 py-3.5 font-medium text-primary-foreground transition-opacity hover:opacity-90"
-            >
-              Lập lá số của tôi →
-            </a>
-            <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-              Miễn phí · không cần thẻ · 1 phút
-            </p>
-          </div>
-        </section>
       </main>
       <SiteFooter />
       <StickyMobileCta trackId="home" label="Lập lá số của tôi" />
