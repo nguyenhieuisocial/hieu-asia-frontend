@@ -47,7 +47,7 @@ interface AnalyticsResponse {
 
 type Range = '7' | '30' | '90';
 
-async function fetchAnalytics(days: Range): Promise<AnalyticsResponse> {
+async function fetchAnalytics(days: string): Promise<AnalyticsResponse> {
   const res = await fetch(`/api/admin/analytics?days=${days}`, { cache: 'no-store' });
   const text = await res.text();
   try {
@@ -73,6 +73,24 @@ function fmtCurrency(n: number) {
   return new Intl.NumberFormat('vi-VN').format(n) + ' đ';
 }
 
+/**
+ * Period-over-period delta tag for a KpiCard. Returns null when there is no
+ * prior-period baseline (previous <= 0) so we never render a meaningless
+ * "+∞" on a zero base — the card simply shows no arrow.
+ */
+function makeDelta(
+  current: number,
+  previous: number,
+): { value: string; direction: 'up' | 'down' | 'flat' } | null {
+  if (!Number.isFinite(previous) || previous <= 0) return null;
+  const pct = ((current - previous) / previous) * 100;
+  if (Math.abs(pct) < 1) return { value: '0%', direction: 'flat' };
+  return {
+    value: `${pct > 0 ? '+' : ''}${pct.toFixed(0)}%`,
+    direction: pct > 0 ? 'up' : 'down',
+  };
+}
+
 export default function AnalyticsPage() {
   const [days, setDays] = React.useState<Range>('30');
   const { data, isLoading, refetch, isFetching, error } = useQuery({
@@ -80,6 +98,16 @@ export default function AnalyticsPage() {
     queryFn: () => fetchAnalytics(days),
     staleTime: 60_000,          // keep cached 60s — no loading flash on revisit
     placeholderData: (prev) => prev, // show old data while refetching days switch
+  });
+  // Period-over-period baseline: fetch a double-length window, then subtract the
+  // current window to isolate the *previous* period's totals (revenue/sessions
+  // are additive, so prev = total(2N) − total(N)). Uses the existing endpoint
+  // as-is — no backend change, lights up the moment this ships.
+  const { data: dataDouble } = useQuery({
+    queryKey: ['admin', 'analytics-2x', days],
+    queryFn: () => fetchAnalytics(String(Number(days) * 2)),
+    staleTime: 60_000,
+    placeholderData: (prev) => prev,
   });
 
   const showError = !!error || data?.ok === false;
@@ -106,11 +134,25 @@ export default function AnalyticsPage() {
   // "AI is free" — so show a pointer to /llm-spend instead of a misleading zero.
   const costUnavailable = !!data && data.vendor_cost_meta?.configured === false;
 
+  // Previous-period figures, isolated from the double-length window above.
+  // Only computed when the comparison fetch succeeded; otherwise deltas stay
+  // null and the cards render exactly as before (safe on first paint / errors).
+  const cmp = data?.ok && dataDouble?.ok ? dataDouble : undefined;
+  const prevRevenue = cmp ? Math.max(0, (cmp.revenue?.total ?? 0) - revenue.total) : null;
+  const prevSessions = cmp ? Math.max(0, (cmp.sessions?.total ?? 0) - sessions.total) : null;
+  const prevPaid = cmp ? Math.max(0, (cmp.revenue?.txn_count ?? 0) - revenue.txn_count) : null;
+  const prevConversion =
+    prevSessions && prevSessions > 0 && prevPaid !== null ? prevPaid / prevSessions : null;
+  const revenueDelta = prevRevenue !== null ? makeDelta(revenue.total, prevRevenue) : null;
+  const sessionsDelta = prevSessions !== null ? makeDelta(sessions.total, prevSessions) : null;
+  const conversionDelta =
+    prevConversion !== null ? makeDelta(sessions.conversion_rate, prevConversion) : null;
+
   return (
     <div className="space-y-6">
       <PageHeader
         title="Analytics"
-        description={`Doanh thu, vendor cost và onboarding funnel — ${days} ngày gần nhất.`}
+        description={`Doanh thu, vendor cost và onboarding funnel — ${days} ngày gần nhất. Mũi tên ↑/↓ so với ${days} ngày liền trước.`}
         icon={<BarChart3 className="h-5 w-5" />}
         badge={data && !isLoading ? <LiveBadge /> : null}
         actions={
@@ -180,6 +222,7 @@ export default function AnalyticsPage() {
           value={fmtCurrency(revenue.total)}
           icon={<DollarSign className="h-4 w-4" />}
           accent="gold"
+          delta={revenueDelta}
           hint={`${revenue.txn_count} giao dịch`}
         />
         <KpiCard
@@ -187,6 +230,7 @@ export default function AnalyticsPage() {
           value={sessions.total.toLocaleString('vi-VN')}
           icon={<Users className="h-4 w-4" />}
           accent="purple"
+          delta={sessionsDelta}
           hint={`${sessions.completed} hoàn thành`}
         />
         <KpiCard
@@ -194,6 +238,7 @@ export default function AnalyticsPage() {
           value={(sessions.conversion_rate * 100).toFixed(1) + '%'}
           icon={<TrendingUp className="h-4 w-4" />}
           accent="jade"
+          delta={conversionDelta}
           hint="paid / started"
         />
         <KpiCard
