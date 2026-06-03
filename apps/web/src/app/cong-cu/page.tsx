@@ -39,6 +39,12 @@ const TOOLS = [
     desc: 'Bốn phong cách hành vi: Dominance, Influence, Steadiness, Compliance.',
   },
   {
+    href: '/enneagram',
+    emoji: '🌀',
+    name: 'Enneagram',
+    desc: 'Chín nhóm tính cách — khám phá động cơ và nỗi sợ cốt lõi của bạn.',
+  },
+  {
     href: '/tarot',
     emoji: '🃏',
     name: 'Tarot',

@@ -10,7 +10,7 @@
 
 const PREFIX = 'hieu:personality:v1:';
 
-export type PersonalityKey = 'mbti' | 'big-five' | 'disc';
+export type PersonalityKey = 'mbti' | 'big-five' | 'disc' | 'enneagram';
 
 function store(): Storage | null {
   if (typeof window === 'undefined') return null;
@@ -38,6 +38,8 @@ export function getPersonalitySummary(): string {
   if (bf) parts.push(bf);
   const disc = s.getItem(PREFIX + 'disc');
   if (disc) parts.push(disc);
+  const enneagram = s.getItem(PREFIX + 'enneagram');
+  if (enneagram) parts.push(enneagram);
   return parts.join(' · ');
 }
 
@@ -91,4 +93,9 @@ const DISC_LABEL: Record<string, string> = {
 /** Build a compact DISC summary string from primary+secondary style keys. */
 export function buildDiscSummary(primary: string, secondary: string): string {
   return `DISC: phong cách ${DISC_LABEL[primary] ?? primary}/${DISC_LABEL[secondary] ?? secondary}`;
+}
+
+/** Build a compact Enneagram summary string: "Enneagram: 8w9 — Người Thủ Lĩnh". */
+export function buildEnneagramSummary(label: string, name: string): string {
+  return `Enneagram: ${label} — ${name}`;
 }
