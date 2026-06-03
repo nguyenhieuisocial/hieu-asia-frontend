@@ -22,6 +22,11 @@ export function savePersonalityResult(key: PersonalityKey, value: string): void 
   try { store()?.setItem(PREFIX + key, value.slice(0, 400)); } catch { /* best-effort */ }
 }
 
+/** Read a single stored personality result (e.g. for "đã soi" note), or null. */
+export function getPersonalityResult(key: PersonalityKey): string | null {
+  try { return store()?.getItem(PREFIX + key) ?? null; } catch { return null; }
+}
+
 /** Return a single-line summary of all stored personality results, or '' if none. */
 export function getPersonalitySummary(): string {
   const s = store();
@@ -60,6 +65,23 @@ export function buildBigFiveSummary(scores: {
     ` · Dễ chịu ${scores.agreeableness}(${label(scores.agreeableness)})` +
     ` · Nhạy cảm ${scores.neuroticism}(${label(scores.neuroticism)})`
   );
+}
+
+/**
+ * Xem Tướng completion flag. The vision tool (/xem-tuong) computes a one-off
+ * AI reading and doesn't persist a result like the test-based lenses do, so we
+ * record a tiny "đã soi" marker here to drive the Hành trình progress star.
+ */
+const VISION_DONE_KEY = PREFIX + 'vision-done';
+
+/** Mark Xem Tướng as completed. Silently no-ops if localStorage is unavailable. */
+export function markVisionDone(): void {
+  try { store()?.setItem(VISION_DONE_KEY, '1'); } catch { /* best-effort */ }
+}
+
+/** Whether the user has completed a Xem Tướng reading. */
+export function hasVisionDone(): boolean {
+  try { return store()?.getItem(VISION_DONE_KEY) === '1'; } catch { return false; }
 }
 
 const DISC_LABEL: Record<string, string> = {
