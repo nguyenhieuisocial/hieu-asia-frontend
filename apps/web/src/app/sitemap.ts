@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 import { PALACES_CONTENT, ALL_STARS_CONTENT } from '@/lib/tuvi-content';
 import { listCaseStudies } from '@/lib/case-studies';
 import { PALACE_READINGS } from '@/lib/palace-readings';
+import { PURPOSES } from './xem-ngay/purposes';
 
 const BASE_URL = 'https://hieu.asia';
 
@@ -179,6 +180,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/cong-cu`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
   ];
 
+  // Xem ngày tốt theo mục đích — SEO landings (engine: worker /tools/lich-van-nien/check).
+  const xemNgay: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/xem-ngay`, lastModified: now, changeFrequency: 'monthly', priority: 0.75 },
+    ...PURPOSES.map((p) => ({
+      url: `${BASE_URL}/xem-ngay/${p.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
+  ];
+
   // Dynamic cam-nang article URLs — fetched from the worker public endpoint.
   // Graceful: if the API is down, sitemap still serves all static URLs.
   let pillarUrls: MetadataRoute.Sitemap = [];
@@ -195,5 +207,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   } catch { /* non-fatal */ }
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...pillarUrls];
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...pillarUrls];
 }
