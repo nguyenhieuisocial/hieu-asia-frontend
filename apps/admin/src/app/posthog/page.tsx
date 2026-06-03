@@ -21,11 +21,12 @@
 
 import Link from 'next/link';
 import { cn } from '@hieu-asia/ui';
-import { Activity, Users2, Gauge, MousePointerClick } from 'lucide-react';
+import { Activity, Users2, Gauge, MousePointerClick, Radio } from 'lucide-react';
 import OverviewPanel from '@/components/admin/analytics/OverviewPanel';
 import CohortsPanel from '@/components/admin/analytics/CohortsPanel';
 import WebVitalsPanel from '@/components/admin/analytics/WebVitalsPanel';
 import StickyCtaPanel from '@/components/admin/analytics/StickyCtaPanel';
+import LiveEventsPanel from '@/components/admin/analytics/LiveEventsPanel';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 60;
@@ -35,6 +36,7 @@ const TABS = [
   { id: 'cohorts', label: 'Cohorts & Retention', Icon: Users2 },
   { id: 'web-vitals', label: 'Web Vitals', Icon: Gauge },
   { id: 'sticky-cta', label: 'Sticky CTA', Icon: MousePointerClick },
+  { id: 'live-events', label: 'Sự kiện trực tiếp', Icon: Radio },
 ] as const;
 
 type TabId = (typeof TABS)[number]['id'];
@@ -80,6 +82,7 @@ export default async function PostHogHubPage({
       {active === 'cohorts' && <CohortsPanel />}
       {active === 'web-vitals' && <WebVitalsPanel />}
       {active === 'sticky-cta' && <StickyCtaPanel />}
+      {active === 'live-events' && <LiveEventsPanel />}
     </div>
   );
 }

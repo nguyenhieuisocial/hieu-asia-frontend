@@ -295,6 +295,12 @@ export default async function ExperimentsPage() {
     if (!convByFlag.has(r.flag)) convByFlag.set(r.flag, new Map());
     convByFlag.get(r.flag)!.set(r.variant, { exposed: r.exposed, converted: r.converted });
   }
+  // Flag key → last evaluation timestamp, so the experiment panel can tell
+  // "flag never called" (pure traffic gap) apart from "called but 0 bucketed
+  // exposures" (likely a wiring/config gap).
+  const lastCalledByFlag = new Map<string, string | null>(
+    (flags ?? []).map((f) => [f.key, f.last_called_at]),
+  );
   const fetchedAt = new Date();
 
   // Summary stats (only when we have data)
@@ -351,6 +357,7 @@ export default async function ExperimentsPage() {
       <ExperimentResultsPanel
         experiments={experiments}
         convByFlag={convByFlag}
+        lastCalledByFlag={lastCalledByFlag}
         dashboardUrl={DASHBOARD_URL}
       />
 
