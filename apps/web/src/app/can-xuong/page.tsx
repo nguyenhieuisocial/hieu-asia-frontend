@@ -114,6 +114,7 @@ export default function CanXuongPage() {
     <>
     <ToolPageShell
       eyebrow="Cổ truyền Việt Nam"
+        relatedSlug="/can-xuong"
       icon={<span aria-hidden="true">⚖️</span>}
       title={
         <>
