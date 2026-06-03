@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Button, Card, CardContent, Skeleton } from '@hieu-asia/ui';
+import { Button, Card, CardContent } from '@hieu-asia/ui';
+import { ReadingRitual } from '@/components/tools/ReadingRitual';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { PersonalityQuiz, type QuizPage } from '@/components/tools/PersonalityQuiz';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
@@ -175,11 +176,14 @@ export default function DiscPage() {
                       Luận giải sâu
                     </div>
                     {readingLoading && !reading ? (
-                      <div className="mt-3 space-y-2">
-                        <Skeleton className="h-4 w-full" />
-                        <Skeleton className="h-4 w-[92%]" />
-                        <Skeleton className="h-4 w-3/4" />
-                      </div>
+                      <ReadingRitual
+                        messages={[
+                          'Đang đọc 16 câu trả lời của bạn…',
+                          'Phân tích 4 chiều hành vi D-i-S-C…',
+                          'Tìm phong cách giao tiếp chủ đạo…',
+                          'Soạn bản đọc cá nhân hoá cho bạn…',
+                        ]}
+                      />
                     ) : reading ? (
                       <article className="markdown-report mt-3 space-y-3 text-sm leading-relaxed text-foreground/90">
                         <ReactMarkdown
