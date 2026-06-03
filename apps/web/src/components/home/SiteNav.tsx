@@ -234,6 +234,9 @@ function AuthedMenu({
             <Link href="/reading">Lá số của bạn</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
+            <Link href="/account/operating-manual">Sổ tay cá nhân</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
             <Link href="/account#streak" className="flex items-center justify-between gap-2">
               <span>Điểm danh</span>
               {needsCheckin && <NudgeDot />}
@@ -372,6 +375,13 @@ function MobileDrawer({
                 className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
               >
                 Lá số của bạn
+              </Link>
+              <Link
+                href="/account/operating-manual"
+                onClick={() => setOpen(false)}
+                className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
+              >
+                Sổ tay cá nhân
               </Link>
               <Link
                 href="/account#streak"
