@@ -37,6 +37,9 @@ interface MentorRequestBody {
   /** Wave 42.2 — PostHog `mentor_model_variant` flag value forwarded from
    *  the browser. Validated against an allowlist worker-side. */
   model_variant?: string;
+  /** Personality summary from localStorage (MBTI / Big Five / DISC / Enneagram).
+   *  Optional; capped at 500 chars server-side. */
+  personalitySummary?: string;
 }
 
 interface SupabaseReadingEnvelope {
@@ -143,6 +146,18 @@ export async function POST(req: Request) {
       systemPrompt = buildSystemPrompt(session);
       userId = session.user_id;
     }
+  }
+
+  // Append personality profile when the client sends one.
+  const ps =
+    typeof body.personalitySummary === 'string'
+      ? body.personalitySummary.slice(0, 500).trim()
+      : '';
+  if (ps) {
+    systemPrompt +=
+      '\n\n--- CHÂN DUNG TÍNH CÁCH (Big Five / MBTI / DISC / Enneagram) ---\n' +
+      ps +
+      '\nCá nhân hoá lời khuyên theo chân dung này và nêu điểm mù phù hợp; KHÔNG dán nhãn cứng, KHÔNG phán số mệnh.';
   }
 
   // Always use the server-built system prompt and STRIP any client-supplied
