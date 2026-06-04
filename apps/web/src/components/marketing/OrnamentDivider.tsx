@@ -28,9 +28,9 @@ export function OrnamentDivider({ className, glyph = '◆' }: OrnamentDividerPro
       role="separator"
       aria-hidden="true"
     >
-      <span className="h-px flex-1 bg-gradient-to-r from-transparent via-gold/30 to-gold/60" />
-      <span className="text-sm leading-none text-gold/70">{glyph}</span>
-      <span className="h-px flex-1 bg-gradient-to-l from-transparent via-gold/30 to-gold/60" />
+      <span className="rv-draw-l h-px flex-1 bg-gradient-to-r from-transparent via-gold/30 to-gold/60" />
+      <span className="rv-fade text-sm leading-none text-gold/70" style={{ animationDelay: '350ms' }}>{glyph}</span>
+      <span className="rv-draw-r h-px flex-1 bg-gradient-to-l from-transparent via-gold/30 to-gold/60" style={{ animationDelay: '100ms' }} />
     </div>
   );
 }

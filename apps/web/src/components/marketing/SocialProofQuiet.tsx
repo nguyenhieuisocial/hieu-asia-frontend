@@ -56,19 +56,20 @@ export function SocialProofQuiet() {
     >
       <div className="mx-auto max-w-marketing-tight px-6 lg:px-12">
         <header className="mb-10">
-          <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
+          <p className="rv-fade font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
             <span className="mr-2 inline-block h-px w-6 bg-primary align-middle" />
             KHOẢNG LẶNG · NGƯỜI ĐÃ HỎI
           </p>
           <h2
             id="social-proof-quiet-heading"
-            className="mt-6 max-w-marketing-text font-editorial-display text-editorial-h2 font-normal tracking-tight text-foreground"
+            className="rv-up mt-6 max-w-marketing-text font-editorial-display text-editorial-h2 font-normal tracking-tight text-foreground"
+            style={{ animationDelay: '80ms' }}
           >
             Không sao. Không ảnh. Không lời khen.{' '}
             <em className="italic text-primary/80">Chỉ là điều họ ghi lại</em>
             <span className="text-primary">.</span>
           </h2>
-          <p className="mt-6 max-w-marketing-text font-sans text-editorial-lede text-muted-foreground">
+          <p className="rv-up mt-6 max-w-marketing-text font-sans text-editorial-lede text-muted-foreground" style={{ animationDelay: '160ms' }}>
             Những trích đoạn vô danh do người dùng tự gửi lại sau khi đặt một
             câu hỏi khó. Đã được cho phép đăng dưới dạng ẩn danh. Không phải
             quảng cáo — là khoảnh khắc.
@@ -79,7 +80,8 @@ export function SocialProofQuiet() {
           {QUOTES.map((q, i) => (
             <li
               key={q.topic}
-              className="relative flex flex-col rounded-card-editorial border border-border bg-card/40 p-5 md:p-7"
+              className="rv-up relative flex flex-col rounded-card-editorial border border-border bg-card/40 p-5 md:p-7"
+              style={{ animationDelay: `${260 + i * 110}ms` }}
             >
               <span
                 aria-hidden

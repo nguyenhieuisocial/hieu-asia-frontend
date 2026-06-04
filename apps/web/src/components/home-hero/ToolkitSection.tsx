@@ -12,13 +12,13 @@ export function ToolkitSection(): React.JSX.Element {
   return (
     <section aria-label="Cả bộ công cụ" className="bg-muted/20 py-12 sm:py-14">
       <div className="mx-auto max-w-marketing-tight px-6 sm:px-8">
-        <p className="font-mono text-editorial-mono uppercase tracking-[0.18em] text-muted-foreground">
+        <p className="rv-fade font-mono text-editorial-mono uppercase tracking-[0.18em] text-muted-foreground">
           KHÔNG CHỈ NĂM LĂNG KÍNH
         </p>
-        <h2 className="mt-3 font-marketing-display text-3xl leading-tight text-foreground sm:text-4xl">
+        <h2 className="rv-up mt-3 font-marketing-display text-3xl leading-tight text-foreground sm:text-4xl" style={{ animationDelay: '80ms' }}>
           Cả một <em className="italic text-primary">bộ công cụ</em> — cổ học Á Đông gặp tâm lý hiện đại.
         </h2>
-        <p className="mt-3 max-w-[36em] leading-relaxed text-muted-foreground">
+        <p className="rv-up mt-3 max-w-[36em] leading-relaxed text-muted-foreground" style={{ animationDelay: '160ms' }}>
           Năm lăng kính cho bức tranh <strong className="font-medium text-foreground/90">sâu</strong> nhất về bạn.
           Cả bộ công cụ còn lại cho từng tình huống — gieo quẻ, hợp tuổi, ngày tốt, lá Tarot, kiểu tính cách…
         </p>

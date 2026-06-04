@@ -17,20 +17,20 @@ export function Methodology(): React.JSX.Element {
   return (
     <section aria-label="Cách hieu.asia giải mã bạn" className="bg-muted/30 py-12 sm:py-14">
       <div className="mx-auto max-w-marketing-tight px-6 sm:px-8">
-        <p className="font-mono text-editorial-mono uppercase tracking-[0.18em] text-muted-foreground">
+        <p className="rv-fade font-mono text-editorial-mono uppercase tracking-[0.18em] text-muted-foreground">
           CÁCH HIEU.ASIA GIẢI MÃ
         </p>
-        <h2 className="mt-3 font-marketing-display text-3xl leading-tight text-foreground sm:text-4xl">
+        <h2 className="rv-up mt-3 font-marketing-display text-3xl leading-tight text-foreground sm:text-4xl" style={{ animationDelay: '80ms' }}>
           Năm lăng kính, <em className="italic text-primary">một bức tranh</em>.
         </h2>
-        <p className="mt-3 max-w-[34em] leading-relaxed text-muted-foreground">
+        <p className="rv-up mt-3 max-w-[34em] leading-relaxed text-muted-foreground" style={{ animationDelay: '160ms' }}>
           Mỗi hệ nhìn bạn từ một phía. AI đọc cả năm rồi hợp thành một góc nhìn bạn dùng được — để
           tự quyết, không phụ thuộc phán đoán bên ngoài.
         </p>
 
         <ol className="mt-8 flex flex-col border-y border-primary/10 divide-y divide-primary/10">
-          {LENSES.map((l) => (
-            <li key={l.n} className="flex items-baseline gap-4 py-4">
+          {LENSES.map((l, i) => (
+            <li key={l.n} className="rv-up flex items-baseline gap-4 py-4" style={{ animationDelay: `${260 + i * 70}ms` }}>
               <span className="font-mono text-sm text-primary/70">{l.n}</span>
               <span className="min-w-[5em] font-editorial-display text-xl italic text-foreground">{l.name}</span>
               <span className="flex-1 text-foreground/85">{l.give}</span>
