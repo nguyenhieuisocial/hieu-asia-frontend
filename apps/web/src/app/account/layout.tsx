@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ReferralClaimOnce } from '@/components/referral/ReferralClaimOnce';
 
 export const metadata: Metadata = {
   title: 'Tài khoản của bạn',
@@ -81,6 +82,7 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }}
       />
+      <ReferralClaimOnce />
       {children}
     </>
   );

@@ -43,6 +43,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { useAuth } from '@/hooks/use-auth';
 import { FeedHero } from '@/components/account/FeedHero';
 import { StreakCard } from '@/components/account/StreakCard';
+import { ReferralCard } from '@/components/account/ReferralCard';
 import { ActivityFeed } from '@/components/account/ActivityFeed';
 import { PinnedInsights } from '@/components/account/PinnedInsights';
 import { QuickActions } from '@/components/account/QuickActions';
@@ -174,6 +175,9 @@ function AccountPageInner() {
           <FeedHero user={auth.user} />
           <div id="streak" className="scroll-mt-24">
             <StreakCard />
+          </div>
+          <div id="moi-ban" className="scroll-mt-24">
+            <ReferralCard />
           </div>
           <ActivityFeed />
           <RecentConversations />
