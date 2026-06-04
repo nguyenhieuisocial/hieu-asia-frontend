@@ -44,6 +44,7 @@ import { ScanRow } from '@/components/marketing/ScanRow';
 import { PullQuote } from '@/components/marketing/PullQuote';
 import { SectionDivider } from '@/components/marketing/SectionDivider';
 import { SocialProofQuiet } from '@/components/marketing/SocialProofQuiet';
+import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 
 export const metadata: Metadata = {
   // Homepage title already contains the brand → bypass the layout
@@ -443,7 +444,7 @@ export default function LandingPage() {
         <MultiHero />
 
         {/* Brand "không phải oracle" — editorial decoder strip ngay dưới hero */}
-        <NotOraclesStrip />
+        <RevealOnScroll><NotOraclesStrip /></RevealOnScroll>
 
         {/* Wave 63.4 — removed the IntentChips "HOẶC BẮT ĐẦU TỪ" 6-lens strip.
             Founder (vault 138 review #2): the hero had THREE stacked start
@@ -519,9 +520,9 @@ export default function LandingPage() {
         />
 
         {/* Methodology — show-your-work: cơ chế 4 lăng kính → AI, đặt trước trust (review #23). */}
-        <Methodology />
+        <RevealOnScroll><Methodology /></RevealOnScroll>
         {/* Breadth — chống undersell (founder feedback): KHÔNG chỉ 4 lăng kính, có cả bộ 12 công cụ. */}
-        <ToolkitSection />
+        <RevealOnScroll><ToolkitSection /></RevealOnScroll>
 
         {/* 2. WhyTrust — existing 3-pillar, wrap in warm-dark-100 shell */}
         <div className="bg-muted/40">
@@ -541,7 +542,7 @@ export default function LandingPage() {
             ordinal number + italic display heading + body + inline editorial
             CTA. Removes the 4 implicit "click anywhere" CTAs from the old
             grid tiles (Wave 62.06 conversion architecture). */}
-        <EditorialList
+        <RevealOnScroll threshold={0.08}><EditorialList
           eyebrow="NĂM ỐNG KÍNH"
           title={
             <>
@@ -590,7 +591,7 @@ export default function LandingPage() {
               cta: 'Thử xem tướng',
             },
           ]}
-        />
+        /></RevealOnScroll>
 
         {/* Wave 60.95.o — removed BigNumberRow section per founder direction.
             The block advertised seed numbers (1243 reports/4.8★) that the
@@ -607,7 +608,7 @@ export default function LandingPage() {
             SectionDivider as visual breath between EditorialList and PullQuote;
             PhilosophyBlock component itself stays in `marketing/` and renders
             on /about page (gitnexus impact confirmed LOW + isolated usage). */}
-        <SectionDivider variant="lotus" />
+        <RevealOnScroll threshold={0.5}><SectionDivider variant="lotus" /></RevealOnScroll>
 
         {/* Wave 60.66.P5 — Editorial PullQuote between philosophy and pricing
             (vault 109 §3 Phase 5 ENRICHED). Motion `whileInView` fade-in via
@@ -745,9 +746,9 @@ export default function LandingPage() {
             sending child abroad, leaving the city). Italic Newsreader,
             ochre quote marks, NO stars/faces/names. Editorial pulse
             between high-friction pricing and FAQ that closes objections. */}
-        <SocialProofQuiet />
+        <RevealOnScroll><SocialProofQuiet /></RevealOnScroll>
         {/* MissionNote — founder ẩn danh → trust qua sứ mệnh (không testimonial mặt/sao) */}
-        <MissionNote />
+        <RevealOnScroll><MissionNote /></RevealOnScroll>
 
         {/* 7. FaqAccordion — existing 6 Q, warm-dark-100 */}
         <div className="bg-muted/40">

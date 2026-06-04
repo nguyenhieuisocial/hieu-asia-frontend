@@ -160,6 +160,25 @@ html {
   background-image: linear-gradient(135deg, #b8923d 0%, #d5b057 50%, #b8923d 100%);
 }
 
+/* ===== SCROLL REVEAL — đồng chất hero (prefers-reduced-motion safe) =====
+ * Trigger: ancestor gets [data-in] via RevealOnScroll.tsx (IntersectionObserver).
+ * Khi motion tắt: rv-* classes giữ nguyên visible (không ẩn ban đầu) → graceful.
+ * Stagger: `style={{ animationDelay: '…ms' }}` inline trên từng element. */
+@media (prefers-reduced-motion: no-preference) {
+  .rv-up   { opacity: 0; transform: translateY(.55em); }
+  .rv-fade { opacity: 0; }
+  .rv-draw-l { transform-origin: left  center; transform: scaleX(0); opacity: 0; }
+  .rv-draw-r { transform-origin: right center; transform: scaleX(0); opacity: 0; }
+
+  [data-in] .rv-up    { animation: rvUp   .72s cubic-bezier(.2,.7,.2,1) both; }
+  [data-in] .rv-fade  { animation: rvFade .8s  ease                    both; }
+  [data-in] .rv-draw-l,
+  [data-in] .rv-draw-r { animation: rvDraw .9s  cubic-bezier(.2,.7,.2,1) both; }
+}
+@keyframes rvUp   { to { opacity: 1; transform: translateY(0); } }
+@keyframes rvFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rvDraw { to { transform: scaleX(1); opacity: 1; } }
+
 /* Same rationale for faint-gold LABEL text — the mono "eyebrow" tags above
  * headings (`text-gold/80|85|90`, ~11px) sit at ~2:1 on cream (gold #B8923D
  * at 0.8 over Paper), failing WCAG 1.4.3 small-text 4.5:1. Deepen to

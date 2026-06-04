@@ -82,12 +82,12 @@ export function EditorialList({
     <section className={`${bgClass} py-14 md:py-16`}>
       <div className="mx-auto max-w-marketing-tight px-6">
         {eyebrow && (
-          <p className="mb-6 font-mono text-editorial-mono uppercase tracking-[0.12em] text-primary">
+          <p className="rv-fade mb-6 font-mono text-editorial-mono uppercase tracking-[0.12em] text-primary">
             — {eyebrow}
           </p>
         )}
         {title && (
-          <h2 className="mb-10 text-balance font-editorial-display text-editorial-h2 font-normal tracking-tight text-foreground">
+          <h2 className="rv-up mb-10 text-balance font-editorial-display text-editorial-h2 font-normal tracking-tight text-foreground" style={{ animationDelay: '80ms' }}>
             {title}
           </h2>
         )}
@@ -105,7 +105,8 @@ export function EditorialList({
             return (
               <li
                 key={idx}
-                className={`grid grid-cols-[auto_1fr] gap-x-8 md:gap-x-12 ${itemSpacing}`}
+                className={`rv-up grid grid-cols-[auto_1fr] gap-x-8 md:gap-x-12 ${itemSpacing}`}
+                style={{ animationDelay: `${180 + idx * 90}ms` }}
               >
                 {item.icon ? (
                   // Wave 62.09 — custom icon takes precedence over number when
