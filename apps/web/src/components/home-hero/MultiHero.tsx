@@ -105,7 +105,7 @@ const CSS = `
 
 .mh-eyebrow { display: flex; align-items: center; font-family: 'JetBrains Mono', monospace; letter-spacing: .16em; font-size: 11px; color: ${SOFT}; margin: 0; }
 .mh-livedot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: ${OCHRE}; margin-right: 9px; flex: none; }
-.mh-h1 { font-size: clamp(3.4rem, 16vw, 4.7rem); line-height: 1.0; margin: .2em 0 .3em; font-weight: 400; letter-spacing: -.028em; }
+.mh-h1 { font-size: clamp(3.4rem, 16vw, 4.7rem); line-height: 1.08; margin: .42em 0 .34em; font-weight: 400; letter-spacing: -.028em; }
 .mh-line { display: block; }
 .mh-l2 { color: ${OCHRE}; font-style: italic; }
 .mh-rot { display: block; background-image: linear-gradient(${OCHRE}, ${OCHRE}); background-repeat: no-repeat; background-position: 0 96%; background-size: 100% 2px; }
