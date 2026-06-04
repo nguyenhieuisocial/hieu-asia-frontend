@@ -35,6 +35,7 @@ export function MultiHero(): React.JSX.Element {
   const [autoActive, setAutoActive] = React.useState(LENS_N); // 0..N-1 soi 1 hệ; N = hội tụ
   const [hover, setHover] = React.useState<number | null>(null);
   const [wordIdx, setWordIdx] = React.useState(0);
+  const [prevIdx, setPrevIdx] = React.useState<number | null>(null); // từ vừa rời đi (để cuộn ra)
   const [sample, setSample] = React.useState(0);
   const hoverRef = React.useRef<number | null>(null);
   React.useEffect(() => { hoverRef.current = hover; }, [hover]);
@@ -42,10 +43,17 @@ export function MultiHero(): React.JSX.Element {
   React.useEffect(() => {
     if (reduceMotion()) return;
     const a = window.setInterval(() => { if (hoverRef.current == null) setAutoActive((x) => (x + 1) % (LENS_N + 1)); }, 2400);
-    const w = window.setInterval(() => setWordIdx((x) => (x + 1) % WORDS.length), 2800);
+    const w = window.setInterval(() => setWordIdx((x) => { setPrevIdx(x); return (x + 1) % WORDS.length; }), 2800);
     const s = window.setInterval(() => setSample((x) => (x + 1) % SAMPLES.length), 3600);
     return () => { window.clearInterval(a); window.clearInterval(w); window.clearInterval(s); };
   }, []);
+
+  // Sau khi từ-mới cuộn vào xong (520ms), bỏ từ-cũ khỏi DOM.
+  React.useEffect(() => {
+    if (prevIdx == null) return;
+    const t = window.setTimeout(() => setPrevIdx(null), 520);
+    return () => window.clearTimeout(t);
+  }, [prevIdx, wordIdx]);
 
   const active = hover != null ? hover : autoActive;
   const sys = active >= 0 && active < LENS_N ? SYSTEMS[active] : null;
@@ -67,7 +75,14 @@ export function MultiHero(): React.JSX.Element {
           <p className="mh-eyebrow"><span className="mh-livedot" aria-hidden="true" />NĂM LĂNG KÍNH · AI HỢP NHẤT THÀNH MỘT</p>
           <h1 className="mh-h1">
             <span className="mh-line mh-l1">Hiểu mình.</span>
-            <span className="mh-line mh-l2">Quyết định <span key={wordIdx} className="mh-rot">{WORDS[wordIdx] ?? 'mình.'}</span></span>
+            <span className="mh-line mh-l2">Quyết định{' '}
+              <span className="mh-rot-slot">
+                {prevIdx != null && (
+                  <span key={`p${prevIdx}`} className="mh-rot mh-rot-out" aria-hidden="true">{WORDS[prevIdx]}</span>
+                )}
+                <span key={wordIdx} className="mh-rot mh-rot-in">{WORDS[wordIdx] ?? 'mình.'}</span>
+              </span>
+            </span>
           </h1>
           <p className="mh-deck">Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng — năm lăng kính cho bức tranh sâu nhất, cùng cả bộ công cụ cổ học &amp; hiện đại. AI hợp nhất để bạn tự quyết.</p>
         </div>
@@ -108,7 +123,9 @@ const CSS = `
 .mh-h1 { font-size: clamp(3.4rem, 16vw, 4.7rem); line-height: 1.08; margin: .42em 0 .34em; font-weight: 400; letter-spacing: -.028em; }
 .mh-line { display: block; }
 .mh-l2 { color: ${OCHRE}; font-style: italic; }
-.mh-rot { display: block; background-image: linear-gradient(${OCHRE}, ${OCHRE}); background-repeat: no-repeat; background-position: 0 96%; background-size: 100% 2px; }
+.mh-rot-slot { display: block; position: relative; }
+.mh-rot { display: inline-block; background-image: linear-gradient(${OCHRE}, ${OCHRE}); background-repeat: no-repeat; background-position: 0 96%; background-size: 100% 2px; }
+.mh-rot-out { position: absolute; left: 0; top: 0; }
 .mh-deck { font-size: .9rem; line-height: 1.5; color: ${INK}; opacity: .76; margin: 0; max-width: 32em; }
 
 .mh-vis { display: flex; flex-direction: column; align-items: center; gap: 12px; }
@@ -136,7 +153,8 @@ const CSS = `
 @media (prefers-reduced-motion: no-preference) {
   .mh-l1 { clip-path: inset(0 100% 0 0); animation: mhInk .85s cubic-bezier(.2,.7,.2,1) .15s both; }
   .mh-l2 { clip-path: inset(0 100% 0 0); animation: mhInk .9s cubic-bezier(.2,.7,.2,1) .45s both; }
-  .mh-rot { background-size: 0% 2px; animation: mhFadeUp .55s cubic-bezier(.2,.7,.2,1) both, mhUline .7s cubic-bezier(.2,.7,.2,1) .12s both; }
+  .mh-rot-in { animation: mhRollIn .5s cubic-bezier(.2,.7,.2,1) both; }
+  .mh-rot-out { animation: mhRollOut .5s cubic-bezier(.2,.7,.2,1) both; }
   .mh-eyebrow { animation: mhFade .8s ease both; }
   .mh-deck { animation: mhFade 1s ease .85s both; }
   .mh-act { animation: mhFade 1s ease 1.05s both; }
@@ -144,7 +162,8 @@ const CSS = `
   .mh-soi-in { animation: mhFadeUp .5s ease both; }
 }
 @keyframes mhInk { to { clip-path: inset(0 0 0 0); } }
-@keyframes mhUline { to { background-size: 100% 2px; } }
+@keyframes mhRollIn { from { opacity: 0; transform: translateY(.5em); } to { opacity: 1; transform: translateY(0); } }
+@keyframes mhRollOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-.45em); } }
 @keyframes mhFade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes mhFadeUp { from { opacity: 0; transform: translateY(.35em); } to { opacity: 1; transform: translateY(0); } }
 @keyframes mhPulse { 0%,100% { opacity: .35; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.15); } }
