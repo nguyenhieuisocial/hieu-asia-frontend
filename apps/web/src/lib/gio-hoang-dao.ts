@@ -42,20 +42,23 @@ export interface StarDef {
 const STARS: StarDef[] = [
   { name: 'Thanh Long', good: true, meaning: 'Đại cát, may mắn toàn diện.', suits: 'Cưới hỏi, khởi công, khai trương, xuất hành.' },
   { name: 'Minh Đường', good: true, meaning: 'Được quý nhân phù trợ, hanh thông.', suits: 'Gặp đối tác, đàm phán, xin việc, giao dịch.' },
-  { name: 'Thiên Hình', good: false, meaning: 'Dễ vướng kiện tụng, va chạm — nên tránh việc lớn.' },
-  { name: 'Chu Tước', good: false, meaning: 'Dễ thị phi, cãi vã, lời tiếng — nên tránh giao dịch lớn.' },
+  { name: 'Thiên Hình', good: false, meaning: 'Chủ hình thương, kiện tụng — nên tránh xuất hành, ký kết, phẫu thuật và việc trọng đại.' },
+  { name: 'Chu Tước', good: false, meaning: 'Chủ khẩu thiệt, thị phi (hành Hoả) — nên tránh ký kết, tranh luận; cẩn thận lửa và lời nói.' },
   { name: 'Kim Quỹ', good: true, meaning: 'Tài lộc, phúc đức, con cái.', suits: 'Việc tiền bạc, mở hàng, cầu tài, việc gia đạo.' },
   { name: 'Thiên Đức', good: true, meaning: 'Được che chở, hoá giải điều xấu (còn gọi Bảo Quang).', suits: 'Cầu an, lễ bái, việc cần bình an.' },
-  { name: 'Bạch Hổ', good: false, meaning: 'Dễ hao tổn, thương tật — nên tránh việc hệ trọng.' },
+  { name: 'Bạch Hổ', good: false, meaning: 'Chủ đao thương, hao tổn — nên tránh phẫu thuật, đi xa và việc hệ trọng.' },
   { name: 'Ngọc Đường', good: true, meaning: 'Thanh quý, sáng sủa, học hành hanh thông.', suits: 'Ký kết, học tập, thi cử, lập nghiệp.' },
-  { name: 'Thiên Lao', good: false, meaning: 'Dễ trói buộc, bế tắc — nên tránh khởi sự mới.' },
-  { name: 'Huyền Vũ', good: false, meaning: 'Dễ mất mát, gặp tiểu nhân — nên cẩn trọng tiền bạc.' },
+  { name: 'Thiên Lao', good: false, meaning: 'Chủ giam hãm, ràng buộc — nên tránh khởi sự mới, vay mượn, ký kết dài hạn.' },
+  { name: 'Huyền Vũ', good: false, meaning: 'Chủ mất mát, tiểu nhân, trộm cắp — nên cẩn trọng tiền bạc, giao dịch và đi xa.' },
   { name: 'Tư Mệnh', good: true, meaning: 'Thuận lợi, được hộ trì (ban ngày càng tốt).', suits: 'Giấy tờ, đăng ký, buôn bán, việc hành chính.' },
-  { name: 'Câu Trận', good: false, meaning: 'Dễ vướng mắc, rối ren — nên tránh di chuyển, khởi công.' },
+  { name: 'Câu Trận', good: false, meaning: 'Chủ vướng mắc, kiện tụng kéo dài — nên tránh di chuyển, khởi công và ký kết.' },
 ];
 
 /** 6 sao hoàng đạo (giờ tốt) — để giới thiệu trên trang. */
 export const HOANG_DAO_STARS: StarDef[] = STARS.filter((s) => s.good);
+
+/** 6 sao hắc đạo (giờ xấu) — để giới thiệu trên trang. */
+export const HAC_DAO_STARS: StarDef[] = STARS.filter((s) => !s.good);
 
 // Mốc khởi sao Thanh Long theo Chi NGÀY (bài quyết cổ "Dần Thân gia Tý…").
 const THANH_LONG_OFFSET: Record<Branch, number> = {

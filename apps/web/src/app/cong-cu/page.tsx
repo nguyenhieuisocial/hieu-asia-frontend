@@ -134,6 +134,12 @@ const TOOLS = [
     name: 'Hỏi Đáp',
     desc: 'Giải đáp ngắn gọn những thắc mắc thường gặp về tử vi, bát tự và các công cụ tâm lý.',
   },
+  {
+    href: '/tu-kiem',
+    emoji: '🪞',
+    name: 'Tự kiểm — Đừng tin mù',
+    desc: 'Bài 1 phút: vì sao lời bói luôn thấy "đúng ghê" và cách không bị lừa.',
+  },
 ] as const;
 
 export default function CongCuPage() {
