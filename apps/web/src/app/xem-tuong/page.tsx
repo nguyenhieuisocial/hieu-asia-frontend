@@ -14,6 +14,7 @@ import {
   Skeleton,
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
@@ -359,6 +360,15 @@ export default function XemTuongPage() {
                     </article>
                   </CardContent>
                 </Card>
+
+                <div className="flex flex-wrap gap-3">
+                  <ShareResultButton
+                    path="/xem-tuong"
+                    title="Xem tướng bằng AI"
+                    text="Mình vừa thử xem tướng trên hieu.asia — bạn thử xem!"
+                    trackId="xem-tuong"
+                  />
+                </div>
 
                 <p className="rounded-lg border border-border bg-card/20 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
                   Kết quả mang tính <strong className="text-foreground/70">tham khảo</strong> — phản ánh xu hướng và ứng xử theo tướng số học, không phán định số phận hay kết quả cụ thể. Ảnh đã được xử lý và không được lưu trữ.

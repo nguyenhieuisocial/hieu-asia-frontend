@@ -14,6 +14,7 @@ import {
   Skeleton,
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
@@ -260,6 +261,15 @@ export default function CanXuongPage() {
                   </p>
                 </CardContent>
               </Card>
+
+              <div className="flex flex-wrap gap-3">
+                <ShareResultButton
+                  path="/can-xuong"
+                  title="Cân xương tính số"
+                  text="Mình vừa xem cân xương theo ngày sinh trên hieu.asia — bạn thử nhé!"
+                  trackId="can-xuong"
+                />
+              </div>
 
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <WeightCell label="Cân năm" value={result.weight_year} />
