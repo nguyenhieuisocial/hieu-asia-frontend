@@ -19,6 +19,8 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
 import { markVisionDone } from '@/lib/personality-store';
+import { getSupabaseAuth } from '@/lib/auth-client';
+import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -30,6 +32,15 @@ interface VisionReadResult {
   kind: Kind;
   reading: string;
   model: string;
+}
+
+interface FeatureLockedPayload {
+  ok: false;
+  error: 'feature_locked';
+  slug: string;
+  price: number;
+  message?: string;
+  checkout?: { tier: string; tool_slug: string };
 }
 
 /** Resize + compress an image File client-side to avoid large payloads. */
@@ -65,6 +76,7 @@ export default function XemTuongPage() {
   const [reading, setReading] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [paywallData, setPaywallData] = React.useState<FeatureLockedPayload | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,6 +104,7 @@ export default function XemTuongPage() {
     e.preventDefault();
     setError(null);
     setReading(null);
+    setPaywallData(null);
 
     if (!file) {
       setError('Vui lòng chọn hoặc chụp ảnh để tiếp tục.');
@@ -102,14 +115,35 @@ export default function XemTuongPage() {
     try {
       const imageUrl = await resizeToDataUrl(file);
 
+      // Attach Supabase Bearer so the backend can identify the user when priced.
+      const sb = getSupabaseAuth();
+      let token: string | undefined;
+      if (sb) {
+        const { data } = await sb.auth.getSession();
+        token = data.session?.access_token;
+      }
+
       const res = await fetch(`${API_BASE}/tools/vision-read`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({ image_url: imageUrl, kind, gender }),
       });
 
       if (res.status === 429) {
         throw new Error('Hệ thống đang bận — vui lòng thử lại sau ít phút.');
+      }
+
+      // 402 feature_locked → show paywall instead of error.
+      if (res.status === 402) {
+        const parsed = await safeJson<FeatureLockedPayload>(res);
+        if (parsed.ok && parsed.data.error === 'feature_locked') {
+          setPaywallData(parsed.data);
+          return;
+        }
+        throw new Error('Tính năng chưa được mở khoá.');
       }
 
       const parsed = await safeJson<VisionReadResult | { ok: false; error: string }>(res);
@@ -134,6 +168,7 @@ export default function XemTuongPage() {
     setPreview(null);
     setReading(null);
     setError(null);
+    setPaywallData(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -302,7 +337,20 @@ export default function XemTuongPage() {
           <div className="lg:col-span-3">
             {loading && <XemTuongSkeleton />}
 
-            {!loading && !reading && (
+            {!loading && paywallData && (
+              <FeaturePaywall
+                slug={paywallData.slug}
+                price={paywallData.price}
+                label="Xem tướng"
+                onUnlocked={() => {
+                  setPaywallData(null);
+                  // Re-submit is triggered by user clicking the form button again
+                  // after unlock. Clear paywall so the form is re-enabled.
+                }}
+              />
+            )}
+
+            {!loading && !paywallData && !reading && (
               <Card className="border-dashed border-border bg-card/30">
                 <CardContent className="flex flex-col items-center justify-center px-6 py-12 text-center">
                   <div aria-hidden className="text-5xl">
@@ -318,7 +366,7 @@ export default function XemTuongPage() {
               </Card>
             )}
 
-            {!loading && reading && (
+            {!loading && !paywallData && reading && (
               <div className="space-y-4">
                 <Card className="relative overflow-hidden border border-gold/20 bg-gradient-to-br from-gold/5 to-transparent">
                   <div
