@@ -15,7 +15,7 @@ const LENSES = CATALOG.map((l, i) => ({
 
 export function Methodology(): React.JSX.Element {
   return (
-    <section aria-label="Cách hieu.asia giải mã bạn" className="bg-muted/30 py-16 sm:py-20">
+    <section aria-label="Cách hieu.asia giải mã bạn" className="bg-muted/30 py-12 sm:py-14">
       <div className="mx-auto max-w-marketing-tight px-6 sm:px-8">
         <p className="font-mono text-editorial-mono uppercase tracking-[0.18em] text-muted-foreground">
           CÁCH HIEU.ASIA GIẢI MÃ

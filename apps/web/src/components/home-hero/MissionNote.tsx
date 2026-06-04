@@ -7,7 +7,7 @@ import * as React from 'react';
  */
 export function MissionNote(): React.JSX.Element {
   return (
-    <section aria-label="Vì sao chúng tôi làm hieu.asia" className="py-16 sm:py-20">
+    <section aria-label="Vì sao chúng tôi làm hieu.asia" className="py-12 sm:py-14">
       <div className="mx-auto max-w-marketing-tight px-6 sm:px-8">
         <h2 className="font-mono text-editorial-mono uppercase tracking-[0.16em] text-muted-foreground">
           VÌ SAO CHÚNG TÔI LÀM HIEU.ASIA

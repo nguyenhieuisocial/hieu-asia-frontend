@@ -10,7 +10,7 @@ const GROUPS = TOOLKIT_GROUPS;
 
 export function ToolkitSection(): React.JSX.Element {
   return (
-    <section aria-label="Cả bộ công cụ" className="bg-muted/20 py-16 sm:py-20">
+    <section aria-label="Cả bộ công cụ" className="bg-muted/20 py-12 sm:py-14">
       <div className="mx-auto max-w-marketing-tight px-6 sm:px-8">
         <p className="font-mono text-editorial-mono uppercase tracking-[0.18em] text-muted-foreground">
           KHÔNG CHỈ NĂM LĂNG KÍNH

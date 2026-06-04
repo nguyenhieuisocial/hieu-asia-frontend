@@ -79,7 +79,7 @@ export function EditorialList({
   const bgClass = bg === 'muted' ? 'bg-muted/40' : 'bg-background';
 
   return (
-    <section className={`${bgClass} py-section`}>
+    <section className={`${bgClass} py-14 md:py-16`}>
       <div className="mx-auto max-w-marketing-tight px-6">
         {eyebrow && (
           <p className="mb-6 font-mono text-editorial-mono uppercase tracking-[0.12em] text-primary">
@@ -87,7 +87,7 @@ export function EditorialList({
           </p>
         )}
         {title && (
-          <h2 className="mb-block text-balance font-editorial-display text-editorial-h2 font-normal tracking-tight text-foreground">
+          <h2 className="mb-10 text-balance font-editorial-display text-editorial-h2 font-normal tracking-tight text-foreground">
             {title}
           </h2>
         )}
@@ -100,7 +100,7 @@ export function EditorialList({
             // Last item: no border (closes the column rhythm cleanly).
             const itemSpacing = isLast
               ? 'pt-card'
-              : 'pt-card pb-section border-b border-border/40';
+              : 'pt-card pb-12 border-b border-border/40';
 
             return (
               <li

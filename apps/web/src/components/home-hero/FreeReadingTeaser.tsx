@@ -11,7 +11,7 @@ export function FreeReadingTeaser(): React.JSX.Element {
   const [dob, setDob] = React.useState('');
   const [shown, setShown] = React.useState(false);
   return (
-    <section aria-label="Phân tích thử miễn phí" className="py-16 sm:py-20">
+    <section aria-label="Phân tích thử miễn phí" className="py-12 sm:py-14">
       <div className="mx-auto max-w-marketing-tight px-6 sm:px-8">
         <div className="rounded-xl border border-primary/20 bg-background p-6 sm:p-8">
           <p className="font-mono text-editorial-mono uppercase tracking-[0.16em] text-muted-foreground">

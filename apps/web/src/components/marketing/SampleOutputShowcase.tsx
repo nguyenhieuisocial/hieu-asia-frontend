@@ -159,7 +159,7 @@ export function SampleOutputShowcase() {
   return (
     <section
       aria-label="Báo cáo mẫu (minh hoạ)"
-      className="bg-background py-16 md:py-20"
+      className="bg-background py-12 md:py-14"
     >
       <div className="mx-auto max-w-marketing px-6 lg:px-12">
         {/* Header */}

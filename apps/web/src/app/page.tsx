@@ -456,16 +456,6 @@ export default function LandingPage() {
             a peer of the 4 canonical ống kính despite being a secondary
             (no-birth-time) entry — keeping the "bốn ống kính" message clean. */}
 
-        {/* Wave 52 — persistent disclaimer chip surfaced near hero (also in footer). */}
-        <div
-          role="note"
-          className="mx-auto mt-4 flex max-w-3xl items-center justify-center px-6"
-        >
-          <p className="rounded-full border border-primary/20 bg-muted/60 px-4 py-1.5 text-center text-[11px] leading-snug text-muted-foreground backdrop-blur-sm sm:text-xs">
-            Kết quả mang tính tham khảo — không thay thế tư vấn y tế, pháp lý hay tài chính.
-          </p>
-        </div>
-
         {/* Wave 60.95.d P1-11 — ScanRow refactored taxonomy → user intent.
             Vault 130 §1 + ChatGPT review §2.2: user intent first, discipline
             as secondary mono-tag. 5 intent cards mapping question-as-card →
