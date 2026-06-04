@@ -44,7 +44,7 @@ const FAQS = [
   },
 ];
 
-const ORDER: KiengKyKey[] = ['tam_nuong', 'nguyet_ky', 'duong_cong'];
+const ORDER: KiengKyKey[] = ['tam_nuong', 'nguyet_ky', 'duong_cong', 'nguyet_tan'];
 
 export default function NgayKiengKyPage() {
   return (
@@ -85,9 +85,9 @@ export default function NgayKiengKyPage() {
           {/* Ba loại ngày kiêng kỵ */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
             <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
-              Ba loại ngày kiêng kỵ phổ biến
+              Bốn loại ngày kiêng kỵ phổ biến
             </h2>
-            <div className="mt-4 grid gap-4 md:grid-cols-3">
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {ORDER.map((key) => {
                 const info = KIENG_KY_INFO[key];
                 return (

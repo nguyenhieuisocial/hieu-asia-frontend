@@ -94,6 +94,10 @@ export const NAME_SUGGESTIONS: Record<Element, NameSuggestion[]> = {
     { name: 'Mỹ', meaning: 'đẹp, thuần mỹ', gender: 'nu' },
     { name: 'Xuyến', meaning: 'vòng trang sức', gender: 'nu' },
     { name: 'Hiền', meaning: 'hiền tài, đức hạnh', gender: 'nu' },
+    { name: 'Khánh', meaning: 'chuông khánh, phúc lành', gender: 'ca' },
+    { name: 'Liêm', meaning: 'liêm chính, sắc bén', gender: 'nam' },
+    { name: 'Bạch', meaning: 'trắng trong, kim bạch', gender: 'ca' },
+    { name: 'Thu', meaning: 'mùa thu (thuộc Kim)', gender: 'nu' },
   ],
   moc: [
     { name: 'Lâm', meaning: 'rừng, rậm rạp', gender: 'nam' },
@@ -104,8 +108,12 @@ export const NAME_SUGGESTIONS: Record<Element, NameSuggestion[]> = {
     { name: 'Lan', meaning: 'hoa lan, quý phái', gender: 'nu' },
     { name: 'Xuân', meaning: 'mùa xuân, sinh trưởng', gender: 'ca' },
     { name: 'Quỳnh', meaning: 'hoa quỳnh, cao quý', gender: 'nu' },
-    { name: 'Nam', meaning: 'phương Nam, sinh khí', gender: 'nam' },
+    { name: 'Nam', meaning: 'cây nam — gỗ quý, vững chãi', gender: 'nam' },
     { name: 'Hương', meaning: 'hương thơm cây cỏ', gender: 'nu' },
+    { name: 'Bách', meaning: 'cây bách, trường thọ', gender: 'nam' },
+    { name: 'Đào', meaning: 'hoa đào, tươi thắm', gender: 'nu' },
+    { name: 'Quế', meaning: 'cây quế thơm', gender: 'nu' },
+    { name: 'Diệp', meaning: 'lá xanh, sum suê', gender: 'ca' },
   ],
   thuy: [
     { name: 'Hà', meaning: 'sông, dòng chảy', gender: 'nu' },
@@ -118,6 +126,10 @@ export const NAME_SUGGESTIONS: Record<Element, NameSuggestion[]> = {
     { name: 'Trí', meaning: 'trí tuệ, sâu sắc', gender: 'nam' },
     { name: 'Băng', meaning: 'băng trong, tinh khiết', gender: 'nu' },
     { name: 'Loan', meaning: 'chim loan bên nước', gender: 'nu' },
+    { name: 'Thanh', meaning: 'trong xanh như nước', gender: 'ca' },
+    { name: 'Bình', meaning: 'mặt nước phẳng lặng', gender: 'ca' },
+    { name: 'Tuyền', meaning: 'suối nguồn trong mát', gender: 'nu' },
+    { name: 'Hồ', meaning: 'hồ nước rộng', gender: 'nam' },
   ],
   hoa: [
     { name: 'Minh', meaning: 'sáng sủa, trí tuệ', gender: 'ca' },
@@ -130,6 +142,10 @@ export const NAME_SUGGESTIONS: Record<Element, NameSuggestion[]> = {
     { name: 'Hồng', meaning: 'đỏ tươi, rạng rỡ', gender: 'nu' },
     { name: 'Đan', meaning: 'đỏ son, chân thành', gender: 'ca' },
     { name: 'Vinh', meaning: 'rực rỡ, vinh quang', gender: 'nam' },
+    { name: 'Khải', meaning: 'khải hoàn, sáng rỡ', gender: 'nam' },
+    { name: 'Hân', meaning: 'hân hoan, rạng rỡ', gender: 'nu' },
+    { name: 'Viêm', meaning: 'ấm nóng (hành Hoả)', gender: 'nam' },
+    { name: 'Diễm', meaning: 'đẹp rực rỡ', gender: 'nu' },
   ],
   tho: [
     { name: 'Sơn', meaning: 'núi, vững chắc', gender: 'nam' },
@@ -142,6 +158,10 @@ export const NAME_SUGGESTIONS: Record<Element, NameSuggestion[]> = {
     { name: 'Bích', meaning: 'ngọc bích xanh sáng', gender: 'nu' },
     { name: 'Trân', meaning: 'quý hiếm, trân trọng', gender: 'nu' },
     { name: 'Anh', meaning: 'tinh anh, tài hoa', gender: 'ca' },
+    { name: 'An', meaning: 'bình an, vững như đất', gender: 'ca' },
+    { name: 'Phú', meaning: 'giàu có, đất màu mỡ', gender: 'nam' },
+    { name: 'Khôn', meaning: 'quẻ Khôn — đất, bao dung', gender: 'nam' },
+    { name: 'Mậu', meaning: 'tốt tươi, sung túc', gender: 'ca' },
   ],
 };
 

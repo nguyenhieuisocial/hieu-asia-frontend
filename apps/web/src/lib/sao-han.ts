@@ -72,7 +72,7 @@ export const SAO_INFO: Record<SaoKey, SaoInfo> = {
     name: 'Thái Dương',
     type: 'tot',
     summary:
-      'Cát tinh, tượng mặt trời — theo phong tục là năm hanh thông, gặp quý nhân, công danh sáng sủa; đặc biệt thuận với nam giới.',
+      'Cát tinh, tượng mặt trời — theo phong tục là năm hanh thông, gặp quý nhân, công danh sáng sủa; đặc biệt thuận với nam giới. Với nữ giới, dương khí mạnh đôi khi dễ va chạm gia đạo nhỏ — giữ hoà khí là ổn.',
     advice: 'Năm thuận để khởi sự, mở rộng việc — cứ tự tin tiến nhưng vẫn giữ chừng mực.',
     thang: 'Tháng tốt thường nhắc: tháng 6 và tháng 10 (âm).',
   },
@@ -83,7 +83,7 @@ export const SAO_INFO: Record<SaoKey, SaoInfo> = {
     summary:
       'Cát tinh, tượng mặt trăng — êm đẹp, tài lộc, gặp may về tiền bạc; hợp với nữ giới.',
     advice: 'Năm dễ chịu để vun vén tài chính, gia đạo. Giữ nhịp ổn định là tốt.',
-    thang: 'Tháng tốt thường nhắc: tháng 9 (âm).',
+    thang: 'Tháng tốt thường nhắc: tháng 9 (âm); tháng 11 nên chú ý sức khoẻ.',
   },
   moc_duc: {
     key: 'moc_duc',
@@ -108,7 +108,7 @@ export const SAO_INFO: Record<SaoKey, SaoInfo> = {
     name: 'Thủy Diệu',
     type: 'trung',
     summary:
-      'Sao trung bình — nhìn chung an lành, lợi cho đi xa; song theo phong tục kỵ sông nước.',
+      'Sao trung bình (một số trường phái xem là cát tinh nhẹ) — nhìn chung an lành, lợi cho đi xa và buôn bán; song theo phong tục kỵ sông nước.',
     advice: 'Năm tương đối nhẹ nhàng; cẩn thận các việc liên quan đến nước, bơi lội, đường thuỷ.',
     thang: 'Tháng cần lưu ý: tháng 4 và tháng 8 (âm).',
   },
@@ -117,7 +117,7 @@ export const SAO_INFO: Record<SaoKey, SaoInfo> = {
     name: 'Vân Hớn',
     type: 'trung',
     summary:
-      'Sao trung bình (còn gọi Vân Hán) — theo phong tục dễ nóng giận, vướng thị phi lời nói, đau ốm nhẹ.',
+      'Sao trung bình (còn gọi Vân Hán, thuộc hành Hoả) — theo phong tục dễ nóng giận, vướng thị phi lời nói, đau ốm nhẹ; nên cẩn thận lửa, điện, xe cộ.',
     advice: 'Giữ bình tĩnh, tránh tranh cãi và khẩu thiệt; chú ý sức khoẻ, lời nói.',
     thang: 'Tháng cần lưu ý: tháng 2 và tháng 8 (âm).',
   },
@@ -126,7 +126,7 @@ export const SAO_INFO: Record<SaoKey, SaoInfo> = {
     name: 'La Hầu',
     type: 'xau',
     summary:
-      'Hung tinh — theo quan niệm dân gian thiên về thị phi, miệng tiếng, giấy tờ pháp lý, ốm đau; nặng hơn với nam giới ("nam La Hầu").',
+      'Hung tinh — theo quan niệm dân gian thiên về thị phi, miệng tiếng, giấy tờ pháp lý, và sức khoẻ (chú ý mắt, tai, máu huyết); nặng hơn với nam giới ("nam La Hầu").',
     advice: 'Năm nên giữ lời ăn tiếng nói, cẩn thận giấy tờ – pháp lý, giữ sức khoẻ. Bình tĩnh xử lý mâu thuẫn.',
     thang: 'Tháng thường nhắc cần thận trọng: tháng 1 và tháng 7 (âm).',
   },
@@ -135,7 +135,7 @@ export const SAO_INFO: Record<SaoKey, SaoInfo> = {
     name: 'Kế Đô',
     type: 'xau',
     summary:
-      'Hung tinh — theo quan niệm dân gian thiên về buồn phiền, hao tài, thị phi; nặng hơn với nữ giới ("nữ Kế Đô").',
+      'Hung tinh — theo quan niệm dân gian thiên về buồn phiền, hao tài, thị phi, chuyện tang sự – âm phần; nặng hơn với nữ giới ("nữ Kế Đô"), nữ nên chú ý sức khoẻ và chuyện thai sản.',
     advice: 'Giữ tâm an, tránh thị phi và tranh chấp; cẩn trọng tiền bạc và sức khoẻ.',
     thang: 'Tháng thường nhắc cần thận trọng: tháng 3 và tháng 9 (âm).',
   },
@@ -144,9 +144,9 @@ export const SAO_INFO: Record<SaoKey, SaoInfo> = {
     name: 'Thái Bạch',
     type: 'xau',
     summary:
-      'Hung tinh về tiền bạc (dân gian có câu "Thái Bạch quét sạch cửa nhà") — thiên về hao tài; nặng hơn với nam giới.',
+      'Hung tinh (dân gian có câu "Thái Bạch quét sạch cửa nhà") — thiên về hao tài, mất mát; cổ truyền còn nhắc cẩn thận đao thương, tai nạn. Nặng hơn với nam giới.',
     advice: 'Năm nên thận trọng chi tiêu, đầu tư, cho vay; tránh quyết định tài chính lớn khi chưa chắc.',
-    thang: 'Tháng thường nhắc cần thận trọng: tháng 5 (âm).',
+    thang: 'Tháng thường nhắc cần thận trọng: tháng 5 (âm); một số nguồn cổ nhắc thêm tháng 2 và 8.',
   },
 };
 
