@@ -51,6 +51,7 @@ import {
   FileText,
   Lock,
   Plug,
+  Tag,
 } from 'lucide-react';
 
 interface NavItem {
@@ -91,6 +92,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/sepay', label: 'SePay đối soát', Icon: Landmark },
       { href: '/payments', label: 'Thanh toán & Doanh thu', Icon: CreditCard },
       { href: '/coupons', label: 'Coupons', Icon: Ticket },
+      { href: '/feature-prices', label: 'Giá tính năng', Icon: Tag },
       { href: '/affiliates', label: 'Affiliate', Icon: HandCoins },
     ],
   },
