@@ -6,6 +6,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
+import { getPersonalitySummary } from '@/lib/personality-store';
 
 const STATEMENTS: string[] = [
   'Bạn có nhu cầu được người khác yêu mến và ngưỡng mộ.',
@@ -23,6 +24,13 @@ const STATEMENTS: string[] = [
 export default function TuKiemPage() {
   const [checked, setChecked] = React.useState<Record<number, boolean>>({});
   const [revealed, setRevealed] = React.useState(false);
+  const [personalSummary, setPersonalSummary] = React.useState<string | null>(null);
+  const [selfRate, setSelfRate] = React.useState<'yes' | 'partial' | 'no' | null>(null);
+
+  React.useEffect(() => {
+    const s = getPersonalitySummary();
+    setPersonalSummary(s ? s : null);
+  }, []);
 
   const score = Object.values(checked).filter(Boolean).length;
 
@@ -39,6 +47,7 @@ export default function TuKiemPage() {
   const handleReset = () => {
     setChecked({});
     setRevealed(false);
+    setSelfRate(null);
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -199,6 +208,81 @@ export default function TuKiemPage() {
                         <a href="/cong-cu">Thử một công cụ thật →</a>
                       </Button>
                     </div>
+                  </CardContent>
+                </Card>
+
+                {/* Phase 4 — thử trên kết quả THẬT của bạn (V2) */}
+                <Card className="border-border bg-card/50">
+                  <CardContent className="p-6">
+                    <p className="font-heading text-base font-semibold text-foreground">
+                      Giờ thử với chính kết quả của bạn
+                    </p>
+                    {personalSummary ? (
+                      <>
+                        <p className="mt-2 text-sm leading-relaxed text-foreground/85">
+                          Ngược với 10 câu mơ hồ ở trên, đây là kết quả{' '}
+                          <strong className="text-foreground">cụ thể</strong> bạn đã tự làm — cụ thể
+                          nên <strong className="text-foreground">dám sai</strong>:
+                        </p>
+                        <blockquote className="mt-3 border-l-2 border-gold/60 pl-3 text-sm italic leading-relaxed text-foreground/90">
+                          {personalSummary}
+                        </blockquote>
+                        <p className="mt-4 text-sm text-foreground/85">
+                          Tự chấm khắt khe — nó đúng với bạn tới đâu?
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {(
+                            [
+                              ['yes', 'Đúng với tôi'],
+                              ['partial', 'Đúng một phần'],
+                              ['no', 'Chưa đúng'],
+                            ] as const
+                          ).map(([k, label]) => (
+                            <Button
+                              key={k}
+                              size="sm"
+                              variant={selfRate === k ? 'default' : 'outline'}
+                              onClick={() => {
+                                setSelfRate(k);
+                                track('tool_used', { tool: 'tu-kiem', result: 'self-check' });
+                              }}
+                              className={
+                                selfRate === k
+                                  ? 'bg-gold text-background hover:bg-gold/90'
+                                  : 'border-border/60 text-foreground/70 hover:border-gold/50 hover:text-gold'
+                              }
+                            >
+                              {label}
+                            </Button>
+                          ))}
+                        </div>
+                        {selfRate && (
+                          <p className="mt-4 rounded-md border border-gold/20 bg-gold/[0.05] p-3 text-sm leading-relaxed text-foreground/90">
+                            {selfRate === 'yes'
+                              ? 'Tốt — nhưng nhớ bài vừa rồi: đừng tin chỉ vì thấy “đúng ghê”. Cái này cụ thể nên đáng tin hơn lời mơ hồ, song bạn vẫn là người quyết định nó có ý nghĩa gì với đời mình.'
+                              : selfRate === 'partial'
+                                ? 'Chuẩn rồi — đúng một phần là điều bình thường và lành mạnh. Công cụ trung thực thì cụ thể, mà đã cụ thể thì phải có chỗ chưa khớp. Bạn giữ phần đúng, bỏ phần không hợp.'
+                                : 'Đây là dấu hiệu TỐT, không phải lỗi: vì cụ thể nên nó dám sai. Một lời bói mơ hồ sẽ chẳng bao giờ để bạn nói “chưa đúng”. Hãy tin vào trải nghiệm của chính bạn.'}
+                          </p>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <p className="mt-2 text-sm leading-relaxed text-foreground/85">
+                          Bạn chưa làm trắc nghiệm nào ở đây. Hãy làm một bài{' '}
+                          <strong className="text-foreground">cụ thể, dám sai</strong> (không phải mô
+                          tả mơ hồ), rồi quay lại trang này để tự chấm xem nó đúng với bạn tới đâu.
+                        </p>
+                        <div className="mt-4 flex flex-wrap gap-3">
+                          <Button asChild variant="outline">
+                            <a href="/enneagram">Trắc nghiệm Enneagram →</a>
+                          </Button>
+                          <Button asChild variant="outline">
+                            <a href="/mbti">Trắc nghiệm MBTI →</a>
+                          </Button>
+                        </div>
+                      </>
+                    )}
                   </CardContent>
                 </Card>
 
