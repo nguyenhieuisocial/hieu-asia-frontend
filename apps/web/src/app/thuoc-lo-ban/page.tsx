@@ -18,6 +18,7 @@ import {
   Skeleton,
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
@@ -222,6 +223,15 @@ export default function ThuocLoBanPage() {
                   </p>
                 </CardContent>
               </Card>
+
+              <div className="flex flex-wrap gap-3">
+                <ShareResultButton
+                  path="/thuoc-lo-ban"
+                  title="Thước Lỗ Ban"
+                  text="Mình vừa tra thước Lỗ Ban trên hieu.asia — tiện lắm!"
+                  trackId="thuoc-lo-ban"
+                />
+              </div>
 
               {(result.next_good || result.prev_good) && (
                 <Card className="border-border bg-card/50">

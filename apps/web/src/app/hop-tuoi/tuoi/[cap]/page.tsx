@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import {
@@ -169,6 +170,15 @@ export default async function HopTuoiPairPage({
             {copy.detail(a.ten, b.ten)}
           </p>
         </section>
+
+        <div className="mt-6 flex flex-wrap gap-3">
+          <ShareResultButton
+            path={url}
+            title="Xem hai tuổi có hợp nhau"
+            text="Mình vừa xem hai tuổi có hợp nhau trên hieu.asia — bạn thử nhé!"
+            trackId="hop-tuoi-cap"
+          />
+        </div>
 
         {/* Tính cách hai con giáp */}
         <section className="mt-8 grid gap-4 sm:grid-cols-2" aria-label="Tính cách hai con giáp">

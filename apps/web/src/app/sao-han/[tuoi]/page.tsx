@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { SaoHanCalculator } from '@/components/sao-han/SaoHanCalculator';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { computeSaoHan, currentViewYear, type SaoType } from '@/lib/sao-han';
@@ -144,6 +145,15 @@ export default async function SaoHanConGiapPage({
         ]}
       >
         <section className="space-y-8">
+          <div className="flex flex-wrap gap-3">
+            <ShareResultButton
+              path={`/sao-han/${tuoi}`}
+              title="Sao hạn năm nay"
+              text="Mình vừa xem sao hạn năm nay trên hieu.asia — bạn xem thử nhé!"
+              trackId="sao-han-tuoi"
+            />
+          </div>
+
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
             <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
               Sao hạn {year} — tuổi {cg.ten} theo năm sinh
