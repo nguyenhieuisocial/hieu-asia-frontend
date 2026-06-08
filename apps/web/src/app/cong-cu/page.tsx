@@ -21,6 +21,12 @@ const TOOLS = [
     desc: 'Numerology: con số cuộc đời, sứ mệnh, linh hồn.',
   },
   {
+    href: '/ban-do-sao',
+    emoji: '🔭',
+    name: 'Bản đồ sao',
+    desc: 'Chiêm tinh phương Tây: cung Mặt Trời & Mặt Trăng từ ngày giờ sinh.',
+  },
+  {
     href: '/mbti',
     emoji: '🧠',
     name: 'MBTI',
