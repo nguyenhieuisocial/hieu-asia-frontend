@@ -176,10 +176,17 @@ const DATA_ROWS: {
     status: 'optional',
   },
   {
-    method: 'Palm Reading',
-    data: 'ảnh bàn tay (tuỳ chọn)',
+    method: 'Big Five (OCEAN)',
+    data: 'khảo sát user',
+    engine: 'Quiz scoring',
+    ai: 'đối chiếu 5 chiều OCEAN',
+    status: 'optional',
+  },
+  {
+    method: 'Xem Tướng',
+    data: 'ảnh bàn tay / khuôn mặt (tuỳ chọn)',
     engine: 'Vision AI',
-    ai: 'phân tích đường chính',
+    ai: 'phân tích nét tướng',
     status: 'beta',
   },
 ];
@@ -1246,7 +1253,7 @@ export default function MethodologyPage() {
             {
               id: 'chapter-philosophy',
               eyebrow: 'CHƯƠNG 1 · TRIẾT LÝ',
-              title: 'Bốn ống kính, một con người',
+              title: 'Năm ống kính, một con người',
               content: <Chapter1Content />,
             },
             {
