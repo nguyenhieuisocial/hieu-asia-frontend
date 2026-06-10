@@ -111,6 +111,12 @@ const TOOLS = [
     desc: 'Kiểm tra hợp tuổi vợ chồng, xây dựng, xuất hành theo tam hợp.',
   },
   {
+    href: '/xem-tuoi-cuoi',
+    emoji: '💍',
+    name: 'Xem Tuổi Cưới',
+    desc: 'Năm này có thuận để cưới không? Tính Kim Lâu, Tam Tai, xung năm theo năm sinh — minh bạch từng bước.',
+  },
+  {
     href: '/xem-hop-nhom',
     emoji: '👨‍👩‍👧‍👦',
     name: 'Xem Hợp Nhóm',
