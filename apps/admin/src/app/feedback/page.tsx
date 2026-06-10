@@ -132,6 +132,7 @@ export default function FeedbackPage() {
         return { rows: MOCK_FEEDBACK, isMock: true };
       }
     },
+    staleTime: 60_000,
   });
 
   const rows = list.data?.rows ?? [];

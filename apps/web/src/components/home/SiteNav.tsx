@@ -22,10 +22,46 @@ import {
 import { ThemeToggle } from '@/components/theme-toggle';
 import { useAuth } from '@/hooks/use-auth';
 import { signOut } from '@/lib/auth-client';
+import { getStreak } from '@/lib/daily-checkin';
+import { QUICK_LOOKUP } from '@/lib/catalog/tools';
 
 interface NavLink {
   href: string;
   label: string;
+}
+
+/**
+ * In-app streak reminder (Hướng 2 follow-up): the free, no-push version of the
+ * "don't break your chain" nudge. True only when the user is signed in, has a
+ * live streak to protect (current > 0), and hasn't checked in today. Fails safe
+ * to false (signed out / endpoint down) so the nav is unchanged for everyone
+ * else. One lightweight KV read per page load, authed-only.
+ */
+function useCheckinNudge(isAuthed: boolean): boolean {
+  const [needsCheckin, setNeedsCheckin] = React.useState(false);
+  React.useEffect(() => {
+    if (!isAuthed) {
+      setNeedsCheckin(false);
+      return;
+    }
+    let alive = true;
+    getStreak()
+      .then((s) => {
+        if (alive) setNeedsCheckin(!!s && s.current > 0 && !s.checkedInToday);
+      })
+      .catch(() => {
+        if (alive) setNeedsCheckin(false);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [isAuthed]);
+  return needsCheckin;
+}
+
+/** Tiny gold "unchecked streak today" indicator. Decorative; callers add a label. */
+function NudgeDot({ className }: { className?: string }) {
+  return <span aria-hidden className={cn('h-1.5 w-1.5 rounded-full bg-gold', className)} />;
 }
 
 /**
@@ -53,23 +89,8 @@ const PRIMARY_LINKS: readonly NavLink[] = [
  * in-menu access to the 12 lookup tools + learning topics instead of having to
  * scroll to the footer. Mirrors SiteFooter COL_QUICK_LOOKUP + learn topics.
  */
-const MOBILE_TOOLS: readonly NavLink[] = [
-  { href: '/tu-vi-2026', label: 'Tử Vi 2026' },
-  { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay' },
-  { href: '/hop-tuoi', label: 'Hợp tuổi' },
-  { href: '/can-xuong', label: 'Cân Xương Đoán Số' },
-  { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
-  { href: '/bat-tu', label: 'Bát Tự' },
-  { href: '/mbti', label: 'MBTI' },
-  { href: '/than-so-hoc', label: 'Thần số học' },
-  { href: '/thuoc-lo-ban', label: 'Thước Lỗ Ban' },
-  { href: '/tinh-menh-cuc', label: 'Tuổi mệnh cục' },
-  { href: '/ban-do', label: 'Bản đồ sao' },
-  { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại' },
-  { href: '/gieo-que', label: 'Gieo Quẻ Kinh Dịch' },
-  { href: '/big-five', label: 'Big Five (OCEAN)' },
-  { href: '/disc', label: 'Trắc nghiệm DiSC' },
-];
+// Tra cứu nhanh — từ catalog (lib/catalog/tools), khớp 1-1 với footer (hết trùng lặp).
+const MOBILE_TOOLS: readonly NavLink[] = QUICK_LOOKUP.map(({ href, label }) => ({ href, label }));
 
 const MOBILE_LEARN: readonly NavLink[] = [
   { href: '/learn', label: 'Tất cả bài học' },
@@ -77,6 +98,7 @@ const MOBILE_LEARN: readonly NavLink[] = [
   { href: '/learn/bat-tu', label: 'Bát Tự' },
   { href: '/learn/than-so-hoc', label: 'Thần Số Học' },
   { href: '/learn/mbti', label: 'MBTI' },
+  { href: '/learn/big-five', label: 'Big Five' },
   { href: '/learn/palm', label: 'Tướng tay' },
 ];
 
@@ -88,6 +110,7 @@ const MOBILE_LEARN: readonly NavLink[] = [
 export function SiteNav() {
   const { user, loading } = useAuth();
   const isAuthed = !!user && !loading;
+  const needsCheckin = useCheckinNudge(isAuthed);
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-card/70 backdrop-blur-md">
@@ -121,7 +144,7 @@ export function SiteNav() {
         <div className="flex items-center gap-2">
           <ThemeToggle />
           {isAuthed ? (
-            <AuthedMenu user={user} />
+            <AuthedMenu user={user} needsCheckin={needsCheckin} />
           ) : (
             <>
               {/* While loading, hide both buttons to avoid flicker (returning user briefly sees "Đăng nhập"). */}
@@ -138,7 +161,11 @@ export function SiteNav() {
               </Button>
             </>
           )}
-          <MobileDrawer isAuthed={isAuthed} userEmail={user?.email ?? null} />
+          <MobileDrawer
+            isAuthed={isAuthed}
+            userEmail={user?.email ?? null}
+            needsCheckin={needsCheckin}
+          />
         </div>
       </div>
     </header>
@@ -153,7 +180,13 @@ export function SiteNav() {
  * manual `useState` + click-outside + Esc + role="menu" wiring. Radix gives
  * us roving-focus a11y + portal rendering + ESC dismiss for free.
  */
-function AuthedMenu({ user }: { user: { email?: string } }) {
+function AuthedMenu({
+  user,
+  needsCheckin,
+}: {
+  user: { email?: string };
+  needsCheckin: boolean;
+}) {
   const router = useRouter();
   const [pending, setPending] = React.useState(false);
   const [open, setOpen] = React.useState(false);
@@ -176,10 +209,14 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
         <DropdownMenuTrigger asChild>
           <button
             type="button"
-            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
+            className="relative inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
           >
-            <UserCircle2 className="h-4 w-4" aria-hidden="true" />
+            <span className="relative">
+              <UserCircle2 className="h-4 w-4" aria-hidden="true" />
+              {needsCheckin && <NudgeDot className="absolute -right-1 -top-1 ring-2 ring-card" />}
+            </span>
             <span className="max-w-[120px] truncate">{user.email ?? 'Tài khoản'}</span>
+            {needsCheckin && <span className="sr-only">— chưa điểm danh hôm nay</span>}
             <ChevronDown
               className={cn(
                 'h-3.5 w-3.5 transition-transform',
@@ -195,6 +232,15 @@ function AuthedMenu({ user }: { user: { email?: string } }) {
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/reading">Lá số của bạn</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/account/operating-manual">Sổ tay cá nhân</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/account#streak" className="flex items-center justify-between gap-2">
+              <span>Điểm danh</span>
+              {needsCheckin && <NudgeDot />}
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuLabel className="text-primary/85">Cộng tác viên</DropdownMenuLabel>
@@ -260,9 +306,11 @@ function DrawerGroup({
 function MobileDrawer({
   isAuthed,
   userEmail,
+  needsCheckin,
 }: {
   isAuthed: boolean;
   userEmail: string | null;
+  needsCheckin: boolean;
 }) {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
@@ -283,10 +331,11 @@ function MobileDrawer({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger
-        className="inline-flex h-11 w-11 items-center justify-center rounded-md text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary md:hidden"
-        aria-label="Mở menu"
+        className="relative inline-flex h-11 w-11 items-center justify-center rounded-md text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary md:hidden"
+        aria-label={needsCheckin ? 'Mở menu — chưa điểm danh hôm nay' : 'Mở menu'}
       >
         <Menu className="h-5 w-5" />
+        {needsCheckin && <NudgeDot className="absolute right-2 top-2 ring-2 ring-card" />}
       </SheetTrigger>
       <SheetContent side="right" className="w-72 border-border bg-background text-foreground">
         <SheetHeader>
@@ -326,6 +375,21 @@ function MobileDrawer({
                 className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
               >
                 Lá số của bạn
+              </Link>
+              <Link
+                href="/account/operating-manual"
+                onClick={() => setOpen(false)}
+                className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
+              >
+                Sổ tay cá nhân
+              </Link>
+              <Link
+                href="/account#streak"
+                onClick={() => setOpen(false)}
+                className="flex items-center justify-between rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
+              >
+                <span>Điểm danh</span>
+                {needsCheckin && <NudgeDot />}
               </Link>
             </>
           )}

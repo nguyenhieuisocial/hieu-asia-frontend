@@ -43,6 +43,12 @@ const TOPICS: readonly LearnTopic[] = [
     blurb: '4 trục: I/E, N/S, T/F, J/P tạo nên 16 nhóm tính cách phân loại tâm lý.',
   },
   {
+    href: '/learn/big-five',
+    title: 'Big Five (OCEAN)',
+    subtitle: 'Tây phương — Khoa học tính cách',
+    blurb: '5 chiều liên tục: Cởi mở, Tận tâm, Hướng ngoại, Dễ chịu, Nhạy cảm cảm xúc.',
+  },
+  {
     href: '/learn/palm',
     title: 'Xem chỉ tay',
     subtitle: 'Phổ quát',

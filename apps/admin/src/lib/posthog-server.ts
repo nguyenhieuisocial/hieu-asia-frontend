@@ -159,6 +159,158 @@ export async function fetchTopPageviews(): Promise<PageviewRow[] | null> {
     .filter((r) => r.url);
 }
 
+export interface ToolUsageRow {
+  /** Tool slug from the `tool_used` event (e.g. gieo-que, big-five, vision-read). */
+  tool: string;
+  /** Total uses (events) in the window. */
+  uses: number;
+  /** Distinct persons who used the tool. */
+  users: number;
+  /** Distinct persons who used the tool AND also paid (payment_completed) in the window. */
+  paidUsers: number;
+  /** Conversion = paidUsers / users (0-1). Correlation (used + paid), not causation. */
+  conversionRate: number;
+  /** Error rate = result='error' / uses (0-1). */
+  errorRate: number;
+}
+
+/**
+ * Top tools over the last 30 days, from the `tool_used` event (apps/web fires
+ * `track('tool_used', { tool, result })` — event-taxonomy.ts; track() forwards
+ * props to posthog.capture, so `properties.tool` is queryable).
+ *
+ * Beyond raw usage, this also correlates each tool with payment: per tool, how
+ * many distinct users also fired `payment_completed` in the window. That's the
+ * deepen-first signal — not just "which tools get used" but "which tools sit on
+ * the path to paying customers" — so investment goes where it converts, not
+ * just where it's busy. (Correlation, not causation: a paying user may have
+ * touched several tools.) Returns null on any PostHog failure (UI placeholder).
+ */
+export async function fetchTopTools(): Promise<ToolUsageRow[] | null> {
+  const rows = await runHogQL(
+    `SELECT
+       properties.tool AS tool,
+       count() AS uses,
+       count(DISTINCT person_id) AS users,
+       count(DISTINCT IF(person_id IN (
+         SELECT DISTINCT person_id FROM events
+         WHERE event = 'payment_completed'
+           AND timestamp > now() - INTERVAL 30 DAY
+       ), person_id, NULL)) AS paid_users,
+       countIf(properties.result = 'error') AS errors
+     FROM events
+     WHERE event = 'tool_used'
+       AND timestamp > now() - INTERVAL 30 DAY
+     GROUP BY tool
+     ORDER BY users DESC
+     LIMIT 15`,
+  );
+  if (!rows) return null;
+  return rows
+    .map((r) => {
+      const tool = String(r[0] ?? '');
+      const uses = Number(r[1] ?? 0);
+      const users = Number(r[2] ?? 0);
+      const paidUsers = Number(r[3] ?? 0);
+      const errors = Number(r[4] ?? 0);
+      return {
+        tool,
+        uses,
+        users,
+        paidUsers,
+        conversionRate: users > 0 ? paidUsers / users : 0,
+        errorRate: uses > 0 ? errors / uses : 0,
+      };
+    })
+    .filter((r) => r.tool);
+}
+
+export interface VariantConversionRow {
+  /** The feature-flag key ($feature_flag). */
+  flag: string;
+  /** The variant the user was shown ($feature_flag_response). */
+  variant: string;
+  /** Distinct persons exposed to this variant in the window. */
+  exposed: number;
+  /** Of those, distinct persons who also paid (payment_completed). */
+  converted: number;
+}
+
+/**
+ * Per-variant conversion for every multivariate flag, last 30 days. For each
+ * (flag, variant): how many distinct users saw that variant
+ * ($feature_flag_called → $feature_flag_response) and how many of THOSE also
+ * fired payment_completed. That's the experiment signal the flag roster lacked
+ * — "which variant actually leads to paying", not just rollout %.
+ *
+ * Correlation, not statistical significance (a paying user may have seen
+ * several variants) — a directional at-a-glance read. Same proven IN-subquery
+ * shape as fetchTopTools. Returns null on any PostHog failure.
+ */
+export async function fetchVariantConversions(): Promise<VariantConversionRow[] | null> {
+  const rows = await runHogQL(
+    `SELECT
+       properties.$feature_flag AS flag,
+       properties.$feature_flag_response AS variant,
+       count(DISTINCT person_id) AS exposed,
+       count(DISTINCT IF(person_id IN (
+         SELECT DISTINCT person_id FROM events
+         WHERE event = 'payment_completed'
+           AND timestamp > now() - INTERVAL 30 DAY
+       ), person_id, NULL)) AS converted
+     FROM events
+     WHERE event = '$feature_flag_called'
+       AND timestamp > now() - INTERVAL 30 DAY
+     GROUP BY flag, variant`,
+  );
+  if (!rows) return null;
+  return rows
+    .map((r) => ({
+      flag: String(r[0] ?? ''),
+      variant: String(r[1] ?? ''),
+      exposed: Number(r[2] ?? 0),
+      converted: Number(r[3] ?? 0),
+    }))
+    .filter((r) => r.flag && r.variant);
+}
+
+export interface RecentEventRow {
+  /** ISO timestamp of the event. */
+  timestamp: string;
+  /** Event name (e.g. $pageview, tool_used, payment_completed). */
+  event: string;
+  /** $pathname when present (pageviews / autocapture), else null. */
+  pathname: string | null;
+  /** distinct_id of the actor (anon hash or authed id). */
+  distinctId: string | null;
+}
+
+/**
+ * The 30 most recent events across the project (last 7 days), newest first.
+ * A raw "is tracking alive?" feed for the admin — at low traffic it doubles as
+ * a diagnostic (e.g. it makes obvious when an expected event, like a feature-
+ * flag exposure, never fires). Returns null on any PostHog failure so the
+ * panel degrades to a placeholder.
+ */
+export async function fetchRecentEvents(): Promise<RecentEventRow[] | null> {
+  const rows = await runHogQL(
+    `SELECT timestamp, event, properties.$pathname AS path, distinct_id
+     FROM events
+     WHERE timestamp > now() - INTERVAL 7 DAY
+     ORDER BY timestamp DESC
+     LIMIT 30`,
+  );
+  if (!rows) return null;
+  return rows
+    .map((r) => ({
+      timestamp: String(r[0] ?? ''),
+      event: String(r[1] ?? ''),
+      pathname: r[2] != null && r[2] !== '' ? String(r[2]) : null,
+      distinctId: r[3] != null && r[3] !== '' ? String(r[3]) : null,
+    }))
+    .filter((r) => r.event);
+}
+
 /** True iff the personal API key is set; used by the admin page to show a
  *  config warning when live tiles are unavailable. */
 export function isPostHogServerConfigured(): boolean {
@@ -305,6 +457,78 @@ export async function fetchStickyCtaFunnel(): Promise<StickyCtaRow[] | null> {
 }
 
 /* -------------------------------------------------------------------------
+ * Paid attribution — revenue + paying customers by channel and by tier.
+ * --------------------------------------------------------------------- */
+
+export interface PaidByDimensionRow {
+  /** Channel name or product tier. */
+  key: string;
+  /** Distinct persons who fired payment_completed in this bucket. */
+  paid_users: number;
+  /** Sum of the event's `amount` property (VND). */
+  revenue: number;
+}
+
+export interface PaidAttribution {
+  by_channel: PaidByDimensionRow[];
+  by_tier: PaidByDimensionRow[];
+}
+
+/**
+ * Revenue + paying customers by acquisition channel and by product tier, last
+ * 30 days. From the `payment_completed` event, which apps/web fires with
+ * { amount, tier } (PaymentClient) — so `properties.amount` (VND) and
+ * `properties.tier` are summable, and PostHog auto-captures the person's
+ * $initial_utm_source / $initial_referring_domain for channel.
+ *
+ * NOTE: PostHog payment_completed is client-fired + consent-gated, so this is a
+ * directional LOWER BOUND, not the canonical revenue (that's the worker's
+ * txn:log). The value here is the BREAKDOWN — which channel / tier brings
+ * paying customers + how much — which the KV total can't give. Null on failure.
+ */
+export async function fetchPaidAttribution(): Promise<PaidAttribution | null> {
+  const byChannelSql = `
+    SELECT
+      coalesce(
+        nullIf(properties.$initial_utm_source, ''),
+        nullIf(properties.$initial_referring_domain, ''),
+        'direct'
+      ) AS channel,
+      count(DISTINCT person_id) AS paid_users,
+      sum(toFloat(properties.amount)) AS revenue
+    FROM events
+    WHERE event = 'payment_completed'
+      AND timestamp > now() - INTERVAL 30 DAY
+    GROUP BY channel
+    ORDER BY revenue DESC
+    LIMIT 12
+  `;
+  const byTierSql = `
+    SELECT
+      coalesce(nullIf(properties.tier, ''), '(không rõ)') AS tier,
+      count(DISTINCT person_id) AS paid_users,
+      sum(toFloat(properties.amount)) AS revenue
+    FROM events
+    WHERE event = 'payment_completed'
+      AND timestamp > now() - INTERVAL 30 DAY
+    GROUP BY tier
+    ORDER BY revenue DESC
+    LIMIT 12
+  `;
+  const [chRows, tiRows] = await Promise.all([runHogQL(byChannelSql), runHogQL(byTierSql)]);
+  if (!chRows && !tiRows) return null;
+  const project = (rows: unknown[][] | null): PaidByDimensionRow[] =>
+    (rows ?? [])
+      .map((r) => ({
+        key: String(r[0] ?? ''),
+        paid_users: Number(r[1] ?? 0),
+        revenue: Number(r[2] ?? 0),
+      }))
+      .filter((r) => r.key);
+  return { by_channel: project(chRows), by_tier: project(tiRows) };
+}
+
+/* -------------------------------------------------------------------------
  * Wave 61.08 — Cohort retention + acquisition channel + funnel.
  * --------------------------------------------------------------------- */
 
@@ -411,19 +635,25 @@ export interface FunnelStepRow {
  * at-a-glance KPI tile a per-step distinct-count is sufficient and far
  * simpler to render. UI shows step name, count, conv-% vs step 1.
  *
- * Events used (event-taxonomy.ts):
+ * Events used — all VERIFIED to fire from apps/web (not aspirational). The
+ * previous version queried `reading_started` / `reading_completed`, which are
+ * defined in event-taxonomy.ts but never actually `track()`-ed anywhere, so
+ * steps 3-4 always returned 0. Rewired to the real session/report/payment
+ * events so the funnel reflects historical data immediately (no backfill).
  *   1. $pageview                 — landed on any page
- *   2. survey_completed          — finished onboarding survey
- *   3. reading_started           — started a reading
- *   4. reading_completed         — completed a reading
+ *   2. reading_session_created   — created a reading session (started)
+ *   3. survey_completed          — finished the onboarding survey
+ *   4. report_viewed             — viewed the finished report (completed)
+ *   5. payment_completed         — unlocked / paid
  */
 export async function fetchAcquisitionFunnel(): Promise<FunnelStepRow[] | null> {
   const sql = `
     SELECT
-      count(DISTINCT IF(event = '$pageview', person_id, NULL))           AS s1,
-      count(DISTINCT IF(event = 'survey_completed', person_id, NULL))    AS s2,
-      count(DISTINCT IF(event = 'reading_started', person_id, NULL))     AS s3,
-      count(DISTINCT IF(event = 'reading_completed', person_id, NULL))   AS s4
+      count(DISTINCT IF(event = '$pageview', person_id, NULL))                AS s1,
+      count(DISTINCT IF(event = 'reading_session_created', person_id, NULL))  AS s2,
+      count(DISTINCT IF(event = 'survey_completed', person_id, NULL))         AS s3,
+      count(DISTINCT IF(event = 'report_viewed', person_id, NULL))            AS s4,
+      count(DISTINCT IF(event = 'payment_completed', person_id, NULL))        AS s5
     FROM events
     WHERE timestamp > now() - INTERVAL 30 DAY
   `;
@@ -433,12 +663,14 @@ export async function fetchAcquisitionFunnel(): Promise<FunnelStepRow[] | null> 
   const s2 = Number(rows[0][1] ?? 0);
   const s3 = Number(rows[0][2] ?? 0);
   const s4 = Number(rows[0][3] ?? 0);
+  const s5 = Number(rows[0][4] ?? 0);
   const safeRate = (n: number) => (s1 > 0 ? n / s1 : 0);
   return [
-    { step: 'Pageview', users: s1, rate: 1 },
-    { step: 'Survey hoàn tất', users: s2, rate: safeRate(s2) },
-    { step: 'Reading bắt đầu', users: s3, rate: safeRate(s3) },
-    { step: 'Reading hoàn tất', users: s4, rate: safeRate(s4) },
+    { step: 'Ghé trang', users: s1, rate: 1 },
+    { step: 'Bắt đầu phiên đọc', users: s2, rate: safeRate(s2) },
+    { step: 'Hoàn tất khảo sát', users: s3, rate: safeRate(s3) },
+    { step: 'Xem báo cáo', users: s4, rate: safeRate(s4) },
+    { step: 'Thanh toán', users: s5, rate: safeRate(s5) },
   ];
 }
 
@@ -537,6 +769,74 @@ export async function fetchPostHogFeatureFlags(): Promise<PostHogFlag[] | null> 
         is_multivariate: Boolean(variants && variants.length > 0),
       };
     });
+  } catch {
+    return null;
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * P1 — PostHog Experiments (the actual A/B tests, distinct from raw flags).
+ *
+ * The /experiments page listed feature FLAGS but never the formal PostHog
+ * Experiment entities — so a founder running an A/B test couldn't see, from
+ * the admin, whether it was even collecting data. This list-only REST read
+ * surfaces each experiment's name, linked flag, status and start date; the
+ * page cross-references the linked flag against the existing per-variant
+ * conversion read (fetchVariantConversions) to show exposure + conversion,
+ * and links out to PostHog for rigorous Bayesian significance.
+ * --------------------------------------------------------------------- */
+
+export interface PostHogExperiment {
+  id: number;
+  name: string;
+  /** Linked feature-flag key — joins to VariantConversionRow.flag. */
+  flagKey: string;
+  /** running / draft / stopped / complete / paused. */
+  status: string;
+  /** ISO launch timestamp; null while still a draft. */
+  startDate: string | null;
+  /** Primary metric label (e.g. "Sign-up completion"), best-effort. */
+  primaryMetricName: string | null;
+}
+
+interface ExperimentListResponse {
+  results?: Array<{
+    id: number;
+    name?: string;
+    feature_flag_key?: string | null;
+    start_date?: string | null;
+    archived?: boolean;
+    status?: string;
+    metrics?: Array<{ name?: string }>;
+  }>;
+}
+
+/**
+ * List the project's (non-archived) experiments via REST. Returns null on any
+ * failure so the page degrades to the flag roster alone. Newest first.
+ */
+export async function fetchPostHogExperiments(): Promise<PostHogExperiment[] | null> {
+  if (!KEY) return null;
+  try {
+    const res = await fetch(
+      `${HOST}/api/projects/${PROJECT_ID}/experiments/?limit=100`,
+      {
+        headers: { Authorization: `Bearer ${KEY}` },
+        next: { revalidate: REVALIDATE_SECONDS, tags: ['posthog'] },
+      },
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as ExperimentListResponse;
+    return (data.results ?? [])
+      .filter((e) => !e.archived && e.feature_flag_key)
+      .map((e) => ({
+        id: e.id,
+        name: e.name ?? `Experiment ${e.id}`,
+        flagKey: e.feature_flag_key as string,
+        status: e.status ?? 'unknown',
+        startDate: e.start_date ?? null,
+        primaryMetricName: e.metrics?.[0]?.name ?? null,
+      }));
   } catch {
     return null;
   }

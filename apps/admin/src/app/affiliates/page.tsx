@@ -266,14 +266,16 @@ function dt(iso: string) {
 }
 
 function OverviewTab() {
-  const promotersQ = useQuery({ queryKey: ['affiliate-promoters'], queryFn: fetchPromoters });
+  const promotersQ = useQuery({ queryKey: ['affiliate-promoters'], queryFn: fetchPromoters, staleTime: 60_000 });
   const commissionsQ = useQuery({
     queryKey: ['affiliate-commission-totals'],
     queryFn: fetchCommissionTotals,
+    staleTime: 60_000,
   });
   const payoutsQ = useQuery({
     queryKey: ['affiliate-pending-payouts'],
     queryFn: fetchPendingPayouts,
+    staleTime: 60_000,
   });
   const activityQ = useQuery({
     queryKey: ['affiliate-activity'],
@@ -283,9 +285,10 @@ function OverviewTab() {
   const topQ = useQuery({
     queryKey: ['affiliate-top-5'],
     queryFn: fetchTopAffiliates,
+    staleTime: 60_000,
   });
-  const listQ = useQuery({ queryKey: ['affiliates-list'], queryFn: fetchAffiliatesList });
-  const fraudQ = useQuery({ queryKey: ['affiliates-fraud'], queryFn: fetchFraudReport });
+  const listQ = useQuery({ queryKey: ['affiliates-list'], queryFn: fetchAffiliatesList, staleTime: 60_000 });
+  const fraudQ = useQuery({ queryKey: ['affiliates-fraud'], queryFn: fetchFraudReport, staleTime: 60_000 });
 
   const totalPromoters = promotersQ.data?.length ?? 0;
   const l1Total = (promotersQ.data ?? []).reduce((s, p) => s + p.l1_count, 0);

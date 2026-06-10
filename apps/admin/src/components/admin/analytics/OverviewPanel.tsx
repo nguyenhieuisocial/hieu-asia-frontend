@@ -42,6 +42,7 @@ import {
   ClipboardList,
   Flag,
   Eye,
+  Wrench,
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { LiveBadge } from '@/components/admin/live-badge';
@@ -51,6 +52,7 @@ import {
   fetchSurveyResponses,
   fetchFeatureFlagExposure,
   fetchTopPageviews,
+  fetchTopTools,
   isPostHogServerConfigured,
 } from '@/lib/posthog-server';
 
@@ -351,6 +353,86 @@ async function TopPageviewsTile() {
   );
 }
 
+async function ToolUsageTile() {
+  const rows = await fetchTopTools();
+  if (rows === null) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-sm">
+            <Wrench className="h-4 w-4 text-gold/80" />
+            Top công cụ (30 ngày)
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <PlaceholderValue tooltip="PostHog Query API không phản hồi." />
+        </CardContent>
+      </Card>
+    );
+  }
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-sm">
+          <Wrench className="h-4 w-4 text-gold/80" />
+          Top công cụ (30 ngày)
+        </CardTitle>
+        <CardDescription>
+          Người dùng <code>tool_used</code> + tỉ lệ{' '}
+          <span className="text-emerald-400">→ trả tiền</span> theo công cụ (deepen-first).
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        {rows.length === 0 ? (
+          <p className="text-sm text-muted-foreground">
+            Chưa có lượt dùng công cụ nào trong 30 ngày.
+          </p>
+        ) : (
+          rows.map((r) => (
+            <div
+              key={r.tool}
+              className="flex items-center justify-between gap-3 border-b border-gold/10 py-2 last:border-b-0"
+            >
+              <code className="truncate text-sm text-foreground">{r.tool}</code>
+              <div className="flex shrink-0 items-center gap-3">
+                {r.errorRate > 0 && (
+                  <span
+                    className="font-mono text-[10px] text-amber-700 dark:text-amber-300"
+                    title="Tỉ lệ lỗi của công cụ"
+                  >
+                    {(r.errorRate * 100).toFixed(0)}% lỗi
+                  </span>
+                )}
+                {r.paidUsers > 0 ? (
+                  <span
+                    className="font-mono text-[11px] text-emerald-400"
+                    title={`${r.paidUsers}/${r.users} người dùng công cụ này rồi trả tiền (30 ngày)`}
+                  >
+                    {(r.conversionRate * 100).toFixed(0)}% → trả tiền
+                  </span>
+                ) : (
+                  <span
+                    className="font-mono text-[11px] text-muted-foreground"
+                    title="Chưa có người dùng công cụ này trả tiền trong 30 ngày"
+                  >
+                    —
+                  </span>
+                )}
+                <span
+                  className="font-mono text-sm text-foreground"
+                  title={`${r.users} người · ${r.uses} lượt`}
+                >
+                  {fmtNum(r.users)}
+                </span>
+              </div>
+            </div>
+          ))
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 function TileSkeleton({ label }: { label: string }) {
   return (
     <Tile
@@ -426,7 +508,7 @@ export default function AdminPostHogPage() {
           fullyConfigured ? (
             <LiveBadge tone="jade" />
           ) : (
-            <span className="rounded-full border border-amber-400/30 bg-amber-500/10 px-2 py-0.5 font-mono text-[10px] text-amber-200">
+            <span className="rounded-full border border-amber-400/30 bg-amber-500/10 px-2 py-0.5 font-mono text-[10px] text-amber-700 dark:text-amber-200">
               {configuredCount}/{status.length} cấu hình
             </span>
           )
@@ -455,6 +537,10 @@ export default function AdminPostHogPage() {
 
         <Suspense fallback={<CardSkeleton label="Top pageviews" />}>
           <TopPageviewsTile />
+        </Suspense>
+
+        <Suspense fallback={<CardSkeleton label="Top công cụ" />}>
+          <ToolUsageTile />
         </Suspense>
       </section>
 

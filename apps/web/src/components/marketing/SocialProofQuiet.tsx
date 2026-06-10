@@ -52,45 +52,47 @@ export function SocialProofQuiet() {
   return (
     <section
       aria-labelledby="social-proof-quiet-heading"
-      className="bg-background py-section"
+      className="bg-background py-14 md:py-16"
     >
       <div className="mx-auto max-w-marketing-tight px-6 lg:px-12">
-        <header className="mb-block">
-          <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
+        <header className="mb-10">
+          <p className="rv-fade font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
             <span className="mr-2 inline-block h-px w-6 bg-primary align-middle" />
             KHOẢNG LẶNG · NGƯỜI ĐÃ HỎI
           </p>
           <h2
             id="social-proof-quiet-heading"
-            className="mt-6 max-w-marketing-text font-editorial-display text-editorial-h2 font-normal tracking-tight text-foreground"
+            className="rv-up mt-6 max-w-marketing-text font-editorial-display text-editorial-h2 font-normal tracking-tight text-foreground"
+            style={{ animationDelay: '80ms' }}
           >
             Không sao. Không ảnh. Không lời khen.{' '}
             <em className="italic text-primary/80">Chỉ là điều họ ghi lại</em>
             <span className="text-primary">.</span>
           </h2>
-          <p className="mt-6 max-w-marketing-text font-sans text-editorial-lede text-muted-foreground">
+          <p className="rv-up mt-6 max-w-marketing-text font-sans text-editorial-lede text-muted-foreground" style={{ animationDelay: '160ms' }}>
             Những trích đoạn vô danh do người dùng tự gửi lại sau khi đặt một
             câu hỏi khó. Đã được cho phép đăng dưới dạng ẩn danh. Không phải
             quảng cáo — là khoảnh khắc.
           </p>
         </header>
 
-        <ul className="grid gap-8 md:gap-12 md:grid-cols-2">
+        <ul className="grid gap-6 md:gap-8 md:grid-cols-2">
           {QUOTES.map((q, i) => (
             <li
               key={q.topic}
-              className="relative flex flex-col rounded-card-editorial border border-border bg-card/40 p-card md:p-10"
+              className="rv-up relative flex flex-col rounded-card-editorial border border-border bg-card/40 p-5 md:p-7"
+              style={{ animationDelay: `${260 + i * 110}ms` }}
             >
               <span
                 aria-hidden
-                className="mb-2 block font-editorial-display text-[4.5rem] leading-none text-primary/60 md:text-[5.5rem]"
+                className="mb-1 block font-editorial-display text-5xl leading-none text-primary/60 md:text-6xl"
               >
                 &ldquo;
               </span>
-              <blockquote className="font-editorial-display text-xl italic leading-relaxed text-foreground md:text-2xl">
+              <blockquote className="font-editorial-display text-lg italic leading-relaxed text-foreground md:text-xl">
                 {q.body}
               </blockquote>
-              <p className="mt-8 font-mono text-editorial-caption uppercase tracking-[0.12em] text-muted-foreground">
+              <p className="mt-5 font-mono text-editorial-caption uppercase tracking-[0.12em] text-muted-foreground">
                 — Một người đã đặt câu hỏi về {q.topic}
               </p>
               <p
@@ -103,7 +105,7 @@ export function SocialProofQuiet() {
           ))}
         </ul>
 
-        <p className="mt-block max-w-marketing-text font-sans text-editorial-caption text-muted-foreground">
+        <p className="mt-10 max-w-marketing-text font-sans text-editorial-caption text-muted-foreground">
           Chính sách trích dẫn: chỉ đăng khi người dùng chủ động gửi và đồng ý
           ẩn danh. Không tên, không ảnh, không công ty. Nội dung có thể được
           biên tập nhẹ để bảo vệ danh tính — không thay đổi ý.

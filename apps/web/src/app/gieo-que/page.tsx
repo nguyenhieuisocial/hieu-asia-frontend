@@ -70,6 +70,7 @@ export default function GieoQuePage() {
     <>
       <ToolPageShell
         eyebrow="Kinh Dịch cổ truyền"
+        relatedSlug="/gieo-que"
         icon={<span aria-hidden="true">☯</span>}
         title={
           <>

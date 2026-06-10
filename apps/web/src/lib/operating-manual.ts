@@ -24,6 +24,7 @@ import {
   type JournalTopic,
   type WeeklyReview,
 } from './journal-storage';
+import { getPersonalityResult, type PersonalityKey } from './personality-store';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -510,6 +511,24 @@ function buildReviewCadenceSection(weekly: WeeklyReview[]): ManualSection {
   };
 }
 
+const PERSONALITY_KEYS: PersonalityKey[] = ['mbti', 'big-five', 'disc', 'enneagram'];
+function readPersonalityResults(): string[] {
+  return PERSONALITY_KEYS
+    .map((k) => getPersonalityResult(k))
+    .filter((v): v is string => !!v && v.trim().length > 0);
+}
+
+function buildPersonalitySection(results: string[]): ManualSection {
+  return {
+    id: 'personality',
+    title: 'Chân dung tính cách',
+    lines: results.slice(),
+    kind: 'list',
+    emptyHref: '/cong-cu',
+    emptyLabel: 'Làm trắc nghiệm tính cách (MBTI / Big Five / DISC / Enneagram)',
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
@@ -545,6 +564,7 @@ export function countManualInputs(): {
   decisions: number;
   journal: number;
   weekly: number;
+  personality: number;
   profileComplete: boolean;
   total: number;
 } {
@@ -553,6 +573,7 @@ export function countManualInputs(): {
   const decisions = readStoredDecisions().length;
   const journal = readJournalEntries().length;
   const weekly = readWeeklyReviews().length;
+  const personality = readPersonalityResults().length;
   const profileComplete = Boolean(
     (profile?.birthDate || chart?.birth_date) &&
       (profile?.gender || chart?.gender),
@@ -561,8 +582,9 @@ export function countManualInputs(): {
     decisions,
     journal,
     weekly,
+    personality,
     profileComplete,
-    total: decisions + journal + weekly,
+    total: decisions + journal + weekly + personality,
   };
 }
 
@@ -579,8 +601,9 @@ export function buildOperatingManual(): OperatingManual | null {
   const decisions = readStoredDecisions();
   const journal = readJournalEntries();
   const weekly = readWeeklyReviews();
+  const personalityResults = readPersonalityResults();
 
-  const totalEntries = decisions.length + journal.length + weekly.length;
+  const totalEntries = decisions.length + journal.length + weekly.length + personalityResults.length;
   if (totalEntries < 3) return null;
 
   const identity = buildIdentityCore(profile, chartProfile);
@@ -595,6 +618,7 @@ export function buildOperatingManual(): OperatingManual | null {
 
   const sections: ManualSection[] = [
     buildIdentitySection(identity),
+    buildPersonalitySection(personalityResults),
     buildStrengthsSection(topicCounts, weekly),
     buildGrowthEdgesSection(weekly),
     buildDecisionPatternsSection(topicCounts, journal, decisions.length),

@@ -1,8 +1,10 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, RadioGroup, RadioGroupItem } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { safeJson } from '@/lib/safe-json';
 
 const API_BASE = process.env.NEXT_PUBLIC_HIEU_API_URL ?? 'https://api.hieu.asia';
@@ -203,6 +205,7 @@ export default function CompatibilityPage() {
       />
       <ToolPageShell
         eyebrow="So sánh 2 người · Compatibility Pair"
+        relatedSlug="/compatibility"
         icon={<span aria-hidden="true">🤝</span>}
         title={
           <>
@@ -232,6 +235,13 @@ export default function CompatibilityPage() {
             {loading ? 'Đang phân tích...' : 'Phân tích tương hợp →'}
           </Button>
         </form>
+
+        <p className="mt-3 text-sm text-muted-foreground">
+          Có từ 3 người trở lên (gia đình, nhóm bạn)?{' '}
+          <Link href="/xem-hop-nhom" className="text-gold underline-offset-2 hover:underline">
+            Xem hợp cả nhóm →
+          </Link>
+        </p>
 
         {!report && !loading && (
           <p className="mt-10 rounded-md border border-border bg-card/40 px-4 py-6 text-center text-sm text-muted-foreground">
@@ -265,6 +275,15 @@ export default function CompatibilityPage() {
                 </div>
               </CardContent>
             </Card>
+
+            <div className="flex flex-wrap gap-3">
+              <ShareResultButton
+                path="/compatibility"
+                title="So sánh tương hợp"
+                text="Mình vừa so sánh mức độ hợp nhau trên hieu.asia — bạn thử nhé!"
+                trackId="compatibility"
+              />
+            </div>
 
             <div>
               <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">

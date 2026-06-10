@@ -597,7 +597,7 @@ export function MentorSampleInteractive() {
   return (
     <section
       aria-label="Thử Mentor AI — nhập câu hỏi tự do trên persona mẫu"
-      className="bg-muted/50 py-16 md:py-20"
+      className="bg-muted/50 py-12 md:py-14"
     >
       <div className="mx-auto max-w-marketing px-6 lg:px-12">
         {/* Header */}

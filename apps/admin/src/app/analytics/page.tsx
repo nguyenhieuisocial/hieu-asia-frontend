@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import {
   Button,
@@ -24,6 +25,7 @@ import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { LiveBadge } from '@/components/admin/live-badge';
 import { ErrorBlock } from '@/components/admin/error-block';
+import { EngineMetricsSection } from '@/components/admin/analytics/EngineMetricsSection';
 
 interface AnalyticsResponse {
   ok: boolean;
@@ -45,7 +47,7 @@ interface AnalyticsResponse {
 
 type Range = '7' | '30' | '90';
 
-async function fetchAnalytics(days: Range): Promise<AnalyticsResponse> {
+async function fetchAnalytics(days: string): Promise<AnalyticsResponse> {
   const res = await fetch(`/api/admin/analytics?days=${days}`, { cache: 'no-store' });
   const text = await res.text();
   try {
@@ -71,11 +73,41 @@ function fmtCurrency(n: number) {
   return new Intl.NumberFormat('vi-VN').format(n) + ' đ';
 }
 
+/**
+ * Period-over-period delta tag for a KpiCard. Returns null when there is no
+ * prior-period baseline (previous <= 0) so we never render a meaningless
+ * "+∞" on a zero base — the card simply shows no arrow.
+ */
+function makeDelta(
+  current: number,
+  previous: number,
+): { value: string; direction: 'up' | 'down' | 'flat' } | null {
+  if (!Number.isFinite(previous) || previous <= 0) return null;
+  const pct = ((current - previous) / previous) * 100;
+  if (Math.abs(pct) < 1) return { value: '0%', direction: 'flat' };
+  return {
+    value: `${pct > 0 ? '+' : ''}${pct.toFixed(0)}%`,
+    direction: pct > 0 ? 'up' : 'down',
+  };
+}
+
 export default function AnalyticsPage() {
   const [days, setDays] = React.useState<Range>('30');
   const { data, isLoading, refetch, isFetching, error } = useQuery({
     queryKey: ['admin', 'analytics', days],
     queryFn: () => fetchAnalytics(days),
+    staleTime: 60_000,          // keep cached 60s — no loading flash on revisit
+    placeholderData: (prev) => prev, // show old data while refetching days switch
+  });
+  // Period-over-period baseline: fetch a double-length window, then subtract the
+  // current window to isolate the *previous* period's totals (revenue/sessions
+  // are additive, so prev = total(2N) − total(N)). Uses the existing endpoint
+  // as-is — no backend change, lights up the moment this ships.
+  const { data: dataDouble } = useQuery({
+    queryKey: ['admin', 'analytics-2x', days],
+    queryFn: () => fetchAnalytics(String(Number(days) * 2)),
+    staleTime: 60_000,
+    placeholderData: (prev) => prev,
   });
 
   const showError = !!error || data?.ok === false;
@@ -96,12 +128,31 @@ export default function AnalyticsPage() {
   const sessions = data?.sessions ?? { total: 0, completed: 0, conversion_rate: 0, error_rate: 0 };
   const totalLLMCost = vendorCost.reduce((s, v) => s + v.cost_usd, 0);
   const avgCost = sessions.total > 0 ? totalLLMCost / sessions.total : 0;
+  // Vendor cost here comes from Langfuse, which is usually NOT wired (keys live
+  // off the worker). The real, realtime LLM cost truth is /llm-spend (Supabase
+  // llm_traces). When Langfuse is unconfigured, rendering "$0.000" reads as
+  // "AI is free" — so show a pointer to /llm-spend instead of a misleading zero.
+  const costUnavailable = !!data && data.vendor_cost_meta?.configured === false;
+
+  // Previous-period figures, isolated from the double-length window above.
+  // Only computed when the comparison fetch succeeded; otherwise deltas stay
+  // null and the cards render exactly as before (safe on first paint / errors).
+  const cmp = data?.ok && dataDouble?.ok ? dataDouble : undefined;
+  const prevRevenue = cmp ? Math.max(0, (cmp.revenue?.total ?? 0) - revenue.total) : null;
+  const prevSessions = cmp ? Math.max(0, (cmp.sessions?.total ?? 0) - sessions.total) : null;
+  const prevPaid = cmp ? Math.max(0, (cmp.revenue?.txn_count ?? 0) - revenue.txn_count) : null;
+  const prevConversion =
+    prevSessions && prevSessions > 0 && prevPaid !== null ? prevPaid / prevSessions : null;
+  const revenueDelta = prevRevenue !== null ? makeDelta(revenue.total, prevRevenue) : null;
+  const sessionsDelta = prevSessions !== null ? makeDelta(sessions.total, prevSessions) : null;
+  const conversionDelta =
+    prevConversion !== null ? makeDelta(sessions.conversion_rate, prevConversion) : null;
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Analytics"
-        description={`Doanh thu, vendor cost và onboarding funnel — ${days} ngày gần nhất.`}
+        description={`Doanh thu, vendor cost và onboarding funnel — ${days} ngày gần nhất. Mũi tên ↑/↓ so với ${days} ngày liền trước.`}
         icon={<BarChart3 className="h-5 w-5" />}
         badge={data && !isLoading ? <LiveBadge /> : null}
         actions={
@@ -133,9 +184,15 @@ export default function AnalyticsPage() {
           onRetry={() => refetch()}
         />
       )}
+      {sessions.error_rate > 0.02 && (
+        <div className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-xs text-red-700 dark:text-red-200">
+          Tỉ lệ lỗi hôm nay cao: {(sessions.error_rate * 100).toFixed(1)}% (5xx / tổng
+          request). Kiểm tra trang Trạng thái hệ thống.
+        </div>
+      )}
       {data?.sources && !data.sources.langfuse && (
         <div className="rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-muted-foreground">
-          Langfuse chưa wire — vendor cost hiển thị 0. Đặt LANGFUSE_PUBLIC_KEY/SECRET_KEY để bật.
+          Langfuse chưa wire — chi phí LLM thật xem ở /llm-spend. Đặt LANGFUSE_PUBLIC_KEY/SECRET_KEY để bật nguồn này.
         </div>
       )}
       {data?.funnel_v2 && data.funnel_v2.total_events === 0 && (
@@ -145,7 +202,7 @@ export default function AnalyticsPage() {
         </div>
       )}
       {data?.funnel_v2 && data.funnel_v2.drop_off_points.length > 0 && (
-        <div className="rounded-md border border-amber-400/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+        <div className="rounded-md border border-amber-400/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-700 dark:text-amber-200">
           Drop-off &gt;30% phát hiện tại:{' '}
           {data.funnel_v2.drop_off_points
             .map(p => FUNNEL_LABELS[p] ?? p)
@@ -165,6 +222,7 @@ export default function AnalyticsPage() {
           value={fmtCurrency(revenue.total)}
           icon={<DollarSign className="h-4 w-4" />}
           accent="gold"
+          delta={revenueDelta}
           hint={`${revenue.txn_count} giao dịch`}
         />
         <KpiCard
@@ -172,6 +230,7 @@ export default function AnalyticsPage() {
           value={sessions.total.toLocaleString('vi-VN')}
           icon={<Users className="h-4 w-4" />}
           accent="purple"
+          delta={sessionsDelta}
           hint={`${sessions.completed} hoàn thành`}
         />
         <KpiCard
@@ -179,14 +238,15 @@ export default function AnalyticsPage() {
           value={(sessions.conversion_rate * 100).toFixed(1) + '%'}
           icon={<TrendingUp className="h-4 w-4" />}
           accent="jade"
+          delta={conversionDelta}
           hint="paid / started"
         />
         <KpiCard
           label="Avg LLM cost/phiên"
-          value={`$${avgCost.toFixed(3)}`}
+          value={costUnavailable ? '—' : `$${avgCost.toFixed(3)}`}
           icon={<Activity className="h-4 w-4" />}
           accent="gold"
-          hint={`tổng $${totalLLMCost.toFixed(2)}`}
+          hint={costUnavailable ? 'Chi phí thật ở /llm-spend' : `tổng $${totalLLMCost.toFixed(2)}`}
         />
       </div>
 
@@ -211,7 +271,22 @@ export default function AnalyticsPage() {
             <CardDescription>Phân bổ LLM cost (USD).</CardDescription>
           </CardHeader>
           <CardContent>
-            <VendorCostChart data={vendorCost} />
+            {costUnavailable ? (
+              <div className="flex flex-col items-start gap-2 py-6 text-sm text-muted-foreground">
+                <p>
+                  Nguồn Langfuse chưa cấu hình nên chi phí ở đây trống. Chi phí LLM
+                  thật (realtime, theo từng request) sống ở trang riêng.
+                </p>
+                <Link
+                  href="/llm-spend"
+                  className="inline-flex items-center gap-1 rounded-md border border-gold/30 bg-gold/5 px-3 py-1.5 text-xs text-gold transition-colors hover:bg-gold/10"
+                >
+                  Mở Chi phí LLM →
+                </Link>
+              </div>
+            ) : (
+              <VendorCostChart data={vendorCost} />
+            )}
           </CardContent>
         </Card>
 
@@ -229,6 +304,8 @@ export default function AnalyticsPage() {
           </CardContent>
         </Card>
       </div>
+
+      <EngineMetricsSection />
     </div>
   );
 }

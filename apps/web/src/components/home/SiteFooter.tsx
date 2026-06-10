@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Mail, MessageCircle, Facebook, Heart, ArrowRight } from 'lucide-react';
+import { QUICK_LOOKUP } from '@/lib/catalog/tools';
 
 interface FooterLink {
   href: string;
@@ -33,23 +34,12 @@ const COL_PRODUCT: readonly FooterLink[] = [
 // B4 — free vs paid lookup tools (verified against route gating + vault 100
 // §9 free-tools list + /pricing tier copy). All are free-to-use except
 // /ban-do (Bản đồ sao = personalised weekly map, a Premium feature).
-const COL_QUICK_LOOKUP: readonly FooterLink[] = [
-  { href: '/tu-vi-2026', label: 'Tử Vi 2026', tag: 'free' },
-  { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay', tag: 'free' },
-  { href: '/hop-tuoi', label: 'Hợp tuổi', tag: 'free' },
-  { href: '/can-xuong', label: 'Cân Xương Đoán Số', tag: 'free' },
-  { href: '/lich-van-nien', label: 'Lịch Vạn Niên', tag: 'free' },
-  { href: '/bat-tu', label: 'Bát Tự', tag: 'free' },
-  { href: '/mbti', label: 'MBTI', tag: 'free' },
-  { href: '/than-so-hoc', label: 'Thần số học', tag: 'free' },
-  { href: '/thuoc-lo-ban', label: 'Thước Lỗ Ban', tag: 'free' },
-  { href: '/tinh-menh-cuc', label: 'Tuổi mệnh cục', tag: 'free' },
-  { href: '/ban-do', label: 'Bản đồ sao', tag: 'premium' },
-  { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại', tag: 'free' },
-  { href: '/gieo-que', label: 'Gieo Quẻ Kinh Dịch', tag: 'free' },
-  { href: '/big-five', label: 'Big Five (OCEAN)', tag: 'free' },
-  { href: '/disc', label: 'Trắc nghiệm DiSC', tag: 'free' },
-];
+// Tra cứu nhanh — từ catalog (lib/catalog/tools), cùng nguồn với SiteNav (hết trùng lặp).
+const COL_QUICK_LOOKUP: readonly FooterLink[] = QUICK_LOOKUP.map(({ href, label, tier }) => ({
+  href,
+  label,
+  tag: tier,
+}));
 
 const COL_DOCS: readonly FooterLink[] = [
   { href: '/methodology', label: 'Phương pháp' },

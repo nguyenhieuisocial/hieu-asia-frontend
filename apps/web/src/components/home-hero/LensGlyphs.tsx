@@ -79,3 +79,40 @@ export function MbtiEmblem({ className }: { className?: string }): React.JSX.Ele
     </svg>
   );
 }
+
+// Big Five (OCEAN) — a 5-axis radar: outer ring + pentagon + 5 spokes to 5 trait dots.
+export function BigFiveEmblem({ className }: { className?: string }): React.JSX.Element {
+  const P5 = Array.from({ length: 5 }, (_, k) => pt(18, -90 + 72 * k));
+  return (
+    <svg {...base(className)}>
+      <circle cx={24} cy={24} r={20} />
+      <polygon points={poly(P5)} strokeWidth={1} />
+      {P5.map(([x, y], i) => <line key={`s${i}`} x1={24} y1={24} x2={x} y2={y} strokeWidth={0.8} />)}
+      {P5.map(([x, y], i) => <circle key={`d${i}`} cx={x} cy={y} r={1.4} fill="currentColor" stroke="none" />)}
+      <circle cx={24} cy={24} r={1.5} fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+// Xem Tướng (chỉ tay & tướng mặt) — an eye of discernment: ring + almond + iris + brow rays.
+export function XemTuongEmblem({ className }: { className?: string }): React.JSX.Element {
+  return (
+    <svg {...base(className)}>
+      <circle cx={24} cy={24} r={20} />
+      <path d="M10 24 Q24 13 38 24 Q24 35 10 24 Z" strokeWidth={1.1} />
+      <circle cx={24} cy={24} r={6} />
+      <circle cx={24} cy={24} r={1.7} fill="currentColor" stroke="none" />
+      <path d="M16 16.5 L18 19.5 M24 13.5 L24 17 M32 16.5 L30 19.5" strokeWidth={0.8} />
+    </svg>
+  );
+}
+
+// slug → emblem, for catalog-driven consumers (the hero lens constellation).
+export const EMBLEMS: Record<string, (props: { className?: string }) => React.JSX.Element> = {
+  'tu-vi': TuViEmblem,
+  'bat-tu': BatTuEmblem,
+  'than-so': ThanSoEmblem,
+  mbti: MbtiEmblem,
+  'big-five': BigFiveEmblem,
+  'xem-tuong': XemTuongEmblem,
+};

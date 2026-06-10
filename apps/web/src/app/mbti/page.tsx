@@ -9,8 +9,10 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { ItalicSpan } from '@/components/marketing/ItalicSpan';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { MbtiTool } from '@/components/tools/MbtiTool';
 
 /**
  * Wave 60.95.u P1 (vault 130 P1) — /mbti audience landing.
@@ -175,12 +177,29 @@ export default function MbtiHubPage() {
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
-                <Link href="/onboarding?intent=mbti">Bắt đầu với MBTI →</Link>
+                <Link href="#mbti-test">Làm bài test MBTI →</Link>
               </Button>
               <Button asChild size="lg" variant="outline">
                 <Link href="/methodology">Phương pháp luận</Link>
               </Button>
             </div>
+          </div>
+        </section>
+
+        {/* MBTI test tool — quiz → 4-letter type → deep reading */}
+        <section id="mbti-test" className="scroll-mt-24 bg-background px-6 pb-6 md:pb-10">
+          <div className="mx-auto max-w-marketing-tight">
+            <div className="mb-6 flex items-center gap-3">
+              <Compass className="h-5 w-5 text-gold" aria-hidden />
+              <h2 className="font-sans text-section-display font-bold tracking-tight text-foreground">
+                Làm bài test — <ItalicSpan>16 câu, khoảng 4 phút</ItalicSpan>
+              </h2>
+            </div>
+            <p className="mb-8 max-w-marketing-text font-sans text-base leading-relaxed text-muted-foreground">
+              Trả lời theo thang đồng ý để hệ thống ước lượng 4 trục, ra kiểu của bạn, rồi đọc một bản
+              luận giải sâu cá nhân hoá. Kết quả là điểm khởi đầu để tự phản tư — không phải nhãn cố định.
+            </p>
+            <MbtiTool />
           </div>
         </section>
 
@@ -334,6 +353,9 @@ export default function MbtiHubPage() {
             </div>
           </div>
         </section>
+        <div className="mx-auto max-w-6xl px-6 pb-12">
+          <RelatedTools current="/mbti" />
+        </div>
       </main>
 
       <SiteFooter />

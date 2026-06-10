@@ -2,20 +2,51 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useParams, useRouter } from 'next/navigation';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  Button,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   StatusBadge,
+  Textarea,
   cn,
+  toast,
 } from '@hieu-asia/ui';
-import { ChevronLeft, Clock, DollarSign, ListTodo, Copy, AlertCircle } from 'lucide-react';
+import {
+  ChevronLeft,
+  Clock,
+  DollarSign,
+  ListTodo,
+  Copy,
+  AlertCircle,
+  CreditCard,
+  ExternalLink,
+  RotateCcw,
+  Pencil,
+  Trash2,
+  UserRound,
+  Link2,
+  KeyRound,
+  ShieldOff,
+} from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import { getSession } from '@/lib/admin-api';
+import { getSession, patchSession, setSessionAccess } from '@/lib/admin-api';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
 import type { TaskStatus } from '@hieu-asia/types';
@@ -33,6 +64,28 @@ const STATUS_LABEL: Record<TaskStatus, string> = {
   completed: 'Hoàn tất',
   failed: 'Lỗi',
 };
+
+// Sessions enrichment wave — human labels for reading_type / channel codes.
+// Falls back to the raw code so unknown future values still render.
+const READING_TYPE_LABEL: Record<string, string> = {
+  tuvi_batu: 'Tử Vi · Bát Tự',
+  palmistry: 'Xem tướng tay',
+  face: 'Xem tướng mặt',
+};
+const CHANNEL_LABEL: Record<string, string> = {
+  web: 'Web',
+  telegram: 'Telegram',
+  zalo: 'Zalo',
+};
+
+/** How long (ms) a running session may sit before we flag it as stuck. */
+const STUCK_THRESHOLD_MS = 30 * 60 * 1000;
+
+// Public customer-facing report lives on the web app, keyed by session_id at
+// /reading/<id>/report (the bare /reading/<id> only redirects into the upload
+// flow, so we link the /report sub-route directly). Origin is the canonical
+// public site; overridable for preview/staging via NEXT_PUBLIC_WEB_URL.
+const PUBLIC_WEB_URL = process.env.NEXT_PUBLIC_WEB_URL ?? 'https://hieu.asia';
 
 interface AuditEntry {
   ts: string;
@@ -58,6 +111,27 @@ async function fetchSessionAudit(id: string): Promise<SessionAuditResp> {
   } catch {
     return { ok: false };
   }
+}
+
+// Re-orchestrate + bulk-delete mirror the /sessions list helpers verbatim
+// (same Next API routes → Worker). Single-delete reuses the bulk route with a
+// one-id array because no dedicated single-delete endpoint exists.
+async function reOrchestrate(sessionId: string) {
+  const r = await fetch(`/api/admin/sessions/${sessionId}/re-orchestrate`, { method: 'POST' });
+  const data = await r.json().catch(() => ({ ok: false, error: `HTTP ${r.status}` }));
+  if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
+  return data;
+}
+
+async function bulkDelete(sessionIds: string[]) {
+  const r = await fetch('/api/admin/sessions/bulk-delete', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ session_ids: sessionIds, confirm: 'DELETE_BULK' }),
+  });
+  const data = await r.json().catch(() => ({ ok: false, error: `HTTP ${r.status}` }));
+  if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
+  return data;
 }
 
 function fmtDateTime(iso: string) {
@@ -97,21 +171,159 @@ function Field({
 
 export default function SessionDetailPage() {
   const params = useParams<{ id: string }>();
+  const router = useRouter();
+  const qc = useQueryClient();
   const id = params?.id ?? '';
   const session = useQuery({
     queryKey: ['admin', 'session', id],
     queryFn: () => getSession(id),
+    staleTime: 60_000,
   });
   const audit = useQuery({
     queryKey: ['admin', 'session', id, 'audit'],
     queryFn: () => fetchSessionAudit(id),
     enabled: !!id,
+    staleTime: 60_000,
   });
 
   const copyId = React.useCallback(() => {
     if (!session.data) return;
     navigator.clipboard.writeText(session.data.session_id).catch(() => {});
   }, [session.data]);
+
+  // Actions toolbar — mirrors the per-row actions on the /sessions list so the
+  // detail page is operationally complete (re-run / rename / delete / view
+  // customer / copy public link). Reuses the same backend calls + confirm
+  // patterns as the list (no new endpoints).
+  const [renameOpen, setRenameOpen] = React.useState(false);
+  const [renameLabel, setRenameLabel] = React.useState('');
+  const [renameNote, setRenameNote] = React.useState('');
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = React.useState(false);
+  // Manual paid-access override (backend #41). Grant comps / fixes a missed
+  // bank-transfer unlock; revoke removes access (ACCESS-only — never refunds).
+  const [grantOpen, setGrantOpen] = React.useState(false);
+  const [grantTier, setGrantTier] = React.useState('premium');
+  const [revokeOpen, setRevokeOpen] = React.useState(false);
+  const [revokeReason, setRevokeReason] = React.useState('');
+
+  const reOrchestrateMut = useMutation({
+    mutationFn: reOrchestrate,
+    onSuccess: () => {
+      toast.success('Đã trigger re-orchestrate', { description: `Session ${id}` });
+      qc.invalidateQueries({ queryKey: ['admin', 'session', id] });
+      qc.invalidateQueries({ queryKey: ['admin', 'session', id, 'audit'] });
+    },
+    onError: (e) =>
+      toast.error('Re-orchestrate thất bại', { description: (e as Error).message }),
+  });
+
+  const renameMut = useMutation({
+    mutationFn: (vars: { label: string; note: string }) =>
+      patchSession(id, { label: vars.label, note: vars.note }),
+    onSuccess: (res) => {
+      if (res.ok) {
+        toast.success('Đã lưu tên / ghi chú');
+        setRenameOpen(false);
+        qc.invalidateQueries({ queryKey: ['admin', 'session', id] });
+      } else {
+        toast.error('Lưu thất bại', { description: res.error });
+      }
+    },
+    onError: (e) => toast.error('Lưu thất bại', { description: (e as Error).message }),
+  });
+
+  const deleteMut = useMutation({
+    // Single-row delete reuses the bulk-delete route with a one-id array — the
+    // same mechanism the list page's per-row "Xóa" uses (no single-delete
+    // endpoint exists). On success we leave the (now-gone) detail page.
+    mutationFn: () => bulkDelete([id]),
+    onSuccess: () => {
+      toast.success('Đã xóa phiên');
+      setConfirmDeleteOpen(false);
+      qc.invalidateQueries({ queryKey: ['admin', 'sessions'] });
+      router.push('/sessions');
+    },
+    onError: (e) => toast.error('Xóa thất bại', { description: (e as Error).message }),
+  });
+
+  // Mở khoá thủ công (grant) — write the paid-access signal for this session.
+  const grantMut = useMutation({
+    mutationFn: (tier: string) => setSessionAccess(id, { action: 'grant', tier }),
+    onSuccess: (res) => {
+      if (res.ok) {
+        toast.success('Đã mở khoá quyền xem trả phí');
+        setGrantOpen(false);
+        qc.invalidateQueries({ queryKey: ['admin', 'session', id] });
+        qc.invalidateQueries({ queryKey: ['admin', 'session', id, 'audit'] });
+      } else {
+        toast.error('Mở khoá thất bại', { description: res.error });
+      }
+    },
+    onError: (e) => toast.error('Mở khoá thất bại', { description: (e as Error).message }),
+  });
+
+  // Thu hồi quyền (revoke) — delete the paid-access signal. Records `reason` in
+  // the audit log only; does NOT move money (SePay refunds are manual).
+  const revokeMut = useMutation({
+    mutationFn: (reason: string) =>
+      setSessionAccess(id, { action: 'revoke', reason: reason || undefined }),
+    onSuccess: (res) => {
+      if (res.ok) {
+        toast.success('Đã thu hồi quyền xem trả phí');
+        setRevokeOpen(false);
+        qc.invalidateQueries({ queryKey: ['admin', 'session', id] });
+        qc.invalidateQueries({ queryKey: ['admin', 'session', id, 'audit'] });
+      } else {
+        toast.error('Thu hồi thất bại', { description: res.error });
+      }
+    },
+    onError: (e) => toast.error('Thu hồi thất bại', { description: (e as Error).message }),
+  });
+
+  const copyReportLink = React.useCallback(() => {
+    if (!session.data) return;
+    const url = `${PUBLIC_WEB_URL}/reading/${encodeURIComponent(session.data.session_id)}/report`;
+    navigator.clipboard
+      .writeText(url)
+      .then(() => toast.success('Đã copy link báo cáo'))
+      .catch(() => toast.error('Copy link thất bại'));
+  }, [session.data]);
+
+  const openRename = React.useCallback(() => {
+    setRenameLabel(session.data?.label ?? '');
+    setRenameNote(session.data?.note ?? '');
+    setRenameOpen(true);
+  }, [session.data]);
+
+  const handleReOrchestrate = React.useCallback(() => {
+    reOrchestrateMut.mutate(id);
+  }, [reOrchestrateMut, id]);
+
+  const handleRenameSave = React.useCallback(() => {
+    renameMut.mutate({ label: renameLabel, note: renameNote });
+  }, [renameMut, renameLabel, renameNote]);
+
+  const handleDeleteConfirm = React.useCallback(() => {
+    deleteMut.mutate();
+  }, [deleteMut]);
+
+  const openGrant = React.useCallback(() => {
+    setGrantTier('premium');
+    setGrantOpen(true);
+  }, []);
+
+  const openRevoke = React.useCallback(() => {
+    setRevokeReason('');
+    setRevokeOpen(true);
+  }, []);
+
+  const handleGrantConfirm = React.useCallback(() => {
+    grantMut.mutate(grantTier);
+  }, [grantMut, grantTier]);
+
+  const handleRevokeConfirm = React.useCallback(() => {
+    revokeMut.mutate(revokeReason);
+  }, [revokeMut, revokeReason]);
 
   if (session.isLoading) {
     return (
@@ -152,6 +364,26 @@ export default function SessionDetailPage() {
   const s = session.data;
   const entries = audit.data?.entries ?? [];
 
+  // Sessions enrichment wave — flag a session that's still "running" long after
+  // creation (>30min) so the operator can investigate a stuck pipeline.
+  const createdMs = new Date(s.created_at).getTime();
+  const isStuck =
+    s.status === 'running' &&
+    Number.isFinite(createdMs) &&
+    Date.now() - createdMs > STUCK_THRESHOLD_MS;
+  const hasPayment = s.paid != null || s.tier != null || s.paid_at != null;
+
+  // "Xem khách hàng" target. The customer detail route (/customers/[id]) is
+  // keyed by user_id; prefer it when present. Else fall back to the customers
+  // list pre-filtered by the email search. Anonymous sessions (no id, no real
+  // email) get no link — the button is hidden.
+  const hasRealEmail = !!(s.user_email && s.user_email.includes('@'));
+  const customerHref = s.user_id
+    ? `/customers/${encodeURIComponent(s.user_id)}`
+    : hasRealEmail
+      ? `/customers?search=${encodeURIComponent(s.user_email)}`
+      : null;
+
   return (
     <div className="space-y-6">
       <Link
@@ -165,17 +397,33 @@ export default function SessionDetailPage() {
       {/* Wave 60.20 — Header refactor. Admin needs USER identity prominent
           (email = the human), not the opaque session UUID. UUID demoted to
           a small copy-chip below for support-ticket cross-reference. */}
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="min-w-0 flex-1">
+      <div className="flex flex-col gap-4">
+        <div className="min-w-0">
           <div className="flex items-center gap-2">
             <ListTodo className="h-5 w-5 text-gold" />
             <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
               Session detail
             </span>
             <StatusBadge status={STATUS_TONE[s.status]} label={STATUS_LABEL[s.status]} />
+            {s.reading_type ? (
+              <span
+                className="inline-flex items-center rounded border border-gold/25 bg-gold/10 px-1.5 py-0.5 text-[11px] text-gold"
+                title={`reading_type: ${s.reading_type}`}
+              >
+                {READING_TYPE_LABEL[s.reading_type] ?? s.reading_type}
+              </span>
+            ) : null}
+            {s.channel ? (
+              <span
+                className="inline-flex items-center rounded border border-border bg-card/60 px-1.5 py-0.5 text-[11px] text-muted-foreground"
+                title={`channel: ${s.channel}`}
+              >
+                {CHANNEL_LABEL[s.channel] ?? s.channel}
+              </span>
+            ) : null}
           </div>
-          <h1 className="mt-2 truncate text-2xl font-semibold text-foreground" title={s.user_email || 'Người dùng ẩn danh'}>
-            {s.user_email || <span className="italic text-muted-foreground">Người dùng ẩn danh</span>}
+          <h1 className="mt-2 truncate text-2xl font-semibold text-foreground" title={s.user_email && s.user_email.includes('@') ? s.user_email : 'Người dùng ẩn danh'}>
+            {s.user_email && s.user_email.includes('@') ? s.user_email : <span className="italic text-muted-foreground">Người dùng ẩn danh</span>}
           </h1>
           <div className="mt-1 flex flex-wrap items-center gap-2 text-xs">
             <span className="rounded border border-gold/30 bg-gold/5 px-2 py-0.5 font-mono text-gold/80" title={s.session_id}>
@@ -198,7 +446,116 @@ export default function SessionDetailPage() {
             )}
           </div>
         </div>
+
+        {/* Actions toolbar — re-run / rename / delete / view customer / copy
+            link, alongside the existing report-open + copy buttons. Mirrors the
+            per-row actions on the /sessions list so the detail page is
+            operationally complete. */}
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleReOrchestrate}
+            disabled={reOrchestrateMut.isPending}
+            title="Chạy lại pipeline cho phiên này"
+          >
+            <RotateCcw className="mr-1.5 h-3.5 w-3.5 text-gold" aria-hidden />
+            {reOrchestrateMut.isPending ? 'Đang chạy…' : 'Chạy lại'}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={openRename}
+            title="Đặt tên gợi nhớ / ghi chú nội bộ"
+          >
+            <Pencil className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+            Sửa tên / ghi chú
+          </Button>
+          {customerHref && (
+            <Link
+              href={customerHref}
+              className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm font-medium text-foreground transition-all duration-300 ease-editorial hover:border-gold/50"
+              title="Mở hồ sơ khách hàng của phiên này"
+            >
+              <UserRound className="h-4 w-4" aria-hidden />
+              Xem khách hàng
+            </Link>
+          )}
+          <button
+            type="button"
+            onClick={copyReportLink}
+            className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm font-medium text-foreground transition-all duration-300 ease-editorial hover:border-gold/50"
+            title="Copy link báo cáo khách nhìn thấy"
+          >
+            <Link2 className="h-4 w-4" aria-hidden />
+            Copy link
+          </button>
+
+          {/* Sessions polish — open the customer-facing report (public web app)
+              in a new tab. Keyed by session_id; the /report sub-route renders
+              the finished reading (and shows a "chưa sẵn sàng" state if not). */}
+          <a
+            href={`${PUBLIC_WEB_URL}/reading/${encodeURIComponent(s.session_id)}/report`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-gold/30 bg-gold/10 px-3 text-sm font-medium text-gold transition-all duration-300 ease-editorial hover:border-gold/50 hover:bg-gold/15"
+            title="Mở báo cáo khách nhìn thấy (tab mới)"
+          >
+            <ExternalLink className="h-4 w-4" aria-hidden />
+            Xem báo cáo
+          </a>
+          {/* Manual paid-access override (backend #41). Grant shown until the
+              session is paid; revoke once it is. Both require explicit confirm —
+              grant comps access, revoke is sensitive (and never refunds money). */}
+          {!s.paid && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={openGrant}
+              className="border-jade/40 text-jade-700 hover:bg-jade/10 dark:text-jade-50"
+              title="Cấp quyền xem trả phí cho phiên này"
+            >
+              <KeyRound className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+              Mở khoá thủ công
+            </Button>
+          )}
+          {s.paid && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={openRevoke}
+              className="border-red-500/40 text-red-700 hover:bg-red-500/10 dark:text-red-300"
+              title="Gỡ quyền xem trả phí của phiên này (không hoàn tiền)"
+            >
+              <ShieldOff className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+              Thu hồi quyền
+            </Button>
+          )}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setConfirmDeleteOpen(true)}
+            className="border-red-500/40 text-red-700 hover:bg-red-500/10 dark:text-red-300"
+            title="Xóa phiên vĩnh viễn"
+          >
+            <Trash2 className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+            Xoá
+          </Button>
+        </div>
       </div>
+
+      {isStuck && (
+        <div className="flex items-start gap-2.5 rounded-md border border-red-500/40 bg-red-500/5 px-4 py-3 text-sm text-red-700 dark:text-red-300">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+          <div>
+            <p className="font-medium">Phiên có thể đang treo</p>
+            <p className="mt-0.5 text-xs text-red-700/80 dark:text-red-300/80">
+              Đang ở trạng thái “đang chạy” hơn 30 phút kể từ lúc tạo. Pipeline có thể đã
+              kẹt — cân nhắc re-orchestrate hoặc kiểm tra log.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-3">
         <KpiCard
@@ -241,6 +598,112 @@ export default function SessionDetailPage() {
           </p>
         </CardContent>
       </Card>
+
+      {/* Sessions enrichment wave — payment status. Display-only: paid flag +
+          tier + unlock timestamp, derived backend-side from the
+          session-unlocked KV key. Hidden entirely when the backend hasn't
+          enriched this row (no paid/tier/paid_at). */}
+      {hasPayment && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <CreditCard className="h-4 w-4 text-gold/70" aria-hidden />
+              Thanh toán
+            </CardTitle>
+            <CardDescription>
+              Trạng thái thanh toán + gói đã mua cho phiên này.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <dl className="grid gap-3 sm:grid-cols-3">
+              <div className="space-y-0.5">
+                <dt className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                  Trạng thái
+                </dt>
+                <dd>
+                  {s.paid == null ? (
+                    <span className="text-sm text-muted-foreground">—</span>
+                  ) : s.paid ? (
+                    <span className="inline-flex items-center rounded border border-jade/30 bg-jade/10 px-1.5 py-0.5 text-xs font-medium text-jade-700 dark:text-jade-50">
+                      Đã trả
+                    </span>
+                  ) : (
+                    <span className="text-sm text-muted-foreground">Chưa trả</span>
+                  )}
+                </dd>
+              </div>
+              <Field label="Gói" value={s.tier ?? undefined} />
+              <Field
+                label="Thanh toán lúc"
+                value={s.paid_at ? fmtDateTime(s.paid_at) : undefined}
+              />
+              <Field
+                label="Số tiền"
+                value={
+                  s.paid_amount_vnd != null
+                    ? `${s.paid_amount_vnd.toLocaleString('vi-VN')} ₫`
+                    : undefined
+                }
+              />
+              <Field label="Mã giao dịch" value={s.paid_txn_ref ?? undefined} mono />
+            </dl>
+          </CardContent>
+        </Card>
+      )}
+
+      {s.user_feedback && s.user_feedback.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Phản hồi của khách</CardTitle>
+            <CardDescription>
+              Phản hồi gần đây của khách này (khớp theo email — không riêng phiên này).
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {s.user_feedback.map((f, i) => (
+              <div
+                key={i}
+                className="rounded border border-border/60 bg-muted/30 px-3 py-2 text-sm"
+              >
+                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                  {f.rating != null && (
+                    <span className="text-gold">
+                      {'★'.repeat(Math.max(0, Math.min(5, f.rating)))}
+                    </span>
+                  )}
+                  {f.surface && <span className="font-mono">{f.surface}</span>}
+                  {f.ts && <span>{fmtDateTime(f.ts)}</span>}
+                  {f.status && (
+                    <span className="rounded bg-border/50 px-1">{f.status}</span>
+                  )}
+                </div>
+                {f.message && <p className="mt-1 text-foreground/90">{f.message}</p>}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {s.state_json && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Dữ liệu thô (JSON)</CardTitle>
+            <CardDescription>
+              Toàn bộ state_json của phiên — để soi sâu khi cần.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <details>
+              <summary className="cursor-pointer text-sm text-gold/80 hover:text-gold">
+                Hiện / ẩn JSON
+              </summary>
+              <pre className="mt-2 max-h-96 overflow-auto rounded border border-border/60 bg-muted/30 p-3 font-mono text-[11px] leading-relaxed text-foreground/85">
+                {JSON.stringify(s.state_json, null, 2)}
+              </pre>
+            </details>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Wave 60.20 — Request metadata card. Extracts IP / geo / user-agent /
           referrer from state_json if the Worker captured them at session
@@ -646,6 +1109,160 @@ export default function SessionDetailPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Sửa tên / ghi chú — same label+note edit as the list (patchSession),
+          prefilled from the current values, refetches the detail on success. */}
+      <Dialog open={renameOpen} onOpenChange={(o) => !o && setRenameOpen(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Đặt tên / ghi chú phiên</DialogTitle>
+            <DialogDescription>
+              Tên gợi nhớ + ghi chú nội bộ cho phiên này. Không đổi ID gốc — chỉ là nhãn hiển thị.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-muted-foreground">Tên gợi nhớ</label>
+              <Input
+                value={renameLabel}
+                onChange={(e) => setRenameLabel(e.target.value)}
+                placeholder="vd: Chị Lan – tài chính"
+                maxLength={120}
+                autoFocus
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-muted-foreground">Ghi chú</label>
+              <Input
+                value={renameNote}
+                onChange={(e) => setRenameNote(e.target.value)}
+                placeholder="vd: khách VIP, cần follow-up"
+                maxLength={280}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="ghost"
+              onClick={() => setRenameOpen(false)}
+              disabled={renameMut.isPending}
+            >
+              Hủy
+            </Button>
+            <Button onClick={handleRenameSave} disabled={renameMut.isPending}>
+              {renameMut.isPending ? 'Đang lưu…' : 'Lưu'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Xoá — destructive confirm. Reuses the bulk-delete route with one id;
+          on success leaves the (now-gone) detail page back to the list. */}
+      <Dialog open={confirmDeleteOpen} onOpenChange={(o) => !o && setConfirmDeleteOpen(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Xóa phiên?</DialogTitle>
+            <DialogDescription>
+              Session <code className="font-mono text-gold">{s.session_id}</code> sẽ bị xóa
+              vĩnh viễn (kèm báo cáo và metadata). Hành động không hoàn tác.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="ghost"
+              onClick={() => setConfirmDeleteOpen(false)}
+              disabled={deleteMut.isPending}
+            >
+              Hủy
+            </Button>
+            <Button
+              onClick={handleDeleteConfirm}
+              disabled={deleteMut.isPending}
+              className="bg-red-500/90 text-foreground hover:bg-red-500"
+            >
+              {deleteMut.isPending ? 'Đang xóa…' : 'Xóa'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Mở khoá thủ công — grant paid access (backend #41). Optional tier
+          (defaults to premium). On success refetches the session so the payment
+          card flips to "Đã trả". */}
+      <Dialog open={grantOpen} onOpenChange={(o) => !o && setGrantOpen(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Mở khoá quyền xem trả phí?</DialogTitle>
+            <DialogDescription>
+              Cấp quyền xem trả phí cho phiên này (vd: khách đã chuyển khoản mà hệ thống
+              chưa tự mở, hoặc tặng).
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-muted-foreground">Gói</label>
+            <Select value={grantTier} onValueChange={setGrantTier}>
+              <SelectTrigger aria-label="Gói">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="premium">premium</SelectItem>
+                <SelectItem value="mentor_month">mentor_month</SelectItem>
+                <SelectItem value="mentor_year">mentor_year</SelectItem>
+                <SelectItem value="lifetime">lifetime</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setGrantOpen(false)} disabled={grantMut.isPending}>
+              Hủy
+            </Button>
+            <Button
+              onClick={handleGrantConfirm}
+              disabled={grantMut.isPending}
+              className="border border-jade/40 bg-jade/15 text-jade-700 hover:bg-jade/25 dark:text-jade-50"
+            >
+              {grantMut.isPending ? 'Đang mở khoá…' : 'Mở khoá'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Thu hồi quyền — revoke paid access (backend #41). Sensitive: the warning
+          MUST make clear this never refunds money. Optional reason recorded in
+          the audit log. On success refetches the session. */}
+      <Dialog open={revokeOpen} onOpenChange={(o) => !o && setRevokeOpen(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Thu hồi quyền xem trả phí?</DialogTitle>
+            <DialogDescription>
+              Gỡ quyền xem trả phí của phiên này. ⚠️ Nếu cần HOÀN TIỀN, bạn phải tự chuyển
+              khoản trả lại — nút này KHÔNG tự hoàn tiền.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-muted-foreground">Lý do (tuỳ chọn)</label>
+            <Textarea
+              value={revokeReason}
+              onChange={(e) => setRevokeReason(e.target.value)}
+              placeholder="vd: đã hoàn tiền qua chuyển khoản, khách yêu cầu huỷ"
+              maxLength={500}
+              rows={3}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setRevokeOpen(false)} disabled={revokeMut.isPending}>
+              Hủy
+            </Button>
+            <Button
+              onClick={handleRevokeConfirm}
+              disabled={revokeMut.isPending}
+              className="bg-red-500/90 text-foreground hover:bg-red-500"
+            >
+              {revokeMut.isPending ? 'Đang thu hồi…' : 'Thu hồi quyền'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

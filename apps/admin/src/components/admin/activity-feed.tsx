@@ -4,8 +4,8 @@
  * Dashboard activity feed — last N events.
  *
  * Order of fallback for the data source:
- *   1. /admin/audit_log?limit=10                          (preferred, if backend ships it)
- *   2. /admin/sessions?limit=10 (already real-data)       (always available)
+ *   1. /admin/audit-log?limit=10 (via /api/admin/audit-log)  (preferred — ships)
+ *   2. /admin/sessions?limit=10 (already real-data)          (fallback)
  *
  * Renders a vertical timeline with relative timestamps + colored dot per event
  * type. Empty state shows a friendly hint.
@@ -30,7 +30,7 @@ interface AuditEntry {
 
 async function fetchAudit(): Promise<AuditEntry[] | null> {
   try {
-    const r = await fetch('/api/admin-proxy/admin/audit_log?limit=10', { cache: 'no-store' });
+    const r = await fetch('/api/admin/audit-log?limit=10', { cache: 'no-store' });
     if (!r.ok) return null;
     const data = (await r.json()) as { ok?: boolean; entries?: Array<{
       id: string;
@@ -38,6 +38,7 @@ async function fetchAudit(): Promise<AuditEntry[] | null> {
       actor?: string;
       action: string;
       detail?: string;
+      resource_id?: string | null;
     }>};
     if (!data?.ok || !Array.isArray(data.entries)) return null;
     return data.entries.map((e): AuditEntry => ({
@@ -45,7 +46,7 @@ async function fetchAudit(): Promise<AuditEntry[] | null> {
       ts: e.ts,
       actor: e.actor,
       action: e.action,
-      detail: e.detail,
+      detail: e.detail ?? e.resource_id ?? undefined,
       tone:
         e.action.includes('error') || e.action.includes('fail')
           ? 'red'
@@ -88,6 +89,7 @@ export function ActivityFeed() {
     queryKey: ['admin', 'recent-sessions'],
     queryFn: () => listSessions({ page_size: 10, page: 1 }),
     enabled: !audit.data,
+    staleTime: 60_000,
   });
 
   // Map sessions → activity entries (fallback)

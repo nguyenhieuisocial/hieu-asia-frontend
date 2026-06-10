@@ -117,6 +117,7 @@ export function AuditLogDrawer({
     queryKey: ['admin', 'audit-log', 'drawer', resourceId, limit],
     queryFn: () => fetchAudit(resourceId!, limit),
     enabled,
+    staleTime: 60_000,
   });
 
   const entries = data?.entries ?? [];
@@ -180,7 +181,7 @@ export function AuditLogDrawer({
                     <span
                       className={`inline-flex items-center gap-1 rounded border px-2 py-0.5 font-mono text-[11px] ${
                         highRisk
-                          ? 'border-red-400/40 bg-red-500/10 text-red-200'
+                          ? 'border-red-400/40 bg-red-500/10 text-red-700 dark:text-red-200'
                           : 'border-gold/20 bg-gold/5 text-gold'
                       }`}
                     >

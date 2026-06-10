@@ -110,6 +110,7 @@ function CustomerDetailPageInner() {
     queryKey: ['admin', 'customer', id],
     queryFn: () => fetchCustomer(id),
     enabled: !!id,
+    staleTime: 60_000,
   });
 
   const [confirm, setConfirm] = React.useState<ConfirmState | null>(null);
@@ -298,7 +299,7 @@ function CustomerDetailPageInner() {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onSelect={onDelete}
-                className="text-red-300 focus:bg-red-500/10 focus:text-red-200"
+                className="text-red-700 dark:text-red-300 focus:bg-red-500/10 focus:text-red-700 dark:focus:text-red-200"
               >
                 {ICON_TRASH}
                 Xoá

@@ -61,6 +61,7 @@ export function ProfileTab() {
   const { data, isLoading } = useQuery({
     queryKey: ['admin', 'settings', 'profile'],
     queryFn: fetchProfile,
+    staleTime: 60_000,
   });
 
   const profile = data?.profile;

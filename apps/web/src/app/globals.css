@@ -144,6 +144,63 @@ html {
   }
 }
 
+/* AA-safe gold headings on the light "Giấy thấm" theme.
+ *
+ * The brand `gold-gradient` (#B8923D→#D5B057) clipped into heading text sits
+ * at ~2.0–2.5:1 on the cream Paper background — below WCAG 1.4.3 large-text
+ * 3:1. Deepen it to antique-ochre on LIGHT only (≥3.6:1 at every stop, and
+ * it reads true to the "giấy cũ" aged-paper spec). DARK keeps the bright gold
+ * (already ~6:1 on charcoal). Scoped to `.bg-clip-text` so gold *fills* —
+ * CTA buttons + progress bars that carry dark ink text — are untouched.
+ * Unlayered rule → wins over Tailwind's utilities layer. */
+.bg-gold-gradient.bg-clip-text {
+  background-image: linear-gradient(135deg, #7a5a1f 0%, #9a6f28 50%, #7a5a1f 100%);
+}
+.dark .bg-gold-gradient.bg-clip-text {
+  background-image: linear-gradient(135deg, #b8923d 0%, #d5b057 50%, #b8923d 100%);
+}
+
+/* ===== SCROLL REVEAL — đồng chất hero (prefers-reduced-motion safe) =====
+ * Trigger: ancestor gets [data-in] via RevealOnScroll.tsx (IntersectionObserver).
+ * Khi motion tắt: rv-* classes giữ nguyên visible (không ẩn ban đầu) → graceful.
+ * Stagger: `style={{ animationDelay: '…ms' }}` inline trên từng element. */
+@media (prefers-reduced-motion: no-preference) {
+  .rv-up   { opacity: 0; transform: translateY(.55em); }
+  .rv-fade { opacity: 0; }
+  .rv-draw-l { transform-origin: left  center; transform: scaleX(0); opacity: 0; }
+  .rv-draw-r { transform-origin: right center; transform: scaleX(0); opacity: 0; }
+
+  [data-in] .rv-up    { animation: rvUp   .72s cubic-bezier(.2,.7,.2,1) both; }
+  [data-in] .rv-fade  { animation: rvFade .8s  ease                    both; }
+  [data-in] .rv-draw-l,
+  [data-in] .rv-draw-r { animation: rvDraw .9s  cubic-bezier(.2,.7,.2,1) both; }
+}
+@keyframes rvUp   { to { opacity: 1; transform: translateY(0); } }
+@keyframes rvFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rvDraw { to { transform: scaleX(1); opacity: 1; } }
+
+/* Same rationale for faint-gold LABEL text — the mono "eyebrow" tags above
+ * headings (`text-gold/80|85|90`, ~11px) sit at ~2:1 on cream (gold #B8923D
+ * at 0.8 over Paper), failing WCAG 1.4.3 small-text 4.5:1. Deepen to
+ * antique-ochre on LIGHT (#7A5A1F ≈ 5:1); DARK restores the brand gold (fine
+ * on charcoal). Only the label opacities /80–/90 are swept; decorative gold
+ * (≤/70 dots/arrows, many aria-hidden) stays intentionally subtle.
+ * Unlayered + descendant selector → wins over Tailwind's utility. */
+:root .text-gold\/80,
+:root .text-gold\/85,
+:root .text-gold\/90 {
+  color: #7a5a1f;
+}
+.dark .text-gold\/80 {
+  color: rgb(184 146 61 / 0.8);
+}
+.dark .text-gold\/85 {
+  color: rgb(184 146 61 / 0.85);
+}
+.dark .text-gold\/90 {
+  color: rgb(184 146 61 / 0.9);
+}
+
 /* Safe-area-inset for iPhone notch / Android gesture nav.
  *
  * Wave 60.68 — added `padding-bottom` so the iPhone home-indicator no longer

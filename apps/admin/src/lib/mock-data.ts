@@ -85,6 +85,17 @@ export interface AdminSession {
   short_code?: string | null;
   label?: string | null;
   note?: string | null;
+  // Sessions enrichment wave — payment + reading-type/channel signals from the
+  // backend. paid is derived from the payment-unlocked KV key; tier is the plan
+  // bought (e.g. "mentor_month"); paid_at is the unlock timestamp. reading_type
+  // (e.g. "tuvi_batu") + channel (e.g. "web") come from state_json. All optional
+  // because legacy rows + mocks + the parallel backend PR predate them — render
+  // gracefully as "—" when absent.
+  paid?: boolean | null;
+  tier?: string | null;
+  paid_at?: string | null;
+  reading_type?: string | null;
+  channel?: string | null;
 }
 
 const CONCERNS = [
@@ -120,13 +131,17 @@ export const MOCK_SESSIONS: AdminSession[] = Array.from({ length: 200 }, (_, i) 
   const createdHours = (i * 5) % 24;
   const duration = status === 'completed' ? 60 + ((i * 17) % 240) : status === 'failed' ? 30 + (i % 60) : null;
   const geo = MOCK_GEO[i % MOCK_GEO.length]!;
+  // Roughly 1-in-4 completed sessions are paid; pick a plausible tier.
+  const paid = status === 'completed' && i % 4 === 0;
+  const tier = paid ? (i % 8 === 0 ? 'mentor_year' : 'mentor_month') : null;
+  const createdIso = isoDaysAgo(createdDays, createdHours);
   return {
     session_id: `sess_${pad(i + 1, 4)}`,
     task_id: `task_${pad(i + 1, 4)}`,
     user_id: user.id,
     user_email: user.email,
     status,
-    created_at: isoDaysAgo(createdDays, createdHours),
+    created_at: createdIso,
     completed_at: status === 'completed' && duration ? isoDaysAgo(createdDays, createdHours - duration / 3600) : null,
     duration_seconds: duration,
     cost_usd: status === 'completed' ? Math.round((0.08 + (i % 11) * 0.013) * 1000) / 1000 : 0,
@@ -136,6 +151,11 @@ export const MOCK_SESSIONS: AdminSession[] = Array.from({ length: 200 }, (_, i) 
     country: geo.country,
     city: geo.city,
     region: geo.region,
+    paid,
+    tier,
+    paid_at: paid ? createdIso : null,
+    reading_type: 'tuvi_batu',
+    channel: 'web',
   };
 });
 

@@ -341,6 +341,7 @@ export default function SecretsPage() {
     queryKey: ['admin', 'secrets', 'list'],
     queryFn: fetchSecretsList,
     refetchOnWindowFocus: false,
+    staleTime: 60_000,
   });
 
   const entries = list.data?.entries ?? [];

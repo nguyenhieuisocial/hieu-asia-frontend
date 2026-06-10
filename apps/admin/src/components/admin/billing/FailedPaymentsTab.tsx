@@ -48,6 +48,7 @@ export function FailedPaymentsTab({ onRowsChange }: FailedPaymentsTabProps) {
   const failed = useQuery({
     queryKey: ['admin', 'failed-payments'],
     queryFn: listFailedPayments,
+    staleTime: 60_000,
   });
 
   const retry = useMutation({
@@ -131,7 +132,7 @@ export function FailedPaymentsTab({ onRowsChange }: FailedPaymentsTabProps) {
           p.next_retry_at ? (
             <span className="text-xs text-muted-foreground">{fmtRelative(p.next_retry_at)}</span>
           ) : (
-            <span className="text-xs text-red-300">Hết retry</span>
+            <span className="text-xs text-red-700 dark:text-red-300">Hết retry</span>
           ),
       },
       {

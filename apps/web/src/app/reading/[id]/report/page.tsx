@@ -342,6 +342,26 @@ function SectionBody({ content }: { content: string }) {
           strong: ({ ...props }) => (
             <strong className="text-gold" {...props} />
           ),
+          // Cổ thư / phương pháp: dòng nghiêng "_Đối chiếu: …_" / "_Theo: …_"
+          // (định dạng do reading-orchestrate yêu cầu AI ghi) → khối trích dẫn nổi bật.
+          em: ({ children, ...props }) => {
+            const text = React.Children.toArray(children)
+              .map((c) => (typeof c === 'string' ? c : ''))
+              .join('');
+            const m = /^\s*(Đối chiếu|Theo)\s*:\s*([\s\S]+?)\s*$/.exec(text);
+            if (m) {
+              const classic = m[1] === 'Đối chiếu';
+              return (
+                <span className="mt-2 flex flex-col gap-0.5 border-l-2 border-gold/60 bg-gold/5 px-3 py-2 not-italic">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-gold/80">
+                    {classic ? 'Đối chiếu cổ thư' : 'Phương pháp luận hieu.asia'}
+                  </span>
+                  <span className="italic text-foreground/75">{m[2]}</span>
+                </span>
+              );
+            }
+            return <em {...props}>{children}</em>;
+          },
         }}
       >
         {content}

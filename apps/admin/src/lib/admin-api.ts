@@ -178,6 +178,14 @@ interface BackendSessionRow {
   short_code?: string | null;
   label?: string | null;
   note?: string | null;
+  // Sessions enrichment wave — payment + reading-type/channel signals added by
+  // the parallel backend PR. Top-level on the list row (payment is derived from
+  // a KV key the backend joins). All optional → render "—" when absent.
+  paid?: boolean | null;
+  tier?: string | null;
+  paid_at?: string | null;
+  reading_type?: string | null;
+  channel?: string | null;
 }
 
 /**
@@ -225,6 +233,30 @@ interface BackendSessionDetail {
   chat_history?: unknown[];
   /** Full raw state_json for admin debugging (Wave 58.12 — Birth/Tử Vi/Insights). */
   state_json?: Record<string, unknown>;
+  // Sessions enrichment wave — payment + reading-type/channel signals (parallel
+  // backend PR). Optional → detail page renders "—" / hides cards when absent.
+  paid?: boolean | null;
+  tier?: string | null;
+  paid_at?: string | null;
+  reading_type?: string | null;
+  channel?: string | null;
+  // Detail-only enrichments (BE PR #45): per-session paid amount + txn ref, and
+  // the customer's recent feedback (user-scoped by email, NOT per-session).
+  paid_amount_vnd?: number | null;
+  paid_txn_ref?: string | null;
+  user_feedback?: Array<{
+    ts?: string;
+    surface?: string;
+    rating?: number | null;
+    message?: string | null;
+    status?: string | null;
+  }>;
+  // Wave 65 — friendly identifiers (migration 0053). Returned by the detail
+  // endpoint alongside the list; surfaced so the detail page can prefill its
+  // rename/note dialog.
+  short_code?: string | null;
+  label?: string | null;
+  note?: string | null;
   [extra: string]: unknown;
 }
 
@@ -294,6 +326,14 @@ function mapBackendSession(row: BackendSessionRow): AdminSession {
     short_code: row.short_code ?? null,
     label: row.label ?? null,
     note: row.note ?? null,
+    // Payment is joined onto the row top-level by the backend (derived from the
+    // `session:unlocked:<id>` KV key). reading_type / channel may arrive either
+    // top-level or inside state_json — read both. All graceful-null.
+    paid: typeof row.paid === 'boolean' ? row.paid : null,
+    tier: row.tier ?? (st.tier as string | undefined) ?? null,
+    paid_at: row.paid_at ?? (st.paid_at as string | undefined) ?? null,
+    reading_type: row.reading_type ?? (st.reading_type as string | undefined) ?? null,
+    channel: row.channel ?? (st.channel as string | undefined) ?? null,
   };
 }
 
@@ -306,7 +346,20 @@ function uiStatusToBackend(s: AdminSession['status']): string {
 }
 
 export async function listSessions(
-  q: PageQuery & { status?: AdminSession['status']; from?: string; to?: string } = {},
+  q: PageQuery & {
+    status?: AdminSession['status'];
+    from?: string;
+    to?: string;
+    // Sessions enrichment wave — backend filter params.
+    reading_type?: string;
+    channel?: string;
+    /** '1' (paid) | '0' (unpaid). */
+    paid?: '1' | '0';
+    /** ISO-3166-1 alpha-2 country code (e.g. "VN"). */
+    country?: string;
+    /** Group-by-user: scope the list to a single user_id. */
+    user_id?: string;
+  } = {},
 ) {
   const pageSize = q.page_size ?? 20;
   const offset = ((q.page ?? 1) - 1) * pageSize;
@@ -318,6 +371,11 @@ export async function listSessions(
   if (q.status) qs.set('status', uiStatusToBackend(q.status));
   if (q.from) qs.set('from', q.from);
   if (q.to) qs.set('to', q.to);
+  if (q.reading_type) qs.set('reading_type', q.reading_type);
+  if (q.channel) qs.set('channel', q.channel);
+  if (q.paid) qs.set('paid', q.paid);
+  if (q.country) qs.set('country', q.country);
+  if (q.user_id) qs.set('user_id', q.user_id);
   const real = await proxyFetch<SessionsEnvelope>(`/admin/sessions?${qs.toString()}`);
   const sessionsList = real?.sessions || real?.items;
   if (real && real.ok !== false && Array.isArray(sessionsList)) {
@@ -367,6 +425,14 @@ export async function listSessions(
   // Mock fallback.
   let rows = MOCK_SESSIONS;
   if (q.status) rows = rows.filter((s) => s.status === q.status);
+  if (q.user_id) rows = rows.filter((s) => s.user_id === q.user_id);
+  if (q.reading_type) rows = rows.filter((s) => s.reading_type === q.reading_type);
+  if (q.channel) rows = rows.filter((s) => s.channel === q.channel);
+  if (q.paid) rows = rows.filter((s) => (s.paid ? '1' : '0') === q.paid);
+  if (q.country) {
+    const cc = q.country.toUpperCase();
+    rows = rows.filter((s) => (s.country ?? '').toUpperCase() === cc);
+  }
   if (q.search) {
     const s = q.search.toLowerCase();
     rows = rows.filter(
@@ -391,12 +457,24 @@ export interface SessionsStats {
   total: number;
   last_1h: number;
   by_status: Partial<Record<'queued' | 'running' | 'completed' | 'failed', number>>;
+  // Sessions enrichment wave — whole-DB payment + health aggregates (parallel
+  // backend PR). Optional → KPI strip shows "—" when the backend predates them.
+  revenue_vnd?: number;
+  paid_count?: number;
+  stuck_count?: number;
 }
 
 export async function getSessionsStats(): Promise<SessionsStats | null> {
   const real = await proxyFetch<{ ok?: boolean } & SessionsStats>('/admin/sessions/stats');
   if (real && real.ok !== false && typeof real.total === 'number') {
-    return { total: real.total, last_1h: real.last_1h ?? 0, by_status: real.by_status ?? {} };
+    return {
+      total: real.total,
+      last_1h: real.last_1h ?? 0,
+      by_status: real.by_status ?? {},
+      revenue_vnd: typeof real.revenue_vnd === 'number' ? real.revenue_vnd : undefined,
+      paid_count: typeof real.paid_count === 'number' ? real.paid_count : undefined,
+      stuck_count: typeof real.stuck_count === 'number' ? real.stuck_count : undefined,
+    };
   }
   return null;
 }
@@ -412,6 +490,29 @@ export async function patchSession(
   const real = await proxyFetch<{ ok?: boolean; error?: string }>(
     `/admin/sessions/${encodeURIComponent(sessionId)}`,
     { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(patch) },
+  );
+  if (real && real.ok !== false) return { ok: true };
+  return { ok: false, error: real?.error ?? 'gateway unreachable' };
+}
+
+/**
+ * Manual paid-access override (POST /admin/sessions/:id/access — backend #41).
+ * Reaches the worker the same way as patchSession: via the generic
+ * `/api/admin-proxy/*` route, which injects X-Admin-Token server-side.
+ *
+ * - grant: write the `session:unlocked:<id>` signal (tier defaults to "premium"
+ *   server-side when omitted) so the paid-reading gate accepts the session.
+ * - revoke: delete that signal. ACCESS-ONLY — moves no money; SePay refunds are
+ *   manual bank transfers done by the founder. `reason` is recorded in the audit
+ *   log only.
+ */
+export async function setSessionAccess(
+  sessionId: string,
+  body: { action: 'grant' | 'revoke'; tier?: string; reason?: string },
+): Promise<{ ok: boolean; error?: string }> {
+  const real = await proxyFetch<{ ok?: boolean; error?: string }>(
+    `/admin/sessions/${encodeURIComponent(sessionId)}/access`,
+    { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) },
   );
   if (real && real.ok !== false) return { ok: true };
   return { ok: false, error: real?.error ?? 'gateway unreachable' };
@@ -442,6 +543,22 @@ export async function getSession(id: string) {
       final_report_markdown: real.final_report_markdown || null,
       chat_history: real.chat_history || [],
       state_json: real.state_json ?? null,
+      // Sessions enrichment wave — payment + reading-type/channel. Top-level on
+      // the detail response (or inside state_json) per the parallel backend PR.
+      paid: typeof real.paid === 'boolean' ? real.paid : null,
+      tier: real.tier ?? (real.state_json?.tier as string | undefined) ?? null,
+      paid_at: real.paid_at ?? (real.state_json?.paid_at as string | undefined) ?? null,
+      reading_type:
+        real.reading_type ?? (real.state_json?.reading_type as string | undefined) ?? null,
+      channel: real.channel ?? (real.state_json?.channel as string | undefined) ?? null,
+      paid_amount_vnd: typeof real.paid_amount_vnd === 'number' ? real.paid_amount_vnd : null,
+      paid_txn_ref: real.paid_txn_ref ?? null,
+      user_feedback: Array.isArray(real.user_feedback) ? real.user_feedback : [],
+      // Wave 65 — friendly identifiers, surfaced for the detail page's
+      // rename/note dialog (mirrors the list row mapping).
+      short_code: real.short_code ?? null,
+      label: real.label ?? null,
+      note: real.note ?? null,
       _source: { isMock: false } as DataSource,
     };
   }
@@ -457,6 +574,15 @@ export async function getSession(id: string) {
           final_report_markdown: null as string | null,
           chat_history: [] as unknown[],
           state_json: null as Record<string, unknown> | null,
+          paid_amount_vnd: null as number | null,
+          paid_txn_ref: null as string | null,
+          user_feedback: [] as Array<{
+            ts?: string;
+            surface?: string;
+            rating?: number | null;
+            message?: string | null;
+            status?: string | null;
+          }>,
         },
         'gateway unreachable; showing mock',
       ),

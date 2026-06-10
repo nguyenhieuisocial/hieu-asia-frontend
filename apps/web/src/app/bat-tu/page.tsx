@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowRight, Columns3, Flame, Sparkles } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { ItalicSpan } from '@/components/marketing/ItalicSpan';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
@@ -340,6 +341,9 @@ export default function BatTuLandingPage() {
             </>
           }
         />
+        <div className="mx-auto max-w-6xl px-6 pb-12">
+          <RelatedTools current="/bat-tu" />
+        </div>
       </main>
       <SiteFooter />
       <StickyMobileCta href="/onboarding?intent=ngu-hanh" trackId="bat-tu" />

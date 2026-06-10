@@ -25,7 +25,8 @@ import Link from 'next/link';
 import {
   Compass,
   Calendar,
-  Hash,
+  Brain,
+  BarChart3,
   Hand,
   MessageSquareHeart,
   FileText,
@@ -50,12 +51,12 @@ import { MarketingHero } from '@/components/marketing/MarketingHero';
 export const metadata: Metadata = {
   title: 'Tính năng',
   description:
-    'Tử Vi 12 cung, Bát Tự, MBTI, Thần Số Học, Palm Reading, AI Mentor, PDF Cẩm Nang, Tử Vi hôm nay, đa ngôn ngữ. Mọi tính năng của hieu.asia.',
+    'Tử Vi 12 cung, Bát Tự, MBTI, Big Five, Xem Tướng, Thần Số Học, AI Mentor, PDF Cẩm Nang, Tử Vi hôm nay, đa ngôn ngữ. Mọi tính năng của hieu.asia.',
   alternates: { canonical: 'https://hieu.asia/features' },
   openGraph: {
     title: 'Tính năng',
     description:
-      'Khám phá đầy đủ tính năng: Tử Vi 12 cung, Bát Tự, MBTI, Palm Reading, AI Mentor và nhiều hơn.',
+      'Khám phá đầy đủ tính năng: Tử Vi 12 cung, Bát Tự, MBTI, Big Five, Xem Tướng, AI Mentor và nhiều hơn.',
     url: 'https://hieu.asia/features',
     type: 'website',
   },
@@ -93,7 +94,7 @@ const BUCKETS: readonly Bucket[] = [
     eyebrow: 'Bucket 01',
     title: 'Phân tích lá số',
     blurb:
-      'Nền tảng Đông phương truyền thống kết hợp khung tâm lý hiện đại. Bốn lăng kính độc lập — bạn so sánh, không bị một nguồn duy nhất chi phối.',
+      'Nền tảng Đông phương truyền thống kết hợp khung tâm lý hiện đại. Năm lăng kính độc lập — thêm Thần Số Học và các công cụ cổ học khác — để bạn so sánh, không bị một nguồn duy nhất chi phối.',
     features: [
       // Wave 60.37 CRIT-3 (sub-agent B): 3/4 CTAs in this bucket all said
       // "Tìm hiểu/Khám phá X" — eye reads them as identical buttons. Rewrite
@@ -115,18 +116,25 @@ const BUCKETS: readonly Bucket[] = [
         cta: { href: '/learn/bat-tu', label: 'Đọc giải nghĩa' },
       },
       {
-        Icon: Hash,
-        anchor: 'numerology-mbti',
-        title: 'Thần Số Học & MBTI',
-        desc: 'Số chủ đạo từ ngày sinh kết hợp 16 nhóm tính cách MBTI — khung tự nhận thức nhanh, dễ áp dụng vào công việc và quan hệ.',
-        cta: { href: '/learn/than-so-hoc', label: 'Tính số chủ đạo' },
+        Icon: Brain,
+        anchor: 'mbti',
+        title: 'MBTI 16 nhóm tính cách',
+        desc: '16 kiểu tâm trí trên 4 trục của Carl Jung (E/I · S/N · T/F · J/P) — khung tự nhận thức nhanh, dễ áp dụng vào công việc và quan hệ.',
+        cta: { href: '/mbti', label: 'Làm trắc nghiệm' },
+      },
+      {
+        Icon: BarChart3,
+        anchor: 'big-five',
+        title: 'Big Five (OCEAN)',
+        desc: 'Mô hình 5 chiều tính cách có cơ sở khoa học vững nhất — Cởi mở, Tận tâm, Hướng ngoại, Dễ chịu, Bất ổn cảm xúc — kèm bản đọc sâu cá nhân hoá.',
+        cta: { href: '/big-five', label: 'Làm trắc nghiệm' },
       },
       {
         Icon: Hand,
         anchor: 'palm',
-        title: 'Palm Reading AI',
-        desc: 'Upload ảnh lòng bàn tay — AI vision phân tích đường tâm đạo, trí đạo, sinh đạo. Dùng được khi không có giờ sinh.',
-        cta: { href: '/learn/palm', label: 'Tải ảnh bàn tay' },
+        title: 'Xem Tướng — Chỉ tay & Tướng mặt',
+        desc: 'Tải ảnh lòng bàn tay hoặc khuôn mặt — AI vision đọc nét tướng, mô tả xu hướng tính cách (không phán số mệnh). Dùng được khi không có giờ sinh.',
+        cta: { href: '/learn/palm', label: 'Tải ảnh' },
         badge: 'premium',
       },
     ],
@@ -206,7 +214,7 @@ const FEATURES_FAQ: readonly FaqItem[] = [
       <p>
         Ngày sinh, giới tính, và nếu có — giờ sinh. Giờ sinh càng chính xác,
         phân tích Tử Vi và Bát Tự càng chi tiết. Không có giờ sinh, bạn vẫn dùng
-        được MBTI, Thần Số Học và Palm Reading.
+        được MBTI, Big Five, Thần Số Học và Xem Tướng.
       </p>
     ),
   },
@@ -242,8 +250,8 @@ const FEATURES_FAQ: readonly FaqItem[] = [
     q: 'Tính năng nào miễn phí, tính năng nào trả phí?',
     a: (
       <p>
-        Khảo sát đầu vào và bản rút gọn Tử Vi / Bát Tự / MBTI / Thần Số Học luôn
-        miễn phí. Palm Reading, PDF Cẩm Nang và Tử Vi hôm nay (badge{' '}
+        Khảo sát đầu vào và bản rút gọn Tử Vi / Bát Tự / MBTI / Big Five / Thần Số
+        Học luôn miễn phí. Xem Tướng, PDF Cẩm Nang và Tử Vi hôm nay (badge{' '}
         <span className="font-medium text-gold-700">Premium</span>) yêu cầu một
         trong các gói trả phí. Xem chi tiết tại{' '}
         <Link href="/pricing" className="text-gold-700 underline-offset-2 hover:underline">
@@ -383,18 +391,18 @@ function renderBucketTitle(id: string, title: string) {
 }
 
 // Wave 60.60.b — SEO + GEO structured data.
-// ItemList of the four lenses (Tử Vi, Bát Tự, Thần Số, MBTI) for Google
-// Rich Results + AI assistants (ChatGPT/Claude/Perplexity/Gemini) so they
-// can cite each lens by name with a stable URL.
+// ItemList of the five flagship lenses (Tử Vi, Bát Tự, MBTI, Big Five, Xem
+// Tướng) for Google Rich Results + AI assistants (ChatGPT/Claude/Perplexity/
+// Gemini) so they can cite each lens by name with a stable URL.
 const FEATURES_JSON_LD = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: 'Tính năng hieu.asia — bốn lăng kính tự nhận thức',
+  name: 'Tính năng hieu.asia — năm lăng kính tự nhận thức',
   description:
-    'Tử Vi 12 cung, Bát Tự Tứ Trụ, Thần Số Học, MBTI và Palm Reading — bốn lăng kính độc lập giúp bạn nhìn chính mình từ nhiều góc.',
+    'Tử Vi 12 cung, Bát Tự Tứ Trụ, MBTI, Big Five (OCEAN) và Xem Tướng — năm lăng kính độc lập giúp bạn nhìn chính mình từ nhiều góc.',
   inLanguage: 'vi-VN',
   itemListOrder: 'https://schema.org/ItemListOrderAscending',
-  numberOfItems: 4,
+  numberOfItems: 5,
   itemListElement: [
     {
       '@type': 'ListItem',
@@ -429,10 +437,10 @@ const FEATURES_JSON_LD = {
       position: 3,
       item: {
         '@type': 'Service',
-        name: 'Thần Số Học',
-        url: 'https://hieu.asia/learn/than-so-hoc',
+        name: 'MBTI 16 loại tính cách',
+        url: 'https://hieu.asia/learn/mbti',
         description:
-          'Thần Số Học theo Pythagoras — số chủ đạo (Life Path) 1-9 + 11, 22, 33, phân tích chu kỳ 9 năm.',
+          'MBTI dựa trên 4 trục của Carl Jung (E/I, S/N, T/F, J/P) — khung tự nhận thức về cách bạn vận hành tự nhiên.',
         provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
         areaServed: 'VN',
         inLanguage: 'vi-VN',
@@ -443,10 +451,24 @@ const FEATURES_JSON_LD = {
       position: 4,
       item: {
         '@type': 'Service',
-        name: 'MBTI 16 loại tính cách',
-        url: 'https://hieu.asia/learn/mbti',
+        name: 'Big Five (OCEAN)',
+        url: 'https://hieu.asia/learn/big-five',
         description:
-          'MBTI dựa trên 4 trục của Carl Jung (E/I, S/N, T/F, J/P) — khung tự nhận thức về cách bạn vận hành tự nhiên.',
+          'Big Five (OCEAN) — 5 chiều tính cách (Cởi mở, Tận tâm, Hướng ngoại, Dễ chịu, Bất ổn cảm xúc) có cơ sở khoa học vững nhất, kèm bản đọc sâu cá nhân hoá.',
+        provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
+        areaServed: 'VN',
+        inLanguage: 'vi-VN',
+      },
+    },
+    {
+      '@type': 'ListItem',
+      position: 5,
+      item: {
+        '@type': 'Service',
+        name: 'Xem Tướng (Chỉ tay & Tướng mặt)',
+        url: 'https://hieu.asia/learn/palm',
+        description:
+          'Đọc chỉ tay và tướng mặt bằng AI vision — nhận diện nét tướng, mô tả xu hướng tính cách (không phán số mệnh).',
         provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
         areaServed: 'VN',
         inLanguage: 'vi-VN',
@@ -472,7 +494,7 @@ export default function FeaturesPage() {
           eyebrow="SẢN PHẨM · 10 TÍNH NĂNG · 3 CHƯƠNG"
           title={
             <>
-              Bốn ống kính, <em className="italic text-gold-soft">mười</em> ngôn
+              Năm ống kính, <em className="italic text-gold-soft">mười</em> ngôn
               ngữ tự hiểu<span className="text-gold-dot">.</span>
             </>
           }

@@ -1,0 +1,156 @@
+import type { Metadata } from 'next';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@hieu-asia/ui';
+import { LearnArticle } from '@/components/learn/LearnArticle';
+import { relatedLearnLenses } from '@/lib/learn/related';
+
+export const metadata: Metadata = {
+  title: 'Big Five (OCEAN) — Trắc nghiệm tính cách | Học huyền học',
+  description:
+    'Big Five (OCEAN) — mô hình tính cách có cơ sở khoa học vững nhất, đo 5 chiều: Cởi mở, Tận tâm, Hướng ngoại, Dễ chịu, Nhạy cảm cảm xúc. Xu hướng, không phải nhãn cố định.',
+  alternates: { canonical: 'https://hieu.asia/learn/big-five' },
+};
+
+// 5 chiều OCEAN — mô tả 2 đầu của mỗi dải (không đầu nào "tốt/xấu" hơn).
+const DIMENSIONS: { vi: string; en: string; high: string; low: string }[] = [
+  {
+    vi: 'Cởi mở',
+    en: 'Openness',
+    high: 'Tò mò, sáng tạo, thích ý tưởng và trải nghiệm mới.',
+    low: 'Thực tế, ưa điều quen thuộc và đã được kiểm chứng.',
+  },
+  {
+    vi: 'Tận tâm',
+    en: 'Conscientiousness',
+    high: 'Kỷ luật, có tổ chức, theo đuổi mục tiêu đến cùng.',
+    low: 'Linh hoạt, tuỳ hứng, thoải mái với sự ngẫu hứng.',
+  },
+  {
+    vi: 'Hướng ngoại',
+    en: 'Extraversion',
+    high: 'Năng động, thích giao tiếp, nạp năng lượng từ đám đông.',
+    low: 'Trầm tĩnh, thích chiều sâu và không gian riêng.',
+  },
+  {
+    vi: 'Dễ chịu',
+    en: 'Agreeableness',
+    high: 'Tin tưởng, đồng cảm, đặt sự hoà hợp lên trước.',
+    low: 'Thẳng thắn, cạnh tranh, đặt logic trước cảm xúc.',
+  },
+  {
+    vi: 'Nhạy cảm cảm xúc',
+    en: 'Neuroticism',
+    high: 'Nhạy cảm, dễ lo nghĩ, cảm xúc thay đổi nhanh.',
+    low: 'Bình thản, ổn định, ít bị stress cuốn đi.',
+  },
+];
+
+export default function LearnBigFivePage() {
+  return (
+    <LearnArticle
+      eyebrow="Tây phương · Khoa học tính cách"
+      title={
+        <>
+          Big Five — <span className="bg-gold-gradient bg-clip-text text-transparent">5 chiều tính cách</span>
+        </>
+      }
+      standfirst={
+        <>
+          Big Five (OCEAN) là mô hình tính cách có cơ sở thực nghiệm vững nhất trong tâm lý học
+          hiện đại. Năm chiều độc lập, mỗi chiều là một <em>dải liên tục</em> — không phải "ô đóng",
+          không có đầu nào tốt hay xấu hơn, chỉ là thiên hướng tự nhiên của bạn.
+        </>
+      }
+      readMeta="6 phút đọc · Cập nhật 2026"
+      breadcrumb={[
+        { label: 'Trang chủ', href: '/' },
+        { label: 'Học huyền học', href: '/learn' },
+        { label: 'Big Five' },
+      ]}
+      relatedLenses={relatedLearnLenses('big-five')}
+      tryCta={{
+        heading: 'Trải nghiệm ngay',
+        blurb:
+          'Trả lời bộ câu hỏi Big Five khoảng 4 phút để xem điểm của bạn trên 5 chiều, kèm một bản luận giải sâu cá nhân hoá — mô tả xu hướng, không phán định mệnh.',
+        href: '/big-five',
+        label: 'Làm trắc nghiệm Big Five',
+      }}
+      sections={[
+        {
+          id: 'nam-chieu',
+          tocLabel: 'Năm chiều (OCEAN)',
+          heading: 'Năm chiều (OCEAN)',
+          children: (
+            <ul className="space-y-4">
+              {DIMENSIONS.map((d) => (
+                <li key={d.en} className="border-t border-border/60 pt-4 first:border-0 first:pt-0">
+                  <div className="flex items-baseline gap-2">
+                    <span className="font-heading text-base text-foreground">{d.vi}</span>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                      {d.en}
+                    </span>
+                  </div>
+                  <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                    <p className="text-sm leading-relaxed text-foreground/85">
+                      <span className="font-medium text-gold-700">Cao · </span>{d.high}
+                    </p>
+                    <p className="text-sm leading-relaxed text-foreground/85">
+                      <span className="font-medium text-muted-foreground">Thấp · </span>{d.low}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ),
+        },
+        {
+          id: 'giai-thich',
+          tocLabel: 'Giải thích chi tiết',
+          heading: 'Giải thích chi tiết',
+          children: (
+            <Accordion type="single" collapsible className="space-y-2">
+              <AccordionItem value="why-science" className="rounded border border-border px-4">
+                <AccordionTrigger>Vì sao Big Five được xem là "khoa học" nhất?</AccordionTrigger>
+                <AccordionContent>
+                  Năm chiều này không do ai "nghĩ ra" mà nổi lên từ phân tích thống kê hàng nghìn từ mô
+                  tả tính cách qua nhiều ngôn ngữ và nền văn hoá (lexical hypothesis). Chúng có độ ổn
+                  định và khả năng dự báo cao trong nghiên cứu — nên giới hàn lâm tin cậy hơn hẳn so với
+                  các bài phân loại "đóng hộp".
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="vs-mbti" className="rounded border border-border px-4">
+                <AccordionTrigger>Khác MBTI ở chỗ nào?</AccordionTrigger>
+                <AccordionContent>
+                  MBTI xếp bạn vào 1 trong 16 "kiểu" cố định; Big Five cho bạn một <em>điểm trên năm dải
+                  liên tục</em> — gần thực tế hơn vì con người hiếm khi rơi gọn vào một hộp. Big Five
+                  cũng có nền thực nghiệm mạnh hơn. Hai góc nhìn bổ sung nhau: MBTI dễ chia sẻ, Big Five
+                  đo lường chính xác hơn.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="neuroticism" className="rounded border border-border px-4">
+                <AccordionTrigger>"Nhạy cảm cảm xúc" cao có phải điều xấu?</AccordionTrigger>
+                <AccordionContent>
+                  Không. Đây là một dải trung lập: đầu nhạy cảm giúp bạn tinh tế, đồng cảm, cảnh giác
+                  sớm với rủi ro; đầu ổn định giúp bạn điềm tĩnh dưới áp lực. Mỗi đầu hợp với những bối
+                  cảnh khác nhau — hieu.asia mô tả xu hướng, không gán tốt/xấu.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="caution" className="rounded border border-border px-4">
+                <AccordionTrigger>Cần lưu ý gì?</AccordionTrigger>
+                <AccordionContent>
+                  Điểm số là một lát cắt ở thời điểm làm bài, không cố định cả đời và có thể đổi theo
+                  giai đoạn. Hãy dùng kết quả để hiểu mình và tự quyết — không để dán nhãn hay phán xét.
+                  hieu.asia đọc Big Five như một góc nhìn, kết hợp với các lăng kính khác.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          ),
+        },
+      ]}
+    />
+  );
+}

@@ -35,7 +35,7 @@ import { EditorialList } from '@/components/marketing/EditorialList';
 // Wave 62.09 — custom discipline icons (vault 138 "đừng dùng icon set").
 import { LaSoIcon } from '@/components/marketing/icons/LaSoIcon';
 import { BatTuIcon } from '@/components/marketing/icons/BatTuIcon';
-import { ThanSoIcon } from '@/components/marketing/icons/ThanSoIcon';
+import { BigFiveEmblem, XemTuongEmblem } from '@/components/home-hero/LensGlyphs';
 import { MbtiIcon } from '@/components/marketing/icons/MbtiIcon';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { SampleOutputShowcase } from '@/components/marketing/SampleOutputShowcase';
@@ -44,6 +44,7 @@ import { ScanRow } from '@/components/marketing/ScanRow';
 import { PullQuote } from '@/components/marketing/PullQuote';
 import { SectionDivider } from '@/components/marketing/SectionDivider';
 import { SocialProofQuiet } from '@/components/marketing/SocialProofQuiet';
+import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 
 export const metadata: Metadata = {
   // Homepage title already contains the brand → bypass the layout
@@ -178,6 +179,17 @@ const SERVICES_JSONLD = {
     },
     {
       '@type': 'Service',
+      name: 'Big Five (OCEAN)',
+      serviceType: 'Big Five (OCEAN) personality assessment',
+      provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
+      areaServed: 'VN',
+      inLanguage: 'vi-VN',
+      url: 'https://hieu.asia/big-five',
+      description:
+        'Trắc nghiệm Big Five (OCEAN) — 5 chiều tính cách có cơ sở khoa học vững nhất, kèm bản đọc sâu cá nhân hoá.',
+    },
+    {
+      '@type': 'Service',
       name: 'Palm Reading AI',
       serviceType: 'Palmistry / chiromancy AI analysis',
       provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
@@ -211,7 +223,7 @@ const FAQ_JSONLD = {
       name: 'Tôi không có giờ sinh chính xác thì có dùng được không?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Có. Bạn vẫn dùng được MBTI, Thần Số Học và Palm Reading mà không cần giờ sinh. Có thể cập nhật lá số bất cứ lúc nào sau đó.',
+        text: 'Có. Bạn vẫn dùng được MBTI, Big Five, Thần Số Học và Xem Tướng mà không cần giờ sinh. Có thể cập nhật lá số bất cứ lúc nào sau đó.',
       },
     },
     {
@@ -304,7 +316,7 @@ const HOME_FAQ: readonly FaqItem[] = [
     q: 'Tôi không có giờ sinh chính xác thì có dùng được không?',
     a: (
       <p>
-        Có. Bạn vẫn có thể bắt đầu với MBTI, Thần Số Học và Palm Reading mà
+        Có. Bạn vẫn có thể bắt đầu với MBTI, Big Five, Thần Số Học và Xem Tướng mà
         không cần giờ sinh. Khi tìm được thông tin chính xác hơn, bạn có thể cập
         nhật lá số bất cứ lúc nào.
       </p>
@@ -432,7 +444,7 @@ export default function LandingPage() {
         <MultiHero />
 
         {/* Brand "không phải oracle" — editorial decoder strip ngay dưới hero */}
-        <NotOraclesStrip />
+        <RevealOnScroll><NotOraclesStrip /></RevealOnScroll>
 
         {/* Wave 63.4 — removed the IntentChips "HOẶC BẮT ĐẦU TỪ" 6-lens strip.
             Founder (vault 138 review #2): the hero had THREE stacked start
@@ -444,16 +456,6 @@ export default function LandingPage() {
             This also removes "Tướng tay"/Palm from the hero, where it sat as
             a peer of the 4 canonical ống kính despite being a secondary
             (no-birth-time) entry — keeping the "bốn ống kính" message clean. */}
-
-        {/* Wave 52 — persistent disclaimer chip surfaced near hero (also in footer). */}
-        <div
-          role="note"
-          className="mx-auto mt-4 flex max-w-3xl items-center justify-center px-6"
-        >
-          <p className="rounded-full border border-primary/20 bg-muted/60 px-4 py-1.5 text-center text-[11px] leading-snug text-muted-foreground backdrop-blur-sm sm:text-xs">
-            Kết quả mang tính tham khảo — không thay thế tư vấn y tế, pháp lý hay tài chính.
-          </p>
-        </div>
 
         {/* Wave 60.95.d P1-11 — ScanRow refactored taxonomy → user intent.
             Vault 130 §1 + ChatGPT review §2.2: user intent first, discipline
@@ -518,9 +520,9 @@ export default function LandingPage() {
         />
 
         {/* Methodology — show-your-work: cơ chế 4 lăng kính → AI, đặt trước trust (review #23). */}
-        <Methodology />
+        <RevealOnScroll><Methodology /></RevealOnScroll>
         {/* Breadth — chống undersell (founder feedback): KHÔNG chỉ 4 lăng kính, có cả bộ 12 công cụ. */}
-        <ToolkitSection />
+        <RevealOnScroll><ToolkitSection /></RevealOnScroll>
 
         {/* 2. WhyTrust — existing 3-pillar, wrap in warm-dark-100 shell */}
         <div className="bg-muted/40">
@@ -540,11 +542,11 @@ export default function LandingPage() {
             ordinal number + italic display heading + body + inline editorial
             CTA. Removes the 4 implicit "click anywhere" CTAs from the old
             grid tiles (Wave 62.06 conversion architecture). */}
-        <EditorialList
-          eyebrow="BỐN ỐNG KÍNH"
+        <RevealOnScroll threshold={0.08}><EditorialList
+          eyebrow="NĂM ỐNG KÍNH"
           title={
             <>
-              Một con người, <em className="italic text-primary">soi</em> từ bốn góc.
+              Một con người, <em className="italic text-primary">soi</em> từ năm góc.
             </>
           }
           items={[
@@ -565,14 +567,6 @@ export default function LandingPage() {
               cta: 'Đọc về Bát Tự',
             },
             {
-              icon: <ThanSoIcon className="h-full w-full" />,
-              eyebrow: 'THẦN SỐ · NUMEROLOGY',
-              title: 'Đếm con số đời',
-              body: 'Numerology phương Tây — đường đời, ngày sinh, tên gọi cộng dồn thành mật mã hành trình cá nhân.',
-              href: '/learn/than-so-hoc',
-              cta: 'Đọc về Thần Số',
-            },
-            {
               icon: <MbtiIcon className="h-full w-full" />,
               eyebrow: 'MBTI · TÂM LÝ HỌC',
               title: 'Gọi tên tâm trí',
@@ -580,8 +574,24 @@ export default function LandingPage() {
               href: '/learn/mbti',
               cta: 'Đọc về MBTI',
             },
+            {
+              icon: <BigFiveEmblem className="h-full w-full" />,
+              eyebrow: 'BIG FIVE · OCEAN',
+              title: 'Đo 5 chiều',
+              body: 'Năm chiều tính cách (OCEAN) — mô hình tâm lý có cơ sở thực nghiệm vững nhất; đo xu hướng, không dán nhãn.',
+              href: '/big-five',
+              cta: 'Làm trắc nghiệm Big Five',
+            },
+            {
+              icon: <XemTuongEmblem className="h-full w-full" />,
+              eyebrow: 'XEM TƯỚNG · AI',
+              title: 'Đọc chỉ tay & tướng',
+              body: 'Chỉ tay và tướng mặt đọc từ ảnh — AI thị giác nhận diện nét tướng, mô tả xu hướng, không phán số phận.',
+              href: '/xem-tuong',
+              cta: 'Thử xem tướng',
+            },
           ]}
-        />
+        /></RevealOnScroll>
 
         {/* Wave 60.95.o — removed BigNumberRow section per founder direction.
             The block advertised seed numbers (1243 reports/4.8★) that the
@@ -598,7 +608,7 @@ export default function LandingPage() {
             SectionDivider as visual breath between EditorialList and PullQuote;
             PhilosophyBlock component itself stays in `marketing/` and renders
             on /about page (gitnexus impact confirmed LOW + isolated usage). */}
-        <SectionDivider variant="lotus" />
+        <RevealOnScroll threshold={0.5}><SectionDivider variant="lotus" /></RevealOnScroll>
 
         {/* Wave 60.66.P5 — Editorial PullQuote between philosophy and pricing
             (vault 109 §3 Phase 5 ENRICHED). Motion `whileInView` fade-in via
@@ -652,7 +662,7 @@ export default function LandingPage() {
               features: [
                 'Khảo sát đầu vào',
                 'Công cụ tra cứu cơ bản',
-                'Tử Vi · Bát Tự · MBTI · Thần Số',
+                'Tử Vi · Bát Tự · MBTI · Big Five · Xem Tướng',
                 'Lưu hồ sơ cá nhân',
               ],
               ctaLabel: 'Bắt đầu miễn phí',
@@ -698,7 +708,7 @@ export default function LandingPage() {
               features: [
                 'Mentor AI không giới hạn câu hỏi',
                 'Đại vận và lưu niên hàng năm',
-                'Tất cả 4 ống kính sâu',
+                'Tất cả 5 ống kính sâu',
                 'Huỷ bất cứ lúc nào',
               ],
               ctaLabel: 'Dùng Mentor không giới hạn',
@@ -736,9 +746,9 @@ export default function LandingPage() {
             sending child abroad, leaving the city). Italic Newsreader,
             ochre quote marks, NO stars/faces/names. Editorial pulse
             between high-friction pricing and FAQ that closes objections. */}
-        <SocialProofQuiet />
+        <RevealOnScroll><SocialProofQuiet /></RevealOnScroll>
         {/* MissionNote — founder ẩn danh → trust qua sứ mệnh (không testimonial mặt/sao) */}
-        <MissionNote />
+        <RevealOnScroll><MissionNote /></RevealOnScroll>
 
         {/* 7. FaqAccordion — existing 6 Q, warm-dark-100 */}
         <div className="bg-muted/40">
@@ -750,23 +760,6 @@ export default function LandingPage() {
           <NewsletterSignup id="newsletter" />
         </div>
 
-        {/* Final CTA — lời mời hành động đóng trang (review: thiếu CTA cuối trước footer) */}
-        <section aria-label="Bắt đầu" className="py-16 text-center sm:py-20">
-          <div className="mx-auto max-w-marketing-tight px-6 sm:px-8">
-            <h2 className="font-marketing-display text-3xl leading-tight text-foreground sm:text-4xl">
-              Bắt đầu hiểu mình hôm nay.
-            </h2>
-            <a
-              href="/onboarding"
-              className="mt-5 inline-flex items-center justify-center rounded-md bg-[hsl(var(--primary-cta))] px-8 py-3.5 font-medium text-primary-foreground transition-opacity hover:opacity-90"
-            >
-              Lập lá số của tôi →
-            </a>
-            <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-              Miễn phí · không cần thẻ · 1 phút
-            </p>
-          </div>
-        </section>
       </main>
       <SiteFooter />
       <StickyMobileCta trackId="home" label="Lập lá số của tôi" />

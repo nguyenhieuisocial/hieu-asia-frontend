@@ -36,11 +36,14 @@ import {
   CreditCard,
   Network,
   ShieldCheck,
+  Sparkle,
 } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { useAuth } from '@/hooks/use-auth';
 import { FeedHero } from '@/components/account/FeedHero';
+import { StreakCard } from '@/components/account/StreakCard';
+import { ReferralCard } from '@/components/account/ReferralCard';
 import { ActivityFeed } from '@/components/account/ActivityFeed';
 import { PinnedInsights } from '@/components/account/PinnedInsights';
 import { QuickActions } from '@/components/account/QuickActions';
@@ -110,6 +113,7 @@ const SETTINGS_LINKS: readonly {
   label: string;
   icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
 }[] = [
+  { href: '/account/journey', label: 'Hành trình 5 lăng kính', icon: Sparkle },
   { href: '/account/profile', label: 'Hồ sơ', icon: UserIcon },
   { href: '/account/chart', label: 'Lá số của tôi', icon: UserIcon },
   { href: '/account/operating-manual', label: 'Sổ tay cá nhân', icon: BookOpen },
@@ -169,6 +173,12 @@ function AccountPageInner() {
 
         <section className="relative mx-auto max-w-3xl space-y-12 px-6 pb-20 pt-12 sm:pt-16">
           <FeedHero user={auth.user} />
+          <div id="streak" className="scroll-mt-24">
+            <StreakCard />
+          </div>
+          <div id="moi-ban" className="scroll-mt-24">
+            <ReferralCard />
+          </div>
           <ActivityFeed />
           <RecentConversations />
           <PinnedInsights />

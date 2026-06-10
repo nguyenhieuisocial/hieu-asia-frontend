@@ -272,16 +272,21 @@ export default function FamilyProfilesPage() {
             viên với bạn.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
-            <Button asChild size="lg"><Link href="/onboarding/topic">
-              
-                Lập lá số cá nhân
+            <Button asChild size="lg"><Link href="/xem-hop-nhom">
+
+                Xem hợp cả nhóm (3–6 người)
                 <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-              
+
             </Link></Button>
             <Button asChild size="lg" variant="outline"><Link href="/compatibility">
-              
-                So 2 lá số đã có sẵn
-              
+
+                So 2 người
+
+            </Link></Button>
+            <Button asChild size="lg" variant="outline"><Link href="/onboarding/topic">
+
+                Lập lá số cá nhân
+
             </Link></Button>
           </div>
         </section>

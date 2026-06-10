@@ -93,6 +93,7 @@ export default function PromptsListPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['admin', 'prompts'],
     queryFn: fetchPrompts,
+    staleTime: 60_000,
   });
 
   // Wave 60.71.T2.prompts polish — search + custom/default filter so the

@@ -61,7 +61,7 @@ export function HowToStart() {
       // `rgb(19,17,13)` set in page.tsx line 531. Same fix as Wave 60.79.T3
       // applied to WhyTrust earlier — inherit page wrapper bg for tonal
       // consistency. Callers that need a specific bg can wrap this component.
-      className="relative py-16 md:py-20"
+      className="relative py-12 md:py-14"
     >
       <div
         aria-hidden="true"

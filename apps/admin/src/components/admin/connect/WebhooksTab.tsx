@@ -121,6 +121,7 @@ export function WebhooksTab() {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['admin', 'connect', 'webhooks'],
     queryFn: fetchDeliveries,
+    staleTime: 60_000,
   });
 
   const rows = React.useMemo(
