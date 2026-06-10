@@ -5,6 +5,7 @@ import { PALACE_READINGS } from '@/lib/palace-readings';
 import { PURPOSES } from './xem-ngay/purposes';
 import { VARIANTS } from './dat-ten-ngu-hanh/variants';
 import { BIRTH_YEARS, slugOf } from './xem-tuoi-cuoi/years';
+import { VARIANTS as SINH_CON_VARIANTS } from './sinh-con/variants';
 import { ZODIAC, canonicalPairSlug } from '@/lib/hop-tuoi-pairs';
 import { COMPARISONS } from '@/lib/so-sanh';
 
@@ -290,5 +291,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls];
+  // Sinh con theo năm — SEO (mệnh của bé + đối chiếu tuổi bố mẹ).
+  const sinhCon: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/sinh-con`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    ...SINH_CON_VARIANTS.map((v) => ({
+      url: `${BASE_URL}/sinh-con/${v.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.65,
+    })),
+  ];
+
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls];
 }

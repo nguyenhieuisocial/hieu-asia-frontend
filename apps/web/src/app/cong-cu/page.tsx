@@ -105,6 +105,12 @@ const TOOLS = [
     desc: 'Tra mệnh ngũ hành của bé theo ngày sinh + gợi ý tên hợp mệnh — gợi ý tham khảo.',
   },
   {
+    href: '/sinh-con',
+    emoji: '👶',
+    name: 'Sinh Con Theo Năm',
+    desc: 'Mệnh & con giáp của bé theo năm sinh + đối chiếu tuổi bố mẹ — tham khảo phong tục.',
+  },
+  {
     href: '/hop-tuoi',
     emoji: '💑',
     name: 'Hợp Tuổi',
