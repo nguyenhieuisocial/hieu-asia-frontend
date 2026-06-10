@@ -44,7 +44,11 @@ export default function LlmSpendPage() {
   const qc = useQueryClient();
   const [vendorFilter, setVendorFilter] = React.useState('');
   const [roleFilter, setRoleFilter] = React.useState('');
-  const [lastRefresh, setLastRefresh] = React.useState<Date>(() => new Date());
+  // Null on the server so SSR markup is deterministic; the real timestamp is
+  // filled in after mount (effect below). Rendering `new Date()` during SSR vs
+  // hydration produced a React #418 text-mismatch (toLocaleString includes
+  // seconds → server and client strings differ).
+  const [lastRefresh, setLastRefresh] = React.useState<Date | null>(null);
 
   const configured = isLlmSpendConfigured();
 
@@ -108,6 +112,11 @@ export default function LlmSpendPage() {
     setLastRefresh(new Date());
   }, [qc]);
 
+  // Seed the "last refresh" clock after mount (see state declaration above).
+  React.useEffect(() => {
+    setLastRefresh(new Date());
+  }, []);
+
   // Realtime: refetch KPIs / traces on new INSERT into llm_traces.
   React.useEffect(() => {
     if (!configured) return;
@@ -156,7 +165,7 @@ export default function LlmSpendPage() {
             <code className="font-mono text-gold">hieu_asia.llm_traces</code>.
             <br />
             <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-              Cập nhật lần cuối: {fmtTime(lastRefresh)}
+              Cập nhật lần cuối: {lastRefresh ? fmtTime(lastRefresh) : '—'}
             </span>
           </>
         }
