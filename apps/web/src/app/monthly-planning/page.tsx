@@ -25,14 +25,14 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
-  title: 'Monthly Planning — Lập kế hoạch tháng theo lá số',
+  title: 'Khung kế hoạch tháng — chia mục tiêu thành 4 tuần',
   description:
-    'Lập kế hoạch tháng theo lá số: chia chủ đề tháng thành 4 tuần. Premium tự fill dữ liệu từ đại vận và lưu nguyệt của bạn.',
+    'Khung tham khảo chung để lập kế hoạch tháng: chia mục tiêu thành 4 tuần + các mảng cần cân đối. Lập lá số để cá nhân hoá theo đại vận và lưu nguyệt của bạn.',
   alternates: { canonical: 'https://hieu.asia/monthly-planning' },
   openGraph: {
-    title: 'Monthly Planning — Lập kế hoạch tháng',
+    title: 'Khung kế hoạch tháng',
     description:
-      'Chia chủ đề tháng thành 4 tuần — định hướng theo đại vận và lưu nguyệt cá nhân.',
+      'Chia mục tiêu tháng thành 4 tuần — khung tham khảo chung, lập lá số để cá nhân hoá.',
     url: 'https://hieu.asia/monthly-planning',
     type: 'article',
   },
@@ -108,20 +108,14 @@ const WEEKS: {
 const ENERGIES: {
   icon: typeof Briefcase;
   label: string;
-  tone: 'Thuận' | 'Trung tính' | 'Cẩn trọng';
+  hint: string;
 }[] = [
-  { icon: Briefcase, label: 'Sự nghiệp', tone: 'Thuận' },
-  { icon: Wallet, label: 'Tài chính', tone: 'Cẩn trọng' },
-  { icon: Heart, label: 'Quan hệ', tone: 'Trung tính' },
-  { icon: Wind, label: 'Sức khoẻ', tone: 'Thuận' },
-  { icon: Sparkles, label: 'Tinh thần', tone: 'Trung tính' },
+  { icon: Briefcase, label: 'Sự nghiệp', hint: 'Mục tiêu công việc của tháng' },
+  { icon: Wallet, label: 'Tài chính', hint: 'Thu chi & khoản cần kiểm soát' },
+  { icon: Heart, label: 'Quan hệ', hint: 'Người cần dành thời gian' },
+  { icon: Wind, label: 'Sức khoẻ', hint: 'Thói quen muốn giữ' },
+  { icon: Sparkles, label: 'Tinh thần', hint: 'Việc giúp nạp lại năng lượng' },
 ];
-
-const TONE_STYLE: Record<'Thuận' | 'Trung tính' | 'Cẩn trọng', string> = {
-  'Thuận': 'border-emerald-400/40 bg-emerald-500/10 text-emerald-200',
-  'Trung tính': 'border-border bg-muted/5 text-foreground/80',
-  'Cẩn trọng': 'border-amber-400/40 bg-amber-500/10 text-amber-200',
-};
 
 function currentMonthVN(): string {
   return new Intl.DateTimeFormat('vi-VN', {
@@ -156,33 +150,34 @@ export default function MonthlyPlanningPage() {
             <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold-700">
               Kế hoạch tháng
             </p>
-            <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/40 bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-amber-200">
-              Demo
+            <span className="inline-flex items-center gap-1 rounded-full border border-border bg-muted/10 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+              Tham khảo chung
             </span>
           </div>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">
             <span className="bg-gold-gradient bg-clip-text text-transparent">
-              Lập kế hoạch tháng theo lá số
+              Khung kế hoạch tháng
             </span>
           </h1>
           <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Chia chủ đề tháng thành 4 tuần. Premium subscription tự fill dữ liệu từ
-            đại vận + lưu nguyệt của bạn — Phase 1 hiển thị nội dung tham chiếu.
+            Chia mục tiêu tháng thành 4 tuần. Đây là khung tham khảo chung — lập
+            lá số để cá nhân hoá theo đại vận + lưu nguyệt của bạn.
           </p>
         </header>
 
         <Card className="mb-10 border-gold/25 bg-gold/[0.05]">
           <CardHeader>
             <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
-              Chủ đề tháng
+              Tháng đang lập kế hoạch
             </p>
             <CardTitle className="font-heading text-xl capitalize sm:text-2xl">
               {monthLabel}
             </CardTitle>
             <CardDescription className="text-muted-foreground">
-              Chủ đề tham chiếu — <strong className="text-foreground">xây nền hơn là
-              mở rộng</strong>. Tập trung vào hệ thống bạn đã có, đừng vội thêm
-              dự án mới.
+              Một nguyên tắc chung đáng cân nhắc mỗi tháng:{' '}
+              <strong className="text-foreground">ưu tiên xây nền hơn là mở
+              rộng</strong> — hoàn thiện hệ thống bạn đã có trước khi thêm dự án
+              mới. Lưu nguyệt riêng của tháng cần lá số để xác định.
             </CardDescription>
           </CardHeader>
         </Card>
@@ -234,7 +229,7 @@ export default function MonthlyPlanningPage() {
             id="energies-heading"
             className="mb-5 font-heading text-lg font-semibold sm:text-xl"
           >
-            5 năng lượng tháng này
+            5 mảng cần cân đối trong tháng
           </h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {ENERGIES.map((e) => {
@@ -244,11 +239,9 @@ export default function MonthlyPlanningPage() {
                   <CardContent className="flex flex-col items-start gap-2 p-5">
                     <Icon className="h-5 w-5 text-gold/80" aria-hidden="true" />
                     <p className="text-sm font-medium text-foreground">{e.label}</p>
-                    <span
-                      className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-medium ${TONE_STYLE[e.tone]}`}
-                    >
-                      {e.tone}
-                    </span>
+                    <p className="text-xs leading-relaxed text-muted-foreground">
+                      {e.hint}
+                    </p>
                   </CardContent>
                 </Card>
               );

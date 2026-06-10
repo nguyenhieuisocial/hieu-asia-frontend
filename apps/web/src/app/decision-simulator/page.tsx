@@ -43,69 +43,37 @@ const TOPIC_OPTIONS: readonly { id: Topic; label: string }[] = [
   { id: 'general', label: 'Khác' },
 ];
 
-const CRITERIA: readonly string[] = [
-  'Hợp xu hướng hiện tại',
-  'Rủi ro tài chính',
-  'Cơ hội học nhanh',
-  'Áp lực tinh thần',
-  'Tác động dài hạn',
-  'Điều kiện nên chọn',
+// Khung tiêu chí để NGƯỜI DÙNG tự cân nhắc — không phải máy chấm điểm.
+// Mỗi tiêu chí kèm 1 câu hỏi dẫn dắt áp cho cả hai lựa chọn.
+const CRITERIA: readonly { name: string; question: string }[] = [
+  {
+    name: 'Hợp xu hướng hiện tại',
+    question: 'Lựa chọn nào hợp hơn với hướng bạn đang đi trong 1–2 năm tới?',
+  },
+  {
+    name: 'Rủi ro tài chính',
+    question: 'Nếu kịch bản xấu nhất xảy ra, lựa chọn nào bạn còn chịu được về tiền bạc?',
+  },
+  {
+    name: 'Cơ hội học nhanh',
+    question: 'Lựa chọn nào buộc bạn học kỹ năng mới hoặc trưởng thành nhanh hơn?',
+  },
+  {
+    name: 'Áp lực tinh thần',
+    question: 'Lựa chọn nào khiến bạn căng thẳng kéo dài hơn — và bạn chịu được bao lâu?',
+  },
+  {
+    name: 'Tác động dài hạn',
+    question: 'Sau 3–5 năm nhìn lại, lựa chọn nào để lại nền tảng tốt hơn?',
+  },
+  {
+    name: 'Điều kiện nên chọn',
+    question: 'Mỗi lựa chọn chỉ thực sự đúng khi điều kiện nào là thật?',
+  },
 ];
-
-type Tag = 'Thấp' | 'Trung bình' | 'Cao';
-const TAGS: readonly Tag[] = ['Thấp', 'Trung bình', 'Cao'];
-
-const TAG_STYLE: Record<Tag, string> = {
-  'Thấp': 'border-emerald-400/40 bg-emerald-500/10 text-emerald-200',
-  'Trung bình': 'border-border bg-muted/5 text-foreground/80',
-  'Cao': 'border-amber-400/40 bg-amber-500/10 text-amber-200',
-};
-
-function hashString(s: string): number {
-  let h = 2166136261;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
-}
-
-function deterministicTag(seed: number, criterionIndex: number): Tag {
-  // Mix seed with criterionIndex so different rows differ.
-  const v = (seed ^ (criterionIndex * 2654435761)) >>> 0;
-  const i = v % TAGS.length;
-  return TAGS[i] ?? 'Trung bình';
-}
 
 function isTopic(v: string): v is Topic {
   return v === 'career' || v === 'finance' || v === 'relationship' || v === 'general';
-}
-
-type ComparisonRow = { criterion: string; a: Tag; b: Tag };
-
-type Result = {
-  rows: ComparisonRow[];
-  summary: string;
-};
-
-function buildResult(
-  titleA: string,
-  titleB: string,
-  topic: Topic,
-): Result {
-  const seedA = hashString(`${topic}:${titleA}`);
-  const seedB = hashString(`${topic}:${titleB}`);
-  const rows: ComparisonRow[] = CRITERIA.map((c, i) => ({
-    criterion: c,
-    a: deterministicTag(seedA, i),
-    b: deterministicTag(seedB, i),
-  }));
-  const summary =
-    `Cân nhắc: Lựa chọn A ("${titleA}") thiên về điều kiện ổn định hơn; ` +
-    `lựa chọn B ("${titleB}") thiên về cơ hội học nhanh nhưng đi kèm áp lực. ` +
-    `Quyết định phụ thuộc bạn đang ở giai đoạn nào — Giai đoạn 1 chỉ hỗ trợ tư duy, ` +
-    `chưa phải gợi ý đúng/sai.`;
-  return { rows, summary };
 }
 
 export default function DecisionSimulatorPage() {
@@ -114,8 +82,7 @@ export default function DecisionSimulatorPage() {
   const [titleB, setTitleB] = useState('');
   const [descB, setDescB] = useState('');
   const [topic, setTopic] = useState<Topic>('career');
-  const [result, setResult] = useState<Result | null>(null);
-  const [submitting, setSubmitting] = useState(false);
+  const [showFramework, setShowFramework] = useState(false);
 
   const canSubmit = useMemo(() => {
     const a = titleA.trim();
@@ -126,41 +93,16 @@ export default function DecisionSimulatorPage() {
       b.length >= 5 &&
       b.length <= 100 &&
       descA.length <= 500 &&
-      descB.length <= 500 &&
-      !submitting
+      descB.length <= 500
     );
-  }, [titleA, titleB, descA, descB, submitting]);
+  }, [titleA, titleB, descA, descB]);
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit) return;
-    setSubmitting(true);
-
-    // Phase 1: try the API, fall back to deterministic client-side comparison.
-    try {
-      const resp = await fetch('/api/decisions/compare', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          a: { title: titleA.trim(), description: descA.trim() },
-          b: { title: titleB.trim(), description: descB.trim() },
-          topic,
-        }),
-      });
-      if (resp.ok) {
-        const data = (await resp.json()) as Partial<Result>;
-        if (Array.isArray(data.rows) && typeof data.summary === 'string') {
-          setResult({ rows: data.rows, summary: data.summary });
-          setSubmitting(false);
-          return;
-        }
-      }
-    } catch {
-      // Network or parse error — fall through to client-side fallback.
-    }
-
-    setResult(buildResult(titleA.trim(), titleB.trim(), topic));
-    setSubmitting(false);
+    // Không có "động cơ chấm điểm" — đây là khung để người dùng tự cân nhắc.
+    // Phân tích sâu theo lá số nằm ở Decision Brief (/decisions/new, AI thật).
+    setShowFramework(true);
   }
 
   return (
@@ -189,8 +131,8 @@ export default function DecisionSimulatorPage() {
             aria-hidden="true"
           />
           <p>
-            Simulator này hỗ trợ tư duy, không thay quyết định. Mọi lựa chọn cuối
-            cùng vẫn là của bạn.
+            Đây là khung giúp bạn tự cân nhắc — không phải máy chấm điểm hộ. Mọi
+            lựa chọn cuối cùng vẫn là của bạn.
           </p>
         </div>
 
@@ -204,7 +146,7 @@ export default function DecisionSimulatorPage() {
             </span>
           </h1>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Không phải để biết đúng/sai, mà để hiểu rõ trade-off.
+            Không phải để biết đúng/sai, mà để hiểu rõ trade-off của từng hướng đi.
           </p>
         </header>
 
@@ -270,85 +212,83 @@ export default function DecisionSimulatorPage() {
                   disabled={!canSubmit}
                   className="min-w-[220px]"
                 >
-                  {submitting ? (
-                    'Đang phân tích...'
-                  ) : (
-                    <>
-                      So sánh 2 lựa chọn
-                      <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-                    </>
-                  )}
+                  Mở khung cân nhắc
+                  <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
                 </Button>
               </div>
             </CardContent>
           </Card>
         </form>
 
-        {result && (
-          <section aria-labelledby="result-heading" className="mt-10">
+        {showFramework && (
+          <section aria-labelledby="framework-heading" className="mt-10">
             <h2
-              id="result-heading"
-              className="mb-4 flex items-center gap-2 font-heading text-lg font-semibold sm:text-xl"
+              id="framework-heading"
+              className="mb-2 flex items-center gap-2 font-heading text-lg font-semibold sm:text-xl"
             >
               <Scale className="h-5 w-5 text-gold" aria-hidden="true" />
-              Bảng so sánh
+              Khung cân nhắc
             </h2>
+            <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
+              Với mỗi tiêu chí, tự hỏi câu bên dưới cho{' '}
+              <strong className="text-foreground">cả hai lựa chọn</strong> rồi tự
+              chấm — chúng tôi không quyết thay bạn.
+            </p>
             <Card className="border-border bg-card/40">
               <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-border text-xs uppercase tracking-wider text-muted-foreground">
-                        <th className="px-5 py-3 text-left font-medium">
-                          Tiêu chí
-                        </th>
-                        <th className="px-5 py-3 text-left font-medium">A</th>
-                        <th className="px-5 py-3 text-left font-medium">B</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {result.rows.map((r) => (
-                        <tr
-                          key={r.criterion}
-                          className="border-b border-border last:border-0"
-                        >
-                          <td className="px-5 py-3 text-foreground/85">
-                            {r.criterion}
-                          </td>
-                          <td className="px-5 py-3">
-                            <span
-                              className={`inline-flex rounded-full border px-2 py-0.5 text-[11px] font-medium ${TAG_STYLE[r.a]}`}
-                            >
-                              {r.a}
-                            </span>
-                          </td>
-                          <td className="px-5 py-3">
-                            <span
-                              className={`inline-flex rounded-full border px-2 py-0.5 text-[11px] font-medium ${TAG_STYLE[r.b]}`}
-                            >
-                              {r.b}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                <ul className="divide-y divide-border">
+                  {CRITERIA.map((c) => (
+                    <li key={c.name} className="px-5 py-4">
+                      <p className="font-heading text-sm font-semibold text-foreground">
+                        {c.name}
+                      </p>
+                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                        {c.question}
+                      </p>
+                      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                        <div className="rounded-lg border border-border bg-card/40 px-3 py-2 text-xs text-foreground/80">
+                          <span className="font-mono uppercase tracking-wider text-gold-700">
+                            A
+                          </span>{' '}
+                          — {titleA.trim()}
+                        </div>
+                        <div className="rounded-lg border border-border bg-card/40 px-3 py-2 text-xs text-foreground/80">
+                          <span className="font-mono uppercase tracking-wider text-gold-700">
+                            B
+                          </span>{' '}
+                          — {titleB.trim()}
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
               </CardContent>
             </Card>
 
-            <p className="mt-5 text-sm leading-relaxed text-foreground/80">
-              {result.summary}
-            </p>
-
-            <div className="mt-6">
-              <Button asChild size="lg" variant="outline"><Link href="/journal/new">
-                
-                  Lập decision journal
-                  <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-                
-              </Link></Button>
-            </div>
+            <Card className="mt-6 border-gold/25 bg-gold/[0.05]">
+              <CardHeader>
+                <CardTitle className="font-heading text-base sm:text-lg">
+                  Muốn phân tích sâu theo lá số của bạn?
+                </CardTitle>
+                <CardDescription className="text-muted-foreground">
+                  Decision Brief đọc lá số Tử Vi + tính cách của bạn rồi phân tích
+                  từng lựa chọn bằng AI — thay vì khung chung chung.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-3">
+                  <Button asChild size="lg">
+                    <Link href="/decisions/new">
+                      Lập Decision Brief (AI thật)
+                      <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
+                    </Link>
+                  </Button>
+                  <Button asChild size="lg" variant="outline">
+                    <Link href="/journal/new">Lập decision journal</Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </section>
         )}
       </section>
