@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import { Suspense } from 'react';
 // Wave 55 LCP #1 — dropped Inter import. Inter only sat in the `sans` fallback
 // chain (`var(--font-be-vietnam), var(--font-inter), ...`) and almost never
 // actually rendered because Be Vietnam Pro already covers latin. Removing it
@@ -297,9 +296,12 @@ export default async function RootLayout({
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
             <QueryProvider>
               <LazyMotionProvider>
-                <Suspense fallback={null}>
-                  <PostHogProvider>{children}</PostHogProvider>
-                </Suspense>
+                {/* Soft-404 fix: KHÔNG bọc {children} trong Suspense ở root —
+                    boundary root làm shell flush trước khi page chạy → notFound()
+                    hết đường trả HTTP 404 thật (mọi slug lạ thành 200+noindex).
+                    Suspense cho useSearchParams nằm BÊN TRONG PostHogProvider,
+                    chỉ quanh phần tracking. */}
+                <PostHogProvider>{children}</PostHogProvider>
                 {/* Wave 41 Track E — CMP cookie consent banner. Renders only
                     on first visit (geo-aware: VN + EU always; auto-accept
                     legitimate-interest defaults elsewhere). */}
