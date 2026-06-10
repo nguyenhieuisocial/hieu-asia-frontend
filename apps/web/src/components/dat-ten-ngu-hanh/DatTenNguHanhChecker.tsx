@@ -23,6 +23,7 @@ import {
   type BanMenhResult,
 } from '@/lib/dat-ten-ngu-hanh';
 import { track } from '@/lib/analytics';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 
 type GenderFilter = 'ca' | 'nam' | 'nu';
 
@@ -162,10 +163,18 @@ export function DatTenNguHanhChecker({ defaultGender = 'ca' }: { defaultGender?:
             {/* Hạt giống đo nhu cầu "danh sách tên đầy đủ" — không backend, chỉ ghi ý định qua analytics. */}
             <div className="rounded-xl border border-gold/30 bg-gold/[0.04] p-4">
               {reportInterest ? (
-                <p className="text-sm text-muted-foreground">
-                  Cảm ơn bạn! 🌱 Nếu nhiều cha mẹ quan tâm, chúng tôi sẽ ưu tiên làm{' '}
-                  <strong className="text-foreground">danh sách tên đầy đủ theo họ của gia đình</strong>.
-                </p>
+                <div className="space-y-3">
+                  <div className="text-sm font-medium text-foreground">
+                    Để lại email — chúng tôi báo bạn khi có bản đầy đủ 🌱
+                  </div>
+                  <OccasionLeadCapture
+                    source="occasion:dat-ten-ngu-hanh"
+                    capturedEvent="dat_ten_lead_captured"
+                    capturedProps={{ element: result.element, gender }}
+                    blurb="Bản đầy đủ sẽ có nhiều tên hơn cho mỗi hành, lọc theo họ của gia đình, kèm ý nghĩa Hán-Việt và một lời chúc. Để email, chúng tôi gửi bạn ngay khi ra mắt."
+                    cta="Báo tôi khi có"
+                  />
+                </div>
               ) : (
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
