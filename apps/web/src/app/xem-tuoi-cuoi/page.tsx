@@ -223,6 +223,10 @@ export default function XemTuoiCuoiPage() {
             <Link href="/ngay-kieng-ky" className="text-gold hover:underline">
               Ngày kiêng kỵ dân gian
             </Link>
+            {', '}
+            <Link href="/sinh-con" className="text-gold hover:underline">
+              Sinh con theo năm (đối chiếu tuổi bố mẹ)
+            </Link>
           </nav>
         </section>
       </ToolPageShell>

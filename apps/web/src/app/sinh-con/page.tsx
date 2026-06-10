@@ -143,6 +143,7 @@ export default function SinhConPage() {
           <RelatedTools
             links={[
               { href: '/dat-ten-ngu-hanh', label: 'Đặt tên ngũ hành' },
+              { href: '/xem-tuoi-cuoi', label: 'Xem tuổi cưới' },
               { href: '/xem-hop-nhom', label: 'Xem hợp cả nhà' },
               { href: '/hop-tuoi', label: 'Xem hợp tuổi' },
               { href: '/xem-ngay', label: 'Xem ngày tốt' },
