@@ -123,6 +123,12 @@ const TOOLS = [
     desc: 'Năm này có thuận để cưới không? Tính Kim Lâu, Tam Tai, xung năm theo năm sinh — minh bạch từng bước.',
   },
   {
+    href: '/xem-tuoi-lam-nha',
+    emoji: '🏠',
+    name: 'Xem Tuổi Làm Nhà',
+    desc: 'Năm này có được tuổi xây/sửa nhà không? Tính Kim Lâu, Hoang Ốc, Tam Tai — kèm cách kiểm tra người mượn tuổi.',
+  },
+  {
     href: '/xem-hop-nhom',
     emoji: '👨‍👩‍👧‍👦',
     name: 'Xem Hợp Nhóm',
