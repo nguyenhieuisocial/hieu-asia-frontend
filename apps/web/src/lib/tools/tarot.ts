@@ -123,3 +123,19 @@ export function drawCards(n: number, seed?: number): DrawnCard[] {
     orientation: rand() < 0.5 ? 'reversed' : 'upright',
   }));
 }
+
+/**
+ * Lá của ngày — seed theo NGÀY (giờ VN, UTC+7) → một lá cố định suốt cả ngày,
+ * CHUNG cho mọi người. KHÔNG phải tiên đoán về ngày của bạn — chỉ là một lá để
+ * dừng lại và ngẫm; ý nghĩa nằm ở điều chính bạn soi thấy.
+ * Thuần hàm (server-safe): cùng ngày ⇒ cùng lá + cùng chiều.
+ */
+export function cardOfTheDay(now: Date = new Date()): { drawn: DrawnCard; dateLabel: string } {
+  const vn = new Date(now.getTime() + 7 * 3600_000); // UTC+7
+  const y = vn.getUTCFullYear();
+  const m = vn.getUTCMonth() + 1;
+  const d = vn.getUTCDate();
+  const drawn = drawCards(1, y * 10000 + m * 100 + d)[0]!;
+  const dateLabel = `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}/${y}`;
+  return { drawn, dateLabel };
+}
