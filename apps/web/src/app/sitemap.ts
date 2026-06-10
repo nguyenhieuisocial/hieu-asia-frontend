@@ -7,6 +7,7 @@ import { VARIANTS } from './dat-ten-ngu-hanh/variants';
 import { BIRTH_YEARS, slugOf } from './xem-tuoi-cuoi/years';
 import { VARIANTS as SINH_CON_VARIANTS } from './sinh-con/variants';
 import { BIRTH_YEARS as LAM_NHA_BIRTH_YEARS, slugOf as lamNhaSlugOf } from './xem-tuoi-lam-nha/years';
+import { HOST_YEARS as XONG_DAT_YEARS, slugOf as xongDatSlug } from './xong-dat/years';
 import { ZODIAC, canonicalPairSlug } from '@/lib/hop-tuoi-pairs';
 import { COMPARISONS } from '@/lib/so-sanh';
 
@@ -314,5 +315,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...lamNha, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls];
+  // Tuổi xông đất Tết Đinh Mùi 2027 — SEO mùa Tết (tam hợp/lục hợp + ngũ hành).
+  const xongDat: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/xong-dat`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    ...XONG_DAT_YEARS.map((y) => ({
+      url: `${BASE_URL}/xong-dat/${xongDatSlug(y)}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.65,
+    })),
+  ];
+
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...lamNha, ...xongDat, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls];
 }
