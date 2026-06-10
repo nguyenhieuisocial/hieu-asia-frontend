@@ -18,6 +18,7 @@ import {
   type WeddingYearResult,
 } from '@/lib/xem-tuoi-cuoi';
 import { track } from '@/lib/analytics';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 
 const VERDICT_CLASS: Record<WeddingYearResult['verdict'], string> = {
   'thuan': 'text-emerald-700 dark:text-emerald-300',
@@ -167,19 +168,29 @@ export function XemTuoiCuoiChecker({
             {/* Hạt giống đo nhu cầu "báo cáo ngày cưới chi tiết" — không backend, chỉ ghi ý định qua analytics. */}
             <div className="rounded-xl border border-gold/30 bg-gold/[0.04] p-4">
               {reportInterest ? (
-                <p className="text-sm text-muted-foreground">
-                  Cảm ơn bạn! 🌱 Nếu nhiều cặp đôi quan tâm, chúng tôi sẽ ưu tiên làm{' '}
-                  <strong className="text-foreground">báo cáo chọn ngày cưới chi tiết theo tuổi hai bạn</strong>.
-                  Trong lúc đó, bạn có thể{' '}
-                  <Link href="/xem-ngay/cuoi-hoi" className="text-gold hover:underline">
-                    chấm điểm từng ngày cưới (miễn phí)
-                  </Link>{' '}
-                  hoặc xem{' '}
-                  <Link href="/hop-tuoi" className="text-gold hover:underline">
-                    hợp tuổi hai bạn
-                  </Link>
-                  .
-                </p>
+                <div className="space-y-3">
+                  <div className="text-sm font-medium text-foreground">
+                    Để lại email — chúng tôi báo bạn khi có bản đầy đủ 🌱
+                  </div>
+                  <OccasionLeadCapture
+                    source="occasion:xem-tuoi-cuoi"
+                    capturedEvent="cuoi_lead_captured"
+                    capturedProps={{ targetYear: brideResult.targetYear, verdict: brideResult.verdict }}
+                    blurb="Bản đầy đủ sẽ gợi ý ngày cưới đẹp theo tuổi cả hai bạn, kèm giờ đón dâu. Để email, chúng tôi gửi bạn ngay khi ra mắt — kèm vài mẹo chọn ngày cưới."
+                    cta="Báo tôi khi có"
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    Trong lúc chờ, bạn có thể{' '}
+                    <Link href="/xem-ngay/cuoi-hoi" className="text-gold hover:underline">
+                      chấm điểm từng ngày cưới (miễn phí)
+                    </Link>{' '}
+                    hoặc xem{' '}
+                    <Link href="/hop-tuoi" className="text-gold hover:underline">
+                      hợp tuổi hai bạn
+                    </Link>
+                    .
+                  </p>
+                </div>
               ) : (
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
