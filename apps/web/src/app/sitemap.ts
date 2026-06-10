@@ -4,6 +4,7 @@ import { listCaseStudies } from '@/lib/case-studies';
 import { PALACE_READINGS } from '@/lib/palace-readings';
 import { PURPOSES } from './xem-ngay/purposes';
 import { VARIANTS } from './dat-ten-ngu-hanh/variants';
+import { BIRTH_YEARS, slugOf } from './xem-tuoi-cuoi/years';
 import { ZODIAC, canonicalPairSlug } from '@/lib/hop-tuoi-pairs';
 import { COMPARISONS } from '@/lib/so-sanh';
 
@@ -267,6 +268,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/gio-hoang-dao`, lastModified: now, changeFrequency: 'daily', priority: 0.7 },
   ];
 
+  // Xem tuổi cưới theo năm sinh — SEO mùa cưới (Kim Lâu / Tam Tai / xung năm).
+  const xemTuoiCuoi: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/xem-tuoi-cuoi`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    ...BIRTH_YEARS.map((y) => ({
+      url: `${BASE_URL}/xem-tuoi-cuoi/${slugOf(y)}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.65,
+    })),
+  ];
+
   // Đặt tên con theo ngũ hành — SEO (mệnh nạp âm + gợi ý tên).
   const datTenNguHanh: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/dat-ten-ngu-hanh`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
@@ -278,5 +290,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls];
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls];
 }
