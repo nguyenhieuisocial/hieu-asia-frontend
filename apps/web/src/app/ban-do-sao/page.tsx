@@ -7,7 +7,7 @@ import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { ZODIAC } from '@/lib/western-astrology';
 
 const DESC =
-  'Tính bản đồ sao của bạn theo chiêm tinh phương Tây — cung Mặt Trời, Mặt Trăng & 7 hành tinh (Sao Thuỷ → Hải Vương) từ ngày giờ sinh, bằng thuật toán thiên văn (Meeus + Schlyter) đối chiếu thư viện chuẩn. Con số là thật, diễn giải để hiểu mình, không bói toán.';
+  'Tính bản đồ sao của bạn theo chiêm tinh phương Tây — cung Mặt Trời, Mặt Trăng, cung Mọc & 7 hành tinh (Sao Thuỷ → Hải Vương) từ ngày giờ & nơi sinh, bằng thuật toán thiên văn (Meeus + Schlyter) đối chiếu thư viện chuẩn. Con số là thật, diễn giải để hiểu mình, không bói toán.';
 
 export const metadata: Metadata = {
   title: 'Bản đồ sao — Mặt Trời, Mặt Trăng & 7 hành tinh',
@@ -29,6 +29,10 @@ const FAQS = [
   {
     q: 'Cung Mặt Trăng (moon sign) khác gì cung Mặt Trời?',
     a: 'Mặt Trăng đại diện cho thế giới cảm xúc, nhu cầu nội tâm và điều khiến bạn thấy an toàn. Mặt Trăng đi rất nhanh (đổi cung khoảng 2–3 ngày một lần) nên cần ngày VÀ giờ sinh để tính chính xác. Nhiều người thấy cung Mặt Trăng mô tả “con người bên trong” đúng hơn cả cung Mặt Trời.',
+  },
+  {
+    q: 'Cung Mọc (Ascendant / rising sign) là gì?',
+    a: 'Cung Mọc là cung hoàng đạo đang mọc lên ở chân trời phía đông ngay lúc bạn sinh. Nó phản ánh vẻ ngoài, ấn tượng đầu tiên và cách bạn bước vào thế giới — cùng Mặt Trời và Mặt Trăng tạo thành bộ “tam trụ” của bản đồ sao. Cung Mọc đổi nhanh (~1 cung mỗi 2 giờ) nên cần GIỜ SINH chính xác VÀ NƠI SINH (kinh/vĩ độ) — vì thế công cụ hỏi thêm tỉnh/thành nơi bạn sinh.',
   },
   {
     q: 'Vì sao cần giờ sinh?',
