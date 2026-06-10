@@ -7,9 +7,17 @@
  *
  * We disable PostHog's built-in `capture_pageview` so we can fire a single
  * `$pageview` per Next.js navigation (App Router doesn't fire a full reload).
+ *
+ * Soft-404 fix: `useSearchParams()` requires a Suspense boundary, but that
+ * boundary must NOT wrap `{children}` — a root-level boundary makes the shell
+ * flush before any page runs, so notFound() can no longer set a real HTTP 404
+ * (every unknown slug returned 200 + noindex). The tracking hooks live in an
+ * inner render-null component wrapped in its own Suspense; children render
+ * outside any boundary.
  */
 
 import * as React from "react";
+import { Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { getPostHog } from "@/lib/posthog";
 import { wireWebVitals } from "@/lib/web-vitals";
@@ -25,7 +33,7 @@ import {
   trackPixelPageView,
 } from "@/lib/marketing-pixels";
 
-export function PostHogProvider({ children }: { children: React.ReactNode }) {
+function PostHogTracking(): null {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -107,5 +115,16 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
     void getConsent;
   }, [pathname, searchParams]);
 
-  return <>{children}</>;
+  return null;
+}
+
+export function PostHogProvider({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <Suspense fallback={null}>
+        <PostHogTracking />
+      </Suspense>
+      {children}
+    </>
+  );
 }
