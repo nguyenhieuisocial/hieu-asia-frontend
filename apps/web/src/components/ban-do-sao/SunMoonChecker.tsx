@@ -1,7 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
+import ReactMarkdown from 'react-markdown';
+import { Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
 import {
   computeChart,
   chartBalance,
@@ -10,6 +11,21 @@ import {
   type NatalChart,
   type ChartBalance,
 } from '@/lib/western-astrology';
+import { safeJson } from '@/lib/safe-json';
+import { getSupabaseAuth } from '@/lib/auth-client';
+import { ReadingRitual } from '@/components/tools/ReadingRitual';
+import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
+
+interface FeatureLockedPayload {
+  ok: false;
+  error: 'feature_locked';
+  slug: string;
+  price: number;
+  message?: string;
+  checkout?: { tier: string; tool_slug: string };
+}
 
 function parseDate(value: string): { y: number; m: number; d: number } | null {
   const parts = value.split('-').map(Number);
@@ -90,6 +106,9 @@ export function SunMoonChecker() {
   const [date, setDate] = React.useState('');
   const [time, setTime] = React.useState('12:00');
   const [placeIdx, setPlaceIdx] = React.useState<number | null>(null);
+  const [reading, setReading] = React.useState<string | null>(null);
+  const [readingLoading, setReadingLoading] = React.useState(false);
+  const [paywall, setPaywall] = React.useState<FeatureLockedPayload | null>(null);
 
   const parsedDate = React.useMemo(() => parseDate(date), [date]);
   const chart = React.useMemo<NatalChart | null>(() => {
@@ -109,6 +128,61 @@ export function SunMoonChecker() {
   }, [parsedDate, time, placeIdx]);
 
   const balance = React.useMemo<ChartBalance | null>(() => (chart ? chartBalance(chart) : null), [chart]);
+
+  // Reset reading khi chart thay đổi (đổi ngày/giờ/nơi sinh)
+  React.useEffect(() => {
+    setReading(null);
+    setPaywall(null);
+    setReadingLoading(false);
+  }, [chart]);
+
+  const onDeepRead = React.useCallback(async () => {
+    if (!chart) return;
+    setReading(null);
+    setPaywall(null);
+    setReadingLoading(true);
+    try {
+      const sb = getSupabaseAuth();
+      let token: string | undefined;
+      if (sb) {
+        const { data } = await sb.auth.getSession();
+        token = data.session?.access_token;
+      }
+      const res = await fetch(`${API_BASE}/tools/natal-read`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          sun: chart.sun.sign.name,
+          moon: chart.moon.sign.name,
+          ascendant: chart.ascendant?.sign.name ?? null,
+          planets: chart.planets.map((p) => ({ name: p.planet.name, sign: p.position.sign.name })),
+          dominantElement: balance?.dominantElement,
+          dominantModality: balance?.dominantModality,
+        }),
+      });
+
+      if (res.status === 402) {
+        const locked = await safeJson<FeatureLockedPayload>(res);
+        if (locked.ok && locked.data.error === 'feature_locked') {
+          setPaywall(locked.data);
+          return;
+        }
+      }
+
+      const parsed = await safeJson<{ ok: true; reading: string } | { ok: false; error: string }>(res);
+      if (!parsed.ok) throw new Error(`HTTP ${parsed.status}`);
+      const json = parsed.data as { ok: true; reading: string } | { ok: false; error: string };
+      if (!json.ok || !json.reading) throw new Error('empty reading');
+      setReading(json.reading);
+    } catch {
+      setReading(null);
+    } finally {
+      setReadingLoading(false);
+    }
+  }, [chart, balance]);
 
   return (
     <Card>
@@ -245,10 +319,58 @@ export function SunMoonChecker() {
               không phải tiên đoán số mệnh. Bạn vẫn là người quyết định.
             </p>
 
-            <div className="rounded-lg border border-dashed border-gold/30 bg-gold/5 p-4 text-sm text-muted-foreground">
-              🔭 <strong className="text-foreground">Sắp có:</strong> Diêm Vương (Pluto), hệ thống nhà (houses),
-              và bản luận giải chuyên sâu bằng AI cho cả bản đồ sao.
-            </div>
+            {/* Lớp đọc sâu AI */}
+            {paywall ? (
+              <FeaturePaywall
+                slug={paywall.slug}
+                price={paywall.price}
+                label="Bản đồ sao"
+                onUnlocked={() => {
+                  setPaywall(null);
+                  void onDeepRead();
+                }}
+              />
+            ) : reading ? (
+              <div className="rounded-xl border border-gold/20 bg-gradient-to-br from-gold/5 to-transparent p-5">
+                <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                  Đọc sâu cùng AI
+                </div>
+                <article className="markdown-report mt-3 space-y-3 text-sm leading-relaxed text-foreground/90">
+                  <ReactMarkdown
+                    components={{
+                      h1: ({ ...props }) => <h2 className="mt-4 font-heading text-xl text-gold" {...props} />,
+                      h2: ({ ...props }) => <h3 className="mt-3 font-heading text-lg text-foreground" {...props} />,
+                      h3: ({ ...props }) => <h4 className="mt-3 font-heading text-base text-foreground" {...props} />,
+                      p: ({ ...props }) => <p className="leading-relaxed" {...props} />,
+                      ul: ({ ...props }) => <ul className="ml-5 list-disc space-y-1" {...props} />,
+                      ol: ({ ...props }) => <ol className="ml-5 list-decimal space-y-1" {...props} />,
+                      strong: ({ ...props }) => <strong className="text-gold" {...props} />,
+                    }}
+                  >
+                    {reading}
+                  </ReactMarkdown>
+                </article>
+              </div>
+            ) : readingLoading ? (
+              <div className="rounded-xl border border-gold/20 bg-gradient-to-br from-gold/5 to-transparent p-5">
+                <ReadingRitual
+                  messages={[
+                    'Đang đọc vị trí các thiên thể…',
+                    'Phân tích tổ hợp cung & hành…',
+                    'Nối các mảnh thành một bức tranh…',
+                    'Soạn luận giải để bạn tự soi…',
+                  ]}
+                />
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => void onDeepRead()}
+                className="w-full rounded-md border border-gold/40 px-6 py-3 text-sm font-medium text-gold transition-colors hover:bg-gold/10 sm:w-auto sm:px-10"
+              >
+                🔮 Đọc sâu cùng AI →
+              </button>
+            )}
           </div>
         )}
       </CardContent>
