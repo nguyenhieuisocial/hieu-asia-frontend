@@ -223,7 +223,7 @@ const FAQ_JSONLD = {
       name: 'Tôi không có giờ sinh chính xác thì có dùng được không?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Có. Bạn vẫn dùng được MBTI, Thần Số Học và Palm Reading mà không cần giờ sinh. Có thể cập nhật lá số bất cứ lúc nào sau đó.',
+        text: 'Có. Bạn vẫn dùng được MBTI, Big Five, Thần Số Học và Xem Tướng mà không cần giờ sinh. Có thể cập nhật lá số bất cứ lúc nào sau đó.',
       },
     },
     {
@@ -316,7 +316,7 @@ const HOME_FAQ: readonly FaqItem[] = [
     q: 'Tôi không có giờ sinh chính xác thì có dùng được không?',
     a: (
       <p>
-        Có. Bạn vẫn có thể bắt đầu với MBTI, Thần Số Học và Palm Reading mà
+        Có. Bạn vẫn có thể bắt đầu với MBTI, Big Five, Thần Số Học và Xem Tướng mà
         không cần giờ sinh. Khi tìm được thông tin chính xác hơn, bạn có thể cập
         nhật lá số bất cứ lúc nào.
       </p>
