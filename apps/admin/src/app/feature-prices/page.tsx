@@ -31,6 +31,13 @@ interface FeaturePrice {
   vnd: number;
 }
 
+// Slugs whose price is actually ENFORCED server-side: the worker gates these
+// single-shot AI tools via gateFeatureOr402. Setting a price on any OTHER tool
+// is stored but currently has NO effect (the tool stays free). Keep this in sync
+// with the worker's gateFeatureOr402 call sites (vision-read + the 4 personality
+// readings).
+const ENFORCED_SLUGS = new Set<string>(['xem-tuong', 'mbti', 'disc', 'big-five', 'enneagram']);
+
 interface FeaturePricesResponse {
   ok: boolean;
   items?: FeaturePrice[];
@@ -119,6 +126,9 @@ export default function FeaturePricesPage() {
         description={
           <>
             Đặt giá cho từng công cụ. <strong>0đ = miễn phí</strong>. Đơn vị: VND.
+            <br />
+            Chỉ công cụ gắn nhãn <strong>🔒 khoá được</strong> mới thực sự chặn khi giá &gt; 0.
+            Công cụ <strong>chưa khoá</strong> chỉ lưu giá — hiện chưa có hiệu lực.
           </>
         }
         icon={<Tag className="h-5 w-5" />}
@@ -183,7 +193,20 @@ export default function FeaturePricesPage() {
                         key={item.slug}
                         className="border-b border-gold/10 transition-all duration-300 ease-editorial last:border-0 hover:bg-gold/[0.03]"
                       >
-                        <td className="px-3 py-2 font-medium text-foreground/90">{item.label}</td>
+                        <td className="px-3 py-2 font-medium text-foreground/90">
+                          <div className="flex items-center gap-2">
+                            <span>{item.label}</span>
+                            {ENFORCED_SLUGS.has(item.slug) ? (
+                              <span className="rounded-full border border-gold/20 bg-gold/10 px-1.5 py-0.5 text-[10px] font-medium text-gold">
+                                🔒 khoá được
+                              </span>
+                            ) : (
+                              <span className="rounded-full border border-muted-foreground/20 bg-muted/20 px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                                chưa khoá
+                              </span>
+                            )}
+                          </div>
+                        </td>
                         <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{item.slug}</td>
                         <td className="px-3 py-2">
                           <div className="flex items-center gap-2">

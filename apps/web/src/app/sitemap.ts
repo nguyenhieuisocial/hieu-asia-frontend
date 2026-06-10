@@ -3,6 +3,7 @@ import { PALACES_CONTENT, ALL_STARS_CONTENT } from '@/lib/tuvi-content';
 import { listCaseStudies } from '@/lib/case-studies';
 import { PALACE_READINGS } from '@/lib/palace-readings';
 import { PURPOSES } from './xem-ngay/purposes';
+import { VARIANTS } from './dat-ten-ngu-hanh/variants';
 import { ZODIAC, canonicalPairSlug } from '@/lib/hop-tuoi-pairs';
 import { COMPARISONS } from '@/lib/so-sanh';
 
@@ -50,6 +51,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/can-xuong`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/thuoc-lo-ban`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/xem-tuong`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/ban-do-sao`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/privacy`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
     { url: `${BASE_URL}/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
   ];
@@ -182,6 +184,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/enneagram`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/tu-kiem`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/tarot`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/tarot/hom-nay`, lastModified: now, changeFrequency: 'daily', priority: 0.6 },
     { url: `${BASE_URL}/sao-han`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/cong-cu`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
   ];
@@ -267,6 +270,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Đặt tên con theo ngũ hành — SEO (mệnh nạp âm + gợi ý tên).
   const datTenNguHanh: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/dat-ten-ngu-hanh`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    ...VARIANTS.map((v) => ({
+      url: `${BASE_URL}/dat-ten-ngu-hanh/${v.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.65,
+    })),
   ];
 
   return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls];

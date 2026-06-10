@@ -10,6 +10,8 @@ import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
+import { getSupabaseAuth } from '@/lib/auth-client';
+import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
 import { savePersonalityResult, buildDiscSummary } from '@/lib/personality-store';
 import { EXTENDED_SURVEY_SCHEMA, type DiscDimension } from '@/lib/survey-schema-extended';
 import { scoreDisc, type DiscScoreWithMeta } from '@/lib/scoring/disc';
@@ -28,10 +30,20 @@ const DIM_META: Record<DiscDimension, { letter: string; label: string; desc: str
 };
 const DIM_ORDER: DiscDimension[] = ['dominance', 'influence', 'steadiness', 'compliance'];
 
+interface FeatureLockedPayload {
+  ok: false;
+  error: 'feature_locked';
+  slug: string;
+  price: number;
+  message?: string;
+  checkout?: { tier: string; tool_slug: string };
+}
+
 export default function DiscPage() {
   const [result, setResult] = React.useState<DiscScoreWithMeta | null>(null);
   const [reading, setReading] = React.useState<string | null>(null);
   const [readingLoading, setReadingLoading] = React.useState(false);
+  const [paywall, setPaywall] = React.useState<FeatureLockedPayload | null>(null);
 
   // Bản đọc sâu cá nhân hoá từ điểm DISC (backend /tools/disc-read). Fallback an
   // toàn: endpoint chưa có / lỗi → ẩn mục đọc, trang vẫn giữ thanh điểm + mô tả.
@@ -39,14 +51,34 @@ export default function DiscPage() {
     if (!result) return;
     let cancelled = false;
     setReading(null);
+    setPaywall(null);
     setReadingLoading(true);
     void (async () => {
       try {
+        const sb = getSupabaseAuth();
+        let token: string | undefined;
+        if (sb) {
+          const { data } = await sb.auth.getSession();
+          token = data.session?.access_token;
+        }
+
         const res = await fetch(`${API_BASE}/tools/disc-read`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
           body: JSON.stringify({ scores: result.scores }),
         });
+
+        if (res.status === 402) {
+          const parsed = await safeJson<FeatureLockedPayload>(res);
+          if (parsed.ok && parsed.data.error === 'feature_locked') {
+            if (!cancelled) setPaywall(parsed.data);
+            return;
+          }
+        }
+
         const parsed = await safeJson<{ ok: true; reading: string } | { ok: false; error: string }>(res);
         if (!parsed.ok) throw new Error(`HTTP ${parsed.status}`);
         const json = parsed.data as { ok: true; reading: string } | { ok: false; error: string };
@@ -83,6 +115,7 @@ export default function DiscPage() {
   }, []);
 
   const onComplete = (answers: Record<string, number>) => {
+    setPaywall(null);
     const scored = scoreDisc(answers);
     setResult(scored);
     savePersonalityResult('disc', buildDiscSummary(scored.primary_style, scored.secondary_style));
@@ -170,7 +203,16 @@ export default function DiscPage() {
                 );
               })}
 
-              {(readingLoading || reading) && (
+              {paywall && (
+                <FeaturePaywall
+                  slug={paywall.slug}
+                  price={paywall.price}
+                  label="DISC"
+                  onUnlocked={() => setPaywall(null)}
+                />
+              )}
+
+              {!paywall && (readingLoading || reading) && (
                 <Card className="relative overflow-hidden border border-gold/20 bg-gradient-to-br from-gold/5 to-transparent">
                   <CardContent className="p-6">
                     <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">

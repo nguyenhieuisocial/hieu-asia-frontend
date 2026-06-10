@@ -1,14 +1,20 @@
 'use client';
 
 /**
- * RevealOnScroll — thin IntersectionObserver wrapper.
+ * RevealOnScroll — geometry-poll scroll reveal (fling-proof).
  *
- * Sets `data-in` on the div when the element first enters the viewport.
- * CSS `[data-in] .rv-up / .rv-fade / .rv-draw-l / .rv-draw-r` in globals.css
- * fire the animations — no prop drilling, children stay server components.
+ * Sets `data-in` when the element enters (or has scrolled past) the viewport.
+ * CSS `[data-in] .rv-*` in globals.css fire the animations; children stay
+ * server components.
  *
- * Matches the hero's prefers-reduced-motion-safe pattern: when motion is off
- * the rv-* classes are never hidden so content always shows.
+ * Why a scroll-triggered rAF POLL instead of IntersectionObserver:
+ * IO (and a single rAF-on-scroll) can SILENTLY MISS the rest position after a
+ * fast / fling scroll, leaving content stuck at opacity:0 = blank section.
+ * Here each scroll arms a ~500ms rAF poll that reads getBoundingClientRect
+ * every frame — it cannot miss the settle position, even after a hard fling.
+ * Idle (no scrolling) = no polling, so battery is unaffected. reduced-motion
+ * stays safe (the rv-* hidden state only lives inside
+ * `@media (prefers-reduced-motion: no-preference)`).
  */
 
 import { useRef, useState, useEffect, type ReactNode } from 'react';
@@ -16,6 +22,7 @@ import { useRef, useState, useEffect, type ReactNode } from 'react';
 interface Props {
   children: ReactNode;
   className?: string;
+  /** Fraction of viewport height the element top must cross to reveal (0–1). */
   threshold?: number;
 }
 
@@ -26,13 +33,33 @@ export function RevealOnScroll({ children, className, threshold = 0.15 }: Props)
   useEffect(() => {
     const node = ref.current;
     if (!node || inView) return;
-    if (typeof IntersectionObserver === 'undefined') { setInView(true); return; }
-    const obs = new IntersectionObserver(
-      ([e]) => { if (e?.isIntersecting) { setInView(true); obs.disconnect(); } },
-      { threshold },
-    );
-    obs.observe(node);
-    return () => obs.disconnect();
+
+    const inOrPast = () => {
+      const r = node.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      return r.top <= vh * (1 - threshold);
+    };
+
+    if (inOrPast()) { setInView(true); return; }
+
+    let raf = 0;
+    let until = 0;
+    const stop = () => {
+      window.removeEventListener('scroll', arm);
+      window.removeEventListener('resize', arm);
+      if (raf) { cancelAnimationFrame(raf); raf = 0; }
+    };
+    const poll = () => {
+      if (inOrPast()) { setInView(true); stop(); return; }
+      raf = performance.now() < until ? requestAnimationFrame(poll) : 0;
+    };
+    const arm = () => {
+      until = performance.now() + 500; // poll 500ms sau mỗi scroll → phủ momentum fling
+      if (!raf) raf = requestAnimationFrame(poll);
+    };
+    window.addEventListener('scroll', arm, { passive: true });
+    window.addEventListener('resize', arm, { passive: true });
+    return stop;
   }, [inView, threshold]);
 
   return (
