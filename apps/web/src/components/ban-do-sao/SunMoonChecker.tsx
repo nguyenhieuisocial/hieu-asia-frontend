@@ -2,7 +2,14 @@
 
 import * as React from 'react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
-import { computeChart, type SignPosition, type NatalChart } from '@/lib/western-astrology';
+import {
+  computeChart,
+  chartBalance,
+  ELEMENT_TENDENCY,
+  type SignPosition,
+  type NatalChart,
+  type ChartBalance,
+} from '@/lib/western-astrology';
 
 function parseDate(value: string): { y: number; m: number; d: number } | null {
   const parts = value.split('-').map(Number);
@@ -100,6 +107,8 @@ export function SunMoonChecker() {
       longitude: place?.lon,
     });
   }, [parsedDate, time, placeIdx]);
+
+  const balance = React.useMemo<ChartBalance | null>(() => (chart ? chartBalance(chart) : null), [chart]);
 
   return (
     <Card>
@@ -210,6 +219,25 @@ export function SunMoonChecker() {
                 ))}
               </div>
             </div>
+
+            {balance && (
+              <div className="rounded-xl border border-border bg-card/40 p-4">
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">Cân bằng nguyên tố</p>
+                <div className="mt-3 grid grid-cols-4 gap-2">
+                  {(['Lửa', 'Đất', 'Khí', 'Nước'] as const).map((el) => (
+                    <div key={el} className="rounded-lg border border-border bg-background/40 p-2.5 text-center">
+                      <p className="text-xs text-muted-foreground">{el}</p>
+                      <p className="font-mono text-lg text-gold">{balance.elements[el]}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-3 text-sm text-foreground/85">
+                  Nổi trội: <strong>nguyên tố {balance.dominantElement}</strong> (
+                  {balance.elements[balance.dominantElement]}/{balance.total} thiên thể) ·{' '}
+                  <strong>{balance.dominantModality}</strong>. Bạn {ELEMENT_TENDENCY[balance.dominantElement]}
+                </p>
+              </div>
+            )}
 
             <p className="text-xs leading-relaxed text-muted-foreground">
               Vị trí hành tinh được tính bằng thuật toán thiên văn (Meeus + Schlyter), đối chiếu với thư viện chuẩn —

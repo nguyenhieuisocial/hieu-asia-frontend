@@ -358,3 +358,38 @@ export function computeChart(input: BirthInput): NatalChart {
   }
   return chart;
 }
+
+/** Lời mô tả xu hướng theo nguyên tố nổi trội (tham khảo, không phán số mệnh). */
+export const ELEMENT_TENDENCY: Record<ZodiacElement, string> = {
+  Lửa: 'thiên về hành động, nhiệt huyết và bộc trực — sống bằng đam mê và cảm hứng.',
+  Đất: 'thiên về thực tế, bền bỉ và đáng tin — xây dựng mọi thứ vững chắc, từng bước.',
+  Khí: 'thiên về tư duy, giao tiếp và ý tưởng — sống trong thế giới của trí óc và kết nối.',
+  Nước: 'thiên về cảm xúc, trực giác và đồng cảm — cảm nhận sâu và thấu hiểu người khác.',
+};
+
+export interface ChartBalance {
+  elements: Record<ZodiacElement, number>;
+  modalities: Record<ZodiacQuality, number>;
+  dominantElement: ZodiacElement;
+  dominantModality: ZodiacQuality;
+  total: number;
+}
+
+/** Phân bố nguyên tố & tính chất trên toàn bộ thiên thể (gồm cung Mọc nếu có). */
+export function chartBalance(chart: NatalChart): ChartBalance {
+  const bodies: SignPosition[] = [chart.sun, chart.moon, ...chart.planets.map((p) => p.position)];
+  if (chart.ascendant) bodies.push(chart.ascendant);
+  const elements: Record<ZodiacElement, number> = { Lửa: 0, Đất: 0, Khí: 0, Nước: 0 };
+  const modalities: Record<ZodiacQuality, number> = { 'Tiên phong': 0, 'Kiên định': 0, 'Linh hoạt': 0 };
+  for (const b of bodies) {
+    elements[b.sign.element] += 1;
+    modalities[b.sign.quality] += 1;
+  }
+  const dominantElement = (Object.keys(elements) as ZodiacElement[]).reduce((a, b) =>
+    elements[b] > elements[a] ? b : a,
+  );
+  const dominantModality = (Object.keys(modalities) as ZodiacQuality[]).reduce((a, b) =>
+    modalities[b] > modalities[a] ? b : a,
+  );
+  return { elements, modalities, dominantElement, dominantModality, total: bodies.length };
+}
