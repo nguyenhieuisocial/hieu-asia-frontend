@@ -64,14 +64,31 @@ function PositionCard({
   );
 }
 
+const CITIES: ReadonlyArray<{ name: string; lat: number; lon: number }> = [
+  { name: 'Hà Nội', lat: 21.03, lon: 105.85 },
+  { name: 'TP. Hồ Chí Minh', lat: 10.82, lon: 106.63 },
+  { name: 'Đà Nẵng', lat: 16.05, lon: 108.22 },
+  { name: 'Hải Phòng', lat: 20.86, lon: 106.68 },
+  { name: 'Cần Thơ', lat: 10.03, lon: 105.79 },
+  { name: 'Huế', lat: 16.46, lon: 107.59 },
+  { name: 'Nha Trang', lat: 12.24, lon: 109.19 },
+  { name: 'Buôn Ma Thuột', lat: 12.67, lon: 108.04 },
+  { name: 'Đà Lạt', lat: 11.94, lon: 108.46 },
+  { name: 'Vinh', lat: 18.68, lon: 105.68 },
+  { name: 'Quy Nhơn', lat: 13.78, lon: 109.22 },
+  { name: 'Biên Hoà', lat: 10.95, lon: 106.82 },
+];
+
 export function SunMoonChecker() {
   const [date, setDate] = React.useState('');
   const [time, setTime] = React.useState('12:00');
+  const [placeIdx, setPlaceIdx] = React.useState<number | null>(null);
 
   const parsedDate = React.useMemo(() => parseDate(date), [date]);
   const chart = React.useMemo<NatalChart | null>(() => {
     if (!parsedDate) return null;
     const { h, min } = parseTime(time);
+    const place = placeIdx !== null ? CITIES[placeIdx] : undefined;
     return computeChart({
       year: parsedDate.y,
       month: parsedDate.m,
@@ -79,8 +96,10 @@ export function SunMoonChecker() {
       hour: h,
       minute: min,
       tzOffsetMinutes: 420, // giả định sinh tại VN (GMT+7)
+      latitude: place?.lat,
+      longitude: place?.lon,
     });
-  }, [parsedDate, time]);
+  }, [parsedDate, time, placeIdx]);
 
   return (
     <Card>
@@ -98,6 +117,22 @@ export function SunMoonChecker() {
             <Input id="smTime" type="time" value={time} onChange={(e) => setTime(e.target.value)} />
           </div>
         </div>
+        <div className="space-y-1">
+          <Label htmlFor="smPlace">Nơi sinh (để tính cung Mọc — không bắt buộc)</Label>
+          <select
+            id="smPlace"
+            value={placeIdx ?? ''}
+            onChange={(e) => setPlaceIdx(e.target.value === '' ? null : Number(e.target.value))}
+            className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          >
+            <option value="">— Chọn tỉnh/thành —</option>
+            {CITIES.map((c, i) => (
+              <option key={c.name} value={i}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
         <p className="text-xs text-muted-foreground">
           Giả định sinh tại Việt Nam (GMT+7). Không nhớ giờ? Để <strong>12:00</strong> — cung Mặt Trời gần
           như không đổi, nhưng cung <strong>Mặt Trăng</strong> đổi nhanh theo giờ nên có thể lệch.
@@ -109,7 +144,7 @@ export function SunMoonChecker() {
 
         {chart && (
           <div className="space-y-4">
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className={chart.ascendant ? 'grid gap-3 sm:grid-cols-3' : 'grid gap-3 sm:grid-cols-2'}>
               <PositionCard
                 icon="☀️"
                 title="Mặt Trời"
@@ -122,7 +157,21 @@ export function SunMoonChecker() {
                 subtitle="Thế giới cảm xúc — nhu cầu nội tâm & điều khiến bạn thấy an toàn."
                 pos={chart.moon}
               />
+              {chart.ascendant && (
+                <PositionCard
+                  icon="↗️"
+                  title="Cung Mọc"
+                  subtitle="Vẻ ngoài & cách bạn bước vào đời — 'lớp áo' đầu tiên người khác thấy."
+                  pos={chart.ascendant}
+                />
+              )}
             </div>
+            {!chart.ascendant && (
+              <p className="text-xs text-muted-foreground">
+                💡 Chọn <strong>nơi sinh</strong> ở trên để xem thêm <strong>cung Mọc</strong> (Ascendant) —
+                mảnh thứ ba của bộ &ldquo;tam trụ&rdquo; (Mặt Trời · Mặt Trăng · Mọc).
+              </p>
+            )}
 
             <div className="rounded-lg border border-border bg-card/40 p-4">
               <p className="text-sm text-foreground/85">
@@ -169,8 +218,8 @@ export function SunMoonChecker() {
             </p>
 
             <div className="rounded-lg border border-dashed border-gold/30 bg-gold/5 p-4 text-sm text-muted-foreground">
-              🔭 <strong className="text-foreground">Sắp có:</strong> cung Mọc (Ascendant — cần nơi sinh), Diêm
-              Vương (Pluto), hệ thống nhà, và bản luận giải chuyên sâu cho bản đồ sao đầy đủ.
+              🔭 <strong className="text-foreground">Sắp có:</strong> Diêm Vương (Pluto), hệ thống nhà (houses),
+              và bản luận giải chuyên sâu bằng AI cho cả bản đồ sao.
             </div>
           </div>
         )}

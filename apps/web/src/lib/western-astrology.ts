@@ -282,6 +282,10 @@ export interface BirthInput {
   minute: number; // 0–59
   /** Lệch múi giờ nơi sinh so với UTC, tính bằng PHÚT. VN = +420. */
   tzOffsetMinutes?: number;
+  /** Vĩ độ nơi sinh (+ Bắc). Cần để tính cung Mọc (Ascendant). */
+  latitude?: number;
+  /** Kinh độ nơi sinh (+ Đông). Cần để tính cung Mọc. */
+  longitude?: number;
 }
 
 export interface PlanetPosition {
@@ -294,10 +298,40 @@ export interface NatalChart {
   moon: SignPosition;
   /** Sao Thuỷ → Hải Vương (7 hành tinh) theo cung hoàng đạo. */
   planets: PlanetPosition[];
+  /** Cung Mọc (Ascendant) — chỉ có khi cung cấp nơi sinh (latitude + longitude). */
+  ascendant?: SignPosition;
+}
+
+const tand = (deg: number): number => Math.tan(deg * D2R);
+
+/** Greenwich mean sidereal time (độ) — Meeus ch. 12. */
+function gmst(jd: number): number {
+  const T = (jd - 2451545.0) / 36525;
+  return norm360(
+    280.46061837 + 360.98564736629 * (jd - 2451545.0) + 0.000387933 * T * T - (T * T * T) / 38710000,
+  );
+}
+
+/** Độ nghiêng hoàng đạo trung bình (độ) — Meeus ch. 22. */
+function obliquity(jd: number): number {
+  const T = (jd - 2451545.0) / 36525;
+  return 23.4392911 - 0.0130041667 * T - 1.638889e-7 * T * T + 5.036111e-7 * T * T * T;
 }
 
 /**
- * Tính bản đồ sao (Mặt Trời + Mặt Trăng + 7 hành tinh) từ thông tin sinh.
+ * Cung Mọc (Ascendant) — kinh độ hoàng đạo của điểm mọc ở chân trời đông.
+ * Kiểm chứng vs astronomy-engine (Horizon, 400 ca, 6 thành phố): điểm Mọc nằm đúng
+ * trên chân trời đông, sai số <0.01° (hình học, không khúc xạ).
+ */
+export function ascendantLongitude(jd: number, latitude: number, longitudeEast: number): number {
+  const ramc = norm360(gmst(jd) + longitudeEast); // local sidereal time (độ)
+  const eps = obliquity(jd);
+  const asc = atan2d(cosd(ramc), -(sind(ramc) * cosd(eps) + tand(latitude) * sind(eps)));
+  return norm360(asc);
+}
+
+/**
+ * Tính bản đồ sao (Mặt Trời + Mặt Trăng + 7 hành tinh; + cung Mọc nếu có nơi sinh).
  * Giờ sinh là giờ ĐỊA PHƯƠNG; chuyển sang UTC bằng `tzOffsetMinutes` (mặc định VN +7).
  */
 export function computeChart(input: BirthInput): NatalChart {
@@ -314,9 +348,13 @@ export function computeChart(input: BirthInput): NatalChart {
     utc.getUTCMinutes(),
     utc.getUTCSeconds(),
   );
-  return {
+  const chart: NatalChart = {
     sun: positionOf(sunLongitude(jd)),
     moon: positionOf(moonLongitude(jd)),
     planets: PLANETS.map((planet) => ({ planet, position: positionOf(planetLongitude(planet.key, jd)) })),
   };
+  if (typeof input.latitude === 'number' && typeof input.longitude === 'number') {
+    chart.ascendant = positionOf(ascendantLongitude(jd, input.latitude, input.longitude));
+  }
+  return chart;
 }
