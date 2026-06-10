@@ -148,6 +148,7 @@ export default function DatTenNguHanhPage() {
 
           <RelatedTools
             links={[
+              { href: '/sinh-con', label: 'Sinh con theo năm' },
               { href: '/xem-ngay', label: 'Xem ngày tốt' },
               { href: '/hop-tuoi', label: 'Xem hợp tuổi' },
               { href: '/sao-han', label: 'Xem sao hạn' },
