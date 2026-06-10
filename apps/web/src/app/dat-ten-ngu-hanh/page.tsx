@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { DatTenNguHanhChecker } from '@/components/dat-ten-ngu-hanh/DatTenNguHanhChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { ELEMENTS, type Element } from '@/lib/dat-ten-ngu-hanh';
+import { VARIANTS } from './variants';
 
 const DESC =
   'Tra mệnh ngũ hành của bé theo ngày sinh (nạp âm) và gợi ý tên hợp mệnh theo phong tục: tên thuộc hành tương sinh, tránh hành tương khắc. Gợi ý tham khảo theo nghĩa chữ — không phán số mệnh.';
@@ -79,6 +81,15 @@ export default function DatTenNguHanhPage() {
       >
         <section className="space-y-8">
           <DatTenNguHanhChecker />
+
+          <nav aria-label="Đặt tên theo nhu cầu cụ thể" className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+            <span className="text-muted-foreground">Đặt tên theo nhu cầu:</span>
+            {VARIANTS.map((v) => (
+              <Link key={v.slug} href={`/dat-ten-ngu-hanh/${v.slug}`} className="text-gold hover:underline">
+                {v.label}
+              </Link>
+            ))}
+          </nav>
 
           {/* Ngũ hành tương sinh tương khắc */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">

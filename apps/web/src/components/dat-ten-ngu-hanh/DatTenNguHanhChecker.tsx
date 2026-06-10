@@ -22,6 +22,7 @@ import {
   type Element,
   type BanMenhResult,
 } from '@/lib/dat-ten-ngu-hanh';
+import { track } from '@/lib/analytics';
 
 type GenderFilter = 'ca' | 'nam' | 'nu';
 
@@ -43,9 +44,10 @@ function matchGender(g: NameSuggestionGender, filter: GenderFilter): boolean {
 }
 type NameSuggestionGender = 'nam' | 'nu' | 'ca';
 
-export function DatTenNguHanhChecker() {
+export function DatTenNguHanhChecker({ defaultGender = 'ca' }: { defaultGender?: GenderFilter } = {}) {
   const [value, setValue] = React.useState('');
-  const [gender, setGender] = React.useState<GenderFilter>('ca');
+  const [gender, setGender] = React.useState<GenderFilter>(defaultGender);
+  const [reportInterest, setReportInterest] = React.useState(false);
 
   React.useEffect(() => {
     if (!value) setValue(todayISO());
@@ -156,6 +158,37 @@ export function DatTenNguHanhChecker() {
               chữ Hán-Việt (phổ biến nhất, có thể khác các trường phái tính theo số nét). Một cái tên đẹp,
               ý nghĩa tốt và tâm ý của cha mẹ vẫn là điều quan trọng nhất.
             </p>
+
+            {/* Hạt giống đo nhu cầu "danh sách tên đầy đủ" — không backend, chỉ ghi ý định qua analytics. */}
+            <div className="rounded-xl border border-gold/30 bg-gold/[0.04] p-4">
+              {reportInterest ? (
+                <p className="text-sm text-muted-foreground">
+                  Cảm ơn bạn! 🌱 Nếu nhiều cha mẹ quan tâm, chúng tôi sẽ ưu tiên làm{' '}
+                  <strong className="text-foreground">danh sách tên đầy đủ theo họ của gia đình</strong>.
+                </p>
+              ) : (
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <div className="text-sm font-medium text-foreground">Cần thêm gợi ý tên?</div>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                      Bản đầy đủ sẽ có nhiều tên hơn cho mỗi hành, lọc theo{' '}
+                      <strong>họ của gia đình</strong>, kèm ý nghĩa Hán-Việt và một lời chúc. Vẫn là gợi
+                      ý tham khảo — không phán số mệnh.
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    className="shrink-0"
+                    onClick={() => {
+                      setReportInterest(true);
+                      track('dat_ten_report_intent', { element: result.element, gender });
+                    }}
+                  >
+                    Tôi quan tâm
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </CardContent>

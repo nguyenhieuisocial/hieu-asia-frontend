@@ -3,6 +3,7 @@ import { PALACES_CONTENT, ALL_STARS_CONTENT } from '@/lib/tuvi-content';
 import { listCaseStudies } from '@/lib/case-studies';
 import { PALACE_READINGS } from '@/lib/palace-readings';
 import { PURPOSES } from './xem-ngay/purposes';
+import { VARIANTS } from './dat-ten-ngu-hanh/variants';
 import { ZODIAC, canonicalPairSlug } from '@/lib/hop-tuoi-pairs';
 import { COMPARISONS } from '@/lib/so-sanh';
 
@@ -269,6 +270,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Đặt tên con theo ngũ hành — SEO (mệnh nạp âm + gợi ý tên).
   const datTenNguHanh: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/dat-ten-ngu-hanh`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    ...VARIANTS.map((v) => ({
+      url: `${BASE_URL}/dat-ten-ngu-hanh/${v.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.65,
+    })),
   ];
 
   return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls];
