@@ -123,6 +123,18 @@ const TOOLS = [
     desc: 'Năm này có thuận để cưới không? Tính Kim Lâu, Tam Tai, xung năm theo năm sinh — minh bạch từng bước.',
   },
   {
+    href: '/xem-tuoi-lam-nha',
+    emoji: '🏠',
+    name: 'Xem Tuổi Làm Nhà',
+    desc: 'Năm này có được tuổi xây/sửa nhà không? Tính Kim Lâu, Hoang Ốc, Tam Tai — kèm cách kiểm tra người mượn tuổi.',
+  },
+  {
+    href: '/xong-dat',
+    emoji: '🧧',
+    name: 'Tuổi Xông Đất',
+    desc: 'Gợi ý tuổi xông đất Tết Đinh Mùi 2027 theo tam hợp, lục hợp & ngũ hành — minh bạch, tham khảo.',
+  },
+  {
     href: '/xem-hop-nhom',
     emoji: '👨‍👩‍👧‍👦',
     name: 'Xem Hợp Nhóm',
