@@ -7,14 +7,14 @@ import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { ZODIAC } from '@/lib/western-astrology';
 
 const DESC =
-  'Tính cung Mặt Trời & cung Mặt Trăng của bạn theo chiêm tinh phương Tây — từ ngày giờ sinh, bằng thuật toán thiên văn (Meeus) đối chiếu thư viện chuẩn. Con số là thật, diễn giải để hiểu mình, không bói toán.';
+  'Tính bản đồ sao của bạn theo chiêm tinh phương Tây — cung Mặt Trời, Mặt Trăng & 7 hành tinh (Sao Thuỷ → Hải Vương) từ ngày giờ sinh, bằng thuật toán thiên văn (Meeus + Schlyter) đối chiếu thư viện chuẩn. Con số là thật, diễn giải để hiểu mình, không bói toán.';
 
 export const metadata: Metadata = {
-  title: 'Bản đồ sao — cung Mặt Trời & Mặt Trăng của bạn',
+  title: 'Bản đồ sao — Mặt Trời, Mặt Trăng & 7 hành tinh',
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/ban-do-sao' },
   openGraph: {
-    title: 'Bản đồ sao — cung Mặt Trời & Mặt Trăng',
+    title: 'Bản đồ sao — Mặt Trời, Mặt Trăng & 7 hành tinh',
     description: DESC,
     url: 'https://hieu.asia/ban-do-sao',
     type: 'website',
@@ -57,7 +57,7 @@ export default function BanDoSaoPage() {
       <JsonLd
         data={[
           webPage({
-            name: 'Bản đồ sao — cung Mặt Trời & Mặt Trăng của bạn',
+            name: 'Bản đồ sao — Mặt Trời, Mặt Trăng & 7 hành tinh',
             description: DESC,
             url: '/ban-do-sao',
           }),
@@ -73,10 +73,10 @@ export default function BanDoSaoPage() {
         icon={<span aria-hidden="true">🔭</span>}
         title={
           <>
-            Cung <GoldAccent>Mặt Trời &amp; Mặt Trăng</GoldAccent>
+            <GoldAccent>Bản đồ sao</GoldAccent> của bạn
           </>
         }
-        description="Tính cung Mặt Trời & cung Mặt Trăng của bạn từ ngày giờ sinh — bằng thuật toán thiên văn, đối chiếu thư viện chuẩn. Con số là thật; diễn giải để hiểu mình, không bói toán."
+        description="Cung Mặt Trời, Mặt Trăng & 7 hành tinh (Sao Thuỷ → Hải Vương) từ ngày giờ sinh — bằng thuật toán thiên văn, đối chiếu thư viện chuẩn. Con số là thật; diễn giải để hiểu mình, không bói toán."
         breadcrumb={[{ label: 'Trang chủ', href: '/' }, { label: 'Bản đồ sao' }]}
       >
         <section className="space-y-8">

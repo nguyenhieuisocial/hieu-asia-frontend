@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
-import { computeSunMoonChart, type SignPosition, type SunMoonChart } from '@/lib/western-astrology';
+import { computeChart, type SignPosition, type NatalChart } from '@/lib/western-astrology';
 
 function parseDate(value: string): { y: number; m: number; d: number } | null {
   const parts = value.split('-').map(Number);
@@ -69,10 +69,10 @@ export function SunMoonChecker() {
   const [time, setTime] = React.useState('12:00');
 
   const parsedDate = React.useMemo(() => parseDate(date), [date]);
-  const chart = React.useMemo<SunMoonChart | null>(() => {
+  const chart = React.useMemo<NatalChart | null>(() => {
     if (!parsedDate) return null;
     const { h, min } = parseTime(time);
-    return computeSunMoonChart({
+    return computeChart({
       year: parsedDate.y,
       month: parsedDate.m,
       day: parsedDate.d,
@@ -133,15 +133,44 @@ export function SunMoonChecker() {
               </p>
             </div>
 
+            {/* 7 hành tinh */}
+            <div className="rounded-xl border border-border bg-card/40 p-4">
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">Bảy hành tinh</p>
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                {chart.planets.map(({ planet, position }) => (
+                  <div
+                    key={planet.key}
+                    className="flex items-start gap-2 rounded-lg border border-border bg-background/40 p-2.5"
+                  >
+                    <span className="text-lg leading-none text-gold" aria-hidden>
+                      {planet.symbol}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-foreground">
+                        {planet.name} ở {position.sign.symbol} {position.sign.name}
+                        <span className="ml-1 font-mono text-xs text-muted-foreground">
+                          {position.degreeInSign.toFixed(0)}°
+                        </span>
+                        {position.nearCusp && (
+                          <span className="ml-1 text-[10px] text-amber-600 dark:text-amber-400">(sát ranh giới)</span>
+                        )}
+                      </p>
+                      <p className="text-xs text-muted-foreground">{planet.represents}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             <p className="text-xs leading-relaxed text-muted-foreground">
-              Vị trí hành tinh được tính bằng thuật toán thiên văn (Meeus), đối chiếu với thư viện chuẩn —
+              Vị trí hành tinh được tính bằng thuật toán thiên văn (Meeus + Schlyter), đối chiếu với thư viện chuẩn —
               <strong> con số là thật</strong>. Phần diễn giải mang tính <strong>tham khảo để hiểu mình</strong>,
               không phải tiên đoán số mệnh. Bạn vẫn là người quyết định.
             </p>
 
             <div className="rounded-lg border border-dashed border-gold/30 bg-gold/5 p-4 text-sm text-muted-foreground">
-              🔭 <strong className="text-foreground">Sắp có:</strong> cung Mọc (Ascendant), vị trí các hành tinh
-              (Sao Thuỷ → Diêm Vương) theo cung &amp; nhà, và bản luận giải chuyên sâu cho bản đồ sao đầy đủ.
+              🔭 <strong className="text-foreground">Sắp có:</strong> cung Mọc (Ascendant — cần nơi sinh), Diêm
+              Vương (Pluto), hệ thống nhà, và bản luận giải chuyên sâu cho bản đồ sao đầy đủ.
             </div>
           </div>
         )}
