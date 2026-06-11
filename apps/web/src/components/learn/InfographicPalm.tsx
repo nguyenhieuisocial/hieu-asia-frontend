@@ -48,7 +48,7 @@ const LINES: readonly PalmLine[] = [
   },
   {
     id: 'mercury',
-    name: 'Đường Mercury (Health line)',
+    name: 'Đường Thuỷ Tinh (Health line)',
     desc: 'Phản ánh sức khỏe, khả năng giao tiếp và kinh doanh.',
     path: 'M 225 320 Q 235 240 245 130',
     color: '#A98AD3',
