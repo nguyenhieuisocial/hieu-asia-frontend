@@ -16,6 +16,7 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { LoTrinhChart } from '@/components/lo-trinh/LoTrinhChart';
 
 const SLUG = 'ke-hoach-nam';
 const TOPIC = 'general';
@@ -246,6 +247,14 @@ export default function KeHoachNamPage() {
               Nam, 35 tuổi · cung Điền Trạch + đại vận chuyển · chọn phân bổ tài sản theo pha vận, không theo giá thị trường.
             </p>
           </Link>
+        </section>
+
+        <section className="relative mx-auto max-w-4xl px-6 pb-12">
+          <LoTrinhChart
+            topic="general"
+            focusPalaces={['Mệnh', 'Quan Lộc']}
+            heading="Kế hoạch năm theo lá số của bạn"
+          />
         </section>
 
         <section className="relative mx-auto max-w-4xl px-6 pb-20">

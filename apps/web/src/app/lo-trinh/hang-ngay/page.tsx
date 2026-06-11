@@ -16,6 +16,7 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { LoTrinhChart } from '@/components/lo-trinh/LoTrinhChart';
 
 const SLUG = 'hang-ngay';
 const TOPIC = 'general';
@@ -233,6 +234,13 @@ export default function HangNgayPage() {
               </ul>
             </div>
           </div>
+        </section>
+
+        <section className="relative mx-auto max-w-4xl px-6 pb-12">
+          <LoTrinhChart
+            topic="general"
+            focusPalaces={['Mệnh', 'Phúc Đức']}
+          />
         </section>
 
         <section className="relative mx-auto max-w-4xl px-6 pb-20">
