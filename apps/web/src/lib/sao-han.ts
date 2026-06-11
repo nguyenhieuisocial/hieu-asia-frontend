@@ -64,6 +64,8 @@ export interface SaoInfo {
   advice: string;
   /** Tháng âm thường được nhắc là cần lưu ý / thuận lợi (theo phong tục). */
   thang: string;
+  /** "Sao" này thực chất là gì trong thiên văn — Cửu Diệu gốc là Navagraha (Ấn Độ). */
+  origin: string;
 }
 
 export const SAO_INFO: Record<SaoKey, SaoInfo> = {
@@ -75,6 +77,7 @@ export const SAO_INFO: Record<SaoKey, SaoInfo> = {
       'Cát tinh, tượng mặt trời — theo phong tục là năm hanh thông, gặp quý nhân, công danh sáng sủa; đặc biệt thuận với nam giới. Với nữ giới, dương khí mạnh đôi khi dễ va chạm gia đạo nhỏ — giữ hoà khí là ổn.',
     advice: 'Năm thuận để khởi sự, mở rộng việc — cứ tự tin tiến nhưng vẫn giữ chừng mực.',
     thang: 'Tháng tốt thường nhắc: tháng 6 và tháng 10 (âm).',
+    origin: 'Mặt Trời — Surya trong Navagraha (9 thiên thể của thiên văn Ấn Độ cổ).',
   },
   thai_am: {
     key: 'thai_am',
@@ -84,6 +87,7 @@ export const SAO_INFO: Record<SaoKey, SaoInfo> = {
       'Cát tinh, tượng mặt trăng — êm đẹp, tài lộc, gặp may về tiền bạc; hợp với nữ giới.',
     advice: 'Năm dễ chịu để vun vén tài chính, gia đạo. Giữ nhịp ổn định là tốt.',
     thang: 'Tháng tốt thường nhắc: tháng 9 (âm); tháng 11 nên chú ý sức khoẻ.',
+    origin: 'Mặt Trăng — Chandra trong Navagraha.',
   },
   moc_duc: {
     key: 'moc_duc',
@@ -93,6 +97,7 @@ export const SAO_INFO: Record<SaoKey, SaoInfo> = {
       'Cát tinh — bình an, hỷ sự, thuận hoà, hợp chuyện vui như cưới hỏi, sinh con.',
     advice: 'Năm an lành, hợp việc hỷ. Tận hưởng và giữ gìn sức khoẻ.',
     thang: 'Tháng tốt thường nhắc: tháng 10 và tháng 12 (âm).',
+    origin: 'Mộc tinh (sao Mộc) — Brihaspati trong Navagraha.',
   },
   tho_tu: {
     key: 'tho_tu',
@@ -102,6 +107,7 @@ export const SAO_INFO: Record<SaoKey, SaoInfo> = {
       'Sao trung bình — theo phong tục thiên về trắc trở vặt, hao hụt nhỏ; đi xa nên cẩn trọng.',
     advice: 'Giữ mọi việc ổn định, tránh thay đổi lớn không cần thiết; cẩn thận khi đi xa.',
     thang: 'Tháng cần lưu ý: tháng 4 và tháng 8 (âm).',
+    origin: 'Thổ tinh (sao Thổ) — Shani trong Navagraha.',
   },
   thuy_dieu: {
     key: 'thuy_dieu',
@@ -111,6 +117,7 @@ export const SAO_INFO: Record<SaoKey, SaoInfo> = {
       'Sao trung bình (một số trường phái xem là cát tinh nhẹ) — nhìn chung an lành, lợi cho đi xa và buôn bán; song theo phong tục kỵ sông nước.',
     advice: 'Năm tương đối nhẹ nhàng; cẩn thận các việc liên quan đến nước, bơi lội, đường thuỷ.',
     thang: 'Tháng cần lưu ý: tháng 4 và tháng 8 (âm).',
+    origin: 'Thủy tinh (sao Thủy) — Budha trong Navagraha.',
   },
   van_hon: {
     key: 'van_hon',
@@ -120,6 +127,7 @@ export const SAO_INFO: Record<SaoKey, SaoInfo> = {
       'Sao trung bình (còn gọi Vân Hán, thuộc hành Hoả) — theo phong tục dễ nóng giận, vướng thị phi lời nói, đau ốm nhẹ; nên cẩn thận lửa, điện, xe cộ.',
     advice: 'Giữ bình tĩnh, tránh tranh cãi và khẩu thiệt; chú ý sức khoẻ, lời nói.',
     thang: 'Tháng cần lưu ý: tháng 2 và tháng 8 (âm).',
+    origin: 'Hỏa tinh (sao Hỏa) — Mangala trong Navagraha.',
   },
   la_hau: {
     key: 'la_hau',
@@ -129,6 +137,8 @@ export const SAO_INFO: Record<SaoKey, SaoInfo> = {
       'Hung tinh — theo quan niệm dân gian thiên về thị phi, miệng tiếng, giấy tờ pháp lý, và sức khoẻ (chú ý mắt, tai, máu huyết); nặng hơn với nam giới ("nam La Hầu").',
     advice: 'Năm nên giữ lời ăn tiếng nói, cẩn thận giấy tờ – pháp lý, giữ sức khoẻ. Bình tĩnh xử lý mâu thuẫn.',
     thang: 'Tháng thường nhắc cần thận trọng: tháng 1 và tháng 7 (âm).',
+    origin:
+      'Không phải sao thật: giao điểm Bắc nơi quỹ đạo Mặt Trăng cắt hoàng đạo (Rahu) — vùng trời xảy ra nhật thực, nguyệt thực.',
   },
   ke_do: {
     key: 'ke_do',
@@ -138,6 +148,8 @@ export const SAO_INFO: Record<SaoKey, SaoInfo> = {
       'Hung tinh — theo quan niệm dân gian thiên về buồn phiền, hao tài, thị phi, chuyện tang sự – âm phần; nặng hơn với nữ giới ("nữ Kế Đô"), nữ nên chú ý sức khoẻ và chuyện thai sản.',
     advice: 'Giữ tâm an, tránh thị phi và tranh chấp; cẩn trọng tiền bạc và sức khoẻ.',
     thang: 'Tháng thường nhắc cần thận trọng: tháng 3 và tháng 9 (âm).',
+    origin:
+      'Không phải sao thật: giao điểm Nam của quỹ đạo Mặt Trăng (Ketu) — cặp đối xứng với La Hầu.',
   },
   thai_bach: {
     key: 'thai_bach',
@@ -147,6 +159,7 @@ export const SAO_INFO: Record<SaoKey, SaoInfo> = {
       'Hung tinh (dân gian có câu "Thái Bạch quét sạch cửa nhà") — thiên về hao tài, mất mát; cổ truyền còn nhắc cẩn thận đao thương, tai nạn. Nặng hơn với nam giới.',
     advice: 'Năm nên thận trọng chi tiêu, đầu tư, cho vay; tránh quyết định tài chính lớn khi chưa chắc.',
     thang: 'Tháng thường nhắc cần thận trọng: tháng 5 (âm); một số nguồn cổ nhắc thêm tháng 2 và 8.',
+    origin: 'Kim tinh (sao Kim) — Shukra trong Navagraha; "sao Thái Bạch" chính là Kim tinh lúc rạng sáng/chập tối.',
   },
 };
 
