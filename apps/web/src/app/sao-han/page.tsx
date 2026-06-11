@@ -39,6 +39,10 @@ const FAQS = [
     q: 'Có cần cúng sao giải hạn không?',
     a: 'Tuỳ niềm tin mỗi người. Một số gia đình làm lễ dâng sao đầu năm để cầu an — đó là nét văn hoá tín ngưỡng. hieu.asia chỉ giúp bạn tra cứu để tham khảo, không phán số mệnh và không bán lễ giải hạn.',
   },
+  {
+    q: 'La Hầu, Kế Đô có phải sao thật trên trời không?',
+    a: 'Không. Trong 9 "sao" Cửu Diệu có 7 thiên thể thật (Mặt Trời, Mặt Trăng và 5 hành tinh Kim – Mộc – Thủy – Hỏa – Thổ), còn La Hầu (Rahu) và Kế Đô (Ketu) là hai giao điểm nơi quỹ đạo Mặt Trăng cắt đường hoàng đạo — đúng vùng trời xảy ra nhật thực, nguyệt thực. Người xưa thấy Mặt Trời, Mặt Trăng "bị nuốt" ở đó nên hình dung thành thần thoại, và hai "sao" này mang nghĩa che khuất, xáo trộn từ đó. Hiểu nguồn gốc để tham khảo phong tục một cách bình tĩnh — không cần sợ một giao điểm hình học.',
+  },
 ];
 
 const TYPE_DOT: Record<SaoType, string> = {
@@ -98,10 +102,43 @@ export default function SaoHanPage() {
                     <p className="mt-0.5 text-[11px] uppercase tracking-wide text-muted-foreground">
                       {TYPE_LABEL[s.type]}
                     </p>
+                    <p className="mt-1.5 text-xs leading-relaxed text-foreground/60">
+                      Thực chất: {s.origin}
+                    </p>
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.summary}</p>
                   </div>
                 );
               })}
+            </div>
+          </section>
+
+          {/* Nguồn gốc Cửu Diệu — lớp "nói có sách": thiên văn thật đằng sau phong tục */}
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Từ thiên văn đến phong tục — Cửu Diệu là gì?
+            </h2>
+            <div className="mt-3 space-y-3 text-sm leading-relaxed text-muted-foreground">
+              <p>
+                Cửu Diệu bắt nguồn từ <strong className="text-foreground">Navagraha</strong> — chín
+                &quot;thiên thể&quot; trong thiên văn Ấn Độ cổ, theo dòng giao lưu văn hoá và Phật giáo
+                truyền vào Đông Á rồi thành tục xem sao hạn. Trong đó có 7 thiên thể thật: Mặt Trời
+                (Thái Dương), Mặt Trăng (Thái Âm) và 5 hành tinh nhìn được bằng mắt thường — Kim tinh
+                (Thái Bạch), Mộc tinh (Mộc Đức), Thủy tinh (Thủy Diệu), Hỏa tinh (Vân Hớn), Thổ tinh
+                (Thổ Tú).
+              </p>
+              <p>
+                Điều thú vị nhất: <strong className="text-foreground">La Hầu và Kế Đô không phải sao</strong>.
+                Đó là hai giao điểm nơi quỹ đạo Mặt Trăng cắt đường hoàng đạo — đúng vùng trời xảy ra
+                nhật thực, nguyệt thực. Người xưa thấy Mặt Trời, Mặt Trăng &quot;bị nuốt&quot; ở đó nên
+                hình dung thành thần La Hầu nuốt nhật nguyệt; hai &quot;sao&quot; này mang nghĩa che
+                khuất, xáo trộn từ đó.
+              </p>
+              <p>
+                Hiểu nguồn gốc rồi sẽ thấy: sao hạn là cách người xưa gửi lời nhắc &quot;năm nay nên
+                cẩn trọng điều gì&quot; lên bầu trời — một di sản văn hoá đáng trân trọng, không phải
+                án phạt. Vì vậy không cần sợ, càng không cần tốn tiền để &quot;giải&quot; một giao điểm
+                hình học.
+              </p>
             </div>
           </section>
 
