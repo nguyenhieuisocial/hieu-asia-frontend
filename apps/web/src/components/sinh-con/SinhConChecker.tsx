@@ -24,6 +24,7 @@ import {
   type RelationTone,
 } from '@/lib/sinh-con';
 import { track } from '@/lib/analytics';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 
 const CHILD_YEARS = [2026, 2027, 2028] as const;
 
@@ -188,10 +189,18 @@ export function SinhConChecker({ defaultYear = 2027 }: { defaultYear?: number } 
             {/* Hạt giống đo nhu cầu "cẩm nang đón bé" — không backend, chỉ ghi ý định qua analytics. */}
             <div className="rounded-xl border border-gold/30 bg-gold/[0.04] p-4">
               {reportInterest ? (
-                <p className="text-sm text-muted-foreground">
-                  Cảm ơn bạn! 🌱 Nếu nhiều gia đình quan tâm, chúng tôi sẽ ưu tiên làm{' '}
-                  <strong className="text-foreground">cẩm nang đón bé theo tuổi cả nhà</strong>.
-                </p>
+                <div className="space-y-3">
+                  <div className="text-sm font-medium text-foreground">
+                    Để lại email — chúng tôi báo bạn khi có bản đầy đủ 🌱
+                  </div>
+                  <OccasionLeadCapture
+                    source="occasion:sinh-con"
+                    capturedEvent="sinh_con_lead_captured"
+                    capturedProps={{ year: child.year }}
+                    blurb="Bản đầy đủ sẽ đối chiếu mệnh & con giáp của bé với cả nhà, gợi ý tên hợp mệnh và những mốc nên biết theo phong tục. Để email, chúng tôi gửi bạn khi ra mắt."
+                    cta="Báo tôi khi có"
+                  />
+                </div>
               ) : (
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>

@@ -135,6 +135,12 @@ const TOOLS = [
     desc: 'Gợi ý tuổi xông đất Tết Đinh Mùi 2027 theo tam hợp, lục hợp & ngũ hành — minh bạch, tham khảo.',
   },
   {
+    href: '/huong-nha',
+    emoji: '🧭',
+    name: 'Xem Hướng Nhà',
+    desc: 'Hướng nhà hợp tuổi theo Bát Trạch (cung phi): 4 hướng tốt – 4 hướng tránh cho cửa, giường, bếp.',
+  },
+  {
     href: '/xem-hop-nhom',
     emoji: '👨‍👩‍👧‍👦',
     name: 'Xem Hợp Nhóm',

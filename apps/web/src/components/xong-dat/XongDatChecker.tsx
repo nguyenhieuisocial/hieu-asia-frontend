@@ -27,6 +27,7 @@ import {
   type XongDatResult,
 } from '@/lib/xong-dat';
 import { track } from '@/lib/analytics';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 
 const TONE_CLASS: Record<RelationTone, string> = {
   hop: 'border-emerald-300 bg-emerald-50/60 dark:border-emerald-800 dark:bg-emerald-950/20',
@@ -221,10 +222,18 @@ export function XongDatChecker({ defaultHostYear }: { defaultHostYear?: number }
             {/* Hạt giống đo nhu cầu "cẩm nang đón Tết" — không backend, chỉ ghi ý định. */}
             <div className="rounded-xl border border-gold/30 bg-gold/[0.04] p-4">
               {reportInterest ? (
-                <p className="text-sm text-muted-foreground">
-                  Cảm ơn bạn! 🌱 Nếu nhiều gia đình quan tâm, chúng tôi sẽ ưu tiên làm{' '}
-                  <strong className="text-foreground">cẩm nang đón Tết theo tuổi cả nhà</strong>.
-                </p>
+                <div className="space-y-3">
+                  <div className="text-sm font-medium text-foreground">
+                    Để lại email — chúng tôi báo bạn khi có bản đầy đủ 🌱
+                  </div>
+                  <OccasionLeadCapture
+                    source="occasion:xong-dat"
+                    capturedEvent="xong_dat_lead_captured"
+                    capturedProps={{ year: Number(targetYear) }}
+                    blurb="Bản đầy đủ sẽ gộp tuổi xông đất hợp cả nhà, ngày giờ đẹp khai xuân và những mốc nên biết theo phong tục. Để email, chúng tôi gửi bạn khi ra mắt."
+                    cta="Báo tôi khi có"
+                  />
+                </div>
               ) : (
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
