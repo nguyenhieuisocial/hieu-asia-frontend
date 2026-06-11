@@ -100,7 +100,7 @@ export function OnboardingRecap() {
         </ul>
         <Link
           href="/onboarding/topic"
-          className="mt-3 inline-block text-xs text-gold-700 underline underline-offset-4 hover:opacity-80"
+          className="mt-3 inline-block whitespace-nowrap text-xs text-gold-700 underline underline-offset-4 hover:opacity-80"
         >
           Sửa lại pre-step
         </Link>

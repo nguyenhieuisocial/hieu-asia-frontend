@@ -56,6 +56,7 @@ export default async function UnlockPage({
             <Link
               href={`/pricing?session=${encodeURIComponent(session_id)}`}
               className="mt-6 inline-block rounded-md border border-gold/40 px-4 py-2 text-sm text-gold transition hover:bg-gold/10"
+              style={{ width: 'max-content' }}
             >
               Xem các gói →
             </Link>
