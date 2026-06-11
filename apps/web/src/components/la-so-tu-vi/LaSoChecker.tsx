@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
-import { castTuViChart, type TuViChart } from '@/lib/tuvi-client';
+import { castTuViChart, type TuViChart, type TuViPalace } from '@/lib/tuvi-client';
 import { TuViChart12Palaces } from '@/components/tuvi/TuViChart12Palaces';
 
 /**
@@ -44,6 +44,30 @@ function parseHour(t: string): number {
   return Number.isFinite(h) && h >= 0 && h <= 23 ? h : 12;
 }
 
+// Đại vận hiện tại — computed purely from the chart's per-palace decadal ranges
+// (already present, no extra fetch) + Western age. Mirrors the backend
+// currentDaiVan logic (verified === iztro decadal). [start, end] age inclusive.
+function ageFromDate(dateStr: string, now: Date = new Date()): number | null {
+  const m = /^(\d{4})-(\d{1,2})-(\d{1,2})/.exec((dateStr ?? '').trim());
+  if (!m) return null;
+  const by = Number(m[1]);
+  const bm = Number(m[2]);
+  const bd = Number(m[3]);
+  let age = now.getFullYear() - by;
+  const mo = now.getMonth() + 1;
+  if (mo < bm || (mo === bm && now.getDate() < bd)) age -= 1;
+  return age >= 0 && age < 140 ? age : null;
+}
+
+function currentDaiVan(chart: TuViChart, age: number | null): TuViPalace | null {
+  if (age == null) return null;
+  for (const p of chart.palaces) {
+    const r = p.decadal?.range;
+    if (r && r.length >= 2 && age >= r[0]! && age <= r[1]!) return p;
+  }
+  return null;
+}
+
 export function LaSoChecker() {
   const [date, setDate] = React.useState('');
   const [time, setTime] = React.useState('12:00');
@@ -71,6 +95,8 @@ export function LaSoChecker() {
   }, [date, time, gender]);
 
   const cachCuc = chart ? detectCachCuc(chart) : [];
+  const age = chart ? ageFromDate(date) : null;
+  const daiVan = chart ? currentDaiVan(chart, age) : null;
 
   return (
     <Card>
@@ -130,6 +156,31 @@ export function LaSoChecker() {
                 <p className="mt-3 text-xs text-muted-foreground">
                   Cách cục là <strong>khuôn hình thiên hướng tính cách</strong>, không phải dự đoán giàu–nghèo.
                   Đọc Mệnh luôn xét cùng tam phương tứ chính (cung được tô sáng khi bạn bấm chọn).
+                </p>
+              </div>
+            )}
+
+            {daiVan && (
+              <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
+                  Vận 10 năm hiện tại (đại vận)
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-foreground/85">
+                  {age != null && (
+                    <>
+                      Khoảng <strong>{age} tuổi</strong>, bạn đang ở{' '}
+                    </>
+                  )}
+                  <strong>đại vận cung {normPalace(daiVan.name)}</strong>
+                  {daiVan.decadal?.range && daiVan.decadal.range.length >= 2
+                    ? ` (${daiVan.decadal.range[0]}–${daiVan.decadal.range[1]} tuổi)`
+                    : ''}
+                  . Xem các sao ở cung {normPalace(daiVan.name)} trong lá số trên để hiểu trọng tâm giai đoạn
+                  10 năm này.
+                </p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Đại vận = chu kỳ 10 năm, mỗi giai đoạn nhấn vào một cung — chỉ để soi trọng tâm, không phải
+                  dự đoán may rủi.
                 </p>
               </div>
             )}
