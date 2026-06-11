@@ -27,6 +27,12 @@ const TOOLS = [
     desc: 'Chiêm tinh phương Tây: cung Mặt Trời & Mặt Trăng từ ngày giờ sinh.',
   },
   {
+    href: '/la-so-tu-vi',
+    emoji: '☯',
+    name: 'Xem lá số Tử Vi',
+    desc: 'Lập lá số Tử Vi miễn phí: 12 cung, 114 sao, độ sáng, cách cục — con số thật.',
+  },
+  {
     href: '/mbti',
     emoji: '🧠',
     name: 'MBTI',
