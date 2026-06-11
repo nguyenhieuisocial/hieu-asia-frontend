@@ -48,6 +48,16 @@ jobs:
       - name: Install deps
         run: pnpm install --frozen-lockfile --filter web
 
+      # Fail fast & CLEARLY if the eval can't authenticate — otherwise the runner
+      # exits 1 at its token check and the regression alert below mislabels a
+      # missing-secret CONFIG failure as a quality regression (see #194/#240).
+      - name: Verify ADMIN_TOKEN secret present
+        run: |
+          if [ -z "$ADMIN_TOKEN" ]; then
+            echo "::error::CONFIG: HIEU_API_ADMIN_TOKEN secret is missing/empty — the eval cannot run. Add it in Settings → Secrets and variables → Actions. This is NOT a quality regression."
+            exit 1
+          fi
+
       - name: Run eval
         id: run
         run: |
@@ -76,7 +86,7 @@ jobs:
             github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `Weekly eval regression — ${new Date().toISOString().slice(0, 10)}`,
-              body: `Eval avg score dropped below P4.5 gate (target ≥ 9.0).\n\nArtifacts: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n\n**Action required**: download eval-results artifact, review per-sample failures, identify prompt regression OR Iztro tool drift OR model regression.\n\nCC @nguyenhieuisocial`,
+              title: `Weekly eval gate failed — ${new Date().toISOString().slice(0, 10)}`,
+              body: `The eval step exited non-zero.\n\n⚠️ FIRST open the "Run eval" step log:\n- If it printed \`Avg: X/10\` with X < 9.0 → genuine quality regression: download the eval-results artifact, review per-sample failures (prompt / Iztro tool / model).\n- If there is NO \`Avg:\` line (e.g. \`ADMIN_TOKEN required\`, API/network error) → INFRA/CONFIG failure, NOT a quality regression.\n\nRun: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n\nCC @nguyenhieuisocial`,
               labels: ['eval', 'quality-gate', 'p1'],
             });

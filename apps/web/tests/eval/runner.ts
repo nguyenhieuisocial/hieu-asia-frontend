@@ -96,7 +96,7 @@ async function runOne(sample: EvalSample, opts: RunnerOptions): Promise<EvalResu
     // LLM-as-judge: only call for low-rubric-score samples (cost optimization)
     // OR if explicitly requested via --judge-mode llm-only
     if (opts.judgeMode === 'llm-only' || (opts.judgeMode === 'rubric-plus-llm' && rubric.raw_score < 9.0)) {
-      llmVerdict = await judgeWithLLM(sample, output, opts.adminToken);
+      llmVerdict = await judgeWithLLM(sample, output, opts.adminToken, opts.apiBaseUrl);
     }
 
     const final_score = llmVerdict
