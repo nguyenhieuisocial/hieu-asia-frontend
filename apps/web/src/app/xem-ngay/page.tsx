@@ -31,6 +31,10 @@ const FAQS = [
     a: 'Theo lịch pháp, mỗi ngày có một trong 12 vị thần luân phiên trực. Sáu ngày có cát tinh trực gọi là ngày Hoàng đạo (thuận cho việc lớn), sáu ngày còn lại là Hắc đạo (nên thận trọng). Đây là một trong nhiều yếu tố được cân nhắc, không phải tất cả.',
   },
   {
+    q: '12 Trực là gì và được tính thế nào?',
+    a: 'Trực là "nhịp" 12 bước của ngày trong lịch pháp: Kiến, Trừ, Mãn, Bình, Định, Chấp, Phá, Nguy, Thành, Thâu, Khai, Bế — mỗi ngày mang một trực, luân phiên đủ 12 rồi lặp lại. Cách an trực dựa trên địa chi: trong mỗi tháng âm, ngày có chi trùng với chi tháng là trực Kiến (ví dụ tháng Dần thì ngày Dần là Kiến), các ngày sau cứ thế tuần tự. Mỗi trực có thiên hướng hợp – kỵ riêng theo nghĩa chữ (ví dụ Thành hợp hoàn thành – hỷ sự, Phá chỉ hợp tháo dỡ); chi tiết từng việc có khác nhau giữa các sách, nên công cụ đối chiếu trực với đúng việc bạn chọn khi chấm điểm.',
+  },
+  {
     q: 'Tam Tai, Kim Lâu, Hoang Ốc là gì?',
     a: 'Là các cách tính kiêng theo tuổi: Tam Tai là 3 năm hạn theo nhóm tam hợp; Kim Lâu và Hoang Ốc thường được xét khi cưới hỏi, làm nhà. Khi bạn nhập năm sinh, hệ thống nhắc các cảnh báo này để bạn cân nhắc — đây là tập tục dân gian, không khẳng định đúng – sai.',
   },
@@ -130,6 +134,46 @@ export default function XemNgayHubPage() {
               hệ thống nhắc các năm/tuổi phạm Tam Tai, Kim Lâu, Hoang Ốc để bạn cân nhắc.
             </li>
           </ul>
+        </section>
+
+        {/* 12 Trực — lớp giải thích cốt lõi (audit content-depth) */}
+        <section className="mt-6 rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+          <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            12 Trực — nhịp 12 bước của ngày
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+            Mỗi ngày âm lịch mang một trong 12 trực, luân phiên như một vòng quay: khởi đầu → dọn
+            dẹp → đầy đủ → … → đóng lại, rồi bắt đầu vòng mới. Cách an trực theo địa chi: trong mỗi
+            tháng âm, ngày có chi trùng chi tháng là trực <strong className="text-foreground">Kiến</strong>{' '}
+            (tháng Dần thì ngày Dần là Kiến), các ngày sau tuần tự đủ 12. Thiên hướng từng trực theo
+            nghĩa chữ:
+          </p>
+          <div className="mt-4 grid gap-2 text-sm sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              ['Kiến', 'khởi đầu — hợp khởi sự, xuất hành'],
+              ['Trừ', 'tẩy trừ — hợp dọn dẹp, chữa bệnh, bỏ điều cũ'],
+              ['Mãn', 'đầy đủ — hợp cầu phúc, sum họp, nhập kho'],
+              ['Bình', 'bằng phẳng — mọi việc bình hoà, hợp hoà giải'],
+              ['Định', 'ổn định — hợp ký kết, đính ước, cưới hỏi'],
+              ['Chấp', 'nắm giữ — hợp xây cất, lập giao kèo'],
+              ['Phá', 'phá vỡ — chỉ hợp tháo dỡ; không hợp việc lành'],
+              ['Nguy', 'cẩn trọng — tránh mạo hiểm; hợp tế lễ cầu an'],
+              ['Thành', 'hoàn thành — cát cho hỷ sự, khai trương, nhập học'],
+              ['Thâu', 'thu hoạch — hợp thu tiền, gặt hái; không hợp mở việc mới'],
+              ['Khai', 'mở ra — hợp khai trương, động thổ, nhập học'],
+              ['Bế', 'đóng lại — hợp lấp, đắp, xây bít; kỵ mở đầu việc mới'],
+            ].map(([ten, nghia]) => (
+              <div key={ten} className="rounded-md border border-border bg-background/40 px-3 py-2">
+                <span className="font-medium text-foreground">{ten}</span>{' '}
+                <span className="text-muted-foreground">— {nghia}</span>
+              </div>
+            ))}
+          </div>
+          <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+            Lưu ý trung thực: chi tiết hợp – kỵ của từng trực có khác nhau giữa các sách lịch pháp;
+            bảng trên là thiên hướng theo nghĩa chữ ở mức nhiều nguồn đồng thuận. Khi chấm điểm,
+            công cụ đối chiếu trực với đúng việc bạn chọn — bạn không cần tự tra.
+          </p>
         </section>
 
         {/* Một lời nhắn */}
