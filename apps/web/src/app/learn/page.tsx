@@ -49,6 +49,18 @@ const TOPICS: readonly LearnTopic[] = [
     blurb: '5 chiều liên tục: Cởi mở, Tận tâm, Hướng ngoại, Dễ chịu, Nhạy cảm cảm xúc.',
   },
   {
+    href: '/learn/disc',
+    title: 'DISC — 4 nhóm hành vi',
+    subtitle: 'Tâm lý — William Marston',
+    blurb: '4 thiên hướng: Thống trị (D), Ảnh hưởng (I), Kiên định (S), Tuân thủ (C).',
+  },
+  {
+    href: '/learn/enneagram',
+    title: 'Enneagram — 9 nhóm',
+    subtitle: 'Tâm lý — 3 trung tâm',
+    blurb: '9 nhóm theo động lực sâu (điều bạn sợ & khao khát), chia 3 trung tâm.',
+  },
+  {
     href: '/learn/palm',
     title: 'Xem chỉ tay',
     subtitle: 'Phổ quát',
