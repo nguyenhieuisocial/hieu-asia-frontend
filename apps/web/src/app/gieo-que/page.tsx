@@ -32,6 +32,43 @@ interface IChingResult {
   interpretation: { primary: string; changing?: string };
 }
 
+const FAQ: { q: string; a: string }[] = [
+  {
+    q: 'Kinh Dịch là gì?',
+    a: 'Kinh Dịch (Chu Dịch / I Ching) là một trong những bộ kinh cổ nhất của Á Đông, hình thành khoảng 3.000 năm trước. Hệ thống gồm 64 quẻ, mỗi quẻ là 6 hào âm (nét đứt) hoặc dương (nét liền) chồng lên nhau — mỗi quẻ mô tả một thế cục, một tình huống điển hình để người hỏi soi chiếu việc của mình.',
+  },
+  {
+    q: 'Phép gieo 3 đồng xu hoạt động thế nào?',
+    a: 'Gieo 3 đồng xu cùng lúc, sáu lần — mỗi lần ra một hào, xếp từ dưới lên. Tổ hợp sấp/ngửa của 3 đồng xu quyết định hào đó là âm hay dương, và là hào "tĩnh" hay hào "động" (đang chuyển). Sáu hào hợp thành một trong 64 quẻ.',
+  },
+  {
+    q: 'Hào động và quẻ biến là gì?',
+    a: 'Hào động là nét được xem như đang ở trạng thái chuyển hoá. Lật các hào động sang trạng thái ngược lại sẽ ra quẻ biến. Cách đọc truyền thống: quẻ chính nói về thế cục hiện tại, quẻ biến gợi ý hướng tình huống có thể chuyển tới.',
+  },
+  {
+    q: 'Gieo online có khác gieo đồng xu thật không?',
+    a: 'Về xác suất là tương đương: máy mô phỏng đúng phép 3 đồng xu — mỗi hào có 1/8 khả năng là âm động, 3/8 dương tĩnh, 3/8 âm tĩnh, 1/8 dương động, giống hệt khi bạn gieo xu thật. Còn sự "linh nghiệm" theo nghĩa huyền bí thì hieu.asia không hứa — giá trị của quẻ nằm ở câu hỏi rõ ràng và sự chiêm nghiệm khi đọc, không nằm ở đồng xu.',
+  },
+  {
+    q: 'Nên hỏi thế nào để quẻ có ích?',
+    a: 'Hỏi một việc cụ thể mỗi lần gieo, và ưu tiên câu hỏi mở — ví dụ "điều gì cần lưu ý nếu tôi đổi việc lúc này?" thay vì bắt quẻ trả lời có/không. Đọc xong, hãy đối chiếu lời quẻ với hoàn cảnh thật của bạn: chỗ nào "chạm" thì đó là thứ đáng suy nghĩ tiếp.',
+  },
+  {
+    q: 'Gieo quẻ có phải bói toán không?',
+    a: 'hieu.asia trình bày quẻ Dịch như công cụ gợi mở suy ngẫm — một tấm gương giúp bạn nhìn tình huống từ góc khác — chứ không phải lời tiên đoán chắc chắn về tương lai. Quẻ không quyết định thay bạn; nó giúp bạn nghĩ kỹ hơn trước khi tự quyết.',
+  },
+];
+
+const FAQ_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
 export default function GieoQuePage() {
   const [question, setQuestion] = React.useState('');
   const [asked, setAsked] = React.useState('');
@@ -68,6 +105,10 @@ export default function GieoQuePage() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
+      />
       <ToolPageShell
         eyebrow="Kinh Dịch cổ truyền"
         relatedSlug="/gieo-que"
@@ -228,6 +269,64 @@ export default function GieoQuePage() {
               </div>
             )}
           </div>
+        </section>
+
+        <section
+          aria-labelledby="gq-about-heading"
+          className="mt-12 border-t border-border pt-10"
+        >
+          <h2
+            id="gq-about-heading"
+            className="font-heading text-xl font-semibold text-foreground sm:text-2xl"
+          >
+            Kinh Dịch &amp; phép gieo hoạt động thế nào?
+          </h2>
+          <div className="mt-4 space-y-4 text-sm leading-relaxed text-foreground/80">
+            <p>
+              Kinh Dịch là bộ kinh cổ ~3.000 năm của Á Đông, gồm{' '}
+              <strong className="text-foreground">64 quẻ</strong> — mỗi quẻ là 6
+              hào âm (nét đứt) hoặc dương (nét liền), mô tả một thế cục điển
+              hình. Trang này dùng{' '}
+              <strong className="text-foreground">phép gieo 3 đồng xu</strong>:
+              gieo sáu lần, mỗi lần ra một hào từ dưới lên; hào &ldquo;động&rdquo;
+              (đang chuyển) sẽ lật ra <strong className="text-foreground">quẻ
+              biến</strong> — quẻ chính nói thế cục hiện tại, quẻ biến gợi hướng
+              chuyển.
+            </p>
+            <p>
+              Minh bạch để bạn rõ: máy mô phỏng{' '}
+              <strong className="text-foreground">đúng xác suất</strong> của phép
+              3 đồng xu thật (mỗi hào: 1/8 âm động · 3/8 dương tĩnh · 3/8 âm tĩnh
+              · 1/8 dương động), và lời giải được soạn theo nghĩa truyền thống
+              của từng quẻ. Quẻ Dịch ở đây là công cụ gợi mở suy ngẫm — đúng tinh
+              thần &ldquo;không bói mù&rdquo; — không phải lời tiên đoán chắc
+              chắn; quyết định cuối cùng vẫn là của bạn.
+            </p>
+          </div>
+        </section>
+
+        <section aria-labelledby="gq-faq-heading" className="mt-10">
+          <h2
+            id="gq-faq-heading"
+            className="font-heading text-xl font-semibold text-foreground sm:text-2xl"
+          >
+            Câu hỏi thường gặp
+          </h2>
+          <dl className="mt-4 space-y-3">
+            {FAQ.map((f) => (
+              <details
+                key={f.q}
+                className="group rounded-lg border border-border bg-card/40 px-4 py-3"
+              >
+                <summary className="cursor-pointer list-none font-medium text-foreground [&::-webkit-details-marker]:hidden">
+                  {f.q}
+                </summary>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {f.a}
+                </p>
+              </details>
+            ))}
+          </dl>
         </section>
       </ToolPageShell>
       <StickyMobileCta trackId="gieo-que" />
