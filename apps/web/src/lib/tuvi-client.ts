@@ -158,8 +158,12 @@ export async function castTuViHoroscope(
     input.targetDate ??
     (() => {
       // VN local date (ICT, UTC+7) — the yearly flow is keyed by the target year.
+      // Zero-padded ISO 8601 (YYYY-MM-DD), consistent with the rest of the
+      // codebase and safe for the worker's date parser.
       const ict = new Date(Date.now() + 7 * 60 * 60 * 1000);
-      return `${ict.getUTCFullYear()}-${ict.getUTCMonth() + 1}-${ict.getUTCDate()}`;
+      const mm = String(ict.getUTCMonth() + 1).padStart(2, '0');
+      const dd = String(ict.getUTCDate()).padStart(2, '0');
+      return `${ict.getUTCFullYear()}-${mm}-${dd}`;
     })();
 
   const res = await fetch(`${API_BASE}/tools/tuvi-v2`, {
