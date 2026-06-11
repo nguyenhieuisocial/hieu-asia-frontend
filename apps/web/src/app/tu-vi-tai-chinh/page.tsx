@@ -7,7 +7,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb } from '@/lib/seo/jsonld';
+import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   title: 'Tử Vi tài chính: kiếm tiền, quản lý, rủi ro',
@@ -49,21 +49,88 @@ const PATTERNS = [
     icon: PiggyBank,
     title: 'Tích luỹ ổn định, ít rủi ro',
     body: 'Tài Bạch có Thiên Phủ/Thái Âm — khuynh hướng tiết kiệm tự nhiên. Hợp tích luỹ qua chuyên môn + bất động sản. Tránh "lướt sóng".',
+    strengths: [
+      'Tiết kiệm tự nhiên, ít chi tiêu bốc đồng.',
+      'Hợp tích sản dài hạn: chuyên môn sâu, quỹ định kỳ, nhà để ở.',
+    ],
+    watchOut:
+      'Quá an toàn → tiền nằm im mất giá vì lạm phát; né mọi quyết định vì sợ sai nên bỏ lỡ cả cơ hội học quản lý tiền.',
+    selfCheck: 'Tôi đang thận trọng có tính toán, hay chỉ đang né mọi quyết định?',
   },
   {
     icon: TrendingUp,
     title: 'Quyết liệt, có hệ thống',
     body: 'Tài Bạch có Vũ Khúc — kỷ luật tài chính cao. Hợp ngành tài chính, kế toán, kỹ sư. Cẩn trọng "cứng nhắc" trong quyết định đầu tư.',
+    strengths: [
+      'Kỷ luật ngân sách cao, theo dõi dòng tiền sát.',
+      'Ra quyết định dựa trên số liệu thay vì cảm xúc.',
+    ],
+    watchOut:
+      'Bám kế hoạch cũ khi hoàn cảnh đã đổi; khắt khe chuyện tiền tới mức làm căng các mối quan hệ thân thiết.',
+    selfCheck:
+      'Kế hoạch này còn đúng với hoàn cảnh hiện tại không, hay tôi giữ nó chỉ vì đã lỡ cam kết?',
   },
   {
     icon: Wallet,
     title: 'Đa nguồn thu nhập, biến động',
     body: 'Tài Bạch có Tham Lang/Phá Quân — thu nhập đa nguồn, có lên có xuống. Hợp người làm freelance, kinh doanh, sáng tạo. Bắt buộc có emergency fund.',
+    strengths: [
+      'Nhạy cơ hội, tạo được nhiều nguồn thu.',
+      'Thu nhập có thể bứt tốc khi gặp đúng sóng.',
+    ],
+    watchOut:
+      'Thu nhập lên xuống nhưng chi tiêu chỉ đi lên; thiếu quỹ dự phòng nên một cú hụt thu là vỡ cả kế hoạch.',
+    selfCheck: 'Nếu 3 tháng tới không có đồng nào về, tôi sống bằng gì?',
   },
   {
     icon: AlertTriangle,
     title: 'Tài Bạch có Hoá Kỵ/sát tinh',
     body: 'Không nghĩa là "đời mạt vận tài chính". Là tín hiệu cần kỷ luật quản lý dòng tiền cao hơn người khác — và TUYỆT ĐỐI tránh leverage cao.',
+    strengths: [
+      'Khi đã có kỷ luật, đây thường là người quản trị rủi ro tốt nhất — vì quen cảnh giác.',
+      'Học tài chính cá nhân nghiêm túc thường thấy chuyển biến rõ nhất ở nhóm này.',
+    ],
+    watchOut:
+      'Vay đòn bẩy cao, đầu tư theo đám đông, hoặc giao người khác quyết thay chuyện tiền của mình.',
+    selfCheck: 'Khoản này nếu mất trắng, tôi có còn ngủ được không?',
+  },
+];
+
+const HOW_TO_READ = [
+  {
+    step: 'Cung Tài Bạch + chính tinh',
+    body: 'Cho biết CÁCH tiền về với bạn và cách bạn quản nó — không phải con số tài sản. 4 khuôn mẫu ở trên là những tổ hợp thường gặp.',
+  },
+  {
+    step: 'Nhìn kèm Điền Trạch + Phúc Đức',
+    body: 'Điền Trạch nói về tích sản (nhà đất, của để dành), Phúc Đức nói về quan niệm hưởng thụ — đọc cùng nhau mới ra bức tranh tiền bạc đầy đủ.',
+  },
+  {
+    step: 'Đại vận + lưu niên để chọn nhịp',
+    body: 'Giai đoạn nên tích luỹ phòng thủ và giai đoạn có thể mở rộng là khác nhau. Lưu ý: đây là nhịp chiến lược cá nhân, không phải tín hiệu "năm trúng lớn".',
+  },
+];
+
+const FAQ = [
+  {
+    q: 'Cung Tài Bạch là gì?',
+    a: 'Tài Bạch là cung trong lá số Tử Vi mô tả cách bạn kiếm tiền và quản lý tiền: khuynh hướng tích luỹ hay mạo hiểm, kỷ luật hay tuỳ hứng. Nó phản ánh CÁCH vận hành với tiền, không phải con số tài sản bạn sẽ có.',
+  },
+  {
+    q: 'Tử Vi có đoán được bao giờ tôi giàu không?',
+    a: 'Không. Lá số cho biết khuynh hướng quản lý tiền và nhịp giai đoạn, không cho biết số tài sản hay thời điểm "phát tài". Bất kỳ ai hứa đoán được điều đó đều đang bán ảo vọng — của cải thực tế đến từ thu nhập, kỷ luật chi tiêu và thời gian.',
+  },
+  {
+    q: 'Tài Bạch có Hoá Kỵ là "mạt vận tài chính"?',
+    a: 'Không. Đó là tín hiệu nên giữ kỷ luật dòng tiền cao hơn trung bình và tránh đòn bẩy — không phải bản án. Thực tế nhiều người nhóm này trở thành người quản trị rủi ro giỏi nhất sau khi học tài chính cá nhân nghiêm túc.',
+  },
+  {
+    q: 'hieu.asia có khuyên tôi mua cổ phiếu, coin hay đất không?',
+    a: 'Không bao giờ. hieu.asia không phải nền tảng tư vấn đầu tư và không đưa khuyến nghị mua/bán bất kỳ tài sản nào. Mọi nội dung ở đây là góc nhìn về khuynh hướng cá nhân; quyết định đầu tư cần người tư vấn có chứng chỉ và hiểu biết thị trường thực tế.',
+  },
+  {
+    q: 'Muốn xem tài chính năm nay thì xem thế nào?',
+    a: 'Xem đại vận và lưu niên chiếu cung Tài Bạch để biết giai đoạn này nên tích luỹ phòng thủ hay có thể mở rộng. Với một quyết định tiền bạc cụ thể (đổi việc lương thấp hơn, mua nhà, học tiếp…), dùng công cụ Quyết định để AI phân tích kèm bối cảnh thật của bạn.',
   },
 ];
 
@@ -86,6 +153,7 @@ const JSONLD = [
     { name: 'Trang chủ', url: '/' },
     { name: 'Tử Vi tài chính', url: '/tu-vi-tai-chinh' },
   ]),
+  faqPage(FAQ),
 ];
 
 export default function TuViTaiChinhPage() {
@@ -149,13 +217,76 @@ export default function TuViTaiChinhPage() {
                       {p.title}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="text-sm leading-relaxed text-muted-foreground">
-                    {p.body}
+                  <CardContent className="space-y-3 text-sm leading-relaxed text-muted-foreground">
+                    <p>{p.body}</p>
+                    <ul className="space-y-1">
+                      {p.strengths.map((s) => (
+                        <li key={s} className="flex gap-2">
+                          <span aria-hidden className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-gold/70" />
+                          <span className="text-foreground/80">{s}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="rounded-md border border-amber-400/25 bg-amber-500/[0.06] px-2.5 py-2 text-xs leading-relaxed text-amber-100/85">
+                      <strong className="text-amber-200">Cạm bẫy:</strong> {p.watchOut}
+                    </p>
+                    <p className="text-xs italic text-foreground/70">
+                      Tự vấn: &ldquo;{p.selfCheck}&rdquo;
+                    </p>
                   </CardContent>
                 </Card>
               );
             })}
           </div>
+        </section>
+
+        <section className="relative mx-auto max-w-3xl px-6 pb-12">
+          <h2 className="mb-5 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+            Đọc cung Tài Bạch thế nào cho đúng
+          </h2>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {HOW_TO_READ.map((h, i) => (
+              <Card key={h.step} className="border-border bg-card/40">
+                <CardHeader className="pb-2">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
+                    Bước {i + 1}
+                  </p>
+                  <CardTitle className="font-heading text-base text-foreground">
+                    {h.step}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm leading-relaxed text-muted-foreground">
+                  {h.body}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+            Lưu ý trung thực: Tài Bạch mô tả KHUYNH HƯỚNG quản lý tiền — không dự
+            đoán số tài sản, không biết rủi ro thị trường, và không thay được kỷ
+            luật chi tiêu thực tế của bạn.
+          </p>
+        </section>
+
+        <section className="relative mx-auto max-w-3xl px-6 pb-12">
+          <h2 className="mb-5 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+            Câu hỏi thường gặp
+          </h2>
+          <dl className="space-y-3">
+            {FAQ.map((f) => (
+              <details
+                key={f.q}
+                className="group rounded-lg border border-border bg-card/40 px-4 py-3"
+              >
+                <summary className="cursor-pointer list-none font-medium text-foreground [&::-webkit-details-marker]:hidden">
+                  {f.q}
+                </summary>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {f.a}
+                </p>
+              </details>
+            ))}
+          </dl>
         </section>
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12">
