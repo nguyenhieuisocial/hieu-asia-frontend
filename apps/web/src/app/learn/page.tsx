@@ -96,7 +96,7 @@ export default function LearnLandingPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm leading-relaxed text-muted-foreground">{t.blurb}</p>
-                <span className="mt-4 inline-block text-xs font-semibold text-gold-700 group-hover:text-gold">
+                <span className="mt-4 inline-block whitespace-nowrap text-xs font-semibold text-gold-700 group-hover:text-gold">
                   Đọc giải thích →
                 </span>
               </CardContent>
