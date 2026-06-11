@@ -22,6 +22,8 @@ import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { faqPage } from '@/lib/seo/jsonld';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -46,6 +48,29 @@ const TYPE_OPTIONS: { value: LoBanType; label: string; hint: string }[] = [
   { value: 'lo_ban_38_8', label: 'Lỗ Ban 38.8 cm', hint: 'Dương trạch — đồ vật, giường, tủ' },
   { value: 'thuoc_ban_52_2', label: 'Thước Ban 52.2 cm', hint: 'Âm trạch — mộ phần' },
   { value: 'dinh_lan', label: 'Thước Đinh Lan 38.4 cm', hint: 'Quan tài, mộ phần' },
+];
+
+const FAQS = [
+  {
+    q: 'Thước Lỗ Ban là gì?',
+    a: 'Là cây thước phong thủy của nghề mộc cổ truyền, chia chiều dài thành các cung Tốt – Xấu xen kẽ. Khi đo một vật (cửa, bàn thờ, giường…), người ta cố chọn kích thước rơi vào cung tốt. Đây là quy ước truyền thống của thợ, mang tính tham khảo — không phải định luật.',
+  },
+  {
+    q: 'Vì sao có nhiều loại thước Lỗ Ban?',
+    a: 'Mỗi loại dùng cho một mục đích và có chu kỳ khác nhau: thước 42.9 cm (thông thủy) cho khoảng trống như cửa, cổng, bàn thờ; thước 38.8 cm (dương trạch) cho đồ vật như giường, tủ, bàn; thước 52.2 cm và Đinh Lan 38.4 cm dùng cho âm trạch (mộ phần, quan tài). Chọn đúng loại thước theo vật cần đo mới ra kết quả phù hợp.',
+  },
+  {
+    q: 'Cách dùng công cụ này?',
+    a: 'Nhập kích thước (cm) và chọn loại thước. Hệ thống quy về chu kỳ của thước đó, cho biết kích thước rơi vào cung Tốt hay Xấu, ý nghĩa ô con, và nếu xấu thì gợi ý kích thước tốt gần nhất (nhỏ hơn / lớn hơn) để bạn điều chỉnh.',
+  },
+  {
+    q: 'Kích thước rơi vào cung xấu thì có sao không?',
+    a: 'Đây chỉ là một yếu tố tham khảo theo phong tục, không phải điều bắt buộc. Nếu lịch và điều kiện cho phép, bạn có thể chỉnh sang kích thước tốt gần nhất cho an tâm; nếu không, công năng và sự chắc chắn của vật dụng vẫn là điều quan trọng hơn cả.',
+  },
+  {
+    q: 'Đo theo lọt lòng hay phủ bì?',
+    a: 'Với cửa, cổng (thước thông thủy 42.9 cm) thường đo khoảng thông thủy — tức lọt lòng, phần trống ánh sáng đi qua. Với đồ vật (thước dương trạch 38.8 cm) đo kích thước phủ bì của vật. Đo đúng quy ước của từng loại thước thì kết quả mới chuẩn.',
+  },
 ];
 
 export default function ThuocLoBanPage() {
@@ -90,6 +115,7 @@ export default function ThuocLoBanPage() {
 
   return (
     <>
+    <JsonLd data={faqPage(FAQS)} />
     <ToolPageShell
       eyebrow="Phong thủy · Lỗ Ban"
         relatedSlug="/thuoc-lo-ban"
@@ -253,6 +279,47 @@ export default function ThuocLoBanPage() {
             </div>
           )}
         </div>
+      </section>
+
+      {/* Giáo dục: Thước Lỗ Ban là gì + 4 loại thước — lớp "nói có sách" cho SEO */}
+      <section className="mt-12" aria-label="Tìm hiểu Thước Lỗ Ban">
+        <h2 className="font-heading text-xl font-semibold text-foreground sm:text-2xl">
+          Thước Lỗ Ban — hiểu để dùng đúng
+        </h2>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          Thước Lỗ Ban là cây thước phong thủy của nghề mộc cổ truyền, chia chiều dài thành các cung
+          <strong className="text-foreground"> Tốt – Xấu</strong> xen kẽ. Khi đo một vật, người ta cố
+          chọn kích thước rơi vào cung tốt. Mỗi loại thước dùng cho một mục đích riêng — chọn đúng
+          loại theo vật cần đo mới ra kết quả phù hợp:
+        </p>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          {TYPE_OPTIONS.map((t) => (
+            <div key={t.value} className="rounded-xl border border-border bg-card/40 p-4">
+              <div className="font-heading text-base font-semibold text-foreground">{t.label}</div>
+              <p className="mt-1 text-sm text-muted-foreground">{t.hint}</p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          Lưu ý cách đo: cửa, cổng (thước thông thủy) đo khoảng lọt lòng; đồ vật (thước dương trạch)
+          đo phủ bì. Đây là quy ước truyền thống mang tính tham khảo — công năng và độ chắc chắn của
+          vật dụng vẫn quan trọng hơn cả.
+        </p>
+      </section>
+
+      {/* FAQ */}
+      <section className="mt-12" aria-label="Câu hỏi thường gặp về Thước Lỗ Ban">
+        <h2 className="font-heading text-xl font-semibold text-foreground sm:text-2xl">
+          Câu hỏi thường gặp
+        </h2>
+        <dl className="mt-5 space-y-5">
+          {FAQS.map((f) => (
+            <div key={f.q}>
+              <dt className="font-medium text-foreground">{f.q}</dt>
+              <dd className="mt-1 text-sm leading-relaxed text-muted-foreground">{f.a}</dd>
+            </div>
+          ))}
+        </dl>
       </section>
     </ToolPageShell>
     <StickyMobileCta trackId="thuoc-lo-ban" />
