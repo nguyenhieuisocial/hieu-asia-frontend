@@ -21,8 +21,33 @@ import { safeJson } from '@/lib/safe-json';
 import { markVisionDone } from '@/lib/personality-store';
 import { getSupabaseAuth } from '@/lib/auth-client';
 import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { faqPage } from '@/lib/seo/jsonld';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
+
+const FAQS = [
+  {
+    q: 'Xem chỉ tay, tướng mặt ở đây dựa trên gì?',
+    a: 'Trên nhân tướng học — bộ môn quan sát đặc điểm khuôn mặt, bàn tay có truyền thống lâu đời ở Đông Á. AI mô tả các đặc điểm nhìn thấy được trong ảnh bạn gửi (đường nét bàn tay, tỉ lệ và nét chính của khuôn mặt) rồi đối chiếu với cách diễn giải truyền thống để đưa ra góc nhìn về xu hướng tính cách, ứng xử. Tất cả mang tính tham khảo.',
+  },
+  {
+    q: 'Ảnh của tôi có bị lưu lại không?',
+    a: 'Không — ảnh được xử lý để phân tích xong là bỏ, không lưu trữ. Ảnh cũng được nén ngay trên máy bạn trước khi gửi. Lưu ý nhỏ: chỉ gửi ảnh của chính bạn, hoặc ảnh người khác khi đã được họ đồng ý.',
+  },
+  {
+    q: 'Kết quả có khoa học không?',
+    a: 'Nói thẳng: nhân tướng học là quan sát kinh nghiệm dân gian, không phải khoa học được kiểm chứng. Giá trị thật của nó nằm ở chỗ cho bạn một tấm gương để tự ngẫm về mình — không phải ở việc "đoán đúng". Nếu thấy kết quả nào cũng "đúng ghê", hãy đọc thêm bài Tự kiểm về hiệu ứng Forer trên trang này — đó là một thiên kiến tâm lý rất phổ biến.',
+  },
+  {
+    q: 'Tướng "xấu" có nghĩa là số khổ không?',
+    a: 'Không. Người xưa có câu "tướng tự tâm sinh" — nét mặt, dáng vẻ phần nhiều phản ánh nếp sống và tâm thế hiện tại, và chúng thay đổi theo thời gian. Không một đường nét nào trên ảnh phán định được cuộc đời bạn. Kết quả ở đây không bao giờ "phán số khổ" — nếu nơi nào đó làm vậy để bán bùa giải, hãy cảnh giác.',
+  },
+  {
+    q: 'Chụp ảnh thế nào để kết quả tốt nhất?',
+    a: 'Ảnh đủ sáng, rõ nét, không bị che. Với chỉ tay: mở lòng bàn tay thẳng, chụp chính diện cả bàn tay. Với tướng mặt: khuôn mặt chính diện, không đeo kính râm hay khẩu trang. Ảnh càng rõ, phần mô tả đặc điểm càng sát.',
+  },
+];
 
 type Kind = 'palm' | 'face';
 type Gender = 'nam' | 'nữ';
@@ -434,7 +459,51 @@ export default function XemTuongPage() {
             )}
           </div>
         </section>
+
+        {/* Nhân tướng học là gì — lớp giáo dục (audit content-depth: flagship lens 0 editorial) */}
+        <section className="mt-12" aria-label="Tìm hiểu nhân tướng học">
+          <h2 className="font-heading text-xl font-semibold text-foreground sm:text-2xl">
+            Nhân tướng học — hiểu đúng trước khi xem
+          </h2>
+          <div className="mt-3 max-w-3xl space-y-3 text-sm leading-relaxed text-muted-foreground">
+            <p>
+              Nhân tướng học là bộ môn quan sát đặc điểm khuôn mặt và bàn tay, có truyền thống lâu
+              đời ở Đông Á; xem chỉ tay cũng xuất hiện trong nhiều nền văn hoá khác. Cốt lõi của nó
+              là kinh nghiệm quan sát được tích luỹ qua nhiều thế hệ — không phải khoa học được kiểm
+              chứng, và chúng tôi nói rõ điều đó thay vì khoác cho nó chiếc áo huyền bí.
+            </p>
+            <p>
+              <strong className="text-foreground">AI ở đây làm gì:</strong> mô tả những đặc điểm
+              nhìn thấy được trong ảnh — đường nét chính của bàn tay, tỉ lệ và nét nổi bật của khuôn
+              mặt — rồi đối chiếu với cách diễn giải truyền thống để gợi một góc nhìn về xu hướng
+              tính cách, ứng xử. Như soi vào một tấm gương lạ: thứ đáng giá không phải lời "phán",
+              mà là khoảnh khắc bạn dừng lại tự ngẫm xem điều nào đúng, điều nào không.
+            </p>
+            <p>
+              <strong className="text-foreground">Giới hạn — nói thẳng:</strong> công cụ này không
+              chẩn đoán sức khoẻ hay tâm lý, không đoán tương lai, không quyết định thay bạn. Người
+              xưa cũng nói &quot;tướng tự tâm sinh&quot; — nét mặt phản ánh nếp sống hiện tại và
+              thay đổi theo thời gian, nên không có chuyện một bức ảnh định đoạt một đời người.
+            </p>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="mt-12" aria-label="Câu hỏi thường gặp về xem tướng">
+          <h2 className="font-heading text-xl font-semibold text-foreground sm:text-2xl">
+            Câu hỏi thường gặp
+          </h2>
+          <dl className="mt-5 max-w-3xl space-y-5">
+            {FAQS.map((f) => (
+              <div key={f.q}>
+                <dt className="font-medium text-foreground">{f.q}</dt>
+                <dd className="mt-1 text-sm leading-relaxed text-muted-foreground">{f.a}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
       </ToolPageShell>
+      <JsonLd data={faqPage(FAQS)} />
       <StickyMobileCta trackId="xem-tuong" />
     </>
   );
