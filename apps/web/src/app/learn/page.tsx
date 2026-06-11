@@ -52,7 +52,7 @@ const TOPICS: readonly LearnTopic[] = [
     href: '/learn/palm',
     title: 'Xem chỉ tay',
     subtitle: 'Phổ quát',
-    blurb: '7 đường chính: tâm đạo, trí đạo, sinh đạo, số mệnh, mặt trời, mercury, kim tinh.',
+    blurb: '7 đường chính: tâm đạo, trí đạo, sinh đạo, số mệnh, mặt trời, thuỷ tinh, kim tinh.',
   },
 ];
 

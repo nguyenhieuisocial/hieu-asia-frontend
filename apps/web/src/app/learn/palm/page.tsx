@@ -12,7 +12,7 @@ import { relatedLearnLenses } from '@/lib/learn/related';
 export const metadata: Metadata = {
   title: 'Xem chỉ tay — Học huyền học',
   description:
-    'Xem chỉ tay (chiromancy): 7 đường chính trên lòng bàn tay — tâm đạo, trí đạo, sinh đạo, số mệnh, mặt trời, mercury, kim tinh — mỗi đường nói lên một khía cạnh đời sống.',
+    'Xem chỉ tay (chiromancy): 7 đường chính trên lòng bàn tay — tâm đạo, trí đạo, sinh đạo, số mệnh, mặt trời, thuỷ tinh, kim tinh — mỗi đường nói lên một khía cạnh đời sống.',
   alternates: { canonical: 'https://hieu.asia/learn/palm' },
 };
 
