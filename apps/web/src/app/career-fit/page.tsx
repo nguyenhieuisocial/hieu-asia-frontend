@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, RadioGroup, RadioGroupItem } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
@@ -37,6 +38,39 @@ const BREADCRUMB_JSONLD = {
     { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
     { '@type': 'ListItem', position: 2, name: 'Career Fit', item: 'https://hieu.asia/career-fit' },
   ],
+};
+
+const FAQ: { q: string; a: string }[] = [
+  {
+    q: 'Career Fit có phải bói nghề không?',
+    a: 'Không. Công cụ ghép 5 lựa chọn bạn tự khai về cách mình làm việc với một tín hiệu khuynh hướng nhẹ từ năm sinh, rồi gợi ý nhóm nghề hợp cách bạn vận hành. Bạn đổi lựa chọn thì kết quả đổi theo — đây là công cụ phản chiếu để suy nghĩ, không phải lời phán cố định về số phận.',
+  },
+  {
+    q: 'Khác gì với Tử Vi nghề nghiệp?',
+    a: 'Tử Vi nghề nghiệp đọc cung Quan Lộc trong lá số đầy đủ nên cần cả ngày và giờ sinh. Career Fit nhẹ hơn: dựa chính vào 5 sở thích bạn khai cộng với năm sinh, không cần giờ sinh — hợp khi bạn muốn một gợi ý nhanh trước khi đi sâu.',
+  },
+  {
+    q: '"Mệnh theo địa chi năm sinh" nghĩa là gì?',
+    a: 'Mỗi năm sinh ứng với một con giáp và một hành trong ngũ hành (Kim, Mộc, Thủy, Hỏa, Thổ). Career Fit dùng nó như một tín hiệu khuynh hướng nhẹ; phần lớn kết quả vẫn đến từ cách chính bạn mô tả mình làm việc.',
+  },
+  {
+    q: 'Nên dùng kết quả để quyết định nghỉ việc hay đổi nghề không?',
+    a: 'Hãy xem đây là điểm khởi đầu để suy nghĩ, không phải chỉ thị. Đọc kỹ phần "Cẩn trọng" của mỗi nhóm và đối chiếu với hoàn cảnh thật của bạn. Với quyết định lớn, nên thử nghiệm có kiểm soát trước khi rẽ hẳn.',
+  },
+  {
+    q: 'Tôi cần nhập những gì?',
+    a: 'Chỉ ngày sinh, giới tính và 5 lựa chọn về cách bạn làm việc (mức tự chủ, chấp nhận rủi ro, cường độ giao tiếp, mức sáng tạo, mức cấu trúc). Không cần giờ sinh.',
+  },
+];
+
+const FAQ_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
 };
 
 const PREF_GROUPS: {
@@ -192,6 +226,10 @@ export default function CareerFitPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
       />
       <ToolPageShell
         eyebrow="Career Fit · Định hướng nghề"
@@ -387,6 +425,70 @@ export default function CareerFitPage() {
             </footer>
           </section>
         )}
+
+        <section
+          aria-labelledby="cf-about-heading"
+          className="mt-12 border-t border-border pt-10"
+        >
+          <h2
+            id="cf-about-heading"
+            className="font-heading text-xl font-semibold text-foreground sm:text-2xl"
+          >
+            Career Fit hoạt động thế nào?
+          </h2>
+          <div className="mt-4 space-y-4 text-sm leading-relaxed text-foreground/80">
+            <p>
+              Công cụ kết hợp <strong className="text-foreground">hai nguồn</strong>:
+              (1) 5 lựa chọn bạn tự khai về cách mình làm việc — mức tự chủ, chấp
+              nhận rủi ro, cường độ giao tiếp, mức sáng tạo và mức cấu trúc; và (2)
+              một <strong className="text-foreground">tín hiệu khuynh hướng nhẹ</strong>{' '}
+              từ mệnh theo địa chi năm sinh. AI ghép hai nguồn để gợi ý nhóm nghề
+              hợp với cách bạn vận hành.
+            </p>
+            <p>
+              Đây là một{' '}
+              <strong className="text-foreground">công cụ phản chiếu</strong>, không
+              phải lời phán số mệnh. Bạn khai khác đi thì kết quả đổi theo — đúng
+              tinh thần &ldquo;không bói mù&rdquo;: đưa gợi ý để bạn tự đối chiếu
+              với thực tế của mình rồi tự quyết.
+            </p>
+          </div>
+
+          <div className="mt-6 rounded-lg border border-gold/25 bg-gold/[0.05] p-4 text-sm leading-relaxed text-foreground/80">
+            <strong className="text-foreground">Khác gì Tử Vi nghề nghiệp?</strong>{' '}
+            <Link
+              href="/tu-vi-nghe-nghiep"
+              className="text-gold-700 underline-offset-2 hover:underline"
+            >
+              Tử Vi nghề nghiệp
+            </Link>{' '}
+            đọc cung Quan Lộc trong lá số đầy đủ nên cần cả giờ sinh. Career Fit nhẹ
+            hơn — dựa chính vào sở thích bạn khai và năm sinh, không cần giờ sinh,
+            hợp khi bạn muốn một gợi ý nhanh.
+          </div>
+
+          <h2
+            id="cf-faq-heading"
+            className="mt-10 font-heading text-xl font-semibold text-foreground sm:text-2xl"
+          >
+            Câu hỏi thường gặp
+          </h2>
+          <dl className="mt-4 space-y-3">
+            {FAQ.map((f) => (
+              <details
+                key={f.q}
+                className="group rounded-lg border border-border bg-card/40 px-4 py-3"
+              >
+                <summary className="cursor-pointer list-none font-medium text-foreground [&::-webkit-details-marker]:hidden">
+                  {f.q}
+                </summary>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {f.a}
+                </p>
+              </details>
+            ))}
+          </dl>
+        </section>
       </ToolPageShell>
     </>
   );

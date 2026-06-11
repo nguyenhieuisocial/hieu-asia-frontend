@@ -14,14 +14,14 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
-  title: 'Timeline — Đại vận + Lưu niên',
+  title: 'Timeline đại vận — đại vận 10 năm vận hành thế nào',
   description:
-    'Timeline đại vận của bạn: 10 đại vận theo Tử Vi Đẩu Số, lưu niên năm hiện tại, lưu nguyệt tháng hiện tại. Dữ liệu minh hoạ — lập lá số để cá nhân hoá.',
+    'Đại vận = giai đoạn 10 năm trong Tử Vi Đẩu Số. Trang này minh hoạ cách 10 đại vận nối tiếp nhau — lập lá số để biết bạn đang ở đại vận nào theo ngày giờ sinh.',
   alternates: { canonical: 'https://hieu.asia/timeline' },
   openGraph: {
     title: 'Timeline đại vận',
     description:
-      'Đại vận = 10 năm. Lưu niên = năm hiện tại. Lưu nguyệt = tháng hiện tại.',
+      'Đại vận = 10 năm. Lưu niên = năm. Lưu nguyệt = tháng. Ví dụ minh hoạ — lập lá số để cá nhân hoá.',
     url: 'https://hieu.asia/timeline',
     type: 'article',
   },
@@ -74,6 +74,9 @@ type Segment = {
   theme: string;
 };
 
+// Minh hoạ thứ tự cung theo vòng đại vận — KHÔNG phải lá số của ai cụ thể.
+// Cung an mệnh thật, chiều thuận/nghịch và tuổi khởi đại vận phụ thuộc ngày
+// giờ sinh + Cục; xác định ở /dai-van-hien-tai hoặc lá số đầy đủ.
 function buildSegments(): Segment[] {
   return Array.from({ length: 10 }, (_, i) => ({
     ageStart: 10 + i * 10,
@@ -82,9 +85,6 @@ function buildSegments(): Segment[] {
     theme: THEMES[i] ?? '',
   }));
 }
-
-// Demo: assume user is 28 → current đại vận = 24-33 (segment index 1).
-const DEMO_USER_AGE = 28;
 
 const VN_MONTH = new Intl.DateTimeFormat('vi-VN', {
   month: 'long',
@@ -95,26 +95,7 @@ const VN_MONTH = new Intl.DateTimeFormat('vi-VN', {
 export default function TimelinePage() {
   const segments = buildSegments();
   const now = new Date();
-  const currentYear = now.getFullYear();
   const currentMonthLabel = VN_MONTH.format(now);
-  const activeIdx = segments.findIndex(
-    (s) => DEMO_USER_AGE >= s.ageStart && DEMO_USER_AGE <= s.ageEnd,
-  );
-
-  const upcoming: { year: number; theme: string }[] = [
-    {
-      year: currentYear,
-      theme: 'Năm xây nền — thử nghiệm có kiểm soát.',
-    },
-    {
-      year: currentYear + 1,
-      theme: 'Năm mở rộng nếu năm hiện tại có tín hiệu thuận.',
-    },
-    {
-      year: currentYear + 2,
-      theme: 'Năm chuyển dịch — review trung hạn 3 năm.',
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -139,13 +120,14 @@ export default function TimelinePage() {
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">
             <span className="bg-gold-gradient bg-clip-text text-transparent">
-              Timeline đại vận của bạn
+              Đại vận 10 năm vận hành thế nào
             </span>
           </h1>
           <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Đại vận = giai đoạn 10 năm. Lưu niên = năm hiện tại. Lưu nguyệt = tháng
-            hiện tại. Đây là minh hoạ — lập lá số để cá nhân hoá theo cung an mệnh
-            của bạn.
+            Đại vận = giai đoạn 10 năm. Lưu niên = năm. Lưu nguyệt = tháng. Trang
+            này là <strong className="text-foreground">ví dụ minh hoạ</strong> cách
+            các đại vận nối tiếp nhau — lập lá số để biết bạn đang ở đại vận nào
+            theo cung an mệnh của mình.
           </p>
         </header>
 
@@ -154,48 +136,36 @@ export default function TimelinePage() {
             id="timeline-heading"
             className="mb-4 font-heading text-lg font-semibold sm:text-xl"
           >
-            Demo timeline đại vận (10 → 109 tuổi)
+            10 đại vận trong đời — ví dụ minh hoạ (10 → 109 tuổi)
           </h2>
           <div
             className="-mx-2 flex gap-3 overflow-x-auto px-2 pb-4"
             role="list"
           >
-            {segments.map((s, i) => {
-              const active = i === activeIdx;
-              return (
-                <Card
-                  key={s.ageStart}
-                  role="listitem"
-                  className={[
-                    'min-w-[160px] flex-shrink-0',
-                    active
-                      ? 'border-gold/70 bg-gold/[0.07]'
-                      : 'border-border bg-card/40',
-                  ].join(' ')}
-                >
-                  <CardContent className="p-4">
-                    {active && (
-                      <span className="mb-2 inline-flex rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-gold-700">
-                        Hiện tại
-                      </span>
-                    )}
-                    <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-                      {s.ageStart}–{s.ageEnd} tuổi
-                    </p>
-                    <p className="mt-1 font-heading text-sm font-semibold text-foreground">
-                      {s.cung}
-                    </p>
-                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                      {s.theme}
-                    </p>
-                  </CardContent>
-                </Card>
-              );
-            })}
+            {segments.map((s) => (
+              <Card
+                key={s.ageStart}
+                role="listitem"
+                className="min-w-[160px] flex-shrink-0 border-border bg-card/40"
+              >
+                <CardContent className="p-4">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                    {s.ageStart}–{s.ageEnd} tuổi
+                  </p>
+                  <p className="mt-1 font-heading text-sm font-semibold text-foreground">
+                    {s.cung}
+                  </p>
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                    {s.theme}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
           <p className="mt-1 text-xs text-muted-foreground">
-            Kéo ngang để xem các đại vận khác. Giai đoạn đang highlight là demo
-            cho user 28 tuổi.
+            Kéo ngang để xem cả 10 đại vận. Thứ tự cung ở đây chỉ là minh hoạ —
+            mốc tuổi và cung an mệnh thật phụ thuộc ngày giờ sinh, lập lá số để
+            biết bạn đang ở đại vận nào.
           </p>
         </section>
 
@@ -204,39 +174,42 @@ export default function TimelinePage() {
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-gold" aria-hidden="true" />
               <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
-                Lưu niên
+                Lưu niên & lưu nguyệt
               </p>
             </div>
             <CardTitle className="font-heading text-xl sm:text-2xl">
-              Lưu niên {currentYear} — Bính Ngọ
+              Lưu niên là gì
             </CardTitle>
             <CardDescription className="text-muted-foreground">
-              Chủ đề:{' '}
-              <strong className="text-foreground">
-                xây nền + thử nghiệm có kiểm soát
-              </strong>
-              . Tháng đang trong:{' '}
-              <span className="capitalize">{currentMonthLabel}</span>.
+              Lưu niên là lớp sao chiếu theo từng năm, lưu nguyệt là theo từng
+              tháng (đang trong{' '}
+              <span className="capitalize">{currentMonthLabel}</span>). Lưu niên
+              riêng của bạn — sao nào vào cung nào trong năm — cần lá số để xác
+              định, không suy ra được nếu chỉ biết năm dương lịch.
             </CardDescription>
           </CardHeader>
         </Card>
 
-        <section aria-labelledby="upcoming-heading" className="mb-12">
+        <section aria-labelledby="howto-heading" className="mb-12">
           <h2
-            id="upcoming-heading"
+            id="howto-heading"
             className="mb-5 font-heading text-lg font-semibold sm:text-xl"
           >
-            3 năm quan trọng sắp tới
+            Đọc đại vận thế nào cho có ích
           </h2>
           <div className="grid gap-4 sm:grid-cols-3">
-            {upcoming.map((u) => (
-              <Card key={u.year} className="border-border bg-card/40">
+            {[
+              'Xác định bạn đang ở đại vận nào (10 năm) — đó là "bối cảnh" lớn của giai đoạn này.',
+              'Xem cung nào được đại vận chiếu tới: sự nghiệp, tài chính, hay quan hệ đang là trọng tâm.',
+              'Dùng lưu niên / lưu nguyệt để chọn thời điểm trong giai đoạn — không dùng để phán đúng/sai.',
+            ].map((t, i) => (
+              <Card key={i} className="border-border bg-card/40">
                 <CardHeader>
                   <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
-                    Năm {u.year}
+                    Bước {i + 1}
                   </p>
                   <CardDescription className="text-muted-foreground">
-                    {u.theme}
+                    {t}
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -252,24 +225,22 @@ export default function TimelinePage() {
             </p>
           </div>
           <h2 className="mt-2 font-heading text-lg font-semibold sm:text-xl">
-            Xem timeline của riêng bạn
+            Xem đại vận thật của bạn
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Lập lá số Tử Vi để xác định đại vận thật + cung an mệnh + tinh đẩu
-            theo ngày giờ sinh.
+            Nhập ngày giờ sinh để xác định bạn đang ở đại vận nào, cung an mệnh
+            và chính tinh của giai đoạn — thay cho ví dụ minh hoạ ở trên.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
-            <Button asChild size="lg"><Link href="/onboarding/topic">
-              
-                Lập lá số
+            <Button asChild size="lg">
+              <Link href="/dai-van-hien-tai">
+                Xem đại vận hiện tại
                 <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-              
-            </Link></Button>
-            <Button asChild size="lg" variant="outline"><Link href="/sample-report">
-              
-                Xem mẫu báo cáo có timeline
-              
-            </Link></Button>
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <Link href="/onboarding/topic">Lập lá số đầy đủ</Link>
+            </Button>
           </div>
         </section>
       </section>

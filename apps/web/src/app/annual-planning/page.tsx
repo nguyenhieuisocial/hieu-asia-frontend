@@ -14,9 +14,9 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
-  title: 'Annual Planning — Kế hoạch năm 2026 theo lá số',
+  title: 'Khung kế hoạch năm 2026 — 4 quý + quyết định lớn',
   description:
-    'Kế hoạch năm 2026 theo lá số Tử Vi Đẩu Số: chủ đề lưu niên + 4 quý + decisions lớn nên chuẩn bị. Lập lá số để cá nhân hoá.',
+    'Khung tham khảo chung để lập kế hoạch năm Bính Ngọ 2026: chủ đề năm + 4 quý + các quyết định lớn nên chuẩn bị. Lập lá số để cá nhân hoá theo đại vận của bạn.',
   alternates: { canonical: 'https://hieu.asia/annual-planning' },
   openGraph: {
     title: 'Annual Planning — Kế hoạch năm 2026',
@@ -130,12 +130,13 @@ export default function AnnualPlanningPage() {
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">
             <span className="bg-gold-gradient bg-clip-text text-transparent">
-              Kế hoạch năm 2026 theo lá số
+              Khung kế hoạch năm 2026
             </span>
           </h1>
           <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Chủ đề lưu niên + 4 quý + decisions lớn nên chuẩn bị. Demo content;
-            lập lá số để cá nhân hoá theo đại vận của bạn.
+            Chủ đề năm + 4 quý + các quyết định lớn nên chuẩn bị. Đây là khung
+            tham khảo chung cho năm Bính Ngọ — chưa phải kế hoạch theo lá số
+            riêng; lập lá số để cá nhân hoá theo đại vận của bạn.
           </p>
         </header>
 
