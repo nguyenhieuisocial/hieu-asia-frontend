@@ -20,6 +20,7 @@ import {
   BeginnerContent,
   ExpertContent,
 } from '@/components/reading/ModeContent';
+import { LoTrinhChart } from '@/components/lo-trinh/LoTrinhChart';
 
 const SLUG = 'hieu-ban-than';
 const TOPIC = 'self';
@@ -274,6 +275,13 @@ export default function HieuBanThanPage() {
               </ul>
             </div>
           </div>
+        </section>
+
+        <section className="relative mx-auto max-w-4xl px-6 pb-12">
+          <LoTrinhChart
+            topic="general"
+            focusPalaces={['Mệnh', 'Phúc Đức', 'Tật Ách']}
+          />
         </section>
 
         <section className="relative mx-auto max-w-4xl px-6 pb-20">

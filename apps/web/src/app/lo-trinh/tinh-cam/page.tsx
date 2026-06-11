@@ -16,6 +16,7 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { LoTrinhChart } from '@/components/lo-trinh/LoTrinhChart';
 
 const SLUG = 'tinh-cam';
 const TOPIC = 'love';
@@ -252,6 +253,13 @@ export default function TinhCamPage() {
               Nữ, 42 tuổi · cung Phu Thê có Thiên Cơ + Hoá Kỵ · compatibility check chỉ ra va chạm là phong cách, không phải giá trị.
             </p>
           </Link>
+        </section>
+
+        <section className="relative mx-auto max-w-4xl px-6 pb-12">
+          <LoTrinhChart
+            topic="relationship"
+            focusPalaces={['Phu Thê', 'Phúc Đức']}
+          />
         </section>
 
         <section className="relative mx-auto max-w-4xl px-6 pb-20">
