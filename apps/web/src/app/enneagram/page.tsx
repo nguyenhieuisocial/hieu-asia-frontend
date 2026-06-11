@@ -33,6 +33,43 @@ interface FeatureLockedPayload {
   checkout?: { tier: string; tool_slug: string };
 }
 
+const FAQ: { q: string; a: string }[] = [
+  {
+    q: 'Enneagram là gì?',
+    a: 'Enneagram là hệ thống chia tính cách thành 9 nhóm, mỗi nhóm xoay quanh một động cơ cốt lõi và một nỗi sợ nền tảng. Khác với trắc nghiệm mô tả hành vi bên ngoài, Enneagram đào vào "vì sao bạn làm vậy" — nên thường được dùng để hiểu động lực và điểm mù của chính mình.',
+  },
+  {
+    q: 'Enneagram có nguồn gốc từ đâu?',
+    a: 'Biểu tượng 9 đỉnh có lịch sử lâu đời, nhưng hệ thống 9 nhóm tính cách như ngày nay là sản phẩm thế kỷ 20 — khởi từ Oscar Ichazo và được bác sĩ tâm thần Claudio Naranjo phát triển vào thập niên 1970, sau đó phổ biến rộng trong giới phát triển bản thân và coaching.',
+  },
+  {
+    q: 'Cánh (wing) là gì?',
+    a: 'Cánh là một trong hai nhóm nằm kề nhóm chủ đạo của bạn trên vòng tròn 9 đỉnh. Nó "pha thêm màu" cho tính cách — ví dụ Type 9 cánh 1 sẽ khác Type 9 cánh 8 ở cách thể hiện. Bài test của hieu.asia tính cả cánh từ điểm số của bạn.',
+  },
+  {
+    q: 'Ba trung tâm (centers) nghĩa là gì?',
+    a: 'Chín nhóm được xếp vào ba trung tâm theo cách phản ứng chủ đạo: trung tâm Bản năng/Bụng (8, 9, 1) thiên về hành động và ranh giới; trung tâm Cảm xúc/Tim (2, 3, 4) thiên về hình ảnh bản thân và kết nối; trung tâm Lý trí/Đầu (5, 6, 7) thiên về tư duy và an toàn.',
+  },
+  {
+    q: 'Enneagram có phải công cụ khoa học không?',
+    a: 'Nói thẳng: Enneagram phổ biến trong phát triển bản thân và coaching, nhưng nền nghiên cứu thực nghiệm của nó hạn chế hơn các mô hình như Big Five. Hãy dùng nó như một khung chiêm nghiệm về động lực — nếu bạn cần mô hình có bằng chứng nghiên cứu vững nhất, hãy làm thêm Big Five trên hieu.asia rồi đối chiếu.',
+  },
+  {
+    q: 'Enneagram khác gì MBTI?',
+    a: 'MBTI phân loại theo 4 cặp xu hướng nhận thức (hướng nội/ngoại, trực giác/giác quan…), còn Enneagram xoay quanh động cơ cốt lõi và nỗi sợ nền tảng. MBTI trả lời "bạn vận hành thế nào", Enneagram trả lời "điều gì thúc đẩy bạn" — làm cả hai rồi đối chiếu thường cho bức tranh đầy đủ hơn.',
+  },
+];
+
+const FAQ_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
 export default function EnneagramPage() {
   const [result, setResult] = React.useState<EnneagramScoreWithMeta | null>(null);
   const [reading, setReading] = React.useState<string | null>(null);
@@ -112,6 +149,10 @@ export default function EnneagramPage() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
+      />
       <ToolPageShell
         eyebrow="Trắc nghiệm tính cách · Enneagram"
         relatedSlug="/enneagram"
@@ -279,6 +320,65 @@ export default function EnneagramPage() {
               </p>
             </div>
           )}
+        </section>
+
+        <section
+          aria-labelledby="enn-about-heading"
+          className="mt-12 border-t border-border pt-10"
+        >
+          <h2
+            id="enn-about-heading"
+            className="font-heading text-xl font-semibold text-foreground sm:text-2xl"
+          >
+            Enneagram hoạt động thế nào?
+          </h2>
+          <div className="mt-4 space-y-4 text-sm leading-relaxed text-foreground/80">
+            <p>
+              Bài test gồm 36 câu, chấm điểm song song cho cả{' '}
+              <strong className="text-foreground">9 nhóm</strong>; nhóm điểm cao
+              nhất là nhóm chủ đạo của bạn, nhóm kề bên điểm cao hơn trở thành{' '}
+              <strong className="text-foreground">cánh (wing)</strong>. Chín nhóm
+              xếp vào <strong className="text-foreground">ba trung tâm</strong> —
+              Bản năng (8, 9, 1), Cảm xúc (2, 3, 4) và Lý trí (5, 6, 7) — mỗi
+              trung tâm là một kiểu phản ứng chủ đạo trước cuộc sống. Khác các
+              trắc nghiệm mô tả hành vi, Enneagram tập trung vào{' '}
+              <strong className="text-foreground">động cơ cốt lõi và nỗi sợ nền
+              tảng</strong> đứng sau hành vi.
+            </p>
+            <p>
+              Về nguồn gốc: hệ thống 9 nhóm tính cách hiện đại được Oscar Ichazo
+              khởi xướng và Claudio Naranjo phát triển trong thế kỷ 20. Minh bạch
+              để bạn rõ: nền nghiên cứu thực nghiệm của Enneagram{' '}
+              <strong className="text-foreground">hạn chế hơn Big Five</strong> —
+              hãy đọc kết quả như một khung chiêm nghiệm về động lực của mình,
+              đối chiếu với trải nghiệm thật, thay vì xem là nhãn cố định. Đúng
+              tinh thần &ldquo;không bói mù&rdquo; của hieu.asia.
+            </p>
+          </div>
+        </section>
+
+        <section aria-labelledby="enn-faq-heading" className="mt-10">
+          <h2
+            id="enn-faq-heading"
+            className="font-heading text-xl font-semibold text-foreground sm:text-2xl"
+          >
+            Câu hỏi thường gặp
+          </h2>
+          <dl className="mt-4 space-y-3">
+            {FAQ.map((f) => (
+              <details
+                key={f.q}
+                className="group rounded-lg border border-border bg-card/40 px-4 py-3"
+              >
+                <summary className="cursor-pointer list-none font-medium text-foreground [&::-webkit-details-marker]:hidden">
+                  {f.q}
+                </summary>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {f.a}
+                </p>
+              </details>
+            ))}
+          </dl>
         </section>
       </ToolPageShell>
       <StickyMobileCta trackId="enneagram" />

@@ -157,6 +157,13 @@ export function Scrollyteller({
                   <li key={c.id}>
                     <a
                       href={`#${c.id}`}
+                      // Parent <aside> is aria-hidden (a decorative visual
+                      // mirror of the chapter being read — the real content +
+                      // its anchors live in the RIGHT column). Keyboard users
+                      // navigate there; -1 keeps these mirror links out of the
+                      // tab order so aria-hidden has no focusable descendants
+                      // (WCAG 4.1.2 / Lighthouse aria-hidden-focus).
+                      tabIndex={-1}
                       className={`block rounded-lg px-3 py-2 font-sans text-sm leading-snug transition-colors ${
                         i === activeIdx
                           ? 'bg-card text-gold-soft ring-1 ring-gold/30'

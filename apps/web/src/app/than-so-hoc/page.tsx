@@ -16,6 +16,43 @@ const FEATURES: { title: string; body: string; icon: string }[] = [
   { title: 'Chu kỳ đỉnh cao', body: '4 đỉnh cao và 4 thử thách trong cuộc đời.', icon: '⛰️' },
 ];
 
+const FAQ: { q: string; a: string }[] = [
+  {
+    q: 'Thần số học là gì?',
+    a: 'Thần số học là hệ thống diễn giải ý nghĩa các con số rút ra từ ngày sinh và họ tên. Truyền thống này gắn với trường phái Pythagoras (Hy Lạp cổ đại) và được hệ thống hoá thành dạng phổ biến hiện nay vào đầu thế kỷ 20. hieu.asia dùng nó như một lăng kính chiêm nghiệm — không phán định số mệnh.',
+  },
+  {
+    q: 'Số chủ đạo (đường đời) được tính thế nào?',
+    a: 'Cộng dồn toàn bộ chữ số trong ngày sinh dương lịch rồi rút gọn về một chữ số từ 1 đến 9. Ví dụ 28/12/1995 → 2+8+1+2+1+9+9+5 = 37 → 3+7 = 10 → 1. Riêng 11 và 22 được giữ nguyên vì là "số bậc thầy". Phần tính toán này là số học thuần tuý, chạy bằng thuật toán cố định.',
+  },
+  {
+    q: 'Số bậc thầy 11 và 22 có gì đặc biệt?',
+    a: 'Trong quy ước thần số học, 11 và 22 không rút gọn tiếp vì được xem là mang chủ đề "khuếch đại" — 11 thiên về trực giác và truyền cảm hứng, 22 thiên về kiến tạo việc lớn. Hãy đọc chúng như một chủ đề để chiêm nghiệm, kèm áp lực riêng của nó, thay vì một danh hiệu.',
+  },
+  {
+    q: 'Vì sao cần cả họ tên lẫn ngày sinh?',
+    a: 'Hai nguồn cho hai nhóm chỉ số khác nhau: ngày sinh cho số đường đời và các chu kỳ (năm cá nhân, đỉnh cao, thử thách); họ tên — quy đổi từng chữ cái sang số 1–9 theo bảng Pythagoras — cho số biểu đạt, linh hồn (nguyên âm) và tính cách (phụ âm). Thiếu một trong hai thì bức tranh không đủ.',
+  },
+  {
+    q: 'Thần số học có phải khoa học không?',
+    a: 'Không — đây không phải khoa học thực nghiệm và không có bằng chứng tiên đoán tương lai. Giá trị thực tế của nó là bộ khung gợi mở để bạn tự soi lại mình. hieu.asia nói thẳng điều này thay vì thổi phồng; nếu bạn cần mô hình có nền nghiên cứu tâm lý, hãy thử Big Five.',
+  },
+  {
+    q: 'Thần số học khác gì Tử Vi hay MBTI?',
+    a: 'Thần số học nhẹ và nhanh: chỉ cần ngày sinh + họ tên, không cần giờ sinh. Tử Vi Đẩu Số cần cả giờ sinh và cho lá số 12 cung chi tiết hơn nhiều. MBTI/Big Five là trắc nghiệm tâm lý — kết quả đến từ câu trả lời của bạn. Xem nhiều lăng kính rồi đối chiếu là cách dùng hay nhất.',
+  },
+];
+
+const FAQ_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
 export default function ThanSoHocLandingPage() {
   const router = useRouter();
   const [fullName, setFullName] = React.useState('');
@@ -38,6 +75,10 @@ export default function ThanSoHocLandingPage() {
 
   return (
     <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
+    />
     <ToolPageShell
       eyebrow="Numerology · Pythagoras"
         relatedSlug="/than-so-hoc"
@@ -128,6 +169,63 @@ export default function ThanSoHocLandingPage() {
             ))}
           </div>
         </aside>
+      </section>
+
+      <section
+        aria-labelledby="tsh-about-heading"
+        className="mt-12 border-t border-border pt-10"
+      >
+        <h2
+          id="tsh-about-heading"
+          className="font-heading text-xl font-semibold text-foreground sm:text-2xl"
+        >
+          Thần số học hoạt động thế nào?
+        </h2>
+        <div className="mt-4 space-y-4 text-sm leading-relaxed text-foreground/80">
+          <p>
+            Mọi chỉ số đều rút ra từ <strong className="text-foreground">hai nguồn
+            dữ liệu</strong> bạn nhập: ngày sinh được cộng dồn và rút gọn về 1–9
+            (giữ nguyên 11, 22) để ra <strong className="text-foreground">số đường
+            đời</strong> và các chu kỳ; họ tên được quy đổi từng chữ cái sang số
+            theo bảng Pythagoras để ra số biểu đạt, linh hồn (nguyên âm) và tính
+            cách (phụ âm). Phần tính toán này là số học thuần tuý — chạy bằng
+            thuật toán cố định, ai tính cũng ra đúng một kết quả.
+          </p>
+          <p>
+            Phần <strong className="text-foreground">diễn giải ý nghĩa</strong> là
+            truyền thống chiêm nghiệm, không phải khoa học thực nghiệm — hieu.asia
+            nói thẳng điều này. Cách dùng có ích nhất: đọc như một bộ câu hỏi về
+            chính mình, đối chiếu với trải nghiệm thật, và so với các lăng kính
+            khác (Tử Vi, Big Five) thay vì tin một chiều.
+          </p>
+        </div>
+      </section>
+
+      <section
+        aria-labelledby="tsh-faq-heading"
+        className="mt-10"
+      >
+        <h2
+          id="tsh-faq-heading"
+          className="font-heading text-xl font-semibold text-foreground sm:text-2xl"
+        >
+          Câu hỏi thường gặp
+        </h2>
+        <dl className="mt-4 space-y-3">
+          {FAQ.map((f) => (
+            <details
+              key={f.q}
+              className="group rounded-lg border border-border bg-card/40 px-4 py-3"
+            >
+              <summary className="cursor-pointer list-none font-medium text-foreground [&::-webkit-details-marker]:hidden">
+                {f.q}
+              </summary>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {f.a}
+              </p>
+            </details>
+          ))}
+        </dl>
       </section>
     </ToolPageShell>
     <StickyMobileCta trackId="than-so-hoc" />
