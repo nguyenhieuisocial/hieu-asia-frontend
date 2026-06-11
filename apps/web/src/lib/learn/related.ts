@@ -17,6 +17,8 @@ const LEARN_TOPICS: readonly LearnTopic[] = [
   { slug: 'bat-tu', eyebrow: 'NGŨ HÀNH', name: 'Bát Tự', href: '/learn/bat-tu' },
   { slug: 'mbti', eyebrow: 'TÂM LÝ HỌC', name: 'MBTI', href: '/learn/mbti' },
   { slug: 'big-five', eyebrow: 'OCEAN', name: 'Big Five', href: '/learn/big-five' },
+  { slug: 'disc', eyebrow: 'HÀNH VI', name: 'DISC', href: '/learn/disc' },
+  { slug: 'enneagram', eyebrow: '9 NHÓM', name: 'Enneagram', href: '/learn/enneagram' },
   { slug: 'than-so-hoc', eyebrow: 'PYTHAGORAS', name: 'Thần Số Học', href: '/learn/than-so-hoc' },
   { slug: 'palm', eyebrow: 'XEM TƯỚNG', name: 'Xem chỉ tay', href: '/learn/palm' },
 ];

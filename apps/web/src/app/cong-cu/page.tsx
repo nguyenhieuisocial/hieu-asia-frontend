@@ -129,6 +129,12 @@ const TOOLS = [
     desc: 'Năm này có được tuổi xây/sửa nhà không? Tính Kim Lâu, Hoang Ốc, Tam Tai — kèm cách kiểm tra người mượn tuổi.',
   },
   {
+    href: '/khai-truong',
+    emoji: '🎉',
+    name: 'Xem Tuổi Khai Trương',
+    desc: 'Năm này có hợp tuổi khai trương / mở hàng không? Tính Tam Tai, xung Thái Tuế theo tuổi chủ — minh bạch từng bước.',
+  },
+  {
     href: '/xong-dat',
     emoji: '🧧',
     name: 'Tuổi Xông Đất',
