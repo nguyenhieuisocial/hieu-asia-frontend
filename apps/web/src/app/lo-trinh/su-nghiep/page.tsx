@@ -16,6 +16,7 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { LoTrinhChart } from '@/components/lo-trinh/LoTrinhChart';
 
 const SLUG = 'su-nghiep';
 const TOPIC = 'career';
@@ -251,6 +252,13 @@ export default function SuNghiepPage() {
               Nam, 41 tuổi · cung Mệnh Phá Quân + Liêm Trinh · tách 2 thất bại thành 2 bài học khác nhau trước khi quyết.
             </p>
           </Link>
+        </section>
+
+        <section className="relative mx-auto max-w-4xl px-6 pb-12">
+          <LoTrinhChart
+            topic="career"
+            focusPalaces={['Quan Lộc', 'Tài Bạch', 'Thiên Di']}
+          />
         </section>
 
         <section className="relative mx-auto max-w-4xl px-6 pb-20">

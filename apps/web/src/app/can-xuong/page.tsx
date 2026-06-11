@@ -68,6 +68,39 @@ const LEVEL_STYLE: Record<
   },
 };
 
+const FAQ: { q: string; a: string }[] = [
+  {
+    q: 'Cân xương tính số là gì?',
+    a: 'Là phép luận số dân gian: gán cho năm, tháng, ngày và giờ sinh mỗi thành phần một "trọng lượng xương" (tính bằng lạng, chỉ), cộng lại thành tổng rồi tra bài thơ luận giải ứng với tổng đó. Tương truyền phép này gắn với Viên Thiên Cang đời Đường, lưu truyền trong dân gian với nhiều dị bản.',
+  },
+  {
+    q: 'Cách tính cụ thể thế nào?',
+    a: 'Ngày giờ sinh của bạn được đổi sang lịch âm: năm tính theo can chi, tháng và ngày theo lịch âm, giờ theo 12 canh giờ. Mỗi thành phần tra ra một số lạng cố định theo bảng cổ truyền; cộng bốn thành phần được tổng (ví dụ 4 lạng 3). Công cụ đổi lịch và tra bảng tự động — ai nhập cùng dữ liệu cũng ra cùng kết quả.',
+  },
+  {
+    q: 'Xương càng nặng là số càng sướng?',
+    a: 'Quan niệm cũ xếp tổng nặng cân là "số an nhàn" — nhưng đừng đọc máy móc. Bài thơ luận giải dùng ngôn ngữ và chuẩn mực xã hội thời xưa (công danh, điền sản…), phản ánh giá trị thời đó chứ không phải thước đo cuộc sống hiện đại. hieu.asia giữ nguyên bản thơ để bạn tham khảo trung thực, kèm lời giải thích — không hù doạ ai "nhẹ cân".',
+  },
+  {
+    q: 'Vì sao hai người cùng tổng lạng mà cuộc đời khác nhau?',
+    a: 'Vì phép cân xương nén cả ngày giờ sinh về MỘT con số tổng — độ phân giải rất thấp (chỉ vài chục mức cho tất cả mọi người). Đây là lý do nên xem nó như một lát cắt tham khảo vui và nhanh, còn muốn phân tích cá nhân thật sự thì cần Tử Vi hoặc Bát Tự.',
+  },
+  {
+    q: 'Cân xương khác gì Tử Vi, Bát Tự?',
+    a: 'Cân xương là phép tra cứu nhanh ra một con số tổng kèm bài thơ — đơn giản, một chiều. Tử Vi lập lá số 12 cung với hơn trăm sao; Bát Tự phân tích cân bằng ngũ hành của tám chữ can chi — cả hai đa chiều và cá nhân hơn nhiều. Thử cân xương cho biết, rồi đào sâu bằng lá số là cách dùng hợp lý.',
+  },
+];
+
+const FAQ_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
 export default function CanXuongPage() {
   const [birthDate, setBirthDate] = React.useState('');
   const [birthHour, setBirthHour] = React.useState('12');
@@ -113,6 +146,10 @@ export default function CanXuongPage() {
 
   return (
     <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
+    />
     <ToolPageShell
       eyebrow="Cổ truyền Việt Nam"
         relatedSlug="/can-xuong"
@@ -300,6 +337,62 @@ export default function CanXuongPage() {
             </div>
           )}
         </div>
+      </section>
+
+      <section
+        aria-labelledby="cx-about-heading"
+        className="mt-12 border-t border-border pt-10"
+      >
+        <h2
+          id="cx-about-heading"
+          className="font-heading text-xl font-semibold text-foreground sm:text-2xl"
+        >
+          Cân xương tính số hoạt động thế nào?
+        </h2>
+        <div className="mt-4 space-y-4 text-sm leading-relaxed text-foreground/80">
+          <p>
+            Phép cân xương — tương truyền gắn với{' '}
+            <strong className="text-foreground">Viên Thiên Cang</strong> đời Đường,
+            lưu truyền dân gian với nhiều dị bản — gán cho mỗi thành phần của ngày
+            giờ sinh một &ldquo;trọng lượng xương&rdquo;: năm sinh theo can chi,
+            tháng và ngày theo lịch âm, giờ theo 12 canh giờ. Cộng bốn thành phần
+            được tổng số lạng, tra bài thơ cổ ứng với tổng đó. Công cụ đổi lịch âm
+            và tra bảng <strong className="text-foreground">tự động, cố định</strong>{' '}
+            — ai nhập cùng dữ liệu cũng ra đúng một kết quả.
+          </p>
+          <p>
+            Minh bạch để bạn rõ: bài thơ luận giải dùng ngôn ngữ và chuẩn mực thời
+            xưa, và cả phép tính chỉ nén ngày giờ sinh về MỘT con số tổng — độ phân
+            giải thấp hơn Tử Vi hay Bát Tự rất nhiều. Hãy xem đây là lát cắt tham
+            khảo nhanh đúng tinh thần &ldquo;không bói mù&rdquo;: thử cho biết, chiêm
+            nghiệm phần thấy đúng, và đào sâu bằng lá số đầy đủ nếu muốn phân tích
+            thật sự cá nhân.
+          </p>
+        </div>
+      </section>
+
+      <section aria-labelledby="cx-faq-heading" className="mt-10">
+        <h2
+          id="cx-faq-heading"
+          className="font-heading text-xl font-semibold text-foreground sm:text-2xl"
+        >
+          Câu hỏi thường gặp
+        </h2>
+        <dl className="mt-4 space-y-3">
+          {FAQ.map((f) => (
+            <details
+              key={f.q}
+              className="group rounded-lg border border-border bg-card/40 px-4 py-3"
+            >
+              <summary className="cursor-pointer list-none font-medium text-foreground [&::-webkit-details-marker]:hidden">
+                {f.q}
+              </summary>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {f.a}
+              </p>
+            </details>
+          ))}
+        </dl>
       </section>
     </ToolPageShell>
     <StickyMobileCta trackId="can-xuong" />

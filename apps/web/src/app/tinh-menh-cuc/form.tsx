@@ -20,6 +20,39 @@ import { castTuViChart, type TuViChart } from '@/lib/tuvi-client';
 
 type Gender = 'male' | 'female';
 
+const FAQ: { q: string; a: string }[] = [
+  {
+    q: 'Cung Mệnh là gì?',
+    a: 'Cung Mệnh là cung gốc của lá số Tử Vi — nơi "đứng" của bản mệnh, mô tả tư duy, cá tính và cách bạn nhìn cuộc đời. Vị trí cung Mệnh được an theo tháng sinh và giờ sinh trên vòng 12 cung địa chi, nên cần giờ sinh chính xác.',
+  },
+  {
+    q: 'Cung Thân khác cung Mệnh thế nào?',
+    a: 'Cung Mệnh thiên về bản chất bên trong; cung Thân thiên về hành động và phần thể hiện ra ngoài, thường được xem nặng hơn ở nửa sau cuộc đời. Tuỳ giờ sinh, cung Thân sẽ đóng cùng một trong các cung Mệnh, Phúc Đức, Quan Lộc, Tài Bạch, Thiên Di hoặc Phu Thê.',
+  },
+  {
+    q: 'Cục là gì và dùng để làm gì?',
+    a: 'Cục là ngũ hành cục của lá số: Thủy nhị cục, Mộc tam cục, Kim tứ cục, Thổ ngũ cục, Hỏa lục cục — xác định từ can năm sinh kết hợp vị trí cung Mệnh. Cục quyết định tuổi bắt đầu đại vận (2 / 3 / 4 / 5 / 6 tuổi) và nhịp an sao Tử Vi — mắt xích nối phần "tĩnh" của lá số với vận động theo thời gian.',
+  },
+  {
+    q: 'Âm dương thuận nghịch ảnh hưởng gì?',
+    a: 'Âm dương của năm sinh kết hợp giới tính quyết định chiều đi của đại vận: dương nam và âm nữ đi thuận, âm nam và dương nữ đi nghịch. Cùng ngày giờ sinh nhưng khác giới tính sẽ có trình tự đại vận ngược nhau — vì vậy công cụ này hỏi giới tính.',
+  },
+  {
+    q: 'Công cụ này khác lá số đầy đủ thế nào?',
+    a: 'Đây là bước tra cứu NỀN: cung Mệnh, cung Thân, Cục và âm dương — phần khung của lá số. Lá số đầy đủ an tiếp 14 chính tinh cùng phụ tinh vào 12 cung rồi mới luận giải sâu. Phần tính ở đây dùng đúng thuật toán lập lá số chuẩn — ai nhập cùng dữ liệu cũng ra cùng kết quả.',
+  },
+];
+
+const FAQ_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
 export function TinhMenhCucForm() {
   const [birthDate, setBirthDate] = React.useState('');
   const [birthHour, setBirthHour] = React.useState('12');
@@ -58,6 +91,10 @@ export function TinhMenhCucForm() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
+      />
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
           aria-hidden="true"
@@ -282,6 +319,77 @@ export function TinhMenhCucForm() {
               </p>
             </CardContent>
           </Card>
+        </section>
+
+        <section
+          aria-labelledby="tmc-method-heading"
+          className="relative mx-auto max-w-3xl px-6 pb-12"
+        >
+          <h2
+            id="tmc-method-heading"
+            className="mb-4 font-heading text-xl font-semibold text-foreground sm:text-2xl"
+          >
+            Cách tính Mệnh — Thân — Cục
+          </h2>
+          <ol className="space-y-3 text-sm leading-relaxed text-foreground/80">
+            <li className="flex gap-3">
+              <span className="shrink-0 font-mono text-gold-700">01</span>
+              <span>
+                <strong className="text-foreground">An cung Mệnh:</strong> từ tháng
+                sinh âm lịch và giờ sinh, đếm trên vòng 12 cung địa chi để xác định
+                cung Mệnh — vì vậy sai giờ sinh là lệch cả lá số.
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="shrink-0 font-mono text-gold-700">02</span>
+              <span>
+                <strong className="text-foreground">An cung Thân:</strong> cũng từ
+                tháng và giờ sinh nhưng đếm theo chiều ngược lại — cung Thân luôn rơi
+                vào một trong sáu vị trí cố định của lá số.
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="shrink-0 font-mono text-gold-700">03</span>
+              <span>
+                <strong className="text-foreground">Định Cục:</strong> ghép can năm
+                sinh với vị trí cung Mệnh, tra nạp âm để ra ngũ hành cục — con số của
+                Cục (2–6) chính là tuổi bắt đầu đại vận đầu tiên.
+              </span>
+            </li>
+          </ol>
+          <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+            Minh bạch: toàn bộ phần tính chạy bằng thuật toán lập lá số chuẩn — không
+            có "cảm nhận của thầy" ở bước này. Phần cần thận trọng là bước LUẬN GIẢI
+            sau con số, và đó là lý do hieu.asia luôn ghi rõ đâu là tính toán, đâu là
+            diễn giải.
+          </p>
+        </section>
+
+        <section
+          aria-labelledby="tmc-faq-heading"
+          className="relative mx-auto max-w-3xl px-6 pb-12"
+        >
+          <h2
+            id="tmc-faq-heading"
+            className="mb-4 font-heading text-xl font-semibold text-foreground sm:text-2xl"
+          >
+            Câu hỏi thường gặp
+          </h2>
+          <dl className="space-y-3">
+            {FAQ.map((f) => (
+              <details
+                key={f.q}
+                className="group rounded-lg border border-border bg-card/40 px-4 py-3"
+              >
+                <summary className="cursor-pointer list-none font-medium text-foreground [&::-webkit-details-marker]:hidden">
+                  {f.q}
+                </summary>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {f.a}
+                </p>
+              </details>
+            ))}
+          </dl>
         </section>
       </main>
       <SiteFooter />

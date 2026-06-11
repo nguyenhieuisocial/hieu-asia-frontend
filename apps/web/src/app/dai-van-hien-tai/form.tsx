@@ -56,6 +56,39 @@ function themeForPalace(name: string): string {
   return map[name] ?? 'Giai đoạn chuyển mình — Mentor sẽ giúp bạn dịch chi tiết khi có lá số đầy đủ.';
 }
 
+const FAQ: { q: string; a: string }[] = [
+  {
+    q: 'Vì sao tuổi bắt đầu đại vận của mỗi người khác nhau?',
+    a: 'Tuổi khởi đại vận do Cục của lá số quyết định: Thủy nhị cục bắt đầu từ 2 tuổi, Mộc tam cục từ 3 tuổi, Kim tứ cục từ 4 tuổi, Thổ ngũ cục từ 5 tuổi, Hỏa lục cục từ 6 tuổi. Cục được xác định từ can năm sinh và vị trí cung Mệnh — bạn có thể tra Cục của mình ở công cụ Tính Mệnh Cục.',
+  },
+  {
+    q: 'Đại vận đi thuận hay đi nghịch dựa vào đâu?',
+    a: 'Dựa vào âm dương năm sinh kết hợp giới tính: dương nam và âm nữ đi thuận chiều 12 cung; âm nam và dương nữ đi nghịch. Vì vậy hai người sinh cùng ngày giờ nhưng khác giới tính sẽ có trình tự đại vận ngược nhau — và công cụ này cần hỏi giới tính.',
+  },
+  {
+    q: 'Đại vận "xấu" có nghĩa là 10 năm đen đủi?',
+    a: 'Không. Trong cách đọc của hieu.asia, đại vận đóng ở cung khó nghĩa là giai đoạn đó cuộc sống ưu tiên bài học của cung ấy — ví dụ đại vận Tật Ách nhắc đầu tư cho sức khoẻ. Đó là trọng tâm cần chú ý, không phải lời tuyên án 10 năm.',
+  },
+  {
+    q: 'Bản rút gọn này khác lá số đầy đủ thế nào?',
+    a: 'Bản rút gọn xác định bạn đang ở đại vận nào và chính tinh của cung đại vận — đủ để biết "bối cảnh" giai đoạn. Lá số đầy đủ xét thêm tứ hoá, lưu niên, các phụ tinh và tương quan giữa các cung, nên luận giải chi tiết và cá nhân hơn nhiều.',
+  },
+  {
+    q: 'Không nhớ giờ sinh chính xác có xem được không?',
+    a: 'Giờ sinh quyết định cung Mệnh và Cục — tức cả vị trí lẫn nhịp đại vận — nên sai giờ là lệch kết quả. Nếu chỉ nhớ khoảng (ví dụ "buổi sáng"), hãy thử các giờ lân cận xem kết quả có đổi không; nếu hoàn toàn không rõ, nên bắt đầu bằng Bát Tự theo ngày sinh.',
+  },
+];
+
+const FAQ_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
 export function DaiVanHienTaiForm() {
   const [birthDate, setBirthDate] = React.useState('');
   const [birthHour, setBirthHour] = React.useState('12');
@@ -97,6 +130,10 @@ export function DaiVanHienTaiForm() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
+      />
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
           aria-hidden="true"
@@ -315,6 +352,75 @@ export function DaiVanHienTaiForm() {
               </p>
             </CardContent>
           </Card>
+        </section>
+
+        <section
+          aria-labelledby="dv-method-heading"
+          className="relative mx-auto max-w-3xl px-6 pb-12"
+        >
+          <h2
+            id="dv-method-heading"
+            className="mb-4 font-heading text-xl font-semibold text-foreground sm:text-2xl"
+          >
+            Công cụ xác định đại vận của bạn thế nào
+          </h2>
+          <ol className="space-y-3 text-sm leading-relaxed text-foreground/80">
+            <li className="flex gap-3">
+              <span className="shrink-0 font-mono text-gold-700">01</span>
+              <span>
+                <strong className="text-foreground">Lập lá số gốc</strong> từ ngày và
+                giờ sinh bằng thuật toán chuẩn — xác định cung Mệnh và Cục của bạn.
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="shrink-0 font-mono text-gold-700">02</span>
+              <span>
+                <strong className="text-foreground">Tính nhịp đại vận:</strong> Cục
+                cho tuổi khởi vận (2–6 tuổi), âm dương năm sinh + giới tính cho chiều
+                đi thuận hay nghịch trên 12 cung.
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="shrink-0 font-mono text-gold-700">03</span>
+              <span>
+                <strong className="text-foreground">Chiếu vào tuổi hiện tại</strong>{' '}
+                để tìm cung đại vận bạn đang ở và chính tinh của cung đó — ra "chủ
+                đề" của giai đoạn 10 năm này.
+              </span>
+            </li>
+          </ol>
+          <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+            Minh bạch: phần tính là thuật toán cố định, ai nhập cùng dữ liệu cũng ra
+            cùng kết quả. Phần "chủ đề giai đoạn" là diễn giải truyền thống mang tính
+            tham khảo — dùng để đặt mục tiêu hợp nhịp, không phải lời tiên đoán.
+          </p>
+        </section>
+
+        <section
+          aria-labelledby="dv-faq-heading"
+          className="relative mx-auto max-w-3xl px-6 pb-12"
+        >
+          <h2
+            id="dv-faq-heading"
+            className="mb-4 font-heading text-xl font-semibold text-foreground sm:text-2xl"
+          >
+            Câu hỏi thường gặp
+          </h2>
+          <dl className="space-y-3">
+            {FAQ.map((f) => (
+              <details
+                key={f.q}
+                className="group rounded-lg border border-border bg-card/40 px-4 py-3"
+              >
+                <summary className="cursor-pointer list-none font-medium text-foreground [&::-webkit-details-marker]:hidden">
+                  {f.q}
+                </summary>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {f.a}
+                </p>
+              </details>
+            ))}
+          </dl>
         </section>
       </main>
       <SiteFooter />
