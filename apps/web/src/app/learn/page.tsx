@@ -49,10 +49,22 @@ const TOPICS: readonly LearnTopic[] = [
     blurb: '5 chiều liên tục: Cởi mở, Tận tâm, Hướng ngoại, Dễ chịu, Nhạy cảm cảm xúc.',
   },
   {
+    href: '/learn/disc',
+    title: 'DISC — 4 nhóm hành vi',
+    subtitle: 'Tâm lý — William Marston',
+    blurb: '4 thiên hướng: Thống trị (D), Ảnh hưởng (I), Kiên định (S), Tuân thủ (C).',
+  },
+  {
+    href: '/learn/enneagram',
+    title: 'Enneagram — 9 nhóm',
+    subtitle: 'Tâm lý — 3 trung tâm',
+    blurb: '9 nhóm theo động lực sâu (điều bạn sợ & khao khát), chia 3 trung tâm.',
+  },
+  {
     href: '/learn/palm',
     title: 'Xem chỉ tay',
     subtitle: 'Phổ quát',
-    blurb: '7 đường chính: tâm đạo, trí đạo, sinh đạo, số mệnh, mặt trời, mercury, kim tinh.',
+    blurb: '7 đường chính: tâm đạo, trí đạo, sinh đạo, số mệnh, mặt trời, thuỷ tinh, kim tinh.',
   },
 ];
 
@@ -96,7 +108,7 @@ export default function LearnLandingPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm leading-relaxed text-muted-foreground">{t.blurb}</p>
-                <span className="mt-4 inline-block text-xs font-semibold text-gold-700 group-hover:text-gold">
+                <span className="mt-4 inline-block whitespace-nowrap text-xs font-semibold text-gold-700 group-hover:text-gold">
                   Đọc giải thích →
                 </span>
               </CardContent>
