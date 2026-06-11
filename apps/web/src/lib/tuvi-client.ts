@@ -130,6 +130,68 @@ export async function castTuViChart(input: CastChartInput): Promise<TuViChart> {
   return data.chart;
 }
 
+/** A time-flow scope (đại vận / lưu niên) from the horoscope overlay. */
+export interface TuViScope {
+  /** e.g. "Lưu Niên" (yearly). */
+  name: string;
+  heavenlyStem: string;
+  earthlyBranch: string;
+  /** Exactly 4 star names in [Lộc, Quyền, Khoa, Kỵ] order. */
+  mutagen: string[];
+}
+
+export interface TuViHoroscope {
+  decadal?: TuViScope;
+  yearly?: TuViScope;
+}
+
+/**
+ * POST /tools/tuvi-v2 with `horoscope:true` — returns the natal chart plus the
+ * time-flow overlay (đại vận / lưu niên) for `targetDate`. Powers "vận năm nay"
+ * (yearly Tứ Hóa) on the free chart page. Not cached: the result depends on the
+ * date, and casts are infrequent.
+ */
+export async function castTuViHoroscope(
+  input: CastChartInput & { targetDate?: string },
+): Promise<{ chart: TuViChart; horoscope: TuViHoroscope | null }> {
+  const target =
+    input.targetDate ??
+    (() => {
+      // VN local date (ICT, UTC+7) — the yearly flow is keyed by the target year.
+      const ict = new Date(Date.now() + 7 * 60 * 60 * 1000);
+      return `${ict.getUTCFullYear()}-${ict.getUTCMonth() + 1}-${ict.getUTCDate()}`;
+    })();
+
+  const res = await fetch(`${API_BASE}/tools/tuvi-v2`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      birthSolarDate: input.birthSolarDate,
+      birthHour: input.birthHour,
+      gender: input.gender === 'female' ? 'F' : 'M',
+      language: input.language ?? 'vi-VN',
+      horoscope: true,
+      targetDate: target,
+    }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`Tử Vi horoscope fetch failed (HTTP ${res.status}): ${text.slice(0, 200)}`);
+  }
+
+  const data = (await res.json()) as {
+    ok: boolean;
+    chart?: TuViChart;
+    horoscope?: TuViHoroscope;
+    error?: string;
+  };
+  if (!data.ok || !data.chart) {
+    throw new Error(data.error ?? 'Tử Vi horoscope fetch failed');
+  }
+  return { chart: data.chart, horoscope: data.horoscope ?? null };
+}
+
 /**
  * Looks up a palace by its Vietnamese name.
  * Returns null if not found (defensive — the engine may rename in future).

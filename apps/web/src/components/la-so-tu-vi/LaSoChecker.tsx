@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
-import { castTuViChart, type TuViChart, type TuViPalace } from '@/lib/tuvi-client';
+import { castTuViHoroscope, type TuViChart, type TuViHoroscope, type TuViPalace } from '@/lib/tuvi-client';
 import { TuViChart12Palaces } from '@/components/tuvi/TuViChart12Palaces';
 
 /**
@@ -68,11 +68,24 @@ function currentDaiVan(chart: TuViChart, age: number | null): TuViPalace | null 
   return null;
 }
 
+// Lưu niên (vận năm) — the year's Tứ Hóa, computed by the engine for `targetDate`.
+// iztro's `mutagen` array is fixed-order [Lộc, Quyền, Khoa, Kỵ].
+const HOA_ORDER = ['Lộc', 'Quyền', 'Khoa', 'Kỵ'];
+function mutagenText(mutagen?: string[]): string {
+  if (!Array.isArray(mutagen)) return '';
+  return mutagen
+    .slice(0, 4)
+    .map((star, i) => (star ? `${star} hóa ${HOA_ORDER[i]}` : ''))
+    .filter(Boolean)
+    .join(' · ');
+}
+
 export function LaSoChecker() {
   const [date, setDate] = React.useState('');
   const [time, setTime] = React.useState('12:00');
   const [gender, setGender] = React.useState<'male' | 'female'>('male');
   const [chart, setChart] = React.useState<TuViChart | null>(null);
+  const [horoscope, setHoroscope] = React.useState<TuViHoroscope | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -84,9 +97,15 @@ export function LaSoChecker() {
     setLoading(true);
     setError(null);
     setChart(null);
+    setHoroscope(null);
     try {
-      const c = await castTuViChart({ birthSolarDate: date, birthHour: parseHour(time), gender });
+      const { chart: c, horoscope: h } = await castTuViHoroscope({
+        birthSolarDate: date,
+        birthHour: parseHour(time),
+        gender,
+      });
       setChart(c);
+      setHoroscope(h);
     } catch {
       setError('Chưa lập được lá số — thử lại sau giây lát.');
     } finally {
@@ -97,6 +116,11 @@ export function LaSoChecker() {
   const cachCuc = chart ? detectCachCuc(chart) : [];
   const age = chart ? ageFromDate(date) : null;
   const daiVan = chart ? currentDaiVan(chart, age) : null;
+  const luuNien = horoscope?.yearly ?? null;
+  const luuNienHoa = luuNien ? mutagenText(luuNien.mutagen) : '';
+  const luuNienCanChi = luuNien
+    ? [luuNien.heavenlyStem, luuNien.earthlyBranch].filter(Boolean).join(' ')
+    : '';
 
   return (
     <Card>
@@ -185,8 +209,27 @@ export function LaSoChecker() {
               </div>
             )}
 
+            {luuNien && luuNienHoa && (
+              <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
+                  Vận năm nay{luuNienCanChi ? ` — lưu niên ${luuNienCanChi}` : ''}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-foreground/85">
+                  Năm nay an theo can chi{' '}
+                  {luuNienCanChi && <strong>{luuNienCanChi}</strong>}, kích hoạt bốn sao Tứ Hóa lưu niên:{' '}
+                  <strong>{luuNienHoa}</strong>. Tìm bốn sao này đang nằm ở cung nào trong lá số trên để biết
+                  năm nay nổi bật ở mảng nào (tài chính, công việc, tình cảm, sức khỏe…).
+                </p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Tứ Hóa lưu niên = điểm nhấn động của riêng năm nay, chồng lên lá số gốc — chỉ để soi trọng
+                  tâm, không phải dự đoán may rủi.
+                </p>
+              </div>
+            )}
+
             <p className="text-xs leading-relaxed text-muted-foreground">
-              Lá số được an bằng engine Tử Vi chuẩn (114 sao, độ sáng miếu/vượng/hãm, Tứ Hóa, đại vận) —{' '}
+              Lá số được an bằng engine Tử Vi chuẩn (114 sao, độ sáng miếu/vượng/hãm, Tứ Hóa, đại vận, lưu
+              niên) —{' '}
               <strong>con số là thật, kiểm chứng được</strong>. Đây là bản tra cứu miễn phí; phần luận giải sâu
               là để bạn TỰ hiểu mình, không phải bói toán hay phán số mệnh.
             </p>
