@@ -3,11 +3,15 @@
 // lá bài GỢI CÂU HỎI, người đọc giữ câu trả lời — không phán định mệnh, không hù dọa.
 // Tách khỏi lib/tools/tarot.ts (engine rút bài) vì đây là dữ liệu BIÊN TẬP cho trang tĩnh.
 
+import { MINOR_PAGES } from './tarot-card-pages-minor';
+
 export interface TarotCardPage {
   slug: string;
   name: string; // tên tiếng Anh (người Việt tìm kiếm chủ yếu bằng tên này)
   name_vi: string;
-  number: number; // 0–21 theo thứ tự RWS
+  number: number; // Ẩn chính: 0–21 theo RWS · Ẩn phụ: 1–14 (Át → Vua) trong chất
+  arcana?: 'major' | 'minor'; // mặc định (không khai) = major
+  suit_vi?: string; // Ẩn phụ: Gậy · Cốc · Kiếm · Tiền
   keyUp: string[]; // từ khóa nghĩa xuôi
   keyRev: string[]; // từ khóa nghĩa ngược
   image: string; // hình ảnh biểu tượng trên lá (hệ RWS)
@@ -427,4 +431,15 @@ export const MAJOR_PAGES: TarotCardPage[] = [
 /** Tra cứu theo slug — dùng cho generateStaticParams + page. */
 export function getMajorPage(slug: string): TarotCardPage | undefined {
   return MAJOR_PAGES.find((c) => c.slug === slug);
+}
+
+// Đợt 2: gộp 22 Ẩn chính + 56 Ẩn phụ thành một thư viện 78 lá.
+// (minor chỉ import TYPE từ file này — type bị xoá khi compile nên không có vòng import runtime.)
+
+/** Đủ bộ 78 lá theo thứ tự: 22 Ẩn chính (0–21) rồi 4 chất × 14 (Át → Vua). */
+export const ALL_PAGES: TarotCardPage[] = [...MAJOR_PAGES, ...MINOR_PAGES];
+
+/** Tra cứu trong cả 78 lá. */
+export function getCardPage(slug: string): TarotCardPage | undefined {
+  return ALL_PAGES.find((c) => c.slug === slug);
 }

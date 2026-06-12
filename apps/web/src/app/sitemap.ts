@@ -12,7 +12,7 @@ import { BIRTH_YEARS as KHAI_TRUONG_YEARS, slugOf as khaiTruongSlug } from './kh
 import { BIRTH_YEARS as HUONG_NHA_YEARS, slugOf as huongNhaSlug } from './huong-nha/years';
 import { ZODIAC, canonicalPairSlug } from '@/lib/hop-tuoi-pairs';
 import { COMPARISONS } from '@/lib/so-sanh';
-import { MAJOR_PAGES } from '@/lib/tarot-card-pages';
+import { ALL_PAGES as TAROT_PAGES } from '@/lib/tarot-card-pages';
 
 const BASE_URL = 'https://hieu.asia';
 
@@ -196,9 +196,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/tu-kiem`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/tarot`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/tarot/hom-nay`, lastModified: now, changeFrequency: 'daily', priority: 0.6 },
-    // Thư viện ý nghĩa lá Tarot (đợt 1: 22 Ẩn chính) — evergreen SEO.
+    // Thư viện ý nghĩa lá Tarot (đủ 78 lá: 22 Ẩn chính + 56 Ẩn phụ) — evergreen SEO.
     { url: `${BASE_URL}/tarot/y-nghia`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
-    ...MAJOR_PAGES.map((c) => ({
+    ...TAROT_PAGES.map((c) => ({
       url: `${BASE_URL}/tarot/y-nghia/${c.slug}`,
       lastModified: now,
       changeFrequency: 'monthly' as const,

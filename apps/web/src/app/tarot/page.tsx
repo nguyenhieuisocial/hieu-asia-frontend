@@ -54,7 +54,7 @@ export default function TarotPage() {
           href="/tarot/y-nghia"
           className="mt-3 flex items-center justify-between gap-3 rounded-lg border border-border bg-card/40 px-4 py-3 text-sm transition-colors hover:border-gold/40 hover:bg-gold/5"
         >
-          <span className="text-foreground/85">📖 <b className="text-foreground">Ý nghĩa 22 lá Ẩn chính</b> — tra cứu nghĩa xuôi &amp; ngược từng lá</span>
+          <span className="text-foreground/85">📖 <b className="text-foreground">Ý nghĩa 78 lá bài</b> — tra cứu nghĩa xuôi &amp; ngược từng lá</span>
           <span className="shrink-0 text-gold">Mở →</span>
         </Link>
       </div>
@@ -72,7 +72,7 @@ export default function TarotPage() {
               Rider–Waite–Smith (1909). Bộ bài đủ gồm <b className="text-foreground/85">78 lá</b>: 22 Ẩn chính kể một
               hành trình lớn của đời người, 56 Ẩn phụ chia 4 chất Gậy – Cốc – Kiếm – Tiền ứng với hành động, cảm xúc,
               suy nghĩ và vật chất. Muốn hiểu một lá cụ thể, bạn có thể tra trong{' '}
-              <Link href="/tarot/y-nghia" className="text-gold hover:underline">thư viện ý nghĩa 22 lá Ẩn chính</Link>.
+              <Link href="/tarot/y-nghia" className="text-gold hover:underline">thư viện ý nghĩa đủ 78 lá</Link>.
             </p>
             <p>
               Mình nói thẳng: <b className="text-foreground/85">không có bằng chứng nào cho thấy lá bài đoán được
