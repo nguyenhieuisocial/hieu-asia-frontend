@@ -30,7 +30,7 @@ jobs:
   eval:
     name: Eval run + alert on regression
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 75
     env:
       ADMIN_TOKEN: ${{ secrets.HIEU_API_ADMIN_TOKEN }}
       EVAL_API_URL: https://api.hieu.asia

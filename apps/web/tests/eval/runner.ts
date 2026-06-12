@@ -80,8 +80,9 @@ async function generateReading(sample: EvalSample, opts: RunnerOptions): Promise
   const { session_id } = (await create.json()) as { session_id?: string };
   if (!session_id) throw new Error('reading-create returned no session_id');
 
-  // Orchestration is async + multi-stage (logic → alignment → report); poll up to ~4 min.
-  for (let i = 0; i < 80; i++) {
+  // Orchestration is async + two-phase (full: logic→corpus→psychology, then a fresh
+  // finalize invocation: alignment→report). End-to-end ~4–5 min, so poll up to ~7.5 min.
+  for (let i = 0; i < 150; i++) {
     await new Promise((r) => setTimeout(r, 3000));
     const get = await fetch(`${opts.apiBaseUrl}/reading-get?id=${encodeURIComponent(session_id)}`, {
       headers: {
@@ -109,7 +110,7 @@ async function generateReading(sample: EvalSample, opts: RunnerOptions): Promise
       };
     }
   }
-  throw new Error(`reading ${session_id} did not produce a report within ~4 min`);
+  throw new Error(`reading ${session_id} did not produce a report within ~7.5 min`);
 }
 
 async function runOne(sample: EvalSample, opts: RunnerOptions): Promise<EvalResult> {
