@@ -23,6 +23,7 @@ import {
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { TimeFlowChecker } from '@/components/time-flow/TimeFlowChecker';
 
 export const metadata: Metadata = {
   title: 'Khung kế hoạch tháng — chia mục tiêu thành 4 tuần',
@@ -164,6 +165,10 @@ export default function MonthlyPlanningPage() {
             lá số để cá nhân hoá theo đại vận + lưu nguyệt của bạn.
           </p>
         </header>
+
+        <div className="mb-12">
+          <TimeFlowChecker scope="monthly" />
+        </div>
 
         <Card className="mb-10 border-gold/25 bg-gold/[0.05]">
           <CardHeader>
