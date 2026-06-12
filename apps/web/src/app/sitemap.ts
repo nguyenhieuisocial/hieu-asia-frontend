@@ -13,6 +13,7 @@ import { BIRTH_YEARS as HUONG_NHA_YEARS, slugOf as huongNhaSlug } from './huong-
 import { ZODIAC, canonicalPairSlug } from '@/lib/hop-tuoi-pairs';
 import { COMPARISONS } from '@/lib/so-sanh';
 import { ALL_PAGES as TAROT_PAGES } from '@/lib/tarot-card-pages';
+import { QUE_PAGES } from '@/lib/que-kinh-dich';
 
 const BASE_URL = 'https://hieu.asia';
 
@@ -190,6 +191,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Đợt 0 big-upgrade — bật các engine đã build sẵn (Kinh Dịch, Big Five, DISC).
   const dot0Tools: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/gieo-que`, lastModified: now, changeFrequency: 'monthly', priority: 0.65 },
+    // Thư viện ý nghĩa 64 quẻ Kinh Dịch — evergreen SEO (nâng cấp dữ liệu mỏng 2026-06).
+    { url: `${BASE_URL}/gieo-que/y-nghia`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    ...QUE_PAGES.map((q) => ({
+      url: `${BASE_URL}/gieo-que/y-nghia/${q.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    })),
     { url: `${BASE_URL}/big-five`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/disc`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/enneagram`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
