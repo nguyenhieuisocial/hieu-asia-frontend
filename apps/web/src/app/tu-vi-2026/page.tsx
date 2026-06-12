@@ -8,6 +8,7 @@ import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb } from '@/lib/seo/jsonld';
+import { TimeFlowChecker } from '@/components/time-flow/TimeFlowChecker';
 
 export const metadata: Metadata = {
   title: 'Tử Vi 2026 cá nhân hoá theo ngày sinh (Bính Ngọ)',
@@ -156,6 +157,10 @@ export default function TuVi2026Page() {
               
             </Link></Button>
           </div>
+        </section>
+
+        <section className="relative mx-auto max-w-3xl px-6 pb-12">
+          <TimeFlowChecker scope="yearly" />
         </section>
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12">
