@@ -141,8 +141,12 @@ export interface TuViScope {
 }
 
 export interface TuViHoroscope {
+  /** Đại vận — the current 10-year flow. */
   decadal?: TuViScope;
+  /** Lưu niên — the target year's flow. */
   yearly?: TuViScope;
+  /** Lưu nguyệt — the target month's flow. */
+  monthly?: TuViScope;
 }
 
 /**

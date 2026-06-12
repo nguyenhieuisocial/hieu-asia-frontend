@@ -12,6 +12,7 @@ import { ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { TimeFlowChecker } from '@/components/time-flow/TimeFlowChecker';
 
 export const metadata: Metadata = {
   title: 'Khung kế hoạch năm 2026 — 4 quý + quyết định lớn',
@@ -139,6 +140,10 @@ export default function AnnualPlanningPage() {
             riêng; lập lá số để cá nhân hoá theo đại vận của bạn.
           </p>
         </header>
+
+        <div className="mb-12">
+          <TimeFlowChecker scope="yearly" />
+        </div>
 
         <Card className="mb-10 border-gold/25 bg-gold/[0.05]">
           <CardHeader>
