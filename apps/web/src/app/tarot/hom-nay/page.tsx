@@ -1,10 +1,45 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { faqPage } from '@/lib/seo/jsonld';
 import { cardOfTheDay } from '@/lib/tools/tarot';
 
 // Render mỗi request với ngày hiện tại (giờ VN) → luôn đúng "lá hôm nay".
 export const dynamic = 'force-dynamic';
+
+// Metadata riêng — nếu không khai báo, trang thừa kế canonical /tarot từ layout cha
+// và tự loại mình khỏi index.
+export const metadata: Metadata = {
+  title: 'Lá Tarot hôm nay — mỗi ngày một lá để ngẫm | hieu.asia',
+  description:
+    'Mỗi ngày một lá Tarot chung cho mọi người (theo giờ Việt Nam) kèm câu hỏi tự soi. Không tiên đoán vận ngày — chỉ là một phút dừng lại để ngẫm. Miễn phí.',
+  alternates: { canonical: 'https://hieu.asia/tarot/hom-nay' },
+  openGraph: {
+    title: 'Lá Tarot hôm nay — mỗi ngày một lá để ngẫm | hieu.asia',
+    description: 'Mỗi ngày một lá Tarot kèm câu hỏi tự soi — không tiên đoán, chỉ là một phút dừng lại.',
+    url: 'https://hieu.asia/tarot/hom-nay',
+    siteName: 'hieu.asia',
+    locale: 'vi_VN',
+    type: 'website',
+  },
+};
+
+const FAQS = [
+  {
+    q: 'Lá Tarot hôm nay được chọn như thế nào?',
+    a: 'Theo ngày (giờ Việt Nam): hệ thống trộn bộ 78 lá bằng thuật toán ngẫu nhiên lấy chính ngày hôm đó làm hạt giống, nên suốt cả ngày chỉ có một lá và ai mở trang cũng thấy giống nhau; sang ngày mới lá tự đổi. Không ai "chọn tay" lá để dẫn dắt bạn cả.',
+  },
+  {
+    q: 'Lá hôm nay có phải là vận mệnh ngày của tôi không?',
+    a: 'Không. Cùng một lá hiện ra cho tất cả mọi người thì không thể là chuyện riêng của ai. Nó chỉ là một lời nhắc trung lập để bạn dừng lại một phút — điều có ý nghĩa là cách bạn liên hệ lá với chuyện của chính mình.',
+  },
+  {
+    q: 'Muốn rút lá cho câu hỏi riêng thì làm thế nào?',
+    a: 'Sang trang Rút bài Tarot, đặt một câu hỏi cụ thể đang phân vân rồi rút bài theo kiểu trải phù hợp; nếu muốn, bạn có thể đọc sâu cùng AI dựa trên bối cảnh bạn mô tả.',
+  },
+];
 
 const REFLECT = [
   'Lá này khiến bạn liên tưởng tới điều gì đang diễn ra với mình lúc này?',
@@ -83,7 +118,20 @@ export default function TarotTodayPage() {
         <p className="mt-4 text-center text-xs text-muted-foreground">
           Ghé lại mỗi ngày để gặp một lá mới · <Link href="/tu-kiem" className="text-gold hover:underline">Vì sao mình không bói mù?</Link>
         </p>
+
+        <section className="mt-10 rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+          <h2 className="font-heading text-xl font-semibold text-foreground">Câu hỏi thường gặp</h2>
+          <dl className="mt-4 space-y-4">
+            {FAQS.map((f, i) => (
+              <div key={i}>
+                <dt className="font-medium text-foreground">{f.q}</dt>
+                <dd className="mt-1 text-sm leading-relaxed text-muted-foreground">{f.a}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
       </div>
+      <JsonLd data={faqPage(FAQS)} />
       <StickyMobileCta trackId="tarot-hom-nay" />
     </ToolPageShell>
   );
