@@ -21,6 +21,7 @@ interface RunnerOptions {
   judgeMode: 'rubric-only' | 'rubric-plus-llm' | 'llm-only';
   apiBaseUrl: string;
   adminToken: string;
+  supabaseAnonKey: string;
   outputDir: string;
 }
 
@@ -64,6 +65,10 @@ async function generateReading(sample: EvalSample, opts: RunnerOptions): Promise
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      // Supabase Edge Functions verify a JWT (anon key is public, RLS-gated);
+      // the Worker /reading-* passthrough forwards these to Supabase as-is.
+      apikey: opts.supabaseAnonKey,
+      Authorization: `Bearer ${opts.supabaseAnonKey}`,
       'X-Admin-Token': opts.adminToken,
       'X-Eval-Sample-Id': sample.id, // tags Sentry events for traceability
     },
@@ -79,7 +84,11 @@ async function generateReading(sample: EvalSample, opts: RunnerOptions): Promise
   for (let i = 0; i < 80; i++) {
     await new Promise((r) => setTimeout(r, 3000));
     const get = await fetch(`${opts.apiBaseUrl}/reading-get?id=${encodeURIComponent(session_id)}`, {
-      headers: { 'X-Admin-Token': opts.adminToken },
+      headers: {
+        apikey: opts.supabaseAnonKey,
+        Authorization: `Bearer ${opts.supabaseAnonKey}`,
+        'X-Admin-Token': opts.adminToken,
+      },
     });
     if (!get.ok) continue;
     const data = (await get.json()) as {
@@ -180,6 +189,7 @@ async function main() {
     judgeMode: (args.includes('--judge-mode') ? args[args.indexOf('--judge-mode') + 1] : 'rubric-plus-llm') as RunnerOptions['judgeMode'],
     apiBaseUrl: process.env.EVAL_API_URL || 'https://api.hieu.asia',
     adminToken: process.env.ADMIN_TOKEN || '',
+    supabaseAnonKey: process.env.EVAL_SUPABASE_ANON_KEY || '',
     outputDir: join(import.meta.dirname || '.', 'results'),
   };
 

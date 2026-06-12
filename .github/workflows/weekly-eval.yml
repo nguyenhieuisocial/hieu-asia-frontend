@@ -34,6 +34,9 @@ jobs:
     env:
       ADMIN_TOKEN: ${{ secrets.HIEU_API_ADMIN_TOKEN }}
       EVAL_API_URL: https://api.hieu.asia
+      # Public Supabase anon JWT (same value as NEXT_PUBLIC_SUPABASE_ANON_KEY) —
+      # required so reading-create/reading-get pass the Edge Function verify_jwt gate.
+      EVAL_SUPABASE_ANON_KEY: ${{ secrets.EVAL_SUPABASE_ANON_KEY }}
     steps:
       - uses: actions/checkout@v6
       # action-setup@v4 with NO version key — defers to packageManager
@@ -51,10 +54,14 @@ jobs:
       # Fail fast & CLEARLY if the eval can't authenticate — otherwise the runner
       # exits 1 at its token check and the regression alert below mislabels a
       # missing-secret CONFIG failure as a quality regression (see #194/#240).
-      - name: Verify ADMIN_TOKEN secret present
+      - name: Verify eval secrets present
         run: |
           if [ -z "$ADMIN_TOKEN" ]; then
             echo "::error::CONFIG: HIEU_API_ADMIN_TOKEN secret is missing/empty — the eval cannot run. Add it in Settings → Secrets and variables → Actions. This is NOT a quality regression."
+            exit 1
+          fi
+          if [ -z "$EVAL_SUPABASE_ANON_KEY" ]; then
+            echo "::error::CONFIG: EVAL_SUPABASE_ANON_KEY secret is missing/empty — needed to authenticate to the reading service (value = the public NEXT_PUBLIC_SUPABASE_ANON_KEY). This is NOT a quality regression."
             exit 1
           fi
 
