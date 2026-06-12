@@ -4,7 +4,8 @@ import { notFound } from 'next/navigation';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage } from '@/lib/seo/jsonld';
-import { MAJOR_PAGES, getMajorPage } from '@/lib/tarot-card-pages';
+import { ALL_PAGES, MAJOR_PAGES, getCardPage } from '@/lib/tarot-card-pages';
+import { MINOR_PAGES } from '@/lib/tarot-card-pages-minor';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -13,15 +14,16 @@ interface Props {
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return MAJOR_PAGES.map((c) => ({ slug: c.slug }));
+  return ALL_PAGES.map((c) => ({ slug: c.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const c = getMajorPage(slug);
+  const c = getCardPage(slug);
   if (!c) return {};
+  const nhom = c.arcana === 'minor' ? `Ẩn phụ · ${c.suit_vi}` : `số ${c.number}, Ẩn chính`;
   const title = `Ý nghĩa lá ${c.name} (${c.name_vi}) — xuôi & ngược | hieu.asia`;
-  const description = `Lá ${c.name} · ${c.name_vi} (số ${c.number}, Ẩn chính): xuôi — ${c.keyUp
+  const description = `Lá ${c.name} · ${c.name_vi} (${nhom}): xuôi — ${c.keyUp
     .slice(0, 3)
     .join(', ')}; ngược — ${c.keyRev.slice(0, 2).join(', ')}. Biểu tượng, góc tình cảm – công việc và câu hỏi tự soi.`;
   const url = `https://hieu.asia/tarot/y-nghia/${c.slug}`;
@@ -35,16 +37,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function TarotCardMeaningPage({ params }: Props) {
   const { slug } = await params;
-  const c = getMajorPage(slug);
+  const c = getCardPage(slug);
   if (!c) notFound();
 
-  const idx = MAJOR_PAGES.findIndex((x) => x.slug === c.slug);
-  const prev = idx > 0 ? MAJOR_PAGES[idx - 1] : undefined;
-  const next = idx < MAJOR_PAGES.length - 1 ? MAJOR_PAGES[idx + 1] : undefined;
+  // prev/next trong đúng nhóm: 22 Ẩn chính theo hành trình 0→21, 56 Ẩn phụ theo 4 chất × (Át→Vua).
+  const group = c.arcana === 'minor' ? MINOR_PAGES : MAJOR_PAGES;
+  const idx = group.findIndex((x) => x.slug === c.slug);
+  const prev = idx > 0 ? group[idx - 1] : undefined;
+  const next = idx < group.length - 1 ? group[idx + 1] : undefined;
 
   return (
     <ToolPageShell
-      eyebrow={`TAROT PHẢN TƯ · ẨN CHÍNH ${String(c.number).padStart(2, '0')}`}
+      eyebrow={
+        c.arcana === 'minor'
+          ? `TAROT PHẢN TƯ · ẨN PHỤ · ${(c.suit_vi ?? '').toUpperCase()}`
+          : `TAROT PHẢN TƯ · ẨN CHÍNH ${String(c.number).padStart(2, '0')}`
+      }
       relatedSlug="/tarot"
       icon="🃏"
       title={
@@ -141,7 +149,7 @@ export default async function TarotCardMeaningPage({ params }: Props) {
               href={`/tarot/y-nghia/${prev.slug}`}
               className="rounded-md border border-border px-4 py-2.5 text-muted-foreground transition-colors hover:border-gold/40 hover:text-foreground"
             >
-              ← {String(prev.number).padStart(2, '0')} {prev.name_vi}
+              ← {prev.arcana === 'minor' ? prev.name_vi : `${String(prev.number).padStart(2, '0')} ${prev.name_vi}`}
             </Link>
           ) : (
             <span />
@@ -151,7 +159,7 @@ export default async function TarotCardMeaningPage({ params }: Props) {
               href={`/tarot/y-nghia/${next.slug}`}
               className="rounded-md border border-border px-4 py-2.5 text-muted-foreground transition-colors hover:border-gold/40 hover:text-foreground"
             >
-              {String(next.number).padStart(2, '0')} {next.name_vi} →
+              {next.arcana === 'minor' ? next.name_vi : `${String(next.number).padStart(2, '0')} ${next.name_vi}`} →
             </Link>
           ) : (
             <span />
@@ -169,7 +177,7 @@ export default async function TarotCardMeaningPage({ params }: Props) {
             href="/tarot/y-nghia"
             className="rounded-md border border-gold/30 px-5 py-2.5 text-sm text-gold transition-colors hover:bg-gold/10"
           >
-            📖 Xem cả 22 lá Ẩn chính
+            📖 Thư viện đủ 78 lá
           </Link>
         </div>
       </div>
@@ -179,7 +187,7 @@ export default async function TarotCardMeaningPage({ params }: Props) {
           webPage({
             url: `/tarot/y-nghia/${c.slug}`,
             name: `Ý nghĩa lá ${c.name} (${c.name_vi}) — xuôi & ngược`,
-            description: `Ý nghĩa lá ${c.name} (${c.name_vi}, Ẩn chính số ${c.number}) theo hệ Rider–Waite–Smith: nghĩa xuôi, nghĩa ngược, góc tình cảm – công việc và câu hỏi tự soi.`,
+            description: `Ý nghĩa lá ${c.name} (${c.name_vi}${c.arcana === 'minor' ? `, Ẩn phụ chất ${c.suit_vi}` : `, Ẩn chính số ${c.number}`}) theo hệ Rider–Waite–Smith: nghĩa xuôi, nghĩa ngược, góc tình cảm – công việc và câu hỏi tự soi.`,
           }),
           breadcrumb([
             { name: 'Trang chủ', url: '/' },

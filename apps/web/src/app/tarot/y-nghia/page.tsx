@@ -4,14 +4,15 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, faqPage, webPage } from '@/lib/seo/jsonld';
 import { MAJOR_PAGES } from '@/lib/tarot-card-pages';
+import { MINOR_PAGES } from '@/lib/tarot-card-pages-minor';
 
 export const metadata: Metadata = {
-  title: 'Ý nghĩa 22 lá Tarot Ẩn chính (Major Arcana) — xuôi & ngược | hieu.asia',
+  title: 'Ý nghĩa 78 lá bài Tarot — xuôi & ngược, đủ bộ | hieu.asia',
   description:
-    'Tra cứu ý nghĩa 22 lá Ẩn chính theo hệ Rider–Waite–Smith: từ khóa xuôi – ngược, hình ảnh biểu tượng, góc tình cảm – công việc và câu hỏi tự soi cho từng lá. Không phán định mệnh.',
+    'Tra cứu ý nghĩa đủ 78 lá Tarot (22 Ẩn chính + 56 Ẩn phụ: Gậy – Cốc – Kiếm – Tiền) theo hệ Rider–Waite–Smith: từ khóa xuôi – ngược, biểu tượng, góc tình cảm – công việc, câu hỏi tự soi. Không phán định mệnh.',
   alternates: { canonical: 'https://hieu.asia/tarot/y-nghia' },
   openGraph: {
-    title: 'Ý nghĩa 22 lá Tarot Ẩn chính — xuôi & ngược | hieu.asia',
+    title: 'Ý nghĩa 78 lá bài Tarot — xuôi & ngược, đủ bộ | hieu.asia',
     description: 'Thư viện ý nghĩa lá Tarot viết theo lối phản tư: hiểu lá để tự hỏi, không phải để được phán.',
     url: 'https://hieu.asia/tarot/y-nghia',
     siteName: 'hieu.asia',
@@ -30,8 +31,8 @@ const FAQS = [
     a: 'Không. Bạn có thể rút bài và đọc gợi ý kèm theo ngay. Thư viện này dành cho lúc bạn muốn hiểu sâu hơn một lá vừa gặp — đọc đến đâu, dùng đến đó.',
   },
   {
-    q: 'Vì sao mới có 22 lá Ẩn chính?',
-    a: 'Ẩn chính là nhóm được tìm hiểu nhiều nhất và mang các chủ đề lớn của bộ bài, nên được viết kỹ trước. 56 lá Ẩn phụ (4 chất Gậy – Cốc – Kiếm – Tiền) sẽ được bổ sung dần.',
+    q: 'Ẩn chính và Ẩn phụ khác gì nhau?',
+    a: '22 lá Ẩn chính (Major Arcana) mang các chủ đề lớn của đời người — khởi đầu, chuyển hóa, khép vòng. 56 lá Ẩn phụ (Minor Arcana) nói chuyện đời thường hằng ngày, chia 4 chất: Gậy (hành động), Cốc (cảm xúc), Kiếm (suy nghĩ – lời nói), Tiền (công việc – vật chất). Khi rút bài, cả hai nhóm trộn chung một bộ.',
   },
 ];
 
@@ -41,8 +42,8 @@ export default function TarotMeaningsHubPage() {
       eyebrow="TAROT PHẢN TƯ · THƯ VIỆN"
       relatedSlug="/tarot"
       icon="📖"
-      title={<>Ý nghĩa <GoldAccent>22 lá Ẩn chính</GoldAccent></>}
-      description="Mỗi lá một trang: hình ảnh biểu tượng, nghĩa xuôi – ngược theo truyền thống Rider–Waite–Smith, góc tình cảm – công việc, và câu hỏi để bạn tự soi. Hiểu lá để tự hỏi — không phải để được phán."
+      title={<>Ý nghĩa <GoldAccent>78 lá Tarot</GoldAccent></>}
+      description="Đủ bộ 78 lá, mỗi lá một trang: hình ảnh biểu tượng, nghĩa xuôi – ngược theo truyền thống Rider–Waite–Smith, góc tình cảm – công việc, và câu hỏi để bạn tự soi. Hiểu lá để tự hỏi — không phải để được phán."
       breadcrumb={[
         { label: 'Trang chủ', href: '/' },
         { label: 'Tarot', href: '/tarot' },
@@ -56,7 +57,8 @@ export default function TarotMeaningsHubPage() {
           lần. Chọn lá bạn vừa rút được, hoặc lá đang khiến bạn tò mò.
         </p>
 
-        <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+        <h2 className="mt-8 font-heading text-xl font-semibold text-foreground">22 lá Ẩn chính — hành trình lớn</h2>
+        <ul className="mt-4 grid gap-3 sm:grid-cols-2">
           {MAJOR_PAGES.map((c) => (
             <li key={c.slug}>
               <Link
@@ -76,6 +78,35 @@ export default function TarotMeaningsHubPage() {
             </li>
           ))}
         </ul>
+
+
+        {[
+          { vi: 'Gậy', en: 'Wands', theme: 'hành động · đam mê · năng lượng' },
+          { vi: 'Cốc', en: 'Cups', theme: 'cảm xúc · quan hệ · trực giác' },
+          { vi: 'Kiếm', en: 'Swords', theme: 'tư duy · lời nói · sự thật' },
+          { vi: 'Tiền', en: 'Pentacles', theme: 'công việc · vật chất · sức khỏe' },
+        ].map((suit) => (
+          <section key={suit.vi} className="mt-10">
+            <h2 className="font-heading text-xl font-semibold text-foreground">
+              Chất {suit.vi} <span className="text-sm font-normal text-muted-foreground">· {suit.en} — {suit.theme}</span>
+            </h2>
+            <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+              {MINOR_PAGES.filter((c) => c.suit_vi === suit.vi).map((c) => (
+                <li key={c.slug}>
+                  <Link
+                    href={`/tarot/y-nghia/${c.slug}`}
+                    className="flex h-full items-baseline justify-between gap-3 rounded-lg border border-border bg-card/40 px-4 py-2.5 transition-colors hover:border-gold/40 hover:bg-gold/5"
+                  >
+                    <span className="font-medium text-foreground">
+                      {c.name_vi} <span className="text-xs font-normal text-muted-foreground">· {c.name}</span>
+                    </span>
+                    <span className="shrink-0 text-right text-[11px] leading-snug text-muted-foreground">{c.keyUp[0]}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
 
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <Link
@@ -109,9 +140,9 @@ export default function TarotMeaningsHubPage() {
         data={[
           webPage({
             url: '/tarot/y-nghia',
-            name: 'Ý nghĩa 22 lá Tarot Ẩn chính (Major Arcana)',
+            name: 'Ý nghĩa 78 lá bài Tarot — đủ bộ',
             description:
-              'Thư viện ý nghĩa lá Tarot Ẩn chính: từ khóa xuôi – ngược, biểu tượng, góc tình cảm – công việc và câu hỏi tự soi.',
+              'Thư viện ý nghĩa đủ 78 lá Tarot (22 Ẩn chính + 56 Ẩn phụ): từ khóa xuôi – ngược, biểu tượng, góc tình cảm – công việc và câu hỏi tự soi.',
           }),
           breadcrumb([
             { name: 'Trang chủ', url: '/' },
