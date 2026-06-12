@@ -53,37 +53,54 @@ function loadPersonaSamples(personaDir: string, filter?: string): EvalSample[] {
 }
 
 async function generateReading(sample: EvalSample, opts: RunnerOptions): Promise<ReadingOutput> {
-  const response = await fetch(`${opts.apiBaseUrl}/reading/create`, {
+  // Mirrors the real product flow (packages/supabase-client `createReading`):
+  //   1. POST /reading-create { user_id, birth_data } → { session_id }
+  //      (reading-create fire-and-forgets the LLM-heavy reading-orchestrate)
+  //   2. poll GET /reading-get?id=<session_id> until state_json.report is written
+  // Both are Supabase Edge Functions, reached via the Worker's /reading-* passthrough
+  // (api.hieu.asia). The eval sample's `input` already matches the BirthData shape.
+  const startedAt = Date.now();
+  const create = await fetch(`${opts.apiBaseUrl}/reading-create`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'X-Admin-Token': opts.adminToken,
       'X-Eval-Sample-Id': sample.id, // tags Sentry events for traceability
     },
-    body: JSON.stringify({
-      birth: sample.input,
-      mode: 'eval', // signals orchestrate to skip caching + use deterministic temp=0
-    }),
+    body: JSON.stringify({ user_id: `eval-bot-${sample.id}`, birth_data: sample.input }),
   });
-
-  if (!response.ok) {
-    throw new Error(`generateReading failed: ${response.status} ${await response.text()}`);
+  if (!create.ok) {
+    throw new Error(`reading-create failed: ${create.status} ${(await create.text()).slice(0, 200)}`);
   }
+  const { session_id } = (await create.json()) as { session_id?: string };
+  if (!session_id) throw new Error('reading-create returned no session_id');
 
-  const sessionData = (await response.json()) as { session_id: string };
-
-  // Poll until ready (eval runs are sync; up to 60s)
-  for (let i = 0; i < 30; i++) {
-    await new Promise((r) => setTimeout(r, 2000));
-    const get = await fetch(`${opts.apiBaseUrl}/reading/${sessionData.session_id}`, {
+  // Orchestration is async + multi-stage (logic → alignment → report); poll up to ~4 min.
+  for (let i = 0; i < 80; i++) {
+    await new Promise((r) => setTimeout(r, 3000));
+    const get = await fetch(`${opts.apiBaseUrl}/reading-get?id=${encodeURIComponent(session_id)}`, {
       headers: { 'X-Admin-Token': opts.adminToken },
     });
-    if (get.ok) {
-      const data = (await get.json()) as { status: string; output?: ReadingOutput };
-      if (data.status === 'completed' && data.output) return data.output;
+    if (!get.ok) continue;
+    const data = (await get.json()) as {
+      status?: string;
+      report?: (Partial<ReadingOutput> & { meta?: { model?: string } }) | null;
+    };
+    if (data.status === 'error' || data.status === 'failed') {
+      throw new Error(`reading ${session_id} failed (status=${data.status})`);
+    }
+    const r = data.report;
+    if (r && typeof r.summary_section === 'string' && r.summary_section.length > 0) {
+      return {
+        summary_section: r.summary_section ?? '',
+        strengths_section: r.strengths_section ?? '',
+        caveats_section: r.caveats_section ?? '',
+        recommendations_section: r.recommendations_section ?? '',
+        meta: { model: r.meta?.model ?? 'unknown', duration_ms: Date.now() - startedAt },
+      };
     }
   }
-  throw new Error(`Reading session ${sessionData.session_id} did not complete within 60s`);
+  throw new Error(`reading ${session_id} did not produce a report within ~4 min`);
 }
 
 async function runOne(sample: EvalSample, opts: RunnerOptions): Promise<EvalResult> {
