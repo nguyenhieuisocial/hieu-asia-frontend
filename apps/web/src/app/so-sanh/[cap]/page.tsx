@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { allComparisonSlugs, findComparison } from '@/lib/so-sanh';
@@ -70,6 +71,20 @@ export default async function ComparisonPage({
           { label: c.title },
         ]}
       >
+        {/* Banner lan truyền — người nhận link từ bạn */}
+        <div className="mt-6 rounded-xl border border-jade/30 bg-jade/[0.05] px-5 py-4 text-sm text-foreground/80">
+          <span className="font-semibold text-foreground">Nhận link từ bạn bè?</span>{' '}
+          Bạn đang xem so sánh{' '}
+          <span className="text-gold font-medium">
+            {c.a.ten} vs {c.b.ten}
+          </span>{' '}
+          mà họ chia sẻ. Tự kiểm tra lăng kính phù hợp nhất với{' '}
+          <Link href="/so-sanh" className="underline underline-offset-2 hover:text-gold">
+            bạn tại đây
+          </Link>{' '}
+          — miễn phí.
+        </div>
+
         {/* Hai công cụ */}
         <section className="mt-8 grid gap-4 sm:grid-cols-2" aria-label="Hai công cụ">
           {[c.a, c.b].map((t) => (
@@ -115,6 +130,22 @@ export default async function ComparisonPage({
             </table>
           </div>
         </section>
+
+        {/* CTA chia sẻ — đặt ngay sau bảng đối chiếu */}
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <ShareResultButton
+            path={url}
+            title={`So sánh ${c.a.ten} vs ${c.b.ten}`}
+            text={`Mình vừa đọc so sánh ${c.a.ten} và ${c.b.ten} trên hieu.asia — bạn thử xem nhé!`}
+            trackId="so-sanh-cap"
+          />
+          <Link
+            href="/so-sanh"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-gold"
+          >
+            Xem so sánh khác <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </Link>
+        </div>
 
         {/* Khi nào nên dùng */}
         <section className="mt-10 grid gap-4 sm:grid-cols-2" aria-label="Khi nào nên dùng">
