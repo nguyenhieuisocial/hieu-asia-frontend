@@ -81,6 +81,17 @@ export function menhGroup(q: Quai): 'Đông' | 'Tây' {
 }
 
 // ── Cung Phi (mệnh quái) — MIRROR worker tools/hop-tuoi.ts ──────────────
+//
+// Method: key = sumDigits(năm dương lịch, rút gọn đệ quy → 1–9),
+//         tra bảng direct-lookup dưới đây (không qua La Shu).
+// Nguồn xác nhận: dieukhacdamynghe.vn — khớp 9/9 key cho cả nam lẫn nữ.
+//
+// Ghi chú audit (2026-06-13):
+//   • CUNG_PHI_NU[1]=Cấn và CUNG_PHI_NU[4]=Cấn đều ĐÚNG (không phải typo);
+//     hai key khác nhau ánh xạ cùng quái là bình thường với 10 slot / 8 quái.
+//   • CUNG_PHI_NAM[9]=Khôn cũng trùng CUNG_PHI_NAM[6]=Khôn — cùng lý do.
+//   • Comment trong worker hop-tuoi.ts ghi sai công thức "(10-sum)%9 → La Shu";
+//     code thực tế dùng direct-lookup (đúng). Cần sửa comment đó ở BE.
 const CUNG_PHI_NAM: Record<number, Quai> = {
   1: 'Khảm', 2: 'Ly', 3: 'Cấn', 4: 'Đoài', 5: 'Càn',
   6: 'Khôn', 7: 'Tốn', 8: 'Chấn', 9: 'Khôn', 0: 'Ly',
