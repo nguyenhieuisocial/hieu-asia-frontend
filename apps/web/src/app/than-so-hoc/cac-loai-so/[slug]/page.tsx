@@ -20,8 +20,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const l = getLoaiSo(slug);
   if (!l) return {};
-  const title = `${l.name} trong thần số học là gì? Cách tính và ý nghĩa từng số`;
-  const description = `${l.name} (${l.englishName}) tính từ ${l.keyTags[2]}: ${l.whatItReveals} Ý nghĩa từng số 1–9 và master 11/22/33 — viết theo lối tỉnh táo, không bói toán.`;
+  const title = `${l.name} trong thần số học là gì? Cách tính và ý nghĩa từng số | hieu.asia`;
+  const description = `${l.name} (${l.englishName}) trong thần số học: cách tính và ý nghĩa từng số 1–9 + số master. Không bói toán, không phán số mệnh.`;
   const url = `https://hieu.asia/than-so-hoc/cac-loai-so/${l.slug}`;
   return {
     title,
