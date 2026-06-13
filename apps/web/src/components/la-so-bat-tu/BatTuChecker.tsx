@@ -237,6 +237,47 @@ export function BatTuChecker() {
               </p>
             </div>
 
+            <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
+                Quan hệ giữa các trụ (hợp · xung · tam hợp)
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                Quan hệ giữa các địa chi cho thấy nội lực <strong>hoà hay căng</strong> trong lá số — dữ kiện cố
+                định tra theo bảng, không phải lời đoán.
+              </p>
+              {chart.relations.length === 0 ? (
+                <p className="mt-3 text-sm text-foreground/85">
+                  Bốn trụ không có quan hệ hợp / xung / tam hợp nổi bật — các chi đứng khá độc lập.
+                </p>
+              ) : (
+                <ul className="mt-3 space-y-1.5">
+                  {chart.relations.map((rel) => {
+                    const harmony = rel.type === 'Lục Hợp' || rel.type === 'Tam Hợp' || rel.type === 'Bán Tam Hợp';
+                    const tone = harmony
+                      ? 'bg-emerald-400/15 text-emerald-300'
+                      : rel.type === 'Lục Xung'
+                        ? 'bg-rose-400/15 text-rose-300'
+                        : 'bg-amber-400/15 text-amber-300';
+                    return (
+                      <li
+                        key={`${rel.type}-${rel.chi}-${rel.pillars}`}
+                        className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-sm"
+                      >
+                        <span className={`shrink-0 rounded px-1.5 py-0.5 text-[11px] font-medium ${tone}`}>
+                          {rel.type}
+                        </span>
+                        <span className="font-medium text-foreground/90">{rel.chi}</span>
+                        <span className="text-xs text-muted-foreground">({rel.pillars})</span>
+                        <span className="w-full text-xs text-muted-foreground sm:w-auto sm:flex-1">
+                          — {rel.detail}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+
             {chart.daiVan && (
               <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">

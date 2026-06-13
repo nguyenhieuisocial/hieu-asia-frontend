@@ -122,6 +122,76 @@ function napAmOf(canIdx: number, chiIdx: number): { name: string; element: Eleme
   return NAP_AM[Math.floor(sexagenaryIndex(canIdx, chiIdx) / 2)]!;
 }
 
+// Quan hệ giữa các Địa Chi (bảng cố định, theo chỉ số chi 0=Tý … 11=Hợi).
+// Lục Xung = hai chi đối nhau (cách 6). Các bảng còn lại liệt kê cặp.
+const LUC_HOP_PAIRS: [number, number][] = [
+  [0, 1], [2, 11], [3, 10], [4, 9], [5, 8], [6, 7], // Tý-Sửu, Dần-Hợi, Mão-Tuất, Thìn-Dậu, Tỵ-Thân, Ngọ-Mùi
+];
+const LUC_HAI_PAIRS: [number, number][] = [
+  [0, 7], [1, 6], [2, 5], [3, 4], [8, 11], [9, 10], // Tý-Mùi, Sửu-Ngọ, Dần-Tỵ, Mão-Thìn, Thân-Hợi, Dậu-Tuất
+];
+const TAM_HOP_GROUPS: { chi: [number, number, number]; element: Element; center: number }[] = [
+  { chi: [8, 0, 4], element: 'Thủy', center: 0 }, // Thân-Tý-Thìn
+  { chi: [5, 9, 1], element: 'Kim', center: 9 }, // Tỵ-Dậu-Sửu
+  { chi: [2, 6, 10], element: 'Hỏa', center: 6 }, // Dần-Ngọ-Tuất
+  { chi: [11, 3, 7], element: 'Mộc', center: 3 }, // Hợi-Mão-Mùi
+];
+
+export interface PillarRelation {
+  type: 'Lục Hợp' | 'Lục Xung' | 'Lục Hại' | 'Tam Hợp' | 'Bán Tam Hợp';
+  pillars: string; // nhãn các trụ tham gia, vd "Tháng–Giờ"
+  chi: string; // chi tham gia, vd "Tỵ–Thân"
+  detail: string; // mô tả trung lập (không bói toán)
+}
+
+const pairKey = (a: number, b: number) => (a < b ? `${a}-${b}` : `${b}-${a}`);
+
+/** Dò quan hệ địa chi (Lục Hợp/Xung/Hại + Tam Hợp) giữa 4 trụ. */
+function pillarRelations(pillars: { label: string; chi: number }[]): PillarRelation[] {
+  const rels: PillarRelation[] = [];
+  const hop = new Set(LUC_HOP_PAIRS.map(([a, b]) => pairKey(a, b)));
+  const hai = new Set(LUC_HAI_PAIRS.map(([a, b]) => pairKey(a, b)));
+
+  for (let i = 0; i < pillars.length; i++) {
+    for (let j = i + 1; j < pillars.length; j++) {
+      const a = pillars[i]!;
+      const b = pillars[j]!;
+      if (a.chi === b.chi) continue; // cùng chi: không xét
+      const labels = `${a.label}–${b.label}`;
+      const chis = `${CHI[a.chi]!}–${CHI[b.chi]!}`;
+      if (Math.abs(a.chi - b.chi) === 6) {
+        rels.push({ type: 'Lục Xung', pillars: labels, chi: chis, detail: 'hai chi đối xung — lực động/đối lập giữa hai trụ (không phải điềm xấu)' });
+      } else if (hop.has(pairKey(a.chi, b.chi))) {
+        rels.push({ type: 'Lục Hợp', pillars: labels, chi: chis, detail: 'hai chi hoà hợp — gắn kết, dễ phối hợp' });
+      } else if (hai.has(pairKey(a.chi, b.chi))) {
+        rels.push({ type: 'Lục Hại', pillars: labels, chi: chis, detail: 'khắc ngầm nhẹ giữa hai chi' });
+      }
+    }
+  }
+
+  const present = new Map<number, string[]>();
+  for (const p of pillars) present.set(p.chi, [...(present.get(p.chi) ?? []), p.label]);
+  for (const g of TAM_HOP_GROUPS) {
+    const have = g.chi.filter((c) => present.has(c));
+    if (have.length === 3) {
+      rels.push({
+        type: 'Tam Hợp',
+        pillars: g.chi.flatMap((c) => present.get(c)!).join('–'),
+        chi: g.chi.map((c) => CHI[c]!).join('–'),
+        detail: `ba chi tụ thành cục ${g.element} mạnh`,
+      });
+    } else if (have.length === 2 && have.includes(g.center)) {
+      rels.push({
+        type: 'Bán Tam Hợp',
+        pillars: have.flatMap((c) => present.get(c)!).join('–'),
+        chi: have.map((c) => CHI[c]!).join('–'),
+        detail: `nửa cục ${g.element} (có trung tâm) — thiên về hành ${g.element}`,
+      });
+    }
+  }
+  return rels;
+}
+
 // Ngũ Hổ Độn — can của tháng Dần ứng với từng can năm (index theo can năm).
 const NGU_HO_DAN_STEM = [2, 4, 6, 8, 0, 2, 4, 6, 8, 0];
 // Ngũ Thử Độn — can của giờ Tý ứng với từng can ngày (index theo can ngày).
@@ -186,6 +256,8 @@ export interface BaziChart {
   missing: Element[];
   /** Hành nhiều nhất. */
   strongest: Element;
+  /** Quan hệ địa chi giữa 4 trụ (Lục Hợp/Xung/Hại + Tam Hợp). */
+  relations: PillarRelation[];
   meta: { solarDate: string; hour: number; solarYearForPillar: number };
   /** Đại vận (vận 10 năm) — null nếu không truyền giới tính. */
   daiVan?: DaiVan | null;
@@ -402,6 +474,12 @@ export function calculateBazi(input: BaziInput): BaziChart {
     elementCount,
     missing,
     strongest,
+    relations: pillarRelations([
+      { label: 'Năm', chi: yearChi },
+      { label: 'Tháng', chi: monthChi },
+      { label: 'Ngày', chi: dayChi },
+      { label: 'Giờ', chi: hourChi },
+    ]),
     daiVan,
     luuNien,
     meta: { solarDate: input.birthSolarDate, hour, solarYearForPillar: solarYear },
