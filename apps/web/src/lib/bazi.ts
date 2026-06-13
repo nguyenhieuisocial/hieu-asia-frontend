@@ -403,7 +403,7 @@ export function calculateBazi(input: BaziInput): BaziChart {
   const M = Number(m[2]);
   const D = Number(m[3]);
   const hour = Number.isFinite(input.birthHour) ? input.birthHour : 12;
-  const minute = input.birthMinute ?? 0;
+  const minute = Number.isFinite(input.birthMinute) ? input.birthMinute! : 0; // guard NaN (?? chỉ chặn null/undefined)
 
   // Thời điểm sinh quy về UTC (giờ VN = UTC+7) — dùng cho ranh giới tiết khí.
   const jdUTC = julianDay(Y, M, D, hour - 7, minute);
