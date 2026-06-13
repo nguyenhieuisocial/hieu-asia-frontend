@@ -6,9 +6,9 @@ import { breadcrumb, faqPage, webPage } from '@/lib/seo/jsonld';
 import { LOAI_SO } from '@/lib/than-so-hoc-loai-so';
 
 export const metadata: Metadata = {
-  title: 'Các loại số trong thần số học — Vận mệnh, Linh hồn, Nhân cách, Ngày sinh',
+  title: 'Các loại số trong thần số học — Vận mệnh, Linh hồn, Nhân cách, Ngày sinh | hieu.asia',
   description:
-    'Thần số học Pythagoras có 4 loại số ngoài số chủ đạo: Số Vận Mệnh (từ tên), Số Linh Hồn (từ nguyên âm), Số Nhân Cách (từ phụ âm) và Số Ngày Sinh. Mỗi loại tiết lộ một khía cạnh khác nhau — hiểu rõ để tự soi, không phải để được phán.',
+    '4 loại số trong thần số học Pythagoras — Vận Mệnh, Linh Hồn, Nhân Cách, Ngày Sinh: mỗi loại tính từ đâu, tiết lộ điều gì. Hiểu để tự soi, không bói toán.',
   alternates: { canonical: 'https://hieu.asia/than-so-hoc/cac-loai-so' },
   openGraph: {
     title: 'Các loại số trong thần số học — Vận mệnh, Linh hồn, Nhân cách, Ngày sinh',

@@ -103,6 +103,13 @@ export default function ThanSoHocLandingPage() {
           <span className="text-foreground/85">🔢 <b className="text-foreground">Ý nghĩa 12 số chủ đạo</b> — tra cứu khuynh hướng, điểm mạnh &amp; bài học từng số</span>
           <span className="shrink-0 text-gold">Mở →</span>
         </Link>
+        <Link
+          href="/than-so-hoc/cac-loai-so"
+          className="mt-3 flex items-center justify-between gap-3 rounded-lg border border-border bg-card/40 px-4 py-3 text-sm transition-colors hover:border-gold/40 hover:bg-gold/5"
+        >
+          <span className="text-foreground/85">🧮 <b className="text-foreground">Các loại số khác</b> — số vận mệnh, linh hồn, nhân cách, ngày sinh là gì</span>
+          <span className="shrink-0 text-gold">Mở →</span>
+        </Link>
       </div>
       <section className="mt-6 grid gap-6 lg:grid-cols-5">
         <div className="lg:col-span-3">
