@@ -27,6 +27,11 @@ function escapeCell(value: CsvValue): string {
   } else {
     s = String(value);
   }
+  // CSV formula injection: Excel/Sheets executes a cell starting with = + - @ (or a
+  // leading tab/CR) as a formula. Neutralize by prefixing a single quote.
+  if (/^[=+\-@\t\r]/.test(s)) {
+    s = `'${s}`;
+  }
   if (/[",\r\n]/.test(s)) {
     return `"${s.replace(/"/g, '""')}"`;
   }

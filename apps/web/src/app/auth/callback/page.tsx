@@ -163,7 +163,14 @@ export default function AuthCallbackPage() {
       // relative paths (must start with `/`); fallback to `/account`.
       const nextParam = searchParams.get('next');
       const dest =
-        nextParam && typeof nextParam === 'string' && nextParam.startsWith('/')
+        // Open-redirect guard: same-origin relative path only. `//evil.com` and
+        // `/\evil.com` are protocol-relative — browsers treat them as absolute — so
+        // `startsWith('/')` alone is not enough; reject those too.
+        nextParam &&
+        typeof nextParam === 'string' &&
+        nextParam.startsWith('/') &&
+        !nextParam.startsWith('//') &&
+        !nextParam.startsWith('/\\')
           ? nextParam
           : '/account';
       router.replace(dest);
