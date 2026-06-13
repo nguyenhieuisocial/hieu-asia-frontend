@@ -108,6 +108,16 @@ export default function ThanSoHocMeaningsHubPage() {
           </Link>
         </div>
 
+        <div className="mt-6 rounded-xl border border-gold/25 bg-gold/5 p-4">
+          <p className="text-xs text-muted-foreground">Ngoài số chủ đạo, thần số học còn 4 loại số khác — mỗi loại tiết lộ một khía cạnh riêng:</p>
+          <Link
+            href="/than-so-hoc/cac-loai-so"
+            className="mt-2 inline-block text-sm font-medium text-gold hover:underline"
+          >
+            Khám phá Số Vận Mệnh, Số Linh Hồn, Số Nhân Cách & Số Ngày Sinh →
+          </Link>
+        </div>
+
         <section className="mt-10 rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
           <h2 className="font-heading text-xl font-semibold text-foreground">Câu hỏi thường gặp</h2>
           <dl className="mt-4 space-y-4">
