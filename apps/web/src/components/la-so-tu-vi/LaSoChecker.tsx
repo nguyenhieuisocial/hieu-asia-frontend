@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
 import { castTuViHoroscope, type TuViChart, type TuViHoroscope, type TuViPalace } from '@/lib/tuvi-client';
 import { TuViChart12Palaces } from '@/components/tuvi/TuViChart12Palaces';
+import { NguHanhRemedyCard } from '@/components/ngu-hanh/NguHanhRemedyCard';
 
 /**
  * Cách cục (hệ chính tinh hội về Mệnh) — ported from the backend reading engine
@@ -233,6 +234,9 @@ export function LaSoChecker() {
               <strong>con số là thật, kiểm chứng được</strong>. Đây là bản tra cứu miễn phí; phần luận giải sâu
               là để bạn TỰ hiểu mình, không phải bói toán hay phán số mệnh.
             </p>
+
+            {/* Gợi ý bổ khuyết ngũ hành — chỉ đọc fiveElementsClass, không đụng engine */}
+            <NguHanhRemedyCard fiveElementsClass={chart.meta.fiveElementsClass} />
 
             {/* Funnel → AI deep reading (free chart here; the AI interpretation is the product) */}
             <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-5 text-center">
