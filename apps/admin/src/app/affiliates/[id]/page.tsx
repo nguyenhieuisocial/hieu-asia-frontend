@@ -113,14 +113,19 @@ export default function AdminAffiliateDetailPage({
   }, [load]);
 
   async function approve(payoutId: string) {
+    if (!window.confirm('Duyệt + đánh dấu đã trả payout này?')) return;
     setBusy(true);
     try {
-      await fetch(`/api/admin/affiliates/${id}/approve-payout`, {
+      const r = await fetch(`/api/admin/affiliates/${id}/approve-payout`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ payout_id: payoutId }),
       });
+      const d = await r.json();
+      if (!r.ok || !d.ok) throw new Error(d.error ?? `HTTP ${r.status}`);
       await load();
+    } catch (e) {
+      setError((e as Error).message);
     } finally {
       setBusy(false);
     }
@@ -129,14 +134,18 @@ export default function AdminAffiliateDetailPage({
   async function reject(payoutId: string) {
     setBusy(true);
     try {
-      await fetch(`/api/admin/affiliates/${id}/reject-payout`, {
+      const r = await fetch(`/api/admin/affiliates/${id}/reject-payout`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ payout_id: payoutId, reason: rejectReason || 'no reason' }),
+        body: JSON.stringify({ payout_id: payoutId, reason: rejectReason || null }),
       });
+      const d = await r.json();
+      if (!r.ok || !d.ok) throw new Error(d.error ?? `HTTP ${r.status}`);
       setRejectingId(null);
       setRejectReason('');
       await load();
+    } catch (e) {
+      setError((e as Error).message);
     } finally {
       setBusy(false);
     }
@@ -144,14 +153,19 @@ export default function AdminAffiliateDetailPage({
 
   async function toggleBan() {
     if (!data) return;
+    if (!window.confirm(data.affiliate.status === 'active' ? 'Ban affiliate này?' : 'Unban affiliate này?')) return;
     setBusy(true);
     try {
-      await fetch(`/api/admin/affiliates/${id}/ban`, {
+      const r = await fetch(`/api/admin/affiliates/${id}/ban`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ banned: data.affiliate.status === 'active' }),
       });
+      const d = await r.json();
+      if (!r.ok || !d.ok) throw new Error(d.error ?? `HTTP ${r.status}`);
       await load();
+    } catch (e) {
+      setError((e as Error).message);
     } finally {
       setBusy(false);
     }

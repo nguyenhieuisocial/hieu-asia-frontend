@@ -5,9 +5,8 @@
  * POST /admin/affiliates/payouts/batches/:id/approve.
  */
 
-import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
-import { ADMIN_SESSION_COOKIE, verifySession } from '@/lib/auth';
+import { requireAdminSession } from '@/lib/auth-server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -19,6 +18,10 @@ export async function POST(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  // Defense-in-depth: payout routes move money — require admin+ in-handler
+  // (middleware HMAC gate is the primary; this is the backstop). Fail closed.
+  const auth = await requireAdminSession('admin');
+  if ('error' in auth) return auth.error;
   if (!TOKEN) {
     return NextResponse.json(
       { ok: false, error: 'HIEU_API_ADMIN_TOKEN not configured on the admin app' },
@@ -27,14 +30,7 @@ export async function POST(
   }
   const { id } = await params;
   // Wave 45.2 P3-2 — forward admin email for audit attribution.
-  const cookieStore = await cookies();
-  const session = await verifySession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
-  // Defense-in-depth: don't forward the admin token to the worker without a valid
-  // admin session in-handler (middleware HMAC gate is the primary; this is the backstop
-  // if the matcher ever regresses). Payout routes move money — fail closed.
-  if (!session) {
-    return NextResponse.json({ ok: false, error: 'unauthenticated' }, { status: 401 });
-  }
+  const session = auth.session;
   try {
     const r = await fetch(
       `${GATEWAY}/admin/affiliates/payouts/batches/${encodeURIComponent(id)}/approve`,
