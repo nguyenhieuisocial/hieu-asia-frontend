@@ -105,12 +105,15 @@ export interface BaziChart {
   /** Hành nhiều nhất. */
   strongest: Element;
   meta: { solarDate: string; hour: number; solarYearForPillar: number };
+  /** Đại vận (vận 10 năm) — null nếu không truyền giới tính. */
+  daiVan?: DaiVan | null;
 }
 
 export interface BaziInput {
   birthSolarDate: string; // "YYYY-MM-DD"
   birthHour: number; // 0–23
   birthMinute?: number; // 0–59 (mặc định 0)
+  gender?: 'M' | 'F'; // cần cho hướng đại vận (thuận/nghịch); thiếu → bỏ đại vận
 }
 
 function makePillar(label: string, canIdx: number, chiIdx: number, dm: { el: Element; yang: boolean } | null): BaziPillar {
@@ -122,6 +125,89 @@ function makePillar(label: string, canIdx: number, chiIdx: number, dm: { el: Ele
     chiElement: CHI_ELEMENT[chiIdx]!,
     tenGod: dm ? thapThan(dm.el, dm.yang, CAN_ELEMENT[canIdx]!, CAN_YANG[canIdx]!) : 'Nhật Chủ',
   };
+}
+
+export interface DaiVanPillar {
+  index: number;
+  startAge: number;
+  endAge: number;
+  can: string;
+  chi: string;
+  canElement: Element;
+  chiElement: Element;
+  tenGod: string;
+}
+
+export interface DaiVan {
+  forward: boolean; // thuận (true) / nghịch (false)
+  startAge: number; // tuổi khởi vận (xấp xỉ, 3 ngày tới tiết = 1 tuổi)
+  pillars: DaiVanPillar[];
+}
+
+/** Tìm JD Mặt Trời tới `targetLon` trong [jdStart, jdEnd] (giả định đúng 1 lần cắt). */
+function findTermCrossing(jdStart: number, jdEnd: number, targetLon: number): number {
+  const f = (jd: number) => {
+    let d = sunLongitude(jd) - targetLon;
+    while (d > 180) d -= 360;
+    while (d < -180) d += 360;
+    return d;
+  };
+  let lo = jdStart;
+  let hi = jdEnd;
+  for (let i = 0; i < 50; i++) {
+    const mid = (lo + hi) / 2;
+    if (f(lo) * f(mid) <= 0) hi = mid;
+    else lo = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+/**
+ * Đại vận (vận 10 năm). Hướng: dương-nam / âm-nữ → thuận; âm-nam / dương-nữ → nghịch.
+ * Tuổi khởi vận = số ngày từ sinh tới tiết kế (thuận) / tiết trước (nghịch) chia 3.
+ * Các trụ vận bước ±1 từ trụ THÁNG theo vòng can chi, mỗi trụ 10 năm.
+ */
+function computeDaiVan(
+  jdBirthUTC: number,
+  sector: number,
+  monthCan: number,
+  monthChi: number,
+  yearCan: number,
+  dm: { el: Element; yang: boolean },
+  gender: 'M' | 'F',
+): DaiVan {
+  const yangYear = CAN_YANG[yearCan]!;
+  const forward = (yangYear && gender === 'M') || (!yangYear && gender === 'F');
+
+  const curLon = mod(315 + sector * 30, 360); // tiết khởi đầu tháng sinh
+  let days: number;
+  if (forward) {
+    const jdNext = findTermCrossing(jdBirthUTC, jdBirthUTC + 32, mod(curLon + 30, 360));
+    days = jdNext - jdBirthUTC;
+  } else {
+    const jdPrev = findTermCrossing(jdBirthUTC - 32, jdBirthUTC, curLon);
+    days = jdBirthUTC - jdPrev;
+  }
+  const startAge = Math.max(1, Math.round(days / 3));
+
+  const dir = forward ? 1 : -1;
+  const pillars: DaiVanPillar[] = [];
+  for (let k = 1; k <= 9; k++) {
+    const c = mod(monthCan + dir * k, 10);
+    const ch = mod(monthChi + dir * k, 12);
+    const start = startAge + (k - 1) * 10;
+    pillars.push({
+      index: k,
+      startAge: start,
+      endAge: start + 9,
+      can: CAN[c]!,
+      chi: CHI[ch]!,
+      canElement: CAN_ELEMENT[c]!,
+      chiElement: CHI_ELEMENT[ch]!,
+      tenGod: thapThan(dm.el, dm.yang, CAN_ELEMENT[c]!, CAN_YANG[c]!),
+    });
+  }
+  return { forward, startAge, pillars };
 }
 
 export function calculateBazi(input: BaziInput): BaziChart {
@@ -174,6 +260,9 @@ export function calculateBazi(input: BaziInput): BaziChart {
   const missing = ELEMENTS.filter((e) => elementCount[e] === 0);
   const strongest = ELEMENTS.reduce((a, b) => (elementCount[b] > elementCount[a] ? b : a), ELEMENTS[0]!);
 
+  const gender = input.gender === 'F' ? 'F' : input.gender === 'M' ? 'M' : null;
+  const daiVan = gender ? computeDaiVan(jdUTC, sector, monthCan, monthChi, yearCan, dm, gender) : null;
+
   return {
     year,
     month,
@@ -183,6 +272,7 @@ export function calculateBazi(input: BaziInput): BaziChart {
     elementCount,
     missing,
     strongest,
+    daiVan,
     meta: { solarDate: input.birthSolarDate, hour, solarYearForPillar: solarYear },
   };
 }

@@ -6,7 +6,7 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 
 const DESC =
-  'Lập & xem lá số Bát Tự (Tứ Trụ) miễn phí từ ngày giờ sinh — đủ 4 trụ năm/tháng/ngày/giờ (8 chữ), ngũ hành, Nhật Chủ, Thập Thần & cân bằng ngũ hành. Trụ tính theo tiết khí (đúng chuẩn Bát Tự). Con số là thật; luận giải để hiểu mình, không bói toán.';
+  'Lập & xem lá số Bát Tự (Tứ Trụ) miễn phí từ ngày giờ sinh — đủ 4 trụ năm/tháng/ngày/giờ (8 chữ), ngũ hành, Nhật Chủ, Thập Thần, cân bằng ngũ hành & đại vận (vận 10 năm). Trụ tính theo tiết khí (đúng chuẩn Bát Tự). Con số là thật; luận giải để hiểu mình, không bói toán.';
 
 export const metadata: Metadata = {
   title: 'Xem lá số Bát Tự (Tứ Trụ) miễn phí — 8 chữ, ngũ hành, Thập Thần',
@@ -43,7 +43,7 @@ const FAQS = [
   },
   {
     q: 'Cần thông tin gì để lập lá số Bát Tự?',
-    a: 'Chỉ cần ngày sinh dương lịch và giờ sinh. Công cụ tự tính 4 trụ theo can chi. Giờ sinh quyết định trụ giờ; ba trụ còn lại (năm, tháng, ngày) không phụ thuộc giờ.',
+    a: 'Ngày sinh dương lịch, giờ sinh và giới tính. Công cụ tự tính 4 trụ theo can chi; giới tính dùng để xác định chiều đại vận (thuận hay nghịch). Giờ sinh quyết định trụ giờ; ba trụ còn lại (năm, tháng, ngày) không phụ thuộc giờ.',
   },
   {
     q: 'Lá số ở đây tính thế nào, có chính xác không?',
@@ -52,6 +52,10 @@ const FAQS = [
   {
     q: 'Bát Tự khác Tử Vi thế nào?',
     a: 'Cùng dùng ngày giờ sinh nhưng hai hệ khác nhau: Tử Vi an 12 cung + sao trên một "bản đồ", thiên về từng lĩnh vực đời sống; Bát Tự nhìn sự cân bằng ngũ hành quanh Nhật Chủ (chính bạn), thiên về tính cách, sở trường và dòng chảy vận. Xem cả hai cho góc nhìn bổ sung.',
+  },
+  {
+    q: 'Đại vận (vận 10 năm) là gì?',
+    a: 'Đại vận là chuỗi giai đoạn 10 năm, mỗi giai đoạn mang một trụ can chi — cho biết "bối cảnh" lớn của mỗi thập niên đời người. Chiều đi (thuận hay nghịch) tính theo can năm sinh và giới tính; tuổi khởi vận tính theo số ngày từ lúc sinh tới tiết khí gần nhất (3 ngày ≈ 1 tuổi). Công cụ hiển thị chuỗi đại vận và đánh dấu giai đoạn bạn đang ở — để soi trọng tâm từng thập niên, không phải dự đoán may rủi.',
   },
   {
     q: 'Đây có phải bói toán không?',

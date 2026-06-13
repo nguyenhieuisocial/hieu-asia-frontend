@@ -31,6 +31,18 @@ function parseHour(t: string): number {
   return Number.isFinite(h) && h >= 0 && h <= 23 ? h : 12;
 }
 
+function ageFromDate(dateStr: string, now: Date = new Date()): number | null {
+  const m = /^(\d{4})-(\d{1,2})-(\d{1,2})/.exec((dateStr ?? '').trim());
+  if (!m) return null;
+  const by = Number(m[1]);
+  const bm = Number(m[2]);
+  const bd = Number(m[3]);
+  let age = now.getFullYear() - by;
+  const mo = now.getMonth() + 1;
+  if (mo < bm || (mo === bm && now.getDate() < bd)) age -= 1;
+  return age >= 0 && age < 140 ? age : null;
+}
+
 function PillarCard({ pillar, highlight }: { pillar: BaziPillar; highlight?: boolean }) {
   return (
     <div
@@ -54,6 +66,7 @@ function PillarCard({ pillar, highlight }: { pillar: BaziPillar; highlight?: boo
 export function BatTuChecker() {
   const [date, setDate] = React.useState('');
   const [time, setTime] = React.useState('12:00');
+  const [gender, setGender] = React.useState<'M' | 'F'>('M');
   const [chart, setChart] = React.useState<BaziChart | null>(null);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -64,13 +77,14 @@ export function BatTuChecker() {
     }
     setError(null);
     try {
-      setChart(calculateBazi({ birthSolarDate: date, birthHour: parseHour(time) }));
+      setChart(calculateBazi({ birthSolarDate: date, birthHour: parseHour(time), gender }));
     } catch {
       setError('Chưa lập được lá số — kiểm tra lại ngày sinh.');
     }
-  }, [date, time]);
+  }, [date, time, gender]);
 
   const maxCount = chart ? Math.max(...ELEMENTS.map((e) => chart.elementCount[e]), 1) : 1;
+  const curAge = chart ? ageFromDate(chart.meta.solarDate) : null;
 
   return (
     <Card className="border-gold/20 bg-card/60 backdrop-blur-sm">
@@ -78,7 +92,7 @@ export function BatTuChecker() {
         <CardTitle className="font-heading text-lg">Nhập ngày &amp; giờ sinh (dương lịch)</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-3">
           <div className="space-y-1">
             <Label htmlFor="btDate">Ngày sinh (dương lịch)</Label>
             <Input id="btDate" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
@@ -86,6 +100,18 @@ export function BatTuChecker() {
           <div className="space-y-1">
             <Label htmlFor="btTime">Giờ sinh</Label>
             <Input id="btTime" type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="btGender">Giới tính</Label>
+            <select
+              id="btGender"
+              value={gender}
+              onChange={(e) => setGender(e.target.value as 'M' | 'F')}
+              className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            >
+              <option value="M">Nam</option>
+              <option value="F">Nữ</option>
+            </select>
           </div>
         </div>
         <p className="text-xs text-muted-foreground">
@@ -166,6 +192,47 @@ export function BatTuChecker() {
                 tàng can, mùa sinh… để bản đọc AI làm.
               </p>
             </div>
+
+            {chart.daiVan && (
+              <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
+                  Đại vận (vận 10 năm)
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-foreground/85">
+                  Khởi vận khoảng <strong>{chart.daiVan.startAge} tuổi</strong>, đi theo chiều{' '}
+                  <strong>{chart.daiVan.forward ? 'thuận' : 'nghịch'}</strong> (theo can năm &amp; giới tính).
+                  Mỗi vận kéo dài 10 năm.
+                </p>
+                <div className="-mx-1 mt-3 flex gap-2 overflow-x-auto px-1 pb-2" role="list">
+                  {chart.daiVan.pillars.map((p) => {
+                    const cur = curAge != null && curAge >= p.startAge && curAge <= p.endAge;
+                    return (
+                      <div
+                        key={p.index}
+                        role="listitem"
+                        className={`min-w-[92px] flex-shrink-0 rounded-lg border p-2 text-center ${
+                          cur ? 'border-gold/60 bg-gold/[0.08]' : 'border-border bg-card/40'
+                        }`}
+                      >
+                        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                          {p.startAge}–{p.endAge}t{cur ? ' ●' : ''}
+                        </p>
+                        <p className="mt-1 font-heading text-sm font-semibold">
+                          <span className={EL_TEXT[p.canElement]}>{p.can}</span>{' '}
+                          <span className={EL_TEXT[p.chiElement]}>{p.chi}</span>
+                        </p>
+                        <p className="mt-0.5 text-[10px] text-gold-700">{p.tenGod}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {curAge != null ? `Chấm vàng ● = vận hiện tại (~${curAge} tuổi). ` : ''}
+                  Đại vận = bối cảnh 10 năm chồng lên lá số gốc — để soi trọng tâm giai đoạn, không phải dự
+                  đoán may rủi.
+                </p>
+              </div>
+            )}
 
             <p className="text-xs leading-relaxed text-muted-foreground">
               Lá số tính bằng engine Tứ Trụ chuẩn (theo tiết khí, vị trí Mặt Trời) —{' '}
