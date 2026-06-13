@@ -16,6 +16,8 @@ import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
+import { parseTrigrams, getHaoDongMota } from '@/lib/hao-dong';
+import { QUE_PAGES } from '@/lib/que-kinh-dich';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -223,20 +225,61 @@ export default function GieoQuePage() {
                   </CardContent>
                 </Card>
 
+                {/* Thượng quái / Hạ quái */}
+                {(() => {
+                  const trigrams = parseTrigrams(result.hexagramPrimary.binary);
+                  if (!trigrams) return null;
+                  const { upper, lower } = trigrams;
+                  return (
+                    <Card className="border-border bg-card/50">
+                      <CardHeader>
+                        <CardTitle className="text-base">Cấu trúc quẻ — Bát Quái</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="rounded-lg border border-border bg-card/40 p-3 text-center">
+                            <div className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-1">Thượng quái (ngoài)</div>
+                            <div className="text-2xl" aria-hidden>{upper.icon}</div>
+                            <div className="font-semibold text-foreground mt-1">{upper.ten} · {upper.tuong}</div>
+                            <div className="text-xs text-muted-foreground mt-0.5">Hành {upper.hanh}</div>
+                          </div>
+                          <div className="rounded-lg border border-border bg-card/40 p-3 text-center">
+                            <div className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-1">Hạ quái (trong)</div>
+                            <div className="text-2xl" aria-hidden>{lower.icon}</div>
+                            <div className="font-semibold text-foreground mt-1">{lower.ten} · {lower.tuong}</div>
+                            <div className="text-xs text-muted-foreground mt-0.5">Hành {lower.hanh}</div>
+                          </div>
+                        </div>
+                        <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                          Mỗi quẻ gồm hai tầng: Hạ quái (3 hào dưới) phản chiếu tình thế bên trong hoặc khởi đầu,
+                          Thượng quái (3 hào trên) phản chiếu tình thế bên ngoài hoặc hướng vận động.
+                          Gợi ý chiêm nghiệm, không phải lời tiên đoán.
+                        </p>
+                      </CardContent>
+                    </Card>
+                  );
+                })()}
+
+                {/* Hào động — ý nghĩa vị trí */}
                 {result.movingLines.length > 0 && (
                   <Card className="border-border bg-card/50">
                     <CardHeader>
-                      <CardTitle className="text-base text-gold-700">Hào động</CardTitle>
+                      <CardTitle className="text-base text-gold-700">Hào động — vị trí chuyển hoá</CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <p className="text-sm leading-relaxed text-foreground/85">
-                        Hào động:{' '}
-                        <span className="font-semibold text-foreground">
-                          {result.movingLines.map((n) => `hào ${n}`).join(', ')}
-                        </span>
-                        . Đây là những nét đang chuyển — gợi ý nơi tình huống có khả năng thay đổi,
-                        dẫn tới quẻ biến bên dưới.
+                    <CardContent className="space-y-3">
+                      <p className="text-sm text-foreground/75">
+                        Những hào đang ở trạng thái chuyển — gợi ý nơi tình huống có khả năng thay đổi.
                       </p>
+                      {result.movingLines.map((haoSo) => {
+                        const info = getHaoDongMota(haoSo);
+                        if (!info) return null;
+                        return (
+                          <div key={haoSo} className="rounded-md border border-gold/20 bg-gold/5 px-3 py-2.5">
+                            <div className="text-xs font-semibold text-gold-700 mb-1">{info.ten}</div>
+                            <p className="text-sm leading-relaxed text-foreground/85">{info.mo_ta}</p>
+                          </div>
+                        );
+                      })}
                     </CardContent>
                   </Card>
                 )}
@@ -262,6 +305,24 @@ export default function GieoQuePage() {
                     </CardContent>
                   </Card>
                 )}
+
+                {/* Link xem chi tiết quẻ */}
+                {(() => {
+                  const queSlug = QUE_PAGES.find((q) => q.id === result.hexagramPrimary.id)?.slug;
+                  if (!queSlug) return null;
+                  return (
+                    <Link
+                      href={`/gieo-que/y-nghia/${queSlug}`}
+                      className="flex items-center justify-between rounded-lg border border-gold/30 bg-gold/5 px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-gold/10"
+                    >
+                      <span>
+                        Đọc sâu quẻ <span className="text-gold-700">{result.hexagramPrimary.nameVi}</span>
+                        <span className="ml-1 text-muted-foreground font-normal">— tượng quẻ, góc tình cảm, công việc, câu tự soi</span>
+                      </span>
+                      <span aria-hidden className="ml-3 flex-shrink-0 text-gold-700">→</span>
+                    </Link>
+                  );
+                })()}
 
                 <div className="pt-1">
                   <ShareResultButton
