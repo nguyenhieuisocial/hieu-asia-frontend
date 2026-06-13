@@ -14,11 +14,12 @@ import {
   SheetTrigger,
   SheetTitle,
 } from '@hieu-asia/ui';
-import { MoreVertical, Share2, Download, MessageCircle } from 'lucide-react';
+import { MoreVertical, Share2, Download, MessageCircle, Lock } from 'lucide-react';
 import {
   getReading,
   type ApiClientError,
   type Reading,
+  type ReadingReportMarkdown,
 } from '@/lib/api-client';
 import { CautionBanner } from '@/components/caution-banner';
 import { ReportContextSummary } from '@/components/report-context-summary';
@@ -92,6 +93,21 @@ function extractCautionBullets(body: string): string[] {
     .filter(Boolean);
 }
 
+/**
+ * Type guards for the union report shape.
+ *
+ * Backend (reading-get PR #134) returns:
+ *   - Paid/full:  { markdown: string }         → ReadingReportMarkdown
+ *   - Locked/preview: { preview: string }      → ReadingReportPreview
+ */
+function isFullReport(r: Reading['report']): r is ReadingReportMarkdown {
+  return typeof r === 'object' && r !== null && 'markdown' in r;
+}
+
+function isPreviewReport(r: Reading['report']): r is { preview: string } {
+  return typeof r === 'object' && r !== null && 'preview' in r;
+}
+
 export default function ReportPage() {
   return (
     <ErrorBoundary>
@@ -117,10 +133,18 @@ function ReportContent() {
 
   const session = query.data;
   const state = session?.state;
-  const markdown = session?.report?.markdown ?? '';
+  const isLocked = session?.locked === true;
+
+  // Narrow report to full markdown (paid) or preview (locked).
+  const fullMarkdown = isFullReport(session?.report) ? session.report.markdown : '';
+  const previewMarkdown = isPreviewReport(session?.report) ? session.report.preview : '';
+
+  // For analytics + section parsing, use full markdown when unlocked.
+  const markdown = fullMarkdown;
 
   React.useEffect(() => {
     if (!state) return;
+    // Locked preview is a valid terminal state (report_ready) — don't redirect.
     if (state !== 'report_ready' && !state.startsWith('error_at_')) {
       router.replace(`/reading/${readingId}/processing`);
     }
@@ -128,11 +152,15 @@ function ReportContent() {
 
   const reportTrackedRef = React.useRef<string | null>(null);
   React.useEffect(() => {
-    if (state === 'report_ready' && markdown && reportTrackedRef.current !== readingId) {
+    if (state === 'report_ready' && reportTrackedRef.current !== readingId) {
       reportTrackedRef.current = readingId;
-      track('report_viewed', { reading_id: readingId, section_count: markdown.match(/^##\s+/gm)?.length ?? 0 });
+      track('report_viewed', {
+        reading_id: readingId,
+        locked: isLocked,
+        section_count: markdown.match(/^##\s+/gm)?.length ?? 0,
+      });
     }
-  }, [state, markdown, readingId]);
+  }, [state, markdown, readingId, isLocked]);
 
   const sections = React.useMemo(
     () => parseMarkdownSections(markdown),
@@ -146,8 +174,9 @@ function ReportContent() {
 
   if (query.isLoading) return <ReportSkeleton />;
 
-  // Not ready yet (e.g. still pending) or fetch error.
-  if (!markdown || state !== 'report_ready') {
+  // Not ready yet (e.g. still pending) or fetch error — and NOT a locked preview.
+  const hasContent = isLocked ? !!previewMarkdown : !!markdown;
+  if (!hasContent || state !== 'report_ready') {
     const errMessage =
       query.error?.message ??
       (state && state.startsWith('error_at_')
@@ -180,9 +209,8 @@ function ReportContent() {
 
   return (
     <main className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
-      {/* Wave UX — thanh tiến độ đọc (scroll-driven). Chỉ render khi báo cáo
-          đã sẵn sàng (nhánh này), tránh hiển thị trên trạng thái lỗi/loading. */}
-      <ReadingProgress />
+      {/* Thanh tiến độ đọc chỉ hiển thị khi có nội dung đầy đủ (không locked). */}
+      {!isLocked && <ReadingProgress />}
       <header className="mb-6 flex items-center justify-between">
         <Link
           href="/account"
@@ -207,20 +235,24 @@ function ReportContent() {
           generatedAt={new Date().toLocaleDateString('vi-VN')}
         />
 
-        {/* Interactive 12-cung chart — fetches deterministic structure from
-            the Tử Vi engine before the AI narrative below. Skips silently if
-            inputs aren't sufficient. */}
+        {/* Lá số Tử Vi cơ bản hiển thị cả khi locked (dữ liệu deterministic). */}
         <TuViChartSection
           birthDate={(session?.inputs?.birth_date as string | null | undefined) ?? null}
           birthTime={(session?.inputs?.birth_time as string | null | undefined) ?? null}
           gender={(session?.inputs?.gender as string | null | undefined) ?? null}
         />
 
-        <CautionBanner flags={cautionFlags} />
-
-        <ReportSections sections={reportSections} />
-
-        <ReportFooter readingId={readingId} />
+        {isLocked ? (
+          /* ── Trạng thái chưa mua: hiển thị preview + CTA mở khoá ── */
+          <LockedReportGate readingId={readingId} previewMarkdown={previewMarkdown} />
+        ) : (
+          /* ── Đã mua: hiển thị đầy đủ như cũ ── */
+          <>
+            <CautionBanner flags={cautionFlags} />
+            <ReportSections sections={reportSections} />
+            <ReportFooter readingId={readingId} />
+          </>
+        )}
       </div>
 
       {/*
@@ -233,6 +265,73 @@ function ReportContent() {
       */}
       <PostReadingSurvey readingId={readingId} />
     </main>
+  );
+}
+
+/**
+ * Hiển thị phần tóm tắt (preview) và CTA mở khoá khi báo cáo chưa được mua.
+ *
+ * Backend (reading-get PR #134) trả về:
+ *   - `session.locked = true`
+ *   - `session.report = { preview: "…" }`  ← markdown vài mục đầu
+ *
+ * CTA dẫn sang `/pricing?session=<readingId>` — luồng chọn gói hiện có,
+ * sau khi thanh toán backend cập nhật trạng thái và trang tự refetch.
+ */
+function LockedReportGate({
+  readingId,
+  previewMarkdown,
+}: {
+  readingId: string;
+  previewMarkdown: string;
+}) {
+  const unlockHref = `/pricing?session=${encodeURIComponent(readingId)}`;
+
+  return (
+    <div className="space-y-6">
+      {/* ── Phần preview (tóm tắt mấy mục đầu từ backend) ── */}
+      {previewMarkdown && (
+        <div className="relative overflow-hidden rounded-lg border border-gold/20 bg-card/60 p-6">
+          <SectionBody content={previewMarkdown} />
+          {/* Fade-out gradient báo hiệu còn nội dung phía dưới */}
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent"
+            aria-hidden
+          />
+        </div>
+      )}
+
+      {/* ── CTA mở khoá ── */}
+      <Card className="border-gold/30 bg-gradient-to-br from-card to-gold/5">
+        <CardContent className="space-y-5 p-8 text-center">
+          <div className="mx-auto flex size-12 items-center justify-center rounded-full border border-gold/30 bg-gold/10">
+            <Lock className="size-5 text-gold" aria-hidden />
+          </div>
+          <div className="space-y-1">
+            <p className="font-heading text-xl text-foreground">
+              Đây là phần tóm tắt
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Mở khoá để đọc đầy đủ 30 mục phân tích sâu + tải PDF chất lượng cao.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <Button
+              asChild
+              className="bg-gold text-black hover:bg-gold/90"
+              size="lg"
+            >
+              <Link href={unlockHref}>
+                Mở khoá báo cáo đầy đủ →
+              </Link>
+            </Button>
+            <Button variant="outline" asChild>
+              <Link href="/account">Về tài khoản</Link>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 
