@@ -370,8 +370,15 @@ function SectionBody({ content }: { content: string }) {
   );
 }
 
+type PdfState =
+  | { status: 'idle' }
+  | { status: 'loading' }
+  | { status: 'error'; message: string }
+  | { status: 'done'; url: string };
+
 function ReportFooter({ readingId }: { readingId: string }) {
   const [copied, setCopied] = React.useState(false);
+  const [pdfState, setPdfState] = React.useState<PdfState>({ status: 'idle' });
 
   const onShare = async () => {
     try {
@@ -383,10 +390,111 @@ function ReportFooter({ readingId }: { readingId: string }) {
     }
   };
 
-  const onPrint = () => window.print();
+  const onExportPdf = async () => {
+    if (pdfState.status === 'loading') return;
+
+    // If we already have a URL from a previous successful call, open it.
+    if (pdfState.status === 'done') {
+      window.open(pdfState.url, '_blank', 'noopener');
+      return;
+    }
+
+    setPdfState({ status: 'loading' });
+
+    try {
+      // Grab Supabase access token from the auth client (may be null for anon).
+      let accessToken: string | null = null;
+      try {
+        const { getSupabaseAuth } = await import('@/lib/auth-client');
+        const supabase = getSupabaseAuth();
+        if (supabase) {
+          const { data } = await supabase.auth.getSession();
+          accessToken = data.session?.access_token ?? null;
+        }
+      } catch {
+        /* auth client unavailable — proceed, worker will 401 */
+      }
+
+      const headers: Record<string, string> = {
+        'content-type': 'application/json',
+      };
+      if (accessToken) {
+        headers['authorization'] = `Bearer ${accessToken}`;
+      }
+
+      const res = await fetch(
+        `/api/reading/${encodeURIComponent(readingId)}/export-pdf`,
+        {
+          method: 'POST',
+          headers,
+          cache: 'no-store',
+        },
+      );
+
+      if (res.status === 402 || res.status === 403) {
+        setPdfState({
+          status: 'error',
+          message: 'Mở khoá báo cáo trả phí để tải PDF chất lượng cao.',
+        });
+        return;
+      }
+
+      if (res.status === 401) {
+        setPdfState({
+          status: 'error',
+          message: 'Vui lòng đăng nhập để tải PDF.',
+        });
+        return;
+      }
+
+      if (!res.ok) {
+        let errMsg = 'Tạo PDF thất bại, vui lòng thử lại.';
+        try {
+          const body = (await res.json()) as { error?: string };
+          if (body.error) errMsg = body.error;
+        } catch {
+          /* ignore parse error */
+        }
+        setPdfState({ status: 'error', message: errMsg });
+        return;
+      }
+
+      const data = (await res.json()) as { ok: boolean; url?: string; error?: string };
+      if (!data.ok || !data.url) {
+        setPdfState({
+          status: 'error',
+          message: data.error ?? 'Không nhận được link PDF.',
+        });
+        return;
+      }
+
+      setPdfState({ status: 'done', url: data.url });
+      track('pdf_exported', { reading_id: readingId });
+      window.open(data.url, '_blank', 'noopener');
+    } catch {
+      setPdfState({
+        status: 'error',
+        message: 'Lỗi kết nối, vui lòng thử lại.',
+      });
+    }
+  };
+
+  const pdfLabel =
+    pdfState.status === 'loading'
+      ? 'Đang tạo PDF…'
+      : pdfState.status === 'done'
+        ? 'Mở PDF'
+        : 'Tải PDF báo cáo';
 
   return (
     <div className="border-t border-gold/15 pt-6 print:hidden">
+      {/* Error / upsell message */}
+      {pdfState.status === 'error' && (
+        <p className="mb-3 rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-sm text-foreground/80">
+          {pdfState.message}
+        </p>
+      )}
+
       {/* Mobile (<lg): collapse the 3 actions into a Material 3 bottom-sheet.
           Avoids the awkward wrap on <360 px screens where buttons collide. */}
       <div className="lg:hidden">
@@ -413,11 +521,12 @@ function ReportFooter({ readingId }: { readingId: string }) {
               </Button>
               <Button
                 variant="ghost"
-                onClick={onPrint}
+                onClick={onExportPdf}
+                disabled={pdfState.status === 'loading'}
                 className="h-14 justify-start gap-3 text-base"
               >
                 <Download className="size-5" aria-hidden="true" />
-                Tải PDF báo cáo
+                {pdfLabel}
               </Button>
               <Button asChild className="h-14 justify-start gap-3 text-base">
                 <Link href={`/reading/${readingId}/mentor`}>
@@ -432,8 +541,12 @@ function ReportFooter({ readingId }: { readingId: string }) {
 
       {/* Desktop (lg+): existing inline row. */}
       <div className="hidden lg:flex lg:items-center lg:justify-between">
-        <Button variant="outline" onClick={onPrint}>
-          Tải PDF báo cáo
+        <Button
+          variant="outline"
+          onClick={onExportPdf}
+          disabled={pdfState.status === 'loading'}
+        >
+          {pdfLabel}
         </Button>
         <div className="flex gap-3">
           <Button variant="outline" onClick={onShare}>
