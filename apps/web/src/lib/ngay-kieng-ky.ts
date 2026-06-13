@@ -228,19 +228,17 @@ export interface KiengKyResult {
   hits: KiengKyKey[];
 }
 
+/** Ngày dương hợp lệ trên lịch (chặn rollover, vd 31 của tháng 30 ngày). */
+function isValidSolar(dd: number, mm: number, yy: number): boolean {
+  if (!Number.isFinite(dd) || !Number.isFinite(mm) || !Number.isFinite(yy)) return false;
+  if (mm < 1 || mm > 12 || dd < 1 || dd > 31 || yy < 1900 || yy > 2100) return false;
+  const dt = new Date(Date.UTC(yy, mm - 1, dd));
+  return dt.getUTCFullYear() === yy && dt.getUTCMonth() === mm - 1 && dt.getUTCDate() === dd;
+}
+
 /** Kiểm tra một ngày dương lịch có rơi vào ngày kiêng kỵ nào không. */
 export function checkKiengKy(dd: number, mm: number, yy: number): KiengKyResult | null {
-  if (
-    !Number.isFinite(dd) ||
-    !Number.isFinite(mm) ||
-    !Number.isFinite(yy) ||
-    mm < 1 ||
-    mm > 12 ||
-    dd < 1 ||
-    dd > 31 ||
-    yy < 1900 ||
-    yy > 2100
-  ) {
+  if (!isValidSolar(dd, mm, yy)) {
     return null;
   }
   const lunar = solarToLunar(dd, mm, yy);
