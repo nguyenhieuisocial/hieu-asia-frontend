@@ -84,8 +84,16 @@ Judge model: ${JUDGE_MODEL} (cross-vendor anti-self-bias)`;
     throw new Error(`Judge LLM call failed: ${response.status} ${await response.text()}`);
   }
 
-  const data = (await response.json()) as { content: string };
-  const parsed = JSON.parse(data.content) as JudgeVerdict;
+  // The /ai/role/* gateway returns { ok, response, vendor, model } — the completion
+  // text is in `response`, not `content` (reading `data.content` gave undefined →
+  // `JSON.parse(undefined)` → "undefined is not valid JSON" for every judged sample).
+  const data = (await response.json()) as { ok?: boolean; response?: string };
+  if (!data.response) {
+    throw new Error(`Judge LLM returned no response text: ${JSON.stringify(data).slice(0, 200)}`);
+  }
+  // response_format=json_object should yield bare JSON, but strip ```json fences defensively.
+  const jsonText = data.response.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+  const parsed = JSON.parse(jsonText) as JudgeVerdict;
 
   // Validate shape
   if (typeof parsed.score !== 'number' || parsed.score < 0 || parsed.score > 10) {
