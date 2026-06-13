@@ -11,15 +11,17 @@ import { calculateBazi, type BaziChart, type BaziPillar, type Element, ELEMENTS 
  * 4 trụ + Thập Thần + cân bằng ngũ hành. Khung trung lập "không bói mù".
  */
 
-// Theme-aware: shade tối (≥4.5:1) cho nền sáng (kem), shade sáng cho nền tối.
-// Trước đây chỉ có shade -400/-200 (chỉ hợp nền tối) → ở light mode chữ ngũ hành
-// gần như vô hình (Kim 1.05:1). Đo vs nền kem rgb(243,236,221): 700/800/600 ≥4.5:1.
+// Theme-aware: shade tối cho nền sáng (kem), shade sáng cho nền tối.
+// Trước đây chỉ -400/-200 (chỉ hợp nền tối) → light mode chữ ngũ hành gần vô hình.
+// ĐO LẠI bằng alpha-composite THẬT (chữ trên bg-card/40 đè lên nền kem, KHÔNG phải
+// vs kem trần): -700 cho Mộc/Hỏa/Thủy chỉ ~4.0–4.4:1 (hụt AA 4.5 cho chữ nhỏ) →
+// nâng -800. Composite ≥5.1:1 mọi token nhỏ; dark mode giữ -400/-200.
 const EL_TEXT: Record<Element, string> = {
-  Mộc: 'text-emerald-700 dark:text-emerald-400',
-  Hỏa: 'text-rose-700 dark:text-rose-400',
+  Mộc: 'text-emerald-800 dark:text-emerald-400',
+  Hỏa: 'text-rose-800 dark:text-rose-400',
   Thổ: 'text-amber-800 dark:text-amber-400',
   Kim: 'text-slate-600 dark:text-slate-200',
-  Thủy: 'text-sky-700 dark:text-sky-400',
+  Thủy: 'text-sky-800 dark:text-sky-400',
 };
 const EL_BAR: Record<Element, string> = {
   Mộc: 'bg-emerald-400/70',
@@ -257,9 +259,9 @@ export function BatTuChecker() {
                   {chart.relations.map((rel) => {
                     const harmony = rel.type === 'Lục Hợp' || rel.type === 'Tam Hợp' || rel.type === 'Bán Tam Hợp';
                     const tone = harmony
-                      ? 'bg-emerald-400/15 text-emerald-700 dark:text-emerald-300'
+                      ? 'bg-emerald-400/15 text-emerald-800 dark:text-emerald-300'
                       : rel.type === 'Lục Xung'
-                        ? 'bg-rose-400/15 text-rose-700 dark:text-rose-300'
+                        ? 'bg-rose-400/15 text-rose-800 dark:text-rose-300'
                         : 'bg-amber-400/15 text-amber-800 dark:text-amber-300';
                     return (
                       <li
