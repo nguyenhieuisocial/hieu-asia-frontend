@@ -15,6 +15,7 @@ import { COMPARISONS } from '@/lib/so-sanh';
 import { ALL_PAGES as TAROT_PAGES } from '@/lib/tarot-card-pages';
 import { QUE_PAGES } from '@/lib/que-kinh-dich';
 import { SO_CHU_DAO } from '@/lib/than-so-hoc-numbers';
+import { LOAI_SO } from '@/lib/than-so-hoc-loai-so';
 import { SAO_GIO } from '@/lib/gio-hoang-dao-stars';
 
 const BASE_URL = 'https://hieu.asia';
@@ -64,6 +65,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/than-so-hoc/y-nghia`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     ...SO_CHU_DAO.map((n) => ({
       url: `${BASE_URL}/than-so-hoc/y-nghia/${n.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    })),
+    // Thư viện 4 loại số thần số học — Vận mệnh, Linh hồn, Nhân cách, Ngày sinh (2026-06).
+    { url: `${BASE_URL}/than-so-hoc/cac-loai-so`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.7 },
+    ...LOAI_SO.map((l) => ({
+      url: `${BASE_URL}/than-so-hoc/cac-loai-so/${l.slug}`,
       lastModified: now,
       changeFrequency: 'monthly' as const,
       priority: 0.6,
