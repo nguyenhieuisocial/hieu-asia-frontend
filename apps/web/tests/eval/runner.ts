@@ -21,6 +21,7 @@ interface RunnerOptions {
   judgeMode: 'rubric-only' | 'rubric-plus-llm' | 'llm-only';
   apiBaseUrl: string;
   adminToken: string;
+  supabaseAnonKey: string;
   outputDir: string;
 }
 
@@ -52,38 +53,92 @@ function loadPersonaSamples(personaDir: string, filter?: string): EvalSample[] {
   return samples;
 }
 
+// The reading pipeline emits ONE markdown report (`report.markdown`) with ~8 Vietnamese
+// H2 sections; the rubric + LLM judge expect 4 named sections. Bucket each H2 block by
+// heading keyword — every block lands somewhere, so the concatenation of the 4 fields
+// equals the full report (keeps theme/caution keyword coverage and the judge complete).
+function reportFromMarkdown(markdown: string, startedAt: number): ReadingOutput {
+  const buckets = {
+    summary: [] as string[],
+    strengths: [] as string[],
+    caveats: [] as string[],
+    recommendations: [] as string[],
+  };
+  // Split at each H2 (`## `). Text before the first H2 (the `# title` + any intro)
+  // becomes the first part and seeds the summary bucket.
+  for (const part of markdown.split(/\n(?=##\s)/)) {
+    const block = part.trim();
+    if (!block) continue;
+    const heading = (block.match(/^#{1,3}\s+(.+)$/m)?.[1] ?? '').toLowerCase();
+    if (/mạnh|strength|ưu điểm/.test(heading)) buckets.strengths.push(block);
+    else if (/blind|cảnh báo|lưu ý|cẩn trọng|rủi ro|điểm yếu|nguy cơ|caveat/.test(heading)) buckets.caveats.push(block);
+    else if (/kế hoạch|hành động|khuyến nghị|đề xuất|lời khuyên|90 ngày|giai đoạn|tuần \d|ngày \d|bước \d|recommend|phase/.test(heading)) buckets.recommendations.push(block);
+    else buckets.summary.push(block); // title/intro, tóm tắt, tính cách, sự nghiệp, cuộc đời, quan hệ…
+  }
+  const join = (a: string[]) => a.join('\n\n').trim();
+  return {
+    summary_section: join(buckets.summary),
+    strengths_section: join(buckets.strengths),
+    caveats_section: join(buckets.caveats),
+    recommendations_section: join(buckets.recommendations),
+    meta: { model: 'claude-opus', duration_ms: Date.now() - startedAt },
+  };
+}
+
 async function generateReading(sample: EvalSample, opts: RunnerOptions): Promise<ReadingOutput> {
-  const response = await fetch(`${opts.apiBaseUrl}/reading/create`, {
+  // Mirrors the real product flow (packages/supabase-client `createReading`):
+  //   1. POST /reading-create { user_id, birth_data } → { session_id }
+  //      (reading-create fire-and-forgets the LLM-heavy reading-orchestrate)
+  //   2. poll GET /reading-get?id=<session_id> until state_json.report is written
+  // Both are Supabase Edge Functions, reached via the Worker's /reading-* passthrough
+  // (api.hieu.asia). The eval sample's `input` already matches the BirthData shape.
+  const startedAt = Date.now();
+  const create = await fetch(`${opts.apiBaseUrl}/reading-create`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      // Supabase Edge Functions verify a JWT (anon key is public, RLS-gated);
+      // the Worker /reading-* passthrough forwards these to Supabase as-is.
+      apikey: opts.supabaseAnonKey,
+      Authorization: `Bearer ${opts.supabaseAnonKey}`,
       'X-Admin-Token': opts.adminToken,
       'X-Eval-Sample-Id': sample.id, // tags Sentry events for traceability
     },
-    body: JSON.stringify({
-      birth: sample.input,
-      mode: 'eval', // signals orchestrate to skip caching + use deterministic temp=0
-    }),
+    body: JSON.stringify({ user_id: `eval-bot-${sample.id}`, birth_data: sample.input }),
   });
-
-  if (!response.ok) {
-    throw new Error(`generateReading failed: ${response.status} ${await response.text()}`);
+  if (!create.ok) {
+    throw new Error(`reading-create failed: ${create.status} ${(await create.text()).slice(0, 200)}`);
   }
+  const { session_id } = (await create.json()) as { session_id?: string };
+  if (!session_id) throw new Error('reading-create returned no session_id');
 
-  const sessionData = (await response.json()) as { session_id: string };
-
-  // Poll until ready (eval runs are sync; up to 60s)
-  for (let i = 0; i < 30; i++) {
-    await new Promise((r) => setTimeout(r, 2000));
-    const get = await fetch(`${opts.apiBaseUrl}/reading/${sessionData.session_id}`, {
-      headers: { 'X-Admin-Token': opts.adminToken },
+  // Orchestration is async + two-phase (full: logic→corpus→psychology, then a fresh
+  // finalize invocation: alignment→report). End-to-end ~4–5 min, so poll up to ~7.5 min.
+  for (let i = 0; i < 150; i++) {
+    await new Promise((r) => setTimeout(r, 3000));
+    const get = await fetch(`${opts.apiBaseUrl}/reading-get?id=${encodeURIComponent(session_id)}`, {
+      headers: {
+        apikey: opts.supabaseAnonKey,
+        Authorization: `Bearer ${opts.supabaseAnonKey}`,
+        'X-Admin-Token': opts.adminToken,
+      },
     });
-    if (get.ok) {
-      const data = (await get.json()) as { status: string; output?: ReadingOutput };
-      if (data.status === 'completed' && data.output) return data.output;
+    if (!get.ok) continue;
+    // reading-get returns { ok, session: { status, state, report: { markdown }, … } }.
+    const data = (await get.json()) as {
+      session?: { status?: string; state?: string; report?: { markdown?: string } | null };
+    };
+    const session = data.session;
+    const state = session?.state ?? '';
+    if (session?.status === 'error' || session?.status === 'failed' || state.startsWith('error')) {
+      throw new Error(`reading ${session_id} failed (status=${session?.status}, state=${state})`);
+    }
+    const markdown = session?.report?.markdown;
+    if (session?.status === 'done' && typeof markdown === 'string' && markdown.length > 0) {
+      return reportFromMarkdown(markdown, startedAt);
     }
   }
-  throw new Error(`Reading session ${sessionData.session_id} did not complete within 60s`);
+  throw new Error(`reading ${session_id} did not produce a report within ~7.5 min`);
 }
 
 async function runOne(sample: EvalSample, opts: RunnerOptions): Promise<EvalResult> {
@@ -163,6 +218,7 @@ async function main() {
     judgeMode: (args.includes('--judge-mode') ? args[args.indexOf('--judge-mode') + 1] : 'rubric-plus-llm') as RunnerOptions['judgeMode'],
     apiBaseUrl: process.env.EVAL_API_URL || 'https://api.hieu.asia',
     adminToken: process.env.ADMIN_TOKEN || '',
+    supabaseAnonKey: process.env.EVAL_SUPABASE_ANON_KEY || '',
     outputDir: join(import.meta.dirname || '.', 'results'),
   };
 
