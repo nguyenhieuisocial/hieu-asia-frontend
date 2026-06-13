@@ -107,6 +107,8 @@ export interface BaziChart {
   meta: { solarDate: string; hour: number; solarYearForPillar: number };
   /** Đại vận (vận 10 năm) — null nếu không truyền giới tính. */
   daiVan?: DaiVan | null;
+  /** Lưu niên (vận năm) cho `asOf` — null nếu không truyền asOf. */
+  luuNien?: LuuNien | null;
 }
 
 export interface BaziInput {
@@ -114,6 +116,7 @@ export interface BaziInput {
   birthHour: number; // 0–23
   birthMinute?: number; // 0–59 (mặc định 0)
   gender?: 'M' | 'F'; // cần cho hướng đại vận (thuận/nghịch); thiếu → bỏ đại vận
+  asOf?: string; // ngày tham chiếu "YYYY-MM-DD" để tính lưu niên (vận năm); thiếu → bỏ lưu niên
 }
 
 function makePillar(label: string, canIdx: number, chiIdx: number, dm: { el: Element; yang: boolean } | null): BaziPillar {
@@ -125,6 +128,15 @@ function makePillar(label: string, canIdx: number, chiIdx: number, dm: { el: Ele
     chiElement: CHI_ELEMENT[chiIdx]!,
     tenGod: dm ? thapThan(dm.el, dm.yang, CAN_ELEMENT[canIdx]!, CAN_YANG[canIdx]!) : 'Nhật Chủ',
   };
+}
+
+export interface LuuNien {
+  year: number; // năm dương lịch (theo ranh giới Lập Xuân)
+  can: string;
+  chi: string;
+  canElement: Element;
+  chiElement: Element;
+  tenGod: string; // can năm so với Nhật Chủ
 }
 
 export interface DaiVanPillar {
@@ -160,6 +172,13 @@ function findTermCrossing(jdStart: number, jdEnd: number, targetLon: number): nu
     else lo = mid;
   }
   return (lo + hi) / 2;
+}
+
+/** Năm can chi (Bát Tự) chứa ngày (Y,M,D) — đổi tại Lập Xuân. */
+function solarYearOf(Y: number, M: number, D: number): number {
+  const jd = julianDay(Y, M, D, 5); // ~giữa trưa giờ VN (UTC+7) ≈ 05:00 UTC
+  const lx = solarTermJD(Y, 315, 2, 4);
+  return jd >= lx ? Y : Y - 1;
 }
 
 /**
@@ -263,6 +282,22 @@ export function calculateBazi(input: BaziInput): BaziChart {
   const gender = input.gender === 'F' ? 'F' : input.gender === 'M' ? 'M' : null;
   const daiVan = gender ? computeDaiVan(jdUTC, sector, monthCan, monthChi, yearCan, dm, gender) : null;
 
+  let luuNien: LuuNien | null = null;
+  const am = input.asOf ? /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(input.asOf.trim()) : null;
+  if (am) {
+    const sy = solarYearOf(Number(am[1]), Number(am[2]), Number(am[3]));
+    const lc = mod(sy - 4, 10);
+    const lch = mod(sy - 4, 12);
+    luuNien = {
+      year: sy,
+      can: CAN[lc]!,
+      chi: CHI[lch]!,
+      canElement: CAN_ELEMENT[lc]!,
+      chiElement: CHI_ELEMENT[lch]!,
+      tenGod: thapThan(dm.el, dm.yang, CAN_ELEMENT[lc]!, CAN_YANG[lc]!),
+    };
+  }
+
   return {
     year,
     month,
@@ -273,6 +308,7 @@ export function calculateBazi(input: BaziInput): BaziChart {
     missing,
     strongest,
     daiVan,
+    luuNien,
     meta: { solarDate: input.birthSolarDate, hour, solarYearForPillar: solarYear },
   };
 }

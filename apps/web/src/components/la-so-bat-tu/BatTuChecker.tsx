@@ -77,7 +77,9 @@ export function BatTuChecker() {
     }
     setError(null);
     try {
-      setChart(calculateBazi({ birthSolarDate: date, birthHour: parseHour(time), gender }));
+      const ict = new Date(Date.now() + 7 * 3600 * 1000); // hôm nay theo giờ VN
+      const asOf = `${ict.getUTCFullYear()}-${ict.getUTCMonth() + 1}-${ict.getUTCDate()}`;
+      setChart(calculateBazi({ birthSolarDate: date, birthHour: parseHour(time), gender, asOf }));
     } catch {
       setError('Chưa lập được lá số — kiểm tra lại ngày sinh.');
     }
@@ -230,6 +232,24 @@ export function BatTuChecker() {
                   {curAge != null ? `Chấm vàng ● = vận hiện tại (~${curAge} tuổi). ` : ''}
                   Đại vận = bối cảnh 10 năm chồng lên lá số gốc — để soi trọng tâm giai đoạn, không phải dự
                   đoán may rủi.
+                </p>
+              </div>
+            )}
+
+            {chart.luuNien && (
+              <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
+                  Vận năm nay — lưu niên {chart.luuNien.can} {chart.luuNien.chi}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-foreground/85">
+                  Năm {chart.luuNien.year} an theo can chi{' '}
+                  <span className={EL_TEXT[chart.luuNien.canElement]}>{chart.luuNien.can}</span>{' '}
+                  <span className={EL_TEXT[chart.luuNien.chiElement]}>{chart.luuNien.chi}</span> — so với Nhật
+                  Chủ là <strong className="text-gold-700">{chart.luuNien.tenGod}</strong>. Đây là
+                  &ldquo;màu&rdquo; của riêng năm nay chồng lên lá số gốc.
+                </p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Lưu niên = điểm nhấn của riêng năm nay — chỉ để soi nhịp, không phải dự đoán may rủi.
                 </p>
               </div>
             )}
