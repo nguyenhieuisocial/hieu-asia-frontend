@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { GioHoangDaoChecker } from '@/components/gio-hoang-dao/GioHoangDaoChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
@@ -77,6 +78,15 @@ export default function GioHoangDaoPage() {
           { label: 'Giờ hoàng đạo' },
         ]}
       >
+      <div className="mx-auto mb-6 max-w-3xl">
+        <Link
+          href="/gio-hoang-dao/y-nghia"
+          className="flex items-center justify-between gap-3 rounded-lg border border-gold/25 bg-gold/5 px-4 py-3 text-sm transition-colors hover:bg-gold/10"
+        >
+          <span className="text-foreground/85">🕐 <b className="text-foreground">Ý nghĩa 12 sao giờ</b> — Thanh Long, Bạch Hổ... mỗi sao là gì &amp; hợp việc nào</span>
+          <span className="shrink-0 text-gold">Mở →</span>
+        </Link>
+      </div>
         <section className="space-y-8">
           <GioHoangDaoChecker />
 
