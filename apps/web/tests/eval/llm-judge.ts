@@ -72,8 +72,14 @@ Judge model: ${JUDGE_MODEL} (cross-vendor anti-self-bias)`;
     },
     body: JSON.stringify({
       model: JUDGE_MODEL,
-      system: JUDGE_SYSTEM_PROMPT,
-      messages: [{ role: 'user', content: userPrompt }],
+      // The /ai/role/* gateway reads the system prompt from a {role:'system'} message
+      // in `messages`, NOT a top-level `system` field — sending it as `system` meant
+      // the judge instructions never reached the model, so it replied conversationally
+      // ("Tôi hiểu rằng…") instead of JSON. Put the instructions in messages.
+      messages: [
+        { role: 'system', content: JUDGE_SYSTEM_PROMPT },
+        { role: 'user', content: userPrompt },
+      ],
       max_tokens: 500,
       temperature: 0.0, // deterministic judgment
       response_format: { type: 'json_object' },
