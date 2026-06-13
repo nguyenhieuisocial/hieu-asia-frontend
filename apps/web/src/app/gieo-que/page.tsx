@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import {
   Button,
   Card,
@@ -124,6 +125,15 @@ export default function GieoQuePage() {
           { label: 'Gieo Quẻ Kinh Dịch' },
         ]}
       >
+      <div className="mx-auto mb-6 max-w-3xl">
+        <Link
+          href="/gieo-que/y-nghia"
+          className="flex items-center justify-between gap-3 rounded-lg border border-gold/25 bg-gold/5 px-4 py-3 text-sm transition-colors hover:bg-gold/10"
+        >
+          <span className="text-foreground/85">📖 <b className="text-foreground">Ý nghĩa 64 quẻ</b> — tra cứu tượng quẻ, thế cục &amp; lời khuyên từng quẻ</span>
+          <span className="shrink-0 text-gold">Mở →</span>
+        </Link>
+      </div>
         <section className="mt-6 grid gap-6 lg:grid-cols-5">
           <div className="lg:col-span-2">
             <Card className="border-gold/20 bg-card/60 backdrop-blur-sm">
