@@ -20,6 +20,13 @@ interface FeaturePaywallProps {
   slug: string;
   price: number;
   label?: string;
+  /**
+   * Optional reading session to unlock after payment. When provided, the
+   * intent carries `session_id` so the SePay webhook flips `is_paid` on that
+   * specific reading_session (gates reading-get). Used by the locked report
+   * gate; omitted for plain per-tool unlocks (xem-tuong, big-five, …).
+   */
+  sessionId?: string;
   onUnlocked: () => void;
 }
 
@@ -41,7 +48,7 @@ async function getToken(): Promise<string | null> {
   }
 }
 
-async function createFeatureIntent(slug: string): Promise<PaymentIntent> {
+async function createFeatureIntent(slug: string, sessionId?: string): Promise<PaymentIntent> {
   const token = await getToken();
   const res = await fetch('/api/payment/intent', {
     method: 'POST',
@@ -49,7 +56,11 @@ async function createFeatureIntent(slug: string): Promise<PaymentIntent> {
       'content-type': 'application/json',
       ...(token ? { authorization: `Bearer ${token}` } : {}),
     },
-    body: JSON.stringify({ tier: 'feature_unlock', tool_slug: slug }),
+    body: JSON.stringify({
+      tier: 'feature_unlock',
+      tool_slug: slug,
+      ...(sessionId ? { session_id: sessionId } : {}),
+    }),
     cache: 'no-store',
   });
   const parsed = await safeJson<IntentEnvelope>(res);
@@ -83,6 +94,7 @@ export function FeaturePaywall({
   slug,
   price,
   label,
+  sessionId,
   onUnlocked,
 }: FeaturePaywallProps) {
   const [intent, setIntent] = React.useState<PaymentIntent | null>(null);
@@ -102,7 +114,7 @@ export function FeaturePaywall({
     setExpired(false);
     setIntent(null);
 
-    createFeatureIntent(slug)
+    createFeatureIntent(slug, sessionId)
       .then((i) => {
         if (cancelled) return;
         setIntent(i);
