@@ -15,6 +15,7 @@ import { Skeleton } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { usePartnerGuard, type PartnerMe } from '@/lib/use-partner-guard';
+import { safeJson } from '@/lib/safe-json';
 
 const NAV = [
   { href: '/partner', label: 'Tổng quan', exact: true },
@@ -112,7 +113,9 @@ export async function partnerFetch<T>(path: string): Promise<T> {
     headers: { authorization: `Bearer ${jwt}` },
     cache: 'no-store',
   });
-  const d = await r.json();
+  const parsed = await safeJson<{ ok?: boolean; error?: string }>(r);
+  if (!parsed.ok) throw new Error(`HTTP ${parsed.status}`);
+  const d = parsed.data;
   if (!r.ok || !d.ok) throw new Error(d.error ?? `HTTP ${r.status}`);
   return d as T;
 }

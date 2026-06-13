@@ -79,53 +79,52 @@ export default function EnneagramPage() {
   // Bản đọc sâu cá nhân hoá từ nhóm Enneagram (backend /tools/enneagram-read).
   // Fallback an toàn: endpoint chưa có / lỗi → ẩn mục đọc, trang vẫn giữ chân
   // dung tĩnh + thanh điểm 9 nhóm.
-  React.useEffect(() => {
+  const runReading = React.useCallback(async () => {
     if (!result) return;
-    let cancelled = false;
     setReading(null);
     setPaywall(null);
     setReadingLoading(true);
-    void (async () => {
-      try {
-        const sb = getSupabaseAuth();
-        let token: string | undefined;
-        if (sb) {
-          const { data } = await sb.auth.getSession();
-          token = data.session?.access_token;
-        }
-
-        const res = await fetch(`${API_BASE}/tools/enneagram-read`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-          body: JSON.stringify({ type: result.type, wing: result.wing, label: result.label }),
-        });
-
-        if (res.status === 402) {
-          const parsed = await safeJson<FeatureLockedPayload>(res);
-          if (parsed.ok && parsed.data.error === 'feature_locked') {
-            if (!cancelled) setPaywall(parsed.data);
-            return;
-          }
-        }
-
-        const parsed = await safeJson<{ ok: true; reading: string } | { ok: false; error: string }>(res);
-        if (!parsed.ok) throw new Error(`HTTP ${parsed.status}`);
-        const json = parsed.data as { ok: true; reading: string } | { ok: false; error: string };
-        if (!json.ok || !json.reading) throw new Error('empty reading');
-        if (!cancelled) setReading(json.reading);
-      } catch {
-        if (!cancelled) setReading(null);
-      } finally {
-        if (!cancelled) setReadingLoading(false);
+    try {
+      const sb = getSupabaseAuth();
+      let token: string | undefined;
+      if (sb) {
+        const { data } = await sb.auth.getSession();
+        token = data.session?.access_token;
       }
-    })();
-    return () => {
-      cancelled = true;
-    };
+
+      const res = await fetch(`${API_BASE}/tools/enneagram-read`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ type: result.type, wing: result.wing, label: result.label }),
+      });
+
+      if (res.status === 402) {
+        const parsed = await safeJson<FeatureLockedPayload>(res);
+        if (parsed.ok && parsed.data.error === 'feature_locked') {
+          setPaywall(parsed.data);
+          return;
+        }
+      }
+
+      const parsed = await safeJson<{ ok: true; reading: string } | { ok: false; error: string }>(res);
+      if (!parsed.ok) throw new Error(`HTTP ${parsed.status}`);
+      const json = parsed.data as { ok: true; reading: string } | { ok: false; error: string };
+      if (!json.ok || !json.reading) throw new Error('empty reading');
+      setReading(json.reading);
+    } catch {
+      setReading(null);
+    } finally {
+      setReadingLoading(false);
+    }
   }, [result]);
+
+  React.useEffect(() => {
+    if (!result) return;
+    void runReading();
+  }, [result, runReading]);
 
   // Mở link chia sẻ "/enneagram?r=s1-s2-…-s9" → dựng lại kết quả để hiển thị ngay.
   React.useEffect(() => {
@@ -255,7 +254,10 @@ export default function EnneagramPage() {
                   slug={paywall.slug}
                   price={paywall.price}
                   label="Enneagram"
-                  onUnlocked={() => setPaywall(null)}
+                  onUnlocked={() => {
+                    setPaywall(null);
+                    void runReading();
+                  }}
                 />
               )}
 

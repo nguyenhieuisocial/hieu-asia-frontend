@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port 3000",
-    "build": "NODE_OPTIONS=--max-old-space-size=6144 next build",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=6144 next build",
     "start": "next start --port 3000",
     "lint": "next lint",
     "test": "echo 'web: no tests yet'",

@@ -233,7 +233,7 @@ export default function XemHopNhomPage() {
         setError(parsed.data.error ?? 'Có lỗi xảy ra, thử lại sau.');
       } else {
         setReport(parsed.data.report);
-        track('tool_used', { tool: 'xem-hop-nhom', result: 'ok', size: parsed.data.report.size });
+        track('tool_used', { tool: 'xem-hop-nhom', result: 'ok', size: parsed.data.report?.size ?? 0 });
       }
     } catch {
       setError('Không kết nối được máy chủ. Thử lại sau.');

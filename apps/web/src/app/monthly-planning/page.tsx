@@ -25,6 +25,8 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { TimeFlowChecker } from '@/components/time-flow/TimeFlowChecker';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Khung kế hoạch tháng — chia mục tiêu thành 4 tuần',
   description:
