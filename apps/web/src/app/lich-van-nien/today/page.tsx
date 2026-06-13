@@ -10,6 +10,7 @@ import {
 } from '@/components/lich-van-nien/CalendarMonth';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { safeJson } from '@/lib/safe-json';
+import { getVietnamDateParts } from '@/lib/vn-date';
 
 function getApiBase(): string {
   if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_URL) {
@@ -19,12 +20,7 @@ function getApiBase(): string {
 }
 
 function todayParts() {
-  const d = new Date();
-  return {
-    year: d.getUTCFullYear(),
-    month: d.getUTCMonth() + 1,
-    day: d.getUTCDate(),
-  };
+  return getVietnamDateParts();
 }
 
 export default function TodayPage() {

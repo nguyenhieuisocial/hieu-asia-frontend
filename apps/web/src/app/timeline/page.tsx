@@ -14,6 +14,8 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { TimeFlowChecker } from '@/components/time-flow/TimeFlowChecker';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Timeline đại vận — đại vận 10 năm vận hành thế nào',
   description:

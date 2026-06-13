@@ -14,6 +14,8 @@
  *         6 La Hầu · 7 Thái Dương · 8 Thái Bạch · 0 Thủy Diệu
  */
 
+import { getVietnamDateParts } from './vn-date';
+
 export type Gender = 'nam' | 'nu';
 
 export type SaoKey =
@@ -190,9 +192,9 @@ export interface SaoHanResult {
   viewYear: number;
 }
 
-/** Năm dương đang dùng để xem hạn (mặc định = năm hiện tại). */
+/** Năm dương đang dùng để xem hạn (mặc định = năm hiện tại theo giờ VN). */
 export function currentViewYear(): number {
-  return new Date().getFullYear();
+  return getVietnamDateParts().year;
 }
 
 /**
