@@ -14,11 +14,14 @@ export function ShareResultButton({
   title,
   text,
   trackId,
+  label,
 }: {
   path: string;
   title: string;
   text: string;
   trackId: string;
+  /** Override default button label "Chia sẻ kết quả" */
+  label?: string;
 }) {
   const [copied, setCopied] = React.useState(false);
 
@@ -44,7 +47,7 @@ export function ShareResultButton({
 
   return (
     <Button variant="outline" onClick={onShare} aria-live="polite">
-      {copied ? 'Đã copy link ✓' : 'Chia sẻ kết quả'}
+      {copied ? 'Đã copy link ✓' : (label ?? 'Chia sẻ kết quả')}
     </Button>
   );
 }

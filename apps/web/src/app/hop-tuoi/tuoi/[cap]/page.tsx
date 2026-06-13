@@ -171,13 +171,30 @@ export default async function HopTuoiPairPage({
           </p>
         </section>
 
-        <div className="mt-6 flex flex-wrap gap-3">
-          <ShareResultButton
-            path={url}
-            title="Xem hai tuổi có hợp nhau"
-            text="Mình vừa xem hai tuổi có hợp nhau trên hieu.asia — bạn thử nhé!"
-            trackId="hop-tuoi-cap"
-          />
+        {/* Chia sẻ + thách bạn */}
+        <div className="mt-6 rounded-xl border border-border bg-card/40 p-5">
+          <p className="text-sm font-medium text-foreground">
+            Thách người ấy tự xem kết quả — gửi link này cho họ nhé!
+          </p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Họ sẽ thấy đúng kết quả hai tuổi này và có thể tự xem hợp tuổi của chính mình.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <ShareResultButton
+              path={url}
+              title={`Tuổi ${a.ten} và tuổi ${b.ten} có hợp nhau không?`}
+              text={`Mình vừa xem hai tuổi ${a.ten} và ${b.ten} — ${copy.label.toLowerCase()}. Bạn thử xem hợp tuổi của mình nhé!`}
+              trackId="hop-tuoi-cap"
+              label="Gửi kết quả cho bạn"
+            />
+            <ShareResultButton
+              path="/hop-tuoi"
+              title="Xem hợp tuổi cưới hỏi, làm ăn — hieu.asia"
+              text="Thách bạn tự xem hợp tuổi của mình trên hieu.asia — miễn phí, không phán mù!"
+              trackId="hop-tuoi-cap-challenge"
+              label="Thách bạn tự xem"
+            />
+          </div>
         </div>
 
         {/* Tính cách hai con giáp */}
@@ -246,6 +263,25 @@ export default async function HopTuoiPairPage({
               </Link>
             </div>
           </div>
+        </section>
+
+        {/* Banner cho người nhận link — CTA lan truyền */}
+        <section className="mt-10 rounded-xl border border-gold/40 bg-gradient-to-br from-gold/[0.07] to-transparent p-5 sm:p-6">
+          <p className="text-xs font-mono uppercase tracking-widest text-gold/70">Nhận link này từ bạn bè?</p>
+          <h2 className="mt-1 font-heading text-lg font-bold text-foreground sm:text-xl">
+            Tự xem hợp tuổi của chính bạn — miễn phí
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-foreground/75">
+            Đây là kết quả hai tuổi bạn vừa xem. Muốn biết tuổi của <em>bạn</em> hợp với tuổi người kia không?
+            Chọn việc cần xem — cưới hỏi, hợp tác kinh doanh, sinh con — và nhận luận giải theo năm sinh thật.
+          </p>
+          <Link
+            href="/hop-tuoi"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-gold-gradient px-4 py-2 text-sm font-semibold text-ink transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+          >
+            Xem hợp tuổi của tôi
+            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </Link>
         </section>
 
         {/* FAQ */}
