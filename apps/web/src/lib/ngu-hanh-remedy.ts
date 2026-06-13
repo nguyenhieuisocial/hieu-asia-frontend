@@ -35,9 +35,9 @@ export interface NguHanhRemedy {
  *
  * Màu sắc:
  *   Kim → trắng, bạc, vàng kim (Kim + Thổ sinh Kim → thêm màu vàng đất)
- *   Mộc → xanh lá, xanh lam (Thủy sinh Mộc → thêm màu xanh nước)
+ *   Mộc → xanh lá, xanh lục (Thủy sinh Mộc → thêm màu xanh non)
  *   Thủy → đen, xanh đen, xanh đậm (Kim sinh Thủy → thêm màu bạc)
- *   Hỏa → đỏ, cam, tím (Mộc sinh Hỏa → thêm màu xanh lá)
+ *   Hỏa → đỏ, cam, hồng (Hỏa = nhiệt, ánh sáng — đỏ/cam/hồng đậm/hồng)
  *   Thổ → vàng, nâu, cam đất (Hỏa sinh Thổ → thêm màu đỏ đất)
  *
  * Hướng theo Ngũ Hành / Phong Thủy:
@@ -69,7 +69,7 @@ const REMEDY_MAP: Record<HanhCore, Omit<NguHanhRemedy, 'hanh'>> = {
     ],
   },
   Mộc: {
-    mauHop: ['Xanh lá', 'Xanh lam', 'Xanh ngọc', 'Ngọc lam'],
+    mauHop: ['Xanh lá', 'Xanh lục', 'Xanh ngọc', 'Xanh non'],
     huongTot: ['Đông', 'Đông Nam'],
     ngheHop: [
       'Giáo dục, đào tạo, tư vấn',
@@ -109,7 +109,7 @@ const REMEDY_MAP: Record<HanhCore, Omit<NguHanhRemedy, 'hanh'>> = {
     ],
   },
   Hỏa: {
-    mauHop: ['Đỏ', 'Cam', 'Tím', 'Hồng đậm'],
+    mauHop: ['Đỏ', 'Cam', 'Hồng đậm', 'Hồng'],
     huongTot: ['Nam'],
     ngheHop: [
       'Truyền thông, marketing, quảng cáo',
@@ -153,7 +153,7 @@ const REMEDY_MAP: Record<HanhCore, Omit<NguHanhRemedy, 'hanh'>> = {
 /**
  * Trích xuất hành chủ đạo từ chuỗi `fiveElementsClass` của iztro.
  *
- * iztro trả về định dạng "Thủy nhị cục" / "Mộc tam cục" / "Kim tứ cục" /
+ * iztro trả về định dạng "Thủy Nhị Cục" / "Mộc tam cục" / "Kim tứ cục" /
  * "Thổ ngũ cục" / "Hỏa lục cục" (tiếng Việt).
  * Hàm lấy từ đầu tiên trong chuỗi làm tên hành.
  *
