@@ -11,12 +11,15 @@ import { calculateBazi, type BaziChart, type BaziPillar, type Element, ELEMENTS 
  * 4 trụ + Thập Thần + cân bằng ngũ hành. Khung trung lập "không bói mù".
  */
 
+// Theme-aware: shade tối (≥4.5:1) cho nền sáng (kem), shade sáng cho nền tối.
+// Trước đây chỉ có shade -400/-200 (chỉ hợp nền tối) → ở light mode chữ ngũ hành
+// gần như vô hình (Kim 1.05:1). Đo vs nền kem rgb(243,236,221): 700/800/600 ≥4.5:1.
 const EL_TEXT: Record<Element, string> = {
-  Mộc: 'text-emerald-400',
-  Hỏa: 'text-rose-400',
-  Thổ: 'text-amber-400',
-  Kim: 'text-slate-200',
-  Thủy: 'text-sky-400',
+  Mộc: 'text-emerald-700 dark:text-emerald-400',
+  Hỏa: 'text-rose-700 dark:text-rose-400',
+  Thổ: 'text-amber-800 dark:text-amber-400',
+  Kim: 'text-slate-600 dark:text-slate-200',
+  Thủy: 'text-sky-700 dark:text-sky-400',
 };
 const EL_BAR: Record<Element, string> = {
   Mộc: 'bg-emerald-400/70',
@@ -235,6 +238,47 @@ export function BatTuChecker() {
                 thấy ngũ hành còn ẩn thêm; luận vượng/nhược &amp; dụng thần (cân theo mùa sinh) là phần bản đọc
                 AI làm.
               </p>
+            </div>
+
+            <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
+                Quan hệ giữa các trụ (hợp · xung · tam hợp)
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                Quan hệ giữa các địa chi cho thấy nội lực <strong>hoà hay căng</strong> trong lá số — dữ kiện cố
+                định tra theo bảng, không phải lời đoán.
+              </p>
+              {chart.relations.length === 0 ? (
+                <p className="mt-3 text-sm text-foreground/85">
+                  Bốn trụ không có quan hệ hợp / xung / tam hợp nổi bật — các chi đứng khá độc lập.
+                </p>
+              ) : (
+                <ul className="mt-3 space-y-1.5">
+                  {chart.relations.map((rel) => {
+                    const harmony = rel.type === 'Lục Hợp' || rel.type === 'Tam Hợp' || rel.type === 'Bán Tam Hợp';
+                    const tone = harmony
+                      ? 'bg-emerald-400/15 text-emerald-700 dark:text-emerald-300'
+                      : rel.type === 'Lục Xung'
+                        ? 'bg-rose-400/15 text-rose-700 dark:text-rose-300'
+                        : 'bg-amber-400/15 text-amber-800 dark:text-amber-300';
+                    return (
+                      <li
+                        key={`${rel.type}-${rel.chi}-${rel.pillars}`}
+                        className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-sm"
+                      >
+                        <span className={`shrink-0 rounded px-1.5 py-0.5 text-[11px] font-medium ${tone}`}>
+                          {rel.type}
+                        </span>
+                        <span className="font-medium text-foreground/90">{rel.chi}</span>
+                        <span className="text-xs text-muted-foreground">({rel.pillars})</span>
+                        <span className="w-full text-xs text-muted-foreground sm:w-auto sm:flex-1">
+                          — {rel.detail}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
             </div>
 
             {chart.daiVan && (
