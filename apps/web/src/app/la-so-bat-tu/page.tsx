@@ -62,6 +62,10 @@ const FAQS = [
     a: 'Tàng can là các thiên can ẩn bên trong mỗi địa chi (mỗi chi chứa 1–3 can) — đây mới là phần quyết định ngũ hành thật của lá số và cho đủ bộ Thập Thần, nên luận Bát Tự luôn xét tàng can chứ không chỉ 8 chữ nổi. Nạp âm là "mệnh" theo vòng 60 hoa giáp (ví dụ Canh Ngọ là Lộ Bàng Thổ) — cách gọi ngũ hành quen thuộc với người Việt, khác với ngũ hành của riêng can hay chi. Công cụ hiển thị cả tàng can (kèm Thập Thần) lẫn nạp âm cho từng trụ; đều là dữ kiện tra theo bảng cố định, kiểm chứng được.',
   },
   {
+    q: 'Lục Hợp, Lục Xung giữa các trụ là gì?',
+    a: 'Mười hai địa chi có những quan hệ cố định với nhau: Lục Hợp (hai chi hoà hợp, ví dụ Tý–Sửu, Ngọ–Mùi), Lục Xung (hai chi đối nhau, ví dụ Tý–Ngọ, Dần–Thân), Tam Hợp (ba chi tụ thành một hành mạnh, ví dụ Thân–Tý–Thìn thành Thủy) và Lục Hại (khắc ngầm nhẹ). Khi đối chiếu giữa bốn trụ của lá số, các quan hệ này cho thấy nội lực hoà hay căng — trụ nào dễ phối hợp, trụ nào có lực động/đối lập. Công cụ tự dò và liệt kê; đây là dữ kiện tra theo bảng cố định, không phải lời đoán may rủi (Lục Xung chỉ là lực thay đổi, không phải điềm xấu).',
+  },
+  {
     q: 'Đây có phải bói toán không?',
     a: 'Không. Việc lập 4 trụ là tính toán xác định; phần luận giải chỉ mô tả thiên hướng và gợi ý để bạn TỰ hiểu mình, không phán hoạ phúc hay tiên đoán số mệnh chắc chắn. Đó là điểm khác biệt của hieu.asia so với bói mù.',
   },
