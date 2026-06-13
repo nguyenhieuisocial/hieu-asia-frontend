@@ -159,6 +159,47 @@ export function BatTuChecker() {
 
             <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
               <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
+                Tàng can &amp; nạp âm (chiều sâu lá số)
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                Mỗi địa chi còn <strong>ẩn 1–3 thiên can</strong> bên trong (tàng can) — đây mới là phần định
+                ngũ hành thật &amp; đủ bộ Thập Thần. <strong>Nạp âm</strong> là &ldquo;mệnh&rdquo; theo 60 hoa
+                giáp (vd Lộ Bàng Thổ), khác với ngũ hành can/chi ở trên.
+              </p>
+              <div className="mt-3 space-y-2">
+                {[chart.year, chart.month, chart.day, chart.hour].map((p) => (
+                  <div key={p.label} className="rounded-lg border border-border bg-card/40 p-2.5">
+                    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                      <span className="w-12 shrink-0 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                        {p.label}
+                      </span>
+                      <span className="font-heading text-sm font-semibold">
+                        <span className={EL_TEXT[p.canElement]}>{p.can}</span>{' '}
+                        <span className={EL_TEXT[p.chiElement]}>{p.chi}</span>
+                      </span>
+                      <span className="text-[11px] text-foreground/70">
+                        nạp âm <strong className={EL_TEXT[p.napAm.element]}>{p.napAm.name}</strong>
+                      </span>
+                    </div>
+                    <div className="mt-1.5 flex flex-wrap gap-1.5 sm:pl-14">
+                      {p.hiddenStems.map((h) => (
+                        <span key={h.can} className="rounded bg-border/40 px-1.5 py-0.5 text-[11px]">
+                          <span className={`font-medium ${EL_TEXT[h.element]}`}>{h.can}</span>
+                          <span className="text-muted-foreground"> · {h.tenGod}</span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-3 text-xs text-muted-foreground">
+                Cung phối (trụ ngày) đọc theo tàng can ở chi ngày. Đây là dữ kiện cố định tra theo lá số —
+                luận vượng/nhược &amp; chọn dụng thần (cân theo mùa sinh, trọng số can ẩn) là phần bản đọc AI làm.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
                 Cân bằng ngũ hành (8 chữ)
               </p>
               <ul className="mt-3 space-y-1.5">
@@ -190,8 +231,9 @@ export function BatTuChecker() {
                 .
               </p>
               <p className="mt-2 text-xs text-muted-foreground">
-                Đây là đếm 8 chữ nổi — cách nhìn nhanh sự cân bằng. Luận sâu (vượng/nhược, dụng thần) còn xét
-                tàng can, mùa sinh… để bản đọc AI làm.
+                Đây là đếm 8 chữ nổi — cách nhìn nhanh sự cân bằng. Phần <strong>tàng can</strong> ở trên cho
+                thấy ngũ hành còn ẩn thêm; luận vượng/nhược &amp; dụng thần (cân theo mùa sinh) là phần bản đọc
+                AI làm.
               </p>
             </div>
 

@@ -33,6 +33,26 @@ const CAN_YANG: boolean[] = [true, false, true, false, true, false, true, false,
 // Ngũ hành + âm/dương của 12 Địa Chi.
 const CHI_ELEMENT: Element[] = ['Thủy', 'Thổ', 'Mộc', 'Mộc', 'Thổ', 'Hỏa', 'Hỏa', 'Thổ', 'Kim', 'Kim', 'Thổ', 'Thủy'];
 
+/**
+ * Tàng Can (人元/藏干) — các Thiên Can ẩn bên trong mỗi Địa Chi, theo CHỈ SỐ can.
+ * Bản khí (can đầu) đứng trước, rồi trung khí / dư khí. Bảng cố định, kiểm chứng được.
+ * Index theo CHI (0 = Tý … 11 = Hợi).
+ */
+const TANG_CAN: number[][] = [
+  [9], // Tý: Quý
+  [5, 9, 7], // Sửu: Kỷ, Quý, Tân
+  [0, 2, 4], // Dần: Giáp, Bính, Mậu
+  [1], // Mão: Ất
+  [4, 1, 9], // Thìn: Mậu, Ất, Quý
+  [2, 4, 6], // Tỵ: Bính, Mậu, Canh
+  [3, 5], // Ngọ: Đinh, Kỷ
+  [5, 3, 1], // Mùi: Kỷ, Đinh, Ất
+  [6, 8, 4], // Thân: Canh, Nhâm, Mậu
+  [7], // Dậu: Tân
+  [4, 7, 3], // Tuất: Mậu, Tân, Đinh
+  [8, 0], // Hợi: Nhâm, Giáp
+];
+
 // Quan hệ ngũ hành.
 const SHENG: Record<Element, Element> = { Mộc: 'Hỏa', Hỏa: 'Thổ', Thổ: 'Kim', Kim: 'Thủy', Thủy: 'Mộc' };
 const KE: Record<Element, Element> = { Mộc: 'Thổ', Thổ: 'Thủy', Thủy: 'Hỏa', Hỏa: 'Kim', Kim: 'Mộc' };
@@ -49,6 +69,57 @@ function thapThan(dmEl: Element, dmYang: boolean, el: Element, yang: boolean): s
   if (KE[dmEl] === el) return same ? 'Thiên Tài' : 'Chính Tài'; // Nhật Chủ khắc nó
   if (SHENG[el] === dmEl) return same ? 'Thiên Ấn' : 'Chính Ấn'; // Nó sinh Nhật Chủ
   return '';
+}
+
+/**
+ * Nạp Âm (納音) — "mệnh" theo 60 hoa giáp. Mỗi tên phủ 2 trụ liên tiếp trong
+ * vòng 60, nên có đúng 30 mục (theo thứ tự Giáp Tý → Quý Hợi). Bảng cố định.
+ */
+const NAP_AM: { name: string; element: Element }[] = [
+  { name: 'Hải Trung Kim', element: 'Kim' }, // Giáp Tý · Ất Sửu
+  { name: 'Lư Trung Hỏa', element: 'Hỏa' }, // Bính Dần · Đinh Mão
+  { name: 'Đại Lâm Mộc', element: 'Mộc' }, // Mậu Thìn · Kỷ Tỵ
+  { name: 'Lộ Bàng Thổ', element: 'Thổ' }, // Canh Ngọ · Tân Mùi
+  { name: 'Kiếm Phong Kim', element: 'Kim' }, // Nhâm Thân · Quý Dậu
+  { name: 'Sơn Đầu Hỏa', element: 'Hỏa' }, // Giáp Tuất · Ất Hợi
+  { name: 'Giản Hạ Thủy', element: 'Thủy' }, // Bính Tý · Đinh Sửu
+  { name: 'Thành Đầu Thổ', element: 'Thổ' }, // Mậu Dần · Kỷ Mão
+  { name: 'Bạch Lạp Kim', element: 'Kim' }, // Canh Thìn · Tân Tỵ
+  { name: 'Dương Liễu Mộc', element: 'Mộc' }, // Nhâm Ngọ · Quý Mùi
+  { name: 'Tuyền Trung Thủy', element: 'Thủy' }, // Giáp Thân · Ất Dậu
+  { name: 'Ốc Thượng Thổ', element: 'Thổ' }, // Bính Tuất · Đinh Hợi
+  { name: 'Tích Lịch Hỏa', element: 'Hỏa' }, // Mậu Tý · Kỷ Sửu
+  { name: 'Tùng Bách Mộc', element: 'Mộc' }, // Canh Dần · Tân Mão
+  { name: 'Trường Lưu Thủy', element: 'Thủy' }, // Nhâm Thìn · Quý Tỵ
+  { name: 'Sa Trung Kim', element: 'Kim' }, // Giáp Ngọ · Ất Mùi
+  { name: 'Sơn Hạ Hỏa', element: 'Hỏa' }, // Bính Thân · Đinh Dậu
+  { name: 'Bình Địa Mộc', element: 'Mộc' }, // Mậu Tuất · Kỷ Hợi
+  { name: 'Bích Thượng Thổ', element: 'Thổ' }, // Canh Tý · Tân Sửu
+  { name: 'Kim Bạch Kim', element: 'Kim' }, // Nhâm Dần · Quý Mão
+  { name: 'Phú Đăng Hỏa', element: 'Hỏa' }, // Giáp Thìn · Ất Tỵ
+  { name: 'Thiên Hà Thủy', element: 'Thủy' }, // Bính Ngọ · Đinh Mùi
+  { name: 'Đại Dịch Thổ', element: 'Thổ' }, // Mậu Thân · Kỷ Dậu
+  { name: 'Thoa Xuyến Kim', element: 'Kim' }, // Canh Tuất · Tân Hợi
+  { name: 'Tang Đố Mộc', element: 'Mộc' }, // Nhâm Tý · Quý Sửu
+  { name: 'Đại Khê Thủy', element: 'Thủy' }, // Giáp Dần · Ất Mão
+  { name: 'Sa Trung Thổ', element: 'Thổ' }, // Bính Thìn · Đinh Tỵ
+  { name: 'Thiên Thượng Hỏa', element: 'Hỏa' }, // Mậu Ngọ · Kỷ Mùi
+  { name: 'Thạch Lựu Mộc', element: 'Mộc' }, // Canh Thân · Tân Dậu
+  { name: 'Đại Hải Thủy', element: 'Thủy' }, // Nhâm Tuất · Quý Hợi
+];
+
+/** Vị trí (0–59) của cặp can-chi trong vòng 60 hoa giáp. */
+function sexagenaryIndex(canIdx: number, chiIdx: number): number {
+  for (let t = 0; t < 6; t++) {
+    const s = canIdx + 10 * t;
+    if (s % 12 === chiIdx) return s;
+  }
+  return 0; // không xảy ra với cặp can-chi hợp lệ (cùng tính âm/dương)
+}
+
+/** Nạp âm của một trụ (can-chi). */
+function napAmOf(canIdx: number, chiIdx: number): { name: string; element: Element } {
+  return NAP_AM[Math.floor(sexagenaryIndex(canIdx, chiIdx) / 2)]!;
 }
 
 // Ngũ Hổ Độn — can của tháng Dần ứng với từng can năm (index theo can năm).
@@ -82,6 +153,13 @@ function solarTermJD(year: number, targetLon: number, approxMonth: number, appro
   return (lo + hi) / 2;
 }
 
+export interface HiddenStem {
+  can: string;
+  element: Element;
+  /** Thập Thần của can ẩn này so với Nhật Chủ. */
+  tenGod: string;
+}
+
 export interface BaziPillar {
   label: string; // "Năm" | "Tháng" | "Ngày" | "Giờ"
   can: string;
@@ -90,6 +168,10 @@ export interface BaziPillar {
   chiElement: Element;
   /** Thập Thần của CAN trụ này so với Nhật Chủ. Trụ ngày = "Nhật Chủ". */
   tenGod: string;
+  /** Tàng can — các can ẩn trong địa chi của trụ (bản khí đứng đầu). */
+  hiddenStems: HiddenStem[];
+  /** Nạp âm ("mệnh" theo 60 hoa giáp) của trụ. */
+  napAm: { name: string; element: Element };
 }
 
 export interface BaziChart {
@@ -119,14 +201,27 @@ export interface BaziInput {
   asOf?: string; // ngày tham chiếu "YYYY-MM-DD" để tính lưu niên (vận năm); thiếu → bỏ lưu niên
 }
 
-function makePillar(label: string, canIdx: number, chiIdx: number, dm: { el: Element; yang: boolean } | null): BaziPillar {
+function makePillar(
+  label: string,
+  canIdx: number,
+  chiIdx: number,
+  dm: { el: Element; yang: boolean },
+  isDayStem = false,
+): BaziPillar {
+  const hiddenStems: HiddenStem[] = (TANG_CAN[chiIdx] ?? []).map((hc) => ({
+    can: CAN[hc]!,
+    element: CAN_ELEMENT[hc]!,
+    tenGod: thapThan(dm.el, dm.yang, CAN_ELEMENT[hc]!, CAN_YANG[hc]!),
+  }));
   return {
     label,
     can: CAN[canIdx]!,
     chi: CHI[chiIdx]!,
     canElement: CAN_ELEMENT[canIdx]!,
     chiElement: CHI_ELEMENT[chiIdx]!,
-    tenGod: dm ? thapThan(dm.el, dm.yang, CAN_ELEMENT[canIdx]!, CAN_YANG[canIdx]!) : 'Nhật Chủ',
+    tenGod: isDayStem ? 'Nhật Chủ' : thapThan(dm.el, dm.yang, CAN_ELEMENT[canIdx]!, CAN_YANG[canIdx]!),
+    hiddenStems,
+    napAm: napAmOf(canIdx, chiIdx),
   };
 }
 
@@ -267,7 +362,7 @@ export function calculateBazi(input: BaziInput): BaziChart {
 
   const year = makePillar('Năm', yearCan, yearChi, dm);
   const month = makePillar('Tháng', monthCan, monthChi, dm);
-  const day = makePillar('Ngày', dayCan, dayChi, null);
+  const day = makePillar('Ngày', dayCan, dayChi, dm, true);
   const hourP = makePillar('Giờ', hourCan, hourChi, dm);
 
   // Đếm ngũ hành trên 8 chữ.
