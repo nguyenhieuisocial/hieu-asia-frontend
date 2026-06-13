@@ -156,7 +156,7 @@ export default function AffiliateCommissionsPage() {
         setError(`Lỗi tải hoa hồng (HTTP ${j.status})`);
         return;
       }
-      const sorted = [...j.data.commissions].sort(
+      const sorted = [...(j.data.commissions ?? [])].sort(
         (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
       );
       setRows(sorted);

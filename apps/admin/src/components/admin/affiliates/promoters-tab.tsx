@@ -172,9 +172,10 @@ export function PromotersTab() {
                       <Button
                         size="sm"
                         variant="ghost"
-                        onClick={() =>
-                          banMut.mutate({ id: r.user_id, banned: r.status === 'active' })
-                        }
+                        onClick={() => {
+                          if (!confirm('Ban/Unban tài khoản này?')) return;
+                          banMut.mutate({ id: r.user_id, banned: r.status === 'active' });
+                        }}
                         disabled={banMut.isPending}
                         className="border border-border"
                       >
