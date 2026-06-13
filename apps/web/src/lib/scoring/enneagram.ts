@@ -193,6 +193,18 @@ export function scoreFromShare(vals: number[]): EnneagramScoreWithMeta | null {
   return { type, wing, label: `${type}w${wing}`, scores, total_items: 36, total_answered: 36 };
 }
 
+// Mũi tên Riso-Hudson: mỗi nhóm có 1 hướng phát triển (integration, khi an toàn/lành mạnh)
+// và 1 hướng áp lực (disintegration, khi căng thẳng/stress).
+// Nguồn: Don Richard Riso & Russ Hudson, "The Wisdom of the Enneagram" (1999).
+// Bảng: 1→7/4, 2→4/8, 3→6/9, 4→1/2, 5→8/7, 6→9/3, 7→5/1, 8→2/5, 9→3/6
+// (integration/disintegration).
+export const INTEGRATION: Record<EnneagramType, EnneagramType> = {
+  1: 7, 2: 4, 3: 6, 4: 1, 5: 8, 6: 9, 7: 5, 8: 2, 9: 3,
+};
+export const DISINTEGRATION: Record<EnneagramType, EnneagramType> = {
+  1: 4, 2: 8, 3: 9, 4: 2, 5: 7, 6: 3, 7: 1, 8: 5, 9: 6,
+};
+
 export interface EnneagramTypeMeta {
   name: string; // "Người Thủ Lĩnh"
   nick: string; // tên gọi khác (eyebrow)

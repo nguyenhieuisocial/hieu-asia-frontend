@@ -17,6 +17,8 @@ import {
   ENNEAGRAM_PAGES,
   ENNEAGRAM_TYPE_ORDER,
   TYPE_META,
+  INTEGRATION,
+  DISINTEGRATION,
   scoreEnneagram,
   scoreFromShare,
   type EnneagramScoreWithMeta,
@@ -215,6 +217,48 @@ export default function EnneagramPage() {
                       <p className="mt-1 text-sm leading-relaxed text-foreground/85">{row.text}</p>
                     </div>
                   ))}
+                </CardContent>
+              </Card>
+
+              <Card className="border-gold/20 bg-card/50">
+                <CardContent className="p-6">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                    Đường phát triển &amp; áp lực
+                  </div>
+                  <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
+                      <div className="text-[10px] font-mono uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+                        Khi phát triển →
+                      </div>
+                      <p className="mt-1 text-sm text-foreground/90">
+                        Nghiêng về{' '}
+                        <span className="font-semibold text-foreground">
+                          Type {INTEGRATION[result.type]} — {TYPE_META[INTEGRATION[result.type]].name}
+                        </span>
+                      </p>
+                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                        {TYPE_META[INTEGRATION[result.type]].atBest}
+                      </p>
+                    </div>
+                    <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3">
+                      <div className="text-[10px] font-mono uppercase tracking-widest text-amber-600 dark:text-amber-400">
+                        Khi áp lực →
+                      </div>
+                      <p className="mt-1 text-sm text-foreground/90">
+                        Nghiêng về{' '}
+                        <span className="font-semibold text-foreground">
+                          Type {DISINTEGRATION[result.type]} — {TYPE_META[DISINTEGRATION[result.type]].name}
+                        </span>
+                      </p>
+                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                        {TYPE_META[DISINTEGRATION[result.type]].underStress}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
+                    Theo mô hình Riso-Hudson: khi lành mạnh bạn hấp thụ điểm mạnh của nhóm phát triển;
+                    khi căng thẳng dễ rơi vào điểm yếu của nhóm áp lực.
+                  </p>
                 </CardContent>
               </Card>
 
