@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { ZodiacCard } from '@/components/daily/ZodiacCard';
 import { SubscribePush } from '@/components/daily/SubscribePush';
 import { ReflectCard } from '@/components/daily/ReflectCard';
@@ -144,6 +145,21 @@ export default async function Page() {
           streak right where the daily ritual happens. Self-hides for anonymous
           / signed-out visitors (the SEO-traffic majority). */}
       <StreakCard variant="compact" />
+
+      {/* Brand honesty disclaimer — clarify this is general horoscope by zodiac sign,
+          NOT a personal Tử Vi Đẩu Số chart (which requires exact birth date/time/place). */}
+      <div className="mt-4 rounded-xl border border-gold/20 bg-gold/5 px-4 py-3">
+        <p className="text-sm text-foreground/80">
+          <span className="font-semibold text-foreground">Lưu ý:</span>{' '}
+          Đây là dự báo chung theo <strong>12 con giáp</strong>, không phải lá số Tử Vi cá nhân của bạn.{' '}
+          <Link
+            href="/la-so-tu-vi"
+            className="font-medium text-gold underline-offset-2 hover:underline"
+          >
+            Muốn bản cá nhân hoá theo lá số thật? Lập lá số ngay →
+          </Link>
+        </p>
+      </div>
 
       {/* Reflective prompt — calm editorial card, private textarea (localStorage). */}
       <div className="mt-6">
