@@ -74,7 +74,9 @@ export function scoreBigFive(answers: Record<string, number>): BigFiveScoreWithM
   for (const trait of Object.keys(scores) as BigFiveTrait[]) {
     const items = items_per_trait[trait];
     if (items === 0) {
-      scores[trait] = 0;
+      // No answers for this trait → neutral 50 (mirrors MBTI scorer).
+      // Avoids mis-reading "cực thấp" (0) when the trait simply wasn't answered.
+      scores[trait] = 50;
       continue;
     }
     const min = items * 1;
