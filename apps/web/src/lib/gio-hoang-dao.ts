@@ -5,7 +5,7 @@
  * hoàng đạo + 6 giờ hắc đạo, ĐỔI theo Địa Chi của NGÀY (không theo tháng).
  *
  * Cách tính (đối chiếu KHỚP lịch vạn niên hieu.asia + bài quyết cổ):
- *   - Can/Chi ngày suy từ số ngày Julian: chi = (JDN+1)%12, can = (JDN+9)%10.
+ *   - Can/Chi ngày suy từ số ngày Julian: chi = (JDN+4)%12, can = (JDN+8)%10.
  *   - Mốc sao Thanh Long theo Chi NGÀY (bài quyết "Dần Thân gia Tý, Mão Dậu Dần,
  *     Thìn Tuất Thìn, Tỵ Hợi Ngọ, Tý Ngọ Thân, Sửu Mùi Tuất").
  *   - Xếp 12 sao (vòng cố định) lên 12 giờ; 6 sao tốt = giờ hoàng đạo.
@@ -90,11 +90,17 @@ export interface DayCanChi {
   label: string;
 }
 
-/** Can Chi của ngày dương (dd/mm/yy) — suy từ số ngày Julian. */
+/** Can Chi của ngày dương (dd/mm/yy) — suy từ số ngày Julian.
+ *
+ * Offset đã verify bằng 2 mốc thực:
+ *   2024-01-01 (JDN 2460311) → Quý Mão  (stemIndex=9, branchIndex=3)
+ *   2026-05-21 (JDN 2461182) → Giáp Tuất (stemIndex=0, branchIndex=10)
+ * Khớp với backend lunar.ts: stem=(jdn+8)%10, branch=(jdn+4)%12.
+ */
 export function dayCanChi(dd: number, mm: number, yy: number): DayCanChi {
   const jd = jdFromDate(dd, mm, yy);
-  const branchIndex = ((jd + 1) % 12 + 12) % 12;
-  const stemIndex = ((jd + 9) % 10 + 10) % 10;
+  const branchIndex = ((jd + 4) % 12 + 12) % 12;
+  const stemIndex = ((jd + 8) % 10 + 10) % 10;
   const stem = STEMS[stemIndex]!;
   const branch = BRANCHES[branchIndex]!;
   return { stem, branch, stemIndex, branchIndex, label: `${stem} ${branch}` };
