@@ -62,8 +62,8 @@ export async function generateMetadata(
   }
   const url = `https://hieu.asia/cam-nang/${pillar.slug}`;
   return {
-    title: `${pillar.topic} — Cẩm nang hieu.asia`,
-    description: pillar.content.slice(0, 160).replace(/\s+/g, ' ').trim(),
+    title: `${pillar.topic} — Cẩm nang`,
+    description: pillar.content.replace(/\s+/g, ' ').trim().slice(0, 157).replace(/\s\S*$/, '') + '…',
     alternates: { canonical: url },
     openGraph: {
       title: pillar.topic,
@@ -149,7 +149,7 @@ export default async function PillarPage({
   const pillar = await fetchPillar(slug);
   if (!pillar) notFound();
 
-  const articleDescription = pillar.content.slice(0, 160).replace(/\s+/g, ' ').trim();
+  const articleDescription = pillar.content.replace(/\s+/g, ' ').trim().slice(0, 157).replace(/\s\S*$/, '') + '…';
 
   return (
     <>
