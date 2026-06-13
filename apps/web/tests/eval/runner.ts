@@ -53,6 +53,38 @@ function loadPersonaSamples(personaDir: string, filter?: string): EvalSample[] {
   return samples;
 }
 
+// The reading pipeline emits ONE markdown report (`report.markdown`) with ~8 Vietnamese
+// H2 sections; the rubric + LLM judge expect 4 named sections. Bucket each H2 block by
+// heading keyword — every block lands somewhere, so the concatenation of the 4 fields
+// equals the full report (keeps theme/caution keyword coverage and the judge complete).
+function reportFromMarkdown(markdown: string, startedAt: number): ReadingOutput {
+  const buckets = {
+    summary: [] as string[],
+    strengths: [] as string[],
+    caveats: [] as string[],
+    recommendations: [] as string[],
+  };
+  // Split at each H2 (`## `). Text before the first H2 (the `# title` + any intro)
+  // becomes the first part and seeds the summary bucket.
+  for (const part of markdown.split(/\n(?=##\s)/)) {
+    const block = part.trim();
+    if (!block) continue;
+    const heading = (block.match(/^#{1,3}\s+(.+)$/m)?.[1] ?? '').toLowerCase();
+    if (/mạnh|strength|ưu điểm/.test(heading)) buckets.strengths.push(block);
+    else if (/blind|cảnh báo|lưu ý|cẩn trọng|rủi ro|điểm yếu|nguy cơ|caveat/.test(heading)) buckets.caveats.push(block);
+    else if (/kế hoạch|hành động|khuyến nghị|đề xuất|lời khuyên|90 ngày|giai đoạn|tuần \d|ngày \d|bước \d|recommend|phase/.test(heading)) buckets.recommendations.push(block);
+    else buckets.summary.push(block); // title/intro, tóm tắt, tính cách, sự nghiệp, cuộc đời, quan hệ…
+  }
+  const join = (a: string[]) => a.join('\n\n').trim();
+  return {
+    summary_section: join(buckets.summary),
+    strengths_section: join(buckets.strengths),
+    caveats_section: join(buckets.caveats),
+    recommendations_section: join(buckets.recommendations),
+    meta: { model: 'claude-opus', duration_ms: Date.now() - startedAt },
+  };
+}
+
 async function generateReading(sample: EvalSample, opts: RunnerOptions): Promise<ReadingOutput> {
   // Mirrors the real product flow (packages/supabase-client `createReading`):
   //   1. POST /reading-create { user_id, birth_data } → { session_id }
@@ -92,22 +124,18 @@ async function generateReading(sample: EvalSample, opts: RunnerOptions): Promise
       },
     });
     if (!get.ok) continue;
+    // reading-get returns { ok, session: { status, state, report: { markdown }, … } }.
     const data = (await get.json()) as {
-      status?: string;
-      report?: (Partial<ReadingOutput> & { meta?: { model?: string } }) | null;
+      session?: { status?: string; state?: string; report?: { markdown?: string } | null };
     };
-    if (data.status === 'error' || data.status === 'failed') {
-      throw new Error(`reading ${session_id} failed (status=${data.status})`);
+    const session = data.session;
+    const state = session?.state ?? '';
+    if (session?.status === 'error' || session?.status === 'failed' || state.startsWith('error')) {
+      throw new Error(`reading ${session_id} failed (status=${session?.status}, state=${state})`);
     }
-    const r = data.report;
-    if (r && typeof r.summary_section === 'string' && r.summary_section.length > 0) {
-      return {
-        summary_section: r.summary_section ?? '',
-        strengths_section: r.strengths_section ?? '',
-        caveats_section: r.caveats_section ?? '',
-        recommendations_section: r.recommendations_section ?? '',
-        meta: { model: r.meta?.model ?? 'unknown', duration_ms: Date.now() - startedAt },
-      };
+    const markdown = session?.report?.markdown;
+    if (session?.status === 'done' && typeof markdown === 'string' && markdown.length > 0) {
+      return reportFromMarkdown(markdown, startedAt);
     }
   }
   throw new Error(`reading ${session_id} did not produce a report within ~7.5 min`);
