@@ -359,6 +359,17 @@ function LockedReportGate({
             <div className="mx-auto h-2 w-32 animate-pulse rounded bg-muted/10" />
           </CardContent>
         </Card>
+      ) : priceQuery.isError ? (
+        /* Lỗi tải giá (mạng) → cho thử lại, KHÔNG nhầm thành "sắp mở bán". */
+        <Card className="border-red-500/30 bg-card/40">
+          <CardContent className="space-y-4 p-8 text-center">
+            <p className="font-heading text-foreground">Không tải được giá mở khoá</p>
+            <p className="text-sm text-muted-foreground">
+              Có thể do kết nối mạng. Vui lòng thử lại.
+            </p>
+            <Button onClick={() => void priceQuery.refetch()}>Thử lại</Button>
+          </CardContent>
+        </Card>
       ) : price > 0 ? (
         <FeaturePaywall
           slug={TUVI_REPORT_SLUG}
@@ -368,7 +379,7 @@ function LockedReportGate({
           onUnlocked={onUnlocked}
         />
       ) : (
-        /* Giá chưa được cấu hình (vd 0đ) hoặc lỗi tải giá → không hiện nút 0đ. */
+        /* Giá = 0 (chưa cấu hình bán) → không hiện nút 0đ. */
         <Card className="border-gold/20 bg-card/40">
           <CardContent className="space-y-4 p-8 text-center">
             <p className="text-sm text-muted-foreground">
