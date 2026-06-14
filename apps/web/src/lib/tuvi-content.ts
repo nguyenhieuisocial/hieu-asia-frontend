@@ -425,6 +425,8 @@ export const MAJOR_STARS_CONTENT: StarContent[] = [
     caution: ['Áp lực nội tâm cao.', 'Khi gặp Tham Lang hoặc Hoá Kỵ, dễ căng thẳng cá nhân.'],
     byPalace: [
       { palace: 'Mệnh', reading: 'Người có hai mặt: phần kỷ luật + phần đam mê. Cần biết cân bằng.' },
+      { palace: 'Quan Lộc', reading: 'Hợp ngành đòi hỏi chuẩn mực cao: kỹ thuật, tài chính, quản trị, hành chính.' },
+      { palace: 'Tài Bạch', reading: 'Tiền đến từ chuyên môn và bền bỉ; tránh kiểu "được ăn cả" cảm tính.' },
     ],
   },
   {
@@ -436,6 +438,8 @@ export const MAJOR_STARS_CONTENT: StarContent[] = [
     caution: ['Có thể quá thủ thân, bỏ lỡ cơ hội.', 'Khó thay đổi khi cần.'],
     byPalace: [
       { palace: 'Tài Bạch', reading: 'Tích luỹ ổn định, hợp người làm chuyên môn dài hạn.' },
+      { palace: 'Mệnh', reading: 'Người điềm đạm, biết giữ, tạo cảm giác an toàn cho người quanh mình.' },
+      { palace: 'Điền Trạch', reading: 'Hợp tích sản, nhà cửa; của cải giữ được lâu, ít hao hụt.' },
     ],
   },
   {
@@ -459,6 +463,8 @@ export const MAJOR_STARS_CONTENT: StarContent[] = [
     caution: ['Dễ phân tán.', 'Cần thận trọng với "đào hoa quá vượng" — quan hệ phức tạp.'],
     byPalace: [
       { palace: 'Mệnh', reading: 'Người đa năng, học nhanh, có sức hút.' },
+      { palace: 'Quan Lộc', reading: 'Hợp nghề cần giao tiếp, ngoại giao, sáng tạo, làm nhiều mảng.' },
+      { palace: 'Phu Thê', reading: 'Đời sống tình cảm phong phú; cần rõ ràng, chừng mực để bền lâu.' },
     ],
   },
   {
@@ -470,6 +476,8 @@ export const MAJOR_STARS_CONTENT: StarContent[] = [
     caution: ['Dễ nói nhiều, dễ mâu thuẫn nếu không kiểm soát.', 'Khi gặp Hoá Kỵ, dễ vướng "khẩu thiệt".'],
     byPalace: [
       { palace: 'Quan Lộc', reading: 'Hợp nghề dùng ngôn ngữ — luật, báo chí, giảng dạy.' },
+      { palace: 'Mệnh', reading: 'Người lý lẽ, hay đặt câu hỏi; thuyết phục tốt nhưng nên tiết chế lời.' },
+      { palace: 'Phu Thê', reading: 'Dễ hiểu lầm do lời nói — giao tiếp thẳng thắn, tránh "nói mát".' },
     ],
   },
   {
@@ -481,6 +489,8 @@ export const MAJOR_STARS_CONTENT: StarContent[] = [
     caution: ['Có thể thiếu tự chủ.', 'Cần học ra quyết định độc lập.'],
     byPalace: [
       { palace: 'Quan Lộc', reading: 'Hợp vai trò chief of staff, COO, trợ lý cấp cao.' },
+      { palace: 'Mệnh', reading: 'Người chỉn chu, trọng nghĩa, đáng tin; giỏi điều phối, dung hoà.' },
+      { palace: 'Phu Thê', reading: 'Bạn đời hỗ trợ tốt; hợp vai "hậu phương" vững cho nhau.' },
     ],
   },
   {
@@ -492,6 +502,8 @@ export const MAJOR_STARS_CONTENT: StarContent[] = [
     caution: ['Có thể "lo việc thiên hạ" quên việc nhà.', 'Cần học nói không.'],
     byPalace: [
       { palace: 'Mệnh', reading: 'Người có khuynh hướng giúp đỡ — cần cân bằng giữa cho và giữ.' },
+      { palace: 'Quan Lộc', reading: 'Hợp y tế, giáo dục, pháp lý, tư vấn — nghề "chăm sóc người khác".' },
+      { palace: 'Phúc Đức', reading: 'Phúc dày, hay gặp quý nhân lớn tuổi; tâm an khi giúp được người.' },
     ],
   },
   {
@@ -503,6 +515,8 @@ export const MAJOR_STARS_CONTENT: StarContent[] = [
     caution: ['Dễ va đập.', 'Cần học nhẫn nại trong việc lâu dài.'],
     byPalace: [
       { palace: 'Mệnh', reading: 'Người mạnh mẽ, hợp môi trường cạnh tranh.' },
+      { palace: 'Quan Lộc', reading: 'Hợp việc cần quyết đoán, chịu áp lực: quản lý, kinh doanh, kỹ thuật khó.' },
+      { palace: 'Tài Bạch', reading: 'Tiền vào ra mạnh; nên có kỷ luật quản trị rủi ro, giữ quỹ dự phòng.' },
     ],
   },
   {
@@ -514,6 +528,8 @@ export const MAJOR_STARS_CONTENT: StarContent[] = [
     caution: ['Dễ phá rồi không xây.', 'Cần học hoàn thiện.'],
     byPalace: [
       { palace: 'Mệnh', reading: 'Người ưa thay đổi, hợp startup hoặc nghề chuyển đổi liên tục.' },
+      { palace: 'Quan Lộc', reading: 'Hợp khởi nghiệp, tái cấu trúc, nghề đổi mới; ít hợp việc lặp đều đặn.' },
+      { palace: 'Phu Thê', reading: 'Quan hệ nhiều biến chuyển; cần chủ động vun đắp sự ổn định.' },
     ],
   },
 ];
@@ -936,6 +952,72 @@ export const AUX_STARS_CONTENT: StarContent[] = [
     byPalace: [
       { palace: 'Tài Bạch', reading: 'Cẩn trọng dòng tiền, tránh đầu cơ, giữ quỹ dự phòng.' },
       { palace: 'Mệnh', reading: 'Cuộc đời nhiều khúc rẽ — bản lĩnh tôi luyện qua biến động.' },
+    ],
+  },
+  {
+    slug: 'tuan-triet',
+    name: 'Tuần - Triệt',
+    category: 'aux',
+    archetype: 'Hai sao "không vong" — làm chậm/hoá giải cung chúng án ngữ; việc hay đến muộn hoặc đi đường vòng.',
+    positive: [
+      'Hoá giải bớt sao xấu ở cung bị án ngữ (cái xấu cũng "trống" theo).',
+      'Hợp người "nở muộn" — thành quả đến sau nhưng bền.',
+    ],
+    caution: [
+      'Cung bị Tuần/Triệt thường phát muộn hoặc cần đi đường khác thường — đừng nóng vội.',
+      'Là "khoảng lặng / đổi hướng", KHÔNG phải mất trắng.',
+    ],
+    byPalace: [
+      { palace: 'Mệnh', reading: 'Hay "nở muộn"; tin vào hành trình dài, không so bì giai đoạn đầu.' },
+      { palace: 'Quan Lộc', reading: 'Sự nghiệp lập muộn hoặc rẽ ngang rồi mới vững.' },
+    ],
+  },
+  {
+    slug: 'dai-hao-tieu-hao',
+    name: 'Đại Hao - Tiểu Hao',
+    category: 'aux',
+    archetype: 'Cặp hao tinh — chi tiêu, hao tán, tiền ra nhiều.',
+    positive: [
+      'Biết trước thì lập kế hoạch chi tiêu, giữ quỹ dự phòng chủ động.',
+      'Thường phóng khoáng, rộng rãi với người.',
+    ],
+    caution: [
+      'Năm/cung gặp: rà soát ngân sách, tránh đầu tư bốc đồng.',
+      'Là nhắc "giữ tiền", KHÔNG phải phá sản định sẵn.',
+    ],
+    byPalace: [
+      { palace: 'Tài Bạch', reading: 'Dòng tiền ra vào lớn — quản trị chi tiêu là chìa khoá.' },
+      { palace: 'Mệnh', reading: 'Tính phóng khoáng; hợp học kỷ luật tài chính sớm.' },
+    ],
+  },
+  {
+    slug: 'thai-phu-phong-cao',
+    name: 'Thai Phụ - Phong Cáo',
+    category: 'aux',
+    archetype: 'Cặp quý tinh — bằng cấp, chức danh, giấy tờ vinh danh.',
+    positive: [
+      'Hỗ trợ thi cử, bổ nhiệm, được cấp "danh phận" chính thức.',
+      'Tăng uy tín qua chứng chỉ, văn bằng.',
+    ],
+    caution: ['Danh đi cùng thực lực mới bền — đừng chuộng hình thức.'],
+    byPalace: [
+      { palace: 'Quan Lộc', reading: 'Thuận bổ nhiệm, thăng chức, được giao trọng trách có danh.' },
+      { palace: 'Mệnh', reading: 'Hợp môi trường trọng bằng cấp, danh vị.' },
+    ],
+  },
+  {
+    slug: 'thien-tho-thien-tai',
+    name: 'Thiên Thọ - Thiên Tài',
+    category: 'aux',
+    archetype: 'Cặp sao phúc — Thọ (sức bền, điềm đạm) + Tài (năng khiếu, lanh lợi).',
+    positive: [
+      'Thiên Thọ: bền sức, điều độ, nhẫn nại; Thiên Tài: nhạy bén, học nhanh.',
+      'Hợp tích luỹ lâu dài và phát huy năng khiếu riêng.',
+    ],
+    caution: ['Tài cần mài thành kỹ năng thật; thọ cần lối sống lành mạnh đi kèm.'],
+    byPalace: [
+      { palace: 'Mệnh', reading: 'Người chín chắn hơn tuổi, có khiếu riêng đáng nuôi dưỡng.' },
+      { palace: 'Phúc Đức', reading: 'Phúc thọ, tâm an; hợp lối sống điều độ.' },
     ],
   },
 ];
