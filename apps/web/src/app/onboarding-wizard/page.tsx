@@ -230,7 +230,16 @@ export default function OnboardingWizardPage() {
     }
 
     const nextParam = searchParams.get('next');
-    const dest = nextParam && nextParam.startsWith('/') ? nextParam : '/reading/new';
+    // Open-redirect guard: same-origin relative path only. `//evil.com` and
+    // `/\evil.com` are protocol-relative (browsers resolve them cross-origin), so
+    // startsWith('/') alone is not enough — reject those too (mirrors /auth/callback).
+    const dest =
+      nextParam &&
+      nextParam.startsWith('/') &&
+      !nextParam.startsWith('//') &&
+      !nextParam.startsWith('/\\')
+        ? nextParam
+        : '/reading/new';
     router.replace(dest);
   }
 
