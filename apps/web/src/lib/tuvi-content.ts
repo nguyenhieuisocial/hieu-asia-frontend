@@ -524,6 +524,24 @@ export const MAJOR_STARS_CONTENT: StarContent[] = [
 
 export const AUX_STARS_CONTENT: StarContent[] = [
   {
+    slug: 'thien-ma',
+    name: 'Thiên Mã',
+    category: 'aux',
+    archetype: 'Sao dịch mã — di chuyển, thay đổi, cơ hội ở phương xa.',
+    positive: [
+      'Năng động, thích nghi nhanh với môi trường mới.',
+      'Hợp công việc đi lại, xê dịch, kết nối nhiều nơi.',
+    ],
+    caution: [
+      'Dễ thiếu ổn định nếu thay đổi quá nhiều — nên chọn điểm dừng đúng lúc.',
+    ],
+    byPalace: [
+      { palace: 'Thiên Di', reading: 'Đi xa hay đổi môi trường thường mở ra cơ hội; hợp lập nghiệp ngoài quê.' },
+      { palace: 'Mệnh', reading: 'Tính hiếu động, ưa trải nghiệm, khó ngồi yên một chỗ.' },
+      { palace: 'Tài Bạch', reading: 'Tiền tài gắn với di chuyển; gặp Lộc Tồn (Lộc Mã) thì dòng tiền theo bước chân.' },
+    ],
+  },
+  {
     slug: 'ta-phu',
     name: 'Tả Phụ',
     category: 'aux',
