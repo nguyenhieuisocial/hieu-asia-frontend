@@ -107,7 +107,9 @@ export default async function XemTuoiLamNhaYearPage({
               So sánh các năm gần: {TARGET_YEAR}–{TARGET_YEAR + 5}
             </h2>
             <div className="mt-4 overflow-x-auto">
-              <table className="w-full min-w-[520px] text-sm">
+              {/* No min-width: keep the "Kết luận" column on-screen on mobile
+                  (was pushed behind an undiscovered horizontal scroll). */}
+              <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
                     <th className="py-2 pr-3 font-medium">Năm khởi công</th>

@@ -107,7 +107,11 @@ export default async function XemTuoiCuoiYearPage({
               So sánh các năm gần: {TARGET_YEAR}–{TARGET_YEAR + 5}
             </h2>
             <div className="mt-4 overflow-x-auto">
-              <table className="w-full min-w-[480px] text-sm">
+              {/* No min-width: on mobile the 4th column (Kết luận — the actual
+                  answer) was pushed off-screen behind a horizontal scroll most
+                  users never discover. Letting the table fit + wrap keeps the
+                  verdict visible without scrolling; desktop has ample width. */}
+              <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
                     <th className="py-2 pr-3 font-medium">Năm cưới</th>
