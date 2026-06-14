@@ -659,6 +659,159 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       { palace: 'Phu Thê', reading: 'Năm cần giao tiếp kỳ vọng rõ — dễ hiểu lầm trong quan hệ.' },
     ],
   },
+  {
+    slug: 'dia-khong-kiep',
+    name: 'Địa Không - Địa Kiếp',
+    category: 'aux',
+    archetype: 'Cặp sát tinh — phá cách, tư duy khác thường, dễ hao hụt vật chất.',
+    positive: [
+      'Tư duy đột phá, không theo lối mòn — hợp sáng tạo, nghiên cứu, tâm linh.',
+      'Trải nghiệm mất mát sớm giúp trưởng thành về tinh thần.',
+    ],
+    caution: [
+      'Tài chính dễ vào ra thất thường — nên tránh đầu cơ, vay đòn bẩy lớn.',
+      'Là lực "phá để làm mới", KHÔNG phải điềm xui cố định.',
+    ],
+    byPalace: [
+      { palace: 'Mệnh', reading: 'Người nghĩ khác số đông, hợp con đường phi truyền thống.' },
+      { palace: 'Tài Bạch', reading: 'Tiền hợp với chuyên môn/sáng tạo hơn là buôn bán đầu cơ.' },
+    ],
+  },
+  {
+    slug: 'hoa-quyen',
+    name: 'Hoá Quyền',
+    category: 'aux',
+    archetype: 'Tứ hoá — Quyền (năng lực, quyền hành, làm chủ).',
+    positive: [
+      'Tăng khả năng nắm việc, ra quyết định, dẫn dắt.',
+      'Giai đoạn hợp nhận thêm trách nhiệm, mở rộng tầm ảnh hưởng.',
+    ],
+    caution: ['Dễ ôm việc, cứng nhắc hoặc áp đặt — cần học uỷ quyền.'],
+    byPalace: [
+      { palace: 'Quan Lộc', reading: 'Giai đoạn thăng tiến, hợp vai trò quản lý, chủ động đề xuất.' },
+      { palace: 'Mệnh', reading: 'Khí chất mạnh lên, dám đứng mũi chịu sào.' },
+    ],
+  },
+  {
+    slug: 'hoa-khoa',
+    name: 'Hoá Khoa',
+    category: 'aux',
+    archetype: 'Tứ hoá — Khoa (danh tiếng, học vấn, quý nhân ngầm).',
+    positive: [
+      'Hợp thi cử, học hành, xây dựng uy tín và hình ảnh.',
+      'Có quý nhân nhẹ nhàng giúp đỡ, tiếng lành đồn xa.',
+    ],
+    caution: ['Trợ lực vừa phải — danh tốt nhưng không đẩy mạnh tài lộc trực tiếp.'],
+    byPalace: [
+      { palace: 'Quan Lộc', reading: 'Hợp việc cần uy tín, chuyên môn, bằng cấp.' },
+      { palace: 'Mệnh', reading: 'Phong thái nhã nhặn, dễ được tin tưởng.' },
+    ],
+  },
+  {
+    slug: 'dao-hoa',
+    name: 'Đào Hoa',
+    category: 'aux',
+    archetype: 'Sao đào hoa — sức hút, duyên dáng, quan hệ xã hội.',
+    positive: [
+      'Có sức hút tự nhiên, dễ gây thiện cảm — hợp nghề giao tiếp, biểu diễn.',
+      'Đời sống tình cảm và xã hội phong phú.',
+    ],
+    caution: ['Nhiều mối quan tâm dễ phân tâm — cần rõ ràng, chừng mực trong quan hệ.'],
+    byPalace: [
+      { palace: 'Mệnh', reading: 'Người duyên dáng, ăn nói có sức cuốn.' },
+      { palace: 'Phu Thê', reading: 'Tình duyên sôi nổi; hợp chủ động vun đắp sự chung thuỷ.' },
+    ],
+  },
+  {
+    slug: 'hong-loan-thien-hy',
+    name: 'Hồng Loan - Thiên Hỷ',
+    category: 'aux',
+    archetype: 'Cặp hỷ tinh — tình duyên, cưới hỏi, tin vui.',
+    positive: [
+      'Báo hiệu các dịp vui: cưới hỏi, gặp gỡ, gắn kết.',
+      'Tâm tính ấm áp, dễ mến.',
+    ],
+    caution: ['Là tín hiệu thời điểm thuận, không thay cho việc chủ động xây dựng quan hệ.'],
+    byPalace: [
+      { palace: 'Phu Thê', reading: 'Giai đoạn thuận cho chuyện tình cảm tiến triển, kết đôi.' },
+      { palace: 'Mệnh', reading: 'Người vui vẻ, lạc quan, thu hút thiện cảm.' },
+    ],
+  },
+  {
+    slug: 'long-tri-phuong-cac',
+    name: 'Long Trì - Phượng Các',
+    category: 'aux',
+    archetype: 'Cặp quý tinh — tài hoa, thanh nhã, khoa bảng.',
+    positive: [
+      'Gu thẩm mỹ tốt — hợp nghệ thuật, học thuật, công việc tinh tế.',
+      'Phong thái lịch thiệp, được nể trọng.',
+    ],
+    caution: ['Chuộng cái đẹp/hình thức — nên cân bằng với thực tế.'],
+    byPalace: [
+      { palace: 'Quan Lộc', reading: 'Hợp ngành đòi hỏi thẩm mỹ, chuyên môn cao, hình ảnh.' },
+      { palace: 'Mệnh', reading: 'Người nhã nhặn, ưa sự chỉn chu, tinh tế.' },
+    ],
+  },
+  {
+    slug: 'thien-khoc-thien-hu',
+    name: 'Thiên Khốc - Thiên Hư',
+    category: 'aux',
+    archetype: 'Cặp sao u tịch — nhạy cảm, hoài niệm, cảm giác thiếu hụt.',
+    positive: [
+      'Chiều sâu nội tâm, đồng cảm tốt — hợp việc cần sự tinh tế cảm xúc.',
+      'Biết trân trọng điều mình có khi vượt qua cảm giác trống trải.',
+    ],
+    caution: ['Dễ lo nghĩ, hoài cổ — nên nuôi dưỡng kết nối và lối sống tích cực.'],
+    byPalace: [
+      { palace: 'Mệnh', reading: 'Tâm hồn sâu sắc, đôi khi đa cảm.' },
+      { palace: 'Phúc Đức', reading: 'Cần chủ động chăm sóc đời sống tinh thần.' },
+    ],
+  },
+  {
+    slug: 'co-than-qua-tu',
+    name: 'Cô Thần - Quả Tú',
+    category: 'aux',
+    archetype: 'Cặp sao cô độc — độc lập, thích riêng tư, có khoảng cách trong quan hệ.',
+    positive: [
+      'Tự chủ, làm việc độc lập tốt, không phụ thuộc đám đông.',
+      'Hợp công việc cần tập trung, chuyên sâu.',
+    ],
+    caution: ['Dễ thu mình — nên chủ động giữ kết nối với người thân.'],
+    byPalace: [
+      { palace: 'Mệnh', reading: 'Tính tự lập cao, thích không gian riêng.' },
+      { palace: 'Phu Thê', reading: 'Cần chủ động vun đắp gần gũi, tránh "ai việc nấy".' },
+    ],
+  },
+  {
+    slug: 'thien-hinh',
+    name: 'Thiên Hình',
+    category: 'aux',
+    archetype: 'Sao kỷ luật — nguyên tắc, sắc bén, ưa công lý.',
+    positive: [
+      'Kỷ luật, quyết đoán — hợp ngành luật, y, kỹ thuật, quân đội.',
+      'Giữ nguyên tắc tốt, làm việc dứt khoát.',
+    ],
+    caution: ['Dễ khắt khe với mình và người — cần thêm sự mềm mỏng.'],
+    byPalace: [
+      { palace: 'Quan Lộc', reading: 'Hợp nghề cần kỷ luật và độ chính xác cao.' },
+      { palace: 'Mệnh', reading: 'Người cương trực, rạch ròi đúng sai.' },
+    ],
+  },
+  {
+    slug: 'thien-rieu',
+    name: 'Thiên Riêu',
+    category: 'aux',
+    archetype: 'Sao đa tình — quyến rũ, nhạy bén tâm lý, chiều sâu cảm xúc.',
+    positive: [
+      'Tinh tế, có sức hút riêng, nhạy với tâm lý người khác.',
+      'Hợp công việc cần thấu hiểu con người.',
+    ],
+    caution: ['Dễ sa vào cảm xúc/cám dỗ — cần ranh giới rõ ràng.'],
+    byPalace: [
+      { palace: 'Mệnh', reading: 'Người có chiều sâu, đôi khi bí ẩn, đa cảm.' },
+      { palace: 'Phu Thê', reading: 'Đời sống tình cảm nhiều sắc thái; nên minh bạch.' },
+    ],
+  },
 ];
 
 export const ALL_STARS_CONTENT: StarContent[] = [...MAJOR_STARS_CONTENT, ...AUX_STARS_CONTENT];
