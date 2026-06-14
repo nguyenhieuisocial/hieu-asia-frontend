@@ -91,6 +91,16 @@ function renderMarkdown(md: string): string {
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
+  // Inline formatting — run on ALREADY-ESCAPED text. Chỉ cho phép link nội bộ
+  // (/...) hoặc https:// (chặn javascript:/khác). Hỗ trợ [text](url) và **bold**.
+  const inline = (s: string) =>
+    s
+      .replace(
+        /\[([^\]]+)\]\((\/[^)\s]*|https:\/\/[^)\s]+)\)/g,
+        '<a href="$2" class="text-gold underline underline-offset-2 hover:opacity-80">$1</a>',
+      )
+      .replace(/\*\*([^*]+)\*\*/g, '<strong class="font-semibold text-foreground">$1</strong>');
+  const fmt = (s: string) => inline(escape(s));
   const lines = md.split('\n');
   const out: string[] = [];
   let inList = false;
@@ -108,22 +118,22 @@ function renderMarkdown(md: string): string {
     }
     if (line.startsWith('### ')) {
       flushList();
-      out.push(`<h3 class="mt-8 font-heading text-xl font-semibold text-foreground">${escape(line.slice(4))}</h3>`);
+      out.push(`<h3 class="mt-8 font-heading text-xl font-semibold text-foreground">${fmt(line.slice(4))}</h3>`);
     } else if (line.startsWith('## ')) {
       flushList();
-      out.push(`<h2 class="mt-10 font-heading text-2xl font-semibold text-foreground">${escape(line.slice(3))}</h2>`);
+      out.push(`<h2 class="mt-10 font-heading text-2xl font-semibold text-foreground">${fmt(line.slice(3))}</h2>`);
     } else if (line.startsWith('# ')) {
       flushList();
-      out.push(`<h2 class="mt-10 font-heading text-2xl font-semibold text-foreground">${escape(line.slice(2))}</h2>`);
+      out.push(`<h2 class="mt-10 font-heading text-2xl font-semibold text-foreground">${fmt(line.slice(2))}</h2>`);
     } else if (/^[-*]\s+/.test(line)) {
       if (!inList) {
         out.push('<ul class="mt-3 ml-5 list-disc space-y-1 text-foreground/85">');
         inList = true;
       }
-      out.push(`<li>${escape(line.replace(/^[-*]\s+/, ''))}</li>`);
+      out.push(`<li>${fmt(line.replace(/^[-*]\s+/, ''))}</li>`);
     } else {
       flushList();
-      out.push(`<p class="mt-4 leading-relaxed text-foreground/85">${escape(line)}</p>`);
+      out.push(`<p class="mt-4 leading-relaxed text-foreground/85">${fmt(line)}</p>`);
     }
   }
   flushList();
