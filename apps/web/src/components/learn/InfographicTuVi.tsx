@@ -106,7 +106,10 @@ export function InfographicTuVi() {
           {CUNG_12[active]!.name}
         </text>
         <foreignObject x={center - 100} y={center + 4} width={200} height={80}>
-          <div className="text-center text-xs leading-snug text-foreground/80">
+          {/* Wheel inner circle is a fixed near-black (#0E0E0F) in BOTH themes,
+              so this caption must stay light always — text-foreground/80 went
+              dark-on-dark (invisible) in light mode. */}
+          <div className="text-center text-xs leading-snug text-[#d8cdb1]">
             {CUNG_12[active]!.desc}
           </div>
         </foreignObject>

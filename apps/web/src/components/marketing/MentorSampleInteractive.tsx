@@ -675,7 +675,7 @@ export function MentorSampleInteractive() {
                 <button
                   type="submit"
                   disabled={!input.trim()}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 font-sans text-sm font-semibold text-ink transition-colors duration-200 hover:bg-primary/80 disabled:cursor-not-allowed disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 font-sans text-sm font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/80 disabled:cursor-not-allowed disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   Gửi câu hỏi
                   <Send className="size-4" aria-hidden strokeWidth={2} />

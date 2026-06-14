@@ -354,7 +354,7 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
             <Button
               type="submit"
               disabled={anyLoading || !email || !captchaToken}
-              className="h-12 w-full rounded-pill bg-gold text-warm-dark-50 transition-all duration-300 ease-editorial hover:bg-gold-soft"
+              className="h-12 w-full rounded-pill border border-gold-soft/50 bg-gold text-warm-dark-50 transition-all duration-300 ease-editorial hover:bg-gold-soft disabled:opacity-60"
             >
               {emailLoading ? 'Đang gửi…' : 'Gửi liên kết đăng nhập'}
             </Button>
