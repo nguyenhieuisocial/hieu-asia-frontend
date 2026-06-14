@@ -305,7 +305,12 @@ export function BirthDataForm() {
         /* quota — best effort */
       }
     }
-    router.push(`/reading/${res.session_id}/upload`);
+    // Skip the palm-upload + personality-survey steps: orchestration already
+    // kicked off at createReading() using birth data, and those two inputs are
+    // NOT consumed by the report pipeline — collecting them was pure friction
+    // (and implied an analysis that doesn't happen). Go straight to processing.
+    // (/upload + /survey pages remain in the repo for a future wire-through.)
+    router.push(`/reading/${res.session_id}/processing`);
   });
 
   return (

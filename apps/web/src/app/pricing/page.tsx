@@ -80,10 +80,10 @@ const PRICING_FAQ: readonly FaqItem[] = [
       <p>
         Gói <b>Premium</b> mở khoá ngay khi bạn lập lá số: quét mã QR chuyển
         khoản ngân hàng nội địa và báo cáo đầy đủ tự mở sau khi nhận được tiền.
-        Với các gói thuê bao <b>Mentor</b> (tháng / năm / trọn đời), chúng tôi
-        đang hoàn thiện thanh toán tự động — trong thời gian này bạn đăng ký
-        bằng cách nhắn trực tiếp founder qua Telegram. Thẻ Visa/Mastercard và
-        Apple Pay dự kiến bổ sung sau.
+        Các gói thuê bao <b>Mentor</b> (tháng / năm / trọn đời) cũng thanh toán
+        bằng mã QR chuyển khoản ngay trên trang đăng ký — bạn chỉ cần đăng nhập
+        để gói được gắn vào tài khoản, gói kích hoạt tự động sau khi nhận được
+        tiền. Thẻ Visa/Mastercard và Apple Pay dự kiến bổ sung sau.
       </p>
     ),
   },

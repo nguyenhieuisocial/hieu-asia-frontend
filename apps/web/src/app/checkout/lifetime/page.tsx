@@ -1,5 +1,8 @@
-import { MarketingHero } from '@/components/marketing/MarketingHero';
+import Link from 'next/link';
+import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { SubscriptionCheckout } from '@/components/checkout/SubscriptionCheckout';
+import { formatVND, ADVANCED_PRICING } from '@/lib/pricing';
 
 export const metadata = {
   title: 'Checkout Lifetime',
@@ -8,27 +11,47 @@ export const metadata = {
 };
 
 /**
- * Wave 64.1 (audit 2026-05-29): the pricing "Tuỳ chọn nâng cao" card linked to
- * /checkout/lifetime but the route never existed → hard 404 on the highest-value
- * paid CTA. Mirror the premium/mentor "Sắp ra mắt" stub so it degrades gracefully
- * (coming-soon + founder Telegram) instead of 404.
+ * Lifetime one-time checkout (4.990.000đ). Session-less QR checkout: the plan
+ * attaches to the logged-in account forever, no reading required.
  */
 export default function CheckoutLifetimePage() {
   return (
     <>
-      <MarketingHero
-        eyebrow="CHECKOUT · LIFETIME"
-        title={
-          <>
-            Sắp <em className="italic text-gold-soft">ra mắt Lifetime</em>
-            <span className="text-gold-dot drop-shadow-[0_0_16px_rgba(229,198,138,0.18)]">.</span>
-          </>
-        }
-        subtitle="Gói Lifetime — truy cập trọn đời toàn bộ tính năng Mentor, thanh toán một lần duy nhất. Đang hoàn thiện tích hợp thanh toán SePay + Stripe. Vui lòng quay lại sau, hoặc liên hệ trực tiếp founder để đăng ký sớm."
-        primaryCta={{ label: 'Quay về bảng giá', href: '/pricing' }}
-        secondaryCta={{ label: 'Liên hệ qua Telegram', href: 'https://t.me/nguyenhieuisocial' }}
-        trustLine="Câu hỏi · founder phản hồi trong 4 giờ"
-      />
+      <SiteNav />
+      <main className="min-h-screen bg-background pt-24 text-foreground">
+        <div className="container mx-auto max-w-3xl px-4 py-10 sm:px-6">
+          <header className="mb-6 flex items-center justify-between">
+            <nav aria-label="Breadcrumb" className="text-xs text-muted-foreground">
+              <Link href="/" className="hover:text-gold">Trang chủ</Link>
+              <span className="mx-1.5">/</span>
+              <Link href="/pricing" className="hover:text-gold">Pricing</Link>
+              <span className="mx-1.5">/</span>
+              <span className="text-muted-foreground">Lifetime</span>
+            </nav>
+            <Link
+              href="/pricing"
+              className="text-sm text-muted-foreground transition hover:text-gold"
+            >
+              ← Đổi gói
+            </Link>
+          </header>
+
+          <div className="mb-6">
+            <p className="font-mono text-xs uppercase tracking-wider text-primary">
+              CHECKOUT · LIFETIME
+            </p>
+            <h1 className="mt-2 font-heading text-2xl text-foreground">
+              Lifetime — trọn đời
+            </h1>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {formatVND(ADVANCED_PRICING.lifetime.vnd)} / một lần — mở khóa toàn
+              bộ tính năng Mentor mãi mãi, không gia hạn.
+            </p>
+          </div>
+
+          <SubscriptionCheckout tier="lifetime_onetime" />
+        </div>
+      </main>
       <SiteFooter />
     </>
   );

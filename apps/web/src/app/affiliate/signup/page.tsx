@@ -17,6 +17,7 @@ type PayoutMethod = 'bank' | 'momo' | 'zalo';
 interface SignupSuccess {
   ok: true;
   affiliate_id: string;
+  token: string;
   code: string;
   share_url: string;
   qr_url: string;
@@ -70,7 +71,7 @@ export default function AffiliateSignupPage() {
       const meRes = await fetch('/api/affiliate/me', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ affiliate_id: data.affiliate_id }),
+        body: JSON.stringify({ token: data.token }),
       });
       if (!meRes.ok) {
         throw new Error(
