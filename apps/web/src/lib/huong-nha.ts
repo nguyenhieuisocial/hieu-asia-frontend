@@ -135,14 +135,14 @@ export interface StarInfo {
 }
 
 export const STAR_INFO: Record<StarKey, StarInfo> = {
-  sinh_khi: { name: 'Sinh Khí', good: true, blurb: 'Hướng tốt nhất — thuận công danh, tài lộc, sức sống. Hợp đặt cửa chính, bàn làm việc.' },
-  thien_y: { name: 'Thiên Y', good: true, blurb: 'Tốt cho sức khỏe, quý nhân. Hợp hướng giường ngủ, bếp.' },
-  dien_nien: { name: 'Diên Niên', good: true, blurb: 'Tốt cho hòa thuận, hôn nhân, quan hệ. Hợp phòng ngủ, phòng khách.' },
-  phuc_vi: { name: 'Phục Vị', good: true, blurb: 'Bình ổn, củng cố — hợp bàn thờ, phòng học, nơi cần sự yên định.' },
-  tuyet_menh: { name: 'Tuyệt Mệnh', good: false, blurb: 'Hướng xấu nhất theo quan niệm — nên tránh đặt cửa chính, giường.' },
-  ngu_quy: { name: 'Ngũ Quỷ', good: false, blurb: 'Dễ thị phi, hao tán — thường tránh cho cửa và bếp.' },
-  luc_sat: { name: 'Lục Sát', good: false, blurb: 'Hay vướng mắc, trục trặc — nên tránh hướng cửa, giường.' },
-  hoa_hai: { name: 'Họa Hại', good: false, blurb: 'Hao hụt nhẹ, lục đục — hướng kém, nên tránh nếu có lựa chọn khác.' },
+  sinh_khi: { name: 'Sinh Khí', good: true, blurb: 'Cát tinh số 1 — chủ công danh, tài lộc, sức sống và thăng tiến. Ưu tiên cho cửa chính, bàn làm việc, hướng bếp quay về (toạ hung hướng cát).' },
+  thien_y: { name: 'Thiên Y', good: true, blurb: 'Sao sức khỏe & quý nhân — chủ bình an, hồi phục, được nâng đỡ. Hợp hướng giường ngủ, bàn ăn, bếp.' },
+  dien_nien: { name: 'Diên Niên', good: true, blurb: 'Sao hòa hợp — chủ hôn nhân, tình cảm, quan hệ bền lâu. Hợp phòng ngủ vợ chồng, phòng khách, bàn tiếp khách.' },
+  phuc_vi: { name: 'Phục Vị', good: true, blurb: 'Sao ổn định — chủ sự yên định, củng cố, tĩnh tâm. Hợp bàn thờ, phòng học, nơi cần sự an tĩnh.' },
+  tuyet_menh: { name: 'Tuyệt Mệnh', good: false, blurb: 'Hung tinh nặng nhất theo quan niệm — dễ hao tổn sức khỏe, tinh thần. Nên tránh đặt cửa chính, giường, bếp về hướng này.' },
+  ngu_quy: { name: 'Ngũ Quỷ', good: false, blurb: 'Chủ thị phi, hao tài, xáo trộn — dễ sinh chuyện ngoài ý. Tránh cho cửa, bếp, giường; có thể dùng cho kho, nhà vệ sinh.' },
+  luc_sat: { name: 'Lục Sát', good: false, blurb: 'Chủ trục trặc, vướng mắc, tiểu nhân — hay sinh mâu thuẫn. Nên tránh hướng cửa, giường, bếp.' },
+  hoa_hai: { name: 'Họa Hại', good: false, blurb: 'Chủ hao hụt nhẹ, lục đục, miệng tiếng — hướng kém. Nên tránh nếu còn lựa chọn tốt hơn.' },
 };
 
 // Thuật toán biến hào du niên: bắt đầu từ quẻ mệnh (Phục Vị), lật hào theo
