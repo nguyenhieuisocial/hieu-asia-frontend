@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, Button } from '@hieu-asia/ui'
 import { ChevronRight, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
-import { PALACES_CONTENT, findPalaceContent } from '@/lib/tuvi-content';
+import { PALACES_CONTENT, findPalaceContent, ALL_STARS_CONTENT } from '@/lib/tuvi-content';
 
 export function generateStaticParams() {
   return PALACES_CONTENT.map((p) => ({ palace: p.slug }));
@@ -191,20 +191,24 @@ export default async function PalacePage({
             <CardContent>
               <div className="flex flex-wrap gap-2">
                 {data.commonStars.map((s) => {
-                  const slug = s
-                    .toLowerCase()
-                    .normalize('NFD')
-                    .replace(/[̀-ͯ]/g, '')
-                    .replace(/[^a-z0-9]+/g, '-')
-                    .replace(/^-|-$/g, '');
-                  return (
+                  // Chỉ link sao có trang nội dung thật (tra theo TÊN trong ALL_STARS_CONTENT
+                  // để lấy đúng slug chuẩn). Slugify thủ công trước đây bỏ chữ "đ" → "Thiên Đồng"
+                  // ra "thien-ong" (404); sao chưa có trang (vd Thiên Mã) thì hiện chữ, không link gãy.
+                  const star = ALL_STARS_CONTENT.find((x) => x.name === s);
+                  const chip =
+                    'rounded-full border border-border bg-card/40 px-3 py-1 font-mono text-xs text-foreground/80 transition-colors';
+                  return star ? (
                     <Link
                       key={s}
-                      href={`/tu-vi/sao/${slug}`}
-                      className="rounded-full border border-border bg-card/40 px-3 py-1 font-mono text-xs text-foreground/80 transition-colors hover:border-gold/50 hover:text-gold"
+                      href={`/tu-vi/sao/${star.slug}`}
+                      className={`${chip} hover:border-gold/50 hover:text-gold`}
                     >
                       {s}
                     </Link>
+                  ) : (
+                    <span key={s} className={chip}>
+                      {s}
+                    </span>
                   );
                 })}
               </div>
