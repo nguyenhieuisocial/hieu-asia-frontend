@@ -40,6 +40,7 @@ import { ErrorBlock } from '@/components/admin/error-block';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { CustomerDetailTabs } from '@/components/admin/customers/CustomerDetailTabs';
 import { PlanBadge } from '@/components/admin/customers/PlanBadge';
+import { SetPlanDialog } from '@/components/admin/customers/SetPlanDialog';
 import type {
   CustomerDetailResponse,
 } from '@/components/admin/customers/detail-types';
@@ -210,6 +211,13 @@ function CustomerDetailPageInner() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {customer?.email && (
+            <SetPlanDialog
+              defaultEmail={customer.email}
+              triggerLabel="Cấp gói cho user này"
+              onSuccess={() => refetch()}
+            />
+          )}
           <Button variant="outline" size="sm" onClick={onRefresh} disabled={isFetching}>
             {isFetching ? 'Đang tải…' : 'Làm mới'}
           </Button>
