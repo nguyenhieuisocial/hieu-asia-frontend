@@ -62,10 +62,21 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
     pathname != null &&
     NIGHT_MODE_ROUTES.some((route) => pathname.startsWith(route));
 
+  // Homepage is the flagship "Giấy thấm" (Paper) light experience — its
+  // HeroV4/MultiHero is built light-only (inline `background:#F3ECDD`, no
+  // theme tokens). User-toggling dark produced a half-dark page (dark
+  // header/cookie banner over a cream hero). Force light so `/` always
+  // renders as the intended Paper showcase. (Founder decision 2026-06-14;
+  // other marketing routes stay user-toggleable — their bodies are
+  // theme-token-aware and render dark correctly.)
+  const isHomeRoute = pathname === '/';
+
   return (
     <NextThemesProvider
       {...props}
-      forcedTheme={isNightRoute ? 'dark' : props.forcedTheme}
+      forcedTheme={
+        isNightRoute ? 'dark' : isHomeRoute ? 'light' : props.forcedTheme
+      }
     >
       {children}
     </NextThemesProvider>

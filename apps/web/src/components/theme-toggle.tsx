@@ -47,12 +47,13 @@ export function ThemeToggle() {
 
   React.useEffect(() => setMounted(true), []);
 
-  // Hide on force-dark routes (Wave 62.05c). ThemeProvider's forcedTheme
-  // prop makes setTheme a no-op here — the button would be visually
-  // active but functionally dead.
+  // Hide on force-dark routes (Wave 62.05c) AND the force-light homepage
+  // (2026-06-14). ThemeProvider's forcedTheme prop makes setTheme a no-op on
+  // these routes — the button would be visually active but functionally dead.
   if (
     pathname != null &&
-    FORCED_DARK_PREFIXES.some((p) => pathname.startsWith(p))
+    (pathname === '/' ||
+      FORCED_DARK_PREFIXES.some((p) => pathname.startsWith(p)))
   ) {
     return null;
   }
