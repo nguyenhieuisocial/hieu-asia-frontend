@@ -34,7 +34,12 @@ interface IntentEnvelope {
   ok: boolean;
   intent?: PaymentIntent;
   error?: string;
+  /** Set by the worker when a supplied coupon_code is invalid/expired/exhausted. */
+  code_invalid?: boolean;
 }
+
+/** Error carrying the worker's code_invalid flag so the UI can recover the code state. */
+class CouponInvalidError extends Error {}
 
 interface ValidateCodeEnvelope {
   ok: boolean;
@@ -91,7 +96,11 @@ async function createFeatureIntent(
   }
   const body = parsed.data;
   if (!res.ok || !body.ok || !body.intent) {
-    throw new Error(body.error ?? `Tạo giao dịch thất bại (${res.status})`);
+    const message = body.error ?? `Tạo giao dịch thất bại (${res.status})`;
+    // A code can expire/exhaust between "Áp dụng" and "Mở khoá" (race on a
+    // max_uses promo). Surface it distinctly so the caller can drop the code
+    // and recover instead of looping on the same dead code.
+    throw body.code_invalid ? new CouponInvalidError(message) : new Error(message);
   }
   return body.intent;
 }
@@ -203,6 +212,18 @@ export function FeaturePaywall({
       })
       .catch((err: unknown) => {
         if (cancelled) return;
+        if (err instanceof CouponInvalidError) {
+          // Code died in the validate→unlock window. Drop it, return to the
+          // price card, and show why — so the user can re-enter or just unlock
+          // at full price instead of looping the same dead code.
+          setAppliedCode(null);
+          setAppliedPrice(null);
+          setAppliedDiscountPct(null);
+          appliedCodeRef.current = null;
+          setCodeErr(err.message || 'Mã không còn hợp lệ — vui lòng thử lại');
+          setAttempt(0);
+          return;
+        }
         setError(err instanceof Error ? err.message : String(err));
       })
       .finally(() => {
