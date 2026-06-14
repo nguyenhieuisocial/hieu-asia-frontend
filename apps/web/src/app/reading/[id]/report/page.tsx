@@ -32,7 +32,28 @@ import { ProductTabs, type ProductTab } from '@/components/product/ProductTabs';
 import { ReportTOC } from '@/components/report/ReportTOC';
 import { ReadingProgress } from '@/components/report/ReadingProgress';
 import { PostReadingSurvey } from '@/components/feedback/PostReadingSurvey';
+import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
 import { track } from '@/lib/analytics';
+
+/** Feature-pricing slug for the full Tử Vi report (matches backend registry). */
+const TUVI_REPORT_SLUG = 'tu-vi';
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
+
+interface FeaturePriceItem {
+  slug: string;
+  label: string;
+  vnd: number;
+}
+
+/** Public, no-auth price lookup for a single feature slug (returns 0 if unset). */
+async function fetchFeaturePrice(slug: string): Promise<number> {
+  const res = await fetch(`${API_BASE}/feature-prices`, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`feature-prices HTTP ${res.status}`);
+  const body = (await res.json()) as { ok?: boolean; items?: FeaturePriceItem[] };
+  const item = body.items?.find((i) => i.slug === slug);
+  return item?.vnd ?? 0;
+}
 
 /** Slugify Vietnamese section title for a stable, URL-safe sectionId. */
 function slugifySectionId(title: string): string {
@@ -243,8 +264,17 @@ function ReportContent() {
         />
 
         {isLocked ? (
-          /* ── Trạng thái chưa mua: hiển thị preview + CTA mở khoá ── */
-          <LockedReportGate readingId={readingId} previewMarkdown={previewMarkdown} />
+          /* ── Trạng thái chưa mua: hiển thị preview + cổng thanh toán ── */
+          <LockedReportGate
+            readingId={readingId}
+            previewMarkdown={previewMarkdown}
+            onUnlocked={() => {
+              // Webhook ghi cờ is_paid (best-effort, không đồng bộ) → refetch
+              // ngay rồi lặp lại sau 3s để chắc chắn bắt được trạng thái full.
+              void query.refetch();
+              window.setTimeout(() => void query.refetch(), 3000);
+            }}
+          />
         ) : (
           /* ── Đã mua: hiển thị đầy đủ như cũ ── */
           <>
@@ -269,23 +299,33 @@ function ReportContent() {
 }
 
 /**
- * Hiển thị phần tóm tắt (preview) và CTA mở khoá khi báo cáo chưa được mua.
+ * Hiển thị phần tóm tắt (preview) và cổng thanh toán khi báo cáo chưa được mua.
  *
  * Backend (reading-get PR #134) trả về:
  *   - `session.locked = true`
  *   - `session.report = { preview: "…" }`  ← markdown vài mục đầu
  *
- * CTA dẫn sang `/pricing?session=<readingId>` — luồng chọn gói hiện có,
- * sau khi thanh toán backend cập nhật trạng thái và trang tự refetch.
+ * Cổng dùng <FeaturePaywall slug="tu-vi" sessionId={readingId}> — luồng QR
+ * SePay đang chạy. Intent mang `session_id` nên webhook lật cờ `is_paid` của
+ * đúng phiên này; FeaturePaywall poll tới khi `paid` rồi gọi onUnlocked →
+ * trang refetch và hiện báo cáo đầy đủ.
  */
 function LockedReportGate({
   readingId,
   previewMarkdown,
+  onUnlocked,
 }: {
   readingId: string;
   previewMarkdown: string;
+  onUnlocked: () => void;
 }) {
-  const unlockHref = `/pricing?session=${encodeURIComponent(readingId)}`;
+  const priceQuery = useQuery<number, Error>({
+    queryKey: ['feature-price', TUVI_REPORT_SLUG],
+    queryFn: () => fetchFeaturePrice(TUVI_REPORT_SLUG),
+    staleTime: 5 * 60_000,
+    retry: 1,
+  });
+  const price = priceQuery.data ?? 0;
 
   return (
     <div className="space-y-6">
@@ -301,36 +341,65 @@ function LockedReportGate({
         </div>
       )}
 
-      {/* ── CTA mở khoá ── */}
-      <Card className="border-gold/30 bg-gradient-to-br from-card to-gold/5">
-        <CardContent className="space-y-5 p-8 text-center">
-          <div className="mx-auto flex size-12 items-center justify-center rounded-full border border-gold/30 bg-gold/10">
-            <Lock className="size-5 text-gold" aria-hidden />
-          </div>
-          <div className="space-y-1">
-            <p className="font-heading text-xl text-foreground">
-              Đây là phần tóm tắt
-            </p>
+      {/* ── Khung dẫn dắt mở khoá ── */}
+      <div className="space-y-2 text-center">
+        <div className="mx-auto flex size-12 items-center justify-center rounded-full border border-gold/30 bg-gold/10">
+          <Lock className="size-5 text-gold" aria-hidden />
+        </div>
+        <p className="font-heading text-xl text-foreground">Đây là phần tóm tắt</p>
+        <p className="text-sm text-muted-foreground">
+          Mở khoá để đọc đầy đủ 30 mục phân tích sâu + tải PDF chất lượng cao.
+        </p>
+      </div>
+
+      {/* ── Cổng thanh toán ── */}
+      {priceQuery.isLoading ? (
+        <Card className="border-gold/15 bg-card/40">
+          <CardContent className="p-8 text-center">
+            <div className="mx-auto h-2 w-32 animate-pulse rounded bg-muted/10" />
+          </CardContent>
+        </Card>
+      ) : priceQuery.isError ? (
+        /* Lỗi tải giá (mạng) → cho thử lại, KHÔNG nhầm thành "sắp mở bán". */
+        <Card className="border-red-500/30 bg-card/40">
+          <CardContent className="space-y-4 p-8 text-center">
+            <p className="font-heading text-foreground">Không tải được giá mở khoá</p>
             <p className="text-sm text-muted-foreground">
-              Mở khoá để đọc đầy đủ 30 mục phân tích sâu + tải PDF chất lượng cao.
+              Có thể do kết nối mạng. Vui lòng thử lại.
             </p>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <Button
-              asChild
-              className="bg-gold text-black hover:bg-gold/90"
-              size="lg"
-            >
-              <Link href={unlockHref}>
-                Mở khoá báo cáo đầy đủ →
-              </Link>
-            </Button>
+            <Button onClick={() => void priceQuery.refetch()}>Thử lại</Button>
+          </CardContent>
+        </Card>
+      ) : price > 0 ? (
+        <FeaturePaywall
+          slug={TUVI_REPORT_SLUG}
+          price={price}
+          label="Báo cáo Tử Vi đầy đủ"
+          sessionId={readingId}
+          onUnlocked={onUnlocked}
+        />
+      ) : (
+        /* Giá = 0 (chưa cấu hình bán) → không hiện nút 0đ. */
+        <Card className="border-gold/20 bg-card/40">
+          <CardContent className="space-y-4 p-8 text-center">
+            <p className="text-sm text-muted-foreground">
+              Báo cáo đầy đủ sắp được mở bán. Vui lòng quay lại sau ít phút.
+            </p>
             <Button variant="outline" asChild>
               <Link href="/account">Về tài khoản</Link>
             </Button>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="text-center">
+        <Link
+          href="/account"
+          className="text-sm text-muted-foreground hover:text-gold"
+        >
+          Về tài khoản
+        </Link>
+      </div>
     </div>
   );
 }

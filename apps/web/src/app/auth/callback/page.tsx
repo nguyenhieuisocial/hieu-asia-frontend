@@ -108,12 +108,31 @@ export default function AuthCallbackPage() {
         return;
       }
 
-      // Stash anonymous id so a future merge endpoint can link reading
-      // history (handled in dashboard or by a backend job — out of scope).
+      // Claim the prior anonymous id so the dashboard can show readings created
+      // before login. We persist it into the GoTrue-signed `user_metadata`
+      // (server-trusted) via the authenticated client — this is what
+      // /api/reading/list reads back (session.linkedAnonId), NOT the localStorage
+      // copy. The localStorage stash is kept only as a client-side breadcrumb.
+      //
+      // SECURITY: writing this through `updateUser` means the only id that can
+      // be claimed is the one the *currently authenticated* browser presents,
+      // and the server later trusts it because it's signed into the user record
+      // — a different user cannot inject this anon id into someone else's
+      // account. We only set it once (don't clobber an existing claim).
       try {
         const anonId = window.localStorage.getItem(ANON_USER_KEY);
         if (anonId && anonId !== data.session.user.id) {
           window.localStorage.setItem(LINKED_ANON_KEY, anonId);
+          const existing = data.session.user.user_metadata?.linked_anon_user_id;
+          if (!existing) {
+            // Fire-and-forget; failure just means history-claim is deferred to a
+            // later login. Shape is validated server-side before it's trusted.
+            await supabase.auth
+              .updateUser({ data: { linked_anon_user_id: anonId } })
+              .catch(() => {
+                /* non-fatal — claim retried on next login */
+              });
+          }
         }
       } catch {
         /* localStorage blocked — ignore */

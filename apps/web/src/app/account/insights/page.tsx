@@ -15,17 +15,11 @@ import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { InsightTimeline, type InsightItem } from '@/components/account/InsightTimeline';
 import { listMentorConversations } from '@/lib/mentor-conversations';
-import { listReadings } from '@hieu-asia/supabase';
-import { getSupabaseAuth } from '@/lib/auth-client';
+import { listMyReadings } from '@/lib/account-history';
 
 async function fetchReadings(): Promise<InsightItem[]> {
   try {
-    const supabase = getSupabaseAuth();
-    if (!supabase) return [];
-    const { data } = await supabase.auth.getSession();
-    const userId = data.session?.user?.id;
-    if (!userId) return [];
-    const sessions = await listReadings(userId);
+    const sessions = await listMyReadings();
     return sessions.map((x) => ({
       id: `reading-${x.session_id}`,
       kind: 'reading' as const,

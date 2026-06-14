@@ -21,7 +21,15 @@ export function RelatedTools({
 }) {
   const base = links ?? (current ? RELATED_TOOLS[current] : undefined) ?? [];
   if (base.length === 0) return null;
-  const all = includeHub ? [...base, { href: '/cong-cu', label: 'Tất cả công cụ' }] : base;
+  const withHub = includeHub ? [...base, { href: '/cong-cu', label: 'Tất cả công cụ' }] : base;
+  // Dedupe by href: vài trang truyền sẵn link hub /cong-cu trong `links`, trùng
+  // với hub tự thêm ở trên → React key trùng ("/cong-cu"). Giữ lần xuất hiện đầu.
+  const seen = new Set<string>();
+  const all = withHub.filter((l) => {
+    if (seen.has(l.href)) return false;
+    seen.add(l.href);
+    return true;
+  });
   return (
     <nav aria-label="Công cụ liên quan" className="text-sm text-muted-foreground">
       Xem thêm:{' '}

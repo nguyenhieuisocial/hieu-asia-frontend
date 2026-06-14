@@ -20,6 +20,13 @@ interface FeaturePaywallProps {
   slug: string;
   price: number;
   label?: string;
+  /**
+   * Optional reading session to unlock after payment. When provided, the
+   * intent carries `session_id` so the SePay webhook flips `is_paid` on that
+   * specific reading_session (gates reading-get). Used by the locked report
+   * gate; omitted for plain per-tool unlocks (xem-tuong, big-five, …).
+   */
+  sessionId?: string;
   onUnlocked: () => void;
 }
 
@@ -27,6 +34,28 @@ interface IntentEnvelope {
   ok: boolean;
   intent?: PaymentIntent;
   error?: string;
+  /** Set by the worker when a supplied coupon_code is invalid/expired/exhausted. */
+  code_invalid?: boolean;
+}
+
+/** Error carrying the worker's code_invalid flag so the UI can recover the code state. */
+class CouponInvalidError extends Error {}
+
+interface ValidateCodeEnvelope {
+  ok: boolean;
+  valid?: boolean;
+  code?: string;
+  discount_pct?: number;
+  discounted_amount?: number;
+  original_amount?: number;
+  reason?: string;
+  error?: string;
+}
+
+interface ValidatedCode {
+  code: string;
+  discountedAmount: number;
+  discountPct?: number;
 }
 
 async function getToken(): Promise<string | null> {
@@ -41,7 +70,11 @@ async function getToken(): Promise<string | null> {
   }
 }
 
-async function createFeatureIntent(slug: string): Promise<PaymentIntent> {
+async function createFeatureIntent(
+  slug: string,
+  sessionId?: string,
+  couponCode?: string,
+): Promise<PaymentIntent> {
   const token = await getToken();
   const res = await fetch('/api/payment/intent', {
     method: 'POST',
@@ -49,7 +82,12 @@ async function createFeatureIntent(slug: string): Promise<PaymentIntent> {
       'content-type': 'application/json',
       ...(token ? { authorization: `Bearer ${token}` } : {}),
     },
-    body: JSON.stringify({ tier: 'feature_unlock', tool_slug: slug }),
+    body: JSON.stringify({
+      tier: 'feature_unlock',
+      tool_slug: slug,
+      ...(sessionId ? { session_id: sessionId } : {}),
+      ...(couponCode ? { coupon_code: couponCode } : {}),
+    }),
     cache: 'no-store',
   });
   const parsed = await safeJson<IntentEnvelope>(res);
@@ -58,9 +96,56 @@ async function createFeatureIntent(slug: string): Promise<PaymentIntent> {
   }
   const body = parsed.data;
   if (!res.ok || !body.ok || !body.intent) {
-    throw new Error(body.error ?? `Tạo giao dịch thất bại (${res.status})`);
+    const message = body.error ?? `Tạo giao dịch thất bại (${res.status})`;
+    // A code can expire/exhaust between "Áp dụng" and "Mở khoá" (race on a
+    // max_uses promo). Surface it distinctly so the caller can drop the code
+    // and recover instead of looping on the same dead code.
+    throw body.code_invalid ? new CouponInvalidError(message) : new Error(message);
   }
   return body.intent;
+}
+
+type ValidateResult =
+  | { kind: 'valid'; data: ValidatedCode }
+  | { kind: 'invalid'; reason: string }
+  | { kind: 'error' };
+
+async function validateCode(slug: string, code: string): Promise<ValidateResult> {
+  const token = await getToken();
+  let res: Response;
+  try {
+    res = await fetch('/api/payment/validate-code', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? { authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({
+        code,
+        tier: 'feature_unlock',
+        tool_slug: slug,
+      }),
+      cache: 'no-store',
+    });
+  } catch {
+    return { kind: 'error' };
+  }
+  const parsed = await safeJson<ValidateCodeEnvelope>(res);
+  if (!parsed.ok) return { kind: 'error' };
+  const body = parsed.data;
+  if (!res.ok || !body.ok) return { kind: 'error' };
+  if (!body.valid) {
+    return { kind: 'invalid', reason: body.reason ?? 'Mã không hợp lệ' };
+  }
+  if (typeof body.discounted_amount !== 'number') return { kind: 'error' };
+  return {
+    kind: 'valid',
+    data: {
+      code: body.code ?? code,
+      discountedAmount: body.discounted_amount,
+      discountPct: body.discount_pct,
+    },
+  };
 }
 
 async function pollIntent(id: string): Promise<PaymentIntent> {
@@ -83,6 +168,7 @@ export function FeaturePaywall({
   slug,
   price,
   label,
+  sessionId,
   onUnlocked,
 }: FeaturePaywallProps) {
   const [intent, setIntent] = React.useState<PaymentIntent | null>(null);
@@ -90,6 +176,22 @@ export function FeaturePaywall({
   const [error, setError] = React.useState<string | null>(null);
   const [expired, setExpired] = React.useState(false);
   const [attempt, setAttempt] = React.useState(0);
+
+  // Voucher / promo code state (initial price card only).
+  const [code, setCode] = React.useState('');
+  const [appliedCode, setAppliedCode] = React.useState<string | null>(null);
+  const [appliedPrice, setAppliedPrice] = React.useState<number | null>(null);
+  const [appliedDiscountPct, setAppliedDiscountPct] = React.useState<number | null>(null);
+  const [codeErr, setCodeErr] = React.useState<string | null>(null);
+  const [validating, setValidating] = React.useState(false);
+
+  // The intent-creation effect deps are [slug, attempt] only, so read the
+  // applied code through a ref to avoid re-running the effect on every code
+  // change. Kept in sync below.
+  const appliedCodeRef = React.useRef<string | null>(null);
+  React.useEffect(() => {
+    appliedCodeRef.current = appliedCode;
+  }, [appliedCode]);
 
   const toolLabel = label ?? slug;
 
@@ -102,7 +204,7 @@ export function FeaturePaywall({
     setExpired(false);
     setIntent(null);
 
-    createFeatureIntent(slug)
+    createFeatureIntent(slug, sessionId, appliedCodeRef.current ?? undefined)
       .then((i) => {
         if (cancelled) return;
         setIntent(i);
@@ -110,6 +212,18 @@ export function FeaturePaywall({
       })
       .catch((err: unknown) => {
         if (cancelled) return;
+        if (err instanceof CouponInvalidError) {
+          // Code died in the validate→unlock window. Drop it, return to the
+          // price card, and show why — so the user can re-enter or just unlock
+          // at full price instead of looping the same dead code.
+          setAppliedCode(null);
+          setAppliedPrice(null);
+          setAppliedDiscountPct(null);
+          appliedCodeRef.current = null;
+          setCodeErr(err.message || 'Mã không còn hợp lệ — vui lòng thử lại');
+          setAttempt(0);
+          return;
+        }
         setError(err instanceof Error ? err.message : String(err));
       })
       .finally(() => {
@@ -159,6 +273,45 @@ export function FeaturePaywall({
     setExpired(true);
   }, []);
 
+  const handleApplyCode = React.useCallback(async () => {
+    const trimmed = code.trim().toUpperCase();
+    if (!trimmed) return;
+    setValidating(true);
+    setCodeErr(null);
+    try {
+      const result = await validateCode(slug, trimmed);
+      if (result.kind === 'valid') {
+        setAppliedCode(result.data.code);
+        setAppliedPrice(result.data.discountedAmount);
+        setAppliedDiscountPct(result.data.discountPct ?? null);
+        setCodeErr(null);
+      } else if (result.kind === 'invalid') {
+        setCodeErr(result.reason);
+        setAppliedCode(null);
+        setAppliedPrice(null);
+        setAppliedDiscountPct(null);
+      } else {
+        setCodeErr('Không kiểm tra được mã');
+        setAppliedCode(null);
+        setAppliedPrice(null);
+        setAppliedDiscountPct(null);
+      }
+    } finally {
+      setValidating(false);
+    }
+  }, [code, slug]);
+
+  const handleRemoveCode = React.useCallback(() => {
+    setAppliedCode(null);
+    setAppliedPrice(null);
+    setAppliedDiscountPct(null);
+    setCode('');
+    setCodeErr(null);
+  }, []);
+
+  // Effective price = discounted amount when a code is applied, else base price.
+  const effectivePrice = appliedPrice ?? price;
+
   // Initial state — show price + unlock button.
   if (attempt === 0) {
     return (
@@ -170,16 +323,85 @@ export function FeaturePaywall({
           </p>
           <p className="text-sm text-muted-foreground">
             Giá:{' '}
-            <span className="font-semibold text-gold">
-              {price.toLocaleString('vi-VN')}đ
-            </span>{' '}
+            {appliedCode ? (
+              <>
+                <span className="text-muted-foreground line-through">
+                  {price.toLocaleString('vi-VN')}đ
+                </span>{' '}
+                <span className="font-semibold text-gold">
+                  {effectivePrice.toLocaleString('vi-VN')}đ
+                </span>
+                {appliedPrice !== null &&
+                  appliedPrice < price &&
+                  (() => {
+                    const pct =
+                      typeof appliedDiscountPct === 'number'
+                        ? appliedDiscountPct
+                        : Math.round((1 - appliedPrice / price) * 100);
+                    return pct > 0 ? (
+                      <span className="ml-1 text-xs font-medium text-emerald-500">
+                        -{pct}%
+                      </span>
+                    ) : null;
+                  })()}
+              </>
+            ) : (
+              <span className="font-semibold text-gold">
+                {price.toLocaleString('vi-VN')}đ
+              </span>
+            )}{' '}
             / lần mở khoá
           </p>
+
+          {/* Voucher / promo code — understated, secondary to the unlock CTA. */}
+          <div className="mx-auto max-w-xs space-y-1 text-left">
+            {appliedCode ? (
+              <p className="text-center text-xs text-muted-foreground">
+                Đã áp mã{' '}
+                <span className="font-semibold text-gold">{appliedCode}</span>{' '}
+                <button
+                  type="button"
+                  onClick={handleRemoveCode}
+                  className="text-muted-foreground underline hover:text-foreground"
+                >
+                  Bỏ
+                </button>
+              </p>
+            ) : (
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value.toUpperCase())}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      void handleApplyCode();
+                    }
+                  }}
+                  placeholder="Nhập mã giảm giá (nếu có)"
+                  maxLength={32}
+                  className="w-full rounded-md border border-gold/20 bg-card/60 px-3 py-2 text-sm uppercase text-foreground placeholder:normal-case placeholder:text-muted-foreground focus:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                />
+                <Button
+                  variant="outline"
+                  onClick={() => void handleApplyCode()}
+                  disabled={validating || code.trim().length === 0}
+                >
+                  {validating ? 'Đang kiểm tra…' : 'Áp dụng'}
+                </Button>
+              </div>
+            )}
+            {codeErr && (
+              <p className="text-xs text-red-500">{codeErr}</p>
+            )}
+          </div>
+
           <Button
             onClick={() => setAttempt(1)}
             className="bg-gold text-black hover:bg-gold/90"
           >
-            Mở khoá — {price.toLocaleString('vi-VN')}đ
+            Mở khoá — {effectivePrice.toLocaleString('vi-VN')}đ
           </Button>
         </CardContent>
       </Card>
