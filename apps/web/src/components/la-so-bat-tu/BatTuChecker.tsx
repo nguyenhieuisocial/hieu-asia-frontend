@@ -4,6 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
 import { calculateBazi, type BaziChart, type BaziPillar, type Element, ELEMENTS } from '@/lib/bazi';
+import { ShareResultButton } from '@/components/tools/ShareResultButton';
 
 /**
  * Công cụ Bát Tự (Tứ Trụ) bấm-thử miễn phí. Engine `lib/bazi.ts` chạy NGAY trong
@@ -11,12 +12,17 @@ import { calculateBazi, type BaziChart, type BaziPillar, type Element, ELEMENTS 
  * 4 trụ + Thập Thần + cân bằng ngũ hành. Khung trung lập "không bói mù".
  */
 
+// Theme-aware: shade tối cho nền sáng (kem), shade sáng cho nền tối.
+// Trước đây chỉ -400/-200 (chỉ hợp nền tối) → light mode chữ ngũ hành gần vô hình.
+// ĐO LẠI bằng alpha-composite THẬT (chữ trên bg-card/40 đè lên nền kem, KHÔNG phải
+// vs kem trần): -700 cho Mộc/Hỏa/Thủy chỉ ~4.0–4.4:1 (hụt AA 4.5 cho chữ nhỏ) →
+// nâng -800. Composite ≥5.1:1 mọi token nhỏ; dark mode giữ -400/-200.
 const EL_TEXT: Record<Element, string> = {
-  Mộc: 'text-emerald-400',
-  Hỏa: 'text-rose-400',
-  Thổ: 'text-amber-400',
-  Kim: 'text-slate-200',
-  Thủy: 'text-sky-400',
+  Mộc: 'text-emerald-800 dark:text-emerald-400',
+  Hỏa: 'text-rose-800 dark:text-rose-400',
+  Thổ: 'text-amber-800 dark:text-amber-400',
+  Kim: 'text-slate-600 dark:text-slate-200',
+  Thủy: 'text-sky-800 dark:text-sky-400',
 };
 const EL_BAR: Record<Element, string> = {
   Mộc: 'bg-emerald-400/70',
@@ -80,13 +86,58 @@ export function BatTuChecker() {
       const ict = new Date(Date.now() + 7 * 3600 * 1000); // hôm nay theo giờ VN
       const asOf = `${ict.getUTCFullYear()}-${ict.getUTCMonth() + 1}-${ict.getUTCDate()}`;
       setChart(calculateBazi({ birthSolarDate: date, birthHour: parseHour(time), gender, asOf }));
+      // Ghi tham số vào URL để LÁ SỐ chia sẻ được (mở link là thấy ngay lá số đó).
+      if (typeof window !== 'undefined') {
+        const qs = new URLSearchParams({ d: date, t: time, g: gender }).toString();
+        window.history.replaceState(null, '', `/la-so-bat-tu?${qs}`);
+      }
     } catch {
       setError('Chưa lập được lá số — kiểm tra lại ngày sinh.');
     }
   }, [date, time, gender]);
 
+  // Mở link chia sẻ (?d=&t=&g=) → tự điền + lập lá số ngay (không cần bấm lại).
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const sp = new URLSearchParams(window.location.search);
+    const d = sp.get('d');
+    if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return;
+    const t = sp.get('t') || '12:00';
+    const g: 'M' | 'F' = sp.get('g') === 'F' ? 'F' : 'M';
+    setDate(d);
+    setTime(t);
+    setGender(g);
+    try {
+      const ict = new Date(Date.now() + 7 * 3600 * 1000);
+      const asOf = `${ict.getUTCFullYear()}-${ict.getUTCMonth() + 1}-${ict.getUTCDate()}`;
+      setChart(calculateBazi({ birthSolarDate: d, birthHour: parseHour(t), gender: g, asOf }));
+    } catch {
+      /* link hỏng — bỏ qua, người dùng tự nhập */
+    }
+  }, []);
+
   const maxCount = chart ? Math.max(...ELEMENTS.map((e) => chart.elementCount[e]), 1) : 1;
   const curAge = chart ? ageFromDate(chart.meta.solarDate) : null;
+
+  // Link + caption chia sẻ (khoe lá số → kéo người mới vào xem thử).
+  const sharePath = `/la-so-bat-tu?${new URLSearchParams({ d: date, t: time, g: gender }).toString()}`;
+  const shareText = chart
+    ? `Lá số Bát Tự của tôi: Nhật Chủ ${chart.dayMaster.can} (${chart.dayMaster.element} ${chart.dayMaster.yang ? 'dương' : 'âm'}), hành ${chart.strongest} vượng${chart.missing.length ? `, thiếu ${chart.missing.join('/')}` : ''}. Tính theo tiết khí chuẩn, không bói toán — xem thử lá số của bạn miễn phí 👇`
+    : '';
+
+  // Bản "nếm thử" — teaser CÁ NHÂN HOÁ theo lá số (chốt khách; KHÔNG lộ kết luận trả phí).
+  const curDaiVan = chart?.daiVan?.pillars.find((p) => curAge != null && curAge >= p.startAge && curAge <= p.endAge) ?? null;
+  const teasers = chart
+    ? [
+        `Nhật Chủ ${chart.dayMaster.can} (${chart.dayMaster.element}) của bạn VƯỢNG hay NHƯỢC — và hành nào là "dụng thần" nên dùng.`,
+        chart.missing.length
+          ? `Bạn thiếu hành ${chart.missing.join(', ')}, mạnh hành ${chart.strongest} — định hình tính cách & lựa chọn ra sao, bù thế nào.`
+          : `Ngũ hành đủ cả 5, mạnh nhất là ${chart.strongest} — thế cân bằng này nói gì về bạn.`,
+        curDaiVan
+          ? `Đại vận ${curDaiVan.can} ${curDaiVan.chi} (${curDaiVan.startAge}–${curDaiVan.endAge} tuổi) bạn đang đi — trọng tâm 10 năm này.`
+          : `Đại vận 10 năm hiện tại của bạn — bối cảnh & trọng tâm giai đoạn.`,
+      ]
+    : [];
 
   return (
     <Card className="border-gold/20 bg-card/60 backdrop-blur-sm">
@@ -141,6 +192,18 @@ export function BatTuChecker() {
               <p className="mt-2 text-xs text-muted-foreground">
                 Trụ tính theo <strong>tiết khí</strong> (đúng chuẩn Bát Tự) — chữ màu là ngũ hành của từng can/chi.
               </p>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-gold/30 bg-gold/[0.05] px-4 py-3">
+              <p className="text-sm text-foreground/85">
+                Lá số tính theo tiết khí chuẩn — <strong>khoe với bạn bè</strong> hoặc thách họ xem thử lá số của mình.
+              </p>
+              <ShareResultButton
+                path={sharePath}
+                title="Lá số Bát Tự (Tứ Trụ) của tôi — hieu.asia"
+                text={shareText}
+                trackId="la-so-bat-tu"
+              />
             </div>
 
             <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
@@ -237,6 +300,47 @@ export function BatTuChecker() {
               </p>
             </div>
 
+            <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
+                Quan hệ giữa các trụ (hợp · xung · tam hợp)
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                Quan hệ giữa các địa chi cho thấy nội lực <strong>hoà hay căng</strong> trong lá số — dữ kiện cố
+                định tra theo bảng, không phải lời đoán.
+              </p>
+              {chart.relations.length === 0 ? (
+                <p className="mt-3 text-sm text-foreground/85">
+                  Bốn trụ không có quan hệ hợp / xung / tam hợp nổi bật — các chi đứng khá độc lập.
+                </p>
+              ) : (
+                <ul className="mt-3 space-y-1.5">
+                  {chart.relations.map((rel) => {
+                    const harmony = rel.type === 'Lục Hợp' || rel.type === 'Tam Hợp' || rel.type === 'Bán Tam Hợp';
+                    const tone = harmony
+                      ? 'bg-emerald-400/15 text-emerald-800 dark:text-emerald-300'
+                      : rel.type === 'Lục Xung'
+                        ? 'bg-rose-400/15 text-rose-800 dark:text-rose-300'
+                        : 'bg-amber-400/15 text-amber-800 dark:text-amber-300';
+                    return (
+                      <li
+                        key={`${rel.type}-${rel.chi}-${rel.pillars}`}
+                        className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-sm"
+                      >
+                        <span className={`shrink-0 rounded px-1.5 py-0.5 text-[11px] font-medium ${tone}`}>
+                          {rel.type}
+                        </span>
+                        <span className="font-medium text-foreground/90">{rel.chi}</span>
+                        <span className="text-xs text-muted-foreground">({rel.pillars})</span>
+                        <span className="w-full text-xs text-muted-foreground sm:w-auto sm:flex-1">
+                          — {rel.detail}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+
             {chart.daiVan && (
               <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
@@ -302,15 +406,30 @@ export function BatTuChecker() {
               là để bạn TỰ hiểu mình, không phải bói toán hay phán số mệnh.
             </p>
 
-            <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-5 text-center">
-              <p className="font-heading text-lg text-foreground">Muốn AI luận sâu lá số Bát Tự này?</p>
-              <p className="mx-auto mt-1 max-w-xl text-sm text-muted-foreground">
-                Bản đọc đầy đủ: vượng–nhược nhật chủ, dụng thần, Thập Thần theo trụ, đối chiếu cổ thư — viết
-                riêng cho bạn, văn phong &ldquo;hiểu mình để tự quyết&rdquo;.
+            <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-5">
+              <p className="text-center font-heading text-lg text-foreground">
+                Bản đọc Bát Tự đầy đủ — viết riêng cho lá số này
               </p>
-              <Button asChild size="lg" className="mt-4">
-                <Link href="/onboarding?intent=ngu-hanh">Tạo bản đọc Bát Tự đầy đủ →</Link>
-              </Button>
+              <p className="mx-auto mt-1 max-w-xl text-center text-sm text-muted-foreground">
+                Lá số trên là <strong>dữ kiện</strong>. Bản đọc trả phí luận sâu — riêng cho lá số của bạn:
+              </p>
+              <ul className="mx-auto mt-3 max-w-xl space-y-1.5 text-left text-sm text-foreground/85">
+                {teasers.map((tl) => (
+                  <li key={tl} className="flex gap-2">
+                    <span className="mt-0.5 shrink-0 text-gold-700">›</span>
+                    <span>{tl}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mx-auto mt-3 max-w-xl text-center text-xs text-muted-foreground">
+                …cùng Thập Thần theo từng trụ, vòng Trường Sinh, đối chiếu cổ thư — văn phong &ldquo;hiểu mình
+                để tự quyết&rdquo;, không bói toán.
+              </p>
+              <div className="mt-4 text-center">
+                <Button asChild size="lg">
+                  <Link href="/onboarding?intent=ngu-hanh">Đọc bản đầy đủ cho lá số này →</Link>
+                </Button>
+              </div>
             </div>
           </div>
         )}

@@ -28,6 +28,12 @@ initBotId({
       method: 'POST',
     },
     {
+      // Promo-code validation — same payment surface. Guard against bots
+      // enumerating valid voucher codes (worker also rate-limits 20/min/IP).
+      path: '/api/payment/validate-code',
+      method: 'POST',
+    },
+    {
       // Wave 56 — reasoning routes call AI Gateway per request. Each LLM
       // call costs real money + counts toward provider rate limits. Bot
       // abuse here would drain budget without producing legitimate output.

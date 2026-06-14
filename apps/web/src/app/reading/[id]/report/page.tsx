@@ -14,11 +14,12 @@ import {
   SheetTrigger,
   SheetTitle,
 } from '@hieu-asia/ui';
-import { MoreVertical, Share2, Download, MessageCircle } from 'lucide-react';
+import { MoreVertical, Share2, Download, MessageCircle, Lock } from 'lucide-react';
 import {
   getReading,
   type ApiClientError,
   type Reading,
+  type ReadingReportMarkdown,
 } from '@/lib/api-client';
 import { CautionBanner } from '@/components/caution-banner';
 import { ReportContextSummary } from '@/components/report-context-summary';
@@ -31,7 +32,28 @@ import { ProductTabs, type ProductTab } from '@/components/product/ProductTabs';
 import { ReportTOC } from '@/components/report/ReportTOC';
 import { ReadingProgress } from '@/components/report/ReadingProgress';
 import { PostReadingSurvey } from '@/components/feedback/PostReadingSurvey';
+import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
 import { track } from '@/lib/analytics';
+
+/** Feature-pricing slug for the full Tử Vi report (matches backend registry). */
+const TUVI_REPORT_SLUG = 'tu-vi';
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
+
+interface FeaturePriceItem {
+  slug: string;
+  label: string;
+  vnd: number;
+}
+
+/** Public, no-auth price lookup for a single feature slug (returns 0 if unset). */
+async function fetchFeaturePrice(slug: string): Promise<number> {
+  const res = await fetch(`${API_BASE}/feature-prices`, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`feature-prices HTTP ${res.status}`);
+  const body = (await res.json()) as { ok?: boolean; items?: FeaturePriceItem[] };
+  const item = body.items?.find((i) => i.slug === slug);
+  return item?.vnd ?? 0;
+}
 
 /** Slugify Vietnamese section title for a stable, URL-safe sectionId. */
 function slugifySectionId(title: string): string {
@@ -92,6 +114,21 @@ function extractCautionBullets(body: string): string[] {
     .filter(Boolean);
 }
 
+/**
+ * Type guards for the union report shape.
+ *
+ * Backend (reading-get PR #134) returns:
+ *   - Paid/full:  { markdown: string }         → ReadingReportMarkdown
+ *   - Locked/preview: { preview: string }      → ReadingReportPreview
+ */
+function isFullReport(r: Reading['report']): r is ReadingReportMarkdown {
+  return typeof r === 'object' && r !== null && 'markdown' in r;
+}
+
+function isPreviewReport(r: Reading['report']): r is { preview: string } {
+  return typeof r === 'object' && r !== null && 'preview' in r;
+}
+
 export default function ReportPage() {
   return (
     <ErrorBoundary>
@@ -117,10 +154,18 @@ function ReportContent() {
 
   const session = query.data;
   const state = session?.state;
-  const markdown = session?.report?.markdown ?? '';
+  const isLocked = session?.locked === true;
+
+  // Narrow report to full markdown (paid) or preview (locked).
+  const fullMarkdown = isFullReport(session?.report) ? session.report.markdown : '';
+  const previewMarkdown = isPreviewReport(session?.report) ? session.report.preview : '';
+
+  // For analytics + section parsing, use full markdown when unlocked.
+  const markdown = fullMarkdown;
 
   React.useEffect(() => {
     if (!state) return;
+    // Locked preview is a valid terminal state (report_ready) — don't redirect.
     if (state !== 'report_ready' && !state.startsWith('error_at_')) {
       router.replace(`/reading/${readingId}/processing`);
     }
@@ -128,11 +173,15 @@ function ReportContent() {
 
   const reportTrackedRef = React.useRef<string | null>(null);
   React.useEffect(() => {
-    if (state === 'report_ready' && markdown && reportTrackedRef.current !== readingId) {
+    if (state === 'report_ready' && reportTrackedRef.current !== readingId) {
       reportTrackedRef.current = readingId;
-      track('report_viewed', { reading_id: readingId, section_count: markdown.match(/^##\s+/gm)?.length ?? 0 });
+      track('report_viewed', {
+        reading_id: readingId,
+        locked: isLocked,
+        section_count: markdown.match(/^##\s+/gm)?.length ?? 0,
+      });
     }
-  }, [state, markdown, readingId]);
+  }, [state, markdown, readingId, isLocked]);
 
   const sections = React.useMemo(
     () => parseMarkdownSections(markdown),
@@ -146,8 +195,9 @@ function ReportContent() {
 
   if (query.isLoading) return <ReportSkeleton />;
 
-  // Not ready yet (e.g. still pending) or fetch error.
-  if (!markdown || state !== 'report_ready') {
+  // Not ready yet (e.g. still pending) or fetch error — and NOT a locked preview.
+  const hasContent = isLocked ? !!previewMarkdown : !!markdown;
+  if (!hasContent || state !== 'report_ready') {
     const errMessage =
       query.error?.message ??
       (state && state.startsWith('error_at_')
@@ -180,9 +230,8 @@ function ReportContent() {
 
   return (
     <main className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
-      {/* Wave UX — thanh tiến độ đọc (scroll-driven). Chỉ render khi báo cáo
-          đã sẵn sàng (nhánh này), tránh hiển thị trên trạng thái lỗi/loading. */}
-      <ReadingProgress />
+      {/* Thanh tiến độ đọc chỉ hiển thị khi có nội dung đầy đủ (không locked). */}
+      {!isLocked && <ReadingProgress />}
       <header className="mb-6 flex items-center justify-between">
         <Link
           href="/account"
@@ -207,20 +256,33 @@ function ReportContent() {
           generatedAt={new Date().toLocaleDateString('vi-VN')}
         />
 
-        {/* Interactive 12-cung chart — fetches deterministic structure from
-            the Tử Vi engine before the AI narrative below. Skips silently if
-            inputs aren't sufficient. */}
+        {/* Lá số Tử Vi cơ bản hiển thị cả khi locked (dữ liệu deterministic). */}
         <TuViChartSection
           birthDate={(session?.inputs?.birth_date as string | null | undefined) ?? null}
           birthTime={(session?.inputs?.birth_time as string | null | undefined) ?? null}
           gender={(session?.inputs?.gender as string | null | undefined) ?? null}
         />
 
-        <CautionBanner flags={cautionFlags} />
-
-        <ReportSections sections={reportSections} />
-
-        <ReportFooter readingId={readingId} />
+        {isLocked ? (
+          /* ── Trạng thái chưa mua: hiển thị preview + cổng thanh toán ── */
+          <LockedReportGate
+            readingId={readingId}
+            previewMarkdown={previewMarkdown}
+            onUnlocked={() => {
+              // Webhook ghi cờ is_paid (best-effort, không đồng bộ) → refetch
+              // ngay rồi lặp lại sau 3s để chắc chắn bắt được trạng thái full.
+              void query.refetch();
+              window.setTimeout(() => void query.refetch(), 3000);
+            }}
+          />
+        ) : (
+          /* ── Đã mua: hiển thị đầy đủ như cũ ── */
+          <>
+            <CautionBanner flags={cautionFlags} />
+            <ReportSections sections={reportSections} />
+            <ReportFooter readingId={readingId} />
+          </>
+        )}
       </div>
 
       {/*
@@ -233,6 +295,112 @@ function ReportContent() {
       */}
       <PostReadingSurvey readingId={readingId} />
     </main>
+  );
+}
+
+/**
+ * Hiển thị phần tóm tắt (preview) và cổng thanh toán khi báo cáo chưa được mua.
+ *
+ * Backend (reading-get PR #134) trả về:
+ *   - `session.locked = true`
+ *   - `session.report = { preview: "…" }`  ← markdown vài mục đầu
+ *
+ * Cổng dùng <FeaturePaywall slug="tu-vi" sessionId={readingId}> — luồng QR
+ * SePay đang chạy. Intent mang `session_id` nên webhook lật cờ `is_paid` của
+ * đúng phiên này; FeaturePaywall poll tới khi `paid` rồi gọi onUnlocked →
+ * trang refetch và hiện báo cáo đầy đủ.
+ */
+function LockedReportGate({
+  readingId,
+  previewMarkdown,
+  onUnlocked,
+}: {
+  readingId: string;
+  previewMarkdown: string;
+  onUnlocked: () => void;
+}) {
+  const priceQuery = useQuery<number, Error>({
+    queryKey: ['feature-price', TUVI_REPORT_SLUG],
+    queryFn: () => fetchFeaturePrice(TUVI_REPORT_SLUG),
+    staleTime: 5 * 60_000,
+    retry: 1,
+  });
+  const price = priceQuery.data ?? 0;
+
+  return (
+    <div className="space-y-6">
+      {/* ── Phần preview (tóm tắt mấy mục đầu từ backend) ── */}
+      {previewMarkdown && (
+        <div className="relative overflow-hidden rounded-lg border border-gold/20 bg-card/60 p-6">
+          <SectionBody content={previewMarkdown} />
+          {/* Fade-out gradient báo hiệu còn nội dung phía dưới */}
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent"
+            aria-hidden
+          />
+        </div>
+      )}
+
+      {/* ── Khung dẫn dắt mở khoá ── */}
+      <div className="space-y-2 text-center">
+        <div className="mx-auto flex size-12 items-center justify-center rounded-full border border-gold/30 bg-gold/10">
+          <Lock className="size-5 text-gold" aria-hidden />
+        </div>
+        <p className="font-heading text-xl text-foreground">Đây là phần tóm tắt</p>
+        <p className="text-sm text-muted-foreground">
+          Mở khoá để đọc đầy đủ 30 mục phân tích sâu + tải PDF chất lượng cao.
+        </p>
+      </div>
+
+      {/* ── Cổng thanh toán ── */}
+      {priceQuery.isLoading ? (
+        <Card className="border-gold/15 bg-card/40">
+          <CardContent className="p-8 text-center">
+            <div className="mx-auto h-2 w-32 animate-pulse rounded bg-muted/10" />
+          </CardContent>
+        </Card>
+      ) : priceQuery.isError ? (
+        /* Lỗi tải giá (mạng) → cho thử lại, KHÔNG nhầm thành "sắp mở bán". */
+        <Card className="border-red-500/30 bg-card/40">
+          <CardContent className="space-y-4 p-8 text-center">
+            <p className="font-heading text-foreground">Không tải được giá mở khoá</p>
+            <p className="text-sm text-muted-foreground">
+              Có thể do kết nối mạng. Vui lòng thử lại.
+            </p>
+            <Button onClick={() => void priceQuery.refetch()}>Thử lại</Button>
+          </CardContent>
+        </Card>
+      ) : price > 0 ? (
+        <FeaturePaywall
+          slug={TUVI_REPORT_SLUG}
+          price={price}
+          label="Báo cáo Tử Vi đầy đủ"
+          sessionId={readingId}
+          onUnlocked={onUnlocked}
+        />
+      ) : (
+        /* Giá = 0 (chưa cấu hình bán) → không hiện nút 0đ. */
+        <Card className="border-gold/20 bg-card/40">
+          <CardContent className="space-y-4 p-8 text-center">
+            <p className="text-sm text-muted-foreground">
+              Báo cáo đầy đủ sắp được mở bán. Vui lòng quay lại sau ít phút.
+            </p>
+            <Button variant="outline" asChild>
+              <Link href="/account">Về tài khoản</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="text-center">
+        <Link
+          href="/account"
+          className="text-sm text-muted-foreground hover:text-gold"
+        >
+          Về tài khoản
+        </Link>
+      </div>
+    </div>
   );
 }
 
@@ -370,8 +538,15 @@ function SectionBody({ content }: { content: string }) {
   );
 }
 
+type PdfState =
+  | { status: 'idle' }
+  | { status: 'loading' }
+  | { status: 'error'; message: string }
+  | { status: 'done'; url: string };
+
 function ReportFooter({ readingId }: { readingId: string }) {
   const [copied, setCopied] = React.useState(false);
+  const [pdfState, setPdfState] = React.useState<PdfState>({ status: 'idle' });
 
   const onShare = async () => {
     try {
@@ -383,10 +558,111 @@ function ReportFooter({ readingId }: { readingId: string }) {
     }
   };
 
-  const onPrint = () => window.print();
+  const onExportPdf = async () => {
+    if (pdfState.status === 'loading') return;
+
+    // If we already have a URL from a previous successful call, open it.
+    if (pdfState.status === 'done') {
+      window.open(pdfState.url, '_blank', 'noopener');
+      return;
+    }
+
+    setPdfState({ status: 'loading' });
+
+    try {
+      // Grab Supabase access token from the auth client (may be null for anon).
+      let accessToken: string | null = null;
+      try {
+        const { getSupabaseAuth } = await import('@/lib/auth-client');
+        const supabase = getSupabaseAuth();
+        if (supabase) {
+          const { data } = await supabase.auth.getSession();
+          accessToken = data.session?.access_token ?? null;
+        }
+      } catch {
+        /* auth client unavailable — proceed, worker will 401 */
+      }
+
+      const headers: Record<string, string> = {
+        'content-type': 'application/json',
+      };
+      if (accessToken) {
+        headers['authorization'] = `Bearer ${accessToken}`;
+      }
+
+      const res = await fetch(
+        `/api/reading/${encodeURIComponent(readingId)}/export-pdf`,
+        {
+          method: 'POST',
+          headers,
+          cache: 'no-store',
+        },
+      );
+
+      if (res.status === 402 || res.status === 403) {
+        setPdfState({
+          status: 'error',
+          message: 'Mở khoá báo cáo trả phí để tải PDF chất lượng cao.',
+        });
+        return;
+      }
+
+      if (res.status === 401) {
+        setPdfState({
+          status: 'error',
+          message: 'Vui lòng đăng nhập để tải PDF.',
+        });
+        return;
+      }
+
+      if (!res.ok) {
+        let errMsg = 'Tạo PDF thất bại, vui lòng thử lại.';
+        try {
+          const body = (await res.json()) as { error?: string };
+          if (body.error) errMsg = body.error;
+        } catch {
+          /* ignore parse error */
+        }
+        setPdfState({ status: 'error', message: errMsg });
+        return;
+      }
+
+      const data = (await res.json()) as { ok: boolean; url?: string; error?: string };
+      if (!data.ok || !data.url) {
+        setPdfState({
+          status: 'error',
+          message: data.error ?? 'Không nhận được link PDF.',
+        });
+        return;
+      }
+
+      setPdfState({ status: 'done', url: data.url });
+      track('pdf_exported', { reading_id: readingId });
+      window.open(data.url, '_blank', 'noopener');
+    } catch {
+      setPdfState({
+        status: 'error',
+        message: 'Lỗi kết nối, vui lòng thử lại.',
+      });
+    }
+  };
+
+  const pdfLabel =
+    pdfState.status === 'loading'
+      ? 'Đang tạo PDF…'
+      : pdfState.status === 'done'
+        ? 'Mở PDF'
+        : 'Tải PDF báo cáo';
 
   return (
     <div className="border-t border-gold/15 pt-6 print:hidden">
+      {/* Error / upsell message */}
+      {pdfState.status === 'error' && (
+        <p className="mb-3 rounded-md border border-gold/30 bg-gold/5 px-3 py-2 text-sm text-foreground/80">
+          {pdfState.message}
+        </p>
+      )}
+
       {/* Mobile (<lg): collapse the 3 actions into a Material 3 bottom-sheet.
           Avoids the awkward wrap on <360 px screens where buttons collide. */}
       <div className="lg:hidden">
@@ -413,11 +689,12 @@ function ReportFooter({ readingId }: { readingId: string }) {
               </Button>
               <Button
                 variant="ghost"
-                onClick={onPrint}
+                onClick={onExportPdf}
+                disabled={pdfState.status === 'loading'}
                 className="h-14 justify-start gap-3 text-base"
               >
                 <Download className="size-5" aria-hidden="true" />
-                Tải PDF báo cáo
+                {pdfLabel}
               </Button>
               <Button asChild className="h-14 justify-start gap-3 text-base">
                 <Link href={`/reading/${readingId}/mentor`}>
@@ -432,8 +709,12 @@ function ReportFooter({ readingId }: { readingId: string }) {
 
       {/* Desktop (lg+): existing inline row. */}
       <div className="hidden lg:flex lg:items-center lg:justify-between">
-        <Button variant="outline" onClick={onPrint}>
-          Tải PDF báo cáo
+        <Button
+          variant="outline"
+          onClick={onExportPdf}
+          disabled={pdfState.status === 'loading'}
+        >
+          {pdfLabel}
         </Button>
         <div className="flex gap-3">
           <Button variant="outline" onClick={onShare}>

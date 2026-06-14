@@ -70,7 +70,11 @@ async function fetchReading(sessionId: string): Promise<Reading | null> {
 }
 
 function buildSystemPrompt(session: Reading): string {
-  const reportMd = session.report?.markdown?.trim();
+  // Narrow to full paid report — preview shape ({ preview }) has no markdown.
+  const reportMd =
+    session.report != null && 'markdown' in session.report
+      ? session.report.markdown.trim()
+      : undefined;
   const chart = session.tuvi_chart;
 
   const lines: string[] = [

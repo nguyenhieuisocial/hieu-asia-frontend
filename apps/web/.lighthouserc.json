@@ -30,7 +30,8 @@
         "legacy-javascript-insight": "warn",
         "meta-description": "warn",
         "network-dependency-tree-insight": "warn",
-        "unused-javascript": "warn"
+        "unused-javascript": "warn",
+        "forced-reflow-insight": "warn"
       }
     },
     "upload": {

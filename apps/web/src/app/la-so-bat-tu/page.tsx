@@ -8,7 +8,7 @@ import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 const DESC =
   'Lập & xem lá số Bát Tự (Tứ Trụ) miễn phí từ ngày giờ sinh — đủ 4 trụ năm/tháng/ngày/giờ (8 chữ), ngũ hành, Nhật Chủ, Thập Thần, cân bằng ngũ hành & đại vận (vận 10 năm). Trụ tính theo tiết khí (đúng chuẩn Bát Tự). Con số là thật; luận giải để hiểu mình, không bói toán.';
 
-export const metadata: Metadata = {
+const BASE_META: Metadata = {
   title: 'Xem lá số Bát Tự (Tứ Trụ) miễn phí — 8 chữ, ngũ hành, Thập Thần',
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/la-so-bat-tu' },
@@ -20,6 +20,28 @@ export const metadata: Metadata = {
     images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'hieu.asia — Lá số Bát Tự Tứ Trụ' }],
   },
 };
+
+// Link chia sẻ (?d=&t=&g=) → ảnh OG ĐỘNG theo lá số (preview FB/Zalo hiện 4 trụ
+// của người gửi). Canonical VẪN trỏ /la-so-bat-tu (không index URL tham số).
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ d?: string; t?: string; g?: string }>;
+}): Promise<Metadata> {
+  const sp = await searchParams;
+  const d = sp?.d;
+  if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return BASE_META;
+  const t = sp.t ?? '12:00';
+  const g = sp.g === 'F' ? 'F' : 'M';
+  const ogUrl = `https://hieu.asia/la-so-bat-tu/og?d=${d}&t=${encodeURIComponent(t)}&g=${g}`;
+  const title = 'Lá số Bát Tự (Tứ Trụ) của tôi — hieu.asia';
+  return {
+    ...BASE_META,
+    title,
+    openGraph: { ...BASE_META.openGraph, title, images: [{ url: ogUrl, width: 1200, height: 630, alt: 'Lá số Bát Tự (Tứ Trụ)' }] },
+    twitter: { card: 'summary_large_image', title, images: [ogUrl] },
+  };
+}
 
 const TRU: Array<{ name: string; govern: string }> = [
   { name: 'Trụ Năm', govern: 'gốc gác, tổ tiên, thời thơ ấu (~0–16 tuổi) & bối cảnh xuất thân' },
@@ -60,6 +82,10 @@ const FAQS = [
   {
     q: 'Tàng can và nạp âm là gì?',
     a: 'Tàng can là các thiên can ẩn bên trong mỗi địa chi (mỗi chi chứa 1–3 can) — đây mới là phần quyết định ngũ hành thật của lá số và cho đủ bộ Thập Thần, nên luận Bát Tự luôn xét tàng can chứ không chỉ 8 chữ nổi. Nạp âm là "mệnh" theo vòng 60 hoa giáp (ví dụ Canh Ngọ là Lộ Bàng Thổ) — cách gọi ngũ hành quen thuộc với người Việt, khác với ngũ hành của riêng can hay chi. Công cụ hiển thị cả tàng can (kèm Thập Thần) lẫn nạp âm cho từng trụ; đều là dữ kiện tra theo bảng cố định, kiểm chứng được.',
+  },
+  {
+    q: 'Lục Hợp, Lục Xung giữa các trụ là gì?',
+    a: 'Mười hai địa chi có những quan hệ cố định với nhau: Lục Hợp (hai chi hoà hợp, ví dụ Tý–Sửu, Ngọ–Mùi), Lục Xung (hai chi đối nhau, ví dụ Tý–Ngọ, Dần–Thân), Tam Hợp (ba chi tụ thành một hành mạnh, ví dụ Thân–Tý–Thìn thành Thủy) và Lục Hại (khắc ngầm nhẹ). Khi đối chiếu giữa bốn trụ của lá số, các quan hệ này cho thấy nội lực hoà hay căng — trụ nào dễ phối hợp, trụ nào có lực động/đối lập. Công cụ tự dò và liệt kê; đây là dữ kiện tra theo bảng cố định, không phải lời đoán may rủi (Lục Xung chỉ là lực thay đổi, không phải điềm xấu).',
   },
   {
     q: 'Đây có phải bói toán không?',
