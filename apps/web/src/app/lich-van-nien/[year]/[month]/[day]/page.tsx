@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, Button } from '@hieu-asia/ui'
 import { ChevronRight, Sun, Moon, Sparkles, AlertTriangle, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 interface VanNienHour {
   name?: string;
@@ -88,6 +89,7 @@ export async function generateMetadata({
       description: 'Tra cứu âm lịch + Can Chi + giờ tốt cho ngày này.',
       url,
       type: 'article',
+      images: OG_DEFAULT_IMAGES,
     },
   };
 }

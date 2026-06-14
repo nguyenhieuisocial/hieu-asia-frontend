@@ -11,6 +11,7 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: 'Changelog',
@@ -22,6 +23,7 @@ export const metadata: Metadata = {
     description: 'Lộ trình sản phẩm và tính năng đã ra mắt.',
     url: 'https://hieu.asia/changelog',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

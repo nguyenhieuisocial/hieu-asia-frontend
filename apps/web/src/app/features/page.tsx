@@ -47,6 +47,7 @@ import { OrnamentDivider } from '@/components/marketing/OrnamentDivider';
 import { TrustStrip, FEATURES_PILLARS } from '@/components/marketing/TrustStrip';
 // Wave 60.56 P3.3 — consolidated hero (kills purple-radial paste L366).
 import { MarketingHero } from '@/components/marketing/MarketingHero';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: 'Tính năng',
@@ -59,6 +60,7 @@ export const metadata: Metadata = {
       'Khám phá đầy đủ tính năng: Tử Vi 12 cung, Bát Tự, MBTI, Big Five, Xem Tướng, AI Mentor và nhiều hơn.',
     url: 'https://hieu.asia/features',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

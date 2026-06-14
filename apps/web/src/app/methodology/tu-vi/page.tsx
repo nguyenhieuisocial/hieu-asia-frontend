@@ -19,6 +19,7 @@ import {
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { FloatingTOC } from '@/components/ui/FloatingTOC';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   // Wave 54 BUG-034: rename "Methodology" → "Phương pháp" for VN consistency
@@ -35,6 +36,7 @@ export const metadata: Metadata = {
       'Tử Vi Bắc phái: cách an sao, đại vận, lưu niên — và lằn ranh engine deterministic vs AI/LLM.',
     url: 'https://hieu.asia/methodology/tu-vi',
     type: 'article',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

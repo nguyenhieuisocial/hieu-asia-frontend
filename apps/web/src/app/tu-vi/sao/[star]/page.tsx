@@ -6,6 +6,7 @@ import { ChevronRight, ArrowRight, Sparkles, ShieldAlert } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { ALL_STARS_CONTENT, findStarContent } from '@/lib/tuvi-content';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export function generateStaticParams() {
   return ALL_STARS_CONTENT.map((s) => ({ star: s.slug }));
@@ -26,6 +27,7 @@ export async function generateMetadata(
       description: data.archetype,
       url: `https://hieu.asia/tu-vi/sao/${data.slug}`,
       type: 'article',
+      images: OG_DEFAULT_IMAGES,
     },
   };
 }

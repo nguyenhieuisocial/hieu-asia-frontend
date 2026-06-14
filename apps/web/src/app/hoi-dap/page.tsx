@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 const TITLE = 'Hỏi đáp về hieu.asia — Tử Vi AI, Bát Tự, MBTI & các phương pháp';
 const DESCRIPTION =
@@ -191,6 +192,7 @@ export const metadata: Metadata = {
     description: 'Tử Vi AI, Bát Tự, MBTI, Big Five, DISC — giải đáp ngắn gọn, trung thực.',
     url: 'https://hieu.asia/hoi-dap',
     type: 'website' as const,
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

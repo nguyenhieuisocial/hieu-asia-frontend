@@ -4,6 +4,7 @@ import { LaSoChecker } from '@/components/la-so-tu-vi/LaSoChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 const DESC =
   'Lập & xem lá số Tử Vi Đẩu Số miễn phí từ ngày giờ sinh — đầy đủ 12 cung, 114 sao, độ sáng (miếu/vượng/hãm), Tứ Hóa, cách cục & tam phương tứ chính, bằng engine chuẩn. Con số là thật; luận giải để hiểu mình, không bói toán.';
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
     description: DESC,
     url: 'https://hieu.asia/la-so-tu-vi',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

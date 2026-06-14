@@ -21,6 +21,7 @@ import {
   ExpertContent,
 } from '@/components/reading/ModeContent';
 import { LoTrinhChart } from '@/components/lo-trinh/LoTrinhChart';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 const SLUG = 'hieu-ban-than';
 const TOPIC = 'self';
@@ -36,6 +37,7 @@ export const metadata: Metadata = {
       'Một bức chân dung trung thực về điểm mạnh, vùng tối, và kiểu năng lượng của bạn.',
     url: `https://hieu.asia/lo-trinh/${SLUG}`,
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

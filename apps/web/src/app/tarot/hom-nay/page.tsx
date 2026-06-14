@@ -4,6 +4,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { faqPage } from '@/lib/seo/jsonld';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { cardOfTheDay } from '@/lib/tools/tarot';
 
 // Render mỗi request với ngày hiện tại (giờ VN) → luôn đúng "lá hôm nay".
@@ -23,6 +24,7 @@ export const metadata: Metadata = {
     siteName: 'hieu.asia',
     locale: 'vi_VN',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

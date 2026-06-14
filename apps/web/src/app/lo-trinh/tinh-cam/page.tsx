@@ -17,6 +17,7 @@ import {
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { LoTrinhChart } from '@/components/lo-trinh/LoTrinhChart';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 const SLUG = 'tinh-cam';
 const TOPIC = 'love';
@@ -32,6 +33,7 @@ export const metadata: Metadata = {
       'Phu Thê + Phúc Đức + Nô Bộc + tương hợp tuổi — hiểu kiểu gắn bó trước khi quyết định.',
     url: `https://hieu.asia/lo-trinh/${SLUG}`,
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

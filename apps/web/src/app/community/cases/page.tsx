@@ -11,6 +11,7 @@ import { ArrowRight, BookOpen } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { listCaseStudies } from '@/lib/case-studies';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: 'Case studies — quyết định thực tế qua Tử Vi',
@@ -22,6 +23,7 @@ export const metadata: Metadata = {
     description: 'Quy trình ra quyết định thực tế, không phải lời hứa kết quả.',
     url: 'https://hieu.asia/community/cases',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

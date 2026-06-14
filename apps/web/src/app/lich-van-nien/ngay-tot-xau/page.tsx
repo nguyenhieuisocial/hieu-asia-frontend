@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ActivityChecker } from '@/components/lich-van-nien/ActivityChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: 'Kiểm tra ngày tốt — Lịch Vạn Niên',
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
       'Chấm điểm ngày tốt cho cưới hỏi, khai trương, động thổ. Cá nhân hoá theo tuổi.',
     url: 'https://hieu.asia/lich-van-nien/ngay-tot-xau',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

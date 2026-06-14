@@ -19,6 +19,7 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: 'Decision Brief — Quyết định bớt mơ hồ',
@@ -31,6 +32,7 @@ export const metadata: Metadata = {
       'Quyết định bớt mơ hồ — không phải tiên đoán số phận, mà giúp bạn reframe vấn đề.',
     url: 'https://hieu.asia/decisions',
     type: 'website' as const,
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

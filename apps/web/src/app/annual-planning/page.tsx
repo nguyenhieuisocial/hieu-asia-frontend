@@ -13,6 +13,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { TimeFlowChecker } from '@/components/time-flow/TimeFlowChecker';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: 'Khung kế hoạch năm 2026 — 4 quý + quyết định lớn',
@@ -24,6 +25,7 @@ export const metadata: Metadata = {
     description: 'Chủ đề năm Bính Ngọ + 4 quý + 5 decisions lớn — tham chiếu chung.',
     url: 'https://hieu.asia/annual-planning',
     type: 'article',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

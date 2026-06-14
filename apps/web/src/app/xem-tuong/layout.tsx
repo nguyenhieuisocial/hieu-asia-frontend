@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: 'Xem Chỉ Tay & Tướng Mặt miễn phí — AI phân tích ảnh thật',
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
       'Phân tích chỉ tay và tướng mặt bằng AI — xu hướng tính cách, ứng xử, điểm mạnh. Ảnh không được lưu trữ.',
     url: 'https://hieu.asia/xem-tuong',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

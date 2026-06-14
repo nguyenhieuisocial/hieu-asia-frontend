@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 export const metadata: Metadata = {
   title: 'Nhật ký Quyết định — Ghi lại các quyết định',
   description:
@@ -9,6 +10,7 @@ export const metadata: Metadata = {
     description: 'Nhật ký quyết định cá nhân.',
     url: 'https://hieu.asia/journal',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 export default function L({ children }: { children: React.ReactNode }) { return children; }

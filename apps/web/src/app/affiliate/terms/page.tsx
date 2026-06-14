@@ -9,6 +9,7 @@ import type { Metadata } from 'next';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { AffiliateSubNav } from '@/components/affiliate/AffiliateSubNav';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: 'Điều khoản chương trình affiliate',
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
       'Cơ cấu hoa hồng tier-based, cookie 30 ngày, nghĩa vụ thuế VN và quy trình payout.',
     url: 'https://hieu.asia/affiliate/terms',
     type: 'article',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: 'Chương trình affiliate — Kiếm 30% hoa hồng',
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
       'Hoa hồng 30% tháng đầu + 10% recurring 6 tháng. Cookie 30 ngày, payout từ 500.000đ.',
     url: 'https://hieu.asia/affiliate',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

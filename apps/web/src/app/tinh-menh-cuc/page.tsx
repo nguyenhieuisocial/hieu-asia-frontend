@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { TinhMenhCucForm } from './form';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: 'Tính Mệnh Cục: cung Mệnh, cung Thân, cục, âm dương',
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
     description: 'Cung Mệnh, cung Thân, Cục, âm dương — miễn phí, 30 giây.',
     url: 'https://hieu.asia/tinh-menh-cuc',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

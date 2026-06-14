@@ -20,6 +20,7 @@ import {
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: 'Lộ trình theo nhu cầu',
@@ -32,6 +33,7 @@ export const metadata: Metadata = {
       'Năm lộ trình theo nhu cầu thực tế — từ hiểu bản thân đến lập kế hoạch năm và tra cứu nhanh hằng ngày.',
     url: 'https://hieu.asia/lo-trinh',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 
