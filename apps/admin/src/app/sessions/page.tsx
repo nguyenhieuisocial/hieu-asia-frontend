@@ -1003,16 +1003,15 @@ function AdminSessionsPageInner() {
         <CardHeader>
           <CardTitle>Bộ lọc</CardTitle>
           <CardDescription>
-            Tìm theo session_id, email, hoặc nội dung mối quan tâm — chỉ lọc
-            trong trang đang tải (dùng bộ lọc trạng thái / thanh toán / ngày để
-            thu hẹp trên toàn hệ thống).
+            Tìm theo mã phiên / email / tên trên toàn hệ thống, kết hợp với bộ
+            lọc trạng thái / thanh toán / ngày để thu hẹp kết quả.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap items-center gap-3">
             <Input
-              placeholder="Tìm trong trang này: session_id / email / nội dung…"
-              title="Tìm kiếm chỉ lọc các phiên đang hiển thị trên trang hiện tại (chưa hỗ trợ tìm toàn hệ thống)."
+              placeholder="Tìm theo mã phiên / email / tên…"
+              title="Tìm kiếm trên toàn hệ thống theo mã phiên, email, hoặc tên gợi nhớ."
               value={search}
               onChange={handleSearch}
               className="min-w-0 flex-1 sm:max-w-md"
