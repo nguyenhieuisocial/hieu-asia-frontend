@@ -4,6 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
 import { calculateBazi, type BaziChart, type BaziPillar, type Element, ELEMENTS } from '@/lib/bazi';
+import { ShareResultButton } from '@/components/tools/ShareResultButton';
 
 /**
  * Công cụ Bát Tự (Tứ Trụ) bấm-thử miễn phí. Engine `lib/bazi.ts` chạy NGAY trong
@@ -85,13 +86,44 @@ export function BatTuChecker() {
       const ict = new Date(Date.now() + 7 * 3600 * 1000); // hôm nay theo giờ VN
       const asOf = `${ict.getUTCFullYear()}-${ict.getUTCMonth() + 1}-${ict.getUTCDate()}`;
       setChart(calculateBazi({ birthSolarDate: date, birthHour: parseHour(time), gender, asOf }));
+      // Ghi tham số vào URL để LÁ SỐ chia sẻ được (mở link là thấy ngay lá số đó).
+      if (typeof window !== 'undefined') {
+        const qs = new URLSearchParams({ d: date, t: time, g: gender }).toString();
+        window.history.replaceState(null, '', `/la-so-bat-tu?${qs}`);
+      }
     } catch {
       setError('Chưa lập được lá số — kiểm tra lại ngày sinh.');
     }
   }, [date, time, gender]);
 
+  // Mở link chia sẻ (?d=&t=&g=) → tự điền + lập lá số ngay (không cần bấm lại).
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const sp = new URLSearchParams(window.location.search);
+    const d = sp.get('d');
+    if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return;
+    const t = sp.get('t') || '12:00';
+    const g: 'M' | 'F' = sp.get('g') === 'F' ? 'F' : 'M';
+    setDate(d);
+    setTime(t);
+    setGender(g);
+    try {
+      const ict = new Date(Date.now() + 7 * 3600 * 1000);
+      const asOf = `${ict.getUTCFullYear()}-${ict.getUTCMonth() + 1}-${ict.getUTCDate()}`;
+      setChart(calculateBazi({ birthSolarDate: d, birthHour: parseHour(t), gender: g, asOf }));
+    } catch {
+      /* link hỏng — bỏ qua, người dùng tự nhập */
+    }
+  }, []);
+
   const maxCount = chart ? Math.max(...ELEMENTS.map((e) => chart.elementCount[e]), 1) : 1;
   const curAge = chart ? ageFromDate(chart.meta.solarDate) : null;
+
+  // Link + caption chia sẻ (khoe lá số → kéo người mới vào xem thử).
+  const sharePath = `/la-so-bat-tu?${new URLSearchParams({ d: date, t: time, g: gender }).toString()}`;
+  const shareText = chart
+    ? `Lá số Bát Tự của tôi: Nhật Chủ ${chart.dayMaster.can} (${chart.dayMaster.element} ${chart.dayMaster.yang ? 'dương' : 'âm'}), hành ${chart.strongest} vượng${chart.missing.length ? `, thiếu ${chart.missing.join('/')}` : ''}. Tính theo tiết khí chuẩn, không bói toán — xem thử lá số của bạn miễn phí 👇`
+    : '';
 
   return (
     <Card className="border-gold/20 bg-card/60 backdrop-blur-sm">
@@ -146,6 +178,18 @@ export function BatTuChecker() {
               <p className="mt-2 text-xs text-muted-foreground">
                 Trụ tính theo <strong>tiết khí</strong> (đúng chuẩn Bát Tự) — chữ màu là ngũ hành của từng can/chi.
               </p>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-gold/30 bg-gold/[0.05] px-4 py-3">
+              <p className="text-sm text-foreground/85">
+                Lá số tính theo tiết khí chuẩn — <strong>khoe với bạn bè</strong> hoặc thách họ xem thử lá số của mình.
+              </p>
+              <ShareResultButton
+                path={sharePath}
+                title="Lá số Bát Tự (Tứ Trụ) của tôi — hieu.asia"
+                text={shareText}
+                trackId="la-so-bat-tu"
+              />
             </div>
 
             <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
