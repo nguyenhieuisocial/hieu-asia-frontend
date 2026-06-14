@@ -10,12 +10,12 @@
  *   ├─ This file (~200 LOC orchestration: query, KPI strip, header chrome)
  *   ├─ <CustomerDetailTabs> (components/admin/customers/CustomerDetailTabs)
  *   │     hosts Profile / Phiên / Giao dịch / Audit / Compliance
- *   ├─ <AdminTable> primitive — transactions + audit lists
- *   ├─ <CustomerRowActions> reused trigger style via DropdownMenu
- *   └─ <ConfirmActionDialog> Dialog (replaces native confirm)
+ *   └─ <AdminTable> primitive — transactions + audit lists
  *
- * Detail-page action target is the page's customer, not a row. We synthesise
- * a ConfirmState from the loaded customer so it reuses the shared Dialog.
+ * Account-mutation actions (đổi role / tạm khoá / xoá) were removed — no
+ * backend mutation routes exist (/api/admin/customers/:id is read-only), so
+ * they popped a confirm dialog then silently no-op'd. Re-add once mutation
+ * endpoints land.
  */
 
 import * as React from 'react';
@@ -26,35 +26,20 @@ import {
   Button,
   Card,
   CardContent,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
   toast,
 } from '@hieu-asia/ui';
 import {
   ChevronLeft,
   Copy,
   ListTodo,
-  MoreHorizontal,
-  Pencil,
   Receipt,
   ShieldAlert,
-  ShieldOff,
-  Trash2,
   User,
 } from 'lucide-react';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { CustomerDetailTabs } from '@/components/admin/customers/CustomerDetailTabs';
-import { ConfirmActionDialog } from '@/components/admin/customers/ConfirmActionDialog';
 import { PlanBadge } from '@/components/admin/customers/PlanBadge';
-import type {
-  ConfirmState,
-  Customer,
-  RowAction,
-} from '@/components/admin/customers/types';
 import type {
   CustomerDetailResponse,
 } from '@/components/admin/customers/detail-types';
@@ -84,11 +69,6 @@ async function fetchCustomer(id: string): Promise<CustomerDetailResponse> {
   }
 }
 
-const ICON_PENCIL = <Pencil className="h-3.5 w-3.5" aria-hidden />;
-const ICON_SUSPEND = <ShieldOff className="h-3.5 w-3.5" aria-hidden />;
-const ICON_TRASH = <Trash2 className="h-3.5 w-3.5" aria-hidden />;
-const ICON_MORE = <MoreHorizontal className="h-4 w-4" aria-hidden />;
-
 export default function CustomerDetailPage() {
   // useSearchParams() requires a Suspense boundary (App Router CSR bailout).
   // Local boundary keeps sidebar/topbar mounted while ?tab= resolves.
@@ -112,8 +92,6 @@ function CustomerDetailPageInner() {
     enabled: !!id,
     staleTime: 60_000,
   });
-
-  const [confirm, setConfirm] = React.useState<ConfirmState | null>(null);
 
   const showError = !!error || data?.ok === false;
   const errorMsg = (error as Error | undefined)?.message ?? data?.error;
@@ -178,47 +156,6 @@ function CustomerDetailPageInner() {
     [router, pathname, searchParams],
   );
 
-  // Build a thin `Customer` from the detail shape so ConfirmActionDialog
-  // can reuse its expected props. Memoised so onAction's deps stay stable
-  // across renders (react-hooks/exhaustive-deps caught this in build).
-  const confirmTarget: Customer | null = React.useMemo(() => {
-    if (!customer) return null;
-    return {
-      id: customer.id,
-      display_name: customer.display_name ?? null,
-      email: customer.email ?? null,
-      telegram_id: customer.telegram_id ?? null,
-      plan: (customer.plan as Customer['plan']) ?? null,
-    };
-  }, [customer]);
-
-  const onAction = React.useCallback(
-    (action: RowAction) => {
-      if (!confirmTarget) return;
-      setConfirm({ action, customer: confirmTarget });
-    },
-    [confirmTarget],
-  );
-
-  const onConfirmAction = React.useCallback(() => {
-    if (!confirm) return;
-    const { action } = confirm;
-    setConfirm(null);
-    // TODO Wave 60.71.T2.customers.b — wire mutation routes.
-    toast(`Backend pending: ${action}`, {
-      description:
-        'Endpoint /api/admin/customers/:id chưa hỗ trợ mutation. Sẽ wire trong wave kế tiếp.',
-    });
-  }, [confirm]);
-
-  const onConfirmDismiss = React.useCallback((open: boolean) => {
-    if (!open) setConfirm(null);
-  }, []);
-
-  const onEdit = React.useCallback(() => onAction('edit-role'), [onAction]);
-  const onSuspend = React.useCallback(() => onAction('suspend'), [onAction]);
-  const onDelete = React.useCallback(() => onAction('delete'), [onAction]);
-
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -276,36 +213,6 @@ function CustomerDetailPageInner() {
           <Button variant="outline" size="sm" onClick={onRefresh} disabled={isFetching}>
             {isFetching ? 'Đang tải…' : 'Làm mới'}
           </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                type="button"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-gold/20 bg-card/60 text-muted-foreground hover:border-gold/50 hover:text-gold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ochre dark:focus-visible:ring-gold"
-                aria-label="Hành động"
-                disabled={!confirmTarget}
-              >
-                {ICON_MORE}
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="min-w-[10rem]">
-              <DropdownMenuItem onSelect={onEdit}>
-                {ICON_PENCIL}
-                Đổi role
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onSelect={onSuspend}>
-                {ICON_SUSPEND}
-                Tạm khoá
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onSelect={onDelete}
-                className="text-red-700 dark:text-red-300 focus:bg-red-500/10 focus:text-red-700 dark:focus:text-red-200"
-              >
-                {ICON_TRASH}
-                Xoá
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
 
@@ -369,12 +276,6 @@ function CustomerDetailPageInner() {
           />
         </CardContent>
       </Card>
-
-      <ConfirmActionDialog
-        state={confirm}
-        onOpenChange={onConfirmDismiss}
-        onConfirm={onConfirmAction}
-      />
     </div>
   );
 }

@@ -13,10 +13,9 @@ import {
   Input,
   Label,
   StatusBadge,
-  toast,
   type DataTableColumn,
 } from '@hieu-asia/ui';
-import { getQdrantStats, ingestRagChunks, listRagChunks } from '@/lib/admin-api';
+import { ingestRagChunks, listRagChunks } from '@/lib/admin-api';
 import { MockBanner } from '@/components/mock-banner';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
@@ -24,25 +23,6 @@ import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { BookOpen, FileText, Database, Layers, RotateCw } from 'lucide-react';
 import type { RagChunk } from '@/lib/mock-data';
-
-/**
- * POST /admin/rag/reindex/:source_id — re-runs embedding job.
- * Worker endpoint may not exist yet — handle 404 gracefully.
- */
-async function reindexDocument(sourceId: string): Promise<{ ok: boolean; queued?: boolean; error?: string }> {
-  const r = await fetch(`/api/admin-proxy/admin/rag/reindex/${encodeURIComponent(sourceId)}`, {
-    method: 'POST',
-  });
-  if (r.status === 404) {
-    return { ok: false, error: 'Endpoint chưa wire ở worker (/admin/rag/reindex)' };
-  }
-  const text = await r.text();
-  try {
-    return JSON.parse(text);
-  } catch {
-    return { ok: false, error: `HTTP ${r.status}` };
-  }
-}
 
 const DISCIPLINE_LABEL: Record<RagChunk['discipline'], string> = {
   tu_vi: 'Tử Vi',
@@ -60,20 +40,6 @@ const LICENSE_TONE: Record<RagChunk['license_status'], React.ComponentProps<type
 export default function AdminRagPage() {
   const qc = useQueryClient();
   const chunks = useQuery({ queryKey: ['admin', 'rag', 'chunks'], queryFn: listRagChunks, staleTime: 60_000 });
-  const stats = useQuery({ queryKey: ['admin', 'rag', 'qdrant'], queryFn: getQdrantStats, staleTime: 60_000 });
-
-  const reindex = useMutation({
-    mutationFn: reindexDocument,
-    onSuccess: (data, sourceId) => {
-      if (data.ok) {
-        toast.success('Đã queue reindex', { description: `Source: ${sourceId}` });
-        qc.invalidateQueries({ queryKey: ['admin', 'rag'] });
-      } else {
-        toast.error('Reindex thất bại', { description: data.error });
-      }
-    },
-    onError: (e) => toast.error('Reindex thất bại', { description: (e as Error).message }),
-  });
 
   const cols: DataTableColumn<RagChunk>[] = [
     { key: 'source_id', header: 'Source ID', cell: (c) => <span className="font-mono text-xs text-foreground/85">{c.source_id}</span> },
@@ -101,16 +67,18 @@ export default function AdminRagPage() {
       key: 'actions',
       header: '',
       width: '110px',
-      cell: (c) => (
+      // Worker /admin/rag/reindex returns 501 (pipeline chưa triển khai) — disable
+      // the button and label it "sắp có" so we don't promise an action that no-ops.
+      cell: () => (
         <Button
           size="sm"
           variant="outline"
-          onClick={() => reindex.mutate(c.source_id)}
-          disabled={reindex.isPending}
-          aria-label={`Reindex ${c.source_id}`}
+          disabled
+          title="Pipeline reindex chưa triển khai ở backend"
+          aria-label="Reindex chưa khả dụng"
         >
-          <RotateCw className={`mr-1 h-3 w-3 ${reindex.isPending && reindex.variables === c.source_id ? 'animate-spin' : ''}`} />
-          Reindex
+          <RotateCw className="mr-1 h-3 w-3" />
+          Reindex (sắp có)
         </Button>
       ),
     },
@@ -128,7 +96,12 @@ export default function AdminRagPage() {
         icon={<BookOpen className="h-5 w-5" />}
       />
 
-      <MockBanner source={[chunks.data?._source, stats.data?._source].find((s) => s?.isMock) ?? chunks.data?._source ?? stats.data?._source} />
+      {/* Banner reflects ONLY the chunks list (the data with a real source).
+          getQdrantStats is permanently mock (/admin/qdrant/stats không tồn tại),
+          so feeding it into the banner would flip the whole page to "mock" even
+          when corpus_chunks is real. The Qdrant/Collection KPIs are labelled
+          "chưa có endpoint" instead. */}
+      <MockBanner source={chunks.data?._source} />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard
@@ -147,19 +120,14 @@ export default function AdminRagPage() {
         />
         <KpiCard
           label="Collection"
-          value={<span className="font-mono text-base">{stats.data?.collection ?? 'pgvector'}</span>}
+          value={<span className="font-mono text-base">pgvector</span>}
           icon={<Database className="h-4 w-4" />}
           accent="jade"
-          hint="embeddings store"
+          hint="chưa có endpoint"
         />
         <KpiCard
           label="Status"
-          value={
-            <StatusBadge
-              status={stats.data?.status === 'green' ? 'success' : 'info'}
-              label={stats.data?.status ?? 'ready'}
-            />
-          }
+          value={<StatusBadge status="info" label="chưa có endpoint" />}
           icon={<BookOpen className="h-4 w-4" />}
           accent="jade"
         />
@@ -202,7 +170,12 @@ function IngestForm({ onIngested }: { onIngested: () => void }) {
 
   const mutation = useMutation({
     mutationFn: ingestRagChunks,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // ingestRagChunks is a hardcoded mock (POST /admin/rag/ingest không tồn tại
+      // ở worker). It never stores anything → do NOT clear the form or show a
+      // success banner that would lie about data being saved. The isMock flag
+      // drives the "chưa kết nối backend" notice below instead.
+      if (data.isMock) return;
       setText('');
       setSourceId('');
       setSourceTitle('');
@@ -238,6 +211,10 @@ function IngestForm({ onIngested }: { onIngested: () => void }) {
       <CardHeader>
         <CardTitle>Ingest tài liệu mới</CardTitle>
         <CardDescription>Tải file .txt hoặc dán text — hệ thống tự tách đoạn theo blank line.</CardDescription>
+        <p className="mt-2 rounded border border-warn-500/40 bg-warn-500/10 p-2 text-xs text-warn-700 dark:text-warn-300">
+          Chưa kết nối backend — endpoint ingest (POST /admin/rag/ingest) chưa có ở worker. Form chỉ
+          để xem trước; bấm Ingest sẽ KHÔNG lưu gì.
+        </p>
       </CardHeader>
       <CardContent>
         <form onSubmit={onSubmit} className="grid gap-4 sm:grid-cols-2">
@@ -308,14 +285,19 @@ function IngestForm({ onIngested }: { onIngested: () => void }) {
               />
             </div>
           )}
-          {mutation.isSuccess && (
-            <p className="sm:col-span-2 rounded border border-jade/40 bg-jade/10 p-2 text-sm text-jade-50">
-              Đã ingest {mutation.data.ingested} chunks vào `{mutation.data.source_id}`.
+          {/* Mock path: never claim success. ingestRagChunks returns isMock=true
+              because the worker endpoint doesn't exist. Surface that honestly. */}
+          {mutation.isSuccess && mutation.data.isMock && (
+            <p className="sm:col-span-2 rounded border border-warn-500/40 bg-warn-500/10 p-2 text-sm text-warn-700 dark:text-warn-300">
+              Chưa kết nối backend (mock) — {chunks.length} chunk(s) KHÔNG được lưu. Cần wire
+              POST /admin/rag/ingest ở worker trước.
             </p>
           )}
           <div className="sm:col-span-2">
+            {/* Endpoint chưa wire — submit chỉ để show notice "chưa kết nối (mock)",
+                không lưu gì. Disable khi đang chạy / thiếu field như cũ. */}
             <Button type="submit" disabled={mutation.isPending || chunks.length === 0 || !sourceId || !sourceTitle}>
-              {mutation.isPending ? 'Đang ingest…' : `Ingest ${chunks.length} chunks`}
+              {mutation.isPending ? 'Đang kiểm tra…' : `Ingest ${chunks.length} chunks (chưa khả dụng)`}
             </Button>
           </div>
         </form>

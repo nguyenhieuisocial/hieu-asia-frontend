@@ -114,12 +114,7 @@ export async function getLlmSpendKpis(opts: { since: string; until?: string }): 
   const cfg = getConfig();
   if (!cfg) return { cost_usd: 0, call_count: 0, avg_latency_ms: 0, error_rate: 0 };
 
-  const query: Record<string, string> = {
-    select: 'cost_usd,latency_ms,status',
-    created_at: `gte.${opts.since}`,
-  };
-  if (opts.until) query['created_at'] = `gte.${opts.since}`;
-  // We need both gte and lte — PostgREST takes them as repeated params via and=
+  // We need both gte and lte — PostgREST takes them as repeated params.
   const params = new URLSearchParams();
   params.set('select', 'cost_usd,latency_ms,status');
   params.append('created_at', `gte.${opts.since}`);
@@ -157,8 +152,10 @@ export async function getLlmSpendKpis(opts: { since: string; until?: string }): 
 
 export async function getLlmSpendDaily(days = 30): Promise<LlmDailyRow[]> {
   const since = isoDaysAgo(days);
+  // The llm_trace_daily view exposes the aggregate as `cost_usd_sum` (not
+  // `cost_usd`). Alias on read so LlmDailyRow.cost_usd is populated.
   return restGet<LlmDailyRow>('llm_trace_daily', {
-    select: 'day,vendor,model,cost_usd,call_count',
+    select: 'day,vendor,model,cost_usd:cost_usd_sum,call_count',
     day: `gte.${since.slice(0, 10)}`,
     order: 'day.asc',
     limit: '5000',

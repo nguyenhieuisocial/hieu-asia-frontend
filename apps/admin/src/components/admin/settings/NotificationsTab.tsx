@@ -3,11 +3,15 @@
 /**
  * Wave 60.81.D — Notifications tab for /settings.
  *
- * Form fields:
- *   - email digest: daily / weekly / off (DropdownMenu)
- *   - Slack webhook URL
- *   - Telegram bot token
- *   - critical alerts toggle (Switch)
+ * Three toggles, mirroring the backend KV schema 1:1 (wave-60-82.ts):
+ *   - email_alerts          (boolean)
+ *   - sentry_high_priority  (boolean)
+ *   - weekly_digest         (boolean)
+ *
+ * #20 fix: the FE previously offered a digest enum + Slack webhook + Telegram
+ * token + critical-alerts toggle, none of which the backend stores — Save
+ * "succeeded" but the values were silently dropped. The tab now reads+writes
+ * exactly the three fields the backend persists, so Save round-trips.
  *
  * PATCH /api/admin/settings/notifications on Save. audit_log row written.
  */
@@ -21,10 +25,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  Input,
-  Label,
   Switch,
-  cn,
   toast,
 } from '@hieu-asia/ui';
 import { Bell, Save } from 'lucide-react';
@@ -33,16 +34,6 @@ import type { NotificationPrefs } from './types';
 
 const ICON_SAVE = <Save className="h-3.5 w-3.5" aria-hidden />;
 const ICON_BELL = <Bell className="h-4 w-4 text-gold" aria-hidden />;
-
-const DIGEST_OPTIONS: Array<{
-  value: NotificationPrefs['email_digest'];
-  label: string;
-  hint: string;
-}> = [
-  { value: 'daily', label: 'Hàng ngày', hint: 'Tóm tắt 24h' },
-  { value: 'weekly', label: 'Hàng tuần', hint: 'Thứ 2, 9h sáng' },
-  { value: 'off', label: 'Tắt', hint: 'Không gửi digest' },
-];
 
 interface PrefsResp {
   ok?: boolean;
@@ -69,11 +60,36 @@ async function fetchPrefs(): Promise<PrefsResp> {
 }
 
 const DEFAULT_PREFS: NotificationPrefs = {
-  email_digest: 'weekly',
-  slack_webhook_url: '',
-  telegram_bot_token: '',
-  critical_alerts_enabled: true,
+  email_alerts: true,
+  sentry_high_priority: true,
+  weekly_digest: false,
 };
+
+const TOGGLES: Array<{
+  key: keyof NotificationPrefs;
+  title: string;
+  description: string;
+  label: string;
+}> = [
+  {
+    key: 'email_alerts',
+    title: 'Email alerts',
+    description: 'Gửi email khi có sự cố vận hành cần admin chú ý.',
+    label: 'Bật email alert',
+  },
+  {
+    key: 'sentry_high_priority',
+    title: 'Sentry high-priority',
+    description: 'Nhận thông báo khi Sentry bắn issue mức high-priority.',
+    label: 'Bật cảnh báo Sentry high-priority',
+  },
+  {
+    key: 'weekly_digest',
+    title: 'Weekly digest',
+    description: 'Email tóm tắt vận hành hàng tuần (Thứ 2, 9h sáng).',
+    label: 'Bật digest hàng tuần',
+  },
+];
 
 export function NotificationsTab() {
   const { data, isLoading, error, refetch } = useQuery({
@@ -89,39 +105,22 @@ export function NotificationsTab() {
   // Hydrate form from server response.
   React.useEffect(() => {
     if (data?.prefs) {
-      setForm(data.prefs);
+      setForm({
+        email_alerts: data.prefs.email_alerts,
+        sentry_high_priority: data.prefs.sentry_high_priority,
+        weekly_digest: data.prefs.weekly_digest,
+      });
       setDirty(false);
     }
   }, [data?.prefs]);
 
-  const handleDigest = React.useCallback(
-    (value: NotificationPrefs['email_digest']) => {
-      setForm((prev) => ({ ...prev, email_digest: value }));
+  const handleToggle = React.useCallback(
+    (key: keyof NotificationPrefs, checked: boolean) => {
+      setForm((prev) => ({ ...prev, [key]: checked }));
       setDirty(true);
     },
     [],
   );
-
-  const handleSlack = React.useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setForm((prev) => ({ ...prev, slack_webhook_url: e.target.value }));
-      setDirty(true);
-    },
-    [],
-  );
-
-  const handleTelegram = React.useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setForm((prev) => ({ ...prev, telegram_bot_token: e.target.value }));
-      setDirty(true);
-    },
-    [],
-  );
-
-  const handleCriticalToggle = React.useCallback((checked: boolean) => {
-    setForm((prev) => ({ ...prev, critical_alerts_enabled: checked }));
-    setDirty(true);
-  }, []);
 
   const handleSave = React.useCallback(async () => {
     setBusy(true);
@@ -172,94 +171,30 @@ export function NotificationsTab() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             {ICON_BELL}
-            Email digest
+            Thông báo admin
           </CardTitle>
           <CardDescription>
-            Frequency tóm tắt admin gửi đến email đăng nhập.
+            Các kênh thông báo cho tài khoản admin đăng nhập.
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="grid gap-2 sm:grid-cols-3">
-            {DIGEST_OPTIONS.map((opt) => {
-              const checked = form.email_digest === opt.value;
-              return (
-                <DigestRadio
-                  key={opt.value}
-                  value={opt.value}
-                  label={opt.label}
-                  hint={opt.hint}
-                  checked={checked}
-                  disabled={isLoading || busy}
-                  onSelect={handleDigest}
-                />
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Slack webhook</CardTitle>
-          <CardDescription>
-            Incoming webhook URL — empty = không gửi Slack.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-1.5">
-          <Label htmlFor="slack-url" className="text-xs uppercase tracking-wider text-muted-foreground">
-            Webhook URL
-          </Label>
-          <Input
-            id="slack-url"
-            type="url"
-            value={form.slack_webhook_url}
-            onChange={handleSlack}
-            placeholder="https://hooks.slack.com/services/..."
-            disabled={isLoading || busy}
-          />
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Telegram bot</CardTitle>
-          <CardDescription>
-            Bot token để gửi critical alert qua Telegram. Lưu encrypted.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-1.5">
-          <Label htmlFor="tg-token" className="text-xs uppercase tracking-wider text-muted-foreground">
-            Bot token
-          </Label>
-          <Input
-            id="tg-token"
-            type="password"
-            value={form.telegram_bot_token}
-            onChange={handleTelegram}
-            placeholder="123456:ABC-DEF…"
-            disabled={isLoading || busy}
-          />
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Critical alerts</CardTitle>
-          <CardDescription>
-            Gửi alert ngay khi worker error rate &gt; 5% hoặc payment webhook
-            fail liên tiếp.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-between gap-3 rounded-md border border-gold/15 bg-card/60 px-4 py-3">
-            <span className="text-sm">Bật cảnh báo critical</span>
-            <Switch
-              checked={form.critical_alerts_enabled}
-              onCheckedChange={handleCriticalToggle}
-              disabled={isLoading || busy}
-              aria-label="Critical alerts toggle"
-            />
-          </div>
+        <CardContent className="space-y-3">
+          {TOGGLES.map((t) => (
+            <div
+              key={t.key}
+              className="flex items-start justify-between gap-3 rounded-md border border-gold/15 bg-card/60 px-4 py-3"
+            >
+              <div className="min-w-0 space-y-0.5">
+                <p className="text-sm font-medium text-foreground">{t.title}</p>
+                <p className="text-xs text-muted-foreground">{t.description}</p>
+              </div>
+              <Switch
+                checked={form[t.key]}
+                onCheckedChange={(checked) => handleToggle(t.key, checked)}
+                disabled={isLoading || busy}
+                aria-label={t.label}
+              />
+            </div>
+          ))}
         </CardContent>
       </Card>
 
@@ -270,45 +205,5 @@ export function NotificationsTab() {
         </Button>
       </div>
     </div>
-  );
-}
-
-interface DigestRadioProps {
-  value: NotificationPrefs['email_digest'];
-  label: string;
-  hint: string;
-  checked: boolean;
-  disabled: boolean;
-  onSelect: (v: NotificationPrefs['email_digest']) => void;
-}
-
-function DigestRadio({
-  value,
-  label,
-  hint,
-  checked,
-  disabled,
-  onSelect,
-}: DigestRadioProps) {
-  const handleClick = React.useCallback(() => {
-    if (!disabled) onSelect(value);
-  }, [onSelect, value, disabled]);
-
-  return (
-    <button
-      type="button"
-      onClick={handleClick}
-      disabled={disabled}
-      className={cn(
-        'flex flex-col items-start gap-1 rounded-md border px-3 py-2 text-left text-sm transition-colors',
-        checked
-          ? 'border-gold/50 bg-gold/[0.08] text-foreground'
-          : 'border-gold/15 bg-card/40 text-foreground/85 hover:border-gold/30',
-        disabled && 'cursor-not-allowed opacity-50',
-      )}
-    >
-      <span className="font-medium">{label}</span>
-      <span className="text-[11px] text-muted-foreground">{hint}</span>
-    </button>
   );
 }

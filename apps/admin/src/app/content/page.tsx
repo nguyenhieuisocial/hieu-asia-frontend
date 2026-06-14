@@ -134,6 +134,13 @@ export default function ContentListPage() {
             setCreateOpen(false);
             setCreateTopic('');
             setCreateSlug('');
+          } else if (res.timedOut) {
+            // #47 — generation outran the 25s edge proxy. Not a failure; the
+            // worker keeps generating. Point the user to reload the list.
+            toast.info('Đang sinh nội dung', { description: res.error });
+            setCreateOpen(false);
+            setCreateTopic('');
+            setCreateSlug('');
           } else {
             toast.error('Tạo draft thất bại', { description: res.error });
           }
@@ -158,6 +165,9 @@ export default function ContentListPage() {
             description:
               'Chạy ngầm ~5-10 phút. Tải lại danh sách để xem tiến độ. Nếu sau 10 phút vẫn rỗng → kiểm tra LLM keys (Anthropic/OpenAI/Google) + Supabase trên Worker.',
           });
+        } else if (res.timedOut) {
+          // #47 — bulk outran the edge proxy. Generation continues server-side.
+          toast.info('Đang sinh loạt pillar', { description: res.error });
         } else {
           toast.error('Bulk generate thất bại', { description: res.error });
         }

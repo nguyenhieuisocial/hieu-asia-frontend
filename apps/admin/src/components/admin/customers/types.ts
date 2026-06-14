@@ -32,34 +32,7 @@ export const PLAN_TONE: Record<CustomerPlan, string> = {
   lifetime: 'bg-purple/15 text-foreground/85 border-purple/40',
 };
 
-export type RowAction = 'edit-role' | 'suspend' | 'delete';
-
-export interface ConfirmState {
-  action: RowAction;
-  customer: Customer;
-}
-
-export const ACTION_COPY: Record<
-  RowAction,
-  { title: string; description: string; cta: string; danger?: boolean }
-> = {
-  'edit-role': {
-    title: 'Đổi role khách hàng',
-    description:
-      'Hành động này cập nhật bảng users. Sẽ ghi audit_log trước khi áp dụng.',
-    cta: 'Mở form đổi role',
-  },
-  suspend: {
-    title: 'Tạm khoá tài khoản',
-    description:
-      'Khách hàng sẽ không đăng nhập được cho đến khi mở lại. Sẽ ghi audit_log.',
-    cta: 'Xác nhận tạm khoá',
-  },
-  delete: {
-    title: 'Xoá khách hàng',
-    description:
-      'Hành động này xoá vĩnh viễn user và mọi reading_session liên kết. Không thể hoàn tác.',
-    cta: 'Xoá vĩnh viễn',
-    danger: true,
-  },
-};
+// Account-mutation row actions (edit-role / suspend / delete) and their
+// confirm-dialog plumbing were removed — no backend mutation routes exist
+// (/api/admin/customers/:id is read-only). Re-add RowAction / ConfirmState /
+// ACTION_COPY here alongside the dialog once those endpoints land.

@@ -16,11 +16,15 @@ export interface AdminApiKey {
   expires_at?: string | null;
 }
 
+/**
+ * Mirrors the backend KV shape exactly (wave-60-82.ts NotificationPrefs).
+ * The backend stores only these three booleans; any other field is silently
+ * dropped on PATCH, so the tab must read+write exactly these.
+ */
 export interface NotificationPrefs {
-  email_digest: 'daily' | 'weekly' | 'off';
-  slack_webhook_url: string;
-  telegram_bot_token: string;
-  critical_alerts_enabled: boolean;
+  email_alerts: boolean;
+  sentry_high_priority: boolean;
+  weekly_digest: boolean;
 }
 
 export interface AdminProfile {
@@ -30,7 +34,9 @@ export interface AdminProfile {
   last_login_at: string | null;
 }
 
-export type RetentionDays = 30 | 90 | 365 | 0; // 0 = forever
+// Backend (wave-60-82.ts handleRetentionPatch) accepts 7–730 only; there is no
+// "forever" sentinel, so 0 is not a valid option.
+export type RetentionDays = 30 | 90 | 365 | 730;
 
 export const SCOPE_OPTIONS = [
   { id: 'admin:read', label: 'Đọc dữ liệu admin' },

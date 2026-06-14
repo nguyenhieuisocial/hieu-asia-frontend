@@ -66,8 +66,10 @@ const QUEUE_ALERT_AGE_SECONDS = 60 * 60;
  */
 const QUEUE_CRITICAL_AGE_SECONDS = 4 * 60 * 60;
 
-function fmtUsd(v: number) {
-  return `$${v.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+// #55: weekly_revenue_usd actually holds VND (SePay), despite the legacy field
+// name — format as VND, not USD.
+function fmtVnd(v: number) {
+  return `${v.toLocaleString('vi-VN', { maximumFractionDigits: 0 })}đ`;
 }
 
 function fmtUsdSmall(v: number) {
@@ -220,9 +222,10 @@ export default function AdminOverviewPage() {
         />
         <KpiCard
           label="Doanh thu 7 ngày"
-          value={kpis.data ? fmtUsd(kpis.data.weekly_revenue_usd) : '—'}
+          value={kpis.data ? fmtVnd(kpis.data.weekly_revenue_usd) : '—'}
           icon={<DollarSign className="h-4 w-4" />}
           accent="jade"
+          hint="VNĐ (SePay)"
         />
         <KpiCard
           label="LLM spend 14d"

@@ -31,7 +31,6 @@
  */
 
 import {
-  MOCK_USERS,
   MOCK_SESSIONS,
   MOCK_TASKS,
   MOCK_COST_BY_DAY,
@@ -40,11 +39,7 @@ import {
   MOCK_RAG_CHUNKS,
   MOCK_QDRANT_STATS,
   MOCK_TRANSACTIONS,
-  MOCK_COUPONS,
   MOCK_QUEUE_DEPTH,
-  MOCK_SUBSCRIPTIONS,
-  MOCK_FAILED_PAYMENTS,
-  MOCK_MRR_BY_MONTH,
   getOverviewKpis,
   type AdminUser,
   type AdminSession,
@@ -53,9 +48,6 @@ import {
   type ReadingsPerDay,
   type RagChunk,
   type AdminTransaction,
-  type AdminCoupon,
-  type AdminSubscription,
-  type MrrByMonth,
 } from './mock-data';
 
 const PROXY = '/api/admin-proxy';
@@ -149,24 +141,9 @@ function paginate<T>(
 }
 
 // ---------- Users ----------
-
-export async function listUsers(q: PageQuery & { plan?: AdminUser['plan'] } = {}) {
-  // TODO(wave-D): `/admin/users` exists but returns *admin login users* (KV),
-  // not end-users. End-user list lives under `/admin/customers`. The mock here
-  // represents end-users with plan/spend, so we keep mock for now and surface
-  // real data via the dedicated /customers page.
-  let rows = MOCK_USERS;
-  if (q.search) {
-    const s = q.search.toLowerCase();
-    rows = rows.filter((u) => u.email.toLowerCase().includes(s) || u.id.includes(s));
-  }
-  if (q.plan) rows = rows.filter((u) => u.plan === q.plan);
-  return delay(mock(paginate(rows, q), 'end-user list not yet on backend; use /customers'));
-}
-
-export async function getUser(id: string) {
-  return delay(MOCK_USERS.find((u) => u.id === id) ?? null);
-}
+// Removed mock listUsers/getUser (they had no callers and a misleading
+// "not yet on backend" TODO). Real end-users live on the /customers page
+// (GET /admin/customers); admin login accounts live on /users (GET /admin/users).
 
 // ---------- Sessions ----------
 
@@ -264,7 +241,9 @@ interface BackendSessionDetail {
 function normalizeStatus(s: unknown): AdminSession['status'] {
   const v = String(s ?? '').toLowerCase();
   if (v === 'done' || v === 'completed' || v === 'report_ready') return 'completed';
-  if (v === 'failed' || v === 'error') return 'failed';
+  // Backend encodes failures as 'failed' OR 'error_at_*' / 'error_internal' — match any
+  // 'error*' so failed sessions/tasks show the error badge + Retry instead of "queued".
+  if (v === 'failed' || v.includes('error')) return 'failed';
   if (v === 'running' || v === 'processing') return 'running';
   return 'queued';
 }
@@ -337,14 +316,6 @@ function mapBackendSession(row: BackendSessionRow): AdminSession {
   };
 }
 
-/** UI status → backend `state_json.status` filter value. */
-function uiStatusToBackend(s: AdminSession['status']): string {
-  if (s === 'completed') return 'report_ready';
-  if (s === 'failed') return 'failed';
-  if (s === 'running') return 'running';
-  return 'pending';
-}
-
 export async function listSessions(
   q: PageQuery & {
     status?: AdminSession['status'];
@@ -368,7 +339,10 @@ export async function listSessions(
   // Worker uses cursor; emulate offset → cursor via base64({offset}) so this
   // page-based UI keeps working without protocol churn.
   if (offset > 0) qs.set('cursor', btoa(JSON.stringify({ offset })));
-  if (q.status) qs.set('status', uiStatusToBackend(q.status));
+  // Backend canonicalizes row status to the same union the UI uses
+  // (queued|running|completed|failed), so send q.status verbatim. Translating to
+  // legacy 'report_ready'/'pending' here made the completed/queued filters match 0 rows.
+  if (q.status) qs.set('status', q.status);
   if (q.from) qs.set('from', q.from);
   if (q.to) qs.set('to', q.to);
   if (q.reading_type) qs.set('reading_type', q.reading_type);
@@ -631,8 +605,11 @@ function mapBackendTask(row: BackendTaskRow): AdminTask {
 
 function uiTaskStatusToBackend(s: AdminTask['status']): string {
   if (s === 'completed') return 'done';
+  // NOTE: the backend stores failures as 'error_at_*' / 'error_internal', so a plain
+  // ?status=failed equality won't match until handleTasksList accepts a canonical
+  // 'failed' (backend follow-up). 'running'/'done'/'pending' DO match the real column.
   if (s === 'failed') return 'failed';
-  if (s === 'running') return 'processing';
+  if (s === 'running') return 'running';
   return 'pending';
 }
 
@@ -776,9 +753,13 @@ export async function getKpis() {
     return real({
       total_users: c?.total ?? 0,
       readings_today: todaysCell?.txn_count ?? a.sessions?.total ?? 0,
-      active_mentor_sessions: 0, // not exposed yet
-      weekly_revenue_usd: Math.round((a.revenue?.total ?? 0) * 100) / 100,
-      eval_avg_score: 4.32, // not exposed yet
+      // NOT exposed by the backend yet — these are placeholders. The dashboard must
+      // NOT present them as live metrics (active_mentor_sessions=0 reads as "none";
+      // eval_avg_score is a fixed fake). weekly_revenue is VND (SePay), not USD —
+      // the field keeps its legacy name but the dashboard formats it as VND.
+      active_mentor_sessions: 0,
+      weekly_revenue_usd: Math.round(a.revenue?.total ?? 0),
+      eval_avg_score: 0,
     });
   }
   return delay(mock(getOverviewKpis(), 'gateway unreachable; showing mock'));
@@ -879,7 +860,7 @@ export async function ingestRagChunks(payload: {
 
 interface PaymentTxn {
   id: string;
-  ts: string;
+  created_at: string;
   type: string;
   intent_id?: string | null;
   user_id?: string | null;
@@ -887,23 +868,43 @@ interface PaymentTxn {
   metadata?: Record<string, unknown> | null;
 }
 
-/** Map worker `/payment/transactions` rows → admin UI shape. */
+/**
+ * Map worker `/payment/transactions` rows → admin UI shape.
+ *
+ * Contract (verified against backend payment/transactions.ts TransactionRecord):
+ *   - timestamp field is `created_at` (NOT `ts`)
+ *   - paid plan lives in `metadata.tier` (subscription_monthly | subscription_yearly |
+ *     lifetime | lifetime_onetime | premium) — there is NO `metadata.plan` / `metadata.email`
+ *   - refunds use type `refund` / `refund_completed` — there is NO `intent_refunded`
+ *   - `amount` is VND (SePay); it is surfaced in the legacy `amount_usd` field but the
+ *     UI formats it as VND. There is no USD anywhere in this product.
+ */
 function mapPaymentToAdmin(t: PaymentTxn): AdminTransaction | null {
-  if (t.type !== 'intent_paid' && t.type !== 'intent_created' && t.type !== 'intent_refunded')
-    return null;
+  const isPaid = t.type === 'intent_paid';
+  const isCreated = t.type === 'intent_created';
+  const isRefund = t.type === 'refund' || t.type === 'refund_completed';
+  if (!isPaid && !isCreated && !isRefund) return null;
   const md = t.metadata ?? {};
-  const planRaw = (md.plan as string | undefined) ?? 'mentor_month';
+  const tier = (md.tier as string | undefined) ?? '';
   const plan: AdminTransaction['plan'] =
-    planRaw === 'lifetime' ? 'lifetime' : planRaw === 'mentor_year' ? 'mentor_year' : 'mentor_month';
-  const status: AdminTransaction['status'] =
-    t.type === 'intent_paid' ? 'succeeded' : t.type === 'intent_refunded' ? 'refunded' : 'pending';
+    tier === 'lifetime' || tier === 'lifetime_onetime'
+      ? 'lifetime'
+      : tier === 'subscription_yearly'
+        ? 'mentor_year'
+        : 'mentor_month';
+  const status: AdminTransaction['status'] = isPaid
+    ? 'succeeded'
+    : isRefund
+      ? 'refunded'
+      : 'pending';
   return {
     id: t.id,
-    user_email: (md.email as string | undefined) ?? t.user_id ?? '—',
+    // Backend records carry no email — surface user_id (UI column relabelled to "User ID").
+    user_email: t.user_id ?? '—',
     amount_usd: Number(t.amount ?? 0),
     plan,
     status,
-    created_at: t.ts,
+    created_at: t.created_at,
     stripe_id: t.intent_id ?? '',
   };
 }
@@ -933,29 +934,13 @@ export async function listTransactions(
   return delay(mock(paginate(rows, q), 'gateway unreachable'));
 }
 
-export async function refundTransaction(id: string) {
-  // TODO(wave-D): POST /admin/payments/{id}/refund not shipped.
-  return delay({ id, status: 'refunded' as const, isMock: true });
-}
+// Refunds are NOT a generic transaction action here. Real refunds live on the
+// /sepay page (owner-gated manual SePay workflow → POST /admin/sepay/refund). The
+// old mock `refundTransaction` falsely reported success and was removed.
 
-export async function listCoupons() {
-  // TODO(wave-D): /admin/coupons not shipped.
-  return delay(
-    Object.assign([...MOCK_COUPONS], {
-      _source: { isMock: true, reason: '/admin/coupons not shipped' } as DataSource,
-    }),
-  );
-}
-
-export async function createCoupon(c: Omit<AdminCoupon, 'redeemed'>) {
-  // TODO(wave-D): POST /admin/coupons not shipped.
-  return delay({ ...c, redeemed: 0, isMock: true });
-}
-
-export async function toggleCoupon(code: string, active: boolean) {
-  // TODO(wave-D): PATCH /admin/coupons/{code} not shipped.
-  return delay({ code, active, isMock: true });
-}
+// Coupons CRUD lives on the dedicated /coupons page (real backend: GET /admin/coupons,
+// POST /admin/coupons/revoke). The old mock listCoupons/createCoupon/toggleCoupon used a
+// wrong schema and were removed so the /payments page can't show fake coupon data.
 
 // ---------- Feature flags ----------
 // Feature-flag CRUD lives in `frontend/apps/admin/src/app/feature-flags/page.tsx`
@@ -964,47 +949,12 @@ export async function toggleCoupon(code: string, active: boolean) {
 // they wrote to a module-level object that never persisted and used a stale
 // 4-flag schema that drifted from the worker's real 6-flag schema.
 
-// ---------- Billing / Subscriptions (Wave 60.71.T2.billing) ----------
+// ---------- Billing / Subscriptions ----------
 //
-// All four helpers are mock-only until the worker exposes `/admin/billing/*`.
-// Shape is locked to match the eventual Stripe-backed envelope so the swap
-// is type-safe (just delete the mock branch).
-
-export async function listSubscriptions(
-  q: PageQuery & { status?: AdminSubscription['status']; plan?: AdminSubscription['plan'] } = {},
-) {
-  // TODO(wave-D): /admin/subscriptions not shipped — replace with proxyFetch
-  // once backend exposes Stripe subscription pull.
-  let rows = MOCK_SUBSCRIPTIONS;
-  if (q.status) rows = rows.filter((s) => s.status === q.status);
-  if (q.plan) rows = rows.filter((s) => s.plan === q.plan);
-  return delay(mock(paginate(rows, q), '/admin/subscriptions not shipped'));
-}
-
-export async function cancelSubscription(id: string) {
-  // TODO(wave-D): POST /admin/subscriptions/:id/cancel not shipped.
-  return delay({ id, status: 'canceled' as const, isMock: true });
-}
-
-export async function listFailedPayments() {
-  // TODO(wave-D): /admin/billing/failed not shipped.
-  return delay(
-    Object.assign([...MOCK_FAILED_PAYMENTS], {
-      _source: { isMock: true, reason: '/admin/billing/failed not shipped' } as DataSource,
-    }),
-  );
-}
-
-export async function retryFailedPayment(id: string) {
-  // TODO(wave-D): POST /admin/billing/failed/:id/retry not shipped.
-  return delay({ id, status: 'pending' as const, isMock: true });
-}
-
-export async function getMrrByMonth(): Promise<MrrByMonth[] & { _source: DataSource }> {
-  // TODO(wave-D): /admin/billing/mrr_by_month not shipped.
-  return delay(
-    Object.assign([...MOCK_MRR_BY_MONTH], {
-      _source: { isMock: true, reason: '/admin/billing/mrr_by_month not shipped' } as DataSource,
-    }),
-  );
-}
+// Removed: the mock-only listSubscriptions / cancelSubscription / listFailedPayments /
+// retryFailedPayment / getMrrByMonth helpers. They presented fabricated Stripe-shaped
+// data the SePay backend never produces. The REAL surfaces are:
+//   - active subscriptions  → /sepay page (GET /admin/sepay/subscriptions, VND, expiry)
+//   - revenue / AOV         → /sepay page (real SePay transactions, VND)
+//   - refund workflow       → /sepay page (owner-gated manual approve/complete)
+// There is no failed-payment retry or MRR concept for one-off SePay bank transfers.

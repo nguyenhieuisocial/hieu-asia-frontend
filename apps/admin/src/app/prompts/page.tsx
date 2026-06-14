@@ -67,10 +67,30 @@ export interface PromptSummary {
   is_custom: boolean;
 }
 
+/** Raw worker row — does NOT include `is_custom`; we derive it on the FE. */
+interface RawPrompt {
+  role: Role;
+  system: string;
+  updated_at: string | null;
+  updated_by: string | null;
+  version: number;
+}
+
 interface ListResp {
   ok: boolean;
-  prompts?: PromptSummary[];
+  prompts?: RawPrompt[];
   error?: string;
+}
+
+/**
+ * The worker's GET /admin/prompts returns the raw StoredPrompt
+ * ({ role, system, updated_at, updated_by, version }) with NO `is_custom`
+ * field — defaults come back as { version: 0, updated_by: 'default' }, an
+ * override as { version >= 1, updated_by: <admin> }. Derive is_custom here so
+ * the filters/KPIs/badges work. (#12)
+ */
+function deriveIsCustom(p: RawPrompt): PromptSummary {
+  return { ...p, is_custom: p.version > 0 || (p.updated_by ?? 'default') !== 'default' };
 }
 
 async function fetchPrompts(): Promise<PromptSummary[]> {
@@ -78,7 +98,7 @@ async function fetchPrompts(): Promise<PromptSummary[]> {
   if (r.status === 404) return []; // Worker not deployed yet — render empty grid + hint
   const data: ListResp = await r.json();
   if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
-  return data.prompts ?? [];
+  return (data.prompts ?? []).map(deriveIsCustom);
 }
 
 // Wave 52-C — Date formatters live in `@/lib/format-date` now so the

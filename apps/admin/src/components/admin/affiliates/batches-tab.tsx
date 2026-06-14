@@ -259,12 +259,15 @@ function BuildBatchModal({ onClose, onBuilt }: { onClose: () => void; onBuilt: (
   async function submit() {
     setSubmitting(true);
     try {
+      // A min of 0 (include all affiliates) must NOT coerce to 100k — use a
+      // NaN-check so only an empty/invalid field falls back to the default.
+      const n = Number.parseInt(minVnd, 10);
       const r = await fetch('/api/admin/affiliates/payouts/build-batch', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           rail,
-          min_amount_vnd: Number.parseInt(minVnd, 10) || 100_000,
+          min_amount_vnd: Number.isFinite(n) ? n : 100_000,
         }),
       });
       const d = await r.json();

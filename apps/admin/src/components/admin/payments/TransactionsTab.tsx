@@ -3,14 +3,15 @@
 /**
  * Wave 60.71.T2.payments — Transactions tab extract.
  *
- * Vault 107 §5 Tier 2 — splits the /payments page into per-tab components so
- * KPIs + Transactions + Coupons each live in their own surface. Visual parity
- * with Wave 60.62.T1.2 /affiliates: ProductTabs wrapper hosts these.
+ * Vault 107 §5 Tier 2 — the recent-transactions surface for /payments. Reads
+ * the real audit ledger (/payment/transactions) and lists each event. Money is
+ * VND (SePay); there is no USD in this product.
  *
  * Material 3 — Wave 60.68 DropdownMenu replaces the 3× raw `<select>` filter
- * dropdowns (Status / Plan / Saved presets). Refund confirmation uses the
- * shared Dialog primitive instead of native `confirm()` (better keyboard
- * focus trap + brand-correct chrome).
+ * dropdowns (Status / Plan / Saved presets).
+ *
+ * Refunds are NOT performed here — real refunds are an owner-gated manual SePay
+ * workflow on /sepay. This tab is read-only.
  *
  * Wave 60.65.P0a + Wave 60.66.HF1 — icons pre-rendered at the call site,
  * no Component refs or inline arrow fns crossing RSC boundaries (the
@@ -19,7 +20,7 @@
  */
 
 import * as React from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import {
   Button,
   Card,
@@ -28,12 +29,6 @@ import {
   CardHeader,
   CardTitle,
   DataTable,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -53,7 +48,7 @@ import {
   Trash2,
   Undo2,
 } from 'lucide-react';
-import { listTransactions, refundTransaction } from '@/lib/admin-api';
+import { listTransactions } from '@/lib/admin-api';
 import { ErrorBlock } from '@/components/admin/error-block';
 import type { AdminTransaction } from '@/lib/mock-data';
 import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
@@ -99,7 +94,7 @@ const PLAN_OPTIONS: Array<{ value: PlanFilter; label: string }> = [
 ];
 
 /**
- * Mask a secret-like opaque string: show first 4 + last 4 (e.g. Stripe/SePay IDs).
+ * Mask a secret-like opaque string: show first 4 + last 4 (e.g. SePay intent IDs).
  */
 function maskSecret(value: string | null | undefined): string {
   if (!value) return '—';
@@ -108,13 +103,18 @@ function maskSecret(value: string | null | undefined): string {
   return `${s.slice(0, 4)}…${s.slice(-4)}`;
 }
 
+/** VND formatter — mirrors /sepay (the `amount_usd` field actually holds VND). */
+function fmtVnd(amount: number): string {
+  return new Intl.NumberFormat('vi-VN').format(amount) + 'đ';
+}
+
 const CSV_HEADERS = {
   id: 'ID',
   user_email: 'User',
   plan: 'Plan',
-  amount_usd: 'Amount (USD)',
+  amount_usd: 'Số tiền (VND)',
   status: 'Status',
-  stripe_id: 'Stripe ID',
+  stripe_id: 'Intent ID',
   created_at: 'Created',
 } as const;
 
@@ -125,11 +125,9 @@ export interface TransactionsTabProps {
 }
 
 export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTabProps) {
-  const qc = useQueryClient();
   const [page, setPage] = React.useState(1);
   const [status, setStatus] = React.useState<StatusFilter>('all');
   const [plan, setPlan] = React.useState<PlanFilter>('all');
-  const [confirmingId, setConfirmingId] = React.useState<string | null>(null);
 
   // Saved filter presets (status + plan). Persisted under
   // `hieu-admin:filters:payments:v1`.
@@ -143,11 +141,6 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
     queryFn: () => listTransactions({ page, page_size: 15 }),
     staleTime: 60_000,
     placeholderData: (prev) => prev,
-  });
-
-  const refund = useMutation({
-    mutationFn: (id: string) => refundTransaction(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'transactions'] }),
   });
 
   // Defensive Array.isArray (Wave 60.65.P0c lesson — `?? []` only catches
@@ -196,18 +189,6 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
     [deletePreset],
   );
 
-  const handleRefundConfirm = React.useCallback(() => {
-    if (!confirmingId) return;
-    const id = confirmingId;
-    setConfirmingId(null);
-    refund.mutate(id);
-  }, [confirmingId, refund]);
-
-  const confirmingTx = React.useMemo(
-    () => (confirmingId ? rows.find((t) => t.id === confirmingId) ?? null : null),
-    [confirmingId, rows],
-  );
-
   const onExportCsv = React.useCallback(() => {
     exportToCSV(
       rows.map((t) => ({
@@ -240,10 +221,10 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
       { key: 'plan', header: 'Gói', width: '120px', cell: (t) => PLAN_LABEL[t.plan] },
       {
         key: 'amount_usd',
-        header: 'Amount',
+        header: 'Số tiền',
         align: 'right',
-        width: '90px',
-        cell: (t) => `$${t.amount_usd.toFixed(2)}`,
+        width: '120px',
+        cell: (t) => fmtVnd(t.amount_usd),
       },
       {
         key: 'status',
@@ -275,31 +256,15 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
       },
       {
         key: 'stripe_id',
-        header: 'Stripe',
+        header: 'Intent',
         cell: (t) => (
           <span className="font-mono text-xs text-muted-foreground" title={t.stripe_id}>
             {maskSecret(t.stripe_id)}
           </span>
         ),
       },
-      {
-        key: 'actions',
-        header: '',
-        width: '110px',
-        cell: (t) =>
-          t.status === 'succeeded' ? (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setConfirmingId(t.id)}
-              disabled={refund.isPending}
-            >
-              Refund
-            </Button>
-          ) : null,
-      },
     ],
-    [refund.isPending],
+    [],
   );
 
   const statusLabel = STATUS_OPTIONS.find((o) => o.value === status)?.label ?? 'Tất cả';
@@ -308,14 +273,13 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
     (status !== 'all' ? 1 : 0) + (plan !== 'all' ? 1 : 0);
 
   return (
-    <>
-      <Card>
+    <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-4">
           <div className="min-w-0">
             <CardTitle>Giao dịch gần đây</CardTitle>
             <CardDescription>
-              Webhook events ghi tại <code className="font-mono text-xs">/v1/payments/webhook</code>.
-              Refund đi qua Stripe API.
+              Nhật ký giao dịch từ <code className="font-mono text-xs">/payment/transactions</code>.
+              Số tiền tính theo VND. Hoàn tiền xử lý ở SePay.
             </CardDescription>
             <div className="mt-3 flex flex-wrap items-center gap-2">
               <DropdownMenu>
@@ -460,52 +424,5 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
           )}
         </CardContent>
       </Card>
-
-      <Dialog
-        open={confirmingId !== null}
-        onOpenChange={(open) => {
-          if (!open) setConfirmingId(null);
-        }}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Xác nhận refund</DialogTitle>
-            <DialogDescription>
-              Hành động này gọi Stripe API hoàn tiền. Không thể hoàn tác.
-            </DialogDescription>
-          </DialogHeader>
-          {confirmingTx && (
-            <div className="space-y-1.5 rounded-md border border-gold/15 bg-card/60 p-3 text-sm">
-              <div className="flex justify-between gap-3">
-                <span className="text-muted-foreground">User</span>
-                <span className="font-mono">{confirmingTx.user_email}</span>
-              </div>
-              <div className="flex justify-between gap-3">
-                <span className="text-muted-foreground">Gói</span>
-                <span>{PLAN_LABEL[confirmingTx.plan]}</span>
-              </div>
-              <div className="flex justify-between gap-3">
-                <span className="text-muted-foreground">Số tiền</span>
-                <span className="font-mono text-gold">
-                  ${confirmingTx.amount_usd.toFixed(2)}
-                </span>
-              </div>
-              <div className="flex justify-between gap-3">
-                <span className="text-muted-foreground">Stripe</span>
-                <span className="font-mono text-xs">{maskSecret(confirmingTx.stripe_id)}</span>
-              </div>
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setConfirmingId(null)}>
-              Huỷ
-            </Button>
-            <Button onClick={handleRefundConfirm} disabled={refund.isPending}>
-              {refund.isPending ? 'Đang xử lý…' : 'Xác nhận refund'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
   );
 }

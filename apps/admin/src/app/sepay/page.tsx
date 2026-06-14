@@ -721,7 +721,7 @@ const TIER_LABEL: Record<string, string> = {
 };
 interface AuditRecord {
   id: string;
-  ts: string;
+  created_at: string;
   type: string;
   amount?: number | null;
   metadata?: { tier?: string } | null;
@@ -788,7 +788,7 @@ function DashboardView() {
   const days: { day: string; rev: number }[] = [];
   for (let i = 13; i >= 0; i--) days.push({ day: new Date(Date.now() - i * 86_400_000).toISOString().slice(0, 10), rev: 0 });
   for (const r of paid) {
-    const slot = days.find((x) => x.day === (r.ts || '').slice(0, 10));
+    const slot = days.find((x) => x.day === (r.created_at || '').slice(0, 10));
     if (slot) slot.rev += r.amount ?? 0;
   }
   const maxDayRev = Math.max(1, ...days.map((x) => x.rev));
