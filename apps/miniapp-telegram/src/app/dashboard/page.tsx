@@ -17,8 +17,14 @@ interface DashReport {
 }
 
 function formatVnDate(iso: string): string {
-  const d = new Date(iso);
-  return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+  // Format in Vietnam time (UTC+7), not the device's local zone, so the date is
+  // correct for VN users regardless of where they (or the server) are.
+  return new Intl.DateTimeFormat('vi-VN', {
+    timeZone: 'Asia/Ho_Chi_Minh',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).format(new Date(iso));
 }
 
 export default function MiniAppDashboardPage() {

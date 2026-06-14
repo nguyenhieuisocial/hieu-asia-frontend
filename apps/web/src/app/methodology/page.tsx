@@ -1175,7 +1175,7 @@ export default function MethodologyPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
       />
-      <main id="main-content" className="relative">
+      <main id="main-content" className="relative methodology-a11y">
         {/* ─────────────────────────────────────────────────────────────
            Wave 60.67 — Page hero (Option E typography pivot, vault 109 §4).
            Replaces the previous MarketingHero rendering — scrollytelling
