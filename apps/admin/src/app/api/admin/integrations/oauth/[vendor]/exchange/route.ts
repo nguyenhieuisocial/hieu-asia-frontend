@@ -7,7 +7,10 @@ const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
 type Ctx = { params: Promise<{ vendor: string }> };
 
 export async function POST(req: NextRequest, ctx: Ctx) {
-  const auth = await requireAdminSession();
+  // Binding AI-provider OAuth credentials is a privileged mutation → admin+ (a
+  // viewer must not initiate/complete provider credential exchange). Worker is
+  // role-blind, so enforce here.
+  const auth = await requireAdminSession('admin');
   if ('error' in auth) return auth.error;
   if (!TOKEN) {
     return NextResponse.json(
