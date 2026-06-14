@@ -268,11 +268,15 @@ function ReportContent() {
           <LockedReportGate
             readingId={readingId}
             previewMarkdown={previewMarkdown}
-            onUnlocked={() => {
-              // Webhook ghi cờ is_paid (best-effort, không đồng bộ) → refetch
-              // ngay rồi lặp lại sau 3s để chắc chắn bắt được trạng thái full.
-              void query.refetch();
-              window.setTimeout(() => void query.refetch(), 3000);
+            onUnlocked={async () => {
+              // Cờ is_paid được ghi không đồng bộ phía backend; poll lại reading-get
+              // tới khi mở khoá (locked !== true) hoặc hết ~30s, để khách không phải
+              // tự reload trang sau khi trả tiền.
+              for (let i = 0; i < 12; i++) {
+                const r = await query.refetch();
+                if (r.data && r.data.locked !== true) break;
+                await new Promise((res) => setTimeout(res, 2500));
+              }
             }}
           />
         ) : (
