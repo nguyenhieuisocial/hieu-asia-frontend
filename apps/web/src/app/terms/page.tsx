@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu
 export const metadata = {
   title: 'Điều khoản dịch vụ',
   description: 'Điều khoản sử dụng dịch vụ hieu.asia.',
+  alternates: { canonical: 'https://hieu.asia/terms' },
 };
 
 const LAST_UPDATED = '21/05/2026';
