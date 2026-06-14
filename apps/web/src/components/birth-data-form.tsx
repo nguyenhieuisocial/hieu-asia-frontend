@@ -24,7 +24,8 @@ import {
   VN_PROVINCES,
   type BirthDataValues,
 } from '@/lib/birth-data-schema';
-import { createReading, getOrCreateAnonUserId, logAudit, type BirthData } from '@hieu-asia/supabase';
+import { createReading, getOrCreateAnonUserId, type BirthData } from '@hieu-asia/supabase';
+import { logAuditEvent } from '@/lib/account-history';
 import { track } from '@/lib/analytics';
 
 const CONFIDENCE_LABELS = ['Đoán', 'Không chắc', 'Tương đối', 'Khá chắc', 'Chính xác'];
@@ -243,8 +244,8 @@ export function BirthDataForm() {
     }
 
     try {
-      await logAudit({
-        user_id: userId,
+      // Actor forced server-side by /api/audit/log; no client user_id sent.
+      await logAuditEvent({
         action: 'consent_accepted',
         audit_metadata: { boxes: 1, version: 'v2.0', purposes, accepted_at: consentTimestamp },
       });
