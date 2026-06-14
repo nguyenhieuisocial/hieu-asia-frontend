@@ -52,6 +52,7 @@ import {
   Lock,
   Plug,
   Tag,
+  Search,
 } from 'lucide-react';
 
 interface NavItem {
@@ -102,6 +103,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: '/analytics', label: 'Doanh thu & Phễu', Icon: BarChart3 },
       { href: '/posthog', label: 'Traffic & Hành vi', Icon: Activity },
+      { href: '/seo', label: 'Tìm kiếm Google', Icon: Search },
       { href: '/experiments', label: 'A/B Experiments', Icon: FlaskConical },
     ],
   },

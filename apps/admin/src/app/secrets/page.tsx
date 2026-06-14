@@ -66,6 +66,8 @@ const WORKER_KEYS: WorkerKeyDef[] = [
   { name: 'LANGFUSE_SECRET_KEY',      desc: 'Langfuse observability — secret key (sk_lf_*).' },
   { name: 'SENTRY_DSN',               desc: 'Sentry error tracking DSN (optional).' },
   { name: 'TELEGRAM_BOT_TOKEN',       desc: 'Telegram bot — daily horoscope + mentor proxy.' },
+  { name: 'GSC_SA_KEY',               desc: 'Google service-account JSON key cho Search Console (đọc từ khoá tìm kiếm).' },
+  { name: 'GSC_SITE_URL',             desc: 'GSC property, vd sc-domain:hieu.asia hoặc https://hieu.asia/' },
   { name: 'ADMIN_CF_API_TOKEN',       desc: 'Bootstrap — CF API token (Workers Scripts Write).' },
   { name: 'ADMIN_VERCEL_TOKEN',       desc: 'Bootstrap — Vercel API token (env vars Write).' },
 ];
