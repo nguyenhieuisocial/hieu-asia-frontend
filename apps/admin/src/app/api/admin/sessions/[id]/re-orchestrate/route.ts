@@ -15,7 +15,9 @@ const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
 type Ctx = { params: Promise<{ id: string }> };
 
 export async function POST(_req: NextRequest, ctx: Ctx) {
-  const auth = await requireAdminSession();
+  // Re-running the pipeline triggers paid LLM work — require admin (not viewer),
+  // matching the privilege level of bulk-delete.
+  const auth = await requireAdminSession('admin');
   if ('error' in auth) return auth.error;
   if (!TOKEN) {
     return NextResponse.json(
