@@ -1,8 +1,9 @@
 /**
  * /community/cases — case study index (§8.6).
  *
- * Anonymized user narratives showing how Tử Vi + Decision Brief was applied.
- * Each case = process documentation, not outcome promise.
+ * Illustrative composite narratives showing how Tử Vi + Decision Brief could be
+ * applied. These are worked examples, not real users. Each case = process
+ * documentation, not outcome promise.
  */
 
 import type { Metadata } from 'next';
@@ -10,13 +11,13 @@ import Link from 'next/link';
 import { ArrowRight, BookOpen } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
-import { listCaseStudies } from '@/lib/case-studies';
+import { listCaseStudies, ILLUSTRATIVE_LABEL } from '@/lib/case-studies';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: 'Case studies — quyết định thực tế qua Tử Vi',
   description:
-    'Bộ câu chuyện đã được ẩn danh: người dùng đã ra quyết định nghề nghiệp, gia đình, tài chính như thế nào sau khi đọc lá số.',
+    'Bộ tình huống minh hoạ (không phải người dùng thật): ví dụ cách kết hợp lá số với hoàn cảnh để ra quyết định nghề nghiệp, gia đình, tài chính.',
   alternates: { canonical: 'https://hieu.asia/community/cases' },
   openGraph: {
     title: 'Case studies',
@@ -50,11 +51,13 @@ export default function CaseStudiesIndexPage() {
             </h1>
             <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
               Mỗi câu chuyện là một quyết định khó. Chúng tôi không chia sẻ kết quả
-              — chia sẻ cách người đó nhìn lá số, kết hợp với hoàn cảnh, rồi đi
-              tới quyết định mà họ thấy thoải mái nhất.
+              — chia sẻ cách lá số được kết hợp với hoàn cảnh để đi tới một quyết
+              định mà nhân vật trong ví dụ thấy thoải mái nhất.
             </p>
             <p className="mt-3 text-sm text-muted-foreground">
-              Tất cả case đều được ẩn danh và xin phép trước khi xuất bản.
+              Đây là các tình huống minh hoạ — kịch bản tổng hợp do chúng tôi
+              dựng để minh hoạ quy trình, không phải câu chuyện của người dùng
+              thật.
             </p>
           </div>
         </section>
@@ -74,6 +77,9 @@ export default function CaseStudiesIndexPage() {
                     <span aria-hidden>·</span>
                     <span>{c.persona}</span>
                   </div>
+                  <p className="mt-3 inline-flex rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-[11px] font-medium text-gold/90">
+                    {c.illustrativeLabel}
+                  </p>
                   <h2 className="mt-3 font-heading text-xl font-semibold text-foreground sm:text-2xl">
                     <Link
                       href={`/community/cases/${c.slug}`}
@@ -108,15 +114,9 @@ export default function CaseStudiesIndexPage() {
             <div className="mt-12 rounded-2xl border border-border bg-card/30 p-6 text-center">
               <BookOpen className="mx-auto h-6 w-6 text-gold/70" aria-hidden="true" />
               <p className="mt-3 text-sm text-muted-foreground">
-                Bạn đã ra một quyết định khó sau khi đọc lá số?{' '}
-                <a
-                  href="mailto:hi@hieu.asia?subject=Case%20study%20cho%20hieu.asia"
-                  className="font-medium text-gold/90 underline-offset-4 transition-colors hover:text-gold hover:underline"
-                >
-                  Chia sẻ với chúng tôi
-                </a>{' '}
-                — case của bạn sẽ được ẩn danh hoá trước khi xuất bản, và bạn có
-                quyền chỉnh sửa hoặc rút lại bất cứ lúc nào.
+                {ILLUSTRATIVE_LABEL}. Mọi nhân vật, hoàn cảnh và lá số ở đây là
+                kịch bản tổng hợp do chúng tôi dựng để minh hoạ quy trình ra
+                quyết định — không phản ánh một người dùng cụ thể nào.
               </p>
             </div>
           </div>
