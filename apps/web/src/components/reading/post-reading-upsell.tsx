@@ -43,6 +43,15 @@ interface Props {
   runId: string;
   /** Graph kind for analytics dimension. */
   graphKind: 'tu-vi' | 'bat-tu' | 'palm';
+  /**
+   * Reading session id (the one that gates `reading-get`). When present, the
+   * one-time CTAs (Premium / Lifetime) route to the working QR checkout at
+   * `/unlock/{sessionId}?tier=…` — which unlocks THIS reading on success —
+   * instead of the "Sắp ra mắt" /checkout stubs. Subscription tiers
+   * (Mentor monthly/yearly) have no session-less checkout yet, so they keep
+   * pointing at /pricing.
+   */
+  sessionId?: string;
 }
 
 type Variant = 'control' | 'mentor-focus' | 'unlimited-focus' | 'lifetime-discount';
@@ -96,9 +105,33 @@ function copyForVariant(variant: Variant, quotaExhausted: boolean): CopyBlock | 
   }
 }
 
+/**
+ * Resolve the CTA href.
+ *
+ * One-time tiers (Premium / Lifetime) "unlock THIS reading" — when a reading
+ * session is in scope they route to the working QR checkout at
+ * `/unlock/{sessionId}?tier=…` (POST /api/payment/intent → 5s polling → on
+ * paid, redirect back to the report). Subscription tiers (Mentor monthly/
+ * yearly) have no session-less checkout yet, so they keep the catalog href.
+ */
+function resolveCtaHref(
+  block: CopyBlock,
+  sessionId: string | undefined,
+): string {
+  if (!sessionId) return block.ctaHref;
+  if (block.targetTier === 'premium') {
+    return `/unlock/${encodeURIComponent(sessionId)}?tier=premium`;
+  }
+  if (block.targetTier === 'lifetime') {
+    return `/unlock/${encodeURIComponent(sessionId)}?tier=lifetime_onetime`;
+  }
+  // monthly / yearly subscriptions — no session-scoped checkout; keep catalog.
+  return block.ctaHref;
+}
+
 const SESSION_DISMISS_KEY = 'hieu:upsell-post-reading:dismissed';
 
-export function PostReadingUpsell({ upsellVariant, runId, graphKind }: Props) {
+export function PostReadingUpsell({ upsellVariant, runId, graphKind, sessionId }: Props) {
   const isSubscriber = upsellVariant === 'subscriber';
   const quotaExhausted = upsellVariant === 'free_quota_exhausted';
   const variant = useFeatureFlag<Variant>(FLAGS.UPSELL_POST_READING_V1, 'control');
@@ -227,6 +260,10 @@ export function PostReadingUpsell({ upsellVariant, runId, graphKind }: Props) {
   // ─── Free user render: upsell ───────────────────────────────────────────
   if (!copy) return null;
 
+  // One-time tiers route to the working /unlock QR flow when this reading's
+  // session is in scope; subscriptions fall back to the catalog href.
+  const ctaHref = resolveCtaHref(copy, sessionId);
+
   return (
     <aside
       className={`mt-8 rounded-xl border p-5 ${
@@ -256,8 +293,8 @@ export function PostReadingUpsell({ upsellVariant, runId, graphKind }: Props) {
             {copy.subtext}
           </p>
           <Link
-            href={copy.ctaHref}
-            onClick={() => handleClick(copy.ctaLabel, copy.ctaHref)}
+            href={ctaHref}
+            onClick={() => handleClick(copy.ctaLabel, ctaHref)}
             className={`mt-3 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors ${
               quotaExhausted
                 ? 'bg-rose-600 hover:bg-rose-700'

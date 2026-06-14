@@ -8,9 +8,12 @@
  *
  * Why "quiet": the spec calls out flashy testimonials (5 stars + bright
  * photos + first names) as actively counter-tone for hieu.asia. The aim is
- * editorial restraint — let the words breathe. Excerpts are written in
- * founder voice as honest reflections from people who have used Mentor for
- * actual decisions, not promotional hype.
+ * editorial restraint — let the words breathe.
+ *
+ * IMPORTANT: these excerpts are NOT real user testimonials. They are
+ * illustrative examples, written in founder voice, of the kind of question
+ * people bring to Mentor. The section is labelled as such so no reader
+ * mistakes them for consented quotes from real users.
  *
  * Tokens:
  *   - font-editorial-display = Newsreader Variable serif (Wave 62.01)
@@ -58,7 +61,7 @@ export function SocialProofQuiet() {
         <header className="mb-10">
           <p className="rv-fade font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
             <span className="mr-2 inline-block h-px w-6 bg-primary align-middle" />
-            KHOẢNG LẶNG · NGƯỜI ĐÃ HỎI
+            KHOẢNG LẶNG · VÍ DỤ MINH HOẠ
           </p>
           <h2
             id="social-proof-quiet-heading"
@@ -66,13 +69,14 @@ export function SocialProofQuiet() {
             style={{ animationDelay: '80ms' }}
           >
             Không sao. Không ảnh. Không lời khen.{' '}
-            <em className="italic text-primary/80">Chỉ là điều họ ghi lại</em>
+            <em className="italic text-primary/80">Kiểu câu hỏi mọi người mang tới</em>
             <span className="text-primary">.</span>
           </h2>
           <p className="rv-up mt-6 max-w-marketing-text font-sans text-editorial-lede text-muted-foreground" style={{ animationDelay: '160ms' }}>
-            Những trích đoạn vô danh do người dùng tự gửi lại sau khi đặt một
-            câu hỏi khó. Đã được cho phép đăng dưới dạng ẩn danh. Không phải
-            quảng cáo — là khoảnh khắc.
+            Đây là ví dụ minh hoạ — không phải lời chứng thực của người dùng
+            thật — về kiểu câu hỏi khó mà người ta mang tới Mentor và cách
+            Mentor hỏi ngược lại. Không phải quảng cáo, không phải trích dẫn
+            có thật.
           </p>
         </header>
 
@@ -93,7 +97,7 @@ export function SocialProofQuiet() {
                 {q.body}
               </blockquote>
               <p className="mt-5 font-mono text-editorial-caption uppercase tracking-[0.12em] text-muted-foreground">
-                — Một người đã đặt câu hỏi về {q.topic}
+                — Ví dụ minh hoạ · câu hỏi về {q.topic}
               </p>
               <p
                 aria-hidden
@@ -106,9 +110,9 @@ export function SocialProofQuiet() {
         </ul>
 
         <p className="mt-10 max-w-marketing-text font-sans text-editorial-caption text-muted-foreground">
-          Chính sách trích dẫn: chỉ đăng khi người dùng chủ động gửi và đồng ý
-          ẩn danh. Không tên, không ảnh, không công ty. Nội dung có thể được
-          biên tập nhẹ để bảo vệ danh tính — không thay đổi ý.
+          Các đoạn trên là ví dụ minh hoạ do chúng tôi viết, không phải lời kể
+          của người dùng thật. Khi nào có trích dẫn thật được người dùng đồng ý
+          chia sẻ, chúng tôi sẽ ghi rõ.
         </p>
       </div>
     </section>

@@ -17,7 +17,6 @@ import {
   Lock,
   ChevronRight,
   Info,
-  Github,
   Calendar,
 } from 'lucide-react';
 import {
@@ -361,8 +360,10 @@ const FAQ: { q: string; a: string }[] = [
 // Made the "99% accuracy on 500/600" claim tangible by enumerating:
 //   1. Sample 20 of 500 âm-dương lịch conversion test cases (table).
 //   2. All 10 categories of the 600 prompt safety eval (table — pass rates).
-// NOTE: Sample rows are illustrative — full dataset + runner are hosted on
-// GitHub. Founder updates with real numbers post-ship.
+// NOTE: Sample rows are illustrative representative slices of the suites that
+// run before each release. No public dataset/runner is published yet, so we do
+// not claim it can be re-run externally. Founder updates with real numbers
+// post-ship.
 // ─────────────────────────────────────────────────────────────
 
 type CalendarCase = {
@@ -1287,8 +1288,9 @@ export default function MethodologyPage() {
            Wave 62.07 — Test cases public (vault 138 §"99/600 mỏng").
            Made the existing "≥99% on 600 prompts" + "500/500 calendar" claim
            tangible: sample 20 of 500 calendar rows + full 10-category 600
-           safety eval breakdown. Honest framing: full dataset + runner
-           hosted on GitHub; sample rows are representative slices.
+           safety eval breakdown. Honest framing: the sample rows shown here
+           are representative slices; a public dataset/runner is not yet
+           published, so we do not claim "reproduce it yourself" until it is.
            ───────────────────────────────────────────────────────────── */}
         <section
           aria-labelledby="test-cases-heading"
@@ -1304,26 +1306,17 @@ export default function MethodologyPage() {
               className="mt-6 font-editorial-display text-editorial-h2 font-normal tracking-tight text-foreground"
             >
               Không nói &quot;99% chính xác&quot;.{' '}
-              <em className="italic text-primary/80">Đưa nguyên test cases ra cho xem</em>
+              <em className="italic text-primary/80">Cho bạn xem cách chúng tôi kiểm thử</em>
               <span className="text-primary">.</span>
             </h2>
             <p className="mt-6 max-w-marketing-text font-sans text-editorial-lede text-muted-foreground">
-              Hai bộ kiểm chứng cốt lõi của hieu.asia — bộ 500 case
-              chuyển đổi âm/dương lịch và bộ 600 prompt safety eval — đều
-              công khai. Bên dưới là sample + breakdown. Toàn bộ dataset +
-              runner ở GitHub, ai cũng chạy lại được.
+              Hai bộ kiểm chứng cốt lõi của hieu.asia — bộ chuyển đổi
+              âm/dương lịch và bộ prompt safety eval — chạy tự động trước mỗi
+              lần phát hành. Bên dưới là một số case mẫu đại diện cùng
+              breakdown để bạn xem cách chúng tôi kiểm chứng.
             </p>
 
             <div className="mt-card flex flex-wrap items-center gap-3">
-              <a
-                href="https://github.com/hieu-asia/methodology"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-11 items-center gap-2 rounded-pill border border-border bg-card px-4 py-2 font-mono text-eyebrow uppercase tracking-[0.12em] text-foreground transition-colors hover:border-primary/45 hover:bg-muted active:bg-muted"
-              >
-                <Github className="h-3.5 w-3.5" aria-hidden />
-                github.com/hieu-asia/methodology
-              </a>
               <span className="inline-flex items-center gap-2 rounded-pill border border-border bg-muted/40 px-3 py-1 font-mono text-eyebrow uppercase tracking-[0.12em] text-muted-foreground">
                 <Calendar className="h-3.5 w-3.5" aria-hidden />
                 LAST VERIFIED {LAST_VERIFIED}
@@ -1343,9 +1336,8 @@ export default function MethodologyPage() {
                 các mùng 1 Tết, ngày đặc biệt (Y2K, nhật/nguyệt thực).
               </p>
               <p className="mt-2 font-sans text-editorial-caption text-muted-foreground/70">
-                Sample dưới đây là 20/500 case đại diện. Toàn bộ 500 case + Jest
-                runner: <code className="font-mono text-foreground/80">/calendar-suite/</code>{' '}
-                trong repo trên.
+                Sample dưới đây là một số case đại diện trong bộ kiểm thử
+                chuyển đổi âm-dương lịch chạy trước mỗi release.
               </p>
 
               {/* Mobile: stacked cards */}
@@ -1536,10 +1528,8 @@ export default function MethodologyPage() {
               </div>
 
               <p className="mt-4 font-sans text-editorial-caption text-muted-foreground/70">
-                Suite ở <code className="font-mono text-foreground/80">/safety-suite/</code>{' '}
-                trong repo trên. Mỗi prompt đi kèm expected behavior (refuse,
-                redirect, escalate). Đã đăng cả &quot;safety leakage report&quot;
-                hàng tháng.
+                Mỗi prompt trong bộ safety eval đi kèm expected behavior
+                (refuse, redirect, escalate) và được chạy trước mỗi release.
               </p>
             </div>
           </div>

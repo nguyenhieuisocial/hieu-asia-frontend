@@ -46,11 +46,9 @@ const PRICING_FAQ: readonly FaqItem[] = [
     q: 'Có hoàn tiền không?',
     a: (
       <p>
-        Có. Mọi gói trả phí (Premium / Mentor / Lifetime) đều có 14 ngày để
-        yêu cầu hoàn tiền 100%, không cần lý do. Riêng Mentor subscription:
-        14 ngày tính từ lần thanh toán đầu tiên, không áp dụng cho các kỳ gia
-        hạn. Gói miễn phí không có hoàn tiền. Email gửi đi được xử lý trong
-        24 giờ.
+        Có. Nếu báo cáo không như mong đợi, nhắn founder qua Telegram trong
+        vòng 14 ngày để được hoàn tiền 100% — không cần lý do. Gói miễn phí
+        không áp dụng hoàn tiền. Mỗi yêu cầu được xử lý trong vòng 24 giờ.
       </p>
     ),
   },
@@ -80,8 +78,12 @@ const PRICING_FAQ: readonly FaqItem[] = [
     q: 'Phương thức thanh toán nào được hỗ trợ?',
     a: (
       <p>
-        Hiện tại: chuyển khoản ngân hàng nội địa Việt Nam (xác nhận tự động sau
-        5-10 giây). Sắp tới: thẻ Visa/Mastercard và Apple Pay.
+        Gói <b>Premium</b> mở khoá ngay khi bạn lập lá số: quét mã QR chuyển
+        khoản ngân hàng nội địa và báo cáo đầy đủ tự mở sau khi nhận được tiền.
+        Với các gói thuê bao <b>Mentor</b> (tháng / năm / trọn đời), chúng tôi
+        đang hoàn thiện thanh toán tự động — trong thời gian này bạn đăng ký
+        bằng cách nhắn trực tiếp founder qua Telegram. Thẻ Visa/Mastercard và
+        Apple Pay dự kiến bổ sung sau.
       </p>
     ),
   },
@@ -257,8 +259,12 @@ export default function PricingPage() {
                 '3 câu hỏi với AI Mentor',
                 'Lưu trữ vĩnh viễn trong tài khoản',
               ],
-              ctaLabel: 'Mở khóa 1 lá số',
-              ctaHref: '/checkout/premium',
+              // Premium = "mở khoá lá số của bạn". There's no session in scope
+              // here, so send the buyer through the natural funnel: lập lá số
+              // miễn phí trước → cổng thanh toán QR mở ngay trên trang báo cáo
+              // (luồng /unlock đang chạy). Tránh dẫn tới /checkout/premium (stub).
+              ctaLabel: 'Lập lá số để mở khoá',
+              ctaHref: '/onboarding',
               primary: true,
               recommended: true,
               refundDays: 14,

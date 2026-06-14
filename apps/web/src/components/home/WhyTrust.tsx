@@ -22,13 +22,13 @@ const PROOFS: readonly Proof[] = [
   {
     Icon: ShieldCheck,
     title: 'Đã kiểm thử kỹ trước khi đến tay bạn',
-    // Wave 60.95.b P1 — vault 130 §3 P1-7 + ChatGPT external review §1.5
-    // ("99% accurate" claim ambiguous). Clarify scope so users not misled:
-    // the 99% refers to deterministic calculations (calendar conversion + chart
-    // an sao), NOT AI interpretation accuracy. AI interpretation is NEVER
-    // measured as "% accurate" — it's measured by eval framework score
-    // (target ≥9.0/10 per vault 80 P4.5 gate).
-    desc: 'Đối chiếu 500 trường hợp chuyển đổi âm–dương lịch và 600 prompt kiểm thử an toàn. Tỷ lệ trên 99% áp dụng cho phần tính toán lá số và kiểm soát phản hồi, không phải dự đoán tương lai.',
+    // Trust fix — the specific "99% / 500 cases / 600 prompts" figures are
+    // still self-labelled illustrative in /methodology ("founder updates with
+    // real numbers post-ship"), so we do NOT state them as fact here. Honest
+    // present-tense scope instead: testing covers the deterministic chart math
+    // (calendar conversion + an sao) and response safety, never future
+    // prediction.
+    desc: 'Phần tính toán lá số (chuyển đổi âm–dương lịch, an sao) và kiểm soát an toàn phản hồi đều chạy qua bộ kiểm thử trước mỗi lần phát hành. Đây là phần kỹ thuật xác định được, không phải dự đoán tương lai.',
   },
 ];
 
