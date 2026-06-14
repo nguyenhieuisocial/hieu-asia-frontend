@@ -41,13 +41,21 @@ export async function GET(req: NextRequest) {
   }
 }
 
-/** POST /api/affiliate/me — sets the cookie after successful signup. */
+/** POST /api/affiliate/me — sets the cookie after successful signup.
+ * The cookie now holds the worker-issued HMAC session token (not the raw id),
+ * so it cannot be forged into another affiliate's session. */
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => ({}));
-  const id = typeof body?.affiliate_id === 'string' ? body.affiliate_id : null;
-  if (!id) return NextResponse.json({ ok: false, error: 'affiliate_id required' }, { status: 400 });
+  // Prefer the signed `token`; fall back to `affiliate_id` for older callers.
+  const value =
+    typeof body?.token === 'string'
+      ? body.token
+      : typeof body?.affiliate_id === 'string'
+        ? body.affiliate_id
+        : null;
+  if (!value) return NextResponse.json({ ok: false, error: 'token required' }, { status: 400 });
   const res = NextResponse.json({ ok: true });
-  res.cookies.set(COOKIE_NAME, id, {
+  res.cookies.set(COOKIE_NAME, value, {
     httpOnly: true,
     sameSite: 'lax',
     secure: true,

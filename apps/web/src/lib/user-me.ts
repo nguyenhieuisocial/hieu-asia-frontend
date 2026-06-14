@@ -31,6 +31,8 @@ export interface UserMeResponse {
   membership_tier: 'free' | 'standard' | 'premium' | 'lifetime';
 }
 
+import { getSupabaseAuth } from './auth-client';
+
 const TTL_MS = 30_000;
 const ERROR_TTL_MS = 5_000;
 
@@ -43,7 +45,21 @@ let inflight: Promise<UserMeResponse | null> | null = null;
 
 async function doFetch(): Promise<UserMeResponse | null> {
   try {
-    const res = await fetch('/api/user/me', { cache: 'no-store' });
+    // Attach the Supabase access token so the route can resolve the REAL tier
+    // (the session JWT lives in localStorage, not a server cookie). No session →
+    // no header → the route returns the safe 'free' default. Mirrors lib/referral.ts.
+    let authHeaders: Record<string, string> = {};
+    try {
+      const sb = getSupabaseAuth();
+      if (sb) {
+        const { data } = await sb.auth.getSession();
+        const token = data.session?.access_token;
+        if (token) authHeaders = { Authorization: `Bearer ${token}` };
+      }
+    } catch {
+      /* no session / client unavailable → anonymous, fall through */
+    }
+    const res = await fetch('/api/user/me', { cache: 'no-store', headers: authHeaders });
     // Content-type guard — never feed an HTML error page to JSON.parse.
     const ct = res.headers.get('content-type') ?? '';
     if (!res.ok || !/\bjson\b/i.test(ct)) {
