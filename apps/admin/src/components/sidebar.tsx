@@ -100,9 +100,9 @@ const NAV_GROUPS: NavGroup[] = [
     id: 'analytics',
     label: 'Analytics',
     items: [
-      { href: '/analytics', label: 'Analytics', Icon: BarChart3 },
-      { href: '/posthog', label: 'PostHog', Icon: Activity },
-      { href: '/experiments', label: 'Experiments', Icon: FlaskConical },
+      { href: '/analytics', label: 'Doanh thu & Phễu', Icon: BarChart3 },
+      { href: '/posthog', label: 'Traffic & Hành vi', Icon: Activity },
+      { href: '/experiments', label: 'A/B Experiments', Icon: FlaskConical },
     ],
   },
   {
