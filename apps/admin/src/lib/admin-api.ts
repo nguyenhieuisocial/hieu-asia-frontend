@@ -350,10 +350,13 @@ export async function listSessions(
   if (q.paid) qs.set('paid', q.paid);
   if (q.country) qs.set('country', q.country);
   if (q.user_id) qs.set('user_id', q.user_id);
+  // Server-side search (#34): backend does an ILIKE across
+  // session_id / short_code / label / user_email. Whole-DB, not page-slice.
+  if (q.search) qs.set('search', q.search);
   const real = await proxyFetch<SessionsEnvelope>(`/admin/sessions?${qs.toString()}`);
   const sessionsList = real?.sessions || real?.items;
   if (real && real.ok !== false && Array.isArray(sessionsList)) {
-    let rows = sessionsList.map((row): AdminSession => {
+    const rows = sessionsList.map((row): AdminSession => {
       // BackendSessionRow has state_json (modern path); LegacyTaskRow doesn't.
       if ('state_json' in row && row.state_json) {
         return mapBackendSession(row as BackendSessionRow);
@@ -374,19 +377,10 @@ export async function listSessions(
         error: legacy.error ?? null,
       };
     });
-    // Search filter is applied client-side because Postgres needs a full-text
-    // index for `state_json` deep search; cheap for the current row volume.
-    if (q.search) {
-      const s = q.search.toLowerCase();
-      rows = rows.filter(
-        (r) =>
-          r.session_id.toLowerCase().includes(s) ||
-          (r.short_code?.toLowerCase().includes(s) ?? false) ||
-          (r.label?.toLowerCase().includes(s) ?? false) ||
-          r.user_email.toLowerCase().includes(s) ||
-          r.primary_concern.toLowerCase().includes(s),
-      );
-    }
+    // Search is now applied server-side (#34): the `search` query param above
+    // makes the backend run an ILIKE across session_id / short_code / label /
+    // user_email, so the backend rows are returned directly (whole-DB match,
+    // not just the current page slice).
     return {
       rows,
       total: real.total ?? rows.length + offset,
