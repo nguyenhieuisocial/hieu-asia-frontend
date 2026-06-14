@@ -685,7 +685,9 @@ interface CostByDayEnvelope {
 
 /** Fetch llm_traces daily rollup. Returns a slice of the last N days. */
 export async function getCostByDay(days = 30): Promise<CostByDay[] & { _source: DataSource }> {
-  const real = await proxyFetch<CostByDayEnvelope>('/admin/cost/by_day');
+  // Forward the window so the backend (which now honors ?days=, clamp 1..90) returns
+  // the selected range — otherwise the 7/14/30/90 picker silently always got 30 days.
+  const real = await proxyFetch<CostByDayEnvelope>(`/admin/cost/by_day?days=${days}`);
   if (real?.ok && Array.isArray(real.days)) {
     const rows: CostByDay[] = real.days.slice(-days).map((d) => ({
       date: d.day,
@@ -711,8 +713,8 @@ interface TopSpendersEnvelope {
   top_spenders?: Array<{ user_id: string; cost_usd: number; request_count: number }>;
 }
 
-export async function getTopSpenders(limit = 10) {
-  const real = await proxyFetch<TopSpendersEnvelope>('/admin/cost/top_spenders');
+export async function getTopSpenders(limit = 10, days = 30) {
+  const real = await proxyFetch<TopSpendersEnvelope>(`/admin/cost/top_spenders?days=${days}`);
   if (real?.ok && Array.isArray(real.top_spenders)) {
     const rows = real.top_spenders.slice(0, limit).map((u) => ({
       // Shape adapter: cost page reads .id, .email, .total_spend_usd.

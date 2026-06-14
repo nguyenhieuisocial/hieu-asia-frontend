@@ -60,7 +60,7 @@ export function CostPanel() {
     staleTime: 60_000,
     placeholderData: (prev) => prev,
   });
-  const top = useQuery({ queryKey: ['admin', 'top-spenders'], queryFn: () => getTopSpenders(10), staleTime: 60_000 });
+  const top = useQuery({ queryKey: ['admin', 'top-spenders', days], queryFn: () => getTopSpenders(10, days), staleTime: 60_000 });
 
   const data = cost.data ?? [];
   const today = data.at(-1)?.total_usd ?? 0;
