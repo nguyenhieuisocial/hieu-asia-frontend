@@ -6,6 +6,7 @@ import { ChevronRight, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { PALACES_CONTENT, findPalaceContent, ALL_STARS_CONTENT } from '@/lib/tuvi-content';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export function generateStaticParams() {
   return PALACES_CONTENT.map((p) => ({ palace: p.slug }));
@@ -26,6 +27,7 @@ export async function generateMetadata(
       description: data.overview.slice(0, 200),
       url: `https://hieu.asia/tu-vi/${data.slug}`,
       type: 'article',
+      images: OG_DEFAULT_IMAGES,
     },
   };
 }

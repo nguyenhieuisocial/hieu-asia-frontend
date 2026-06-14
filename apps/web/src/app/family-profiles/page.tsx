@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: 'Hồ sơ gia đình — Hiểu cả nhà',
@@ -31,6 +32,7 @@ export const metadata: Metadata = {
     description: 'Hồ sơ thành viên gia đình để hiểu giao tiếp và tránh xung đột.',
     url: 'https://hieu.asia/family-profiles',
     type: 'article',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

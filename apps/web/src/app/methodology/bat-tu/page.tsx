@@ -19,6 +19,7 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: 'Bát Tự — Beta',
@@ -31,6 +32,7 @@ export const metadata: Metadata = {
       'Trạng thái beta, khái niệm cơ bản, limitations cụ thể và roadmap graduation.',
     url: 'https://hieu.asia/methodology/bat-tu',
     type: 'article',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

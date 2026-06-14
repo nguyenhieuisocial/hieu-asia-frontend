@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu
 import { BirthDataForm } from '@/components/birth-data-form';
 import { SiteNav } from '@/components/home/SiteNav';
 import { OnboardingStepBadge } from '@/components/onboarding-recap';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata = {
   title: 'Thông tin ngày sinh',
@@ -15,6 +16,7 @@ export const metadata = {
       'Bước 4 / 4 — nhập ngày, giờ, nơi sinh để dựng lá số Tử Vi và Bát Tự.',
     url: 'https://hieu.asia/onboarding/birth',
     type: 'website' as const,
+    images: OG_DEFAULT_IMAGES,
   },
   robots: { index: false, follow: true },
 };

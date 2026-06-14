@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { DaiVanHienTaiForm } from './form';
 
 export const metadata: Metadata = {
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
     description: 'Chu kỳ 10 năm + chủ đề chính — rút gọn, 30 giây.',
     url: 'https://hieu.asia/dai-van-hien-tai',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

@@ -5,6 +5,7 @@ import { ArrowRight, Shield } from 'lucide-react';
 import { PALACE_READINGS, findPalaceReading } from '@/lib/palace-readings';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb } from '@/lib/seo/jsonld';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { LearnArticle } from '@/components/learn/LearnArticle';
 
 // Closed whitelist of the 12 palace slugs. Defence-in-depth alongside
@@ -31,6 +32,7 @@ export async function generateMetadata(
       description: data.governs.slice(0, 200),
       url: `https://hieu.asia/learn/tu-vi/${data.slug}`,
       type: 'article',
+      images: OG_DEFAULT_IMAGES,
     },
   };
 }

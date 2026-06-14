@@ -14,6 +14,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb } from '@/lib/seo/jsonld';
 import { getCaseStudy, listCaseStudies } from '@/lib/case-studies';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -37,6 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       url: `https://hieu.asia/community/cases/${c.slug}`,
       type: 'article',
       publishedTime: c.publishedAt,
+      images: OG_DEFAULT_IMAGES,
     },
   };
 }

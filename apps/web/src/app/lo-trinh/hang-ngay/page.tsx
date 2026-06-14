@@ -17,6 +17,7 @@ import {
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { LoTrinhChart } from '@/components/lo-trinh/LoTrinhChart';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 const SLUG = 'hang-ngay';
 const TOPIC = 'general';
@@ -32,6 +33,7 @@ export const metadata: Metadata = {
       'Tử Vi hôm nay + Lịch Vạn Niên + Ngày tốt + Telegram bot — gợi ý ngắn, đủ dùng.',
     url: `https://hieu.asia/lo-trinh/${SLUG}`,
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: 'Lá Tarot hôm nay — gợi ý phản tư mỗi ngày | hieu.asia',
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
     siteName: 'hieu.asia',
     locale: 'vi_VN',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

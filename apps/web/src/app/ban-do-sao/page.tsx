@@ -5,6 +5,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { ZODIAC } from '@/lib/western-astrology';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 const DESC =
   'Tính bản đồ sao của bạn theo chiêm tinh phương Tây — cung Mặt Trời, Mặt Trăng, cung Mọc & 7 hành tinh (Sao Thuỷ → Hải Vương) từ ngày giờ & nơi sinh, bằng thuật toán thiên văn (Meeus + Schlyter) đối chiếu thư viện chuẩn. Con số là thật, diễn giải để hiểu mình, không bói toán.';
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
     description: DESC,
     url: 'https://hieu.asia/ban-do-sao',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

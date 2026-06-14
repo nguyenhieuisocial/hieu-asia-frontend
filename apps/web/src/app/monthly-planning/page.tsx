@@ -24,6 +24,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { TimeFlowChecker } from '@/components/time-flow/TimeFlowChecker';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,6 +39,7 @@ export const metadata: Metadata = {
       'Chia mục tiêu tháng thành 4 tuần — khung tham khảo chung, lập lá số để cá nhân hoá.',
     url: 'https://hieu.asia/monthly-planning',
     type: 'article',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

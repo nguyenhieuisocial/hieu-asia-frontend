@@ -15,6 +15,7 @@ import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { webPage, breadcrumb } from '@/lib/seo/jsonld';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: 'Cộng đồng',
@@ -27,6 +28,7 @@ export const metadata: Metadata = {
       'Nhận một bài viết ngắn mỗi tuần — cách dùng cổ học để ra quyết định tốt hơn.',
     url: 'https://hieu.asia/community',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

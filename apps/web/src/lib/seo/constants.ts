@@ -24,6 +24,16 @@ export const ORG_DESCRIPTION =
 export const OG_DEFAULT = '/og-image.jpg';
 
 /**
+ * Default Open Graph `images` array. Pages that declare their own `openGraph`
+ * block OVERRIDE (not merge) the root-layout default, so they silently lose the
+ * share image. Reference this in such pages' `openGraph.images` to keep the
+ * brand preview on social shares.
+ */
+export const OG_DEFAULT_IMAGES = [
+  { url: OG_DEFAULT, width: 1200, height: 630, alt: SITE_NAME },
+];
+
+/**
  * Logo for Organization.logo (ImageObject). TODO(product): replace with a
  * dedicated square logo asset (>=112x112) once available; using the existing
  * OG image keeps the schema valid in the meantime.

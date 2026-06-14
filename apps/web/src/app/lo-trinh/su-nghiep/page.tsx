@@ -17,6 +17,7 @@ import {
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { LoTrinhChart } from '@/components/lo-trinh/LoTrinhChart';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 const SLUG = 'su-nghiep';
 const TOPIC = 'career';
@@ -32,6 +33,7 @@ export const metadata: Metadata = {
       'Hiểu để chuyển động đúng: Quan Lộc, Tài Bạch, Thiên Di + Decision Brief có rủi ro kèm.',
     url: `https://hieu.asia/lo-trinh/${SLUG}`,
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 
