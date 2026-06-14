@@ -1,7 +1,8 @@
 // hieu.asia — MBTI (Jung-based) scoring + question set.
 //
-// Self-contained: the 16-item Likert quiz (4 per axis) + the scorer that maps
-// answers → a 4-letter type. Mirrors lib/scoring/disc.ts in shape.
+// Self-contained: the 24-item Likert quiz (6 per axis) + the scorer that maps
+// answers → a 4-letter type. Mirrors lib/scoring/disc.ts in shape. (24 items
+// gives steadier results for near-neutral profiles than the old 16.)
 //
 // NOT licensed MBTI® — these are open self-reflection items grounded in the four
 // Jungian dichotomies (E/I · S/N · T/F · J/P), phrased as "không bói toán":
@@ -29,10 +30,10 @@ interface MbtiItem {
   title: string;
 }
 
-// 16 items, 4 per axis, balanced 2 `pos` / 2 `neg` to cut acquiescence bias.
+// 24 items, 6 per axis, balanced 3 `pos` / 3 `neg` to cut acquiescence bias.
 // Ordered axis-interleaved so each page of 4 mixes all four axes (no page
 // telegraphs a single axis).
-const QUESTIONS: MbtiItem[] = [
+export const QUESTIONS: MbtiItem[] = [
   // — page 1 —
   { name: 'mbti_ei_01', axis: 'EI', toward: 'pos', title: 'Tôi thấy được tiếp thêm năng lượng sau khi gặp gỡ và trò chuyện với nhiều người.' },
   { name: 'mbti_sn_01', axis: 'SN', toward: 'pos', title: 'Tôi tin vào dữ kiện cụ thể và kinh nghiệm thực tế hơn là linh cảm.' },
@@ -53,6 +54,16 @@ const QUESTIONS: MbtiItem[] = [
   { name: 'mbti_sn_04', axis: 'SN', toward: 'neg', title: 'Tôi hay đọc ra ý nghĩa hoặc mẫu hình ẩn phía sau sự việc.' },
   { name: 'mbti_tf_04', axis: 'TF', toward: 'neg', title: 'Sự hoà hợp và giá trị con người thường dẫn dắt lựa chọn của tôi.' },
   { name: 'mbti_jp_04', axis: 'JP', toward: 'neg', title: 'Tôi làm việc tốt nhất khi được ứng biến, hơn là bám một kế hoạch cứng.' },
+  // — page 5 —
+  { name: 'mbti_ei_05', axis: 'EI', toward: 'pos', title: 'Tôi dễ bắt chuyện với người lạ và thấy thoải mái giữa đám đông.' },
+  { name: 'mbti_sn_05', axis: 'SN', toward: 'pos', title: 'Tôi nhớ rõ chi tiết cụ thể (con số, việc đã xảy ra) hơn là ấn tượng chung chung.' },
+  { name: 'mbti_tf_05', axis: 'TF', toward: 'pos', title: 'Tôi thấy một lời góp ý thẳng thắn thường hữu ích hơn một lời an ủi.' },
+  { name: 'mbti_jp_05', axis: 'JP', toward: 'pos', title: 'Tôi hay lập danh sách việc cần làm và thấy thoả mãn khi gạch xong từng mục.' },
+  // — page 6 —
+  { name: 'mbti_ei_06', axis: 'EI', toward: 'neg', title: 'Tôi thích trò chuyện sâu 1-1 hơn là dự tiệc đông người.' },
+  { name: 'mbti_sn_06', axis: 'SN', toward: 'neg', title: 'Tôi hay nghĩ về "sẽ ra sao nếu…" và những khả năng chưa xảy ra.' },
+  { name: 'mbti_tf_06', axis: 'TF', toward: 'neg', title: 'Trước khi phản hồi, tôi cân nhắc người kia sẽ cảm thấy thế nào.' },
+  { name: 'mbti_jp_06', axis: 'JP', toward: 'neg', title: 'Tôi thường quyết vào phút chót mà vẫn xoay xở tốt.' },
 ];
 
 const likert = (): QuizChoice[] => [
@@ -63,10 +74,10 @@ const likert = (): QuizChoice[] => [
   { value: 5, text: 'Rất đồng ý' },
 ];
 
-// 4 pages × 4 questions; each page interleaves all four axes.
-export const MBTI_PAGES: QuizPage[] = [0, 1, 2, 3].map((pageIdx) => ({
+// 6 pages × 4 questions; each page interleaves all four axes.
+export const MBTI_PAGES: QuizPage[] = [0, 1, 2, 3, 4, 5].map((pageIdx) => ({
   name: `mbti_p${pageIdx + 1}`,
-  title: `Phần ${pageIdx + 1}/4`,
+  title: `Phần ${pageIdx + 1}/6`,
   elements: QUESTIONS.slice(pageIdx * 4, pageIdx * 4 + 4).map((q) => ({
     name: q.name,
     title: q.title,
@@ -135,5 +146,5 @@ export function scoreFromShare(scores: number[]): MbtiScoreWithMeta | null {
     axes[axis] = { score, letter, positive, negative };
     type += letter;
   });
-  return { type, axes, total_items: 16, total_answered: 16 };
+  return { type, axes, total_items: 24, total_answered: 24 };
 }
