@@ -194,7 +194,7 @@ export default function OnboardingConsentPage() {
 
           <Card className="mt-8 border-jade-50/30 bg-card/60">
             <CardHeader>
-              <CardTitle className="font-heading text-lg text-jade-50">Bắt buộc</CardTitle>
+              <CardTitle className="font-heading text-lg text-[#2c6b61] dark:text-jade-50">Bắt buộc</CardTitle>
               <CardDescription className="text-muted-foreground">
                 Dữ liệu duy nhất bắt buộc để tạo lá số.
               </CardDescription>
