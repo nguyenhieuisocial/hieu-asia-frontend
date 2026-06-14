@@ -98,7 +98,7 @@ export default async function StarPage({
           <div className="grid gap-4 md:grid-cols-2">
             <Card className="border-jade/30 bg-jade/[0.04]">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 font-heading text-lg text-jade-50">
+                <CardTitle className="flex items-center gap-2 font-heading text-lg text-[#2c6b61] dark:text-jade-50">
                   <Sparkles className="h-4 w-4" aria-hidden /> Điểm mạnh
                 </CardTitle>
               </CardHeader>
@@ -106,7 +106,7 @@ export default async function StarPage({
                 <ul className="space-y-2 text-sm leading-relaxed text-foreground/80">
                   {data.positive.map((p, i) => (
                     <li key={i} className="flex gap-2">
-                      <span className="text-jade-50">+</span>
+                      <span className="text-[#2c6b61] dark:text-jade-50">+</span>
                       <span>{p}</span>
                     </li>
                   ))}
@@ -115,7 +115,7 @@ export default async function StarPage({
             </Card>
             <Card className="border-amber-700/40 bg-amber-900/10">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 font-heading text-lg text-amber-200">
+                <CardTitle className="flex items-center gap-2 font-heading text-lg text-[#785312] dark:text-amber-200">
                   <ShieldAlert className="h-4 w-4" aria-hidden /> Điểm cần chú ý
                 </CardTitle>
               </CardHeader>
@@ -123,7 +123,7 @@ export default async function StarPage({
                 <ul className="space-y-2 text-sm leading-relaxed text-foreground/80">
                   {data.caution.map((p, i) => (
                     <li key={i} className="flex gap-2">
-                      <span className="text-amber-300">!</span>
+                      <span className="text-[#785312] dark:text-amber-300">!</span>
                       <span>{p}</span>
                     </li>
                   ))}

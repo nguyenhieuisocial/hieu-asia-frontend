@@ -72,12 +72,12 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
           )}
 
           <header className="mb-10 max-w-marketing-text">
-            <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
+            <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-[#d4b373]">
               — HIEU.ASIA · ĐĂNG NHẬP
             </p>
             <h1 className="mt-4 font-marketing-display text-4xl leading-tight text-cream-50 md:text-5xl">
               Đăng nhập để được{' '}
-              <span className="italic text-gold">hiểu</span>.
+              <span className="italic text-[#d4b373]">hiểu</span>.
             </h1>
             <p className="mt-4 font-sans text-base text-cream-300">
               Không cần mật khẩu. Chọn nhà cung cấp hoặc nhận liên kết qua email.
