@@ -322,7 +322,7 @@ export default function AffiliateDashboardPage() {
                   </div>
                   <div className="mt-1 text-muted-foreground">{n.message}</div>
                   {n.link && (
-                    <Link href={n.link} className="mt-1 inline-block text-xs text-gold-700 hover:underline">
+                    <Link href={n.link} className="mt-1 inline-block whitespace-nowrap text-xs text-gold-700 hover:underline">
                       Xem chi tiết →
                     </Link>
                   )}

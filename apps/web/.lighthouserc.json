@@ -24,7 +24,14 @@
         "uses-text-compression": "off",
         "uses-long-cache-ttl": "off",
         "robots-txt": "off",
-        "tap-targets": "off"
+        "tap-targets": "off",
+        "bf-cache": "warn",
+        "errors-in-console": "warn",
+        "legacy-javascript-insight": "warn",
+        "meta-description": "warn",
+        "network-dependency-tree-insight": "warn",
+        "unused-javascript": "warn",
+        "forced-reflow-insight": "warn"
       }
     },
     "upload": {

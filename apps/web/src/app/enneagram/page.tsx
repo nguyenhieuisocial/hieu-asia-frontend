@@ -17,6 +17,8 @@ import {
   ENNEAGRAM_PAGES,
   ENNEAGRAM_TYPE_ORDER,
   TYPE_META,
+  INTEGRATION,
+  DISINTEGRATION,
   scoreEnneagram,
   scoreFromShare,
   type EnneagramScoreWithMeta,
@@ -79,53 +81,52 @@ export default function EnneagramPage() {
   // Bản đọc sâu cá nhân hoá từ nhóm Enneagram (backend /tools/enneagram-read).
   // Fallback an toàn: endpoint chưa có / lỗi → ẩn mục đọc, trang vẫn giữ chân
   // dung tĩnh + thanh điểm 9 nhóm.
-  React.useEffect(() => {
+  const runReading = React.useCallback(async () => {
     if (!result) return;
-    let cancelled = false;
     setReading(null);
     setPaywall(null);
     setReadingLoading(true);
-    void (async () => {
-      try {
-        const sb = getSupabaseAuth();
-        let token: string | undefined;
-        if (sb) {
-          const { data } = await sb.auth.getSession();
-          token = data.session?.access_token;
-        }
-
-        const res = await fetch(`${API_BASE}/tools/enneagram-read`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-          body: JSON.stringify({ type: result.type, wing: result.wing, label: result.label }),
-        });
-
-        if (res.status === 402) {
-          const parsed = await safeJson<FeatureLockedPayload>(res);
-          if (parsed.ok && parsed.data.error === 'feature_locked') {
-            if (!cancelled) setPaywall(parsed.data);
-            return;
-          }
-        }
-
-        const parsed = await safeJson<{ ok: true; reading: string } | { ok: false; error: string }>(res);
-        if (!parsed.ok) throw new Error(`HTTP ${parsed.status}`);
-        const json = parsed.data as { ok: true; reading: string } | { ok: false; error: string };
-        if (!json.ok || !json.reading) throw new Error('empty reading');
-        if (!cancelled) setReading(json.reading);
-      } catch {
-        if (!cancelled) setReading(null);
-      } finally {
-        if (!cancelled) setReadingLoading(false);
+    try {
+      const sb = getSupabaseAuth();
+      let token: string | undefined;
+      if (sb) {
+        const { data } = await sb.auth.getSession();
+        token = data.session?.access_token;
       }
-    })();
-    return () => {
-      cancelled = true;
-    };
+
+      const res = await fetch(`${API_BASE}/tools/enneagram-read`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ type: result.type, wing: result.wing, label: result.label }),
+      });
+
+      if (res.status === 402) {
+        const parsed = await safeJson<FeatureLockedPayload>(res);
+        if (parsed.ok && parsed.data.error === 'feature_locked') {
+          setPaywall(parsed.data);
+          return;
+        }
+      }
+
+      const parsed = await safeJson<{ ok: true; reading: string } | { ok: false; error: string }>(res);
+      if (!parsed.ok) throw new Error(`HTTP ${parsed.status}`);
+      const json = parsed.data as { ok: true; reading: string } | { ok: false; error: string };
+      if (!json.ok || !json.reading) throw new Error('empty reading');
+      setReading(json.reading);
+    } catch {
+      setReading(null);
+    } finally {
+      setReadingLoading(false);
+    }
   }, [result]);
+
+  React.useEffect(() => {
+    if (!result) return;
+    void runReading();
+  }, [result, runReading]);
 
   // Mở link chia sẻ "/enneagram?r=s1-s2-…-s9" → dựng lại kết quả để hiển thị ngay.
   React.useEffect(() => {
@@ -219,6 +220,48 @@ export default function EnneagramPage() {
                 </CardContent>
               </Card>
 
+              <Card className="border-gold/20 bg-card/50">
+                <CardContent className="p-6">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                    Đường phát triển &amp; áp lực
+                  </div>
+                  <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
+                      <div className="text-[10px] font-mono uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+                        Khi phát triển →
+                      </div>
+                      <p className="mt-1 text-sm text-foreground/90">
+                        Nghiêng về{' '}
+                        <span className="font-semibold text-foreground">
+                          Type {INTEGRATION[result.type]} — {TYPE_META[INTEGRATION[result.type]].name}
+                        </span>
+                      </p>
+                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                        {TYPE_META[INTEGRATION[result.type]].atBest}
+                      </p>
+                    </div>
+                    <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3">
+                      <div className="text-[10px] font-mono uppercase tracking-widest text-amber-600 dark:text-amber-400">
+                        Khi áp lực →
+                      </div>
+                      <p className="mt-1 text-sm text-foreground/90">
+                        Nghiêng về{' '}
+                        <span className="font-semibold text-foreground">
+                          Type {DISINTEGRATION[result.type]} — {TYPE_META[DISINTEGRATION[result.type]].name}
+                        </span>
+                      </p>
+                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                        {TYPE_META[DISINTEGRATION[result.type]].underStress}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
+                    Theo mô hình Riso-Hudson: khi lành mạnh bạn hấp thụ điểm mạnh của nhóm phát triển;
+                    khi căng thẳng dễ rơi vào điểm yếu của nhóm áp lực.
+                  </p>
+                </CardContent>
+              </Card>
+
               <Card className="border-border bg-card/50">
                 <CardContent className="space-y-3 p-5">
                   <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
@@ -255,7 +298,10 @@ export default function EnneagramPage() {
                   slug={paywall.slug}
                   price={paywall.price}
                   label="Enneagram"
-                  onUnlocked={() => setPaywall(null)}
+                  onUnlocked={() => {
+                    setPaywall(null);
+                    void runReading();
+                  }}
                 />
               )}
 

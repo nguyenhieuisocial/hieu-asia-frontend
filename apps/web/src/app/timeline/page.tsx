@@ -12,6 +12,9 @@ import { ArrowRight, Calendar, Sparkles } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { TimeFlowChecker } from '@/components/time-flow/TimeFlowChecker';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Timeline đại vận — đại vận 10 năm vận hành thế nào',
@@ -130,6 +133,10 @@ export default function TimelinePage() {
             theo cung an mệnh của mình.
           </p>
         </header>
+
+        <div className="mb-12">
+          <TimeFlowChecker scope="decadal" />
+        </div>
 
         <section aria-labelledby="timeline-heading" className="mb-10">
           <h2

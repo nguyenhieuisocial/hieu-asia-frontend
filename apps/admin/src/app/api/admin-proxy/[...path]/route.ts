@@ -46,7 +46,13 @@ async function forward(
     );
   }
   const { path } = await ctx.params;
-  const subpath = (path ?? []).map(encodeURIComponent).join('/');
+  const segments = path ?? [];
+  // Block path traversal / injection: each segment must be a clean slug.
+  // Rejects `..`, `.`, and anything outside [A-Za-z0-9_-] before building the URL.
+  if (segments.some((seg) => !/^[A-Za-z0-9_-]+$/.test(seg))) {
+    return NextResponse.json({ ok: false, error: 'invalid path' }, { status: 400 });
+  }
+  const subpath = segments.map(encodeURIComponent).join('/');
   const url = new URL(req.url);
   const target = `${GATEWAY}/${subpath}${url.search}`;
   const body = method === 'GET' || method === 'DELETE' ? undefined : await req.text();

@@ -17,6 +17,7 @@ import { AlertTriangle, Sparkles, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { castTuViChart, type TuViChart } from '@/lib/tuvi-client';
+import { getNguHanhRemedy, type NguHanhRemedy } from '@/lib/ngu-hanh-remedy';
 
 type Gender = 'male' | 'female';
 
@@ -283,6 +284,8 @@ export function TinhMenhCucForm() {
           </section>
         )}
 
+        {result && <NguHanhRemedySection fiveElementsClass={result.meta.fiveElementsClass} />}
+
         <section className="relative mx-auto max-w-2xl px-6 pb-20">
           <Card className="border-border bg-card/40">
             <CardHeader>
@@ -403,6 +406,105 @@ function ResultRow({ label, value, hint }: { label: string; value: string; hint:
       <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
       <p className="mt-1 font-heading text-lg font-semibold text-gold-700">{value}</p>
       <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
+    </div>
+  );
+}
+
+/**
+ * Section "Gợi ý bổ khuyết ngũ hành" — chỉ đọc fiveElementsClass từ chart,
+ * không đụng engine cast lá số.
+ */
+function NguHanhRemedySection({ fiveElementsClass }: { fiveElementsClass: string }) {
+  const remedy: NguHanhRemedy | null = getNguHanhRemedy(fiveElementsClass);
+  if (!remedy) return null;
+
+  return (
+    <section className="relative mx-auto max-w-2xl px-6 pb-12">
+      <Card className="border-gold/20 bg-card/40">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-gold" aria-hidden />
+            <CardTitle className="font-heading text-xl text-foreground">
+              Gợi ý bổ khuyết ngũ hành (tham khảo)
+            </CardTitle>
+          </div>
+          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+            Đây là gợi ý tham khảo theo ngũ hành, không phải lời phán về số mệnh.
+            Áp dụng hay không tuỳ bối cảnh cá nhân — hieu.asia không phán, chỉ gợi ý.
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          {/* Màu hợp */}
+          <RemedyBlock
+            title={`Màu sắc phù hợp với hành ${remedy.hanh}`}
+            items={remedy.mauHop}
+            hint="Theo Ngũ Hành học, màu tương sinh với hành chủ đạo giúp cân bằng năng lượng."
+          />
+
+          {/* Hướng tốt */}
+          <RemedyBlock
+            title="Hướng tốt"
+            items={remedy.huongTot}
+            hint="Hướng bàn làm việc, cửa chính hoặc hướng ngủ theo Phong Thủy Ngũ Hành."
+          />
+
+          {/* Nhóm nghề */}
+          <RemedyBlock
+            title="Nhóm nghề phù hợp"
+            items={remedy.ngheHop}
+            hint="Ngành nghề cộng hưởng với đặc tính hành chủ đạo — không phải giới hạn, chỉ là xu hướng thuận."
+          />
+
+          {/* Vật phẩm / môi trường */}
+          <RemedyBlock
+            title="Vật phẩm & môi trường hỗ trợ"
+            items={remedy.vatPham}
+            hint="Không cần mua nhiều — chọn 1–2 thứ phù hợp hoàn cảnh, đặt nơi bạn làm việc hoặc nghỉ ngơi."
+          />
+
+          {/* Lời khuyên hành động */}
+          <div>
+            <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              Lời khuyên hành động
+            </p>
+            <ol className="space-y-2">
+              {remedy.loiKhuyen.map((lk, i) => (
+                <li key={i} className="flex gap-3 text-sm leading-relaxed text-foreground/80">
+                  <span className="shrink-0 font-mono text-gold-700">{String(i + 1).padStart(2, '0')}</span>
+                  <span>{lk}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <p className="border-t border-border pt-4 text-xs leading-relaxed text-muted-foreground">
+            Nguồn quy tắc: Ngũ Hành học cổ điển (tương sinh/tương khắc chuẩn) + bảng
+            hướng Phong Thủy phổ biến tại Việt Nam. Kết quả mang tính gợi ý, không thay
+            thế tư vấn chuyên sâu từ chuyên gia Tử Vi có kinh nghiệm.
+          </p>
+        </CardContent>
+      </Card>
+    </section>
+  );
+}
+
+function RemedyBlock({ title, items, hint }: { title: string; items: string[]; hint: string }) {
+  return (
+    <div>
+      <p className="mb-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+        {title}
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {items.map((item) => (
+          <span
+            key={item}
+            className="rounded-md border border-gold/20 bg-gold/5 px-2.5 py-1 text-xs font-medium text-gold-700"
+          >
+            {item}
+          </span>
+        ))}
+      </div>
+      <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{hint}</p>
     </div>
   );
 }

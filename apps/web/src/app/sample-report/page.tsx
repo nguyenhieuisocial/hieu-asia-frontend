@@ -12,6 +12,11 @@ import {
   Home,
   Compass,
   Calendar,
+  CheckCircle2,
+  Circle,
+  Lock,
+  BookOpen,
+  Zap,
 } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
@@ -62,6 +67,47 @@ const PERSONA = {
   mbti: 'INTJ',
   numerology: 'Số chủ đạo 6',
 };
+
+// Mục lục 30 mục — 7 visible, 23 blur
+const TOC_VISIBLE = [
+  { part: 'A', label: 'LÁ SỐ — CỐT CÁCH', items: [
+    { id: 'A1', name: 'Ngũ hành cục Hỏa Lục Cục — năng lượng nền tảng' },
+    { id: 'A2', name: 'Mệnh chủ Phá Quân & Thân chủ Tử Vi — 2 ngôi sao chủ đạo' },
+    { id: 'A3', name: 'Cách cục Tử Phủ Đồng Lương — khí chất ổn định dẫn dắt' },
+    { id: 'A4', name: 'Thân cung Dần — vận hướng nửa sau cuộc đời' },
+    { id: 'A5', name: 'Pha Trường Sinh hiện tại — đang ở giai đoạn bứt phá' },
+  ]},
+  { part: 'B', label: 'SỰ NGHIỆP & TÀI NĂNG', items: [
+    { id: 'B1', name: 'Tam phương Quan Lộc — Vũ Khúc Quyền trấn giữ sự nghiệp' },
+    { id: 'B2', name: 'Phong cách làm việc: chuyên gia có thẩm quyền, không hợp quản lý đám đông' },
+  ]},
+];
+
+const TOC_LOCKED = [
+  { id: 'B3', name: 'Top 3 lĩnh vực nghề thiên hướng theo lá số' },
+  { id: 'B4', name: 'Điểm mù trong ra quyết định — từ phân tích tâm lý' },
+  { id: 'B5', name: 'Thời điểm bứt phá theo đại vận — cửa sổ 3 năm tới' },
+  { id: 'B6', name: 'Rủi ro sự nghiệp cần tránh (Lục Sát cung Quan Lộc)' },
+  { id: 'C1', name: 'Tam phương Tài Bạch — Thiên Phủ Khoa giữ của' },
+  { id: 'C2', name: 'Mô thức thu nhập hợp lá số: lương cố định hay kinh doanh?' },
+  { id: 'C3', name: 'Tài vận 2026 — Tứ Hóa lưu niên tác động cung Tài Bạch' },
+  { id: 'C4', name: 'Cạm bẫy tài chính cần tránh theo ngũ hành cục' },
+  { id: 'C5', name: 'Giai đoạn tích lũy vs chi tiêu theo đại vận' },
+  { id: 'D1', name: 'Tam phương Phu Thê — Thái Âm Thiên Đồng cung quan hệ' },
+  { id: 'D2', name: 'Chân dung người phù hợp theo lá số' },
+  { id: 'D3', name: 'Pattern xung đột trong quan hệ — từ tính cách cốt lõi' },
+  { id: 'D4', name: 'Cung Tử Tức — vận gia đình, con cái' },
+  { id: 'D5', name: 'Thời điểm thuận lợi cho chuyện hôn nhân theo vận hạn' },
+  { id: 'E1', name: 'Tam phương sức khỏe — cung Tật Ách' },
+  { id: 'E2', name: 'Cơ quan / hệ thống cần chú ý theo ngũ hành Hỏa Lục Cục' },
+  { id: 'E3', name: 'Lục Sát cung Tật Ách — dấu hiệu cần đề phòng' },
+  { id: 'E4', name: 'Mùa / giai đoạn sức khỏe cần giữ gìn' },
+  { id: 'F1', name: 'Đại vận hiện tại — cung đang cai quản (35–45 tuổi)' },
+  { id: 'F2', name: 'Tứ Hóa năm 2026 — sao nào được kích hoạt, ảnh hưởng thực tế' },
+  { id: 'F3', name: 'Tứ Hóa đại vận — xu hướng 10 năm này' },
+  { id: 'G1', name: 'Gợi ý bổ khuyết ngũ hành: màu / hướng / nghề hợp cục' },
+  { id: 'G2', name: 'Kế hoạch tự-chiêm-nghiệm 30 ngày — 6 nhóm × 5 ngày' },
+];
 
 type IconType = React.ComponentType<{ className?: string }>;
 const PALACE_PREVIEWS: { icon: IconType; palace: string; summary: string; insights: string[] }[] = [
@@ -188,6 +234,8 @@ const BREADCRUMB_JSONLD = {
   ],
 };
 
+const TOTAL_ITEMS = TOC_VISIBLE.reduce((s, g) => s + g.items.length, 0) + TOC_LOCKED.length;
+
 export default function SampleReportPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -223,11 +271,108 @@ export default function SampleReportPage() {
               Tử Vi Bắc phái 114 sao
             </span>
           </div>
+
+          {/* Badge kỹ thuật — trust signals */}
+          <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <TechBadge
+              icon={<Zap className="h-3.5 w-3.5" />}
+              label="An sao chuẩn tiết khí"
+              tooltip="Không dùng xấp xỉ tháng âm lịch — tính đúng ngày tiết khí chuyển cung"
+            />
+            <TechBadge
+              icon={<BookOpen className="h-3.5 w-3.5" />}
+              label="Đối chiếu cổ thư"
+              tooltip="50 thẻ cổ thư Tử Vi + Bát Tự — mỗi nhận định ghi rõ xuất xứ, kiểm chứng được"
+            />
+            <TechBadge
+              icon={<CheckCircle2 className="h-3.5 w-3.5" />}
+              label="Múi giờ lịch sử VN"
+              tooltip="Sinh trước 1975? Giờ thật của bạn khác giờ hiện tại — chúng tôi tính đúng múi giờ từng thời kỳ"
+            />
+            <TechBadge
+              icon={<ShieldCheck className="h-3.5 w-3.5" />}
+              label="Có disclaimer rõ"
+              tooltip="Chúng tôi nói rõ: đây là tham khảo, không phải dự đoán số phận. Hiếm nền tảng dám nói thật điều này."
+            />
+          </div>
         </section>
 
         {/* Wave 52.1 — per-report disclaimer at top of result preview (BUG-018). */}
         <section className="relative mx-auto max-w-3xl px-6 pb-4">
           <ResultDisclaimer />
+        </section>
+
+        {/* Mục lục "Bạn sẽ nhận được" */}
+        <section className="relative mx-auto max-w-3xl px-6 pb-10">
+          <div className="rounded-xl border border-gold/25 bg-gradient-to-br from-gold/[0.04] to-transparent p-5 sm:p-6">
+            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
+              Bản Premium · {TOTAL_ITEMS} mục có tên cụ thể
+            </p>
+            <h2 className="mt-2 font-heading text-xl font-semibold text-foreground sm:text-2xl">
+              Bạn sẽ nhận được gì?
+            </h2>
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              7 mục đầu có preview bên dưới. Phần còn lại trong bản đầy đủ.
+            </p>
+
+            <div className="mt-5 space-y-4">
+              {TOC_VISIBLE.map((group) => (
+                <div key={group.part}>
+                  <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-gold-700">
+                    Phần {group.part} — {group.label}
+                  </p>
+                  <ul className="space-y-1.5">
+                    {group.items.map((item) => (
+                      <li key={item.id} className="flex items-start gap-2 text-sm text-foreground/85">
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden />
+                        <span>
+                          <span className="font-mono text-[10px] text-muted-foreground">{item.id}.</span>{' '}
+                          {item.name}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            {/* Locked items — blurred */}
+            <div className="relative mt-4">
+              <ul className="space-y-1.5 blur-[3px] select-none" aria-hidden="true">
+                {TOC_LOCKED.slice(0, 8).map((item) => (
+                  <li key={item.id} className="flex items-start gap-2 text-sm text-foreground/60">
+                    <Circle className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground/40" />
+                    <span>
+                      <span className="font-mono text-[10px] text-muted-foreground/60">{item.id}.</span>{' '}
+                      {item.name}
+                    </span>
+                  </li>
+                ))}
+                <li className="flex items-start gap-2 text-sm text-muted-foreground/40">
+                  <Circle className="mt-0.5 h-4 w-4 shrink-0" />
+                  <span>... và {TOC_LOCKED.length - 8} mục nữa</span>
+                </li>
+              </ul>
+              {/* Fade overlay */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-transparent via-background/70 to-background/95">
+                <div className="flex items-center gap-1.5 rounded-full border border-gold/30 bg-background/90 px-3 py-1.5 shadow-sm">
+                  <Lock className="h-3.5 w-3.5 text-gold" aria-hidden />
+                  <span className="text-xs font-medium text-foreground/80">
+                    {TOC_LOCKED.length} mục còn lại trong bản đầy đủ
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-5">
+              <Button asChild size="sm">
+                <Link href="/onboarding">
+                  Lập lá số — xem bản đầy đủ
+                  <ArrowRight className="ml-1.5 h-3.5 w-3.5" aria-hidden />
+                </Link>
+              </Button>
+            </div>
+          </div>
         </section>
 
         {/* Executive summary */}
@@ -288,6 +433,133 @@ export default function SampleReportPage() {
                 </Card>
               );
             })}
+          </div>
+        </section>
+
+        {/* Preview Bát Tự — lăng kính bổ sung */}
+        <section className="relative mx-auto max-w-3xl px-6 pb-10">
+          <Card className="border-dashed border-gold/30 bg-card/30">
+            <CardHeader className="pb-3">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-gold-700">
+                Trong bản đầy đủ — lăng kính Bát Tự
+              </p>
+              <CardTitle className="font-heading text-base text-foreground sm:text-lg">
+                Bát Tự bổ sung chiều sâu tâm lý
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-sm leading-relaxed text-foreground/85">
+                <strong className="text-foreground">Nhật Chủ Canh Kim sinh tháng Mộc</strong> — áp lực
+                khắc chủ. Đại vận Quý Thủy hiện tại thông quan: cơ hội xuất hiện nhưng cần hành
+                động đúng thời điểm, không chờ "hoàn hảo".
+              </p>
+              <p className="text-sm leading-relaxed text-foreground/85">
+                Tứ trụ xác nhận xu hướng Tử Vi: <em>chuyên môn sâu hơn quản lý rộng</em> — phù
+                hợp người dẫn dắt nhóm nhỏ chuyên biệt hơn là điều phối đại chúng.
+              </p>
+              <div className="flex items-center gap-2 rounded-lg border border-border/50 bg-muted/5 px-3 py-2">
+                <Lock className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden />
+                <p className="text-xs text-muted-foreground">
+                  Chi tiết 8 mục Bát Tự (Thập Thần, Thiên Can, dụng thần, đại vận từng năm) trong bản Premium.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Section Bổ Khuyết — partially visible, partially blurred */}
+        <section className="relative mx-auto max-w-3xl px-6 pb-10">
+          <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.03]">
+            <div className="p-5 sm:p-6">
+              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-amber-600 dark:text-amber-400">
+                Mục G1 — Gợi ý bổ khuyết ngũ hành · preview 30%
+              </p>
+              <h2 className="mt-2 font-heading text-xl font-semibold text-foreground sm:text-2xl">
+                Bổ khuyết & hành động cụ thể
+              </h2>
+              <p className="mt-1.5 text-sm text-muted-foreground">
+                Đây là phần khách nhớ lâu nhất. Dựa trên Hỏa Lục Cục + cách cục Tử Phủ:
+              </p>
+
+              {/* Visible part */}
+              <div className="mt-4 space-y-3">
+                <div className="rounded-lg border border-border/50 bg-card/40 p-3">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Màu sắc hỗ trợ
+                  </p>
+                  <p className="mt-1 text-sm text-foreground/85">
+                    <strong className="text-foreground">Trắng, bạc, vàng nhạt</strong> (Kim — hành thông
+                    quan) · <strong className="text-foreground">Đen, xanh đậm</strong> (Thủy — tăng
+                    lưu thông). Tránh: đỏ đậm, cam nóng (tăng Hỏa khi Hỏa đã đủ mạnh).
+                  </p>
+                </div>
+                <div className="rounded-lg border border-border/50 bg-card/40 p-3">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Hướng làm việc tốt
+                  </p>
+                  <p className="mt-1 text-sm text-foreground/85">
+                    <strong className="text-foreground">Tây, Tây Bắc</strong> — hướng Kim khí. Bàn làm
+                    việc quay về hướng này hoặc ngồi bên trái cửa sổ hướng Tây.
+                  </p>
+                </div>
+              </div>
+
+              {/* Blurred part */}
+              <div className="relative mt-3">
+                <div className="space-y-3 blur-[4px] select-none" aria-hidden="true">
+                  <div className="rounded-lg border border-border/50 bg-card/40 p-3">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      Nghề hợp thiên mệnh
+                    </p>
+                    <p className="mt-1 text-sm text-foreground/60">
+                      Tài chính, luật, cơ khí chính xác, phân tích dữ liệu — các lĩnh vực Kim tính...
+                    </p>
+                  </div>
+                  <div className="rounded-lg border border-border/50 bg-card/40 p-3">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      3 ngày tốt tháng 7/2026
+                    </p>
+                    <p className="mt-1 text-sm text-foreground/60">
+                      07/07 · 15/07 · 23/07 — ngày Kim Thủy vượng, hợp ký kết và...
+                    </p>
+                  </div>
+                  <div className="rounded-lg border border-border/50 bg-card/40 p-3">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      Checklist 30 ngày cụ thể
+                    </p>
+                    <p className="mt-1 text-sm text-foreground/60">
+                      Ngày 1–5: Cung Mệnh · Ngày 6–10: Cung Quan Lộc · Ngày 11–15: Cung Tài Bạch...
+                    </p>
+                  </div>
+                </div>
+                {/* Fade overlay */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-transparent via-background/60 to-background/90">
+                  <div className="flex flex-col items-center gap-2 text-center">
+                    <div className="flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-background/90 px-3 py-1.5 shadow-sm">
+                      <Lock className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" aria-hidden />
+                      <span className="text-xs font-medium text-foreground/80">
+                        Mở khoá bổ khuyết đầy đủ + {TOC_LOCKED.length} mục còn lại
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-5 flex flex-wrap items-center gap-3">
+                <Button asChild size="sm">
+                  <Link href="/onboarding">
+                    Lập lá số của tôi
+                    <ArrowRight className="ml-1.5 h-3.5 w-3.5" aria-hidden />
+                  </Link>
+                </Button>
+                <Link
+                  href="/pricing"
+                  className="text-sm text-muted-foreground hover:text-gold"
+                >
+                  Xem gói &amp; giá →
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -393,7 +665,7 @@ export default function SampleReportPage() {
           </Card>
         </section>
 
-        {/* CTA */}
+        {/* CTA cuối */}
         <section className="relative mx-auto max-w-3xl px-6 pb-20">
           <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent p-6 sm:p-8">
             <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
@@ -401,17 +673,27 @@ export default function SampleReportPage() {
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-foreground/85 sm:text-base">
               Mẫu trên là persona giả định. Bản của bạn cá nhân hoá theo
-              ngày–giờ sinh, MBTI (nếu có), và bối cảnh đời sống hiện tại. Hoàn tiền 100%
-              trong 24 giờ nếu báo cáo chưa được tạo.
+              ngày–giờ sinh, MBTI (nếu có), và bối cảnh đời sống hiện tại. {TOTAL_ITEMS} mục được
+              đặt tên cụ thể theo lá số thật — không phải template chung chung.
             </p>
+            <ul className="mt-4 space-y-1.5 text-sm text-foreground/80">
+              {[
+                'Lưu vĩnh viễn trong tài khoản — không mất sau khi đọc',
+                'Nhận toàn bộ báo cáo qua email trong 5 phút',
+                'Hoàn tiền 100% trong 24 giờ nếu báo cáo chưa được tạo',
+              ].map((t, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden />
+                  <span>{t}</span>
+                </li>
+              ))}
+            </ul>
             <div className="mt-5 flex flex-wrap gap-3">
               <Button asChild size="lg"><Link href="/onboarding">
                 Lập lá số của tôi
               </Link></Button>
               <Button asChild size="lg" variant="outline"><Link href="/pricing">
-                
-                  Xem gói
-                
+                Xem gói
               </Link></Button>
               <Link
                 href="/methodology"
@@ -435,6 +717,33 @@ function Stat({ label, value }: { label: string; value: string }) {
     <div>
       <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
       <p className="mt-0.5 font-heading text-sm font-semibold text-foreground">{value}</p>
+    </div>
+  );
+}
+
+function TechBadge({
+  icon,
+  label,
+  tooltip,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  tooltip: string;
+}) {
+  return (
+    <div
+      className="group relative flex items-center gap-1.5 rounded-lg border border-border/60 bg-card/40 px-2.5 py-2 text-xs text-foreground/75 hover:border-gold/40 hover:text-foreground transition-colors cursor-default"
+      title={tooltip}
+    >
+      <span className="text-gold" aria-hidden>{icon}</span>
+      <span className="leading-tight">{label}</span>
+      {/* Tooltip */}
+      <div
+        role="tooltip"
+        className="pointer-events-none absolute bottom-full left-0 z-10 mb-1.5 w-56 rounded-lg border border-border bg-background p-2.5 text-xs leading-relaxed text-foreground/80 opacity-0 shadow-lg transition-opacity group-hover:opacity-100"
+      >
+        {tooltip}
+      </div>
     </div>
   );
 }

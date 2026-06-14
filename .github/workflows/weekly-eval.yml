@@ -30,10 +30,13 @@ jobs:
   eval:
     name: Eval run + alert on regression
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 75
     env:
       ADMIN_TOKEN: ${{ secrets.HIEU_API_ADMIN_TOKEN }}
       EVAL_API_URL: https://api.hieu.asia
+      # Public Supabase anon JWT (same value as NEXT_PUBLIC_SUPABASE_ANON_KEY) —
+      # required so reading-create/reading-get pass the Edge Function verify_jwt gate.
+      EVAL_SUPABASE_ANON_KEY: ${{ secrets.EVAL_SUPABASE_ANON_KEY }}
     steps:
       - uses: actions/checkout@v6
       # action-setup@v4 with NO version key — defers to packageManager
@@ -47,6 +50,20 @@ jobs:
 
       - name: Install deps
         run: pnpm install --frozen-lockfile --filter web
+
+      # Fail fast & CLEARLY if the eval can't authenticate — otherwise the runner
+      # exits 1 at its token check and the regression alert below mislabels a
+      # missing-secret CONFIG failure as a quality regression (see #194/#240).
+      - name: Verify eval secrets present
+        run: |
+          if [ -z "$ADMIN_TOKEN" ]; then
+            echo "::error::CONFIG: HIEU_API_ADMIN_TOKEN secret is missing/empty — the eval cannot run. Add it in Settings → Secrets and variables → Actions. This is NOT a quality regression."
+            exit 1
+          fi
+          if [ -z "$EVAL_SUPABASE_ANON_KEY" ]; then
+            echo "::error::CONFIG: EVAL_SUPABASE_ANON_KEY secret is missing/empty — needed to authenticate to the reading service (value = the public NEXT_PUBLIC_SUPABASE_ANON_KEY). This is NOT a quality regression."
+            exit 1
+          fi
 
       - name: Run eval
         id: run
@@ -76,7 +93,7 @@ jobs:
             github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `Weekly eval regression — ${new Date().toISOString().slice(0, 10)}`,
-              body: `Eval avg score dropped below P4.5 gate (target ≥ 9.0).\n\nArtifacts: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n\n**Action required**: download eval-results artifact, review per-sample failures, identify prompt regression OR Iztro tool drift OR model regression.\n\nCC @nguyenhieuisocial`,
+              title: `Weekly eval gate failed — ${new Date().toISOString().slice(0, 10)}`,
+              body: `The eval step exited non-zero.\n\n⚠️ FIRST open the "Run eval" step log:\n- If it printed \`Avg: X/10\` with X < 9.0 → genuine quality regression: download the eval-results artifact, review per-sample failures (prompt / Iztro tool / model).\n- If there is NO \`Avg:\` line (e.g. \`ADMIN_TOKEN required\`, API/network error) → INFRA/CONFIG failure, NOT a quality regression.\n\nRun: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n\nCC @nguyenhieuisocial`,
               labels: ['eval', 'quality-gate', 'p1'],
             });

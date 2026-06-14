@@ -12,6 +12,11 @@ import { BIRTH_YEARS as KHAI_TRUONG_YEARS, slugOf as khaiTruongSlug } from './kh
 import { BIRTH_YEARS as HUONG_NHA_YEARS, slugOf as huongNhaSlug } from './huong-nha/years';
 import { ZODIAC, canonicalPairSlug } from '@/lib/hop-tuoi-pairs';
 import { COMPARISONS } from '@/lib/so-sanh';
+import { ALL_PAGES as TAROT_PAGES } from '@/lib/tarot-card-pages';
+import { QUE_PAGES } from '@/lib/que-kinh-dich';
+import { SO_CHU_DAO } from '@/lib/than-so-hoc-numbers';
+import { LOAI_SO } from '@/lib/than-so-hoc-loai-so';
+import { SAO_GIO } from '@/lib/gio-hoang-dao-stars';
 
 const BASE_URL = 'https://hieu.asia';
 
@@ -56,11 +61,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/tu-vi-hom-nay`, lastModified: now, changeFrequency: 'daily', priority: 0.7 },
     { url: `${BASE_URL}/lich-van-nien`, lastModified: now, changeFrequency: 'daily', priority: 0.7 },
     { url: `${BASE_URL}/than-so-hoc`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    // Thư viện ý nghĩa 12 số chủ đạo — evergreen SEO (lane nâng cấp dữ liệu mỏng 2026-06).
+    { url: `${BASE_URL}/than-so-hoc/y-nghia`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    ...SO_CHU_DAO.map((n) => ({
+      url: `${BASE_URL}/than-so-hoc/y-nghia/${n.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    })),
+    // Thư viện 4 loại số thần số học — Vận mệnh, Linh hồn, Nhân cách, Ngày sinh (2026-06).
+    { url: `${BASE_URL}/than-so-hoc/cac-loai-so`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.7 },
+    ...LOAI_SO.map((l) => ({
+      url: `${BASE_URL}/than-so-hoc/cac-loai-so/${l.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    })),
     { url: `${BASE_URL}/hop-tuoi`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/can-xuong`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/thuoc-lo-ban`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/xem-tuong`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/ban-do-sao`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/la-so-tu-vi`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${BASE_URL}/la-so-bat-tu`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/privacy`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
     { url: `${BASE_URL}/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
   ];
@@ -188,12 +211,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Đợt 0 big-upgrade — bật các engine đã build sẵn (Kinh Dịch, Big Five, DISC).
   const dot0Tools: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/gieo-que`, lastModified: now, changeFrequency: 'monthly', priority: 0.65 },
+    // Thư viện ý nghĩa 64 quẻ Kinh Dịch — evergreen SEO (nâng cấp dữ liệu mỏng 2026-06).
+    { url: `${BASE_URL}/gieo-que/y-nghia`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    ...QUE_PAGES.map((q) => ({
+      url: `${BASE_URL}/gieo-que/y-nghia/${q.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    })),
     { url: `${BASE_URL}/big-five`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/disc`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/enneagram`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/tu-kiem`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/tarot`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/tarot/hom-nay`, lastModified: now, changeFrequency: 'daily', priority: 0.6 },
+    // Thư viện ý nghĩa lá Tarot (đủ 78 lá: 22 Ẩn chính + 56 Ẩn phụ) — evergreen SEO.
+    { url: `${BASE_URL}/tarot/y-nghia`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    ...TAROT_PAGES.map((c) => ({
+      url: `${BASE_URL}/tarot/y-nghia/${c.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    })),
     { url: `${BASE_URL}/sao-han`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/cong-cu`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
   ];
@@ -274,6 +313,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Giờ hoàng đạo — SEO mùa vụ (giờ tốt trong ngày).
   const gioHoangDao: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/gio-hoang-dao`, lastModified: now, changeFrequency: 'daily', priority: 0.7 },
+    // Thư viện ý nghĩa 12 sao giờ — evergreen SEO (lane nâng cấp dữ liệu mỏng 2026-06).
+    { url: `${BASE_URL}/gio-hoang-dao/y-nghia`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    ...SAO_GIO.map((s) => ({
+      url: `${BASE_URL}/gio-hoang-dao/y-nghia/${s.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    })),
   ];
 
   // Xem tuổi cưới theo năm sinh — SEO mùa cưới (Kim Lâu / Tam Tai / xung năm).

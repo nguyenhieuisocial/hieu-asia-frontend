@@ -203,9 +203,17 @@ export interface ReadingInsights {
   alignment?: string;
 }
 
-/** Final markdown report. Backend now returns a single Markdown blob with H2 sections. */
+/** Final markdown report — full paid version. Backend returns a single Markdown blob with H2 sections. */
 export interface ReadingReportMarkdown {
   markdown: string;
+}
+
+/**
+ * Locked preview — returned by reading-get (PR #134) when the report has
+ * not been purchased yet. Only contains a short preview summary.
+ */
+export interface ReadingReportPreview {
+  preview: string;
 }
 
 export interface TuviChart {
@@ -218,6 +226,16 @@ export interface TuviChart {
 /**
  * Canonical reading row as returned by `GET /api/reading/{id}` proxy
  * (Supabase Edge Function `reading-get`).
+ *
+ * When the report is locked (not yet purchased):
+ *   - `report`   = `{ preview: "…" }` (ReadingReportPreview)
+ *   - `locked`   = true
+ *   - `summary`  = true
+ *   - `insights` = null / undefined
+ *
+ * When the report is unlocked (paid):
+ *   - `report`   = `{ markdown: "…" }` (ReadingReportMarkdown) — same as before
+ *   - `locked`   = absent / false
  */
 export interface Reading {
   id: string;
@@ -227,8 +245,12 @@ export interface Reading {
   palm_image_url?: string;
   survey_answers?: Record<string, unknown>;
   tuvi_chart?: TuviChart;
-  insights?: ReadingInsights;
-  report?: ReadingReportMarkdown;
+  insights?: ReadingInsights | null;
+  report?: ReadingReportMarkdown | ReadingReportPreview | null;
+  /** true when report has not been purchased — report contains only a preview. */
+  locked?: boolean;
+  /** true when the backend intentionally returns a summary/preview shape. */
+  summary?: boolean;
   errors?: Record<string, string>;
   created_at: string;
   updated_at: string;
