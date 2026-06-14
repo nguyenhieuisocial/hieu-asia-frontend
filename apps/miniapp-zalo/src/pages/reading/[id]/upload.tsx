@@ -20,11 +20,14 @@ async function uploadDirect(file: File, userId: string) {
       user_id: userId,
       content_type: file.type || 'image/jpeg',
     });
-    await fetch(presigned.upload_url, {
+    const putRes = await fetch(presigned.upload_url, {
       method: 'PUT',
       headers: { 'Content-Type': file.type || 'image/jpeg' },
       body: file,
     });
+    // A failed PUT must NOT be treated as success — otherwise the reading is created
+    // with a dead hand_image_url. Throw so the catch path falls back to the mock object.
+    if (!putRes.ok) throw new Error(`presigned PUT failed: ${putRes.status}`);
     return { object_name: presigned.object_name, public_read_url: presigned.public_read_url, mock: false };
   } catch (err) {
     console.warn('[upload] falling back to mock object_name:', err);
