@@ -55,9 +55,19 @@ export async function sha256Hex(input: string): Promise<string> {
  * absolute path; anything else falls back to `/`.
  */
 export function safeNextPath(next: string | null | undefined): string {
-  if (!next || !next.startsWith('/')) return '/';
-  if (next.startsWith('//') || next.startsWith('/\\')) return '/';
-  return next;
+  if (!next) return '/';
+  // The WHATWG URL parser STRIPS ASCII tab/newline/CR from input before parsing,
+  // so `/\t/evil.com` (or \n, \r) would smuggle a protocol-relative `//evil.com`
+  // past a naive prefix check and redirect off-site. Strip those first, then
+  // reject any other control char defensively, then validate the result.
+  const cleaned = next.replace(/[\t\n\r]/g, '');
+  for (let i = 0; i < cleaned.length; i++) {
+    const code = cleaned.charCodeAt(i);
+    if (code < 0x20 || code === 0x7f) return "/"; // reject control chars (URL parser strips some)
+  }
+  if (!cleaned.startsWith('/')) return '/';
+  if (cleaned.startsWith('//') || cleaned.startsWith('/\\')) return '/';
+  return cleaned;
 }
 
 /** Constant-time string compare for equal-length strings. */
