@@ -200,7 +200,7 @@ export function MbtiTool() {
                 {readingLoading && !reading ? (
                   <ReadingRitual
                     messages={[
-                      'Đang đọc 16 câu trả lời của bạn…',
+                      'Đang đọc 24 câu trả lời của bạn…',
                       'Đối chiếu với 16 kiểu tính cách…',
                       'Tìm điểm mạnh và điểm mù riêng…',
                       'Soạn bản đọc cá nhân hoá cho bạn…',
