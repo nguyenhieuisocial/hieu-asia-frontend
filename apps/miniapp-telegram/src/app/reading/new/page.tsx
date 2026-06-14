@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, Checkbox, Input, Label, Radio
 import { TgMainButton } from '@/components/tg-main-button';
 import { TgBackButton } from '@/components/tg-back-button';
 import { createReading, getOrCreateAnonUserId, type BirthData } from '@hieu-asia/supabase';
+import { getWebApp } from '@/lib/telegram-init';
 
 type Gender = 'nam' | 'nữ' | 'khác' | 'không nói';
 
@@ -30,7 +31,17 @@ export default function NewReadingPage() {
   const onSubmit = async () => {
     if (!valid || submitting) return;
     setSubmitting(true);
-    const userId = getOrCreateAnonUserId();
+    // Resolve the Telegram identity BEFORE creating the reading so it is stored under
+    // tg_<id> (not anon_<uuid>) when inside Telegram. The provider sets it async, so we
+    // await it here rather than racing it. Outside Telegram, fall back to the anon id.
+    let userId = getOrCreateAnonUserId();
+    try {
+      const wa = await getWebApp();
+      const tgId = wa?.initDataUnsafe?.user?.id;
+      if (tgId) userId = `tg_${tgId}`;
+    } catch {
+      /* not inside Telegram — keep the anon id */
+    }
     const birth: BirthData = {
       birth_date: birthDate,
       birth_time: unknownTime ? null : birthTime || null,
