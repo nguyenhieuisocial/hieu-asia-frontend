@@ -195,17 +195,23 @@ export function Scrollyteller({
               aria-labelledby={`${chapter.id}-title`}
               className="scroll-mt-32"
             >
-              {/* Mobile-only inline header (desktop reads from sticky column). */}
-              <header className="lg:hidden">
+              {/* Mobile shows the chapter header inline; on desktop the title
+                  is shown visually in the (aria-hidden) sticky column, so we
+                  keep this <h2> in the a11y tree as `lg:sr-only` rather than
+                  hiding the whole header with `lg:hidden`. With display:none the
+                  desktop heading outline skipped h1→h3 (Lighthouse heading-order
+                  failure on /methodology). sr-only keeps it in the tree and the
+                  aria-hidden sticky column means SR reads the title only once. */}
+              <header>
                 {chapter.eyebrow && (
-                  <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold">
+                  <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold lg:hidden">
                     <span className="mr-2 inline-block h-px w-6 bg-gold align-middle" />
                     {chapter.eyebrow}
                   </p>
                 )}
                 <h2
                   id={`${chapter.id}-title`}
-                  className="mt-4 font-sans text-section-display font-bold tracking-tight text-foreground"
+                  className="mt-4 font-sans text-section-display font-bold tracking-tight text-foreground lg:sr-only lg:mt-0"
                 >
                   {chapter.title}
                 </h2>

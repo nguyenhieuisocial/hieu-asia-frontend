@@ -238,6 +238,36 @@ html {
   color: hsl(var(--muted-foreground)); /* drop the 0.7 fade → full #6A6258 (AA) */
 }
 
+/* /methodology was authored dark-first: text-{rose,amber,jade}-300 on dark
+ * translucent card tints (bg-rose-950/20, bg-jade/10, bg-amber-500/10). In LIGHT
+ * mode those tints composite to muddy mid-tones and the bright-300 text drops to
+ * 1.06–4.4:1 (Lighthouse color-contrast). These accent classes are used site-wide
+ * so a global sweep is unsafe (the rose/amber families were intentionally left in
+ * the sweep above) — instead this is SCOPED to the page via `.methodology-a11y`
+ * (added on <main>). DARK is untouched by :not(.dark). The two extra classes give
+ * higher specificity than both Tailwind's utilities layer and the global jade
+ * override above, so these win inside /methodology. Replacement colors are
+ * pre-verified AA against the actual composited card backgrounds. */
+:root:not(.dark) .methodology-a11y .text-rose-300,
+:root:not(.dark) .methodology-a11y .text-rose-300\/80,
+:root:not(.dark) .methodology-a11y .text-rose-400 {
+  color: #a8201a; /* ≥5.9:1 on the cream/rose card tints — keeps the red "avoid" semantic */
+}
+:root:not(.dark) .methodology-a11y .text-amber-300 {
+  color: #785312; /* dark ochre-gold, ≥5.2:1 on the amber tints */
+}
+:root:not(.dark) .methodology-a11y .text-jade-300 {
+  color: #245c52; /* ≥5.4:1 — clears 4.5 on the darker jade-tinted badge bg */
+}
+:root:not(.dark) .methodology-a11y .text-muted-foreground\/80 {
+  color: hsl(var(--muted-foreground)); /* drop the 0.8 fade → full #6A6258 (≥4.8:1
+                                          on the bg-muted/40 step/table cards) */
+}
+:root:not(.dark) .methodology-a11y .bg-rose-950\/20 {
+  background-color: #f6e6e4; /* light rose tint → muted-foreground body text reaches
+                                4.96:1 (was 3.34 on the dark-tint mud) */
+}
+
 /* Safe-area-inset for iPhone notch / Android gesture nav.
  *
  * Wave 60.68 — added `padding-bottom` so the iPhone home-indicator no longer
