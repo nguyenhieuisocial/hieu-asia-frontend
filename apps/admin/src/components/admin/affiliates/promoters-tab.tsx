@@ -9,7 +9,7 @@
  */
 
 import * as React from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Card,
@@ -22,6 +22,7 @@ import {
   DialogFooter,
   toast,
 } from '@hieu-asia/ui';
+import { trackAdminMutation } from '@/lib/admin-breadcrumb';
 
 interface PromoterRow {
   user_id: string;
@@ -64,10 +65,31 @@ export function PromotersTab() {
     refetchInterval: 60_000,
   });
 
-  // Ban/unban mutation removed: the backend /ban route keys on the legacy KV
-  // affiliate-record id, but this table only exposes affiliate_network.user_id,
-  // so every call 404s. The Ban button is disabled (see below) until a backend
-  // ban-by-network-user_id route ships. Reparent keeps working (keys correctly).
+  const banMut = useMutation({
+    mutationFn: async ({ id, banned }: { id: string; banned: boolean }) => {
+      const r = await fetch(`/api/admin/affiliates/${id}/ban`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ banned }),
+      });
+      const d = await r.json();
+      if (!r.ok || !d.ok) throw new Error(d.error ?? `HTTP ${r.status}`);
+      return d;
+    },
+    onSuccess: (_d, vars) => {
+      // Wave 60.62.T1.1 — backfill audit breadcrumb. Destructive (ban/unban).
+      // PII-safe: only the action flag, no affiliate id.
+      trackAdminMutation('affiliates.promoters.ban', 'success', { banned: vars.banned });
+      toast.success('Đã cập nhật trạng thái');
+      qc.invalidateQueries({ queryKey: ['affiliate-promoters'] });
+    },
+    onError: (e: Error) => {
+      trackAdminMutation('affiliates.promoters.ban', 'failure', {
+        error: e.message.slice(0, 200),
+      });
+      toast.error(e.message);
+    },
+  });
 
   const filtered = React.useMemo(() => {
     const rows = q.data ?? [];
@@ -147,16 +169,14 @@ export function PromotersTab() {
                     <td className="py-2 pr-3 text-right font-mono">{r.l3_count}</td>
                     <td className="py-2 pr-3 text-muted-foreground text-xs">{dt(r.created_at)}</td>
                     <td className="py-2 flex flex-wrap gap-1">
-                      {/* Ban disabled: the /ban route keys on the legacy KV
-                          affiliate-record id, but this table only has
-                          affiliate_network.user_id → always 404. Needs a
-                          backend ban route keyed on network user_id (like
-                          reparent / verify-rail). */}
                       <Button
                         size="sm"
                         variant="ghost"
-                        disabled
-                        title="Tạm khoá: cần endpoint ban theo user_id của affiliate_network (chưa có ở backend)."
+                        onClick={() => {
+                          if (!confirm('Ban/Unban tài khoản này?')) return;
+                          banMut.mutate({ id: r.user_id, banned: r.status === 'active' });
+                        }}
+                        disabled={banMut.isPending}
                         className="border border-border"
                       >
                         {r.status === 'active' ? 'Ban' : 'Unban'}
