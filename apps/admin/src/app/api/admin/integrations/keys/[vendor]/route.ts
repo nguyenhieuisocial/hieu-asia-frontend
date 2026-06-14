@@ -7,7 +7,11 @@ const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
 type Ctx = { params: Promise<{ vendor: string }> };
 
 async function proxy(req: NextRequest, ctx: Ctx, method: 'POST' | 'DELETE') {
-  const auth = await requireAdminSession();
+  // Provider API keys (Anthropic/OpenAI/Google) are PRODUCTION secrets — setting or
+  // deleting them is owner-only, mirroring the /admin/secrets gate. The worker
+  // (/ai/keys/*) only checks the shared token (role-blind), so per-user role MUST be
+  // enforced here; without it a `viewer` could DoS the AI pipeline or swap a key.
+  const auth = await requireAdminSession('owner');
   if ('error' in auth) return auth.error;
   if (!TOKEN) {
     return NextResponse.json(
