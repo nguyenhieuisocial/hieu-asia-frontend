@@ -160,7 +160,18 @@ function resolveSiteOrigin(): string | undefined {
  */
 function withNextParam(callbackUrl: string | undefined, next: string | null | undefined): string | undefined {
   if (!callbackUrl) return undefined;
-  if (!next || typeof next !== 'string' || !next.startsWith('/')) return callbackUrl;
+  // Reject protocol-relative (`//evil.com`, `/\evil.com`) — they pass
+  // startsWith('/') but browsers resolve them cross-origin. Defense in depth:
+  // /auth/callback guards the actual redirect, but don't propagate a hostile
+  // value through the magic-link/OAuth roundtrip either (mirrors that guard).
+  if (
+    !next ||
+    typeof next !== 'string' ||
+    !next.startsWith('/') ||
+    next.startsWith('//') ||
+    next.startsWith('/\\')
+  )
+    return callbackUrl;
   const sep = callbackUrl.includes('?') ? '&' : '?';
   return `${callbackUrl}${sep}next=${encodeURIComponent(next)}`;
 }
