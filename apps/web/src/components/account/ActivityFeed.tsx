@@ -27,7 +27,7 @@ import { getSupabaseAuth } from '@/lib/auth-client';
 // Wave 60.59.b fix — package is `@hieu-asia/supabase` (not `-client`).
 // Wrong specifier broke `pnpm --filter web build`, blocking all deploys
 // after Wave 60.58 T2.1.
-import { listReadings } from '@hieu-asia/supabase';
+import { listMyReadings } from '@/lib/account-history';
 import { Skeleton } from '@hieu-asia/ui';
 
 type ItemKind = 'reading' | 'decision' | 'mentor' | 'journal';
@@ -120,12 +120,13 @@ function loadJournalFromLocal(): FeedItem | null {
 }
 
 /**
- * Latest reading session (hieu_asia.reading_sessions) via Edge Function.
- * `userId` is the authed Supabase user.id (== `auth.uid`).
+ * Latest reading session (hieu_asia.reading_sessions) via the secure same-origin
+ * /api/reading/list route. The server derives the user (auth uid + any claimed
+ * anon id) from the verified session, so we pass no user id from the client.
  */
-async function loadReadingFromDb(userId: string): Promise<FeedItem | null> {
+async function loadReadingFromDb(): Promise<FeedItem | null> {
   try {
-    const sessions = await listReadings(userId);
+    const sessions = await listMyReadings();
     if (!sessions.length) return null;
     // listReadings returns newest first per current Edge Fn contract, but
     // sort defensively in case that changes.
@@ -212,7 +213,7 @@ export function ActivityFeed() {
 
       // Run DB fetches in parallel; localStorage scans are sync.
       const [readingItem, mentorItem] = await Promise.all([
-        userId ? loadReadingFromDb(userId) : Promise.resolve(null),
+        userId ? loadReadingFromDb() : Promise.resolve(null),
         userId ? loadMentorFromDb() : Promise.resolve(null),
       ]);
       const decisionItem = loadDecisionsFromLocal();

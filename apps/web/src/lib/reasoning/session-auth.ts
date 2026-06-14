@@ -30,6 +30,27 @@ import { createClient } from '@supabase/supabase-js';
 export interface AuthedSession {
   userId: string;
   email: string | null;
+  /**
+   * Prior anonymous user id this account claimed at login, IF any.
+   *
+   * SECURITY: read from the GoTrue-signed `user_metadata` (set via the
+   * authenticated `supabase.auth.updateUser` call at /auth/callback), NOT from
+   * raw client input — so it is server-trusted exactly like `userId`. The value
+   * round-trips through `getUser(token)` (GoTrue) so a forged Authorization
+   * header can't inject an arbitrary anon id. Shape-validated to `anon_<uuid>`;
+   * anything else is dropped to null. Used so a logged-in user can see readings
+   * created under their prior anon id.
+   */
+  linkedAnonId: string | null;
+}
+
+// `anon_<uuid v4>` — must mirror getOrCreateAnonUserId() in @hieu-asia/supabase.
+const ANON_ID_RE =
+  /^anon_[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+function sanitizeLinkedAnonId(raw: unknown): string | null {
+  if (typeof raw !== 'string') return null;
+  return ANON_ID_RE.test(raw) ? raw : null;
 }
 
 let _anonClient: ReturnType<typeof createClient> | null = null;
@@ -81,5 +102,10 @@ export async function getSessionFromRequest(req: Request): Promise<AuthedSession
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
     return null;
   }
-  return { userId: id, email: data.user.email ?? null };
+  // user_metadata is part of the GoTrue-signed user record returned by
+  // getUser(token); reading the linked anon id from here (not the request body)
+  // is what keeps the reading-claim path free of an IDOR.
+  const meta = (data.user.user_metadata ?? {}) as Record<string, unknown>;
+  const linkedAnonId = sanitizeLinkedAnonId(meta.linked_anon_user_id);
+  return { userId: id, email: data.user.email ?? null, linkedAnonId };
 }
