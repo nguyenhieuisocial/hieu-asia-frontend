@@ -22,7 +22,9 @@ Chấm điểm báo cáo từ 0-10 dựa trên 5 tiêu chí:
 4. Caveat balance (0-2): Có disclaimer phù hợp cho topic nhạy cảm (tài chính/pháp lý/y tế)? Không quá nhiều caveat làm mất giá trị?
 5. Coherence (0-1): Các section nhất quán với nhau? Không mâu thuẫn?
 
-Trả về JSON: {"score": <0-10>, "reasoning": "<2-3 sentences>", "subscores": {"resonance": N, "actionability": N, "cultural_fit": N, "caveat_balance": N, "coherence": N}}`;
+Trả về JSON: {"score": <0-10>, "reasoning": "<2-3 sentences>", "subscores": {"resonance": N, "actionability": N, "cultural_fit": N, "caveat_balance": N, "coherence": N}}
+
+TUYỆT ĐỐI: câu trả lời của bạn CHỈ gồm đúng MỘT đối tượng JSON hợp lệ. KHÔNG lời dẫn ("Tôi sẽ chấm…"), KHÔNG giải thích ngoài JSON, KHÔNG markdown, KHÔNG \`\`\`. Ký tự đầu tiên phải là {.`;
 
 export interface JudgeVerdict {
   score: number;
@@ -72,8 +74,14 @@ Judge model: ${JUDGE_MODEL} (cross-vendor anti-self-bias)`;
     },
     body: JSON.stringify({
       model: JUDGE_MODEL,
-      system: JUDGE_SYSTEM_PROMPT,
-      messages: [{ role: 'user', content: userPrompt }],
+      // The /ai/role/* gateway reads the system prompt from a {role:'system'} message
+      // in `messages`, NOT a top-level `system` field — sending it as `system` meant
+      // the judge instructions never reached the model, so it replied conversationally
+      // ("Tôi hiểu rằng…") instead of JSON. Put the instructions in messages.
+      messages: [
+        { role: 'system', content: JUDGE_SYSTEM_PROMPT },
+        { role: 'user', content: userPrompt },
+      ],
       max_tokens: 500,
       temperature: 0.0, // deterministic judgment
       response_format: { type: 'json_object' },
@@ -84,16 +92,26 @@ Judge model: ${JUDGE_MODEL} (cross-vendor anti-self-bias)`;
     throw new Error(`Judge LLM call failed: ${response.status} ${await response.text()}`);
   }
 
-  // The /ai/role/* gateway returns { ok, response, vendor, model } — the completion
-  // text is in `response`, not `content` (reading `data.content` gave undefined →
-  // `JSON.parse(undefined)` → "undefined is not valid JSON" for every judged sample).
-  const data = (await response.json()) as { ok?: boolean; response?: string };
-  if (!data.response) {
-    throw new Error(`Judge LLM returned no response text: ${JSON.stringify(data).slice(0, 200)}`);
+  // The /ai/role/* gateway is a PROSE endpoint: the completion is in `response` (not
+  // `content`), it IGNORES response_format, and the model often wraps the verdict in
+  // commentary ("Tôi sẽ chấm…") or — for some vendors — returns `response` already
+  // parsed as an object. Be robust to all three: object → use directly; string → pull
+  // out the first balanced {...} JSON object (tolerates lead-in/trailing prose + fences).
+  const data = (await response.json()) as { ok?: boolean; response?: unknown };
+  const raw = data?.response;
+  let parsed: JudgeVerdict;
+  if (raw && typeof raw === 'object') {
+    parsed = raw as JudgeVerdict;
+  } else if (typeof raw === 'string' && raw.indexOf('{') !== -1) {
+    const start = raw.indexOf('{');
+    const end = raw.lastIndexOf('}');
+    if (end <= start) {
+      throw new Error(`Judge LLM returned no JSON object: ${raw.slice(0, 200)}`);
+    }
+    parsed = JSON.parse(raw.slice(start, end + 1)) as JudgeVerdict;
+  } else {
+    throw new Error(`Judge LLM returned no usable response: ${JSON.stringify(data).slice(0, 200)}`);
   }
-  // response_format=json_object should yield bare JSON, but strip ```json fences defensively.
-  const jsonText = data.response.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
-  const parsed = JSON.parse(jsonText) as JudgeVerdict;
 
   // Validate shape
   if (typeof parsed.score !== 'number' || parsed.score < 0 || parsed.score > 10) {
