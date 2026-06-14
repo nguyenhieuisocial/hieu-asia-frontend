@@ -62,6 +62,7 @@ import {
 import { CustomerAvatar } from '@/components/admin/customers/CustomerAvatar';
 import { PlanBadge } from '@/components/admin/customers/PlanBadge';
 import { CustomerRowActions } from '@/components/admin/customers/CustomerRowActions';
+import { SetPlanDialog } from '@/components/admin/customers/SetPlanDialog';
 import { fmtDate } from '@/components/admin/customers/format';
 import type { Customer } from '@/components/admin/customers/types';
 import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
@@ -286,6 +287,7 @@ export default function CustomersPage() {
         icon={<Users className="h-5 w-5" aria-hidden />}
         actions={
           <>
+            <SetPlanDialog />
             <Button
               variant="outline"
               size="sm"
