@@ -13,7 +13,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb } from '@/lib/seo/jsonld';
-import { getCaseStudy, listCaseStudies } from '@/lib/case-studies';
+import { getCaseStudy, listCaseStudies, ILLUSTRATIVE_LABEL } from '@/lib/case-studies';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 interface PageProps {
@@ -79,7 +79,10 @@ export default async function CaseStudyPage({ params }: PageProps) {
           </Link>
 
           <header className="mt-8">
-            <div className="flex items-center gap-3 text-xs text-muted-foreground">
+            <p className="inline-flex rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-[11px] font-medium text-gold/90">
+              {c.illustrativeLabel}
+            </p>
+            <div className="mt-4 flex items-center gap-3 text-xs text-muted-foreground">
               <span className="font-mono uppercase tracking-[0.2em] text-gold/85">
                 {c.year}
               </span>
@@ -104,7 +107,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
             <p>{c.decision}</p>
           </Section>
 
-          <Section title="Hồi tưởng (người dùng tự kể)">
+          <Section title="Chiêm nghiệm (tình huống minh hoạ)">
             <blockquote className="border-l-2 border-gold/40 pl-5 italic text-foreground/85">
               {c.reflection}
             </blockquote>
@@ -129,11 +132,12 @@ export default async function CaseStudyPage({ params }: PageProps) {
             <div className="flex items-start gap-3">
               <Shield className="mt-0.5 h-5 w-5 flex-shrink-0 text-gold/80" aria-hidden="true" />
               <div className="text-sm leading-relaxed text-muted-foreground">
-                <p className="font-medium text-foreground/90">Cam kết riêng tư</p>
+                <p className="font-medium text-foreground/90">{ILLUSTRATIVE_LABEL}</p>
                 <p className="mt-1">
-                  Tất cả case studies đều được ẩn danh hoá: không tên thật, không
-                  ngày sinh cụ thể, không chi tiết nhận diện. Người dùng có quyền
-                  rút lại hoặc chỉnh sửa bất cứ lúc nào. Đọc thêm{' '}
+                  Đây là một kịch bản tổng hợp do chúng tôi dựng để minh hoạ quy
+                  trình ra quyết định — không phải hồ sơ của một người dùng có
+                  thật. Nhân vật, hoàn cảnh và lá số đều là ví dụ, không gắn với
+                  bất kỳ cá nhân nào. Đọc thêm{' '}
                   <Link
                     href="/privacy"
                     className="text-gold/90 underline-offset-2 hover:text-gold hover:underline"

@@ -88,7 +88,17 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
   React.useEffect(() => {
     if (!authLoading && authedUser) {
       const next = nextProp ?? searchParams.get('next');
-      router.replace(next && next.startsWith('/') ? next : '/account');
+      // Open-redirect guard: same-origin relative path only. `//evil.com` and
+      // `/\evil.com` are protocol-relative — browsers treat them as absolute —
+      // so `startsWith('/')` alone is not enough; reject those too.
+      router.replace(
+        next &&
+          next.startsWith('/') &&
+          !next.startsWith('//') &&
+          !next.startsWith('/\\')
+          ? next
+          : '/account',
+      );
     }
   }, [authLoading, authedUser, router, searchParams, nextProp]);
 

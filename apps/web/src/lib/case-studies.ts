@@ -1,30 +1,40 @@
 /**
- * Case studies — anonymized user narratives.
+ * Case studies — illustrative composite narratives (NOT real users).
  *
- * Showcases how Tử Vi + Decision Brief was applied to a real life decision.
- * Privacy: no birth data, no real names (T., A., M.), no identifying details.
- * Source: paraphrased + de-identified user feedback, used with permission.
+ * Each case is a worked example written to show how Tử Vi + Decision Brief
+ * could be applied to a life decision. The personas, situations, charts and
+ * reflections are composites authored to teach the process — they are not
+ * accounts of identified real users, and there is no claim of consent.
+ *
+ * The `illustrative` flag must surface to readers in the UI label.
  */
 
 export interface CaseStudy {
   slug: string;
   title: string;
   excerpt: string;
-  /** Persona summary — generic enough to not identify anyone. */
+  /** Persona summary — a composite, not a real person. */
   persona: string;
-  /** Year the decision was made. */
+  /** Year the example is set in. */
   year: number;
   /** What the chart highlighted — referenced to methodology, not prescription. */
   insight: string;
-  /** What they decided + the broad outcome. */
+  /** The worked-through decision + the broad outcome in the example. */
   decision: string;
-  /** Their reflection in their own (paraphrased) words. */
+  /** Reflection written in-character for the example. */
   reflection: string;
   /** Methodology pages this case touches — for cross-link. */
   related: Array<{ href: string; label: string }>;
   /** Disclaimer: case studies illustrate process, not outcome guarantee. */
   publishedAt: string;
+  /** Always true: this is an illustrative composite, not a real user. */
+  illustrative: true;
+  /** UI label that must be shown to readers. */
+  illustrativeLabel: string;
 }
+
+/** Shared label so every case carries the same unambiguous wording. */
+export const ILLUSTRATIVE_LABEL = 'Tình huống minh hoạ — không phải người dùng thật';
 
 export const CASE_STUDIES: readonly CaseStudy[] = [
   {
@@ -46,6 +56,8 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
       { href: '/decisions/new', label: 'Tạo Decision Brief cho quyết định của bạn' },
     ],
     publishedAt: '2026-03-08',
+    illustrative: true,
+    illustrativeLabel: ILLUSTRATIVE_LABEL,
   },
   {
     slug: 'chon-truong-cho-con-vao-cap-2',
@@ -66,6 +78,8 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
       { href: '/methodology/tu-vi', label: 'Cung Phụ Mẫu trong Methodology' },
     ],
     publishedAt: '2026-02-18',
+    illustrative: true,
+    illustrativeLabel: ILLUSTRATIVE_LABEL,
   },
   {
     slug: 'doi-nghe-sau-30-tuoi',
@@ -86,6 +100,8 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
       { href: '/lo-trinh/su-nghiep', label: 'Lộ trình nghề nghiệp' },
     ],
     publishedAt: '2026-04-22',
+    illustrative: true,
+    illustrativeLabel: ILLUSTRATIVE_LABEL,
   },
   {
     slug: 'quan-he-vo-chong-ran-nut',
@@ -107,6 +123,8 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
       { href: '/methodology/tu-vi', label: 'Methodology Tử Vi đầy đủ' },
     ],
     publishedAt: '2026-04-05',
+    illustrative: true,
+    illustrativeLabel: ILLUSTRATIVE_LABEL,
   },
   {
     slug: 'dau-tu-bat-dong-san-dau-tien',
@@ -128,6 +146,8 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
       { href: '/methodology/tu-vi', label: 'Methodology Tử Vi đầy đủ' },
     ],
     publishedAt: '2026-03-20',
+    illustrative: true,
+    illustrativeLabel: ILLUSTRATIVE_LABEL,
   },
   {
     slug: 'khoi-nghiep-lan-thu-3',
@@ -149,6 +169,8 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
       { href: '/methodology/tu-vi', label: 'Methodology Tử Vi đầy đủ' },
     ],
     publishedAt: '2026-05-10',
+    illustrative: true,
+    illustrativeLabel: ILLUSTRATIVE_LABEL,
   },
 ] as const;
 

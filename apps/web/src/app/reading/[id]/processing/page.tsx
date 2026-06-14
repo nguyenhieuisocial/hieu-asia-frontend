@@ -15,9 +15,9 @@ import { useReadingSession } from '@/lib/use-reading-session';
 
 const STEP_ORDER: { key: StepKey; label: string }[] = [
   { key: 'prepare_context', label: 'Đang dựng dữ liệu nền…' },
-  { key: 'vision', label: 'Đang phân tích ảnh bàn tay…' },
-  { key: 'logic', label: 'Đang lập ma trận ngày sinh…' },
-  { key: 'psychology', label: 'Đang đối chiếu tâm lý hành vi…' },
+  { key: 'vision', label: 'Đang lập lá số theo ngày sinh…' },
+  { key: 'logic', label: 'Đang luận giải cung mệnh & cách cục…' },
+  { key: 'psychology', label: 'Đang phân tích đại vận, lưu niên…' },
   { key: 'alignment', label: 'Đang đồng bộ Hội đồng Agent…' },
   { key: 'report', label: 'Đang biên tập Cẩm Nang Cuộc Đời…' },
 ];
@@ -37,6 +37,12 @@ function stateToActiveIndex(state: ReadingState): number {
   }
 
   const [phase, status] = state.split('_') as [string, string | undefined];
+  // The 2-phase finalize/handoff happens after alignment, while the report is
+  // being written. Pin it to the last step so the stepper never jumps back to
+  // step 1 near the very end.
+  if (phase === 'finalize' || phase === 'handoff') {
+    return STEP_ORDER.length - 1;
+  }
   const idx = STEP_ORDER.findIndex((s) => s.key === phase);
   if (idx === -1) return 0;
   return status === 'done' ? idx + 1 : idx;
@@ -74,9 +80,12 @@ export default function ProcessingPage() {
     return () => window.clearTimeout(t);
   }, [state, readingId, router]);
 
-  const failed = !!state && state.startsWith('error_at_');
+  const failed =
+    !!state && (state === 'error_internal' || state.startsWith('error_at_'));
   const errorMessage = failed
-    ? `Phân tích thất bại ở bước "${state!.replace('error_at_', '')}".`
+    ? state === 'error_internal'
+      ? 'Hệ thống gặp sự cố khi tạo báo cáo. Bạn có thể thử lại — chúng tôi sẽ không trừ thêm chi phí.'
+      : `Phân tích thất bại ở bước "${state!.replace('error_at_', '')}".`
     : null;
 
   React.useEffect(() => {
@@ -84,6 +93,22 @@ export default function ProcessingPage() {
       toast.error('Phân tích thất bại', { description: errorMessage });
     }
   }, [errorMessage]);
+
+  // Watchdog: if the backend goes silent (e.g. a stuck `report_pending` /
+  // `finalize_handoff`) we never reach a terminal state and the stepper would
+  // spin forever. After ~150s with no terminal state, surface a non-fatal
+  // "taking longer than expected" notice with a retry + contact path. We don't
+  // hard-fail — the report may still arrive — so the stepper keeps running.
+  const [slow, setSlow] = React.useState(false);
+  React.useEffect(() => {
+    if (failed || state === 'report_ready') {
+      setSlow(false);
+      return;
+    }
+    setSlow(false);
+    const t = window.setTimeout(() => setSlow(true), 150_000);
+    return () => window.clearTimeout(t);
+  }, [failed, state, readingId]);
 
   const steps = React.useMemo(() => buildSteps(state), [state]);
 
@@ -115,7 +140,7 @@ export default function ProcessingPage() {
           Hội đồng Agent đang phân tích
         </h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          Sáu chuyên gia AI đang đối chiếu ngày sinh, đường chỉ tay và tính cách của bạn.
+          Sáu chuyên gia AI đang lập lá số và luận giải dựa trên ngày, giờ sinh của bạn.
         </p>
       </header>
 
@@ -133,7 +158,10 @@ export default function ProcessingPage() {
                 }
               />
             ) : (
-              <ProcessingStepper steps={steps} />
+              <>
+                <ProcessingStepper steps={steps} />
+                {slow && <SlowNotice onRetry={retry} />}
+              </>
             )}
           </CardContent>
         </Card>
@@ -165,6 +193,31 @@ function ErrorBlock({
         <Button onClick={onRetry}>Thử lại</Button>
         <Button variant="outline" onClick={onBack}>
           Quay lại khảo sát
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function SlowNotice({ onRetry }: { onRetry: () => void }) {
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="mt-6 space-y-3 rounded-card-editorial border border-gold/30 bg-card/40 p-5 text-center"
+    >
+      <p className="font-heading text-base text-foreground">
+        Báo cáo lâu hơn dự kiến
+      </p>
+      <p className="text-sm text-muted-foreground">
+        Quá trình phân tích đang mất nhiều thời gian hơn bình thường. Báo cáo
+        vẫn có thể đang được hoàn tất — bạn có thể chờ thêm, thử lại, hoặc liên
+        hệ nếu cần hỗ trợ.
+      </p>
+      <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+        <Button onClick={onRetry}>Thử lại</Button>
+        <Button variant="outline" asChild>
+          <a href="mailto:hi@hieu.asia">Liên hệ hỗ trợ</a>
         </Button>
       </div>
     </div>
