@@ -45,6 +45,31 @@ export async function sha256Hex(input: string): Promise<string> {
     .join('');
 }
 
+/**
+ * Sanitize a post-login `?next=` redirect target to a SAME-ORIGIN path.
+ *
+ * Open-redirect fix: a bare `next.startsWith('/')` check is NOT enough — the
+ * browser normalizes protocol-relative `//evil.com` and backslash `/\evil.com`
+ * into a cross-origin URL, so those would redirect the freshly-authenticated
+ * admin off-site (phishing / token-handoff). Accept only a real same-origin
+ * absolute path; anything else falls back to `/`.
+ */
+export function safeNextPath(next: string | null | undefined): string {
+  if (!next) return '/';
+  // The WHATWG URL parser STRIPS ASCII tab/newline/CR from input before parsing,
+  // so `/\t/evil.com` (or \n, \r) would smuggle a protocol-relative `//evil.com`
+  // past a naive prefix check and redirect off-site. Strip those first, then
+  // reject any other control char defensively, then validate the result.
+  const cleaned = next.replace(/[\t\n\r]/g, '');
+  for (let i = 0; i < cleaned.length; i++) {
+    const code = cleaned.charCodeAt(i);
+    if (code < 0x20 || code === 0x7f) return "/"; // reject control chars (URL parser strips some)
+  }
+  if (!cleaned.startsWith('/')) return '/';
+  if (cleaned.startsWith('//') || cleaned.startsWith('/\\')) return '/';
+  return cleaned;
+}
+
 /** Constant-time string compare for equal-length strings. */
 export function constantTimeEqual(a: string, b: string): boolean {
   if (a.length !== b.length) return false;

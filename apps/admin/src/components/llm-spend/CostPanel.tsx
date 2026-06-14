@@ -24,6 +24,12 @@ function fmtUsd(v: number) {
 
 type Range = 7 | 14 | 30 | 90;
 
+// The backend /admin/cost/by_day endpoint is hardcoded to a 30-day window
+// (see backend admin/data.ts), so ranges > 30d cannot return more data — the
+// 90d option would silently render the same 30 days under a "90 ngày" label.
+// Disable it (honest UI) until the backend accepts a `days` param.
+const MAX_BACKEND_DAYS = 30;
+
 const RANGE_OPTIONS: { value: Range; label: string }[] = [
   { value: 7, label: '7d' },
   { value: 14, label: '14d' },
@@ -89,21 +95,31 @@ export function CostPanel() {
         </p>
         <div className="flex shrink-0 items-center gap-2">
           <div className="inline-flex rounded-md border border-gold/20 bg-card/60 p-0.5">
-            {RANGE_OPTIONS.map((r) => (
-              <button
-                key={r.value}
-                type="button"
-                onClick={() => setDays(r.value)}
-                className={cn(
-                  'rounded px-3 py-1 text-xs transition-colors',
-                  days === r.value
-                    ? 'bg-gold/20 text-gold'
-                    : 'text-muted-foreground hover:bg-gold/5',
-                )}
-              >
-                {r.label}
-              </button>
-            ))}
+            {RANGE_OPTIONS.map((r) => {
+              const unsupported = r.value > MAX_BACKEND_DAYS;
+              return (
+                <button
+                  key={r.value}
+                  type="button"
+                  onClick={() => setDays(r.value)}
+                  disabled={unsupported}
+                  title={
+                    unsupported
+                      ? 'Backend hiện chỉ trả tối đa 30 ngày — chọn 90d sẽ không thêm dữ liệu.'
+                      : undefined
+                  }
+                  className={cn(
+                    'rounded px-3 py-1 text-xs transition-colors',
+                    unsupported && 'cursor-not-allowed opacity-40',
+                    days === r.value
+                      ? 'bg-gold/20 text-gold'
+                      : 'text-muted-foreground hover:bg-gold/5',
+                  )}
+                >
+                  {r.label}
+                </button>
+              );
+            })}
           </div>
           <Button
             variant="outline"

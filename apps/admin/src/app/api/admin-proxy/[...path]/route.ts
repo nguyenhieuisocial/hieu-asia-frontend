@@ -27,6 +27,38 @@ export const dynamic = 'force-dynamic';
 const GATEWAY = process.env.HIEU_API_GATEWAY_URL ?? 'https://api.hieu.asia';
 const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
 
+// Per-user role enforcement (mirrors ROLE_RANK in lib/auth-server.ts; redefined
+// inline so the edge proxy doesn't pull in `cookies()`/sbServer from that module).
+//
+// WHY THIS EXISTS (Wave 64.x security fix): the backend `requireAdmin` only
+// constant-time-compares the shared X-Admin-Token and never reads a per-user
+// role; it treats X-Admin-Email as audit metadata only. This proxy injects that
+// master token for EVERY authenticated session, so WITHOUT a gate here a
+// `viewer` (intended read-only) could issue refunds, grant comped paid-reading
+// access, reveal/rotate production secrets, retry paid pipelines, etc. Per-user
+// authorization MUST happen in the proxy — there is no backend fallback.
+const ROLE_RANK = { viewer: 0, admin: 1, owner: 2 } as const;
+
+/**
+ * Minimum role required to forward a given request.
+ *   - GET (read)              → viewer  (dashboards stay readable for read-only ops)
+ *   - mutations (POST/PATCH/DELETE) → admin
+ *   - production secrets (read OR write), SePay refunds/reconcile (money),
+ *     and comped paid-access grants → owner
+ */
+function requiredRank(method: string, segments: string[]): number {
+  const path = segments.join('/');
+  // Owner-only surfaces: production secrets, money movement, comped access.
+  if (path === 'admin/secrets' || path.startsWith('admin/secrets/')) return ROLE_RANK.owner;
+  if (path === 'admin/sepay/refund' || path.startsWith('admin/sepay/refund/')) return ROLE_RANK.owner;
+  if (path === 'admin/sepay/reconcile') return ROLE_RANK.owner;
+  if (segments[0] === 'admin' && segments[1] === 'sessions' && segments[3] === 'access') {
+    return ROLE_RANK.owner;
+  }
+  // Default: reads open to viewer; any write needs admin.
+  return method === 'GET' ? ROLE_RANK.viewer : ROLE_RANK.admin;
+}
+
 async function forward(
   req: NextRequest,
   ctx: { params: Promise<{ path: string[] }> },
@@ -39,18 +71,26 @@ async function forward(
   if (!session) {
     return NextResponse.json({ ok: false, error: 'unauthenticated' }, { status: 401 });
   }
-  if (!TOKEN) {
-    return NextResponse.json(
-      { ok: false, error: 'HIEU_API_ADMIN_TOKEN not configured on the admin app' },
-      { status: 503 },
-    );
-  }
   const { path } = await ctx.params;
   const segments = path ?? [];
   // Block path traversal / injection: each segment must be a clean slug.
   // Rejects `..`, `.`, and anything outside [A-Za-z0-9_-] before building the URL.
   if (segments.some((seg) => !/^[A-Za-z0-9_-]+$/.test(seg))) {
     return NextResponse.json({ ok: false, error: 'invalid path' }, { status: 400 });
+  }
+  // Per-user role gate (see ROLE_RANK note above). Without this, role is decorative
+  // for everything routed through the generic proxy.
+  if (ROLE_RANK[session.role] < requiredRank(method, segments)) {
+    return NextResponse.json(
+      { ok: false, error: 'forbidden: insufficient role for this action' },
+      { status: 403 },
+    );
+  }
+  if (!TOKEN) {
+    return NextResponse.json(
+      { ok: false, error: 'HIEU_API_ADMIN_TOKEN not configured on the admin app' },
+      { status: 503 },
+    );
   }
   const subpath = segments.map(encodeURIComponent).join('/');
   const url = new URL(req.url);

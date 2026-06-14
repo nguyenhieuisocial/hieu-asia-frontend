@@ -23,7 +23,7 @@
  *
  * Behavioural parity with the pre-redesign page:
  *   - Bulk select + CSV export of selection
- *   - Export-all CSV (proxied through /api/admin/sessions/export)
+ *   - Export CSV of the visible result set (client-side via csv-export util)
  *   - Re-orchestrate single + bulk-delete with confirm phrase
  *   - URL-synced filter (?status=…&sort=…) for dashboard CTAs
  */
@@ -72,6 +72,7 @@ import {
 } from 'lucide-react';
 import type { TaskStatus } from '@hieu-asia/types';
 import { listSessions, getSessionsStats, patchSession } from '@/lib/admin-api';
+import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
 import type { AdminSession } from '@/lib/mock-data';
 import { MockBanner } from '@/components/mock-banner';
 import { PageHeader } from '@/components/admin/page-header';
@@ -94,6 +95,53 @@ import {
 
 const PAGE_SIZE = 20;
 const CONFIRM_PHRASE = 'XÓA HÀNG LOẠT';
+
+// CSV export columns + pretty headers. The backend /export endpoint only
+// returns rows when scoped to a single user_id, so export runs client-side
+// from the rows already in hand — it covers the current result set the
+// operator can see, not the whole DB.
+const SESSION_CSV_HEADERS = {
+  short_code: 'Mã phiên',
+  session_id: 'Session ID',
+  created_at: 'Tạo lúc',
+  user_email: 'Email',
+  user_id: 'User ID',
+  status: 'Trạng thái',
+  paid: 'Đã trả',
+  tier: 'Gói',
+  reading_type: 'Loại',
+  channel: 'Kênh',
+  country: 'Quốc gia',
+  city: 'Thành phố',
+  duration_seconds: 'Thời lượng (giây)',
+  primary_concern: 'Mối quan tâm',
+  label: 'Tên gợi nhớ',
+  note: 'Ghi chú',
+  error: 'Lỗi',
+} as const;
+
+/** Flatten an AdminSession into a CSV-friendly row. */
+function sessionToCsvRow(s: AdminSession): Record<string, string | number | boolean | null> {
+  return {
+    short_code: s.short_code ?? '',
+    session_id: s.session_id,
+    created_at: s.created_at ?? '',
+    user_email: s.user_email ?? '',
+    user_id: s.user_id ?? '',
+    status: s.status,
+    paid: s.paid ?? '',
+    tier: s.tier ?? '',
+    reading_type: s.reading_type ?? '',
+    channel: s.channel ?? '',
+    country: s.country ?? '',
+    city: s.city ?? '',
+    duration_seconds: s.duration_seconds ?? '',
+    primary_concern: s.primary_concern ?? '',
+    label: s.label ?? '',
+    note: s.note ?? '',
+    error: s.error ?? '',
+  };
+}
 
 type SortOrder = 'newest' | 'oldest';
 type StatusFilter = TaskStatus | '';
@@ -184,16 +232,6 @@ function parseStatusParam(raw: string | null): StatusFilter {
 
 function parseSortParam(raw: string | null): SortOrder {
   return raw === 'oldest' ? 'oldest' : 'newest';
-}
-
-/** Trigger a browser download — proxy may not set Content-Disposition. */
-function downloadUrl(url: string) {
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `hieu-asia-sessions-${new Date().toISOString().slice(0, 10)}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
 }
 
 async function reOrchestrate(sessionId: string) {
@@ -356,8 +394,24 @@ function AdminSessionsPageInner() {
     return m;
   }, [rows, page]);
 
-  const total = stats?.total ?? data?.total ?? 0;
-  const totalPages = Math.max(1, Math.ceil((data?.total ?? total) / PAGE_SIZE));
+  // Any filter active → the whole-DB /stats total no longer describes the
+  // result set; fall back to the filtered data.total so the count + paging
+  // reflect what the operator is actually looking at (#50).
+  const filterActive = !!(
+    search ||
+    status ||
+    paid ||
+    readingType ||
+    channel ||
+    country ||
+    fromDate ||
+    toDate ||
+    userId
+  );
+  const total = filterActive
+    ? (data?.total ?? 0)
+    : (stats?.total ?? data?.total ?? 0);
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   // Page-slice aggregates — fallback when /stats endpoint is unavailable.
   const completedCountPage = rows.filter((r) => r.status === 'completed').length;
@@ -496,21 +550,24 @@ function AdminSessionsPageInner() {
     refetch();
   }, [refetch]);
 
+  // CSV exports run client-side from the rows already fetched (the visible
+  // result set, current filter + page). The backend /export endpoint only
+  // returns data when scoped to a single user_id, so an "all" call there
+  // yields a header-only file — this keeps the button honest (#18).
   const handleExportAll = React.useCallback(() => {
-    const qs = new URLSearchParams({ format: 'csv' });
-    if (status) qs.set('status', status);
-    if (search) qs.set('search', search);
-    downloadUrl(`/api/admin/sessions/export?${qs.toString()}`);
-    toast.success('Đang tải CSV…');
-  }, [status, search]);
+    if (rows.length === 0) return;
+    exportToCSV(rows.map(sessionToCsvRow), fmtCsvFilename('sessions'), SESSION_CSV_HEADERS);
+    toast.success(`Đang tải CSV ${rows.length} phiên (trang hiện tại)…`);
+  }, [rows]);
 
   const handleExportSelected = React.useCallback(() => {
     if (selected.length === 0) return;
-    const qs = new URLSearchParams({ format: 'csv' });
-    qs.set('session_ids', selected.join(','));
-    downloadUrl(`/api/admin/sessions/export?${qs.toString()}`);
-    toast.success(`Đang tải CSV ${selected.length} phiên đã chọn…`);
-  }, [selected]);
+    const picked = new Set(selected);
+    const chosen = rows.filter((r) => picked.has(r.session_id));
+    if (chosen.length === 0) return;
+    exportToCSV(chosen.map(sessionToCsvRow), fmtCsvFilename('sessions'), SESSION_CSV_HEADERS);
+    toast.success(`Đang tải CSV ${chosen.length} phiên đã chọn…`);
+  }, [selected, rows]);
 
   const handleClearSelected = React.useCallback(() => {
     setSelected([]);
@@ -852,17 +909,7 @@ function AdminSessionsPageInner() {
   const countryLabelSel = country
     ? `${countryFlag(country)} ${country}`.trim()
     : 'Tất cả quốc gia';
-  const hasActiveFilter = !!(
-    search ||
-    status ||
-    paid ||
-    readingType ||
-    channel ||
-    country ||
-    fromDate ||
-    toDate ||
-    userId
-  );
+  const hasActiveFilter = filterActive;
   const showError = !!error;
   const errorMsg = (error as Error | undefined)?.message;
 
@@ -890,9 +937,10 @@ function AdminSessionsPageInner() {
             size="sm"
             onClick={handleExportAll}
             disabled={rows.length === 0}
+            title="Xuất các phiên đang hiển thị trên trang hiện tại ra file CSV."
           >
             {ICON_DOWNLOAD}
-            Xuất CSV tất cả
+            Xuất CSV trang này
           </Button>
         }
       />
@@ -955,13 +1003,16 @@ function AdminSessionsPageInner() {
         <CardHeader>
           <CardTitle>Bộ lọc</CardTitle>
           <CardDescription>
-            Tìm theo session_id, email, hoặc nội dung mối quan tâm.
+            Tìm theo session_id, email, hoặc nội dung mối quan tâm — chỉ lọc
+            trong trang đang tải (dùng bộ lọc trạng thái / thanh toán / ngày để
+            thu hẹp trên toàn hệ thống).
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap items-center gap-3">
             <Input
-              placeholder="Tìm session_id / email / nội dung…"
+              placeholder="Tìm trong trang này: session_id / email / nội dung…"
+              title="Tìm kiếm chỉ lọc các phiên đang hiển thị trên trang hiện tại (chưa hỗ trợ tìm toàn hệ thống)."
               value={search}
               onChange={handleSearch}
               className="min-w-0 flex-1 sm:max-w-md"

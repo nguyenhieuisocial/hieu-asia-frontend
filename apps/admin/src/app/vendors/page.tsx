@@ -117,17 +117,19 @@ function VendorCard({ p }: { p: ProviderRow }) {
   const [testing, setTesting] = React.useState(false);
   const [testResult, setTestResult] = React.useState<{ ok: boolean; msg: string } | null>(null);
 
-  const testConnection = async () => {
+  // #37: this does NOT make a live test call — it re-reads /admin/vendors and
+  // reports whether credentials are configured. Named accordingly to avoid
+  // implying a real round-trip to the vendor.
+  const checkKeyConfig = async () => {
     setTesting(true);
     setTestResult(null);
     try {
-      // Calling /ai/role/mentor would need SERVICE_TOKEN — instead test via /ai/providers admin endpoint
       const r = await fetch('/api/admin/vendors', { cache: 'no-store' });
       const d = await r.json();
       if (d.ok) {
         const refreshed = (d.providers as ProviderRow[]).find(x => x.vendor === p.vendor);
         if (refreshed && (refreshed.api_key || refreshed.oauth) || p.vendor === 'cloudflare') {
-          setTestResult({ ok: true, msg: 'Credentials present, ready to route.' });
+          setTestResult({ ok: true, msg: 'Đã có khoá/credentials — sẵn sàng route.' });
         } else {
           setTestResult({ ok: false, msg: 'Chưa có credentials.' });
         }
@@ -160,15 +162,18 @@ function VendorCard({ p }: { p: ProviderRow }) {
       <CardContent className="space-y-3">
         <div className="text-xs text-muted-foreground">{status.label}</div>
 
+        {/* #37: backend /admin/vendors/status returns hardcoded 0 / null for
+            these — telemetry (Langfuse) chưa wire. Show "chưa đo" thay vì số 0
+            giả để không ngụ ý đã đo. */}
         <dl className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs">
           <dt className="text-muted-foreground">Requests 7d</dt>
-          <dd className="tabular-nums text-foreground/85">{p.requests_7d.toLocaleString('vi-VN')}</dd>
+          <dd className="text-muted-foreground/70">chưa đo</dd>
           <dt className="text-muted-foreground">Fallback 7d</dt>
-          <dd className="tabular-nums text-foreground/85">{p.fallback_count_7d}</dd>
+          <dd className="text-muted-foreground/70">chưa đo</dd>
           <dt className="text-muted-foreground">p50 / p95</dt>
-          <dd className="tabular-nums font-mono text-foreground/85">{p.latency_p50_ms} / {p.latency_p95_ms} ms</dd>
+          <dd className="text-muted-foreground/70">chưa đo</dd>
           <dt className="text-muted-foreground">Last used</dt>
-          <dd className="font-mono text-[11px] text-muted-foreground">{p.last_used ?? '—'}</dd>
+          <dd className="font-mono text-[11px] text-muted-foreground">{p.last_used ?? 'chưa đo'}</dd>
         </dl>
 
         {testResult && (
@@ -185,11 +190,11 @@ function VendorCard({ p }: { p: ProviderRow }) {
 
         <div className="flex flex-wrap gap-2 pt-1">
           <button
-            onClick={testConnection}
+            onClick={checkKeyConfig}
             disabled={testing}
             className="rounded border border-gold/30 px-2.5 py-1 text-xs text-gold transition-all duration-300 ease-editorial hover:bg-gold/10 disabled:opacity-50"
           >
-            {testing ? 'Đang test…' : 'Test connection'}
+            {testing ? 'Đang kiểm tra…' : 'Kiểm tra cấu hình khoá'}
           </button>
           {p.vendor !== 'cloudflare' && (
             <Link
@@ -251,14 +256,9 @@ export default function VendorsPage() {
         const connected = providers.filter(
           (p) => p.api_key || p.oauth || p.vendor === 'cloudflare',
         ).length;
-        const totalRequests = providers.reduce((s, p) => s + (p.requests_7d ?? 0), 0);
-        const totalFallback = providers.reduce((s, p) => s + (p.fallback_count_7d ?? 0), 0);
-        const avgP95 =
-          providers.length > 0
-            ? Math.round(
-                providers.reduce((s, p) => s + (p.latency_p95_ms ?? 0), 0) / providers.length,
-              )
-            : 0;
+        // #37: requests / fallback / latency are hardcoded 0 by the backend
+        // (Langfuse telemetry chưa wire), so they're shown as "chưa đo" instead
+        // of fabricated aggregates. Only "Connected" reflects real state.
         return (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <KpiCard
@@ -270,24 +270,24 @@ export default function VendorsPage() {
             />
             <KpiCard
               label="Requests 7d"
-              value={totalRequests.toLocaleString('vi-VN')}
+              value="chưa đo"
               icon={<Activity className="h-4 w-4" />}
               accent="gold"
-              hint="tổng calls"
+              hint="cần Langfuse"
             />
             <KpiCard
               label="Fallback 7d"
-              value={totalFallback}
+              value="chưa đo"
               icon={<AlertCircle className="h-4 w-4" />}
-              accent={totalFallback > 0 ? 'red' : 'jade'}
-              hint="primary failed"
+              accent="gold"
+              hint="cần Langfuse"
             />
             <KpiCard
               label="Avg p95 latency"
-              value={`${avgP95} ms`}
+              value="chưa đo"
               icon={<Zap className="h-4 w-4" />}
               accent="purple"
-              hint="across vendors"
+              hint="cần Langfuse"
             />
           </div>
         );

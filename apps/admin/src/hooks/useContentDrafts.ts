@@ -72,6 +72,13 @@ export interface GenerateResponse {
   judge_reasoning?: string;
   generation_errors?: Partial<Record<DraftKey, string>>;
   error?: string;
+  /**
+   * Generation runs synchronously through a ~25s-bounded edge proxy and can
+   * outlive it. A timeout is NOT a hard failure — the worker keeps generating
+   * in the background — so callers should tell the user to reload the list
+   * rather than show an error. (#47)
+   */
+  timedOut?: boolean;
 }
 
 export interface PatchInput {
@@ -92,17 +99,44 @@ export interface BulkResponse {
   slugs?: string[];
   note?: string;
   error?: string;
+  /** See GenerateResponse.timedOut — bulk runs even longer. (#47) */
+  timedOut?: boolean;
 }
 
 const BASE = '/api/admin-proxy/admin/content';
 const STALE_MS = 5 * 60 * 1000; // 5 minutes — content rarely flips state mid-session.
 
+/** ~25s edge-proxy timeout message. Generation continues server-side. (#47) */
+const TIMEOUT_HINT =
+  'Đang sinh nội dung (quá 25s) — hãy tải lại danh sách /admin/content/list sau ~1-2 phút để xem kết quả.';
+
+/**
+ * Gateway-timeout-ish statuses. A synchronous generate can outrun the edge
+ * proxy's wall-clock budget; the platform returns 504 (or 502/408) with a
+ * non-JSON body. Treat those as "đang sinh" rather than a hard error. (#47)
+ */
+function isTimeoutStatus(status: number): boolean {
+  return status === 504 || status === 502 || status === 408;
+}
+
 async function getJSON<T>(url: string, init?: RequestInit): Promise<T> {
-  const r = await fetch(url, { cache: 'no-store', ...init });
+  let r: Response;
+  try {
+    r = await fetch(url, { cache: 'no-store', ...init });
+  } catch {
+    // fetch rejected (abort / network drop) — for a POST this is almost always
+    // the request outliving the edge proxy, not a real failure. (#47)
+    return { ok: false, timedOut: true, error: TIMEOUT_HINT } as unknown as T;
+  }
   const text = await r.text();
   try {
     return JSON.parse(text) as T;
   } catch {
+    // Non-JSON body. If the status is timeout-shaped, surface it as pending
+    // (generation keeps running) instead of a hard "invalid response". (#47)
+    if (isTimeoutStatus(r.status)) {
+      return { ok: false, timedOut: true, error: TIMEOUT_HINT } as unknown as T;
+    }
     return { ok: false, error: `Phản hồi không hợp lệ (HTTP ${r.status})` } as unknown as T;
   }
 }

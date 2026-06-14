@@ -9,8 +9,7 @@
  *   ├─ This file (~180 LOC orchestration: queries, KPI strip, filter chrome)
  *   ├─ <AdminTable> primitive (components/admin/table/AdminTable.tsx)
  *   ├─ <CustomerAvatar> + <PlanBadge> (components/admin/customers/*)
- *   ├─ <CustomerRowActions> DropdownMenu (Wave 60.68)
- *   └─ <ConfirmActionDialog> Dialog (replaces native confirm())
+ *   └─ <CustomerRowActions> DropdownMenu (Wave 60.68)
  *
  * RSC discipline:
  *   - Icons pre-rendered at the call site (Wave 60.65.P0a)
@@ -19,9 +18,11 @@
  *   - Defensive `Array.isArray` on data crossing React Query cache boundary
  *     (Wave 60.65.P0c)
  *
- * Mutation endpoints (suspend / delete / role-edit) are NOT wired yet —
- * confirm Dialog opens and `toast`-warns about pending backend. A follow-up
- * wave will land /api/admin/customers/:id PATCH/DELETE.
+ * Mutation endpoints (suspend / delete / role-edit) do NOT exist on the
+ * backend, so those row actions were removed (they previously popped a
+ * confirm dialog then silently no-op'd). Row actions are read-only now
+ * (just "Xem chi tiết"). A follow-up wave can re-add them once
+ * /api/admin/customers/:id supports PATCH/DELETE.
  */
 
 import * as React from 'react';
@@ -41,7 +42,6 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  toast,
 } from '@hieu-asia/ui';
 import {
   ChevronDown,
@@ -62,9 +62,8 @@ import {
 import { CustomerAvatar } from '@/components/admin/customers/CustomerAvatar';
 import { PlanBadge } from '@/components/admin/customers/PlanBadge';
 import { CustomerRowActions } from '@/components/admin/customers/CustomerRowActions';
-import { ConfirmActionDialog } from '@/components/admin/customers/ConfirmActionDialog';
 import { fmtDate } from '@/components/admin/customers/format';
-import type { ConfirmState, Customer } from '@/components/admin/customers/types';
+import type { Customer } from '@/components/admin/customers/types';
 import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
 
 interface CustomersResponse {
@@ -90,13 +89,11 @@ const LIMIT = 50;
 
 const CSV_HEADERS = {
   id: 'ID',
-  display_name: 'Tên',
   email: 'Email',
   telegram_id: 'Telegram',
   plan: 'Plan',
   created_at: 'Tạo lúc',
   last_active: 'Hoạt động cuối',
-  sessions_count: 'Phiên',
 } as const;
 
 async function fetchCustomers(params: {
@@ -127,7 +124,6 @@ export default function CustomersPage() {
   const [search, setSearch] = React.useState('');
   const [plan, setPlan] = React.useState<PlanFilter>('all');
   const [cursor, setCursor] = React.useState<string | undefined>(undefined);
-  const [confirm, setConfirm] = React.useState<ConfirmState | null>(null);
 
   React.useEffect(() => {
     const t = window.setTimeout(() => setSearch(searchInput.trim()), 300);
@@ -196,32 +192,16 @@ export default function CustomersPage() {
     exportToCSV(
       customers.map((c) => ({
         id: c.id,
-        display_name: c.display_name ?? '',
         email: c.email ?? '',
         telegram_id: c.telegram_id ?? '',
         plan: c.plan ?? '',
         created_at: c.created_at ?? '',
         last_active: c.last_active ?? '',
-        sessions_count: c.sessions_count ?? 0,
       })),
       fmtCsvFilename('customers'),
       CSV_HEADERS,
     );
   }, [customers]);
-
-  const onConfirmAction = React.useCallback(() => {
-    if (!confirm) return;
-    const { action, customer } = confirm;
-    setConfirm(null);
-    // TODO Wave 60.71.T2.customers.b — wire PATCH/DELETE /api/admin/customers/:id
-    toast(`Backend pending: ${action} cho ${customer.display_name ?? customer.id}`, {
-      description: 'Endpoint /api/admin/customers/:id chưa hỗ trợ mutation.',
-    });
-  }, [confirm]);
-
-  const onConfirmDismiss = React.useCallback((open: boolean) => {
-    if (!open) setConfirm(null);
-  }, []);
 
   const columns = React.useMemo<AdminTableColumn<Customer>[]>(
     () => [
@@ -232,15 +212,12 @@ export default function CustomersPage() {
         cell: (c) => <CustomerAvatar email={c.email} name={c.display_name} />,
       },
       {
-        id: 'name',
-        header: 'Tên / Email',
-        sortKey: 'display_name',
+        id: 'email',
+        header: 'Email',
+        sortKey: 'email',
         cell: (c) => (
           <div className="min-w-0">
-            <div className="truncate text-foreground">
-              {c.display_name ?? '(không tên)'}
-            </div>
-            <div className="truncate font-mono text-xs text-muted-foreground">
+            <div className="truncate font-mono text-sm text-foreground">
               {c.email ?? '—'}
             </div>
           </div>
@@ -252,17 +229,6 @@ export default function CustomersPage() {
         sortKey: 'plan',
         width: '120px',
         cell: (c) => <PlanBadge plan={c.plan} />,
-      },
-      {
-        id: 'sessions_count',
-        header: 'Phiên',
-        sortKey: 'sessions_count',
-        width: '70px',
-        className: 'text-right tabular-nums',
-        hideOnMobile: true,
-        cell: (c) => (
-          <span className="text-foreground/85">{c.sessions_count ?? 0}</span>
-        ),
       },
       {
         id: 'telegram',
@@ -303,7 +269,7 @@ export default function CustomersPage() {
         id: 'actions',
         header: '',
         width: '48px',
-        cell: (c) => <CustomerRowActions customer={c} onAction={setConfirm} />,
+        cell: (c) => <CustomerRowActions customer={c} />,
       },
     ],
     [],
@@ -376,7 +342,7 @@ export default function CustomersPage() {
         <CardHeader>
           <CardTitle>Bộ lọc</CardTitle>
           <CardDescription>
-            Tìm theo tên / email / telegram_id (debounce 300ms).
+            Tìm theo email hoặc ID (debounce 300ms).
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -385,7 +351,7 @@ export default function CustomersPage() {
               type="text"
               value={searchInput}
               onChange={onSearchChange}
-              placeholder="Tìm theo tên, email hoặc telegram_id…"
+              placeholder="Tìm theo email hoặc ID…"
               className="min-w-0 flex-1 rounded-md border border-gold/20 bg-card/60 px-3 py-2 text-sm text-foreground placeholder:text-foreground/30 focus:border-gold focus:outline-none"
             />
             <DropdownMenu>
@@ -471,12 +437,6 @@ export default function CustomersPage() {
           )}
         </CardContent>
       </Card>
-
-      <ConfirmActionDialog
-        state={confirm}
-        onOpenChange={onConfirmDismiss}
-        onConfirm={onConfirmAction}
-      />
     </div>
   );
 }

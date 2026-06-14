@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { ADMIN_SESSION_COOKIE, verifySession } from '@/lib/auth';
+import { ADMIN_SESSION_COOKIE, verifySession, safeNextPath } from '@/lib/auth';
 
 /**
  * Admin middleware — gate every route except /login and Next internals.
@@ -58,8 +58,7 @@ export async function middleware(request: NextRequest) {
   // Already authenticated → block /login to avoid loops.
   if (isLoginPage) {
     if (session) {
-      const next = request.nextUrl.searchParams.get('next');
-      const target = next && next.startsWith('/') ? next : '/';
+      const target = safeNextPath(request.nextUrl.searchParams.get('next'));
       return NextResponse.redirect(new URL(target, request.url));
     }
     return NextResponse.next();

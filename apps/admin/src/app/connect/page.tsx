@@ -37,7 +37,6 @@ import {
   CardTitle,
 } from '@hieu-asia/ui';
 import {
-  AlertOctagon,
   CheckCircle2,
   Plug,
   PlugZap,
@@ -71,8 +70,6 @@ const TAB_AUDIT = 'audit';
 const TAB_WEBHOOKS = 'webhooks';
 
 const ICON_CONNECTED = <CheckCircle2 className="h-4 w-4" aria-hidden />;
-const ICON_INACTIVE = <Wrench className="h-4 w-4" aria-hidden />;
-const ICON_FAILED = <AlertOctagon className="h-4 w-4" aria-hidden />;
 const ICON_PLUG = <Plug className="h-4 w-4" aria-hidden />;
 
 interface ProvidersResp {
@@ -122,22 +119,6 @@ function mergeRows(resp: ProvidersResp | undefined): ProviderRow[] {
   });
 }
 
-function fmtDateShort(s: string | null | undefined): string {
-  if (!s) return '—';
-  try {
-    return new Date(s).toLocaleDateString('vi-VN');
-  } catch {
-    return s;
-  }
-}
-
-function daysSince(s: string | null | undefined): number | null {
-  if (!s) return null;
-  const t = new Date(s).getTime();
-  if (Number.isNaN(t)) return null;
-  return Math.floor((Date.now() - t) / (24 * 3600 * 1000));
-}
-
 export default function ConnectPage() {
   // useSearchParams() requires a Suspense boundary (App Router CSR bailout).
   // Local boundary keeps sidebar/topbar mounted while ?tab= resolves.
@@ -175,17 +156,15 @@ function ConnectPageInner() {
     [rows],
   );
 
+  // #54: the worker `/ai/providers` response is a flat status map with no
+  // last_used / failures fields, so "Inactive >30d" and "Failed 24h" can never
+  // be fed — those KPIs (and the Connected-by / Last-used columns) are dropped
+  // rather than always rendering 0 / "—" as if tracked.
   const kpi = React.useMemo(() => {
     const total = rows.filter((r) => r.status === 'connected').length;
-    const inactive = rows.filter((r) => {
-      if (r.status !== 'connected') return false;
-      const d = daysSince(r.last_used);
-      return d != null && d > 30;
-    }).length;
-    const failed = rows.reduce((acc, r) => acc + (r.failures_24h ?? 0), 0);
     const available = PROVIDER_CATALOGUE.filter((p) => p.category !== 'native')
       .length;
-    return { total, inactive, failed, available };
+    return { total, available };
   }, [rows]);
 
   const showError = !!error || data?.ok === false;
@@ -312,29 +291,6 @@ function ConnectPageInner() {
         },
       },
       {
-        id: 'connected_by',
-        header: 'Connected by',
-        width: '160px',
-        hideOnMobile: true,
-        cell: (r) => (
-          <span className="font-mono text-xs text-muted-foreground">
-            {r.connected_by ?? '—'}
-          </span>
-        ),
-      },
-      {
-        id: 'last_used',
-        header: 'Last used',
-        sortKey: 'last_used',
-        width: '120px',
-        hideOnMobile: true,
-        cell: (r) => (
-          <span className="font-mono text-xs text-muted-foreground">
-            {fmtDateShort(r.last_used)}
-          </span>
-        ),
-      },
-      {
         id: 'actions',
         header: '',
         width: '48px',
@@ -415,27 +371,13 @@ function ConnectPageInner() {
         }
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2">
         <KpiCard
           label="Đã kết nối"
           value={kpi.total}
           icon={ICON_CONNECTED}
           accent="jade"
           hint={`/ ${kpi.available} khả dụng`}
-        />
-        <KpiCard
-          label="Inactive >30d"
-          value={kpi.inactive}
-          icon={ICON_INACTIVE}
-          accent="purple"
-          hint="cần kiểm tra"
-        />
-        <KpiCard
-          label="Failed 24h"
-          value={kpi.failed}
-          icon={ICON_FAILED}
-          accent="red"
-          hint="OAuth + webhook"
         />
         <KpiCard
           label="Catalogue"

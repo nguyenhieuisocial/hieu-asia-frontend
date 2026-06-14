@@ -80,11 +80,12 @@ export const PROVIDER_CATALOGUE: ReadonlyArray<ProviderCatalogueEntry> = [
     hint: 'llama-3.3-70b · vision-11b (native, no key)',
   },
   {
+    // No OAUTH_CONFIG entry on the worker — oauthStart() 400s. Route through the
+    // API-key/secrets path instead (oauth flag omitted).
     id: 'stripe',
     name: 'Stripe',
     category: 'oauth',
     hint: 'Payments + subscriptions (USD)',
-    oauth: true,
     scopes: 'read_write',
   },
   {
@@ -116,19 +117,21 @@ export const PROVIDER_CATALOGUE: ReadonlyArray<ProviderCatalogueEntry> = [
     docUrl: 'https://resend.com/docs',
   },
   {
+    // No OAUTH_CONFIG entry on the worker — oauthStart() 400s. Route through the
+    // API-key/secrets path instead (oauth flag omitted).
     id: 'vercel',
     name: 'Vercel',
     category: 'oauth',
     hint: 'Deploy + edge config',
-    oauth: true,
     scopes: 'deployment:write',
   },
   {
+    // No OAUTH_CONFIG entry on the worker — oauthStart() 400s. Route through the
+    // API-key/secrets path instead (oauth flag omitted).
     id: 'supabase',
     name: 'Supabase',
     category: 'oauth',
     hint: 'Postgres + auth + storage',
-    oauth: true,
     scopes: 'read+write',
   },
   {

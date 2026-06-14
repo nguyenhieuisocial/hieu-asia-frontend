@@ -36,26 +36,49 @@ interface PromptDetail {
   updated_at: string | null;
   updated_by: string | null;
   version: number;
+  /** Derived on the FE (#12) — the worker does NOT return this. */
   is_custom: boolean;
+  /**
+   * NOT returned by the worker (#13, needs-backend). The "So sánh ↔ default"
+   * diff + "Khác mặc định" hint stay disabled until the worker exposes it.
+   */
   default_system?: string;
-  history?: Array<{ version: number; updated_at: string; updated_by: string | null }>;
+}
+
+/** Raw worker row — no `is_custom` / `default_system` / `history`. */
+interface RawPrompt {
+  role: Role;
+  system: string;
+  updated_at: string | null;
+  updated_by: string | null;
+  version: number;
 }
 
 interface PromptResp {
   ok: boolean;
-  prompt?: PromptDetail;
+  prompt?: RawPrompt;
   error?: string;
 }
 
 const CHAR_WARN = 10_000;
 const PLACEHOLDERS = ['{{user_id}}', '{{session_id}}'];
 
+/**
+ * Worker returns the raw StoredPrompt ({ role, system, updated_at, updated_by,
+ * version }) with NO `is_custom`. Defaults come back as { version: 0,
+ * updated_by: 'default' }; an override as { version >= 1, updated_by: <admin> }.
+ * Derive is_custom here so the Reset button + custom/default badge work. (#12)
+ */
+function deriveIsCustom(p: RawPrompt): PromptDetail {
+  return { ...p, is_custom: p.version > 0 || (p.updated_by ?? 'default') !== 'default' };
+}
+
 async function fetchPrompt(role: string): Promise<PromptDetail | null> {
   const r = await fetch(`/api/admin/prompts/${role}`, { cache: 'no-store' });
   if (r.status === 404) return null;
   const data: PromptResp = await r.json();
   if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
-  return data.prompt ?? null;
+  return data.prompt ? deriveIsCustom(data.prompt) : null;
 }
 
 async function savePrompt(role: string, system: string): Promise<PromptDetail> {
@@ -68,7 +91,7 @@ async function savePrompt(role: string, system: string): Promise<PromptDetail> {
   if (!r.ok || !data.ok || !data.prompt) {
     throw new Error(data.error ?? `HTTP ${r.status}`);
   }
-  return data.prompt;
+  return deriveIsCustom(data.prompt);
 }
 
 async function resetPrompt(role: string): Promise<PromptDetail> {
@@ -77,7 +100,7 @@ async function resetPrompt(role: string): Promise<PromptDetail> {
   if (!r.ok || !data.ok || !data.prompt) {
     throw new Error(data.error ?? `HTTP ${r.status}`);
   }
-  return data.prompt;
+  return deriveIsCustom(data.prompt);
 }
 
 // Wave 52-C — Delegate to shared util so 0 / "" / null all render
@@ -350,30 +373,9 @@ export default function PromptEditPage() {
                 </p>
               </CardContent>
             </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm">Lịch sử (5 gần nhất)</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {!prompt?.history?.length ? (
-                  <p className="text-xs text-muted-foreground">Chưa có lịch sử.</p>
-                ) : (
-                  <ul className="space-y-1.5 text-xs">
-                    {prompt.history.slice(0, 5).map((h) => (
-                      <li
-                        key={h.version}
-                        className="flex items-center justify-between border-b border-gold/10 pb-1.5 last:border-0"
-                      >
-                        <span className="font-mono text-gold/80">v{h.version}</span>
-                        <span className="text-muted-foreground">{fmtDate(h.updated_at)}</span>
-                        <span className="truncate text-muted-foreground">{h.updated_by ?? '—'}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </CardContent>
-            </Card>
+            {/* Lịch sử card removed (#44): the worker's GET /admin/prompts/:role
+                never returns history[] — the KV store only keeps the current
+                version. Don't render a permanently-empty card. */}
           </div>
         </div>
       )}

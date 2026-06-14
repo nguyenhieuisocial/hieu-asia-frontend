@@ -9,6 +9,11 @@
  *
  * Trigger button stops propagation so opening the menu does not also
  * trigger the AdminTable row-click handler (which routes to /detail).
+ *
+ * NOTE: "Đổi role" / "Tạm khoá" / "Xoá" were removed — no backend mutation
+ * routes exist (/api/admin/customers/:id is read-only), so those items
+ * popped a confirm dialog then silently no-op'd. Re-add once mutation
+ * endpoints land. (edit-role could map to /admin/users/set-plan if wired.)
  */
 
 import * as React from 'react';
@@ -17,47 +22,24 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@hieu-asia/ui';
-import {
-  ExternalLink,
-  MoreHorizontal,
-  Pencil,
-  ShieldOff,
-  Trash2,
-} from 'lucide-react';
-import type { ConfirmState, Customer } from './types';
+import { ExternalLink, MoreHorizontal } from 'lucide-react';
+import type { Customer } from './types';
 
 const ICON_VIEW = <ExternalLink className="h-3.5 w-3.5" aria-hidden />;
-const ICON_PENCIL = <Pencil className="h-3.5 w-3.5" aria-hidden />;
-const ICON_SUSPEND = <ShieldOff className="h-3.5 w-3.5" aria-hidden />;
-const ICON_TRASH = <Trash2 className="h-3.5 w-3.5" aria-hidden />;
 const ICON_MORE = <MoreHorizontal className="h-4 w-4" aria-hidden />;
 
 export interface CustomerRowActionsProps {
   customer: Customer;
-  onAction: (state: ConfirmState) => void;
 }
 
-export function CustomerRowActions({ customer, onAction }: CustomerRowActionsProps) {
+export function CustomerRowActions({ customer }: CustomerRowActionsProps) {
   const router = useRouter();
 
   const handleView = React.useCallback(() => {
     router.push(`/customers/${encodeURIComponent(customer.id)}`);
   }, [router, customer.id]);
-
-  const handleEdit = React.useCallback(() => {
-    onAction({ action: 'edit-role', customer });
-  }, [onAction, customer]);
-
-  const handleSuspend = React.useCallback(() => {
-    onAction({ action: 'suspend', customer });
-  }, [onAction, customer]);
-
-  const handleDelete = React.useCallback(() => {
-    onAction({ action: 'delete', customer });
-  }, [onAction, customer]);
 
   const stopRowClick = React.useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -79,22 +61,6 @@ export function CustomerRowActions({ customer, onAction }: CustomerRowActionsPro
         <DropdownMenuItem onSelect={handleView}>
           {ICON_VIEW}
           Xem chi tiết
-        </DropdownMenuItem>
-        <DropdownMenuItem onSelect={handleEdit}>
-          {ICON_PENCIL}
-          Đổi role
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={handleSuspend}>
-          {ICON_SUSPEND}
-          Tạm khoá
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onSelect={handleDelete}
-          className="text-red-700 dark:text-red-300 focus:bg-red-500/10 focus:text-red-700 dark:focus:text-red-200"
-        >
-          {ICON_TRASH}
-          Xoá
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

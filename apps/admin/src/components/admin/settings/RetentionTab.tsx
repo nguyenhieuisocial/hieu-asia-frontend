@@ -47,7 +47,7 @@ const OPTIONS: Array<{ value: RetentionDays; label: string; hint: string }> = [
   { value: 30, label: '30 ngày', hint: 'tối thiểu compliance' },
   { value: 90, label: '90 ngày', hint: 'khuyến nghị' },
   { value: 365, label: '365 ngày', hint: '1 năm full audit' },
-  { value: 0, label: 'Mãi mãi', hint: 'storage cost cao' },
+  { value: 730, label: '730 ngày', hint: '2 năm, tối đa cho phép' },
 ];
 
 interface RetentionResp {
@@ -90,7 +90,7 @@ export function RetentionTab() {
   const pickedLabel =
     OPTIONS.find((o) => o.value === picked)?.label ?? `${picked}d`;
   const dirty = picked !== current;
-  const shortening = dirty && picked !== 0 && (current === 0 || picked < current);
+  const shortening = dirty && picked < current;
 
   const handlePick = React.useCallback((v: string) => {
     setPicked(Number(v) as RetentionDays);
@@ -197,7 +197,7 @@ export function RetentionTab() {
           <p className="text-xs text-muted-foreground">
             Hiện tại:{' '}
             <code className="font-mono text-foreground/85">
-              {current === 0 ? 'forever' : `${current} ngày`}
+              {`${current} ngày`}
             </code>
             .
           </p>

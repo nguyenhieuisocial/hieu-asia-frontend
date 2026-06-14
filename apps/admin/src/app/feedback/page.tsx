@@ -8,21 +8,21 @@
  * pricing CTA exit-intent (Wave 60.77), and the onboarding survey
  * (Wave 60.22). Each row has rating + tag + free-text + status.
  *
- * Data source (best-effort):
- *   GET /api/admin-proxy/admin/feedback?limit=100
+ * Data source:
+ *   GET  /api/admin-proxy/admin/feedback?limit=100
+ *   POST /api/admin-proxy/admin/feedback/:id/resolve
  *
- * Worker endpoint TBD. Mock list renders so we can dial in the visual
- * shell. Once shipped, the same AdminTable + KpiCard shape applies.
+ * Worker endpoint /admin/feedback is shipped (Wave 60.82). No mock fallback:
+ * on error we surface an ErrorBlock, on empty we show a real empty state.
  */
 
 import * as React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, cn } from '@hieu-asia/ui';
-import { MessageSquare, Star, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, cn, toast } from '@hieu-asia/ui';
+import { MessageSquare, Star, AlertTriangle, CheckCircle2, Check } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
-import { LiveBadge } from '@/components/admin/live-badge';
-import { MockBanner } from '@/components/mock-banner';
+import { ErrorBlock } from '@/components/admin/error-block';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
 type FeedbackStatus = 'new' | 'triaged' | 'resolved';
@@ -50,45 +50,6 @@ const STATUS_CLASS: Record<FeedbackStatus, string> = {
   triaged: 'border-warn-500/40 bg-warn-500/10 text-warn-700 dark:text-warn-300',
   resolved: 'border-jade-300/40 bg-jade-500/15 text-jade-700 dark:text-jade-300',
 };
-
-const MOCK_FEEDBACK: Feedback[] = [
-  {
-    id: 'fb-001',
-    ts: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
-    user_email: 'an.le@example.com',
-    surface: 'reading',
-    rating: 5,
-    message: 'Báo cáo rất sâu, đặc biệt là phần Psychology — đúng lo lắng của tôi.',
-    status: 'new',
-  },
-  {
-    id: 'fb-002',
-    ts: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(),
-    user_email: 'minh.tran@example.com',
-    surface: 'pricing',
-    rating: 3,
-    message: 'Gói "Cẩm nang" quá đắt so với 1 lần đọc đơn lẻ — cân nhắc lại pricing?',
-    status: 'triaged',
-  },
-  {
-    id: 'fb-003',
-    ts: new Date(Date.now() - 1000 * 60 * 60 * 28).toISOString(),
-    user_email: 'thu.nguyen@example.com',
-    surface: 'onboarding',
-    rating: 4,
-    message: 'Câu hỏi "trục cuộc đời" hơi trừu tượng — cần ví dụ.',
-    status: 'resolved',
-  },
-  {
-    id: 'fb-004',
-    ts: new Date(Date.now() - 1000 * 60 * 60 * 40).toISOString(),
-    user_email: 'hieu@example.com',
-    surface: 'reading',
-    rating: null,
-    message: 'Bug: cuộn ngang trên iPad mini, phần Alignment.',
-    status: 'new',
-  },
-];
 
 function Stars({ value }: { value: number | null }) {
   if (value == null) {
@@ -120,19 +81,38 @@ function fmtDate(iso: string) {
 }
 
 export default function FeedbackPage() {
+  const qc = useQueryClient();
+
+  // /admin/feedback is shipped (Wave 60.82). No mock fallback — throw on any
+  // hiccup so the page shows a real ErrorBlock instead of fake-looking rows.
   const list = useQuery({
     queryKey: ['admin', 'feedback'],
-    queryFn: async () => {
-      try {
-        const r = await fetch('/api/admin-proxy/admin/feedback?limit=100', { cache: 'no-store' });
-        if (!r.ok) return { rows: MOCK_FEEDBACK, isMock: true };
-        const data = (await r.json()) as { rows?: Feedback[] };
-        return { rows: data.rows ?? MOCK_FEEDBACK, isMock: !data.rows };
-      } catch {
-        return { rows: MOCK_FEEDBACK, isMock: true };
-      }
+    queryFn: async (): Promise<{ rows: Feedback[] }> => {
+      const r = await fetch('/api/admin-proxy/admin/feedback?limit=100', { cache: 'no-store' });
+      if (!r.ok) throw new Error(`Không tải được phản hồi (HTTP ${r.status})`);
+      const data = (await r.json()) as { ok?: boolean; rows?: Feedback[]; error?: string };
+      if (data.ok === false) throw new Error(data.error ?? 'feedback query failed');
+      return { rows: data.rows ?? [] };
     },
     staleTime: 60_000,
+  });
+
+  const resolveMut = useMutation({
+    mutationFn: async (id: string) => {
+      const r = await fetch(`/api/admin-proxy/admin/feedback/${encodeURIComponent(id)}/resolve`, {
+        method: 'POST',
+      });
+      const data = (await r.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!r.ok || data.ok === false) {
+        throw new Error(data.error ?? `HTTP ${r.status}`);
+      }
+      return data;
+    },
+    onSuccess: () => {
+      toast.success('Đã đánh dấu resolved');
+      qc.invalidateQueries({ queryKey: ['admin', 'feedback'] });
+    },
+    onError: (e) => toast.error('Resolve thất bại', { description: (e as Error).message }),
   });
 
   const rows = list.data?.rows ?? [];
@@ -208,6 +188,28 @@ export default function FeedbackPage() {
         </span>
       ),
     },
+    {
+      id: 'actions',
+      header: '',
+      width: '120px',
+      // POST /admin/feedback/:id/resolve (Wave 60.82). Reversible + low-risk.
+      // Already-resolved rows show a static "đã xử lý" hint instead of a button.
+      cell: (r) =>
+        r.status === 'resolved' ? (
+          <span className="text-[10px] text-muted-foreground">đã xử lý</span>
+        ) : (
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => resolveMut.mutate(r.id)}
+            disabled={resolveMut.isPending}
+            aria-label={`Đánh dấu resolved feedback ${r.id}`}
+          >
+            <Check className="mr-1 h-3 w-3" />
+            Resolve
+          </Button>
+        ),
+    },
   ];
 
   return (
@@ -216,12 +218,15 @@ export default function FeedbackPage() {
         title="Phản hồi người dùng"
         description="Feedback gửi từ báo cáo, modal pricing, onboarding. Triage thành new → triaged → resolved."
         icon={<MessageSquare className="h-5 w-5" />}
-        badge={<LiveBadge isMock={list.data?.isMock} />}
       />
 
-      <MockBanner
-        source={{ isMock: list.data?.isMock ?? false, reason: 'endpoint /admin/feedback TBD' }}
-      />
+      {list.isError && (
+        <ErrorBlock
+          title="Không tải được phản hồi"
+          message={(list.error as Error).message}
+          onRetry={() => list.refetch()}
+        />
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard

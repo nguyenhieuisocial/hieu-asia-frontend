@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
+import { safeNextPath } from '@/lib/auth';
 
 export default function AdminLoginPage() {
   // useSearchParams() requires a Suspense boundary (App Router CSR bailout).
@@ -16,7 +17,8 @@ export default function AdminLoginPage() {
 function AdminLoginPageInner() {
   const router = useRouter();
   const search = useSearchParams();
-  const next = search.get('next') ?? '/';
+  // Sanitize to a same-origin path — never router.push() a raw ?next= (open redirect).
+  const next = safeNextPath(search.get('next'));
   const reason = search.get('reason');
 
   const [email, setEmail] = React.useState('');
