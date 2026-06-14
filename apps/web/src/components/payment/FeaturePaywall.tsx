@@ -36,7 +36,12 @@ interface IntentEnvelope {
   error?: string;
   /** Set by the worker when a supplied coupon_code is invalid/expired/exhausted. */
   code_invalid?: boolean;
+  /** Set when a 100%-off GIFT code unlocked the feature directly — no QR/payment. */
+  free_unlock?: boolean;
 }
+
+/** createFeatureIntent result: a QR intent, or a direct free unlock (gift code). */
+type IntentOrFree = PaymentIntent | { freeUnlock: true };
 
 /** Error carrying the worker's code_invalid flag so the UI can recover the code state. */
 class CouponInvalidError extends Error {}
@@ -48,6 +53,7 @@ interface ValidateCodeEnvelope {
   discount_pct?: number;
   discounted_amount?: number;
   original_amount?: number;
+  free?: boolean;
   reason?: string;
   error?: string;
 }
@@ -56,6 +62,8 @@ interface ValidatedCode {
   code: string;
   discountedAmount: number;
   discountPct?: number;
+  /** True for a 100%-off gift code (price becomes 0 / "Miễn phí"). */
+  free?: boolean;
 }
 
 async function getToken(): Promise<string | null> {
@@ -74,7 +82,7 @@ async function createFeatureIntent(
   slug: string,
   sessionId?: string,
   couponCode?: string,
-): Promise<PaymentIntent> {
+): Promise<IntentOrFree> {
   const token = await getToken();
   const res = await fetch('/api/payment/intent', {
     method: 'POST',
@@ -95,6 +103,10 @@ async function createFeatureIntent(
     throw new Error(`Phản hồi không hợp lệ (HTTP ${parsed.status})`);
   }
   const body = parsed.data;
+  // 100%-off gift code → worker unlocked directly, no intent/QR.
+  if (res.ok && body.ok && body.free_unlock) {
+    return { freeUnlock: true };
+  }
   if (!res.ok || !body.ok || !body.intent) {
     const message = body.error ?? `Tạo giao dịch thất bại (${res.status})`;
     // A code can expire/exhaust between "Áp dụng" and "Mở khoá" (race on a
@@ -144,6 +156,7 @@ async function validateCode(slug: string, code: string): Promise<ValidateResult>
       code: body.code ?? code,
       discountedAmount: body.discounted_amount,
       discountPct: body.discount_pct,
+      free: body.free === true,
     },
   };
 }
@@ -182,6 +195,8 @@ export function FeaturePaywall({
   const [appliedCode, setAppliedCode] = React.useState<string | null>(null);
   const [appliedPrice, setAppliedPrice] = React.useState<number | null>(null);
   const [appliedDiscountPct, setAppliedDiscountPct] = React.useState<number | null>(null);
+  const [appliedFree, setAppliedFree] = React.useState(false);
+  const [freeUnlocked, setFreeUnlocked] = React.useState(false);
   const [codeErr, setCodeErr] = React.useState<string | null>(null);
   const [validating, setValidating] = React.useState(false);
 
@@ -205,10 +220,18 @@ export function FeaturePaywall({
     setIntent(null);
 
     createFeatureIntent(slug, sessionId, appliedCodeRef.current ?? undefined)
-      .then((i) => {
+      .then((result) => {
         if (cancelled) return;
-        setIntent(i);
-        track('payment_intent_created', { slug, tier: 'feature_unlock', intent_id: i.id, amount: i.amount_due });
+        if ('freeUnlock' in result) {
+          // 100%-off gift code unlocked the feature directly — no QR. Tell the
+          // parent to refetch so the full content loads.
+          setFreeUnlocked(true);
+          track('payment_free_unlock', { slug, tier: 'feature_unlock' });
+          onUnlocked();
+          return;
+        }
+        setIntent(result);
+        track('payment_intent_created', { slug, tier: 'feature_unlock', intent_id: result.id, amount: result.amount_due });
       })
       .catch((err: unknown) => {
         if (cancelled) return;
@@ -284,17 +307,20 @@ export function FeaturePaywall({
         setAppliedCode(result.data.code);
         setAppliedPrice(result.data.discountedAmount);
         setAppliedDiscountPct(result.data.discountPct ?? null);
+        setAppliedFree(result.data.free === true);
         setCodeErr(null);
       } else if (result.kind === 'invalid') {
         setCodeErr(result.reason);
         setAppliedCode(null);
         setAppliedPrice(null);
         setAppliedDiscountPct(null);
+        setAppliedFree(false);
       } else {
         setCodeErr('Không kiểm tra được mã');
         setAppliedCode(null);
         setAppliedPrice(null);
         setAppliedDiscountPct(null);
+        setAppliedFree(false);
       }
     } finally {
       setValidating(false);
@@ -305,9 +331,24 @@ export function FeaturePaywall({
     setAppliedCode(null);
     setAppliedPrice(null);
     setAppliedDiscountPct(null);
+    setAppliedFree(false);
     setCode('');
     setCodeErr(null);
   }, []);
+
+  // 100%-off gift code unlocked directly — show a brief success state while the
+  // parent's onUnlocked refetch loads the full report.
+  if (freeUnlocked) {
+    return (
+      <Card className="border-gold/30 bg-gradient-to-br from-card to-gold/5">
+        <CardContent className="space-y-3 p-8 text-center">
+          <p className="text-4xl" aria-hidden>🎁</p>
+          <p className="font-heading text-xl text-foreground">Đã mở khoá miễn phí!</p>
+          <p className="text-sm text-muted-foreground">Đang tải báo cáo đầy đủ…</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   // Effective price = discounted amount when a code is applied, else base price.
   const effectivePrice = appliedPrice ?? price;
@@ -329,9 +370,10 @@ export function FeaturePaywall({
                   {price.toLocaleString('vi-VN')}đ
                 </span>{' '}
                 <span className="font-semibold text-gold">
-                  {effectivePrice.toLocaleString('vi-VN')}đ
+                  {appliedFree ? 'Miễn phí 🎁' : `${effectivePrice.toLocaleString('vi-VN')}đ`}
                 </span>
-                {appliedPrice !== null &&
+                {!appliedFree &&
+                  appliedPrice !== null &&
                   appliedPrice < price &&
                   (() => {
                     const pct =
@@ -401,7 +443,9 @@ export function FeaturePaywall({
             onClick={() => setAttempt(1)}
             className="bg-gold text-black hover:bg-gold/90"
           >
-            Mở khoá — {effectivePrice.toLocaleString('vi-VN')}đ
+            {appliedFree
+              ? 'Mở khoá miễn phí 🎁'
+              : `Mở khoá — ${effectivePrice.toLocaleString('vi-VN')}đ`}
           </Button>
         </CardContent>
       </Card>
