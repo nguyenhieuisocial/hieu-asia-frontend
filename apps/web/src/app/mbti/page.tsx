@@ -192,7 +192,7 @@ export default function MbtiHubPage() {
             <div className="mb-6 flex items-center gap-3">
               <Compass className="h-5 w-5 text-gold" aria-hidden />
               <h2 className="font-sans text-section-display font-bold tracking-tight text-foreground">
-                Làm bài test — <ItalicSpan>16 câu, khoảng 4 phút</ItalicSpan>
+                Làm bài test — <ItalicSpan>24 câu, khoảng 5 phút</ItalicSpan>
               </h2>
             </div>
             <p className="mb-8 max-w-marketing-text font-sans text-base leading-relaxed text-muted-foreground">

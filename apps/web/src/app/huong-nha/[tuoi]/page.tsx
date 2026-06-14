@@ -39,8 +39,11 @@ function ResultBlock({ label, r }: { label: string; r: HuongNhaResult }) {
           <div className="text-xs font-medium uppercase tracking-wide text-emerald-700 dark:text-emerald-300">Hướng tốt</div>
           <ul className="mt-1 space-y-0.5 text-sm text-muted-foreground">
             {r.good.map((d) => (
-              <li key={d.direction}>
+              <li key={d.direction} className="mb-1.5">
                 <strong className="text-foreground">{d.direction}</strong> — {STAR_INFO[d.star].name}
+                <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground/80">
+                  {STAR_INFO[d.star].blurb}
+                </span>
               </li>
             ))}
           </ul>
@@ -49,8 +52,11 @@ function ResultBlock({ label, r }: { label: string; r: HuongNhaResult }) {
           <div className="text-xs font-medium uppercase tracking-wide text-rose-700 dark:text-rose-300">Hướng tránh</div>
           <ul className="mt-1 space-y-0.5 text-sm text-muted-foreground">
             {r.bad.map((d) => (
-              <li key={d.direction}>
+              <li key={d.direction} className="mb-1.5">
                 <strong className="text-foreground">{d.direction}</strong> — {STAR_INFO[d.star].name}
+                <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground/80">
+                  {STAR_INFO[d.star].blurb}
+                </span>
               </li>
             ))}
           </ul>
