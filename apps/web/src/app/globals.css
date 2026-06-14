@@ -268,6 +268,34 @@ html {
                                 4.96:1 (was 3.34 on the dark-tint mud) */
 }
 
+/* ────────────────────────────────────────────────────────────────────────
+ * AA contrast sweep — ROUND 3 (2026-06-14, founder "fix màu toàn site, cả
+ * sáng/tối"). A Playwright audit (both themes, 39 template families) surfaced
+ * two accent families NOT covered by the light-only sweeps above. Both scoped
+ * so the opposite theme is untouched *by construction*. Colors pre-verified AA.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/* (1) DARK mode — `text-gold-700` accent labels / eyebrows / links sit at
+ * 2.64:1 on the charcoal & bark surfaces (rgb 107,84,36 on #15110C / #1F1A13).
+ * A prior LIGHT pass swept text-gold→text-gold-700 across ~62 content/tool
+ * pages so the dark-gold reads AA on cream — but on the force-dark experience
+ * routes (/tu-vi-*, /reading, /dashboard, /methodology/*, /learn/*, /lo-trinh/*)
+ * that same dark-gold is now too dim. Lift to the night brand gold
+ * (gold-soft #D4B373 ≈ 7:1 on charcoal) — the very dark-mode --primary the
+ * design already uses. LIGHT keeps gold-700 (AA on cream) via the .dark scope. */
+.dark .text-gold-700 {
+  color: #d4b373;
+}
+
+/* (2) LIGHT mode — filled gold CTA buttons (`bg-gold` + `text-background`) put
+ * paper-cream text on gold = 2.47:1 (≈9 content templates: than-so-hoc, tarot,
+ * gieo-que, gio-hoang-dao…). Ink text on gold = 6.45:1. In DARK, text-background
+ * resolves to charcoal-on-gold (already AA), so scope to light only. The
+ * two-class selector matches ONLY these buttons, not other text-background. */
+:root:not(.dark) .bg-gold.text-background {
+  color: rgb(var(--ink-rgb)); /* #171411 ink — 6.45:1 on #B8923D gold */
+}
+
 /* Safe-area-inset for iPhone notch / Android gesture nav.
  *
  * Wave 60.68 — added `padding-bottom` so the iPhone home-indicator no longer
