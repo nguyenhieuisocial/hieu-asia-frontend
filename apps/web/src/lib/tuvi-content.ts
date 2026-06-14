@@ -812,6 +812,132 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       { palace: 'Phu Thê', reading: 'Đời sống tình cảm nhiều sắc thái; nên minh bạch.' },
     ],
   },
+  {
+    slug: 'tam-thai-bat-toa',
+    name: 'Tam Thai - Bát Tọa',
+    category: 'aux',
+    archetype: 'Cặp quý tinh — địa vị, chỗ đứng, được nâng đỡ.',
+    positive: [
+      'Tăng uy tín, vị thế; dễ được cấp trên/tập thể ghi nhận.',
+      'Hợp vai trò có danh phận, đại diện, quản lý.',
+    ],
+    caution: ['Vị thế đi kèm trách nhiệm — giữ thực lực tương xứng với danh.'],
+    byPalace: [
+      { palace: 'Quan Lộc', reading: 'Hợp thăng tiến, đảm nhận vị trí có tiếng nói.' },
+      { palace: 'Mệnh', reading: 'Phong thái đĩnh đạc, được nể trọng.' },
+    ],
+  },
+  {
+    slug: 'an-quang-thien-quy',
+    name: 'Ân Quang - Thiên Quý',
+    category: 'aux',
+    archetype: 'Cặp quý tinh — vinh dự, được ghi nhận, khoa danh.',
+    positive: [
+      'Hợp thi cử, được công nhận, có phần thưởng/ghi danh.',
+      'Quý nhân ngầm nâng đỡ đúng lúc.',
+    ],
+    caution: ['Vinh dự đến từ tích luỹ thật — không trông chờ may rủi.'],
+    byPalace: [
+      { palace: 'Quan Lộc', reading: 'Hợp môi trường trọng bằng cấp, thành tích.' },
+      { palace: 'Mệnh', reading: 'Dễ được tin tưởng, giao việc quan trọng.' },
+    ],
+  },
+  {
+    slug: 'hoa-cai',
+    name: 'Hoa Cái',
+    category: 'aux',
+    archetype: 'Sao nghệ thuật — tài hoa, thiên hướng tâm linh, có phần cô cao.',
+    positive: [
+      'Năng khiếu nghệ thuật, triết lý, tôn giáo; gu riêng độc đáo.',
+      'Khả năng tập trung sâu, làm việc một mình tốt.',
+    ],
+    caution: ['Hơi kiêu, dễ thấy lạc lõng giữa đám đông — nên giữ kết nối.'],
+    byPalace: [
+      { palace: 'Mệnh', reading: 'Người có cá tính, thiên hướng nghệ thuật/tâm linh.' },
+      { palace: 'Phúc Đức', reading: 'Đời sống tinh thần phong phú, ưa chiêm nghiệm.' },
+    ],
+  },
+  {
+    slug: 'tang-mon-bach-ho',
+    name: 'Tang Môn - Bạch Hổ',
+    category: 'aux',
+    archetype: 'Cặp sao vòng Thái Tuế — chủ đề buồn phiền, va chạm, cần thận trọng theo giai đoạn.',
+    positive: [
+      'Là tín hiệu "năm cần giữ gìn" — biết trước thì chủ động phòng bị.',
+      'Gắn với giai đoạn, KHÔNG phải bản tính cố định.',
+    ],
+    caution: [
+      'Năm gặp: chú ý sức khoẻ người thân, tránh tranh chấp, đi lại cẩn thận.',
+      'KHÔNG phải "điềm gở" — chỉ là nhắc nhở thận trọng, không nên hoảng.',
+    ],
+    byPalace: [
+      { palace: 'Mệnh', reading: 'Năm/đại vận có: ưu tiên giữ sức khoẻ và hoà khí.' },
+      { palace: 'Tật Ách', reading: 'Nhắc kiểm tra sức khoẻ định kỳ, đề phòng va chạm nhỏ.' },
+    ],
+  },
+  {
+    slug: 'quan-phu',
+    name: 'Quan Phù',
+    category: 'aux',
+    archetype: 'Sao vòng Thái Tuế — giấy tờ, kiện tụng, chuyện hành chính.',
+    positive: [
+      'Nhắc rà soát hợp đồng, giấy tờ kỹ — tránh sơ suất pháp lý.',
+      'Biết trước thì xử lý thủ tục gọn gàng.',
+    ],
+    caution: ['Năm gặp: cẩn trọng ký kết, đọc kỹ trước khi đặt bút, tránh vướng tranh chấp.'],
+    byPalace: [
+      { palace: 'Quan Lộc', reading: 'Chú ý hợp đồng, quy định công việc trong giai đoạn này.' },
+      { palace: 'Mệnh', reading: 'Năm hợp làm gì cũng rõ ràng văn bản, minh bạch.' },
+    ],
+  },
+  {
+    slug: 'thien-quan-thien-phuc',
+    name: 'Thiên Quan - Thiên Phúc',
+    category: 'aux',
+    archetype: 'Cặp phúc tinh — che chở, phúc khí, hoá giải khó khăn.',
+    positive: [
+      'Gặp khó dễ có chỗ dựa, "gặp dữ hoá lành".',
+      'Tăng phúc đức, hay gặp may đúng lúc ngặt.',
+    ],
+    caution: ['Phúc là nền — vẫn cần nỗ lực thật để thành kết quả.'],
+    byPalace: [
+      { palace: 'Phúc Đức', reading: 'Phúc khí dày, tâm an, hậu vận êm.' },
+      { palace: 'Mệnh', reading: 'Người hiền lành, hay được giúp lúc khó.' },
+    ],
+  },
+  {
+    slug: 'thien-duc-nguyet-duc',
+    name: 'Thiên Đức - Nguyệt Đức',
+    category: 'aux',
+    archetype: 'Cặp đức tinh — đức độ, được phù trợ, giảm nhẹ trắc trở.',
+    positive: [
+      'Giảm bớt ảnh hưởng sao xấu cùng cung; gặp khó có người đỡ.',
+      'Tâm thiện, sống có đức nên tích phúc.',
+    ],
+    caution: ['Là lực "giảm xóc", không phải bùa hộ mệnh — vẫn cần cẩn trọng.'],
+    byPalace: [
+      { palace: 'Mệnh', reading: 'Tính nhân hậu, hay làm việc thiện, được quý mến.' },
+      { palace: 'Tật Ách', reading: 'Khi có hạn, thường gặp yếu tố giảm nhẹ.' },
+    ],
+  },
+  {
+    slug: 'kiep-sat',
+    name: 'Kiếp Sát',
+    category: 'aux',
+    archetype: 'Sát tinh — biến động bất ngờ, hao tài hoặc thay đổi nhanh.',
+    positive: [
+      'Quyết đoán, phản ứng nhanh trước biến cố.',
+      'Trải biến động giúp học cách phòng bị, quản trị rủi ro.',
+    ],
+    caution: [
+      'Chú ý giữ tài sản, tránh quyết định vội khi cung liên quan có Kiếp Sát.',
+      'Là lực "thay đổi đột ngột", KHÔNG phải định mệnh xui xẻo.',
+    ],
+    byPalace: [
+      { palace: 'Tài Bạch', reading: 'Cẩn trọng dòng tiền, tránh đầu cơ, giữ quỹ dự phòng.' },
+      { palace: 'Mệnh', reading: 'Cuộc đời nhiều khúc rẽ — bản lĩnh tôi luyện qua biến động.' },
+    ],
+  },
 ];
 
 export const ALL_STARS_CONTENT: StarContent[] = [...MAJOR_STARS_CONTENT, ...AUX_STARS_CONTENT];
