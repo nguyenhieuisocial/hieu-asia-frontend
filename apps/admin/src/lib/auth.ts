@@ -95,6 +95,25 @@ function getCookieSecret(): string | null {
 }
 
 /**
+ * Sign a short-lived realtime WebSocket ticket.
+ *
+ * Used so the MASTER admin token NEVER travels in the WS URL query string
+ * (which Cloudflare/proxies log and browsers keep in history). Both this app
+ * and the AdminRealtime DO already hold the master admin token; we use it as
+ * the HMAC KEY (never transmitted) and send only the resulting ticket.
+ *
+ * Message format MUST stay byte-for-byte identical to the DO verifier:
+ *   `${email}:${expiresAt}`
+ */
+export async function signRealtimeTicket(
+  secret: string,
+  email: string,
+  expiresAt: number,
+): Promise<string> {
+  return hmacSha256Hex(secret, `${email}:${expiresAt}`);
+}
+
+/**
  * Encode (email, role) into a SIGNED cookie value.
  *
  * Format: `<email>:<role>.<hmac_hex>`

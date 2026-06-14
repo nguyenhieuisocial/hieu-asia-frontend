@@ -64,61 +64,84 @@ export function useRealtime(topics: RealtimeTopic[]) {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
     const wsUrl = apiUrl.replace(/^http/, 'ws') + '/admin/realtime/connect';
 
-    // Get admin email + token from secure cookie (server reads ADMIN_COOKIE_SECRET-signed)
-    // For MVP: pull token from sessionStorage — production should use httpOnly cookie + server fetch
-    const token = sessionStorage.getItem('admin_realtime_token') ?? '';
-    const adminEmail = sessionStorage.getItem('admin_email') ?? '';
-
-    if (!token || !adminEmail) {
-      setStatus('error');
-      return;
-    }
-
-    const url = `${wsUrl}?token=${encodeURIComponent(token)}&admin_email=${encodeURIComponent(adminEmail)}&topics=${topicsKey}`;
-    const ws = new WebSocket(url);
-    wsRef.current = ws;
     setStatus('connecting');
 
-    ws.addEventListener('open', () => {
-      setStatus('open');
-      backoffRef.current = INITIAL_BACKOFF_MS; // reset backoff after successful connect
-    });
-
-    ws.addEventListener('message', (e) => {
+    // Fetch a short-lived HMAC ticket from the server (master admin token stays
+    // server-side; only the ticket travels in the WS URL — see BUG #3 fix).
+    void (async () => {
+      let ticket: string;
+      let admin_email: string;
+      let expires_at: number;
       try {
-        const msg = JSON.parse(e.data) as RealtimeMessage;
-        if (msg.type === 'connected') {
-          setPeerCount(msg.peer_count);
+        const res = await fetch('/api/admin/realtime/ticket', { cache: 'no-store' });
+        if (!res.ok) {
+          setStatus('error');
           return;
         }
-        // Event
-        setEvents((prev) => {
-          const next = [...prev, msg];
-          // Cap buffer to avoid memory bloat on long-running sessions
-          return next.length > MAX_BUFFERED_EVENTS ? next.slice(-MAX_BUFFERED_EVENTS) : next;
-        });
+        const data = (await res.json()) as {
+          ok?: boolean;
+          ticket?: string;
+          admin_email?: string;
+          expires_at?: number;
+        };
+        if (!data.ok || !data.ticket || !data.admin_email || !data.expires_at) {
+          setStatus('error');
+          return;
+        }
+        ticket = data.ticket;
+        admin_email = data.admin_email;
+        expires_at = data.expires_at;
       } catch {
-        // Ignore malformed messages
+        setStatus('error');
+        return;
       }
-    });
 
-    ws.addEventListener('close', () => {
-      // Ignore the close of a socket already superseded by a reconnect — else its
-      // async close would schedule a duplicate reconnect racing the new socket.
-      if (wsRef.current !== ws) return;
-      setStatus('closed');
-      if (closedByCallerRef.current) return; // intentional close, no reconnect
-      // Exponential backoff reconnect
-      const backoff = backoffRef.current;
-      backoffRef.current = Math.min(backoffRef.current * 2, MAX_BACKOFF_MS);
-      reconnectTimerRef.current = setTimeout(() => {
-        connect();
-      }, backoff);
-    });
+      const url = `${wsUrl}?ticket=${encodeURIComponent(ticket)}&admin_email=${encodeURIComponent(admin_email)}&expires=${expires_at}&topics=${topicsKey}`;
+      const ws = new WebSocket(url);
+      wsRef.current = ws;
+      setStatus('connecting');
 
-    ws.addEventListener('error', () => {
-      setStatus('error');
-    });
+      ws.addEventListener('open', () => {
+        setStatus('open');
+        backoffRef.current = INITIAL_BACKOFF_MS; // reset backoff after successful connect
+      });
+
+      ws.addEventListener('message', (e) => {
+        try {
+          const msg = JSON.parse(e.data) as RealtimeMessage;
+          if (msg.type === 'connected') {
+            setPeerCount(msg.peer_count);
+            return;
+          }
+          // Event
+          setEvents((prev) => {
+            const next = [...prev, msg];
+            // Cap buffer to avoid memory bloat on long-running sessions
+            return next.length > MAX_BUFFERED_EVENTS ? next.slice(-MAX_BUFFERED_EVENTS) : next;
+          });
+        } catch {
+          // Ignore malformed messages
+        }
+      });
+
+      ws.addEventListener('close', () => {
+        // Ignore the close of a socket already superseded by a reconnect — else its
+        // async close would schedule a duplicate reconnect racing the new socket.
+        if (wsRef.current !== ws) return;
+        setStatus('closed');
+        if (closedByCallerRef.current) return; // intentional close, no reconnect
+        // Exponential backoff reconnect
+        const backoff = backoffRef.current;
+        backoffRef.current = Math.min(backoffRef.current * 2, MAX_BACKOFF_MS);
+        reconnectTimerRef.current = setTimeout(() => {
+          connect();
+        }, backoff);
+      });
+
+      ws.addEventListener('error', () => {
+        setStatus('error');
+      });
+    })();
   }, [topicsKey]);
 
   const reconnect = useCallback(() => {
