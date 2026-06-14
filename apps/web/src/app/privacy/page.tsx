@@ -6,6 +6,7 @@ export const metadata = {
   title: 'Chính sách bảo mật',
   description:
     'Cam kết bảo vệ dữ liệu cá nhân tại hieu.asia, tuân thủ Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân.',
+  alternates: { canonical: 'https://hieu.asia/privacy' },
 };
 
 const LAST_UPDATED = '22/05/2026 (Wave 41)';
