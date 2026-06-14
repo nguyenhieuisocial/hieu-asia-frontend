@@ -41,7 +41,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const core: MetadataRoute.Sitemap = [
     { url: BASE_URL, lastModified: now, changeFrequency: 'weekly', priority: 1 },
-    { url: `${BASE_URL}/onboarding`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
+    // NOTE: noindex pages are intentionally NOT listed here — /onboarding, /decisions/new,
+    // /journal/new, /affiliate/assets all set `robots.index:false`, so listing them in the
+    // sitemap is a conflicting signal (Google: "Submitted URL marked noindex"). Don't re-add.
     { url: `${BASE_URL}/pricing`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/features`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/about`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
@@ -110,17 +112,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/lo-trinh/ke-hoach-nam`, lastModified: now, changeFrequency: 'monthly', priority: 0.75 },
     { url: `${BASE_URL}/lo-trinh/hang-ngay`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${BASE_URL}/ban-do`, lastModified: now, changeFrequency: 'weekly', priority: 0.85 },
-    { url: `${BASE_URL}/decisions`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${BASE_URL}/decisions/new`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${BASE_URL}/methodology/tu-vi`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE_URL}/decisions`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },    { url: `${BASE_URL}/methodology/tu-vi`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/methodology/algorithm-changelog`, lastModified: now, changeFrequency: 'monthly', priority: 0.55 },
   ];
 
   // Wave 6 — Retention features + new compat/career tools.
   const retentionTools: MetadataRoute.Sitemap = [
-    { url: `${BASE_URL}/journal`, lastModified: now, changeFrequency: 'weekly', priority: 0.75 },
-    { url: `${BASE_URL}/journal/new`, lastModified: now, changeFrequency: 'monthly', priority: 0.65 },
-    { url: `${BASE_URL}/weekly-review`, lastModified: now, changeFrequency: 'weekly', priority: 0.75 },
+    { url: `${BASE_URL}/journal`, lastModified: now, changeFrequency: 'weekly', priority: 0.75 },    { url: `${BASE_URL}/weekly-review`, lastModified: now, changeFrequency: 'weekly', priority: 0.75 },
     { url: `${BASE_URL}/compatibility`, lastModified: now, changeFrequency: 'monthly', priority: 0.75 },
     { url: `${BASE_URL}/xem-hop-nhom`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/career-fit`, lastModified: now, changeFrequency: 'monthly', priority: 0.75 },
@@ -145,9 +143,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/affiliate/commissions`, lastModified: now, changeFrequency: 'weekly', priority: 0.65 },
     { url: `${BASE_URL}/affiliate/signup`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/affiliate/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
-    { url: `${BASE_URL}/affiliate/leaderboard`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
-    { url: `${BASE_URL}/affiliate/assets`, lastModified: now, changeFrequency: 'monthly', priority: 0.55 },
-  ];
+    { url: `${BASE_URL}/affiliate/leaderboard`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },  ];
 
   // Daily / reading / brand additions.
   const waveAdditions: MetadataRoute.Sitemap = [
