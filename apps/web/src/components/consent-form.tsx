@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button, Checkbox } from '@hieu-asia/ui';
 import { Check } from 'lucide-react';
-import { getOrCreateAnonUserId, logAudit } from '@hieu-asia/supabase';
+import { logAuditEvent } from '@/lib/account-history';
 import { track } from '@/lib/analytics';
 
 const PURPOSES = [
@@ -57,11 +57,11 @@ export function ConsentForm() {
       );
     }
 
-    // Generate / reuse anonymous user id and record consent in Supabase audit_log.
-    const userId = getOrCreateAnonUserId();
+    // Record consent in Supabase audit_log via the secure same-origin route.
+    // The actor is forced server-side (verified uid if signed in, else a
+    // server-minted anon id), so we no longer pass a client-chosen user_id.
     try {
-      await logAudit({
-        user_id: userId,
+      await logAuditEvent({
         action: 'consent_accepted',
         audit_metadata: { boxes: 1, version: 'v2.0', purposes, accepted_at: acceptedAt },
       });
