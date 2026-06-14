@@ -125,6 +125,20 @@ export function BatTuChecker() {
     ? `Lá số Bát Tự của tôi: Nhật Chủ ${chart.dayMaster.can} (${chart.dayMaster.element} ${chart.dayMaster.yang ? 'dương' : 'âm'}), hành ${chart.strongest} vượng${chart.missing.length ? `, thiếu ${chart.missing.join('/')}` : ''}. Tính theo tiết khí chuẩn, không bói toán — xem thử lá số của bạn miễn phí 👇`
     : '';
 
+  // Bản "nếm thử" — teaser CÁ NHÂN HOÁ theo lá số (chốt khách; KHÔNG lộ kết luận trả phí).
+  const curDaiVan = chart?.daiVan?.pillars.find((p) => curAge != null && curAge >= p.startAge && curAge <= p.endAge) ?? null;
+  const teasers = chart
+    ? [
+        `Nhật Chủ ${chart.dayMaster.can} (${chart.dayMaster.element}) của bạn VƯỢNG hay NHƯỢC — và hành nào là "dụng thần" nên dùng.`,
+        chart.missing.length
+          ? `Bạn thiếu hành ${chart.missing.join(', ')}, mạnh hành ${chart.strongest} — định hình tính cách & lựa chọn ra sao, bù thế nào.`
+          : `Ngũ hành đủ cả 5, mạnh nhất là ${chart.strongest} — thế cân bằng này nói gì về bạn.`,
+        curDaiVan
+          ? `Đại vận ${curDaiVan.can} ${curDaiVan.chi} (${curDaiVan.startAge}–${curDaiVan.endAge} tuổi) bạn đang đi — trọng tâm 10 năm này.`
+          : `Đại vận 10 năm hiện tại của bạn — bối cảnh & trọng tâm giai đoạn.`,
+      ]
+    : [];
+
   return (
     <Card className="border-gold/20 bg-card/60 backdrop-blur-sm">
       <CardHeader>
@@ -392,15 +406,30 @@ export function BatTuChecker() {
               là để bạn TỰ hiểu mình, không phải bói toán hay phán số mệnh.
             </p>
 
-            <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-5 text-center">
-              <p className="font-heading text-lg text-foreground">Muốn AI luận sâu lá số Bát Tự này?</p>
-              <p className="mx-auto mt-1 max-w-xl text-sm text-muted-foreground">
-                Bản đọc đầy đủ: vượng–nhược nhật chủ, dụng thần, Thập Thần theo trụ, đối chiếu cổ thư — viết
-                riêng cho bạn, văn phong &ldquo;hiểu mình để tự quyết&rdquo;.
+            <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-5">
+              <p className="text-center font-heading text-lg text-foreground">
+                Bản đọc Bát Tự đầy đủ — viết riêng cho lá số này
               </p>
-              <Button asChild size="lg" className="mt-4">
-                <Link href="/onboarding?intent=ngu-hanh">Tạo bản đọc Bát Tự đầy đủ →</Link>
-              </Button>
+              <p className="mx-auto mt-1 max-w-xl text-center text-sm text-muted-foreground">
+                Lá số trên là <strong>dữ kiện</strong>. Bản đọc trả phí luận sâu — riêng cho lá số của bạn:
+              </p>
+              <ul className="mx-auto mt-3 max-w-xl space-y-1.5 text-left text-sm text-foreground/85">
+                {teasers.map((tl) => (
+                  <li key={tl} className="flex gap-2">
+                    <span className="mt-0.5 shrink-0 text-gold-700">›</span>
+                    <span>{tl}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mx-auto mt-3 max-w-xl text-center text-xs text-muted-foreground">
+                …cùng Thập Thần theo từng trụ, vòng Trường Sinh, đối chiếu cổ thư — văn phong &ldquo;hiểu mình
+                để tự quyết&rdquo;, không bói toán.
+              </p>
+              <div className="mt-4 text-center">
+                <Button asChild size="lg">
+                  <Link href="/onboarding?intent=ngu-hanh">Đọc bản đầy đủ cho lá số này →</Link>
+                </Button>
+              </div>
             </div>
           </div>
         )}
