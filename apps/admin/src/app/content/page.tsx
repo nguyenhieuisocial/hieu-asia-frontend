@@ -34,7 +34,7 @@ import {
   cn,
   toast,
 } from '@hieu-asia/ui';
-import { FileText, Plus, Layers, ChevronRight, Sparkles } from 'lucide-react';
+import { FileText, Plus, Layers, ChevronRight, Sparkles, Check, Ban, X } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
@@ -46,6 +46,7 @@ import {
   type ContentStatus,
   type ContentDraftListRow,
   type DraftKey,
+  type PillarGenResult,
 } from '@/hooks/useContentDrafts';
 
 const STATUS_FILTERS: Array<{ value: 'all' | ContentStatus; label: string }> = [
@@ -111,6 +112,9 @@ export default function ContentListPage() {
   const generateMut = useGenerateContent();
   const bulkMut = useBulkGeneratePillars();
 
+  // Per-slug outcomes from the most recent bulk-generate (new worker only).
+  const [bulkResults, setBulkResults] = React.useState<PillarGenResult[] | null>(null);
+
   function onCreate(e: React.FormEvent) {
     e.preventDefault();
     if (!createTopic.trim()) {
@@ -158,9 +162,25 @@ export default function ContentListPage() {
       )
     )
       return;
+    setBulkResults(null);
     bulkMut.mutate(undefined, {
       onSuccess: (res) => {
-        if (res.ok) {
+        if (res.ok && res.results) {
+          // New worker — show the per-slug outcome list inline.
+          setBulkResults(res.results);
+          const created = res.created ?? res.results.filter((r) => r.status === 'created').length;
+          const failed = res.failed ?? res.results.filter((r) => r.status === 'failed').length;
+          if (failed > 0) {
+            toast.error(`Sinh pillar: ${created} thành công, ${failed} lỗi`, {
+              description: 'Xem chi tiết từng slug bên dưới.',
+            });
+          } else {
+            toast.success(`Đã sinh ${created} pillar`, {
+              description: 'Xem chi tiết từng slug bên dưới.',
+            });
+          }
+        } else if (res.ok) {
+          // Legacy fire-and-forget worker (no `results`) — fall back to the old behavior.
           toast.success(`Đã queue ${res.queued ?? 10} pillar`, {
             description:
               'Chạy ngầm ~5-10 phút. Tải lại danh sách để xem tiến độ. Nếu sau 10 phút vẫn rỗng → kiểm tra LLM keys (Anthropic/OpenAI/Google) + Supabase trên Worker.',
@@ -200,6 +220,10 @@ export default function ContentListPage() {
           </>
         }
       />
+
+      {bulkResults && (
+        <BulkResultsPanel results={bulkResults} onDismiss={() => setBulkResults(null)} />
+      )}
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as ContentType)} className="space-y-4">
         <TabsList>
@@ -345,6 +369,78 @@ export default function ContentListPage() {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+const STATUS_META: Record<
+  PillarGenResult['status'],
+  { label: string; icon: React.ReactNode; cls: string }
+> = {
+  created: {
+    label: 'Đã tạo',
+    icon: <Check className="h-4 w-4" />,
+    cls: 'text-emerald-600 dark:text-emerald-400',
+  },
+  skipped: {
+    label: 'Bỏ qua (đã tồn tại)',
+    icon: <Ban className="h-4 w-4" />,
+    cls: 'text-muted-foreground',
+  },
+  failed: {
+    label: 'Lỗi',
+    icon: <X className="h-4 w-4" />,
+    cls: 'text-red-600 dark:text-red-400',
+  },
+};
+
+function BulkResultsPanel({
+  results,
+  onDismiss,
+}: {
+  results: PillarGenResult[];
+  onDismiss: () => void;
+}) {
+  const created = results.filter((r) => r.status === 'created').length;
+  const skipped = results.filter((r) => r.status === 'skipped').length;
+  const failed = results.filter((r) => r.status === 'failed').length;
+
+  return (
+    <Card>
+      <CardContent className="space-y-3 py-4">
+        <div className="flex items-center justify-between">
+          <div className="text-sm font-medium text-foreground">
+            Kết quả sinh loạt pillar
+            <span className="ml-2 text-xs font-normal text-muted-foreground">
+              {created} đã tạo · {skipped} bỏ qua · {failed} lỗi
+            </span>
+          </div>
+          <Button size="sm" variant="ghost" onClick={onDismiss}>
+            Đóng
+          </Button>
+        </div>
+        <ul className="divide-y divide-border rounded-md border border-border">
+          {results.map((r) => {
+            const meta = STATUS_META[r.status];
+            return (
+              <li key={r.slug} className="flex items-start gap-3 px-3 py-2 text-sm">
+                <span className={cn('mt-0.5 shrink-0', meta.cls)}>{meta.icon}</span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs text-foreground">/{r.slug}</span>
+                    <span className={cn('text-xs', meta.cls)}>{meta.label}</span>
+                  </div>
+                  {r.status === 'failed' && r.error && (
+                    <div className="mt-0.5 break-words text-xs text-red-600/90 dark:text-red-400/90">
+                      {r.error}
+                    </div>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </CardContent>
+    </Card>
   );
 }
 

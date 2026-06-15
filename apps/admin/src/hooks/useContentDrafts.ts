@@ -93,8 +93,26 @@ export interface PatchResponse {
   error?: string;
 }
 
+export type PillarGenStatus = 'created' | 'skipped' | 'failed';
+
+export interface PillarGenResult {
+  slug: string;
+  status: PillarGenStatus;
+  error?: string;
+  id?: string;
+}
+
 export interface BulkResponse {
   ok: boolean;
+  /**
+   * Per-slug outcomes from the worker. Present on the new synchronous worker;
+   * ABSENT on the legacy fire-and-forget worker (which returned `queued`/`slugs`
+   * + a 202). Callers MUST treat this as optional and fall back gracefully.
+   */
+  results?: PillarGenResult[];
+  created?: number;
+  failed?: number;
+  /** Legacy fire-and-forget worker fields (kept for graceful fallback). */
   queued?: number;
   slugs?: string[];
   note?: string;
