@@ -42,6 +42,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  toast,
 } from '@hieu-asia/ui';
 import {
   ChevronDown,
@@ -202,7 +203,17 @@ export default function CustomersPage() {
       fmtCsvFilename('customers'),
       CSV_HEADERS,
     );
-  }, [customers]);
+    // CSV runs client-side from the rows already fetched — only the current
+    // page (max LIMIT). Warn when more pages exist so the export isn't
+    // mistaken for the full customer list.
+    if (data?.next_cursor) {
+      toast.warning('Chỉ xuất các khách đang hiển thị trên trang này', {
+        description: `Còn trang sau chưa tải. File chỉ gồm ${customers.length} dòng của trang hiện tại.`,
+      });
+    } else {
+      toast.success(`Đang tải CSV ${customers.length} khách hàng…`);
+    }
+  }, [customers, data?.next_cursor]);
 
   const columns = React.useMemo<AdminTableColumn<Customer>[]>(
     () => [
@@ -293,9 +304,10 @@ export default function CustomersPage() {
               size="sm"
               onClick={onExportCsv}
               disabled={customers.length === 0}
+              title="Xuất các khách đang hiển thị trên trang hiện tại ra file CSV."
             >
               <Download className="mr-1.5 h-3.5 w-3.5" aria-hidden />
-              Xuất CSV
+              Xuất CSV {data?.next_cursor ? 'trang này' : ''}
             </Button>
             <Button
               variant="outline"

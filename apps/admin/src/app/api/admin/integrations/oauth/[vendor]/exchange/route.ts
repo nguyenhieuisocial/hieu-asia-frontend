@@ -4,6 +4,11 @@ import { requireAdminSession } from '@/lib/auth-server';
 const GATEWAY = process.env.HIEU_API_GATEWAY_URL ?? 'https://api.hieu.asia';
 const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
 
+// Mirrors the worker OAUTH_CONFIG keys (api-gateway). Validate before
+// interpolating `vendor` into the gateway URL so an unknown/garbage vendor
+// can't be used to forge a request path.
+const OAUTH_VENDORS = new Set(['anthropic', 'openai', 'google']);
+
 type Ctx = { params: Promise<{ vendor: string }> };
 
 export async function POST(req: NextRequest, ctx: Ctx) {
@@ -19,6 +24,9 @@ export async function POST(req: NextRequest, ctx: Ctx) {
     );
   }
   const { vendor } = await ctx.params;
+  if (!OAUTH_VENDORS.has(vendor)) {
+    return NextResponse.json({ ok: false, error: 'unknown vendor' }, { status: 400 });
+  }
   const body = await req.text();
   try {
     const r = await fetch(`${GATEWAY}/oauth/${vendor}/exchange`, {
