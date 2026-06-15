@@ -15,18 +15,41 @@
  */
 
 import * as React from 'react';
+import dynamic from 'next/dynamic';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle, cn } from '@hieu-asia/ui';
-import { Search, MousePointerClick, Eye, Percent, CalendarRange } from 'lucide-react';
+import {
+  Search,
+  MousePointerClick,
+  Eye,
+  Percent,
+  CalendarRange,
+  Gauge,
+  TrendingUp,
+  TrendingDown,
+} from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
-import { KpiCard } from '@/components/admin/kpi-card';
+import { KpiCard, type KpiCardProps } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
 import {
   getGscSearchAnalytics,
   type GscResponse,
   type GscRow,
+  type GscMetrics,
+  type GscMovingQuery,
 } from '@/lib/gsc-api';
+
+// Recharts (~150KB gzipped) lazy-loaded so it stays out of the initial bundle;
+// the trend card hydrates after the KPI row paints. ssr:false — admin is
+// auth-gated and not SEO-indexed (mirrors ReadingsChart on the dashboard).
+const GscTrendChart = dynamic(
+  () => import('@/components/admin/seo/GscTrendChart').then((m) => m.GscTrendChart),
+  {
+    ssr: false,
+    loading: () => <div className="h-72 animate-pulse rounded bg-muted/30" aria-hidden />,
+  },
+);
 
 type Range = 7 | 28 | 90;
 
@@ -46,6 +69,43 @@ function fmtPct(v: number): string {
 /** avg rank — 1 decimal, lower = better. */
 function fmtPos(v: number): string {
   return v.toFixed(1);
+}
+
+type Delta = NonNullable<KpiCardProps['delta']>;
+
+/**
+ * Period-over-period delta for a "higher = better" metric (clicks, impressions,
+ * CTR). Returns a percentage tag with green-up / red-down semantics. `null` when
+ * there's no comparable prior value.
+ */
+function pctDelta(current: number, prev: number): Delta | null {
+  if (prev === 0) {
+    if (current === 0) return null;
+    return { value: 'mới', direction: 'up' };
+  }
+  const ratio = ((current - prev) / Math.abs(prev)) * 100;
+  if (Math.abs(ratio) < 0.1) return { value: '0%', direction: 'flat' };
+  const sign = ratio > 0 ? '+' : '';
+  return {
+    value: `${sign}${ratio.toFixed(1)}%`,
+    direction: ratio > 0 ? 'up' : 'down',
+  };
+}
+
+/**
+ * Delta for avg position, where LOWER is better. We invert the colour semantics
+ * so an improvement (rank drops) shows green; the value carries an explicit ▲/▼
+ * rank glyph so the direction stays unambiguous despite the inverted colour.
+ */
+function positionDelta(current: number, prev: number): Delta | null {
+  const diff = current - prev; // negative = improved (moved up the page)
+  if (Math.abs(diff) < 0.05) return { value: '±0', direction: 'flat' };
+  const improved = diff < 0;
+  return {
+    // ▲ = climbed toward #1 (good); ▼ = slipped down. Magnitude in ranks.
+    value: `${improved ? '▲' : '▼'} ${Math.abs(diff).toFixed(1)}`,
+    direction: improved ? 'up' : 'down',
+  };
 }
 
 /** Top-queries / top-pages table. Truncates long keys with a title tooltip. */
@@ -93,6 +153,55 @@ function GscTable({ title, rows }: { title: string; rows: GscRow[] }) {
             </table>
           </div>
         )}
+      </CardContent>
+    </Card>
+  );
+}
+
+/**
+ * Rising / falling queries — compact list of queries whose impressions moved
+ * most vs the prior equal-length window. `variant` flips the glyph + colour.
+ */
+function MovingQueries({
+  title,
+  rows,
+  variant,
+}: {
+  title: string;
+  rows: GscMovingQuery[];
+  variant: 'rising' | 'falling';
+}) {
+  const isRising = variant === 'rising';
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-sm">
+          {isRising ? (
+            <TrendingUp className="h-4 w-4 text-jade" aria-hidden />
+          ) : (
+            <TrendingDown className="h-4 w-4 text-red-500" aria-hidden />
+          )}
+          {title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="p-0">
+        <ul className="divide-y divide-border/40">
+          {rows.map((r) => (
+            <li key={r.key} className="flex items-center justify-between gap-3 px-4 py-2.5">
+              <span className="min-w-0 flex-1 truncate text-sm text-foreground/85" title={r.key}>
+                {r.key}
+              </span>
+              <span
+                className={cn(
+                  'shrink-0 font-mono text-xs tabular-nums',
+                  isRising ? 'text-jade-700 dark:text-jade-50' : 'text-red-700 dark:text-red-300',
+                )}
+              >
+                {isRising ? '▲' : '▼'} {fmtInt(Math.abs(r.deltaImpressions))}
+              </span>
+            </li>
+          ))}
+        </ul>
       </CardContent>
     </Card>
   );
@@ -198,6 +307,22 @@ export default function SeoPage() {
   const avgCtr = totals.impressions > 0 ? totals.clicks / totals.impressions : 0;
   const rangeLabel = ok?.range ? `${ok.range.start} → ${ok.range.end}` : '—';
 
+  // Period-over-period — all optional; deltas only render when prev+current
+  // are both present (backend may not yet emit them → cards render as today).
+  const current: GscMetrics | undefined = ok?.current;
+  const prev = ok?.prev;
+  const hasDelta = !!current && !!prev;
+  const clicksDelta = hasDelta ? pctDelta(current.clicks, prev.clicks) : undefined;
+  const imprDelta = hasDelta ? pctDelta(current.impressions, prev.impressions) : undefined;
+  const ctrDelta = hasDelta ? pctDelta(current.ctr, prev.ctr) : undefined;
+  const posDelta = hasDelta ? positionDelta(current.position, prev.position) : undefined;
+
+  const daily = ok?.daily ?? [];
+  const rising = ok?.risingQueries ?? [];
+  const falling = ok?.fallingQueries ?? [];
+  const showTrend = !q.isLoading && daily.length > 1;
+  const showMovers = !q.isLoading && (rising.length > 0 || falling.length > 0);
+
   return (
     <div className="space-y-6">
       {header}
@@ -208,16 +333,18 @@ export default function SeoPage() {
         </p>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <KpiCard
           label="Tổng clicks"
           value={q.isLoading ? '…' : fmtInt(totals.clicks)}
+          delta={clicksDelta}
           icon={<MousePointerClick className="h-4 w-4" />}
           accent="gold"
         />
         <KpiCard
           label="Tổng impressions"
           value={q.isLoading ? '…' : fmtInt(totals.impressions)}
+          delta={imprDelta}
           icon={<Eye className="h-4 w-4" />}
           accent="jade"
         />
@@ -225,9 +352,23 @@ export default function SeoPage() {
           label="CTR trung bình"
           value={q.isLoading ? '…' : fmtPct(avgCtr)}
           hint="clicks / impressions"
+          delta={ctrDelta}
           icon={<Percent className="h-4 w-4" />}
           accent="purple"
         />
+        {/* Avg position — lower = better, so positionDelta inverts colour
+            semantics (green = climbed toward #1). Only shown once the backend
+            emits `current.position`; otherwise we keep the original 4 cards. */}
+        {current ? (
+          <KpiCard
+            label="Vị trí TB"
+            value={q.isLoading ? '…' : fmtPos(current.position)}
+            hint="thấp hơn = tốt hơn"
+            delta={posDelta}
+            icon={<Gauge className="h-4 w-4" />}
+            accent="jade"
+          />
+        ) : null}
         <KpiCard
           label="Khoảng ngày"
           value={q.isLoading ? '…' : rangeLabel}
@@ -235,6 +376,17 @@ export default function SeoPage() {
           icon={<CalendarRange className="h-4 w-4" />}
         />
       </div>
+
+      {showTrend && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm">Xu hướng tìm kiếm theo ngày</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <GscTrendChart data={daily} />
+          </CardContent>
+        </Card>
+      )}
 
       {q.isLoading ? (
         <Card>
@@ -249,6 +401,17 @@ export default function SeoPage() {
         <div className="grid gap-4 lg:grid-cols-2">
           <GscTable title="Từ khoá hàng đầu" rows={ok?.queries ?? []} />
           <GscTable title="Trang hàng đầu" rows={ok?.pages ?? []} />
+        </div>
+      )}
+
+      {showMovers && (
+        <div className="grid gap-4 lg:grid-cols-2">
+          {rising.length > 0 && (
+            <MovingQueries title="Từ khoá đang lên" rows={rising} variant="rising" />
+          )}
+          {falling.length > 0 && (
+            <MovingQueries title="Từ khoá đang xuống" rows={falling} variant="falling" />
+          )}
         </div>
       )}
     </div>
