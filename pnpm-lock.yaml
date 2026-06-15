@@ -347,7 +347,7 @@ importers:
       '@sentry/nextjs':
         specifier: ^10.53.1
         version: 10.55.0(@opentelemetry/core@2.7.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.7.1(@opentelemetry/api@1.9.1))(next@15.5.19(@opentelemetry/api@1.9.1)(@playwright/test@1.60.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(webpack@5.107.2(esbuild@0.25.12)(lightningcss@1.32.0)(postcss@8.5.15))
-      '@sparticuz/chromium':
+      '@sparticuz/chromium-min':
         specifier: 131.0.1
         version: 131.0.1
       '@supabase/supabase-js':
@@ -3031,8 +3031,8 @@ packages:
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
 
-  '@sparticuz/chromium@131.0.1':
-    resolution: {integrity: sha512-VfmHkQmb/Px0zjwdSQwjRMwFw63Qfj+g4Giumz4jiAGEpXHgIZk6xEwlUz6yiUHVDveK2TEgMR2MR6I3okOE7w==}
+  '@sparticuz/chromium-min@131.0.1':
+    resolution: {integrity: sha512-kQqKflJtjcBb8aA1b6L4dhU/8UbCJHcjb3au8cjBhKAG7nzqh//92rHCB6ULkgV0CMEQmfp3LDBQ/W8Wg2k+Yg==}
     engines: {node: '>= 16'}
 
   '@stablelib/base64@1.0.1':
@@ -11364,7 +11364,7 @@ snapshots:
 
   '@socket.io/component-emitter@3.1.2': {}
 
-  '@sparticuz/chromium@131.0.1':
+  '@sparticuz/chromium-min@131.0.1':
     dependencies:
       follow-redirects: 1.16.0(debug@4.3.2)
       tar-fs: 3.1.2
