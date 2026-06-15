@@ -17,6 +17,7 @@ import {
   Users,
   Activity,
   DollarSign,
+  Compass,
 } from 'lucide-react';
 import { RevenueChart, type RevenueDay } from '@/components/analytics/RevenueChart';
 import { VendorCostChart, type VendorCost } from '@/components/analytics/VendorCostChart';
@@ -224,6 +225,26 @@ export default function AnalyticsPage() {
           </>
         }
       />
+
+      {/* Signpost: the acquisition/channel data the founder usually hunts for
+          (traffic theo kênh & nguồn, doanh thu theo kênh, funnel) lives on the
+          PostHog hub under tab=cohorts. This page is revenue + funnel only —
+          just point there, don't duplicate. */}
+      <Link
+        href="/posthog?tab=cohorts"
+        className="group flex items-center justify-between gap-3 rounded-md border border-gold/30 bg-gold/5 px-4 py-3 text-sm transition-colors hover:bg-gold/10"
+      >
+        <span className="flex items-center gap-2 text-foreground">
+          <Compass className="h-4 w-4 text-gold" aria-hidden />
+          <span>
+            <strong className="font-medium">Xem traffic theo kênh &amp; nguồn</strong>
+            <span className="ml-1.5 text-muted-foreground">
+              — khách đến từ đâu (UTM, referrer), doanh thu theo kênh, funnel chuyển đổi
+            </span>
+          </span>
+        </span>
+        <span className="shrink-0 text-gold transition-transform group-hover:translate-x-0.5">→</span>
+      </Link>
 
       {showError && (
         <ErrorBlock

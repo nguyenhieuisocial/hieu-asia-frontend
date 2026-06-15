@@ -21,7 +21,7 @@
 
 import Link from 'next/link';
 import { cn } from '@hieu-asia/ui';
-import { Activity, Users2, Gauge, MousePointerClick, Radio } from 'lucide-react';
+import { Activity, Compass, Gauge, MousePointerClick, Radio } from 'lucide-react';
 import OverviewPanel from '@/components/admin/analytics/OverviewPanel';
 import CohortsPanel from '@/components/admin/analytics/CohortsPanel';
 import WebVitalsPanel from '@/components/admin/analytics/WebVitalsPanel';
@@ -32,8 +32,12 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 60;
 
 const TABS = [
-  { id: 'overview', label: 'Tổng quan', Icon: Activity },
-  { id: 'cohorts', label: 'Cohorts & Retention', Icon: Users2 },
+  { id: 'overview', label: 'Tổng quan lưu lượng', Icon: Activity },
+  // id stays 'cohorts' so existing /posthog?tab=cohorts links + the
+  // /cohorts → /posthog?tab=cohorts redirect keep working. Only the
+  // founder-facing label/icon change: this tab is really acquisition
+  // channels (UTM/referrer), paid-by-channel, và funnel chuyển đổi.
+  { id: 'cohorts', label: 'Kênh traffic & Giữ chân', Icon: Compass },
   { id: 'web-vitals', label: 'Web Vitals', Icon: Gauge },
   { id: 'sticky-cta', label: 'Sticky CTA', Icon: MousePointerClick },
   { id: 'live-events', label: 'Sự kiện trực tiếp', Icon: Radio },
