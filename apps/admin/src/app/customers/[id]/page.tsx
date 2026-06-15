@@ -124,10 +124,7 @@ function CustomerDetailPageInner() {
     if (!customer) return customer;
     const bd = sessions.find((s) => s.state_json?.birth_data)?.state_json
       ?.birth_data;
-    // Shape guard — an incomplete/garbled state_json could make birth_data a
-    // non-object (string/array). Only enrich from a plain object so unexpected
-    // fields can't leak into the customer record.
-    if (typeof bd !== 'object' || bd === null || Array.isArray(bd)) return customer;
+    if (!bd) return customer;
     return {
       ...customer,
       display_name: customer.display_name ?? bd.display_name ?? null,
@@ -284,6 +281,7 @@ function CustomerDetailPageInner() {
             auditTrail={auditTrail}
             value={active}
             onValueChange={onTabChange}
+            onSessionMutated={() => refetch()}
           />
         </CardContent>
       </Card>

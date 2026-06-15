@@ -57,6 +57,8 @@ import {
   getKpis,
   getReadingsPerDay,
 } from '@/lib/admin-api';
+import { getGscSearchAnalytics } from '@/lib/gsc-api';
+import { Search, MousePointerClick, Percent, Gauge } from 'lucide-react';
 
 /** BUG-022: surface a visual alert + Triage CTA when oldest pending > 60 min. */
 const QUEUE_ALERT_AGE_SECONDS = 60 * 60;
@@ -77,6 +79,10 @@ function fmtUsdSmall(v: number) {
   return `$${v.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 }
 
+function fmtInt(v: number) {
+  return v.toLocaleString('vi-VN', { maximumFractionDigits: 0 });
+}
+
 export default function AdminOverviewPage() {
   const kpis = useQuery({ queryKey: ['admin', 'kpis'], queryFn: getKpis, staleTime: 60_000 });
   const readings = useQuery({
@@ -90,6 +96,13 @@ export default function AdminOverviewPage() {
     staleTime: 60_000,
   });
   const queue = useQueueDepth();
+  // Organic search at-a-glance (GSC, 7d) — reuses the same proxy endpoint as
+  // the /seo page. staleTime 5min mirrors that page; GSC data lags ~2-3 days.
+  const gsc = useQuery({
+    queryKey: ['admin', 'gsc', 'dashboard'],
+    queryFn: () => getGscSearchAnalytics(7),
+    staleTime: 5 * 60_000,
+  });
 
   // Build sparklines from existing series.
   const readingsSpark = (readings.data ?? []).slice(-14).map((d) => d.count);
@@ -111,6 +124,17 @@ export default function AdminOverviewPage() {
       ? `${Math.floor(oldestAgeSec / 3600)}h${Math.round((oldestAgeSec % 3600) / 60)}m`
       : `${Math.round(oldestAgeSec / 60)}m`
     : null;
+
+  // GSC at-a-glance. `not_configured` → render a "connect GSC" note. Otherwise
+  // derive clicks / CTR / avg rank (`current.position`, optional) + a clicks
+  // sparkline from `daily` when present (same optional-field rollout as /seo).
+  const gscData = gsc.data && gsc.data.ok ? gsc.data : undefined;
+  const gscNotConfigured = gsc.data?.ok === false && gsc.data.error === 'not_configured';
+  const gscClicks = gscData?.totals.clicks ?? 0;
+  const gscImpr = gscData?.totals.impressions ?? 0;
+  const gscCtr = gscImpr > 0 ? gscClicks / gscImpr : 0;
+  const gscPosition = gscData?.current?.position;
+  const gscSpark = (gscData?.daily ?? []).map((d) => d.clicks);
 
   return (
     <div className="space-y-6">
@@ -273,6 +297,65 @@ export default function AdminOverviewPage() {
           <HealthWidget />
         </div>
       </div>
+
+      {/* Tìm kiếm Google (GSC) — organic at-a-glance, 7 ngày */}
+      <Card>
+        <CardHeader className="flex-row items-center justify-between gap-2 space-y-0">
+          <div>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Search className="h-4 w-4 text-gold" aria-hidden />
+              Tìm kiếm Google (7 ngày)
+            </CardTitle>
+            <CardDescription>Traffic tự nhiên từ Google Search Console — trễ ~2-3 ngày.</CardDescription>
+          </div>
+          <Link
+            href="/seo"
+            className="shrink-0 text-xs text-muted-foreground transition-colors hover:text-gold"
+          >
+            Chi tiết →
+          </Link>
+        </CardHeader>
+        <CardContent>
+          {gsc.isLoading ? (
+            <div className="h-16 animate-pulse rounded bg-muted/30" aria-hidden />
+          ) : gscNotConfigured ? (
+            <p className="text-sm text-muted-foreground">
+              Chưa kết nối GSC.{' '}
+              <Link href="/seo" className="text-gold hover:underline">
+                Kết nối ở trang SEO →
+              </Link>
+            </p>
+          ) : !gscData ? (
+            <p className="text-sm text-muted-foreground">Chưa tải được dữ liệu Search Console.</p>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-3">
+              <KpiCard
+                label="Clicks (7d)"
+                value={fmtInt(gscClicks)}
+                icon={<MousePointerClick className="h-4 w-4" />}
+                accent="gold"
+                sparkline={gscSpark.length > 1 ? gscSpark : undefined}
+                delta={null}
+                hint="organic"
+              />
+              <KpiCard
+                label="CTR"
+                value={`${(gscCtr * 100).toFixed(1)}%`}
+                icon={<Percent className="h-4 w-4" />}
+                accent="purple"
+                hint="clicks / impressions"
+              />
+              <KpiCard
+                label="Vị trí TB"
+                value={gscPosition != null ? gscPosition.toFixed(1) : '—'}
+                icon={<Gauge className="h-4 w-4" />}
+                accent="jade"
+                hint="thấp hơn = tốt hơn"
+              />
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Platform KPI band */}
       <PlatformKpiBand />

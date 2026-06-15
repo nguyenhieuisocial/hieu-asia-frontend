@@ -26,6 +26,7 @@ import {
   type AdminTableColumn,
 } from '@/components/admin/table/AdminTable';
 import { ProductTabs, type ProductTab } from '@/components/admin/product-tabs';
+import { SessionAccessDialog } from './SessionAccessDialog';
 import { fmtDate, fmtRelative } from './format';
 import {
   type AuditRow,
@@ -42,6 +43,8 @@ export interface CustomerDetailTabsProps {
   auditTrail: AuditRow[];
   value: string;
   onValueChange: (id: string) => void;
+  /** Refetch the customer after a per-session access grant/revoke. */
+  onSessionMutated?: () => void;
 }
 
 export function CustomerDetailTabs({
@@ -51,6 +54,7 @@ export function CustomerDetailTabs({
   auditTrail,
   value,
   onValueChange,
+  onSessionMutated,
 }: CustomerDetailTabsProps) {
   const tabs: ProductTab[] = [
     {
@@ -69,7 +73,7 @@ export function CustomerDetailTabs({
     {
       id: 'sessions',
       label: `Phiên · ${sessions.length}`,
-      content: <SessionsTab sessions={sessions} />,
+      content: <SessionsTab sessions={sessions} onSessionMutated={onSessionMutated} />,
     },
     {
       id: 'transactions',
@@ -124,7 +128,13 @@ function ProfileTab({ customer }: { customer: CustomerDetail }) {
   );
 }
 
-function SessionsTab({ sessions }: { sessions: SessionRow[] }) {
+function SessionsTab({
+  sessions,
+  onSessionMutated,
+}: {
+  sessions: SessionRow[];
+  onSessionMutated?: () => void;
+}) {
   if (sessions.length === 0) {
     return (
       <EmptyState
@@ -171,6 +181,26 @@ function SessionsTab({ sessions }: { sessions: SessionRow[] }) {
             <span className="shrink-0 rounded border border-gold/20 bg-gold/5 px-2 py-0.5 text-xs text-muted-foreground">
               {status}
             </span>
+            {/* Access-only override: help a stuck customer read this one session
+                without touching money. Both actions shown — the operator picks
+                grant or revoke; we don't track unlock state per session here. */}
+            {sid && (
+              <div className="flex shrink-0 items-center gap-1.5">
+                <SessionAccessDialog
+                  sessionId={sid}
+                  action="grant"
+                  triggerLabel="Cấp quyền đọc"
+                  onSuccess={onSessionMutated}
+                />
+                <SessionAccessDialog
+                  sessionId={sid}
+                  action="revoke"
+                  triggerLabel="Thu hồi"
+                  triggerClassName="shrink-0 rounded border border-border bg-muted/20 px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-muted/40"
+                  onSuccess={onSessionMutated}
+                />
+              </div>
+            )}
           </li>
         );
       })}
