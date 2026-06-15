@@ -69,7 +69,9 @@ export default function AdminTasksPage() {
 
   const retry = useMutation({
     mutationFn: (id: string) => retryTask(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'tasks'] }),
+    // Partial match (exact:false) so the filtered list key ['admin','tasks',filter]
+    // is invalidated too — otherwise the retried row wouldn't refresh.
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'tasks'], exact: false }),
   });
 
   const oldestAge = queue.data?.oldest_pending_age_seconds ?? null;

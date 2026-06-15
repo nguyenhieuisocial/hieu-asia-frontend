@@ -263,7 +263,14 @@ function ReparentDialog({
       toast.success('Đã reparent thành công');
       onDone();
     } catch (e) {
-      toast.error((e as Error).message);
+      const msg = (e as Error).message;
+      // Worker surfaces the Postgres RPC "Cycle detected — new parent is in
+      // self subtree" raw — translate to a friendly vi-VN hint.
+      if (/cycle/i.test(msg)) {
+        toast.error('Không thể chuyển: tạo vòng lặp — cha mới đã là cấp dưới của affiliate này.');
+      } else {
+        toast.error(msg);
+      }
     } finally {
       setBusy(false);
     }
