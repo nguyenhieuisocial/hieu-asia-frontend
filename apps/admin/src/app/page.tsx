@@ -27,6 +27,7 @@ import {
   ListChecks,
   DollarSign,
   Coins,
+  UserPlus,
 } from 'lucide-react';
 // Wave 60.12 — ReadingsChart lazy-loaded so Recharts (~150KB gzipped) is
 // no longer in the initial bundle. KPI cards above-fold paint first; chart
@@ -56,6 +57,7 @@ import {
   getCostByDay,
   getKpis,
   getReadingsPerDay,
+  getSignupsByDay,
 } from '@/lib/admin-api';
 import { getGscSearchAnalytics } from '@/lib/gsc-api';
 import { Search, MousePointerClick, Percent, Gauge } from 'lucide-react';
@@ -96,6 +98,14 @@ export default function AdminOverviewPage() {
     staleTime: 60_000,
   });
   const queue = useQueueDepth();
+  // New signups (last 30d) — powers the "Khách mới hôm nay" KPI. The backend
+  // endpoint /admin/signups/by_day ships in a parallel wave; getSignupsByDay
+  // returns null until then, so the card degrades to "—" without breaking.
+  const signups = useQuery({
+    queryKey: ['admin', 'signups'],
+    queryFn: () => getSignupsByDay(30),
+    staleTime: 60_000,
+  });
   // Organic search at-a-glance (GSC, 7d) — reuses the same proxy endpoint as
   // the /seo page. staleTime 5min mirrors that page; GSC data lags ~2-3 days.
   const gsc = useQuery({
@@ -107,6 +117,25 @@ export default function AdminOverviewPage() {
   // Build sparklines from existing series.
   const readingsSpark = (readings.data ?? []).slice(-14).map((d) => d.count);
   const costSpark = (cost.data ?? []).slice(-14).map((d) => d.total_usd);
+
+  // New-signups KPI. signups.data is null until the backend endpoint deploys —
+  // when null we render the card with "—" and no spark/delta (no fake data).
+  const signupsData = signups.data ?? null;
+  const signupsSpark = (signupsData?.days ?? []).slice(-14).map((d) => d.count);
+  // Delta vs the previous window, only when the backend supplies prev_total.
+  const signupsDelta = (() => {
+    if (!signupsData || signupsData.prev_total == null) return null;
+    const prev = signupsData.prev_total;
+    const cur = signupsData.total;
+    if (prev === 0 && cur === 0) return null;
+    if (prev === 0) return { value: `+${cur.toFixed(0)}`, direction: 'up' as const };
+    const pct = ((cur - prev) / Math.abs(prev)) * 100;
+    if (Math.abs(pct) < 1) return { value: '0%', direction: 'flat' as const };
+    return {
+      value: `${pct > 0 ? '+' : ''}${pct.toFixed(0)}%`,
+      direction: (pct > 0 ? 'up' : 'down') as 'up' | 'down',
+    };
+  })();
 
   // Spend total for 14d
   const spend14d = (cost.data ?? []).reduce((s, d) => s + d.total_usd, 0);
@@ -209,13 +238,23 @@ export default function AdminOverviewPage() {
       <h2 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/85">
         Vận hành
       </h2>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
         <KpiCard
           label="Tổng người dùng"
           value={kpis.data?.total_users.toLocaleString('vi-VN') ?? '—'}
           icon={<Users className="h-4 w-4" />}
           accent="gold"
           hint="end-user"
+        />
+        <KpiCard
+          label="Khách mới hôm nay"
+          // Null until /admin/signups/by_day deploys → "—", no fake number.
+          value={signupsData ? signupsData.today.toLocaleString('vi-VN') : '—'}
+          icon={<UserPlus className="h-4 w-4" />}
+          accent="jade"
+          sparkline={signupsSpark.length > 1 ? signupsSpark : undefined}
+          delta={signupsDelta}
+          hint={signupsData ? '14d' : 'chưa có endpoint'}
         />
         <KpiCard
           label="Báo cáo hôm nay"
