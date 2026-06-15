@@ -43,9 +43,14 @@ export async function POST(
     );
   }
 
+  // Forward `?format=html` so the worker can return the print-ready HTML
+  // (browser "Save as PDF") instead of a Browser-Rendering PDF.
+  const format = req.nextUrl.searchParams.get('format');
+  const upstreamQS = format === 'html' ? '?format=html' : '';
+
   try {
     const res = await fetch(
-      `${HIEU_API_URL}/reading/${encodeURIComponent(id)}/export-pdf`,
+      `${HIEU_API_URL}/reading/${encodeURIComponent(id)}/export-pdf${upstreamQS}`,
       {
         method: 'POST',
         headers: {

@@ -545,8 +545,7 @@ function SectionBody({ content }: { content: string }) {
 type PdfState =
   | { status: 'idle' }
   | { status: 'loading' }
-  | { status: 'error'; message: string }
-  | { status: 'done'; url: string };
+  | { status: 'error'; message: string };
 
 function ReportFooter({ readingId }: { readingId: string }) {
   const [copied, setCopied] = React.useState(false);
@@ -565,11 +564,23 @@ function ReportFooter({ readingId }: { readingId: string }) {
   const onExportPdf = async () => {
     if (pdfState.status === 'loading') return;
 
-    // If we already have a URL from a previous successful call, open it.
-    if (pdfState.status === 'done') {
-      window.open(pdfState.url, '_blank', 'noopener');
+    // Open the print window SYNCHRONOUSLY inside the click so the browser
+    // treats it as user-initiated (popup blockers allow it). We fill it after
+    // fetching the print-ready HTML. The worker returns the same A4 template
+    // the PDF path uses + an auto-print script → the browser's "Save as PDF"
+    // produces the file. This needs no Cloudflare Browser Rendering.
+    const printWin = window.open('', '_blank');
+    if (!printWin) {
+      setPdfState({
+        status: 'error',
+        message: 'Vui lòng cho phép cửa sổ bật lên (popup) cho hieu.asia để tải PDF.',
+      });
       return;
     }
+    printWin.document.write(
+      '<!doctype html><meta charset="utf-8"><title>Đang chuẩn bị PDF…</title>' +
+        '<p style="font-family:system-ui,sans-serif;padding:2rem;color:#3B2754">Đang chuẩn bị báo cáo để lưu PDF…</p>',
+    );
 
     setPdfState({ status: 'loading' });
 
@@ -595,7 +606,7 @@ function ReportFooter({ readingId }: { readingId: string }) {
       }
 
       const res = await fetch(
-        `/api/reading/${encodeURIComponent(readingId)}/export-pdf`,
+        `/api/reading/${encodeURIComponent(readingId)}/export-pdf?format=html`,
         {
           method: 'POST',
           headers,
@@ -604,6 +615,7 @@ function ReportFooter({ readingId }: { readingId: string }) {
       );
 
       if (res.status === 402 || res.status === 403) {
+        printWin.close();
         setPdfState({
           status: 'error',
           message: 'Mở khoá báo cáo trả phí để tải PDF chất lượng cao.',
@@ -612,6 +624,7 @@ function ReportFooter({ readingId }: { readingId: string }) {
       }
 
       if (res.status === 401) {
+        printWin.close();
         setPdfState({
           status: 'error',
           message: 'Vui lòng đăng nhập để tải PDF.',
@@ -620,6 +633,7 @@ function ReportFooter({ readingId }: { readingId: string }) {
       }
 
       if (!res.ok) {
+        printWin.close();
         let errMsg = 'Tạo PDF thất bại, vui lòng thử lại.';
         try {
           const body = (await res.json()) as { error?: string };
@@ -631,19 +645,19 @@ function ReportFooter({ readingId }: { readingId: string }) {
         return;
       }
 
-      const data = (await res.json()) as { ok: boolean; url?: string; error?: string };
-      if (!data.ok || !data.url) {
-        setPdfState({
-          status: 'error',
-          message: data.error ?? 'Không nhận được link PDF.',
-        });
-        return;
-      }
-
-      setPdfState({ status: 'done', url: data.url });
+      const html = await res.text();
+      printWin.document.open();
+      printWin.document.write(html);
+      printWin.document.close();
+      printWin.focus();
       track('pdf_exported', { reading_id: readingId });
-      window.open(data.url, '_blank', 'noopener');
+      setPdfState({ status: 'idle' });
     } catch {
+      try {
+        printWin.close();
+      } catch {
+        /* ignore */
+      }
       setPdfState({
         status: 'error',
         message: 'Lỗi kết nối, vui lòng thử lại.',
@@ -652,11 +666,7 @@ function ReportFooter({ readingId }: { readingId: string }) {
   };
 
   const pdfLabel =
-    pdfState.status === 'loading'
-      ? 'Đang tạo PDF…'
-      : pdfState.status === 'done'
-        ? 'Mở PDF'
-        : 'Tải PDF báo cáo';
+    pdfState.status === 'loading' ? 'Đang chuẩn bị…' : 'Tải PDF báo cáo';
 
   return (
     <div className="border-t border-gold/15 pt-6 print:hidden">
