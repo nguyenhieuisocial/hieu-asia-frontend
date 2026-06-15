@@ -196,14 +196,9 @@ function IngestForm({ onIngested }: { onIngested: () => void }) {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!sourceId || !sourceTitle || chunks.length === 0) return;
-    mutation.mutate({
-      source_id: sourceId,
-      source_title: sourceTitle,
-      discipline,
-      chunks,
-      license_status: license,
-    });
+    // Backend endpoint (POST /admin/rag/ingest) chưa tồn tại → không gọi mock.
+    // Guard chặn cả Enter-submit để form không giả vờ đã lưu. Bỏ return này khi
+    // backend wire xong (cùng lúc bỏ `disabled` ở nút Ingest).
   };
 
   return (
@@ -294,10 +289,16 @@ function IngestForm({ onIngested }: { onIngested: () => void }) {
             </p>
           )}
           <div className="sm:col-span-2">
-            {/* Endpoint chưa wire — submit chỉ để show notice "chưa kết nối (mock)",
-                không lưu gì. Disable khi đang chạy / thiếu field như cũ. */}
-            <Button type="submit" disabled={mutation.isPending || chunks.length === 0 || !sourceId || !sourceTitle}>
-              {mutation.isPending ? 'Đang kiểm tra…' : `Ingest ${chunks.length} chunks (chưa khả dụng)`}
+            {/* Endpoint POST /admin/rag/ingest chưa có ở worker → submit luôn
+                disabled để KHÔNG đánh lừa founder rằng ingest hoạt động. Bỏ
+                disable khi backend wire xong (đổi `true` → điều kiện field). */}
+            <Button
+              type="submit"
+              disabled
+              title="Endpoint ingest (POST /admin/rag/ingest) chưa có ở backend"
+              aria-label="Ingest chưa khả dụng — backend chưa kết nối"
+            >
+              Ingest {chunks.length} chunks (sắp ra mắt — chưa kết nối backend)
             </Button>
           </div>
         </form>

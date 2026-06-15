@@ -9,7 +9,9 @@
 import * as React from 'react';
 import { use } from 'react';
 import Link from 'next/link';
+import { AlertTriangle } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, StatusBadge } from '@hieu-asia/ui';
+import { fetchFraudReport, type FraudFlag } from '@/lib/affiliate-admin-api';
 
 type PreferredRail = 'manual_csv' | 'wise' | 'stripe_connect';
 type RailStatus = 'pending' | 'verified' | 'rejected' | 'manual_only';
@@ -87,6 +89,9 @@ export default function AdminAffiliateDetailPage({
 }) {
   const { id } = use(params);
   const [data, setData] = React.useState<DetailResponse | null>(null);
+  // Fraud flags for THIS affiliate, fetched on load so the warning surfaces
+  // before any approve action. Empty = no active flag (or report unavailable).
+  const [fraudFlags, setFraudFlags] = React.useState<FraudFlag[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [busy, setBusy] = React.useState(false);
@@ -108,9 +113,25 @@ export default function AdminAffiliateDetailPage({
     }
   }, [id]);
 
+  // Fraud check — runs on load (and after approve/reject via `load`) so the
+  // banner is visible BEFORE the admin approves a payout. Best-effort: if the
+  // fraud report is unreachable we simply show no banner (don't block the page).
+  const loadFraud = React.useCallback(async () => {
+    try {
+      const report = await fetchFraudReport();
+      const active = (report.flags ?? []).filter(
+        (f) => f.affiliate_id === id && !f.cleared_at,
+      );
+      setFraudFlags(active);
+    } catch {
+      setFraudFlags([]);
+    }
+  }, [id]);
+
   React.useEffect(() => {
     load();
-  }, [load]);
+    loadFraud();
+  }, [load, loadFraud]);
 
   async function approve(payoutId: string) {
     if (!window.confirm('Duyệt + đánh dấu đã trả payout này?')) return;
@@ -229,6 +250,36 @@ export default function AdminAffiliateDetailPage({
             {a.status === 'active' ? 'Ban' : 'Unban'}
           </Button>
         </header>
+
+        {/* Fraud warning — surfaces active fraud flags on load, BEFORE the admin
+            can approve a payout. Cleared flags are filtered out in loadFraud. */}
+        {fraudFlags.length > 0 && (
+          <div
+            role="alert"
+            className="flex items-start gap-3 rounded-xl border border-red-500/40 bg-red-500/[0.07] p-4"
+          >
+            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-red-600 dark:text-red-400" aria-hidden />
+            <div className="space-y-1">
+              <p className="font-semibold text-red-700 dark:text-red-200">
+                Affiliate này đang bị gắn cờ gian lận ({fraudFlags.length})
+              </p>
+              <p className="text-sm text-red-700/90 dark:text-red-100/80">
+                Kiểm tra kỹ trước khi duyệt payout. Có thể clear cờ ở{' '}
+                <Link href="/affiliates?tab=fraud" className="underline hover:text-gold">
+                  tab Fraud
+                </Link>
+                .
+              </p>
+              <ul className="mt-1 space-y-0.5 text-xs text-red-700/90 dark:text-red-100/80">
+                {fraudFlags.map((f, i) => (
+                  <li key={i} className="font-mono">
+                    {f.reason} — {f.detail} ({dt(f.flagged_at)})
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
 
         {/* Stats */}
         <div className="grid gap-4 sm:grid-cols-4">
