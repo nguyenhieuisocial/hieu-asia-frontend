@@ -25,7 +25,10 @@ import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { LiveBadge } from '@/components/admin/live-badge';
 import { ErrorBlock } from '@/components/admin/error-block';
+import { EmptyState } from '@/components/admin/empty-state';
 import { EngineMetricsSection } from '@/components/admin/analytics/EngineMetricsSection';
+import { listTransactions } from '@/lib/admin-api';
+import type { AdminTransaction } from '@/lib/mock-data';
 
 interface AnalyticsResponse {
   ok: boolean;
@@ -73,6 +76,38 @@ function fmtCurrency(n: number) {
   return new Intl.NumberFormat('vi-VN').format(n) + ' đ';
 }
 
+// Revenue-by-tier — pure client-side aggregation over the transactions list
+// (listTransactions already maps metadata.tier → plan). No new endpoint.
+const TIER_LABEL: Record<AdminTransaction['plan'], string> = {
+  mentor_month: 'Mentor tháng',
+  mentor_year: 'Mentor năm',
+  lifetime: 'Trọn đời',
+};
+const TIER_ORDER: AdminTransaction['plan'][] = ['mentor_month', 'mentor_year', 'lifetime'];
+
+interface TierRow {
+  plan: AdminTransaction['plan'];
+  count: number;
+  total: number;
+}
+
+/** Aggregate SUCCEEDED transactions by plan → count + total VND per tier. */
+function aggregateByTier(txns: AdminTransaction[]): { rows: TierRow[]; total: number } {
+  const acc = new Map<AdminTransaction['plan'], TierRow>();
+  let total = 0;
+  for (const t of txns) {
+    if (t.status !== 'succeeded') continue;
+    const amount = t.amount_usd ?? 0; // amount_usd holds VND (SePay), despite the name
+    total += amount;
+    const cur = acc.get(t.plan) ?? { plan: t.plan, count: 0, total: 0 };
+    cur.count += 1;
+    cur.total += amount;
+    acc.set(t.plan, cur);
+  }
+  const rows = TIER_ORDER.filter((p) => acc.has(p)).map((p) => acc.get(p)!);
+  return { rows, total };
+}
+
 /**
  * Period-over-period delta tag for a KpiCard. Returns null when there is no
  * prior-period baseline (previous <= 0) so we never render a meaningless
@@ -109,6 +144,19 @@ export default function AnalyticsPage() {
     staleTime: 60_000,
     placeholderData: (prev) => prev,
   });
+
+  // Revenue-by-tier: reuse the existing transactions list (succeeded SePay
+  // payments) and aggregate by plan client-side. Independent of the analytics
+  // window — it's a lifetime breakdown of paid revenue per tier.
+  const txnQuery = useQuery({
+    queryKey: ['admin', 'transactions', 'by-tier'],
+    queryFn: () => listTransactions({ page_size: 500 }),
+    staleTime: 60_000,
+  });
+  const tierBreakdown = React.useMemo(
+    () => aggregateByTier(txnQuery.data?.rows ?? []),
+    [txnQuery.data?.rows],
+  );
 
   const showError = !!error || data?.ok === false;
   const errorMsg = (error as Error | undefined)?.message ?? data?.error;
@@ -260,6 +308,78 @@ export default function AnalyticsPage() {
             <p className="py-8 text-center text-sm text-muted-foreground">Đang tải…</p>
           ) : (
             <RevenueChart data={revenue.daily} />
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Doanh thu theo gói</CardTitle>
+          <CardDescription>
+            Tổng giao dịch thành công theo từng gói (lifetime — toàn bộ lịch sử).
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-0">
+          {txnQuery.isLoading ? (
+            <p className="px-6 py-8 text-center text-sm text-muted-foreground">Đang tải…</p>
+          ) : tierBreakdown.rows.length === 0 ? (
+            <EmptyState
+              title="Chưa có doanh thu theo gói"
+              description="Khi có giao dịch thành công, phân bổ theo gói sẽ hiện ở đây."
+              className="border-0 bg-transparent py-8"
+            />
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="border-b border-border/60 text-left text-xs text-muted-foreground">
+                  <tr>
+                    <th className="px-6 py-2.5 font-medium">Gói</th>
+                    <th className="px-6 py-2.5 text-right font-medium">Số giao dịch</th>
+                    <th className="px-6 py-2.5 text-right font-medium">Doanh thu</th>
+                    <th className="px-6 py-2.5 text-right font-medium">% tổng</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tierBreakdown.rows.map((r) => {
+                    const pct =
+                      tierBreakdown.total > 0
+                        ? (r.total / tierBreakdown.total) * 100
+                        : 0;
+                    return (
+                      <tr
+                        key={r.plan}
+                        className="border-b border-border/40 transition-colors last:border-0 hover:bg-muted/[0.04]"
+                      >
+                        <td className="px-6 py-2.5 text-foreground/85">{TIER_LABEL[r.plan]}</td>
+                        <td className="px-6 py-2.5 text-right font-mono text-foreground/70 tabular-nums">
+                          {r.count.toLocaleString('vi-VN')}
+                        </td>
+                        <td className="px-6 py-2.5 text-right font-mono text-foreground tabular-nums">
+                          {fmtCurrency(r.total)}
+                        </td>
+                        <td className="px-6 py-2.5 text-right font-mono text-foreground/70 tabular-nums">
+                          {pct.toFixed(0)}%
+                        </td>
+                      </tr>
+                    );
+                  })}
+                  <tr className="border-t border-border/60 font-medium">
+                    <td className="px-6 py-2.5 text-foreground">Tổng</td>
+                    <td className="px-6 py-2.5 text-right font-mono text-foreground tabular-nums">
+                      {tierBreakdown.rows
+                        .reduce((s, r) => s + r.count, 0)
+                        .toLocaleString('vi-VN')}
+                    </td>
+                    <td className="px-6 py-2.5 text-right font-mono text-foreground tabular-nums">
+                      {fmtCurrency(tierBreakdown.total)}
+                    </td>
+                    <td className="px-6 py-2.5 text-right font-mono text-foreground/70 tabular-nums">
+                      100%
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           )}
         </CardContent>
       </Card>
