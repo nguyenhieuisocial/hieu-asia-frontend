@@ -21,6 +21,32 @@ export interface GscRow {
   position: number;
 }
 
+/** One day of aggregated search metrics (ascending by date). */
+export interface GscDailyPoint {
+  date: string;
+  clicks: number;
+  impressions: number;
+  ctr: number;
+  position: number;
+}
+
+/** Aggregate metrics for a window — used for period-over-period deltas. */
+export interface GscMetrics {
+  clicks: number;
+  impressions: number;
+  ctr: number;
+  position: number;
+}
+
+/** A query with its delta vs the prior equal-length window. */
+export interface GscMovingQuery {
+  key: string;
+  clicks: number;
+  impressions: number;
+  deltaClicks: number;
+  deltaImpressions: number;
+}
+
 /** Success payload from the worker. */
 export interface GscSearchAnalytics {
   ok: true;
@@ -29,6 +55,19 @@ export interface GscSearchAnalytics {
   totals: { clicks: number; impressions: number };
   queries: GscRow[];
   pages: GscRow[];
+  // --- Trend / period-over-period (OPTIONAL — backend rollout in progress). ---
+  // The page MUST render exactly as before when these are absent; each new UI
+  // section renders only when its field is present + non-empty.
+  /** Daily series for the current window, ascending by date. */
+  daily?: GscDailyPoint[];
+  /** Aggregate metrics for the current window. */
+  current?: GscMetrics;
+  /** Prior equal-length window — for period-over-period deltas. */
+  prev?: GscMetrics & { range: { start: string; end: string } };
+  /** Queries gaining impressions vs the prior window (descending). */
+  risingQueries?: GscMovingQuery[];
+  /** Queries losing impressions vs the prior window (descending magnitude). */
+  fallingQueries?: GscMovingQuery[];
 }
 
 /** Structured error payload (503 not_configured / 502 auth_failed | gsc_api_error). */
