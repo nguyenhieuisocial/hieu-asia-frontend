@@ -41,12 +41,26 @@ const CHROMIUM_PACK_URL =
 async function launchBrowser() {
   // Vercel (Linux serverless): download + use the @sparticuz chromium pack.
   if (process.env.VERCEL) {
-    return puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(CHROMIUM_PACK_URL),
-      headless: true,
-    });
+    const execPath = await chromium.executablePath(CHROMIUM_PACK_URL);
+    try {
+      return await puppeteer.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: execPath,
+        headless: true,
+      });
+    } catch (e) {
+      // Surface diagnostics in the error so we can see WHY chromium can't load
+      // its shared libraries (libnss3) on Vercel — path vs missing-lib.
+      let tmp = 'n/a';
+      try {
+        const fs = await import('node:fs');
+        tmp = fs.readdirSync('/tmp').filter((f) => /chrom|nss|lib|al2|swift/i.test(f)).slice(0, 40).join(',');
+      } catch { /* ignore */ }
+      throw new Error(
+        `${(e as Error).message} || execPath=${execPath} || LD_LIBRARY_PATH=${process.env.LD_LIBRARY_PATH ?? '(unset)'} || /tmp=[${tmp}]`,
+      );
+    }
   }
   // Local dev: use an installed Chrome via puppeteer-core's channel resolver.
   return puppeteer.launch({ channel: 'chrome', headless: true });
