@@ -19,23 +19,32 @@
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
-import chromium from '@sparticuz/chromium';
+import chromium from '@sparticuz/chromium-min';
 import puppeteer from 'puppeteer-core';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-// Cold start (chromium spin-up ~2-3s) + render (~3-6s). 30s is ample.
+// Cold start (chromium pack download + spin-up ~5-8s) + render (~3-6s). 30s ample.
 export const maxDuration = 30;
 
 const HIEU_API_URL = process.env.HIEU_API_URL ?? 'https://api.hieu.asia';
 
+// chromium-min downloads the full browser pack (binary + shared libs incl
+// libnss3) at runtime — avoids the Vercel file-tracing gap that left the
+// bundled @sparticuz/chromium libs missing ("libnss3.so cannot open"). Pin the
+// pack to the chromium-min version (131.0.1). Overridable via env so the pack
+// can later be self-hosted on R2 instead of the GitHub release.
+const CHROMIUM_PACK_URL =
+  process.env.CHROMIUM_PACK_URL ??
+  'https://github.com/Sparticuz/chromium/releases/download/v131.0.1/chromium-v131.0.1-pack.tar';
+
 async function launchBrowser() {
-  // Vercel (Linux serverless): use the bundled @sparticuz chromium binary.
+  // Vercel (Linux serverless): download + use the @sparticuz chromium pack.
   if (process.env.VERCEL) {
     return puppeteer.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
+      executablePath: await chromium.executablePath(CHROMIUM_PACK_URL),
       headless: true,
     });
   }

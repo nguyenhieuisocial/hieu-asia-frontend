@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
   // by webpack/turbopack. Used by the server-side PDF export route to render the
   // Cẩm Nang report deterministically (browser "Save as PDF" can't control
   // headers/footers/margins/backgrounds → poor output).
-  serverExternalPackages: ['@sparticuz/chromium', 'puppeteer-core'],
+  serverExternalPackages: ['@sparticuz/chromium-min', 'puppeteer-core'],
   experimental: {
     typedRoutes: true,
   },
