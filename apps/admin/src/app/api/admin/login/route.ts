@@ -66,6 +66,14 @@ export async function POST(request: NextRequest) {
       if (r.status === 401) {
         return NextResponse.json({ error: 'Sai email hoặc mật khẩu.' }, { status: 401 });
       }
+      // Worker enforces a durable KV rate limit (5 fails / 15min / IP). Forward
+      // the 429 so the operator sees the right message instead of a generic 503.
+      if (r.status === 429) {
+        return NextResponse.json(
+          { error: 'Quá nhiều lần đăng nhập sai. Thử lại sau ít phút.' },
+          { status: 429 },
+        );
+      }
       if (!r.ok || !data.ok || !data.user) {
         workerError = data.error ?? `gateway HTTP ${r.status}`;
       } else if (data.user.email.toLowerCase() === email) {

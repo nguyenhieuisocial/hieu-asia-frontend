@@ -32,6 +32,8 @@ const ICON_PALETTE = <Palette className="h-4 w-4 text-gold" aria-hidden />;
 interface ProfileResp {
   ok?: boolean;
   profile?: AdminProfile;
+  /** Set by /api/admin/me when the gateway fetch failed (cookie-only data). */
+  degraded?: boolean;
   error?: string;
 }
 
@@ -103,6 +105,11 @@ export function ProfileTab() {
                 <p className="font-mono text-[11px] text-muted-foreground">
                   Last login: {fmtDate(profile.last_login_at)}
                 </p>
+                {data?.degraded && (
+                  <p className="text-[11px] text-amber-700 dark:text-amber-300">
+                    Thông tin đăng nhập gần nhất tạm thời không có (gateway lỗi) — thử tải lại sau.
+                  </p>
+                )}
               </div>
             </div>
           ) : (

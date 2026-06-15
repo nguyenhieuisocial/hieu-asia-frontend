@@ -72,14 +72,73 @@ export default function ContentDetailPage() {
   const [tab, setTab] = React.useState<TabKey>('edited');
   const [editedDraft, setEditedDraft] = React.useState<string>('');
 
+  // Crash-safe autosave (#batch2) — the edited markdown lives only in React
+  // state, so a PATCH/network failure on save would wipe in-progress edits.
+  // Mirror every keystroke into sessionStorage (debounced) so the editor can
+  // offer to restore them if the save fails or the tab reloads. Keyed by draft
+  // id. Cleared on a successful save.
+  const draftStorageKey = id ? `admin:content-draft:${id}` : null;
+  // `restoreCandidate` holds sessionStorage text that differs from the server
+  // draft (newer unsaved edits). When set, an inline prompt offers to restore.
+  const [restoreCandidate, setRestoreCandidate] = React.useState<string | null>(null);
+  // Guards the hydrate effect from re-running its restore check after the
+  // user has interacted (typed / restored / dismissed).
+  const restoreChecked = React.useRef(false);
+
   // Hydrate edited from server data on first load. Always prefer:
   //   1. server-saved edited_content (founder previously edited)
   //   2. judge-picked draft (default starting point)
+  // Then, if sessionStorage holds different text, surface it as a restore
+  // candidate rather than overwriting silently.
   React.useEffect(() => {
     if (!draft) return;
-    const initial = draft.edited_content ?? draft.drafts[draft.judge_pick] ?? '';
-    setEditedDraft(initial);
-  }, [draft]);
+    const serverInitial = draft.edited_content ?? draft.drafts[draft.judge_pick] ?? '';
+    setEditedDraft(serverInitial);
+    if (restoreChecked.current || !draftStorageKey || typeof window === 'undefined') return;
+    restoreChecked.current = true;
+    try {
+      const stashed = window.sessionStorage.getItem(draftStorageKey);
+      if (stashed != null && stashed !== serverInitial) {
+        setRestoreCandidate(stashed);
+      }
+    } catch {
+      /* sessionStorage unavailable (private mode) — skip restore */
+    }
+  }, [draft, draftStorageKey]);
+
+  // Debounced mirror of editedDraft → sessionStorage as the user types.
+  React.useEffect(() => {
+    if (!draftStorageKey || typeof window === 'undefined') return;
+    // Don't stash before the first hydrate (avoids writing the empty initial state).
+    if (!restoreChecked.current) return;
+    const t = window.setTimeout(() => {
+      try {
+        window.sessionStorage.setItem(draftStorageKey, editedDraft);
+      } catch {
+        /* quota / private mode — best-effort */
+      }
+    }, 600);
+    return () => window.clearTimeout(t);
+  }, [editedDraft, draftStorageKey]);
+
+  const clearStash = React.useCallback(() => {
+    if (!draftStorageKey || typeof window === 'undefined') return;
+    try {
+      window.sessionStorage.removeItem(draftStorageKey);
+    } catch {
+      /* ignore */
+    }
+  }, [draftStorageKey]);
+
+  const restoreStash = React.useCallback(() => {
+    if (restoreCandidate != null) setEditedDraft(restoreCandidate);
+    setRestoreCandidate(null);
+  }, [restoreCandidate]);
+
+  const dismissStash = React.useCallback(() => {
+    setRestoreCandidate(null);
+    clearStash();
+  }, [clearStash]);
 
   if (isLoading && !draft) {
     return (
@@ -113,8 +172,10 @@ export default function ContentDetailPage() {
       { edited_content: editedDraft },
       {
         onSuccess: (res) => {
-          if (res.ok) toast.success('Đã lưu draft');
-          else toast.error('Lưu thất bại', { description: res.error });
+          if (res.ok) {
+            clearStash();
+            toast.success('Đã lưu draft');
+          } else toast.error('Lưu thất bại', { description: res.error });
         },
         onError: (e) => toast.error('Lưu thất bại', { description: (e as Error).message }),
       },
@@ -126,8 +187,10 @@ export default function ContentDetailPage() {
       { edited_content: editedDraft, status: 'in_review' },
       {
         onSuccess: (res) => {
-          if (res.ok) toast.success('Đã đánh dấu review');
-          else toast.error('Cập nhật thất bại', { description: res.error });
+          if (res.ok) {
+            clearStash();
+            toast.success('Đã đánh dấu review');
+          } else toast.error('Cập nhật thất bại', { description: res.error });
         },
         onError: (e) => toast.error('Cập nhật thất bại', { description: (e as Error).message }),
       },
@@ -150,6 +213,7 @@ export default function ContentDetailPage() {
       {
         onSuccess: (res) => {
           if (res.ok) {
+            clearStash();
             if (res.publish_result?.ok) {
               toast.success(
                 draft.type === 'newsletter' ? 'Đã gửi newsletter' : 'Đã publish pillar',
@@ -295,6 +359,22 @@ export default function ContentDetailPage() {
         <TabsContent value="edited">
           <Card>
             <CardContent className="space-y-3 p-4">
+              {restoreCandidate != null && (
+                <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-gold/40 bg-gold/5 px-3 py-2 text-xs text-foreground/85">
+                  <span>
+                    Tìm thấy bản chỉnh sửa chưa lưu (lần trước có thể lưu thất bại). Khôi phục bản
+                    chỉnh sửa chưa lưu?
+                  </span>
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline" onClick={restoreStash}>
+                      Khôi phục
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={dismissStash}>
+                      Bỏ qua
+                    </Button>
+                  </div>
+                </div>
+              )}
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>
                   Markdown editor — đây là bản sẽ được publish. Mặc định khởi tạo từ {JUDGE_LABEL[draft.judge_pick]}.

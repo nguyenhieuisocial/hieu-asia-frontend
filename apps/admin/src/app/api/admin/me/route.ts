@@ -37,7 +37,9 @@ export async function GET() {
       { cache: 'no-store', headers: { 'X-Admin-Token': TOKEN } },
     );
     if (!r.ok) {
-      return NextResponse.json({ ok: true, profile: base });
+      // Gateway reachable but errored → cookie-only data, flag as degraded so
+      // the UI can note that last_login / display_name are temporarily missing.
+      return NextResponse.json({ ok: true, degraded: true, profile: base });
     }
     const text = await r.text();
     try {
@@ -53,10 +55,11 @@ export async function GET() {
         },
       });
     } catch {
-      return NextResponse.json({ ok: true, profile: base });
+      // Non-JSON gateway response → degraded.
+      return NextResponse.json({ ok: true, degraded: true, profile: base });
     }
   } catch {
     // Gateway down → degrade gracefully.
-    return NextResponse.json({ ok: true, profile: base });
+    return NextResponse.json({ ok: true, degraded: true, profile: base });
   }
 }

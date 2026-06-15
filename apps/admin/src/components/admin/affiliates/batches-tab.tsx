@@ -103,7 +103,7 @@ export function BatchesTab() {
       toast.success(`CSV ${d.row_count} dòng đã sẵn sàng`);
       // Wave 45.2 P2-5 — surface missing-bank-info warning before download.
       if (d.warning) {
-        toast.error(d.warning);
+        toast.warning(d.warning);
       }
       window.open(d.url, '_blank', 'noopener,noreferrer');
     },
