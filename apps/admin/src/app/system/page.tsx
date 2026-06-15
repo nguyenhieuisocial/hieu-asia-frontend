@@ -40,6 +40,18 @@ function SystemPageInner() {
   const param = searchParams.get('tab');
   const active: TabId = isValidTab(param) ? param : 'services';
 
+  // Normalize an invalid `?tab=` value out of the URL so deep-links / stale
+  // bookmarks fall back to the default tab cleanly instead of leaving a bad
+  // param behind. Only acts when `tab` is present but not a known id.
+  React.useEffect(() => {
+    if (param !== null && !isValidTab(param)) {
+      const next = new URLSearchParams(searchParams.toString());
+      next.delete('tab');
+      const qs = next.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    }
+  }, [param, pathname, router, searchParams]);
+
   const onTabChange = React.useCallback(
     (id: string) => {
       const next = new URLSearchParams(searchParams.toString());
