@@ -84,8 +84,11 @@ export async function POST(request: NextRequest) {
     if (breakGlassPw && email === 'admin@hieu.asia' && constantTimeEqual(password, breakGlassPw)) {
       matchedRole = 'owner';
     } else {
+      // Log the real backend error server-side for debugging, but return a
+      // generic message — don't leak gateway internals to the client.
+      console.error('[admin/login] auth failed:', workerError);
       return NextResponse.json(
-        { error: `Không thể xác thực: ${workerError}` },
+        { error: 'Không thể xác thực. Thử lại sau.' },
         { status: 503 },
       );
     }

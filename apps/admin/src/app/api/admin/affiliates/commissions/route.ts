@@ -108,6 +108,35 @@ export async function PATCH(req: NextRequest) {
   if (!ALLOWED_STATUSES.has(body.status)) {
     return NextResponse.json({ ok: false, error: `status must be one of ${[...ALLOWED_STATUSES].join(',')}` }, { status: 400 });
   }
+
+  // Clawback is only legal from a commission that is currently held or
+  // available. Reject e.g. clawing back something already paid / void /
+  // clawed_back — read the current row first and verify the transition.
+  if (body.status === 'clawed_back') {
+    const cur = await sbServer<Pick<CommissionRow, 'status'>[]>(
+      `affiliate_commissions?select=status&id=eq.${encodeURIComponent(body.id)}&limit=1`,
+    );
+    if (!cur.ok) {
+      return NextResponse.json(
+        { ok: false, error: cur.error ?? 'Supabase error' },
+        { status: cur.status === 503 ? 503 : 502 },
+      );
+    }
+    const current = cur.body?.[0];
+    if (!current) {
+      return NextResponse.json({ ok: false, error: 'commission not found' }, { status: 404 });
+    }
+    if (current.status !== 'held' && current.status !== 'available') {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: `cannot claw back from '${current.status}' — only 'held' or 'available' commissions can be clawed back`,
+        },
+        { status: 409 },
+      );
+    }
+  }
+
   const r = await sbServer(
     `affiliate_commissions?id=eq.${encodeURIComponent(body.id)}`,
     {
