@@ -563,29 +563,10 @@ function ReportFooter({ readingId }: { readingId: string }) {
 
   const onExportPdf = async () => {
     if (pdfState.status === 'loading') return;
-
-    // Open the print window SYNCHRONOUSLY inside the click so the browser
-    // treats it as user-initiated (popup blockers allow it). We fill it after
-    // fetching the print-ready HTML. The worker returns the same A4 template
-    // the PDF path uses + an auto-print script → the browser's "Save as PDF"
-    // produces the file. This needs no Cloudflare Browser Rendering.
-    const printWin = window.open('', '_blank');
-    if (!printWin) {
-      setPdfState({
-        status: 'error',
-        message: 'Vui lòng cho phép cửa sổ bật lên (popup) cho hieu.asia để tải PDF.',
-      });
-      return;
-    }
-    printWin.document.write(
-      '<!doctype html><meta charset="utf-8"><title>Đang chuẩn bị PDF…</title>' +
-        '<p style="font-family:system-ui,sans-serif;padding:2rem;color:#3B2754">Đang chuẩn bị báo cáo để lưu PDF…</p>',
-    );
-
     setPdfState({ status: 'loading' });
 
     try {
-      // Grab Supabase access token from the auth client (may be null for anon).
+      // Supabase access token (may be null for anon → worker 401s).
       let accessToken: string | null = null;
       try {
         const { getSupabaseAuth } = await import('@/lib/auth-client');
@@ -598,42 +579,28 @@ function ReportFooter({ readingId }: { readingId: string }) {
         /* auth client unavailable — proceed, worker will 401 */
       }
 
-      const headers: Record<string, string> = {
-        'content-type': 'application/json',
-      };
-      if (accessToken) {
-        headers['authorization'] = `Bearer ${accessToken}`;
-      }
+      const headers: Record<string, string> = { 'content-type': 'application/json' };
+      if (accessToken) headers['authorization'] = `Bearer ${accessToken}`;
 
+      // Server renders a deterministic PDF (no browser print dialog) and streams
+      // it back as a file. One click → download.
       const res = await fetch(
-        `/api/reading/${encodeURIComponent(readingId)}/export-pdf?format=html`,
-        {
-          method: 'POST',
-          headers,
-          cache: 'no-store',
-        },
+        `/api/reading/${encodeURIComponent(readingId)}/export-pdf`,
+        { method: 'POST', headers, cache: 'no-store' },
       );
 
       if (res.status === 402 || res.status === 403) {
-        printWin.close();
         setPdfState({
           status: 'error',
           message: 'Mở khoá báo cáo trả phí để tải PDF chất lượng cao.',
         });
         return;
       }
-
       if (res.status === 401) {
-        printWin.close();
-        setPdfState({
-          status: 'error',
-          message: 'Vui lòng đăng nhập để tải PDF.',
-        });
+        setPdfState({ status: 'error', message: 'Vui lòng đăng nhập để tải PDF.' });
         return;
       }
-
       if (!res.ok) {
-        printWin.close();
         let errMsg = 'Tạo PDF thất bại, vui lòng thử lại.';
         try {
           const body = (await res.json()) as { error?: string };
@@ -645,28 +612,25 @@ function ReportFooter({ readingId }: { readingId: string }) {
         return;
       }
 
-      const html = await res.text();
-      printWin.document.open();
-      printWin.document.write(html);
-      printWin.document.close();
-      printWin.focus();
+      // Success → download the PDF blob.
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Cam-Nang-Cuoc-Doi.pdf';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
       track('pdf_exported', { reading_id: readingId });
       setPdfState({ status: 'idle' });
     } catch {
-      try {
-        printWin.close();
-      } catch {
-        /* ignore */
-      }
-      setPdfState({
-        status: 'error',
-        message: 'Lỗi kết nối, vui lòng thử lại.',
-      });
+      setPdfState({ status: 'error', message: 'Lỗi kết nối, vui lòng thử lại.' });
     }
   };
 
   const pdfLabel =
-    pdfState.status === 'loading' ? 'Đang chuẩn bị…' : 'Tải PDF báo cáo';
+    pdfState.status === 'loading' ? 'Đang tạo PDF…' : 'Tải PDF báo cáo';
 
   return (
     <div className="border-t border-gold/15 pt-6 print:hidden">
