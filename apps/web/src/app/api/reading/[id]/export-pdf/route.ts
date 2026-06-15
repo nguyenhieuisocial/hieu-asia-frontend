@@ -50,15 +50,10 @@ async function launchBrowser() {
         headless: true,
       });
     } catch (e) {
-      // Surface diagnostics in the error so we can see WHY chromium can't load
-      // its shared libraries (libnss3) on Vercel — path vs missing-lib.
-      let tmp = 'n/a';
-      try {
-        const fs = await import('node:fs');
-        tmp = fs.readdirSync('/tmp').filter((f) => /chrom|nss|lib|al2|swift/i.test(f)).slice(0, 40).join(',');
-      } catch { /* ignore */ }
+      // Surface diagnostics: does executablePath set LD_LIBRARY_PATH to where the
+      // libs (libnss3) were extracted? This pinpoints the Vercel-specific failure.
       throw new Error(
-        `${(e as Error).message} || execPath=${execPath} || LD_LIBRARY_PATH=${process.env.LD_LIBRARY_PATH ?? '(unset)'} || /tmp=[${tmp}]`,
+        `${(e as Error).message} || execPath=${execPath} || LD_LIBRARY_PATH=${process.env.LD_LIBRARY_PATH ?? '(unset)'}`,
       );
     }
   }
