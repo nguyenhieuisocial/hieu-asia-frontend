@@ -40,6 +40,7 @@ import {
   Ticket,
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
+import { EmptyState } from '@/components/admin/empty-state';
 import { ProductTabs, type ProductTab } from '@/components/admin/product-tabs';
 import { fetchAffiliatesList, fetchFraudReport, vnd } from '@/lib/affiliate-admin-api';
 import { PromotersTab } from '@/components/admin/affiliates/promoters-tab';
@@ -342,11 +343,10 @@ function OverviewTab() {
           {topQ.isLoading ? (
             <p className="text-sm text-muted-foreground">Đang tải…</p>
           ) : (topQ.data ?? []).length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              Materialized view chưa có dữ liệu. Cron job{' '}
-              <code className="font-mono text-xs">aff-leaderboard-refresh</code> chạy
-              mỗi giờ phút 30.
-            </p>
+            <EmptyState
+              title="Chưa có affiliate nào"
+              description="Khi có affiliate phát sinh hoa hồng, bảng xếp hạng sẽ hiển thị ở đây."
+            />
           ) : (
             <ol className="space-y-2">
               {(topQ.data ?? []).map((row, idx) => (
@@ -396,9 +396,10 @@ function OverviewTab() {
           {activityQ.isLoading ? (
             <p className="text-sm text-muted-foreground">Đang tải…</p>
           ) : (activityQ.data ?? []).length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              Chưa có audit_log entry nào với action LIKE &apos;affiliate%&apos;.
-            </p>
+            <EmptyState
+              title="Chưa có hoạt động"
+              description="Các thao tác liên quan đến affiliate sẽ xuất hiện ở đây khi phát sinh."
+            />
           ) : (
             <ul className="space-y-1 text-sm">
               {(activityQ.data ?? []).map((row) => (
