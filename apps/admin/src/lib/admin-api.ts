@@ -782,6 +782,45 @@ export async function getReadingsPerDay(
   ) as Promise<ReadingsPerDay[] & { _source: DataSource }>;
 }
 
+// ---------- Signups ----------
+
+export interface SignupsByDay {
+  days: Array<{ date: string; count: number }>;
+  total: number;
+  today: number;
+  /** Previous-window total for delta. Optional — backend may omit it. */
+  prev_total?: number;
+}
+
+interface SignupsByDayEnvelope {
+  ok: boolean;
+  days?: Array<{ date: string; count: number }>;
+  total?: number;
+  today?: number;
+  prev_total?: number;
+}
+
+/**
+ * New-signups daily rollup. Powers the "Khách mới hôm nay" dashboard KPI.
+ *
+ * Backend endpoint `GET /admin/signups/by_day?days=N` is shipping in a parallel
+ * wave. Until it's deployed proxyFetch returns null (404 → !res.ok → null), so
+ * this returns null too — NO mock fallback. The dashboard renders "—" / hides
+ * the card gracefully instead of inventing numbers.
+ */
+export async function getSignupsByDay(days = 30): Promise<SignupsByDay | null> {
+  const real = await proxyFetch<SignupsByDayEnvelope>(`/admin/signups/by_day?days=${days}`);
+  if (real?.ok && Array.isArray(real.days)) {
+    return {
+      days: real.days,
+      total: Number(real.total ?? 0),
+      today: Number(real.today ?? 0),
+      prev_total: real.prev_total != null ? Number(real.prev_total) : undefined,
+    };
+  }
+  return null;
+}
+
 // ---------- RAG ----------
 
 interface RagChunksEnvelope {
