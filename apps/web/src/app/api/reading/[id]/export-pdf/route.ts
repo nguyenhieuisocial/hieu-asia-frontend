@@ -42,6 +42,15 @@ async function launchBrowser() {
   // Vercel (Linux serverless): download + use the @sparticuz chromium pack.
   if (process.env.VERCEL) {
     const execPath = await chromium.executablePath(CHROMIUM_PACK_URL);
+    // @sparticuz unpacks chromium's shared libraries (libnss3.so etc.) to
+    // /tmp/lib, but on Vercel it does NOT add that dir to LD_LIBRARY_PATH — so the
+    // dynamic linker can't find libnss3 → "cannot open shared object file".
+    // Confirmed via diagnostic: execPath=/tmp/chromium, LD_LIBRARY_PATH had no
+    // /tmp; the al2023 pack ships the libs under lib/. Prepend /tmp/lib so the
+    // spawned chromium (inherits process.env) resolves them.
+    process.env.LD_LIBRARY_PATH = ['/tmp/lib', '/tmp', process.env.LD_LIBRARY_PATH]
+      .filter(Boolean)
+      .join(':');
     try {
       return await puppeteer.launch({
         args: chromium.args,
@@ -50,8 +59,6 @@ async function launchBrowser() {
         headless: true,
       });
     } catch (e) {
-      // Surface diagnostics: does executablePath set LD_LIBRARY_PATH to where the
-      // libs (libnss3) were extracted? This pinpoints the Vercel-specific failure.
       throw new Error(
         `${(e as Error).message} || execPath=${execPath} || LD_LIBRARY_PATH=${process.env.LD_LIBRARY_PATH ?? '(unset)'}`,
       );
