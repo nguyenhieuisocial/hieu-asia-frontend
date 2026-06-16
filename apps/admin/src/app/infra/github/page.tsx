@@ -11,9 +11,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent } from '@hieu-asia/ui';
 import { ExternalLink } from 'lucide-react';
-import { getInfraGithub, type InfraGithubItem } from '@/lib/admin-api';
+import {
+  getInfraGithub,
+  type InfraGithubItem,
+  type InfraGithubSummary,
+} from '@/lib/admin-api';
 import { getInfraTool } from '@/lib/infra-tools';
 import { formatRelativeOrEmpty } from '@/lib/format-date';
+import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
 
 const tool = getInfraTool('github')!;
@@ -48,13 +53,30 @@ export default function InfraGithubPage() {
     staleTime: 30_000,
   });
 
+  const summary: InfraGithubSummary | undefined =
+    query.data?.ok ? query.data.summary : undefined;
+  const lastDeploy = summary?.last_worker_deploy;
+  const deployTone = lastDeploy
+    ? runTone(null, lastDeploy.conclusion)
+    : null;
+
   return (
     <InfraPanel<InfraGithubItem>
       tool={tool}
       query={query}
       emptyTitle="Chưa có lần chạy gần đây"
       renderTable={(items) => (
-        <Card>
+        <div className="space-y-6">
+          {lastDeploy && deployTone && (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <StatCard
+                label="Lần deploy Worker gần nhất"
+                value={<InfraStatusPill label={deployTone.label} tone={deployTone.tone} />}
+                hint={formatRelativeOrEmpty(lastDeploy.created_at) || undefined}
+              />
+            </div>
+          )}
+          <Card>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -117,7 +139,8 @@ export default function InfraGithubPage() {
               </table>
             </div>
           </CardContent>
-        </Card>
+          </Card>
+        </div>
       )}
     />
   );
