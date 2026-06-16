@@ -9,7 +9,8 @@
  * (`summary`) and the issues table, deep-linking each row to its permalink.
  */
 
-import { useQuery } from '@tanstack/react-query';
+import * as React from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent } from '@hieu-asia/ui';
 import { ExternalLink } from 'lucide-react';
 import {
@@ -21,6 +22,7 @@ import { getInfraTool } from '@/lib/infra-tools';
 import { formatRelativeOrEmpty } from '@/lib/format-date';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
+import { SentryIssueDrawer } from '@/components/admin/infra/SentryIssueDrawer';
 
 const tool = getInfraTool('sentry')!;
 
@@ -44,16 +46,26 @@ function fmtNum(n: number): string {
 }
 
 export default function InfraSentryPage() {
+  const queryClient = useQueryClient();
   const query = useQuery({
     queryKey: ['infra', 'sentry'],
     queryFn: getInfraSentry,
     staleTime: 30_000,
   });
 
+  const [openId, setOpenId] = React.useState<string | null>(null);
+
   const summary: InfraSentrySummary | undefined =
     query.data?.ok ? query.data.summary : undefined;
 
   return (
+    <>
+    <SentryIssueDrawer
+      issueId={openId}
+      open={openId !== null}
+      onClose={() => setOpenId(null)}
+      onResolved={() => queryClient.invalidateQueries({ queryKey: ['infra', 'sentry'] })}
+    />
     <InfraPanel<InfraSentryItem>
       tool={tool}
       query={query}
@@ -111,7 +123,8 @@ export default function InfraSentryPage() {
                     {items.map((i) => (
                       <tr
                         key={i.id}
-                        className="border-b border-border/50 last:border-0 hover:bg-gold/5"
+                        onClick={() => setOpenId(i.id)}
+                        className="cursor-pointer border-b border-border/50 last:border-0 hover:bg-gold/5"
                       >
                         <td className="px-4 py-2.5">
                           <InfraStatusPill label={i.level} tone={levelTone(i.level)} />
@@ -139,6 +152,7 @@ export default function InfraSentryPage() {
                               href={i.permalink}
                               target="_blank"
                               rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
                               className="inline-flex items-center gap-1 text-gold hover:underline"
                             >
                               <ExternalLink className="h-3.5 w-3.5" />
@@ -157,5 +171,6 @@ export default function InfraSentryPage() {
         </div>
       )}
     />
+    </>
   );
 }
