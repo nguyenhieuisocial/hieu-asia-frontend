@@ -43,7 +43,7 @@ const NAP_AM: Array<{ name: string; element: Element }> = [
   { name: 'Kim Bạch Kim', element: 'kim' }, // Nhâm Dần · Quý Mão
   { name: 'Phú Đăng Hỏa', element: 'hoa' }, // Giáp Thìn · Ất Tỵ
   { name: 'Thiên Hà Thủy', element: 'thuy' }, // Bính Ngọ · Đinh Mùi
-  { name: 'Đại Trạch Thổ', element: 'tho' }, // Mậu Thân · Kỷ Dậu
+  { name: 'Đại Dịch Thổ', element: 'tho' }, // Mậu Thân · Kỷ Dậu
   { name: 'Thoa Xuyến Kim', element: 'kim' }, // Canh Tuất · Tân Hợi
   { name: 'Tang Đố Mộc', element: 'moc' }, // Nhâm Tý · Quý Sửu
   { name: 'Đại Khê Thủy', element: 'thuy' }, // Giáp Dần · Ất Mão
