@@ -44,6 +44,7 @@ const ReadingsChart = dynamic(
 import { MockBanner } from '@/components/mock-banner';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { HealthWidget } from '@/components/admin/health-widget';
+import { WorkQueueWidget } from '@/components/admin/work-queue-widget';
 import { QuickActions } from '@/components/admin/quick-actions';
 import { ActivityFeed } from '@/components/admin/activity-feed';
 import { LiveBadge } from '@/components/admin/live-badge';
@@ -332,8 +333,9 @@ export default function AdminOverviewPage() {
             )}
           </CardContent>
         </Card>
-        <div className="lg:col-span-1">
+        <div className="space-y-4 lg:col-span-1">
           <HealthWidget />
+          <WorkQueueWidget />
         </div>
       </div>
 
