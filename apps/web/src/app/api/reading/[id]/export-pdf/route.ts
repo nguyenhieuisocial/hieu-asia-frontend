@@ -19,6 +19,7 @@
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
+import { readdirSync } from 'node:fs';
 import chromium from '@sparticuz/chromium-min';
 import puppeteer from 'puppeteer-core';
 
@@ -59,8 +60,12 @@ async function launchBrowser() {
         headless: true,
       });
     } catch (e) {
+      const ls = (d: string) => {
+        try { return readdirSync(d).filter((f) => /nss|\.so|lib|chrom|al2/i.test(f)).slice(0, 40).join(','); }
+        catch (err) { return `ERR:${(err as Error).message}`; }
+      };
       throw new Error(
-        `${(e as Error).message} || execPath=${execPath} || LD_LIBRARY_PATH=${process.env.LD_LIBRARY_PATH ?? '(unset)'}`,
+        `${(e as Error).message} || execPath=${execPath} || /tmp=[${ls('/tmp')}] || /tmp/lib=[${ls('/tmp/lib')}] || /tmp/al2023=[${ls('/tmp/al2023')}]`,
       );
     }
   }
