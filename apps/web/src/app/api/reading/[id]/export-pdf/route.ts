@@ -129,11 +129,15 @@ export async function POST(
     return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
 
+  // `?doc=master` → render the 200-500p master compendium, else the single report.
+  const isMaster = req.nextUrl.searchParams.get('doc') === 'master';
+  const docQS = isMaster ? '&doc=master' : '';
+
   // 1. Fetch the print-ready HTML from the worker (it enforces the auth gate).
   let html: string;
   try {
     const res = await fetch(
-      `${HIEU_API_URL}/reading/${encodeURIComponent(id)}/export-pdf?format=html`,
+      `${HIEU_API_URL}/reading/${encodeURIComponent(id)}/export-pdf?format=html${docQS}`,
       {
         method: 'POST',
         headers: { 'content-type': 'application/json', authorization: authz },
@@ -188,7 +192,7 @@ export async function POST(
       status: 200,
       headers: {
         'content-type': 'application/pdf',
-        'content-disposition': 'attachment; filename="cam-nang-cuoc-doi.pdf"',
+        'content-disposition': `attachment; filename="${isMaster ? 'Cam-Nang-Cuoc-Doi-Tong-Hop' : 'Cam-Nang-Cuoc-Doi'}.pdf"`,
         'cache-control': 'no-store',
       },
     });
