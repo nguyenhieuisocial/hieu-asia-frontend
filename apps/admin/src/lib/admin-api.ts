@@ -1047,9 +1047,16 @@ export async function listTransactions(
 // that calls `fetchInfra<...>("<tool>")` with the matching item type. The
 // worker side just needs a new `case "<tool>"` in `infra-hub.ts`.
 
-/** Shared envelope every /admin/infra/<tool> endpoint returns. */
-export type InfraEnvelope<T> =
-  | { ok: true; configured: true; items: T[] }
+/**
+ * Shared envelope every /admin/infra/<tool> endpoint returns.
+ *
+ * `S` (default `unknown`) is an optional summary object some tools attach to the
+ * success payload (e.g. Cloudflare 24h totals, AI Gateway spend). Tools without
+ * a summary leave it off; `InfraPanel<T>` ignores it and pages that need it read
+ * `query.data.summary` directly.
+ */
+export type InfraEnvelope<T, S = unknown> =
+  | { ok: true; configured: true; items: T[]; summary?: S }
   | { ok: false; configured: false; error: string }
   | { ok: false; configured: true; error: string };
 
@@ -1082,13 +1089,78 @@ export interface InfraResendItem {
   created_at: string | null;
 }
 
+export interface InfraCloudflareItem {
+  date: string;
+  requests: number;
+  errors: number;
+}
+
+export interface InfraCloudflareSummary {
+  requests_24h: number;
+  errors_24h: number;
+  error_rate_pct: number;
+}
+
+export interface InfraSupabaseItem {
+  schema: string;
+  table: string;
+  rows: number;
+}
+
+export interface InfraSupabaseSummary {
+  total_tables: number;
+}
+
+export interface InfraLangfuseItem {
+  id: string;
+  name: string | null;
+  timestamp: string | null;
+  latency_ms: number | null;
+  cost_usd: number | null;
+  user_id: string | null;
+}
+
+export interface InfraGithubItem {
+  repo: string;
+  workflow: string;
+  status: string | null;
+  conclusion: string | null;
+  branch: string | null;
+  actor: string | null;
+  created_at: string | null;
+  url: string | null;
+}
+
+export interface InfraTelegramItem {
+  bot: string;
+  username: string | null;
+  status: string | null;
+  webhook_url: string | null;
+  pending_updates: number | null;
+}
+
+export interface InfraAiGatewayItem {
+  vendor: string;
+  model: string;
+  requests: number;
+  cost_usd: number;
+  error_rate_pct: number;
+}
+
+export interface InfraAiGatewaySummary {
+  total_requests: number;
+  total_cost_usd: number;
+}
+
 /**
  * Low-level infra fetch. Returns the parsed envelope for 2xx AND for the
  * documented 503 not-configured / 502 vendor-error responses (both carry
  * `ok:false`). Bounces to /login on 401. Never throws — a thrown fetch or
  * unparseable body degrades to an `ok:false, configured:true` envelope.
  */
-async function fetchInfra<T>(tool: string): Promise<InfraEnvelope<T>> {
+async function fetchInfra<T, S = unknown>(
+  tool: string,
+): Promise<InfraEnvelope<T, S>> {
   try {
     const res = await fetch(`${PROXY}/admin/infra/${tool}`, {
       cache: 'no-store',
@@ -1100,9 +1172,9 @@ async function fetchInfra<T>(tool: string): Promise<InfraEnvelope<T>> {
       return { ok: false, configured: true, error: 'unauthenticated' };
     }
     const text = await res.text();
-    let parsed: InfraEnvelope<T> | undefined;
+    let parsed: InfraEnvelope<T, S> | undefined;
     try {
-      parsed = text ? (JSON.parse(text) as InfraEnvelope<T>) : undefined;
+      parsed = text ? (JSON.parse(text) as InfraEnvelope<T, S>) : undefined;
     } catch {
       parsed = undefined;
     }
@@ -1127,4 +1199,34 @@ export function getInfraSentry(): Promise<InfraEnvelope<InfraSentryItem>> {
 
 export function getInfraResend(): Promise<InfraEnvelope<InfraResendItem>> {
   return fetchInfra<InfraResendItem>('resend');
+}
+
+export function getInfraCloudflare(): Promise<
+  InfraEnvelope<InfraCloudflareItem, InfraCloudflareSummary>
+> {
+  return fetchInfra<InfraCloudflareItem, InfraCloudflareSummary>('cloudflare');
+}
+
+export function getInfraSupabase(): Promise<
+  InfraEnvelope<InfraSupabaseItem, InfraSupabaseSummary>
+> {
+  return fetchInfra<InfraSupabaseItem, InfraSupabaseSummary>('supabase');
+}
+
+export function getInfraLangfuse(): Promise<InfraEnvelope<InfraLangfuseItem>> {
+  return fetchInfra<InfraLangfuseItem>('langfuse');
+}
+
+export function getInfraGithub(): Promise<InfraEnvelope<InfraGithubItem>> {
+  return fetchInfra<InfraGithubItem>('github');
+}
+
+export function getInfraTelegram(): Promise<InfraEnvelope<InfraTelegramItem>> {
+  return fetchInfra<InfraTelegramItem>('telegram');
+}
+
+export function getInfraAiGateway(): Promise<
+  InfraEnvelope<InfraAiGatewayItem, InfraAiGatewaySummary>
+> {
+  return fetchInfra<InfraAiGatewayItem, InfraAiGatewaySummary>('ai-gateway');
 }
