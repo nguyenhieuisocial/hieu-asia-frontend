@@ -53,6 +53,7 @@ import {
   Plug,
   Tag,
   Search,
+  Server,
 } from 'lucide-react';
 
 interface NavItem {
@@ -74,6 +75,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: '/', label: 'Tổng quan', Icon: LayoutDashboard },
       { href: '/system', label: 'Trạng thái hệ thống', Icon: ServerCog },
+      { href: '/infra', label: 'Hạ tầng', Icon: Server },
     ],
   },
   {
