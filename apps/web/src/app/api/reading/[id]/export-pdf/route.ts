@@ -177,8 +177,22 @@ export async function POST(
   try {
     browser = await launchBrowser();
     const page = await browser.newPage();
-    // networkidle0 waits for the Be Vietnam Pro web font to load before printing.
-    await page.setContent(html, { waitUntil: 'networkidle0', timeout: 25_000 });
+    // 'load' (not networkidle0): networkidle0 stalls on the big master page and
+    // doesn't guarantee fonts. Wait explicitly for the Be Vietnam Pro web font so
+    // it EMBEDS in the PDF (without this the file is tiny + uses a fallback font).
+    await page.setContent(html, { waitUntil: 'load', timeout: 25_000 });
+    try {
+      await page.evaluate(
+        () =>
+          Promise.race([
+            // @ts-expect-error document.fonts exists in the page context
+            document.fonts?.ready ?? Promise.resolve(),
+            new Promise((res) => setTimeout(res, 8000)),
+          ]),
+      );
+    } catch {
+      /* fonts API unavailable — proceed */
+    }
     const pdf = await page.pdf({
       printBackground: true,
       preferCSSPageSize: true, // honour the template's @page (A4 + @page :first margin:0 cover)
