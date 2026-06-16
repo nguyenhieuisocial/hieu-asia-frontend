@@ -278,6 +278,38 @@ export function getModelHealth(days = 7): Promise<ModelHealth | null> {
   return aiGetOrNull<ModelHealth>('model-health', { days: String(days) });
 }
 
+// ---------- Per-vendor telemetry (cho trang /vendors) ----------
+//
+// Backed by /admin/ai/vendor-telemetry (backend handleAiVendorTelemetry). Gom
+// llm_traces theo cột `vendor`: requests / errors / error_rate / latency TB+p95
+// / cost / lần cuối dùng. Cùng dùng aiGetOrNull → null trên 404, panel tự ẩn
+// khi worker chưa ship route. CAVEAT: nhiều trace có cost_usd=0 (pipeline không
+// định giá mọi call) → requests/errors/latency là số THẬT, cost có thể thiếu.
+
+export interface VendorTelemetryRow {
+  vendor: string;
+  requests: number;
+  errors: number;
+  error_rate_pct: number;
+  latency_avg_ms: number;
+  latency_p95_ms: number;
+  cost_usd: number;
+  last_used_at: string | null;
+}
+
+export interface VendorTelemetry {
+  ok: true;
+  configured: boolean;
+  window_days: number;
+  generated_at: string;
+  total_requests: number;
+  items: VendorTelemetryRow[];
+}
+
+export function getVendorTelemetry(days = 7): Promise<VendorTelemetry | null> {
+  return aiGetOrNull<VendorTelemetry>('vendor-telemetry', { days: String(days) });
+}
+
 // ---------- Helpers ----------
 
 export function isoStartOfMonth(): string {
