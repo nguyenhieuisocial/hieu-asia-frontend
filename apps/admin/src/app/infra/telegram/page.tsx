@@ -8,13 +8,42 @@
  * declares the per-bot columns (bot, username, trạng thái, webhook, hàng đợi).
  */
 
+import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent } from '@hieu-asia/ui';
-import { getInfraTelegram, type InfraTelegramItem } from '@/lib/admin-api';
+import { Button, Card, CardContent, toast } from '@hieu-asia/ui';
+import { Send } from 'lucide-react';
+import {
+  getInfraTelegram,
+  postInfraTelegramTest,
+  type InfraTelegramItem,
+} from '@/lib/admin-api';
 import { getInfraTool } from '@/lib/infra-tools';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
 
 const tool = getInfraTool('telegram')!;
+
+/** Header action: send a test message via Telegram, toast the result. */
+function SendTestMessageButton() {
+  const [pending, setPending] = React.useState(false);
+  const click = React.useCallback(async () => {
+    if (pending) return;
+    setPending(true);
+    const res = await postInfraTelegramTest();
+    setPending(false);
+    if (res.ok) {
+      const chat = typeof res.sent_to_chat === 'string' ? res.sent_to_chat : null;
+      toast.success(chat ? `Đã gửi tới ${chat}` : 'Đã gửi tin thử.');
+      return;
+    }
+    toast.error(res.error ?? 'Không gửi được tin thử.');
+  }, [pending]);
+  return (
+    <Button variant="outline" size="sm" onClick={click} disabled={pending}>
+      <Send className="mr-1.5 h-3.5 w-3.5" />
+      {pending ? 'Đang gửi…' : 'Gửi tin thử'}
+    </Button>
+  );
+}
 
 function statusTone(status: string | null): 'good' | 'bad' | 'warn' | 'neutral' {
   switch ((status ?? '').toLowerCase()) {
@@ -45,6 +74,7 @@ export default function InfraTelegramPage() {
       tool={tool}
       query={query}
       emptyTitle="Chưa có bot nào"
+      headerActions={<SendTestMessageButton />}
       renderTable={(items) => (
         <Card>
           <CardContent className="p-0">

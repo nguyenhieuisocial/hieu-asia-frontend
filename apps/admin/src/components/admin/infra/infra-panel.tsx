@@ -41,6 +41,12 @@ interface InfraPanelProps<T> {
   renderTable: (items: T[]) => React.ReactNode;
   /** vi-VN copy for the empty (zero-rows) state. */
   emptyTitle?: string;
+  /**
+   * Extra action(s) rendered in the page header, left of the refresh +
+   * "Mở trang gốc" buttons (e.g. a "Gửi email thử" test button). Shown in
+   * every state so operators can trigger it even when the list is empty.
+   */
+  headerActions?: React.ReactNode;
 }
 
 export function InfraPanel<T>({
@@ -48,6 +54,7 @@ export function InfraPanel<T>({
   query,
   renderTable,
   emptyTitle = 'Chưa có dữ liệu',
+  headerActions,
 }: InfraPanelProps<T>) {
   const { data, isLoading, isError } = query;
   const { Icon } = tool;
@@ -59,6 +66,7 @@ export function InfraPanel<T>({
       description={tool.blurb}
       actions={
         <div className="flex items-center gap-2">
+          {headerActions}
           <Button
             variant="ghost"
             size="sm"
