@@ -230,6 +230,54 @@ export function getReportCosts(days = 30, limit = 20): Promise<ReportCosts | nul
   });
 }
 
+// ---------- AI-ops monitors (báo cáo kẹt + sức khoẻ model) ----------
+//
+// Backed by /admin/ai/stuck-sessions và /admin/ai/model-health (backend
+// handleAiStuckSessions / handleAiModelHealth). Cùng dùng aiGetOrNull → null
+// trên 404, panel tự ẩn khi worker chưa ship route.
+
+export interface StuckSessionRow {
+  session_id: string;
+  user_id: string | null;
+  status: 'queued' | 'running';
+  created_at: string | null;
+  age_minutes: number;
+}
+
+export interface StuckSessions {
+  ok: true;
+  older_than_min: number;
+  generated_at: string;
+  count: number;
+  sessions: StuckSessionRow[];
+}
+
+export interface ModelHealthRow {
+  model: string;
+  count: number;
+  cost_usd_total: number;
+  avg_cost_usd: number;
+  error_rate_pct: number;
+}
+
+export interface ModelHealth {
+  ok: true;
+  window_days: number;
+  generated_at: string;
+  total_count: number;
+  models: ModelHealthRow[];
+}
+
+export function getStuckSessions(olderThanMin = 30): Promise<StuckSessions | null> {
+  return aiGetOrNull<StuckSessions>('stuck-sessions', {
+    older_than_min: String(olderThanMin),
+  });
+}
+
+export function getModelHealth(days = 7): Promise<ModelHealth | null> {
+  return aiGetOrNull<ModelHealth>('model-health', { days: String(days) });
+}
+
 // ---------- Helpers ----------
 
 export function isoStartOfMonth(): string {
