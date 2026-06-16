@@ -23,7 +23,13 @@ const BASE_URL = 'https://hieu.asia';
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const now = new Date();
+  // Mốc lastmod CỐ ĐỊNH cho trang tĩnh. KHÔNG dùng `new Date()`: sitemap là route động,
+  // giờ-sinh-theo-request làm MỌI URL "đổi lastmod" mỗi lần regen → Google ngừng tin tín
+  // hiệu lastmod + quét lại sitemap liên tục (dễ trúng cửa sổ deploy → "không đọc được").
+  // Mốc ổn định giúp crawl hiệu quả hơn. BUMP mốc này khi có cập nhật nội dung lớn.
+  // (Trang động — community cases / cẩm nang pillars — vẫn dùng ngày publish THẬT bên dưới.)
+  const SITE_CONTENT_DATE = new Date('2026-06-16T00:00:00Z');
+  const now = SITE_CONTENT_DATE;
 
   const palaceUrls: MetadataRoute.Sitemap = PALACES_CONTENT.map((p) => ({
     url: `${BASE_URL}/tu-vi/${p.slug}`,
