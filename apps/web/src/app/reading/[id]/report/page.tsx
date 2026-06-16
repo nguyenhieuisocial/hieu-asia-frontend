@@ -30,6 +30,7 @@ import { TuViChartSection } from '@/components/tuvi/TuViChartSection';
 import { SectionFeedback } from '@/components/report/SectionFeedback';
 import { ProductTabs, type ProductTab } from '@/components/product/ProductTabs';
 import { ReportTOC } from '@/components/report/ReportTOC';
+import { MasterReportButton } from '@/components/report/MasterReportButton';
 import { ReadingProgress } from '@/components/report/ReadingProgress';
 import { PostReadingSurvey } from '@/components/feedback/PostReadingSurvey';
 import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
@@ -284,6 +285,7 @@ function ReportContent() {
           <>
             <CautionBanner flags={cautionFlags} />
             <ReportSections sections={reportSections} />
+            <MasterReportButton readingId={readingId} />
             <ReportFooter readingId={readingId} />
           </>
         )}
