@@ -185,8 +185,15 @@ export interface ToolUsageRow {
  * the path to paying customers" — so investment goes where it converts, not
  * just where it's busy. (Correlation, not causation: a paying user may have
  * touched several tools.) Returns null on any PostHog failure (UI placeholder).
+ *
+ * `limit` defaults to 15 (the OverviewPanel "top tools" list). The tool-health
+ * scorecard passes a higher cap (e.g. 100) so EVERY tool surfaces, not just the
+ * busiest 15 — the scorecard's whole point is spotting low-traffic / high-error
+ * tools that never reach the top-15. Clamped to [1, 200] so a bad caller can't
+ * request an unbounded scan.
  */
-export async function fetchTopTools(): Promise<ToolUsageRow[] | null> {
+export async function fetchTopTools(limit = 15): Promise<ToolUsageRow[] | null> {
+  const safeLimit = Math.min(Math.max(Math.trunc(limit) || 15, 1), 200);
   const rows = await runHogQL(
     `SELECT
        properties.tool AS tool,
@@ -203,7 +210,7 @@ export async function fetchTopTools(): Promise<ToolUsageRow[] | null> {
        AND timestamp > now() - INTERVAL 30 DAY
      GROUP BY tool
      ORDER BY users DESC
-     LIMIT 15`,
+     LIMIT ${safeLimit}`,
   );
   if (!rows) return null;
   return rows
