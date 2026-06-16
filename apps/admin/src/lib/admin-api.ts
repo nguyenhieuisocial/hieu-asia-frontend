@@ -1070,6 +1070,25 @@ export interface InfraVercelItem {
   commit_message: string | null;
 }
 
+/**
+ * Infra-hub v2 wave 2 — Vercel deploy-frequency summary + 14d series.
+ * All fields optional → the page hides the StatCard strip / chart when the
+ * worker predates them.
+ */
+export interface InfraVercelSummary {
+  deploys_7d?: number;
+  success_rate_pct?: number;
+  last_prod_state?: string | null;
+  last_prod_age_min?: number | null;
+}
+
+/** One day of Vercel deploy outcomes (asc, ≤14 days). */
+export interface InfraVercelSeriesPoint {
+  date: string;
+  success: number;
+  failed: number;
+}
+
 export interface InfraSentryItem {
   id: string;
   title: string;
@@ -1081,12 +1100,37 @@ export interface InfraSentryItem {
   level: string;
 }
 
+/**
+ * Infra-hub v2 wave 2 — Sentry top-issues summary. All optional → the page
+ * renders the StatCard strip only for the fields the worker sends.
+ */
+export interface InfraSentrySummary {
+  errors_24h?: number;
+  unresolved_count?: number;
+  fatal_count?: number;
+  top_issue?: { title: string; count: number } | null;
+}
+
 export interface InfraResendItem {
   id: string;
   to: string | null;
   subject: string | null;
   last_event: string | null;
   created_at: string | null;
+}
+
+/**
+ * Infra-hub v2 wave 2 — Resend delivery-status counts. All optional → only the
+ * counts the worker provides become StatCards.
+ */
+export interface InfraResendSummary {
+  delivered?: number;
+  bounced?: number;
+  complained?: number;
+  delayed?: number;
+  queued?: number;
+  sent?: number;
+  other?: number;
 }
 
 /**
@@ -1126,6 +1170,38 @@ export interface InfraLangfuseItem {
   latency_ms: number | null;
   cost_usd: number | null;
   user_id: string | null;
+}
+
+/**
+ * Infra-hub v2 wave 2 — Langfuse 24h summary. All optional → the page renders
+ * the StatCard strip only for the fields present.
+ *
+ * NOTE: the worker exposes `error_rate_pct` but the Langfuse API has no error
+ * field, so it is always 0 from this source. Do NOT surface it as meaningful —
+ * the page omits it from the StatCards.
+ */
+export interface InfraLangfuseSummary {
+  spend_today_usd?: number;
+  traces_24h?: number;
+  latency_avg_ms?: number | null;
+  latency_p95_ms?: number | null;
+  error_rate_pct?: number;
+}
+
+/** One day of Langfuse trace/cost/latency (asc, ≤30 days). */
+export interface InfraLangfuseSeriesPoint {
+  date: string;
+  traces: number;
+  cost_usd: number;
+  latency_avg_ms: number | null;
+}
+
+/** Per-role Langfuse rollup (desc by traces). */
+export interface InfraLangfuseRole {
+  role: string;
+  traces: number;
+  cost_usd: number;
+  error_rate_pct: number;
 }
 
 export interface InfraGithubItem {
@@ -1224,16 +1300,38 @@ async function fetchInfra<T, S = unknown>(
   }
 }
 
-export function getInfraVercel(): Promise<InfraEnvelope<InfraVercelItem>> {
-  return fetchInfra<InfraVercelItem>('vercel');
+/**
+ * Vercel success envelope also carries a top-level 14d deploy `series` (wave 2)
+ * alongside the summary. Mirror the AI Gateway pattern: intersect the success
+ * branch with the optional summary + series without changing `InfraEnvelope`.
+ */
+export type InfraVercelEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraVercelItem[];
+      summary?: InfraVercelSummary;
+      series?: InfraVercelSeriesPoint[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export function getInfraVercel(): Promise<InfraVercelEnvelope> {
+  return fetchInfra<InfraVercelItem, InfraVercelSummary>(
+    'vercel',
+  ) as Promise<InfraVercelEnvelope>;
 }
 
-export function getInfraSentry(): Promise<InfraEnvelope<InfraSentryItem>> {
-  return fetchInfra<InfraSentryItem>('sentry');
+export function getInfraSentry(): Promise<
+  InfraEnvelope<InfraSentryItem, InfraSentrySummary>
+> {
+  return fetchInfra<InfraSentryItem, InfraSentrySummary>('sentry');
 }
 
-export function getInfraResend(): Promise<InfraEnvelope<InfraResendItem>> {
-  return fetchInfra<InfraResendItem>('resend');
+export function getInfraResend(): Promise<
+  InfraEnvelope<InfraResendItem, InfraResendSummary>
+> {
+  return fetchInfra<InfraResendItem, InfraResendSummary>('resend');
 }
 
 export function getInfraCloudflare(): Promise<
@@ -1248,8 +1346,27 @@ export function getInfraSupabase(): Promise<
   return fetchInfra<InfraSupabaseItem, InfraSupabaseSummary>('supabase');
 }
 
-export function getInfraLangfuse(): Promise<InfraEnvelope<InfraLangfuseItem>> {
-  return fetchInfra<InfraLangfuseItem>('langfuse');
+/**
+ * Langfuse success envelope carries a top-level 30d `series` + per-role
+ * breakdown (`by_role`) alongside the summary (wave 2). Same intersection trick
+ * as AI Gateway / Vercel.
+ */
+export type InfraLangfuseEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraLangfuseItem[];
+      summary?: InfraLangfuseSummary;
+      series?: InfraLangfuseSeriesPoint[];
+      by_role?: InfraLangfuseRole[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export function getInfraLangfuse(): Promise<InfraLangfuseEnvelope> {
+  return fetchInfra<InfraLangfuseItem, InfraLangfuseSummary>(
+    'langfuse',
+  ) as Promise<InfraLangfuseEnvelope>;
 }
 
 export function getInfraGithub(): Promise<
