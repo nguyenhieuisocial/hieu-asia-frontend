@@ -179,13 +179,21 @@ export async function POST(
 
   // 2. Render to a deterministic A4 PDF (backgrounds on, no browser headers).
   let browser: Awaited<ReturnType<typeof launchBrowser>> | null = null;
+  let htmlPath: string | null = null;
   try {
     browser = await launchBrowser();
     const page = await browser.newPage();
-    // 'load' (not networkidle0): networkidle0 stalls on the big master page and
-    // doesn't guarantee fonts. Wait explicitly for the Be Vietnam Pro web font so
-    // it EMBEDS in the PDF (without this the file is tiny + uses a fallback font).
-    await page.setContent(html, { waitUntil: 'load', timeout: 25_000 });
+    // Load via a temp FILE (page.goto file://), NOT page.setContent. setContent
+    // ships the whole HTML over the CDP protocol, and the @sparticuz/chromium
+    // build on Vercel truncates that payload (~256KB) — so the 557KB master only
+    // got its first ~28 pages into the DOM (and the inline font got cut), while
+    // the small single report fit. Writing to /tmp + navigating has no such cap,
+    // so the FULL document + embedded font render. 'load' waits for the inline
+    // base64 font to register before we paginate.
+    const tmpDir = process.env.VERCEL ? '/tmp' : (process.env.TMPDIR ?? '/tmp');
+    htmlPath = `${tmpDir}/reading-${encodeURIComponent(id)}-${isMaster ? 'master' : 'report'}.html`;
+    writeFileSync(htmlPath, html);
+    await page.goto(`file://${htmlPath}`, { waitUntil: 'load', timeout: 45_000 });
     try {
       await page.evaluate(
         () =>

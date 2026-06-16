@@ -1032,3 +1032,99 @@ export async function listTransactions(
 //   - revenue / AOV         → /sepay page (real SePay transactions, VND)
 //   - refund workflow       → /sepay page (owner-gated manual approve/complete)
 // There is no failed-payment retry or MRR concept for one-off SePay bank transfers.
+
+// ---------- "Hạ tầng" infra hub (read-only vendor detail panels) ----------
+//
+// Each wrapper hits the worker dispatcher `GET /admin/infra/<tool>` via the
+// admin proxy and returns the FULL envelope (success OR not-configured) so the
+// page can render an honest setup-card. We do NOT use `proxyFetch` here: it
+// returns null whenever `ok === false`, which would erase the worker's
+// `configured:false` + `error` fields. A raw fetch (mirroring `gsc-api.ts`)
+// preserves them. On network/parse failure we synthesize an `ok:false,
+// configured:true` envelope so the page shows an ErrorBlock + retry.
+//
+// FOLLOW-UP TOOLS: add a `<Tool>Item` interface + a `getInfra<Tool>()` wrapper
+// that calls `fetchInfra<...>("<tool>")` with the matching item type. The
+// worker side just needs a new `case "<tool>"` in `infra-hub.ts`.
+
+/** Shared envelope every /admin/infra/<tool> endpoint returns. */
+export type InfraEnvelope<T> =
+  | { ok: true; configured: true; items: T[] }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export interface InfraVercelItem {
+  uid: string;
+  name: string | null;
+  state: string | null;
+  target: string | null;
+  created: number | null;
+  url: string | null;
+  commit_message: string | null;
+}
+
+export interface InfraSentryItem {
+  id: string;
+  title: string;
+  culprit: string | null;
+  count: number;
+  userCount: number;
+  lastSeen: string | null;
+  permalink: string | null;
+  level: string;
+}
+
+export interface InfraResendItem {
+  id: string;
+  to: string | null;
+  subject: string | null;
+  last_event: string | null;
+  created_at: string | null;
+}
+
+/**
+ * Low-level infra fetch. Returns the parsed envelope for 2xx AND for the
+ * documented 503 not-configured / 502 vendor-error responses (both carry
+ * `ok:false`). Bounces to /login on 401. Never throws — a thrown fetch or
+ * unparseable body degrades to an `ok:false, configured:true` envelope.
+ */
+async function fetchInfra<T>(tool: string): Promise<InfraEnvelope<T>> {
+  try {
+    const res = await fetch(`${PROXY}/admin/infra/${tool}`, {
+      cache: 'no-store',
+      credentials: 'same-origin',
+    });
+    if (res.status === 401 && typeof window !== 'undefined') {
+      const next = window.location.pathname + window.location.search;
+      window.location.href = `/login?reason=session_invalid&next=${encodeURIComponent(next)}`;
+      return { ok: false, configured: true, error: 'unauthenticated' };
+    }
+    const text = await res.text();
+    let parsed: InfraEnvelope<T> | undefined;
+    try {
+      parsed = text ? (JSON.parse(text) as InfraEnvelope<T>) : undefined;
+    } catch {
+      parsed = undefined;
+    }
+    if (parsed && typeof parsed.ok === 'boolean') return parsed;
+    return {
+      ok: false,
+      configured: true,
+      error: `infra ${tool} → HTTP ${res.status}`,
+    };
+  } catch (err) {
+    return { ok: false, configured: true, error: (err as Error).message };
+  }
+}
+
+export function getInfraVercel(): Promise<InfraEnvelope<InfraVercelItem>> {
+  return fetchInfra<InfraVercelItem>('vercel');
+}
+
+export function getInfraSentry(): Promise<InfraEnvelope<InfraSentryItem>> {
+  return fetchInfra<InfraSentryItem>('sentry');
+}
+
+export function getInfraResend(): Promise<InfraEnvelope<InfraResendItem>> {
+  return fetchInfra<InfraResendItem>('resend');
+}
