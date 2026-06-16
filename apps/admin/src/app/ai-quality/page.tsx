@@ -16,13 +16,14 @@
 
 import * as React from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { Shield, Brain } from 'lucide-react';
+import { Shield, Brain, Timer } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { ProductTabs, type ProductTab } from '@/components/admin/product-tabs';
 import { ValidatorTab } from '@/components/admin/ai/ValidatorTab';
 import { EvalTab } from '@/components/admin/ai/EvalTab';
+import { LatencyTab } from '@/components/admin/ai/LatencyTab';
 
-const VALID_TABS = ['validator', 'eval'] as const;
+const VALID_TABS = ['validator', 'eval', 'latency'] as const;
 type TabId = (typeof VALID_TABS)[number];
 
 function isValidTab(v: string | null): v is TabId {
@@ -59,6 +60,12 @@ function AiQualityPageInner() {
         label: 'Eval nightly',
         icon: <Brain size={16} />,
         content: <EvalTab />,
+      },
+      {
+        id: 'latency',
+        label: 'Độ trễ (p50/p95)',
+        icon: <Timer size={16} />,
+        content: <LatencyTab />,
       },
     ],
     [],

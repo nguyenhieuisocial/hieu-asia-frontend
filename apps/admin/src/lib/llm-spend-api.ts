@@ -155,6 +155,81 @@ export async function upsertApiBudget(body: BudgetUpsert): Promise<ApiBudgetRow 
   return (await res.json()) as ApiBudgetRow | null;
 }
 
+// ---------- AI observability (latency percentiles + per-report economics) ----------
+//
+// Backed by the worker endpoints /admin/ai/latency and /admin/ai/report-costs
+// (see backend src/admin/data.ts handleAiLatency / handleAiReportCosts). These
+// surface llm_traces.latency_ms (p50/p95 per role) and llm_traces.reading_session_id
+// (cost per report) — neither was exposed by the existing spend panels.
+//
+// Both wrappers return null on any non-2xx (incl. 404 when the worker hasn't
+// shipped these routes yet) so the panels can hide gracefully pre-deploy.
+
+const AI_BASE = '/api/admin-proxy/admin/ai';
+
+export interface LatencyRoleRow {
+  role: string;
+  p50: number;
+  p95: number;
+  count: number;
+}
+
+export interface LatencyByRole {
+  ok: true;
+  window_days: number;
+  generated_at: string;
+  byRole: LatencyRoleRow[];
+}
+
+export interface ReportCostRow {
+  reading_session_id: string;
+  cost_usd: number;
+  trace_count: number;
+  total_latency_ms: number;
+}
+
+export interface ReportCosts {
+  ok: true;
+  window_days: number;
+  generated_at: string;
+  report_count: number;
+  avg_cost_usd: number;
+  median_cost_usd: number;
+  reports: ReportCostRow[];
+}
+
+/** Returns null on 404 (route not deployed) / any error → caller hides the panel. */
+async function aiGetOrNull<T extends { ok: true }>(
+  path: string,
+  query: Record<string, string> = {},
+): Promise<T | null> {
+  try {
+    const qs = new URLSearchParams(query).toString();
+    const res = await fetch(`${AI_BASE}/${path}${qs ? `?${qs}` : ''}`, {
+      cache: 'no-store',
+      credentials: 'same-origin',
+    });
+    if (bounceOn401(res.status)) return null;
+    if (!res.ok) return null;
+    const data = (await res.json()) as T;
+    if (!data?.ok) return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+export function getLatencyByRole(days = 7): Promise<LatencyByRole | null> {
+  return aiGetOrNull<LatencyByRole>('latency', { days: String(days) });
+}
+
+export function getReportCosts(days = 30, limit = 20): Promise<ReportCosts | null> {
+  return aiGetOrNull<ReportCosts>('report-costs', {
+    days: String(days),
+    limit: String(limit),
+  });
+}
+
 // ---------- Helpers ----------
 
 export function isoStartOfMonth(): string {

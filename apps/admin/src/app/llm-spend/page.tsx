@@ -32,6 +32,7 @@ import { VendorBarChart } from '@/components/llm-spend/VendorBarChart';
 import { RecentTracesTable } from '@/components/llm-spend/RecentTracesTable';
 import { BudgetsManager } from '@/components/llm-spend/BudgetsManager';
 import { CostPanel } from '@/components/llm-spend/CostPanel';
+import { ReportCostsPanel } from '@/components/llm-spend/ReportCostsPanel';
 import { PageHeader } from '@/components/admin/page-header';
 import { LiveBadge } from '@/components/admin/live-badge';
 import { DollarSign } from 'lucide-react';
@@ -215,6 +216,7 @@ export default function LlmSpendPage() {
         <TabsList>
           <TabsTrigger value="vendor">Vendor breakdown</TabsTrigger>
           <TabsTrigger value="users">Top users</TabsTrigger>
+          <TabsTrigger value="report-costs">Chi phí / báo cáo</TabsTrigger>
           <TabsTrigger value="traces">Recent traces</TabsTrigger>
           <TabsTrigger value="budgets">Budgets</TabsTrigger>
         </TabsList>
@@ -265,6 +267,10 @@ export default function LlmSpendPage() {
               </ol>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="report-costs">
+          <ReportCostsPanel />
         </TabsContent>
 
         <TabsContent value="traces">
