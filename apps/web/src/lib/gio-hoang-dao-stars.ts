@@ -60,10 +60,10 @@ export const SAO_GIO: SaoGio[] = [
     slug: 'chu-tuoc',
     name: 'Chu Tước',
     good: false,
-    element: 'Hoả',
+    element: 'Hỏa',
     keyTags: ['khẩu thiệt', 'thị phi', 'cẩn ngôn'],
     overview:
-      'Chu Tước (Chim Sẻ Đỏ) là sao hắc đạo mang hành Hoả, theo quan niệm dân gian chủ về khẩu thiệt — thị phi, cãi vã, lời qua tiếng lại. Giờ Chu Tước thường được khuyên tránh cho việc dễ sinh bất hoà bằng lời: tranh luận căng thẳng, ký kết có nhiều bên, phát ngôn trước đám đông. Cách hiểu lành mạnh: đây là lời nhắc "uốn lưỡi trước khi nói" — một thói quen tốt ở bất kỳ giờ nào, không riêng giờ này.',
+      'Chu Tước (Chim Sẻ Đỏ) là sao hắc đạo mang hành Hỏa, theo quan niệm dân gian chủ về khẩu thiệt — thị phi, cãi vã, lời qua tiếng lại. Giờ Chu Tước thường được khuyên tránh cho việc dễ sinh bất hoà bằng lời: tranh luận căng thẳng, ký kết có nhiều bên, phát ngôn trước đám đông. Cách hiểu lành mạnh: đây là lời nhắc "uốn lưỡi trước khi nói" — một thói quen tốt ở bất kỳ giờ nào, không riêng giờ này.',
     cautions: 'Nên giữ lời khi tranh luận, ký kết nhiều bên, phát ngôn công khai; cẩn thận lửa và nước sôi.',
     reflect: [
       'Cuộc trao đổi dễ căng sắp tới: bạn đang muốn thắng cuộc cãi, hay muốn giải quyết vấn đề? Câu trả lời quan trọng hơn khung giờ.',

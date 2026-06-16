@@ -43,7 +43,7 @@ const STARS: StarDef[] = [
   { name: 'Thanh Long', good: true, meaning: 'Đại cát, may mắn toàn diện.', suits: 'Cưới hỏi, khởi công, khai trương, xuất hành.' },
   { name: 'Minh Đường', good: true, meaning: 'Được quý nhân phù trợ, hanh thông.', suits: 'Gặp đối tác, đàm phán, xin việc, giao dịch.' },
   { name: 'Thiên Hình', good: false, meaning: 'Chủ hình thương, kiện tụng — nên tránh xuất hành, ký kết, phẫu thuật và việc trọng đại.' },
-  { name: 'Chu Tước', good: false, meaning: 'Chủ khẩu thiệt, thị phi (hành Hoả) — nên tránh ký kết, tranh luận; cẩn thận lửa và lời nói.' },
+  { name: 'Chu Tước', good: false, meaning: 'Chủ khẩu thiệt, thị phi (hành Hỏa) — nên tránh ký kết, tranh luận; cẩn thận lửa và lời nói.' },
   { name: 'Kim Quỹ', good: true, meaning: 'Tài lộc, phúc đức, con cái.', suits: 'Việc tiền bạc, mở hàng, cầu tài, việc gia đạo.' },
   { name: 'Thiên Đức', good: true, meaning: 'Được che chở, hoá giải điều xấu (còn gọi Bảo Quang).', suits: 'Cầu an, lễ bái, việc cần bình an.' },
   { name: 'Bạch Hổ', good: false, meaning: 'Chủ đao thương, hao tổn — nên tránh phẫu thuật, đi xa và việc hệ trọng.' },

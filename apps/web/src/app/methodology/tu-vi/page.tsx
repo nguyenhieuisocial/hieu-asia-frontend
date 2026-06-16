@@ -159,7 +159,7 @@ const STARS_114: StarRow[] = [
   { name: 'Lộc Tồn', group: 'Phụ tinh chính', basis: 'Can năm', defaultShow: 'Có' },
   { name: 'Kình Dương', group: 'Phụ tinh chính', basis: 'Can năm (cạnh Lộc Tồn)', defaultShow: 'Có' },
   { name: 'Đà La', group: 'Phụ tinh chính', basis: 'Can năm (cạnh Lộc Tồn)', defaultShow: 'Có' },
-  { name: 'Hoả Tinh', group: 'Phụ tinh chính', basis: 'Chi năm + giờ', defaultShow: 'Có' },
+  { name: 'Hỏa Tinh', group: 'Phụ tinh chính', basis: 'Chi năm + giờ', defaultShow: 'Có' },
   { name: 'Linh Tinh', group: 'Phụ tinh chính', basis: 'Chi năm + giờ', defaultShow: 'Có' },
 
   // 4 Tứ Hoá
@@ -629,7 +629,7 @@ export default function MethodologyTuViPage() {
                 <strong>Phụ tinh</strong> an theo <em>can/chi năm</em>, <em>tháng âm</em>,
                 hoặc <em>giờ</em> sinh, tuỳ từng nhóm sao. Ví dụ Tả Phụ – Hữu Bật an theo
                 tháng âm; Văn Xương – Văn Khúc an theo giờ; Khôi – Việt an theo thiên can
-                năm; Lộc Tồn – Kình – Đà an theo thiên can năm; Hoả – Linh an theo địa chi
+                năm; Lộc Tồn – Kình – Đà an theo thiên can năm; Hỏa – Linh an theo địa chi
                 năm và giờ.
               </p>
               <p>
@@ -671,8 +671,8 @@ export default function MethodologyTuViPage() {
                 <p className="font-medium text-foreground">Tuổi khởi đại vận:</p>
                 <ul className="mt-2 list-disc space-y-1 pl-5 text-foreground/80">
                   <li>
-                    <strong>Bản phổ thông:</strong> dùng Cục số (Thuỷ nhị cục = 2, Mộc tam
-                    cục = 3, Kim tứ cục = 4, Thổ ngũ cục = 5, Hoả lục cục = 6) làm tuổi
+                    <strong>Bản phổ thông:</strong> dùng Cục số (Thủy nhị cục = 2, Mộc tam
+                    cục = 3, Kim tứ cục = 4, Thổ ngũ cục = 5, Hỏa lục cục = 6) làm tuổi
                     khởi đại vận đầu tiên.
                   </li>
                   <li>
@@ -756,7 +756,7 @@ export default function MethodologyTuViPage() {
                 <p className="font-medium text-foreground">Quy tắc: Cục số</p>
                 <p className="mt-1"><span className="text-muted-foreground">Nguồn / nhánh chính:</span> Bảng Lục Thập Hoa Giáp — nạp âm Can Chi năm + cung Mệnh.</p>
                 <p><span className="text-muted-foreground">Dị bản:</span> Một số nhánh dùng nạp âm năm + chi tháng (ít phổ biến).</p>
-                <p><span className="text-muted-foreground">Engine mặc định:</span> <strong>Nạp âm can-chi năm + cung Mệnh</strong> → Kim/Mộc/Thuỷ/Hoả/Thổ (2-6 cục).</p>
+                <p><span className="text-muted-foreground">Engine mặc định:</span> <strong>Nạp âm can-chi năm + cung Mệnh</strong> → Kim/Mộc/Thủy/Hỏa/Thổ (2-6 cục).</p>
                 <p><span className="text-muted-foreground">Tại sao chọn:</span> Phương pháp mainstream, mỗi tổ hợp (năm + cung Mệnh) chỉ ra <em>một</em> cục duy nhất.</p>
               </div>
               <div className="rounded-lg border border-border bg-card/60 p-4">

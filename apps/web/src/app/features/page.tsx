@@ -114,7 +114,7 @@ const BUCKETS: readonly Bucket[] = [
         Icon: Calendar,
         anchor: 'bat-tu',
         title: 'Bát Tự Tứ Trụ',
-        desc: 'Bốn trụ Năm – Tháng – Ngày – Giờ theo Ngũ Hành. Hiểu năng lượng bẩm sinh và cách cân bằng Kim, Mộc, Thuỷ, Hoả, Thổ.',
+        desc: 'Bốn trụ Năm – Tháng – Ngày – Giờ theo Ngũ Hành. Hiểu năng lượng bẩm sinh và cách cân bằng Kim, Mộc, Thủy, Hỏa, Thổ.',
         cta: { href: '/learn/bat-tu', label: 'Đọc giải nghĩa' },
       },
       {

@@ -108,7 +108,7 @@ export function moonLongitude(jd: number): number {
   return norm360(lon + dPsi);
 }
 
-// ── Hành tinh (Sao Thuỷ → Hải Vương) — phần tử quỹ đạo Schlyter + nhiễu loạn ──
+// ── Hành tinh (Sao Thủy → Hải Vương) — phần tử quỹ đạo Schlyter + nhiễu loạn ──
 // Kiểm chứng vs astronomy-engine trên 300 mốc (1950–2030): sai số ≤0.06°; chỉ
 // lệch cung khi hành tinh <0.025° sát ranh giới (đã gắn cờ nearCusp).
 const cosd = (deg: number): number => Math.cos(deg * D2R);
@@ -215,9 +215,9 @@ export interface PlanetMeta {
 }
 
 export const PLANETS: ReadonlyArray<PlanetMeta> = [
-  { key: 'mercury', name: 'Sao Thuỷ', symbol: '☿', represents: 'Tư duy, giao tiếp — cách bạn học và diễn đạt.' },
+  { key: 'mercury', name: 'Sao Thủy', symbol: '☿', represents: 'Tư duy, giao tiếp — cách bạn học và diễn đạt.' },
   { key: 'venus', name: 'Sao Kim', symbol: '♀', represents: 'Tình yêu, cái đẹp, giá trị và điều bạn trân quý.' },
-  { key: 'mars', name: 'Sao Hoả', symbol: '♂', represents: 'Hành động, khát khao, năng lượng và cách bạn theo đuổi.' },
+  { key: 'mars', name: 'Sao Hỏa', symbol: '♂', represents: 'Hành động, khát khao, năng lượng và cách bạn theo đuổi.' },
   { key: 'jupiter', name: 'Sao Mộc', symbol: '♃', represents: 'Mở rộng, niềm tin, may mắn và nơi bạn phát triển.' },
   { key: 'saturn', name: 'Sao Thổ', symbol: '♄', represents: 'Kỷ luật, trách nhiệm, giới hạn và bài học trưởng thành.' },
   { key: 'uranus', name: 'Sao Thiên Vương', symbol: '♅', represents: 'Đổi mới, tự do, sự khác biệt (mang tính thế hệ).' },
@@ -296,7 +296,7 @@ export interface PlanetPosition {
 export interface NatalChart {
   sun: SignPosition;
   moon: SignPosition;
-  /** Sao Thuỷ → Hải Vương (7 hành tinh) theo cung hoàng đạo. */
+  /** Sao Thủy → Hải Vương (7 hành tinh) theo cung hoàng đạo. */
   planets: PlanetPosition[];
   /** Cung Mọc (Ascendant) — chỉ có khi cung cấp nơi sinh (latitude + longitude). */
   ascendant?: SignPosition;

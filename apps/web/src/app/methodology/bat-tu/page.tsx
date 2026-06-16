@@ -118,28 +118,28 @@ const TEN_GODS: { name: string; meaning: string }[] = [
 const ELEMENTS: { name: string; sinh: string; khac: string }[] = [
   {
     name: 'Kim',
-    sinh: 'Kim sinh Thuỷ',
+    sinh: 'Kim sinh Thủy',
     khac: 'Kim khắc Mộc',
   },
   {
     name: 'Mộc',
-    sinh: 'Mộc sinh Hoả',
+    sinh: 'Mộc sinh Hỏa',
     khac: 'Mộc khắc Thổ',
   },
   {
-    name: 'Thuỷ',
-    sinh: 'Thuỷ sinh Mộc',
-    khac: 'Thuỷ khắc Hoả',
+    name: 'Thủy',
+    sinh: 'Thủy sinh Mộc',
+    khac: 'Thủy khắc Hỏa',
   },
   {
-    name: 'Hoả',
-    sinh: 'Hoả sinh Thổ',
-    khac: 'Hoả khắc Kim',
+    name: 'Hỏa',
+    sinh: 'Hỏa sinh Thổ',
+    khac: 'Hỏa khắc Kim',
   },
   {
     name: 'Thổ',
     sinh: 'Thổ sinh Kim',
-    khac: 'Thổ khắc Thuỷ',
+    khac: 'Thổ khắc Thủy',
   },
 ];
 
