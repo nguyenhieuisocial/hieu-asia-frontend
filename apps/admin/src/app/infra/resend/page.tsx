@@ -1,18 +1,24 @@
 'use client';
 
 /**
- * Hạ tầng → Resend — recent emails.
+ * Hạ tầng → Resend — delivery-status summary + recent emails.
  *
- * Data: GET /api/admin-proxy/admin/infra/resend → worker `handleResend`
- * (api.resend.com/emails). State handling lives in <InfraPanel>; this page
- * declares the email table columns. `last_event` summarises delivery state.
+ * Data: GET /api/admin-proxy/admin/infra/resend → worker `handleResend`.
+ * State handling lives in <InfraPanel>; this page renders the delivery-status
+ * StatCard strip (`summary`) and the recent-emails table. `last_event`
+ * summarises each row's delivery state.
  */
 
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent } from '@hieu-asia/ui';
-import { getInfraResend, type InfraResendItem } from '@/lib/admin-api';
+import {
+  getInfraResend,
+  type InfraResendItem,
+  type InfraResendSummary,
+} from '@/lib/admin-api';
 import { getInfraTool } from '@/lib/infra-tools';
 import { formatDateOrEmpty, formatRelativeOrEmpty } from '@/lib/format-date';
+import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
 
 const tool = getInfraTool('resend')!;
@@ -33,6 +39,26 @@ function eventTone(event: string | null): 'good' | 'bad' | 'warn' | 'neutral' {
   }
 }
 
+function fmtNum(n: number): string {
+  return n.toLocaleString('vi-VN');
+}
+
+// Delivery-status cards, in funnel order. Each renders only when the worker
+// sends that count; "bad" buckets get a red tint to draw the eye.
+const STATUS_CARDS: Array<{
+  key: keyof InfraResendSummary;
+  label: string;
+  bad?: boolean;
+}> = [
+  { key: 'sent', label: 'Đã gửi đi' },
+  { key: 'delivered', label: 'Đã gửi tới' },
+  { key: 'bounced', label: 'Bị trả về', bad: true },
+  { key: 'complained', label: 'Khiếu nại', bad: true },
+  { key: 'delayed', label: 'Trễ' },
+  { key: 'queued', label: 'Hàng đợi' },
+  { key: 'other', label: 'Khác' },
+];
+
 export default function InfraResendPage() {
   const query = useQuery({
     queryKey: ['infra', 'resend'],
@@ -40,57 +66,83 @@ export default function InfraResendPage() {
     staleTime: 30_000,
   });
 
+  const summary: InfraResendSummary | undefined =
+    query.data?.ok ? query.data.summary : undefined;
+
+  const cards = summary
+    ? STATUS_CARDS.filter((c) => summary[c.key] != null)
+    : [];
+
   return (
     <InfraPanel<InfraResendItem>
       tool={tool}
       query={query}
       emptyTitle="Chưa có email gần đây"
       renderTable={(items) => (
-        <Card>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border text-left font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-                    <th className="px-4 py-2.5">Trạng thái</th>
-                    <th className="px-4 py-2.5">Người nhận</th>
-                    <th className="px-4 py-2.5">Tiêu đề</th>
-                    <th className="px-4 py-2.5">Thời gian</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {items.map((e) => (
-                    <tr
-                      key={e.id}
-                      className="border-b border-border/50 last:border-0 hover:bg-gold/5"
-                    >
-                      <td className="px-4 py-2.5">
-                        <InfraStatusPill
-                          label={e.last_event ?? '—'}
-                          tone={eventTone(e.last_event)}
-                        />
-                      </td>
-                      <td className="max-w-[18rem] truncate px-4 py-2.5 text-muted-foreground">
-                        {e.to ?? '—'}
-                      </td>
-                      <td className="max-w-[24rem] truncate px-4 py-2.5">
-                        {e.subject ?? <span className="text-muted-foreground">—</span>}
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-2.5 text-muted-foreground">
-                        {formatDateOrEmpty(e.created_at)}
-                        {formatRelativeOrEmpty(e.created_at) && (
-                          <span className="ml-1.5 text-xs opacity-70">
-                            · {formatRelativeOrEmpty(e.created_at)}
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        <div className="space-y-6">
+          {cards.length > 0 && (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+              {cards.map((c) => (
+                <StatCard
+                  key={c.key}
+                  label={c.label}
+                  value={fmtNum(summary![c.key] as number)}
+                  className={
+                    c.bad && (summary![c.key] as number) > 0
+                      ? 'border-red-400/40 bg-red-500/5 hover:border-red-400/60'
+                      : undefined
+                  }
+                />
+              ))}
             </div>
-          </CardContent>
-        </Card>
+          )}
+
+          <Card>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border text-left font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
+                      <th className="px-4 py-2.5">Trạng thái</th>
+                      <th className="px-4 py-2.5">Người nhận</th>
+                      <th className="px-4 py-2.5">Tiêu đề</th>
+                      <th className="px-4 py-2.5">Thời gian</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {items.map((e) => (
+                      <tr
+                        key={e.id}
+                        className="border-b border-border/50 last:border-0 hover:bg-gold/5"
+                      >
+                        <td className="px-4 py-2.5">
+                          <InfraStatusPill
+                            label={e.last_event ?? '—'}
+                            tone={eventTone(e.last_event)}
+                          />
+                        </td>
+                        <td className="max-w-[18rem] truncate px-4 py-2.5 text-muted-foreground">
+                          {e.to ?? '—'}
+                        </td>
+                        <td className="max-w-[24rem] truncate px-4 py-2.5">
+                          {e.subject ?? <span className="text-muted-foreground">—</span>}
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-2.5 text-muted-foreground">
+                          {formatDateOrEmpty(e.created_at)}
+                          {formatRelativeOrEmpty(e.created_at) && (
+                            <span className="ml-1.5 text-xs opacity-70">
+                              · {formatRelativeOrEmpty(e.created_at)}
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       )}
     />
   );
