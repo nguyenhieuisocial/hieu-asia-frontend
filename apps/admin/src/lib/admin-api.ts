@@ -486,6 +486,45 @@ export async function setSessionAccess(
   return { ok: false, error: real?.error ?? 'gateway unreachable' };
 }
 
+// ---------- Contact customer (transactional email) ----------
+//
+// Wraps the worker's existing `POST /admin/email/send` (api-gateway index.ts).
+// IMPORTANT: that endpoint does NOT accept a freeform subject/body — it renders
+// one of a FIXED set of Resend templates (src/email/templates.ts) and only takes
+// `{ template, to, args }`. So "contact customer" is a template picker, not a
+// freeform composer. The union below mirrors the real template arg shapes 1:1;
+// adding a key here without a matching backend template will 400 ("unknown
+// template" / template render failure). Owner not required — POST → admin rank
+// in the proxy role gate.
+export type AdminEmailTemplate =
+  | { template: 'readingComplete'; args: { readingType: string; viewUrl: string } }
+  | { template: 'welcome'; args: { userName?: string; signinUrl: string } }
+  | { template: 'dailyHoroscope'; args: { zodiac: string; date: string; summary: string; fullUrl: string } };
+
+/**
+ * Send a transactional email to a customer via the worker's Resend templates.
+ * `to` is the recipient email. Returns `{ ok }` plus the worker's error string
+ * on failure (e.g. Resend rejected, unknown template) so the dialog can toast it.
+ */
+export async function sendAdminEmail(
+  to: string,
+  payload: AdminEmailTemplate,
+  opts: { replyTo?: string } = {},
+): Promise<{ ok: boolean; error?: string }> {
+  const real = await proxyFetch<{ ok?: boolean; error?: string }>('/admin/email/send', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      template: payload.template,
+      to,
+      args: payload.args,
+      ...(opts.replyTo ? { replyTo: opts.replyTo } : {}),
+    }),
+  });
+  if (real && real.ok !== false) return { ok: true };
+  return { ok: false, error: real?.error ?? 'gateway unreachable' };
+}
+
 export async function getSession(id: string) {
   const real = await proxyFetch<BackendSessionDetail>(
     `/admin/sessions/${encodeURIComponent(id)}`,
