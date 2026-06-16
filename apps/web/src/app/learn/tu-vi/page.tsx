@@ -1,11 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@hieu-asia/ui';
+import { ChevronDown } from 'lucide-react';
 import { InfographicTuVi } from '@/components/learn/InfographicTuVi';
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
@@ -20,6 +15,31 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://hieu.asia/learn/tu-vi' },
 };
 
+// FAQ dùng chung cho CẢ FAQPage JSON-LD lẫn phần hiển thị (native <details>) →
+// chữ schema === chữ hiển thị (chống cloaking) + crawler/AI đọc được câu trả lời.
+const FAQS = [
+  {
+    q: 'Tử Vi đến từ đâu?',
+    a: 'Tử Vi Đẩu Số khởi nguồn từ Trung Hoa thời Tống (thế kỷ 10), do Trần Đoàn lão tổ hệ thống hóa. Nguyên lý chính: vị trí các sao quanh sao Tử Vi (Polaris) tại thời khắc sinh phản ánh cấu trúc số mệnh.',
+  },
+  {
+    q: 'Cung là gì?',
+    a: 'Cung là một trong 12 ô trên lá số, ứng với một khu vực của đời sống. Ví dụ cung Tài Bạch phản ánh dòng tiền, cung Phu Thê phản ánh hôn nhân. Sao đóng trong cung nào sẽ ảnh hưởng đến khu vực đó.',
+  },
+  {
+    q: 'Có bao nhiêu sao?',
+    a: 'Hệ thống tiêu chuẩn dùng 14 chính tinh (Tử Vi, Thiên Phủ, Vũ Khúc, Liêm Trinh...) cộng các phụ tinh — tổng cộng hơn 100 sao. hieu.asia dùng engine Iztro để tính đầy đủ chính tinh và phụ tinh.',
+  },
+  {
+    q: 'Đọc lá số để làm gì?',
+    a: 'Không phải để biết tương lai cố định. Mà để nhận diện thiên hướng, điểm mạnh, điểm dễ vấp — từ đó có quyết định phù hợp hơn. Lá số là bản đồ, không phải kịch bản.',
+  },
+  {
+    q: 'Giới hạn của Tử Vi?',
+    a: 'Tử Vi không dự đoán được trúng số, không thay thế lời khuyên y tế/pháp lý/tài chính. Đây là công cụ tự nhận thức, dùng kết hợp với suy nghĩ tỉnh táo và hành động thực tế.',
+  },
+];
+
 const JSONLD = [
   article({
     headline: 'Tử Vi 12 cung — nền tảng cho người mới',
@@ -32,28 +52,7 @@ const JSONLD = [
     { name: 'Học huyền học', url: '/learn' },
     { name: 'Tử Vi 12 cung', url: '/learn/tu-vi' },
   ]),
-  faqPage([
-    {
-      q: 'Tử Vi đến từ đâu?',
-      a: 'Tử Vi Đẩu Số khởi nguồn từ Trung Hoa thời Tống (thế kỷ 10), do Trần Đoàn lão tổ hệ thống hóa. Nguyên lý chính: vị trí các sao quanh sao Tử Vi (Polaris) tại thời khắc sinh phản ánh cấu trúc số mệnh.',
-    },
-    {
-      q: 'Cung là gì?',
-      a: 'Cung là một trong 12 ô trên lá số, ứng với một “khu vực” của đời sống. Ví dụ cung Tài Bạch phản ánh dòng tiền, cung Phu Thê phản ánh hôn nhân. Sao đóng trong cung nào sẽ ảnh hưởng đến khu vực đó.',
-    },
-    {
-      q: 'Có bao nhiêu sao?',
-      a: 'Hệ thống tiêu chuẩn dùng 14 chính tinh (Tử Vi, Thiên Phủ, Vũ Khúc, Liêm Trinh...) cộng các phụ tinh — tổng cộng hơn 100 sao. hieu.asia dùng engine Iztro để tính đầy đủ chính tinh và phụ tinh.',
-    },
-    {
-      q: 'Đọc lá số để làm gì?',
-      a: 'Không phải để biết tương lai cố định. Mà để nhận diện thiên hướng, điểm mạnh, điểm dễ vấp — từ đó có quyết định phù hợp hơn. Lá số là bản đồ, không phải kịch bản.',
-    },
-    {
-      q: 'Giới hạn của Tử Vi?',
-      a: 'Tử Vi không dự đoán được trúng số, không thay thế lời khuyên y tế/pháp lý/tài chính. Đây là công cụ tự nhận thức, dùng kết hợp với suy nghĩ tỉnh táo và hành động thực tế.',
-    },
-  ]),
+  faqPage(FAQS),
 ];
 
 export default function LearnTuViPage() {
@@ -141,48 +140,24 @@ export default function LearnTuViPage() {
           tocLabel: 'Giải thích chi tiết',
           heading: 'Giải thích chi tiết',
           children: (
-            <Accordion type="single" collapsible className="space-y-2">
-              <AccordionItem value="origin" className="rounded border border-border px-4">
-                <AccordionTrigger>Tử Vi đến từ đâu?</AccordionTrigger>
-                <AccordionContent>
-                  Tử Vi Đẩu Số khởi nguồn từ Trung Hoa thời Tống (thế kỷ 10), do Trần Đoàn lão tổ
-                  hệ thống hóa. Nguyên lý chính: vị trí các sao quanh sao Tử Vi (Polaris) tại thời
-                  khắc sinh phản ánh cấu trúc số mệnh.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="cung" className="rounded border border-border px-4">
-                <AccordionTrigger>Cung là gì?</AccordionTrigger>
-                <AccordionContent>
-                  Cung là một trong 12 ô trên lá số, ứng với một “khu vực” của đời sống. Ví dụ
-                  cung Tài Bạch phản ánh dòng tiền, cung Phu Thê phản ánh hôn nhân. Sao đóng trong
-                  cung nào sẽ ảnh hưởng đến khu vực đó.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="stars" className="rounded border border-border px-4">
-                <AccordionTrigger>Có bao nhiêu sao?</AccordionTrigger>
-                <AccordionContent>
-                  Hệ thống tiêu chuẩn dùng 14 chính tinh (Tử Vi, Thiên Phủ, Vũ Khúc, Liêm Trinh...)
-                  cộng các phụ tinh — tổng cộng hơn 100 sao. hieu.asia dùng engine Iztro để tính
-                  đầy đủ chính tinh và phụ tinh.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="usage" className="rounded border border-border px-4">
-                <AccordionTrigger>Đọc lá số để làm gì?</AccordionTrigger>
-                <AccordionContent>
-                  Không phải để biết tương lai cố định. Mà để nhận diện thiên hướng, điểm mạnh,
-                  điểm dễ vấp — từ đó có quyết định phù hợp hơn. Lá số là bản đồ, không phải kịch
-                  bản.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="limit" className="rounded border border-border px-4">
-                <AccordionTrigger>Giới hạn của Tử Vi?</AccordionTrigger>
-                <AccordionContent>
-                  Tử Vi không dự đoán được trúng số, không thay thế lời khuyên y tế/pháp lý/tài
-                  chính. Đây là công cụ tự nhận thức, dùng kết hợp với suy nghĩ tỉnh táo và hành
-                  động thực tế.
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+            <dl className="space-y-2">
+              {FAQS.map((f, i) => (
+                <details
+                  key={i}
+                  open={i === 0}
+                  className="group rounded border border-border px-4 py-3"
+                >
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-medium text-foreground [&::-webkit-details-marker]:hidden">
+                    <span>{f.q}</span>
+                    <ChevronDown
+                      aria-hidden
+                      className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180"
+                    />
+                  </summary>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.a}</p>
+                </details>
+              ))}
+            </dl>
           ),
         },
       ]}
