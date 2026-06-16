@@ -8,7 +8,7 @@ import { ZODIAC } from '@/lib/western-astrology';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 const DESC =
-  'Tính bản đồ sao của bạn theo chiêm tinh phương Tây — cung Mặt Trời, Mặt Trăng, cung Mọc & 7 hành tinh (Sao Thuỷ → Hải Vương) từ ngày giờ & nơi sinh, bằng thuật toán thiên văn (Meeus + Schlyter) đối chiếu thư viện chuẩn. Con số là thật, diễn giải để hiểu mình, không bói toán.';
+  'Tính bản đồ sao của bạn theo chiêm tinh phương Tây — cung Mặt Trời, Mặt Trăng, cung Mọc & 7 hành tinh (Sao Thủy → Hải Vương) từ ngày giờ & nơi sinh, bằng thuật toán thiên văn (Meeus + Schlyter) đối chiếu thư viện chuẩn. Con số là thật, diễn giải để hiểu mình, không bói toán.';
 
 export const metadata: Metadata = {
   title: 'Bản đồ sao — Mặt Trời, Mặt Trăng & 7 hành tinh',
@@ -82,7 +82,7 @@ export default function BanDoSaoPage() {
             <GoldAccent>Bản đồ sao</GoldAccent> của bạn
           </>
         }
-        description="Cung Mặt Trời, Mặt Trăng & 7 hành tinh (Sao Thuỷ → Hải Vương) từ ngày giờ sinh — bằng thuật toán thiên văn, đối chiếu thư viện chuẩn. Con số là thật; diễn giải để hiểu mình, không bói toán."
+        description="Cung Mặt Trời, Mặt Trăng & 7 hành tinh (Sao Thủy → Hải Vương) từ ngày giờ sinh — bằng thuật toán thiên văn, đối chiếu thư viện chuẩn. Con số là thật; diễn giải để hiểu mình, không bói toán."
         breadcrumb={[{ label: 'Trang chủ', href: '/' }, { label: 'Bản đồ sao' }]}
       >
         <section className="space-y-8">

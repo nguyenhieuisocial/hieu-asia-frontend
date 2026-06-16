@@ -64,7 +64,7 @@ const LENS_INTEGRATION: { title: string; body: string }[] = [
   },
   {
     title: 'Bát Tự · ngũ hành cá nhân',
-    body: 'Tương quan Kim-Mộc-Thuỷ-Hoả-Thổ trong tứ trụ — gợi ý khí chất và mùa của đời.',
+    body: 'Tương quan Kim-Mộc-Thủy-Hỏa-Thổ trong tứ trụ — gợi ý khí chất và mùa của đời.',
   },
   {
     title: 'Thần Số Học · chu kỳ thời gian',

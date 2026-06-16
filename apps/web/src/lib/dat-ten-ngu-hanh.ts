@@ -166,7 +166,7 @@ export const NAME_SUGGESTIONS: Record<Element, NameSuggestion[]> = {
     { name: 'Vinh', meaning: 'rực rỡ, vinh quang', gender: 'nam' },
     { name: 'Khải', meaning: 'khải hoàn, sáng rỡ', gender: 'nam' },
     { name: 'Hân', meaning: 'hân hoan, rạng rỡ', gender: 'nu' },
-    { name: 'Viêm', meaning: 'ấm nóng (hành Hoả)', gender: 'nam' },
+    { name: 'Viêm', meaning: 'ấm nóng (hành Hỏa)', gender: 'nam' },
     { name: 'Diễm', meaning: 'đẹp rực rỡ', gender: 'nu' },
     { name: 'Hạ', meaning: 'mùa hạ, nắng ấm', gender: 'nu' },
     { name: 'Chiếu', meaning: 'chiếu rọi, toả sáng', gender: 'ca' },

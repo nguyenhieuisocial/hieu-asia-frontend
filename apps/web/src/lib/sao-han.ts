@@ -126,7 +126,7 @@ export const SAO_INFO: Record<SaoKey, SaoInfo> = {
     name: 'Vân Hớn',
     type: 'trung',
     summary:
-      'Sao trung bình (còn gọi Vân Hán, thuộc hành Hoả) — theo phong tục dễ nóng giận, vướng thị phi lời nói, đau ốm nhẹ; nên cẩn thận lửa, điện, xe cộ.',
+      'Sao trung bình (còn gọi Vân Hán, thuộc hành Hỏa) — theo phong tục dễ nóng giận, vướng thị phi lời nói, đau ốm nhẹ; nên cẩn thận lửa, điện, xe cộ.',
     advice: 'Giữ bình tĩnh, tránh tranh cãi và khẩu thiệt; chú ý sức khoẻ, lời nói.',
     thang: 'Tháng cần lưu ý: tháng 2 và tháng 8 (âm).',
     origin: 'Hỏa tinh (sao Hỏa) — Mangala trong Navagraha.',
