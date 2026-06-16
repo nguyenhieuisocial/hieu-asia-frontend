@@ -18,8 +18,12 @@ import {
   Activity,
   DollarSign,
   Compass,
+  Undo2,
+  ShoppingCart,
 } from 'lucide-react';
 import { RevenueChart, type RevenueDay } from '@/components/analytics/RevenueChart';
+import { RefundChart, type RefundDay } from '@/components/analytics/RefundChart';
+import { AbandonedChart, type AbandonedDay } from '@/components/analytics/AbandonedChart';
 import { VendorCostChart, type VendorCost } from '@/components/analytics/VendorCostChart';
 import { FunnelChart, type FunnelStage } from '@/components/analytics/FunnelChart';
 import { PageHeader } from '@/components/admin/page-header';
@@ -45,6 +49,16 @@ interface AnalyticsResponse {
     window_days: number;
   };
   sessions?: { total: number; completed: number; conversion_rate: number; error_rate: number };
+  // Money-monitoring trends — both OPTIONAL (absent until the backend ships).
+  refunds?: { daily: RefundDay[]; total: number; count: number; ratePct: number };
+  abandoned?: {
+    daily: AbandonedDay[];
+    createdTotal: number;
+    paidTotal: number;
+    abandonedTotal: number;
+    abandonRatePct: number;
+    leakageVnd: number;
+  };
   sources?: { langfuse: boolean; kv_transactions: boolean; kv_events?: boolean };
   error?: string;
 }
@@ -175,6 +189,10 @@ export default function AnalyticsPage() {
     return [{ key: k, label: FUNNEL_LABELS[k] ?? k, count }];
   });
   const sessions = data?.sessions ?? { total: 0, completed: 0, conversion_rate: 0, error_rate: 0 };
+  // Money-monitoring trends — render the cards/charts only when the backend
+  // actually returned the fields (older worker builds omit them entirely).
+  const refunds = data?.refunds;
+  const abandoned = data?.abandoned;
   const totalLLMCost = vendorCost.reduce((s, v) => s + v.cost_usd, 0);
   const avgCost = sessions.total > 0 ? totalLLMCost / sessions.total : 0;
   // Vendor cost here comes from Langfuse, which is usually NOT wired (keys live
@@ -317,6 +335,24 @@ export default function AnalyticsPage() {
           accent="gold"
           hint={costUnavailable ? 'Chi phí thật ở /llm-spend' : `tổng $${totalLLMCost.toFixed(2)}`}
         />
+        {refunds && (
+          <KpiCard
+            label={`Tỉ lệ hoàn tiền (${days}d)`}
+            value={refunds.ratePct.toFixed(1) + '%'}
+            icon={<Undo2 className="h-4 w-4" />}
+            accent="gold"
+            hint={`${fmtCurrency(refunds.total)} · ${refunds.count} lệnh`}
+          />
+        )}
+        {abandoned && (
+          <KpiCard
+            label={`Bỏ giỏ thanh toán (${days}d)`}
+            value={abandoned.abandonRatePct.toFixed(1) + '%'}
+            icon={<ShoppingCart className="h-4 w-4" />}
+            accent="purple"
+            hint={`${abandoned.abandonedTotal}/${abandoned.createdTotal} đơn · rò rỉ ${fmtCurrency(abandoned.leakageVnd)}`}
+          />
+        )}
       </div>
 
       <Card>
@@ -332,6 +368,60 @@ export default function AnalyticsPage() {
           )}
         </CardContent>
       </Card>
+
+      {(refunds || abandoned) && (
+        <div className="grid gap-4 lg:grid-cols-2">
+          {refunds && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Hoàn tiền theo ngày</CardTitle>
+                <CardDescription>
+                  Tổng tiền hoàn (lệnh đã hoàn tất) mỗi ngày. Tỉ lệ hoàn{' '}
+                  {refunds.ratePct.toFixed(1)}% trên doanh thu {days} ngày.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {isLoading ? (
+                  <p className="py-8 text-center text-sm text-muted-foreground">Đang tải…</p>
+                ) : refunds.count === 0 ? (
+                  <EmptyState
+                    title="Chưa có hoàn tiền"
+                    description={`Không có lệnh hoàn nào hoàn tất trong ${days} ngày — tốt.`}
+                    className="border-0 bg-transparent py-8"
+                  />
+                ) : (
+                  <RefundChart data={refunds.daily} />
+                )}
+              </CardContent>
+            </Card>
+          )}
+          {abandoned && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Bỏ giỏ thanh toán</CardTitle>
+                <CardDescription>
+                  Số đơn bắt đầu thanh toán so với đã trả mỗi ngày. Bỏ giỏ{' '}
+                  {abandoned.abandonRatePct.toFixed(1)}% · ước tính rò rỉ{' '}
+                  {fmtCurrency(abandoned.leakageVnd)}.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {isLoading ? (
+                  <p className="py-8 text-center text-sm text-muted-foreground">Đang tải…</p>
+                ) : abandoned.createdTotal === 0 ? (
+                  <EmptyState
+                    title="Chưa có đơn thanh toán"
+                    description={`Không có đơn nào được tạo trong ${days} ngày.`}
+                    className="border-0 bg-transparent py-8"
+                  />
+                ) : (
+                  <AbandonedChart data={abandoned.daily} />
+                )}
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
 
       <Card>
         <CardHeader>
