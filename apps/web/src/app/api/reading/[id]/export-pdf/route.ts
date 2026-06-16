@@ -63,12 +63,23 @@ export async function POST(
       );
     }
 
-    // 2. Redirect to the signed R2 URL — the browser fetches the PDF directly
-    //    from the worker (the cross-origin GET is CORS-allowed), so the 9MB master
-    //    isn't streamed twice through this serverless function. The caller's
-    //    fetch() follows the redirect transparently; it still gets the blob and
-    //    names the file client-side. The signed URL is short-lived (1h).
-    return NextResponse.redirect(wb.url, 302);
+    // 2. Stream the R2 object back as an attachment. (A 302 redirect to the signed
+    //    URL was tried but FAILS: the caller's fetch() can't follow a cross-origin
+    //    redirect when the original request carries an Authorization header — CORS
+    //    blocks the redirected request. So we proxy the bytes server-side.)
+    const pdfRes = await fetch(wb.url, { cache: 'no-store' });
+    if (!pdfRes.ok) {
+      return NextResponse.json({ ok: false, error: 'pdf_fetch_failed' }, { status: 502 });
+    }
+    const pdf = await pdfRes.arrayBuffer();
+    return new NextResponse(Buffer.from(pdf), {
+      status: 200,
+      headers: {
+        'content-type': 'application/pdf',
+        'content-disposition': `attachment; filename="${isMaster ? 'Cam-Nang-Cuoc-Doi-Tong-Hop' : 'Cam-Nang-Cuoc-Doi'}.pdf"`,
+        'cache-control': 'no-store',
+      },
+    });
   } catch (err) {
     return NextResponse.json(
       { ok: false, error: 'pdf_proxy_failed', detail: err instanceof Error ? err.message : String(err) },
