@@ -9,10 +9,13 @@
  * summarises each row's delivery state.
  */
 
+import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent } from '@hieu-asia/ui';
+import { Button, Card, CardContent, toast } from '@hieu-asia/ui';
+import { Send } from 'lucide-react';
 import {
   getInfraResend,
+  postInfraResendTest,
   type InfraResendItem,
   type InfraResendSummary,
 } from '@/lib/admin-api';
@@ -22,6 +25,29 @@ import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
 
 const tool = getInfraTool('resend')!;
+
+/** Header action: send a test email via Resend, toast the result. */
+function SendTestEmailButton() {
+  const [pending, setPending] = React.useState(false);
+  const click = React.useCallback(async () => {
+    if (pending) return;
+    setPending(true);
+    const res = await postInfraResendTest();
+    setPending(false);
+    if (res.ok) {
+      const to = typeof res.sent_to === 'string' ? res.sent_to : null;
+      toast.success(to ? `Đã gửi tới ${to}` : 'Đã gửi email thử.');
+      return;
+    }
+    toast.error(res.error ?? 'Không gửi được email thử.');
+  }, [pending]);
+  return (
+    <Button variant="outline" size="sm" onClick={click} disabled={pending}>
+      <Send className="mr-1.5 h-3.5 w-3.5" />
+      {pending ? 'Đang gửi…' : 'Gửi email thử'}
+    </Button>
+  );
+}
 
 function eventTone(event: string | null): 'good' | 'bad' | 'warn' | 'neutral' {
   switch ((event ?? '').toLowerCase()) {
@@ -78,6 +104,7 @@ export default function InfraResendPage() {
       tool={tool}
       query={query}
       emptyTitle="Chưa có email gần đây"
+      headerActions={<SendTestEmailButton />}
       renderTable={(items) => (
         <div className="space-y-6">
           {cards.length > 0 && (

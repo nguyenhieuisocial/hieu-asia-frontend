@@ -1213,6 +1213,10 @@ export interface InfraGithubItem {
   actor: string | null;
   created_at: string | null;
   url: string | null;
+  // Infra-hub v2 wave 3+4 — the run's numeric id, needed to re-run a failed run
+  // via POST /admin/infra/github/rerun. Optional → older worker deploys omit it
+  // and the page hides the "Chạy lại" button.
+  run_id?: number | string | null;
 }
 
 /**
@@ -1400,6 +1404,188 @@ export function getInfraAiGateway(): Promise<InfraAiGatewayEnvelope> {
   return fetchInfra<InfraAiGatewayItem, InfraAiGatewaySummary>(
     'ai-gateway',
   ) as Promise<InfraAiGatewayEnvelope>;
+}
+
+// ---------- Infra-hub v2 wave 3+4 — detail fetches + safe POST actions --------
+//
+// Detail GETs return a richer per-record envelope than the list endpoints; the
+// drawers fetch them lazily (React Query enabled only when open, keyed by id).
+// They reuse `fetchInfraDetail` (raw fetch like `fetchInfra` so an `ok:false`
+// body isn't erased) and never throw.
+//
+// Actions are POSTs. They DELIBERATELY do NOT use `proxyFetch` — that helper
+// returns null whenever `ok === false`, which would hide the worker's
+// `{ok:false, error}` result. The action buttons need the real result to toast
+// success vs the friendly error (e.g. token missing a write scope). `postInfra`
+// returns the parsed envelope verbatim and degrades to `{ok:false, error}` on
+// any network/parse failure so callers can always toast something.
+
+/** Sentry issue detail (GET /admin/infra/sentry/:id). */
+export interface InfraSentryDetailIssue {
+  id: string;
+  title: string;
+  culprit: string | null;
+  level: string;
+  status: string | null;
+  count: number;
+  userCount: number;
+  firstSeen: string | null;
+  lastSeen: string | null;
+  permalink: string | null;
+  metadata?: Record<string, unknown> | null;
+}
+
+export interface InfraSentryLatestEvent {
+  exception: { type: string | null; value: string | null } | null;
+  frames: Array<{ filename: string | null; function: string | null; lineNo: number | null }>;
+  tags: Array<{ key: string; value: string }>;
+}
+
+export type InfraSentryDetailEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraSentryItem[];
+      issue: InfraSentryDetailIssue;
+      latest_event: InfraSentryLatestEvent | null;
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+/** Vercel deployment detail (GET /admin/infra/vercel/:uid). */
+export interface InfraVercelDetailDeployment {
+  uid: string;
+  name: string | null;
+  state: string | null;
+  target: string | null;
+  created: number | null;
+  ready: number | null;
+  buildingAt: number | null;
+  url: string | null;
+  inspectorUrl: string | null;
+  gitSource: { ref: string | null; sha: string | null } | null;
+  creator: string | null;
+  meta: {
+    githubCommitMessage?: string | null;
+    githubCommitAuthorName?: string | null;
+  } | null;
+}
+
+export interface InfraVercelBuildLog {
+  text: string;
+  type: string | null;
+  created: number | null;
+}
+
+export type InfraVercelDetailEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraVercelItem[];
+      deployment: InfraVercelDetailDeployment;
+      build_logs?: InfraVercelBuildLog[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+/** Raw detail fetch (mirrors `fetchInfra`, but for a specific record path). */
+async function fetchInfraDetail<E extends { ok: boolean }>(path: string): Promise<E> {
+  try {
+    const res = await fetch(`${PROXY}/admin/infra${path}`, {
+      cache: 'no-store',
+      credentials: 'same-origin',
+    });
+    if (res.status === 401 && typeof window !== 'undefined') {
+      const next = window.location.pathname + window.location.search;
+      window.location.href = `/login?reason=session_invalid&next=${encodeURIComponent(next)}`;
+      return { ok: false, configured: true, error: 'unauthenticated' } as unknown as E;
+    }
+    const text = await res.text();
+    let parsed: E | undefined;
+    try {
+      parsed = text ? (JSON.parse(text) as E) : undefined;
+    } catch {
+      parsed = undefined;
+    }
+    if (parsed && typeof parsed.ok === 'boolean') return parsed;
+    return { ok: false, configured: true, error: `infra detail → HTTP ${res.status}` } as unknown as E;
+  } catch (err) {
+    return { ok: false, configured: true, error: (err as Error).message } as unknown as E;
+  }
+}
+
+export function getInfraSentryDetail(id: string): Promise<InfraSentryDetailEnvelope> {
+  return fetchInfraDetail<InfraSentryDetailEnvelope>(
+    `/sentry/${encodeURIComponent(id)}`,
+  );
+}
+
+export function getInfraVercelDetail(uid: string): Promise<InfraVercelDetailEnvelope> {
+  return fetchInfraDetail<InfraVercelDetailEnvelope>(
+    `/vercel/${encodeURIComponent(uid)}`,
+  );
+}
+
+/** Result of every infra action — the worker's `{ok, ...}` envelope verbatim. */
+export type InfraActionResult = { ok: boolean; error?: string } & Record<string, unknown>;
+
+/**
+ * POST an infra action and return the parsed `{ok, ...}` envelope. Unlike
+ * `proxyFetch`, it does NOT collapse `ok:false` to null — callers need the real
+ * result (and `error`) to show a success vs friendly-error toast. Never throws.
+ */
+async function postInfra(
+  path: string,
+  body?: Record<string, unknown>,
+): Promise<InfraActionResult> {
+  try {
+    const res = await fetch(`${PROXY}/admin/infra${path}`, {
+      method: 'POST',
+      cache: 'no-store',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      ...(body ? { body: JSON.stringify(body) } : {}),
+    });
+    if (res.status === 401 && typeof window !== 'undefined') {
+      const next = window.location.pathname + window.location.search;
+      window.location.href = `/login?reason=session_invalid&next=${encodeURIComponent(next)}`;
+      return { ok: false, error: 'unauthenticated' };
+    }
+    const text = await res.text();
+    let parsed: InfraActionResult | undefined;
+    try {
+      parsed = text ? (JSON.parse(text) as InfraActionResult) : undefined;
+    } catch {
+      parsed = undefined;
+    }
+    if (parsed && typeof parsed.ok === 'boolean') return parsed;
+    return { ok: false, error: `infra action → HTTP ${res.status}` };
+  } catch (err) {
+    return { ok: false, error: (err as Error).message };
+  }
+}
+
+export function postInfraResendTest(): Promise<InfraActionResult> {
+  return postInfra('/resend/send-test');
+}
+
+export function postInfraTelegramTest(): Promise<InfraActionResult> {
+  return postInfra('/telegram/send-test');
+}
+
+export function postInfraGithubRerun(
+  repo: string,
+  runId: number | string,
+): Promise<InfraActionResult> {
+  return postInfra('/github/rerun', { repo, run_id: runId });
+}
+
+export function postInfraSentryResolve(id: string): Promise<InfraActionResult> {
+  return postInfra(`/sentry/${encodeURIComponent(id)}/resolve`);
+}
+
+export function postInfraSentryIgnore(id: string): Promise<InfraActionResult> {
+  return postInfra(`/sentry/${encodeURIComponent(id)}/ignore`);
 }
 
 // ---------- Infra-hub v2 — Cloudflare KV browser (worker PR #203) ----------

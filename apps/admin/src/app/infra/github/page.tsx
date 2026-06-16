@@ -8,11 +8,13 @@
  * colours each run by its `conclusion` (success → jade, failure → red).
  */
 
-import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent } from '@hieu-asia/ui';
-import { ExternalLink } from 'lucide-react';
+import * as React from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Button, Card, CardContent, toast } from '@hieu-asia/ui';
+import { ExternalLink, RotateCw } from 'lucide-react';
 import {
   getInfraGithub,
+  postInfraGithubRerun,
   type InfraGithubItem,
   type InfraGithubSummary,
 } from '@/lib/admin-api';
@@ -22,6 +24,60 @@ import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
 
 const tool = getInfraTool('github')!;
+
+// The rerun endpoint validates `repo ∈ hieu-asia-frontend | hieu-asia-backend`.
+// The row's `repo` may arrive as `owner/name` — strip any leading owner segment
+// and only enable the button when the result is one of the two allowed repos.
+const RERUN_REPOS = new Set(['hieu-asia-frontend', 'hieu-asia-backend']);
+function normalizeRepo(repo: string): string | null {
+  const short = repo.includes('/') ? repo.split('/').pop()! : repo;
+  return RERUN_REPOS.has(short) ? short : null;
+}
+
+/** A conclusion that warrants a re-run button (the job did not succeed). */
+function isRerunnable(conclusion: string | null): boolean {
+  const c = (conclusion ?? '').toLowerCase();
+  return c === 'failure' || c === 'cancelled' || c === 'timed_out' || c === 'startup_failure';
+}
+
+/** Inline "Chạy lại" button — in-flight disabled, toast on result, then refetch. */
+function RerunButton({
+  repo,
+  runId,
+  onDone,
+}: {
+  repo: string;
+  runId: number | string;
+  onDone: () => void;
+}) {
+  const [pending, setPending] = React.useState(false);
+  const click = React.useCallback(
+    async (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (pending) return;
+      setPending(true);
+      const res = await postInfraGithubRerun(repo, runId);
+      setPending(false);
+      if (res.ok) {
+        toast.success('Đã yêu cầu chạy lại workflow.');
+        onDone();
+        return;
+      }
+      if ((res.error ?? '').toLowerCase().includes('actions:write')) {
+        toast.error('GITHUB_TOKEN thiếu quyền actions:write.');
+        return;
+      }
+      toast.error(res.error ?? 'Không chạy lại được workflow.');
+    },
+    [repo, runId, pending, onDone],
+  );
+  return (
+    <Button variant="outline" size="sm" onClick={click} disabled={pending}>
+      <RotateCw className={`mr-1.5 h-3.5 w-3.5 ${pending ? 'animate-spin' : ''}`} />
+      {pending ? 'Đang gửi…' : 'Chạy lại'}
+    </Button>
+  );
+}
 
 /** A run is `in_progress`/`queued` until it has a conclusion. */
 function runTone(
@@ -47,11 +103,16 @@ function runTone(
 }
 
 export default function InfraGithubPage() {
+  const queryClient = useQueryClient();
   const query = useQuery({
     queryKey: ['infra', 'github'],
     queryFn: getInfraGithub,
     staleTime: 30_000,
   });
+  const refetchList = React.useCallback(
+    () => queryClient.invalidateQueries({ queryKey: ['infra', 'github'] }),
+    [queryClient],
+  );
 
   const summary: InfraGithubSummary | undefined =
     query.data?.ok ? query.data.summary : undefined;
@@ -87,12 +148,16 @@ export default function InfraGithubPage() {
                     <th className="px-4 py-2.5">Nhánh</th>
                     <th className="px-4 py-2.5">Người chạy</th>
                     <th className="px-4 py-2.5">Thời gian</th>
+                    <th className="px-4 py-2.5 text-right">Hành động</th>
                     <th className="px-4 py-2.5 text-right">Mở</th>
                   </tr>
                 </thead>
                 <tbody>
                   {items.map((r, idx) => {
                     const { label, tone } = runTone(r.status, r.conclusion);
+                    const repo = normalizeRepo(r.repo);
+                    const canRerun =
+                      isRerunnable(r.conclusion) && repo !== null && r.run_id != null;
                     return (
                       <tr
                         key={r.url ?? `${r.repo}-${r.workflow}-${idx}`}
@@ -117,6 +182,17 @@ export default function InfraGithubPage() {
                         </td>
                         <td className="whitespace-nowrap px-4 py-2.5 text-muted-foreground">
                           {formatRelativeOrEmpty(r.created_at) || '—'}
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-2.5 text-right">
+                          {canRerun ? (
+                            <RerunButton
+                              repo={repo!}
+                              runId={r.run_id!}
+                              onDone={refetchList}
+                            />
+                          ) : (
+                            <span className="text-muted-foreground">—</span>
+                          )}
                         </td>
                         <td className="px-4 py-2.5 text-right">
                           {r.url ? (
