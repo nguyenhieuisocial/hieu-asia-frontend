@@ -32,6 +32,7 @@ import {
   type AuditRow,
   type CustomerDetail,
   hasComplianceField,
+  type RefundRow,
   type SessionRow,
   type TxnRow,
 } from './detail-types';
@@ -40,6 +41,7 @@ export interface CustomerDetailTabsProps {
   customer: CustomerDetail | null;
   sessions: SessionRow[];
   transactions: TxnRow[];
+  refunds: RefundRow[];
   auditTrail: AuditRow[];
   value: string;
   onValueChange: (id: string) => void;
@@ -51,6 +53,7 @@ export function CustomerDetailTabs({
   customer,
   sessions,
   transactions,
+  refunds,
   auditTrail,
   value,
   onValueChange,
@@ -79,6 +82,11 @@ export function CustomerDetailTabs({
       id: 'transactions',
       label: `Giao dịch · ${transactions.length}`,
       content: <TransactionsTab transactions={transactions} />,
+    },
+    {
+      id: 'refunds',
+      label: `Hoàn tiền · ${refunds.length}`,
+      content: <RefundsTab refunds={refunds} />,
     },
     {
       id: 'audit',
@@ -258,6 +266,101 @@ function TransactionsTab({ transactions }: { transactions: TxnRow[] }) {
         <EmptyState
           title="Chưa có giao dịch"
           description="User chưa thanh toán."
+          className="border-0 bg-transparent py-4"
+        />
+      }
+    />
+  );
+}
+
+// Worker refund state machine: requested → approved → completed | rejected.
+const REFUND_STATUS_META: Record<string, { label: string; tone: string }> = {
+  requested: {
+    label: 'Đang chờ',
+    tone: 'border-gold/40 bg-gold/10 text-gold',
+  },
+  approved: {
+    label: 'Đã duyệt',
+    tone: 'border-jade/40 bg-jade/15 text-jade-700 dark:text-jade-50',
+  },
+  completed: {
+    label: 'Đã hoàn',
+    tone: 'border-jade/50 bg-jade/20 text-jade-700 dark:text-jade-50',
+  },
+  rejected: {
+    label: 'Từ chối',
+    tone: 'border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300',
+  },
+};
+
+function RefundsTab({ refunds }: { refunds: RefundRow[] }) {
+  const columns = React.useMemo<AdminTableColumn<RefundRow>[]>(
+    () => [
+      {
+        id: 'requested_at',
+        header: 'Thời gian',
+        sortKey: 'requested_at',
+        width: '170px',
+        cell: (r) => (
+          <span className="font-mono text-xs text-muted-foreground">
+            {fmtDate(r.requested_at)}
+          </span>
+        ),
+      },
+      {
+        id: 'status',
+        header: 'Trạng thái',
+        sortKey: 'status',
+        width: '130px',
+        cell: (r) => {
+          const meta =
+            REFUND_STATUS_META[(r.status ?? '').toLowerCase()] ?? {
+              label: r.status ?? '—',
+              tone: 'border-border bg-muted/30 text-muted-foreground',
+            };
+          return (
+            <span
+              className={`inline-flex items-center rounded border px-2 py-0.5 text-xs font-medium ${meta.tone}`}
+            >
+              {meta.label}
+            </span>
+          );
+        },
+      },
+      {
+        id: 'amount_vnd',
+        header: 'Số tiền',
+        sortKey: 'amount_vnd',
+        width: '120px',
+        className: 'text-right tabular-nums',
+        cell: (r) => (
+          <span className="text-foreground/85">
+            {r.amount_vnd != null
+              ? new Intl.NumberFormat('vi-VN').format(r.amount_vnd) + ' đ'
+              : '—'}
+          </span>
+        ),
+      },
+      {
+        id: 'reason',
+        header: 'Lý do',
+        cell: (r) => (
+          <span className="text-muted-foreground">{r.reason || '—'}</span>
+        ),
+      },
+    ],
+    [],
+  );
+  return (
+    <AdminTable<RefundRow>
+      rows={refunds}
+      columns={columns}
+      getRowId={(r) => r.refund_id}
+      caption="Lịch sử hoàn tiền"
+      empty={
+        <EmptyState
+          title="Khách này chưa có hoàn tiền nào"
+          description="Khi có yêu cầu hoàn tiền gắn với đơn của khách, nó sẽ hiện ở đây."
           className="border-0 bg-transparent py-4"
         />
       }

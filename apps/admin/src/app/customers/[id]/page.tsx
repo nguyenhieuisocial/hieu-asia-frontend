@@ -50,6 +50,7 @@ const VALID_TABS = [
   'profile',
   'sessions',
   'transactions',
+  'refunds',
   'audit',
   'compliance',
 ] as const;
@@ -108,6 +109,10 @@ function CustomerDetailPageInner() {
   const transactions = React.useMemo(
     () => (Array.isArray(data?.transactions) ? data.transactions : []),
     [data?.transactions],
+  );
+  const refunds = React.useMemo(
+    () => (Array.isArray(data?.refunds) ? data.refunds : []),
+    [data?.refunds],
   );
   const auditTrail = React.useMemo(
     () => (Array.isArray(data?.audit_trail) ? data.audit_trail : []),
@@ -282,6 +287,7 @@ function CustomerDetailPageInner() {
             customer={enrichedCustomer ?? customer}
             sessions={sessions}
             transactions={transactions}
+            refunds={refunds}
             auditTrail={auditTrail}
             value={active}
             onValueChange={onTabChange}
