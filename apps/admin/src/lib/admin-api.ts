@@ -1089,16 +1089,24 @@ export interface InfraResendItem {
   created_at: string | null;
 }
 
+/**
+ * Infra-hub v2 (worker PR #203) — Cloudflare now returns Pages/Workers
+ * *deployments* (most-recent first), not daily request rollups. The token may
+ * still lack deployment read scope → the worker returns a notConfigured setup
+ * card, which `InfraPanel` already renders.
+ */
 export interface InfraCloudflareItem {
-  date: string;
-  requests: number;
-  errors: number;
+  id: string;
+  created_on: string;
+  author_email: string | null;
+  message: string | null;
+  source: string | null;
+  live: boolean;
 }
 
 export interface InfraCloudflareSummary {
-  requests_24h: number;
-  errors_24h: number;
-  error_rate_pct: number;
+  total_deployments: number;
+  live_deployment_at: string | null;
 }
 
 export interface InfraSupabaseItem {
@@ -1131,6 +1139,16 @@ export interface InfraGithubItem {
   url: string | null;
 }
 
+/**
+ * Infra-hub v2 (worker PR #203) — GitHub summary now carries the last Worker
+ * deploy result + a cache flag. Both optional → the page hides the card / pill
+ * when the worker predates these fields.
+ */
+export interface InfraGithubSummary {
+  last_worker_deploy?: { conclusion: string | null; created_at: string | null };
+  cached?: boolean;
+}
+
 export interface InfraTelegramItem {
   bot: string;
   username: string | null;
@@ -1145,11 +1163,28 @@ export interface InfraAiGatewayItem {
   requests: number;
   cost_usd: number;
   error_rate_pct: number;
+  // Infra-hub v2 (worker PR #203) — per-model latency + top error class.
+  // Optional → older worker deploys omit them; the table renders "—".
+  latency_avg_ms?: number | null;
+  latency_p95_ms?: number | null;
+  error_class_top?: Array<{ error_class: string; count: number }>;
 }
 
 export interface InfraAiGatewaySummary {
   total_requests: number;
   total_cost_usd: number;
+  // Infra-hub v2 — prepaid balance + low-balance flag (worker PR #203).
+  // Optional → render the balance card only when present.
+  balance_usd?: number | null;
+  low_balance?: boolean;
+}
+
+/** Infra-hub v2 — 30d cost/request/error daily series for the AI Gateway chart. */
+export interface InfraAiGatewaySeriesPoint {
+  date: string;
+  requests: number;
+  cost_usd: number;
+  errors: number;
 }
 
 /**
@@ -1217,16 +1252,142 @@ export function getInfraLangfuse(): Promise<InfraEnvelope<InfraLangfuseItem>> {
   return fetchInfra<InfraLangfuseItem>('langfuse');
 }
 
-export function getInfraGithub(): Promise<InfraEnvelope<InfraGithubItem>> {
-  return fetchInfra<InfraGithubItem>('github');
+export function getInfraGithub(): Promise<
+  InfraEnvelope<InfraGithubItem, InfraGithubSummary>
+> {
+  return fetchInfra<InfraGithubItem, InfraGithubSummary>('github');
 }
 
 export function getInfraTelegram(): Promise<InfraEnvelope<InfraTelegramItem>> {
   return fetchInfra<InfraTelegramItem>('telegram');
 }
 
-export function getInfraAiGateway(): Promise<
-  InfraEnvelope<InfraAiGatewayItem, InfraAiGatewaySummary>
-> {
-  return fetchInfra<InfraAiGatewayItem, InfraAiGatewaySummary>('ai-gateway');
+/**
+ * AI Gateway success envelope also carries a top-level 30d `series` (worker
+ * PR #203). `fetchInfra` returns the raw parsed body, so we intersect the
+ * success branch with the optional series to surface it without changing the
+ * shared `InfraEnvelope`.
+ */
+export type InfraAiGatewayEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraAiGatewayItem[];
+      summary?: InfraAiGatewaySummary;
+      series?: InfraAiGatewaySeriesPoint[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export function getInfraAiGateway(): Promise<InfraAiGatewayEnvelope> {
+  return fetchInfra<InfraAiGatewayItem, InfraAiGatewaySummary>(
+    'ai-gateway',
+  ) as Promise<InfraAiGatewayEnvelope>;
+}
+
+// ---------- Infra-hub v2 — Cloudflare KV browser (worker PR #203) ----------
+//
+// Read-only browser over the operational KV namespaces (sessions / cache /
+// affiliates). Three endpoints under /admin/infra/kv, all HTTP 200 with an
+// `{ok, configured, ...}` envelope. We reuse the same fetch-through-proxy
+// pattern as `fetchInfra` (raw fetch so an `ok:false` body isn't erased), and
+// build query strings with encodeURIComponent.
+
+/** A curated (namespace, prefix) shortcut shown as a clickable chip. */
+export interface InfraKvChip {
+  label: string;
+  ns: string;
+  prefix: string;
+}
+
+export interface InfraKvNamespacesResp {
+  ok: boolean;
+  configured: boolean;
+  namespaces?: Array<{ binding: string }>;
+  chips?: InfraKvChip[];
+  error?: string;
+}
+
+export interface InfraKvKeyItem {
+  name: string;
+  expiration: number | null;
+}
+
+export interface InfraKvKeysResp {
+  ok: boolean;
+  configured: boolean;
+  ns?: string;
+  prefix?: string;
+  items?: InfraKvKeyItem[];
+  cursor?: string | null;
+  list_complete?: boolean;
+  error?: string;
+}
+
+export interface InfraKvValueResp {
+  ok: boolean;
+  configured: boolean;
+  ns?: string;
+  key?: string;
+  value?: string | null;
+  metadata?: Record<string, unknown> | null;
+  redacted?: boolean;
+  truncated?: boolean;
+  not_found?: boolean;
+  error?: string;
+}
+
+/** Shared raw fetch for KV endpoints. Mirrors `fetchInfra`: never throws;
+ * bounces to /login on 401; degrades to an `ok:false` envelope on any error. */
+async function fetchInfraKv<T extends { ok: boolean; configured: boolean; error?: string }>(
+  path: string,
+): Promise<T> {
+  try {
+    const res = await fetch(`${PROXY}/admin/infra/kv${path}`, {
+      cache: 'no-store',
+      credentials: 'same-origin',
+    });
+    if (res.status === 401 && typeof window !== 'undefined') {
+      const next = window.location.pathname + window.location.search;
+      window.location.href = `/login?reason=session_invalid&next=${encodeURIComponent(next)}`;
+      return { ok: false, configured: true, error: 'unauthenticated' } as T;
+    }
+    const text = await res.text();
+    let parsed: T | undefined;
+    try {
+      parsed = text ? (JSON.parse(text) as T) : undefined;
+    } catch {
+      parsed = undefined;
+    }
+    if (parsed && typeof parsed.ok === 'boolean') return parsed;
+    return { ok: false, configured: true, error: `infra kv → HTTP ${res.status}` } as T;
+  } catch (err) {
+    return { ok: false, configured: true, error: (err as Error).message } as T;
+  }
+}
+
+/** Namespaces + curated prefix chips for the KV browser landing state. */
+export function getInfraKvCatalog(): Promise<InfraKvNamespacesResp> {
+  return fetchInfraKv<InfraKvNamespacesResp>('');
+}
+
+/** List keys in `ns` filtered by `prefix`; pass `cursor` to page further. */
+export function getInfraKvKeys(
+  ns: string,
+  prefix: string,
+  cursor?: string | null,
+): Promise<InfraKvKeysResp> {
+  const qs = new URLSearchParams();
+  qs.set('ns', ns);
+  qs.set('prefix', prefix);
+  if (cursor) qs.set('cursor', cursor);
+  return fetchInfraKv<InfraKvKeysResp>(`/keys?${qs.toString()}`);
+}
+
+/** Read a single key's value + metadata (redacted/truncated server-side). */
+export function getInfraKvValue(ns: string, key: string): Promise<InfraKvValueResp> {
+  const qs = new URLSearchParams();
+  qs.set('ns', ns);
+  qs.set('key', key);
+  return fetchInfraKv<InfraKvValueResp>(`/value?${qs.toString()}`);
 }

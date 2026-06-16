@@ -28,6 +28,7 @@ import {
   Github,
   Send,
   Network,
+  KeyRound,
 } from 'lucide-react';
 
 export interface InfraTool {
@@ -79,6 +80,15 @@ export const INFRA_TOOLS: InfraTool[] = [
     Icon: Cloud,
     external: 'https://dash.cloudflare.com/',
     env: 'CF_ANALYTICS_TOKEN / CLOUDFLARE_API_TOKEN',
+    built: true,
+  },
+  {
+    slug: 'kv',
+    name: 'Cloudflare KV',
+    blurb: 'Duyệt dữ liệu vận hành (phiên/đơn/streak/CTV) lưu trong KV.',
+    Icon: KeyRound,
+    external: 'https://dash.cloudflare.com/?to=/:account/workers/kv/namespaces',
+    env: 'KV bindings (SESSIONS / CACHE / AFFILIATES)',
     built: true,
   },
   {
