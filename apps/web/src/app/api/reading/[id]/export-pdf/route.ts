@@ -135,6 +135,45 @@ export async function POST(
   const isMaster = req.nextUrl.searchParams.get('doc') === 'master';
   const docQS = isMaster ? '&doc=master' : '';
 
+  // Master compendium (150+ pages) renders on Cloudflare Browser Rendering (full
+  // chromium, one pass) via the worker, which stores the PDF in R2 and returns a
+  // signed URL. The Vercel @sparticuz path below hard-caps at ~28 pages, so it
+  // CANNOT produce the master. Proxy + stream the R2 object so the download stays
+  // same-origin with a forced filename.
+  if (isMaster) {
+    try {
+      const wr = await fetch(
+        `${HIEU_API_URL}/reading/${encodeURIComponent(id)}/export-pdf?doc=master`,
+        { method: 'POST', headers: { 'content-type': 'application/json', authorization: authz }, cache: 'no-store' },
+      );
+      const wb = (await wr.json().catch(() => ({}))) as { ok?: boolean; url?: string; error?: string };
+      if (!wr.ok || !wb.url) {
+        return NextResponse.json(
+          { ok: false, error: wb.error ?? 'master_render_failed' },
+          { status: wr.status >= 400 ? wr.status : 502 },
+        );
+      }
+      const pdfRes = await fetch(wb.url, { cache: 'no-store' });
+      if (!pdfRes.ok) {
+        return NextResponse.json({ ok: false, error: 'master_fetch_failed' }, { status: 502 });
+      }
+      const pdf = await pdfRes.arrayBuffer();
+      return new NextResponse(Buffer.from(pdf), {
+        status: 200,
+        headers: {
+          'content-type': 'application/pdf',
+          'content-disposition': 'attachment; filename="Cam-Nang-Cuoc-Doi-Tong-Hop.pdf"',
+          'cache-control': 'no-store',
+        },
+      });
+    } catch (err) {
+      return NextResponse.json(
+        { ok: false, error: 'master_proxy_failed', detail: err instanceof Error ? err.message : String(err) },
+        { status: 502 },
+      );
+    }
+  }
+
   // 1. Fetch the print-ready HTML from the worker (it enforces the auth gate).
   let html: string;
   try {
