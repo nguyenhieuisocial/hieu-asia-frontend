@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { breadcrumb, webPage } from '@/lib/seo/jsonld';
+import { FaqSection } from '@/components/seo/FaqSection';
+import { breadcrumb, webPage, faqPage, type FaqItem } from '@/lib/seo/jsonld';
 import { QUE_PAGES, TRIGRAMS, getQue } from '@/lib/que-kinh-dich';
 
 interface Props {
@@ -53,6 +54,23 @@ export default async function QueMeaningPage({ params }: Props) {
   const idx = QUE_PAGES.findIndex((x) => x.slug === q.slug);
   const prev = idx > 0 ? QUE_PAGES[idx - 1] : undefined;
   const next = idx < QUE_PAGES.length - 1 ? QUE_PAGES[idx + 1] : undefined;
+
+  // Câu hỏi thường gặp — dựng từ dữ liệu THẬT của quẻ (core/advice/love/work) + cấu trúc quái,
+  // mỗi quẻ một bộ riêng. Dùng chung 1 mảng cho cả FAQPage JSON-LD lẫn phần hiển thị.
+  const faqs: FaqItem[] = [
+    { q: `Quẻ ${q.nameVi} có ý nghĩa gì?`, a: q.core },
+    { q: `Bốc được quẻ ${q.nameVi} thì nên ứng xử thế nào?`, a: q.advice },
+    { q: `Quẻ ${q.nameVi} nói gì về tình cảm, quan hệ?`, a: q.love },
+    { q: `Quẻ ${q.nameVi} nói gì về công việc, tiền bạc?`, a: q.work },
+    ...(up && down
+      ? [
+          {
+            q: `Quẻ ${q.nameVi} gồm những quái nào?`,
+            a: `Quẻ ${q.nameVi} (quẻ ${q.id}/64 Kinh Dịch) ghép từ ${up.ten} (${up.tuong}) ở trên và ${down.ten} (${down.tuong}) ở dưới.`,
+          },
+        ]
+      : []),
+  ];
 
   return (
     <ToolPageShell
@@ -147,6 +165,8 @@ export default async function QueMeaningPage({ params }: Props) {
           </p>
         </section>
 
+        <FaqSection items={faqs} />
+
         <nav className="flex items-center justify-between gap-3 text-sm" aria-label="Quẻ trước / quẻ sau">
           {prev ? (
             <Link
@@ -199,6 +219,7 @@ export default async function QueMeaningPage({ params }: Props) {
             { name: 'Ý nghĩa 64 quẻ', url: '/gieo-que/y-nghia' },
             { name: q.nameVi, url: `/gieo-que/y-nghia/${q.slug}` },
           ]),
+          faqPage(faqs),
         ]}
       />
     </ToolPageShell>
