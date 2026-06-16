@@ -44,7 +44,7 @@ const CANON: ReadonlyArray<{ name: string; element: Element }> = [
   { name: 'Kim Bạch Kim', element: 'kim' },
   { name: 'Phú Đăng Hỏa', element: 'hoa' },
   { name: 'Thiên Hà Thủy', element: 'thuy' },
-  { name: 'Đại Trạch Thổ', element: 'tho' },
+  { name: 'Đại Dịch Thổ', element: 'tho' },
   { name: 'Thoa Xuyến Kim', element: 'kim' },
   { name: 'Tang Đố Mộc', element: 'moc' },
   { name: 'Đại Khê Thủy', element: 'thuy' },
