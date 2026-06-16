@@ -61,6 +61,7 @@ import {
   getSignupsByDay,
 } from '@/lib/admin-api';
 import { getGscSearchAnalytics } from '@/lib/gsc-api';
+import { getLlmSpendKpis } from '@/lib/llm-spend-api';
 import { Search, MousePointerClick, Percent, Gauge } from 'lucide-react';
 
 /** BUG-022: surface a visual alert + Triage CTA when oldest pending > 60 min. */
@@ -113,6 +114,20 @@ export default function AdminOverviewPage() {
     queryKey: ['admin', 'gsc', 'dashboard'],
     queryFn: () => getGscSearchAnalytics(7),
     staleTime: 5 * 60_000,
+  });
+  // "Lỗi AI hôm nay" — the at-a-glance "is the AI pipeline on fire" signal.
+  // /admin/llm-spend/kpis.error_rate is a FRACTION (0-1) of today's llm_traces
+  // whose status != ok/success. since = today 00:00 (stable within the day, so
+  // the query key doesn't churn). Degrades to "—" if the endpoint is down.
+  const todayStartIso = (() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d.toISOString();
+  })();
+  const aiErr = useQuery({
+    queryKey: ['admin', 'ai-error-today', todayStartIso],
+    queryFn: () => getLlmSpendKpis({ since: todayStartIso }),
+    staleTime: 60_000,
   });
 
   // Build sparklines from existing series.
@@ -239,7 +254,7 @@ export default function AdminOverviewPage() {
       <h2 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/85">
         Vận hành
       </h2>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-7">
         <KpiCard
           label="Tổng người dùng"
           value={kpis.data?.total_users.toLocaleString('vi-VN') ?? '—'}
@@ -298,6 +313,19 @@ export default function AdminOverviewPage() {
           accent="gold"
           sparkline={costSpark}
           hint="USD"
+        />
+        <KpiCard
+          label="Lỗi AI hôm nay"
+          value={aiErr.data ? `${(aiErr.data.error_rate * 100).toFixed(1)}%` : '—'}
+          icon={<AlertTriangle className="h-4 w-4" />}
+          accent={
+            aiErr.data && aiErr.data.error_rate > 0
+              ? aiErr.data.error_rate >= 0.1
+                ? 'red'
+                : 'warn'
+              : 'jade'
+          }
+          hint={aiErr.data ? `${aiErr.data.call_count} lượt gọi` : 'pipeline AI'}
         />
       </div>
 
