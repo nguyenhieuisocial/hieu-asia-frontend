@@ -33,8 +33,10 @@ import puppeteer from 'puppeteer-core';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-// Cold start (chromium pack download + spin-up ~5-8s) + render (~3-6s). 30s ample.
-export const maxDuration = 30;
+// Cold start (chromium pack download + spin-up ~5-8s) + render. The single
+// report renders in ~3-6s, but the 180-page master compendium needs much more
+// CPU to paginate + embed the font, so allow up to 60s.
+export const maxDuration = 60;
 
 const HIEU_API_URL = process.env.HIEU_API_URL ?? 'https://api.hieu.asia';
 
@@ -136,8 +138,11 @@ export async function POST(
   // 1. Fetch the print-ready HTML from the worker (it enforces the auth gate).
   let html: string;
   try {
+    // `_cb` busts any intermediate cache so the render always gets the latest
+    // worker HTML (incl. the embedded base64 font). Without it a stale cached
+    // HTML (old Google-Fonts link) renders with a fallback font.
     const res = await fetch(
-      `${HIEU_API_URL}/reading/${encodeURIComponent(id)}/export-pdf?format=html${docQS}`,
+      `${HIEU_API_URL}/reading/${encodeURIComponent(id)}/export-pdf?format=html${docQS}&_cb=${Date.now()}`,
       {
         method: 'POST',
         headers: { 'content-type': 'application/json', authorization: authz },
@@ -207,6 +212,9 @@ export async function POST(
         'content-type': 'application/pdf',
         'content-disposition': `attachment; filename="${isMaster ? 'Cam-Nang-Cuoc-Doi-Tong-Hop' : 'Cam-Nang-Cuoc-Doi'}.pdf"`,
         'cache-control': 'no-store',
+        // Diagnostics: what the render actually received from the worker.
+        'x-upstream-bytes': String(html.length),
+        'x-upstream-font': /data:font\/woff2/.test(html) ? '1' : '0',
       },
     });
   } catch (err) {
