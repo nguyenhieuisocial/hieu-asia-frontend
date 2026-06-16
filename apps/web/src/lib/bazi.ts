@@ -77,7 +77,7 @@ function thapThan(dmEl: Element, dmYang: boolean, el: Element, yang: boolean): s
  */
 const NAP_AM: { name: string; element: Element }[] = [
   { name: 'Hải Trung Kim', element: 'Kim' }, // Giáp Tý · Ất Sửu
-  { name: 'Lư Trung Hỏa', element: 'Hỏa' }, // Bính Dần · Đinh Mão
+  { name: 'Lô Trung Hỏa', element: 'Hỏa' }, // Bính Dần · Đinh Mão
   { name: 'Đại Lâm Mộc', element: 'Mộc' }, // Mậu Thìn · Kỷ Tỵ
   { name: 'Lộ Bàng Thổ', element: 'Thổ' }, // Canh Ngọ · Tân Mùi
   { name: 'Kiếm Phong Kim', element: 'Kim' }, // Nhâm Thân · Quý Dậu
