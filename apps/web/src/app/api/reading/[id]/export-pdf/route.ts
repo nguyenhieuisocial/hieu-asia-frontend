@@ -185,7 +185,6 @@ export async function POST(
       await page.evaluate(
         () =>
           Promise.race([
-            // @ts-expect-error document.fonts exists in the page context
             document.fonts?.ready ?? Promise.resolve(),
             new Promise((res) => setTimeout(res, 8000)),
           ]),
