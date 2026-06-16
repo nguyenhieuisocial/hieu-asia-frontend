@@ -19,7 +19,15 @@
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
-import { readdirSync } from 'node:fs';
+import {
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+  mkdirSync,
+  existsSync,
+  statSync,
+} from 'node:fs';
+import { brotliDecompressSync } from 'node:zlib';
 import chromium from '@sparticuz/chromium-min';
 import puppeteer from 'puppeteer-core';
 
@@ -39,17 +47,51 @@ const CHROMIUM_PACK_URL =
   process.env.CHROMIUM_PACK_URL ??
   'https://github.com/Sparticuz/chromium/releases/download/v131.0.1/chromium-v131.0.1-pack.tar';
 
+// @sparticuz/chromium-min unpacks chromium + the swiftshader graphics libs to
+// /tmp, but NOT the al2023 system libraries (libnss3.so etc.) — those ship in the
+// pack's al2023.tar.br and are meant to be an AWS Lambda LAYER, which Vercel does
+// not provide. Diagnostic confirmed /tmp has chromium + swiftshader .so but no
+// libnss3, and /tmp/lib doesn't exist. So extract the al2023 libs from the
+// already-downloaded pack ourselves (once) into /tmp/al-libs and point
+// LD_LIBRARY_PATH there.
+let libsReady = false;
+function ensureChromiumLibs(): string {
+  const LIB_DIR = '/tmp/al-libs';
+  if (libsReady) return LIB_DIR;
+  // @sparticuz extracts the downloaded pack into /tmp/chromium-pack (dir of *.br).
+  let brPath = ['/tmp/chromium-pack/al2023.tar.br', '/tmp/al2023.tar.br'].find((p) => existsSync(p)) ?? '';
+  if (!brPath && existsSync('/tmp/chromium-pack') && statSync('/tmp/chromium-pack').isDirectory()) {
+    const f = readdirSync('/tmp/chromium-pack').find((n) => /al2023.*\.br$/.test(n));
+    if (f) brPath = `/tmp/chromium-pack/${f}`;
+  }
+  if (!brPath) return LIB_DIR; // not found — the launch catch surfaces a diagnostic
+  const tar = brotliDecompressSync(readFileSync(brPath));
+  mkdirSync(LIB_DIR, { recursive: true });
+  // Minimal POSIX tar reader: 512-byte header + padded data; regular files only.
+  let off = 0;
+  while (off + 512 <= tar.length) {
+    const name = tar.toString('utf8', off, off + 100).replace(/\0.*$/, '');
+    if (!name) break; // zero block → end of archive
+    const size = parseInt(tar.toString('utf8', off + 124, off + 136).replace(/\0.*$/, '').trim(), 8) || 0;
+    const typeflag = tar[off + 156];
+    off += 512;
+    if ((typeflag === 0x30 /* '0' */ || typeflag === 0) && size > 0) {
+      const base = name.split('/').pop() ?? name;
+      if (base.includes('.so')) writeFileSync(`${LIB_DIR}/${base}`, tar.subarray(off, off + size));
+    }
+    off += Math.ceil(size / 512) * 512;
+  }
+  libsReady = true;
+  return LIB_DIR;
+}
+
 async function launchBrowser() {
-  // Vercel (Linux serverless): download + use the @sparticuz chromium pack.
+  // Vercel (Linux serverless): download the pack, extract the missing system
+  // libs, point the linker at them, then launch.
   if (process.env.VERCEL) {
-    const execPath = await chromium.executablePath(CHROMIUM_PACK_URL);
-    // @sparticuz unpacks chromium's shared libraries (libnss3.so etc.) to
-    // /tmp/lib, but on Vercel it does NOT add that dir to LD_LIBRARY_PATH — so the
-    // dynamic linker can't find libnss3 → "cannot open shared object file".
-    // Confirmed via diagnostic: execPath=/tmp/chromium, LD_LIBRARY_PATH had no
-    // /tmp; the al2023 pack ships the libs under lib/. Prepend /tmp/lib so the
-    // spawned chromium (inherits process.env) resolves them.
-    process.env.LD_LIBRARY_PATH = ['/tmp/lib', '/tmp', process.env.LD_LIBRARY_PATH]
+    const execPath = await chromium.executablePath(CHROMIUM_PACK_URL); // downloads pack → /tmp
+    const libDir = ensureChromiumLibs();
+    process.env.LD_LIBRARY_PATH = [libDir, '/tmp', process.env.LD_LIBRARY_PATH]
       .filter(Boolean)
       .join(':');
     try {
@@ -61,11 +103,11 @@ async function launchBrowser() {
       });
     } catch (e) {
       const ls = (d: string) => {
-        try { return readdirSync(d).filter((f) => /nss|\.so|lib|chrom|al2/i.test(f)).slice(0, 40).join(','); }
+        try { return readdirSync(d).filter((f) => /nss|\.so|al/i.test(f)).slice(0, 40).join(','); }
         catch (err) { return `ERR:${(err as Error).message}`; }
       };
       throw new Error(
-        `${(e as Error).message} || execPath=${execPath} || /tmp=[${ls('/tmp')}] || /tmp/lib=[${ls('/tmp/lib')}] || /tmp/al2023=[${ls('/tmp/al2023')}]`,
+        `${(e as Error).message} || libDir=${libDir}=[${ls(libDir)}] || /tmp/chromium-pack=[${ls('/tmp/chromium-pack')}]`,
       );
     }
   }
