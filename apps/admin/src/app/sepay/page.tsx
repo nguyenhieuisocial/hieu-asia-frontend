@@ -7,6 +7,7 @@
  */
 
 import * as React from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
@@ -165,7 +166,19 @@ const PRESETS: { label: string; days: number | 'today' | null }[] = [
 ];
 
 export default function AdminSepayPage() {
+  // useSearchParams() requires a Suspense boundary (App Router CSR bailout) —
+  // the refund deep-link (?refund_ref=…) from the session detail page reads it.
+  return (
+    <React.Suspense fallback={<div className="h-72 animate-pulse rounded bg-muted/30" />}>
+      <AdminSepayPageInner />
+    </React.Suspense>
+  );
+}
+
+function AdminSepayPageInner() {
   const qc = useQueryClient();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [tab, setTab] = React.useState<'dashboard' | 'tx' | 'reconcile' | 'refunds'>('dashboard');
   const [draft, setDraft] = React.useState<Filters>(EMPTY_FILTERS);
   const [filters, setFilters] = React.useState<Filters>(EMPTY_FILTERS);
@@ -262,6 +275,40 @@ export default function AdminSepayPage() {
     if (!refundReason.trim()) return toast.error('Nhập lý do hoàn tiền');
     createMut.mutate({ reference: refundTxn?.reference_number ?? undefined, amount: amt, reason: refundReason.trim() });
   };
+
+  // Deep-link from the session detail page: /sepay?refund_ref=…&refund_amount=…&refund_reason=…
+  // Synthesize a minimal SepayTransaction so the EXISTING refund modal + createMut
+  // (POST /admin/sepay/refund) fire unchanged. We then strip the params from the
+  // URL so a refresh doesn't re-open the modal. Runs once on mount.
+  const deepLinkHandled = React.useRef(false);
+  React.useEffect(() => {
+    if (deepLinkHandled.current) return;
+    const ref = searchParams.get('refund_ref');
+    const amountParam = searchParams.get('refund_amount');
+    const reasonParam = searchParams.get('refund_reason');
+    if (!ref && !amountParam) return;
+    deepLinkHandled.current = true;
+    setRefundTxn({
+      id: `deeplink-${ref ?? 'txn'}`,
+      transaction_date: '',
+      account_number: null,
+      amount_in: amountParam ?? '0',
+      amount_out: '0',
+      accumulated: '0',
+      transaction_content: null,
+      reference_number: ref,
+      bank_brand_name: null,
+      sub_account: null,
+      code: null,
+    });
+    if (amountParam) setRefundAmount(String(Math.round(Number(amountParam) || 0)));
+    if (reasonParam) setRefundReason(reasonParam);
+    toast.info('Mở yêu cầu hoàn tiền từ phiên', {
+      description: 'Kiểm tra mã giao dịch + số tiền trước khi tạo yêu cầu.',
+    });
+    // Drop the query params so a reload doesn't re-trigger the modal.
+    router.replace('/sepay', { scroll: false });
+  }, [searchParams, router]);
 
   const applyFilters = () => setFilters(draft);
   const resetFilters = () => { setDraft(EMPTY_FILTERS); setFilters(EMPTY_FILTERS); setPreset('Tất cả'); };

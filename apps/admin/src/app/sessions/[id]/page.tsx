@@ -44,11 +44,13 @@ import {
   Link2,
   KeyRound,
   ShieldOff,
+  Undo2,
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { getSession, patchSession, setSessionAccess } from '@/lib/admin-api';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
+import { ContactCustomerDialog } from '@/components/admin/ContactCustomerDialog';
 import type { TaskStatus } from '@hieu-asia/types';
 
 const STATUS_TONE: Record<TaskStatus, React.ComponentProps<typeof StatusBadge>['status']> = {
@@ -529,6 +531,41 @@ export default function SessionDetailPage() {
             >
               <ShieldOff className="mr-1.5 h-3.5 w-3.5" aria-hidden />
               Thu hồi quyền
+            </Button>
+          )}
+          {/* Liên hệ khách — gửi email qua template có sẵn (POST /admin/email/send).
+              Vô hiệu hoá khi khách không có email (vd: chỉ dùng Telegram). */}
+          <ContactCustomerDialog
+            email={hasRealEmail ? s.user_email : null}
+            viewUrl={`${PUBLIC_WEB_URL}/reading/${encodeURIComponent(s.session_id)}/report`}
+          />
+          {/* Yêu cầu hoàn tiền — chỉ hiện khi phiên ĐÃ trả tiền. Deep-link sang
+              /sepay (nơi quy trình hoàn tiền owner-gated thực sự chạy) với mã GD +
+              số tiền + lý do mẫu đã điền sẵn; KHÔNG tự hoàn tiền ở đây. */}
+          {s.paid && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const qs = new URLSearchParams();
+                if (s.paid_txn_ref) qs.set('refund_ref', s.paid_txn_ref);
+                if (s.paid_amount_vnd != null) qs.set('refund_amount', String(s.paid_amount_vnd));
+                qs.set(
+                  'refund_reason',
+                  `Hoàn tiền cho phiên ${s.short_code ?? s.session_id}${
+                    hasRealEmail ? ` (${s.user_email})` : ''
+                  } — `,
+                );
+                toast.info('Chuyển sang trang hoàn tiền', {
+                  description: 'Quy trình hoàn tiền chạy ở trang SePay (yêu cầu → duyệt → đã chuyển khoản).',
+                });
+                router.push(`/sepay?${qs.toString()}`);
+              }}
+              className="border-amber-500/40 text-amber-700 hover:bg-amber-500/10 dark:text-amber-300"
+              title="Tạo yêu cầu hoàn tiền cho phiên này (mở trang SePay, không tự chuyển tiền)"
+            >
+              <Undo2 className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+              Yêu cầu hoàn tiền
             </Button>
           )}
           <Button
