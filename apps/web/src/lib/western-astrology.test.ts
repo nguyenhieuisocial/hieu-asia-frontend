@@ -14,7 +14,18 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { julianDay, sunLongitude, moonLongitude, planetLongitude, computeChart } from './western-astrology';
+import {
+  julianDay,
+  sunLongitude,
+  moonLongitude,
+  planetLongitude,
+  computeChart,
+  mcLongitude,
+  meanNorthNodeLongitude,
+  computeAspects,
+  wholeSignHouses,
+  houseOf,
+} from './western-astrology';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -260,5 +271,255 @@ describe('degreeInSign helper — sanity check', () => {
   it('270° → Capricorn 0°', () => {
     expect(signName(270)).toBe('Capricorn');
     expect(degInSign(270)).toBeCloseTo(0, 5);
+  });
+});
+
+// ── computeAspects: phân loại 5 góc Ptolemy trên cặp kinh độ dựng tay ──────────
+//
+// Nguồn quy tắc: Ptolemy "Tetrabiblos" Q.1 (5 góc lớn). Orb: ~8° nếu có
+// luminary (Mặt Trời/Mặt Trăng), ~6° còn lại (thông lệ hiện đại).
+// Các cặp dưới đây có giá trị góc TUYỆT ĐỐI nên kết quả là tất định, kiểm được bằng tay.
+
+describe('computeAspects — phân loại trên cặp kinh độ dựng tay', () => {
+  const lum = (name: string, longitude: number) => ({ name, longitude, luminary: true });
+  const pl = (name: string, longitude: number) => ({ name, longitude, luminary: false });
+
+  it('10° vs 130° = trine khít (orb 0, exactAngle 120)', () => {
+    const a = computeAspects([pl('A', 10), pl('B', 130)]);
+    expect(a).toHaveLength(1);
+    expect(a[0]!.aspect).toBe('trine');
+    expect(a[0]!.exactAngle).toBeCloseTo(120, 5);
+    expect(a[0]!.orb).toBeCloseTo(0, 5);
+  });
+
+  it('10° vs 100° = square khít (orb 0, exactAngle 90)', () => {
+    const a = computeAspects([pl('A', 10), pl('B', 100)]);
+    expect(a).toHaveLength(1);
+    expect(a[0]!.aspect).toBe('square');
+    expect(a[0]!.exactAngle).toBeCloseTo(90, 5);
+    expect(a[0]!.orb).toBeCloseTo(0, 5);
+  });
+
+  it('0° vs 5° = conjunction (orb 5)', () => {
+    const a = computeAspects([pl('A', 0), pl('B', 5)]);
+    expect(a[0]!.aspect).toBe('conjunction');
+    expect(a[0]!.orb).toBeCloseTo(5, 5);
+  });
+
+  it('10° vs 190° = opposition (sep 180)', () => {
+    const a = computeAspects([pl('A', 10), pl('B', 190)]);
+    expect(a[0]!.aspect).toBe('opposition');
+    expect(a[0]!.exactAngle).toBeCloseTo(180, 5);
+  });
+
+  it('10° vs 70° = sextile (sep 60, orb 0)', () => {
+    const a = computeAspects([pl('A', 10), pl('B', 70)]);
+    expect(a[0]!.aspect).toBe('sextile');
+    expect(a[0]!.orb).toBeCloseTo(0, 5);
+  });
+
+  it('góc ôm wrap 0/360: 355° vs 5° = conjunction (sep 10, orb 10 > 8 → KHÔNG khi non-lum)', () => {
+    // sep = 10°, vượt orb 6° (non-lum) và 8° (lum) cho conjunction → không có góc.
+    expect(computeAspects([pl('A', 355), pl('B', 5)])).toHaveLength(0);
+    // Nhưng 357° vs 5° (sep 8°) là conjunction nếu có luminary (orb 8 ≤ 8).
+    const withLum = computeAspects([lum('Mặt Trời', 357), pl('B', 5)]);
+    expect(withLum).toHaveLength(1);
+    expect(withLum[0]!.aspect).toBe('conjunction');
+    expect(withLum[0]!.orb).toBeCloseTo(8, 5);
+  });
+
+  it('orb luminary rộng hơn: 10° vs 78° (sep 68) → sextile CHỈ khi có luminary', () => {
+    // orb với sextile = |68-60| = 8°. Non-lum (≤6°) loại; lum (≤8°) nhận.
+    expect(computeAspects([pl('A', 10), pl('B', 78)])).toHaveLength(0);
+    const withLum = computeAspects([lum('Mặt Trăng', 10), pl('B', 78)]);
+    expect(withLum).toHaveLength(1);
+    expect(withLum[0]!.aspect).toBe('sextile');
+    expect(withLum[0]!.orb).toBeCloseTo(8, 5);
+  });
+
+  it('45° không là góc lớn nào → bỏ qua', () => {
+    expect(computeAspects([pl('A', 0), pl('B', 45)])).toHaveLength(0);
+  });
+
+  it('mỗi cặp chỉ giữ MỘT góc (góc khít nhất)', () => {
+    // 3 thiên thể → tối đa 3 cặp; mỗi cặp ≤ 1 góc.
+    const out = computeAspects([pl('A', 0), pl('B', 120), pl('C', 240)]);
+    // A-B trine, B-C trine, A-C trine (sep 120 mỗi cặp)
+    expect(out).toHaveLength(3);
+    expect(out.every((x) => x.aspect === 'trine')).toBe(true);
+  });
+});
+
+// ── MC (Midheaven) + North Node: kiểm chứng vs astronomy-engine ────────────────
+//
+// NGUỒN THAM CHIẾU: astronomy-engine 2.1.19 (Python) — cùng họ thư viện chuẩn
+// (NASA/JPL VSOP87-accuracy) đã dùng kiểm chứng phần Mặt Trời/Mặt Trăng/hành tinh.
+// Chạy ngày 2026-06-17. Công thức:
+//   GMST  = SiderealTime(t) × 15  (°)
+//   RAMC  = GMST + kinh-độ-Đông   (°)
+//   eps   = độ nghiêng hoàng đạo trung bình (Meeus ch. 22)
+//   MC    = atan2( sin RAMC, cos RAMC · cos eps )           (Meeus, công thức kinh tuyến)
+//   Node  = 125.0452 − 1934.136261·T   (Meeus 47.7, T = thế kỷ Julian từ J2000)
+//
+// CHÉO ĐỘC LẬP: gmst()/obliquity() của engine ta khớp astronomy-engine
+//   GMST  lệch ~0.003–0.004°, eps khớp tới 5 chữ số thập phân
+//   → MC lệch < 0.004° (cùng cung, cùng độ tới ~0.01°). North Node DÙNG CHÍNH
+//     biểu thức Meeus 47.7 nên trùng khớp tuyệt đối với reference.
+//
+// Anchor A: 1990-05-20 12:00:00 UTC, TP.HCM (lat 10.82, lon 106.63 Đông)
+//   astronomy-engine → MC = 163.19700° (Virgo 13.197°) · Node = 311.07178° (Aquarius 11.072°)
+// Anchor B: 2000-01-01 00:00:00 UTC, Hà Nội (lat 21.03, lon 105.85 Đông)
+//   astronomy-engine → MC = 207.79960° (Libra 27.800°) · Node = 125.07168° (Leo 5.072°)
+
+describe('mcLongitude — kiểm chứng vs astronomy-engine 2.1.19', () => {
+  it('Anchor A 1990-05-20 12:00 UTC, lon 106.63E → MC ≈ 163.197° (Virgo)', () => {
+    const jd = julianDay(1990, 5, 20, 12, 0, 0);
+    const mc = mcLongitude(jd, 106.63);
+    const ref = 163.197;
+    const diff = Math.abs(mc - ref);
+    expect(Math.min(diff, 360 - diff)).toBeLessThan(0.01);
+    expect(signName(mc)).toBe('Virgo');
+  });
+
+  it('Anchor B 2000-01-01 00:00 UTC, lon 105.85E → MC ≈ 207.800° (Libra)', () => {
+    const jd = julianDay(2000, 1, 1, 0, 0, 0);
+    const mc = mcLongitude(jd, 105.85);
+    const ref = 207.7996;
+    const diff = Math.abs(mc - ref);
+    expect(Math.min(diff, 360 - diff)).toBeLessThan(0.01);
+    expect(signName(mc)).toBe('Libra');
+  });
+});
+
+describe('meanNorthNodeLongitude — kiểm chứng vs Meeus 47.7 / astronomy-engine', () => {
+  it('Anchor A 1990-05-20 12:00 UTC → North Node ≈ 311.072° (Aquarius)', () => {
+    const jd = julianDay(1990, 5, 20, 12, 0, 0);
+    const node = meanNorthNodeLongitude(jd);
+    const ref = 311.07178;
+    const diff = Math.abs(node - ref);
+    expect(Math.min(diff, 360 - diff)).toBeLessThan(0.001);
+    expect(signName(node)).toBe('Aquarius');
+  });
+
+  it('Anchor B 2000-01-01 00:00 UTC → North Node ≈ 125.072° (Leo)', () => {
+    const jd = julianDay(2000, 1, 1, 0, 0, 0);
+    const node = meanNorthNodeLongitude(jd);
+    const ref = 125.07168;
+    const diff = Math.abs(node - ref);
+    expect(Math.min(diff, 360 - diff)).toBeLessThan(0.001);
+    expect(signName(node)).toBe('Leo');
+  });
+
+  it('North Node lùi dần theo thời gian (chuyển động nghịch ~19.3°/năm)', () => {
+    const jd0 = julianDay(2000, 1, 1, 0, 0, 0);
+    const jd1 = julianDay(2001, 1, 1, 0, 0, 0);
+    // norm360 quanh wrap — so chênh lệch chuẩn hoá phải âm (lùi).
+    let delta = meanNorthNodeLongitude(jd1) - meanNorthNodeLongitude(jd0);
+    if (delta > 180) delta -= 360;
+    if (delta < -180) delta += 360;
+    expect(delta).toBeLessThan(0);
+    expect(delta).toBeCloseTo(-19.34, 0); // ~19.34°/năm
+  });
+});
+
+// ── Whole-Sign houses: gán nhà cho một cung Mọc đã biết ───────────────────────
+//
+// Quy tắc: Hellenistic Whole-Sign. Nhà 1 = nguyên cung chứa cung Mọc; nhà 2..12 là
+// các cung kế tiếp theo thứ tự hoàng đạo. house(body) = ((idx_cung − idx_Mọc + 12) % 12) + 1.
+
+describe('wholeSignHouses / houseOf — Ascendant đã biết', () => {
+  it('Mọc ở Cancer (idx 3): nhà 1 = Cancer, nhà 2 = Leo, …, nhà 12 = Gemini', () => {
+    // Dựng một Ascendant tối thiểu với cung = Cancer (idx 3) để kiểm quy tắc Whole-Sign.
+    const ascCancer = { sign: { idx: 3 } } as never;
+    const houses = wholeSignHouses(ascCancer);
+    expect(houses).toHaveLength(12);
+    expect(houses[0]!.house).toBe(1);
+    expect(houses[0]!.sign.idx).toBe(3); // Cancer
+    expect(houses[1]!.sign.idx).toBe(4); // Leo
+    expect(houses[11]!.sign.idx).toBe(2); // Gemini (nhà 12)
+  });
+
+  it('houseOf: cùng cung Mọc → nhà 1; cung kế → nhà 2; cung đối → nhà 7', () => {
+    const asc = { sign: { idx: 3 } } as never; // Cancer
+    expect(houseOf({ sign: { idx: 3 } } as never, asc)).toBe(1); // Cancer
+    expect(houseOf({ sign: { idx: 4 } } as never, asc)).toBe(2); // Leo
+    expect(houseOf({ sign: { idx: 9 } } as never, asc)).toBe(7); // Capricorn (đối Cancer)
+    expect(houseOf({ sign: { idx: 2 } } as never, asc)).toBe(12); // Gemini
+  });
+});
+
+// ── computeChart: trường mới ADDITIVE — không phá vỡ output cũ ─────────────────
+
+describe('computeChart — trường mới (additive)', () => {
+  const withLoc = computeChart({
+    year: 1990,
+    month: 5,
+    day: 20,
+    hour: 12,
+    minute: 0,
+    tzOffsetMinutes: 420,
+    latitude: 10.82,
+    longitude: 106.63,
+  });
+  const noLoc = computeChart({ year: 1990, month: 5, day: 20, hour: 12, minute: 0, tzOffsetMinutes: 420 });
+
+  it('nodes luôn có (kể cả khi KHÔNG có nơi sinh)', () => {
+    expect(noLoc.nodes).toBeDefined();
+    expect(noLoc.nodes!.south.longitude).toBeCloseTo(
+      ((noLoc.nodes!.north.longitude + 180) % 360 + 360) % 360,
+      5,
+    );
+  });
+
+  it('angles/houses CHỈ có khi cung cấp nơi sinh', () => {
+    expect(noLoc.angles).toBeUndefined();
+    expect(noLoc.houses).toBeUndefined();
+    expect(withLoc.angles).toBeDefined();
+    expect(withLoc.houses).toHaveLength(12);
+  });
+
+  it('IC = MC + 180; DSC = Ascendant + 180', () => {
+    const a = withLoc.angles!;
+    const wrap = (x: number) => ((x % 360) + 360) % 360;
+    expect(a.ic.longitude).toBeCloseTo(wrap(a.mc.longitude + 180), 5);
+    expect(a.dsc.longitude).toBeCloseTo(wrap(withLoc.ascendant!.longitude + 180), 5);
+  });
+
+  it('nhà 1 = cung chứa Ascendant; mỗi thiên thể có house 1–12 khi có nơi sinh', () => {
+    expect(withLoc.houses![0]!.sign.idx).toBe(withLoc.ascendant!.sign.idx);
+    expect(withLoc.sun.house).toBeGreaterThanOrEqual(1);
+    expect(withLoc.sun.house).toBeLessThanOrEqual(12);
+    for (const p of withLoc.planets) {
+      expect(p.position.house).toBeGreaterThanOrEqual(1);
+      expect(p.position.house).toBeLessThanOrEqual(12);
+      // house khớp công thức houseOf
+      expect(p.position.house).toBe(houseOf(p.position, withLoc.ascendant!));
+    }
+    // KHÔNG có nơi sinh → không gán house
+    expect(noLoc.sun.house).toBeUndefined();
+  });
+
+  it('aspects luôn được tính; mỗi mục có orb hợp lệ và 2 thiên thể khác nhau', () => {
+    expect(Array.isArray(withLoc.aspects)).toBe(true);
+    for (const asp of withLoc.aspects!) {
+      expect(asp.bodyA).not.toBe(asp.bodyB);
+      expect(asp.orb).toBeGreaterThanOrEqual(0);
+      expect(asp.orb).toBeLessThanOrEqual(8);
+      expect(asp.exactAngle).toBeGreaterThanOrEqual(0);
+      expect(asp.exactAngle).toBeLessThanOrEqual(180);
+    }
+  });
+
+  it('retrograde: mỗi hành tinh có cờ boolean', () => {
+    for (const p of withLoc.planets) {
+      expect(typeof p.retrograde).toBe('boolean');
+    }
+  });
+
+  it('output CŨ vẫn nguyên: sun/moon/planets(7)/ascendant', () => {
+    expect(withLoc.sun.sign.name).toBe('Kim Ngưu');
+    expect(withLoc.moon.sign.name).toBe('Song Ngư');
+    expect(withLoc.planets).toHaveLength(7);
+    expect(withLoc.ascendant).toBeDefined();
   });
 });
