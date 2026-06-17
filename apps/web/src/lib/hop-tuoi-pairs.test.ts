@@ -88,7 +88,7 @@ describe('hop-tuoi › bộ kỳ vọng độc lập tự nhất quán', () => {
   });
 
   it('Lục Xung đúng là cặp đối 6 ô (cách nhau 6 vị trí trên vòng 12 chi)', () => {
-    const order = new Map(ALL_SLUGS.map((s, i) => [s, i]));
+    const order = new Map<string, number>(ALL_SLUGS.map((s, i) => [s, i]));
     for (const [a, b] of EXPECTED_LUC_XUNG) {
       const d = Math.abs((order.get(a)! - order.get(b)! + 12) % 12);
       expect(d).toBe(6);
@@ -153,7 +153,7 @@ describe('hop-tuoi › relationOf phân loại đúng từng cặp tiêu biểu'
 describe('hop-tuoi › engine khớp toàn bộ luật cổ điển suy độc lập', () => {
   it('mọi cặp Tam Hợp suy độc lập → engine trả tam-hop', () => {
     for (const k of tamHopPairKeys()) {
-      const [a, b] = k.split('|');
+      const [a, b] = k.split('|') as [string, string];
       expect(relationOf(a, b)).toBe('tam-hop');
     }
   });

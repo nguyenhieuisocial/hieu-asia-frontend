@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 const FAQS = [
   {
     q: 'Tử Vi đến từ đâu?',
-    a: 'Tử Vi Đẩu Số khởi nguồn từ Trung Hoa thời Tống (thế kỷ 10), do Trần Đoàn lão tổ hệ thống hóa. Nguyên lý chính: vị trí các sao quanh sao Tử Vi (Polaris) tại thời khắc sinh phản ánh cấu trúc số mệnh.',
+    a: 'Tử Vi Đẩu Số khởi nguồn từ Trung Hoa thời Tống (thế kỷ 10), tương truyền do Trần Đoàn (Hi Di tiên sinh) hệ thống hóa. Nguyên lý chính: vị trí các sao quanh sao Tử Vi (Polaris) tại thời khắc sinh phản ánh cấu trúc số mệnh.',
   },
   {
     q: 'Cung là gì?',
@@ -28,7 +28,7 @@ const FAQS = [
   },
   {
     q: 'Có bao nhiêu sao?',
-    a: 'Hệ thống tiêu chuẩn dùng 14 chính tinh (Tử Vi, Thiên Phủ, Vũ Khúc, Liêm Trinh...) cộng các phụ tinh — tổng cộng hơn 100 sao. hieu.asia dùng engine Iztro để tính đầy đủ chính tinh và phụ tinh.',
+    a: 'Hệ thống tiêu chuẩn dùng 14 chính tinh (Tử Vi, Thiên Phủ, Vũ Khúc, Liêm Trinh...) cộng các phụ tinh — tổng cộng hơn 100 sao. hieu.asia dùng engine dựa trên Iztro (thư viện an sao mã nguồn mở), bọc trong lớp kiểm-định riêng, để tính đầy đủ chính tinh và phụ tinh.',
   },
   {
     q: 'Đọc lá số để làm gì?',

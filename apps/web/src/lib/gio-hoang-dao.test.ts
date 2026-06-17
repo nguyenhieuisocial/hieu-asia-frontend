@@ -52,14 +52,14 @@ describe('gio-hoang-dao › xếp 12 sao theo chi ngày', () => {
   it('ngày Tân Dậu (16/06/2026): giờ Tý = Tư Mệnh (tốt), Ngọ = Kim Quỹ (tốt), Tuất = xấu', () => {
     const r = computeGioHoangDao(16, 6, 2026)!;
     expect(r.dayCanChi.label).toBe('Tân Dậu');
-    expect(r.hours[0].branch).toBe('Tý');
-    expect(r.hours[0].star).toBe('Tư Mệnh');
-    expect(r.hours[0].good).toBe(true);
-    expect(r.hours[6].branch).toBe('Ngọ');
-    expect(r.hours[6].star).toBe('Kim Quỹ');
-    expect(r.hours[6].good).toBe(true);
-    expect(r.hours[10].branch).toBe('Tuất');
-    expect(r.hours[10].good).toBe(false);
+    expect(r.hours[0]!.branch).toBe('Tý');
+    expect(r.hours[0]!.star).toBe('Tư Mệnh');
+    expect(r.hours[0]!.good).toBe(true);
+    expect(r.hours[6]!.branch).toBe('Ngọ');
+    expect(r.hours[6]!.star).toBe('Kim Quỹ');
+    expect(r.hours[6]!.good).toBe(true);
+    expect(r.hours[10]!.branch).toBe('Tuất');
+    expect(r.hours[10]!.good).toBe(false);
   });
 
   it('ngày không hợp lệ trả null', () => {
