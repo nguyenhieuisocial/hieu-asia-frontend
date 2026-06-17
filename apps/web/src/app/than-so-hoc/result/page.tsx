@@ -23,6 +23,7 @@ import {
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
+import { KARMIC_DEBT, KARMIC_LESSONS } from '@/lib/than-so-hoc-karmic';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -138,21 +139,16 @@ export default function ThanSoHocResultPage() {
         <div className="mt-6 space-y-6">
           <HeroLifePath card={data.life_path} year={data.personal_year.number} />
 
-          {(data.master_numbers.length > 0 || data.karmic_debt) && (
+          {data.master_numbers.length > 0 && (
             <div className="flex flex-wrap items-center gap-2">
-              {data.master_numbers.length > 0 && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/15 px-3 py-1 text-xs font-medium text-gold-700">
-                  <Sparkles className="h-3 w-3" aria-hidden="true" />
-                  Master Numbers: {data.master_numbers.join(', ')}
-                </span>
-              )}
-              {data.karmic_debt && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-500/40 bg-rose-500/10 px-3 py-1 text-xs font-medium text-rose-300">
-                  Nợ nghiệp: {data.karmic_debt}
-                </span>
-              )}
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/15 px-3 py-1 text-xs font-medium text-gold-700">
+                <Sparkles className="h-3 w-3" aria-hidden="true" />
+                Master Numbers: {data.master_numbers.join(', ')}
+              </span>
             </div>
           )}
+
+          {data.karmic_debt && <KarmicDebtCard debt={data.karmic_debt} />}
 
           <section>
             <SectionTitle>Hồ sơ số học cá nhân</SectionTitle>
@@ -235,18 +231,37 @@ export default function ThanSoHocResultPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm leading-relaxed text-foreground/80">
-                  Những con số sau đây không xuất hiện trong tên bạn. Đây là các bài học cuộc đời
-                  bạn cần hoàn thiện:
+                  Những con số sau đây không xuất hiện trong tên bạn — theo phương pháp Pythagoras,
+                  đó là các phẩm chất bạn chưa quen vận dụng và có thể chủ động rèn luyện. Đây là cơ
+                  hội phát triển, không phải khiếm khuyết cố định:
                 </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {data.karmic_lessons.map((n) => (
-                    <span
-                      key={n}
-                      className="rounded-full border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-sm font-medium text-amber-200"
-                    >
-                      Số {n}
-                    </span>
-                  ))}
+                <div className="mt-4 space-y-3">
+                  {data.karmic_lessons.map((n) => {
+                    const m = KARMIC_LESSONS[n];
+                    if (!m) return null;
+                    return (
+                      <div
+                        key={n}
+                        className="flex items-start gap-4 rounded-xl border border-amber-500/25 bg-amber-500/5 p-4"
+                      >
+                        <div
+                          aria-hidden="true"
+                          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-amber-500/40 bg-amber-500/10 font-heading text-lg font-bold text-amber-200"
+                        >
+                          {n}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium leading-relaxed text-amber-100">
+                            {m.lesson}
+                          </p>
+                          <p className="mt-1.5 text-xs leading-relaxed text-foreground/70">
+                            <span className="font-semibold text-amber-200/90">Cách rèn luyện: </span>
+                            {m.how}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>
@@ -264,6 +279,33 @@ export default function ThanSoHocResultPage() {
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <h2 className="font-heading text-lg font-semibold text-foreground sm:text-xl">{children}</h2>
+  );
+}
+
+function KarmicDebtCard({ debt }: { debt: number }) {
+  const m = KARMIC_DEBT[debt as 13 | 14 | 16 | 19];
+  if (!m) return null;
+  return (
+    <Card className="border-rose-500/30 bg-rose-500/5">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-3 text-base text-rose-200">
+          <span
+            aria-hidden="true"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-rose-500/40 bg-rose-500/10 font-heading text-lg font-bold text-rose-200"
+          >
+            {m.number}
+          </span>
+          {m.title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm leading-relaxed text-foreground/80">{m.theme}</p>
+        <p className="mt-3 text-sm leading-relaxed text-foreground/85">
+          <span className="font-semibold text-rose-200/90">Hướng trưởng thành: </span>
+          {m.growth}
+        </p>
+      </CardContent>
+    </Card>
   );
 }
 
