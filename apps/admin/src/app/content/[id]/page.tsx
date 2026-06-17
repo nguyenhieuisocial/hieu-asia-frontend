@@ -19,6 +19,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
 import {
   Button,
   Card,
@@ -34,7 +35,7 @@ import {
   cn,
   toast,
 } from '@hieu-asia/ui';
-import { ChevronLeft, Save, Send, Archive, RotateCcw } from 'lucide-react';
+import { ChevronLeft, Save, Send, Archive, RotateCcw, Eye, EyeOff } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { ErrorBlock } from '@/components/admin/error-block';
 import {
@@ -59,6 +60,42 @@ const STATUS_TONE: Record<ContentStatus, React.ComponentProps<typeof StatusBadge
 
 type TabKey = DraftKey | 'edited';
 
+// Live markdown preview for the edited draft. Reuses react-markdown (already a
+// dependency, used by the public site's chat renderer) with the cream/gold
+// admin theme so the founder sees rendered output while writing.
+const MD_COMPONENTS: React.ComponentProps<typeof ReactMarkdown>['components'] = {
+  h1: ({ children }) => <h1 className="mb-3 mt-4 text-xl font-semibold text-foreground first:mt-0">{children}</h1>,
+  h2: ({ children }) => <h2 className="mb-2 mt-4 text-lg font-semibold text-foreground first:mt-0">{children}</h2>,
+  h3: ({ children }) => <h3 className="mb-2 mt-3 text-base font-semibold text-foreground first:mt-0">{children}</h3>,
+  p: ({ children }) => <p className="mb-3 leading-relaxed text-foreground/90 last:mb-0">{children}</p>,
+  ul: ({ children }) => <ul className="mb-3 ml-5 list-disc space-y-1 text-foreground/90 last:mb-0">{children}</ul>,
+  ol: ({ children }) => <ol className="mb-3 ml-5 list-decimal space-y-1 text-foreground/90 last:mb-0">{children}</ol>,
+  li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+  strong: ({ children }) => <strong className="font-semibold text-gold">{children}</strong>,
+  em: ({ children }) => <em className="italic text-foreground/90">{children}</em>,
+  blockquote: ({ children }) => (
+    <blockquote className="mb-3 border-l-2 border-gold/40 pl-3 italic text-muted-foreground">{children}</blockquote>
+  ),
+  a: ({ children, href }) => (
+    <a href={href} className="text-gold underline underline-offset-2" target="_blank" rel="noreferrer">
+      {children}
+    </a>
+  ),
+  code: ({ children }) => <code className="rounded bg-card/80 px-1 font-mono text-xs text-foreground">{children}</code>,
+  hr: () => <hr className="my-4 border-border" />,
+};
+
+function MarkdownPreview({ source }: { source: string }) {
+  if (!source.trim()) {
+    return <p className="text-sm text-muted-foreground">Bản preview sẽ hiện ở đây khi bạn nhập markdown…</p>;
+  }
+  return (
+    <div className="max-w-none text-sm">
+      <ReactMarkdown components={MD_COMPONENTS}>{source}</ReactMarkdown>
+    </div>
+  );
+}
+
 export default function ContentDetailPage() {
   const params = useParams<{ id: string }>();
   const id = params?.id ?? null;
@@ -71,6 +108,9 @@ export default function ContentDetailPage() {
 
   const [tab, setTab] = React.useState<TabKey>('edited');
   const [editedDraft, setEditedDraft] = React.useState<string>('');
+  // Side-by-side live markdown preview on the editor tab. On by default so the
+  // founder sees rendered output while writing; can be hidden for a wider editor.
+  const [showPreview, setShowPreview] = React.useState(true);
 
   // Crash-safe autosave (#batch2) — the edited markdown lives only in React
   // state, so a PATCH/network failure on save would wipe in-progress edits.
@@ -375,19 +415,40 @@ export default function ContentDetailPage() {
                   </div>
                 </div>
               )}
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
                 <span>
                   Markdown editor — đây là bản sẽ được publish. Mặc định khởi tạo từ {JUDGE_LABEL[draft.judge_pick]}.
                 </span>
-                <span className="font-mono">{editedDraft.length} ký tự</span>
+                <div className="flex shrink-0 items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowPreview((v) => !v)}
+                    className="inline-flex items-center gap-1 rounded-md border border-gold/20 px-2 py-1 transition hover:border-gold/40 hover:text-gold"
+                    aria-pressed={showPreview}
+                  >
+                    {showPreview ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                    {showPreview ? 'Ẩn preview' : 'Xem preview'}
+                  </button>
+                  <span className="font-mono">{editedDraft.length} ký tự</span>
+                </div>
               </div>
-              <Textarea
-                value={editedDraft}
-                onChange={(e) => setEditedDraft(e.target.value)}
-                rows={30}
-                className="font-mono text-sm"
-                placeholder="Markdown bản chỉnh sửa cuối..."
-              />
+              <div className={cn('grid gap-3', showPreview && 'lg:grid-cols-2')}>
+                <Textarea
+                  value={editedDraft}
+                  onChange={(e) => setEditedDraft(e.target.value)}
+                  rows={30}
+                  className="font-mono text-sm"
+                  placeholder="Markdown bản chỉnh sửa cuối..."
+                />
+                {showPreview && (
+                  <div className="overflow-auto rounded-md border border-border bg-card/40 p-4">
+                    <div className="mb-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                      Preview
+                    </div>
+                    <MarkdownPreview source={editedDraft} />
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
