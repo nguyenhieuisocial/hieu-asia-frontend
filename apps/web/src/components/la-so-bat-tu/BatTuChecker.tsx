@@ -65,6 +65,9 @@ function PillarCard({ pillar, highlight }: { pillar: BaziPillar; highlight?: boo
         {pillar.canElement}/{pillar.chiElement}
       </p>
       <p className="mt-2 text-[11px] font-medium text-gold-700">{pillar.tenGod}</p>
+      <p className="mt-1 rounded bg-border/40 px-1.5 py-0.5 text-[10px] text-muted-foreground">
+        {pillar.truongSinh}
+      </p>
     </div>
   );
 }
@@ -191,6 +194,9 @@ export function BatTuChecker() {
               </div>
               <p className="mt-2 text-xs text-muted-foreground">
                 Trụ tính theo <strong>tiết khí</strong> (đúng chuẩn Bát Tự) — chữ màu là ngũ hành của từng can/chi.
+                Dòng cuối mỗi trụ là <strong>vòng Trường Sinh</strong>: trạng thái &ldquo;đời người&rdquo; của Nhật
+                Chủ ({chart.dayMaster.can}) trên chi đó (Trường Sinh → Đế Vượng = mạnh; Suy → Tuyệt = yếu) — tra theo
+                bảng cổ điển, không phải lời đoán.
               </p>
             </div>
 
@@ -341,6 +347,40 @@ export function BatTuChecker() {
               )}
             </div>
 
+            <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
+                Thần Sát (sao tượng trưng)
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                Các sao tượng trưng tra theo lá số (tam-hợp chi năm/ngày &amp; can ngày) — dữ kiện cố định theo cổ
+                thư (Tam Mệnh Thông Hội), <strong>không phải lời đoán định mệnh</strong>. Mỗi sao là một &ldquo;màu
+                sắc&rdquo; tính cách để hiểu mình, không phải điềm tốt/xấu.
+              </p>
+              {chart.thanSat.length === 0 ? (
+                <p className="mt-3 text-sm text-foreground/85">
+                  Lá số không có thần sát nổi bật trong nhóm phổ biến — bốn trụ &ldquo;sạch&rdquo; ở khía cạnh này.
+                </p>
+              ) : (
+                <ul className="mt-3 space-y-1.5">
+                  {chart.thanSat.map((ts) => (
+                    <li
+                      key={`${ts.name}-${ts.chi}-${ts.pillars}`}
+                      className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-sm"
+                    >
+                      <span className="shrink-0 rounded bg-gold/15 px-1.5 py-0.5 text-[11px] font-medium text-gold-700">
+                        {ts.name}
+                      </span>
+                      <span className="font-medium text-foreground/90">{ts.chi}</span>
+                      <span className="text-xs text-muted-foreground">({ts.pillars})</span>
+                      <span className="w-full text-xs text-muted-foreground sm:w-auto sm:flex-1">
+                        — {ts.meaning}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
             {chart.daiVan && (
               <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
@@ -422,8 +462,8 @@ export function BatTuChecker() {
                 ))}
               </ul>
               <p className="mx-auto mt-3 max-w-xl text-center text-xs text-muted-foreground">
-                …cùng Thập Thần theo từng trụ, vòng Trường Sinh, đối chiếu cổ thư — văn phong &ldquo;hiểu mình
-                để tự quyết&rdquo;, không bói toán.
+                …luận sâu từ Thập Thần, vòng Trường Sinh &amp; Thần Sát (đã hiện ở trên), đối chiếu cổ thư — văn
+                phong &ldquo;hiểu mình để tự quyết&rdquo;, không bói toán.
               </p>
               <div className="mt-4 text-center">
                 <Button asChild size="lg">
