@@ -633,6 +633,10 @@ function mapBackendTask(row: BackendTaskRow): AdminTask {
     duration_seconds: duration,
     retries: 0, // reading_tasks has no retries column yet
     error: row.error,
+    // Preserve the raw worker status (e.g. 'error_at_vision_agent') — `status`
+    // above collapses every failure to 'failed', so the /tasks failure-reason
+    // breakdown reads this to recover the failure category.
+    raw_status: row.status,
   };
 }
 
