@@ -24,6 +24,11 @@ export interface LlmDailyRow {
   model: string;
   cost_usd: number;
   call_count: number;
+  // Per-day token volume (aliased from input_tokens_sum / output_tokens_sum by
+  // the worker). OPTIONAL so the page degrades gracefully when the backend that
+  // adds these fields hasn't deployed yet.
+  input_tokens?: number | null;
+  output_tokens?: number | null;
 }
 
 export interface LlmTraceRow {

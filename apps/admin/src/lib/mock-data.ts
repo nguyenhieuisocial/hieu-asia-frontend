@@ -169,6 +169,13 @@ export interface AdminTask {
   duration_seconds: number | null;
   retries: number;
   error: string | null;
+  /**
+   * Raw worker status string before normalization (e.g. 'error_at_vision_agent',
+   * 'error_internal'). `status` collapses all failures to 'failed', so this
+   * preserves the failure CATEGORY for the /tasks failure-reason breakdown.
+   * Optional — mock rows omit it.
+   */
+  raw_status?: string;
 }
 
 const TASK_NAMES = [
@@ -195,6 +202,10 @@ export const MOCK_TASKS: AdminTask[] = Array.from({ length: 30 }, (_, i) => {
     duration_seconds: duration,
     retries: status === 'failed' ? (i % 3) + 1 : 0,
     error: status === 'failed' ? ['TimeoutError', 'ConnectionRefused', 'ValidationError: empty image'][i % 3]! : null,
+    raw_status:
+      status === 'failed'
+        ? ['error_at_vision_agent', 'error_at_qdrant', 'error_internal'][i % 3]!
+        : status,
   };
 });
 
