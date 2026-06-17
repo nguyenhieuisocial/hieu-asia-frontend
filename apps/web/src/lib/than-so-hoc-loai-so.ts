@@ -43,7 +43,7 @@ export const LOAI_SO: LoaiSo[] = [
       {
         number: 1,
         label: 'Số 1',
-        core: 'Bạn được định sẵn để dẫn đầu, đổi mới. Tài năng tự nhiên: khởi nghiệp, lãnh đạo, quyết đoán.',
+        core: 'Thiên hướng tự nhiên của bạn là dẫn đầu, đổi mới. Tài năng tự nhiên: khởi nghiệp, lãnh đạo, quyết đoán.',
         expanded:
           'Với số vận mệnh 1, bạn mang năng lượng của người đi tiên phong: tự nhiên khởi xướng, quyết đoán và không cần chờ ai bật đèn xanh. Tài năng lớn nhất nằm ở khả năng biến ý tưởng thành hành động ngay lập tức. Môi trường lý tưởng là nơi bạn được trao quyền tự quyết — khởi nghiệp, lãnh đạo nhóm, hoặc bất kỳ vai trò nào đòi hỏi sự độc lập. Bài toán dài hạn: học hợp tác mà không cảm thấy bị kéo chậm.',
       },

@@ -116,7 +116,7 @@ describe('que-kinh-dich › bảng 8 quái (TRIGRAMS)', () => {
 
 describe('que-kinh-dich › tách quái trên/dưới (upper=bits[0:3], lower=bits[3:6])', () => {
   // Helper suy ra độc lập: tra quái từ 3 bit.
-  const trigram = (bits: string) => EXPECTED_TRIGRAMS[bits];
+  const trigram = (bits: string) => EXPECTED_TRIGRAMS[bits]!;
 
   it('#1 Thuần Càn = Càn (trên) / Càn (dưới)', () => {
     const q = QUE_PAGES.find((x) => x.id === 1)!;
