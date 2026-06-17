@@ -7,9 +7,11 @@ import {
   computeChart,
   chartBalance,
   ELEMENT_TENDENCY,
+  ASPECTS,
   type SignPosition,
   type NatalChart,
   type ChartBalance,
+  type AspectName,
 } from '@/lib/western-astrology';
 import { safeJson } from '@/lib/safe-json';
 import { getSupabaseAuth } from '@/lib/auth-client';
@@ -83,6 +85,40 @@ function PositionCard({
           ⚠️ Sát ranh giới cung — nếu không chắc giờ sinh, cung này có thể lệch sang cung kề.
         </p>
       )}
+    </div>
+  );
+}
+
+/** Tra cứu nhanh meta của một góc hợp (ký hiệu + nhãn + bản chất) theo tên. */
+const ASPECT_META: Record<AspectName, { symbol: string; label: string; nature: string; tone: string }> =
+  ASPECTS.reduce(
+    (acc, a) => {
+      const tone =
+        a.nature === 'hài hoà'
+          ? 'text-emerald-600 dark:text-emerald-400'
+          : a.nature === 'căng thẳng'
+            ? 'text-rose-600 dark:text-rose-400'
+            : 'text-gold';
+      acc[a.name] = { symbol: a.symbol, label: a.label, nature: a.nature, tone };
+      return acc;
+    },
+    {} as Record<AspectName, { symbol: string; label: string; nature: string; tone: string }>,
+  );
+
+/** Một "góc" (angle) hiển thị gọn: tên + cung + độ. */
+function AngleRow({ icon, title, subtitle, pos }: { icon: string; title: string; subtitle: string; pos: SignPosition }) {
+  return (
+    <div className="flex items-start gap-2 rounded-lg border border-border bg-background/40 p-2.5">
+      <span className="text-lg leading-none" aria-hidden>
+        {icon}
+      </span>
+      <div className="min-w-0">
+        <p className="text-sm font-medium text-foreground">
+          {title} ở {pos.sign.symbol} {pos.sign.name}
+          <span className="ml-1 font-mono text-xs text-muted-foreground">{pos.degreeInSign.toFixed(0)}°</span>
+        </p>
+        <p className="text-xs text-muted-foreground">{subtitle}</p>
+      </div>
     </div>
   );
 }
@@ -269,7 +305,7 @@ export function SunMoonChecker() {
             <div className="rounded-xl border border-border bg-card/40 p-4">
               <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">Bảy hành tinh</p>
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                {chart.planets.map(({ planet, position }) => (
+                {chart.planets.map(({ planet, position, retrograde }) => (
                   <div
                     key={planet.key}
                     className="flex items-start gap-2 rounded-lg border border-border bg-background/40 p-2.5"
@@ -283,6 +319,17 @@ export function SunMoonChecker() {
                         <span className="ml-1 font-mono text-xs text-muted-foreground">
                           {position.degreeInSign.toFixed(0)}°
                         </span>
+                        {typeof position.house === 'number' && (
+                          <span className="ml-1 font-mono text-[10px] text-gold/80">· nhà {position.house}</span>
+                        )}
+                        {retrograde && (
+                          <span
+                            className="ml-1 font-mono text-[10px] text-sky-600 dark:text-sky-400"
+                            title="Nghịch hành (retrograde) lúc sinh — năng lượng hành tinh hướng vào trong nhiều hơn."
+                          >
+                            ℞ nghịch hành
+                          </span>
+                        )}
                         {position.nearCusp && (
                           <span className="ml-1 text-[10px] text-amber-600 dark:text-amber-400">(sát ranh giới)</span>
                         )}
@@ -293,6 +340,130 @@ export function SunMoonChecker() {
                 ))}
               </div>
             </div>
+
+            {/* Bốn góc (angles): Mọc/Lặn + MC/IC */}
+            {chart.angles && chart.ascendant && (
+              <div className="rounded-xl border border-border bg-card/40 p-4">
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">Bốn góc (trục đời)</p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Hai trục lớn của lá số: trục <strong>Mọc–Lặn</strong> (bản thân ↔ người khác) và trục{' '}
+                  <strong>MC–IC</strong> (sự nghiệp/hình ảnh xã hội ↔ gốc rễ/gia đình).
+                </p>
+                <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                  <AngleRow
+                    icon="↗️"
+                    title="Mọc (ASC)"
+                    subtitle="Cách bạn bước vào đời — 'lớp áo' đầu tiên."
+                    pos={chart.ascendant}
+                  />
+                  <AngleRow
+                    icon="↘️"
+                    title="Lặn (DSC)"
+                    subtitle="Kiểu người & mối quan hệ bạn thu hút."
+                    pos={chart.angles.dsc}
+                  />
+                  <AngleRow
+                    icon="⛰️"
+                    title="Thiên đỉnh (MC)"
+                    subtitle="Đỉnh cao sự nghiệp & hình ảnh trước công chúng."
+                    pos={chart.angles.mc}
+                  />
+                  <AngleRow
+                    icon="🌱"
+                    title="Thiên để (IC)"
+                    subtitle="Gốc rễ, gia đình & đời sống nội tâm sâu kín."
+                    pos={chart.angles.ic}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Điểm nút Mặt Trăng (North/South Node) */}
+            {chart.nodes && (
+              <div className="rounded-xl border border-border bg-card/40 p-4">
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">Điểm nút Mặt Trăng</p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Một trục (không phải định mệnh): <strong>Nút Bắc</strong> gợi hướng phát triển còn mới mẻ;{' '}
+                  <strong>Nút Nam</strong> là vùng đã quen, nơi bạn dễ trở về.
+                </p>
+                <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                  <AngleRow
+                    icon="☊"
+                    title="Nút Bắc"
+                    subtitle="Hướng bạn được mời gọi khám phá & lớn lên."
+                    pos={chart.nodes.north}
+                  />
+                  <AngleRow
+                    icon="☋"
+                    title="Nút Nam"
+                    subtitle="Sở trường quen thuộc — nền tảng để dựa vào."
+                    pos={chart.nodes.south}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* 12 nhà theo hệ Whole-Sign */}
+            {chart.houses && (
+              <div className="rounded-xl border border-border bg-card/40 p-4">
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
+                  Mười hai nhà (Whole-Sign)
+                </p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Mỗi nhà là một lĩnh vực sống. Hệ Whole-Sign (Hellenistic cổ): nhà 1 = nguyên cung Mọc, các nhà
+                  sau là các cung kế tiếp.
+                </p>
+                <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+                  {chart.houses.map((h) => (
+                    <div key={h.house} className="rounded-lg border border-border bg-background/40 p-2 text-center">
+                      <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                        Nhà {h.house}
+                      </p>
+                      <p className="text-sm text-foreground">
+                        {h.sign.symbol} {h.sign.name}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Góc hợp (aspects) giữa các thiên thể */}
+            {chart.aspects && chart.aspects.length > 0 && (
+              <div className="rounded-xl border border-border bg-card/40 p-4">
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
+                  Góc hợp giữa các thiên thể
+                </p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Những &ldquo;đường nối&rdquo; (theo Ptolemy) cho thấy các phần trong bạn{' '}
+                  <span className="text-emerald-600 dark:text-emerald-400">hỗ trợ nhau</span> hay{' '}
+                  <span className="text-rose-600 dark:text-rose-400">cọ xát</span> để bạn trưởng thành. Càng khít (orb
+                  nhỏ) càng rõ.
+                </p>
+                <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                  {[...chart.aspects]
+                    .sort((a, b) => a.orb - b.orb)
+                    .map((asp, i) => {
+                      const meta = ASPECT_META[asp.aspect];
+                      return (
+                        <div
+                          key={`${asp.bodyA}-${asp.bodyB}-${i}`}
+                          className="flex items-center justify-between gap-2 rounded-lg border border-border bg-background/40 p-2.5"
+                        >
+                          <p className="text-sm text-foreground">
+                            {asp.bodyA} <span className={`mx-1 ${meta.tone}`} aria-hidden>{meta.symbol}</span>{' '}
+                            {asp.bodyB}
+                            <span className={`ml-1.5 text-xs ${meta.tone}`}>{meta.label}</span>
+                          </p>
+                          <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
+                            orb {asp.orb.toFixed(1)}°
+                          </span>
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+            )}
 
             {balance && (
               <div className="rounded-xl border border-border bg-card/40 p-4">
