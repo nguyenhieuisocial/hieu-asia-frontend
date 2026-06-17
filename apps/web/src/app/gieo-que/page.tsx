@@ -16,7 +16,7 @@ import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
-import { parseTrigrams, getHaoDongMota } from '@/lib/hao-dong';
+import { parseTrigrams, getHaoDongMota, readingFocus } from '@/lib/hao-dong';
 import { QUE_PAGES } from '@/lib/que-kinh-dich';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
@@ -224,6 +224,38 @@ export default function GieoQuePage() {
                     </div>
                   </CardContent>
                 </Card>
+
+                {/* Trọng tâm nên đọc — luật Chu Hy theo số hào động */}
+                {(() => {
+                  // Thuần Càn = quẻ số 1, Thuần Khôn = quẻ số 2 (trình tự King Wen).
+                  const isQianKun =
+                    result.hexagramPrimary.id === 1 || result.hexagramPrimary.id === 2;
+                  const focus = readingFocus(result.movingLines, isQianKun);
+                  return (
+                    <Card className="border-gold/30 bg-gold/5">
+                      <CardHeader>
+                        <CardTitle className="text-base text-gold-700">
+                          🎯 Trọng tâm nên đọc — <span className="font-normal">{focus.rule}</span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-2.5">
+                        <p className="text-sm leading-relaxed text-foreground/85">{focus.note}</p>
+                        {focus.chuDao !== null && (
+                          <p className="text-sm text-foreground/85">
+                            <span className="font-semibold text-gold-700">Hào chủ đạo:</span>{' '}
+                            {getHaoDongMota(focus.chuDao)?.ten ?? `Hào ${focus.chuDao}`}
+                          </p>
+                        )}
+                        <p className="text-xs leading-relaxed text-muted-foreground">
+                          Phép xét theo số hào động của Chu Hy 朱熹{' '}
+                          <span className="italic">《易學啟蒙》</span> — cách đọc cổ điển giúp biết{' '}
+                          <em>nên tập trung vào lời nào</em> giữa quẻ chính, quẻ biến và các hào.
+                          Gợi ý chiêm nghiệm, không phải lời phán quyết.
+                        </p>
+                      </CardContent>
+                    </Card>
+                  );
+                })()}
 
                 {/* Thượng quái / Hạ quái */}
                 {(() => {
