@@ -1955,17 +1955,29 @@ export function postInfraSentryIgnore(id: string): Promise<InfraActionResult> {
 // pattern as `fetchInfra` (raw fetch so an `ok:false` body isn't erased), and
 // build query strings with encodeURIComponent.
 
-/** A curated (namespace, prefix) shortcut shown as a clickable chip. */
+/** A curated (namespace, prefix) shortcut shown as a clickable chip. The BE
+ * annotates each chip with an approximate key count (`count`, `exact`). */
 export interface InfraKvChip {
   label: string;
   ns: string;
   prefix: string;
+  /** Approximate keys under this prefix (one list page). */
+  count?: number;
+  /** false when the count hit the 1000-key page cap → render "≥1000". */
+  exact?: boolean;
+}
+
+/** A bound namespace, annotated with an approximate total key count. */
+export interface InfraKvNamespace {
+  binding: string;
+  count?: number;
+  exact?: boolean;
 }
 
 export interface InfraKvNamespacesResp {
   ok: boolean;
   configured: boolean;
-  namespaces?: Array<{ binding: string }>;
+  namespaces?: InfraKvNamespace[];
   chips?: InfraKvChip[];
   error?: string;
 }
@@ -1980,9 +1992,15 @@ export interface InfraKvKeysResp {
   configured: boolean;
   ns?: string;
   prefix?: string;
+  /** Echoes the active substring filter (search mode only). */
+  contains?: string;
   items?: InfraKvKeyItem[];
   cursor?: string | null;
   list_complete?: boolean;
+  /** Search mode: how many keys were scanned before filtering. */
+  scanned?: number;
+  /** Search mode: true when the scan hit the ~1000-key cap. */
+  scan_truncated?: boolean;
   error?: string;
 }
 
@@ -1996,6 +2014,10 @@ export interface InfraKvValueResp {
   redacted?: boolean;
   truncated?: boolean;
   not_found?: boolean;
+  /** UTF-8 byte length of the raw (pre-truncation) value. */
+  bytes?: number;
+  /** Key's expiration (unix-seconds) or null = no TTL. */
+  expiration?: number | null;
   error?: string;
 }
 
@@ -2033,16 +2055,20 @@ export function getInfraKvCatalog(): Promise<InfraKvNamespacesResp> {
   return fetchInfraKv<InfraKvNamespacesResp>('');
 }
 
-/** List keys in `ns` filtered by `prefix`; pass `cursor` to page further. */
+/** List keys in `ns` filtered by `prefix`; pass `cursor` to page further. Pass
+ * `contains` to switch to server-side substring search (bounded ~1000-key scan;
+ * no paging — the result set is already bounded). */
 export function getInfraKvKeys(
   ns: string,
   prefix: string,
   cursor?: string | null,
+  contains?: string,
 ): Promise<InfraKvKeysResp> {
   const qs = new URLSearchParams();
   qs.set('ns', ns);
   qs.set('prefix', prefix);
   if (cursor) qs.set('cursor', cursor);
+  if (contains) qs.set('contains', contains);
   return fetchInfraKv<InfraKvKeysResp>(`/keys?${qs.toString()}`);
 }
 
