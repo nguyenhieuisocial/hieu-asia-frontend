@@ -81,10 +81,24 @@ function mutagenText(mutagen?: string[]): string {
     .join(' · ');
 }
 
-export function LaSoChecker() {
-  const [date, setDate] = React.useState('');
-  const [time, setTime] = React.useState('12:00');
-  const [gender, setGender] = React.useState<'male' | 'female'>('male');
+export interface LaSoCheckerProps {
+  /** Pre-seed birth inputs (e.g. from a share link with birth data pre-filled). */
+  initialDate?: string;
+  initialTime?: string;
+  initialGender?: 'male' | 'female';
+  /** When true + a valid initialDate is given, cast the chart on mount. */
+  autoCast?: boolean;
+}
+
+export function LaSoChecker({
+  initialDate,
+  initialTime,
+  initialGender,
+  autoCast = false,
+}: LaSoCheckerProps = {}) {
+  const [date, setDate] = React.useState(initialDate ?? '');
+  const [time, setTime] = React.useState(initialTime ?? '12:00');
+  const [gender, setGender] = React.useState<'male' | 'female'>(initialGender ?? 'male');
   const [chart, setChart] = React.useState<TuViChart | null>(null);
   const [horoscope, setHoroscope] = React.useState<TuViHoroscope | null>(null);
   const [loading, setLoading] = React.useState(false);
@@ -113,6 +127,17 @@ export function LaSoChecker() {
       setLoading(false);
     }
   }, [date, time, gender]);
+
+  // Link chia sẻ (?d=&t=&g=) đã pre-fill ngày–giờ–giới tính qua prop initial* →
+  // lập lá số NGAY khi mở (không cần bấm lại). Chỉ chạy 1 lần lúc mount; nếu
+  // worker rate-limit (429/503), onCast tự set error + tắt loading → form thủ
+  // công vẫn dùng được, không quay vô tận.
+  React.useEffect(() => {
+    if (!autoCast || !initialDate || !/^\d{4}-\d{1,2}-\d{1,2}$/.test(initialDate)) return;
+    void onCast();
+    // chỉ chạy 1 lần khi mount với giá trị khởi tạo từ link
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const cachCuc = chart ? detectCachCuc(chart) : [];
   const age = chart ? ageFromDate(date) : null;
