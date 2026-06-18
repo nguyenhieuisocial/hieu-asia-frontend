@@ -192,9 +192,12 @@ export function SunMoonChecker() {
         },
         body: JSON.stringify({
           sun: chart.sun.sign.name,
+          sunLon: chart.sun.longitude,
           moon: chart.moon.sign.name,
+          moonLon: chart.moon.longitude,
           ascendant: chart.ascendant?.sign.name ?? null,
-          planets: chart.planets.map((p) => ({ name: p.planet.name, sign: p.position.sign.name })),
+          ascLon: chart.ascendant?.longitude ?? null,
+          planets: chart.planets.map((p) => ({ name: p.planet.name, sign: p.position.sign.name, lon: p.position.longitude })),
           dominantElement: balance?.dominantElement,
           dominantModality: balance?.dominantModality,
         }),
