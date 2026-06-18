@@ -1072,6 +1072,42 @@ export interface InfraVercelItem {
   created: number | null;
   url: string | null;
   commit_message: string | null;
+  /** Wave-3: short commit sha + GitHub link (optional → older workers omit). */
+  commit_sha?: string | null;
+  commit_url?: string | null;
+}
+
+/** Wave-3: Vercel project info card (framework / node / build / link / alias). */
+export interface InfraVercelProject {
+  id: string;
+  name: string | null;
+  framework: string | null;
+  nodeVersion: string | null;
+  rootDirectory: string | null;
+  buildCommand: string | null;
+  installCommand: string | null;
+  productionBranch: string | null;
+  repo: string | null;
+  repoId: number | string | null;
+  prodAlias: string | null;
+}
+
+/** Wave-3: one production domain bound to the project. */
+export interface InfraVercelDomain {
+  name: string;
+  verified: boolean;
+  misconfigured: boolean | null;
+}
+
+/** Wave-3: env vars grouped by environment target (NAMES ONLY — no values). */
+export interface InfraVercelEnvGroup {
+  target: string;
+  vars: Array<{
+    key: string;
+    type: string | null;
+    gitBranch: string | null;
+    updatedAt: number | null;
+  }>;
 }
 
 /**
@@ -1161,7 +1197,82 @@ export interface InfraCloudflareItem {
 export interface InfraCloudflareSummary {
   total_deployments: number;
   live_deployment_at: string | null;
+  requests_24h?: number;
+  errors_24h?: number;
+  error_rate_pct?: number;
 }
+
+/** Wave-3: worker script metadata tile. */
+export interface InfraCfScriptMeta {
+  created_on: string | null;
+  modified_on: string | null;
+  usage_model: string | null;
+  compatibility_date: string | null;
+}
+
+/** Wave-3: one cron schedule. */
+export interface InfraCfCronTrigger {
+  cron: string;
+  modified_on: string | null;
+}
+
+/** Wave-3: one binding (KV/R2/D1/queue/service/secret) — name + kind only. */
+export interface InfraCfBinding {
+  name: string;
+  type: string;
+  detail: string | null;
+}
+
+/** Wave-3: one worker route pattern. */
+export interface InfraCfRoute {
+  pattern: string;
+  id: string | null;
+}
+
+/** Wave-3: deploy cadence tiles. */
+export interface InfraCfCadence {
+  deploys_7d: number;
+  deploys_30d: number;
+  days_since_last: number | null;
+}
+
+/** Wave-3: one day of CF deploy counts (asc, ≤30 days). */
+export interface InfraCfDeploySeriesPoint {
+  date: string;
+  count: number;
+}
+
+/**
+ * Cloudflare success envelope carries Wave-3 detail panels alongside the
+ * deployments list. All optional → the page renders only what the worker sends.
+ */
+export type InfraCloudflareEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraCloudflareItem[];
+      summary?: InfraCloudflareSummary;
+      script_meta?: InfraCfScriptMeta | null;
+      cron_triggers?: InfraCfCronTrigger[] | null;
+      bindings?: InfraCfBinding[] | null;
+      routes?: InfraCfRoute[] | null;
+      cadence?: InfraCfCadence | null;
+      deploy_series?: InfraCfDeploySeriesPoint[] | null;
+      permission_notes?: string[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+/** Cloudflare single-deployment detail (GET /admin/infra/cloudflare/:id). */
+export type InfraCloudflareDetailEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraCloudflareItem[];
+      deployment: InfraCloudflareItem & { position: number; total: number };
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
 
 export interface InfraSupabaseItem {
   schema: string;
@@ -1477,6 +1588,10 @@ export type InfraVercelEnvelope =
       items: InfraVercelItem[];
       summary?: InfraVercelSummary;
       series?: InfraVercelSeriesPoint[];
+      /** Wave-3 detail panels — all optional so older workers degrade gracefully. */
+      project?: InfraVercelProject | null;
+      domains?: InfraVercelDomain[] | null;
+      env_groups?: InfraVercelEnvGroup[] | null;
     }
   | { ok: false; configured: false; error: string }
   | { ok: false; configured: true; error: string };
@@ -1499,10 +1614,18 @@ export function getInfraResend(): Promise<
   return fetchInfra<InfraResendItem, InfraResendSummary>('resend');
 }
 
-export function getInfraCloudflare(): Promise<
-  InfraEnvelope<InfraCloudflareItem, InfraCloudflareSummary>
-> {
-  return fetchInfra<InfraCloudflareItem, InfraCloudflareSummary>('cloudflare');
+export function getInfraCloudflare(): Promise<InfraCloudflareEnvelope> {
+  return fetchInfra<InfraCloudflareItem, InfraCloudflareSummary>(
+    'cloudflare',
+  ) as Promise<InfraCloudflareEnvelope>;
+}
+
+export function getInfraCloudflareDetail(
+  id: string,
+): Promise<InfraCloudflareDetailEnvelope> {
+  return fetchInfraDetail<InfraCloudflareDetailEnvelope>(
+    `/cloudflare/${encodeURIComponent(id)}`,
+  );
 }
 
 export function getInfraSupabase(): Promise<
@@ -1703,6 +1826,8 @@ export type InfraVercelDetailEnvelope =
       items: InfraVercelItem[];
       deployment: InfraVercelDetailDeployment;
       build_logs?: InfraVercelBuildLog[];
+      /** Wave-3: first error line surfaced from the build logs (null when none). */
+      first_error?: string | null;
     }
   | { ok: false; configured: false; error: string }
   | { ok: false; configured: true; error: string };
@@ -1941,6 +2066,16 @@ export function postInfraGithubRerun(
 
 export function postInfraSentryResolve(id: string): Promise<InfraActionResult> {
   return postInfra(`/sentry/${encodeURIComponent(id)}/resolve`);
+}
+
+/**
+ * Trigger a fresh production redeploy from git main for one project (admin|web).
+ * Non-destructive — Vercel keeps every prior deployment. Owner/admin-gated.
+ */
+export function postInfraVercelRedeploy(
+  project: 'admin' | 'web' = 'admin',
+): Promise<InfraActionResult> {
+  return postInfra('/vercel/redeploy', { project });
 }
 
 export function postInfraSentryIgnore(id: string): Promise<InfraActionResult> {

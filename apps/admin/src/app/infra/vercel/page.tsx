@@ -11,22 +11,67 @@
 
 import * as React from 'react';
 import dynamic from 'next/dynamic';
-import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent } from '@hieu-asia/ui';
-import { ExternalLink } from 'lucide-react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Button, Card, CardContent, toast } from '@hieu-asia/ui';
+import { ExternalLink, RotateCw } from 'lucide-react';
 import {
   getInfraVercel,
+  postInfraVercelRedeploy,
   type InfraVercelItem,
   type InfraVercelSummary,
   type InfraVercelSeriesPoint,
+  type InfraVercelProject,
+  type InfraVercelDomain,
+  type InfraVercelEnvGroup,
 } from '@/lib/admin-api';
+import { useAdminRole } from '@/hooks/useAdminRole';
 import { getInfraTool } from '@/lib/infra-tools';
 import { formatDateOrEmpty, formatRelativeOrEmpty } from '@/lib/format-date';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
 import { VercelDeployDrawer } from '@/components/admin/infra/VercelDeployDrawer';
+import {
+  VercelProjectCard,
+  VercelDomainsCard,
+  VercelEnvCard,
+} from '@/components/admin/infra/VercelDetailPanels';
 
 const tool = getInfraTool('vercel')!;
+
+/** Header action: redeploy admin prod from git main. Owner/admin only. */
+function RedeployButton() {
+  const { role } = useAdminRole();
+  const qc = useQueryClient();
+  const [pending, setPending] = React.useState(false);
+  const allowed = role === 'owner' || role === 'admin';
+  const click = React.useCallback(async () => {
+    if (pending) return;
+    if (
+      !window.confirm(
+        'Triển khai lại bản production của admin từ nhánh main? (Không xoá bản cũ — Vercel giữ lại mọi bản triển khai trước.)',
+      )
+    )
+      return;
+    setPending(true);
+    const res = await postInfraVercelRedeploy('admin');
+    setPending(false);
+    if (res.ok) {
+      toast.success('Đã kích hoạt deploy lại từ main.');
+      void qc.invalidateQueries({ queryKey: ['infra', 'vercel'] });
+      return;
+    }
+    toast.error(res.error ?? 'Không kích hoạt được deploy lại.');
+  }, [pending, qc]);
+  if (!allowed) return null;
+  return (
+    <Button variant="outline" size="sm" onClick={click} disabled={pending}>
+      <RotateCw className={`mr-1.5 h-3.5 w-3.5 ${pending ? 'animate-spin' : ''}`} />
+      {pending ? 'Đang gửi…' : 'Deploy lại prod'}
+    </Button>
+  );
+}
+
+type EnvFilter = 'all' | 'production' | 'preview';
 
 // Recharts (~150KB) lazy-loaded so it stays out of the initial bundle; ssr:false
 // because admin is auth-gated (mirrors AiGatewayTrendChart).
@@ -78,11 +123,18 @@ export default function InfraVercelPage() {
   });
 
   const [openUid, setOpenUid] = React.useState<string | null>(null);
+  const [envFilter, setEnvFilter] = React.useState<EnvFilter>('all');
 
   const summary: InfraVercelSummary | undefined =
     query.data?.ok ? query.data.summary : undefined;
   const series: InfraVercelSeriesPoint[] =
     query.data?.ok && Array.isArray(query.data.series) ? query.data.series : [];
+  const project: InfraVercelProject | null =
+    query.data?.ok && query.data.project ? query.data.project : null;
+  const domains: InfraVercelDomain[] | null =
+    query.data?.ok && Array.isArray(query.data.domains) ? query.data.domains : null;
+  const envGroups: InfraVercelEnvGroup[] | null =
+    query.data?.ok && Array.isArray(query.data.env_groups) ? query.data.env_groups : null;
 
   return (
     <>
@@ -95,7 +147,13 @@ export default function InfraVercelPage() {
       tool={tool}
       query={query}
       emptyTitle="Chưa có deploy gần đây"
-      renderTable={(items) => (
+      headerActions={<RedeployButton />}
+      renderTable={(items) => {
+       const filtered =
+         envFilter === 'all'
+           ? items
+           : items.filter((d) => (d.target ?? '') === envFilter);
+       return (
         <div className="space-y-6">
           {summary && (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -139,8 +197,28 @@ export default function InfraVercelPage() {
             </Card>
           )}
 
+          {project && <VercelProjectCard project={project} />}
+          {domains && <VercelDomainsCard domains={domains} />}
+          {envGroups && <VercelEnvCard groups={envGroups} />}
+
           <Card>
             <CardContent className="p-0">
+              <div className="flex items-center gap-1.5 border-b border-border px-4 py-2.5">
+                {(['all', 'production', 'preview'] as EnvFilter[]).map((f) => (
+                  <button
+                    key={f}
+                    type="button"
+                    onClick={() => setEnvFilter(f)}
+                    className={`rounded-full px-2.5 py-1 font-mono text-[11px] uppercase tracking-wide transition-colors ${
+                      envFilter === f
+                        ? 'bg-gold/15 text-gold'
+                        : 'text-muted-foreground hover:bg-muted/40'
+                    }`}
+                  >
+                    {f === 'all' ? 'tất cả' : f}
+                  </button>
+                ))}
+              </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
@@ -148,12 +226,13 @@ export default function InfraVercelPage() {
                       <th className="px-4 py-2.5">Trạng thái</th>
                       <th className="px-4 py-2.5">Môi trường</th>
                       <th className="px-4 py-2.5">Commit</th>
+                      <th className="px-4 py-2.5">SHA</th>
                       <th className="px-4 py-2.5">Thời gian</th>
                       <th className="px-4 py-2.5 text-right">Mở</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {items.map((d) => (
+                    {filtered.map((d) => (
                       <tr
                         key={d.uid}
                         onClick={() => setOpenUid(d.uid)}
@@ -168,8 +247,29 @@ export default function InfraVercelPage() {
                         <td className="px-4 py-2.5 text-muted-foreground">
                           {d.target ?? '—'}
                         </td>
-                        <td className="max-w-[28rem] truncate px-4 py-2.5">
+                        <td className="max-w-[24rem] truncate px-4 py-2.5">
                           {d.commit_message ?? (
+                            <span className="text-muted-foreground">—</span>
+                          )}
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-2.5 font-mono text-xs">
+                          {d.commit_sha ? (
+                            d.commit_url ? (
+                              <a
+                                href={d.commit_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="text-gold hover:underline"
+                              >
+                                {d.commit_sha.slice(0, 7)}
+                              </a>
+                            ) : (
+                              <span className="text-muted-foreground">
+                                {d.commit_sha.slice(0, 7)}
+                              </span>
+                            )
+                          ) : (
                             <span className="text-muted-foreground">—</span>
                           )}
                         </td>
@@ -204,7 +304,8 @@ export default function InfraVercelPage() {
             </CardContent>
           </Card>
         </div>
-      )}
+       );
+      }}
     />
     </>
   );

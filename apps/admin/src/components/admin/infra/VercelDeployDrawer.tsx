@@ -88,6 +88,7 @@ export function VercelDeployDrawer({
   const d: InfraVercelDetailDeployment | undefined =
     data && data.ok ? data.deployment : undefined;
   const logs = data && data.ok ? data.build_logs : undefined;
+  const firstError = data && data.ok ? data.first_error : undefined;
   const showError = isError || (data && data.ok === false);
   const errorMsg = data && data.ok === false ? data.error : undefined;
 
@@ -172,14 +173,38 @@ export function VercelDeployDrawer({
               />
             </div>
 
+            {firstError && (
+              <div className="rounded-md border border-red-400/40 bg-red-500/5 px-3 py-2">
+                <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-red-400">
+                  Lỗi đầu tiên
+                </p>
+                <p className="break-words font-mono text-[11px] leading-relaxed text-foreground">
+                  {firstError}
+                </p>
+              </div>
+            )}
+
             {logs && logs.length > 0 && (
               <div>
                 <p className="mb-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                   Log build
                 </p>
-                <pre className="max-h-72 overflow-auto rounded-md border border-border bg-ink/90 px-3 py-2 font-mono text-[11px] leading-relaxed text-muted-foreground dark:bg-card/60">
-                  {logs.map((l) => l.text).join('\n')}
-                </pre>
+                <div className="max-h-72 overflow-auto rounded-md border border-border bg-ink/90 px-3 py-2 font-mono text-[11px] leading-relaxed dark:bg-card/60">
+                  {logs.map((l, i) => {
+                    const t = (l.type ?? '').toLowerCase();
+                    const isErr = t === 'error' || t === 'stderr';
+                    return (
+                      <div
+                        key={i}
+                        className={`whitespace-pre-wrap break-words ${
+                          isErr ? 'text-red-400' : 'text-muted-foreground'
+                        }`}
+                      >
+                        {l.text}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>
