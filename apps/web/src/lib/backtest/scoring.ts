@@ -12,6 +12,7 @@ import {
   type YearSignals,
   type MutagenLanding,
   type LifeCategory,
+  type LossTarget,
 } from './backtest-core';
 import type { TuViChart } from '../tuvi-client';
 import {
@@ -22,7 +23,6 @@ import {
   CATEGORY_VALENCE,
   TU_HOA_BY_STEM,
   ALL_STEMS,
-  type LossTarget,
 } from './palace-map';
 
 export type MatchGrade = 'STRONG' | 'PARTIAL' | 'NONE' | 'UNSCORABLE';

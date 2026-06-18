@@ -35,11 +35,19 @@ export type LifeCategory =
   | 'study' // học hành / thi cử
   | 'childbirth'; // sinh con
 
+/**
+ * For "loss" the governing palace depends on WHAT was lost (no single loss palace).
+ * Defined here (core types) so both the event shape and palace-map share it.
+ */
+export type LossTarget = 'parent' | 'spouse' | 'sibling' | 'child' | 'self' | 'money';
+
 /** A real, dated past life event the user reports for verification. */
 export interface LifeEvent {
   /** Solar (dương lịch) year the event happened. */
   year: number;
   category: LifeCategory;
+  /** Required when category === 'loss' (which palace to read). */
+  lossTarget?: LossTarget;
   /** Optional free-text note (never sent anywhere public). */
   note?: string;
 }
@@ -165,20 +173,24 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 export async function backtestChart(
   input: BacktestInput,
   events: LifeEvent[],
-): Promise<YearSignals[]> {
+  onProgress?: (done: number, total: number) => void,
+): Promise<{ chart: TuViChart | null; signals: YearSignals[] }> {
   const birthYear = Number(input.birthSolarDate.slice(0, 4));
   const out: YearSignals[] = [];
+  let natalChart: TuViChart | null = null;
   for (let i = 0; i < events.length; i++) {
     const ev = events[i]!;
     if (i > 0) await sleep(2100); // ≤5/10s headroom
+    onProgress?.(i, events.length);
     const { chart, horoscope } = await castTuViHoroscope({
       birthSolarDate: input.birthSolarDate,
       birthHour: input.birthHour,
       gender: input.gender,
       targetDate: `${ev.year}-06-30`,
     });
+    natalChart = chart; // identical across years; kept for base-rate computation
     const age = Number.isFinite(birthYear) ? ev.year - birthYear : null;
     out.push(extractYearSignals(chart, horoscope, ev.year, age));
   }
-  return out;
+  return { chart: natalChart, signals: out };
 }

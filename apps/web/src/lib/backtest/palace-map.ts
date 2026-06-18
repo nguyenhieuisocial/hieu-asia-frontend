@@ -7,7 +7,7 @@
  * These constants are that pre-registration. They must not be edited per-case.
  */
 
-import type { LifeCategory } from './backtest-core';
+import type { LifeCategory, LossTarget } from './backtest-core';
 
 /**
  * Fixed circular palace order (cung Mệnh first). Used for geometry: a palace's
@@ -44,12 +44,8 @@ export function trinePalaces(p: string): PalaceName[] {
   return [PALACE_ORDER[(i + 4) % 12]!, PALACE_ORDER[(i + 8) % 12]!];
 }
 
-/**
- * For "loss", the governing palace depends on WHAT was lost (no single loss
- * palace exists). The user must specify; we never pick after seeing the chart.
- */
-export type LossTarget = 'parent' | 'spouse' | 'sibling' | 'child' | 'self' | 'money';
-
+// LossTarget lives in backtest-core (shared core types). For "loss", the governing
+// palace depends on WHAT was lost — the user must specify; never picked post-hoc.
 const LOSS_PALACE: Record<LossTarget, PalaceName> = {
   parent: 'Phụ Mẫu',
   spouse: 'Phu Thê',
