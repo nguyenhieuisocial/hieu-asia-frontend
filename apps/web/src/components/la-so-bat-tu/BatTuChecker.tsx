@@ -214,40 +214,49 @@ export function BatTuChecker({
 
   return (
     <Card className="border-gold/20 bg-card/60 backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="font-heading text-lg">Nhập ngày &amp; giờ sinh (dương lịch)</CardTitle>
-      </CardHeader>
+      {!embedded && (
+        <CardHeader>
+          <CardTitle className="font-heading text-lg">Nhập ngày &amp; giờ sinh (dương lịch)</CardTitle>
+        </CardHeader>
+      )}
       <CardContent className="space-y-4">
-        <div className="grid gap-3 sm:grid-cols-3">
-          <div className="space-y-1">
-            <Label htmlFor="btDate">Ngày sinh (dương lịch)</Label>
-            <Input id="btDate" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-          </div>
-          <div className="space-y-1">
-            <Label htmlFor="btTime">Giờ sinh</Label>
-            <Input id="btTime" type="time" value={time} onChange={(e) => setTime(e.target.value)} />
-          </div>
-          <div className="space-y-1">
-            <Label htmlFor="btGender">Giới tính</Label>
-            <select
-              id="btGender"
-              value={gender}
-              onChange={(e) => setGender(e.target.value as 'M' | 'F')}
-              className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-            >
-              <option value="M">Nam</option>
-              <option value="F">Nữ</option>
-            </select>
-          </div>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          Giờ sinh quyết định trụ giờ. Không nhớ giờ? Để <strong>12:00</strong> — ba trụ năm/tháng/ngày vẫn
-          đúng, chỉ trụ giờ là ước lượng.
-        </p>
+        {/* Embedded (homepage hero): the hero already collected birth data + the
+            chart auto-casts from props — hide this duplicate input so the hero
+            reads "nhập một lần → lá số", not two identical forms. */}
+        {!embedded && (
+          <>
+            <div className="grid gap-3 sm:grid-cols-3">
+              <div className="space-y-1">
+                <Label htmlFor="btDate">Ngày sinh (dương lịch)</Label>
+                <Input id="btDate" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="btTime">Giờ sinh</Label>
+                <Input id="btTime" type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="btGender">Giới tính</Label>
+                <select
+                  id="btGender"
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value as 'M' | 'F')}
+                  className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                >
+                  <option value="M">Nam</option>
+                  <option value="F">Nữ</option>
+                </select>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Giờ sinh quyết định trụ giờ. Không nhớ giờ? Để <strong>12:00</strong> — ba trụ năm/tháng/ngày vẫn
+              đúng, chỉ trụ giờ là ước lượng.
+            </p>
 
-        <Button onClick={onCast} size="lg">
-          ✦ Lập lá số Bát Tự
-        </Button>
+            <Button onClick={onCast} size="lg">
+              ✦ Lập lá số Bát Tự
+            </Button>
+          </>
+        )}
         {error && <p className="text-sm text-destructive">{error}</p>}
 
         {chart && (
