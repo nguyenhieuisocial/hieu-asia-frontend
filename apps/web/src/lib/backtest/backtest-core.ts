@@ -84,7 +84,7 @@ function normPalace(name: string): string {
 }
 
 /** Build a star-name → canonical-natal-palace map over the full star pool. */
-function starPalaceIndex(chart: TuViChart): Map<string, string> {
+export function starPalaceIndex(chart: TuViChart): Map<string, string> {
   const idx = new Map<string, string>();
   for (const p of chart.palaces) {
     const pal = normPalace(p.name);
