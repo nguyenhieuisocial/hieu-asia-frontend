@@ -33,6 +33,12 @@ const TOOLS = [
     desc: 'Lập lá số Tử Vi miễn phí: 12 cung, 114 sao, độ sáng, cách cục — con số thật.',
   },
   {
+    href: '/bang-chung',
+    emoji: '✓',
+    name: 'Bằng Chứng',
+    desc: 'Kiểm chứng lá số bằng quá khứ thật của bạn — nhập sự kiện đã xảy ra, xem lá số có ghi dấu không. Không bói mù.',
+  },
+  {
     href: '/la-so-bat-tu',
     emoji: '☯',
     name: 'Xem lá số Bát Tự',
