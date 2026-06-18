@@ -4,7 +4,6 @@ import { BangChungTool } from '@/components/bang-chung/BangChungTool';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
-import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 const DESC =
   'Đừng vội tin lá số — hãy KIỂM CHỨNG nó bằng chính quá khứ của bạn. Nhập vài sự kiện đời thật đã xảy ra, hệ thống tính lại lá số đúng như nó đứng ở từng năm đó và cho thấy lá số có ghi dấu lĩnh vực ấy không — thành thật cả khi không khớp. Con số là thật, không bói mù.';
@@ -57,7 +56,9 @@ export function generateMetadata({
       description: DESC,
       url: 'https://hieu.asia/bang-chung',
       type: 'website',
-      images: OG_DEFAULT_IMAGES,
+      // Branded default card (the no-param /og render "Kiểm chứng lá số bằng quá khứ
+      // của bạn") so even a non-shared link unfurls on-brand, not the generic site image.
+      images: [{ url: 'https://hieu.asia/bang-chung/og', width: 1200, height: 630 }],
     },
   };
 }
