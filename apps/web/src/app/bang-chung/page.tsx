@@ -4,6 +4,7 @@ import { BangChungTool } from '@/components/bang-chung/BangChungTool';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
+import { deriveProofCard, firstParam } from '@/lib/bang-chung/share-card';
 
 const DESC =
   'Đừng vội tin lá số — hãy KIỂM CHỨNG nó bằng chính quá khứ của bạn. Nhập vài sự kiện đời thật đã xảy ra, hệ thống tính lại lá số đúng như nó đứng ở từng năm đó và cho thấy lá số có ghi dấu lĩnh vực ấy không — thành thật cả khi không khớp. Con số là thật, không bói mù.';
@@ -17,20 +18,17 @@ export function generateMetadata({
 }: {
   searchParams: Record<string, string | string[] | undefined>;
 }): Metadata {
-  const num = (k: string): number | null => {
-    const raw = searchParams[k];
-    const n = Number(Array.isArray(raw) ? raw[0] : raw);
-    return Number.isInteger(n) && n >= 0 && n <= 7 ? n : null;
-  };
-  const total = num('total');
-  const hit = num('hit');
-  const strong = num('strong');
-  const shared = total != null && total >= 1 && hit != null && hit <= total;
+  // Same anti-overclaim guard as the OG image route (single source of truth) so
+  // the unfurled title and the card image can never disagree.
+  const card = deriveProofCard({
+    total: firstParam(searchParams.total),
+    hit: firstParam(searchParams.hit),
+    strong: firstParam(searchParams.strong),
+  });
 
-  if (shared) {
-    const ogUrl =
-      `https://hieu.asia/bang-chung/og?hit=${hit}&total=${total}` +
-      (strong != null ? `&strong=${strong}` : '');
+  if (card.valid) {
+    const { hit, total, strong } = card;
+    const ogUrl = `https://hieu.asia/bang-chung/og?hit=${hit}&total=${total}&strong=${strong}`;
     const desc = `Tôi tự đối chiếu lá số với quá khứ thật của mình trên hieu.asia — trùng khớp ${hit}/${total} mốc, có khoe cả mốc trật. Một mốc trùng chưa nói lên gì; cái chính là kiểm chứng được trước khi tin. Không bói mù.`;
     return {
       title: TITLE,

@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { deriveProofCard } from '@/lib/bang-chung/share-card';
 
 // Ảnh xem-trước (OG) ĐỘNG cho thẻ chia-sẻ "Bằng Chứng" — khi link unfurl trên
 // FB/Zalo/Telegram, hiện kết quả kiểm-chứng CỦA NGƯỜI GỬI (khoe "lá số ghi đúng
@@ -12,21 +13,19 @@ export const alt = 'Bằng Chứng — kiểm chứng lá số bằng quá khứ
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-function clampInt(v: string | null, min: number, max: number): number | null {
-  const n = Number(v);
-  if (!Number.isInteger(n) || n < min || n > max) return null;
-  return n;
-}
-
 export function GET(req: Request) {
   const sp = new URL(req.url).searchParams;
-  const total = clampInt(sp.get('total'), 1, 7);
-  const hitRaw = clampInt(sp.get('hit'), 0, 7);
-  const strongRaw = clampInt(sp.get('strong'), 0, 7);
-  // Only render the personalized card when the numbers are internally consistent.
-  const valid = total != null && hitRaw != null && hitRaw <= total;
-  const hit = valid ? hitRaw! : 0;
-  const strong = valid && strongRaw != null && strongRaw <= hit ? strongRaw! : 0;
+  // Single source of truth for the anti-overclaim guard (shared with page
+  // generateMetadata) — a manipulated URL can never inflate the card.
+  const card = deriveProofCard({
+    total: sp.get('total'),
+    hit: sp.get('hit'),
+    strong: sp.get('strong'),
+  });
+  const valid = card.valid;
+  const hit = card.valid ? card.hit : 0;
+  const total = card.valid ? card.total : 0;
+  const strong = card.valid ? card.strong : 0;
 
   return new ImageResponse(
     (
