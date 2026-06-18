@@ -17,7 +17,17 @@ import * as React from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { Button, Card, CardContent, Input, Skeleton, cn } from '@hieu-asia/ui';
-import { ArrowLeft, ExternalLink, KeyRound, Lock, Scissors } from 'lucide-react';
+import {
+  ArrowLeft,
+  Check,
+  Copy,
+  ExternalLink,
+  KeyRound,
+  ListTree,
+  Lock,
+  Scissors,
+  Search,
+} from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
@@ -29,6 +39,8 @@ import {
 } from '@/lib/admin-api';
 import { getInfraTool } from '@/lib/infra-tools';
 import { formatRelativeOrEmpty } from '@/lib/format-date';
+import { JsonTree } from '@/components/admin/infra/JsonTree';
+import { tryParseJson, formatBytes } from '@/components/admin/infra/json-tree-parse';
 
 const tool = getInfraTool('kv')!;
 
@@ -48,6 +60,27 @@ function fmtExpiration(exp: number | null): string {
   }
 }
 
+/** "Còn hạn" phrasing for the value pane: time UNTIL a future expiry. */
+function fmtTtlRemaining(exp: number | null): string {
+  if (exp == null) return 'không hết hạn';
+  const diffMs = exp * 1000 - Date.now();
+  if (diffMs <= 0) return 'đã hết hạn';
+  const mins = Math.floor(diffMs / 60_000);
+  if (mins < 60) return `còn ${mins} phút`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 48) return `còn ${hours} giờ`;
+  const days = Math.floor(hours / 24);
+  if (days < 60) return `còn ${days} ngày`;
+  return `còn ${Math.floor(days / 30)} tháng`;
+}
+
+/** Render an approximate count badge: "≥1000" when not exact, else the number. */
+function fmtCount(count: number | undefined, exact: boolean | undefined): string {
+  if (count == null) return '?';
+  if (exact === false) return `≥${count}`;
+  return String(count);
+}
+
 /** Pretty-print a value: parse JSON if possible, else show raw. */
 function prettyValue(value: string): string {
   try {
@@ -55,6 +88,42 @@ function prettyValue(value: string): string {
   } catch {
     return value;
   }
+}
+
+/** A small clipboard-copy icon button with a transient "copied" check. */
+function CopyButton({
+  text,
+  label,
+  className,
+}: {
+  text: string;
+  label: string;
+  className?: string;
+}): React.ReactElement {
+  const [copied, setCopied] = React.useState(false);
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      title={label}
+      onClick={(e) => {
+        e.stopPropagation();
+        try {
+          void navigator.clipboard?.writeText(text);
+          setCopied(true);
+          window.setTimeout(() => setCopied(false), 1200);
+        } catch {
+          /* clipboard unavailable — no-op */
+        }
+      }}
+      className={cn(
+        'inline-flex h-6 w-6 shrink-0 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-gold/10 hover:text-gold',
+        className,
+      )}
+    >
+      {copied ? <Check className="h-3.5 w-3.5 text-jade" /> : <Copy className="h-3.5 w-3.5" />}
+    </button>
+  );
 }
 
 export default function InfraKvPage() {
@@ -68,6 +137,13 @@ export default function InfraKvPage() {
   const [cursor, setCursor] = React.useState<string | null>(null);
   const [listComplete, setListComplete] = React.useState<boolean>(true);
   const [pageCursor, setPageCursor] = React.useState<string | null>(null);
+  // Server-side substring search within the active (ns, prefix).
+  const [searchInput, setSearchInput] = React.useState<string>('');
+  const [contains, setContains] = React.useState<string>('');
+  // Direct exact-key lookup (jumps to the value pane without paging).
+  const [lookupInput, setLookupInput] = React.useState<string>('');
+  // Value pane: JSON-tree vs raw <pre> toggle (default tree when parseable).
+  const [rawView, setRawView] = React.useState<boolean>(false);
 
   const catalog = useQuery({
     queryKey: ['infra', 'kv', 'catalog'],
@@ -76,14 +152,15 @@ export default function InfraKvPage() {
   });
 
   const keysQuery = useQuery({
-    queryKey: ['infra', 'kv', 'keys', ns, prefix, pageCursor],
-    queryFn: () => getInfraKvKeys(ns, prefix, pageCursor),
+    queryKey: ['infra', 'kv', 'keys', ns, prefix, pageCursor, contains],
+    queryFn: () => getInfraKvKeys(ns, prefix, pageCursor, contains || undefined),
     enabled: ns !== '',
     staleTime: 15_000,
   });
 
-  // Fold each loaded page into the accumulated list. A fresh (ns,prefix) sends
-  // pageCursor=null → replace; a "Tải thêm" sends a cursor → append.
+  // Fold each loaded page into the accumulated list. A fresh (ns,prefix,search)
+  // sends pageCursor=null → replace; a "Tải thêm" sends a cursor → append.
+  // (Search mode is single-shot, so pageCursor is always null there.)
   React.useEffect(() => {
     const data = keysQuery.data;
     if (!data || !data.ok) return;
@@ -100,6 +177,11 @@ export default function InfraKvPage() {
     staleTime: 15_000,
   });
 
+  // Whenever a new key is selected, default back to the tree view.
+  React.useEffect(() => {
+    setRawView(false);
+  }, [selectedKey]);
+
   function loadList(nextNs: string, nextPrefix: string) {
     setNs(nextNs);
     setPrefix(nextPrefix);
@@ -109,6 +191,25 @@ export default function InfraKvPage() {
     setCursor(null);
     setListComplete(true);
     setPageCursor(null);
+    setSearchInput('');
+    setContains('');
+  }
+
+  /** Run a substring search within the current (ns, prefix). */
+  function runSearch(term: string) {
+    setSelectedKey(null);
+    setItems([]);
+    setCursor(null);
+    setListComplete(true);
+    setPageCursor(null);
+    setContains(term.trim());
+  }
+
+  /** Jump straight to a value by exact key (no paging needed). */
+  function lookupKey(key: string) {
+    const k = key.trim();
+    if (!ns || !k) return;
+    setSelectedKey(k);
   }
 
   const namespaces = catalog.data?.ok ? (catalog.data.namespaces ?? []) : [];
@@ -178,13 +279,19 @@ export default function InfraKvPage() {
                       type="button"
                       onClick={() => loadList(n.binding, '')}
                       className={cn(
-                        'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
+                        'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors',
                         ns === n.binding
                           ? 'border-gold/40 bg-gold/15 text-gold'
                           : 'border-border bg-muted/40 text-muted-foreground hover:border-gold/30 hover:text-foreground',
                       )}
                     >
                       {n.binding}
+                      <span
+                        className="rounded-full bg-foreground/10 px-1.5 py-0.5 font-mono text-[10px] leading-none text-foreground/70"
+                        title={n.exact === false ? 'ước lượng (≥1000)' : 'số key'}
+                      >
+                        {fmtCount(n.count, n.exact)}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -204,7 +311,7 @@ export default function InfraKvPage() {
                           type="button"
                           onClick={() => loadList(c.ns, c.prefix)}
                           className={cn(
-                            'rounded-full border px-3 py-1 text-xs transition-colors',
+                            'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-colors',
                             active
                               ? 'border-jade/40 bg-jade/10 text-jade'
                               : 'border-border bg-muted/40 text-muted-foreground hover:border-jade/30 hover:text-foreground',
@@ -212,6 +319,12 @@ export default function InfraKvPage() {
                           title={`${c.ns} · ${c.prefix}`}
                         >
                           {c.label}
+                          <span
+                            className="rounded-full bg-foreground/10 px-1.5 py-0.5 font-mono text-[10px] leading-none text-foreground/70"
+                            title={c.exact === false ? 'ước lượng (≥1000)' : 'số key'}
+                          >
+                            {fmtCount(c.count, c.exact)}
+                          </span>
                         </button>
                       );
                     })}
@@ -219,28 +332,54 @@ export default function InfraKvPage() {
                 </div>
               )}
 
-              <div className="space-y-1.5">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                  Tiền tố tự nhập
-                </p>
-                <form
-                  className="flex flex-wrap items-center gap-2"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (ns) loadList(ns, prefixInput.trim());
-                  }}
-                >
-                  <Input
-                    value={prefixInput}
-                    onChange={(e) => setPrefixInput(e.target.value)}
-                    placeholder={ns ? 'vd: session:unlocked:' : 'Chọn vùng dữ liệu trước'}
-                    disabled={!ns}
-                    className="max-w-xs font-mono text-xs"
-                  />
-                  <Button type="submit" size="sm" variant="outline" disabled={!ns}>
-                    Lọc
-                  </Button>
-                </form>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="space-y-1.5">
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                    Tiền tố tự nhập
+                  </p>
+                  <form
+                    className="flex flex-wrap items-center gap-2"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (ns) loadList(ns, prefixInput.trim());
+                    }}
+                  >
+                    <Input
+                      value={prefixInput}
+                      onChange={(e) => setPrefixInput(e.target.value)}
+                      placeholder={ns ? 'vd: session:unlocked:' : 'Chọn vùng dữ liệu trước'}
+                      disabled={!ns}
+                      className="max-w-xs font-mono text-xs"
+                    />
+                    <Button type="submit" size="sm" variant="outline" disabled={!ns}>
+                      Lọc
+                    </Button>
+                  </form>
+                </div>
+
+                <div className="space-y-1.5">
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                    Tra cứu key chính xác
+                  </p>
+                  <form
+                    className="flex flex-wrap items-center gap-2"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      lookupKey(lookupInput);
+                    }}
+                  >
+                    <Input
+                      value={lookupInput}
+                      onChange={(e) => setLookupInput(e.target.value)}
+                      placeholder={ns ? 'vd: streak:HA-12345' : 'Chọn vùng dữ liệu trước'}
+                      disabled={!ns}
+                      className="max-w-xs font-mono text-xs"
+                    />
+                    <Button type="submit" size="sm" variant="outline" disabled={!ns || !lookupInput.trim()}>
+                      Mở
+                    </Button>
+                  </form>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -256,11 +395,53 @@ export default function InfraKvPage() {
               {/* Key list */}
               <Card className="min-w-0">
                 <CardContent className="p-0">
-                  <div className="border-b border-border px-4 py-2.5">
+                  <div className="space-y-2 border-b border-border px-4 py-2.5">
                     <p className="font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
                       <span className="text-foreground">{ns}</span>
                       {prefix && <span className="text-gold"> · {prefix}</span>}
                     </p>
+                    <form
+                      className="flex items-center gap-2"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        runSearch(searchInput);
+                      }}
+                    >
+                      <div className="relative flex-1">
+                        <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={searchInput}
+                          onChange={(e) => setSearchInput(e.target.value)}
+                          placeholder="Tìm trong tên key…"
+                          className="h-8 pl-8 font-mono text-xs"
+                        />
+                      </div>
+                      <Button type="submit" size="sm" variant="outline" className="h-8">
+                        Tìm
+                      </Button>
+                      {contains && (
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="ghost"
+                          className="h-8"
+                          onClick={() => runSearch('')}
+                        >
+                          Xoá
+                        </Button>
+                      )}
+                    </form>
+                    {contains && keysQuery.data?.ok && (
+                      <p className="text-[11px] text-muted-foreground">
+                        Kết quả cho “<span className="text-foreground">{contains}</span>”: {items.length} key
+                        {typeof keysQuery.data.scanned === 'number' && (
+                          <> · đã quét {keysQuery.data.scanned}</>
+                        )}
+                        {keysQuery.data.scan_truncated && (
+                          <span className="text-gold"> · dừng ở ~1000 (còn nữa)</span>
+                        )}
+                      </p>
+                    )}
                   </div>
                   {keysQuery.isLoading && items.length === 0 ? (
                     <div className="space-y-2 p-4">
@@ -293,14 +474,17 @@ export default function InfraKvPage() {
                         {items.map((it) => {
                           const active = selectedKey === it.name;
                           return (
-                            <li key={it.name}>
+                            <li
+                              key={it.name}
+                              className={cn(
+                                'group flex items-center gap-1 pr-2 transition-colors',
+                                active ? 'bg-gold/10' : 'hover:bg-gold/5',
+                              )}
+                            >
                               <button
                                 type="button"
                                 onClick={() => setSelectedKey(it.name)}
-                                className={cn(
-                                  'flex w-full flex-col items-start gap-0.5 px-4 py-2.5 text-left transition-colors',
-                                  active ? 'bg-gold/10' : 'hover:bg-gold/5',
-                                )}
+                                className="flex min-w-0 flex-1 flex-col items-start gap-0.5 px-4 py-2.5 text-left"
                               >
                                 <span className="w-full truncate font-mono text-xs text-foreground">
                                   {it.name}
@@ -309,6 +493,11 @@ export default function InfraKvPage() {
                                   {fmtExpiration(it.expiration)}
                                 </span>
                               </button>
+                              <CopyButton
+                                text={it.name}
+                                label="Sao chép key"
+                                className="opacity-0 group-hover:opacity-100 focus:opacity-100"
+                              />
                             </li>
                           );
                         })}
@@ -355,62 +544,113 @@ export default function InfraKvPage() {
                     />
                   ) : (
                     valueQuery.data &&
-                    valueQuery.data.ok && (
-                      <div className="space-y-3">
-                        <div className="space-y-0.5">
-                          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                            Key
-                          </p>
-                          <p className="break-all font-mono text-xs text-foreground">
-                            {selectedKey}
-                          </p>
-                        </div>
-
-                        {valueQuery.data.not_found ? (
-                          <div className="rounded-md border border-border bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
-                            không tìm thấy
+                    valueQuery.data.ok &&
+                    (() => {
+                      const data = valueQuery.data;
+                      const rawVal = data.value;
+                      const parsed = rawVal != null ? tryParseJson(rawVal) : { ok: false as const };
+                      const showTree = parsed.ok && !rawView;
+                      return (
+                        <div className="space-y-3">
+                          <div className="space-y-0.5">
+                            <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                              Key
+                            </p>
+                            <div className="flex items-start gap-1.5">
+                              <p className="min-w-0 flex-1 break-all font-mono text-xs text-foreground">
+                                {selectedKey}
+                              </p>
+                              {selectedKey && (
+                                <CopyButton text={selectedKey} label="Sao chép key" />
+                              )}
+                            </div>
                           </div>
-                        ) : (
-                          <>
-                            {valueQuery.data.redacted && (
-                              <div className="flex items-center gap-1.5 rounded-md border border-gold/30 bg-gold/10 px-3 py-2 text-xs text-gold">
-                                <Lock className="h-3.5 w-3.5" />
-                                🔒 đã ẩn (key nhạy cảm)
-                              </div>
-                            )}
-                            {valueQuery.data.truncated && (
-                              <div className="flex items-center gap-1.5 rounded-md border border-gold/30 bg-gold/10 px-3 py-2 text-xs text-gold">
-                                <Scissors className="h-3.5 w-3.5" />
-                                ⚠️ đã cắt bớt (&gt;8KB)
-                              </div>
-                            )}
-                            {valueQuery.data.value != null ? (
-                              <pre className="max-h-96 overflow-auto whitespace-pre-wrap break-words rounded-md border border-border bg-muted/30 p-3 font-mono text-xs text-foreground">
-                                {prettyValue(valueQuery.data.value)}
-                              </pre>
-                            ) : (
-                              !valueQuery.data.redacted && (
-                                <div className="rounded-md border border-border bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
-                                  (rỗng)
-                                </div>
-                              )
-                            )}
 
-                            {valueQuery.data.metadata &&
-                              Object.keys(valueQuery.data.metadata).length > 0 && (
+                          {data.not_found ? (
+                            <div className="rounded-md border border-border bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
+                              không tìm thấy
+                            </div>
+                          ) : (
+                            <>
+                              {/* Size + TTL summary line */}
+                              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-muted-foreground">
+                                {!data.redacted && typeof data.bytes === 'number' && (
+                                  <span>
+                                    Kích thước:{' '}
+                                    <span className="text-foreground">{formatBytes(data.bytes)}</span>
+                                  </span>
+                                )}
+                                <span>
+                                  Còn hạn:{' '}
+                                  <span className="text-foreground">
+                                    {fmtTtlRemaining(data.expiration ?? null)}
+                                  </span>
+                                </span>
+                              </div>
+
+                              {data.redacted && (
+                                <div className="flex items-center gap-1.5 rounded-md border border-gold/30 bg-gold/10 px-3 py-2 text-xs text-gold">
+                                  <Lock className="h-3.5 w-3.5" />
+                                  🔒 đã ẩn (key nhạy cảm)
+                                </div>
+                              )}
+                              {data.truncated && (
+                                <div className="flex items-center gap-1.5 rounded-md border border-gold/30 bg-gold/10 px-3 py-2 text-xs text-gold">
+                                  <Scissors className="h-3.5 w-3.5" />
+                                  ⚠️ đã cắt bớt (&gt;8KB)
+                                </div>
+                              )}
+
+                              {rawVal != null ? (
+                                <div className="space-y-2">
+                                  {/* Toolbar: tree/raw toggle + copy value */}
+                                  <div className="flex items-center justify-between gap-2">
+                                    {parsed.ok ? (
+                                      <button
+                                        type="button"
+                                        onClick={() => setRawView((r) => !r)}
+                                        className="inline-flex items-center gap-1.5 rounded border border-border bg-muted/40 px-2 py-1 text-[11px] text-muted-foreground transition-colors hover:text-foreground"
+                                      >
+                                        <ListTree className="h-3.5 w-3.5" />
+                                        {rawView ? 'Xem dạng cây' : 'Xem dạng thô'}
+                                      </button>
+                                    ) : (
+                                      <span />
+                                    )}
+                                    <CopyButton text={rawVal} label="Sao chép nội dung" />
+                                  </div>
+
+                                  {showTree ? (
+                                    <JsonTree value={parsed.value} />
+                                  ) : (
+                                    <pre className="max-h-96 overflow-auto whitespace-pre-wrap break-words rounded-md border border-border bg-muted/30 p-3 font-mono text-xs text-foreground">
+                                      {prettyValue(rawVal)}
+                                    </pre>
+                                  )}
+                                </div>
+                              ) : (
+                                !data.redacted && (
+                                  <div className="rounded-md border border-border bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
+                                    (rỗng)
+                                  </div>
+                                )
+                              )}
+
+                              {data.metadata && Object.keys(data.metadata).length > 0 && (
                                 <div className="space-y-1">
                                   <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                                     Metadata
                                   </p>
                                   <pre className="max-h-48 overflow-auto whitespace-pre-wrap break-words rounded-md border border-border bg-muted/20 p-3 font-mono text-xs text-muted-foreground">
-                                    {JSON.stringify(valueQuery.data.metadata, null, 2)}
+                                    {JSON.stringify(data.metadata, null, 2)}
                                   </pre>
                                 </div>
                               )}
-                          </>
-                        )}
-                      </div>
-                    )
+                            </>
+                          )}
+                        </div>
+                      );
+                    })()
                   )}
                 </CardContent>
               </Card>
