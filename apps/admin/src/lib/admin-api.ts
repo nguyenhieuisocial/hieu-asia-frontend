@@ -1179,6 +1179,40 @@ export interface InfraResendSummary {
   other?: number;
 }
 
+/** Wave-4: one Resend sending domain (verification-status pill). */
+export interface InfraResendDomain {
+  id: string;
+  name: string | null;
+  status: string | null;
+  region: string | null;
+  created_at: string | null;
+}
+
+/** Wave-4: one Resend API key (name/id/created_at — never the secret). */
+export interface InfraResendApiKey {
+  id: string;
+  name: string | null;
+  created_at: string | null;
+}
+
+/**
+ * Resend success envelope carries Wave-4 domains + API keys alongside the
+ * recent-emails items + delivery-status summary. All optional → the page
+ * renders only what the worker sends; permission_notes explains a skipped panel.
+ */
+export type InfraResendEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraResendItem[];
+      summary?: InfraResendSummary;
+      domains?: InfraResendDomain[];
+      api_keys?: InfraResendApiKey[];
+      permission_notes?: string[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
 /**
  * Infra-hub v2 (worker PR #203) — Cloudflare now returns Pages/Workers
  * *deployments* (most-recent first), not daily request rollups. The token may
@@ -1278,11 +1312,45 @@ export interface InfraSupabaseItem {
   schema: string;
   table: string;
   rows: number;
+  /** Wave-4: exact HEAD count for top hieu_asia tables (null → estimate only). */
+  rows_exact?: number | null;
 }
 
 export interface InfraSupabaseSummary {
   total_tables: number;
+  /** Wave-4: exact user count from hieu_asia.users (optional → older workers). */
+  total_users?: number;
 }
+
+/** Wave-4: one day of new signups (asc, ≤30 days). */
+export interface InfraSupabaseSignupPoint {
+  date: string;
+  count: number;
+}
+
+/** Wave-4: one applied DB migration (newest first). */
+export interface InfraSupabaseMigration {
+  version: string;
+  name: string | null;
+}
+
+/**
+ * Supabase success envelope carries Wave-4 detail (30d signups, migrations
+ * list) alongside the table-stats items + summary. All optional → the page
+ * renders only what the worker sends.
+ */
+export type InfraSupabaseEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraSupabaseItem[];
+      summary?: InfraSupabaseSummary;
+      signups?: InfraSupabaseSignupPoint[];
+      migrations?: InfraSupabaseMigration[];
+      migrations_note?: string;
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
 
 export interface InfraLangfuseItem {
   id: string;
@@ -1608,10 +1676,10 @@ export function getInfraSentry(): Promise<
   return fetchInfra<InfraSentryItem, InfraSentrySummary>('sentry');
 }
 
-export function getInfraResend(): Promise<
-  InfraEnvelope<InfraResendItem, InfraResendSummary>
-> {
-  return fetchInfra<InfraResendItem, InfraResendSummary>('resend');
+export function getInfraResend(): Promise<InfraResendEnvelope> {
+  return fetchInfra<InfraResendItem, InfraResendSummary>(
+    'resend',
+  ) as Promise<InfraResendEnvelope>;
 }
 
 export function getInfraCloudflare(): Promise<InfraCloudflareEnvelope> {
@@ -1628,10 +1696,10 @@ export function getInfraCloudflareDetail(
   );
 }
 
-export function getInfraSupabase(): Promise<
-  InfraEnvelope<InfraSupabaseItem, InfraSupabaseSummary>
-> {
-  return fetchInfra<InfraSupabaseItem, InfraSupabaseSummary>('supabase');
+export function getInfraSupabase(): Promise<InfraSupabaseEnvelope> {
+  return fetchInfra<InfraSupabaseItem, InfraSupabaseSummary>(
+    'supabase',
+  ) as Promise<InfraSupabaseEnvelope>;
 }
 
 /**
@@ -1958,6 +2026,62 @@ export function getInfraSupabaseRows(
   qs.set('table', table);
   qs.set('limit', String(limit));
   return fetchInfraDetail<InfraSupabaseRowsEnvelope>(`/supabase/rows?${qs.toString()}`);
+}
+
+/**
+ * Resend single-email DETAIL (GET /admin/infra/resend/:id). The worker tries the
+ * email endpoint first, falling back to single-domain DNS records on a 404 — so
+ * this envelope can carry EITHER an `email`+`timeline` OR a `domain`+`dns_records`.
+ */
+export interface InfraResendEmailDetail {
+  id: string;
+  from: string | null;
+  to: string | null;
+  subject: string | null;
+  html: string | null;
+  text: string | null;
+  last_event: string | null;
+  created_at: string | null;
+}
+
+export interface InfraResendTimelineEvent {
+  event: string;
+  at: string | null;
+}
+
+/** One DNS record Resend expects for a domain (SPF/DKIM/MX/DMARC). */
+export interface InfraResendDnsRecord {
+  record: string | null;
+  type: string | null;
+  name: string | null;
+  value: string | null;
+  status: string | null;
+  priority: number | null;
+  ttl: string | null;
+}
+
+export type InfraResendDetailEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraResendItem[];
+      email: InfraResendEmailDetail;
+      timeline: InfraResendTimelineEvent[];
+    }
+  | {
+      ok: true;
+      configured: true;
+      items: InfraResendItem[];
+      domain: InfraResendDomain;
+      dns_records: InfraResendDnsRecord[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export function getInfraResendDetail(id: string): Promise<InfraResendDetailEnvelope> {
+  return fetchInfraDetail<InfraResendDetailEnvelope>(
+    `/resend/${encodeURIComponent(id)}`,
+  );
 }
 
 /** Langfuse single-trace DETAIL (GET /admin/infra/langfuse/:traceId). */
