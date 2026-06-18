@@ -55,7 +55,10 @@ interface ThanSoHocResult {
   pinnacle_cycles: PinnacleCycle[];
   challenges: ChallengePoint[];
   karmic_lessons: number[];
+  /** Back-compat: first karmic debt (legacy). Prefer `karmic_debts`. */
   karmic_debt?: number;
+  /** Every core position carrying a Karmic Debt (13/14/16/19). Added 2026-06-18. */
+  karmic_debts?: { position: 'life_path' | 'expression' | 'soul_urge' | 'birthday'; number: number }[];
   master_numbers: number[];
   input: { birth_date: string; full_name: string; current_year: number };
 }
@@ -148,7 +151,7 @@ export default function ThanSoHocResultPage() {
             </div>
           )}
 
-          {data.karmic_debt && <KarmicDebtCard debt={data.karmic_debt} />}
+          <KarmicDebtSection debts={data.karmic_debts} fallback={data.karmic_debt} />
 
           <section>
             <SectionTitle>Hồ sơ số học cá nhân</SectionTitle>
@@ -282,7 +285,16 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
   );
 }
 
-function KarmicDebtCard({ debt }: { debt: number }) {
+// Nhãn vị trí lõi mang nợ nghiệp — 4 vị trí đồng thuận (Goodwin ∩ Decoz).
+// Nhân Cách (consonant-sum) bị loại có chủ đích: Goodwin không tính → tránh over-claim.
+const KARMIC_POSITION_LABEL: Record<string, string> = {
+  life_path: 'Đường Đời',
+  expression: 'Vận Mệnh',
+  soul_urge: 'Linh Hồn',
+  birthday: 'Ngày Sinh',
+};
+
+function KarmicDebtCard({ debt, positions }: { debt: number; positions?: string[] }) {
   const m = KARMIC_DEBT[debt as 13 | 14 | 16 | 19];
   if (!m) return null;
   return (
@@ -299,6 +311,11 @@ function KarmicDebtCard({ debt }: { debt: number }) {
         </CardTitle>
       </CardHeader>
       <CardContent>
+        {positions && positions.length > 0 && (
+          <p className="mb-3 text-xs font-medium text-rose-200/80">
+            Xuất hiện ở: {positions.join(' · ')}
+          </p>
+        )}
         <p className="text-sm leading-relaxed text-foreground/80">{m.theme}</p>
         <p className="mt-3 text-sm leading-relaxed text-foreground/85">
           <span className="font-semibold text-rose-200/90">Hướng trưởng thành: </span>
@@ -306,6 +323,37 @@ function KarmicDebtCard({ debt }: { debt: number }) {
         </p>
       </CardContent>
     </Card>
+  );
+}
+
+// Render TẤT CẢ nợ nghiệp engine trả về (trước đây chỉ hiện 1). Gom theo con số vì
+// cùng một số có thể xuất hiện ở nhiều vị trí lõi. Fallback `karmic_debt` (số lẻ) cho
+// khoảng thời gian deploy lệch (backend cũ chưa trả `karmic_debts`).
+function KarmicDebtSection({
+  debts,
+  fallback,
+}: {
+  debts?: { position: string; number: number }[];
+  fallback?: number;
+}) {
+  const byNumber = new Map<number, string[]>();
+  if (debts && debts.length > 0) {
+    for (const d of debts) {
+      const arr = byNumber.get(d.number) ?? [];
+      const label = KARMIC_POSITION_LABEL[d.position];
+      if (label) arr.push(label);
+      byNumber.set(d.number, arr);
+    }
+  } else if (fallback) {
+    byNumber.set(fallback, []);
+  }
+  if (byNumber.size === 0) return null;
+  return (
+    <div className="space-y-3">
+      {Array.from(byNumber.entries()).map(([num, positions]) => (
+        <KarmicDebtCard key={num} debt={num} positions={positions} />
+      ))}
+    </div>
   );
 }
 
