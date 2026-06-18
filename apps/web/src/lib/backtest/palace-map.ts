@@ -135,3 +135,75 @@ export const CATEGORY_LABEL: Record<LifeCategory, string> = {
   study: 'Học hành / thi cử',
   childbirth: 'Sinh con',
 };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CALIBRATION PRE-REGISTRATION — constants the anonymous accuracy corpus is
+// stamped with. These lock the rules IN ADVANCE so the (future) public ledger
+// can never be accused of p-hacking. They must never be tuned to data.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Ruleset version — a manual cohort stamp written onto every persisted
+ * calibration row. BUMP THIS whenever the scoring rules change (CATEGORY_PALACES,
+ * LOSS_PALACE, the grade thresholds in scoring.ts, the SignalCode set, or the
+ * control mapping below). The public accuracy ledger aggregates only within a
+ * single ruleset_version, so a rule change starts a FRESH cohort instead of
+ * silently mixing verdicts computed under different rules into one number.
+ */
+export const RULESET_VERSION = 'bc-ruleset-1';
+
+/**
+ * Pre-registered headline hypotheses for the (future) public accuracy ledger.
+ * Each entry is a category whose PRIMARY governing palace is fixed here in
+ * advance — the only comparisons the ledger may ever headline. This collapses the
+ * 12-palace × 4-Tứ-Hóa (~384-cell) p-hacking surface to this locked list.
+ *
+ * `independent: false` marks a cell whose primary palace is SHARED with another
+ * cell (career & study both → Quan Lộc). Such cells are NOT statistically
+ * independent; the ledger must treat them as a correlated family (and the
+ * multiple-comparison correction must not count them as separate evidence).
+ * `loss` is intentionally excluded — its palace varies by what was lost, so it is
+ * not a single fixed hypothesis.
+ */
+export const LEDGER_CELLS: ReadonlyArray<{
+  category: Exclude<LifeCategory, 'loss'>;
+  palace: PalaceName;
+  independent: boolean;
+}> = [
+  { category: 'career', palace: 'Quan Lộc', independent: true },
+  { category: 'wealth', palace: 'Tài Bạch', independent: true },
+  { category: 'relationship', palace: 'Phu Thê', independent: true },
+  { category: 'health', palace: 'Tật Ách', independent: true },
+  { category: 'relocation', palace: 'Thiên Di', independent: true },
+  { category: 'childbirth', palace: 'Tử Tức', independent: true },
+  { category: 'study', palace: 'Quan Lộc', independent: false }, // shares Quan Lộc with career
+];
+
+/**
+ * Fixed negative-control mapping: each real category → a DIFFERENT life-domain
+ * whose primary governing palace is provably different. Scoring the same chart
+ * and year against the control category estimates the chance baseline ("some
+ * palace lights up in most years"), which is the honest aggregate denominator —
+ * NOT the per-chart analytic base rate. Fixed (not random) so the control is
+ * reproducible and unit-testable; every pair below lands on a different palace
+ * (asserted in calibration.test.ts).
+ */
+const CONTROL_OF: Record<Exclude<LifeCategory, 'loss'>, Exclude<LifeCategory, 'loss'>> = {
+  career: 'health',
+  wealth: 'relationship',
+  relationship: 'wealth',
+  health: 'career',
+  relocation: 'childbirth',
+  childbirth: 'relocation',
+  study: 'wealth',
+};
+
+/**
+ * The negative-control category for an event. For `loss` we return `career`
+ * (Quan Lộc is never a loss palace, so it is always a different palace than the
+ * real one regardless of lossTarget).
+ */
+export function controlCategory(real: LifeCategory): Exclude<LifeCategory, 'loss'> {
+  if (real === 'loss') return 'career';
+  return CONTROL_OF[real];
+}

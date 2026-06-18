@@ -11,7 +11,9 @@ import {
 } from '@/lib/backtest/backtest-core';
 import { scoreEvent, palaceBaseRate, type EventScore, type PalaceBaseRate } from '@/lib/backtest/scoring';
 import { forecastTimeline, type ForecastYear } from '@/lib/backtest/forecast';
-import { CATEGORY_LABEL } from '@/lib/backtest/palace-map';
+import { CATEGORY_LABEL, controlCategory } from '@/lib/backtest/palace-map';
+import { buildCalibrationTuple, type CalibrationTuple } from '@/lib/backtest/calibration';
+import { captureCalibration, isCaptureOptedOut, setCaptureOptedOut } from '@/lib/bang-chung/capture-client';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { readSavedProfile, describeProfile } from '@/lib/saved-profile';
 import { track } from '@/lib/analytics';
@@ -73,7 +75,19 @@ export function BangChungTool() {
   const [error, setError] = React.useState<string | null>(null);
   const [results, setResults] = React.useState<ScoredEvent[] | null>(null);
   const [savedNote, setSavedNote] = React.useState<string | null>(null);
+  const [optOut, setOptOut] = React.useState(false);
   const tracked = React.useRef(false);
+
+  // Read the anonymous-contribution opt-out after mount (avoids SSR hydration mismatch).
+  React.useEffect(() => {
+    setOptOut(isCaptureOptedOut());
+  }, []);
+  const toggleOptOut = () =>
+    setOptOut((v) => {
+      const next = !v;
+      setCaptureOptedOut(next);
+      return next;
+    });
 
   // Compose with the shared birth profile (saved by other tools / the front-door
   // chart flow) — auto-fill so a user who already cast their chart doesn't re-type.
@@ -133,6 +147,49 @@ export function BangChungTool() {
         return { event: ev, score, baseRate };
       });
       setResults(scored);
+      // Anonymous calibration capture (fire-and-forget): each scored event + its
+      // negative-control twin (same chart/era vs a deliberately-wrong category).
+      // Only coarse buckets + the verdict leave the browser — never the birth
+      // data or the raw year (see calibration.ts). The control is computed from
+      // the in-memory chart here; it can never be reconstructed later.
+      try {
+        const birthYear = Number(date.slice(0, 4));
+        const tuples: CalibrationTuple[] = [];
+        for (let i = 0; i < signals.length; i++) {
+          const sig = signals[i]!;
+          const ev = events[i]!;
+          const real = scored[i]!;
+          const realTuple = buildCalibrationTuple({
+            score: real.score,
+            realCategory: ev.category,
+            lossTarget: ev.lossTarget,
+            isControl: false,
+            birthYear,
+            eventYear: ev.year,
+            captureYear: nowYear,
+            baseRateHits: real.baseRate?.hits ?? 0,
+          });
+          if (realTuple) tuples.push(realTuple);
+
+          const ctrlScore = scoreEvent(sig, controlCategory(ev.category));
+          const ctrlHits =
+            chart && ctrlScore.governingPalace ? palaceBaseRate(chart, ctrlScore.governingPalace).hits : 0;
+          const ctrlTuple = buildCalibrationTuple({
+            score: ctrlScore,
+            realCategory: ev.category,
+            lossTarget: ev.lossTarget,
+            isControl: true,
+            birthYear,
+            eventYear: ev.year,
+            captureYear: nowYear,
+            baseRateHits: ctrlHits,
+          });
+          if (ctrlTuple) tuples.push(ctrlTuple);
+        }
+        captureCalibration(tuples);
+      } catch {
+        /* capture must never affect the user-facing result */
+      }
       if (!tracked.current) {
         tracked.current = true;
         track('tool_used', { tool: 'bang-chung', events: events.length });
@@ -257,6 +314,20 @@ export function BangChungTool() {
             </p>
           )}
           {error && <p className="text-sm text-destructive">{error}</p>}
+
+          <p className="text-xs leading-relaxed text-muted-foreground">
+            Kết quả được lưu <strong>ẩn danh</strong> để đo độ chính xác công khai —{' '}
+            <strong>không gồm</strong> ngày/giờ sinh, <strong>không gồm</strong> năm sự kiện, không có thông tin
+            nhận dạng.{' '}
+            <button
+              type="button"
+              onClick={toggleOptOut}
+              className="underline underline-offset-2 hover:text-foreground"
+            >
+              {optOut ? 'Bật lại đóng góp ẩn danh' : 'Không đóng góp dữ liệu ẩn danh'}
+            </button>
+            {optOut && <span className="text-jade-700"> · đã tắt</span>}
+          </p>
         </CardContent>
       </Card>
 
