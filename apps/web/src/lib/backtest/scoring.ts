@@ -27,6 +27,20 @@ import {
 
 export type MatchGrade = 'STRONG' | 'PARTIAL' | 'NONE' | 'UNSCORABLE';
 
+/**
+ * Closed vocabulary of signal TYPES that can fire when scoring an event. Unlike
+ * `firedSignals` (human prose, for the UI), these stable codes are what the
+ * anonymous calibration corpus stores — so per-signal accuracy can be measured
+ * later WITHOUT keeping any chart geometry. Adding/removing a code is a ruleset
+ * change → bump RULESET_VERSION.
+ */
+export type SignalCode =
+  | 'PRIMARY_TOA_THU' // a year Tứ Hóa sits directly in the primary palace (toạ thủ)
+  | 'DAIVAN_GOVERNS' // đại vận governs the primary palace (or its trine)
+  | 'TRINE_OPP_BRUSH' // a year Tứ Hóa hits the trine/opposition of the primary
+  | 'SECONDARY_TOA_THU' // a year Tứ Hóa sits in a secondary governing palace
+  | 'POLARITY_DOWNGRADE'; // valence contradicted the category → grade downgraded
+
 export interface EventScore {
   year: number;
   category: LifeCategory;
@@ -37,6 +51,8 @@ export interface EventScore {
   landingsOnGoverning: MutagenLanding[];
   /** Auditable list of exactly which signals fired (shown to the user). */
   firedSignals: string[];
+  /** Stable, closed-vocabulary signal types (for anonymous calibration storage). */
+  signalCodes: SignalCode[];
   /** Dominant polarity of the activation on the governing palace. */
   valence: 'positive' | 'negative' | 'mixed' | 'none';
   /** True when an inherently-valenced category (loss/childbirth) is contradicted. */
@@ -66,6 +82,7 @@ export function scoreEvent(
       grade: 'UNSCORABLE',
       landingsOnGoverning: [],
       firedSignals: [],
+      signalCodes: [],
       valence: 'none',
       polarityMismatch: false,
       reason:
@@ -93,15 +110,22 @@ export function scoreEvent(
     (signals.daiVanPalace != null && trine.includes(signals.daiVanPalace as never));
 
   const fired: string[] = [];
+  // Closed-vocabulary signal codes (anonymous calibration) computed alongside the
+  // human-readable `fired` list, from the SAME conditions — single source of truth.
+  const signalCodes: SignalCode[] = [];
   for (const m of landingsOnGoverning) fired.push(`${hoaLabel(m)} toạ thủ cung ${primary}`);
+  if (landingsOnGoverning.length > 0) signalCodes.push('PRIMARY_TOA_THU');
   for (const m of landingsOnTrineOpp) fired.push(`${hoaLabel(m)} hội/xung chiếu cung ${primary} (từ ${m.palace})`);
+  if (landingsOnTrineOpp.length > 0) signalCodes.push('TRINE_OPP_BRUSH');
   for (const m of landingsOnSecondary) fired.push(`${hoaLabel(m)} toạ thủ cung phụ ${m.palace}`);
+  if (landingsOnSecondary.length > 0) signalCodes.push('SECONDARY_TOA_THU');
   if (daiVanOnPrimary) {
     fired.push(
       signals.daiVanPalace === primary
         ? `Đại vận hiện quản cung ${primary}`
         : `Đại vận (cung ${signals.daiVanPalace}) hội chiếu cung ${primary}`,
     );
+    signalCodes.push('DAIVAN_GOVERNS');
   }
 
   // Valence over the DIRECT activations on the governing palace (toạ thủ first).
@@ -142,6 +166,7 @@ export function scoreEvent(
     if (valence !== expected) {
       polarityMismatch = true;
       grade = grade === 'STRONG' ? 'PARTIAL' : 'NONE';
+      signalCodes.push('POLARITY_DOWNGRADE');
     }
   }
 
@@ -154,6 +179,7 @@ export function scoreEvent(
     grade,
     landingsOnGoverning,
     firedSignals: fired,
+    signalCodes,
     valence,
     polarityMismatch,
     reason,
