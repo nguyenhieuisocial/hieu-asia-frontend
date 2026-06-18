@@ -84,6 +84,11 @@ export function SentryIssueDrawer({
   const runAction = React.useCallback(
     async (kind: 'resolve' | 'ignore') => {
       if (!issueId || pending) return;
+      const confirmMsg =
+        kind === 'resolve'
+          ? 'Đánh dấu lỗi này đã xử lý trên Sentry?'
+          : 'Bỏ qua lỗi này trên Sentry?';
+      if (!window.confirm(confirmMsg)) return;
       setPending(kind);
       const res =
         kind === 'resolve'

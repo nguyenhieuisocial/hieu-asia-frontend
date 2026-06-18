@@ -31,6 +31,7 @@ function SendTestEmailButton() {
   const [pending, setPending] = React.useState(false);
   const click = React.useCallback(async () => {
     if (pending) return;
+    if (!window.confirm('Gửi một email thử tới địa chỉ admin cố định?')) return;
     setPending(true);
     const res = await postInfraResendTest();
     setPending(false);
