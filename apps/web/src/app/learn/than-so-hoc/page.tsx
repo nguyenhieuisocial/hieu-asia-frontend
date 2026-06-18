@@ -7,6 +7,8 @@ import {
 } from '@hieu-asia/ui';
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   title: 'Thần Số Học Pythagoras — Học huyền học',
@@ -14,6 +16,42 @@ export const metadata: Metadata = {
     'Thần Số Học (Numerology) theo trường phái Pythagoras: rút số chủ đạo từ ngày sinh và tên, mỗi số mang một năng lượng riêng.',
   alternates: { canonical: 'https://hieu.asia/learn/than-so-hoc' },
 };
+
+// FAQ trích nguyên văn từ phần "Giải thích chi tiết" (Accordion) đang hiển thị →
+// chữ schema === chữ hiển thị (chống cloaking), KHÔNG thêm câu hỏi mới.
+const FAQS = [
+  {
+    q: 'Pythagoras là ai?',
+    a: 'Pythagoras (~570 TCN) là nhà toán học, triết gia Hy Lạp — người đặt nền móng cho Thần Số Học phương Tây. Ông tin số không chỉ đếm vật, mà còn mang “linh hồn” riêng phản ánh quy luật vũ trụ.',
+  },
+  {
+    q: 'Cách tính số chủ đạo?',
+    a: 'Cộng tất cả chữ số trong ngày sinh đầy đủ. Ví dụ 15/08/1990 = 1+5+0+8+1+9+9+0 = 33 → 3+3 = 6. Vậy số chủ đạo là 6 (riêng 11, 22, 33 giữ nguyên — gọi là số bậc thầy).',
+  },
+  {
+    q: 'Số từ tên thì sao?',
+    a: 'Mỗi chữ cái được gán một số 1–9 theo bảng Pythagoras. Cộng các số ứng với tên đầy đủ rồi rút gọn — ra số biểu hiện (expression number) và số linh hồn (soul urge number).',
+  },
+  {
+    q: 'Dùng để làm gì?',
+    a: 'Soi tính cách bẩm sinh, sứ mệnh đời, vùng dễ vấp. Là công cụ tự nhận thức nhanh — chỉ cần ngày sinh + tên là có bản phác họa.',
+  },
+];
+
+const JSONLD = [
+  article({
+    headline: 'Thần Số Học Pythagoras — nền tảng cho người mới',
+    description:
+      'Thần Số Học (Numerology) theo trường phái Pythagoras: rút số chủ đạo từ ngày sinh và tên, mỗi số mang một năng lượng riêng.',
+    url: '/learn/than-so-hoc',
+  }),
+  breadcrumb([
+    { name: 'Trang chủ', url: '/' },
+    { name: 'Học huyền học', url: '/learn' },
+    { name: 'Thần Số Học', url: '/learn/than-so-hoc' },
+  ]),
+  faqPage(FAQS),
+];
 
 interface NumberCard {
   num: number;
@@ -129,6 +167,8 @@ export default function LearnThanSoHocPage() {
           ),
         },
       ]}
-    />
+    >
+      <JsonLd data={JSONLD} />
+    </LearnArticle>
   );
 }

@@ -48,6 +48,8 @@ import { TrustStrip, FEATURES_PILLARS } from '@/components/marketing/TrustStrip'
 // Wave 60.56 P3.3 — consolidated hero (kills purple-radial paste L366).
 import { MarketingHero } from '@/components/marketing/MarketingHero';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { faqPage } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   title: 'Tính năng',
@@ -479,13 +481,37 @@ const FEATURES_JSON_LD = {
   ],
 };
 
+// FAQPage JSON-LD — plain-string mirror of the FEATURES_FAQ accordion shown on
+// the page (chữ schema === chữ hiển thị, chống cloaking). Answers are the JSX
+// FEATURES_FAQ rendered as clean strings; the /pricing <Link> becomes its
+// visible text "/pricing".
+const FEATURES_FAQ_SCHEMA = [
+  {
+    q: 'Tôi cần thông tin gì để bắt đầu?',
+    a: 'Ngày sinh, giới tính, và nếu có — giờ sinh. Giờ sinh càng chính xác, phân tích Tử Vi và Bát Tự càng chi tiết. Không có giờ sinh, bạn vẫn dùng được MBTI, Big Five, Thần Số Học và Xem Tướng.',
+  },
+  {
+    q: 'Tôi có thể cập nhật lá số sau không?',
+    a: 'Có. Bạn có thể chỉnh sửa ngày, giờ, giới tính trong trang Tài khoản. Lá số mới được tính lại tức thì.',
+  },
+  {
+    q: 'Mentor AI dùng mô hình nào?',
+    a: 'Mentor đối thoại dùng Claude — model AI hiện đại với cửa sổ ngữ cảnh lớn. Mentor không phải chatbot scripted — nó hiểu lá số của bạn và đặt câu hỏi có ngữ cảnh.',
+  },
+  {
+    q: 'PDF có thể xuất nhiều lần?',
+    a: 'Có. Sau khi mở khoá báo cáo, bạn xuất PDF bao nhiêu lần tuỳ ý. Nếu cập nhật lá số, PDF mới sẽ phản ánh thay đổi.',
+  },
+  {
+    q: 'Tính năng nào miễn phí, tính năng nào trả phí?',
+    a: 'Khảo sát đầu vào và bản rút gọn Tử Vi / Bát Tự / MBTI / Big Five / Thần Số Học luôn miễn phí. Xem Tướng, PDF Cẩm Nang và Tử Vi hôm nay (badge Premium) yêu cầu một trong các gói trả phí. Xem chi tiết tại /pricing.',
+  },
+];
+
 export default function FeaturesPage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(FEATURES_JSON_LD) }}
-      />
+      <JsonLd data={[FEATURES_JSON_LD, faqPage(FEATURES_FAQ_SCHEMA)]} />
       <SiteNav />
       <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
         {/* Hero — Wave 60.56 P3.3: consolidated MarketingHero (R1 finding:
