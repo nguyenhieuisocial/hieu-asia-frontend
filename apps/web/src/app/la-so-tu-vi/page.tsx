@@ -158,6 +158,7 @@ export default function LaSoTuViPage() {
 
           <RelatedTools
             links={[
+              { href: '/bang-chung', label: 'Bằng Chứng — kiểm chứng lá số này với quá khứ' },
               { href: '/tu-vi', label: 'Cẩm nang Tử Vi' },
               { href: '/ban-do-sao', label: 'Bản đồ sao (chiêm tinh)' },
               { href: '/bat-tu', label: 'Bát Tự' },
