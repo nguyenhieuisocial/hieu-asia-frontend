@@ -54,7 +54,7 @@ export default async function UnlockPage({
               Vui lòng chọn gói tại trang định giá để tiếp tục.
             </p>
             <Link
-              href={`/pricing?session=${encodeURIComponent(session_id)}`}
+              href="/pricing"
               className="mt-6 inline-block rounded-md border border-gold/40 px-4 py-2 text-sm text-gold transition hover:bg-gold/10"
               style={{ width: 'max-content' }}
             >
@@ -76,7 +76,7 @@ export default async function UnlockPage({
               <Link href="/" className="hover:text-gold">Trang chủ</Link>
               <span className="mx-1.5">/</span>
               <Link
-                href={`/pricing?session=${encodeURIComponent(session_id)}`}
+                href="/pricing"
                 className="hover:text-gold"
               >
                 Pricing
@@ -85,7 +85,7 @@ export default async function UnlockPage({
               <span className="text-muted-foreground">Thanh toán</span>
             </nav>
             <Link
-              href={`/pricing?session=${encodeURIComponent(session_id)}`}
+              href="/pricing"
               className="text-sm text-muted-foreground transition hover:text-gold"
             >
               ← Đổi gói

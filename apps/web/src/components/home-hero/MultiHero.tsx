@@ -73,7 +73,7 @@ export function MultiHero(): React.JSX.Element {
       <div className="mh-wrap">
         <div className="mh-copy">
           <p className="mh-eyebrow"><span className="mh-livedot" aria-hidden="true" />NĂM LĂNG KÍNH · AI HỢP NHẤT THÀNH MỘT</p>
-          <h1 className="mh-h1">
+          <h2 className="mh-h1">
             <span className="mh-line mh-l1">Hiểu mình.</span>
             <span className="mh-line mh-l2">Quyết định{' '}
               <span className="mh-rot-slot">
@@ -83,7 +83,7 @@ export function MultiHero(): React.JSX.Element {
                 <span key={wordIdx} className="mh-rot mh-rot-in">{WORDS[wordIdx] ?? 'mình.'}</span>
               </span>
             </span>
-          </h1>
+          </h2>
           <p className="mh-deck">Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng — năm lăng kính cho bức tranh sâu nhất, cùng cả bộ công cụ cổ học &amp; hiện đại. AI hợp nhất để bạn tự quyết.</p>
         </div>
 
