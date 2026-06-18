@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
 import { calculateBazi, type BaziChart, type BaziPillar, type Element, ELEMENTS } from '@/lib/bazi';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { ProofDisclosure } from '@/components/la-so-bat-tu/ProofDisclosure';
 
 /**
  * Công cụ Bát Tự (Tứ Trụ) bấm-thử miễn phí. Engine `lib/bazi.ts` chạy NGAY trong
@@ -519,6 +520,12 @@ export function BatTuChecker({
               </div>
             )}
 
+            {/* Khoảnh khắc NIỀM TIN: trước khi mời mua, cho khách TỰ kiểm chứng
+                mỗi kết luận ở trên được TÍNH ra sao (tiết khí → can chi, bảng cố
+                định, luật âm-dương) — minh bạch THẬT, khác hẳn "chuyên gia AI"
+                giả của đối thủ. Dữ kiện kéo thẳng từ lá số, không bịa. */}
+            <ProofDisclosure chart={chart} />
+
             <p className="text-xs leading-relaxed text-muted-foreground">
               Lá số tính bằng engine Tứ Trụ chuẩn (theo tiết khí, vị trí Mặt Trời) —{' '}
               <strong>con số là thật, kiểm chứng được</strong>. Đây là bản tra cứu miễn phí; phần luận giải sâu
@@ -527,10 +534,12 @@ export function BatTuChecker({
 
             <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-5">
               <p className="text-center font-heading text-lg text-foreground">
-                Bản đọc Bát Tự đầy đủ — viết riêng cho lá số này
+                Bản đọc đầy đủ — giải sâu CHÍNH lá số này
               </p>
               <p className="mx-auto mt-1 max-w-xl text-center text-sm text-muted-foreground">
-                Lá số trên là <strong>dữ kiện</strong>. Bản đọc trả phí luận sâu — riêng cho lá số của bạn:
+                Bạn vừa thấy <strong>con số được tính ra sao</strong>. Bản đọc trả phí lấy đúng những dữ kiện
+                ấy — Nhật Chủ {chart.dayMaster.can}, hành {chart.strongest} vượng
+                {chart.missing.length ? `, thiếu ${chart.missing.join('/')}` : ''} — luận sâu riêng cho bạn:
               </p>
               <ul className="mx-auto mt-3 max-w-xl space-y-1.5 text-left text-sm text-foreground/85">
                 {teasers.map((tl) => (
@@ -554,11 +563,11 @@ export function BatTuChecker({
                       chuẩn (hieu:chart:profile:v1) trước khi điều hướng → bước
                       "Thông tin sinh" tự điền sẵn, không phải nhập lại từ đầu. */}
                   <Link href="/onboarding/topic?intent=ngu-hanh">
-                    Đọc bản đầy đủ cho lá số này →
+                    Đọc sâu CHÍNH lá số này →
                   </Link>
                 </Button>
                 <p className="mt-2 text-xs text-muted-foreground">
-                  Bản đầy đủ dùng đúng lá số trên — không phải nhập lại ngày sinh.
+                  Mang thẳng lá số vừa tính sang — <strong>không phải nhập lại</strong> ngày giờ sinh.
                 </p>
               </div>
             </div>
