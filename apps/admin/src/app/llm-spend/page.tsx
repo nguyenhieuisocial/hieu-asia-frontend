@@ -254,6 +254,7 @@ export default function LlmSpendPage() {
       <Tabs defaultValue="vendor">
         <TabsList>
           <TabsTrigger value="vendor">Vendor breakdown</TabsTrigger>
+          <TabsTrigger value="cost">Chi phí theo ngày</TabsTrigger>
           <TabsTrigger value="users">Top users</TabsTrigger>
           <TabsTrigger value="report-costs">Chi phí / báo cáo</TabsTrigger>
           <TabsTrigger value="traces">Recent traces</TabsTrigger>

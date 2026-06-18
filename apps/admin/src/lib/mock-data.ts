@@ -296,13 +296,6 @@ export const MOCK_RAG_CHUNKS: RagChunk[] = [
   { id: 'rag_007', source_id: 'iching_commentary', source_title: 'I Ching with Commentary', discipline: 'general', license_status: 'public_domain', chunk_count: 96, ingested_at: isoDaysAgo(7) },
 ];
 
-export const MOCK_QDRANT_STATS = {
-  collection: 'hieu_rag',
-  vectors_count: MOCK_RAG_CHUNKS.reduce((acc, c) => acc + c.chunk_count, 0),
-  dim: 1536,
-  status: 'green' as const,
-};
-
 // ---------- Payments / coupons ----------
 
 export interface AdminTransaction {

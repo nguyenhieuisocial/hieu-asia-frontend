@@ -100,9 +100,9 @@ export default function AdminOverviewPage() {
     staleTime: 60_000,
   });
   const queue = useQueueDepth();
-  // New signups (last 30d) — powers the "Khách mới hôm nay" KPI. The backend
-  // endpoint /admin/signups/by_day ships in a parallel wave; getSignupsByDay
-  // returns null until then, so the card degrades to "—" without breaking.
+  // New signups (last 30d) — powers the "Khách mới hôm nay" KPI. There is no
+  // dedicated /admin/signups/by_day endpoint, so getSignupsByDay returns null
+  // and the card degrades to "—" without breaking (no fake number).
   const signups = useQuery({
     queryKey: ['admin', 'signups'],
     queryFn: () => getSignupsByDay(30),
@@ -264,7 +264,7 @@ export default function AdminOverviewPage() {
         />
         <KpiCard
           label="Khách mới hôm nay"
-          // Null until /admin/signups/by_day deploys → "—", no fake number.
+          // No /admin/signups/by_day endpoint → getSignupsByDay null → "—", no fake number.
           value={signupsData ? signupsData.today.toLocaleString('vi-VN') : '—'}
           icon={<UserPlus className="h-4 w-4" />}
           accent="jade"

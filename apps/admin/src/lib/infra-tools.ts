@@ -10,11 +10,9 @@
  *   - Icon         → lucide glyph
  *   - external     → "mở trang gốc ↗" deep-link to the vendor dashboard
  *   - built        → true once both a worker `case` + an `/infra/<slug>/page.tsx`
- *                    exist. `false` tools still show a card but their page says
- *                    "đang dựng".
- *
- * FOLLOW-UP AGENTS: flip `built: true` (and add the page + worker case) when you
- * ship a tool. Nothing else in the hub needs to change.
+ *                    exist. All current tools are built; the flag still guards an
+ *                    "đang dựng" badge on the hub grid for any future not-yet-
+ *                    built tool added with `built: false`.
  */
 
 import type { LucideIcon } from 'lucide-react';
