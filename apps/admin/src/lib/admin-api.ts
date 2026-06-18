@@ -1233,12 +1233,90 @@ export interface InfraGithubSummary {
   cached?: boolean;
 }
 
+/**
+ * Infra-detail wave — Dependabot security alerts carried top-level on the
+ * GitHub success envelope. `available:false` → the GITHUB_TOKEN lacks the
+ * `security_events` scope; the page shows an honest note instead of cards.
+ */
+export interface InfraGithubDependabot {
+  available: boolean;
+  total: number;
+  by_severity: { critical: number; high: number; medium: number; low: number };
+  items: Array<{
+    repo: string | null;
+    package: string | null;
+    ecosystem: string | null;
+    severity: string | null;
+    ghsa_id: string | null;
+    cve_id: string | null;
+    url: string | null;
+    summary: string | null;
+  }>;
+}
+
+/** Infra-detail wave — one open pull request, carried top-level. */
+export interface InfraGithubPullRequest {
+  repo: string;
+  number: number | null;
+  title: string | null;
+  author: string | null;
+  draft: boolean;
+  head: string | null;
+  base: string | null;
+  created_at: string | null;
+  url: string | null;
+  checks: 'success' | 'failure' | 'pending' | 'none';
+}
+
+/** Infra-detail wave — one recent commit on the default branch, top-level. */
+export interface InfraGithubCommit {
+  repo: string;
+  sha: string | null;
+  message: string | null;
+  author: string | null;
+  date: string | null;
+  url: string | null;
+}
+
+/**
+ * GitHub success envelope also carries top-level dependabot / pull_requests /
+ * recent_commits extras (infra-detail wave). Mirror the AI Gateway pattern:
+ * intersect the success branch with the optional extras without changing the
+ * shared `InfraEnvelope`.
+ */
+export type InfraGithubEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraGithubItem[];
+      summary?: InfraGithubSummary;
+      dependabot?: InfraGithubDependabot;
+      pull_requests?: InfraGithubPullRequest[];
+      recent_commits?: InfraGithubCommit[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
 export interface InfraTelegramItem {
   bot: string;
   username: string | null;
   status: string | null;
   webhook_url: string | null;
   pending_updates: number | null;
+  // Infra-detail wave — per-bot getMe capabilities + webhook config + commands.
+  // All optional/null → the expanded detail panel renders honest fallbacks.
+  id?: number | null;
+  can_join_groups?: boolean | null;
+  can_read_all_group_messages?: boolean | null;
+  supports_inline_queries?: boolean | null;
+  /** EPOCH SECONDS — convert to ms before formatting. */
+  last_error_date?: number | null;
+  last_error_message?: string | null;
+  ip_address?: string | null;
+  max_connections?: number | null;
+  allowed_updates?: string[] | null;
+  has_custom_certificate?: boolean | null;
+  commands?: Array<{ command: string; description: string }>;
 }
 
 export interface InfraAiGatewayItem {
@@ -1261,6 +1339,9 @@ export interface InfraAiGatewaySummary {
   // Optional → render the balance card only when present.
   balance_usd?: number | null;
   low_balance?: boolean;
+  // Infra-detail wave — lifetime spend (all-time). Optional → render the
+  // "Tổng đã tiêu từ trước đến nay" card only when present.
+  total_spend_usd?: number;
 }
 
 /** Infra-hub v2 — 30d cost/request/error daily series for the AI Gateway chart. */
@@ -1285,6 +1366,15 @@ export interface InfraUptimeItem {
   last_checked_at: string | null;
   response_time_ms: number | null;
   paused: boolean;
+  // Infra-detail wave — extra monitor config surfaced from the BetterStack
+  // monitors LIST endpoint. All optional/null → table renders "—".
+  monitor_type?: string | null;
+  /** Check interval, seconds. */
+  check_frequency?: number | null;
+  /** Request timeout, seconds. */
+  request_timeout?: number | null;
+  /** Days until TLS cert expiry (HTTP/TLS monitors only; null otherwise). */
+  ssl_expiration?: number | null;
 }
 
 /** Monitor status counts. */
@@ -1410,10 +1500,10 @@ export function getInfraLangfuse(): Promise<InfraLangfuseEnvelope> {
   ) as Promise<InfraLangfuseEnvelope>;
 }
 
-export function getInfraGithub(): Promise<
-  InfraEnvelope<InfraGithubItem, InfraGithubSummary>
-> {
-  return fetchInfra<InfraGithubItem, InfraGithubSummary>('github');
+export function getInfraGithub(): Promise<InfraGithubEnvelope> {
+  return fetchInfra<InfraGithubItem, InfraGithubSummary>(
+    'github',
+  ) as Promise<InfraGithubEnvelope>;
 }
 
 export function getInfraTelegram(): Promise<InfraEnvelope<InfraTelegramItem>> {
@@ -1582,6 +1672,65 @@ export function getInfraSentryDetail(id: string): Promise<InfraSentryDetailEnvel
 export function getInfraVercelDetail(uid: string): Promise<InfraVercelDetailEnvelope> {
   return fetchInfraDetail<InfraVercelDetailEnvelope>(
     `/vercel/${encodeURIComponent(uid)}`,
+  );
+}
+
+/** Uptime monitor detail (GET /admin/infra/uptime/:monitorId). */
+export interface InfraUptimeDetailMonitor {
+  id: string;
+  name: string;
+  url: string | null;
+  status: string;
+  monitor_type: string | null;
+  check_frequency: number | null;
+  request_timeout: number | null;
+  request_method: string | null;
+  ssl_expiration: number | null;
+  paused: boolean;
+  last_checked_at: string | null;
+  created_at: string | null;
+}
+
+/** One ≤60-point response-time sparkline sample. */
+export interface InfraUptimeResponseTime {
+  at: string | null;
+  response_time_ms: number | null;
+}
+
+/** SLA availability over the monitor's plan window (null when not on plan). */
+export interface InfraUptimeAvailability {
+  availability_pct: number | null;
+  total_downtime_sec: number | null;
+}
+
+/** One ≤25 incident for this monitor (detail view). */
+export interface InfraUptimeDetailIncident {
+  id: string;
+  name: string;
+  cause: string | null;
+  started_at: string | null;
+  acknowledged_at: string | null;
+  resolved_at: string | null;
+  status: string;
+  duration_sec: number | null;
+}
+
+export type InfraUptimeDetailEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraUptimeItem[];
+      monitor: InfraUptimeDetailMonitor;
+      response_times: InfraUptimeResponseTime[];
+      availability: InfraUptimeAvailability | null;
+      incidents: InfraUptimeDetailIncident[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export function getInfraUptimeDetail(id: string): Promise<InfraUptimeDetailEnvelope> {
+  return fetchInfraDetail<InfraUptimeDetailEnvelope>(
+    `/uptime/${encodeURIComponent(id)}`,
   );
 }
 
