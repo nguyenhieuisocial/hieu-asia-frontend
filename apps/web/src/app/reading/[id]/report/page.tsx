@@ -156,6 +156,11 @@ function ReportContent() {
   const session = query.data;
   const state = session?.state;
   const isLocked = session?.locked === true;
+  // reading-get returns inputs:{ birth_data:{...} } (EF: `inputs: { birth_data:
+  // s.birth_data }`), so birth fields live under inputs.birth_data — NOT top-level
+  // inputs. Reading them top-level yielded undefined → the Tử Vi chart rendered empty
+  // (the "đúng là TÔI" moment) and the header showed the "Bạn" fallback on every report.
+  const bd = (session?.inputs?.birth_data ?? {}) as Record<string, unknown>;
 
   // Narrow report to full markdown (paid) or preview (locked).
   const fullMarkdown = isFullReport(session?.report) ? session.report.markdown : '';
@@ -248,10 +253,10 @@ function ReportContent() {
         <ResultDisclaimer />
 
         <ReportContextSummary
-          displayName={(session?.inputs?.display_name as string) ?? 'Bạn'}
+          displayName={(bd.display_name as string) ?? 'Bạn'}
           role={(session?.inputs?.role as string) ?? 'Người dùng'}
           primaryConcern={
-            (session?.inputs?.primary_concern as string) ??
+            (bd.primary_concern as string) ??
             'Báo cáo cá nhân hóa'
           }
           generatedAt={new Date().toLocaleDateString('vi-VN')}
@@ -259,9 +264,9 @@ function ReportContent() {
 
         {/* Lá số Tử Vi cơ bản hiển thị cả khi locked (dữ liệu deterministic). */}
         <TuViChartSection
-          birthDate={(session?.inputs?.birth_date as string | null | undefined) ?? null}
-          birthTime={(session?.inputs?.birth_time as string | null | undefined) ?? null}
-          gender={(session?.inputs?.gender as string | null | undefined) ?? null}
+          birthDate={(bd.birth_date as string | null | undefined) ?? null}
+          birthTime={(bd.birth_time as string | null | undefined) ?? null}
+          gender={(bd.gender as string | null | undefined) ?? null}
         />
 
         {isLocked ? (
