@@ -24,6 +24,7 @@ import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
+import { ContactCustomerDialog } from '@/components/admin/ContactCustomerDialog';
 
 type FeedbackStatus = 'new' | 'triaged' | 'resolved';
 type FeedbackSurface = 'reading' | 'pricing' | 'onboarding' | 'misc';
@@ -191,24 +192,34 @@ export default function FeedbackPage() {
     {
       id: 'actions',
       header: '',
-      width: '120px',
+      width: '210px',
       // POST /admin/feedback/:id/resolve (Wave 60.82). Reversible + low-risk.
       // Already-resolved rows show a static "đã xử lý" hint instead of a button.
-      cell: (r) =>
-        r.status === 'resolved' ? (
-          <span className="text-[10px] text-muted-foreground">đã xử lý</span>
-        ) : (
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => resolveMut.mutate(r.id)}
-            disabled={resolveMut.isPending}
-            aria-label={`Đánh dấu resolved feedback ${r.id}`}
-          >
-            <Check className="mr-1 h-3 w-3" />
-            Resolve
-          </Button>
-        ),
+      // "Trả lời" reuses ContactCustomerDialog (built for /sessions/customers):
+      // it pre-fills the feedback's user_email and sends a transactional email
+      // via the worker's existing Resend templates — so the founder can reply
+      // without leaving /feedback. The dialog self-disables its trigger when the
+      // row has no usable email (e.g. Telegram-only users), so that limit is
+      // handled by the component itself.
+      cell: (r) => (
+        <div className="flex items-center justify-end gap-2">
+          <ContactCustomerDialog email={r.user_email} triggerLabel="Trả lời" />
+          {r.status === 'resolved' ? (
+            <span className="text-[10px] text-muted-foreground">đã xử lý</span>
+          ) : (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => resolveMut.mutate(r.id)}
+              disabled={resolveMut.isPending}
+              aria-label={`Đánh dấu resolved feedback ${r.id}`}
+            >
+              <Check className="mr-1 h-3 w-3" />
+              Resolve
+            </Button>
+          )}
+        </div>
+      ),
     },
   ];
 
