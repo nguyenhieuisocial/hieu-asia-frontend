@@ -553,10 +553,11 @@ export function BatTuChecker({
                 Bản đọc đầy đủ — giải sâu TOÀN BỘ hồ sơ này
               </p>
               <p className="mx-auto mt-1 max-w-xl text-center text-sm text-muted-foreground">
-                Bạn vừa thấy <strong>con số được tính ra sao</strong> qua bốn hệ thống. Bản đọc trả phí lấy
-                đúng những dữ kiện ấy — neo ở lá số Bát Tự (Nhật Chủ {chart.dayMaster.can}, hành{' '}
+                Bạn vừa thấy <strong>con số được tính ra sao</strong> qua bốn hệ thống. Bản đọc trả phí
+                đào sâu lá số của bạn — neo ở Bát Tự (Nhật Chủ {chart.dayMaster.can}, hành{' '}
                 {chart.strongest} vượng
-                {chart.missing.length ? `, thiếu ${chart.missing.join('/')}` : ''}) — luận sâu riêng cho bạn:
+                {chart.missing.length ? `, thiếu ${chart.missing.join('/')}` : ''}), cùng{' '}
+                <strong>Tử Vi</strong> và <strong>thần số</strong> — luận sâu riêng cho bạn:
               </p>
               <ul className="mx-auto mt-3 max-w-xl space-y-1.5 text-left text-sm text-foreground/85">
                 {teasers.map((tl) => (
@@ -578,8 +579,12 @@ export function BatTuChecker({
                 >
                   {/* Mang THẲNG lá số vừa tính vào phễu trả phí: ghi kho lá số
                       chuẩn (hieu:chart:profile:v1) trước khi điều hướng → bước
-                      "Thông tin sinh" tự điền sẵn, không phải nhập lại từ đầu. */}
-                  <Link href="/onboarding/topic?intent=ngu-hanh">
+                      "Thông tin sinh" tự điền sẵn, không phải nhập lại từ đầu.
+                      topic=self ("Định hướng bản thân — Hiểu mình") chọn-sẵn để
+                      khớp hứa "toàn bộ hồ sơ": khách xem xong chân dung tổng thể
+                      KHÔNG bị thả vào ô chọn-chủ-đề trống → nút "Tiếp tục" bật
+                      ngay (vẫn đổi chủ đề được nếu muốn). */}
+                  <Link href="/onboarding/topic?topic=self&intent=ngu-hanh">
                     Đọc sâu CHÍNH lá số này →
                   </Link>
                 </Button>
