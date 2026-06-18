@@ -75,7 +75,7 @@ export default function InfraAiGatewayPage() {
       renderTable={(items) => (
         <div className="space-y-6">
           {summary && (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {summary.balance_usd != null && (
                 <StatCard
                   label="Số dư trả trước"
@@ -86,6 +86,12 @@ export default function InfraAiGatewayPage() {
                       ? 'border-red-400/40 bg-red-500/5 hover:border-red-400/60'
                       : undefined
                   }
+                />
+              )}
+              {summary.total_spend_usd != null && (
+                <StatCard
+                  label="Tổng đã tiêu từ trước đến nay"
+                  value={fmtBalance(summary.total_spend_usd)}
                 />
               )}
               <StatCard label="Tổng request" value={fmtNum(summary.total_requests)} />

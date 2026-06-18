@@ -13,6 +13,7 @@
  * separate /response-times endpoint), so the "Phản hồi" cell shows "—".
  */
 
+import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent } from '@hieu-asia/ui';
 import {
@@ -24,6 +25,7 @@ import {
 import { getInfraTool } from '@/lib/infra-tools';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
+import { UptimeMonitorDrawer } from '@/components/admin/infra/UptimeMonitorDrawer';
 
 const tool = getInfraTool('uptime')!;
 
@@ -41,6 +43,13 @@ function fmtTime(iso: string | null): string {
   const t = Date.parse(iso);
   if (Number.isNaN(t)) return '—';
   return new Date(t).toLocaleString('vi-VN');
+}
+
+/** SSL days-until-expiry — red text when ≤14 days, "—" when not applicable. */
+function fmtSsl(days: number | null | undefined): React.ReactNode {
+  if (days == null) return '—';
+  const cls = days <= 14 ? 'text-red-600 dark:text-red-300' : '';
+  return <span className={cls}>{`${days.toLocaleString('vi-VN')} ngày`}</span>;
 }
 
 /** Map a monitor row to a status pill (paused wins over up/down). */
@@ -74,12 +83,20 @@ export default function InfraUptimePage() {
     staleTime: 30_000,
   });
 
+  const [openId, setOpenId] = React.useState<string | null>(null);
+
   const summary: InfraUptimeSummary | undefined =
     query.data?.ok ? query.data.summary : undefined;
   const incidents: InfraUptimeIncident[] =
     query.data?.ok && Array.isArray(query.data.incidents) ? query.data.incidents : [];
 
   return (
+    <>
+    <UptimeMonitorDrawer
+      monitorId={openId}
+      open={openId !== null}
+      onClose={() => setOpenId(null)}
+    />
     <InfraPanel<InfraUptimeItem>
       tool={tool}
       query={query}
@@ -113,6 +130,7 @@ export default function InfraUptimePage() {
                       <th className="px-4 py-2.5">Trạng thái</th>
                       <th className="px-4 py-2.5">URL</th>
                       <th className="px-4 py-2.5 text-right">Phản hồi</th>
+                      <th className="px-4 py-2.5 text-right">SSL</th>
                       <th className="px-4 py-2.5">Kiểm gần nhất</th>
                     </tr>
                   </thead>
@@ -122,10 +140,16 @@ export default function InfraUptimePage() {
                       return (
                         <tr
                           key={m.id}
-                          className="border-b border-border/50 last:border-0 hover:bg-gold/5"
+                          onClick={() => setOpenId(m.id)}
+                          className="cursor-pointer border-b border-border/50 last:border-0 hover:bg-gold/5"
                         >
                           <td className="px-4 py-2.5 font-medium text-foreground">
                             {m.name}
+                            {m.monitor_type && (
+                              <span className="ml-2 font-mono text-[10px] uppercase text-muted-foreground">
+                                {m.monitor_type}
+                              </span>
+                            )}
                           </td>
                           <td className="px-4 py-2.5">
                             <InfraStatusPill label={pill.label} tone={pill.tone} />
@@ -136,6 +160,7 @@ export default function InfraUptimePage() {
                                 href={m.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
                                 className="hover:text-gold hover:underline"
                               >
                                 {m.url}
@@ -146,6 +171,9 @@ export default function InfraUptimePage() {
                           </td>
                           <td className="px-4 py-2.5 text-right tabular-nums text-muted-foreground">
                             {fmtMs(m.response_time_ms)}
+                          </td>
+                          <td className="px-4 py-2.5 text-right tabular-nums">
+                            {fmtSsl(m.ssl_expiration)}
                           </td>
                           <td className="whitespace-nowrap px-4 py-2.5 text-xs text-muted-foreground">
                             {fmtTime(m.last_checked_at)}
@@ -193,5 +221,6 @@ export default function InfraUptimePage() {
         </div>
       )}
     />
+    </>
   );
 }
