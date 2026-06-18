@@ -52,6 +52,7 @@ function requiredRank(method: string, segments: string[]): number {
   if (path === 'admin/secrets' || path.startsWith('admin/secrets/')) return ROLE_RANK.owner;
   if (path === 'admin/sepay/refund' || path.startsWith('admin/sepay/refund/')) return ROLE_RANK.owner;
   if (path === 'admin/sepay/reconcile') return ROLE_RANK.owner;
+  if (path === 'admin/sepay/drift/fix') return ROLE_RANK.owner;
   if (segments[0] === 'admin' && segments[1] === 'sessions' && segments[3] === 'access') {
     return ROLE_RANK.owner;
   }

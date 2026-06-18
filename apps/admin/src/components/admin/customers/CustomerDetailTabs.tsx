@@ -27,6 +27,7 @@ import {
 } from '@/components/admin/table/AdminTable';
 import { ProductTabs, type ProductTab } from '@/components/admin/product-tabs';
 import { SessionAccessDialog } from './SessionAccessDialog';
+import { RefundActionDialog } from './RefundActionDialog';
 import { fmtDate, fmtRelative } from './format';
 import {
   type AuditRow,
@@ -47,6 +48,8 @@ export interface CustomerDetailTabsProps {
   onValueChange: (id: string) => void;
   /** Refetch the customer after a per-session access grant/revoke. */
   onSessionMutated?: () => void;
+  /** Refetch the customer after a refund approve/reject. */
+  onRefundMutated?: () => void;
 }
 
 export function CustomerDetailTabs({
@@ -58,6 +61,7 @@ export function CustomerDetailTabs({
   value,
   onValueChange,
   onSessionMutated,
+  onRefundMutated,
 }: CustomerDetailTabsProps) {
   const tabs: ProductTab[] = [
     {
@@ -86,7 +90,7 @@ export function CustomerDetailTabs({
     {
       id: 'refunds',
       label: `Hoàn tiền · ${refunds.length}`,
-      content: <RefundsTab refunds={refunds} />,
+      content: <RefundsTab refunds={refunds} onRefundMutated={onRefundMutated} />,
     },
     {
       id: 'audit',
@@ -293,7 +297,13 @@ const REFUND_STATUS_META: Record<string, { label: string; tone: string }> = {
   },
 };
 
-function RefundsTab({ refunds }: { refunds: RefundRow[] }) {
+function RefundsTab({
+  refunds,
+  onRefundMutated,
+}: {
+  refunds: RefundRow[];
+  onRefundMutated?: () => void;
+}) {
   const columns = React.useMemo<AdminTableColumn<RefundRow>[]>(
     () => [
       {
@@ -348,8 +358,38 @@ function RefundsTab({ refunds }: { refunds: RefundRow[] }) {
           <span className="text-muted-foreground">{r.reason || '—'}</span>
         ),
       },
+      {
+        id: 'actions',
+        header: '',
+        width: '150px',
+        className: 'text-right',
+        // Duyệt / Từ chối CHỈ hiện trên lệnh `requested` — mirror đúng worker
+        // state machine (accept/reject hợp lệ từ trạng thái requested). Mỗi nút
+        // mở dialog xác nhận, đi qua proxy OWNER-gated. Không có tiền di chuyển.
+        cell: (r) =>
+          (r.status ?? '').toLowerCase() === 'requested' ? (
+            <div className="flex items-center justify-end gap-1.5">
+              <RefundActionDialog
+                refundId={r.refund_id}
+                action="accept"
+                amountVnd={r.amount_vnd}
+                triggerLabel="Duyệt"
+                onSuccess={onRefundMutated}
+              />
+              <RefundActionDialog
+                refundId={r.refund_id}
+                action="reject"
+                amountVnd={r.amount_vnd}
+                triggerLabel="Từ chối"
+                onSuccess={onRefundMutated}
+              />
+            </div>
+          ) : (
+            <span className="text-xs text-muted-foreground">—</span>
+          ),
+      },
     ],
-    [],
+    [onRefundMutated],
   );
   return (
     <AdminTable<RefundRow>

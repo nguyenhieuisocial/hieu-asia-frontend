@@ -292,6 +292,7 @@ function CustomerDetailPageInner() {
             value={active}
             onValueChange={onTabChange}
             onSessionMutated={() => refetch()}
+            onRefundMutated={() => refetch()}
           />
         </CardContent>
       </Card>
