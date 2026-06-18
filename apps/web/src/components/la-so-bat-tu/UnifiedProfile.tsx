@@ -179,28 +179,40 @@ export function UnifiedProfile({
   React.useEffect(() => {
     let alive = true;
     setTuvi({ status: 'loading' });
-    castTuViChart({
+    const input = {
       birthSolarDate: date,
       birthHour: parseHourSafe(time),
-      gender: gender === 'F' ? 'female' : 'male',
-    })
-      .then((c: TuViChart) => {
-        if (!alive) return;
-        const menh = findPalaceByName(c, 'Mệnh');
-        if (!menh) {
-          setTuvi({ status: 'error' });
+      gender: (gender === 'F' ? 'female' : 'male') as 'female' | 'male',
+    };
+    (async () => {
+      // tuvi-v2 chạy ở worker và có thể tạm bị giới hạn nhịp (429) — thử lại MỘT lần
+      // sau nhịp ngắn để khoảnh khắc "bốn lăng kính" giao đủ; vẫn degrade êm nếu vẫn hỏng.
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          const c: TuViChart = await castTuViChart(input);
+          if (!alive) return;
+          const menh = findPalaceByName(c, 'Mệnh');
+          if (!menh) {
+            setTuvi({ status: 'error' });
+            return;
+          }
+          setTuvi({
+            status: 'ready',
+            menhStem: menh.heavenlyStem,
+            menhBranch: menh.earthlyBranch,
+            mainStars: menh.majorStars.map((s) => s.name).filter(Boolean),
+          });
           return;
+        } catch {
+          if (!alive) return;
+          if (attempt === 0) {
+            await new Promise((r) => setTimeout(r, 1300));
+            if (!alive) return;
+          }
         }
-        setTuvi({
-          status: 'ready',
-          menhStem: menh.heavenlyStem,
-          menhBranch: menh.earthlyBranch,
-          mainStars: menh.majorStars.map((s) => s.name).filter(Boolean),
-        });
-      })
-      .catch(() => {
-        if (alive) setTuvi({ status: 'error' });
-      });
+      }
+      if (alive) setTuvi({ status: 'error' });
+    })();
     return () => {
       alive = false;
     };
