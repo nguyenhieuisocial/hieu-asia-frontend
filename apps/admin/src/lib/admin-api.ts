@@ -1530,6 +1530,75 @@ export function getInfraVercelDetail(uid: string): Promise<InfraVercelDetailEnve
   );
 }
 
+/**
+ * Supabase ROW BROWSER (GET /admin/infra/supabase/rows?table=&limit=).
+ * OWNER-gated in the admin-proxy. Rows arrive with sensitive columns masked
+ * server-side ("•••"); `masked_columns` lists which were redacted. A non-owner
+ * (or any failure) gets an `ok:false` envelope — never throws.
+ */
+export type InfraSupabaseRow = Record<string, unknown>;
+
+export type InfraSupabaseRowsEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      table: string;
+      columns: string[];
+      rows: InfraSupabaseRow[];
+      row_count: number;
+      masked_columns: string[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export function getInfraSupabaseRows(
+  table: string,
+  limit: number,
+): Promise<InfraSupabaseRowsEnvelope> {
+  const qs = new URLSearchParams();
+  qs.set('table', table);
+  qs.set('limit', String(limit));
+  return fetchInfraDetail<InfraSupabaseRowsEnvelope>(`/supabase/rows?${qs.toString()}`);
+}
+
+/** Langfuse single-trace DETAIL (GET /admin/infra/langfuse/:traceId). */
+export interface InfraLangfuseTrace {
+  id: string;
+  name: string | null;
+  timestamp: string | null;
+  latency_ms: number | null;
+  cost_usd: number | null;
+  user_id: string | null;
+}
+
+export interface InfraLangfuseObservation {
+  name: string | null;
+  type: string | null;
+  latency_ms: number | null;
+  model: string | null;
+  input_preview: string | null;
+  output_preview: string | null;
+}
+
+export type InfraLangfuseDetailEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraLangfuseItem[];
+      trace: InfraLangfuseTrace;
+      observations: InfraLangfuseObservation[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export function getInfraLangfuseDetail(
+  traceId: string,
+): Promise<InfraLangfuseDetailEnvelope> {
+  return fetchInfraDetail<InfraLangfuseDetailEnvelope>(
+    `/langfuse/${encodeURIComponent(traceId)}`,
+  );
+}
+
 /** Result of every infra action — the worker's `{ok, ...}` envelope verbatim. */
 export type InfraActionResult = { ok: boolean; error?: string } & Record<string, unknown>;
 

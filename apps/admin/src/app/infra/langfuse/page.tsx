@@ -12,6 +12,7 @@
  * no error field — so we deliberately omit it from the StatCards.
  */
 
+import * as React from 'react';
 import dynamic from 'next/dynamic';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent } from '@hieu-asia/ui';
@@ -26,6 +27,7 @@ import { getInfraTool } from '@/lib/infra-tools';
 import { formatDateOrEmpty, formatRelativeOrEmpty } from '@/lib/format-date';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel } from '@/components/admin/infra/infra-panel';
+import { LangfuseTraceDrawer } from '@/components/admin/infra/LangfuseTraceDrawer';
 
 const tool = getInfraTool('langfuse')!;
 
@@ -63,6 +65,7 @@ export default function InfraLangfusePage() {
     queryFn: getInfraLangfuse,
     staleTime: 30_000,
   });
+  const [openTraceId, setOpenTraceId] = React.useState<string | null>(null);
 
   const summary: InfraLangfuseSummary | undefined =
     query.data?.ok ? query.data.summary : undefined;
@@ -72,6 +75,12 @@ export default function InfraLangfusePage() {
     query.data?.ok && Array.isArray(query.data.by_role) ? query.data.by_role : [];
 
   return (
+    <>
+    <LangfuseTraceDrawer
+      traceId={openTraceId}
+      open={openTraceId !== null}
+      onClose={() => setOpenTraceId(null)}
+    />
     <InfraPanel<InfraLangfuseItem>
       tool={tool}
       query={query}
@@ -162,7 +171,12 @@ export default function InfraLangfusePage() {
                     {items.map((t) => (
                       <tr
                         key={t.id}
-                        className="border-b border-border/50 last:border-0 hover:bg-gold/5"
+                        onClick={t.id ? () => setOpenTraceId(t.id) : undefined}
+                        className={
+                          t.id
+                            ? 'cursor-pointer border-b border-border/50 last:border-0 hover:bg-gold/5'
+                            : 'border-b border-border/50 last:border-0 hover:bg-gold/5'
+                        }
                       >
                         <td className="max-w-[24rem] truncate px-4 py-2.5 font-medium text-foreground">
                           {t.name ?? <span className="text-muted-foreground">—</span>}
@@ -194,5 +208,6 @@ export default function InfraLangfusePage() {
         </div>
       )}
     />
+    </>
   );
 }
