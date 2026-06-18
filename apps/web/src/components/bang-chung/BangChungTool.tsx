@@ -319,6 +319,13 @@ export function BangChungTool() {
             Kết quả được lưu <strong>ẩn danh</strong> để đo độ chính xác công khai —{' '}
             <strong>không gồm</strong> ngày/giờ sinh, <strong>không gồm</strong> năm sự kiện, không có thông tin
             nhận dạng.{' '}
+            <Link
+              href="/bang-chung/do-chinh-xac#rieng-tu"
+              className="underline underline-offset-2 hover:text-foreground"
+            >
+              Vì sao an toàn?
+            </Link>{' '}
+            ·{' '}
             <button
               type="button"
               onClick={toggleOptOut}
