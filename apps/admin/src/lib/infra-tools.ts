@@ -29,6 +29,7 @@ import {
   Send,
   Network,
   KeyRound,
+  Activity,
 } from 'lucide-react';
 
 export interface InfraTool {
@@ -134,6 +135,15 @@ export const INFRA_TOOLS: InfraTool[] = [
     Icon: Network,
     external: 'https://vercel.com/nguyenhieuisocial-4628s-projects/~/ai',
     env: 'AI_GATEWAY_API_KEY',
+    built: true,
+  },
+  {
+    slug: 'uptime',
+    name: 'Uptime',
+    blurb: 'Giám sát uptime + sự cố (BetterStack).',
+    Icon: Activity,
+    external: 'https://uptime.betterstack.com/',
+    env: 'BETTERSTACK_API_TOKEN',
     built: true,
   },
 ];

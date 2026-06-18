@@ -1272,6 +1272,39 @@ export interface InfraAiGatewaySeriesPoint {
 }
 
 /**
+ * Infra-hub — one BetterStack uptime monitor (worker `handleInfraUptime`).
+ * `response_time_ms` is null from the monitors LIST endpoint (latency lives at a
+ * separate /response-times endpoint); `paused` covers status "paused" + a
+ * maintenance window.
+ */
+export interface InfraUptimeItem {
+  id: string;
+  name: string;
+  url: string | null;
+  status: string;
+  last_checked_at: string | null;
+  response_time_ms: number | null;
+  paused: boolean;
+}
+
+/** Monitor status counts. */
+export interface InfraUptimeSummary {
+  total: number;
+  up: number;
+  down: number;
+  paused: number;
+}
+
+/** One recent BetterStack incident. */
+export interface InfraUptimeIncident {
+  id: string;
+  name: string;
+  started_at: string | null;
+  resolved_at: string | null;
+  status: string;
+}
+
+/**
  * Low-level infra fetch. Returns the parsed envelope for 2xx AND for the
  * documented 503 not-configured / 502 vendor-error responses (both carry
  * `ok:false`). Bounces to /login on 401. Never throws — a thrown fetch or
@@ -1408,6 +1441,28 @@ export function getInfraAiGateway(): Promise<InfraAiGatewayEnvelope> {
   return fetchInfra<InfraAiGatewayItem, InfraAiGatewaySummary>(
     'ai-gateway',
   ) as Promise<InfraAiGatewayEnvelope>;
+}
+
+/**
+ * Uptime success envelope also carries `summary` (status counts) + `incidents`
+ * (recent ≤10). Mirror the AI Gateway pattern: intersect the success branch with
+ * the optional extras without changing the shared `InfraEnvelope`.
+ */
+export type InfraUptimeEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraUptimeItem[];
+      summary?: InfraUptimeSummary;
+      incidents?: InfraUptimeIncident[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export function getInfraUptime(): Promise<InfraUptimeEnvelope> {
+  return fetchInfra<InfraUptimeItem, InfraUptimeSummary>(
+    'uptime',
+  ) as Promise<InfraUptimeEnvelope>;
 }
 
 // ---------- Infra-hub v2 wave 3+4 — detail fetches + safe POST actions --------
