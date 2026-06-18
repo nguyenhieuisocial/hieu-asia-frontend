@@ -25,6 +25,7 @@ import { KpiCard } from '@/components/admin/kpi-card';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { ContactCustomerDialog } from '@/components/admin/ContactCustomerDialog';
+import { FeedbackCharts } from '@/components/feedback/FeedbackCharts';
 
 type FeedbackStatus = 'new' | 'triaged' | 'resolved';
 type FeedbackSurface = 'reading' | 'pricing' | 'onboarding' | 'misc';
@@ -269,6 +270,10 @@ export default function FeedbackPage() {
           hint={`/5 (${withRating.length} ratings)`}
         />
       </div>
+
+      {/* Charts derived from the same fetched rows — no extra request. Hidden on
+          error so we never chart a broken/empty fetch as if it were "zero". */}
+      {!list.isError && <FeedbackCharts rows={rows} />}
 
       <Card>
         <CardHeader>

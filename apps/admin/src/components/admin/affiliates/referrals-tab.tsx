@@ -13,6 +13,7 @@ import * as React from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { Button, Card, CardContent, Input } from '@hieu-asia/ui';
+import { ReferralDepthChart } from '@/components/affiliates/ReferralDepthChart';
 
 interface PromoterRow {
   user_id: string;
@@ -121,6 +122,10 @@ export function ReferralsTab() {
             Xem toàn bộ cây
           </Button>
         </div>
+      )}
+
+      {!q.isLoading && !q.error && (
+        <ReferralDepthChart rows={q.data ?? []} />
       )}
 
       <Card>

@@ -41,6 +41,15 @@ const ReadingsChart = dynamic(
     loading: () => <div className="h-72 animate-pulse rounded bg-muted/30" aria-hidden />,
   },
 );
+// AI-spend trend chart — same lazy-load treatment as ReadingsChart (Recharts
+// chunk). Fed by the `cost` query already fetched below; no new data fetch.
+const OverviewTrends = dynamic(
+  () => import('@/components/admin/overview-trends').then((m) => m.OverviewTrends),
+  {
+    ssr: false,
+    loading: () => <div className="h-64 animate-pulse rounded-xl bg-muted/30" aria-hidden />,
+  },
+);
 import { MockBanner } from '@/components/mock-banner';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { HealthWidget } from '@/components/admin/health-widget';
@@ -366,6 +375,11 @@ export default function AdminOverviewPage() {
           <WorkQueueWidget />
         </div>
       </div>
+
+      {/* Chi phí AI 14 ngày — real series from getCostByDay (same `cost` query
+          already fetched above; reused by /llm-spend's CostPanel). Renders an
+          honest "chưa có chi tiêu" state when the 14d total is $0. */}
+      <OverviewTrends cost={cost.data} isLoading={cost.isLoading} />
 
       {/* Tìm kiếm Google (GSC) — organic at-a-glance, 7 ngày */}
       <Card>
