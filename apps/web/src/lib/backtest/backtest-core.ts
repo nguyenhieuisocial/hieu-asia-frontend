@@ -23,6 +23,7 @@ import {
   type TuViChart,
   type TuViHoroscope,
 } from '../tuvi-client';
+import { awaitCastSlot } from './cast-gate';
 
 /** Life-event categories a user can verify against their chart. */
 export type LifeCategory =
@@ -161,14 +162,12 @@ export interface BacktestInput {
   gender: 'male' | 'female';
 }
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
 /**
  * Network orchestration (thin): for each reported event, fetch that year's chart
- * overlay and extract its signal envelope. Calls are spaced to respect the worker's
- * Tử Vi rate rule (≤5 req / 10s → CF error 1015), so a multi-event backtest stays
- * under the limit instead of failing mid-run. The pure work lives in
- * extractYearSignals; this layer only sequences the per-year casts.
+ * overlay and extract its signal envelope. Calls are spaced via the shared cast
+ * gate to respect the worker's Tử Vi rate rule (≤5 req / 10s → CF error 1015) —
+ * shared so a forecast fired right after a backtest can't burst past the cap. The
+ * pure work lives in extractYearSignals; this layer only sequences the per-year casts.
  */
 export async function backtestChart(
   input: BacktestInput,
@@ -180,7 +179,7 @@ export async function backtestChart(
   let natalChart: TuViChart | null = null;
   for (let i = 0; i < events.length; i++) {
     const ev = events[i]!;
-    if (i > 0) await sleep(2100); // ≤5/10s headroom
+    await awaitCastSlot(); // shared ≤4/10s gate (across backtest + forecast)
     onProgress?.(i, events.length);
     const { chart, horoscope } = await castTuViHoroscope({
       birthSolarDate: input.birthSolarDate,

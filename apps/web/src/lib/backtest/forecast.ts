@@ -17,6 +17,7 @@ import {
 } from './backtest-core';
 import { castTuViHoroscope, type TuViChart } from '../tuvi-client';
 import { scoreEvent, type EventScore } from './scoring';
+import { awaitCastSlot } from './cast-gate';
 
 /**
  * Domains we forecast. Excludes "loss" (needs a specific lost-target, can't be
@@ -74,12 +75,11 @@ export interface ForecastInput {
   gender: 'male' | 'female';
 }
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
 /**
  * Cast the next `nYears` years (starting at `fromYear`) and extract each year's
- * emphasized domains. Sequential + throttled to respect the tuvi-v2 rate rule
- * (≤5/10s → CF 1015), mirroring backtestChart.
+ * emphasized domains. Sequential + paced via the SHARED cast gate so a forecast
+ * fired right after a backtest stays under the tuvi-v2 rate rule (≤5/10s → CF 1015)
+ * instead of bursting past it (the old per-function 2.1s gap left no headroom).
  */
 export async function forecastTimeline(
   input: ForecastInput,
@@ -92,7 +92,7 @@ export async function forecastTimeline(
   let natalChart: TuViChart | null = null;
   for (let i = 0; i < nYears; i++) {
     const year = fromYear + i;
-    if (i > 0) await sleep(2100);
+    await awaitCastSlot(); // shared ≤4/10s gate (across backtest + forecast)
     onProgress?.(i, nYears);
     const { chart, horoscope } = await castTuViHoroscope({
       birthSolarDate: input.birthSolarDate,
