@@ -53,6 +53,10 @@ function requiredRank(method: string, segments: string[]): number {
   if (path === 'admin/sepay/refund' || path.startsWith('admin/sepay/refund/')) return ROLE_RANK.owner;
   if (path === 'admin/sepay/reconcile') return ROLE_RANK.owner;
   if (path === 'admin/sepay/drift/fix') return ROLE_RANK.owner;
+  // Supabase ROW BROWSER returns raw table rows (PII even when column-masked) →
+  // owner-only, mirroring admin/secrets. The table-stats GET (admin/infra/supabase)
+  // stays viewer; only this rows sub-path is gated.
+  if (path === 'admin/infra/supabase/rows') return ROLE_RANK.owner;
   if (segments[0] === 'admin' && segments[1] === 'sessions' && segments[3] === 'access') {
     return ROLE_RANK.owner;
   }
