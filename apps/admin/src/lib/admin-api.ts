@@ -1102,6 +1102,12 @@ export interface InfraSentryItem {
   lastSeen: string | null;
   permalink: string | null;
   level: string;
+  /** Wave-3 detail (optional → older workers omit). firstSeen + 24h sparkline. */
+  firstSeen?: string | null;
+  /** Hourly event counts over the trailing 24h for a tiny inline sparkline. */
+  spark_24h?: number[] | null;
+  /** True when the issue was first seen within the last 24h. */
+  is_new_24h?: boolean;
 }
 
 /**
@@ -1206,6 +1212,34 @@ export interface InfraLangfuseRole {
   traces: number;
   cost_usd: number;
   error_rate_pct: number;
+}
+
+/** Per-model rollup from the Daily Metrics API (desc by cost). Wave-3. */
+export interface InfraLangfuseModelRow {
+  model: string;
+  traces: number;
+  observations: number;
+  total_tokens: number;
+  cost_usd: number;
+}
+
+/** Quality score / eval attached to a trace (GET /scores). Wave-3. */
+export interface InfraLangfuseScore {
+  id: string;
+  name: string | null;
+  value: number | string | null;
+  data_type: string | null;
+  trace_id: string | null;
+  comment: string | null;
+  timestamp: string | null;
+}
+
+/** Optional filters forwarded to the Langfuse traces API. */
+export interface InfraLangfuseFilters {
+  name?: string;
+  userId?: string;
+  fromTimestamp?: string;
+  toTimestamp?: string;
 }
 
 export interface InfraGithubItem {
@@ -1489,14 +1523,26 @@ export type InfraLangfuseEnvelope =
       items: InfraLangfuseItem[];
       summary?: InfraLangfuseSummary;
       series?: InfraLangfuseSeriesPoint[];
+      /** Whether `series` came from the real Daily Metrics API or the trace sample. */
+      series_source?: 'daily_metrics' | 'trace_sample';
       by_role?: InfraLangfuseRole[];
+      by_model?: InfraLangfuseModelRow[];
+      scores?: InfraLangfuseScore[];
     }
   | { ok: false; configured: false; error: string }
   | { ok: false; configured: true; error: string };
 
-export function getInfraLangfuse(): Promise<InfraLangfuseEnvelope> {
+export function getInfraLangfuse(
+  filters?: InfraLangfuseFilters,
+): Promise<InfraLangfuseEnvelope> {
+  const qs = new URLSearchParams();
+  if (filters?.name) qs.set('name', filters.name);
+  if (filters?.userId) qs.set('userId', filters.userId);
+  if (filters?.fromTimestamp) qs.set('fromTimestamp', filters.fromTimestamp);
+  if (filters?.toTimestamp) qs.set('toTimestamp', filters.toTimestamp);
+  const suffix = qs.toString() ? `?${qs.toString()}` : '';
   return fetchInfra<InfraLangfuseItem, InfraLangfuseSummary>(
-    'langfuse',
+    `langfuse${suffix}`,
   ) as Promise<InfraLangfuseEnvelope>;
 }
 
@@ -1582,12 +1628,32 @@ export interface InfraSentryDetailIssue {
   lastSeen: string | null;
   permalink: string | null;
   metadata?: Record<string, unknown> | null;
+  /** Wave-3: release context + new-issue flag (optional → older workers omit). */
+  first_release?: string | null;
+  last_release?: string | null;
+  is_new_24h?: boolean;
+}
+
+export interface InfraSentryBreadcrumb {
+  category: string | null;
+  message: string | null;
+  level: string | null;
+  timestamp: string | null;
 }
 
 export interface InfraSentryLatestEvent {
   exception: { type: string | null; value: string | null } | null;
   frames: Array<{ filename: string | null; function: string | null; lineNo: number | null }>;
   tags: Array<{ key: string; value: string }>;
+  /** Wave-3: breadcrumb trail + release tag (optional → older workers omit). */
+  breadcrumbs?: InfraSentryBreadcrumb[];
+  release?: string | null;
+}
+
+export interface InfraSentryEventRow {
+  id: string;
+  title: string | null;
+  dateCreated: string | null;
 }
 
 export type InfraSentryDetailEnvelope =
@@ -1597,6 +1663,10 @@ export type InfraSentryDetailEnvelope =
       items: InfraSentryItem[];
       issue: InfraSentryDetailIssue;
       latest_event: InfraSentryLatestEvent | null;
+      /** Wave-3 extras — all optional so older workers degrade gracefully. */
+      stats_24h?: number[] | null;
+      stats_14d?: number[] | null;
+      recent_events?: InfraSentryEventRow[];
     }
   | { ok: false; configured: false; error: string }
   | { ok: false; configured: true; error: string };
@@ -1773,6 +1843,9 @@ export interface InfraLangfuseTrace {
   latency_ms: number | null;
   cost_usd: number | null;
   user_id: string | null;
+  /** Wave-3: summed observation tokens + derived error flag (optional). */
+  total_tokens?: number | null;
+  has_error?: boolean;
 }
 
 export interface InfraLangfuseObservation {
@@ -1782,6 +1855,15 @@ export interface InfraLangfuseObservation {
   model: string | null;
   input_preview: string | null;
   output_preview: string | null;
+  /** Wave-3 enrichment — all optional so older workers degrade gracefully. */
+  start_time?: string | null;
+  end_time?: string | null;
+  level?: string | null;
+  status_message?: string | null;
+  cost_usd?: number | null;
+  prompt_tokens?: number | null;
+  completion_tokens?: number | null;
+  total_tokens?: number | null;
 }
 
 export type InfraLangfuseDetailEnvelope =

@@ -33,6 +33,11 @@ function fmtCost(usd: number | null | undefined): string {
   return `$${usd.toFixed(4)}`;
 }
 
+function fmtTokens(n: number | null | undefined): string {
+  if (n == null || !Number.isFinite(n)) return '—';
+  return n.toLocaleString('vi-VN');
+}
+
 function StatLine({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex items-baseline justify-between gap-3 border-b border-border/40 py-1.5 last:border-0">
@@ -102,8 +107,21 @@ export function LangfuseTraceDrawer({
           <div className="space-y-5">
             {/* Trace summary */}
             <div className="rounded-md border border-border bg-card/60 px-3 py-1">
+              {trace.has_error && (
+                <StatLine
+                  label="Trạng thái"
+                  value={
+                    <span className="rounded bg-red-500/15 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-red-700 dark:text-red-300">
+                      Có lỗi
+                    </span>
+                  }
+                />
+              )}
               <StatLine label="Độ trễ" value={fmtLatency(trace.latency_ms)} />
               <StatLine label="Chi phí" value={fmtCost(trace.cost_usd)} />
+              {trace.total_tokens != null && (
+                <StatLine label="Tokens" value={fmtTokens(trace.total_tokens)} />
+              )}
               <StatLine label="Người dùng" value={trace.user_id ?? '—'} />
               <StatLine label="Thời gian" value={formatDateOrEmpty(trace.timestamp)} />
             </div>
@@ -117,14 +135,26 @@ export function LangfuseTraceDrawer({
                 <p className="text-sm text-muted-foreground">Không có observation.</p>
               ) : (
                 <ol className="space-y-2">
-                  {observations.map((o, i) => (
+                  {observations.map((o, i) => {
+                    const isErr = (o.level ?? '').toUpperCase() === 'ERROR';
+                    return (
                     <li
                       key={`${o.name ?? '?'}-${i}`}
-                      className="rounded-md border border-border/60 bg-card/60 px-3 py-2"
+                      className={
+                        'rounded-md border px-3 py-2 ' +
+                        (isErr
+                          ? 'border-red-400/40 bg-red-500/5'
+                          : 'border-border/60 bg-card/60')
+                      }
                     >
                       <div className="flex flex-wrap items-baseline justify-between gap-2">
-                        <span className="font-medium text-foreground">
+                        <span className="flex items-center gap-1.5 font-medium text-foreground">
                           {o.name ?? '—'}
+                          {isErr && (
+                            <span className="rounded bg-red-500/15 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wide text-red-700 dark:text-red-300">
+                              {o.level}
+                            </span>
+                          )}
                         </span>
                         <span className="font-mono text-[10px] uppercase text-muted-foreground">
                           {o.type ?? '—'}
@@ -132,6 +162,30 @@ export function LangfuseTraceDrawer({
                           {o.latency_ms != null ? ` · ${fmtLatency(o.latency_ms)}` : ''}
                         </span>
                       </div>
+                      {/* Tokens / cost row */}
+                      {(o.total_tokens != null ||
+                        o.prompt_tokens != null ||
+                        o.cost_usd != null) && (
+                        <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 font-mono text-[10px] text-muted-foreground">
+                          {o.prompt_tokens != null && (
+                            <span>in {fmtTokens(o.prompt_tokens)}</span>
+                          )}
+                          {o.completion_tokens != null && (
+                            <span>out {fmtTokens(o.completion_tokens)}</span>
+                          )}
+                          {o.total_tokens != null && (
+                            <span className="text-foreground/80">
+                              tổng {fmtTokens(o.total_tokens)} tok
+                            </span>
+                          )}
+                          {o.cost_usd != null && <span>{fmtCost(o.cost_usd)}</span>}
+                        </div>
+                      )}
+                      {o.status_message && (
+                        <p className="mt-1 break-words font-mono text-[10px] text-red-700 dark:text-red-300">
+                          {o.status_message}
+                        </p>
+                      )}
                       {o.input_preview && (
                         <div className="mt-1.5">
                           <span className="font-mono text-[10px] uppercase text-muted-foreground">
@@ -153,7 +207,8 @@ export function LangfuseTraceDrawer({
                         </div>
                       )}
                     </li>
-                  ))}
+                    );
+                  })}
                 </ol>
               )}
             </div>
