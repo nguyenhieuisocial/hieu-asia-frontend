@@ -14,6 +14,7 @@
  */
 
 import * as React from 'react';
+import dynamic from 'next/dynamic';
 import { useQuery } from '@tanstack/react-query';
 import {
   Button,
@@ -33,6 +34,29 @@ import {
 import { formatDateOrEmpty } from '@/lib/format-date';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { InfraStatusPill } from '@/components/admin/infra/infra-panel';
+
+// Recharts lazy-loaded so it stays out of the initial bundle (ssr:false because
+// admin is auth-gated). Mirrors the Langfuse/AI-Gateway charts.
+const SentryVolumeChart = dynamic(
+  () =>
+    import('@/components/admin/infra/SentryVolumeChart').then((m) => m.SentryVolumeChart),
+  {
+    ssr: false,
+    loading: () => <div className="h-40 animate-pulse rounded bg-muted/30" aria-hidden />,
+  },
+);
+
+function breadcrumbTone(level: string | null): string {
+  switch ((level ?? '').toLowerCase()) {
+    case 'fatal':
+    case 'error':
+      return 'text-red-700 dark:text-red-300';
+    case 'warning':
+      return 'text-gold';
+    default:
+      return 'text-muted-foreground';
+  }
+}
 
 function levelTone(level: string): 'good' | 'bad' | 'warn' | 'neutral' {
   switch (level.toLowerCase()) {
@@ -114,6 +138,12 @@ export function SentryIssueDrawer({
 
   const issue = data && data.ok ? data.issue : undefined;
   const event = data && data.ok ? data.latest_event : null;
+  const stats14d = data && data.ok ? data.stats_14d : null;
+  const stats24h = data && data.ok ? data.stats_24h : null;
+  const volume = stats14d && stats14d.length > 1 ? stats14d : stats24h;
+  const volumeLabel = stats14d && stats14d.length > 1 ? 'Sự kiện (14 ngày)' : 'Sự kiện (24 giờ)';
+  const recentEvents = data && data.ok ? (data.recent_events ?? []) : [];
+  const breadcrumbs = event?.breadcrumbs ?? [];
   const showError = isError || (data && data.ok === false);
   const errorMsg = data && data.ok === false ? data.error : undefined;
 
@@ -193,9 +223,52 @@ export function SentryIssueDrawer({
                 label="Người dùng"
                 value={issue.userCount.toLocaleString('vi-VN')}
               />
-              <StatLine label="Lần đầu" value={formatDateOrEmpty(issue.firstSeen)} />
+              <StatLine
+                label="Lần đầu"
+                value={
+                  <span className="inline-flex items-center gap-1.5">
+                    {formatDateOrEmpty(issue.firstSeen)}
+                    {issue.is_new_24h && (
+                      <span className="rounded bg-jade/15 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wide text-jade-700 dark:text-jade-50">
+                        mới 24h
+                      </span>
+                    )}
+                  </span>
+                }
+              />
               <StatLine label="Gần nhất" value={formatDateOrEmpty(issue.lastSeen)} />
+              {issue.first_release && (
+                <StatLine
+                  label="Phiên bản đầu"
+                  value={<span className="font-mono text-xs">{issue.first_release}</span>}
+                />
+              )}
+              {issue.last_release && (
+                <StatLine
+                  label="Phiên bản cuối"
+                  value={<span className="font-mono text-xs">{issue.last_release}</span>}
+                />
+              )}
+              {event?.release && (
+                <StatLine
+                  label="Phiên bản sự kiện"
+                  value={<span className="font-mono text-xs">{event.release}</span>}
+                />
+              )}
             </div>
+
+            {/* Event-volume chart (14d preferred, else 24h) */}
+            {volume && volume.length > 1 && (
+              <div>
+                <p className="mb-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  {volumeLabel}
+                </p>
+                <SentryVolumeChart
+                  data={volume}
+                  label={stats14d && stats14d.length > 1 ? 'Sự kiện/ngày' : 'Sự kiện/giờ'}
+                />
+              </div>
+            )}
 
             {/* Exception */}
             {event?.exception && (
@@ -235,6 +308,39 @@ export function SentryIssueDrawer({
               </div>
             )}
 
+            {/* Breadcrumbs (oldest → crash) */}
+            {breadcrumbs.length > 0 && (
+              <div>
+                <p className="mb-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  Dấu vết (breadcrumbs)
+                </p>
+                <ol className="space-y-1">
+                  {breadcrumbs.map((b, i) => (
+                    <li
+                      key={`${b.category ?? '?'}-${i}`}
+                      className="rounded border border-border/60 bg-card/60 px-2.5 py-1.5 text-[11px]"
+                    >
+                      <div className="flex items-baseline justify-between gap-2">
+                        <span className={`font-mono ${breadcrumbTone(b.level)}`}>
+                          {b.category ?? '—'}
+                        </span>
+                        {b.timestamp && (
+                          <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
+                            {formatDateOrEmpty(b.timestamp)}
+                          </span>
+                        )}
+                      </div>
+                      {b.message && (
+                        <span className="mt-0.5 block break-words text-foreground/90">
+                          {b.message}
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+
             {/* Tags */}
             {event && event.tags.length > 0 && (
               <div>
@@ -251,6 +357,28 @@ export function SentryIssueDrawer({
                     </span>
                   ))}
                 </div>
+              </div>
+            )}
+
+            {/* Recent occurrences */}
+            {recentEvents.length > 0 && (
+              <div>
+                <p className="mb-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  Lần xuất hiện gần đây ({recentEvents.length})
+                </p>
+                <ol className="space-y-1">
+                  {recentEvents.map((e, i) => (
+                    <li
+                      key={`${e.id || 'evt'}-${i}`}
+                      className="flex items-baseline justify-between gap-2 rounded border border-border/60 bg-card/60 px-2.5 py-1.5 text-[11px]"
+                    >
+                      <span className="truncate text-foreground/90">{e.title ?? e.id ?? '—'}</span>
+                      <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
+                        {formatDateOrEmpty(e.dateCreated)}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
               </div>
             )}
           </div>

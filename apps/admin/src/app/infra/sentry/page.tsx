@@ -23,6 +23,7 @@ import { formatRelativeOrEmpty } from '@/lib/format-date';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
 import { SentryIssueDrawer } from '@/components/admin/infra/SentryIssueDrawer';
+import { MiniSparkline } from '@/components/admin/infra/MiniSparkline';
 
 const tool = getInfraTool('sentry')!;
 
@@ -54,6 +55,11 @@ export default function InfraSentryPage() {
   });
 
   const [openId, setOpenId] = React.useState<string | null>(null);
+  // Client-side segment over the already-loaded rows (no refetch).
+  const [levelFilter, setLevelFilter] = React.useState<'all' | 'fatal' | 'error' | 'warning'>(
+    'all',
+  );
+  const [ageFilter, setAgeFilter] = React.useState<'all' | 'new' | 'recurring'>('all');
 
   const summary: InfraSentrySummary | undefined =
     query.data?.ok ? query.data.summary : undefined;
@@ -70,7 +76,15 @@ export default function InfraSentryPage() {
       tool={tool}
       query={query}
       emptyTitle="Không có lỗi chưa xử lý"
-      renderTable={(items) => (
+      renderTable={(items) => {
+        const filtered = items.filter((i) => {
+          const lvl = (i.level ?? '').toLowerCase();
+          if (levelFilter !== 'all' && lvl !== levelFilter) return false;
+          if (ageFilter === 'new' && !i.is_new_24h) return false;
+          if (ageFilter === 'recurring' && i.is_new_24h) return false;
+          return true;
+        });
+        return (
         <div className="space-y-6">
           {summary && (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -105,6 +119,55 @@ export default function InfraSentryPage() {
             </div>
           )}
 
+          {/* Client-side segment over the loaded rows */}
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
+            <div className="flex items-center gap-1.5">
+              <span className="font-mono uppercase tracking-wide text-muted-foreground">Mức:</span>
+              {(['all', 'fatal', 'error', 'warning'] as const).map((v) => (
+                <button
+                  key={v}
+                  type="button"
+                  onClick={() => setLevelFilter(v)}
+                  className={
+                    'rounded px-2 py-0.5 font-mono uppercase tracking-wide transition-colors ' +
+                    (levelFilter === v
+                      ? 'bg-gold/15 text-gold'
+                      : 'text-muted-foreground hover:text-foreground')
+                  }
+                >
+                  {v === 'all' ? 'Tất cả' : v}
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="font-mono uppercase tracking-wide text-muted-foreground">Tuổi:</span>
+              {(
+                [
+                  ['all', 'Tất cả'],
+                  ['new', 'Mới 24h'],
+                  ['recurring', 'Lặp lại'],
+                ] as const
+              ).map(([v, label]) => (
+                <button
+                  key={v}
+                  type="button"
+                  onClick={() => setAgeFilter(v)}
+                  className={
+                    'rounded px-2 py-0.5 font-mono uppercase tracking-wide transition-colors ' +
+                    (ageFilter === v
+                      ? 'bg-gold/15 text-gold'
+                      : 'text-muted-foreground hover:text-foreground')
+                  }
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <span className="text-muted-foreground">
+              {filtered.length}/{items.length} lỗi
+            </span>
+          </div>
+
           <Card>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
@@ -115,12 +178,13 @@ export default function InfraSentryPage() {
                       <th className="px-4 py-2.5">Lỗi</th>
                       <th className="px-4 py-2.5 text-right">Số lần</th>
                       <th className="px-4 py-2.5 text-right">Người dùng</th>
+                      <th className="px-4 py-2.5">24h</th>
                       <th className="px-4 py-2.5">Gần nhất</th>
                       <th className="px-4 py-2.5 text-right">Mở</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {items.map((i) => (
+                    {filtered.map((i) => (
                       <tr
                         key={i.id}
                         onClick={() => setOpenId(i.id)}
@@ -130,8 +194,15 @@ export default function InfraSentryPage() {
                           <InfraStatusPill label={i.level} tone={levelTone(i.level)} />
                         </td>
                         <td className="max-w-[26rem] px-4 py-2.5">
-                          <div className="truncate font-medium text-foreground">
-                            {i.title}
+                          <div className="flex items-center gap-1.5">
+                            <span className="truncate font-medium text-foreground">
+                              {i.title}
+                            </span>
+                            {i.is_new_24h && (
+                              <span className="shrink-0 rounded bg-jade/15 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wide text-jade-700 dark:text-jade-50">
+                                mới 24h
+                              </span>
+                            )}
                           </div>
                           {i.culprit && (
                             <div className="truncate font-mono text-xs text-muted-foreground">
@@ -142,6 +213,16 @@ export default function InfraSentryPage() {
                         <td className="px-4 py-2.5 text-right tabular-nums">{i.count}</td>
                         <td className="px-4 py-2.5 text-right tabular-nums text-muted-foreground">
                           {i.userCount}
+                        </td>
+                        <td className="px-4 py-2.5">
+                          {i.spark_24h && i.spark_24h.length > 1 ? (
+                            <MiniSparkline
+                              data={i.spark_24h}
+                              ariaLabel="Lưu lượng lỗi 24h"
+                            />
+                          ) : (
+                            <span className="text-muted-foreground">—</span>
+                          )}
                         </td>
                         <td className="whitespace-nowrap px-4 py-2.5 text-muted-foreground">
                           {formatRelativeOrEmpty(i.lastSeen) || '—'}
@@ -169,7 +250,8 @@ export default function InfraSentryPage() {
             </CardContent>
           </Card>
         </div>
-      )}
+        );
+      }}
     />
     </>
   );
