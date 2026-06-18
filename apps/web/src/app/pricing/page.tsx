@@ -33,6 +33,8 @@ import { MarketingHero } from '@/components/marketing/MarketingHero';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { OrnamentDivider } from '@/components/marketing/OrnamentDivider';
 import { TrustStrip } from '@/components/marketing/TrustStrip';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { faqPage } from '@/lib/seo/jsonld';
 import {
   PRICING,
   ADVANCED_PRICING,
@@ -97,6 +99,34 @@ const PRICING_FAQ: readonly FaqItem[] = [
         trong vòng 30 ngày.
       </p>
     ),
+  },
+];
+
+/**
+ * FAQPage JSON-LD — chữ schema === chữ đang hiển thị trong PRICING_FAQ ở trên
+ * (rút text thuần từ JSX, bỏ thẻ <b>/<strong>, không đổi nghĩa, không thêm câu
+ * hỏi mới) → chống cloaking. Crawler/AI đọc được câu trả lời.
+ */
+const PRICING_FAQ_SCHEMA: { q: string; a: string }[] = [
+  {
+    q: 'Có hoàn tiền không?',
+    a: 'Có. Nếu báo cáo không như mong đợi, nhắn founder qua Telegram trong vòng 14 ngày để được hoàn tiền 100% — không cần lý do. Gói miễn phí không áp dụng hoàn tiền. Mỗi yêu cầu được xử lý trong vòng 24 giờ.',
+  },
+  {
+    q: 'Mentor có gì khác so với Premium?',
+    a: 'Premium 99.000đ một lần cho bạn một lá số Tử Vi đầy đủ, PDF báo cáo và 3 câu hỏi với AI Mentor — phù hợp khi bạn cần báo cáo trọn vẹn một lần. Mentor 199.000đ/tháng (hoặc 1.990.000đ/năm) mở khóa AI Mentor không giới hạn, đại vận và lưu niên hàng năm — phù hợp khi bạn muốn đồng hành dài hạn.',
+  },
+  {
+    q: 'Có thể chuyển gói không?',
+    a: 'Có. Khi nâng cấp, chúng tôi tính prorate phần còn lại của kỳ hiện tại — bạn chỉ trả phần chênh. Khi hạ cấp, thay đổi áp dụng từ kỳ thanh toán kế tiếp; phần đã trả của kỳ hiện tại không bị mất.',
+  },
+  {
+    q: 'Phương thức thanh toán nào được hỗ trợ?',
+    a: 'Gói Premium mở khoá ngay khi bạn lập lá số: quét mã QR chuyển khoản ngân hàng nội địa và báo cáo đầy đủ tự mở sau khi nhận được tiền. Các gói thuê bao Mentor (tháng / năm / trọn đời) cũng thanh toán bằng mã QR chuyển khoản ngay trên trang đăng ký — bạn chỉ cần đăng nhập để gói được gắn vào tài khoản, gói kích hoạt tự động sau khi nhận được tiền. Thẻ Visa/Mastercard và Apple Pay dự kiến bổ sung sau.',
+  },
+  {
+    q: 'Dữ liệu cá nhân của tôi được bảo vệ thế nào?',
+    a: 'Lá số và nhật ký nội tâm được mã hoá khi lưu trữ. Chúng tôi không bán dữ liệu, không dùng để huấn luyện mô hình của bên thứ ba, và bạn có thể xoá toàn bộ tài khoản bất cứ lúc nào — dữ liệu bị xoá vĩnh viễn trong vòng 30 ngày.',
   },
 ];
 
@@ -344,6 +374,7 @@ export default function PricingPage() {
       </main>
       <SiteFooter />
       <StickyMobileCta label="Bắt đầu miễn phí" trackId="pricing" />
+      <JsonLd data={faqPage(PRICING_FAQ_SCHEMA)} />
     </>
   );
 }

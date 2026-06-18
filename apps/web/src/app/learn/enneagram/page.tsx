@@ -7,6 +7,8 @@ import {
 } from '@hieu-asia/ui';
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   title: 'Enneagram — 9 nhóm tính cách & 3 trung tâm | Học huyền học',
@@ -33,6 +35,46 @@ const CENTERS: { name: string; types: string; theme: string }[] = [
   { name: 'Trung tâm Bản năng (Bụng)', types: 'Nhóm 8 · 9 · 1', theme: 'Xoay quanh sự giận dữ và quyền kiểm soát — phản ứng theo bản năng "đúng/sai".' },
   { name: 'Trung tâm Tình cảm (Tim)', types: 'Nhóm 2 · 3 · 4', theme: 'Xoay quanh hình ảnh bản thân và cảm xúc — quan tâm mình được nhìn nhận thế nào.' },
   { name: 'Trung tâm Lý trí (Đầu)', types: 'Nhóm 5 · 6 · 7', theme: 'Xoay quanh nỗi lo và sự an toàn — xử lý bằng suy nghĩ, lên kế hoạch.' },
+];
+
+// FAQ dùng chung cho CẢ FAQPage JSON-LD lẫn phần hiển thị (Accordion) → chữ
+// schema === chữ hiển thị (chống cloaking) + crawler/AI đọc được câu trả lời.
+const FAQS: { value: string; q: string; a: string }[] = [
+  {
+    value: 'wing',
+    q: '"Cánh" (wing) là gì?',
+    a: 'Mỗi nhóm chịu ảnh hưởng từ một trong hai nhóm liền kề trên vòng tròn — gọi là cánh. Ví dụ nhóm 9 có thể nghiêng cánh 1 (kỷ luật hơn) hoặc cánh 8 (quyết liệt hơn). Cánh giải thích vì sao hai người cùng nhóm vẫn có sắc thái riêng.',
+  },
+  {
+    value: 'arrows',
+    q: 'Khi căng thẳng / khi phát triển thì sao?',
+    a: 'Enneagram có các "mũi tên" nối các nhóm: lúc căng thẳng bạn có xu hướng mượn nét (thường là mặt kém) của một nhóm khác; lúc thoải mái, trưởng thành bạn hấp thụ nét tốt của một nhóm khác. Đây là điểm khiến Enneagram thiên về phát triển hơn là dán nhãn.',
+  },
+  {
+    value: 'vs-mbti',
+    q: 'Khác MBTI ở chỗ nào?',
+    a: 'MBTI mô tả cách bạn tư duy và tiếp nhận thông tin; Enneagram đào vào động lực và nỗi sợ cốt lõi đứng sau hành vi. Nhiều người thấy Enneagram chạm sâu hơn về "vì sao tôi như vậy", còn MBTI tiện để mô tả phong cách làm việc. Hai góc nhìn bổ sung nhau.',
+  },
+  {
+    value: 'caution',
+    q: 'Cần lưu ý gì?',
+    a: 'Enneagram là bản đồ để soi mình, không phải lời tiên tri. Đừng dùng số nhóm để bào chữa ("tôi nhóm 8 nên mới gắt") hay đóng khung người khác. hieu.asia mô tả động lực như một góc nhìn để bạn hiểu và tự quyết — kết hợp với các lăng kính khác.',
+  },
+];
+
+const JSONLD = [
+  article({
+    headline: 'Enneagram — 9 nhóm tính cách & 3 trung tâm',
+    description:
+      'Enneagram mô tả 9 nhóm tính cách theo động lực sâu bên trong (điều bạn sợ và điều bạn khao khát), chia theo 3 trung tâm: Bản năng, Tình cảm, Lý trí.',
+    url: '/learn/enneagram',
+  }),
+  breadcrumb([
+    { name: 'Trang chủ', url: '/' },
+    { name: 'Học huyền học', url: '/learn' },
+    { name: 'Enneagram', url: '/learn/enneagram' },
+  ]),
+  faqPage(FAQS),
 ];
 
 export default function LearnEnneagramPage() {
@@ -118,44 +160,18 @@ export default function LearnEnneagramPage() {
           heading: 'Giải thích chi tiết',
           children: (
             <Accordion type="single" collapsible className="space-y-2">
-              <AccordionItem value="wing" className="rounded border border-border px-4">
-                <AccordionTrigger>"Cánh" (wing) là gì?</AccordionTrigger>
-                <AccordionContent>
-                  Mỗi nhóm chịu ảnh hưởng từ một trong hai nhóm liền kề trên vòng tròn — gọi là{' '}
-                  <em>cánh</em>. Ví dụ nhóm 9 có thể nghiêng cánh 1 (kỷ luật hơn) hoặc cánh 8 (quyết
-                  liệt hơn). Cánh giải thích vì sao hai người cùng nhóm vẫn có sắc thái riêng.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="arrows" className="rounded border border-border px-4">
-                <AccordionTrigger>Khi căng thẳng / khi phát triển thì sao?</AccordionTrigger>
-                <AccordionContent>
-                  Enneagram có các "mũi tên" nối các nhóm: lúc <em>căng thẳng</em> bạn có xu hướng mượn
-                  nét (thường là mặt kém) của một nhóm khác; lúc <em>thoải mái, trưởng thành</em> bạn
-                  hấp thụ nét tốt của một nhóm khác. Đây là điểm khiến Enneagram thiên về <em>phát
-                  triển</em> hơn là dán nhãn.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="vs-mbti" className="rounded border border-border px-4">
-                <AccordionTrigger>Khác MBTI ở chỗ nào?</AccordionTrigger>
-                <AccordionContent>
-                  MBTI mô tả <em>cách bạn tư duy và tiếp nhận thông tin</em>; Enneagram đào vào{' '}
-                  <em>động lực và nỗi sợ cốt lõi</em> đứng sau hành vi. Nhiều người thấy Enneagram chạm
-                  sâu hơn về "vì sao tôi như vậy", còn MBTI tiện để mô tả phong cách làm việc. Hai góc
-                  nhìn bổ sung nhau.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="caution" className="rounded border border-border px-4">
-                <AccordionTrigger>Cần lưu ý gì?</AccordionTrigger>
-                <AccordionContent>
-                  Enneagram là bản đồ để soi mình, không phải lời tiên tri. Đừng dùng số nhóm để bào
-                  chữa ("tôi nhóm 8 nên mới gắt") hay đóng khung người khác. hieu.asia mô tả động lực
-                  như một góc nhìn để bạn hiểu và tự quyết — kết hợp với các lăng kính khác.
-                </AccordionContent>
-              </AccordionItem>
+              {FAQS.map((f) => (
+                <AccordionItem key={f.value} value={f.value} className="rounded border border-border px-4">
+                  <AccordionTrigger>{f.q}</AccordionTrigger>
+                  <AccordionContent>{f.a}</AccordionContent>
+                </AccordionItem>
+              ))}
             </Accordion>
           ),
         },
       ]}
-    />
+    >
+      <JsonLd data={JSONLD} />
+    </LearnArticle>
   );
 }
