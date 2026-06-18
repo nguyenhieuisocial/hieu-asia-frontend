@@ -11,6 +11,7 @@ import {
 } from '@/lib/backtest/backtest-core';
 import { scoreEvent, palaceBaseRate, type EventScore, type PalaceBaseRate } from '@/lib/backtest/scoring';
 import { CATEGORY_LABEL } from '@/lib/backtest/palace-map';
+import { readSavedProfile, describeProfile } from '@/lib/saved-profile';
 import { track } from '@/lib/analytics';
 
 const CATEGORIES: LifeCategory[] = [
@@ -69,7 +70,20 @@ export function BangChungTool() {
   const [progress, setProgress] = React.useState<{ done: number; total: number } | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [results, setResults] = React.useState<ScoredEvent[] | null>(null);
+  const [savedNote, setSavedNote] = React.useState<string | null>(null);
   const tracked = React.useRef(false);
+
+  // Compose with the shared birth profile (saved by other tools / the front-door
+  // chart flow) — auto-fill so a user who already cast their chart doesn't re-type.
+  React.useEffect(() => {
+    const p = readSavedProfile();
+    if (p?.birthDate) {
+      setDate(p.birthDate);
+      if (p.birthTime) setTime(p.birthTime);
+      if (p.gender) setGender(p.gender);
+      setSavedNote(describeProfile(p));
+    }
+  }, []);
 
   const setRow = (i: number, patch: Partial<EventRow>) =>
     setRows((rs) => rs.map((r, k) => (k === i ? { ...r, ...patch } : r)));
@@ -158,6 +172,12 @@ export function BangChungTool() {
               </select>
             </div>
           </div>
+
+          {savedNote && (
+            <p className="text-xs text-muted-foreground">
+              Đã điền sẵn từ thông tin bạn đã lưu: <strong>{savedNote}</strong>
+            </p>
+          )}
 
           <div className="space-y-3">
             <p className="text-sm font-medium text-foreground">
