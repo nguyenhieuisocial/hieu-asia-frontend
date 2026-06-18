@@ -26,10 +26,10 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 // of the retired /muc-lab demo into components/home-hero/. HeroV4 stays
 // available for other surfaces.
 import { MultiHero } from '@/components/home-hero/MultiHero';
+import { InstantChartHero } from '@/components/home-hero/InstantChartHero';
 import { NotOraclesStrip } from '@/components/home-hero/NotOraclesStrip';
 import { Methodology } from '@/components/home-hero/Methodology';
 import { ToolkitSection } from '@/components/home-hero/ToolkitSection';
-import { FreeReadingTeaser } from '@/components/home-hero/FreeReadingTeaser';
 import { MissionNote } from '@/components/home-hero/MissionNote';
 import { EditorialList } from '@/components/marketing/EditorialList';
 // Wave 62.09 — custom discipline icons (vault 138 "đừng dùng icon set").
@@ -441,6 +441,12 @@ export default function LandingPage() {
             uses /tu-vi-2026 as secondary destination for the traditional
             audience. Sample report still discoverable via inline CTA at
             the EditorialList "Bốn ống kính" section closing line. */}
+        {/* Phase 1 — cửa trước THẬT: lá số Bát Tự client-side hiện ngay khi
+            khách nhập ngày sinh (thay teaser GIẢ cũ). Niềm tin TRƯỚC form.
+            Đặt trên MultiHero để là thứ đầu tiên người lạ chạm vào. */}
+        <InstantChartHero />
+
+        {/* Câu chuyện thương hiệu "năm lăng kính → AI" — giữ bản sắc editorial */}
         <MultiHero />
 
         {/* Brand "không phải oracle" — editorial decoder strip ngay dưới hero */}
@@ -637,8 +643,9 @@ export default function LandingPage() {
             grid-row trick for reveal. */}
         <MentorSampleInteractive />
 
-        {/* FreeReadingTeaser — lời mời đọc thử miễn phí trước khi tới giá */}
-        <FreeReadingTeaser />
+        {/* Lời mời "lập lá số thật" giờ là HERO (InstantChartHero, trên cùng) —
+            teaser GIẢ cũ ở đây đã bỏ. Để khách lướt thẳng xuống giá sau khi
+            xem mẫu báo cáo + Mentor demo. */}
 
         {/* 6. PricingTierV2 — 3 tiers replace 4 (Notion-style toggle + KHUYÊN DÙNG + refund) */}
         <PricingTierV2

@@ -72,10 +72,57 @@ function PillarCard({ pillar, highlight }: { pillar: BaziPillar; highlight?: boo
   );
 }
 
-export function BatTuChecker() {
-  const [date, setDate] = React.useState('');
-  const [time, setTime] = React.useState('12:00');
-  const [gender, setGender] = React.useState<'M' | 'F'>('M');
+/**
+ * Carry the just-computed chart into the paid onboarding funnel WITHOUT a blank
+ * re-entry: write the canonical chart-profile store (`hieu:chart:profile:v1`)
+ * that `BirthDataForm` (step 4/4) reads on mount to pre-fill. Same key + shape
+ * are consumed by /decisions/new, /account chart tabs & LoTrinhChart — so the
+ * carry seeds the whole product, not just one form. Gender maps M→nam, F→nữ.
+ */
+function carryChartToOnboarding(date: string, time: string, gender: 'M' | 'F') {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(
+      'hieu:chart:profile:v1',
+      JSON.stringify({
+        full_name: '',
+        gender: gender === 'F' ? 'nữ' : 'nam',
+        birth_date: date,
+        birth_time: time || '',
+        birth_place: '',
+        updated_at: new Date().toISOString(),
+      }),
+    );
+  } catch {
+    /* quota — best effort; onboarding still works, just without pre-fill */
+  }
+}
+
+export interface BatTuCheckerProps {
+  /** Pre-seed birth inputs (e.g. from the homepage hero invitation). */
+  initialDate?: string;
+  initialTime?: string;
+  initialGender?: 'M' | 'F';
+  /** When true + a valid initialDate is given, compute the chart on mount. */
+  autoCast?: boolean;
+  /**
+   * Embedded mode (homepage hero): don't rewrite the page URL to
+   * /la-so-bat-tu on cast, and don't read `?d=&t=&g=` from the host URL.
+   * The standalone /la-so-bat-tu page keeps both behaviours (default false).
+   */
+  embedded?: boolean;
+}
+
+export function BatTuChecker({
+  initialDate,
+  initialTime,
+  initialGender,
+  autoCast = false,
+  embedded = false,
+}: BatTuCheckerProps = {}) {
+  const [date, setDate] = React.useState(initialDate ?? '');
+  const [time, setTime] = React.useState(initialTime ?? '12:00');
+  const [gender, setGender] = React.useState<'M' | 'F'>(initialGender ?? 'M');
   const [chart, setChart] = React.useState<BaziChart | null>(null);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -90,18 +137,20 @@ export function BatTuChecker() {
       const asOf = `${ict.getUTCFullYear()}-${ict.getUTCMonth() + 1}-${ict.getUTCDate()}`;
       setChart(calculateBazi({ birthSolarDate: date, birthHour: parseHour(time), gender, asOf }));
       // Ghi tham số vào URL để LÁ SỐ chia sẻ được (mở link là thấy ngay lá số đó).
-      if (typeof window !== 'undefined') {
+      // Bỏ qua khi nhúng trong hero trang chủ (không ghi đè URL "/").
+      if (!embedded && typeof window !== 'undefined') {
         const qs = new URLSearchParams({ d: date, t: time, g: gender }).toString();
         window.history.replaceState(null, '', `/la-so-bat-tu?${qs}`);
       }
     } catch {
       setError('Chưa lập được lá số — kiểm tra lại ngày sinh.');
     }
-  }, [date, time, gender]);
+  }, [date, time, gender, embedded]);
 
   // Mở link chia sẻ (?d=&t=&g=) → tự điền + lập lá số ngay (không cần bấm lại).
+  // Embedded mode bỏ qua URL host (hero trang chủ dùng prop initial* thay thế).
   React.useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (embedded || typeof window === 'undefined') return;
     const sp = new URLSearchParams(window.location.search);
     const d = sp.get('d');
     if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return;
@@ -117,7 +166,28 @@ export function BatTuChecker() {
     } catch {
       /* link hỏng — bỏ qua, người dùng tự nhập */
     }
-  }, []);
+  }, [embedded]);
+
+  // Hero trang chủ: lời mời đã thu ngày–giờ–giới tính → lập lá số ngay khi nhúng.
+  React.useEffect(() => {
+    if (!autoCast || !initialDate || !/^\d{4}-\d{2}-\d{2}$/.test(initialDate)) return;
+    try {
+      const ict = new Date(Date.now() + 7 * 3600 * 1000);
+      const asOf = `${ict.getUTCFullYear()}-${ict.getUTCMonth() + 1}-${ict.getUTCDate()}`;
+      setChart(
+        calculateBazi({
+          birthSolarDate: initialDate,
+          birthHour: parseHour(initialTime ?? '12:00'),
+          gender: initialGender ?? 'M',
+          asOf,
+        }),
+      );
+    } catch {
+      /* ngày hỏng — để người dùng tự bấm lại */
+    }
+    // chỉ chạy 1 lần khi nhúng với giá trị khởi tạo
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoCast]);
 
   const maxCount = chart ? Math.max(...ELEMENTS.map((e) => chart.elementCount[e]), 1) : 1;
   const curAge = chart ? ageFromDate(chart.meta.solarDate) : null;
@@ -466,9 +536,21 @@ export function BatTuChecker() {
                 phong &ldquo;hiểu mình để tự quyết&rdquo;, không bói toán.
               </p>
               <div className="mt-4 text-center">
-                <Button asChild size="lg">
-                  <Link href="/onboarding?intent=ngu-hanh">Đọc bản đầy đủ cho lá số này →</Link>
+                <Button
+                  asChild
+                  size="lg"
+                  onClick={() => carryChartToOnboarding(date, time, gender)}
+                >
+                  {/* Mang THẲNG lá số vừa tính vào phễu trả phí: ghi kho lá số
+                      chuẩn (hieu:chart:profile:v1) trước khi điều hướng → bước
+                      "Thông tin sinh" tự điền sẵn, không phải nhập lại từ đầu. */}
+                  <Link href="/onboarding/topic?intent=ngu-hanh">
+                    Đọc bản đầy đủ cho lá số này →
+                  </Link>
                 </Button>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Bản đầy đủ dùng đúng lá số trên — không phải nhập lại ngày sinh.
+                </p>
               </div>
             </div>
           </div>
