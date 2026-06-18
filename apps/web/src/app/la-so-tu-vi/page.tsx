@@ -64,7 +64,21 @@ const FAQS = [
   },
 ];
 
-export default function LaSoTuViPage() {
+const DATE_RE = /^\d{4}-\d{1,2}-\d{1,2}$/;
+
+export default async function LaSoTuViPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ d?: string; t?: string; g?: string }>;
+}) {
+  // Link chia sẻ (?d=&t=&g=) → tự điền + lập lá số ngay (không phải nhập lại).
+  // Đọc tham số ở server rồi truyền xuống làm initial state — KHÔNG dùng hook
+  // useSearchParams (tránh lỗi soft-404 đã biết). g=M→male, g=F→female.
+  const sp = await searchParams;
+  const d = typeof sp?.d === 'string' && DATE_RE.test(sp.d) ? sp.d : undefined;
+  const t = d && typeof sp?.t === 'string' && /^\d{1,2}:\d{2}$/.test(sp.t) ? sp.t : undefined;
+  const g: 'male' | 'female' | undefined = d ? (sp?.g === 'F' ? 'female' : 'male') : undefined;
+
   return (
     <>
       <JsonLd
@@ -93,7 +107,12 @@ export default function LaSoTuViPage() {
         breadcrumb={[{ label: 'Trang chủ', href: '/' }, { label: 'Xem lá số Tử Vi' }]}
       >
         <section className="space-y-8">
-          <LaSoChecker />
+          <LaSoChecker
+            initialDate={d}
+            initialTime={t}
+            initialGender={g}
+            autoCast={Boolean(d)}
+          />
 
           {/* 12 cung */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
