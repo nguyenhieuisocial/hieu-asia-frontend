@@ -141,16 +141,27 @@ function CardShell({
   badge,
   title,
   children,
+  gateway,
 }: {
   badge: string;
   title: React.ReactNode;
   children: React.ReactNode;
+  /** "Cửa vào" công cụ đầy đủ của lăng kính — mang sẵn ngày sinh, khỏi nhập lại. */
+  gateway?: { href: string; label: string };
 }) {
   return (
-    <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
+    <div className="flex flex-col rounded-xl border border-gold/20 bg-card/40 p-4">
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">{badge}</p>
       <p className="mt-2 font-heading text-base font-semibold text-foreground">{title}</p>
       <div className="mt-2 space-y-1.5">{children}</div>
+      {gateway && (
+        <Link
+          href={gateway.href}
+          className="mt-auto inline-flex items-center gap-1 pt-3 text-xs font-medium text-gold-700 underline-offset-2 hover:underline"
+        >
+          {gateway.label} <span aria-hidden>→</span>
+        </Link>
+      )}
     </div>
   );
 }
@@ -173,6 +184,10 @@ export function UnifiedProfile({
   const western = React.useMemo(() => buildWestern(date, time), [date, time]);
   const lifePath = React.useMemo(() => lifePathFromDate(date), [date]);
   const soChuDao: SoChuDao | undefined = lifePath ? getSoChuDao(`so-${lifePath}`) : undefined;
+
+  // Mỗi lăng kính dẫn vào CÔNG CỤ ĐẦY ĐỦ của nó, mang sẵn ngày–giờ–giới tính qua
+  // query (đúng contract ?d=&t=&g= mà các tool đã nhận) → khách khỏi nhập lại.
+  const birthQ = `d=${encodeURIComponent(date)}&t=${encodeURIComponent(time || '12:00')}&g=${gender}`;
 
   // Tử Vi: cung Mệnh + chính tinh cần engine worker (iztro). Nạp lười 1 lần.
   const [tuvi, setTuvi] = React.useState<TuViState>({ status: 'loading' });
@@ -269,6 +284,7 @@ export function UnifiedProfile({
         {/* 2 ─ Tử Vi (cung Mệnh + chính tinh — engine iztro) */}
         <CardShell
           badge="Tử Vi Đẩu Số"
+          gateway={{ href: `/la-so-tu-vi?${birthQ}`, label: 'Lập lá số Tử Vi đầy đủ' }}
           title={
             tuvi.status === 'ready' ? (
               <>
@@ -319,6 +335,7 @@ export function UnifiedProfile({
         {western && (
           <CardShell
             badge="Chiêm tinh Tây"
+            gateway={{ href: `/ban-do-sao?${birthQ}`, label: 'Xem bản đồ sao đầy đủ' }}
             title={
               <>
                 <span className={ZEL_TEXT[western.sunElement]}>
@@ -339,11 +356,7 @@ export function UnifiedProfile({
               — {ELEMENT_TENDENCY[western.dominantElement]}
             </p>
             <p className="text-xs text-muted-foreground">
-              Cung Mọc cần <strong>nơi sinh</strong> (chưa có) →{' '}
-              <Link href="/ban-do-sao" className="text-gold-700 underline-offset-2 hover:underline">
-                thêm nơi sinh để mở khoá cung Mọc
-              </Link>
-              .
+              Cung Mọc cần <strong>nơi sinh</strong> — bổ sung ở bản đồ sao đầy đủ để mở khoá.
             </p>
           </CardShell>
         )}
@@ -352,6 +365,10 @@ export function UnifiedProfile({
         {soChuDao && (
           <CardShell
             badge="Thần số học"
+            gateway={{
+              href: `/than-so-hoc/y-nghia/${soChuDao.slug}`,
+              label: `Đọc sâu Số Chủ Đạo ${soChuDao.number}`,
+            }}
             title={
               <>
                 Số Chủ Đạo <span className="text-gold-700">{soChuDao.number}</span>
