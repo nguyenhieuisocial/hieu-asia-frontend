@@ -55,6 +55,7 @@ function RerunButton({
     async (e: React.MouseEvent) => {
       e.stopPropagation();
       if (pending) return;
+      if (!window.confirm(`Chạy lại workflow này trên ${repo}?`)) return;
       setPending(true);
       const res = await postInfraGithubRerun(repo, runId);
       setPending(false);

@@ -27,6 +27,7 @@ function SendTestMessageButton() {
   const [pending, setPending] = React.useState(false);
   const click = React.useCallback(async () => {
     if (pending) return;
+    if (!window.confirm('Gửi một tin thử tới nhóm chat admin cố định?')) return;
     setPending(true);
     const res = await postInfraTelegramTest();
     setPending(false);
