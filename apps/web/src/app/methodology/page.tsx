@@ -1521,7 +1521,7 @@ export default function MethodologyPage() {
                       <td className="px-4 py-3 font-mono text-xs text-primary/80">Σ</td>
                       <td className="px-4 py-3 font-semibold text-foreground">Tổng cộng (10 chủ đề)</td>
                       <td className="px-4 py-3 font-mono text-xs font-semibold text-foreground">{SAFETY_TOTAL}</td>
-                      <td className="px-4 py-3 font-mono text-xs text-muted-foreground">≥99% trung bình</td>
+                      <td className="px-4 py-3 font-mono text-xs text-muted-foreground">~98% trung bình</td>
                       <td className="px-4 py-3 text-muted-foreground">12 case đang xét lại trong S-08</td>
                     </tr>
                   </tbody>
