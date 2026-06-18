@@ -74,7 +74,9 @@ function NudgeDot({ className }: { className?: string }) {
  * mega-footer where they belong as reference shortcuts, not primary surfaces.
  */
 const PRIMARY_LINKS: readonly NavLink[] = [
-  { href: '/onboarding?intent=self', label: 'Lá số' },
+  // "Lá số" trỏ thẳng công cụ lá số THẬT (client-side, không form-wall) —
+  // Phase 1 front-door. Mentor vẫn vào /onboarding cho luồng đối thoại.
+  { href: '/la-so-bat-tu', label: 'Lá số' },
   { href: '/onboarding?intent=decision', label: 'Mentor' },
   { href: '/cong-cu', label: 'Công cụ' },
   { href: '/methodology', label: 'Phương pháp' },
