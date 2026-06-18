@@ -9,18 +9,58 @@ import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 const DESC =
   'Đừng vội tin lá số — hãy KIỂM CHỨNG nó bằng chính quá khứ của bạn. Nhập vài sự kiện đời thật đã xảy ra, hệ thống tính lại lá số đúng như nó đứng ở từng năm đó và cho thấy lá số có ghi dấu lĩnh vực ấy không — thành thật cả khi không khớp. Con số là thật, không bói mù.';
 
-export const metadata: Metadata = {
-  title: 'Bằng Chứng — kiểm chứng lá số bằng quá khứ thật của bạn',
-  description: DESC,
-  alternates: { canonical: 'https://hieu.asia/bang-chung' },
-  openGraph: {
-    title: 'Bằng Chứng — kiểm chứng lá số bằng quá khứ thật của bạn',
+const TITLE = 'Bằng Chứng — kiểm chứng lá số bằng quá khứ thật của bạn';
+
+// Dynamic OG: when a shared link carries the aggregate result (hit/total/strong —
+// NO personal data), unfurl a personalized card so it spreads. Otherwise default.
+export function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Record<string, string | string[] | undefined>;
+}): Metadata {
+  const num = (k: string): number | null => {
+    const raw = searchParams[k];
+    const n = Number(Array.isArray(raw) ? raw[0] : raw);
+    return Number.isInteger(n) && n >= 0 && n <= 7 ? n : null;
+  };
+  const total = num('total');
+  const hit = num('hit');
+  const strong = num('strong');
+  const shared = total != null && total >= 1 && hit != null && hit <= total;
+
+  if (shared) {
+    const ogUrl =
+      `https://hieu.asia/bang-chung/og?hit=${hit}&total=${total}` +
+      (strong != null ? `&strong=${strong}` : '');
+    const desc = `Tôi tự đối chiếu lá số với quá khứ thật của mình trên hieu.asia — trùng khớp ${hit}/${total} mốc, có khoe cả mốc trật. Một mốc trùng chưa nói lên gì; cái chính là kiểm chứng được trước khi tin. Không bói mù.`;
+    return {
+      title: TITLE,
+      description: desc,
+      alternates: { canonical: 'https://hieu.asia/bang-chung' },
+      openGraph: {
+        title: `Tôi đối chiếu lá số với đời thật — trùng khớp ${hit}/${total} mốc · Bằng Chứng`,
+        description: desc,
+        url: 'https://hieu.asia/bang-chung',
+        type: 'website',
+        images: [{ url: ogUrl, width: 1200, height: 630 }],
+      },
+      twitter: { card: 'summary_large_image', title: TITLE, description: desc, images: [ogUrl] },
+    };
+  }
+
+  return {
+    title: TITLE,
     description: DESC,
-    url: 'https://hieu.asia/bang-chung',
-    type: 'website',
-    images: OG_DEFAULT_IMAGES,
-  },
-};
+    alternates: { canonical: 'https://hieu.asia/bang-chung' },
+    openGraph: {
+      title: TITLE,
+      description: DESC,
+      url: 'https://hieu.asia/bang-chung',
+      type: 'website',
+      images: OG_DEFAULT_IMAGES,
+    },
+  };
+}
 
 const STEPS = [
   {

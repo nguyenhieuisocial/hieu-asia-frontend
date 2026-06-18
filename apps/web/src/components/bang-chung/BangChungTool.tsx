@@ -12,6 +12,7 @@ import {
 import { scoreEvent, palaceBaseRate, type EventScore, type PalaceBaseRate } from '@/lib/backtest/scoring';
 import { forecastTimeline, type ForecastYear } from '@/lib/backtest/forecast';
 import { CATEGORY_LABEL } from '@/lib/backtest/palace-map';
+import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { readSavedProfile, describeProfile } from '@/lib/saved-profile';
 import { track } from '@/lib/analytics';
 
@@ -298,6 +299,15 @@ function ResultsView({ results }: { results: ScoredEvent[] }) {
                 <strong>{Math.round(avgBase * 100)}%</strong> số năm. Vì vậy hãy nhìn <strong>tổng thể nhiều sự kiện</strong>,
                 đừng vin vào một lần trúng đơn lẻ. Các lần &ldquo;trượt&rdquo; được tính thành thật ở dưới.
               </p>
+              <div className="pt-1">
+                <ShareResultButton
+                  path={`/bang-chung?hit=${hit}&total=${scorable.length}&strong=${strong}`}
+                  title="Bằng Chứng — tôi đối chiếu lá số với đời thật"
+                  text={`Tôi tự đối chiếu lá số với quá khứ thật của mình: trùng khớp ${hit}/${scorable.length} mốc — kiểm chứng được, không bói mù (xem cả mốc trật). Thử với đời bạn:`}
+                  trackId="bang-chung"
+                  label="Chia sẻ kết quả ✦"
+                />
+              </div>
             </>
           ) : (
             <p className="text-sm text-muted-foreground">Chưa có sự kiện nào đủ thông tin để chấm.</p>
