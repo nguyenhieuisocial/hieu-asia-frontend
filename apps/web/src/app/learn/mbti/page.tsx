@@ -8,6 +8,8 @@ import {
 import { InfographicMBTI } from '@/components/learn/InfographicMBTI';
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   title: 'MBTI 16 loại tính cách — Học huyền học',
@@ -15,6 +17,42 @@ export const metadata: Metadata = {
     'MBTI dựa trên 4 trục: Hướng nội/ngoại (I/E), Trực giác/Cảm nhận (N/S), Lý trí/Cảm xúc (T/F), Nguyên tắc/Linh hoạt (J/P) — 16 nhóm tính cách.',
   alternates: { canonical: 'https://hieu.asia/learn/mbti' },
 };
+
+// FAQ dùng chung cho FAQPage JSON-LD — chữ schema === chữ đang hiển thị trong
+// phần "Giải thích chi tiết" (các AccordionItem) để chống cloaking.
+const FAQS = [
+  {
+    q: '4 trục lưỡng cực là gì?',
+    a: 'I / E — Hướng nội (Introvert) vs Hướng ngoại (Extravert): Nguồn năng lượng đến từ một mình hay từ tương tác? N / S — Trực giác (iNtuition) vs Cảm nhận (Sensing): Chú ý vào khả năng, mẫu hình, hay vào chi tiết, dữ kiện? T / F — Lý trí (Thinking) vs Cảm xúc (Feeling): Quyết định theo logic hay theo giá trị, cảm xúc? J / P — Nguyên tắc (Judging) vs Linh hoạt (Perceiving): Thích đóng kế hoạch hay để mở, ứng biến?',
+  },
+  {
+    q: '4 nhóm lớn?',
+    a: 'Analysts (NT) — INTJ, INTP, ENTJ, ENTP: tư duy hệ thống. Diplomats (NF) — INFJ, INFP, ENFJ, ENFP: lý tưởng, đồng cảm. Sentinels (SJ) — ISTJ, ISFJ, ESTJ, ESFJ: trật tự, trách nhiệm. Explorers (SP) — ISTP, ISFP, ESTP, ESFP: thực tế, linh hoạt.',
+  },
+  {
+    q: 'Cần lưu ý gì?',
+    a: 'MBTI là khung phân loại, không phải chẩn đoán. Kết quả có thể thay đổi theo giai đoạn cuộc đời. Đừng dùng MBTI để dán nhãn hay phán xét người khác — dùng để hiểu cách mình vận hành tự nhiên.',
+  },
+  {
+    q: 'MBTI có khoa học không?',
+    a: 'MBTI bị nhiều nhà tâm lý học phản biện về độ tin cậy (test-retest reliability). Tuy nhiên với mục đích tự phản tỉnh và đối thoại, nó vẫn là khung hữu ích — đặc biệt khi kết hợp với các góc nhìn khác.',
+  },
+];
+
+const JSONLD = [
+  article({
+    headline: 'MBTI — 16 loại tính cách',
+    description:
+      'MBTI dựa trên 4 trục: Hướng nội/ngoại (I/E), Trực giác/Cảm nhận (N/S), Lý trí/Cảm xúc (T/F), Nguyên tắc/Linh hoạt (J/P) — 16 nhóm tính cách.',
+    url: '/learn/mbti',
+  }),
+  breadcrumb([
+    { name: 'Trang chủ', url: '/' },
+    { name: 'Học huyền học', url: '/learn' },
+    { name: 'MBTI', url: '/learn/mbti' },
+  ]),
+  faqPage(FAQS),
+];
 
 export default function LearnMBTIPage() {
   return (
@@ -124,6 +162,8 @@ export default function LearnMBTIPage() {
           ),
         },
       ]}
-    />
+    >
+      <JsonLd data={JSONLD} />
+    </LearnArticle>
   );
 }

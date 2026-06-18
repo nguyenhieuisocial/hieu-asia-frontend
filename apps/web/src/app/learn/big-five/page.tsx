@@ -7,6 +7,8 @@ import {
 } from '@hieu-asia/ui';
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   title: 'Big Five (OCEAN) — Trắc nghiệm tính cách | Học huyền học',
@@ -14,6 +16,42 @@ export const metadata: Metadata = {
     'Big Five (OCEAN) — mô hình tính cách có cơ sở khoa học vững nhất, đo 5 chiều: Cởi mở, Tận tâm, Hướng ngoại, Dễ chịu, Nhạy cảm cảm xúc. Xu hướng, không phải nhãn cố định.',
   alternates: { canonical: 'https://hieu.asia/learn/big-five' },
 };
+
+// FAQ dùng chung cho CẢ FAQPage JSON-LD lẫn phần hiển thị (Accordion) →
+// chữ schema === chữ hiển thị (chống cloaking) + crawler/AI đọc được câu trả lời.
+const FAQS = [
+  {
+    q: 'Vì sao Big Five được xem là "khoa học" nhất?',
+    a: 'Năm chiều này không do ai "nghĩ ra" mà nổi lên từ phân tích thống kê hàng nghìn từ mô tả tính cách qua nhiều ngôn ngữ và nền văn hoá (lexical hypothesis). Chúng có độ ổn định và khả năng dự báo cao trong nghiên cứu — nên giới hàn lâm tin cậy hơn hẳn so với các bài phân loại "đóng hộp".',
+  },
+  {
+    q: 'Khác MBTI ở chỗ nào?',
+    a: 'MBTI xếp bạn vào 1 trong 16 "kiểu" cố định; Big Five cho bạn một điểm trên năm dải liên tục — gần thực tế hơn vì con người hiếm khi rơi gọn vào một hộp. Big Five cũng có nền thực nghiệm mạnh hơn. Hai góc nhìn bổ sung nhau: MBTI dễ chia sẻ, Big Five đo lường chính xác hơn.',
+  },
+  {
+    q: '"Nhạy cảm cảm xúc" cao có phải điều xấu?',
+    a: 'Không. Đây là một dải trung lập: đầu nhạy cảm giúp bạn tinh tế, đồng cảm, cảnh giác sớm với rủi ro; đầu ổn định giúp bạn điềm tĩnh dưới áp lực. Mỗi đầu hợp với những bối cảnh khác nhau — hieu.asia mô tả xu hướng, không gán tốt/xấu.',
+  },
+  {
+    q: 'Cần lưu ý gì?',
+    a: 'Điểm số là một lát cắt ở thời điểm làm bài, không cố định cả đời và có thể đổi theo giai đoạn. Hãy dùng kết quả để hiểu mình và tự quyết — không để dán nhãn hay phán xét. hieu.asia đọc Big Five như một góc nhìn, kết hợp với các lăng kính khác.',
+  },
+];
+
+const JSONLD = [
+  article({
+    headline: 'Big Five (OCEAN) — 5 chiều tính cách',
+    description:
+      'Big Five (OCEAN) — mô hình tính cách có cơ sở khoa học vững nhất, đo 5 chiều: Cởi mở, Tận tâm, Hướng ngoại, Dễ chịu, Nhạy cảm cảm xúc. Xu hướng, không phải nhãn cố định.',
+    url: '/learn/big-five',
+  }),
+  breadcrumb([
+    { name: 'Trang chủ', url: '/' },
+    { name: 'Học huyền học', url: '/learn' },
+    { name: 'Big Five', url: '/learn/big-five' },
+  ]),
+  faqPage(FAQS),
+];
 
 // 5 chiều OCEAN — mô tả 2 đầu của mỗi dải (không đầu nào "tốt/xấu" hơn).
 const DIMENSIONS: { vi: string; en: string; high: string; low: string }[] = [
@@ -113,44 +151,22 @@ export default function LearnBigFivePage() {
           heading: 'Giải thích chi tiết',
           children: (
             <Accordion type="single" collapsible className="space-y-2">
-              <AccordionItem value="why-science" className="rounded border border-border px-4">
-                <AccordionTrigger>Vì sao Big Five được xem là "khoa học" nhất?</AccordionTrigger>
-                <AccordionContent>
-                  Năm chiều này không do ai "nghĩ ra" mà nổi lên từ phân tích thống kê hàng nghìn từ mô
-                  tả tính cách qua nhiều ngôn ngữ và nền văn hoá (lexical hypothesis). Chúng có độ ổn
-                  định và khả năng dự báo cao trong nghiên cứu — nên giới hàn lâm tin cậy hơn hẳn so với
-                  các bài phân loại "đóng hộp".
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="vs-mbti" className="rounded border border-border px-4">
-                <AccordionTrigger>Khác MBTI ở chỗ nào?</AccordionTrigger>
-                <AccordionContent>
-                  MBTI xếp bạn vào 1 trong 16 "kiểu" cố định; Big Five cho bạn một <em>điểm trên năm dải
-                  liên tục</em> — gần thực tế hơn vì con người hiếm khi rơi gọn vào một hộp. Big Five
-                  cũng có nền thực nghiệm mạnh hơn. Hai góc nhìn bổ sung nhau: MBTI dễ chia sẻ, Big Five
-                  đo lường chính xác hơn.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="neuroticism" className="rounded border border-border px-4">
-                <AccordionTrigger>"Nhạy cảm cảm xúc" cao có phải điều xấu?</AccordionTrigger>
-                <AccordionContent>
-                  Không. Đây là một dải trung lập: đầu nhạy cảm giúp bạn tinh tế, đồng cảm, cảnh giác
-                  sớm với rủi ro; đầu ổn định giúp bạn điềm tĩnh dưới áp lực. Mỗi đầu hợp với những bối
-                  cảnh khác nhau — hieu.asia mô tả xu hướng, không gán tốt/xấu.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="caution" className="rounded border border-border px-4">
-                <AccordionTrigger>Cần lưu ý gì?</AccordionTrigger>
-                <AccordionContent>
-                  Điểm số là một lát cắt ở thời điểm làm bài, không cố định cả đời và có thể đổi theo
-                  giai đoạn. Hãy dùng kết quả để hiểu mình và tự quyết — không để dán nhãn hay phán xét.
-                  hieu.asia đọc Big Five như một góc nhìn, kết hợp với các lăng kính khác.
-                </AccordionContent>
-              </AccordionItem>
+              {FAQS.map((f, i) => (
+                <AccordionItem
+                  key={i}
+                  value={`faq-${i}`}
+                  className="rounded border border-border px-4"
+                >
+                  <AccordionTrigger>{f.q}</AccordionTrigger>
+                  <AccordionContent>{f.a}</AccordionContent>
+                </AccordionItem>
+              ))}
             </Accordion>
           ),
         },
       ]}
-    />
+    >
+      <JsonLd data={JSONLD} />
+    </LearnArticle>
   );
 }
