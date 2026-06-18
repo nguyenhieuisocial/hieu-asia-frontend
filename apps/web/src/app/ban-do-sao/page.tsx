@@ -57,7 +57,19 @@ const ELEMENTS: Array<{ name: string; tone: string; signs: string }> = [
   { name: 'Nước 💧', tone: 'Cảm xúc, trực giác, đồng cảm', signs: 'Cự Giải · Bọ Cạp · Song Ngư' },
 ];
 
-export default function BanDoSaoPage() {
+// Link mở sẵn lá số (?d=&t=&g=) → tự điền ngày/giờ sinh, lá số Mặt Trời/Mặt Trăng
+// hiện ngay không phải nhập lại. Theo đúng khuôn /la-so-bat-tu (server đọc query,
+// truyền prop initial*) để tránh lỗi soft-404 của useSearchParams. `g` (giới tính)
+// được nhận nhưng bỏ qua — chiêm tinh Tây không cần. Nơi sinh KHÔNG truyền: engine
+// tự lược cung Mọc một cách êm khi thiếu (không bịa nơi sinh).
+export default async function BanDoSaoPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ d?: string; t?: string; g?: string }>;
+}) {
+  const sp = await searchParams;
+  const initialDate = sp?.d && /^\d{4}-\d{1,2}-\d{1,2}$/.test(sp.d) ? sp.d : undefined;
+  const initialTime = initialDate ? sp.t : undefined;
   return (
     <>
       <JsonLd
@@ -86,7 +98,7 @@ export default function BanDoSaoPage() {
         breadcrumb={[{ label: 'Trang chủ', href: '/' }, { label: 'Bản đồ sao' }]}
       >
         <section className="space-y-8">
-          <SunMoonChecker />
+          <SunMoonChecker initialDate={initialDate} initialTime={initialTime} />
 
           {/* 12 cung hoàng đạo */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">

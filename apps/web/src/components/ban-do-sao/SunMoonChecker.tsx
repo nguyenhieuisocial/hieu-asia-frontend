@@ -138,9 +138,21 @@ const CITIES: ReadonlyArray<{ name: string; lat: number; lon: number }> = [
   { name: 'Biên Hoà', lat: 10.95, lon: 106.82 },
 ];
 
-export function SunMoonChecker() {
-  const [date, setDate] = React.useState('');
-  const [time, setTime] = React.useState('12:00');
+export interface SunMoonCheckerProps {
+  /**
+   * Pre-seed birth inputs from a share/link (?d=&t=) — e.g. a visitor arriving
+   * with their birth date pre-filled. The chart computes reactively in useMemo
+   * from `date`/`time`, so seeding initial state renders the sun/moon chart with
+   * no button press. Place (lat/lon) is intentionally NOT seeded — the engine
+   * omits the Ascendant gracefully when no place is given.
+   */
+  initialDate?: string;
+  initialTime?: string;
+}
+
+export function SunMoonChecker({ initialDate, initialTime }: SunMoonCheckerProps = {}) {
+  const [date, setDate] = React.useState(initialDate ?? '');
+  const [time, setTime] = React.useState(initialTime ?? '12:00');
   const [placeIdx, setPlaceIdx] = React.useState<number | null>(null);
   const [reading, setReading] = React.useState<string | null>(null);
   const [readingLoading, setReadingLoading] = React.useState(false);
