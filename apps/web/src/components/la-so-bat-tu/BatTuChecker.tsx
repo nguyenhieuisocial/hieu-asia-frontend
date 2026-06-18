@@ -6,6 +6,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '
 import { calculateBazi, type BaziChart, type BaziPillar, type Element, ELEMENTS } from '@/lib/bazi';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { ProofDisclosure } from '@/components/la-so-bat-tu/ProofDisclosure';
+import { UnifiedProfile } from '@/components/la-so-bat-tu/UnifiedProfile';
 
 /**
  * Công cụ Bát Tự (Tứ Trụ) bấm-thử miễn phí. Engine `lib/bazi.ts` chạy NGAY trong
@@ -520,6 +521,21 @@ export function BatTuChecker({
               </div>
             )}
 
+            {/* HỒ SƠ CON NGƯỜI: từ MỘT ngày–giờ–giới tính ở cửa trước, hợp nhất
+                lá số khách qua 4 hệ thống THẬT (Bát Tự đã có ở trên + Tử Vi +
+                Chiêm tinh Tây + Thần số) thành một chân dung "đây là toàn bộ bạn".
+                Trung thực là hào nước — chỉ kéo giá trị engine tính được, không
+                bịa hội tụ. Nằm giữa lá số Bát Tự và phần "Vì sao đúng?" / mua. */}
+            <div className="border-t border-gold/15 pt-5">
+              <UnifiedProfile
+                chart={chart}
+                date={date}
+                time={time}
+                gender={gender}
+                hourKnown={time !== '' && time !== '12:00'}
+              />
+            </div>
+
             {/* Khoảnh khắc NIỀM TIN: trước khi mời mua, cho khách TỰ kiểm chứng
                 mỗi kết luận ở trên được TÍNH ra sao (tiết khí → can chi, bảng cố
                 định, luật âm-dương) — minh bạch THẬT, khác hẳn "chuyên gia AI"
@@ -534,12 +550,13 @@ export function BatTuChecker({
 
             <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-5">
               <p className="text-center font-heading text-lg text-foreground">
-                Bản đọc đầy đủ — giải sâu CHÍNH lá số này
+                Bản đọc đầy đủ — giải sâu TOÀN BỘ hồ sơ này
               </p>
               <p className="mx-auto mt-1 max-w-xl text-center text-sm text-muted-foreground">
-                Bạn vừa thấy <strong>con số được tính ra sao</strong>. Bản đọc trả phí lấy đúng những dữ kiện
-                ấy — Nhật Chủ {chart.dayMaster.can}, hành {chart.strongest} vượng
-                {chart.missing.length ? `, thiếu ${chart.missing.join('/')}` : ''} — luận sâu riêng cho bạn:
+                Bạn vừa thấy <strong>con số được tính ra sao</strong> qua bốn hệ thống. Bản đọc trả phí lấy
+                đúng những dữ kiện ấy — neo ở lá số Bát Tự (Nhật Chủ {chart.dayMaster.can}, hành{' '}
+                {chart.strongest} vượng
+                {chart.missing.length ? `, thiếu ${chart.missing.join('/')}` : ''}) — luận sâu riêng cho bạn:
               </p>
               <ul className="mx-auto mt-3 max-w-xl space-y-1.5 text-left text-sm text-foreground/85">
                 {teasers.map((tl) => (
