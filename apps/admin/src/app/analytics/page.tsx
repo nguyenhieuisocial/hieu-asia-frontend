@@ -20,8 +20,10 @@ import {
   Compass,
   Undo2,
   ShoppingCart,
+  Wallet,
 } from 'lucide-react';
 import { RevenueChart, type RevenueDay } from '@/components/analytics/RevenueChart';
+import { NetRevenueChart } from '@/components/analytics/NetRevenueChart';
 import { RefundChart, type RefundDay } from '@/components/analytics/RefundChart';
 import { AbandonedChart, type AbandonedDay } from '@/components/analytics/AbandonedChart';
 import { VendorCostChart, type VendorCost } from '@/components/analytics/VendorCostChart';
@@ -33,6 +35,7 @@ import { ErrorBlock } from '@/components/admin/error-block';
 import { EmptyState } from '@/components/admin/empty-state';
 import { EngineMetricsSection } from '@/components/admin/analytics/EngineMetricsSection';
 import { listTransactions } from '@/lib/admin-api';
+import { computeNetRevenue } from '@/lib/net-revenue';
 import type { AdminTransaction } from '@/lib/mock-data';
 
 interface AnalyticsResponse {
@@ -193,6 +196,13 @@ export default function AnalyticsPage() {
   // actually returned the fields (older worker builds omit them entirely).
   const refunds = data?.refunds;
   const abandoned = data?.abandoned;
+  // "Tiền thực thu" = doanh thu gộp − hoàn tiền, gộp theo ngày từ hai series mà
+  // endpoint đã trả. Chỉ tính được khi backend trả refunds (build worker cũ bỏ
+  // field này → ẩn cả KPI lẫn chart). Pure client-side, không gọi thêm endpoint.
+  const netRevenue = React.useMemo(
+    () => (refunds ? computeNetRevenue(revenue.daily, refunds.daily) : null),
+    [refunds, revenue.daily],
+  );
   const totalLLMCost = vendorCost.reduce((s, v) => s + v.cost_usd, 0);
   const avgCost = sessions.total > 0 ? totalLLMCost / sessions.total : 0;
   // Vendor cost here comes from Langfuse, which is usually NOT wired (keys live
@@ -312,6 +322,15 @@ export default function AnalyticsPage() {
           delta={revenueDelta}
           hint={`${revenue.txn_count} giao dịch`}
         />
+        {netRevenue && (
+          <KpiCard
+            label={`Tiền thực thu (${days}d)`}
+            value={fmtCurrency(netRevenue.netTotal)}
+            icon={<Wallet className="h-4 w-4" />}
+            accent="jade"
+            hint={`gộp ${fmtCurrency(netRevenue.grossTotal)} − hoàn ${fmtCurrency(netRevenue.refundsTotal)}`}
+          />
+        )}
         <KpiCard
           label={`Phiên (${days}d)`}
           value={sessions.total.toLocaleString('vi-VN')}
@@ -368,6 +387,29 @@ export default function AnalyticsPage() {
           )}
         </CardContent>
       </Card>
+
+      {netRevenue && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Tiền thực thu theo ngày</CardTitle>
+            <CardDescription>
+              Doanh thu gộp trừ tiền hoàn (đường vàng nét đứt = gộp, vùng ngọc =
+              thực thu). Chưa trừ chi phí LLM — chi phí thật theo ngày xem ở{' '}
+              <Link href="/llm-spend" className="text-gold hover:underline">
+                /llm-spend
+              </Link>
+              .
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <p className="py-8 text-center text-sm text-muted-foreground">Đang tải…</p>
+            ) : (
+              <NetRevenueChart data={netRevenue.daily} />
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {(refunds || abandoned) && (
         <div className="grid gap-4 lg:grid-cols-2">
