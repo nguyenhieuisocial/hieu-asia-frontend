@@ -10,6 +10,7 @@ import {
   type LossTarget,
 } from '@/lib/backtest/backtest-core';
 import { scoreEvent, palaceBaseRate, type EventScore, type PalaceBaseRate } from '@/lib/backtest/scoring';
+import { forecastTimeline, type ForecastYear } from '@/lib/backtest/forecast';
 import { CATEGORY_LABEL } from '@/lib/backtest/palace-map';
 import { readSavedProfile, describeProfile } from '@/lib/saved-profile';
 import { track } from '@/lib/analytics';
@@ -260,6 +261,10 @@ export function BangChungTool() {
 
       {results && <ResultsView results={results} />}
 
+      {results && (
+        <ForecastSection birthSolarDate={date} birthHour={parseHour(time)} gender={gender} />
+      )}
+
       <MethodologyNote />
     </div>
   );
@@ -340,6 +345,121 @@ function ResultsView({ results }: { results: ScoredEvent[] }) {
         </Button>
       </div>
     </div>
+  );
+}
+
+function ForecastSection({
+  birthSolarDate,
+  birthHour,
+  gender,
+}: {
+  birthSolarDate: string;
+  birthHour: number;
+  gender: 'male' | 'female';
+}) {
+  const N = 5;
+  const [forecast, setForecast] = React.useState<ForecastYear[] | null>(null);
+  const [loading, setLoading] = React.useState(false);
+  const [progress, setProgress] = React.useState<{ done: number; total: number } | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
+
+  const onForecast = React.useCallback(async () => {
+    setError(null);
+    setLoading(true);
+    setProgress({ done: 0, total: N });
+    try {
+      const { years } = await forecastTimeline(
+        { birthSolarDate, birthHour, gender },
+        nowYear,
+        N,
+        (done, total) => setProgress({ done, total }),
+      );
+      setForecast(years);
+      track('tool_used', { tool: 'bang-chung-forecast', years: N });
+    } catch {
+      setError('Chưa xem được — thử lại sau giây lát (hệ thống giới hạn số lần tra cứu liên tục).');
+    } finally {
+      setLoading(false);
+      setProgress(null);
+    }
+  }, [birthSolarDate, birthHour, gender]);
+
+  return (
+    <Card className="border-gold/20 bg-card/40">
+      <CardHeader>
+        <CardTitle className="text-base">Vài năm tới — lĩnh vực lá số nhấn</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {!forecast && (
+          <>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Lá số đã &ldquo;ghi đúng&rdquo; quá khứ của bạn? Cùng phương pháp đó cho thấy {N} năm tới lá số
+              NHẤN vào lĩnh vực nào — để bạn <strong>chủ động chuẩn bị</strong>, không phải lời tiên đoán.
+            </p>
+            <Button onClick={() => void onForecast()} disabled={loading} size="lg" variant="outline">
+              {loading
+                ? progress
+                  ? `Đang xem… (${progress.done}/${progress.total})`
+                  : 'Đang xem…'
+                : `Lá số nhấn gì trong ${N} năm tới? →`}
+            </Button>
+            {error && <p className="text-sm text-destructive">{error}</p>}
+          </>
+        )}
+        {forecast && (
+          <>
+            <div className="space-y-3">
+              {forecast.map((y) => {
+                const strong = y.domains.filter((d) => d.grade === 'STRONG');
+                const partial = y.domains.filter((d) => d.grade === 'PARTIAL');
+                return (
+                  <div key={y.year} className="rounded-xl border border-border bg-background/40 p-4">
+                    <div className="font-heading text-base font-semibold text-foreground">
+                      {y.year}
+                      {y.age != null ? ` · ${y.age} tuổi` : ''}
+                    </div>
+                    {strong.length > 0 ? (
+                      <p className="mt-1 text-sm leading-relaxed text-foreground/85">
+                        Lá số nhấn <strong className="text-jade-700">mạnh</strong>:{' '}
+                        {strong.map((d) => CATEGORY_LABEL[d.category]).join(', ')}.
+                        {partial.length > 0 && (
+                          <span className="text-muted-foreground"> (+{partial.length} lĩnh vực chỉ chớm nhẹ)</span>
+                        )}
+                      </p>
+                    ) : partial.length > 0 ? (
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        Không có lĩnh vực nổi bật mạnh — chỉ {partial.length} chủ đề chớm nhẹ (mức &ldquo;ngẫu nhiên&rdquo;,
+                        chưa đáng kể).
+                      </p>
+                    ) : (
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        Năm tương đối tĩnh — lá số không nhấn lĩnh vực nào rõ.
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              Đây là những <strong>lĩnh vực được nhấn</strong> theo lá số từng năm — một{' '}
+              <strong>chủ đề để chủ động</strong>, KHÔNG phải dự đoán sự kiện cụ thể. Nhiều năm sẽ có vài
+              lĩnh vực cùng &ldquo;sáng&rdquo; (chuyện thường của lá số), nên hãy chú ý nhất vào mục{' '}
+              <strong>nhấn mạnh</strong>.
+            </p>
+            <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-5 text-center">
+              <p className="font-heading text-lg text-foreground">Muốn hiểu sâu các chủ đề này để chuẩn bị?</p>
+              <p className="mx-auto mt-1 max-w-xl text-sm text-muted-foreground">
+                Bản đọc đầy đủ luận từng giai đoạn theo lá số của bạn — &ldquo;hiểu mình để tự quyết&rdquo;,
+                không phán định mệnh.
+              </p>
+              <Button asChild size="lg" className="mt-4">
+                <Link href="/onboarding">Tạo bản đọc đầy đủ →</Link>
+              </Button>
+            </div>
+          </>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
