@@ -9,7 +9,7 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
-  title: 'Tử Vi 12 cung — Học huyền học',
+  title: 'Tử Vi 12 cung, Học huyền học',
   description:
     'Tìm hiểu 12 cung Tử Vi: Mệnh, Tài Bạch, Phu Thê, Quan Lộc... Mỗi cung phản ánh một lĩnh vực đời sống cụ thể.',
   alternates: { canonical: 'https://hieu.asia/learn/tu-vi' },
@@ -28,11 +28,11 @@ const FAQS = [
   },
   {
     q: 'Có bao nhiêu sao?',
-    a: 'Hệ thống tiêu chuẩn dùng 14 chính tinh (Tử Vi, Thiên Phủ, Vũ Khúc, Liêm Trinh...) cộng các phụ tinh — tổng cộng hơn 100 sao. hieu.asia dùng engine dựa trên Iztro (thư viện an sao mã nguồn mở), bọc trong lớp kiểm-định riêng, để tính đầy đủ chính tinh và phụ tinh.',
+    a: 'Hệ thống tiêu chuẩn dùng 14 chính tinh (Tử Vi, Thiên Phủ, Vũ Khúc, Liêm Trinh...) cộng các phụ tinh, tổng cộng hơn 100 sao. hieu.asia dùng engine dựa trên Iztro (thư viện an sao mã nguồn mở), bọc trong lớp kiểm-định riêng, để tính đầy đủ chính tinh và phụ tinh.',
   },
   {
     q: 'Đọc lá số để làm gì?',
-    a: 'Không phải để biết tương lai cố định. Mà để nhận diện thiên hướng, điểm mạnh, điểm dễ vấp — từ đó có quyết định phù hợp hơn. Lá số là bản đồ, không phải kịch bản.',
+    a: 'Không phải để biết tương lai cố định. Mà để nhận diện thiên hướng, điểm mạnh, điểm dễ vấp, từ đó có quyết định phù hợp hơn. Lá số là bản đồ, không phải kịch bản.',
   },
   {
     q: 'Giới hạn của Tử Vi?',
@@ -42,7 +42,7 @@ const FAQS = [
 
 const JSONLD = [
   article({
-    headline: 'Tử Vi 12 cung — nền tảng cho người mới',
+    headline: 'Tử Vi 12 cung: nền tảng cho người mới',
     description:
       'Tìm hiểu 12 cung Tử Vi: Mệnh, Tài Bạch, Phu Thê, Quan Lộc... Mỗi cung phản ánh một lĩnh vực đời sống cụ thể.',
     url: '/learn/tu-vi',
@@ -67,7 +67,7 @@ export default function LearnTuViPage() {
       standfirst={
         <>
           Lá số Tử Vi chia đời người thành 12 lĩnh vực (gọi là "cung"), mỗi cung chứa các sao
-          ảnh hưởng đến một mặt cụ thể của cuộc sống — từ sức khỏe, tài chính, tình cảm đến
+          ảnh hưởng đến một mặt cụ thể của cuộc sống, từ sức khỏe, tài chính, tình cảm đến
           sự nghiệp.{' '}
           <Link
             href="/methodology/tu-vi"
@@ -105,7 +105,7 @@ export default function LearnTuViPage() {
         {
           id: 'tung-cung',
           tocLabel: 'Bấm vào cung bạn quan tâm',
-          heading: '12 cung — bấm vào cung bạn quan tâm',
+          heading: '12 cung, bấm vào cung bạn quan tâm',
           children: (
             <>
               <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
