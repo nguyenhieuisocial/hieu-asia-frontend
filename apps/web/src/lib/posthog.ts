@@ -16,6 +16,7 @@
  */
 
 import posthog, { type PostHog } from "posthog-js";
+import { getOrCreateAnonUserId } from "@hieu-asia/supabase";
 
 const PREFS_KEY = "hieu.user.preferences";
 const DEFAULT_HOST = "https://us.i.posthog.com";
@@ -114,8 +115,19 @@ export function getPostHog(): PostHog | null {
   }
   const host = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? DEFAULT_HOST;
 
+  // Use our `anon_<uuid>` as PostHog's distinct_id so every event (autocapture +
+  // custom track()) and the login-time `ph.alias(user.id, anonId)` all key off the
+  // SAME id — which is also the id the backend accepts for pre-login reading
+  // history. `isIdentifiedID: false` keeps the visitor anonymous (event-only),
+  // honouring `person_profiles: "identified_only"`. Only applied on first init;
+  // returning visitors keep their stored distinct_id (acceptable pre-launch).
+  const anonId = getOrCreateAnonUserId();
+
   posthog.init(key, {
     api_host: host,
+    bootstrap: anonId
+      ? { distinctID: anonId, isIdentifiedID: false }
+      : undefined,
     // GDPR / ePrivacy: opt out of capturing until the CMP banner records
     // explicit `analytics:true`. PostHog SDK still loads (so feature flags
     // and surveys can be evaluated) but autocapture/$pageview don't ship
