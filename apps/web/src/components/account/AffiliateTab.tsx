@@ -139,10 +139,8 @@ export function AffiliateTab() {
             </CardContent>
           </Card>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <MiniStat label="L1 (trực tiếp)" value={data.l1_count ?? 0} />
-            <MiniStat label="L2 (cấp 2)" value={data.l2_count ?? 0} />
-            <MiniStat label="L3 (cấp 3)" value={data.l3_count ?? 0} />
+          <div className="grid grid-cols-1 gap-3">
+            <MiniStat label="Người bạn đã giới thiệu" value={data.l1_count ?? 0} />
           </div>
 
           <Card>
