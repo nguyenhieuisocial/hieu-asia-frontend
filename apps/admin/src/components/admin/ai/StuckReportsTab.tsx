@@ -11,7 +11,8 @@
  */
 
 import * as React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Card,
@@ -19,8 +20,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  toast,
 } from '@hieu-asia/ui';
-import { AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, ExternalLink, RotateCw } from 'lucide-react';
 import { EmptyState } from '@/components/admin/empty-state';
 import { getStuckSessions, type StuckSessionRow } from '@/lib/llm-spend-api';
 
@@ -48,8 +50,29 @@ function fmtAge(min: number): string {
   return `${min} phút`;
 }
 
+/**
+ * Cho chạy lại pipeline cho một phiên đang treo — cùng endpoint trang /sessions
+ * dùng (POST /api/admin/sessions/:id/re-orchestrate, worker re-orchestrate +
+ * audit). Thao tác NGAY tại đây thay vì phải sang /sessions tìm lại session_id.
+ */
+async function reOrchestrate(sessionId: string) {
+  const r = await fetch(`/api/admin/sessions/${sessionId}/re-orchestrate`, { method: 'POST' });
+  const data = await r.json().catch(() => ({ ok: false, error: `HTTP ${r.status}` }));
+  if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
+  return data;
+}
+
 function StuckRow({ row }: { row: StuckSessionRow }) {
   const critical = row.age_minutes > CRITICAL_AGE_MIN;
+  const qc = useQueryClient();
+  const rerun = useMutation({
+    mutationFn: () => reOrchestrate(row.session_id),
+    onSuccess: () => {
+      toast.success('Đã cho chạy lại báo cáo', { description: `Session ${row.session_id}` });
+      qc.invalidateQueries({ queryKey: ['ai-stuck-sessions'] });
+    },
+    onError: (e) => toast.error('Chạy lại thất bại', { description: (e as Error).message }),
+  });
   return (
     <li
       className={[
@@ -75,6 +98,22 @@ function StuckRow({ row }: { row: StuckSessionRow }) {
       <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-muted-foreground">
         <span>{STATUS_LABEL[row.status]}</span>
         {row.user_id ? <span className="font-mono">user: {row.user_id}</span> : null}
+      </div>
+      <div className="mt-2 flex items-center gap-3">
+        <Button size="sm" onClick={() => rerun.mutate()} disabled={rerun.isPending}>
+          <RotateCw
+            className={['mr-1.5 h-3.5 w-3.5', rerun.isPending ? 'animate-spin' : ''].join(' ')}
+            aria-hidden
+          />
+          {rerun.isPending ? 'Đang chạy lại…' : 'Chạy lại pipeline'}
+        </Button>
+        <Link
+          href={`/sessions/${row.session_id}`}
+          className="inline-flex items-center gap-1 text-xs text-muted-foreground underline-offset-2 transition-colors hover:text-foreground hover:underline"
+        >
+          <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+          Xem session
+        </Link>
       </div>
     </li>
   );
