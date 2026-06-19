@@ -116,9 +116,9 @@ export function PayoutRequest({
   payoutMethod,
   payoutDestination,
   minPayout,
+  availableVnd,
   canPayout,
-  payoutAmount,
-  setPayoutAmount,
+  submitting,
   onSubmit,
   msg,
   isActive,
@@ -126,9 +126,9 @@ export function PayoutRequest({
   payoutMethod: string;
   payoutDestination: string;
   minPayout: number;
+  availableVnd: number;
   canPayout: boolean;
-  payoutAmount: string;
-  setPayoutAmount: (v: string) => void;
+  submitting: boolean;
   onSubmit: () => void;
   msg: { ok: boolean; text: string } | null;
   isActive: boolean;
@@ -143,20 +143,18 @@ export function PayoutRequest({
           Phương thức: <b>{payoutMethod.toUpperCase()}</b> · Đích:{' '}
           <span className="font-mono">{payoutDestination}</span>
         </div>
-        <div className="flex gap-2">
-          <Input
-            type="number"
-            placeholder={`Min ${minPayout.toLocaleString('vi-VN')}`}
-            value={payoutAmount}
-            onChange={(e) => setPayoutAmount(e.target.value)}
-            disabled={!canPayout}
-          />
-          <Button onClick={onSubmit} disabled={!canPayout} className="bg-gold text-ink hover:bg-gold/90">
-            Gửi yêu cầu
-          </Button>
-        </div>
+        <p className="text-sm text-muted-foreground">
+          Khi gửi yêu cầu, bạn rút toàn bộ số dư khả dụng. Admin sẽ xử lý và chuyển khoản.
+        </p>
+        <Button
+          onClick={onSubmit}
+          disabled={!canPayout || submitting}
+          className="bg-gold text-ink hover:bg-gold/90"
+        >
+          {submitting ? 'Đang gửi...' : `Yêu cầu rút ${vnd(availableVnd)}`}
+        </Button>
         {!canPayout && isActive && (
-          <p className="text-xs text-muted-foreground">Cần đạt {vnd(minPayout)} mới được rút.</p>
+          <p className="text-xs text-muted-foreground">Tối thiểu {vnd(minPayout)} mới được rút.</p>
         )}
         {msg && (
           <p className={`text-sm ${msg.ok ? 'text-green-400' : 'text-rose-300'}`} role="status">
