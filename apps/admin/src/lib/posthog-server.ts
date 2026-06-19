@@ -244,9 +244,26 @@ export async function fetchRecordingSnapshots(
         }
       }
     }
+    // rrweb needs a FullSnapshot (type 2) to build the DOM — a window without
+    // one renders blank. Prefer the busiest window that HAS a full snapshot; if
+    // none do (PostHog's encoded format), fail soft so the UI shows an honest
+    // message instead of an empty player.
+    const windows = [...byWindow.values()].map((evs) => {
+      evs.sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0));
+      return evs;
+    });
+    const hasFullSnapshot = (evs: Array<{ timestamp?: number }>) =>
+      evs.some((e) => (e as { type?: number }).type === 2);
+    const withSnap = windows.filter(hasFullSnapshot);
+    if (withSnap.length === 0) {
+      return {
+        ok: false,
+        events: [],
+        error: 'Phiên này không có khung đầy đủ để dựng lại (PostHog lưu định dạng riêng) — chưa phát trong admin được.',
+      };
+    }
     let best: Array<{ timestamp?: number }> = [];
-    for (const evs of byWindow.values()) if (evs.length > best.length) best = evs;
-    best.sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0));
+    for (const evs of withSnap) if (evs.length > best.length) best = evs;
     if (best.length < 2) return { ok: false, events: [], error: 'Không đủ dữ liệu để phát lại phiên này.' };
     return { ok: true, events: best };
   } catch (e) {

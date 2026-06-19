@@ -64,5 +64,14 @@ export default function RrwebPlayer({ events }: Props) {
       </div>
     );
   }
-  return <div ref={hostRef} className="overflow-auto rounded-md border border-border bg-black/40" />;
+  return (
+    <div className="space-y-1.5">
+      <div ref={hostRef} className="overflow-auto rounded-md border border-border bg-black/40" />
+      <p className="text-[11px] text-muted-foreground">
+        Nếu khung trống: phiên ở trang khách dùng giao diện riêng mà bảo mật admin (CSP) chặn dựng
+        lại đầy đủ — thanh thời gian vẫn tua được, và phần thống kê (click, lỗi, đường đi) ở danh sách
+        là dữ liệu chính.
+      </p>
+    </div>
+  );
 }
