@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { SinhConChecker } from '@/components/sinh-con/SinhConChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { ELEMENTS } from '@/lib/dat-ten-ngu-hanh';
 import { yearProfile, zodiacRelationTable } from '@/lib/sinh-con';
@@ -152,6 +153,21 @@ export default async function SinhConVariantPage({
                 </div>
               ))}
             </dl>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-4">
+              <OccasionLeadCapture
+                source={`sinh-con-${slug}`}
+                capturedEvent="lead_capture_sinh_con"
+                capturedProps={{ slug }}
+                blurb="Để lại email, chúng tôi sẽ báo bạn khi có bản đầy đủ cùng nội dung mới về năm và ngày tốt sinh con theo mùa. Thi thoảng thôi, không spam."
+                cta="Nhận nhắc"
+              />
+            </div>
           </section>
 
           <nav aria-label="Sinh con theo nhu cầu khác" className="text-sm">
