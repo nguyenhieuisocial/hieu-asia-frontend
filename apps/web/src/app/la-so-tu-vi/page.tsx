@@ -3,6 +3,7 @@ import { RelatedTools } from '@/components/tools/RelatedTools';
 import { LaSoChecker } from '@/components/la-so-tu-vi/LaSoChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
@@ -173,6 +174,20 @@ export default async function LaSoTuViPage({
                 </div>
               ))}
             </dl>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-4">
+              <OccasionLeadCapture
+                source="la-so-tu-vi"
+                capturedEvent="lead_capture_la_so_tu_vi"
+                blurb="Để lại email, chúng tôi báo khi có nội dung mới theo mùa cho lá số của bạn: tử vi năm mới, sao hạn, ngày tốt. Thi thoảng thôi, không spam."
+                cta="Nhận nhắc"
+              />
+            </div>
           </section>
 
           <RelatedTools
