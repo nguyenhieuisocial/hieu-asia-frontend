@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { XongDatChecker } from '@/components/xong-dat/XongDatChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { HOST_YEARS, TARGET_YEAR, buildHostPage, slugOf, yearFromSlug } from '../years';
 
@@ -131,6 +132,21 @@ export default async function XongDatHostYearPage({
                 </div>
               ))}
             </dl>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-4">
+              <OccasionLeadCapture
+                source={`xong-dat-${tuoi}`}
+                capturedEvent="lead_capture_xong_dat"
+                capturedProps={{ tuoi }}
+                blurb={`Để lại email nếu bạn muốn được báo khi có bản gợi ý tuổi xông đất đầy đủ hơn cho gia chủ sinh ${year}, cùng nội dung mới theo mùa Tết. Thi thoảng thôi, không spam.`}
+                cta="Nhận nhắc"
+              />
+            </div>
           </section>
 
           <nav aria-label="Tuổi xông đất theo năm sinh khác" className="text-sm">

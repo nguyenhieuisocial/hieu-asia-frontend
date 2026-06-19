@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { HuongNhaChecker } from '@/components/huong-nha/HuongNhaChecker';
 import { groupLabel, STAR_INFO, type HuongNhaResult } from '@/lib/huong-nha';
@@ -125,6 +126,21 @@ export default async function HuongNhaYearPage({ params }: { params: Promise<{ t
                 </div>
               ))}
             </dl>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-4">
+              <OccasionLeadCapture
+                source={`huong-nha-${tuoi}`}
+                capturedEvent="lead_capture_huong_nha"
+                capturedProps={{ tuoi }}
+                blurb={`Để lại email, chúng tôi sẽ báo bạn khi có bản hướng nhà hợp tuổi ${d.year} đầy đủ hơn và nội dung phong thuỷ mới theo mùa. Thi thoảng thôi, không spam.`}
+                cta="Nhận nhắc"
+              />
+            </div>
           </section>
 
           <nav aria-label="Xem hướng nhà tuổi khác" className="text-sm leading-7">
