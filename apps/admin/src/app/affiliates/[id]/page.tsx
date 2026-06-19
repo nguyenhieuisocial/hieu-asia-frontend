@@ -141,12 +141,13 @@ export default function AdminAffiliateDetailPage({
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ payout_id: payoutId }),
+        signal: AbortSignal.timeout(15000),
       });
       const d = await r.json();
       if (!r.ok || !d.ok) throw new Error(d.error ?? `HTTP ${r.status}`);
       await load();
     } catch (e) {
-      setError((e as Error).message);
+      setError((e as Error).name === 'TimeoutError' ? 'Quá lâu, thử lại' : (e as Error).message);
     } finally {
       setBusy(false);
     }
@@ -159,6 +160,7 @@ export default function AdminAffiliateDetailPage({
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ payout_id: payoutId, reason: rejectReason || null }),
+        signal: AbortSignal.timeout(15000),
       });
       const d = await r.json();
       if (!r.ok || !d.ok) throw new Error(d.error ?? `HTTP ${r.status}`);
@@ -166,7 +168,7 @@ export default function AdminAffiliateDetailPage({
       setRejectReason('');
       await load();
     } catch (e) {
-      setError((e as Error).message);
+      setError((e as Error).name === 'TimeoutError' ? 'Quá lâu, thử lại' : (e as Error).message);
     } finally {
       setBusy(false);
     }

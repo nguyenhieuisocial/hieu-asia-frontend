@@ -67,16 +67,22 @@ function PostHogTracking(): null {
     const supabase = getSupabaseAuth();
     if (!supabase) return;
     let cancelled = false;
-    supabase.auth.getSession().then(({ data }) => {
-      if (cancelled) return;
-      if (data.session?.user) {
-        void identifyUser(data.session.user);
-        // Catches the "/r/<CODE> clicked after signup" edge case where the user
-        // never re-enters /auth/callback. Idempotent — localStorage flag +
-        // worker-side dedupe stop repeat calls on token refresh.
-        void onboardAffiliateFromRef();
-      }
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data }) => {
+        if (cancelled) return;
+        if (data.session?.user) {
+          void identifyUser(data.session.user);
+          // Catches the "/r/<CODE> clicked after signup" edge case where the user
+          // never re-enters /auth/callback. Idempotent — localStorage flag +
+          // worker-side dedupe stop repeat calls on token refresh.
+          void onboardAffiliateFromRef();
+        }
+      })
+      // getSession() reject ở ngữ cảnh storage bị chặn (iOS/private) — provider
+      // này bọc MỌI trang, nên bắt để không nổi thành unhandled-rejection
+      // (capture_exceptions ở dưới sẽ đổ vào Sentry). Không có session = không định danh.
+      .catch(() => {});
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       if (cancelled) return;
       if (session?.user) {

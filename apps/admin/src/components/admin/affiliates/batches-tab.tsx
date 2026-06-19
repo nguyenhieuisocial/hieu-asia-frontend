@@ -72,6 +72,7 @@ export function BatchesTab() {
       const r = await fetch(`/api/admin/affiliates/payouts/batches/${id}/approve`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
+        signal: AbortSignal.timeout(15000),
       });
       const d = await r.json();
       if (!r.ok || !d.ok) throw new Error(d.error ?? `HTTP ${r.status}`);
@@ -81,7 +82,8 @@ export function BatchesTab() {
       toast.success('Đã duyệt batch — dispatch đang chạy');
       qc.invalidateQueries({ queryKey: ['affiliate-batches'] });
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: (e: Error) =>
+      toast.error(e.name === 'TimeoutError' ? 'Quá lâu, thử lại' : e.message),
   });
 
   const csv = useMutation({
@@ -269,6 +271,7 @@ function BuildBatchModal({ onClose, onBuilt }: { onClose: () => void; onBuilt: (
           rail,
           min_amount_vnd: Number.isFinite(n) ? n : 100_000,
         }),
+        signal: AbortSignal.timeout(20000),
       });
       const d = await r.json();
       if (!r.ok || !d.ok) throw new Error(d.error ?? `HTTP ${r.status}`);
@@ -279,7 +282,13 @@ function BuildBatchModal({ onClose, onBuilt }: { onClose: () => void; onBuilt: (
       );
       onBuilt();
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : String(e));
+      toast.error(
+        e instanceof Error
+          ? e.name === 'TimeoutError'
+            ? 'Quá lâu, thử lại'
+            : e.message
+          : String(e),
+      );
     } finally {
       setSubmitting(false);
     }
