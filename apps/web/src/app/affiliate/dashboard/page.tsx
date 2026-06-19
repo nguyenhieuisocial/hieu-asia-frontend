@@ -1,7 +1,11 @@
 /**
  * /affiliate/dashboard — affiliate user dashboard.
- * Pulls /api/affiliate/me (cookie-authed). Shows KPIs, recent events,
- * payouts, and share toolkit.
+ *
+ * Money balance + payout request come from System B (canonical Postgres
+ * ledger) via the JWT-gated worker route `GET /aff/me` and
+ * `POST /aff/payout-request`. The legacy KV `/api/affiliate/me` (cookie-authed)
+ * is kept ONLY for the payout profile, performance counters, recent events,
+ * and payout history — never for money totals.
  */
 
 'use client';
@@ -12,6 +16,8 @@ import { Button, Card, CardContent, CardHeader, CardTitle, Skeleton } from '@hie
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { TierProgress, type Tier, type TierProgressData } from '@/components/affiliate/TierProgress';
+import { getSupabaseAuth } from '@/lib/auth-client';
+import { safeJson } from '@/lib/safe-json';
 import {
   ShareToolkit,
   PayoutRequest,
@@ -20,6 +26,8 @@ import {
   type DashRecentEvent,
   type DashPayout,
 } from '@/components/affiliate/DashboardSections';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
 interface AffiliateRecord {
   id: string;
@@ -73,6 +81,19 @@ interface MeResponse {
   notifications?: Notification[];
 }
 
+/** System-B (canonical Postgres ledger) money balance, JWT-gated /aff/me. */
+interface Balance {
+  available_vnd: number;
+  pending_vnd: number;
+  paid_vnd: number;
+  min_payout_vnd: number;
+}
+
+interface AffMeResponse {
+  ok: true;
+  balance: Balance;
+}
+
 function vnd(n: number) {
   return n.toLocaleString('vi-VN') + 'đ';
 }
@@ -87,15 +108,48 @@ function dt(iso: string) {
 
 export default function AffiliateDashboardPage() {
   const [data, setData] = React.useState<MeResponse | null>(null);
+  const [balance, setBalance] = React.useState<Balance | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(true);
-  const [payoutAmount, setPayoutAmount] = React.useState<string>('');
+  const [submitting, setSubmitting] = React.useState(false);
   const [payoutMsg, setPayoutMsg] = React.useState<{ ok: boolean; text: string } | null>(null);
+
+  // System-B money balance, JWT-gated. Kept separate from the KV profile/stats
+  // load so a missing Supabase session degrades the balance only, not the page.
+  const loadBalance = React.useCallback(async () => {
+    const supabase = getSupabaseAuth();
+    if (!supabase) {
+      setBalance(null);
+      return;
+    }
+    const { data: sess } = await supabase.auth.getSession();
+    const token = sess.session?.access_token;
+    if (!token) {
+      setBalance(null);
+      return;
+    }
+    try {
+      const res = await fetch(`${API_BASE}/aff/me`, {
+        headers: { authorization: `Bearer ${token}` },
+        cache: 'no-store',
+      });
+      const j = await safeJson<AffMeResponse>(res);
+      if (j.ok && j.data.ok && j.data.balance) {
+        setBalance(j.data.balance);
+      } else {
+        setBalance(null);
+      }
+    } catch {
+      setBalance(null);
+    }
+  }, []);
 
   const load = React.useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
+      // KV cookie path: profile (payout method/destination), performance
+      // counters, recent events, payout history. NOT money totals.
       const res = await fetch('/api/affiliate/me', { cache: 'no-store' });
       if (res.status === 401) {
         setError('not_signed_in');
@@ -113,42 +167,60 @@ export default function AffiliateDashboardPage() {
         return;
       }
       setData(d);
+      // Money comes from System B; fire after the profile resolves.
+      await loadBalance();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Lỗi mạng');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [loadBalance]);
 
   React.useEffect(() => {
     load();
   }, [load]);
 
+  // System-B payout request: no amount (requests the full available balance).
   async function requestPayout() {
-    if (!data) return;
-    const amount = Math.floor(Number(payoutAmount));
-    if (!amount || amount < data.min_payout_vnd) {
-      setPayoutMsg({ ok: false, text: `Tối thiểu ${vnd(data.min_payout_vnd)}` });
+    const supabase = getSupabaseAuth();
+    if (!supabase) {
+      setPayoutMsg({ ok: false, text: 'Cần đăng nhập để gửi yêu cầu rút.' });
       return;
     }
-    const res = await fetch('/api/affiliate/payout', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ amount }),
-    });
-    // Guard against HTML error pages.
-    const ct = res.headers.get('content-type') ?? '';
-    if (!/\bjson\b/i.test(ct)) {
-      setPayoutMsg({ ok: false, text: `Phản hồi không phải JSON (HTTP ${res.status})` });
+    const { data: sess } = await supabase.auth.getSession();
+    const token = sess.session?.access_token;
+    if (!token) {
+      setPayoutMsg({ ok: false, text: 'Cần đăng nhập để gửi yêu cầu rút.' });
       return;
     }
-    const d = await res.json();
-    if (d.ok) {
-      setPayoutMsg({ ok: true, text: 'Đã gửi yêu cầu rút tiền. Admin sẽ xử lý trong 1–3 ngày.' });
-      setPayoutAmount('');
-      await load();
-    } else {
-      setPayoutMsg({ ok: false, text: d.error ?? 'Lỗi gửi yêu cầu' });
+    setSubmitting(true);
+    setPayoutMsg(null);
+    try {
+      const res = await fetch(`${API_BASE}/aff/payout-request`, {
+        method: 'POST',
+        headers: { authorization: `Bearer ${token}` },
+      });
+      const j = await safeJson<{ ok: boolean; requested_vnd?: number; already_requested?: boolean; error?: string }>(res);
+      if (!j.ok) {
+        setPayoutMsg({ ok: false, text: `Phản hồi không hợp lệ (HTTP ${j.status})` });
+        return;
+      }
+      const d = j.data;
+      if (d.ok && d.already_requested) {
+        setPayoutMsg({ ok: true, text: 'Bạn đã có một yêu cầu rút đang chờ.' });
+      } else if (d.ok) {
+        setPayoutMsg({
+          ok: true,
+          text: `Đã gửi yêu cầu rút ${vnd(d.requested_vnd ?? 0)}, admin sẽ xử lý.`,
+        });
+        await loadBalance();
+      } else {
+        setPayoutMsg({ ok: false, text: d.error ?? 'Lỗi gửi yêu cầu' });
+      }
+    } catch (err) {
+      setPayoutMsg({ ok: false, text: err instanceof Error ? err.message : 'Lỗi mạng' });
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -216,7 +288,11 @@ export default function AffiliateDashboardPage() {
   const s = data.stats;
   const shareUrl = `https://hieu.asia/?ref=${a.code}`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=512x512&data=${encodeURIComponent(shareUrl)}`;
-  const canPayout = s.pending_payout >= data.min_payout_vnd && a.status === 'active';
+  // Money gate uses System-B balance only. Min payout also from System B,
+  // falling back to the KV value if the balance hasn't loaded yet.
+  const minPayout = balance?.min_payout_vnd ?? data.min_payout_vnd;
+  const canPayout =
+    !!balance && balance.available_vnd >= balance.min_payout_vnd && a.status === 'active';
   const shareText = `Tôi đang dùng hieu.asia — phân tích Tử Vi, MBTI và lòng bàn tay bằng AI. Đăng ký qua link của tôi nhé: ${shareUrl}`;
 
   return (
@@ -254,26 +330,50 @@ export default function AffiliateDashboardPage() {
           </Button>
         </header>
 
-        {/* KPI cards */}
-        <div className="grid gap-4 sm:grid-cols-3">
+        {/* KPI cards. Money numbers come from System B (canonical ledger). */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Card className="border-gold/30">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs uppercase text-muted-foreground">Tổng kiếm được</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-gold-700">{vnd(s.total_earned)}</div>
-              <div className="text-xs text-muted-foreground">Đã trả: {vnd(s.paid_total)}</div>
-            </CardContent>
-          </Card>
-          <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-xs uppercase text-muted-foreground">Số dư khả dụng</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{vnd(s.pending_payout)}</div>
-              <div className="text-xs text-muted-foreground">
-                Tối thiểu rút: {vnd(data.min_payout_vnd)}
-              </div>
+              {balance ? (
+                <>
+                  <div className="text-2xl font-bold text-gold-700">{vnd(balance.available_vnd)}</div>
+                  <div className="text-xs text-muted-foreground">
+                    Tối thiểu rút: {vnd(balance.min_payout_vnd)}
+                  </div>
+                </>
+              ) : (
+                <div className="text-sm text-muted-foreground">Đăng nhập để xem số dư.</div>
+              )}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xs uppercase text-muted-foreground">Đang chờ</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {balance ? (
+                <>
+                  <div className="text-2xl font-bold">{vnd(balance.pending_vnd)}</div>
+                  <div className="text-xs text-muted-foreground">Chưa đủ điều kiện rút.</div>
+                </>
+              ) : (
+                <div className="text-sm text-muted-foreground">—</div>
+              )}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xs uppercase text-muted-foreground">Đã trả</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {balance ? (
+                <div className="text-2xl font-bold">{vnd(balance.paid_vnd)}</div>
+              ) : (
+                <div className="text-sm text-muted-foreground">—</div>
+              )}
             </CardContent>
           </Card>
           <Card>
@@ -352,10 +452,10 @@ export default function AffiliateDashboardPage() {
         <PayoutRequest
           payoutMethod={a.payout_method}
           payoutDestination={a.payout_destination}
-          minPayout={data.min_payout_vnd}
+          minPayout={minPayout}
+          availableVnd={balance?.available_vnd ?? 0}
           canPayout={canPayout}
-          payoutAmount={payoutAmount}
-          setPayoutAmount={setPayoutAmount}
+          submitting={submitting}
           onSubmit={requestPayout}
           msg={payoutMsg}
           isActive={a.status === 'active'}
