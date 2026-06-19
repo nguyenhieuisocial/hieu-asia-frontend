@@ -27,6 +27,7 @@ import { getSupabaseAuth } from "@/lib/auth-client";
 import { captureAttribution } from "@/lib/attribution";
 import { wireBehaviorTracking } from "@/lib/behavior";
 import { getConsent } from "@/lib/consent";
+import { getOrCreateAnonUserId } from "@hieu-asia/supabase";
 import {
   hasMarketingConsent,
   loadMarketingPixels,
@@ -51,15 +52,15 @@ function PostHogTracking(): null {
     if (hasMarketingConsent()) {
       loadMarketingPixels();
     }
-    // Wave 41 — ensure anon distinct_id always persists for identity stitch.
+    // Wave 41 — ensure a valid anon id (anon_<uuid>) exists for identity stitch.
+    // Must NOT overwrite hieu.user_id with PostHog's distinct_id: after
+    // identify() that's the bare auth uuid, which fails the anon_<uuid> guard in
+    // session-auth (sanitizeLinkedAnonId) + reading-list EF → user_id_2 becomes
+    // null → /account history empty + GDPR export/erase miss pre-login data.
+    // getOrCreateAnonUserId is idempotent — preserves any existing anon id and
+    // only generates one when absent; it never clobbers.
     try {
-      const ph = getPostHog();
-      if (ph) {
-        const anonId = ph.get_distinct_id?.();
-        if (anonId) {
-          localStorage.setItem("hieu.user_id", anonId);
-        }
-      }
+      getOrCreateAnonUserId();
     } catch {
       /* ignore */
     }

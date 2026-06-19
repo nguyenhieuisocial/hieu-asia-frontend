@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
 import { Sun, Focus, Hand, MoveDiagonal } from 'lucide-react';
 import { Button, Card, CardContent } from '@hieu-asia/ui';
+import { getOrCreateAnonUserId } from '@hieu-asia/supabase';
 import { PalmUpload } from '@/components/palm-upload';
 import { SiteNav } from '@/components/home/SiteNav';
 import { uploadHandImage } from '@/lib/upload-image';
@@ -32,10 +33,10 @@ export default function PalmUploadPage() {
     setSubmitting(true);
     setSubmitError(null);
     try {
-      // user_id: phase 2 will plug Auth.js session. For now use draft id.
-      const userId =
-        (typeof window !== 'undefined' && window.sessionStorage.getItem('hieu.user_id')) ||
-        `anon-${readingId}`;
+      // Anon id is the canonical anon_<uuid> in localStorage. Reading it from
+      // sessionStorage always missed → fell back to anon-<readingId> (wrong
+      // shape) → upload orphaned from the user's history + GDPR export/erase.
+      const userId = getOrCreateAnonUserId();
       const result = await uploadHandImage(file, userId);
       if (typeof window !== 'undefined') {
         window.sessionStorage.setItem(
