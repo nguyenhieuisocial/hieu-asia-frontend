@@ -56,7 +56,12 @@ function fmtAge(min: number): string {
  * audit). Thao tác NGAY tại đây thay vì phải sang /sessions tìm lại session_id.
  */
 async function reOrchestrate(sessionId: string) {
-  const r = await fetch(`/api/admin/sessions/${sessionId}/re-orchestrate`, { method: 'POST' });
+  // timeout 15s: nếu worker/Supabase treo, nút "Chạy lại" không kẹt mãi
+  // (AbortError → mutation onError toast) thay vì đơ.
+  const r = await fetch(`/api/admin/sessions/${sessionId}/re-orchestrate`, {
+    method: 'POST',
+    signal: AbortSignal.timeout(15000),
+  });
   const data = await r.json().catch(() => ({ ok: false, error: `HTTP ${r.status}` }));
   if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
   return data;
