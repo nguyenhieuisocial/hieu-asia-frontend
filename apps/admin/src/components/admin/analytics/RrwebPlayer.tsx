@@ -118,9 +118,11 @@ export default function RrwebPlayer({ events }: Props) {
     const r = replayerRef.current;
     if (!r || !total) return;
     const t = (Number(e.target.value) / 1000) * total;
-    r.play(t);
+    // Respect the current state: pause(t) jumps to a paused frame, play(t)
+    // resumes from t — so scrubbing a paused replay stays paused.
+    if (playing) r.play(t);
+    else r.pause(t);
     setCur(t);
-    setPlaying(true);
   };
 
   if (err) {
