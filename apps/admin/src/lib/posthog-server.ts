@@ -848,3 +848,136 @@ export async function fetchPostHogExperiments(): Promise<PostHogExperiment[] | n
     return null;
   }
 }
+
+/* -------------------------------------------------------------------------
+ * Per-user "Nguồn & hành trình" (source + journey) — surfaces, for ONE user
+ * inside the admin session-detail page, where they came from + the steps
+ * they took, so the founder needn't open PostHog.
+ *
+ * distinct_id semantics: apps/web identifies authed users with their user_id
+ * (there's a `user_identified` event); anon users keep an anon distinct_id
+ * (admin renders it as `anon-<session_id>`). Both forms work here — we filter
+ * `events.distinct_id = <userId>` verbatim, so the caller passes whatever id
+ * the session row carries.
+ *
+ * Attribution (apps/web/src/lib/attribution.ts) is written BOTH as PostHog
+ * super-properties (on every event) AND person profile props
+ * (people.set / set_once). On the `events` table, `person.properties.<x>`
+ * resolves to the person's current profile state — the canonical place to
+ * read first/last-touch — and it's populated for identified persons. To stay
+ * robust for anon distinct_ids too (where the person profile may be empty but
+ * the super-properties rode along on the events), we COALESCE person props
+ * with the same prop read off `properties.<x>` from the latest event.
+ * --------------------------------------------------------------------- */
+
+/**
+ * Single-quote-escape a value for safe inline interpolation into a HogQL
+ * string literal. HogQL (ClickHouse SQL dialect) escapes a single quote by
+ * doubling it. userId/distinct_id is the only user-controlled value we splice
+ * in; everything else in these queries is a fixed literal.
+ */
+function escapeHogQLString(value: string): string {
+  return value.replace(/'/g, "''");
+}
+
+export interface UserAttribution {
+  firstTouchSource: string | null;
+  firstTouchMedium: string | null;
+  firstTouchCampaign: string | null;
+  /** PostHog's canonical first-touch referrer domain. */
+  initialReferringDomain: string | null;
+  firstTouchAffiliate: string | null;
+  lastTouchSource: string | null;
+  lastTouchMedium: string | null;
+  lastTouchCampaign: string | null;
+}
+
+/**
+ * Read the first/last-touch attribution for a single distinct_id.
+ *
+ * Strategy: take the LATEST event for that distinct_id (argMax over timestamp)
+ * and read both `person.properties.<x>` (person-profile state, set for
+ * identified users) and `properties.<x>` (super-property that rode the event,
+ * present even for anon). Coalesce so whichever exists wins. Returns null when
+ * unconfigured / query fails / the distinct_id has no events.
+ */
+export async function fetchUserAttribution(
+  userId: string,
+): Promise<UserAttribution | null> {
+  if (!userId) return null;
+  const id = escapeHogQLString(userId);
+  const sql = `
+    SELECT
+      argMax(coalesce(nullIf(person.properties.first_touch_source, ''),        nullIf(properties.first_touch_source, ''), ''),        timestamp) AS first_touch_source,
+      argMax(coalesce(nullIf(person.properties.first_touch_medium, ''),        nullIf(properties.first_touch_medium, ''), ''),        timestamp) AS first_touch_medium,
+      argMax(coalesce(nullIf(person.properties.first_touch_campaign, ''),      nullIf(properties.first_touch_campaign, ''), ''),      timestamp) AS first_touch_campaign,
+      argMax(coalesce(nullIf(person.properties.$initial_referring_domain, ''), nullIf(properties.$initial_referring_domain, ''), ''), timestamp) AS initial_referring_domain,
+      argMax(coalesce(nullIf(person.properties.first_touch_affiliate, ''),     nullIf(properties.first_touch_affiliate, ''), ''),     timestamp) AS first_touch_affiliate,
+      argMax(coalesce(nullIf(person.properties.last_touch_source, ''),         nullIf(properties.last_touch_source, ''), ''),         timestamp) AS last_touch_source,
+      argMax(coalesce(nullIf(person.properties.last_touch_medium, ''),         nullIf(properties.last_touch_medium, ''), ''),         timestamp) AS last_touch_medium,
+      argMax(coalesce(nullIf(person.properties.last_touch_campaign, ''),       nullIf(properties.last_touch_campaign, ''), ''),       timestamp) AS last_touch_campaign
+    FROM events
+    WHERE distinct_id = '${id}'
+      AND timestamp > now() - INTERVAL 365 DAY
+  `;
+  const rows = await runHogQL(sql);
+  if (!rows || !rows[0]) return null;
+  const r = rows[0];
+  const cell = (i: number): string | null => {
+    const v = r[i];
+    return v != null && v !== '' ? String(v) : null;
+  };
+  const attr: UserAttribution = {
+    firstTouchSource: cell(0),
+    firstTouchMedium: cell(1),
+    firstTouchCampaign: cell(2),
+    initialReferringDomain: cell(3),
+    firstTouchAffiliate: cell(4),
+    lastTouchSource: cell(5),
+    lastTouchMedium: cell(6),
+    lastTouchCampaign: cell(7),
+  };
+  // All-empty → the distinct_id had events but no attribution captured. Still a
+  // valid result (the route renders "direct"); only return null on no rows.
+  return attr;
+}
+
+export interface UserJourneyEvent {
+  /** Raw PostHog event name (e.g. tool_used, payment_completed, $pageview). */
+  event: string;
+  /** ISO timestamp of the event. */
+  timestamp: string;
+  /** $current_url when present, else null. */
+  url: string | null;
+}
+
+/**
+ * The most recent events for a single distinct_id, newest first. Powers the
+ * vertical journey timeline on the session-detail page. `limit` clamped to
+ * [1, 200]. Returns null on unconfigured / failure.
+ */
+export async function fetchUserJourney(
+  userId: string,
+  limit = 50,
+): Promise<UserJourneyEvent[] | null> {
+  if (!userId) return null;
+  const id = escapeHogQLString(userId);
+  const safeLimit = Math.min(Math.max(Math.trunc(limit) || 50, 1), 200);
+  const sql = `
+    SELECT event, timestamp, properties.$current_url AS url
+    FROM events
+    WHERE distinct_id = '${id}'
+      AND timestamp > now() - INTERVAL 365 DAY
+    ORDER BY timestamp DESC
+    LIMIT ${safeLimit}
+  `;
+  const rows = await runHogQL(sql);
+  if (!rows) return null;
+  return rows
+    .map((row) => ({
+      event: String(row[0] ?? ''),
+      timestamp: String(row[1] ?? ''),
+      url: row[2] != null && row[2] !== '' ? String(row[2]) : null,
+    }))
+    .filter((e) => e.event);
+}
