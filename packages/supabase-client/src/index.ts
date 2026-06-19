@@ -67,18 +67,22 @@ export function getEdgeFnBase(config: SupabaseConfig = {}): string {
 
 const USER_ID_KEY = 'hieu.user_id';
 
-// Must mirror ANON_ID_RE in apps/web reasoning/session-auth.ts and the backend
-// reading-list gate. The anon id is the cross-session key for pre-login reading
-// history; if anything (e.g. an old PostHog distinct_id) wrote a non-`anon_<v4>`
-// value into this slot, the backend rejects it and history is lost — so we
-// regenerate a conformant id instead of returning a malformed one as-is.
-const ANON_ID_RE =
-  /^anon_[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+// `hieu.user_id` is a SHARED slot holding several legitimate identity formats:
+// anonymous users (`anon_<uuid>`, created here) AND the Telegram miniapp's
+// server-verified `tg_<id>` (telegram-webapp-provider.tsx). We must only heal
+// the ONE known-corrupt shape — a bare UUID with no prefix, which an old
+// PostHogProvider build leaked into this slot; that value fails the backend
+// ANON_ID_RE and silently drops pre-login reading history. Regenerating any
+// PREFIXED identity (especially `tg_<id>`) would instead wipe that user's
+// history, so the gate is deliberately a narrow corruption signature, not an
+// `anon_`-only allowlist.
+const BARE_UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export function getOrCreateAnonUserId(): string {
   if (typeof window === 'undefined') return '';
   let id = window.localStorage.getItem(USER_ID_KEY);
-  if (!id || !ANON_ID_RE.test(id)) {
+  if (!id || BARE_UUID_RE.test(id)) {
     let uuid: string;
     if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
       uuid = crypto.randomUUID();
