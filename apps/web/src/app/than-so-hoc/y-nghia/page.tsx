@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { breadcrumb, faqPage, webPage } from '@/lib/seo/jsonld';
+import { breadcrumb, faqPage, itemList, webPage } from '@/lib/seo/jsonld';
 import { SO_CHU_DAO } from '@/lib/than-so-hoc-numbers';
 
 export const metadata: Metadata = {
@@ -145,6 +145,12 @@ export default function ThanSoHocMeaningsHubPage() {
             { name: 'Ý nghĩa số chủ đạo', url: '/than-so-hoc/y-nghia' },
           ]),
           faqPage(FAQS),
+          itemList(
+            SO_CHU_DAO.map((n) => ({
+              name: `Số ${n.number} — ${n.archetype}`,
+              url: `/than-so-hoc/y-nghia/${n.slug}`,
+            })),
+          ),
         ]}
       />
     </ToolPageShell>
