@@ -11,7 +11,7 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
-  title: 'Thần Số Học Pythagoras — Học huyền học',
+  title: 'Thần Số Học Pythagoras: Học huyền học',
   description:
     'Thần Số Học (Numerology) theo trường phái Pythagoras: rút số chủ đạo từ ngày sinh và tên, mỗi số mang một năng lượng riêng.',
   alternates: { canonical: 'https://hieu.asia/learn/than-so-hoc' },
@@ -22,25 +22,25 @@ export const metadata: Metadata = {
 const FAQS = [
   {
     q: 'Pythagoras là ai?',
-    a: 'Pythagoras (~570 TCN) là nhà toán học, triết gia Hy Lạp — người đặt nền móng cho Thần Số Học phương Tây. Ông tin số không chỉ đếm vật, mà còn mang “linh hồn” riêng phản ánh quy luật vũ trụ.',
+    a: 'Pythagoras (~570 TCN) là nhà toán học, triết gia Hy Lạp, người đặt nền móng cho Thần Số Học phương Tây. Ông tin số không chỉ đếm vật, mà còn mang "linh hồn" riêng phản ánh quy luật vũ trụ.',
   },
   {
     q: 'Cách tính số chủ đạo?',
-    a: 'Cộng tất cả chữ số trong ngày sinh đầy đủ. Ví dụ 15/08/1990 = 1+5+0+8+1+9+9+0 = 33 → 3+3 = 6. Vậy số chủ đạo là 6 (riêng 11, 22, 33 giữ nguyên — gọi là số bậc thầy).',
+    a: 'Cộng tất cả chữ số trong ngày sinh đầy đủ. Ví dụ 15/08/1990 = 1+5+0+8+1+9+9+0 = 33 → 3+3 = 6. Vậy số chủ đạo là 6 (riêng 11, 22, 33 giữ nguyên, gọi là số bậc thầy).',
   },
   {
     q: 'Số từ tên thì sao?',
-    a: 'Mỗi chữ cái được gán một số 1–9 theo bảng Pythagoras. Cộng các số ứng với tên đầy đủ rồi rút gọn — ra số biểu hiện (expression number) và số linh hồn (soul urge number).',
+    a: 'Mỗi chữ cái được gán một số 1–9 theo bảng Pythagoras. Cộng các số ứng với tên đầy đủ rồi rút gọn, ra số biểu hiện (expression number) và số linh hồn (soul urge number).',
   },
   {
     q: 'Dùng để làm gì?',
-    a: 'Soi tính cách bẩm sinh, sứ mệnh đời, vùng dễ vấp. Là công cụ tự nhận thức nhanh — chỉ cần ngày sinh + tên là có bản phác họa.',
+    a: 'Soi tính cách bẩm sinh, sứ mệnh đời, vùng dễ vấp. Là công cụ tự nhận thức nhanh, chỉ cần ngày sinh + tên là có bản phác họa.',
   },
 ];
 
 const JSONLD = [
   article({
-    headline: 'Thần Số Học Pythagoras — nền tảng cho người mới',
+    headline: 'Thần Số Học Pythagoras: nền tảng cho người mới',
     description:
       'Thần Số Học (Numerology) theo trường phái Pythagoras: rút số chủ đạo từ ngày sinh và tên, mỗi số mang một năng lượng riêng.',
     url: '/learn/than-so-hoc',
@@ -83,7 +83,7 @@ export default function LearnThanSoHocPage() {
       standfirst={
         <>
           Pythagoras tin rằng mọi thứ đều có thể quy về số. Thần Số Học hiện đại rút số chủ
-          đạo từ ngày sinh và tên — mỗi số từ 1 đến 9 mang một nguồn năng lượng riêng.
+          đạo từ ngày sinh và tên. Mỗi số từ 1 đến 9 mang một nguồn năng lượng riêng.
         </>
       }
       readMeta="6 phút đọc · Cập nhật 2026"
@@ -96,7 +96,7 @@ export default function LearnThanSoHocPage() {
       tryCta={{
         heading: 'Trải nghiệm ngay',
         blurb:
-          'Chỉ cần ngày sinh và tên đầy đủ, hệ thống tính ra số chủ đạo, số biểu hiện và số linh hồn — kèm diễn giải năng lượng từng số.',
+          'Chỉ cần ngày sinh và tên đầy đủ, hệ thống tính ra số chủ đạo, số biểu hiện và số linh hồn, kèm diễn giải năng lượng từng số.',
         href: '/reading/new?method=numerology',
         label: 'Khám phá Thần Số Học',
       }}
@@ -122,7 +122,7 @@ export default function LearnThanSoHocPage() {
                 ))}
               </div>
               <p className="mt-4 text-xs text-muted-foreground">
-                Ngoài 1–9 còn có 3 số “bậc thầy”: 11, 22, 33 — không rút gọn về 1 chữ số.
+                Ngoài 1–9 còn có 3 số "bậc thầy": 11, 22, 33, không rút gọn về 1 chữ số.
               </p>
             </>
           ),
@@ -136,8 +136,8 @@ export default function LearnThanSoHocPage() {
               <AccordionItem value="origin" className="rounded border border-border px-4">
                 <AccordionTrigger>Pythagoras là ai?</AccordionTrigger>
                 <AccordionContent>
-                  Pythagoras (~570 TCN) là nhà toán học, triết gia Hy Lạp — người đặt nền móng cho
-                  Thần Số Học phương Tây. Ông tin số không chỉ đếm vật, mà còn mang “linh hồn”
+                  Pythagoras (~570 TCN) là nhà toán học, triết gia Hy Lạp, người đặt nền móng cho
+                  Thần Số Học phương Tây. Ông tin số không chỉ đếm vật, mà còn mang "linh hồn"
                   riêng phản ánh quy luật vũ trụ.
                 </AccordionContent>
               </AccordionItem>
@@ -145,22 +145,22 @@ export default function LearnThanSoHocPage() {
                 <AccordionTrigger>Cách tính số chủ đạo?</AccordionTrigger>
                 <AccordionContent>
                   Cộng tất cả chữ số trong ngày sinh đầy đủ. Ví dụ 15/08/1990 = 1+5+0+8+1+9+9+0 =
-                  33 → 3+3 = 6. Vậy số chủ đạo là 6 (riêng 11, 22, 33 giữ nguyên — gọi là số bậc thầy).
+                  33 → 3+3 = 6. Vậy số chủ đạo là 6 (riêng 11, 22, 33 giữ nguyên, gọi là số bậc thầy).
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="name" className="rounded border border-border px-4">
                 <AccordionTrigger>Số từ tên thì sao?</AccordionTrigger>
                 <AccordionContent>
                   Mỗi chữ cái được gán một số 1–9 theo bảng Pythagoras. Cộng các số ứng với tên
-                  đầy đủ rồi rút gọn — ra số biểu hiện (expression number) và số linh hồn (soul
+                  đầy đủ rồi rút gọn, ra số biểu hiện (expression number) và số linh hồn (soul
                   urge number).
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="usage" className="rounded border border-border px-4">
                 <AccordionTrigger>Dùng để làm gì?</AccordionTrigger>
                 <AccordionContent>
-                  Soi tính cách bẩm sinh, sứ mệnh đời, vùng dễ vấp. Là công cụ tự nhận thức nhanh
-                  — chỉ cần ngày sinh + tên là có bản phác họa.
+                  Soi tính cách bẩm sinh, sứ mệnh đời, vùng dễ vấp. Là công cụ tự nhận thức nhanh,
+                  chỉ cần ngày sinh + tên là có bản phác họa.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
