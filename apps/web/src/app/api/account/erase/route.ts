@@ -47,11 +47,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: 'invalid_json' }, { status: 400 });
   }
 
-  // Force user_id to the authenticated user; ignore any client-supplied value.
-  // Also forward the linked anon id (user_id_2) so erase covers data created
-  // before sign-in — already sanitized to anon_<uuid v4>.
+  // Strip any client-supplied identity fields, THEN set server-derived values —
+  // never let body.user_id / body.user_id_2 survive the spread. A client could
+  // otherwise smuggle a victim's anon id as user_id_2 (e.g. when the user has no
+  // linked anon, the conditional spread below adds nothing and `...body` would
+  // forward it verbatim) and the worker trusts it under our service token, ERASING
+  // the victim's data → destructive IDOR. linkedAnonId comes from the GoTrue-signed
+  // session, bound to this user.
+  const rest = { ...body };
+  delete rest.user_id;
+  delete rest.user_id_2;
   const forwardBody = {
-    ...body,
+    ...rest,
     user_id: session.userId,
     ...(session.linkedAnonId ? { user_id_2: session.linkedAnonId } : {}),
   };
