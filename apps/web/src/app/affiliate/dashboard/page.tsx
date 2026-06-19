@@ -332,17 +332,11 @@ export default function AffiliateDashboardPage() {
           </Card>
         )}
 
-        {/* Quick links to assets / leaderboard / terms */}
+        {/* Quick links to assets / terms */}
         <Card>
           <CardContent className="flex flex-wrap gap-3 pt-6 text-sm">
             <Link href="/affiliate/assets" className="rounded bg-gold/10 px-3 py-1.5 text-gold-700 hover:bg-gold/20">
               Marketing assets
-            </Link>
-            <Link
-              href="/affiliate/leaderboard"
-              className="rounded border border-border px-3 py-1.5 hover:bg-muted/5"
-            >
-              Bảng xếp hạng
             </Link>
             <Link
               href="/affiliate/terms"
