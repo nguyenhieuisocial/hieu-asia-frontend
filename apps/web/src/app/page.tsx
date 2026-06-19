@@ -8,6 +8,7 @@ import { HowToStart } from '@/components/home/HowToStart';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 import { AstroTickerLive } from '@/components/home/AstroTickerLive';
+import { TrustBand } from '@/components/home/TrustBand';
 // Wave 62.04 — homepage swapped from MarketingHero → HeroV4 (split layout
 // + 12-cung neo thị giác + 2 entry points). MarketingHero stays the
 // canonical reusable hero for /pricing /features /about /methodology
@@ -457,6 +458,10 @@ export default function LandingPage() {
             liệu THẬT, tính client-side; cho cảm giác "sống" + lý do quay lại
             mỗi ngày). Đặt sau "không phải oracle" để khung lịch/thực-dụng rõ. */}
         <AstroTickerLive />
+
+        {/* Trust band — đưa "Bằng Chứng" (moat) + độ-tin THẬT lên cao (mẫu
+            trust-signal nổi bật của Bitget; tuyên bố đều kiểm chứng được). */}
+        <RevealOnScroll><TrustBand /></RevealOnScroll>
 
         {/* Wave 63.4 — removed the IntentChips "HOẶC BẮT ĐẦU TỪ" 6-lens strip.
             Founder (vault 138 review #2): the hero had THREE stacked start
