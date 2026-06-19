@@ -68,6 +68,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.10.0(react-hook-form@7.77.0(react@19.2.7))
+      '@rrweb/replay':
+        specifier: ^2.0.1
+        version: 2.0.1
       '@sentry/nextjs':
         specifier: ^10.53.1
         version: 10.55.0(@opentelemetry/core@2.7.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.7.1(@opentelemetry/api@1.9.1))(next@15.5.19(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.60.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(webpack@5.107.2(lightningcss@1.32.0)(postcss@8.5.15))
@@ -107,9 +110,6 @@ importers:
       recharts:
         specifier: ^3.8.1
         version: 3.8.1(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react-is@18.3.1)(react@19.2.7)(redux@5.0.1)
-      rrweb-player:
-        specifier: ^2.0.1
-        version: 2.0.1
       zod:
         specifier: ^3.23.8
         version: 3.25.76
@@ -2821,9 +2821,6 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@rrweb/packer@2.0.1':
-    resolution: {integrity: sha512-2U8RkVe+ZK3gTtmKjJKjoh6QL1Q6wIlt3sBTJeCPERLr9e0JIimNrZ1+bog1L30CTVP3ULuDf5Ba7RZO+QNcHg==}
-
   '@rrweb/replay@2.0.1':
     resolution: {integrity: sha512-UrZONirb8o4t0urg1aJ8aMSWhNHvJ3a2usuVbPJIm/edyFbwTvvY9sg/rrXccyXOntFhhp73R5nCretODRZcCw==}
 
@@ -3402,9 +3399,6 @@ packages:
 
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
-
-  '@tsconfig/svelte@1.0.13':
-    resolution: {integrity: sha512-5lYJP45Xllo4yE/RUBccBT32eBlRDbqN8r1/MIvQbKxW3aFqaYPCNgm8D5V20X4ShHcwvYWNlKg3liDh1MlBoA==}
 
   '@turbo/darwin-64@2.9.14':
     resolution: {integrity: sha512-t7QiPflaEyBE4oayeZtSmu4mEfjgIrcNlNNl1z1dmIVPqEdtA7+CfTf8d7KXsOGPh6aNgWjKxyvQg9uGfDQF+A==}
@@ -7902,9 +7896,6 @@ packages:
   rrdom@2.0.1:
     resolution: {integrity: sha512-z8GdQWFmVfa8GpcGkAqfBXseb89z0ciTPSBkID0qr0i6KHCye1MdQ4VoXFf0Ejp3ELe/c7AObu4zsbSbMT+hiw==}
 
-  rrweb-player@2.0.1:
-    resolution: {integrity: sha512-v8PVnOy7Q3kXqWriGuzZo4ndGEV06nCMRkH/jSHweJfTLwpLqb2evgMj0S5FwQLsN2X1VM+L2/i7QWGJfgj9zw==}
-
   rrweb-snapshot@2.0.1:
     resolution: {integrity: sha512-H8TA29ct2tpYtr5oaB0N+ksRY9bhEErfAYcKbce4+w8lqEUQChpKZd41HpBJLkp04b5QUfWUg4v6r9Okf8r7vA==}
 
@@ -11114,11 +11105,6 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.61.0':
     optional: true
 
-  '@rrweb/packer@2.0.1':
-    dependencies:
-      '@rrweb/types': 2.0.1
-      fflate: 0.4.8
-
   '@rrweb/replay@2.0.1':
     dependencies:
       '@rrweb/types': 2.0.1
@@ -11768,8 +11754,6 @@ snapshots:
       '@testing-library/dom': 10.4.0
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
-
-  '@tsconfig/svelte@1.0.13': {}
 
   '@turbo/darwin-64@2.9.14':
     optional: true
@@ -16885,12 +16869,6 @@ snapshots:
   rrdom@2.0.1:
     dependencies:
       rrweb-snapshot: 2.0.1
-
-  rrweb-player@2.0.1:
-    dependencies:
-      '@rrweb/packer': 2.0.1
-      '@rrweb/replay': 2.0.1
-      '@tsconfig/svelte': 1.0.13
 
   rrweb-snapshot@2.0.1:
     dependencies:
