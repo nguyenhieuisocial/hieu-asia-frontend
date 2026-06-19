@@ -103,15 +103,6 @@ export const FLAGS = {
   ONBOARDING_SKIP_OPTIONAL: "onboarding_skip_optional",
 
   /**
-   * `affiliate_l2_visible` — boolean.
-   *
-   * Gates the L2 (5% commission) card on /affiliate/dashboard +
-   * /affiliate/network. Default false until the multi-tier programme
-   * officially launches. Flip ON to reveal L2 metrics network-wide.
-   */
-  AFFILIATE_L2_VISIBLE: "affiliate_l2_visible",
-
-  /**
    * `upsell_post_reading_v1` — multivariate string.
    *
    * Variants for the PostReadingUpsell banner headline (Wave 58):

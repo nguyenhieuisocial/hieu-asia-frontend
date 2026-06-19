@@ -75,9 +75,9 @@ export function AffiliateTab() {
       <div>
         <h2 className="font-heading text-2xl text-foreground sm:text-3xl">Affiliate</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Mã giới thiệu, số tuyến dưới và hoa hồng tổng. Chi tiết xem trong{' '}
-          <Link href="/affiliate/network" className="text-gold hover:underline">
-            mạng lưới
+          Mã giới thiệu, số người bạn giới thiệu và hoa hồng tổng. Chi tiết xem trong{' '}
+          <Link href="/affiliate/dashboard" className="text-gold hover:underline">
+            bảng điều khiển
           </Link>
           .
         </p>
@@ -99,7 +99,7 @@ export function AffiliateTab() {
           <CardHeader>
             <CardTitle className="text-lg">Bạn chưa tham gia affiliate</CardTitle>
             <CardDescription>
-              Đăng ký để nhận mã giới thiệu và hoa hồng đa cấp 3 tầng.
+              Đăng ký để nhận mã giới thiệu và 30% hoa hồng trên đơn của khách bạn giới thiệu.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -113,7 +113,7 @@ export function AffiliateTab() {
           <Card>
             <CardHeader>
               <CardTitle className="text-lg">Mã giới thiệu</CardTitle>
-              <CardDescription>Chia sẻ để nhận hoa hồng 3 tầng.</CardDescription>
+              <CardDescription>Chia sẻ để nhận 30% hoa hồng trên đơn của khách bạn giới thiệu.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex flex-wrap items-center gap-2">
@@ -156,7 +156,7 @@ export function AffiliateTab() {
               </p>
               <div className="flex flex-wrap gap-2">
                 <Button asChild={false}>
-                  <Link href="/affiliate/network">Xem mạng lưới đầy đủ</Link>
+                  <Link href="/affiliate/dashboard">Vào bảng điều khiển</Link>
                 </Button>
                 <Button variant="outline" asChild={false}>
                   <Link href="/affiliate/commissions">Xem hoa hồng</Link>

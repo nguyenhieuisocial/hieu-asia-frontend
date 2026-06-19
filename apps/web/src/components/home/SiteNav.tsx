@@ -247,7 +247,7 @@ function AuthedMenu({
           <DropdownMenuSeparator />
           <DropdownMenuLabel className="text-primary/85">Cộng tác viên</DropdownMenuLabel>
           <DropdownMenuItem asChild>
-            <Link href="/affiliate/network">Mạng lưới</Link>
+            <Link href="/affiliate/dashboard">Bảng điều khiển</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/affiliate/commissions">Hoa hồng</Link>
