@@ -9,6 +9,7 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb } from '@/lib/seo/jsonld';
 import { TimeFlowChecker } from '@/components/time-flow/TimeFlowChecker';
+import { ZODIAC } from '@/lib/hop-tuoi-pairs';
 
 export const metadata: Metadata = {
   title: 'Tử Vi 2026 cá nhân hoá theo ngày sinh (Bính Ngọ)',
@@ -156,6 +157,26 @@ export default function TuVi2026Page() {
                 Mẫu báo cáo
               
             </Link></Button>
+          </div>
+        </section>
+
+        <section className="relative mx-auto max-w-3xl px-6 pb-12">
+          <h2 className="mb-4 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+            Tử Vi 2026 theo tuổi của bạn
+          </h2>
+          <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+            Xem nhanh hợp xung với năm Ngọ, Tam Tai và sao hạn theo từng năm sinh cho mỗi con giáp.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {ZODIAC.map((z) => (
+              <Link
+                key={z.slug}
+                href={`/tu-vi-2026/${z.slug}`}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-3 py-1.5 text-sm text-foreground/80 transition hover:border-gold/40 hover:text-gold"
+              >
+                <span aria-hidden="true">{z.emoji}</span> Tuổi {z.ten}
+              </Link>
+            ))}
           </div>
         </section>
 
