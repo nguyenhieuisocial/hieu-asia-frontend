@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import {
@@ -296,6 +297,22 @@ export default async function HopTuoiPairPage({
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.a}</p>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Bắt email — người quan tâm hợp tuổi nhưng chưa xem chi tiết */}
+        <section className="mt-10 rounded-xl border border-border bg-card/40 p-6">
+          <h2 className="font-heading text-lg font-semibold text-foreground">
+            Nhận nhắc ngày tốt theo tuổi
+          </h2>
+          <div className="mt-3">
+            <OccasionLeadCapture
+              source={`hop-tuoi-${a.slug}-${b.slug}`}
+              capturedEvent="lead_capture_hop_tuoi"
+              capturedProps={{ pair: `${a.slug}-${b.slug}` }}
+              blurb="Để lại email, chúng tôi báo khi có nội dung mới theo mùa: ngày tốt cưới hỏi, khai trương, xem ngày hợp tuổi. Thi thoảng thôi, không spam."
+              cta="Nhận nhắc"
+            />
           </div>
         </section>
 
