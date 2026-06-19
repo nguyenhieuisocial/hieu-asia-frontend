@@ -1,14 +1,13 @@
 'use client';
 
 /**
- * AffiliateSubNav — horizontal tab strip linking the 5 affiliate sub-pages
+ * AffiliateSubNav — horizontal tab strip linking the affiliate sub-pages
  * + dashboard. Highlights the active route using `usePathname()`.
  *
- * Wave 40 P2 nav cleanup (Wave 38.4 audit follow-up):
- *   /affiliate/network, /affiliate/commissions, /affiliate/leaderboard,
- *   /affiliate/assets, /affiliate/terms were sibling islands — visitors had
- *   to bounce back to /affiliate to discover other sub-pages. This strip
- *   gives one-click hop between siblings.
+ * Links: /affiliate/dashboard, /affiliate/commissions, /affiliate/assets,
+ * /affiliate/terms. These were sibling islands; visitors had to bounce back
+ * to /affiliate to discover other sub-pages. This strip gives one-click hop
+ * between siblings.
  */
 
 import * as React from 'react';
@@ -23,9 +22,7 @@ interface SubNavItem {
 
 const SUB_NAV: readonly SubNavItem[] = [
   { href: '/affiliate/dashboard', label: 'Dashboard' },
-  { href: '/affiliate/network', label: 'Mạng lưới' },
   { href: '/affiliate/commissions', label: 'Hoa hồng' },
-  { href: '/affiliate/leaderboard', label: 'Xếp hạng' },
   { href: '/affiliate/assets', label: 'Marketing assets' },
   { href: '/affiliate/terms', label: 'Điều khoản' },
 ];

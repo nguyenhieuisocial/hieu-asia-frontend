@@ -1,9 +1,9 @@
 /**
- * /affiliate/commissions — tiered commission history with status filtering.
+ * /affiliate/commissions — single-tier commission history with status filtering.
  *
  * Pulls /aff/commissions?status= from the worker with Supabase JWT bearer.
  * Renders 4 stats cards, status filter tabs, and the table sorted by
- * created_at DESC. Min payout 200.000đ; payout flow lives at
+ * created_at DESC. Min payout 500.000đ; payout flow lives at
  * /affiliate/dashboard.
  */
 
@@ -34,7 +34,7 @@ import { getSupabaseAuth } from '@/lib/auth-client';
 import { safeJson } from '@/lib/safe-json';
 
 const API_BASE = process.env.NEXT_PUBLIC_HIEU_API_URL ?? 'https://api.hieu.asia';
-const MIN_PAYOUT_VND = 200_000;
+const MIN_PAYOUT_VND = 500_000;
 
 type Status = 'pending' | 'locked' | 'paid' | 'clawback' | 'void';
 type Filter = 'all' | 'pending' | 'paid' | 'clawback';
@@ -236,13 +236,6 @@ export default function AffiliateCommissionsPage() {
                 Tìm hiểu chương trình
               </Link></Button>
             </div>
-            <p className="mt-6 text-xs text-muted-foreground">
-              Đối tác cấp cao (Mentor / nhóm KOL) vui lòng dùng{' '}
-              <Link href="/partner" className="underline hover:text-gold">
-                Cổng đối tác
-              </Link>
-              .
-            </p>
           </div>
         </main>
         <SiteFooter />
@@ -277,7 +270,7 @@ export default function AffiliateCommissionsPage() {
             Hoa hồng của bạn
           </h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
-            Lịch sử hoa hồng 3 tầng. Trả sau khi giao dịch confirm (~7 ngày).
+            Lịch sử hoa hồng. Trả sau khi giao dịch được xác nhận (~7 ngày).
           </p>
         </header>
 
@@ -396,7 +389,6 @@ export default function AffiliateCommissionsPage() {
                       <th className="py-2 pr-3 font-normal">Ngày</th>
                       <th className="py-2 pr-3 font-normal">Order ID</th>
                       <th className="py-2 pr-3 font-normal">Người mua</th>
-                      <th className="py-2 pr-3 font-normal">Tầng</th>
                       <th className="py-2 pr-3 text-right font-normal">Doanh số</th>
                       <th className="py-2 pr-3 text-right font-normal">Tỉ lệ</th>
                       <th className="py-2 pr-3 text-right font-normal">Hoa hồng</th>
@@ -412,11 +404,6 @@ export default function AffiliateCommissionsPage() {
                         </td>
                         <td className="py-2 pr-3 font-mono text-xs text-muted-foreground">
                           {maskUserId(r.source_user_id)}
-                        </td>
-                        <td className="py-2 pr-3">
-                          <span className="rounded bg-muted/10 px-2 py-0.5 text-xs">
-                            L{r.tier_level}
-                          </span>
                         </td>
                         <td className="py-2 pr-3 text-right tabular-nums">
                           {vnd(r.gross_amount_vnd)}
@@ -458,9 +445,6 @@ export default function AffiliateCommissionsPage() {
               Yêu cầu rút (tối thiểu {vnd(MIN_PAYOUT_VND)})
             </Button>
           )}
-          <Link href="/affiliate/network" className="text-sm text-muted-foreground hover:text-gold">
-            Xem mạng lưới →
-          </Link>
         </div>
 
         <p className="mt-4 text-xs text-muted-foreground">

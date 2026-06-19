@@ -144,14 +144,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/family-profiles`, lastModified: now, changeFrequency: 'monthly', priority: 0.65 },
   ];
 
-  // Wave 8/9 — Multi-tier affiliate hubs (public-facing landing).
+  // Affiliate program — public-facing pages (single-tier referral). The
+  // /network + /leaderboard routes were retired (redirect + noindex), so they
+  // are intentionally absent here.
   const wave9: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/affiliate`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
-    { url: `${BASE_URL}/affiliate/network`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
-    { url: `${BASE_URL}/affiliate/commissions`, lastModified: now, changeFrequency: 'weekly', priority: 0.65 },
     { url: `${BASE_URL}/affiliate/signup`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/affiliate/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
-    { url: `${BASE_URL}/affiliate/leaderboard`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },  ];
+  ];
 
   // Daily / reading / brand additions.
   const waveAdditions: MetadataRoute.Sitemap = [
