@@ -1,6 +1,6 @@
 import { RectifyClient, type BtrQuestion } from './rectify-client';
 
-const API_BASE = process.env.NEXT_PUBLIC_HIEU_API_URL ?? 'https://api.hieu.asia';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
 // Fallback questions (mirror of backend BTR_QUESTIONS) so SSR never returns
 // an empty page if the worker is down. Kept minimal — only enough for the form

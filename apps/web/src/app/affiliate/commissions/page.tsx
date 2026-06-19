@@ -33,7 +33,7 @@ import { AffiliateSubNav } from '@/components/affiliate/AffiliateSubNav';
 import { getSupabaseAuth } from '@/lib/auth-client';
 import { safeJson } from '@/lib/safe-json';
 
-const API_BASE = process.env.NEXT_PUBLIC_HIEU_API_URL ?? 'https://api.hieu.asia';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 const MIN_PAYOUT_VND = 500_000;
 
 type Status = 'pending' | 'locked' | 'paid' | 'clawback' | 'void';
@@ -436,7 +436,7 @@ export default function AffiliateCommissionsPage() {
 
         {/* Payout button */}
         <div className="mt-6 flex flex-wrap items-center gap-3">
-          {stats.totalPaid >= MIN_PAYOUT_VND ? (
+          {stats.totalPending >= MIN_PAYOUT_VND ? (
             <Button asChild className="bg-gold text-ink hover:bg-gold/90"><Link href="/affiliate/dashboard">
               Yêu cầu rút
             </Link></Button>

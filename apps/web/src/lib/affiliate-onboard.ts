@@ -16,7 +16,7 @@ import { readAffiliateRef } from './affiliate-ref';
 import { getSupabaseAuth } from './auth-client';
 import { getAttribution } from './attribution';
 
-const API_BASE = process.env.NEXT_PUBLIC_HIEU_API_URL ?? 'https://api.hieu.asia';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 const ONBOARDED_KEY_PREFIX = 'hieu:ref:onboarded:';
 
 export async function onboardAffiliateFromRef(): Promise<void> {

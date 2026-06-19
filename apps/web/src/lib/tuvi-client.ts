@@ -9,7 +9,7 @@
  *   - Normalizes hour input (0–23) regardless of upstream timeIndex (0–12).
  */
 
-const API_BASE = process.env.NEXT_PUBLIC_HIEU_API_URL ?? 'https://api.hieu.asia';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
 export interface TuViStar {
   name: string;

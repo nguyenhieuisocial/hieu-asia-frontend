@@ -13,7 +13,7 @@
 
 import { getSupabaseAuth } from './auth-client';
 
-const API_BASE = process.env.NEXT_PUBLIC_HIEU_API_URL ?? 'https://api.hieu.asia';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
 export interface StreakView {
   /** Effective current streak — 0 once the run is broken. */
@@ -52,9 +52,13 @@ export async function getStreak(): Promise<StreakView | null> {
 }
 
 export interface VoucherInfo {
-  /** "v30" = 30% off (7-day milestone), "v50" = 50% off (30-day milestone). */
-  type: 'v30' | 'v50';
-  discount_pct: 30 | 50;
+  /**
+   * "v30" = 30% off (7-day streak milestone), "v50" = 50% off (30-day streak
+   * milestone), "vref" = 20% off (referral reward). The endpoint can return any
+   * of these, so the UI must label by type, not assume "streak".
+   */
+  type: 'v30' | 'v50' | 'vref';
+  discount_pct: number;
   issued_at: string;
 }
 
