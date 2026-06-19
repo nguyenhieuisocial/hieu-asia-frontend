@@ -22,7 +22,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Button, Card, CardContent, Skeleton } from '@hieu-asia/ui';
-import { ArrowLeft, ExternalLink, RefreshCw } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, ExternalLink, RefreshCw } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
@@ -154,9 +154,27 @@ export function InfraPanel<T>({
           </CardContent>
         </Card>
       ) : items.length === 0 ? (
+        // Đã kết nối (data.ok) nhưng không có mục nào — đây là trạng thái BÌNH
+        // THƯỜNG/KHOẺ (vd Sentry 0 lỗi), KHÔNG phải "chưa làm xong". Hiển thị rõ
+        // "đã kết nối" + dấu check xanh để operator không tưởng tool hỏng/thiếu.
         <EmptyState
           title={emptyTitle}
-          description={`Không có mục nào gần đây từ ${tool.name}.`}
+          illustration={
+            <div className="relative mx-auto h-20 w-20" aria-hidden>
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-jade/20 via-jade/10 to-gold/10 blur-xl" />
+              <div className="relative flex h-full w-full items-center justify-center rounded-full border border-jade/30 bg-card/60 backdrop-blur-sm">
+                <CheckCircle2 className="h-9 w-9 text-jade/80" />
+              </div>
+            </div>
+          }
+          description={
+            <>
+              <span className="font-medium text-jade-700 dark:text-jade-50">
+                ✓ {tool.name} đã kết nối
+              </span>{' '}
+              — không có dữ liệu nào lúc này. Mục sẽ tự hiện ở đây khi có.
+            </>
+          }
         />
       ) : (
         renderTable(items)
