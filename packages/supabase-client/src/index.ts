@@ -67,10 +67,18 @@ export function getEdgeFnBase(config: SupabaseConfig = {}): string {
 
 const USER_ID_KEY = 'hieu.user_id';
 
+// Must mirror ANON_ID_RE in apps/web reasoning/session-auth.ts and the backend
+// reading-list gate. The anon id is the cross-session key for pre-login reading
+// history; if anything (e.g. an old PostHog distinct_id) wrote a non-`anon_<v4>`
+// value into this slot, the backend rejects it and history is lost — so we
+// regenerate a conformant id instead of returning a malformed one as-is.
+const ANON_ID_RE =
+  /^anon_[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 export function getOrCreateAnonUserId(): string {
   if (typeof window === 'undefined') return '';
   let id = window.localStorage.getItem(USER_ID_KEY);
-  if (!id) {
+  if (!id || !ANON_ID_RE.test(id)) {
     let uuid: string;
     if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
       uuid = crypto.randomUUID();
