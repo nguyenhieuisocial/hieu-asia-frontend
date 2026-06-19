@@ -20,14 +20,13 @@
  *   GET  /admin/cost/top_spenders                  llm_traces aggregated by user
  *   GET  /admin/rag/chunks?limit=&document_id=     corpus_chunks list
  *   GET  /payment/transactions?limit=&user_id=     raw payment events
+ *   GET  /admin/coupons                            coupon list
+ *   POST /admin/coupons, PATCH /admin/coupons/{code}   create / update coupon
+ *   GET  /admin/feature-flags, POST /admin/feature-flags/toggle   feature flags
  *
  * Endpoints NOT shipped yet (mock-only — TODO marked `isMock: true`):
  *   GET  /admin/qdrant/stats        (Qdrant moved to pgvector; stats TBD)
  *   POST /admin/rag/ingest
- *   GET  /admin/coupons
- *   POST /admin/coupons, PATCH /admin/coupons/{code}
- *   GET  /admin/feature_flags, PATCH /admin/feature_flags
- *   POST /admin/payments/{id}/refund
  */
 
 import {
@@ -37,7 +36,6 @@ import {
   MOCK_TOP_SPENDERS,
   MOCK_READINGS_PER_DAY,
   MOCK_RAG_CHUNKS,
-  MOCK_QDRANT_STATS,
   MOCK_TRANSACTIONS,
   MOCK_QUEUE_DEPTH,
   getOverviewKpis,
@@ -683,7 +681,7 @@ export async function retryTask(taskId: string) {
   if (real?.ok && real.task) {
     return { task_id: real.task.task_id, status: 'queued' as const, isMock: false };
   }
-  return delay({ task_id: taskId, status: 'queued' as const, isMock: true });
+  throw new Error('Retry failed — gateway unreachable');
 }
 
 interface QueueDepthEnvelope {
@@ -846,10 +844,10 @@ interface SignupsByDayEnvelope {
 /**
  * New-signups daily rollup. Powers the "Khách mới hôm nay" dashboard KPI.
  *
- * Backend endpoint `GET /admin/signups/by_day?days=N` is shipping in a parallel
- * wave. Until it's deployed proxyFetch returns null (404 → !res.ok → null), so
- * this returns null too — NO mock fallback. The dashboard renders "—" / hides
- * the card gracefully instead of inventing numbers.
+ * There is no dedicated `GET /admin/signups/by_day?days=N` endpoint (not shipped,
+ * not planned), so proxyFetch returns null (404 → !res.ok → null) and this
+ * returns null too — NO mock fallback. The dashboard renders "—" / hides the
+ * card gracefully instead of inventing numbers.
  */
 export async function getSignupsByDay(days = 30): Promise<SignupsByDay | null> {
   const real = await proxyFetch<SignupsByDayEnvelope>(`/admin/signups/by_day?days=${days}`);
@@ -916,11 +914,6 @@ export async function listRagChunks() {
       _source: { isMock: true, reason: 'gateway unreachable; showing mock' } as DataSource,
     }),
   );
-}
-
-export async function getQdrantStats() {
-  // TODO(wave-D): /admin/qdrant/stats not shipped.
-  return delay(mock({ ...MOCK_QDRANT_STATS }, '/admin/qdrant/stats not shipped'));
 }
 
 export async function ingestRagChunks(payload: {

@@ -97,10 +97,10 @@ export default function AdminRagPage() {
       />
 
       {/* Banner reflects ONLY the chunks list (the data with a real source).
-          getQdrantStats is permanently mock (/admin/qdrant/stats không tồn tại),
-          so feeding it into the banner would flip the whole page to "mock" even
-          when corpus_chunks is real. The Qdrant/Collection KPIs are labelled
-          "chưa có endpoint" instead. */}
+          There is no /admin/qdrant/stats endpoint (Qdrant moved to pgvector),
+          so the Qdrant/Collection KPIs are labelled "chưa có endpoint" instead
+          of being fed into the banner — which would otherwise flip the whole
+          page to "mock" even when corpus_chunks is real. */}
       <MockBanner source={chunks.data?._source} />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

@@ -18,6 +18,7 @@ import {
   SheetHeader,
   SheetTitle,
   StatusBadge,
+  toast,
   type DataTableColumn,
 } from '@hieu-asia/ui';
 import { Bot, RotateCcw, Clock, Activity, AlertTriangle, ExternalLink } from 'lucide-react';
@@ -100,7 +101,11 @@ export default function AdminTasksPage() {
     mutationFn: (id: string) => retryTask(id),
     // Partial match (exact:false) so the filtered list key ['admin','tasks',filter]
     // is invalidated too — otherwise the retried row wouldn't refresh.
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'tasks'], exact: false }),
+    onSuccess: () => {
+      toast.success('Đã đưa task vào hàng đợi retry');
+      qc.invalidateQueries({ queryKey: ['admin', 'tasks'], exact: false });
+    },
+    onError: (e) => toast.error('Retry thất bại', { description: (e as Error).message }),
   });
 
   const oldestAge = queue.data?.oldest_pending_age_seconds ?? null;

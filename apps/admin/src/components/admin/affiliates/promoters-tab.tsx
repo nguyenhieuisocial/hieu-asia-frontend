@@ -9,6 +9,7 @@
  */
 
 import * as React from 'react';
+import dynamic from 'next/dynamic';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
@@ -23,6 +24,16 @@ import {
   toast,
 } from '@hieu-asia/ui';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
+
+// Recharts lazy-loaded — keeps it out of the initial admin bundle (tasks
+// page pattern). ssr:false because admin is auth-gated.
+const PromoterCharts = dynamic(
+  () => import('@/components/affiliates/PromoterCharts').then((m) => m.PromoterCharts),
+  {
+    ssr: false,
+    loading: () => <div className="h-64 animate-pulse rounded bg-muted/30" aria-hidden />,
+  },
+);
 
 interface PromoterRow {
   user_id: string;
@@ -127,6 +138,10 @@ export function PromotersTab() {
           </div>
         </CardContent>
       </Card>
+
+      {!q.isLoading && !q.error && (
+        <PromoterCharts rows={q.data ?? []} />
+      )}
 
       <Card>
         <CardContent className="overflow-x-auto pt-6">

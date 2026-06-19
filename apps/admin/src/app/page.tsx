@@ -41,6 +41,15 @@ const ReadingsChart = dynamic(
     loading: () => <div className="h-72 animate-pulse rounded bg-muted/30" aria-hidden />,
   },
 );
+// AI-spend trend chart — same lazy-load treatment as ReadingsChart (Recharts
+// chunk). Fed by the `cost` query already fetched below; no new data fetch.
+const OverviewTrends = dynamic(
+  () => import('@/components/admin/overview-trends').then((m) => m.OverviewTrends),
+  {
+    ssr: false,
+    loading: () => <div className="h-64 animate-pulse rounded-xl bg-muted/30" aria-hidden />,
+  },
+);
 import { MockBanner } from '@/components/mock-banner';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { HealthWidget } from '@/components/admin/health-widget';
@@ -100,9 +109,9 @@ export default function AdminOverviewPage() {
     staleTime: 60_000,
   });
   const queue = useQueueDepth();
-  // New signups (last 30d) — powers the "Khách mới hôm nay" KPI. The backend
-  // endpoint /admin/signups/by_day ships in a parallel wave; getSignupsByDay
-  // returns null until then, so the card degrades to "—" without breaking.
+  // New signups (last 30d) — powers the "Khách mới hôm nay" KPI. There is no
+  // dedicated /admin/signups/by_day endpoint, so getSignupsByDay returns null
+  // and the card degrades to "—" without breaking (no fake number).
   const signups = useQuery({
     queryKey: ['admin', 'signups'],
     queryFn: () => getSignupsByDay(30),
@@ -264,7 +273,7 @@ export default function AdminOverviewPage() {
         />
         <KpiCard
           label="Khách mới hôm nay"
-          // Null until /admin/signups/by_day deploys → "—", no fake number.
+          // No /admin/signups/by_day endpoint → getSignupsByDay null → "—", no fake number.
           value={signupsData ? signupsData.today.toLocaleString('vi-VN') : '—'}
           icon={<UserPlus className="h-4 w-4" />}
           accent="jade"
@@ -366,6 +375,11 @@ export default function AdminOverviewPage() {
           <WorkQueueWidget />
         </div>
       </div>
+
+      {/* Chi phí AI 14 ngày — real series from getCostByDay (same `cost` query
+          already fetched above; reused by /llm-spend's CostPanel). Renders an
+          honest "chưa có chi tiêu" state when the 14d total is $0. */}
+      <OverviewTrends cost={cost.data} isLoading={cost.isLoading} />
 
       {/* Tìm kiếm Google (GSC) — organic at-a-glance, 7 ngày */}
       <Card>

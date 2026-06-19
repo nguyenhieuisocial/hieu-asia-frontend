@@ -19,6 +19,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -49,6 +50,16 @@ import { BatchesTab } from '@/components/admin/affiliates/batches-tab';
 import { ReferralsTab } from '@/components/admin/affiliates/referrals-tab';
 import { FraudTab } from '@/components/admin/affiliates/fraud-tab';
 import { BroadcastTab } from '@/components/admin/affiliates/broadcast-tab';
+
+// Recharts lazy-loaded for the Payouts tab trend — keeps it out of the
+// initial admin bundle (tasks page pattern). ssr:false (auth-gated admin).
+const PayoutTrendChart = dynamic(
+  () => import('@/components/affiliates/PayoutTrendChart').then((m) => m.PayoutTrendChart),
+  {
+    ssr: false,
+    loading: () => <div className="h-56 animate-pulse rounded bg-muted/30" aria-hidden />,
+  },
+);
 
 const VALID_TABS = [
   'overview',
@@ -512,6 +523,10 @@ function PayoutsInlineTab() {
           </div>
         </CardContent>
       </Card>
+
+      {!q.isLoading && !q.error && (
+        <PayoutTrendChart rows={q.data ?? []} />
+      )}
 
       <Card>
         <CardContent className="overflow-x-auto pt-6">
