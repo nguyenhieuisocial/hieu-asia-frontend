@@ -8,6 +8,7 @@ import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { PalmUpload } from '@/components/palm-upload';
 import { SiteNav } from '@/components/home/SiteNav';
 import { uploadHandImage } from '@/lib/upload-image';
+import { getOrCreateAnonUserId } from '@hieu-asia/supabase';
 import { track } from '@/lib/analytics';
 
 const CHECKLIST = [
@@ -32,10 +33,11 @@ export default function PalmUploadPage() {
     setSubmitting(true);
     setSubmitError(null);
     try {
-      // user_id: phase 2 will plug Auth.js session. For now use draft id.
-      const userId =
-        (typeof window !== 'undefined' && window.sessionStorage.getItem('hieu.user_id')) ||
-        `anon-${readingId}`;
+      // Canonical anon id from localStorage (`anon_<uuid>` via
+      // getOrCreateAnonUserId). The old sessionStorage read always missed and
+      // used a malformed `anon-<readingId>` the backend rejects, orphaning the
+      // reading from /account history + GDPR export.
+      const userId = getOrCreateAnonUserId();
       const result = await uploadHandImage(file, userId);
       if (typeof window !== 'undefined') {
         window.sessionStorage.setItem(
