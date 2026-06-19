@@ -3,50 +3,44 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Mail, MessageCircle, Facebook, Heart, ArrowRight } from 'lucide-react';
-import { QUICK_LOOKUP } from '@/lib/catalog/tools';
 
 interface FooterLink {
   href: string;
   label: string;
-  /** B4 (design handoff) — free/paid badge for the "Tra cứu nhanh" lookup
-   *  tools so visitors know which need a paid tier before clicking, instead
-   *  of hitting a surprise paywall. Only set on COL_QUICK_LOOKUP items. */
-  tag?: 'free' | 'premium';
+  /** Optional Premium pill (only the exception is badged; free is the default
+   *  so we don't repeat "Miễn phí" 20+ times). */
+  tag?: 'premium';
 }
 
 /**
- * Mega-footer columns — Wave 62.10 per founder vault 138.
- * Previously SiteNav.tsx carried 26 sub-routes across 7 mega-menu sections —
- * crushing first-time-visitor scan-ability. We trimmed top nav to 6 primary
- * links and relocated the 11 tra-cứu-nhanh tools + product/learning/legal
- * reference shortcuts here. Footer is now the discovery surface for ad-hoc
- * tool lookups; top nav is the trust/conversion path.
+ * Mega-footer columns — 4 balanced columns. The 24-item "Tra cứu nhanh" tool
+ * list was removed from the footer: tools now live on /cong-cu (which has
+ * search), so the footer links there once instead of towering ~2400px tall on
+ * mobile. Surfaces the previously-buried engagement layer (affiliate, cộng
+ * đồng, hỗ trợ, app) under "Khám phá".
  */
 
 const COL_PRODUCT: readonly FooterLink[] = [
   { href: '/onboarding?intent=self', label: 'Lá số tử vi' },
   { href: '/onboarding?intent=decision', label: 'AI Mentor' },
+  { href: '/cong-cu', label: 'Tất cả công cụ' },
   { href: '/sample-report', label: 'Báo cáo mẫu' },
-  { href: '/cam-nang', label: 'Cẩm nang' },
   { href: '/pricing', label: 'Bảng giá' },
 ];
 
-// B4 — free vs paid lookup tools (verified against route gating + vault 100
-// §9 free-tools list + /pricing tier copy). All are free-to-use except
-// /ban-do (Bản đồ sao = personalised weekly map, a Premium feature).
-// Tra cứu nhanh — từ catalog (lib/catalog/tools), cùng nguồn với SiteNav (hết trùng lặp).
-const COL_QUICK_LOOKUP: readonly FooterLink[] = QUICK_LOOKUP.map(({ href, label, tier }) => ({
-  href,
-  label,
-  tag: tier,
-}));
+// Khám phá / cộng đồng — đưa các mặt-tiền trước đây bị chôn ra footer.
+const COL_COMMUNITY: readonly FooterLink[] = [
+  { href: '/affiliate', label: 'Mời bạn nhận quà' },
+  { href: '/community', label: 'Cộng đồng' },
+  { href: '/hoi-dap', label: 'Trợ giúp & Hỏi đáp' },
+  { href: 'https://t.me/hieuasiabot', label: 'Mở trên Telegram' },
+];
 
 const COL_DOCS: readonly FooterLink[] = [
   { href: '/methodology', label: 'Phương pháp' },
-  { href: '/sample-report', label: 'Báo cáo mẫu' },
   { href: '/cam-nang', label: 'Cẩm nang' },
-  { href: '/changelog', label: 'Changelog' },
   { href: '/learn', label: 'Learn' },
+  { href: '/changelog', label: 'Changelog' },
 ];
 
 const COL_LEGAL: readonly FooterLink[] = [
@@ -79,22 +73,11 @@ export function SiteFooter() {
           </Link>
         </div>
 
-        {/*
-          Mega-footer 4-column grid — Wave 62.10.
-          Mobile: stack vertically with gap-12 (~48px editorial gap).
-          lg breakpoint: 4 equal columns with gap-12.
-          Column 2 (Tra cứu nhanh) is wider on lg because of 11 tool routes —
-          using col-span-2 on lg keeps it readable as a 2-column sublist while
-          the other 3 columns stay single-line.
-        */}
-        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-5 lg:gap-12">
+        {/* 4 balanced columns. Mobile: 2 columns (short lists now ~4-5 items
+            each → compact, no more ~2400px tower). lg: 4 equal columns. */}
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
           <FooterCol title="Sản phẩm" links={COL_PRODUCT} />
-          <FooterCol
-            title="Tra cứu nhanh"
-            links={COL_QUICK_LOOKUP}
-            className="lg:col-span-2"
-            twoCol
-          />
+          <FooterCol title="Khám phá" links={COL_COMMUNITY} />
           <FooterCol title="Tài liệu" links={COL_DOCS} />
           <FooterColLegal links={COL_LEGAL} year={year} />
         </div>
@@ -169,15 +152,9 @@ function FooterCol({
               className="inline-flex min-h-11 w-full items-center gap-2 py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground active:text-foreground touch-manipulation sm:min-h-0 sm:w-auto sm:py-0"
             >
               {link.label}
-              {link.tag && (
-                <span
-                  className={`shrink-0 font-mono text-[9px] uppercase tracking-wider ${
-                    link.tag === 'premium'
-                      ? 'text-[hsl(var(--primary-cta))]'
-                      : 'text-muted-foreground'
-                  }`}
-                >
-                  {link.tag === 'premium' ? 'Premium' : 'Miễn phí'}
+              {link.tag === 'premium' && (
+                <span className="shrink-0 rounded-full border border-[hsl(var(--primary-cta))]/40 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-[hsl(var(--primary-cta))]">
+                  Premium
                 </span>
               )}
             </Link>
@@ -215,15 +192,9 @@ function FooterColLegal({
               className="inline-flex min-h-11 w-full items-center gap-2 py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground active:text-foreground touch-manipulation sm:min-h-0 sm:w-auto sm:py-0"
             >
               {link.label}
-              {link.tag && (
-                <span
-                  className={`shrink-0 font-mono text-[9px] uppercase tracking-wider ${
-                    link.tag === 'premium'
-                      ? 'text-[hsl(var(--primary-cta))]'
-                      : 'text-muted-foreground'
-                  }`}
-                >
-                  {link.tag === 'premium' ? 'Premium' : 'Miễn phí'}
+              {link.tag === 'premium' && (
+                <span className="shrink-0 rounded-full border border-[hsl(var(--primary-cta))]/40 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-[hsl(var(--primary-cta))]">
+                  Premium
                 </span>
               )}
             </Link>
