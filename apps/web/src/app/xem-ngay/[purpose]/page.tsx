@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { ActivityChecker } from '@/components/lich-van-nien/ActivityChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { PURPOSES, getPurpose } from '../purposes';
 
@@ -99,6 +100,21 @@ export default async function XemNgayPurposePage({
                 </div>
               ))}
             </dl>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-4">
+              <OccasionLeadCapture
+                source={`xem-ngay-${purpose}`}
+                capturedEvent="lead_capture_xem_ngay"
+                capturedProps={{ purpose }}
+                blurb={`Để lại email, mình sẽ báo bạn khi có nội dung xem ngày ${p.h1Suffix} đầy đủ hơn và các bài xem ngày tốt mới theo mùa. Thi thoảng thôi, không spam.`}
+                cta="Nhận nhắc"
+              />
+            </div>
           </section>
 
           <nav aria-label="Xem ngày cho việc khác" className="text-sm">

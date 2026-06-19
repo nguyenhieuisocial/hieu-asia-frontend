@@ -5,6 +5,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { KhaiTruongChecker } from '@/components/khai-truong/KhaiTruongChecker';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { OPENING_VERDICT_LABEL } from '@/lib/khai-truong';
 import { BIRTH_YEARS, TARGET_YEAR, buildYearPage, slugOf, yearFromSlug } from '../years';
 
@@ -164,6 +165,24 @@ export default async function KhaiTruongYearPage({
                 </div>
               ))}
             </dl>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <p className="mt-2 text-sm font-medium text-foreground">
+              Để lại email cho chủ sinh năm {d.birthYear}
+            </p>
+            <div className="mt-4">
+              <OccasionLeadCapture
+                source={`khai-truong-${tuoi}`}
+                capturedEvent="lead_capture_khai_truong"
+                capturedProps={{ tuoi }}
+                blurb={`Bạn quan tâm tới ngày tốt khai trương theo tuổi? Để lại email, chúng tôi sẽ báo bạn khi có bản đầy đủ và nội dung mới theo mùa cho chủ sinh năm ${d.birthYear}. Thi thoảng thôi, không spam.`}
+                cta="Nhận nhắc"
+              />
+            </div>
           </section>
 
           <nav aria-label="Xem tuổi khai trương các năm sinh khác" className="text-sm leading-7">

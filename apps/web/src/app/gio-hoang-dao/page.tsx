@@ -4,6 +4,7 @@ import { RelatedTools } from '@/components/tools/RelatedTools';
 import { GioHoangDaoChecker } from '@/components/gio-hoang-dao/GioHoangDaoChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { HOANG_DAO_STARS, HAC_DAO_STARS } from '@/lib/gio-hoang-dao';
 
@@ -156,6 +157,20 @@ export default function GioHoangDaoPage() {
                 </div>
               ))}
             </dl>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-4">
+              <OccasionLeadCapture
+                source="gio-hoang-dao"
+                capturedEvent="lead_capture_gio_hoang_dao"
+                blurb="Để lại email, chúng tôi báo khi có nội dung mới theo mùa: giờ hoàng đạo, ngày tốt theo việc, lịch tốt xấu. Thi thoảng thôi, không spam."
+                cta="Nhận nhắc"
+              />
+            </div>
           </section>
 
           <RelatedTools
