@@ -7,6 +7,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { article, breadcrumb } from '@/lib/seo/jsonld';
 import { TimeFlowChecker } from '@/components/time-flow/TimeFlowChecker';
 import { ZODIAC } from '@/lib/hop-tuoi-pairs';
@@ -274,6 +275,22 @@ export default function TuVi2026Page() {
               >
                 Cẩm nang Tử Vi <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
               </Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="relative mx-auto max-w-3xl px-6 pb-20">
+          <div className="rounded-xl border border-border bg-card/40 p-6 sm:p-8">
+            <h2 className="font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-4">
+              <OccasionLeadCapture
+                source="tu-vi-2026-hub"
+                capturedEvent="lead_capture_tu_vi_2026_hub"
+                blurb="Để lại email, chúng tôi sẽ báo bạn khi có bản tử vi 2026 đầy đủ theo tuổi và nội dung mới theo mùa. Thi thoảng thôi, không spam."
+                cta="Nhận nhắc"
+              />
             </div>
           </div>
         </section>

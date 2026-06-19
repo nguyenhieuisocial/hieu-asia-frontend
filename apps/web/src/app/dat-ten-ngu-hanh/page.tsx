@@ -4,6 +4,7 @@ import { RelatedTools } from '@/components/tools/RelatedTools';
 import { DatTenNguHanhChecker } from '@/components/dat-ten-ngu-hanh/DatTenNguHanhChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { ELEMENTS, type Element } from '@/lib/dat-ten-ngu-hanh';
 import { VARIANTS } from './variants';
@@ -144,6 +145,21 @@ export default function DatTenNguHanhPage() {
                 </div>
               ))}
             </dl>
+          </section>
+
+          {/* Nhận nhắc theo mùa */}
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-3">
+              <OccasionLeadCapture
+                source="dat-ten-hub"
+                capturedEvent="lead_capture_dat_ten_hub"
+                blurb='Để lại email, mình báo bạn khi có bản gợi ý tên hợp mệnh đầy đủ hơn và nội dung mới theo mùa. Thi thoảng thôi, không spam.'
+                cta="Nhận nhắc"
+              />
+            </div>
           </section>
 
           <RelatedTools

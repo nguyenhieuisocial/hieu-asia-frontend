@@ -4,6 +4,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { XemTuoiLamNhaChecker } from '@/components/xem-tuoi-lam-nha/XemTuoiLamNhaChecker';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { checkBuildYear, BUILD_VERDICT_LABEL } from '@/lib/xem-tuoi-lam-nha';
 import { BIRTH_YEARS, TARGET_YEAR, slugOf } from './years';
 
@@ -221,6 +222,20 @@ export default function XemTuoiLamNhaPage() {
                 </li>
               ))}
             </ul>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-3">
+              <OccasionLeadCapture
+                source="lam-nha-hub"
+                capturedEvent="lead_capture_lam_nha_hub"
+                blurb='Để lại email, chúng tôi sẽ báo bạn khi có bản đầy đủ và những nội dung mới theo mùa: năm tốt làm nhà sắp tới và lịch động thổ theo từng mùa. Thi thoảng thôi, không spam.'
+                cta="Nhận nhắc"
+              />
+            </div>
           </section>
 
           <nav aria-label="Công cụ làm nhà liên quan" className="text-sm">
