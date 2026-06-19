@@ -9,6 +9,7 @@ import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 import { AstroTickerLive } from '@/components/home/AstroTickerLive';
 import { TrustBand } from '@/components/home/TrustBand';
+import { StartupPath } from '@/components/home/StartupPath';
 // Wave 62.04 — homepage swapped from MarketingHero → HeroV4 (split layout
 // + 12-cung neo thị giác + 2 entry points). MarketingHero stays the
 // canonical reusable hero for /pricing /features /about /methodology
@@ -653,6 +654,11 @@ export default function LandingPage() {
             (useState for active question), no Motion runtime — pure CSS
             grid-row trick for reveal. */}
         <MentorSampleInteractive />
+
+        {/* Lộ trình khởi đầu — band kích-hoạt có khung phần-thưởng THẬT (mẫu
+            task-center/rewards của Bitget; mời bạn → voucher giảm giá có thật).
+            Đặt trước Giá: làm xong các bước free rồi mới tới gói trả phí. */}
+        <RevealOnScroll><StartupPath /></RevealOnScroll>
 
         {/* Lời mời "lập lá số thật" giờ là HERO (InstantChartHero, trên cùng) —
             teaser GIẢ cũ ở đây đã bỏ. Để khách lướt thẳng xuống giá sau khi
