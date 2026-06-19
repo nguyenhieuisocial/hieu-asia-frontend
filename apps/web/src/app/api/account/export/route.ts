@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
   // client-supplied user_id (was an unauth IDOR: any caller could export any
   // user's full PII by POSTing their UUID, because the backend trusts
   // body.user_id when the service token is present).
-  let session: { userId: string; email: string | null } | null;
+  let session: { userId: string; email: string | null; linkedAnonId: string | null } | null;
   try {
     session = await getSessionFromRequest(req);
   } catch {
@@ -48,7 +48,13 @@ export async function POST(req: NextRequest) {
   }
 
   // Force user_id to the authenticated user; ignore any client-supplied value.
-  const forwardBody = { ...body, user_id: session.userId };
+  // Also forward the linked anon id (user_id_2) so the export covers readings &
+  // uploads created before sign-in — already sanitized to anon_<uuid v4>.
+  const forwardBody = {
+    ...body,
+    user_id: session.userId,
+    ...(session.linkedAnonId ? { user_id_2: session.linkedAnonId } : {}),
+  };
 
   try {
     const res = await fetch(`${HIEU_API_URL}/user/export`, {
