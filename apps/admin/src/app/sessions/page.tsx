@@ -235,7 +235,12 @@ function parseSortParam(raw: string | null): SortOrder {
 }
 
 async function reOrchestrate(sessionId: string) {
-  const r = await fetch(`/api/admin/sessions/${sessionId}/re-orchestrate`, { method: 'POST' });
+  // timeout 15s: re-orchestrate gọi worker → Supabase; nếu treo, nút không kẹt
+  // mãi (AbortError → throw → mutation onError toast) thay vì đơ nút "Đang…".
+  const r = await fetch(`/api/admin/sessions/${sessionId}/re-orchestrate`, {
+    method: 'POST',
+    signal: AbortSignal.timeout(15000),
+  });
   const data = await r.json().catch(() => ({ ok: false, error: `HTTP ${r.status}` }));
   if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
   return data;
