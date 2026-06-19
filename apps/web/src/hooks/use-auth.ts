@@ -33,10 +33,18 @@ export function useAuth(): AuthState {
 
     let cancelled = false;
 
-    supabase.auth.getSession().then(({ data }) => {
-      if (cancelled) return;
-      setState({ user: data.session?.user ?? null, loading: false });
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data }) => {
+        if (cancelled) return;
+        setState({ user: data.session?.user ?? null, loading: false });
+      })
+      .catch(() => {
+        // getSession() có thể reject ở ngữ cảnh storage bị chặn (iOS strict /
+        // private mode). Bắt tại đây để KHÔNG nổi thành unhandled-rejection
+        // (PostHog capture_exceptions sẽ đổ vào Sentry); coi như chưa đăng nhập.
+        if (!cancelled) setState({ user: null, loading: false });
+      });
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       if (cancelled) return;

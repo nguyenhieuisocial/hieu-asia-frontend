@@ -47,8 +47,15 @@ export interface ConversationEnvelope {
 async function getAccessToken(): Promise<string | null> {
   const sb = getSupabaseAuth();
   if (!sb) return null;
-  const { data } = await sb.auth.getSession();
-  return data.session?.access_token ?? null;
+  try {
+    const { data } = await sb.auth.getSession();
+    return data.session?.access_token ?? null;
+  } catch {
+    // getSession() có thể reject ở storage bị chặn (iOS/private). Trả null để
+    // caller (conversations + mentor pages) coi như chưa đăng nhập, thay vì để
+    // lỗi nổi thành unhandled-rejection.
+    return null;
+  }
 }
 
 async function authedFetch(input: RequestInfo, init: RequestInit = {}): Promise<Response | null> {

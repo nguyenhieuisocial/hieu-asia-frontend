@@ -1609,10 +1609,18 @@ export interface InfraUptimeIncident {
 async function fetchInfra<T, S = unknown>(
   tool: string,
 ): Promise<InfraEnvelope<T, S>> {
+  // 25s timeout so a stalled backend degrades to an error envelope instead of
+  // a frozen panel. Same deadline as proxyFetch (cold-start tolerant).
+  const ctrl = new AbortController();
+  const t = setTimeout(
+    () => ctrl.abort(new DOMException('Proxy timeout after 25000ms', 'TimeoutError')),
+    25_000,
+  );
   try {
     const res = await fetch(`${PROXY}/admin/infra/${tool}`, {
       cache: 'no-store',
       credentials: 'same-origin',
+      signal: ctrl.signal,
     });
     if (res.status === 401 && typeof window !== 'undefined') {
       const next = window.location.pathname + window.location.search;
@@ -1634,6 +1642,8 @@ async function fetchInfra<T, S = unknown>(
     };
   } catch (err) {
     return { ok: false, configured: true, error: (err as Error).message };
+  } finally {
+    clearTimeout(t);
   }
 }
 
@@ -1895,10 +1905,18 @@ export type InfraVercelDetailEnvelope =
 
 /** Raw detail fetch (mirrors `fetchInfra`, but for a specific record path). */
 async function fetchInfraDetail<E extends { ok: boolean }>(path: string): Promise<E> {
+  // 25s timeout so a stalled backend degrades to an error envelope instead of
+  // a frozen detail panel.
+  const ctrl = new AbortController();
+  const t = setTimeout(
+    () => ctrl.abort(new DOMException('Proxy timeout after 25000ms', 'TimeoutError')),
+    25_000,
+  );
   try {
     const res = await fetch(`${PROXY}/admin/infra${path}`, {
       cache: 'no-store',
       credentials: 'same-origin',
+      signal: ctrl.signal,
     });
     if (res.status === 401 && typeof window !== 'undefined') {
       const next = window.location.pathname + window.location.search;
@@ -1916,6 +1934,8 @@ async function fetchInfraDetail<E extends { ok: boolean }>(path: string): Promis
     return { ok: false, configured: true, error: `infra detail → HTTP ${res.status}` } as unknown as E;
   } catch (err) {
     return { ok: false, configured: true, error: (err as Error).message } as unknown as E;
+  } finally {
+    clearTimeout(t);
   }
 }
 
@@ -2139,12 +2159,22 @@ async function postInfra(
   path: string,
   body?: Record<string, unknown>,
 ): Promise<InfraActionResult> {
+  // 15s timeout: infra POST actions (Sentry resolve/ignore, redeploy, test
+  // sends) hit a backend that can stall. Without a deadline the UI button spins
+  // forever and the page freezes. AbortController bounds the wait; on abort the
+  // catch below normalizes the error so callers clear their pending state.
+  const ctrl = new AbortController();
+  const t = setTimeout(
+    () => ctrl.abort(new DOMException('Proxy timeout after 15000ms', 'TimeoutError')),
+    15_000,
+  );
   try {
     const res = await fetch(`${PROXY}/admin/infra${path}`, {
       method: 'POST',
       cache: 'no-store',
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
+      signal: ctrl.signal,
       ...(body ? { body: JSON.stringify(body) } : {}),
     });
     if (res.status === 401 && typeof window !== 'undefined') {
@@ -2162,7 +2192,14 @@ async function postInfra(
     if (parsed && typeof parsed.ok === 'boolean') return parsed;
     return { ok: false, error: `infra action → HTTP ${res.status}` };
   } catch (err) {
+    // On timeout/abort, surface a friendly message so the UI clears its pending
+    // spinner + toasts instead of freezing.
+    if ((err as Error).name === 'TimeoutError' || (err as Error).name === 'AbortError') {
+      return { ok: false, error: 'Hết thời gian chờ — thử lại' };
+    }
     return { ok: false, error: (err as Error).message };
+  } finally {
+    clearTimeout(t);
   }
 }
 
@@ -2278,10 +2315,18 @@ export interface InfraKvValueResp {
 async function fetchInfraKv<T extends { ok: boolean; configured: boolean; error?: string }>(
   path: string,
 ): Promise<T> {
+  // 25s timeout so a stalled backend degrades to an error envelope instead of
+  // a frozen KV browser.
+  const ctrl = new AbortController();
+  const t = setTimeout(
+    () => ctrl.abort(new DOMException('Proxy timeout after 25000ms', 'TimeoutError')),
+    25_000,
+  );
   try {
     const res = await fetch(`${PROXY}/admin/infra/kv${path}`, {
       cache: 'no-store',
       credentials: 'same-origin',
+      signal: ctrl.signal,
     });
     if (res.status === 401 && typeof window !== 'undefined') {
       const next = window.location.pathname + window.location.search;
@@ -2299,6 +2344,8 @@ async function fetchInfraKv<T extends { ok: boolean; configured: boolean; error?
     return { ok: false, configured: true, error: `infra kv → HTTP ${res.status}` } as T;
   } catch (err) {
     return { ok: false, configured: true, error: (err as Error).message } as T;
+  } finally {
+    clearTimeout(t);
   }
 }
 
