@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
 import { calculateBazi, type BaziChart, type BaziPillar, type Element, ELEMENTS } from '@/lib/bazi';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { ProofDisclosure } from '@/components/la-so-bat-tu/ProofDisclosure';
 import { UnifiedProfile } from '@/components/la-so-bat-tu/UnifiedProfile';
 
@@ -285,12 +286,52 @@ export function BatTuChecker({
               <p className="text-sm text-foreground/85">
                 Lá số tính theo tiết khí chuẩn — <strong>khoe với bạn bè</strong> hoặc thách họ xem thử lá số của mình.
               </p>
-              <ShareResultButton
-                path={sharePath}
-                title="Lá số Bát Tự (Tứ Trụ) của tôi — hieu.asia"
-                text={shareText}
-                trackId="la-so-bat-tu"
-              />
+              <div className="flex flex-wrap items-center gap-3">
+                <ShareResultButton
+                  path={sharePath}
+                  title="Lá số Bát Tự (Tứ Trụ) của tôi — hieu.asia"
+                  text={shareText}
+                  trackId="la-so-bat-tu"
+                />
+                <DownloadToolPdfButton
+                  label="Tải PDF"
+                  payload={() =>
+                    chart
+                      ? {
+                          title: 'Lá số Bát Tự (Tứ Trụ)',
+                          subtitle: `Sinh ${date} ${time} · ${gender === 'M' ? 'Nam' : 'Nữ'}`,
+                          sections: [
+                            {
+                              heading: 'Tứ Trụ',
+                              rows: [chart.year, chart.month, chart.day, chart.hour].map((p) => ({
+                                label: `Trụ ${p.label}`,
+                                value: `${p.can} ${p.chi} · ${p.tenGod}`,
+                              })),
+                            },
+                            {
+                              heading: 'Nhật Chủ & ngũ hành',
+                              rows: [
+                                {
+                                  label: 'Nhật Chủ',
+                                  value: `${chart.dayMaster.can} (${chart.dayMaster.element} ${chart.dayMaster.yang ? 'dương' : 'âm'})`,
+                                },
+                                { label: 'Hành vượng nhất', value: chart.strongest },
+                                {
+                                  label: 'Hành thiếu',
+                                  value: chart.missing.length ? chart.missing.join(', ') : 'Đủ cả 5',
+                                },
+                                ...ELEMENTS.map((e) => ({
+                                  label: `Số hành ${e}`,
+                                  value: String(chart.elementCount[e]),
+                                })),
+                              ],
+                            },
+                          ],
+                        }
+                      : null
+                  }
+                />
+              </div>
             </div>
 
             <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
