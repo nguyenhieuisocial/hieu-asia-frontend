@@ -7,6 +7,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 import { ZODIAC } from '@/lib/hop-tuoi-pairs';
@@ -247,6 +248,22 @@ export default async function TuVi2026ConGiapPage({
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </section>
+
+        {/* Bắt email — người quan tâm nhưng chưa sẵn sàng xem chi tiết */}
+        <section className="relative mx-auto max-w-3xl px-6 pb-10">
+          <div className="rounded-xl border border-border bg-card/40 p-6">
+            <h2 className="mb-3 font-heading text-lg font-semibold text-foreground">
+              Nhận nhắc theo mùa cho tuổi {d.z.ten}
+            </h2>
+            <OccasionLeadCapture
+              source={`tu-vi-2026-${congiap}`}
+              capturedEvent="lead_capture_tu_vi_2026"
+              capturedProps={{ congiap }}
+              blurb={`Chưa muốn xem chi tiết ngay? Để lại email, chúng tôi báo bạn khi có bản tử vi 2026 đầy đủ cho tuổi ${d.z.ten} và các bài theo mùa (sao hạn, ngày tốt, xem ngày). Thi thoảng thôi, không spam.`}
+              cta="Nhận thông báo"
+            />
           </div>
         </section>
 
