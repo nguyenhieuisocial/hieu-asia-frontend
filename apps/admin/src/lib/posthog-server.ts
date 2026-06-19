@@ -18,6 +18,7 @@
  */
 
 import 'server-only';
+import { gunzipSync } from 'zlib';
 
 const PROJECT_ID = process.env.POSTHOG_PROJECT_ID ?? '434217';
 const HOST = process.env.POSTHOG_API_HOST ?? 'https://us.posthog.com';
@@ -187,6 +188,30 @@ export async function fetchRecordings(
   }
 }
 
+// PostHog stores the bulky FullSnapshot `data` as a RAW GZIP byte stream kept in
+// a string (each char = one byte; head bytes 0x1f 0x8b = gzip magic). rrweb needs
+// the decoded `{node, initialOffset}` object, so gunzip + JSON.parse it here
+// (Node `zlib`, server-only — no client dependency). Incremental events already
+// arrive as plain objects and pass through untouched; anything that won't decode
+// is left as-is so one odd event never throws the whole playback.
+function decodeSnapshotEvent(ev: { timestamp?: number; data?: unknown }): {
+  timestamp?: number;
+  data?: unknown;
+} {
+  if (ev && typeof ev.data === 'string') {
+    try {
+      const bytes = Buffer.from(ev.data, 'latin1');
+      if (bytes.length > 2 && bytes[0] === 0x1f && bytes[1] === 0x8b) {
+        const json = gunzipSync(bytes).toString('utf8');
+        return { ...ev, data: JSON.parse(json) };
+      }
+    } catch {
+      /* leave as-is */
+    }
+  }
+  return ev;
+}
+
 /**
  * Best-effort: assemble a recording's rrweb events for playback. Fetches the
  * blob_v2 sources, pulls each blob decompressed (JSONL of `[windowId, event]`),
@@ -265,7 +290,7 @@ export async function fetchRecordingSnapshots(
     let best: Array<{ timestamp?: number }> = [];
     for (const evs of withSnap) if (evs.length > best.length) best = evs;
     if (best.length < 2) return { ok: false, events: [], error: 'Không đủ dữ liệu để phát lại phiên này.' };
-    return { ok: true, events: best };
+    return { ok: true, events: best.map(decodeSnapshotEvent) };
   } catch (e) {
     return { ok: false, events: [], error: (e as Error).message };
   }
