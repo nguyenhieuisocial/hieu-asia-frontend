@@ -26,7 +26,22 @@ export function ShareResultButton({
   const [copied, setCopied] = React.useState(false);
 
   const onShare = async () => {
-    const url = typeof window !== 'undefined' ? `${window.location.origin}${path}` : path;
+    // Định danh nguồn cho vòng lan-truyền: gắn UTM vào link share để
+    // attribution.ts/PostHog bắt được "đến từ một kết quả được chia sẻ"
+    // (utm_campaign = công cụ). Không gắn thì mọi share rơi vào direct/referrer
+    // và không đo được vòng lan-truyền.
+    let url = path;
+    if (typeof window !== 'undefined') {
+      try {
+        const u = new URL(`${window.location.origin}${path}`);
+        u.searchParams.set('utm_source', 'share');
+        u.searchParams.set('utm_medium', 'result_share');
+        u.searchParams.set('utm_campaign', trackId);
+        url = u.toString();
+      } catch {
+        url = `${window.location.origin}${path}`;
+      }
+    }
     track('result_shared', { tool: trackId });
     try {
       if (typeof navigator !== 'undefined' && navigator.share) {
