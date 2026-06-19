@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { faqPage } from '@/lib/seo/jsonld';
 
@@ -259,6 +260,24 @@ export default function HopTuoiLandingPage() {
             </div>
           ))}
         </dl>
+      </section>
+
+      {/* Bắt email: nhắc nội dung theo mùa, opt-in, không spam */}
+      <section
+        className="mt-12 rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm"
+        aria-label="Nhận nhắc theo mùa"
+      >
+        <h2 className="font-heading text-lg font-semibold text-foreground">Nhận nhắc theo mùa</h2>
+        <div className="mt-3 max-w-2xl">
+          <OccasionLeadCapture
+            source="hop-tuoi-hub"
+            capturedEvent="lead_capture_hop_tuoi_hub"
+            cta="Nhận nhắc"
+            blurb={
+              'Để lại email, chúng tôi sẽ báo bạn khi có bản hợp tuổi đầy đủ hơn và nội dung mới theo mùa: ngày tốt cưới hỏi, khai trương, hay xem ngày hợp tuổi cho từng việc. Thi thoảng thôi, không spam.'
+            }
+          />
+        </div>
       </section>
 
       <p className="mt-10 text-center text-xs text-foreground/40">

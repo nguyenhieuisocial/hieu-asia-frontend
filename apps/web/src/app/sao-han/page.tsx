@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { SaoHanCalculator } from '@/components/sao-han/SaoHanCalculator';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { RelatedTools } from '@/components/tools/RelatedTools';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { SAO_ORDER, SAO_INFO, TYPE_LABEL, type SaoType } from '@/lib/sao-han';
@@ -184,6 +185,20 @@ export default function SaoHanPage() {
                   Tuổi {ten}
                 </Link>
               ))}
+            </div>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-4">
+              <OccasionLeadCapture
+                source="sao-han-hub"
+                capturedEvent="lead_capture_sao_han_hub"
+                cta="Nhận nhắc"
+                blurb="Để lại email, chúng tôi sẽ báo bạn khi có bản đầy đủ về sao hạn năm mới và nhắc ngày tốt theo mùa. Thi thoảng thôi, không spam."
+              />
             </div>
           </section>
 

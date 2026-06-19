@@ -4,6 +4,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { KhaiTruongChecker } from '@/components/khai-truong/KhaiTruongChecker';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { checkOpeningYear, OPENING_VERDICT_LABEL } from '@/lib/khai-truong';
 import { BIRTH_YEARS, TARGET_YEAR, slugOf } from './years';
 
@@ -213,6 +214,20 @@ export default function KhaiTruongPage() {
                 </li>
               ))}
             </ul>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-4">
+              <OccasionLeadCapture
+                source="khai-truong-hub"
+                capturedEvent="lead_capture_khai_truong_hub"
+                blurb="Để lại email, chúng tôi sẽ báo bạn khi có bản đầy đủ và nội dung mới theo mùa khai trương (năm hợp tuổi sắp tới, ngày giờ đẹp mở hàng). Thi thoảng thôi, không spam."
+                cta="Nhận nhắc"
+              />
+            </div>
           </section>
 
           <nav aria-label="Công cụ khai trương liên quan" className="text-sm">
