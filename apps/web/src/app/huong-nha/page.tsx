@@ -4,6 +4,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { HuongNhaChecker } from '@/components/huong-nha/HuongNhaChecker';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import {
   batTrachMap,
   menhGroup,
@@ -175,6 +176,16 @@ export default function HuongNhaPage() {
                 </li>
               ))}
             </ul>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">Nhận nhắc theo mùa</h2>
+            <OccasionLeadCapture
+              source="huong-nha-hub"
+              capturedEvent="lead_capture_huong_nha_hub"
+              blurb="Để lại email, chúng tôi báo bạn khi có bản tra hướng nhà đầy đủ hơn và nội dung phong thủy mới theo mùa: hướng hợp tuổi, hướng đặt cửa, giường, bếp. Thi thoảng thôi, không spam."
+              cta="Nhận nhắc"
+            />
           </section>
 
           <nav aria-label="Công cụ làm nhà liên quan" className="text-sm">
