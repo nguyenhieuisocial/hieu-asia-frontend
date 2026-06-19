@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { breadcrumb, faqPage, webPage } from '@/lib/seo/jsonld';
+import { breadcrumb, faqPage, itemList, webPage } from '@/lib/seo/jsonld';
 import { SAO_GIO } from '@/lib/gio-hoang-dao-stars';
 
 export const metadata: Metadata = {
@@ -135,6 +135,12 @@ export default function SaoGioMeaningsHubPage() {
             { name: 'Ý nghĩa 12 sao', url: '/gio-hoang-dao/y-nghia' },
           ]),
           faqPage(FAQS),
+          itemList(
+            SAO_GIO.map((s) => ({
+              name: s.name,
+              url: `/gio-hoang-dao/y-nghia/${s.slug}`,
+            })),
+          ),
         ]}
       />
     </ToolPageShell>

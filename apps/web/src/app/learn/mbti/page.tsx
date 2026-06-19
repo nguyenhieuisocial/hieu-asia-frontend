@@ -12,9 +12,9 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
-  title: 'MBTI 16 loại tính cách — Học huyền học',
+  title: 'MBTI 16 loại tính cách | Học huyền học',
   description:
-    'MBTI dựa trên 4 trục: Hướng nội/ngoại (I/E), Trực giác/Cảm nhận (N/S), Lý trí/Cảm xúc (T/F), Nguyên tắc/Linh hoạt (J/P) — 16 nhóm tính cách.',
+    'MBTI dựa trên 4 trục: Hướng nội/ngoại (I/E), Trực giác/Cảm nhận (N/S), Lý trí/Cảm xúc (T/F), Nguyên tắc/Linh hoạt (J/P), tạo nên 16 nhóm tính cách.',
   alternates: { canonical: 'https://hieu.asia/learn/mbti' },
 };
 
@@ -23,27 +23,27 @@ export const metadata: Metadata = {
 const FAQS = [
   {
     q: '4 trục lưỡng cực là gì?',
-    a: 'I / E — Hướng nội (Introvert) vs Hướng ngoại (Extravert): Nguồn năng lượng đến từ một mình hay từ tương tác? N / S — Trực giác (iNtuition) vs Cảm nhận (Sensing): Chú ý vào khả năng, mẫu hình, hay vào chi tiết, dữ kiện? T / F — Lý trí (Thinking) vs Cảm xúc (Feeling): Quyết định theo logic hay theo giá trị, cảm xúc? J / P — Nguyên tắc (Judging) vs Linh hoạt (Perceiving): Thích đóng kế hoạch hay để mở, ứng biến?',
+    a: 'I / E: Hướng nội (Introvert) vs Hướng ngoại (Extravert). Nguồn năng lượng đến từ một mình hay từ tương tác? N / S: Trực giác (iNtuition) vs Cảm nhận (Sensing). Chú ý vào khả năng, mẫu hình, hay vào chi tiết, dữ kiện? T / F: Lý trí (Thinking) vs Cảm xúc (Feeling). Quyết định theo logic hay theo giá trị, cảm xúc? J / P: Nguyên tắc (Judging) vs Linh hoạt (Perceiving). Thích đóng kế hoạch hay để mở, ứng biến?',
   },
   {
     q: '4 nhóm lớn?',
-    a: 'Analysts (NT) — INTJ, INTP, ENTJ, ENTP: tư duy hệ thống. Diplomats (NF) — INFJ, INFP, ENFJ, ENFP: lý tưởng, đồng cảm. Sentinels (SJ) — ISTJ, ISFJ, ESTJ, ESFJ: trật tự, trách nhiệm. Explorers (SP) — ISTP, ISFP, ESTP, ESFP: thực tế, linh hoạt.',
+    a: 'Analysts (NT) gồm INTJ, INTP, ENTJ, ENTP: tư duy hệ thống. Diplomats (NF) gồm INFJ, INFP, ENFJ, ENFP: lý tưởng, đồng cảm. Sentinels (SJ) gồm ISTJ, ISFJ, ESTJ, ESFJ: trật tự, trách nhiệm. Explorers (SP) gồm ISTP, ISFP, ESTP, ESFP: thực tế, linh hoạt.',
   },
   {
     q: 'Cần lưu ý gì?',
-    a: 'MBTI là khung phân loại, không phải chẩn đoán. Kết quả có thể thay đổi theo giai đoạn cuộc đời. Đừng dùng MBTI để dán nhãn hay phán xét người khác — dùng để hiểu cách mình vận hành tự nhiên.',
+    a: 'MBTI là khung phân loại, không phải chẩn đoán. Kết quả có thể thay đổi theo giai đoạn cuộc đời. Đừng dùng MBTI để dán nhãn hay phán xét người khác, hãy dùng để hiểu cách mình vận hành tự nhiên.',
   },
   {
     q: 'MBTI có khoa học không?',
-    a: 'MBTI bị nhiều nhà tâm lý học phản biện về độ tin cậy (test-retest reliability). Tuy nhiên với mục đích tự phản tỉnh và đối thoại, nó vẫn là khung hữu ích — đặc biệt khi kết hợp với các góc nhìn khác.',
+    a: 'MBTI bị nhiều nhà tâm lý học phản biện về độ tin cậy (test-retest reliability). Tuy nhiên với mục đích tự phản tỉnh và đối thoại, nó vẫn là khung hữu ích, nhất là khi kết hợp với các góc nhìn khác.',
   },
 ];
 
 const JSONLD = [
   article({
-    headline: 'MBTI — 16 loại tính cách',
+    headline: 'MBTI: 16 loại tính cách',
     description:
-      'MBTI dựa trên 4 trục: Hướng nội/ngoại (I/E), Trực giác/Cảm nhận (N/S), Lý trí/Cảm xúc (T/F), Nguyên tắc/Linh hoạt (J/P) — 16 nhóm tính cách.',
+      'MBTI dựa trên 4 trục: Hướng nội/ngoại (I/E), Trực giác/Cảm nhận (N/S), Lý trí/Cảm xúc (T/F), Nguyên tắc/Linh hoạt (J/P), tạo nên 16 nhóm tính cách.',
     url: '/learn/mbti',
   }),
   breadcrumb([
@@ -60,13 +60,13 @@ export default function LearnMBTIPage() {
       eyebrow="Tây phương · Carl Jung"
       title={
         <>
-          MBTI — <span className="bg-gold-gradient bg-clip-text text-transparent">16 loại tính cách</span>
+          MBTI: <span className="bg-gold-gradient bg-clip-text text-transparent">16 loại tính cách</span>
         </>
       }
       standfirst={
         <>
-          Myers–Briggs Type Indicator phát triển từ thuyết tâm lý của Carl Jung. 4 trục lưỡng
-          cực tạo nên 16 nhóm tính cách — không phải "ô đóng", mà là thiên hướng tự nhiên.
+          Myers-Briggs Type Indicator phát triển từ thuyết tâm lý của Carl Jung. 4 trục lưỡng
+          cực tạo nên 16 nhóm tính cách, không phải "ô đóng" mà là thiên hướng tự nhiên.
         </>
       }
       readMeta="6 phút đọc · Cập nhật 2026"
@@ -105,19 +105,19 @@ export default function LearnMBTIPage() {
                 <AccordionContent>
                   <ul className="list-inside list-disc space-y-1">
                     <li>
-                      <strong>I / E</strong> — Hướng nội (Introvert) vs Hướng ngoại (Extravert):
+                      <strong>I / E</strong>: Hướng nội (Introvert) vs Hướng ngoại (Extravert).
                       Nguồn năng lượng đến từ một mình hay từ tương tác?
                     </li>
                     <li>
-                      <strong>N / S</strong> — Trực giác (iNtuition) vs Cảm nhận (Sensing): Chú ý
+                      <strong>N / S</strong>: Trực giác (iNtuition) vs Cảm nhận (Sensing). Chú ý
                       vào khả năng, mẫu hình, hay vào chi tiết, dữ kiện?
                     </li>
                     <li>
-                      <strong>T / F</strong> — Lý trí (Thinking) vs Cảm xúc (Feeling): Quyết định
+                      <strong>T / F</strong>: Lý trí (Thinking) vs Cảm xúc (Feeling). Quyết định
                       theo logic hay theo giá trị, cảm xúc?
                     </li>
                     <li>
-                      <strong>J / P</strong> — Nguyên tắc (Judging) vs Linh hoạt (Perceiving):
+                      <strong>J / P</strong>: Nguyên tắc (Judging) vs Linh hoạt (Perceiving).
                       Thích đóng kế hoạch hay để mở, ứng biến?
                     </li>
                   </ul>
@@ -128,16 +128,16 @@ export default function LearnMBTIPage() {
                 <AccordionContent>
                   <ul className="list-inside list-disc space-y-1">
                     <li>
-                      <strong>Analysts (NT)</strong> — INTJ, INTP, ENTJ, ENTP: tư duy hệ thống.
+                      <strong>Analysts (NT)</strong> gồm INTJ, INTP, ENTJ, ENTP: tư duy hệ thống.
                     </li>
                     <li>
-                      <strong>Diplomats (NF)</strong> — INFJ, INFP, ENFJ, ENFP: lý tưởng, đồng cảm.
+                      <strong>Diplomats (NF)</strong> gồm INFJ, INFP, ENFJ, ENFP: lý tưởng, đồng cảm.
                     </li>
                     <li>
-                      <strong>Sentinels (SJ)</strong> — ISTJ, ISFJ, ESTJ, ESFJ: trật tự, trách nhiệm.
+                      <strong>Sentinels (SJ)</strong> gồm ISTJ, ISFJ, ESTJ, ESFJ: trật tự, trách nhiệm.
                     </li>
                     <li>
-                      <strong>Explorers (SP)</strong> — ISTP, ISFP, ESTP, ESFP: thực tế, linh hoạt.
+                      <strong>Explorers (SP)</strong> gồm ISTP, ISFP, ESTP, ESFP: thực tế, linh hoạt.
                     </li>
                   </ul>
                 </AccordionContent>
@@ -146,7 +146,7 @@ export default function LearnMBTIPage() {
                 <AccordionTrigger>Cần lưu ý gì?</AccordionTrigger>
                 <AccordionContent>
                   MBTI là khung phân loại, không phải chẩn đoán. Kết quả có thể thay đổi theo
-                  giai đoạn cuộc đời. Đừng dùng MBTI để dán nhãn hay phán xét người khác — dùng
+                  giai đoạn cuộc đời. Đừng dùng MBTI để dán nhãn hay phán xét người khác, hãy dùng
                   để hiểu cách mình vận hành tự nhiên.
                 </AccordionContent>
               </AccordionItem>
@@ -154,8 +154,8 @@ export default function LearnMBTIPage() {
                 <AccordionTrigger>MBTI có khoa học không?</AccordionTrigger>
                 <AccordionContent>
                   MBTI bị nhiều nhà tâm lý học phản biện về độ tin cậy (test-retest reliability).
-                  Tuy nhiên với mục đích tự phản tỉnh và đối thoại, nó vẫn là khung hữu ích — đặc
-                  biệt khi kết hợp với các góc nhìn khác.
+                  Tuy nhiên với mục đích tự phản tỉnh và đối thoại, nó vẫn là khung hữu ích, nhất
+                  là khi kết hợp với các góc nhìn khác.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
