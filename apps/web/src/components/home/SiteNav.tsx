@@ -247,7 +247,7 @@ function AuthedMenu({
           <DropdownMenuSeparator />
           <DropdownMenuLabel className="text-primary/85">Mời bạn (Cộng tác viên)</DropdownMenuLabel>
           <DropdownMenuItem asChild>
-            <Link href="/affiliate">Mời bạn nhận quà</Link>
+            <Link href="/qua">Quà &amp; mời bạn</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/affiliate/commissions">Hoa hồng &amp; bảng điều khiển</Link>
@@ -394,11 +394,11 @@ function MobileDrawer({
                 {needsCheckin && <NudgeDot />}
               </Link>
               <Link
-                href="/affiliate"
+                href="/qua"
                 onClick={() => setOpen(false)}
                 className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
               >
-                Mời bạn nhận quà
+                Quà &amp; mời bạn
               </Link>
             </>
           )}

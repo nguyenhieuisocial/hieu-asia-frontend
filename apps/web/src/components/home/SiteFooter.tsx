@@ -30,7 +30,7 @@ const COL_PRODUCT: readonly FooterLink[] = [
 
 // Khám phá / cộng đồng — đưa các mặt-tiền trước đây bị chôn ra footer.
 const COL_COMMUNITY: readonly FooterLink[] = [
-  { href: '/affiliate', label: 'Mời bạn nhận quà' },
+  { href: '/qua', label: 'Quà & mời bạn' },
   { href: '/community', label: 'Cộng đồng' },
   { href: '/hoi-dap', label: 'Trợ giúp & Hỏi đáp' },
   { href: 'https://t.me/hieuasiabot', label: 'Mở trên Telegram' },
