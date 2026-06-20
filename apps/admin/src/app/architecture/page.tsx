@@ -29,9 +29,19 @@ import {
   Share2,
   LayoutGrid,
   Clock,
+  ShieldCheck,
+  Lock,
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
-import { ARCH_LAYERS, ARCH_FLOWS, RUNBOOKS, SCHEDULED_OPS, type ArchNode } from '@/lib/architecture';
+import {
+  ARCH_LAYERS,
+  ARCH_FLOWS,
+  RUNBOOKS,
+  SCHEDULED_OPS,
+  RBAC_ROLES,
+  OWNER_ONLY_ACTIONS,
+  type ArchNode,
+} from '@/lib/architecture';
 
 // Heavy (React Flow) — lazy-load only when the "Tương tác" view is shown.
 const SystemMapFlow = dynamic(
@@ -337,6 +347,51 @@ export default function ArchitecturePage() {
               </CardContent>
             </Card>
           ))}
+        </div>
+      </section>
+
+      {/* Permissions / safety model */}
+      <section>
+        <div className="mb-1 flex items-center gap-2">
+          <ShieldCheck className="h-4 w-4 text-gold" aria-hidden />
+          <h2 className="font-heading text-lg text-foreground">Phân quyền &amp; hành động nhạy cảm</h2>
+        </div>
+        <p className="mb-3 text-xs text-muted-foreground">
+          Ai được làm gì — và những việc nguy hiểm nhất chỉ <span className="font-medium text-foreground">chủ
+          (owner)</span> mới chạm được. Gác ngay tại cổng admin-proxy theo từng route.
+        </p>
+        <div className="grid gap-3 lg:grid-cols-2">
+          <Card>
+            <CardContent className="p-4">
+              <div className="mb-2 text-sm font-medium text-foreground">Bậc quyền</div>
+              <ul className="space-y-2 border-t border-border/50 pt-2">
+                {RBAC_ROLES.map((r) => (
+                  <li key={r.role} className="flex gap-2 text-xs">
+                    <span className="shrink-0 rounded bg-gold/10 px-1.5 py-0.5 font-mono text-[10px] font-medium text-gold">
+                      {r.role}
+                    </span>
+                    <span className="text-muted-foreground">{r.can}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+          <Card className="border-red-500/25">
+            <CardContent className="p-4">
+              <div className="mb-2 flex items-center gap-1.5 text-sm font-medium text-foreground">
+                <Lock className="h-3.5 w-3.5 text-red-500" aria-hidden /> Chỉ owner (nguy hiểm)
+              </div>
+              <ul className="space-y-1.5 border-t border-border/50 pt-2">
+                {OWNER_ONLY_ACTIONS.map((a) => (
+                  <li key={a.path} className="text-xs">
+                    <span className="font-medium text-foreground">{a.name}</span>
+                    <span className="ml-1.5 font-mono text-[9px] text-muted-foreground">{a.path}</span>
+                    <span className="text-muted-foreground"> — {a.why}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
         </div>
       </section>
     </div>

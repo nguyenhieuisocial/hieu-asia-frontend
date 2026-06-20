@@ -366,3 +366,36 @@ export const SCHEDULED_OPS: ScheduleGroup[] = [
     ops: [{ name: 'Bản tin tuần (cockpit)', fn: 'sendWeeklyDigest', does: 'Tổng-kết tuần cho founder.' }],
   },
 ];
+
+/**
+ * RBAC / safety model — grounded in admin-proxy `requiredRank()` + ROLE_RANK.
+ * The permission ladder is enforced in code but had no admin-visible reference;
+ * this documents who-can-do-what + the owner-only sensitive actions, so the
+ * safety posture is legible (and onboarding a teammate is safe).
+ * Keep in sync with apps/admin/src/app/api/admin-proxy/[...path]/route.ts.
+ */
+export interface RbacRole {
+  role: 'viewer' | 'admin' | 'owner';
+  rank: number;
+  can: string;
+}
+export const RBAC_ROLES: RbacRole[] = [
+  { role: 'viewer', rank: 0, can: 'Xem mọi dashboard (chỉ-đọc — mọi GET).' },
+  { role: 'admin', rank: 1, can: 'Như viewer + mọi thao-tác sửa (thêm/sửa/xoá).' },
+  { role: 'owner', rank: 2, can: 'Như admin + các hành-động nhạy-cảm bên dưới.' },
+];
+
+export interface SensitiveAction {
+  name: string;
+  path: string; // admin-proxy path the gate matches
+  why: string;
+}
+/** Owner-only surfaces (requiredRank → owner): secrets, money, raw PII, comped access. */
+export const OWNER_ONLY_ACTIONS: SensitiveAction[] = [
+  { name: 'Bí mật production', path: 'admin/secrets', why: 'Đọc/sửa key + token thật của hệ-thống.' },
+  { name: 'Hoàn tiền SePay', path: 'admin/sepay/refund', why: 'Chuyển tiền cho khách — không thể hoàn-tác.' },
+  { name: 'Đối soát SePay', path: 'admin/sepay/reconcile', why: 'Ghi-đè trạng-thái thanh-toán theo ngân-hàng.' },
+  { name: 'Sửa lệch SePay', path: 'admin/sepay/drift/fix', why: 'Sửa số tiền lệch giữa hệ-thống và SePay.' },
+  { name: 'Xem hàng thô Supabase', path: 'admin/infra/supabase/rows', why: 'Dữ-liệu thật chưa che (PII), kể cả khi cột đã mask.' },
+  { name: 'Cấp quyền trả-phí (comp)', path: 'admin/sessions/…/access', why: 'Mở khoá lá-số trả-phí miễn-phí cho một phiên.' },
+];
