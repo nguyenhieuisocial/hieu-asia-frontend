@@ -114,6 +114,14 @@ export default function ArchitecturePage() {
 
   const [mapView, setMapView] = React.useState<'flow' | 'layers'>('flow');
 
+  // Only mount the React-Flow map AFTER hydration. next/dynamic(ssr:false)
+  // loads its chunk asynchronously; letting it resolve during initial hydration
+  // races with React and can leave the whole page un-hydrated (skeleton stuck,
+  // toggle + live status dots dead). Gating on a post-mount flag keeps the
+  // lazy component out of the hydration pass entirely.
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -172,7 +180,11 @@ export default function ArchitecturePage() {
 
         {mapView === 'flow' ? (
           <>
-            <SystemMapFlow statuses={statuses} />
+            {mounted ? (
+              <SystemMapFlow statuses={statuses} />
+            ) : (
+              <div className="h-[70vh] min-h-[460px] w-full animate-pulse rounded-lg bg-muted/30" />
+            )}
             <p className="text-center text-[11px] text-muted-foreground">
               Kéo để di chuyển · cuộn để phóng to · bấm một khối để mở chi tiết
             </p>
