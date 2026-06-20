@@ -13,6 +13,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { Card, CardContent, cn } from '@hieu-asia/ui';
 import {
   Network,
@@ -25,9 +26,17 @@ import {
   Circle,
   Workflow,
   BookOpen,
+  Share2,
+  LayoutGrid,
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { ARCH_LAYERS, ARCH_FLOWS, RUNBOOKS, type ArchNode } from '@/lib/architecture';
+
+// Heavy (React Flow) — lazy-load only when the "Tương tác" view is shown.
+const SystemMapFlow = dynamic(
+  () => import('@/components/admin/architecture/SystemMapFlow'),
+  { ssr: false, loading: () => <div className="h-[70vh] min-h-[460px] w-full animate-pulse rounded-lg bg-muted/30" /> },
+);
 
 type Live = 'ok' | 'warn' | 'down' | 'unknown' | 'loading';
 
@@ -103,6 +112,8 @@ export default function ArchitecturePage() {
   const queueStatus: Live =
     core.queueAgeMin == null ? 'unknown' : core.queueAgeMin >= 240 ? 'down' : core.queueAgeMin >= 60 ? 'warn' : 'ok';
 
+  const [mapView, setMapView] = React.useState<'flow' | 'layers'>('flow');
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -130,9 +141,45 @@ export default function ArchitecturePage() {
         </CardContent>
       </Card>
 
-      {/* Layered system map */}
-      <section className="space-y-2">
-        {ARCH_LAYERS.map((layer, li) => (
+      {/* System map — interactive (React Flow) or layered cards */}
+      <section className="space-y-3">
+        <div className="flex items-center justify-end gap-1.5">
+          <button
+            type="button"
+            onClick={() => setMapView('flow')}
+            className={cn(
+              'inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition-colors',
+              mapView === 'flow'
+                ? 'border-gold/50 bg-gold/15 text-gold'
+                : 'border-border text-muted-foreground hover:text-foreground',
+            )}
+          >
+            <Share2 className="h-3.5 w-3.5" aria-hidden /> Tương tác
+          </button>
+          <button
+            type="button"
+            onClick={() => setMapView('layers')}
+            className={cn(
+              'inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition-colors',
+              mapView === 'layers'
+                ? 'border-gold/50 bg-gold/15 text-gold'
+                : 'border-border text-muted-foreground hover:text-foreground',
+            )}
+          >
+            <LayoutGrid className="h-3.5 w-3.5" aria-hidden /> Theo tầng
+          </button>
+        </div>
+
+        {mapView === 'flow' ? (
+          <>
+            <SystemMapFlow statuses={statuses} />
+            <p className="text-center text-[11px] text-muted-foreground">
+              Kéo để di chuyển · cuộn để phóng to · bấm một khối để mở chi tiết
+            </p>
+          </>
+        ) : (
+          <div className="space-y-2">
+            {ARCH_LAYERS.map((layer, li) => (
           <React.Fragment key={layer.id}>
             <Card>
               <CardContent className="p-4">
@@ -154,6 +201,8 @@ export default function ArchitecturePage() {
             )}
           </React.Fragment>
         ))}
+          </div>
+        )}
       </section>
 
       {/* Data flows */}
