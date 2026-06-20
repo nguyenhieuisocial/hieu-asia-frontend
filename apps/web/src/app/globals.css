@@ -289,6 +289,45 @@ html {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
+ * AA contrast sweep — ROUND 4 (2026-06-20, founder "fix gốc rễ, không sót ở
+ * all page khác"). ROOT CAUSE: many accent labels/chips/badges were authored
+ * dark-first (light accent shades text-{amber,jade,emerald,rose,red,...}-50…300
+ * on translucent tints). In LIGHT mode those tints composite to light surfaces
+ * and the light-shade text drops to 1.0–4.4:1 (e.g. text-jade-50 = rgb 230,240,238
+ * @1.01; text-amber-200 'Caveat' @1.06). The earlier .methodology-a11y scope only
+ * covered methodology; this generalises it SITE-WIDE for LIGHT mode only.
+ * SAFE BY CONSTRUCTION: in the cream day theme every surface is light, so darkening
+ * a light accent never hurts — empirically verified by injecting this exact rule on
+ * /ban-do (4 fails→0), /tu-vi-tai-chinh, /big-five, /la-so-tu-vi (all stayed 0, no
+ * regressions). DARK is untouched by :not(.dark). Replacement colors are the same
+ * AA-verified family anchors used in the scoped sweeps above. Unlayered + :root
+ * descendant wins over Tailwind's utilities layer (no !important needed). */
+:root:not(.dark) .text-amber-50,
+:root:not(.dark) .text-amber-100,
+:root:not(.dark) .text-amber-200,
+:root:not(.dark) .text-amber-300,
+:root:not(.dark) .text-yellow-200,
+:root:not(.dark) .text-yellow-300 { color: #785312; } /* ochre, ≥5:1 on cream */
+:root:not(.dark) .text-jade-50,
+:root:not(.dark) .text-jade-100,
+:root:not(.dark) .text-jade-200,
+:root:not(.dark) .text-jade-300 { color: #245c52; } /* jade-teal, ≥5.4:1 */
+:root:not(.dark) .text-emerald-50,
+:root:not(.dark) .text-emerald-100,
+:root:not(.dark) .text-emerald-200,
+:root:not(.dark) .text-emerald-300 { color: #176046; } /* emerald, ≥6:1 */
+:root:not(.dark) .text-rose-100,
+:root:not(.dark) .text-rose-200,
+:root:not(.dark) .text-rose-300,
+:root:not(.dark) .text-rose-400,
+:root:not(.dark) .text-red-50,
+:root:not(.dark) .text-red-100,
+:root:not(.dark) .text-red-200,
+:root:not(.dark) .text-red-300 { color: #a8201a; } /* red, ≥5.9:1 — keeps "avoid" semantic */
+:root:not(.dark) .text-sky-300,
+:root:not(.dark) .text-blue-300 { color: #1e5a8a; } /* blue, ≥6:1 */
+
+/* ────────────────────────────────────────────────────────────────────────
  * AA contrast sweep — ROUND 3 (2026-06-14, founder "fix màu toàn site, cả
  * sáng/tối"). A Playwright audit (both themes, 39 template families) surfaced
  * two accent families NOT covered by the light-only sweeps above. Both scoped
