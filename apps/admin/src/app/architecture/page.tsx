@@ -49,6 +49,26 @@ function StatusDot({ s }: { s: Live }) {
   return <Circle className={cn('h-3.5 w-3.5 shrink-0', s === 'loading' ? 'animate-pulse text-muted-foreground/40' : 'text-muted-foreground/30')} aria-label="chưa rõ" />;
 }
 
+// Turn `(/path)` references inside a runbook/flow step into a clickable Link to
+// that admin page — so an operator goes map → runbook → one click → the fix page.
+function linkifyAdminPaths(text: string): React.ReactNode {
+  const parts = text.split(/(\(\/[a-z0-9/-]+\))/g);
+  return parts.map((part, i) => {
+    const m = /^\((\/[a-z0-9/-]+)\)$/.exec(part);
+    const href = m?.[1];
+    if (!href) return part;
+    return (
+      <React.Fragment key={i}>
+        (
+        <Link href={href} className="text-gold underline-offset-2 hover:underline">
+          {href}
+        </Link>
+        )
+      </React.Fragment>
+    );
+  });
+}
+
 // Slugs that have a live /admin/infra/<slug> status endpoint.
 const LIVE_SLUGS = Array.from(
   new Set(ARCH_LAYERS.flatMap((l) => l.nodes.map((n) => n.infraSlug).filter(Boolean) as string[])),
@@ -235,7 +255,7 @@ export default function ArchitecturePage() {
                       <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-gold/15 font-mono text-[9px] text-gold">
                         {i + 1}
                       </span>
-                      <span>{step}</span>
+                      <span>{linkifyAdminPaths(step)}</span>
                     </li>
                   ))}
                 </ol>
@@ -269,7 +289,7 @@ export default function ArchitecturePage() {
                         <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-gold/15 font-mono text-[9px] text-gold">
                           {i + 1}
                         </span>
-                        <span>{step}</span>
+                        <span>{linkifyAdminPaths(step)}</span>
                       </li>
                     ))}
                   </ol>

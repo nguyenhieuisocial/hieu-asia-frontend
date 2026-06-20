@@ -164,6 +164,17 @@ export interface CachCuc {
 }
 
 /**
+ * Tuần Không (旬空) — cung "không vong", an theo can-chi năm sinh (luật thống nhất).
+ * Yếu tố rất Việt mà iztro (gốc Hoa) không xuất ra; tính server-side, deterministic.
+ */
+export interface TuanKhong {
+  branches: string[];
+  palaces: Array<{ name: string; branch: string }>;
+  yearPillar: string;
+  note: string;
+}
+
+/**
  * POST /tools/tuvi-v2 with `horoscope:true` — returns the natal chart plus the
  * time-flow overlay (đại vận / lưu niên) for `targetDate`. Powers "vận năm nay"
  * (yearly Tứ Hóa) on the free chart page. Not cached: the result depends on the
@@ -171,7 +182,7 @@ export interface CachCuc {
  */
 export async function castTuViHoroscope(
   input: CastChartInput & { targetDate?: string },
-): Promise<{ chart: TuViChart; horoscope: TuViHoroscope | null; cachCuc: CachCuc[] }> {
+): Promise<{ chart: TuViChart; horoscope: TuViHoroscope | null; cachCuc: CachCuc[]; tuanKhong: TuanKhong | null }> {
   const target =
     input.targetDate ??
     (() => {
@@ -207,6 +218,7 @@ export async function castTuViHoroscope(
     chart?: TuViChart;
     horoscope?: TuViHoroscope;
     cachCuc?: CachCuc[];
+    tuanKhong?: TuanKhong | null;
     error?: string;
   };
   if (!data.ok || !data.chart) {
@@ -216,6 +228,7 @@ export async function castTuViHoroscope(
     chart: data.chart,
     horoscope: data.horoscope ?? null,
     cachCuc: Array.isArray(data.cachCuc) ? data.cachCuc : [],
+    tuanKhong: data.tuanKhong && Array.isArray(data.tuanKhong.branches) ? data.tuanKhong : null,
   };
 }
 
