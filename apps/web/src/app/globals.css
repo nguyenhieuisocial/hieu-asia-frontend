@@ -255,8 +255,12 @@ html {
   color: #a8201a; /* ≥5.9:1 on the cream/rose card tints — keeps the red "avoid" semantic */
 }
 :root:not(.dark) .methodology-a11y .text-amber-300,
-:root:not(.dark) .methodology-a11y .text-amber-300\/80 {
-  color: #785312; /* dark ochre-gold, ≥5.2:1 on the amber tints */
+:root:not(.dark) .methodology-a11y .text-amber-300\/80,
+:root:not(.dark) .methodology-a11y .text-amber-200,
+:root:not(.dark) .methodology-a11y .text-amber-200\/80 {
+  color: #785312; /* dark ochre-gold, ≥5.2:1 on the amber tints. amber-200 (oklch
+                     0.924 ≈ rgb 254,230,136) was the lighter "Caveat:" label —
+                     ~1.06:1 on cream until this; -300 was already covered. */
 }
 :root:not(.dark) .methodology-a11y .text-jade-300,
 :root:not(.dark) .methodology-a11y .text-jade-300\/80 {
