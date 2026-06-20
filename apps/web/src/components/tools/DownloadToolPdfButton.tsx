@@ -38,13 +38,24 @@ export function DownloadToolPdfButton({
   const [state, setState] = React.useState<'idle' | 'loading' | 'error'>('idle');
 
   async function handleClick() {
+    const body = typeof payload === 'function' ? payload() : payload;
+    if (!body) return;
+
+    // Open the result tab SYNCHRONOUSLY, while the click's user-activation is
+    // still valid. If the tab is opened only AFTER the awaited fetch, Safari/iOS
+    // (and popup blockers) treat it as a programmatic popup and silently block
+    // it — the download just never appears. The blank tab shows a placeholder
+    // until the signed PDF URL is ready, then we point it at the file.
+    const win = typeof window !== 'undefined' ? window.open('about:blank', '_blank') : null;
+    if (win) {
+      win.document.write(
+        '<!doctype html><meta charset="utf-8"><title>Đang tạo PDF…</title>' +
+          '<body style="margin:0;font-family:system-ui,sans-serif;padding:2.5rem;color:#3a2f1a;background:#f3ecdd">Đang tạo PDF…</body>',
+      );
+    }
+
     setState('loading');
     try {
-      const body = typeof payload === 'function' ? payload() : payload;
-      if (!body) {
-        setState('idle');
-        return;
-      }
       const res = await fetch(`${API_BASE}/tools/pdf`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
@@ -52,15 +63,21 @@ export function DownloadToolPdfButton({
       });
       const data = (await res.json()) as { ok?: boolean; url?: string; error?: string };
       if (!data?.ok || !data?.url) throw new Error(data?.error || 'pdf_failed');
-      const a = document.createElement('a');
-      a.href = data.url;
-      a.target = '_blank';
-      a.rel = 'noopener';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
+      if (win) {
+        win.location.href = data.url;
+      } else {
+        // Popup blocked despite the sync open — fall back to an anchor click.
+        const a = document.createElement('a');
+        a.href = data.url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }
       setState('idle');
     } catch {
+      if (win) win.close();
       setState('error');
       window.setTimeout(() => setState('idle'), 3500);
     }
