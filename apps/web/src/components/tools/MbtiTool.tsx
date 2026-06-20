@@ -6,6 +6,7 @@ import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { PersonalityQuiz } from '@/components/tools/PersonalityQuiz';
 import { ReadingRitual } from '@/components/tools/ReadingRitual';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { track } from '@/lib/analytics';
 import { savePersonalityResult, buildMbtiSummary } from '@/lib/personality-store';
 import { safeJson } from '@/lib/safe-json';
@@ -236,6 +237,37 @@ export function MbtiTool() {
               title={`Kiểu MBTI của tôi là ${result.type} — hieu.asia`}
               text="Tôi vừa làm trắc nghiệm MBTI ở hieu.asia. Bạn thử xem mình kiểu gì?"
               trackId="mbti"
+            />
+            <DownloadToolPdfButton
+              payload={() => {
+                if (!result) return null;
+                return {
+                  title: `Kết quả MBTI của tôi: ${result.type} — hieu.asia`,
+                  subtitle: `Đã trả lời ${result.total_answered}/${result.total_items} câu`,
+                  sections: [
+                    {
+                      heading: 'Kiểu tính cách',
+                      rows: [{ label: 'Bốn chữ', value: result.type }],
+                    },
+                    {
+                      heading: 'Bốn trục xu hướng',
+                      rows: AXIS_META.map((m) => {
+                        const ax = result.axes[m.axis];
+                        const positiveChosen = ax.letter === ax.positive;
+                        const strength = Math.round(Math.abs(ax.score - 50) * 2);
+                        return {
+                          label: m.label,
+                          value: `${ax.letter} · ${positiveChosen ? m.pos : m.neg} · nghiêng ${strength}%`,
+                        };
+                      }),
+                    },
+                    {
+                      heading: 'Lưu ý',
+                      text: 'Bốn chữ là các xu hướng trên một dải — không phải nhãn cố định. Kiểu có thể đổi theo giai đoạn đời; đây là điểm khởi đầu để tự phản tư.',
+                    },
+                  ],
+                };
+              }}
             />
             <Button variant="outline" onClick={() => setResult(null)}>
               Làm lại
