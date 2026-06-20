@@ -28,9 +28,10 @@ import {
   BookOpen,
   Share2,
   LayoutGrid,
+  Clock,
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
-import { ARCH_LAYERS, ARCH_FLOWS, RUNBOOKS, type ArchNode } from '@/lib/architecture';
+import { ARCH_LAYERS, ARCH_FLOWS, RUNBOOKS, SCHEDULED_OPS, type ArchNode } from '@/lib/architecture';
 
 // Heavy (React Flow) — lazy-load only when the "Tương tác" view is shown.
 const SystemMapFlow = dynamic(
@@ -294,6 +295,45 @@ export default function ArchitecturePage() {
                     ))}
                   </ol>
                 </details>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Scheduled operations — the worker cron autopilot */}
+      <section>
+        <div className="mb-1 flex items-center gap-2">
+          <Clock className="h-4 w-4 text-gold" aria-hidden />
+          <h2 className="font-heading text-lg text-foreground">Tác vụ định kỳ</h2>
+        </div>
+        <p className="mb-3 text-xs text-muted-foreground">
+          Worker tự chạy theo lịch — đây là "chế độ lái tự động" của hệ thống. Mỗi việc báo về một
+          chủ đề Telegram tương ứng.
+        </p>
+        <div className="grid gap-3 lg:grid-cols-2">
+          {SCHEDULED_OPS.map((group) => (
+            <Card key={group.id}>
+              <CardContent className="p-4">
+                <div className="mb-2 flex items-center justify-between gap-2">
+                  <span className="text-sm font-medium text-foreground">{group.schedule}</span>
+                  <span className="rounded bg-muted/40 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                    {group.cron}
+                  </span>
+                </div>
+                <ul className="space-y-1.5 border-t border-border/50 pt-2">
+                  {group.ops.map((op) => (
+                    <li key={op.fn} className="text-xs text-foreground/85">
+                      <span className="font-medium text-foreground">{op.name}</span>
+                      {op.topic && (
+                        <span className="ml-1.5 rounded bg-gold/10 px-1 py-px font-mono text-[9px] text-gold">
+                          {op.topic}
+                        </span>
+                      )}
+                      <span className="text-muted-foreground"> — {op.does}</span>
+                    </li>
+                  ))}
+                </ul>
               </CardContent>
             </Card>
           ))}
