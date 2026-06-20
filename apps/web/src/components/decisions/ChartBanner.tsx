@@ -12,6 +12,7 @@
 
 import Link from 'next/link';
 import { Button, Card, CardContent } from '@hieu-asia/ui';
+import { formatVnDate } from '@/lib/vn-date';
 
 export type ChartBannerProps = {
   /** When non-null, banner shows the "loaded" jade state with this date. */
@@ -38,7 +39,7 @@ export function ChartBanner({
         </span>
         <p className="text-sm leading-relaxed text-foreground/85">
           <strong className="font-semibold">Lá số đã có</strong> — đang sử
-          dụng lá số ngày {birthDate}. Brief sẽ tham chiếu các cung và sao
+          dụng lá số ngày {formatVnDate(birthDate)}. Brief sẽ tham chiếu các cung và sao
           trong lá số của bạn.
         </p>
       </div>

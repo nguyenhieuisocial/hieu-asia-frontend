@@ -12,11 +12,7 @@ import {
   cn,
 } from '@hieu-asia/ui';
 import { computeGioHoangDao, nextGoodHour, type GioHoangDaoResult } from '@/lib/gio-hoang-dao';
-
-function todayISO(): string {
-  const n = new Date();
-  return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}`;
-}
+import { getVietnamTodayISO } from '@/lib/vn-date';
 
 function parseISO(value: string): { d: number; m: number; y: number } | null {
   const parts = value.split('-').map(Number);
@@ -30,7 +26,7 @@ export function GioHoangDaoChecker() {
   const [today, setToday] = React.useState('');
 
   React.useEffect(() => {
-    const t = todayISO();
+    const t = getVietnamTodayISO();
     setToday(t);
     if (!value) setValue(t);
   }, [value]);
@@ -61,7 +57,7 @@ export function GioHoangDaoChecker() {
             <Input id="ghdDate" type="date" value={value} onChange={(e) => setValue(e.target.value)} />
           </div>
           <div className="flex items-end">
-            <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={() => setValue(todayISO())}>
+            <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={() => setValue(getVietnamTodayISO())}>
               Về hôm nay
             </Button>
           </div>
