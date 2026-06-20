@@ -231,3 +231,44 @@ export const RUNBOOKS: Runbook[] = [
     ],
   },
 ];
+
+/**
+ * Directed connections between nodes for the interactive (React Flow) map.
+ * Worker-centric — the gateway is the hub almost everything flows through.
+ * kind: flow = request/data path · deploy = CI ships code · monitor = telemetry.
+ */
+export interface ArchEdge {
+  source: string;
+  target: string;
+  label?: string;
+  kind?: 'flow' | 'deploy' | 'monitor';
+}
+
+export const ARCH_EDGES: ArchEdge[] = [
+  // Giao diện → Worker (mọi request đi qua cổng)
+  { source: 'web', target: 'worker', kind: 'flow' },
+  { source: 'admin', target: 'worker', kind: 'flow' },
+  { source: 'mini-tg', target: 'worker', kind: 'flow' },
+  { source: 'mini-zalo', target: 'worker', kind: 'flow' },
+  // Worker → nội bộ + dữ liệu
+  { source: 'worker', target: 'iztro', label: 'Tử Vi', kind: 'flow' },
+  { source: 'worker', target: 'pg', kind: 'flow' },
+  { source: 'worker', target: 'kv', kind: 'flow' },
+  { source: 'worker', target: 'r2', kind: 'flow' },
+  { source: 'worker', target: 'edge', kind: 'flow' },
+  // Worker → AI
+  { source: 'worker', target: 'llm', kind: 'flow' },
+  { source: 'worker', target: 'rag', kind: 'flow' },
+  { source: 'worker', target: 'browser', label: 'PDF', kind: 'flow' },
+  { source: 'llm', target: 'langfuse', label: 'traces', kind: 'monitor' },
+  // Worker → tiền & kênh
+  { source: 'worker', target: 'sepay', label: 'QR + webhook', kind: 'flow' },
+  { source: 'worker', target: 'tg', kind: 'flow' },
+  { source: 'worker', target: 'resend', kind: 'flow' },
+  // Đo lường & deploy (đứt nét)
+  { source: 'worker', target: 'sentry', label: 'lỗi', kind: 'monitor' },
+  { source: 'web', target: 'posthog', label: 'hành vi', kind: 'monitor' },
+  { source: 'uptime', target: 'worker', label: 'ping', kind: 'monitor' },
+  { source: 'vercel', target: 'admin', label: 'deploy', kind: 'deploy' },
+  { source: 'gh', target: 'worker', label: 'deploy', kind: 'deploy' },
+];
