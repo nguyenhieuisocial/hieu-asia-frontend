@@ -14,6 +14,7 @@ import {
   toast,
 } from '@hieu-asia/ui';
 import { safeJson } from '@/lib/safe-json';
+import { formatVnDate } from '@/lib/vn-date';
 
 const ONBOARDING_KEY = 'hieu:onboarding:v2';
 const CHART_KEY = 'hieu:chart:profile:v1';
@@ -189,7 +190,7 @@ export function MyChartTab() {
             <dl className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
               <Field label="Họ tên" value={profile.full_name} />
               <Field label="Giới tính" value={profile.gender} />
-              <Field label="Ngày sinh (dương)" value={profile.birth_date} />
+              <Field label="Ngày sinh (dương)" value={formatVnDate(profile.birth_date ?? '')} />
               <Field label="Giờ sinh" value={profile.birth_time} />
               <Field label="Nơi sinh" value={profile.birth_place} />
               <Field label="Ngày sinh (âm)" value={profile.birth_date_lunar || '— (sẽ tính khi lập lá số)'} />
