@@ -150,6 +150,20 @@ export interface TuViHoroscope {
 }
 
 /**
+ * Cách cục (格局) — a named chart pattern detected server-side from the real
+ * iztro chart (deterministic, grounded). Replaces the old client-side guess.
+ */
+export interface CachCuc {
+  id: string;
+  name: string;
+  nameHan?: string;
+  cung: string;
+  polarity: 'cát' | 'hung' | 'trung' | 'tùy';
+  meaning: string;
+  source?: string;
+}
+
+/**
  * POST /tools/tuvi-v2 with `horoscope:true` — returns the natal chart plus the
  * time-flow overlay (đại vận / lưu niên) for `targetDate`. Powers "vận năm nay"
  * (yearly Tứ Hóa) on the free chart page. Not cached: the result depends on the
@@ -157,7 +171,7 @@ export interface TuViHoroscope {
  */
 export async function castTuViHoroscope(
   input: CastChartInput & { targetDate?: string },
-): Promise<{ chart: TuViChart; horoscope: TuViHoroscope | null }> {
+): Promise<{ chart: TuViChart; horoscope: TuViHoroscope | null; cachCuc: CachCuc[] }> {
   const target =
     input.targetDate ??
     (() => {
@@ -192,12 +206,17 @@ export async function castTuViHoroscope(
     ok: boolean;
     chart?: TuViChart;
     horoscope?: TuViHoroscope;
+    cachCuc?: CachCuc[];
     error?: string;
   };
   if (!data.ok || !data.chart) {
     throw new Error(data.error ?? 'Tử Vi horoscope fetch failed');
   }
-  return { chart: data.chart, horoscope: data.horoscope ?? null };
+  return {
+    chart: data.chart,
+    horoscope: data.horoscope ?? null,
+    cachCuc: Array.isArray(data.cachCuc) ? data.cachCuc : [],
+  };
 }
 
 /**

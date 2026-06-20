@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
-import { castTuViHoroscope, type TuViChart, type TuViHoroscope, type TuViPalace } from '@/lib/tuvi-client';
+import { castTuViHoroscope, type TuViChart, type TuViHoroscope, type TuViPalace, type CachCuc } from '@/lib/tuvi-client';
 import { TuViChart12Palaces } from '@/components/tuvi/TuViChart12Palaces';
 import { NguHanhRemedyCard } from '@/components/ngu-hanh/NguHanhRemedyCard';
 
@@ -14,31 +14,14 @@ import { NguHanhRemedyCard } from '@/components/ngu-hanh/NguHanhRemedyCard';
  * fixed set {Mệnh, Tài Bạch, Quan Lộc, Thiên Di}. Neutral tendency framing —
  * NOT a wealth/fortune verdict.
  */
-const MENH_TRINE = ['Mệnh', 'Tài Bạch', 'Quan Lộc', 'Thiên Di'];
+// Cách cục giờ tính SERVER-SIDE từ lá số iztro thật (deterministic, có điều kiện
+// đầy đủ) — thay bộ dò client cũ vốn báo cách cục khi trùng ≥1 sao (overclaim).
 const PALACE_ALIASES: Record<string, string> = {
   'Tử Nữ': 'Tử Tức',
   'Giao Hữu': 'Nô Bộc',
   'Sự Nghiệp': 'Quan Lộc',
 };
 const normPalace = (n: string) => PALACE_ALIASES[(n ?? '').trim()] ?? (n ?? '').trim();
-const CACH_CUC: Array<{ name: string; stars: string[]; note: string }> = [
-  { name: 'Sát Phá Tham', stars: ['Thất Sát', 'Phá Quân', 'Tham Lang'], note: 'thiên hướng biến động & khai phá — hợp cạnh tranh, khởi nghiệp, môi trường thay đổi' },
-  { name: 'Cơ Nguyệt Đồng Lương', stars: ['Thiên Cơ', 'Thái Âm', 'Thiên Đồng', 'Thiên Lương'], note: 'thiên hướng ổn định & chuyên môn — hợp hệ thống, hành chính, giáo dục, kỹ thuật' },
-  { name: 'Tử Phủ Vũ Tướng', stars: ['Tử Vi', 'Thiên Phủ', 'Vũ Khúc', 'Thiên Tướng'], note: 'thiên hướng quản trị & tổ chức — hợp điều hành, quản lý, kinh doanh quy mô' },
-  { name: 'Cự Nhật', stars: ['Cự Môn', 'Thái Dương'], note: 'thiên hướng giao tiếp & ngôn luận — hợp nói/dạy/luật/truyền thông' },
-];
-
-function detectCachCuc(chart: TuViChart): Array<{ name: string; note: string; hit: string[] }> {
-  const set = new Set<string>();
-  for (const p of chart.palaces) {
-    if (MENH_TRINE.includes(normPalace(p.name))) {
-      for (const s of p.majorStars) if (s?.name) set.add(s.name.trim());
-    }
-  }
-  return CACH_CUC.map((c) => ({ name: c.name, note: c.note, hit: c.stars.filter((s) => set.has(s)) }))
-    .filter((c) => c.hit.length > 0)
-    .sort((a, b) => b.hit.length - a.hit.length);
-}
 
 function parseHour(t: string): number {
   const h = Number((t ?? '').split(':')[0]);
@@ -101,6 +84,7 @@ export function LaSoChecker({
   const [gender, setGender] = React.useState<'male' | 'female'>(initialGender ?? 'male');
   const [chart, setChart] = React.useState<TuViChart | null>(null);
   const [horoscope, setHoroscope] = React.useState<TuViHoroscope | null>(null);
+  const [cachCuc, setCachCuc] = React.useState<CachCuc[]>([]);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -113,14 +97,16 @@ export function LaSoChecker({
     setError(null);
     setChart(null);
     setHoroscope(null);
+    setCachCuc([]);
     try {
-      const { chart: c, horoscope: h } = await castTuViHoroscope({
+      const { chart: c, horoscope: h, cachCuc: cc } = await castTuViHoroscope({
         birthSolarDate: date,
         birthHour: parseHour(time),
         gender,
       });
       setChart(c);
       setHoroscope(h);
+      setCachCuc(cc);
     } catch {
       setError('Chưa lập được lá số — thử lại sau giây lát.');
     } finally {
@@ -139,7 +125,6 @@ export function LaSoChecker({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const cachCuc = chart ? detectCachCuc(chart) : [];
   const age = chart ? ageFromDate(date) : null;
   const daiVan = chart ? currentDaiVan(chart, age) : null;
   const luuNien = horoscope?.yearly ?? null;
@@ -193,19 +178,37 @@ export function LaSoChecker({
             {cachCuc.length > 0 && (
               <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
-                  Cách cục — hệ chính tinh hội về Mệnh
+                  Cách cục — thế cục có tên trong lá số
                 </p>
-                <ul className="mt-3 space-y-2">
+                <ul className="mt-3 space-y-3">
                   {cachCuc.map((c) => (
-                    <li key={c.name} className="text-sm leading-relaxed text-foreground/85">
-                      <strong className="text-foreground">{c.name}</strong>{' '}
-                      <span className="text-xs text-muted-foreground">({c.hit.join('/')})</span> — {c.note}.
+                    <li key={c.id} className="text-sm leading-relaxed text-foreground/85">
+                      <span className="flex flex-wrap items-baseline gap-x-2">
+                        <strong className="text-foreground">{c.name}</strong>
+                        {c.nameHan && <span className="text-xs text-muted-foreground">{c.nameHan}</span>}
+                        <span
+                          className={`rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide ${
+                            c.polarity === 'cát'
+                              ? 'border-gold/40 text-gold'
+                              : c.polarity === 'hung'
+                                ? 'border-destructive/40 text-destructive'
+                                : 'border-border text-muted-foreground'
+                          }`}
+                        >
+                          {c.polarity}
+                        </span>
+                      </span>
+                      <span className="mt-0.5 block">{c.meaning}</span>
+                      {c.source && (
+                        <span className="mt-0.5 block text-xs text-muted-foreground">Đối chiếu: {c.source}</span>
+                      )}
                     </li>
                   ))}
                 </ul>
                 <p className="mt-3 text-xs text-muted-foreground">
-                  Cách cục là <strong>khuôn hình thiên hướng tính cách</strong>, không phải dự đoán giàu–nghèo.
-                  Đọc Mệnh luôn xét cùng tam phương tứ chính (cung được tô sáng khi bạn bấm chọn).
+                  Cách cục được <strong>tính trực tiếp từ lá số</strong> (vị trí sao thật), không phải lời đoán —
+                  là <strong>khuôn hình thiên hướng</strong>, không phải phán giàu–nghèo. Đọc Mệnh luôn xét cùng
+                  tam phương tứ chính.
                 </p>
               </div>
             )}
