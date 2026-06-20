@@ -17,6 +17,7 @@ import {
   cn,
 } from '@hieu-asia/ui';
 import { safeJson } from '@/lib/safe-json';
+import { getVietnamTodayISO } from '@/lib/vn-date';
 
 export type Activity =
   | 'cuoi_hoi'
@@ -61,10 +62,9 @@ export function ActivityChecker({
   defaultDate,
   defaultActivity,
 }: { defaultDate?: string; defaultActivity?: Activity } = {}) {
-  const today = new Date();
-  const todayIso = `${today.getUTCFullYear()}-${String(today.getUTCMonth() + 1).padStart(2, '0')}-${String(
-    today.getUTCDate(),
-  ).padStart(2, '0')}`;
+  // VN-local (UTC+7) today, NOT UTC — otherwise between 00:00–07:00 ICT the
+  // date input pre-fills YESTERDAY. Matches the other lich-van-nien checkers.
+  const todayIso = getVietnamTodayISO();
 
   const [activity, setActivity] = React.useState<Activity>(defaultActivity ?? 'cuoi_hoi');
   const [date, setDate] = React.useState(defaultDate ?? todayIso);
