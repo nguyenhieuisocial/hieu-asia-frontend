@@ -13,6 +13,7 @@ import {
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
@@ -356,12 +357,68 @@ export default function GieoQuePage() {
                   );
                 })()}
 
-                <div className="pt-1">
+                <div className="flex flex-wrap items-center gap-3 pt-1">
                   <ShareResultButton
                     path="/gieo-que"
                     title="Gieo quẻ Kinh Dịch — hieu.asia"
                     text={`Tôi vừa gieo được quẻ ${result.hexagramPrimary.nameVi}. Bạn thử gieo một quẻ xem?`}
                     trackId="gieo-que"
+                  />
+                  <DownloadToolPdfButton
+                    payload={() => {
+                      if (!result) return null;
+                      const trigrams = parseTrigrams(result.hexagramPrimary.binary);
+                      const sections: ToolPdfPayload['sections'] = [
+                        {
+                          heading: 'Quẻ chính',
+                          rows: [
+                            { label: 'Tên quẻ', value: `${result.hexagramPrimary.nameVi} (${result.hexagramPrimary.name})` },
+                            { label: 'Số quẻ', value: `${result.hexagramPrimary.id}` },
+                          ],
+                        },
+                      ];
+                      if (asked) {
+                        sections.unshift({ heading: 'Điều bạn hỏi', text: asked });
+                      }
+                      if (result.interpretation.primary) {
+                        sections.push({ heading: 'Lời quẻ chính', text: result.interpretation.primary });
+                      }
+                      if (trigrams) {
+                        sections.push({
+                          heading: 'Cấu trúc quẻ — Bát Quái',
+                          rows: [
+                            { label: 'Thượng quái (ngoài)', value: `${trigrams.upper.ten} · ${trigrams.upper.tuong} · Hành ${trigrams.upper.hanh}` },
+                            { label: 'Hạ quái (trong)', value: `${trigrams.lower.ten} · ${trigrams.lower.tuong} · Hành ${trigrams.lower.hanh}` },
+                          ],
+                        });
+                      }
+                      if (result.movingLines.length > 0) {
+                        sections.push({
+                          heading: 'Hào động — vị trí chuyển hoá',
+                          rows: result.movingLines
+                            .map((haoSo) => getHaoDongMota(haoSo))
+                            .filter((info): info is NonNullable<typeof info> => info !== null)
+                            .map((info) => ({ label: info.ten, value: info.mo_ta })),
+                        });
+                      }
+                      if (result.hexagramChanging) {
+                        sections.push({
+                          heading: 'Quẻ biến',
+                          rows: [
+                            { label: 'Tên quẻ', value: `${result.hexagramChanging.nameVi} (${result.hexagramChanging.name})` },
+                            { label: 'Số quẻ', value: `${result.hexagramChanging.id}` },
+                          ],
+                        });
+                        if (result.interpretation.changing) {
+                          sections.push({ heading: 'Lời quẻ biến', text: result.interpretation.changing });
+                        }
+                      }
+                      return {
+                        title: `Quẻ ${result.hexagramPrimary.nameVi} — Gieo quẻ Kinh Dịch hieu.asia`,
+                        subtitle: 'Quẻ Dịch là công cụ gợi mở suy ngẫm, không phải lời tiên đoán chắc chắn.',
+                        sections,
+                      };
+                    }}
                   />
                 </div>
 
