@@ -74,7 +74,17 @@ function readChartInput(): CastChartInput | null {
       const o = JSON.parse(raw) as Record<string, unknown>;
       const bd = typeof o.birth_date === 'string' ? o.birth_date : '';
       const bt = typeof o.birth_time === 'string' ? o.birth_time : '';
-      const g = o.gender === 'female' ? 'female' : o.gender === 'male' ? 'male' : '';
+      // Kho CHÍNH ghi giới TIẾNG VIỆT ('nam'/'nữ'/'khác'/'không nói') — và
+      // BatTuChecker ghi 'F'/'M' — KHÔNG phải 'female'/'male'. So sánh thẳng
+      // với chuỗi tiếng Anh luôn cho '' → guard trượt → mọi /lo-trinh/* hiện
+      // thẻ mời chung thay vì lá số thật. Chuẩn hoá như normalizeGender
+      // (decisions/new); chỉ coi là THIẾU khi rỗng hẳn (→ thử kho rectify).
+      const rawG = typeof o.gender === 'string' ? o.gender.toLowerCase().trim() : '';
+      const g = rawG
+        ? rawG === 'nữ' || rawG === 'nu' || rawG === 'female' || rawG === 'f'
+          ? 'female'
+          : 'male'
+        : '';
       if (bd && bt && g && /^\d{4}-\d{1,2}-\d{1,2}$/.test(bd)) {
         return { birthSolarDate: bd, birthHour: parseHour(bt), gender: g, language: 'vi-VN' };
       }
