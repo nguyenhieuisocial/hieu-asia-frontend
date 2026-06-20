@@ -344,7 +344,7 @@ export default function MethodologyTuViPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_JSONLD) }}
       />
-      <main id="main-content" className="relative overflow-hidden pt-16">
+      <main id="main-content" className="relative overflow-hidden pt-16 methodology-a11y">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-ink-radial opacity-80"
