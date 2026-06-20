@@ -41,6 +41,7 @@ const L = {
   sosanh: { href: '/so-sanh', label: 'So sánh lăng kính' },
   hoidap: { href: '/hoi-dap', label: 'Hỏi đáp' },
   tuvi2026: { href: '/tu-vi-2026', label: 'Tử Vi 2026' },
+  tuvi2027: { href: '/tu-vi-2027', label: 'Tử Vi 2027' },
   tuvihomnay: { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay' },
   tuvinghe: { href: '/tu-vi-nghe-nghiep', label: 'Tử Vi sự nghiệp' },
   tuvitinhyeu: { href: '/tu-vi-tinh-yeu', label: 'Tử Vi tình yêu' },
@@ -49,14 +50,15 @@ const L = {
 
 export const RELATED_TOOLS: Record<string, RelatedLink[]> = {
   // Tử Vi / mệnh lý Á Đông
-  '/tu-vi': [L.battu, L.thanso, L.menhcuc, L.lichvannien, L.bangchung],
+  '/tu-vi': [L.tuvi2027, L.battu, L.thanso, L.menhcuc, L.lichvannien, L.bangchung],
   '/bang-chung': [L.laso, L.tuvi, L.battu],
   '/bat-tu': [L.tuvi, L.thanso, L.canxuong, L.datten],
   '/than-so-hoc': [L.tuvi, L.battu, L.mbti, L.canxuong],
   '/can-xuong': [L.tuvi, L.battu, L.thanso, L.saohan],
   '/tinh-menh-cuc': [L.tuvi, L.battu, L.thanso, L.bangchung],
-  '/tu-vi-2026': [L.tuvi, L.saohan, L.tuvihomnay, L.bangchung],
-  '/tu-vi-hom-nay': [L.tuvi, L.tuvi2026, L.lichvannien],
+  '/tu-vi-2026': [L.tuvi, L.tuvi2027, L.saohan, L.tuvihomnay, L.bangchung],
+  '/tu-vi-2027': [L.tuvi, L.saohan, L.tuvihomnay, L.tuvi2026, L.lichvannien],
+  '/tu-vi-hom-nay': [L.tuvi, L.tuvi2026, L.tuvi2027, L.lichvannien],
   '/tu-vi-nghe-nghiep': [L.tuvi, L.careerfit, L.battu],
   '/tu-vi-tinh-yeu': [L.tuvi, L.hoptuoi, L.compat],
   '/tu-vi-tai-chinh': [L.tuvi, L.battu, L.tuvinghe],

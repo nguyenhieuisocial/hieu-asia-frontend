@@ -17,6 +17,7 @@ export interface QuickTool {
 
 /** Flat quick-lookup list — shared by SiteNav (mobile drawer) + SiteFooter. */
 export const QUICK_LOOKUP: QuickTool[] = [
+  { href: '/tu-vi-2027', label: 'Tử Vi 2027', tier: 'free' },
   { href: '/tu-vi-2026', label: 'Tử Vi 2026', tier: 'free' },
   { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay', tier: 'free' },
   { href: '/hop-tuoi', label: 'Hợp tuổi', tier: 'free' },

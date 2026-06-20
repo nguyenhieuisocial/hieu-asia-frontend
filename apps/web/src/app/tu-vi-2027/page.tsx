@@ -277,7 +277,7 @@ export default function TuVi2027HubPage() {
         </section>
 
         <div className="mx-auto max-w-6xl px-6 pb-12">
-          <RelatedTools current="/tu-vi-2026" />
+          <RelatedTools current="/tu-vi-2027" />
         </div>
       </main>
       <SiteFooter />

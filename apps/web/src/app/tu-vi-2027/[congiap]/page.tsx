@@ -372,7 +372,7 @@ export default async function TuVi2027ConGiapPage({
         </section>
 
         <div className="mx-auto max-w-6xl px-6 pb-12">
-          <RelatedTools current="/tu-vi-2026" />
+          <RelatedTools current="/tu-vi-2027" />
         </div>
       </main>
       <SiteFooter />
