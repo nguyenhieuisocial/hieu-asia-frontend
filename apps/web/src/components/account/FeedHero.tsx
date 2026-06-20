@@ -31,7 +31,6 @@ import { ArrowRight } from 'lucide-react';
 import { getSupabaseAuth } from '@/lib/auth-client';
 
 const CHART_KEY = 'hieu:chart:profile:v1';
-const ONBOARDING_KEY = 'hieu:onboarding:v2';
 
 type CtaKey =
   | 'complete-chart'
@@ -74,11 +73,6 @@ function hasSavedChartLocal(): boolean {
     const direct = window.localStorage.getItem(CHART_KEY);
     if (direct) {
       const p = JSON.parse(direct) as { birth_date?: string };
-      if (p?.birth_date) return true;
-    }
-    const onb = window.localStorage.getItem(ONBOARDING_KEY);
-    if (onb) {
-      const p = JSON.parse(onb) as { birth_date?: string };
       if (p?.birth_date) return true;
     }
   } catch {
