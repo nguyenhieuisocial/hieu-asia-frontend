@@ -30,6 +30,7 @@ import { TypographyShowcase } from '@/components/brand/TypographyShowcase';
 import { SpacingDemo } from '@/components/brand/SpacingDemo';
 import { IconShowcase } from '@/components/brand/IconShowcase';
 import { PhotoDirection } from '@/components/brand/PhotoDirection';
+import { SiteNav } from '@/components/home/SiteNav';
 
 export const metadata: Metadata = {
   title: 'Brand System',
@@ -69,7 +70,9 @@ const VOICE_DONT = [
 
 export default function BrandPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <>
+      <SiteNav />
+      <div className="min-h-screen bg-background pt-16 text-foreground">
       {/* HERO */}
       <section className="relative isolate overflow-hidden border-b border-gold/10 bg-background">
         <div
@@ -371,7 +374,8 @@ export default function BrandPage() {
           </Link>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   );
 }
 

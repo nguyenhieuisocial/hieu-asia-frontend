@@ -97,7 +97,18 @@ export function useRealtime(topics: RealtimeTopic[]) {
       }
 
       const url = `${wsUrl}?ticket=${encodeURIComponent(ticket)}&admin_email=${encodeURIComponent(admin_email)}&expires=${expires_at}&topics=${topicsKey}`;
-      const ws = new WebSocket(url);
+      // Một số trình duyệt (vd Chrome trên iOS, hoặc ngữ cảnh bị chặn cookie/WS)
+      // ném SecurityError NGAY tại `new WebSocket(...)`. Vì khối này chạy trong
+      // async IIFE, lỗi không-bắt sẽ nổi thành unhandled-rejection và đổ vào
+      // Sentry (DOMException 18). Realtime là tính năng PHỤ — bắt tại đây, set
+      // 'error' và dừng; admin vẫn chạy đầy đủ không cần realtime.
+      let ws: WebSocket;
+      try {
+        ws = new WebSocket(url);
+      } catch {
+        setStatus('error');
+        return;
+      }
       wsRef.current = ws;
       setStatus('connecting');
 

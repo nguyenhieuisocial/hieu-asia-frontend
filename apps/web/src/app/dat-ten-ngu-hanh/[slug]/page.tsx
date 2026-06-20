@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { DatTenNguHanhChecker } from '@/components/dat-ten-ngu-hanh/DatTenNguHanhChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { VARIANTS, getVariant } from '../variants';
 
@@ -99,6 +100,21 @@ export default async function DatTenVariantPage({
                 </div>
               ))}
             </dl>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-4">
+              <OccasionLeadCapture
+                source={`dat-ten-${slug}`}
+                capturedEvent="lead_capture_dat_ten"
+                capturedProps={{ slug }}
+                blurb={`Để lại email, chúng tôi sẽ báo bạn khi có thêm gợi ý đặt tên hợp mệnh ${v.label.toLowerCase()} và nội dung mới theo mùa. Thi thoảng thôi, không spam.`}
+                cta="Nhận nhắc"
+              />
+            </div>
           </section>
 
           <nav aria-label="Đặt tên theo nhu cầu khác" className="text-sm">

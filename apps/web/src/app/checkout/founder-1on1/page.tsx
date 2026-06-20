@@ -1,4 +1,5 @@
 import { MarketingHero } from '@/components/marketing/MarketingHero';
+import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata = {
@@ -17,6 +18,7 @@ export const metadata = {
 export default function CheckoutFounder1on1Page() {
   return (
     <>
+      <SiteNav />
       <MarketingHero
         eyebrow="TƯ VẤN 1:1 · FOUNDER"
         title={

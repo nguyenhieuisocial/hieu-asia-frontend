@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { breadcrumb, faqPage, webPage } from '@/lib/seo/jsonld';
+import { breadcrumb, faqPage, itemList, webPage } from '@/lib/seo/jsonld';
 import { QUE_PAGES, TRIGRAMS } from '@/lib/que-kinh-dich';
 
 export const metadata: Metadata = {
@@ -133,6 +133,12 @@ export default function KinhDichMeaningsHubPage() {
             { name: 'Ý nghĩa 64 quẻ', url: '/gieo-que/y-nghia' },
           ]),
           faqPage(FAQS),
+          itemList(
+            QUE_PAGES.map((q) => ({
+              name: q.nameVi,
+              url: `/gieo-que/y-nghia/${q.slug}`,
+            })),
+          ),
         ]}
       />
     </ToolPageShell>

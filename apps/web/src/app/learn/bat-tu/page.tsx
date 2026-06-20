@@ -8,13 +8,51 @@ import {
 import { InfographicBatTu } from '@/components/learn/InfographicBatTu';
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
-  title: 'Bát Tự Tứ Trụ — Học huyền học',
+  title: 'Bát Tự Tứ Trụ: Học huyền học',
   description:
-    'Bát Tự Tứ Trụ: 4 trụ Năm – Tháng – Ngày – Giờ với Thiên Can + Địa Chi tạo nên 8 chữ định mệnh cách theo Ngũ Hành.',
+    'Bát Tự Tứ Trụ: 4 trụ Năm, Tháng, Ngày, Giờ với Thiên Can + Địa Chi tạo nên 8 chữ định mệnh cách theo Ngũ Hành.',
   alternates: { canonical: 'https://hieu.asia/learn/bat-tu' },
 };
+
+// FAQ dùng chung cho CẢ FAQPage JSON-LD lẫn phần hiển thị (accordion) →
+// chữ schema === chữ hiển thị (chống cloaking) + crawler/AI đọc được câu trả lời.
+const FAQS = [
+  {
+    q: 'Bát Tự là gì?',
+    a: 'Bát Tự (八字) nghĩa là 8 chữ. Mỗi trụ trong 4 trụ có 1 Thiên Can (天干, gồm 10 can: Giáp, Ất, Bính, Đinh, Mậu, Kỷ, Canh, Tân, Nhâm, Quý) và 1 Địa Chi (地支, gồm 12 chi: Tý, Sửu, Dần, Mão...). Tổng cộng 8 ký tự.',
+  },
+  {
+    q: 'Ngũ Hành là gì?',
+    a: '5 yếu tố cơ bản: Kim (kim loại), Mộc (cây), Thủy (nước), Hỏa (lửa), Thổ (đất). Chúng tương sinh, tương khắc lẫn nhau. Mỗi Can/Chi mang một hành. Sự cân bằng giữa các hành trong lá Bát Tự cho biết thiên hướng, điểm thừa, điểm thiếu.',
+  },
+  {
+    q: 'Ý nghĩa từng trụ?',
+    a: 'Trụ Năm: Tổ tiên, vận thiếu thời, môi trường xuất thân. Trụ Tháng: Cha mẹ, anh chị em, vận thanh niên. Trụ Ngày: Bản thân (Can ngày = Nhật Chủ), vợ/chồng, trung niên. Trụ Giờ: Con cái, vận về già, di sản để lại.',
+  },
+  {
+    q: 'Khác gì Tử Vi?',
+    a: 'Tử Vi đọc qua hệ thống sao trên 12 cung. Bát Tự đọc qua cân bằng Ngũ Hành trong 4 trụ. Hai hệ có thể bổ sung cho nhau: Tử Vi mạnh ở chi tiết lĩnh vực, Bát Tự mạnh ở năng lượng tổng thể.',
+  },
+];
+
+const JSONLD = [
+  article({
+    headline: 'Bát Tự Tứ Trụ: nền tảng cho người mới',
+    description:
+      'Bát Tự Tứ Trụ: 4 trụ Năm, Tháng, Ngày, Giờ với Thiên Can + Địa Chi tạo nên 8 chữ định mệnh cách theo Ngũ Hành.',
+    url: '/learn/bat-tu',
+  }),
+  breadcrumb([
+    { name: 'Trang chủ', url: '/' },
+    { name: 'Học huyền học', url: '/learn' },
+    { name: 'Bát Tự Tứ Trụ', url: '/learn/bat-tu' },
+  ]),
+  faqPage(FAQS),
+];
 
 export default function LearnBatTuPage() {
   return (
@@ -36,7 +74,7 @@ export default function LearnBatTuPage() {
       standfirst={
         <>
           "Bát Tự" = 8 chữ. Đây là 4 cặp Thiên Can + Địa Chi tương ứng với Năm, Tháng, Ngày,
-          Giờ sinh — tạo nên 4 trụ phản ánh năng lượng Ngũ Hành chi phối số mệnh.
+          Giờ sinh, tạo nên 4 trụ phản ánh năng lượng Ngũ Hành chi phối số mệnh.
         </>
       }
       readMeta="6 phút đọc · Cập nhật 2026"
@@ -49,7 +87,7 @@ export default function LearnBatTuPage() {
       tryCta={{
         heading: 'Trải nghiệm ngay',
         blurb:
-          'Nhập ngày giờ sinh, hệ thống lập 4 trụ Năm – Tháng – Ngày – Giờ và phân tích cân bằng Ngũ Hành. Bạn xem Bát Tự đầy đủ trước khi đọc luận giải chi tiết.',
+          'Nhập ngày giờ sinh, hệ thống lập 4 trụ Năm, Tháng, Ngày, Giờ và phân tích cân bằng Ngũ Hành. Bạn xem Bát Tự đầy đủ trước khi đọc luận giải chi tiết.',
         href: '/reading/new?method=bat-tu',
         label: 'Xem Bát Tự của bạn',
       }}
@@ -70,53 +108,22 @@ export default function LearnBatTuPage() {
           heading: 'Giải thích chi tiết',
           children: (
             <Accordion type="single" collapsible className="space-y-2">
-              <AccordionItem value="basics" className="rounded border border-border px-4">
-                <AccordionTrigger>Bát Tự là gì?</AccordionTrigger>
-                <AccordionContent>
-                  Bát Tự (八字) nghĩa là 8 chữ. Mỗi trụ trong 4 trụ có 1 Thiên Can (天干 — 10 can:
-                  Giáp, Ất, Bính, Đinh, Mậu, Kỷ, Canh, Tân, Nhâm, Quý) và 1 Địa Chi (地支 — 12 chi:
-                  Tý, Sửu, Dần, Mão...). Tổng cộng 8 ký tự.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="five" className="rounded border border-border px-4">
-                <AccordionTrigger>Ngũ Hành là gì?</AccordionTrigger>
-                <AccordionContent>
-                  5 yếu tố cơ bản: Kim (kim loại), Mộc (cây), Thủy (nước), Hỏa (lửa), Thổ (đất).
-                  Chúng tương sinh – tương khắc. Mỗi Can/Chi mang một hành. Sự cân bằng giữa các
-                  hành trong lá Bát Tự cho biết thiên hướng, điểm thừa, điểm thiếu.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="pillar" className="rounded border border-border px-4">
-                <AccordionTrigger>Ý nghĩa từng trụ?</AccordionTrigger>
-                <AccordionContent>
-                  <ul className="list-inside list-disc space-y-1">
-                    <li>
-                      <strong>Trụ Năm</strong> — Tổ tiên, vận thiếu thời, môi trường xuất thân.
-                    </li>
-                    <li>
-                      <strong>Trụ Tháng</strong> — Cha mẹ, anh chị em, vận thanh niên.
-                    </li>
-                    <li>
-                      <strong>Trụ Ngày</strong> — Bản thân (Can ngày = Nhật Chủ), vợ/chồng, trung niên.
-                    </li>
-                    <li>
-                      <strong>Trụ Giờ</strong> — Con cái, vận về già, di sản để lại.
-                    </li>
-                  </ul>
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="diff" className="rounded border border-border px-4">
-                <AccordionTrigger>Khác gì Tử Vi?</AccordionTrigger>
-                <AccordionContent>
-                  Tử Vi đọc qua hệ thống sao trên 12 cung. Bát Tự đọc qua cân bằng Ngũ Hành trong
-                  4 trụ. Hai hệ có thể bổ sung cho nhau — Tử Vi mạnh ở chi tiết lĩnh vực, Bát Tự
-                  mạnh ở năng lượng tổng thể.
-                </AccordionContent>
-              </AccordionItem>
+              {FAQS.map((f, i) => (
+                <AccordionItem
+                  key={i}
+                  value={`faq-${i}`}
+                  className="rounded border border-border px-4"
+                >
+                  <AccordionTrigger>{f.q}</AccordionTrigger>
+                  <AccordionContent>{f.a}</AccordionContent>
+                </AccordionItem>
+              ))}
             </Accordion>
           ),
         },
       ]}
-    />
+    >
+      <JsonLd data={JSONLD} />
+    </LearnArticle>
   );
 }

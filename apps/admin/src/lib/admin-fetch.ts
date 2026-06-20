@@ -20,10 +20,28 @@
  * 401 body is moot.
  */
 export async function adminFetch(input: string, init?: RequestInit): Promise<Response> {
-  const res = await fetch(input, { cache: 'no-store', ...init });
-  if (res.status === 401 && typeof window !== 'undefined') {
-    const next = window.location.pathname + window.location.search;
-    window.location.href = `/login?reason=session_invalid&next=${encodeURIComponent(next)}`;
+  // 20s default timeout: the /system tabs hit the proxy directly, so without a
+  // deadline a stalled backend leaves these panels spinning forever. Bound the
+  // wait with an AbortController; if the caller already passed a `signal` we
+  // honor it instead of overriding. The abort rejects the fetch, which the
+  // caller's existing error handling surfaces (no frozen UI).
+  const ctrl = new AbortController();
+  const t = setTimeout(
+    () => ctrl.abort(new DOMException('Admin fetch timeout after 20000ms', 'TimeoutError')),
+    20_000,
+  );
+  try {
+    const res = await fetch(input, {
+      cache: 'no-store',
+      signal: ctrl.signal,
+      ...init,
+    });
+    if (res.status === 401 && typeof window !== 'undefined') {
+      const next = window.location.pathname + window.location.search;
+      window.location.href = `/login?reason=session_invalid&next=${encodeURIComponent(next)}`;
+    }
+    return res;
+  } finally {
+    clearTimeout(t);
   }
-  return res;
 }

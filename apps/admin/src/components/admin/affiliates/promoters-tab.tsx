@@ -9,6 +9,7 @@
  */
 
 import * as React from 'react';
+import dynamic from 'next/dynamic';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
@@ -23,6 +24,16 @@ import {
   toast,
 } from '@hieu-asia/ui';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
+
+// Recharts lazy-loaded — keeps it out of the initial admin bundle (tasks
+// page pattern). ssr:false because admin is auth-gated.
+const PromoterCharts = dynamic(
+  () => import('@/components/affiliates/PromoterCharts').then((m) => m.PromoterCharts),
+  {
+    ssr: false,
+    loading: () => <div className="h-64 animate-pulse rounded bg-muted/30" aria-hidden />,
+  },
+);
 
 interface PromoterRow {
   user_id: string;
@@ -127,6 +138,10 @@ export function PromotersTab() {
           </div>
         </CardContent>
       </Card>
+
+      {!q.isLoading && !q.error && (
+        <PromoterCharts rows={q.data ?? []} />
+      )}
 
       <Card>
         <CardContent className="overflow-x-auto pt-6">
@@ -263,7 +278,14 @@ function ReparentDialog({
       toast.success('Đã reparent thành công');
       onDone();
     } catch (e) {
-      toast.error((e as Error).message);
+      const msg = (e as Error).message;
+      // Worker surfaces the Postgres RPC "Cycle detected — new parent is in
+      // self subtree" raw — translate to a friendly vi-VN hint.
+      if (/cycle/i.test(msg)) {
+        toast.error('Không thể chuyển: tạo vòng lặp — cha mới đã là cấp dưới của affiliate này.');
+      } else {
+        toast.error(msg);
+      }
     } finally {
       setBusy(false);
     }

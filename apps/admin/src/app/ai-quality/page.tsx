@@ -16,13 +16,16 @@
 
 import * as React from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { Shield, Brain } from 'lucide-react';
+import { Shield, Brain, Timer, AlertTriangle, Network } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { ProductTabs, type ProductTab } from '@/components/admin/product-tabs';
 import { ValidatorTab } from '@/components/admin/ai/ValidatorTab';
 import { EvalTab } from '@/components/admin/ai/EvalTab';
+import { LatencyTab } from '@/components/admin/ai/LatencyTab';
+import { StuckReportsTab } from '@/components/admin/ai/StuckReportsTab';
+import { ModelHealthTab } from '@/components/admin/ai/ModelHealthTab';
 
-const VALID_TABS = ['validator', 'eval'] as const;
+const VALID_TABS = ['validator', 'eval', 'latency', 'stuck', 'model-health'] as const;
 type TabId = (typeof VALID_TABS)[number];
 
 function isValidTab(v: string | null): v is TabId {
@@ -59,6 +62,24 @@ function AiQualityPageInner() {
         label: 'Eval nightly',
         icon: <Brain size={16} />,
         content: <EvalTab />,
+      },
+      {
+        id: 'latency',
+        label: 'Độ trễ (p50/p95)',
+        icon: <Timer size={16} />,
+        content: <LatencyTab />,
+      },
+      {
+        id: 'stuck',
+        label: 'Báo cáo kẹt',
+        icon: <AlertTriangle size={16} />,
+        content: <StuckReportsTab />,
+      },
+      {
+        id: 'model-health',
+        label: 'Sức khoẻ model',
+        icon: <Network size={16} />,
+        content: <ModelHealthTab />,
       },
     ],
     [],

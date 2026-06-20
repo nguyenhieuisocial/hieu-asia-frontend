@@ -20,14 +20,13 @@
  *   GET  /admin/cost/top_spenders                  llm_traces aggregated by user
  *   GET  /admin/rag/chunks?limit=&document_id=     corpus_chunks list
  *   GET  /payment/transactions?limit=&user_id=     raw payment events
+ *   GET  /admin/coupons                            coupon list
+ *   POST /admin/coupons, PATCH /admin/coupons/{code}   create / update coupon
+ *   GET  /admin/feature-flags, POST /admin/feature-flags/toggle   feature flags
  *
  * Endpoints NOT shipped yet (mock-only — TODO marked `isMock: true`):
  *   GET  /admin/qdrant/stats        (Qdrant moved to pgvector; stats TBD)
  *   POST /admin/rag/ingest
- *   GET  /admin/coupons
- *   POST /admin/coupons, PATCH /admin/coupons/{code}
- *   GET  /admin/feature_flags, PATCH /admin/feature_flags
- *   POST /admin/payments/{id}/refund
  */
 
 import {
@@ -37,7 +36,6 @@ import {
   MOCK_TOP_SPENDERS,
   MOCK_READINGS_PER_DAY,
   MOCK_RAG_CHUNKS,
-  MOCK_QDRANT_STATS,
   MOCK_TRANSACTIONS,
   MOCK_QUEUE_DEPTH,
   getOverviewKpis,
@@ -486,6 +484,45 @@ export async function setSessionAccess(
   return { ok: false, error: real?.error ?? 'gateway unreachable' };
 }
 
+// ---------- Contact customer (transactional email) ----------
+//
+// Wraps the worker's existing `POST /admin/email/send` (api-gateway index.ts).
+// IMPORTANT: that endpoint does NOT accept a freeform subject/body — it renders
+// one of a FIXED set of Resend templates (src/email/templates.ts) and only takes
+// `{ template, to, args }`. So "contact customer" is a template picker, not a
+// freeform composer. The union below mirrors the real template arg shapes 1:1;
+// adding a key here without a matching backend template will 400 ("unknown
+// template" / template render failure). Owner not required — POST → admin rank
+// in the proxy role gate.
+export type AdminEmailTemplate =
+  | { template: 'readingComplete'; args: { readingType: string; viewUrl: string } }
+  | { template: 'welcome'; args: { userName?: string; signinUrl: string } }
+  | { template: 'dailyHoroscope'; args: { zodiac: string; date: string; summary: string; fullUrl: string } };
+
+/**
+ * Send a transactional email to a customer via the worker's Resend templates.
+ * `to` is the recipient email. Returns `{ ok }` plus the worker's error string
+ * on failure (e.g. Resend rejected, unknown template) so the dialog can toast it.
+ */
+export async function sendAdminEmail(
+  to: string,
+  payload: AdminEmailTemplate,
+  opts: { replyTo?: string } = {},
+): Promise<{ ok: boolean; error?: string }> {
+  const real = await proxyFetch<{ ok?: boolean; error?: string }>('/admin/email/send', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      template: payload.template,
+      to,
+      args: payload.args,
+      ...(opts.replyTo ? { replyTo: opts.replyTo } : {}),
+    }),
+  });
+  if (real && real.ok !== false) return { ok: true };
+  return { ok: false, error: real?.error ?? 'gateway unreachable' };
+}
+
 export async function getSession(id: string) {
   const real = await proxyFetch<BackendSessionDetail>(
     `/admin/sessions/${encodeURIComponent(id)}`,
@@ -594,6 +631,10 @@ function mapBackendTask(row: BackendTaskRow): AdminTask {
     duration_seconds: duration,
     retries: 0, // reading_tasks has no retries column yet
     error: row.error,
+    // Preserve the raw worker status (e.g. 'error_at_vision_agent') — `status`
+    // above collapses every failure to 'failed', so the /tasks failure-reason
+    // breakdown reads this to recover the failure category.
+    raw_status: row.status,
   };
 }
 
@@ -640,7 +681,7 @@ export async function retryTask(taskId: string) {
   if (real?.ok && real.task) {
     return { task_id: real.task.task_id, status: 'queued' as const, isMock: false };
   }
-  return delay({ task_id: taskId, status: 'queued' as const, isMock: true });
+  throw new Error('Retry failed — gateway unreachable');
 }
 
 interface QueueDepthEnvelope {
@@ -782,6 +823,45 @@ export async function getReadingsPerDay(
   ) as Promise<ReadingsPerDay[] & { _source: DataSource }>;
 }
 
+// ---------- Signups ----------
+
+export interface SignupsByDay {
+  days: Array<{ date: string; count: number }>;
+  total: number;
+  today: number;
+  /** Previous-window total for delta. Optional — backend may omit it. */
+  prev_total?: number;
+}
+
+interface SignupsByDayEnvelope {
+  ok: boolean;
+  days?: Array<{ date: string; count: number }>;
+  total?: number;
+  today?: number;
+  prev_total?: number;
+}
+
+/**
+ * New-signups daily rollup. Powers the "Khách mới hôm nay" dashboard KPI.
+ *
+ * There is no dedicated `GET /admin/signups/by_day?days=N` endpoint (not shipped,
+ * not planned), so proxyFetch returns null (404 → !res.ok → null) and this
+ * returns null too — NO mock fallback. The dashboard renders "—" / hides the
+ * card gracefully instead of inventing numbers.
+ */
+export async function getSignupsByDay(days = 30): Promise<SignupsByDay | null> {
+  const real = await proxyFetch<SignupsByDayEnvelope>(`/admin/signups/by_day?days=${days}`);
+  if (real?.ok && Array.isArray(real.days)) {
+    return {
+      days: real.days,
+      total: Number(real.total ?? 0),
+      today: Number(real.today ?? 0),
+      prev_total: real.prev_total != null ? Number(real.prev_total) : undefined,
+    };
+  }
+  return null;
+}
+
 // ---------- RAG ----------
 
 interface RagChunksEnvelope {
@@ -834,11 +914,6 @@ export async function listRagChunks() {
       _source: { isMock: true, reason: 'gateway unreachable; showing mock' } as DataSource,
     }),
   );
-}
-
-export async function getQdrantStats() {
-  // TODO(wave-D): /admin/qdrant/stats not shipped.
-  return delay(mock({ ...MOCK_QDRANT_STATS }, '/admin/qdrant/stats not shipped'));
 }
 
 export async function ingestRagChunks(payload: {
@@ -954,3 +1029,1352 @@ export async function listTransactions(
 //   - revenue / AOV         → /sepay page (real SePay transactions, VND)
 //   - refund workflow       → /sepay page (owner-gated manual approve/complete)
 // There is no failed-payment retry or MRR concept for one-off SePay bank transfers.
+
+// ---------- "Hạ tầng" infra hub (read-only vendor detail panels) ----------
+//
+// Each wrapper hits the worker dispatcher `GET /admin/infra/<tool>` via the
+// admin proxy and returns the FULL envelope (success OR not-configured) so the
+// page can render an honest setup-card. We do NOT use `proxyFetch` here: it
+// returns null whenever `ok === false`, which would erase the worker's
+// `configured:false` + `error` fields. A raw fetch (mirroring `gsc-api.ts`)
+// preserves them. On network/parse failure we synthesize an `ok:false,
+// configured:true` envelope so the page shows an ErrorBlock + retry.
+//
+// FOLLOW-UP TOOLS: add a `<Tool>Item` interface + a `getInfra<Tool>()` wrapper
+// that calls `fetchInfra<...>("<tool>")` with the matching item type. The
+// worker side just needs a new `case "<tool>"` in `infra-hub.ts`.
+
+/**
+ * Shared envelope every /admin/infra/<tool> endpoint returns.
+ *
+ * `S` (default `unknown`) is an optional summary object some tools attach to the
+ * success payload (e.g. Cloudflare 24h totals, AI Gateway spend). Tools without
+ * a summary leave it off; `InfraPanel<T>` ignores it and pages that need it read
+ * `query.data.summary` directly.
+ */
+export type InfraEnvelope<T, S = unknown> =
+  | { ok: true; configured: true; items: T[]; summary?: S }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export interface InfraVercelItem {
+  uid: string;
+  name: string | null;
+  state: string | null;
+  target: string | null;
+  created: number | null;
+  url: string | null;
+  commit_message: string | null;
+  /** Wave-3: short commit sha + GitHub link (optional → older workers omit). */
+  commit_sha?: string | null;
+  commit_url?: string | null;
+}
+
+/** Wave-3: Vercel project info card (framework / node / build / link / alias). */
+export interface InfraVercelProject {
+  id: string;
+  name: string | null;
+  framework: string | null;
+  nodeVersion: string | null;
+  rootDirectory: string | null;
+  buildCommand: string | null;
+  installCommand: string | null;
+  productionBranch: string | null;
+  repo: string | null;
+  repoId: number | string | null;
+  prodAlias: string | null;
+}
+
+/** Wave-3: one production domain bound to the project. */
+export interface InfraVercelDomain {
+  name: string;
+  verified: boolean;
+  misconfigured: boolean | null;
+}
+
+/** Wave-3: env vars grouped by environment target (NAMES ONLY — no values). */
+export interface InfraVercelEnvGroup {
+  target: string;
+  vars: Array<{
+    key: string;
+    type: string | null;
+    gitBranch: string | null;
+    updatedAt: number | null;
+  }>;
+}
+
+/**
+ * Infra-hub v2 wave 2 — Vercel deploy-frequency summary + 14d series.
+ * All fields optional → the page hides the StatCard strip / chart when the
+ * worker predates them.
+ */
+export interface InfraVercelSummary {
+  deploys_7d?: number;
+  success_rate_pct?: number;
+  last_prod_state?: string | null;
+  last_prod_age_min?: number | null;
+}
+
+/** One day of Vercel deploy outcomes (asc, ≤14 days). */
+export interface InfraVercelSeriesPoint {
+  date: string;
+  success: number;
+  failed: number;
+}
+
+export interface InfraSentryItem {
+  id: string;
+  title: string;
+  culprit: string | null;
+  count: number;
+  userCount: number;
+  lastSeen: string | null;
+  permalink: string | null;
+  level: string;
+  /** Wave-3 detail (optional → older workers omit). firstSeen + 24h sparkline. */
+  firstSeen?: string | null;
+  /** Hourly event counts over the trailing 24h for a tiny inline sparkline. */
+  spark_24h?: number[] | null;
+  /** True when the issue was first seen within the last 24h. */
+  is_new_24h?: boolean;
+}
+
+/**
+ * Infra-hub v2 wave 2 — Sentry top-issues summary. All optional → the page
+ * renders the StatCard strip only for the fields the worker sends.
+ */
+export interface InfraSentrySummary {
+  errors_24h?: number;
+  unresolved_count?: number;
+  fatal_count?: number;
+  top_issue?: { title: string; count: number } | null;
+}
+
+export interface InfraResendItem {
+  id: string;
+  to: string | null;
+  subject: string | null;
+  last_event: string | null;
+  created_at: string | null;
+}
+
+/**
+ * Infra-hub v2 wave 2 — Resend delivery-status counts. All optional → only the
+ * counts the worker provides become StatCards.
+ */
+export interface InfraResendSummary {
+  delivered?: number;
+  bounced?: number;
+  complained?: number;
+  delayed?: number;
+  queued?: number;
+  sent?: number;
+  other?: number;
+}
+
+/** Wave-4: one Resend sending domain (verification-status pill). */
+export interface InfraResendDomain {
+  id: string;
+  name: string | null;
+  status: string | null;
+  region: string | null;
+  created_at: string | null;
+}
+
+/** Wave-4: one Resend API key (name/id/created_at — never the secret). */
+export interface InfraResendApiKey {
+  id: string;
+  name: string | null;
+  created_at: string | null;
+}
+
+/**
+ * Resend success envelope carries Wave-4 domains + API keys alongside the
+ * recent-emails items + delivery-status summary. All optional → the page
+ * renders only what the worker sends; permission_notes explains a skipped panel.
+ */
+export type InfraResendEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraResendItem[];
+      summary?: InfraResendSummary;
+      domains?: InfraResendDomain[];
+      api_keys?: InfraResendApiKey[];
+      permission_notes?: string[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+/**
+ * Infra-hub v2 (worker PR #203) — Cloudflare now returns Pages/Workers
+ * *deployments* (most-recent first), not daily request rollups. The token may
+ * still lack deployment read scope → the worker returns a notConfigured setup
+ * card, which `InfraPanel` already renders.
+ */
+export interface InfraCloudflareItem {
+  id: string;
+  created_on: string;
+  author_email: string | null;
+  message: string | null;
+  source: string | null;
+  live: boolean;
+}
+
+export interface InfraCloudflareSummary {
+  total_deployments: number;
+  live_deployment_at: string | null;
+  requests_24h?: number;
+  errors_24h?: number;
+  error_rate_pct?: number;
+}
+
+/** Wave-3: worker script metadata tile. */
+export interface InfraCfScriptMeta {
+  created_on: string | null;
+  modified_on: string | null;
+  usage_model: string | null;
+  compatibility_date: string | null;
+}
+
+/** Wave-3: one cron schedule. */
+export interface InfraCfCronTrigger {
+  cron: string;
+  modified_on: string | null;
+}
+
+/** Wave-3: one binding (KV/R2/D1/queue/service/secret) — name + kind only. */
+export interface InfraCfBinding {
+  name: string;
+  type: string;
+  detail: string | null;
+}
+
+/** Wave-3: one worker route pattern. */
+export interface InfraCfRoute {
+  pattern: string;
+  id: string | null;
+}
+
+/** Wave-3: deploy cadence tiles. */
+export interface InfraCfCadence {
+  deploys_7d: number;
+  deploys_30d: number;
+  days_since_last: number | null;
+}
+
+/** Wave-3: one day of CF deploy counts (asc, ≤30 days). */
+export interface InfraCfDeploySeriesPoint {
+  date: string;
+  count: number;
+}
+
+/**
+ * Cloudflare success envelope carries Wave-3 detail panels alongside the
+ * deployments list. All optional → the page renders only what the worker sends.
+ */
+export type InfraCloudflareEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraCloudflareItem[];
+      summary?: InfraCloudflareSummary;
+      script_meta?: InfraCfScriptMeta | null;
+      cron_triggers?: InfraCfCronTrigger[] | null;
+      bindings?: InfraCfBinding[] | null;
+      routes?: InfraCfRoute[] | null;
+      cadence?: InfraCfCadence | null;
+      deploy_series?: InfraCfDeploySeriesPoint[] | null;
+      permission_notes?: string[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+/** Cloudflare single-deployment detail (GET /admin/infra/cloudflare/:id). */
+export type InfraCloudflareDetailEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraCloudflareItem[];
+      deployment: InfraCloudflareItem & { position: number; total: number };
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export interface InfraSupabaseItem {
+  schema: string;
+  table: string;
+  rows: number;
+  /** Wave-4: exact HEAD count for top hieu_asia tables (null → estimate only). */
+  rows_exact?: number | null;
+}
+
+export interface InfraSupabaseSummary {
+  total_tables: number;
+  /** Wave-4: exact user count from hieu_asia.users (optional → older workers). */
+  total_users?: number;
+}
+
+/** Wave-4: one day of new signups (asc, ≤30 days). */
+export interface InfraSupabaseSignupPoint {
+  date: string;
+  count: number;
+}
+
+/** Wave-4: one applied DB migration (newest first). */
+export interface InfraSupabaseMigration {
+  version: string;
+  name: string | null;
+}
+
+/**
+ * Supabase success envelope carries Wave-4 detail (30d signups, migrations
+ * list) alongside the table-stats items + summary. All optional → the page
+ * renders only what the worker sends.
+ */
+export type InfraSupabaseEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraSupabaseItem[];
+      summary?: InfraSupabaseSummary;
+      signups?: InfraSupabaseSignupPoint[];
+      migrations?: InfraSupabaseMigration[];
+      migrations_note?: string;
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export interface InfraLangfuseItem {
+  id: string;
+  name: string | null;
+  timestamp: string | null;
+  latency_ms: number | null;
+  cost_usd: number | null;
+  user_id: string | null;
+}
+
+/**
+ * Infra-hub v2 wave 2 — Langfuse 24h summary. All optional → the page renders
+ * the StatCard strip only for the fields present.
+ *
+ * NOTE: the worker exposes `error_rate_pct` but the Langfuse API has no error
+ * field, so it is always 0 from this source. Do NOT surface it as meaningful —
+ * the page omits it from the StatCards.
+ */
+export interface InfraLangfuseSummary {
+  spend_today_usd?: number;
+  traces_24h?: number;
+  latency_avg_ms?: number | null;
+  latency_p95_ms?: number | null;
+  error_rate_pct?: number;
+}
+
+/** One day of Langfuse trace/cost/latency (asc, ≤30 days). */
+export interface InfraLangfuseSeriesPoint {
+  date: string;
+  traces: number;
+  cost_usd: number;
+  latency_avg_ms: number | null;
+}
+
+/** Per-role Langfuse rollup (desc by traces). */
+export interface InfraLangfuseRole {
+  role: string;
+  traces: number;
+  cost_usd: number;
+  error_rate_pct: number;
+}
+
+/** Per-model rollup from the Daily Metrics API (desc by cost). Wave-3. */
+export interface InfraLangfuseModelRow {
+  model: string;
+  traces: number;
+  observations: number;
+  total_tokens: number;
+  cost_usd: number;
+}
+
+/** Quality score / eval attached to a trace (GET /scores). Wave-3. */
+export interface InfraLangfuseScore {
+  id: string;
+  name: string | null;
+  value: number | string | null;
+  data_type: string | null;
+  trace_id: string | null;
+  comment: string | null;
+  timestamp: string | null;
+}
+
+/** Optional filters forwarded to the Langfuse traces API. */
+export interface InfraLangfuseFilters {
+  name?: string;
+  userId?: string;
+  fromTimestamp?: string;
+  toTimestamp?: string;
+}
+
+export interface InfraGithubItem {
+  repo: string;
+  workflow: string;
+  status: string | null;
+  conclusion: string | null;
+  branch: string | null;
+  actor: string | null;
+  created_at: string | null;
+  url: string | null;
+  // Infra-hub v2 wave 3+4 — the run's numeric id, needed to re-run a failed run
+  // via POST /admin/infra/github/rerun. Optional → older worker deploys omit it
+  // and the page hides the "Chạy lại" button.
+  run_id?: number | string | null;
+}
+
+/**
+ * Infra-hub v2 (worker PR #203) — GitHub summary now carries the last Worker
+ * deploy result + a cache flag. Both optional → the page hides the card / pill
+ * when the worker predates these fields.
+ */
+export interface InfraGithubSummary {
+  last_worker_deploy?: { conclusion: string | null; created_at: string | null };
+  cached?: boolean;
+}
+
+/**
+ * Infra-detail wave — Dependabot security alerts carried top-level on the
+ * GitHub success envelope. `available:false` → the GITHUB_TOKEN lacks the
+ * `security_events` scope; the page shows an honest note instead of cards.
+ */
+export interface InfraGithubDependabot {
+  available: boolean;
+  total: number;
+  by_severity: { critical: number; high: number; medium: number; low: number };
+  items: Array<{
+    repo: string | null;
+    package: string | null;
+    ecosystem: string | null;
+    severity: string | null;
+    ghsa_id: string | null;
+    cve_id: string | null;
+    url: string | null;
+    summary: string | null;
+  }>;
+}
+
+/** Infra-detail wave — one open pull request, carried top-level. */
+export interface InfraGithubPullRequest {
+  repo: string;
+  number: number | null;
+  title: string | null;
+  author: string | null;
+  draft: boolean;
+  head: string | null;
+  base: string | null;
+  created_at: string | null;
+  url: string | null;
+  checks: 'success' | 'failure' | 'pending' | 'none';
+}
+
+/** Infra-detail wave — one recent commit on the default branch, top-level. */
+export interface InfraGithubCommit {
+  repo: string;
+  sha: string | null;
+  message: string | null;
+  author: string | null;
+  date: string | null;
+  url: string | null;
+}
+
+/**
+ * GitHub success envelope also carries top-level dependabot / pull_requests /
+ * recent_commits extras (infra-detail wave). Mirror the AI Gateway pattern:
+ * intersect the success branch with the optional extras without changing the
+ * shared `InfraEnvelope`.
+ */
+export type InfraGithubEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraGithubItem[];
+      summary?: InfraGithubSummary;
+      dependabot?: InfraGithubDependabot;
+      pull_requests?: InfraGithubPullRequest[];
+      recent_commits?: InfraGithubCommit[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export interface InfraTelegramItem {
+  bot: string;
+  username: string | null;
+  status: string | null;
+  webhook_url: string | null;
+  pending_updates: number | null;
+  // Infra-detail wave — per-bot getMe capabilities + webhook config + commands.
+  // All optional/null → the expanded detail panel renders honest fallbacks.
+  id?: number | null;
+  can_join_groups?: boolean | null;
+  can_read_all_group_messages?: boolean | null;
+  supports_inline_queries?: boolean | null;
+  /** EPOCH SECONDS — convert to ms before formatting. */
+  last_error_date?: number | null;
+  last_error_message?: string | null;
+  ip_address?: string | null;
+  max_connections?: number | null;
+  allowed_updates?: string[] | null;
+  has_custom_certificate?: boolean | null;
+  commands?: Array<{ command: string; description: string }>;
+}
+
+export interface InfraAiGatewayItem {
+  vendor: string;
+  model: string;
+  requests: number;
+  cost_usd: number;
+  error_rate_pct: number;
+  // Infra-hub v2 (worker PR #203) — per-model latency + top error class.
+  // Optional → older worker deploys omit them; the table renders "—".
+  latency_avg_ms?: number | null;
+  latency_p95_ms?: number | null;
+  error_class_top?: Array<{ error_class: string; count: number }>;
+}
+
+export interface InfraAiGatewaySummary {
+  total_requests: number;
+  total_cost_usd: number;
+  // Infra-hub v2 — prepaid balance + low-balance flag (worker PR #203).
+  // Optional → render the balance card only when present.
+  balance_usd?: number | null;
+  low_balance?: boolean;
+  // Infra-detail wave — lifetime spend (all-time). Optional → render the
+  // "Tổng đã tiêu từ trước đến nay" card only when present.
+  total_spend_usd?: number;
+}
+
+/** Infra-hub v2 — 30d cost/request/error daily series for the AI Gateway chart. */
+export interface InfraAiGatewaySeriesPoint {
+  date: string;
+  requests: number;
+  cost_usd: number;
+  errors: number;
+}
+
+/**
+ * Infra-hub — one BetterStack uptime monitor (worker `handleInfraUptime`).
+ * `response_time_ms` is null from the monitors LIST endpoint (latency lives at a
+ * separate /response-times endpoint); `paused` covers status "paused" + a
+ * maintenance window.
+ */
+export interface InfraUptimeItem {
+  id: string;
+  name: string;
+  url: string | null;
+  status: string;
+  last_checked_at: string | null;
+  response_time_ms: number | null;
+  paused: boolean;
+  // Infra-detail wave — extra monitor config surfaced from the BetterStack
+  // monitors LIST endpoint. All optional/null → table renders "—".
+  monitor_type?: string | null;
+  /** Check interval, seconds. */
+  check_frequency?: number | null;
+  /** Request timeout, seconds. */
+  request_timeout?: number | null;
+  /** Days until TLS cert expiry (HTTP/TLS monitors only; null otherwise). */
+  ssl_expiration?: number | null;
+}
+
+/** Monitor status counts. */
+export interface InfraUptimeSummary {
+  total: number;
+  up: number;
+  down: number;
+  paused: number;
+}
+
+/** One recent BetterStack incident. */
+export interface InfraUptimeIncident {
+  id: string;
+  name: string;
+  started_at: string | null;
+  resolved_at: string | null;
+  status: string;
+}
+
+/**
+ * Low-level infra fetch. Returns the parsed envelope for 2xx AND for the
+ * documented 503 not-configured / 502 vendor-error responses (both carry
+ * `ok:false`). Bounces to /login on 401. Never throws — a thrown fetch or
+ * unparseable body degrades to an `ok:false, configured:true` envelope.
+ */
+async function fetchInfra<T, S = unknown>(
+  tool: string,
+): Promise<InfraEnvelope<T, S>> {
+  // 25s timeout so a stalled backend degrades to an error envelope instead of
+  // a frozen panel. Same deadline as proxyFetch (cold-start tolerant).
+  const ctrl = new AbortController();
+  const t = setTimeout(
+    () => ctrl.abort(new DOMException('Proxy timeout after 25000ms', 'TimeoutError')),
+    25_000,
+  );
+  try {
+    const res = await fetch(`${PROXY}/admin/infra/${tool}`, {
+      cache: 'no-store',
+      credentials: 'same-origin',
+      signal: ctrl.signal,
+    });
+    if (res.status === 401 && typeof window !== 'undefined') {
+      const next = window.location.pathname + window.location.search;
+      window.location.href = `/login?reason=session_invalid&next=${encodeURIComponent(next)}`;
+      return { ok: false, configured: true, error: 'unauthenticated' };
+    }
+    const text = await res.text();
+    let parsed: InfraEnvelope<T, S> | undefined;
+    try {
+      parsed = text ? (JSON.parse(text) as InfraEnvelope<T, S>) : undefined;
+    } catch {
+      parsed = undefined;
+    }
+    if (parsed && typeof parsed.ok === 'boolean') return parsed;
+    return {
+      ok: false,
+      configured: true,
+      error: `infra ${tool} → HTTP ${res.status}`,
+    };
+  } catch (err) {
+    return { ok: false, configured: true, error: (err as Error).message };
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+/**
+ * Vercel success envelope also carries a top-level 14d deploy `series` (wave 2)
+ * alongside the summary. Mirror the AI Gateway pattern: intersect the success
+ * branch with the optional summary + series without changing `InfraEnvelope`.
+ */
+export type InfraVercelEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraVercelItem[];
+      summary?: InfraVercelSummary;
+      series?: InfraVercelSeriesPoint[];
+      /** Wave-3 detail panels — all optional so older workers degrade gracefully. */
+      project?: InfraVercelProject | null;
+      domains?: InfraVercelDomain[] | null;
+      env_groups?: InfraVercelEnvGroup[] | null;
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export function getInfraVercel(): Promise<InfraVercelEnvelope> {
+  return fetchInfra<InfraVercelItem, InfraVercelSummary>(
+    'vercel',
+  ) as Promise<InfraVercelEnvelope>;
+}
+
+export function getInfraSentry(): Promise<
+  InfraEnvelope<InfraSentryItem, InfraSentrySummary>
+> {
+  return fetchInfra<InfraSentryItem, InfraSentrySummary>('sentry');
+}
+
+export function getInfraResend(): Promise<InfraResendEnvelope> {
+  return fetchInfra<InfraResendItem, InfraResendSummary>(
+    'resend',
+  ) as Promise<InfraResendEnvelope>;
+}
+
+export function getInfraCloudflare(): Promise<InfraCloudflareEnvelope> {
+  return fetchInfra<InfraCloudflareItem, InfraCloudflareSummary>(
+    'cloudflare',
+  ) as Promise<InfraCloudflareEnvelope>;
+}
+
+export function getInfraCloudflareDetail(
+  id: string,
+): Promise<InfraCloudflareDetailEnvelope> {
+  return fetchInfraDetail<InfraCloudflareDetailEnvelope>(
+    `/cloudflare/${encodeURIComponent(id)}`,
+  );
+}
+
+export function getInfraSupabase(): Promise<InfraSupabaseEnvelope> {
+  return fetchInfra<InfraSupabaseItem, InfraSupabaseSummary>(
+    'supabase',
+  ) as Promise<InfraSupabaseEnvelope>;
+}
+
+/**
+ * Langfuse success envelope carries a top-level 30d `series` + per-role
+ * breakdown (`by_role`) alongside the summary (wave 2). Same intersection trick
+ * as AI Gateway / Vercel.
+ */
+export type InfraLangfuseEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraLangfuseItem[];
+      summary?: InfraLangfuseSummary;
+      series?: InfraLangfuseSeriesPoint[];
+      /** Whether `series` came from the real Daily Metrics API or the trace sample. */
+      series_source?: 'daily_metrics' | 'trace_sample';
+      by_role?: InfraLangfuseRole[];
+      by_model?: InfraLangfuseModelRow[];
+      scores?: InfraLangfuseScore[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export function getInfraLangfuse(
+  filters?: InfraLangfuseFilters,
+): Promise<InfraLangfuseEnvelope> {
+  const qs = new URLSearchParams();
+  if (filters?.name) qs.set('name', filters.name);
+  if (filters?.userId) qs.set('userId', filters.userId);
+  if (filters?.fromTimestamp) qs.set('fromTimestamp', filters.fromTimestamp);
+  if (filters?.toTimestamp) qs.set('toTimestamp', filters.toTimestamp);
+  const suffix = qs.toString() ? `?${qs.toString()}` : '';
+  return fetchInfra<InfraLangfuseItem, InfraLangfuseSummary>(
+    `langfuse${suffix}`,
+  ) as Promise<InfraLangfuseEnvelope>;
+}
+
+export function getInfraGithub(): Promise<InfraGithubEnvelope> {
+  return fetchInfra<InfraGithubItem, InfraGithubSummary>(
+    'github',
+  ) as Promise<InfraGithubEnvelope>;
+}
+
+export function getInfraTelegram(): Promise<InfraEnvelope<InfraTelegramItem>> {
+  return fetchInfra<InfraTelegramItem>('telegram');
+}
+
+/**
+ * AI Gateway success envelope also carries a top-level 30d `series` (worker
+ * PR #203). `fetchInfra` returns the raw parsed body, so we intersect the
+ * success branch with the optional series to surface it without changing the
+ * shared `InfraEnvelope`.
+ */
+export type InfraAiGatewayEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraAiGatewayItem[];
+      summary?: InfraAiGatewaySummary;
+      series?: InfraAiGatewaySeriesPoint[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export function getInfraAiGateway(): Promise<InfraAiGatewayEnvelope> {
+  return fetchInfra<InfraAiGatewayItem, InfraAiGatewaySummary>(
+    'ai-gateway',
+  ) as Promise<InfraAiGatewayEnvelope>;
+}
+
+/**
+ * Uptime success envelope also carries `summary` (status counts) + `incidents`
+ * (recent ≤10). Mirror the AI Gateway pattern: intersect the success branch with
+ * the optional extras without changing the shared `InfraEnvelope`.
+ */
+export type InfraUptimeEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraUptimeItem[];
+      summary?: InfraUptimeSummary;
+      incidents?: InfraUptimeIncident[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export function getInfraUptime(): Promise<InfraUptimeEnvelope> {
+  return fetchInfra<InfraUptimeItem, InfraUptimeSummary>(
+    'uptime',
+  ) as Promise<InfraUptimeEnvelope>;
+}
+
+// ---------- Infra-hub v2 wave 3+4 — detail fetches + safe POST actions --------
+//
+// Detail GETs return a richer per-record envelope than the list endpoints; the
+// drawers fetch them lazily (React Query enabled only when open, keyed by id).
+// They reuse `fetchInfraDetail` (raw fetch like `fetchInfra` so an `ok:false`
+// body isn't erased) and never throw.
+//
+// Actions are POSTs. They DELIBERATELY do NOT use `proxyFetch` — that helper
+// returns null whenever `ok === false`, which would hide the worker's
+// `{ok:false, error}` result. The action buttons need the real result to toast
+// success vs the friendly error (e.g. token missing a write scope). `postInfra`
+// returns the parsed envelope verbatim and degrades to `{ok:false, error}` on
+// any network/parse failure so callers can always toast something.
+
+/** Sentry issue detail (GET /admin/infra/sentry/:id). */
+export interface InfraSentryDetailIssue {
+  id: string;
+  title: string;
+  culprit: string | null;
+  level: string;
+  status: string | null;
+  count: number;
+  userCount: number;
+  firstSeen: string | null;
+  lastSeen: string | null;
+  permalink: string | null;
+  metadata?: Record<string, unknown> | null;
+  /** Wave-3: release context + new-issue flag (optional → older workers omit). */
+  first_release?: string | null;
+  last_release?: string | null;
+  is_new_24h?: boolean;
+}
+
+export interface InfraSentryBreadcrumb {
+  category: string | null;
+  message: string | null;
+  level: string | null;
+  timestamp: string | null;
+}
+
+export interface InfraSentryLatestEvent {
+  exception: { type: string | null; value: string | null } | null;
+  frames: Array<{ filename: string | null; function: string | null; lineNo: number | null }>;
+  tags: Array<{ key: string; value: string }>;
+  /** Wave-3: breadcrumb trail + release tag (optional → older workers omit). */
+  breadcrumbs?: InfraSentryBreadcrumb[];
+  release?: string | null;
+}
+
+export interface InfraSentryEventRow {
+  id: string;
+  title: string | null;
+  dateCreated: string | null;
+}
+
+export type InfraSentryDetailEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraSentryItem[];
+      issue: InfraSentryDetailIssue;
+      latest_event: InfraSentryLatestEvent | null;
+      /** Wave-3 extras — all optional so older workers degrade gracefully. */
+      stats_24h?: number[] | null;
+      stats_14d?: number[] | null;
+      recent_events?: InfraSentryEventRow[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+/** Vercel deployment detail (GET /admin/infra/vercel/:uid). */
+export interface InfraVercelDetailDeployment {
+  uid: string;
+  name: string | null;
+  state: string | null;
+  target: string | null;
+  created: number | null;
+  ready: number | null;
+  buildingAt: number | null;
+  url: string | null;
+  inspectorUrl: string | null;
+  gitSource: { ref: string | null; sha: string | null } | null;
+  creator: string | null;
+  meta: {
+    githubCommitMessage?: string | null;
+    githubCommitAuthorName?: string | null;
+  } | null;
+}
+
+export interface InfraVercelBuildLog {
+  text: string;
+  type: string | null;
+  created: number | null;
+}
+
+export type InfraVercelDetailEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraVercelItem[];
+      deployment: InfraVercelDetailDeployment;
+      build_logs?: InfraVercelBuildLog[];
+      /** Wave-3: first error line surfaced from the build logs (null when none). */
+      first_error?: string | null;
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+/** Raw detail fetch (mirrors `fetchInfra`, but for a specific record path). */
+async function fetchInfraDetail<E extends { ok: boolean }>(path: string): Promise<E> {
+  // 25s timeout so a stalled backend degrades to an error envelope instead of
+  // a frozen detail panel.
+  const ctrl = new AbortController();
+  const t = setTimeout(
+    () => ctrl.abort(new DOMException('Proxy timeout after 25000ms', 'TimeoutError')),
+    25_000,
+  );
+  try {
+    const res = await fetch(`${PROXY}/admin/infra${path}`, {
+      cache: 'no-store',
+      credentials: 'same-origin',
+      signal: ctrl.signal,
+    });
+    if (res.status === 401 && typeof window !== 'undefined') {
+      const next = window.location.pathname + window.location.search;
+      window.location.href = `/login?reason=session_invalid&next=${encodeURIComponent(next)}`;
+      return { ok: false, configured: true, error: 'unauthenticated' } as unknown as E;
+    }
+    const text = await res.text();
+    let parsed: E | undefined;
+    try {
+      parsed = text ? (JSON.parse(text) as E) : undefined;
+    } catch {
+      parsed = undefined;
+    }
+    if (parsed && typeof parsed.ok === 'boolean') return parsed;
+    return { ok: false, configured: true, error: `infra detail → HTTP ${res.status}` } as unknown as E;
+  } catch (err) {
+    return { ok: false, configured: true, error: (err as Error).message } as unknown as E;
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+export function getInfraSentryDetail(id: string): Promise<InfraSentryDetailEnvelope> {
+  return fetchInfraDetail<InfraSentryDetailEnvelope>(
+    `/sentry/${encodeURIComponent(id)}`,
+  );
+}
+
+export function getInfraVercelDetail(uid: string): Promise<InfraVercelDetailEnvelope> {
+  return fetchInfraDetail<InfraVercelDetailEnvelope>(
+    `/vercel/${encodeURIComponent(uid)}`,
+  );
+}
+
+/** Uptime monitor detail (GET /admin/infra/uptime/:monitorId). */
+export interface InfraUptimeDetailMonitor {
+  id: string;
+  name: string;
+  url: string | null;
+  status: string;
+  monitor_type: string | null;
+  check_frequency: number | null;
+  request_timeout: number | null;
+  request_method: string | null;
+  ssl_expiration: number | null;
+  paused: boolean;
+  last_checked_at: string | null;
+  created_at: string | null;
+}
+
+/** One ≤60-point response-time sparkline sample. */
+export interface InfraUptimeResponseTime {
+  at: string | null;
+  response_time_ms: number | null;
+}
+
+/** SLA availability over the monitor's plan window (null when not on plan). */
+export interface InfraUptimeAvailability {
+  availability_pct: number | null;
+  total_downtime_sec: number | null;
+}
+
+/** One ≤25 incident for this monitor (detail view). */
+export interface InfraUptimeDetailIncident {
+  id: string;
+  name: string;
+  cause: string | null;
+  started_at: string | null;
+  acknowledged_at: string | null;
+  resolved_at: string | null;
+  status: string;
+  duration_sec: number | null;
+}
+
+export type InfraUptimeDetailEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraUptimeItem[];
+      monitor: InfraUptimeDetailMonitor;
+      response_times: InfraUptimeResponseTime[];
+      availability: InfraUptimeAvailability | null;
+      incidents: InfraUptimeDetailIncident[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export function getInfraUptimeDetail(id: string): Promise<InfraUptimeDetailEnvelope> {
+  return fetchInfraDetail<InfraUptimeDetailEnvelope>(
+    `/uptime/${encodeURIComponent(id)}`,
+  );
+}
+
+/**
+ * Supabase ROW BROWSER (GET /admin/infra/supabase/rows?table=&limit=).
+ * OWNER-gated in the admin-proxy. Rows arrive with sensitive columns masked
+ * server-side ("•••"); `masked_columns` lists which were redacted. A non-owner
+ * (or any failure) gets an `ok:false` envelope — never throws.
+ */
+export type InfraSupabaseRow = Record<string, unknown>;
+
+export type InfraSupabaseRowsEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      table: string;
+      columns: string[];
+      rows: InfraSupabaseRow[];
+      row_count: number;
+      masked_columns: string[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export function getInfraSupabaseRows(
+  table: string,
+  limit: number,
+): Promise<InfraSupabaseRowsEnvelope> {
+  const qs = new URLSearchParams();
+  qs.set('table', table);
+  qs.set('limit', String(limit));
+  return fetchInfraDetail<InfraSupabaseRowsEnvelope>(`/supabase/rows?${qs.toString()}`);
+}
+
+/**
+ * Resend single-email DETAIL (GET /admin/infra/resend/:id). The worker tries the
+ * email endpoint first, falling back to single-domain DNS records on a 404 — so
+ * this envelope can carry EITHER an `email`+`timeline` OR a `domain`+`dns_records`.
+ */
+export interface InfraResendEmailDetail {
+  id: string;
+  from: string | null;
+  to: string | null;
+  subject: string | null;
+  html: string | null;
+  text: string | null;
+  last_event: string | null;
+  created_at: string | null;
+}
+
+export interface InfraResendTimelineEvent {
+  event: string;
+  at: string | null;
+}
+
+/** One DNS record Resend expects for a domain (SPF/DKIM/MX/DMARC). */
+export interface InfraResendDnsRecord {
+  record: string | null;
+  type: string | null;
+  name: string | null;
+  value: string | null;
+  status: string | null;
+  priority: number | null;
+  ttl: string | null;
+}
+
+export type InfraResendDetailEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraResendItem[];
+      email: InfraResendEmailDetail;
+      timeline: InfraResendTimelineEvent[];
+    }
+  | {
+      ok: true;
+      configured: true;
+      items: InfraResendItem[];
+      domain: InfraResendDomain;
+      dns_records: InfraResendDnsRecord[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export function getInfraResendDetail(id: string): Promise<InfraResendDetailEnvelope> {
+  return fetchInfraDetail<InfraResendDetailEnvelope>(
+    `/resend/${encodeURIComponent(id)}`,
+  );
+}
+
+/** Langfuse single-trace DETAIL (GET /admin/infra/langfuse/:traceId). */
+export interface InfraLangfuseTrace {
+  id: string;
+  name: string | null;
+  timestamp: string | null;
+  latency_ms: number | null;
+  cost_usd: number | null;
+  user_id: string | null;
+  /** Wave-3: summed observation tokens + derived error flag (optional). */
+  total_tokens?: number | null;
+  has_error?: boolean;
+}
+
+export interface InfraLangfuseObservation {
+  name: string | null;
+  type: string | null;
+  latency_ms: number | null;
+  model: string | null;
+  input_preview: string | null;
+  output_preview: string | null;
+  /** Wave-3 enrichment — all optional so older workers degrade gracefully. */
+  start_time?: string | null;
+  end_time?: string | null;
+  level?: string | null;
+  status_message?: string | null;
+  cost_usd?: number | null;
+  prompt_tokens?: number | null;
+  completion_tokens?: number | null;
+  total_tokens?: number | null;
+}
+
+export type InfraLangfuseDetailEnvelope =
+  | {
+      ok: true;
+      configured: true;
+      items: InfraLangfuseItem[];
+      trace: InfraLangfuseTrace;
+      observations: InfraLangfuseObservation[];
+    }
+  | { ok: false; configured: false; error: string }
+  | { ok: false; configured: true; error: string };
+
+export function getInfraLangfuseDetail(
+  traceId: string,
+): Promise<InfraLangfuseDetailEnvelope> {
+  return fetchInfraDetail<InfraLangfuseDetailEnvelope>(
+    `/langfuse/${encodeURIComponent(traceId)}`,
+  );
+}
+
+/** Result of every infra action — the worker's `{ok, ...}` envelope verbatim. */
+export type InfraActionResult = { ok: boolean; error?: string } & Record<string, unknown>;
+
+/**
+ * POST an infra action and return the parsed `{ok, ...}` envelope. Unlike
+ * `proxyFetch`, it does NOT collapse `ok:false` to null — callers need the real
+ * result (and `error`) to show a success vs friendly-error toast. Never throws.
+ */
+async function postInfra(
+  path: string,
+  body?: Record<string, unknown>,
+): Promise<InfraActionResult> {
+  // 15s timeout: infra POST actions (Sentry resolve/ignore, redeploy, test
+  // sends) hit a backend that can stall. Without a deadline the UI button spins
+  // forever and the page freezes. AbortController bounds the wait; on abort the
+  // catch below normalizes the error so callers clear their pending state.
+  const ctrl = new AbortController();
+  const t = setTimeout(
+    () => ctrl.abort(new DOMException('Proxy timeout after 15000ms', 'TimeoutError')),
+    15_000,
+  );
+  try {
+    const res = await fetch(`${PROXY}/admin/infra${path}`, {
+      method: 'POST',
+      cache: 'no-store',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      signal: ctrl.signal,
+      ...(body ? { body: JSON.stringify(body) } : {}),
+    });
+    if (res.status === 401 && typeof window !== 'undefined') {
+      const next = window.location.pathname + window.location.search;
+      window.location.href = `/login?reason=session_invalid&next=${encodeURIComponent(next)}`;
+      return { ok: false, error: 'unauthenticated' };
+    }
+    const text = await res.text();
+    let parsed: InfraActionResult | undefined;
+    try {
+      parsed = text ? (JSON.parse(text) as InfraActionResult) : undefined;
+    } catch {
+      parsed = undefined;
+    }
+    if (parsed && typeof parsed.ok === 'boolean') return parsed;
+    return { ok: false, error: `infra action → HTTP ${res.status}` };
+  } catch (err) {
+    // On timeout/abort, surface a friendly message so the UI clears its pending
+    // spinner + toasts instead of freezing.
+    if ((err as Error).name === 'TimeoutError' || (err as Error).name === 'AbortError') {
+      return { ok: false, error: 'Hết thời gian chờ — thử lại' };
+    }
+    return { ok: false, error: (err as Error).message };
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+export function postInfraResendTest(): Promise<InfraActionResult> {
+  return postInfra('/resend/send-test');
+}
+
+export function postInfraTelegramTest(): Promise<InfraActionResult> {
+  return postInfra('/telegram/send-test');
+}
+
+export function postInfraGithubRerun(
+  repo: string,
+  runId: number | string,
+): Promise<InfraActionResult> {
+  return postInfra('/github/rerun', { repo, run_id: runId });
+}
+
+export function postInfraSentryResolve(id: string): Promise<InfraActionResult> {
+  return postInfra(`/sentry/${encodeURIComponent(id)}/resolve`);
+}
+
+/**
+ * Trigger a fresh production redeploy from git main for one project (admin|web).
+ * Non-destructive — Vercel keeps every prior deployment. Owner/admin-gated.
+ */
+export function postInfraVercelRedeploy(
+  project: 'admin' | 'web' = 'admin',
+): Promise<InfraActionResult> {
+  return postInfra('/vercel/redeploy', { project });
+}
+
+export function postInfraSentryIgnore(id: string): Promise<InfraActionResult> {
+  return postInfra(`/sentry/${encodeURIComponent(id)}/ignore`);
+}
+
+// ---------- Infra-hub v2 — Cloudflare KV browser (worker PR #203) ----------
+//
+// Read-only browser over the operational KV namespaces (sessions / cache /
+// affiliates). Three endpoints under /admin/infra/kv, all HTTP 200 with an
+// `{ok, configured, ...}` envelope. We reuse the same fetch-through-proxy
+// pattern as `fetchInfra` (raw fetch so an `ok:false` body isn't erased), and
+// build query strings with encodeURIComponent.
+
+/** A curated (namespace, prefix) shortcut shown as a clickable chip. The BE
+ * annotates each chip with an approximate key count (`count`, `exact`). */
+export interface InfraKvChip {
+  label: string;
+  ns: string;
+  prefix: string;
+  /** Approximate keys under this prefix (one list page). */
+  count?: number;
+  /** false when the count hit the 1000-key page cap → render "≥1000". */
+  exact?: boolean;
+}
+
+/** A bound namespace, annotated with an approximate total key count. */
+export interface InfraKvNamespace {
+  binding: string;
+  count?: number;
+  exact?: boolean;
+}
+
+export interface InfraKvNamespacesResp {
+  ok: boolean;
+  configured: boolean;
+  namespaces?: InfraKvNamespace[];
+  chips?: InfraKvChip[];
+  error?: string;
+}
+
+export interface InfraKvKeyItem {
+  name: string;
+  expiration: number | null;
+}
+
+export interface InfraKvKeysResp {
+  ok: boolean;
+  configured: boolean;
+  ns?: string;
+  prefix?: string;
+  /** Echoes the active substring filter (search mode only). */
+  contains?: string;
+  items?: InfraKvKeyItem[];
+  cursor?: string | null;
+  list_complete?: boolean;
+  /** Search mode: how many keys were scanned before filtering. */
+  scanned?: number;
+  /** Search mode: true when the scan hit the ~1000-key cap. */
+  scan_truncated?: boolean;
+  error?: string;
+}
+
+export interface InfraKvValueResp {
+  ok: boolean;
+  configured: boolean;
+  ns?: string;
+  key?: string;
+  value?: string | null;
+  metadata?: Record<string, unknown> | null;
+  redacted?: boolean;
+  truncated?: boolean;
+  not_found?: boolean;
+  /** UTF-8 byte length of the raw (pre-truncation) value. */
+  bytes?: number;
+  /** Key's expiration (unix-seconds) or null = no TTL. */
+  expiration?: number | null;
+  error?: string;
+}
+
+/** Shared raw fetch for KV endpoints. Mirrors `fetchInfra`: never throws;
+ * bounces to /login on 401; degrades to an `ok:false` envelope on any error. */
+async function fetchInfraKv<T extends { ok: boolean; configured: boolean; error?: string }>(
+  path: string,
+): Promise<T> {
+  // 25s timeout so a stalled backend degrades to an error envelope instead of
+  // a frozen KV browser.
+  const ctrl = new AbortController();
+  const t = setTimeout(
+    () => ctrl.abort(new DOMException('Proxy timeout after 25000ms', 'TimeoutError')),
+    25_000,
+  );
+  try {
+    const res = await fetch(`${PROXY}/admin/infra/kv${path}`, {
+      cache: 'no-store',
+      credentials: 'same-origin',
+      signal: ctrl.signal,
+    });
+    if (res.status === 401 && typeof window !== 'undefined') {
+      const next = window.location.pathname + window.location.search;
+      window.location.href = `/login?reason=session_invalid&next=${encodeURIComponent(next)}`;
+      return { ok: false, configured: true, error: 'unauthenticated' } as T;
+    }
+    const text = await res.text();
+    let parsed: T | undefined;
+    try {
+      parsed = text ? (JSON.parse(text) as T) : undefined;
+    } catch {
+      parsed = undefined;
+    }
+    if (parsed && typeof parsed.ok === 'boolean') return parsed;
+    return { ok: false, configured: true, error: `infra kv → HTTP ${res.status}` } as T;
+  } catch (err) {
+    return { ok: false, configured: true, error: (err as Error).message } as T;
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+/** Namespaces + curated prefix chips for the KV browser landing state. */
+export function getInfraKvCatalog(): Promise<InfraKvNamespacesResp> {
+  return fetchInfraKv<InfraKvNamespacesResp>('');
+}
+
+/** List keys in `ns` filtered by `prefix`; pass `cursor` to page further. Pass
+ * `contains` to switch to server-side substring search (bounded ~1000-key scan;
+ * no paging — the result set is already bounded). */
+export function getInfraKvKeys(
+  ns: string,
+  prefix: string,
+  cursor?: string | null,
+  contains?: string,
+): Promise<InfraKvKeysResp> {
+  const qs = new URLSearchParams();
+  qs.set('ns', ns);
+  qs.set('prefix', prefix);
+  if (cursor) qs.set('cursor', cursor);
+  if (contains) qs.set('contains', contains);
+  return fetchInfraKv<InfraKvKeysResp>(`/keys?${qs.toString()}`);
+}
+
+/** Read a single key's value + metadata (redacted/truncated server-side). */
+export function getInfraKvValue(ns: string, key: string): Promise<InfraKvValueResp> {
+  const qs = new URLSearchParams();
+  qs.set('ns', ns);
+  qs.set('key', key);
+  return fetchInfraKv<InfraKvValueResp>(`/value?${qs.toString()}`);
+}

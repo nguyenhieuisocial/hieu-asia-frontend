@@ -6,6 +6,7 @@ import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { Card, CardContent } from '@hieu-asia/ui';
 import type { SurveyAnswers } from '@/lib/survey-schema';
 import { apiClient } from '@/lib/api';
+import { getOrCreateAnonUserId } from '@hieu-asia/supabase';
 import { track } from '@/lib/analytics';
 import { SiteNav } from '@/components/home/SiteNav';
 import {
@@ -234,8 +235,11 @@ export default function SurveyPage() {
         const upload = readSession<{ public_read_url: string; mock: boolean }>(
           `hieu.upload.${readingId}`,
         );
-        const userId =
-          window.sessionStorage.getItem('hieu.user_id') ?? `anon-${readingId}`;
+        // Canonical anon id lives in localStorage as `anon_<uuid>`
+        // (getOrCreateAnonUserId). The old sessionStorage read always missed →
+        // the reading was created under a malformed `anon-<readingId>` the
+        // backend rejects, orphaning it from /account history + GDPR export.
+        const userId = getOrCreateAnonUserId();
 
         if (!userContext || !upload || upload.mock) {
           // No backend / partial data — go straight to processing in mock mode.

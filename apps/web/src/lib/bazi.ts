@@ -77,7 +77,7 @@ function thapThan(dmEl: Element, dmYang: boolean, el: Element, yang: boolean): s
  */
 const NAP_AM: { name: string; element: Element }[] = [
   { name: 'Hải Trung Kim', element: 'Kim' }, // Giáp Tý · Ất Sửu
-  { name: 'Lư Trung Hỏa', element: 'Hỏa' }, // Bính Dần · Đinh Mão
+  { name: 'Lô Trung Hỏa', element: 'Hỏa' }, // Bính Dần · Đinh Mão
   { name: 'Đại Lâm Mộc', element: 'Mộc' }, // Mậu Thìn · Kỷ Tỵ
   { name: 'Lộ Bàng Thổ', element: 'Thổ' }, // Canh Ngọ · Tân Mùi
   { name: 'Kiếm Phong Kim', element: 'Kim' }, // Nhâm Thân · Quý Dậu
@@ -192,6 +192,124 @@ function pillarRelations(pillars: { label: string; chi: number }[]): PillarRelat
   return rels;
 }
 
+/**
+ * Vòng Trường Sinh (十二長生) — 12 giai đoạn "đời người" của một Thiên Can khi
+ * trải qua 12 Địa Chi. Bảng cố định, tra theo lá số (không bói toán).
+ *
+ * Thứ tự 12 giai đoạn (index 0 → 11).
+ */
+export const TRUONG_SINH_STAGES = [
+  'Trường Sinh', 'Mộc Dục', 'Quan Đới', 'Lâm Quan', 'Đế Vượng', 'Suy',
+  'Bệnh', 'Tử', 'Mộ', 'Tuyệt', 'Thai', 'Dưỡng',
+] as const;
+
+// Chi (index) nơi mỗi can KHỞI "Trường Sinh", theo CHỈ SỐ can (0=Giáp … 9=Quý):
+//   Giáp→Hợi(11), Bính/Mậu→Dần(2), Canh→Tỵ(5), Nhâm→Thân(8) — can DƯƠNG đi THUẬN;
+//   Ất→Ngọ(6), Đinh/Kỷ→Dậu(9), Tân→Tý(0), Quý→Mão(3) — can ÂM đi NGHỊCH.
+const TRUONG_SINH_START: number[] = [11, 6, 2, 9, 2, 9, 5, 0, 8, 3];
+
+/**
+ * Giai đoạn Trường Sinh của `dayStem` (chỉ số can 0–9) khi đứng trên `branch`
+ * (chỉ số chi 0–11). Can dương đi thuận (start+k), can âm đi nghịch (start−k).
+ * Trả về tên 1 trong 12 giai đoạn — tra theo bảng, kiểm chứng được.
+ */
+export function truongSinh(dayStem: number, branch: number): (typeof TRUONG_SINH_STAGES)[number] {
+  const start = TRUONG_SINH_START[dayStem]!;
+  const k = CAN_YANG[dayStem] ? mod(branch - start, 12) : mod(start - branch, 12);
+  return TRUONG_SINH_STAGES[k]!;
+}
+
+/**
+ * Thần Sát (神煞) — các sao tượng trưng, TRA THEO BẢNG cố định (Tam Mệnh Thông
+ * Hội / Uyên Hải Tử Bình). Không bói toán: chỉ là dữ kiện tra cứu, kèm nghĩa
+ * trung lập (không định mệnh).
+ *
+ * Nhóm tam-hợp của một chi (để tra Đào Hoa / Dịch Mã / Hoa Cái) — index chi
+ * 0..11 → 0..3 (Thân-Tý-Thìn, Tỵ-Dậu-Sửu, Dần-Ngọ-Tuất, Hợi-Mão-Mùi).
+ */
+const TAM_HOP_GROUP_OF: number[] = (() => {
+  const g: number[] = new Array(12).fill(0);
+  const groups: number[][] = [
+    [8, 0, 4], // 0: Thân-Tý-Thìn (Thủy)
+    [5, 9, 1], // 1: Tỵ-Dậu-Sửu (Kim)
+    [2, 6, 10], // 2: Dần-Ngọ-Tuất (Hỏa)
+    [11, 3, 7], // 3: Hợi-Mão-Mùi (Mộc)
+  ];
+  groups.forEach((grp, gi) => grp.forEach((c) => (g[c] = gi)));
+  return g;
+})();
+
+// Đào Hoa / Dịch Mã / Hoa Cái: chi mục tiêu theo NHÓM tam-hợp (index nhóm 0..3).
+const DAO_HOA_BY_GROUP = [9, 6, 3, 0]; // → Dậu, Ngọ, Mão, Tý
+const DICH_MA_BY_GROUP = [2, 11, 8, 5]; // → Dần, Hợi, Thân, Tỵ
+const HOA_CAI_BY_GROUP = [4, 1, 10, 7]; // → Thìn, Sửu, Tuất, Mùi
+
+// Thiên Ất Quý Nhân — cặp chi quý nhân theo CAN NGÀY (index can 0..9).
+const THIEN_AT_BY_STEM: number[][] = [
+  [1, 7], // Giáp → Sửu, Mùi
+  [0, 8], // Ất → Tý, Thân
+  [11, 9], // Bính → Hợi, Dậu
+  [11, 9], // Đinh → Hợi, Dậu
+  [1, 7], // Mậu → Sửu, Mùi
+  [0, 8], // Kỷ → Tý, Thân
+  [6, 2], // Canh → Ngọ, Dần
+  [6, 2], // Tân → Ngọ, Dần
+  [5, 3], // Nhâm → Tỵ, Mão
+  [5, 3], // Quý → Tỵ, Mão
+];
+
+// Văn Xương — chi theo CAN NGÀY (index can 0..9).
+const VAN_XUONG_BY_STEM: number[] = [5, 6, 8, 9, 8, 9, 11, 0, 2, 3];
+// Giáp→Tỵ, Ất→Ngọ, Bính→Thân, Đinh→Dậu, Mậu→Thân, Kỷ→Dậu, Canh→Hợi, Tân→Tý, Nhâm→Dần, Quý→Mão.
+
+export interface ThanSat {
+  name: string; // tên thần sát, vd "Đào Hoa"
+  pillars: string; // nhãn các trụ trúng, vd "Năm · Giờ"
+  chi: string; // chi của thần sát, vd "Dậu"
+  meaning: string; // nghĩa trung lập (không định mệnh)
+}
+
+/**
+ * Dò Thần Sát trên 4 trụ. Tra theo:
+ *  - Đào Hoa / Dịch Mã / Hoa Cái: theo tam-hợp của chi NĂM hoặc chi NGÀY.
+ *  - Thiên Ất Quý Nhân / Văn Xương: theo CAN NGÀY (Nhật Chủ).
+ * Mỗi thần sát gom các trụ có chi trúng. Bảng cố định, kiểm chứng được.
+ */
+function thanSat(
+  dayStem: number,
+  yearChi: number,
+  dayChi: number,
+  pillars: { label: string; chi: number }[],
+): ThanSat[] {
+  const out: ThanSat[] = [];
+  // Chi trúng theo từng trụ — gom nhãn trụ + chi.
+  const collect = (name: string, targets: number[], meaning: string) => {
+    const set = new Set(targets);
+    const hits = pillars.filter((p) => set.has(p.chi));
+    if (hits.length === 0) return;
+    out.push({
+      name,
+      pillars: hits.map((p) => p.label).join(' · '),
+      chi: [...new Set(hits.map((p) => CHI[p.chi]!))].join('–'),
+      meaning,
+    });
+  };
+
+  // Tam-hợp lấy theo CẢ chi năm và chi ngày (chuẩn dùng cả hai làm "bản mệnh").
+  const groups = new Set([TAM_HOP_GROUP_OF[yearChi]!, TAM_HOP_GROUP_OF[dayChi]!]);
+  const daoHoa = [...groups].map((g) => DAO_HOA_BY_GROUP[g]!);
+  const dichMa = [...groups].map((g) => DICH_MA_BY_GROUP[g]!);
+  const hoaCai = [...groups].map((g) => HOA_CAI_BY_GROUP[g]!);
+
+  collect('Đào Hoa', daoHoa, 'duyên dáng, sức hút, thẩm mỹ — KHÔNG phải "lăng nhăng"');
+  collect('Dịch Mã', dichMa, 'di chuyển, thay đổi, năng động — hợp việc đi lại/giao tiếp');
+  collect('Hoa Cái', hoaCai, 'tài hoa nghệ thuật, thiên về tâm linh/độc lập — đôi khi thích ở một mình');
+  collect('Thiên Ất Quý Nhân', THIEN_AT_BY_STEM[dayStem]!, 'quý nhân phù trợ — dễ gặp người giúp đỡ lúc khó');
+  collect('Văn Xương', [VAN_XUONG_BY_STEM[dayStem]!], 'học hành, văn chương, thi cử — thuận đường chữ nghĩa');
+
+  return out;
+}
+
 // Ngũ Hổ Độn — can của tháng Dần ứng với từng can năm (index theo can năm).
 const NGU_HO_DAN_STEM = [2, 4, 6, 8, 0, 2, 4, 6, 8, 0];
 // Ngũ Thử Độn — can của giờ Tý ứng với từng can ngày (index theo can ngày).
@@ -242,6 +360,8 @@ export interface BaziPillar {
   hiddenStems: HiddenStem[];
   /** Nạp âm ("mệnh" theo 60 hoa giáp) của trụ. */
   napAm: { name: string; element: Element };
+  /** Giai đoạn Vòng Trường Sinh của Nhật Chủ trên chi của trụ này (tra theo bảng). */
+  truongSinh: (typeof TRUONG_SINH_STAGES)[number];
 }
 
 export interface BaziChart {
@@ -258,6 +378,8 @@ export interface BaziChart {
   strongest: Element;
   /** Quan hệ địa chi giữa 4 trụ (Lục Hợp/Xung/Hại + Tam Hợp). */
   relations: PillarRelation[];
+  /** Thần Sát (sao tượng trưng) trên 4 trụ — tra theo bảng cố định. */
+  thanSat: ThanSat[];
   meta: { solarDate: string; hour: number; solarYearForPillar: number };
   /** Đại vận (vận 10 năm) — null nếu không truyền giới tính. */
   daiVan?: DaiVan | null;
@@ -278,6 +400,7 @@ function makePillar(
   canIdx: number,
   chiIdx: number,
   dm: { el: Element; yang: boolean },
+  dayStem: number,
   isDayStem = false,
 ): BaziPillar {
   const hiddenStems: HiddenStem[] = (TANG_CAN[chiIdx] ?? []).map((hc) => ({
@@ -294,6 +417,7 @@ function makePillar(
     tenGod: isDayStem ? 'Nhật Chủ' : thapThan(dm.el, dm.yang, CAN_ELEMENT[canIdx]!, CAN_YANG[canIdx]!),
     hiddenStems,
     napAm: napAmOf(canIdx, chiIdx),
+    truongSinh: truongSinh(dayStem, chiIdx),
   };
 }
 
@@ -432,10 +556,10 @@ export function calculateBazi(input: BaziInput): BaziChart {
 
   const dm = { el: CAN_ELEMENT[dayCan]!, yang: CAN_YANG[dayCan]! };
 
-  const year = makePillar('Năm', yearCan, yearChi, dm);
-  const month = makePillar('Tháng', monthCan, monthChi, dm);
-  const day = makePillar('Ngày', dayCan, dayChi, dm, true);
-  const hourP = makePillar('Giờ', hourCan, hourChi, dm);
+  const year = makePillar('Năm', yearCan, yearChi, dm, dayCan);
+  const month = makePillar('Tháng', monthCan, monthChi, dm, dayCan);
+  const day = makePillar('Ngày', dayCan, dayChi, dm, dayCan, true);
+  const hourP = makePillar('Giờ', hourCan, hourChi, dm, dayCan);
 
   // Đếm ngũ hành trên 8 chữ.
   const elementCount: Record<Element, number> = { Mộc: 0, Hỏa: 0, Thổ: 0, Kim: 0, Thủy: 0 };
@@ -475,6 +599,12 @@ export function calculateBazi(input: BaziInput): BaziChart {
     missing,
     strongest,
     relations: pillarRelations([
+      { label: 'Năm', chi: yearChi },
+      { label: 'Tháng', chi: monthChi },
+      { label: 'Ngày', chi: dayChi },
+      { label: 'Giờ', chi: hourChi },
+    ]),
+    thanSat: thanSat(dayCan, yearChi, dayChi, [
       { label: 'Năm', chi: yearChi },
       { label: 'Tháng', chi: monthChi },
       { label: 'Ngày', chi: dayChi },

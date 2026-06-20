@@ -72,11 +72,25 @@ export interface AuditRow {
   detail?: string | null;
 }
 
+// One refund attributed to this customer (joined to the user via intent_id on
+// the worker — refund records have no user_id). Status follows the worker's
+// refund state machine: requested → approved → completed, or rejected.
+export interface RefundRow {
+  refund_id: string;
+  intent_id?: string | null;
+  amount_vnd?: number | null;
+  status: string;
+  reason?: string | null;
+  requested_at?: string | null;
+  completed_at?: string | null;
+}
+
 export interface CustomerDetailResponse {
   ok: boolean;
   customer?: CustomerDetail | null;
   sessions?: SessionRow[];
   transactions?: TxnRow[];
+  refunds?: RefundRow[];
   audit_trail?: AuditRow[];
   note?: string;
   error?: string;

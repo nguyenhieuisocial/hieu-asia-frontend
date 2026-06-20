@@ -103,12 +103,24 @@ export function moonLongitude(jd: number): number {
   const A2 = 53.09 + 479264.29 * T;
   sumL += 3958 * sind(A1) + 1962 * sind(Lp - F) + 318 * sind(A2);
   const lon = Lp + sumL / 1e6;
-  const omega = 125.04452 - 1934.136261 * T;
+  const omega = meanNodeLongitudeT(T); // điểm nút Mặt Trăng trung bình (dùng cho chương động)
   const dPsi = (-17.2 * sind(omega)) / 3600; // số hạng chương động chính (apparent)
   return norm360(lon + dPsi);
 }
 
-// ── Hành tinh (Sao Thuỷ → Hải Vương) — phần tử quỹ đạo Schlyter + nhiễu loạn ──
+/**
+ * Kinh độ điểm nút Mặt Trăng lên (North/ascending Node) TRUNG BÌNH, theo T (thế kỷ
+ * Julian từ J2000) — Meeus "Astronomical Algorithms" công thức (47.7):
+ *   Ω = 125.04452 − 1934.136261·T  (chưa norm360)
+ * Tách riêng để (a) tái dùng trong số hạng chương động của Mặt Trăng và (b) trả ra
+ * cho người dùng (North/South Node). Đây ĐÚNG là biểu thức trước đây nằm trong
+ * moonLongitude rồi bị vứt đi.
+ */
+function meanNodeLongitudeT(T: number): number {
+  return 125.04452 - 1934.136261 * T;
+}
+
+// ── Hành tinh (Sao Thủy → Hải Vương) — phần tử quỹ đạo Schlyter + nhiễu loạn ──
 // Kiểm chứng vs astronomy-engine trên 300 mốc (1950–2030): sai số ≤0.06°; chỉ
 // lệch cung khi hành tinh <0.025° sát ranh giới (đã gắn cờ nearCusp).
 const cosd = (deg: number): number => Math.cos(deg * D2R);
@@ -215,9 +227,9 @@ export interface PlanetMeta {
 }
 
 export const PLANETS: ReadonlyArray<PlanetMeta> = [
-  { key: 'mercury', name: 'Sao Thuỷ', symbol: '☿', represents: 'Tư duy, giao tiếp — cách bạn học và diễn đạt.' },
+  { key: 'mercury', name: 'Sao Thủy', symbol: '☿', represents: 'Tư duy, giao tiếp — cách bạn học và diễn đạt.' },
   { key: 'venus', name: 'Sao Kim', symbol: '♀', represents: 'Tình yêu, cái đẹp, giá trị và điều bạn trân quý.' },
-  { key: 'mars', name: 'Sao Hoả', symbol: '♂', represents: 'Hành động, khát khao, năng lượng và cách bạn theo đuổi.' },
+  { key: 'mars', name: 'Sao Hỏa', symbol: '♂', represents: 'Hành động, khát khao, năng lượng và cách bạn theo đuổi.' },
   { key: 'jupiter', name: 'Sao Mộc', symbol: '♃', represents: 'Mở rộng, niềm tin, may mắn và nơi bạn phát triển.' },
   { key: 'saturn', name: 'Sao Thổ', symbol: '♄', represents: 'Kỷ luật, trách nhiệm, giới hạn và bài học trưởng thành.' },
   { key: 'uranus', name: 'Sao Thiên Vương', symbol: '♅', represents: 'Đổi mới, tự do, sự khác biệt (mang tính thế hệ).' },
@@ -260,6 +272,8 @@ export interface SignPosition {
   longitude: number;
   /** true nếu nằm sát ranh giới cung (<1° hoặc >29°) → cung có thể lệch nếu giờ sinh không chắc. */
   nearCusp: boolean;
+  /** Nhà (Whole-Sign 1–12) chứa điểm này — chỉ gán khi đã có cung Mọc (cần nơi sinh). */
+  house?: number;
 }
 
 function positionOf(longitude: number): SignPosition {
@@ -291,15 +305,25 @@ export interface BirthInput {
 export interface PlanetPosition {
   planet: PlanetMeta;
   position: SignPosition;
+  /** true nếu hành tinh đang nghịch hành (retrograde) tại thời điểm sinh. */
+  retrograde?: boolean;
 }
 
 export interface NatalChart {
   sun: SignPosition;
   moon: SignPosition;
-  /** Sao Thuỷ → Hải Vương (7 hành tinh) theo cung hoàng đạo. */
+  /** Sao Thủy → Hải Vương (7 hành tinh) theo cung hoàng đạo. */
   planets: PlanetPosition[];
   /** Cung Mọc (Ascendant) — chỉ có khi cung cấp nơi sinh (latitude + longitude). */
   ascendant?: SignPosition;
+  /** Bốn góc (angles): MC/IC + DSC. Chỉ có khi cung cấp nơi sinh. */
+  angles?: ChartAngles;
+  /** Điểm nút Mặt Trăng (North/South Node) — luôn tính được (không cần nơi sinh). */
+  nodes?: LunarNodes;
+  /** 12 nhà theo hệ Whole-Sign (Hellenistic). Chỉ có khi cung cấp nơi sinh. */
+  houses?: WholeSignHouses;
+  /** Các góc hợp (aspect) giữa mọi cặp thiên thể chính. */
+  aspects?: Aspect[];
 }
 
 const tand = (deg: number): number => Math.tan(deg * D2R);
@@ -331,6 +355,177 @@ export function ascendantLongitude(jd: number, latitude: number, longitudeEast: 
 }
 
 /**
+ * Thiên đỉnh (Midheaven / Medium Coeli, MC) — kinh độ hoàng đạo của điểm giao giữa
+ * kinh tuyến trên và hoàng đạo. Meeus "Astronomical Algorithms" (công thức kinh tuyến):
+ *   MC = atan2( sin(RAMC), cos(RAMC)·cos(eps) )
+ * với RAMC = thời gian sao địa phương (gmst + kinh độ Đông) và eps = độ nghiêng hoàng đạo.
+ * KHÔNG phụ thuộc vĩ độ (khác với cung Mọc). Dùng cùng helpers gmst()/obliquity()
+ * như ascendantLongitude → cùng độ chính xác.
+ */
+export function mcLongitude(jd: number, longitudeEast: number): number {
+  const ramc = norm360(gmst(jd) + longitudeEast);
+  const eps = obliquity(jd);
+  return norm360(atan2d(sind(ramc), cosd(ramc) * cosd(eps)));
+}
+
+/**
+ * Điểm nút Mặt Trăng lên (North/ascending Node) TRUNG BÌNH theo Julian Day.
+ * Bao quanh meanNodeLongitudeT (Meeus 47.7). North Node; South Node = +180°.
+ */
+export function meanNorthNodeLongitude(jd: number): number {
+  const T = (jd - 2451545.0) / 36525;
+  return norm360(meanNodeLongitudeT(T));
+}
+
+/**
+ * Cờ nghịch hành (retrograde) của một hành tinh tại thời điểm jd.
+ * So sánh kinh độ địa tâm jd vs jd−1 ngày: nếu kinh độ ĐANG GIẢM (xử lý wrap 0/360)
+ * thì hành tinh đang chuyển động lùi (nghịch hành). Mặt Trời/Mặt Trăng không bao giờ
+ * nghịch hành nên không áp dụng.
+ */
+export function isRetrograde(key: PlanetKey, jd: number): boolean {
+  const today = planetLongitude(key, jd);
+  const yesterday = planetLongitude(key, jd - 1);
+  // Chênh lệch chuẩn hoá về (−180, 180]: dương = tiến (direct), âm = lùi (retrograde).
+  let delta = today - yesterday;
+  if (delta > 180) delta -= 360;
+  if (delta < -180) delta += 360;
+  return delta < 0;
+}
+
+// ── Góc hợp (aspects) — 5 góc lớn Ptolemy (Tetrabiblos) ──────────────────────
+
+export type AspectName = 'conjunction' | 'sextile' | 'square' | 'trine' | 'opposition';
+
+export interface AspectMeta {
+  name: AspectName;
+  /** Góc lý tưởng (độ). */
+  angle: number;
+  /** Tên tiếng Việt. */
+  label: string;
+  /** Bản chất: hài hoà / căng thẳng / hỗn hợp. */
+  nature: 'hài hoà' | 'căng thẳng' | 'hợp nhất';
+  symbol: string;
+}
+
+/** 5 góc hợp lớn (Ptolemaic majors) — Tetrabiblos Q.1. */
+export const ASPECTS: ReadonlyArray<AspectMeta> = [
+  { name: 'conjunction', angle: 0, label: 'Trùng tụ', nature: 'hợp nhất', symbol: '☌' },
+  { name: 'sextile', angle: 60, label: 'Lục hợp', nature: 'hài hoà', symbol: '⚹' },
+  { name: 'square', angle: 90, label: 'Vuông góc', nature: 'căng thẳng', symbol: '□' },
+  { name: 'trine', angle: 120, label: 'Tam hợp', nature: 'hài hoà', symbol: '△' },
+  { name: 'opposition', angle: 180, label: 'Đối đỉnh', nature: 'căng thẳng', symbol: '☍' },
+];
+
+export interface Aspect {
+  bodyA: string;
+  bodyB: string;
+  aspect: AspectName;
+  /** Tên tiếng Việt của góc (tiện hiển thị). */
+  label: string;
+  /** Góc thật giữa hai thiên thể (0–180°). */
+  exactAngle: number;
+  /** Độ lệch khỏi góc lý tưởng (°). Càng nhỏ càng "khít". */
+  orb: number;
+}
+
+/** Tên một thiên thể dùng để tính/hiển thị góc hợp. */
+interface AspectBody {
+  name: string;
+  longitude: number;
+  /** Mặt Trời/Mặt Trăng có orb rộng hơn (luminaries). */
+  luminary: boolean;
+}
+
+/** Chênh lệch góc nhỏ nhất giữa hai kinh độ (0–180°). */
+function angularSeparation(a: number, b: number): number {
+  const d = Math.abs(norm360(a) - norm360(b));
+  return Math.min(d, 360 - d);
+}
+
+/**
+ * Liệt kê tất cả góc hợp giữa các cặp thiên thể.
+ * Orb: ~8° nếu góc liên quan Mặt Trời/Mặt Trăng, ~6° còn lại (theo thông lệ chiêm tinh
+ * hiện đại; Ptolemy định nghĩa 5 góc — Tetrabiblos). Mỗi cặp chỉ giữ góc khít nhất.
+ */
+export function computeAspects(bodies: AspectBody[]): Aspect[] {
+  const out: Aspect[] = [];
+  for (let i = 0; i < bodies.length; i++) {
+    for (let j = i + 1; j < bodies.length; j++) {
+      const a = bodies[i]!;
+      const b = bodies[j]!;
+      const sep = angularSeparation(a.longitude, b.longitude);
+      const maxOrb = a.luminary || b.luminary ? 8 : 6;
+      let best: { meta: AspectMeta; orb: number } | null = null;
+      for (const meta of ASPECTS) {
+        const orb = Math.abs(sep - meta.angle);
+        if (orb <= maxOrb && (best === null || orb < best.orb)) best = { meta, orb };
+      }
+      if (best) {
+        out.push({
+          bodyA: a.name,
+          bodyB: b.name,
+          aspect: best.meta.name,
+          label: best.meta.label,
+          exactAngle: sep,
+          orb: best.orb,
+        });
+      }
+    }
+  }
+  return out;
+}
+
+// ── Bốn góc (angles): MC/IC + DSC ────────────────────────────────────────────
+
+export interface ChartAngles {
+  /** Thiên đỉnh (Midheaven) — đỉnh cao sự nghiệp / hình ảnh xã hội. */
+  mc: SignPosition;
+  /** Thiên để (Imum Coeli) = MC + 180° — gốc rễ / gia đình / nội tâm. */
+  ic: SignPosition;
+  /** Điểm Lặn (Descendant) = Ascendant + 180° — đối tác / "người kia". */
+  dsc: SignPosition;
+}
+
+// ── Điểm nút Mặt Trăng (lunar nodes) ─────────────────────────────────────────
+
+export interface LunarNodes {
+  /** Điểm nút lên (North Node) — hướng phát triển. */
+  north: SignPosition;
+  /** Điểm nút xuống (South Node) = North + 180° — vùng quen thuộc/quá khứ. */
+  south: SignPosition;
+}
+
+// ── Nhà theo hệ Whole-Sign (Hellenistic) ─────────────────────────────────────
+
+export interface WholeSignHouse {
+  /** Số nhà 1–12. */
+  house: number;
+  /** Cung phủ kín toàn bộ nhà này. */
+  sign: ZodiacSign;
+}
+
+export type WholeSignHouses = WholeSignHouse[];
+
+/**
+ * 12 nhà theo hệ Whole-Sign: nhà 1 = nguyên cung chứa cung Mọc; nhà 2..12 = các cung
+ * kế tiếp theo thứ tự hoàng đạo. (Hellenistic Whole-Sign houses.)
+ */
+export function wholeSignHouses(ascendant: SignPosition): WholeSignHouses {
+  const ascIdx = ascendant.sign.idx;
+  const houses: WholeSignHouses = [];
+  for (let h = 0; h < 12; h++) {
+    houses.push({ house: h + 1, sign: ZODIAC[(ascIdx + h) % 12]! });
+  }
+  return houses;
+}
+
+/** Nhà Whole-Sign chứa một điểm (1–12), tính theo cung của nó so với cung Mọc. */
+export function houseOf(position: SignPosition, ascendant: SignPosition): number {
+  return ((position.sign.idx - ascendant.sign.idx + 12) % 12) + 1;
+}
+
+/**
  * Tính bản đồ sao (Mặt Trời + Mặt Trăng + 7 hành tinh; + cung Mọc nếu có nơi sinh).
  * Giờ sinh là giờ ĐỊA PHƯƠNG; chuyển sang UTC bằng `tzOffsetMinutes` (mặc định VN +7).
  */
@@ -351,11 +546,49 @@ export function computeChart(input: BirthInput): NatalChart {
   const chart: NatalChart = {
     sun: positionOf(sunLongitude(jd)),
     moon: positionOf(moonLongitude(jd)),
-    planets: PLANETS.map((planet) => ({ planet, position: positionOf(planetLongitude(planet.key, jd)) })),
+    planets: PLANETS.map((planet) => ({
+      planet,
+      position: positionOf(planetLongitude(planet.key, jd)),
+      retrograde: isRetrograde(planet.key, jd),
+    })),
   };
+
+  // Điểm nút Mặt Trăng — không cần nơi sinh.
+  const northLon = meanNorthNodeLongitude(jd);
+  chart.nodes = {
+    north: positionOf(northLon),
+    south: positionOf(norm360(northLon + 180)),
+  };
+
   if (typeof input.latitude === 'number' && typeof input.longitude === 'number') {
-    chart.ascendant = positionOf(ascendantLongitude(jd, input.latitude, input.longitude));
+    const asc = positionOf(ascendantLongitude(jd, input.latitude, input.longitude));
+    chart.ascendant = asc;
+
+    // Bốn góc: MC/IC + DSC.
+    const mcLon = mcLongitude(jd, input.longitude);
+    chart.angles = {
+      mc: positionOf(mcLon),
+      ic: positionOf(norm360(mcLon + 180)),
+      dsc: positionOf(norm360(asc.longitude + 180)),
+    };
+
+    // Nhà Whole-Sign + gán nhà cho từng thiên thể.
+    chart.houses = wholeSignHouses(asc);
+    chart.sun.house = houseOf(chart.sun, asc);
+    chart.moon.house = houseOf(chart.moon, asc);
+    for (const p of chart.planets) p.position.house = houseOf(p.position, asc);
+    chart.nodes.north.house = houseOf(chart.nodes.north, asc);
+    chart.nodes.south.house = houseOf(chart.nodes.south, asc);
   }
+
+  // Góc hợp giữa mọi cặp thiên thể chính (Mặt Trời/Mặt Trăng + 7 hành tinh).
+  const aspectBodies: AspectBody[] = [
+    { name: 'Mặt Trời', longitude: chart.sun.longitude, luminary: true },
+    { name: 'Mặt Trăng', longitude: chart.moon.longitude, luminary: true },
+    ...chart.planets.map((p) => ({ name: p.planet.name, longitude: p.position.longitude, luminary: false })),
+  ];
+  chart.aspects = computeAspects(aspectBodies);
+
   return chart;
 }
 

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Điều khoản chương trình affiliate',
     description:
-      'Cơ cấu hoa hồng tier-based, cookie 30 ngày, nghĩa vụ thuế VN và quy trình payout.',
+      'Cơ cấu hoa hồng minh bạch, một tầng, cookie 30 ngày, nghĩa vụ thuế VN và quy trình payout.',
     url: 'https://hieu.asia/affiliate/terms',
     type: 'article',
     images: OG_DEFAULT_IMAGES,
@@ -44,54 +44,23 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
   },
   {
     id: 'commission',
-    title: '2. Cơ cấu hoa hồng (tier-based)',
+    title: '2. Cơ cấu hoa hồng (một tầng)',
     body: (
       <>
         <p className="text-foreground/80">
           Hoa hồng được tính trên doanh thu thực thu (sau khi trừ refund &amp; chargeback) của khách hàng
           do bạn giới thiệu trong cửa sổ cookie 30 ngày.
         </p>
-        <div className="mt-3 overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="border-b border-border text-left text-xs uppercase text-muted-foreground">
-              <tr>
-                <th className="pb-2 pr-3">Tier</th>
-                <th className="pb-2 pr-3">Yêu cầu (conv/30 ngày)</th>
-                <th className="pb-2 pr-3">Tháng đầu</th>
-                <th className="pb-2">Recurring</th>
-              </tr>
-            </thead>
-            <tbody className="text-foreground/80">
-              <tr className="border-b border-border">
-                <td className="py-1.5 pr-3 font-semibold text-[#cd7f32]">Bronze</td>
-                <td className="py-1.5 pr-3">0 – 9</td>
-                <td className="py-1.5 pr-3">20%</td>
-                <td className="py-1.5">5%</td>
-              </tr>
-              <tr className="border-b border-border">
-                <td className="py-1.5 pr-3 font-semibold text-[#c0c0c0]">Silver</td>
-                <td className="py-1.5 pr-3">10 – 29</td>
-                <td className="py-1.5 pr-3">30%</td>
-                <td className="py-1.5">10%</td>
-              </tr>
-              <tr className="border-b border-border">
-                <td className="py-1.5 pr-3 font-semibold text-[#d4af37]">Gold</td>
-                <td className="py-1.5 pr-3">30 – 99</td>
-                <td className="py-1.5 pr-3">40%</td>
-                <td className="py-1.5">15%</td>
-              </tr>
-              <tr>
-                <td className="py-1.5 pr-3 font-semibold text-[#e5e4e2]">Platinum</td>
-                <td className="py-1.5 pr-3">≥ 100</td>
-                <td className="py-1.5 pr-3">50%</td>
-                <td className="py-1.5">20%</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <ul className="mt-3 list-disc space-y-1 pl-5 text-foreground/80">
+          <li>30% hoa hồng trên đơn đầu tiên của khách bạn giới thiệu.</li>
+          <li>10% cho mỗi lần khách gia hạn (gói theo tháng hoặc theo năm).</li>
+          <li>
+            Một tầng: chỉ người giới thiệu trực tiếp được hưởng, không có hoa hồng tuyến dưới.
+          </li>
+        </ul>
         <p className="mt-3 text-xs text-muted-foreground">
-          Tier được tính lại đầu mỗi tháng dương lịch dựa trên số conversions trong 30 ngày gần nhất.
-          Affiliate V1.4 với hợp đồng thoả thuận riêng (30% / 10%) được giữ nguyên rate cũ.
+          Đây là mức cố định, áp dụng cho mọi affiliate. Cấp Bronze / Silver / Gold / Platinum (nếu hiển
+          thị trên dashboard) chỉ ghi nhận cột mốc số lượt giới thiệu, không làm thay đổi tỉ lệ hoa hồng.
         </p>
       </>
     ),

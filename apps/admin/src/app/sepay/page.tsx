@@ -7,6 +7,7 @@
  */
 
 import * as React from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
@@ -14,6 +15,12 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
   Input,
   cn,
   toast,
@@ -165,7 +172,19 @@ const PRESETS: { label: string; days: number | 'today' | null }[] = [
 ];
 
 export default function AdminSepayPage() {
+  // useSearchParams() requires a Suspense boundary (App Router CSR bailout) —
+  // the refund deep-link (?refund_ref=…) from the session detail page reads it.
+  return (
+    <React.Suspense fallback={<div className="h-72 animate-pulse rounded bg-muted/30" />}>
+      <AdminSepayPageInner />
+    </React.Suspense>
+  );
+}
+
+function AdminSepayPageInner() {
   const qc = useQueryClient();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [tab, setTab] = React.useState<'dashboard' | 'tx' | 'reconcile' | 'refunds'>('dashboard');
   const [draft, setDraft] = React.useState<Filters>(EMPTY_FILTERS);
   const [filters, setFilters] = React.useState<Filters>(EMPTY_FILTERS);
@@ -262,6 +281,40 @@ export default function AdminSepayPage() {
     if (!refundReason.trim()) return toast.error('Nhập lý do hoàn tiền');
     createMut.mutate({ reference: refundTxn?.reference_number ?? undefined, amount: amt, reason: refundReason.trim() });
   };
+
+  // Deep-link from the session detail page: /sepay?refund_ref=…&refund_amount=…&refund_reason=…
+  // Synthesize a minimal SepayTransaction so the EXISTING refund modal + createMut
+  // (POST /admin/sepay/refund) fire unchanged. We then strip the params from the
+  // URL so a refresh doesn't re-open the modal. Runs once on mount.
+  const deepLinkHandled = React.useRef(false);
+  React.useEffect(() => {
+    if (deepLinkHandled.current) return;
+    const ref = searchParams.get('refund_ref');
+    const amountParam = searchParams.get('refund_amount');
+    const reasonParam = searchParams.get('refund_reason');
+    if (!ref && !amountParam) return;
+    deepLinkHandled.current = true;
+    setRefundTxn({
+      id: `deeplink-${ref ?? 'txn'}`,
+      transaction_date: '',
+      account_number: null,
+      amount_in: amountParam ?? '0',
+      amount_out: '0',
+      accumulated: '0',
+      transaction_content: null,
+      reference_number: ref,
+      bank_brand_name: null,
+      sub_account: null,
+      code: null,
+    });
+    if (amountParam) setRefundAmount(String(Math.round(Number(amountParam) || 0)));
+    if (reasonParam) setRefundReason(reasonParam);
+    toast.info('Mở yêu cầu hoàn tiền từ phiên', {
+      description: 'Kiểm tra mã giao dịch + số tiền trước khi tạo yêu cầu.',
+    });
+    // Drop the query params so a reload doesn't re-trigger the modal.
+    router.replace('/sepay', { scroll: false });
+  }, [searchParams, router]);
 
   const applyFilters = () => setFilters(draft);
   const resetFilters = () => { setDraft(EMPTY_FILTERS); setFilters(EMPTY_FILTERS); setPreset('Tất cả'); };
@@ -711,6 +764,88 @@ function ReconcileView() {
   );
 }
 
+// ── "Sửa gói": vá MỘT user bị lệch gói (đã trả tiền nhưng plan DB sai) ─────────
+// Client CHỈ gửi user_id; worker tự suy ra gói đúng từ audit log rồi PATCH (nếu
+// thực sự lệch — idempotent). Owner-gated ở proxy. Dialog xác nhận hiện rõ
+// "đang X → sẽ thành Y" trước khi chạy; không có tiền nào di chuyển (chỉ sửa gói).
+interface DriftRow {
+  user_id: string;
+  expected_plan: string;
+  actual_plan: string | null;
+  tier: string;
+  last_paid_at: string;
+}
+
+function DriftFixDialog({ drift, onSuccess }: { drift: DriftRow; onSuccess?: () => void }) {
+  const [open, setOpen] = React.useState(false);
+  const [pending, setPending] = React.useState(false);
+
+  const submit = React.useCallback(async () => {
+    setPending(true);
+    let res: { ok: boolean; changed?: boolean; reason?: string; error?: string };
+    try {
+      const r = await fetch(`${PROXY}/drift/fix`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ user_id: drift.user_id }),
+      });
+      const text = await r.text();
+      try {
+        res = JSON.parse(text);
+      } catch {
+        res = { ok: false, error: `Phản hồi không hợp lệ (HTTP ${r.status})` };
+      }
+    } catch (e) {
+      res = { ok: false, error: (e as Error)?.message ?? 'Lỗi mạng' };
+    }
+    setPending(false);
+    if (res.ok) {
+      if (res.changed) {
+        toast.success('Đã sửa gói cho user.', { description: `Gói mới: ${drift.expected_plan}` });
+      } else {
+        toast.info('Không cần sửa.', {
+          description: res.reason === 'already_in_sync' ? 'Gói đã đúng.' : 'Không tìm thấy đơn đã trả.',
+        });
+      }
+      setOpen(false);
+      onSuccess?.();
+    } else {
+      toast.error('Sửa gói thất bại', { description: res.error });
+    }
+  }, [drift, onSuccess]);
+
+  return (
+    <>
+      <Button size="sm" variant="outline" onClick={() => setOpen(true)}>
+        <Check className="mr-1 h-3 w-3" />Sửa gói
+      </Button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Sửa gói cho user này?</DialogTitle>
+            <DialogDescription>
+              User <span className="font-mono">{drift.user_id.slice(0, 12)}…</span> đã thanh toán
+              nhưng gói trong hệ thống chưa đúng. Sẽ đổi gói từ{' '}
+              <strong className="text-red-500">{drift.actual_plan ?? 'free'}</strong> →{' '}
+              <strong className="text-emerald-500">{drift.expected_plan}</strong>. Đây chỉ là sửa
+              quyền lợi gói — KHÔNG có tiền nào được chuyển. Gói đúng được hệ thống tự tính lại từ
+              lịch sử thanh toán; nếu thực ra đã đúng, sẽ không có gì thay đổi.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpen(false)} disabled={pending}>
+              Huỷ
+            </Button>
+            <Button onClick={submit} disabled={pending}>
+              {pending ? 'Đang sửa…' : 'Sửa gói'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
+
 // ── Tab Tổng quan: doanh thu từ audit /payment/transactions ───────────────────
 const TIER_LABEL: Record<string, string> = {
   premium: 'Premium',
@@ -817,6 +952,9 @@ function DashboardView() {
                     <td className="px-4 py-2"><a href={`/customers/${x.user_id}`} className="font-mono text-xs text-gold hover:underline">{x.user_id.slice(0, 12)}…</a></td>
                     <td className="px-4 py-2 text-xs">cần <span className="text-emerald-500">{x.expected_plan}</span> · đang <span className="text-red-500">{x.actual_plan ?? 'free'}</span></td>
                     <td className="px-4 py-2 text-right text-xs text-muted-foreground">{fmtTs(x.last_paid_at)}</td>
+                    <td className="px-4 py-2 text-right">
+                      <DriftFixDialog drift={x} onSuccess={() => driftQ.refetch()} />
+                    </td>
                   </tr>
                 ))}
               </tbody></table>

@@ -78,8 +78,15 @@ export function MentorTab() {
     (async () => {
       const supa = getSupabaseAuth();
       if (!supa) return;
-      const { data } = await supa.auth.getSession();
-      const token = data.session?.access_token;
+      let token: string | undefined;
+      try {
+        const { data } = await supa.auth.getSession();
+        token = data.session?.access_token;
+      } catch {
+        // getSession() có thể reject ở storage bị chặn (iOS/private) — bỏ qua
+        // để không nổi thành unhandled-rejection.
+        return;
+      }
       if (!token) return;
       try {
         const res = await fetch('/api/mentor?action=memory', {

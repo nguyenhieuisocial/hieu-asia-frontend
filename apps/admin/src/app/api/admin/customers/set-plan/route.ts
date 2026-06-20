@@ -43,6 +43,7 @@ export async function POST(req: NextRequest) {
         'x-admin-email': auth.session.email,
       },
       body,
+      signal: AbortSignal.timeout(20000),
     });
     const data = await r.json();
     return NextResponse.json(data, { status: r.status });

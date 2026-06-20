@@ -51,18 +51,15 @@ function PostHogTracking(): null {
     if (hasMarketingConsent()) {
       loadMarketingPixels();
     }
-    // Wave 41 — ensure anon distinct_id always persists for identity stitch.
-    try {
-      const ph = getPostHog();
-      if (ph) {
-        const anonId = ph.get_distinct_id?.();
-        if (anonId) {
-          localStorage.setItem("hieu.user_id", anonId);
-        }
-      }
-    } catch {
-      /* ignore */
-    }
+    // NOTE: we no longer copy PostHog's distinct_id into `hieu.user_id`. That
+    // overwrote the `anon_<uuid>` (which the backend requires for pre-login
+    // reading history) with a bare UUID and silently lost the history. Identity
+    // is now unified the other way: posthog.ts bootstraps PostHog's distinct_id
+    // FROM `getOrCreateAnonUserId()`, so both ids already match.
+    // (Returning anonymous visitors whose PostHog distinct_id predates this fix
+    // keep a bare-uuid PH id; autocapture-vs-custom may fragment for that small
+    // cohort — acceptable pre-launch; revisit with a dual-alias if it ships to
+    // real traffic.)
   }, []);
 
   // Watch Supabase auth — re-identify on session restore + tier refresh.
@@ -70,16 +67,22 @@ function PostHogTracking(): null {
     const supabase = getSupabaseAuth();
     if (!supabase) return;
     let cancelled = false;
-    supabase.auth.getSession().then(({ data }) => {
-      if (cancelled) return;
-      if (data.session?.user) {
-        void identifyUser(data.session.user);
-        // Catches the "/r/<CODE> clicked after signup" edge case where the user
-        // never re-enters /auth/callback. Idempotent — localStorage flag +
-        // worker-side dedupe stop repeat calls on token refresh.
-        void onboardAffiliateFromRef();
-      }
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data }) => {
+        if (cancelled) return;
+        if (data.session?.user) {
+          void identifyUser(data.session.user);
+          // Catches the "/r/<CODE> clicked after signup" edge case where the user
+          // never re-enters /auth/callback. Idempotent — localStorage flag +
+          // worker-side dedupe stop repeat calls on token refresh.
+          void onboardAffiliateFromRef();
+        }
+      })
+      // getSession() reject ở ngữ cảnh storage bị chặn (iOS/private) — provider
+      // này bọc MỌI trang, nên bắt để không nổi thành unhandled-rejection
+      // (capture_exceptions ở dưới sẽ đổ vào Sentry). Không có session = không định danh.
+      .catch(() => {});
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       if (cancelled) return;
       if (session?.user) {

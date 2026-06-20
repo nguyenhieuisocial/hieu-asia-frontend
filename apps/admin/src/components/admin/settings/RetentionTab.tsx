@@ -120,12 +120,14 @@ export function RetentionTab() {
         setConfirmOpen(false);
         refetch();
       } else {
-        toast('Không cập nhật được', {
+        // Keep the confirm dialog open so the operator can retry; surface the error.
+        toast.error('Không cập nhật được', {
           description: d?.error ?? `HTTP ${r.status}`,
         });
       }
     } catch (err) {
-      toast('Lỗi update retention', { description: (err as Error).message });
+      // PATCH threw (network) — keep dialog open, reset busy via finally, show error.
+      toast.error('Lỗi update retention', { description: (err as Error).message });
     } finally {
       setBusy(false);
     }

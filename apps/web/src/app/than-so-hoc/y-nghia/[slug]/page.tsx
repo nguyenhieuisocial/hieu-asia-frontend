@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { breadcrumb, webPage } from '@/lib/seo/jsonld';
+import { FaqSection } from '@/components/seo/FaqSection';
+import { breadcrumb, webPage, faqPage, type FaqItem } from '@/lib/seo/jsonld';
 import { SO_CHU_DAO, getSoChuDao } from '@/lib/than-so-hoc-numbers';
 
 interface Props {
@@ -39,6 +40,24 @@ export default async function SoChuDaoPage({ params }: Props) {
   const idx = SO_CHU_DAO.findIndex((x) => x.slug === n.slug);
   const prev = idx > 0 ? SO_CHU_DAO[idx - 1] : undefined;
   const next = idx < SO_CHU_DAO.length - 1 ? SO_CHU_DAO[idx + 1] : undefined;
+
+  // Câu hỏi thường gặp — dựng từ dữ liệu THẬT của số (overview/strengths/challenge/work/love),
+  // mỗi số một bộ riêng. Dùng chung 1 mảng cho cả FAQPage JSON-LD lẫn phần hiển thị.
+  const faqs: FaqItem[] = [
+    { q: `Số chủ đạo ${n.number} (${n.archetype}) nói lên điều gì về tính cách?`, a: n.overview },
+    { q: `Điểm mạnh tự nhiên của số ${n.number} là gì?`, a: `Người số ${n.number} thường mạnh ở: ${n.strengths.join('; ')}.` },
+    { q: `Bài học lớn nhất của người số ${n.number} là gì?`, a: n.challenge },
+    { q: `Số ${n.number} hợp công việc và tiền bạc thế nào?`, a: n.work },
+    { q: `Số ${n.number} trong tình cảm và quan hệ thế nào?`, a: n.love },
+    ...(n.master
+      ? [
+          {
+            q: `Số master ${n.number} có "cao cấp" hơn số thường không?`,
+            a: `Không. Số master không phải đẳng cấp cao hơn — nó là phiên bản cường độ cao của một năng lượng gốc, đi kèm bài tập khó hơn và rủi ro quá tải lớn hơn. Nơi nào dùng số master để tâng bốc rồi bán khoá học "khai mở sứ mệnh" giá cao, nơi đó đang bán nỗi khao khát được đặc biệt.`,
+          },
+        ]
+      : []),
+  ];
 
   return (
     <ToolPageShell
@@ -134,6 +153,8 @@ export default async function SoChuDaoPage({ params }: Props) {
           </p>
         </section>
 
+        <FaqSection items={faqs} />
+
         <nav className="flex items-center justify-between gap-3 text-sm" aria-label="Số trước / số sau">
           {prev ? (
             <Link
@@ -186,6 +207,7 @@ export default async function SoChuDaoPage({ params }: Props) {
             { name: 'Ý nghĩa số chủ đạo', url: '/than-so-hoc/y-nghia' },
             { name: `Số ${n.number}`, url: `/than-so-hoc/y-nghia/${n.slug}` },
           ]),
+          faqPage(faqs),
         ]}
       />
     </ToolPageShell>

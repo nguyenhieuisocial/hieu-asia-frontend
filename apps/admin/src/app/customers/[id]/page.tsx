@@ -41,6 +41,7 @@ import { KpiCard } from '@/components/admin/kpi-card';
 import { CustomerDetailTabs } from '@/components/admin/customers/CustomerDetailTabs';
 import { PlanBadge } from '@/components/admin/customers/PlanBadge';
 import { SetPlanDialog } from '@/components/admin/customers/SetPlanDialog';
+import { ContactCustomerDialog } from '@/components/admin/ContactCustomerDialog';
 import type {
   CustomerDetailResponse,
 } from '@/components/admin/customers/detail-types';
@@ -49,6 +50,7 @@ const VALID_TABS = [
   'profile',
   'sessions',
   'transactions',
+  'refunds',
   'audit',
   'compliance',
 ] as const;
@@ -107,6 +109,10 @@ function CustomerDetailPageInner() {
   const transactions = React.useMemo(
     () => (Array.isArray(data?.transactions) ? data.transactions : []),
     [data?.transactions],
+  );
+  const refunds = React.useMemo(
+    () => (Array.isArray(data?.refunds) ? data.refunds : []),
+    [data?.refunds],
   );
   const auditTrail = React.useMemo(
     () => (Array.isArray(data?.audit_trail) ? data.audit_trail : []),
@@ -211,6 +217,9 @@ function CustomerDetailPageInner() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {/* Liên hệ khách qua email (template có sẵn). Tự vô hiệu hoá khi không
+              có email — vẫn render để giải thích vì sao không gửi được. */}
+          <ContactCustomerDialog email={customer?.email ?? null} />
           {customer?.email && (
             <SetPlanDialog
               defaultEmail={customer.email}
@@ -278,9 +287,12 @@ function CustomerDetailPageInner() {
             customer={enrichedCustomer ?? customer}
             sessions={sessions}
             transactions={transactions}
+            refunds={refunds}
             auditTrail={auditTrail}
             value={active}
             onValueChange={onTabChange}
+            onSessionMutated={() => refetch()}
+            onRefundMutated={() => refetch()}
           />
         </CardContent>
       </Card>

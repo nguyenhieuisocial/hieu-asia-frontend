@@ -9,9 +9,20 @@
  */
 
 import * as React from 'react';
+import dynamic from 'next/dynamic';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Card, CardContent, toast } from '@hieu-asia/ui';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
+
+// Recharts lazy-loaded so it stays out of the initial admin bundle (tasks page
+// pattern). ssr:false — admin is auth-gated, not SEO-indexed.
+const CommissionCharts = dynamic(
+  () => import('@/components/affiliates/CommissionCharts').then((m) => m.CommissionCharts),
+  {
+    ssr: false,
+    loading: () => <div className="h-64 animate-pulse rounded bg-muted/30" aria-hidden />,
+  },
+);
 
 interface Commission {
   id: string;
@@ -117,6 +128,10 @@ export function CommissionsTab() {
           </div>
         </CardContent>
       </Card>
+
+      {!q.isLoading && !q.error && (
+        <CommissionCharts rows={q.data ?? []} />
+      )}
 
       <Card>
         <CardContent className="overflow-x-auto pt-6">

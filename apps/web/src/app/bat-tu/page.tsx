@@ -203,7 +203,7 @@ export default function BatTuLandingPage() {
               <p>
                 Bát Tự (八字, nghĩa đen "tám chữ") lấy năm-tháng-ngày-giờ sinh, mỗi mốc một
                 cặp Thiên Can + Địa Chi — tổng cộng 4 trụ × 2 chữ = 8 chữ. Mỗi chữ mang một
-                trong năm hành Kim, Mộc, Thuỷ, Hoả, Thổ; tỉ lệ và quan hệ tương sinh - tương
+                trong năm hành Kim, Mộc, Thủy, Hỏa, Thổ; tỉ lệ và quan hệ tương sinh - tương
                 khắc giữa chúng dệt nên bản đồ năng lượng cốt lõi.
               </p>
               <p>
@@ -285,7 +285,7 @@ export default function BatTuLandingPage() {
             </p>
             <blockquote className="mt-6 border-l-2 border-gold/50 pl-6 font-marketing-display text-xl leading-relaxed text-foreground md:text-2xl">
               <p>
-                "Nhật can Giáp Mộc sinh tháng Thân — Kim vượng khắc Mộc. Bạn cần Thuỷ để hoá
+                "Nhật can Giáp Mộc sinh tháng Thân — Kim vượng khắc Mộc. Bạn cần Thủy để hoá
                 Kim sinh Mộc; điều đó đọc thành xu hướng tìm cố vấn, học vấn, môi trường ôn
                 hoà thay vì cạnh tranh trực diện."
               </p>

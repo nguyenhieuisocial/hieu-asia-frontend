@@ -13,6 +13,11 @@ const withBundleAnalyzer = bundleAnalyzer({
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@hieu-asia/ui', '@hieu-asia/types', '@hieu-asia/api-client'],
+  // @sparticuz/chromium ships a binary it reads at runtime — must NOT be bundled
+  // by webpack/turbopack. Used by the server-side PDF export route to render the
+  // Cẩm Nang report deterministically (browser "Save as PDF" can't control
+  // headers/footers/margins/backgrounds → poor output).
+  serverExternalPackages: ['@sparticuz/chromium-min', 'puppeteer-core'],
   experimental: {
     typedRoutes: true,
   },

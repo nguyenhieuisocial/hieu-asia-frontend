@@ -112,7 +112,7 @@ async function fetchAudit(params: {
   limit: number;
 }): Promise<AuditResponse> {
   const qs = new URLSearchParams();
-  if (params.action && params.action !== '__all') qs.set('action', params.action);
+  if (params.action) qs.set('action', params.action);
   if (params.actor) qs.set('actor', params.actor);
   if (params.from) qs.set('from', new Date(params.from).toISOString());
   if (params.to) qs.set('to', new Date(params.to).toISOString());
@@ -240,11 +240,20 @@ const COLUMNS: AdminTableColumn<AuditEntry>[] = [
 ];
 
 export function AuditTab() {
-  const [action, setAction] = React.useState('__all');
+  // Free-text action search is the source of truth for the `action` filter
+  // (Worker now does a case-insensitive PREFIX match). The preset dropdown is a
+  // convenience that fills this input — keeping a single param + one debounce.
+  const [actionInput, setActionInput] = React.useState('');
+  const [action, setAction] = React.useState('');
   const [actorInput, setActorInput] = React.useState('');
   const [actor, setActor] = React.useState('');
   const [from, setFrom] = React.useState('');
   const [to, setTo] = React.useState('');
+
+  React.useEffect(() => {
+    const t = window.setTimeout(() => setAction(actionInput.trim()), 300);
+    return () => window.clearTimeout(t);
+  }, [actionInput]);
 
   React.useEffect(() => {
     const t = window.setTimeout(() => setActor(actorInput.trim()), 300);
@@ -287,9 +296,17 @@ export function AuditTab() {
     Object.entries(actorCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
 
   // ---- Stable callbacks ----
-  const handleActionChange = React.useCallback((v: string) => {
-    setAction(v);
+  // Preset dropdown fills the free-text input (`__all` clears it).
+  const handleActionPreset = React.useCallback((v: string) => {
+    setActionInput(v === '__all' ? '' : v);
   }, []);
+
+  const handleActionChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setActionInput(e.target.value);
+    },
+    [],
+  );
 
   const handleActorChange = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -320,8 +337,7 @@ export function AuditTab() {
     exportCsv(entries);
   }, [entries]);
 
-  const actionLabel =
-    ACTION_OPTIONS.find((o) => o.value === action)?.label ?? 'Tất cả action';
+  const actionLabel = action ? action : 'Action: tất cả';
 
   return (
     <div className="space-y-6">
@@ -385,35 +401,45 @@ export function AuditTab() {
         <CardHeader>
           <CardTitle>Bộ lọc</CardTitle>
           <CardDescription>
-            Mặc định {LIMIT} entry mới nhất. Actor search debounce 300ms.
+            Mặc định {LIMIT} entry mới nhất. Tìm theo hành động (khớp tiền tố) + actor, debounce 300ms.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  type="button"
-                  className="inline-flex h-10 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-3 text-sm text-foreground transition-all duration-300 ease-editorial hover:border-gold/50"
-                  aria-label="Lọc theo action"
-                >
-                  {ICON_FILTER}
-                  <span className="flex-1 truncate text-left">{actionLabel}</span>
-                  {ICON_CHEVRON}
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="min-w-[16rem]">
-                <DropdownMenuLabel>Action</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuRadioGroup value={action} onValueChange={handleActionChange}>
-                  {ACTION_OPTIONS.map((opt) => (
-                    <DropdownMenuRadioItem key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </DropdownMenuRadioItem>
-                  ))}
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="flex items-stretch gap-2">
+              <Input
+                type="text"
+                value={actionInput}
+                onChange={handleActionChange}
+                placeholder="Tìm theo hành động…"
+                aria-label="Tìm theo hành động"
+                className="flex-1"
+              />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-md border border-gold/20 bg-card/60 px-2.5 text-sm text-foreground transition-all duration-300 ease-editorial hover:border-gold/50"
+                    aria-label="Chọn action mẫu"
+                    title={actionLabel}
+                  >
+                    {ICON_FILTER}
+                    {ICON_CHEVRON}
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="min-w-[16rem]">
+                  <DropdownMenuLabel>Action mẫu</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuRadioGroup value={action || '__all'} onValueChange={handleActionPreset}>
+                    {ACTION_OPTIONS.map((opt) => (
+                      <DropdownMenuRadioItem key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </DropdownMenuRadioItem>
+                    ))}
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
             <Input
               type="text"
               value={actorInput}

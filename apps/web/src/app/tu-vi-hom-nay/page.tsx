@@ -10,6 +10,7 @@ import { getVietnamTodayISO } from '@/lib/vn-date';
 import { generateZodiacBlurb, isGenericSummary } from '@/lib/zodiac-blurb';
 import { breadcrumb, webPage } from '@/lib/seo/jsonld';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 600;
@@ -198,6 +199,20 @@ export default async function Page() {
               />
             );
           })}
+        </div>
+      </section>
+
+      <section className="mt-8 rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+        <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+          Nhận nhắc theo mùa qua email
+        </h2>
+        <div className="mt-4">
+          <OccasionLeadCapture
+            source="tu-vi-hom-nay"
+            capturedEvent="lead_capture_tu_vi_hom_nay"
+            blurb="Để lại email, chúng tôi báo khi có nội dung mới theo mùa: tử vi năm mới, sao hạn, ngày tốt theo việc. Thi thoảng thôi, không spam."
+            cta="Nhận nhắc"
+          />
         </div>
       </section>
     </ToolPageShell>

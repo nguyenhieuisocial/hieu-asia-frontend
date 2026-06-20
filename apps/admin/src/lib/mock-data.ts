@@ -169,6 +169,13 @@ export interface AdminTask {
   duration_seconds: number | null;
   retries: number;
   error: string | null;
+  /**
+   * Raw worker status string before normalization (e.g. 'error_at_vision_agent',
+   * 'error_internal'). `status` collapses all failures to 'failed', so this
+   * preserves the failure CATEGORY for the /tasks failure-reason breakdown.
+   * Optional — mock rows omit it.
+   */
+  raw_status?: string;
 }
 
 const TASK_NAMES = [
@@ -195,6 +202,10 @@ export const MOCK_TASKS: AdminTask[] = Array.from({ length: 30 }, (_, i) => {
     duration_seconds: duration,
     retries: status === 'failed' ? (i % 3) + 1 : 0,
     error: status === 'failed' ? ['TimeoutError', 'ConnectionRefused', 'ValidationError: empty image'][i % 3]! : null,
+    raw_status:
+      status === 'failed'
+        ? ['error_at_vision_agent', 'error_at_qdrant', 'error_internal'][i % 3]!
+        : status,
   };
 });
 
@@ -284,13 +295,6 @@ export const MOCK_RAG_CHUNKS: RagChunk[] = [
   { id: 'rag_006', source_id: 'enneagram_intro', source_title: 'Enneagram: An Introduction', discipline: 'psychology', license_status: 'owned_or_licensed', chunk_count: 41, ingested_at: isoDaysAgo(15) },
   { id: 'rag_007', source_id: 'iching_commentary', source_title: 'I Ching with Commentary', discipline: 'general', license_status: 'public_domain', chunk_count: 96, ingested_at: isoDaysAgo(7) },
 ];
-
-export const MOCK_QDRANT_STATS = {
-  collection: 'hieu_rag',
-  vectors_count: MOCK_RAG_CHUNKS.reduce((acc, c) => acc + c.chunk_count, 0),
-  dim: 1536,
-  status: 'green' as const,
-};
 
 // ---------- Payments / coupons ----------
 

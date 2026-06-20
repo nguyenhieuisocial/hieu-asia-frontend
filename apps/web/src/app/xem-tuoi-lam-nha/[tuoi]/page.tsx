@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { XemTuoiLamNhaChecker } from '@/components/xem-tuoi-lam-nha/XemTuoiLamNhaChecker';
 import { BUILD_VERDICT_LABEL } from '@/lib/xem-tuoi-lam-nha';
@@ -162,6 +163,23 @@ export default async function XemTuoiLamNhaYearPage({
                 </div>
               ))}
             </dl>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <p className="mt-2 mb-4 text-sm leading-relaxed text-muted-foreground">
+              Để lại email, chúng tôi sẽ báo bạn khi có bản đầy đủ về năm tốt làm nhà và động thổ
+              theo tuổi, cùng nội dung mới theo mùa.
+            </p>
+            <OccasionLeadCapture
+              source={`lam-nha-${tuoi}`}
+              capturedEvent="lead_capture_lam_nha"
+              capturedProps={{ tuoi }}
+              blurb="Để lại email, chúng tôi sẽ báo bạn khi có bản đầy đủ về năm tốt làm nhà và động thổ theo tuổi, cùng nội dung mới theo mùa. Thi thoảng thôi, không spam."
+              cta="Nhận nhắc"
+            />
           </section>
 
           <nav aria-label="Xem tuổi làm nhà các năm sinh khác" className="text-sm leading-7">

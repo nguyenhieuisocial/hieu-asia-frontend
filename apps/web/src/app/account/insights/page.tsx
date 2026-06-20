@@ -16,6 +16,8 @@ import { useQuery } from '@tanstack/react-query';
 import { InsightTimeline, type InsightItem } from '@/components/account/InsightTimeline';
 import { listMentorConversations } from '@/lib/mentor-conversations';
 import { listMyReadings } from '@/lib/account-history';
+import { SiteNav } from '@/components/home/SiteNav';
+import { SiteFooter } from '@/components/home/SiteFooter';
 
 async function fetchReadings(): Promise<InsightItem[]> {
   try {
@@ -99,7 +101,9 @@ export default function InsightMapPage() {
   });
 
   return (
-    <main id="main-content" className="min-h-screen bg-background pb-24 pt-16">
+    <div className="min-h-screen bg-background text-foreground">
+      <SiteNav />
+      <main id="main-content" className="pb-24 pt-16">
       <div className="mx-auto max-w-3xl px-6">
         <header className="mb-10">
           <p className="font-mono text-eyebrow uppercase tracking-[0.32em] text-gold-700">
@@ -116,6 +120,8 @@ export default function InsightMapPage() {
 
         <InsightTimeline items={data ?? []} loading={isLoading} />
       </div>
-    </main>
+      </main>
+      <SiteFooter />
+    </div>
   );
 }

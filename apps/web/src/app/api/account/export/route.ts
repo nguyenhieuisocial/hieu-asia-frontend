@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
   // client-supplied user_id (was an unauth IDOR: any caller could export any
   // user's full PII by POSTing their UUID, because the backend trusts
   // body.user_id when the service token is present).
-  let session: { userId: string; email: string | null } | null;
+  let session: { userId: string; email: string | null; linkedAnonId: string | null } | null;
   try {
     session = await getSessionFromRequest(req);
   } catch {
@@ -47,8 +47,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: 'invalid_json' }, { status: 400 });
   }
 
-  // Force user_id to the authenticated user; ignore any client-supplied value.
-  const forwardBody = { ...body, user_id: session.userId };
+  // Strip any client-supplied identity fields, THEN set server-derived values —
+  // never let body.user_id / body.user_id_2 survive the spread. A client could
+  // otherwise smuggle a victim's anon id as user_id_2 (e.g. when the user has no
+  // linked anon, the conditional spread below adds nothing and `...body` would
+  // forward it verbatim) and the worker trusts it under our service token → IDOR.
+  // linkedAnonId comes from the GoTrue-signed session, bound to this user.
+  const rest = { ...body };
+  delete rest.user_id;
+  delete rest.user_id_2;
+  const forwardBody = {
+    ...rest,
+    user_id: session.userId,
+    ...(session.linkedAnonId ? { user_id_2: session.linkedAnonId } : {}),
+  };
 
   try {
     const res = await fetch(`${HIEU_API_URL}/user/export`, {

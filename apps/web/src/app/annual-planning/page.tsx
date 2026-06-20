@@ -156,7 +156,7 @@ export default function AnnualPlanningPage() {
               Năm Bính Ngọ — &ldquo;xây nền + thử nghiệm có kiểm soát&rdquo;
             </CardTitle>
             <CardDescription className="text-muted-foreground">
-              Năng lượng Hoả vượng: thuận cho người chủ động, không thuận cho
+              Năng lượng Hỏa vượng: thuận cho người chủ động, không thuận cho
               người chần chừ — nhưng dễ &ldquo;đốt&rdquo; nếu thiếu kỷ luật.
             </CardDescription>
           </CardHeader>

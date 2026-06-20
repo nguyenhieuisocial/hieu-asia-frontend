@@ -27,6 +27,7 @@ import {
   ListChecks,
   DollarSign,
   Coins,
+  UserPlus,
 } from 'lucide-react';
 // Wave 60.12 — ReadingsChart lazy-loaded so Recharts (~150KB gzipped) is
 // no longer in the initial bundle. KPI cards above-fold paint first; chart
@@ -40,9 +41,19 @@ const ReadingsChart = dynamic(
     loading: () => <div className="h-72 animate-pulse rounded bg-muted/30" aria-hidden />,
   },
 );
+// AI-spend trend chart — same lazy-load treatment as ReadingsChart (Recharts
+// chunk). Fed by the `cost` query already fetched below; no new data fetch.
+const OverviewTrends = dynamic(
+  () => import('@/components/admin/overview-trends').then((m) => m.OverviewTrends),
+  {
+    ssr: false,
+    loading: () => <div className="h-64 animate-pulse rounded-xl bg-muted/30" aria-hidden />,
+  },
+);
 import { MockBanner } from '@/components/mock-banner';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { HealthWidget } from '@/components/admin/health-widget';
+import { WorkQueueWidget } from '@/components/admin/work-queue-widget';
 import { QuickActions } from '@/components/admin/quick-actions';
 import { ActivityFeed } from '@/components/admin/activity-feed';
 import { LiveBadge } from '@/components/admin/live-badge';
@@ -56,7 +67,11 @@ import {
   getCostByDay,
   getKpis,
   getReadingsPerDay,
+  getSignupsByDay,
 } from '@/lib/admin-api';
+import { getGscSearchAnalytics } from '@/lib/gsc-api';
+import { getLlmSpendKpis } from '@/lib/llm-spend-api';
+import { Search, MousePointerClick, Percent, Gauge } from 'lucide-react';
 
 /** BUG-022: surface a visual alert + Triage CTA when oldest pending > 60 min. */
 const QUEUE_ALERT_AGE_SECONDS = 60 * 60;
@@ -77,6 +92,10 @@ function fmtUsdSmall(v: number) {
   return `$${v.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 }
 
+function fmtInt(v: number) {
+  return v.toLocaleString('vi-VN', { maximumFractionDigits: 0 });
+}
+
 export default function AdminOverviewPage() {
   const kpis = useQuery({ queryKey: ['admin', 'kpis'], queryFn: getKpis, staleTime: 60_000 });
   const readings = useQuery({
@@ -90,10 +109,58 @@ export default function AdminOverviewPage() {
     staleTime: 60_000,
   });
   const queue = useQueueDepth();
+  // New signups (last 30d) — powers the "Khách mới hôm nay" KPI. There is no
+  // dedicated /admin/signups/by_day endpoint, so getSignupsByDay returns null
+  // and the card degrades to "—" without breaking (no fake number).
+  const signups = useQuery({
+    queryKey: ['admin', 'signups'],
+    queryFn: () => getSignupsByDay(30),
+    staleTime: 60_000,
+  });
+  // Organic search at-a-glance (GSC, 7d) — reuses the same proxy endpoint as
+  // the /seo page. staleTime 5min mirrors that page; GSC data lags ~2-3 days.
+  const gsc = useQuery({
+    queryKey: ['admin', 'gsc', 'dashboard'],
+    queryFn: () => getGscSearchAnalytics(7),
+    staleTime: 5 * 60_000,
+  });
+  // "Lỗi AI hôm nay" — the at-a-glance "is the AI pipeline on fire" signal.
+  // /admin/llm-spend/kpis.error_rate is a FRACTION (0-1) of today's llm_traces
+  // whose status != ok/success. since = today 00:00 (stable within the day, so
+  // the query key doesn't churn). Degrades to "—" if the endpoint is down.
+  const todayStartIso = (() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d.toISOString();
+  })();
+  const aiErr = useQuery({
+    queryKey: ['admin', 'ai-error-today', todayStartIso],
+    queryFn: () => getLlmSpendKpis({ since: todayStartIso }),
+    staleTime: 60_000,
+  });
 
   // Build sparklines from existing series.
   const readingsSpark = (readings.data ?? []).slice(-14).map((d) => d.count);
   const costSpark = (cost.data ?? []).slice(-14).map((d) => d.total_usd);
+
+  // New-signups KPI. signups.data is null until the backend endpoint deploys —
+  // when null we render the card with "—" and no spark/delta (no fake data).
+  const signupsData = signups.data ?? null;
+  const signupsSpark = (signupsData?.days ?? []).slice(-14).map((d) => d.count);
+  // Delta vs the previous window, only when the backend supplies prev_total.
+  const signupsDelta = (() => {
+    if (!signupsData || signupsData.prev_total == null) return null;
+    const prev = signupsData.prev_total;
+    const cur = signupsData.total;
+    if (prev === 0 && cur === 0) return null;
+    if (prev === 0) return { value: `+${cur.toFixed(0)}`, direction: 'up' as const };
+    const pct = ((cur - prev) / Math.abs(prev)) * 100;
+    if (Math.abs(pct) < 1) return { value: '0%', direction: 'flat' as const };
+    return {
+      value: `${pct > 0 ? '+' : ''}${pct.toFixed(0)}%`,
+      direction: (pct > 0 ? 'up' : 'down') as 'up' | 'down',
+    };
+  })();
 
   // Spend total for 14d
   const spend14d = (cost.data ?? []).reduce((s, d) => s + d.total_usd, 0);
@@ -111,6 +178,17 @@ export default function AdminOverviewPage() {
       ? `${Math.floor(oldestAgeSec / 3600)}h${Math.round((oldestAgeSec % 3600) / 60)}m`
       : `${Math.round(oldestAgeSec / 60)}m`
     : null;
+
+  // GSC at-a-glance. `not_configured` → render a "connect GSC" note. Otherwise
+  // derive clicks / CTR / avg rank (`current.position`, optional) + a clicks
+  // sparkline from `daily` when present (same optional-field rollout as /seo).
+  const gscData = gsc.data && gsc.data.ok ? gsc.data : undefined;
+  const gscNotConfigured = gsc.data?.ok === false && gsc.data.error === 'not_configured';
+  const gscClicks = gscData?.totals.clicks ?? 0;
+  const gscImpr = gscData?.totals.impressions ?? 0;
+  const gscCtr = gscImpr > 0 ? gscClicks / gscImpr : 0;
+  const gscPosition = gscData?.current?.position;
+  const gscSpark = (gscData?.daily ?? []).map((d) => d.clicks);
 
   return (
     <div className="space-y-6">
@@ -185,13 +263,23 @@ export default function AdminOverviewPage() {
       <h2 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/85">
         Vận hành
       </h2>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-7">
         <KpiCard
           label="Tổng người dùng"
           value={kpis.data?.total_users.toLocaleString('vi-VN') ?? '—'}
           icon={<Users className="h-4 w-4" />}
           accent="gold"
           hint="end-user"
+        />
+        <KpiCard
+          label="Khách mới hôm nay"
+          // No /admin/signups/by_day endpoint → getSignupsByDay null → "—", no fake number.
+          value={signupsData ? signupsData.today.toLocaleString('vi-VN') : '—'}
+          icon={<UserPlus className="h-4 w-4" />}
+          accent="jade"
+          sparkline={signupsSpark.length > 1 ? signupsSpark : undefined}
+          delta={signupsDelta}
+          hint={signupsData ? '14d' : 'chưa có endpoint'}
         />
         <KpiCard
           label="Báo cáo hôm nay"
@@ -235,6 +323,19 @@ export default function AdminOverviewPage() {
           sparkline={costSpark}
           hint="USD"
         />
+        <KpiCard
+          label="Lỗi AI hôm nay"
+          value={aiErr.data ? `${(aiErr.data.error_rate * 100).toFixed(1)}%` : '—'}
+          icon={<AlertTriangle className="h-4 w-4" />}
+          accent={
+            aiErr.data && aiErr.data.error_rate > 0
+              ? aiErr.data.error_rate >= 0.1
+                ? 'red'
+                : 'warn'
+              : 'jade'
+          }
+          hint={aiErr.data ? `${aiErr.data.call_count} lượt gọi` : 'pipeline AI'}
+        />
       </div>
 
       {/* Chart + health */}
@@ -269,10 +370,75 @@ export default function AdminOverviewPage() {
             )}
           </CardContent>
         </Card>
-        <div className="lg:col-span-1">
+        <div className="space-y-4 lg:col-span-1">
           <HealthWidget />
+          <WorkQueueWidget />
         </div>
       </div>
+
+      {/* Chi phí AI 14 ngày — real series from getCostByDay (same `cost` query
+          already fetched above; reused by /llm-spend's CostPanel). Renders an
+          honest "chưa có chi tiêu" state when the 14d total is $0. */}
+      <OverviewTrends cost={cost.data} isLoading={cost.isLoading} />
+
+      {/* Tìm kiếm Google (GSC) — organic at-a-glance, 7 ngày */}
+      <Card>
+        <CardHeader className="flex-row items-center justify-between gap-2 space-y-0">
+          <div>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Search className="h-4 w-4 text-gold" aria-hidden />
+              Tìm kiếm Google (7 ngày)
+            </CardTitle>
+            <CardDescription>Traffic tự nhiên từ Google Search Console — trễ ~2-3 ngày.</CardDescription>
+          </div>
+          <Link
+            href="/seo"
+            className="shrink-0 text-xs text-muted-foreground transition-colors hover:text-gold"
+          >
+            Chi tiết →
+          </Link>
+        </CardHeader>
+        <CardContent>
+          {gsc.isLoading ? (
+            <div className="h-16 animate-pulse rounded bg-muted/30" aria-hidden />
+          ) : gscNotConfigured ? (
+            <p className="text-sm text-muted-foreground">
+              Chưa kết nối GSC.{' '}
+              <Link href="/seo" className="text-gold hover:underline">
+                Kết nối ở trang SEO →
+              </Link>
+            </p>
+          ) : !gscData ? (
+            <p className="text-sm text-muted-foreground">Chưa tải được dữ liệu Search Console.</p>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-3">
+              <KpiCard
+                label="Clicks (7d)"
+                value={fmtInt(gscClicks)}
+                icon={<MousePointerClick className="h-4 w-4" />}
+                accent="gold"
+                sparkline={gscSpark.length > 1 ? gscSpark : undefined}
+                delta={null}
+                hint="organic"
+              />
+              <KpiCard
+                label="CTR"
+                value={`${(gscCtr * 100).toFixed(1)}%`}
+                icon={<Percent className="h-4 w-4" />}
+                accent="purple"
+                hint="clicks / impressions"
+              />
+              <KpiCard
+                label="Vị trí TB"
+                value={gscPosition != null ? gscPosition.toFixed(1) : '—'}
+                icon={<Gauge className="h-4 w-4" />}
+                accent="jade"
+                hint="thấp hơn = tốt hơn"
+              />
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Platform KPI band */}
       <PlatformKpiBand />

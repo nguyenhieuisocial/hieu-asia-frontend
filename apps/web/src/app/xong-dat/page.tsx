@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { RelatedTools } from '@/components/tools/RelatedTools';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { XongDatChecker } from '@/components/xong-dat/XongDatChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -186,6 +187,21 @@ export default function XongDatPage() {
                 </div>
               ))}
             </dl>
+          </section>
+
+          {/* Nhận nhắc theo mùa */}
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-3">
+              <OccasionLeadCapture
+                source="xong-dat-hub"
+                capturedEvent="lead_capture_xong_dat_hub"
+                blurb="Để lại email, hieu.asia sẽ báo bạn khi có bản gợi ý tuổi xông đất đầy đủ và nội dung mới theo mùa Tết. Thi thoảng thôi, không spam."
+                cta="Nhận nhắc"
+              />
+            </div>
           </section>
 
           <RelatedTools

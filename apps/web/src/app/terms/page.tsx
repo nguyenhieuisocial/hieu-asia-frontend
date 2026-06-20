@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
+import { SiteNav } from '@/components/home/SiteNav';
+import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata = {
   title: 'Điều khoản dịch vụ',
@@ -11,13 +13,9 @@ const LAST_UPDATED = '21/05/2026';
 
 export default function TermsPage() {
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <header className="container mx-auto flex items-center justify-between px-6 py-5">
-        <Link href="/" className="font-heading text-xl font-semibold text-gold-700">
-          hieu.asia
-        </Link>
-        <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Điều khoản dịch vụ</span>
-      </header>
+    <>
+      <SiteNav />
+      <main className="min-h-screen bg-background pt-24 text-foreground">
 
       <section className="container mx-auto max-w-3xl px-6 pb-20 pt-6">
         <div className="mb-10">
@@ -229,6 +227,8 @@ export default function TermsPage() {
           <p>© {new Date().getFullYear()} hieu.asia · Premium AI insight platform</p>
         </div>
       </section>
-    </main>
+      </main>
+      <SiteFooter />
+    </>
   );
 }

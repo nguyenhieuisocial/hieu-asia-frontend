@@ -4,6 +4,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { XemTuoiCuoiChecker } from '@/components/xem-tuoi-cuoi/XemTuoiCuoiChecker';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { checkWeddingYear, VERDICT_LABEL } from '@/lib/xem-tuoi-cuoi';
 import { BIRTH_YEARS, TARGET_YEAR, slugOf } from './years';
 
@@ -204,6 +205,20 @@ export default function XemTuoiCuoiPage() {
                 </li>
               ))}
             </ul>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-4">
+              <OccasionLeadCapture
+                source="xem-tuoi-cuoi-hub"
+                capturedEvent="lead_capture_xem_tuoi_cuoi_hub"
+                blurb="Để lại email, chúng tôi báo bạn khi có bản đầy đủ và nội dung mới theo mùa cưới: năm nào thuận, ngày nào tốt để cưới hỏi. Thi thoảng thôi, không spam."
+                cta="Nhận nhắc"
+              />
+            </div>
           </section>
 
           <nav aria-label="Công cụ cưới hỏi liên quan" className="text-sm">

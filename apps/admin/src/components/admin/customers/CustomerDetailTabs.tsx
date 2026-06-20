@@ -26,11 +26,14 @@ import {
   type AdminTableColumn,
 } from '@/components/admin/table/AdminTable';
 import { ProductTabs, type ProductTab } from '@/components/admin/product-tabs';
+import { SessionAccessDialog } from './SessionAccessDialog';
+import { RefundActionDialog } from './RefundActionDialog';
 import { fmtDate, fmtRelative } from './format';
 import {
   type AuditRow,
   type CustomerDetail,
   hasComplianceField,
+  type RefundRow,
   type SessionRow,
   type TxnRow,
 } from './detail-types';
@@ -39,18 +42,26 @@ export interface CustomerDetailTabsProps {
   customer: CustomerDetail | null;
   sessions: SessionRow[];
   transactions: TxnRow[];
+  refunds: RefundRow[];
   auditTrail: AuditRow[];
   value: string;
   onValueChange: (id: string) => void;
+  /** Refetch the customer after a per-session access grant/revoke. */
+  onSessionMutated?: () => void;
+  /** Refetch the customer after a refund approve/reject. */
+  onRefundMutated?: () => void;
 }
 
 export function CustomerDetailTabs({
   customer,
   sessions,
   transactions,
+  refunds,
   auditTrail,
   value,
   onValueChange,
+  onSessionMutated,
+  onRefundMutated,
 }: CustomerDetailTabsProps) {
   const tabs: ProductTab[] = [
     {
@@ -69,12 +80,17 @@ export function CustomerDetailTabs({
     {
       id: 'sessions',
       label: `Phiên · ${sessions.length}`,
-      content: <SessionsTab sessions={sessions} />,
+      content: <SessionsTab sessions={sessions} onSessionMutated={onSessionMutated} />,
     },
     {
       id: 'transactions',
       label: `Giao dịch · ${transactions.length}`,
       content: <TransactionsTab transactions={transactions} />,
+    },
+    {
+      id: 'refunds',
+      label: `Hoàn tiền · ${refunds.length}`,
+      content: <RefundsTab refunds={refunds} onRefundMutated={onRefundMutated} />,
     },
     {
       id: 'audit',
@@ -124,7 +140,13 @@ function ProfileTab({ customer }: { customer: CustomerDetail }) {
   );
 }
 
-function SessionsTab({ sessions }: { sessions: SessionRow[] }) {
+function SessionsTab({
+  sessions,
+  onSessionMutated,
+}: {
+  sessions: SessionRow[];
+  onSessionMutated?: () => void;
+}) {
   if (sessions.length === 0) {
     return (
       <EmptyState
@@ -171,6 +193,26 @@ function SessionsTab({ sessions }: { sessions: SessionRow[] }) {
             <span className="shrink-0 rounded border border-gold/20 bg-gold/5 px-2 py-0.5 text-xs text-muted-foreground">
               {status}
             </span>
+            {/* Access-only override: help a stuck customer read this one session
+                without touching money. Both actions shown — the operator picks
+                grant or revoke; we don't track unlock state per session here. */}
+            {sid && (
+              <div className="flex shrink-0 items-center gap-1.5">
+                <SessionAccessDialog
+                  sessionId={sid}
+                  action="grant"
+                  triggerLabel="Cấp quyền đọc"
+                  onSuccess={onSessionMutated}
+                />
+                <SessionAccessDialog
+                  sessionId={sid}
+                  action="revoke"
+                  triggerLabel="Thu hồi"
+                  triggerClassName="shrink-0 rounded border border-border bg-muted/20 px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-muted/40"
+                  onSuccess={onSessionMutated}
+                />
+              </div>
+            )}
           </li>
         );
       })}
@@ -228,6 +270,137 @@ function TransactionsTab({ transactions }: { transactions: TxnRow[] }) {
         <EmptyState
           title="Chưa có giao dịch"
           description="User chưa thanh toán."
+          className="border-0 bg-transparent py-4"
+        />
+      }
+    />
+  );
+}
+
+// Worker refund state machine: requested → approved → completed | rejected.
+const REFUND_STATUS_META: Record<string, { label: string; tone: string }> = {
+  requested: {
+    label: 'Đang chờ',
+    tone: 'border-gold/40 bg-gold/10 text-gold',
+  },
+  approved: {
+    label: 'Đã duyệt',
+    tone: 'border-jade/40 bg-jade/15 text-jade-700 dark:text-jade-50',
+  },
+  completed: {
+    label: 'Đã hoàn',
+    tone: 'border-jade/50 bg-jade/20 text-jade-700 dark:text-jade-50',
+  },
+  rejected: {
+    label: 'Từ chối',
+    tone: 'border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300',
+  },
+};
+
+function RefundsTab({
+  refunds,
+  onRefundMutated,
+}: {
+  refunds: RefundRow[];
+  onRefundMutated?: () => void;
+}) {
+  const columns = React.useMemo<AdminTableColumn<RefundRow>[]>(
+    () => [
+      {
+        id: 'requested_at',
+        header: 'Thời gian',
+        sortKey: 'requested_at',
+        width: '170px',
+        cell: (r) => (
+          <span className="font-mono text-xs text-muted-foreground">
+            {fmtDate(r.requested_at)}
+          </span>
+        ),
+      },
+      {
+        id: 'status',
+        header: 'Trạng thái',
+        sortKey: 'status',
+        width: '130px',
+        cell: (r) => {
+          const meta =
+            REFUND_STATUS_META[(r.status ?? '').toLowerCase()] ?? {
+              label: r.status ?? '—',
+              tone: 'border-border bg-muted/30 text-muted-foreground',
+            };
+          return (
+            <span
+              className={`inline-flex items-center rounded border px-2 py-0.5 text-xs font-medium ${meta.tone}`}
+            >
+              {meta.label}
+            </span>
+          );
+        },
+      },
+      {
+        id: 'amount_vnd',
+        header: 'Số tiền',
+        sortKey: 'amount_vnd',
+        width: '120px',
+        className: 'text-right tabular-nums',
+        cell: (r) => (
+          <span className="text-foreground/85">
+            {r.amount_vnd != null
+              ? new Intl.NumberFormat('vi-VN').format(r.amount_vnd) + ' đ'
+              : '—'}
+          </span>
+        ),
+      },
+      {
+        id: 'reason',
+        header: 'Lý do',
+        cell: (r) => (
+          <span className="text-muted-foreground">{r.reason || '—'}</span>
+        ),
+      },
+      {
+        id: 'actions',
+        header: '',
+        width: '150px',
+        className: 'text-right',
+        // Duyệt / Từ chối CHỈ hiện trên lệnh `requested` — mirror đúng worker
+        // state machine (accept/reject hợp lệ từ trạng thái requested). Mỗi nút
+        // mở dialog xác nhận, đi qua proxy OWNER-gated. Không có tiền di chuyển.
+        cell: (r) =>
+          (r.status ?? '').toLowerCase() === 'requested' ? (
+            <div className="flex items-center justify-end gap-1.5">
+              <RefundActionDialog
+                refundId={r.refund_id}
+                action="accept"
+                amountVnd={r.amount_vnd}
+                triggerLabel="Duyệt"
+                onSuccess={onRefundMutated}
+              />
+              <RefundActionDialog
+                refundId={r.refund_id}
+                action="reject"
+                amountVnd={r.amount_vnd}
+                triggerLabel="Từ chối"
+                onSuccess={onRefundMutated}
+              />
+            </div>
+          ) : (
+            <span className="text-xs text-muted-foreground">—</span>
+          ),
+      },
+    ],
+    [onRefundMutated],
+  );
+  return (
+    <AdminTable<RefundRow>
+      rows={refunds}
+      columns={columns}
+      getRowId={(r) => r.refund_id}
+      caption="Lịch sử hoàn tiền"
+      empty={
+        <EmptyState
+          title="Khách này chưa có hoàn tiền nào"
+          description="Khi có yêu cầu hoàn tiền gắn với đơn của khách, nó sẽ hiện ở đây."
           className="border-0 bg-transparent py-4"
         />
       }

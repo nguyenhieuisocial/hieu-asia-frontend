@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { XemTuoiCuoiChecker } from '@/components/xem-tuoi-cuoi/XemTuoiCuoiChecker';
 import { VERDICT_LABEL } from '@/lib/xem-tuoi-cuoi';
@@ -164,6 +165,21 @@ export default async function XemTuoiCuoiYearPage({
                 </div>
               ))}
             </dl>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-4">
+              <OccasionLeadCapture
+                source={`xem-tuoi-cuoi-${tuoi}`}
+                capturedEvent="lead_capture_xem_tuoi_cuoi"
+                capturedProps={{ tuoi }}
+                blurb={`Để lại email, mình sẽ báo bạn khi có bản đầy đủ về năm tốt cưới hỏi cho tuổi ${d.birthYear} và những nội dung mới chọn ngày tốt theo mùa. Thi thoảng thôi, không spam.`}
+                cta="Nhận nhắc"
+              />
+            </div>
           </section>
 
           <nav aria-label="Xem tuổi cưới các năm sinh khác" className="text-sm leading-7">

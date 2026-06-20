@@ -14,8 +14,9 @@
 
 import { readAffiliateRef } from './affiliate-ref';
 import { getSupabaseAuth } from './auth-client';
+import { getAttribution } from './attribution';
 
-const API_BASE = process.env.NEXT_PUBLIC_HIEU_API_URL ?? 'https://api.hieu.asia';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 const ONBOARDED_KEY_PREFIX = 'hieu:ref:onboarded:';
 
 export async function onboardAffiliateFromRef(): Promise<void> {
@@ -37,13 +38,29 @@ export async function onboardAffiliateFromRef(): Promise<void> {
     const token = data.session?.access_token;
     if (!token) return;
 
+    // Forward the first-touch marketing signals so the worker persists them in
+    // the durable server-side attribution record alongside the referral code.
+    // Tied to the auth user_id, this survives cookie-clear / device change, so
+    // the affiliate's credit (and the campaign source) is never lost.
+    const ft = getAttribution()?.first_touch;
+    const body: Record<string, unknown> = { parentCode: code };
+    if (ft) {
+      if (ft.utm_source) body.utm_source = ft.utm_source;
+      if (ft.utm_medium) body.utm_medium = ft.utm_medium;
+      if (ft.utm_campaign) body.utm_campaign = ft.utm_campaign;
+      if (ft.gclid) body.gclid = ft.gclid;
+      if (ft.fbclid) body.fbclid = ft.fbclid;
+      if (ft.url) body.landing_url = ft.url;
+      if (ft.ts) body.first_touch_ts = String(ft.ts);
+    }
+
     const res = await fetch(`${API_BASE}/aff/onboard`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
         authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ parentCode: code }),
+      body: JSON.stringify(body),
       keepalive: true,
     });
 

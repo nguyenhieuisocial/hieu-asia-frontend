@@ -38,7 +38,7 @@ interface DecisionBrief {
 type StructuredChart = StructuredChartEnvelope;
 
 const API_BASE =
-  process.env.NEXT_PUBLIC_HIEU_API_URL ??
+  process.env.NEXT_PUBLIC_API_URL ??
   process.env.HIEU_API_URL ??
   'https://api.hieu.asia';
 

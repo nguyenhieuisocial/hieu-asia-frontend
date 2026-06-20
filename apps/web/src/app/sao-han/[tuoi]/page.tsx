@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { SaoHanCalculator } from '@/components/sao-han/SaoHanCalculator';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { computeSaoHan, currentViewYear, type SaoType } from '@/lib/sao-han';
@@ -204,6 +205,21 @@ export default async function SaoHanConGiapPage({
                 </div>
               ))}
             </dl>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa cho tuổi {cg.ten}
+            </h2>
+            <div className="mt-4">
+              <OccasionLeadCapture
+                source={`sao-han-${tuoi}`}
+                capturedEvent="lead_capture_sao_han"
+                capturedProps={{ tuoi }}
+                blurb={`Để lại email, chúng tôi báo khi có nội dung mới theo mùa cho tuổi ${cg.ten} (sao hạn năm mới, ngày tốt, xem ngày). Thi thoảng thôi, không spam.`}
+                cta="Nhận nhắc"
+              />
+            </div>
           </section>
 
           <nav aria-label="Sao hạn các tuổi khác" className="text-sm">

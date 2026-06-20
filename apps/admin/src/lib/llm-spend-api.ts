@@ -24,6 +24,11 @@ export interface LlmDailyRow {
   model: string;
   cost_usd: number;
   call_count: number;
+  // Per-day token volume (aliased from input_tokens_sum / output_tokens_sum by
+  // the worker). OPTIONAL so the page degrades gracefully when the backend that
+  // adds these fields hasn't deployed yet.
+  input_tokens?: number | null;
+  output_tokens?: number | null;
 }
 
 export interface LlmTraceRow {
@@ -153,6 +158,161 @@ export async function upsertApiBudget(body: BudgetUpsert): Promise<ApiBudgetRow 
     throw new Error(`[llm-spend] upsertApiBudget HTTP ${res.status}: ${detail.slice(0, 200)}`);
   }
   return (await res.json()) as ApiBudgetRow | null;
+}
+
+// ---------- AI observability (latency percentiles + per-report economics) ----------
+//
+// Backed by the worker endpoints /admin/ai/latency and /admin/ai/report-costs
+// (see backend src/admin/data.ts handleAiLatency / handleAiReportCosts). These
+// surface llm_traces.latency_ms (p50/p95 per role) and llm_traces.reading_session_id
+// (cost per report) — neither was exposed by the existing spend panels.
+//
+// Both wrappers return null on any non-2xx (incl. 404 when the worker hasn't
+// shipped these routes yet) so the panels can hide gracefully pre-deploy.
+
+const AI_BASE = '/api/admin-proxy/admin/ai';
+
+export interface LatencyRoleRow {
+  role: string;
+  p50: number;
+  p95: number;
+  count: number;
+}
+
+export interface LatencyByRole {
+  ok: true;
+  window_days: number;
+  generated_at: string;
+  byRole: LatencyRoleRow[];
+}
+
+export interface ReportCostRow {
+  reading_session_id: string;
+  cost_usd: number;
+  trace_count: number;
+  total_latency_ms: number;
+}
+
+export interface ReportCosts {
+  ok: true;
+  window_days: number;
+  generated_at: string;
+  report_count: number;
+  avg_cost_usd: number;
+  median_cost_usd: number;
+  reports: ReportCostRow[];
+}
+
+/** Returns null on 404 (route not deployed) / any error → caller hides the panel. */
+async function aiGetOrNull<T extends { ok: true }>(
+  path: string,
+  query: Record<string, string> = {},
+): Promise<T | null> {
+  try {
+    const qs = new URLSearchParams(query).toString();
+    const res = await fetch(`${AI_BASE}/${path}${qs ? `?${qs}` : ''}`, {
+      cache: 'no-store',
+      credentials: 'same-origin',
+    });
+    if (bounceOn401(res.status)) return null;
+    if (!res.ok) return null;
+    const data = (await res.json()) as T;
+    if (!data?.ok) return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+export function getLatencyByRole(days = 7): Promise<LatencyByRole | null> {
+  return aiGetOrNull<LatencyByRole>('latency', { days: String(days) });
+}
+
+export function getReportCosts(days = 30, limit = 20): Promise<ReportCosts | null> {
+  return aiGetOrNull<ReportCosts>('report-costs', {
+    days: String(days),
+    limit: String(limit),
+  });
+}
+
+// ---------- AI-ops monitors (báo cáo kẹt + sức khoẻ model) ----------
+//
+// Backed by /admin/ai/stuck-sessions và /admin/ai/model-health (backend
+// handleAiStuckSessions / handleAiModelHealth). Cùng dùng aiGetOrNull → null
+// trên 404, panel tự ẩn khi worker chưa ship route.
+
+export interface StuckSessionRow {
+  session_id: string;
+  user_id: string | null;
+  status: 'queued' | 'running';
+  created_at: string | null;
+  age_minutes: number;
+}
+
+export interface StuckSessions {
+  ok: true;
+  older_than_min: number;
+  generated_at: string;
+  count: number;
+  sessions: StuckSessionRow[];
+}
+
+export interface ModelHealthRow {
+  model: string;
+  count: number;
+  cost_usd_total: number;
+  avg_cost_usd: number;
+  error_rate_pct: number;
+}
+
+export interface ModelHealth {
+  ok: true;
+  window_days: number;
+  generated_at: string;
+  total_count: number;
+  models: ModelHealthRow[];
+}
+
+export function getStuckSessions(olderThanMin = 30): Promise<StuckSessions | null> {
+  return aiGetOrNull<StuckSessions>('stuck-sessions', {
+    older_than_min: String(olderThanMin),
+  });
+}
+
+export function getModelHealth(days = 7): Promise<ModelHealth | null> {
+  return aiGetOrNull<ModelHealth>('model-health', { days: String(days) });
+}
+
+// ---------- Per-vendor telemetry (cho trang /vendors) ----------
+//
+// Backed by /admin/ai/vendor-telemetry (backend handleAiVendorTelemetry). Gom
+// llm_traces theo cột `vendor`: requests / errors / error_rate / latency TB+p95
+// / cost / lần cuối dùng. Cùng dùng aiGetOrNull → null trên 404, panel tự ẩn
+// khi worker chưa ship route. CAVEAT: nhiều trace có cost_usd=0 (pipeline không
+// định giá mọi call) → requests/errors/latency là số THẬT, cost có thể thiếu.
+
+export interface VendorTelemetryRow {
+  vendor: string;
+  requests: number;
+  errors: number;
+  error_rate_pct: number;
+  latency_avg_ms: number;
+  latency_p95_ms: number;
+  cost_usd: number;
+  last_used_at: string | null;
+}
+
+export interface VendorTelemetry {
+  ok: true;
+  configured: boolean;
+  window_days: number;
+  generated_at: string;
+  total_requests: number;
+  items: VendorTelemetryRow[];
+}
+
+export function getVendorTelemetry(days = 7): Promise<VendorTelemetry | null> {
+  return aiGetOrNull<VendorTelemetry>('vendor-telemetry', { days: String(days) });
 }
 
 // ---------- Helpers ----------
