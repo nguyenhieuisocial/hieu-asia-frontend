@@ -45,7 +45,12 @@ function StarPill({ star }: { star: { name: string; brightness?: string; mutagen
     >
       {star.name}
       {star.mutagen && (
-        <span className="rounded bg-gold/20 px-1 text-[9px] text-gold">{star.mutagen[0]}</span>
+        <span
+          title={`Hóa ${star.mutagen}`}
+          className="rounded bg-gold/20 px-1 text-[9px] text-gold"
+        >
+          {star.mutagen}
+        </span>
       )}
     </span>
   );
