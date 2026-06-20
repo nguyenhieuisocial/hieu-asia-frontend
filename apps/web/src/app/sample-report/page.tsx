@@ -647,14 +647,14 @@ export default function SampleReportPage() {
           <Card className="border-purple/30 bg-purple/[0.04]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-heading text-xl text-foreground sm:text-2xl">
-                <Calendar className="h-5 w-5 text-purple-300" aria-hidden /> 5 câu tự phản tư
+                <Calendar className="h-5 w-5 text-purple-700 dark:text-purple-50" aria-hidden /> 5 câu tự phản tư
               </CardTitle>
             </CardHeader>
             <CardContent>
               <ol className="space-y-3 text-sm leading-relaxed text-foreground/85 sm:text-base">
                 {REFLECTION_QUESTIONS.map((q, i) => (
                   <li key={i} className="flex gap-3">
-                    <span className="shrink-0 font-mono text-purple-300">
+                    <span className="shrink-0 font-mono text-purple-700 dark:text-purple-50">
                       {String(i + 1).padStart(2, '0')}.
                     </span>
                     <span>{q}</span>

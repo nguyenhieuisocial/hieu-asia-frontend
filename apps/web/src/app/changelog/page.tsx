@@ -124,7 +124,7 @@ const RELEASES: readonly ReleaseEntry[] = [
 
 const TAG_LABELS: Record<NonNullable<ReleaseEntry['tag']>, { label: string; cls: string }> = {
   major: { label: 'Major', cls: 'border-gold/40 bg-gold/10 text-gold-700' },
-  feature: { label: 'Tính năng', cls: 'border-purple/40 bg-purple/10 text-purple-200' },
+  feature: { label: 'Tính năng', cls: 'border-purple/40 bg-purple/10 text-purple-700 dark:text-purple-50' },
   polish: { label: 'Polish', cls: 'border-jade/40 bg-jade/10 text-emerald-200' },
   infra: { label: 'Hạ tầng', cls: 'border-border bg-muted/5 text-muted-foreground' },
 };

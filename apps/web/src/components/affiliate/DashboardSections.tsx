@@ -28,8 +28,8 @@ const EVENT_LABEL: Record<DashRecentEvent['event'], { text: string; tone: string
 };
 
 const STATUS_LABEL: Record<DashPayout['status'], { text: string; tone: string }> = {
-  pending: { text: 'Đang chờ', tone: 'text-yellow-400' },
-  paid: { text: 'Đã trả', tone: 'text-green-400' },
+  pending: { text: 'Đang chờ', tone: 'text-amber-700 dark:text-yellow-400' },
+  paid: { text: 'Đã trả', tone: 'text-emerald-700 dark:text-emerald-400' },
   rejected: { text: 'Bị từ chối', tone: 'text-rose-400' },
 };
 
@@ -157,7 +157,7 @@ export function PayoutRequest({
           <p className="text-xs text-muted-foreground">Tối thiểu {vnd(minPayout)} mới được rút.</p>
         )}
         {msg && (
-          <p className={`text-sm ${msg.ok ? 'text-green-400' : 'text-rose-300'}`} role="status">
+          <p className={`text-sm ${msg.ok ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-300'}`} role="status">
             {msg.text}
           </p>
         )}
