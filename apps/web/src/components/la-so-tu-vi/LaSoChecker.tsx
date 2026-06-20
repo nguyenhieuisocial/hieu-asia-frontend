@@ -175,11 +175,16 @@ export function LaSoChecker({
         {error && <p className="text-sm text-destructive">{error}</p>}
 
         {chart && (
-          <div className="space-y-5 pt-2">
-            <TuViChart12Palaces chart={chart} />
+          // `data-in` kích hoạt hệ reveal sẵn có (globals.css) → lá số + các ô
+          // dữ-liệu hiện-dần theo nhịp khi vừa tính xong. Tự tắt khi
+          // prefers-reduced-motion (rv-* chỉ ẩn ban đầu trong no-preference).
+          <div className="space-y-5 pt-2" data-in>
+            <div className="rv-fade">
+              <TuViChart12Palaces chart={chart} />
+            </div>
 
             {cachCuc.length > 0 && (
-              <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
+              <div className="rv-up rounded-xl border border-gold/20 bg-card/40 p-4" style={{ animationDelay: '60ms' }}>
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
                   Cách cục — thế cục có tên trong lá số
                 </p>
@@ -217,7 +222,7 @@ export function LaSoChecker({
             )}
 
             {tuanKhong && tuanKhong.palaces.length > 0 && (
-              <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
+              <div className="rv-up rounded-xl border border-gold/20 bg-card/40 p-4" style={{ animationDelay: '120ms' }}>
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
                   Tuần Không (旬空) — cung “không vong”
                 </p>
@@ -236,7 +241,7 @@ export function LaSoChecker({
             )}
 
             {daiVan && (
-              <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
+              <div className="rv-up rounded-xl border border-gold/20 bg-card/40 p-4" style={{ animationDelay: '180ms' }}>
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
                   Vận 10 năm hiện tại (đại vận)
                 </p>
@@ -261,7 +266,7 @@ export function LaSoChecker({
             )}
 
             {luuNien && luuNienHoa && (
-              <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
+              <div className="rv-up rounded-xl border border-gold/20 bg-card/40 p-4" style={{ animationDelay: '240ms' }}>
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
                   Vận năm nay{luuNienCanChi ? ` — lưu niên ${luuNienCanChi}` : ''}
                 </p>
@@ -278,7 +283,7 @@ export function LaSoChecker({
               </div>
             )}
 
-            <p className="text-xs leading-relaxed text-muted-foreground">
+            <p className="rv-up text-xs leading-relaxed text-muted-foreground" style={{ animationDelay: '300ms' }}>
               Lá số được an bằng engine Tử Vi chuẩn (114 sao, độ sáng miếu/vượng/hãm, Tứ Hóa, đại vận, lưu
               niên) —{' '}
               <strong>con số là thật, kiểm chứng được</strong>. Đây là bản tra cứu miễn phí; phần luận giải sâu
@@ -286,10 +291,12 @@ export function LaSoChecker({
             </p>
 
             {/* Gợi ý bổ khuyết ngũ hành — chỉ đọc fiveElementsClass, không đụng engine */}
-            <NguHanhRemedyCard fiveElementsClass={chart.meta.fiveElementsClass} />
+            <div className="rv-up" style={{ animationDelay: '340ms' }}>
+              <NguHanhRemedyCard fiveElementsClass={chart.meta.fiveElementsClass} />
+            </div>
 
             {/* Funnel → AI deep reading (free chart here; the AI interpretation is the product) */}
-            <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-5 text-center">
+            <div className="rv-up rounded-xl border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-5 text-center" style={{ animationDelay: '380ms' }}>
               <p className="font-heading text-lg text-foreground">Muốn AI luận sâu lá số này?</p>
               <p className="mx-auto mt-1 max-w-xl text-sm text-muted-foreground">
                 Bản đọc đầy đủ: 12 cung theo tam phương tứ chính, đại vận – lưu niên, đối chiếu cổ thư — viết
