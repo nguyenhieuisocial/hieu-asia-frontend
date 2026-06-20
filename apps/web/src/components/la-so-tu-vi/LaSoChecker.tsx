@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
-import { castTuViHoroscope, type TuViChart, type TuViHoroscope, type TuViPalace, type CachCuc } from '@/lib/tuvi-client';
+import { castTuViHoroscope, type TuViChart, type TuViHoroscope, type TuViPalace, type CachCuc, type TuanKhong } from '@/lib/tuvi-client';
 import { TuViChart12Palaces } from '@/components/tuvi/TuViChart12Palaces';
 import { NguHanhRemedyCard } from '@/components/ngu-hanh/NguHanhRemedyCard';
 
@@ -85,6 +85,7 @@ export function LaSoChecker({
   const [chart, setChart] = React.useState<TuViChart | null>(null);
   const [horoscope, setHoroscope] = React.useState<TuViHoroscope | null>(null);
   const [cachCuc, setCachCuc] = React.useState<CachCuc[]>([]);
+  const [tuanKhong, setTuanKhong] = React.useState<TuanKhong | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -98,8 +99,9 @@ export function LaSoChecker({
     setChart(null);
     setHoroscope(null);
     setCachCuc([]);
+    setTuanKhong(null);
     try {
-      const { chart: c, horoscope: h, cachCuc: cc } = await castTuViHoroscope({
+      const { chart: c, horoscope: h, cachCuc: cc, tuanKhong: tk } = await castTuViHoroscope({
         birthSolarDate: date,
         birthHour: parseHour(time),
         gender,
@@ -107,6 +109,7 @@ export function LaSoChecker({
       setChart(c);
       setHoroscope(h);
       setCachCuc(cc);
+      setTuanKhong(tk);
     } catch {
       setError('Chưa lập được lá số — thử lại sau giây lát.');
     } finally {
@@ -209,6 +212,25 @@ export function LaSoChecker({
                   Cách cục được <strong>tính trực tiếp từ lá số</strong> (vị trí sao thật), không phải lời đoán —
                   là <strong>khuôn hình thiên hướng</strong>, không phải phán giàu–nghèo. Đọc Mệnh luôn xét cùng
                   tam phương tứ chính.
+                </p>
+              </div>
+            )}
+
+            {tuanKhong && tuanKhong.palaces.length > 0 && (
+              <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
+                  Tuần Không (旬空) — cung “không vong”
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-foreground/85">
+                  Năm sinh <strong>{tuanKhong.yearPillar}</strong> →{' '}
+                  <strong className="text-foreground">{tuanKhong.palaces.map((p) => p.name).join(' · ')}</strong>{' '}
+                  bị Tuần Không (chi {tuanKhong.branches.join(', ')}). Việc của cung “không vong” dễ hư hao,
+                  ứng muộn, khó thành tựu trực tiếp — thường phải qua trắc trở mới được; ngược lại cũng làm
+                  <strong> nhẹ bớt</strong> cái xấu nếu cung đó nhiều sát tinh.
+                </p>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  An theo can-chi năm sinh (luật thống nhất — <strong>tính thật</strong>). Triệt Lộ chưa tính
+                  (cách an khác nhau theo trường phái).
                 </p>
               </div>
             )}
