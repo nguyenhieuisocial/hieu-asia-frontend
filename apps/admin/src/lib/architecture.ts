@@ -272,3 +272,97 @@ export const ARCH_EDGES: ArchEdge[] = [
   { source: 'vercel', target: 'admin', label: 'deploy', kind: 'deploy' },
   { source: 'gh', target: 'worker', label: 'deploy', kind: 'deploy' },
 ];
+
+/**
+ * Scheduled operations — the worker cron jobs (the system's "autopilot").
+ * Grounded in api-gateway `scheduled()` + telegram-digest.ts. Admin previously
+ * had zero visibility into these — this is the legibility layer (what runs, when,
+ * what it does, which Telegram topic it alerts). Run-history (did each fire OK)
+ * is a future layer once the worker records per-run state.
+ */
+export interface ScheduledOp {
+  name: string;
+  fn: string; // worker function name (grounding reference)
+  does: string;
+  topic?: string; // Telegram topic the alert posts to
+}
+export interface ScheduleGroup {
+  id: string;
+  schedule: string; // human-readable
+  cron: string; // cron expression
+  ops: ScheduledOp[];
+}
+
+export const SCHEDULED_OPS: ScheduleGroup[] = [
+  {
+    id: 'q15',
+    schedule: 'Mỗi 15 phút',
+    cron: '*/15 * * * *',
+    ops: [
+      {
+        name: 'Đối soát mở-khóa trả-phí',
+        fn: 'reconcileUnlockedSessions',
+        does: 'Phiên đã trả tiền (KV) nhưng cờ is_paid chưa ghi kịp → tự đồng-bộ lại trong ≤15 phút, không để khách bị khóa oan.',
+      },
+    ],
+  },
+  {
+    id: 'hourly',
+    schedule: 'Mỗi giờ',
+    cron: '0 * * * *',
+    ops: [
+      { name: 'Dò bất thường', fn: 'checkAnomalies', does: 'Lỗi / đăng-ký / chi-phí-AI tăng đột-biến so với nền.' },
+      { name: 'Khách mới', fn: 'notifyNewUsers', does: 'Báo có người dùng mới đăng-ký.', topic: 'user' },
+      { name: 'Lỗi mới', fn: 'notifyNewErrors', does: 'Lỗi Sentry mới phát-sinh.', topic: 'bug' },
+      { name: 'Bản ship mới', fn: 'notifyShips', does: 'Có deploy / tính-năng mới lên mạng.', topic: 'update' },
+      { name: 'Góp ý mới', fn: 'notifyNewFeedback', does: 'Khách gửi góp-ý / phản-hồi mới.', topic: 'feedback' },
+      { name: 'Thao tác admin mới', fn: 'notifyNewAudit', does: 'Có thao-tác admin mới ghi vào nhật-ký.', topic: 'security' },
+      { name: 'Thanh toán bỏ dở', fn: 'notifyAbandonedPayments', does: 'Đơn còn treo chưa trả → nhắc để thu-hồi doanh-thu.', topic: 'revenue' },
+      { name: 'CTV mới', fn: 'notifyNewAffiliates', does: 'Cộng-tác-viên affiliate mới đăng-ký.', topic: 'affiliate' },
+      { name: 'Yêu cầu rút hoa-hồng', fn: 'notifyPayoutRequests', does: 'Có yêu-cầu rút hoa-hồng đang chờ duyệt.', topic: 'affiliate' },
+      { name: 'Nội dung mới đăng', fn: 'notifyContentPublished', does: 'Bài/nội-dung vừa được publish.', topic: 'marketing' },
+      { name: 'Gói sắp hết hạn', fn: 'notifyExpiringSubscriptions', does: 'Gói thuê-bao hết hạn trong 3 ngày hoặc vừa hết.', topic: 'revenue' },
+      { name: 'Lá số bị kẹt', fn: 'notifyStuckReadings', does: 'Lá-số khách (đã trả tiền) chờ quá lâu — cảnh-báo SLA lõi sản-phẩm.', topic: 'health' },
+      { name: 'Công-tắc người-chết', fn: 'monitorAlertHealth', does: 'Kiểm chính các cảnh-báo trên có còn chạy không (chống "im-lặng giả").', topic: 'health' },
+      { name: 'Số dư cổng AI', fn: 'monitorAiBalance', does: 'Cảnh-báo TRƯỚC khi cổng AI hết tiền.', topic: 'ai' },
+      { name: 'Uptime FE + API', fn: 'monitorUptime', does: 'Ping web + API, báo khi sập / khi hồi.', topic: 'health' },
+      { name: 'Dung lượng KV + R2', fn: 'monitorStorage', does: 'Cảnh-báo khi KV/R2 dùng ≥80% hạn-mức free.', topic: 'resource' },
+      { name: 'Sức khỏe nhà-cung-cấp AI', fn: 'monitorProviderHealth', does: 'Báo nếu một vendor AI mất credential cuối-cùng.', topic: 'ai' },
+    ],
+  },
+  {
+    id: 'morning',
+    schedule: 'Hằng ngày · 10h sáng',
+    cron: '0 3 * * *',
+    ops: [
+      { name: 'Bản tin sáng', fn: 'sendDigest("morning")', does: 'Tổng-hợp đêm qua: user / doanh-thu / lỗi / lá-số.' },
+      { name: 'Tóm tắt AI cho founder', fn: 'sendAiBriefing', does: 'Tóm-tắt bằng ngôn-ngữ thường, AI viết.' },
+      { name: 'Bản tin tài chính SePay', fn: 'sendSepayDigest', does: 'Đối-soát thu-chi SePay → nhóm tài-chính.', topic: 'revenue' },
+    ],
+  },
+  {
+    id: 'evening',
+    schedule: 'Hằng ngày · 20h tối',
+    cron: '0 13 * * *',
+    ops: [{ name: 'Bản tin chiều', fn: 'sendDigest("evening")', does: 'Tổng-hợp trong ngày.' }],
+  },
+  {
+    id: 'nightly',
+    schedule: 'Hằng đêm · 1h sáng',
+    cron: '0 18 * * *',
+    ops: [
+      {
+        name: 'Chấm điểm Mentor (eval đêm)',
+        fn: 'runNightlyEval',
+        does: '100 persona × 3 giám-khảo đa-LLM → lưu eval_runs; báo nếu điểm TB < 8.5 hoặc > 10 lỗi (canh "không bói mù").',
+        topic: 'ai',
+      },
+    ],
+  },
+  {
+    id: 'weekly',
+    schedule: 'Hằng tuần · Thứ 2, 9h sáng',
+    cron: '0 2 * * 1',
+    ops: [{ name: 'Bản tin tuần (cockpit)', fn: 'sendWeeklyDigest', does: 'Tổng-kết tuần cho founder.' }],
+  },
+];
