@@ -108,7 +108,11 @@ export function PrivacyTab({ userId }: PrivacyTabProps) {
         const res = await fetch('/api/user/preferences', {
           method: 'POST',
           headers,
-          body: JSON.stringify({ user_id: userId, consent: next }),
+          // The proxy contract (and the worker /user/preferences handler) takes
+          // a `prefs` bag, not `consent` — sending `consent` 400s at the proxy.
+          // The consent flags share the merged prefs store; their keys don't
+          // collide with the general settings keys.
+          body: JSON.stringify({ user_id: userId, prefs: next }),
         });
         if (res.ok) {
           toast.success('Đã lưu');
