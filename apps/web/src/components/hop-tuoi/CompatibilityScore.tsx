@@ -13,11 +13,15 @@ interface Props {
 }
 
 function colorForScore(s: number): string {
-  if (s < 30) return '#ef4444';        // red-500
-  if (s < 50) return '#f97316';        // orange-500
-  if (s < 70) return '#eab308';        // yellow-500
-  if (s < 85) return '#84cc16';        // lime-500
-  return '#22c55e';                    // green-500
+  // Darkened bad→good ramp that stays WCAG-AA (≥4.5:1) on the cream (#F3ECDD)
+  // light theme this gauge renders on. It drives the arc, the big score number
+  // and the rating label, so all three must clear AA — the original 500-shades
+  // sat at only 1.6–3.2:1 and washed out on cream.
+  if (s < 30) return '#b91c1c';        // red-700    (5.5:1)
+  if (s < 50) return '#9a3412';        // orange-800 (6.2:1)
+  if (s < 70) return '#854d0e';        // yellow-800 (5.8:1)
+  if (s < 85) return '#166534';        // green-800  (6.1:1)
+  return '#14532d';                    // green-900  (7.8:1)
 }
 
 export function CompatibilityScore({ score, rating, size = 200 }: Props) {
@@ -35,8 +39,8 @@ export function CompatibilityScore({ score, rating, size = 200 }: Props) {
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="rgba(255,255,255,0.08)"
           strokeWidth={10}
+          style={{ stroke: 'hsl(var(--border))' }}
         />
         <circle
           cx={size / 2}
@@ -68,7 +72,7 @@ export function CompatibilityScore({ score, rating, size = 200 }: Props) {
           textAnchor="middle"
           dominantBaseline="middle"
           fontSize={size * 0.08}
-          fill="rgba(255,255,255,0.6)"
+          style={{ fill: 'hsl(var(--muted-foreground))' }}
         >
           / 100
         </text>

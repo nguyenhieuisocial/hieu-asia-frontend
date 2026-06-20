@@ -83,7 +83,7 @@ export function PaintedCanvas({
       {watermark === 'lotus' && (
         <svg
           aria-hidden
-          className="pointer-events-none absolute -right-12 bottom-0 z-0 h-[480px] w-[480px] text-ink/80/30"
+          className="pointer-events-none absolute -right-12 bottom-0 z-0 h-[480px] w-[480px] text-ink/30"
           viewBox="0 0 200 200"
           fill="none"
           stroke="currentColor"

@@ -381,7 +381,7 @@ export function FeaturePaywall({
                         ? appliedDiscountPct
                         : Math.round((1 - appliedPrice / price) * 100);
                     return pct > 0 ? (
-                      <span className="ml-1 text-xs font-medium text-emerald-500">
+                      <span className="ml-1 text-xs font-medium text-emerald-300">
                         -{pct}%
                       </span>
                     ) : null;
@@ -435,7 +435,7 @@ export function FeaturePaywall({
               </div>
             )}
             {codeErr && (
-              <p className="text-xs text-red-500">{codeErr}</p>
+              <p className="text-xs text-red-300">{codeErr}</p>
             )}
           </div>
 
