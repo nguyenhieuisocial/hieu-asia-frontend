@@ -250,13 +250,16 @@ html {
  * pre-verified AA against the actual composited card backgrounds. */
 :root:not(.dark) .methodology-a11y .text-rose-300,
 :root:not(.dark) .methodology-a11y .text-rose-300\/80,
-:root:not(.dark) .methodology-a11y .text-rose-400 {
+:root:not(.dark) .methodology-a11y .text-rose-400,
+:root:not(.dark) .methodology-a11y .text-rose-400\/80 {
   color: #a8201a; /* ≥5.9:1 on the cream/rose card tints — keeps the red "avoid" semantic */
 }
-:root:not(.dark) .methodology-a11y .text-amber-300 {
+:root:not(.dark) .methodology-a11y .text-amber-300,
+:root:not(.dark) .methodology-a11y .text-amber-300\/80 {
   color: #785312; /* dark ochre-gold, ≥5.2:1 on the amber tints */
 }
-:root:not(.dark) .methodology-a11y .text-jade-300 {
+:root:not(.dark) .methodology-a11y .text-jade-300,
+:root:not(.dark) .methodology-a11y .text-jade-300\/80 {
   color: #245c52; /* ≥5.4:1 — clears 4.5 on the darker jade-tinted badge bg */
 }
 :root:not(.dark) .methodology-a11y .text-muted-foreground\/80 {
