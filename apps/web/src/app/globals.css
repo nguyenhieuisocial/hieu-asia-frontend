@@ -271,6 +271,19 @@ html {
                                 4.96:1 (was 3.34 on the dark-tint mud) */
 }
 
+/* Homepage AstroTickerLive — the live almanac ticker tints its labels with the
+ * five-element vars (--hanh-*) on a light bg-card/60 surface. In LIGHT mode
+ * Kim/Mộc/Hoả/Thổ drop to ~2.6–4.0:1 (Lighthouse color-contrast); Thuỷ already
+ * passes. Darken just those four to AA, SCOPED to the ticker via `.astro-ticker`
+ * so the SAME vars stay brand-bright inside charts/lá số elsewhere. DARK is
+ * untouched by :not(.dark). Replacement colors pre-verified ≥5:1 on the card. */
+:root:not(.dark) .astro-ticker {
+  --hanh-kim: #4f5a66; /* metal — gray-blue, ≥5.8:1 */
+  --hanh-moc: #4d6139; /* wood  — green,     ≥5.6:1 */
+  --hanh-hoa: #8b3b2b; /* fire  — red,       ≥6.0:1 */
+  --hanh-tho: #7a5a2c; /* earth — gold-brown, ≥5.1:1 */
+}
+
 /* ────────────────────────────────────────────────────────────────────────
  * AA contrast sweep — ROUND 3 (2026-06-14, founder "fix màu toàn site, cả
  * sáng/tối"). A Playwright audit (both themes, 39 template families) surfaced

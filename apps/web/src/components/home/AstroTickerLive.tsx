@@ -92,7 +92,7 @@ export function AstroTickerLive() {
   return (
     <section
       aria-label="Lịch can chi & giờ hoàng đạo hôm nay"
-      className="border-y border-primary/15 bg-card/60"
+      className="astro-ticker border-y border-primary/15 bg-card/60"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* min-height reserves space pre-mount to avoid layout shift */}

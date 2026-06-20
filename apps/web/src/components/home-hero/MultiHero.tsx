@@ -15,6 +15,7 @@ import { LENSES } from '@/lib/catalog/lenses';
 
 const INK = '#171411';
 const OCHRE = '#A47532';
+const OCHRE_DEEP = '#7A5420'; // AA-dark ochre for SMALL labels on PAPER (≥5:1); OCHRE stays for the large h1 line (passes large-text 3:1)
 const PAPER = '#F3ECDD';
 const SOFT = '#6B6358';
 
@@ -133,7 +134,7 @@ const CSS = `
 .mh-soi { margin: 0; text-align: center; min-height: 4.5em; max-width: 32em; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; letter-spacing: .01em; line-height: 1.5; }
 .mh-soi-in { display: inline-block; }
 .mh-soi-k { color: ${SOFT}; }
-.mh-soi-n { color: ${OCHRE}; font-weight: 500; font-family: 'Newsreader', Georgia, serif; font-size: 1.15em; font-style: italic; }
+.mh-soi-n { color: ${OCHRE_DEEP}; font-weight: 500; font-family: 'Newsreader', Georgia, serif; font-size: 1.15em; font-style: italic; }
 .mh-soi-r { color: ${SOFT}; }
 .mh-soi-q { color: ${INK}; opacity: .92; font-family: 'Newsreader', Georgia, serif; font-size: 1.12em; font-style: italic; }
 .mh-hint { margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: ${SOFT}; opacity: .78; }
