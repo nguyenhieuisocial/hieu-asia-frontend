@@ -20,9 +20,23 @@ const NGU_HANH_COLOR: Record<TruData['nguHanh'], string> = {
   Kim: '#D8CDB1',
   Mộc: '#5C8A6A',
   Thủy: '#3B5F8A',
-  Hỏa: '#B85C3D',
+  Hỏa: '#A84E2E',
   Thổ: '#B8923D',
 };
+
+// WCAG-AA readable text color for a solid hex background: keep the dark brand
+// ink on light element colors (Kim/Mộc/Thổ) and switch to white on the dark
+// ones (Hỏa/Thủy), picking whichever has the higher contrast ratio. This keeps
+// every element chip legible instead of hardcoding one near-black ink that
+// washes out on the darker fills.
+function readableOn(hex: string): string {
+  const channel = (i: number) => parseInt(hex.slice(i, i + 2), 16) / 255;
+  const lin = (v: number) => (v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+  const L = 0.2126 * lin(channel(1)) + 0.7152 * lin(channel(3)) + 0.0722 * lin(channel(5));
+  const onInk = (L + 0.05) / (0.0048 + 0.05); // contrast vs near-black ink (#0F0F12)
+  const onWhite = (1 + 0.05) / (L + 0.05); // contrast vs white
+  return onWhite > onInk ? '#FFFFFF' : '#0F0F12';
+}
 
 export function InfographicBatTu() {
   return (
@@ -81,8 +95,11 @@ export function InfographicBatTu() {
                   className="border border-border px-3 py-2 text-center"
                 >
                   <span
-                    className="inline-block rounded px-2 py-1 text-xs font-semibold text-ink"
-                    style={{ backgroundColor: NGU_HANH_COLOR[t.nguHanh] }}
+                    className="inline-block rounded px-2 py-1 text-xs font-semibold"
+                    style={{
+                      backgroundColor: NGU_HANH_COLOR[t.nguHanh],
+                      color: readableOn(NGU_HANH_COLOR[t.nguHanh]),
+                    }}
                   >
                     {t.nguHanh}
                   </span>
