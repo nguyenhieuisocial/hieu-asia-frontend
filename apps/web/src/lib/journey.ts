@@ -21,7 +21,6 @@ import { LENSES, type Lens } from '@/lib/catalog/lenses';
 import { getPersonalityResult, hasVisionDone } from '@/lib/personality-store';
 
 const CHART_KEY = 'hieu:chart:profile:v1';
-const ONBOARDING_KEY = 'hieu:onboarding:v2';
 
 /** Where "Soi ngay" sends the user for each lens (the action, not the learn page). */
 const ACTION_HREF: Record<string, string> = {
@@ -43,13 +42,12 @@ export interface JourneyLens {
   reviewHref: string;
 }
 
-/** True if a birth chart is saved locally (direct profile or onboarding draft). */
+/** True if a birth chart is saved locally (the chart-profile store). */
 function hasSavedChart(): boolean {
   if (typeof window === 'undefined') return false;
   try {
-    for (const key of [CHART_KEY, ONBOARDING_KEY]) {
-      const raw = window.localStorage.getItem(key);
-      if (!raw) continue;
+    const raw = window.localStorage.getItem(CHART_KEY);
+    if (raw) {
       const p = JSON.parse(raw) as { birth_date?: string };
       if (p?.birth_date) return true;
     }

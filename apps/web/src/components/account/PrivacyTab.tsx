@@ -105,12 +105,18 @@ export function PrivacyTab({ userId }: PrivacyTabProps) {
         }
         const headers: Record<string, string> = { 'content-type': 'application/json' };
         if (token) headers['Authorization'] = `Bearer ${token}`;
-        await fetch('/api/user/preferences', {
+        const res = await fetch('/api/user/preferences', {
           method: 'POST',
           headers,
           body: JSON.stringify({ user_id: userId, consent: next }),
         });
-        toast.success('Đã lưu');
+        if (res.ok) {
+          toast.success('Đã lưu');
+        } else {
+          // A 404/5xx is a RESOLVED fetch (not a throw) — must check res.ok or
+          // we'd show a false "Đã lưu" on a consent (Nghị định 13) toggle.
+          toast.error('Không đồng bộ được — đã lưu cục bộ');
+        }
       } catch {
         toast.error('Không đồng bộ được — đã lưu cục bộ');
       } finally {

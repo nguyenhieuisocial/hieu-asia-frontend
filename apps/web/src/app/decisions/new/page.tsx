@@ -50,7 +50,6 @@ const API_BASE =
 import { getPersonalitySummary } from '@/lib/personality-store';
 
 const CHART_PROFILE_KEY = 'hieu:chart:profile:v1';
-const ONBOARDING_KEY = 'hieu:onboarding:v2';
 
 interface BirthInputs {
   birth_date: string;
@@ -74,10 +73,7 @@ function readBirthInputs(): BirthInputs | null {
       return null;
     }
   };
-  const sources = [
-    window.localStorage.getItem(CHART_PROFILE_KEY),
-    window.localStorage.getItem(ONBOARDING_KEY),
-  ];
+  const sources = [window.localStorage.getItem(CHART_PROFILE_KEY)];
   for (const raw of sources) {
     const parsed = tryParse(raw);
     if (
