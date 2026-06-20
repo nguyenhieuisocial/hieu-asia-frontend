@@ -7,8 +7,10 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { article, breadcrumb } from '@/lib/seo/jsonld';
 import { TimeFlowChecker } from '@/components/time-flow/TimeFlowChecker';
+import { ZODIAC } from '@/lib/hop-tuoi-pairs';
 
 export const metadata: Metadata = {
   title: 'Tử Vi 2026 cá nhân hoá theo ngày sinh (Bính Ngọ)',
@@ -28,18 +30,18 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'hieu.asia — Tử Vi 2026 năm Bính Ngọ hành Hoả',
+        alt: 'hieu.asia — Tử Vi 2026 năm Bính Ngọ hành Hỏa',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Tử Vi năm 2026',
-    description: 'Năm Bính Ngọ hành Hoả — chủ đề năm + 12 tháng + 3 quyết định cân nhắc.',
+    description: 'Năm Bính Ngọ hành Hỏa — chủ đề năm + 12 tháng + 3 quyết định cân nhắc.',
     images: [
       {
         url: '/og-image.jpg',
-        alt: 'hieu.asia — Tử Vi 2026 năm Bính Ngọ hành Hoả',
+        alt: 'hieu.asia — Tử Vi 2026 năm Bính Ngọ hành Hỏa',
       },
     ],
   },
@@ -64,7 +66,7 @@ const THEMES = [
   {
     icon: Briefcase,
     title: 'Sự nghiệp 2026',
-    body: 'Năm Hoả Mã — năng lượng đẩy người có Quan Lộc tốt mở rộng phạm vi. Cẩn trọng với quyết định nghề nóng vội quý 1 + quý 4.',
+    body: 'Năm Hỏa Mã — năng lượng đẩy người có Quan Lộc tốt mở rộng phạm vi. Cẩn trọng với quyết định nghề nóng vội quý 1 + quý 4.',
   },
   {
     icon: Wallet,
@@ -79,7 +81,7 @@ const THEMES = [
   {
     icon: Activity,
     title: 'Sức khoẻ 2026',
-    body: 'Năm Hoả vượng — cẩn trọng với stress + giấc ngủ. Duy trì vận động đều, không ép quá nhanh.',
+    body: 'Năm Hỏa vượng — cẩn trọng với stress + giấc ngủ. Duy trì vận động đều, không ép quá nhanh.',
   },
 ];
 
@@ -107,7 +109,7 @@ const DECISIONS = [
 // @id inside article(); not repeated here.
 const JSONLD = [
   article({
-    headline: 'Tử Vi 2026 — chủ đề năm Bính Ngọ hành Hoả',
+    headline: 'Tử Vi 2026 — chủ đề năm Bính Ngọ hành Hỏa',
     description:
       'Tử Vi 2026 (năm Bính Ngọ): chủ đề năm, sự nghiệp, tài chính, tình cảm, sức khoẻ — cá nhân hoá theo lá số.',
     url: '/tu-vi-2026',
@@ -136,14 +138,14 @@ export default function TuVi2026Page() {
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12 pt-12 sm:pt-16">
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
-            Năm Bính Ngọ · hành Hoả · 17/02/2026 → 05/02/2027
+            Năm Bính Ngọ · hành Hỏa · 17/02/2026 → 05/02/2027
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
             Tử Vi 2026 — chủ đề năm Bính Ngọ
           </h1>
           <p className="mt-5 text-base leading-relaxed text-foreground/80 sm:text-lg">
-            2026 là năm Bính Ngọ — hành Hoả vượng. Đây là năm năng lượng cao: thuận cho
-            người chủ động, không thuận cho người chần chừ. Nhưng năng lượng Hoả cũng
+            2026 là năm Bính Ngọ — hành Hỏa vượng. Đây là năm năng lượng cao: thuận cho
+            người chủ động, không thuận cho người chần chừ. Nhưng năng lượng Hỏa cũng
             dễ "đốt" nếu không quản lý — ai vội vàng tài chính hoặc quan hệ trong năm
             này dễ tiếc nuối.
           </p>
@@ -156,6 +158,26 @@ export default function TuVi2026Page() {
                 Mẫu báo cáo
               
             </Link></Button>
+          </div>
+        </section>
+
+        <section className="relative mx-auto max-w-3xl px-6 pb-12">
+          <h2 className="mb-4 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+            Tử Vi 2026 theo tuổi của bạn
+          </h2>
+          <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+            Xem nhanh hợp xung với năm Ngọ, Tam Tai và sao hạn theo từng năm sinh cho mỗi con giáp.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {ZODIAC.map((z) => (
+              <Link
+                key={z.slug}
+                href={`/tu-vi-2026/${z.slug}`}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-3 py-1.5 text-sm text-foreground/80 transition hover:border-gold/40 hover:text-gold"
+              >
+                <span aria-hidden="true">{z.emoji}</span> Tuổi {z.ten}
+              </Link>
+            ))}
           </div>
         </section>
 
@@ -253,6 +275,22 @@ export default function TuVi2026Page() {
               >
                 Cẩm nang Tử Vi <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
               </Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="relative mx-auto max-w-3xl px-6 pb-20">
+          <div className="rounded-xl border border-border bg-card/40 p-6 sm:p-8">
+            <h2 className="font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-4">
+              <OccasionLeadCapture
+                source="tu-vi-2026-hub"
+                capturedEvent="lead_capture_tu_vi_2026_hub"
+                blurb="Để lại email, chúng tôi sẽ báo bạn khi có bản tử vi 2026 đầy đủ theo tuổi và nội dung mới theo mùa. Thi thoảng thôi, không spam."
+                cta="Nhận nhắc"
+              />
             </div>
           </div>
         </section>

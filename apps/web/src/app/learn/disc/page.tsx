@@ -7,6 +7,8 @@ import {
 } from '@hieu-asia/ui';
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   title: 'DISC — 4 nhóm hành vi (D/I/S/C) | Học huyền học',
@@ -14,6 +16,42 @@ export const metadata: Metadata = {
     'DISC mô tả 4 thiên hướng hành vi: Thống trị (D), Ảnh hưởng (I), Kiên định (S), Tuân thủ (C). Cách bạn phản ứng với thử thách và con người — xu hướng, không phải nhãn cố định.',
   alternates: { canonical: 'https://hieu.asia/learn/disc' },
 };
+
+// FAQ dùng chung cho CẢ FAQPage JSON-LD lẫn phần hiển thị (Accordion) → chữ
+// schema === chữ hiển thị (chống cloaking) + crawler/AI đọc được câu trả lời.
+const FAQS = [
+  {
+    q: 'Bốn nhóm sắp xếp theo logic nào?',
+    a: 'DISC nằm trên hai trục: nhịp độ (nhanh – quyết liệt ↔ chậm – ôn hoà) và trọng tâm (việc ↔ người). D = nhanh + việc, I = nhanh + người, S = chậm + người, C = chậm + việc. Hiểu hai trục giúp bạn đoán phong cách của người đối diện để giao tiếp hợp hơn.',
+  },
+  {
+    q: 'Khác MBTI và Big Five ở chỗ nào?',
+    a: 'DISC tập trung vào hành vi quan sát được — cách bạn cư xử ở công sở, nhóm — nên rất hợp để cải thiện giao tiếp và làm việc nhóm. MBTI thiên về cách bạn suy nghĩ, Big Five đo tính cách nền có cơ sở khoa học. Ba lăng kính bổ sung nhau; hieu.asia đọc cả ba như những góc nhìn khác nhau về cùng một con người.',
+  },
+  {
+    q: 'Tôi có thể vừa D vừa S không?',
+    a: 'Có. Hầu hết mọi người mạnh ở một hoặc hai nhóm và nhạt hơn ở các nhóm còn lại — DISC đo tỉ lệ chứ không xếp bạn vào một ô duy nhất. Phong cách cũng có thể đổi theo vai trò (ở nhà khác ở công ty).',
+  },
+  {
+    q: 'Cần lưu ý gì?',
+    a: 'DISC mô tả phong cách hành vi ở thời điểm làm bài, không phải năng lực hay giá trị con người, và không cố định cả đời. Dùng nó để hiểu mình, giao tiếp tốt hơn và tự quyết — không để dán nhãn hay đánh giá ai.',
+  },
+];
+
+const JSONLD = [
+  article({
+    headline: 'DISC — 4 nhóm hành vi (D/I/S/C)',
+    description:
+      'DISC mô tả 4 thiên hướng hành vi: Thống trị (D), Ảnh hưởng (I), Kiên định (S), Tuân thủ (C). Cách bạn phản ứng với thử thách và con người — xu hướng, không phải nhãn cố định.',
+    url: '/learn/disc',
+  }),
+  breadcrumb([
+    { name: 'Trang chủ', url: '/' },
+    { name: 'Học huyền học', url: '/learn' },
+    { name: 'DISC', url: '/learn/disc' },
+  ]),
+  faqPage(FAQS),
+];
 
 // 4 nhóm hành vi DISC (Marston, 1928 — miền công cộng). Mỗi nhóm mô tả thiên
 // hướng ở mức cao; không nhóm nào "tốt/xấu" hơn — mỗi kiểu mạnh ở bối cảnh khác.
@@ -119,44 +157,18 @@ export default function LearnDiscPage() {
           heading: 'Giải thích chi tiết',
           children: (
             <Accordion type="single" collapsible className="space-y-2">
-              <AccordionItem value="two-axes" className="rounded border border-border px-4">
-                <AccordionTrigger>Bốn nhóm sắp xếp theo logic nào?</AccordionTrigger>
-                <AccordionContent>
-                  DISC nằm trên hai trục: <em>nhịp độ</em> (nhanh – quyết liệt ↔ chậm – ôn hoà) và{' '}
-                  <em>trọng tâm</em> (việc ↔ người). D = nhanh + việc, I = nhanh + người, S = chậm +
-                  người, C = chậm + việc. Hiểu hai trục giúp bạn đoán phong cách của người đối diện để
-                  giao tiếp hợp hơn.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="vs-mbti" className="rounded border border-border px-4">
-                <AccordionTrigger>Khác MBTI và Big Five ở chỗ nào?</AccordionTrigger>
-                <AccordionContent>
-                  DISC tập trung vào <em>hành vi quan sát được</em> — cách bạn cư xử ở công sở, nhóm —
-                  nên rất hợp để cải thiện giao tiếp và làm việc nhóm. MBTI thiên về <em>cách bạn suy
-                  nghĩ</em>, Big Five đo <em>tính cách nền</em> có cơ sở khoa học. Ba lăng kính bổ sung
-                  nhau; hieu.asia đọc cả ba như những góc nhìn khác nhau về cùng một con người.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="blend" className="rounded border border-border px-4">
-                <AccordionTrigger>Tôi có thể vừa D vừa S không?</AccordionTrigger>
-                <AccordionContent>
-                  Có. Hầu hết mọi người mạnh ở một hoặc hai nhóm và nhạt hơn ở các nhóm còn lại — DISC
-                  đo <em>tỉ lệ</em> chứ không xếp bạn vào một ô duy nhất. Phong cách cũng có thể đổi
-                  theo vai trò (ở nhà khác ở công ty).
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="caution" className="rounded border border-border px-4">
-                <AccordionTrigger>Cần lưu ý gì?</AccordionTrigger>
-                <AccordionContent>
-                  DISC mô tả phong cách hành vi ở thời điểm làm bài, không phải năng lực hay giá trị con
-                  người, và không cố định cả đời. Dùng nó để hiểu mình, giao tiếp tốt hơn và tự quyết —
-                  không để dán nhãn hay đánh giá ai.
-                </AccordionContent>
-              </AccordionItem>
+              {FAQS.map((f, i) => (
+                <AccordionItem key={i} value={`faq-${i}`} className="rounded border border-border px-4">
+                  <AccordionTrigger>{f.q}</AccordionTrigger>
+                  <AccordionContent>{f.a}</AccordionContent>
+                </AccordionItem>
+              ))}
             </Accordion>
           ),
         },
       ]}
-    />
+    >
+      <JsonLd data={JSONLD} />
+    </LearnArticle>
   );
 }

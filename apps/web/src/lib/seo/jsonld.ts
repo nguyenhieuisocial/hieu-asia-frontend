@@ -35,6 +35,17 @@ export function organization(): JsonLdNode {
       url: abs(LOGO_PATH),
     },
     description: ORG_DESCRIPTION,
+    // Expertise domains — helps AI search engines disambiguate hieu.asia as a
+    // subject-matter entity (entity authority is a leading AI-citation signal).
+    knowsAbout: [
+      'Tử Vi Đẩu Số',
+      'Bát Tự (Tứ Trụ)',
+      'Tarot',
+      'Thần số học',
+      'Chiêm tinh học phương Tây',
+      'Kinh Dịch',
+      'Trắc nghiệm tính cách (MBTI, DISC, Big Five, Enneagram)',
+    ],
     sameAs: SOCIAL_LINKS,
     contactPoint: {
       '@type': 'ContactPoint',
@@ -138,6 +149,32 @@ export function faqPage(items: FaqItem[]): JsonLdNode {
       '@type': 'Question',
       name: item.q,
       acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  };
+}
+
+export interface ItemListEntry {
+  name: string;
+  /** Site-relative hoặc tuyệt đối; sẽ được abs() chuẩn hoá. */
+  url: string;
+}
+
+/**
+ * ItemList cho các trang index bách khoa (vd 64 quẻ Kinh Dịch, 12 số chủ đạo
+ * thần số, 12 giờ hoàng đạo). Báo cho AI search/Google đây là danh sách có cấu
+ * trúc → dễ được trích khi user hỏi "có bao nhiêu...". Phát kèm webPage +
+ * breadcrumb của trang hub.
+ */
+export function itemList(items: ItemListEntry[]): JsonLdNode {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    numberOfItems: items.length,
+    itemListElement: items.map((item, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.name,
+      url: abs(item.url),
     })),
   };
 }

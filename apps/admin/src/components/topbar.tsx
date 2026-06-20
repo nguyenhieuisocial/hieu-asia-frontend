@@ -25,6 +25,7 @@ const SEG_LABEL: Record<string, string> = {
   '/settings': 'Cài đặt',
   '/connect': 'OAuth Connect',
   '/system': 'Trạng thái hệ thống',
+  '/infra': 'Hạ tầng',
 };
 
 function buildCrumbs(pathname: string | null): { href: string; label: string }[] {

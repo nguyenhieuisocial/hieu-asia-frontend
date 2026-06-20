@@ -14,6 +14,8 @@ export interface RelatedLink {
 // Nhãn dùng lại cho gọn.
 const L = {
   tuvi: { href: '/tu-vi', label: 'Tử Vi' },
+  bangchung: { href: '/bang-chung', label: 'Bằng Chứng (kiểm chứng lá số)' },
+  laso: { href: '/la-so-tu-vi', label: 'Xem lá số Tử Vi' },
   battu: { href: '/bat-tu', label: 'Bát Tự' },
   thanso: { href: '/than-so-hoc', label: 'Thần số học' },
   canxuong: { href: '/can-xuong', label: 'Cân xương' },
@@ -47,12 +49,13 @@ const L = {
 
 export const RELATED_TOOLS: Record<string, RelatedLink[]> = {
   // Tử Vi / mệnh lý Á Đông
-  '/tu-vi': [L.battu, L.thanso, L.menhcuc, L.lichvannien],
+  '/tu-vi': [L.battu, L.thanso, L.menhcuc, L.lichvannien, L.bangchung],
+  '/bang-chung': [L.laso, L.tuvi, L.battu],
   '/bat-tu': [L.tuvi, L.thanso, L.canxuong, L.datten],
   '/than-so-hoc': [L.tuvi, L.battu, L.mbti, L.canxuong],
   '/can-xuong': [L.tuvi, L.battu, L.thanso, L.saohan],
-  '/tinh-menh-cuc': [L.tuvi, L.battu, L.thanso],
-  '/tu-vi-2026': [L.tuvi, L.saohan, L.tuvihomnay],
+  '/tinh-menh-cuc': [L.tuvi, L.battu, L.thanso, L.bangchung],
+  '/tu-vi-2026': [L.tuvi, L.saohan, L.tuvihomnay, L.bangchung],
   '/tu-vi-hom-nay': [L.tuvi, L.tuvi2026, L.lichvannien],
   '/tu-vi-nghe-nghiep': [L.tuvi, L.careerfit, L.battu],
   '/tu-vi-tinh-yeu': [L.tuvi, L.hoptuoi, L.compat],

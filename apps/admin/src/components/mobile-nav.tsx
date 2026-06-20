@@ -31,6 +31,7 @@ import {
   User,
   Landmark,
   ServerCog,
+  Server,
   Settings,
   X,
 } from 'lucide-react';
@@ -54,6 +55,7 @@ const MORE_TABS: Tab[] = [
   { href: '/customers', label: 'Khách hàng', Icon: User },
   { href: '/sepay', label: 'SePay đối soát', Icon: Landmark },
   { href: '/system', label: 'Trạng thái hệ thống', Icon: ServerCog },
+  { href: '/infra', label: 'Hạ tầng', Icon: Server },
   { href: '/settings', label: 'Cài đặt', Icon: Settings },
 ];
 

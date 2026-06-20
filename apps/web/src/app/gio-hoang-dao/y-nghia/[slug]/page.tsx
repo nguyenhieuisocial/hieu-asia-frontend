@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { breadcrumb, webPage } from '@/lib/seo/jsonld';
+import { FaqSection } from '@/components/seo/FaqSection';
+import { breadcrumb, webPage, faqPage, type FaqItem } from '@/lib/seo/jsonld';
 import { SAO_GIO, getSaoGio } from '@/lib/gio-hoang-dao-stars';
 
 interface Props {
@@ -42,6 +43,26 @@ export default async function SaoGioPage({ params }: Props) {
   const idx = SAO_GIO.findIndex((x) => x.slug === s.slug);
   const prev = idx > 0 ? SAO_GIO[idx - 1] : undefined;
   const next = idx < SAO_GIO.length - 1 ? SAO_GIO[idx + 1] : undefined;
+
+  // Câu hỏi thường gặp — dựng từ dữ liệu THẬT của sao (overview/favors/cautions),
+  // mỗi sao một bộ riêng. Dùng chung 1 mảng cho cả FAQPage JSON-LD lẫn phần hiển thị.
+  const faqs: FaqItem[] = [
+    { q: `Sao ${s.name} là gì?`, a: s.overview },
+    ...(s.good && s.favors ? [{ q: `Giờ ${s.name} hợp làm việc gì?`, a: s.favors }] : []),
+    ...(!s.good && s.cautions
+      ? [
+          { q: `Giờ ${s.name} nên thận trọng việc gì?`, a: s.cautions },
+          {
+            q: `Giờ ${s.name} (giờ xấu) có thật sự nguy hiểm không?`,
+            a: `Không. "Giờ xấu" chỉ là lời nhắc thận trọng theo phong tục, không phải điềm tai hoạ. 12 sao luân phiên mỗi ngày — không có giờ nào là "giờ định mệnh"; sự chuẩn bị và nỗ lực mới quyết định kết quả.`,
+          },
+        ]
+      : []),
+    {
+      q: 'Có nhất thiết phải chọn giờ hoàng đạo không?',
+      a: 'Không bắt buộc. Giờ hoàng đạo là một quy ước văn hoá giúp bạn bắt đầu với tâm thế vững hơn; nó không thay thế sự chuẩn bị, năng lực và quyết định của chính bạn.',
+    },
+  ];
 
   return (
     <ToolPageShell
@@ -129,6 +150,8 @@ export default async function SaoGioPage({ params }: Props) {
           </p>
         </section>
 
+        <FaqSection items={faqs} />
+
         <nav className="flex items-center justify-between gap-3 text-sm" aria-label="Sao trước / sao sau">
           {prev ? (
             <Link
@@ -183,6 +206,7 @@ export default async function SaoGioPage({ params }: Props) {
             { name: 'Ý nghĩa 12 sao', url: '/gio-hoang-dao/y-nghia' },
             { name: s.name, url: `/gio-hoang-dao/y-nghia/${s.slug}` },
           ]),
+          faqPage(faqs),
         ]}
       />
     </ToolPageShell>

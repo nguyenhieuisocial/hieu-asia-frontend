@@ -18,6 +18,7 @@
  */
 
 import 'server-only';
+import { gunzipSync } from 'zlib';
 
 const PROJECT_ID = process.env.POSTHOG_PROJECT_ID ?? '434217';
 const HOST = process.env.POSTHOG_API_HOST ?? 'https://us.posthog.com';
@@ -56,6 +57,296 @@ async function runHogQL(sql: string): Promise<unknown[][] | null> {
     return data.results ?? [];
   } catch {
     return null;
+  }
+}
+
+export interface ExplorerResult {
+  ok: boolean;
+  columns: string[];
+  rows: unknown[][];
+  error?: string;
+  truncated?: boolean;
+}
+
+// Read-only guard. The PostHog query API only runs analytics (read) HogQL, but
+// reject anything resembling a mutation as defense-in-depth before we ever hit
+// the network. Word-boundary, case-insensitive.
+const BLOCKED_HOGQL =
+  /\b(insert|update|delete|alter|drop|truncate|create|grant|revoke)\b/i;
+const MAX_EXPLORER_ROWS = 1000;
+
+/**
+ * Run an admin-authored HogQL query and return columns + rows. Server-only —
+ * the Personal API key never leaves the server, and the result goes straight to
+ * the auth-gated admin UI (NO public share link, nothing to leak). Read-only
+ * guarded + row-capped. Powers the in-admin Query Explorer so the founder can
+ * ask any question of the data without leaving admin.
+ */
+export async function runExplorerQuery(sql: string): Promise<ExplorerResult> {
+  if (!KEY) return { ok: false, columns: [], rows: [], error: 'PostHog chưa cấu hình trên admin.' };
+  const trimmed = (sql ?? '').trim();
+  if (!trimmed) return { ok: false, columns: [], rows: [], error: 'Truy vấn rỗng.' };
+  if (trimmed.length > 10_000) {
+    return { ok: false, columns: [], rows: [], error: 'Truy vấn quá dài (>10.000 ký tự).' };
+  }
+  if (BLOCKED_HOGQL.test(trimmed)) {
+    return { ok: false, columns: [], rows: [], error: 'Chỉ cho phép truy vấn ĐỌC (SELECT). Từ khoá ghi/sửa bị chặn.' };
+  }
+  try {
+    const res = await fetch(`${HOST}/api/projects/${PROJECT_ID}/query`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: { kind: 'HogQLQuery', query: trimmed } }),
+      cache: 'no-store',
+    });
+    if (!res.ok) {
+      let msg = `PostHog HTTP ${res.status}`;
+      try {
+        const j = (await res.json()) as { detail?: string; error?: string };
+        msg = j.detail ?? j.error ?? msg;
+      } catch {
+        /* keep default */
+      }
+      return { ok: false, columns: [], rows: [], error: msg };
+    }
+    const data = (await res.json()) as HogQLResponse;
+    const allRows = data.results ?? [];
+    return {
+      ok: true,
+      columns: data.columns ?? [],
+      rows: allRows.slice(0, MAX_EXPLORER_ROWS),
+      truncated: allRows.length > MAX_EXPLORER_ROWS,
+    };
+  } catch (e) {
+    return { ok: false, columns: [], rows: [], error: (e as Error).message };
+  }
+}
+
+// ===========================================================================
+// Session replay — list + snapshot assembly (server-only, key never leaks).
+// Supported list API; the snapshot/playback API is documented by PostHog as
+// "never built for public use" + "not vanilla rrweb JSON", so playback is
+// best-effort: we assemble events defensively and the UI degrades gracefully.
+// ===========================================================================
+
+export interface RecordingSummary {
+  id: string;
+  distinct_id: string | null;
+  duration: number | null; // seconds
+  start_time: string | null;
+  start_url: string | null;
+  click_count: number | null;
+  keypress_count: number | null;
+  console_error_count: number | null;
+  person_name: string | null;
+  viewed: boolean;
+}
+
+interface RawRecording {
+  id?: string;
+  distinct_id?: string;
+  recording_duration?: number;
+  start_time?: string;
+  start_url?: string;
+  click_count?: number;
+  keypress_count?: number;
+  console_error_count?: number;
+  viewed?: boolean;
+  person?: { name?: string; distinct_ids?: string[] };
+}
+
+/** List recent session recordings (metadata only — supported API). */
+export async function fetchRecordings(
+  limit = 30,
+  offset = 0,
+): Promise<{ ok: boolean; recordings: RecordingSummary[]; error?: string; hasMore?: boolean }> {
+  if (!KEY) return { ok: false, recordings: [], error: 'PostHog chưa cấu hình trên admin.' };
+  const lim = Math.min(Math.max(1, limit), 100);
+  const off = Math.max(0, offset);
+  try {
+    const res = await fetch(
+      `${HOST}/api/projects/${PROJECT_ID}/session_recordings/?limit=${lim}&offset=${off}`,
+      { headers: { Authorization: `Bearer ${KEY}` }, cache: 'no-store' },
+    );
+    if (!res.ok) return { ok: false, recordings: [], error: `PostHog HTTP ${res.status}` };
+    const data = (await res.json()) as { results?: RawRecording[]; next?: string | null };
+    const recordings = (data.results ?? []).map((r) => ({
+      id: String(r.id ?? ''),
+      distinct_id: r.distinct_id ?? null,
+      duration: typeof r.recording_duration === 'number' ? r.recording_duration : null,
+      start_time: r.start_time ?? null,
+      start_url: r.start_url ?? null,
+      click_count: typeof r.click_count === 'number' ? r.click_count : null,
+      keypress_count: typeof r.keypress_count === 'number' ? r.keypress_count : null,
+      console_error_count: typeof r.console_error_count === 'number' ? r.console_error_count : null,
+      person_name: r.person?.name ?? r.person?.distinct_ids?.[0] ?? null,
+      viewed: !!r.viewed,
+    }));
+    return { ok: true, recordings, hasMore: !!data.next };
+  } catch (e) {
+    return { ok: false, recordings: [], error: (e as Error).message };
+  }
+}
+
+// PostHog stores the bulky FullSnapshot `data` as a RAW GZIP byte stream kept in
+// a string (each char = one byte; head bytes 0x1f 0x8b = gzip magic). rrweb needs
+// the decoded `{node, initialOffset}` object, so gunzip + JSON.parse it here
+// (Node `zlib`, server-only — no client dependency). Incremental events already
+// arrive as plain objects and pass through untouched; anything that won't decode
+// is left as-is so one odd event never throws the whole playback.
+function decodeSnapshotEvent(ev: { timestamp?: number; data?: unknown }): {
+  timestamp?: number;
+  data?: unknown;
+} {
+  if (ev && typeof ev.data === 'string') {
+    try {
+      const bytes = Buffer.from(ev.data, 'latin1');
+      if (bytes.length > 2 && bytes[0] === 0x1f && bytes[1] === 0x8b) {
+        const json = gunzipSync(bytes).toString('utf8');
+        return { ...ev, data: JSON.parse(json) };
+      }
+    } catch {
+      /* leave as-is */
+    }
+  }
+  return ev;
+}
+
+/**
+ * Best-effort: assemble a recording's rrweb events for playback. Fetches the
+ * blob_v2 sources, pulls each blob decompressed (JSONL of `[windowId, event]`),
+ * groups by window, returns the busiest window's events sorted by timestamp.
+ * Returns ok:false (never throws) when the recording has no playable data or
+ * PostHog's undocumented format shifts — the UI shows a soft message.
+ */
+export async function fetchRecordingSnapshots(
+  id: string,
+): Promise<{ ok: boolean; events: unknown[]; error?: string }> {
+  if (!KEY) return { ok: false, events: [], error: 'PostHog chưa cấu hình trên admin.' };
+  if (!/^[A-Za-z0-9_-]+$/.test(id)) return { ok: false, events: [], error: 'ID phiên không hợp lệ.' };
+  const base = `${HOST}/api/environments/${PROJECT_ID}/session_recordings/${encodeURIComponent(id)}/snapshots`;
+  try {
+    const srcRes = await fetch(`${base}?blob_v2=true`, {
+      headers: { Authorization: `Bearer ${KEY}` },
+      cache: 'no-store',
+    });
+    if (!srcRes.ok) return { ok: false, events: [], error: `nguồn snapshot HTTP ${srcRes.status}` };
+    const srcData = (await srcRes.json()) as {
+      sources?: Array<{ source?: string; blob_key?: string }>;
+    };
+    const keys = (srcData.sources ?? [])
+      .filter((s) => s.source === 'blob_v2' && s.blob_key != null)
+      .map((s) => Number(s.blob_key))
+      .filter((n) => Number.isFinite(n))
+      .sort((a, b) => a - b);
+    if (keys.length === 0) return { ok: false, events: [], error: 'Phiên này chưa có dữ liệu phát lại.' };
+
+    const byWindow = new Map<string, Array<{ timestamp?: number }>>();
+    for (let i = 0; i < keys.length; i += 20) {
+      const start = keys[i];
+      const end = keys[Math.min(i + 19, keys.length - 1)];
+      const blobRes = await fetch(
+        `${base}?source=blob_v2&start_blob_key=${start}&end_blob_key=${end}&decompress=true`,
+        { headers: { Authorization: `Bearer ${KEY}` }, cache: 'no-store' },
+      );
+      if (!blobRes.ok) continue;
+      const text = await blobRes.text();
+      for (const line of text.split('\n')) {
+        const t = line.trim();
+        if (!t) continue;
+        try {
+          const parsed = JSON.parse(t);
+          if (Array.isArray(parsed) && parsed.length >= 2 && parsed[1] && typeof parsed[1] === 'object') {
+            const win = String(parsed[0]);
+            if (!byWindow.has(win)) byWindow.set(win, []);
+            byWindow.get(win)!.push(parsed[1] as { timestamp?: number });
+          } else if (parsed && typeof parsed === 'object' && 'type' in parsed) {
+            if (!byWindow.has('_')) byWindow.set('_', []);
+            byWindow.get('_')!.push(parsed as { timestamp?: number });
+          }
+        } catch {
+          /* skip malformed line */
+        }
+      }
+    }
+    // rrweb needs a FullSnapshot (type 2) to build the DOM — a window without
+    // one renders blank. Prefer the busiest window that HAS a full snapshot; if
+    // none do (PostHog's encoded format), fail soft so the UI shows an honest
+    // message instead of an empty player.
+    const windows = [...byWindow.values()].map((evs) => {
+      evs.sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0));
+      return evs;
+    });
+    const hasFullSnapshot = (evs: Array<{ timestamp?: number }>) =>
+      evs.some((e) => (e as { type?: number }).type === 2);
+    const withSnap = windows.filter(hasFullSnapshot);
+    if (withSnap.length === 0) {
+      return {
+        ok: false,
+        events: [],
+        error: 'Phiên này không có khung đầy đủ để dựng lại (PostHog lưu định dạng riêng) — chưa phát trong admin được.',
+      };
+    }
+    let best: Array<{ timestamp?: number }> = [];
+    for (const evs of withSnap) if (evs.length > best.length) best = evs;
+    if (best.length < 2) return { ok: false, events: [], error: 'Không đủ dữ liệu để phát lại phiên này.' };
+    return { ok: true, events: best.map(decodeSnapshotEvent) };
+  } catch (e) {
+    return { ok: false, events: [], error: (e as Error).message };
+  }
+}
+
+// ===========================================================================
+// Heatmaps — click/scroll density for a URL (supported API, server-only).
+// ===========================================================================
+
+export interface HeatmapPoint {
+  x: number; // 0..1 relative horizontal
+  y: number; // absolute vertical px
+  count: number;
+  fixed: boolean;
+}
+
+export async function fetchHeatmap(opts: {
+  url: string;
+  type?: string;
+  dateFrom?: string;
+  widthMin?: number;
+  widthMax?: number;
+  aggregation?: string;
+}): Promise<{ ok: boolean; points: HeatmapPoint[]; error?: string }> {
+  if (!KEY) return { ok: false, points: [], error: 'PostHog chưa cấu hình trên admin.' };
+  if (!opts.url) return { ok: false, points: [], error: 'Cần nhập URL trang.' };
+  const params = new URLSearchParams();
+  params.set('url_exact', opts.url);
+  params.set('type', opts.type ?? 'click');
+  params.set('date_from', opts.dateFrom ?? '-30d');
+  params.set('aggregation', opts.aggregation ?? 'total_count');
+  if (opts.widthMin) params.set('viewport_width_min', String(opts.widthMin));
+  if (opts.widthMax) params.set('viewport_width_max', String(opts.widthMax));
+  try {
+    const res = await fetch(`${HOST}/api/projects/${PROJECT_ID}/heatmaps/?${params.toString()}`, {
+      headers: { Authorization: `Bearer ${KEY}` },
+      cache: 'no-store',
+    });
+    if (!res.ok) return { ok: false, points: [], error: `PostHog HTTP ${res.status}` };
+    const data = (await res.json()) as {
+      results?: Array<{
+        pointer_relative_x?: number;
+        pointer_y?: number;
+        count?: number;
+        pointer_target_fixed?: boolean;
+      }>;
+    };
+    const points = (data.results ?? []).map((r) => ({
+      x: typeof r.pointer_relative_x === 'number' ? r.pointer_relative_x : 0,
+      y: typeof r.pointer_y === 'number' ? r.pointer_y : 0,
+      count: typeof r.count === 'number' ? r.count : 0,
+      fixed: !!r.pointer_target_fixed,
+    }));
+    return { ok: true, points };
+  } catch (e) {
+    return { ok: false, points: [], error: (e as Error).message };
   }
 }
 
@@ -185,8 +476,15 @@ export interface ToolUsageRow {
  * the path to paying customers" — so investment goes where it converts, not
  * just where it's busy. (Correlation, not causation: a paying user may have
  * touched several tools.) Returns null on any PostHog failure (UI placeholder).
+ *
+ * `limit` defaults to 15 (the OverviewPanel "top tools" list). The tool-health
+ * scorecard passes a higher cap (e.g. 100) so EVERY tool surfaces, not just the
+ * busiest 15 — the scorecard's whole point is spotting low-traffic / high-error
+ * tools that never reach the top-15. Clamped to [1, 200] so a bad caller can't
+ * request an unbounded scan.
  */
-export async function fetchTopTools(): Promise<ToolUsageRow[] | null> {
+export async function fetchTopTools(limit = 15): Promise<ToolUsageRow[] | null> {
+  const safeLimit = Math.min(Math.max(Math.trunc(limit) || 15, 1), 200);
   const rows = await runHogQL(
     `SELECT
        properties.tool AS tool,
@@ -203,7 +501,7 @@ export async function fetchTopTools(): Promise<ToolUsageRow[] | null> {
        AND timestamp > now() - INTERVAL 30 DAY
      GROUP BY tool
      ORDER BY users DESC
-     LIMIT 15`,
+     LIMIT ${safeLimit}`,
   );
   if (!rows) return null;
   return rows
@@ -840,4 +1138,137 @@ export async function fetchPostHogExperiments(): Promise<PostHogExperiment[] | n
   } catch {
     return null;
   }
+}
+
+/* -------------------------------------------------------------------------
+ * Per-user "Nguồn & hành trình" (source + journey) — surfaces, for ONE user
+ * inside the admin session-detail page, where they came from + the steps
+ * they took, so the founder needn't open PostHog.
+ *
+ * distinct_id semantics: apps/web identifies authed users with their user_id
+ * (there's a `user_identified` event); anon users keep an anon distinct_id
+ * (admin renders it as `anon-<session_id>`). Both forms work here — we filter
+ * `events.distinct_id = <userId>` verbatim, so the caller passes whatever id
+ * the session row carries.
+ *
+ * Attribution (apps/web/src/lib/attribution.ts) is written BOTH as PostHog
+ * super-properties (on every event) AND person profile props
+ * (people.set / set_once). On the `events` table, `person.properties.<x>`
+ * resolves to the person's current profile state — the canonical place to
+ * read first/last-touch — and it's populated for identified persons. To stay
+ * robust for anon distinct_ids too (where the person profile may be empty but
+ * the super-properties rode along on the events), we COALESCE person props
+ * with the same prop read off `properties.<x>` from the latest event.
+ * --------------------------------------------------------------------- */
+
+/**
+ * Single-quote-escape a value for safe inline interpolation into a HogQL
+ * string literal. HogQL (ClickHouse SQL dialect) escapes a single quote by
+ * doubling it. userId/distinct_id is the only user-controlled value we splice
+ * in; everything else in these queries is a fixed literal.
+ */
+function escapeHogQLString(value: string): string {
+  return value.replace(/'/g, "''");
+}
+
+export interface UserAttribution {
+  firstTouchSource: string | null;
+  firstTouchMedium: string | null;
+  firstTouchCampaign: string | null;
+  /** PostHog's canonical first-touch referrer domain. */
+  initialReferringDomain: string | null;
+  firstTouchAffiliate: string | null;
+  lastTouchSource: string | null;
+  lastTouchMedium: string | null;
+  lastTouchCampaign: string | null;
+}
+
+/**
+ * Read the first/last-touch attribution for a single distinct_id.
+ *
+ * Strategy: take the LATEST event for that distinct_id (argMax over timestamp)
+ * and read both `person.properties.<x>` (person-profile state, set for
+ * identified users) and `properties.<x>` (super-property that rode the event,
+ * present even for anon). Coalesce so whichever exists wins. Returns null when
+ * unconfigured / query fails / the distinct_id has no events.
+ */
+export async function fetchUserAttribution(
+  userId: string,
+): Promise<UserAttribution | null> {
+  if (!userId) return null;
+  const id = escapeHogQLString(userId);
+  const sql = `
+    SELECT
+      argMax(coalesce(nullIf(person.properties.first_touch_source, ''),        nullIf(properties.first_touch_source, ''), ''),        timestamp) AS first_touch_source,
+      argMax(coalesce(nullIf(person.properties.first_touch_medium, ''),        nullIf(properties.first_touch_medium, ''), ''),        timestamp) AS first_touch_medium,
+      argMax(coalesce(nullIf(person.properties.first_touch_campaign, ''),      nullIf(properties.first_touch_campaign, ''), ''),      timestamp) AS first_touch_campaign,
+      argMax(coalesce(nullIf(person.properties.$initial_referring_domain, ''), nullIf(properties.$initial_referring_domain, ''), ''), timestamp) AS initial_referring_domain,
+      argMax(coalesce(nullIf(person.properties.first_touch_affiliate, ''),     nullIf(properties.first_touch_affiliate, ''), ''),     timestamp) AS first_touch_affiliate,
+      argMax(coalesce(nullIf(person.properties.last_touch_source, ''),         nullIf(properties.last_touch_source, ''), ''),         timestamp) AS last_touch_source,
+      argMax(coalesce(nullIf(person.properties.last_touch_medium, ''),         nullIf(properties.last_touch_medium, ''), ''),         timestamp) AS last_touch_medium,
+      argMax(coalesce(nullIf(person.properties.last_touch_campaign, ''),       nullIf(properties.last_touch_campaign, ''), ''),       timestamp) AS last_touch_campaign
+    FROM events
+    WHERE distinct_id = '${id}'
+      AND timestamp > now() - INTERVAL 365 DAY
+  `;
+  const rows = await runHogQL(sql);
+  if (!rows || !rows[0]) return null;
+  const r = rows[0];
+  const cell = (i: number): string | null => {
+    const v = r[i];
+    return v != null && v !== '' ? String(v) : null;
+  };
+  const attr: UserAttribution = {
+    firstTouchSource: cell(0),
+    firstTouchMedium: cell(1),
+    firstTouchCampaign: cell(2),
+    initialReferringDomain: cell(3),
+    firstTouchAffiliate: cell(4),
+    lastTouchSource: cell(5),
+    lastTouchMedium: cell(6),
+    lastTouchCampaign: cell(7),
+  };
+  // All-empty → the distinct_id had events but no attribution captured. Still a
+  // valid result (the route renders "direct"); only return null on no rows.
+  return attr;
+}
+
+export interface UserJourneyEvent {
+  /** Raw PostHog event name (e.g. tool_used, payment_completed, $pageview). */
+  event: string;
+  /** ISO timestamp of the event. */
+  timestamp: string;
+  /** $current_url when present, else null. */
+  url: string | null;
+}
+
+/**
+ * The most recent events for a single distinct_id, newest first. Powers the
+ * vertical journey timeline on the session-detail page. `limit` clamped to
+ * [1, 200]. Returns null on unconfigured / failure.
+ */
+export async function fetchUserJourney(
+  userId: string,
+  limit = 50,
+): Promise<UserJourneyEvent[] | null> {
+  if (!userId) return null;
+  const id = escapeHogQLString(userId);
+  const safeLimit = Math.min(Math.max(Math.trunc(limit) || 50, 1), 200);
+  const sql = `
+    SELECT event, timestamp, properties.$current_url AS url
+    FROM events
+    WHERE distinct_id = '${id}'
+      AND timestamp > now() - INTERVAL 365 DAY
+    ORDER BY timestamp DESC
+    LIMIT ${safeLimit}
+  `;
+  const rows = await runHogQL(sql);
+  if (!rows) return null;
+  return rows
+    .map((row) => ({
+      event: String(row[0] ?? ''),
+      timestamp: String(row[1] ?? ''),
+      url: row[2] != null && row[2] !== '' ? String(row[2]) : null,
+    }))
+    .filter((e) => e.event);
 }

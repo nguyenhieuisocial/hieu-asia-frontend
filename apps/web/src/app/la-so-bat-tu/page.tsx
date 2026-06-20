@@ -3,6 +3,7 @@ import { RelatedTools } from '@/components/tools/RelatedTools';
 import { BatTuChecker } from '@/components/la-so-bat-tu/BatTuChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 
 const DESC =
@@ -191,6 +192,20 @@ export default function LaSoBatTuPage() {
                 </div>
               ))}
             </dl>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-4">
+              <OccasionLeadCapture
+                source="la-so-bat-tu"
+                capturedEvent="lead_capture_la_so_bat_tu"
+                blurb="Để lại email, chúng tôi báo khi có nội dung mới theo mùa cho lá số Bát Tự của bạn: vận năm mới, ngày tốt, xem ngày. Thi thoảng thôi, không spam."
+                cta="Nhận nhắc"
+              />
+            </div>
           </section>
 
           <RelatedTools

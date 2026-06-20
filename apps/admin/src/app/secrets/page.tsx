@@ -106,6 +106,45 @@ function fmtTs(ts?: string): string {
   }
 }
 
+const ROTATION_DUE_DAYS = 90;
+
+/**
+ * Read-only rotation hint derived from a secret's `set_at`. Pure presentation:
+ * shows "đặt N ngày trước" and tints red once a secret is older than
+ * ROTATION_DUE_DAYS. Returns null when no usable timestamp exists (e.g. unset,
+ * or CLI-set worker secrets with an empty set_at) so we never fabricate an age.
+ */
+function rotationHint(setAt?: string): { label: string; due: boolean } | null {
+  if (!setAt) return null;
+  const t = new Date(setAt).getTime();
+  if (Number.isNaN(t)) return null;
+  const days = Math.floor((Date.now() - t) / 86_400_000);
+  if (days < 0) return null;
+  return { label: `đặt ${days} ngày trước`, due: days >= ROTATION_DUE_DAYS };
+}
+
+/** Small read-only badge surfacing secret age + a "nên xoay vòng" warning. */
+function RotationBadge({ setAt }: { setAt?: string }) {
+  const hint = rotationHint(setAt);
+  if (!hint) return null;
+  return (
+    <span
+      title={
+        hint.due
+          ? `Đặt hơn ${ROTATION_DUE_DAYS} ngày trước — nên xoay vòng (rotate) secret này.`
+          : 'Tuổi của secret tính từ lần set gần nhất.'
+      }
+      className={
+        hint.due
+          ? 'inline-flex items-center gap-1 rounded-full bg-red-900/30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-red-300'
+          : 'inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium tracking-wider text-muted-foreground'
+      }
+    >
+      {hint.due ? `${hint.label} · nên xoay vòng` : hint.label}
+    </span>
+  );
+}
+
 async function copyToClipboard(text: string, label: string) {
   try {
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
@@ -239,6 +278,7 @@ function WorkerSecretRow({
               Chưa set
             </span>
           )}
+          <RotationBadge setAt={last?.set_at} />
         </div>
         <p className="mt-1 text-xs text-muted-foreground">{def.desc}</p>
         <p className="mt-1 font-mono text-[10px] text-muted-foreground">
@@ -307,6 +347,7 @@ function VercelSecretRow({
               Chưa set
             </span>
           )}
+          <RotationBadge setAt={last?.set_at} />
         </div>
         <p className="mt-1 text-xs text-muted-foreground">{def.desc}</p>
         <p className="mt-1 font-mono text-[10px] text-muted-foreground">

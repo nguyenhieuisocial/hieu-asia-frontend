@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { PURPOSES } from './purposes';
 
@@ -202,6 +203,21 @@ export default function XemNgayHubPage() {
               </div>
             ))}
           </dl>
+        </section>
+
+        {/* Nhận nhắc theo mùa */}
+        <section className="mt-6 rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+          <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            Nhận nhắc theo mùa
+          </h2>
+          <div className="mt-3">
+            <OccasionLeadCapture
+              source="xem-ngay-hub"
+              capturedEvent="lead_capture_xem_ngay_hub"
+              blurb="Để lại email, mình sẽ báo bạn khi có bản đầy đủ cho từng việc và nội dung mới theo mùa: ngày tốt cho cưới hỏi, khai trương, động thổ và lịch tốt xấu nổi bật trong dịp đó. Thi thoảng thôi, không spam."
+              cta="Nhận nhắc"
+            />
+          </div>
         </section>
 
         <RelatedTools

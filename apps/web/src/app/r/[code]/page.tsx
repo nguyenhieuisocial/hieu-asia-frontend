@@ -47,11 +47,18 @@ async function fetchAffiliateName(code: string): Promise<string | null> {
     const r = await fetch(`${base}/affiliate/leaderboard?period=all_time&limit=50`, {
       cache: 'no-store',
     });
-    const parsed = await safeJson<{ ok: boolean; leaderboard: { code: string; display_name: string }[] }>(r);
+    // The leaderboard endpoint has shipped two row shapes over time (KV path
+    // returns `code`, the materialized-view path returns `affiliate_code`), so
+    // match either. If no display name is carried, the caller falls back to
+    // showing the raw code, which is the correct graceful default.
+    const parsed = await safeJson<{
+      ok: boolean;
+      leaderboard: { code?: string; affiliate_code?: string; display_name?: string }[];
+    }>(r);
     if (!parsed.ok) return null;
     const d = parsed.data;
     if (!d.ok) return null;
-    const hit = d.leaderboard.find((e) => e.code === code);
+    const hit = d.leaderboard.find((e) => (e.code ?? e.affiliate_code) === code);
     return hit?.display_name ?? null;
   } catch {
     return null;

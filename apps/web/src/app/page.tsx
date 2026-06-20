@@ -7,6 +7,9 @@ import { WhyTrust } from '@/components/home/WhyTrust';
 import { HowToStart } from '@/components/home/HowToStart';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
+import { AstroTickerLive } from '@/components/home/AstroTickerLive';
+import { TrustBand } from '@/components/home/TrustBand';
+import { StartupPath } from '@/components/home/StartupPath';
 // Wave 62.04 — homepage swapped from MarketingHero → HeroV4 (split layout
 // + 12-cung neo thị giác + 2 entry points). MarketingHero stays the
 // canonical reusable hero for /pricing /features /about /methodology
@@ -26,10 +29,10 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 // of the retired /muc-lab demo into components/home-hero/. HeroV4 stays
 // available for other surfaces.
 import { MultiHero } from '@/components/home-hero/MultiHero';
+import { InstantChartHero } from '@/components/home-hero/InstantChartHero';
 import { NotOraclesStrip } from '@/components/home-hero/NotOraclesStrip';
 import { Methodology } from '@/components/home-hero/Methodology';
 import { ToolkitSection } from '@/components/home-hero/ToolkitSection';
-import { FreeReadingTeaser } from '@/components/home-hero/FreeReadingTeaser';
 import { MissionNote } from '@/components/home-hero/MissionNote';
 import { EditorialList } from '@/components/marketing/EditorialList';
 // Wave 62.09 — custom discipline icons (vault 138 "đừng dùng icon set").
@@ -441,10 +444,25 @@ export default function LandingPage() {
             uses /tu-vi-2026 as secondary destination for the traditional
             audience. Sample report still discoverable via inline CTA at
             the EditorialList "Bốn ống kính" section closing line. */}
+        {/* Phase 1 — cửa trước THẬT: lá số Bát Tự client-side hiện ngay khi
+            khách nhập ngày sinh (thay teaser GIẢ cũ). Niềm tin TRƯỚC form.
+            Đặt trên MultiHero để là thứ đầu tiên người lạ chạm vào. */}
+        <InstantChartHero />
+
+        {/* Câu chuyện thương hiệu "năm lăng kính → AI" — giữ bản sắc editorial */}
         <MultiHero />
 
         {/* Brand "không phải oracle" — editorial decoder strip ngay dưới hero */}
         <RevealOnScroll><NotOraclesStrip /></RevealOnScroll>
+
+        {/* Thiên văn hôm nay — dải lịch can-chi & giờ hoàng đạo chạy động (dữ
+            liệu THẬT, tính client-side; cho cảm giác "sống" + lý do quay lại
+            mỗi ngày). Đặt sau "không phải oracle" để khung lịch/thực-dụng rõ. */}
+        <AstroTickerLive />
+
+        {/* Trust band — đưa "Bằng Chứng" (moat) + độ-tin THẬT lên cao (mẫu
+            trust-signal nổi bật của Bitget; tuyên bố đều kiểm chứng được). */}
+        <RevealOnScroll><TrustBand /></RevealOnScroll>
 
         {/* Wave 63.4 — removed the IntentChips "HOẶC BẮT ĐẦU TỪ" 6-lens strip.
             Founder (vault 138 review #2): the hero had THREE stacked start
@@ -637,8 +655,14 @@ export default function LandingPage() {
             grid-row trick for reveal. */}
         <MentorSampleInteractive />
 
-        {/* FreeReadingTeaser — lời mời đọc thử miễn phí trước khi tới giá */}
-        <FreeReadingTeaser />
+        {/* Lộ trình khởi đầu — band kích-hoạt có khung phần-thưởng THẬT (mẫu
+            task-center/rewards của Bitget; mời bạn → voucher giảm giá có thật).
+            Đặt trước Giá: làm xong các bước free rồi mới tới gói trả phí. */}
+        <RevealOnScroll><StartupPath /></RevealOnScroll>
+
+        {/* Lời mời "lập lá số thật" giờ là HERO (InstantChartHero, trên cùng) —
+            teaser GIẢ cũ ở đây đã bỏ. Để khách lướt thẳng xuống giá sau khi
+            xem mẫu báo cáo + Mentor demo. */}
 
         {/* 6. PricingTierV2 — 3 tiers replace 4 (Notion-style toggle + KHUYÊN DÙNG + refund) */}
         <PricingTierV2

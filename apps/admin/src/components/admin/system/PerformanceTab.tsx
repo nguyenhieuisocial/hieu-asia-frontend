@@ -23,11 +23,33 @@
  */
 
 import * as React from 'react';
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
+import dynamic from 'next/dynamic';
+import { Button, Card, CardContent, CardHeader, CardTitle, cn } from '@hieu-asia/ui';
 import { RefreshCw } from 'lucide-react';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { adminFetch } from '@/lib/admin-fetch';
+import type { MetricsTrendPoint } from './MetricsTrendChart';
+
+// Recharts (~150KB) lazy-loaded so it stays out of the initial bundle (same
+// pattern as GscTrendChart on /seo). ssr:false — admin is auth-gated, not
+// SEO-indexed.
+const MetricsTrendChart = dynamic(
+  () => import('./MetricsTrendChart').then((m) => m.MetricsTrendChart),
+  {
+    ssr: false,
+    loading: () => <div className="h-72 animate-pulse rounded bg-muted/30" aria-hidden />,
+  },
+);
+
+interface MetricsTrendResponse {
+  ok: boolean;
+  days?: number;
+  generated_at?: string;
+  series?: MetricsTrendPoint[];
+}
+
+type TrendDays = 7 | 30;
 
 interface MetricsSummary {
   ok: true;
@@ -88,6 +110,35 @@ export function PerformanceTab() {
   const [health, setHealth] = React.useState<HealthInfo | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+
+  // Request/error trend — its own window (7/30d) + fetch lifecycle, decoupled
+  // from the today-only summary above so the toggle re-fetches independently.
+  const [trendDays, setTrendDays] = React.useState<TrendDays>(30);
+  const [trend, setTrend] = React.useState<MetricsTrendPoint[] | null>(null);
+  const [trendError, setTrendError] = React.useState(false);
+
+  const loadTrend = React.useCallback(async (days: TrendDays) => {
+    setTrendError(false);
+    try {
+      const res = await adminFetch(`/api/admin-proxy/admin/metrics/trend?days=${days}`, {
+        signal: AbortSignal.timeout(15000),
+      });
+      if (!res.ok) throw new Error(`Trend HTTP ${res.status}`);
+      const json = (await res.json()) as MetricsTrendResponse;
+      if (json.ok === false || !Array.isArray(json.series)) {
+        throw new Error('Phản hồi xu hướng không hợp lệ');
+      }
+      setTrend(json.series);
+    } catch {
+      // Graceful degrade — render an inline muted message, never crash the tab.
+      setTrend([]);
+      setTrendError(true);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    loadTrend(trendDays);
+  }, [loadTrend, trendDays]);
 
   const load = React.useCallback(async () => {
     setLoading(true);
@@ -191,6 +242,46 @@ export function PerformanceTab() {
           onRetry={load}
         />
       )}
+
+      {/* Request/error trend — reads the worker's 90-day KV counters. */}
+      <Card>
+        <CardHeader>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <CardTitle className="text-base">Xu hướng lưu lượng &amp; lỗi</CardTitle>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Số request &amp; lỗi 5xx theo ngày — đọc từ KV counter 90 ngày.
+              </p>
+            </div>
+            <div className="inline-flex rounded-md border border-gold/20 bg-card/60 p-0.5">
+              {([7, 30] as TrendDays[]).map((d) => (
+                <button
+                  key={d}
+                  type="button"
+                  onClick={() => setTrendDays(d)}
+                  className={cn(
+                    'rounded px-3 py-1 text-xs transition-colors',
+                    trendDays === d ? 'bg-gold/20 text-gold' : 'text-muted-foreground hover:bg-gold/5',
+                  )}
+                >
+                  {d}d
+                </button>
+              ))}
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {trend === null ? (
+            <div className="h-72 animate-pulse rounded bg-muted/30" aria-hidden />
+          ) : trendError || trend.length === 0 ? (
+            <p className="py-16 text-center text-sm text-muted-foreground">
+              Chưa có dữ liệu xu hướng
+            </p>
+          ) : (
+            <MetricsTrendChart data={trend} />
+          )}
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

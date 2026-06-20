@@ -54,6 +54,11 @@ export async function POST(req: NextRequest) {
   // Forward the caller's Supabase access token so the worker can verify
   // identity and derive user_id server-side (mirrors /payment/intent).
   const authz = req.headers.get('authorization');
+  // Forward the REAL client IP so the worker can rate-limit per buyer. Without
+  // this, every call reaches the worker from this Vercel function's shared egress
+  // IP, turning the worker's per-IP coupon-validate cap into a near-global one
+  // (a promo burst would then wrongly reject everyone's valid codes).
+  const clientIp = req.headers.get('x-forwarded-for') ?? req.headers.get('x-real-ip');
 
   try {
     const res = await fetch(`${HIEU_API_URL}/payment/validate-code`, {
@@ -62,6 +67,7 @@ export async function POST(req: NextRequest) {
         'content-type': 'application/json',
         'X-Service-Token': HIEU_API_SERVICE_TOKEN,
         ...(authz ? { authorization: authz } : {}),
+        ...(clientIp ? { 'x-forwarded-for': clientIp } : {}),
       },
       body: JSON.stringify(body),
       cache: 'no-store',

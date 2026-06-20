@@ -1,6 +1,8 @@
 'use client';
 
 import * as React from 'react';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
@@ -10,11 +12,18 @@ import {
   CardHeader,
   CardTitle,
   DataTable,
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
   StatusBadge,
+  toast,
   type DataTableColumn,
 } from '@hieu-asia/ui';
-import { Bot, RotateCcw, Clock, Activity, AlertTriangle } from 'lucide-react';
+import { Bot, RotateCcw, Clock, Activity, AlertTriangle, ExternalLink } from 'lucide-react';
 import { getQueueDepth, listTasks, retryTask } from '@/lib/admin-api';
+import { groupFailureReasons, deriveFailureReason } from '@/lib/task-failure-reason';
 import { MockBanner } from '@/components/mock-banner';
 import { PageHeader } from '@/components/admin/page-header';
 import { LiveBadge } from '@/components/admin/live-badge';
@@ -22,6 +31,26 @@ import { EmptyState } from '@/components/admin/empty-state';
 import { KpiCard } from '@/components/admin/kpi-card';
 import type { AdminTask } from '@/lib/mock-data';
 import type { TaskStatus } from '@hieu-asia/types';
+
+// Recharts lazy-loaded so it stays out of the initial bundle (GscTrendChart
+// pattern). ssr:false — admin is auth-gated, not SEO-indexed.
+const FailureReasonChart = dynamic(
+  () =>
+    import('@/components/admin/tasks/FailureReasonChart').then((m) => m.FailureReasonChart),
+  {
+    ssr: false,
+    loading: () => <div className="h-64 animate-pulse rounded bg-muted/30" aria-hidden />,
+  },
+);
+
+function fmtTs(iso: string | null | undefined): string {
+  if (!iso) return '—';
+  try {
+    return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'medium' });
+  } catch {
+    return iso;
+  }
+}
 
 const TONE: Record<TaskStatus, React.ComponentProps<typeof StatusBadge>['status']> = {
   queued: 'neutral',
@@ -55,6 +84,7 @@ function fmtAge(seconds: number | null): string {
 export default function AdminTasksPage() {
   const qc = useQueryClient();
   const [filter, setFilter] = React.useState<TaskStatus | ''>('');
+  const [selectedTask, setSelectedTask] = React.useState<AdminTask | null>(null);
 
   const tasks = useQuery({
     queryKey: ['admin', 'tasks', filter],
@@ -69,11 +99,30 @@ export default function AdminTasksPage() {
 
   const retry = useMutation({
     mutationFn: (id: string) => retryTask(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'tasks'] }),
+    // Partial match (exact:false) so the filtered list key ['admin','tasks',filter]
+    // is invalidated too — otherwise the retried row wouldn't refresh.
+    onSuccess: () => {
+      toast.success('Đã đưa task vào hàng đợi retry');
+      qc.invalidateQueries({ queryKey: ['admin', 'tasks'], exact: false });
+    },
+    onError: (e) => toast.error('Retry thất bại', { description: (e as Error).message }),
   });
 
   const oldestAge = queue.data?.oldest_pending_age_seconds ?? null;
   const oldestAlert = (oldestAge ?? 0) > 3600;
+
+  // Failure-reason breakdown over the CURRENTLY-FETCHED page rows (no extra
+  // fetch). Reads the raw worker status (`raw_status`, falling back to the
+  // normalized `status`) so the category survives the failed-collapse.
+  const taskRows = React.useMemo(() => tasks.data?.rows ?? [], [tasks.data?.rows]);
+  const failureBreakdown = React.useMemo(
+    () => groupFailureReasons(taskRows.map((t) => ({ status: t.raw_status ?? t.status }))),
+    [taskRows],
+  );
+  const failedCount = React.useMemo(
+    () => taskRows.filter((t) => deriveFailureReason(t.raw_status ?? t.status) !== '').length,
+    [taskRows],
+  );
 
   const cols: DataTableColumn<AdminTask>[] = [
     {
@@ -127,7 +176,11 @@ export default function AdminTasksPage() {
           <Button
             size="sm"
             variant="outline"
-            onClick={() => retry.mutate(t.task_id)}
+            // Stop propagation so retrying a row doesn't also open its drawer.
+            onClick={(e) => {
+              e.stopPropagation();
+              retry.mutate(t.task_id);
+            }}
             disabled={retry.isPending}
           >
             <RotateCcw className="mr-1 h-3 w-3" />
@@ -231,11 +284,107 @@ export default function AdminTasksPage() {
               columns={cols}
               rows={tasks.data?.rows ?? []}
               rowKey={(t) => t.task_id}
+              onRowClick={(t) => setSelectedTask(t)}
               emptyState="Chưa có task."
             />
           )}
         </CardContent>
       </Card>
+
+      {/* Failure-reason breakdown — derived from the fetched page rows only. */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Nguyên nhân lỗi</CardTitle>
+          <CardDescription>
+            Nhóm theo nguyên nhân trong {taskRows.length} task gần nhất.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {failedCount === 0 ? (
+            <p className="py-12 text-center text-sm text-muted-foreground">
+              Không có task lỗi trong danh sách.
+            </p>
+          ) : (
+            <FailureReasonChart data={failureBreakdown} />
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Row drill-down drawer */}
+      <Sheet open={selectedTask !== null} onOpenChange={(open) => !open && setSelectedTask(null)}>
+        <SheetContent className="w-full overflow-y-auto sm:max-w-md">
+          {selectedTask && (
+            <>
+              <SheetHeader>
+                <SheetTitle>Chi tiết task</SheetTitle>
+                <SheetDescription className="font-mono text-xs break-all">
+                  {selectedTask.task_id}
+                </SheetDescription>
+              </SheetHeader>
+
+              <div className="mt-6 space-y-4 text-sm">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-muted-foreground">Trạng thái</span>
+                  <span className="flex items-center gap-2">
+                    <StatusBadge
+                      status={TONE[selectedTask.status]}
+                      label={STATUS_LABEL[selectedTask.status]}
+                    />
+                    {(() => {
+                      const reason = deriveFailureReason(
+                        selectedTask.raw_status ?? selectedTask.status,
+                      );
+                      return reason ? (
+                        <span className="rounded border border-red-500/40 bg-red-500/10 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-red-700 dark:text-red-300">
+                          {reason}
+                        </span>
+                      ) : null;
+                    })()}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-muted-foreground">Bắt đầu</span>
+                  <span className="font-mono text-xs text-foreground">
+                    {fmtTs(selectedTask.started_at)}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-muted-foreground">Thời lượng</span>
+                  <span className="font-mono text-xs text-foreground">
+                    {selectedTask.duration_seconds == null
+                      ? '—'
+                      : `${selectedTask.duration_seconds}s`}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-muted-foreground">Retry</span>
+                  <span className="font-mono text-xs text-foreground">{selectedTask.retries}</span>
+                </div>
+
+                <div className="space-y-1.5">
+                  <span className="text-muted-foreground">Lỗi</span>
+                  <pre className="max-h-48 overflow-auto whitespace-pre-wrap break-words rounded-md border border-gold/15 bg-card/60 p-3 font-mono text-xs text-red-700 dark:text-red-300">
+                    {selectedTask.error ?? '—'}
+                  </pre>
+                </div>
+
+                {selectedTask.name && (
+                  <Link
+                    href={`/sessions/${encodeURIComponent(selectedTask.name)}`}
+                    className="inline-flex items-center gap-1.5 rounded-md border border-gold/30 px-3 py-1.5 text-xs text-gold transition-colors hover:bg-gold/10"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                    Xem session
+                  </Link>
+                )}
+              </div>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

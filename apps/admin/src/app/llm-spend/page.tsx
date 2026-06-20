@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import dynamic from 'next/dynamic';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
@@ -25,13 +26,25 @@ import {
   isoStartOfMonth,
   isoStartOfToday,
 } from '@/lib/llm-spend-api';
+import { forecastMonthEndCost } from '@/lib/llm-spend-forecast';
 import { getBrowserSupabase } from '@/lib/supabase-browser';
 import { KpiRow } from '@/components/llm-spend/KpiRow';
 import { DailyCostChart } from '@/components/llm-spend/DailyCostChart';
 import { VendorBarChart } from '@/components/llm-spend/VendorBarChart';
+
+// Recharts lazy-loaded so it stays out of the initial bundle (GscTrendChart
+// pattern). ssr:false — admin is auth-gated, not SEO-indexed.
+const TokenTrendChart = dynamic(
+  () => import('@/components/llm-spend/TokenTrendChart').then((m) => m.TokenTrendChart),
+  {
+    ssr: false,
+    loading: () => <div className="h-72 animate-pulse rounded bg-muted/30" aria-hidden />,
+  },
+);
 import { RecentTracesTable } from '@/components/llm-spend/RecentTracesTable';
 import { BudgetsManager } from '@/components/llm-spend/BudgetsManager';
 import { CostPanel } from '@/components/llm-spend/CostPanel';
+import { ReportCostsPanel } from '@/components/llm-spend/ReportCostsPanel';
 import { PageHeader } from '@/components/admin/page-header';
 import { LiveBadge } from '@/components/admin/live-badge';
 import { DollarSign } from 'lucide-react';
@@ -145,6 +158,16 @@ export default function LlmSpendPage() {
     return global?.limit_usd ?? null;
   }, [budgets.data]);
 
+  // Month-end cost forecast from the already-fetched daily series (no extra
+  // fetch). Null while loading/empty so the KPI card shows "—".
+  const forecast = React.useMemo(() => {
+    const rows = daily.data;
+    if (!rows || rows.length === 0) return null;
+    return forecastMonthEndCost(
+      rows.map((r) => ({ day: r.day, cost_usd: r.cost_usd })),
+    );
+  }, [daily.data]);
+
   const anyFetching =
     daily.isFetching ||
     kpiToday.isFetching ||
@@ -195,6 +218,7 @@ export default function LlmSpendPage() {
         last30={kpi30.data?.cost_usd ?? 0}
         mtd={kpiMtd.data?.cost_usd ?? 0}
         monthlyBudget={monthlyBudget}
+        forecast={forecast}
       />
 
       <Card>
@@ -211,10 +235,28 @@ export default function LlmSpendPage() {
         </CardContent>
       </Card>
 
+      <Card>
+        <CardHeader>
+          <CardTitle>Lưu lượng token (input/output theo ngày)</CardTitle>
+          <CardDescription>
+            Tổng token vào/ra mỗi ngày, cộng dồn qua mọi vendor — 30 ngày.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {daily.isLoading ? (
+            <div className="h-72 animate-pulse rounded bg-muted/30" />
+          ) : (
+            <TokenTrendChart data={daily.data ?? []} />
+          )}
+        </CardContent>
+      </Card>
+
       <Tabs defaultValue="vendor">
         <TabsList>
           <TabsTrigger value="vendor">Vendor breakdown</TabsTrigger>
+          <TabsTrigger value="cost">Chi phí theo ngày</TabsTrigger>
           <TabsTrigger value="users">Top users</TabsTrigger>
+          <TabsTrigger value="report-costs">Chi phí / báo cáo</TabsTrigger>
           <TabsTrigger value="traces">Recent traces</TabsTrigger>
           <TabsTrigger value="budgets">Budgets</TabsTrigger>
         </TabsList>
@@ -265,6 +307,10 @@ export default function LlmSpendPage() {
               </ol>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="report-costs">
+          <ReportCostsPanel />
         </TabsContent>
 
         <TabsContent value="traces">

@@ -5,6 +5,9 @@ import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
 import { calculateBazi, type BaziChart, type BaziPillar, type Element, ELEMENTS } from '@/lib/bazi';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
+import { ProofDisclosure } from '@/components/la-so-bat-tu/ProofDisclosure';
+import { UnifiedProfile } from '@/components/la-so-bat-tu/UnifiedProfile';
 
 /**
  * Công cụ Bát Tự (Tứ Trụ) bấm-thử miễn phí. Engine `lib/bazi.ts` chạy NGAY trong
@@ -65,14 +68,64 @@ function PillarCard({ pillar, highlight }: { pillar: BaziPillar; highlight?: boo
         {pillar.canElement}/{pillar.chiElement}
       </p>
       <p className="mt-2 text-[11px] font-medium text-gold-700">{pillar.tenGod}</p>
+      <p className="mt-1 rounded bg-border/40 px-1.5 py-0.5 text-[10px] text-muted-foreground">
+        {pillar.truongSinh}
+      </p>
     </div>
   );
 }
 
-export function BatTuChecker() {
-  const [date, setDate] = React.useState('');
-  const [time, setTime] = React.useState('12:00');
-  const [gender, setGender] = React.useState<'M' | 'F'>('M');
+/**
+ * Carry the just-computed chart into the paid onboarding funnel WITHOUT a blank
+ * re-entry: write the canonical chart-profile store (`hieu:chart:profile:v1`)
+ * that `BirthDataForm` (step 4/4) reads on mount to pre-fill. Same key + shape
+ * are consumed by /decisions/new, /account chart tabs & LoTrinhChart — so the
+ * carry seeds the whole product, not just one form. Gender maps M→nam, F→nữ.
+ */
+function carryChartToOnboarding(date: string, time: string, gender: 'M' | 'F') {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(
+      'hieu:chart:profile:v1',
+      JSON.stringify({
+        full_name: '',
+        gender: gender === 'F' ? 'nữ' : 'nam',
+        birth_date: date,
+        birth_time: time || '',
+        birth_place: '',
+        updated_at: new Date().toISOString(),
+      }),
+    );
+  } catch {
+    /* quota — best effort; onboarding still works, just without pre-fill */
+  }
+}
+
+export interface BatTuCheckerProps {
+  /** Pre-seed birth inputs (e.g. from the homepage hero invitation). */
+  initialDate?: string;
+  initialTime?: string;
+  initialGender?: 'M' | 'F';
+  /** When true + a valid initialDate is given, compute the chart on mount. */
+  autoCast?: boolean;
+  /**
+   * Embedded mode (homepage hero): don't rewrite the page URL to
+   * /la-so-bat-tu on cast, and don't read `?d=&t=&g=` from the host URL.
+   * The standalone /la-so-bat-tu page keeps both behaviours (default false).
+   */
+  embedded?: boolean;
+}
+
+export function BatTuChecker({
+  initialDate,
+  initialTime,
+  initialGender,
+  autoCast = false,
+  embedded = false,
+}: BatTuCheckerProps = {}) {
+  const [date, setDate] = React.useState(initialDate ?? '');
+  const [time, setTime] = React.useState(initialTime ?? '12:00');
+  const [gender, setGender] = React.useState<'M' | 'F'>(initialGender ?? 'M');
   const [chart, setChart] = React.useState<BaziChart | null>(null);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -87,18 +140,20 @@ export function BatTuChecker() {
       const asOf = `${ict.getUTCFullYear()}-${ict.getUTCMonth() + 1}-${ict.getUTCDate()}`;
       setChart(calculateBazi({ birthSolarDate: date, birthHour: parseHour(time), gender, asOf }));
       // Ghi tham số vào URL để LÁ SỐ chia sẻ được (mở link là thấy ngay lá số đó).
-      if (typeof window !== 'undefined') {
+      // Bỏ qua khi nhúng trong hero trang chủ (không ghi đè URL "/").
+      if (!embedded && typeof window !== 'undefined') {
         const qs = new URLSearchParams({ d: date, t: time, g: gender }).toString();
         window.history.replaceState(null, '', `/la-so-bat-tu?${qs}`);
       }
     } catch {
       setError('Chưa lập được lá số — kiểm tra lại ngày sinh.');
     }
-  }, [date, time, gender]);
+  }, [date, time, gender, embedded]);
 
   // Mở link chia sẻ (?d=&t=&g=) → tự điền + lập lá số ngay (không cần bấm lại).
+  // Embedded mode bỏ qua URL host (hero trang chủ dùng prop initial* thay thế).
   React.useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (embedded || typeof window === 'undefined') return;
     const sp = new URLSearchParams(window.location.search);
     const d = sp.get('d');
     if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return;
@@ -114,7 +169,28 @@ export function BatTuChecker() {
     } catch {
       /* link hỏng — bỏ qua, người dùng tự nhập */
     }
-  }, []);
+  }, [embedded]);
+
+  // Hero trang chủ: lời mời đã thu ngày–giờ–giới tính → lập lá số ngay khi nhúng.
+  React.useEffect(() => {
+    if (!autoCast || !initialDate || !/^\d{4}-\d{2}-\d{2}$/.test(initialDate)) return;
+    try {
+      const ict = new Date(Date.now() + 7 * 3600 * 1000);
+      const asOf = `${ict.getUTCFullYear()}-${ict.getUTCMonth() + 1}-${ict.getUTCDate()}`;
+      setChart(
+        calculateBazi({
+          birthSolarDate: initialDate,
+          birthHour: parseHour(initialTime ?? '12:00'),
+          gender: initialGender ?? 'M',
+          asOf,
+        }),
+      );
+    } catch {
+      /* ngày hỏng — để người dùng tự bấm lại */
+    }
+    // chỉ chạy 1 lần khi nhúng với giá trị khởi tạo
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoCast]);
 
   const maxCount = chart ? Math.max(...ELEMENTS.map((e) => chart.elementCount[e]), 1) : 1;
   const curAge = chart ? ageFromDate(chart.meta.solarDate) : null;
@@ -141,40 +217,49 @@ export function BatTuChecker() {
 
   return (
     <Card className="border-gold/20 bg-card/60 backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="font-heading text-lg">Nhập ngày &amp; giờ sinh (dương lịch)</CardTitle>
-      </CardHeader>
+      {!embedded && (
+        <CardHeader>
+          <CardTitle className="font-heading text-lg">Nhập ngày &amp; giờ sinh (dương lịch)</CardTitle>
+        </CardHeader>
+      )}
       <CardContent className="space-y-4">
-        <div className="grid gap-3 sm:grid-cols-3">
-          <div className="space-y-1">
-            <Label htmlFor="btDate">Ngày sinh (dương lịch)</Label>
-            <Input id="btDate" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-          </div>
-          <div className="space-y-1">
-            <Label htmlFor="btTime">Giờ sinh</Label>
-            <Input id="btTime" type="time" value={time} onChange={(e) => setTime(e.target.value)} />
-          </div>
-          <div className="space-y-1">
-            <Label htmlFor="btGender">Giới tính</Label>
-            <select
-              id="btGender"
-              value={gender}
-              onChange={(e) => setGender(e.target.value as 'M' | 'F')}
-              className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-            >
-              <option value="M">Nam</option>
-              <option value="F">Nữ</option>
-            </select>
-          </div>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          Giờ sinh quyết định trụ giờ. Không nhớ giờ? Để <strong>12:00</strong> — ba trụ năm/tháng/ngày vẫn
-          đúng, chỉ trụ giờ là ước lượng.
-        </p>
+        {/* Embedded (homepage hero): the hero already collected birth data + the
+            chart auto-casts from props — hide this duplicate input so the hero
+            reads "nhập một lần → lá số", not two identical forms. */}
+        {!embedded && (
+          <>
+            <div className="grid gap-3 sm:grid-cols-3">
+              <div className="space-y-1">
+                <Label htmlFor="btDate">Ngày sinh (dương lịch)</Label>
+                <Input id="btDate" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="btTime">Giờ sinh</Label>
+                <Input id="btTime" type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="btGender">Giới tính</Label>
+                <select
+                  id="btGender"
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value as 'M' | 'F')}
+                  className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                >
+                  <option value="M">Nam</option>
+                  <option value="F">Nữ</option>
+                </select>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Giờ sinh quyết định trụ giờ. Không nhớ giờ? Để <strong>12:00</strong> — ba trụ năm/tháng/ngày vẫn
+              đúng, chỉ trụ giờ là ước lượng.
+            </p>
 
-        <Button onClick={onCast} size="lg">
-          ✦ Lập lá số Bát Tự
-        </Button>
+            <Button onClick={onCast} size="lg">
+              ✦ Lập lá số Bát Tự
+            </Button>
+          </>
+        )}
         {error && <p className="text-sm text-destructive">{error}</p>}
 
         {chart && (
@@ -191,6 +276,9 @@ export function BatTuChecker() {
               </div>
               <p className="mt-2 text-xs text-muted-foreground">
                 Trụ tính theo <strong>tiết khí</strong> (đúng chuẩn Bát Tự) — chữ màu là ngũ hành của từng can/chi.
+                Dòng cuối mỗi trụ là <strong>vòng Trường Sinh</strong>: trạng thái &ldquo;đời người&rdquo; của Nhật
+                Chủ ({chart.dayMaster.can}) trên chi đó (Trường Sinh → Đế Vượng = mạnh; Suy → Tuyệt = yếu) — tra theo
+                bảng cổ điển, không phải lời đoán.
               </p>
             </div>
 
@@ -198,12 +286,52 @@ export function BatTuChecker() {
               <p className="text-sm text-foreground/85">
                 Lá số tính theo tiết khí chuẩn — <strong>khoe với bạn bè</strong> hoặc thách họ xem thử lá số của mình.
               </p>
-              <ShareResultButton
-                path={sharePath}
-                title="Lá số Bát Tự (Tứ Trụ) của tôi — hieu.asia"
-                text={shareText}
-                trackId="la-so-bat-tu"
-              />
+              <div className="flex flex-wrap items-center gap-3">
+                <ShareResultButton
+                  path={sharePath}
+                  title="Lá số Bát Tự (Tứ Trụ) của tôi — hieu.asia"
+                  text={shareText}
+                  trackId="la-so-bat-tu"
+                />
+                <DownloadToolPdfButton
+                  label="Tải PDF"
+                  payload={() =>
+                    chart
+                      ? {
+                          title: 'Lá số Bát Tự (Tứ Trụ)',
+                          subtitle: `Sinh ${date} ${time} · ${gender === 'M' ? 'Nam' : 'Nữ'}`,
+                          sections: [
+                            {
+                              heading: 'Tứ Trụ',
+                              rows: [chart.year, chart.month, chart.day, chart.hour].map((p) => ({
+                                label: `Trụ ${p.label}`,
+                                value: `${p.can} ${p.chi} · ${p.tenGod}`,
+                              })),
+                            },
+                            {
+                              heading: 'Nhật Chủ & ngũ hành',
+                              rows: [
+                                {
+                                  label: 'Nhật Chủ',
+                                  value: `${chart.dayMaster.can} (${chart.dayMaster.element} ${chart.dayMaster.yang ? 'dương' : 'âm'})`,
+                                },
+                                { label: 'Hành vượng nhất', value: chart.strongest },
+                                {
+                                  label: 'Hành thiếu',
+                                  value: chart.missing.length ? chart.missing.join(', ') : 'Đủ cả 5',
+                                },
+                                ...ELEMENTS.map((e) => ({
+                                  label: `Số hành ${e}`,
+                                  value: String(chart.elementCount[e]),
+                                })),
+                              ],
+                            },
+                          ],
+                        }
+                      : null
+                  }
+                />
+              </div>
             </div>
 
             <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
@@ -341,6 +469,40 @@ export function BatTuChecker() {
               )}
             </div>
 
+            <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
+                Thần Sát (sao tượng trưng)
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                Các sao tượng trưng tra theo lá số (tam-hợp chi năm/ngày &amp; can ngày) — dữ kiện cố định theo cổ
+                thư (Tam Mệnh Thông Hội), <strong>không phải lời đoán định mệnh</strong>. Mỗi sao là một &ldquo;màu
+                sắc&rdquo; tính cách để hiểu mình, không phải điềm tốt/xấu.
+              </p>
+              {chart.thanSat.length === 0 ? (
+                <p className="mt-3 text-sm text-foreground/85">
+                  Lá số không có thần sát nổi bật trong nhóm phổ biến — bốn trụ &ldquo;sạch&rdquo; ở khía cạnh này.
+                </p>
+              ) : (
+                <ul className="mt-3 space-y-1.5">
+                  {chart.thanSat.map((ts) => (
+                    <li
+                      key={`${ts.name}-${ts.chi}-${ts.pillars}`}
+                      className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-sm"
+                    >
+                      <span className="shrink-0 rounded bg-gold/15 px-1.5 py-0.5 text-[11px] font-medium text-gold-700">
+                        {ts.name}
+                      </span>
+                      <span className="font-medium text-foreground/90">{ts.chi}</span>
+                      <span className="text-xs text-muted-foreground">({ts.pillars})</span>
+                      <span className="w-full text-xs text-muted-foreground sm:w-auto sm:flex-1">
+                        — {ts.meaning}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
             {chart.daiVan && (
               <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
@@ -400,6 +562,27 @@ export function BatTuChecker() {
               </div>
             )}
 
+            {/* HỒ SƠ CON NGƯỜI: từ MỘT ngày–giờ–giới tính ở cửa trước, hợp nhất
+                lá số khách qua 4 hệ thống THẬT (Bát Tự đã có ở trên + Tử Vi +
+                Chiêm tinh Tây + Thần số) thành một chân dung "đây là toàn bộ bạn".
+                Trung thực là hào nước — chỉ kéo giá trị engine tính được, không
+                bịa hội tụ. Nằm giữa lá số Bát Tự và phần "Vì sao đúng?" / mua. */}
+            <div className="border-t border-gold/15 pt-5">
+              <UnifiedProfile
+                chart={chart}
+                date={date}
+                time={time}
+                gender={gender}
+                hourKnown={time !== '' && time !== '12:00'}
+              />
+            </div>
+
+            {/* Khoảnh khắc NIỀM TIN: trước khi mời mua, cho khách TỰ kiểm chứng
+                mỗi kết luận ở trên được TÍNH ra sao (tiết khí → can chi, bảng cố
+                định, luật âm-dương) — minh bạch THẬT, khác hẳn "chuyên gia AI"
+                giả của đối thủ. Dữ kiện kéo thẳng từ lá số, không bịa. */}
+            <ProofDisclosure chart={chart} />
+
             <p className="text-xs leading-relaxed text-muted-foreground">
               Lá số tính bằng engine Tứ Trụ chuẩn (theo tiết khí, vị trí Mặt Trời) —{' '}
               <strong>con số là thật, kiểm chứng được</strong>. Đây là bản tra cứu miễn phí; phần luận giải sâu
@@ -408,10 +591,14 @@ export function BatTuChecker() {
 
             <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-5">
               <p className="text-center font-heading text-lg text-foreground">
-                Bản đọc Bát Tự đầy đủ — viết riêng cho lá số này
+                Bản đọc đầy đủ — giải sâu TOÀN BỘ hồ sơ này
               </p>
               <p className="mx-auto mt-1 max-w-xl text-center text-sm text-muted-foreground">
-                Lá số trên là <strong>dữ kiện</strong>. Bản đọc trả phí luận sâu — riêng cho lá số của bạn:
+                Bạn vừa thấy <strong>con số được tính ra sao</strong> qua bốn hệ thống. Bản đọc trả phí
+                đào sâu lá số của bạn — neo ở Bát Tự (Nhật Chủ {chart.dayMaster.can}, hành{' '}
+                {chart.strongest} vượng
+                {chart.missing.length ? `, thiếu ${chart.missing.join('/')}` : ''}), cùng{' '}
+                <strong>Tử Vi</strong> và <strong>thần số</strong> — luận sâu riêng cho bạn:
               </p>
               <ul className="mx-auto mt-3 max-w-xl space-y-1.5 text-left text-sm text-foreground/85">
                 {teasers.map((tl) => (
@@ -422,13 +609,29 @@ export function BatTuChecker() {
                 ))}
               </ul>
               <p className="mx-auto mt-3 max-w-xl text-center text-xs text-muted-foreground">
-                …cùng Thập Thần theo từng trụ, vòng Trường Sinh, đối chiếu cổ thư — văn phong &ldquo;hiểu mình
-                để tự quyết&rdquo;, không bói toán.
+                …luận sâu từ Thập Thần, vòng Trường Sinh &amp; Thần Sát (đã hiện ở trên), đối chiếu cổ thư — văn
+                phong &ldquo;hiểu mình để tự quyết&rdquo;, không bói toán.
               </p>
               <div className="mt-4 text-center">
-                <Button asChild size="lg">
-                  <Link href="/onboarding?intent=ngu-hanh">Đọc bản đầy đủ cho lá số này →</Link>
+                <Button
+                  asChild
+                  size="lg"
+                  onClick={() => carryChartToOnboarding(date, time, gender)}
+                >
+                  {/* Mang THẲNG lá số vừa tính vào phễu trả phí: ghi kho lá số
+                      chuẩn (hieu:chart:profile:v1) trước khi điều hướng → bước
+                      "Thông tin sinh" tự điền sẵn, không phải nhập lại từ đầu.
+                      topic=self ("Định hướng bản thân — Hiểu mình") chọn-sẵn để
+                      khớp hứa "toàn bộ hồ sơ": khách xem xong chân dung tổng thể
+                      KHÔNG bị thả vào ô chọn-chủ-đề trống → nút "Tiếp tục" bật
+                      ngay (vẫn đổi chủ đề được nếu muốn). */}
+                  <Link href="/onboarding/topic?topic=self&intent=ngu-hanh">
+                    Đọc sâu CHÍNH lá số này →
+                  </Link>
                 </Button>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Mang thẳng lá số vừa tính sang — <strong>không phải nhập lại</strong> ngày giờ sinh.
+                </p>
               </div>
             </div>
           </div>

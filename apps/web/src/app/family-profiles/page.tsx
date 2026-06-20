@@ -104,7 +104,7 @@ const DEMO_PROFILES = [
   {
     label: 'Mẹ',
     summary:
-      'Tuổi Bính Ngọ · ngũ hành Hoả. Nhạy cảm với không khí gia đình, ưu tiên kết nối.',
+      'Tuổi Bính Ngọ · ngũ hành Hỏa. Nhạy cảm với không khí gia đình, ưu tiên kết nối.',
     tip:
       'Giao tiếp: hỏi cảm xúc trước, giải pháp sau. Cuối tuần dành thời gian gọi điện.',
   },

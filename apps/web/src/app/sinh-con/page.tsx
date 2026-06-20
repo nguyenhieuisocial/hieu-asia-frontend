@@ -4,6 +4,7 @@ import { RelatedTools } from '@/components/tools/RelatedTools';
 import { SinhConChecker } from '@/components/sinh-con/SinhConChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { VARIANTS } from './variants';
 
@@ -138,6 +139,21 @@ export default function SinhConPage() {
                 </div>
               ))}
             </dl>
+          </section>
+
+          {/* Nhận nhắc theo mùa */}
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-3">
+              <OccasionLeadCapture
+                source="sinh-con-hub"
+                capturedEvent="lead_capture_sinh_con_hub"
+                blurb="Để lại email, chúng tôi báo bạn khi có bản đối chiếu đầy đủ hơn và nội dung mới theo mùa về chọn năm, chọn ngày tốt sinh con. Thi thoảng thôi, không spam."
+                cta="Nhận nhắc"
+              />
+            </div>
           </section>
 
           <RelatedTools

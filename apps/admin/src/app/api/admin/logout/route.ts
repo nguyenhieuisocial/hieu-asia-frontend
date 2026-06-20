@@ -2,8 +2,10 @@ import { NextResponse } from 'next/server';
 import { ADMIN_SESSION_COOKIE } from '@/lib/auth';
 import { requireAdminSession } from '@/lib/auth-server';
 
-// Edge runtime for 0ms cold-start parity with login route.
-export const runtime = 'edge';
+// nodejs runtime: logout calls requireAdminSession() which is server-only
+// (uses next/headers cookies(), not edge-safe). Logout isn't a hot path, so
+// the cold-start cost is negligible.
+export const runtime = 'nodejs';
 
 export async function POST() {
   // Require a valid admin session before clearing it — otherwise a cross-site

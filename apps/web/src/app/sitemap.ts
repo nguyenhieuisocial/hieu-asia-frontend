@@ -23,7 +23,13 @@ const BASE_URL = 'https://hieu.asia';
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const now = new Date();
+  // Mốc lastmod CỐ ĐỊNH cho trang tĩnh. KHÔNG dùng `new Date()`: sitemap là route động,
+  // giờ-sinh-theo-request làm MỌI URL "đổi lastmod" mỗi lần regen → Google ngừng tin tín
+  // hiệu lastmod + quét lại sitemap liên tục (dễ trúng cửa sổ deploy → "không đọc được").
+  // Mốc ổn định giúp crawl hiệu quả hơn. BUMP mốc này khi có cập nhật nội dung lớn.
+  // (Trang động — community cases / cẩm nang pillars — vẫn dùng ngày publish THẬT bên dưới.)
+  const SITE_CONTENT_DATE = new Date('2026-06-16T00:00:00Z');
+  const now = SITE_CONTENT_DATE;
 
   const palaceUrls: MetadataRoute.Sitemap = PALACES_CONTENT.map((p) => ({
     url: `${BASE_URL}/tu-vi/${p.slug}`,
@@ -85,6 +91,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/xem-tuong`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/ban-do-sao`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/la-so-tu-vi`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${BASE_URL}/bang-chung`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${BASE_URL}/bang-chung/do-chinh-xac`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/la-so-bat-tu`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/privacy`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
     { url: `${BASE_URL}/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
@@ -136,14 +144,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/family-profiles`, lastModified: now, changeFrequency: 'monthly', priority: 0.65 },
   ];
 
-  // Wave 8/9 — Multi-tier affiliate hubs (public-facing landing).
+  // Affiliate program — public-facing pages (single-tier referral). The
+  // /network + /leaderboard routes were retired (redirect + noindex), so they
+  // are intentionally absent here.
   const wave9: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/affiliate`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
-    { url: `${BASE_URL}/affiliate/network`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
-    { url: `${BASE_URL}/affiliate/commissions`, lastModified: now, changeFrequency: 'weekly', priority: 0.65 },
     { url: `${BASE_URL}/affiliate/signup`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/affiliate/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
-    { url: `${BASE_URL}/affiliate/leaderboard`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },  ];
+  ];
 
   // Daily / reading / brand additions.
   const waveAdditions: MetadataRoute.Sitemap = [
@@ -290,6 +298,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
+  // Tử Vi 2026 theo từng con giáp (12 trang SEO mùa vụ Tết — dữ liệu deterministic).
+  const tuVi2026ConGiap: MetadataRoute.Sitemap = ZODIAC_LIST.map((t) => ({
+    url: `${BASE_URL}/tu-vi-2026/${t}`,
+    lastModified: now,
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
   // Trang so sánh lăng kính (MBTI vs Big Five, Tử Vi vs Bát Tự, MBTI vs DISC) + hub.
   const soSanhUrls: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/so-sanh`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.6 },
@@ -396,5 +412,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...lamNha, ...xongDat, ...khaiTruong, ...huongNha, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls];
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...lamNha, ...xongDat, ...khaiTruong, ...huongNha, ...tuVi2026ConGiap, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls];
 }

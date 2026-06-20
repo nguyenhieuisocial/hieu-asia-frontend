@@ -235,7 +235,12 @@ function parseSortParam(raw: string | null): SortOrder {
 }
 
 async function reOrchestrate(sessionId: string) {
-  const r = await fetch(`/api/admin/sessions/${sessionId}/re-orchestrate`, { method: 'POST' });
+  // timeout 15s: re-orchestrate gọi worker → Supabase; nếu treo, nút không kẹt
+  // mãi (AbortError → throw → mutation onError toast) thay vì đơ nút "Đang…".
+  const r = await fetch(`/api/admin/sessions/${sessionId}/re-orchestrate`, {
+    method: 'POST',
+    signal: AbortSignal.timeout(15000),
+  });
   const data = await r.json().catch(() => ({ ok: false, error: `HTTP ${r.status}` }));
   if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
   return data;
@@ -946,6 +951,12 @@ function AdminSessionsPageInner() {
       />
 
       <MockBanner source={data?._source} />
+
+      {filterActive && !stats && (
+        <div className="rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2 text-xs text-amber-700 dark:text-amber-200">
+          Số liệu chỉ trong trang hiện tại — tải lại để lấy toàn bộ.
+        </div>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard

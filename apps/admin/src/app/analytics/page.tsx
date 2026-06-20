@@ -17,15 +17,26 @@ import {
   Users,
   Activity,
   DollarSign,
+  Compass,
+  Undo2,
+  ShoppingCart,
+  Wallet,
 } from 'lucide-react';
 import { RevenueChart, type RevenueDay } from '@/components/analytics/RevenueChart';
+import { NetRevenueChart } from '@/components/analytics/NetRevenueChart';
+import { RefundChart, type RefundDay } from '@/components/analytics/RefundChart';
+import { AbandonedChart, type AbandonedDay } from '@/components/analytics/AbandonedChart';
 import { VendorCostChart, type VendorCost } from '@/components/analytics/VendorCostChart';
 import { FunnelChart, type FunnelStage } from '@/components/analytics/FunnelChart';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { LiveBadge } from '@/components/admin/live-badge';
 import { ErrorBlock } from '@/components/admin/error-block';
+import { EmptyState } from '@/components/admin/empty-state';
 import { EngineMetricsSection } from '@/components/admin/analytics/EngineMetricsSection';
+import { listTransactions } from '@/lib/admin-api';
+import { computeNetRevenue } from '@/lib/net-revenue';
+import type { AdminTransaction } from '@/lib/mock-data';
 
 interface AnalyticsResponse {
   ok: boolean;
@@ -41,6 +52,16 @@ interface AnalyticsResponse {
     window_days: number;
   };
   sessions?: { total: number; completed: number; conversion_rate: number; error_rate: number };
+  // Money-monitoring trends — both OPTIONAL (absent until the backend ships).
+  refunds?: { daily: RefundDay[]; total: number; count: number; ratePct: number };
+  abandoned?: {
+    daily: AbandonedDay[];
+    createdTotal: number;
+    paidTotal: number;
+    abandonedTotal: number;
+    abandonRatePct: number;
+    leakageVnd: number;
+  };
   sources?: { langfuse: boolean; kv_transactions: boolean; kv_events?: boolean };
   error?: string;
 }
@@ -71,6 +92,38 @@ const FUNNEL_ORDER = ['reading_started', 'consent_given', 'palm_uploaded', 'surv
 
 function fmtCurrency(n: number) {
   return new Intl.NumberFormat('vi-VN').format(n) + ' đ';
+}
+
+// Revenue-by-tier — pure client-side aggregation over the transactions list
+// (listTransactions already maps metadata.tier → plan). No new endpoint.
+const TIER_LABEL: Record<AdminTransaction['plan'], string> = {
+  mentor_month: 'Mentor tháng',
+  mentor_year: 'Mentor năm',
+  lifetime: 'Trọn đời',
+};
+const TIER_ORDER: AdminTransaction['plan'][] = ['mentor_month', 'mentor_year', 'lifetime'];
+
+interface TierRow {
+  plan: AdminTransaction['plan'];
+  count: number;
+  total: number;
+}
+
+/** Aggregate SUCCEEDED transactions by plan → count + total VND per tier. */
+function aggregateByTier(txns: AdminTransaction[]): { rows: TierRow[]; total: number } {
+  const acc = new Map<AdminTransaction['plan'], TierRow>();
+  let total = 0;
+  for (const t of txns) {
+    if (t.status !== 'succeeded') continue;
+    const amount = t.amount_usd ?? 0; // amount_usd holds VND (SePay), despite the name
+    total += amount;
+    const cur = acc.get(t.plan) ?? { plan: t.plan, count: 0, total: 0 };
+    cur.count += 1;
+    cur.total += amount;
+    acc.set(t.plan, cur);
+  }
+  const rows = TIER_ORDER.filter((p) => acc.has(p)).map((p) => acc.get(p)!);
+  return { rows, total };
 }
 
 /**
@@ -110,6 +163,19 @@ export default function AnalyticsPage() {
     placeholderData: (prev) => prev,
   });
 
+  // Revenue-by-tier: reuse the existing transactions list (succeeded SePay
+  // payments) and aggregate by plan client-side. Independent of the analytics
+  // window — it's a lifetime breakdown of paid revenue per tier.
+  const txnQuery = useQuery({
+    queryKey: ['admin', 'transactions', 'by-tier'],
+    queryFn: () => listTransactions({ page_size: 500 }),
+    staleTime: 60_000,
+  });
+  const tierBreakdown = React.useMemo(
+    () => aggregateByTier(txnQuery.data?.rows ?? []),
+    [txnQuery.data?.rows],
+  );
+
   const showError = !!error || data?.ok === false;
   const errorMsg = (error as Error | undefined)?.message ?? data?.error;
 
@@ -126,6 +192,17 @@ export default function AnalyticsPage() {
     return [{ key: k, label: FUNNEL_LABELS[k] ?? k, count }];
   });
   const sessions = data?.sessions ?? { total: 0, completed: 0, conversion_rate: 0, error_rate: 0 };
+  // Money-monitoring trends — render the cards/charts only when the backend
+  // actually returned the fields (older worker builds omit them entirely).
+  const refunds = data?.refunds;
+  const abandoned = data?.abandoned;
+  // "Tiền thực thu" = doanh thu gộp − hoàn tiền, gộp theo ngày từ hai series mà
+  // endpoint đã trả. Chỉ tính được khi backend trả refunds (build worker cũ bỏ
+  // field này → ẩn cả KPI lẫn chart). Pure client-side, không gọi thêm endpoint.
+  const netRevenue = React.useMemo(
+    () => (refunds ? computeNetRevenue(revenue.daily, refunds.daily) : null),
+    [refunds, revenue.daily],
+  );
   const totalLLMCost = vendorCost.reduce((s, v) => s + v.cost_usd, 0);
   const avgCost = sessions.total > 0 ? totalLLMCost / sessions.total : 0;
   // Vendor cost here comes from Langfuse, which is usually NOT wired (keys live
@@ -177,6 +254,26 @@ export default function AnalyticsPage() {
         }
       />
 
+      {/* Signpost: the acquisition/channel data the founder usually hunts for
+          (traffic theo kênh & nguồn, doanh thu theo kênh, funnel) lives on the
+          PostHog hub under tab=cohorts. This page is revenue + funnel only —
+          just point there, don't duplicate. */}
+      <Link
+        href="/posthog?tab=cohorts"
+        className="group flex items-center justify-between gap-3 rounded-md border border-gold/30 bg-gold/5 px-4 py-3 text-sm transition-colors hover:bg-gold/10"
+      >
+        <span className="flex items-center gap-2 text-foreground">
+          <Compass className="h-4 w-4 text-gold" aria-hidden />
+          <span>
+            <strong className="font-medium">Xem traffic theo kênh &amp; nguồn</strong>
+            <span className="ml-1.5 text-muted-foreground">
+              — khách đến từ đâu (UTM, referrer), doanh thu theo kênh, funnel chuyển đổi
+            </span>
+          </span>
+        </span>
+        <span className="shrink-0 text-gold transition-transform group-hover:translate-x-0.5">→</span>
+      </Link>
+
       {showError && (
         <ErrorBlock
           compact
@@ -225,6 +322,15 @@ export default function AnalyticsPage() {
           delta={revenueDelta}
           hint={`${revenue.txn_count} giao dịch`}
         />
+        {netRevenue && (
+          <KpiCard
+            label={`Tiền thực thu (${days}d)`}
+            value={fmtCurrency(netRevenue.netTotal)}
+            icon={<Wallet className="h-4 w-4" />}
+            accent="jade"
+            hint={`gộp ${fmtCurrency(netRevenue.grossTotal)} − hoàn ${fmtCurrency(netRevenue.refundsTotal)}`}
+          />
+        )}
         <KpiCard
           label={`Phiên (${days}d)`}
           value={sessions.total.toLocaleString('vi-VN')}
@@ -248,6 +354,24 @@ export default function AnalyticsPage() {
           accent="gold"
           hint={costUnavailable ? 'Chi phí thật ở /llm-spend' : `tổng $${totalLLMCost.toFixed(2)}`}
         />
+        {refunds && (
+          <KpiCard
+            label={`Tỉ lệ hoàn tiền (${days}d)`}
+            value={refunds.ratePct.toFixed(1) + '%'}
+            icon={<Undo2 className="h-4 w-4" />}
+            accent="gold"
+            hint={`${fmtCurrency(refunds.total)} · ${refunds.count} lệnh`}
+          />
+        )}
+        {abandoned && (
+          <KpiCard
+            label={`Bỏ giỏ thanh toán (${days}d)`}
+            value={abandoned.abandonRatePct.toFixed(1) + '%'}
+            icon={<ShoppingCart className="h-4 w-4" />}
+            accent="purple"
+            hint={`${abandoned.abandonedTotal}/${abandoned.createdTotal} đơn · rò rỉ ${fmtCurrency(abandoned.leakageVnd)}`}
+          />
+        )}
       </div>
 
       <Card>
@@ -260,6 +384,155 @@ export default function AnalyticsPage() {
             <p className="py-8 text-center text-sm text-muted-foreground">Đang tải…</p>
           ) : (
             <RevenueChart data={revenue.daily} />
+          )}
+        </CardContent>
+      </Card>
+
+      {netRevenue && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Tiền thực thu theo ngày</CardTitle>
+            <CardDescription>
+              Doanh thu gộp trừ tiền hoàn (đường vàng nét đứt = gộp, vùng ngọc =
+              thực thu). Chưa trừ chi phí LLM — chi phí thật theo ngày xem ở{' '}
+              <Link href="/llm-spend" className="text-gold hover:underline">
+                /llm-spend
+              </Link>
+              .
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <p className="py-8 text-center text-sm text-muted-foreground">Đang tải…</p>
+            ) : (
+              <NetRevenueChart data={netRevenue.daily} />
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {(refunds || abandoned) && (
+        <div className="grid gap-4 lg:grid-cols-2">
+          {refunds && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Hoàn tiền theo ngày</CardTitle>
+                <CardDescription>
+                  Tổng tiền hoàn (lệnh đã hoàn tất) mỗi ngày. Tỉ lệ hoàn{' '}
+                  {refunds.ratePct.toFixed(1)}% trên doanh thu {days} ngày.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {isLoading ? (
+                  <p className="py-8 text-center text-sm text-muted-foreground">Đang tải…</p>
+                ) : refunds.count === 0 ? (
+                  <EmptyState
+                    title="Chưa có hoàn tiền"
+                    description={`Không có lệnh hoàn nào hoàn tất trong ${days} ngày — tốt.`}
+                    className="border-0 bg-transparent py-8"
+                  />
+                ) : (
+                  <RefundChart data={refunds.daily} />
+                )}
+              </CardContent>
+            </Card>
+          )}
+          {abandoned && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Bỏ giỏ thanh toán</CardTitle>
+                <CardDescription>
+                  Số đơn bắt đầu thanh toán so với đã trả mỗi ngày. Bỏ giỏ{' '}
+                  {abandoned.abandonRatePct.toFixed(1)}% · ước tính rò rỉ{' '}
+                  {fmtCurrency(abandoned.leakageVnd)}.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {isLoading ? (
+                  <p className="py-8 text-center text-sm text-muted-foreground">Đang tải…</p>
+                ) : abandoned.createdTotal === 0 ? (
+                  <EmptyState
+                    title="Chưa có đơn thanh toán"
+                    description={`Không có đơn nào được tạo trong ${days} ngày.`}
+                    className="border-0 bg-transparent py-8"
+                  />
+                ) : (
+                  <AbandonedChart data={abandoned.daily} />
+                )}
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Doanh thu theo gói</CardTitle>
+          <CardDescription>
+            Tổng giao dịch thành công theo từng gói (lifetime — toàn bộ lịch sử).
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-0">
+          {txnQuery.isLoading ? (
+            <p className="px-6 py-8 text-center text-sm text-muted-foreground">Đang tải…</p>
+          ) : tierBreakdown.rows.length === 0 ? (
+            <EmptyState
+              title="Chưa có doanh thu theo gói"
+              description="Khi có giao dịch thành công, phân bổ theo gói sẽ hiện ở đây."
+              className="border-0 bg-transparent py-8"
+            />
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="border-b border-border/60 text-left text-xs text-muted-foreground">
+                  <tr>
+                    <th className="px-6 py-2.5 font-medium">Gói</th>
+                    <th className="px-6 py-2.5 text-right font-medium">Số giao dịch</th>
+                    <th className="px-6 py-2.5 text-right font-medium">Doanh thu</th>
+                    <th className="px-6 py-2.5 text-right font-medium">% tổng</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tierBreakdown.rows.map((r) => {
+                    const pct =
+                      tierBreakdown.total > 0
+                        ? (r.total / tierBreakdown.total) * 100
+                        : 0;
+                    return (
+                      <tr
+                        key={r.plan}
+                        className="border-b border-border/40 transition-colors last:border-0 hover:bg-muted/[0.04]"
+                      >
+                        <td className="px-6 py-2.5 text-foreground/85">{TIER_LABEL[r.plan]}</td>
+                        <td className="px-6 py-2.5 text-right font-mono text-foreground/70 tabular-nums">
+                          {r.count.toLocaleString('vi-VN')}
+                        </td>
+                        <td className="px-6 py-2.5 text-right font-mono text-foreground tabular-nums">
+                          {fmtCurrency(r.total)}
+                        </td>
+                        <td className="px-6 py-2.5 text-right font-mono text-foreground/70 tabular-nums">
+                          {pct.toFixed(0)}%
+                        </td>
+                      </tr>
+                    );
+                  })}
+                  <tr className="border-t border-border/60 font-medium">
+                    <td className="px-6 py-2.5 text-foreground">Tổng</td>
+                    <td className="px-6 py-2.5 text-right font-mono text-foreground tabular-nums">
+                      {tierBreakdown.rows
+                        .reduce((s, r) => s + r.count, 0)
+                        .toLocaleString('vi-VN')}
+                    </td>
+                    <td className="px-6 py-2.5 text-right font-mono text-foreground tabular-nums">
+                      {fmtCurrency(tierBreakdown.total)}
+                    </td>
+                    <td className="px-6 py-2.5 text-right font-mono text-foreground/70 tabular-nums">
+                      100%
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           )}
         </CardContent>
       </Card>

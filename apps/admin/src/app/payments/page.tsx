@@ -30,6 +30,7 @@ import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { LiveBadge } from '@/components/admin/live-badge';
 import { TransactionsTab } from '@/components/admin/payments/TransactionsTab';
+import { PaymentCharts } from '@/components/payments/PaymentCharts';
 import type { AdminTransaction } from '@/lib/mock-data';
 
 /** VND formatter — mirrors /sepay (no USD anywhere in this product). */
@@ -116,6 +117,10 @@ export default function AdminPaymentsPage() {
           hint="đã hoàn"
         />
       </div>
+
+      {/* Charts from the same real ledger (/payment/transactions). Self-hides on
+          fetch error or mock fallback so a chart never poses as real data. */}
+      <PaymentCharts />
 
       <TransactionsTab onRowsChange={setTxRows} onTotalChange={setTxTotal} />
     </div>

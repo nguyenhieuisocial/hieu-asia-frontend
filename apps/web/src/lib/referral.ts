@@ -9,7 +9,7 @@
 
 import { getSupabaseAuth } from './auth-client';
 
-const API_BASE = process.env.NEXT_PUBLIC_HIEU_API_URL ?? 'https://api.hieu.asia';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
 export interface ReferralVoucher {
   type: 'v30' | 'v50' | 'vref';

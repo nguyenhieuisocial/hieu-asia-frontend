@@ -541,7 +541,7 @@ export const MINOR_PAGES: TarotCardPage[] = [
     keyUp: ['thấu cảm sâu', 'lắng nghe', 'an toàn cảm xúc'],
     keyRev: ['thấm nỗi người đến kiệt', 'mất ranh giới'],
     image:
-      'Hoàng hậu ngồi trên ngai sát mép nước, nâng chiếc chén có nắp — chén duy nhất đóng kín trong cả bộ bài — chân không chạm nước mà chạm bờ.',
+      'Hoàng hậu ngồi trên ngai sát mép nước, nâng chiếc chén có nắp đóng kín — hiếm hoi trong bộ bài — chân không chạm nước mà chạm bờ.',
     up: 'Hoàng Hậu Cốc là người mà ai cũng tìm đến để được nghe: thấu cảm sâu, giữ chuyện kín, làm người khác an toàn để yếu lòng. Chi tiết đắt của lá nằm ở chiếc chén có nắp và bàn chân trên bờ: hiểu nước mà không tan vào nước — cảm được nỗi người mà vẫn giữ được hình dạng của mình. Đó là thấu cảm bền, khác với thấm nỗi người rồi chìm cùng.',
     rev: 'Ngược chiều: ranh giới nhòe — nỗi buồn của người thành nỗi buồn của mình, nghe cả thế giới mà không ai nghe mình, kiệt vì làm "trạm cứu hộ cảm xúc" không giờ đóng cửa. Người giúp giỏi nhất là người còn nguyên.',
     love: 'Trong tình cảm: sự dịu dàng và lắng nghe của bạn là tài sản — miễn nó chảy hai chiều. Một mối quan hệ mà chỉ một người làm chén chứa thì chén ấy sớm tràn.',
@@ -1013,7 +1013,7 @@ export const MINOR_PAGES: TarotCardPage[] = [
     keyUp: ['mài giũa tay nghề', 'chuyên tâm', 'lặp lại có chủ đích'],
     keyRev: ['làm máy móc mất hồn', 'đứt mạch rèn luyện'],
     image:
-      'Người thợ trẻ ngồi khắc đồng tiền thứ tám, bảy đồng đã xong treo thẳng hàng; thành phố mờ phía xa — anh quay lưng lại với nó để ngồi đây khắc.',
+      'Người thợ trẻ ngồi khắc đồng tiền thứ tám, sáu đồng đã xong treo trên cột và một đồng đặt dưới đất; thành phố mờ phía xa — anh quay lưng lại với nó để ngồi đây khắc.',
     up: 'Tám Tiền là lá của giờ-bay: tay nghề không đến từ tài năng trời cho mà từ con số lần lặp có chủ đích — khắc xong một đồng, treo lên, khắc tiếp đồng sau tốt hơn một li. Lá này gợi giai đoạn cúi đầu luyện: học sâu một kỹ năng, làm đi làm lại một dạng việc tới mức thành phản xạ. Thành phố (danh tiếng, cơ hội) ở phía xa kia sẽ tự tìm đến người có tám đồng tiền khắc đẹp treo trên cột.',
     rev: 'Ngược chiều: sự lặp mất chữ "chủ đích" — làm như máy, mười năm kinh nghiệm thực ra là một năm lặp mười lần; hoặc mạch rèn đứt giữa chừng vì hết kiên nhẫn với đoạn "chưa giỏi". Đoạn xấu hổ giữa người-mới và người-giỏi là đoạn ai cũng phải bò qua — không có đường vòng.',
     love: 'Trong tình cảm: yêu lâu cũng là một tay nghề — lắng nghe, xin lỗi, làm lành đều giỏi lên nhờ luyện. Đừng mong "tự nhiên hợp"; hãy luyện thành hợp.',
@@ -1093,7 +1093,7 @@ export const MINOR_PAGES: TarotCardPage[] = [
     keyUp: ['bền bỉ', 'chậm mà chắc', 'đáng tin cậy'],
     keyRev: ['ì trệ', 'cầu toàn hóa trì hoãn', 'chán việc lặp'],
     image:
-      'Hiệp sĩ ngồi trên con ngựa cày đứng yên giữa ruộng đã vỡ luống, ngắm đồng tiền trên tay. Con ngựa duy nhất KHÔNG phi trong cả bộ bài — vì việc của anh không cần phi, cần cày.',
+      'Hiệp sĩ ngồi trên con ngựa cày đứng yên giữa ruộng đã vỡ luống, ngắm đồng tiền trên tay. Con ngựa duy nhất đứng yên trong bốn Hiệp Sĩ — vì việc của anh không cần phi, cần cày.',
     up: 'Hiệp Sĩ Tiền là người về đích kiểu nông dân: không cú nước rút nào ngoạn mục, chỉ là sáng nào cũng ra ruộng. Lá này tôn vinh thứ năng lực bị mạng xã hội bỏ quên: làm việc nhàm một cách xuất sắc, giữ lời một cách buồn tẻ, tiến 1% một ngày trong im lặng. Khi mọi người mải tìm đường tắt, người đi đường dài thẳng lại thành nhanh nhất.',
     rev: 'Ngược chiều: chậm-mà-chắc rơi mất vế "chắc", còn lại chậm — quy trình thành lối mòn, cẩn thận thành lề mề, cầu toàn thành cớ hoãn ("chưa hoàn hảo nên chưa ra mắt"). Cũng có khi là cơn chán chính đáng của người làm mãi việc lặp: cày giỏi cũng cần thấy mùa gặt.',
     love: 'Trong tình cảm: kiểu người không lãng mạn ồn ào nhưng có mặt mỗi-lần-cần. Nếu bạn đang được yêu kiểu này — đừng nhầm sự ổn định với sự nhạt; nếu bạn đang yêu kiểu này — thỉnh thoảng tặng một bất ngờ, ngựa cày cũng biết vui.',

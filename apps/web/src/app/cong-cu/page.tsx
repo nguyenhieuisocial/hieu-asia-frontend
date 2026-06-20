@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { CongCuExplorer } from '@/components/tools/CongCuExplorer';
 
 const TOOLS = [
   {
@@ -31,6 +31,12 @@ const TOOLS = [
     emoji: '☯',
     name: 'Xem lá số Tử Vi',
     desc: 'Lập lá số Tử Vi miễn phí: 12 cung, 114 sao, độ sáng, cách cục — con số thật.',
+  },
+  {
+    href: '/bang-chung',
+    emoji: '✓',
+    name: 'Bằng Chứng',
+    desc: 'Kiểm chứng lá số bằng quá khứ thật của bạn — nhập sự kiện đã xảy ra, xem lá số có ghi dấu không. Không bói mù.',
   },
   {
     href: '/la-so-bat-tu',
@@ -208,40 +214,7 @@ export default function CongCuPage() {
       description="Toàn bộ công cụ luận số, tâm lý học, và phong thủy tại hieu.asia — chọn một điểm bắt đầu, mọi con đường đều dẫn về chính mình."
       breadcrumb={[{ label: 'Trang chủ', href: '/' }, { label: 'Công cụ' }]}
     >
-      <ul
-        role="list"
-        className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-      >
-        {TOOLS.map((tool) => (
-          <li key={tool.href}>
-            <Link
-              href={tool.href}
-              className="group flex h-full flex-col gap-3 rounded-2xl border border-white/[0.07] bg-white/[0.03] p-5 transition-all duration-200 hover:border-gold/40 hover:bg-gold/[0.06] hover:shadow-[0_0_28px_-8px_rgba(184,146,61,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60"
-            >
-              <span
-                aria-hidden="true"
-                className="text-2xl leading-none transition-transform duration-200 group-hover:scale-110"
-              >
-                {tool.emoji}
-              </span>
-              <div className="flex flex-col gap-1">
-                <span className="font-heading text-base font-semibold text-foreground group-hover:text-gold transition-colors duration-200">
-                  {tool.name}
-                </span>
-                <span className="text-[13px] leading-relaxed text-muted-foreground">
-                  {tool.desc}
-                </span>
-              </div>
-              <span
-                aria-hidden="true"
-                className="mt-auto text-xs font-mono text-gold/40 transition-colors duration-200 group-hover:text-gold/70"
-              >
-                Khám phá →
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <CongCuExplorer tools={TOOLS} />
     </ToolPageShell>
   );
 }

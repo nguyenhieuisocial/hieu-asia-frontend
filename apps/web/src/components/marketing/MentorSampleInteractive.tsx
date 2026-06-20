@@ -33,7 +33,7 @@ import { MessageSquareQuote, ArrowRight, RotateCcw, Send } from 'lucide-react';
  *   0. FALLBACK — "kể thêm hoàn cảnh, điều bạn đã thử, điều bạn đang sợ"
  *
  * Persona block (fixed for all demo answers):
- *   Chi Lan, 29 tuổi · ENFP · Mệnh Hoả · Tử Vi mẫu
+ *   Chi Lan, 29 tuổi · ENFP · Mệnh Hỏa · Tử Vi mẫu
  *   Disclaimer: real account personalises to caller's chart.
  *
  * Brand tokens stay aligned with the Wave 60.95.i version:
@@ -635,7 +635,7 @@ export function MentorSampleInteractive() {
               </span>
               <span className="text-muted-foreground/40">·</span>
               <span className="font-mono text-xs uppercase tracking-wider text-primary/80">
-                Mệnh Hoả
+                Mệnh Hỏa
               </span>
               <span className="text-muted-foreground/40">·</span>
               <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
@@ -722,7 +722,7 @@ export function MentorSampleInteractive() {
                   Hỏi câu khác
                 </button>
                 <p className="text-[11px] text-muted-foreground">
-                  Phản hồi dựa trên persona Chi Lan · ENFP · Mệnh Hoả
+                  Phản hồi dựa trên persona Chi Lan · ENFP · Mệnh Hỏa
                 </p>
               </div>
             </div>

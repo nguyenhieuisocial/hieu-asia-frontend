@@ -8,10 +8,11 @@
  * failed status on AdminTable (vault 107 §5.5).
  *
  * Data source (best-effort):
- *   GET /api/admin-proxy/admin/migrations?limit=50
+ *   GET /api/admin-proxy/admin/migrations?limit=50   (shipped)
  *
- * Worker endpoint TODO — until shipped, mock list renders so the shell is
- * exercised (MockBanner surfaces the mock state).
+ * Uses the real worker endpoint. If the gateway is unreachable or returns an
+ * unexpected shape, a deterministic mock list renders as a graceful fallback
+ * (MockBanner surfaces the mock state).
  */
 
 import * as React from 'react';
@@ -198,7 +199,7 @@ export function MigrationsTab() {
   return (
     <div className="space-y-6">
       <MockBanner
-        source={{ isMock: list.data?.isMock ?? false, reason: 'endpoint /admin/migrations TBD' }}
+        source={{ isMock: list.data?.isMock ?? false, reason: 'gateway unreachable; showing mock' }}
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

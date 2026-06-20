@@ -9,7 +9,17 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
+
+// Recharts lazy-loaded — out of the initial admin bundle (tasks page pattern).
+const FraudReasonChart = dynamic(
+  () => import('@/components/affiliates/FraudReasonChart').then((m) => m.FraudReasonChart),
+  {
+    ssr: false,
+    loading: () => <div className="h-56 animate-pulse rounded bg-muted/30" aria-hidden />,
+  },
+);
 
 interface FraudFlag {
   code: string;
@@ -104,6 +114,8 @@ export function FraudTab() {
       </div>
 
       {error && <p className="text-sm text-red-700 dark:text-red-300">{error}</p>}
+
+      {data && data.flags.length > 0 && <FraudReasonChart flags={data.flags} />}
 
       <Card>
         <CardHeader>

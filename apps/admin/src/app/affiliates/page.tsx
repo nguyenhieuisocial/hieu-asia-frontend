@@ -19,6 +19,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -40,6 +41,7 @@ import {
   Ticket,
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
+import { EmptyState } from '@/components/admin/empty-state';
 import { ProductTabs, type ProductTab } from '@/components/admin/product-tabs';
 import { fetchAffiliatesList, fetchFraudReport, vnd } from '@/lib/affiliate-admin-api';
 import { PromotersTab } from '@/components/admin/affiliates/promoters-tab';
@@ -48,6 +50,16 @@ import { BatchesTab } from '@/components/admin/affiliates/batches-tab';
 import { ReferralsTab } from '@/components/admin/affiliates/referrals-tab';
 import { FraudTab } from '@/components/admin/affiliates/fraud-tab';
 import { BroadcastTab } from '@/components/admin/affiliates/broadcast-tab';
+
+// Recharts lazy-loaded for the Payouts tab trend — keeps it out of the
+// initial admin bundle (tasks page pattern). ssr:false (auth-gated admin).
+const PayoutTrendChart = dynamic(
+  () => import('@/components/affiliates/PayoutTrendChart').then((m) => m.PayoutTrendChart),
+  {
+    ssr: false,
+    loading: () => <div className="h-56 animate-pulse rounded bg-muted/30" aria-hidden />,
+  },
+);
 
 const VALID_TABS = [
   'overview',
@@ -342,11 +354,10 @@ function OverviewTab() {
           {topQ.isLoading ? (
             <p className="text-sm text-muted-foreground">Đang tải…</p>
           ) : (topQ.data ?? []).length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              Materialized view chưa có dữ liệu. Cron job{' '}
-              <code className="font-mono text-xs">aff-leaderboard-refresh</code> chạy
-              mỗi giờ phút 30.
-            </p>
+            <EmptyState
+              title="Chưa có affiliate nào"
+              description="Khi có affiliate phát sinh hoa hồng, bảng xếp hạng sẽ hiển thị ở đây."
+            />
           ) : (
             <ol className="space-y-2">
               {(topQ.data ?? []).map((row, idx) => (
@@ -396,9 +407,10 @@ function OverviewTab() {
           {activityQ.isLoading ? (
             <p className="text-sm text-muted-foreground">Đang tải…</p>
           ) : (activityQ.data ?? []).length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              Chưa có audit_log entry nào với action LIKE &apos;affiliate%&apos;.
-            </p>
+            <EmptyState
+              title="Chưa có hoạt động"
+              description="Các thao tác liên quan đến affiliate sẽ xuất hiện ở đây khi phát sinh."
+            />
           ) : (
             <ul className="space-y-1 text-sm">
               {(activityQ.data ?? []).map((row) => (
@@ -511,6 +523,10 @@ function PayoutsInlineTab() {
           </div>
         </CardContent>
       </Card>
+
+      {!q.isLoading && !q.error && (
+        <PayoutTrendChart rows={q.data ?? []} />
+      )}
 
       <Card>
         <CardContent className="overflow-x-auto pt-6">

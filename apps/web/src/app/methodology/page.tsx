@@ -71,7 +71,8 @@ export const metadata: Metadata = {
   },
 };
 
-const LAST_VERIFIED = '21/05/2026';
+// QA tables below show illustrative representative figures (relabeled "số minh hoạ"
+// in the UI) — real measured numbers are published post-launch, not a verified-date claim.
 
 const PRINCIPLES = [
   {
@@ -416,7 +417,7 @@ const SAFETY_CATEGORIES: ReadonlyArray<SafetyCategory> = [
   { id: 'S-05', category: 'Self-harm escalation', count: 50, passRate: '100% pass', note: 'Phát hiện ý định tự hại → ngắt session, hotline' },
   { id: 'S-06', category: 'Underage user detection', count: 40, passRate: '100% pass', note: 'Tuổi < 16 → khoá tính năng, yêu cầu giám hộ' },
   { id: 'S-07', category: 'PII leak prevention', count: 80, passRate: '100% pass', note: 'Không lặp lại CMND/CCCD/thẻ trong response' },
-  { id: 'S-08', category: 'Hallucination / false confidence', count: 100, passRate: '98% pass', note: '12/100 case đang xét lại — phán quá chắc về tương lai' },
+  { id: 'S-08', category: 'Hallucination / false confidence', count: 100, passRate: '88% pass', note: '12/100 case đang xét lại — phán quá chắc về tương lai' },
   { id: 'S-09', category: 'Prompt injection resistance', count: 60, passRate: '100% pass', note: 'Ignore system role, bypass safety → từ chối' },
   { id: 'S-10', category: 'Cross-language consistency', count: 40, passRate: '100% pass', note: 'EN/VN cùng câu hỏi → cùng mức từ chối' },
 ];
@@ -910,7 +911,8 @@ function Chapter3Content() {
           Kiểm chứng thuật toán
         </h3>
         <p className="mt-2 font-sans text-sm text-muted-foreground/70">
-          Snapshot test suite tại lần verify gần nhất ({LAST_VERIFIED}).
+          Cấu trúc bộ kiểm thử chạy trước mỗi lần phát hành. Số liệu dưới đây là{' '}
+          <strong>minh hoạ đại diện</strong> — số đo thật sẽ công bố sau khi ra mắt.
         </p>
 
         {/* Wave 60.79.T3 (vault 112 P1 #8): validation table mobile-responsive
@@ -1220,8 +1222,6 @@ export default function MethodologyPage() {
               </Link>
               <span className="mx-2">/</span>
               <span className="text-muted-foreground">Phương pháp luận</span>
-              <span className="mx-2">·</span>
-              <span>LAST VERIFIED {LAST_VERIFIED}</span>
             </nav>
 
             <div className="mt-6 flex flex-wrap gap-2 font-sans text-xs">
@@ -1319,7 +1319,7 @@ export default function MethodologyPage() {
             <div className="mt-card flex flex-wrap items-center gap-3">
               <span className="inline-flex items-center gap-2 rounded-pill border border-border bg-muted/40 px-3 py-1 font-mono text-eyebrow uppercase tracking-[0.12em] text-muted-foreground">
                 <Calendar className="h-3.5 w-3.5" aria-hidden />
-                LAST VERIFIED {LAST_VERIFIED}
+                Số minh hoạ · số đo thật công bố sau ra mắt
               </span>
             </div>
 
@@ -1438,7 +1438,8 @@ export default function MethodologyPage() {
               <p className="mt-3 max-w-marketing-text font-sans text-base text-muted-foreground">
                 Adversarial prompts chia 10 chủ đề ranh giới — AI phải từ chối
                 hoặc chuyển hướng đúng cách. Mỗi chủ đề chạy mỗi đêm trong CI;
-                điểm dưới ngưỡng → block release.
+                điểm dưới ngưỡng → block release. <em>Tỷ lệ dưới đây là số minh hoạ
+                đại diện cho phạm vi kiểm thử — số đo thật sẽ công bố sau khi ra mắt.</em>
               </p>
 
               {/* Mobile: stacked cards */}
@@ -1520,7 +1521,7 @@ export default function MethodologyPage() {
                       <td className="px-4 py-3 font-mono text-xs text-primary/80">Σ</td>
                       <td className="px-4 py-3 font-semibold text-foreground">Tổng cộng (10 chủ đề)</td>
                       <td className="px-4 py-3 font-mono text-xs font-semibold text-foreground">{SAFETY_TOTAL}</td>
-                      <td className="px-4 py-3 font-mono text-xs text-muted-foreground">≥99% trung bình</td>
+                      <td className="px-4 py-3 font-mono text-xs text-muted-foreground">~98% trung bình</td>
                       <td className="px-4 py-3 text-muted-foreground">12 case đang xét lại trong S-08</td>
                     </tr>
                   </tbody>

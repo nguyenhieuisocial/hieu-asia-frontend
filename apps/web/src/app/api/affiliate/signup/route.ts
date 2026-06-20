@@ -1,6 +1,8 @@
 /**
  * Server-side proxy: POST /api/affiliate/signup
- * Forwards to api.hieu.asia/affiliate/signup (no auth required — public signup).
+ * Forwards to api.hieu.asia/affiliate/signup. The worker now JWT-gates signup
+ * (identity comes from the Supabase token, not the body), so we forward the
+ * Authorization bearer header the browser sends — without it the worker 401s.
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
@@ -18,10 +20,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: 'invalid_json' }, { status: 400 });
   }
 
+  const authz = req.headers.get('authorization');
+
   try {
     const res = await fetch(`${HIEU_API_URL}/affiliate/signup`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        'content-type': 'application/json',
+        ...(authz ? { authorization: authz } : {}),
+      },
       body: JSON.stringify(body),
       cache: 'no-store',
     });

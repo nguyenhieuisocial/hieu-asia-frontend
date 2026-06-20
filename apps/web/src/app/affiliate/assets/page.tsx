@@ -124,8 +124,16 @@ export default function AffiliateAssetsPage() {
                   </span>
                 </h1>
                 <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Banner, video, caption, QR — tất cả đã được cá nhân hoá với mã
+                  Banner, video, caption, QR. Tất cả đã được cá nhân hoá với mã
                   giới thiệu của bạn. Sao chép một click, đăng ngay.
+                </p>
+                <p className="mt-3">
+                  <Link
+                    href="/affiliate/poster"
+                    className="text-sm font-medium text-gold-700 hover:underline"
+                  >
+                    Tạo poster QR để in hoặc đăng →
+                  </Link>
                 </p>
               </header>
 

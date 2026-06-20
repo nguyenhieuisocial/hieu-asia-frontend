@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { ReopenCmpButton } from '@/components/cmp/ReopenCmpButton';
+import { SiteNav } from '@/components/home/SiteNav';
+import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata = {
   title: 'Chính sách bảo mật',
@@ -264,13 +266,9 @@ const IP_USING_VENDORS = [
 
 export default function PrivacyPage() {
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <header className="container mx-auto flex items-center justify-between px-6 py-5">
-        <Link href="/" className="font-heading text-xl font-semibold text-gold-700">
-          hieu.asia
-        </Link>
-        <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Chính sách bảo mật</span>
-      </header>
+    <>
+      <SiteNav />
+      <main className="min-h-screen bg-background pt-24 text-foreground">
 
       <section id="nd-13-2023" className="container mx-auto max-w-3xl scroll-mt-24 px-6 pb-20 pt-6">
         <div className="mb-10">
@@ -619,6 +617,8 @@ export default function PrivacyPage() {
           <p>© {new Date().getFullYear()} hieu.asia · Premium AI insight platform</p>
         </div>
       </section>
-    </main>
+      </main>
+      <SiteFooter />
+    </>
   );
 }

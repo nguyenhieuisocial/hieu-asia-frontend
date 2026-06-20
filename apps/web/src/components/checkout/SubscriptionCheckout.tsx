@@ -275,10 +275,13 @@ export function SubscriptionCheckout({ tier }: SubscriptionCheckoutProps) {
       <Card className="border-gold/30 bg-gold/[0.05]">
         <CardContent className="space-y-4 p-8 text-center">
           <p className="font-heading text-xl text-foreground">
-            <span aria-hidden>🎁</span> Bạn có voucher streak!
+            <span aria-hidden>🎁</span>{' '}
+            {voucher.type === 'vref' ? 'Bạn có voucher giới thiệu!' : 'Bạn có voucher điểm danh!'}
           </p>
           <p className="text-sm text-muted-foreground">
-            Chuỗi điểm danh của bạn đã đạt mốc phần thưởng.
+            {voucher.type === 'vref'
+              ? 'Phần thưởng từ chương trình giới thiệu của bạn. '
+              : 'Chuỗi điểm danh của bạn đã đạt mốc phần thưởng. '}
             Voucher giảm <strong className="text-gold-700 font-semibold">{voucher.discount_pct}%</strong> cho gói này.
           </p>
           <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
