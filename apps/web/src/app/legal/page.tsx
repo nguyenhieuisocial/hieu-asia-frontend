@@ -14,6 +14,10 @@ export const metadata: Metadata = {
   description:
     'Tổng hợp tài liệu pháp lý của hieu.asia: chính sách bảo mật, điều khoản, xuất và xoá dữ liệu cá nhân theo GDPR và Nghị định 13/2023.',
   alternates: { canonical: 'https://hieu.asia/legal' },
+  // Hub mỏng trùng cột "Pháp lý" ở footer (đã trỏ thẳng Privacy/Terms). Để
+  // noindex + bỏ khỏi sitemap (audit cấu trúc 2026-06-21) — dồn SEO về trang
+  // Privacy/Terms thật; trang này chỉ là lối tắt tiện dụng.
+  robots: { index: false, follow: true },
 };
 
 const SECTIONS = [
