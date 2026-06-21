@@ -78,6 +78,7 @@ export default function GieoQuePage() {
   const [question, setQuestion] = React.useState('');
   const [asked, setAsked] = React.useState('');
   const [result, setResult] = React.useState<IChingResult | null>(null);
+  const [castId, setCastId] = React.useState(0); // tăng mỗi lần gieo → remount glyph để chạy lại hoạt họa
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -99,6 +100,7 @@ export default function GieoQuePage() {
       const json = parsed.data;
       if (!json.ok || !json.result) throw new Error(json.error ?? 'Không gieo được quẻ');
       setResult(json.result);
+      setCastId((n) => n + 1);
       track('tool_used', { tool: 'gieo-que', result: 'ok' });
     } catch (e) {
       setError((e as Error).message);
@@ -211,7 +213,12 @@ export default function GieoQuePage() {
                     className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gold/15 blur-3xl"
                   />
                   <CardContent className="relative grid gap-6 p-6 sm:p-8 sm:grid-cols-[auto_1fr] sm:items-center">
-                    <HexagramGlyph binary={result.hexagramPrimary.binary} movingLines={result.movingLines} />
+                    <HexagramGlyph
+                      key={castId}
+                      binary={result.hexagramPrimary.binary}
+                      movingLines={result.movingLines}
+                      animate
+                    />
                     <div>
                       <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
                         Quẻ chính · số {result.hexagramPrimary.id}
@@ -522,8 +529,18 @@ export default function GieoQuePage() {
   );
 }
 
-/** Vẽ 6 hào của quẻ. binary[0] = hào 6 (đỉnh) → binary[5] = hào 1 (đáy). */
-function HexagramGlyph({ binary, movingLines }: { binary: string; movingLines: number[] }) {
+/** Vẽ 6 hào của quẻ. binary[0] = hào 6 (đỉnh) → binary[5] = hào 1 (đáy).
+ * animate=true: sáu hào hiện dần từ dưới (hào 1) lên đỉnh (hào 6), so le ~110ms.
+ * Remount glyph (key theo lần gieo) để hiệu ứng chạy lại mỗi lần gieo mới. */
+function HexagramGlyph({
+  binary,
+  movingLines,
+  animate = false,
+}: {
+  binary: string;
+  movingLines: number[];
+  animate?: boolean;
+}) {
   const moving = new Set(movingLines);
   return (
     <div className="mx-auto flex w-28 flex-col gap-1.5" aria-hidden>
@@ -531,8 +548,15 @@ function HexagramGlyph({ binary, movingLines }: { binary: string; movingLines: n
         const lineNo = 6 - i; // index 0 = hào 6 (đỉnh)
         const isYang = bit === '1';
         const isMoving = moving.has(lineNo);
+        // Hào đáy (i=5) hiện trước → đỉnh (i=0) hiện sau cùng.
+        const lineProps = animate
+          ? {
+              className: 'flex h-3 items-center justify-center gap-2 hex-line hex-line-animate',
+              style: { animationDelay: `${(5 - i) * 110}ms` },
+            }
+          : { className: 'flex h-3 items-center justify-center gap-2' };
         return (
-          <div key={i} className="flex h-3 items-center justify-center gap-2">
+          <div key={i} {...lineProps}>
             {isYang ? (
               <span
                 className={`h-full w-full rounded-sm ${isMoving ? 'bg-gold' : 'bg-foreground/80'}`}
