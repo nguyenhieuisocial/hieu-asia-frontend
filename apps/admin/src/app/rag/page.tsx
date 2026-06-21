@@ -15,13 +15,13 @@ import {
   StatusBadge,
   type DataTableColumn,
 } from '@hieu-asia/ui';
-import { ingestRagChunks, listRagChunks } from '@/lib/admin-api';
+import { ingestRagChunks, listRagChunks, searchRagChunks } from '@/lib/admin-api';
 import { MockBanner } from '@/components/mock-banner';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
-import { BookOpen, FileText, Database, Layers, RotateCw } from 'lucide-react';
+import { BookOpen, FileText, Database, Layers, RotateCw, Search } from 'lucide-react';
 import type { RagChunk } from '@/lib/mock-data';
 
 const DISCIPLINE_LABEL: Record<RagChunk['discipline'], string> = {
@@ -135,6 +135,8 @@ export default function AdminRagPage() {
 
       <IngestForm onIngested={() => qc.invalidateQueries({ queryKey: ['admin', 'rag'] })} />
 
+      <SearchBox />
+
       <Card>
         <CardHeader>
           <CardTitle>Tài liệu đã ingest</CardTitle>
@@ -158,6 +160,77 @@ export default function AdminRagPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+function SearchBox() {
+  const [query, setQuery] = React.useState('');
+  const mutation = useMutation({ mutationFn: (q: string) => searchRagChunks(q, 5) });
+  const hits = mutation.data ?? [];
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = query.trim();
+    if (q.length === 0 || mutation.isPending) return;
+    mutation.mutate(q);
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Search className="h-4 w-4" /> Thử tìm kiếm (kiểm chất lượng kho)
+        </CardTitle>
+        <CardDescription>
+          Nhập câu hỏi — hệ thống tạo embedding rồi tìm các đoạn gần nghĩa nhất trong corpus_chunks (xếp
+          theo độ tương đồng). Chỉ để kiểm tra; chưa nối vào báo cáo.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={onSubmit} className="flex gap-2">
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="vd: sao Thiên Cơ ở cung Mệnh nói lên điều gì?"
+            className="flex-1"
+          />
+          <Button type="submit" disabled={query.trim().length === 0 || mutation.isPending}>
+            {mutation.isPending ? 'Đang tìm…' : 'Tìm'}
+          </Button>
+        </form>
+
+        {mutation.isError && (
+          <div className="mt-3">
+            <ErrorBlock compact message={(mutation.error as Error).message} />
+          </div>
+        )}
+
+        {mutation.isSuccess && hits.length === 0 && (
+          <p className="mt-3 text-sm text-muted-foreground">
+            Không tìm thấy đoạn nào khớp. Kho có thể đang trống — ingest tài liệu trước.
+          </p>
+        )}
+
+        {hits.length > 0 && (
+          <ul className="mt-4 space-y-2">
+            {hits.map((h) => (
+              <li key={h.chunk_id} className="rounded-md border border-gold/15 bg-card/50 p-3">
+                <div className="mb-1 flex items-center justify-between gap-2">
+                  <span className="font-mono text-[10px] uppercase tracking-wide text-muted-foreground">
+                    {(h.metadata?.title as string | undefined) ?? h.document_id}
+                  </span>
+                  <StatusBadge
+                    status={h.similarity >= 0.5 ? 'success' : h.similarity >= 0.3 ? 'warning' : 'neutral'}
+                    label={`${Math.round(h.similarity * 100)}% khớp`}
+                  />
+                </div>
+                <p className="line-clamp-3 text-sm leading-snug text-foreground/90">{h.content}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
