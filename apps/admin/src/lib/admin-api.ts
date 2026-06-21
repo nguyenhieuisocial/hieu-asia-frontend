@@ -1150,6 +1150,20 @@ export interface InfraSentrySummary {
   top_issue?: { title: string; count: number } | null;
 }
 
+export interface InfraAikidoItem {
+  id: string;
+  title: string;
+  type: string;
+  severity: string; // critical | high | medium | low | unknown
+  severity_score: number;
+  status: string;
+}
+export interface InfraAikidoSummary {
+  open_count?: number;
+  critical_count?: number;
+  high_count?: number;
+}
+
 export interface InfraResendItem {
   id: string;
   to: string | null;
@@ -1677,6 +1691,12 @@ export function getInfraSentry(): Promise<
   InfraEnvelope<InfraSentryItem, InfraSentrySummary>
 > {
   return fetchInfra<InfraSentryItem, InfraSentrySummary>('sentry');
+}
+
+export function getInfraAikido(): Promise<
+  InfraEnvelope<InfraAikidoItem, InfraAikidoSummary>
+> {
+  return fetchInfra<InfraAikidoItem, InfraAikidoSummary>('aikido');
 }
 
 export function getInfraResend(): Promise<InfraResendEnvelope> {

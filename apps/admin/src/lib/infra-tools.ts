@@ -28,6 +28,7 @@ import {
   Network,
   KeyRound,
   Activity,
+  ShieldCheck,
 } from 'lucide-react';
 
 export interface InfraTool {
@@ -142,6 +143,15 @@ export const INFRA_TOOLS: InfraTool[] = [
     Icon: Activity,
     external: 'https://uptime.betterstack.com/',
     env: 'BETTERSTACK_API_TOKEN',
+    built: true,
+  },
+  {
+    slug: 'aikido',
+    name: 'Aikido',
+    blurb: 'Lỗ hổng bảo mật đang mở (mức độ, loại) từ Aikido.',
+    Icon: ShieldCheck,
+    external: 'https://app.aikido.dev/issues',
+    env: 'AIKIDO_CLIENT_ID / AIKIDO_CLIENT_SECRET',
     built: true,
   },
 ];
