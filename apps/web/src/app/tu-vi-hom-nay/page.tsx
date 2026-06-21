@@ -115,7 +115,10 @@ async function fetchAll(): Promise<AllResponse | null> {
 
 export default async function Page() {
   const data = await fetchAll();
-  const today = data?.date ?? formatToday();
+  // Always show today's VN date in the header — never echo a stale upstream
+  // `date`. If a degraded SWR/CDN snapshot returns an old payload, the eyebrow
+  // must still read today (the per-zodiac cards are matched by key, not date).
+  const today = formatToday();
   const byKey = new Map<string, DailyHoroscope>();
   if (data?.horoscopes) {
     for (const h of data.horoscopes) {

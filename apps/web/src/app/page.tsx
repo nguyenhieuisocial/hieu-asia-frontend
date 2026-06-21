@@ -234,7 +234,7 @@ const FAQ_JSONLD = {
       name: 'Dữ liệu cá nhân được bảo vệ thế nào?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Mã hoá AES-256 khi lưu trữ, TLS 1.3 khi truyền. Không bán dữ liệu, không dùng để huấn luyện mô hình. Tuân thủ Nghị định 13/2023/NĐ-CP. Xoá tài khoản trong trang Tài khoản.',
+        text: 'Mã hoá AES-256 khi lưu trữ, TLS 1.3 khi truyền. Không bán dữ liệu, không dùng để huấn luyện mô hình. Tuân thủ Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và Nghị định 356/2025/NĐ-CP. Xoá tài khoản trong trang Tài khoản.',
       },
     },
     {
@@ -336,7 +336,8 @@ const HOME_FAQ: readonly FaqItem[] = [
         </p>
         <p className="mt-2">
           Bạn có thể yêu cầu xoá toàn bộ tài khoản trong trang Tài khoản. Tuân
-          thủ Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân của Việt Nam.
+          thủ Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và Nghị định 356/2025/NĐ-CP
+          (thay thế Nghị định 13/2023/NĐ-CP).
         </p>
       </>
     ),
@@ -361,10 +362,10 @@ const HOME_FAQ: readonly FaqItem[] = [
     a: (
       <p>
         Có. Bạn huỷ trong trang Tài khoản — gói vẫn dùng được đến hết kỳ đã
-        thanh toán, không tự gia hạn. Bạn có 24h sau khi mua để hoàn tiền
-        instant nếu báo cáo chưa tạo. Sau đó, mọi gói trả phí (Premium /
-        Mentor / Lifetime) đều có 14 ngày để yêu cầu hoàn tiền nếu không hài
-        lòng. Hoàn tiền trong 24h sau khi yêu cầu, không cần lý do.
+        thanh toán, không tự gia hạn. Trong 24h sau khi mua, nếu báo cáo chưa
+        tạo, bạn được hoàn 100% không cần lý do. Sau khi báo cáo đã tạo, trong
+        vòng 14 ngày vẫn được xem xét hoàn tiền nếu có lỗi kỹ thuật hoặc trải
+        nghiệm không đúng mô tả. Mỗi yêu cầu được xử lý trong 24h.
       </p>
     ),
   },
@@ -751,7 +752,7 @@ export default function LandingPage() {
             the 24h-instant nuance stays in FAQ as a detail. */}
         <div className="mx-auto mt-6 flex max-w-marketing-tight flex-col items-center gap-3 px-6 text-center">
           <p className="font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
-            14 ngày hoàn tiền · không cần lý do · hoàn trong 24h
+            Hoàn 100% trong 24h nếu chưa tạo báo cáo · bảo hành 14 ngày
           </p>
           <p className="text-editorial-caption text-muted-foreground">
             Có gói Mentor theo năm (₫1.990.000) và Lifetime (₫4.990.000) —{' '}

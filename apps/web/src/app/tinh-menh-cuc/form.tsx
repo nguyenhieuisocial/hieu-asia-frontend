@@ -56,7 +56,7 @@ const FAQ_JSONLD = {
 
 export function TinhMenhCucForm() {
   const [birthDate, setBirthDate] = React.useState('');
-  const [birthHour, setBirthHour] = React.useState('12');
+  const [birthHour, setBirthHour] = React.useState('12:00');
   const [gender, setGender] = React.useState<Gender>('male');
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -69,7 +69,7 @@ export function TinhMenhCucForm() {
     setError(null);
     setResult(null);
     try {
-      const hour = Number(birthHour);
+      const hour = Number(birthHour.split(':')[0]);
       if (!birthDate || !/^\d{4}-\d{1,2}-\d{1,2}$/.test(birthDate)) {
         throw new Error('Ngày sinh phải có dạng YYYY-MM-DD.');
       }
@@ -151,18 +151,16 @@ export function TinhMenhCucForm() {
 
                 <div className="space-y-2">
                   <Label htmlFor="birth-hour">
-                    Giờ sinh (0–23){' '}
+                    Giờ sinh{' '}
                     {!hasTime && (
                       <span className="font-mono text-[10px] text-amber-300">
-                        — không nhớ giờ thì để 12
+                        — không nhớ giờ thì để 12:00
                       </span>
                     )}
                   </Label>
                   <Input
                     id="birth-hour"
-                    type="number"
-                    min={0}
-                    max={23}
+                    type="time"
                     value={birthHour}
                     onChange={(e) => setBirthHour(e.target.value)}
                   />

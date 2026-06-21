@@ -48,7 +48,7 @@ const COL_DOCS: readonly FooterLink[] = [
 const COL_LEGAL: readonly FooterLink[] = [
   { href: '/privacy', label: 'Privacy' },
   { href: '/terms', label: 'Terms' },
-  { href: '/privacy#nd-13-2023', label: 'NĐ 13/2023' },
+  { href: '/privacy#nd-13-2023', label: 'Dữ liệu cá nhân' },
   { href: 'mailto:hi@hieu.asia', label: 'Liên hệ' },
 ];
 

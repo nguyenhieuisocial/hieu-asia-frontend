@@ -76,8 +76,8 @@ const CONSENT_FIELDS: { key: keyof ConsentState; label: string; hint: string }[]
   },
   {
     key: 'training',
-    label: 'Cải thiện sản phẩm (training opt-in)',
-    hint: 'Cho phép dùng dữ liệu ẩn danh để cải thiện model.',
+    label: 'Cải thiện sản phẩm (tùy chọn)',
+    hint: 'Cho phép dùng dữ liệu đã ẩn danh để cải thiện prompt — không dùng để huấn luyện mô hình.',
   },
 ];
 
