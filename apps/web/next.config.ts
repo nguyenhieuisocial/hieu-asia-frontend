@@ -20,6 +20,13 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ['@sparticuz/chromium-min', 'puppeteer-core'],
   experimental: {
     typedRoutes: true,
+    // Inline CSS into <head> instead of a render-blocking <link>. App-Router-
+    // native, well-suited to Tailwind's single atomic stylesheet → removes the
+    // CSS request from the critical path (homepage LCP was gated by a ~195KB
+    // render-blocking stylesheet that is legitimately sized, not trimmable).
+    // Verified via prod build + Chromatic visual regression + Lighthouse;
+    // single reversible flag.
+    inlineCss: true,
   },
   // Wave 55 + V4-FIX BUG-044. Force blocking <head> metadata for:
   //   1. unfurl/preview bots → complete OG tags before any streamed body
