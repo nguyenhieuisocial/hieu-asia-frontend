@@ -18,6 +18,7 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
 import { parseTrigrams, getHaoDongMota, readingFocus } from '@/lib/hao-dong';
+import { getHaoTu, getHaoTuExtra, HAO_TU_SOURCE } from '@/lib/que-hao-tu';
 import { QUE_PAGES } from '@/lib/que-kinh-dich';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
@@ -305,14 +306,41 @@ export default function GieoQuePage() {
                       </p>
                       {result.movingLines.map((haoSo) => {
                         const info = getHaoDongMota(haoSo);
-                        if (!info) return null;
+                        const hao = getHaoTu(result.hexagramPrimary.id, haoSo);
+                        if (!info && !hao) return null;
+                        const heading = [hao?.label, info?.ten].filter(Boolean).join(' · ');
                         return (
                           <div key={haoSo} className="rounded-md border border-gold/20 bg-gold/5 px-3 py-2.5">
-                            <div className="text-xs font-semibold text-gold-700 mb-1">{info.ten}</div>
-                            <p className="text-sm leading-relaxed text-foreground/85">{info.mo_ta}</p>
+                            <div className="text-xs font-semibold text-gold-700 mb-1">{heading || `Hào ${haoSo}`}</div>
+                            {hao && (
+                              <div className="mb-2 border-l-2 border-gold/30 pl-3">
+                                <p lang="zh-Hant" className="font-heading text-base leading-relaxed text-foreground">{hao.han}</p>
+                                <p className="text-sm italic leading-relaxed text-foreground/80">{hao.hanViet}</p>
+                                <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground">{hao.nghia}</p>
+                              </div>
+                            )}
+                            {info && <p className="text-sm leading-relaxed text-foreground/85">{info.mo_ta}</p>}
                           </div>
                         );
                       })}
+                      {(() => {
+                        // Càn/Khôn: cả 6 hào động → đọc 用九/用六 (lời chốt riêng).
+                        const ex =
+                          result.movingLines.length === 6
+                            ? getHaoTuExtra(result.hexagramPrimary.id)
+                            : undefined;
+                        return ex ? (
+                          <div className="rounded-md border border-gold/30 bg-gold/10 px-3 py-2.5">
+                            <div className="text-xs font-semibold text-gold-700 mb-1">{ex.label} · cả sáu hào đều động</div>
+                            <p lang="zh-Hant" className="font-heading text-base leading-relaxed text-foreground">{ex.han}</p>
+                            <p className="text-sm italic leading-relaxed text-foreground/80">{ex.hanViet}</p>
+                            <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground">{ex.nghia}</p>
+                          </div>
+                        ) : null;
+                      })()}
+                      <p className="border-t border-border/60 pt-2.5 text-xs leading-relaxed text-muted-foreground">
+                        {HAO_TU_SOURCE}
+                      </p>
                     </CardContent>
                   </Card>
                 )}
