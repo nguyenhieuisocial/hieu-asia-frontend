@@ -46,7 +46,7 @@ function applyMarketingCache(pathname: string, res: NextResponse): NextResponse 
 // pass-through (page) responses only; redirects re-request the final page and
 // pick the header up there.
 const AGENT_LINK_HEADER =
-  '</.well-known/agent-skills/index.json>; rel="agent-skills", </llms.txt>; rel="llms"';
+  '</.well-known/agent-skills/index.json>; rel="agent-skills", </llms.txt>; rel="llms", </.well-known/api-catalog>; rel="api-catalog"';
 
 function applyAgentDiscovery(res: NextResponse): NextResponse {
   res.headers.set('Link', AGENT_LINK_HEADER);
