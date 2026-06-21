@@ -49,7 +49,7 @@ jobs:
           fetch-depth: 0   # Chromatic needs full history to baseline
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
         with:
           version: 9.12.0
 
@@ -84,7 +84,7 @@ jobs:
 
       - name: Publish to Chromatic
         if: steps.token_check.outputs.has_token == 'true'
-        uses: chromaui/action@9ee44f384ebe883c5b5e2b3a1248a8143fac0dc1 # v17
+        uses: chromaui/action@7804f34e4e59c0d9b3c856848f46ad96d7897429 # v17
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: apps/web

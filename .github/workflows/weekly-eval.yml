@@ -42,7 +42,7 @@ jobs:
       # action-setup@v4 with NO version key — defers to packageManager
       # (pnpm@9.12.0) in root package.json, matching ci.yml. v5 + an explicit
       # `version: 10` hard-errors ERR_PNPM_BAD_PM_VERSION (dual-spec conflict).
-      - uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: '22'
@@ -87,7 +87,7 @@ jobs:
 
       - name: Alert on regression
         if: steps.run.outcome == 'failure'
-        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553 # v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           script: |
             github.rest.issues.create({
