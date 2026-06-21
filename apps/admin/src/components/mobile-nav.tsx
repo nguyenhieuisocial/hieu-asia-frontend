@@ -30,6 +30,7 @@ import {
   Plus,
   User,
   Landmark,
+  BookText,
   ServerCog,
   Server,
   Settings,
@@ -54,6 +55,7 @@ const CORE_TABS: Tab[] = [
 const MORE_TABS: Tab[] = [
   { href: '/customers', label: 'Khách hàng', Icon: User },
   { href: '/sepay', label: 'SePay đối soát', Icon: Landmark },
+  { href: '/ledger', label: 'Sổ cái tiền', Icon: BookText },
   { href: '/system', label: 'Trạng thái hệ thống', Icon: ServerCog },
   { href: '/infra', label: 'Hạ tầng', Icon: Server },
   { href: '/settings', label: 'Cài đặt', Icon: Settings },
