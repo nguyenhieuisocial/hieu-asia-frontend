@@ -42,7 +42,7 @@ import { BigFiveEmblem, XemTuongEmblem } from '@/components/home-hero/LensGlyphs
 import { MbtiIcon } from '@/components/marketing/icons/MbtiIcon';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { SampleOutputShowcase } from '@/components/marketing/SampleOutputShowcase';
-import { MentorSampleInteractive } from '@/components/marketing/MentorSampleInteractive';
+import { MentorSampleLazy } from '@/components/marketing/MentorSampleLazy';
 import { ScanRow } from '@/components/marketing/ScanRow';
 import { PullQuote } from '@/components/marketing/PullQuote';
 import { SectionDivider } from '@/components/marketing/SectionDivider';
@@ -654,7 +654,7 @@ export default function LandingPage() {
             with a touch interaction before price friction. Client component
             (useState for active question), no Motion runtime — pure CSS
             grid-row trick for reveal. */}
-        <MentorSampleInteractive />
+        <MentorSampleLazy />
 
         {/* Lộ trình khởi đầu — band kích-hoạt có khung phần-thưởng THẬT (mẫu
             task-center/rewards của Bitget; mời bạn → voucher giảm giá có thật).

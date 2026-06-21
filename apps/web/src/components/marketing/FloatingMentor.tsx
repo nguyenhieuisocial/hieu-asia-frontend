@@ -39,7 +39,7 @@ export function FloatingMentor() {
       href="/onboarding?intent=decision"
       data-analytics="floating-mentor"
       className="group fixed bottom-6 right-6 z-40 hidden items-center gap-2 rounded-full border border-primary/30 bg-card/90 px-4 py-3 text-sm font-medium text-foreground shadow-[0_6px_24px_-8px_rgba(0,0,0,0.35)] backdrop-blur-md transition-all hover:border-primary/60 hover:bg-card md:inline-flex"
-      aria-label="Hỏi AI Mentor"
+      aria-label="Hỏi Mentor"
     >
       <span className="relative flex h-5 w-5 items-center justify-center">
         <Sparkles className="h-4 w-4 text-primary" aria-hidden />
