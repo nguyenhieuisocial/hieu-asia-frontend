@@ -399,3 +399,65 @@ export const OWNER_ONLY_ACTIONS: SensitiveAction[] = [
   { name: 'Xem hàng thô Supabase', path: 'admin/infra/supabase/rows', why: 'Dữ-liệu thật chưa che (PII), kể cả khi cột đã mask.' },
   { name: 'Cấp quyền trả-phí (comp)', path: 'admin/sessions/…/access', why: 'Mở khoá lá-số trả-phí miễn-phí cho một phiên.' },
 ];
+
+/**
+ * Quick actions — one-stop launcher so the ops console is ACT-able, not just
+ * readable. Each routes to the dedicated admin page where the action lives with
+ * its own confirm + role gate (the safe place to mutate); `owner` marks the
+ * sensitive owner-only ones (see OWNER_ONLY_ACTIONS / requiredRank). Inline
+ * one-click execution + edit-content-from-UI are a later layer (need worker
+ * endpoints). All hrefs verified to exist.
+ */
+export interface QuickAction {
+  name: string;
+  href: string;
+  does: string;
+  owner?: boolean;
+}
+export interface QuickActionGroup {
+  id: string;
+  label: string;
+  actions: QuickAction[];
+}
+export const QUICK_ACTIONS: QuickActionGroup[] = [
+  {
+    id: 'money',
+    label: 'Tiền & thanh toán',
+    actions: [
+      { name: 'Hoàn tiền / đối soát SePay', href: '/sepay', does: 'Hoàn tiền, đối-soát, sửa lệch giao-dịch.', owner: true },
+      { name: 'Giao dịch & doanh thu', href: '/payments', does: 'Xem đơn, trạng-thái thanh-toán, doanh-thu.' },
+      { name: 'Affiliate & rút hoa-hồng', href: '/affiliates', does: 'Duyệt payout, soát gian-lận CTV.' },
+    ],
+  },
+  {
+    id: 'customer',
+    label: 'Khách & quyền',
+    actions: [
+      { name: 'Cấp quyền trả-phí (comp)', href: '/sessions', does: 'Mở khoá lá-số cho một phiên.', owner: true },
+      { name: 'Người dùng & vai trò', href: '/users', does: 'Thêm admin, đổi vai-trò, khoá.' },
+      { name: 'Hồ sơ khách', href: '/customers', does: 'Tra-cứu khách, giao-dịch, phiên.' },
+    ],
+  },
+  {
+    id: 'content',
+    label: 'Nội dung · giá · cấu hình',
+    actions: [
+      { name: 'Giá tính năng', href: '/feature-prices', does: 'Sửa giá VND từng tính-năng (0 = free).' },
+      { name: 'Mã giảm giá', href: '/coupons', does: 'Tạo / sửa / tắt mã giảm-giá.' },
+      { name: 'Cờ tính năng', href: '/feature-flags', does: 'Bật/tắt tính-năng theo cờ.' },
+      { name: 'Prompt AI', href: '/prompts', does: 'Sửa prompt từng vai (có versioning + diff).' },
+      { name: 'Nội dung site', href: '/content', does: 'Sửa / xuất-bản nội-dung.' },
+      { name: 'Nạp tri-thức RAG', href: '/rag', does: 'Thêm tài-liệu vào kho RAG.' },
+    ],
+  },
+  {
+    id: 'ops',
+    label: 'Vận hành & chất lượng',
+    actions: [
+      { name: 'Lá số kẹt → chạy lại', href: '/tasks', does: 'Xem hàng-đợi, chạy-lại tác-vụ kẹt.' },
+      { name: 'Phiên phân tích', href: '/sessions', does: 'Soi từng phiên, chạy-lại báo-cáo kẹt.' },
+      { name: 'Chất lượng AI', href: '/ai-quality', does: 'Kiểm "không bói mù", eval, báo-cáo-kẹt.' },
+      { name: 'Bí mật production', href: '/secrets', does: 'Quản-lý key / token thật.', owner: true },
+    ],
+  },
+];
