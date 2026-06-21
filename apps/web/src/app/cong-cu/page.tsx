@@ -45,6 +45,24 @@ const TOOLS = [
     desc: 'Lập lá số Bát Tự (Tứ Trụ) miễn phí: 8 chữ, ngũ hành, Nhật Chủ, Thập Thần — tính theo tiết khí.',
   },
   {
+    href: '/tu-vi-nghe-nghiep',
+    emoji: '💼',
+    name: 'Tử Vi Nghề Nghiệp',
+    desc: 'Lá số nói gì về sự nghiệp: hợp ngành nào, vai trò nào, điểm mạnh khi làm việc.',
+  },
+  {
+    href: '/tu-vi-tinh-yeu',
+    emoji: '❤️',
+    name: 'Tử Vi Tình Yêu',
+    desc: 'Lá số về tình cảm: cách bạn gắn bó, thể hiện cảm xúc và mẫu xung đột thường gặp.',
+  },
+  {
+    href: '/tu-vi-tai-chinh',
+    emoji: '💰',
+    name: 'Tử Vi Tài Chính',
+    desc: 'Lá số về tiền bạc: cách kiếm tiền, thói quen quản lý và điểm rủi ro cần lưu ý.',
+  },
+  {
     href: '/mbti',
     emoji: '🧠',
     name: 'MBTI',
@@ -169,6 +187,36 @@ const TOOLS = [
     emoji: '👨‍👩‍👧‍👦',
     name: 'Xem Hợp Nhóm',
     desc: 'Thêm 3–6 người (gia đình, nhóm bạn) — điểm hoà hợp chung, từng cặp và gợi ý phối hợp.',
+  },
+  {
+    href: '/family-profiles',
+    emoji: '👪',
+    name: 'Hồ Sơ Gia Đình',
+    desc: 'Lưu hồ sơ cả nhà một chỗ — hiểu tính cách, hợp khắc và cách phối hợp giữa các thành viên.',
+  },
+  {
+    href: '/compatibility',
+    emoji: '💞',
+    name: 'Hợp Đôi',
+    desc: 'Đo độ hợp giữa hai người — tính cách, cảm xúc và mẫu hình tương tác.',
+  },
+  {
+    href: '/career-fit',
+    emoji: '🧩',
+    name: 'Nhóm Nghề',
+    desc: 'Gợi ý nhóm ngành nghề hợp với thiên hướng của bạn — từ tính cách và lá số.',
+  },
+  {
+    href: '/decision-simulator',
+    emoji: '🔀',
+    name: 'Mô Phỏng Quyết Định',
+    desc: 'Đặt 2 lựa chọn cạnh nhau — đối chiếu theo lá số để thấy mỗi hướng nghiêng về điều gì.',
+  },
+  {
+    href: '/timeline',
+    emoji: '📈',
+    name: 'Timeline Đại Vận',
+    desc: 'Xem đại vận 10 năm vận hành thế nào theo dòng thời gian — các mốc chuyển vận lớn.',
   },
   {
     href: '/lich-van-nien',
