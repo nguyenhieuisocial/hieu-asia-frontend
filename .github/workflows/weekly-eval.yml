@@ -38,12 +38,12 @@ jobs:
       # required so reading-create/reading-get pass the Edge Function verify_jwt gate.
       EVAL_SUPABASE_ANON_KEY: ${{ secrets.EVAL_SUPABASE_ANON_KEY }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
       # action-setup@v4 with NO version key — defers to packageManager
       # (pnpm@9.12.0) in root package.json, matching ci.yml. v5 + an explicit
       # `version: 10` hard-errors ERR_PNPM_BAD_PM_VERSION (dual-spec conflict).
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v6
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: '22'
           cache: 'pnpm'
@@ -79,7 +79,7 @@ jobs:
 
       - name: Upload eval results
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: eval-results-${{ github.run_id }}
           path: apps/web/tests/eval/results/
@@ -87,7 +87,7 @@ jobs:
 
       - name: Alert on regression
         if: steps.run.outcome == 'failure'
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           script: |
             github.rest.issues.create({

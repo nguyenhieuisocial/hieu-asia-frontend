@@ -44,17 +44,17 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
           fetch-depth: 0   # Chromatic needs full history to baseline
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
         with:
           version: 9.12.0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: '22'
           cache: 'pnpm'
@@ -84,7 +84,7 @@ jobs:
 
       - name: Publish to Chromatic
         if: steps.token_check.outputs.has_token == 'true'
-        uses: chromaui/action@v17
+        uses: chromaui/action@7804f34e4e59c0d9b3c856848f46ad96d7897429 # v17
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: apps/web
