@@ -17,6 +17,7 @@ import {
   KIENG_KY_INFO,
   type KiengKyKey,
 } from '@/lib/ngay-kieng-ky';
+import { getVietnamTodayISO } from '@/lib/vn-date';
 
 const HIT_BADGE: Record<KiengKyKey, string> = {
   tam_nuong:
@@ -29,14 +30,6 @@ const HIT_BADGE: Record<KiengKyKey, string> = {
     'border-slate-300 bg-slate-50 text-slate-700 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-300',
 };
 
-function todayISO(): string {
-  const n = new Date();
-  const y = n.getFullYear();
-  const m = String(n.getMonth() + 1).padStart(2, '0');
-  const d = String(n.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
-}
-
 function parseISO(value: string): { d: number; m: number; y: number } | null {
   const parts = value.split('-').map(Number);
   if (parts.length !== 3 || parts.some((n) => !Number.isFinite(n))) return null;
@@ -45,12 +38,12 @@ function parseISO(value: string): { d: number; m: number; y: number } | null {
 }
 
 export function KiengKyChecker() {
-  // Để trống khi render trên máy chủ, set "hôm nay" sau khi mount → tránh lệch
-  // ngày giữa máy chủ (UTC) và trình duyệt (giờ VN).
+  // Để trống khi render trên máy chủ, set "hôm nay" theo GIỜ VIỆT NAM (không
+  // phụ thuộc đồng hồ thiết bị) sau khi mount → tránh lệch ngày.
   const [value, setValue] = React.useState('');
 
   React.useEffect(() => {
-    if (!value) setValue(todayISO());
+    if (!value) setValue(getVietnamTodayISO());
   }, [value]);
 
   const parsed = React.useMemo(() => parseISO(value), [value]);
@@ -84,7 +77,7 @@ export function KiengKyChecker() {
               type="button"
               variant="outline"
               className="w-full sm:w-auto"
-              onClick={() => setValue(todayISO())}
+              onClick={() => setValue(getVietnamTodayISO())}
             >
               Về hôm nay
             </Button>

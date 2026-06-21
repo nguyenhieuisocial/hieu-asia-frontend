@@ -144,8 +144,8 @@ export default async function LaSoTuViPage({
               cùng <strong>tam hợp</strong> (hai cung cách 4 cung) và <strong>cung xung chiếu</strong> (cung
               đối diện). Ví dụ, đọc cung Mệnh phải xét chung Quan Lộc + Tài Bạch (tam hợp) và Thiên Di (xung
               chiếu) — bốn cung này tạo thành &ldquo;tam phương tứ chính&rdquo;. Từ các chính tinh hội về Mệnh,
-              ta nhận ra <strong>cách cục</strong> (Sát Phá Tham, Cơ Nguyệt Đồng Lương, Tử Phủ Vũ Tướng, Cự
-              Nhật) — khuôn hình thiên hướng của lá số. Khi bạn bấm chọn một cung ở trên, các cung trong tam
+              ta nhận ra <strong>cách cục</strong> (Sát Phá Tham, Cơ Nguyệt Đồng Lương, Tử Phủ Vũ Tướng, Tử
+              Phủ Đồng Cung, Cự Cơ Đồng Cung…) — khuôn hình thiên hướng của lá số. Khi bạn bấm chọn một cung ở trên, các cung trong tam
               phương tứ chính sẽ được tô sáng để dễ đọc.
             </p>
           </section>

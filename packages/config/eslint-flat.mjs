@@ -16,6 +16,7 @@ import { FlatCompat } from '@eslint/eslintrc';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
 import noServerToClientFunctionProp from './eslint-rules/no-server-to-client-function-prop.mjs';
+import noSearchParamsInChildrenWrapper from './eslint-rules/no-search-params-in-children-wrapper.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -25,6 +26,7 @@ const compat = new FlatCompat({ baseDirectory: __dirname });
 const rscDisciplinePlugin = {
   rules: {
     'no-server-to-client-function-prop': noServerToClientFunctionProp,
+    'no-search-params-in-children-wrapper': noSearchParamsInChildrenWrapper,
   },
 };
 
@@ -49,6 +51,10 @@ export default [
       // (inline arrow fns, Lucide icon refs) that crash the Server→Client
       // RSC boundary. See packages/config/eslint-rules/ for the rule.
       'rsc-discipline/no-server-to-client-function-prop': 'error',
+      // Hydration discipline: ban useSearchParams() inside a {children}-wrapping
+      // component — it intermittently de-opts hydration of the whole route.
+      // Isolate it in a Suspense-wrapped leaf. See PR #470 + the rule's header.
+      'rsc-discipline/no-search-params-in-children-wrapper': 'error',
     },
   },
   {

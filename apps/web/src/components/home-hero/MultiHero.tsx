@@ -15,6 +15,7 @@ import { LENSES } from '@/lib/catalog/lenses';
 
 const INK = '#171411';
 const OCHRE = '#A47532';
+const OCHRE_DEEP = '#7A5420'; // AA-dark ochre for SMALL labels on PAPER (≥5:1); OCHRE stays for the large h1 line (passes large-text 3:1)
 const PAPER = '#F3ECDD';
 const SOFT = '#6B6358';
 
@@ -91,11 +92,15 @@ export function MultiHero(): React.JSX.Element {
         {/* mobile-first: CTA TRƯỚC la bàn → user bấm được ngay màn 1 (above-fold).
             Desktop grid-template-areas ("copy vis" / "act vis") đặt lại vị trí nên không đổi. */}
         <div className="mh-act">
+          {/* Khung "quà" — reciprocity THẬT: lá số đầy đủ (114 sao, tính thật) là
+              quà giữ được, KHÔNG phải teaser. Cố ý KHÔNG hứa "luận giải sâu miễn
+              phí" (phần đó trả phí) → trung thực, không over-claim. */}
+          <p className="mh-gift"><span className="mh-gift-mk" aria-hidden="true">✦</span> Quà mở đầu · <strong>lá số Tử Vi đầy đủ</strong>, miễn phí — của bạn để giữ</p>
           <div className="mh-cta-row">
             <a className="mh-cta mh-cta-primary" href="/onboarding?intent=decision"><span className="mh-cta-num">①</span>Tôi đang phân vân một quyết định</a>
             <Link className="mh-cta mh-cta-ghost" href="/tu-vi-2026"><span className="mh-cta-num">②</span>Xem nhanh<span className="mh-cta-sub">· Tử Vi 2026 · Hợp tuổi</span></Link>
           </div>
-          <p className="mh-micro">MIỄN PHÍ · KHÔNG CẦN THẺ · 1 PHÚT</p>
+          <p className="mh-micro">KHÔNG CẦN THẺ · 1 PHÚT · KHÔNG SPAM</p>
         </div>
 
         <div className="mh-vis">
@@ -133,7 +138,7 @@ const CSS = `
 .mh-soi { margin: 0; text-align: center; min-height: 4.5em; max-width: 32em; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; letter-spacing: .01em; line-height: 1.5; }
 .mh-soi-in { display: inline-block; }
 .mh-soi-k { color: ${SOFT}; }
-.mh-soi-n { color: ${OCHRE}; font-weight: 500; font-family: 'Newsreader', Georgia, serif; font-size: 1.15em; font-style: italic; }
+.mh-soi-n { color: ${OCHRE_DEEP}; font-weight: 500; font-family: 'Newsreader', Georgia, serif; font-size: 1.15em; font-style: italic; }
 .mh-soi-r { color: ${SOFT}; }
 .mh-soi-q { color: ${INK}; opacity: .92; font-family: 'Newsreader', Georgia, serif; font-size: 1.12em; font-style: italic; }
 .mh-hint { margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: ${SOFT}; opacity: .78; }
@@ -149,6 +154,9 @@ const CSS = `
 .mh-cta-num { font-family: 'JetBrains Mono', monospace; margin-right: .6em; opacity: .85; }
 .mh-cta-sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; opacity: .68; margin-left: .5em; }
 .mh-micro { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .14em; color: ${SOFT}; margin: 0; text-align: center; }
+.mh-gift { font-family: 'Newsreader', Georgia, serif; font-size: .94rem; line-height: 1.4; color: ${OCHRE_DEEP}; margin: 0; text-align: center; font-style: italic; }
+.mh-gift strong { font-weight: 600; font-style: normal; }
+.mh-gift-mk { color: ${OCHRE}; font-style: normal; margin-right: .2em; }
 
 .mh-l1, .mh-l2 { opacity: 1; }
 @media (prefers-reduced-motion: no-preference) {
@@ -181,6 +189,7 @@ const CSS = `
   .mh-cta-row { flex-direction: row; flex-wrap: wrap; }
   .mh-cta { justify-content: flex-start; }
   .mh-micro { text-align: left; }
+  .mh-gift { text-align: left; }
 }
 
 @media (hover: hover) {

@@ -7,6 +7,7 @@ import { ReadingRitual } from '@/components/tools/ReadingRitual';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { PersonalityQuiz } from '@/components/tools/PersonalityQuiz';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
@@ -351,6 +352,58 @@ export default function EnneagramPage() {
                   title="Kết quả Enneagram của tôi — hieu.asia"
                   text={`Nhóm tính cách của tôi là Type ${result.type} — ${meta.name} (${result.label}). Bạn thử xem mình thuộc nhóm nào?`}
                   trackId="enneagram"
+                />
+                <DownloadToolPdfButton
+                  payload={() => {
+                    if (!result) return null;
+                    const m = TYPE_META[result.type];
+                    return {
+                      title: 'Kết quả Enneagram của tôi — hieu.asia',
+                      subtitle: `Type ${result.type} — ${m.name} · Cánh ${result.label} · Trung tâm ${m.center}`,
+                      sections: [
+                        {
+                          heading: 'Nhóm tính cách của bạn',
+                          rows: [
+                            { label: 'Nhóm chủ đạo', value: `Type ${result.type} — ${m.name}` },
+                            { label: 'Cánh (wing)', value: result.label },
+                            { label: 'Trung tâm', value: m.center },
+                            { label: 'Đặc trưng', value: m.tagline },
+                          ],
+                        },
+                        {
+                          heading: 'Chân dung nhóm',
+                          rows: [
+                            { label: 'Mong muốn cốt lõi', value: m.desire },
+                            { label: 'Nỗi sợ nền tảng', value: m.fear },
+                            { label: 'Điểm mạnh', value: m.strengths },
+                            { label: 'Khi cân bằng', value: m.atBest },
+                            { label: 'Khi căng thẳng', value: m.underStress },
+                            { label: 'Hướng phát triển', value: m.growth },
+                          ],
+                        },
+                        {
+                          heading: 'Đường phát triển & áp lực',
+                          rows: [
+                            {
+                              label: 'Khi phát triển →',
+                              value: `Type ${INTEGRATION[result.type]} — ${TYPE_META[INTEGRATION[result.type]].name}`,
+                            },
+                            {
+                              label: 'Khi áp lực →',
+                              value: `Type ${DISINTEGRATION[result.type]} — ${TYPE_META[DISINTEGRATION[result.type]].name}`,
+                            },
+                          ],
+                        },
+                        {
+                          heading: 'Điểm 9 nhóm',
+                          rows: ENNEAGRAM_TYPE_ORDER.map((t) => ({
+                            label: `Type ${t} — ${TYPE_META[t].name}`,
+                            value: String(result.scores[t]),
+                          })),
+                        },
+                      ],
+                    };
+                  }}
                 />
                 <Button variant="outline" onClick={() => setResult(null)}>
                   Làm lại

@@ -30,11 +30,15 @@ const MBTI_TYPES: readonly MbtiType[] = [
   { code: 'ESFP', nickname: 'Người biểu diễn', desc: 'Vui vẻ, hấp dẫn', quadrant: 'SP' },
 ];
 
+// Text colors are AA-readable (≥4.5:1) on the cream (#F3ECDD) light theme this
+// public /learn/mbti page renders on. The original light hex (#A98AD3/#7BC9A8/
+// #D8B566/#F5EFE0) sat at only 1.0–2.5:1 — the SP "Explorers" tone was literally
+// cream-on-cream. The faint /15–/20 background tints are kept for hue identity.
 const QUADRANT_STYLE: Record<Quadrant, { bg: string; text: string; label: string }> = {
-  NT: { bg: 'bg-[#5C3D8A]/20', text: 'text-[#A98AD3]', label: 'Analysts' },
-  NF: { bg: 'bg-[#3D8A6E]/20', text: 'text-[#7BC9A8]', label: 'Diplomats' },
-  SJ: { bg: 'bg-[#B8923D]/20', text: 'text-[#D8B566]', label: 'Sentinels' },
-  SP: { bg: 'bg-[#F5EFE0]/15', text: 'text-[#F5EFE0]', label: 'Explorers' },
+  NT: { bg: 'bg-[#5C3D8A]/20', text: 'text-[#5C3D8A]', label: 'Analysts' },
+  NF: { bg: 'bg-[#3D8A6E]/20', text: 'text-[#245C52]', label: 'Diplomats' },
+  SJ: { bg: 'bg-[#B8923D]/20', text: 'text-[#785312]', label: 'Sentinels' },
+  SP: { bg: 'bg-[#F5EFE0]/15', text: 'text-[#A14E2E]', label: 'Explorers' },
 };
 
 export function InfographicMBTI() {

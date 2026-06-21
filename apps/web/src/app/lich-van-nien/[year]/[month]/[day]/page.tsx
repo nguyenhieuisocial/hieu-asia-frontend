@@ -178,7 +178,7 @@ export default async function ArchiveDayPage({
             <Card className="border-border bg-card/40">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 font-heading text-base text-foreground">
-                  <Moon className="h-4 w-4 text-purple-300" aria-hidden /> Âm lịch
+                  <Moon className="h-4 w-4 text-purple-700 dark:text-purple-50" aria-hidden /> Âm lịch
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-sm leading-relaxed text-foreground/80">

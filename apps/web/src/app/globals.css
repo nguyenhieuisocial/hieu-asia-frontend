@@ -250,13 +250,20 @@ html {
  * pre-verified AA against the actual composited card backgrounds. */
 :root:not(.dark) .methodology-a11y .text-rose-300,
 :root:not(.dark) .methodology-a11y .text-rose-300\/80,
-:root:not(.dark) .methodology-a11y .text-rose-400 {
+:root:not(.dark) .methodology-a11y .text-rose-400,
+:root:not(.dark) .methodology-a11y .text-rose-400\/80 {
   color: #a8201a; /* ≥5.9:1 on the cream/rose card tints — keeps the red "avoid" semantic */
 }
-:root:not(.dark) .methodology-a11y .text-amber-300 {
-  color: #785312; /* dark ochre-gold, ≥5.2:1 on the amber tints */
+:root:not(.dark) .methodology-a11y .text-amber-300,
+:root:not(.dark) .methodology-a11y .text-amber-300\/80,
+:root:not(.dark) .methodology-a11y .text-amber-200,
+:root:not(.dark) .methodology-a11y .text-amber-200\/80 {
+  color: #785312; /* dark ochre-gold, ≥5.2:1 on the amber tints. amber-200 (oklch
+                     0.924 ≈ rgb 254,230,136) was the lighter "Caveat:" label —
+                     ~1.06:1 on cream until this; -300 was already covered. */
 }
-:root:not(.dark) .methodology-a11y .text-jade-300 {
+:root:not(.dark) .methodology-a11y .text-jade-300,
+:root:not(.dark) .methodology-a11y .text-jade-300\/80 {
   color: #245c52; /* ≥5.4:1 — clears 4.5 on the darker jade-tinted badge bg */
 }
 :root:not(.dark) .methodology-a11y .text-muted-foreground\/80 {
@@ -267,6 +274,58 @@ html {
   background-color: #f6e6e4; /* light rose tint → muted-foreground body text reaches
                                 4.96:1 (was 3.34 on the dark-tint mud) */
 }
+
+/* Homepage AstroTickerLive — the live almanac ticker tints its labels with the
+ * five-element vars (--hanh-*) on a light bg-card/60 surface. In LIGHT mode
+ * Kim/Mộc/Hoả/Thổ drop to ~2.6–4.0:1 (Lighthouse color-contrast); Thuỷ already
+ * passes. Darken just those four to AA, SCOPED to the ticker via `.astro-ticker`
+ * so the SAME vars stay brand-bright inside charts/lá số elsewhere. DARK is
+ * untouched by :not(.dark). Replacement colors pre-verified ≥5:1 on the card. */
+:root:not(.dark) .astro-ticker {
+  --hanh-kim: #4f5a66; /* metal — gray-blue, ≥5.8:1 */
+  --hanh-moc: #4d6139; /* wood  — green,     ≥5.6:1 */
+  --hanh-hoa: #8b3b2b; /* fire  — red,       ≥6.0:1 */
+  --hanh-tho: #7a5a2c; /* earth — gold-brown, ≥5.1:1 */
+}
+
+/* ────────────────────────────────────────────────────────────────────────
+ * AA contrast sweep — ROUND 4 (2026-06-20, founder "fix gốc rễ, không sót ở
+ * all page khác"). ROOT CAUSE: many accent labels/chips/badges were authored
+ * dark-first (light accent shades text-{amber,jade,emerald,rose,red,...}-50…300
+ * on translucent tints). In LIGHT mode those tints composite to light surfaces
+ * and the light-shade text drops to 1.0–4.4:1 (e.g. text-jade-50 = rgb 230,240,238
+ * @1.01; text-amber-200 'Caveat' @1.06). The earlier .methodology-a11y scope only
+ * covered methodology; this generalises it SITE-WIDE for LIGHT mode only.
+ * SAFE BY CONSTRUCTION: in the cream day theme every surface is light, so darkening
+ * a light accent never hurts — empirically verified by injecting this exact rule on
+ * /ban-do (4 fails→0), /tu-vi-tai-chinh, /big-five, /la-so-tu-vi (all stayed 0, no
+ * regressions). DARK is untouched by :not(.dark). Replacement colors are the same
+ * AA-verified family anchors used in the scoped sweeps above. Unlayered + :root
+ * descendant wins over Tailwind's utilities layer (no !important needed). */
+:root:not(.dark) .text-amber-50,
+:root:not(.dark) .text-amber-100,
+:root:not(.dark) .text-amber-200,
+:root:not(.dark) .text-amber-300,
+:root:not(.dark) .text-yellow-200,
+:root:not(.dark) .text-yellow-300 { color: #785312; } /* ochre, ≥5:1 on cream */
+:root:not(.dark) .text-jade-50,
+:root:not(.dark) .text-jade-100,
+:root:not(.dark) .text-jade-200,
+:root:not(.dark) .text-jade-300 { color: #245c52; } /* jade-teal, ≥5.4:1 */
+:root:not(.dark) .text-emerald-50,
+:root:not(.dark) .text-emerald-100,
+:root:not(.dark) .text-emerald-200,
+:root:not(.dark) .text-emerald-300 { color: #176046; } /* emerald, ≥6:1 */
+:root:not(.dark) .text-rose-100,
+:root:not(.dark) .text-rose-200,
+:root:not(.dark) .text-rose-300,
+:root:not(.dark) .text-rose-400,
+:root:not(.dark) .text-red-50,
+:root:not(.dark) .text-red-100,
+:root:not(.dark) .text-red-200,
+:root:not(.dark) .text-red-300 { color: #a8201a; } /* red, ≥5.9:1 — keeps "avoid" semantic */
+:root:not(.dark) .text-sky-300,
+:root:not(.dark) .text-blue-300 { color: #1e5a8a; } /* blue, ≥6:1 */
 
 /* ────────────────────────────────────────────────────────────────────────
  * AA contrast sweep — ROUND 3 (2026-06-14, founder "fix màu toàn site, cả

@@ -9,6 +9,7 @@ import { getSupabaseAuth } from '@/lib/auth-client';
 import { getPersonalitySummary } from '@/lib/personality-store';
 import { ReadingRitual } from '@/components/tools/ReadingRitual';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
@@ -278,6 +279,25 @@ export function TarotTool() {
               title="Lá Tarot tôi vừa rút — hieu.asia"
               text="Mình vừa rút Tarot để soi lại điều đang phân vân. Bạn thử xem mình rút được gì?"
               trackId="tarot"
+            />
+            <DownloadToolPdfButton
+              payload={() => {
+                if (!drawn) return null;
+                const pos = SPREADS[spreadKey].positions;
+                return {
+                  title: 'Lá Tarot tôi vừa rút — hieu.asia',
+                  subtitle: question.trim()
+                    ? `${SPREADS[spreadKey].label} · “${question.trim()}”`
+                    : SPREADS[spreadKey].label,
+                  sections: drawn.map((d, i) => ({
+                    heading: `${pos[i] ?? `Lá ${i + 1}`} — ${d.card.name_vi} (${d.orientation === 'upright' ? 'xuôi' : 'ngược'})`,
+                    rows: [
+                      { label: 'Loại', value: d.card.arcana === 'major' ? 'Ẩn chính' : (d.card.suit ?? 'Ẩn phụ') },
+                      { label: 'Ý nghĩa', value: d.orientation === 'upright' ? d.card.up : d.card.rev },
+                    ],
+                  })),
+                };
+              }}
             />
             <a href="/onboarding" className="inline-block rounded-md border border-gold/30 px-5 py-2.5 text-sm text-gold transition-colors hover:bg-gold/10">
               Ghép với Tử Vi + Bát Tự của tôi →

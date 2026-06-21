@@ -13,10 +13,12 @@ import {
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
 import { parseTrigrams, getHaoDongMota, readingFocus } from '@/lib/hao-dong';
+import { getHaoTu, getHaoTuExtra, HAO_TU_SOURCE } from '@/lib/que-hao-tu';
 import { QUE_PAGES } from '@/lib/que-kinh-dich';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
@@ -304,14 +306,41 @@ export default function GieoQuePage() {
                       </p>
                       {result.movingLines.map((haoSo) => {
                         const info = getHaoDongMota(haoSo);
-                        if (!info) return null;
+                        const hao = getHaoTu(result.hexagramPrimary.id, haoSo);
+                        if (!info && !hao) return null;
+                        const heading = [hao?.label, info?.ten].filter(Boolean).join(' · ');
                         return (
                           <div key={haoSo} className="rounded-md border border-gold/20 bg-gold/5 px-3 py-2.5">
-                            <div className="text-xs font-semibold text-gold-700 mb-1">{info.ten}</div>
-                            <p className="text-sm leading-relaxed text-foreground/85">{info.mo_ta}</p>
+                            <div className="text-xs font-semibold text-gold-700 mb-1">{heading || `Hào ${haoSo}`}</div>
+                            {hao && (
+                              <div className="mb-2 border-l-2 border-gold/30 pl-3">
+                                <p lang="zh-Hant" className="font-heading text-base leading-relaxed text-foreground">{hao.han}</p>
+                                <p className="text-sm italic leading-relaxed text-foreground/80">{hao.hanViet}</p>
+                                <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground">{hao.nghia}</p>
+                              </div>
+                            )}
+                            {info && <p className="text-sm leading-relaxed text-foreground/85">{info.mo_ta}</p>}
                           </div>
                         );
                       })}
+                      {(() => {
+                        // Càn/Khôn: cả 6 hào động → đọc 用九/用六 (lời chốt riêng).
+                        const ex =
+                          result.movingLines.length === 6
+                            ? getHaoTuExtra(result.hexagramPrimary.id)
+                            : undefined;
+                        return ex ? (
+                          <div className="rounded-md border border-gold/30 bg-gold/10 px-3 py-2.5">
+                            <div className="text-xs font-semibold text-gold-700 mb-1">{ex.label} · cả sáu hào đều động</div>
+                            <p lang="zh-Hant" className="font-heading text-base leading-relaxed text-foreground">{ex.han}</p>
+                            <p className="text-sm italic leading-relaxed text-foreground/80">{ex.hanViet}</p>
+                            <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground">{ex.nghia}</p>
+                          </div>
+                        ) : null;
+                      })()}
+                      <p className="border-t border-border/60 pt-2.5 text-xs leading-relaxed text-muted-foreground">
+                        {HAO_TU_SOURCE}
+                      </p>
                     </CardContent>
                   </Card>
                 )}
@@ -356,12 +385,68 @@ export default function GieoQuePage() {
                   );
                 })()}
 
-                <div className="pt-1">
+                <div className="flex flex-wrap items-center gap-3 pt-1">
                   <ShareResultButton
                     path="/gieo-que"
                     title="Gieo quẻ Kinh Dịch — hieu.asia"
                     text={`Tôi vừa gieo được quẻ ${result.hexagramPrimary.nameVi}. Bạn thử gieo một quẻ xem?`}
                     trackId="gieo-que"
+                  />
+                  <DownloadToolPdfButton
+                    payload={() => {
+                      if (!result) return null;
+                      const trigrams = parseTrigrams(result.hexagramPrimary.binary);
+                      const sections: ToolPdfPayload['sections'] = [
+                        {
+                          heading: 'Quẻ chính',
+                          rows: [
+                            { label: 'Tên quẻ', value: `${result.hexagramPrimary.nameVi} (${result.hexagramPrimary.name})` },
+                            { label: 'Số quẻ', value: `${result.hexagramPrimary.id}` },
+                          ],
+                        },
+                      ];
+                      if (asked) {
+                        sections.unshift({ heading: 'Điều bạn hỏi', text: asked });
+                      }
+                      if (result.interpretation.primary) {
+                        sections.push({ heading: 'Lời quẻ chính', text: result.interpretation.primary });
+                      }
+                      if (trigrams) {
+                        sections.push({
+                          heading: 'Cấu trúc quẻ — Bát Quái',
+                          rows: [
+                            { label: 'Thượng quái (ngoài)', value: `${trigrams.upper.ten} · ${trigrams.upper.tuong} · Hành ${trigrams.upper.hanh}` },
+                            { label: 'Hạ quái (trong)', value: `${trigrams.lower.ten} · ${trigrams.lower.tuong} · Hành ${trigrams.lower.hanh}` },
+                          ],
+                        });
+                      }
+                      if (result.movingLines.length > 0) {
+                        sections.push({
+                          heading: 'Hào động — vị trí chuyển hoá',
+                          rows: result.movingLines
+                            .map((haoSo) => getHaoDongMota(haoSo))
+                            .filter((info): info is NonNullable<typeof info> => info !== null)
+                            .map((info) => ({ label: info.ten, value: info.mo_ta })),
+                        });
+                      }
+                      if (result.hexagramChanging) {
+                        sections.push({
+                          heading: 'Quẻ biến',
+                          rows: [
+                            { label: 'Tên quẻ', value: `${result.hexagramChanging.nameVi} (${result.hexagramChanging.name})` },
+                            { label: 'Số quẻ', value: `${result.hexagramChanging.id}` },
+                          ],
+                        });
+                        if (result.interpretation.changing) {
+                          sections.push({ heading: 'Lời quẻ biến', text: result.interpretation.changing });
+                        }
+                      }
+                      return {
+                        title: `Quẻ ${result.hexagramPrimary.nameVi} — Gieo quẻ Kinh Dịch hieu.asia`,
+                        subtitle: 'Quẻ Dịch là công cụ gợi mở suy ngẫm, không phải lời tiên đoán chắc chắn.',
+                        sections,
+                      };
+                    }}
                   />
                 </div>
 

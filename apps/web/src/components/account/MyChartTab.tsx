@@ -14,8 +14,8 @@ import {
   toast,
 } from '@hieu-asia/ui';
 import { safeJson } from '@/lib/safe-json';
+import { formatVnDate } from '@/lib/vn-date';
 
-const ONBOARDING_KEY = 'hieu:onboarding:v2';
 const CHART_KEY = 'hieu:chart:profile:v1';
 
 interface ChartProfile {
@@ -42,29 +42,12 @@ const EMPTY: ChartProfile = {
 
 function loadLocal(): ChartProfile {
   if (typeof window === 'undefined') return EMPTY;
-  // First check our own key
+  // Read our own chart-profile store.
   try {
     const raw = window.localStorage.getItem(CHART_KEY);
     if (raw) {
       const parsed = JSON.parse(raw) as ChartProfile;
       if (parsed && typeof parsed === 'object') return { ...EMPTY, ...parsed };
-    }
-  } catch {
-    /* ignore */
-  }
-  // Fallback: derive from onboarding v2
-  try {
-    const raw = window.localStorage.getItem(ONBOARDING_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw) as Record<string, unknown>;
-      return {
-        ...EMPTY,
-        full_name: (parsed.display_name as string) ?? '',
-        gender: (parsed.gender as ChartProfile['gender']) ?? '',
-        birth_date: (parsed.birth_date as string) ?? '',
-        birth_time: (parsed.birth_time as string) ?? '',
-        birth_place: (parsed.birth_place as string) ?? '',
-      };
     }
   } catch {
     /* ignore */
@@ -189,7 +172,7 @@ export function MyChartTab() {
             <dl className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
               <Field label="Họ tên" value={profile.full_name} />
               <Field label="Giới tính" value={profile.gender} />
-              <Field label="Ngày sinh (dương)" value={profile.birth_date} />
+              <Field label="Ngày sinh (dương)" value={formatVnDate(profile.birth_date ?? '')} />
               <Field label="Giờ sinh" value={profile.birth_time} />
               <Field label="Nơi sinh" value={profile.birth_place} />
               <Field label="Ngày sinh (âm)" value={profile.birth_date_lunar || '— (sẽ tính khi lập lá số)'} />
