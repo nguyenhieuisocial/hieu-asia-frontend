@@ -29,6 +29,7 @@ import {
   type GioHoangDaoResult,
   type HourInfo,
 } from '@/lib/gio-hoang-dao';
+import { getVietnamDateParts } from '@/lib/vn-date';
 
 interface TickerState {
   result: GioHoangDaoResult;
@@ -40,9 +41,9 @@ interface TickerState {
 }
 
 function compute(now: Date): TickerState | null {
-  const dd = now.getDate();
-  const mm = now.getMonth() + 1;
-  const yy = now.getFullYear();
+  // Ngày theo lịch VN (UTC+7), KHÔNG theo đồng hồ máy khách — nếu không, người
+  // dùng ở múi giờ khác sẽ thấy can-chi/giờ của NGÀY sai quanh lúc giao ngày.
+  const { year: yy, month: mm, day: dd } = getVietnamDateParts(now);
   const result = computeGioHoangDao(dd, mm, yy);
   if (!result) return null;
   const idx = currentHourIndex(now);
