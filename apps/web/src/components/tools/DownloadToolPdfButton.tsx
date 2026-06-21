@@ -65,13 +65,15 @@ export function DownloadToolPdfButton({
     return win;
   }
 
-  async function renderAndOpen(win: Window | null, body: ToolPdfPayload) {
+  async function renderAndOpen(win: Window | null, body: ToolPdfPayload, email?: string) {
     setState('loading');
     try {
       const res = await fetch(`${API_BASE}/tools/pdf`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(body),
+        // email (nếu có) → worker gửi luôn link PDF vào hộp thư (đúng lời hứa
+        // "nhập email để NHẬN bản PDF"). Không có email → giữ hành vi cũ.
+        body: JSON.stringify(email ? { ...body, email } : body),
       });
       const data = (await res.json()) as { ok?: boolean; url?: string; error?: string };
       if (!data?.ok || !data?.url) throw new Error(data?.error || 'pdf_failed');
@@ -100,7 +102,7 @@ export function DownloadToolPdfButton({
     const body = getBody();
     if (!body) return;
     if (user) {
-      renderAndOpen(openTab(), body);
+      renderAndOpen(openTab(), body, user.email ?? undefined);
     } else {
       setState('email');
     }
@@ -120,7 +122,7 @@ export function DownloadToolPdfButton({
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ email: em, source: String(source).slice(0, 32) }),
     }).catch(() => {});
-    renderAndOpen(win, body);
+    renderAndOpen(win, body, em);
   }
 
   if (state === 'email') {
