@@ -230,6 +230,10 @@ export default function TuVi2027HubPage() {
               Xem hợp tuổi
             </Link>
             {', '}
+            <Link href="/xuat-hanh-2027" className="text-gold hover:underline">
+              Xuất hành đầu năm 2027
+            </Link>
+            {', '}
             <Link href="/la-so-bat-tu" className="text-gold hover:underline">
               Lập lá số miễn phí
             </Link>
