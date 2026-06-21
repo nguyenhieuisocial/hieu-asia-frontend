@@ -39,6 +39,7 @@ import {
 import { ErrorBlock } from '@/components/admin/error-block';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { CustomerDetailTabs } from '@/components/admin/customers/CustomerDetailTabs';
+import { CustomerIntelligenceCard } from '@/components/admin/customers/CustomerIntelligenceCard';
 import { PlanBadge } from '@/components/admin/customers/PlanBadge';
 import { SetPlanDialog } from '@/components/admin/customers/SetPlanDialog';
 import { ContactCustomerDialog } from '@/components/admin/ContactCustomerDialog';
@@ -281,6 +282,14 @@ function CustomerDetailPageInner() {
           hint="touching account"
         />
       </div>
+
+      {(enrichedCustomer ?? customer) && (
+        <CustomerIntelligenceCard
+          customer={(enrichedCustomer ?? customer)!}
+          sessionCount={sessions.length}
+          totalSpendVnd={totalSpend}
+        />
+      )}
 
       <Card>
         <CardContent className="pt-6">
