@@ -52,7 +52,7 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
       '"Trước đây tôi cứ nghĩ phải có dũng cảm mới bỏ việc. Sau khi đọc lá số tôi hiểu — dũng cảm của tôi nằm ở việc làm bài tập về nhà, không phải nhảy vực. Đó là cách tôi cảm thấy ổn nhất."',
     related: [
       { href: '/methodology/tu-vi', label: 'Methodology Tử Vi đầy đủ' },
-      { href: '/lo-trinh/su-nghiep', label: 'Lộ trình quyết định nghề nghiệp' },
+      { href: '/tu-vi-nghe-nghiep', label: 'Lộ trình quyết định nghề nghiệp' },
       { href: '/decisions/new', label: 'Tạo Decision Brief cho quyết định của bạn' },
     ],
     publishedAt: '2026-03-08',
@@ -74,7 +74,7 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
       '"Tử Vi không nói trường nào tốt hơn — nó giúp chúng tôi nhìn ra chúng tôi đang tranh cãi nhầm câu hỏi. Khi đổi câu hỏi, đáp án thành đơn giản."',
     related: [
       { href: '/compatibility', label: 'Hợp đôi 2 lá số' },
-      { href: '/lo-trinh/tinh-cam', label: 'Lộ trình quyết định gia đình' },
+      { href: '/tu-vi-tinh-yeu', label: 'Lộ trình quyết định gia đình' },
       { href: '/methodology/tu-vi', label: 'Cung Phụ Mẫu trong Methodology' },
     ],
     publishedAt: '2026-02-18',
@@ -97,7 +97,7 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
     related: [
       { href: '/career-fit', label: 'Career Fit công cụ' },
       { href: '/methodology/algorithm-changelog', label: 'Cách Career Fit tính điểm' },
-      { href: '/lo-trinh/su-nghiep', label: 'Lộ trình nghề nghiệp' },
+      { href: '/tu-vi-nghe-nghiep', label: 'Lộ trình nghề nghiệp' },
     ],
     publishedAt: '2026-04-22',
     illustrative: true,
@@ -118,7 +118,7 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
       '"Lá số không nói tôi nên ở hay đi. Nó cho tôi khung để hỏi câu đúng: \'Vấn đề là phong cách hay là giá trị?\' Khi rõ là phong cách, tôi mới dám chọn ở lại để thay đổi phong cách thay vì bỏ giá trị."',
     related: [
       { href: '/compatibility', label: 'Hợp đôi 2 lá số' },
-      { href: '/lo-trinh/tinh-cam', label: 'Lộ trình quyết định gia đình' },
+      { href: '/tu-vi-tinh-yeu', label: 'Lộ trình quyết định gia đình' },
       { href: '/decisions/new', label: 'Tạo Decision Brief cho quyết định của bạn' },
       { href: '/methodology/tu-vi', label: 'Methodology Tử Vi đầy đủ' },
     ],
@@ -141,7 +141,7 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
       '"Bạn bè bảo tôi mua ngay vì \'giá lên\'. Lá số bảo tôi đứt mạch nếu đại vận chuyển. Cuối cùng tôi không mua theo logic \'giá\', tôi mua theo logic \'cuộc đời tôi sẽ ra sao 5 năm tới\'."',
     related: [
       { href: '/career-fit', label: 'Career Fit công cụ' },
-      { href: '/lo-trinh/su-nghiep', label: 'Lộ trình nghề nghiệp' },
+      { href: '/tu-vi-nghe-nghiep', label: 'Lộ trình nghề nghiệp' },
       { href: '/lo-trinh/ke-hoach-nam', label: 'Lộ trình kế hoạch năm' },
       { href: '/methodology/tu-vi', label: 'Methodology Tử Vi đầy đủ' },
     ],
@@ -164,7 +164,7 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
       '"Lá số không bảo tôi sẽ thành công. Nó bảo tôi: \'Bạn được sinh ra để vỡ và xây lại — không có cách khác.\' Khi tôi chấp nhận điều đó, tôi không còn sợ thử nữa."',
     related: [
       { href: '/career-fit', label: 'Career Fit công cụ' },
-      { href: '/lo-trinh/su-nghiep', label: 'Lộ trình nghề nghiệp' },
+      { href: '/tu-vi-nghe-nghiep', label: 'Lộ trình nghề nghiệp' },
       { href: '/decisions/new', label: 'Tạo Decision Brief cho quyết định của bạn' },
       { href: '/methodology/tu-vi', label: 'Methodology Tử Vi đầy đủ' },
     ],
