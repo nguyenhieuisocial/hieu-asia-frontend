@@ -964,8 +964,8 @@ export const SITE_STRUCTURE: AppGroup[] = [
               '/hop-tuoi/birth-child',
               '/hop-tuoi/business',
               '/hop-tuoi/tuoi',
-              '/hop-tuoi/wedding',
               '/hop-tuoi/xong-dat',
+              '/xem-tuoi-cuoi',
             ],
           },
           {
@@ -1299,7 +1299,13 @@ export const SITE_STRUCTURE: AppGroup[] = [
             section: 'lo-trinh',
             app: 'web',
             dynamic: false,
-            linksTo: ['/', '/onboarding/topic'],
+            linksTo: [
+              '/',
+              '/onboarding/topic',
+              '/tu-vi-hom-nay',
+              '/tu-vi-nghe-nghiep',
+              '/tu-vi-tinh-yeu',
+            ],
           },
           {
             route: '/lo-trinh/hang-ngay',
@@ -2642,7 +2648,7 @@ export const SITE_STRUCTURE: AppGroup[] = [
             section: 'architecture',
             app: 'admin',
             dynamic: false,
-            linksTo: [],
+            linksTo: ['/site-structure'],
           },
         ],
       },
@@ -3176,6 +3182,21 @@ export const SITE_STRUCTURE: AppGroup[] = [
         ],
       },
       {
+        id: 'site-structure',
+        title: 'site-structure',
+        pages: [
+          {
+            route: '/site-structure',
+            title: 'Cấu trúc trang',
+            fn: 'Cấu trúc trang',
+            section: 'site-structure',
+            app: 'admin',
+            dynamic: false,
+            linksTo: ['/architecture'],
+          },
+        ],
+      },
+      {
         id: 'system',
         title: 'system',
         pages: [
@@ -3371,12 +3392,12 @@ export const SITE_STRUCTURE: AppGroup[] = [
 ];
 
 export const SITE_STATS: SiteStats = {
-  totalRoutes: 252,
+  totalRoutes: 253,
   perApp: {
     web: 183,
-    admin: 59,
+    admin: 60,
     'miniapp-telegram': 10,
     'miniapp-zalo': 0,
   },
-  totalEdges: 651,
+  totalEdges: 656,
 };
