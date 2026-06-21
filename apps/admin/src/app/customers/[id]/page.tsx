@@ -49,6 +49,7 @@ import type {
 const VALID_TABS = [
   'profile',
   'sessions',
+  'journey',
   'transactions',
   'refunds',
   'audit',
@@ -291,6 +292,7 @@ function CustomerDetailPageInner() {
             auditTrail={auditTrail}
             value={active}
             onValueChange={onTabChange}
+            userId={id}
             onSessionMutated={() => refetch()}
             onRefundMutated={() => refetch()}
           />
