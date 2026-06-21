@@ -29,6 +29,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import type { AppGroup } from '@/lib/site-structure';
+import { layoutSectionSubtree } from '@/lib/flow-layout';
 
 // A page row that already had its dynamic siblings collapsed into one node.
 interface FlowPage {
@@ -65,17 +66,24 @@ interface PageNodeData {
 
 type AnyData = SectionNodeData | PageNodeData;
 
-const COL_W = 260;
+// Fixed node-box sizes (match the w-[210px] cards) fed to dagre. ~58px section
+// header (label + "section" caption), ~62px page row (label + 1-line fn).
+const NODE_W = 210;
+const SECTION_NODE_H = 58;
+const PAGE_NODE_H = 62;
+// Horizontal stride between grid columns. A section's dagre LR block is a fixed
+// width (header column + page column); stride = that block width + a gutter.
+const BLOCK_W = 476; // header col + ranksep + page col (matches dagre LR output)
+const COL_STRIDE = BLOCK_W + 60;
 const SECTION_ROW_Y = 0;
-const PAGE_ROW_START_Y = 150;
-const PAGE_ROW_H = 92;
 // Vertical gap between two grid-rows of section blocks (below the tallest block
 // in the row above), so variable-height sections never overlap.
 const ROW_GUTTER = 80;
 // Cap so a wide app (web has ~85 sections) wraps instead of forming a single
 // ~22,000px row. Columns ≈ √(sections), capped — keeps the grid roughly square
-// and bounded in width.
-const MAX_COLS = 6;
+// and bounded in width. Capped at 4 because each LR block is ~480px wide
+// (wider than the old 210px stacks), so 4 columns keeps the canvas < ~2200px.
+const MAX_COLS = 4;
 
 // A stable, readable palette cycled across sections (group-by-section color).
 const SECTION_COLORS = [
@@ -101,6 +109,7 @@ const SectionNodeView = React.memo(function SectionNodeView({ data }: NodeProps<
       className="w-[210px] rounded-md border-2 px-3 py-2 text-left shadow-sm"
       style={{ borderColor: data.color, background: `${data.color}1a` }}
     >
+      <Handle type="source" position={Position.Right} id="s-right" style={{ opacity: 0 }} />
       <Handle type="source" position={Position.Bottom} id="s-bot" style={{ opacity: 0 }} />
       <div className="flex items-center justify-between gap-2">
         <span className="truncate text-[13px] font-semibold text-foreground">{data.label}</span>
@@ -121,6 +130,7 @@ const PageNodeView = React.memo(function PageNodeView({ data }: NodeProps<Node<P
       style={{ borderColor: `${data.color}66` }}
       title={data.fn}
     >
+      <Handle type="target" position={Position.Left} id="t-left" style={{ opacity: 0 }} />
       <Handle type="target" position={Position.Top} id="t-top" style={{ opacity: 0 }} />
       <Handle type="source" position={Position.Bottom} id="s-bot" style={{ opacity: 0 }} />
       <Handle type="target" position={Position.Bottom} id="t-bot" style={{ opacity: 0 }} />
@@ -202,13 +212,14 @@ export default function SiteMapFlow({ group, liveUrlFor }: SiteMapFlowProps) {
   const nodes: Node<AnyData>[] = React.useMemo(() => {
     const out: Node<AnyData>[] = [];
 
-    // Lay the section blocks (each = section header + its stacked page nodes) in
-    // a grid that WRAPS, instead of one ever-widening horizontal row. Columns
+    // Lay the section blocks (each = section header + its page nodes) in a grid
+    // that WRAPS, instead of one ever-widening horizontal row. Columns
     // ≈ √(sections), capped at MAX_COLS, so the canvas width stays bounded.
     const cols = Math.max(1, Math.min(MAX_COLS, Math.ceil(Math.sqrt(sectionFlowPages.length))));
 
     // Each grid-row's Y is the previous row's Y plus the tallest section block in
-    // that previous row (so variable-height sections don't overlap), + a gutter.
+    // that previous row (measured by dagre), so variable-height sections never
+    // overlap. + a gutter between rows.
     let rowYOffset = SECTION_ROW_Y;
     let rowMaxBlockH = 0;
 
@@ -219,26 +230,41 @@ export default function SiteMapFlow({ group, liveUrlFor }: SiteMapFlowProps) {
         rowYOffset += rowMaxBlockH + ROW_GUTTER;
         rowMaxBlockH = 0;
       }
-      // Block height = header offset + one row per page node.
-      const blockH = PAGE_ROW_START_Y + section.pages.length * PAGE_ROW_H;
-      if (blockH > rowMaxBlockH) rowMaxBlockH = blockH;
 
       const color = colorForSection(si);
-      const x = col * COL_W;
+      const headerId = `sec::${section.id}`;
+      // dagre lays out THIS section's tree only (header → its pages). Cross-links
+      // are NOT fed in — each section stays a small bounded tree, never one wide
+      // graph. Returns relative TOP-LEFT positions + the measured block size.
+      const { positions, height: blockH } = layoutSectionSubtree(
+        headerId,
+        section.pages.map((p) => p.id),
+        {
+          nodeWidth: NODE_W,
+          sectionHeight: SECTION_NODE_H,
+          pageHeight: PAGE_NODE_H,
+        },
+      );
+      if (blockH > rowMaxBlockH) rowMaxBlockH = blockH;
+
+      const originX = col * COL_STRIDE;
+      const originY = rowYOffset;
+      const headerPos = positions.get(headerId) ?? { x: 0, y: 0 };
       // Section header node.
       out.push({
-        id: `sec::${section.id}`,
+        id: headerId,
         type: 'section',
-        position: { x, y: rowYOffset },
+        position: { x: originX + headerPos.x, y: originY + headerPos.y },
         data: { kind: 'section', label: section.title, pages: section.pages.length, color },
         draggable: false,
       });
-      // Page nodes stacked under their section column.
-      section.pages.forEach((p, pi) => {
+      // Page nodes placed by dagre, offset to this block's grid origin.
+      section.pages.forEach((p) => {
+        const rel = positions.get(p.id) ?? { x: 0, y: 0 };
         out.push({
           id: p.id,
           type: 'page',
-          position: { x, y: rowYOffset + PAGE_ROW_START_Y + pi * PAGE_ROW_H },
+          position: { x: originX + rel.x, y: originY + rel.y },
           data: { kind: 'page', label: p.route, fn: p.fn, color, href: p.href, count: p.count },
           draggable: false,
         });
@@ -258,8 +284,10 @@ export default function SiteMapFlow({ group, liveUrlFor }: SiteMapFlowProps) {
           id: `h::${section.id}::${p.id}`,
           source: `sec::${section.id}`,
           target: p.id,
-          sourceHandle: 's-bot',
-          targetHandle: 't-top',
+          // header is LEFT of its page column (dagre LR) → exit right, enter left.
+          sourceHandle: 's-right',
+          targetHandle: 't-left',
+          type: 'smoothstep',
           style: { stroke: `${color}99`, strokeWidth: 1.25 },
         });
       });
