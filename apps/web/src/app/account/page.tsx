@@ -114,6 +114,7 @@ const SETTINGS_LINKS: readonly {
   icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
 }[] = [
   { href: '/account/journey', label: 'Hành trình 5 lăng kính', icon: Sparkle },
+  { href: '/account/insights', label: 'Bản đồ nhận thức', icon: Sparkle },
   { href: '/account/profile', label: 'Hồ sơ', icon: UserIcon },
   { href: '/account/chart', label: 'Lá số của tôi', icon: UserIcon },
   { href: '/account/operating-manual', label: 'Sổ tay cá nhân', icon: BookOpen },
