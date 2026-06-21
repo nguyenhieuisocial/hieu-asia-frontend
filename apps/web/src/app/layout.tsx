@@ -17,6 +17,7 @@ import { LazyMotionProvider } from '@/components/providers/lazy-motion-provider'
 import { PlausibleScript } from '@/components/analytics/PlausibleScript';
 import { PostHogProvider } from '@/components/PostHogProvider';
 import { ConsentBanner } from '@/components/cmp/ConsentBanner';
+import { FloatingMentor } from '@/components/marketing/FloatingMentor';
 import { Toaster } from '@hieu-asia/ui';
 import { AppShell } from '@/components/product/AppShell';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -310,6 +311,10 @@ export default async function RootLayout({
                     display-mode AND on in-app routes (/account, /reading,
                     /dashboard, /journal, /decisions). No-op otherwise. */}
                 <AppShell />
+                {/* Persistent "Hỏi Mentor" entry (desktop-only; hidden on
+                    experience routes). Surfaces the AI assistant like Bitget's
+                    always-present GetAgent. */}
+                <FloatingMentor />
               </LazyMotionProvider>
             </QueryProvider>
             <Toaster />
