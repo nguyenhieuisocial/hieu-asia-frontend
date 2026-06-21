@@ -17,6 +17,7 @@ import { safeJson } from '@/lib/safe-json';
 import { getSupabaseAuth } from '@/lib/auth-client';
 import { ReadingRitual } from '@/components/tools/ReadingRitual';
 import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
+import { NatalWheel } from './NatalWheel';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -278,6 +279,17 @@ export function SunMoonChecker({ initialDate, initialTime }: SunMoonCheckerProps
 
         {chart && (
           <div className="space-y-4">
+            {/* Bánh xe bản đồ sao — neo thị giác, vẽ đúng kinh độ thật */}
+            <div className="rounded-xl border border-gold/20 bg-gradient-to-br from-gold/5 to-transparent p-4">
+              <NatalWheel chart={chart} className="mx-auto block w-full max-w-[360px]" />
+              <p className="mt-1 text-center text-[11px] text-muted-foreground">
+                {chart.ascendant ? (
+                  <>Cung Mọc ở mép trái (chân trời đông) · 10 thiên thể đặt đúng kinh độ hoàng đạo thật.</>
+                ) : (
+                  <>0° Bạch Dương ở mép trái · chọn nơi sinh để xoay bánh xe theo cung Mọc của bạn.</>
+                )}
+              </p>
+            </div>
             <div className={chart.ascendant ? 'grid gap-3 sm:grid-cols-3' : 'grid gap-3 sm:grid-cols-2'}>
               <PositionCard
                 icon="☀️"
