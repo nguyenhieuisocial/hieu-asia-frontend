@@ -1,11 +1,10 @@
 /**
- * Server-side Supabase REST helper for /partner/* portal API routes.
+ * Server-side Supabase REST helper for API routes that query `hieu_asia.*`
+ * tables on behalf of the logged-in user. Passes the user's JWT through so
+ * Supabase RLS policies scope the response server-side.
  *
- * Wave 44 — used by /api/partner/{me,subtree,commissions,payouts} to query
- * `hieu_asia.*` tables on behalf of the logged-in affiliate. Passes the
- * user's JWT through so RLS policies enforce subtree visibility
- * (affiliate_self_or_descendants_read, affiliate_own_commissions_read,
- * affiliate_own_payouts_read added in migration 0017).
+ * (The legacy /partner/* portal routes that originally used this helper were
+ * retired; it is now used by generic authenticated API routes.)
  *
  * Env required:
  *   NEXT_PUBLIC_SUPABASE_URL              — Supabase project URL
