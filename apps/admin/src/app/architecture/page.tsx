@@ -102,6 +102,47 @@ function RunJobButton({ job }: { job: string }) {
   );
 }
 
+// One recorded cron/ops run (mirrors worker admin/cron-history CronRun).
+interface CronRun {
+  job: string;
+  ts: string;
+  ok: boolean;
+  ms: number;
+  source: 'scheduled' | 'manual';
+  note?: string;
+}
+
+// Compact "x phút/giờ/ngày trước" — computed after mount (client-only) so no
+// hydration mismatch.
+function fmtAgo(iso: string): string {
+  const ms = Date.now() - new Date(iso).getTime();
+  if (ms < 60_000) return 'vừa xong';
+  const min = Math.floor(ms / 60_000);
+  if (min < 60) return `${min} phút trước`;
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr} giờ trước`;
+  return `${Math.floor(hr / 24)} ngày trước`;
+}
+
+// "Lần chạy gần nhất" badge for a schedule group — last recorded run + status.
+function LastRun({ runs }: { runs?: CronRun[] }) {
+  const last = runs?.[0];
+  if (!last) {
+    return <span className="text-[10px] text-muted-foreground/60">chưa ghi nhận lần chạy</span>;
+  }
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center gap-1 text-[10px]',
+        last.ok ? 'text-jade-700 dark:text-jade-50' : 'text-red-500',
+      )}
+      title={last.ok ? `${last.source} · ${last.ms}ms` : last.note ?? 'lỗi'}
+    >
+      {last.ok ? '✓' : '✗'} {fmtAgo(last.ts)}
+    </span>
+  );
+}
+
 // Turn `(/path)` references inside a runbook/flow step into a clickable Link to
 // that admin page — so an operator goes map → runbook → one click → the fix page.
 function linkifyAdminPaths(text: string): React.ReactNode {
@@ -132,6 +173,23 @@ export default function ArchitecturePage() {
     Object.fromEntries(LIVE_SLUGS.map((s) => [s, 'loading'])),
   );
   const [core, setCore] = React.useState<{ api: Live; version?: string; queueAgeMin?: number }>({ api: 'loading' });
+  const [cronHistory, setCronHistory] = React.useState<Record<string, CronRun[]>>({});
+
+  React.useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const r = await fetch(`${PROXY}/admin/cron/history`, { cache: 'no-store' });
+        const j = (await r.json().catch(() => ({}))) as { ok?: boolean; history?: Record<string, CronRun[]> };
+        if (active && j?.ok && j.history) setCronHistory(j.history);
+      } catch {
+        /* run-history is best-effort UI sugar — ignore */
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -416,6 +474,12 @@ export default function ArchitecturePage() {
                     {group.cron}
                   </span>
                 </div>
+                {group.historyKey && (
+                  <div className="mb-2 flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                    <span>Lần chạy gần nhất:</span>
+                    <LastRun runs={cronHistory[group.historyKey]} />
+                  </div>
+                )}
                 <ul className="space-y-1.5 border-t border-border/50 pt-2">
                   {group.ops.map((op) => (
                     <li key={op.fn} className="flex items-start justify-between gap-2 text-xs text-foreground/85">
