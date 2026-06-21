@@ -153,8 +153,9 @@ export async function POST(req: NextRequest) {
     .select('run_id')
     .single();
   if (runErr || !runRow) {
+    console.error('[reasoning/tu-vi] run_create_failed', runErr?.message);
     return NextResponse.json(
-      { ok: false, error: 'run_create_failed', detail: runErr?.message },
+      { ok: false, error: 'run_create_failed' },
       { status: 500 },
     );
   }
@@ -224,7 +225,7 @@ export async function POST(req: NextRequest) {
     trace.end({ error: message, runId });
     after(() => trace.flush());
     return NextResponse.json(
-      { ok: false, error: 'graph_failed', runId, detail: message },
+      { ok: false, error: 'graph_failed', runId },
       { status: 502 },
     );
   }
