@@ -175,6 +175,23 @@ export async function reasoningGenerate(opts: ReasoningCallOpts) {
 }
 
 /**
+ * Return the LLM's text, or THROW if it is empty/whitespace.
+ *
+ * `generateText` resolves (not rejects) when a provider returns a valid response
+ * with no usable text — e.g. finishReason 'content-filter' (model refused), a
+ * length-0 completion, or a fallback that produced nothing. Shipping that empty
+ * string as a finished reading would charge the user a slot for a BLANK result.
+ * Callers that need a non-empty result must route through here so an empty
+ * completion degrades (palace → null) or fails loudly (synthesize → 502) instead
+ * of silently succeeding.
+ */
+export function requireText(result: { text?: string | null }, label: string): string {
+  const text = result.text?.trim() ?? '';
+  if (!text) throw new Error(`reasoning_llm_empty: ${label}`);
+  return text;
+}
+
+/**
  * Streaming variant — for routes that push tokens to the client via SSE.
  * Same fallback chain semantics.
  */
