@@ -76,6 +76,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'Tổng quan',
     items: [
       { href: '/', label: 'Tổng quan', Icon: LayoutDashboard },
+      { href: '/copilot', label: 'Trợ lý AI', Icon: Bot },
       { href: '/architecture', label: 'Sơ đồ hệ thống', Icon: Network },
       { href: '/system', label: 'Trạng thái hệ thống', Icon: ServerCog },
       { href: '/infra', label: 'Hạ tầng', Icon: Server },
