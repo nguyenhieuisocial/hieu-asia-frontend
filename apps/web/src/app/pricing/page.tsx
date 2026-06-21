@@ -48,9 +48,11 @@ const PRICING_FAQ: readonly FaqItem[] = [
     q: 'Có hoàn tiền không?',
     a: (
       <p>
-        Có. Nếu báo cáo không như mong đợi, nhắn founder qua Telegram trong
-        vòng 14 ngày để được hoàn tiền 100% — không cần lý do. Gói miễn phí
-        không áp dụng hoàn tiền. Mỗi yêu cầu được xử lý trong vòng 24 giờ.
+        Có. Trong 24h sau khi mua, nếu báo cáo chưa được tạo, bạn được hoàn
+        100% không cần lý do. Sau khi báo cáo đã tạo, trong vòng 14 ngày vẫn
+        được xem xét hoàn tiền nếu có lỗi kỹ thuật hoặc trải nghiệm không đúng
+        mô tả — nhắn founder qua Telegram. Gói miễn phí không áp dụng hoàn
+        tiền. Mỗi yêu cầu được xử lý trong vòng 24 giờ.
       </p>
     ),
   },
@@ -110,7 +112,7 @@ const PRICING_FAQ: readonly FaqItem[] = [
 const PRICING_FAQ_SCHEMA: { q: string; a: string }[] = [
   {
     q: 'Có hoàn tiền không?',
-    a: 'Có. Nếu báo cáo không như mong đợi, nhắn founder qua Telegram trong vòng 14 ngày để được hoàn tiền 100% — không cần lý do. Gói miễn phí không áp dụng hoàn tiền. Mỗi yêu cầu được xử lý trong vòng 24 giờ.',
+    a: 'Có. Trong 24h sau khi mua, nếu báo cáo chưa được tạo, bạn được hoàn 100% không cần lý do. Sau khi báo cáo đã tạo, trong vòng 14 ngày vẫn được xem xét hoàn tiền nếu có lỗi kỹ thuật hoặc trải nghiệm không đúng mô tả — nhắn founder qua Telegram. Gói miễn phí không áp dụng hoàn tiền. Mỗi yêu cầu được xử lý trong vòng 24 giờ.',
   },
   {
     q: 'Mentor có gì khác so với Premium?',
