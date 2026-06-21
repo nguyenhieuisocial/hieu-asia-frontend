@@ -92,11 +92,15 @@ export function MultiHero(): React.JSX.Element {
         {/* mobile-first: CTA TRƯỚC la bàn → user bấm được ngay màn 1 (above-fold).
             Desktop grid-template-areas ("copy vis" / "act vis") đặt lại vị trí nên không đổi. */}
         <div className="mh-act">
+          {/* Khung "quà" — reciprocity THẬT: lá số đầy đủ (114 sao, tính thật) là
+              quà giữ được, KHÔNG phải teaser. Cố ý KHÔNG hứa "luận giải sâu miễn
+              phí" (phần đó trả phí) → trung thực, không over-claim. */}
+          <p className="mh-gift"><span className="mh-gift-mk" aria-hidden="true">✦</span> Quà mở đầu · <strong>lá số Tử Vi đầy đủ</strong>, miễn phí — của bạn để giữ</p>
           <div className="mh-cta-row">
             <a className="mh-cta mh-cta-primary" href="/onboarding?intent=decision"><span className="mh-cta-num">①</span>Tôi đang phân vân một quyết định</a>
             <Link className="mh-cta mh-cta-ghost" href="/tu-vi-2026"><span className="mh-cta-num">②</span>Xem nhanh<span className="mh-cta-sub">· Tử Vi 2026 · Hợp tuổi</span></Link>
           </div>
-          <p className="mh-micro">MIỄN PHÍ · KHÔNG CẦN THẺ · 1 PHÚT</p>
+          <p className="mh-micro">KHÔNG CẦN THẺ · 1 PHÚT · KHÔNG SPAM</p>
         </div>
 
         <div className="mh-vis">
@@ -150,6 +154,9 @@ const CSS = `
 .mh-cta-num { font-family: 'JetBrains Mono', monospace; margin-right: .6em; opacity: .85; }
 .mh-cta-sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; opacity: .68; margin-left: .5em; }
 .mh-micro { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .14em; color: ${SOFT}; margin: 0; text-align: center; }
+.mh-gift { font-family: 'Newsreader', Georgia, serif; font-size: .94rem; line-height: 1.4; color: ${OCHRE_DEEP}; margin: 0; text-align: center; font-style: italic; }
+.mh-gift strong { font-weight: 600; font-style: normal; }
+.mh-gift-mk { color: ${OCHRE}; font-style: normal; margin-right: .2em; }
 
 .mh-l1, .mh-l2 { opacity: 1; }
 @media (prefers-reduced-motion: no-preference) {
@@ -182,6 +189,7 @@ const CSS = `
   .mh-cta-row { flex-direction: row; flex-wrap: wrap; }
   .mh-cta { justify-content: flex-start; }
   .mh-micro { text-align: left; }
+  .mh-gift { text-align: left; }
 }
 
 @media (hover: hover) {
