@@ -30,6 +30,7 @@ import {
   Plus,
   User,
   Landmark,
+  Bot,
   BookText,
   ServerCog,
   Server,
@@ -53,6 +54,7 @@ const CORE_TABS: Tab[] = [
 
 // Secondary shortcuts surfaced in the "Thêm" bottom-sheet.
 const MORE_TABS: Tab[] = [
+  { href: '/copilot', label: 'Trợ lý AI', Icon: Bot },
   { href: '/customers', label: 'Khách hàng', Icon: User },
   { href: '/sepay', label: 'SePay đối soát', Icon: Landmark },
   { href: '/ledger', label: 'Sổ cái tiền', Icon: BookText },
