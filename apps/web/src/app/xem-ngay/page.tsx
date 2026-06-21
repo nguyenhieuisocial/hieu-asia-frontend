@@ -107,6 +107,14 @@ export default function XemNgayHubPage() {
           .
         </p>
 
+        <p className="mt-3 text-sm text-muted-foreground">
+          Sắp tới tháng 7 âm lịch?{' '}
+          <Link href="/thang-co-hon-2026" className="text-gold hover:underline">
+            Tháng cô hồn 2026: tháng nào, kiêng gì và hiểu thế nào cho đúng
+          </Link>
+          .
+        </p>
+
         {/* Cách chấm điểm ngày — nội dung giáo dục */}
         <section className="mt-10 rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
           <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">

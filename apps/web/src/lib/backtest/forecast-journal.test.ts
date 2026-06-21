@@ -3,6 +3,7 @@ import {
   addPredictions,
   clearJournal,
   loadJournal,
+  partitionByYear,
   predictionsFromForecast,
   removePrediction,
   resolvePrediction,
@@ -131,5 +132,30 @@ describe('trackRecord (pure)', () => {
       pending: 0,
       resolved: 0,
     });
+  });
+});
+
+describe('partitionByYear (pure)', () => {
+  const mk = (targetYear: number): SavedPrediction => ({
+    id: `${targetYear}:career`,
+    createdAt: 'c',
+    targetYear,
+    category: 'career',
+    palace: 'Quan Lộc',
+    grade: 'STRONG',
+    outcome: 'pending',
+    resolvedAt: null,
+  });
+
+  it('the current year IS judgeable (year already started)', () => {
+    const { ready, upcoming } = partitionByYear([mk(2026), mk(2027), mk(2030)], 2027);
+    expect(ready.map((p) => p.targetYear)).toEqual([2026, 2027]);
+    expect(upcoming.map((p) => p.targetYear)).toEqual([2030]);
+  });
+
+  it('all future → nothing judgeable yet', () => {
+    const { ready, upcoming } = partitionByYear([mk(2028), mk(2029)], 2026);
+    expect(ready).toEqual([]);
+    expect(upcoming).toHaveLength(2);
   });
 });

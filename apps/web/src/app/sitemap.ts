@@ -247,6 +247,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Xem ngày tốt theo mục đích — SEO landings (engine: worker /tools/lich-van-nien/check).
   const xemNgay: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/xem-ngay`, lastModified: now, changeFrequency: 'monthly', priority: 0.75 },
+    { url: `${BASE_URL}/thang-co-hon-2026`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     ...PURPOSES.map((p) => ({
       url: `${BASE_URL}/xem-ngay/${p.slug}`,
       lastModified: now,
