@@ -7,6 +7,7 @@ import { FaqSection } from '@/components/seo/FaqSection';
 import { breadcrumb, webPage, faqPage, type FaqItem } from '@/lib/seo/jsonld';
 import { QUE_PAGES, TRIGRAMS, getQue } from '@/lib/que-kinh-dich';
 import { getThoanTu, THOAN_TU_SOURCE } from '@/lib/que-thoan-tu';
+import { HAO_TU, HAO_TU_SOURCE } from '@/lib/que-hao-tu';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -53,6 +54,7 @@ export default async function QueMeaningPage({ params }: Props) {
   const up = TRIGRAMS[q.binary.slice(0, 3)];
   const down = TRIGRAMS[q.binary.slice(3)];
   const thoanTu = getThoanTu(q.id);
+  const haoList = HAO_TU[q.id];
   const idx = QUE_PAGES.findIndex((x) => x.slug === q.slug);
   const prev = idx > 0 ? QUE_PAGES[idx - 1] : undefined;
   const next = idx < QUE_PAGES.length - 1 ? QUE_PAGES[idx + 1] : undefined;
@@ -147,6 +149,32 @@ export default async function QueMeaningPage({ params }: Props) {
               {THOAN_TU_SOURCE} Phần đọc bên dưới viết theo lối phản tư, bắt rễ từ lời quẻ gốc này.
             </p>
           </section>
+        )}
+
+        {haoList && haoList.length > 0 && (
+          <details className="group rounded-2xl border border-gold/20 bg-card/40 p-6 backdrop-blur-sm">
+            <summary className="cursor-pointer list-none font-heading text-xl font-semibold text-foreground marker:content-none">
+              <span className="flex items-center justify-between gap-3">
+                <span>Sáu hào (爻辞) — nguyên văn từng hào</span>
+                <span className="font-mono text-xs font-normal text-gold/80 transition-transform group-open:rotate-90">▸</span>
+              </span>
+            </summary>
+            <ol className="mt-4 space-y-4">
+              {haoList.map((h) => (
+                <li key={h.line} className="border-l-2 border-gold/25 pl-4">
+                  <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-gold/80">
+                    Hào {h.line} · {h.label}
+                  </div>
+                  <p lang="zh-Hant" className="mt-1 font-heading text-lg leading-relaxed text-foreground">{h.han}</p>
+                  <p className="mt-0.5 text-sm italic leading-relaxed text-foreground/80">{h.hanViet}</p>
+                  <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground">{h.nghia}</p>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-4 border-t border-border/60 pt-3 text-xs leading-relaxed text-muted-foreground">
+              {HAO_TU_SOURCE} Khi gieo quẻ, hào &ldquo;động&rdquo; sẽ dẫn đúng lời hào tương ứng ở đây.
+            </p>
+          </details>
         )}
 
         <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
