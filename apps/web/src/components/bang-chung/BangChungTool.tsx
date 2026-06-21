@@ -20,6 +20,7 @@ import { track } from '@/lib/analytics';
 import {
   addPredictions,
   loadJournal,
+  partitionByYear,
   predictionsFromForecast,
   removePrediction,
   resolvePrediction,
@@ -28,6 +29,7 @@ import {
   type ForecastOutcome,
   type SavedPrediction,
 } from '@/lib/backtest/forecast-journal';
+import { getVietnamDateParts } from '@/lib/vn-date';
 
 const CATEGORIES: LifeCategory[] = [
   'career',
@@ -619,6 +621,9 @@ function OutcomeBadge({ outcome }: { outcome: ForecastOutcome }) {
  */
 function ForecastJournalPanel() {
   const [list, setList] = React.useState<SavedPrediction[]>([]);
+  // VN year (almanac clock), not the device clock — same source as the canh-giờ.
+  // Declared before the early return so the hook order stays stable.
+  const currentYear = React.useMemo(() => getVietnamDateParts(new Date()).year, []);
 
   React.useEffect(() => {
     const sync = () => setList(loadJournal());
@@ -630,6 +635,7 @@ function ForecastJournalPanel() {
   if (list.length === 0) return null;
 
   const rec = trackRecord(list);
+  const { ready, upcoming } = partitionByYear(list, currentYear);
   const onResolve = (id: string, outcome: ForecastOutcome) =>
     setList(resolvePrediction(id, outcome, new Date().toISOString()));
   const onRemove = (id: string) => setList(removePrediction(id));
@@ -639,6 +645,47 @@ function ForecastJournalPanel() {
         ? 'border-jade/50 bg-jade/15 text-jade-700'
         : 'border-border text-muted-foreground hover:bg-muted'
     }`;
+
+  const row = (p: SavedPrediction, canJudge: boolean) => (
+    <li key={p.id} className="rounded-lg border border-border bg-background/40 p-3">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <div className="text-sm text-foreground/90">
+          <strong>{p.targetYear}</strong> · lá số nhấn{' '}
+          <strong className="text-jade-700">{CATEGORY_LABEL[p.category]}</strong>
+          <span className="ml-1 text-xs text-muted-foreground">
+            (ghi {new Date(p.createdAt).toLocaleDateString('vi-VN')})
+          </span>
+        </div>
+        {canJudge ? (
+          <OutcomeBadge outcome={p.outcome} />
+        ) : (
+          <span className="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground">Chưa tới</span>
+        )}
+      </div>
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        {canJudge ? (
+          <>
+            <button type="button" className={chip(p.outcome === 'occurred')} onClick={() => onResolve(p.id, 'occurred')}>
+              Đã xảy ra
+            </button>
+            <button type="button" className={chip(p.outcome === 'absent')} onClick={() => onResolve(p.id, 'absent')}>
+              Không xảy ra
+            </button>
+            {p.outcome !== 'pending' && (
+              <button type="button" className="rounded-md px-2.5 py-1 text-xs text-muted-foreground hover:underline" onClick={() => onResolve(p.id, 'pending')}>
+                Bỏ đánh dấu
+              </button>
+            )}
+          </>
+        ) : (
+          <span className="text-xs text-muted-foreground">Chờ đến năm {p.targetYear} mới đánh giá được.</span>
+        )}
+        <button type="button" className="ml-auto rounded-md px-2.5 py-1 text-xs text-muted-foreground/70 hover:text-destructive" onClick={() => onRemove(p.id)}>
+          Xoá
+        </button>
+      </div>
+    </li>
+  );
 
   return (
     <Card className="border-jade/30 bg-jade/5">
@@ -666,38 +713,21 @@ function ForecastJournalPanel() {
           </div>
         )}
 
-        <ul className="space-y-2">
-          {list.map((p) => (
-            <li key={p.id} className="rounded-lg border border-border bg-background/40 p-3">
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <div className="text-sm text-foreground/90">
-                  <strong>{p.targetYear}</strong> · lá số nhấn{' '}
-                  <strong className="text-jade-700">{CATEGORY_LABEL[p.category]}</strong>
-                  <span className="ml-1 text-xs text-muted-foreground">
-                    (ghi {new Date(p.createdAt).toLocaleDateString('vi-VN')})
-                  </span>
-                </div>
-                <OutcomeBadge outcome={p.outcome} />
-              </div>
-              <div className="mt-2 flex flex-wrap items-center gap-2">
-                <button type="button" className={chip(p.outcome === 'occurred')} onClick={() => onResolve(p.id, 'occurred')}>
-                  Đã xảy ra
-                </button>
-                <button type="button" className={chip(p.outcome === 'absent')} onClick={() => onResolve(p.id, 'absent')}>
-                  Không xảy ra
-                </button>
-                {p.outcome !== 'pending' && (
-                  <button type="button" className="rounded-md px-2.5 py-1 text-xs text-muted-foreground hover:underline" onClick={() => onResolve(p.id, 'pending')}>
-                    Bỏ đánh dấu
-                  </button>
-                )}
-                <button type="button" className="ml-auto rounded-md px-2.5 py-1 text-xs text-muted-foreground/70 hover:text-destructive" onClick={() => onRemove(p.id)}>
-                  Xoá
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+        {ready.length > 0 && (
+          <div className="space-y-2">
+            {upcoming.length > 0 && (
+              <p className="text-xs font-semibold text-foreground/70">Có thể đánh giá (năm đã tới)</p>
+            )}
+            <ul className="space-y-2">{ready.map((p) => row(p, true))}</ul>
+          </div>
+        )}
+
+        {upcoming.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-xs font-semibold text-muted-foreground">⏳ Chưa tới — chờ tới lượt</p>
+            <ul className="space-y-2">{upcoming.map((p) => row(p, false))}</ul>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
