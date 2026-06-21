@@ -26,6 +26,7 @@ import {
   type DashRecentEvent,
   type DashPayout,
 } from '@/components/affiliate/DashboardSections';
+import { TaxProfileForm } from '@/components/affiliate/TaxProfileForm';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -448,6 +449,8 @@ export default function AffiliateDashboardPage() {
         </Card>
 
         <ShareToolkit shareUrl={shareUrl} shareText={shareText} qrUrl={qrUrl} code={a.code} />
+
+        <TaxProfileForm />
 
         <PayoutRequest
           payoutMethod={a.payout_method}
