@@ -58,6 +58,15 @@ const nextConfig: NextConfig = {
       // Legal hub aliases
       { source: '/legal/privacy', destination: '/privacy', permanent: true },
       { source: '/legal/terms', destination: '/terms', permanent: true },
+      // Retired legacy "Wave 44" partner portal (/partner/*). It still rendered a
+      // multi-tier (L1/L2/L3/L4+) downline "subtree" UI — the exact downline-payout
+      // model we do NOT run (commission is SINGLE-TIER; only the direct referrer
+      // earns). Advertising multi-tier implies an unregistered MLM (Nghị định
+      // 40/2018) — a legal + trust risk. The same fix was already applied to the
+      // twin /affiliate/network route; /partner was missed. De-linked from all nav;
+      // superseded by /affiliate/*. Temporary (307) pending final delete decision.
+      { source: '/partner', destination: '/affiliate', permanent: false },
+      { source: '/partner/:path*', destination: '/affiliate', permanent: false },
     ];
   },
   async rewrites() {
