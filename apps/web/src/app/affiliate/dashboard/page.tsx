@@ -233,7 +233,7 @@ export default function AffiliateDashboardPage() {
 
   // Voucher payout: redeem the available balance as an in-product credit coupon
   // (no tax/KYC — in-product credit, not cash). Mirrors requestPayout's JWT flow.
-  async function requestVoucher() {
+  async function requestVoucher(amountVnd?: number) {
     const supabase = getSupabaseAuth();
     if (!supabase) {
       setPayoutMsg({ ok: false, text: 'Cần đăng nhập để đổi voucher.' });
@@ -248,9 +248,15 @@ export default function AffiliateDashboardPage() {
     setSubmitting(true);
     setPayoutMsg(null);
     try {
+      // Partial redeem: send { amount_vnd } when the CTV chose an amount below
+      // their full balance; omit it to redeem everything (backend default).
+      const partial = typeof amountVnd === 'number' && amountVnd > 0;
       const res = await fetch(`${API_BASE}/aff/payout-voucher`, {
         method: 'POST',
-        headers: { authorization: `Bearer ${token}` },
+        headers: partial
+          ? { authorization: `Bearer ${token}`, 'content-type': 'application/json' }
+          : { authorization: `Bearer ${token}` },
+        body: partial ? JSON.stringify({ amount_vnd: Math.floor(amountVnd) }) : undefined,
       });
       const j = await safeJson<{ ok: boolean; coupon_code?: string; amount_vnd?: number; error?: string }>(res);
       if (!j.ok) {

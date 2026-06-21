@@ -76,8 +76,9 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
             TNCN 10% tại nguồn.
           </li>
           <li>
-            hieu.asia sẽ tự động trừ 10% trên payout vượt ngưỡng và xuất chứng từ khấu trừ điện tử
-            (cá nhân dùng để hoàn thuế cuối năm).
+            hieu.asia trừ 10% trên payout tiền mặt vượt ngưỡng và cung cấp bảng kê khấu trừ cho bạn.
+            Chứng từ khấu trừ thuế điện tử chính thức (để hoàn thuế cuối năm) được phát hành qua đơn vị
+            dịch vụ thuế được cấp phép khi có phát sinh chi trả thực tế.
           </li>
           <li>
             Tổng thu nhập &gt; 100.000.000đ / năm: bạn có trách nhiệm tự khai báo &amp; quyết toán bổ

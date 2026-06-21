@@ -134,8 +134,9 @@ export function PayoutRequest({
   canPayout: boolean;
   submitting: boolean;
   onSubmit: () => void;
-  /** Optional: redeem the balance as an in-product voucher (no tax/KYC). */
-  onVoucher?: () => void;
+  /** Optional: redeem commission as an in-product voucher (no tax/KYC). Pass an
+   * amount to redeem PART of the balance; omit to redeem the full balance. */
+  onVoucher?: (amountVnd?: number) => void;
   /** Projected after-tax cash payout (from backend; 10% TNCN already applied). */
   cashNetVnd?: number;
   /** Projected 10% TNCN withheld on a cash payout. */
@@ -145,6 +146,17 @@ export function PayoutRequest({
   msg: { ok: boolean; text: string } | null;
   isActive: boolean;
 }) {
+  // Partial voucher redeem: blank = redeem the full available balance.
+  const [voucherAmount, setVoucherAmount] = React.useState('');
+  const trimmed = voucherAmount.trim();
+  const parsed = trimmed === '' ? undefined : Number(trimmed);
+  const voucherAmountVnd =
+    parsed !== undefined && Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : undefined;
+  const voucherAmountErr =
+    trimmed !== '' && (voucherAmountVnd === undefined || voucherAmountVnd > availableVnd)
+      ? `Nhập số từ 1 đến ${vnd(availableVnd)}, hoặc để trống để đổi hết.`
+      : null;
+  const voucherDisabled = !canPayout || submitting || voucherAmountErr !== null;
   return (
     <Card>
       <CardHeader>
@@ -171,6 +183,34 @@ export function PayoutRequest({
             Hoặc đổi voucher (không cần thủ tục thuế).
           </p>
         )}
+        {onVoucher && (
+          <div className="space-y-1">
+            <label htmlFor="voucher-amount" className="text-xs text-muted-foreground">
+              Số tiền đổi voucher (để trống = đổi hết {vnd(availableVnd)})
+            </label>
+            <Input
+              id="voucher-amount"
+              type="number"
+              inputMode="numeric"
+              min={minPayout}
+              max={availableVnd}
+              step={1000}
+              value={voucherAmount}
+              onChange={(e) => setVoucherAmount(e.target.value)}
+              placeholder={`Tối đa ${vnd(availableVnd)}`}
+              className="max-w-[220px]"
+            />
+            {voucherAmountErr ? (
+              <p className="text-xs text-rose-300">{voucherAmountErr}</p>
+            ) : voucherAmountVnd !== undefined ? (
+              <p className="text-xs text-muted-foreground">
+                Còn lại sau khi đổi: <b>{vnd(Math.max(0, availableVnd - voucherAmountVnd))}</b>.
+                Voucher đổi theo từng phần thưởng nên giá trị có thể nhỉnh hơn số bạn nhập một chút —
+                bạn không mất phần dư.
+              </p>
+            ) : null}
+          </div>
+        )}
         <div className="flex flex-wrap gap-2">
           <Button
             onClick={onSubmit}
@@ -181,18 +221,22 @@ export function PayoutRequest({
           </Button>
           {onVoucher && (
             <Button
-              onClick={onVoucher}
-              disabled={!canPayout || submitting}
+              onClick={() => onVoucher(voucherAmountVnd)}
+              disabled={voucherDisabled}
               variant="outline"
             >
-              {submitting ? 'Đang xử lý...' : 'Đổi voucher dùng trong sản phẩm'}
+              {submitting
+                ? 'Đang xử lý...'
+                : voucherAmountVnd !== undefined
+                  ? `Đổi voucher ${vnd(voucherAmountVnd)}`
+                  : 'Đổi hết thành voucher'}
             </Button>
           )}
         </div>
         {onVoucher && (
           <p className="text-xs text-muted-foreground">
-            Rút tiền mặt: có thể bị khấu trừ 10% thuế khi ≥ 2tr/lần (cần khai báo thuế).
-            Đổi voucher: nhận mã giảm giá dùng khi mua dịch vụ, không cần thủ tục thuế.
+            Rút tiền mặt: rút toàn bộ số dư, có thể bị khấu trừ 10% thuế khi ≥ 2tr/lần (cần khai báo thuế).
+            Đổi voucher: nhận mã giảm giá dùng khi mua dịch vụ, không cần thủ tục thuế — đổi từng phần hoặc đổi hết tuỳ ý.
           </p>
         )}
         {!canPayout && isActive && (

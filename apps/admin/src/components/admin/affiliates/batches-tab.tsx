@@ -99,10 +99,15 @@ export function BatchesTab() {
         key: string;
         row_count: number;
         warning?: string | null;
+        total_net_vnd?: number;
       };
     },
     onSuccess: (d) => {
-      toast.success(`CSV ${d.row_count} dòng đã sẵn sàng`);
+      toast.success(
+        `CSV ${d.row_count} dòng đã sẵn sàng${
+          typeof d.total_net_vnd === 'number' ? ` · tổng chi (sau thuế) ${vnd(d.total_net_vnd)}` : ''
+        }`,
+      );
       // Wave 45.2 P2-5 — surface missing-bank-info warning before download.
       if (d.warning) {
         toast.warning(d.warning);
@@ -110,6 +115,27 @@ export function BatchesTab() {
       window.open(d.url, '_blank', 'noopener,noreferrer');
     },
     onError: (e: Error) => toast.error(e.message),
+  });
+
+  // RECORD-ONLY: after the founder has done the bank transfers off-platform,
+  // mark the whole manual_csv batch paid. Moves no money.
+  const markPaid = useMutation({
+    mutationFn: async (id: string) => {
+      const r = await fetch(`/api/admin/affiliates/payouts/batches/${id}/mark-paid`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        signal: AbortSignal.timeout(15000),
+      });
+      const d = await r.json();
+      if (!r.ok || !d.ok) throw new Error(d.error ?? `HTTP ${r.status}`);
+      return d as { ok: true; marked_payouts: number };
+    },
+    onSuccess: (d) => {
+      toast.success(`Đã ghi nhận đã trả — ${d.marked_payouts} người`);
+      qc.invalidateQueries({ queryKey: ['affiliate-batches'] });
+    },
+    onError: (e: Error) =>
+      toast.error(e.name === 'TimeoutError' ? 'Quá lâu, thử lại' : e.message),
   });
 
   return (
@@ -207,6 +233,26 @@ export function BatchesTab() {
                               CSV
                             </Button>
                           )}
+                        {b.rail === 'manual_csv' && b.status === 'in_progress' && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            disabled={markPaid.isPending}
+                            onClick={() => {
+                              if (
+                                confirm(
+                                  `Xác nhận: bạn ĐÃ chuyển khoản xong cho batch ${b.id.slice(0, 8)} (${vnd(
+                                    b.total_amount_vnd,
+                                  )})? Thao tác này chỉ GHI NHẬN, không tự chuyển tiền.`,
+                                )
+                              ) {
+                                markPaid.mutate(b.id);
+                              }
+                            }}
+                          >
+                            Ghi nhận đã trả
+                          </Button>
+                        )}
                         {b.rail !== 'manual_csv' &&
                           ['in_progress', 'completed', 'failed'].includes(b.status) && (
                             <span className="text-xs text-muted-foreground">
@@ -229,7 +275,55 @@ export function BatchesTab() {
           )}
         </CardContent>
       </Card>
+
+      <WithholdingStatementOpener />
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Internal TNCN withholding statement — per-payout "bảng kê tạm tính" for the
+// accountant. Payout ids come from the batch CSV. NOT an official certificate.
+// ---------------------------------------------------------------------------
+function WithholdingStatementOpener() {
+  const [payoutId, setPayoutId] = React.useState('');
+  const id = payoutId.trim();
+  const valid = /^\d+$/.test(id);
+  const open = (fmt: 'pdf' | 'html') => {
+    if (!valid) return;
+    window.open(
+      `/api/admin/affiliates/payouts/${id}/withholding-statement?format=${fmt}`,
+      '_blank',
+      'noopener,noreferrer',
+    );
+  };
+  return (
+    <Card>
+      <CardContent className="space-y-2 pt-6">
+        <p className="text-sm font-medium text-foreground">Bảng kê khấu trừ thuế TNCN (nội bộ)</p>
+        <p className="text-xs text-muted-foreground">
+          Tài liệu nội bộ cho kế toán, theo từng mã chi trả (payout id — lấy trong file CSV của batch).
+          KHÔNG phải chứng từ khấu trừ thuế điện tử chính thức; MST/CCCD đã được che.
+        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <input
+            type="number"
+            inputMode="numeric"
+            min={1}
+            value={payoutId}
+            onChange={(e) => setPayoutId(e.target.value)}
+            placeholder="Mã chi trả (vd 12)"
+            className="w-44 rounded border border-foreground/20 bg-background px-3 py-2 text-sm"
+          />
+          <Button size="sm" variant="outline" disabled={!valid} onClick={() => open('pdf')}>
+            Tải PDF
+          </Button>
+          <Button size="sm" variant="outline" disabled={!valid} onClick={() => open('html')}>
+            Xem
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
