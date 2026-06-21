@@ -40,6 +40,19 @@ function applyMarketingCache(pathname: string, res: NextResponse): NextResponse 
   return res;
 }
 
+// Agent-discovery: advertise the public Agent Skills index + llms.txt on HTML
+// page responses so AI agents can find the read-only free tools. Purely
+// additive — sets one `Link` header, touches nothing else. Applied to
+// pass-through (page) responses only; redirects re-request the final page and
+// pick the header up there.
+const AGENT_LINK_HEADER =
+  '</.well-known/agent-skills/index.json>; rel="agent-skills", </llms.txt>; rel="llms"';
+
+function applyAgentDiscovery(res: NextResponse): NextResponse {
+  res.headers.set('Link', AGENT_LINK_HEADER);
+  return res;
+}
+
 function cookieOpts() {
   return {
     httpOnly: false as const, // readable client-side for analytics/signup attach
@@ -83,7 +96,7 @@ export function middleware(req: NextRequest) {
   if (MARKETING_ROUTES.has(pathname) && !req.nextUrl.searchParams.get('ref')) {
     const existing = req.cookies.get(COOKIE_NAME)?.value;
     if (!existing || !CODE_REGEX.test(existing)) {
-      return applyMarketingCache(pathname, NextResponse.next());
+      return applyAgentDiscovery(applyMarketingCache(pathname, NextResponse.next()));
     }
   }
 
@@ -110,7 +123,7 @@ export function middleware(req: NextRequest) {
       // Refresh TTL on the existing attribution so first-touch sticks.
       res.cookies.set(COOKIE_NAME, existingRef, cookieOpts());
     }
-    return res;
+    return applyAgentDiscovery(res);
   }
 
   const refRaw = req.nextUrl.searchParams.get('ref');
@@ -123,9 +136,9 @@ export function middleware(req: NextRequest) {
     if (existing && CODE_REGEX.test(existing)) {
       const res = NextResponse.next();
       res.cookies.set(COOKIE_NAME, existing, cookieOpts());
-      return res;
+      return applyAgentDiscovery(res);
     }
-    return NextResponse.next();
+    return applyAgentDiscovery(NextResponse.next());
   }
 
   const ref = refRaw.trim();
