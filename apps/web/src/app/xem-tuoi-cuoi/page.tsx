@@ -4,6 +4,9 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { XemTuoiCuoiChecker } from '@/components/xem-tuoi-cuoi/XemTuoiCuoiChecker';
+// Gộp cưới hỏi (audit cấu trúc 2026-06-21): nhúng công cụ "hợp tuổi vợ chồng"
+// (trước ở /hop-tuoi/wedding) làm mục 2 → trang này thành "Cưới hỏi" trọn vẹn.
+import { HopTuoiClient } from '@/app/hop-tuoi/[type]/HopTuoiClient';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { checkWeddingYear, VERDICT_LABEL } from '@/lib/xem-tuoi-cuoi';
 import { BIRTH_YEARS, TARGET_YEAR, slugOf } from './years';
@@ -77,6 +80,20 @@ export default function XemTuoiCuoiPage() {
       >
         <section className="space-y-8">
           <XemTuoiCuoiChecker defaultTargetYear={TARGET_YEAR} />
+
+          {/* Mục 2 (gộp từ /hop-tuoi/wedding): hai người có hợp tuổi cưới không */}
+          <section className="rounded-2xl border border-gold/20 bg-gradient-to-br from-gold/5 to-transparent p-6">
+            <h2 className="font-heading text-xl font-semibold text-foreground">
+              Hai người có hợp tuổi cưới không?
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Phần trên xét <strong>năm cưới</strong> theo tuổi một người. Phần này chấm
+              <strong> độ hợp giữa hai người</strong> — Thiên Can, Địa Chi, Cung Phi (Bát Trạch).
+            </p>
+            <div className="mt-5">
+              <HopTuoiClient type="wedding" />
+            </div>
+          </section>
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
             <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">

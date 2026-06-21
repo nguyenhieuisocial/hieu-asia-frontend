@@ -187,7 +187,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Wave 38.4 audit additions — surface hidden SEO pages to Google Search Console.
   // P1 fix: 4 hop-tuoi sub-types + 12 palace deep-dives + newsletter were missing.
   const wave38Additions: MetadataRoute.Sitemap = [
-    { url: `${BASE_URL}/hop-tuoi/wedding`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    // /hop-tuoi/wedding gộp vào /xem-tuoi-cuoi (redirect 308) → bỏ khỏi sitemap.
     { url: `${BASE_URL}/hop-tuoi/business`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/hop-tuoi/birth-child`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/hop-tuoi/xong-dat`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },

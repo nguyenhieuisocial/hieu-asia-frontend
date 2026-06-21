@@ -72,6 +72,10 @@ const nextConfig: NextConfig = {
       // was a teaser that never worked (sits under robots-blocked /reading/, 0
       // internal links). 308 → /sample-report. (Site-structure audit 2026-06-21.)
       { source: '/reading/sample-tu-vi', destination: '/sample-report', permanent: true },
+      // Gộp 2 trang cưới hỏi (audit cấu trúc 2026-06-21): /xem-tuoi-cuoi nay là
+      // trang "Cưới hỏi" trọn vẹn (năm cưới + hợp tuổi vợ chồng nhúng sẵn). Trang
+      // hợp-tuổi-cưới riêng dồn về đó. (Các loại hợp tuổi khác vẫn ở /hop-tuoi/*.)
+      { source: '/hop-tuoi/wedding', destination: '/xem-tuoi-cuoi', permanent: true },
     ];
   },
   async rewrites() {
