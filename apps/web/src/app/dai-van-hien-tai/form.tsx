@@ -91,7 +91,7 @@ const FAQ_JSONLD = {
 
 export function DaiVanHienTaiForm() {
   const [birthDate, setBirthDate] = React.useState('');
-  const [birthHour, setBirthHour] = React.useState('12');
+  const [birthHour, setBirthHour] = React.useState('12:00');
   const [gender, setGender] = React.useState<Gender>('male');
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -107,7 +107,7 @@ export function DaiVanHienTaiForm() {
     setError(null);
     setResult(null);
     try {
-      const hour = Number(birthHour);
+      const hour = Number(birthHour.split(':')[0]);
       if (!birthDate || !/^\d{4}-\d{1,2}-\d{1,2}$/.test(birthDate)) {
         throw new Error('Ngày sinh phải có dạng YYYY-MM-DD.');
       }
@@ -189,12 +189,10 @@ export function DaiVanHienTaiForm() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="birth-hour-dv">Giờ sinh (0–23)</Label>
+                  <Label htmlFor="birth-hour-dv">Giờ sinh</Label>
                   <Input
                     id="birth-hour-dv"
-                    type="number"
-                    min={0}
-                    max={23}
+                    type="time"
                     value={birthHour}
                     onChange={(e) => setBirthHour(e.target.value)}
                   />

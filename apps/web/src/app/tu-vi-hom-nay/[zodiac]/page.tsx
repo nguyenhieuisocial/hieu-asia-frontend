@@ -5,6 +5,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { ExpertContent, ExpertTerm } from '@/components/reading/ModeContent';
 import { getZodiacDailyOpener } from '@/lib/daily-opener';
+import { isGenericSummary } from '@/lib/zodiac-blurb';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 600;
@@ -200,10 +201,14 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
               tinh thủ cung tương ứng.
             </ExpertContent>
             <div className="mt-4 space-y-5 rounded-2xl border border-border bg-card/40 p-5">
-              <ScoreRow label="Sự nghiệp" expertCung="cung Quan Lộc" score={h.career.score} summary={h.career.summary} />
-              <ScoreRow label="Tình duyên" expertCung="cung Phu Thê" score={h.love.score} summary={h.love.summary} />
-              <ScoreRow label="Tài lộc" expertCung="cung Tài Bạch" score={h.money.score} summary={h.money.summary} />
-              <ScoreRow label="Sức khỏe" expertCung="cung Tật Ách" score={h.health.score} summary={h.health.summary} />
+              {/* Drop per-field text when upstream returns the identical generic
+                  fallback (degraded-LLM day) — show the score/bar only rather
+                  than the same line on all 12 zodiacs. The per-zodiac opener
+                  above stays deterministic, so the page is never Barnum-generic. */}
+              <ScoreRow label="Sự nghiệp" expertCung="cung Quan Lộc" score={h.career.score} summary={isGenericSummary(h.career.summary) ? '' : h.career.summary} />
+              <ScoreRow label="Tình duyên" expertCung="cung Phu Thê" score={h.love.score} summary={isGenericSummary(h.love.summary) ? '' : h.love.summary} />
+              <ScoreRow label="Tài lộc" expertCung="cung Tài Bạch" score={h.money.score} summary={isGenericSummary(h.money.summary) ? '' : h.money.summary} />
+              <ScoreRow label="Sức khỏe" expertCung="cung Tật Ách" score={h.health.score} summary={isGenericSummary(h.health.summary) ? '' : h.health.summary} />
             </div>
           </section>
 

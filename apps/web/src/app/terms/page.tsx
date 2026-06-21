@@ -224,7 +224,7 @@ export default function TermsPage() {
               Chính sách bảo mật
             </Link>
           </p>
-          <p>© {new Date().getFullYear()} hieu.asia · Premium AI insight platform</p>
+          <p>© {new Date().getFullYear()} hieu.asia · Nền tảng thấu hiểu bản thân bằng AI</p>
         </div>
       </section>
       </main>

@@ -234,7 +234,7 @@ const FAQ_JSONLD = {
       name: 'Dữ liệu cá nhân được bảo vệ thế nào?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Mã hoá AES-256 khi lưu trữ, TLS 1.3 khi truyền. Không bán dữ liệu, không dùng để huấn luyện mô hình. Tuân thủ Nghị định 13/2023/NĐ-CP. Xoá tài khoản trong trang Tài khoản.',
+        text: 'Mã hoá AES-256 khi lưu trữ, TLS 1.3 khi truyền. Không bán dữ liệu, không dùng để huấn luyện mô hình. Tuân thủ Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và Nghị định 356/2025/NĐ-CP. Xoá tài khoản trong trang Tài khoản.',
       },
     },
     {
@@ -336,7 +336,8 @@ const HOME_FAQ: readonly FaqItem[] = [
         </p>
         <p className="mt-2">
           Bạn có thể yêu cầu xoá toàn bộ tài khoản trong trang Tài khoản. Tuân
-          thủ Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân của Việt Nam.
+          thủ Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và Nghị định 356/2025/NĐ-CP
+          (thay thế Nghị định 13/2023/NĐ-CP).
         </p>
       </>
     ),

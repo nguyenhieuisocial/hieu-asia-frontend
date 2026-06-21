@@ -7,7 +7,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 export const metadata = {
   title: 'Chính sách bảo mật',
   description:
-    'Cam kết bảo vệ dữ liệu cá nhân tại hieu.asia, tuân thủ Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân.',
+    'Cam kết bảo vệ dữ liệu cá nhân tại hieu.asia, tuân thủ Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và Nghị định 356/2025/NĐ-CP.',
   alternates: { canonical: 'https://hieu.asia/privacy' },
 };
 
@@ -280,8 +280,9 @@ export default function PrivacyPage() {
           </p>
           <p className="mt-4 text-sm leading-relaxed text-foreground/80">
             Chính sách này mô tả cách hieu.asia thu thập, lưu trữ và sử dụng dữ liệu cá nhân của bạn,
-            tuân thủ <strong className="text-gold-700">Nghị định 13/2023/NĐ-CP</strong> của Chính phủ Việt
-            Nam về bảo vệ dữ liệu cá nhân.
+            tuân thủ <strong className="text-gold-700">Luật Bảo vệ dữ liệu cá nhân số 91/2025/QH15</strong> và{' '}
+            <strong className="text-gold-700">Nghị định 356/2025/NĐ-CP</strong> (hiệu lực 01/01/2026, thay thế
+            Nghị định 13/2023/NĐ-CP).
           </p>
         </div>
 
@@ -370,7 +371,7 @@ export default function PrivacyPage() {
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-xl">5. Quyền của bạn</CardTitle>
-            <CardDescription>Theo Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân.</CardDescription>
+            <CardDescription>Theo Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và Nghị định 356/2025/NĐ-CP.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/85">
             <div className="rounded-md border border-gold/20 bg-card/40 p-4 text-xs text-foreground/80">
@@ -614,7 +615,7 @@ export default function PrivacyPage() {
               Điều khoản dịch vụ
             </Link>
           </p>
-          <p>© {new Date().getFullYear()} hieu.asia · Premium AI insight platform</p>
+          <p>© {new Date().getFullYear()} hieu.asia · Nền tảng thấu hiểu bản thân bằng AI</p>
         </div>
       </section>
       </main>
