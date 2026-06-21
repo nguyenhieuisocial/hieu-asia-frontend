@@ -109,3 +109,34 @@ export async function getSessionFromRequest(req: Request): Promise<AuthedSession
   const linkedAnonId = sanitizeLinkedAnonId(meta.linked_anon_user_id);
   return { userId: id, email: data.user.email ?? null, linkedAnonId };
 }
+
+/**
+ * Wave 65 IDOR fix — resolve the owner id(s) a caller may read readings for.
+ *
+ * `reading-get` scopes the row to these ids, so a leaked `session_id` (the value
+ * in a shared URL) is no longer enough: the caller must BE the owner (verified
+ * JWT) or hold the owner's anon id (in their own localStorage, NOT in the URL).
+ *
+ *   - authed → verified `userId` + GoTrue-signed `linkedAnonId`
+ *   - anon   → the caller's own `x-anon-id` header, shape-guarded to `anon_<uuid>`
+ *             so it can never be a victim's bare auth uid
+ *
+ * Returns `[]` when the caller proves no identity → the proxy should 401.
+ * Fails CLOSED: if JWT verification throws (GoTrue down), authed ids are simply
+ * omitted — the caller sees "not found", never another user's data.
+ */
+export async function resolveReadingOwnerIds(req: Request): Promise<string[]> {
+  const ids = new Set<string>();
+  try {
+    const session = await getSessionFromRequest(req);
+    if (session) {
+      ids.add(session.userId);
+      if (session.linkedAnonId) ids.add(session.linkedAnonId);
+    }
+  } catch {
+    // GoTrue unreachable — omit authed ids (fail closed: no access, no leak).
+  }
+  const anon = req.headers.get('x-anon-id')?.trim();
+  if (anon && ANON_ID_RE.test(anon)) ids.add(anon);
+  return [...ids];
+}

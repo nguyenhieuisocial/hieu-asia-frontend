@@ -12,6 +12,38 @@ import type {
   Reading,
 } from '@hieu-asia/types';
 import { getPersonalitySummary } from '@/lib/personality-store';
+import { getSupabaseAuth } from './auth-client';
+import { getOrCreateAnonUserId } from '@hieu-asia/supabase';
+
+/**
+ * Wave 65 IDOR fix — identity headers for reading-scoped proxy calls. The
+ * proxies (`/api/reading/[id]`, `/api/mentor`, `/api/mentor/stream`) derive the
+ * reading owner from these to enforce ownership in `reading-get`:
+ *   - `authorization: Bearer <jwt>` when logged in (server verifies via GoTrue)
+ *   - `x-anon-id: anon_<uuid>` always (the caller's own anon id, shape-checked
+ *     server-side) — covers anon-created readings.
+ * Safe on the server (returns {} — both helpers no-op without `window`).
+ */
+async function readingIdentityHeaders(): Promise<Record<string, string>> {
+  const headers: Record<string, string> = {};
+  try {
+    const sb = getSupabaseAuth();
+    if (sb) {
+      const { data } = await sb.auth.getSession();
+      const token = data.session?.access_token;
+      if (token) headers.authorization = `Bearer ${token}`;
+    }
+  } catch {
+    /* fall back to anon id below */
+  }
+  try {
+    const anon = getOrCreateAnonUserId();
+    if (anon) headers['x-anon-id'] = anon;
+  } catch {
+    /* ignore */
+  }
+  return headers;
+}
 
 export type {
   MentorMessage,
@@ -66,7 +98,7 @@ export async function getReading(id: string): Promise<Reading | null> {
 
   const res = await fetch(`/api/reading/${encodeURIComponent(id)}`, {
     method: 'GET',
-    headers: { accept: 'application/json' },
+    headers: { accept: 'application/json', ...(await readingIdentityHeaders()) },
     cache: 'no-store',
   });
 
@@ -107,6 +139,7 @@ export async function chatMentor(
     headers: {
       'content-type': 'application/json',
       accept: 'application/json',
+      ...(await readingIdentityHeaders()),
     },
     body: JSON.stringify({
       messages,
@@ -172,6 +205,7 @@ export async function* chatMentorStream(
     headers: {
       'content-type': 'application/json',
       accept: 'text/event-stream',
+      ...(await readingIdentityHeaders()),
     },
     body: JSON.stringify({
       messages,
