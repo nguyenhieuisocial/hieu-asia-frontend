@@ -17,6 +17,17 @@ import { captureCalibration, isCaptureOptedOut, setCaptureOptedOut } from '@/lib
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { readSavedProfile, describeProfile } from '@/lib/saved-profile';
 import { track } from '@/lib/analytics';
+import {
+  addPredictions,
+  loadJournal,
+  predictionsFromForecast,
+  removePrediction,
+  resolvePrediction,
+  trackRecord,
+  JOURNAL_EVENT,
+  type ForecastOutcome,
+  type SavedPrediction,
+} from '@/lib/backtest/forecast-journal';
 
 const CATEGORIES: LifeCategory[] = [
   'career',
@@ -348,6 +359,8 @@ export function BangChungTool() {
         <ForecastSection birthSolarDate={date} birthHour={parseHour(time)} gender={gender} />
       )}
 
+      <ForecastJournalPanel />
+
       <MethodologyNote />
     </div>
   );
@@ -454,6 +467,7 @@ function ForecastSection({
   const [loading, setLoading] = React.useState(false);
   const [progress, setProgress] = React.useState<{ done: number; total: number } | null>(null);
   const [error, setError] = React.useState<string | null>(null);
+  const [saved, setSaved] = React.useState<{ added: number; total: number } | null>(null);
 
   const onForecast = React.useCallback(async () => {
     setError(null);
@@ -538,6 +552,39 @@ function ForecastSection({
               lĩnh vực cùng &ldquo;sáng&rdquo; (chuyện thường của lá số), nên hãy chú ý nhất vào mục{' '}
               <strong>nhấn mạnh</strong>.
             </p>
+            {(() => {
+              const strongCount = forecast.reduce(
+                (n, y) => n + y.domains.filter((d) => d.grade === 'STRONG').length,
+                0,
+              );
+              if (strongCount === 0) return null;
+              return (
+                <div className="rounded-xl border border-jade/30 bg-jade/5 p-4">
+                  <p className="text-sm leading-relaxed text-foreground/85">
+                    <strong>Theo dõi để tự kiểm:</strong> lưu {strongCount} dự báo nhấn-mạnh
+                    này vào sổ riêng (chỉ nằm trên máy bạn). Vài năm nữa quay lại đánh dấu
+                    điều nào đã ứng — đó mới là cách trung thực để biết lá số có đúng,
+                    thay vì tự nhủ &ldquo;thấy đúng&rdquo;.
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="mt-3"
+                    disabled={saved != null}
+                    onClick={() => {
+                      const r = addPredictions(
+                        predictionsFromForecast(forecast, new Date().toISOString()),
+                      );
+                      setSaved(r);
+                      track('tool_used', { tool: 'bang-chung-forecast-saved', count: r.added });
+                    }}
+                  >
+                    {saved
+                      ? `✓ Đã lưu vào sổ theo dõi (${saved.total} dự báo)`
+                      : `📌 Theo dõi ${strongCount} dự báo này`}
+                  </Button>
+                </div>
+              );
+            })()}
             <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-5 text-center">
               <p className="font-heading text-lg text-foreground">Muốn hiểu sâu các chủ đề này để chuẩn bị?</p>
               <p className="mx-auto mt-1 max-w-xl text-sm text-muted-foreground">
@@ -550,6 +597,107 @@ function ForecastSection({
             </div>
           </>
         )}
+      </CardContent>
+    </Card>
+  );
+}
+
+/** Outcome chip — a tiny status badge for one saved prediction. */
+function OutcomeBadge({ outcome }: { outcome: ForecastOutcome }) {
+  if (outcome === 'occurred')
+    return <span className="rounded-full bg-jade/15 px-2 py-0.5 text-xs font-semibold text-jade-700">Đã ứng nghiệm</span>;
+  if (outcome === 'absent')
+    return <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-semibold text-muted-foreground">Không xảy ra</span>;
+  return <span className="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground">Chưa đánh dấu</span>;
+}
+
+/**
+ * "Sổ theo dõi dự báo" — the forecast→outcome loop, client-held (localStorage).
+ * Self-hydrates on mount and re-reads on the journal-changed event, so saving a
+ * forecast (in ForecastSection) makes it appear here without prop-drilling. Renders
+ * nothing until the user has saved at least one prediction.
+ */
+function ForecastJournalPanel() {
+  const [list, setList] = React.useState<SavedPrediction[]>([]);
+
+  React.useEffect(() => {
+    const sync = () => setList(loadJournal());
+    sync();
+    window.addEventListener(JOURNAL_EVENT, sync);
+    return () => window.removeEventListener(JOURNAL_EVENT, sync);
+  }, []);
+
+  if (list.length === 0) return null;
+
+  const rec = trackRecord(list);
+  const onResolve = (id: string, outcome: ForecastOutcome) =>
+    setList(resolvePrediction(id, outcome, new Date().toISOString()));
+  const onRemove = (id: string) => setList(removePrediction(id));
+  const chip = (active: boolean) =>
+    `rounded-md border px-2.5 py-1 text-xs font-medium transition-colors ${
+      active
+        ? 'border-jade/50 bg-jade/15 text-jade-700'
+        : 'border-border text-muted-foreground hover:bg-muted'
+    }`;
+
+  return (
+    <Card className="border-jade/30 bg-jade/5">
+      <CardHeader>
+        <CardTitle className="text-base">📒 Sổ theo dõi dự báo của bạn</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <p className="text-xs leading-relaxed text-muted-foreground">
+          Riêng tư tuyệt đối — sổ này chỉ nằm trên máy bạn, không gửi đi đâu. Mỗi dòng ghi rõ{' '}
+          <strong>ngày bạn lưu</strong> (trước khi biết kết quả) để việc tự kiểm công bằng. Hãy
+          đánh dấu thật cả khi <strong>KHÔNG xảy ra</strong> — chỗ trật mới cho biết lá số đúng tới đâu.
+        </p>
+
+        {rec.resolved > 0 && (
+          <div className="rounded-lg border border-border bg-background/50 p-3 text-sm text-foreground/90">
+            Bạn đã đánh giá <strong>{rec.resolved}</strong> dự báo:{' '}
+            <span className="font-semibold text-jade-700">{rec.occurred} đã ứng</span> ·{' '}
+            <span className="text-muted-foreground">{rec.absent} không</span>
+            {rec.pending > 0 && <> · {rec.pending} đang chờ</>}.
+            {rec.resolved < 5 && (
+              <span className="mt-1 block text-xs text-muted-foreground">
+                (Mẫu còn nhỏ — đây là tự-kiểm cá nhân để bạn tham khảo, chưa phải bằng chứng thống kê.)
+              </span>
+            )}
+          </div>
+        )}
+
+        <ul className="space-y-2">
+          {list.map((p) => (
+            <li key={p.id} className="rounded-lg border border-border bg-background/40 p-3">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <div className="text-sm text-foreground/90">
+                  <strong>{p.targetYear}</strong> · lá số nhấn{' '}
+                  <strong className="text-jade-700">{CATEGORY_LABEL[p.category]}</strong>
+                  <span className="ml-1 text-xs text-muted-foreground">
+                    (ghi {new Date(p.createdAt).toLocaleDateString('vi-VN')})
+                  </span>
+                </div>
+                <OutcomeBadge outcome={p.outcome} />
+              </div>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <button type="button" className={chip(p.outcome === 'occurred')} onClick={() => onResolve(p.id, 'occurred')}>
+                  Đã xảy ra
+                </button>
+                <button type="button" className={chip(p.outcome === 'absent')} onClick={() => onResolve(p.id, 'absent')}>
+                  Không xảy ra
+                </button>
+                {p.outcome !== 'pending' && (
+                  <button type="button" className="rounded-md px-2.5 py-1 text-xs text-muted-foreground hover:underline" onClick={() => onResolve(p.id, 'pending')}>
+                    Bỏ đánh dấu
+                  </button>
+                )}
+                <button type="button" className="ml-auto rounded-md px-2.5 py-1 text-xs text-muted-foreground/70 hover:text-destructive" onClick={() => onRemove(p.id)}>
+                  Xoá
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
       </CardContent>
     </Card>
   );
