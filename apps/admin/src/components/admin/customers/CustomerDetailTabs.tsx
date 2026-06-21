@@ -27,6 +27,7 @@ import {
 } from '@/components/admin/table/AdminTable';
 import { ProductTabs, type ProductTab } from '@/components/admin/product-tabs';
 import { UserJourneyPanel } from '@/components/admin/UserJourneyPanel';
+import { CustomerAffiliateCard } from '@/components/admin/customers/CustomerAffiliateCard';
 import { SessionAccessDialog } from './SessionAccessDialog';
 import { RefundActionDialog } from './RefundActionDialog';
 import { fmtDate, fmtRelative } from './format';
@@ -88,9 +89,12 @@ export function CustomerDetailTabs({
     },
     {
       id: 'journey',
-      label: 'Hành trình',
+      label: 'Hành trình & CTV',
       content: userId ? (
-        <UserJourneyPanel userId={userId} />
+        <div className="space-y-4">
+          <UserJourneyPanel userId={userId} />
+          <CustomerAffiliateCard userId={userId} />
+        </div>
       ) : (
         <EmptyState
           title="Chưa có hành trình"
