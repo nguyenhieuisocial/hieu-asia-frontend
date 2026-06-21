@@ -18,22 +18,19 @@ let _client: SupabaseClient | null = null;
 let _disabled = false;
 
 /**
- * Wave 44.2 — Cookie hint for SSR partner-gate.
+ * Auth-presence cookie hint for SSR.
  *
  * The real Supabase JWT lives in localStorage (`hieu.auth.session`) and is
  * NOT readable from the server. We mirror its presence into a non-httpOnly
- * cookie so Next.js server components can decide whether to render the
- * partner shell or 302-redirect to /signin BEFORE shipping HTML.
+ * cookie so Next.js server components can cheaply tell logged-in vs anonymous
+ * BEFORE shipping HTML.
  *
  * Security model:
  *   - Cookie contains NO token — value is the constant string `1`.
- *   - SSR uses it only as a hint to render shell vs redirect.
- *   - Real auth boundary remains the worker JWT verify on /api/partner/*.
- *   - Defense-in-depth: client-side `usePartnerGuard()` still runs and
- *     enforces the affiliate_partner role check post-hydration.
+ *   - SSR uses it only as a presence hint, never as an auth boundary.
+ *   - The real auth boundary is always the worker JWT verify on each API call.
  *
- * Full cookie-session migration (httpOnly JWT cookie + ssr-helpers) is
- * deferred to Wave 52+ when full SSG/ISR partner pages are needed.
+ * (Originally added to gate the now-retired /partner SSR shell.)
  */
 const AUTH_MARKER_COOKIE = 'hieu_authed';
 const AUTH_MARKER_MAX_AGE = 60 * 60 * 24 * 90; // 90 days
