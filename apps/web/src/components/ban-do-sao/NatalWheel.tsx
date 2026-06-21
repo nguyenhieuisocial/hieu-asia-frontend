@@ -83,19 +83,17 @@ export function NatalWheel({ chart, className }: { chart: NatalChart; className?
     bodies.push({ glyph: 'Asc', name: `Cung Mọc ${chart.ascendant.sign.name}`, lon: chart.ascendant.longitude, emphasis: 'asc' });
   }
 
-  // Né va chạm: sắp theo kinh độ; nếu sát nhau (<9°) thì đẩy vào trong từng nấc.
+  // Né va chạm: sắp theo kinh độ; mỗi lá sát lá LIỀN TRƯỚC (<minSep) thì lùi
+  // vào trong sâu thêm 1 nấc — CHUỖI khoảng-cách-liền-kề, nên cụm 3+ sao
+  // (stellium) vẫn được tách bán kính riêng từng lá, không trùng. Hết cụm
+  // (gặp một khoảng ≥minSep) thì reset về nấc gốc.
   const minSep = 9;
   const rStep = 17;
   const sorted = [...bodies].sort((m, n) => m.lon - n.lon);
   const placed = sorted.map((b) => ({ ...b, r: rBodyRing }));
+  let depth = 0;
   for (let i = 1; i < placed.length; i++) {
-    let depth = 0;
-    let j = i - 1;
-    // đếm số thiên thể liền trước nằm trong cụm sát nhau
-    while (j >= 0 && Math.abs(placed[i]!.lon - placed[j]!.lon) < minSep) {
-      depth++;
-      j--;
-    }
+    depth = placed[i]!.lon - placed[i - 1]!.lon < minSep ? depth + 1 : 0;
     placed[i]!.r = rBodyRing - depth * rStep;
   }
 
