@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
 import { Calendar, User, Briefcase, HelpCircle, Heart } from 'lucide-react';
 import { PRICING, formatVND } from '@/lib/pricing';
 import { SiteNav } from '@/components/home/SiteNav';
@@ -43,33 +42,12 @@ import { BigFiveEmblem, XemTuongEmblem } from '@/components/home-hero/LensGlyphs
 import { MbtiIcon } from '@/components/marketing/icons/MbtiIcon';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { SampleOutputShowcase } from '@/components/marketing/SampleOutputShowcase';
+import { MentorSampleLazy } from '@/components/marketing/MentorSampleLazy';
 import { ScanRow } from '@/components/marketing/ScanRow';
 import { PullQuote } from '@/components/marketing/PullQuote';
 import { SectionDivider } from '@/components/marketing/SectionDivider';
 import { SocialProofQuiet } from '@/components/marketing/SocialProofQuiet';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
-
-// Below-the-fold, interaction-only Mentor demo (no SSR/SEO text — the template
-// answers only render after a click). It is the single largest client component
-// on the homepage (~27KB), so defer it off the initial bundle. The loading
-// placeholder mirrors the section's band + reserves height to avoid layout shift
-// when it mounts on scroll.
-const MentorSampleInteractive = dynamic(
-  () =>
-    import('@/components/marketing/MentorSampleInteractive').then(
-      (m) => m.MentorSampleInteractive,
-    ),
-  {
-    ssr: false,
-    loading: () => (
-      <section aria-hidden className="bg-muted/50 py-12 md:py-14">
-        <div className="mx-auto max-w-marketing px-6 lg:px-12">
-          <div className="mx-auto min-h-[520px] max-w-marketing-tight" />
-        </div>
-      </section>
-    ),
-  },
-);
 
 export const metadata: Metadata = {
   // Homepage title already contains the brand → bypass the layout
@@ -676,7 +654,7 @@ export default function LandingPage() {
             with a touch interaction before price friction. Client component
             (useState for active question), no Motion runtime — pure CSS
             grid-row trick for reveal. */}
-        <MentorSampleInteractive />
+        <MentorSampleLazy />
 
         {/* Lộ trình khởi đầu — band kích-hoạt có khung phần-thưởng THẬT (mẫu
             task-center/rewards của Bitget; mời bạn → voucher giảm giá có thật).
