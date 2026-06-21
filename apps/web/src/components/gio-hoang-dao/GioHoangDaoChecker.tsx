@@ -11,8 +11,14 @@ import {
   Label,
   cn,
 } from '@hieu-asia/ui';
-import { computeGioHoangDao, nextGoodHour, type GioHoangDaoResult } from '@/lib/gio-hoang-dao';
+import {
+  computeGioHoangDao,
+  currentHourIndex,
+  nextGoodHour,
+  type GioHoangDaoResult,
+} from '@/lib/gio-hoang-dao';
 import { getVietnamTodayISO } from '@/lib/vn-date';
+import { HoursDial } from './HoursDial';
 
 function parseISO(value: string): { d: number; m: number; y: number } | null {
   const parts = value.split('-').map(Number);
@@ -40,6 +46,12 @@ export function GioHoangDaoChecker() {
   const isToday = value !== '' && value === today;
   const next = React.useMemo(
     () => (result && isToday ? nextGoodHour(result, new Date()) : null),
+    [result, isToday],
+  );
+
+  // Canh giờ hiện tại chỉ đánh dấu trên đồng hồ khi đang xem NGÀY HÔM NAY.
+  const activeIndex = React.useMemo(
+    () => (result && isToday ? currentHourIndex(new Date()) : -1),
     [result, isToday],
   );
 
@@ -89,6 +101,40 @@ export function GioHoangDaoChecker() {
                 )}
               </div>
             )}
+
+            {/* Đồng hồ 12 canh giờ — trực quan hoá giờ tốt/xấu của ngày */}
+            <div className="rounded-xl border border-border bg-background/40 p-4">
+              <div className="mx-auto max-w-[340px]">
+                <HoursDial hours={result.hours} activeIndex={activeIndex} className="h-auto w-full" />
+              </div>
+              <div className="mt-3 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5">
+                  <span
+                    className="inline-block h-3 w-3 rounded-sm border border-gold/50"
+                    style={{ backgroundColor: 'rgba(193, 154, 58, 0.16)' }}
+                    aria-hidden="true"
+                  />
+                  Giờ hoàng đạo (tốt)
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <span
+                    className="inline-block h-3 w-3 rounded-sm border border-border"
+                    style={{ backgroundColor: 'rgba(120, 120, 120, 0.08)' }}
+                    aria-hidden="true"
+                  />
+                  Giờ hắc đạo (nên tránh)
+                </span>
+                {activeIndex >= 0 && (
+                  <span className="inline-flex items-center gap-1.5">
+                    <span
+                      className="inline-block h-3 w-3 rounded-sm border-2 border-gold"
+                      aria-hidden="true"
+                    />
+                    Canh giờ hiện tại
+                  </span>
+                )}
+              </div>
+            </div>
 
             <div className="grid gap-2 sm:grid-cols-2">
               {result.hours.map((h) => (
