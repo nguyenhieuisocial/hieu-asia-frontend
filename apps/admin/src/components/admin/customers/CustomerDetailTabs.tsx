@@ -26,6 +26,7 @@ import {
   type AdminTableColumn,
 } from '@/components/admin/table/AdminTable';
 import { ProductTabs, type ProductTab } from '@/components/admin/product-tabs';
+import { UserJourneyPanel } from '@/components/admin/UserJourneyPanel';
 import { SessionAccessDialog } from './SessionAccessDialog';
 import { RefundActionDialog } from './RefundActionDialog';
 import { fmtDate, fmtRelative } from './format';
@@ -46,6 +47,8 @@ export interface CustomerDetailTabsProps {
   auditTrail: AuditRow[];
   value: string;
   onValueChange: (id: string) => void;
+  /** Route param = the user_id (PostHog distinct_id for authed users) — powers the journey tab. */
+  userId: string;
   /** Refetch the customer after a per-session access grant/revoke. */
   onSessionMutated?: () => void;
   /** Refetch the customer after a refund approve/reject. */
@@ -60,6 +63,7 @@ export function CustomerDetailTabs({
   auditTrail,
   value,
   onValueChange,
+  userId,
   onSessionMutated,
   onRefundMutated,
 }: CustomerDetailTabsProps) {
@@ -81,6 +85,19 @@ export function CustomerDetailTabs({
       id: 'sessions',
       label: `Phiên · ${sessions.length}`,
       content: <SessionsTab sessions={sessions} onSessionMutated={onSessionMutated} />,
+    },
+    {
+      id: 'journey',
+      label: 'Hành trình',
+      content: userId ? (
+        <UserJourneyPanel userId={userId} />
+      ) : (
+        <EmptyState
+          title="Chưa có hành trình"
+          description="Khách ẩn danh (chưa đăng nhập) nên không gộp được hành trình theo người dùng."
+          className="border-0 bg-transparent py-4"
+        />
+      ),
     },
     {
       id: 'transactions',
