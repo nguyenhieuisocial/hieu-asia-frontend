@@ -9,6 +9,7 @@ import { getSupabaseAuth } from '@/lib/auth-client';
 import { getPersonalitySummary } from '@/lib/personality-store';
 import { ReadingRitual } from '@/components/tools/ReadingRitual';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { TarotSpread } from '@/components/tools/TarotSpread';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
 
@@ -191,6 +192,8 @@ export function TarotTool() {
       {drawn && (
         <div className="mt-8 space-y-4">
           {question.trim() && <p className="text-sm italic text-muted-foreground">“{question.trim()}”</p>}
+          {/* Trải bài có hình — lật từng lá khi rút (key=seed để lật lại mỗi lần rút) */}
+          <TarotSpread key={seed} drawn={drawn} positions={positions} />
           {drawn.map((d, i) => (
             <div key={i} className="rounded-xl border border-gold/15 bg-background/40 p-5">
               <div className="flex items-baseline justify-between gap-3">
