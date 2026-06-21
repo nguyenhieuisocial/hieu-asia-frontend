@@ -4,6 +4,7 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { FaqSection } from '@/components/seo/FaqSection';
 import { breadcrumb, webPage, faqPage, type FaqItem } from '@/lib/seo/jsonld';
 import { SKY_EVENTS, kindMeta, type SkyEvent } from '@/lib/sky-events';
+import { LunarEclipseDiagram } from '@/components/thien-van/LunarEclipseDiagram';
 
 export const metadata: Metadata = {
   title: 'Lịch thiên văn 2026–2030 — nguyệt thực, nhật thực, phân & chí (giờ VN) | hieu.asia',
@@ -83,10 +84,11 @@ export default function ThienVanPage() {
 
       <div className="mx-auto max-w-3xl space-y-8">
         <section className="rounded-2xl border border-gold/25 bg-gradient-to-br from-gold/[0.07] to-transparent p-6">
-          <p className="text-sm leading-relaxed text-foreground/85">
-            Sắp tới đáng chú ý nhất: <strong>nguyệt thực toàn phần (“trăng máu”) ngày 03/03/2026</strong> — quan sát
-            được tại Việt Nam. Toàn bộ ngày giờ dưới đây <strong>tính bằng thư viện thiên văn mã-nguồn-mở</strong>{' '}
-            (đối chiếu được), quy về giờ Việt Nam.
+          <LunarEclipseDiagram className="mx-auto block w-full max-w-xl" />
+          <p className="mt-4 text-sm leading-relaxed text-foreground/85">
+            Sắp tới đáng chú ý nhất: <strong>nguyệt thực toàn phần (“trăng máu”) ngày 03/03/2026</strong> (đỉnh ~18:33
+            giờ VN) — quan sát được tại Việt Nam. Toàn bộ ngày giờ dưới đây{' '}
+            <strong>tính bằng thư viện thiên văn mã-nguồn-mở</strong> (đối chiếu được), quy về giờ Việt Nam.
           </p>
         </section>
 
