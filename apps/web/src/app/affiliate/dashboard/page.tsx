@@ -225,6 +225,49 @@ export default function AffiliateDashboardPage() {
     }
   }
 
+  // Voucher payout: redeem the available balance as an in-product credit coupon
+  // (no tax/KYC — in-product credit, not cash). Mirrors requestPayout's JWT flow.
+  async function requestVoucher() {
+    const supabase = getSupabaseAuth();
+    if (!supabase) {
+      setPayoutMsg({ ok: false, text: 'Cần đăng nhập để đổi voucher.' });
+      return;
+    }
+    const { data: sess } = await supabase.auth.getSession();
+    const token = sess.session?.access_token;
+    if (!token) {
+      setPayoutMsg({ ok: false, text: 'Cần đăng nhập để đổi voucher.' });
+      return;
+    }
+    setSubmitting(true);
+    setPayoutMsg(null);
+    try {
+      const res = await fetch(`${API_BASE}/aff/payout-voucher`, {
+        method: 'POST',
+        headers: { authorization: `Bearer ${token}` },
+      });
+      const j = await safeJson<{ ok: boolean; coupon_code?: string; amount_vnd?: number; error?: string }>(res);
+      if (!j.ok) {
+        setPayoutMsg({ ok: false, text: `Phản hồi không hợp lệ (HTTP ${j.status})` });
+        return;
+      }
+      const d = j.data;
+      if (d.ok && d.coupon_code) {
+        setPayoutMsg({
+          ok: true,
+          text: `Đã đổi ${vnd(d.amount_vnd ?? 0)} thành mã voucher: ${d.coupon_code} — nhập mã này khi thanh toán dịch vụ.`,
+        });
+        await loadBalance();
+      } else {
+        setPayoutMsg({ ok: false, text: d.error ?? 'Lỗi đổi voucher' });
+      }
+    } catch (err) {
+      setPayoutMsg({ ok: false, text: err instanceof Error ? err.message : 'Lỗi mạng' });
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   async function signOut() {
     await fetch('/api/affiliate/me', { method: 'DELETE' });
     window.location.href = '/affiliate';
@@ -460,6 +503,7 @@ export default function AffiliateDashboardPage() {
           canPayout={canPayout}
           submitting={submitting}
           onSubmit={requestPayout}
+          onVoucher={requestVoucher}
           msg={payoutMsg}
           isActive={a.status === 'active'}
         />
