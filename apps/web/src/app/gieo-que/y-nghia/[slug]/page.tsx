@@ -6,6 +6,7 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { FaqSection } from '@/components/seo/FaqSection';
 import { breadcrumb, webPage, faqPage, type FaqItem } from '@/lib/seo/jsonld';
 import { QUE_PAGES, TRIGRAMS, getQue } from '@/lib/que-kinh-dich';
+import { getThoanTu, THOAN_TU_SOURCE } from '@/lib/que-thoan-tu';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -51,6 +52,7 @@ export default async function QueMeaningPage({ params }: Props) {
 
   const up = TRIGRAMS[q.binary.slice(0, 3)];
   const down = TRIGRAMS[q.binary.slice(3)];
+  const thoanTu = getThoanTu(q.id);
   const idx = QUE_PAGES.findIndex((x) => x.slug === q.slug);
   const prev = idx > 0 ? QUE_PAGES[idx - 1] : undefined;
   const next = idx < QUE_PAGES.length - 1 ? QUE_PAGES[idx + 1] : undefined;
@@ -62,6 +64,14 @@ export default async function QueMeaningPage({ params }: Props) {
     { q: `Bốc được quẻ ${q.nameVi} thì nên ứng xử thế nào?`, a: q.advice },
     { q: `Quẻ ${q.nameVi} nói gì về tình cảm, quan hệ?`, a: q.love },
     { q: `Quẻ ${q.nameVi} nói gì về công việc, tiền bạc?`, a: q.work },
+    ...(thoanTu
+      ? [
+          {
+            q: `Thoán từ (lời quẻ gốc) của quẻ ${q.nameVi} là gì?`,
+            a: `Thoán từ nguyên văn quẻ ${q.nameVi}: “${thoanTu.han}” (Hán-Việt: ${thoanTu.hanViet}). Nghĩa: ${thoanTu.nghia} Đây là lời quẻ cổ trong Chu Dịch (Kinh Dịch), thuộc phạm vi công cộng.`,
+          },
+        ]
+      : []),
     ...(up && down
       ? [
           {
@@ -122,6 +132,22 @@ export default async function QueMeaningPage({ params }: Props) {
             </div>
           </div>
         </div>
+
+        {thoanTu && (
+          <section className="rounded-2xl border border-gold/25 bg-gradient-to-br from-gold/[0.07] to-transparent p-6">
+            <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/80">
+              Thoán từ · 卦辞 — nguyên văn Chu Dịch
+            </div>
+            <p lang="zh-Hant" className="mt-3 font-heading text-2xl leading-relaxed text-foreground">
+              {thoanTu.han}
+            </p>
+            <p className="mt-2 text-sm italic leading-relaxed text-foreground/80">{thoanTu.hanViet}</p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{thoanTu.nghia}</p>
+            <p className="mt-4 border-t border-border/60 pt-3 text-xs leading-relaxed text-muted-foreground">
+              {THOAN_TU_SOURCE} Phần đọc bên dưới viết theo lối phản tư, bắt rễ từ lời quẻ gốc này.
+            </p>
+          </section>
+        )}
 
         <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
           <h2 className="font-heading text-xl font-semibold text-foreground">Tượng quẻ</h2>
