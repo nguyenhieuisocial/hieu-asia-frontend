@@ -173,6 +173,12 @@ const TOOLS = [
     desc: 'Tra giờ tốt (hoàng đạo) trong ngày — đổi theo từng ngày, kèm gợi ý giờ tốt kế tiếp.',
   },
   {
+    href: '/xuat-hanh',
+    emoji: '🧭',
+    name: 'Hướng & Giờ Xuất Hành',
+    desc: 'Tra hướng Hỷ Thần, Tài Thần và giờ hoàng đạo để xuất hành — tính theo Can-Chi từng ngày.',
+  },
+  {
     href: '/dat-ten-ngu-hanh',
     emoji: '🌱',
     name: 'Đặt Tên Ngũ Hành',
