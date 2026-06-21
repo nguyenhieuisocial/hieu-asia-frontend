@@ -121,6 +121,9 @@ export function PayoutRequest({
   submitting,
   onSubmit,
   onVoucher,
+  cashNetVnd,
+  cashWithholdingVnd,
+  kycComplete,
   msg,
   isActive,
 }: {
@@ -133,6 +136,12 @@ export function PayoutRequest({
   onSubmit: () => void;
   /** Optional: redeem the balance as an in-product voucher (no tax/KYC). */
   onVoucher?: () => void;
+  /** Projected after-tax cash payout (from backend; 10% TNCN already applied). */
+  cashNetVnd?: number;
+  /** Projected 10% TNCN withheld on a cash payout. */
+  cashWithholdingVnd?: number;
+  /** Whether MST + CTV contract are on file (cash payout gate). */
+  kycComplete?: boolean;
   msg: { ok: boolean; text: string } | null;
   isActive: boolean;
 }) {
@@ -149,6 +158,19 @@ export function PayoutRequest({
         <p className="text-sm text-muted-foreground">
           Khi gửi yêu cầu, bạn rút toàn bộ số dư khả dụng. Admin sẽ xử lý và chuyển khoản.
         </p>
+        {typeof cashWithholdingVnd === 'number' && cashWithholdingVnd > 0 && (
+          <p className="text-sm">
+            Rút tiền mặt — thực nhận sau thuế:{' '}
+            <b className="text-gold-700">{vnd(cashNetVnd ?? availableVnd)}</b>{' '}
+            <span className="text-muted-foreground">(đã trừ 10% thuế TNCN {vnd(cashWithholdingVnd)})</span>
+          </p>
+        )}
+        {kycComplete === false && (
+          <p className="text-xs text-rose-300">
+            Cần khai báo thuế (mã số thuế + hợp đồng cộng tác viên) ở mục trên trước khi rút tiền mặt.
+            Hoặc đổi voucher (không cần thủ tục thuế).
+          </p>
+        )}
         <div className="flex flex-wrap gap-2">
           <Button
             onClick={onSubmit}
