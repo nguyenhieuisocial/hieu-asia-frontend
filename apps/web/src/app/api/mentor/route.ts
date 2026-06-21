@@ -13,6 +13,7 @@
 
 import { NextResponse } from 'next/server';
 import { checkBotId } from 'botid/server';
+import { resolveReadingOwnerIds } from '@/lib/reasoning/session-auth';
 import type {
   MentorMessage,
   Reading,
@@ -26,7 +27,9 @@ const HIEU_API_URL =
 const HIEU_API_SERVICE_TOKEN = process.env.HIEU_API_SERVICE_TOKEN;
 const SUPABASE_URL =
   process.env.SUPABASE_URL ?? 'https://fvftbqairezsybasqsek.supabase.co';
-const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
+// Wave 65: reading-get is owner-gated — call it with the service token + the
+// caller's verified owner ids (mirrors /api/reading/[id]).
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const DEFAULT_SYSTEM_PROMPT =
   'Bạn là mentor cá nhân. Trả lời ấm áp, đồng cảm, ngắn gọn (2-3 đoạn), tiếng Việt. Luôn nhắc rằng user quyết định, AI chỉ gợi mở.';
@@ -48,16 +51,14 @@ interface SupabaseReadingEnvelope {
   error?: string;
 }
 
-async function fetchReading(sessionId: string): Promise<Reading | null> {
-  if (!SUPABASE_ANON_KEY) return null;
+async function fetchReading(sessionId: string, ownerIds: string[]): Promise<Reading | null> {
+  if (!SUPABASE_SERVICE_ROLE_KEY || ownerIds.length === 0) return null;
   try {
-    const url = `${SUPABASE_URL}/functions/v1/reading-get?id=${encodeURIComponent(sessionId)}`;
+    const qs = new URLSearchParams({ id: sessionId, owner_ids: ownerIds.join(',') });
+    const url = `${SUPABASE_URL}/functions/v1/reading-get?${qs.toString()}`;
     const res = await fetch(url, {
       method: 'GET',
-      headers: {
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-        apikey: SUPABASE_ANON_KEY,
-      },
+      headers: { 'x-service-token': SUPABASE_SERVICE_ROLE_KEY },
       cache: 'no-store',
     });
     if (!res.ok) return null;
@@ -145,7 +146,8 @@ export async function POST(req: Request) {
   let systemPrompt = DEFAULT_SYSTEM_PROMPT;
   let userId: string | undefined;
   if (sessionId) {
-    const session = await fetchReading(sessionId);
+    const ownerIds = await resolveReadingOwnerIds(req);
+    const session = await fetchReading(sessionId, ownerIds);
     if (session) {
       systemPrompt = buildSystemPrompt(session);
       userId = session.user_id;
