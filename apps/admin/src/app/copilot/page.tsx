@@ -58,6 +58,16 @@ export default function CopilotPage() {
   const mut = useMutation({ mutationFn: askCopilot });
   const result = mut.data;
 
+  // Defensive: the worker always returns a full `signals`, but never let a
+  // malformed/partial 200 response white-screen the page.
+  const sig = result?.signals;
+  const kpis = sig?.kpis ?? [];
+  const failing = sig?.cron?.failing ?? [];
+  const heartbeatMin = sig?.cron?.heartbeat_min ?? null;
+  const aiBalance = sig?.ai_balance_usd ?? null;
+  // Answer empty but neither degrade flag set → explain instead of going silent.
+  const emptyAnswer = !!result && !result.answer && !result.ai_summary_disabled && !result.ai_fallback;
+
   const submit = (q: string) => {
     const text = q.trim();
     if (!text || mut.isPending) return;
@@ -80,7 +90,10 @@ export default function CopilotPage() {
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             onKeyDown={(e) => {
-              if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') submit(question);
+              if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+                e.preventDefault();
+                submit(question);
+              }
             }}
             placeholder="Ví dụ: Hệ thống hôm nay có ổn không?"
             rows={3}
@@ -161,50 +174,49 @@ export default function CopilotPage() {
             </Card>
           )}
 
+          {emptyAnswer && (
+            <Card className="border-muted">
+              <CardContent className="flex items-start gap-2 p-3 text-xs text-muted-foreground">
+                <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                <span>Trợ lý chưa trả lời được lần này — anh xem số liệu bên dưới, hoặc thử hỏi lại.</span>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Raw signals — always shown so numbers are visible even with AI off */}
           <div>
             <h2 className="mb-2 text-sm font-medium text-foreground">Số liệu hệ thống</h2>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {result.signals.kpis.map((k) => (
+              {kpis.map((k) => (
                 <KpiCard key={k.key} label={k.label} value={fmtKpiVal(k.value)} accent="gold" />
               ))}
               <KpiCard
                 label="Số dư cổng AI"
-                value={result.signals.ai_balance_usd === null ? '—' : `$${result.signals.ai_balance_usd.toFixed(2)}`}
-                accent={
-                  result.signals.ai_balance_usd !== null && result.signals.ai_balance_usd < 3 ? 'red' : 'jade'
-                }
+                value={aiBalance === null ? '—' : `$${aiBalance.toFixed(2)}`}
+                accent={aiBalance !== null && aiBalance < 3 ? 'red' : 'jade'}
               />
               <KpiCard
                 label="Nhịp cron (mỗi giờ)"
-                value={
-                  result.signals.cron.heartbeat_min === null
-                    ? 'chưa ghi nhận'
-                    : `${result.signals.cron.heartbeat_min} phút trước`
-                }
-                accent={
-                  result.signals.cron.heartbeat_min !== null && result.signals.cron.heartbeat_min > 90
-                    ? 'warn'
-                    : 'jade'
-                }
+                value={heartbeatMin === null ? 'chưa ghi nhận' : `${heartbeatMin} phút trước`}
+                accent={heartbeatMin !== null && heartbeatMin > 90 ? 'warn' : 'jade'}
               />
               <KpiCard
                 label="Tác vụ đang lỗi"
-                value={result.signals.cron.failing.length}
-                accent={result.signals.cron.failing.length > 0 ? 'red' : 'jade'}
+                value={failing.length}
+                accent={failing.length > 0 ? 'red' : 'jade'}
                 href="/architecture"
               />
             </div>
 
-            {result.signals.cron.failing.length > 0 && (
+            {failing.length > 0 && (
               <Card className="mt-4 border-red-500/20">
                 <CardContent className="p-4">
                   <div className="mb-2 text-xs font-medium text-red-600 dark:text-red-300">
                     Tác vụ định kỳ đang lỗi
                   </div>
                   <ul className="space-y-1 text-xs">
-                    {result.signals.cron.failing.map((f) => (
-                      <li key={f.job} className="flex items-center justify-between gap-2">
+                    {failing.map((f, i) => (
+                      <li key={`${f.job}-${i}`} className="flex items-center justify-between gap-2">
                         <span className="font-mono text-foreground/85">{f.job}</span>
                         <span className="truncate text-muted-foreground" title={f.note}>
                           {f.note ?? 'lỗi'}
