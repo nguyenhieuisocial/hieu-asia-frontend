@@ -48,9 +48,49 @@ function applyMarketingCache(pathname: string, res: NextResponse): NextResponse 
 const AGENT_LINK_HEADER =
   '</.well-known/agent-skills/index.json>; rel="agent-skills", </llms.txt>; rel="llms", </.well-known/api-catalog>; rel="api-catalog"';
 
-function applyAgentDiscovery(res: NextResponse): NextResponse {
-  res.headers.set('Link', AGENT_LINK_HEADER);
+function applyAgentDiscovery(res: NextResponse, pathname?: string): NextResponse {
+  // Advertise that this exact page is available as Markdown — both via
+  // `Accept: text/markdown` content negotiation on the same URL, and directly
+  // at `/api/markdown?path=<this page>` (rel="alternate", RFC 8288).
+  const mdLink = pathname
+    ? `, </api/markdown?path=${encodeURIComponent(pathname)}>; rel="alternate"; type="text/markdown"`
+    : '';
+  res.headers.set('Link', `${AGENT_LINK_HEADER}${mdLink}`);
   return res;
+}
+
+// "Markdown for Agents" — content negotiation. When a request to a normal page
+// explicitly prefers `text/markdown`, rewrite it to the Node-runtime markdown
+// route, which self-fetches the page's HTML and converts it. Browsers and
+// SEO bots send `Accept: text/html,...` (markdown absent) so they are
+// completely unaffected — HTML stays the default.
+//
+// Conservative on purpose: only triggers when `text/markdown` is explicitly
+// present AND ranked at least as high as `text/html` (or html is absent).
+function prefersMarkdown(accept: string | null): boolean {
+  if (!accept) return false;
+  const lower = accept.toLowerCase();
+  if (!lower.includes('text/markdown')) return false;
+
+  const qOf = (type: string): number | null => {
+    // Match the media type with an optional q-param; default q=1.0 when present.
+    const re = new RegExp(
+      `(?:^|,)\\s*${type.replace('/', '\\/')}\\b[^,]*`,
+      'i',
+    );
+    const m = re.exec(lower);
+    if (!m) return null;
+    const q = /;\s*q=([0-9.]+)/.exec(m[0]);
+    return q ? parseFloat(q[1]!) : 1.0;
+  };
+
+  const mdQ = qOf('text/markdown');
+  if (mdQ === null || mdQ <= 0) return false;
+  // `text/html` and the catch-all `*/*` both count as "html-preferring".
+  const htmlQ = qOf('text/html');
+  const starQ = qOf('\\*/\\*');
+  const competing = Math.max(htmlQ ?? 0, starQ ?? 0);
+  return mdQ >= competing;
 }
 
 function cookieOpts() {
@@ -90,13 +130,37 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  // "Markdown for Agents" content negotiation. If a GET page request explicitly
+  // prefers `text/markdown`, rewrite to the Node-runtime markdown route, which
+  // self-fetches the page HTML (with `Accept: text/html`) and converts it.
+  // Placed AFTER the `?ref=` affiliate redirect is deferred: when `?ref=` is
+  // present we let the normal flow strip it via 307 first; the agent then
+  // re-requests the clean URL and lands here for markdown. Browsers send
+  // `Accept: text/html,...` (no `text/markdown`) so they are unaffected.
+  if (
+    req.method === 'GET' &&
+    !req.nextUrl.searchParams.get('ref') &&
+    prefersMarkdown(req.headers.get('accept'))
+  ) {
+    const url = req.nextUrl.clone();
+    url.pathname = '/api/markdown';
+    url.search = '';
+    url.searchParams.set('path', pathname);
+    // Also pass the page path as a request header. Next.js does not reliably
+    // expose rewrite-added search params on `req.nextUrl.searchParams` in the
+    // destination route, so the header is the authoritative source there.
+    const headers = new Headers(req.headers);
+    headers.set('x-markdown-path', pathname);
+    return NextResponse.rewrite(url, { request: { headers } });
+  }
+
   // Wave 60.60.a — Anonymous + no-ref fast path for marketing routes.
   // Avoids any cookie writes (which would trigger Vercel's
   // `private, no-cache, no-store`) and override Cache-Control so bf-cache works.
   if (MARKETING_ROUTES.has(pathname) && !req.nextUrl.searchParams.get('ref')) {
     const existing = req.cookies.get(COOKIE_NAME)?.value;
     if (!existing || !CODE_REGEX.test(existing)) {
-      return applyAgentDiscovery(applyMarketingCache(pathname, NextResponse.next()));
+      return applyAgentDiscovery(applyMarketingCache(pathname, NextResponse.next()), pathname);
     }
   }
 
@@ -123,7 +187,7 @@ export function middleware(req: NextRequest) {
       // Refresh TTL on the existing attribution so first-touch sticks.
       res.cookies.set(COOKIE_NAME, existingRef, cookieOpts());
     }
-    return applyAgentDiscovery(res);
+    return applyAgentDiscovery(res, pathname);
   }
 
   const refRaw = req.nextUrl.searchParams.get('ref');
@@ -136,9 +200,9 @@ export function middleware(req: NextRequest) {
     if (existing && CODE_REGEX.test(existing)) {
       const res = NextResponse.next();
       res.cookies.set(COOKIE_NAME, existing, cookieOpts());
-      return applyAgentDiscovery(res);
+      return applyAgentDiscovery(res, pathname);
     }
-    return applyAgentDiscovery(NextResponse.next());
+    return applyAgentDiscovery(NextResponse.next(), pathname);
   }
 
   const ref = refRaw.trim();
