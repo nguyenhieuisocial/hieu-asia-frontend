@@ -32,6 +32,7 @@ import {
   ShieldCheck,
   Lock,
   Zap,
+  FolderTree,
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import {
@@ -259,6 +260,14 @@ export default function ArchitecturePage() {
         title="Sơ đồ & vận hành"
         description="Trung tâm vận hành: hành động nhanh, trạng thái sống, sơ đồ hệ thống, luồng dữ liệu, cẩm nang, tác vụ định kỳ và phân quyền — tất cả một chỗ."
         icon={<Network className="h-5 w-5" />}
+        actions={
+          <Link
+            href="/site-structure"
+            className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:border-gold/40 hover:text-foreground"
+          >
+            <FolderTree className="h-3.5 w-3.5" aria-hidden /> Xem cấu trúc trang
+          </Link>
+        }
       />
 
       {/* Core health banner */}
