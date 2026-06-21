@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
-import { castTuViHoroscope, type TuViChart, type TuViHoroscope, type TuViPalace, type CachCuc, type TuanKhong } from '@/lib/tuvi-client';
+import { castTuViHoroscope, type TuViChart, type TuViHoroscope, type TuViPalace, type CachCuc, type TuanKhong, type TrietLo } from '@/lib/tuvi-client';
 import { TuViChart12Palaces } from '@/components/tuvi/TuViChart12Palaces';
 import { NguHanhRemedyCard } from '@/components/ngu-hanh/NguHanhRemedyCard';
 
@@ -86,6 +86,7 @@ export function LaSoChecker({
   const [horoscope, setHoroscope] = React.useState<TuViHoroscope | null>(null);
   const [cachCuc, setCachCuc] = React.useState<CachCuc[]>([]);
   const [tuanKhong, setTuanKhong] = React.useState<TuanKhong | null>(null);
+  const [triet, setTriet] = React.useState<TrietLo | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -100,8 +101,9 @@ export function LaSoChecker({
     setHoroscope(null);
     setCachCuc([]);
     setTuanKhong(null);
+    setTriet(null);
     try {
-      const { chart: c, horoscope: h, cachCuc: cc, tuanKhong: tk } = await castTuViHoroscope({
+      const { chart: c, horoscope: h, cachCuc: cc, tuanKhong: tk, triet: tr } = await castTuViHoroscope({
         birthSolarDate: date,
         birthHour: parseHour(time),
         gender,
@@ -110,6 +112,7 @@ export function LaSoChecker({
       setHoroscope(h);
       setCachCuc(cc);
       setTuanKhong(tk);
+      setTriet(tr);
     } catch {
       setError('Chưa lập được lá số — thử lại sau giây lát.');
     } finally {
@@ -234,8 +237,26 @@ export function LaSoChecker({
                   <strong> nhẹ bớt</strong> cái xấu nếu cung đó nhiều sát tinh.
                 </p>
                 <p className="mt-3 text-xs text-muted-foreground">
-                  An theo can-chi năm sinh (luật thống nhất — <strong>tính thật</strong>). Triệt Lộ chưa tính
-                  (cách an khác nhau theo trường phái).
+                  An theo can-chi năm sinh (luật thống nhất — <strong>tính thật</strong>).
+                </p>
+              </div>
+            )}
+
+            {triet && triet.palaces.length > 0 && (
+              <div className="rv-up rounded-xl border border-gold/20 bg-card/40 p-4" style={{ animationDelay: '150ms' }}>
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
+                  Triệt Lộ Không Vong — cung bị “triệt”
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-foreground/85">
+                  Can năm <strong>{triet.yearStem}</strong> →{' '}
+                  <strong className="text-foreground">{triet.palaces.map((p) => p.name).join(' · ')}</strong>{' '}
+                  bị Triệt (chi {triet.branches.join(', ')}). Cung bị Triệt như bị <strong>chặn đường</strong>:
+                  việc dễ trắc trở, đứt đoạn — nhất là <strong>nửa đầu đời</strong> (cổ truyền: Triệt ứng mạnh
+                  ~30 năm đầu, Tuần ứng nửa sau); cũng làm nhẹ bớt sát tinh đóng tại đó.
+                </p>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  An theo can năm sinh (bảng cố định — <strong>tính thật</strong>); phần luận sâu nên đối chiếu
+                  thầy Tử Vi.
                 </p>
               </div>
             )}
