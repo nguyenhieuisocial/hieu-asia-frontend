@@ -120,6 +120,7 @@ export function PayoutRequest({
   canPayout,
   submitting,
   onSubmit,
+  onVoucher,
   msg,
   isActive,
 }: {
@@ -130,6 +131,8 @@ export function PayoutRequest({
   canPayout: boolean;
   submitting: boolean;
   onSubmit: () => void;
+  /** Optional: redeem the balance as an in-product voucher (no tax/KYC). */
+  onVoucher?: () => void;
   msg: { ok: boolean; text: string } | null;
   isActive: boolean;
 }) {
@@ -146,13 +149,30 @@ export function PayoutRequest({
         <p className="text-sm text-muted-foreground">
           Khi gửi yêu cầu, bạn rút toàn bộ số dư khả dụng. Admin sẽ xử lý và chuyển khoản.
         </p>
-        <Button
-          onClick={onSubmit}
-          disabled={!canPayout || submitting}
-          className="bg-gold text-ink hover:bg-gold/90"
-        >
-          {submitting ? 'Đang gửi...' : `Yêu cầu rút ${vnd(availableVnd)}`}
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            onClick={onSubmit}
+            disabled={!canPayout || submitting}
+            className="bg-gold text-ink hover:bg-gold/90"
+          >
+            {submitting ? 'Đang gửi...' : `Rút tiền mặt ${vnd(availableVnd)}`}
+          </Button>
+          {onVoucher && (
+            <Button
+              onClick={onVoucher}
+              disabled={!canPayout || submitting}
+              variant="outline"
+            >
+              {submitting ? 'Đang xử lý...' : 'Đổi voucher dùng trong sản phẩm'}
+            </Button>
+          )}
+        </div>
+        {onVoucher && (
+          <p className="text-xs text-muted-foreground">
+            Rút tiền mặt: có thể bị khấu trừ 10% thuế khi ≥ 2tr/lần (cần khai báo thuế).
+            Đổi voucher: nhận mã giảm giá dùng khi mua dịch vụ, không cần thủ tục thuế.
+          </p>
+        )}
         {!canPayout && isActive && (
           <p className="text-xs text-muted-foreground">Tối thiểu {vnd(minPayout)} mới được rút.</p>
         )}
