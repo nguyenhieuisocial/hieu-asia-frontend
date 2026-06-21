@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle, Skeleton } from '@hieu-asia/ui';
+import { Card, CardContent, CardHeader, CardTitle, Skeleton, Tabs, TabsList, TabsTrigger, TabsContent } from '@hieu-asia/ui';
 import { BookText, ArrowDownLeft, ArrowUpRight, Scale, Info } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
@@ -11,6 +11,7 @@ import { ErrorBlock } from '@/components/admin/error-block';
 import { EmptyState } from '@/components/admin/empty-state';
 import { formatDateOrEmpty } from '@/lib/format-date';
 import { buildLedger, type LedgerMovement } from '@/lib/ledger';
+import { AccountingTab } from '@/components/admin/ledger/AccountingTab';
 
 const fmtVnd = (n: number) => `${Math.round(n).toLocaleString('vi-VN')}₫`;
 const fmtDate = (iso: string) => formatDateOrEmpty(iso, '—');
@@ -108,7 +109,7 @@ const SOURCE_LABEL: Record<LedgerMovement['source'], { label: string; href: stri
   affiliate_payout: { label: 'Hoa hồng', href: '/affiliates?tab=payouts' },
 };
 
-export default function LedgerPage() {
+function CashFlowView() {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['admin', 'ledger'],
     queryFn: fetchLedgerData,
@@ -122,12 +123,6 @@ export default function LedgerPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        icon={<BookText className="h-5 w-5 text-gold" />}
-        title="Sổ cái tiền (VND)"
-        description="Mọi đồng tiền vào / ra theo thời gian + số dư lũy kế. Chỉ đọc — không thao tác tiền ở đây."
-      />
-
       {error ? (
         <ErrorBlock message={(error as Error).message} onRetry={() => refetch()} />
       ) : isLoading ? (
@@ -299,6 +294,30 @@ export default function LedgerPage() {
           )}
         </>
       )}
+    </div>
+  );
+}
+
+export default function LedgerPage() {
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        icon={<BookText className="h-5 w-5 text-gold" />}
+        title="Sổ cái tiền (VND)"
+        description="Dòng tiền vào/ra + sổ kế toán kép. Chỉ đọc với tiền thật — ghi bút toán / đối soát là sổ-sách, không chuyển tiền ở đây."
+      />
+      <Tabs defaultValue="cashflow">
+        <TabsList>
+          <TabsTrigger value="cashflow">Dòng tiền</TabsTrigger>
+          <TabsTrigger value="accounting">Kế toán kép</TabsTrigger>
+        </TabsList>
+        <TabsContent value="cashflow" className="mt-4">
+          <CashFlowView />
+        </TabsContent>
+        <TabsContent value="accounting" className="mt-4">
+          <AccountingTab />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
