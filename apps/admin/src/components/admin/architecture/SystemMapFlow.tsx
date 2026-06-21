@@ -26,6 +26,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { ARCH_LAYERS, ARCH_EDGES } from '@/lib/architecture';
+import { layoutLayeredDag } from '@/lib/flow-layout';
 
 export type Live = 'ok' | 'warn' | 'down' | 'unknown' | 'loading';
 
@@ -39,8 +40,10 @@ interface NodeData {
   [key: string]: unknown;
 }
 
-const COL_W = 250;
-const ROW_H = 165;
+// Fixed node box size (matches the w-[210px] node card) fed to dagre so ranks
+// don't overlap. ~64px tall = label row + 2-line role.
+const NODE_W = 210;
+const NODE_H = 64;
 const DOT: Record<Live, string> = {
   ok: '#3fae8f',
   warn: '#d9a441',
@@ -95,32 +98,30 @@ export default function SystemMapFlow({ statuses }: SystemMapFlowProps) {
     return m;
   }, []);
 
-  const maxCols = React.useMemo(
-    () => Math.max(...ARCH_LAYERS.map((l) => l.nodes.length)),
-    [],
-  );
-
-  const nodes: Node<NodeData>[] = React.useMemo(
-    () =>
-      ARCH_LAYERS.flatMap((layer, li) => {
-        const offset = ((maxCols - layer.nodes.length) * COL_W) / 2;
-        return layer.nodes.map((n, j) => ({
-          id: n.id,
-          type: 'arch',
-          position: { x: offset + j * COL_W, y: li * ROW_H },
-          data: {
-            label: n.label,
-            role: n.role,
-            core: n.core,
-            adminHref: n.adminHref,
-            externalHref: n.externalHref,
-            status: n.infraSlug ? statuses[n.infraSlug] ?? 'unknown' : undefined,
-          },
-          draggable: false,
-        }));
-      }),
-    [maxCols, statuses],
-  );
+  const nodes: Node<NodeData>[] = React.useMemo(() => {
+    const flat = ARCH_LAYERS.flatMap((layer) => layer.nodes);
+    // dagre layered layout (TB) from the real ARCH_EDGES — ranks fall out of the
+    // graph, so we no longer hand-center each layer. positions = TOP-LEFT.
+    const positions = layoutLayeredDag(
+      flat.map((n) => ({ id: n.id, width: NODE_W, height: NODE_H })),
+      ARCH_EDGES.map((e) => ({ source: e.source, target: e.target })),
+      { rankdir: 'TB', nodesep: 55, ranksep: 95 },
+    );
+    return flat.map((n) => ({
+      id: n.id,
+      type: 'arch',
+      position: positions.get(n.id) ?? { x: 0, y: 0 },
+      data: {
+        label: n.label,
+        role: n.role,
+        core: n.core,
+        adminHref: n.adminHref,
+        externalHref: n.externalHref,
+        status: n.infraSlug ? statuses[n.infraSlug] ?? 'unknown' : undefined,
+      },
+      draggable: false,
+    }));
+  }, [statuses]);
 
   const edges: Edge[] = React.useMemo(
     () =>

@@ -123,11 +123,11 @@ export default function AdminRagPage() {
           value={<span className="font-mono text-base">pgvector</span>}
           icon={<Database className="h-4 w-4" />}
           accent="jade"
-          hint="chưa có endpoint"
+          hint="corpus_chunks"
         />
         <KpiCard
           label="Status"
-          value={<StatusBadge status="info" label="chưa có endpoint" />}
+          value={<StatusBadge status="success" label="ingest đã bật" />}
           icon={<BookOpen className="h-4 w-4" />}
           accent="jade"
         />
@@ -162,7 +162,6 @@ export default function AdminRagPage() {
 }
 
 function IngestForm({ onIngested }: { onIngested: () => void }) {
-  const [sourceId, setSourceId] = React.useState('');
   const [sourceTitle, setSourceTitle] = React.useState('');
   const [text, setText] = React.useState('');
   const [discipline, setDiscipline] = React.useState<RagChunk['discipline']>('tu_vi');
@@ -170,14 +169,10 @@ function IngestForm({ onIngested }: { onIngested: () => void }) {
 
   const mutation = useMutation({
     mutationFn: ingestRagChunks,
-    onSuccess: (data) => {
-      // ingestRagChunks is a hardcoded mock (POST /admin/rag/ingest không tồn tại
-      // ở worker). It never stores anything → do NOT clear the form or show a
-      // success banner that would lie about data being saved. The isMock flag
-      // drives the "chưa kết nối backend" notice below instead.
-      if (data.isMock) return;
+    onSuccess: () => {
+      // Real ingest succeeded (worker stored chunks). Clear the text + title so
+      // the operator can paste the next document; keep discipline/license.
       setText('');
-      setSourceId('');
       setSourceTitle('');
       onIngested();
     },
@@ -194,31 +189,27 @@ function IngestForm({ onIngested }: { onIngested: () => void }) {
     .map((s) => s.trim())
     .filter((s) => s.length > 30);
 
+  const canSubmit = sourceTitle.trim().length > 0 && text.trim().length > 0 && !mutation.isPending;
+
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Backend endpoint (POST /admin/rag/ingest) chưa tồn tại → không gọi mock.
-    // Guard chặn cả Enter-submit để form không giả vờ đã lưu. Bỏ return này khi
-    // backend wire xong (cùng lúc bỏ `disabled` ở nút Ingest).
+    if (!canSubmit) return;
+    mutation.mutate({ source_title: sourceTitle.trim(), discipline, license_status: license, text });
   };
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Ingest tài liệu mới</CardTitle>
-        <CardDescription>Tải file .txt hoặc dán text — hệ thống tự tách đoạn theo blank line.</CardDescription>
-        <p className="mt-2 rounded border border-warn-500/40 bg-warn-500/10 p-2 text-xs text-warn-700 dark:text-warn-300">
-          Chưa kết nối backend — endpoint ingest (POST /admin/rag/ingest) chưa có ở worker. Form chỉ
-          để xem trước; bấm Ingest sẽ KHÔNG lưu gì.
-        </p>
+        <CardDescription>
+          Tải file .txt hoặc dán text — worker tự tách đoạn (blank line), tạo embedding và lưu vào
+          corpus_chunks. Re-ingest cùng tiêu đề sẽ bỏ qua đoạn trùng.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={onSubmit} className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="src-id">Source ID</Label>
-            <Input id="src-id" value={sourceId} onChange={(e) => setSourceId(e.target.value)} placeholder="vd: tu_vi_co_dien_vol3" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="src-title">Tiêu đề</Label>
+          <div className="space-y-2 sm:col-span-2">
+            <Label htmlFor="src-title">Tiêu đề tài liệu</Label>
             <Input id="src-title" value={sourceTitle} onChange={(e) => setSourceTitle(e.target.value)} placeholder="Tử Vi Cổ Điển Quyển 3" />
           </div>
           <div className="space-y-2">
@@ -280,25 +271,20 @@ function IngestForm({ onIngested }: { onIngested: () => void }) {
               />
             </div>
           )}
-          {/* Mock path: never claim success. ingestRagChunks returns isMock=true
-              because the worker endpoint doesn't exist. Surface that honestly. */}
-          {mutation.isSuccess && mutation.data.isMock && (
-            <p className="sm:col-span-2 rounded border border-warn-500/40 bg-warn-500/10 p-2 text-sm text-warn-700 dark:text-warn-300">
-              Chưa kết nối backend (mock) — {chunks.length} chunk(s) KHÔNG được lưu. Cần wire
-              POST /admin/rag/ingest ở worker trước.
+          {mutation.isSuccess && (
+            <p className="sm:col-span-2 rounded border border-jade-500/40 bg-jade-500/10 p-2 text-sm text-jade-700 dark:text-jade-300">
+              Đã nạp: <span className="font-semibold">{mutation.data.chunks_inserted}</span> đoạn mới
+              {mutation.data.chunks_skipped > 0 && <> · {mutation.data.chunks_skipped} đoạn trùng (bỏ qua)</>}
+              {' '}— tổng {mutation.data.chunks_total} đoạn.
             </p>
           )}
           <div className="sm:col-span-2">
-            {/* Endpoint POST /admin/rag/ingest chưa có ở worker → submit luôn
-                disabled để KHÔNG đánh lừa founder rằng ingest hoạt động. Bỏ
-                disable khi backend wire xong (đổi `true` → điều kiện field). */}
             <Button
               type="submit"
-              disabled
-              title="Endpoint ingest (POST /admin/rag/ingest) chưa có ở backend"
-              aria-label="Ingest chưa khả dụng — backend chưa kết nối"
+              disabled={!canSubmit}
+              title={!sourceTitle.trim() ? 'Nhập tiêu đề' : !text.trim() ? 'Dán nội dung' : undefined}
             >
-              Ingest {chunks.length} chunks (sắp ra mắt — chưa kết nối backend)
+              {mutation.isPending ? 'Đang nạp…' : `Ingest ${chunks.length} đoạn`}
             </Button>
           </div>
         </form>
