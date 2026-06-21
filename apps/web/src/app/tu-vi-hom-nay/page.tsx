@@ -11,6 +11,9 @@ import { generateZodiacBlurb, isGenericSummary } from '@/lib/zodiac-blurb';
 import { breadcrumb, webPage } from '@/lib/seo/jsonld';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
+// Gộp (B) 2026-06-21: bê lá số THẬT (Mệnh, Phúc Đức + đại vận) từ
+// /lo-trinh/hang-ngay (nay redirect về đây).
+import { LoTrinhChart } from '@/components/lo-trinh/LoTrinhChart';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 600;
@@ -216,6 +219,17 @@ export default async function Page() {
             blurb="Để lại email, chúng tôi báo khi có nội dung mới theo mùa: tử vi năm mới, sao hạn, ngày tốt theo việc. Thi thoảng thôi, không spam."
             cta="Nhận nhắc"
           />
+        </div>
+      </section>
+
+      <section className="mt-8">
+        <h2 className="font-heading text-2xl font-semibold text-foreground">Lá số của bạn hôm nay</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Trên là vận chung theo con giáp. Dưới đây đọc đúng lá số THẬT của bạn — cung Mệnh, Phúc Đức
+          cùng đại vận hiện tại — để soi ngày hôm nay sát hơn.
+        </p>
+        <div className="mt-5">
+          <LoTrinhChart topic="general" focusPalaces={['Mệnh', 'Phúc Đức']} />
         </div>
       </section>
     </ToolPageShell>
