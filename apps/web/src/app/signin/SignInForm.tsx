@@ -160,8 +160,8 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
     } catch {
       /* ignore */
     }
-    // Wave 44.4 (#251): pass `?next=` through magic-link roundtrip so
-    // signup-from-partner flow lands back on `/partner` after callback.
+    // Pass `?next=` through the magic-link roundtrip so the user lands back on
+    // the page they started from after the callback.
     const next = nextProp ?? searchParams.get('next');
     // Wave 60.60.d — forward Turnstile token to Supabase; reset after attempt
     // since token is single-use (replay would 400 on next try).
