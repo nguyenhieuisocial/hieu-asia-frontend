@@ -295,6 +295,10 @@ export interface ScheduleGroup {
    * (idempotent checks/monitors/notifies/reconcile). Digests + nightly eval
    * are NOT runnable on tap (spam / AI cost). Mirrors /admin/cron/run. */
   runnable?: boolean;
+  /** Job key this schedule's run is recorded under in GET /admin/cron/history
+   * (the scheduled-bundle key — the hourly group records as one "hourlyChecks").
+   * Used to show "last run + status" per group. */
+  historyKey?: string;
 }
 
 export const SCHEDULED_OPS: ScheduleGroup[] = [
@@ -303,6 +307,7 @@ export const SCHEDULED_OPS: ScheduleGroup[] = [
     schedule: 'Mỗi 15 phút',
     cron: '*/15 * * * *',
     runnable: true,
+    historyKey: 'reconcileUnlockedSessions',
     ops: [
       {
         name: 'Đối soát mở-khóa trả-phí',
@@ -316,6 +321,7 @@ export const SCHEDULED_OPS: ScheduleGroup[] = [
     schedule: 'Mỗi giờ',
     cron: '0 * * * *',
     runnable: true,
+    historyKey: 'hourlyChecks',
     ops: [
       { name: 'Dò bất thường', fn: 'checkAnomalies', does: 'Lỗi / đăng-ký / chi-phí-AI tăng đột-biến so với nền.' },
       { name: 'Khách mới', fn: 'notifyNewUsers', does: 'Báo có người dùng mới đăng-ký.', topic: 'user' },
@@ -340,6 +346,7 @@ export const SCHEDULED_OPS: ScheduleGroup[] = [
     id: 'morning',
     schedule: 'Hằng ngày · 10h sáng',
     cron: '0 3 * * *',
+    historyKey: 'sendDigest:morning',
     ops: [
       { name: 'Bản tin sáng', fn: 'sendDigest("morning")', does: 'Tổng-hợp đêm qua: user / doanh-thu / lỗi / lá-số.' },
       { name: 'Tóm tắt AI cho founder', fn: 'sendAiBriefing', does: 'Tóm-tắt bằng ngôn-ngữ thường, AI viết.' },
@@ -350,12 +357,14 @@ export const SCHEDULED_OPS: ScheduleGroup[] = [
     id: 'evening',
     schedule: 'Hằng ngày · 20h tối',
     cron: '0 13 * * *',
+    historyKey: 'sendDigest:evening',
     ops: [{ name: 'Bản tin chiều', fn: 'sendDigest("evening")', does: 'Tổng-hợp trong ngày.' }],
   },
   {
     id: 'nightly',
     schedule: 'Hằng đêm · 1h sáng',
     cron: '0 18 * * *',
+    historyKey: 'runNightlyEval',
     ops: [
       {
         name: 'Chấm điểm Mentor (eval đêm)',
@@ -369,6 +378,7 @@ export const SCHEDULED_OPS: ScheduleGroup[] = [
     id: 'weekly',
     schedule: 'Hằng tuần · Thứ 2, 9h sáng',
     cron: '0 2 * * 1',
+    historyKey: 'sendWeeklyDigest',
     ops: [{ name: 'Bản tin tuần (cockpit)', fn: 'sendWeeklyDigest', does: 'Tổng-kết tuần cho founder.' }],
   },
 ];

@@ -103,6 +103,41 @@ async function resetPrompt(role: string): Promise<PromptDetail> {
   return deriveIsCustom(data.prompt);
 }
 
+/** A past version snapshot from the worker history store (newest first). */
+interface HistoryEntry {
+  role: Role;
+  system: string;
+  updated_at: string;
+  updated_by: string;
+  version: number;
+}
+
+interface HistoryResp {
+  ok: boolean;
+  history?: HistoryEntry[];
+  error?: string;
+}
+
+async function fetchHistory(role: string): Promise<HistoryEntry[]> {
+  const r = await fetch(`/api/admin/prompts/${role}/history`, { cache: 'no-store' });
+  const data: HistoryResp = await r.json();
+  if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
+  return data.history ?? [];
+}
+
+async function revertPromptVersion(role: string, at: string): Promise<PromptDetail> {
+  const r = await fetch(`/api/admin/prompts/${role}/revert`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ at }),
+  });
+  const data: PromptResp = await r.json();
+  if (!r.ok || !data.ok || !data.prompt) {
+    throw new Error(data.error ?? `HTTP ${r.status}`);
+  }
+  return deriveIsCustom(data.prompt);
+}
+
 // Wave 52-C — Delegate to shared util so 0 / "" / null all render
 // "Chưa override" instead of "08:00 1/1/70".
 const fmtDate = (iso: string | null) => formatDateOrEmpty(iso, 'Chưa override');
@@ -167,6 +202,10 @@ export default function PromptEditPage() {
   const [confirmResetOpen, setConfirmResetOpen] = React.useState(false);
   const [previewOpen, setPreviewOpen] = React.useState(false);
   const [diffOpen, setDiffOpen] = React.useState(false);
+  // History/revert: the entry being viewed (diff vs current) and the one queued
+  // for a confirm-revert.
+  const [viewEntry, setViewEntry] = React.useState<HistoryEntry | null>(null);
+  const [revertEntry, setRevertEntry] = React.useState<HistoryEntry | null>(null);
 
   // Seed editor when prompt loads
   React.useEffect(() => {
@@ -174,6 +213,13 @@ export default function PromptEditPage() {
       setDraft(prompt.system);
     }
   }, [prompt, dirty]);
+
+  const { data: history } = useQuery({
+    queryKey: ['admin', 'prompts', role, 'history'],
+    queryFn: () => fetchHistory(role),
+    enabled: isValidRole,
+    staleTime: 60_000,
+  });
 
   const saveMut = useMutation({
     mutationFn: () => savePrompt(role, draft),
@@ -220,6 +266,33 @@ export default function PromptEditPage() {
         error: msg.slice(0, 200),
       });
       toast.error('Khôi phục thất bại', { description: msg });
+    },
+  });
+
+  const revertMut = useMutation({
+    mutationFn: (entry: HistoryEntry) => revertPromptVersion(role, entry.updated_at),
+    onSuccess: (updated, entry) => {
+      // Forward-only restore: writes the old body as a NEW version. PII-safe
+      // breadcrumb — role + which version was restored + the resulting version.
+      trackAdminMutation('prompts.revert', 'success', {
+        role,
+        restored_from: entry.version,
+        version: updated.version,
+      });
+      toast.success(`Đã khôi phục v${entry.version}`, {
+        description: `Áp dụng thành phiên bản mới v${updated.version}`,
+      });
+      qc.setQueryData(['admin', 'prompts', role], updated);
+      qc.invalidateQueries({ queryKey: ['admin', 'prompts'] });
+      qc.invalidateQueries({ queryKey: ['admin', 'prompts', role, 'history'] });
+      setDraft(updated.system);
+      setDirty(false);
+      setRevertEntry(null);
+    },
+    onError: (e) => {
+      const msg = (e as Error).message;
+      trackAdminMutation('prompts.revert', 'failure', { role, error: msg.slice(0, 200) });
+      toast.error('Khôi phục phiên bản thất bại', { description: msg });
     },
   });
 
@@ -373,9 +446,57 @@ export default function PromptEditPage() {
                 </p>
               </CardContent>
             </Card>
-            {/* Lịch sử card removed (#44): the worker's GET /admin/prompts/:role
-                never returns history[] — the KV store only keeps the current
-                version. Don't render a permanently-empty card. */}
+            {/* Lịch sử phiên bản — worker now snapshots overwritten versions to
+                `prompt-history:<role>` on every save/reset, so a bad edit is
+                recoverable (forward-only revert). */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm">Lịch sử phiên bản</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {!history || history.length === 0 ? (
+                  <p className="text-[11px] text-muted-foreground">
+                    Chưa có phiên bản cũ. Mỗi lần lưu/khôi-phục-mặc-định sẽ lưu lại bản bị ghi đè ở đây.
+                  </p>
+                ) : (
+                  <ul className="space-y-2">
+                    {history.map((h) => (
+                      <li
+                        key={h.updated_at}
+                        className="rounded border border-gold/15 bg-card/60 px-2 py-1.5 text-xs"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-mono text-gold">v{h.version}</span>
+                          <span className="text-[11px] text-muted-foreground">{fmtDate(h.updated_at)}</span>
+                        </div>
+                        <div className="mt-0.5 truncate text-[11px] text-muted-foreground">
+                          bởi {h.updated_by}
+                        </div>
+                        <div className="mt-1.5 flex items-center gap-1.5">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-6 px-2 text-[11px]"
+                            onClick={() => setViewEntry(h)}
+                          >
+                            Xem
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-6 px-2 text-[11px]"
+                            onClick={() => setRevertEntry(h)}
+                            disabled={revertMut.isPending}
+                          >
+                            Khôi phục
+                          </Button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </CardContent>
+            </Card>
           </div>
         </div>
       )}
@@ -507,6 +628,82 @@ ${draft
           <DialogFooter>
             <Button variant="ghost" onClick={() => setPreviewOpen(false)}>
               Đóng
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* View a history version — diff vs the current draft */}
+      <Dialog open={!!viewEntry} onOpenChange={(o) => !o && setViewEntry(null)}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>Phiên bản cũ v{viewEntry?.version}</DialogTitle>
+            <DialogDescription>
+              {viewEntry ? `${fmtDate(viewEntry.updated_at)} · bởi ${viewEntry.updated_by}. ` : ''}
+              Dòng <span className="text-emerald-700 dark:text-emerald-200">xanh</span> = có ở bản đang
+              chỉnh; dòng <span className="text-red-700 dark:text-red-200">đỏ</span> = chỉ có ở bản cũ này.
+            </DialogDescription>
+          </DialogHeader>
+          {viewEntry && (
+            <div className="max-h-[60vh] overflow-auto rounded-md border border-gold/15 bg-card/60 font-mono text-xs leading-5">
+              {lineDiff(draft, viewEntry.system).map((row, i) => (
+                <div
+                  key={i}
+                  className={
+                    row.kind === 'add'
+                      ? 'bg-emerald-500/10 px-3 py-0.5 text-emerald-700 dark:text-emerald-200'
+                      : row.kind === 'remove'
+                        ? 'bg-red-500/10 px-3 py-0.5 text-red-700 dark:text-red-200'
+                        : 'px-3 py-0.5 text-muted-foreground'
+                  }
+                >
+                  <span className="mr-2 select-none text-muted-foreground">
+                    {row.kind === 'add' ? '+' : row.kind === 'remove' ? '-' : ' '}
+                  </span>
+                  {row.text || ' '}
+                </div>
+              ))}
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setViewEntry(null)}>
+              Đóng
+            </Button>
+            {viewEntry && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setRevertEntry(viewEntry);
+                  setViewEntry(null);
+                }}
+              >
+                Khôi phục bản này
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Revert confirm */}
+      <Dialog open={!!revertEntry} onOpenChange={(o) => !o && setRevertEntry(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Khôi phục phiên bản v{revertEntry?.version}?</DialogTitle>
+            <DialogDescription>
+              Nội dung của v{revertEntry?.version} sẽ được áp dụng thành một phiên bản MỚI (v
+              {(prompt?.version ?? 0) + 1}). Bản hiện tại được lưu vào lịch sử nên vẫn khôi phục lại
+              được — không mất gì.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setRevertEntry(null)}>
+              Hủy
+            </Button>
+            <Button
+              onClick={() => revertEntry && revertMut.mutate(revertEntry)}
+              disabled={revertMut.isPending}
+            >
+              {revertMut.isPending ? 'Đang khôi phục…' : 'Xác nhận khôi phục'}
             </Button>
           </DialogFooter>
         </DialogContent>
