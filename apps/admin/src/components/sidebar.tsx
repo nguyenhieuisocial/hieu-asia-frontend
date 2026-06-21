@@ -35,6 +35,7 @@ import {
   BookOpen,
   CreditCard,
   Landmark,
+  BookText,
   Settings,
   Sparkles,
   Activity,
@@ -96,6 +97,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'Doanh thu',
     items: [
       { href: '/sepay', label: 'SePay đối soát', Icon: Landmark },
+      { href: '/ledger', label: 'Sổ cái tiền', Icon: BookText },
       { href: '/payments', label: 'Thanh toán & Doanh thu', Icon: CreditCard },
       { href: '/coupons', label: 'Coupons', Icon: Ticket },
       { href: '/feature-prices', label: 'Giá tính năng', Icon: Tag },

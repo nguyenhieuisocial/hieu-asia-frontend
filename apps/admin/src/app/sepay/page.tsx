@@ -185,7 +185,13 @@ function AdminSepayPageInner() {
   const qc = useQueryClient();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [tab, setTab] = React.useState<'dashboard' | 'tx' | 'reconcile' | 'refunds'>('dashboard');
+  // Honor a ?tab= deep-link (e.g. /sepay?tab=refunds from the ledger) on first
+  // render; falls back to the dashboard tab for any missing/invalid value.
+  const initialTab = ((): 'dashboard' | 'tx' | 'reconcile' | 'refunds' => {
+    const t = searchParams.get('tab');
+    return t === 'tx' || t === 'reconcile' || t === 'refunds' ? t : 'dashboard';
+  })();
+  const [tab, setTab] = React.useState<'dashboard' | 'tx' | 'reconcile' | 'refunds'>(initialTab);
   const [draft, setDraft] = React.useState<Filters>(EMPTY_FILTERS);
   const [filters, setFilters] = React.useState<Filters>(EMPTY_FILTERS);
   const [preset, setPreset] = React.useState<string>('Tất cả');
