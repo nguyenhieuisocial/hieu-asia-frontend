@@ -44,39 +44,24 @@ type ThemeProviderProps = React.ComponentProps<typeof NextThemesProvider>;
  *    marketing goes LIGHT (Paper). This is not a regression of 60.83.4;
  *    it's a deliberate two-mode brand architecture per vault 138.
  */
-const NIGHT_MODE_ROUTES = [
-  '/reading',
-  '/dashboard',
-  '/tu-vi-2026',
-  '/tu-vi-hom-nay',
-  '/tu-vi-nghe-nghiep',
-  '/tu-vi-tai-chinh',
-  '/tu-vi-tinh-yeu',
-  '/dai-van-hien-tai',
-  '/mentor',
-];
-
+// 2026-06-22 — Founder: light/dark toggle TRÊN MỌI TRANG. Khóa forced-dark
+// "Night/Khoảng lặng" (NIGHT_MODE_ROUTES) ĐÃ GỠ — audit xác nhận các trang đó
+// (/tu-vi-2026, /tu-vi-hom-nay, /tu-vi-nghe-nghiep, /tu-vi-tai-chinh,
+// /tu-vi-tinh-yeu, /dai-van-hien-tai, /reading, /dashboard, /mentor) đều
+// theme-token-aware → render đúng CẢ light lẫn dark, chỉ bị khóa vì "vibe".
+// Nay theo nút toggle như mọi trang khác.
+//
+// Trang chủ '/' TẠM giữ force-light: MultiHero/FourLens còn hardcode Paper/Ink
+// (#F3ECDD / #171411) → bật dark sẽ vỡ. Gỡ nốt sau khi 2 component đó chuyển
+// sang token theme (PR riêng).
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   const pathname = usePathname();
-  const isNightRoute =
-    pathname != null &&
-    NIGHT_MODE_ROUTES.some((route) => pathname.startsWith(route));
-
-  // Homepage is the flagship "Giấy thấm" (Paper) light experience — its
-  // HeroV4/MultiHero is built light-only (inline `background:#F3ECDD`, no
-  // theme tokens). User-toggling dark produced a half-dark page (dark
-  // header/cookie banner over a cream hero). Force light so `/` always
-  // renders as the intended Paper showcase. (Founder decision 2026-06-14;
-  // other marketing routes stay user-toggleable — their bodies are
-  // theme-token-aware and render dark correctly.)
   const isHomeRoute = pathname === '/';
 
   return (
     <NextThemesProvider
       {...props}
-      forcedTheme={
-        isNightRoute ? 'dark' : isHomeRoute ? 'light' : props.forcedTheme
-      }
+      forcedTheme={isHomeRoute ? 'light' : props.forcedTheme}
     >
       {children}
     </NextThemesProvider>
