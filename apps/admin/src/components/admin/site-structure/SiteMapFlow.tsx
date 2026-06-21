@@ -4,8 +4,9 @@
  * SiteMapFlow — interactive (pan/zoom) sitemap graph on React Flow.
  *
  * Lazy-loaded (heavy lib) from /site-structure as the "Tương tác" view, for ONE
- * selected app at a time. Layout is layered top-down: a row of section nodes,
- * then their page nodes underneath, grouped by section column. Dynamic `[param]`
+ * selected app at a time. Section blocks (a section header + its page nodes
+ * stacked underneath) are laid out in a grid that WRAPS — columns ≈ √(sections),
+ * capped — so a wide app doesn't form one ~22,000px-wide row. Dynamic `[param]`
  * routes inside a section collapse into a single node labelled with the count.
  * Solid edges = section → page (hierarchy); dashed gold edges = cross-links
  * between pages (linksTo). Click a page node → open its live URL in a new tab.
@@ -68,6 +69,13 @@ const COL_W = 260;
 const SECTION_ROW_Y = 0;
 const PAGE_ROW_START_Y = 150;
 const PAGE_ROW_H = 92;
+// Vertical gap between two grid-rows of section blocks (below the tallest block
+// in the row above), so variable-height sections never overlap.
+const ROW_GUTTER = 80;
+// Cap so a wide app (web has ~85 sections) wraps instead of forming a single
+// ~22,000px row. Columns ≈ √(sections), capped — keeps the grid roughly square
+// and bounded in width.
+const MAX_COLS = 6;
 
 // A stable, readable palette cycled across sections (group-by-section color).
 const SECTION_COLORS = [
@@ -191,14 +199,35 @@ export default function SiteMapFlow({ group, liveUrlFor }: SiteMapFlowProps) {
 
   const nodes: Node<AnyData>[] = React.useMemo(() => {
     const out: Node<AnyData>[] = [];
+
+    // Lay the section blocks (each = section header + its stacked page nodes) in
+    // a grid that WRAPS, instead of one ever-widening horizontal row. Columns
+    // ≈ √(sections), capped at MAX_COLS, so the canvas width stays bounded.
+    const cols = Math.max(1, Math.min(MAX_COLS, Math.ceil(Math.sqrt(sectionFlowPages.length))));
+
+    // Each grid-row's Y is the previous row's Y plus the tallest section block in
+    // that previous row (so variable-height sections don't overlap), + a gutter.
+    let rowYOffset = SECTION_ROW_Y;
+    let rowMaxBlockH = 0;
+
     sectionFlowPages.forEach((section, si) => {
+      const col = si % cols;
+      // At the start of each new grid-row, advance Y past the tallest block above.
+      if (col === 0 && si > 0) {
+        rowYOffset += rowMaxBlockH + ROW_GUTTER;
+        rowMaxBlockH = 0;
+      }
+      // Block height = header offset + one row per page node.
+      const blockH = PAGE_ROW_START_Y + section.pages.length * PAGE_ROW_H;
+      if (blockH > rowMaxBlockH) rowMaxBlockH = blockH;
+
       const color = colorForSection(si);
-      const x = si * COL_W;
+      const x = col * COL_W;
       // Section header node.
       out.push({
         id: `sec::${section.id}`,
         type: 'section',
-        position: { x, y: SECTION_ROW_Y },
+        position: { x, y: rowYOffset },
         data: { kind: 'section', label: section.title, pages: section.pages.length, color },
         draggable: false,
       });
@@ -207,7 +236,7 @@ export default function SiteMapFlow({ group, liveUrlFor }: SiteMapFlowProps) {
         out.push({
           id: p.id,
           type: 'page',
-          position: { x, y: PAGE_ROW_START_Y + pi * PAGE_ROW_H },
+          position: { x, y: rowYOffset + PAGE_ROW_START_Y + pi * PAGE_ROW_H },
           data: { kind: 'page', label: p.route, fn: p.fn, color, href: p.href, count: p.count },
           draggable: false,
         });
