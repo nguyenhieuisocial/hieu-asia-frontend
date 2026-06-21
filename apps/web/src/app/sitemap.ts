@@ -116,10 +116,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const decisionSystem: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/lo-trinh`, lastModified: now, changeFrequency: 'weekly', priority: 0.85 },
     { url: `${BASE_URL}/lo-trinh/hieu-ban-than`, lastModified: now, changeFrequency: 'monthly', priority: 0.75 },
-    { url: `${BASE_URL}/lo-trinh/su-nghiep`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE_URL}/lo-trinh/tinh-cam`, lastModified: now, changeFrequency: 'monthly', priority: 0.75 },
+    // Gộp (B) 2026-06-21: su-nghiep/tinh-cam/hang-ngay redirect 301 → /tu-vi-* → bỏ khỏi sitemap.
     { url: `${BASE_URL}/lo-trinh/ke-hoach-nam`, lastModified: now, changeFrequency: 'monthly', priority: 0.75 },
-    { url: `${BASE_URL}/lo-trinh/hang-ngay`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${BASE_URL}/ban-do`, lastModified: now, changeFrequency: 'weekly', priority: 0.85 },
     { url: `${BASE_URL}/decisions`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },    { url: `${BASE_URL}/methodology/tu-vi`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/methodology/algorithm-changelog`, lastModified: now, changeFrequency: 'monthly', priority: 0.55 },
