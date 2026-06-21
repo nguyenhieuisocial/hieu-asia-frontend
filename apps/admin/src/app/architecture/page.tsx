@@ -31,6 +31,7 @@ import {
   Clock,
   ShieldCheck,
   Lock,
+  Zap,
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import {
@@ -40,6 +41,7 @@ import {
   SCHEDULED_OPS,
   RBAC_ROLES,
   OWNER_ONLY_ACTIONS,
+  QUICK_ACTIONS,
   type ArchNode,
 } from '@/lib/architecture';
 
@@ -156,8 +158,8 @@ export default function ArchitecturePage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Sơ đồ hệ thống"
-        description="Toàn bộ guồng máy hoạt động như thế nào — trạng thái sống từng phần, luồng dữ liệu, và cẩm nang vận hành. Bấm vào mỗi khối để mở chi tiết."
+        title="Sơ đồ & vận hành"
+        description="Trung tâm vận hành: hành động nhanh, trạng thái sống, sơ đồ hệ thống, luồng dữ liệu, cẩm nang, tác vụ định kỳ và phân quyền — tất cả một chỗ."
         icon={<Network className="h-5 w-5" />}
       />
 
@@ -179,6 +181,49 @@ export default function ArchitecturePage() {
           </span>
         </CardContent>
       </Card>
+
+      {/* Quick actions — one-stop launcher to every admin operation */}
+      <section>
+        <div className="mb-1 flex items-center gap-2">
+          <Zap className="h-4 w-4 text-gold" aria-hidden />
+          <h2 className="font-heading text-lg text-foreground">Hành động nhanh</h2>
+        </div>
+        <p className="mb-3 text-xs text-muted-foreground">
+          Mọi thao tác admin trong một chỗ — bấm để tới đúng trang xử lý (có xác nhận + phân quyền).
+          <span className="ml-1 inline-flex items-center gap-1 align-middle">
+            <Lock className="h-3 w-3 text-red-500" aria-hidden />
+            <span className="text-red-500/90">= chỉ chủ (owner)</span>
+          </span>
+        </p>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {QUICK_ACTIONS.map((group) => (
+            <Card key={group.id}>
+              <CardContent className="p-4">
+                <div className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  {group.label}
+                </div>
+                <ul className="space-y-1.5">
+                  {group.actions.map((a) => (
+                    <li key={a.href + a.name}>
+                      <Link
+                        href={a.href}
+                        className="group flex items-start gap-1.5 rounded px-1 py-0.5 -mx-1 hover:bg-gold/[0.05]"
+                      >
+                        <ArrowRight className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground group-hover:text-gold" aria-hidden />
+                        <span className="min-w-0">
+                          <span className="text-xs font-medium text-foreground">{a.name}</span>
+                          {a.owner && <Lock className="ml-1 inline h-3 w-3 align-text-top text-red-500" aria-hidden />}
+                          <span className="block text-[11px] leading-snug text-muted-foreground">{a.does}</span>
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
 
       {/* System map — interactive (React Flow) or layered cards */}
       <section className="space-y-3">
