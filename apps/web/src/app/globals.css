@@ -179,6 +179,16 @@ html {
 @keyframes rvFade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes rvDraw { to { transform: scaleX(1); opacity: 1; } }
 
+/* ===== GIEO QUẺ — sáu hào hiện dần từ dưới lên (như tung xu lần lượt) =====
+ * Visual-only: HexagramGlyph thêm class .hex-line + inline animationDelay so le
+ * theo từng hào (hào 1 đáy hiện trước → hào 6 đỉnh sau). Remount theo lần gieo.
+ * Khi motion tắt: giữ nguyên hiển thị tức thì (không ẩn ban đầu) → graceful. */
+@media (prefers-reduced-motion: no-preference) {
+  .hex-line { opacity: 0; transform: translateY(.5em) scaleY(.6); }
+  .hex-line-animate { animation: hexLine .42s cubic-bezier(.2,.7,.2,1) both; }
+}
+@keyframes hexLine { to { opacity: 1; transform: translateY(0) scaleY(1); } }
+
 /* Same rationale for faint-gold LABEL text — the mono "eyebrow" tags above
  * headings (`text-gold/80|85|90`, ~11px) sit at ~2:1 on cream (gold #B8923D
  * at 0.8 over Paper), failing WCAG 1.4.3 small-text 4.5:1. Deepen to
