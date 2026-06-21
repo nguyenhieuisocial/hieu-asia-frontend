@@ -35,6 +35,17 @@ export function organization(): JsonLdNode {
       url: abs(LOGO_PATH),
     },
     description: ORG_DESCRIPTION,
+    // Expertise domains — helps AI search engines disambiguate hieu.asia as a
+    // subject-matter entity (entity authority is a leading AI-citation signal).
+    knowsAbout: [
+      'Tử Vi Đẩu Số',
+      'Bát Tự (Tứ Trụ)',
+      'Tarot',
+      'Thần số học',
+      'Chiêm tinh học phương Tây',
+      'Kinh Dịch',
+      'Trắc nghiệm tính cách (MBTI, DISC, Big Five, Enneagram)',
+    ],
     sameAs: SOCIAL_LINKS,
     contactPoint: {
       '@type': 'ContactPoint',

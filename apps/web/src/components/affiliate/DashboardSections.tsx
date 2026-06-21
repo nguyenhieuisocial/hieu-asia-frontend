@@ -28,8 +28,8 @@ const EVENT_LABEL: Record<DashRecentEvent['event'], { text: string; tone: string
 };
 
 const STATUS_LABEL: Record<DashPayout['status'], { text: string; tone: string }> = {
-  pending: { text: 'Đang chờ', tone: 'text-yellow-400' },
-  paid: { text: 'Đã trả', tone: 'text-green-400' },
+  pending: { text: 'Đang chờ', tone: 'text-amber-700 dark:text-yellow-400' },
+  paid: { text: 'Đã trả', tone: 'text-emerald-700 dark:text-emerald-400' },
   rejected: { text: 'Bị từ chối', tone: 'text-rose-400' },
 };
 
@@ -116,20 +116,23 @@ export function PayoutRequest({
   payoutMethod,
   payoutDestination,
   minPayout,
+  availableVnd,
   canPayout,
-  payoutAmount,
-  setPayoutAmount,
+  submitting,
   onSubmit,
+  onVoucher,
   msg,
   isActive,
 }: {
   payoutMethod: string;
   payoutDestination: string;
   minPayout: number;
+  availableVnd: number;
   canPayout: boolean;
-  payoutAmount: string;
-  setPayoutAmount: (v: string) => void;
+  submitting: boolean;
   onSubmit: () => void;
+  /** Optional: redeem the balance as an in-product voucher (no tax/KYC). */
+  onVoucher?: () => void;
   msg: { ok: boolean; text: string } | null;
   isActive: boolean;
 }) {
@@ -143,23 +146,38 @@ export function PayoutRequest({
           Phương thức: <b>{payoutMethod.toUpperCase()}</b> · Đích:{' '}
           <span className="font-mono">{payoutDestination}</span>
         </div>
-        <div className="flex gap-2">
-          <Input
-            type="number"
-            placeholder={`Min ${minPayout.toLocaleString('vi-VN')}`}
-            value={payoutAmount}
-            onChange={(e) => setPayoutAmount(e.target.value)}
-            disabled={!canPayout}
-          />
-          <Button onClick={onSubmit} disabled={!canPayout} className="bg-gold text-ink hover:bg-gold/90">
-            Gửi yêu cầu
+        <p className="text-sm text-muted-foreground">
+          Khi gửi yêu cầu, bạn rút toàn bộ số dư khả dụng. Admin sẽ xử lý và chuyển khoản.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            onClick={onSubmit}
+            disabled={!canPayout || submitting}
+            className="bg-gold text-ink hover:bg-gold/90"
+          >
+            {submitting ? 'Đang gửi...' : `Rút tiền mặt ${vnd(availableVnd)}`}
           </Button>
+          {onVoucher && (
+            <Button
+              onClick={onVoucher}
+              disabled={!canPayout || submitting}
+              variant="outline"
+            >
+              {submitting ? 'Đang xử lý...' : 'Đổi voucher dùng trong sản phẩm'}
+            </Button>
+          )}
         </div>
+        {onVoucher && (
+          <p className="text-xs text-muted-foreground">
+            Rút tiền mặt: có thể bị khấu trừ 10% thuế khi ≥ 2tr/lần (cần khai báo thuế).
+            Đổi voucher: nhận mã giảm giá dùng khi mua dịch vụ, không cần thủ tục thuế.
+          </p>
+        )}
         {!canPayout && isActive && (
-          <p className="text-xs text-muted-foreground">Cần đạt {vnd(minPayout)} mới được rút.</p>
+          <p className="text-xs text-muted-foreground">Tối thiểu {vnd(minPayout)} mới được rút.</p>
         )}
         {msg && (
-          <p className={`text-sm ${msg.ok ? 'text-green-400' : 'text-rose-300'}`} role="status">
+          <p className={`text-sm ${msg.ok ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-300'}`} role="status">
             {msg.text}
           </p>
         )}

@@ -43,3 +43,14 @@ export function getVietnamDateParts(date: Date = new Date()): {
     Number(parts.find((p) => p.type === name)?.value ?? 0);
   return { year: get('year'), month: get('month'), day: get('day') };
 }
+
+/**
+ * Format an ISO date (YYYY-MM-DD) as vi-VN DD/MM/YYYY for display.
+ * Returns the input unchanged on a parse miss (safe on '' / partial values).
+ * Canonical VN-facing date formatter — prefer this over inline regexes so
+ * birth/target dates never surface as raw ISO ("1990-05-15") to users.
+ */
+export function formatVnDate(iso: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : iso;
+}

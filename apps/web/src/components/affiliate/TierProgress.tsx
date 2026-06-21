@@ -1,6 +1,11 @@
 /**
- * TierProgress — bronze/silver/gold/platinum progress bar.
+ * TierProgress — bronze/silver/gold/platinum recognition progress bar.
  * Consumed by /affiliate/dashboard.
+ *
+ * Note: hoa hồng là một mức cố định cho mọi cấp (30% tháng đầu / 10% các
+ * tháng sau). Cấp chỉ là ghi nhận cột mốc số lượt giới thiệu, KHÔNG đổi tỉ
+ * lệ hoa hồng. Vì vậy widget chỉ hiển thị tiến độ cột mốc, không hiển thị
+ * tỉ lệ theo cấp.
  */
 
 'use client';
@@ -29,10 +34,6 @@ interface Props {
   tiers: Tier[];
 }
 
-function pct(rate: number) {
-  return `${Math.round(rate * 100)}%`;
-}
-
 export function TierProgress({ tier, tiers }: Props) {
   const c = tier.current;
   return (
@@ -54,12 +55,12 @@ export function TierProgress({ tier, tiers }: Props) {
         <div>
           <div className="mb-1 flex justify-between text-xs text-muted-foreground">
             <span>
-              Hoa hồng: <b className="text-gold">{pct(c.commission_first)}</b> tháng đầu ·{' '}
-              <b className="text-gold">{pct(c.commission_recurring)}</b> recurring
+              Hoa hồng: <b className="text-gold">30%</b> tháng đầu ·{' '}
+              <b className="text-gold">10%</b> các tháng sau (một mức cho mọi cấp)
             </span>
             {tier.next && (
               <span>
-                Còn <b>{tier.conversions_to_next}</b> conversion lên{' '}
+                Còn <b>{tier.conversions_to_next}</b> lượt giới thiệu lên{' '}
                 <b style={{ color: tier.next.badge_color }}>{tier.next.name}</b>
               </span>
             )}
@@ -92,10 +93,7 @@ export function TierProgress({ tier, tiers }: Props) {
                   {active && <span className="text-[10px] text-gold">Hiện tại</span>}
                 </div>
                 <div className="mt-1 text-muted-foreground">
-                  ≥ {t.min_monthly_conversions} conv/tháng
-                </div>
-                <div className="text-muted-foreground">
-                  {pct(t.commission_first)} / {pct(t.commission_recurring)}
+                  ≥ {t.min_monthly_conversions} lượt giới thiệu/tháng
                 </div>
               </div>
             );

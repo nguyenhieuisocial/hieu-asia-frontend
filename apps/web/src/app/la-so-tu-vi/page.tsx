@@ -3,6 +3,7 @@ import { RelatedTools } from '@/components/tools/RelatedTools';
 import { LaSoChecker } from '@/components/la-so-tu-vi/LaSoChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
@@ -143,8 +144,8 @@ export default async function LaSoTuViPage({
               cùng <strong>tam hợp</strong> (hai cung cách 4 cung) và <strong>cung xung chiếu</strong> (cung
               đối diện). Ví dụ, đọc cung Mệnh phải xét chung Quan Lộc + Tài Bạch (tam hợp) và Thiên Di (xung
               chiếu) — bốn cung này tạo thành &ldquo;tam phương tứ chính&rdquo;. Từ các chính tinh hội về Mệnh,
-              ta nhận ra <strong>cách cục</strong> (Sát Phá Tham, Cơ Nguyệt Đồng Lương, Tử Phủ Vũ Tướng, Cự
-              Nhật) — khuôn hình thiên hướng của lá số. Khi bạn bấm chọn một cung ở trên, các cung trong tam
+              ta nhận ra <strong>cách cục</strong> (Sát Phá Tham, Cơ Nguyệt Đồng Lương, Tử Phủ Vũ Tướng, Tử
+              Phủ Đồng Cung, Cự Cơ Đồng Cung…) — khuôn hình thiên hướng của lá số. Khi bạn bấm chọn một cung ở trên, các cung trong tam
               phương tứ chính sẽ được tô sáng để dễ đọc.
             </p>
           </section>
@@ -173,6 +174,20 @@ export default async function LaSoTuViPage({
                 </div>
               ))}
             </dl>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+              Nhận nhắc theo mùa
+            </h2>
+            <div className="mt-4">
+              <OccasionLeadCapture
+                source="la-so-tu-vi"
+                capturedEvent="lead_capture_la_so_tu_vi"
+                blurb="Để lại email, chúng tôi báo khi có nội dung mới theo mùa cho lá số của bạn: tử vi năm mới, sao hạn, ngày tốt. Thi thoảng thôi, không spam."
+                cta="Nhận nhắc"
+              />
+            </div>
           </section>
 
           <RelatedTools

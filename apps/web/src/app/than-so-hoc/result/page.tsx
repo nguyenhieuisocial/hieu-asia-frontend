@@ -27,6 +27,12 @@ import { KARMIC_DEBT, KARMIC_LESSONS } from '@/lib/than-so-hoc-karmic';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
+/** Format an ISO birth date (YYYY-MM-DD) as vi-VN DD/MM/YYYY; input on no-match. */
+function formatVnDate(iso: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : iso;
+}
+
 interface NumberCard {
   number: number;
   name: string;
@@ -127,7 +133,7 @@ export default function ThanSoHocResultPage() {
       }
       description={
         data
-          ? `Phân tích cho ${data.input.full_name} · Sinh ngày ${data.input.birth_date}`
+          ? `Phân tích cho ${data.input.full_name} · Sinh ngày ${formatVnDate(data.input.birth_date)}`
           : 'Phân tích con số chủ đạo theo phương pháp Pythagoras — đường đời, thiên hướng, linh hồn và chu kỳ đỉnh cao.'
       }
       breadcrumb={BREADCRUMB}
@@ -432,7 +438,7 @@ function ResultActions({ data }: { data: ThanSoHocResult }) {
   const onCopy = async () => {
     const lines = [
       `Bản đồ Thần Số Học — ${data.input.full_name}`,
-      `Sinh ngày: ${data.input.birth_date}`,
+      `Sinh ngày: ${formatVnDate(data.input.birth_date)}`,
       `Đường đời: ${data.life_path.number} (${data.life_path.name})`,
       `Số biểu đạt: ${data.expression.number} · Linh hồn: ${data.soul_urge.number} · Tính cách: ${data.personality.number}`,
       `Năm cá nhân ${data.input.current_year}: ${data.personal_year.number}`,

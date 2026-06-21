@@ -573,7 +573,7 @@ function FactorList({ factors }: { factors: Factor[] }) {
           <span
             className={
               f.weight > 0
-                ? 'font-mono text-sm text-emerald-400'
+                ? 'font-mono text-sm text-emerald-700 dark:text-emerald-400'
                 : f.weight < 0
                   ? 'font-mono text-sm text-rose-400'
                   : 'font-mono text-sm text-foreground/40'

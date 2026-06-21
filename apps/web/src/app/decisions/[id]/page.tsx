@@ -389,7 +389,7 @@ export default function DecisionBriefPage() {
           <section aria-labelledby="caveats" className="mb-12">
             <h2
               id="caveats"
-              className="mb-3 font-mono text-xs uppercase tracking-[0.32em] text-amber-400/80"
+              className="mb-3 font-mono text-xs uppercase tracking-[0.32em] text-amber-300"
             >
               Lưu ý
             </h2>

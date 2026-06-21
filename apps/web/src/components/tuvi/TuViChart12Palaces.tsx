@@ -45,7 +45,12 @@ function StarPill({ star }: { star: { name: string; brightness?: string; mutagen
     >
       {star.name}
       {star.mutagen && (
-        <span className="rounded bg-gold/20 px-1 text-[9px] text-gold">{star.mutagen[0]}</span>
+        <span
+          title={`Hóa ${star.mutagen}`}
+          className="rounded bg-gold/20 px-1 text-[9px] text-gold"
+        >
+          {star.mutagen}
+        </span>
       )}
     </span>
   );
@@ -107,7 +112,7 @@ function PalaceDetail({ palace }: { palace: TuViPalace }) {
           </p>
           <h3 className="mt-1 font-heading text-2xl font-bold text-foreground">Cung {palace.name}</h3>
           {palace.isBodyPalace && (
-            <p className="mt-1 text-xs text-purple-200">
+            <p className="mt-1 text-xs text-purple-700 dark:text-purple-50">
               Đây cũng là Cung Thân — phần thể hiện hành động cụ thể trong đời.
             </p>
           )}

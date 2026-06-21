@@ -17,6 +17,7 @@
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
+import { getSessionFromRequest } from '@/lib/reasoning/session-auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -43,6 +44,19 @@ export async function POST(
   const isMaster = req.nextUrl.searchParams.get('doc') === 'master';
   const docQS = isMaster ? '?doc=master' : '';
 
+  // A reading created while the user was anonymous is stored under anon_<uuid>,
+  // not the auth uuid the JWT carries. Forward the linked anon id so the worker's
+  // ownership check accepts it (same anon/auth bridge as reading-list + GDPR);
+  // otherwise a paid-while-anon-then-login user gets 403 on their own PDF.
+  // Best-effort: a non-anon reading still works without it.
+  let linkedAnonId: string | null = null;
+  try {
+    const session = await getSessionFromRequest(req);
+    linkedAnonId = session?.linkedAnonId ?? null;
+  } catch {
+    /* best-effort — worker still handles readings owned by the auth uuid */
+  }
+
   try {
     // 1. Worker renders via Cloudflare Browser Rendering → R2 and returns a fresh
     //    signed URL (it enforces auth + ownership + is_paid).
@@ -51,6 +65,7 @@ export async function POST(
       {
         method: 'POST',
         headers: { 'content-type': 'application/json', authorization: authz },
+        body: JSON.stringify(linkedAnonId ? { user_id_2: linkedAnonId } : {}),
         cache: 'no-store',
       },
     );

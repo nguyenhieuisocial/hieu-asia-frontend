@@ -55,6 +55,11 @@ function fmtMs(ms: number | null | undefined): string {
   return `${Math.round(ms).toLocaleString('vi-VN')} ms`;
 }
 
+function fmtPct(pct: number | null | undefined): string {
+  if (typeof pct !== 'number' || Number.isNaN(pct)) return '—';
+  return `${pct.toFixed(2)}%`;
+}
+
 export default function InfraAiGatewayPage() {
   const query = useQuery({
     queryKey: ['infra', 'ai-gateway'],
@@ -149,7 +154,7 @@ export default function InfraAiGatewayPage() {
                             {fmtMs(r.latency_p95_ms)}
                           </td>
                           <td className="px-4 py-2.5 text-right tabular-nums text-muted-foreground">
-                            {r.error_rate_pct.toFixed(2)}%
+                            {fmtPct(r.error_rate_pct)}
                           </td>
                           <td className="max-w-[14rem] truncate px-4 py-2.5 text-xs text-muted-foreground">
                             {topError ? (

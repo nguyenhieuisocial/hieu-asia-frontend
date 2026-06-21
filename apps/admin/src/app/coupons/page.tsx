@@ -3,12 +3,15 @@
 /**
  * /admin/coupons — Coupon CRUD (Postgres `hieu_asia.coupons`).
  *
- * - GET  /api/admin/coupons         → list
- * - POST /api/admin/coupons         → create (code/discount_pct/valid_from?/valid_to?/max_uses?/notes?)
- * - POST /api/admin/coupons/revoke  → revoke ({code})
+ * - GET   /api/admin/coupons         → list
+ * - POST  /api/admin/coupons         → create (code/discount_pct/valid_from?/valid_to?/max_uses?/notes?)
+ * - PATCH /api/admin/coupons/:code   → edit a live coupon (discount_pct/valid_to/max_uses/notes)
+ * - POST  /api/admin/coupons/revoke  → revoke ({code})
  *
- * No edit action in v1 — match brief. Empty state shows worker note when
- * the table isn't provisioned yet.
+ * Edit lets an admin extend/adjust a running promo in place (no revoke+recreate,
+ * which would break a code customers already saved). Revoked coupons are terminal
+ * and not editable; an expired coupon CAN be edited (e.g. push out valid_to to
+ * revive it). Empty state shows worker note when the table isn't provisioned yet.
  */
 
 import * as React from 'react';
@@ -31,7 +34,7 @@ import {
   cn,
   toast,
 } from '@hieu-asia/ui';
-import { Ticket, Plus, ShieldAlert, Trash2, Search, Percent, CheckCircle2, XCircle, Download } from 'lucide-react';
+import { Ticket, Plus, ShieldAlert, Trash2, Search, Percent, CheckCircle2, XCircle, Download, Pencil } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
@@ -133,6 +136,25 @@ async function revokeCoupon(code: string): Promise<void> {
   if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
 }
 
+interface EditInput {
+  discount_pct: number;
+  // null = clear the column (unlimited uses / never expires / no note).
+  max_uses: number | null;
+  valid_to: string | null; // 'YYYY-MM-DD' from the date input, or null
+  notes: string | null;
+}
+
+async function updateCoupon(code: string, input: EditInput): Promise<Coupon> {
+  const r = await fetch(`/api/admin/coupons/${encodeURIComponent(code)}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  const data = await r.json().catch(() => ({ ok: false, error: `HTTP ${r.status}` }));
+  if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
+  return data.coupon as Coupon;
+}
+
 export default function CouponsPage() {
   const qc = useQueryClient();
   const { data, isLoading, error } = useQuery({
@@ -221,6 +243,41 @@ export default function CouponsPage() {
     },
   });
 
+  // -- Edit dialog ------------------------------------------------------------
+  const [editCode, setEditCode] = React.useState<string | null>(null);
+  const [editForm, setEditForm] = React.useState<EditInput>({
+    discount_pct: 10,
+    max_uses: null,
+    valid_to: null,
+    notes: null,
+  });
+
+  function openEdit(c: Coupon) {
+    setEditForm({
+      discount_pct: c.discount_pct,
+      max_uses: c.max_uses ?? null,
+      // ISO timestamp → 'YYYY-MM-DD' for the <input type="date">.
+      valid_to: c.valid_to ? c.valid_to.slice(0, 10) : null,
+      notes: c.notes ?? null,
+    });
+    setEditCode(c.code);
+  }
+
+  const editMut = useMutation({
+    mutationFn: ({ code, input }: { code: string; input: EditInput }) => updateCoupon(code, input),
+    onSuccess: (c) => {
+      trackAdminMutation('coupons.update', 'success');
+      toast.success('Đã cập nhật coupon', { description: c.code });
+      qc.invalidateQueries({ queryKey: ['admin', 'coupons'] });
+      setEditCode(null);
+    },
+    onError: (e) => {
+      const msg = (e as Error).message;
+      trackAdminMutation('coupons.update', 'failure', { error: msg.slice(0, 200) });
+      toast.error('Cập nhật thất bại', { description: msg });
+    },
+  });
+
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!form.code || !form.discount_pct) {
@@ -232,6 +289,16 @@ export default function CouponsPage() {
       return;
     }
     createMut.mutate(form);
+  }
+
+  function onEditSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!editCode) return;
+    if (editForm.discount_pct < 1 || editForm.discount_pct > 100) {
+      toast.error('Discount % phải nằm 1–100');
+      return;
+    }
+    editMut.mutate({ code: editCode, input: editForm });
   }
 
   function onRevoke(code: string) {
@@ -269,7 +336,7 @@ export default function CouponsPage() {
     <div className="space-y-6">
       <PageHeader
         title="Coupons"
-        description="Mã giảm giá kích hoạt tại checkout. Hỗ trợ tạo + revoke; edit không trong v1."
+        description="Mã giảm giá kích hoạt tại checkout. Tạo, sửa (mức giảm / hạn / lượt) và thu hồi."
         icon={<Ticket className="h-5 w-5" />}
         badge={
           coupons.length > 0 ? (
@@ -499,17 +566,34 @@ export default function CouponsPage() {
                           {fmtDate(c.created_at)}
                         </td>
                         <td className="px-3 py-2 text-right">
-                          {c.status === 'active' ? (
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              disabled={revokeMut.isPending}
-                              onClick={() => onRevoke(c.code)}
-                              className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          ) : null}
+                          <div className="flex items-center justify-end gap-1">
+                            {c.status !== 'revoked' && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                disabled={editMut.isPending}
+                                onClick={() => openEdit(c)}
+                                aria-label={`Sửa ${c.code}`}
+                                title="Sửa coupon"
+                                className="text-gold hover:bg-gold/10"
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                            )}
+                            {c.status === 'active' && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                disabled={revokeMut.isPending}
+                                onClick={() => onRevoke(c.code)}
+                                aria-label={`Thu hồi ${c.code}`}
+                                title="Thu hồi coupon"
+                                className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     );
@@ -630,6 +714,80 @@ export default function CouponsPage() {
               </Button>
               <Button type="submit" disabled={createMut.isPending}>
                 {createMut.isPending ? 'Đang tạo…' : 'Tạo coupon'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={editCode !== null} onOpenChange={(o) => (o ? null : setEditCode(null))}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>
+              Sửa coupon <span className="font-mono text-gold">{editCode}</span>
+            </DialogTitle>
+            <DialogDescription>
+              Đổi mức giảm / hạn dùng / lượt mà không phải thu hồi rồi tạo lại — mã khách đã lưu vẫn dùng được.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={onEditSubmit} className="space-y-4 py-2">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="edit-pct">Giảm (%)</Label>
+                <Input
+                  id="edit-pct"
+                  type="number"
+                  min={1}
+                  max={100}
+                  value={editForm.discount_pct}
+                  onChange={(e) => setEditForm({ ...editForm, discount_pct: Number(e.target.value) })}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-max">Max uses</Label>
+                <Input
+                  id="edit-max"
+                  type="number"
+                  min={1}
+                  placeholder="vô hạn"
+                  value={editForm.max_uses ?? ''}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      max_uses: e.target.value ? Number(e.target.value) : null,
+                    })
+                  }
+                />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="edit-to">Hết hạn</Label>
+              <Input
+                id="edit-to"
+                type="date"
+                value={editForm.valid_to ?? ''}
+                onChange={(e) => setEditForm({ ...editForm, valid_to: e.target.value || null })}
+              />
+              <p className="mt-1 font-mono text-[10px] text-muted-foreground">
+                Để trống = không hết hạn. Đặt ngày tương lai cho coupon đã hết hạn để dùng lại.
+              </p>
+            </div>
+            <div>
+              <Label htmlFor="edit-notes">Ghi chú</Label>
+              <Input
+                id="edit-notes"
+                placeholder="Promo Tết 2026"
+                value={editForm.notes ?? ''}
+                onChange={(e) => setEditForm({ ...editForm, notes: e.target.value || null })}
+              />
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setEditCode(null)}>
+                Huỷ
+              </Button>
+              <Button type="submit" disabled={editMut.isPending}>
+                {editMut.isPending ? 'Đang lưu…' : 'Lưu thay đổi'}
               </Button>
             </DialogFooter>
           </form>

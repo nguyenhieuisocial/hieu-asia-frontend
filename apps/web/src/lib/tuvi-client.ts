@@ -9,7 +9,7 @@
  *   - Normalizes hour input (0–23) regardless of upstream timeIndex (0–12).
  */
 
-const API_BASE = process.env.NEXT_PUBLIC_HIEU_API_URL ?? 'https://api.hieu.asia';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
 export interface TuViStar {
   name: string;
@@ -150,6 +150,31 @@ export interface TuViHoroscope {
 }
 
 /**
+ * Cách cục (格局) — a named chart pattern detected server-side from the real
+ * iztro chart (deterministic, grounded). Replaces the old client-side guess.
+ */
+export interface CachCuc {
+  id: string;
+  name: string;
+  nameHan?: string;
+  cung: string;
+  polarity: 'cát' | 'hung' | 'trung' | 'tùy';
+  meaning: string;
+  source?: string;
+}
+
+/**
+ * Tuần Không (旬空) — cung "không vong", an theo can-chi năm sinh (luật thống nhất).
+ * Yếu tố rất Việt mà iztro (gốc Hoa) không xuất ra; tính server-side, deterministic.
+ */
+export interface TuanKhong {
+  branches: string[];
+  palaces: Array<{ name: string; branch: string }>;
+  yearPillar: string;
+  note: string;
+}
+
+/**
  * POST /tools/tuvi-v2 with `horoscope:true` — returns the natal chart plus the
  * time-flow overlay (đại vận / lưu niên) for `targetDate`. Powers "vận năm nay"
  * (yearly Tứ Hóa) on the free chart page. Not cached: the result depends on the
@@ -157,7 +182,7 @@ export interface TuViHoroscope {
  */
 export async function castTuViHoroscope(
   input: CastChartInput & { targetDate?: string },
-): Promise<{ chart: TuViChart; horoscope: TuViHoroscope | null }> {
+): Promise<{ chart: TuViChart; horoscope: TuViHoroscope | null; cachCuc: CachCuc[]; tuanKhong: TuanKhong | null }> {
   const target =
     input.targetDate ??
     (() => {
@@ -192,12 +217,19 @@ export async function castTuViHoroscope(
     ok: boolean;
     chart?: TuViChart;
     horoscope?: TuViHoroscope;
+    cachCuc?: CachCuc[];
+    tuanKhong?: TuanKhong | null;
     error?: string;
   };
   if (!data.ok || !data.chart) {
     throw new Error(data.error ?? 'Tử Vi horoscope fetch failed');
   }
-  return { chart: data.chart, horoscope: data.horoscope ?? null };
+  return {
+    chart: data.chart,
+    horoscope: data.horoscope ?? null,
+    cachCuc: Array.isArray(data.cachCuc) ? data.cachCuc : [],
+    tuanKhong: data.tuanKhong && Array.isArray(data.tuanKhong.branches) ? data.tuanKhong : null,
+  };
 }
 
 /**

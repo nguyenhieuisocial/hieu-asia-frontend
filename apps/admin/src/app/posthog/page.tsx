@@ -21,13 +21,26 @@
 
 import Link from 'next/link';
 import { cn } from '@hieu-asia/ui';
-import { Activity, Compass, Gauge, MousePointerClick, Radio, Trophy } from 'lucide-react';
+import {
+  Activity,
+  Clapperboard,
+  Compass,
+  Database,
+  Flame,
+  Gauge,
+  MousePointerClick,
+  Radio,
+  Trophy,
+} from 'lucide-react';
 import OverviewPanel from '@/components/admin/analytics/OverviewPanel';
 import CohortsPanel from '@/components/admin/analytics/CohortsPanel';
 import WebVitalsPanel from '@/components/admin/analytics/WebVitalsPanel';
 import StickyCtaPanel from '@/components/admin/analytics/StickyCtaPanel';
 import LiveEventsPanel from '@/components/admin/analytics/LiveEventsPanel';
 import ToolScorecardPanel from '@/components/admin/analytics/ToolScorecardPanel';
+import ExplorerPanel from '@/components/admin/analytics/ExplorerPanel';
+import SessionReplayPanel from '@/components/admin/analytics/SessionReplayPanel';
+import HeatmapPanel from '@/components/admin/analytics/HeatmapPanel';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 60;
@@ -43,6 +56,11 @@ const TABS = [
   { id: 'web-vitals', label: 'Web Vitals', Icon: Gauge },
   { id: 'sticky-cta', label: 'Sticky CTA', Icon: MousePointerClick },
   { id: 'live-events', label: 'Sự kiện trực tiếp', Icon: Radio },
+  // Native, secure in-admin replacements for PostHog's own tools (no iframe,
+  // no public share link — all read server-side with the key kept on the server).
+  { id: 'explorer', label: 'Bảng hỏi dữ liệu', Icon: Database },
+  { id: 'replay', label: 'Xem lại phiên', Icon: Clapperboard },
+  { id: 'heatmap', label: 'Bản đồ nhiệt', Icon: Flame },
 ] as const;
 
 type TabId = (typeof TABS)[number]['id'];
@@ -92,6 +110,9 @@ export default async function PostHogHubPage({
       {active === 'web-vitals' && <WebVitalsPanel />}
       {active === 'sticky-cta' && <StickyCtaPanel />}
       {active === 'live-events' && <LiveEventsPanel />}
+      {active === 'explorer' && <ExplorerPanel />}
+      {active === 'replay' && <SessionReplayPanel />}
+      {active === 'heatmap' && <HeatmapPanel />}
     </div>
   );
 }

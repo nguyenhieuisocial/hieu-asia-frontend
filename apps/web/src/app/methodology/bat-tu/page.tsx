@@ -206,7 +206,7 @@ export default function BatTuMethodologyPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
       />
-      <main id="main-content" className="relative pt-16">
+      <main id="main-content" className="relative pt-16 methodology-a11y">
         {/* Hero */}
         <section className="relative overflow-hidden">
           <div
