@@ -38,6 +38,25 @@ export interface AdminProfile {
 // "forever" sentinel, so 0 is not a valid option.
 export type RetentionDays = 30 | 90 | 365 | 730;
 
+/**
+ * Operator-editable alert thresholds. Mirrors the backend
+ * /admin/settings/alert-thresholds contract 1:1 (six numeric fields).
+ * These were previously hardcoded in the worker; the backend now persists
+ * them in KV so a solo operator can tune alerting without a redeploy.
+ *
+ * Defaults: errors_per_hour=2, llm_cost_usd_per_day=50,
+ * signup_drop_ratio=0.5, ai_balance_usd=3, queue_warn_seconds=3600,
+ * queue_critical_seconds=14400.
+ */
+export interface AlertThresholds {
+  errors_per_hour: number;
+  llm_cost_usd_per_day: number;
+  signup_drop_ratio: number;
+  ai_balance_usd: number;
+  queue_warn_seconds: number;
+  queue_critical_seconds: number;
+}
+
 export const SCOPE_OPTIONS = [
   { id: 'admin:read', label: 'Đọc dữ liệu admin' },
   { id: 'admin:write', label: 'Ghi mutation admin' },
