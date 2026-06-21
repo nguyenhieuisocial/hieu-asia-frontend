@@ -164,3 +164,22 @@ export function trackRecord(list: SavedPrediction[]): TrackRecord {
   const pending = list.filter((p) => p.outcome === 'pending').length;
   return { total: list.length, occurred, absent, pending, resolved: occurred + absent };
 }
+
+/**
+ * Split predictions into those that can be judged now (their year has started)
+ * and upcoming ones. You can't honestly mark a FUTURE year's emphasis as
+ * "happened" yet — so the UI only offers Đã/Không for `ready`. `currentYear` is
+ * injected (caller passes the VN year — the canh-giờ/almanac clock, not the
+ * device clock).
+ */
+export function partitionByYear(
+  list: SavedPrediction[],
+  currentYear: number,
+): { ready: SavedPrediction[]; upcoming: SavedPrediction[] } {
+  const ready: SavedPrediction[] = [];
+  const upcoming: SavedPrediction[] = [];
+  for (const p of list) {
+    (p.targetYear <= currentYear ? ready : upcoming).push(p);
+  }
+  return { ready, upcoming };
+}
