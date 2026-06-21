@@ -62,6 +62,46 @@ function StatusDot({ s }: { s: Live }) {
   return <Circle className={cn('h-3.5 w-3.5 shrink-0', s === 'loading' ? 'animate-pulse text-muted-foreground/40' : 'text-muted-foreground/30')} aria-label="chưa rõ" />;
 }
 
+// "Chạy ngay" — trigger a safe scheduled job on demand via POST /admin/cron/run
+// (worker allowlists idempotent check/monitor/notify/reconcile jobs only).
+function RunJobButton({ job }: { job: string }) {
+  const [state, setState] = React.useState<'idle' | 'running' | 'ok' | 'err'>('idle');
+  const run = React.useCallback(async () => {
+    setState('running');
+    try {
+      const r = await fetch(`${PROXY}/admin/cron/run`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ job }),
+        cache: 'no-store',
+      });
+      const j = (await r.json().catch(() => ({}))) as { ok?: boolean };
+      setState(r.ok && j?.ok ? 'ok' : 'err');
+    } catch {
+      setState('err');
+    }
+    setTimeout(() => setState('idle'), 4000);
+  }, [job]);
+  return (
+    <button
+      type="button"
+      onClick={run}
+      disabled={state === 'running'}
+      className={cn(
+        'shrink-0 rounded border px-1.5 py-0.5 text-[10px] font-medium transition-colors disabled:opacity-60',
+        state === 'ok'
+          ? 'border-jade-600/40 text-jade-700 dark:text-jade-50'
+          : state === 'err'
+            ? 'border-red-500/40 text-red-500'
+            : 'border-gold/30 text-gold hover:bg-gold/10',
+      )}
+      title="Chạy tác vụ này ngay (không đợi lịch)"
+    >
+      {state === 'running' ? 'Đang chạy…' : state === 'ok' ? '✓ đã chạy' : state === 'err' ? '✗ lỗi' : 'Chạy ngay'}
+    </button>
+  );
+}
+
 // Turn `(/path)` references inside a runbook/flow step into a clickable Link to
 // that admin page — so an operator goes map → runbook → one click → the fix page.
 function linkifyAdminPaths(text: string): React.ReactNode {
@@ -378,14 +418,17 @@ export default function ArchitecturePage() {
                 </div>
                 <ul className="space-y-1.5 border-t border-border/50 pt-2">
                   {group.ops.map((op) => (
-                    <li key={op.fn} className="text-xs text-foreground/85">
-                      <span className="font-medium text-foreground">{op.name}</span>
-                      {op.topic && (
-                        <span className="ml-1.5 rounded bg-gold/10 px-1 py-px font-mono text-[9px] text-gold">
-                          {op.topic}
-                        </span>
-                      )}
-                      <span className="text-muted-foreground"> — {op.does}</span>
+                    <li key={op.fn} className="flex items-start justify-between gap-2 text-xs text-foreground/85">
+                      <span className="min-w-0">
+                        <span className="font-medium text-foreground">{op.name}</span>
+                        {op.topic && (
+                          <span className="ml-1.5 rounded bg-gold/10 px-1 py-px font-mono text-[9px] text-gold">
+                            {op.topic}
+                          </span>
+                        )}
+                        <span className="text-muted-foreground"> — {op.does}</span>
+                      </span>
+                      {group.runnable && <RunJobButton job={op.fn} />}
                     </li>
                   ))}
                 </ul>

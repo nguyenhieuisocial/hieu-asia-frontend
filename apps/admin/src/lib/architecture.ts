@@ -291,6 +291,10 @@ export interface ScheduleGroup {
   schedule: string; // human-readable
   cron: string; // cron expression
   ops: ScheduledOp[];
+  /** True if every op here is in the worker's run-on-demand allowlist
+   * (idempotent checks/monitors/notifies/reconcile). Digests + nightly eval
+   * are NOT runnable on tap (spam / AI cost). Mirrors /admin/cron/run. */
+  runnable?: boolean;
 }
 
 export const SCHEDULED_OPS: ScheduleGroup[] = [
@@ -298,6 +302,7 @@ export const SCHEDULED_OPS: ScheduleGroup[] = [
     id: 'q15',
     schedule: 'Mỗi 15 phút',
     cron: '*/15 * * * *',
+    runnable: true,
     ops: [
       {
         name: 'Đối soát mở-khóa trả-phí',
@@ -310,6 +315,7 @@ export const SCHEDULED_OPS: ScheduleGroup[] = [
     id: 'hourly',
     schedule: 'Mỗi giờ',
     cron: '0 * * * *',
+    runnable: true,
     ops: [
       { name: 'Dò bất thường', fn: 'checkAnomalies', does: 'Lỗi / đăng-ký / chi-phí-AI tăng đột-biến so với nền.' },
       { name: 'Khách mới', fn: 'notifyNewUsers', does: 'Báo có người dùng mới đăng-ký.', topic: 'user' },
