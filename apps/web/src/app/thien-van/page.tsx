@@ -5,6 +5,7 @@ import { FaqSection } from '@/components/seo/FaqSection';
 import { breadcrumb, webPage, faqPage, type FaqItem } from '@/lib/seo/jsonld';
 import { SKY_EVENTS, kindMeta, type SkyEvent } from '@/lib/sky-events';
 import { LunarEclipseDiagram } from '@/components/thien-van/LunarEclipseDiagram';
+import { SkyTimeline } from '@/components/thien-van/SkyTimeline';
 
 export const metadata: Metadata = {
   title: 'Lịch thiên văn 2026–2030 — nguyệt thực, nhật thực, phân & chí (giờ VN) | hieu.asia',
@@ -90,6 +91,14 @@ export default function ThienVanPage() {
             giờ VN) — quan sát được tại Việt Nam. Toàn bộ ngày giờ dưới đây{' '}
             <strong>tính bằng thư viện thiên văn mã-nguồn-mở</strong> (đối chiếu được), quy về giờ Việt Nam.
           </p>
+        </section>
+
+        <section className="rounded-2xl border border-gold/20 bg-card/40 p-5 sm:p-6">
+          <h2 className="font-heading text-xl font-semibold text-foreground">Dòng thời gian 2026–2030</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Toàn cảnh các sự kiện theo thời gian — rê chuột vào mỗi dấu để xem chi tiết.
+          </p>
+          <SkyTimeline className="mt-3 block w-full" />
         </section>
 
         <section>
