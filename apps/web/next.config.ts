@@ -70,10 +70,9 @@ const nextConfig: NextConfig = {
     ];
   },
   async rewrites() {
-    return [
-      // Legacy /favicon.ico requests → Next.js app/icon.tsx (covers older crawlers).
-      { source: '/favicon.ico', destination: '/icon' },
-    ];
+    // (Removed dead /favicon.ico → /icon rewrite: app/icon route no longer
+    // exists; public/favicon.ico is served directly. Site-structure audit.)
+    return [];
   },
   async headers() {
     // Content-Security-Policy — allows: self + Vercel/Supabase + Cloudflare API + PostHog + Sentry + fonts.
