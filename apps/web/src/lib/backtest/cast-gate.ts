@@ -31,7 +31,15 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
  * `now` is injectable for tests.
  */
 export async function awaitCastSlot(now: () => number = Date.now): Promise<void> {
-  const delay = castDelayMs(now(), lastCastAt);
-  if (delay > 0) await sleep(delay);
-  lastCastAt = now();
+  // Reserve this slot SYNCHRONOUSLY (before any await), so a second caller that
+  // starts while we sleep sees the updated `lastCastAt` and queues AFTER us.
+  // backtestChart + forecastTimeline can run concurrently (separate loading
+  // states) — if both read a stale shared `lastCastAt`, they'd sleep the same
+  // delay and fire together, bursting past the worker cap (the exact 1015 this
+  // gate exists to prevent). Writing the reservation before sleeping serialises
+  // overlapping callers into a real queue instead of just spacing off one mark.
+  const startAt = Math.max(now(), lastCastAt + CAST_GAP_MS);
+  lastCastAt = startAt;
+  const wait = startAt - now();
+  if (wait > 0) await sleep(wait);
 }
