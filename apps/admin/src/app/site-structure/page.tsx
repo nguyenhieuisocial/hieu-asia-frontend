@@ -35,6 +35,8 @@ import {
   ChevronDown,
   Network,
   RefreshCw,
+  Unlink,
+  CheckCircle2,
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import {
@@ -45,6 +47,7 @@ import {
   type AppGroupId,
   type SitePageNode,
 } from '@/lib/site-structure';
+import { computeAppBrokenLinks, type AppBrokenLinks } from '@/lib/site-structure-health';
 
 // Heavy (React Flow) — lazy-load only when the "Tương tác" view is shown.
 const SiteMapFlow = dynamic(() => import('@/components/admin/site-structure/SiteMapFlow'), {
@@ -100,6 +103,12 @@ export default function SiteStructurePage() {
     }
     return map;
   }, [group]);
+
+  // Dangling internal links for the selected app (pure, from the dataset).
+  const brokenLinks = React.useMemo(
+    () => (group ? computeAppBrokenLinks(group) : null),
+    [group],
+  );
 
   const urlFor = React.useCallback((route: string) => liveUrlFor(appId, route), [appId]);
 
@@ -190,6 +199,9 @@ export default function SiteStructurePage() {
         })}
       </div>
 
+      {/* Broken internal links — scoped to the selected app */}
+      {brokenLinks && <BrokenLinksSummary report={brokenLinks} urlFor={urlFor} />}
+
       {/* View toggle */}
       <div className="flex items-center justify-end gap-1.5">
         <button
@@ -240,6 +252,76 @@ export default function SiteStructurePage() {
         <DetailTable group={group} filter={filter} setFilter={setFilter} linkedFrom={linkedFrom} urlFor={urlFor} />
       )}
     </div>
+  );
+}
+
+// ── Broken internal links summary ────────────────────────────────────────────
+
+function BrokenLinksSummary({
+  report,
+  urlFor,
+}: {
+  report: AppBrokenLinks;
+  urlFor: (route: string) => string | undefined;
+}) {
+  if (report.count === 0) {
+    return (
+      <Card className="border-emerald-500/30">
+        <CardContent className="flex items-center gap-2 p-3 text-sm">
+          <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" aria-hidden />
+          <span className="text-muted-foreground">Không có liên kết nội bộ hỏng</span>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="border-red-500/30">
+      <CardContent className="p-0">
+        <details className="group" open>
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 hover:bg-red-500/[0.04]">
+            <span className="flex items-center gap-2">
+              <Unlink className="h-4 w-4 shrink-0 text-red-500" aria-hidden />
+              <span className="font-medium text-foreground">Liên kết nội bộ hỏng</span>
+              <span className="rounded bg-red-500/15 px-1.5 py-0.5 font-mono text-[10px] text-red-500">
+                {report.count}
+              </span>
+            </span>
+            <ChevronDown
+              className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180"
+              aria-hidden
+            />
+          </summary>
+          <ul className="divide-y divide-border/50 border-t border-border/50">
+            {report.links.map((link) => {
+              const fromHref = urlFor(link.fromRoute);
+              return (
+                <li
+                  key={`${link.fromRoute}→${link.brokenTarget}`}
+                  className="flex flex-wrap items-center gap-x-1.5 gap-y-1 px-4 py-2 text-[11px]"
+                >
+                  {fromHref ? (
+                    <a
+                      href={fromHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 font-mono font-medium text-gold hover:underline"
+                    >
+                      {link.fromRoute}
+                      <ExternalLink className="h-3 w-3" aria-hidden />
+                    </a>
+                  ) : (
+                    <span className="font-mono font-medium text-foreground">{link.fromRoute}</span>
+                  )}
+                  <ArrowRight className="h-3 w-3 text-muted-foreground" aria-hidden />
+                  <span className="font-mono font-medium text-red-500">{link.brokenTarget}</span>
+                </li>
+              );
+            })}
+          </ul>
+        </details>
+      </CardContent>
+    </Card>
   );
 }
 
