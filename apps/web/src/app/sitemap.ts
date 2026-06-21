@@ -160,6 +160,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/lich-van-nien/ngay-tot-xau`, lastModified: now, changeFrequency: 'daily', priority: 0.6 },
     { url: `${BASE_URL}/reading`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
     { url: `${BASE_URL}/brand`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
+    { url: `${BASE_URL}/thien-van`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
   ];
 
   // Dynamic zodiac daily entries.
