@@ -37,17 +37,20 @@
       "sharp": "^0.34.0",
       "jsonwebtoken": "^9.0.2",
       "dicer": "npm:@fastify/busboy@^3.1.0",
-      "multer": "^2.0.0",
+      "multer": ">=2.2.0",
       "postcss": "^8.5.10",
       "cookie": "^0.7.0",
       "next-auth": "5.0.0-beta.31",
       "tmp": "^0.2.6",
-      "vite": "^7.3.2",
+      "vite": ">=7.3.5 <8",
       "esbuild": "^0.25.0",
       "jszip": "^3.10.1",
       "send": "^0.19.0",
       "serve-static": "^1.16.0",
-      "uuid": "^11.1.1"
+      "uuid": "^11.1.1",
+      "protobufjs": ">=7.6.1 <8",
+      "ws": ">=8.21.0",
+      "form-data": ">=4.0.6"
     }
   }
 }

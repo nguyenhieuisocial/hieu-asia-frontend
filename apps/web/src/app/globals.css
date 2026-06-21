@@ -1,6 +1,28 @@
 @import 'tailwindcss';
 @config '../../tailwind.config.ts';
 
+/* Noto Serif SC — bản RÚT GỌN tự-host (832 chữ Hán + dấu câu thực dùng, ~168KB,
+ * giấy phép OFL). unicode-range giới hạn ở dải CJK → trình duyệt CHỈ tải & dùng
+ * font này cho chữ Hán; toàn bộ chữ Latin/Việt vẫn dùng Be Vietnam Pro. Nguồn:
+ * Google Noto Serif SC (variable) → ép wght=400 → subset đúng glyph dùng. */
+@font-face {
+  font-family: 'Noto Serif SC Han';
+  src: url('/fonts/noto-serif-sc-han.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FF00-FFEF;
+}
+
+/* Chữ Hán đánh dấu lang (卦辞/爻辞 nguyên văn Chu Dịch, v.v.) → font có chân
+ * Noto Serif SC. Rule này KHÔNG nằm trong @layer nên thắng các utility font
+ * (font-heading/Outfit…) vốn không có glyph Hán; phần chữ Việt không bị ảnh
+ * hưởng vì các phần tử này thuần chữ Hán. */
+:lang(zh),
+[lang^='zh'] {
+  font-family: 'Noto Serif SC Han', var(--font-be-vietnam), Georgia, serif;
+}
+
 /*
  * shadcn/ui design tokens — mapped to hieu.asia brand palette.
  * Replace via `pnpm dlx shadcn@latest init` if you want full shadcn theming.
@@ -94,6 +116,11 @@
 
   body {
     @apply font-sans antialiased;
+    /* Be Vietnam Pro cho Latin/Việt; Noto Serif SC (bản rút gọn 832 chữ, OFL)
+     * CHỈ áp cho chữ Hán nhờ unicode-range ở @font-face dưới — để 八字/祿權科忌/
+     * 卦辞 hiện đúng "chữ nho" có chân thay vì rơi về font hệ điều hành. */
+    font-family: var(--font-be-vietnam), 'Noto Serif SC Han', ui-sans-serif, system-ui,
+      -apple-system, 'Segoe UI', Roboto, sans-serif;
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
   }
