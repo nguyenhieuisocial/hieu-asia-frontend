@@ -6,6 +6,9 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+// Gộp (B) 2026-06-21: bê lá số THẬT (đại vận + cung nghề) + Decision Brief từ
+// /lo-trinh/su-nghiep (nay redirect về đây) — giữ khoảnh khắc "thấy lá số mình".
+import { LoTrinhChart } from '@/components/lo-trinh/LoTrinhChart';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 
@@ -328,6 +331,18 @@ export default function TuViNgheNghiepPage() {
                 Xem mẫu báo cáo <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
               </Link>
             </div>
+          </div>
+        </section>
+        <section className="mx-auto max-w-3xl px-6 pb-12">
+          <h2 className="font-heading text-2xl font-semibold text-foreground">
+            Lá số nghề nghiệp của bạn
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Trên là góc nhìn chung. Dưới đây đọc đúng lá số THẬT của bạn — cung Quan Lộc, Tài Bạch,
+            Thiên Di cùng đại vận hiện tại — rồi lập Decision Brief nếu đang phân vân.
+          </p>
+          <div className="mt-5">
+            <LoTrinhChart topic="career" focusPalaces={['Quan Lộc', 'Tài Bạch', 'Thiên Di']} />
           </div>
         </section>
         <div className="mx-auto max-w-6xl px-6 pb-12">

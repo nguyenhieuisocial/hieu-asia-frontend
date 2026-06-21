@@ -76,6 +76,13 @@ const nextConfig: NextConfig = {
       // trang "Cưới hỏi" trọn vẹn (năm cưới + hợp tuổi vợ chồng nhúng sẵn). Trang
       // hợp-tuổi-cưới riêng dồn về đó. (Các loại hợp tuổi khác vẫn ở /hop-tuoi/*.)
       { source: '/hop-tuoi/wedding', destination: '/xem-tuoi-cuoi', permanent: true },
+      // Gộp (B) 2026-06-21: hệ "nhu cầu" /lo-trinh/* trùng nội dung hệ "bộ môn"
+      // /tu-vi-* (tự cạnh tranh từ khóa). Dồn về /tu-vi-* canonical (đã bê lá số
+      // thật + Decision Brief sang đó). GIỮ /lo-trinh (hub) + /lo-trinh/hieu-ban-than
+      // (độc quyền) + /lo-trinh/ke-hoach-nam (evergreen, không có đích tu-vi sạch).
+      { source: '/lo-trinh/su-nghiep', destination: '/tu-vi-nghe-nghiep', permanent: true },
+      { source: '/lo-trinh/tinh-cam', destination: '/tu-vi-tinh-yeu', permanent: true },
+      { source: '/lo-trinh/hang-ngay', destination: '/tu-vi-hom-nay', permanent: true },
     ];
   },
   async rewrites() {

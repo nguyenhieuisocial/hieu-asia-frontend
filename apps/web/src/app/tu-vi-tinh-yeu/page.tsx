@@ -6,6 +6,9 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+// Gộp (B) 2026-06-21: bê lá số THẬT (Phu Thê, Phúc Đức + đại vận) + Decision
+// Brief từ /lo-trinh/tinh-cam (nay redirect về đây).
+import { LoTrinhChart } from '@/components/lo-trinh/LoTrinhChart';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 
@@ -336,6 +339,22 @@ export default function TuViTinhYeuPage() {
               </Link>
             </div>
           </div>
+        </section>
+        <section className="mx-auto max-w-3xl px-6 pb-12">
+          <h2 className="font-heading text-2xl font-semibold text-foreground">
+            Lá số tình cảm của bạn
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Trên là góc nhìn chung. Dưới đây đọc đúng lá số THẬT của bạn — cung Phu Thê, Phúc Đức cùng
+            đại vận hiện tại — rồi lập Decision Brief nếu đang phân vân một mối quan hệ.
+          </p>
+          <div className="mt-5">
+            <LoTrinhChart topic="relationship" focusPalaces={['Phu Thê', 'Phúc Đức']} />
+          </div>
+          <p className="mt-4 rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-xs leading-relaxed text-foreground/80">
+            Nếu bạn đang ở trong mối quan hệ có bạo lực hoặc bị kiểm soát, lá số không phải nơi để cân nhắc
+            ở/đi — hãy tìm hỗ trợ an toàn (Ngôi nhà Bình yên 1900&nbsp;969&nbsp;680). An toàn của bạn trên hết.
+          </p>
         </section>
         <div className="mx-auto max-w-6xl px-6 pb-12">
           <RelatedTools current="/tu-vi-tinh-yeu" />

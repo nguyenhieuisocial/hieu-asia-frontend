@@ -43,6 +43,9 @@ type Route = {
   Icon: typeof Compass;
   framing: string;
   kit: string[];
+  /** Đích thẳng (gộp B): 3 chủ đề trùng trỏ sang trang /tu-vi-* canonical thay
+   *  vì /lo-trinh/<slug> (đã redirect). Bỏ trống = giữ ở /lo-trinh/<slug>. */
+  href?: string;
 };
 
 const ROUTES: Route[] = [
@@ -61,6 +64,7 @@ const ROUTES: Route[] = [
     framing:
       'Bạn đang đứng giữa ngã ba: ở lại, đổi việc, hay tự làm. Bạn cần một góc nhìn tỉnh táo để tách "cảm giác mệt" khỏi "cơ hội thật".',
     kit: ['Cung Quan Lộc + Tài Bạch + Thiên Di', 'Decision Brief cho lựa chọn nghề', 'Đại vận + lưu niên kế hoạch năm'],
+    href: '/tu-vi-nghe-nghiep',
   },
   {
     slug: 'tinh-cam',
@@ -69,6 +73,7 @@ const ROUTES: Route[] = [
     framing:
       'Một mối quan hệ đang nặng, hoặc bạn muốn hiểu kiểu gắn bó của mình và người kia trước khi quyết định bước tiếp.',
     kit: ['Cung Phu Thê + Phúc Đức + Nô Bộc', 'Hợp tuổi & tương hợp', 'Decision Brief cho quan hệ'],
+    href: '/tu-vi-tinh-yeu',
   },
   {
     slug: 'ke-hoach-nam',
@@ -85,6 +90,7 @@ const ROUTES: Route[] = [
     framing:
       'Bạn không cần báo cáo dài — chỉ cần một câu gợi ý đúng buổi sáng, một ngày tốt cho cuộc họp, hoặc một lời nhắc khi vận chuyển pha.',
     kit: ['Tử Vi hôm nay', 'Lịch Vạn Niên + Ngày tốt', 'Telegram bot @hieuasiabot'],
+    href: '/tu-vi-hom-nay',
   },
 ];
 
@@ -161,7 +167,7 @@ export default function LoTrinhHubPage() {
                         </li>
                       ))}
                     </ul>
-                    <Button asChild variant="outline" className="w-full justify-between"><Link href={`/lo-trinh/${r.slug}`}>
+                    <Button asChild variant="outline" className="w-full justify-between"><Link href={r.href ?? `/lo-trinh/${r.slug}`}>
                       
                         Bắt đầu lộ trình
                         <ArrowRight className="ml-2 h-4 w-4" aria-hidden />
