@@ -49,7 +49,7 @@ const DOT: Record<Live, string> = {
   loading: '#9b9384',
 };
 
-function ArchNodeView({ data }: NodeProps<Node<NodeData>>) {
+const ArchNodeView = React.memo(function ArchNodeView({ data }: NodeProps<Node<NodeData>>) {
   const s = data.status;
   return (
     <div
@@ -77,7 +77,7 @@ function ArchNodeView({ data }: NodeProps<Node<NodeData>>) {
       <p className="mt-0.5 line-clamp-2 text-[10px] leading-snug text-muted-foreground">{data.role}</p>
     </div>
   );
-}
+});
 
 const nodeTypes = { arch: ArchNodeView };
 
@@ -168,6 +168,7 @@ export default function SystemMapFlow({ statuses }: SystemMapFlowProps) {
         fitViewOptions={{ padding: 0.15 }}
         minZoom={0.25}
         maxZoom={1.5}
+        onlyRenderVisibleElements
         proOptions={{ hideAttribution: true }}
         nodesConnectable={false}
         nodesDraggable={false}
