@@ -50,6 +50,7 @@ import {
   MessageSquare,
   ServerCog,
   FileText,
+  CalendarDays,
   Lock,
   Plug,
   Tag,
@@ -128,7 +129,10 @@ const NAV_GROUPS: NavGroup[] = [
   {
     id: 'content',
     label: 'Nội dung',
-    items: [{ href: '/content', label: 'Nội dung', Icon: FileText }],
+    items: [
+      { href: '/content', label: 'Nội dung', Icon: FileText },
+      { href: '/content-calendar', label: 'Lịch nội dung', Icon: CalendarDays },
+    ],
   },
   {
     id: 'system',
