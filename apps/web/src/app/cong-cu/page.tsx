@@ -8,6 +8,44 @@ const TOOLS = [
     name: 'Tử Vi',
     desc: 'Luận mệnh theo lá số Tử Vi — 12 cung, 14 chính tinh.',
   },
+  // Đồng bộ catalog (audit cấu trúc 2026-06-21): 6 công cụ trước chỉ có ở
+  // nav/footer mà thiếu ở trang "Tất cả công cụ" — nay đưa đủ.
+  {
+    href: '/tu-vi-hom-nay',
+    emoji: '📅',
+    name: 'Tử Vi hôm nay',
+    desc: 'Vận trình hôm nay theo 12 con giáp — màu sắc, giờ tốt, điều nên/nên tránh.',
+  },
+  {
+    href: '/tu-vi-2026',
+    emoji: '🐎',
+    name: 'Tử Vi 2026',
+    desc: 'Tử Vi năm Bính Ngọ 2026 cho 12 con giáp — công việc, tài lộc, tình cảm.',
+  },
+  {
+    href: '/tu-vi-2027',
+    emoji: '🐐',
+    name: 'Tử Vi 2027',
+    desc: 'Tử Vi năm Đinh Mùi 2027 cho 12 con giáp — sao hạn, vận trình từng tuổi.',
+  },
+  {
+    href: '/dai-van-hien-tai',
+    emoji: '🧭',
+    name: 'Đại vận hiện tại',
+    desc: 'Bạn đang ở đại vận (10 năm) nào — chủ đề lớn của giai đoạn hiện tại.',
+  },
+  {
+    href: '/tinh-menh-cuc',
+    emoji: '🧮',
+    name: 'Tuổi mệnh cục',
+    desc: 'Tính Mệnh và Cục từ ngày giờ sinh — nền tảng để lập lá số Tử Vi.',
+  },
+  {
+    href: '/thien-van',
+    emoji: '🌘',
+    name: 'Lịch thiên văn',
+    desc: 'Nhật thực, nguyệt thực và bốn điểm phân–chí 2026–2030 quan sát tại Việt Nam.',
+  },
   {
     href: '/bat-tu',
     emoji: '🔯',

@@ -67,6 +67,11 @@ const nextConfig: NextConfig = {
       // superseded by /affiliate/*. Temporary (307) pending final delete decision.
       { source: '/partner', destination: '/affiliate', permanent: false },
       { source: '/partner/:path*', destination: '/affiliate', permanent: false },
+      // Consolidate duplicate sample pages → /sample-report is the canonical
+      // public sample (linked everywhere, priority 0.8). /reading/sample-tu-vi
+      // was a teaser that never worked (sits under robots-blocked /reading/, 0
+      // internal links). 308 → /sample-report. (Site-structure audit 2026-06-21.)
+      { source: '/reading/sample-tu-vi', destination: '/sample-report', permanent: true },
     ];
   },
   async rewrites() {
