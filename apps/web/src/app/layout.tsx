@@ -18,6 +18,7 @@ import { PlausibleScript } from '@/components/analytics/PlausibleScript';
 import { PostHogProvider } from '@/components/PostHogProvider';
 import { ConsentBanner } from '@/components/cmp/ConsentBanner';
 import { FloatingMentor } from '@/components/marketing/FloatingMentor';
+import { WebMcpTools } from '@/components/marketing/WebMcpTools';
 import { Toaster } from '@hieu-asia/ui';
 import { AppShell } from '@/components/product/AppShell';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -315,6 +316,11 @@ export default async function RootLayout({
                     experience routes). Surfaces the AI assistant like Bitget's
                     always-present GetAgent. */}
                 <FloatingMentor />
+                {/* WebMCP — registers public read-only free tools with an
+                    in-browser AI agent if the experimental
+                    navigator.modelContext API exists. Feature-detected,
+                    renders null, no-op otherwise. */}
+                <WebMcpTools />
               </LazyMotionProvider>
             </QueryProvider>
             <Toaster />
