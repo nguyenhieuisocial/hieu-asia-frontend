@@ -466,9 +466,9 @@ export const HAO_TU: Record<number, HaoTuLine[]> = {
   54: [
     { line: 1, label: '初九', han: '歸妹以娣，跛能履，征吉。', hanViet: 'quy muội dĩ đễ, bả năng lý, chinh cát.', nghia: 'Gả em gái làm thiếp; người què vẫn bước đi được; tiến lên thì tốt.' },
     { line: 2, label: '九二', han: '眇能視，利幽人之貞。', hanViet: 'miễu năng thị, lợi u nhân chi trinh.', nghia: 'Người chột vẫn nhìn được; lợi cho sự bền chí của người ẩn dật giữ mình ngay thẳng.' },
-    { line: 3, label: '六三', han: '歸妹以須，反歸以娣。', hanViet: 'quy muội dĩ tu, phản quy dĩ đệ', nghia: 'Gả em gái mà phải chờ đợi; quay về làm thiếp thì hơn.' },
+    { line: 3, label: '六三', han: '歸妹以須，反歸以娣。', hanViet: 'quy muội dĩ tu, phản quy dĩ đễ', nghia: 'Gả em gái mà phải chờ đợi; quay về làm thiếp thì hơn.' },
     { line: 4, label: '九四', han: '歸妹愆期，遲歸有時。', hanViet: 'quy muội khiên kỳ, trì quy hữu thì.', nghia: 'Việc gả em gái lỡ kỳ hẹn; gả muộn cũng có thời của nó.' },
-    { line: 5, label: '六五', han: '帝乙歸妹，其君之袂，不如其娣之袂良，月幾望，吉。', hanViet: 'đế ất quy muội, kỳ quân chi mệ, bất như kỳ đễ chi mệ lương, nguyệt cơ vọng, cát.', nghia: 'Vua Đế Ất gả em gái; tay áo của cô dâu chính không đẹp bằng tay áo của người thiếp; trăng gần tròn; tốt.' },
+    { line: 5, label: '六五', han: '帝乙歸妹，其君之袂，不如其娣之袂良，月幾望，吉。', hanViet: 'đế ất quy muội, kỳ quân chi mệ, bất như kỳ đễ chi mệ lương, nguyệt ki vọng, cát.', nghia: 'Vua Đế Ất gả em gái; tay áo của cô dâu chính không đẹp bằng tay áo của người thiếp; trăng gần tròn; tốt.' },
     { line: 6, label: '上六', han: '女承筐无實，士刲羊无血，无攸利。', hanViet: 'nữ thừa khuông vô thực, sĩ khuê dương vô huyết, vô du lợi.', nghia: 'Người con gái bưng giỏ mà không có gì trong giỏ; kẻ sĩ cắt cổ dê mà không có máu; không có gì lợi.' },
   ],
   55: [
@@ -521,10 +521,10 @@ export const HAO_TU: Record<number, HaoTuLine[]> = {
   ],
   61: [
     { line: 1, label: '初九', han: '虞吉，有他不燕。', hanViet: 'ngu cát, hữu tha bất yến.', nghia: 'Liệu định sẵn (giữ lòng chuyên nhất) thì tốt; nếu có lòng khác thì chẳng được yên.' },
-    { line: 2, label: '九二', han: '鳴鶴在陰，其子和之，我有好爵，吾與爾靡之。', hanViet: 'cửu nhị. minh hạc tại âm, kỳ tử hòa chi, ngã hữu hảo tước, ngô dữ nhĩ mĩ chi.', nghia: 'Hạc kêu nơi khuất, con nó họa theo; ta có chén rượu ngon, ta cùng ngươi chia hưởng. Lòng thành cảm ứng nhau dù xa cách.' },
+    { line: 2, label: '九二', han: '鳴鶴在陰，其子和之，我有好爵，吾與爾靡之。', hanViet: 'Minh hạc tại âm, kỳ tử hòa chi, ngã hữu hảo tước, ngô dữ nhĩ mĩ chi.', nghia: 'Hạc kêu nơi khuất, con nó họa theo; ta có chén rượu ngon, ta cùng ngươi chia hưởng. Lòng thành cảm ứng nhau dù xa cách.' },
     { line: 3, label: '六三', han: '得敵，或鼓或罷，或泣或歌。', hanViet: 'đắc địch, hoặc cổ hoặc bãi, hoặc khấp hoặc ca.', nghia: 'Gặp đối thủ (kẻ tương đắc), lúc đánh trống lúc nghỉ, lúc khóc lúc hát. Lòng dao động không yên định.' },
-    { line: 4, label: '六四', han: '月几望，馬匹亡，无咎。', hanViet: 'lục tứ. nguyệt cơ vọng, mã thất vong, vô cữu.', nghia: 'Trăng gần tròn; ngựa cùng đôi mất bạn (bỏ bè đảng để theo trên). Không lỗi.' },
-    { line: 5, label: '九五', han: '有孚攣如，无咎。', hanViet: 'cửu ngũ. hữu phu luyến như, vô cữu.', nghia: 'Có lòng thành tín ràng buộc quy tụ mọi người lại. Không lỗi.' },
+    { line: 4, label: '六四', han: '月几望，馬匹亡，无咎。', hanViet: 'Nguyệt ki vọng, mã thất vong, vô cữu.', nghia: 'Trăng gần tròn; ngựa cùng đôi mất bạn (bỏ bè đảng để theo trên). Không lỗi.' },
+    { line: 5, label: '九五', han: '有孚攣如，无咎。', hanViet: 'Hữu phu luyến như, vô cữu.', nghia: 'Có lòng thành tín ràng buộc quy tụ mọi người lại. Không lỗi.' },
     { line: 6, label: '上九', han: '翰音登于天，貞凶。', hanViet: 'hàn âm đăng vu thiên, trinh hung.', nghia: 'Tiếng gà (chỉ hư danh, lời suông) bay lên tận trời; giữ mãi như vậy thì hung.' },
   ],
   62: [
