@@ -97,6 +97,21 @@ export function NatalWheel({ chart, className }: { chart: NatalChart; className?
     placed[i]!.r = rBodyRing - depth * rStep;
   }
 
+  // Đường nối góc (aspect lines): nối kinh độ 2 thiên thể qua tâm. Dùng đúng
+  // chart.aspects ĐÃ TÍNH (góc thật + orb), tô màu theo tính chất. Bỏ "trùng tụ"
+  // (0° ~ cùng điểm, không thành đường). Tên trong aspects là canonical
+  // ('Mặt Trời'/'Mặt Trăng'/tên hành tinh) → tra kinh độ theo tên đó.
+  const lonByName: Record<string, number> = {
+    'Mặt Trời': chart.sun.longitude,
+    'Mặt Trăng': chart.moon.longitude,
+  };
+  for (const p of chart.planets) lonByName[p.planet.name] = p.position.longitude;
+  const TENSE = new Set(['square', 'opposition']);
+  const aspectLines = (chart.aspects ?? [])
+    .filter((a) => a.aspect !== 'conjunction')
+    .map((a) => ({ a: lonByName[a.bodyA], b: lonByName[a.bodyB], tense: TENSE.has(a.aspect) }))
+    .filter((x): x is { a: number; b: number; tense: boolean } => x.a != null && x.b != null);
+
   return (
     <svg
       viewBox={`0 0 ${size} ${size}`}
@@ -149,6 +164,27 @@ export function NatalWheel({ chart, className }: { chart: NatalChart; className?
         {chart.ascendant && (
           <line x1={cx + rInner} y1={cy} x2={cx + rOuter} y2={cy} strokeOpacity={0.25} strokeWidth={1} strokeDasharray="2 3" />
         )}
+      </g>
+
+      {/* ── Đường nối góc (aspect lines) trong vòng trong ── */}
+      <g>
+        {aspectLines.map((ln, i) => {
+          const p1 = pt(ln.a, rInner);
+          const p2 = pt(ln.b, rInner);
+          return (
+            <line
+              key={`asp-${i}`}
+              x1={p1.x}
+              y1={p1.y}
+              x2={p2.x}
+              y2={p2.y}
+              stroke={ln.tense ? 'rgba(176, 73, 44, 0.45)' : 'currentColor'}
+              className={ln.tense ? undefined : 'text-gold'}
+              strokeOpacity={ln.tense ? undefined : 0.32}
+              strokeWidth={0.9}
+            />
+          );
+        })}
       </g>
 
       {/* ── Thiên thể: vạch dẫn + chấm + biểu tượng ── */}
