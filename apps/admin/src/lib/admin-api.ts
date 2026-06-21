@@ -19,6 +19,7 @@
  *   GET  /admin/cost/by_day                        llm_traces aggregated by day
  *   GET  /admin/cost/top_spenders                  llm_traces aggregated by user
  *   GET  /admin/rag/chunks?limit=&document_id=     corpus_chunks list
+ *   POST /admin/rag/ingest                          chunk + embed + store corpus_chunks
  *   GET  /payment/transactions?limit=&user_id=     raw payment events
  *   GET  /admin/coupons                            coupon list
  *   POST /admin/coupons, PATCH /admin/coupons/{code}   create / update coupon
@@ -26,7 +27,6 @@
  *
  * Endpoints NOT shipped yet (mock-only — TODO marked `isMock: true`):
  *   GET  /admin/qdrant/stats        (Qdrant moved to pgvector; stats TBD)
- *   POST /admin/rag/ingest
  */
 
 import {
@@ -888,8 +888,13 @@ export async function listRagChunks() {
       const meta = c.metadata ?? {};
       const discipline = (meta.discipline as RagChunk['discipline']) ?? 'general';
       const title = (meta.title as string | undefined) ?? c.document_id;
-      const license =
-        (meta.license_status as RagChunk['license_status']) ?? 'owned_or_licensed';
+      // Backend stores the normalized license vocab ('owned'); map it back to
+      // the FE-display vocab ('owned_or_licensed') so the badge tone resolves.
+      const rawLicense = meta.license_status as string | undefined;
+      const license: RagChunk['license_status'] =
+        rawLicense == null || rawLicense === 'owned'
+          ? 'owned_or_licensed'
+          : (rawLicense as RagChunk['license_status']);
       const existing = byDoc.get(c.document_id);
       if (existing) {
         existing.chunk_count += 1;
@@ -917,14 +922,62 @@ export async function listRagChunks() {
 }
 
 export async function ingestRagChunks(payload: {
-  source_id: string;
   source_title: string;
   discipline: RagChunk['discipline'];
-  chunks: string[];
   license_status: RagChunk['license_status'];
-}) {
-  // TODO(wave-D): POST /admin/rag/ingest not shipped.
-  return delay({ ingested: payload.chunks.length, source_id: payload.source_id, isMock: true });
+  text: string;
+}): Promise<{
+  ok: true;
+  document_id: string;
+  chunks_inserted: number;
+  chunks_skipped: number;
+  chunks_total: number;
+}> {
+  // POST /admin/rag/ingest — the worker chunks (blank-line split), embeds
+  // (OpenAI text-embedding-3-small, 1536d) and upserts corpus_chunks. Direct
+  // fetch (not proxyFetch) so the backend error message surfaces to the
+  // operator — e.g. `embed_failed` when the embedding key/credit is down —
+  // instead of being swallowed into a generic "gateway down". The FE-display
+  // license vocab ('owned_or_licensed') maps to the backend's ('owned').
+  const license_status =
+    payload.license_status === 'owned_or_licensed' ? 'owned' : payload.license_status;
+  const res = await fetch(`${PROXY}/admin/rag/ingest`, {
+    method: 'POST',
+    cache: 'no-store',
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      source_title: payload.source_title,
+      discipline: payload.discipline,
+      license_status,
+      text: payload.text,
+    }),
+  });
+  let data: {
+    ok?: boolean;
+    error?: string;
+    detail?: string;
+    document_id?: string;
+    chunks_inserted?: number;
+    chunks_skipped?: number;
+    chunks_total?: number;
+  } = {};
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error(`Gateway trả về không hợp lệ (HTTP ${res.status})`);
+  }
+  if (!res.ok || data.ok === false) {
+    const base = data.error ?? `Ingest thất bại (HTTP ${res.status})`;
+    throw new Error(data.detail ? `${base}: ${data.detail}` : base);
+  }
+  return {
+    ok: true,
+    document_id: data.document_id ?? '',
+    chunks_inserted: data.chunks_inserted ?? 0,
+    chunks_skipped: data.chunks_skipped ?? 0,
+    chunks_total: data.chunks_total ?? 0,
+  };
 }
 
 // ---------- Payments ----------
