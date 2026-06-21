@@ -10,6 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "types:check": "tsc --noEmit",
+    "extract:sitemap": "node scripts/extract-site-structure.mjs",
     "analyze": "cross-env ANALYZE=true next build",
     "clean": "rm -rf .next .turbo node_modules"
   },
