@@ -83,18 +83,41 @@ export function NatalWheel({ chart, className }: { chart: NatalChart; className?
     bodies.push({ glyph: 'Asc', name: `Cung Mọc ${chart.ascendant.sign.name}`, lon: chart.ascendant.longitude, emphasis: 'asc' });
   }
 
-  // Né va chạm: sắp theo kinh độ; mỗi lá sát lá LIỀN TRƯỚC (<minSep) thì lùi
-  // vào trong sâu thêm 1 nấc — CHUỖI khoảng-cách-liền-kề, nên cụm 3+ sao
-  // (stellium) vẫn được tách bán kính riêng từng lá, không trùng. Hết cụm
-  // (gặp một khoảng ≥minSep) thì reset về nấc gốc.
+  // Né va chạm: sắp theo kinh độ rồi lùi bán kính theo CHUỖI khoảng-cách-liền-kề
+  // trên VÒNG TRÒN (kể cả mép 0°/360°). Nhờ vậy: (a) cụm 3+ sao (stellium) tách
+  // bán kính riêng từng lá; (b) hai sao sát nhau qua mốc 0° — vd Mặt Trời cuối
+  // Song Ngư (~359°) và Sao Thủy đầu Bạch Dương (~2°), luôn ≤28° nên rất hay gặp
+  // — cũng được tách, không đè. Bắt đầu chuỗi NGAY SAU khoảng trống lớn nhất để
+  // mốc reset rơi đúng chỗ thưa, không cắt ngang cụm trải qua 0°. Bán kính chặn
+  // sàn (rFloor) để thiên thể không lấn vào hub hay ra bán kính âm (lật qua tâm).
   const minSep = 9;
   const rStep = 17;
+  const rFloor = rInner + 8;
   const sorted = [...bodies].sort((m, n) => m.lon - n.lon);
   const placed = sorted.map((b) => ({ ...b, r: rBodyRing }));
-  let depth = 0;
-  for (let i = 1; i < placed.length; i++) {
-    depth = placed[i]!.lon - placed[i - 1]!.lon < minSep ? depth + 1 : 0;
-    placed[i]!.r = rBodyRing - depth * rStep;
+  const nBodies = placed.length;
+  if (nBodies > 1) {
+    // Khoảng cách góc (0..360) từ sao i tới sao kế tiếp theo chiều vòng tròn.
+    const gapAfter = (i: number) => {
+      const g = sorted[(i + 1) % nBodies]!.lon - sorted[i]!.lon;
+      return ((g % 360) + 360) % 360;
+    };
+    // Khoảng trống LỚN NHẤT = nơi reset an toàn; chuỗi bắt đầu ngay sau nó.
+    let cut = 0;
+    let maxGap = -1;
+    for (let i = 0; i < nBodies; i++) {
+      const g = gapAfter(i);
+      if (g > maxGap) {
+        maxGap = g;
+        cut = i;
+      }
+    }
+    let depth = 0;
+    for (let k = 0; k < nBodies; k++) {
+      const i = (cut + 1 + k) % nBodies;
+      depth = k > 0 && gapAfter((cut + k) % nBodies) < minSep ? depth + 1 : 0;
+      placed[i]!.r = Math.max(rFloor, rBodyRing - depth * rStep);
+    }
   }
 
   // Đường nối góc (aspect lines): nối kinh độ 2 thiên thể qua tâm. Dùng đúng

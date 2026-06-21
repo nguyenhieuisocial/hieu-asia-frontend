@@ -13,6 +13,8 @@
  * Định vị thương hiệu: TRA CỨU PHONG TỤC để tham khảo — không phán số mệnh.
  */
 
+import { getVietnamHour } from './vn-date';
+
 const INT = Math.floor;
 
 export const BRANCHES = [
@@ -152,7 +154,7 @@ export function computeGioHoangDao(dd: number, mm: number, yy: number): GioHoang
 
 /** Chỉ số canh giờ (0=Tý…11=Hợi) chứa thời điểm `now`. */
 export function currentHourIndex(now: Date): number {
-  const h = now.getHours();
+  const h = getVietnamHour(now); // giờ VN (UTC+7), KHÔNG theo đồng hồ máy khách
   return INT(((h + 1) % 24) / 2);
 }
 

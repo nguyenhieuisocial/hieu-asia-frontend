@@ -44,6 +44,23 @@ export function getVietnamDateParts(date: Date = new Date()): {
   return { year: get('year'), month: get('month'), day: get('day') };
 }
 
+const HOUR_FORMAT = new Intl.DateTimeFormat('en-GB', {
+  timeZone: 'Asia/Ho_Chi_Minh',
+  hour: '2-digit',
+  hourCycle: 'h23',
+});
+
+/**
+ * Returns the VN-local hour-of-day (0–23) for the given instant.
+ * Correct on hosts whose process timezone isn't VN (Vercel/Cloudflare run UTC)
+ * AND for clients in any timezone — the canh-giờ must always be VN wall-clock,
+ * never the viewer's device clock.
+ */
+export function getVietnamHour(date: Date = new Date()): number {
+  const parts = HOUR_FORMAT.formatToParts(date);
+  return Number(parts.find((p) => p.type === 'hour')?.value ?? 0);
+}
+
 /**
  * Format an ISO date (YYYY-MM-DD) as vi-VN DD/MM/YYYY for display.
  * Returns the input unchanged on a parse miss (safe on '' / partial values).
