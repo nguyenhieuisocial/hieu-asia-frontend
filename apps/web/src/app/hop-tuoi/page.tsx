@@ -35,10 +35,10 @@ const HOP_TUOI_JSONLD = {
 
 const CARDS = [
   {
-    href: '/hop-tuoi/wedding',
+    href: '/xem-tuoi-cuoi',
     title: 'Cưới hỏi',
     emoji: '💍',
-    desc: 'Xem hợp tuổi vợ chồng — Thiên Can, Địa Chi, Cung Phi 8 trạch.',
+    desc: 'Năm cưới đẹp (Kim Lâu, Tam Tai) + hợp tuổi vợ chồng (Thiên Can, Địa Chi, Cung Phi) — trong một trang.',
   },
   {
     href: '/hop-tuoi/business',
