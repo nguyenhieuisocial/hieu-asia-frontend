@@ -203,7 +203,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/bat-tu`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/mbti`, lastModified: now, changeFrequency: 'monthly', priority: 0.75 },
     { url: `${BASE_URL}/newsletter/archive`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
-    { url: `${BASE_URL}/reading/sample-tu-vi`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    // NOTE: /reading/sample-tu-vi removed from sitemap — it lives under /reading/
+    // which robots.ts disallows, so sitemapping it produced a "Submitted URL
+    // blocked by robots.txt" conflict in GSC. /sample-report (above) is the
+    // canonical public sample. (Site-structure audit 2026-06-21.)
     // Wave 60.98-FE — pillar index + dynamic per-article URLs.
     { url: `${BASE_URL}/cam-nang`, lastModified: now, changeFrequency: 'weekly', priority: 0.75 },
   ];

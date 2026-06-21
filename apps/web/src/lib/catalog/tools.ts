@@ -34,7 +34,7 @@ export const QUICK_LOOKUP: QuickTool[] = [
   { href: '/than-so-hoc', label: 'Thần số học', tier: 'free' },
   { href: '/thuoc-lo-ban', label: 'Thước Lỗ Ban', tier: 'free' },
   { href: '/tinh-menh-cuc', label: 'Tuổi mệnh cục', tier: 'free' },
-  { href: '/ban-do', label: 'Bản đồ sao', tier: 'premium' },
+  { href: '/ban-do-sao', label: 'Bản đồ sao', tier: 'premium' },
   { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại', tier: 'free' },
   { href: '/gieo-que', label: 'Gieo Quẻ Kinh Dịch', tier: 'free' },
   { href: '/big-five', label: 'Big Five (OCEAN)', tier: 'free' },
