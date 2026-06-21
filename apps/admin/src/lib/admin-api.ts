@@ -980,6 +980,42 @@ export async function ingestRagChunks(payload: {
   };
 }
 
+export interface RagSearchHit {
+  chunk_id: string;
+  document_id: string;
+  content: string;
+  metadata: Record<string, unknown> | null;
+  similarity: number;
+}
+
+/**
+ * Admin retrieval test — POST /admin/rag/search. Embeds the query (Workers AI
+ * bge-m3) and runs the search_corpus RPC, returning the top matches ranked by
+ * cosine similarity. Read-only; lets the operator gauge corpus quality before
+ * it feeds anything. Direct fetch so the backend error (e.g. embed_failed)
+ * surfaces instead of a swallowed "gateway down".
+ */
+export async function searchRagChunks(query: string, limit = 5): Promise<RagSearchHit[]> {
+  const res = await fetch(`${PROXY}/admin/rag/search`, {
+    method: 'POST',
+    cache: 'no-store',
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query, limit }),
+  });
+  let data: { ok?: boolean; error?: string; detail?: string; results?: RagSearchHit[] } = {};
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error(`Gateway trả về không hợp lệ (HTTP ${res.status})`);
+  }
+  if (!res.ok || data.ok === false) {
+    const base = data.error ?? `Tìm kiếm thất bại (HTTP ${res.status})`;
+    throw new Error(data.detail ? `${base}: ${data.detail}` : base);
+  }
+  return data.results ?? [];
+}
+
 // ---------- Payments ----------
 
 interface PaymentTxn {
