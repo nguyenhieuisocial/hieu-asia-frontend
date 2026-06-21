@@ -6,11 +6,12 @@
 //   - phần "Sáu hào" trên trang ý nghĩa quẻ /gieo-que/y-nghia/[slug].
 //
 // NGUỒN nguyên văn (chữ Hán): Wikisource tiếng Trung — zh.wikisource.org/wiki/周易/<quẻ>
-//   (văn bản cổ ~Tây Chu, PHẠM VI CÔNG CỘNG; lấy NGUYÊN BYTE, parse deterministic,
-//   không qua mô hình → 0 rủi ro sai chữ khi trích). 384 dòng khớp số (64×6).
-// PHIÊN ÂM Hán-Việt + DIỄN NGHĨA: sinh có kiểm (1 agent/quẻ, schema ràng buộc;
-//   giữ NGUYÊN han từ nguồn, chỉ phiên âm/diễn nghĩa là sinh) — CÔNG CỤ ĐỌC,
-//   nên có thầy Kinh Dịch rà tinh khi có điều kiện.
+//   (văn bản cổ ~Tây Chu, PHẠM VI CÔNG CỘNG; lấy NGUYÊN BYTE, parse deterministic).
+// PHIÊN ÂM Hán-Việt: sinh có kiểm, RỒI RÀ SOÁT thêm 1 vòng hội-đồng học-giả
+//   (đối chiếu chú giải Ngô Tất Tố / Nguyễn Hiến Lê / Phan Bội Châu / Thiều Chửu)
+//   — đã sửa 21 dị-âm chuẩn-hoá (vd 臘=lạp, 胏=chỉ, 旋=tuyền, 摧=thôi, 享祀=hưởng tự,
+//   為(giới từ)=vị, 禴=dược) và bỏ vài tiền-tố nhãn-hào lọt vào phiên âm.
+//   Vẫn là CÔNG CỤ ĐỌC — phần luận sâu nên thầy Kinh Dịch rà; chữ Hán gốc là chuẩn.
 // 用九/用六 (Càn/Khôn) ở HAO_TU_EXTRA. id khớp King Wen của que-kinh-dich.ts.
 
 export interface HaoTuLine {
@@ -108,7 +109,7 @@ export const HAO_TU: Record<number, HaoTuLine[]> = {
     { line: 3, label: '九三', han: '輿說輻，夫妻反目。', hanViet: 'dư thoát bức, phu thê phản mục.', nghia: 'Xe tuột mất nan hoa, vợ chồng trở mặt nhau.' },
     { line: 4, label: '六四', han: '有孚，血去惕出，无咎。', hanViet: 'hữu phu, huyết khứ dịch xuất, vô cữu.', nghia: 'Có lòng thành tín, máu được trừ đi, lo sợ tan biến, không lỗi.' },
     { line: 5, label: '九五', han: '有孚攣如，富以其鄰。', hanViet: 'hữu phu luyến như, phú dĩ kỳ lân.', nghia: 'Có lòng thành tín ràng buộc gắn bó, đem sự giàu có chia cùng láng giềng.' },
-    { line: 6, label: '上九', han: '既雨既處，尚德載，婦貞厲，月幾望，君子征凶。', hanViet: 'ký vũ ký xử, thượng đức tải, phụ trinh lệ, nguyệt cơ vọng, quân tử chinh hung.', nghia: 'Mưa đã rơi đã tạnh, đức được chứa đầy chở nặng, vợ giữ chính bền vẫn có nguy; trăng gần tròn; người quân tử nếu tiến lên thì hung.' },
+    { line: 6, label: '上九', han: '既雨既處，尚德載，婦貞厲，月幾望，君子征凶。', hanViet: 'ký vũ ký xử, thượng đức tải, phụ trinh lệ, nguyệt ki vọng, quân tử chinh hung', nghia: 'Mưa đã rơi đã tạnh, đức được chứa đầy chở nặng, vợ giữ chính bền vẫn có nguy; trăng gần tròn; người quân tử nếu tiến lên thì hung.' },
   ],
   10: [
     { line: 1, label: '初九', han: '素履，往无咎。', hanViet: 'tố lý, vãng vô cữu.', nghia: 'Đi theo lối mộc mạc, giản dị; cứ bước tới thì không có lỗi.' },
@@ -116,7 +117,7 @@ export const HAO_TU: Record<number, HaoTuLine[]> = {
     { line: 3, label: '六三', han: '眇能視，跛能履，履虎尾，咥人，凶。武人為于大君。', hanViet: 'miễu năng thị, bả năng lý, lý hổ vĩ, điệt nhân, hung. vũ nhân vi vu đại quân.', nghia: 'Chột mắt mà tưởng thấy rõ, què chân mà tưởng đi được; giẫm lên đuôi hổ, bị cắn, hung. Kẻ võ biền liều lĩnh muốn làm vua lớn.' },
     { line: 4, label: '九四', han: '履虎尾，愬愬終吉。', hanViet: 'lý hổ vĩ, sách sách chung cát.', nghia: 'Giẫm lên đuôi hổ, biết sợ hãi cẩn trọng thì cuối cùng được tốt lành.' },
     { line: 5, label: '九五', han: '夬履，貞厲。', hanViet: 'quải lý, trinh lệ.', nghia: 'Bước đi quyết đoán cương quyết; dù giữ chính đạo vẫn có điều nguy.' },
-    { line: 6, label: '上九', han: '視履考祥，其旋元吉。', hanViet: 'thị lý khảo tường, kỳ toàn nguyên cát.', nghia: 'Xem xét lại đường đã đi, suy xét điềm lành dữ; nếu vẹn toàn thì rất tốt.' },
+    { line: 6, label: '上九', han: '視履考祥，其旋元吉。', hanViet: 'thị lý khảo tường, kỳ tuyền nguyên cát', nghia: 'Xem xét lại đường đã đi, suy xét điềm lành dữ; nếu vẹn toàn thì rất tốt.' },
   ],
   11: [
     { line: 1, label: '初九', han: '拔茅茹以其彙，征吉。', hanViet: 'Bạt mao nhự dĩ kỳ vị, chinh cát.', nghia: 'Nhổ rễ cỏ tranh kéo theo cả khóm cùng loại; tiến lên thì tốt.' },
@@ -201,8 +202,8 @@ export const HAO_TU: Record<number, HaoTuLine[]> = {
   21: [
     { line: 1, label: '初九', han: '屨校滅趾，无咎。', hanViet: 'lũ giảo diệt chỉ, vô cữu.', nghia: 'Mang gông cùm vào chân, che mất ngón chân. Không lỗi (hình phạt nhẹ buổi đầu để răn, tránh lỗi lớn).' },
     { line: 2, label: '六二', han: '噬膚滅鼻，无咎。', hanViet: 'phệ phu diệt tị, vô cữu.', nghia: 'Cắn vào da thịt mềm, ngập mất mũi. Không lỗi.' },
-    { line: 3, label: '六三', han: '噬臘肉，遇毒；小吝，无咎。', hanViet: 'phệ tích nhục, ngộ độc; tiểu lận, vô cữu.', nghia: 'Cắn miếng thịt khô ướp, gặp phải độc; hơi đáng tiếc, nhưng không lỗi.' },
-    { line: 4, label: '九四', han: '噬乾胏，得金矢，利艱貞，吉。', hanViet: 'phệ can chí, đắc kim thỉ, lợi gian trinh, cát.', nghia: 'Cắn miếng thịt khô còn xương, được mũi tên đồng; lợi ở việc giữ chính bền trong gian khó. Tốt lành.' },
+    { line: 3, label: '六三', han: '噬臘肉，遇毒；小吝，无咎。', hanViet: 'phệ lạp nhục, ngộ độc; tiểu lận, vô cữu.', nghia: 'Cắn miếng thịt khô ướp, gặp phải độc; hơi đáng tiếc, nhưng không lỗi.' },
+    { line: 4, label: '九四', han: '噬乾胏，得金矢，利艱貞，吉。', hanViet: 'phệ can chỉ, đắc kim thỉ, lợi gian trinh, cát.', nghia: 'Cắn miếng thịt khô còn xương, được mũi tên đồng; lợi ở việc giữ chính bền trong gian khó. Tốt lành.' },
     { line: 5, label: '六五', han: '噬乾肉，得黃金，貞厲，无咎。', hanViet: 'phệ can nhục, đắc hoàng kim, trinh lệ, vô cữu.', nghia: 'Cắn miếng thịt khô, được vàng ròng; giữ chính mà vẫn nên thận trọng đề phòng. Không lỗi.' },
     { line: 6, label: '上九', han: '何校滅耳，凶。', hanViet: 'hà giảo diệt nhĩ, hung.', nghia: 'Mang gông nặng trên cổ, che mất tai. Hung (không chịu nghe lời răn, hình phạt nặng).' },
   ],
@@ -232,7 +233,7 @@ export const HAO_TU: Record<number, HaoTuLine[]> = {
   ],
   25: [
     { line: 1, label: '初九', han: '无妄，往吉。', hanViet: 'vô vọng, vãng cát.', nghia: 'Không càn bậy, giữ lòng chân chính; tiến tới thì tốt.' },
-    { line: 2, label: '六二', han: '不耕穫，不菑畬，則利有攸往。', hanViet: 'bất canh hoạch, bất chuy dư, tắc lợi hữu du vãng.', nghia: 'Không cày mà mong gặt, không khai hoang mà mong ruộng tốt; không cầu lợi vọng tưởng thì có lợi cho việc tiến tới.' },
+    { line: 2, label: '六二', han: '不耕穫，不菑畬，則利有攸往。', hanViet: 'bất canh hoạch, bất tri dư, tắc lợi hữu du vãng', nghia: 'Không cày mà mong gặt, không khai hoang mà mong ruộng tốt; không cầu lợi vọng tưởng thì có lợi cho việc tiến tới.' },
     { line: 3, label: '六三', han: '无妄之災，或系之牛，行人之得，邑人之災。', hanViet: 'vô vọng chi tai, hoặc hệ chi ngưu, hành nhân chi đắc, ấp nhân chi tai.', nghia: 'Tai họa bất ngờ không do lỗi mình: con bò buộc đó bị người qua đường dắt mất, hóa thành tai vạ cho người trong làng.' },
     { line: 4, label: '九四', han: '可貞，无咎。', hanViet: 'khả trinh, vô cữu.', nghia: 'Có thể giữ vững chính bền; không có lỗi.' },
     { line: 5, label: '九五', han: '无妄之疾，勿藥有喜。', hanViet: 'vô vọng chi tật, vật dược hữu hỉ.', nghia: 'Bệnh đến không do mình gây ra; không cần dùng thuốc cũng có điều mừng (tự khỏi).' },
@@ -282,7 +283,7 @@ export const HAO_TU: Record<number, HaoTuLine[]> = {
     { line: 1, label: '初六', han: '咸其拇。', hanViet: 'hàm kỳ mẫu.', nghia: 'Cảm ứng đến ngón chân cái. Mới chớm động, chưa đủ tác động gì.' },
     { line: 2, label: '六二', han: '咸其腓，凶，居吉。', hanViet: 'hàm kỳ phì, hung, cư cát.', nghia: 'Cảm ứng đến bắp chân: vọng động thì hung; giữ yên một chỗ thì tốt.' },
     { line: 3, label: '九三', han: '咸其股，執其隨，往吝。', hanViet: 'hàm kỳ cổ, chấp kỳ tùy, vãng lận.', nghia: 'Cảm ứng đến bắp đùi, cứ bám theo người khác mà động; tiến tới thì đáng tiếc.' },
-    { line: 4, label: '九四', han: '貞吉悔亡，憧憧往來，朋從爾思。', hanViet: 'trinh cát hối vong, sung sung vãng lai, bằng tùng nhĩ tư.', nghia: 'Giữ chính thì tốt, hối hận tiêu tan. Lòng dạ thấp thỏm qua lại, bạn bè sẽ thuận theo ý nghĩ của ngươi.' },
+    { line: 4, label: '九四', han: '貞吉悔亡，憧憧往來，朋從爾思。', hanViet: 'trinh cát hối vong, sung sung vãng lai, bằng tòng nhĩ tư.', nghia: 'Giữ chính thì tốt, hối hận tiêu tan. Lòng dạ thấp thỏm qua lại, bạn bè sẽ thuận theo ý nghĩ của ngươi.' },
     { line: 5, label: '九五', han: '咸其脢，无悔。', hanViet: 'hàm kỳ mỗi, vô hối.', nghia: 'Cảm ứng đến phần lưng trên (sau tim); không có gì hối hận.' },
     { line: 6, label: '上六', han: '咸其輔，頰，舌。', hanViet: 'hàm kỳ phụ, giáp, thiệt.', nghia: 'Cảm ứng đến hàm, má, lưỡi: chỉ cảm bằng lời nói suông.' },
   ],
@@ -298,7 +299,7 @@ export const HAO_TU: Record<number, HaoTuLine[]> = {
     { line: 1, label: '初六', han: '遯尾，厲，勿用有攸往。', hanViet: 'độn vĩ, lệ, vật dụng hữu du vãng.', nghia: 'Lui chạy mà ở phía sau cùng, nguy. Chớ làm gì, chớ tiến đi đâu (cứ ở yên thì tránh được họa).' },
     { line: 2, label: '六二', han: '執之用黃牛之革，莫之勝說。', hanViet: 'chấp chi dụng hoàng ngưu chi cách, mạc chi thắng thoát.', nghia: 'Giữ chặt như buộc bằng da bò vàng, không ai cởi ra được. Ý chí kiên định, không thể lay chuyển.' },
     { line: 3, label: '九三', han: '系遯，有疾厲，畜臣妾吉。', hanViet: 'hệ độn, hữu tật lệ, súc thần thiếp cát.', nghia: 'Bị ràng buộc nên không lui được, có bệnh hoạn nguy khốn. Nuôi tôi tớ thê thiếp thì tốt (chỉ hợp việc nhỏ trong nhà).' },
-    { line: 4, label: '九四', han: '好遯君子吉，小人否。', hanViet: 'hảo độn quân tử cát, tiểu nhân phủ.', nghia: 'Yêu mến mà vẫn dứt lui được, người quân tử thì tốt; kẻ tiểu nhân thì không làm được vậy.' },
+    { line: 4, label: '九四', han: '好遯君子吉，小人否。', hanViet: 'hảo độn quân tử cát, tiểu nhân bĩ.', nghia: 'Yêu mến mà vẫn dứt lui được, người quân tử thì tốt; kẻ tiểu nhân thì không làm được vậy.' },
     { line: 5, label: '九五', han: '嘉遯，貞吉。', hanViet: 'gia độn, trinh cát.', nghia: 'Lui chạy một cách tốt đẹp, hợp thời đúng mực; giữ chính bền thì tốt lành.' },
     { line: 6, label: '上九', han: '肥遯，无不利。', hanViet: 'phì độn, vô bất lợi.', nghia: 'Lui xa thong dong, dư dả không vướng bận; không gì là không lợi.' },
   ],
@@ -307,14 +308,14 @@ export const HAO_TU: Record<number, HaoTuLine[]> = {
     { line: 2, label: '九二', han: '貞吉。', hanViet: 'Trinh cát.', nghia: 'Giữ vững chính bền thì tốt lành.' },
     { line: 3, label: '九三', han: '小人用壯，君子用罔，貞厲。羝羊觸藩，羸其角。', hanViet: 'Tiểu nhân dụng tráng, quân tử dụng võng, trinh lệ. Đê dương xúc phiên, luy kỳ giác.', nghia: 'Kẻ tiểu nhân dùng sức mạnh, người quân tử coi như không có; cố giữ thì nguy. Như con dê đực húc vào giậu, mắc kẹt sừng không gỡ ra được.' },
     { line: 4, label: '九四', han: '貞吉悔亡，藩決不羸，壯于大輿之輹。', hanViet: 'Trinh cát hối vong, phiên quyết bất luy, tráng vu đại dư chi phúc.', nghia: 'Giữ chính thì tốt, hối hận tiêu tan; giậu vỡ ra nên sừng không còn mắc kẹt, sức mạnh như trục bánh của cỗ xe lớn.' },
-    { line: 5, label: '六五', han: '喪羊于易，无悔。', hanViet: 'Táng dương vu dị, vô hối.', nghia: 'Mất con dê một cách dễ dàng (buông bỏ sức cứng), không có gì phải hối hận.' },
+    { line: 5, label: '六五', han: '喪羊于易，无悔。', hanViet: 'Táng dương vu dịch, vô hối.', nghia: 'Mất con dê một cách dễ dàng (buông bỏ sức cứng), không có gì phải hối hận.' },
     { line: 6, label: '上六', han: '羝羊觸藩，不能退，不能遂，无攸利，艱則吉。', hanViet: 'Đê dương xúc phiên, bất năng thoái, bất năng toại, vô du lợi, gian tắc cát.', nghia: 'Dê đực húc giậu, không lui được, cũng không tiến được, chẳng có lợi gì; chịu khó nhọc gắng vượt khó thì mới tốt.' },
   ],
   35: [
-    { line: 1, label: '初六', han: '晉如，摧如，貞吉。罔孚，裕无咎。', hanViet: 'tấn như, tồi như, trinh cát. Võng phu, dụ vô cữu.', nghia: 'Tiến lên rồi bị ngăn lùi; giữ chính thì tốt. Chưa được tin cậy, cứ thong thả khoan hòa thì không lỗi.' },
+    { line: 1, label: '初六', han: '晉如，摧如，貞吉。罔孚，裕无咎。', hanViet: 'tấn như, thôi như, trinh cát. võng phu, dụ vô cữu.', nghia: 'Tiến lên rồi bị ngăn lùi; giữ chính thì tốt. Chưa được tin cậy, cứ thong thả khoan hòa thì không lỗi.' },
     { line: 2, label: '六二', han: '晉如，愁如，貞吉。受茲介福，于其王母。', hanViet: 'tấn như, sầu như, trinh cát. Thụ tư giới phúc, vu kỳ vương mẫu.', nghia: 'Tiến lên mà lo buồn; giữ chính thì tốt. Sẽ nhận được phúc lớn này từ bậc vương mẫu.' },
     { line: 3, label: '六三', han: '眾允，悔亡。', hanViet: 'chúng duẫn, hối vong.', nghia: 'Được mọi người tin theo, điều hối tiếc tiêu tan.' },
-    { line: 4, label: '九四', han: '晉如鼫鼠，貞厲。', hanViet: 'tấn như thạch thử, trinh lệ.', nghia: 'Tiến lên như con chuột lớn (tham mà sợ); giữ vậy thì nguy.' },
+    { line: 4, label: '九四', han: '晉如鼫鼠，貞厲。', hanViet: 'tấn như thạc thử, trinh lệ.', nghia: 'Tiến lên như con chuột lớn (tham mà sợ); giữ vậy thì nguy.' },
     { line: 5, label: '六五', han: '悔亡，失得勿恤，往吉无不利。', hanViet: 'hối vong, thất đắc vật tuất, vãng cát vô bất lợi.', nghia: 'Điều hối tiếc tiêu tan; chớ lo việc được mất, cứ tiến thì tốt, không gì không lợi.' },
     { line: 6, label: '上九', han: '晉其角，維用伐邑，厲吉无咎，貞吝。', hanViet: 'tấn kỳ giác, duy dụng phạt ấp, lệ cát vô cữu, trinh lận.', nghia: 'Tiến đến chỗ sừng (cùng cực, cứng nhọn); chỉ nên dùng để chinh phạt ấp ấp nhỏ. Tuy nguy nhưng tốt và không lỗi; nhưng giữ mãi vậy thì đáng tiếc.' },
   ],
@@ -377,8 +378,8 @@ export const HAO_TU: Record<number, HaoTuLine[]> = {
   43: [
     { line: 1, label: '初九', han: '壯于前趾，往不勝為咎。', hanViet: 'Tráng vu tiền chỉ, vãng bất thắng vi cữu.', nghia: 'Mạnh ở ngón chân phía trước; tiến lên mà không thắng nổi thì có lỗi.' },
     { line: 2, label: '九二', han: '惕號，莫夜有戎，勿恤。', hanViet: 'Dịch hào, mạc dạ hữu nhung, vật tuất.', nghia: 'Cảnh giác mà kêu lên; đang đêm có binh đao cũng chớ lo.' },
-    { line: 3, label: '九三', han: '壯于頄，有凶。君子夬夬，獨行遇雨，若濡有慍，无咎。', hanViet: 'Tráng vu quỹ, hữu hung. Quân tử quải quải, độc hành ngộ vũ, nhược nhu hữu uấn, vô cữu.', nghia: 'Mạnh hiện ra ở gò má, có điều dữ. Người quân tử quyết đoán dứt khoát; đi một mình gặp mưa, ướt át mà có chút bực, nhưng không có lỗi.' },
-    { line: 4, label: '九四', han: '臀无膚，其行次且。牽羊悔亡，聞言不信。', hanViet: 'Đồn vô phu, kỳ hành thứ thư. Khiên dương hối vong, văn ngôn bất tín.', nghia: 'Mông không có da, bước đi ngập ngừng khó nhọc. Dắt dê theo thì hối hận mất đi, nhưng nghe lời nói lại chẳng tin.' },
+    { line: 3, label: '九三', han: '壯于頄，有凶。君子夬夬，獨行遇雨，若濡有慍，无咎。', hanViet: 'Tráng vu cừu, hữu hung. Quân tử quải quải, độc hành ngộ vũ, nhược nhu hữu uấn, vô cữu.', nghia: 'Mạnh hiện ra ở gò má, có điều dữ. Người quân tử quyết đoán dứt khoát; đi một mình gặp mưa, ướt át mà có chút bực, nhưng không có lỗi.' },
+    { line: 4, label: '九四', han: '臀无膚，其行次且。牽羊悔亡，聞言不信。', hanViet: 'đồn vô phu, kỳ hành tư thư. khiên dương hối vong, văn ngôn bất tín.', nghia: 'Mông không có da, bước đi ngập ngừng khó nhọc. Dắt dê theo thì hối hận mất đi, nhưng nghe lời nói lại chẳng tin.' },
     { line: 5, label: '九五', han: '莧陸夬夬，中行无咎。', hanViet: 'Hiện lục quải quải, trung hành vô cữu.', nghia: 'Như rau sam dễ đứt, quyết đoán dứt khoát; giữ đạo trung mà đi thì không có lỗi.' },
     { line: 6, label: '上六', han: '无號，終有凶。', hanViet: 'Vô hào, chung hữu hung.', nghia: 'Không kêu la cảnh báo được nữa; cuối cùng có điều dữ.' },
   ],
@@ -399,7 +400,7 @@ export const HAO_TU: Record<number, HaoTuLine[]> = {
     { line: 6, label: '上六', han: '齎咨涕洟，无咎。', hanViet: 'tê tư thế di, vô cữu.', nghia: 'Than thở, nước mắt nước mũi giàn giụa; biết vậy mà sửa thì không lỗi.' },
   ],
   46: [
-    { line: 1, label: '初六', han: '允升，大吉。', hanViet: 'doãn thăng, đại cát.', nghia: 'Được tin theo mà tiến lên, rất tốt lành.' },
+    { line: 1, label: '初六', han: '允升，大吉。', hanViet: 'duẫn thăng, đại cát', nghia: 'Được tin theo mà tiến lên, rất tốt lành.' },
     { line: 2, label: '九二', han: '孚乃利用禴，无咎。', hanViet: 'phu nãi lợi dụng dược, vô cữu.', nghia: 'Có lòng thành tín thì dù lễ tế đơn sơ mùa hạ cũng có lợi, không lỗi.' },
     { line: 3, label: '九三', han: '升虛邑。', hanViet: 'thăng hư ấp.', nghia: 'Tiến lên vào ấp trống không, thuận lợi không gặp trở ngại.' },
     { line: 4, label: '六四', han: '王用亨于岐山，吉无咎。', hanViet: 'vương dụng hanh vu kỳ sơn, cát vô cữu.', nghia: 'Vua dùng để tế hanh thông ở núi Kỳ, tốt lành, không lỗi.' },
@@ -408,7 +409,7 @@ export const HAO_TU: Record<number, HaoTuLine[]> = {
   ],
   47: [
     { line: 1, label: '初六', han: '臀困于株木，入于幽谷，三歲不覿。', hanViet: 'đồn khốn vu chu mộc, nhập vu u cốc, tam tuế bất địch.', nghia: 'Mông đít bị khốn nơi gốc cây, sa vào hang tối, ba năm không gặp ai.' },
-    { line: 2, label: '九二', han: '困于酒食，朱紱方來，利用亨祀，征凶，无咎。', hanViet: 'khốn vu tửu thực, chu phất phương lai, lợi dụng hanh tự, chinh hung, vô cữu.', nghia: 'Khốn quẫn giữa rượu thịt, dải lụa đỏ vừa đến, nên dùng việc cúng tế; tiến lên thì hung, nhưng không lỗi.' },
+    { line: 2, label: '九二', han: '困于酒食，朱紱方來，利用亨祀，征凶，无咎。', hanViet: 'khốn vu tửu thực, chu phất phương lai, lợi dụng hưởng tự, chinh hung, vô cữu.', nghia: 'Khốn quẫn giữa rượu thịt, dải lụa đỏ vừa đến, nên dùng việc cúng tế; tiến lên thì hung, nhưng không lỗi.' },
     { line: 3, label: '六三', han: '困于石，據于蒺藜，入于其宮，不見其妻，凶。', hanViet: 'khốn vu thạch, cứ vu tật lê, nhập vu kỳ cung, bất kiến kỳ thê, hung.', nghia: 'Bị khốn bởi đá, tựa vào bụi gai, vào nhà mình mà không thấy vợ, hung.' },
     { line: 4, label: '九四', han: '來徐徐，困于金車，吝，有終。', hanViet: 'lai từ từ, khốn vu kim xa, lận, hữu chung.', nghia: 'Đến chậm rãi, bị khốn bởi xe vàng, đáng tiếc, nhưng cuối cùng có kết quả tốt.' },
     { line: 5, label: '九五', han: '劓刖，困于赤紱，乃徐有說，利用祭祀。', hanViet: 'nghĩ ngoạt, khốn vu xích phất, nãi từ hữu duyệt, lợi dụng tế tự.', nghia: 'Bị cắt mũi chặt chân, khốn bởi dải lụa đỏ, rồi dần dần được thoải mái, nên dùng việc tế tự.' },
@@ -417,7 +418,7 @@ export const HAO_TU: Record<number, HaoTuLine[]> = {
   48: [
     { line: 1, label: '初六', han: '井泥不食，舊井无禽。', hanViet: 'Tỉnh nê bất thực, cựu tỉnh vô cầm.', nghia: 'Giếng bùn lầy không uống được; giếng cũ bỏ hoang đến chim cũng không tới.' },
     { line: 2, label: '九二', han: '井谷射鮒，瓮敝漏。', hanViet: 'Tỉnh cốc xạ phụ, úng tệ lậu.', nghia: 'Nước giếng rò xuống khe chỉ nuôi cá nhỏ; vò sứt mẻ nên rò rỉ hết.' },
-    { line: 3, label: '九三', han: '井渫不食，為我心惻，可用汲，王明，并受其福。', hanViet: 'Tỉnh tiết bất thực, vi ngã tâm trắc, khả dụng cấp, vương minh, tịnh thụ kỳ phúc.', nghia: 'Giếng đã vét trong mà không ai uống, khiến lòng ta xót xa; nước ấy có thể múc dùng; nếu vua sáng suốt, mọi người cùng hưởng phúc.' },
+    { line: 3, label: '九三', han: '井渫不食，為我心惻，可用汲，王明，并受其福。', hanViet: 'tỉnh tiết bất thực, vị ngã tâm trắc, khả dụng cấp, vương minh, tịnh thụ kỳ phúc.', nghia: 'Giếng đã vét trong mà không ai uống, khiến lòng ta xót xa; nước ấy có thể múc dùng; nếu vua sáng suốt, mọi người cùng hưởng phúc.' },
     { line: 4, label: '六四', han: '井甃，无咎。', hanViet: 'Tỉnh trứu, vô cữu.', nghia: 'Xây gạch sửa thành giếng, không có lỗi.' },
     { line: 5, label: '九五', han: '井冽，寒泉食。', hanViet: 'Tỉnh liệt, hàn tuyền thực.', nghia: 'Nước giếng trong mát, suối lạnh dùng uống được.' },
     { line: 6, label: '上六', han: '井收勿幕，有孚元吉。', hanViet: 'Tỉnh thu vật mạc, hữu phu nguyên cát.', nghia: 'Giếng đã thành, chớ đậy che lại; giữ lòng thành tín thì cả lớn tốt lành.' },
@@ -465,7 +466,7 @@ export const HAO_TU: Record<number, HaoTuLine[]> = {
   54: [
     { line: 1, label: '初九', han: '歸妹以娣，跛能履，征吉。', hanViet: 'quy muội dĩ đễ, bả năng lý, chinh cát.', nghia: 'Gả em gái làm thiếp; người què vẫn bước đi được; tiến lên thì tốt.' },
     { line: 2, label: '九二', han: '眇能視，利幽人之貞。', hanViet: 'miễu năng thị, lợi u nhân chi trinh.', nghia: 'Người chột vẫn nhìn được; lợi cho sự bền chí của người ẩn dật giữ mình ngay thẳng.' },
-    { line: 3, label: '六三', han: '歸妹以須，反歸以娣。', hanViet: 'quy muội dĩ tu, phản quy dĩ đễ.', nghia: 'Gả em gái mà phải chờ đợi; quay về làm thiếp thì hơn.' },
+    { line: 3, label: '六三', han: '歸妹以須，反歸以娣。', hanViet: 'quy muội dĩ tu, phản quy dĩ đệ', nghia: 'Gả em gái mà phải chờ đợi; quay về làm thiếp thì hơn.' },
     { line: 4, label: '九四', han: '歸妹愆期，遲歸有時。', hanViet: 'quy muội khiên kỳ, trì quy hữu thì.', nghia: 'Việc gả em gái lỡ kỳ hẹn; gả muộn cũng có thời của nó.' },
     { line: 5, label: '六五', han: '帝乙歸妹，其君之袂，不如其娣之袂良，月幾望，吉。', hanViet: 'đế ất quy muội, kỳ quân chi mệ, bất như kỳ đễ chi mệ lương, nguyệt cơ vọng, cát.', nghia: 'Vua Đế Ất gả em gái; tay áo của cô dâu chính không đẹp bằng tay áo của người thiếp; trăng gần tròn; tốt.' },
     { line: 6, label: '上六', han: '女承筐无實，士刲羊无血，无攸利。', hanViet: 'nữ thừa khuông vô thực, sĩ khuê dương vô huyết, vô du lợi.', nghia: 'Người con gái bưng giỏ mà không có gì trong giỏ; kẻ sĩ cắt cổ dê mà không có máu; không có gì lợi.' },
@@ -519,12 +520,12 @@ export const HAO_TU: Record<number, HaoTuLine[]> = {
     { line: 6, label: '上六', han: '苦節，貞凶，悔亡。', hanViet: 'Khổ tiết, trinh hung, hối vong.', nghia: 'Tiết chế khắc khổ quá đáng, cố giữ thì xấu; nhưng biết thay đổi thì hối hận tiêu tan.' },
   ],
   61: [
-    { line: 1, label: '初九', han: '虞吉，有他不燕。', hanViet: 'sơ cửu. ngu cát, hữu tha bất yến.', nghia: 'Liệu định sẵn (giữ lòng chuyên nhất) thì tốt; nếu có lòng khác thì chẳng được yên.' },
+    { line: 1, label: '初九', han: '虞吉，有他不燕。', hanViet: 'ngu cát, hữu tha bất yến.', nghia: 'Liệu định sẵn (giữ lòng chuyên nhất) thì tốt; nếu có lòng khác thì chẳng được yên.' },
     { line: 2, label: '九二', han: '鳴鶴在陰，其子和之，我有好爵，吾與爾靡之。', hanViet: 'cửu nhị. minh hạc tại âm, kỳ tử hòa chi, ngã hữu hảo tước, ngô dữ nhĩ mĩ chi.', nghia: 'Hạc kêu nơi khuất, con nó họa theo; ta có chén rượu ngon, ta cùng ngươi chia hưởng. Lòng thành cảm ứng nhau dù xa cách.' },
-    { line: 3, label: '六三', han: '得敵，或鼓或罷，或泣或歌。', hanViet: 'lục tam. đắc địch, hoặc cổ hoặc bãi, hoặc khấp hoặc ca.', nghia: 'Gặp đối thủ (kẻ tương đắc), lúc đánh trống lúc nghỉ, lúc khóc lúc hát. Lòng dao động không yên định.' },
+    { line: 3, label: '六三', han: '得敵，或鼓或罷，或泣或歌。', hanViet: 'đắc địch, hoặc cổ hoặc bãi, hoặc khấp hoặc ca.', nghia: 'Gặp đối thủ (kẻ tương đắc), lúc đánh trống lúc nghỉ, lúc khóc lúc hát. Lòng dao động không yên định.' },
     { line: 4, label: '六四', han: '月几望，馬匹亡，无咎。', hanViet: 'lục tứ. nguyệt cơ vọng, mã thất vong, vô cữu.', nghia: 'Trăng gần tròn; ngựa cùng đôi mất bạn (bỏ bè đảng để theo trên). Không lỗi.' },
     { line: 5, label: '九五', han: '有孚攣如，无咎。', hanViet: 'cửu ngũ. hữu phu luyến như, vô cữu.', nghia: 'Có lòng thành tín ràng buộc quy tụ mọi người lại. Không lỗi.' },
-    { line: 6, label: '上九', han: '翰音登于天，貞凶。', hanViet: 'thượng cửu. hàn âm đăng vu thiên, trinh hung.', nghia: 'Tiếng gà (chỉ hư danh, lời suông) bay lên tận trời; giữ mãi như vậy thì hung.' },
+    { line: 6, label: '上九', han: '翰音登于天，貞凶。', hanViet: 'hàn âm đăng vu thiên, trinh hung.', nghia: 'Tiếng gà (chỉ hư danh, lời suông) bay lên tận trời; giữ mãi như vậy thì hung.' },
   ],
   62: [
     { line: 1, label: '初六', han: '飛鳥以凶。', hanViet: 'phi điểu dĩ hung.', nghia: 'Chim bay lên cao, mang điều hung. Vượt quá phận mà liều lĩnh tiến, ắt gặp tai họa.' },
@@ -538,8 +539,8 @@ export const HAO_TU: Record<number, HaoTuLine[]> = {
     { line: 1, label: '初九', han: '曳其輪，濡其尾，无咎。', hanViet: 'Duệ kỳ luân, nhu kỳ vĩ, vô cữu.', nghia: 'Kéo lê bánh xe lại, làm ướt cái đuôi; biết kiềm giữ, chậm rãi nên không lỗi.' },
     { line: 2, label: '六二', han: '婦喪其茀，勿逐，七日得。', hanViet: 'Phụ táng kỳ phất, vật trục, thất nhật đắc.', nghia: 'Người đàn bà mất tấm rèm che xe; chớ vội đuổi theo tìm, bảy ngày sẽ lấy lại được.' },
     { line: 3, label: '九三', han: '高宗伐鬼方，三年克之，小人勿用。', hanViet: 'Cao tông phạt quỷ phương, tam niên khắc chi, tiểu nhân vật dụng.', nghia: 'Vua Cao Tông đánh nước Quỷ Phương, ba năm mới thắng; chớ dùng kẻ tiểu nhân vào việc lớn.' },
-    { line: 4, label: '六四', han: '繻有衣袽，終日戒。', hanViet: 'Nhu hữu y nhữ, chung nhật giới.', nghia: 'Thuyền rỉ nước, có sẵn giẻ rách để vá; suốt ngày phải đề phòng cảnh giác.' },
-    { line: 5, label: '九五', han: '東鄰殺牛，不如西鄰之禴祭，實受其福。', hanViet: 'Đông lân sát ngưu, bất như tây lân chi thược tế, thực thụ kỳ phúc.', nghia: 'Nhà phía đông giết bò cúng lớn, không bằng lễ cúng đạm bạc của nhà phía tây mà thật lòng được hưởng phúc.' },
+    { line: 4, label: '六四', han: '繻有衣袽，終日戒。', hanViet: 'Nhu hữu y nhứ, chung nhật giới.', nghia: 'Thuyền rỉ nước, có sẵn giẻ rách để vá; suốt ngày phải đề phòng cảnh giác.' },
+    { line: 5, label: '九五', han: '東鄰殺牛，不如西鄰之禴祭，實受其福。', hanViet: 'Đông lân sát ngưu, bất như tây lân chi dược tế, thực thụ kỳ phúc.', nghia: 'Nhà phía đông giết bò cúng lớn, không bằng lễ cúng đạm bạc của nhà phía tây mà thật lòng được hưởng phúc.' },
     { line: 6, label: '上六', han: '濡其首，厲。', hanViet: 'Nhu kỳ thủ, lệ.', nghia: 'Để ướt cả cái đầu, nguy hiểm.' },
   ],
   64: [
