@@ -88,6 +88,12 @@ interface Balance {
   pending_vnd: number;
   paid_vnd: number;
   min_payout_vnd: number;
+  /** Projected 10% TNCN withheld if cashed out now (0 if < 2tr / cam-kết-08). */
+  cash_withholding_vnd?: number;
+  /** Projected after-tax cash payout (available - withholding). */
+  cash_net_vnd?: number;
+  /** MST + CTV contract on file → cash payout allowed. */
+  kyc_complete?: boolean;
 }
 
 interface AffMeResponse {
@@ -504,6 +510,9 @@ export default function AffiliateDashboardPage() {
           submitting={submitting}
           onSubmit={requestPayout}
           onVoucher={requestVoucher}
+          cashNetVnd={balance?.cash_net_vnd}
+          cashWithholdingVnd={balance?.cash_withholding_vnd}
+          kycComplete={balance?.kyc_complete}
           msg={payoutMsg}
           isActive={a.status === 'active'}
         />
