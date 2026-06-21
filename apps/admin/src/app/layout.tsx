@@ -9,6 +9,7 @@ import { PostHogProvider } from '@/components/posthog-provider';
 import { Sidebar } from '@/components/sidebar';
 import { Topbar } from '@/components/topbar';
 import { MobileNav } from '@/components/mobile-nav';
+import { CommandPalette } from '@/components/admin/command-palette';
 import { Toaster } from '@hieu-asia/ui';
 import { ADMIN_SESSION_COOKIE, verifySession } from '@/lib/auth';
 import './globals.css';
@@ -87,6 +88,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     <main className="px-4 pt-6 pb-[calc(5rem+env(safe-area-inset-bottom))] lg:px-8 lg:py-8 lg:pb-8">{children}</main>
                   </div>
                   <MobileNav />
+                  <CommandPalette />
                 </div>
               </QueryProvider>
             </PostHogProvider>
