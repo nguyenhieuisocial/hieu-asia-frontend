@@ -93,7 +93,9 @@ function colorForSection(index: number): string {
   return SECTION_COLORS[index % SECTION_COLORS.length] ?? '#c9a24a';
 }
 
-function SectionNodeView({ data }: NodeProps<Node<SectionNodeData>>) {
+// Memoized so panning/zooming a 180+ node graph doesn't re-render every node on
+// each viewport tick (nodes are pure functions of `data`, which is stable).
+const SectionNodeView = React.memo(function SectionNodeView({ data }: NodeProps<Node<SectionNodeData>>) {
   return (
     <div
       className="w-[210px] rounded-md border-2 px-3 py-2 text-left shadow-sm"
@@ -107,9 +109,9 @@ function SectionNodeView({ data }: NodeProps<Node<SectionNodeData>>) {
       <p className="mt-0.5 font-mono text-[9px] uppercase tracking-wide text-muted-foreground">section</p>
     </div>
   );
-}
+});
 
-function PageNodeView({ data }: NodeProps<Node<PageNodeData>>) {
+const PageNodeView = React.memo(function PageNodeView({ data }: NodeProps<Node<PageNodeData>>) {
   return (
     <div
       className={[
@@ -138,7 +140,7 @@ function PageNodeView({ data }: NodeProps<Node<PageNodeData>>) {
       <p className="mt-0.5 line-clamp-1 text-[10px] leading-snug text-muted-foreground">{data.fn}</p>
     </div>
   );
-}
+});
 
 const nodeTypes = { section: SectionNodeView, page: PageNodeView };
 
@@ -308,8 +310,9 @@ export default function SiteMapFlow({ group, liveUrlFor }: SiteMapFlowProps) {
         onNodeClick={onNodeClick}
         fitView
         fitViewOptions={{ padding: 0.15 }}
-        minZoom={0.1}
+        minZoom={0.2}
         maxZoom={1.5}
+        onlyRenderVisibleElements
         proOptions={{ hideAttribution: true }}
         nodesConnectable={false}
         nodesDraggable={false}
