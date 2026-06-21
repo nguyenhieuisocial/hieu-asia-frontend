@@ -240,6 +240,16 @@ export default function GieoQuePage() {
                   const isQianKun =
                     result.hexagramPrimary.id === 1 || result.hexagramPrimary.id === 2;
                   const focus = readingFocus(result.movingLines, isQianKun);
+                  const changed = result.hexagramChanging;
+                  // Ca 4–5 hào động: Chu Hy bảo đọc hào-từ các hào TĨNH trên QUẺ
+                  // BIẾN. readingFocus đã chọn đúng các hào đó (focus.lines = hào
+                  // tĩnh, là số KHÔNG nằm trong movingLines). Hiện ngay lời ấy để
+                  // chỉ dẫn không trỏ vào chữ vắng mặt (card "Hào động" bên dưới
+                  // chỉ in hào-từ các hào ĐỘNG trên quẻ chính).
+                  const changedReadLines =
+                    focus.primary === 'line' && changed
+                      ? focus.lines.filter((l) => !result.movingLines.includes(l))
+                      : [];
                   return (
                     <Card className="border-gold/30 bg-gold/5">
                       <CardHeader>
@@ -254,6 +264,25 @@ export default function GieoQuePage() {
                             <span className="font-semibold text-gold-700">Hào chủ đạo:</span>{' '}
                             {getHaoDongMota(focus.chuDao)?.ten ?? `Hào ${focus.chuDao}`}
                           </p>
+                        )}
+                        {changed && changedReadLines.length > 0 && (
+                          <div className="space-y-2 border-t border-gold/20 pt-2.5">
+                            <p className="text-xs font-semibold text-gold-700">
+                              Hào-từ nên đọc — trên quẻ biến {changed.nameVi}:
+                            </p>
+                            {changedReadLines.map((l) => {
+                              const hao = getHaoTu(changed.id, l);
+                              if (!hao) return null;
+                              return (
+                                <div key={l} className="rounded-md border border-gold/20 bg-gold/5 px-3 py-2">
+                                  <div className="mb-1 text-xs font-semibold text-gold-700">{hao.label}</div>
+                                  <p lang="zh-Hant" className="font-heading text-base leading-relaxed text-foreground">{hao.han}</p>
+                                  <p className="text-sm italic leading-relaxed text-foreground/80">{hao.hanViet}</p>
+                                  <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground">{hao.nghia}</p>
+                                </div>
+                              );
+                            })}
+                          </div>
                         )}
                         <p className="text-xs leading-relaxed text-muted-foreground">
                           Phép xét theo số hào động của Chu Hy 朱熹{' '}

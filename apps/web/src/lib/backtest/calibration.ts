@@ -111,6 +111,10 @@ export interface BuildTupleArgs {
 export function buildCalibrationTuple(args: BuildTupleArgs): CalibrationTuple | null {
   const { score, realCategory, lossTarget, isControl, birthYear, eventYear, captureYear, baseRateHits } = args;
   if (score.grade === 'UNSCORABLE' || score.governingPalace == null) return null;
+  // Event before birth = impossible/typo → would feed a NEGATIVE age into
+  // ageBucket (silently bucketed '<20'), polluting the calibration corpus.
+  // Drop it rather than persist a junk tuple.
+  if (eventYear < birthYear) return null;
   return {
     rulesetVersion: RULESET_VERSION,
     kind: args.kind ?? 'backtest',

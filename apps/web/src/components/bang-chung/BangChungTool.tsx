@@ -113,12 +113,17 @@ export function BangChungTool() {
       setError('Hãy chọn ngày sinh dương lịch.');
       return;
     }
+    const birthYear = Number(date.slice(0, 4));
     const events: LifeEvent[] = [];
     for (const r of rows) {
       const y = Number(r.year);
       if (!r.year) continue; // skip blank rows
       if (!Number.isInteger(y) || y < 1900 || y > nowYear) {
         setError(`Năm "${r.year}" không hợp lệ (1900–${nowYear}).`);
+        return;
+      }
+      if (y < birthYear) {
+        setError(`Năm sự kiện "${r.year}" không thể trước năm sinh (${birthYear}).`);
         return;
       }
       if (r.category === 'loss' && !r.lossTarget) {
@@ -153,7 +158,6 @@ export function BangChungTool() {
       // data or the raw year (see calibration.ts). The control is computed from
       // the in-memory chart here; it can never be reconstructed later.
       try {
-        const birthYear = Number(date.slice(0, 4));
         const tuples: CalibrationTuple[] = [];
         for (let i = 0; i < signals.length; i++) {
           const sig = signals[i]!;
