@@ -60,6 +60,8 @@ const config: Config = {
           // VN fallback for chars outside Instrument Serif latin-ext subset
           // (Be Vietnam Pro already loaded in root layout).
           'var(--font-be-vietnam)',
+          // Han chars → self-hosted Noto Serif SC subset (unicode-range gated).
+          'Noto Serif SC Han',
           'Georgia',
           'serif',
         ],
@@ -73,6 +75,8 @@ const config: Config = {
         'editorial-display': [
           'var(--font-newsreader)',
           'var(--font-be-vietnam)',
+          // Han chars → self-hosted Noto Serif SC subset (unicode-range gated).
+          'Noto Serif SC Han',
           'Georgia',
           'serif',
         ],
