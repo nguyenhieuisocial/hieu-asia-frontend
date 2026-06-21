@@ -60,6 +60,13 @@ function requiredRank(method: string, segments: string[]): number {
   if (segments[0] === 'admin' && segments[1] === 'sessions' && segments[3] === 'access') {
     return ROLE_RANK.owner;
   }
+  // Alert-threshold writes are owner-only — a viewer/admin must not be able to
+  // mute production alerts. Read (GET) stays open to viewer. (Mirrors the
+  // dedicated /api/admin/settings/alert-thresholds proxy's owner gate so the
+  // generic proxy path can't bypass it.)
+  if (path === 'admin/settings/alert-thresholds' && method !== 'GET') {
+    return ROLE_RANK.owner;
+  }
   // Default: reads open to viewer; any write needs admin.
   return method === 'GET' ? ROLE_RANK.viewer : ROLE_RANK.admin;
 }

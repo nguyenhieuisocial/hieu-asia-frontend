@@ -30,7 +30,7 @@
 
 import { Annotation, StateGraph, START, END } from '@langchain/langgraph';
 import { createClient } from '@supabase/supabase-js';
-import { reasoningGenerate, type Tier } from './llm';
+import { reasoningGenerate, requireText, type Tier } from './llm';
 import { computeCostUsd } from './cost';
 
 /* ─── Cost helper (Phase 2.6 dedupe — pricing now in cost.ts) ─────────── */
@@ -189,13 +189,16 @@ KHÔNG dùng các cụm cấm.`;
     tier: 'top',
     system,
     prompt,
-    maxOutputTokens: 1400,
+    maxOutputTokens: 2400, // ~400–600 từ tiếng Việt — tránh cắt cụt giữa câu
     label: 'synthesize',
   });
   incrementCost(state.runId, 'top', first.usage, 'synthesize');
 
-  if (!FORBIDDEN_PHRASES.test(first.text)) {
-    return { synthesis: first.text };
+  // Empty completion → throw (route 502) thay vì trả bản đọc TRỐNG như thành công.
+  const firstText = requireText(first, 'synthesize');
+
+  if (!FORBIDDEN_PHRASES.test(firstText)) {
+    return { synthesis: firstText };
   }
 
   const retry = await reasoningGenerate({
@@ -204,11 +207,11 @@ KHÔNG dùng các cụm cấm.`;
       system +
       '\n\nBẮT BUỘC: KHÔNG dùng các cụm "định mệnh", "chắc chắn", "phải làm", "không thể", "sẽ xảy ra". Bản nháp trước vi phạm; viết lại với văn phong mentor.',
     prompt,
-    maxOutputTokens: 1400,
+    maxOutputTokens: 2400,
     label: 'synthesize.retry',
   });
   incrementCost(state.runId, 'top', retry.usage, 'synthesize.retry');
-  return { synthesis: retry.text };
+  return { synthesis: requireText(retry, 'synthesize.retry') };
 }
 
 /* ─── Wiring ─────────────────────────────────────────────────────────── */
