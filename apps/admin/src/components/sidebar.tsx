@@ -57,6 +57,7 @@ import {
   Search,
   Server,
   Network,
+  FolderTree,
 } from 'lucide-react';
 
 interface NavItem {
@@ -79,6 +80,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/', label: 'Tổng quan', Icon: LayoutDashboard },
       { href: '/copilot', label: 'Trợ lý AI', Icon: Bot },
       { href: '/architecture', label: 'Sơ đồ hệ thống', Icon: Network },
+      { href: '/site-structure', label: 'Cấu trúc trang', Icon: FolderTree },
       { href: '/system', label: 'Trạng thái hệ thống', Icon: ServerCog },
       { href: '/infra', label: 'Hạ tầng', Icon: Server },
     ],
