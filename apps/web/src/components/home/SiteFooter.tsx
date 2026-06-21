@@ -23,6 +23,7 @@ interface FooterLink {
 const COL_PRODUCT: readonly FooterLink[] = [
   { href: '/onboarding?intent=self', label: 'Lá số tử vi' },
   { href: '/onboarding?intent=decision', label: 'AI Mentor' },
+  { href: '/lo-trinh', label: 'Lộ trình cá nhân' },
   { href: '/cong-cu', label: 'Tất cả công cụ' },
   { href: '/sample-report', label: 'Báo cáo mẫu' },
   { href: '/pricing', label: 'Bảng giá' },
