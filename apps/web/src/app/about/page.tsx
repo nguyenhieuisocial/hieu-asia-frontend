@@ -97,7 +97,7 @@ export default function AboutPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(ABOUT_JSON_LD) }}
       />
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
+      <main id="main-content" className="min-h-screen bg-background text-foreground">
         {/* Section 1 — Hero + Founder face placeholder.
             Wave 60.79.T1 (vault 112 P0-03): add gold-ring ornament so the
             right ~50% of viewport at lg+ is no longer dead space. */}

@@ -136,7 +136,7 @@ export default function TuVi2026Page() {
           className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-ink-radial opacity-80"
         />
 
-        <section className="relative mx-auto max-w-3xl px-6 pb-12 pt-12 sm:pt-16">
+        <section className="relative mx-auto max-w-3xl px-6 pb-12 pt-6 sm:pt-8">
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Năm Bính Ngọ · hành Hỏa · 17/02/2026 → 05/02/2027
           </p>

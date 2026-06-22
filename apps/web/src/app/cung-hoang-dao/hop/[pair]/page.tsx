@@ -104,7 +104,7 @@ export default async function PairPage({ params }: { params: Promise<{ pair: str
         />
 
         {/* Hero */}
-        <section className="relative mx-auto max-w-3xl px-6 pb-10 pt-12 sm:pt-16">
+        <section className="relative mx-auto max-w-3xl px-6 pb-10 pt-6 sm:pt-8">
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Độ hợp cung hoàng đạo
           </p>

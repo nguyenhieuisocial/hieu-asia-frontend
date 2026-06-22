@@ -88,7 +88,7 @@ function AccountSkeleton({ message }: { message?: string } = {}) {
       role="status"
       aria-live="polite"
       aria-busy="true"
-      className="mx-auto max-w-3xl space-y-10 px-6 pb-20 pt-12 sm:pt-16"
+      className="mx-auto max-w-3xl space-y-10 px-6 pb-20 pt-6 sm:pt-8"
     >
       <div aria-hidden className="space-y-3">
         <div className="h-3 w-24 animate-pulse rounded bg-card/30" />
@@ -172,7 +172,7 @@ function AccountPageInner() {
           className="pointer-events-none absolute -top-20 right-[-10%] h-[360px] w-[360px] rounded-full bg-gold/10 blur-3xl"
         />
 
-        <section className="relative mx-auto max-w-3xl space-y-12 px-6 pb-20 pt-12 sm:pt-16">
+        <section className="relative mx-auto max-w-3xl space-y-12 px-6 pb-20 pt-6 sm:pt-8">
           <FeedHero user={auth.user} />
           <div id="streak" className="scroll-mt-24">
             <StreakCard />

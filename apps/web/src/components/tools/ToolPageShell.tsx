@@ -89,7 +89,7 @@ export function ToolPageShell({
         />
 
         <section className="relative">
-          <div className="mx-auto max-w-6xl px-6 pt-12 pb-8 sm:pt-16 sm:pb-12">
+          <div className="mx-auto max-w-6xl px-6 pt-6 pb-8 sm:pt-8 sm:pb-12">
             {breadcrumb && breadcrumb.length > 0 && (
               <nav aria-label="Breadcrumb" className="mb-4">
                 <ol className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">

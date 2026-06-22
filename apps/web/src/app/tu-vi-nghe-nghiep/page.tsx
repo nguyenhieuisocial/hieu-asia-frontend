@@ -172,7 +172,7 @@ export default function TuViNgheNghiepPage() {
           className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-ink-radial opacity-80"
         />
 
-        <section className="relative mx-auto max-w-3xl px-6 pb-12 pt-12 sm:pt-16">
+        <section className="relative mx-auto max-w-3xl px-6 pb-12 pt-6 sm:pt-8">
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Tử Vi · Sự nghiệp & vai trò
           </p>

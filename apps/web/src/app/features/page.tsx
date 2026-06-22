@@ -513,7 +513,7 @@ export default function FeaturesPage() {
     <>
       <JsonLd data={[FEATURES_JSON_LD, faqPage(FEATURES_FAQ_SCHEMA)]} />
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
+      <main id="main-content" className="min-h-screen bg-background text-foreground">
         {/* Hero — Wave 60.56 P3.3: consolidated MarketingHero (R1 finding:
             kill purple-radial paste, single source of truth for hero block).
             Wave 60.79.T1 (vault 112 P0-04): add gold-ring ornament so the

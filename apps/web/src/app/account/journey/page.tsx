@@ -79,7 +79,7 @@ export default function JourneyPage() {
           className="pointer-events-none absolute -top-24 right-[-10%] h-[420px] w-[420px] rounded-full bg-gold/10 blur-3xl"
         />
 
-        <section className="relative mx-auto max-w-4xl px-6 pb-24 pt-12 sm:pt-16">
+        <section className="relative mx-auto max-w-4xl px-6 pb-24 pt-6 sm:pt-8">
           {/* Hero: count copy on the left, the star on the right. */}
           <div className="grid items-center gap-10 sm:grid-cols-[minmax(0,1fr)_300px]">
             <div>

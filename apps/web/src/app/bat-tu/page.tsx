@@ -143,7 +143,7 @@ export default function BatTuLandingPage() {
 
       <main id="main-content" className="relative pt-16">
         {/* Hero */}
-        <section className="relative overflow-hidden bg-background py-16 md:py-20 lg:py-24">
+        <section className="relative overflow-hidden bg-background pt-6 pb-16 md:pt-8 md:pb-20 lg:pb-24">
           <div className="relative mx-auto max-w-marketing px-6 lg:px-12">
             <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground/70">
               <Link href="/" className="hover:text-gold">

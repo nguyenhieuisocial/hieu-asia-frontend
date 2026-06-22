@@ -350,7 +350,7 @@ export default function MethodologyTuViPage() {
           className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-ink-radial opacity-80"
         />
 
-        <section className="relative mx-auto max-w-3xl px-6 pb-12 pt-12 sm:pt-16">
+        <section className="relative mx-auto max-w-3xl px-6 pb-12 pt-6 sm:pt-8">
           <nav aria-label="Breadcrumb" className="mb-4 text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">
               Trang chủ
