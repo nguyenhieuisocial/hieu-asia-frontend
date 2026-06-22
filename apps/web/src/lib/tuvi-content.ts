@@ -75,7 +75,7 @@ export const PALACES_CONTENT: PalaceContent[] = [
       'Đối chiếu với Mệnh — Phụ Mẫu mạnh hỗ trợ Mệnh hay đè nén.',
       'Hoá Kỵ tại Phụ Mẫu thường liên quan đến "vướng" với gia đình hoặc thẩm quyền.',
     ],
-    trigon: ['Phụ Mẫu', 'Phúc Đức', 'Thiên Di', 'Quan Lộc'],
+    trigon: ['Phụ Mẫu', 'Tử Tức', 'Nô Bộc', 'Tật Ách'],
     commonStars: ['Thiên Lương', 'Thái Dương', 'Thiên Đồng'],
     faq: [
       {
@@ -102,7 +102,7 @@ export const PALACES_CONTENT: PalaceContent[] = [
       'Phúc Đức xung Phu Thê → kỳ vọng quá cao trong quan hệ, dễ thất vọng.',
       'Phúc Đức và Mệnh đồng dụng → tâm bình, sống thư thái.',
     ],
-    trigon: ['Phúc Đức', 'Phụ Mẫu', 'Tài Bạch', 'Phu Thê'],
+    trigon: ['Phúc Đức', 'Phu Thê', 'Thiên Di', 'Tài Bạch'],
     commonStars: ['Thiên Lương', 'Thiên Cơ', 'Tham Lang'],
     faq: [],
   },
@@ -122,7 +122,7 @@ export const PALACES_CONTENT: PalaceContent[] = [
       'Cát tinh tại Điền Trạch → dễ tích luỹ tài sản cố định.',
       'Sát tinh → cần thận trọng đầu tư bất động sản, đặc biệt khi đại vận xung Điền Trạch.',
     ],
-    trigon: ['Điền Trạch', 'Tử Tức', 'Huynh Đệ', 'Nô Bộc'],
+    trigon: ['Điền Trạch', 'Huynh Đệ', 'Tật Ách', 'Tử Tức'],
     commonStars: ['Thiên Phủ', 'Vũ Khúc', 'Thái Âm'],
     faq: [],
   },
@@ -145,7 +145,7 @@ export const PALACES_CONTENT: PalaceContent[] = [
       'Quan Lộc trống chính tinh → luận theo cung đối diện và bộ tam phương.',
       'So sánh Quan Lộc với Mệnh — đồng dụng thì sự nghiệp ăn khớp tính cách; xung khắc thì phải học cách thích nghi.',
     ],
-    trigon: ['Quan Lộc', 'Mệnh', 'Tài Bạch', 'Thiên Di'],
+    trigon: ['Quan Lộc', 'Mệnh', 'Tài Bạch', 'Phu Thê'],
     commonStars: ['Vũ Khúc', 'Tử Vi', 'Thái Dương', 'Liêm Trinh', 'Thất Sát', 'Phá Quân'],
     faq: [
       {
@@ -174,7 +174,7 @@ export const PALACES_CONTENT: PalaceContent[] = [
       'Nô Bộc mạnh + Cát → có bạn bè nâng đỡ trong sự nghiệp.',
       'Nô Bộc xung Mệnh → dễ va chạm với người xung quanh hoặc bị ảnh hưởng nặng bởi môi trường.',
     ],
-    trigon: ['Nô Bộc', 'Huynh Đệ', 'Điền Trạch', 'Tử Tức'],
+    trigon: ['Nô Bộc', 'Tử Tức', 'Phụ Mẫu', 'Huynh Đệ'],
     commonStars: ['Thiên Đồng', 'Thiên Cơ', 'Cự Môn'],
     faq: [],
   },
@@ -194,7 +194,7 @@ export const PALACES_CONTENT: PalaceContent[] = [
       'Cát tinh tại Thiên Di → đi xa thuận lợi, dễ mở mang sự nghiệp khi rời quê.',
       'Thiên Di xung Mệnh là điều bình thường (luôn xung) — quan trọng là xem sát tinh đi kèm.',
     ],
-    trigon: ['Thiên Di', 'Mệnh', 'Quan Lộc', 'Tài Bạch'],
+    trigon: ['Thiên Di', 'Phu Thê', 'Phúc Đức', 'Mệnh'],
     commonStars: ['Thái Dương', 'Thiên Mã', 'Thiên Cơ'],
     faq: [],
   },
@@ -215,7 +215,7 @@ export const PALACES_CONTENT: PalaceContent[] = [
       'Sát tinh + Hoá Kỵ → cần lưu ý các giai đoạn căng để nghỉ ngơi, không phải dự báo bệnh nặng.',
       'KHÔNG dùng Tật Ách thay khám bệnh. Có triệu chứng → đi bác sĩ.',
     ],
-    trigon: ['Tật Ách', 'Phu Thê', 'Phụ Mẫu', 'Tài Bạch'],
+    trigon: ['Tật Ách', 'Huynh Đệ', 'Điền Trạch', 'Phụ Mẫu'],
     commonStars: ['Thiên Cơ', 'Cự Môn', 'Liêm Trinh'],
     faq: [
       {
@@ -243,7 +243,7 @@ export const PALACES_CONTENT: PalaceContent[] = [
       'Tài Bạch xung Phúc Đức → tiền nhiều nhưng không thấy đủ; cần xem cả tâm thái.',
       'KHÔNG dùng Tài Bạch để quyết định mua/bán cổ phiếu cụ thể.',
     ],
-    trigon: ['Tài Bạch', 'Quan Lộc', 'Mệnh', 'Thiên Di'],
+    trigon: ['Tài Bạch', 'Mệnh', 'Quan Lộc', 'Phúc Đức'],
     commonStars: ['Vũ Khúc', 'Thiên Phủ', 'Thái Âm', 'Tham Lang', 'Phá Quân'],
     faq: [
       {
@@ -268,7 +268,7 @@ export const PALACES_CONTENT: PalaceContent[] = [
       'Cát + Tử Tức mạnh → con cái thuận hoà hoặc dự án dài hạn dễ thành.',
       'Sát tinh → có thể có "khó khăn ban đầu" — cần kiên nhẫn.',
     ],
-    trigon: ['Tử Tức', 'Điền Trạch', 'Nô Bộc', 'Huynh Đệ'],
+    trigon: ['Tử Tức', 'Nô Bộc', 'Phụ Mẫu', 'Điền Trạch'],
     commonStars: ['Thiên Đồng', 'Tham Lang', 'Cự Môn'],
     faq: [],
   },
@@ -291,7 +291,7 @@ export const PALACES_CONTENT: PalaceContent[] = [
       'Phu Thê và Phúc Đức → kỳ vọng quan hệ có thực tế hay không.',
       'KHÔNG dùng cung Phu Thê để kết luận "có nên chia tay hay không" — quyết định đó cần dữ kiện đời thực + tham vấn người chuyên môn.',
     ],
-    trigon: ['Phu Thê', 'Phúc Đức', 'Tật Ách', 'Quan Lộc'],
+    trigon: ['Phu Thê', 'Thiên Di', 'Phúc Đức', 'Quan Lộc'],
     commonStars: ['Thái Âm', 'Thiên Đồng', 'Thiên Lương', 'Liêm Trinh'],
     faq: [
       {
@@ -316,7 +316,7 @@ export const PALACES_CONTENT: PalaceContent[] = [
       'Huynh Đệ mạnh + Cát → có bạn thân hỗ trợ.',
       'Sát tinh → dễ va chạm hoặc khoảng cách với anh chị em.',
     ],
-    trigon: ['Huynh Đệ', 'Nô Bộc', 'Tử Tức', 'Điền Trạch'],
+    trigon: ['Huynh Đệ', 'Tật Ách', 'Điền Trạch', 'Nô Bộc'],
     commonStars: ['Thiên Cơ', 'Thái Âm', 'Cự Môn'],
     faq: [],
   },
