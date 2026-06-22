@@ -277,12 +277,17 @@ export default function DiscPage() {
                     return {
                       title: 'Kết quả DiSC của tôi — hieu.asia',
                       subtitle: `Phong cách chính: ${code} · ${DIM_META[result.primary_style].label} · ${DIM_META[result.secondary_style].label}`,
+                      hero: {
+                        big: code,
+                        small: `${DIM_META[result.primary_style].label} · ${DIM_META[result.secondary_style].label}`,
+                      },
                       sections: [
                         {
                           heading: 'Điểm 4 phong cách hành vi',
                           rows: DIM_ORDER.map((dim) => ({
                             label: `${DIM_META[dim].letter} · ${DIM_META[dim].label}`,
                             value: `${result.scores[dim]}/100`,
+                            bar: result.scores[dim],
                           })),
                         },
                         ...DIM_ORDER.map((dim) => ({

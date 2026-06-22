@@ -76,6 +76,7 @@ export default function XemNgayHubPage() {
           { label: 'Lịch Vạn Niên', href: '/lich-van-nien' },
           { label: 'Xem ngày tốt' },
         ]}
+        relatedSlug="/xem-ngay"
       >
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {PURPOSES.map((p) => (

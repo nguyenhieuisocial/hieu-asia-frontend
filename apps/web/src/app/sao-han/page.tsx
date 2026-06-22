@@ -80,6 +80,7 @@ export default function SaoHanPage() {
           { label: 'Lịch Vạn Niên', href: '/lich-van-nien' },
           { label: 'Xem sao hạn' },
         ]}
+        relatedSlug="/sao-han"
       >
         <section className="space-y-8">
           <SaoHanCalculator />

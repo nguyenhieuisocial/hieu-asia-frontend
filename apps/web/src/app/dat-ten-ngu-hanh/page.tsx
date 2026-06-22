@@ -79,6 +79,7 @@ export default function DatTenNguHanhPage() {
           { label: 'Trang chủ', href: '/' },
           { label: 'Đặt tên ngũ hành' },
         ]}
+        relatedSlug="/dat-ten-ngu-hanh"
       >
         <section className="space-y-8">
           <DatTenNguHanhChecker />

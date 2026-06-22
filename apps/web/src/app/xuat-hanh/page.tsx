@@ -76,6 +76,7 @@ export default function XuatHanhPage() {
           { label: 'Lịch Vạn Niên', href: '/lich-van-nien' },
           { label: 'Hướng & giờ xuất hành' },
         ]}
+        relatedSlug="/xuat-hanh"
       >
         <section className="space-y-8">
           <XuatHanhChecker />
