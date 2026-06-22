@@ -24,11 +24,16 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export interface ToolPdfPayload {
   title: string;
   subtitle?: string;
+  /** Prominent result headline (the takeaway) rendered above the sections. */
+  hero?: { big: string; small?: string };
   sections: Array<{
     heading: string;
-    rows?: Array<{ label: string; value: string }>;
+    /** rows[].bar (0–100) renders a gold gradient score bar under the value. */
+    rows?: Array<{ label: string; value: string; bar?: number }>;
     text?: string;
   }>;
+  /** Lead-magnet call-to-action override; the template has a sensible default. */
+  cta?: { text?: string; url?: string };
 }
 
 export function DownloadToolPdfButton({
