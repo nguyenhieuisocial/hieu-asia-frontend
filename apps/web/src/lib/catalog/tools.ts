@@ -14,7 +14,7 @@ export interface QuickTool {
   label: string;
   tier: ToolTier;
   /** drawer sub-group key (mobile nav grouping); footer ignores it */
-  group?: 'co-hoc' | 'theo-mua' | 'tam-ly' | 'kham-pha';
+  group?: 'co-hoc' | 'theo-mua' | 'tam-ly' | 'chiem-tinh' | 'kham-pha';
 }
 
 /** Sub-group order + labels for the mobile drawer "Tra cứu nhanh" section. */
@@ -22,6 +22,7 @@ export const QUICK_GROUPS: { key: NonNullable<QuickTool['group']>; label: string
   { key: 'co-hoc', label: 'Cổ học Á Đông' },
   { key: 'theo-mua', label: 'Theo thời điểm' },
   { key: 'tam-ly', label: 'Tâm lý hiện đại' },
+  { key: 'chiem-tinh', label: 'Chiêm tinh phương Tây' },
   { key: 'kham-pha', label: 'Khám phá' },
 ];
 
@@ -44,7 +45,9 @@ export const QUICK_LOOKUP: QuickTool[] = [
   { href: '/than-so-hoc', label: 'Thần số học', tier: 'free', group: 'co-hoc' },
   { href: '/thuoc-lo-ban', label: 'Thước Lỗ Ban', tier: 'free', group: 'co-hoc' },
   { href: '/tinh-menh-cuc', label: 'Tuổi mệnh cục', tier: 'free', group: 'co-hoc' },
-  { href: '/ban-do-sao', label: 'Bản đồ sao', tier: 'premium', group: 'co-hoc' },
+  { href: '/ban-do-sao', label: 'Bản đồ sao', tier: 'free', group: 'chiem-tinh' },
+  { href: '/cung-hoang-dao', label: 'Cung hoàng đạo', tier: 'free', group: 'chiem-tinh' },
+  { href: '/tarot', label: 'Tarot', tier: 'free', group: 'kham-pha' },
   { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại', tier: 'free', group: 'theo-mua' },
   { href: '/gieo-que', label: 'Gieo Quẻ Kinh Dịch', tier: 'free', group: 'co-hoc' },
   { href: '/big-five', label: 'Big Five (OCEAN)', tier: 'free', group: 'tam-ly' },
@@ -98,7 +101,14 @@ export const TOOLKIT_GROUPS: ToolGroup[] = [
       { n: 'Enneagram', href: '/enneagram', learn: '/learn/enneagram' },
     ],
   },
-  { label: 'Trực giác', tools: [{ n: 'Tarot', href: '/tarot' }] },
+  {
+    label: 'Chiêm tinh phương Tây',
+    tools: [
+      { n: 'Bản đồ sao', href: '/ban-do-sao' },
+      { n: 'Cung hoàng đạo', href: '/cung-hoang-dao' },
+    ],
+  },
+  { label: 'Trực giác', tools: [{ n: 'Tarot', href: '/tarot', learn: '/learn/tarot' }] },
   {
     label: 'Khám phá & so sánh',
     tools: [

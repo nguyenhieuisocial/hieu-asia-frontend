@@ -30,7 +30,13 @@ const CATEGORIES: ExplorerCategory[] = [
     id: 'hieu-ban-than',
     icon: '🧠',
     label: 'Hiểu bản thân',
-    blurb: 'Trắc nghiệm tâm lý đo được + chiêm tinh phương Tây — bạn là ai qua nhiều lăng kính.',
+    blurb: 'Trắc nghiệm tâm lý đo được — MBTI, Big Five, DISC, Enneagram, thần số — bạn là ai qua nhiều lăng kính.',
+  },
+  {
+    id: 'chiem-tinh',
+    icon: '🔭',
+    label: 'Chiêm tinh & Tarot',
+    blurb: 'Chiêm tinh phương Tây và Tarot — ngôn ngữ biểu tượng quen thuộc với người trẻ để hiểu mình và đặt câu hỏi sâu hơn.',
   },
   {
     id: 'ngay-gio',
@@ -86,9 +92,12 @@ const TOOLS: ExplorerTool[] = [
   { cat: 'hieu-ban-than', href: '/disc', emoji: '🎯', name: 'DISC', desc: 'Bốn phong cách hành vi: Dominance, Influence, Steadiness, Compliance.' },
   { cat: 'hieu-ban-than', href: '/enneagram', emoji: '🌀', name: 'Enneagram', desc: 'Chín nhóm tính cách — khám phá động cơ và nỗi sợ cốt lõi của bạn.' },
   { cat: 'hieu-ban-than', href: '/than-so-hoc', emoji: '🔢', name: 'Thần Số Học', desc: 'Numerology: con số cuộc đời, sứ mệnh, linh hồn.' },
-  { cat: 'hieu-ban-than', href: '/ban-do-sao', emoji: '🔭', name: 'Bản đồ sao', desc: 'Chiêm tinh phương Tây: cung Mặt Trời & Mặt Trăng từ ngày giờ sinh.' },
-  { cat: 'hieu-ban-than', href: '/cung-hoang-dao', emoji: '♌', name: 'Cung hoàng đạo', desc: '12 cung hoàng đạo: tra cung theo ngày sinh, tính cách, nguyên tố và cung hợp nhau.' },
   { cat: 'hieu-ban-than', href: '/xem-tuong', emoji: '🖐️', name: 'Xem Chỉ Tay & Tướng Mặt', desc: 'Tải ảnh lòng bàn tay hoặc khuôn mặt — AI phân tích xu hướng tính cách theo tướng số học.' },
+
+  // ── Chiêm tinh & Tarot ──────────────────────────────────────────
+  { cat: 'chiem-tinh', href: '/ban-do-sao', emoji: '🔭', name: 'Bản đồ sao', desc: 'Chiêm tinh phương Tây: cung Mặt Trời, Mặt Trăng & cung Mọc từ ngày giờ sinh — bản đồ sao cá nhân.' },
+  { cat: 'chiem-tinh', href: '/cung-hoang-dao', emoji: '♌', name: 'Cung hoàng đạo', desc: '12 cung hoàng đạo: tra cung theo ngày sinh, tính cách, nguyên tố và cung hợp nhau.' },
+  { cat: 'chiem-tinh', href: '/tarot', emoji: '🃏', name: 'Tarot', desc: '78 lá bài — ngôn ngữ biểu tượng để đặt câu hỏi sâu hơn.' },
 
   // ── Xem ngày – giờ ──────────────────────────────────────────────
   { cat: 'ngay-gio', href: '/lich-van-nien', emoji: '📅', name: 'Lịch Vạn Niên', desc: 'Tra cứu ngày tốt xấu, giờ hoàng đạo, lịch âm dương đầy đủ.' },
@@ -118,7 +127,6 @@ const TOOLS: ExplorerTool[] = [
   { cat: 'kham-pha', href: '/so-sanh', emoji: '🪞', name: 'So Sánh Lăng Kính', desc: 'Đặt hai lăng kính cạnh nhau — MBTI vs Big Five, Tử Vi vs Bát Tự… thấy rõ mỗi hệ soi sáng điều gì.' },
   { cat: 'kham-pha', href: '/decision-simulator', emoji: '🔀', name: 'Mô Phỏng Quyết Định', desc: 'Đặt 2 lựa chọn cạnh nhau — đối chiếu theo lá số để thấy mỗi hướng nghiêng về điều gì.' },
   { cat: 'kham-pha', href: '/career-fit', emoji: '🧩', name: 'Nhóm Nghề', desc: 'Gợi ý nhóm ngành nghề hợp với thiên hướng của bạn — từ tính cách và lá số.' },
-  { cat: 'kham-pha', href: '/tarot', emoji: '🃏', name: 'Tarot', desc: '78 lá bài — ngôn ngữ biểu tượng để đặt câu hỏi sâu hơn.' },
   { cat: 'kham-pha', href: '/gieo-que', emoji: '🪬', name: 'Gieo Quẻ', desc: 'Kinh Dịch 64 quẻ — hỏi thời thế, nhận chỉ dẫn từ âm dương.' },
   { cat: 'kham-pha', href: '/can-xuong', emoji: '⚖️', name: 'Cân Xương', desc: 'Luận cân nặng xương theo ngày sinh — luận mệnh dân gian.' },
   { cat: 'kham-pha', href: '/hoi-dap', emoji: '💬', name: 'Hỏi Đáp', desc: 'Giải đáp ngắn gọn những thắc mắc thường gặp về tử vi, bát tự và các công cụ tâm lý.' },
