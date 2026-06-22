@@ -666,7 +666,7 @@ export function MentorSampleInteractive() {
                 onChange={(e) => setInput(e.target.value)}
                 rows={3}
                 placeholder="VD: Tôi đang phân vân có nên đổi nghề không..."
-                className="min-h-[100px] w-full rounded-[2px] border border-border/40 bg-card p-4 font-sans text-[15px] leading-relaxed text-foreground placeholder:text-muted-foreground/50 focus:border-primary/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+                className="min-h-[100px] w-full rounded-[2px] border border-border/40 bg-card p-4 font-sans text-[15px] leading-relaxed text-foreground placeholder:text-muted-foreground focus:border-primary/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
               />
               <div className="mt-3 flex items-center justify-between gap-3">
                 <p className="text-[11px] text-muted-foreground">

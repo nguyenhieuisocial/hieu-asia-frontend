@@ -325,7 +325,7 @@ export function PricingTierV2({
                     naturally instead of "199K · /mo". */}
                 <p className="mt-8 font-editorial-display text-price-amount text-foreground">
                   {formatVND(amount)}{' '}
-                  <span className="text-muted-foreground/80">{unit}</span>
+                  <span className="whitespace-nowrap text-muted-foreground/80">{unit}</span>
                 </p>
 
                 {/* Wave 62.05 — "·" mid-dot bullet replaces the lucide Check
