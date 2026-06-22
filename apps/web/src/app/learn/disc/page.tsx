@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import {
   Accordion,
   AccordionContent,
@@ -129,23 +130,38 @@ export default function LearnDiscPage() {
           children: (
             <ul className="space-y-4">
               {STYLES.map((s) => (
-                <li key={s.letter} className="border-t border-border/60 pt-4 first:border-0 first:pt-0">
-                  <div className="flex items-baseline gap-2">
-                    <span className="font-heading text-base text-gold-700">{s.letter}</span>
-                    <span className="font-heading text-base text-foreground">{s.vi}</span>
-                    <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                      {s.en}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-sm leading-relaxed text-foreground/85">{s.drive}</p>
-                  <div className="mt-2 grid gap-2 sm:grid-cols-2">
-                    <p className="text-sm leading-relaxed text-foreground/85">
-                      <span className="font-medium text-gold-700">Điểm mạnh · </span>{s.strength}
-                    </p>
-                    <p className="text-sm leading-relaxed text-foreground/85">
-                      <span className="font-medium text-muted-foreground">Cần để ý · </span>{s.watch}
-                    </p>
-                  </div>
+                <li key={s.letter} className="border-t border-border/60 first:border-0">
+                  <Link
+                    href={`/learn/disc/${s.letter.toLowerCase()}`}
+                    className="group block rounded-lg py-4 transition hover:bg-card/40"
+                  >
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-heading text-base text-gold-700 group-hover:text-gold">
+                        {s.letter}
+                      </span>
+                      <span className="font-heading text-base text-foreground group-hover:text-gold">
+                        {s.vi}
+                      </span>
+                      <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                        {s.en}
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="ml-auto text-sm text-muted-foreground group-hover:text-gold"
+                      >
+                        →
+                      </span>
+                    </div>
+                    <p className="mt-2 text-sm leading-relaxed text-foreground/85">{s.drive}</p>
+                    <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                      <p className="text-sm leading-relaxed text-foreground/85">
+                        <span className="font-medium text-gold-700">Điểm mạnh · </span>{s.strength}
+                      </p>
+                      <p className="text-sm leading-relaxed text-foreground/85">
+                        <span className="font-medium text-muted-foreground">Cần để ý · </span>{s.watch}
+                      </p>
+                    </div>
+                  </Link>
                 </li>
               ))}
             </ul>
