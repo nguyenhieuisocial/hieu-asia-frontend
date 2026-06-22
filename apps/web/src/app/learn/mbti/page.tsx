@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import {
   Accordion,
   AccordionContent,
@@ -10,6 +11,14 @@ import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import { listTypes, MBTI_GROUPS, type MbtiGroupKey } from '@/lib/mbti-type-data';
+
+const GROUP_ORDER: MbtiGroupKey[] = ['NT', 'NF', 'SJ', 'SP'];
+const TYPES_BY_GROUP = GROUP_ORDER.map((g) => ({
+  key: g,
+  meta: MBTI_GROUPS[g],
+  types: listTypes().filter((t) => t.group === g),
+}));
 
 export const metadata: Metadata = {
   title: 'MBTI 16 loại tính cách | Học huyền học',
@@ -91,6 +100,49 @@ export default function LearnMBTIPage() {
           children: (
             <div className="rounded-xl border border-border bg-card/40 p-6 sm:p-8">
               <InfographicMBTI />
+            </div>
+          ),
+        },
+        {
+          id: 'muoi-sau-nhom',
+          tocLabel: '16 nhóm',
+          heading: '16 nhóm tính cách',
+          children: (
+            <div className="space-y-6">
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                Bấm vào từng nhóm để đọc sâu: tổng quan, điểm mạnh, hướng phát triển, chuỗi chức
+                năng nhận thức, công việc và các mối quan hệ.
+              </p>
+              {TYPES_BY_GROUP.map((grp) => (
+                <div key={grp.key}>
+                  <div className="mb-2 flex items-baseline gap-2">
+                    <span className="font-heading text-base text-foreground">{grp.meta.name}</span>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                      {grp.meta.en}
+                    </span>
+                  </div>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {grp.types.map((t) => (
+                      <Link
+                        key={t.slug}
+                        href={`/learn/mbti/${t.slug}`}
+                        className="group flex items-center gap-3 rounded-lg border border-border bg-card/40 px-3 py-2 transition hover:border-gold/40"
+                      >
+                        <span className="font-mono text-sm font-semibold tracking-wide text-gold-700 group-hover:text-gold">
+                          {t.code}
+                        </span>
+                        <span className="text-sm text-foreground/85">{t.nick}</span>
+                        <span
+                          aria-hidden="true"
+                          className="ml-auto text-sm text-muted-foreground group-hover:text-gold"
+                        >
+                          →
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           ),
         },
