@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 const FAQS = [
   {
     q: 'Chiromancy đến từ đâu?',
-    a: 'Xem chỉ tay (chiromancy / palmistry) xuất hiện độc lập ở nhiều nền văn hóa cổ đại — Ấn Độ (Hast Samudrika Shastra ~5,000 năm), Trung Hoa, Hy Lạp. Hệ thống hiện đại tại phương Tây phổ biến từ thế kỷ 19.',
+    a: 'Xem chỉ tay (chiromancy / palmistry) xuất hiện độc lập ở nhiều nền văn hóa cổ đại — Ấn Độ (Hast Samudrika Shastra, một truyền thống lâu đời), Trung Hoa, Hy Lạp. Hệ thống hiện đại tại phương Tây phổ biến từ thế kỷ 19.',
   },
   {
     q: 'Tay nào để xem?',

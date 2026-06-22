@@ -42,14 +42,14 @@ const LINES: readonly PalmLine[] = [
   {
     id: 'sun',
     name: 'Đường Mặt Trời (Sun line)',
-    desc: 'Phản ánh danh tiếng, sự công nhận và niềm vui sáng tạo.',
+    desc: 'Phản ánh niềm vui sáng tạo và sự được ghi nhận trong điều mình theo đuổi.',
     path: 'M 195 320 Q 200 240 210 110',
     color: '#F5C766',
   },
   {
     id: 'mercury',
     name: 'Đường Thủy Tinh (Health line)',
-    desc: 'Phản ánh sức khỏe, khả năng giao tiếp và kinh doanh.',
+    desc: 'Phản ánh khả năng giao tiếp, sự nhạy bén và đầu óc kinh doanh.',
     path: 'M 225 320 Q 235 240 245 130',
     color: '#A98AD3',
   },
