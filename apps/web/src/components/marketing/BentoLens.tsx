@@ -193,7 +193,7 @@ export function BentoLens({
                       textAnchor="end"
                       fill="#3F362D"
                       opacity="0.55"
-                      fontFamily="var(--font-marketing-display), Georgia, serif"
+                      fontFamily="var(--font-newsreader), Georgia, serif"
                       fontStyle="italic"
                       fontSize="100"
                     >
