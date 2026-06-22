@@ -94,7 +94,10 @@ const instrumentSerif = Instrument_Serif({
 // - 300 (display 88px hero), 400 (H1-H3 normal), 500 (button label), 700 (H2 emphasis).
 // Italic enabled for the signature `<em>verb</em>` accent inside headlines.
 const newsreader = Newsreader({
-  subsets: ['latin', 'latin-ext'],
+  // 2026-06-22 — +'vietnamese' subset: Newsreader giờ là serif display DUY NHẤT
+  // (marketing-display cũng trỏ về đây sau VN-fix) nên cần phủ trọn dấu tiếng Việt,
+  // không phụ thuộc latin-ext (tránh fallback sang sans gây lẫn font).
+  subsets: ['vietnamese', 'latin', 'latin-ext'],
   weight: ['300', '400', '500', '700'],
   style: ['normal', 'italic'],
   variable: '--font-newsreader',
