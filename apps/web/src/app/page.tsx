@@ -3,8 +3,6 @@ import { Calendar, User, Briefcase, HelpCircle, Heart } from 'lucide-react';
 import { PRICING, formatVND } from '@/lib/pricing';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
-import { WhyTrust } from '@/components/home/WhyTrust';
-import { HowToStart } from '@/components/home/HowToStart';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 import { AstroTickerLive } from '@/components/home/AstroTickerLive';
@@ -34,12 +32,6 @@ import { NotOraclesStrip } from '@/components/home-hero/NotOraclesStrip';
 import { Methodology } from '@/components/home-hero/Methodology';
 import { ToolkitSection } from '@/components/home-hero/ToolkitSection';
 import { MissionNote } from '@/components/home-hero/MissionNote';
-import { EditorialList } from '@/components/marketing/EditorialList';
-// Wave 62.09 — custom discipline icons (vault 138 "đừng dùng icon set").
-import { LaSoIcon } from '@/components/marketing/icons/LaSoIcon';
-import { BatTuIcon } from '@/components/marketing/icons/BatTuIcon';
-import { BigFiveEmblem, XemTuongEmblem } from '@/components/home-hero/LensGlyphs';
-import { MbtiIcon } from '@/components/marketing/icons/MbtiIcon';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { SampleOutputShowcase } from '@/components/marketing/SampleOutputShowcase';
 import { MentorSampleLazy } from '@/components/marketing/MentorSampleLazy';
@@ -465,6 +457,23 @@ export default function LandingPage() {
             trust-signal nổi bật của Bitget; tuyên bố đều kiểm chứng được). */}
         <RevealOnScroll><TrustBand /></RevealOnScroll>
 
+        {/* Wave 64 (declutter) — gieo giá sớm ngay sau trust: hạ rào cản, cho
+            thấy "miễn phí" + mức vào trước khi cuộn sâu tới bảng giá. Cố ý KHÔNG
+            nhắc "hoàn tiền" ở đây (giữ ở bảng giá cạnh điều khoản — review #2). */}
+        <div className="mx-auto flex max-w-marketing-tight flex-col items-center gap-1.5 px-6 pt-8 text-center sm:flex-row sm:justify-center sm:gap-3">
+          <p className="text-editorial-caption text-muted-foreground">
+            Lá số &amp; 5 lăng kính cơ bản{' '}
+            <strong className="font-medium text-foreground">miễn phí mãi mãi</strong> · đọc sâu từ{' '}
+            {formatVND(PRICING.premium.vnd)}.
+          </p>
+          <a
+            href="#pricing"
+            className="whitespace-nowrap font-mono text-editorial-mono uppercase tracking-[0.12em] text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
+          >
+            Xem các gói →
+          </a>
+        </div>
+
         {/* Wave 63.4 — removed the IntentChips "HOẶC BẮT ĐẦU TỪ" 6-lens strip.
             Founder (vault 138 review #2): the hero had THREE stacked start
             mechanisms — HeroV4's 2 CTAs, this 6-lens strip, and the ScanRow
@@ -543,74 +552,13 @@ export default function LandingPage() {
         {/* Breadth — chống undersell (founder feedback): KHÔNG chỉ 4 lăng kính, có cả bộ 12 công cụ. */}
         <RevealOnScroll><ToolkitSection /></RevealOnScroll>
 
-        {/* 2. WhyTrust — existing 3-pillar, wrap in warm-dark-100 shell */}
-        <div className="bg-muted/40">
-          <WhyTrust />
-        </div>
-
-        {/* 3. HowToStart — existing, warm-dark-50 tonal shift */}
-        <div className="bg-background">
-          <HowToStart />
-        </div>
-
-        {/* Wave 62.08 — EditorialList replaces BentoLens 2×2 grid here.
-            Founder vault 138 spec: "Đa số section '4 thẻ vuông' có thể
-            chuyển sang editorial list dọc với số thứ tự — tận dụng được
-            italic display, tạo nhịp đọc rõ, giảm cảm giác feature dump."
-            Each lens now reads as one chapter in a sequence, with mono
-            ordinal number + italic display heading + body + inline editorial
-            CTA. Removes the 4 implicit "click anywhere" CTAs from the old
-            grid tiles (Wave 62.06 conversion architecture). */}
-        <RevealOnScroll threshold={0.08}><EditorialList
-          eyebrow="NĂM ỐNG KÍNH"
-          title={
-            <>
-              Một con người, <em className="italic text-primary">soi</em> từ năm góc.
-            </>
-          }
-          items={[
-            {
-              icon: <LaSoIcon className="h-full w-full" />,
-              eyebrow: 'TỬ VI · CUNG MỆNH',
-              title: 'Đọc cung mệnh',
-              body: 'Bản đồ sao thời điểm sinh — không phải lời tiên tri, mà là bản đồ ưu thế và bóng tối tự nhiên. Tử Vi Đẩu Số tổng hợp 14 chính tinh trên 12 cung.',
-              href: '/learn/tu-vi',
-              cta: 'Đọc về Tử Vi',
-            },
-            {
-              icon: <BatTuIcon className="h-full w-full" />,
-              eyebrow: 'BÁT TỰ · NGŨ HÀNH',
-              title: 'Cân ngũ hành',
-              body: 'Tám chữ năm-tháng-ngày-giờ — đo nội lực và cân bằng nguyên tố qua quan hệ tương sinh tương khắc.',
-              href: '/learn/bat-tu',
-              cta: 'Đọc về Bát Tự',
-            },
-            {
-              icon: <MbtiIcon className="h-full w-full" />,
-              eyebrow: 'MBTI · TÂM LÝ HỌC',
-              title: 'Gọi tên tâm trí',
-              body: '16 kiểu Myers-Briggs — không nhãn dán, mà là ngôn ngữ để nhận diện thiên hướng nội tại.',
-              href: '/learn/mbti',
-              cta: 'Đọc về MBTI',
-            },
-            {
-              icon: <BigFiveEmblem className="h-full w-full" />,
-              eyebrow: 'BIG FIVE · OCEAN',
-              title: 'Đo 5 chiều',
-              body: 'Năm chiều tính cách (OCEAN) — mô hình tâm lý có cơ sở thực nghiệm vững nhất; đo xu hướng, không dán nhãn.',
-              href: '/big-five',
-              cta: 'Làm trắc nghiệm Big Five',
-            },
-            {
-              icon: <XemTuongEmblem className="h-full w-full" />,
-              eyebrow: 'XEM TƯỚNG · AI',
-              title: 'Đọc chỉ tay & tướng',
-              body: 'Chỉ tay và tướng mặt đọc từ ảnh — AI thị giác nhận diện nét tướng, mô tả xu hướng, không phán số phận.',
-              href: '/xem-tuong',
-              cta: 'Thử xem tướng',
-            },
-          ]}
-        /></RevealOnScroll>
+        {/* Wave 64 (declutter) — 3 khối bỏ ở đây:
+            • WhyTrust + HowToStart: niềm tin đã do TrustBand phủ SỚM (gồm Bằng
+              Chứng); các bước bắt đầu do StartupPath (ngay trước Pricing).
+            • EditorialList "NĂM ỐNG KÍNH": TRÙNG với Methodology ("Năm lăng kính,
+              một bức tranh") ở trên — Methodology giờ mang link /learn từng lăng
+              kính. Bỏ ~5 màn cuộn (nặng nhất trên mobile = 80% user).
+            Cả 3 component vẫn còn trong repo cho surface khác. */}
 
         {/* Wave 60.95.o — removed BigNumberRow section per founder direction.
             The block advertised seed numbers (1243 reports/4.8★) that the
@@ -666,6 +614,8 @@ export default function LandingPage() {
             xem mẫu báo cáo + Mentor demo. */}
 
         {/* 6. PricingTierV2 — 3 tiers replace 4 (Notion-style toggle + KHUYÊN DÙNG + refund) */}
+        {/* Wave 64 — anchor cho "Xem các gói →" (gieo giá sớm); scroll-mt chừa nav dính. */}
+        <div id="pricing" aria-hidden="true" className="scroll-mt-24" />
         <PricingTierV2
           eyebrow="GÓI THÀNH VIÊN"
           page="/"

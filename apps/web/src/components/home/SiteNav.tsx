@@ -23,7 +23,7 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { useAuth } from '@/hooks/use-auth';
 import { signOut } from '@/lib/auth-client';
 import { getStreak } from '@/lib/daily-checkin';
-import { QUICK_LOOKUP } from '@/lib/catalog/tools';
+import { QUICK_LOOKUP, QUICK_GROUPS } from '@/lib/catalog/tools';
 
 interface NavLink {
   href: string;
@@ -91,8 +91,13 @@ const PRIMARY_LINKS: readonly NavLink[] = [
  * in-menu access to the 12 lookup tools + learning topics instead of having to
  * scroll to the footer. Mirrors SiteFooter COL_QUICK_LOOKUP + learn topics.
  */
-// Tra cứu nhanh — từ catalog (lib/catalog/tools), khớp 1-1 với footer (hết trùng lặp).
-const MOBILE_TOOLS: readonly NavLink[] = QUICK_LOOKUP.map(({ href, label }) => ({ href, label }));
+// Tra cứu nhanh — từ catalog, chia nhóm con cho dễ tìm trên mobile (footer vẫn dùng phẳng).
+const MOBILE_TOOL_SECTIONS: readonly { label: string; links: readonly NavLink[] }[] = QUICK_GROUPS.map(
+  (g) => ({
+    label: g.label,
+    links: QUICK_LOOKUP.filter((t) => t.group === g.key).map(({ href, label }) => ({ href, label })),
+  }),
+).filter((s) => s.links.length > 0);
 
 const MOBILE_LEARN: readonly NavLink[] = [
   { href: '/learn', label: 'Tất cả bài học' },
@@ -270,16 +275,21 @@ function AuthedMenu({
   );
 }
 
-/** Wave 64.13 — collapsible link group for the mobile drawer (native <details>). */
+/** Wave 64.13 — collapsible link group for the mobile drawer (native <details>).
+    Wave 64 — optional `sections` renders grouped sub-headings for long lists. */
 function DrawerGroup({
   title,
   links,
+  sections,
   onNavigate,
 }: {
   title: string;
-  links: readonly NavLink[];
+  links?: readonly NavLink[];
+  sections?: readonly { label: string; links: readonly NavLink[] }[];
   onNavigate: () => void;
 }) {
+  const linkCls =
+    'rounded-md px-3 py-2 text-sm text-foreground/70 transition-colors hover:bg-primary/10 hover:text-primary';
   return (
     <details className="group">
       <summary className="flex cursor-pointer list-none items-center justify-between rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary [&::-webkit-details-marker]:hidden">
@@ -290,16 +300,24 @@ function DrawerGroup({
         />
       </summary>
       <div className="mb-1 flex flex-col gap-0.5 pl-2">
-        {links.map((l) => (
-          <Link
-            key={l.href}
-            href={l.href}
-            onClick={onNavigate}
-            className="rounded-md px-3 py-2 text-sm text-foreground/70 transition-colors hover:bg-primary/10 hover:text-primary"
-          >
-            {l.label}
-          </Link>
-        ))}
+        {sections
+          ? sections.map((s) => (
+              <div key={s.label} className="mt-1.5 flex flex-col gap-0.5 first:mt-0">
+                <p className="px-3 pt-1 font-mono text-[10px] uppercase tracking-[0.12em] text-primary/55">
+                  {s.label}
+                </p>
+                {s.links.map((l) => (
+                  <Link key={l.href} href={l.href} onClick={onNavigate} className={linkCls}>
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
+            ))
+          : links?.map((l) => (
+              <Link key={l.href} href={l.href} onClick={onNavigate} className={linkCls}>
+                {l.label}
+              </Link>
+            ))}
       </div>
     </details>
   );
@@ -414,8 +432,8 @@ function MobileDrawer({
           ))}
           <div className="my-2 h-px bg-muted/5" />
           <DrawerGroup
-            title="Công cụ tra cứu"
-            links={MOBILE_TOOLS}
+            title="Tra cứu nhanh"
+            sections={MOBILE_TOOL_SECTIONS}
             onNavigate={() => setOpen(false)}
           />
           <DrawerGroup

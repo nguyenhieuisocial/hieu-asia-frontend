@@ -1,4 +1,6 @@
 import * as React from 'react';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import { LENSES as CATALOG } from '@/lib/catalog/lenses';
 
 /**
@@ -11,6 +13,8 @@ const LENSES = CATALOG.map((l, i) => ({
   name: l.name,
   give: l.give,
   meta: l.meta,
+  cta: l.cta,
+  href: l.href,
 }));
 
 export function Methodology(): React.JSX.Element {
@@ -30,13 +34,23 @@ export function Methodology(): React.JSX.Element {
 
         <ol className="mt-8 flex flex-col border-y border-primary/10 divide-y divide-primary/10">
           {LENSES.map((l, i) => (
-            <li key={l.n} className="rv-up flex items-baseline gap-4 py-4" style={{ animationDelay: `${260 + i * 70}ms` }}>
-              <span className="font-mono text-sm text-primary/70">{l.n}</span>
-              <span className="min-w-[5em] font-editorial-display text-xl italic text-foreground">{l.name}</span>
-              <span className="flex-1 text-foreground/85">{l.give}</span>
-              <span className="hidden font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground sm:block">
-                {l.meta}
-              </span>
+            <li key={l.n} className="rv-up" style={{ animationDelay: `${260 + i * 70}ms` }}>
+              <Link
+                href={l.href}
+                aria-label={l.cta}
+                className="group flex items-baseline gap-4 py-4 transition-colors hover:bg-primary/[0.04]"
+              >
+                <span className="font-mono text-sm text-primary/70">{l.n}</span>
+                <span className="min-w-[5em] font-editorial-display text-xl italic text-foreground">{l.name}</span>
+                <span className="flex-1 text-foreground/85">{l.give}</span>
+                <span className="hidden font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground sm:block">
+                  {l.meta}
+                </span>
+                <ArrowRight
+                  className="h-4 w-4 shrink-0 self-center text-primary/50 transition-transform group-hover:translate-x-0.5 group-hover:text-primary"
+                  aria-hidden="true"
+                />
+              </Link>
             </li>
           ))}
         </ol>
