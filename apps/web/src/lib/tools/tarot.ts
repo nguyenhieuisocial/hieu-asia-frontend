@@ -21,6 +21,14 @@ export interface DrawnCard {
   orientation: CardOrientation;
 }
 
+/**
+ * Slug của trang chi tiết lá bài (/tarot/y-nghia/[slug]) suy từ tên tiếng Anh.
+ * Bất biến đã kiểm: kebab(name) === slug cho đủ 78 lá trong tarot-card-pages(-minor).
+ * Dùng cách này để KHÔNG phải nạp toàn bộ dữ liệu 78 lá vào bundle client.
+ */
+export const cardDetailSlug = (card: TarotCard): string =>
+  card.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
 const MAJOR: Omit<TarotCard, 'id' | 'arcana'>[] = [
   { name: 'The Fool', name_vi: 'Gã Khờ', up: 'khởi đầu mới, dám bước dù chưa chắc chắn', rev: 'liều lĩnh thiếu chuẩn bị; cân nhắc trước khi nhảy' },
   { name: 'The Magician', name_vi: 'Nhà Ảo Thuật', up: 'bạn đã có đủ công cụ — vấn đề là bắt tay làm', rev: 'tài nguyên bị bỏ phí hoặc dùng sai mục đích' },
