@@ -135,7 +135,7 @@ const FEATURED: FeaturedConfig = {
     { href: '/la-so-tu-vi', emoji: '☯', name: 'Lá số Tử Vi', tagline: '12 cung · 114 sao · con số thật', cta: 'Lập miễn phí' },
     { href: '/la-so-bat-tu', emoji: '🔯', name: 'Lá số Bát Tự', tagline: '8 chữ · ngũ hành · Nhật Chủ', cta: 'Lập miễn phí' },
   ],
-  lensesHeading: 'Năm lăng kính',
+  lensesHeading: 'Lăng kính khác',
   lenses: ['/mbti', '/big-five', '/xem-tuong'],
 };
 
