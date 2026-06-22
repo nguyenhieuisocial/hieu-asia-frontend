@@ -66,6 +66,36 @@ const TOPICS: readonly LearnTopic[] = [
     subtitle: 'Phổ quát',
     blurb: '7 đường chính: tâm đạo, trí đạo, sinh đạo, số mệnh, mặt trời, thuỷ tinh, kim tinh.',
   },
+  {
+    href: '/learn/kinh-dich',
+    title: 'Kinh Dịch (I Ching)',
+    subtitle: 'Đông phương — 64 quẻ',
+    blurb: 'Gieo quẻ soi tình huống: 64 quẻ, 384 hào, luật hào động Chu Hy.',
+  },
+  {
+    href: '/learn/tarot',
+    title: 'Tarot — 78 lá',
+    subtitle: 'Tây phương — phản tư',
+    blurb: '22 Ẩn Chính + 56 Ẩn Phụ; lăng kính phản tư bản thân, không phán số mệnh.',
+  },
+  {
+    href: '/learn/phong-thuy',
+    title: 'Phong Thủy ứng dụng',
+    subtitle: 'Đông phương — Bát Trạch',
+    blurb: 'Hướng hợp tuổi (Bát Trạch), ngũ hành, chọn ngày giờ, thước Lỗ Ban.',
+  },
+  {
+    href: '/learn/chiem-tinh',
+    title: 'Chiêm tinh phương Tây',
+    subtitle: 'Tây phương — bản đồ sao',
+    blurb: '12 cung hoàng đạo, hành tinh, cung Mọc, 12 nhà và các góc hợp.',
+  },
+  {
+    href: '/learn/hop-tuoi',
+    title: 'Hợp tuổi (12 con giáp)',
+    subtitle: 'Đông phương — Can Chi',
+    blurb: 'Tam Hợp / Lục Hợp / Xung / Hại + nạp âm; giọng dung hòa, không phán khắc.',
+  },
 ];
 
 export default function LearnLandingPage() {
