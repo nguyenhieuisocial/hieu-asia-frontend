@@ -300,33 +300,107 @@ export function BatTuChecker({
                       ? {
                           title: 'Lá số Bát Tự (Tứ Trụ)',
                           subtitle: `Sinh ${date} ${time} · ${gender === 'M' ? 'Nam' : 'Nữ'}`,
+                          hero: {
+                            big: `Nhật Chủ ${chart.dayMaster.can} · ${chart.dayMaster.element} ${chart.dayMaster.yang ? 'dương' : 'âm'}`,
+                            small: chart.missing.length
+                              ? `Hành vượng nhất: ${chart.strongest} · thiếu ${chart.missing.join(', ')}`
+                              : `Hành vượng nhất: ${chart.strongest} · đủ cả 5 hành`,
+                          },
                           sections: [
                             {
                               heading: 'Tứ Trụ',
                               rows: [chart.year, chart.month, chart.day, chart.hour].map((p) => ({
                                 label: `Trụ ${p.label}`,
-                                value: `${p.can} ${p.chi} · ${p.tenGod}`,
+                                value: `${p.can} ${p.chi} · ${p.tenGod} · nạp âm ${p.napAm.name}`,
                               })),
                             },
                             {
-                              heading: 'Nhật Chủ & ngũ hành',
+                              heading: 'Tàng can (ngũ hành ẩn) & nạp âm',
+                              rows: [chart.year, chart.month, chart.day, chart.hour].map((p) => ({
+                                label: `Trụ ${p.label}`,
+                                value: `Nạp âm ${p.napAm.name} (${p.napAm.element}) · Tàng can: ${p.hiddenStems
+                                  .map((h) => `${h.can} ${h.tenGod}`)
+                                  .join(', ')}`,
+                              })),
+                            },
+                            {
+                              heading: 'Cân bằng ngũ hành (đếm 8 chữ)',
                               rows: [
-                                {
-                                  label: 'Nhật Chủ',
-                                  value: `${chart.dayMaster.can} (${chart.dayMaster.element} ${chart.dayMaster.yang ? 'dương' : 'âm'})`,
-                                },
-                                { label: 'Hành vượng nhất', value: chart.strongest },
-                                {
-                                  label: 'Hành thiếu',
-                                  value: chart.missing.length ? chart.missing.join(', ') : 'Đủ cả 5',
-                                },
                                 ...ELEMENTS.map((e) => ({
-                                  label: `Số hành ${e}`,
+                                  label: `Hành ${e}`,
                                   value: String(chart.elementCount[e]),
+                                  bar: Math.round((chart.elementCount[e] / maxCount) * 100),
                                 })),
+                                {
+                                  label: 'Tổng kết',
+                                  value: chart.missing.length
+                                    ? `Vượng nhất ${chart.strongest} · thiếu ${chart.missing.join(', ')}`
+                                    : `Vượng nhất ${chart.strongest} · đủ cả 5 hành`,
+                                },
                               ],
                             },
+                            {
+                              heading: 'Vòng Trường Sinh (theo Nhật Chủ)',
+                              rows: [chart.year, chart.month, chart.day, chart.hour].map((p) => ({
+                                label: `Trụ ${p.label}`,
+                                value: p.truongSinh,
+                              })),
+                            },
+                            ...(chart.relations.length
+                              ? [
+                                  {
+                                    heading: 'Quan hệ giữa các trụ (hợp · xung · tam hợp)',
+                                    rows: chart.relations.map((rel) => ({
+                                      label: `${rel.type} · ${rel.chi}`,
+                                      value: `(${rel.pillars}) ${rel.detail}`,
+                                    })),
+                                  },
+                                ]
+                              : []),
+                            ...(chart.thanSat.length
+                              ? [
+                                  {
+                                    heading: 'Thần Sát (sao tượng trưng — để hiểu mình, không phải điềm)',
+                                    rows: chart.thanSat.map((ts) => ({
+                                      label: `${ts.name} · ${ts.chi}`,
+                                      value: `(${ts.pillars}) ${ts.meaning}`,
+                                    })),
+                                  },
+                                ]
+                              : []),
+                            ...(chart.daiVan
+                              ? [
+                                  {
+                                    heading: `Đại vận (vận 10 năm · khởi ~${chart.daiVan.startAge} tuổi · chiều ${chart.daiVan.forward ? 'thuận' : 'nghịch'})`,
+                                    rows: chart.daiVan.pillars.map((p) => ({
+                                      label: `${p.startAge}–${p.endAge} tuổi${
+                                        curAge != null && curAge >= p.startAge && curAge <= p.endAge
+                                          ? ' (hiện tại)'
+                                          : ''
+                                      }`,
+                                      value: `${p.can} ${p.chi} · ${p.tenGod}`,
+                                    })),
+                                  },
+                                ]
+                              : []),
+                            ...(chart.luuNien
+                              ? [
+                                  {
+                                    heading: `Vận năm nay — lưu niên ${chart.luuNien.can} ${chart.luuNien.chi}`,
+                                    rows: [
+                                      {
+                                        label: `Năm ${chart.luuNien.year}`,
+                                        value: `${chart.luuNien.can} ${chart.luuNien.chi} · so với Nhật Chủ là ${chart.luuNien.tenGod}`,
+                                      },
+                                    ],
+                                  },
+                                ]
+                              : []),
                           ],
+                          cta: {
+                            text: 'Mở khoá bản luận giải sâu từ chính lá số của bạn — vượng/nhược, dụng thần & định hướng theo Đại vận',
+                            url: 'hieu.asia',
+                          },
                         }
                       : null
                   }
