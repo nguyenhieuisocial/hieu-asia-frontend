@@ -13,11 +13,15 @@ import { LENSES } from '@/lib/catalog/lenses';
  * Editorial giấy-mực-ochre, SVG/CSS thuần, prefers-reduced-motion-safe (SSR = hội tụ tĩnh).
  */
 
-const INK = '#171411';
+// 2026-06-22: chuyển 3 màu CẤU TRÚC sang biến theme để hero render đúng cả
+// light lẫn dark. Light KHÔNG đổi: token light = đúng các hex cũ
+// (--foreground=Ink #171411, --background=Paper #F3ECDD, --muted-foreground≈#6A6258).
+// Dark: tự đổi sang Charcoal/Bone. OCHRE/OCHRE_DEEP (gold brand) giữ nguyên.
+const INK = 'hsl(var(--foreground))';
 const OCHRE = '#A47532';
 const OCHRE_DEEP = '#7A5420'; // AA-dark ochre for SMALL labels on PAPER (≥5:1); OCHRE stays for the large h1 line (passes large-text 3:1)
-const PAPER = '#F3ECDD';
-const SOFT = '#6B6358';
+const PAPER = 'hsl(var(--background))';
+const SOFT = 'hsl(var(--muted-foreground))';
 
 // Flagship lenses từ catalog (lib/catalog/lenses) — 1 nguồn sự thật, hết drift.
 const SYSTEMS = LENSES.map((l) => ({ n: l.name, r: l.role, full: l.full }));

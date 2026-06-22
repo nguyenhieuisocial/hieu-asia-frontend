@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { usePathname } from 'next/navigation';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 
 type ThemeProviderProps = React.ComponentProps<typeof NextThemesProvider>;
@@ -44,26 +43,13 @@ type ThemeProviderProps = React.ComponentProps<typeof NextThemesProvider>;
  *    marketing goes LIGHT (Paper). This is not a regression of 60.83.4;
  *    it's a deliberate two-mode brand architecture per vault 138.
  */
-// 2026-06-22 — Founder: light/dark toggle TRÊN MỌI TRANG. Khóa forced-dark
-// "Night/Khoảng lặng" (NIGHT_MODE_ROUTES) ĐÃ GỠ — audit xác nhận các trang đó
-// (/tu-vi-2026, /tu-vi-hom-nay, /tu-vi-nghe-nghiep, /tu-vi-tai-chinh,
-// /tu-vi-tinh-yeu, /dai-van-hien-tai, /reading, /dashboard, /mentor) đều
-// theme-token-aware → render đúng CẢ light lẫn dark, chỉ bị khóa vì "vibe".
-// Nay theo nút toggle như mọi trang khác.
-//
-// Trang chủ '/' TẠM giữ force-light: MultiHero/FourLens còn hardcode Paper/Ink
-// (#F3ECDD / #171411) → bật dark sẽ vỡ. Gỡ nốt sau khi 2 component đó chuyển
-// sang token theme (PR riêng).
+// 2026-06-22 — Founder: light/dark toggle TRÊN MỌI TRANG.
+//  · Khóa forced-dark "Night/Khoảng lặng" (NIGHT_MODE_ROUTES) ĐÃ GỠ (PR trước):
+//    /tu-vi-*, /dai-van-hien-tai, /reading, /dashboard, /mentor đều
+//    theme-token-aware → render đúng cả light lẫn dark, chỉ bị khóa vì "vibe".
+//  · Khóa force-light trang chủ '/' nay CŨNG GỠ: MultiHero/FourLens đã chuyển
+//    màu cấu trúc (INK/PAPER/SOFT) sang biến theme → bật dark không còn vỡ.
+// Không còn route nào bị ép theme; tất cả theo nút toggle của SiteNav.
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  const pathname = usePathname();
-  const isHomeRoute = pathname === '/';
-
-  return (
-    <NextThemesProvider
-      {...props}
-      forcedTheme={isHomeRoute ? 'light' : props.forcedTheme}
-    >
-      {children}
-    </NextThemesProvider>
-  );
+  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
 }
