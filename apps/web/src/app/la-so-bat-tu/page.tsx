@@ -125,6 +125,7 @@ export default function LaSoBatTuPage() {
         }
         description="Lập đủ 4 trụ năm/tháng/ngày/giờ (8 chữ), ngũ hành, Nhật Chủ & Thập Thần từ ngày giờ sinh — tính theo tiết khí, đúng chuẩn. Con số là thật, để bạn tự soi, không bói toán."
         breadcrumb={[{ label: 'Trang chủ', href: '/' }, { label: 'Xem lá số Bát Tự' }]}
+        relatedSlug="/la-so-bat-tu"
       >
         <section className="space-y-8">
           <BatTuChecker />

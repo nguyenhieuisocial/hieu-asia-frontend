@@ -88,6 +88,7 @@ export default function HuongNhaPage() {
         }
         description="Nhập năm sinh và giới tính của gia chủ để biết mệnh quái (cung phi) và 4 hướng tốt — 4 hướng nên tránh theo Bát Trạch, kèm hướng nên đặt cửa chính, giường, bếp. Tham khảo theo phong tục, quyết định là của bạn."
         breadcrumb={[{ label: 'Trang chủ', href: '/' }, { label: 'Xem hướng nhà' }]}
+        relatedSlug="/huong-nha"
       >
         <section className="space-y-8">
           <HuongNhaChecker defaultGender="nam" />

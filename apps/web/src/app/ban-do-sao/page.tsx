@@ -96,6 +96,7 @@ export default async function BanDoSaoPage({
         }
         description="Cung Mặt Trời, Mặt Trăng & 7 hành tinh (Sao Thủy → Hải Vương) từ ngày giờ sinh — bằng thuật toán thiên văn, đối chiếu thư viện chuẩn. Con số là thật; diễn giải để hiểu mình, không bói toán."
         breadcrumb={[{ label: 'Trang chủ', href: '/' }, { label: 'Bản đồ sao' }]}
+        relatedSlug="/ban-do-sao"
       >
         <section className="space-y-8">
           <SunMoonChecker initialDate={initialDate} initialTime={initialTime} />

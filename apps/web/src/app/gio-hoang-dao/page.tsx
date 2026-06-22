@@ -78,6 +78,7 @@ export default function GioHoangDaoPage() {
           { label: 'Lịch Vạn Niên', href: '/lich-van-nien' },
           { label: 'Giờ hoàng đạo' },
         ]}
+        relatedSlug="/gio-hoang-dao"
       >
       <div className="mx-auto mb-6 max-w-3xl">
         <Link

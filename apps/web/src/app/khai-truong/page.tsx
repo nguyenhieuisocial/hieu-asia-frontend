@@ -78,6 +78,7 @@ export default function KhaiTruongPage() {
         }
         description={`Nhập năm sinh chủ kinh doanh để biết năm ${TARGET_YEAR} có vướng Tam Tai hay xung tuổi không — kèm phép tính cụ thể từng bước và các năm hợp tuổi gần nhất. Xem tuổi khai trương không xét Kim Lâu / Hoang Ốc. Tham khảo theo tập tục, quyết định là của bạn.`}
         breadcrumb={[{ label: 'Trang chủ', href: '/' }, { label: 'Xem tuổi khai trương' }]}
+        relatedSlug="/khai-truong"
       >
         <section className="space-y-8">
           <KhaiTruongChecker defaultTargetYear={TARGET_YEAR} />
