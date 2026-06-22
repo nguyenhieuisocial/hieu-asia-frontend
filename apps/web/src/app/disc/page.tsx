@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { ReadingRitual } from '@/components/tools/ReadingRitual';
@@ -172,6 +173,13 @@ export default function DiscPage() {
                   )}
                 </CardContent>
               </Card>
+
+              <Button asChild variant="outline" className="w-full">
+                <Link href={`/learn/disc/${DIM_META[result.primary_style].letter.toLowerCase()}`}>
+                  Tìm hiểu sâu về nhóm {DIM_META[result.primary_style].letter} —{' '}
+                  {DIM_META[result.primary_style].label} →
+                </Link>
+              </Button>
 
               {DIM_ORDER.map((dim) => {
                 const score = result.scores[dim];
