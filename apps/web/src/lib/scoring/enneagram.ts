@@ -15,7 +15,7 @@ export type EnneagramType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 export const ENNEAGRAM_TYPE_ORDER: EnneagramType[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 // Hai nhóm liền kề (cánh) của mỗi nhóm, vòng tròn 1↔9. [trái, phải].
-const WINGS: Record<EnneagramType, [EnneagramType, EnneagramType]> = {
+export const WINGS: Record<EnneagramType, [EnneagramType, EnneagramType]> = {
   1: [9, 2],
   2: [1, 3],
   3: [2, 4],
