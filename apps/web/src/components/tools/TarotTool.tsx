@@ -12,6 +12,7 @@ import { ReadingRitual } from '@/components/tools/ReadingRitual';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { TarotSpread } from '@/components/tools/TarotSpread';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
+import { aiReadingToSections } from '@/lib/pdf/ai-reading-sections';
 import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
@@ -299,13 +300,22 @@ export function TarotTool() {
                   subtitle: question.trim()
                     ? `${SPREADS[spreadKey].label} · “${question.trim()}”`
                     : SPREADS[spreadKey].label,
-                  sections: drawn.map((d, i) => ({
-                    heading: `${pos[i] ?? `Lá ${i + 1}`} — ${d.card.name_vi} (${d.orientation === 'upright' ? 'xuôi' : 'ngược'})`,
-                    rows: [
-                      { label: 'Loại', value: d.card.arcana === 'major' ? 'Ẩn chính' : (d.card.suit ?? 'Ẩn phụ') },
-                      { label: 'Ý nghĩa', value: d.orientation === 'upright' ? d.card.up : d.card.rev },
-                    ],
-                  })),
+                  sections: [
+                    ...drawn.map((d, i) => ({
+                      heading: `${pos[i] ?? `Lá ${i + 1}`} — ${d.card.name_vi} (${d.orientation === 'upright' ? 'xuôi' : 'ngược'})`,
+                      rows: [
+                        { label: 'Loại', value: d.card.arcana === 'major' ? 'Ẩn chính' : (d.card.suit ?? 'Ẩn phụ') },
+                        { label: 'Ý nghĩa', value: d.orientation === 'upright' ? d.card.up : d.card.rev },
+                      ],
+                    })),
+                    // Đọc sâu cùng AI (opt-in) — khi khách đã bấm "Đọc sâu", đưa vào
+                    // PDF (dùng lại bản đã sinh, 0 phí AI thêm).
+                    ...aiReadingToSections(reading, 'Đọc sâu cùng AI'),
+                  ],
+                  cta: {
+                    text: 'Ghép lá Tarot với lá số Tử Vi + Bát Tự của bạn để hiểu sâu hơn',
+                    url: 'hieu.asia',
+                  },
                 };
               }}
             />
