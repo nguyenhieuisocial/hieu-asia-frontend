@@ -264,9 +264,14 @@ export default async function CungDetailPage({
           <h2 className="mb-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             Cung {z.name} hợp với cung nào?
           </h2>
-          <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
+          <p className="mb-3 text-sm leading-relaxed text-muted-foreground">
             Theo khung nguyên tố của chiêm tinh, đây là các xu hướng hòa hợp. Độ hợp thật của hai
             người còn tùy lá số đầy đủ — không chỉ cung Mặt Trời.
+          </p>
+          <p className="mb-5 text-sm">
+            <Link href="/cung-hoang-dao/hop" className="text-gold hover:underline">
+              Tra độ hợp chi tiết giữa {z.name} và một cung bất kỳ →
+            </Link>
           </p>
           <div className="space-y-4">
             <div>
