@@ -9,6 +9,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { PersonalityQuiz } from '@/components/tools/PersonalityQuiz';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
+import { aiReadingToSections } from '@/lib/pdf/ai-reading-sections';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
@@ -408,6 +409,8 @@ export default function EnneagramPage() {
                             value: String(result.scores[t]),
                           })),
                         },
+                        // Luận giải sâu (AI) đã sinh — đưa vào PDF (dùng lại, 0 phí AI).
+                        ...aiReadingToSections(reading),
                       ],
                     };
                   }}
