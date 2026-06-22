@@ -35,7 +35,7 @@ export function EngineProofShowcase(): React.JSX.Element {
             <LaSoSvg className="w-full max-w-[280px]" />
             <figcaption className="mt-4 max-w-[28em] text-center text-sm text-muted-foreground">
               <span className="font-display text-foreground">Tử Vi · 12 cung</span> — bản đồ 12
-              lĩnh vực đời sống, an sao bằng thuật toán.
+              lĩnh vực đời sống (sơ đồ minh hoạ).
             </figcaption>
           </figure>
 

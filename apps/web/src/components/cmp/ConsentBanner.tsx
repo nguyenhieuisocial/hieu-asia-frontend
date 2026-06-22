@@ -161,7 +161,7 @@ export function ConsentBanner(): React.ReactElement | null {
       // hero (top) and the center/right-aligned primary CTAs on
       // /onboarding · /pricing.
       className={[
-        "fixed bottom-4 left-1/2 z-50 -translate-x-1/2 lg:left-6 lg:translate-x-0 lg:max-w-[420px]",
+        "fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-50 -translate-x-1/2 lg:left-6 lg:translate-x-0 lg:max-w-[420px]",
         "rounded-lg border border-gold/30 bg-card/95 text-sm text-foreground shadow-2xl backdrop-blur",
         collapsed
           ? "w-[min(340px,calc(100vw-2rem))] px-3 py-2 sm:w-[min(640px,calc(100vw-2rem))] sm:p-5"
