@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { PersonalityQuiz } from '@/components/tools/PersonalityQuiz';
@@ -144,6 +145,12 @@ export function MbtiTool() {
               )}
             </CardContent>
           </Card>
+
+          <Button asChild variant="outline" className="w-full">
+            <Link href={`/learn/mbti/${result.type.toLowerCase()}`}>
+              Tìm hiểu sâu về {result.type} →
+            </Link>
+          </Button>
 
           {AXIS_META.map((m) => {
             const ax = result.axes[m.axis];

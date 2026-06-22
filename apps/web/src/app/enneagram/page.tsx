@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { ReadingRitual } from '@/components/tools/ReadingRitual';
@@ -200,6 +201,12 @@ export default function EnneagramPage() {
                   )}
                 </CardContent>
               </Card>
+
+              <Button asChild variant="outline" className="w-full">
+                <Link href={`/learn/enneagram/${result.type}`}>
+                  Tìm hiểu sâu về Nhóm {result.type} — {meta.name} →
+                </Link>
+              </Button>
 
               <Card className="border-gold/20 bg-card/50">
                 <CardContent className="space-y-4 p-6">

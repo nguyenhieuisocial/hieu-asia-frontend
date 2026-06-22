@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { ReadingRitual } from '@/components/tools/ReadingRitual';
@@ -196,6 +197,12 @@ export default function BigFivePage() {
                       <p className="mt-2.5 text-sm leading-relaxed text-foreground/80">
                         {lv === 'Thấp' ? t.low : t.high}
                       </p>
+                      <Link
+                        href={`/learn/big-five/${t.key}`}
+                        className="mt-2.5 inline-block text-xs font-semibold text-gold-700 hover:text-gold"
+                      >
+                        Tìm hiểu sâu chiều {t.label} →
+                      </Link>
                     </CardContent>
                   </Card>
                 );
