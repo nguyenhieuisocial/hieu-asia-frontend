@@ -60,7 +60,12 @@ export function InstantChartHero(): React.JSX.Element {
       />
 
       <div className="relative mx-auto max-w-3xl px-6 pt-8 pb-28 sm:pt-12 sm:pb-16">
-        <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+        {/* Wave 65 — lời hứa thương hiệu lên đầu (page 1) theo yêu cầu founder;
+            GIỮ nguyên H1 hành động + form ngay dưới (không phá mối nối chuyển đổi). */}
+        <p className="font-marketing-display text-lg italic leading-tight text-primary/90 sm:text-xl">
+          Hiểu mình. Quyết định mình.
+        </p>
+        <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
           Lá số Bát Tự thật · tính ngay · miễn phí
         </p>
         <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
