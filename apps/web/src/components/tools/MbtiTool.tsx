@@ -252,6 +252,7 @@ export function MbtiTool() {
                 return {
                   title: `Kết quả MBTI của tôi: ${result.type} — hieu.asia`,
                   subtitle: `Đã trả lời ${result.total_answered}/${result.total_items} câu`,
+                  hero: { big: result.type, small: 'Kiểu tính cách MBTI của bạn' },
                   sections: [
                     {
                       heading: 'Kiểu tính cách',
@@ -266,6 +267,7 @@ export function MbtiTool() {
                         return {
                           label: m.label,
                           value: `${ax.letter} · ${positiveChosen ? m.pos : m.neg} · nghiêng ${strength}%`,
+                          bar: strength,
                         };
                       }),
                     },

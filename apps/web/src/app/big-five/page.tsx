@@ -280,7 +280,7 @@ export default function BigFivePage() {
                           return {
                             heading: `${t.label} (${t.en})`,
                             rows: [
-                              { label: 'Điểm', value: `${score}/100` },
+                              { label: 'Điểm', value: `${score}/100`, bar: score },
                               { label: 'Mức', value: lv },
                               { label: 'Mô tả', value: lv === 'Thấp' ? t.low : t.high },
                             ],
