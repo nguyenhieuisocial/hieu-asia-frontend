@@ -73,7 +73,7 @@ export function StartupPath() {
           </span>
           <h2
             id="startup-path-h"
-            className="mt-2 font-display text-3xl leading-tight text-foreground sm:text-4xl"
+            className="mt-2 font-marketing-display text-3xl leading-tight text-foreground sm:text-4xl"
           >
             Bắt đầu miễn phí — <span className="italic">mỗi bước mở thêm một chút</span>.
           </h2>
@@ -106,7 +106,7 @@ export function StartupPath() {
                       </span>
                     )}
                   </div>
-                  <h3 className="font-display text-lg leading-snug text-foreground">
+                  <h3 className="font-marketing-display text-lg leading-snug text-foreground">
                     {done ? <span className="text-muted-foreground line-through">{s.title}</span> : s.title}
                   </h3>
                   <p className="text-sm leading-relaxed text-muted-foreground">{s.body}</p>
