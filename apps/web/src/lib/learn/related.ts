@@ -21,6 +21,11 @@ const LEARN_TOPICS: readonly LearnTopic[] = [
   { slug: 'enneagram', eyebrow: '9 NHÓM', name: 'Enneagram', href: '/learn/enneagram' },
   { slug: 'than-so-hoc', eyebrow: 'PYTHAGORAS', name: 'Thần Số Học', href: '/learn/than-so-hoc' },
   { slug: 'palm', eyebrow: 'XEM TƯỚNG', name: 'Xem chỉ tay', href: '/learn/palm' },
+  { slug: 'kinh-dich', eyebrow: 'KINH DỊCH', name: 'Kinh Dịch', href: '/learn/kinh-dich' },
+  { slug: 'tarot', eyebrow: 'TAROT', name: 'Tarot', href: '/learn/tarot' },
+  { slug: 'phong-thuy', eyebrow: 'PHONG THỦY', name: 'Phong Thủy', href: '/learn/phong-thuy' },
+  { slug: 'chiem-tinh', eyebrow: 'CHIÊM TINH', name: 'Chiêm tinh', href: '/learn/chiem-tinh' },
+  { slug: 'hop-tuoi', eyebrow: 'CAN CHI', name: 'Hợp tuổi', href: '/learn/hop-tuoi' },
 ];
 
 /**
