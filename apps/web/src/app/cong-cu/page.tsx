@@ -62,8 +62,9 @@ const TOOLS: ExplorerTool[] = [
   // ── Lá số của bạn ───────────────────────────────────────────────
   { cat: 'la-so', href: '/la-so-tu-vi', emoji: '☯', name: 'Xem lá số Tử Vi', desc: 'Lập lá số Tử Vi miễn phí: 12 cung, 114 sao, độ sáng, cách cục — con số thật.' },
   { cat: 'la-so', href: '/la-so-bat-tu', emoji: '☯', name: 'Xem lá số Bát Tự', desc: 'Lập lá số Bát Tự (Tứ Trụ) miễn phí: 8 chữ, ngũ hành, Nhật Chủ, Thập Thần — tính theo tiết khí.' },
-  { cat: 'la-so', href: '/tu-vi', emoji: '☯️', name: 'Tử Vi', desc: 'Luận mệnh theo lá số Tử Vi — 12 cung, 14 chính tinh.' },
-  { cat: 'la-so', href: '/bat-tu', emoji: '🔯', name: 'Bát Tự', desc: 'Tứ Trụ Bát Tự: ngày giờ sinh tiết lộ ngũ hành bản mệnh.' },
+  // 2026-06-22: gỡ /tu-vi + /bat-tu khỏi catalog — chúng là trang GIỚI THIỆU/SEO
+  // (không có bộ lập lá số), trùng cảm-giác với công cụ /la-so-tu-vi, /la-so-bat-tu.
+  // Trang giới thiệu vẫn sống (SEO + nút "Lập lá số" dẫn sang công cụ thật).
   { cat: 'la-so', href: '/tinh-menh-cuc', emoji: '🧮', name: 'Tuổi mệnh cục', desc: 'Tính Mệnh và Cục từ ngày giờ sinh — nền tảng để lập lá số Tử Vi.' },
   { cat: 'la-so', href: '/ban-menh', emoji: '🪙', name: 'Ngũ hành bản mệnh', desc: 'Sinh năm nào mệnh gì: tra nạp âm, hành bản mệnh và màu hợp theo năm sinh.' },
   { cat: 'la-so', href: '/bang-chung', emoji: '✓', name: 'Bằng Chứng', desc: 'Kiểm chứng lá số bằng quá khứ thật của bạn — nhập sự kiện đã xảy ra, xem lá số có ghi dấu không. Không bói mù.' },
@@ -197,7 +198,7 @@ export default function CongCuPage() {
           Tất cả <GoldAccent>công cụ</GoldAccent>
         </>
       }
-      description="Hơn 50 công cụ luận số, tâm lý học và phong thủy — sắp theo việc bạn cần làm. Chưa biết bắt đầu từ đâu? Lập lá số miễn phí, rồi đi sâu theo từng nhu cầu. Tất cả đều minh bạch từng bước, không bói mù."
+      description="Gần 50 công cụ luận số, tâm lý học và phong thủy — sắp theo việc bạn cần làm. Chưa biết bắt đầu từ đâu? Lập lá số miễn phí, rồi đi sâu theo từng nhu cầu. Tất cả đều minh bạch từng bước, không bói mù."
       breadcrumb={[{ label: 'Trang chủ', href: '/' }, { label: 'Công cụ' }]}
       heroAside={commandPanel}
     >
