@@ -1,8 +1,9 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
-import { drawCards, type DrawnCard } from '@/lib/tools/tarot';
+import { drawCards, cardDetailSlug, type DrawnCard } from '@/lib/tools/tarot';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
 import { getSupabaseAuth } from '@/lib/auth-client';
@@ -209,6 +210,12 @@ export function TarotTool() {
               <p className="mt-2 leading-relaxed text-foreground/85">
                 {d.orientation === 'upright' ? d.card.up : d.card.rev}
               </p>
+              <Link
+                href={`/tarot/y-nghia/${cardDetailSlug(d.card)}`}
+                className="mt-2.5 inline-block text-xs font-semibold text-gold-700 hover:text-gold"
+              >
+                Đọc sâu lá {d.card.name_vi} →
+              </Link>
             </div>
           ))}
 
