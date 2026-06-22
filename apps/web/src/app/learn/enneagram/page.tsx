@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import {
   Accordion,
   AccordionContent,
@@ -114,21 +115,34 @@ export default function LearnEnneagramPage() {
           tocLabel: 'Chín nhóm',
           heading: 'Chín nhóm tính cách',
           children: (
-            <ul className="space-y-3">
+            <ul className="space-y-1">
               {TYPES.map((t) => (
-                <li key={t.n} className="flex gap-3 border-t border-border/60 pt-3 first:border-0 first:pt-0">
-                  <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/40 font-heading text-sm text-gold-700">
-                    {t.n}
-                  </span>
-                  <div>
-                    <div className="flex items-baseline gap-2">
-                      <span className="font-heading text-base text-foreground">{t.vi}</span>
-                      <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                        {t.en}
-                      </span>
+                <li key={t.n} className="border-t border-border/60 first:border-0">
+                  <Link
+                    href={`/learn/enneagram/${t.n}`}
+                    className="group flex gap-3 rounded-lg py-3 transition hover:bg-card/40"
+                  >
+                    <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/40 font-heading text-sm text-gold-700 group-hover:border-gold">
+                      {t.n}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-baseline gap-2">
+                        <span className="font-heading text-base text-foreground group-hover:text-gold">
+                          {t.vi}
+                        </span>
+                        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                          {t.en}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-sm leading-relaxed text-foreground/85">{t.core}</p>
                     </div>
-                    <p className="mt-1 text-sm leading-relaxed text-foreground/85">{t.core}</p>
-                  </div>
+                    <span
+                      aria-hidden="true"
+                      className="mt-1 shrink-0 text-sm text-muted-foreground group-hover:text-gold"
+                    >
+                      →
+                    </span>
+                  </Link>
                 </li>
               ))}
             </ul>
