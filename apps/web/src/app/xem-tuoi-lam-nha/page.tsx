@@ -78,6 +78,7 @@ export default function XemTuoiLamNhaPage() {
         }
         description={`Nhập năm sinh gia chủ để biết năm ${TARGET_YEAR} có phạm Kim Lâu, Hoang Ốc hay Tam Tai không — kèm phép tính cụ thể từng bước, các năm được tuổi gần nhất và cả cách kiểm tra người mượn tuổi. Tham khảo theo tập tục, quyết định là của bạn.`}
         breadcrumb={[{ label: 'Trang chủ', href: '/' }, { label: 'Xem tuổi làm nhà' }]}
+        relatedSlug="/xem-tuoi-lam-nha"
       >
         <section className="space-y-8">
           <XemTuoiLamNhaChecker defaultTargetYear={TARGET_YEAR} />

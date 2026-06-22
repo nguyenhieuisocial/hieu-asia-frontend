@@ -77,6 +77,7 @@ export default function XemTuoiCuoiPage() {
         }
         description={`Nhập năm sinh cô dâu (và chú rể) để biết năm ${TARGET_YEAR} có phạm Kim Lâu, Tam Tai hay xung năm không — kèm phép tính cụ thể từng bước và các năm không phạm gần nhất. Tham khảo theo tập tục, quyết định là của bạn.`}
         breadcrumb={[{ label: 'Trang chủ', href: '/' }, { label: 'Xem tuổi cưới' }]}
+        relatedSlug="/xem-tuoi-cuoi"
       >
         <section className="space-y-8">
           <XemTuoiCuoiChecker defaultTargetYear={TARGET_YEAR} />

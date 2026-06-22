@@ -76,6 +76,7 @@ export default function SinhConPage() {
           { label: 'Trang chủ', href: '/' },
           { label: 'Sinh con theo năm' },
         ]}
+        relatedSlug="/sinh-con"
       >
         <section className="space-y-8">
           <SinhConChecker />

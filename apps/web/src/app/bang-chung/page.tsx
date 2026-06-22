@@ -129,6 +129,7 @@ export default function BangChungPage() {
         }
         description="Đừng vội tin lá số. Nhập vài sự kiện đời thật đã xảy ra — hệ thống tính lại lá số đúng như nó đứng ở từng năm đó và cho thấy lá số có ghi dấu lĩnh vực ấy không, thành thật cả khi không khớp."
         breadcrumb={[{ label: 'Trang chủ', href: '/' }, { label: 'Bằng Chứng' }]}
+        relatedSlug="/bang-chung"
       >
         <section className="space-y-8">
           <BangChungTool />

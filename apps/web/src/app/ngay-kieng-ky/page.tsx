@@ -79,6 +79,7 @@ export default function NgayKiengKyPage() {
           { label: 'Lịch Vạn Niên', href: '/lich-van-nien' },
           { label: 'Ngày kiêng kỵ' },
         ]}
+        relatedSlug="/ngay-kieng-ky"
       >
         <section className="space-y-8">
           <KiengKyChecker />
