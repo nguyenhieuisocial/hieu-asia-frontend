@@ -99,7 +99,7 @@ export default async function TuVi2026ConGiapPage({
         />
 
         {/* Hero */}
-        <section className="relative mx-auto max-w-3xl px-6 pb-10 pt-12 sm:pt-16">
+        <section className="relative mx-auto max-w-3xl px-6 pb-10 pt-6 sm:pt-8">
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Tử Vi 2026 · Năm Bính Ngọ hành Hỏa · {YEAR_RANGE}
           </p>

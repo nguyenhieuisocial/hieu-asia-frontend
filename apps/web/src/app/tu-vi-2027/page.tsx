@@ -105,7 +105,7 @@ export default function TuVi2027HubPage() {
           className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-ink-radial opacity-80"
         />
 
-        <section className="relative mx-auto max-w-3xl px-6 pb-10 pt-12 sm:pt-16">
+        <section className="relative mx-auto max-w-3xl px-6 pb-10 pt-6 sm:pt-8">
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
             Năm Đinh Mùi · hành Thổ · con Dê · {YEAR_RANGE}
           </p>

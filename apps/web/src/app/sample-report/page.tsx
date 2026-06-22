@@ -251,7 +251,7 @@ export default function SampleReportPage() {
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.10)_0%,_transparent_55%)] dark:bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.18)_0%,_transparent_55%)]"
         />
 
-        <section className="relative mx-auto max-w-3xl px-6 pb-10 pt-12 sm:pt-16">
+        <section className="relative mx-auto max-w-3xl px-6 pb-10 pt-6 sm:pt-8">
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
             Mẫu báo cáo · Cẩm nang cá nhân hoá
           </p>

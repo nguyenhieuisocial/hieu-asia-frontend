@@ -266,7 +266,7 @@ export default function AiSafetyPage() {
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-ink-radial opacity-80"
           />
-          <div className="relative mx-auto max-w-5xl px-6 pb-8 pt-12 sm:pt-16">
+          <div className="relative mx-auto max-w-5xl px-6 pb-8 pt-6 sm:pt-8">
             <nav
               aria-label="Breadcrumb"
               className="mb-4 text-xs text-muted-foreground"
