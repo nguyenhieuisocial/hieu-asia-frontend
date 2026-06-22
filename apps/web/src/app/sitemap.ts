@@ -18,6 +18,7 @@ import { SO_CHU_DAO } from '@/lib/than-so-hoc-numbers';
 import { LOAI_SO } from '@/lib/than-so-hoc-loai-so';
 import { SAO_GIO } from '@/lib/gio-hoang-dao-stars';
 import { CUNG_SLUGS } from '@/lib/cung-hoang-dao-data';
+import { BIRTH_YEARS as BAN_MENH_YEARS } from '@/lib/ban-menh-data';
 
 const BASE_URL = 'https://hieu.asia';
 
@@ -336,6 +337,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
+  // Ngũ hành bản mệnh theo năm sinh — hub + 1 trang/năm (1950–2025). Deterministic SSG.
+  const banMenhUrls: MetadataRoute.Sitemap = [
+    {
+      url: `${BASE_URL}/ban-menh`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    ...BAN_MENH_YEARS.map((y) => ({
+      url: `${BASE_URL}/ban-menh/${y}`,
+      lastModified: now,
+      changeFrequency: 'yearly' as const,
+      priority: 0.6,
+    })),
+  ];
+
   // Trang so sánh lăng kính (MBTI vs Big Five, Tử Vi vs Bát Tự, MBTI vs DISC) + hub.
   const soSanhUrls: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/so-sanh`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.6 },
@@ -442,5 +459,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...lamNha, ...xongDat, ...khaiTruong, ...huongNha, ...tuVi2026ConGiap, ...tuVi2027ConGiap, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls, ...cungHoangDaoUrls];
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...lamNha, ...xongDat, ...khaiTruong, ...huongNha, ...tuVi2026ConGiap, ...tuVi2027ConGiap, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls, ...cungHoangDaoUrls, ...banMenhUrls];
 }

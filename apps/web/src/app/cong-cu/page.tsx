@@ -65,6 +65,18 @@ const TOOLS = [
     desc: 'Chiêm tinh phương Tây: cung Mặt Trời & Mặt Trăng từ ngày giờ sinh.',
   },
   {
+    href: '/cung-hoang-dao',
+    emoji: '♌',
+    name: 'Cung hoàng đạo',
+    desc: '12 cung hoàng đạo: tra cung theo ngày sinh, tính cách, nguyên tố và cung hợp nhau.',
+  },
+  {
+    href: '/ban-menh',
+    emoji: '🪙',
+    name: 'Ngũ hành bản mệnh',
+    desc: 'Sinh năm nào mệnh gì: tra nạp âm, hành bản mệnh và màu hợp theo năm sinh.',
+  },
+  {
     href: '/la-so-tu-vi',
     emoji: '☯',
     name: 'Xem lá số Tử Vi',
