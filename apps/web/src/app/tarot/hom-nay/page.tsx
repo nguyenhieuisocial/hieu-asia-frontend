@@ -5,7 +5,7 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { faqPage } from '@/lib/seo/jsonld';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
-import { cardOfTheDay } from '@/lib/tools/tarot';
+import { cardOfTheDay, cardDetailSlug } from '@/lib/tools/tarot';
 
 // Render mỗi request với ngày hiện tại (giờ VN) → luôn đúng "lá hôm nay".
 export const dynamic = 'force-dynamic';
@@ -81,6 +81,12 @@ export default function TarotTodayPage() {
             </span>
           </h2>
           <p className="mt-3 leading-relaxed text-foreground/90">{meaning}</p>
+          <Link
+            href={`/tarot/y-nghia/${cardDetailSlug(card)}`}
+            className="mt-3 inline-block text-sm font-semibold text-gold-700 hover:text-gold"
+          >
+            Đọc sâu lá {card.name_vi} — nghĩa xuôi/ngược, tình cảm, công việc →
+          </Link>
         </div>
 
         <div className="mt-6 rounded-xl border border-border bg-card/40 p-5">
