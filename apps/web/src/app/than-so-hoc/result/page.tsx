@@ -27,6 +27,12 @@ import { KARMIC_DEBT, KARMIC_LESSONS } from '@/lib/than-so-hoc-karmic';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
+// Chỉ các số có trang chi tiết /than-so-hoc/y-nghia/so-N (1–9 + master 11/22/33).
+// Số nợ nghiệp (13/14/16/19) hay ngày sinh thô KHÔNG có trang → trả null, không link.
+const SO_PAGE_SET = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 22, 33]);
+const soDetailHref = (n: number): string | null =>
+  SO_PAGE_SET.has(n) ? `/than-so-hoc/y-nghia/so-${n}` : null;
+
 /** Format an ISO birth date (YYYY-MM-DD) as vi-VN DD/MM/YYYY; input on no-match. */
 function formatVnDate(iso: string): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
@@ -394,6 +400,16 @@ function HeroLifePath({ card, year }: { card: NumberCard; year: number }) {
             <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-3 py-1 font-mono text-[11px] tracking-wide text-muted-foreground">
               Năm cá nhân hiện tại · <span className="font-bold text-gold-700">{year}</span>
             </p>
+            {soDetailHref(card.number) && (
+              <div className="mt-3">
+                <Link
+                  href={soDetailHref(card.number)!}
+                  className="inline-block text-sm font-semibold text-gold-700 hover:text-gold"
+                >
+                  Đọc sâu số chủ đạo {card.number} — tính cách, sự nghiệp, tình cảm →
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </CardContent>
@@ -427,6 +443,14 @@ function NumberCardView({ card, highlight }: { card: NumberCard; highlight?: boo
           </div>
           <p className="text-xs leading-relaxed text-muted-foreground">{card.meaning}</p>
         </div>
+        {soDetailHref(card.number) && (
+          <Link
+            href={soDetailHref(card.number)!}
+            className="mt-3 inline-block text-xs font-semibold text-gold-700 hover:text-gold"
+          >
+            Đọc sâu số {card.number} →
+          </Link>
+        )}
       </CardContent>
     </Card>
   );
