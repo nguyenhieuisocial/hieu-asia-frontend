@@ -56,9 +56,14 @@ const config: Config = {
         // Marketing-only display serif. Outfit/Be Vietnam Pro/JetBrains Mono
         // preset entries kept for in-app UI.
         'marketing-display': [
-          'var(--font-marketing-display)',
-          // VN fallback for chars outside Instrument Serif latin-ext subset
-          // (Be Vietnam Pro already loaded in root layout).
+          // 2026-06-22 VN-FIX: Instrument Serif thiếu glyph tiếng Việt → ký tự
+          // có dấu (ả, ộ, ệ, đ…) rớt sang Be Vietnam Pro (sans) = LẪN FONT trong
+          // cùng một từ (founder báo). Trỏ sang Newsreader (serif CÓ tiếng Việt)
+          // → `font-marketing-display` render tiếng Việt SẠCH toàn site, đồng bộ
+          // với editorial-display. (var --font-marketing-display/Instrument vẫn
+          // định nghĩa nhưng không còn utility nào dùng.)
+          'var(--font-newsreader)',
+          // Fallback an toàn nếu thiếu glyph (hiếm, Newsreader đã phủ TV).
           'var(--font-be-vietnam)',
           // Han chars → self-hosted Noto Serif SC subset (unicode-range gated).
           'Noto Serif SC Han',
