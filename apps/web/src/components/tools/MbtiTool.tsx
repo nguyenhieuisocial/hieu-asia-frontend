@@ -8,6 +8,7 @@ import { PersonalityQuiz } from '@/components/tools/PersonalityQuiz';
 import { ReadingRitual } from '@/components/tools/ReadingRitual';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
+import { aiReadingToSections } from '@/lib/pdf/ai-reading-sections';
 import { track } from '@/lib/analytics';
 import { savePersonalityResult, buildMbtiSummary } from '@/lib/personality-store';
 import { safeJson } from '@/lib/safe-json';
@@ -272,6 +273,8 @@ export function MbtiTool() {
                       heading: 'Lưu ý',
                       text: 'Bốn chữ là các xu hướng trên một dải — không phải nhãn cố định. Kiểu có thể đổi theo giai đoạn đời; đây là điểm khởi đầu để tự phản tư.',
                     },
+                    // Luận giải sâu (AI) đã sinh — đưa vào PDF (dùng lại, 0 phí AI).
+                    ...aiReadingToSections(reading),
                   ],
                 };
               }}
