@@ -48,7 +48,7 @@ export function TrustBand() {
             <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
               Bằng Chứng
             </span>
-            <p className="mt-1 font-display text-xl leading-snug text-foreground sm:text-2xl">
+            <p className="mt-1 font-marketing-display text-xl leading-snug text-foreground sm:text-2xl">
               Kiểm chứng lá số bằng <span className="italic">quá khứ thật của bạn</span>.
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -72,7 +72,7 @@ export function TrustBand() {
                 className="group flex flex-col gap-2 bg-card/60 p-5 transition-colors hover:bg-card"
               >
                 <Icon className="h-5 w-5 text-primary" aria-hidden />
-                <h3 className="font-display text-base leading-snug text-foreground">
+                <h3 className="font-marketing-display text-base leading-snug text-foreground">
                   {p.title}
                 </h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{p.body}</p>
