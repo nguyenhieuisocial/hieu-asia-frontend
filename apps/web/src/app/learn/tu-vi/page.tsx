@@ -38,6 +38,18 @@ const FAQS = [
     q: 'Giới hạn của Tử Vi?',
     a: 'Tử Vi không dự đoán được trúng số, không thay thế lời khuyên y tế/pháp lý/tài chính. Đây là công cụ tự nhận thức, dùng kết hợp với suy nghĩ tỉnh táo và hành động thực tế.',
   },
+  {
+    q: 'Tam phương tứ chính là gì, tại sao không đọc một cung lẻ?',
+    a: 'Một cung không bao giờ luận đơn lẻ. Theo truyền thống, mỗi cung phải gộp cùng ba cung liên quan: cung xung chiếu (đối diện) và hai cung tam hợp. Ví dụ, muốn xét sự nghiệp thì đọc cả bộ Mệnh, Quan Lộc, Tài Bạch và Thiên Di. Đây là xương sống của mọi phép luận, giúp tránh kết luận vội từ một sao đứng riêng.',
+  },
+  {
+    q: 'Tứ Hóa là gì?',
+    a: 'Tứ Hóa gồm Hóa Lộc, Hóa Quyền, Hóa Khoa, Hóa Kỵ — bốn "biến hóa" gắn vào bốn sao tùy theo Thiên Can của năm sinh (và của đại vận/lưu niên cho Tứ Hóa lưu). Đây là phần làm hai lá số trông giống nhau trên giấy lại luận khác nhau, và làm mỗi năm có một chủ đề riêng. Có dị biệt nhỏ giữa các phái về bảng Tứ Hóa của vài Thiên Can, nên đây là tham khảo, không phải cách duy nhất đúng.',
+  },
+  {
+    q: 'Hóa Kỵ tại cung Mệnh có phải đời mạt vận không?',
+    a: 'Không. Hóa Kỵ không phải điềm gở; đời lá số nào cũng có một Hóa Kỵ. Nó chỉ đánh dấu "đề tài bạn để tâm quá mức" — nơi dễ tự làm khó mình, và cũng là động cơ trưởng thành nếu nhận biết. Luận đúng là xem Hóa Kỵ rơi vào lĩnh vực nào để có hành động chủ động, chứ không hù dọa.',
+  },
 ];
 
 const JSONLD = [
@@ -133,6 +145,97 @@ export default function LearnTuViPage() {
                 ))}
               </div>
             </>
+          ),
+        },
+        {
+          id: 'doc-mot-cung',
+          tocLabel: 'Cách luận một cung',
+          heading: 'Cách luận một cung: không bao giờ đọc lẻ',
+          children: (
+            <div className="space-y-4 text-sm leading-relaxed text-muted-foreground">
+              <p>
+                Sai lầm phổ biến nhất khi mới học là nhìn một cung, thấy một sao "xấu" rồi
+                hoảng. Theo truyền thống, một cung không bao giờ luận đơn lẻ. Mỗi cung phải
+                đọc cùng <strong className="text-foreground">tam phương tứ chính</strong>:
+                chính cung, cộng cung xung chiếu (cung đối diện), cộng hai cung tam hợp. Bốn
+                cung này chiếu vào nhau và cùng tạo nên bức tranh.
+              </p>
+              <p>
+                Ví dụ kinh điển: muốn xét sự nghiệp, bạn không chỉ đọc cung Quan Lộc mà đọc
+                cả bộ <strong className="text-foreground">Mệnh · Quan Lộc · Tài Bạch · Thiên
+                Di</strong>. Một cung Mệnh hơi yếu nhưng cung Thiên Di đối diện tốt thường
+                được luận là "đi xa thì khá hơn ở nhà".
+              </p>
+              <p>
+                Khoảng 30% lá số có cung Mệnh{' '}
+                <strong className="text-foreground">vô chính diệu</strong> — không có chính
+                tinh nào đóng. Đây không phải dấu hiệu xấu; cách luận là mượn sao của cung
+                đối diện rồi xét thêm phụ tinh. Thường đó là người bản sắc đa dạng, phản ứng
+                linh hoạt theo hoàn cảnh.
+              </p>
+              <p>
+                Trình tự luận có cơ sở thường đi theo các lớp: trước hết định sao thủ Mệnh
+                cùng độ sáng và Cục (nhịp đại vận); kế đến đọc Mệnh trong tam phương tứ
+                chính; rồi phủ thêm độ sáng và Tứ Hóa gốc để thấy đâu là thế mạnh, đâu là
+                nút thắt; sau đó mới dùng phụ tinh tô màu; cuối cùng áp lớp thời gian (đại
+                vận, lưu niên) để biết "giai đoạn này chủ đề gì". Trật tự này giúp tránh kiểu
+                nói chung chung đúng-với-ai-cũng-được.
+              </p>
+            </div>
+          ),
+        },
+        {
+          id: 'chinh-tinh-phu-tinh',
+          tocLabel: 'Chính tinh & phụ tinh',
+          heading: 'Chính tinh, độ sáng và phụ tinh: các lớp tạo nên một sao',
+          children: (
+            <div className="space-y-4 text-sm leading-relaxed text-muted-foreground">
+              <p>
+                <strong className="text-foreground">14 chính tinh</strong> là "nhân vật
+                chính", quyết định khuôn của mỗi cung — từ Tử Vi (đế tinh, lãnh đạo), Thiên
+                Cơ (trí tinh, linh hoạt), Vũ Khúc (tài tinh, kỷ luật), đến Thất Sát và Phá
+                Quân (quyết liệt, đột phá). Mỗi sao có mặt sáng và mặt cần lưu ý; không sao
+                nào "toàn tốt" hay "toàn xấu".
+              </p>
+              <p>
+                Các chính tinh hay đi thành ba "bộ tính cách lớn", giúp nhận ra giọng của
+                một người:
+              </p>
+              <ul className="ml-5 list-disc space-y-1.5">
+                <li>
+                  <strong className="text-foreground">Sát · Phá · Tham</strong> (Thất Sát,
+                  Phá Quân, Tham Lang) — bộ "động" nhất: biến động, đột phá, thăng trầm
+                  mạnh; hợp người dám thay đổi, khởi nghiệp.
+                </li>
+                <li>
+                  <strong className="text-foreground">Cơ · Nguyệt · Đồng · Lương</strong>{' '}
+                  (Thiên Cơ, Thái Âm, Thiên Đồng, Thiên Lương) — bộ "tĩnh": ổn định, chuyên
+                  môn, đời sống nội tâm; hợp làm công, chuyên gia, nghề chăm sóc.
+                </li>
+                <li>
+                  <strong className="text-foreground">Tử · Phủ · Vũ · Tướng</strong> (Tử Vi,
+                  Thiên Phủ, Vũ Khúc, Thiên Tướng) — bộ "lãnh đạo, quản trị, tài chính": trật
+                  tự, địa vị, quản lý nguồn lực.
+                </li>
+              </ul>
+              <p>
+                Cùng một sao đặt ở vị trí khác nhau sẽ{' '}
+                <strong className="text-foreground">sáng hay tối</strong> khác nhau (miếu,
+                vượng, đắc địa, bình hòa, hãm), tức cường độ biểu hiện mạnh hay yếu. Nhưng
+                "hãm" không đồng nghĩa với xấu, "miếu" không đồng nghĩa với tốt: sao hãm gặp
+                cát tinh phụ trợ vẫn dùng được, sao miếu gặp sát tinh nặng vẫn trục trặc.
+              </p>
+              <p>
+                <strong className="text-foreground">Phụ tinh</strong> là lớp tô màu: nhóm cát
+                tinh nâng đỡ (Tả Phụ – Hữu Bật, Văn Xương – Văn Khúc, Thiên Khôi – Thiên
+                Việt) và nhóm sát tinh tạo áp lực (Kình Dương – Đà La, Hỏa Tinh – Linh Tinh,
+                Địa Không – Địa Kiếp). Sát tinh không phải điềm gở — nhiều khi chính là động
+                lực trong khủng hoảng, hợp nghề cạnh tranh. Có trường phái nhấn mạnh sao này,
+                phái khác nhấn sao kia; điểm chung là luận đúng theo thứ tự: chính tinh trước,
+                rồi độ sáng, rồi Tứ Hóa, sau cùng mới tới phụ tinh — tất cả trong tam phương
+                tứ chính.
+              </p>
+            </div>
           ),
         },
         {

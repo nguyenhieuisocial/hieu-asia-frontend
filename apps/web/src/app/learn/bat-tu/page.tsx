@@ -37,6 +37,22 @@ const FAQS = [
     q: 'Khác gì Tử Vi?',
     a: 'Tử Vi đọc qua hệ thống sao trên 12 cung. Bát Tự đọc qua cân bằng Ngũ Hành trong 4 trụ. Hai hệ có thể bổ sung cho nhau: Tử Vi mạnh ở chi tiết lĩnh vực, Bát Tự mạnh ở năng lượng tổng thể.',
   },
+  {
+    q: 'Nhật Chủ là gì và vì sao quan trọng nhất?',
+    a: 'Nhật Chủ (日主) là Thiên Can của trụ Ngày — đại diện cho "tôi". Trường phái Tử Bình lấy Nhật Chủ làm gốc, rồi xét 7 chữ còn lại quan hệ ngũ hành thế nào với nó. Trước khi luận tốt/xấu phải biết Nhật Chủ mạnh (vượng) hay yếu (nhược), vì cùng một mối quan hệ nhưng với thân vượng và thân nhược lại luận khác nhau, thậm chí ngược nhau.',
+  },
+  {
+    q: 'Thân vượng, thân nhược nghĩa là gì?',
+    a: 'Là độ mạnh-yếu của Nhật Chủ. Căn cứ chính: mùa sinh (Chi Tháng) có nâng đỡ hành Nhật Chủ không, có "gốc rễ" trong tàng can các chi không, và số lượng phe sinh-trợ so với phe khắc-tiết-hao. Đếm số chữ mỗi hành chỉ là gợi ý thô; đánh giá đúng phải xét cả mùa, gốc rễ và tổ hợp. Đây là cách hiểu tham khảo, không phải phán định.',
+  },
+  {
+    q: 'Dụng Thần là gì?',
+    a: 'Dụng Thần (用神) là hành làm lá số cân bằng và vận hành tốt nhất — ví như "vị thuốc" cho lá số. Nguyên tắc phổ biến (phù-ức): thân nhược thì dùng hành sinh/trợ Nhật Chủ; thân vượng thì dùng hành tiết/khắc/hao bớt. Đây là phần khó và dễ sai nhất, các trường phái có thể chọn khác nhau, nên chỉ nên xem là một cách luận có cơ sở, không tuyệt đối.',
+  },
+  {
+    q: 'Thần Sát (Đào Hoa, Quý Nhân...) có quyết định số mệnh không?',
+    a: 'Không. Thần Sát là lớp phụ "tô màu" cho lá số, tra theo bảng cố định (theo Can Ngày hoặc theo Chi), không thay phần lõi là Thập Thần và Dụng Thần. Ví dụ Thiên Ất Quý Nhân chỉ ý quý nhân phù trợ, Đào Hoa nói về sức hút và duyên. Chỉ nên dùng để tham khảo thêm, không dùng riêng để hù dọa hay quyết định điều gì.',
+  },
 ];
 
 const JSONLD = [
@@ -99,6 +115,120 @@ export default function LearnBatTuPage() {
           children: (
             <div className="rounded-xl border border-border bg-card/40 p-6 sm:p-8">
               <InfographicBatTu />
+            </div>
+          ),
+        },
+        {
+          id: 'nhat-chu-vuong-nhuoc',
+          tocLabel: 'Nhật Chủ & vượng nhược',
+          heading: 'Nhật Chủ — và chuyện vượng hay nhược',
+          children: (
+            <div className="space-y-4 leading-relaxed text-muted-foreground">
+              <p>
+                Trường phái <strong className="text-foreground">Tử Bình</strong> lấy{' '}
+                <strong className="text-foreground">Thiên Can của trụ Ngày</strong> làm{' '}
+                <strong className="text-foreground">Nhật Chủ (日主)</strong> — tức "tôi". Sau đó
+                người luận xét quan hệ Ngũ Hành của 7 chữ còn lại trong lá số với Nhật Chủ. Nói cách
+                khác, cả lá Bát Tự được đọc qua lăng kính "tôi đứng giữa, mọi thứ quanh tôi đang nâng
+                đỡ hay đang khắc chế tôi".
+              </p>
+              <p>
+                Trước khi nói tốt hay xấu, bước quan trọng nhất là biết Nhật Chủ{' '}
+                <strong className="text-foreground">mạnh (vượng)</strong> hay{' '}
+                <strong className="text-foreground">yếu (nhược)</strong>. Lý do: cùng một mối quan hệ
+                ngũ hành, nhưng với thân vượng và thân nhược lại luận theo hướng khác nhau, đôi khi
+                ngược hẳn. Có ba căn cứ chính, xếp theo mức ảnh hưởng:
+              </p>
+              <ul className="list-disc space-y-2 pl-5">
+                <li>
+                  <strong className="text-foreground">Đắc lệnh (mùa sinh):</strong> yếu tố mạnh nhất —
+                  Chi Tháng có mang mùa nâng đỡ hành của Nhật Chủ không (các trạng thái theo mùa:
+                  Vượng, Tướng, Hưu, Tù, Tử).
+                </li>
+                <li>
+                  <strong className="text-foreground">Đắc địa (gốc rễ):</strong> Nhật Chủ có "rễ"
+                  trong tàng can (can ẩn) của các chi không — cùng hành hoặc hành sinh ra nó.
+                </li>
+                <li>
+                  <strong className="text-foreground">Đắc thế (vây cánh):</strong> số lượng phe
+                  sinh-trợ (Tỷ Kiếp, Ấn) so với phe khắc-tiết-hao (Quan Sát, Tài, Thực Thương).
+                </li>
+              </ul>
+              <p className="rounded-lg border border-border bg-card/40 p-4 text-sm">
+                Lưu ý: chỉ "đếm số chữ mỗi hành" rồi kết luận là cách làm thô và dễ sai. Đánh giá
+                đúng phải xét cả mùa, gốc rễ và tổ hợp. Đây là cách hiểu mang tính tham khảo để hiểu
+                mình rõ hơn, không phải lời phán về số mệnh.
+              </p>
+            </div>
+          ),
+        },
+        {
+          id: 'thap-than-dung-than',
+          tocLabel: 'Thập Thần & Dụng Thần',
+          heading: 'Thập Thần và Dụng Thần — bộ khung luận giải',
+          children: (
+            <div className="space-y-4 leading-relaxed text-muted-foreground">
+              <p>
+                Từ quan hệ Ngũ Hành giữa mỗi chữ với Nhật Chủ, người ta quy về{' '}
+                <strong className="text-foreground">Thập Thần (十神)</strong> — 10 mối quan hệ, gom
+                thành 5 nhóm, mỗi nhóm một cặp âm–dương. Mỗi nhóm gắn với một mảng đời sống (đây là{' '}
+                <em>xu hướng tham khảo</em>, không phải định mệnh):
+              </p>
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse text-sm">
+                  <thead>
+                    <tr className="border-b border-border text-left text-foreground">
+                      <th className="py-2 pr-4 font-semibold">Nhóm</th>
+                      <th className="py-2 pr-4 font-semibold">Quan hệ với Nhật Chủ</th>
+                      <th className="py-2 font-semibold">Mảng đời sống (xu hướng)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="align-top">
+                    <tr className="border-b border-border/60">
+                      <td className="py-2 pr-4 font-medium text-foreground">Tỷ Kiếp</td>
+                      <td className="py-2 pr-4">Đồng hành với Nhật Chủ</td>
+                      <td className="py-2">Bản thân, anh em, bạn bè, cạnh tranh, hợp tác</td>
+                    </tr>
+                    <tr className="border-b border-border/60">
+                      <td className="py-2 pr-4 font-medium text-foreground">Thực Thương</td>
+                      <td className="py-2 pr-4">Nhật Chủ sinh ra nó</td>
+                      <td className="py-2">Tài năng, sáng tạo, diễn đạt, "đầu ra"</td>
+                    </tr>
+                    <tr className="border-b border-border/60">
+                      <td className="py-2 pr-4 font-medium text-foreground">Tài</td>
+                      <td className="py-2 pr-4">Nhật Chủ khắc nó</td>
+                      <td className="py-2">Tiền bạc, của cải, hưởng thụ, quản trị nguồn lực</td>
+                    </tr>
+                    <tr className="border-b border-border/60">
+                      <td className="py-2 pr-4 font-medium text-foreground">Quan Sát</td>
+                      <td className="py-2 pr-4">Nó khắc Nhật Chủ</td>
+                      <td className="py-2">Sự nghiệp, địa vị, kỷ luật, áp lực</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2 pr-4 font-medium text-foreground">Ấn</td>
+                      <td className="py-2 pr-4">Nó sinh Nhật Chủ</td>
+                      <td className="py-2">Học vấn, che chở, tri thức, sự nâng đỡ</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>
+                Nhưng Thập Thần không có "tốt" hay "xấu" cố định. Luận chuẩn là{' '}
+                <strong className="text-foreground">
+                  Thập Thần × (thân vượng hay nhược) × Dụng Thần
+                </strong>
+                . Đây là lúc <strong className="text-foreground">Dụng Thần (用神)</strong> bước vào:
+                đó là hành giúp lá số cân bằng và vận hành tốt nhất, ví như "vị thuốc". Nguyên tắc phổ
+                biến nhất (phù-ức): thân nhược thì dùng hành sinh/trợ Nhật Chủ; thân vượng thì dùng
+                hành tiết bớt, khắc hoặc hao. Ngoài ra còn các cách điều hậu (quá lạnh cần Hỏa, quá
+                nóng cần Thủy), thông quan, bệnh-dược.
+              </p>
+              <p className="rounded-lg border border-border bg-card/40 p-4 text-sm">
+                Chọn Dụng Thần là phần khó và dễ sai nhất; có trường phái chọn khác nhau cho cùng một
+                lá số. Vì vậy một bài đọc tử tế sẽ trình bày có cơ sở (vượng/nhược + mùa) và nói rõ
+                đây là một cách luận phổ biến, không tuyệt đối — chứ không bán chuyện "đổi mệnh, giải
+                hạn".
+              </p>
             </div>
           ),
         },

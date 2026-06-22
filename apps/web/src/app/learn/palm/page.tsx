@@ -41,6 +41,22 @@ const FAQS = [
     q: 'Cẩn trọng khi đọc?',
     a: 'Không có đường chỉ tay nào dự đoán chính xác sự kiện cụ thể. Đây là khung tham chiếu — nên kết hợp với hoàn cảnh thực tế, sức khỏe, lựa chọn cá nhân. hieu.asia dùng AI phân tích ảnh bàn tay để hỗ trợ, không thay thế lời khuyên chuyên môn.',
   },
+  {
+    q: 'Đường sinh đạo ngắn có phải “sống ngắn”?',
+    a: 'Không. Đây là hiểu lầm phổ biến nhất về xem chỉ tay. Đường sinh đạo nói về sức sống, năng lượng và những giai đoạn thay đổi lớn — không phải tuổi thọ. Đường ngắn hoặc ôm sát có thể chỉ năng lượng tập trung, gọn gàng, ưu tiên sự an toàn, hoàn toàn không liên quan đến chuyện thọ yểu.',
+  },
+  {
+    q: 'Đường trí đạo dài thì thông minh hơn?',
+    a: 'Không. Trí đạo nói về phong cách tư duy chứ không phải mức IQ. Đường thẳng và ngang thiên về tư duy thực tế, có cấu trúc; đường dốc xuống thiên về tưởng tượng và sáng tạo. Trí đạo ngắn nghĩa là quyết nhanh, đi thẳng vào việc — không phải “kém thông minh”.',
+  },
+  {
+    q: 'Đếm vạch hôn nhân để biết cưới mấy lần được không?',
+    a: 'Không nên. Đếm vạch ở cạnh bàn tay để phán “kết hôn mấy lần” là cách đọc bị lạm dụng và sai lệch. Những vạch này chỉ phản ánh việc bạn coi trọng các mối quan hệ gắn bó sâu sắc, không phải con số sự kiện cụ thể.',
+  },
+  {
+    q: 'Đường “sức khoẻ” trên tay có nói được bệnh không?',
+    a: 'Tuyệt đối không. Dù truyền thống gọi là đường Sức khoẻ (Thuỷ Tinh), nó chỉ nói về khuynh hướng giao tiếp và sự nhạy bén, không phải chẩn đoán y học. Mọi lo ngại về sức khoẻ nên gặp bác sĩ — xem chỉ tay không có cơ sở y học và không thay thế chuyên môn.',
+  },
 ];
 
 const JSONLD = [
@@ -95,6 +111,110 @@ export default function LearnPalmPage() {
           children: (
             <div className="rounded-xl border border-border bg-card/40 p-6 sm:p-8">
               <InfographicPalm />
+            </div>
+          ),
+        },
+        {
+          id: 'ba-duong-chinh',
+          tocLabel: 'Ba đường chính',
+          heading: 'Ba đường chính — đọc xu hướng, không phán số mệnh',
+          children: (
+            <div className="prose-invert max-w-none space-y-5 text-muted-foreground">
+              <p>
+                Gần như bàn tay nào cũng có ba đường này, và chúng là trục chính của mọi
+                bài đọc. Điều quan trọng nhất: đọc <strong>tổ hợp</strong> hình dạng, độ rõ,
+                nhánh phụ và chỗ bắt đầu — không đọc độ dài đơn lẻ.
+              </p>
+
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-foreground">
+                  Tâm đạo — đường tình cảm
+                </h3>
+                <p>
+                  Đường trên cùng, chạy ngang dưới gốc các ngón. Chủ về cách yêu và cách
+                  kết nối cảm xúc. Bắt đầu dưới ngón trỏ thường gắn với khuynh hướng chọn
+                  lọc, biết mình muốn gì; bắt đầu dưới ngón giữa thiên về nhu cầu của bản
+                  thân trong quan hệ. Đường cong lên cho thấy cảm xúc cởi mở, chủ động; đường
+                  thẳng-ngang thì giữ cảm xúc kín hơn, thiên lý trí.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-foreground">
+                  Trí đạo — đường lý trí
+                </h3>
+                <p>
+                  Đường giữa, chạy ngang lòng bàn tay. Nói về <em>phong cách</em> tư duy chứ
+                  không phải mức IQ. Thẳng và ngang thiên về tư duy thực tế, có cấu trúc; dốc
+                  xuống phía gò Mặt Trăng thì giàu tưởng tượng, sáng tạo. Trí đạo dính liền
+                  điểm đầu với sinh đạo gợi khởi đầu thận trọng, gắn với gia đình; tách rời
+                  gợi sự độc lập, tự quyết sớm.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-foreground">
+                  Sinh đạo — đường sức sống
+                </h3>
+                <p>
+                  Đường vòng quanh gốc ngón cái. Chủ về sức sống, năng lượng và những bước
+                  ngoặt lớn trong đời — <strong>không phải tuổi thọ</strong>. Cần nói rõ:
+                  đường sinh đạo ngắn không có nghĩa “sống ngắn”, mà có thể chỉ năng lượng
+                  tập trung. Vòng rộng gợi nhiệt huyết, ưa vận động; vòng ôm sát gợi kiểu
+                  “chậm mà chắc”. Đoạn đứt hay nhánh được truyền thống đọc là giai đoạn
+                  chuyển biến (đổi nghề, dọn nhà), không phải tai hoạ.
+                </p>
+              </div>
+            </div>
+          ),
+        },
+        {
+          id: 'go-va-hinh-tay',
+          tocLabel: 'Gò & hình bàn tay',
+          heading: 'Gò và hình bàn tay — khung nền trước khi đọc đường',
+          children: (
+            <div className="prose-invert max-w-none space-y-5 text-muted-foreground">
+              <p>
+                Ngoài bảy đường, hai yếu tố giúp định “khung” trước khi luận là các gò thịt
+                nổi và hình dáng tổng thể bàn tay.
+              </p>
+
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-foreground">Các gò (mounts)</h3>
+                <p>
+                  Các gò là vùng thịt nổi dưới mỗi ngón và quanh lòng tay, đặt theo tên hành
+                  tinh trong hệ phương Tây. Đọc theo độ đầy đặn: gò nổi đầy gợi năng lượng
+                  vùng đó trội, gò lép gợi khuynh hướng nhẹ hơn — không phải “thiếu sót”. Gò
+                  Kim Tinh quanh gốc ngón cái gắn với nhiệt tình và sự ấm áp; gò Mộc Tinh dưới
+                  ngón trỏ gắn với tham vọng, lãnh đạo; gò Thổ Tinh dưới ngón giữa gắn với kỷ
+                  luật và chiều sâu; gò Mặt Trăng ở cạnh ngoài gắn với trí tưởng tượng và trực
+                  giác. Vì gò khó thấy chính xác qua ảnh phẳng, chỉ nên nhận xét khi gò rõ
+                  ràng nổi hoặc lép.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-foreground">
+                  Hình dáng bàn tay — hai hệ khác nhau
+                </h3>
+                <p>
+                  Có hai hệ phân loại phổ biến và chúng <strong>không tương ứng 1-1</strong>.
+                  Hệ phương Tây hiện đại chia bàn tay thành bốn loại theo Đất – Khí – Lửa –
+                  Nước: tay Đất (lòng vuông, ngón ngắn) thiên thực tế, vững vàng; tay Khí (lòng
+                  vuông, ngón dài) thiên lý trí, giao tiếp; tay Lửa (lòng dài, ngón ngắn) thiên
+                  năng động, hành động nhanh; tay Nước (lòng dài, ngón mảnh) thiên nhạy cảm,
+                  giàu cảm xúc. Bên cạnh đó có trường phái Đông Á phân theo Ngũ hành thủ gồm
+                  năm loại (Kim – Mộc – Thuỷ – Hoả – Thổ thủ) — đây là một hệ khác, không nên
+                  trộn lẫn với hệ bốn yếu tố.
+                </p>
+              </div>
+
+              <p className="text-sm">
+                Một lưu ý nền của cả môn: nhân tướng học là quan sát kinh nghiệm dân gian,
+                không phải khoa học được kiểm chứng. Tinh thần truyền thống “tướng tự tâm
+                sinh” nhắc rằng nét tay phản ánh nếp sống hiện tại và thay đổi theo thời gian
+                — không một bức ảnh nào định đoạt cả cuộc đời.
+              </p>
             </div>
           ),
         },
