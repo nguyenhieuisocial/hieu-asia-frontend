@@ -1,16 +1,19 @@
 'use client';
 
 /**
- * CongCuExplorer — trang "Tất cả công cụ" sắp theo 7 NHÓM việc-cần-làm, có vùng
- * "Bắt đầu ở đây" (lá số miễn phí + lăng kính) và mục-lục nhảy-nhóm.
+ * CongCuExplorer — trang "Tất cả công cụ" sắp theo 7 NHÓM việc-cần-làm.
  *
- * - Tìm kiếm không phân biệt dấu (NFD + đ→d) trên tên + mô tả. Khi đang tìm,
- *   ẩn vùng nổi bật/mục-lục/tiêu-đề-nhóm và gộp thành 1 lưới phẳng kết quả.
- * - Toàn bộ bề mặt dùng BIẾN-THEME (bg-card / border-border / text-foreground /
- *   text-muted-foreground / text-primary) → đúng cả light (Giấy thấm) lẫn dark
- *   (Khoảng lặng). Trước đây dùng white-opacity nên mất nền ở light.
- * - Mục-lục KHÔNG sticky: ToolPageShell <main> có overflow-hidden (cho glow nền)
- *   → phá position:sticky. Dùng anchor + scroll-mt-20 để chừa thanh nav cố định.
+ * Bố cục (2026-06-22, sửa "khoảng trống bên phải"):
+ * - THANH DUYỆT đầu trang: ô tìm-kiếm (trái) + mục-lục nhảy-nhóm (chips, lấp
+ *   hết chiều ngang bên phải ở desktop) → hết khoảng trống ở hàng tìm-kiếm.
+ * - 2 lá số MIỄN PHÍ: ở desktop nằm trong panel hero bên phải tiêu đề (page.tsx);
+ *   ở mobile/tablet hiện ngay đây (thẻ DỌC, CTA full-width — hết khoảng-hở).
+ *   `lg:hidden` ở đây + `hidden lg:block` ở panel → không trùng lặp.
+ * - Tìm kiếm không phân biệt dấu (NFD + đ→d); khi tìm → gộp 1 lưới phẳng.
+ * - Bề mặt dùng BIẾN-THEME (bg-card/border-border/text-foreground/
+ *   text-muted-foreground/text-primary) → đúng cả light lẫn dark.
+ * - Mục-lục KHÔNG sticky (ToolPageShell <main> overflow-hidden phá sticky):
+ *   dùng anchor + scroll-mt-20 để chừa thanh nav cố định.
  */
 
 import * as React from 'react';
@@ -95,35 +98,31 @@ function ToolCard({ tool, eyebrow }: { tool: ExplorerTool; eyebrow?: string }) {
   );
 }
 
+/** Thẻ lá số MIỄN PHÍ (mobile/tablet) — DỌC: emoji → tên+mô tả → CTA full-width.
+ *  Không `ml-auto` nên không còn khoảng-hở phải. (Desktop dùng panel hero.) */
 function FreeHeroCard({ item }: { item: FeaturedFree }) {
   return (
     <Link
       href={item.href}
-      className="group relative flex flex-col gap-4 overflow-hidden rounded-2xl border-[1.5px] border-gold/45 bg-card p-5 transition-all duration-200 hover:border-gold/70 hover:shadow-[0_2px_24px_-10px_hsl(var(--primary)/0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:flex-row sm:items-center"
+      className="group flex h-full flex-col gap-3 rounded-2xl border border-gold/30 bg-card p-5 transition-all duration-200 hover:border-gold/60 hover:bg-primary/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gold/[0.1] to-transparent"
-      />
-      <span className="relative flex items-center gap-4">
-        <span
-          aria-hidden="true"
-          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-gold/25 bg-gold/10 text-3xl"
-        >
-          {item.emoji}
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block font-heading text-lg font-semibold text-foreground">
-            {item.name}
-          </span>
-          <span className="mt-0.5 block font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-            {item.tagline}
-          </span>
-        </span>
+        className="grid size-11 place-items-center rounded-xl border border-border bg-background text-2xl"
+      >
+        {item.emoji}
       </span>
-      <span className="relative inline-flex shrink-0 items-center gap-1 self-start rounded-full bg-primary px-4 py-2 font-heading text-sm font-semibold text-primary-foreground transition-colors group-hover:bg-primary/90 sm:ml-auto sm:self-auto">
+      <div>
+        <p className="font-heading text-base font-semibold text-foreground transition-colors group-hover:text-primary">
+          {item.name}
+        </p>
+        <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">
+          {item.tagline}
+        </p>
+      </div>
+      <span className="mt-auto inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors group-hover:bg-primary/90">
         {item.cta}
-        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        <ArrowRight className="size-4" aria-hidden="true" />
       </span>
     </Link>
   );
@@ -164,37 +163,62 @@ export function CongCuExplorer({
 
   return (
     <div className="mt-2">
-      {/* Search */}
-      <div className="relative max-w-md">
-        <Search
-          aria-hidden="true"
-          className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-        />
-        <input
-          type="search"
-          inputMode="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Tìm theo nhu cầu… (vd: xem tuổi cưới, ngày tốt, mbti)"
-          aria-label="Tìm công cụ"
-          className="h-11 w-full rounded-xl border border-border bg-card pl-10 pr-10 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-ring/30"
-        />
-        {query && (
-          <button
-            type="button"
-            onClick={() => setQuery('')}
-            aria-label="Xoá tìm kiếm"
-            className="absolute right-2.5 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+      {/* Thanh duyệt: tìm-kiếm (trái) + mục-lục nhảy-nhóm (lấp phải) */}
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+        <div className="relative lg:w-80 lg:shrink-0">
+          <Search
+            aria-hidden="true"
+            className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+          />
+          <input
+            type="search"
+            inputMode="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Tìm công cụ… (xem tuổi cưới, ngày tốt, mbti)"
+            aria-label="Tìm công cụ"
+            className="h-11 w-full rounded-full border border-border bg-card pl-10 pr-10 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-ring/30"
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery('')}
+              aria-label="Xoá tìm kiếm"
+              className="absolute right-2.5 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+        </div>
+
+        {!isSearching && (
+          <nav
+            aria-label="Nhảy tới nhóm"
+            className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] lg:flex-1 lg:flex-wrap lg:overflow-visible lg:pb-0 [&::-webkit-scrollbar]:hidden"
           >
-            <X className="h-3.5 w-3.5" />
-          </button>
+            {categories.map((c) => {
+              const count = byCat.get(c.id)?.length ?? 0;
+              if (!count) return null;
+              return (
+                <a
+                  key={c.id}
+                  href={`#${c.id}`}
+                  className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 font-mono text-[11px] uppercase tracking-wide text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/[0.06] hover:text-primary"
+                >
+                  <span aria-hidden="true">{c.icon}</span>
+                  {c.label}
+                  <span className="text-muted-foreground/60">· {count}</span>
+                </a>
+              );
+            })}
+          </nav>
         )}
       </div>
 
       {isSearching ? (
         /* ── Chế độ tìm kiếm: 1 lưới phẳng ── */
         <>
-          <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+          <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
             {filtered.length} / {tools.length} công cụ
           </p>
           {filtered.length > 0 ? (
@@ -224,10 +248,10 @@ export function CongCuExplorer({
           )}
         </>
       ) : (
-        /* ── Chế độ duyệt: nổi bật + mục lục + nhóm ── */
+        /* ── Chế độ duyệt: nổi bật + nhóm ── */
         <>
-          {/* Bắt đầu ở đây */}
-          <section aria-label="Bắt đầu ở đây" className="mt-8">
+          {/* Lá số miễn phí — CHỈ mobile/tablet (desktop đã có panel hero bên phải) */}
+          <div className="mt-8 lg:hidden">
             <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-primary">
               {featured.eyebrow}
             </p>
@@ -237,53 +261,31 @@ export function CongCuExplorer({
             <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-muted-foreground">
               {featured.subcopy}
             </p>
-
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               {featured.free.map((item) => (
                 <FreeHeroCard key={item.href} item={item} />
               ))}
             </div>
+          </div>
 
-            {lensTools.length > 0 && (
-              <>
-                <p className="mt-7 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-                  {featured.lensesHeading}
-                </p>
-                <ul
-                  role="list"
-                  className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-3"
-                >
-                  {lensTools.map((tool) => (
-                    <li key={tool.href}>
-                      <ToolCard tool={tool} eyebrow="Lăng kính" />
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-          </section>
-
-          {/* Mục lục nhảy-nhóm */}
-          <nav
-            aria-label="Nhóm công cụ"
-            className="mt-10 flex flex-wrap gap-2 border-y border-border py-3"
-          >
-            {categories.map((c) => {
-              const count = byCat.get(c.id)?.length ?? 0;
-              if (!count) return null;
-              return (
-                <a
-                  key={c.id}
-                  href={`#${c.id}`}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 font-mono text-[11px] uppercase tracking-wide text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/[0.06] hover:text-primary"
-                >
-                  <span aria-hidden="true">{c.icon}</span>
-                  {c.label}
-                  <span className="text-muted-foreground/60">· {count}</span>
-                </a>
-              );
-            })}
-          </nav>
+          {/* Năm lăng kính — luôn hiện */}
+          {lensTools.length > 0 && (
+            <section aria-label={featured.lensesHeading} className="mt-8">
+              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+                {featured.lensesHeading}
+              </p>
+              <ul
+                role="list"
+                className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-3"
+              >
+                {lensTools.map((tool) => (
+                  <li key={tool.href}>
+                    <ToolCard tool={tool} eyebrow="Lăng kính" />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           {/* Các nhóm */}
           {categories.map((c, idx) => {

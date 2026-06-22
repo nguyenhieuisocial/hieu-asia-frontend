@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import {
   CongCuExplorer,
@@ -137,6 +139,55 @@ const FEATURED: FeaturedConfig = {
   lenses: ['/mbti', '/big-five', '/xem-tuong'],
 };
 
+// Panel "Bắt đầu miễn phí" lấp nửa-phải tiêu đề ở desktop (lg+). Chứa 2 lá số
+// MIỄN PHÍ — hành động giá-trị-cao nhất — thay vì để trống. Ở mobile panel ẩn
+// (CongCuExplorer hiện 2 thẻ này), nên không trùng lặp.
+const commandPanel = (
+  <aside className="rounded-2xl border border-gold/30 bg-card p-5 shadow-sm">
+    <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-primary">
+      Bắt đầu miễn phí · 30 giây
+    </p>
+    <p className="mt-2 font-heading text-base leading-snug text-foreground">
+      Lập lá số của bạn — con số thật, không bói mù.
+    </p>
+    <div className="mt-4 flex flex-col gap-3">
+      {FEATURED.free.map((f) => (
+        <Link
+          key={f.href}
+          href={f.href}
+          className="group flex items-center gap-3 rounded-xl border border-border bg-background/50 p-3 transition-colors hover:border-primary/50 hover:bg-primary/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <span
+            aria-hidden="true"
+            className="grid size-10 shrink-0 place-items-center rounded-lg border border-border bg-card text-xl"
+          >
+            {f.emoji}
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-heading text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
+              {f.name}
+            </span>
+            <span className="block truncate text-[12px] text-muted-foreground">
+              {f.tagline}
+            </span>
+          </span>
+          <span
+            aria-hidden="true"
+            className="grid size-8 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground transition-transform group-hover:translate-x-0.5"
+          >
+            <ArrowRight className="size-4" />
+          </span>
+        </Link>
+      ))}
+    </div>
+    <div className="mt-4 border-t border-border pt-3">
+      <p className="font-mono text-[11px] text-muted-foreground">
+        {TOOLS.length} công cụ · {CATEGORIES.length} nhóm · không cần tài khoản
+      </p>
+    </div>
+  </aside>
+);
+
 export default function CongCuPage() {
   return (
     <ToolPageShell
@@ -148,6 +199,7 @@ export default function CongCuPage() {
       }
       description="Hơn 50 công cụ luận số, tâm lý học và phong thủy — sắp theo việc bạn cần làm. Chưa biết bắt đầu từ đâu? Lập lá số miễn phí, rồi đi sâu theo từng nhu cầu. Tất cả đều minh bạch từng bước, không bói mù."
       breadcrumb={[{ label: 'Trang chủ', href: '/' }, { label: 'Công cụ' }]}
+      heroAside={commandPanel}
     >
       <CongCuExplorer tools={TOOLS} categories={CATEGORIES} featured={FEATURED} />
     </ToolPageShell>
