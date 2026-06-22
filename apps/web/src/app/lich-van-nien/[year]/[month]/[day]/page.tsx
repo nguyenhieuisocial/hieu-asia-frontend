@@ -140,7 +140,7 @@ export default async function ArchiveDayPage({
           className="pointer-events-none absolute inset-x-0 top-0 h-[360px] bg-ink-radial opacity-80"
         />
 
-        <section className="relative mx-auto max-w-3xl px-6 pb-10 pt-12 sm:pt-16">
+        <section className="relative mx-auto max-w-3xl px-6 pb-10 pt-6 sm:pt-8">
           <nav aria-label="Breadcrumb" className="mb-4 flex flex-wrap items-center text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">Trang chủ</Link>
             <ChevronRight className="mx-1 h-3 w-3" aria-hidden />

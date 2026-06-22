@@ -32,6 +32,7 @@ import { NotOraclesStrip } from '@/components/home-hero/NotOraclesStrip';
 import { Methodology } from '@/components/home-hero/Methodology';
 import { ToolkitSection } from '@/components/home-hero/ToolkitSection';
 import { MissionNote } from '@/components/home-hero/MissionNote';
+import { EngineProofShowcase } from '@/components/home-hero/EngineProofShowcase';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { SampleOutputShowcase } from '@/components/marketing/SampleOutputShowcase';
 import { MentorSampleLazy } from '@/components/marketing/MentorSampleLazy';
@@ -585,6 +586,12 @@ export default function LandingPage() {
           Trí tuệ phương Đông không phải lời tiên tri.{' '}
           Đó là <em className="text-primary/80">khoảng lặng</em> để bạn nghe rõ chính mình.
         </PullQuote>
+
+        {/* Wave 64 — EngineProofShowcase: lá số Tử Vi + bảng Bát Tự MẪU (data
+            tĩnh, có nhãn demo) ngay trước báo cáo mẫu — cho thấy "lá số được
+            TÍNH RA" trước khi đọc kết quả. Phá đơn điệu text + chứng minh
+            "tính thật, không tra bảng". */}
+        <RevealOnScroll><EngineProofShowcase /></RevealOnScroll>
 
         {/* Wave 60.95.c P1-6 — SampleOutputShowcase (vault 130 §III P1-6, biggest
             conversion lever per ChatGPT R6 §3.2). Surfaces 4 illustrative report

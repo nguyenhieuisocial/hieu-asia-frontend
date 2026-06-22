@@ -168,7 +168,7 @@ export function LearnArticle({
     <>
       <ReadingProgress />
 
-      <main className="mx-auto max-w-6xl px-6 py-12 sm:py-16">
+      <main className="mx-auto max-w-6xl px-6 pt-6 pb-12 sm:pt-8 sm:pb-16">
         {children}
 
         <nav
