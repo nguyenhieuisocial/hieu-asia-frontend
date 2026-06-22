@@ -16,9 +16,12 @@ import { LENSES } from '@/lib/catalog/lenses';
  * NOTE: sơ đồ cạnh sao (EDGES) cố định cho 5 lăng kính flagship — đổi số lượng catalog thì sửa EDGES.
  */
 
-const INK = '#171411';
+// 2026-06-22: INK/SOFT → currentColor để nét vẽ SVG theo chữ (foreground) của
+// theme — Ink trên light, Bone trên dark. (Dùng currentColor thay var() vì
+// thuộc-tính SVG không resolve var() ổn định mọi trình duyệt.) OCHRE/FLAGRED giữ.
+const INK = 'currentColor';
 const OCHRE = '#A47532';
-const SOFT = '#6B6358';
+const SOFT = 'currentColor';
 const FLAGRED = '#DA251D';
 const C = 200, R_LENS = 126, LENS_R = 40, CORE_R = 26, OUT_R = 170, STAR_IN = 52;
 const R2 = (n: number): number => Math.round(n * 100) / 100;
