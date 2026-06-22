@@ -68,7 +68,7 @@ export function InstantChartHero(): React.JSX.Element {
         <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
           Lá số Bát Tự thật · tính ngay · miễn phí
         </p>
-        <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
+        <h1 className="mt-3 text-balance font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
           Nhập ngày sinh —{' '}
           <span className="bg-gold-gradient bg-clip-text text-transparent">
             xem lá số của bạn

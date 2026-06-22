@@ -40,7 +40,7 @@ export function ToolkitSection(): React.JSX.Element {
                       <a
                         href={t.learn}
                         aria-label={`Tìm hiểu về ${t.n}`}
-                        className="-my-1 inline-flex items-center px-1 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-primary/55 underline underline-offset-2 transition-colors hover:text-primary"
+                        className="-my-1 inline-flex items-center px-1 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-primary underline underline-offset-2 transition-colors hover:text-primary"
                       >
                         học
                       </a>

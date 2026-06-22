@@ -34,19 +34,19 @@ export function EngineProofShowcase(): React.JSX.Element {
           <figure className="flex flex-col items-center text-primary">
             <LaSoSvg className="w-full max-w-[280px]" />
             <figcaption className="mt-4 max-w-[28em] text-center text-sm text-muted-foreground">
-              <span className="font-display text-foreground">Tử Vi · 12 cung</span> — bản đồ 12
+              <span className="font-marketing-display text-foreground">Tử Vi · 12 cung</span> — bản đồ 12
               lĩnh vực đời sống (sơ đồ minh hoạ).
             </figcaption>
           </figure>
 
           {/* Bát Tự · 4 trụ ngũ hành — InfographicBatTu tự có caption + chú thích màu */}
           <figure className="flex flex-col items-center">
-            <p className="mb-4 font-display text-base text-foreground">Bát Tự · 4 trụ ngũ hành</p>
+            <p className="mb-4 font-marketing-display text-base text-foreground">Bát Tự · 4 trụ ngũ hành</p>
             <InfographicBatTu />
           </figure>
         </div>
 
-        <p className="mt-10 text-center font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground/70">
+        <p className="mt-10 text-center font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
           Persona demo · không phải dữ liệu thật
         </p>
       </div>
