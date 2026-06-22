@@ -414,7 +414,7 @@ function MobileDrawer({
           ))}
           <div className="my-2 h-px bg-muted/5" />
           <DrawerGroup
-            title="Công cụ tra cứu"
+            title="Tra cứu nhanh"
             links={MOBILE_TOOLS}
             onNavigate={() => setOpen(false)}
           />

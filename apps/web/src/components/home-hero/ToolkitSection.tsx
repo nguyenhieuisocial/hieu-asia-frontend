@@ -29,13 +29,23 @@ export function ToolkitSection(): React.JSX.Element {
               <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-primary/70">{g.label}</p>
               <div className="mt-2 flex flex-wrap gap-2">
                 {g.tools.map((t) => (
-                  <a
-                    key={t.href}
-                    href={t.href}
-                    className="rounded-full border border-primary/25 px-3.5 py-1.5 text-sm text-foreground transition-colors hover:border-primary hover:bg-primary/5"
-                  >
-                    {t.n}
-                  </a>
+                  <span key={t.href} className="inline-flex items-center gap-1">
+                    <a
+                      href={t.href}
+                      className="rounded-full border border-primary/25 px-3.5 py-1.5 text-sm text-foreground transition-colors hover:border-primary hover:bg-primary/5"
+                    >
+                      {t.n}
+                    </a>
+                    {t.learn && (
+                      <a
+                        href={t.learn}
+                        aria-label={`Tìm hiểu về ${t.n}`}
+                        className="font-mono text-[10px] uppercase tracking-[0.08em] text-primary/55 underline underline-offset-2 transition-colors hover:text-primary"
+                      >
+                        học
+                      </a>
+                    )}
+                  </span>
                 ))}
               </div>
             </div>

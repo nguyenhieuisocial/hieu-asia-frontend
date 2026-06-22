@@ -49,6 +49,8 @@ export const QUICK_LOOKUP: QuickTool[] = [
 export interface ToolChip {
   n: string; // short label
   href: string;
+  /** optional /learn explainer page for this tool (internal-link SEO) */
+  learn?: string;
 }
 export interface ToolGroup {
   label: string;
@@ -60,10 +62,10 @@ export const TOOLKIT_GROUPS: ToolGroup[] = [
   {
     label: 'Cổ học Á Đông',
     tools: [
-      { n: 'Tử Vi', href: '/tu-vi' },
-      { n: 'Bát Tự', href: '/bat-tu' },
-      { n: 'Xem Tướng', href: '/xem-tuong' },
-      { n: 'Thần Số', href: '/than-so-hoc' },
+      { n: 'Tử Vi', href: '/tu-vi', learn: '/learn/tu-vi' },
+      { n: 'Bát Tự', href: '/bat-tu', learn: '/learn/bat-tu' },
+      { n: 'Xem Tướng', href: '/xem-tuong', learn: '/learn/palm' },
+      { n: 'Thần Số', href: '/than-so-hoc', learn: '/learn/than-so-hoc' },
       { n: 'Kinh Dịch', href: '/gieo-que' },
       { n: 'Cân Xương', href: '/can-xuong' },
       { n: 'Thước Lỗ Ban', href: '/thuoc-lo-ban' },
@@ -80,10 +82,10 @@ export const TOOLKIT_GROUPS: ToolGroup[] = [
   {
     label: 'Tâm lý hiện đại',
     tools: [
-      { n: 'MBTI', href: '/mbti' },
-      { n: 'Big Five', href: '/big-five' },
-      { n: 'DISC', href: '/disc' },
-      { n: 'Enneagram', href: '/enneagram' },
+      { n: 'MBTI', href: '/mbti', learn: '/learn/mbti' },
+      { n: 'Big Five', href: '/big-five', learn: '/learn/big-five' },
+      { n: 'DISC', href: '/disc', learn: '/learn/disc' },
+      { n: 'Enneagram', href: '/enneagram', learn: '/learn/enneagram' },
     ],
   },
   { label: 'Trực giác', tools: [{ n: 'Tarot', href: '/tarot' }] },
