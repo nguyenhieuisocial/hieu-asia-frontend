@@ -381,10 +381,14 @@ export function buildCung(slug: string): CungData | null {
     (o) => o.element === z.element && o.idx !== idx,
   ).map((o) => refOf(o.idx));
   const supportElement = ELEMENT_SUPPORT[z.element];
-  const support: SignRef[] = ZODIAC.filter((o) => o.element === supportElement).map((o) =>
-    refOf(o.idx),
-  );
-  const opposite = refOf((idx + 6) % 12);
+  // Cung đối (idx+6) LUÔN cùng nguyên tố bổ trợ (cùng polarity) → phải loại khỏi
+  // danh sách "bổ trợ" để "Bổ trợ" và "Cung đối" không trùng nhau (opposition ≠
+  // sextile). Còn lại đúng 2 cung bổ trợ thật.
+  const oppIdx = (idx + 6) % 12;
+  const support: SignRef[] = ZODIAC.filter(
+    (o) => o.element === supportElement && o.idx !== oppIdx,
+  ).map((o) => refOf(o.idx));
+  const opposite = refOf(oppIdx);
 
   const planetLine = extra.rulingPlanetModern
     ? `${extra.rulingPlanet} (hiện đại: ${extra.rulingPlanetModern})`

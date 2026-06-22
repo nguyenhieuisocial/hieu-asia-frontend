@@ -49,10 +49,14 @@ describe('buildCung', () => {
       // Hợp tự nhiên: 2 cung cùng nguyên tố (không gồm chính nó).
       expect(d.sameElement).toHaveLength(2);
       expect(d.sameElement.every((s) => s.slug !== slug)).toBe(true);
-      // Bổ trợ: 3 cung nguyên tố bổ trợ.
-      expect(d.support).toHaveLength(3);
+      // Bổ trợ: 2 cung nguyên tố bổ trợ (đã loại cung đối — opposition ≠ sextile).
+      expect(d.support).toHaveLength(2);
       // Cung đối = idx + 6.
       expect(d.opposite.slug).toBe(CUNG_SLUGS[(d.idx + 6) % 12]);
+      // Cung đối KHÔNG được nằm trong danh sách bổ trợ (không mâu thuẫn nhãn).
+      expect(d.support.every((s) => s.slug !== d.opposite.slug)).toBe(true);
+      // sameElement cũng không chứa cung đối (khác nguyên tố).
+      expect(d.sameElement.every((s) => s.slug !== d.opposite.slug)).toBe(true);
       // FAQ + SEO đủ.
       expect(d.faqs.length).toBeGreaterThanOrEqual(4);
       expect(d.seoTitle).toContain(d.z.name);
