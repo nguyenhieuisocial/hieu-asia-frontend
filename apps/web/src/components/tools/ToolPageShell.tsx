@@ -14,6 +14,9 @@ export interface ToolPageShellProps {
   breadcrumb?: { label: string; href?: string }[];
   /** Optional CTA row in the hero, e.g. quick action buttons. */
   heroAction?: React.ReactNode;
+  /** Khi set, render khối nội dung bên phải hero trong lưới 2 cột ở desktop (lg+).
+   *  Mặc định undefined → hero giữ layout 1 cột như cũ (mọi trang khác không đổi). */
+  heroAside?: React.ReactNode;
   /** Khi set, render khối "Công cụ liên quan" (tra RELATED_TOOLS theo route) ở cuối trang. */
   relatedSlug?: string;
   /** Page content below the hero. */
@@ -36,9 +39,36 @@ export function ToolPageShell({
   icon,
   breadcrumb,
   heroAction,
+  heroAside,
   relatedSlug,
   children,
 }: ToolPageShellProps) {
+  // Tách phần hero (icon + chữ) ra biến để đường-MẶC-ĐỊNH (không heroAside)
+  // render DOM y hệt trước — 64 trang khác dùng shell không đổi gì.
+  const heroInner = (
+    <>
+      {icon && (
+        <div
+          aria-hidden="true"
+          className="hidden h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-gold/25 bg-gradient-to-br from-gold/15 via-background to-purple/20 text-3xl shadow-[0_0_40px_-12px_rgba(184,146,61,0.45)] sm:flex"
+        >
+          {icon}
+        </div>
+      )}
+      <div className="flex-1">
+        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-primary">
+          {eyebrow}
+        </p>
+        <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
+          {title}
+        </h1>
+        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+          {description}
+        </p>
+        {heroAction && <div className="mt-6">{heroAction}</div>}
+      </div>
+    </>
+  );
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
@@ -81,28 +111,14 @@ export function ToolPageShell({
               </nav>
             )}
 
-            <div className="flex items-start gap-5">
-              {icon && (
-                <div
-                  aria-hidden="true"
-                  className="hidden h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-gold/25 bg-gradient-to-br from-gold/15 via-background to-purple/20 text-3xl shadow-[0_0_40px_-12px_rgba(184,146,61,0.45)] sm:flex"
-                >
-                  {icon}
-                </div>
-              )}
-              <div className="flex-1">
-                <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-primary">
-                  {eyebrow}
-                </p>
-                <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
-                  {title}
-                </h1>
-                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  {description}
-                </p>
-                {heroAction && <div className="mt-6">{heroAction}</div>}
+            {heroAside ? (
+              <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-12">
+                <div className="flex items-start gap-5">{heroInner}</div>
+                <div className="hidden lg:block">{heroAside}</div>
               </div>
-            </div>
+            ) : (
+              <div className="flex items-start gap-5">{heroInner}</div>
+            )}
           </div>
         </section>
 
