@@ -219,6 +219,7 @@ export default function CungHoangDaoHubPage() {
         <div className="mx-auto max-w-6xl px-6 pb-12">
           <RelatedTools
             links={[
+              { href: '/cung-hoang-dao/hop', label: 'Độ hợp 12 cung hoàng đạo' },
               { href: '/ban-do-sao', label: 'Bản đồ sao (lá số chiêm tinh đầy đủ)' },
               { href: '/thien-van', label: 'Thiên văn hôm nay' },
               { href: '/la-so-tu-vi', label: 'Lá số Tử Vi' },
