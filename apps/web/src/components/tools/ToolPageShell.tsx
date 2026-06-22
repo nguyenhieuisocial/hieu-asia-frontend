@@ -56,10 +56,13 @@ export function ToolPageShell({
         </div>
       )}
       <div className="flex-1">
-        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-primary">
+        {/* 2026-06-22 UX review: eyebrow về token (0.12em, khớp marketing; was
+            0.32em ~3x drift) · H1 dùng serif biên-tập editorial-h2 (khớp brand
+            "Như giấy cũ" mà marketing/home đang dùng; was font-heading sans). */}
+        <p className="font-mono text-eyebrow uppercase text-primary">
           {eyebrow}
         </p>
-        <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
+        <h1 className="mt-3 font-editorial-display text-editorial-h2 font-medium text-foreground">
           {title}
         </h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -96,7 +99,7 @@ export function ToolPageShell({
                   {breadcrumb.map((b, i) => (
                     <li key={i} className="flex items-center gap-1.5">
                       {b.href ? (
-                        <Link href={b.href} className="transition-colors hover:text-gold">
+                        <Link href={b.href} className="transition-colors hover:text-primary">
                           {b.label}
                         </Link>
                       ) : (
