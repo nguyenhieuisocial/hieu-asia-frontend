@@ -59,7 +59,7 @@ export function InstantChartHero(): React.JSX.Element {
         className="pointer-events-none absolute -top-10 left-[-12%] h-[300px] w-[300px] rounded-full bg-purple/15 blur-3xl"
       />
 
-      <div className="relative mx-auto max-w-3xl px-6 pt-24 pb-12 sm:pt-28 sm:pb-16">
+      <div className="relative mx-auto max-w-3xl px-6 pt-24 pb-28 sm:pt-28 sm:pb-16">
         <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
           Lá số Bát Tự thật · tính ngay · miễn phí
         </p>
