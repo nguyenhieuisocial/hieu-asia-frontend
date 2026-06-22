@@ -81,6 +81,7 @@ export default function XongDatPage() {
           { label: 'Trang chủ', href: '/' },
           { label: 'Tuổi xông đất' },
         ]}
+        relatedSlug="/xong-dat"
       >
         <section className="space-y-8">
           <XongDatChecker />

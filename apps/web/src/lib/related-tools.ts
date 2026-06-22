@@ -46,6 +46,19 @@ const L = {
   tuvinghe: { href: '/tu-vi-nghe-nghiep', label: 'Tử Vi sự nghiệp' },
   tuvitinhyeu: { href: '/tu-vi-tinh-yeu', label: 'Tử Vi tình yêu' },
   tuvitaichinh: { href: '/tu-vi-tai-chinh', label: 'Tử Vi tài chính' },
+  // 2026-06-22: bổ sung để bật "Công cụ liên quan" cho 16 trang còn thiếu.
+  banDoSao: { href: '/ban-do-sao', label: 'Bản đồ sao' },
+  cungHoangDao: { href: '/cung-hoang-dao', label: 'Cung hoàng đạo' },
+  laSoBatTu: { href: '/la-so-bat-tu', label: 'Xem lá số Bát Tự' },
+  banMenh: { href: '/ban-menh', label: 'Ngũ hành bản mệnh' },
+  daiVan: { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại' },
+  xuatHanh: { href: '/xuat-hanh', label: 'Hướng & giờ xuất hành' },
+  sinhCon: { href: '/sinh-con', label: 'Sinh con theo năm' },
+  xemTuoiCuoi: { href: '/xem-tuoi-cuoi', label: 'Xem tuổi cưới' },
+  xemTuoiLamNha: { href: '/xem-tuoi-lam-nha', label: 'Xem tuổi làm nhà' },
+  khaiTruong: { href: '/khai-truong', label: 'Xem tuổi khai trương' },
+  xongDat: { href: '/xong-dat', label: 'Tuổi xông đất' },
+  huongNha: { href: '/huong-nha', label: 'Xem hướng nhà' },
 } as const;
 
 export const RELATED_TOOLS: Record<string, RelatedLink[]> = {
@@ -82,4 +95,28 @@ export const RELATED_TOOLS: Record<string, RelatedLink[]> = {
   '/thuoc-lo-ban': [L.lichvannien, L.giohoangdao, L.xemngay],
   '/so-sanh': [L.mbti, L.bigfive, L.disc],
   '/hoi-dap': [L.tuvi, L.mbti, L.gieoque],
+  // 2026-06-22: 16 map mới (suy theo 7 nhóm /cong-cu — cùng nhóm = liên quan).
+  // Lá số
+  '/la-so-tu-vi': [L.laSoBatTu, L.tuvi, L.menhcuc, L.bangchung],
+  '/la-so-bat-tu': [L.laso, L.battu, L.banMenh, L.menhcuc],
+  // Hiểu bản thân (chiêm tinh Tây)
+  '/ban-do-sao': [L.cungHoangDao, L.mbti, L.bigfive, L.xemtuong],
+  // Vận trình & thời gian
+  '/sao-han': [L.tuvihomnay, L.tuvi2026, L.daiVan, L.lichvannien],
+  // Xem ngày – giờ
+  '/xem-ngay': [L.lichvannien, L.giohoangdao, L.ngaykiengky, L.xuatHanh],
+  '/gio-hoang-dao': [L.xemngay, L.ngaykiengky, L.xuatHanh, L.lichvannien],
+  '/ngay-kieng-ky': [L.xemngay, L.giohoangdao, L.lichvannien, L.xuatHanh],
+  '/xuat-hanh': [L.giohoangdao, L.xemngay, L.ngaykiengky, L.lichvannien],
+  // Xem tuổi việc lớn
+  '/xem-tuoi-cuoi': [L.hoptuoi, L.xemngay, L.xemTuoiLamNha, L.khaiTruong],
+  '/xem-tuoi-lam-nha': [L.huongNha, L.xemngay, L.thuocloban, L.xemTuoiCuoi],
+  '/khai-truong': [L.xemngay, L.xemTuoiCuoi, L.hoptuoi, L.saohan],
+  '/xong-dat': [L.hoptuoi, L.xemTuoiCuoi, L.tuvi2027, L.xemngay],
+  '/huong-nha': [L.xemTuoiLamNha, L.thuocloban, L.xemngay, L.banMenh],
+  // Quan hệ & gia đình
+  '/sinh-con': [L.datten, L.hoptuoi, L.banMenh, L.xemTuoiCuoi],
+  '/dat-ten-ngu-hanh': [L.sinhCon, L.banMenh, L.battu],
+  // Khám phá & tự kiểm
+  '/tu-kiem': [L.sosanh, L.hoidap, L.gieoque, L.tarot],
 };

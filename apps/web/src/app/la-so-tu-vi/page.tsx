@@ -106,6 +106,7 @@ export default async function LaSoTuViPage({
         }
         description="Lập lá số đầy đủ 12 cung, 114 sao, độ sáng & Tứ Hóa từ ngày giờ sinh — bằng engine chuẩn. Con số là thật; cách cục & tam phương để bạn tự soi, không bói toán."
         breadcrumb={[{ label: 'Trang chủ', href: '/' }, { label: 'Xem lá số Tử Vi' }]}
+        relatedSlug="/la-so-tu-vi"
       >
         <section className="space-y-8">
           <LaSoChecker

@@ -66,6 +66,7 @@ export default function TuKiemPage() {
           { label: 'Trang chủ', href: '/' },
           { label: 'Tự kiểm' },
         ]}
+        relatedSlug="/tu-kiem"
       >
         <section className="mt-6">
           <div className="mx-auto max-w-2xl space-y-4">

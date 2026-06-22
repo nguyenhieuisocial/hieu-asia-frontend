@@ -9,7 +9,7 @@ import {
 } from '@/components/tools/CongCuExplorer';
 
 // 2026-06-22 — Sắp xếp lại + thiết kế lại /cong-cu (workflow 3-hướng→chấm→tổng hợp).
-// 50 công cụ chia 7 NHÓM theo việc người dùng cần làm, có vùng "Bắt đầu ở đây"
+// ~48 công cụ chia 7 NHÓM theo việc người dùng cần làm, có vùng "Bắt đầu ở đây"
 // (lá số miễn phí + 5 lăng kính) và thanh nhảy-nhóm. Thẻ dùng BIẾN-THEME nên
 // chạy đúng cả light (Giấy thấm) lẫn dark (Khoảng lặng) — sửa lỗi nền trắng-mờ cũ.
 
@@ -198,7 +198,7 @@ export default function CongCuPage() {
           Tất cả <GoldAccent>công cụ</GoldAccent>
         </>
       }
-      description="Gần 50 công cụ luận số, tâm lý học và phong thủy — sắp theo việc bạn cần làm. Chưa biết bắt đầu từ đâu? Lập lá số miễn phí, rồi đi sâu theo từng nhu cầu. Tất cả đều minh bạch từng bước, không bói mù."
+      description={`${TOOLS.length} công cụ luận số, tâm lý học và phong thủy — sắp theo việc bạn cần làm. Chưa biết bắt đầu từ đâu? Lập lá số miễn phí, rồi đi sâu theo từng nhu cầu. Tất cả đều minh bạch từng bước, không bói mù.`}
       breadcrumb={[{ label: 'Trang chủ', href: '/' }, { label: 'Công cụ' }]}
       heroAside={commandPanel}
     >
