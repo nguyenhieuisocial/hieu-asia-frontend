@@ -195,7 +195,7 @@ export default function AboutPage() {
           body={[
             'Tôi xây hieu.asia vì tôi tin cổ học Á Đông — bao gồm tinh hoa cổ truyền Việt Nam như Cân Xương Đoán Số — đáng được trình bày bằng ngôn ngữ của thời đại này, cho người Việt. Không huyễn hoặc, không thương mại hoá rẻ tiền. Mỗi người đều có quyền hiểu chính mình rõ hơn, và quyền tự chọn con đường mình đi.',
             'Riêng tư là mặc định — dữ liệu mã hoá lúc lưu và lúc truyền, không bán cho bên thứ ba, không dùng huấn luyện mô hình, bạn có quyền xoá bất cứ lúc nào. Không định mệnh hoá — không tuyên bố dự đoán tương lai, không doạ vận hạn, không bán bùa giải. Không thay thế chuyên gia — quyết định y tế, pháp lý, tài chính cần chuyên gia phù hợp.',
-            'Built on Cloudflare Workers + Next.js 15 + Supabase + Claude — chi tiết kiến trúc tại /methodology.',
+            'Built on Next.js 15 (web trên Vercel) + Cloudflare Workers (API) + Supabase + Claude — chi tiết kiến trúc tại /methodology.',
           ]}
           citation="hieu.asia — 2026"
         />
