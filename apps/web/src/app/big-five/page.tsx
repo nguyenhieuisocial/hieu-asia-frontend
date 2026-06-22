@@ -9,6 +9,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { PersonalityQuiz, type QuizPage } from '@/components/tools/PersonalityQuiz';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
+import { aiReadingToSections } from '@/lib/pdf/ai-reading-sections';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { savePersonalityResult, buildBigFiveSummary } from '@/lib/personality-store';
@@ -272,18 +273,23 @@ export default function BigFivePage() {
                     return {
                       title: 'Kết quả Big Five (OCEAN) của tôi — hieu.asia',
                       subtitle: `Đã trả lời ${result.total_answered}/${result.total_items} câu · thang IPIP-NEO`,
-                      sections: TRAIT_META.map((t) => {
-                        const score = result.scores[t.key];
-                        const lv = level(score);
-                        return {
-                          heading: `${t.label} (${t.en})`,
-                          rows: [
-                            { label: 'Điểm', value: `${score}/100` },
-                            { label: 'Mức', value: lv },
-                            { label: 'Mô tả', value: lv === 'Thấp' ? t.low : t.high },
-                          ],
-                        };
-                      }),
+                      sections: [
+                        ...TRAIT_META.map((t) => {
+                          const score = result.scores[t.key];
+                          const lv = level(score);
+                          return {
+                            heading: `${t.label} (${t.en})`,
+                            rows: [
+                              { label: 'Điểm', value: `${score}/100`, bar: score },
+                              { label: 'Mức', value: lv },
+                              { label: 'Mô tả', value: lv === 'Thấp' ? t.low : t.high },
+                            ],
+                          };
+                        }),
+                        // Luận giải sâu (AI) — đã sinh khi khách dùng công cụ; đưa vào
+                        // PDF (dùng lại, không gọi AI thêm) thay vì bỏ rơi.
+                        ...aiReadingToSections(reading),
+                      ],
                     };
                   }}
                 />

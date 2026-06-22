@@ -9,6 +9,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { PersonalityQuiz, type QuizPage } from '@/components/tools/PersonalityQuiz';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
+import { aiReadingToSections } from '@/lib/pdf/ai-reading-sections';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
@@ -276,18 +277,25 @@ export default function DiscPage() {
                     return {
                       title: 'Kết quả DiSC của tôi — hieu.asia',
                       subtitle: `Phong cách chính: ${code} · ${DIM_META[result.primary_style].label} · ${DIM_META[result.secondary_style].label}`,
+                      hero: {
+                        big: code,
+                        small: `${DIM_META[result.primary_style].label} · ${DIM_META[result.secondary_style].label}`,
+                      },
                       sections: [
                         {
                           heading: 'Điểm 4 phong cách hành vi',
                           rows: DIM_ORDER.map((dim) => ({
                             label: `${DIM_META[dim].letter} · ${DIM_META[dim].label}`,
                             value: `${result.scores[dim]}/100`,
+                            bar: result.scores[dim],
                           })),
                         },
                         ...DIM_ORDER.map((dim) => ({
                           heading: `${DIM_META[dim].letter} · ${DIM_META[dim].label}`,
                           text: DIM_META[dim].desc,
                         })),
+                        // Luận giải sâu (AI) đã sinh — đưa vào PDF (dùng lại, 0 phí AI).
+                        ...aiReadingToSections(reading),
                       ],
                     };
                   }}

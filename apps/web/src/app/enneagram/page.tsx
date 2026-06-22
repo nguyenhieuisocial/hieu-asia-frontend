@@ -9,6 +9,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { PersonalityQuiz } from '@/components/tools/PersonalityQuiz';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
+import { aiReadingToSections } from '@/lib/pdf/ai-reading-sections';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
@@ -367,6 +368,7 @@ export default function EnneagramPage() {
                     return {
                       title: 'Kết quả Enneagram của tôi — hieu.asia',
                       subtitle: `Type ${result.type} — ${m.name} · Cánh ${result.label} · Trung tâm ${m.center}`,
+                      hero: { big: `Type ${result.type} — ${m.name}`, small: `Cánh ${result.label} · Trung tâm ${m.center}` },
                       sections: [
                         {
                           heading: 'Nhóm tính cách của bạn',
@@ -406,8 +408,11 @@ export default function EnneagramPage() {
                           rows: ENNEAGRAM_TYPE_ORDER.map((t) => ({
                             label: `Type ${t} — ${TYPE_META[t].name}`,
                             value: String(result.scores[t]),
+                            bar: result.scores[t],
                           })),
                         },
+                        // Luận giải sâu (AI) đã sinh — đưa vào PDF (dùng lại, 0 phí AI).
+                        ...aiReadingToSections(reading),
                       ],
                     };
                   }}

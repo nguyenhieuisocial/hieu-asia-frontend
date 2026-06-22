@@ -432,6 +432,9 @@ export default function GieoQuePage() {
                     payload={() => {
                       if (!result) return null;
                       const trigrams = parseTrigrams(result.hexagramPrimary.binary);
+                      const isQianKun =
+                        result.hexagramPrimary.id === 1 || result.hexagramPrimary.id === 2;
+                      const focus = readingFocus(result.movingLines, isQianKun);
                       const sections: ToolPdfPayload['sections'] = [
                         {
                           heading: 'Quẻ chính',
@@ -465,6 +468,42 @@ export default function GieoQuePage() {
                             .map((info) => ({ label: info.ten, value: info.mo_ta })),
                         });
                       }
+                      // Trọng tâm nên đọc (Chu Hy) — luật chọn hào/quẻ + lý do.
+                      sections.push({
+                        heading: '🎯 Trọng tâm nên đọc (theo Chu Hy)',
+                        rows: [
+                          { label: 'Luật', value: focus.rule },
+                          ...(focus.chuDao !== null
+                            ? [
+                                {
+                                  label: 'Hào chủ đạo',
+                                  value: getHaoDongMota(focus.chuDao)?.ten ?? `Hào ${focus.chuDao}`,
+                                },
+                              ]
+                            : []),
+                        ],
+                      });
+                      if (focus.note) {
+                        sections.push({ heading: 'Vì sao đọc như vậy', text: focus.note });
+                      }
+                      // Lời hào động — hào-từ (Hán-Việt + nghĩa; bỏ nguyên văn Hán vì
+                      // phông PDF không có glyph CJK → tránh ô vuông).
+                      if (result.movingLines.length > 0) {
+                        const haoTuRows = result.movingLines
+                          .map((haoSo) => {
+                            const h = getHaoTu(result.hexagramPrimary.id, haoSo);
+                            return h
+                              ? {
+                                  label: getHaoDongMota(haoSo)?.ten ?? `Hào ${haoSo}`,
+                                  value: `${h.hanViet} — ${h.nghia}`,
+                                }
+                              : null;
+                          })
+                          .filter((r): r is { label: string; value: string } => r !== null);
+                        if (haoTuRows.length) {
+                          sections.push({ heading: 'Lời hào động (hào-từ)', rows: haoTuRows });
+                        }
+                      }
                       if (result.hexagramChanging) {
                         sections.push({
                           heading: 'Quẻ biến',
@@ -480,7 +519,17 @@ export default function GieoQuePage() {
                       return {
                         title: `Quẻ ${result.hexagramPrimary.nameVi} — Gieo quẻ Kinh Dịch hieu.asia`,
                         subtitle: 'Quẻ Dịch là công cụ gợi mở suy ngẫm, không phải lời tiên đoán chắc chắn.',
+                        hero: {
+                          big: `Quẻ ${result.hexagramPrimary.nameVi}`,
+                          small: result.hexagramChanging
+                            ? `biến → ${result.hexagramChanging.nameVi}`
+                            : `Quẻ số ${result.hexagramPrimary.id}`,
+                        },
                         sections,
+                        cta: {
+                          text: 'Đọc sâu ý nghĩa quẻ + đối chiếu với lá số của bạn',
+                          url: 'hieu.asia',
+                        },
                       };
                     }}
                   />
