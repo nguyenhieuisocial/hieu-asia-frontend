@@ -34,7 +34,7 @@ export function Methodology(): React.JSX.Element {
 
         <ol className="mt-8 flex flex-col border-y border-primary/10 divide-y divide-primary/10">
           {LENSES.map((l, i) => (
-            <li key={l.n} className="rv-up" style={{ animationDelay: `${260 + i * 70}ms` }}>
+            <li key={l.n} className="rv-up" style={{ animationDelay: `${i * 45}ms` }}>
               <Link
                 href={l.href}
                 aria-label={l.cta}
