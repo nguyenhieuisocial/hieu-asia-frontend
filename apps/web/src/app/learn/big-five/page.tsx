@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import {
   Accordion,
   AccordionContent,
@@ -125,21 +126,34 @@ export default function LearnBigFivePage() {
           children: (
             <ul className="space-y-4">
               {DIMENSIONS.map((d) => (
-                <li key={d.en} className="border-t border-border/60 pt-4 first:border-0 first:pt-0">
-                  <div className="flex items-baseline gap-2">
-                    <span className="font-heading text-base text-foreground">{d.vi}</span>
-                    <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                      {d.en}
-                    </span>
-                  </div>
-                  <div className="mt-2 grid gap-2 sm:grid-cols-2">
-                    <p className="text-sm leading-relaxed text-foreground/85">
-                      <span className="font-medium text-gold-700">Cao · </span>{d.high}
-                    </p>
-                    <p className="text-sm leading-relaxed text-foreground/85">
-                      <span className="font-medium text-muted-foreground">Thấp · </span>{d.low}
-                    </p>
-                  </div>
+                <li key={d.en} className="border-t border-border/60 first:border-0">
+                  <Link
+                    href={`/learn/big-five/${d.en.toLowerCase()}`}
+                    className="group block rounded-lg py-4 transition hover:bg-card/40"
+                  >
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-heading text-base text-foreground group-hover:text-gold">
+                        {d.vi}
+                      </span>
+                      <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                        {d.en}
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="ml-auto text-sm text-muted-foreground group-hover:text-gold"
+                      >
+                        →
+                      </span>
+                    </div>
+                    <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                      <p className="text-sm leading-relaxed text-foreground/85">
+                        <span className="font-medium text-gold-700">Cao · </span>{d.high}
+                      </p>
+                      <p className="text-sm leading-relaxed text-foreground/85">
+                        <span className="font-medium text-muted-foreground">Thấp · </span>{d.low}
+                      </p>
+                    </div>
+                  </Link>
                 </li>
               ))}
             </ul>
