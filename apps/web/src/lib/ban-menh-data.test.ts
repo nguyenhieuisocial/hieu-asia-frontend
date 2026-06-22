@@ -68,6 +68,8 @@ describe('bất biến cho toàn dải năm', () => {
       }
       // SEO/FAQ đủ.
       expect(d.faqs.length).toBeGreaterThanOrEqual(4);
+      // Nghề hợp mệnh phải có (mọi hành đều có nhóm nghề trong ngu-hanh-remedy).
+      expect(d.careers.length, `năm ${y} thiếu nghề`).toBeGreaterThan(0);
       expect(d.seoTitle).toContain(String(y));
     }
   });

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
-import { ArrowRight, ArrowLeft, Sparkles, Palette, ShieldCheck } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Sparkles, Palette, ShieldCheck, Briefcase } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
@@ -214,6 +214,38 @@ export default async function BanMenhYearPage({
             (tính theo Bát Trạch, có phân biệt nam/nữ).
           </p>
         </section>
+
+        {/* Nghề/ngành hợp mệnh */}
+        {d.careers.length > 0 && (
+          <section className="relative mx-auto max-w-3xl px-6 pb-10">
+            <h2 className="mb-2 flex items-center gap-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+              <Briefcase className="h-6 w-6 text-gold" aria-hidden /> Sinh năm {year} hợp nghề gì?
+            </h2>
+            <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+              Theo quan niệm ngũ hành, người mệnh {d.elementName} thường hợp với các nhóm nghề dưới
+              đây. Đây là gợi ý định hướng để tham khảo — nghề phù hợp thật sự còn tùy năng lực, sở
+              thích và hoàn cảnh của bạn.
+            </p>
+            <ul className="grid gap-2 sm:grid-cols-2">
+              {d.careers.map((c) => (
+                <li
+                  key={c}
+                  className="flex items-start gap-2 rounded-lg border border-border bg-card/40 p-3 text-sm leading-relaxed text-foreground/85"
+                >
+                  <Briefcase className="mt-0.5 h-4 w-4 shrink-0 text-gold/80" aria-hidden />
+                  {c}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-3 text-xs text-muted-foreground">
+              Muốn gợi ý nghề theo cả tính cách và năng lực của riêng bạn? Thử{' '}
+              <Link href="/career-fit" className="text-gold hover:underline">
+                công cụ định hướng nghề
+              </Link>
+              .
+            </p>
+          </section>
+        )}
 
         {/* Lưu ý Tết */}
         <section className="relative mx-auto max-w-3xl px-6 pb-10">

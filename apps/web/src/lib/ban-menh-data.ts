@@ -15,6 +15,7 @@
  */
 import { yearProfile } from './sinh-con';
 import { ELEMENTS, type Element } from './dat-ten-ngu-hanh';
+import { getNguHanhRemedy } from './ngu-hanh-remedy';
 import type { FaqItem } from './seo/jsonld';
 
 /** Dải năm sinh có trang riêng — phủ phần lớn người đang sống + trẻ mới sinh. */
@@ -74,6 +75,8 @@ export interface BanMenhData {
   /** Hành khắc mệnh (nên hạn chế) + màu của nó. */
   khacElementName: string;
   avoidColors: string[];
+  /** Nhóm nghề/ngành hợp với hành bản mệnh (theo quan niệm ngũ hành). */
+  careers: string[];
   faqs: FaqItem[];
   seoTitle: string;
   seoDescription: string;
@@ -97,6 +100,9 @@ export function buildBanMenh(year: number): BanMenhData | null {
   const hopColors = ELEMENT_COLORS[info.sinhBy];
   const avoidColors = ELEMENT_COLORS[info.khacBy];
 
+  // Nhóm nghề hợp hành bản mệnh — tái dùng engine ngu-hanh-remedy (ngheHop theo hành).
+  const careers = getNguHanhRemedy(info.name)?.ngheHop ?? [];
+
   const zodiac = { ten: p.zodiac.ten, slug: p.zodiac.slug, emoji: p.zodiac.emoji };
 
   const faqs: FaqItem[] = [
@@ -109,6 +115,13 @@ export function buildBanMenh(year: number): BanMenhData | null {
       a: `Mệnh ${info.name} hợp nhất với màu bản mệnh (${cap(banMenhColors)}) và màu tương sinh thuộc hành ${sinhInfo.name} (${cap(hopColors)}) — vì ${sinhInfo.name} sinh ${info.name}. Nên hạn chế màu thuộc hành ${khacInfo.name} (${cap(avoidColors)}) vì ${khacInfo.name} khắc ${info.name}. Đây là quan niệm phong thủy ngũ hành, mang tính tham khảo.`,
     },
     {
+      q: `Sinh năm ${year} hợp nghề gì?`,
+      a:
+        careers.length > 0
+          ? `Theo quan niệm ngũ hành, người mệnh ${info.name} thường hợp các nhóm nghề: ${cap(careers)}. Đây là gợi ý định hướng để tham khảo — ngành nghề phù hợp thật sự còn tùy năng lực, sở thích và hoàn cảnh của mỗi người, không chỉ dựa vào mệnh.`
+          : `Theo quan niệm ngũ hành, mỗi hành hợp với một số nhóm nghề. Đây chỉ là gợi ý tham khảo; ngành nghề phù hợp còn tùy năng lực và sở thích của bạn.`,
+    },
+    {
       q: `Sinh năm ${year} tuổi con gì?`,
       a: `Năm ${year} là năm ${p.canChi}, cầm tinh con ${p.zodiac.ten}. Lưu ý: tuổi tính theo năm âm lịch, nên người sinh tháng 1 hoặc đầu tháng 2 dương (trước Tết) có thể vẫn thuộc tuổi của năm liền trước.`,
     },
@@ -118,8 +131,8 @@ export function buildBanMenh(year: number): BanMenhData | null {
     },
   ];
 
-  const seoTitle = `Sinh năm ${year} mệnh gì? Tuổi ${p.canChi} — ${p.napAmName}, hợp màu gì`;
-  const seoDescription = `Người sinh năm ${year} (tuổi ${p.canChi}, con ${p.zodiac.ten}) mệnh ${info.name} — nạp âm ${p.napAmName}. Màu hợp: ${cap([...banMenhColors, ...hopColors])}; màu nên hạn chế: ${cap(avoidColors)}. Tính theo nạp âm 60 Giáp Tý, tham khảo, không phán số mệnh.`;
+  const seoTitle = `Sinh năm ${year} mệnh gì? Tuổi ${p.canChi} — ${p.napAmName}, hợp màu gì, nghề gì`;
+  const seoDescription = `Người sinh năm ${year} (tuổi ${p.canChi}, con ${p.zodiac.ten}) mệnh ${info.name} — nạp âm ${p.napAmName}. Màu hợp: ${cap([...banMenhColors, ...hopColors])}; màu nên hạn chế: ${cap(avoidColors)}${careers.length ? `; nghề hợp: ${cap(careers)}` : ''}. Tính theo nạp âm 60 Giáp Tý, tham khảo, không phán số mệnh.`;
 
   return {
     year,
@@ -134,6 +147,7 @@ export function buildBanMenh(year: number): BanMenhData | null {
     hopColors,
     khacElementName: khacInfo.name,
     avoidColors,
+    careers,
     faqs,
     seoTitle,
     seoDescription,
