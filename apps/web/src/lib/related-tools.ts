@@ -59,6 +59,9 @@ const L = {
   khaiTruong: { href: '/khai-truong', label: 'Xem tuổi khai trương' },
   xongDat: { href: '/xong-dat', label: 'Tuổi xông đất' },
   huongNha: { href: '/huong-nha', label: 'Xem hướng nhà' },
+  familyProfiles: { href: '/family-profiles', label: 'Hồ sơ gia đình' },
+  decisionSim: { href: '/decision-simulator', label: 'Mô phỏng quyết định' },
+  timelineL: { href: '/timeline', label: 'Timeline đại vận' },
 } as const;
 
 export const RELATED_TOOLS: Record<string, RelatedLink[]> = {
@@ -119,4 +122,9 @@ export const RELATED_TOOLS: Record<string, RelatedLink[]> = {
   '/dat-ten-ngu-hanh': [L.sinhCon, L.banMenh, L.battu],
   // Khám phá & tự kiểm
   '/tu-kiem': [L.sosanh, L.hoidap, L.gieoque, L.tarot],
+  // 2026-06-22 wave 2: 4 trang hero-riêng còn thiếu (tinh-menh-cuc đã có map sẵn).
+  '/dai-van-hien-tai': [L.timelineL, L.tuvihomnay, L.saohan, L.tuvi2027],
+  '/timeline': [L.daiVan, L.tuvi2027, L.saohan, L.tuvihomnay],
+  '/family-profiles': [L.hopnhom, L.compat, L.hoptuoi, L.sinhCon],
+  '/decision-simulator': [L.sosanh, L.careerfit, L.mbti, L.gieoque],
 };

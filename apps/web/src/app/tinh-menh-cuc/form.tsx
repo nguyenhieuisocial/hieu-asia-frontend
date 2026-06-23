@@ -16,6 +16,7 @@ import {
 import { AlertTriangle, Sparkles, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { castTuViChart, type TuViChart } from '@/lib/tuvi-client';
 import { getNguHanhRemedy, type NguHanhRemedy } from '@/lib/ngu-hanh-remedy';
 
@@ -393,6 +394,9 @@ export function TinhMenhCucForm() {
           </dl>
         </section>
       </main>
+      <div className="mx-auto max-w-6xl px-6 pb-12">
+        <RelatedTools current="/tinh-menh-cuc" />
+      </div>
       <SiteFooter />
     </div>
   );
