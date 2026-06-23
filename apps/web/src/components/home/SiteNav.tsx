@@ -99,14 +99,25 @@ const MOBILE_TOOL_SECTIONS: readonly { label: string; links: readonly NavLink[] 
   }),
 ).filter((s) => s.links.length > 0);
 
+// Bài học — đủ 13 chủ đề /learn, xếp theo 3 trụ (founder: "bổ sung + sắp xếp").
 const MOBILE_LEARN: readonly NavLink[] = [
   { href: '/learn', label: 'Tất cả bài học' },
+  // Cổ học Á Đông
   { href: '/learn/tu-vi', label: 'Tử Vi' },
   { href: '/learn/bat-tu', label: 'Bát Tự' },
   { href: '/learn/than-so-hoc', label: 'Thần Số Học' },
+  { href: '/learn/kinh-dich', label: 'Kinh Dịch' },
+  { href: '/learn/palm', label: 'Tướng tay' },
+  { href: '/learn/phong-thuy', label: 'Phong thủy' },
+  { href: '/learn/hop-tuoi', label: 'Hợp tuổi' },
+  // Tâm lý hiện đại
   { href: '/learn/mbti', label: 'MBTI' },
   { href: '/learn/big-five', label: 'Big Five' },
-  { href: '/learn/palm', label: 'Tướng tay' },
+  { href: '/learn/enneagram', label: 'Enneagram' },
+  { href: '/learn/disc', label: 'DiSC' },
+  // Chiêm tinh & Tarot
+  { href: '/learn/chiem-tinh', label: 'Chiêm tinh' },
+  { href: '/learn/tarot', label: 'Tarot' },
 ];
 
 // Khám phá / cộng đồng — mirror SiteFooter "Khám phá" + 2 mặt-tiền sản phẩm,
@@ -413,21 +424,19 @@ function MobileDrawer({
               >
                 Sổ tay cá nhân
               </Link>
-              <Link
-                href="/account#streak"
-                onClick={() => setOpen(false)}
-                className="flex items-center justify-between rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
-              >
-                <span>Điểm danh</span>
-                {needsCheckin && <NudgeDot />}
-              </Link>
-              <Link
-                href="/qua"
-                onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
-              >
-                Quà &amp; mời bạn
-              </Link>
+              {/* "Điểm danh" chỉ hiện khi hôm nay CHƯA điểm danh — lúc đó là lời
+                  nhắc hành động; bình thường ẩn để khỏi trùng "Tài khoản" (cả hai
+                  đều về /account). "Quà & mời bạn" nay nằm ở nhóm "Khám phá". */}
+              {needsCheckin && (
+                <Link
+                  href="/account#streak"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center justify-between rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
+                >
+                  <span>Điểm danh hôm nay</span>
+                  <NudgeDot />
+                </Link>
+              )}
             </>
           )}
           {PRIMARY_LINKS.map((l) => (
