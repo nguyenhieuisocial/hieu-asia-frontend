@@ -369,9 +369,6 @@ importers:
       '@sentry/nextjs':
         specifier: ^10.59.0
         version: 10.59.0(@opentelemetry/core@2.8.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.7.1(@opentelemetry/api@1.9.1))(next@15.5.19(@opentelemetry/api@1.9.1)(@playwright/test@1.60.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(vite@7.3.5(@types/node@22.19.19)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.47.1))(webpack@5.107.2(esbuild@0.25.12)(lightningcss@1.32.0)(postcss@8.5.15))
-      '@sparticuz/chromium-min':
-        specifier: 131.0.1
-        version: 131.0.1
       '@supabase/supabase-js':
         specifier: ^2.45.0
         version: 2.106.2
@@ -420,9 +417,6 @@ importers:
       posthog-js:
         specifier: ^1.374.3
         version: 1.374.3
-      puppeteer-core:
-        specifier: 23.11.1
-        version: 23.11.1
       react:
         specifier: ^19.0.0
         version: 19.2.7
@@ -1926,11 +1920,6 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@puppeteer/browsers@2.6.1':
-    resolution: {integrity: sha512-aBSREisdsGH890S2rQqK82qmQYU3uFpSH8wcZWHgHzl3LfzsxAKbLNiAG9mO8v1Y0UICBeClICxPJvyr0rcuxg==}
-    engines: {node: '>=18'}
-    hasBin: true
-
   '@radix-ui/number@1.1.1':
     resolution: {integrity: sha512-MkKCwxlXTgz6CFoJx3pCwn07GKp36+aZyu/u2Ln2VrA5DcdyCZkASEDBTd8x5whTQQL5CiYf4prXKLcgQdv29g==}
 
@@ -3027,10 +3016,6 @@ packages:
 
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
-
-  '@sparticuz/chromium-min@131.0.1':
-    resolution: {integrity: sha512-kQqKflJtjcBb8aA1b6L4dhU/8UbCJHcjb3au8cjBhKAG7nzqh//92rHCB6ULkgV0CMEQmfp3LDBQ/W8Wg2k+Yg==}
-    engines: {node: '>= 16'}
 
   '@stablelib/base64@1.0.1':
     resolution: {integrity: sha512-1bnPQqSxSuc3Ii6MhBysoWCg58j97aUjuCSZrGSmDxNqtytIi0k8utUenAwTZN4V5mXXYGsVUI9zeBqy+jBOSQ==}
@@ -4379,9 +4364,6 @@ packages:
   buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
 
-  buffer@5.7.1:
-    resolution: {integrity: sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==}
-
   bufferjs@2.0.0:
     resolution: {integrity: sha512-VnTCQKC+AJ61OFGe/hn3jRXoIt/B95NUcuxzAwiVT0PFB0KRZImkoDPYdFqDIs7xAs1eJ3yiKcHnuUiiYe7ucQ==}
     engines: {node: '>=0.2.0'}
@@ -4523,11 +4505,6 @@ packages:
   chrome-trace-event@1.0.4:
     resolution: {integrity: sha512-rNjApaLzuwaOTjCiT8lSDdGN1APCiqkChLMJxJPWLunPAt5fy8xgU9/jNOchV84wfIxrA0lRQB7oCT8jrn/wrQ==}
     engines: {node: '>=6.0'}
-
-  chromium-bidi@0.11.0:
-    resolution: {integrity: sha512-6CJWHkNRoyZyjV9Rwv2lYONZf1Xm0IuDyNq97nwSsxxP3wf5Bwy15K5rOvVKMtJ127jJBmxFUanSAOjgFRxgrA==}
-    peerDependencies:
-      devtools-protocol: '*'
 
   chromium-bidi@14.0.0:
     resolution: {integrity: sha512-9gYlLtS6tStdRWzrtXaTMnqcM4dudNegMXJxkR0I/CXObHalYeYcAMPrL19eroNZHtJ8DQmu1E+ZNOYu/IXMXw==}
@@ -5067,9 +5044,6 @@ packages:
 
   devlop@1.1.0:
     resolution: {integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==}
-
-  devtools-protocol@0.0.1367902:
-    resolution: {integrity: sha512-XxtPuC3PGakY6PD7dG66/o8KwJ/LkH2/EKe19Dcw58w53dv4/vSQEkn/SzuyhHE2q4zPgCkxQBxus3VV4ql+Pg==}
 
   devtools-protocol@0.0.1467305:
     resolution: {integrity: sha512-LxwMLqBoPPGpMdRL4NkLFRNy3QLp6Uqa7GNp1v6JaBheop2QrB9Q7q0A/q/CYYP9sBfZdHOyszVx4gc9zyk7ow==}
@@ -5961,9 +5935,6 @@ packages:
 
   icu-minify@4.13.0:
     resolution: {integrity: sha512-SIFMeUHZJjzS5RvIGvybKvWoHjDm9cGVEs2EpJ8PmywOdJLWyblPm7TdPLLoUtkJtwQD7iGhl2WMptZ+N0on+w==}
-
-  ieee754@1.2.1:
-    resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
 
   ignore@4.0.6:
     resolution: {integrity: sha512-cyFDKrqc/YdcWFniJhzI42+AzS+gNwmUzOSFcRCQYwySuBBBy/KjuxWLZ/FHEH6Moq1NizMOBWyTcv8O4OZIMg==}
@@ -7604,10 +7575,6 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  puppeteer-core@23.11.1:
-    resolution: {integrity: sha512-3HZ2/7hdDKZvZQ7dhhITOUg4/wOrDRjyK2ZBllRB0ZCOi9u0cwq1ACHDjBB+nX+7+kltHjQvBRdeY7+W0T+7Gg==}
-    engines: {node: '>=18'}
-
   puppeteer-core@24.43.1:
     resolution: {integrity: sha512-T5ScUMAsmhdNbgDR41AGESYeS6V9MSgetkSnVhhW+gXvzC42VesKCn5ld87gAZDJ6vLHL9GkRvY9WtQWSnwFbw==}
     engines: {node: '>=18'}
@@ -8667,9 +8634,6 @@ packages:
     resolution: {integrity: sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw==}
     engines: {node: '>= 0.4'}
 
-  unbzip2-stream@1.4.3:
-    resolution: {integrity: sha512-mlExGW4w71ebDJviH16lQLtZS32VKqsSfk80GCfUlwT/4/hNRFsoscrF/c++9xinkMzECL1uL9DDwXqFWkruPg==}
-
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
@@ -9164,9 +9128,6 @@ packages:
 
   zmp-ui@1.11.14:
     resolution: {integrity: sha512-BN2YjNfxyjeXSABOkB04eU7wN2iOA4CRQGuX2a5fGGRCtMyNngiYhCv6n0CyNaviSoZj0htowccDNXr4zWUcCg==}
-
-  zod@3.23.8:
-    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
@@ -10386,22 +10347,6 @@ snapshots:
       - react-native-b4a
       - supports-color
 
-  '@puppeteer/browsers@2.6.1':
-    dependencies:
-      debug: 4.4.3
-      extract-zip: 2.0.1
-      progress: 2.0.3
-      proxy-agent: 6.5.0
-      semver: 7.8.1
-      tar-fs: 3.1.2
-      unbzip2-stream: 1.4.3
-      yargs: 17.7.2
-    transitivePeerDependencies:
-      - bare-abort-controller
-      - bare-buffer
-      - react-native-b4a
-      - supports-color
-
   '@radix-ui/number@1.1.1': {}
 
   '@radix-ui/primitive@1.1.3': {}
@@ -11491,16 +11436,6 @@ snapshots:
       '@simple-git/args-pathspec': 1.0.3
 
   '@socket.io/component-emitter@3.1.2': {}
-
-  '@sparticuz/chromium-min@131.0.1':
-    dependencies:
-      follow-redirects: 1.16.0(debug@4.3.2)
-      tar-fs: 3.1.2
-    transitivePeerDependencies:
-      - bare-abort-controller
-      - bare-buffer
-      - debug
-      - react-native-b4a
 
   '@stablelib/base64@1.0.1': {}
 
@@ -12864,11 +12799,6 @@ snapshots:
 
   buffer-from@1.1.2: {}
 
-  buffer@5.7.1:
-    dependencies:
-      base64-js: 1.5.1
-      ieee754: 1.2.1
-
   bufferjs@2.0.0: {}
 
   bundle-name@4.1.0:
@@ -13027,12 +12957,6 @@ snapshots:
       - supports-color
 
   chrome-trace-event@1.0.4: {}
-
-  chromium-bidi@0.11.0(devtools-protocol@0.0.1367902):
-    dependencies:
-      devtools-protocol: 0.0.1367902
-      mitt: 3.0.1
-      zod: 3.23.8
 
   chromium-bidi@14.0.0(devtools-protocol@0.0.1608973):
     dependencies:
@@ -13591,8 +13515,6 @@ snapshots:
   devlop@1.1.0:
     dependencies:
       dequal: 2.0.3
-
-  devtools-protocol@0.0.1367902: {}
 
   devtools-protocol@0.0.1467305: {}
 
@@ -14766,8 +14688,6 @@ snapshots:
   icu-minify@4.13.0:
     dependencies:
       '@formatjs/icu-messageformat-parser': 3.5.10
-
-  ieee754@1.2.1: {}
 
   ignore@4.0.6: {}
 
@@ -16596,22 +16516,6 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  puppeteer-core@23.11.1:
-    dependencies:
-      '@puppeteer/browsers': 2.6.1
-      chromium-bidi: 0.11.0(devtools-protocol@0.0.1367902)
-      debug: 4.4.3
-      devtools-protocol: 0.0.1367902
-      typed-query-selector: 2.12.2
-      ws: 8.21.0
-    transitivePeerDependencies:
-      - bare-abort-controller
-      - bare-buffer
-      - bufferutil
-      - react-native-b4a
-      - supports-color
-      - utf-8-validate
-
   puppeteer-core@24.43.1:
     dependencies:
       '@puppeteer/browsers': 2.13.2
@@ -17902,11 +17806,6 @@ snapshots:
       has-symbols: 1.1.0
       which-boxed-primitive: 1.1.1
 
-  unbzip2-stream@1.4.3:
-    dependencies:
-      buffer: 5.7.1
-      through: 2.3.8
-
   undici-types@6.21.0: {}
 
   unified@11.0.5:
@@ -18687,8 +18586,6 @@ snapshots:
     transitivePeerDependencies:
       - react
       - react-dom
-
-  zod@3.23.8: {}
 
   zod@3.25.76: {}
 
