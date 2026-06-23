@@ -14,17 +14,20 @@ export interface QuickTool {
   label: string;
   tier: ToolTier;
   /** drawer sub-group key (mobile nav grouping); footer ignores it */
-  group?: 'co-hoc' | 'theo-mua' | 'tam-ly' | 'chiem-tinh' | 'kham-pha';
+  group?: 'co-hoc' | 'theo-mua' | 'tam-ly' | 'chiem-tinh' | 'xem-tuoi' | 'kham-pha';
 }
 
 /** Sub-group order + labels for the mobile drawer "Tra cứu nhanh" section. */
 export const QUICK_GROUPS: { key: NonNullable<QuickTool['group']>; label: string }[] = [
   { key: 'co-hoc', label: 'Cổ học Á Đông' },
-  { key: 'theo-mua', label: 'Theo thời điểm' },
   { key: 'tam-ly', label: 'Tâm lý hiện đại' },
   { key: 'chiem-tinh', label: 'Chiêm tinh phương Tây' },
-  { key: 'kham-pha', label: 'Khám phá' },
+  { key: 'xem-tuoi', label: 'Xem tuổi việc lớn' },
+  { key: 'theo-mua', label: 'Theo thời điểm' },
+  { key: 'kham-pha', label: 'So sánh & đối chiếu' },
 ];
+// (nhãn 'So sánh & đối chiếu' thay 'Khám phá' để khỏi trùng tên với nhóm
+//  "Khám phá" riêng ở drawer; /hoi-dap nay chỉ ở "Khám phá" + footer, hết lặp.)
 
 /** Flat quick-lookup list — shared by SiteNav (mobile drawer) + SiteFooter. */
 export const QUICK_LOOKUP: QuickTool[] = [
@@ -47,7 +50,7 @@ export const QUICK_LOOKUP: QuickTool[] = [
   { href: '/tinh-menh-cuc', label: 'Tuổi mệnh cục', tier: 'free', group: 'co-hoc' },
   { href: '/ban-do-sao', label: 'Bản đồ sao', tier: 'free', group: 'chiem-tinh' },
   { href: '/cung-hoang-dao', label: 'Cung hoàng đạo', tier: 'free', group: 'chiem-tinh' },
-  { href: '/tarot', label: 'Tarot', tier: 'free', group: 'kham-pha' },
+  { href: '/tarot', label: 'Tarot', tier: 'free', group: 'chiem-tinh' },
   { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại', tier: 'free', group: 'theo-mua' },
   { href: '/gieo-que', label: 'Gieo Quẻ Kinh Dịch', tier: 'free', group: 'co-hoc' },
   { href: '/big-five', label: 'Big Five (OCEAN)', tier: 'free', group: 'tam-ly' },
@@ -56,7 +59,10 @@ export const QUICK_LOOKUP: QuickTool[] = [
   { href: '/xem-tuong', label: 'Xem Chỉ Tay & Tướng Mặt', tier: 'free', group: 'co-hoc' },
   { href: '/xem-hop-nhom', label: 'Xem hợp nhóm / gia đình', tier: 'free', group: 'kham-pha' },
   { href: '/so-sanh', label: 'So sánh lăng kính', tier: 'free', group: 'kham-pha' },
-  { href: '/hoi-dap', label: 'Hỏi đáp', tier: 'free', group: 'kham-pha' },
+  { href: '/xem-tuoi-cuoi', label: 'Xem tuổi cưới', tier: 'free', group: 'xem-tuoi' },
+  { href: '/xem-tuoi-lam-nha', label: 'Xem tuổi làm nhà', tier: 'free', group: 'xem-tuoi' },
+  { href: '/huong-nha', label: 'Xem hướng nhà', tier: 'free', group: 'xem-tuoi' },
+  { href: '/khai-truong', label: 'Xem tuổi khai trương', tier: 'free', group: 'xem-tuoi' },
 ];
 
 export interface ToolChip {
