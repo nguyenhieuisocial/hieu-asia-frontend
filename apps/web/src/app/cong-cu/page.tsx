@@ -7,6 +7,8 @@ import {
   type ExplorerTool,
   type FeaturedConfig,
 } from '@/components/tools/CongCuExplorer';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb, itemList, webPage } from '@/lib/seo/jsonld';
 
 // 2026-06-22 — Sắp xếp lại + thiết kế lại /cong-cu (workflow 3-hướng→chấm→tổng hợp).
 // ~48 công cụ chia 7 NHÓM theo việc người dùng cần làm, có vùng "Bắt đầu ở đây"
@@ -199,8 +201,25 @@ const commandPanel = (
 );
 
 export default function CongCuPage() {
+  // 2026-06-23: thêm dữ-liệu-cấu-trúc cho trang danh-mục — ItemList 49 công cụ
+  // + breadcrumb + webPage → Google/AI hiểu đây là bộ sưu tập có cấu trúc, index
+  // tốt các link công cụ (liên-kết-nội-bộ = nút-thắt traffic).
+  const JSONLD = [
+    webPage({
+      name: 'Tất cả công cụ — hieu.asia',
+      description: 'Bộ công cụ luận số, tâm lý học và phong thủy — sắp theo việc bạn cần làm.',
+      url: '/cong-cu',
+    }),
+    breadcrumb([
+      { name: 'Trang chủ', url: '/' },
+      { name: 'Công cụ', url: '/cong-cu' },
+    ]),
+    itemList(TOOLS.map((t) => ({ name: t.name, url: t.href }))),
+  ];
   return (
-    <ToolPageShell
+    <>
+      <JsonLd data={JSONLD} />
+      <ToolPageShell
       eyebrow="Khám phá"
       title={
         <>
@@ -212,6 +231,7 @@ export default function CongCuPage() {
       heroAside={commandPanel}
     >
       <CongCuExplorer tools={TOOLS} categories={CATEGORIES} featured={FEATURED} />
-    </ToolPageShell>
+      </ToolPageShell>
+    </>
   );
 }
