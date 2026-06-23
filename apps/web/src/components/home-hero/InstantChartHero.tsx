@@ -1,7 +1,31 @@
 'use client';
 
 import * as React from 'react';
-import { BatTuChecker } from '@/components/la-so-bat-tu/BatTuChecker';
+import dynamic from 'next/dynamic';
+
+// BatTuChecker (engine Bát Tự + bảng 4 trụ + Nhật Chủ + đại vận + Thần Sát + nút
+// PDF, ~716 LOC) CHỈ render sau khi khách bấm "Lập lá số" (state `revealed`).
+// Import tĩnh khiến chunk nặng đó tải NGAY lúc vào trang dù chưa dùng → đội
+// unused-JS + bootup-time của trang chủ (LCP/TBT mobile xấu). next/dynamic
+// (ssr:false) nạp chunk lúc SUBMIT; KHÔNG đụng above-the-fold (LCP = H1/form) và
+// KHÔNG đổi hành vi (vốn chỉ hiện sau submit, chưa từng SSR).
+const BatTuChecker = dynamic(
+  () => import('@/components/la-so-bat-tu/BatTuChecker').then((m) => m.BatTuChecker),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="flex min-h-[280px] items-center justify-center rounded-2xl border border-border bg-card/40"
+        role="status"
+        aria-live="polite"
+      >
+        <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+          Đang lập lá số…
+        </span>
+      </div>
+    ),
+  },
+);
 
 /**
  * InstantChartHero — cửa trước thật của trang chủ (Phase 1).
