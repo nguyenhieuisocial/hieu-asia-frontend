@@ -109,6 +109,16 @@ const MOBILE_LEARN: readonly NavLink[] = [
   { href: '/learn/palm', label: 'Tướng tay' },
 ];
 
+// Khám phá / cộng đồng — mirror SiteFooter "Khám phá" + 2 mặt-tiền sản phẩm,
+// để menu mobile đầy đủ ngang footer (founder: "menu mobile chưa đầy đủ").
+const MOBILE_DISCOVER: readonly NavLink[] = [
+  { href: '/lo-trinh', label: 'Lộ trình cá nhân' },
+  { href: '/sample-report', label: 'Báo cáo mẫu' },
+  { href: '/qua', label: 'Quà & mời bạn' },
+  { href: '/community', label: 'Cộng đồng' },
+  { href: '/hoi-dap', label: 'Trợ giúp & Hỏi đáp' },
+];
+
 /**
  * Top navigation bar — fixed, glass background.
  * Desktop: 5 inline links (Lá số / Mentor / Phương pháp / Giá / Về chúng tôi).
@@ -439,6 +449,11 @@ function MobileDrawer({
           <DrawerGroup
             title="Học"
             links={MOBILE_LEARN}
+            onNavigate={() => setOpen(false)}
+          />
+          <DrawerGroup
+            title="Khám phá"
+            links={MOBILE_DISCOVER}
             onNavigate={() => setOpen(false)}
           />
           <div className="my-2 h-px bg-muted/5" />

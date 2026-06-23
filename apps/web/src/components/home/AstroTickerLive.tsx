@@ -104,9 +104,9 @@ export function AstroTickerLive() {
               Đang xem lịch hôm nay…
             </div>
           ) : (
-            <div className="flex w-full flex-wrap items-stretch gap-y-1 sm:flex-nowrap sm:gap-y-0 sm:overflow-x-auto">
+            <div className="grid grid-cols-2 items-stretch gap-x-2 gap-y-1 sm:flex sm:w-full sm:flex-nowrap sm:items-stretch sm:gap-0 sm:overflow-x-auto">
               {/* Live indicator + heading */}
-              <div className="flex shrink-0 items-center gap-2 px-4 py-3 sm:px-5">
+              <div className="col-span-2 flex shrink-0 items-center gap-2 px-4 py-3 sm:col-auto sm:px-5">
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/60 opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
@@ -145,11 +145,11 @@ export function AstroTickerLive() {
                 </span>
               </Cell>
 
-              {/* Mobile: ẩn ô "Giờ tốt kế tiếp" + divider — dải ngắn lại, đỡ phải
-                  vuốt ngang (chi tiết giờ tốt vẫn ở /gio-hoang-dao). */}
+              {/* Mobile: lưới 2 cột (grid) gói gọn đủ 4 ô thông tin — divider dọc
+                  chỉ hiện ở desktop (sm+). Đủ thông tin, không phải vuốt ngang. */}
               <span className="my-3 hidden w-px shrink-0 bg-primary/10 sm:block" />
 
-              <Cell label="Giờ tốt kế tiếp" className="hidden shrink-0 sm:flex">
+              <Cell label="Giờ tốt kế tiếp" className="shrink-0">
                 {state.next ? (
                   state.next.active ? (
                     <span className="font-marketing-display text-lg leading-tight text-[color:var(--hanh-moc,#6B8154)]">
@@ -174,7 +174,7 @@ export function AstroTickerLive() {
 
               <span className="my-3 hidden w-px shrink-0 bg-primary/10 md:block" />
 
-              <Cell label="Hôm nay" className="hidden shrink-0 md:flex">
+              <Cell label="Hôm nay" className="shrink-0 sm:hidden md:flex">
                 <span className="font-marketing-display text-lg leading-tight text-foreground">
                   {state.goodCount} giờ hoàng đạo
                 </span>
@@ -185,7 +185,7 @@ export function AstroTickerLive() {
 
               <Link
                 href="/gio-hoang-dao"
-                className="group flex w-full shrink-0 items-center gap-1.5 self-center whitespace-nowrap px-4 py-3 font-mono text-[11px] uppercase tracking-[0.12em] text-primary transition-colors hover:text-foreground sm:ml-auto sm:w-auto sm:px-5"
+                className="group col-span-2 flex w-full shrink-0 items-center gap-1.5 self-center whitespace-nowrap px-4 py-3 font-mono text-[11px] uppercase tracking-[0.12em] text-primary transition-colors hover:text-foreground sm:col-auto sm:ml-auto sm:w-auto sm:px-5"
               >
                 Xem giờ hoàng đạo
                 <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
