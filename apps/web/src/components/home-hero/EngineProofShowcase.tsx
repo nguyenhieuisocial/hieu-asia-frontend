@@ -29,7 +29,7 @@ export function EngineProofShowcase(): React.JSX.Element {
           rồi AI mới đọc. Dưới đây là một ví dụ minh hoạ, không phải dữ liệu của bạn.
         </p>
 
-        <div className="mt-10 grid items-center gap-10 md:grid-cols-2">
+        <div className="mt-8 grid items-center gap-6 sm:mt-10 sm:gap-10 md:grid-cols-2">
           {/* Tử Vi · 12 cung — accent ochre kế thừa qua text-primary */}
           <figure className="flex flex-col items-center text-primary">
             <LaSoSvg className="w-full max-w-[280px]" />
@@ -46,7 +46,7 @@ export function EngineProofShowcase(): React.JSX.Element {
           </figure>
         </div>
 
-        <p className="mt-10 text-center font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
+        <p className="mt-8 text-center font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground sm:mt-10">
           Persona demo · không phải dữ liệu thật
         </p>
       </div>

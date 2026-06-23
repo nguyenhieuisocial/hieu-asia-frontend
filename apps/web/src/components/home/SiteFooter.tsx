@@ -27,6 +27,7 @@ const COL_PRODUCT: readonly FooterLink[] = [
   { href: '/cong-cu', label: 'Tất cả công cụ' },
   { href: '/features', label: 'Tính năng' },
   { href: '/sample-report', label: 'Báo cáo mẫu' },
+  { href: '/bang-chung', label: 'Bằng Chứng' },
   { href: '/pricing', label: 'Bảng giá' },
 ];
 
@@ -39,6 +40,7 @@ const COL_COMMUNITY: readonly FooterLink[] = [
 ];
 
 const COL_DOCS: readonly FooterLink[] = [
+  { href: '/about', label: 'Về chúng tôi' },
   { href: '/methodology', label: 'Phương pháp' },
   { href: '/cam-nang', label: 'Cẩm nang' },
   { href: '/learn', label: 'Learn' },

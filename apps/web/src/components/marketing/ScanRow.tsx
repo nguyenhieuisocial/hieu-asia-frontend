@@ -77,7 +77,7 @@ export function ScanRow({
         : 'md:grid-cols-3';
 
   return (
-    <section className={`${bgClass} py-16 md:py-24`}>
+    <section className={`${bgClass} py-12 md:py-24`}>
       <div className="mx-auto max-w-marketing px-6 lg:px-12">
         {eyebrow && (
           <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
@@ -94,7 +94,7 @@ export function ScanRow({
             Tailwind v4 arbitrary `[&::-webkit-scrollbar]:hidden` + Firefox
             `[scrollbar-width:none]`. */}
         <div
-          className={`mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 [-ms-overflow-style:none] [scroll-padding-inline:1.5rem] [scrollbar-width:none] md:grid md:gap-6 md:overflow-visible md:pb-0 ${desktopColsClass} [&::-webkit-scrollbar]:hidden`}
+          className={`mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-4 [-ms-overflow-style:none] [scroll-padding-inline:1.5rem] [scrollbar-width:none] md:mt-8 md:grid md:gap-6 md:overflow-visible md:pb-0 ${desktopColsClass} [&::-webkit-scrollbar]:hidden`}
         >
           {items.map((item) => (
             <Link
@@ -107,7 +107,7 @@ export function ScanRow({
               // and clipping the first card's right edge. line-clamp-2 doesn't
               // help here because it clips display, not width. Desktop keeps
               // `md:min-w-0 md:max-w-none` (grid sizing takes over).
-              className="group relative flex h-full min-h-[180px] w-[78vw] max-w-[78vw] shrink-0 snap-start flex-col rounded-card-editorial border border-primary/15 bg-card p-6 transition-all duration-300 ease-editorial hover:-translate-y-0.5 hover:border-primary/30 hover:bg-muted sm:w-[60vw] sm:max-w-[60vw] md:w-auto md:max-w-none"
+              className="group relative flex h-full min-h-[150px] w-[72vw] max-w-[72vw] shrink-0 snap-start flex-col rounded-card-editorial border border-primary/15 bg-card p-5 transition-all duration-300 ease-editorial hover:-translate-y-0.5 hover:border-primary/30 hover:bg-muted sm:min-h-[180px] sm:w-[48vw] sm:max-w-[48vw] sm:p-6 md:w-auto md:max-w-none"
             >
               <div className="mb-4">{item.icon}</div>
               {item.tag && (

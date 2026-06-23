@@ -180,13 +180,13 @@ export function SampleOutputShowcase() {
         </div>
 
         {/* Cards — scale-up reveal (vault 130 §III P2-#19). */}
-        <div ref={gridRef} className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div ref={gridRef} className="mt-8 grid gap-4 md:mt-12 md:grid-cols-2 lg:grid-cols-4">
           {CARDS.map((c, i) => (
             <article
               key={c.id}
               data-in-view={inView ? 'true' : 'false'}
               style={{ transitionDelay: `${i * 80}ms` }}
-              className="group relative flex scale-95 flex-col rounded-card-editorial border border-border bg-muted/40 p-6 opacity-0 transition-[opacity,transform,border-color] duration-[600ms] ease-editorial hover:border-primary/40 data-[in-view=true]:scale-100 data-[in-view=true]:opacity-100"
+              className="group relative flex scale-95 flex-col rounded-card-editorial border border-border bg-muted/40 p-5 opacity-0 transition-[opacity,transform,border-color] duration-[600ms] ease-editorial hover:border-primary/40 data-[in-view=true]:scale-100 data-[in-view=true]:opacity-100 sm:p-6"
             >
               <div className="mb-3 flex items-center gap-2">
                 {c.icon}
@@ -206,7 +206,7 @@ export function SampleOutputShowcase() {
         </div>
 
         {/* Footer CTA pair */}
-        <div className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+        <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center md:mt-12">
           {/* Wave 63.4 — contextual CTA (founder review #2): after the sample
               report, "see MY own report" not the generic "Lập lá số miễn phí".
               text-ink → text-primary-foreground (AA on ochre). */}

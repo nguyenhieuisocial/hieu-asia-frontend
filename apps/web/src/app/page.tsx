@@ -38,7 +38,6 @@ import { SampleOutputShowcase } from '@/components/marketing/SampleOutputShowcas
 import { MentorSampleLazy } from '@/components/marketing/MentorSampleLazy';
 import { ScanRow } from '@/components/marketing/ScanRow';
 import { PullQuote } from '@/components/marketing/PullQuote';
-import { SectionDivider } from '@/components/marketing/SectionDivider';
 import { SocialProofQuiet } from '@/components/marketing/SocialProofQuiet';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 
@@ -572,11 +571,11 @@ export default function LandingPage() {
         {/* Wave 60.95.ak — PhilosophyBlock removed per founder direction
             (TRIẾT LÝ block "Bạn vẫn là người quyết định" + body "Tử Vi không
             tiên tri..."). Philosophy stance now lives entirely in the PullQuote
-            below (same message, denser editorial format). Kept the
-            SectionDivider as visual breath between EditorialList and PullQuote;
+            below (same message, denser editorial format).
             PhilosophyBlock component itself stays in `marketing/` and renders
-            on /about page (gitnexus impact confirmed LOW + isolated usage). */}
-        <RevealOnScroll threshold={0.5}><SectionDivider variant="lotus" /></RevealOnScroll>
+            on /about page (gitnexus impact confirmed LOW + isolated usage).
+            2026-06-23 — bỏ SectionDivider lotus (founder: ngôi sao ngắt trang
+            thừa, phí chiều cao); PullQuote tự đủ "khoảng thở" editorial. */}
 
         {/* Wave 60.66.P5 — Editorial PullQuote between philosophy and pricing
             (vault 109 §3 Phase 5 ENRICHED). Motion `whileInView` fade-in via
