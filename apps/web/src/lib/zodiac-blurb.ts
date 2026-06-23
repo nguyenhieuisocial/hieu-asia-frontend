@@ -144,3 +144,72 @@ export function isGenericSummary(summary: string | null | undefined): boolean {
   ];
   return GENERIC.includes(s);
 }
+
+/** Token-overlap above which two daily summaries count as near-duplicate. */
+export const NEAR_DUP_THRESHOLD = 0.6;
+
+/** One upstream daily card before FE resolution. */
+export interface DailyCardInput {
+  key: string;
+  /** upstream overall.summary (may be null/empty/generic). */
+  summary: string | null | undefined;
+  /** upstream overall.score 1-10 (undefined → neutral bucket). */
+  score: number | undefined;
+}
+
+/** Word-token set for Jaccard similarity (lowercase, diacritics kept, ≥2 chars). */
+function tokenize(s: string): Set<string> {
+  return new Set(
+    s
+      .toLowerCase()
+      .normalize('NFC')
+      .split(/[^\p{L}\p{N}]+/u)
+      .filter((t) => t.length >= 2),
+  );
+}
+
+/** Jaccard similarity of two token sets (0..1). Two empty sets → 1. */
+function jaccard(a: Set<string>, b: Set<string>): number {
+  if (a.size === 0 && b.size === 0) return 1;
+  let inter = 0;
+  for (const t of a) if (b.has(t)) inter += 1;
+  const union = a.size + b.size - inter;
+  return union === 0 ? 0 : inter / union;
+}
+
+/**
+ * Resolve the daily summaries so no two cards read alike, via two guards:
+ *  1) exact upstream generic ("Ngày khá thuận…") → deterministic per-zodiac blurb.
+ *  2) near-duplicate phrasing across signs (Jaccard > NEAR_DUP_THRESHOLD) →
+ *     deterministic blurb for every card in the offending pair.
+ *
+ * The upstream LLM generates each sign independently and tends to converge on
+ * similar wording on a given day; this catches that. The deterministic blurb is
+ * grounded in (zodiac, date, score) so the result is stable across SSR/CSR/cache
+ * and stays on-brand. When upstream is already diverse, returns it unchanged.
+ */
+export function resolveDailySummaries(
+  items: DailyCardInput[],
+  dateIso: string,
+): string[] {
+  // Guard 1 — replace known exact-match generic fallbacks.
+  const resolved = items.map((it) =>
+    isGenericSummary(it.summary)
+      ? generateZodiacBlurb(it.key, it.score, dateIso)
+      : (it.summary as string),
+  );
+  // Guard 2 — flag any card sharing > threshold tokens with another card.
+  const tokens = resolved.map(tokenize);
+  const replace = resolved.map(() => false);
+  for (let i = 0; i < resolved.length; i += 1) {
+    for (let j = i + 1; j < resolved.length; j += 1) {
+      if (jaccard(tokens[i]!, tokens[j]!) > NEAR_DUP_THRESHOLD) {
+        replace[i] = true;
+        replace[j] = true;
+      }
+    }
+  }
+  return resolved.map((s, i) =>
+    replace[i] ? generateZodiacBlurb(items[i]!.key, items[i]!.score, dateIso) : s,
+  );
+}

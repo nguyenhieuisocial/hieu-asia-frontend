@@ -104,7 +104,7 @@ export function AstroTickerLive() {
               Đang xem lịch hôm nay…
             </div>
           ) : (
-            <div className="flex w-full items-stretch overflow-x-auto">
+            <div className="flex w-full flex-wrap items-stretch gap-y-1 sm:flex-nowrap sm:gap-y-0 sm:overflow-x-auto">
               {/* Live indicator + heading */}
               <div className="flex shrink-0 items-center gap-2 px-4 py-3 sm:px-5">
                 <span className="relative flex h-2 w-2">
@@ -117,7 +117,7 @@ export function AstroTickerLive() {
                 </span>
               </div>
 
-              <span className="my-3 w-px shrink-0 bg-primary/10" />
+              <span className="my-3 hidden w-px shrink-0 bg-primary/10 sm:block" />
 
               <Cell label={`Ngày · ${state.dateLabel}`} className="shrink-0">
                 <span className="font-marketing-display text-lg leading-tight text-foreground">
@@ -125,7 +125,7 @@ export function AstroTickerLive() {
                 </span>
               </Cell>
 
-              <span className="my-3 w-px shrink-0 bg-primary/10" />
+              <span className="my-3 hidden w-px shrink-0 bg-primary/10 sm:block" />
 
               <Cell label="Giờ này" className="shrink-0">
                 <span className="flex items-baseline gap-2">
@@ -145,9 +145,11 @@ export function AstroTickerLive() {
                 </span>
               </Cell>
 
-              <span className="my-3 w-px shrink-0 bg-primary/10" />
+              {/* Mobile: ẩn ô "Giờ tốt kế tiếp" + divider — dải ngắn lại, đỡ phải
+                  vuốt ngang (chi tiết giờ tốt vẫn ở /gio-hoang-dao). */}
+              <span className="my-3 hidden w-px shrink-0 bg-primary/10 sm:block" />
 
-              <Cell label="Giờ tốt kế tiếp" className="shrink-0">
+              <Cell label="Giờ tốt kế tiếp" className="hidden shrink-0 sm:flex">
                 {state.next ? (
                   state.next.active ? (
                     <span className="font-marketing-display text-lg leading-tight text-[color:var(--hanh-moc,#6B8154)]">
@@ -183,7 +185,7 @@ export function AstroTickerLive() {
 
               <Link
                 href="/gio-hoang-dao"
-                className="group ml-auto flex shrink-0 items-center gap-1.5 self-center whitespace-nowrap px-4 py-3 font-mono text-[11px] uppercase tracking-[0.12em] text-primary transition-colors hover:text-foreground sm:px-5"
+                className="group flex w-full shrink-0 items-center gap-1.5 self-center whitespace-nowrap px-4 py-3 font-mono text-[11px] uppercase tracking-[0.12em] text-primary transition-colors hover:text-foreground sm:ml-auto sm:w-auto sm:px-5"
               >
                 Xem giờ hoàng đạo
                 <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />

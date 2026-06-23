@@ -79,7 +79,7 @@ export function StartupPath() {
           </h2>
         </div>
 
-        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <ol className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           {STEPS.map((s) => {
             const done = s.n === 1 && step1Done;
             return (
