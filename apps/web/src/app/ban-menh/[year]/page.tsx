@@ -64,7 +64,7 @@ function ColorChips({ colors }: { colors: string[] }) {
         >
           <span
             aria-hidden
-            className="h-3.5 w-3.5 rounded-full border border-white/20"
+            className="h-3.5 w-3.5 rounded-full border border-border"
             style={{ backgroundColor: COLOR_HEX[c] ?? '#888' }}
           />
           {c}
