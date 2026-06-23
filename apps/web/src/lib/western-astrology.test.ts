@@ -19,6 +19,7 @@ import {
   sunLongitude,
   moonLongitude,
   planetLongitude,
+  plutoLongitude,
   computeChart,
   mcLongitude,
   meanNorthNodeLongitude,
@@ -193,6 +194,7 @@ describe('planetLongitude — 1990-05-20 UTC noon', () => {
     { key: 'saturn',  sign: 'Capricorn', refLon: 295.142 },
     { key: 'uranus',  sign: 'Capricorn', refLon: 279.045 },
     { key: 'neptune', sign: 'Capricorn', refLon: 284.270 },
+    { key: 'pluto',   sign: 'Scorpio',   refLon: 226.031 },
   ];
 
   for (const c of planetCases) {
@@ -204,6 +206,48 @@ describe('planetLongitude — 1990-05-20 UTC noon', () => {
       expect(signName(lon)).toBe(c.sign);
     });
   }
+});
+
+// ── plutoLongitude (Schlyter, công thức riêng) ────────────────────────────────
+//
+// Diêm Vương dùng công thức nhiễu-loạn riêng (KHÔNG phải phần tử Kepler như 7 hành
+// tinh kia). Giá trị chuẩn = astronomy-engine 2.1.19, frame ecliptic-of-date (true),
+// khớp NASA JPL Horizons. Hai mốc ingress (2008→Ma Kết ~270°, 2024→Bảo Bình ~300°)
+// là phép thử nhạy nhất vì nằm sát ranh giới cung.
+describe('plutoLongitude — kiểm chứng vs astronomy-engine (1970–2030)', () => {
+  const plutoCases: { y: number; mo: number; d: number; h: number; mi: number; refLon: number; sign: ZodiacEN }[] = [
+    { y: 1970, mo: 1,  d: 1,  h: 0,  mi: 0, refLon: 177.393, sign: 'Virgo' },
+    { y: 1980, mo: 6,  d: 15, h: 12, mi: 0, refLon: 199.019, sign: 'Libra' },
+    { y: 1990, mo: 5,  d: 20, h: 12, mi: 0, refLon: 226.031, sign: 'Scorpio' },
+    { y: 2000, mo: 1,  d: 1,  h: 12, mi: 0, refLon: 251.455, sign: 'Sagittarius' },
+    { y: 2008, mo: 1,  d: 26, h: 0,  mi: 0, refLon: 269.997, sign: 'Sagittarius' },
+    { y: 2015, mo: 7,  d: 1,  h: 0,  mi: 0, refLon: 284.403, sign: 'Capricorn' },
+    { y: 2024, mo: 1,  d: 21, h: 0,  mi: 0, refLon: 299.998, sign: 'Capricorn' },
+    { y: 2030, mo: 1,  d: 1,  h: 0,  mi: 0, refLon: 309.164, sign: 'Aquarius' },
+  ];
+
+  for (const c of plutoCases) {
+    it(`${c.y}-${String(c.mo).padStart(2, '0')}-${String(c.d).padStart(2, '0')} → ${c.sign} (lon≈${c.refLon.toFixed(1)}°)`, () => {
+      const jd = julianDay(c.y, c.mo, c.d, c.h, c.mi, 0);
+      const lon = plutoLongitude(jd);
+      const diff = Math.abs(lon - c.refLon);
+      const normDiff = Math.min(diff, 360 - diff);
+      expect(normDiff).toBeLessThan(0.5); // engine cam kết ≤0.013°; 0.5° đủ bắt regression
+      expect(signName(lon)).toBe(c.sign);
+    });
+  }
+
+  it('được tính trong computeChart (thiên thể thứ 8) và gán nhà khi có nơi sinh', () => {
+    const chart = computeChart({
+      year: 1990, month: 5, day: 20, hour: 12, minute: 0,
+      tzOffsetMinutes: 0, latitude: 21.03, longitude: 105.85,
+    });
+    expect(chart.planets).toHaveLength(8);
+    const pluto = chart.planets.find((p) => p.planet.key === 'pluto');
+    expect(pluto).toBeDefined();
+    expect(pluto!.position.sign.name).toBe('Bọ Cạp'); // Scorpio
+    expect(typeof pluto!.position.house).toBe('number');
+  });
 });
 
 // ── computeChart (integration) ───────────────────────────────────────────────
@@ -225,9 +269,9 @@ describe('computeChart — tích hợp end-to-end', () => {
     expect(chart.moon.sign.name).toBe('Song Ngư'); // Pisces
   });
 
-  it('computeChart trả về đủ 7 hành tinh', () => {
+  it('computeChart trả về đủ 8 hành tinh (Sao Thủy → Diêm Vương)', () => {
     const chart = computeChart({ year: 1990, month: 5, day: 20, hour: 12, minute: 0, tzOffsetMinutes: 0 });
-    expect(chart.planets).toHaveLength(7);
+    expect(chart.planets).toHaveLength(8);
   });
 
   it('ascendant chỉ có khi cung cấp lat/lon', () => {
@@ -516,10 +560,10 @@ describe('computeChart — trường mới (additive)', () => {
     }
   });
 
-  it('output CŨ vẫn nguyên: sun/moon/planets(7)/ascendant', () => {
+  it('output CŨ vẫn nguyên: sun/moon/planets(8)/ascendant', () => {
     expect(withLoc.sun.sign.name).toBe('Kim Ngưu');
     expect(withLoc.moon.sign.name).toBe('Song Ngư');
-    expect(withLoc.planets).toHaveLength(7);
+    expect(withLoc.planets).toHaveLength(8);
     expect(withLoc.ascendant).toBeDefined();
   });
 });

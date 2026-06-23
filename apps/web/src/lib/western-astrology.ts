@@ -127,7 +127,10 @@ const cosd = (deg: number): number => Math.cos(deg * D2R);
 const atan2d = (y: number, x: number): number => (Math.atan2(y, x) * 180) / Math.PI;
 const elemAt = (pair: readonly [number, number], d: number): number => pair[0] + pair[1] * d;
 
-export type PlanetKey = 'mercury' | 'venus' | 'mars' | 'jupiter' | 'saturn' | 'uranus' | 'neptune';
+export type PlanetKey = 'mercury' | 'venus' | 'mars' | 'jupiter' | 'saturn' | 'uranus' | 'neptune' | 'pluto';
+
+/** Hành tinh dùng phần tử Kepler (Schlyter). Diêm Vương dùng công thức riêng (xem plutoLongitude). */
+type KeplerKey = Exclude<PlanetKey, 'pluto'>;
 
 interface OrbitalElements {
   N: readonly [number, number];
@@ -138,7 +141,7 @@ interface OrbitalElements {
   M: readonly [number, number];
 }
 
-const ELEMENTS: Record<PlanetKey, OrbitalElements> = {
+const ELEMENTS: Record<KeplerKey, OrbitalElements> = {
   mercury: { N: [48.3313, 3.24587e-5], i: [7.0047, 5.0e-8], w: [29.1241, 1.01444e-5], a: [0.387098, 0], e: [0.205635, 5.59e-10], M: [168.6562, 4.0923344368] },
   venus: { N: [76.6799, 2.4659e-5], i: [3.3946, 2.75e-8], w: [54.891, 1.38374e-5], a: [0.72333, 0], e: [0.006773, -1.302e-9], M: [48.0052, 1.6021302244] },
   mars: { N: [49.5574, 2.11081e-5], i: [1.8497, -1.78e-8], w: [286.5016, 2.92961e-5], a: [1.523688, 0], e: [0.093405, 2.516e-9], M: [18.6021, 0.5240207766] },
@@ -212,10 +215,58 @@ function perturbation(key: PlanetKey, d: number): number {
 
 /** Kinh độ hoàng đạo địa tâm của một hành tinh (độ). */
 export function planetLongitude(key: PlanetKey, jd: number): number {
+  if (key === 'pluto') return plutoLongitude(jd);
   const d = dayNumber(jd);
   const { xh, yh } = helioRect(ELEMENTS[key], d);
   const { xs, ys } = sunRect(d);
   return norm360(atan2d(yh + ys, xh + xs) + perturbation(key, d));
+}
+
+/**
+ * Diêm Vương tinh (Pluto) — quỹ đạo lệch tâm & nghiêng mạnh nên KHÔNG dùng được
+ * phần tử Kepler đơn giản như 7 hành tinh trên. Dùng công thức nhiễu-loạn riêng của
+ * Schlyter (theo mean longitude của Sao Thổ & Diêm Vương), hợp lệ ~1800–2050.
+ *
+ * Kiểm chứng vs astronomy-engine 2.1.19 (frame ecliptic-of-date, khớp NASA JPL) trên
+ * 8 mốc 1970–2030: sai số kinh độ địa tâm ≤0.013° → 0 lệch cung (dư sức cho cung rộng
+ * 30°; ca sát ranh giới đã gắn cờ nearCusp như mọi thiên thể khác).
+ */
+function plutoHelio(d: number): { lonecl: number; latecl: number; r: number } {
+  const S = norm360(50.03 + 0.033459652 * d);
+  const P = norm360(238.95 + 0.003968789 * d);
+  const lonecl =
+    238.9508 + 0.00400703 * d -
+    19.799 * sind(P) + 19.848 * cosd(P) +
+    0.897 * sind(2 * P) - 4.956 * cosd(2 * P) +
+    0.61 * sind(3 * P) + 1.211 * cosd(3 * P) -
+    0.341 * sind(4 * P) - 0.19 * cosd(4 * P) +
+    0.128 * sind(5 * P) - 0.034 * cosd(5 * P) -
+    0.038 * sind(6 * P) + 0.031 * cosd(6 * P) +
+    0.02 * sind(S - P) - 0.01 * cosd(S - P);
+  const latecl =
+    -3.9082 -
+    5.453 * sind(P) - 14.975 * cosd(P) +
+    3.527 * sind(2 * P) + 1.673 * cosd(2 * P) -
+    1.051 * sind(3 * P) + 0.328 * cosd(3 * P) +
+    0.179 * sind(4 * P) - 0.292 * cosd(4 * P) +
+    0.019 * sind(5 * P) + 0.1 * cosd(5 * P) -
+    0.031 * sind(6 * P) + 0.012 * cosd(6 * P);
+  const r =
+    40.72 +
+    6.68 * sind(P) + 6.9 * cosd(P) -
+    1.18 * sind(2 * P) - 0.03 * cosd(2 * P) +
+    0.15 * sind(3 * P) - 0.14 * cosd(3 * P);
+  return { lonecl: norm360(lonecl), latecl, r };
+}
+
+/** Kinh độ hoàng đạo địa tâm của Diêm Vương tinh (độ). */
+export function plutoLongitude(jd: number): number {
+  const d = dayNumber(jd);
+  const { lonecl, latecl, r } = plutoHelio(d);
+  const xh = r * cosd(lonecl) * cosd(latecl);
+  const yh = r * sind(lonecl) * cosd(latecl);
+  const { xs, ys } = sunRect(d);
+  return norm360(atan2d(yh + ys, xh + xs));
 }
 
 export interface PlanetMeta {
@@ -234,6 +285,7 @@ export const PLANETS: ReadonlyArray<PlanetMeta> = [
   { key: 'saturn', name: 'Sao Thổ', symbol: '♄', represents: 'Kỷ luật, trách nhiệm, giới hạn và bài học trưởng thành.' },
   { key: 'uranus', name: 'Sao Thiên Vương', symbol: '♅', represents: 'Đổi mới, tự do, sự khác biệt (mang tính thế hệ).' },
   { key: 'neptune', name: 'Sao Hải Vương', symbol: '♆', represents: 'Mơ mộng, trực giác, nghệ thuật & tâm linh (thế hệ).' },
+  { key: 'pluto', name: 'Sao Diêm Vương', symbol: '♇', represents: 'Chuyển hoá tận gốc, quyền lực nội tại, tái sinh — điều cần buông để lột xác (thế hệ).' },
 ];
 
 export type ZodiacElement = 'Lửa' | 'Đất' | 'Khí' | 'Nước';
@@ -312,7 +364,7 @@ export interface PlanetPosition {
 export interface NatalChart {
   sun: SignPosition;
   moon: SignPosition;
-  /** Sao Thủy → Hải Vương (7 hành tinh) theo cung hoàng đạo. */
+  /** Sao Thủy → Diêm Vương (8 hành tinh) theo cung hoàng đạo. */
   planets: PlanetPosition[];
   /** Cung Mọc (Ascendant) — chỉ có khi cung cấp nơi sinh (latitude + longitude). */
   ascendant?: SignPosition;
