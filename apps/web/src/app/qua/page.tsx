@@ -30,7 +30,7 @@ export default function QuaPage() {
           <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
             Quà của bạn
           </span>
-          <h1 className="mt-2 font-display text-3xl leading-tight text-foreground sm:text-4xl">
+          <h1 className="mt-2 font-marketing-display text-3xl leading-tight text-foreground sm:text-4xl">
             Quà &amp; lộ trình — <span className="italic">làm tới đâu, mở tới đó</span>.
           </h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
