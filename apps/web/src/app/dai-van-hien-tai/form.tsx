@@ -16,6 +16,7 @@ import {
 import { Timer, AlertTriangle, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { castTuViChart, type TuViChart, type TuViPalace } from '@/lib/tuvi-client';
 
 type Gender = 'male' | 'female';
@@ -420,6 +421,9 @@ export function DaiVanHienTaiForm() {
             ))}
           </dl>
         </section>
+        <div className="mx-auto max-w-6xl px-6 pb-12">
+          <RelatedTools current="/dai-van-hien-tai" />
+        </div>
       </main>
       <SiteFooter />
     </div>

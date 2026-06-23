@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
@@ -293,6 +294,10 @@ export default function FamilyProfilesPage() {
           </div>
         </section>
       </section>
+
+      <div className="mx-auto max-w-6xl px-6 pb-12">
+        <RelatedTools current="/family-profiles" />
+      </div>
 
       <SiteFooter />
     </div>
