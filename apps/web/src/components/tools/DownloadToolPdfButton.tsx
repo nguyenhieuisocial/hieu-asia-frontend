@@ -56,6 +56,19 @@ export function DownloadToolPdfButton({
   const getBody = (): ToolPdfPayload | null =>
     typeof payload === 'function' ? payload() : payload;
 
+  // The getter reads the tool's latest result at click time. If a tool's
+  // payload builder ever throws (a future regression), surface it as the error
+  // state instead of letting the click no-op silently with no feedback.
+  const safeGetBody = (): ToolPdfPayload | null => {
+    try {
+      return getBody();
+    } catch {
+      setState('error');
+      window.setTimeout(() => setState('idle'), 3500);
+      return null;
+    }
+  };
+
   // Open the result tab SYNCHRONOUSLY inside the click/submit gesture — if opened
   // only AFTER the awaited fetch, Safari/iOS + popup blockers treat it as a
   // programmatic popup and silently block it.
@@ -104,7 +117,7 @@ export function DownloadToolPdfButton({
 
   // Logged-in → tải thẳng. Khách ẩn danh → mở cổng email (thu lead) trước.
   function handleClick() {
-    const body = getBody();
+    const body = safeGetBody();
     if (!body) return;
     if (user) {
       renderAndOpen(openTab(), body, user.email ?? undefined);
@@ -115,7 +128,7 @@ export function DownloadToolPdfButton({
 
   function handleEmailSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const body = getBody();
+    const body = safeGetBody();
     if (!body) return;
     const em = email.trim().toLowerCase();
     if (!EMAIL_RE.test(em) || em.length > 254) return;
