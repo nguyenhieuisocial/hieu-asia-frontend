@@ -19,6 +19,7 @@ import { LOAI_SO } from '@/lib/than-so-hoc-loai-so';
 import { SAO_GIO } from '@/lib/gio-hoang-dao-stars';
 import { CUNG_SLUGS } from '@/lib/cung-hoang-dao-data';
 import { BIRTH_YEARS as BAN_MENH_YEARS } from '@/lib/ban-menh-data';
+import { TAM_TAI_SLUGS } from '@/lib/tam-tai-data';
 import { ALL_PAIRS as CUNG_HOP_PAIRS } from '@/lib/cung-hoang-dao-hop-data';
 import { ENNEAGRAM_SLUGS } from '@/lib/enneagram-type-data';
 import { MBTI_SLUGS } from '@/lib/mbti-type-data';
@@ -363,6 +364,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
+  // Tam Tai (phong tục Can Chi) — hub + 12 con giáp. Deterministic SSG.
+  const tamTaiUrls: MetadataRoute.Sitemap = [
+    {
+      url: `${BASE_URL}/tam-tai`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    },
+    ...TAM_TAI_SLUGS.map((s) => ({
+      url: `${BASE_URL}/tam-tai/${s}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    })),
+  ];
+
   // Độ hợp cung hoàng đạo — hub + 78 cặp (unordered). Deterministic SSG.
   const cungHopUrls: MetadataRoute.Sitemap = [
     {
@@ -517,5 +534,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...lamNha, ...xongDat, ...khaiTruong, ...huongNha, ...tuVi2026ConGiap, ...tuVi2027ConGiap, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls, ...cungHoangDaoUrls, ...banMenhUrls, ...cungHopUrls, ...enneagramTypeUrls, ...mbtiTypeUrls, ...discTypeUrls, ...bigFiveTraitUrls];
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...lamNha, ...xongDat, ...khaiTruong, ...huongNha, ...tuVi2026ConGiap, ...tuVi2027ConGiap, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls, ...cungHoangDaoUrls, ...banMenhUrls, ...tamTaiUrls, ...cungHopUrls, ...enneagramTypeUrls, ...mbtiTypeUrls, ...discTypeUrls, ...bigFiveTraitUrls];
 }
