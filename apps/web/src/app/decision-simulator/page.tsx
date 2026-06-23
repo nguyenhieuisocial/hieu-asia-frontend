@@ -19,6 +19,7 @@ import { AlertTriangle, ArrowRight, Scale } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 
 const BREADCRUMB_JSONLD = {
   '@context': 'https://schema.org',
@@ -292,6 +293,10 @@ export default function DecisionSimulatorPage() {
           </section>
         )}
       </section>
+
+      <div className="mx-auto max-w-6xl px-6 pb-12">
+        <RelatedTools current="/decision-simulator" />
+      </div>
 
       <SiteFooter />
       <StickyMobileCta trackId="decision-simulator" />

@@ -191,6 +191,171 @@ export const COMPARISONS: readonly Comparison[] = [
       },
     ],
   },
+  {
+    slug: 'mbti-vs-enneagram',
+    title: 'MBTI vs Enneagram',
+    a: { ten: 'MBTI', href: '/mbti', tag: '16 nhóm tư duy' },
+    b: { ten: 'Enneagram', href: '/enneagram', tag: '9 nhóm động lực' },
+    intro:
+      'MBTI mô tả CÁCH bạn tư duy và tiếp nhận thông tin (16 nhóm); Enneagram đào vào ĐỘNG LỰC và nỗi sợ cốt lõi đứng sau hành vi (9 nhóm). Một bên trả lời "bạn vận hành thế nào", một bên trả lời "vì sao bạn làm vậy".',
+    dims: [
+      {
+        aspect: 'Trọng tâm',
+        a: 'Cách tư duy, nạp năng lượng, ra quyết định',
+        b: 'Động lực sâu: điều bạn khao khát & nỗi sợ nền tảng',
+      },
+      {
+        aspect: 'Số nhóm',
+        a: '16 nhóm (4 trục lưỡng cực)',
+        b: '9 nhóm + cánh (wing) + mũi tên phát triển',
+      },
+      {
+        aspect: 'Thiên về',
+        a: 'Mô tả phong cách nhận thức (khá tĩnh)',
+        b: 'Phát triển bản thân (có đường trưởng thành/áp lực)',
+      },
+      {
+        aspect: 'Cơ sở',
+        a: 'Thuyết Jung; bị phản biện độ tin cậy',
+        b: 'Mô hình phát triển bản thân; nền thực nghiệm hạn chế',
+      },
+      {
+        aspect: 'Trả lời câu hỏi',
+        a: '"Tôi vận hành thế nào?"',
+        b: '"Vì sao tôi như vậy?"',
+      },
+    ],
+    whenA:
+      'Khi bạn muốn hiểu phong cách tư duy, giao tiếp, học tập và làm việc của mình.',
+    whenB:
+      'Khi bạn muốn chạm vào động lực sâu, nỗi sợ cốt lõi và một con đường để trưởng thành.',
+    bottomLine:
+      'Không cái nào thay được cái nào: MBTI mô tả "phần mềm tư duy", Enneagram chạm "động cơ bên dưới". Nhiều người ghép cả hai (ví dụ INFP nhóm 4) cho bức tranh đầy đủ nhất.',
+    faqs: [
+      {
+        q: 'MBTI và Enneagram khác nhau thế nào?',
+        a: 'MBTI mô tả cách bạn tư duy và tiếp nhận thông tin; Enneagram đào vào động lực và nỗi sợ cốt lõi sau hành vi. Một cái về "cách", một cái về "vì sao".',
+      },
+      {
+        q: 'Nên làm cái nào trước?',
+        a: 'MBTI dễ vào hơn nên hợp để bắt đầu; Enneagram chạm sâu hơn về động lực, hợp khi bạn muốn đi vào "vì sao". Làm cả hai bổ sung nhau.',
+      },
+      {
+        q: 'Cái nào "khoa học" hơn?',
+        a: 'Cả hai đều bị giới hàn lâm phản biện về độ tin cậy và không phải chẩn đoán. Nếu cần nền thực nghiệm vững hơn, hãy kết hợp với Big Five.',
+      },
+    ],
+  },
+  {
+    slug: 'enneagram-vs-big-five',
+    title: 'Enneagram vs Big Five',
+    a: { ten: 'Enneagram', href: '/enneagram', tag: '9 nhóm động lực' },
+    b: { ten: 'Big Five', href: '/big-five', tag: '5 chiều OCEAN' },
+    intro:
+      'Enneagram nhóm con người theo 9 động lực cốt lõi và mở ra con đường phát triển; Big Five (OCEAN) đo 5 chiều tính cách trên thang liên tục với nền nghiên cứu vững nhất. Một bên giàu ý nghĩa phát triển, một bên chính xác và đo lường được.',
+    dims: [
+      {
+        aspect: 'Cách phân loại',
+        a: '9 nhóm + cánh (theo động lực)',
+        b: '5 thang liên tục, không "đóng hộp"',
+      },
+      {
+        aspect: 'Cơ sở khoa học',
+        a: 'Mô hình phát triển bản thân; thực nghiệm hạn chế',
+        b: 'Nền nghiên cứu vững, ổn định cao khi đo lại',
+      },
+      {
+        aspect: 'Mạnh ở',
+        a: 'Hiểu "vì sao", nỗi sợ, hướng trưởng thành',
+        b: 'Mô tả chính xác, có khả năng dự báo',
+      },
+      {
+        aspect: 'Hay dùng cho',
+        a: 'Phát triển bản thân, chiêm nghiệm, trị liệu',
+        b: 'Nghiên cứu, tuyển dụng, đo lường',
+      },
+      {
+        aspect: 'Kết quả nhận được',
+        a: 'Một nhóm chính + cánh',
+        b: 'Hồ sơ phần trăm theo 5 chiều',
+      },
+    ],
+    whenA:
+      'Khi bạn muốn hiểu động lực sâu và một lộ trình phát triển có ý nghĩa.',
+    whenB:
+      'Khi bạn muốn bức tranh chính xác, đo được và gần với khoa học tâm lý.',
+    bottomLine:
+      'Big Five mạnh về độ chính xác, Enneagram mạnh về chiều sâu phát triển. Đọc Big Five để biết "bạn ở đâu trên các thang", đọc Enneagram để hiểu "vì sao và đi tới đâu".',
+    faqs: [
+      {
+        q: 'Enneagram hay Big Five chính xác hơn?',
+        a: 'Big Five có nền thực nghiệm và độ ổn định cao hơn hẳn; Enneagram không mạnh về đo lường nhưng giàu ý nghĩa phát triển. Tuỳ mục đích của bạn.',
+      },
+      {
+        q: 'Vì sao nhiều nhà tâm lý thích Big Five?',
+        a: 'Vì 5 chiều nổi lên từ phân tích thống kê hàng nghìn từ mô tả tính cách qua nhiều nền văn hoá, và ổn định khi đo lại — nên đáng tin trong nghiên cứu.',
+      },
+      {
+        q: 'Vậy còn dùng Enneagram làm gì?',
+        a: 'Enneagram trả lời điều Big Five không nhắm tới: động lực sâu, nỗi sợ cốt lõi và con đường trưởng thành. Nó là công cụ chiêm nghiệm, không phải phép đo.',
+      },
+    ],
+  },
+  {
+    slug: 'than-so-hoc-vs-tu-vi',
+    title: 'Thần Số Học vs Tử Vi',
+    a: { ten: 'Thần Số Học', href: '/than-so-hoc', tag: 'Số chủ đạo · Pythagoras' },
+    b: { ten: 'Tử Vi', href: '/tu-vi', tag: 'Đẩu Số · 12 cung' },
+    intro:
+      'Thần Số Học (Tây phương) rút các con số chủ đạo từ ngày sinh và tên; Tử Vi (Á Đông) lập lá số 12 cung với hàng chục sao. Hai truyền thống khác hẳn về nguồn gốc và cách tính — cùng là lăng kính để chiêm nghiệm, không phán số phận.',
+    dims: [
+      {
+        aspect: 'Nguồn gốc',
+        a: 'Tây phương, gắn với Pythagoras',
+        b: 'Á Đông (Trung Hoa) — Đẩu Số',
+      },
+      {
+        aspect: 'Dữ liệu cần',
+        a: 'Ngày sinh + họ tên',
+        b: 'Ngày và GIỜ sinh chính xác',
+      },
+      {
+        aspect: 'Cách tính',
+        a: 'Quy các số về 1–9 (và 11/22/33)',
+        b: 'An sao theo can chi vào 12 cung',
+      },
+      {
+        aspect: 'Trực quan',
+        a: 'Vài con số chủ đạo, dễ nhớ',
+        b: 'Lá số nhiều sao, nhiều lớp thông tin',
+      },
+      {
+        aspect: 'Mạnh ở',
+        a: 'Tổng quan tính cách & chu kỳ năm, nhanh gọn',
+        b: 'Chi tiết theo từng lĩnh vực (Mệnh, Tài, Quan, Phối…)',
+      },
+    ],
+    whenA:
+      'Khi bạn muốn một cái nhìn nhanh, dễ nhớ về thiên hướng và chu kỳ năm cá nhân.',
+    whenB:
+      'Khi bạn muốn bức tranh chi tiết, nhiều lớp theo từng khía cạnh cuộc đời.',
+    bottomLine:
+      'Hai hệ khác nguồn gốc nên không "đối chiếu đúng-sai" được; mỗi cái cho một góc nhìn. Xem Thần Số Học để nắm nhanh, xem Tử Vi để đi sâu — đọc như gợi ý chiêm nghiệm.',
+    faqs: [
+      {
+        q: 'Thần Số Học và Tử Vi cái nào đúng hơn?',
+        a: 'Hai hệ khác nguồn gốc và cách tính, không có cái "đúng hơn". Giá trị nằm ở cách diễn giải trung thực, không ở việc chọn phe.',
+      },
+      {
+        q: 'Có cần giờ sinh không?',
+        a: 'Thần Số Học chỉ cần ngày sinh và họ tên; Tử Vi cần cả giờ sinh chính xác mới lập đúng lá số.',
+      },
+      {
+        q: 'Nên xem cái nào trước?',
+        a: 'Thần Số Học nhanh và dễ vào; Tử Vi sâu và chi tiết hơn. Nhiều người xem Thần Số Học trước rồi sang Tử Vi để đào sâu.',
+      },
+    ],
+  },
 ] as const;
 
 const BY_SLUG: ReadonlyMap<string, Comparison> = new Map(

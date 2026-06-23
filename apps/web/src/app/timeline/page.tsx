@@ -13,6 +13,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { TimeFlowChecker } from '@/components/time-flow/TimeFlowChecker';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const dynamic = 'force-dynamic';
@@ -254,6 +255,9 @@ export default function TimelinePage() {
         </section>
       </section>
 
+      <div className="mx-auto max-w-6xl px-6 pb-12">
+        <RelatedTools current="/timeline" />
+      </div>
       <SiteFooter />
       <StickyMobileCta trackId="timeline" />
     </div>
