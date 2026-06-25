@@ -99,9 +99,9 @@ export default function LearnPalmPage() {
       tryCta={{
         heading: 'Trải nghiệm ngay',
         blurb:
-          'Chụp ảnh hai lòng bàn tay theo hướng dẫn, AI phân tích 7 đường chính và đặc trưng cá nhân. Không cần giờ sinh chính xác.',
-        href: '/reading/new?method=palm',
-        label: 'Upload ảnh chỉ tay',
+          'Chụp ảnh lòng bàn tay theo hướng dẫn, AI đọc các đường chính (sinh đạo, trí đạo, tâm đạo) cùng gò và dáng bàn tay để gợi ý xu hướng tính cách. Không cần giờ sinh.',
+        href: '/xem-tuong',
+        label: 'Xem chỉ tay bằng AI',
       }}
       sections={[
         {
