@@ -4,6 +4,10 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
 import {
+  DownloadToolPdfButton,
+  type ToolPdfPayload,
+} from '@/components/tools/DownloadToolPdfButton';
+import {
   castTuViHoroscope,
   type TuViChart,
   type TuViHoroscope,
@@ -279,6 +283,56 @@ function DecadalResult({
         bạn — không còn là ví dụ minh hoạ. Đại vận chỉ để soi trọng tâm 10 năm, không phải dự đoán
         may rủi.
       </p>
+
+      <DownloadToolPdfButton
+        source="pdf-timeline"
+        payload={() => {
+          if (segments.length === 0) return null;
+          const heroPeriod = current ?? segments[0] ?? null;
+          if (!heroPeriod) return null;
+
+          const sections: ToolPdfPayload['sections'] = [];
+
+          if (current) {
+            const curRows: NonNullable<ToolPdfPayload['sections'][number]['rows']> = [
+              { label: 'Cung đại vận', value: current.cung },
+              { label: 'Khoảng tuổi', value: `${current.start}–${current.end} tuổi` },
+            ];
+            if (age != null) curRows.push({ label: 'Tuổi hiện tại', value: `${age} tuổi` });
+            if (decCanChi) curRows.push({ label: 'Can chi đại vận', value: decCanChi });
+            if (decHoa) curRows.push({ label: 'Tứ Hóa đại vận', value: decHoa });
+            sections.push({ heading: 'Đại vận hiện tại', rows: curRows });
+          }
+
+          sections.push({
+            heading: 'Các đại vận 10 năm',
+            rows: segments.map((s) => ({
+              label: `${s.start}–${s.end} tuổi`,
+              value:
+                current != null && s.start === current.start
+                  ? `Cung ${s.cung} · đại vận hiện tại`
+                  : `Cung ${s.cung}`,
+            })),
+          });
+
+          sections.push({
+            heading: 'Cách đọc dòng chảy đại vận',
+            text: 'Mỗi đại vận kéo dài khoảng 10 năm, chuyển lần lượt qua 12 cung theo chiều thuận/nghịch tính từ ngày giờ sinh và Cục của bạn. Đọc theo trình tự tuổi: cung của mỗi giai đoạn cho biết trọng tâm 10 năm đó (bản thân, tài chính, công việc, quan hệ…), còn Tứ Hóa đại vận là điểm nhấn động chồng lên lá số gốc. Đây là khung tham khảo để soi nhịp dài hạn, không phải dự đoán may rủi.',
+          });
+
+          return {
+            title: 'Timeline Đại Vận — hieu.asia',
+            subtitle: 'Chuỗi đại vận 10 năm theo lá số Tử Vi của bạn',
+            hero: {
+              big: `Đại vận cung ${heroPeriod.cung}`,
+              small: `${heroPeriod.start}–${heroPeriod.end} tuổi${
+                current ? ' · đại vận hiện tại' : ''
+              }`,
+            },
+            sections,
+          };
+        }}
+      />
     </div>
   );
 }

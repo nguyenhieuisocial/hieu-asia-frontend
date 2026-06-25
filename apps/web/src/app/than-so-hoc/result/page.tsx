@@ -21,6 +21,7 @@ import {
   Skeleton,
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
 import { KARMIC_DEBT, KARMIC_LESSONS } from '@/lib/than-so-hoc-karmic';
@@ -516,6 +517,118 @@ function ResultActions({ data }: { data: ThanSoHocResult }) {
         <Button variant="outline" size="sm" onClick={onShare}>
           <Share2 className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" /> Chia sẻ
         </Button>
+        <DownloadToolPdfButton
+          source="pdf-than-so-hoc"
+          payload={() => {
+            if (!data) return null;
+
+            const coreRows: NonNullable<ToolPdfPayload['sections'][number]['rows']> = [
+              { label: data.life_path.name, value: String(data.life_path.number) },
+              { label: data.expression.name, value: String(data.expression.number) },
+              { label: data.soul_urge.name, value: String(data.soul_urge.number) },
+              { label: data.personality.name, value: String(data.personality.number) },
+              { label: data.birthday.name, value: String(data.birthday.number) },
+              { label: data.maturity.name, value: String(data.maturity.number) },
+              { label: data.personal_year.name, value: String(data.personal_year.number) },
+              { label: data.personal_month.name, value: String(data.personal_month.number) },
+            ];
+
+            const sections: ToolPdfPayload['sections'] = [
+              { heading: 'Hồ sơ số học cá nhân', rows: coreRows },
+              {
+                heading: `${data.life_path.name} (số ${data.life_path.number})`,
+                text: data.life_path.meaning,
+              },
+              {
+                heading: `${data.expression.name} (số ${data.expression.number})`,
+                text: data.expression.meaning,
+              },
+              {
+                heading: `${data.soul_urge.name} (số ${data.soul_urge.number})`,
+                text: data.soul_urge.meaning,
+              },
+              {
+                heading: `${data.personality.name} (số ${data.personality.number})`,
+                text: data.personality.meaning,
+              },
+              {
+                heading: `${data.birthday.name} (số ${data.birthday.number})`,
+                text: data.birthday.meaning,
+              },
+              {
+                heading: `${data.maturity.name} (số ${data.maturity.number})`,
+                text: data.maturity.meaning,
+              },
+              {
+                heading: `${data.personal_year.name} (số ${data.personal_year.number})`,
+                text: data.personal_year.meaning,
+              },
+              {
+                heading: `${data.personal_month.name} (số ${data.personal_month.number})`,
+                text: data.personal_month.meaning,
+              },
+            ];
+
+            if (data.master_numbers.length > 0) {
+              sections.push({
+                heading: 'Số bậc thầy (Master Numbers)',
+                text: data.master_numbers.join(', '),
+              });
+            }
+
+            if (data.pinnacle_cycles.length > 0) {
+              sections.push({
+                heading: '4 chu kỳ đỉnh cao cuộc đời',
+                rows: data.pinnacle_cycles.map((p) => ({
+                  label: `Đỉnh ${p.index} · ${p.age_range}`,
+                  value: String(p.number),
+                })),
+              });
+              for (const p of data.pinnacle_cycles) {
+                sections.push({
+                  heading: `Đỉnh ${p.index} · ${p.age_range} (số ${p.number})`,
+                  text: p.meaning,
+                });
+              }
+            }
+
+            if (data.challenges.length > 0) {
+              sections.push({
+                heading: '4 thử thách cuộc đời',
+                rows: data.challenges.map((c) => ({
+                  label: `Thử thách ${c.index}`,
+                  value: String(c.number),
+                })),
+              });
+              for (const c of data.challenges) {
+                sections.push({
+                  heading: `Thử thách ${c.index} (số ${c.number})`,
+                  text: c.meaning,
+                });
+              }
+            }
+
+            const lessonRows = data.karmic_lessons
+              .map((n) => {
+                const m = KARMIC_LESSONS[n];
+                return m ? { label: `Số ${n}`, value: m.lesson } : null;
+              })
+              .filter((r): r is { label: string; value: string } => r !== null);
+            if (lessonRows.length > 0) {
+              sections.push({ heading: 'Bài học nghiệp (Karmic Lessons)', rows: lessonRows });
+            }
+
+            return {
+              title: 'Bản đồ Thần Số Học — hieu.asia',
+              subtitle: `${data.input.full_name} · Sinh ngày ${formatVnDate(data.input.birth_date)}`,
+              hero: {
+                big: String(data.life_path.number),
+                small: `${data.life_path.name} · Năm cá nhân ${data.input.current_year}: ${data.personal_year.number}`,
+              },
+              sections,
+            };
+          }}
+        />
         <Button asChild variant="ghost" size="sm"><Link href="/than-so-hoc">
           
             <ArrowLeft className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" /> Tính số khác

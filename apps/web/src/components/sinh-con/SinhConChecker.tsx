@@ -25,6 +25,10 @@ import {
 } from '@/lib/sinh-con';
 import { track } from '@/lib/analytics';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
+import {
+  DownloadToolPdfButton,
+  type ToolPdfPayload,
+} from '@/components/tools/DownloadToolPdfButton';
 
 const CHILD_YEARS = [2026, 2027, 2028] as const;
 
@@ -185,6 +189,76 @@ export function SinhConChecker({ defaultYear = 2027 }: { defaultYear?: number } 
                 xem ngày tốt đón bé
               </Link>
             </nav>
+
+            <DownloadToolPdfButton
+              source="pdf-sinh-con"
+              payload={() => {
+                if (!child) return null;
+                const childEl = ELEMENTS[child.element];
+                const sections: ToolPdfPayload['sections'] = [
+                  {
+                    heading: 'Mệnh & con giáp của bé',
+                    rows: [
+                      { label: 'Năm sinh (âm lịch)', value: `${child.year} — ${child.canChi}` },
+                      {
+                        label: 'Con giáp',
+                        value: `${child.zodiac.ten} ${child.zodiac.emoji}`,
+                      },
+                      {
+                        label: 'Mệnh (nạp âm)',
+                        value: `${childEl.name} — ${child.napAmName}`,
+                      },
+                    ],
+                  },
+                  { heading: 'Về mệnh của bé', text: childEl.blurb },
+                ];
+
+                if (me) {
+                  const meEl = ELEMENTS[me.parent.element];
+                  sections.push({
+                    heading: `Đối chiếu với mẹ (${me.parent.canChi} ${me.parent.year})`,
+                    rows: [
+                      {
+                        label: 'Tuổi & mệnh mẹ',
+                        value: `${me.parent.zodiac.ten} ${me.parent.zodiac.emoji} · mệnh ${meEl.name} (${me.parent.napAmName})`,
+                      },
+                      { label: 'Con giáp', value: me.relationCopy.label },
+                    ],
+                    text: `${me.relationCopy.text(me.parent.zodiac.ten, child.zodiac.ten)}\n\n${me.menh.text}`,
+                  });
+                }
+
+                if (bo) {
+                  const boEl = ELEMENTS[bo.parent.element];
+                  sections.push({
+                    heading: `Đối chiếu với bố (${bo.parent.canChi} ${bo.parent.year})`,
+                    rows: [
+                      {
+                        label: 'Tuổi & mệnh bố',
+                        value: `${bo.parent.zodiac.ten} ${bo.parent.zodiac.emoji} · mệnh ${boEl.name} (${bo.parent.napAmName})`,
+                      },
+                      { label: 'Con giáp', value: bo.relationCopy.label },
+                    ],
+                    text: `${bo.relationCopy.text(bo.parent.zodiac.ten, child.zodiac.ten)}\n\n${bo.menh.text}`,
+                  });
+                }
+
+                sections.push({
+                  heading: 'Lưu ý',
+                  text: 'Đây là đối chiếu theo quan niệm Can Chi & ngũ hành để tham khảo — không phải lời phán. Em bé nào cũng là phúc của gia đình; nhóm "lưu ý" chỉ gợi ý bố mẹ thêm kiên nhẫn, tuyệt đối không có chuyện con "khắc" hay mang lỗi với cha mẹ. Tuổi tính theo năm âm lịch — bé sinh tháng 1–2 dương (trước Tết) thuộc năm âm liền trước.',
+                });
+
+                return {
+                  title: 'Sinh con theo năm — hieu.asia',
+                  subtitle: `Bé dự kiến sinh năm ${child.year} (${child.canChi})`,
+                  hero: {
+                    big: `${childEl.name} · ${child.zodiac.ten}`,
+                    small: `${child.canChi} ${child.year} — mệnh ${child.napAmName}`,
+                  },
+                  sections,
+                };
+              }}
+            />
 
             {/* Hạt giống đo nhu cầu "cẩm nang đón bé" — không backend, chỉ ghi ý định qua analytics. */}
             <div className="rounded-xl border border-gold/30 bg-gold/[0.04] p-4">
