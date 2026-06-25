@@ -138,7 +138,7 @@ const BUCKETS: readonly Bucket[] = [
         anchor: 'palm',
         title: 'Xem Tướng — Chỉ tay & Tướng mặt',
         desc: 'Tải ảnh lòng bàn tay hoặc khuôn mặt — AI vision đọc nét tướng, mô tả xu hướng tính cách (không phán số mệnh). Dùng được khi không có giờ sinh.',
-        cta: { href: '/learn/palm', label: 'Tải ảnh' },
+        cta: { href: '/xem-tuong', label: 'Tải ảnh' },
         badge: 'premium',
       },
     ],
