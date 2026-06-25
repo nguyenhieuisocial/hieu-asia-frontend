@@ -28,6 +28,10 @@ import {
 } from '@/lib/xong-dat';
 import { track } from '@/lib/analytics';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
+import {
+  DownloadToolPdfButton,
+  type ToolPdfPayload,
+} from '@/components/tools/DownloadToolPdfButton';
 
 const TONE_CLASS: Record<RelationTone, string> = {
   hop: 'border-emerald-300 bg-emerald-50/60 dark:border-emerald-800 dark:bg-emerald-950/20',
@@ -199,6 +203,54 @@ export function XongDatChecker({ defaultHostYear }: { defaultHostYear?: number }
               xông đất quý nhất vẫn là người vui vẻ, xởi lởi, thật lòng quý gia đình — không có
               chuyện "mời sai tuổi thì xui cả năm".
             </p>
+            <div className="mt-3">
+              <DownloadToolPdfButton
+                source="pdf-xong-dat"
+                payload={() => {
+                  if (!host || !target || top.length === 0) return null;
+
+                  const sections: ToolPdfPayload['sections'] = [
+                    {
+                      heading: `Các tuổi xông đất nên chọn — Tết ${target.canChi} ${target.year}`,
+                      rows: top.map((r) => ({
+                        label: `${r.guest.year} — ${r.guest.canChi} (tuổi ${r.guest.zodiac.ten}) · ${TIER_META[r.tier].label}`,
+                        value: `Mệnh ${ELEMENTS[r.guest.element].name} (${r.guest.napAmName}) · ${plusLabels(r)}`,
+                      })),
+                    },
+                  ];
+
+                  if (guest) {
+                    const meta = TIER_META[guest.tier];
+                    sections.push({
+                      heading: `Đối chiếu người định mời: sinh ${guest.guest.year} — ${guest.guest.canChi} · ${meta.label}`,
+                      rows: [
+                        { label: guest.chiNam.label, value: guest.chiNam.text },
+                        { label: guest.chiChu.label, value: guest.chiChu.text },
+                        { label: guest.menhChu.label, value: guest.menhChu.text },
+                      ],
+                    });
+                  }
+
+                  sections.push({
+                    heading: 'Lưu ý theo phong tục',
+                    text:
+                      'Đây là gợi ý theo quan niệm Can Chi & ngũ hành để THAM KHẢO — cách chấm công khai, nhập cùng dữ liệu luôn ra cùng kết quả.\n' +
+                      'Người xông đất quý nhất vẫn là người vui vẻ, xởi lởi, thật lòng quý gia đình — không có chuyện "mời sai tuổi thì xui cả năm".\n' +
+                      'Tuổi tính theo NĂM ÂM LỊCH: người sinh tháng 1–2 dương (trước Tết) thuộc năm âm liền trước.',
+                  });
+
+                  return {
+                    title: 'Tuổi xông đất đầu năm — hieu.asia',
+                    subtitle: `Gợi ý người xông đất Tết ${target.canChi} ${target.year} cho gia chủ sinh năm ${host.year}`,
+                    hero: {
+                      big: `Gia chủ ${host.year} — ${host.canChi}, tuổi ${host.zodiac.ten}`,
+                      small: `Mệnh ${ELEMENTS[host.element].name} (${host.napAmName}) · Đón Tết ${target.canChi} (mùng 1 năm ${target.year})`,
+                    },
+                    sections,
+                  };
+                }}
+              />
+            </div>
           </div>
         )}
 

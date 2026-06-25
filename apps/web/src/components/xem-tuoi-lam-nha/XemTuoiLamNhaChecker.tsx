@@ -19,6 +19,10 @@ import {
 } from '@/lib/xem-tuoi-lam-nha';
 import { track } from '@/lib/analytics';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
+import {
+  DownloadToolPdfButton,
+  type ToolPdfPayload,
+} from '@/components/tools/DownloadToolPdfButton';
 
 const VERDICT_CLASS: Record<BuildYearResult['verdict'], string> = {
   'thuan': 'text-emerald-700 dark:text-emerald-300',
@@ -172,6 +176,91 @@ export function XemTuoiLamNhaChecker({
               tính theo năm âm lịch; nếu bạn sinh tháng 1–2 trước Tết, năm âm của bạn là năm liền
               trước năm dương.
             </p>
+
+            <DownloadToolPdfButton
+              source="pdf-xem-tuoi-lam-nha"
+              payload={() => {
+                if (!ownerResult) return null;
+
+                const verdictText = BUILD_VERDICT_LABEL[ownerResult.verdict];
+                const checkRows = (r: BuildYearResult): ToolPdfPayload['sections'][number]['rows'] => [
+                  {
+                    label: 'Kim Lâu (tuổi mụ chia 9)',
+                    value: r.kimLau.type
+                      ? `Phạm ${r.kimLau.type} — dư ${r.kimLau.remainder}`
+                      : `Không phạm — dư ${r.kimLau.remainder}`,
+                  },
+                  {
+                    label: 'Hoang Ốc (vòng 6 cung)',
+                    value: `${r.hoangOc.cung} (bước ${r.hoangOc.step}/6) — ${
+                      r.hoangOc.isPham ? 'phạm' : 'không phạm'
+                    }`,
+                  },
+                  {
+                    label: 'Tam Tai',
+                    value: r.tamTai.isTamTai
+                      ? `Phạm — năm ${r.tamTai.yearChi} thuộc nhóm ${r.tamTai.tamTaiChis.join(', ')}`
+                      : `Không phạm — nhóm Tam Tai là ${r.tamTai.tamTaiChis.join(', ')}`,
+                  },
+                  {
+                    label: 'Lục xung / năm tuổi',
+                    value: r.xung.isXung
+                      ? `Năm ${r.xung.yearChi} xung chi tuổi ${r.xung.birthChi}`
+                      : r.xung.isNamTuoi
+                        ? `Năm tuổi (trùng chi ${r.xung.birthChi}) — lưu ý nhẹ`
+                        : `Không xung (chi năm ${r.xung.yearChi})`,
+                  },
+                ];
+
+                const sections: ToolPdfPayload['sections'] = [
+                  {
+                    heading: `Gia chủ ${ownerResult.birthYear} (${ownerResult.birthCanChi.name}) — làm nhà năm ${ownerResult.targetYear} (${ownerResult.targetCanChi.name})`,
+                    rows: checkRows(ownerResult),
+                  },
+                  {
+                    heading: 'Diễn giải từng bước',
+                    text: ownerResult.reasons.join('\n'),
+                  },
+                ];
+
+                if (borrowResult) {
+                  sections.push({
+                    heading: `Người được mượn tuổi ${borrowResult.birthYear} (${borrowResult.birthCanChi.name}) — năm ${borrowResult.targetYear}`,
+                    rows: checkRows(borrowResult),
+                  });
+                  sections.push({
+                    heading: 'Về việc mượn tuổi',
+                    text:
+                      'Theo tục, người được mượn tuổi cũng phải không phạm cả ba hạn (Kim Lâu, Hoang Ốc, Tam Tai) trong năm khởi công thì việc mượn tuổi mới được coi là trọn vẹn — thường chọn nam giới lớn tuổi hơn gia chủ. Người mượn tuổi đứng tên động thổ, bán tượng trưng cho gia chủ, làm xong thì chuộc lại.',
+                  });
+                }
+
+                if (goodYears.length > 0 && ownerResult.verdict !== 'thuan') {
+                  sections.push({
+                    heading: `Năm phù hợp hơn cho gia chủ ${ownerResult.birthYear}`,
+                    text: `Các năm gần nhất không phạm hạn thường xét: ${goodYears.join(
+                      ', ',
+                    )}. Nếu không thể đợi, có thể cân nhắc mượn tuổi người không phạm hạn trong năm bạn định làm.`,
+                  });
+                }
+
+                sections.push({
+                  heading: 'Phong tục để tham khảo',
+                  text:
+                    'Kim Lâu, Hoang Ốc, Tam Tai là tập tục dân gian, không phải quy luật khoa học. Chúng tôi tính minh bạch từng bước để bạn biết rõ vì sao có kết luận và tự quyết định — không doạ, không bán "giải hạn". Những yếu tố thật sự quyết định vẫn là tài chính, giấy phép và mùa thi công. Lưu ý: tuổi mụ tính theo năm âm lịch; nếu sinh tháng 1–2 trước Tết, năm âm của bạn là năm liền trước năm dương.',
+                });
+
+                return {
+                  title: 'Xem tuổi làm nhà — hieu.asia',
+                  subtitle: `Gia chủ ${ownerResult.birthYear} • làm nhà năm ${ownerResult.targetYear}`,
+                  hero: {
+                    big: `${VERDICT_EMOJI[ownerResult.verdict]} ${verdictText}`,
+                    small: `Năm ${ownerResult.targetYear} (${ownerResult.targetCanChi.name}) cho gia chủ sinh năm ${ownerResult.birthYear} (${ownerResult.birthCanChi.name}, tuổi ${ownerResult.birthCanChi.animal})`,
+                  },
+                  sections,
+                };
+              }}
+            />
 
             {/* Hạt giống đo nhu cầu "báo cáo khởi công chi tiết" — không backend, chỉ ghi ý định qua analytics. */}
             <div className="rounded-xl border border-gold/30 bg-gold/[0.04] p-4">
