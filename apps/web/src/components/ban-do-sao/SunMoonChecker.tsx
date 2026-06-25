@@ -18,6 +18,8 @@ import { getSupabaseAuth } from '@/lib/auth-client';
 import { ReadingRitual } from '@/components/tools/ReadingRitual';
 import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
 import { NatalWheel } from './NatalWheel';
+import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
+import { aiReadingToSections } from '@/lib/pdf/ai-reading-sections';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -516,6 +518,79 @@ export function SunMoonChecker({ initialDate, initialTime }: SunMoonCheckerProps
               <strong> con số là thật</strong>. Phần diễn giải mang tính <strong>tham khảo để hiểu mình</strong>,
               không phải tiên đoán số mệnh. Bạn vẫn là người quyết định.
             </p>
+
+            {/* Tải bản đồ sao ra PDF — bản lưu niệm (tam trụ + 8 hành tinh + góc hợp + AI nếu đã đọc) */}
+            <div className="flex justify-center">
+              <DownloadToolPdfButton
+                source="pdf-ban-do-sao"
+                label="Tải bản đồ sao (PDF)"
+                payload={() => {
+                  if (!chart) return null;
+                  const posRow = (label: string, p: SignPosition) => ({
+                    label,
+                    value: `${p.sign.symbol} ${p.sign.name} ${p.degreeInSign.toFixed(0)}° · hành ${p.sign.element}`,
+                  });
+                  const triRows = [
+                    posRow('Mặt Trời', chart.sun),
+                    posRow('Mặt Trăng', chart.moon),
+                    ...(chart.ascendant ? [posRow('Cung Mọc', chart.ascendant)] : []),
+                  ];
+                  const planetRows = chart.planets.map(({ planet, position, retrograde }) => ({
+                    label: `${planet.symbol} ${planet.name}`,
+                    value:
+                      `${position.sign.symbol} ${position.sign.name} ${position.degreeInSign.toFixed(0)}°` +
+                      (typeof position.house === 'number' ? ` · nhà ${position.house}` : '') +
+                      (retrograde ? ' · ℞ nghịch hành' : ''),
+                  }));
+                  const sections: ToolPdfPayload['sections'] = [
+                    { heading: 'Tam trụ — Mặt Trời · Mặt Trăng · Mọc', rows: triRows },
+                    { heading: 'Tám hành tinh (Sao Thủy → Diêm Vương)', rows: planetRows },
+                  ];
+                  if (balance) {
+                    sections.push({
+                      heading: 'Cân bằng nguyên tố',
+                      rows: (['Lửa', 'Đất', 'Khí', 'Nước'] as const).map((el) => ({
+                        label: el,
+                        value: `${balance.elements[el]}/${balance.total} thiên thể`,
+                      })),
+                    });
+                    sections.push({
+                      heading: 'Nổi trội',
+                      text: `Nguyên tố ${balance.dominantElement} (${balance.elements[balance.dominantElement]}/${balance.total} thiên thể) · ${balance.dominantModality}. ${ELEMENT_TENDENCY[balance.dominantElement]}`,
+                    });
+                  }
+                  if (chart.aspects && chart.aspects.length > 0) {
+                    sections.push({
+                      heading: 'Góc hợp giữa các thiên thể',
+                      rows: [...chart.aspects]
+                        .sort((a, b) => a.orb - b.orb)
+                        .map((asp) => ({
+                          label: `${asp.bodyA} — ${asp.bodyB}`,
+                          value: `${ASPECT_META[asp.aspect].label} · orb ${asp.orb.toFixed(1)}°`,
+                        })),
+                    });
+                  }
+                  if (reading) {
+                    sections.push(...aiReadingToSections(reading, 'Đọc sâu cùng AI'));
+                  }
+                  const placeName = placeIdx !== null ? (CITIES[placeIdx]?.name ?? '') : '';
+                  return {
+                    title: 'Bản đồ sao — hieu.asia',
+                    subtitle: `${date}${time ? ` · ${time}` : ''}${placeName ? ` · ${placeName}` : ''}`,
+                    hero: {
+                      big: `☀️ ${chart.sun.sign.name} · 🌙 ${chart.moon.sign.name}`,
+                      small: chart.ascendant
+                        ? `↗️ Mọc ${chart.ascendant.sign.name}`
+                        : balance
+                          ? `Nổi trội: nguyên tố ${balance.dominantElement}`
+                          : undefined,
+                    },
+                    sections,
+                    cta: { text: 'Đọc sâu bản đồ sao cùng AI', url: 'https://hieu.asia/ban-do-sao' },
+                  };
+                }}
+              />
+            </div>
 
             {/* Lớp đọc sâu AI */}
             {paywall ? (
