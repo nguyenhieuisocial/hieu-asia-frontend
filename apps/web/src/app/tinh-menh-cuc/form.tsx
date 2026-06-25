@@ -17,6 +17,10 @@ import { AlertTriangle, Sparkles, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
+import {
+  DownloadToolPdfButton,
+  type ToolPdfPayload,
+} from '@/components/tools/DownloadToolPdfButton';
 import { castTuViChart, type TuViChart } from '@/lib/tuvi-client';
 import { getNguHanhRemedy, type NguHanhRemedy } from '@/lib/ngu-hanh-remedy';
 
@@ -267,10 +271,80 @@ export function TinhMenhCucForm() {
                   chính tinh và đại vận của riêng bạn, lập lá số đầy đủ (vẫn miễn phí).
                 </div>
 
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   <Button asChild size="lg"><Link href="/onboarding">
                     Lập lá số đầy đủ
                   </Link></Button>
+                  <DownloadToolPdfButton
+                    source="pdf-tinh-menh-cuc"
+                    payload={() => {
+                      if (!result) return null;
+                      const m = result.meta;
+                      const remedy = getNguHanhRemedy(m.fiveElementsClass);
+                      const sections: ToolPdfPayload['sections'] = [
+                        {
+                          heading: 'Nền lá số của bạn',
+                          rows: [
+                            {
+                              label: 'Cung Mệnh',
+                              value: `${m.soul} · ${m.earthlyBranchOfSoulPalace}`,
+                            },
+                            {
+                              label: 'Cung Thân',
+                              value: `${m.body} · ${m.earthlyBranchOfBodyPalace}`,
+                            },
+                            { label: 'Cục', value: m.fiveElementsClass },
+                            {
+                              label: 'Can Chi năm',
+                              value: m.chineseDate.split(' - ')[0] ?? '—',
+                            },
+                            { label: 'Con giáp', value: m.zodiac },
+                            { label: 'Cung hoàng đạo (Tây)', value: m.sign },
+                            { label: 'Ngày dương lịch', value: m.solarDate },
+                            { label: 'Ngày âm lịch', value: m.lunarDate },
+                            { label: 'Giờ sinh', value: `${m.time} (${m.timeRange})` },
+                          ],
+                        },
+                        {
+                          heading: 'Cục là gì?',
+                          text:
+                            'Cục trong Tử Vi xác định CHU KỲ ĐẠI VẬN của bạn — 10 năm 1 đại vận. Có 5 loại Cục theo ngũ hành:\n' +
+                            '• Thủy nhị cục — đại vận từ 2 tuổi\n' +
+                            '• Mộc tam cục — đại vận từ 3 tuổi\n' +
+                            '• Kim tứ cục — đại vận từ 4 tuổi\n' +
+                            '• Thổ ngũ cục — đại vận từ 5 tuổi\n' +
+                            '• Hỏa lục cục — đại vận từ 6 tuổi\n\n' +
+                            'Mệnh hoà với Cục → giai đoạn phát triển thuận. Mệnh khắc Cục → cảm giác "vận ngược" — không phải định mệnh, là dấu hiệu cần thay đổi cách tiếp cận.',
+                        },
+                      ];
+                      if (remedy) {
+                        sections.push({
+                          heading: `Gợi ý bổ khuyết ngũ hành — hành ${remedy.hanh} (tham khảo)`,
+                          rows: [
+                            { label: 'Màu sắc phù hợp', value: remedy.mauHop.join(', ') },
+                            { label: 'Hướng tốt', value: remedy.huongTot.join(', ') },
+                            { label: 'Nhóm nghề phù hợp', value: remedy.ngheHop.join(', ') },
+                            { label: 'Vật phẩm & môi trường', value: remedy.vatPham.join(', ') },
+                          ],
+                        });
+                        sections.push({
+                          heading: 'Lời khuyên hành động',
+                          text: remedy.loiKhuyen
+                            .map((lk, i) => `${String(i + 1).padStart(2, '0')}. ${lk}`)
+                            .join('\n'),
+                        });
+                      }
+                      return {
+                        title: 'Mệnh · Thân · Cục — hieu.asia',
+                        subtitle: 'Bước 1 của lá số Tử Vi — cung Mệnh, cung Thân, Cục và âm dương',
+                        hero: {
+                          big: `Mệnh tại ${m.earthlyBranchOfSoulPalace} · Cục ${m.fiveElementsClass}`,
+                          small: `${m.soul} · Thân tại ${m.earthlyBranchOfBodyPalace} · ${m.zodiac}`,
+                        },
+                        sections,
+                      };
+                    }}
+                  />
                   <Link
                     href="/tu-vi"
                     className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"
