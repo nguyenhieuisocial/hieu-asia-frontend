@@ -21,6 +21,7 @@ import {
   type MbtiAxis,
   type MbtiScoreWithMeta,
 } from '@/lib/scoring/mbti';
+import { buildType as buildMbtiType } from '@/lib/mbti-type-data';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -118,6 +119,10 @@ export function MbtiTool() {
     }
   };
 
+  // Nội dung mô tả nhóm (cùng nguồn với trang chi tiết /learn/mbti/[type]) để
+  // kết quả miễn phí có giá trị ngay, không chỉ trơ mã 4 chữ.
+  const meta = result ? buildMbtiType(result.type) : null;
+
   return (
     <div className="mx-auto max-w-2xl">
       {!result && (
@@ -146,6 +151,61 @@ export function MbtiTool() {
               )}
             </CardContent>
           </Card>
+
+          {meta && (
+            <Card className="border-gold/20 bg-card/50">
+              <CardContent className="space-y-4 p-6">
+                <div>
+                  <p className="font-heading text-xl text-foreground">
+                    {meta.code} · {meta.nick}
+                  </p>
+                  <p className="mt-0.5 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                    {meta.groupMeta.name} · {meta.groupMeta.en}
+                  </p>
+                  <p className="mt-2 text-sm italic leading-relaxed text-muted-foreground">
+                    {meta.tagline}
+                  </p>
+                </div>
+                <p className="text-sm leading-relaxed text-foreground/85">{meta.overview}</p>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-300">
+                      Điểm mạnh nổi bật
+                    </div>
+                    <ul className="mt-1.5 space-y-1 text-sm leading-relaxed text-foreground/85">
+                      {meta.strengths.map((s) => (
+                        <li key={s} className="flex gap-2">
+                          <span aria-hidden className="text-emerald-400">
+                            •
+                          </span>
+                          {s}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-amber-300">
+                      Hướng phát triển
+                    </div>
+                    <ul className="mt-1.5 space-y-1 text-sm leading-relaxed text-foreground/85">
+                      {meta.growth.map((s) => (
+                        <li key={s} className="flex gap-2">
+                          <span aria-hidden className="text-amber-400">
+                            •
+                          </span>
+                          {s}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                <p className="text-[11px] leading-relaxed text-muted-foreground">
+                  Đây là <strong>xu hướng</strong> của nhóm {meta.code}, không phải lời phán cố định —
+                  ai cũng có thể rèn giũa theo hướng mình muốn.
+                </p>
+              </CardContent>
+            </Card>
+          )}
 
           <Button asChild variant="outline" className="w-full">
             <Link href={`/learn/mbti/${result.type.toLowerCase()}`}>
