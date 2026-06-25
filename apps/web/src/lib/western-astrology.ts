@@ -578,7 +578,7 @@ export function houseOf(position: SignPosition, ascendant: SignPosition): number
 }
 
 /**
- * Tính bản đồ sao (Mặt Trời + Mặt Trăng + 7 hành tinh; + cung Mọc nếu có nơi sinh).
+ * Tính bản đồ sao (Mặt Trời + Mặt Trăng + 8 hành tinh tới Diêm Vương; + cung Mọc nếu có nơi sinh).
  * Giờ sinh là giờ ĐỊA PHƯƠNG; chuyển sang UTC bằng `tzOffsetMinutes` (mặc định VN +7).
  */
 export function computeChart(input: BirthInput): NatalChart {
@@ -633,7 +633,7 @@ export function computeChart(input: BirthInput): NatalChart {
     chart.nodes.south.house = houseOf(chart.nodes.south, asc);
   }
 
-  // Góc hợp giữa mọi cặp thiên thể chính (Mặt Trời/Mặt Trăng + 7 hành tinh).
+  // Góc hợp giữa mọi cặp thiên thể chính (Mặt Trời/Mặt Trăng + 8 hành tinh).
   const aspectBodies: AspectBody[] = [
     { name: 'Mặt Trời', longitude: chart.sun.longitude, luminary: true },
     { name: 'Mặt Trăng', longitude: chart.moon.longitude, luminary: true },
