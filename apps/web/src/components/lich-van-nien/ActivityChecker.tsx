@@ -18,6 +18,8 @@ import {
 } from '@hieu-asia/ui';
 import { safeJson } from '@/lib/safe-json';
 import { getVietnamTodayISO } from '@/lib/vn-date';
+import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
+import type { ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 
 export type Activity =
   | 'cuoi_hoi'
@@ -221,6 +223,62 @@ export function ActivityChecker({
                 </div>
               </div>
             )}
+
+            <DownloadToolPdfButton
+              source="pdf-lich-van-nien"
+              payload={() => {
+                if (!result) return null;
+                const meta = ACTIVITIES.find((a) => a.value === activity);
+                const activityLabel = meta ? `${meta.emoji} ${meta.label}` : activity;
+                const sections: ToolPdfPayload['sections'] = [
+                  {
+                    heading: 'Thông tin kiểm tra',
+                    rows: [
+                      { label: 'Việc cần làm', value: activityLabel },
+                      { label: 'Ngày dự định', value: date },
+                      ...(birthYear ? [{ label: 'Năm sinh', value: birthYear }] : []),
+                      { label: 'Điểm phù hợp', value: `${result.score}/100`, bar: result.score },
+                      {
+                        label: 'Kết luận',
+                        value: result.ok ? 'Phù hợp' : 'Không phù hợp',
+                      },
+                    ],
+                  },
+                  { heading: 'Nhận định', text: result.reason },
+                ];
+                if (result.goodFactors.length > 0) {
+                  sections.push({
+                    heading: 'Yếu tố thuận lợi',
+                    text: result.goodFactors.map((f) => `• ${f}`).join('\n'),
+                  });
+                }
+                if (result.badFactors.length > 0) {
+                  sections.push({
+                    heading: 'Yếu tố bất lợi',
+                    text: result.badFactors.map((f) => `• ${f}`).join('\n'),
+                  });
+                }
+                if (result.alternatives.length > 0) {
+                  sections.push({
+                    heading: 'Gợi ý ngày tốt hơn trong 30 ngày tới',
+                    rows: result.alternatives.map((alt) => ({
+                      label: alt.summary,
+                      value: `${alt.score}/100`,
+                      bar: alt.score,
+                    })),
+                  });
+                }
+                return {
+                  title: `Xem ngày tốt — ${meta ? meta.label : 'việc dự định'}`,
+                  subtitle: `Ngày ${date}`,
+                  hero: {
+                    big: result.ok ? '✓ Ngày phù hợp' : '✗ Ngày không phù hợp',
+                    small: `${activityLabel} · ${date} · ${result.score}/100`,
+                  },
+                  sections,
+                };
+              }}
+            />
           </div>
         )}
       </CardContent>
