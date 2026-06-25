@@ -6,6 +6,7 @@ import { breadcrumb, webPage, faqPage, type FaqItem } from '@/lib/seo/jsonld';
 import { SKY_EVENTS, kindMeta, type SkyEvent } from '@/lib/sky-events';
 import { LunarEclipseDiagram } from '@/components/thien-van/LunarEclipseDiagram';
 import { SkyTimeline } from '@/components/thien-van/SkyTimeline';
+import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 
 export const metadata: Metadata = {
   title: 'Lịch thiên văn 2026–2030 — nguyệt thực, nhật thực, phân & chí (giờ VN) | hieu.asia',
@@ -42,6 +43,19 @@ export default function ThienVanPage() {
   const lunar = SKY_EVENTS.filter((e) => e.type === 'lunar');
   const solar = SKY_EVENTS.filter((e) => e.type === 'solar');
   const seasons = SKY_EVENTS.filter((e) => e.type === 'season');
+
+  const toRows = (events: SkyEvent[]): NonNullable<ToolPdfPayload['sections'][number]['rows']> =>
+    events.map((e) => ({ label: kindMeta(e).label, value: `${fmtVN(e.dateVN)} (giờ VN)` }));
+
+  const pdfPayload: ToolPdfPayload = {
+    title: 'Lịch thiên văn 2026–2030 — hieu.asia',
+    subtitle: 'Nguyệt thực, nhật thực và bốn điểm phân – chí quan sát được tại Việt Nam (giờ VN).',
+    sections: [
+      { heading: 'Nguyệt thực', rows: toRows(lunar) },
+      { heading: 'Nhật thực', rows: toRows(solar) },
+      { heading: 'Điểm phân – điểm chí', rows: toRows(seasons) },
+    ],
+  };
 
   const faqs: FaqItem[] = [
     {
@@ -127,6 +141,10 @@ export default function ThienVanPage() {
             ))}
           </ul>
         </section>
+
+        <div className="flex justify-center">
+          <DownloadToolPdfButton source="pdf-thien-van" payload={pdfPayload} />
+        </div>
 
         <p className="text-xs leading-relaxed text-muted-foreground">
           Nguồn tính toán: thư viện thiên văn <strong>astronomy-engine</strong> (mã nguồn mở, giấy phép MIT). Nhật thực
