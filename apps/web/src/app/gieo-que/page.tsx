@@ -18,6 +18,7 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
 import { parseTrigrams, getHaoDongMota, readingFocus } from '@/lib/hao-dong';
+import { getThoanTu } from '@/lib/que-thoan-tu';
 import { getHaoTu, getHaoTuExtra, HAO_TU_SOURCE } from '@/lib/que-hao-tu';
 import { QUE_PAGES } from '@/lib/que-kinh-dich';
 
@@ -259,6 +260,40 @@ export default function GieoQuePage() {
                       </CardHeader>
                       <CardContent className="space-y-2.5">
                         <p className="text-sm leading-relaxed text-foreground/85">{focus.note}</p>
+                        {(focus.primary === 'gua-primary' || focus.primary === 'gua-changed') &&
+                          (() => {
+                            // Khi luật Chu Hy trỏ vào "lời quẻ" (0/3 hào → quẻ chính; 6 hào →
+                            // quẻ biến), hiển thị Thoán từ nguyên văn của quẻ tương ứng — đúng
+                            // điều /learn/kinh-dich hứa. Dữ liệu THOAN_TU (Chu Dịch, công cộng).
+                            const useChanged = focus.primary === 'gua-changed' && changed ? changed : null;
+                            const hexId = useChanged ? useChanged.id : result.hexagramPrimary.id;
+                            const hexName = useChanged
+                              ? useChanged.nameVi
+                              : result.hexagramPrimary.nameVi;
+                            const thoan = getThoanTu(hexId);
+                            if (!thoan) return null;
+                            return (
+                              <div className="space-y-1.5 border-t border-gold/20 pt-2.5">
+                                <p className="text-xs font-semibold text-gold-700">
+                                  Lời quẻ (Thoán từ) — {hexName}:
+                                </p>
+                                <div className="rounded-md border border-gold/20 bg-gold/5 px-3 py-2">
+                                  <p
+                                    lang="zh-Hant"
+                                    className="font-heading text-base leading-relaxed text-foreground"
+                                  >
+                                    {thoan.han}
+                                  </p>
+                                  <p className="text-sm italic leading-relaxed text-foreground/80">
+                                    {thoan.hanViet}
+                                  </p>
+                                  <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground">
+                                    {thoan.nghia}
+                                  </p>
+                                </div>
+                              </div>
+                            );
+                          })()}
                         {focus.chuDao !== null && (
                           <p className="text-sm text-foreground/85">
                             <span className="font-semibold text-gold-700">Hào chủ đạo:</span>{' '}

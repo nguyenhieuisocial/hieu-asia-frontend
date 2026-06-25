@@ -89,7 +89,7 @@ export default function LearnMBTIPage() {
         heading: 'Trải nghiệm ngay',
         blurb:
           'Trả lời bộ câu hỏi MBTI khoảng 5 phút để xem 1 trong 16 nhóm tính cách phù hợp với thiên hướng tự nhiên của bạn.',
-        href: '/reading/new?method=mbti',
+        href: '/mbti',
         label: 'Làm trắc nghiệm MBTI',
       }}
       sections={[

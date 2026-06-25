@@ -229,8 +229,10 @@ export default function LearnThanSoHocPage() {
                   với thế giới — ấn tượng đầu tiên, năng lượng người khác cảm nhận trước. Khoảng
                   cách giữa <strong>Nhân Cách (phụ âm)</strong> và{' '}
                   <strong>Linh Hồn (nguyên âm)</strong> chính là khoảng cách giữa "người ta thấy
-                  bạn thế nào" và "bạn thật sự là gì" — một góc soi rất đắt giá. (Một kiểm tra logic
-                  thú vị: Linh Hồn + Nhân Cách = Vận Mệnh, vì nguyên âm cộng phụ âm là toàn bộ chữ.)
+                  bạn thế nào" và "bạn thật sự là gì" — một góc soi rất đắt giá. (Mẹo hiểu: nguyên âm
+                  cộng phụ âm chính là toàn bộ chữ — nên TRƯỚC khi rút gọn, tổng của Linh Hồn và
+                  Nhân Cách bằng đúng tổng của Vận Mệnh. Còn ba con số hiển thị đã được rút gọn
+                  riêng về một chữ số, nên cộng trực tiếp thường không bằng nhau.)
                 </p>
               </div>
 

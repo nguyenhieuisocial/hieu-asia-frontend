@@ -46,7 +46,7 @@ const FAQS = [
   },
   {
     q: 'Thước Lỗ Ban dùng để làm gì?',
-    a: 'Thước Lỗ Ban là cây thước phong thủy của nghề mộc cổ truyền, chia chiều dài thành các cung Tốt – Xấu xen kẽ (Tài, Bệnh, Ly, Nghĩa, Quan, Kiếp, Hại, Bản). Khi đo cửa, bàn thờ, giường…, thợ cố chọn kích thước rơi vào cung tốt. Đây là quy ước truyền thống của thợ, mang tính tham khảo; rơi cung xấu chỉ cần nhích sang kích thước tốt gần nhất, không cần làm lại.',
+    a: 'Thước Lỗ Ban là cây thước phong thủy của nghề mộc cổ truyền, chia chiều dài thành các cung Tốt – Xấu xen kẽ (mỗi loại thước có bộ cung riêng — ví dụ thước 38,8cm gồm Tài, Bệnh, Ly, Nghĩa, Quan, Kiếp, Hại, Bản). Khi đo cửa, bàn thờ, giường…, thợ cố chọn kích thước rơi vào cung tốt. Đây là quy ước truyền thống của thợ, mang tính tham khảo; rơi cung xấu chỉ cần nhích sang kích thước tốt gần nhất, không cần làm lại.',
   },
   {
     q: 'Công cụ này có "đổi mệnh", "giải hạn" hay trấn yểm không?',
@@ -320,8 +320,8 @@ export default function LearnPhongThuyPage() {
                   Tử, Lục Hoang Ốc — chỉ dùng cho làm nhà), <strong>Tam Tai</strong> (3 năm
                   hạn liên tiếp theo nhóm tam hợp con giáp) và <strong>Lục Xung</strong> (chi
                   năm xem xung chi năm sinh). <strong>Thước Lỗ Ban</strong> tra một kích thước
-                  xem rơi vào cung Tốt hay Xấu theo bộ cung kinh điển (Tài, Bệnh, Ly, Nghĩa,
-                  Quan, Kiếp, Hại, Bản).
+                  xem rơi vào cung Tốt hay Xấu; công cụ có nhiều loại thước với bộ tên cung khác
+                  nhau (ví dụ thước 38,8cm gồm Tài, Bệnh, Ly, Nghĩa, Quan, Kiếp, Hại, Bản).
                 </p>
                 <p className="text-sm text-foreground/70">
                   Tất cả đều là tập tục để bạn biết và tự quyết, không phải định luật. Nhãn
