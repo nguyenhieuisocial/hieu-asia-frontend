@@ -263,6 +263,11 @@ export default function LearnTarotPage() {
                   phổ biến hóa. Cách đánh số và diễn giải có vài biến thể giữa các trường phái.
                 </li>
               </ul>
+              <p className="text-sm text-muted-foreground">
+                Công cụ Tarot tại hieu.asia hiện trải <strong>một lá</strong> và{' '}
+                <strong>ba lá</strong>; Celtic Cross nêu ở đây như kiến thức tham khảo về các kiểu
+                trải phổ biến, chưa phải lựa chọn trong công cụ.
+              </p>
               <h3 className="text-lg font-semibold text-foreground">Đọc tổng thể, không từng lá rời</h3>
               <p>
                 Người đọc giỏi nhìn bức tranh chung trước khi chốt: nhiều Ẩn Chính → chủ đề lớn,
