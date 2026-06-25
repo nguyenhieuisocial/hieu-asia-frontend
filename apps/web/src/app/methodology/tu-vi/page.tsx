@@ -608,10 +608,10 @@ export default function MethodologyTuViPage() {
                 Môn, Thiên Tướng, Thiên Lương, Thất Sát, Phá Quân.
               </p>
               <p className="rounded-lg border border-gold/20 bg-gold/5 p-3 text-foreground/85">
-                <strong className="text-gold-700">Caveat.</strong> Hệ thống không tự nội suy
-                nếu ngày âm {'>'} 30 trong tháng nhuận — engine có check và sẽ trả lỗi
-                yêu cầu user xác nhận lại ngày âm. Tránh trường hợp "đoán" ngày 31 thành
-                ngày 1 tháng sau và sai toàn bộ lá số.
+                <strong className="text-gold-700">Caveat.</strong> Khi bạn nhập ngày ÂM, hệ
+                thống tự quy đổi sang dương lịch theo thuật toán lịch chuẩn (gồm cả tháng
+                nhuận) trước khi an sao — không "đoán" bừa. Vì một ngày âm nhập sai có thể
+                lệch toàn bộ lá số, nếu không chắc ngày âm thì nên nhập ngày DƯƠNG lịch cho chắc.
               </p>
             </CardContent>
           </Card>
@@ -869,7 +869,7 @@ export default function MethodologyTuViPage() {
                     <tr>
                       <td className="px-3 py-2 text-foreground">Sinh trong tháng nhuận</td>
                       <td className="px-3 py-2 text-muted-foreground">Sai tháng âm</td>
-                      <td className="px-3 py-2 text-muted-foreground">Bắt user xác nhận tháng nhuận</td>
+                      <td className="px-3 py-2 text-muted-foreground">Tự quy đổi theo lịch chuẩn (gồm tháng nhuận)</td>
                     </tr>
                     <tr>
                       <td className="px-3 py-2 text-foreground">Sinh ngoài VN</td>
@@ -879,7 +879,7 @@ export default function MethodologyTuViPage() {
                     <tr>
                       <td className="px-3 py-2 text-foreground">Sinh ngày đổi tiết khí</td>
                       <td className="px-3 py-2 text-muted-foreground">Sai Can Chi tháng</td>
-                      <td className="px-3 py-2 text-muted-foreground">Ngày đổi tiết khí có flag, prompt user xác nhận</td>
+                      <td className="px-3 py-2 text-muted-foreground">Tính Can Chi tháng theo tiết khí thật — giờ sinh càng chính xác càng đúng</td>
                     </tr>
                     <tr>
                       <td className="px-3 py-2 text-foreground">Nhập ngày âm nhưng chọn nhầm lịch dương</td>
