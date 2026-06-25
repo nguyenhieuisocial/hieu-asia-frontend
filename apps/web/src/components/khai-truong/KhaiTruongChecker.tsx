@@ -19,6 +19,10 @@ import {
 } from '@/lib/khai-truong';
 import { track } from '@/lib/analytics';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
+import {
+  DownloadToolPdfButton,
+  type ToolPdfPayload,
+} from '@/components/tools/DownloadToolPdfButton';
 
 const VERDICT_CLASS: Record<OpeningYearResult['verdict'], string> = {
   'thuan': 'text-emerald-700 dark:text-emerald-300',
@@ -136,6 +140,85 @@ export function KhaiTruongChecker({
                 cho chủ {ownerResult.birthYear}: {goodYears.join(', ')}.
               </p>
             )}
+
+            <div className="flex flex-wrap gap-2">
+              <DownloadToolPdfButton
+                source="pdf-khai-truong"
+                payload={() => {
+                  if (!ownerResult) return null;
+                  const r = ownerResult;
+                  const sections: ToolPdfPayload['sections'] = [
+                    {
+                      heading: 'Thông tin xem tuổi',
+                      rows: [
+                        {
+                          label: 'Chủ kinh doanh',
+                          value: `${r.birthYear} — ${r.birthCanChi.name} (tuổi ${r.birthCanChi.animal})`,
+                        },
+                        {
+                          label: 'Năm dự định khai trương',
+                          value: `${r.targetYear} — ${r.targetCanChi.name}`,
+                        },
+                      ],
+                    },
+                    {
+                      heading: 'Các hạn dân gian xét cho khai trương',
+                      rows: [
+                        {
+                          label: 'Tam Tai',
+                          value: r.tamTai.isTamTai
+                            ? `Vướng — năm ${r.tamTai.yearChi} thuộc 3 năm Tam Tai (${r.tamTai.tamTaiChis.join(', ')}) của tuổi ${r.tamTai.birthChi}`
+                            : `Không vướng — năm ${r.tamTai.yearChi} ngoài 3 năm Tam Tai (${r.tamTai.tamTaiChis.join(', ')}) của tuổi ${r.tamTai.birthChi}`,
+                        },
+                        {
+                          label: 'Xung Thái Tuế',
+                          value: r.xung.isXung
+                            ? `Có — chi năm ${r.xung.yearChi} lục xung chi tuổi ${r.xung.birthChi}`
+                            : r.xung.isNamTuoi
+                              ? `Năm tuổi — chi năm ${r.xung.yearChi} trùng chi tuổi (lưu ý nhẹ)`
+                              : `Không xung — chi năm ${r.xung.yearChi} không xung chi tuổi ${r.xung.birthChi}`,
+                        },
+                        {
+                          label: 'Kim Lâu / Hoang Ốc',
+                          value: 'Không xét (dành cho xây nhà và cưới hỏi)',
+                        },
+                      ],
+                    },
+                    {
+                      heading: 'Cách tính từng bước',
+                      text: r.reasons.join('\n'),
+                    },
+                  ];
+
+                  if (goodYears.length > 0 && r.verdict !== 'thuan') {
+                    sections.push({
+                      heading: 'Năm hợp tuổi khai trương gần nhất',
+                      text: `Cho chủ sinh năm ${r.birthYear}, các năm gần nhất không vướng Tam Tai hay xung tuổi: ${goodYears.join(', ')}.`,
+                    });
+                  }
+
+                  sections.push({
+                    heading: 'Lưu ý',
+                    text:
+                      'Tam Tai và xung Thái Tuế là tập tục dân gian để tham khảo, không phải quy luật khoa học. ' +
+                      'Bản tính này minh bạch từng bước để bạn tự quyết định — không doạ, không bán "giải hạn". ' +
+                      'Nếu chủ sinh tháng 1–2 dương trước Tết, năm âm là năm liền trước (nhập lùi 1 năm). ' +
+                      'Bước tiếp theo là chọn NGÀY GIỜ khai trương đẹp tại hieu.asia/xem-ngay/khai-truong.',
+                  });
+
+                  return {
+                    title: 'Xem tuổi khai trương — hieu.asia',
+                    subtitle: `Chủ ${r.birthYear} (${r.birthCanChi.name}) · khai trương năm ${r.targetYear} (${r.targetCanChi.name})`,
+                    hero: {
+                      big: `${VERDICT_EMOJI[r.verdict]} ${OPENING_VERDICT_LABEL[r.verdict]}`,
+                      small: `Năm ${r.targetYear} cho chủ tuổi ${r.birthCanChi.animal} (${r.birthYear})`,
+                    },
+                    sections,
+                    cta: { url: 'https://hieu.asia/xem-ngay/khai-truong' },
+                  };
+                }}
+              />
+            </div>
 
             <p className="text-xs leading-relaxed text-muted-foreground">
               Tam Tai và xung Thái Tuế là <strong>tập tục dân gian</strong>, không phải quy luật

@@ -19,6 +19,10 @@ import {
 } from '@/lib/xem-tuoi-cuoi';
 import { track } from '@/lib/analytics';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
+import {
+  DownloadToolPdfButton,
+  type ToolPdfPayload,
+} from '@/components/tools/DownloadToolPdfButton';
 
 const VERDICT_CLASS: Record<WeddingYearResult['verdict'], string> = {
   'thuan': 'text-emerald-700 dark:text-emerald-300',
@@ -217,6 +221,96 @@ export function XemTuoiCuoiChecker({
                   </Button>
                 </div>
               )}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <DownloadToolPdfButton
+                source="pdf-xem-tuoi-cuoi"
+                payload={() => {
+                  if (!brideResult) return null;
+
+                  const verdictLine = (r: WeddingYearResult) =>
+                    `${VERDICT_EMOJI[r.verdict]} ${VERDICT_LABEL[r.verdict]}`;
+
+                  // Từng hạn dân gian → một dòng kết quả thật từ engine (không bịa).
+                  const checkRows = (
+                    r: WeddingYearResult,
+                  ): NonNullable<ToolPdfPayload['sections'][number]['rows']> => [
+                    {
+                      label: 'Kim Lâu (tuổi mụ chia 9)',
+                      value: r.kimLau.type
+                        ? `Phạm ${r.kimLau.type} — tuổi mụ ${r.kimLau.ageMu}, dư ${r.kimLau.remainder}`
+                        : `Không phạm — tuổi mụ ${r.kimLau.ageMu}, dư ${r.kimLau.remainder}`,
+                    },
+                    {
+                      label: 'Tam Tai',
+                      value: r.tamTai.isTamTai
+                        ? `Phạm — năm ${r.tamTai.yearChi} thuộc nhóm Tam Tai (${r.tamTai.tamTaiChis.join(', ')})`
+                        : `Không phạm — năm ${r.tamTai.yearChi} ngoài nhóm (${r.tamTai.tamTaiChis.join(', ')})`,
+                    },
+                    {
+                      label: 'Xung năm (lục xung)',
+                      value: r.xung.isXung
+                        ? `Lục xung — chi năm ${r.xung.yearChi} xung chi tuổi ${r.xung.birthChi}`
+                        : r.xung.isNamTuoi
+                          ? `Năm tuổi (trùng chi ${r.xung.yearChi}) — chỉ là lưu ý nhẹ`
+                          : `Không xung — chi năm ${r.xung.yearChi}, chi tuổi ${r.xung.birthChi}`,
+                    },
+                  ];
+
+                  const sections: ToolPdfPayload['sections'] = [
+                    {
+                      heading: `Cô dâu sinh năm ${brideResult.birthYear} (${brideResult.birthCanChi.name} — tuổi ${brideResult.birthCanChi.animal})`,
+                      rows: checkRows(brideResult),
+                    },
+                    {
+                      heading: 'Diễn giải từng bước (cô dâu)',
+                      text: brideResult.reasons.join('\n'),
+                    },
+                  ];
+
+                  if (groomResult) {
+                    sections.push(
+                      {
+                        heading: `Chú rể sinh năm ${groomResult.birthYear} (${groomResult.birthCanChi.name} — tuổi ${groomResult.birthCanChi.animal}) — ${verdictLine(groomResult)}`,
+                        rows: checkRows(groomResult),
+                      },
+                      {
+                        heading: 'Diễn giải từng bước (chú rể)',
+                        text: groomResult.reasons.join('\n'),
+                      },
+                    );
+                  }
+
+                  if (goodYears.length > 0 && brideResult.verdict !== 'thuan') {
+                    sections.push({
+                      heading: 'Vẫn cưới được — chọn năm không phạm',
+                      text:
+                        `Nếu muốn tránh hạn thường xét, các năm gần nhất không phạm cho cô dâu ${brideResult.birthYear} là: ` +
+                        `${goodYears.join(', ')}.\n` +
+                        'Đây là tập tục dân gian để tham khảo — bạn hoàn toàn có thể cưới vào năm mình muốn.',
+                    });
+                  }
+
+                  sections.push({
+                    heading: 'Lưu ý',
+                    text:
+                      'Kim Lâu, Tam Tai hay xung năm là tập tục dân gian, không phải quy luật khoa học. ' +
+                      'Chúng tôi tính minh bạch từng bước để bạn biết rõ vì sao có kết luận đó và tự quyết định — không doạ, không bán "giải hạn". ' +
+                      'Tuổi mụ tính theo năm âm lịch; nếu sinh tháng 1–2 trước Tết, năm âm của bạn là năm liền trước năm dương.',
+                  });
+
+                  return {
+                    title: 'Xem tuổi cưới — hieu.asia',
+                    subtitle: `Cô dâu ${brideResult.birthYear}${groomResult ? ` · chú rể ${groomResult.birthYear}` : ''} · dự định cưới năm ${brideResult.targetYear} (${brideResult.targetCanChi.name})`,
+                    hero: {
+                      big: verdictLine(brideResult),
+                      small: `Cô dâu ${brideResult.birthYear} cưới năm ${brideResult.targetYear} (${brideResult.targetCanChi.name})`,
+                    },
+                    sections,
+                  };
+                }}
+              />
             </div>
           </div>
         )}
