@@ -328,9 +328,9 @@ export function SunMoonChecker({ initialDate, initialTime }: SunMoonCheckerProps
               </p>
             </div>
 
-            {/* 7 hành tinh */}
+            {/* 8 hành tinh (Sao Thủy → Diêm Vương) */}
             <div className="rounded-xl border border-border bg-card/40 p-4">
-              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">Bảy hành tinh</p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">Tám hành tinh</p>
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
                 {chart.planets.map(({ planet, position, retrograde }) => (
                   <div

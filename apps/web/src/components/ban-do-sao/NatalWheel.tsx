@@ -15,7 +15,7 @@ import { ZODIAC, type NatalChart } from '@/lib/western-astrology';
  *     có nơi sinh → mặc định 0° Bạch Dương ở trái.
  *   - Kinh độ tăng dần NGƯỢC chiều kim đồng hồ (chuẩn natal).
  *   - Vành ngoài: 12 cung (mỗi 30°), tô nhạt theo nguyên tố; biểu tượng cung.
- *   - Vành trong: 10 thiên thể (Mặt Trời, Mặt Trăng, cung Mọc, 7 hành tinh)
+ *   - Vành trong: 11 thiên thể (Mặt Trời, Mặt Trăng, cung Mọc, 8 hành tinh — gồm Diêm Vương)
  *     đặt đúng kinh độ, có vạch dẫn tới vị trí thật; tự né khi sát nhau.
  *
  * Pure SVG, server-component safe (không state/hook, không asset ngoài).
