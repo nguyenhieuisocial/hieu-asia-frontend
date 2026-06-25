@@ -114,6 +114,7 @@ const TOOLS: ExplorerTool[] = [
   { cat: 'xem-tuoi', href: '/xem-tuoi-lam-nha', emoji: '🏠', name: 'Xem Tuổi Làm Nhà', desc: 'Năm này có được tuổi xây/sửa nhà không? Tính Kim Lâu, Hoang Ốc, Tam Tai — kèm cách kiểm tra người mượn tuổi.' },
   { cat: 'xem-tuoi', href: '/khai-truong', emoji: '🎉', name: 'Xem Tuổi Khai Trương', desc: 'Năm này có hợp tuổi khai trương / mở hàng không? Tính Tam Tai, xung Thái Tuế theo tuổi chủ — minh bạch từng bước.' },
   { cat: 'xem-tuoi', href: '/tam-tai', emoji: '🗓️', name: 'Tam Tai', desc: 'Tuổi nào phạm Tam Tai và vào những năm nào? Tra theo nhóm tam hợp năm sinh — phong tục để tham khảo, không hù dọa.' },
+  { cat: 'xem-tuoi', href: '/kim-lau', emoji: '💍', name: 'Kim Lâu', desc: 'Tuổi Kim Lâu cô dâu là gì, năm nào phạm? Tra theo tuổi mụ (chia 9) — phong tục cưới hỏi để tham khảo, không hù dọa.' },
   { cat: 'xem-tuoi', href: '/xong-dat', emoji: '🧧', name: 'Tuổi Xông Đất', desc: 'Gợi ý tuổi xông đất Tết Đinh Mùi 2027 theo tam hợp, lục hợp & ngũ hành — minh bạch, tham khảo.' },
   { cat: 'xem-tuoi', href: '/hop-tuoi', emoji: '💑', name: 'Hợp Tuổi', desc: 'Kiểm tra hợp tuổi vợ chồng, xây dựng, xuất hành theo tam hợp.' },
   { cat: 'xem-tuoi', href: '/huong-nha', emoji: '🧭', name: 'Xem Hướng Nhà', desc: 'Hướng nhà hợp tuổi theo Bát Trạch (cung phi): 4 hướng tốt – 4 hướng tránh cho cửa, giường, bếp.' },
