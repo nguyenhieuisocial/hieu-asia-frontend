@@ -259,7 +259,7 @@ export default function AnnualPlanningPage() {
             </Link></Button>
             <Button asChild size="lg" variant="outline"><Link href="/ban-do">
               
-                Bản đồ — dashboard cá nhân
+                Bản đồ — bảng cá nhân
               
             </Link></Button>
             <Button asChild size="lg" variant="outline"><Link href="/decisions/new">
