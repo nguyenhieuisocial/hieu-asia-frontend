@@ -9,6 +9,7 @@ import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 import { ZODIAC } from '@/lib/hop-tuoi-pairs';
 import { buildConGiap2026, CON_GIAP_SLUGS, YEAR_RANGE } from '../con-giap-data';
@@ -87,6 +88,28 @@ export default async function TuVi2026ConGiapPage({
     faqPage(d.faqs),
   ];
 
+  const hanLines = [
+    d.isNamTuoi ? '• Năm tuổi (Bản Mệnh) — đúng con giáp của mình.' : '',
+    d.isXungThaiTue ? '• Xung Thái Tuế — năm dễ nhiều thay đổi, nên chủ động & cẩn trọng.' : '',
+    d.isTamTai ? `• Tam Tai — năm 2026 (nhóm ${d.tamTaiChis.join(', ')}).` : '',
+  ].filter(Boolean);
+  const pdfPayload: ToolPdfPayload = {
+    title: `Tử Vi 2026 (Bính Ngọ) — tuổi ${d.z.ten} — hieu.asia`,
+    subtitle: `Con ${d.animal} · ${d.relationLabel}`,
+    hero: { big: `Tử Vi 2026 — tuổi ${d.z.ten}`, small: `Con ${d.animal} · năm Bính Ngọ (Hỏa)` },
+    sections: [
+      { heading: 'Tổng quan năm 2026', text: d.verdictShort },
+      { heading: d.relationLabel, text: d.relationLine },
+      { heading: `Ngũ hành tuổi ${d.z.ten} với năm`, text: d.nguHanhLine },
+      ...(hanLines.length > 0 ? [{ heading: 'Hạn cần lưu ý (phong tục)', text: hanLines.join('\n') }] : []),
+      {
+        heading: 'Lưu ý',
+        text: 'Đây là gợi ý chung theo con giáp — vận thật còn tùy ngày giờ sinh và cách bạn hành động trong năm, không phải tiên đoán số mệnh.',
+      },
+    ],
+    cta: { text: 'Lập lá số Tử Vi của riêng tôi (miễn phí)', url: 'https://hieu.asia/onboarding?intent=tu-vi-2026' },
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
@@ -112,13 +135,14 @@ export default async function TuVi2026ConGiapPage({
           <p className="mt-5 text-base leading-relaxed text-foreground/80 sm:text-lg">
             {d.verdictShort}
           </p>
-          <div className="mt-7 flex flex-wrap gap-3">
+          <div className="mt-7 flex flex-wrap items-center gap-3">
             <Button asChild size="lg">
               <Link href="/onboarding?intent=tu-vi-2026">Xem tử vi 2026 của riêng tôi</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
               <Link href="/tu-vi-2026">Tổng quan năm Bính Ngọ</Link>
             </Button>
+            <DownloadToolPdfButton source="pdf-tu-vi-2026" label="Tải PDF tử vi 2026" payload={pdfPayload} />
           </div>
         </section>
 

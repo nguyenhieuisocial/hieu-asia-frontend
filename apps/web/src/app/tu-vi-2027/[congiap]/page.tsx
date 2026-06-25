@@ -18,6 +18,7 @@ import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 import { ZODIAC } from '@/lib/hop-tuoi-pairs';
 import { buildConGiap2027, CON_GIAP_SLUGS, YEAR_RANGE } from '../con-giap-data';
@@ -110,6 +111,31 @@ export default async function TuVi2027ConGiapPage({
       ]
     : [];
 
+  const pdfNote =
+    'Đây là gợi ý chung theo con giáp — vận thật còn tùy ngày giờ sinh và cách bạn hành động trong năm, không phải tiên đoán số mệnh.';
+  const pdfPayload: ToolPdfPayload = {
+    title: `Tử Vi 2027 (Đinh Mùi) — tuổi ${d.z.ten} — hieu.asia`,
+    subtitle: `Con ${d.animal} · ${d.relationLabel}`,
+    hero: { big: `Tử Vi 2027 — tuổi ${d.z.ten}`, small: `Con ${d.animal} · năm Đinh Mùi (Thổ)` },
+    sections: fc
+      ? [
+          { heading: 'Tổng quan năm Đinh Mùi 2027', text: fc.tongQuan },
+          { heading: 'Sự nghiệp', text: fc.suNghiep },
+          { heading: 'Tài lộc', text: fc.taiLoc },
+          { heading: 'Tình cảm & gia đạo', text: fc.tinhDuyen },
+          { heading: 'Sức khoẻ', text: fc.sucKhoe },
+          { heading: 'Lời khuyên', text: fc.loiKhuyen },
+          { heading: 'Lưu ý', text: pdfNote },
+        ]
+      : [
+          { heading: 'Tổng quan năm 2027', text: d.verdictShort },
+          { heading: d.relationLabel, text: d.relationLine },
+          { heading: `Ngũ hành tuổi ${d.z.ten} với năm`, text: d.nguHanhLine },
+          { heading: 'Lưu ý', text: pdfNote },
+        ],
+    cta: { text: 'Lập lá số Tử Vi của riêng tôi (miễn phí)', url: 'https://hieu.asia/onboarding?intent=tu-vi-2027' },
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
@@ -135,13 +161,14 @@ export default async function TuVi2027ConGiapPage({
           <p className="mt-5 text-base leading-relaxed text-foreground/80 sm:text-lg">
             {d.verdictShort}
           </p>
-          <div className="mt-7 flex flex-wrap gap-3">
+          <div className="mt-7 flex flex-wrap items-center gap-3">
             <Button asChild size="lg">
               <Link href="/onboarding?intent=tu-vi-2027">Xem tử vi 2027 của riêng tôi</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
               <Link href="/tu-vi-2027">Tổng quan năm Đinh Mùi</Link>
             </Button>
+            <DownloadToolPdfButton source="pdf-tu-vi-2027" label="Tải PDF tử vi 2027" payload={pdfPayload} />
           </div>
         </section>
 
