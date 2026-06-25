@@ -13,6 +13,7 @@ import {
 } from '@hieu-asia/ui';
 import { computeXuatHanh, type XuatHanhResult } from '@/lib/xuat-hanh';
 import { getVietnamTodayISO } from '@/lib/vn-date';
+import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 
 function parseISO(value: string): { d: number; m: number; y: number } | null {
   const parts = value.split('-').map(Number);
@@ -116,6 +117,43 @@ export function XuatHanhChecker() {
               <strong>phong tục cầu may</strong> để tham khảo, không phải lời phán số mệnh — đi đúng hướng
               để bắt đầu ngày với tâm thế tích cực, không đi được cũng không sao.
             </p>
+
+            <DownloadToolPdfButton
+              source="pdf-xuat-hanh"
+              payload={() => {
+                if (!result || !parsed) return null;
+                const dateLabel = `${parsed.d}/${parsed.m}/${parsed.y}`;
+                const hours = result.goodHours
+                  .map((h) => `Giờ ${h.branch} (${h.canChi}) — ${h.range}`)
+                  .join('\n');
+                return {
+                  title: 'Hướng & giờ xuất hành',
+                  subtitle: `Ngày ${dateLabel} — ${result.dayCanChi.label}`,
+                  hero: { big: dateLabel, small: `Ngày ${result.dayCanChi.label}` },
+                  sections: [
+                    {
+                      heading: 'Hướng xuất hành theo thiên can của ngày',
+                      rows: [
+                        { label: 'Hỷ Thần — cầu may mắn, hỉ sự', value: result.hyThan },
+                        { label: 'Tài Thần — cầu tài lộc', value: result.taiThan },
+                      ],
+                    },
+                    {
+                      heading: 'Giờ hoàng đạo (giờ tốt để xuất hành)',
+                      text:
+                        hours.length > 0
+                          ? hours
+                          : 'Ngày này không có giờ hoàng đạo nổi bật để xuất hành.',
+                    },
+                    {
+                      heading: 'Cách dùng',
+                      text:
+                        'Hỷ Thần / Tài Thần tính theo thiên can của ngày (chu kỳ 10 ngày), không phụ thuộc tuổi người đi — ai tra cũng ra như nhau. Hướng Tài Thần có vài phái tính khác nhau; ở đây dùng bản phổ biến trong lịch vạn niên Việt Nam.\n\nĐây là phong tục cầu may để tham khảo, không phải lời phán số mệnh — đi đúng hướng để bắt đầu ngày với tâm thế tích cực, không đi được cũng không sao.',
+                    },
+                  ],
+                };
+              }}
+            />
           </div>
         )}
       </CardContent>

@@ -18,6 +18,10 @@ import {
   type KiengKyKey,
 } from '@/lib/ngay-kieng-ky';
 import { getVietnamTodayISO } from '@/lib/vn-date';
+import {
+  DownloadToolPdfButton,
+  type ToolPdfPayload,
+} from '@/components/tools/DownloadToolPdfButton';
 
 const HIT_BADGE: Record<KiengKyKey, string> = {
   tam_nuong:
@@ -168,6 +172,79 @@ export function KiengKyChecker() {
               hỏi, khai trương, động thổ, đi xa); việc thường ngày không cần kiêng. Sự chuẩn bị kỹ
               và cái tâm khi làm việc vẫn là điều quan trọng nhất.
             </p>
+
+            <div className="pt-1">
+              <DownloadToolPdfButton
+                source="pdf-ngay-kieng-ky"
+                payload={() => {
+                  if (!result) return null;
+                  const dateStr = `${result.solar.day}/${result.solar.month}/${result.solar.year}`;
+                  const lunarStr = `ngày ${result.lunar.day} tháng ${result.lunar.month}${
+                    result.lunar.leap ? ' (nhuận)' : ''
+                  } âm lịch`;
+                  const hasHits = result.hits.length > 0;
+
+                  const sections: ToolPdfPayload['sections'] = [];
+
+                  // Đối chiếu từng loại ngày kiêng phổ biến — ngày này có rơi vào không.
+                  sections.push({
+                    heading: 'Đối chiếu các ngày kiêng kỵ phổ biến',
+                    rows: (Object.keys(KIENG_KY_INFO) as KiengKyKey[]).map((k) => ({
+                      label: KIENG_KY_INFO[k].name,
+                      value: result.hits.includes(k) ? 'Có rơi vào' : 'Không',
+                    })),
+                  });
+
+                  // Giải thích chi tiết các loại mà ngày này rơi vào.
+                  for (const k of result.hits) {
+                    const info = KIENG_KY_INFO[k];
+                    sections.push({
+                      heading: info.name,
+                      text: `${info.summary}\n\nÁp dụng: ${info.days}\n\nGợi ý: ${info.advice}`,
+                    });
+                  }
+
+                  // Các ngày kiêng kỵ khác trong cùng tháng dương lịch (nếu có).
+                  if (monthList.length > 0) {
+                    sections.push({
+                      heading: `Các ngày kiêng kỵ trong tháng ${result.solar.month}/${result.solar.year} (dương lịch)`,
+                      text: monthList
+                        .map(
+                          (r) =>
+                            `${r.solar.day}/${r.solar.month}: ${r.hits
+                              .map((k) => KIENG_KY_INFO[k].name)
+                              .join(', ')}`,
+                        )
+                        .join('\n'),
+                    });
+                  }
+
+                  // Ghi chú phong tục — tham khảo, không hù dọa.
+                  sections.push({
+                    heading: 'Lưu ý',
+                    text: 'Đây là cách tra cứu theo phong tục dân gian, mang tính tham khảo — không phải lời phán số mệnh. Ngày kiêng chủ yếu để cân nhắc với việc trọng đại (cưới hỏi, khai trương, động thổ, đi xa); việc thường ngày không cần kiêng. Sự chuẩn bị kỹ và cái tâm khi làm việc vẫn là điều quan trọng nhất.',
+                  });
+
+                  return {
+                    title: 'Tra ngày kiêng kỵ',
+                    subtitle: `${dateStr} dương lịch — tức ${lunarStr}`,
+                    hero: hasHits
+                      ? {
+                          big: 'Ngày có kiêng kỵ',
+                          small: `Rơi vào: ${result.hits
+                            .map((k) => KIENG_KY_INFO[k].name)
+                            .join(', ')}`,
+                        }
+                      : {
+                          big: 'Ngày thường',
+                          small:
+                            'Không rơi vào các ngày kiêng kỵ phổ biến (Tam Nương, Nguyệt Kỵ, Dương Công Kỵ Nhật).',
+                        },
+                    sections,
+                  };
+                }}
+              />
+            </div>
           </div>
         )}
       </CardContent>
