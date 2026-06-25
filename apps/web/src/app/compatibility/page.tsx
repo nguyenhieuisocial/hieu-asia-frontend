@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, RadioGroup, RadioGroupItem } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { safeJson } from '@/lib/safe-json';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
@@ -282,6 +283,42 @@ export default function CompatibilityPage() {
                 title="So sánh tương hợp"
                 text="Mình vừa so sánh mức độ hợp nhau trên hieu.asia — bạn thử nhé!"
                 trackId="compatibility"
+              />
+              <DownloadToolPdfButton
+                source="pdf-compatibility"
+                payload={() => {
+                  if (!report) return null;
+                  return {
+                    title: 'So sánh 2 người — hieu.asia',
+                    subtitle: `${report.profileA.display} (${report.profileA.zodiac}) × ${report.profileB.display} (${report.profileB.zodiac})`,
+                    hero: {
+                      big: `${report.overallScore}/10`,
+                      small: report.summary,
+                    },
+                    sections: [
+                      {
+                        heading: 'Năm chiều cộng hưởng',
+                        rows: report.scores.map((s) => ({
+                          label: `${s.dimension} · ${s.signal}`,
+                          value: `${s.score}/10`,
+                          bar: Math.max(0, Math.min(100, s.score * 10)),
+                        })),
+                      },
+                      ...report.communication.map((tip, i) => ({
+                        heading: `Gợi ý giao tiếp ${i + 1}`,
+                        text: `Dễ trục trặc: ${tip.vulnerability}\n\nCách diễn đạt lại: ${tip.reframe}\n\nThử nói: “${tip.suggestedPhrase}”`,
+                      })),
+                      ...(report.caveats.length > 0
+                        ? [
+                            {
+                              heading: 'Lưu ý',
+                              text: report.caveats.map((c) => `• ${c}`).join('\n'),
+                            },
+                          ]
+                        : []),
+                    ],
+                  };
+                }}
               />
             </div>
 

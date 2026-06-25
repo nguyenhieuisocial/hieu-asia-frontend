@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, RadioGroup, RadioGroupItem } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { safeJson } from '@/lib/safe-json';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
@@ -346,12 +347,53 @@ export default function CareerFitPage() {
               </CardContent>
             </Card>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <ShareResultButton
                 path="/career-fit"
                 title="Nhóm nghề phù hợp với tôi"
                 text="Mình vừa tìm nhóm nghề phù hợp trên hieu.asia — bạn thử xem!"
                 trackId="career-fit"
+              />
+              <DownloadToolPdfButton
+                source="pdf-career-fit"
+                payload={() => {
+                  if (!report) return null;
+                  const top = report.topMatches[0];
+                  return {
+                    title: 'Career Fit — Nhóm nghề phù hợp · hieu.asia',
+                    subtitle: `Mệnh theo địa chi năm sinh: ${report.elementOfZodiac}`,
+                    hero: top
+                      ? {
+                          big: top.category,
+                          small: `Nhóm hợp nhất với cách bạn vận hành — fit ${top.fitScore}/10`,
+                        }
+                      : undefined,
+                    sections: [
+                      { heading: 'Tổng quan', text: report.summary },
+                      {
+                        heading: 'Toàn bộ 5 nhóm — xếp hạng',
+                        rows: report.allCategories.map((c) => ({
+                          label: c.category,
+                          value: `${c.fitScore}/10`,
+                          bar: Math.max(0, Math.min(100, c.fitScore * 10)),
+                        })),
+                      },
+                      ...report.topMatches.map((m) => ({
+                        heading: `${m.category} — fit ${m.fitScore}/10`,
+                        text: [
+                          m.examples.length ? `Ví dụ: ${m.examples.join(', ')}` : '',
+                          m.rationale ? `Vì sao hợp: ${m.rationale}` : '',
+                          m.watchOut ? `Cẩn trọng: ${m.watchOut}` : '',
+                        ]
+                          .filter(Boolean)
+                          .join('\n\n'),
+                      })),
+                      ...(report.caveats.length
+                        ? [{ heading: 'Lưu ý', text: report.caveats.join('\n') }]
+                        : []),
+                    ],
+                  };
+                }}
               />
             </div>
 
