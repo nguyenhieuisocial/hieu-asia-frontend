@@ -87,7 +87,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: 'Cân xương khác gì Tử Vi, Bát Tự?',
-    a: 'Cân xương là phép tra cứu nhanh ra một con số tổng kèm bài thơ — đơn giản, một chiều. Tử Vi lập lá số 12 cung với hơn trăm sao; Bát Tự phân tích cân bằng ngũ hành của tám chữ can chi — cả hai đa chiều và cá nhân hơn nhiều. Thử cân xương cho biết, rồi đào sâu bằng lá số là cách dùng hợp lý.',
+    a: 'Cân xương là phép tra cứu nhanh ra một con số tổng kèm bài thơ — đơn giản, một chiều. Tử Vi lập lá số 12 cung với hơn trăm sao; Bát Tự đọc Nhật Chủ (chính bạn) và tương quan ngũ hành của tám chữ can chi để thấy thiên hướng và thời điểm — cả hai đa chiều và cá nhân hơn nhiều. Thử cân xương cho biết, rồi đào sâu bằng lá số là cách dùng hợp lý.',
   },
 ];
 

@@ -24,9 +24,9 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Bản đồ của bạn — dashboard cá nhân tuần/tháng/năm',
+  title: 'Bản đồ của bạn — gợi ý cá nhân theo tuần/tháng/năm',
   description:
-    'Insight cá nhân hoá theo ngày, tuần, tháng và năm dựa trên lá số của bạn. Premium subscription đồng hành mỗi tuần.',
+    'Gợi ý cá nhân hoá theo ngày, tuần, tháng và năm dựa trên lá số của bạn. Gói đồng hành cập nhật mỗi tuần.',
   alternates: { canonical: 'https://hieu.asia/ban-do' },
 };
 
@@ -129,11 +129,11 @@ export default function BanDoPage() {
             Bản đồ của bạn, đồng hành mỗi tuần
           </h1>
           <p className="mt-4 text-lg text-foreground/80 max-w-3xl">
-            Bản đồ này theo dõi bạn theo 4 nhịp — hôm nay, tuần này, tháng này, năm nay. Premium
+            Bản đồ này theo dõi bạn theo 4 nhịp — hôm nay, tuần này, tháng này, năm nay. Gói
             đồng hành sẽ cập nhật mỗi tuần theo lá số riêng của bạn.
           </p>
           <div className="mt-6 inline-flex items-center gap-2 rounded-lg border border-amber-700/40 bg-amber-900/10 px-4 py-2 text-amber-200 text-sm">
-            <span>📍 Demo content — chưa kết nối lá số của bạn</span>
+            <span>📍 Nội dung minh hoạ — chưa kết nối lá số của bạn</span>
           </div>
         </section>
 
@@ -154,7 +154,7 @@ export default function BanDoPage() {
             <CardContent className="space-y-5 text-foreground/85">
               <div>
                 <h3 className="text-sm font-medium text-gold-700 uppercase tracking-wide mb-1">
-                  Insight ngắn
+                  Gợi ý ngắn
                 </h3>
                 <p>
                   Hôm nay là ngày năng lượng tập trung. Bạn dễ hoàn thành một việc khó nếu chịu
@@ -199,7 +199,7 @@ export default function BanDoPage() {
                 <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
                   Hành động chính
                 </div>
-                <p>Lên lịch 2 khối deep-work 2h, một việc khó mỗi khối.</p>
+                <p>Lên lịch 2 khối tập trung sâu 2 giờ, một việc khó mỗi khối.</p>
               </div>
               <div>
                 <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">

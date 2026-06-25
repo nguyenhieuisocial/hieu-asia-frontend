@@ -67,7 +67,7 @@ export async function generateMetadata(
     alternates: { canonical: url },
     openGraph: {
       title: pillar.topic,
-      description: 'Cẩm nang chuyên đề trên hieu.asia — viết bởi multi-LLM, founder kiểm duyệt.',
+      description: 'Cẩm nang chuyên đề trên hieu.asia — đối chiếu nhiều nguồn, biên tập tay, nói thẳng giới hạn.',
       url,
       type: 'article',
       publishedTime: pillar.published_at ?? undefined,
@@ -195,8 +195,7 @@ export default async function PillarPage({
           </h1>
           <p className="mt-3 font-mono text-xs text-muted-foreground">
             Xuất bản {formatDate(pillar.published_at)} · cập nhật{' '}
-            {formatDate(pillar.updated_at)} · bản LLM được judge chọn:{' '}
-            <code>{pillar.judge_pick}</code>
+            {formatDate(pillar.updated_at)} · biên tập tay bởi founder
           </p>
 
           <div

@@ -113,12 +113,12 @@ export const COMPARISONS: readonly Comparison[] = [
       {
         aspect: 'Trực quan',
         a: 'Lá số nhiều sao, sinh động, nhiều lớp thông tin',
-        b: 'Tám chữ gọn, thiên về cân bằng ngũ hành',
+        b: 'Tám chữ gọn quanh Nhật Chủ — chính là bạn',
       },
       {
         aspect: 'Mạnh ở',
         a: 'Bức tranh chi tiết theo từng lĩnh vực (Mệnh, Quan, Tài, Phối…)',
-        b: 'Dụng thần, cân bằng ngũ hành, xem đại vận theo chu kỳ',
+        b: 'Nhật Chủ, tương quan ngũ hành & thời điểm theo đại vận',
       },
       {
         aspect: 'Dữ liệu cần',
@@ -133,7 +133,7 @@ export const COMPARISONS: readonly Comparison[] = [
     ],
     whenA: 'Khi bạn muốn xem chi tiết từng khía cạnh cuộc đời theo từng cung.',
     whenB:
-      'Khi bạn muốn hiểu cốt lõi ngũ hành, dụng thần và chu kỳ vận (đại vận).',
+      'Khi bạn muốn hiểu Nhật Chủ (chính bạn) và thời điểm thuận theo chu kỳ vận (đại vận).',
     bottomLine:
       'Hai cách nhìn bổ sung nhau; nhiều người xem cả hai để đối chiếu. hieu.asia trình bày như công cụ tham khảo và chiêm nghiệm để hiểu mình rõ hơn — không phán định số phận.',
     faqs: [
@@ -147,7 +147,7 @@ export const COMPARISONS: readonly Comparison[] = [
       },
       {
         q: 'Nên xem cái nào?',
-        a: 'Muốn chi tiết theo từng lĩnh vực thì xem Tử Vi; muốn cốt lõi ngũ hành và chu kỳ vận thì xem Bát Tự. Lý tưởng là xem cả hai rồi đối chiếu.',
+        a: 'Muốn chi tiết theo từng lĩnh vực thì xem Tử Vi; muốn hiểu Nhật Chủ và thời điểm theo chu kỳ vận thì xem Bát Tự. Lý tưởng là xem cả hai rồi đối chiếu.',
       },
     ],
   },

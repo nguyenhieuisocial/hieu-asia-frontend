@@ -28,7 +28,7 @@ export const revalidate = 300; // 5 minutes — newly published pillars surface 
 export const metadata: Metadata = {
   title: 'Cẩm nang hieu.asia — Tử Vi, Bát Tự, MBTI, Thần Số Học',
   description:
-    'Cẩm nang chuyên đề về Tử Vi, Bát Tự, MBTI và Thần Số Học cho người Việt hiện đại. Viết bởi multi-LLM (Claude + GPT + Gemini), founder kiểm duyệt từng bài.',
+    'Cẩm nang chuyên đề về Tử Vi, Bát Tự, MBTI và Thần Số Học — viết dễ hiểu, đối chiếu nhiều nguồn và biên tập tay, nói thẳng giới hạn thay vì phán số mệnh.',
   alternates: { canonical: 'https://hieu.asia/cam-nang' },
   openGraph: {
     title: 'Cẩm nang hieu.asia',
@@ -87,7 +87,7 @@ export default async function CamNangIndexPage() {
           webPage({
             name: 'Cẩm nang hieu.asia — Tử Vi, Bát Tự, MBTI, Thần Số Học',
             description:
-              'Cẩm nang chuyên đề về Tử Vi, Bát Tự, MBTI và Thần Số Học cho người Việt hiện đại. Viết bởi multi-LLM (Claude + GPT + Gemini), founder kiểm duyệt từng bài.',
+              'Cẩm nang chuyên đề về Tử Vi, Bát Tự, MBTI và Thần Số Học — viết dễ hiểu, đối chiếu nhiều nguồn và biên tập tay, nói thẳng giới hạn thay vì phán số mệnh.',
             url: '/cam-nang',
           }),
           breadcrumb([
@@ -107,12 +107,12 @@ export default async function CamNangIndexPage() {
                 Cẩm nang · hieu.asia
               </p>
               <h1 className="mt-2 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
-                Chuyên đề cho người Việt hiện đại
+                Chuyên đề Tử Vi, Bát Tự &amp; tâm lý hiện đại
               </h1>
               <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
-                Mỗi bài cẩm nang được viết bởi ba LLM (Claude + GPT + Gemini),
-                rồi judge model chấm điểm để chọn bản tốt nhất. Founder kiểm
-                duyệt tay từng câu trước khi xuất bản.
+                Mỗi bài đối chiếu nhiều nguồn để hạn chế thiên lệch, rồi founder
+                biên tập tay từng câu — nói rõ đâu là kiến thức cổ học, đâu là
+                quan niệm tham khảo, thay vì phán chắc nịch.
               </p>
             </div>
           </div>

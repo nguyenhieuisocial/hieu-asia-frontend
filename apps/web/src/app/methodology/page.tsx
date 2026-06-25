@@ -158,7 +158,7 @@ const DATA_ROWS: {
     method: 'Bát Tự',
     data: 'ngày, giờ, nơi sinh',
     engine: 'Có',
-    ai: 'đối chiếu ngũ hành/thập thần',
+    ai: 'đọc Nhật Chủ & thời điểm theo ngũ hành',
     status: 'beta',
   },
   {
@@ -1008,7 +1008,7 @@ function Chapter4Content() {
           Human review
         </h3>
         <p className="mt-2 font-sans text-sm text-muted-foreground/70">
-          4 vai trò review, 4 trigger trigger, SLA xử lý phản hồi.
+          4 vai trò review, 4 trigger, SLA xử lý phản hồi.
         </p>
 
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
