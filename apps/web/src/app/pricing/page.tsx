@@ -72,9 +72,9 @@ const PRICING_FAQ: readonly FaqItem[] = [
     q: 'Có thể chuyển gói không?',
     a: (
       <p>
-        Có. Khi nâng cấp, chúng tôi tính prorate phần còn lại của kỳ hiện tại
-        — bạn chỉ trả phần chênh. Khi hạ cấp, thay đổi áp dụng từ kỳ thanh toán
-        kế tiếp; phần đã trả của kỳ hiện tại không bị mất.
+        Mỗi gói là một lần thanh toán theo giá cố định. Muốn lên gói cao hơn,
+        bạn mua gói mới; muốn xuống gói thấp hơn, cứ dùng hết gói hiện tại rồi
+        mua gói phù hợp. Quyền lợi đã mua của gói hiện tại không bị mất.
       </p>
     ),
   },
@@ -120,7 +120,7 @@ const PRICING_FAQ_SCHEMA: { q: string; a: string }[] = [
   },
   {
     q: 'Có thể chuyển gói không?',
-    a: 'Có. Khi nâng cấp, chúng tôi tính prorate phần còn lại của kỳ hiện tại — bạn chỉ trả phần chênh. Khi hạ cấp, thay đổi áp dụng từ kỳ thanh toán kế tiếp; phần đã trả của kỳ hiện tại không bị mất.',
+    a: 'Mỗi gói là một lần thanh toán theo giá cố định. Muốn lên gói cao hơn, bạn mua gói mới; muốn xuống gói thấp hơn, cứ dùng hết gói hiện tại rồi mua gói phù hợp. Quyền lợi đã mua của gói hiện tại không bị mất.',
   },
   {
     q: 'Phương thức thanh toán nào được hỗ trợ?',

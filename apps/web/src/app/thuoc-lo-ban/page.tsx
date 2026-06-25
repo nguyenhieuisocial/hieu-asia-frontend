@@ -19,6 +19,7 @@ import {
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
@@ -256,6 +257,64 @@ export default function ThuocLoBanPage() {
                   title="Thước Lỗ Ban"
                   text="Mình vừa tra thước Lỗ Ban trên hieu.asia — tiện lắm!"
                   trackId="thuoc-lo-ban"
+                />
+                <DownloadToolPdfButton
+                  source="pdf-thuoc-lo-ban"
+                  payload={() => {
+                    if (!result) return null;
+                    const detailRows: NonNullable<ToolPdfPayload['sections'][number]['rows']> = [
+                      { label: 'Kích thước đo', value: `${result.cm} cm` },
+                      { label: 'Loại thước', value: result.type_label },
+                      { label: 'Cung · ô con', value: `${result.block} · ${result.sub}` },
+                      { label: 'Cát / Hung', value: result.fortune },
+                      {
+                        label: 'Vị trí trong chu kỳ',
+                        value: `${result.position_in_cycle_cm.toFixed(1)} / ${result.cycle_length_cm} cm`,
+                      },
+                    ];
+                    const sections: ToolPdfPayload['sections'] = [
+                      { heading: 'Chi tiết tra cứu', rows: detailRows },
+                      { heading: 'Ý nghĩa cung', text: result.meaning },
+                    ];
+
+                    const suggestionRows: NonNullable<ToolPdfPayload['sections'][number]['rows']> = [];
+                    if (result.prev_good) {
+                      suggestionRows.push({
+                        label: `Nhỏ hơn — ${result.prev_good.cm} cm`,
+                        value: `${result.prev_good.block} · ${result.prev_good.sub}`,
+                      });
+                    }
+                    if (result.next_good) {
+                      suggestionRows.push({
+                        label: `Lớn hơn — ${result.next_good.cm} cm`,
+                        value: `${result.next_good.block} · ${result.next_good.sub}`,
+                      });
+                    }
+                    if (suggestionRows.length > 0) {
+                      sections.push({
+                        heading: 'Gợi ý kích thước tốt gần nhất',
+                        rows: suggestionRows,
+                      });
+                    }
+
+                    sections.push({
+                      heading: 'Ghi chú',
+                      text:
+                        'Thước Lỗ Ban là quy ước truyền thống của nghề mộc cổ truyền, mang tính tham khảo theo phong tục — ' +
+                        'không phải định luật. Kết quả phụ thuộc việc chọn đúng loại thước và cách đo (lọt lòng với cửa cổng, ' +
+                        'phủ bì với đồ vật). Công năng và độ chắc chắn của vật dụng vẫn quan trọng hơn cả.',
+                    });
+
+                    return {
+                      title: 'Thước Lỗ Ban',
+                      subtitle: `${result.cm} cm · ${result.type_label}`,
+                      hero: {
+                        big: `${result.cm} cm`,
+                        small: `${result.block} · ${result.sub} — ${result.fortune}`,
+                      },
+                      sections,
+                    };
+                  }}
                 />
               </div>
 

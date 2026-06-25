@@ -281,7 +281,7 @@ const REVIEW_TRIGGERS = [
 const PRIVACY_BULLETS = [
   'Chỉ thu thập dữ liệu cần để tạo báo cáo',
   'Ảnh palm là tuỳ chọn, tự xoá sau 7 ngày',
-  'Chat Mentor có retention 90 ngày',
+  'Chat Mentor được giữ đến khi bạn xoá tài khoản',
   'User có thể xuất/xoá dữ liệu bất cứ lúc nào',
   'Dữ liệu gửi vendor được tối thiểu hoá',
 ];

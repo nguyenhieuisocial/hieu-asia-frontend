@@ -9,6 +9,10 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@hieu-asia/ui';
 import { kimLauYearsAhead, type KimLauYear } from '@/lib/kim-lau-data';
+import {
+  DownloadToolPdfButton,
+  type ToolPdfPayload,
+} from '@/components/tools/DownloadToolPdfButton';
 
 export function KimLauFinder() {
   const [value, setValue] = useState('');
@@ -105,6 +109,64 @@ export function KimLauFinder() {
             </Link>
             .
           </p>
+
+          <DownloadToolPdfButton
+            source="pdf-kim-lau"
+            payload={() => {
+              if (!rows || rows.length === 0) return null;
+              const fc = rows.find((r) => !r.isKimLau);
+              const first = rows[0];
+              const fromYear = first?.year;
+              const toYear = rows[rows.length - 1]?.year;
+              const phamCount = rows.filter((r) => r.isKimLau).length;
+              const clearCount = rows.length - phamCount;
+
+              const hero = fc
+                ? {
+                    big: `Năm gần nhất KHÔNG phạm Kim Lâu: ${fc.year}`,
+                    small: `Tuổi mụ ${fc.ageMu} — cân nhắc cưới theo phong tục.`,
+                  }
+                : {
+                    big: `${rows.length} năm tới đều phạm Kim Lâu`,
+                    small: 'Có thể xem thêm các năm xa hơn ở công cụ Xem tuổi cưới.',
+                  };
+
+              const sections: ToolPdfPayload['sections'] = [
+                {
+                  heading: 'Các năm tới — năm nào phạm Kim Lâu?',
+                  rows: rows.map((r) => ({
+                    label: `Năm ${r.year} (tuổi mụ ${r.ageMu})`,
+                    value: r.isKimLau
+                      ? `Phạm — ${r.type ?? 'Kim Lâu'}`
+                      : 'Không phạm — thuận',
+                  })),
+                },
+                {
+                  heading: 'Cân nhắc theo phong tục',
+                  text:
+                    `Trong ${rows.length} năm tới (${fromYear ?? ''}–${toYear ?? ''}): ` +
+                    `${clearCount} năm không phạm, ${phamCount} năm phạm Kim Lâu.\n` +
+                    'Phạm Kim Lâu là lời nhắc cân nhắc theo phong tục cưới hỏi, KHÔNG phải điều cấm. ' +
+                    (fc
+                      ? `Cách nhẹ nhàng nhất là chọn một năm cô dâu không phạm — gần nhất là năm ${fc.year}.\n`
+                      : 'Bạn có thể cân nhắc các năm xa hơn hoặc tham khảo thêm các yếu tố khác.\n') +
+                    'Kim Lâu xét theo tuổi mụ của cô dâu (tuổi mụ chia 9 dư 1, 3, 6 hoặc 8 thì phạm). ' +
+                    'Đây là thông tin tham khảo để bạn tự quyết, không phải lời phán số mệnh.',
+                },
+              ];
+
+              return {
+                title: 'Tra Kim Lâu theo năm sinh cô dâu',
+                subtitle: 'Kết quả tính theo phong tục cưới hỏi — để bạn tham khảo.',
+                hero,
+                sections,
+                cta: {
+                  text: 'Xem Kim Lâu cùng Tam Tai & xung năm tại công cụ Xem tuổi cưới',
+                  url: 'https://hieu.asia/xem-tuoi-cuoi',
+                },
+              };
+            }}
+          />
         </div>
       )}
     </div>
