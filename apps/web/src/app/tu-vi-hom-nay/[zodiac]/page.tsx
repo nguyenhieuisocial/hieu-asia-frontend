@@ -6,6 +6,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { ExpertContent, ExpertTerm } from '@/components/reading/ModeContent';
 import { getZodiacDailyOpener } from '@/lib/daily-opener';
 import { isGenericSummary } from '@/lib/zodiac-blurb';
+import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 600;
@@ -123,6 +124,44 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
   const label = ZODIAC_LABEL[zodiac] ?? zodiac;
   const icon = ZODIAC_ICON[zodiac] ?? '🔮';
 
+  const bar = (s: number) => Math.max(0, Math.min(100, s * 10));
+  const pdfPayload: ToolPdfPayload | null = h
+    ? {
+        title: `Tử Vi tuổi ${label} hôm nay — hieu.asia`,
+        subtitle: `${h.date}${h.lunar_date ? ` · ${h.lunar_date}` : ''} · tổng quan ${h.overall.score}/10`,
+        hero: { big: `${icon} Tuổi ${label}`, small: `Tổng quan hôm nay: ${h.overall.score}/10` },
+        sections: [
+          {
+            heading: 'Tổng quan hôm nay',
+            text: getZodiacDailyOpener(zodiac, h.overall.score) + (h.detailed_text ? `\n\n${h.detailed_text}` : ''),
+          },
+          {
+            heading: 'Bốn lĩnh vực',
+            rows: [
+              { label: 'Sự nghiệp', value: `${h.career.score}/10`, bar: bar(h.career.score) },
+              { label: 'Tình duyên', value: `${h.love.score}/10`, bar: bar(h.love.score) },
+              { label: 'Tài lộc', value: `${h.money.score}/10`, bar: bar(h.money.score) },
+              { label: 'Sức khỏe', value: `${h.health.score}/10`, bar: bar(h.health.score) },
+            ],
+          },
+          {
+            heading: 'Vận may hôm nay',
+            rows: [
+              { label: 'Số may mắn', value: h.lucky_numbers.join(' · ') },
+              { label: 'Màu may mắn', value: h.lucky_colors.join(' · ') },
+              { label: 'Hướng tốt', value: h.lucky_direction },
+              { label: 'Giờ tốt', value: h.good_hours.join(' · ') },
+            ],
+          },
+          ...(h.avoid ? [{ heading: 'Nên tránh', text: h.avoid }] : []),
+          {
+            heading: 'Lưu ý',
+            text: 'Tử vi hằng ngày là tham chiếu để định hướng tâm thế trong ngày — không phải mệnh lệnh. Bản PDF này chụp lại vận trình của ngày xuất file.',
+          },
+        ],
+      }
+    : null;
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
@@ -239,7 +278,12 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
               <Link href="/tu-vi-hom-nay" className="rounded-lg border border-border px-4 py-2 text-sm text-foreground/80 transition-colors hover:border-gold hover:text-gold">
                 ← Xem tuổi khác
               </Link>
-              <ShareButton zodiac={zodiac} label={label} score={h.overall.score} />
+              <div className="flex items-center gap-2">
+                {pdfPayload && (
+                  <DownloadToolPdfButton source="pdf-tu-vi-hom-nay" label="Tải PDF hôm nay" payload={pdfPayload} />
+                )}
+                <ShareButton zodiac={zodiac} label={label} score={h.overall.score} />
+              </div>
             </div>
           </section>
         </>

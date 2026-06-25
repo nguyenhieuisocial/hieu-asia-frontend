@@ -9,6 +9,7 @@ import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 import {
   buildBanMenh,
@@ -105,6 +106,41 @@ export default async function BanMenhYearPage({
     faqPage(d.faqs),
   ];
 
+  const pdfPayload: ToolPdfPayload = {
+    title: `Ngũ hành bản mệnh — sinh năm ${year} — hieu.asia`,
+    subtitle: `Tuổi ${d.canChi} · cầm tinh ${d.zodiac.ten} · nạp âm ${d.napAmName}`,
+    hero: { big: `Mệnh ${d.elementName}`, small: `Sinh năm ${year} · nạp âm ${d.napAmName}` },
+    sections: [
+      {
+        heading: 'Bản mệnh',
+        rows: [
+          { label: 'Năm sinh', value: String(year) },
+          { label: 'Can Chi', value: d.canChi },
+          { label: 'Con giáp', value: `${d.zodiac.emoji} ${d.zodiac.ten}` },
+          { label: 'Nạp âm', value: d.napAmName },
+          { label: 'Hành bản mệnh', value: d.elementName },
+        ],
+      },
+      { heading: `Hành ${d.elementName}`, text: d.elementBlurb },
+      {
+        heading: 'Màu sắc theo ngũ hành',
+        rows: [
+          { label: `Màu bản mệnh (hành ${d.elementName})`, value: d.banMenhColors.join(', ') },
+          { label: `Màu tương sinh nên dùng (hành ${d.sinhElementName})`, value: d.hopColors.join(', ') },
+          { label: `Màu nên hạn chế (hành ${d.khacElementName} khắc)`, value: d.avoidColors.join(', ') },
+        ],
+      },
+      ...(d.careers.length > 0
+        ? [{ heading: 'Nhóm nghề hợp mệnh (tham khảo)', text: d.careers.join(' · ') }]
+        : []),
+      {
+        heading: 'Lưu ý',
+        text: 'Ngũ hành bản mệnh (nạp âm) là quan niệm dân gian để tham khảo — màu sắc & nghề hợp suy theo luật tương sinh – tương khắc, không phải định mệnh. Bạn vẫn là người quyết định.',
+      },
+    ],
+    cta: { text: 'Lập lá số Bát Tự đầy đủ (miễn phí)', url: 'https://hieu.asia/la-so-bat-tu' },
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
@@ -130,13 +166,14 @@ export default async function BanMenhYearPage({
             <strong className="text-foreground">{d.napAmName}</strong> — thuộc hành{' '}
             <strong className="text-gold">{d.elementName}</strong>.
           </p>
-          <div className="mt-7 flex flex-wrap gap-3">
+          <div className="mt-7 flex flex-wrap items-center gap-3">
             <Button asChild size="lg">
               <Link href="/la-so-bat-tu">Xem lá số Bát Tự của tôi</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
               <Link href="/ban-menh">Tra năm sinh khác</Link>
             </Button>
+            <DownloadToolPdfButton source="pdf-ban-menh" label="Tải PDF bản mệnh" payload={pdfPayload} />
           </div>
         </section>
 
