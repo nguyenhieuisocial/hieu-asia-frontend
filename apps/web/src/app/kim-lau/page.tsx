@@ -49,6 +49,7 @@ export default function KimLauHubPage() {
       />
       <ToolPageShell
         eyebrow="Phong tục cưới hỏi"
+        relatedSlug="/kim-lau"
         icon={<span aria-hidden="true">💍</span>}
         title={
           <>
