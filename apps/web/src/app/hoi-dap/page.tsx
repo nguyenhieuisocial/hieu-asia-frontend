@@ -49,7 +49,7 @@ const VE_PHUONG_PHAP: QA[] = [
   },
   {
     q: 'Bát Tự (Tứ Trụ) là gì?',
-    a: 'Bát Tự là "tám chữ" Can - Chi của bốn trụ giờ, ngày, tháng, năm sinh. Người xem xét sự cân bằng Ngũ Hành và dụng thần để hiểu cốt cách và chu kỳ vận.',
+    a: 'Bát Tự là "tám chữ" Can - Chi của bốn trụ giờ, ngày, tháng, năm sinh. Trục chính là Nhật Chủ (can ngày) — đại diện cho chính bạn; đọc tương quan ngũ hành quanh Nhật Chủ để thấy thiên hướng và thời điểm thuận cho từng việc.',
   },
   {
     q: 'MBTI là gì?',

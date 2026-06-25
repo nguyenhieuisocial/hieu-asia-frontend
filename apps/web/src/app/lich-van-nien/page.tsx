@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 const FAQS = [
   {
     q: 'Ngày Hoàng đạo và Hắc đạo khác nhau thế nào?',
-    a: 'Hoàng đạo là ngày có sao tốt chiếu, thuận lợi cho khởi sự, cưới hỏi, khai trương. Hắc đạo là ngày có sao xấu chiếu, nên tránh việc trọng đại. Lịch vạn niên hieu.asia tính toán dựa trên 12 trực và Nhị thập bát tú.',
+    a: 'Theo quan niệm dân gian, Hoàng đạo là ngày sao tốt chiếu — được xem là thuận cho khởi sự, cưới hỏi, khai trương; Hắc đạo là ngày sao xấu chiếu, thường được kiêng việc trọng đại. hieu.asia tính theo 12 trực và Nhị thập bát tú để bạn tham khảo — đây là phong tục, không phải tiên tri.',
   },
   {
     q: 'Cách chọn giờ Hoàng đạo trong ngày?',
@@ -24,7 +24,7 @@ const FAQS = [
   },
   {
     q: 'Lịch âm dương có chính xác không?',
-    a: 'Chính xác. hieu.asia sử dụng thuật toán thiên văn tính giờ ICT (UTC+7) theo kinh tuyến 105°E như lịch Việt Nam chính thống — sai số dưới 1 phút.',
+    a: 'Phần đổi lịch âm – dương thì chính xác: hieu.asia dùng thuật toán thiên văn tính giờ ICT (UTC+7) theo kinh tuyến 105°E như lịch Việt Nam chính thống — sai số dưới 1 phút. Còn lớp ngày tốt/xấu (Hoàng/Hắc đạo) là quy ước phong tục để tham khảo, không phải đại lượng đo được.',
   },
   {
     q: 'Có thể kiểm tra ngày tốt cho việc cụ thể không?',

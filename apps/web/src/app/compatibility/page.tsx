@@ -204,7 +204,7 @@ export default function CompatibilityPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
       />
       <ToolPageShell
-        eyebrow="So sánh 2 người · Compatibility Pair"
+        eyebrow="So sánh 2 người · Hợp đôi"
         relatedSlug="/compatibility"
         icon={<span aria-hidden="true">🤝</span>}
         title={
@@ -287,7 +287,7 @@ export default function CompatibilityPage() {
 
             <div>
               <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
-                Năm chiều cộng hưởng
+                5 chiều cộng hưởng
               </h2>
               <div className="space-y-4">
                 {report.scores.map((s) => (
