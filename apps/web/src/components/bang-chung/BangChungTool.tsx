@@ -15,6 +15,7 @@ import { CATEGORY_LABEL, controlCategory } from '@/lib/backtest/palace-map';
 import { buildCalibrationTuple, type CalibrationTuple } from '@/lib/backtest/calibration';
 import { captureCalibration, isCaptureOptedOut, setCaptureOptedOut } from '@/lib/bang-chung/capture-client';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { readSavedProfile, describeProfile } from '@/lib/saved-profile';
 import { track } from '@/lib/analytics';
 import {
@@ -396,13 +397,69 @@ function ResultsView({ results }: { results: ScoredEvent[] }) {
                 <strong>{Math.round(avgBase * 100)}%</strong> số năm. Vì vậy hãy nhìn <strong>tổng thể nhiều sự kiện</strong>,
                 đừng vin vào một lần trúng đơn lẻ. Các lần &ldquo;trượt&rdquo; được tính thành thật ở dưới.
               </p>
-              <div className="pt-1">
+              <div className="flex flex-wrap items-center gap-2 pt-1">
                 <ShareResultButton
                   path={`/bang-chung?hit=${hit}&total=${scorable.length}&strong=${strong}`}
                   title="Bằng Chứng — tôi đối chiếu lá số với đời thật"
                   text={`Tôi tự đối chiếu lá số với quá khứ thật của mình: trùng khớp ${hit}/${scorable.length} mốc — kiểm chứng được, không bói mù (xem cả mốc trật). Thử với đời bạn:`}
                   trackId="bang-chung"
                   label="Chia sẻ kết quả ✦"
+                />
+                <DownloadToolPdfButton
+                  source="pdf-bang-chung"
+                  payload={() => {
+                    if (results.length === 0) return null;
+                    const verdictRows = results.map((r) => ({
+                      label: `${CATEGORY_LABEL[r.event.category]}${r.event.year ? ` · ${r.event.year}` : ''}`,
+                      value: GRADE_STYLE[r.score.grade].label,
+                    }));
+                    return {
+                      title: 'Bằng Chứng — đối chiếu lá số với đời thật — hieu.asia',
+                      subtitle:
+                        'Backtest trung thực: lá số được tính lại đúng như nó đứng ở từng năm, ' +
+                        'kể cả những lần KHÔNG khớp.',
+                      hero:
+                        scorable.length > 0
+                          ? {
+                              big: `${hit}/${scorable.length} sự kiện có dấu trong lá số`,
+                              small: `${strong} khớp mạnh · ${partial} khớp một phần · mức "ngẫu nhiên" để so sánh ~${Math.round(avgBase * 100)}%`,
+                            }
+                          : { big: 'Chưa có sự kiện nào đủ thông tin để chấm' },
+                      sections: [
+                        {
+                          heading: 'Tổng quan đối chiếu',
+                          rows: [
+                            { label: 'Số sự kiện chấm được', value: `${scorable.length}` },
+                            { label: 'Khớp (mạnh + một phần)', value: `${hit}/${scorable.length}`, bar: scorable.length > 0 ? Math.round((hit / scorable.length) * 100) : 0 },
+                            { label: 'Khớp mạnh', value: `${strong}` },
+                            { label: 'Khớp một phần', value: `${partial}` },
+                            { label: 'Mức "ngẫu nhiên" trung bình', value: `${Math.round(avgBase * 100)}%` },
+                          ],
+                        },
+                        {
+                          heading: 'Từng sự kiện — khớp hay trượt',
+                          rows: verdictRows,
+                        },
+                        ...results.map((r) => ({
+                          heading: `${CATEGORY_LABEL[r.event.category]}${r.event.year ? ` · ${r.event.year}` : ''} — ${GRADE_STYLE[r.score.grade].label}`,
+                          text:
+                            r.score.reason +
+                            (r.score.governingPalace ? `\n\nCung chủ quản: ${r.score.governingPalace}.` : '') +
+                            (r.baseRate && r.score.grade !== 'NONE' && r.score.grade !== 'UNSCORABLE'
+                              ? `\nCung ${r.score.governingPalace} được Tứ Hóa "chiếu tới" khoảng ${r.baseRate.hits}/${r.baseRate.total} số năm → mức "ngẫu nhiên" để so sánh.`
+                              : ''),
+                        })),
+                        {
+                          heading: 'Đọc đúng con số',
+                          text:
+                            'Đây là dấu hiệu một lĩnh vực được NHẤN trong năm — KHÔNG phải lá số "đoán" được sự kiện ' +
+                            'cụ thể. Hãy nhìn tổng thể nhiều sự kiện, đừng vin vào một lần trúng đơn lẻ; mọi lần ' +
+                            '"trượt" đều được tính thành thật. Cung chủ quản được khóa trước theo bảng cổ điển, ' +
+                            'KHÔNG xem lá số rồi mới gán.',
+                        },
+                      ],
+                    };
+                  }}
                 />
               </div>
             </>

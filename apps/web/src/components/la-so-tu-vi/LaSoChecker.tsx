@@ -3,9 +3,10 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
-import { castTuViHoroscope, type TuViChart, type TuViHoroscope, type TuViPalace, type CachCuc, type TuanKhong, type TrietLo } from '@/lib/tuvi-client';
+import { castTuViHoroscope, type TuViChart, type TuViHoroscope, type TuViPalace, type TuViStar, type CachCuc, type TuanKhong, type TrietLo } from '@/lib/tuvi-client';
 import { TuViChart12Palaces } from '@/components/tuvi/TuViChart12Palaces';
 import { NguHanhRemedyCard } from '@/components/ngu-hanh/NguHanhRemedyCard';
+import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 
 /**
  * Cách cục (hệ chính tinh hội về Mệnh) — ported from the backend reading engine
@@ -314,6 +315,125 @@ export function LaSoChecker({
             {/* Gợi ý bổ khuyết ngũ hành — chỉ đọc fiveElementsClass, không đụng engine */}
             <div className="rv-up" style={{ animationDelay: '340ms' }}>
               <NguHanhRemedyCard fiveElementsClass={chart.meta.fiveElementsClass} />
+            </div>
+
+            {/* Tải lá số ra PDF — bản lưu niệm (Cục, Mệnh chủ, Thân chủ, sao cung Mệnh + cách cục/vận) */}
+            <div className="rv-up flex justify-center" style={{ animationDelay: '370ms' }}>
+              <DownloadToolPdfButton
+                source="pdf-la-so-tu-vi"
+                label="Tải lá số (PDF)"
+                payload={() => {
+                  if (!chart) return null;
+                  const m = chart.meta;
+                  const menh = chart.palaces.find((p) => normPalace(p.name) === 'Mệnh') ?? null;
+                  const than = chart.palaces.find((p) => p.isBodyPalace) ?? null;
+                  const starList = (stars: TuViStar[]) =>
+                    stars
+                      .map((s) => (s.brightness ? `${s.name} (${s.brightness})` : s.name))
+                      .join(' · ');
+                  const menhMajor = menh ? starList(menh.majorStars) : '';
+
+                  const identityRows = [
+                    { label: 'Cục (mệnh ngũ hành)', value: m.fiveElementsClass },
+                    { label: 'Mệnh chủ', value: m.soul },
+                    { label: 'Thân chủ', value: m.body },
+                    menh
+                      ? {
+                          label: 'Cung Mệnh',
+                          value:
+                            `${normPalace(menh.name)} (${menh.heavenlyStem} ${menh.earthlyBranch})` +
+                            (menhMajor ? ` — ${menhMajor}` : ' — vô chính diệu'),
+                        }
+                      : null,
+                    than
+                      ? { label: 'Cung Thân', value: `${normPalace(than.name)} (${than.heavenlyStem} ${than.earthlyBranch})` }
+                      : null,
+                    { label: 'Cung mệnh (chi)', value: m.earthlyBranchOfSoulPalace },
+                    { label: 'Bản mệnh (con giáp)', value: m.zodiac },
+                    { label: 'Cung hoàng đạo', value: m.sign },
+                  ].filter(Boolean) as Array<{ label: string; value: string }>;
+
+                  const birthRows = [
+                    { label: 'Dương lịch', value: m.solarDate },
+                    { label: 'Âm lịch', value: m.lunarDate },
+                    { label: 'Can chi (ngày)', value: m.chineseDate },
+                    { label: 'Giờ sinh', value: `${m.time}${m.timeRange ? ` (${m.timeRange})` : ''}` },
+                    { label: 'Giới tính', value: gender === 'female' ? 'Nữ' : 'Nam' },
+                  ];
+
+                  const sections: ToolPdfPayload['sections'] = [
+                    { heading: 'Thông tin lập lá số', rows: birthRows },
+                  ];
+
+                  if (cachCuc.length > 0) {
+                    sections.push({
+                      heading: 'Cách cục — thế cục có tên trong lá số',
+                      text: cachCuc
+                        .map(
+                          (c) =>
+                            `${c.name}${c.nameHan ? ` (${c.nameHan})` : ''} [${c.polarity}]\n${c.meaning}`,
+                        )
+                        .join('\n\n'),
+                    });
+                  }
+
+                  if (tuanKhong && tuanKhong.palaces.length > 0) {
+                    sections.push({
+                      heading: 'Tuần Không (旬空) — cung “không vong”',
+                      text:
+                        `Năm sinh ${tuanKhong.yearPillar} → ${tuanKhong.palaces.map((p) => p.name).join(' · ')} ` +
+                        `bị Tuần Không (chi ${tuanKhong.branches.join(', ')}). Việc của cung “không vong” dễ hư hao, ` +
+                        `ứng muộn; cũng làm nhẹ bớt sát tinh đóng tại đó.`,
+                    });
+                  }
+
+                  if (triet && triet.palaces.length > 0) {
+                    sections.push({
+                      heading: 'Triệt Lộ Không Vong — cung bị “triệt”',
+                      text:
+                        `Can năm ${triet.yearStem} → ${triet.palaces.map((p) => p.name).join(' · ')} ` +
+                        `bị Triệt (chi ${triet.branches.join(', ')}). Cung bị Triệt như bị chặn đường: ` +
+                        `việc dễ trắc trở, đứt đoạn — nhất là nửa đầu đời.`,
+                    });
+                  }
+
+                  if (daiVan) {
+                    sections.push({
+                      heading: 'Vận 10 năm hiện tại (đại vận)',
+                      text:
+                        (age != null ? `Khoảng ${age} tuổi, bạn đang ở ` : 'Bạn đang ở ') +
+                        `đại vận cung ${normPalace(daiVan.name)}` +
+                        (daiVan.decadal?.range && daiVan.decadal.range.length >= 2
+                          ? ` (${daiVan.decadal.range[0]}–${daiVan.decadal.range[1]} tuổi)`
+                          : '') +
+                        `. Xem các sao ở cung ${normPalace(daiVan.name)} để hiểu trọng tâm giai đoạn 10 năm này.`,
+                    });
+                  }
+
+                  if (luuNien && luuNienHoa) {
+                    sections.push({
+                      heading: `Vận năm nay${luuNienCanChi ? ` — lưu niên ${luuNienCanChi}` : ''}`,
+                      text:
+                        `Năm nay an theo can chi ${luuNienCanChi}, kích hoạt bốn sao Tứ Hóa lưu niên: ` +
+                        `${luuNienHoa}. Tìm bốn sao này đang nằm ở cung nào trong lá số để biết năm nay nổi bật ở mảng nào.`,
+                    });
+                  }
+
+                  return {
+                    title: 'Lá số Tử Vi — hieu.asia',
+                    subtitle: `${m.solarDate}${m.time ? ` · ${m.time}` : ''} · ${gender === 'female' ? 'Nữ' : 'Nam'}`,
+                    hero: {
+                      big: `Cục ${m.fiveElementsClass}`,
+                      small: `Mệnh chủ ${m.soul} · Thân chủ ${m.body}`,
+                    },
+                    sections: [
+                      { heading: 'Định danh lá số', rows: identityRows },
+                      ...sections,
+                    ],
+                    cta: { text: 'Tạo bản đọc Tử Vi đầy đủ (AI luận sâu)', url: 'https://hieu.asia/onboarding' },
+                  };
+                }}
+              />
             </div>
 
             {/* Funnel → AI deep reading (free chart here; the AI interpretation is the product) */}
