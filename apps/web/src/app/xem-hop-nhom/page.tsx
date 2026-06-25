@@ -14,6 +14,10 @@ import {
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import {
+  DownloadToolPdfButton,
+  type ToolPdfPayload,
+} from '@/components/tools/DownloadToolPdfButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
@@ -433,12 +437,67 @@ export default function XemHopNhomPage() {
               </div>
             )}
 
-            <div className="pt-1">
+            <div className="flex flex-wrap items-center gap-3 pt-1">
               <ShareResultButton
                 path="/xem-hop-nhom"
                 title="Xem hợp cả nhóm — hieu.asia"
                 text={`Nhóm ${report.size} người của tôi hoà hợp ${report.groupScore}/10. Thử xem nhóm bạn xem sao?`}
                 trackId="xem-hop-nhom"
+              />
+              <DownloadToolPdfButton
+                source="pdf-xem-hop-nhom"
+                payload={() => {
+                  if (!report) return null;
+                  const pairsSorted = [...report.pairs].sort((a, b) => b.score - a.score);
+                  const sections: ToolPdfPayload['sections'] = [
+                    {
+                      heading: 'Vai trò trong nhóm',
+                      rows: report.members.map((m) => ({
+                        label: `${m.display} · ${m.zodiac}`,
+                        value: `${m.avgScore}/10 · ${m.role}`,
+                        bar: Math.max(0, Math.min(100, m.avgScore * 10)),
+                      })),
+                    },
+                    {
+                      heading: 'Mức hợp từng cặp',
+                      rows: pairsSorted.map((p) => ({
+                        label: `${p.aDisplay} × ${p.bDisplay}`,
+                        value: `${p.score}/10 · ${p.signal} — ${p.note}`,
+                        bar: Math.max(0, Math.min(100, p.score * 10)),
+                      })),
+                    },
+                  ];
+                  if (report.friction.length > 0) {
+                    sections.push({
+                      heading: 'Cặp nên chú ý — gợi ý phối hợp',
+                      text: report.friction
+                        .map((f) =>
+                          [
+                            `${f.pair.aDisplay} × ${f.pair.bDisplay} (${f.pair.score}/10)`,
+                            `Dễ trục trặc: ${f.tip.vulnerability}`,
+                            `Cách nhìn lại: ${f.tip.reframe}`,
+                            `Thử nói: “${f.tip.suggestedPhrase}”`,
+                          ].join('\n'),
+                        )
+                        .join('\n\n'),
+                    });
+                  }
+                  if (report.caveats.length > 0) {
+                    sections.push({
+                      heading: 'Lưu ý',
+                      text: report.caveats.map((c) => `• ${c}`).join('\n'),
+                    });
+                  }
+                  return {
+                    title: 'Xem hợp cả nhóm — hieu.asia',
+                    subtitle: `Mức hoà hợp của nhóm ${report.size} người`,
+                    hero: {
+                      big: `${report.groupScore}/10`,
+                      small: report.summary,
+                    },
+                    sections,
+                  };
+                }}
               />
             </div>
 

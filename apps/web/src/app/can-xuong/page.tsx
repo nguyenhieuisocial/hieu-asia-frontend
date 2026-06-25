@@ -15,6 +15,7 @@ import {
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
@@ -305,6 +306,56 @@ export default function CanXuongPage() {
                   title="Cân xương tính số"
                   text="Mình vừa xem cân xương theo ngày sinh trên hieu.asia — bạn thử nhé!"
                   trackId="can-xuong"
+                />
+                <DownloadToolPdfButton
+                  source="pdf-can-xuong"
+                  payload={() => {
+                    if (!result) return null;
+                    return {
+                      title: 'Cân Xương Đoán Số — hieu.asia',
+                      subtitle: `Năm ${result.input.can_chi_year} · Giờ ${result.input.chi_hour} · Tham khảo dân gian`,
+                      hero: {
+                        big: result.total_weight,
+                        small: `Mức luận: ${result.fortune_level}`,
+                      },
+                      sections: [
+                        {
+                          heading: 'Cân từng trụ',
+                          rows: [
+                            { label: 'Cân năm', value: result.weight_year },
+                            { label: 'Cân tháng', value: result.weight_month },
+                            { label: 'Cân ngày', value: result.weight_day },
+                            { label: 'Cân giờ', value: result.weight_hour },
+                            { label: 'Tổng cân', value: result.total_weight },
+                          ],
+                        },
+                        {
+                          heading: 'Dữ liệu sinh thần',
+                          rows: [
+                            { label: 'Ngày sinh (dương lịch)', value: result.input.birth_date },
+                            {
+                              label: 'Ngày sinh (âm lịch)',
+                              value: `${result.input.lunar_day}/${result.input.lunar_month}/${result.input.lunar_year}`,
+                            },
+                            { label: 'Năm can chi', value: result.input.can_chi_year },
+                            { label: 'Canh giờ', value: result.input.chi_hour },
+                          ],
+                        },
+                        {
+                          heading: 'Câu thơ luận số',
+                          text: result.poem,
+                        },
+                        {
+                          heading: 'Luận giải',
+                          text: result.interpretation,
+                        },
+                        {
+                          heading: 'Đọc đúng tinh thần',
+                          text: 'Cân xương là phép tra cứu dân gian nén ngày giờ sinh về một con số tổng kèm bài thơ cổ — độ phân giải thấp, dùng ngôn ngữ và chuẩn mực thời xưa. Hãy xem đây là lát cắt tham khảo nhanh; muốn phân tích cá nhân thật sự thì nên đào sâu bằng Tử Vi hoặc Bát Tự.',
+                        },
+                      ],
+                    };
+                  }}
                 />
               </div>
 

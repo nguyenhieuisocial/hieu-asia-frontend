@@ -20,6 +20,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { RelatedTools } from '@/components/tools/RelatedTools';
+import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 
 const BREADCRUMB_JSONLD = {
   '@context': 'https://schema.org',
@@ -290,6 +291,54 @@ export default function DecisionSimulatorPage() {
                 </div>
               </CardContent>
             </Card>
+
+            <div className="mt-6 flex justify-end">
+              <DownloadToolPdfButton
+                source="pdf-decision-simulator"
+                payload={() => {
+                  if (!showFramework) return null;
+                  const a = titleA.trim();
+                  const b = titleB.trim();
+                  if (!a || !b) return null;
+                  const topicLabel =
+                    TOPIC_OPTIONS.find((t) => t.id === topic)?.label ?? 'Khác';
+                  return {
+                    title: 'Mô Phỏng Quyết Định — hieu.asia',
+                    subtitle: `Khung cân nhắc 2 lựa chọn · Chủ đề: ${topicLabel}`,
+                    hero: {
+                      big: `${a}  ⇄  ${b}`,
+                      small:
+                        'Khung giúp bạn tự cân nhắc trade-off của từng hướng — không phải máy chấm điểm hộ. Quyết định cuối cùng vẫn là của bạn.',
+                    },
+                    sections: [
+                      {
+                        heading: 'Hai lựa chọn của bạn',
+                        rows: [
+                          { label: 'Lựa chọn A', value: a },
+                          ...(descA.trim()
+                            ? [{ label: 'Bối cảnh A', value: descA.trim() }]
+                            : []),
+                          { label: 'Lựa chọn B', value: b },
+                          ...(descB.trim()
+                            ? [{ label: 'Bối cảnh B', value: descB.trim() }]
+                            : []),
+                          { label: 'Chủ đề', value: topicLabel },
+                        ],
+                      },
+                      ...CRITERIA.map((c) => ({
+                        heading: c.name,
+                        text: `${c.question}\n\nA — ${a}\nB — ${b}`,
+                      })),
+                      {
+                        heading: 'Bước tiếp theo',
+                        text:
+                          'Với mỗi tiêu chí ở trên, tự hỏi câu dẫn dắt cho cả hai lựa chọn rồi tự chấm — chúng tôi không quyết thay bạn.\n\nMuốn phân tích sâu theo lá số Tử Vi + tính cách của bạn bằng AI thật? Lập Decision Brief tại hieu.asia/decisions/new.',
+                      },
+                    ],
+                  };
+                }}
+              />
+            </div>
           </section>
         )}
       </section>
