@@ -69,6 +69,7 @@ export default function TamTaiHubPage() {
       />
       <ToolPageShell
         eyebrow="Phong tục · Can Chi"
+        relatedSlug="/tam-tai"
         icon={<span aria-hidden="true">🗓️</span>}
         title={
           <>
