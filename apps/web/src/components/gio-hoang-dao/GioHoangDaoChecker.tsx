@@ -18,6 +18,10 @@ import {
   type GioHoangDaoResult,
 } from '@/lib/gio-hoang-dao';
 import { getVietnamTodayISO } from '@/lib/vn-date';
+import {
+  DownloadToolPdfButton,
+  type ToolPdfPayload,
+} from '@/components/tools/DownloadToolPdfButton';
 import { HoursDial } from './HoursDial';
 
 function parseISO(value: string): { d: number; m: number; y: number } | null {
@@ -174,6 +178,47 @@ export function GioHoangDaoChecker() {
               phải lời phán số mệnh. Người xưa thường chọn giờ hoàng đạo để xuất hành, làm lễ, khởi sự cho
               an tâm; còn việc thành hay bại vẫn do sự chuẩn bị và cái tâm khi làm.
             </p>
+
+            <DownloadToolPdfButton
+              source="pdf-gio-hoang-dao"
+              payload={() => {
+                if (!result) return null;
+                const dateStr = `${result.solar.day}/${result.solar.month}/${result.solar.year}`;
+                const sections: ToolPdfPayload['sections'] = [
+                  {
+                    heading: '12 canh giờ trong ngày',
+                    rows: result.hours.map((h) => ({
+                      label: `Giờ ${h.branch} (${h.range})`,
+                      value: `${h.good ? 'Hoàng đạo · tốt' : 'Hắc đạo'} — sao ${h.star}`,
+                    })),
+                  },
+                  {
+                    heading: 'Ý nghĩa từng canh giờ',
+                    text: result.hours
+                      .map(
+                        (h) =>
+                          `Giờ ${h.branch} (${h.range}) — sao ${h.star}: ${h.good ? h.note : h.meaning}`,
+                      )
+                      .join('\n'),
+                  },
+                  {
+                    heading: 'Cách dùng giờ hoàng đạo',
+                    text:
+                      'Giờ hoàng đạo là khung giờ tốt trong ngày để khởi sự cho an tâm: xuất hành, làm lễ, ký kết, khai trương, cưới hỏi… Nên ưu tiên những giờ được đánh dấu "Hoàng đạo · tốt"; với giờ hắc đạo thì tránh các việc trọng đại.\n\n' +
+                      'Đây là cách tra cứu theo lịch pháp truyền thống, mang tính tham khảo — không phải lời phán số mệnh. Việc thành hay bại vẫn do sự chuẩn bị và cái tâm khi làm.',
+                  },
+                ];
+                return {
+                  title: 'Giờ hoàng đạo trong ngày',
+                  subtitle: `Ngày ${dateStr} — ngày ${result.dayCanChi.label}`,
+                  hero: {
+                    big: `${goodCount} giờ hoàng đạo`,
+                    small: `Ngày ${dateStr} (${result.dayCanChi.label})`,
+                  },
+                  sections,
+                };
+              }}
+            />
           </div>
         )}
       </CardContent>
