@@ -9,6 +9,7 @@ import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 import { buildCung, CUNG_SLUGS, listCung, type SignRef } from '@/lib/cung-hoang-dao-data';
 
@@ -91,6 +92,37 @@ export default async function CungDetailPage({
     faqPage(d.faqs),
   ];
 
+  const pdfPayload: ToolPdfPayload = {
+    title: `Cung ${z.name} (${extra.english}) — hieu.asia`,
+    subtitle: `${extra.dateLabel} · nguyên tố ${z.element} · tính chất ${z.quality}`,
+    hero: { big: `${z.symbol} Cung ${z.name}`, small: extra.tagline },
+    sections: [
+      {
+        heading: 'Thông tin cung',
+        rows: [
+          { label: 'Tên tiếng Anh', value: extra.english },
+          { label: 'Khoảng ngày', value: extra.dateLabel },
+          { label: 'Nguyên tố', value: z.element },
+          { label: 'Tính chất', value: z.quality },
+          {
+            label: 'Hành tinh chủ quản',
+            value: extra.rulingPlanet + (extra.rulingPlanetModern ? ` · ${extra.rulingPlanetModern}` : ''),
+          },
+        ],
+      },
+      { heading: 'Tổng quan', text: `${z.blurb}\n\n${d.elementTendency}` },
+      { heading: 'Điểm mạnh', text: extra.strengths.map((s) => `• ${s}`).join('\n') },
+      { heading: 'Điểm cần lưu ý', text: extra.growthEdges.map((s) => `• ${s}`).join('\n') },
+      { heading: 'Trong tình yêu', text: extra.love },
+      { heading: 'Trong công việc', text: extra.work },
+      {
+        heading: 'Lưu ý',
+        text: 'Cung hoàng đạo (cung Mặt Trời) là một lăng kính tham khảo để hiểu xu hướng — không phải phán định số mệnh. Bản đồ sao đầy đủ (Mặt Trời + Mặt Trăng + cung Mọc + các hành tinh) cho bức tranh sâu hơn.',
+      },
+    ],
+    cta: { text: 'Xem bản đồ sao đầy đủ của tôi', url: 'https://hieu.asia/ban-do-sao' },
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
@@ -116,13 +148,14 @@ export default async function CungDetailPage({
           <p className="mt-4 text-base leading-relaxed text-foreground/80 sm:text-lg">
             {extra.tagline}
           </p>
-          <div className="mt-7 flex flex-wrap gap-3">
+          <div className="mt-7 flex flex-wrap items-center gap-3">
             <Button asChild size="lg">
               <Link href="/ban-do-sao">Xem bản đồ sao của tôi</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
               <Link href="/cung-hoang-dao">Cả 12 cung</Link>
             </Button>
+            <DownloadToolPdfButton source="pdf-cung-hoang-dao" label="Tải PDF cung này" payload={pdfPayload} />
           </div>
         </section>
 
