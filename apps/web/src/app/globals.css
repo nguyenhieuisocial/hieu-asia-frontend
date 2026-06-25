@@ -369,32 +369,39 @@ html {
  * `text-amber-100/85`, `text-amber-200/70`, `text-rose-300/80`… as distinct
  * classes (`.text-amber-100\/85`) the `.text-amber-100` selector can't match,
  * so callout/badge body text using them stays a near-invisible light shade on
- * cream (e.g. amber-100/85 @ ~1.1:1). Substring-match the `{shade}/` variants
- * too. Opaque override is correct here — the lost alpha was on the unreadable
- * light shade; same AA-anchor colors as above. LIGHT-only; dark untouched. */
-:root:not(.dark) [class*="text-amber-50/"],
-:root:not(.dark) [class*="text-amber-100/"],
-:root:not(.dark) [class*="text-amber-200/"],
-:root:not(.dark) [class*="text-amber-300/"],
-:root:not(.dark) [class*="text-yellow-200/"],
-:root:not(.dark) [class*="text-yellow-300/"] { color: #785312; }
-:root:not(.dark) [class*="text-jade-50/"],
-:root:not(.dark) [class*="text-jade-100/"],
-:root:not(.dark) [class*="text-jade-200/"],
-:root:not(.dark) [class*="text-jade-300/"] { color: #245c52; }
-:root:not(.dark) [class*="text-emerald-50/"],
-:root:not(.dark) [class*="text-emerald-100/"],
-:root:not(.dark) [class*="text-emerald-200/"],
-:root:not(.dark) [class*="text-emerald-300/"] { color: #176046; }
-:root:not(.dark) [class*="text-rose-100/"],
-:root:not(.dark) [class*="text-rose-200/"],
-:root:not(.dark) [class*="text-rose-300/"],
-:root:not(.dark) [class*="text-rose-400/"],
-:root:not(.dark) [class*="text-red-100/"],
-:root:not(.dark) [class*="text-red-200/"],
-:root:not(.dark) [class*="text-red-300/"] { color: #a8201a; }
-:root:not(.dark) [class*="text-sky-300/"],
-:root:not(.dark) [class*="text-blue-300/"] { color: #1e5a8a; }
+ * cream (e.g. amber-100/85 @ ~1.1:1). Match the `{shade}/` opacity variants.
+ *
+ * ANCHORED to a token boundary — `[class^="text-amber-100/"]` (token is first)
+ * OR `[class*=" text-amber-100/"]` (space-preceded). A bare `[class*="text-…/"]`
+ * would also match VARIANT-prefixed tokens like `dark:text-amber-100/85` /
+ * `hover:text-amber-200/80` (the substring is present after the `:`), forcing
+ * the light AA color onto elements whose amber is dark-mode-/hover-only —
+ * clobbering their real light color + killing hover transitions. The
+ * space/start anchor excludes `:`-prefixed variants. Opaque override is correct
+ * (lost alpha was on the unreadable shade). LIGHT-only; dark untouched. */
+:root:not(.dark) [class^="text-amber-50/"], :root:not(.dark) [class*=" text-amber-50/"],
+:root:not(.dark) [class^="text-amber-100/"], :root:not(.dark) [class*=" text-amber-100/"],
+:root:not(.dark) [class^="text-amber-200/"], :root:not(.dark) [class*=" text-amber-200/"],
+:root:not(.dark) [class^="text-amber-300/"], :root:not(.dark) [class*=" text-amber-300/"],
+:root:not(.dark) [class^="text-yellow-200/"], :root:not(.dark) [class*=" text-yellow-200/"],
+:root:not(.dark) [class^="text-yellow-300/"], :root:not(.dark) [class*=" text-yellow-300/"] { color: #785312; }
+:root:not(.dark) [class^="text-jade-50/"], :root:not(.dark) [class*=" text-jade-50/"],
+:root:not(.dark) [class^="text-jade-100/"], :root:not(.dark) [class*=" text-jade-100/"],
+:root:not(.dark) [class^="text-jade-200/"], :root:not(.dark) [class*=" text-jade-200/"],
+:root:not(.dark) [class^="text-jade-300/"], :root:not(.dark) [class*=" text-jade-300/"] { color: #245c52; }
+:root:not(.dark) [class^="text-emerald-50/"], :root:not(.dark) [class*=" text-emerald-50/"],
+:root:not(.dark) [class^="text-emerald-100/"], :root:not(.dark) [class*=" text-emerald-100/"],
+:root:not(.dark) [class^="text-emerald-200/"], :root:not(.dark) [class*=" text-emerald-200/"],
+:root:not(.dark) [class^="text-emerald-300/"], :root:not(.dark) [class*=" text-emerald-300/"] { color: #176046; }
+:root:not(.dark) [class^="text-rose-100/"], :root:not(.dark) [class*=" text-rose-100/"],
+:root:not(.dark) [class^="text-rose-200/"], :root:not(.dark) [class*=" text-rose-200/"],
+:root:not(.dark) [class^="text-rose-300/"], :root:not(.dark) [class*=" text-rose-300/"],
+:root:not(.dark) [class^="text-rose-400/"], :root:not(.dark) [class*=" text-rose-400/"],
+:root:not(.dark) [class^="text-red-100/"], :root:not(.dark) [class*=" text-red-100/"],
+:root:not(.dark) [class^="text-red-200/"], :root:not(.dark) [class*=" text-red-200/"],
+:root:not(.dark) [class^="text-red-300/"], :root:not(.dark) [class*=" text-red-300/"] { color: #a8201a; }
+:root:not(.dark) [class^="text-sky-300/"], :root:not(.dark) [class*=" text-sky-300/"],
+:root:not(.dark) [class^="text-blue-300/"], :root:not(.dark) [class*=" text-blue-300/"] { color: #1e5a8a; }
 
 /* ────────────────────────────────────────────────────────────────────────
  * AA contrast sweep — ROUND 3 (2026-06-14, founder "fix màu toàn site, cả
