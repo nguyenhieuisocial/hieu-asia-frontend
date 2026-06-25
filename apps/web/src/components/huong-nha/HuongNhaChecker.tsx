@@ -23,6 +23,7 @@ import {
   type HuongNhaResult,
 } from '@/lib/huong-nha';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
+import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { track } from '@/lib/analytics';
 
 function parseYear(value: string): number | null {
@@ -180,6 +181,49 @@ export function HuongNhaChecker({
                 </div>
               )}
             </div>
+
+            <DownloadToolPdfButton
+              source="pdf-huong-nha"
+              payload={() => {
+                if (!result) return null;
+                const groupHint =
+                  result.group === 'Đông'
+                    ? 'Đông tứ mệnh hợp 4 hướng: Bắc, Đông, Đông Nam, Nam.'
+                    : 'Tây tứ mệnh hợp 4 hướng: Tây, Tây Bắc, Tây Nam, Đông Bắc.';
+                return {
+                  title: 'Xem Hướng Nhà hợp tuổi — hieu.asia',
+                  subtitle: `Gia chủ sinh năm ${result.year} (${result.gender === 'nam' ? 'nam' : 'nữ'}) · Bát Trạch theo cung phi`,
+                  hero: {
+                    big: `Cung ${result.cungPhi} — ${groupLabel(result.group)}`,
+                    small: groupHint,
+                  },
+                  sections: [
+                    {
+                      heading: '4 hướng tốt (xếp theo mức tốt)',
+                      rows: result.good.map((d) => {
+                        const info = STAR_INFO[d.star];
+                        return { label: `${d.direction} — ${info.name}`, value: info.blurb };
+                      }),
+                    },
+                    {
+                      heading: '4 hướng nên tránh',
+                      rows: result.bad.map((d) => {
+                        const info = STAR_INFO[d.star];
+                        return { label: `${d.direction} — ${info.name}`, value: info.blurb };
+                      }),
+                    },
+                    {
+                      heading: 'Áp dụng cho cửa chính, giường, bếp',
+                      text: `Cửa chính nên mở về một trong các hướng tốt — ưu tiên ${result.good[0]?.direction ?? 'hướng Sinh Khí'} (Sinh Khí) hoặc ${result.good[1]?.direction ?? 'hướng Thiên Y'} (Thiên Y).\nGiường ngủ nên đặt đầu giường quay về hướng tốt, hợp nhất là ${result.good[1]?.direction ?? 'hướng Thiên Y'} (Thiên Y) hoặc ${result.good[2]?.direction ?? 'hướng Diên Niên'} (Diên Niên) cho sức khỏe và hòa hợp.\nBếp theo quan niệm "tọa hung hướng cát": đặt ở vùng hướng xấu nhưng mặt bếp (người nấu nhìn về) quay về hướng tốt — thường là ${result.good[0]?.direction ?? 'hướng Sinh Khí'} (Sinh Khí).\nNên tránh đặt cửa, giường, bếp về ${result.bad[0]?.direction ?? 'hướng Tuyệt Mệnh'} (${result.bad[0] ? STAR_INFO[result.bad[0].star].name : 'Tuyệt Mệnh'}) nếu còn lựa chọn tốt hơn.`,
+                    },
+                    {
+                      heading: 'Lưu ý',
+                      text: 'Bát Trạch (hướng nhà theo cung phi) là tập tục phong thủy để tham khảo, không phải quy luật khoa học. "Hướng nhà" thường tính theo hướng lưng nhà (tọa) hoặc hướng cửa chính — tùy trường phái. Đây là gợi ý để bạn tự cân nhắc; chúng tôi không phán giàu nghèo và không bán "hóa giải".',
+                    },
+                  ],
+                };
+              }}
+            />
           </div>
         )}
       </CardContent>

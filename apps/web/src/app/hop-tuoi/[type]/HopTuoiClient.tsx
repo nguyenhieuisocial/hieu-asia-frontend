@@ -24,6 +24,7 @@ import {
 } from '@hieu-asia/ui';
 import { BirthInputPair, isValidPerson, type PersonInput } from '@/components/hop-tuoi/BirthInputPair';
 import { CompatibilityScore } from '@/components/hop-tuoi/CompatibilityScore';
+import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 import { safeJson } from '@/lib/safe-json';
 import type { HopTuoiType } from './page';
 
@@ -282,6 +283,58 @@ function BirthChildFlow() {
               <p className="mt-3 text-sm text-muted-foreground">{result.parent2WithChild.summary}</p>
             </CardContent>
           </Card>
+
+          <div className="flex justify-center">
+            <DownloadToolPdfButton
+              source="pdf-hop-tuoi"
+              payload={() => {
+                const sections: ToolPdfPayload['sections'] = [
+                  {
+                    heading: 'Năm dự định sinh con',
+                    rows: [
+                      {
+                        label: `Năm ${result.yearPlanned}`,
+                        value: `${result.childYear.canChi} — ${result.childYear.animal}, nạp âm ${result.childYear.napAm}`,
+                      },
+                    ],
+                  },
+                  {
+                    heading: 'Năm tốt nhất (gợi ý)',
+                    rows: result.suggestedYears.map((y) => ({
+                      label: `${y.year} — ${y.canChi} (${y.animal})`,
+                      value: `${y.score}/100`,
+                      bar: y.score,
+                    })),
+                  },
+                  {
+                    heading: 'Chi tiết hợp tuổi với cha',
+                    rows: result.parent1WithChild.factors.map((f) => ({
+                      label: f.type,
+                      value: `${f.value} — ${f.verdict} (${f.weight > 0 ? `+${f.weight}` : f.weight})`,
+                    })),
+                  },
+                  { heading: 'Luận giải (với cha)', text: result.parent1WithChild.summary },
+                  {
+                    heading: 'Chi tiết hợp tuổi với mẹ',
+                    rows: result.parent2WithChild.factors.map((f) => ({
+                      label: f.type,
+                      value: `${f.value} — ${f.verdict} (${f.weight > 0 ? `+${f.weight}` : f.weight})`,
+                    })),
+                  },
+                  { heading: 'Luận giải (với mẹ)', text: result.parent2WithChild.summary },
+                ];
+                return {
+                  title: 'Hợp tuổi sinh con — hieu.asia',
+                  subtitle: `Năm dự định: ${result.yearPlanned}`,
+                  hero: {
+                    big: result.rating,
+                    small: `Điểm hợp tuổi sinh con: ${result.combinedScore}/100`,
+                  },
+                  sections,
+                };
+              }}
+            />
+          </div>
         </div>
       )}
     </div>
@@ -483,6 +536,43 @@ function XongDatFlow() {
                 </div>
               ))}
             </div>
+            <div className="mt-5 flex justify-center">
+              <DownloadToolPdfButton
+                source="pdf-hop-tuoi"
+                payload={() => {
+                  const top = result.ranked[0];
+                  const sections: ToolPdfPayload['sections'] = [
+                    {
+                      heading: 'Bảng xếp hạng ứng viên xông đất',
+                      rows: result.ranked.map((r, i) => ({
+                        label: `#${i + 1} — ${r.candidate.name || `Ứng viên ${i + 1}`} (${r.candidate.canChi}, ${r.candidate.animal})`,
+                        value: `${r.score}/100 — ${r.rating}`,
+                        bar: r.score,
+                      })),
+                    },
+                    ...result.ranked.map((r, i) => ({
+                      heading: `Chi tiết #${i + 1} — ${r.candidate.name || `Ứng viên ${i + 1}`}`,
+                      rows: r.factors.map((f) => ({
+                        label: f.type,
+                        value: `${f.value} — ${f.verdict} (${f.weight > 0 ? `+${f.weight}` : f.weight})`,
+                      })),
+                      text: r.summary,
+                    })),
+                  ];
+                  return {
+                    title: 'Hợp tuổi xông đất — hieu.asia',
+                    subtitle: `Gia chủ: ${result.household.canChi} — ${result.household.animal}`,
+                    hero: top
+                      ? {
+                          big: `${top.candidate.name || 'Ứng viên 1'} (${top.candidate.canChi})`,
+                          small: `Hợp nhất để xông đất — ${top.score}/100, ${top.rating}`,
+                        }
+                      : undefined,
+                    sections,
+                  };
+                }}
+              />
+            </div>
           </CardContent>
         </Card>
       )}
@@ -535,10 +625,59 @@ function ResultView({ result, onShare }: { result: CompatibilityResult; onShare:
         </Alert>
       )}
 
-      <div className="flex justify-center gap-3">
+      <div className="flex flex-wrap items-center justify-center gap-3">
         <Button variant="outline" onClick={onShare}>
           Sao chép link kết quả
         </Button>
+        <DownloadToolPdfButton
+          source="pdf-hop-tuoi"
+          payload={() => {
+            const p1 = result.person1.name || 'Người 1';
+            const p2 = result.person2.name || 'Người 2';
+            const sections: ToolPdfPayload['sections'] = [
+              {
+                heading: 'Hai tuổi đối chiếu',
+                rows: [
+                  {
+                    label: p1,
+                    value: `${result.person1.canChi} — ${result.person1.animal}, nạp âm ${result.person1.napAm} (${result.person1.element})${
+                      result.person1.cungPhi ? `, Cung Phi ${result.person1.cungPhi}` : ''
+                    }`,
+                  },
+                  {
+                    label: p2,
+                    value: `${result.person2.canChi} — ${result.person2.animal}, nạp âm ${result.person2.napAm} (${result.person2.element})${
+                      result.person2.cungPhi ? `, Cung Phi ${result.person2.cungPhi}` : ''
+                    }`,
+                  },
+                ],
+              },
+              {
+                heading: 'Các yếu tố phân tích',
+                rows: result.factors.map((f) => ({
+                  label: f.type,
+                  value: `${f.value} — ${f.verdict} (${f.weight > 0 ? `+${f.weight}` : f.weight})`,
+                })),
+              },
+              { heading: 'Luận giải tổng quan', text: result.summary },
+            ];
+            if (result.warnings.length > 0) {
+              sections.push({
+                heading: 'Lưu ý tham khảo',
+                text: result.warnings.join('\n'),
+              });
+            }
+            return {
+              title: 'Hợp tuổi — hieu.asia',
+              subtitle: `${p1} & ${p2}`,
+              hero: {
+                big: result.rating,
+                small: `Điểm hợp tuổi: ${result.score}/100`,
+              },
+              sections,
+            };
+          }}
+        />
       </div>
     </div>
   );
