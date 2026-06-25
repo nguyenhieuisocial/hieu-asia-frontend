@@ -24,6 +24,10 @@ import {
   type SaoHanResult,
   type SaoType,
 } from '@/lib/sao-han';
+import {
+  DownloadToolPdfButton,
+  type ToolPdfPayload,
+} from '@/components/tools/DownloadToolPdfButton';
 
 const TYPE_STYLE: Record<SaoType, string> = {
   tot: 'border-emerald-300 bg-emerald-50 dark:border-emerald-700 dark:bg-emerald-950/30',
@@ -163,6 +167,62 @@ export function SaoHanCalculator() {
               phải lời phán số mệnh. Sao tốt hay xấu không quyết định cuộc đời bạn; sống cẩn trọng, tử
               tế và chủ động vẫn là điều quan trọng nhất.
             </p>
+
+            <DownloadToolPdfButton
+              source="pdf-sao-han"
+              payload={() => {
+                if (!result) return null;
+                const birthYear = result.viewYear - result.tuoiMu + 1;
+                const sections: ToolPdfPayload['sections'] = [
+                  {
+                    heading: `Sao chiếu mệnh năm ${result.viewYear}`,
+                    rows: [
+                      {
+                        label: 'Tuổi / giới tính / năm xem',
+                        value: `${result.gender === 'nam' ? 'Nam' : 'Nữ'} · tuổi mụ ${result.tuoiMu} · năm ${result.viewYear} (sinh ${birthYear})`,
+                      },
+                      { label: 'Sao chiếu mệnh', value: result.sao.name },
+                      { label: 'Hạn', value: TYPE_LABEL[result.sao.type] },
+                      { label: 'Bản chất thiên văn', value: result.sao.origin },
+                    ],
+                  },
+                  {
+                    heading: 'Ý nghĩa theo phong tục',
+                    text: `${result.sao.summary}\n\nLời khuyên: ${result.sao.advice}\n\nTháng cần lưu ý: ${result.sao.thang}`,
+                  },
+                ];
+
+                const nextRows = [1, 2, 3, 4]
+                  .map((d) => {
+                    const yr = result.viewYear + d;
+                    const next = computeSaoHan(birthYear, result.gender, yr);
+                    if (!next) return null;
+                    return {
+                      label: String(yr),
+                      value: `${next.sao.name} — ${TYPE_LABEL[next.sao.type]}`,
+                    };
+                  })
+                  .filter((r): r is { label: string; value: string } => r !== null);
+                if (nextRows.length > 0) {
+                  sections.push({ heading: 'Sao hạn các năm tới', rows: nextRows });
+                }
+
+                sections.push({
+                  heading: 'Lưu ý',
+                  text: 'Đây là cách tra cứu theo phong tục dân gian (Cửu Diệu), mang tính tham khảo — không phải lời phán số mệnh. Việc cúng sao / giải hạn là tập tục để cầu an, hoàn toàn không bắt buộc. Sao tốt hay xấu không quyết định cuộc đời bạn; sống cẩn trọng, tử tế và chủ động vẫn là điều quan trọng nhất.',
+                });
+
+                return {
+                  title: 'Sao hạn theo tuổi — hieu.asia',
+                  subtitle: `Năm ${result.viewYear} · ${result.gender === 'nam' ? 'Nam' : 'Nữ'} · tuổi mụ ${result.tuoiMu}`,
+                  hero: {
+                    big: `Sao ${result.sao.name}`,
+                    small: `${TYPE_LABEL[result.sao.type]} · năm ${result.viewYear}`,
+                  },
+                  sections,
+                };
+              }}
+            />
           </div>
         )}
       </CardContent>

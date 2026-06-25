@@ -8,6 +8,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@hieu-asia/ui';
+import {
+  DownloadToolPdfButton,
+  type ToolPdfPayload,
+} from '@/components/tools/DownloadToolPdfButton';
 import { ZODIAC } from '@/lib/hop-tuoi-pairs';
 import {
   canChiOfYear,
@@ -151,6 +155,58 @@ export function TamTaiFinder() {
               Xem tuổi làm nhà
             </Link>
           </p>
+
+          <DownloadToolPdfButton
+            source="pdf-tam-tai"
+            payload={() => {
+              if (!result) return null;
+              const verdict = result.isThisYear
+                ? `Năm nay (${result.currentYear}) tuổi ${result.chi} đang trong giai đoạn Tam Tai.`
+                : `Năm nay (${result.currentYear}) tuổi ${result.chi} không phạm Tam Tai.`;
+              const sections: ToolPdfPayload['sections'] = [
+                {
+                  heading: 'Tuổi & nhóm Tam Hợp',
+                  rows: [
+                    { label: 'Năm sinh (dương lịch)', value: String(result.birthYear) },
+                    { label: 'Tuổi (Địa Chi)', value: `${result.chi} (con ${result.animal})` },
+                    { label: 'Nhóm Tam Hợp phạm Tam Tai', value: result.tamTaiChis.join(', ') },
+                  ],
+                },
+                {
+                  heading: `Tình trạng năm ${result.currentYear}`,
+                  text: result.isThisYear
+                    ? `${verdict}\n\nĐây chỉ là lời nhắc cân nhắc kỹ hơn với việc trọng đại (cưới hỏi, làm nhà, khai trương), không phải điềm gở cố định — bạn vẫn có thể tiến hành sau khi chuẩn bị chu đáo.`
+                    : `${verdict}\n\nXét theo phong tục Can Chi, năm nay không rơi vào nhóm năm Tam Tai của tuổi bạn.`,
+                },
+              ];
+
+              if (result.upcoming.length > 0) {
+                sections.push({
+                  heading: 'Các năm Tam Tai sắp tới',
+                  rows: result.upcoming.map((y) => ({
+                    label: `Năm ${y}`,
+                    value: `${canChiOfYear(y).chi} — Tam Tai của tuổi ${result.chi}`,
+                  })),
+                });
+              }
+
+              sections.push({
+                heading: 'Lưu ý phong tục',
+                text: 'Tam Tai là quan niệm dân gian Can Chi: mỗi nhóm Tam Hợp gặp 3 năm Tam Tai liên tiếp trong mỗi 12 năm. Đây là nội dung tham khảo để bạn cân nhắc, không phải lời phán xui rủi và không thay thế quyết định của chính bạn.',
+              });
+
+              const payload: ToolPdfPayload = {
+                title: 'Tra Tam Tai theo năm sinh — hieu.asia',
+                subtitle: `Tuổi ${result.chi} (con ${result.animal}) · sinh năm ${result.birthYear}`,
+                hero: {
+                  big: result.isThisYear ? 'Năm nay đang trong Tam Tai' : 'Năm nay không phạm Tam Tai',
+                  small: verdict,
+                },
+                sections,
+              };
+              return payload;
+            }}
+          />
         </div>
       )}
     </div>
