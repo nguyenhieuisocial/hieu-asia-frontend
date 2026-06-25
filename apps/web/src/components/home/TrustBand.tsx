@@ -15,7 +15,7 @@ const PILLARS = [
   {
     icon: ScrollText,
     title: 'Tính thật, không tra bảng',
-    body: 'Tử Vi Bắc phái · 114 chính tinh & phụ tinh, an sao bằng thuật toán — không bịa.',
+    body: 'Tử Vi Bắc phái · 114 sao (chính tinh & phụ tinh), an sao bằng thuật toán — không bịa.',
     href: '/methodology',
   },
   {
