@@ -18,6 +18,7 @@ import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
 import { savePersonalityResult, buildDiscSummary } from '@/lib/personality-store';
 import { EXTENDED_SURVEY_SCHEMA, type DiscDimension } from '@/lib/survey-schema-extended';
 import { scoreDisc, type DiscScoreWithMeta } from '@/lib/scoring/disc';
+import { buildStyle } from '@/lib/disc-type-data';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -129,6 +130,12 @@ export default function DiscPage() {
     ? `${DIM_META[result.primary_style].letter}/${DIM_META[result.secondary_style].letter}`
     : '';
 
+  // Mô tả sâu phong cách CHÍNH (cùng nguồn trang chi tiết /learn/disc/[type]) để
+  // kết quả miễn phí có chiều sâu, không chỉ 4 dòng tóm tắt + thanh điểm.
+  const styleMeta = result
+    ? buildStyle(DIM_META[result.primary_style].letter.toLowerCase())
+    : null;
+
   return (
     <>
       <ToolPageShell
@@ -174,6 +181,65 @@ export default function DiscPage() {
                   )}
                 </CardContent>
               </Card>
+
+              {styleMeta && (
+                <Card className="border-gold/20 bg-card/50">
+                  <CardContent className="space-y-4 p-6">
+                    <div>
+                      <p className="font-heading text-xl text-foreground">
+                        Nhóm {styleMeta.letter} · {styleMeta.vi}
+                      </p>
+                      <p className="mt-2 text-sm leading-relaxed text-foreground/85">
+                        {styleMeta.overview}
+                      </p>
+                    </div>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div>
+                        <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-300">
+                          Điểm mạnh nổi bật
+                        </div>
+                        <ul className="mt-1.5 space-y-1 text-sm leading-relaxed text-foreground/85">
+                          {styleMeta.strengths.map((s) => (
+                            <li key={s} className="flex gap-2">
+                              <span aria-hidden className="text-emerald-400">
+                                •
+                              </span>
+                              {s}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-amber-300">
+                          Hướng phát triển
+                        </div>
+                        <ul className="mt-1.5 space-y-1 text-sm leading-relaxed text-foreground/85">
+                          {styleMeta.growth.map((s) => (
+                            <li key={s} className="flex gap-2">
+                              <span aria-hidden className="text-amber-400">
+                                •
+                              </span>
+                              {s}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-sky-300">
+                        Giao tiếp &amp; làm việc
+                      </div>
+                      <p className="mt-1.5 text-sm leading-relaxed text-foreground/85">
+                        {styleMeta.communication}
+                      </p>
+                    </div>
+                    <p className="text-[11px] leading-relaxed text-muted-foreground">
+                      Đây là <strong>xu hướng</strong> hành vi của nhóm {styleMeta.letter}, không phải
+                      lời phán cố định — ai cũng là pha trộn của cả bốn nhóm ở mức khác nhau.
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
 
               <Button asChild variant="outline" className="w-full">
                 <Link href={`/learn/disc/${DIM_META[result.primary_style].letter.toLowerCase()}`}>
