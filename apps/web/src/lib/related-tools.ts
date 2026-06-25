@@ -62,6 +62,8 @@ const L = {
   familyProfiles: { href: '/family-profiles', label: 'Hồ sơ gia đình' },
   decisionSim: { href: '/decision-simulator', label: 'Mô phỏng quyết định' },
   timelineL: { href: '/timeline', label: 'Timeline đại vận' },
+  tamTai: { href: '/tam-tai', label: 'Tam Tai' },
+  kimLau: { href: '/kim-lau', label: 'Kim Lâu (tuổi cưới)' },
 } as const;
 
 export const RELATED_TOOLS: Record<string, RelatedLink[]> = {
@@ -112,11 +114,13 @@ export const RELATED_TOOLS: Record<string, RelatedLink[]> = {
   '/ngay-kieng-ky': [L.xemngay, L.giohoangdao, L.lichvannien, L.xuatHanh],
   '/xuat-hanh': [L.giohoangdao, L.xemngay, L.ngaykiengky, L.lichvannien],
   // Xem tuổi việc lớn
-  '/xem-tuoi-cuoi': [L.hoptuoi, L.xemngay, L.xemTuoiLamNha, L.khaiTruong],
-  '/xem-tuoi-lam-nha': [L.huongNha, L.xemngay, L.thuocloban, L.xemTuoiCuoi],
-  '/khai-truong': [L.xemngay, L.xemTuoiCuoi, L.hoptuoi, L.saohan],
+  '/xem-tuoi-cuoi': [L.kimLau, L.tamTai, L.hoptuoi, L.xemngay, L.xemTuoiLamNha],
+  '/xem-tuoi-lam-nha': [L.tamTai, L.huongNha, L.xemngay, L.thuocloban, L.xemTuoiCuoi],
+  '/khai-truong': [L.tamTai, L.xemngay, L.xemTuoiCuoi, L.hoptuoi, L.saohan],
   '/xong-dat': [L.hoptuoi, L.xemTuoiCuoi, L.tuvi2027, L.xemngay],
   '/huong-nha': [L.xemTuoiLamNha, L.thuocloban, L.xemngay, L.banMenh],
+  '/tam-tai': [L.xemTuoiCuoi, L.kimLau, L.saohan, L.hoptuoi],
+  '/kim-lau': [L.xemTuoiCuoi, L.tamTai, L.xemngay, L.hoptuoi],
   // Quan hệ & gia đình
   '/sinh-con': [L.datten, L.hoptuoi, L.banMenh, L.xemTuoiCuoi],
   '/dat-ten-ngu-hanh': [L.sinhCon, L.banMenh, L.battu],
