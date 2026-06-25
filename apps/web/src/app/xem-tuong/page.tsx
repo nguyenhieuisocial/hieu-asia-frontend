@@ -15,6 +15,8 @@ import {
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
+import { aiReadingToSections } from '@/lib/pdf/ai-reading-sections';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
@@ -440,6 +442,38 @@ export default function XemTuongPage() {
                     title="Xem tướng bằng AI"
                     text="Mình vừa thử xem tướng trên hieu.asia — bạn thử xem!"
                     trackId="xem-tuong"
+                  />
+                  <DownloadToolPdfButton
+                    source="pdf-xem-tuong"
+                    payload={() => {
+                      if (!reading) return null;
+                      const loaiXem = kind === 'palm' ? 'Chỉ tay' : 'Tướng mặt';
+                      const fallbackHeading =
+                        kind === 'palm' ? 'Luận chỉ tay (AI)' : 'Luận tướng mặt (AI)';
+                      return {
+                        title: `Xem ${loaiXem} — hieu.asia`,
+                        subtitle:
+                          'Luận giải tướng số học bằng AI · Kết quả mang tính tham khảo, không phán định số phận.',
+                        hero: {
+                          big: kind === 'palm' ? 'Luận chỉ tay' : 'Luận tướng mặt',
+                          small: `Nhân tướng học · ${gender === 'nam' ? 'Nam' : 'Nữ'}`,
+                        },
+                        sections: [
+                          {
+                            heading: 'Thông tin',
+                            rows: [
+                              { label: 'Loại xem', value: loaiXem },
+                              { label: 'Giới tính', value: gender === 'nam' ? 'Nam' : 'Nữ' },
+                            ],
+                          },
+                          ...aiReadingToSections(reading, fallbackHeading),
+                          {
+                            heading: 'Lưu ý',
+                            text: 'Kết quả mang tính tham khảo — phản ánh xu hướng và ứng xử theo tướng số học, không phán định số phận hay kết quả cụ thể. Nhân tướng học là kinh nghiệm quan sát dân gian, không phải khoa học được kiểm chứng.',
+                          },
+                        ],
+                      };
+                    }}
                   />
                 </div>
 

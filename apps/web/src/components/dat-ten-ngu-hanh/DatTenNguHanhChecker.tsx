@@ -24,6 +24,7 @@ import {
 } from '@/lib/dat-ten-ngu-hanh';
 import { track } from '@/lib/analytics';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
+import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 
 type GenderFilter = 'ca' | 'nam' | 'nu';
 
@@ -197,6 +198,63 @@ export function DatTenNguHanhChecker({ defaultGender = 'ca' }: { defaultGender?:
                   </Button>
                 </div>
               )}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <DownloadToolPdfButton
+                source="pdf-dat-ten-ngu-hanh"
+                payload={() => {
+                  if (!result) return null;
+                  const elInfo = ELEMENTS[result.element];
+                  const sections: ToolPdfPayload['sections'] = [
+                    {
+                      heading: 'Thông tin bé',
+                      rows: [
+                        {
+                          label: 'Ngày sinh (dương lịch)',
+                          value: `${result.solar.day}/${result.solar.month}/${result.solar.year}`,
+                        },
+                        { label: 'Năm âm lịch', value: `${result.canChi} (${result.lunarYear})` },
+                        { label: 'Mệnh ngũ hành', value: `${elInfo.name} — ${result.napAmName}` },
+                        {
+                          label: 'Tên nên thuộc hành',
+                          value: result.hopElements.map((e) => ELEMENTS[e].name).join(', '),
+                        },
+                        {
+                          label: 'Thường tránh hành',
+                          value: result.avoidElements.map((e) => ELEMENTS[e].name).join(', '),
+                        },
+                      ],
+                    },
+                    { heading: `Về mệnh ${elInfo.name}`, text: elInfo.blurb },
+                  ];
+
+                  for (const el of result.hopElements) {
+                    const names = NAME_SUGGESTIONS[el].filter((n) => matchGender(n.gender, gender));
+                    if (names.length === 0) continue;
+                    const relation = el === result.element ? 'đồng mệnh' : 'sinh ra mệnh bé';
+                    sections.push({
+                      heading: `Gợi ý tên hợp mệnh — hành ${ELEMENTS[el].name} (${relation})`,
+                      text: names.map((n) => `${n.name} — ${n.meaning}`).join('\n'),
+                    });
+                  }
+
+                  sections.push({
+                    heading: 'Lưu ý',
+                    text: 'Đây là gợi ý tham khảo theo phong tục, giúp cha mẹ thêm một góc nhìn khi chọn tên — không phải lời định đoạt tương lai của con. Cách quy tên theo hành dựa trên nghĩa chữ Hán-Việt (phổ biến nhất, có thể khác các trường phái tính theo số nét). Một cái tên đẹp, ý nghĩa tốt và tâm ý của cha mẹ vẫn là điều quan trọng nhất.',
+                  });
+
+                  return {
+                    title: 'Đặt tên theo ngũ hành — hieu.asia',
+                    subtitle: `Bé sinh ${result.solar.day}/${result.solar.month}/${result.solar.year} · Mệnh ${elInfo.name}`,
+                    hero: {
+                      big: `${elInfo.name} — ${result.napAmName}`,
+                      small: `Năm âm lịch ${result.canChi} (${result.lunarYear})`,
+                    },
+                    sections,
+                  };
+                }}
+              />
             </div>
           </div>
         )}

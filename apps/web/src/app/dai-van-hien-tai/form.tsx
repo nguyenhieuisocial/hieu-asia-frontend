@@ -17,6 +17,7 @@ import { Timer, AlertTriangle, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
+import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { castTuViChart, type TuViChart, type TuViPalace } from '@/lib/tuvi-client';
 
 type Gender = 'male' | 'female';
@@ -301,10 +302,58 @@ export function DaiVanHienTaiForm() {
                   </p>
                 </div>
 
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   <Button asChild size="lg"><Link href="/onboarding">
                     Lập lá số đầy đủ
                   </Link></Button>
+                  <DownloadToolPdfButton
+                    source="pdf-dai-van-hien-tai"
+                    payload={() => {
+                      if (!result || !result.palace) return null;
+                      const p = result.palace;
+                      const start = p.decadal?.range?.[0];
+                      const end = p.decadal?.range?.[1];
+                      const ageRange =
+                        start != null && end != null ? `${start}–${end} tuổi` : 'không xác định';
+                      const stars =
+                        p.majorStars.length > 0
+                          ? p.majorStars
+                              .map((s) => (s.mutagen ? `${s.name} (${s.mutagen})` : s.name))
+                              .join(', ')
+                          : 'Không có chính tinh (cung vô chính diệu)';
+                      return {
+                        title: 'Đại vận hiện tại — hieu.asia',
+                        subtitle: `Chu kỳ 10 năm trong Tử Vi · Tuổi hiện tại ${result.ageNow}`,
+                        hero: {
+                          big: `Đại vận cung ${p.name} (${ageRange})`,
+                          small: `${p.heavenlyStem} ${p.earthlyBranch}`,
+                        },
+                        sections: [
+                          {
+                            heading: 'Đại vận hiện tại',
+                            rows: [
+                              { label: 'Tuổi hiện tại', value: String(result.ageNow) },
+                              { label: 'Khoảng đại vận', value: ageRange },
+                              { label: 'Cung chủ đại vận', value: p.name },
+                              {
+                                label: 'Can chi cung',
+                                value: `${p.heavenlyStem} ${p.earthlyBranch}`,
+                              },
+                              { label: 'Chính tinh tại đại vận', value: stars },
+                            ],
+                          },
+                          {
+                            heading: `Chủ đề của 10 năm — cung ${p.name}`,
+                            text: themeForPalace(p.name),
+                          },
+                          {
+                            heading: 'Đọc bản rút gọn này thế nào',
+                            text: 'Đây là bản rút gọn — chỉ xác định bạn đang ở đại vận nào và chính tinh của cung đại vận, đủ để biết "bối cảnh" giai đoạn 10 năm này. Đại vận không quyết định thành/bại; nó cho biết lĩnh vực nào đang được ưu tiên. Để xem chi tiết cơ hội + rủi ro mỗi năm, lưu niên, tam phương tứ chính hỗ trợ/phá đại vận — hãy lập lá số đầy đủ (vẫn miễn phí) tại hieu.asia.',
+                          },
+                        ],
+                      };
+                    }}
+                  />
                   <Link
                     href="/tu-vi-2026"
                     className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"
