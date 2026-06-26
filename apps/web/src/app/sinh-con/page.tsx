@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { RelatedTools } from '@/components/tools/RelatedTools';
 import { SinhConChecker } from '@/components/sinh-con/SinhConChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -156,16 +155,6 @@ export default function SinhConPage() {
               />
             </div>
           </section>
-
-          <RelatedTools
-            links={[
-              { href: '/dat-ten-ngu-hanh', label: 'Đặt tên ngũ hành' },
-              { href: '/xem-tuoi-cuoi', label: 'Xem tuổi cưới' },
-              { href: '/xem-hop-nhom', label: 'Xem hợp cả nhà' },
-              { href: '/hop-tuoi', label: 'Xem hợp tuổi' },
-              { href: '/xem-ngay', label: 'Xem ngày tốt' },
-            ]}
-          />
         </section>
       </ToolPageShell>
     </>

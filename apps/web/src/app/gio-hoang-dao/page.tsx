@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { RelatedTools } from '@/components/tools/RelatedTools';
 import { GioHoangDaoChecker } from '@/components/gio-hoang-dao/GioHoangDaoChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -173,15 +172,6 @@ export default function GioHoangDaoPage() {
               />
             </div>
           </section>
-
-          <RelatedTools
-            links={[
-              { href: '/xem-ngay', label: 'Xem ngày tốt' },
-              { href: '/ngay-kieng-ky', label: 'Ngày kiêng kỵ' },
-              { href: '/sao-han', label: 'Xem sao hạn' },
-              { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
-            ]}
-          />
         </section>
       </ToolPageShell>
     </>

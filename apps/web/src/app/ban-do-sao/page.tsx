@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { RelatedTools } from '@/components/tools/RelatedTools';
 import { SunMoonChecker } from '@/components/ban-do-sao/SunMoonChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -163,15 +162,6 @@ export default async function BanDoSaoPage({
               ))}
             </dl>
           </section>
-
-          <RelatedTools
-            links={[
-              { href: '/mbti', label: 'Trắc nghiệm MBTI' },
-              { href: '/than-so-hoc', label: 'Thần số học' },
-              { href: '/compatibility', label: 'Xem hợp đôi' },
-              { href: '/cong-cu', label: 'Tất cả công cụ' },
-            ]}
-          />
         </section>
       </ToolPageShell>
     </>

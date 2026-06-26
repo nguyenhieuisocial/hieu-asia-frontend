@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { RelatedTools } from '@/components/tools/RelatedTools';
 import { DatTenNguHanhChecker } from '@/components/dat-ten-ngu-hanh/DatTenNguHanhChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -162,16 +161,6 @@ export default function DatTenNguHanhPage() {
               />
             </div>
           </section>
-
-          <RelatedTools
-            links={[
-              { href: '/sinh-con', label: 'Sinh con theo năm' },
-              { href: '/xem-ngay', label: 'Xem ngày tốt' },
-              { href: '/hop-tuoi', label: 'Xem hợp tuổi' },
-              { href: '/sao-han', label: 'Xem sao hạn' },
-              { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
-            ]}
-          />
         </section>
       </ToolPageShell>
     </>

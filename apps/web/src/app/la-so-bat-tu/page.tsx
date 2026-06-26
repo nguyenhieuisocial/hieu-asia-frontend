@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { RelatedTools } from '@/components/tools/RelatedTools';
 import { BatTuChecker } from '@/components/la-so-bat-tu/BatTuChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -208,15 +207,6 @@ export default function LaSoBatTuPage() {
               />
             </div>
           </section>
-
-          <RelatedTools
-            links={[
-              { href: '/bat-tu', label: 'Cẩm nang Bát Tự' },
-              { href: '/la-so-tu-vi', label: 'Xem lá số Tử Vi' },
-              { href: '/ban-do-sao', label: 'Bản đồ sao (chiêm tinh)' },
-              { href: '/cong-cu', label: 'Tất cả công cụ' },
-            ]}
-          />
         </section>
       </ToolPageShell>
     </>

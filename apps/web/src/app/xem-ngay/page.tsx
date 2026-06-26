@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
-import { RelatedTools } from '@/components/tools/RelatedTools';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
@@ -228,15 +227,6 @@ export default function XemNgayHubPage() {
             />
           </div>
         </section>
-
-        <RelatedTools
-          links={[
-            { href: '/ngay-kieng-ky', label: 'Ngày kiêng kỵ' },
-            { href: '/sao-han', label: 'Xem sao hạn' },
-            { href: '/gio-hoang-dao', label: 'Giờ hoàng đạo' },
-            { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
-          ]}
-        />
       </ToolPageShell>
     </>
   );
