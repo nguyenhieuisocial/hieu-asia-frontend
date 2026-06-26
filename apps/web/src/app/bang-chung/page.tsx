@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { RelatedTools } from '@/components/tools/RelatedTools';
 import { BangChungTool } from '@/components/bang-chung/BangChungTool';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -162,16 +161,6 @@ export default function BangChungPage() {
               ))}
             </dl>
           </section>
-
-          <RelatedTools
-            links={[
-              { href: '/bang-chung/do-chinh-xac', label: 'Tử Vi có chính xác không? — cách chúng tôi đo' },
-              { href: '/la-so-tu-vi', label: 'Xem lá số Tử Vi' },
-              { href: '/bat-tu', label: 'Bát Tự' },
-              { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại' },
-              { href: '/cong-cu', label: 'Tất cả công cụ' },
-            ]}
-          />
         </section>
       </ToolPageShell>
     </>
