@@ -82,7 +82,7 @@ const WEEKS: {
     icon: Target,
     actions: [
       'Chọn việc số 1 trong 3 mục tiêu để dồn lực.',
-      'Tắt noise: bớt họp, bớt scroll.',
+      'Tắt nhiễu: bớt họp, bớt lướt điện thoại.',
       'Cuối tuần kiểm: đã tiến được bao nhiêu %.',
     ],
   },
@@ -94,7 +94,7 @@ const WEEKS: {
     actions: [
       'So tiến độ với mục tiêu — 50% là điểm chuẩn.',
       'Bỏ 1 việc không quan trọng để dồn năng lượng.',
-      'Hỏi 1 người tin cậy về blind spot của bạn.',
+      'Hỏi 1 người tin cậy về điểm mù của bạn.',
     ],
   },
   {

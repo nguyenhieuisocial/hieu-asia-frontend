@@ -271,11 +271,11 @@ export default function TuViHubPage() {
               body="Bấm từng cung để thấy chính tinh, phụ tinh, tứ hoá. Tam phương tứ chính được tô vàng — luận có chiều sâu, không đọc rời lẻ."
             />
             <FeatureItem
-              title="AI Mentor đọc structured chart"
+              title="AI Mentor đọc đúng lá số đã lập"
               body="Mentor không đoán từ ngữ cảnh trống — nó đọc đúng cung Quan Lộc, Tài Bạch, Thiên Di để trả lời câu hỏi cụ thể của bạn."
             />
             <FeatureItem
-              title="Decision plan 30-60-90 ngày"
+              title="Kế hoạch hành động 30-60-90 ngày"
               body="Kết thúc không phải lời tiên tri mà là kế hoạch hành động — kèm câu hỏi tự phản tư và bước kiểm chứng."
             />
           </div>

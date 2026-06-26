@@ -146,7 +146,7 @@ export default function FamilyProfilesPage() {
             </span>
           </h1>
           <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Tạo profile cho người thân (cha mẹ, vợ/chồng, con) để hiểu giao tiếp
+            Tạo hồ sơ cho người thân (cha mẹ, vợ/chồng, con) để hiểu giao tiếp
             và lập kế hoạch chung.
           </p>
           <div
@@ -271,7 +271,7 @@ export default function FamilyProfilesPage() {
             Bắt đầu với lá số của bạn
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Có lá số cá nhân trước — sau đó hệ thống mới ghép được profile thành
+            Có lá số cá nhân trước — sau đó hệ thống mới ghép được hồ sơ thành
             viên với bạn.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">

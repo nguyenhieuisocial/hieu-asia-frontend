@@ -107,7 +107,7 @@ export default function SinhConPage() {
                 Kim → Thủy → Mộc → Hỏa → Thổ.
               </p>
               <p>
-                Cả hai lớp đều là quy tắc cổ điển, deterministic — nhập cùng năm sinh luôn ra cùng
+                Cả hai lớp đều là quy tắc cổ điển, luôn nhất quán — nhập cùng năm sinh luôn ra cùng
                 kết quả, không "bói mù".
               </p>
             </div>

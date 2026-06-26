@@ -119,7 +119,7 @@ export default function LearnLandingPage() {
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
           Mỗi báo cáo tại hieu.asia không phải là phán quyết định mệnh. Đó là một góc nhìn —
-          và bạn xứng đáng biết góc nhìn đó được dựng nên từ đâu. 5 khái niệm dưới đây là nền
+          và bạn xứng đáng biết góc nhìn đó được dựng nên từ đâu. Các khái niệm dưới đây là nền
           tảng tối thiểu để bạn đọc báo cáo của mình một cách có ý thức.
         </p>
       </section>

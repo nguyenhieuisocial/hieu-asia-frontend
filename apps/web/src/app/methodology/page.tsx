@@ -231,7 +231,7 @@ const VALIDATION_ROWS: {
   result: string;
   status: 'pass' | 'partial';
 }[] = [
-  { label: 'Âm/dương lịch 1900-2199', result: '500/500', status: 'pass' },
+  { label: 'Âm/dương lịch 1900-2199', result: '498/500', status: 'partial' },
   { label: 'Can Chi năm/tháng/ngày/giờ', result: '300/300', status: 'pass' },
   {
     label: 'An Mệnh/Thân/Cục (100 lá số vàng)',
@@ -256,7 +256,7 @@ const VALIDATION_ROWS: {
   },
   {
     label: 'Adversarial suite mở rộng (6 bộ × 100 = 600 prompts)',
-    result: '≥99%',
+    result: '~98%',
     status: 'pass',
   },
 ];

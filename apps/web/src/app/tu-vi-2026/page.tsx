@@ -48,18 +48,18 @@ export const metadata: Metadata = {
 };
 
 const MONTHS: { name: string; theme: string }[] = [
-  { name: 'Tháng 1 — Mậu Dần', theme: 'Khởi đầu thận trọng. Lên kế hoạch năm, chưa nên ra quyết định lớn.' },
-  { name: 'Tháng 2 — Kỷ Mão', theme: 'Năng lượng giao tiếp tốt. Phù hợp tái lập quan hệ và mạng lưới.' },
-  { name: 'Tháng 3 — Canh Thìn', theme: 'Thời điểm đẩy dự án ổn định. Chú ý sức khoẻ tinh thần.' },
-  { name: 'Tháng 4 — Tân Tỵ', theme: 'Cảm xúc dễ căng — tránh quyết định trong lúc nóng.' },
-  { name: 'Tháng 5 — Nhâm Ngọ', theme: 'Cơ hội xa quê, du học, dự án quốc tế.' },
-  { name: 'Tháng 6 — Quý Mùi', theme: 'Phù hợp tích luỹ tài chính + chăm sóc gia đạo.' },
-  { name: 'Tháng 7 — Giáp Thân', theme: 'Cần thận trọng khẩu thiệt. Tránh tranh luận online.' },
-  { name: 'Tháng 8 — Ất Dậu', theme: 'Thời điểm tốt để kết nối — học thêm, mentor, mở rộng kỹ năng.' },
-  { name: 'Tháng 9 — Bính Tuất', theme: 'Sự nghiệp có dấu hiệu thay đổi — nên đánh giá lại 6 tháng đầu năm.' },
-  { name: 'Tháng 10 — Đinh Hợi', theme: 'Tài chính cần kỷ luật. Tránh đầu tư rủi ro cao cuối năm.' },
-  { name: 'Tháng 11 — Mậu Tý', theme: 'Năng lượng nội tâm tăng — phù hợp ôn lại mục tiêu.' },
-  { name: 'Tháng 12 — Kỷ Sửu', theme: 'Khép năm bằng kế hoạch 2027 — không vội quyết định cuối năm.' },
+  { name: 'Tháng 1 — Canh Dần', theme: 'Khởi đầu thận trọng. Lên kế hoạch năm, chưa nên ra quyết định lớn.' },
+  { name: 'Tháng 2 — Tân Mão', theme: 'Năng lượng giao tiếp tốt. Phù hợp tái lập quan hệ và mạng lưới.' },
+  { name: 'Tháng 3 — Nhâm Thìn', theme: 'Thời điểm đẩy dự án ổn định. Chú ý sức khoẻ tinh thần.' },
+  { name: 'Tháng 4 — Quý Tỵ', theme: 'Cảm xúc dễ căng — tránh quyết định trong lúc nóng.' },
+  { name: 'Tháng 5 — Giáp Ngọ', theme: 'Cơ hội xa quê, du học, dự án quốc tế.' },
+  { name: 'Tháng 6 — Ất Mùi', theme: 'Phù hợp tích luỹ tài chính + chăm sóc gia đạo.' },
+  { name: 'Tháng 7 — Bính Thân', theme: 'Cần thận trọng khẩu thiệt. Tránh tranh luận online.' },
+  { name: 'Tháng 8 — Đinh Dậu', theme: 'Thời điểm tốt để kết nối — học thêm, mentor, mở rộng kỹ năng.' },
+  { name: 'Tháng 9 — Mậu Tuất', theme: 'Sự nghiệp có dấu hiệu thay đổi — nên đánh giá lại 6 tháng đầu năm.' },
+  { name: 'Tháng 10 — Kỷ Hợi', theme: 'Tài chính cần kỷ luật. Tránh đầu tư rủi ro cao cuối năm.' },
+  { name: 'Tháng 11 — Canh Tý', theme: 'Năng lượng nội tâm tăng — phù hợp ôn lại mục tiêu.' },
+  { name: 'Tháng 12 — Tân Sửu', theme: 'Khép năm bằng kế hoạch 2027 — không vội quyết định cuối năm.' },
 ];
 
 const THEMES = [
@@ -71,7 +71,7 @@ const THEMES = [
   {
     icon: Wallet,
     title: 'Tài chính 2026',
-    body: 'Không phải năm "all-in" — Bính Ngọ có khuynh hướng biến động. Ưu tiên emergency fund 6 tháng trước khi tăng rủi ro.',
+    body: 'Không phải năm dồn hết vốn một lần — Bính Ngọ có khuynh hướng biến động. Ưu tiên quỹ dự phòng 6 tháng trước khi tăng rủi ro.',
   },
   {
     icon: Heart,
@@ -89,7 +89,7 @@ const DECISIONS = [
   {
     label: 'Có nên chuyển ngành/công ty?',
     body:
-      'Năm 2026 thuận cho chuyển đổi NẾU bạn đã có 6 tháng runway tài chính + 2-3 cơ hội cụ thể đã xác minh. Không thuận cho "nhảy mù".',
+      'Năm 2026 thuận cho chuyển đổi NẾU bạn đã có quỹ cầm cự tài chính 6 tháng + 2-3 cơ hội cụ thể đã xác minh. Không thuận cho "nhảy mù".',
   },
   {
     label: 'Có nên cưới?',

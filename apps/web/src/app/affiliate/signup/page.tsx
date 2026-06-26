@@ -244,7 +244,7 @@ export default function AffiliateSignupPage() {
           <CardHeader>
             <CardTitle className="text-2xl">Đăng ký affiliate</CardTitle>
             <p className="text-sm text-muted-foreground">
-              Hoa hồng 30% tháng đầu / 10% các tháng sau · Cookie 30 ngày
+              Hoa hồng 30% đơn đầu / 10% mỗi lần gia hạn · Cookie 30 ngày
             </p>
           </CardHeader>
           <CardContent>
