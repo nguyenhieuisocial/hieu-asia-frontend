@@ -239,6 +239,7 @@ export default function BanMenhHubPage() {
             links={[
               { href: '/la-so-bat-tu', label: 'Lá số Bát Tự (Tứ Trụ) đầy đủ' },
               { href: '/dat-ten-ngu-hanh', label: 'Đặt tên con theo ngũ hành' },
+              { href: '/mau-xe-hop-menh', label: 'Màu xe hợp mệnh' },
               { href: '/huong-nha', label: 'Hướng nhà hợp tuổi' },
               { href: '/hop-tuoi', label: 'Xem hợp tuổi' },
             ]}

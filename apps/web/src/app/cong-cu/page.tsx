@@ -119,6 +119,7 @@ const TOOLS: ExplorerTool[] = [
   { cat: 'xem-tuoi', href: '/hop-tuoi', emoji: '💑', name: 'Hợp Tuổi', desc: 'Kiểm tra hợp tuổi vợ chồng, xây dựng, xuất hành theo tam hợp.' },
   { cat: 'xem-tuoi', href: '/huong-nha', emoji: '🧭', name: 'Xem Hướng Nhà', desc: 'Hướng nhà hợp tuổi theo Bát Trạch (cung phi): 4 hướng tốt – 4 hướng tránh cho cửa, giường, bếp.' },
   { cat: 'xem-tuoi', href: '/thuoc-lo-ban', emoji: '📐', name: 'Thước Lỗ Ban', desc: 'Đo kích thước cát hung theo thước phong thủy truyền thống.' },
+  { cat: 'xem-tuoi', href: '/mau-xe-hop-menh', emoji: '🚗', name: 'Màu Xe Hợp Mệnh', desc: 'Sinh năm nào hợp màu xe gì? Tra theo ngũ hành bản mệnh — màu hợp và màu nên cân nhắc, để tham khảo, không hù dọa.' },
 
   // ── Quan hệ & gia đình ──────────────────────────────────────────
   { cat: 'quan-he', href: '/compatibility', emoji: '💞', name: 'Hợp Đôi', desc: 'Đo độ hợp giữa hai người — tính cách, cảm xúc và mẫu hình tương tác.' },
