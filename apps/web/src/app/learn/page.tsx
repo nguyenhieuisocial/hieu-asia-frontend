@@ -153,7 +153,7 @@ export default function LearnLandingPage() {
             Phương pháp EOSIDIN
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            7 bước hieu.asia dùng để chuyển dữ liệu thô thành insight có thể hành động.
+            7 bước hieu.asia dùng để chuyển dữ liệu thô thành góc nhìn bạn có thể hành động.
           </p>
         </div>
         <EOSIDIN />

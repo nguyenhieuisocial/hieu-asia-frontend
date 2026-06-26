@@ -72,9 +72,9 @@ const CHANNELS = [
   {
     href: '/community/cases',
     label: 'Case studies',
-    desc: '6 quyết định thực tế từ người dùng — ẩn danh hoá, kèm methodology pages liên quan.',
+    desc: '6 tình huống minh hoạ cách dùng lá số cho một quyết định thật — kèm các trang Methodology liên quan.',
     icon: FileText,
-    cta: 'Đọc 6 case',
+    cta: 'Đọc 6 tình huống',
     external: false,
     status: 'live' as const,
   },

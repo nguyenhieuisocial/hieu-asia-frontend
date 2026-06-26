@@ -58,7 +58,7 @@ export default function TermsPage() {
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-xl">2. Phạm vi dịch vụ</CardTitle>
-            <CardDescription>hieu.asia cung cấp insight tham khảo, KHÔNG phải tư vấn chuyên môn.</CardDescription>
+            <CardDescription>hieu.asia cung cấp góc nhìn tham khảo, KHÔNG phải tư vấn chuyên môn.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/85">
             <p>
@@ -80,7 +80,7 @@ export default function TermsPage() {
         <h2 className="sr-only">3. DISCLAIMER quan trọng</h2>
         <Card className="mb-6 border-gold/40">
           <CardHeader>
-            <CardTitle className="text-xl text-gold-700">3. DISCLAIMER quan trọng</CardTitle>
+            <CardTitle className="text-xl text-gold-700">3. Miễn trừ trách nhiệm quan trọng</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/85">
             <div className="rounded-md border border-gold/30 bg-gold/10 p-4">
@@ -110,7 +110,7 @@ export default function TermsPage() {
               Thanh toán được xử lý qua <strong className="text-foreground">SePay</strong> — đối tác thanh
               toán hợp pháp tại Việt Nam.
             </p>
-            <p className="font-semibold text-foreground">Chính sách hoàn tiền (Refund Policy):</p>
+            <p className="font-semibold text-foreground">Chính sách hoàn tiền:</p>
             <ul className="list-disc space-y-2 pl-5">
               <li>
                 Hoàn tiền <strong className="text-gold-700">100% trong vòng 24 giờ</strong> nếu báo
