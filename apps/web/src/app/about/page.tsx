@@ -12,7 +12,7 @@ import { PhilosophyBlock } from '@/components/marketing/PhilosophyBlock';
 export const metadata: Metadata = {
   title: 'Về chúng tôi',
   description:
-    'hieu.asia là người bạn đồng hành cho mỗi quyết định quan trọng — tri thức cổ học Á Đông trình bày bằng tiếng Việt, AI hiện đại, văn phong calm, không định mệnh hoá.',
+    'hieu.asia là người bạn đồng hành cho mỗi quyết định quan trọng — tri thức cổ học Á Đông trình bày bằng tiếng Việt, AI hiện đại, văn phong điềm tĩnh, không định mệnh hoá.',
   alternates: { canonical: 'https://hieu.asia/about' },
   // Wave 60.96.3 — route-level openGraph REPLACES root-layout openGraph; must
   // re-declare `images` or social preview cards render blank.
@@ -75,7 +75,7 @@ const ABOUT_JSON_LD = {
         foundingDate: '2025',
         founder: { '@type': 'Person', name: 'Hiệu' },
         description:
-          'AI cá nhân hoá Tử Vi, Bát Tự, Thần Số Học, MBTI và Palm Reading bằng tiếng Việt — không tiên tri, không định mệnh hoá, AI làm reflection, user quyết định.',
+          'AI cá nhân hoá Tử Vi, Bát Tự, Thần Số Học, MBTI và Xem Tướng bằng tiếng Việt — không tiên tri, không định mệnh hoá; AI gợi mở để bạn chiêm nghiệm, bạn là người quyết định.',
         sameAs: ['https://t.me/hieuasiabot'],
         contactPoint: {
           '@type': 'ContactPoint',

@@ -116,7 +116,7 @@ const BUCKETS: readonly Bucket[] = [
         Icon: Calendar,
         anchor: 'bat-tu',
         title: 'Bát Tự Tứ Trụ',
-        desc: 'Bốn trụ Năm – Tháng – Ngày – Giờ theo Ngũ Hành. Hiểu năng lượng bẩm sinh và cách cân bằng Kim, Mộc, Thủy, Hỏa, Thổ.',
+        desc: 'Bốn trụ Năm – Tháng – Ngày – Giờ quanh Nhật Chủ (chính bạn). Hiểu thiên hướng bẩm sinh và thời điểm thuận để hành động, qua tương quan ngũ hành Kim – Mộc – Thủy – Hỏa – Thổ.',
         cta: { href: '/learn/bat-tu', label: 'Đọc giải nghĩa' },
       },
       {
@@ -190,7 +190,7 @@ const BUCKETS: readonly Bucket[] = [
         Icon: Share2,
         anchor: 'affiliate',
         title: 'Affiliate program',
-        desc: 'Chia sẻ hieu.asia với bạn bè — nhận hoa hồng minh bạch khi họ đăng ký gói. Dashboard riêng để theo dõi hiệu quả.',
+        desc: 'Chia sẻ hieu.asia với bạn bè — nhận hoa hồng minh bạch khi họ đăng ký gói. Bảng theo dõi riêng để xem hiệu quả.',
         cta: { href: '/affiliate', label: 'Tham gia affiliate' },
         badge: 'new',
       },
@@ -430,7 +430,7 @@ const FEATURES_JSON_LD = {
         name: 'Bát Tự Tứ Trụ',
         url: 'https://hieu.asia/learn/bat-tu',
         description:
-          'Bát Tự 4 trụ Năm-Tháng-Ngày-Giờ theo Ngũ Hành (Kim Mộc Thủy Hỏa Thổ) — cân bằng năng lượng bẩm sinh + dụng thần.',
+          'Bát Tự 4 trụ Năm-Tháng-Ngày-Giờ quanh Nhật Chủ (chính bạn) — thiên hướng bẩm sinh + thời điểm thuận để quyết định, qua tương quan ngũ hành (Kim Mộc Thủy Hỏa Thổ).',
         provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
         areaServed: 'VN',
         inLanguage: 'vi-VN',
