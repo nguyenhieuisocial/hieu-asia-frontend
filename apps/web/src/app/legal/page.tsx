@@ -31,7 +31,7 @@ const SECTIONS = [
     href: '/terms',
     icon: FileText,
     title: 'Điều khoản sử dụng',
-    desc: 'Quyền và nghĩa vụ khi dùng dịch vụ. Hoàn tiền 14 ngày. Không tự gia hạn ngầm.',
+    desc: 'Quyền và nghĩa vụ khi dùng dịch vụ. Hoàn tiền 100% nếu chưa tạo báo cáo. Không tự gia hạn ngầm.',
   },
   {
     href: '/account',
@@ -113,7 +113,7 @@ export default function LegalHubPage() {
                 <a href="mailto:privacy@hieu.asia" className="text-gold-700 hover:underline">
                   privacy@hieu.asia
                 </a>
-                . Chúng tôi cam kết trả lời trong 72 giờ làm việc.
+                . Chúng tôi cam kết trả lời trong vòng 72 giờ.
               </p>
             </div>
           </div>

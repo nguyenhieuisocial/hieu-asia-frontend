@@ -25,7 +25,7 @@ interface CookieRow {
 const COOKIES: CookieRow[] = [
   {
     name: 'hieu_authed',
-    purpose: 'Cờ "đã đăng nhập" cho SSR partner gate (chỉ giá trị "1", KHÔNG chứa token/JWT)',
+    purpose: 'Cờ "đã đăng nhập" cho SSR (chỉ giá trị "1", KHÔNG chứa token/JWT)',
     retention: '90 ngày',
     optOut: 'Đăng xuất',
     category: 'necessary',
@@ -46,7 +46,7 @@ const COOKIES: CookieRow[] = [
   },
   {
     name: 'hieu.theme',
-    purpose: 'Light/dark preference',
+    purpose: 'Lựa chọn giao diện sáng/tối',
     retention: '365 ngày',
     optOut: 'Cài đặt trình duyệt',
     category: 'personalization',
@@ -293,7 +293,7 @@ export default function PrivacyPage() {
           </CardHeader>
           <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/85">
             <p>
-              <strong className="text-foreground">hieu.asia</strong> — nền tảng AI insight cá nhân hóa.
+              <strong className="text-foreground">hieu.asia</strong> — nền tảng AI cá nhân hoá giúp bạn hiểu mình.
             </p>
             <p>
               Mọi câu hỏi về dữ liệu, vui lòng liên hệ:{' '}

@@ -317,7 +317,7 @@ export default function PricingPage() {
               features: [
                 'Mentor AI không giới hạn câu hỏi',
                 'Đại vận và lưu niên hàng năm',
-                'Tất cả 4 ống kính sâu',
+                'Tất cả 5 ống kính sâu',
                 'Huỷ bất cứ lúc nào',
               ],
               ctaLabel: 'Dùng Mentor không giới hạn',

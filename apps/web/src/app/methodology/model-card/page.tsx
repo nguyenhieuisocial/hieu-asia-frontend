@@ -41,7 +41,7 @@ export const metadata: Metadata = {
 };
 
 const PURPOSES = [
-  'Diễn giải lá số (Tử Vi/Bát Tự/Thần Số Học/MBTI) thành insight cá nhân hoá.',
+  'Diễn giải lá số (Tử Vi/Bát Tự/Thần Số Học/MBTI) thành góc nhìn cá nhân hoá.',
   'Hỗ trợ tự phản tư + decision brief + mentor chat.',
   'Soạn báo cáo và Cẩm Nang PDF.',
 ];
