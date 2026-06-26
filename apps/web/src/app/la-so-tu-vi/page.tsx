@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { RelatedTools } from '@/components/tools/RelatedTools';
 import { LaSoChecker } from '@/components/la-so-tu-vi/LaSoChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -190,16 +189,6 @@ export default async function LaSoTuViPage({
               />
             </div>
           </section>
-
-          <RelatedTools
-            links={[
-              { href: '/bang-chung', label: 'Bằng Chứng — kiểm chứng lá số này với quá khứ' },
-              { href: '/tu-vi', label: 'Cẩm nang Tử Vi' },
-              { href: '/ban-do-sao', label: 'Bản đồ sao (chiêm tinh)' },
-              { href: '/bat-tu', label: 'Bát Tự' },
-              { href: '/cong-cu', label: 'Tất cả công cụ' },
-            ]}
-          />
         </section>
       </ToolPageShell>
     </>

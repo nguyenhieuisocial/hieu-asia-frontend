@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { RelatedTools } from '@/components/tools/RelatedTools';
 import { KiengKyChecker } from '@/components/ngay-kieng-ky/KiengKyChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -150,15 +149,6 @@ export default function NgayKiengKyPage() {
               />
             </div>
           </section>
-
-          <RelatedTools
-            links={[
-              { href: '/xem-ngay', label: 'Xem ngày tốt' },
-              { href: '/sao-han', label: 'Xem sao hạn' },
-              { href: '/gio-hoang-dao', label: 'Giờ hoàng đạo' },
-              { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
-            ]}
-          />
         </section>
       </ToolPageShell>
     </>

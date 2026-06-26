@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { RelatedTools } from '@/components/tools/RelatedTools';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { XongDatChecker } from '@/components/xong-dat/XongDatChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
@@ -204,16 +203,6 @@ export default function XongDatPage() {
               />
             </div>
           </section>
-
-          <RelatedTools
-            links={[
-              { href: '/xem-ngay', label: 'Xem ngày tốt' },
-              { href: '/gio-hoang-dao', label: 'Giờ hoàng đạo' },
-              { href: '/lich-van-nien', label: 'Lịch vạn niên' },
-              { href: '/hop-tuoi/xong-dat', label: 'Chấm điểm người xông đất cụ thể' },
-              { href: '/sinh-con', label: 'Sinh con theo năm' },
-            ]}
-          />
         </section>
       </ToolPageShell>
     </>

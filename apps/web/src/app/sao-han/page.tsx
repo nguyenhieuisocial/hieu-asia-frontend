@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SaoHanCalculator } from '@/components/sao-han/SaoHanCalculator';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
-import { RelatedTools } from '@/components/tools/RelatedTools';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
@@ -202,15 +201,6 @@ export default function SaoHanPage() {
               />
             </div>
           </section>
-
-          <RelatedTools
-            links={[
-              { href: '/xem-ngay', label: 'Xem ngày tốt' },
-              { href: '/ngay-kieng-ky', label: 'Ngày kiêng kỵ' },
-              { href: '/gio-hoang-dao', label: 'Giờ hoàng đạo' },
-              { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
-            ]}
-          />
         </section>
       </ToolPageShell>
     </>
