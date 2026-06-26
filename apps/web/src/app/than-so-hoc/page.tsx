@@ -24,11 +24,11 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: 'Số chủ đạo (đường đời) được tính thế nào?',
-    a: 'Cộng dồn toàn bộ chữ số trong ngày sinh dương lịch rồi rút gọn về một chữ số từ 1 đến 9. Ví dụ 28/12/1995 → 2+8+1+2+1+9+9+5 = 37 → 3+7 = 10 → 1. Riêng 11 và 22 được giữ nguyên vì là "số bậc thầy". Phần tính toán này là số học thuần tuý, chạy bằng thuật toán cố định.',
+    a: 'Cộng dồn toàn bộ chữ số trong ngày sinh dương lịch rồi rút gọn về một chữ số từ 1 đến 9. Ví dụ 28/12/1995 → 2+8+1+2+1+9+9+5 = 37 → 3+7 = 10 → 1. Riêng 11, 22 và 33 được giữ nguyên vì là "số bậc thầy". Phần tính toán này là số học thuần tuý, chạy bằng thuật toán cố định.',
   },
   {
-    q: 'Số bậc thầy 11 và 22 có gì đặc biệt?',
-    a: 'Trong quy ước thần số học, 11 và 22 không rút gọn tiếp vì được xem là mang chủ đề "khuếch đại" — 11 thiên về trực giác và truyền cảm hứng, 22 thiên về kiến tạo việc lớn. Hãy đọc chúng như một chủ đề để chiêm nghiệm, kèm áp lực riêng của nó, thay vì một danh hiệu.',
+    q: 'Số bậc thầy 11, 22 và 33 có gì đặc biệt?',
+    a: 'Trong quy ước thần số học, 11, 22 và 33 không rút gọn tiếp vì được xem là mang chủ đề "khuếch đại" — 11 thiên về trực giác và truyền cảm hứng, 22 thiên về kiến tạo việc lớn, 33 thiên về chăm sóc và dẫn dắt. Hãy đọc chúng như một chủ đề để chiêm nghiệm, kèm áp lực riêng của nó, thay vì một danh hiệu.',
   },
   {
     q: 'Vì sao cần cả họ tên lẫn ngày sinh?',
@@ -202,7 +202,7 @@ export default function ThanSoHocLandingPage() {
           <p>
             Mọi chỉ số đều rút ra từ <strong className="text-foreground">hai nguồn
             dữ liệu</strong> bạn nhập: ngày sinh được cộng dồn và rút gọn về 1–9
-            (giữ nguyên 11, 22) để ra <strong className="text-foreground">số đường
+            (giữ nguyên 11, 22, 33) để ra <strong className="text-foreground">số đường
             đời</strong> và các chu kỳ; họ tên được quy đổi từng chữ cái sang số
             theo bảng Pythagoras để ra số biểu đạt, linh hồn (nguyên âm) và tính
             cách (phụ âm). Phần tính toán này là số học thuần tuý — chạy bằng

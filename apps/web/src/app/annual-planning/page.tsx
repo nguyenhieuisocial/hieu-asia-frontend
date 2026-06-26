@@ -67,8 +67,8 @@ const QUARTERS: {
     title: 'Thử nghiệm có kiểm soát',
     tone: 'Thuận lợi',
     points: [
-      'Chuẩn bị runway tài chính 6 tháng trước khi thử.',
-      'Chọn 1 thử nghiệm có downside giới hạn.',
+      'Chuẩn bị dòng tiền dự phòng đủ sống 6 tháng trước khi thử.',
+      'Chọn 1 thử nghiệm có mức thiệt hại tối đa giới hạn.',
       'Set sẵn tiêu chí dừng / tiếp tục.',
     ],
   },
@@ -106,7 +106,7 @@ const DECISIONS = [
   'Mua nhà / đầu tư lớn',
   'Cưới hỏi / sinh con',
   'Đầu tư học vấn / chuyển ngành',
-  'Chuyển ngành / chuyển môi trường sống',
+  'Chuyển nơi ở / đổi môi trường sống',
 ];
 
 export default function AnnualPlanningPage() {
@@ -217,7 +217,7 @@ export default function AnnualPlanningPage() {
             id="decisions-heading"
             className="mb-5 font-heading text-lg font-semibold sm:text-xl"
           >
-            Decisions lớn nên chuẩn bị
+            Quyết định lớn nên chuẩn bị
           </h2>
           <Card className="border-border bg-card/40">
             <CardContent className="p-6">
@@ -253,7 +253,7 @@ export default function AnnualPlanningPage() {
           <div className="mt-5 flex flex-wrap gap-3">
             <Button asChild size="lg"><Link href="/tu-vi-2026">
               
-                Tử Vi 2026 — full reading
+                Tử Vi 2026 — luận giải đầy đủ
                 <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
               
             </Link></Button>

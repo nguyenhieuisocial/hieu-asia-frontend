@@ -85,7 +85,7 @@ const PATTERNS = [
   {
     icon: AlertTriangle,
     title: 'Tài Bạch có Hoá Kỵ/sát tinh',
-    body: 'Không nghĩa là "đời mạt vận tài chính". Là tín hiệu cần kỷ luật quản lý dòng tiền cao hơn người khác — và TUYỆT ĐỐI tránh leverage cao.',
+    body: 'Không nghĩa là "đời mạt vận tài chính". Là tín hiệu cần kỷ luật quản lý dòng tiền cao hơn người khác — và TUYỆT ĐỐI tránh dùng đòn bẩy (vay nợ) cao.',
     strengths: [
       'Khi đã có kỷ luật, đây thường là người quản trị rủi ro tốt nhất — vì quen cảnh giác.',
       'Học tài chính cá nhân nghiêm túc thường thấy chuyển biến rõ nhất ở nhóm này.',
@@ -178,7 +178,7 @@ export default function TuViTaiChinhPage() {
           <p className="mt-5 text-base leading-relaxed text-foreground/80 sm:text-lg">
             Cung Tài Bạch phản ánh CÁCH BẠN KIẾM và QUẢN LÝ tiền — không phải con số tài
             sản. Hiểu khuynh hướng giúp bạn chọn chiến lược tài chính hợp tính cách
-            mình, thay vì copy strategy người khác.
+            mình, thay vì sao chép chiến lược của người khác.
           </p>
           <Card className="mt-6 border-amber-700/40 bg-amber-900/10">
             <CardContent className="flex items-start gap-3 pt-5 text-sm leading-relaxed text-amber-100/90">

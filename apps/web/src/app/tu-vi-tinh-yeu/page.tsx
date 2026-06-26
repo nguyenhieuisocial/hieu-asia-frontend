@@ -63,7 +63,7 @@ const PATTERNS = [
   {
     icon: Users,
     title: 'Hợp người sôi nổi + có sức ảnh hưởng',
-    body: 'Phu Thê có Thái Dương/Tham Lang — bạn dễ rung động với người năng động. Cẩn trọng nếu hai bên cùng "high energy" mà không có người làm điểm cân bằng.',
+    body: 'Phu Thê có Thái Dương/Tham Lang — bạn dễ rung động với người năng động. Cẩn trọng nếu hai bên cùng cường độ cao mà không có người làm điểm cân bằng.',
     strengths: [
       'Mang năng lượng và sự mới mẻ vào quan hệ.',
       'Chủ động làm lành, kéo cả hai ra khỏi giai đoạn trì trệ.',

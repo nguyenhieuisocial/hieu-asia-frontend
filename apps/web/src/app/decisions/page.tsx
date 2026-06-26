@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Decision Brief',
     description:
-      'Quyết định bớt mơ hồ — không phải tiên đoán số phận, mà giúp bạn reframe vấn đề.',
+      'Quyết định bớt mơ hồ — không phải tiên đoán số phận, mà giúp bạn nhìn lại vấn đề rõ hơn.',
     url: 'https://hieu.asia/decisions',
     type: 'website' as const,
     images: OG_DEFAULT_IMAGES,
@@ -143,7 +143,7 @@ export default function DecisionsHubPage() {
           </h1>
           <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
             Decision Brief không tiên đoán số phận. Nó giúp bạn{' '}
-            <em>reframe</em> tình huống — tách vấn đề thật khỏi cảm xúc, nhìn
+            <em>nhìn lại</em> tình huống dưới một góc khác — tách vấn đề thật khỏi cảm xúc, nhìn
             các lựa chọn cạnh nhau, và chọn bước nhỏ nhất bạn có thể làm trong
             tuần này.
           </p>

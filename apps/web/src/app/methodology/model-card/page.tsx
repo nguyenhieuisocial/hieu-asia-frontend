@@ -92,7 +92,7 @@ const LIMITATIONS = [
 
 const EVALUATION = [
   'Golden chart dataset (đang mở rộng từ 32 → 100 lá số).',
-  'Safety adversarial tests (100 prompts).',
+  'Safety adversarial suite (6×100 = 600 prompts; 2 bộ cốt lõi đạt 100/100).',
   'User "đúng với tôi" feedback (per-section).',
   'Internal metrics: hallucinated star rate, generic rate, unsafe rate, refund reason breakdown.',
 ];

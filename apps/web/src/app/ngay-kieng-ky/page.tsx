@@ -7,14 +7,14 @@ import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { KIENG_KY_INFO, type KiengKyKey } from '@/lib/ngay-kieng-ky';
 
 const DESC =
-  'Tra ngày kiêng kỵ theo phong tục dân gian: Tam Nương (mùng 3, 7, 13, 18, 22, 27), Nguyệt Kỵ (mùng 5, 14, 23) và Dương Công Kỵ Nhật. Nhập ngày dương lịch để xem ngày âm và ngày đó có phải ngày kiêng không — tham khảo, không bói toán.';
+  'Tra ngày kiêng kỵ theo phong tục dân gian: Tam Nương (mùng 3, 7, 13, 18, 22, 27), Nguyệt Kỵ (mùng 5, 14, 23), Dương Công Kỵ Nhật và Nguyệt Tận (ngày cuối tháng âm). Nhập ngày dương lịch để xem ngày âm và ngày đó có phải ngày kiêng không — tham khảo, không bói toán.';
 
 export const metadata: Metadata = {
-  title: 'Ngày kiêng kỵ — Tam Nương, Nguyệt Kỵ, Dương Công Kỵ Nhật',
+  title: 'Ngày kiêng kỵ — Tam Nương, Nguyệt Kỵ, Dương Công & Nguyệt Tận',
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/ngay-kieng-ky' },
   openGraph: {
-    title: 'Ngày kiêng kỵ — Tam Nương, Nguyệt Kỵ, Dương Công Kỵ Nhật',
+    title: 'Ngày kiêng kỵ — Tam Nương, Nguyệt Kỵ, Dương Công & Nguyệt Tận',
     description: DESC,
     url: 'https://hieu.asia/ngay-kieng-ky',
     type: 'website',
@@ -35,12 +35,16 @@ const FAQS = [
     a: 'Đó là 13 ngày âm lịch trong năm: tháng 1 ngày 13, tháng 2 ngày 11, tháng 3 ngày 9, tháng 4 ngày 7, tháng 5 ngày 5, tháng 6 ngày 3, tháng 7 ngày 8 và 29, tháng 8 ngày 27, tháng 9 ngày 25, tháng 10 ngày 23, tháng 11 ngày 21, tháng 12 ngày 19. Người xưa thường tránh khởi công, xây dựng, cưới hỏi vào các ngày này.',
   },
   {
+    q: 'Ngày Nguyệt Tận là ngày nào?',
+    a: 'Nguyệt Tận là ngày cuối cùng của tháng âm lịch (30 hoặc 29 âm) — "trăng đã hết", khép lại tháng âm. Theo phong tục, người xưa tránh khởi sự việc lớn vào ngày này vì coi là thời điểm "tận", chưa trọn vẹn để bắt đầu. Mang tính tham khảo, việc thường ngày không cần kiêng.',
+  },
+  {
     q: 'Có nhất thiết phải kiêng các ngày này không?',
     a: 'Không. Đây là phong tục để tham khảo, không phải quy tắc bắt buộc. Ngày kiêng chủ yếu được cân nhắc cho việc trọng đại; sinh hoạt, công việc thường ngày không cần kiêng. hieu.asia trình bày để bạn biết và tự quyết định, không phán số mệnh.',
   },
   {
     q: 'Làm sao biết hôm nay có phải ngày kiêng kỵ không?',
-    a: 'Bạn nhập ngày dương lịch vào ô tra cứu phía trên (mặc định là hôm nay). Hệ thống tự đổi sang ngày âm và cho biết ngày đó có rơi vào Tam Nương, Nguyệt Kỵ hay Dương Công Kỵ Nhật không, kèm danh sách các ngày kiêng trong cả tháng.',
+    a: 'Bạn nhập ngày dương lịch vào ô tra cứu phía trên (mặc định là hôm nay). Hệ thống tự đổi sang ngày âm và cho biết ngày đó có rơi vào Tam Nương, Nguyệt Kỵ, Dương Công Kỵ Nhật hay Nguyệt Tận không, kèm danh sách các ngày kiêng trong cả tháng.',
   },
 ];
 
@@ -52,7 +56,7 @@ export default function NgayKiengKyPage() {
       <JsonLd
         data={[
           webPage({
-            name: 'Ngày kiêng kỵ — Tam Nương, Nguyệt Kỵ, Dương Công Kỵ Nhật',
+            name: 'Ngày kiêng kỵ — Tam Nương, Nguyệt Kỵ, Dương Công & Nguyệt Tận',
             description: DESC,
             url: '/ngay-kieng-ky',
           }),

@@ -35,7 +35,7 @@ const WEBPAGE_JSONLD = {
   '@type': 'WebPage',
   '@id': 'https://hieu.asia/bat-tu',
   url: 'https://hieu.asia/bat-tu',
-  name: 'Bát Tự — Tám chữ định mệnh',
+  name: 'Bát Tự — Tám chữ định hình bạn',
   description:
     'Bát Tự (Tứ Trụ) đọc bản đồ ngũ hành từ 8 chữ năm-tháng-ngày-giờ. hieu.asia kết hợp engine deterministic và AI để đối chiếu 4 trường phái.',
   inLanguage: 'vi-VN',
@@ -55,7 +55,7 @@ const FAQ_JSONLD = {
       name: 'Bát Tự khác Tử Vi thế nào?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Tử Vi đọc qua hệ thống sao trên 12 cung. Bát Tự đọc qua quan hệ ngũ hành và thập thần giữa 4 trụ. Tử Vi mạnh ở chi tiết lĩnh vực (sự nghiệp, hôn nhân, tài chính); Bát Tự mạnh ở cân bằng năng lượng tổng thể. hieu.asia đọc cả hai để cross-check kết luận.',
+        text: 'Tử Vi đọc qua hệ thống sao trên 12 cung. Bát Tự đọc qua quan hệ ngũ hành và thập thần giữa 4 trụ. Tử Vi mạnh ở chi tiết lĩnh vực (sự nghiệp, hôn nhân, tài chính); Bát Tự mạnh ở cân bằng năng lượng tổng thể. hieu.asia đọc cả hai để đối chiếu chéo kết luận.',
       },
     },
     {
@@ -71,7 +71,7 @@ const FAQ_JSONLD = {
       name: 'Bát Tự ở hieu.asia có phải bản hoàn chỉnh chưa?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Engine đang ở trạng thái beta: tính được 4 trụ, thập thần và ngũ hành mệnh nạp âm, đóng vai trò lớp đối chiếu phụ với Tử Vi — chưa tự sinh kết luận Bát Tự thuần. Khi đạt 100 lá số validate bởi chuyên gia thì graduation sang production.',
+        text: 'Engine đang ở trạng thái beta: tính được 4 trụ, thập thần và ngũ hành mệnh nạp âm, đóng vai trò lớp đối chiếu phụ với Tử Vi — chưa tự sinh kết luận Bát Tự thuần. Khi đạt 100 lá số được chuyên gia kiểm chứng thì engine chuyển sang bản chính thức.',
       },
     },
   ],
@@ -92,7 +92,7 @@ const FAQ: readonly FaqItem[] = [
         Tử Vi đọc qua hệ thống <em>sao</em> trên <em>12 cung</em>. Bát Tự đọc qua{' '}
         <em>quan hệ ngũ hành</em> + <em>thập thần</em> giữa 4 trụ. Tử Vi mạnh ở chi tiết lĩnh
         vực (sự nghiệp, hôn nhân, tài chính); Bát Tự mạnh ở cân bằng năng lượng tổng thể. Hai
-        hệ bổ sung cho nhau — hieu.asia đọc cả hai để cross-check kết luận, không nhân danh
+        hệ bổ sung cho nhau — hieu.asia đọc cả hai để đối chiếu chéo kết luận, không nhân danh
         một hệ duy nhất.
       </>
     ),
@@ -114,7 +114,8 @@ const FAQ: readonly FaqItem[] = [
       <>
         Engine đang ở trạng thái <em>beta</em>: tính được 4 trụ, thập thần và ngũ hành mệnh
         nạp âm, đóng vai trò lớp đối chiếu phụ với Tử Vi — chưa tự sinh kết luận Bát Tự
-        thuần. Khi đạt 100 lá số validate bởi chuyên gia thì graduation sang production. Xem{' '}
+        thuần. Khi đạt 100 lá số được chuyên gia kiểm chứng thì engine chuyển sang bản chính
+        thức. Xem{' '}
         <Link href="/methodology/bat-tu" className="text-gold hover:text-gold-soft">
           /methodology/bat-tu
         </Link>{' '}
@@ -159,12 +160,13 @@ export default function BatTuLandingPage() {
             </p>
 
             <h1 className="text-balance font-sans text-hero-display font-bold tracking-tight text-foreground">
-              Bát Tự — Tám chữ <ItalicSpan goldDotAfter>định mệnh</ItalicSpan>
+              Bát Tự — Tám chữ <ItalicSpan goldDotAfter>định hình bạn</ItalicSpan>
             </h1>
 
             <p className="mt-8 max-w-marketing-text text-pretty text-lg leading-relaxed text-muted-foreground">
               Bát Tự đọc bản đồ ngũ hành từ tám chữ Thiên Can + Địa Chi của năm-tháng-ngày-giờ
-              sinh. hieu.asia kết hợp engine deterministic tính 4 trụ + thập thần với AI Mentor
+              sinh. hieu.asia kết hợp engine tính xác định (cùng dữ liệu vào luôn cho cùng kết
+              quả) tính 4 trụ + thập thần với AI Mentor
               đối chiếu cùng Tử Vi, MBTI và Thần Số Học — để bạn ra quyết định, không phải để
               phán mệnh.
             </p>
@@ -249,7 +251,7 @@ export default function BatTuLandingPage() {
                   Engine tính 4 trụ
                 </h3>
                 <p className="mt-2 font-sans text-sm leading-relaxed text-muted-foreground">
-                  Deterministic — Can-Chi, thập thần, ngũ hành mệnh nạp âm, tiết khí. Cùng dữ
+                  Tính xác định: Can-Chi, thập thần, ngũ hành mệnh nạp âm, tiết khí. Cùng dữ
                   liệu vào luôn cho cùng kết quả.
                 </p>
               </div>
@@ -260,7 +262,7 @@ export default function BatTuLandingPage() {
                 </h3>
                 <p className="mt-2 font-sans text-sm leading-relaxed text-muted-foreground">
                   Nếu Tử Vi cho thấy chủ đề Tài Bạch và Bát Tự cho thấy thiếu Chính Tài →
-                  confidence tăng. Không có thì giảm.
+                  độ tin cậy tăng. Không có thì giảm.
                 </p>
               </div>
               <div className="rounded-card-editorial border border-gold/40 bg-card p-6">

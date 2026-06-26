@@ -254,7 +254,7 @@ export default function ThangCoHon2026Page() {
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-foreground/80 sm:text-base">
               hieu.asia dùng engine tính theo can-chi và lá số thật để đưa ra tham khảo có cơ sở, rồi
-              để bạn quyết định. Lập lá số miễn phí trong 30 giây — không cần tài khoản, không cần thẻ.
+              để bạn quyết định. Lập lá số miễn phí trong 2 phút — không cần tài khoản, không cần thẻ.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <Button asChild size="lg">
