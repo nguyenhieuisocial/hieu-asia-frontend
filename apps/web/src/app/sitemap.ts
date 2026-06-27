@@ -400,6 +400,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
+  // Hướng bàn làm việc / bàn học (Bát Trạch) — 1 landing (hub + finder). Deterministic.
+  const huongBanUrls: MetadataRoute.Sitemap = [
+    {
+      url: `${BASE_URL}/huong-ban-lam-viec`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    },
+  ];
+
   // Độ hợp cung hoàng đạo — hub + 78 cặp (unordered). Deterministic SSG.
   const cungHopUrls: MetadataRoute.Sitemap = [
     {
@@ -554,5 +564,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...lamNha, ...xongDat, ...khaiTruong, ...huongNha, ...tuVi2026ConGiap, ...tuVi2027ConGiap, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls, ...cungHoangDaoUrls, ...banMenhUrls, ...tamTaiUrls, ...kimLauUrls, ...mauXeUrls, ...cungHopUrls, ...enneagramTypeUrls, ...mbtiTypeUrls, ...discTypeUrls, ...bigFiveTraitUrls];
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...lamNha, ...xongDat, ...khaiTruong, ...huongNha, ...tuVi2026ConGiap, ...tuVi2027ConGiap, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls, ...cungHoangDaoUrls, ...banMenhUrls, ...tamTaiUrls, ...kimLauUrls, ...mauXeUrls, ...huongBanUrls, ...cungHopUrls, ...enneagramTypeUrls, ...mbtiTypeUrls, ...discTypeUrls, ...bigFiveTraitUrls];
 }
