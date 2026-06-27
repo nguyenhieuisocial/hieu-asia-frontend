@@ -65,6 +65,7 @@ const L = {
   tamTai: { href: '/tam-tai', label: 'Tam Tai' },
   kimLau: { href: '/kim-lau', label: 'Kim Lâu (tuổi cưới)' },
   mauXe: { href: '/mau-xe-hop-menh', label: 'Màu xe hợp mệnh' },
+  huongBan: { href: '/huong-ban-lam-viec', label: 'Hướng bàn làm việc' },
 } as const;
 
 export const RELATED_TOOLS: Record<string, RelatedLink[]> = {
@@ -119,8 +120,9 @@ export const RELATED_TOOLS: Record<string, RelatedLink[]> = {
   '/xem-tuoi-lam-nha': [L.tamTai, L.huongNha, L.xemngay, L.thuocloban, L.xemTuoiCuoi],
   '/khai-truong': [L.tamTai, L.xemngay, L.xemTuoiCuoi, L.hoptuoi, L.saohan],
   '/xong-dat': [L.hoptuoi, L.xemTuoiCuoi, L.tuvi2027, L.xemngay],
-  '/huong-nha': [L.xemTuoiLamNha, L.thuocloban, L.banMenh, L.mauXe],
-  '/mau-xe-hop-menh': [L.banMenh, L.huongNha, L.datten, L.hoptuoi],
+  '/huong-nha': [L.xemTuoiLamNha, L.thuocloban, L.banMenh, L.huongBan, L.mauXe],
+  '/mau-xe-hop-menh': [L.banMenh, L.huongNha, L.huongBan, L.hoptuoi],
+  '/huong-ban-lam-viec': [L.huongNha, L.banMenh, L.mauXe, L.thuocloban],
   '/tam-tai': [L.xemTuoiCuoi, L.kimLau, L.saohan, L.hoptuoi],
   '/kim-lau': [L.xemTuoiCuoi, L.tamTai, L.xemngay, L.hoptuoi],
   // Quan hệ & gia đình
