@@ -12,6 +12,12 @@ import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 import { listTypes, MBTI_GROUPS, type MbtiGroupKey } from '@/lib/mbti-type-data';
+import {
+  MbtiFrame,
+  MbtiDepth,
+  MbtiRecall,
+  MbtiChecklist,
+} from './_active-learning';
 
 const GROUP_ORDER: MbtiGroupKey[] = ['NT', 'NF', 'SJ', 'SP'];
 const TYPES_BY_GROUP = GROUP_ORDER.map((g) => ({
@@ -94,6 +100,12 @@ export default function LearnMBTIPage() {
       }}
       sections={[
         {
+          id: 'ban-do-bai-hoc',
+          tocLabel: 'Bản đồ bài học',
+          heading: 'Học cái này để làm gì',
+          children: <MbtiFrame />,
+        },
+        {
           id: 'so-do-4-truc',
           tocLabel: '4 trục & 16 nhóm',
           heading: 'Sơ đồ 4 trục',
@@ -145,6 +157,18 @@ export default function LearnMBTIPage() {
               ))}
             </div>
           ),
+        },
+        {
+          id: 'ban-chat-3-tang',
+          tocLabel: 'Bản chất · 3 độ sâu',
+          heading: 'Hiểu phần lõi ở tầng vừa sức bạn',
+          children: <MbtiDepth />,
+        },
+        {
+          id: 'tu-kiem-tra',
+          tocLabel: 'Tự kiểm tra hiểu',
+          heading: 'Tự kiểm tra: bạn nhớ và hiểu tới đâu',
+          children: <MbtiRecall />,
         },
         {
           id: 'giai-thich',
@@ -212,6 +236,12 @@ export default function LearnMBTIPage() {
               </AccordionItem>
             </Accordion>
           ),
+        },
+        {
+          id: 'ban-da-hieu-chua',
+          tocLabel: 'Bạn đã hiểu chưa?',
+          heading: 'Bạn đã thật sự hiểu chưa?',
+          children: <MbtiChecklist />,
         },
       ]}
     >
