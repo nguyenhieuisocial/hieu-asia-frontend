@@ -119,6 +119,7 @@ const TOOLS: ExplorerTool[] = [
   { cat: 'xem-tuoi', href: '/hop-tuoi', emoji: '💑', name: 'Hợp Tuổi', desc: 'Kiểm tra hợp tuổi vợ chồng, xây dựng, xuất hành theo tam hợp.' },
   { cat: 'xem-tuoi', href: '/huong-nha', emoji: '🧭', name: 'Xem Hướng Nhà', desc: 'Hướng nhà hợp tuổi theo Bát Trạch (cung phi): 4 hướng tốt – 4 hướng tránh cho cửa, giường, bếp.' },
   { cat: 'xem-tuoi', href: '/thuoc-lo-ban', emoji: '📐', name: 'Thước Lỗ Ban', desc: 'Đo kích thước cát hung theo thước phong thủy truyền thống.' },
+  { cat: 'xem-tuoi', href: '/phi-tinh', emoji: '🧭', name: 'Huyền Không Phi Tinh', desc: 'Lập bàn phi tinh 9 cung theo nguyên vận + hướng nhà: vận/sơn/hướng tinh, phán Vượng sơn Vượng hướng. Lý khí, con số thật.' },
   { cat: 'xem-tuoi', href: '/mau-xe-hop-menh', emoji: '🚗', name: 'Màu Xe Hợp Mệnh', desc: 'Sinh năm nào hợp màu xe gì? Tra theo ngũ hành bản mệnh — màu hợp và màu nên cân nhắc, để tham khảo, không hù dọa.' },
   { cat: 'xem-tuoi', href: '/huong-ban-lam-viec', emoji: '🪑', name: 'Hướng Bàn Làm Việc', desc: 'Nên ngồi quay mặt về hướng nào khi làm việc, khi học? Tra theo Bát Trạch (cung phi) từ năm sinh — để tham khảo, không hù dọa.' },
 
