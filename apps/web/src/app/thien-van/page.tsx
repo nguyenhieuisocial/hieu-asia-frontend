@@ -76,7 +76,7 @@ export default function ThienVanPage() {
     <ToolPageShell
       eyebrow="LỊCH THIÊN VĂN · GIỜ VN"
       icon="🌘"
-      relatedSlug="/cong-cu"
+      relatedSlug="/thien-van"
       title={
         <>
           Lịch <GoldAccent>thiên văn</GoldAccent> 2026–2030
