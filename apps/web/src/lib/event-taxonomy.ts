@@ -127,6 +127,19 @@ export interface EventPropertyMap {
     comment?: string;
   };
 
+  // ── Learn (học chủ động trên /learn — đo engagement trước khi mở rộng) ──
+  /** Người học bấm đổi tầng độ sâu (ELI5/ELI14/Chuyên gia) trong DepthTabs. */
+  learn_depth_changed: { topic: string; level: string };
+  /** Người học làm một câu tự kiểm tra: hiện đáp án câu mở, hoặc chọn 1 phương án trắc nghiệm. */
+  learn_quiz_attempted: {
+    topic: string;
+    question_id: string;
+    kind: "open" | "mcq";
+    correct?: boolean;
+  };
+  /** Người học tick / bỏ tick một khía cạnh trong bảng "Bạn đã thật sự hiểu chưa?". */
+  learn_checklist_ticked: { topic: string; facet_id: string; checked: boolean };
+
   // ── Auth ────────────────────────────────────────────────────────
   signup_started: { method: AuthMethod };
   signup_completed: { method: AuthMethod };

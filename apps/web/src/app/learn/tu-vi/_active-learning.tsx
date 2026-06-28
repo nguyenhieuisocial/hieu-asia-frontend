@@ -60,6 +60,7 @@ export function TuViFrame() {
 export function TuViDepth() {
   return (
     <DepthTabs
+      topicId="tu-vi"
       concept="Vì sao không bao giờ đọc một cung lẻ — “tam phương tứ chính”"
       levels={[
         {
@@ -189,7 +190,7 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
 ];
 
 export function TuViRecall() {
-  return <ActiveRecall questions={RECALL_QUESTIONS} />;
+  return <ActiveRecall topicId="tu-vi" questions={RECALL_QUESTIONS} />;
 }
 
 const FACETS: UnderstandingFacet[] = [

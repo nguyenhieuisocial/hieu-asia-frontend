@@ -14,6 +14,7 @@
 
 import * as React from 'react';
 import { Checkbox } from '@hieu-asia/ui';
+import { track } from '@/lib/analytics';
 
 export interface UnderstandingFacet {
   /** id ổn định, duy nhất trong chủ đề. */
@@ -48,8 +49,9 @@ export function UnderstandingChecklist({ topicId, facets }: UnderstandingCheckli
   }, [topicId]);
 
   const toggle = (id: string) => {
+    const checkedNext = !checked[id];
     setChecked((prev) => {
-      const next = { ...prev, [id]: !prev[id] };
+      const next = { ...prev, [id]: checkedNext };
       try {
         window.localStorage.setItem(keyFor(topicId), JSON.stringify(next));
       } catch {
@@ -57,6 +59,8 @@ export function UnderstandingChecklist({ topicId, facets }: UnderstandingCheckli
       }
       return next;
     });
+    // Đo lường ngoài updater (tránh fire 2 lần ở StrictMode dev).
+    track('learn_checklist_ticked', { topic: topicId, facet_id: id, checked: checkedNext });
   };
 
   const done = facets.filter((f) => checked[f.id]).length;

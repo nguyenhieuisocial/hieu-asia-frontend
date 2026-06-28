@@ -62,6 +62,7 @@ export function BatTuFrame() {
 export function BatTuDepth() {
   return (
     <DepthTabs
+      topicId="bat-tu"
       concept="Nhật Chủ vượng hay nhược — vì sao đây là bước đầu tiên"
       levels={[
         {
@@ -209,7 +210,7 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
 ];
 
 export function BatTuRecall() {
-  return <ActiveRecall questions={RECALL_QUESTIONS} />;
+  return <ActiveRecall topicId="bat-tu" questions={RECALL_QUESTIONS} />;
 }
 
 const FACETS: UnderstandingFacet[] = [

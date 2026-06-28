@@ -61,6 +61,7 @@ export function MbtiFrame() {
 export function MbtiDepth() {
   return (
     <DepthTabs
+      topicId="mbti"
       concept="“Thiên hướng”, không phải năng lực, cũng không phải nhãn cố định"
       levels={[
         {
@@ -194,7 +195,7 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
 ];
 
 export function MbtiRecall() {
-  return <ActiveRecall questions={RECALL_QUESTIONS} />;
+  return <ActiveRecall topicId="mbti" questions={RECALL_QUESTIONS} />;
 }
 
 const FACETS: UnderstandingFacet[] = [
