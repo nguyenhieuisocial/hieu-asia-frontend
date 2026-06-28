@@ -13,6 +13,7 @@
 
 import * as React from 'react';
 import { Button } from '@hieu-asia/ui';
+import { track } from '@/lib/analytics';
 
 export interface RecallOpen {
   id: string;
@@ -40,12 +41,14 @@ export interface RecallMcq {
 export type RecallQuestion = RecallOpen | RecallMcq;
 
 export interface ActiveRecallProps {
+  /** chủ đề bài học (vd "bat-tu") — để gắn nhãn sự kiện đo lường. */
+  topicId: string;
   questions: RecallQuestion[];
   /** câu dẫn (tuỳ chọn). */
   intro?: React.ReactNode;
 }
 
-export function ActiveRecall({ questions, intro }: ActiveRecallProps) {
+export function ActiveRecall({ topicId, questions, intro }: ActiveRecallProps) {
   return (
     <div className="space-y-4">
       <p className="text-sm leading-relaxed text-muted-foreground">
@@ -62,9 +65,9 @@ export function ActiveRecall({ questions, intro }: ActiveRecallProps) {
         {questions.map((q, i) => (
           <li key={q.id}>
             {q.type === 'open' ? (
-              <OpenCard q={q} index={i} />
+              <OpenCard q={q} index={i} topicId={topicId} />
             ) : (
-              <McqCard q={q} index={i} />
+              <McqCard q={q} index={i} topicId={topicId} />
             )}
           </li>
         ))}
@@ -95,8 +98,12 @@ function QuestionShell({
   );
 }
 
-function OpenCard({ q, index }: { q: RecallOpen; index: number }) {
+function OpenCard({ q, index, topicId }: { q: RecallOpen; index: number; topicId: string }) {
   const [revealed, setRevealed] = React.useState(false);
+  const reveal = () => {
+    setRevealed(true);
+    track('learn_quiz_attempted', { topic: topicId, question_id: q.id, kind: 'open' });
+  };
   return (
     <QuestionShell index={index} prompt={q.prompt}>
       {revealed ? (
@@ -114,7 +121,7 @@ function OpenCard({ q, index }: { q: RecallOpen; index: number }) {
           type="button"
           variant="outline"
           className="h-8 text-xs"
-          onClick={() => setRevealed(true)}
+          onClick={reveal}
         >
           Hiện gợi ý trả lời
         </Button>
@@ -123,9 +130,19 @@ function OpenCard({ q, index }: { q: RecallOpen; index: number }) {
   );
 }
 
-function McqCard({ q, index }: { q: RecallMcq; index: number }) {
+function McqCard({ q, index, topicId }: { q: RecallMcq; index: number; topicId: string }) {
   const [picked, setPicked] = React.useState<number | null>(null);
   const answered = picked !== null;
+
+  const pick = (ci: number) => {
+    setPicked(ci);
+    track('learn_quiz_attempted', {
+      topic: topicId,
+      question_id: q.id,
+      kind: 'mcq',
+      correct: q.choices[ci]?.correct ?? false,
+    });
+  };
 
   return (
     <QuestionShell index={index} prompt={q.prompt}>
@@ -141,7 +158,7 @@ function McqCard({ q, index }: { q: RecallMcq; index: number }) {
               type="button"
               aria-pressed={isPicked}
               disabled={answered}
-              onClick={() => setPicked(ci)}
+              onClick={() => pick(ci)}
               className={[
                 'flex w-full items-start gap-2.5 rounded-lg border p-3 text-left text-sm transition-colors',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40',
