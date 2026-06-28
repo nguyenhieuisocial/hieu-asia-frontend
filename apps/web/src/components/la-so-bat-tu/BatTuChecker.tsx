@@ -8,6 +8,7 @@ import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { ProofDisclosure } from '@/components/la-so-bat-tu/ProofDisclosure';
 import { UnifiedProfile } from '@/components/la-so-bat-tu/UnifiedProfile';
+import { PRICING, formatVND } from '@/lib/pricing';
 
 /**
  * Công cụ Bát Tự (Tứ Trụ) bấm-thử miễn phí. Engine `lib/bazi.ts` chạy NGAY trong
@@ -705,6 +706,15 @@ export function BatTuChecker({
                 </Button>
                 <p className="mt-2 text-xs text-muted-foreground">
                   Mang thẳng lá số vừa tính sang — <strong>không phải nhập lại</strong> ngày giờ sinh.
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {formatVND(PRICING.premium.vnd)} · trả một lần ·{' '}
+                  <Link
+                    href="/sample-report"
+                    className="text-gold underline underline-offset-2 hover:opacity-80"
+                  >
+                    xem báo cáo mẫu trước
+                  </Link>
                 </p>
               </div>
             </div>
