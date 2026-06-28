@@ -9,6 +9,7 @@
 import * as React from 'react';
 import { LearnFrame } from '@/components/learn/active/LearnFrame';
 import { DepthTabs } from '@/components/learn/active/DepthTabs';
+import { FiveWhys } from '@/components/learn/active/FiveWhys';
 import { ActiveRecall, type RecallQuestion } from '@/components/learn/active/ActiveRecall';
 import {
   UnderstandingChecklist,
@@ -243,4 +244,57 @@ const FACETS: UnderstandingFacet[] = [
 
 export function MbtiChecklist() {
   return <UnderstandingChecklist topicId="mbti" facets={FACETS} />;
+}
+
+export function MbtiWhys() {
+  return (
+    <FiveWhys
+      topicId="mbti"
+      start={<>Một người có kết quả “INTP” nhưng tuần này thấy mình hành xử khác hẳn mô tả INTP.</>}
+      chain={[
+        {
+          question: 'Vì sao một người “INTP” lại có lúc hành xử khác hẳn mô tả?',
+          because: (
+            <>
+              Vì MBTI đo {strong('thiên hướng')}, không phải một khuôn cố định buộc người ta hành xử
+              theo.
+            </>
+          ),
+        },
+        {
+          question: 'Vì sao thiên hướng lại cho phép hành xử khác đi?',
+          because: (
+            <>
+              Vì thiên hướng như {strong('“tay thuận”')} — bạn vẫn dùng được cả hai bên, chỉ là một
+              bên thấy tự nhiên hơn.
+            </>
+          ),
+        },
+        {
+          question: 'Vì sao con người không bị khóa vào một bên?',
+          because: <>Vì người ta thích nghi theo hoàn cảnh; bối cảnh khác nhau gọi ra mặt khác nhau.</>,
+        },
+        {
+          question: 'Vì sao kết quả lại có thể đổi theo thời gian?',
+          because: <>Vì thiên hướng có thể dịch chuyển theo {strong('giai đoạn cuộc đời')} và trải nghiệm.</>,
+        },
+        {
+          question: 'Vì sao vậy thì không nên dùng MBTI để “chốt” một người?',
+          because: (
+            <>
+              Vì MBTI là khung {strong('tự phản tỉnh')} (còn bị phản biện về độ tin cậy), không phải
+              chẩn đoán cố định.
+            </>
+          ),
+        },
+      ]}
+      root={
+        <>
+          MBTI mô tả thiên hướng linh hoạt, không phải bản chất khắc đá. Dùng nó để hiểu và cảm thông
+          cách mình & người khác vận hành — {strong('đừng')} dùng để dán nhãn hay khóa chặt ai vào
+          một loại.
+        </>
+      }
+    />
+  );
 }

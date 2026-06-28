@@ -12,6 +12,7 @@ import {
   TuViDepth,
   TuViRecall,
   TuViChecklist,
+  TuViWhys,
 } from './_active-learning';
 
 export const metadata: Metadata = {
@@ -255,6 +256,12 @@ export default function LearnTuViPage() {
               </p>
             </div>
           ),
+        },
+        {
+          id: 'nam-lan-tai-sao',
+          tocLabel: '5 lần hỏi tại sao',
+          heading: 'Đào tới gốc: 5 lần hỏi “tại sao”',
+          children: <TuViWhys />,
         },
         {
           id: 'tu-kiem-tra',
