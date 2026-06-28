@@ -9,6 +9,7 @@
 import * as React from 'react';
 import { LearnFrame } from '@/components/learn/active/LearnFrame';
 import { DepthTabs } from '@/components/learn/active/DepthTabs';
+import { FiveWhys } from '@/components/learn/active/FiveWhys';
 import { ActiveRecall, type RecallQuestion } from '@/components/learn/active/ActiveRecall';
 import {
   UnderstandingChecklist,
@@ -238,4 +239,61 @@ const FACETS: UnderstandingFacet[] = [
 
 export function TuViChecklist() {
   return <UnderstandingChecklist topicId="tu-vi" facets={FACETS} />;
+}
+
+export function TuViWhys() {
+  return (
+    <FiveWhys
+      topicId="tu-vi"
+      start={
+        <>
+          Người mới xem lá số thấy một sao “xấu” đóng ở cung Phu Thê, liền hoảng “hôn nhân sẽ đổ vỡ”.
+        </>
+      }
+      chain={[
+        {
+          question: 'Vì sao thấy một sao “xấu” ở một cung rồi hoảng lại là sai?',
+          because: <>Vì một cung {strong('không bao giờ')} luận đơn lẻ.</>,
+        },
+        {
+          question: 'Vì sao không được đọc một cung lẻ?',
+          because: (
+            <>
+              Vì phải đọc cùng {strong('tam phương tứ chính')}: chính cung + cung xung chiếu + hai
+              cung tam hợp — bốn cung chiếu vào nhau.
+            </>
+          ),
+        },
+        {
+          question: 'Vì sao bốn cung lại phải chiếu vào nhau?',
+          because: (
+            <>
+              Vì các cung tương tác và bù / khắc nhau — ví dụ một cung yếu nhưng cung đối diện tốt
+              thường được luận khá hơn.
+            </>
+          ),
+        },
+        {
+          question: 'Vì sao chúng lại tương tác như vậy?',
+          because: <>Vì lá số là {strong('một hệ thống')} liên kết, không phải 12 ô rời rạc.</>,
+        },
+        {
+          question: 'Vì sao điều đó đổi cách ta nên đọc lá số?',
+          because: (
+            <>
+              Vì mục đích là thấy {strong('bức tranh tổng thể')} để hiểu mình, không bắt một ngôi sao
+              chịu trách nhiệm cho cả một mảng đời.
+            </>
+          ),
+        },
+      ]}
+      root={
+        <>
+          Lá số Tử Vi là một hệ thống tương tác. Một sao đứng riêng chưa nói lên điều gì — đọc lẻ một
+          cung là cách chắc chắn nhất để kết luận sai. Luôn đặt nó trong tam phương tứ chính và cả
+          bức tranh.
+        </>
+      }
+    />
+  );
 }

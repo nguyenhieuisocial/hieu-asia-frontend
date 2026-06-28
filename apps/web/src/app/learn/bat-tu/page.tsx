@@ -15,6 +15,7 @@ import {
   BatTuDepth,
   BatTuRecall,
   BatTuChecklist,
+  BatTuWhys,
 } from './_active-learning';
 
 export const metadata: Metadata = {
@@ -249,6 +250,12 @@ export default function LearnBatTuPage() {
               </p>
             </div>
           ),
+        },
+        {
+          id: 'nam-lan-tai-sao',
+          tocLabel: '5 lần hỏi tại sao',
+          heading: 'Đào tới gốc: 5 lần hỏi “tại sao”',
+          children: <BatTuWhys />,
         },
         {
           id: 'tu-kiem-tra',

@@ -10,6 +10,7 @@
 import * as React from 'react';
 import { LearnFrame } from '@/components/learn/active/LearnFrame';
 import { DepthTabs } from '@/components/learn/active/DepthTabs';
+import { FiveWhys } from '@/components/learn/active/FiveWhys';
 import { ActiveRecall, type RecallQuestion } from '@/components/learn/active/ActiveRecall';
 import {
   UnderstandingChecklist,
@@ -258,4 +259,62 @@ const FACETS: UnderstandingFacet[] = [
 
 export function BatTuChecklist() {
   return <UnderstandingChecklist topicId="bat-tu" facets={FACETS} />;
+}
+
+export function BatTuWhys() {
+  return (
+    <FiveWhys
+      topicId="bat-tu"
+      start={
+        <>
+          Cùng một sao Tài (tiền bạc) mạnh trong lá số: người này luận là điềm giàu, người kia lại
+          luận là gánh nặng.
+        </>
+      }
+      chain={[
+        {
+          question: 'Vì sao cùng một sao Tài lại luận ngược nhau ở hai người?',
+          because: <>Vì còn tùy {strong('Nhật Chủ')} (cái “tôi”) đang vượng hay nhược.</>,
+        },
+        {
+          question: 'Vì sao vượng hay nhược lại làm đổi cách luận?',
+          because: (
+            <>
+              Vì thân vượng đủ sức “gánh” được Tài (thường luận thuận); còn thân nhược mà Tài quá
+              nhiều thì rơi vào {strong('“thân nhược tài đa”')} — đuối sức, khó giữ.
+            </>
+          ),
+        },
+        {
+          question: 'Vì sao phải “gánh” được thì mới tốt?',
+          because: (
+            <>
+              Vì cốt lõi Bát Tự là {strong('cân bằng Ngũ Hành')} — lệch quá về bất kỳ bên nào đều bất
+              lợi, không riêng gì Tài.
+            </>
+          ),
+        },
+        {
+          question: 'Vì sao cân bằng lại là thước đo?',
+          because: (
+            <>
+              Vì {strong('Dụng Thần')} — hành kéo lá số về cân bằng — mới là gốc quyết định điều gì
+              “tốt”, điều gì “cần bớt”.
+            </>
+          ),
+        },
+        {
+          question: 'Vì sao vậy thì không có “sao tốt tuyệt đối”?',
+          because: <>Vì tốt hay xấu là {strong('tương đối')} với nhu cầu cân bằng riêng của từng lá số.</>,
+        },
+      ]}
+      root={
+        <>
+          Trong Bát Tự không có sao tốt hay xấu cố định. Một yếu tố “tốt” hay “xấu” tùy nó có giúp lá
+          số {strong('của bạn')} cân bằng hơn không — nên đây là cách luận có cơ sở, không phải lời
+          phán định mệnh.
+        </>
+      }
+    />
+  );
 }

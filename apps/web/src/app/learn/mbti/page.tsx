@@ -17,6 +17,7 @@ import {
   MbtiDepth,
   MbtiRecall,
   MbtiChecklist,
+  MbtiWhys,
 } from './_active-learning';
 
 const GROUP_ORDER: MbtiGroupKey[] = ['NT', 'NF', 'SJ', 'SP'];
@@ -163,6 +164,12 @@ export default function LearnMBTIPage() {
           tocLabel: 'Bản chất · 3 độ sâu',
           heading: 'Hiểu phần lõi ở tầng vừa sức bạn',
           children: <MbtiDepth />,
+        },
+        {
+          id: 'nam-lan-tai-sao',
+          tocLabel: '5 lần hỏi tại sao',
+          heading: 'Đào tới gốc: 5 lần hỏi “tại sao”',
+          children: <MbtiWhys />,
         },
         {
           id: 'tu-kiem-tra',
