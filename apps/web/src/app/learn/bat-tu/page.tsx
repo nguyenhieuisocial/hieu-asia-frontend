@@ -10,6 +10,12 @@ import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import {
+  BatTuFrame,
+  BatTuDepth,
+  BatTuRecall,
+  BatTuChecklist,
+} from './_active-learning';
 
 export const metadata: Metadata = {
   title: 'Bát Tự Tứ Trụ: Học huyền học',
@@ -109,6 +115,12 @@ export default function LearnBatTuPage() {
       }}
       sections={[
         {
+          id: 'ban-do-bai-hoc',
+          tocLabel: 'Bản đồ bài học',
+          heading: 'Học cái này để làm gì',
+          children: <BatTuFrame />,
+        },
+        {
           id: 'so-do-tu-tru',
           tocLabel: 'Sơ đồ Tứ Trụ',
           heading: 'Sơ đồ 4 trụ',
@@ -161,6 +173,12 @@ export default function LearnBatTuPage() {
               </p>
             </div>
           ),
+        },
+        {
+          id: 'ban-chat-3-tang',
+          tocLabel: 'Bản chất · 3 độ sâu',
+          heading: 'Hiểu phần lõi ở tầng vừa sức bạn',
+          children: <BatTuDepth />,
         },
         {
           id: 'thap-than-dung-than',
@@ -233,6 +251,12 @@ export default function LearnBatTuPage() {
           ),
         },
         {
+          id: 'tu-kiem-tra',
+          tocLabel: 'Tự kiểm tra hiểu',
+          heading: 'Tự kiểm tra: bạn nhớ và hiểu tới đâu',
+          children: <BatTuRecall />,
+        },
+        {
           id: 'giai-thich',
           tocLabel: 'Giải thích chi tiết',
           heading: 'Giải thích chi tiết',
@@ -250,6 +274,12 @@ export default function LearnBatTuPage() {
               ))}
             </Accordion>
           ),
+        },
+        {
+          id: 'ban-da-hieu-chua',
+          tocLabel: 'Bạn đã hiểu chưa?',
+          heading: 'Bạn đã thật sự hiểu chưa?',
+          children: <BatTuChecklist />,
         },
       ]}
     >

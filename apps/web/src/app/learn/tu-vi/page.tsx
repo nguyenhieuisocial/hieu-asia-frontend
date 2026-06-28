@@ -7,6 +7,12 @@ import { relatedLearnLenses } from '@/lib/learn/related';
 import { PALACE_READINGS } from '@/lib/palace-readings';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import {
+  TuViFrame,
+  TuViDepth,
+  TuViRecall,
+  TuViChecklist,
+} from './_active-learning';
 
 export const metadata: Metadata = {
   title: 'Tử Vi 12 cung, Học huyền học',
@@ -105,6 +111,12 @@ export default function LearnTuViPage() {
       }}
       sections={[
         {
+          id: 'ban-do-bai-hoc',
+          tocLabel: 'Bản đồ bài học',
+          heading: 'Học cái này để làm gì',
+          children: <TuViFrame />,
+        },
+        {
           id: 'so-do-12-cung',
           tocLabel: '12 cung trên lá số',
           heading: '12 cung trên lá số',
@@ -185,6 +197,12 @@ export default function LearnTuViPage() {
           ),
         },
         {
+          id: 'ban-chat-3-tang',
+          tocLabel: 'Bản chất · 3 độ sâu',
+          heading: 'Hiểu phần lõi ở tầng vừa sức bạn',
+          children: <TuViDepth />,
+        },
+        {
           id: 'chinh-tinh-phu-tinh',
           tocLabel: 'Chính tinh & phụ tinh',
           heading: 'Chính tinh, độ sáng và phụ tinh: các lớp tạo nên một sao',
@@ -239,6 +257,12 @@ export default function LearnTuViPage() {
           ),
         },
         {
+          id: 'tu-kiem-tra',
+          tocLabel: 'Tự kiểm tra hiểu',
+          heading: 'Tự kiểm tra: bạn nhớ và hiểu tới đâu',
+          children: <TuViRecall />,
+        },
+        {
           id: 'giai-thich',
           tocLabel: 'Giải thích chi tiết',
           heading: 'Giải thích chi tiết',
@@ -262,6 +286,12 @@ export default function LearnTuViPage() {
               ))}
             </dl>
           ),
+        },
+        {
+          id: 'ban-da-hieu-chua',
+          tocLabel: 'Bạn đã hiểu chưa?',
+          heading: 'Bạn đã thật sự hiểu chưa?',
+          children: <TuViChecklist />,
         },
       ]}
     >
