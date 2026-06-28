@@ -39,7 +39,9 @@ export function ToolkitSection(): React.JSX.Element {
                     {t.learn && (
                       <a
                         href={t.learn}
-                        aria-label={`Tìm hiểu về ${t.n}`}
+                        // a11y (WCAG 2.5.3 Label-in-Name): nhãn phải CHỨA chữ
+                        // hiển thị "học" để điều khiển bằng giọng nói hoạt động.
+                        aria-label={`Học về ${t.n}`}
                         className="-my-1 inline-flex items-center px-1 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-primary underline underline-offset-2 transition-colors hover:text-primary"
                       >
                         học
