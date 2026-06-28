@@ -36,7 +36,7 @@ const CARDS: readonly TrustCard[] = [
         <polygon points="24,8 27,18 38,18 29,25 32,36 24,30 16,36 19,25 10,18 21,18" fill="currentColor" fillOpacity={0.2} />
       </svg>
     ),
-    headline: '114 sao — 14 chính tinh + phụ tinh',
+    headline: '121 sao — 14 chính tinh + phụ tinh',
     desc: 'Iztro engine — tính toán Tử Vi đầy đủ với độ chính xác chuẩn lịch pháp.',
     href: '/learn/tu-vi',
   },

@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   title:
     'Phương pháp Tử Vi — Trường phái, an sao, đại vận, lưu niên',
   description:
-    'Chi tiết phương pháp Tử Vi Bắc phái dùng tại hieu.asia: 114 sao chính/phụ, cách an Mệnh-Thân-Cục, đại vận, lưu niên, và đường phân định engine vs AI.',
+    'Chi tiết phương pháp Tử Vi Bắc phái dùng tại hieu.asia: 121 sao chính/phụ, cách an Mệnh-Thân-Cục, đại vận, lưu niên, và đường phân định engine vs AI.',
   alternates: { canonical: 'https://hieu.asia/methodology/tu-vi' },
   openGraph: {
     title: 'Phương pháp Tử Vi',
@@ -317,7 +317,7 @@ const BREADCRUMB_JSONLD = {
 const TOC: { id: string; label: string }[] = [
   { id: 'truong-phai', label: '1. Trường phái' },
   { id: 'danh-sach-sao', label: '2. Danh sách sao' },
-  { id: 'danh-sach-114', label: '2b. 114 sao đầy đủ' },
+  { id: 'danh-sach-114', label: '2b. 121 sao đầy đủ' },
   { id: 'menh-than', label: '3. An Mệnh & Thân' },
   { id: 'an-chinh-tinh', label: '4. An chính tinh' },
   { id: 'phu-tinh-tu-hoa', label: '5. Phụ tinh & Tứ Hoá' },
@@ -431,7 +431,7 @@ export default function MethodologyTuViPage() {
                 <Star className="h-5 w-5 text-gold" aria-hidden /> Danh sách sao sử dụng
               </CardTitle>
               <CardDescription className="text-muted-foreground">
-                14 chính tinh + 10 phụ tinh chính + ~90 sao phụ/sao nhỏ. Tổng 114 sao
+                14 chính tinh + 10 phụ tinh chính + ~97 sao phụ/sao nhỏ. Tổng 121 sao
                 trong engine.
               </CardDescription>
             </CardHeader>
@@ -480,7 +480,7 @@ export default function MethodologyTuViPage() {
                 </h3>
                 <p className="text-muted-foreground">{SAO_NHO.join(' · ')}</p>
                 <p className="mt-3 rounded-lg border border-border bg-card/60 p-3 text-xs text-muted-foreground">
-                  Đầy đủ 114 sao có trong engine; hiển thị tuỳ vào tầm quan trọng từng
+                  Đầy đủ 121 sao có trong engine; hiển thị tuỳ vào tầm quan trọng từng
                   cung — sao nào ảnh hưởng mạnh tới cung thì hiện rõ, sao "trang trí" thì
                   ẩn vào chi tiết.
                 </p>
@@ -489,11 +489,11 @@ export default function MethodologyTuViPage() {
           </Card>
 
           {/* §5.1 — Danh sách 114 sao đầy đủ */}
-          <h2 className="sr-only">Danh sách 114 sao đầy đủ</h2>
+          <h2 className="sr-only">Danh sách 121 sao đầy đủ</h2>
           <Card id="danh-sach-114" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-foreground sm:text-2xl">
-                Danh sách 114 sao đầy đủ
+                Danh sách 121 sao đầy đủ
               </CardTitle>
               <CardDescription className="text-muted-foreground">
                 Bảng tham chiếu — nhóm, căn cứ an, hiển thị mặc định. Tổng {STARS_114.length} sao.

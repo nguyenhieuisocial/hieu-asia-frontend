@@ -125,7 +125,7 @@ export function TuViChartSection({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/80">
-            Lá số 12 cung · Bắc phái 114 sao
+            Lá số 12 cung · Bắc phái 121 sao
           </p>
           <h2 className="mt-1 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             Bản đồ thiên hướng của bạn
@@ -144,7 +144,7 @@ export function TuViChartSection({
         <CardContent className="flex items-start gap-3 pt-5 text-xs leading-relaxed text-muted-foreground sm:text-sm">
           <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-gold/80" aria-hidden />
           <p>
-            Đây là phần cấu trúc lá số do hệ thống an theo trường phái Bắc phái 114 sao
+            Đây là phần cấu trúc lá số do hệ thống an theo trường phái Bắc phái 121 sao
             (deterministic, không phải AI sinh). Phần luận giải bằng văn bản phía dưới
             được AI Mentor tạo dựa trên chart này — bấm từng cung để thấy bộ sao + tam
             phương tứ chính.

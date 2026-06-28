@@ -108,7 +108,7 @@ const BUCKETS: readonly Bucket[] = [
         Icon: Compass,
         anchor: 'tu-vi',
         title: 'Tử Vi Đẩu Số 12 cung',
-        desc: 'Lá số Bắc phái với 114 sao chính và phụ. Bản đồ 12 lĩnh vực đời sống — sự nghiệp, tài chính, tình cảm, sức khoẻ — kèm đại vận và lưu niên.',
+        desc: 'Lá số Bắc phái với 121 sao chính và phụ. Bản đồ 12 lĩnh vực đời sống — sự nghiệp, tài chính, tình cảm, sức khoẻ — kèm đại vận và lưu niên.',
         cta: { href: '/learn/tu-vi', label: 'Xem lá số mẫu' },
         featured: true,
       },
@@ -416,7 +416,7 @@ const FEATURES_JSON_LD = {
         name: 'Tử Vi Đẩu Số',
         url: 'https://hieu.asia/learn/tu-vi',
         description:
-          'Lá số Tử Vi 12 cung với 114 sao (chính tinh + phụ tinh) theo trường phái Bắc phái — bản đồ 12 lĩnh vực đời sống.',
+          'Lá số Tử Vi 12 cung với 121 sao (chính tinh + phụ tinh) theo trường phái Bắc phái — bản đồ 12 lĩnh vực đời sống.',
         provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
         areaServed: 'VN',
         inLanguage: 'vi-VN',

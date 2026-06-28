@@ -34,7 +34,7 @@ const TOOLS: WebMcpTool[] = [
   {
     name: 'xem_la_so_tu_vi',
     description:
-      'Lập & xem lá số Tử Vi Đẩu Số từ ngày giờ sinh — 12 cung, 114 sao, độ sáng, cách cục và tam phương tứ chính. Công cụ tính toán xác định, không phân tích. Trả về URL công cụ công khai để người dùng tự nhập và xem.',
+      'Lập & xem lá số Tử Vi Đẩu Số từ ngày giờ sinh — 12 cung, 121 sao, độ sáng, cách cục và tam phương tứ chính. Công cụ tính toán xác định, không phân tích. Trả về URL công cụ công khai để người dùng tự nhập và xem.',
     inputSchema: {
       type: 'object',
       properties: {

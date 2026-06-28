@@ -306,7 +306,7 @@ export function LaSoChecker({
             )}
 
             <p className="rv-up text-xs leading-relaxed text-muted-foreground" style={{ animationDelay: '300ms' }}>
-              Lá số được an bằng engine Tử Vi chuẩn (114 sao, độ sáng miếu/vượng/hãm, Tứ Hóa, đại vận, lưu
+              Lá số được an bằng engine Tử Vi chuẩn (121 sao, độ sáng miếu/vượng/hãm, Tứ Hóa, đại vận, lưu
               niên) —{' '}
               <strong>con số là thật, kiểm chứng được</strong>. Đây là bản tra cứu miễn phí; phần luận giải sâu
               là để bạn TỰ hiểu mình, không phải bói toán hay phán số mệnh.
