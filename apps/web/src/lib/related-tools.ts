@@ -115,6 +115,7 @@ export const RELATED_TOOLS: Record<string, RelatedLink[]> = {
   '/gio-hoang-dao': [L.xemngay, L.ngaykiengky, L.xuatHanh, L.lichvannien],
   '/ngay-kieng-ky': [L.xemngay, L.giohoangdao, L.lichvannien, L.xuatHanh],
   '/xuat-hanh': [L.giohoangdao, L.xemngay, L.ngaykiengky, L.lichvannien],
+  '/thien-van': [L.lichvannien, L.giohoangdao, L.xemngay, L.banDoSao],
   // Xem tuổi việc lớn
   '/xem-tuoi-cuoi': [L.kimLau, L.tamTai, L.hoptuoi, L.xemngay, L.xemTuoiLamNha],
   '/xem-tuoi-lam-nha': [L.tamTai, L.huongNha, L.xemngay, L.thuocloban, L.xemTuoiCuoi],
