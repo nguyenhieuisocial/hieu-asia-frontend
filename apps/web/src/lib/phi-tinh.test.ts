@@ -77,6 +77,64 @@ describe('computeFlyingStarChart — cục kinh điển (mỏ neo chính xác)',
   });
 });
 
+describe('Bát vận — toàn bộ 24 sơn đối chiếu bảng cổ điển (人-kiểm)', () => {
+  // Bảng tra 八运二十四山向飞星局 (《沈氏玄空学》 / lunarhook-sixrandom):
+  //   旺山旺向: 未丑亥巳巽乾 · 上山下水: 戌辰申寅坤艮
+  //   双星到山(=đáo tọa): 壬甲丁酉午辛 · 双星到向(=đáo hướng): 丙庚癸乙卯子
+  const GROUND_TRUTH_VAN8: Record<string, string> = {
+    Mùi: 'vuong-son-vuong-huong', Sửu: 'vuong-son-vuong-huong', Hợi: 'vuong-son-vuong-huong',
+    Tỵ: 'vuong-son-vuong-huong', Tốn: 'vuong-son-vuong-huong', Càn: 'vuong-son-vuong-huong',
+    Tuất: 'thuong-son-ha-thuy', Thìn: 'thuong-son-ha-thuy', Thân: 'thuong-son-ha-thuy',
+    Dần: 'thuong-son-ha-thuy', Khôn: 'thuong-son-ha-thuy', Cấn: 'thuong-son-ha-thuy',
+    Nhâm: 'song-tinh-dao-toa', Giáp: 'song-tinh-dao-toa', Đinh: 'song-tinh-dao-toa',
+    Dậu: 'song-tinh-dao-toa', Ngọ: 'song-tinh-dao-toa', Tân: 'song-tinh-dao-toa',
+    Bính: 'song-tinh-dao-huong', Canh: 'song-tinh-dao-huong', Quý: 'song-tinh-dao-huong',
+    Ất: 'song-tinh-dao-huong', Mão: 'song-tinh-dao-huong', Tý: 'song-tinh-dao-huong',
+  };
+  for (const [sit, pattern] of Object.entries(GROUND_TRUTH_VAN8)) {
+    it(`Bát vận tọa ${sit} → ${pattern}`, () => {
+      expect(computeFlyingStarChart(8, sit).pattern).toBe(pattern);
+    });
+  }
+});
+
+describe('Bất biến phân bố cục theo 三元九运 (216 cục)', () => {
+  const dist = (yun: number) => {
+    const c: Record<string, number> = {};
+    for (const m of MOUNTAINS) {
+      const p = computeFlyingStarChart(yun, m.name).pattern;
+      c[p] = (c[p] ?? 0) + 1;
+    }
+    return c;
+  };
+
+  it('Vận 2,3,4,6,7,8: mỗi vận chia đều 6/6/6/6 bốn cục', () => {
+    for (const yun of [2, 3, 4, 6, 7, 8]) {
+      expect(dist(yun)).toEqual({
+        'vuong-son-vuong-huong': 6,
+        'thuong-son-ha-thuy': 6,
+        'song-tinh-dao-huong': 6,
+        'song-tinh-dao-toa': 6,
+      });
+    }
+  });
+
+  it('Vận 1 & 9: KHÔNG có Vượng sơn Vượng hướng / Thượng sơn Hạ thủy (chỉ song tinh)', () => {
+    // Sự thật cổ điển: "一运、九运没有旺山旺向之局" — engine sai sẽ rớt bẫy này.
+    for (const yun of [1, 9]) {
+      const d = dist(yun);
+      expect(d['vuong-son-vuong-huong']).toBeUndefined();
+      expect(d['thuong-son-ha-thuy']).toBeUndefined();
+      expect(d['song-tinh-dao-huong']).toBe(12);
+      expect(d['song-tinh-dao-toa']).toBe(12);
+    }
+  });
+
+  it('Vận 5: toàn bộ 24 sơn là Ngũ vận (đặc biệt)', () => {
+    expect(dist(5)).toEqual({ 'ngu-van': 24 });
+  });
+});
+
 describe('yunOfYear — nguyên vận theo năm', () => {
   it('2004–2023 = Bát vận; 2024–2043 = Cửu vận', () => {
     expect(yunOfYear(2004)).toBe(8);
