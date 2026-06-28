@@ -1226,8 +1226,8 @@ export default function MethodologyPage() {
 
             <div className="mt-6 flex flex-wrap gap-2 font-sans text-xs">
               {[
-                'Engine deterministic',
-                'Tử Vi Bắc phái 114 sao',
+                'Engine tính xác định',
+                'Tử Vi Bắc phái 121 sao',
                 'AI không tự an sao',
                 'Có confidence score',
                 'Có algorithm changelog',

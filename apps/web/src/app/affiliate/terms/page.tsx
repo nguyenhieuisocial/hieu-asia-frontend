@@ -99,7 +99,7 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
       <>
         <ul className="list-disc space-y-1 pl-5 text-foreground/80">
           <li>Số dư tối thiểu để rút: 500.000đ.</li>
-          <li>Thời gian duyệt: 1 – 3 ngày làm việc. Tiền về tài khoản trong 24h sau duyệt.</li>
+          <li>Thời gian xử lý: 7 – 30 ngày làm việc tuỳ phương thức thanh toán (gồm khâu duyệt và chuyển tiền).</li>
           <li>Phí giao dịch (nếu có) khách hàng cuối tự chịu — bạn nhận trọn số tiền đã yêu cầu.</li>
           <li>
             Refund / chargeback trong 30 ngày kể từ giao dịch sẽ trừ hoa hồng tương ứng từ số dư khả

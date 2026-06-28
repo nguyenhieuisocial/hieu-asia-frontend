@@ -190,7 +190,7 @@ export default async function OnboardingPage({
                 Phương pháp
               </p>
               <p className="mt-1 font-heading text-lg font-bold text-foreground">
-                Bắc phái 114 sao
+                Bắc phái 121 sao
               </p>
             </div>
           </div>

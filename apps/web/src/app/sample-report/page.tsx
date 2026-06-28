@@ -268,7 +268,7 @@ export default function SampleReportPage() {
               <ShieldCheck className="h-3.5 w-3.5" aria-hidden /> Persona demo · không có dữ liệu thật
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-3 py-1 text-muted-foreground">
-              Tử Vi Bắc phái 114 sao
+              Tử Vi Bắc phái 121 sao
             </span>
           </div>
 

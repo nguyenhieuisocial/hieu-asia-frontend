@@ -250,7 +250,7 @@ const FAQ_JSONLD = {
       name: 'hieu.asia có khác gì với các app xem bói khác?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Tử Vi và Bát Tự tính theo Bắc phái với 114 sao (không tra bảng), Mentor AI đối thoại có ngữ cảnh, văn phong calm không định mệnh hoá.',
+        text: 'Tử Vi và Bát Tự tính theo Bắc phái với 121 sao (không tra bảng), Mentor AI đối thoại có ngữ cảnh, văn phong điềm tĩnh không định mệnh hoá.',
       },
     },
   ],
@@ -367,9 +367,9 @@ const HOME_FAQ: readonly FaqItem[] = [
       <>
         <p>
           Ba điểm khác biệt rõ ràng: (1) tính toán Tử Vi và Bát Tự theo trường
-          phái Bắc phái với 114 sao, không phải bảng tra cứu sẵn; (2) Mentor AI
+          phái Bắc phái với 121 sao, không phải bảng tra cứu sẵn; (2) Mentor AI
           đặt câu hỏi và đối thoại có ngữ cảnh, không phải chatbot scripted;
-          (3) văn phong calm, không định mệnh hoá — bạn vẫn là người chọn.
+          (3) văn phong điềm tĩnh, không định mệnh hoá — bạn vẫn là người chọn.
         </p>
       </>
     ),

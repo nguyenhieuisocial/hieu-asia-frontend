@@ -10,7 +10,7 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 export const metadata: Metadata = {
   title: 'Tử Vi Đẩu Số: lập lá số, tra cung và sao bằng AI',
   description:
-    'Cẩm nang Tử Vi Đẩu Số: lập lá số 12 cung theo trường phái Bắc phái 114 sao, tra cứu ý nghĩa từng cung và từng sao, luận đại vận lưu niên. Miễn phí cốt lõi, AI Mentor tuỳ chọn.',
+    'Cẩm nang Tử Vi Đẩu Số: lập lá số 12 cung theo trường phái Bắc phái 121 sao, tra cứu ý nghĩa từng cung và từng sao, luận đại vận lưu niên. Miễn phí cốt lõi, AI Mentor tuỳ chọn.',
   alternates: { canonical: 'https://hieu.asia/tu-vi' },
   // Wave 60.96.2 — route-level openGraph REPLACES root-layout openGraph; must
   // re-declare `images` or Zalo/FB/Telegram/Slack previews render blank.
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'hieu.asia — Tử Vi Đẩu Số: 12 cung, 114 sao, AI Mentor',
+        alt: 'hieu.asia — Tử Vi Đẩu Số: 12 cung, 121 sao, AI Mentor',
       },
     ],
   },
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: '/og-image.jpg',
-        alt: 'hieu.asia — Tử Vi Đẩu Số: 12 cung, 114 sao, AI Mentor',
+        alt: 'hieu.asia — Tử Vi Đẩu Số: 12 cung, 121 sao, AI Mentor',
       },
     ],
   },
@@ -104,7 +104,7 @@ const WEBPAGE_JSONLD = {
   url: 'https://hieu.asia/tu-vi',
   name: 'Tử Vi Đẩu Số — lập lá số, tra cung, tra sao',
   description:
-    'Cẩm nang Tử Vi Đẩu Số 12 cung 114 sao Bắc phái — lập lá số AI miễn phí, tra ý nghĩa cung, ý nghĩa sao, luận đại vận lưu niên.',
+    'Cẩm nang Tử Vi Đẩu Số 12 cung 121 sao Bắc phái — lập lá số AI miễn phí, tra ý nghĩa cung, ý nghĩa sao, luận đại vận lưu niên.',
   inLanguage: 'vi-VN',
   isPartOf: { '@type': 'WebSite', name: 'hieu.asia', url: 'https://hieu.asia' },
 };
@@ -137,14 +137,14 @@ export default function TuViHubPage() {
           </nav>
 
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
-            Tử Vi Đẩu Số · Bắc phái 114 sao
+            Tử Vi Đẩu Số · Bắc phái 121 sao
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
             Lá số Tử Vi — bản đồ thiên hướng của bạn
           </h1>
           <p className="mt-5 max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             Tử Vi Đẩu Số chia cuộc đời thành 12 cung, mỗi cung là một lĩnh vực sống. hieu.asia
-            lập lá số theo trường phái Bắc phái 114 sao, có đại vận và lưu niên — kèm AI
+            lập lá số theo trường phái Bắc phái 121 sao, có đại vận và lưu niên — kèm AI
             Mentor đối chiếu với bối cảnh đời thực để giúp bạn ra quyết định.
           </p>
 

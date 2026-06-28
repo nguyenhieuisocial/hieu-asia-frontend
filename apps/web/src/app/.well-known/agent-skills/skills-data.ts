@@ -39,12 +39,12 @@ export interface AgentSkill {
 
 const luoSoTuViBody = `---
 name: Xem lá số Tử Vi
-description: Lập & xem lá số Tử Vi Đẩu Số từ ngày giờ sinh — 12 cung, 114 sao, độ sáng, cách cục, tam phương tứ chính. Công cụ tính toán xác định.
+description: Lập & xem lá số Tử Vi Đẩu Số từ ngày giờ sinh — 12 cung, 121 sao, độ sáng, cách cục, tam phương tứ chính. Công cụ tính toán xác định.
 ---
 
 # Xem lá số Tử Vi
 
-Công cụ MIỄN PHÍ trên hieu.asia giúp người dùng lập lá số Tử Vi Đẩu Số từ ngày giờ sinh. Đây là công cụ tính toán xác định (deterministic): an 12 cung, 114 sao, độ sáng, cách cục và tam phương tứ chính. Con số là thật, không phải AI đoán.
+Công cụ MIỄN PHÍ trên hieu.asia giúp người dùng lập lá số Tử Vi Đẩu Số từ ngày giờ sinh. Đây là công cụ tính toán xác định (deterministic): an 12 cung, 121 sao, độ sáng, cách cục và tam phương tứ chính. Con số là thật, không phải AI đoán.
 
 ## Nên dùng khi nào
 Người dùng muốn xem lá số Tử Vi của họ, hỏi "lập lá số giúp tôi", hoặc cần biết các sao toạ thủ trong từng cung.
@@ -151,7 +151,7 @@ export const AGENT_SKILLS: AgentSkill[] = [
     slug: 'la-so-tu-vi',
     name: 'Xem lá số Tử Vi',
     description:
-      'Lập & xem lá số Tử Vi Đẩu Số từ ngày giờ sinh — 12 cung, 114 sao, độ sáng, cách cục và tam phương tứ chính. Công cụ tính toán xác định, không phân tích.',
+      'Lập & xem lá số Tử Vi Đẩu Số từ ngày giờ sinh — 12 cung, 121 sao, độ sáng, cách cục và tam phương tứ chính. Công cụ tính toán xác định, không phân tích.',
     toolUrl: `${SITE_ORIGIN}/la-so-tu-vi`,
     body: luoSoTuViBody,
   },
