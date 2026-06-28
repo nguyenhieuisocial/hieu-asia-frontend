@@ -243,6 +243,10 @@ export default async function RootLayout({
   return (
     <html
       lang="vi"
+      // globals.css sets `html { scroll-behavior: smooth }`. Next.js asks pages
+      // to declare this so it keeps managing scroll on route transitions (and to
+      // silence its dev warning + stay correct in a future Next version).
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
       className={`${beVietnam.variable} ${outfit.variable} ${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable}`}
     >
