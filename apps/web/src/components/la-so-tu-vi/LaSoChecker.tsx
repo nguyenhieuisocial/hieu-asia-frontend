@@ -7,6 +7,8 @@ import { castTuViHoroscope, type TuViChart, type TuViHoroscope, type TuViPalace,
 import { TuViChart12Palaces } from '@/components/tuvi/TuViChart12Palaces';
 import { NguHanhRemedyCard } from '@/components/ngu-hanh/NguHanhRemedyCard';
 import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
+import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { PRICING, formatVND } from '@/lib/pricing';
 
 /**
  * Cách cục (hệ chính tinh hội về Mệnh) — ported from the backend reading engine
@@ -23,6 +25,30 @@ const PALACE_ALIASES: Record<string, string> = {
   'Sự Nghiệp': 'Quan Lộc',
 };
 const normPalace = (n: string) => PALACE_ALIASES[(n ?? '').trim()] ?? (n ?? '').trim();
+
+// Mang ngày–giờ–giới-tính vừa nhập sang luồng bản đọc trả phí để khách KHÔNG
+// phải gõ lại. BirthDataForm đọc đúng key này (`hieu:chart:profile:v1`) qua
+// readSavedDefaults(). Merge lên hồ sơ cũ (nếu có) để giữ tên/nơi-sinh; map
+// male/female của công cụ free → nam/nữ theo schema form.
+function persistChartProfile(date: string, time: string, gender: 'male' | 'female') {
+  if (typeof window === 'undefined') return;
+  try {
+    const KEY = 'hieu:chart:profile:v1';
+    let existing: Record<string, unknown> = {};
+    try {
+      existing = (JSON.parse(window.localStorage.getItem(KEY) || '{}') as Record<string, unknown>) || {};
+    } catch {}
+    window.localStorage.setItem(
+      KEY,
+      JSON.stringify({
+        ...existing,
+        birth_date: date,
+        birth_time: time,
+        gender: gender === 'female' ? 'nữ' : 'nam',
+      }),
+    );
+  } catch {}
+}
 
 function parseHour(t: string): number {
   const h = Number((t ?? '').split(':')[0]);
@@ -184,7 +210,14 @@ export function LaSoChecker({
           // prefers-reduced-motion (rv-* chỉ ẩn ban đầu trong no-preference).
           <div className="space-y-5 pt-2" data-in>
             <div className="rv-fade">
-              <TuViChart12Palaces chart={chart} />
+              {/* Mở sẵn cung Mệnh — ô cá-nhân-nhất khách muốn đọc đầu tiên về
+                  chính mình — thay vì cung ở index 0 (chung chung). */}
+              <TuViChart12Palaces
+                chart={chart}
+                initialPalaceIndex={
+                  chart.palaces.find((p) => normPalace(p.name) === 'Mệnh')?.index ?? 0
+                }
+              />
             </div>
 
             {cachCuc.length > 0 && (
@@ -318,7 +351,7 @@ export function LaSoChecker({
             </div>
 
             {/* Tải lá số ra PDF — bản lưu niệm (Cục, Mệnh chủ, Thân chủ, sao cung Mệnh + cách cục/vận) */}
-            <div className="rv-up flex justify-center" style={{ animationDelay: '370ms' }}>
+            <div className="rv-up flex flex-wrap items-center justify-center gap-3" style={{ animationDelay: '370ms' }}>
               <DownloadToolPdfButton
                 source="pdf-la-so-tu-vi"
                 label="Tải lá số (PDF)"
@@ -434,6 +467,14 @@ export function LaSoChecker({
                   };
                 }}
               />
+              {/* Lá số deep-link sẵn (?d=&t=&g=) → người nhận mở là tự lập, không nhập lại. */}
+              <ShareResultButton
+                path={`/la-so-tu-vi?d=${date}&t=${time}&g=${gender === 'female' ? 'F' : 'M'}`}
+                title="Lá số Tử Vi của tôi — hieu.asia"
+                text="Mình vừa lập lá số Tử Vi miễn phí trên hieu.asia — con số thật, không bói mù. Lập thử lá số của bạn:"
+                trackId="la-so-tu-vi"
+                label="Chia sẻ lá số"
+              />
             </div>
 
             {/* Funnel → AI deep reading (free chart here; the AI interpretation is the product) */}
@@ -444,8 +485,20 @@ export function LaSoChecker({
                 riêng cho bạn, văn phong &ldquo;hiểu mình để tự quyết&rdquo;, không phán định mệnh.
               </p>
               <Button asChild size="lg" className="mt-4">
-                <Link href="/onboarding">Tạo bản đọc Tử Vi đầy đủ →</Link>
+                {/* onClick mang ngày–giờ–giới-tính sang form trả phí (khỏi gõ lại). */}
+                <Link href="/onboarding" onClick={() => persistChartProfile(date, time, gender)}>
+                  Tạo bản đọc Tử Vi đầy đủ →
+                </Link>
               </Button>
+              <p className="mt-3 text-xs text-muted-foreground">
+                {formatVND(PRICING.premium.vnd)} · trả một lần ·{' '}
+                <Link
+                  href="/sample-report"
+                  className="text-gold underline underline-offset-2 hover:opacity-80"
+                >
+                  xem báo cáo mẫu trước
+                </Link>
+              </p>
             </div>
           </div>
         )}
