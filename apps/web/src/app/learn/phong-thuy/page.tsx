@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import {
   Accordion,
   AccordionContent,
@@ -120,10 +121,16 @@ export default function LearnPhongThuyPage() {
                 <li>
                   <strong>Lý Khí</strong> (理氣) — dùng <strong>la bàn và công thức</strong>{' '}
                   để tính hướng và sao. Trong Lý Khí có nhiều trường phái; công cụ trên
-                  hieu.asia dùng <strong>Bát Trạch</strong> (tính theo năm sinh và giới tính
-                  → mệnh quái → 8 hướng cát/hung). Trường phái Huyền Không Phi Tinh (tính
-                  theo vận khí 20 năm và tọa hướng nhà) là một nhánh Lý Khí khác, ngoài phạm
-                  vi.
+                  hieu.asia dùng cả hai trường phái Lý Khí chính:{' '}
+                  <strong>Bát Trạch</strong> (tính theo năm sinh và giới tính → mệnh quái → 8
+                  hướng cát/hung) và{' '}
+                  <strong>
+                    <Link href="/phi-tinh" className="underline hover:text-primary">
+                      Huyền Không Phi Tinh
+                    </Link>
+                  </strong>{' '}
+                  (lập bàn 9 cung theo vận khí 20 năm và tọa hướng nhà — vận tinh, sơn tinh,
+                  hướng tinh).
                 </li>
               </ul>
               <p>
@@ -337,12 +344,12 @@ export default function LearnPhongThuyPage() {
                   Những gì ngoài phạm vi công cụ
                 </h3>
                 <p>
-                  Để không bịa, có vài phần công cụ web không làm: <strong>Huyền Không Phi
-                  Tinh</strong> (tính sao bay theo Vận 20 năm và tọa hướng nhà),{' '}
-                  <strong>Loan Đầu / hình thế</strong> (thế đất, sơn thủy — cần khảo sát hiện
-                  trường), và <strong>bố cục nội thất chi tiết, trấn yểm, vật phẩm phong
-                  thủy</strong>. Công cụ chỉ gợi ý hướng cùng màu/môi trường để tham khảo, và
-                  không bán dịch vụ "hóa giải".
+                  Để không bịa, có vài phần công cụ web không làm: <strong>Loan Đầu / hình
+                  thế</strong> (thế đất, sơn thủy — cần khảo sát hiện trường), <strong>bố cục
+                  nội thất chi tiết, trấn yểm, vật phẩm phong thủy</strong>, và phần{' '}
+                  <strong>Thế quái (kiêm hướng)</strong> của Phi Tinh (khẩu quyết các phái bất
+                  đồng — công cụ chỉ làm Hạ Quái chuẩn). Công cụ chỉ gợi ý hướng cùng màu/môi
+                  trường để tham khảo, và không bán dịch vụ "hóa giải".
                 </p>
               </div>
             </div>
