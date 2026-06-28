@@ -1108,8 +1108,8 @@ export const SITE_STRUCTURE: AppGroup[] = [
         pages: [
           {
             route: '/la-so-tu-vi',
-            title: 'Xem lá số Tử Vi miễn phí — 12 cung, 114 sao, cách cục',
-            fn: 'Xem lá số Tử Vi miễn phí — 12 cung, 114 sao, cách cục',
+            title: 'Xem lá số Tử Vi miễn phí — 12 cung, 121 sao, cách cục',
+            fn: 'Xem lá số Tử Vi miễn phí — 12 cung, 121 sao, cách cục',
             section: 'la-so-tu-vi',
             app: 'web',
             dynamic: false,
