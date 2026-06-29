@@ -156,7 +156,9 @@ export const states = {
  */
 export const fontFamilies = {
   sans: 'var(--font-be-vietnam), system-ui, sans-serif',
-  heading: 'var(--font-outfit), var(--font-be-vietnam), system-ui, sans-serif',
+  // 2026-06-29 VN-FIX: dropped Outfit lead (no 'vietnamese' subset → mixed font
+  // on VN headings). Mirrors the tailwind-preset heading token.
+  heading: 'var(--font-be-vietnam), system-ui, sans-serif',
   mono: 'var(--font-jetbrains-mono), ui-monospace, monospace',
 } as const;
 

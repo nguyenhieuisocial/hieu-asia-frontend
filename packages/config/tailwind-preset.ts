@@ -160,7 +160,14 @@ const preset = {
         // in layout.tsx). Be Vietnam Pro covers latin already; Inter rarely
         // rendered. Keeping `system-ui` as the real fallback.
         sans: ['var(--font-be-vietnam)', 'system-ui', 'sans-serif'],
-        heading: ['var(--font-outfit)', 'var(--font-be-vietnam)', 'system-ui', 'sans-serif'],
+        // 2026-06-29 VN-FIX: heading led with Outfit, which has NO 'vietnamese'
+        // Google Fonts subset (only latin/latin-ext). Every VN heading with
+        // tone-stacked diacritics (ử, ệ, ộ, ấ, đ…) fell back per-glyph to Be
+        // Vietnam Pro → mixed font in one title across ~897 `font-heading`
+        // call-sites / 240 files. Founder-locked: headings use Be Vietnam Pro
+        // (same family as body, full VN coverage; hierarchy via weight). Outfit
+        // import dropped from all three app layouts (was the only consumer).
+        heading: ['var(--font-be-vietnam)', 'system-ui', 'sans-serif'],
         mono: ['var(--font-jetbrains-mono)', 'ui-monospace', 'monospace'],
       },
       // Wave 52 follow-up (BUG-012/013): named tokens for the 2 sub-xs sizes

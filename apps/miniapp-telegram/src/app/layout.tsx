@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Suspense } from 'react';
-import { Be_Vietnam_Pro, Inter, Outfit, JetBrains_Mono } from 'next/font/google';
+import { Be_Vietnam_Pro, Inter, JetBrains_Mono } from 'next/font/google';
 import Script from 'next/script';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
@@ -19,8 +19,9 @@ const beVietnam = Be_Vietnam_Pro({
   display: 'swap',
 });
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
-const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit', display: 'swap' });
-const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrains-mono', display: 'swap' });
+// 2026-06-29 VN-FIX: Outfit removed (no 'vietnamese' subset → mixed VN headings);
+// headings use Be Vietnam Pro via the shared heading token. Mono +'vietnamese'.
+const mono = JetBrains_Mono({ subsets: ['vietnamese', 'latin'], variable: '--font-jetbrains-mono', display: 'swap' });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://miniapp.hieu.asia'),
@@ -56,7 +57,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html
       lang={locale}
       suppressHydrationWarning
-      className={`${beVietnam.variable} ${inter.variable} ${outfit.variable} ${mono.variable}`}
+      className={`${beVietnam.variable} ${inter.variable} ${mono.variable}`}
     >
       <body>
         {/* Official Telegram WebApp loader — required for SDK before hydration. */}

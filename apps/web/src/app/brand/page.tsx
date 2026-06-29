@@ -211,9 +211,10 @@ export default function BrandPage() {
             {/* TYPOGRAPHY */}
             <Section id="typography" title="Typography" eyebrow="03">
               <p className="text-muted-foreground">
-                <strong className="text-foreground">Outfit</strong> cho heading (display,
-                geometric, sạch). <strong className="text-foreground">Be Vietnam Pro</strong> cho body (tối ưu diacritic tiếng Việt).
-                <strong className="text-foreground"> JetBrains Mono</strong> cho mono / code.
+                <strong className="text-foreground">Be Vietnam Pro</strong> cho cả heading
+                lẫn body (tối ưu diacritic tiếng Việt; phân cấp bằng độ đậm).
+                <strong className="text-foreground"> Newsreader</strong> cho tiêu đề editorial lớn (serif).
+                <strong className="text-foreground"> JetBrains Mono</strong> cho mono / nhãn.
               </p>
               <div className="mt-8">
                 <TypographyShowcase />
@@ -349,7 +350,7 @@ export default function BrandPage() {
                   hint="Wordmark · Symbol · Lockup — tất cả variant"
                 />
                 <DownloadItem title="Color tokens" hint="JSON + Tailwind preset" />
-                <DownloadItem title="Font files" hint="Outfit · Be Vietnam Pro · JetBrains" />
+                <DownloadItem title="Font files" hint="Be Vietnam Pro · Newsreader · JetBrains" />
                 <DownloadItem title="Icon set" hint="Lucide subset · 24 icons" />
                 <DownloadItem title="OG image template" hint="1200×630 · Figma" />
                 <DownloadItem title="Brand book PDF" hint="Toàn bộ guideline · 20 trang" />
