@@ -113,8 +113,11 @@ async function generateReading(sample: EvalSample, opts: RunnerOptions): Promise
   if (!session_id) throw new Error('reading-create returned no session_id');
 
   // Orchestration is async + two-phase (full: logic→corpus→psychology, then a fresh
-  // finalize invocation: alignment→report). End-to-end ~4–5 min, so poll up to ~7.5 min.
-  for (let i = 0; i < 150; i++) {
+  // finalize invocation: alignment→report). End-to-end ~4–5 min (prod p90 ~5.3 min,
+  // max ~5.8 min as of 2026-06). Poll up to ~10 min so transient vendor slowness on
+  // eval-day doesn't false-fail a reading that's still generating (real slowdowns
+  // still surface via the per-sample duration_ms recorded below).
+  for (let i = 0; i < 200; i++) {
     await new Promise((r) => setTimeout(r, 3000));
     const get = await fetch(`${opts.apiBaseUrl}/reading-get?id=${encodeURIComponent(session_id)}`, {
       headers: {
@@ -138,7 +141,7 @@ async function generateReading(sample: EvalSample, opts: RunnerOptions): Promise
       return reportFromMarkdown(markdown, startedAt);
     }
   }
-  throw new Error(`reading ${session_id} did not produce a report within ~7.5 min`);
+  throw new Error(`reading ${session_id} did not finish within ~10 min (likely still generating or vendor-slow on eval-day — not necessarily a quality failure)`);
 }
 
 async function runOne(sample: EvalSample, opts: RunnerOptions): Promise<EvalResult> {
