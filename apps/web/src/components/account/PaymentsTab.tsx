@@ -126,7 +126,7 @@ export function PaymentsTab() {
 function Kpi({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg border border-border bg-card/40 p-3">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{label}</p>
+      <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
       <p className="mt-1.5 text-base font-semibold text-foreground">{value}</p>
     </div>
   );

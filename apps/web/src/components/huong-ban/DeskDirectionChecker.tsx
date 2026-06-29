@@ -151,7 +151,7 @@ export function DeskDirectionChecker({
             </div>
 
             <div>
-              <h3 className="font-mono text-[11px] uppercase tracking-[0.28em] text-emerald-700 dark:text-emerald-300">
+              <h3 className="font-mono text-[11px] uppercase tracking-[0.12em] text-emerald-700 dark:text-emerald-300">
                 4 hướng tốt (nên quay mặt về — xếp theo mức tốt)
               </h3>
               <ul className="mt-2 space-y-1.5">
@@ -168,7 +168,7 @@ export function DeskDirectionChecker({
             </div>
 
             <div>
-              <h3 className="font-mono text-[11px] uppercase tracking-[0.28em] text-rose-700 dark:text-rose-300">
+              <h3 className="font-mono text-[11px] uppercase tracking-[0.12em] text-rose-700 dark:text-rose-300">
                 4 hướng nên tránh ngồi quay mặt về
               </h3>
               <ul className="mt-2 space-y-1.5">

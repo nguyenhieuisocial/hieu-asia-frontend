@@ -39,7 +39,7 @@ export default function NgayTotXauPage() {
         <ActivityChecker />
 
         <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+          <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
             Cách chấm điểm
           </h2>
           <ul className="mt-3 space-y-1.5 pl-5 text-sm text-muted-foreground list-disc">

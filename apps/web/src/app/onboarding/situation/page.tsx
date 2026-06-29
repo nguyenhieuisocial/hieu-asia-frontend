@@ -113,7 +113,7 @@ export default function OnboardingSituationPage() {
           </div>
 
           <div className="mt-8">
-            <p className="text-xs uppercase tracking-[0.28em] text-muted-foreground">Hoặc thử một ví dụ</p>
+            <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Hoặc thử một ví dụ</p>
             <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {EXAMPLES.map((ex) => (
                 <button

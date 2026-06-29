@@ -75,7 +75,7 @@ export function ReadingProgress({
       aria-busy={!isTerminal}
       className="mx-auto w-full max-w-md rounded-2xl border border-border bg-card/40 p-6"
     >
-      <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
+      <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold/80 sm:text-xs">
         Tiến trình
       </p>
       <p className="mt-3 text-sm leading-relaxed text-foreground sm:text-base">{label}</p>

@@ -115,7 +115,7 @@ export default async function HuongNhaYearPage({ params }: { params: Promise<{ t
           <HuongNhaChecker defaultYear={d.year} defaultGender="nam" />
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Câu hỏi thường gặp — sinh năm {d.year}
             </h2>
             <dl className="mt-4 space-y-4">
@@ -129,7 +129,7 @@ export default async function HuongNhaYearPage({ params }: { params: Promise<{ t
           </section>
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Nhận nhắc theo mùa
             </h2>
             <div className="mt-4">

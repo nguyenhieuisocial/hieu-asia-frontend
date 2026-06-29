@@ -177,7 +177,7 @@ function ManualHeader({
   const id = manual.identity;
   return (
     <header className={embedded ? '' : 'border-b border-gold/15 pb-6'}>
-      <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+      <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
         Sổ tay cá nhân
       </p>
       <h1

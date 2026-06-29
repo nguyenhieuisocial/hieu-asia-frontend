@@ -221,7 +221,7 @@ export default function GieoQuePage() {
                       animate
                     />
                     <div>
-                      <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                      <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                         Quẻ chính · số {result.hexagramPrimary.id}
                       </div>
                       <div className="my-1 bg-gold-gradient bg-clip-text font-heading text-3xl font-bold text-transparent">
@@ -421,7 +421,7 @@ export default function GieoQuePage() {
                     <CardContent className="grid gap-6 p-6 sm:grid-cols-[auto_1fr] sm:items-center">
                       <HexagramGlyph binary={result.hexagramChanging.binary} movingLines={[]} />
                       <div>
-                        <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                        <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                           Quẻ biến · số {result.hexagramChanging.id}
                         </div>
                         <div className="my-1 font-heading text-2xl font-semibold text-foreground">

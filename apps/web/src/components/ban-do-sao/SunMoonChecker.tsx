@@ -332,7 +332,7 @@ export function SunMoonChecker({ initialDate, initialTime }: SunMoonCheckerProps
 
             {/* 8 hành tinh (Sao Thủy → Diêm Vương) */}
             <div className="rounded-xl border border-border bg-card/40 p-4">
-              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">Tám hành tinh</p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Tám hành tinh</p>
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
                 {chart.planets.map(({ planet, position, retrograde }) => (
                   <div
@@ -373,7 +373,7 @@ export function SunMoonChecker({ initialDate, initialTime }: SunMoonCheckerProps
             {/* Bốn góc (angles): Mọc/Lặn + MC/IC */}
             {chart.angles && chart.ascendant && (
               <div className="rounded-xl border border-border bg-card/40 p-4">
-                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">Bốn góc (trục đời)</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Bốn góc (trục đời)</p>
                 <p className="mt-2 text-xs text-muted-foreground">
                   Hai trục lớn của lá số: trục <strong>Mọc–Lặn</strong> (bản thân ↔ người khác) và trục{' '}
                   <strong>MC–IC</strong> (sự nghiệp/hình ảnh xã hội ↔ gốc rễ/gia đình).
@@ -410,7 +410,7 @@ export function SunMoonChecker({ initialDate, initialTime }: SunMoonCheckerProps
             {/* Điểm nút Mặt Trăng (North/South Node) */}
             {chart.nodes && (
               <div className="rounded-xl border border-border bg-card/40 p-4">
-                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">Điểm nút Mặt Trăng</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Điểm nút Mặt Trăng</p>
                 <p className="mt-2 text-xs text-muted-foreground">
                   Một trục (không phải định mệnh): <strong>Nút Bắc</strong> gợi hướng phát triển còn mới mẻ;{' '}
                   <strong>Nút Nam</strong> là vùng đã quen, nơi bạn dễ trở về.
@@ -435,7 +435,7 @@ export function SunMoonChecker({ initialDate, initialTime }: SunMoonCheckerProps
             {/* 12 nhà theo hệ Whole-Sign */}
             {chart.houses && (
               <div className="rounded-xl border border-border bg-card/40 p-4">
-                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
+                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
                   Mười hai nhà (Whole-Sign)
                 </p>
                 <p className="mt-2 text-xs text-muted-foreground">
@@ -460,7 +460,7 @@ export function SunMoonChecker({ initialDate, initialTime }: SunMoonCheckerProps
             {/* Góc hợp (aspects) giữa các thiên thể */}
             {chart.aspects && chart.aspects.length > 0 && (
               <div className="rounded-xl border border-border bg-card/40 p-4">
-                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
+                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
                   Góc hợp giữa các thiên thể
                 </p>
                 <p className="mt-2 text-xs text-muted-foreground">
@@ -496,7 +496,7 @@ export function SunMoonChecker({ initialDate, initialTime }: SunMoonCheckerProps
 
             {balance && (
               <div className="rounded-xl border border-border bg-card/40 p-4">
-                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">Cân bằng nguyên tố</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Cân bằng nguyên tố</p>
                 <div className="mt-3 grid grid-cols-4 gap-2">
                   {(['Lửa', 'Đất', 'Khí', 'Nước'] as const).map((el) => (
                     <div key={el} className="rounded-lg border border-border bg-background/40 p-2.5 text-center">
@@ -605,7 +605,7 @@ export function SunMoonChecker({ initialDate, initialTime }: SunMoonCheckerProps
               />
             ) : reading ? (
               <div className="rounded-xl border border-gold/20 bg-gradient-to-br from-gold/5 to-transparent p-5">
-                <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                   Đọc sâu cùng AI
                 </div>
                 <article className="markdown-report mt-3 space-y-3 text-sm leading-relaxed text-foreground/90">

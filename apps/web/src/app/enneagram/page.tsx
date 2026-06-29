@@ -183,7 +183,7 @@ export default function EnneagramPage() {
             <div className="mx-auto max-w-2xl space-y-4">
               <Card className="border-gold/30 bg-gradient-to-br from-gold/10 to-transparent">
                 <CardContent className="p-6 text-center sm:p-8">
-                  <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                     Nhóm tính cách của bạn
                   </div>
                   <div className="my-2 bg-gold-gradient bg-clip-text font-heading text-5xl font-bold text-transparent">
@@ -220,7 +220,7 @@ export default function EnneagramPage() {
                     { label: 'Hướng phát triển', text: meta.growth },
                   ].map((row) => (
                     <div key={row.label} className="border-t border-border/60 pt-3 first:border-0 first:pt-0">
-                      <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-gold-700">
+                      <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
                         {row.label}
                       </div>
                       <p className="mt-1 text-sm leading-relaxed text-foreground/85">{row.text}</p>
@@ -231,7 +231,7 @@ export default function EnneagramPage() {
 
               <Card className="border-gold/20 bg-card/50">
                 <CardContent className="p-6">
-                  <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                     Đường phát triển &amp; áp lực
                   </div>
                   <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -273,7 +273,7 @@ export default function EnneagramPage() {
 
               <Card className="border-border bg-card/50">
                 <CardContent className="space-y-3 p-5">
-                  <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                     Điểm 9 nhóm
                   </div>
                   {ENNEAGRAM_TYPE_ORDER.map((t) => {
@@ -317,7 +317,7 @@ export default function EnneagramPage() {
               {!paywall && (readingLoading || reading) && (
                 <Card className="relative overflow-hidden border border-gold/20 bg-gradient-to-br from-gold/5 to-transparent">
                   <CardContent className="p-6">
-                    <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                    <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                       Luận giải sâu
                     </div>
                     {readingLoading && !reading ? (

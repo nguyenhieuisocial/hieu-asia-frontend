@@ -198,7 +198,7 @@ export function LearnArticleView({
         </nav>
 
         <header className="mb-10 max-w-2xl">
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
+          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
             {eyebrow}
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
@@ -221,7 +221,7 @@ export function LearnArticleView({
             aria-label="Mục lục bài viết"
             className="hidden lg:block lg:sticky lg:top-24 lg:self-start"
           >
-            <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+            <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
               Trong bài
             </p>
             <ul className="space-y-px">
@@ -305,7 +305,7 @@ export function LearnArticleView({
             {/* Related lenses */}
             {relatedLenses.length > 0 ? (
               <section aria-label={relatedHeading} className="pt-2">
-                <h2 className="mb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+                <h2 className="mb-4 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
                   {relatedHeading}
                 </h2>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">

@@ -160,7 +160,7 @@ export default function HieuBanThanPage() {
           <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-lg bg-gold/10 text-gold">
             <Compass className="h-5 w-5" aria-hidden />
           </div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
+          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
             Lộ trình · Tôi muốn hiểu bản thân
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -209,7 +209,7 @@ export default function HieuBanThanPage() {
           </div>
 
           <ExpertContent className="mt-6 rounded-xl border border-gold/30 bg-gold/5 p-5 text-sm leading-relaxed text-foreground/85">
-            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
+            <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
               Bộ khung Tử Vi đang dùng
             </p>
             <p className="mt-2">

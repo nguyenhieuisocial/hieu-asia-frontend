@@ -171,7 +171,7 @@ export function ConsentBanner(): React.ReactElement | null {
       {/* Wave 55 BUG-002 — mobile compact pill. Hidden on sm+ (desktop
           always sees the full layout via the second block below). */}
       <div className={`flex items-center justify-between gap-2 sm:hidden ${collapsed ? "" : "hidden"}`}>
-        <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-gold/85">
+        <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/85">
           🍪 Cookies
         </span>
         <div className="flex shrink-0 gap-1.5">

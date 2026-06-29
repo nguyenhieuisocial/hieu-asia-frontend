@@ -283,7 +283,7 @@ export default function CanXuongPage() {
                   className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gold/15 blur-3xl"
                 />
                 <CardContent className="relative p-6 text-center sm:p-8">
-                  <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                     Tổng cân
                   </div>
                   <div className="my-2 bg-gold-gradient bg-clip-text font-heading text-5xl font-bold text-transparent">
@@ -454,7 +454,7 @@ export default function CanXuongPage() {
 function WeightCell({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl border border-border bg-card/40 p-3 text-center transition-colors hover:border-gold/30">
-      <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">{label}</div>
+      <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{label}</div>
       <div className="mt-1.5 font-heading text-base font-semibold text-foreground">{value}</div>
     </div>
   );

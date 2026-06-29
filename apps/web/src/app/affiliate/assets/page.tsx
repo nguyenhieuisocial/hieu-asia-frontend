@@ -114,7 +114,7 @@ export default function AffiliateAssetsPage() {
           ) : (
             <>
               <header>
-                <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
+                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
                   Affiliate · Toolkit
                 </p>
                 <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">

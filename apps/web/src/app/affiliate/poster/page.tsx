@@ -37,7 +37,7 @@ function PosterInner() {
       {/* Tấm poster — khung kem/vàng, chụp màn hình hoặc in trực tiếp */}
       <Card className="overflow-hidden border-gold/30 bg-cream text-ink shadow-xl">
         <CardContent className="flex flex-col items-center px-8 py-12 text-center">
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
+          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
             hieu.asia
           </p>
           <h1 className="mt-4 font-heading text-3xl font-bold leading-tight text-ink">
@@ -64,7 +64,7 @@ function PosterInner() {
             </div>
           )}
 
-          <p className="mt-6 text-xs uppercase tracking-[0.2em] text-ink/50">
+          <p className="mt-6 text-xs uppercase tracking-[0.12em] text-ink/50">
             Quét để mở
           </p>
           <p className="mt-1 break-all font-mono text-base font-semibold text-gold-700">
@@ -74,7 +74,7 @@ function PosterInner() {
             <p className="mt-2 text-xs text-ink/60">Mã giới thiệu: {code}</p>
           ) : null}
 
-          <p className="mt-8 text-[11px] uppercase tracking-[0.18em] text-ink/45">
+          <p className="mt-8 text-[11px] uppercase tracking-[0.12em] text-ink/45">
             hieu.asia · Hiểu mình. Quyết định mình.
           </p>
         </CardContent>

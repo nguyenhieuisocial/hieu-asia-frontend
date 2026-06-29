@@ -46,7 +46,7 @@ export function StructuredChart({ chart, className }: StructuredChartProps) {
     >
       <h2
         id="structured-chart-heading"
-        className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.32em] text-gold/80"
+        className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.12em] text-gold/80"
       >
         <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
         Lá số tham chiếu

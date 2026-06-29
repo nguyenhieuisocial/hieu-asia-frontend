@@ -56,7 +56,7 @@ export function QuickActions() {
         >
           Bắt đầu một việc
         </h2>
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+        <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
           Hành động nhanh
         </span>
       </div>

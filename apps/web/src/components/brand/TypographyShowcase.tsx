@@ -26,32 +26,32 @@ export function TypographyShowcase() {
       <section>
         <h4 className="font-mono text-xs uppercase tracking-[0.3em] text-gold/80">Hierarchy</h4>
         <div className="mt-4 space-y-4">
-          <Sample label="h1 / Display" meta="Outfit · 56px · bold · -2% tracking">
+          <Sample label="h1 / Display" meta="Be Vietnam Pro · 56px · bold · -2% tracking">
             <h1 className="font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl md:text-6xl">
               Tự hiểu mình. Quyết định tốt hơn.
             </h1>
           </Sample>
-          <Sample label="h2 / Section" meta="Outfit · 40px · semibold · -1% tracking">
+          <Sample label="h2 / Section" meta="Be Vietnam Pro · 40px · semibold · -1% tracking">
             <h2 className="font-heading text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-4xl">
               Tử Vi · MBTI · Palm Reading · AI Mentor
             </h2>
           </Sample>
-          <Sample label="h3" meta="Outfit · 30px · semibold">
+          <Sample label="h3" meta="Be Vietnam Pro · 30px · semibold">
             <h3 className="font-heading text-2xl font-semibold text-foreground sm:text-3xl">
               Báo cáo định hướng hành động, không định mệnh hóa
             </h3>
           </Sample>
-          <Sample label="h4" meta="Outfit · 24px · semibold">
+          <Sample label="h4" meta="Be Vietnam Pro · 24px · semibold">
             <h4 className="font-heading text-xl font-semibold text-foreground sm:text-2xl">
               Người bạn đồng hành huyền học hiện đại
             </h4>
           </Sample>
-          <Sample label="h5" meta="Outfit · 20px · medium">
+          <Sample label="h5" meta="Be Vietnam Pro · 20px · medium">
             <h5 className="font-heading text-lg font-medium text-foreground sm:text-xl">
               Phân tích sâu, đồng cảm, có trách nhiệm
             </h5>
           </Sample>
-          <Sample label="h6" meta="Outfit · 16px · medium · uppercase">
+          <Sample label="h6" meta="Be Vietnam Pro · 16px · medium · uppercase">
             <h6 className="font-heading text-base font-medium uppercase tracking-wider text-foreground">
               Tử Vi Tử Bình
             </h6>

@@ -143,7 +143,7 @@ export function Scrollyteller({
                 {activeChapter?.title}
               </h3>
               <div className="mt-10 flex items-center gap-3">
-                <span className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground/70">
+                <span className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground/70">
                   {String(activeIdx + 1).padStart(2, '0')} / {String(chapters.length).padStart(2, '0')}
                 </span>
                 <div className="h-px flex-1 bg-muted" />
@@ -170,7 +170,7 @@ export function Scrollyteller({
                           : 'text-muted-foreground/70 hover:bg-card/40 hover:text-muted-foreground'
                       }`}
                     >
-                      <span className="mr-2 font-mono text-[10px] tracking-[0.18em]">
+                      <span className="mr-2 font-mono text-[10px] tracking-[0.12em]">
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       {c.eyebrow ?? c.id}

@@ -155,7 +155,7 @@ export function DaiVanHienTaiForm() {
             <span className="text-muted-foreground">Đại vận hiện tại</span>
           </nav>
 
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
             Free tool · Chu kỳ 10 năm
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">

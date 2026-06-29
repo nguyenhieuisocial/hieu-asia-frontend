@@ -221,7 +221,7 @@ export default function ThuocLoBanPage() {
                   className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gold/10 blur-3xl"
                 />
                 <CardContent className="relative p-6 text-center sm:p-8">
-                  <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                     {result.cm} cm · {result.type_label}
                   </div>
                   <div className="my-3 bg-gold-gradient bg-clip-text font-heading text-3xl font-bold text-transparent sm:text-4xl">
@@ -395,7 +395,7 @@ function SuggestionCell({
 }) {
   return (
     <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4 transition-colors hover:bg-emerald-500/10">
-      <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-emerald-300/80">
+      <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-emerald-300/80">
         {direction}
       </div>
       <div className="mt-1.5 font-heading text-xl font-semibold text-foreground">{suggestion.cm} cm</div>

@@ -170,7 +170,7 @@ export default async function OnboardingPage({
               doesn't feel half-empty before the first scroll. */}
           <div className="mt-10 grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl border border-gold/20 bg-gold/5 px-4 py-3 text-center">
-              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/80">
+              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold/80">
                 Bảo mật
               </p>
               <p className="mt-1 font-heading text-lg font-bold text-foreground">
@@ -178,7 +178,7 @@ export default async function OnboardingPage({
               </p>
             </div>
             <div className="rounded-xl border border-border bg-card/40 px-4 py-3 text-center">
-              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/80">
+              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold/80">
                 Thời gian
               </p>
               <p className="mt-1 font-heading text-lg font-bold text-foreground">
@@ -186,7 +186,7 @@ export default async function OnboardingPage({
               </p>
             </div>
             <div className="rounded-xl border border-border bg-card/40 px-4 py-3 text-center">
-              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/80">
+              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold/80">
                 Phương pháp
               </p>
               <p className="mt-1 font-heading text-lg font-bold text-foreground">

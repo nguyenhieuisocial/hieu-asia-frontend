@@ -106,7 +106,7 @@ export default function HuongBanHubPage() {
 
           {/* Bảng ý nghĩa 4 hướng tốt */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               4 hướng tốt nên dùng cho bàn (theo loại việc)
             </h2>
             <div className="mt-4 overflow-x-auto">
@@ -155,7 +155,7 @@ export default function HuongBanHubPage() {
 
           {/* FAQ */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">
@@ -170,7 +170,7 @@ export default function HuongBanHubPage() {
 
           {/* Email */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Nhận nội dung phong thủy hữu ích
             </h2>
             <div className="mt-4">

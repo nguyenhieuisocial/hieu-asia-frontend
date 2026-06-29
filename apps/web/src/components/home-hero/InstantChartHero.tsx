@@ -19,7 +19,7 @@ const BatTuChecker = dynamic(
         role="status"
         aria-live="polite"
       >
-        <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+        <span className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
           Đang lập lá số…
         </span>
       </div>
@@ -89,7 +89,7 @@ export function InstantChartHero(): React.JSX.Element {
         <p className="font-marketing-display text-lg italic leading-tight text-primary/90 sm:text-xl">
           Hiểu mình. Quyết định mình.
         </p>
-        <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+        <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
           Lá số Bát Tự thật · tính ngay · miễn phí
         </p>
         <h1 className="mt-3 text-balance font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
@@ -115,7 +115,7 @@ export function InstantChartHero(): React.JSX.Element {
             <div className="space-y-1">
               <label
                 htmlFor="ich-date"
-                className="block font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground"
+                className="block font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
               >
                 Ngày sinh (dương lịch)
               </label>
@@ -137,7 +137,7 @@ export function InstantChartHero(): React.JSX.Element {
             <div className="space-y-1">
               <label
                 htmlFor="ich-time"
-                className="block font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground"
+                className="block font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
               >
                 Giờ sinh
               </label>
@@ -157,7 +157,7 @@ export function InstantChartHero(): React.JSX.Element {
             <div className="space-y-1">
               <label
                 htmlFor="ich-gender"
-                className="block font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground"
+                className="block font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
               >
                 Giới tính
               </label>

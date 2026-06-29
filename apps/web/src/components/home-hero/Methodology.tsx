@@ -21,7 +21,7 @@ export function Methodology(): React.JSX.Element {
   return (
     <section aria-label="Cách hieu.asia giải mã bạn" className="bg-muted/30 py-12 sm:py-14">
       <div className="mx-auto max-w-marketing-tight px-6 sm:px-8">
-        <p className="rv-fade font-mono text-editorial-mono uppercase tracking-[0.18em] text-muted-foreground">
+        <p className="rv-fade font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
           CÁCH HIEU.ASIA GIẢI MÃ
         </p>
         <h2 className="rv-up mt-3 font-marketing-display text-3xl leading-tight text-foreground sm:text-4xl" style={{ animationDelay: '80ms' }}>

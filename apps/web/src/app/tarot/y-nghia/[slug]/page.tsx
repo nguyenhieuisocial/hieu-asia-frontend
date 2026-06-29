@@ -71,7 +71,7 @@ export default async function TarotCardMeaningPage({ params }: Props) {
       <div className="mx-auto max-w-3xl space-y-6">
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="rounded-xl border border-gold/25 bg-gold/5 p-4">
-            <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/80">Nghĩa xuôi</div>
+            <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold/80">Nghĩa xuôi</div>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {c.keyUp.map((k) => (
                 <span key={k} className="rounded-full border border-gold/30 px-2.5 py-0.5 text-xs text-foreground/85">
@@ -81,7 +81,7 @@ export default async function TarotCardMeaningPage({ params }: Props) {
             </div>
           </div>
           <div className="rounded-xl border border-border bg-card/40 p-4">
-            <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">Nghĩa ngược</div>
+            <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Nghĩa ngược</div>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {c.keyRev.map((k) => (
                 <span key={k} className="rounded-full border border-border px-2.5 py-0.5 text-xs text-muted-foreground">

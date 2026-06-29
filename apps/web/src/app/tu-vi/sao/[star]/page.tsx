@@ -83,7 +83,7 @@ export default async function StarPage({
             <span className="text-muted-foreground">Sao {data.name}</span>
           </nav>
 
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
+          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
             {data.category === 'major' ? 'Chính tinh' : 'Phụ tinh'}
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">

@@ -111,7 +111,7 @@ function OpenCard({ q, index, topicId }: { q: RecallOpen; index: number; topicId
           className="rounded-lg border border-gold/25 bg-gold/5 p-3.5 text-sm leading-relaxed text-muted-foreground"
           aria-live="polite"
         >
-          <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.18em] text-gold-700">
+          <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
             Gợi ý trả lời
           </p>
           {q.answer}

@@ -18,7 +18,7 @@ export function EngineProofShowcase(): React.JSX.Element {
   return (
     <section aria-label="Ví dụ lá số được tính ra" className="bg-muted/20 py-12 sm:py-16">
       <div className="mx-auto max-w-marketing-tight px-6 sm:px-8">
-        <p className="font-mono text-editorial-mono uppercase tracking-[0.18em] text-muted-foreground">
+        <p className="font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
           TÍNH THẬT, KHÔNG TRA BẢNG
         </p>
         <h2 className="mt-3 font-marketing-display text-3xl leading-tight text-foreground sm:text-4xl">

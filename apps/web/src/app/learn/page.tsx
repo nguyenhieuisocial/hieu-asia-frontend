@@ -108,7 +108,7 @@ export default function LearnLandingPage() {
       </nav>
 
       <section className="text-center">
-        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
+        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
           Học huyền học
         </p>
         <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -132,7 +132,7 @@ export default function LearnLandingPage() {
                 <CardTitle className="font-heading text-lg text-gold-700 group-hover:text-gold">
                   {t.title}
                 </CardTitle>
-                <CardDescription className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                <CardDescription className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                   {t.subtitle}
                 </CardDescription>
               </CardHeader>

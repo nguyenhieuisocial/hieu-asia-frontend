@@ -58,7 +58,7 @@ export default function LegalHubPage() {
             className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,_rgba(59,39,84,0.4)_0%,_transparent_55%)]"
           />
           <div className="mx-auto max-w-4xl px-6 py-16 text-center sm:py-20">
-            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold-700 sm:text-xs">
+            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700 sm:text-xs">
               Pháp lý
             </p>
             <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">

@@ -180,7 +180,7 @@ export default function TuViTinhYeuPage() {
         />
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12 pt-6 sm:pt-8">
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
             Tử Vi · Tình cảm & quan hệ thân mật
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -250,7 +250,7 @@ export default function TuViTinhYeuPage() {
             {HOW_TO_READ.map((h, i) => (
               <Card key={h.step} className="border-border bg-card/40">
                 <CardHeader className="pb-2">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
                     Bước {i + 1}
                   </p>
                   <CardTitle className="font-heading text-base text-foreground">

@@ -122,9 +122,9 @@ const config: Config = {
         // kept for back-compat. Naming reflects semantic role, not size.
         //
         // bậc · size · line-height · letter-spacing · usage
-        //   1 · 88px · 0.95 · -0.02em · "Display" — Hero only (Hiểu mình.)
-        //   2 · 64px · 1.0  · -0.02em · "H1" — Section opener
-        //   3 · 48px · 1.05 · -0.02em · "H2" — Block heading
+        //   1 · 88px · 1.1  · -0.02em · "Display" — Hero only (Hiểu mình.) [VN-fix: was 0.95]
+        //   2 · 64px · 1.1  · -0.02em · "H1" — Section opener [VN-fix: was 1.0]
+        //   3 · 48px · 1.15 · -0.02em · "H2" — Block heading [VN-fix: was 1.05]
         //   4 · 32px · 1.15 · -0.01em · "H3" — Sub-block (alias section-display)
         //   5 · 24px · 1.2  ·  0      · "H4" — Card / pricing tier name
         //   6 · 19px · 1.45 ·  0      · "Lede" — Sub-deck paragraph
@@ -137,15 +137,22 @@ const config: Config = {
         // legibility-critical sizes).
         'editorial-display': [
           'clamp(3rem, 6vw, 5.5rem)', // 48→88px
-          { lineHeight: '0.95', letterSpacing: '-0.02em' },
+          // VN-FIX 2026-06-29: 0.95 → 1.1. 0.95 is a Latin-display value; VN's
+          // two-level diacritic stack (Hiểu / Quyết / định) clips/collides on
+          // wrap (esp. mobile) below ~1.1.
+          { lineHeight: '1.1', letterSpacing: '-0.02em' },
         ],
         'editorial-h1': [
           'clamp(2.5rem, 4.5vw, 4rem)', // 40→64px
-          { lineHeight: '1.0', letterSpacing: '-0.02em' },
+          // VN-FIX 2026-06-29: 1.0 → 1.1 (wrapping VN headings need leading room).
+          { lineHeight: '1.1', letterSpacing: '-0.02em' },
         ],
         'editorial-h2': [
           'clamp(2rem, 3.5vw, 3rem)', // 32→48px
-          { lineHeight: '1.05', letterSpacing: '-0.02em' },
+          // VN-FIX 2026-06-29: 1.05 → 1.15. editorial-h2 is the most-used
+          // wrapping heading token (marketing + tool sections); 1.05 clipped
+          // VN diacritics on wrapped multi-word titles.
+          { lineHeight: '1.15', letterSpacing: '-0.02em' },
         ],
         'editorial-h3': [
           'clamp(1.625rem, 2.5vw, 2rem)', // 26→32px

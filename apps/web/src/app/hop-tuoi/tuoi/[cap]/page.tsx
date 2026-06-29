@@ -161,7 +161,7 @@ export default async function HopTuoiPairPage({
       >
         {/* Kết luận quan hệ */}
         <section className={`mt-8 rounded-2xl border p-6 sm:p-8 ${toneClass}`}>
-          <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+          <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
             Quan hệ Can Chi
           </div>
           <h2 className="mt-2 font-heading text-2xl font-bold text-foreground sm:text-3xl">

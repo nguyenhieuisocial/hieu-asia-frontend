@@ -109,7 +109,7 @@ export default function NewJournalEntryPage() {
         </nav>
 
         <header className="mb-8">
-          <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold-700">
+          <p className="font-mono text-xs uppercase tracking-[0.12em] text-gold-700">
             Nhật ký Quyết định
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">

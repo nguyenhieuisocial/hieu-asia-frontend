@@ -160,7 +160,7 @@ const FEATURED: FeaturedConfig = {
 // (CongCuExplorer hiện 2 thẻ này), nên không trùng lặp.
 const commandPanel = (
   <aside className="rounded-2xl border border-gold/30 bg-card p-5 shadow-sm">
-    <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-primary">
+    <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
       Bắt đầu miễn phí · 30 giây
     </p>
     <p className="mt-2 font-heading text-base leading-snug text-foreground">
