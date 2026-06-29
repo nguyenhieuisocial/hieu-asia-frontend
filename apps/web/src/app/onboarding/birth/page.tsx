@@ -38,7 +38,7 @@ export default function OnboardingBirthPage() {
         </header>
 
         <section className="container mx-auto max-w-2xl px-6 pb-20 pt-2">
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">Bước 4 / 4</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Bước 4 / 4</p>
           <Card className="mt-3 border-gold/20 bg-card/60 backdrop-blur">
             <CardHeader>
               <CardTitle className="font-heading text-2xl">

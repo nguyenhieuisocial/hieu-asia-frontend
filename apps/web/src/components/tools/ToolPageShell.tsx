@@ -62,7 +62,7 @@ export function ToolPageShell({
         <p className="font-mono text-eyebrow uppercase text-primary">
           {eyebrow}
         </p>
-        <h1 className="mt-3 font-editorial-display text-editorial-h2 font-medium text-foreground">
+        <h1 className="mt-3 font-editorial-display text-editorial-h2 font-normal text-foreground">
           {title}
         </h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">

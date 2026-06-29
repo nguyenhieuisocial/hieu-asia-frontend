@@ -125,7 +125,7 @@ export default async function EnneagramTypePage({
           <span className="mx-1.5">/</span>
           <span className="text-foreground/70">Nhóm {n}</span>
         </nav>
-        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
           Enneagram · Trung tâm {meta.center} · Nhóm {n}
         </p>
         <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -134,7 +134,7 @@ export default async function EnneagramTypePage({
           </span>
           {meta.name}
         </h1>
-        <p className="mt-2 font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
+        <p className="mt-2 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
           {meta.nick}
         </p>
         <p className="mt-4 text-base leading-relaxed text-foreground/80 sm:text-lg">

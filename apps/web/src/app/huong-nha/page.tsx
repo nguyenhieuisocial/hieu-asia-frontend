@@ -94,7 +94,7 @@ export default function HuongNhaPage() {
           <HuongNhaChecker defaultGender="nam" />
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Bảng tra nhanh: 8 cung phi và hướng hợp
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
@@ -126,7 +126,7 @@ export default function HuongNhaPage() {
           </section>
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Cách tính — minh bạch để bạn kiểm chứng
             </h2>
             <ul className="mt-3 space-y-1.5 pl-5 text-sm text-muted-foreground list-disc">
@@ -155,7 +155,7 @@ export default function HuongNhaPage() {
           </section>
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">Câu hỏi thường gặp</h2>
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Câu hỏi thường gặp</h2>
             <dl className="mt-4 space-y-4">
               {FAQS.map((f, i) => (
                 <div key={i}>
@@ -167,7 +167,7 @@ export default function HuongNhaPage() {
           </section>
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">Xem theo năm sinh</h2>
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Xem theo năm sinh</h2>
             <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm sm:grid-cols-4">
               {BIRTH_YEARS.map((y) => (
                 <li key={y}>
@@ -180,7 +180,7 @@ export default function HuongNhaPage() {
           </section>
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">Nhận nhắc theo mùa</h2>
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Nhận nhắc theo mùa</h2>
             <OccasionLeadCapture
               source="huong-nha-hub"
               capturedEvent="lead_capture_huong_nha_hub"

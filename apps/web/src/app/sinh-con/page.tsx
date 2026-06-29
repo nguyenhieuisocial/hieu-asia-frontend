@@ -91,7 +91,7 @@ export default function SinhConPage() {
 
           {/* Phương pháp đối chiếu */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Cách đối chiếu — minh bạch từng quy tắc
             </h2>
             <div className="mt-3 space-y-3 text-sm leading-relaxed text-muted-foreground">
@@ -115,7 +115,7 @@ export default function SinhConPage() {
 
           {/* Một lời nhắn */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Một lời nhắn
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -128,7 +128,7 @@ export default function SinhConPage() {
 
           {/* FAQ */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">
@@ -143,7 +143,7 @@ export default function SinhConPage() {
 
           {/* Nhận nhắc theo mùa */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Nhận nhắc theo mùa
             </h2>
             <div className="mt-3">

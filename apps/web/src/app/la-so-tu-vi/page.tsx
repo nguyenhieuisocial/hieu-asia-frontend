@@ -117,7 +117,7 @@ export default async function LaSoTuViPage({
 
           {/* 12 cung */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               12 cung trong lá số
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -136,7 +136,7 @@ export default async function LaSoTuViPage({
 
           {/* Đọc theo tam phương tứ chính — showcase method */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Đọc theo tam phương tứ chính
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -152,7 +152,7 @@ export default async function LaSoTuViPage({
 
           {/* Một lời nhắn — brand */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">Một lời nhắn</h2>
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Một lời nhắn</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               Lá số là một <strong>tấm gương để hiểu mình</strong>, không phải bản án số mệnh. Việc an cung –
               an sao là tính toán xác định; phần luận giải chỉ là một góc nhìn tham khảo. Bạn vẫn là người
@@ -163,7 +163,7 @@ export default async function LaSoTuViPage({
 
           {/* FAQ */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">
@@ -177,7 +177,7 @@ export default async function LaSoTuViPage({
           </section>
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Nhận nhắc theo mùa
             </h2>
             <div className="mt-4">

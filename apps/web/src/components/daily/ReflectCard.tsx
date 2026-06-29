@@ -68,7 +68,7 @@ export function ReflectCard({ date }: { date: string }) {
   if (!mounted) {
     return (
       <div className="rounded-xl border border-border bg-card/40 p-5" aria-hidden>
-        <p className="mb-3 font-mono text-[10.5px] uppercase tracking-[0.18em] text-gold/80">
+        <p className="mb-3 font-mono text-[10.5px] uppercase tracking-[0.12em] text-gold/80">
           Câu hỏi suy ngẫm hôm nay
         </p>
         <p className="font-heading text-base italic leading-relaxed text-foreground/85">
@@ -85,7 +85,7 @@ export function ReflectCard({ date }: { date: string }) {
     >
       <p
         id="reflect-heading"
-        className="mb-3 font-mono text-[10.5px] uppercase tracking-[0.18em] text-gold/80"
+        className="mb-3 font-mono text-[10.5px] uppercase tracking-[0.12em] text-gold/80"
       >
         Câu hỏi suy ngẫm hôm nay
       </p>

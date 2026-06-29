@@ -103,7 +103,7 @@ export function ReadingRitual({ messages }: { messages: string[] }) {
         {msg}
       </p>
 
-      <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+      <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
         AI đang luận giải · không tắt trang
       </p>
     </div>

@@ -107,7 +107,7 @@ function PalaceDetail({ palace }: { palace: TuViPalace }) {
     <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent p-5">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/80">
+          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold/80">
             {palace.heavenlyStem} {palace.earthlyBranch}
           </p>
           <h3 className="mt-1 font-heading text-2xl font-bold text-foreground">Cung {palace.name}</h3>

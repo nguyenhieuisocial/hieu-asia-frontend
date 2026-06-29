@@ -69,7 +69,7 @@ export function HowToStart() {
       />
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-primary/90 sm:text-xs">
+          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-primary/90 sm:text-xs">
             Hướng dẫn bắt đầu
           </p>
           <h2
@@ -103,7 +103,7 @@ export function HowToStart() {
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-primary/30 bg-primary/5">
                     <Icon className="h-5 w-5 text-primary" aria-hidden={true} />
                   </div>
-                  <span className="font-mono text-xs uppercase tracking-[0.28em] text-primary/85">
+                  <span className="font-mono text-xs uppercase tracking-[0.12em] text-primary/85">
                     Bước {n}
                   </span>
                 </div>

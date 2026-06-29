@@ -65,7 +65,7 @@ export default function TarotMeaningsHubPage() {
                 href={`/tarot/y-nghia/${c.slug}`}
                 className="flex h-full flex-col rounded-xl border border-border bg-card/40 p-4 transition-colors hover:border-gold/40 hover:bg-gold/5"
               >
-                <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80">
+                <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
                   {String(c.number).padStart(2, '0')} · Ẩn chính
                 </span>
                 <span className="mt-1 font-heading text-lg font-semibold text-foreground">

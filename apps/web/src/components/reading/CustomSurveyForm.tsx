@@ -113,7 +113,7 @@ export function CustomSurveyForm({
     <div className="flex flex-col gap-6">
       {/* Progress header */}
       <div className="flex items-center gap-3">
-        <span className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
+        <span className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
           Bước {currentIdx + 1}/{questions.length}
         </span>
         <div

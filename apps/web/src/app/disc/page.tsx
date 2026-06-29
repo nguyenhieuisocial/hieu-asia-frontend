@@ -164,7 +164,7 @@ export default function DiscPage() {
             <div className="mx-auto max-w-2xl space-y-4">
               <Card className="border-gold/30 bg-gradient-to-br from-gold/10 to-transparent">
                 <CardContent className="p-6 text-center sm:p-8">
-                  <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                     Phong cách chính của bạn
                   </div>
                   <div className="my-2 bg-gold-gradient bg-clip-text font-heading text-5xl font-bold text-transparent">
@@ -195,7 +195,7 @@ export default function DiscPage() {
                     </div>
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div>
-                        <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-300">
+                        <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-emerald-300">
                           Điểm mạnh nổi bật
                         </div>
                         <ul className="mt-1.5 space-y-1 text-sm leading-relaxed text-foreground/85">
@@ -210,7 +210,7 @@ export default function DiscPage() {
                         </ul>
                       </div>
                       <div>
-                        <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-amber-300">
+                        <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-amber-300">
                           Hướng phát triển
                         </div>
                         <ul className="mt-1.5 space-y-1 text-sm leading-relaxed text-foreground/85">
@@ -226,7 +226,7 @@ export default function DiscPage() {
                       </div>
                     </div>
                     <div>
-                      <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-sky-300">
+                      <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-sky-300">
                         Giao tiếp &amp; làm việc
                       </div>
                       <p className="mt-1.5 text-sm leading-relaxed text-foreground/85">
@@ -293,7 +293,7 @@ export default function DiscPage() {
               {!paywall && (readingLoading || reading) && (
                 <Card className="relative overflow-hidden border border-gold/20 bg-gradient-to-br from-gold/5 to-transparent">
                   <CardContent className="p-6">
-                    <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                    <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                       Luận giải sâu
                     </div>
                     {readingLoading && !reading ? (

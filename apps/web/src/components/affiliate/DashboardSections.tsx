@@ -69,7 +69,7 @@ export function ShareToolkit({
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
             Link giới thiệu
           </div>
           <div className="flex gap-2">
@@ -80,7 +80,7 @@ export function ShareToolkit({
           </div>
         </div>
         <div>
-          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
             Caption gợi ý (VN)
           </div>
           <div className="flex gap-2">
@@ -91,7 +91,7 @@ export function ShareToolkit({
           </div>
         </div>
         <div>
-          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
             QR code
           </div>
           <div className="flex items-center gap-4">

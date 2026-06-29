@@ -245,7 +245,7 @@ export default function DecisionBriefPage() {
         <section aria-labelledby="real-problem" className="mb-12">
           <h2
             id="real-problem"
-            className="font-mono text-xs uppercase tracking-[0.32em] text-gold-700"
+            className="font-mono text-xs uppercase tracking-[0.12em] text-gold-700"
           >
             Vấn đề thật sự
           </h2>
@@ -257,7 +257,7 @@ export default function DecisionBriefPage() {
         <section aria-labelledby="chart-signal" className="mb-12">
           <h2
             id="chart-signal"
-            className="font-mono text-xs uppercase tracking-[0.32em] text-gold-700"
+            className="font-mono text-xs uppercase tracking-[0.12em] text-gold-700"
           >
             Lá số nói gì
           </h2>
@@ -389,7 +389,7 @@ export default function DecisionBriefPage() {
           <section aria-labelledby="caveats" className="mb-12">
             <h2
               id="caveats"
-              className="mb-3 font-mono text-xs uppercase tracking-[0.32em] text-amber-300"
+              className="mb-3 font-mono text-xs uppercase tracking-[0.12em] text-amber-300"
             >
               Lưu ý
             </h2>

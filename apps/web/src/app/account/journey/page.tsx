@@ -42,7 +42,7 @@ export default function JourneyPage() {
         <SiteNav />
         <main id="main-content" className="pt-16">
           <div className="mx-auto max-w-md px-6 py-24 text-center">
-            <p className="font-mono text-eyebrow uppercase tracking-[0.32em] text-gold-700">
+            <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-700">
               HÀNH TRÌNH CỦA BẠN
             </p>
             <h1 className="mt-3 font-heading text-2xl font-bold text-foreground">
@@ -83,7 +83,7 @@ export default function JourneyPage() {
           {/* Hero: count copy on the left, the star on the right. */}
           <div className="grid items-center gap-10 sm:grid-cols-[minmax(0,1fr)_300px]">
             <div>
-              <p className="flex items-center gap-2.5 font-mono text-eyebrow uppercase tracking-[0.32em] text-gold-700">
+              <p className="flex items-center gap-2.5 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-700">
                 <span aria-hidden className="h-px w-6 bg-gold-700" />
                 HÀNH TRÌNH CỦA BẠN
               </p>

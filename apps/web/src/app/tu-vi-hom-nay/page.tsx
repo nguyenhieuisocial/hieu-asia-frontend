@@ -190,7 +190,7 @@ export default async function Page() {
           <h2 className="font-heading text-lg font-semibold text-foreground">
             Chọn tuổi của bạn
           </h2>
-          <p className="hidden font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/75 sm:block">
+          <p className="hidden font-mono text-[10px] uppercase tracking-[0.12em] text-foreground/75 sm:block">
             12 con giáp · điểm 1–10
           </p>
         </div>
@@ -212,7 +212,7 @@ export default async function Page() {
       </section>
 
       <section className="mt-8 rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-        <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+        <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
           Nhận nhắc theo mùa qua email
         </h2>
         <div className="mt-4">

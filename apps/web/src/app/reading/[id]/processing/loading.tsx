@@ -27,7 +27,7 @@ export default function ProcessingLoading() {
       className="relative min-h-screen overflow-hidden bg-ink-radial pb-24"
     >
       <header className="container mx-auto max-w-2xl px-5 py-10 text-center">
-        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
           Biên tập cẩm nang
         </p>
         <h1 className="mt-2 font-heading text-3xl font-semibold text-foreground sm:text-4xl">

@@ -57,7 +57,7 @@ export function SharedManualView({ manual }: { manual: OperatingManual }) {
 
       <article className="pom-print-root mx-auto w-full max-w-3xl rounded-2xl border border-border bg-card/40 p-6 sm:p-10">
         <header className="border-b border-gold/15 pb-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
             Sổ tay cá nhân (chia sẻ)
           </p>
           <h1 className="mt-2 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">

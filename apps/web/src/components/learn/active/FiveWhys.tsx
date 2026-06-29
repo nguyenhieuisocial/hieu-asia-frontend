@@ -48,7 +48,7 @@ export function FiveWhys({ topicId, start, chain, root }: FiveWhysProps) {
 
   return (
     <div className="rounded-card-editorial border border-border bg-card/40 p-5 sm:p-6">
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-gold-700">
+      <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
         5 lần hỏi tại sao
       </p>
       <p className="mt-1.5 text-xs text-muted-foreground">
@@ -73,7 +73,7 @@ export function FiveWhys({ topicId, start, chain, root }: FiveWhysProps) {
                 {i + 1}
               </span>
               <p className="text-sm font-medium text-foreground">
-                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-gold-700">
+                <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
                   Tại sao?{' '}
                 </span>
                 {step.question}
@@ -99,7 +99,7 @@ export function FiveWhys({ topicId, start, chain, root }: FiveWhysProps) {
 
       {done ? (
         <div className="mt-4 rounded-lg border border-gold/25 bg-gold/5 p-3.5" aria-live="polite">
-          <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.18em] text-gold-700">
+          <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
             Gốc rễ
           </p>
           <p className="text-sm leading-relaxed text-foreground">{root}</p>

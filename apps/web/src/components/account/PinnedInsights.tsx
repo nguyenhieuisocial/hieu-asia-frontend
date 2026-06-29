@@ -177,7 +177,7 @@ export function PinnedInsights() {
         >
           Mentor đã nói với bạn
         </h2>
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+        <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
           Ghim từ trò chuyện
         </span>
       </div>
@@ -222,7 +222,7 @@ export function PinnedInsights() {
                 <div className="mt-3 pl-7">
                   <Link
                     href={`/reading/${it.readingId}/mentor`}
-                    className="font-mono text-[10px] uppercase tracking-[0.22em] text-gold hover:opacity-80"
+                    className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold hover:opacity-80"
                   >
                     Mở phiên trò chuyện →
                   </Link>

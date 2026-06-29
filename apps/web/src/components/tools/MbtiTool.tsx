@@ -133,7 +133,7 @@ export function MbtiTool() {
         <div className="space-y-4">
           <Card className="border-gold/30 bg-gradient-to-br from-gold/10 to-transparent">
             <CardContent className="p-6 text-center">
-              <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+              <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                 Kiểu của bạn
               </div>
               <div className="mt-2 font-heading text-5xl font-bold tracking-[0.15em] text-gold-700">
@@ -169,7 +169,7 @@ export function MbtiTool() {
                 <p className="text-sm leading-relaxed text-foreground/85">{meta.overview}</p>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-300">
+                    <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-emerald-300">
                       Điểm mạnh nổi bật
                     </div>
                     <ul className="mt-1.5 space-y-1 text-sm leading-relaxed text-foreground/85">
@@ -184,7 +184,7 @@ export function MbtiTool() {
                     </ul>
                   </div>
                   <div>
-                    <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-amber-300">
+                    <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-amber-300">
                       Hướng phát triển
                     </div>
                     <ul className="mt-1.5 space-y-1 text-sm leading-relaxed text-foreground/85">
@@ -222,7 +222,7 @@ export function MbtiTool() {
               <Card key={m.axis} className="border-border bg-card/50">
                 <CardContent className="p-5">
                   <div className="flex items-baseline justify-between gap-3">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                    <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                       {m.label}
                     </span>
                     <span className="font-heading text-sm text-gold-700">
@@ -263,7 +263,7 @@ export function MbtiTool() {
           {!paywall && (readingLoading || reading) && (
             <Card className="relative overflow-hidden border border-gold/20 bg-gradient-to-br from-gold/5 to-transparent">
               <CardContent className="p-6">
-                <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                   Luận giải sâu
                 </div>
                 {readingLoading && !reading ? (

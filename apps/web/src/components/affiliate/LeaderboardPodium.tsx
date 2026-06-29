@@ -75,7 +75,7 @@ function PodiumCard({ row, rank }: { row: PodiumRow; rank: number }) {
       <div className="text-3xl sm:text-4xl" aria-hidden="true">
         {MEDALS[rank - 1]}
       </div>
-      <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+      <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
         #{rank}
       </div>
       <div className="mt-3 font-mono text-base font-semibold text-foreground sm:text-lg">

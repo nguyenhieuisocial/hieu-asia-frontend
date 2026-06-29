@@ -40,7 +40,7 @@ const FAQS = [
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-      <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">{title}</h2>
+      <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">{title}</h2>
       <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">{children}</div>
     </section>
   );
@@ -82,7 +82,7 @@ export default function DoChinhXacPage() {
         <div className="space-y-6">
           {/* Trạng thái hiện tại — thành thật, KHÔNG con số khi chưa đủ mẫu */}
           <div className="rounded-2xl border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-6">
-            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">Trạng thái</p>
+            <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Trạng thái</p>
             <p className="mt-3 font-heading text-xl text-foreground">Đang thu thập dữ liệu</p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               Chúng tôi <strong>chưa</strong> công bố con số độ chính xác, vì chưa đủ mẫu để con số có ý nghĩa.
@@ -149,7 +149,7 @@ export default function DoChinhXacPage() {
           </section>
 
           <section className="rounded-2xl border border-border bg-card/40 p-6">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">Câu hỏi thường gặp</h2>
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Câu hỏi thường gặp</h2>
             <dl className="mt-4 space-y-4">
               {FAQS.map((f, i) => (
                 <div key={i}>

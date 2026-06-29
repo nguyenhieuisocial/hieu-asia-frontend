@@ -65,7 +65,7 @@ export function NewsletterSignup({
 
       <div className="relative grid items-center gap-8 md:grid-cols-[1.2fr_1fr]">
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-primary/90 sm:text-xs">
+          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-primary/90 sm:text-xs">
             Newsletter · mỗi tuần một bài
           </p>
           <h2 className="mt-4 text-balance font-heading text-2xl font-bold leading-tight text-foreground sm:text-3xl">

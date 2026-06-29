@@ -42,7 +42,7 @@ export function WizardFooter({
   return (
     <div className="mt-12 flex flex-col gap-4 border-t border-gold/15 pt-6 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-3">
-        <span className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
+        <span className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
           Bước {currentStep}/{totalSteps}
         </span>
         <div

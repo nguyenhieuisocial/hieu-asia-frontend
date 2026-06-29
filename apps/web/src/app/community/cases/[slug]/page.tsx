@@ -83,7 +83,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
               {c.illustrativeLabel}
             </p>
             <div className="mt-4 flex items-center gap-3 text-xs text-muted-foreground">
-              <span className="font-mono uppercase tracking-[0.2em] text-gold/85">
+              <span className="font-mono uppercase tracking-[0.12em] text-gold/85">
                 {c.year}
               </span>
               <span aria-hidden>·</span>
@@ -181,7 +181,7 @@ function Section({
 }) {
   return (
     <section className="mt-8 first:mt-0">
-      <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+      <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
         {title}
       </h2>
       <div className="mt-3 text-base leading-relaxed text-foreground/85">

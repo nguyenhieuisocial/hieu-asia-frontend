@@ -252,7 +252,7 @@ export default function SampleReportPage() {
         />
 
         <section className="relative mx-auto max-w-3xl px-6 pb-10 pt-6 sm:pt-8">
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
+          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
             Mẫu báo cáo · Cẩm nang cá nhân hoá
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -305,7 +305,7 @@ export default function SampleReportPage() {
         {/* Mục lục "Bạn sẽ nhận được" */}
         <section className="relative mx-auto max-w-3xl px-6 pb-10">
           <div className="rounded-xl border border-gold/25 bg-gradient-to-br from-gold/[0.04] to-transparent p-5 sm:p-6">
-            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold-700">
+            <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
               Bản Premium · {TOTAL_ITEMS} mục có tên cụ thể
             </p>
             <h2 className="mt-2 font-heading text-xl font-semibold text-foreground sm:text-2xl">
@@ -471,7 +471,7 @@ export default function SampleReportPage() {
         <section className="relative mx-auto max-w-3xl px-6 pb-10">
           <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.03]">
             <div className="p-5 sm:p-6">
-              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-amber-600 dark:text-amber-400">
+              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-amber-600 dark:text-amber-400">
                 Mục G1 — Gợi ý bổ khuyết ngũ hành · preview 30%
               </p>
               <h2 className="mt-2 font-heading text-xl font-semibold text-foreground sm:text-2xl">

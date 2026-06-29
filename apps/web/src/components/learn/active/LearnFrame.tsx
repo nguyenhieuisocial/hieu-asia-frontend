@@ -38,7 +38,7 @@ export function LearnFrame(props: LearnFrameProps) {
   const { caption } = props;
   return (
     <div className="rounded-card-editorial border border-gold/20 bg-card/40 p-5 sm:p-6">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-gold-700">
+      <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
         Bản đồ bài học
       </p>
       <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
@@ -56,7 +56,7 @@ export function LearnFrame(props: LearnFrameProps) {
               {i + 1}
             </span>
             <div className="min-w-0">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-gold-700">
+              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
                 {step.label}
               </p>
               <div className="mt-1 text-sm leading-relaxed text-muted-foreground">

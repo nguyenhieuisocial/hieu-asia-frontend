@@ -87,7 +87,7 @@ export default function LearnBatTuPage() {
           {/* Wave 52-C — consistent BETA badge: nav dropdown labels "Bát Tự (beta)"
               and methodology table marks the row beta, so this page should match. */}
           <span
-            className="ml-3 inline-flex translate-y-[-4px] items-center rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 align-middle font-mono text-[10px] uppercase tracking-[0.18em] text-amber-300"
+            className="ml-3 inline-flex translate-y-[-4px] items-center rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 align-middle font-mono text-[10px] uppercase tracking-[0.12em] text-amber-300"
             aria-label="Tính năng đang trong giai đoạn beta"
           >
             beta

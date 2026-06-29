@@ -94,7 +94,7 @@ export default function DatTenNguHanhPage() {
 
           {/* Ngũ hành tương sinh tương khắc */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Ngũ hành &amp; quy luật tương sinh
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -121,7 +121,7 @@ export default function DatTenNguHanhPage() {
 
           {/* Lời nhắn */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Một lời nhắn
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -134,7 +134,7 @@ export default function DatTenNguHanhPage() {
 
           {/* FAQ */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">
@@ -149,7 +149,7 @@ export default function DatTenNguHanhPage() {
 
           {/* Nhận nhắc theo mùa */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Nhận nhắc theo mùa
             </h2>
             <div className="mt-3">

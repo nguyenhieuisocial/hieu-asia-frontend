@@ -114,7 +114,7 @@ export default async function DiscStylePage({
           <span className="mx-1.5">/</span>
           <span className="text-foreground/70">Nhóm {d.letter}</span>
         </nav>
-        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold/80">
+        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
           DISC · {d.pace} · {d.focus}
         </p>
         <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">

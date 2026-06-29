@@ -84,7 +84,7 @@ export default function KhaiTruongPage() {
           <KhaiTruongChecker defaultTargetYear={TARGET_YEAR} />
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Bảng nhanh: chủ sinh năm nào khai trương {TARGET_YEAR} hợp tuổi?
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
@@ -152,7 +152,7 @@ export default function KhaiTruongPage() {
           </section>
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Khai trương xem gì? — minh bạch để bạn kiểm chứng
             </h2>
             <ul className="mt-3 space-y-1.5 pl-5 text-sm text-muted-foreground list-disc">
@@ -189,7 +189,7 @@ export default function KhaiTruongPage() {
           </section>
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">
@@ -203,7 +203,7 @@ export default function KhaiTruongPage() {
           </section>
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Xem chi tiết theo năm sinh chủ
             </h2>
             <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm sm:grid-cols-4">
@@ -218,7 +218,7 @@ export default function KhaiTruongPage() {
           </section>
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.28em] text-gold/80">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
               Nhận nhắc theo mùa
             </h2>
             <div className="mt-4">

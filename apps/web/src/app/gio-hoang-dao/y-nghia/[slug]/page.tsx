@@ -97,7 +97,7 @@ export default async function SaoGioPage({ params }: Props) {
               {s.good ? '🌟' : '⚠️'}
             </span>
             <div>
-              <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-gold/80">
+              <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold/80">
                 {s.good ? 'Sao hoàng đạo — giờ tốt' : 'Sao hắc đạo — giờ xấu'}
               </div>
               <div className="mt-2 flex flex-wrap gap-1.5">

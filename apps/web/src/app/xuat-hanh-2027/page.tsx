@@ -91,7 +91,7 @@ export default function XuatHanh2027Page() {
             <span className="mx-1.5">/</span>
             <span className="text-muted-foreground">Xuất hành đầu năm 2027</span>
           </nav>
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
+          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
             Tết Đinh Mùi 2027 · tính theo Can-Chi
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">

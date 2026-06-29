@@ -53,7 +53,7 @@ const CARDS: SampleCard[] = [
       </p>
     ),
     footer: (
-      <span className="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-[0.18em] text-primary/80">
+      <span className="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-[0.12em] text-primary/80">
         <span aria-hidden>·</span> Có nút “Vì sao?” mở evidence
       </span>
     ),
@@ -73,7 +73,7 @@ const CARDS: SampleCard[] = [
       </p>
     ),
     footer: (
-      <span className="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-[0.18em] text-primary/80">
+      <span className="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-[0.12em] text-primary/80">
         <span aria-hidden>·</span> Có timeline lưu niên năm
       </span>
     ),
@@ -190,7 +190,7 @@ export function SampleOutputShowcase() {
             >
               <div className="mb-3 flex items-center gap-2">
                 {c.icon}
-                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
                   {c.eyebrow}
                 </p>
               </div>

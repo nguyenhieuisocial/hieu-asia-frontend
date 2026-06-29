@@ -36,7 +36,7 @@ export default function NewsletterHubPage() {
       <SiteNav />
       <main id="main-content" className="mx-auto max-w-4xl px-6 py-20 sm:py-24">
         <header className="mb-12 max-w-2xl">
-          <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-xs uppercase tracking-[0.12em] text-gold/80">
             Newsletter
           </p>
           <h1 className="mt-3 font-heading text-4xl font-bold leading-tight sm:text-5xl">

@@ -164,7 +164,7 @@ export default function NewsletterArchivePage() {
       />
       <main id="main-content" className="mx-auto max-w-3xl px-6 py-20 sm:py-24">
         <header className="mb-12 max-w-2xl">
-          <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold/80">
+          <p className="font-mono text-xs uppercase tracking-[0.12em] text-gold/80">
             Newsletter · lưu trữ
           </p>
           <h1 className="mt-3 font-heading text-4xl font-bold leading-tight sm:text-5xl">
@@ -214,7 +214,7 @@ export default function NewsletterArchivePage() {
 
         <section className="mt-16">
           <div className="mb-6 max-w-2xl">
-            <p className="font-mono text-xs uppercase tracking-[0.32em] text-gold/80">
+            <p className="font-mono text-xs uppercase tracking-[0.12em] text-gold/80">
               Tiếp theo
             </p>
             <h2 className="mt-3 font-heading text-2xl font-semibold leading-tight sm:text-3xl">

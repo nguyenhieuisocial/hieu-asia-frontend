@@ -40,7 +40,7 @@ export default function CaseStudiesIndexPage() {
             className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,_rgba(59,39,84,0.4)_0%,_transparent_55%)]"
           />
           <div className="mx-auto max-w-4xl px-6 py-16 text-center sm:py-24">
-            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-gold/80 sm:text-xs">
+            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold/80 sm:text-xs">
               Cộng đồng / Case studies
             </p>
             <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
@@ -71,7 +71,7 @@ export default function CaseStudiesIndexPage() {
                   className="group rounded-2xl border border-border bg-card/40 p-6 transition-all hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)] sm:p-8"
                 >
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    <span className="font-mono uppercase tracking-[0.2em] text-gold/85">
+                    <span className="font-mono uppercase tracking-[0.12em] text-gold/85">
                       {c.year}
                     </span>
                     <span aria-hidden>·</span>
