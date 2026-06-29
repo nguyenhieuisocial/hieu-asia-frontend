@@ -84,7 +84,7 @@ jobs:
 
       - name: Publish to Chromatic
         if: steps.token_check.outputs.has_token == 'true'
-        uses: chromaui/action@7804f34e4e59c0d9b3c856848f46ad96d7897429 # v17
+        uses: chromaui/action@7ffa9343588f15ff3f4cde30e03cd23204ed6a9c # v17
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: apps/web
