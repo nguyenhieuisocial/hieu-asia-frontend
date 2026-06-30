@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 import dynamic from 'next/dynamic';
+import { ShimmerText } from '@/components/fx/ShimmerText';
+import { AuroraBackdrop } from '@/components/fx/AuroraBackdrop';
 
 // BatTuChecker (engine Bát Tự + bảng 4 trụ + Nhật Chủ + đại vận + Thần Sát + nút
 // PDF, ~716 LOC) CHỈ render sau khi khách bấm "Lập lá số" (state `revealed`).
@@ -73,17 +75,10 @@ export function InstantChartHero(): React.JSX.Element {
       aria-label="Lập lá số Bát Tự tức thì"
       className="relative overflow-hidden border-b border-border bg-background"
     >
-      {/* glow trang trí — thuần thị giác, hợp tông giấy-kem + vàng */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-24 right-[-12%] h-[360px] w-[360px] rounded-full bg-gold/10 blur-3xl"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-10 left-[-12%] h-[300px] w-[300px] rounded-full bg-purple/15 blur-3xl"
-      />
+      {/* glow trang trí — thuần thị giác, drift nhẹ (AuroraBackdrop), hợp tông giấy-kem + vàng */}
+      <AuroraBackdrop />
 
-      <div className="relative mx-auto max-w-3xl px-6 pt-8 pb-28 sm:pt-12 sm:pb-16">
+      <div className="relative z-10 mx-auto max-w-3xl px-6 pt-8 pb-28 sm:pt-12 sm:pb-16">
         {/* Wave 65 — lời hứa thương hiệu lên đầu (page 1) theo yêu cầu founder;
             GIỮ nguyên H1 hành động + form ngay dưới (không phá mối nối chuyển đổi). */}
         <p className="font-marketing-display text-lg italic leading-tight text-primary/90 sm:text-xl">
@@ -94,9 +89,7 @@ export function InstantChartHero(): React.JSX.Element {
         </p>
         <h1 className="mt-3 text-balance font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
           Nhập ngày sinh —{' '}
-          <span className="bg-gold-gradient bg-clip-text text-transparent">
-            xem lá số của bạn
-          </span>{' '}
+          <ShimmerText>xem lá số của bạn</ShimmerText>{' '}
           ngay.
         </h1>
         <p className="mt-4 max-w-xl text-sm leading-relaxed text-foreground/75 sm:text-base">
@@ -193,7 +186,7 @@ export function InstantChartHero(): React.JSX.Element {
 
           <button
             type="submit"
-            className="mt-4 inline-flex h-12 w-full items-center justify-center rounded-md bg-gold px-6 text-sm font-medium text-ink transition-colors hover:bg-gold-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:w-auto"
+            className="mt-4 inline-flex h-12 w-full items-center justify-center rounded-md bg-gold px-6 text-sm font-medium text-ink transition hover:bg-gold-400 hover:shadow-lg hover:shadow-gold/30 hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:w-auto"
           >
             ✦ Lập lá số Bát Tự của tôi →
           </button>

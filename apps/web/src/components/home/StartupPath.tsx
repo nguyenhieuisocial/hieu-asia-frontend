@@ -80,13 +80,17 @@ export function StartupPath() {
         </div>
 
         <ol className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-          {STEPS.map((s) => {
+          {STEPS.map((s, i) => {
             const done = s.n === 1 && step1Done;
             return (
-              <li key={s.n}>
+              <li key={s.n} className="rv-up" style={{ animationDelay: `${i * 90}ms` }}>
                 <Link
                   href={s.href}
-                  className="group flex h-full flex-col gap-3 rounded-2xl border border-primary/15 bg-card/60 p-5 transition-colors hover:border-primary/40 hover:bg-card"
+                  className={`group flex h-full flex-col gap-3 rounded-2xl border p-5 transition-colors hover:border-primary/40 hover:bg-card transition active:scale-[0.98] ${
+                    s.reward
+                      ? 'border-primary/40 bg-primary/[0.04]'
+                      : 'border-primary/15 bg-card/60'
+                  }`}
                 >
                   <div className="flex items-center justify-between">
                     <span

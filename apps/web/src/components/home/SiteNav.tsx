@@ -62,7 +62,9 @@ function useCheckinNudge(isAuthed: boolean): boolean {
 
 /** Tiny gold "unchecked streak today" indicator. Decorative; callers add a label. */
 function NudgeDot({ className }: { className?: string }) {
-  return <span aria-hidden className={cn('h-1.5 w-1.5 rounded-full bg-gold', className)} />;
+  return (
+    <span aria-hidden className={cn('h-1.5 w-1.5 animate-pulse rounded-full bg-gold', className)} />
+  );
 }
 
 /**
@@ -163,7 +165,7 @@ export function SiteNav() {
             <Link
               key={l.label}
               href={l.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-primary"
+              className="text-sm text-muted-foreground transition-colors hover:text-primary active:text-primary"
             >
               {l.label}
             </Link>
@@ -181,7 +183,7 @@ export function SiteNav() {
               {!loading && (
                 <Link
                   href="/signin"
-                  className="hidden text-sm text-muted-foreground transition-colors hover:text-primary sm:inline-flex sm:px-2"
+                  className="hidden text-sm text-muted-foreground transition-colors hover:text-primary active:text-primary sm:inline-flex sm:px-2"
                 >
                   Đăng nhập
                 </Link>
@@ -312,10 +314,10 @@ function DrawerGroup({
   onNavigate: () => void;
 }) {
   const linkCls =
-    'rounded-md px-3 py-2 text-sm text-foreground/70 transition-colors hover:bg-primary/10 hover:text-primary';
+    'rounded-md px-3 py-2 text-sm text-foreground/70 transition-colors hover:bg-primary/10 hover:text-primary active:bg-primary/15';
   return (
     <details className="group">
-      <summary className="flex cursor-pointer list-none items-center justify-between rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary [&::-webkit-details-marker]:hidden">
+      <summary className="flex cursor-pointer list-none items-center justify-between rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary active:bg-primary/15 [&::-webkit-details-marker]:hidden">
         {title}
         <ChevronDown
           className="h-4 w-4 transition-transform group-open:rotate-180"
@@ -399,7 +401,7 @@ function MobileDrawer({
           <Link
             href="/"
             onClick={() => setOpen(false)}
-            className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
+            className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary active:bg-primary/15"
           >
             Trang chủ
           </Link>
@@ -408,21 +410,21 @@ function MobileDrawer({
               <Link
                 href="/account"
                 onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
+                className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary active:bg-primary/15"
               >
                 Tài khoản
               </Link>
               <Link
                 href="/reading"
                 onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
+                className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary active:bg-primary/15"
               >
                 Lá số của bạn
               </Link>
               <Link
                 href="/account/operating-manual"
                 onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
+                className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary active:bg-primary/15"
               >
                 Sổ tay cá nhân
               </Link>
@@ -433,7 +435,7 @@ function MobileDrawer({
                 <Link
                   href="/account#streak"
                   onClick={() => setOpen(false)}
-                  className="flex items-center justify-between rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
+                  className="flex items-center justify-between rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary active:bg-primary/15"
                 >
                   <span>Điểm danh hôm nay</span>
                   <NudgeDot />
@@ -446,7 +448,7 @@ function MobileDrawer({
               key={l.label}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
+              className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary active:bg-primary/15"
             >
               {l.label}
             </Link>
@@ -482,7 +484,7 @@ function MobileDrawer({
             <Link
               href="/signin"
               onClick={() => setOpen(false)}
-              className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary"
+              className="rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary active:bg-primary/15"
             >
               Đăng nhập
             </Link>

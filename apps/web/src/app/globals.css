@@ -216,6 +216,15 @@ html {
 }
 @keyframes hexLine { to { opacity: 1; transform: translateY(0) scaleY(1); } }
 
+/* ===== FAQ — câu trả lời mở ra mượt (mờ + trượt nhẹ) thay vì "bụp" =====
+ * Native <details> ẩn nội dung khi đóng (display:none) nên không transition được
+ * chiều cao; thay vào đó chạy animation 1 lần mỗi khi MỞ. Tôn trọng reduce-motion
+ * (toàn bộ nằm trong no-preference). */
+@media (prefers-reduced-motion: no-preference) {
+  details.faq-item[open] > .faq-answer { animation: faqOpen .32s cubic-bezier(.2,.7,.2,1) both; }
+}
+@keyframes faqOpen { from { opacity: 0; transform: translateY(-.4em); } to { opacity: 1; transform: translateY(0); } }
+
 /* Same rationale for faint-gold LABEL text — the mono "eyebrow" tags above
  * headings (`text-gold/80|85|90`, ~11px) sit at ~2:1 on cream (gold #B8923D
  * at 0.8 over Paper), failing WCAG 1.4.3 small-text 4.5:1. Deepen to

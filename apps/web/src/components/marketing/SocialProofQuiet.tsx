@@ -25,6 +25,8 @@
  * Renders identically across day/night via semantic CSS variables.
  */
 
+import { ShimmerText } from '@/components/fx/ShimmerText';
+
 type Quote = {
   /** Quote body — 30-60 words in founder voice, italic Newsreader. */
   body: string;
@@ -69,7 +71,7 @@ export function SocialProofQuiet() {
             style={{ animationDelay: '80ms' }}
           >
             Không sao. Không ảnh. Không lời khen.{' '}
-            <em className="italic text-primary/80">Kiểu câu hỏi mọi người mang tới</em>
+            <em className="italic text-primary/80"><ShimmerText>Kiểu câu hỏi mọi người mang tới</ShimmerText></em>
             <span className="text-primary">.</span>
           </h2>
           <p className="rv-up mt-6 max-w-marketing-text font-sans text-editorial-lede text-muted-foreground" style={{ animationDelay: '160ms' }}>
@@ -84,7 +86,7 @@ export function SocialProofQuiet() {
           {QUOTES.map((q, i) => (
             <li
               key={q.topic}
-              className="rv-up relative flex flex-col rounded-card-editorial border border-border bg-card/40 p-5 md:p-7"
+              className="rv-up relative flex flex-col rounded-card-editorial border border-border bg-card/40 p-5 transition hover:border-primary/30 active:scale-[0.98] md:p-7"
               style={{ animationDelay: `${260 + i * 110}ms` }}
             >
               <span
@@ -101,7 +103,7 @@ export function SocialProofQuiet() {
               </p>
               <p
                 aria-hidden
-                className="absolute right-card top-card font-mono text-eyebrow uppercase tracking-[0.12em] text-muted-foreground/40 md:right-10 md:top-10"
+                className="absolute right-card top-card font-mono text-eyebrow uppercase tracking-[0.12em] text-primary/30 md:right-10 md:top-10"
               >
                 0{i + 1} / 0{QUOTES.length}
               </p>

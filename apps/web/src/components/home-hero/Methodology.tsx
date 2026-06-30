@@ -47,7 +47,7 @@ export function Methodology(): React.JSX.Element {
                   {l.meta}
                 </span>
                 <ArrowRight
-                  className="h-4 w-4 shrink-0 self-center text-primary/50 transition-transform group-hover:translate-x-0.5 group-hover:text-primary"
+                  className="h-4 w-4 shrink-0 self-center text-primary transition-transform group-hover:translate-x-0.5 group-hover:text-primary"
                   aria-hidden="true"
                 />
               </Link>
@@ -55,7 +55,7 @@ export function Methodology(): React.JSX.Element {
           ))}
         </ol>
 
-        <p className="mt-8 max-w-[32em] font-editorial-display text-xl leading-snug text-foreground sm:text-2xl">
+        <p className="rv-up mt-8 max-w-[32em] font-editorial-display text-2xl leading-snug text-foreground sm:text-3xl">
           <span className="text-primary">→</span> AI hợp nhất năm lớp thành{' '}
           <em className="italic text-primary">một lời khuyên thực tế</em>, có thể hành động.
         </p>

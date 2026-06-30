@@ -24,15 +24,15 @@ export function ToolkitSection(): React.JSX.Element {
         </p>
 
         <div className="mt-8 space-y-6">
-          {GROUPS.map((g) => (
-            <div key={g.label}>
+          {GROUPS.map((g, gi) => (
+            <div key={g.label} className="rv-up" style={{ animationDelay: `${gi * 80}ms` }}>
               <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-primary/70">{g.label}</p>
               <div className="mt-2 flex flex-wrap gap-2">
                 {g.tools.map((t) => (
                   <span key={t.href} className="inline-flex items-center gap-1">
                     <a
                       href={t.href}
-                      className="rounded-full border border-primary/25 px-3.5 py-1.5 text-sm text-foreground transition-colors hover:border-primary hover:bg-primary/5"
+                      className="rounded-full border border-primary/40 bg-primary/5 px-3.5 py-1.5 text-sm text-foreground transition-colors hover:border-primary hover:bg-primary/5"
                     >
                       {t.n}
                     </a>
