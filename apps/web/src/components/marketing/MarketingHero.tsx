@@ -4,7 +4,6 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { PaintedCanvas } from './PaintedCanvas';
 import { GlassPanel } from './GlassPanel';
-import { MagneticButton } from '@/components/fx/MagneticButton';
 
 /**
  * Wave 60.56 P2.1 — MarketingHero (Option D "Warm-Dark Editorial").
@@ -136,14 +135,12 @@ export function MarketingHero({
           >
             <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
               <div className="flex flex-col gap-3 sm:flex-row sm:gap-3">
-                <MagneticButton>
-                  <Link
-                    href={primaryCta.href}
-                    className="inline-flex items-center justify-center rounded-pill bg-gold px-7 py-4 font-sans text-sm font-medium text-ink transition-all duration-300 ease-editorial hover:bg-gold-soft"
-                  >
-                    {primaryCta.label}
-                  </Link>
-                </MagneticButton>
+                <Link
+                  href={primaryCta.href}
+                  className="inline-flex items-center justify-center rounded-pill bg-gold px-7 py-4 font-sans text-sm font-medium text-ink transition-all duration-300 ease-editorial hover:bg-gold-soft"
+                >
+                  {primaryCta.label}
+                </Link>
                 {secondaryCta && (
                   <Link
                     href={secondaryCta.href}
@@ -171,14 +168,12 @@ export function MarketingHero({
         ) : (
           <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
             <div className="flex flex-col gap-3 sm:flex-row sm:gap-3">
-              <MagneticButton>
-                <Link
-                  href={primaryCta.href}
-                  className="inline-flex items-center justify-center rounded-pill bg-gold px-7 py-4 font-sans text-sm font-medium text-ink transition-all duration-300 ease-editorial hover:bg-gold-soft"
-                >
-                  {primaryCta.label}
-                </Link>
-              </MagneticButton>
+              <Link
+                href={primaryCta.href}
+                className="inline-flex items-center justify-center rounded-pill bg-gold px-7 py-4 font-sans text-sm font-medium text-ink transition-all duration-300 ease-editorial hover:bg-gold-soft"
+              >
+                {primaryCta.label}
+              </Link>
               {secondaryCta && (
                 <Link
                   href={secondaryCta.href}

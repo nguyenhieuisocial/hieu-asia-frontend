@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { MagneticButton } from '@/components/fx/MagneticButton';
 import { track } from '@/lib/analytics';
 import { formatVND } from '@/lib/pricing';
 
@@ -350,15 +349,13 @@ export function PricingTierV2({
                 </ul>
 
                 {tier.recommended ? (
-                  <MagneticButton block>
-                    <Link
-                      href={tier.ctaHref}
-                      className={`${ctaBase} ${ctaVariant}`}
-                      onClick={() => handleCtaClick(tier.id)}
-                    >
-                      {tier.ctaLabel}
-                    </Link>
-                  </MagneticButton>
+                  <Link
+                    href={tier.ctaHref}
+                    className={`${ctaBase} ${ctaVariant}`}
+                    onClick={() => handleCtaClick(tier.id)}
+                  >
+                    {tier.ctaLabel}
+                  </Link>
                 ) : (
                   <Link
                     href={tier.ctaHref}
