@@ -7,18 +7,16 @@ import { Search, Check, ChevronDown } from 'lucide-react';
  * GoogleTranslate — a custom, searchable language switcher (designed like
  * ifan.asia's admLangDd) that drives Google Translate underneath.
  *
- * Design: a styled trigger (country-code badge + native name + chevron) opens a
- * panel with a search box and a list of languages (country-code badge + native
- * name, the active one highlighted). The raw Google `<select>` is loaded into a
- * visually-hidden container and driven programmatically on select.
+ * Mechanism (the reliable, standard pattern): selecting a language sets the
+ * `googtrans` cookie and reloads. Google's Translate Element — loaded ONLY on
+ * pages that already carry a non-Vietnamese cookie, inside a post-hydration
+ * effect — reads the cookie and translates. This avoids the combo-timing races
+ * of driving the widget live, and (because the load is post-hydration) avoids
+ * React hydration mismatches. For default Vietnamese visitors Google is never
+ * loaded → clean Lighthouse + no third-party contact until the user opts in.
  *
- * LAZY: the Google script is only injected the FIRST time the user opens the
- * dropdown — not at page load. This keeps Lighthouse/perf clean and avoids
- * sending the page to Google until the user actually asks to translate.
- *
- * React resilience: Google swaps text nodes for <font> wrappers, which makes
- * React's removeChild/insertBefore throw on later updates. We install the
- * well-known no-throw guard once (facebook/react#11538).
+ * React resilience: Google swaps text nodes for <font> wrappers; install the
+ * well-known no-throw guard on removeChild/insertBefore (facebook/react#11538).
  */
 
 declare global {
@@ -29,46 +27,55 @@ declare global {
   }
 }
 
-type Lang = { code: string; cc: string; name: string };
+type Lang = { code: string; cc: string; name: string; q: string };
 
-// Curated "mọi quốc gia" list — native names + representative country code,
-// arranged with Vietnamese first then nearby markets, then major world langs.
-// Codes match Google Translate's language codes (goog-te-combo option values).
+// Curated list — native name + country code + ASCII search keywords (English +
+// Vietnamese without diacritics) so search works whatever the user types.
+// `code` = Google Translate language code.
 const LANGS: readonly Lang[] = [
-  { code: 'vi', cc: 'VN', name: 'Tiếng Việt' },
-  { code: 'en', cc: 'GB', name: 'English' },
-  { code: 'zh-CN', cc: 'CN', name: '中文 (简体)' },
-  { code: 'zh-TW', cc: 'TW', name: '中文 (繁體)' },
-  { code: 'ja', cc: 'JP', name: '日本語' },
-  { code: 'ko', cc: 'KR', name: '한국어' },
-  { code: 'th', cc: 'TH', name: 'ไทย' },
-  { code: 'lo', cc: 'LA', name: 'ລາວ' },
-  { code: 'km', cc: 'KH', name: 'ភាសាខ្មែរ' },
-  { code: 'my', cc: 'MM', name: 'မြန်မာ' },
-  { code: 'ms', cc: 'MY', name: 'Bahasa Melayu' },
-  { code: 'id', cc: 'ID', name: 'Bahasa Indonesia' },
-  { code: 'tl', cc: 'PH', name: 'Filipino' },
-  { code: 'hi', cc: 'IN', name: 'हिन्दी' },
-  { code: 'bn', cc: 'BD', name: 'বাংলা' },
-  { code: 'fr', cc: 'FR', name: 'Français' },
-  { code: 'de', cc: 'DE', name: 'Deutsch' },
-  { code: 'es', cc: 'ES', name: 'Español' },
-  { code: 'pt', cc: 'PT', name: 'Português' },
-  { code: 'it', cc: 'IT', name: 'Italiano' },
-  { code: 'nl', cc: 'NL', name: 'Nederlands' },
-  { code: 'ru', cc: 'RU', name: 'Русский' },
-  { code: 'uk', cc: 'UA', name: 'Українська' },
-  { code: 'pl', cc: 'PL', name: 'Polski' },
-  { code: 'tr', cc: 'TR', name: 'Türkçe' },
-  { code: 'ar', cc: 'SA', name: 'العربية' },
-  { code: 'fa', cc: 'IR', name: 'فارسی' },
-  { code: 'he', cc: 'IL', name: 'עברית' },
+  { code: 'vi', cc: 'VN', name: 'Tiếng Việt', q: 'vietnamese tieng viet viet nam' },
+  { code: 'en', cc: 'GB', name: 'English', q: 'english anh' },
+  { code: 'zh-CN', cc: 'CN', name: '中文 (简体)', q: 'chinese simplified trung quoc gian the' },
+  { code: 'zh-TW', cc: 'TW', name: '中文 (繁體)', q: 'chinese traditional trung phon the dai loan' },
+  { code: 'ja', cc: 'JP', name: '日本語', q: 'japanese nhat ban' },
+  { code: 'ko', cc: 'KR', name: '한국어', q: 'korean han quoc' },
+  { code: 'th', cc: 'TH', name: 'ไทย', q: 'thai lan' },
+  { code: 'lo', cc: 'LA', name: 'ລາວ', q: 'lao' },
+  { code: 'km', cc: 'KH', name: 'ភាសាខ្មែរ', q: 'khmer campuchia cambodia' },
+  { code: 'my', cc: 'MM', name: 'မြန်မာ', q: 'burmese myanmar mien dien' },
+  { code: 'ms', cc: 'MY', name: 'Bahasa Melayu', q: 'malay malaysia ma lai' },
+  { code: 'id', cc: 'ID', name: 'Bahasa Indonesia', q: 'indonesian indonesia' },
+  { code: 'tl', cc: 'PH', name: 'Filipino', q: 'filipino tagalog philippines' },
+  { code: 'hi', cc: 'IN', name: 'हिन्दी', q: 'hindi india an do' },
+  { code: 'bn', cc: 'BD', name: 'বাংলা', q: 'bengali bangladesh' },
+  { code: 'fr', cc: 'FR', name: 'Français', q: 'french phap' },
+  { code: 'de', cc: 'DE', name: 'Deutsch', q: 'german duc' },
+  { code: 'es', cc: 'ES', name: 'Español', q: 'spanish tay ban nha' },
+  { code: 'pt', cc: 'PT', name: 'Português', q: 'portuguese bo dao nha' },
+  { code: 'it', cc: 'IT', name: 'Italiano', q: 'italian y' },
+  { code: 'nl', cc: 'NL', name: 'Nederlands', q: 'dutch ha lan' },
+  { code: 'ru', cc: 'RU', name: 'Русский', q: 'russian nga' },
+  { code: 'uk', cc: 'UA', name: 'Українська', q: 'ukrainian ukraine' },
+  { code: 'pl', cc: 'PL', name: 'Polski', q: 'polish ba lan' },
+  { code: 'tr', cc: 'TR', name: 'Türkçe', q: 'turkish tho nhi ky' },
+  { code: 'ar', cc: 'SA', name: 'العربية', q: 'arabic a rap' },
+  { code: 'fa', cc: 'IR', name: 'فارسی', q: 'persian farsi iran' },
+  { code: 'he', cc: 'IL', name: 'עברית', q: 'hebrew israel do thai' },
 ];
 
 const ELEMENT_ID = 'google_translate_element';
 const SCRIPT_ID = 'google-translate-script';
 
-/** Make React tolerate Google Translate's DOM node swaps (no-throw guards). */
+/** Strip diacritics + đ so search matches with or without Vietnamese tones. */
+function norm(s: string): string {
+  return s
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .toLowerCase();
+}
+
 function patchDomForTranslate(): void {
   if (typeof window === 'undefined' || window.__gtResiliencePatched) return;
   window.__gtResiliencePatched = true;
@@ -84,7 +91,7 @@ function patchDomForTranslate(): void {
   };
 }
 
-/** Inject the Google Translate script + init the hidden combo (idempotent). */
+/** Inject the Google Translate script + init the hidden element (idempotent). */
 function loadGoogleTranslate(): void {
   patchDomForTranslate();
   window.googleTranslateElementInit = (): void => {
@@ -105,31 +112,41 @@ function loadGoogleTranslate(): void {
   document.body.appendChild(script);
 }
 
-/** Drive the hidden goog-te-combo. Returns false if it isn't ready yet. */
-function applyGoogleLang(code: string): boolean {
-  const combo = document.querySelector<HTMLSelectElement>('.goog-te-combo');
-  if (!combo) return false;
-  combo.value = code === 'vi' ? '' : code;
-  combo.dispatchEvent(new Event('change'));
-  return true;
-}
-
-/** Read the current translation target from the googtrans cookie. */
+/** Current translation target from the googtrans cookie ('vi' = original). */
 function readCurrentLang(): string {
   if (typeof document === 'undefined') return 'vi';
   const m = document.cookie.match(/googtrans=\/[^/]*\/([^;]+)/);
-  return m && m[1] ? m[1] : 'vi';
+  return m && m[1] ? decodeURIComponent(m[1]) : 'vi';
+}
+
+/** Persist the chosen language via the googtrans cookie (Google reads it). */
+function setLangCookie(code: string): void {
+  const host = window.location.hostname;
+  const expire = 'expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  if (code === 'vi') {
+    // Clear on every domain scope Google might have written.
+    document.cookie = `googtrans=; path=/; ${expire}`;
+    document.cookie = `googtrans=; path=/; domain=${host}; ${expire}`;
+    document.cookie = `googtrans=; path=/; domain=.${host}; ${expire}`;
+    return;
+  }
+  const val = `/vi/${code}`;
+  document.cookie = `googtrans=${val}; path=/`;
+  document.cookie = `googtrans=${val}; path=/; domain=.${host}`;
 }
 
 export function GoogleTranslate({ className = '' }: { className?: string }): React.JSX.Element {
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState('');
   const [current, setCurrent] = React.useState('vi');
-  const loadedRef = React.useRef(false);
   const rootRef = React.useRef<HTMLDivElement | null>(null);
 
+  // Post-hydration: sync the displayed language from the cookie and, if the page
+  // is meant to be translated, load Google now (after hydration → no mismatch).
   React.useEffect(() => {
-    setCurrent(readCurrentLang());
+    const cur = readCurrentLang();
+    setCurrent(cur);
+    if (cur !== 'vi') loadGoogleTranslate();
   }, []);
 
   React.useEffect(() => {
@@ -148,49 +165,28 @@ export function GoogleTranslate({ className = '' }: { className?: string }): Rea
     };
   }, [open]);
 
-  const ensureLoaded = React.useCallback((): void => {
-    if (loadedRef.current) return;
-    loadedRef.current = true;
-    loadGoogleTranslate();
-  }, []);
-
-  const toggle = (): void => {
-    setOpen((o) => {
-      const next = !o;
-      if (next) ensureLoaded();
-      return next;
-    });
-  };
-
   const select = (code: string): void => {
-    setCurrent(code);
     setOpen(false);
     setQuery('');
-    ensureLoaded();
-    if (applyGoogleLang(code)) return;
-    // Google not ready yet (first open) — retry briefly until the combo exists.
-    let tries = 0;
-    const iv = window.setInterval(() => {
-      tries += 1;
-      if (applyGoogleLang(code) || tries > 40) window.clearInterval(iv);
-    }, 150);
+    if (code === current) return;
+    setLangCookie(code);
+    window.location.reload();
   };
 
-  const fallback: Lang = { code: 'vi', cc: 'VN', name: 'Tiếng Việt' };
+  const fallback: Lang = { code: 'vi', cc: 'VN', name: 'Tiếng Việt', q: '' };
   const currentLang = LANGS.find((l) => l.code === current) ?? fallback;
-  const ql = query.trim().toLowerCase();
-  const filtered = ql
-    ? LANGS.filter((l) => l.name.toLowerCase().includes(ql) || l.cc.toLowerCase().includes(ql) || l.code.toLowerCase().includes(ql))
+  const nq = norm(query.trim());
+  const filtered = nq
+    ? LANGS.filter((l) => norm(`${l.name} ${l.q} ${l.cc} ${l.code}`).includes(nq))
     : LANGS;
 
   return (
     <div ref={rootRef} translate="no" className={`gt-widget notranslate ${className}`}>
-      {/* hidden Google engine */}
       <div id={ELEMENT_ID} aria-hidden="true" className="gt-hidden" />
 
       <button
         type="button"
-        onClick={toggle}
+        onClick={() => setOpen((o) => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label="Chọn ngôn ngữ"
