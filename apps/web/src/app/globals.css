@@ -46,21 +46,21 @@
    * with localStorage `theme=dark` stay on dark — no surprise flip.
    */
   :root {
-    --background: 41 48% 91%;        /* Paper #F3ECDD — Giấy thấm */
-    --foreground: 30 15% 8%;         /* Ink #171411 — chữ chính trên paper */
-    --card: 38 60% 95%;              /* Paper-50 #FAF6EC for elevation lift on paper */
-    --card-foreground: 30 15% 8%;
+    --background: 0 0% 100%;         /* C-Hybrid — clean white base */
+    --foreground: 40 8% 10%;         /* Ink #1B1A17 — text on white */
+    --card: 0 0% 100%;               /* white card (lift via border/shadow) */
+    --card-foreground: 40 8% 10%;
     --primary: 35 53% 35%;           /* Ochre-deep #89612A — day accent. WCAG AA fix: was 42% (#A47532, 3.45:1 on paper, fails as small text). Same hue/sat, deepened to 35% → 4.7:1 AA. */
-    --primary-foreground: 38 60% 95%; /* paper-50 text on ochre CTA */
+    --primary-foreground: 0 0% 100%; /* white text on ochre CTA */
     /* V4 a11y fix (design handoff): the *brand* ochre #A47532 above stays the
      * single accent for text / borders / dots. But paper-50 text ON solid
      * ochre is only ~3.7:1 (fails WCAG AA 4.5). This deeper ochre #8A6128 is
      * the CTA *button surface* only — same hue, lifts paper text to ≈5:1 AA.
      * Use `bg-[hsl(var(--primary-cta))]` on filled CTAs, keep paper text. */
     --primary-cta: 35 55% 35%;       /* Ochre-deep #8A6128 — filled CTA surface */
-    --muted: 38 36% 86%;             /* Paper-200 / Bone #EBE2CD — surface lift */
-    --muted-foreground: 33 9% 38%;   /* Paper-700 / Ink-meta #6A6258 — WCAG AA fix: 39%→38% (4.40→4.55 on muted) */
-    --border: 41 25% 73%;            /* Paper-300 / Rule #CCC0A6 */
+    --muted: 40 25% 94%;             /* C-Hybrid surface #F4F1EB — warm-neutral lift */
+    --muted-foreground: 40 6% 39%;   /* Ink-meta #6A675F — ≈5.2:1 on white (AA) */
+    --border: 39 20% 87%;            /* Rule #E4DFD5 */
     --ring: 35 53% 35%;              /* ochre — synced to deepened --primary (focus ring) */
     --radius: 0.625rem;
 
@@ -69,11 +69,11 @@
      * kept as-is for back-compat with rgb()-based utilities sprinkled
      * across 100+ files. */
     --gold-rgb: 184 146 61;          /* #B8923D — legacy */
-    --ink-rgb: 23 20 17;             /* Ink #171411 */
-    --ochre-rgb: 164 117 50;         /* Ochre #A47532 — day accent */
-    --paper-rgb: 243 236 221;        /* Paper #F3ECDD — day bg */
-    --bone-rgb: 232 220 193;         /* Bone #E8DCC1 — night text */
-    --charcoal-rgb: 21 17 12;        /* Charcoal #15110C — night bg */
+    --ink-rgb: 27 26 23;             /* Ink #1B1A17 */
+    --ochre-rgb: 164 117 50;         /* Ochre #A47532 — accent (kept) */
+    --paper-rgb: 255 255 255;        /* C-Hybrid white base */
+    --bone-rgb: 230 228 223;         /* #E6E4DF — night text */
+    --charcoal-rgb: 23 24 26;        /* #17181A — night bg (cool) */
     --gold-5: rgb(var(--gold-rgb) / 0.05);
     --gold-10: rgb(var(--gold-rgb) / 0.10);
     --gold-20: rgb(var(--gold-rgb) / 0.20);
@@ -92,22 +92,22 @@
   }
 
   .dark {
-    --background: 33 27% 6%;         /* Charcoal #15110C — Khoảng lặng */
-    --foreground: 41 46% 83%;        /* Bone #E8DCC1 — chữ chính on charcoal */
-    --card: 30 17% 10%;              /* Bark #1F1A13 — surface lift on charcoal */
-    --card-foreground: 41 46% 83%;
-    --primary: 34 57% 60%;           /* Gold-soft #D4A261 — night accent (softer than #B8923D) */
-    --primary-foreground: 33 27% 6%; /* charcoal text on gold-soft */
-    --primary-cta: 34 57% 60%;       /* night CTA surface = gold-soft (charcoal text ≈ 8:1 AA) */
-    --muted: 32 16% 9%;              /* Charcoal-200 #1B1714 */
-    --muted-foreground: 41 11% 53%;  /* Bone-soft #9A8D72 */
-    --border: 33 26% 18%;            /* Rule #3A3122 */
-    --ring: 34 57% 60%;              /* gold-soft */
+    --background: 220 6% 10%;        /* C-Hybrid — cool dark #17181A */
+    --foreground: 42 11% 89%;        /* #E6E4DF — text on dark */
+    --card: 222 6% 14%;              /* #212327 — elevated surface (lighter = higher, Meta rule) */
+    --card-foreground: 42 11% 89%;
+    --primary: 36 67% 63%;           /* Warm gold #E0AE62 — night accent on cool dark */
+    --primary-foreground: 220 6% 10%; /* dark text on gold */
+    --primary-cta: 36 67% 63%;       /* night CTA surface = gold (dark text ≈ 8:1 AA) */
+    --muted: 225 5% 13%;             /* #1E1F22 — surface */
+    --muted-foreground: 40 5% 64%;   /* #A8A6A0 — meta on dark */
+    --border: 222 6% 22%;            /* #34363A */
+    --ring: 36 67% 63%;              /* gold */
 
     /* RGB anchors flip for dark mode where ink/paper semantic flips.
      * --ochre-rgb in dark mode resolves to gold-night for consistent
      * alpha math. */
-    --ochre-rgb: 212 162 97;         /* Gold-soft #D4A261 in night mode */
+    --ochre-rgb: 224 174 98;         /* Gold #E0AE62 in night mode */
   }
 
   * {
