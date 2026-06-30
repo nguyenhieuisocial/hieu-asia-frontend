@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { Globe } from 'lucide-react';
 
 /**
  * GoogleTranslate — the "all languages" selector (như ifan.asia): Google's
@@ -79,5 +80,10 @@ export function GoogleTranslate({ className = '' }: { className?: string }): Rea
     document.body.appendChild(script);
   }, []);
 
-  return <div id={ELEMENT_ID} translate="no" className={`notranslate gt-widget ${className}`} />;
+  return (
+    <div translate="no" className={`gt-widget notranslate inline-flex items-center gap-1.5 ${className}`}>
+      <Globe className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+      <div id={ELEMENT_ID} />
+    </div>
+  );
 }

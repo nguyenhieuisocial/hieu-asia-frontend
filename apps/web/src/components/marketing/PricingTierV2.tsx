@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { MagneticButton } from '@/components/fx/MagneticButton';
 import { track } from '@/lib/analytics';
 import { formatVND } from '@/lib/pricing';
 
@@ -270,7 +269,7 @@ export function PricingTierV2({
             // 2px thay vì pill"). text-sm → text-base since serif reads ~1 step
             // smaller at the same px.
             const ctaBase =
-              'mt-8 inline-flex w-full items-center justify-center rounded-[2px] px-7 py-4 font-editorial-display text-base font-medium transition-all duration-300 ease-editorial';
+              'mt-8 inline-flex w-full items-center justify-center rounded-[2px] px-7 py-4 font-editorial-display text-base font-medium transition-all duration-300 ease-editorial focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background';
             // Wave 62.05g (ultrareview follow-up) — text-ink (#0F0F12) on
             // bg-primary (Ochre #A47532) was ~3.6:1 on Day mode, below AA 4.5.
             // text-primary-foreground is theme-aware (Paper-50 on ochre ≈ 4.6:1
@@ -350,15 +349,13 @@ export function PricingTierV2({
                 </ul>
 
                 {tier.recommended ? (
-                  <MagneticButton block>
-                    <Link
-                      href={tier.ctaHref}
-                      className={`${ctaBase} ${ctaVariant}`}
-                      onClick={() => handleCtaClick(tier.id)}
-                    >
-                      {tier.ctaLabel}
-                    </Link>
-                  </MagneticButton>
+                  <Link
+                    href={tier.ctaHref}
+                    className={`${ctaBase} ${ctaVariant}`}
+                    onClick={() => handleCtaClick(tier.id)}
+                  >
+                    {tier.ctaLabel}
+                  </Link>
                 ) : (
                   <Link
                     href={tier.ctaHref}
