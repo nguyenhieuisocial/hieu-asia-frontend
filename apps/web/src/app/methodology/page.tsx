@@ -33,6 +33,8 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { Scrollyteller } from '@/components/marketing/Scrollyteller';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
+import { ShimmerText } from '@/components/fx/ShimmerText';
 
 export const metadata: Metadata = {
   title: 'Phương pháp luận — Engine tính gì, AI luận gì',
@@ -1194,10 +1196,10 @@ export default function MethodologyPage() {
               <span className="mr-2 inline-block h-px w-6 bg-primary align-middle" />
               PHƯƠNG PHÁP · 2026
             </p>
-            <h1 className="font-sans text-hero-display font-bold tracking-tight text-foreground">
+            <h1 className="font-editorial-display text-hero-display font-bold tracking-tight text-foreground">
               Engine tính gì, AI luận gì,{' '}
               <u className="underline decoration-primary decoration-2 underline-offset-[6px]">
-                bạn quyết định
+                <ShimmerText>bạn quyết định</ShimmerText>
               </u>{' '}
               gì
               <span className="text-primary">.</span>
@@ -1292,11 +1294,12 @@ export default function MethodologyPage() {
            are representative slices; a public dataset/runner is not yet
            published, so we do not claim "reproduce it yourself" until it is.
            ───────────────────────────────────────────────────────────── */}
+        <RevealOnScroll>
         <section
           aria-labelledby="test-cases-heading"
           className="bg-background py-section"
         >
-          <div className="mx-auto max-w-marketing-tight px-6 lg:px-12">
+          <div className="mx-auto max-w-marketing-tight px-6 lg:px-12 rv-up">
             <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
               <span className="mr-2 inline-block h-px w-6 bg-primary align-middle" />
               KIỂM CHỨNG · TEST CASES CÔNG KHAI
@@ -1535,12 +1538,14 @@ export default function MethodologyPage() {
             </div>
           </div>
         </section>
+        </RevealOnScroll>
 
         {/* ─────────────────────────────────────────────────────────────
            Related — always-visible footer CTA grid + contact callout.
            ───────────────────────────────────────────────────────────── */}
+        <RevealOnScroll>
         <section className="relative bg-muted/40">
-          <div className="mx-auto max-w-marketing px-6 pb-20 pt-16 lg:px-12">
+          <div className="mx-auto max-w-marketing px-6 pb-20 pt-16 lg:px-12 rv-up">
             <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
               <span className="mr-2 inline-block h-px w-6 bg-primary align-middle" />
               ĐỌC TIẾP
@@ -1601,6 +1606,7 @@ export default function MethodologyPage() {
             </div>
           </div>
         </section>
+        </RevealOnScroll>
       </main>
       <SiteFooter />
       <StickyMobileCta trackId="methodology" />

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Button } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 
@@ -39,8 +40,8 @@ const FAQS = [
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-      <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">{title}</h2>
+    <section className="rounded-card-editorial border border-border bg-card/40 p-6 backdrop-blur-sm transition hover:border-primary/30">
+      <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">{title}</h2>
       <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">{children}</div>
     </section>
   );
@@ -81,8 +82,8 @@ export default function DoChinhXacPage() {
       >
         <div className="space-y-6">
           {/* Trạng thái hiện tại — thành thật, KHÔNG con số khi chưa đủ mẫu */}
-          <div className="rounded-2xl border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-6">
-            <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Trạng thái</p>
+          <div className="rounded-card-editorial border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-6">
+            <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">Trạng thái</p>
             <p className="mt-3 font-heading text-xl text-foreground">Đang thu thập dữ liệu</p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               Chúng tôi <strong>chưa</strong> công bố con số độ chính xác, vì chưa đủ mẫu để con số có ý nghĩa.
@@ -92,6 +93,8 @@ export default function DoChinhXacPage() {
             </p>
           </div>
 
+          <RevealOnScroll>
+          <div className="space-y-6 rv-up">
           <Section title="Chúng tôi đo bằng cách nào">
             <p>
               <strong>1. Bạn khai trước.</strong> Trước khi thấy bất cứ điều gì, bạn chọn lĩnh vực (sự nghiệp,
@@ -136,8 +139,11 @@ export default function DoChinhXacPage() {
               Đó là thứ làm nên niềm tin, và là thứ chúng tôi đặt cược.
             </p>
           </Section>
+          </div>
+          </RevealOnScroll>
 
-          <section className="rounded-2xl border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-6 text-center">
+          <RevealOnScroll>
+          <section className="rounded-card-editorial border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-6 text-center rv-up transition hover:border-gold/50">
             <p className="font-heading text-lg text-foreground">Tự mình kiểm chứng — đừng vội tin</p>
             <p className="mx-auto mt-1 max-w-xl text-sm text-muted-foreground">
               Nhập vài sự kiện đời thật đã xảy ra, xem lá số có khớp với chúng không. Bạn vừa tự đánh giá được
@@ -147,9 +153,11 @@ export default function DoChinhXacPage() {
               <Link href="/bang-chung">Tự kiểm chứng lá số của tôi →</Link>
             </Button>
           </section>
+          </RevealOnScroll>
 
-          <section className="rounded-2xl border border-border bg-card/40 p-6">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Câu hỏi thường gặp</h2>
+          <RevealOnScroll>
+          <section className="rounded-card-editorial border border-border bg-card/40 p-6 rv-up">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">Câu hỏi thường gặp</h2>
             <dl className="mt-4 space-y-4">
               {FAQS.map((f, i) => (
                 <div key={i}>
@@ -159,6 +167,7 @@ export default function DoChinhXacPage() {
               ))}
             </dl>
           </section>
+          </RevealOnScroll>
         </div>
       </ToolPageShell>
     </>
