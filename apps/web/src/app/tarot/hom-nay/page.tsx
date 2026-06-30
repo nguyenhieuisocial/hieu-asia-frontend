@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { faqPage } from '@/lib/seo/jsonld';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
@@ -69,7 +70,7 @@ export default function TarotTodayPage() {
           Ngày {dateLabel}
         </p>
 
-        <div className="mt-4 rounded-xl border border-gold/25 bg-gradient-to-br from-gold/10 to-transparent p-6 sm:p-8">
+        <div className="mt-4 rounded-card-editorial border border-gold/25 bg-gradient-to-br from-gold/10 to-transparent p-6 sm:p-8">
           <div className="flex items-baseline justify-between gap-3">
             <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Lá của ngày</span>
             <span className="font-mono text-xs capitalize text-muted-foreground">{kind}</span>
@@ -89,7 +90,7 @@ export default function TarotTodayPage() {
           </Link>
         </div>
 
-        <div className="mt-6 rounded-xl border border-border bg-card/40 p-5">
+        <div className="mt-6 rounded-card-editorial border border-border bg-card/40 p-5">
           <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
             Vài câu để bạn tự soi
           </div>
@@ -111,13 +112,13 @@ export default function TarotTodayPage() {
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <Link
             href="/tarot"
-            className="rounded-md bg-gold px-6 py-3 text-sm font-medium text-background transition-opacity hover:opacity-90"
+            className="rounded-md bg-gold px-6 py-3 text-sm font-medium text-background transition hover:opacity-90 active:scale-[0.98]"
           >
             Rút quẻ cho câu hỏi riêng của bạn →
           </Link>
           <Link
             href="/onboarding"
-            className="rounded-md border border-gold/30 px-5 py-2.5 text-sm text-gold transition-colors hover:bg-gold/10"
+            className="rounded-md border border-gold/30 px-5 py-2.5 text-sm text-gold transition hover:bg-gold/10 hover:border-primary/40 active:scale-[0.98]"
           >
             Ghép với Tử Vi + Bát Tự của tôi →
           </Link>
@@ -127,7 +128,8 @@ export default function TarotTodayPage() {
           Ghé lại mỗi ngày để gặp một lá mới · <Link href="/tu-kiem" className="text-gold hover:underline">Vì sao mình không bói mù?</Link>
         </p>
 
-        <section className="mt-10 rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+        <RevealOnScroll>
+        <section className="rv-up mt-10 rounded-card-editorial border border-border bg-card/40 p-6 backdrop-blur-sm">
           <h2 className="font-heading text-xl font-semibold text-foreground">Câu hỏi thường gặp</h2>
           <dl className="mt-4 space-y-4">
             {FAQS.map((f, i) => (
@@ -138,6 +140,7 @@ export default function TarotTodayPage() {
             ))}
           </dl>
         </section>
+        </RevealOnScroll>
       </div>
       <JsonLd data={faqPage(FAQS)} />
       <StickyMobileCta trackId="tarot-hom-nay" />
