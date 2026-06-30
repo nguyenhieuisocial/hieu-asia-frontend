@@ -261,6 +261,23 @@ html {
 }
 @keyframes pageFade { from { opacity: 0; } to { opacity: 1; } }
 
+/* ===== AuroraBackdrop — glow trôi sau hero (CSS dùng chung) =====
+ * KHÔNG để inline <style> trong component: React 19 dời/dedupe <style> nên 2
+ * instance (hero + MultiHero) phát sinh lệch vị trí server↔client → hydration
+ * #418. Để ở đây + opacity theo biến --ao (set qua data-i). */
+.aur { position: absolute; inset: 0; overflow: hidden; pointer-events: none; --ao: 0.34; }
+.aur[data-i='rich'] { --ao: 0.55; }
+.aur-blob { position: absolute; border-radius: 9999px; filter: blur(66px); will-change: transform; }
+.aur-a { top: -10%; left: 8%; width: 46%; height: 60%; background: radial-gradient(circle, rgba(224, 174, 98, var(--ao)) 0%, rgba(224, 174, 98, 0) 70%); animation: auroraA 18s ease-in-out infinite; }
+.aur-b { top: 6%; right: 2%; width: 42%; height: 55%; background: radial-gradient(circle, rgba(164, 117, 50, var(--ao)) 0%, rgba(164, 117, 50, 0) 70%); animation: auroraB 22s ease-in-out infinite; }
+.aur-c { bottom: -14%; left: 30%; width: 50%; height: 60%; background: radial-gradient(circle, rgba(212, 162, 97, var(--ao)) 0%, rgba(212, 162, 97, 0) 70%); animation: auroraC 26s ease-in-out infinite; }
+.aur-d { top: 24%; left: -8%; width: 38%; height: 50%; background: radial-gradient(circle, rgba(184, 146, 61, calc(var(--ao) * 0.8)) 0%, rgba(184, 146, 61, 0) 72%); animation: auroraD 31s ease-in-out infinite; }
+@keyframes auroraA { 0%, 100% { transform: translate(-12%, -8%) scale(1); } 50% { transform: translate(8%, 6%) scale(1.18); } }
+@keyframes auroraB { 0%, 100% { transform: translate(10%, -6%) scale(1.1); } 50% { transform: translate(-6%, 10%) scale(0.92); } }
+@keyframes auroraC { 0%, 100% { transform: translate(-4%, 10%) scale(0.95); } 50% { transform: translate(6%, -8%) scale(1.15); } }
+@keyframes auroraD { 0%, 100% { transform: translate(6%, 4%) scale(1.05); } 50% { transform: translate(-9%, -7%) scale(1.28); } }
+@media (prefers-reduced-motion: reduce) { .aur-a, .aur-b, .aur-c, .aur-d { animation: none; } }
+
 /* Same rationale for faint-gold LABEL text — the mono "eyebrow" tags above
  * headings (`text-gold/80|85|90`, ~11px) sit at ~2:1 on cream (gold #B8923D
  * at 0.8 over Paper), failing WCAG 1.4.3 small-text 4.5:1. Deepen to
