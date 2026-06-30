@@ -67,7 +67,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html
       lang="vi"
       suppressHydrationWarning
-      className={`${beVietnam.variable} ${inter.variable}`}
+      className={`${beVietnam.variable}`}
     >
       <body>
         {/* Wave 63.9 — enableSystem OFF here too. The login branch (above) was
