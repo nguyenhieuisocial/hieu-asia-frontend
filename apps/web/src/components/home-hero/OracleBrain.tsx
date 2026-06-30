@@ -3,6 +3,10 @@
 import * as React from 'react';
 import { TOOLKIT_GROUPS } from '@/lib/catalog/tools';
 import { ShimmerText } from '@/components/fx/ShimmerText';
+import { Marquee } from '@/components/fx/Marquee';
+
+// Every tool name (full breadth) for the scrolling band under the graph.
+const ALL_TOOLS = TOOLKIT_GROUPS.flatMap((g) => g.tools.map((t) => t.n));
 
 /**
  * OracleBrain — the signature "night-sky" section: a living graph of the whole
@@ -249,13 +253,28 @@ export function OracleBrain(): React.JSX.Element {
             style={{ width: '100%', height: '100%', display: 'block' }}
           />
         </div>
-        <a
-          href="/cong-cu"
-          className="mt-4 inline-block font-mono text-editorial-mono uppercase tracking-[0.12em] underline underline-offset-4 transition-opacity hover:opacity-80"
-          style={{ color: '#E0AE62' }}
-        >
-          Xem tất cả công cụ →
-        </a>
+        <div className="mt-8">
+          <Marquee speed={34}>
+            {ALL_TOOLS.map((t) => (
+              <span
+                key={t}
+                className="font-mono text-editorial-mono uppercase tracking-[0.12em]"
+                style={{ color: 'rgba(224,174,98,0.72)' }}
+              >
+                {t}
+              </span>
+            ))}
+          </Marquee>
+        </div>
+        <div className="mt-6 text-center">
+          <a
+            href="/cong-cu"
+            className="inline-block whitespace-nowrap font-mono text-editorial-mono uppercase tracking-[0.12em] underline underline-offset-4 transition-opacity hover:opacity-80"
+            style={{ color: '#E0AE62' }}
+          >
+            Xem tất cả công cụ →
+          </a>
+        </div>
       </div>
     </section>
   );
