@@ -138,7 +138,7 @@ const nextConfig: NextConfig = {
       // Google Translate widget (ngôn ngữ mọi quốc gia, như ifan.asia) —
       // element.js + its sub-scripts load from these hosts; without them the
       // CSP blocks the widget silently.
-      'https://translate.google.com https://translate.googleapis.com https://www.gstatic.com',
+      'https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://www.gstatic.com',
       pixelScriptHosts,
     ]
       .filter(Boolean)
@@ -152,7 +152,7 @@ const nextConfig: NextConfig = {
       // Wave 60.80.fix — added unpkg.com + cdn.jsdelivr.net for dotlottie WASM
       // fallback fetches. Lighthouse best-practices flagged CSP-blocked errors
       // when primary WASM source failed; library retries from these CDNs.
-      `connect-src 'self' https://api.hieu.asia https://*.hieu.asia https://*.supabase.co https://*.supabase.in https://us.i.posthog.com https://*.posthog.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cloud.langfuse.com https://api.vietqr.io https://unpkg.com https://cdn.jsdelivr.net https://translate.googleapis.com https://translate.google.com ${pixelConnectHosts}`,
+      `connect-src 'self' https://api.hieu.asia https://*.hieu.asia https://*.supabase.co https://*.supabase.in https://us.i.posthog.com https://*.posthog.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cloud.langfuse.com https://api.vietqr.io https://unpkg.com https://cdn.jsdelivr.net https://translate.googleapis.com https://translate-pa.googleapis.com https://translate.google.com ${pixelConnectHosts}`,
       // Wave 60.62 — Cloudflare Turnstile renders its widget inside an iframe
       // hosted at challenges.cloudflare.com — must allow frame-src in addition
       // to script-src above. Both needed for captcha to work.
