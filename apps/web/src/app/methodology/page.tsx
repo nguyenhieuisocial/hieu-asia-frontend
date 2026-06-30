@@ -109,6 +109,42 @@ const PRINCIPLES = [
   },
 ] as const;
 
+// Năm lăng kính chủ lực — mỗi lăng kính nhìn cùng một con người từ một góc khác.
+// Khớp với lib/catalog/lenses.ts. Mô tả cách lập (engine/quiz/AI thị giác) để
+// giữ tinh thần "engine tính, AI luận" — không lăng kính nào "phán mệnh".
+const LENSES = [
+  {
+    icon: Sparkles,
+    name: 'Tử Vi',
+    how: 'Engine deterministic',
+    body: 'An sao, lập 12 cung và đại vận từ ngày-giờ-nơi sinh. Cùng input luôn cho cùng lá số.',
+  },
+  {
+    icon: Sparkles,
+    name: 'Bát Tự',
+    how: 'Engine deterministic · beta',
+    body: 'Tứ trụ Can Chi và ngũ hành làm lớp đối chiếu phụ với Tử Vi. Đang ở giai đoạn beta.',
+  },
+  {
+    icon: Brain,
+    name: 'MBTI',
+    how: 'Bài tự đánh giá',
+    body: 'Bạn tự trả lời khảo sát; hệ thống chấm điểm theo quy tắc cố định, AI chỉ giúp đối chiếu tự phản tư.',
+  },
+  {
+    icon: Brain,
+    name: 'Big Five (OCEAN)',
+    how: 'Bài tự đánh giá',
+    body: '5 chiều tính cách có cơ sở khoa học vững nhất, cũng chấm điểm theo thang đo rồi AI diễn giải.',
+  },
+  {
+    icon: Eye,
+    name: 'Xem Tướng',
+    how: 'AI thị giác · beta',
+    body: 'Đọc nét chỉ tay và tướng mặt qua ảnh bạn chủ động tải lên. Ảnh tự xoá sau 7 ngày.',
+  },
+] as const;
+
 const PIPELINE = [
   {
     icon: Database,
@@ -183,6 +219,27 @@ const DATA_ROWS: {
     engine: 'Quiz scoring',
     ai: 'đối chiếu 5 chiều OCEAN',
     status: 'optional',
+  },
+  {
+    method: 'DISC',
+    data: 'khảo sát user',
+    engine: 'Quiz scoring',
+    ai: 'đối chiếu phong cách hành vi',
+    status: 'optional',
+  },
+  {
+    method: 'Enneagram',
+    data: 'khảo sát user',
+    engine: 'Quiz scoring',
+    ai: 'đối chiếu 9 kiểu tính cách',
+    status: 'optional',
+  },
+  {
+    method: 'Bản đồ sao (natal)',
+    data: 'ngày, giờ, nơi sinh',
+    engine: 'Có',
+    ai: 'diễn giải cung/hành tinh/góc chiếu',
+    status: 'production',
   },
   {
     method: 'Xem Tướng',
@@ -542,8 +599,59 @@ function Chapter1Content() {
   return (
     <div className="space-y-12">
       <p className="font-sans text-lg leading-relaxed text-muted-foreground">
-        5 nguyên tắc định hình mọi quyết định sản phẩm của hieu.asia — từ cách
-        engine tính toán đến cách AI diễn giải và cách dữ liệu được lưu trữ.
+        Một con người không gói gọn trong một lá số. hieu.asia soi bằng năm lăng
+        kính chủ lực — mỗi lăng kính một góc nhìn, không lăng kính nào "phán
+        mệnh".
+      </p>
+
+      <div>
+        <h3 className="font-sans text-xl font-bold text-foreground sm:text-2xl">
+          Năm lăng kính chủ lực
+        </h3>
+        <p className="mt-2 font-sans text-sm text-muted-foreground/70">
+          Cổ học Á Đông, tâm lý hiện đại và AI thị giác — mỗi lăng kính được
+          lập theo cách riêng, rồi AI diễn giải bằng tiếng Việt.
+        </p>
+
+        <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {LENSES.map((lens) => {
+            const Icon = lens.icon;
+            return (
+              <li key={lens.name}>
+                <div className="flex h-full flex-col rounded-xl border border-border bg-muted/40 p-5">
+                  <div className="flex items-center gap-2">
+                    <Icon className="h-4 w-4 text-primary/80" aria-hidden />
+                    <h4 className="font-sans text-sm font-semibold text-foreground">
+                      {lens.name}
+                    </h4>
+                  </div>
+                  <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-primary/70">
+                    {lens.how}
+                  </p>
+                  <p className="mt-2 font-sans text-sm leading-relaxed text-muted-foreground">
+                    {lens.body}
+                  </p>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+
+        <p className="mt-4 font-sans text-sm leading-relaxed text-muted-foreground/70">
+          Ngoài năm lăng kính chủ lực, hieu.asia còn có các lăng kính tâm lý
+          hiện đại khác (DISC, Enneagram) và chiêm tinh phương Tây — Bản đồ sao
+          (natal). Các bài tâm lý đều là bài tự đánh giá: bạn tự trả lời, hệ
+          thống chấm điểm theo thang đo cố định, AI chỉ diễn giải kết quả. Bản
+          đồ sao do engine tính toán từ dữ liệu sinh (cần giờ và nơi sinh chính
+          xác cho phần Cung Mọc). Thần Số Học và các công cụ còn lại nằm trong
+          bộ công cụ mở rộng.
+        </p>
+      </div>
+
+      <p className="font-sans text-lg leading-relaxed text-muted-foreground">
+        Đứng sau năm lăng kính là 5 nguyên tắc định hình mọi quyết định sản
+        phẩm — từ cách engine tính toán đến cách AI diễn giải và cách dữ liệu
+        được lưu trữ.
       </p>
 
       <ol className="space-y-4">
@@ -669,7 +777,8 @@ function Chapter2Content() {
           Dữ liệu dùng để luận
         </h3>
         <p className="mt-2 font-sans text-sm text-muted-foreground/70">
-          Mỗi phương pháp có engine riêng, AI chỉ đọc output structured.
+          Lá số và bản đồ sao do engine tính; các bài tâm lý do bạn tự trả lời
+          rồi chấm điểm theo thang đo cố định. AI chỉ đọc output đã structured.
         </p>
 
         {/* Wave 60.79.T3 (vault 112 P1 #8): 5-col table overflows on 375px.

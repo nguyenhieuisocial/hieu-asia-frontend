@@ -958,8 +958,11 @@ export default function MethodologyTuViPage() {
                 </div>
               </div>
               <p className="rounded-lg border border-border bg-card/40 p-3 text-xs text-muted-foreground">
-                Mode chuyên sâu sẽ có toggle trong báo cáo (chưa active trong UI hiện
-                tại — coming soon).
+                Chế độ Chuyên gia đã có: bật/tắt trong phần Cài đặt hiển thị ở trang
+                tài khoản (lựa chọn được ghi nhớ cho mọi trang đọc). Khi bật, các trang
+                luận giải hiển thị đầy đủ thuật ngữ Tử Vi (cung, sao, đại vận, tiểu hạn);
+                khi tắt, ngôn ngữ đơn giản hơn. Việc áp dụng đang được mở rộng dần qua
+                các trang đọc.
               </p>
             </CardContent>
           </Card>

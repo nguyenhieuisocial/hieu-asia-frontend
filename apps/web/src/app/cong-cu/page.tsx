@@ -62,7 +62,7 @@ const CATEGORIES: ExplorerCategory[] = [
     id: 'kham-pha',
     icon: '🪞',
     label: 'Khám phá & tự kiểm',
-    blurb: 'So sánh các hệ, mô phỏng quyết định, bói toán cổ — và bài tự kiểm "đừng tin mù".',
+    blurb: 'So sánh các hệ, mô phỏng quyết định, luận mệnh cổ học — và bài tự kiểm "đừng tin mù".',
   },
 ];
 

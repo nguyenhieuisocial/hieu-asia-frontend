@@ -37,6 +37,33 @@ interface ReleaseEntry {
 
 const RELEASES: readonly ReleaseEntry[] = [
   {
+    version: 'V3.1',
+    date: 'Tháng 6, 2026',
+    title: 'Bộ ra quyết định + công cụ theo dịp',
+    tag: 'feature',
+    bullets: [
+      'Bộ ra quyết định: Decision Simulator, Nhật ký quyết định, Weekly Review, Compatibility, Career-fit, kế hoạch năm/tháng và Timeline đại vận',
+      'So sánh lăng kính — đối chiếu nhiều góc nhìn về bạn trong một màn hình',
+      'Công cụ theo dịp: xem tuổi cưới / làm nhà / khai trương, hướng nhà, đặt tên ngũ hành, sao hạn, giờ hoàng đạo, ngày kiêng kỵ, kèm Tử Vi 2027',
+      'Huyền Không Phi Tinh — phân tích phương vị theo phi tinh',
+      'Điểm danh nhận quà và mời bạn nhận voucher',
+      'Telegram bot @hieuasiabot — tra cứu nhanh ngay trong Telegram',
+      'Xuất PDF cho nhiều công cụ để lưu lại và chia sẻ',
+    ],
+  },
+  {
+    version: 'V3.0',
+    date: 'Tháng 6, 2026',
+    title: 'Thêm lăng kính tâm lý, trực giác & chiêm tinh phương Tây',
+    tag: 'major',
+    bullets: [
+      'Lăng kính tâm lý chuyên sâu mới: DISC và Enneagram, kèm bản đọc diễn giải bằng AI',
+      'Tarot — trải 1 lá và 3 lá để soi một câu hỏi cụ thể',
+      'Chiêm tinh phương Tây: Bản đồ sao (natal) cần ngày, giờ, nơi sinh chính xác, cùng tra cứu Cung hoàng đạo',
+      'Gieo quẻ Kinh Dịch để tham khảo cho một quyết định',
+    ],
+  },
+  {
     version: 'Wave 2',
     date: 'Tháng 5, 2026',
     title: 'Polish công cộng — Community, Changelog, Newsletter',

@@ -77,7 +77,7 @@ const ABOUT_JSON_LD = {
         foundingDate: '2025',
         founder: { '@type': 'Person', name: 'Hiệu' },
         description:
-          'AI cá nhân hoá Tử Vi, Bát Tự, Thần Số Học, MBTI và Xem Tướng bằng tiếng Việt — không tiên tri, không định mệnh hoá; AI gợi mở để bạn chiêm nghiệm, bạn là người quyết định.',
+          'AI cá nhân hoá Tử Vi, Bát Tự, MBTI, Big Five và Xem Tướng bằng tiếng Việt — không tiên tri, không định mệnh hoá; AI gợi mở để bạn chiêm nghiệm, bạn là người quyết định.',
         sameAs: ['https://t.me/hieuasiabot'],
         contactPoint: {
           '@type': 'ContactPoint',
@@ -200,7 +200,7 @@ export default function AboutPage() {
           body={[
             'Tôi xây hieu.asia vì tôi tin cổ học Á Đông — bao gồm tinh hoa cổ truyền Việt Nam như Cân Xương Đoán Số — đáng được trình bày bằng ngôn ngữ của thời đại này, cho người Việt. Không huyễn hoặc, không thương mại hoá rẻ tiền. Mỗi người đều có quyền hiểu chính mình rõ hơn, và quyền tự chọn con đường mình đi.',
             'Riêng tư là mặc định — dữ liệu mã hoá lúc lưu và lúc truyền, không bán cho bên thứ ba, không dùng huấn luyện mô hình, bạn có quyền xoá bất cứ lúc nào. Không định mệnh hoá — không tuyên bố dự đoán tương lai, không doạ vận hạn, không bán bùa giải. Không thay thế chuyên gia — quyết định y tế, pháp lý, tài chính cần chuyên gia phù hợp.',
-            'Built on Next.js 15 (web trên Vercel) + Cloudflare Workers (API) + Supabase + Claude — chi tiết kiến trúc tại /methodology.',
+            'Built on Next.js 15 (web trên Vercel) + Cloudflare Workers (API) + Supabase, với các mô hình AI hàng đầu cho phần diễn giải — chi tiết kiến trúc tại /methodology.',
           ]}
           citation="hieu.asia — 2026"
         />
