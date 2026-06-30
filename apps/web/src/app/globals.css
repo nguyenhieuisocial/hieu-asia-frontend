@@ -838,7 +838,15 @@ body {
   max-width: 680px;
   margin: 2rem auto 0;
   aspect-ratio: 5 / 4;
+  /* Đồ thị tương tác (tap), KHÔNG phải nội dung để chọn/kéo → chặn bôi-chọn +
+   * kéo-thả để bỏ cảm giác "kéo được nhóm" (bug user báo); tap vẫn sạch. */
+  user-select: none;
+  -webkit-user-select: none;
 }
+.ob-graph .ob-hub,
+.ob-graph .ob-sat,
+.ob-graph .ob-star,
+.ob-graph .ob-center { -webkit-user-drag: none; user-drag: none; }
 .ob-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .ob-line { stroke: rgba(224, 174, 98, 0.28); stroke-width: 1.4; transition: stroke 0.25s ease; }
 .ob-line-on { stroke: rgba(224, 174, 98, 0.85); }
