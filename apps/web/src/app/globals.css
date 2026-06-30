@@ -228,7 +228,8 @@ html {
 /* ===== ShimmerText — sweep vàng dùng CHUNG (1 keyframe toàn site) =====
  * Trước đây ShimmerText inject <style> theo từng instance (useId) → CSS lọt vào
  * textContent của heading (kể cả <h1> LCP) + nesting <style> trong <h1> không hợp lệ.
- * Gom về 1 class .fx-shimmer + 1 keyframe ở đây; component chỉ gắn class. */
+ * Gom về 1 class .fx-shimmer + 1 keyframe ở đây; component chỉ gắn class.
+ * Quy ước motion + i18n: docs/homepage-motion-i18n-guardrails.md */
 .fx-shimmer {
   background: linear-gradient(100deg, #A47532 0%, #A47532 38%, #F5E1AA 50%, #A47532 62%, #A47532 100%);
   background-size: 250% 100%;
