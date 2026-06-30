@@ -147,7 +147,7 @@ export function HoursDial({
                 textAnchor="middle"
                 dominantBaseline="central"
                 fontSize={9}
-                fontFamily="var(--font-jetbrains-mono), ui-monospace, monospace"
+                fontFamily="var(--font-be-vietnam), system-ui, sans-serif"
                 className="text-foreground"
                 fill="currentColor"
                 fillOpacity={0.55}

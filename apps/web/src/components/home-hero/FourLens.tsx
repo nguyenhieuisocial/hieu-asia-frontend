@@ -137,7 +137,7 @@ export function LensConstellation(props: {
           <polygon className="fl-flagstar" points={STAR_POLY} />
         </g>
 
-        <text className={`fl-cap${converge ? ' fl-capon' : ''}`} x={C} y={384} textAnchor="middle" fontSize={11} letterSpacing={1.5} fontFamily="'JetBrains Mono', monospace" fill={SOFT}>
+        <text className={`fl-cap${converge ? ' fl-capon' : ''}`} x={C} y={384} textAnchor="middle" fontSize={11} letterSpacing={1.5} fontFamily="var(--font-be-vietnam), system-ui, sans-serif" fill={SOFT}>
           năm lăng kính · một ngôi sao
         </text>
       </svg>

@@ -159,7 +159,9 @@ export const fontFamilies = {
   // 2026-06-29 VN-FIX: dropped Outfit lead (no 'vietnamese' subset → mixed font
   // on VN headings). Mirrors the tailwind-preset heading token.
   heading: 'var(--font-be-vietnam), system-ui, sans-serif',
-  mono: 'var(--font-jetbrains-mono), ui-monospace, monospace',
+  // 2026-06-29 — JetBrains Mono removed; `mono` is now a legacy alias for the
+  // body font (Be Vietnam Pro) so labels read consistently. Mirrors the preset.
+  mono: 'var(--font-be-vietnam), system-ui, sans-serif',
 } as const;
 
 /**

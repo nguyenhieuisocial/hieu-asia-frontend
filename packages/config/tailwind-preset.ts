@@ -168,7 +168,13 @@ const preset = {
         // (same family as body, full VN coverage; hierarchy via weight). Outfit
         // import dropped from all three app layouts (was the only consumer).
         heading: ['var(--font-be-vietnam)', 'system-ui', 'sans-serif'],
-        mono: ['var(--font-jetbrains-mono)', 'ui-monospace', 'monospace'],
+        // 2026-06-29 — JetBrains Mono removed (founder: "vẫn còn thấy JetBrains").
+        // `font-mono` now resolves to Be Vietnam Pro so the ~812 label/eyebrow
+        // call-sites read consistently with the rest of the site (no monospace
+        // accent). Class name kept as `mono` to avoid sweeping 812 files; it is
+        // now a legacy alias for the body font. ui-monospace fallback retained
+        // only for any genuine code/tabular block that still wants it.
+        mono: ['var(--font-be-vietnam)', 'system-ui', 'sans-serif'],
       },
       // Wave 52 follow-up (BUG-012/013): named tokens for the 2 sub-xs sizes
       // that audit flagged across 269 occurrences (123 files). These are

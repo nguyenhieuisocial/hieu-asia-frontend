@@ -94,12 +94,12 @@ export function TypographyShowcase() {
       <section>
         <h4 className="font-mono text-xs uppercase tracking-[0.3em] text-gold/80">Mono</h4>
         <div className="mt-4 space-y-3">
-          <Sample label="Mono code" meta="JetBrains Mono · 14px">
+          <Sample label="Mono code" meta="Be Vietnam Pro · 14px (JetBrains đã bỏ)">
             <code className="block rounded-md border border-gold/15 bg-card/80 px-4 py-3 font-mono text-sm text-gold">
               POST /api/reading {'{ "kind": "tu-vi", "birthDate": "1995-04-12" }'}
             </code>
           </Sample>
-          <Sample label="Mono label" meta="JetBrains Mono · 11px · uppercase · 0.32em tracking">
+          <Sample label="Mono label" meta="Be Vietnam Pro · 11px · uppercase">
             <span className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold">
               Premium AI insight
             </span>
