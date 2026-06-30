@@ -309,15 +309,15 @@ export function AccountingTab() {
               {tb.accounts.map((a) => (
                 <tr key={a.id} className="border-b border-border/30">
                   <td className="px-3 py-1.5 text-foreground/85">{a.label}</td>
-                  <td className="px-3 py-1.5 text-right font-mono text-muted-foreground">{a.debit ? fmtVnd(a.debit) : '—'}</td>
-                  <td className="px-3 py-1.5 text-right font-mono text-muted-foreground">{a.credit ? fmtVnd(a.credit) : '—'}</td>
-                  <td className="px-3 py-1.5 text-right font-mono font-medium text-foreground">{fmtVnd(a.balance)}</td>
+                  <td className="px-3 py-1.5 text-right font-mono tabular-nums text-muted-foreground">{a.debit ? fmtVnd(a.debit) : '—'}</td>
+                  <td className="px-3 py-1.5 text-right font-mono tabular-nums text-muted-foreground">{a.credit ? fmtVnd(a.credit) : '—'}</td>
+                  <td className="px-3 py-1.5 text-right font-mono tabular-nums font-medium text-foreground">{fmtVnd(a.balance)}</td>
                 </tr>
               ))}
               <tr className="border-t border-gold/20 font-medium">
                 <td className="px-3 py-2 text-foreground">Tổng</td>
-                <td className="px-3 py-2 text-right font-mono text-foreground">{fmtVnd(tb.totalDebit)}</td>
-                <td className="px-3 py-2 text-right font-mono text-foreground">{fmtVnd(tb.totalCredit)}</td>
+                <td className="px-3 py-2 text-right font-mono tabular-nums text-foreground">{fmtVnd(tb.totalDebit)}</td>
+                <td className="px-3 py-2 text-right font-mono tabular-nums text-foreground">{fmtVnd(tb.totalCredit)}</td>
                 <td className={`px-3 py-2 text-right ${tb.balanced ? 'text-jade-700 dark:text-jade-50' : 'text-red-600 dark:text-red-300'}`}>
                   {tb.balanced ? '✓ cân' : '✗ lệch'}
                 </td>
@@ -363,7 +363,7 @@ export function AccountingTab() {
                           ))}
                         </div>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-1.5 text-right font-mono text-foreground/85">{fmtVnd(amt)}</td>
+                      <td className="whitespace-nowrap px-3 py-1.5 text-right font-mono tabular-nums text-foreground/85">{fmtVnd(amt)}</td>
                       <td className="px-3 py-1.5 text-center">
                         <input
                           type="checkbox"

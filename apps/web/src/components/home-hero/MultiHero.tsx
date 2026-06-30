@@ -122,7 +122,7 @@ const NOISE =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
 
 const CSS = `
-.mh { font-family: 'Newsreader', Georgia, serif; overflow-x: hidden; }
+.mh { font-family: var(--font-newsreader), Georgia, serif; overflow-x: hidden; }
 .mh-grain { position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .05; mix-blend-mode: multiply; background-image: ${NOISE}; }
 
 /* ===== BASE = MOBILE ===== */
@@ -142,9 +142,9 @@ const CSS = `
 .mh-soi { margin: 0; text-align: center; min-height: 4.5em; max-width: 32em; display: flex; align-items: center; justify-content: center; font-family: var(--font-be-vietnam), system-ui, sans-serif; font-size: 12.5px; letter-spacing: .01em; line-height: 1.5; }
 .mh-soi-in { display: inline-block; }
 .mh-soi-k { color: ${SOFT}; }
-.mh-soi-n { color: ${OCHRE_DEEP}; font-weight: 500; font-family: 'Newsreader', Georgia, serif; font-size: 1.15em; font-style: italic; }
+.mh-soi-n { color: ${OCHRE_DEEP}; font-weight: 500; font-family: var(--font-newsreader), Georgia, serif; font-size: 1.15em; font-style: italic; }
 .mh-soi-r { color: ${SOFT}; }
-.mh-soi-q { color: ${INK}; opacity: .92; font-family: 'Newsreader', Georgia, serif; font-size: 1.12em; font-style: italic; }
+.mh-soi-q { color: ${INK}; opacity: .92; font-family: var(--font-newsreader), Georgia, serif; font-size: 1.12em; font-style: italic; }
 .mh-hint { margin: 0; font-family: var(--font-be-vietnam), system-ui, sans-serif; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: ${SOFT}; opacity: .78; }
 
 .mh-act { display: flex; flex-direction: column; gap: 14px; }
@@ -158,7 +158,7 @@ const CSS = `
 .mh-cta-num { font-family: var(--font-be-vietnam), system-ui, sans-serif; margin-right: .6em; opacity: .85; }
 .mh-cta-sub { font-family: var(--font-be-vietnam), system-ui, sans-serif; font-size: 11px; opacity: .68; margin-left: .5em; }
 .mh-micro { font-family: var(--font-be-vietnam), system-ui, sans-serif; font-size: 11px; letter-spacing: .14em; color: ${SOFT}; margin: 0; text-align: center; }
-.mh-gift { font-family: 'Newsreader', Georgia, serif; font-size: .94rem; line-height: 1.4; color: ${OCHRE_DEEP}; margin: 0; text-align: center; font-style: italic; }
+.mh-gift { font-family: var(--font-newsreader), Georgia, serif; font-size: .94rem; line-height: 1.4; color: ${OCHRE_DEEP}; margin: 0; text-align: center; font-style: italic; }
 .mh-gift strong { font-weight: 600; font-style: normal; }
 .mh-gift-mk { color: ${OCHRE}; font-style: normal; margin-right: .2em; }
 

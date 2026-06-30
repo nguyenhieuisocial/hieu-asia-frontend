@@ -142,7 +142,7 @@ export function QRDisplay({ intent, onExpire }: QRDisplayProps) {
                 second tick. */}
             <div
               className={cn(
-                'rounded-md border px-3 py-1 text-sm font-mono',
+                'rounded-md border px-3 py-1 text-sm font-mono tabular-nums',
                 intent.status === 'pending'
                   ? 'border-gold/40 text-gold'
                   : 'border-border text-muted-foreground',
@@ -160,7 +160,7 @@ export function QRDisplay({ intent, onExpire }: QRDisplayProps) {
             <dd className="text-foreground">{intent.bank_name}</dd>
 
             <dt className="text-muted-foreground">Số tài khoản</dt>
-            <dd className="font-mono text-foreground">{intent.bank_account}</dd>
+            <dd className="font-mono tabular-nums text-foreground">{intent.bank_account}</dd>
 
             {intent.bank_holder && (
               <>
@@ -170,12 +170,12 @@ export function QRDisplay({ intent, onExpire }: QRDisplayProps) {
             )}
 
             <dt className="text-muted-foreground">Số tiền</dt>
-            <dd className="font-mono text-gold">
+            <dd className="font-mono tabular-nums text-gold">
               {formatVND(intent.amount_due)}
             </dd>
 
             <dt className="text-muted-foreground">Nội dung</dt>
-            <dd className="font-mono text-gold">{intent.content}</dd>
+            <dd className="font-mono tabular-nums text-gold">{intent.content}</dd>
           </dl>
 
           <ol className="space-y-1.5 rounded-md border border-gold/15 bg-card/60 p-4 text-xs text-muted-foreground">

@@ -175,6 +175,11 @@ const preset = {
         // now a legacy alias for the body font. ui-monospace fallback retained
         // only for any genuine code/tabular block that still wants it.
         mono: ['var(--font-be-vietnam)', 'system-ui', 'sans-serif'],
+        // 2026-06-29 — `font-code` for GENUINE code/secret/identifier surfaces
+        // that need fixed-width legibility (admin prompt editor, API keys, OAuth
+        // tokens). System monospace only — NO webfont download, NOT JetBrains.
+        // Numeric alignment in body text should use `tabular-nums` instead.
+        code: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
       },
       // Wave 52 follow-up (BUG-012/013): named tokens for the 2 sub-xs sizes
       // that audit flagged across 269 occurrences (123 files). These are

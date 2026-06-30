@@ -162,6 +162,8 @@ export const fontFamilies = {
   // 2026-06-29 — JetBrains Mono removed; `mono` is now a legacy alias for the
   // body font (Be Vietnam Pro) so labels read consistently. Mirrors the preset.
   mono: 'var(--font-be-vietnam), system-ui, sans-serif',
+  // System monospace for genuine code/secrets (no webfont, not JetBrains).
+  code: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
 } as const;
 
 /**

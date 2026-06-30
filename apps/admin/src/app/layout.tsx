@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { cookies } from 'next/headers';
-import { Be_Vietnam_Pro, Inter } from 'next/font/google';
+import { Be_Vietnam_Pro } from 'next/font/google';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { QueryProvider } from '@/components/providers/query-provider';
@@ -20,7 +20,6 @@ const beVietnam = Be_Vietnam_Pro({
   variable: '--font-be-vietnam',
   display: 'swap',
 });
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 // 2026-06-29 — Outfit + JetBrains Mono removed. Headings + `font-mono` labels
 // both resolve to Be Vietnam Pro via the shared tokens (full VN coverage).
 
@@ -41,7 +40,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <html
         lang="vi"
         suppressHydrationWarning
-        className={`${beVietnam.variable} ${inter.variable}`}
+        className={`${beVietnam.variable}`}
       >
         <body>
           {/* Wave 63.2 — enableSystem OFF: admin is an ops console, dark-built
