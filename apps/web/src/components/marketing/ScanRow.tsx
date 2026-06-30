@@ -107,7 +107,7 @@ export function ScanRow({
               // and clipping the first card's right edge. line-clamp-2 doesn't
               // help here because it clips display, not width. Desktop keeps
               // `md:min-w-0 md:max-w-none` (grid sizing takes over).
-              className="group relative flex h-full min-h-[150px] w-[72vw] max-w-[72vw] shrink-0 snap-start flex-col rounded-card-editorial border border-primary/15 bg-card p-5 transition-all duration-300 ease-editorial hover:-translate-y-0.5 hover:border-primary/30 hover:bg-muted sm:min-h-[180px] sm:w-[48vw] sm:max-w-[48vw] sm:p-6 md:w-auto md:max-w-none"
+              className="group relative flex h-full min-h-[150px] w-[72vw] max-w-[72vw] shrink-0 snap-start flex-col rounded-card-editorial border border-primary/15 bg-card p-5 transition-all duration-300 ease-editorial hover:-translate-y-1 hover:border-primary/40 hover:bg-muted hover:shadow-xl hover:shadow-primary/10 sm:min-h-[180px] sm:w-[48vw] sm:max-w-[48vw] sm:p-6 md:w-auto md:max-w-none"
             >
               <div className="mb-4">{item.icon}</div>
               {item.tag && (

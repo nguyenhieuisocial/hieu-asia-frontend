@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { LensConstellation } from './FourLens';
+import { AuroraBackdrop } from '@/components/fx/AuroraBackdrop';
 import { LENSES } from '@/lib/catalog/lenses';
 
 /**
@@ -75,6 +76,8 @@ export function MultiHero(): React.JSX.Element {
     <section className="mh" aria-label="Giới thiệu hieu.asia" style={{ background: PAPER, color: INK, position: 'relative' }}>
       <style>{CSS}</style>
       <div className="mh-grain" aria-hidden="true" />
+      <AuroraBackdrop className="z-0" />
+
 
       <div className="mh-wrap">
         <div className="mh-copy">
