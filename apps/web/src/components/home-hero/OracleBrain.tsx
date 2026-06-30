@@ -9,32 +9,37 @@ import { Marquee } from '@/components/fx/Marquee';
  * OracleBrain — the signature "night-sky" section: the whole toolkit (Eastern
  * classics + modern psychology + astrology + intuition) converging on "BẠN".
  *
- * Built with HTML + SVG (NOT canvas) on purpose:
- *  - the labels are real DOM text → Google Translate can translate them
- *    (canvas fillText could not, so they used to stay Vietnamese);
- *  - percentage-positioned nodes scale to any width → nothing clips on PC or
- *    mobile (the old canvas drew satellites past its own edge);
- *  - animation is calm CSS (gentle breathe + twinkle, no zoom/jitter) and is
- *    fully disabled under prefers-reduced-motion.
+ * HTML + SVG (NOT canvas) so the labels are real DOM text → Google Translate
+ * can translate them, percentage layout never clips, and motion is calm CSS
+ * (draw-in on view + breathe + twinkle), fully gated by prefers-reduced-motion.
+ *
+ * v2 — richer: each domain hub sprouts satellite tool-nodes (the "dozens of
+ * tools" breadth) and reveals its tool count on hover; faint branch lines +
+ * a converging data pulse make the "everything flows into you" thesis visible.
  */
 
 const ALL_TOOLS = TOOLKIT_GROUPS.flatMap((g) => g.tools.map((t) => t.n));
 
-// 5 groups on a pentagon (top first). left/top are % of the graph box.
-const RADIUS = 34;
+const RADIUS = 33; // hub distance from center (% of box)
+const SAT_R = 6.5; // satellite cluster radius around a hub (% of box)
+
 const HUBS = TOOLKIT_GROUPS.map((g, i, arr) => {
   const a = ((-90 + (360 / arr.length) * i) * Math.PI) / 180;
-  return {
-    label: g.label,
-    left: 50 + Math.cos(a) * RADIUS,
-    top: 50 + Math.sin(a) * RADIUS,
-  };
+  const left = 50 + Math.cos(a) * RADIUS;
+  const top = 50 + Math.sin(a) * RADIUS;
+  // more tools → more satellites (the breadth is the point), capped for clarity
+  const nSat = Math.max(3, Math.min(5, Math.round(g.tools.length / 3)));
+  const sats = Array.from({ length: nSat }, (_, k) => {
+    const sa = a + (k - (nSat - 1) / 2) * 0.42;
+    return { left: left + Math.cos(sa) * SAT_R, top: top + Math.sin(sa) * SAT_R };
+  });
+  return { label: g.label, count: g.tools.length, left, top, sats };
 });
 
-// Deterministic starfield (no Math.random → SSR-stable, no hydration drift).
-const STARS = Array.from({ length: 22 }, (_, i) => ({
+// Deterministic starfield (SSR-stable).
+const STARS = Array.from({ length: 24 }, (_, i) => ({
   left: (i * 53 + 7) % 100,
-  top: (i * 29 + 11) % 100,
+  top: (i * 31 + 11) % 100,
   delay: (i % 6) * 0.5,
 }));
 
@@ -43,8 +48,6 @@ export function OracleBrain(): React.JSX.Element {
   const [inView, setInView] = React.useState(false);
   const graphRef = React.useRef<HTMLDivElement | null>(null);
 
-  // Draw the constellation in once, when it scrolls into view (CSS handles the
-  // line-draw + node fade via [data-in]; reduced-motion shows it static).
   React.useEffect(() => {
     const el = graphRef.current;
     if (!el) return;
@@ -55,7 +58,7 @@ export function OracleBrain(): React.JSX.Element {
           io.disconnect();
         }
       },
-      { threshold: 0.35 },
+      { threshold: 0.3 },
     );
     io.observe(el);
     return () => io.disconnect();
@@ -86,9 +89,10 @@ export function OracleBrain(): React.JSX.Element {
           aria-label="Năm nhóm công cụ hội tụ về Bạn"
         >
           <svg className="ob-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            {/* main lines: hub → center (first → nth-of-type stagger works) */}
             {HUBS.map((h, i) => (
               <line
-                key={h.label}
+                key={`l${i}`}
                 x1="50"
                 y1="50"
                 x2={h.left}
@@ -98,6 +102,20 @@ export function OracleBrain(): React.JSX.Element {
                 className={`ob-line${hover === i ? ' ob-line-on' : ''}`}
               />
             ))}
+            {/* faint branch lines: hub → its satellites */}
+            {HUBS.map((h, i) =>
+              h.sats.map((s, k) => (
+                <line
+                  key={`b${i}-${k}`}
+                  x1={h.left}
+                  y1={h.top}
+                  x2={s.left}
+                  y2={s.top}
+                  vectorEffect="non-scaling-stroke"
+                  className={`ob-branch${hover === i ? ' ob-branch-on' : ''}`}
+                />
+              )),
+            )}
           </svg>
 
           {STARS.map((s, i) => (
@@ -108,6 +126,34 @@ export function OracleBrain(): React.JSX.Element {
               aria-hidden="true"
             />
           ))}
+
+          {/* converging data pulses (one per hub, travels hub → center) */}
+          {HUBS.map((h, i) => (
+            <span
+              key={`p${i}`}
+              className="ob-pulse"
+              aria-hidden="true"
+              style={
+                {
+                  '--sx': `${h.left}%`,
+                  '--sy': `${h.top}%`,
+                  animationDelay: `${i * 0.6}s`,
+                } as React.CSSProperties
+              }
+            />
+          ))}
+
+          {/* satellite tool-nodes */}
+          {HUBS.map((h, i) =>
+            h.sats.map((s, k) => (
+              <span
+                key={`s${i}-${k}`}
+                className={`ob-sat${hover === i ? ' ob-sat-on' : ''}`}
+                style={{ left: `${s.left}%`, top: `${s.top}%` }}
+                aria-hidden="true"
+              />
+            )),
+          )}
 
           <div className="ob-center" style={{ left: '50%', top: '50%' }}>
             <span className="ob-center-glow" aria-hidden="true" />
@@ -129,6 +175,7 @@ export function OracleBrain(): React.JSX.Element {
             >
               <span className="ob-hub-dot" aria-hidden="true" />
               <span className="ob-hub-label">{h.label}</span>
+              <span className="ob-hub-count">{h.count} công cụ</span>
             </button>
           ))}
         </div>
