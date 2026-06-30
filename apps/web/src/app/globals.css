@@ -582,3 +582,46 @@ a[role='button']:not([disabled]):active,
     transition: none;
   }
 }
+
+/* ── Google Translate widget (ngôn ngữ mọi quốc gia — như ifan.asia) ──────────
+   Ẩn banner Google chèn lên đầu trang + reset offset nó thêm vào <body>; chỉ
+   giữ ô <select> ngôn ngữ, style cho hợp thanh nav (sáng/tối theo token). */
+.goog-te-banner-frame,
+.skiptranslate > iframe {
+  display: none !important;
+}
+body {
+  top: 0 !important;
+}
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+}
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}
+.gt-widget .goog-te-gadget {
+  font-size: 0 !important;
+  line-height: 0;
+  color: transparent;
+}
+.gt-widget .goog-te-gadget > span {
+  display: none !important;
+}
+.gt-widget .goog-te-combo {
+  margin: 0 !important;
+  max-width: 8.5rem;
+  cursor: pointer;
+  border-radius: 6px;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+  padding: 0.3rem 0.45rem;
+  font-family: var(--font-be-vietnam), system-ui, sans-serif;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  color: hsl(var(--foreground));
+}
+.gt-widget .goog-te-combo:hover {
+  border-color: hsl(var(--primary) / 0.4);
+}
