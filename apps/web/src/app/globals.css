@@ -225,6 +225,23 @@ html {
 }
 @keyframes faqOpen { from { opacity: 0; transform: translateY(-.4em); } to { opacity: 1; transform: translateY(0); } }
 
+/* ===== ShimmerText — sweep vàng dùng CHUNG (1 keyframe toàn site) =====
+ * Trước đây ShimmerText inject <style> theo từng instance (useId) → CSS lọt vào
+ * textContent của heading (kể cả <h1> LCP) + nesting <style> trong <h1> không hợp lệ.
+ * Gom về 1 class .fx-shimmer + 1 keyframe ở đây; component chỉ gắn class. */
+.fx-shimmer {
+  background: linear-gradient(100deg, #A47532 0%, #A47532 38%, #F5E1AA 50%, #A47532 62%, #A47532 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .fx-shimmer { animation: fxShimmer 4.5s linear infinite; }
+}
+@keyframes fxShimmer { 0% { background-position: -150% 0; } 100% { background-position: 250% 0; } }
+
 /* Same rationale for faint-gold LABEL text — the mono "eyebrow" tags above
  * headings (`text-gold/80|85|90`, ~11px) sit at ~2:1 on cream (gold #B8923D
  * at 0.8 over Paper), failing WCAG 1.4.3 small-text 4.5:1. Deepen to
