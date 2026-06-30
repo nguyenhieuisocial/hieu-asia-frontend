@@ -121,7 +121,7 @@ export function StickyMobileCta({
           className={cn(
             'flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-pill bg-gold px-5 py-3',
             'font-heading text-sm font-semibold text-ink shadow-md shadow-gold/20',
-            'transition-colors duration-200 hover:bg-gold-soft',
+            'transition duration-200 hover:bg-gold-soft active:scale-[0.98]',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           )}
         >

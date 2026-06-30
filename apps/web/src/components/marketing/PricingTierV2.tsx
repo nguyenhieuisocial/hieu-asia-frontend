@@ -259,7 +259,7 @@ export function PricingTierV2({
             // marks the recommended tier without gradient OR contrast risk — all
             // text stays Ink-on-Paper (AA-safe).
             const cardBorder = tier.recommended
-              ? 'border-primary bg-card'
+              ? 'border-primary bg-card md:scale-[1.03] shadow-xl shadow-primary/15 relative z-10 transition'
               : 'border-border hover:border-border/80';
 
             // Wave 62.05g — finish founder spec "3 components done carefully":
@@ -351,7 +351,7 @@ export function PricingTierV2({
                 {tier.recommended ? (
                   <Link
                     href={tier.ctaHref}
-                    className={`${ctaBase} ${ctaVariant}`}
+                    className={`${ctaBase} ${ctaVariant} hover:-translate-y-0.5 transition active:scale-[0.98]`}
                     onClick={() => handleCtaClick(tier.id)}
                   >
                     {tier.ctaLabel}

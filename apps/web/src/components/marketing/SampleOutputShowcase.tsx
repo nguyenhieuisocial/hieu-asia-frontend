@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { Sparkles, Calendar, MessageSquareQuote, ListChecks, ArrowRight } from 'lucide-react';
+import { ShimmerText } from '@/components/fx/ShimmerText';
 
 /**
  * Wave 60.95.c P1-6 — SampleOutputShowcase (vault 130 §III P1-6).
@@ -169,7 +170,7 @@ export function SampleOutputShowcase() {
           </p>
           <h2 className="text-balance font-sans text-section-display font-bold tracking-tight leading-tight text-foreground">
             Báo cáo{' '}
-            <em className="italic text-primary/80">cá nhân hoá</em> theo từng
+            <em className="italic text-primary/80"><ShimmerText>cá nhân hoá</ShimmerText></em> theo từng
             câu hỏi của bạn
             <span className="text-primary">.</span>
           </h2>
@@ -186,7 +187,9 @@ export function SampleOutputShowcase() {
               key={c.id}
               data-in-view={inView ? 'true' : 'false'}
               style={{ transitionDelay: `${i * 80}ms` }}
-              className="group relative flex scale-95 flex-col rounded-card-editorial border border-border bg-muted/40 p-5 opacity-0 transition-[opacity,transform,border-color] duration-[600ms] ease-editorial hover:border-primary/40 data-[in-view=true]:scale-100 data-[in-view=true]:opacity-100 sm:p-6"
+              className={`group relative flex scale-95 flex-col rounded-card-editorial border bg-muted/40 p-5 opacity-0 transition-[opacity,transform,border-color] duration-[600ms] ease-editorial hover:border-primary/40 data-[in-view=true]:scale-100 data-[in-view=true]:opacity-100 sm:p-6 transition hover:-translate-y-0.5 active:scale-[0.98] ${
+                c.id === 'mentor' ? 'border-primary/30' : 'border-border'
+              }`}
             >
               <div className="mb-3 flex items-center gap-2">
                 {c.icon}
@@ -212,7 +215,7 @@ export function SampleOutputShowcase() {
               text-ink → text-primary-foreground (AA on ochre). */}
           <Link
             href="/onboarding"
-            className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 font-sans text-sm font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 font-sans text-sm font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/20"
           >
             Xem báo cáo của chính tôi
           </Link>

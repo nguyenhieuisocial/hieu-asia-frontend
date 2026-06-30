@@ -12,7 +12,7 @@ export function MissionNote(): React.JSX.Element {
         <h2 className="rv-fade font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
           VÌ SAO CHÚNG TÔI LÀM HIEU.ASIA
         </h2>
-        <blockquote className="rv-up mt-4 border-l-2 border-primary/40 pl-5 font-editorial-display text-xl leading-relaxed text-foreground sm:text-2xl" style={{ animationDelay: '100ms' }}>
+        <blockquote className="rv-up mt-4 rounded-card-editorial border-l-[3px] border-primary/70 bg-card/40 p-6 pl-5 font-editorial-display text-xl leading-relaxed text-foreground sm:p-8 sm:text-2xl" style={{ animationDelay: '100ms' }}>
           “Chúng tôi tin cổ học Á Đông xứng đáng được giải mã rõ ràng, không huyền bí hoá — để bạn
           dùng nó mà tự quyết, không bị phán. Vì vậy mỗi kết quả đều nói thẳng: đây là dữ kiện, còn
           quyết định là của bạn.”

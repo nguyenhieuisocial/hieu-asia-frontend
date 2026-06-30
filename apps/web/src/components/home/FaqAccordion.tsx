@@ -95,7 +95,7 @@ export function FaqAccordion({
               // First item open by default so an answer is visible above-the-fold
               // for first-time visitors + helps SEO "visible content" heuristics.
               open={i === 0}
-              className="group border-b border-primary/15 last:border-b-0"
+              className="faq-item group border-b border-primary/15 last:border-b-0"
             >
               <summary
                 className={[
@@ -108,10 +108,10 @@ export function FaqAccordion({
                 <span>{item.q}</span>
                 <ChevronDown
                   aria-hidden="true"
-                  className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180"
+                  className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-open:rotate-180"
                 />
               </summary>
-              <div className="pb-4 pt-0 text-sm leading-relaxed text-muted-foreground">
+              <div className="faq-answer pb-4 pt-0 text-sm leading-relaxed text-muted-foreground">
                 {item.a}
               </div>
             </details>

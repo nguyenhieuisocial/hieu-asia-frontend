@@ -147,7 +147,7 @@ const CSS = `
 .mh-cta-row { display: flex; flex-direction: column; gap: 10px; }
 .mh-cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; border-radius: 3px; padding: 15px 22px; font-size: 1.02rem; text-decoration: none; }
 .mh-cta::before { content: ''; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle, hsl(var(--foreground) / .4), hsl(var(--foreground) / 0) 70%); transform: translate(-50%,-50%) scale(0); transition: transform .55s cubic-bezier(.2,.7,.2,1); }
-.mh-cta-primary { background: rgba(138,97,40,.10); color: ${INK}; border: 1px solid rgba(164,117,50,.45); }
+.mh-cta-primary { background: rgba(138,97,40,.10); color: ${INK}; border: 1px solid rgba(164,117,50,.45); box-shadow: 0 6px 20px -6px rgba(164,117,50,.45), 0 0 0 1px rgba(164,117,50,.30); }
 .mh-cta-ghost { border: 1px solid rgba(164,117,50,.35); color: ${INK}; }
 .mh-cta-ghost::before { background: radial-gradient(circle, rgba(164,117,50,.5), rgba(164,117,50,0) 70%); }
 .mh-cta > * { position: relative; z-index: 1; }

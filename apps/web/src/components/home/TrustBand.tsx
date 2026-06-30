@@ -47,7 +47,7 @@ export function TrustBand() {
         {/* Bằng Chứng — the differentiating proof, given top billing */}
         <Link
           href="/bang-chung"
-          className="group mb-6 flex flex-col items-start gap-2 rounded-2xl border border-primary/20 bg-card/70 p-5 transition-colors hover:border-primary/40 sm:flex-row sm:items-center sm:justify-between"
+          className="group mb-6 flex flex-col items-start gap-2 rounded-2xl border border-primary/20 bg-card/70 p-5 transition hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10 active:scale-[0.99] sm:flex-row sm:items-center sm:justify-between"
         >
           <div className="min-w-0">
             <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
@@ -68,15 +68,18 @@ export function TrustBand() {
 
         {/* Three honest credibility pillars */}
         <div className="grid gap-px overflow-hidden rounded-2xl border border-primary/15 bg-primary/10 sm:grid-cols-3">
-          {PILLARS.map((p) => {
+          {PILLARS.map((p, i) => {
             const Icon = p.icon;
             return (
               <Link
                 key={p.title}
                 href={p.href}
-                className="group flex flex-col gap-2 bg-card/60 p-5 transition-colors hover:bg-card"
+                className="rv-up group flex flex-col gap-2 bg-card/60 p-5 transition-colors hover:bg-card"
+                style={{ animationDelay: `${i * 80}ms` }}
               >
-                <Icon className="h-5 w-5 text-primary" aria-hidden />
+                <span className="w-fit rounded-lg bg-primary/10 p-1.5">
+                  <Icon className="h-6 w-6 text-primary" aria-hidden />
+                </span>
                 <h3 className="font-marketing-display text-base leading-snug text-foreground">
                   {p.title}
                 </h3>

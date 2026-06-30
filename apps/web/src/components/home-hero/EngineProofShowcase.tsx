@@ -31,7 +31,7 @@ export function EngineProofShowcase(): React.JSX.Element {
 
         <div className="mt-8 grid items-center gap-6 sm:mt-10 sm:gap-10 md:grid-cols-2">
           {/* Tử Vi · 12 cung — accent ochre kế thừa qua text-primary */}
-          <figure className="flex flex-col items-center text-primary">
+          <figure className="rv-up flex flex-col items-center text-primary" style={{ animationDelay: '0ms' }}>
             <LaSoSvg className="w-full max-w-[280px]" />
             <figcaption className="mt-4 max-w-[28em] text-center text-sm text-muted-foreground">
               <span className="font-marketing-display text-foreground">Tử Vi · 12 cung</span> — bản đồ 12
@@ -40,7 +40,7 @@ export function EngineProofShowcase(): React.JSX.Element {
           </figure>
 
           {/* Bát Tự · 4 trụ ngũ hành — InfographicBatTu tự có caption + chú thích màu */}
-          <figure className="flex flex-col items-center">
+          <figure className="rv-up flex flex-col items-center" style={{ animationDelay: '120ms' }}>
             <p className="mb-4 font-marketing-display text-base text-foreground">Bát Tự · 4 trụ ngũ hành</p>
             <InfographicBatTu />
           </figure>

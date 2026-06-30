@@ -745,7 +745,9 @@ export default function LandingPage() {
 
         {/* 8. NewsletterSignup — existing, warm-dark-50 */}
         <div className="bg-background">
-          <NewsletterSignup id="newsletter" />
+          <RevealOnScroll>
+            <NewsletterSignup id="newsletter" />
+          </RevealOnScroll>
         </div>
 
       </main>

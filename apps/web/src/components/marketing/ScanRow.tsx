@@ -107,7 +107,7 @@ export function ScanRow({
               // and clipping the first card's right edge. line-clamp-2 doesn't
               // help here because it clips display, not width. Desktop keeps
               // `md:min-w-0 md:max-w-none` (grid sizing takes over).
-              className="group relative flex h-full min-h-[150px] w-[72vw] max-w-[72vw] shrink-0 snap-start flex-col rounded-card-editorial border border-primary/15 bg-card p-5 transition-all duration-300 ease-editorial hover:-translate-y-1 hover:border-primary/40 hover:bg-muted hover:shadow-xl hover:shadow-primary/10 sm:min-h-[180px] sm:w-[48vw] sm:max-w-[48vw] sm:p-6 md:w-auto md:max-w-none"
+              className="group relative flex h-full min-h-[150px] w-[72vw] max-w-[72vw] shrink-0 snap-start flex-col rounded-card-editorial border border-primary/15 bg-card p-5 transition-all duration-300 ease-editorial hover:-translate-y-1 hover:border-primary/40 hover:bg-muted hover:shadow-xl hover:shadow-primary/10 active:scale-[0.98] active:border-primary/40 sm:min-h-[180px] sm:w-[48vw] sm:max-w-[48vw] sm:p-6 md:w-auto md:max-w-none"
             >
               <div className="mb-4">{item.icon}</div>
               {item.tag && (
@@ -122,7 +122,10 @@ export function ScanRow({
                 {item.body}
               </p>
               <p className="mt-auto pt-4 font-sans text-sm font-medium text-primary/80 transition-colors group-hover:text-primary">
-                Xem ngay →
+                Xem ngay{' '}
+                <span className="inline-block transition-transform group-hover:translate-x-0.5">
+                  →
+                </span>
               </p>
             </Link>
           ))}

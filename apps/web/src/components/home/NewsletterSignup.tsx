@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { Mail, Check } from 'lucide-react';
 import { Button, Input } from '@hieu-asia/ui';
+import { ShimmerText } from '@/components/fx/ShimmerText';
 
 interface NewsletterSignupProps {
   id?: string;
@@ -53,7 +54,7 @@ export function NewsletterSignup({
   }
 
   const card = (
-    <div className="relative isolate overflow-hidden rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/[0.07] via-background to-purple/15 p-8 sm:p-12">
+    <div className="rv-up relative isolate overflow-hidden rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/[0.07] via-background to-purple/15 p-8 sm:p-12">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/15 blur-3xl"
@@ -69,7 +70,7 @@ export function NewsletterSignup({
             Newsletter · mỗi tuần một bài
           </p>
           <h2 className="mt-4 text-balance font-heading text-2xl font-bold leading-tight text-foreground sm:text-3xl">
-            Theo dõi tri thức <span className="text-primary">hàng tuần</span>
+            Theo dõi tri thức <span className="text-primary"><ShimmerText>hàng tuần</ShimmerText></span>
           </h2>
           <p className="mt-4 text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
             Một bài viết ngắn về cách dùng cổ học để ra quyết định tốt hơn. Không

@@ -22,6 +22,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { CountUp } from '@/components/fx/CountUp';
 import {
   computeGioHoangDao,
   currentHourIndex,
@@ -104,7 +105,7 @@ export function AstroTickerLive() {
               Đang xem lịch hôm nay…
             </div>
           ) : (
-            <div className="grid grid-cols-2 items-stretch gap-x-2 gap-y-1 sm:flex sm:w-full sm:flex-nowrap sm:items-stretch sm:gap-0 sm:overflow-x-auto">
+            <div className="grid grid-cols-2 items-stretch gap-x-2 gap-y-1 divide-y divide-primary/10 sm:flex sm:w-full sm:flex-nowrap sm:items-stretch sm:gap-0 sm:divide-y-0 sm:overflow-x-auto">
               {/* Live indicator + heading */}
               <div className="col-span-2 flex shrink-0 items-center gap-2 px-4 py-3 sm:col-auto sm:px-5">
                 <span className="relative flex h-2 w-2">
@@ -176,7 +177,7 @@ export function AstroTickerLive() {
 
               <Cell label="Hôm nay" className="shrink-0 sm:hidden md:flex">
                 <span className="font-marketing-display text-lg leading-tight text-foreground">
-                  {state.goodCount} giờ hoàng đạo
+                  <CountUp value={state.goodCount} /> giờ hoàng đạo
                 </span>
               </Cell>
 
@@ -185,7 +186,7 @@ export function AstroTickerLive() {
 
               <Link
                 href="/gio-hoang-dao"
-                className="group col-span-2 flex w-full shrink-0 items-center gap-1.5 self-center whitespace-nowrap px-4 py-3 font-mono text-[11px] uppercase tracking-[0.12em] text-primary transition-colors hover:text-foreground sm:col-auto sm:ml-auto sm:w-auto sm:px-5"
+                className="group col-span-2 flex w-full shrink-0 items-center gap-1.5 self-center whitespace-nowrap px-4 py-3 font-mono text-[11px] uppercase tracking-[0.12em] text-primary transition-colors hover:text-foreground active:text-foreground sm:col-auto sm:ml-auto sm:w-auto sm:px-5"
               >
                 Xem giờ hoàng đạo
                 <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
