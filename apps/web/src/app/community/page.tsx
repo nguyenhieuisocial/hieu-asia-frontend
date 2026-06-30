@@ -13,6 +13,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { webPage, breadcrumb } from '@/lib/seo/jsonld';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
@@ -133,21 +134,26 @@ export default function CommunityPage() {
         </section>
 
         {/* Channels grid */}
+        <RevealOnScroll>
         <section className="relative bg-background pb-12">
           <div className="mx-auto max-w-6xl px-6">
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 rv-up sm:grid-cols-2 lg:grid-cols-3">
               {CHANNELS.map((c) => (
                 <ChannelCard key={c.label} channel={c} />
               ))}
             </div>
           </div>
         </section>
+        </RevealOnScroll>
 
         {/* Newsletter signup */}
-        <NewsletterSignup id="newsletter" />
+        <RevealOnScroll>
+          <NewsletterSignup id="newsletter" />
+        </RevealOnScroll>
 
         {/* Brand promise reminder */}
-        <section className="bg-background py-16">
+        <RevealOnScroll>
+        <section className="bg-background py-16 rv-up">
           <div className="mx-auto max-w-3xl px-6 text-center">
             <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
               Lời hứa
@@ -174,6 +180,7 @@ export default function CommunityPage() {
             </div>
           </div>
         </section>
+        </RevealOnScroll>
       </main>
       <SiteFooter />
       <StickyMobileCta trackId="community" />
@@ -192,7 +199,7 @@ function ChannelCard({
     isSoon ? (
       <div
         aria-disabled
-        className="relative flex h-full flex-col rounded-2xl border border-border bg-card/40 p-6 opacity-70"
+        className="relative flex h-full flex-col rounded-card-editorial border border-border bg-card/40 p-6 opacity-70"
       >
         {children}
       </div>
@@ -201,7 +208,7 @@ function ChannelCard({
         href={channel.href}
         target={channel.external ? '_blank' : undefined}
         rel={channel.external ? 'noopener noreferrer' : undefined}
-        className="group relative flex h-full flex-col rounded-2xl border border-border bg-card/40 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)]"
+        className="group relative flex h-full flex-col rounded-card-editorial border border-border bg-card/40 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)] active:scale-[0.98]"
       >
         {children}
       </Link>
