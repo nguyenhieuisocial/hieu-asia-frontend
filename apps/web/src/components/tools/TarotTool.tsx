@@ -174,7 +174,7 @@ export function TarotTool() {
               key={k}
               type="button"
               onClick={() => selectSpread(k)}
-              className={`rounded-md border px-4 py-2 text-sm transition-colors ${
+              className={`rounded-md border px-4 py-2 text-sm transition active:scale-[0.98] ${
                 spreadKey === k ? 'border-gold bg-gold/10 text-gold' : 'border-foreground/15 text-muted-foreground hover:border-gold/40'
               }`}
             >
@@ -185,7 +185,7 @@ export function TarotTool() {
         <button
           type="button"
           onClick={onDraw}
-          className="mt-4 w-full rounded-md bg-gold px-6 py-3 font-medium text-background transition-opacity hover:opacity-90 sm:w-auto sm:px-10"
+          className="mt-4 w-full rounded-md bg-gold px-6 py-3 font-medium text-background transition active:scale-[0.98] hover:opacity-90 sm:w-auto sm:px-10"
         >
           {drawn ? '↻ Rút lại' : 'Rút bài →'}
         </button>
@@ -197,7 +197,7 @@ export function TarotTool() {
           {/* Trải bài có hình — lật từng lá khi rút (key=seed để lật lại mỗi lần rút) */}
           <TarotSpread key={seed} drawn={drawn} positions={positions} />
           {drawn.map((d, i) => (
-            <div key={i} className="rounded-xl border border-gold/15 bg-background/40 p-5">
+            <div key={i} className="rounded-xl border border-gold/15 bg-background/40 p-5 transition active:scale-[0.98] hover:border-gold/40">
               <div className="flex items-baseline justify-between gap-3">
                 <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">{positions[i] ?? ''}</p>
                 <span className="font-mono text-xs capitalize text-muted-foreground">
@@ -268,7 +268,7 @@ export function TarotTool() {
               <button
                 type="button"
                 onClick={() => void onDeepRead()}
-                className="w-full rounded-md border border-gold/40 px-6 py-3 text-sm font-medium text-gold transition-colors hover:bg-gold/10 sm:w-auto sm:px-10"
+                className="w-full rounded-md border border-gold/40 px-6 py-3 text-sm font-medium text-gold transition active:scale-[0.98] hover:bg-gold/10 sm:w-auto sm:px-10"
               >
                 ✨ Đọc sâu cùng AI →
               </button>
@@ -319,7 +319,7 @@ export function TarotTool() {
                 };
               }}
             />
-            <a href="/onboarding" className="inline-block rounded-md border border-gold/30 px-5 py-2.5 text-sm text-gold transition-colors hover:bg-gold/10">
+            <a href="/onboarding" className="inline-block rounded-md border border-gold/30 px-5 py-2.5 text-sm text-gold transition active:scale-[0.98] hover:bg-gold/10">
               Ghép với Tử Vi + Bát Tự của tôi →
             </a>
           </div>
