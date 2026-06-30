@@ -8,7 +8,7 @@ import type { Metadata, Viewport } from 'next';
 // `font-mono` on home — those size-adjust gracefully to `ui-monospace` from
 // the Tailwind fallback stack). Removing it cuts 3 woff2 files (latin-ext +
 // latin + vietnamese subsets) from every page's critical path.
-import { Be_Vietnam_Pro, Instrument_Serif, JetBrains_Mono, Newsreader } from 'next/font/google';
+import { Be_Vietnam_Pro, Instrument_Serif, Newsreader } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { ThemeProvider } from '@/components/providers/theme-provider';
@@ -97,24 +97,10 @@ const newsreader = Newsreader({
   display: 'swap',
 });
 
-// Wave 62.01 — JetBrains Mono. Re-added after Wave 56 dropped it. Spec uses
-// mono only for labels/meta ("BƯỚC 01", "₫99.000", "CUNG MỆNH") at 11px —
-// a third typographic voice that lifts the editorial system. Weight 400 +
-// 500 covers default + emphasis. Variable token used by Tailwind preset's
-// existing `font-mono` chain (var(--font-jetbrains-mono) was already wired
-// but the underlying font file was missing — now resolved).
-// 2026-06-29 VN-FIX: +'vietnamese' subset. The old "no Vietnamese characters
-// appear in mono surfaces" assumption was FALSE — labels like "BƯỚC 01",
-// "CUNG MỆNH", "CẨM NANG" carry diacritics (Ư, Ệ, Ẩ…). With latin-only those
-// glyphs fell back per-char to ui-monospace, mixing fonts inside one word
-// across ~67 distinct labels. JetBrains Mono ships a vietnamese subset
-// (~1 woff2/weight); mirrors the Be Vietnam Pro / Newsreader VN fix.
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['vietnamese', 'latin'],
-  weight: ['400', '500'],
-  variable: '--font-jetbrains-mono',
-  display: 'swap',
-});
+// 2026-06-29 — JetBrains Mono removed entirely (founder: "vẫn còn thấy
+// JetBrains"). The `font-mono` token now resolves to Be Vietnam Pro (see
+// tailwind-preset), so label/eyebrow surfaces read consistently with the rest
+// of the site. Dropping the import also removes the mono webfont from the build.
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://hieu.asia'),
@@ -246,7 +232,7 @@ export default async function RootLayout({
       // silence its dev warning + stay correct in a future Next version).
       data-scroll-behavior="smooth"
       suppressHydrationWarning
-      className={`${beVietnam.variable} ${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable}`}
+      className={`${beVietnam.variable} ${instrumentSerif.variable} ${newsreader.variable}`}
     >
       <head>
         {/* Wave 55 LCP #3 — dropped 3 unused preconnects.

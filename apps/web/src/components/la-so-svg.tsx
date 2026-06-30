@@ -211,7 +211,7 @@ export function LaSoSvg({ className }: { className?: string }) {
         textAnchor="middle"
         dominantBaseline="middle"
         fontSize="8"
-        fontFamily="var(--font-jetbrains-mono), ui-monospace, monospace"
+        fontFamily="var(--font-be-vietnam), system-ui, sans-serif"
         letterSpacing="0.12em"
         fill="currentColor"
         fillOpacity="0.9"
@@ -227,7 +227,7 @@ export function LaSoSvg({ className }: { className?: string }) {
         textAnchor="middle"
         dominantBaseline="middle"
         fontSize="7"
-        fontFamily="var(--font-jetbrains-mono), ui-monospace, monospace"
+        fontFamily="var(--font-be-vietnam), system-ui, sans-serif"
         fill="currentColor"
         fillOpacity="0.3"
       >
@@ -240,7 +240,7 @@ export function LaSoSvg({ className }: { className?: string }) {
         textAnchor="middle"
         dominantBaseline="middle"
         fontSize="7"
-        fontFamily="var(--font-jetbrains-mono), ui-monospace, monospace"
+        fontFamily="var(--font-be-vietnam), system-ui, sans-serif"
         fill="currentColor"
         fillOpacity="0.3"
       >
@@ -254,7 +254,7 @@ export function LaSoSvg({ className }: { className?: string }) {
         y={cy + 22}
         textAnchor="middle"
         fontSize="9"
-        fontFamily="var(--font-jetbrains-mono), ui-monospace, monospace"
+        fontFamily="var(--font-be-vietnam), system-ui, sans-serif"
         letterSpacing="0.18em"
         fill="currentColor"
         fillOpacity="0.55"

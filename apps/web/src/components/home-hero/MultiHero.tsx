@@ -128,7 +128,7 @@ const CSS = `
 /* ===== BASE = MOBILE ===== */
 .mh-wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 38px 22px 16px; display: flex; flex-direction: column; gap: 24px; }
 
-.mh-eyebrow { display: flex; align-items: center; font-family: 'JetBrains Mono', monospace; letter-spacing: .16em; font-size: 11px; color: ${SOFT}; margin: 0; }
+.mh-eyebrow { display: flex; align-items: center; font-family: var(--font-be-vietnam), system-ui, sans-serif; letter-spacing: .16em; font-size: 11px; color: ${SOFT}; margin: 0; }
 .mh-livedot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: ${OCHRE}; margin-right: 9px; flex: none; }
 .mh-h1 { font-size: clamp(3.4rem, 16vw, 4.7rem); line-height: 1.08; margin: .42em 0 .34em; font-weight: 400; letter-spacing: -.028em; }
 .mh-line { display: block; }
@@ -139,13 +139,13 @@ const CSS = `
 .mh-deck { font-size: .9rem; line-height: 1.5; color: ${INK}; opacity: .76; margin: 0; max-width: 32em; }
 
 .mh-vis { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-.mh-soi { margin: 0; text-align: center; min-height: 4.5em; max-width: 32em; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; letter-spacing: .01em; line-height: 1.5; }
+.mh-soi { margin: 0; text-align: center; min-height: 4.5em; max-width: 32em; display: flex; align-items: center; justify-content: center; font-family: var(--font-be-vietnam), system-ui, sans-serif; font-size: 12.5px; letter-spacing: .01em; line-height: 1.5; }
 .mh-soi-in { display: inline-block; }
 .mh-soi-k { color: ${SOFT}; }
 .mh-soi-n { color: ${OCHRE_DEEP}; font-weight: 500; font-family: 'Newsreader', Georgia, serif; font-size: 1.15em; font-style: italic; }
 .mh-soi-r { color: ${SOFT}; }
 .mh-soi-q { color: ${INK}; opacity: .92; font-family: 'Newsreader', Georgia, serif; font-size: 1.12em; font-style: italic; }
-.mh-hint { margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: ${SOFT}; opacity: .78; }
+.mh-hint { margin: 0; font-family: var(--font-be-vietnam), system-ui, sans-serif; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: ${SOFT}; opacity: .78; }
 
 .mh-act { display: flex; flex-direction: column; gap: 14px; }
 .mh-cta-row { display: flex; flex-direction: column; gap: 10px; }
@@ -155,9 +155,9 @@ const CSS = `
 .mh-cta-ghost { border: 1px solid rgba(164,117,50,.35); color: ${INK}; }
 .mh-cta-ghost::before { background: radial-gradient(circle, rgba(164,117,50,.5), rgba(164,117,50,0) 70%); }
 .mh-cta > * { position: relative; z-index: 1; }
-.mh-cta-num { font-family: 'JetBrains Mono', monospace; margin-right: .6em; opacity: .85; }
-.mh-cta-sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; opacity: .68; margin-left: .5em; }
-.mh-micro { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .14em; color: ${SOFT}; margin: 0; text-align: center; }
+.mh-cta-num { font-family: var(--font-be-vietnam), system-ui, sans-serif; margin-right: .6em; opacity: .85; }
+.mh-cta-sub { font-family: var(--font-be-vietnam), system-ui, sans-serif; font-size: 11px; opacity: .68; margin-left: .5em; }
+.mh-micro { font-family: var(--font-be-vietnam), system-ui, sans-serif; font-size: 11px; letter-spacing: .14em; color: ${SOFT}; margin: 0; text-align: center; }
 .mh-gift { font-family: 'Newsreader', Georgia, serif; font-size: .94rem; line-height: 1.4; color: ${OCHRE_DEEP}; margin: 0; text-align: center; font-style: italic; }
 .mh-gift strong { font-weight: 600; font-style: normal; }
 .mh-gift-mk { color: ${OCHRE}; font-style: normal; margin-right: .2em; }
