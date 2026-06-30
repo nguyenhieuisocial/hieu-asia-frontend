@@ -226,7 +226,7 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
         <button
           type="button"
           onClick={() => onNavigate('manual')}
-          className="group flex w-full items-center gap-4 rounded-xl border border-gold/30 bg-gold/[0.06] p-4 text-left transition hover:border-gold/60 hover:bg-gold/[0.10]"
+          className="group flex w-full items-center gap-4 rounded-xl border border-gold/30 bg-gold/[0.06] p-4 text-left transition hover:border-gold/60 hover:bg-gold/[0.10] active:scale-[0.98]"
         >
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold/40 bg-card/60">
             <BookOpen className="h-5 w-5 text-gold" aria-hidden />
@@ -249,7 +249,7 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
         <button
           type="button"
           onClick={() => onNavigate('manual')}
-          className="group flex w-full items-center gap-4 rounded-xl border border-gold/30 bg-gold/[0.06] p-4 text-left transition hover:border-gold/60 hover:bg-gold/[0.10]"
+          className="group flex w-full items-center gap-4 rounded-xl border border-gold/30 bg-gold/[0.06] p-4 text-left transition hover:border-gold/60 hover:bg-gold/[0.10] active:scale-[0.98]"
         >
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold/40 bg-card/60">
             <BookOpen className="h-5 w-5 text-gold" aria-hidden />
@@ -342,7 +342,7 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
                     {a.href ? (
                       <Link
                         href={a.href}
-                        className="flex items-center gap-3 hover:text-gold"
+                        className="flex min-h-11 items-center gap-3 transition hover:text-gold active:scale-[0.98]"
                       >
                         {inner}
                       </Link>

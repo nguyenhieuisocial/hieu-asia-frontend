@@ -7,6 +7,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
+import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, faqPage, itemList, webPage } from '@/lib/seo/jsonld';
 import { ELEMENT_TENDENCY, type ZodiacElement } from '@/lib/western-astrology';
@@ -115,7 +116,8 @@ export default function CungHoangDaoHubPage() {
         </section>
 
         {/* Lưới 12 cung theo nguyên tố */}
-        <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <RevealOnScroll>
+        <section className="rv-up relative mx-auto max-w-3xl px-6 pb-10">
           <h2 className="mb-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             12 cung hoàng đạo
           </h2>
@@ -137,7 +139,7 @@ export default function CungHoangDaoHubPage() {
                   <div className="grid gap-3 sm:grid-cols-3">
                     {signs.map((s) => (
                       <Link key={s.slug} href={`/cung-hoang-dao/${s.slug}`} className="group">
-                        <Card className="h-full border-border bg-card/40 transition group-hover:border-gold/40">
+                        <Card className="h-full border-border bg-card/40 transition group-hover:border-gold/40 group-active:scale-[0.98]">
                           <CardContent className="p-4">
                             <p className="flex items-center gap-2 font-heading text-base font-semibold text-foreground">
                               <span aria-hidden className="text-xl text-gold">
@@ -159,10 +161,12 @@ export default function CungHoangDaoHubPage() {
             })}
           </div>
         </section>
+        </RevealOnScroll>
 
         {/* Giải thích ngắn */}
-        <section className="relative mx-auto max-w-3xl px-6 pb-10">
-          <div className="rounded-xl border border-border bg-card/40 p-6">
+        <RevealOnScroll>
+        <section className="rv-up relative mx-auto max-w-3xl px-6 pb-10">
+          <div className="rounded-card-editorial border border-border bg-card/40 p-6">
             <h2 className="mb-3 font-heading text-lg font-semibold text-foreground">
               Cung Mặt Trời mới là một mảnh của bức tranh
             </h2>
@@ -182,9 +186,11 @@ export default function CungHoangDaoHubPage() {
             </div>
           </div>
         </section>
+        </RevealOnScroll>
 
         {/* FAQ */}
-        <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <RevealOnScroll>
+        <section className="rv-up relative mx-auto max-w-3xl px-6 pb-10">
           <h2 className="mb-5 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             Câu hỏi thường gặp
           </h2>
@@ -199,10 +205,12 @@ export default function CungHoangDaoHubPage() {
             ))}
           </div>
         </section>
+        </RevealOnScroll>
 
         {/* Bắt email */}
-        <section className="relative mx-auto max-w-3xl px-6 pb-10">
-          <div className="rounded-xl border border-border bg-card/40 p-6">
+        <RevealOnScroll>
+        <section className="rv-up relative mx-auto max-w-3xl px-6 pb-10">
+          <div className="rounded-card-editorial border border-border bg-card/40 p-6">
             <h2 className="mb-3 font-heading text-lg font-semibold text-foreground">
               Nhận bài về chiêm tinh và cung hoàng đạo
             </h2>
@@ -215,6 +223,7 @@ export default function CungHoangDaoHubPage() {
             />
           </div>
         </section>
+        </RevealOnScroll>
 
         <div className="mx-auto max-w-6xl px-6 pb-12">
           <RelatedTools

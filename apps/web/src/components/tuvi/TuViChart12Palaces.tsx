@@ -65,7 +65,7 @@ function PalaceCell({ palace, selected, trigon, onClick }: PalaceCellProps) {
       aria-pressed={selected}
       aria-label={`Cung ${palace.name}`}
       className={cn(
-        'flex h-full min-h-[110px] flex-col items-start gap-1 rounded-lg border bg-card/40 p-2 text-left transition-colors',
+        'flex h-full min-h-[110px] flex-col items-start gap-1 rounded-lg border bg-card/40 p-2 text-left transition active:scale-[0.98]',
         'hover:border-gold/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold',
         selected && 'border-gold bg-gold/10 shadow-[0_0_20px_-8px_rgba(184,146,61,0.6)]',
         !selected && trigon && 'border-gold/40 bg-gold/[0.04]',

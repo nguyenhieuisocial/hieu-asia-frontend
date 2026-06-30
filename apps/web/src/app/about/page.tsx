@@ -8,6 +8,8 @@ import { MarketingHero } from '@/components/marketing/MarketingHero';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { MarketingCard } from '@/components/marketing/MarketingCard';
 import { PhilosophyBlock } from '@/components/marketing/PhilosophyBlock';
+import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
+import { ShimmerText } from '@/components/fx/ShimmerText';
 
 export const metadata: Metadata = {
   title: 'Về chúng tôi',
@@ -105,7 +107,7 @@ export default function AboutPage() {
           eyebrow="VỀ CHÚNG TÔI"
           title={
             <>
-              Về <em className="text-gold-soft">hieu.asia</em>
+              Về <ShimmerText as="em" className="text-gold-soft">hieu.asia</ShimmerText>
               <span className="text-gold-dot">.</span>
             </>
           }
@@ -143,7 +145,8 @@ export default function AboutPage() {
         {/* Section 2 — Mission + Vision merged.
             Wave 60.79.T1 (vault 112 P0): tighten from py-20 sm:py-24 → py-16
             md:py-20 so 3 stacked sections don't pile up 530px of vertical air. */}
-        <section className="relative bg-background py-16 md:py-20">
+        <RevealOnScroll>
+        <section className="relative bg-background py-16 md:py-20 rv-up">
           <div className="mx-auto max-w-5xl px-6">
             <div className="mb-12 text-center">
               <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
@@ -182,8 +185,10 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
+        </RevealOnScroll>
 
         {/* Section 3 — Philosophy + Commitments merged (founder voice + ethics) */}
+        <RevealOnScroll>
         <PhilosophyBlock
           eyebrow="TRIẾT LÝ & CAM KẾT"
           title={
@@ -199,9 +204,11 @@ export default function AboutPage() {
           ]}
           citation="hieu.asia — 2026"
         />
+        </RevealOnScroll>
 
         {/* Contact CTAs */}
-        <section className="relative bg-background py-16">
+        <RevealOnScroll>
+        <section className="relative bg-background py-16 rv-up">
           <div className="mx-auto max-w-3xl px-6 text-center">
             <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
               Liên hệ với chúng tôi
@@ -226,6 +233,7 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
+        </RevealOnScroll>
       </main>
       <SiteFooter />
       <StickyMobileCta trackId="about" />

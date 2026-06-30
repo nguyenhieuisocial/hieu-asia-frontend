@@ -16,6 +16,11 @@ import { Marquee } from '@/components/fx/Marquee';
  * v2 — richer: each domain hub sprouts satellite tool-nodes (the "dozens of
  * tools" breadth) and reveals its tool count on hover; faint branch lines +
  * a converging data pulse make the "everything flows into you" thesis visible.
+ *
+ * v3 — TAP TO FOCUS (mobile-first): chạm/click một nhóm → nhóm đó nổi bật +
+ * các nhóm khác mờ đi ("zoom" có chủ đích, không phải auto-zoom rối cũ), và một
+ * bảng chi tiết liệt kê TÊN các công cụ thật trong nhóm hiện ra. Chạm lại để
+ * thu về. Hover vẫn xem nhanh trên desktop; click khoá lựa chọn + mở chi tiết.
  */
 
 const ALL_TOOLS = TOOLKIT_GROUPS.flatMap((g) => g.tools.map((t) => t.n));
@@ -33,7 +38,7 @@ const HUBS = TOOLKIT_GROUPS.map((g, i, arr) => {
     const sa = a + (k - (nSat - 1) / 2) * 0.42;
     return { left: left + Math.cos(sa) * SAT_R, top: top + Math.sin(sa) * SAT_R };
   });
-  return { label: g.label, count: g.tools.length, left, top, sats };
+  return { label: g.label, count: g.tools.length, tools: g.tools.map((t) => t.n), left, top, sats };
 });
 
 // Deterministic starfield (SSR-stable).
@@ -45,6 +50,7 @@ const STARS = Array.from({ length: 24 }, (_, i) => ({
 
 export function OracleBrain(): React.JSX.Element {
   const [hover, setHover] = React.useState<number | null>(null);
+  const [selected, setSelected] = React.useState<number | null>(null);
   const [inView, setInView] = React.useState(false);
   const graphRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -64,6 +70,10 @@ export function OracleBrain(): React.JSX.Element {
     return () => io.disconnect();
   }, []);
 
+  // Highlight = đang hover HOẶC đã chọn (click/tap).
+  const isOn = (i: number) => hover === i || selected === i;
+  const sel = selected !== null ? HUBS[selected] : null;
+
   return (
     <section
       aria-label="Bộ não Oracle — AI hợp nhất toàn bộ công cụ về bạn"
@@ -80,10 +90,14 @@ export function OracleBrain(): React.JSX.Element {
           Cổ học Á Đông, tâm lý hiện đại, chiêm tinh, trực giác — AI nối tất cả lại để bạn hiểu
           mình sâu.
         </p>
+        <p className="ob-hint mx-auto mt-2 font-mono text-editorial-mono uppercase tracking-[0.12em]">
+          Chạm một nhóm để xem công cụ bên trong
+        </p>
 
         <div
           ref={graphRef}
           data-in={inView || undefined}
+          data-sel={selected !== null || undefined}
           className="ob-graph"
           role="img"
           aria-label="Năm nhóm công cụ hội tụ về Bạn"
@@ -99,7 +113,7 @@ export function OracleBrain(): React.JSX.Element {
                 y2={h.top}
                 pathLength={1}
                 vectorEffect="non-scaling-stroke"
-                className={`ob-line${hover === i ? ' ob-line-on' : ''}`}
+                className={`ob-line${isOn(i) ? ' ob-line-on' : ''}`}
               />
             ))}
             {/* faint branch lines: hub → its satellites */}
@@ -112,7 +126,7 @@ export function OracleBrain(): React.JSX.Element {
                   x2={s.left}
                   y2={s.top}
                   vectorEffect="non-scaling-stroke"
-                  className={`ob-branch${hover === i ? ' ob-branch-on' : ''}`}
+                  className={`ob-branch${isOn(i) ? ' ob-branch-on' : ''}`}
                 />
               )),
             )}
@@ -148,7 +162,7 @@ export function OracleBrain(): React.JSX.Element {
             h.sats.map((s, k) => (
               <span
                 key={`s${i}-${k}`}
-                className={`ob-sat${hover === i ? ' ob-sat-on' : ''}`}
+                className={`ob-sat${isOn(i) ? ' ob-sat-on' : ''}`}
                 style={{ left: `${s.left}%`, top: `${s.top}%` }}
                 aria-hidden="true"
               />
@@ -166,12 +180,14 @@ export function OracleBrain(): React.JSX.Element {
             <button
               key={h.label}
               type="button"
-              className={`ob-hub${hover === i ? ' ob-hub-on' : ''}`}
+              aria-pressed={selected === i}
+              className={`ob-hub${isOn(i) ? ' ob-hub-on' : ''}${selected === i ? ' ob-hub-sel' : ''}`}
               style={{ left: `${h.left}%`, top: `${h.top}%` }}
               onMouseEnter={() => setHover(i)}
               onMouseLeave={() => setHover(null)}
               onFocus={() => setHover(i)}
               onBlur={() => setHover(null)}
+              onClick={() => setSelected((s) => (s === i ? null : i))}
             >
               <span className="ob-hub-dot" aria-hidden="true" />
               <span className="ob-hub-label">{h.label}</span>
@@ -179,6 +195,38 @@ export function OracleBrain(): React.JSX.Element {
             </button>
           ))}
         </div>
+
+        {/* Bảng chi tiết — hiện khi chạm/chọn một nhóm. Tên công cụ là DOM text
+            (dịch được). Chạm "×" hoặc chạm lại nhóm để thu về. */}
+        {sel && (
+          <div className="ob-detail" role="region" aria-label={`Công cụ nhóm ${sel.label}`}>
+            <div className="ob-detail-head">
+              <span className="ob-detail-title">{sel.label}</span>
+              <span className="ob-detail-count">{sel.count} công cụ</span>
+              <button
+                type="button"
+                className="ob-detail-close"
+                onClick={() => setSelected(null)}
+                aria-label="Đóng chi tiết"
+              >
+                ×
+              </button>
+            </div>
+            <div className="ob-detail-tools">
+              {sel.tools.map((t) => (
+                <span key={t} className="ob-detail-tool">
+                  {t}
+                </span>
+              ))}
+            </div>
+            <a
+              href="/cong-cu"
+              className="ob-detail-link font-mono text-editorial-mono uppercase tracking-[0.12em] underline underline-offset-4"
+            >
+              Khám phá nhóm này →
+            </a>
+          </div>
+        )}
 
         <div className="mt-8">
           <Marquee speed={34}>

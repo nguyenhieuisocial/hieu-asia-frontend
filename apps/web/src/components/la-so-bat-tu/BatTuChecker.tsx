@@ -269,7 +269,7 @@ export function BatTuChecker({
               <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
                 Tứ Trụ — 8 chữ
               </p>
-              <div className="grid grid-cols-4 gap-2 sm:gap-3">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
                 <PillarCard pillar={chart.year} />
                 <PillarCard pillar={chart.month} />
                 <PillarCard pillar={chart.day} highlight />
@@ -595,7 +595,7 @@ export function BatTuChecker({
                       <div
                         key={p.index}
                         role="listitem"
-                        className={`min-w-[92px] flex-shrink-0 rounded-lg border p-2 text-center ${
+                        className={`min-w-[92px] flex-shrink-0 rounded-lg border px-2 py-3 text-center ${
                           cur ? 'border-gold/60 bg-gold/[0.08]' : 'border-border bg-card/40'
                         }`}
                       >

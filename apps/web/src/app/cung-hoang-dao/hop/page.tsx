@@ -134,6 +134,9 @@ export default function HopHubPage() {
           <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
             Chọn ô giao giữa hai cung để xem chi tiết. Màu thể hiện kiểu quan hệ theo nguyên tố.
           </p>
+          <p className="mb-2 font-mono text-[11px] text-muted-foreground sm:hidden" aria-hidden="true">
+            ← vuốt ngang →
+          </p>
           <div className="overflow-x-auto rounded-lg border border-border">
             <table className="w-full border-collapse text-center text-xs">
               <thead>
@@ -163,7 +166,7 @@ export default function HopHubPage() {
                         <Link
                           href={`/cung-hoang-dao/hop/${c.slug}`}
                           title={`${sign.name} & ${signs[j]!.name}: ${RELATION_SHORT[c.relation]}`}
-                          className={`flex h-7 w-7 items-center justify-center rounded ${CELL_COLOR[c.relation]} transition hover:ring-1 hover:ring-gold/50`}
+                          className={`flex h-10 w-10 items-center justify-center rounded sm:h-7 sm:w-7 ${CELL_COLOR[c.relation]} transition hover:ring-1 hover:ring-gold/50`}
                         >
                           <span aria-hidden className="text-[11px]">
                             {signs[j]!.symbol}

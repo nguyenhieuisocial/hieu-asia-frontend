@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { ArrowRight, BookOpen } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { listCaseStudies, ILLUSTRATIVE_LABEL } from '@/lib/case-studies';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
@@ -40,7 +41,7 @@ export default function CaseStudiesIndexPage() {
             className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,_rgba(59,39,84,0.4)_0%,_transparent_55%)]"
           />
           <div className="mx-auto max-w-4xl px-6 py-16 text-center sm:py-24">
-            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold/80 sm:text-xs">
+            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-primary sm:text-xs">
               Cộng đồng / Case studies
             </p>
             <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
@@ -62,13 +63,14 @@ export default function CaseStudiesIndexPage() {
           </div>
         </section>
 
+        <RevealOnScroll>
         <section className="pb-16">
           <div className="mx-auto max-w-4xl px-6">
-            <div className="space-y-6">
+            <div className="space-y-6 rv-up">
               {cases.map((c) => (
                 <article
                   key={c.slug}
-                  className="group rounded-2xl border border-border bg-card/40 p-6 transition-all hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)] sm:p-8"
+                  className="group rounded-card-editorial border border-border bg-card/40 p-6 transition-all hover:border-gold/40 hover:shadow-[0_0_40px_-12px_rgba(184,146,61,0.4)] active:scale-[0.98] sm:p-8"
                 >
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
                     <span className="font-mono uppercase tracking-[0.12em] text-gold/85">
@@ -111,7 +113,7 @@ export default function CaseStudiesIndexPage() {
               ))}
             </div>
 
-            <div className="mt-12 rounded-2xl border border-border bg-card/30 p-6 text-center">
+            <div className="mt-12 rounded-card-editorial border border-border bg-card/30 p-6 text-center">
               <BookOpen className="mx-auto h-6 w-6 text-gold/70" aria-hidden="true" />
               <p className="mt-3 text-sm text-muted-foreground">
                 {ILLUSTRATIVE_LABEL}. Mọi nhân vật, hoàn cảnh và lá số ở đây là
@@ -121,6 +123,7 @@ export default function CaseStudiesIndexPage() {
             </div>
           </div>
         </section>
+        </RevealOnScroll>
       </main>
       <SiteFooter />
     </>

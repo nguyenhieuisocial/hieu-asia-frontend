@@ -184,7 +184,7 @@ export default function AffiliateSignupPage() {
                 <Label className="text-xs uppercase text-muted-foreground">Link giới thiệu</Label>
                 <div className="mt-1 flex gap-2">
                   <Input value={result.share_url} readOnly className="font-mono text-xs" />
-                  <Button onClick={copyLink} type="button">
+                  <Button onClick={copyLink} type="button" className="transition active:scale-[0.98]">
                     {copied ? 'Đã copy' : 'Copy'}
                   </Button>
                 </div>
@@ -210,7 +210,7 @@ export default function AffiliateSignupPage() {
                 clicks/conversions trong dashboard.
               </div>
 
-              <Button asChild className="w-full bg-gold text-ink hover:bg-gold/90" size="lg"><Link href="/affiliate/dashboard">
+              <Button asChild className="w-full bg-gold text-ink transition hover:bg-gold/90 active:scale-[0.98]" size="lg"><Link href="/affiliate/dashboard">
 
                   Vào dashboard
 
@@ -258,7 +258,7 @@ export default function AffiliateSignupPage() {
                   Để nhận hoa hồng bằng tiền thật, bạn cần <strong>đăng nhập tài khoản hieu.asia</strong> trước
                   (để gắn hoa hồng + chi trả an toàn vào đúng người).
                 </p>
-                <Button asChild className="w-full bg-gold text-ink hover:bg-gold/90" size="lg">
+                <Button asChild className="w-full bg-gold text-ink transition hover:bg-gold/90 active:scale-[0.98]" size="lg">
                   <Link href="/signin?next=/affiliate/signup">Đăng nhập để đăng ký</Link>
                 </Button>
                 <p className="text-xs text-muted-foreground">
@@ -358,7 +358,7 @@ export default function AffiliateSignupPage() {
                 <Button
                   type="submit"
                   disabled={submitting}
-                  className="w-full bg-gold text-ink hover:bg-gold/90"
+                  className="w-full bg-gold text-ink transition hover:bg-gold/90 active:scale-[0.98]"
                   size="lg"
                 >
                   {submitting ? 'Đang tạo tài khoản…' : 'Đăng ký'}

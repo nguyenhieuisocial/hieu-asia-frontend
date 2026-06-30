@@ -81,10 +81,16 @@ export function InstantChartHero(): React.JSX.Element {
       <div className="relative z-10 mx-auto max-w-3xl px-6 pt-8 pb-28 sm:pt-12 sm:pb-16">
         {/* Wave 65 — lời hứa thương hiệu lên đầu (page 1) theo yêu cầu founder;
             GIỮ nguyên H1 hành động + form ngay dưới (không phá mối nối chuyển đổi). */}
-        <p className="font-marketing-display text-lg italic leading-tight text-primary/90 sm:text-xl">
+        <p
+          className="hero-enter font-marketing-display text-lg italic leading-tight text-primary/90 sm:text-xl"
+          style={{ animationDelay: '80ms' }}
+        >
           Hiểu mình. Quyết định mình.
         </p>
-        <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+        <p
+          className="hero-enter mt-2 font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80"
+          style={{ animationDelay: '150ms' }}
+        >
           Lá số Bát Tự thật · tính ngay · miễn phí
         </p>
         <h1 className="mt-3 text-balance font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
@@ -92,7 +98,10 @@ export function InstantChartHero(): React.JSX.Element {
           <ShimmerText>xem lá số của bạn</ShimmerText>{' '}
           ngay.
         </h1>
-        <p className="mt-4 max-w-xl text-sm leading-relaxed text-foreground/75 sm:text-base">
+        <p
+          className="hero-enter mt-4 max-w-xl text-sm leading-relaxed text-foreground/75 sm:text-base"
+          style={{ animationDelay: '220ms' }}
+        >
           Bốn trụ, Nhật Chủ, ngũ hành, đại vận — tính theo tiết khí, đúng chuẩn,{' '}
           <strong className="text-foreground/90">kiểm chứng được</strong>. Lập ngay trong trình
           duyệt, không cần đăng ký. Con số là thật; phần luận giải là để bạn tự hiểu mình, không
@@ -102,7 +111,8 @@ export function InstantChartHero(): React.JSX.Element {
         {/* Lời mời gọn — above the fold, không ngộp dữ liệu trước khi khách hành động */}
         <form
           onSubmit={onSubmit}
-          className="mt-7 rounded-2xl border border-gold/25 bg-card/60 p-5 backdrop-blur-sm sm:p-6"
+          className="hero-enter mt-7 rounded-2xl border border-gold/25 bg-card/60 p-5 backdrop-blur-sm sm:p-6"
+          style={{ animationDelay: '320ms' }}
         >
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="space-y-1">
