@@ -65,7 +65,7 @@ export function ReferralCard() {
           type="button"
           onClick={onCopy}
           aria-live="polite"
-          className="shrink-0 rounded-md border border-gold/40 bg-gold/10 px-3 py-1.5 text-sm font-medium text-gold-700 transition hover:border-gold/60 hover:bg-gold/15"
+          className="shrink-0 rounded-md border border-gold/40 bg-gold/10 px-3 py-1.5 text-sm font-medium text-gold-700 transition hover:border-gold/60 hover:bg-gold/15 active:scale-[0.98]"
         >
           {copied ? 'Đã copy ✓' : 'Copy link'}
         </button>

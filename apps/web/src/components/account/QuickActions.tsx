@@ -67,7 +67,7 @@ export function QuickActions() {
             <Link
               key={a.href}
               href={a.href}
-              className="group rounded-xl border border-border bg-card/40 p-5 transition hover:border-gold/40 hover:bg-card/60"
+              className="group rounded-xl border border-border bg-card/40 p-5 transition hover:border-gold/40 hover:bg-card/60 active:scale-[0.98]"
             >
               <span className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/30 bg-background/60">
                 <Icon className="h-4 w-4 text-gold" aria-hidden />
