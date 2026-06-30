@@ -44,29 +44,14 @@ export function ConsentBanner(): React.ReactElement | null {
   // mobile visitors see the slim pill; tapping "Tuỳ chỉnh" expands into the
   // existing full layout (and skips straight to granular toggles).
   const [collapsed, setCollapsed] = React.useState(true);
-  // Wave 60.19 + 60.73 — pre-checked defaults per founder business decision
-  // (2026-05-26). All toggles default to TRUE so first-time visitors see
-  // every box pre-ticked; they can still untick + Lưu, or click "Chỉ cần
-  // thiết" for the necessary-only path.
-  //
-  // KNOWN LEGAL RISK: pre-ticked boxes for non-essential cookies are
-  // technically invalid consent under CJEU Planet49 (C-673/17, 2019) for
-  // EU users + VN Decree 13/2023 Art. 11 (consent must be expressed
-  // through an "opt-in action"). Per founder authority this is acceptable
-  // for the VN-first launch; EU exposure mitigated by the banner being
-  // shown in EU geo per `shouldShowBanner()` so users have explicit
-  // opt-out option before any tracker fires. Founder accepts the regulatory
-  // risk; defer formal pre-tick removal to a future EU launch wave.
-  //
-  // Banner shows in VN + EU + UK + BR + CA (per `shouldShowBanner()`);
-  // remaining jurisdictions get silent legitimate-interest defaults
-  // applied without a banner.
-  //
-  // RETURNING USERS: if `consent.shown=true` in storage, the draft is
-  // hydrated from the persisted choice in `useEffect` below.
-  // FIRST-TIME VISITORS: defaults are UNCHECKED (Wave 60.94.l — GDPR/Planet49
-  // C-673/17 + VN Decree 13/2023 Art. 11 compliance; previous pre-tick was
-  // Wave 60.73 founder accepted but vault 119 P1-1 flagged invalid consent).
+  // Consent draft toggles. FIRST-TIME VISITORS: all default UNCHECKED — non-
+  // essential cookies require an explicit opt-in action (GDPR/CJEU Planet49
+  // C-673/17 + VN Decree 13/2023 Art. 11). Wave 60.94.l reversed the earlier
+  // Wave 60.73 pre-tick (vault 119 P1-1 had flagged it as invalid consent).
+  // Banner shows in VN + EU + UK + BR + CA per `shouldShowBanner()`; other
+  // geos get silent legitimate-interest defaults without a banner.
+  // RETURNING USERS: draft is hydrated from the persisted choice in the
+  // useEffect below when `consent.shown=true`.
   const [draft, setDraft] = React.useState<Pick<ConsentState, "analytics" | "marketing" | "personalization">>(
     {
       analytics: false,
@@ -96,13 +81,13 @@ export function ConsentBanner(): React.ReactElement | null {
     });
     const onReopen = () => {
       const current = getConsent();
-      // Reopen path: always hydrate from storage so user sees their last
-      // saved choice. If never saved (shown=false somehow reached this
-      // path), fall back to all-true defaults per founder policy.
+      // Reopen path: hydrate from storage so user sees their last saved
+      // choice. If never saved (shown=false), default UNCHECKED — never
+      // pre-tick non-essential cookies (GDPR/Planet49; matches first-time).
       setDraft({
-        analytics: current.shown ? current.analytics : true,
-        marketing: current.shown ? current.marketing : true,
-        personalization: current.shown ? current.personalization : true,
+        analytics: current.shown ? current.analytics : false,
+        marketing: current.shown ? current.marketing : false,
+        personalization: current.shown ? current.personalization : false,
       });
       setVisible(true);
     };
