@@ -834,6 +834,47 @@ body {
 }
 .ob-hub-on .ob-hub-dot { transform: scale(1.45); box-shadow: 0 0 14px rgba(224, 174, 98, 0.95); }
 .ob-hub-on .ob-hub-label { color: #f5f2ec; }
+.ob-hub-count {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #e0ae62;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.25s ease;
+}
+.ob-hub-on .ob-hub-count { opacity: 1; max-height: 1.4em; }
+/* satellite tool-nodes + branch lines + converging pulse */
+.ob-sat {
+  position: absolute;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(224, 174, 98, 0.4);
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.ob-sat-on { background: #e0ae62; transform: translate(-50%, -50%) scale(1.35); box-shadow: 0 0 8px rgba(224, 174, 98, 0.8); }
+.ob-branch { stroke: rgba(224, 174, 98, 0.12); stroke-width: 0.8; transition: stroke 0.25s ease; }
+.ob-branch-on { stroke: rgba(224, 174, 98, 0.42); }
+.ob-pulse {
+  position: absolute;
+  left: var(--sx); top: var(--sy);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: #f5e1aa;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+@keyframes ob-pulse-travel {
+  0% { left: var(--sx); top: var(--sy); opacity: 0; }
+  18% { opacity: 0.85; }
+  82% { opacity: 0.5; }
+  100% { left: 50%; top: 50%; opacity: 0; }
+}
 .ob-hub:focus-visible { outline: 2px solid rgba(224, 174, 98, 0.6); outline-offset: 2px; border-radius: 10px; }
 .ob-tool { color: rgba(224, 174, 98, 0.72); }
 .ob-link { color: #e0ae62; }
@@ -845,9 +886,11 @@ body {
   .ob-graph[data-in] .ob-line:nth-of-type(3) { animation-delay: 0.2s; }
   .ob-graph[data-in] .ob-line:nth-of-type(4) { animation-delay: 0.3s; }
   .ob-graph[data-in] .ob-line:nth-of-type(5) { animation-delay: 0.4s; }
-  .ob-graph .ob-center, .ob-graph .ob-hub { opacity: 0; }
+  .ob-graph .ob-center, .ob-graph .ob-hub, .ob-graph .ob-sat { opacity: 0; }
   .ob-graph[data-in] .ob-center { animation: ob-fade-in 0.6s ease 0.5s both; }
   .ob-graph[data-in] .ob-hub { animation: ob-fade-in 0.55s ease 0.3s both; }
+  .ob-graph[data-in] .ob-sat { animation: ob-fade-in 0.5s ease 0.5s both; }
+  .ob-graph[data-in] .ob-pulse { animation: ob-pulse-travel 3.2s ease-in-out infinite; }
 }
 @keyframes ob-draw { to { stroke-dashoffset: 0; } }
 @keyframes ob-fade-in { from { opacity: 0; } to { opacity: 1; } }
