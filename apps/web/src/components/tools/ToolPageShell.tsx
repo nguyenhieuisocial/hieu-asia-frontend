@@ -4,6 +4,7 @@ import { ChevronRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
+import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 
 export interface ToolPageShellProps {
   eyebrow: string;
@@ -128,9 +129,11 @@ export function ToolPageShell({
         <div className="relative mx-auto max-w-6xl px-6 pb-20 sm:pb-24">
           {children}
           {relatedSlug && (
-            <div className="mt-12 border-t border-border pt-6">
-              <RelatedTools current={relatedSlug} />
-            </div>
+            <RevealOnScroll>
+              <div className="rv-up mt-12 border-t border-border pt-6">
+                <RelatedTools current={relatedSlug} />
+              </div>
+            </RevealOnScroll>
           )}
         </div>
       </main>

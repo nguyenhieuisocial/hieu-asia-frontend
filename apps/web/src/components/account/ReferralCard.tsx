@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Gift } from 'lucide-react';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { getReferral, type ReferralInfo } from '@/lib/referral';
+import { CountUp } from '@/components/fx/CountUp';
 
 /**
  * "Mời bạn" card on /account — shows the user's invite link, a copy/share
@@ -79,7 +80,7 @@ export function ReferralCard() {
         />
         {info.invited_count > 0 && (
           <span className="text-sm text-muted-foreground">
-            Đã có <strong className="font-semibold text-foreground/90">{info.invited_count}</strong> người tham gia nhờ bạn
+            Đã có <strong className="font-semibold text-foreground/90"><CountUp value={info.invited_count} /></strong> người tham gia nhờ bạn
           </span>
         )}
       </div>

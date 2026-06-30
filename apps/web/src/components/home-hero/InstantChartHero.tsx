@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import dynamic from 'next/dynamic';
+import { MagneticButton } from '@/components/fx/MagneticButton';
 
 // BatTuChecker (engine Bát Tự + bảng 4 trụ + Nhật Chủ + đại vận + Thần Sát + nút
 // PDF, ~716 LOC) CHỈ render sau khi khách bấm "Lập lá số" (state `revealed`).
@@ -191,12 +192,14 @@ export function InstantChartHero(): React.JSX.Element {
             </span>
           </label>
 
-          <button
-            type="submit"
-            className="mt-4 inline-flex h-12 w-full items-center justify-center rounded-md bg-gold px-6 text-sm font-medium text-ink transition-colors hover:bg-gold-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:w-auto"
-          >
-            ✦ Lập lá số Bát Tự của tôi →
-          </button>
+          <MagneticButton block className="mt-4 sm:inline-block">
+            <button
+              type="submit"
+              className="inline-flex h-12 w-full items-center justify-center rounded-md bg-gold px-6 text-sm font-medium text-ink transition-colors hover:bg-gold-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:w-auto"
+            >
+              ✦ Lập lá số Bát Tự của tôi →
+            </button>
+          </MagneticButton>
           {touched && !date && (
             <p className="mt-2 text-xs text-destructive" role="alert">
               Hãy chọn ngày sinh dương lịch để lập lá số.
