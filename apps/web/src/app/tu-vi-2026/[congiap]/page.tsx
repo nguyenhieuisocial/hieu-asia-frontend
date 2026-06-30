@@ -211,7 +211,32 @@ export default async function TuVi2026ConGiapPage({
             Sao hạn (Cửu Diệu) đổi mỗi năm theo tuổi mụ và giới tính, nên cùng tuổi {d.z.ten} nhưng
             khác năm sinh sẽ gặp sao khác nhau. Bảng dưới tính cho năm 2026, tham khảo theo phong tục.
           </p>
-          <div className="overflow-x-auto rounded-lg border border-border">
+          {/* Mobile: danh sách thẻ xếp dọc (4 cột tràn ở 390px) */}
+          <ul className="space-y-2 sm:hidden">
+            {d.cohorts.map((c) => (
+              <li
+                key={c.birthYear}
+                className="rounded-lg border border-border bg-card/40 p-3 text-foreground/85"
+              >
+                <p className="flex items-baseline justify-between">
+                  <span className="font-mono font-medium">{c.birthYear}</span>
+                  <span className="text-xs text-muted-foreground">Tuổi mụ {c.tuoiMu}</span>
+                </p>
+                <p className="mt-1.5 text-sm">
+                  <span className="text-muted-foreground">Nam: </span>
+                  <span className={TYPE_BADGE[c.saoNam.type]}>{c.saoNam.name}</span>{' '}
+                  <span className="text-muted-foreground">({TYPE_WORD[c.saoNam.type]})</span>
+                </p>
+                <p className="mt-0.5 text-sm">
+                  <span className="text-muted-foreground">Nữ: </span>
+                  <span className={TYPE_BADGE[c.saoNu.type]}>{c.saoNu.name}</span>{' '}
+                  <span className="text-muted-foreground">({TYPE_WORD[c.saoNu.type]})</span>
+                </p>
+              </li>
+            ))}
+          </ul>
+          {/* Desktop: bảng đầy đủ */}
+          <div className="hidden overflow-x-auto rounded-lg border border-border sm:block">
             <table className="w-full text-left text-sm">
               <thead className="bg-card/60 text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
