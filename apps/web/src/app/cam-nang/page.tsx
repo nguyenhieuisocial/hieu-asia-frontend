@@ -118,36 +118,36 @@ export default async function CamNangIndexPage() {
           </div>
 
           <div className="mt-12 space-y-4">
-            {pillars.length === 0 ? (
-              <div className="rounded-card-editorial border border-border bg-card p-8 text-center text-sm text-muted-foreground">
-                <p>
-                  Chưa có bài cẩm nang nào được xuất bản. Quay lại sau —
-                  founder đang biên tập đợt đầu.
-                </p>
-              </div>
-            ) : (
-              pillars.map((p) => (
-                <Link
-                  key={p.slug}
-                  href={`/cam-nang/${p.slug}`}
-                  className="group flex items-start justify-between gap-4 rounded-card-editorial border border-border bg-card p-6 transition-colors hover:border-gold/30 hover:bg-card/80"
-                >
-                  <div className="min-w-0 flex-1">
-                    <h2 className="font-heading text-xl font-semibold text-foreground group-hover:text-gold">
-                      {p.topic}
-                    </h2>
-                    <div className="mt-2 flex items-center gap-3 font-mono text-xs text-muted-foreground">
-                      <code>/{p.slug}</code>
-                      {p.published_at && <span>· {formatDate(p.published_at)}</span>}
+              {pillars.length === 0 ? (
+                <div className="rounded-card-editorial border border-border bg-card p-8 text-center text-sm text-muted-foreground">
+                  <p>
+                    Chưa có bài cẩm nang nào được xuất bản. Quay lại sau —
+                    founder đang biên tập đợt đầu.
+                  </p>
+                </div>
+              ) : (
+                pillars.map((p) => (
+                  <Link
+                    key={p.slug}
+                    href={`/cam-nang/${p.slug}`}
+                    className="group flex items-start justify-between gap-4 rounded-card-editorial border border-border bg-card p-6 transition-colors hover:border-gold/30 hover:bg-card/80"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <h2 className="font-heading text-xl font-semibold text-foreground group-hover:text-gold">
+                        {p.topic}
+                      </h2>
+                      <div className="mt-2 flex items-center gap-3 font-mono text-xs text-muted-foreground">
+                        <code>/{p.slug}</code>
+                        {p.published_at && <span>· {formatDate(p.published_at)}</span>}
+                      </div>
                     </div>
-                  </div>
-                  <ArrowRight
-                    className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-gold"
-                    aria-hidden
-                  />
-                </Link>
-              ))
-            )}
+                    <ArrowRight
+                      className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-gold"
+                      aria-hidden
+                    />
+                  </Link>
+                ))
+              )}
           </div>
         </section>
       </main>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ShieldCheck, ScrollText, Lock, ArrowRight } from 'lucide-react';
+import { CountUp } from '@/components/fx/CountUp';
 
 /**
  * TrustBand — surfaces hieu.asia's REAL proof/credibility high on the homepage
@@ -15,7 +16,11 @@ const PILLARS = [
   {
     icon: ScrollText,
     title: 'Tính thật, không tra bảng',
-    body: 'Tử Vi Bắc phái · 121 sao (chính tinh & phụ tinh), an sao bằng thuật toán — không bịa.',
+    // body split around the genuine "121 sao" count so the number can count up
+    // on scroll (CountUp). Copy is unchanged when reassembled.
+    bodyBefore: 'Tử Vi Bắc phái · ',
+    count: 121,
+    bodyAfter: ' sao (chính tinh & phụ tinh), an sao bằng thuật toán — không bịa.',
     href: '/methodology',
   },
   {
@@ -75,7 +80,17 @@ export function TrustBand() {
                 <h3 className="font-marketing-display text-base leading-snug text-foreground">
                   {p.title}
                 </h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{p.body}</p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {'count' in p ? (
+                    <>
+                      {p.bodyBefore}
+                      <CountUp value={p.count} />
+                      {p.bodyAfter}
+                    </>
+                  ) : (
+                    p.body
+                  )}
+                </p>
               </Link>
             );
           })}

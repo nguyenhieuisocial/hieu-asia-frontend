@@ -19,6 +19,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb } from '@/lib/seo/jsonld';
+import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -203,21 +204,23 @@ export default async function PillarPage({
             dangerouslySetInnerHTML={{ __html: renderMarkdown(pillar.content) }}
           />
 
-          <div className="mt-12 rounded-card-editorial border border-gold/20 bg-gradient-to-br from-gold/10 to-gold/0 p-6">
-            <p className="font-heading text-lg font-semibold text-foreground">
-              Muốn lá số chi tiết riêng cho bạn?
-            </p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Lập lá số miễn phí trong 30 giây — không cần tài khoản, không
-              cần thanh toán.
-            </p>
-            <Link
-              href="/onboarding"
-              className="mt-4 inline-flex items-center gap-2 rounded-pill bg-gold px-5 py-2.5 font-heading text-sm font-semibold text-ink shadow-md shadow-gold/20 transition-colors hover:bg-gold-soft"
-            >
-              Lập lá số miễn phí →
-            </Link>
-          </div>
+          <RevealOnScroll>
+            <div className="rv-up mt-12 rounded-card-editorial border border-gold/20 bg-gradient-to-br from-gold/10 to-gold/0 p-6">
+              <p className="font-heading text-lg font-semibold text-foreground">
+                Muốn lá số chi tiết riêng cho bạn?
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Lập lá số miễn phí trong 30 giây — không cần tài khoản, không
+                cần thanh toán.
+              </p>
+              <Link
+                href="/onboarding"
+                className="mt-4 inline-flex items-center gap-2 rounded-pill bg-gold px-5 py-2.5 font-heading text-sm font-semibold text-ink shadow-md shadow-gold/20 transition-colors hover:bg-gold-soft"
+              >
+                Lập lá số miễn phí →
+              </Link>
+            </div>
+          </RevealOnScroll>
         </article>
       </main>
       <SiteFooter />

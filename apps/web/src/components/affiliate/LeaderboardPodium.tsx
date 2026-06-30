@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import { CountUp } from '@/components/fx/CountUp';
 
 interface PodiumRow {
   affiliate_code: string;
@@ -87,10 +88,10 @@ function PodiumCard({ row, rank }: { row: PodiumRow; rank: number }) {
         </div>
       )}
       <div className={`mt-4 font-heading font-bold text-gold ${isFirst ? 'text-2xl sm:text-3xl' : 'text-xl'}`}>
-        {vnd(row.total_earned_vnd)}
+        <CountUp value={row.total_earned_vnd} format={vnd} />
       </div>
       <div className="mt-1 text-xs text-muted-foreground">
-        {row.total_orders.toLocaleString('vi-VN')} đơn
+        <CountUp value={row.total_orders} format={(n) => Math.round(n).toLocaleString('vi-VN')} /> đơn
       </div>
     </div>
   );

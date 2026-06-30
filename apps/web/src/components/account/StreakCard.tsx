@@ -24,6 +24,7 @@ import * as React from 'react';
 import { Flame } from 'lucide-react';
 import { getStreak, checkin, streakMilestone, type StreakView, type VoucherInfo } from '@/lib/daily-checkin';
 import { track } from '@/lib/analytics';
+import { CountUp } from '@/components/fx/CountUp';
 
 export function StreakCard({ variant = 'card' }: { variant?: 'card' | 'compact' } = {}) {
   const [phase, setPhase] = React.useState<'loading' | 'ready' | 'hidden'>('loading');
@@ -194,7 +195,9 @@ export function StreakCard({ variant = 'card' }: { variant?: 'card' | 'compact' 
           aria-hidden
         />
         <div>
-          <div className="font-heading text-3xl leading-none text-foreground">{current}</div>
+          <div className="font-heading text-3xl leading-none text-foreground">
+            <CountUp value={current} />
+          </div>
           <div className="text-xs text-muted-foreground">ngày liên tiếp</div>
         </div>
         <div className="ml-auto text-right text-xs text-muted-foreground">
