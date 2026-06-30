@@ -22,7 +22,7 @@ import { LENSES } from '@/lib/catalog/lenses';
 const INK = 'currentColor';
 const OCHRE = '#A47532';
 const SOFT = 'currentColor';
-const FLAGRED = '#DA251D';
+const FLAGRED = '#9E2E1C'; // đỏ sơn mài trầm (trước là đỏ cờ neon #DA251D) — dịu lại, hợp nền kem + vàng
 const C = 200, R_LENS = 126, LENS_R = 40, CORE_R = 26, OUT_R = 170, STAR_IN = 52;
 const R2 = (n: number): number => Math.round(n * 100) / 100;
 const P = (r: number, deg: number): [number, number] => {
