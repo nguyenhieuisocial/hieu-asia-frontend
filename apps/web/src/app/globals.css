@@ -252,6 +252,15 @@ html {
 }
 @keyframes heroEnter { from { opacity: 0; transform: translateY(.55em); } to { opacity: 1; transform: translateY(0); } }
 
+/* ===== Chuyển trang mượt — fade-in nhẹ khi điều hướng (hết "bụp") =====
+ * app/template.tsx remount mỗi lần đổi trang → animation chạy lại. CHỈ opacity
+ * (KHÔNG transform → không tạo containing-block, giữ position:fixed/sticky của
+ * nav + CTA dính). Lần tải đầu bị bỏ qua ở template (giữ LCP). */
+@media (prefers-reduced-motion: no-preference) {
+  .page-fade { animation: pageFade .32s ease-out both; }
+}
+@keyframes pageFade { from { opacity: 0; } to { opacity: 1; } }
+
 /* Same rationale for faint-gold LABEL text — the mono "eyebrow" tags above
  * headings (`text-gold/80|85|90`, ~11px) sit at ~2:1 on cream (gold #B8923D
  * at 0.8 over Paper), failing WCAG 1.4.3 small-text 4.5:1. Deepen to
@@ -914,6 +923,49 @@ body {
 .ob-hub:focus-visible { outline: 2px solid rgba(224, 174, 98, 0.6); outline-offset: 2px; border-radius: 10px; }
 .ob-tool { color: rgba(224, 174, 98, 0.72); }
 .ob-link { color: #e0ae62; }
+.ob-hint { color: rgba(224, 174, 98, 0.55); }
+
+/* v3 — TAP TO FOCUS: nhóm được chọn nổi bật, nhóm khác mờ. Dùng `filter:opacity`
+ * (KHÔNG dùng `opacity`) vì .ob-hub/.ob-sat có animation fade-in [fill:both] giữ
+ * opacity:1 → sẽ ghi đè property `opacity`; filter thì xếp chồng lên, luôn ăn. */
+.ob-graph[data-sel] .ob-hub:not(.ob-hub-on) { filter: opacity(0.3); }
+.ob-graph[data-sel] .ob-sat:not(.ob-sat-on) { filter: opacity(0.2); }
+.ob-graph[data-sel] .ob-line:not(.ob-line-on) { stroke: rgba(224, 174, 98, 0.07); }
+.ob-hub-sel .ob-hub-dot { transform: scale(1.75); box-shadow: 0 0 18px rgba(224, 174, 98, 1); }
+.ob-hub-sel .ob-hub-label { color: #f5f2ec; }
+
+/* v3 — bảng chi tiết: liệt kê tên công cụ thật của nhóm đang chọn */
+.ob-detail {
+  margin: 1.25rem auto 0;
+  max-width: 30rem;
+  text-align: left;
+  border: 1px solid rgba(224, 174, 98, 0.25);
+  border-radius: 14px;
+  background: rgba(28, 26, 22, 0.55);
+  padding: 14px 16px;
+}
+.ob-detail-head { display: flex; align-items: center; gap: 0.5rem; }
+.ob-detail-title { font-weight: 700; color: #f5f2ec; }
+.ob-detail-count { font-size: 11px; color: #e0ae62; }
+.ob-detail-close {
+  margin-left: auto; width: 26px; height: 26px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 18px; line-height: 1; color: #a8a6a0;
+  background: rgba(224, 174, 98, 0.08); border: 1px solid rgba(224, 174, 98, 0.2);
+  cursor: pointer; transition: background 0.2s ease, color 0.2s ease;
+}
+.ob-detail-close:hover { background: rgba(224, 174, 98, 0.16); color: #f5f2ec; }
+.ob-detail-tools { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
+.ob-detail-tool {
+  font-size: 12px; padding: 0.22rem 0.6rem; border-radius: 999px;
+  background: rgba(224, 174, 98, 0.1); border: 1px solid rgba(224, 174, 98, 0.22);
+  color: #e8e4d8;
+}
+.ob-detail-link { display: inline-block; margin-top: 0.75rem; color: #e0ae62; }
+@media (prefers-reduced-motion: no-preference) {
+  .ob-detail { animation: ob-fade-in 0.3s ease both; }
+}
+
 /* draw the constellation in once when it scrolls into view */
 @media (prefers-reduced-motion: no-preference) {
   .ob-graph .ob-line { stroke-dasharray: 1; stroke-dashoffset: 1; }
