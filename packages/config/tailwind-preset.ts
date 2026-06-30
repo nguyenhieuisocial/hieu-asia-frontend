@@ -22,43 +22,43 @@ const preset = {
       colors: {
         // Background neutrals
         ink: {
-          DEFAULT: '#0F0F12', // Đen than — primary dark background (legacy)
-          night: '#0B1326', // Xanh đêm — alt primary
-          50: '#F2EDE3', // Kem ngà — light mode background (legacy)
+          DEFAULT: '#17181A', // C-Hybrid neutral dark (legacy alias, was #0F0F12)
+          night: '#1E1F22', // neutral dark surface (was xanh đêm #0B1326)
+          50: '#F5F2EC', // off-white light bg (legacy alias, was kem #F2EDE3)
         },
         // Wave 62.02 — Paper × Ink × Ochre day-mode scale.
         // Paper (default bg), Bone (surface lift), Ink (text), Ink-soft (meta),
         // Rule (border). Use these as the canonical day-mode palette going
         // forward; cream/warm-dark/gold remain for back-compat.
         paper: {
-          DEFAULT: '#F3ECDD', // Nền chính — Giấy thấm
-          50: '#FAF6EC', // Highlight (above paper)
-          100: '#F3ECDD', // Default paper (same as DEFAULT, semantic alias)
-          200: '#EBE2CD', // Bone — surface lift on paper
-          300: '#CCC0A6', // Rule — border on paper
-          500: '#A39A86', // Ink-soft on paper background
-          700: '#6B6358', // Ink-meta phụ đề
-          900: '#171411', // Ink — text on paper
+          DEFAULT: '#FAF9F6', // C-Hybrid — soft off-white base
+          50: '#FFFFFF', // pure white (card lift)
+          100: '#FAF9F6', // base alias
+          200: '#F5F2EC', // surface lift
+          300: '#E0DACF', // rule — border
+          500: '#9A968C', // soft meta
+          700: '#5C5950', // ink-meta phụ đề
+          900: '#1A1713', // ink — text
         },
         // Wave 62.02 — Charcoal × Bone × Gold night-mode scale.
         // Charcoal (default bg), Bark (surface lift), Bone (text), Bone-soft (meta),
         // Rule (border). Replaces warm-dark scale going forward.
         charcoal: {
-          DEFAULT: '#15110C', // Nền chính — Khoảng lặng
-          50: '#1F1A13', // Bark — surface lift on charcoal
-          100: '#15110C', // Default charcoal (semantic alias)
-          200: '#1B1714', // Mid surface
-          300: '#3A3122', // Rule — border on charcoal
-          500: '#9A8D72', // Bone-soft on charcoal background
-          700: '#E8DCC1', // Bone — text on charcoal
+          DEFAULT: '#17181A', // C-Hybrid — cool dark base
+          50: '#212327', // surface lift (lighter = higher elevation)
+          100: '#17181A', // base alias
+          200: '#1E1F22', // mid surface
+          300: '#34363A', // rule — border
+          500: '#B4B1AA', // meta text on dark
+          700: '#E6E4DF', // primary text on dark
         },
         // Wave 62.02 — Bone family for night-mode text/surface.
         // Direct hex aliases for the common cases — most surfaces just need
         // bone-DEFAULT (text on charcoal) and bone-soft (meta on charcoal).
         bone: {
-          DEFAULT: '#E8DCC1', // Chữ chính on charcoal
-          soft: '#9A8D72',
-          rule: '#3A3122',
+          DEFAULT: '#E6E4DF', // Chữ chính on dark
+          soft: '#B4B1AA',
+          rule: '#34363A',
         },
         // Wave 62.02 — Ochre (day-mode accent) + softer Gold (night-mode accent).
         // Spec calls Ochre #A47532 the "single accent" on paper, while night
@@ -75,7 +75,7 @@ const preset = {
           700: '#73522A',
           900: '#3A2914',
         },
-        'gold-night': '#D4A261', // Night accent — softer than #B8923D
+        'gold-night': '#E0AE62', // Night accent — warm gold on cool dark (C-Hybrid)
         // Wave 62.02 — Five-element (ngũ hành) functional accents.
         // RULE: chip + accent + data viz only. NEVER use as background.
         // Founder spec: "5 hành chỉ dùng functional, không dùng cho hero".
@@ -135,7 +135,7 @@ const preset = {
           700: '#8F6224',
         },
         // Semantic aliases for shadcn/ui tokens (mapped in app globals.css)
-        cream: '#F2EDE3',
+        cream: '#F5F2EC',
         // Theme-aware tokens — resolve via CSS vars defined in app globals.css.
         // Use these for theme-adaptive chrome (bg-card, text-foreground, etc.).
         background: 'hsl(var(--background) / <alpha-value>)',

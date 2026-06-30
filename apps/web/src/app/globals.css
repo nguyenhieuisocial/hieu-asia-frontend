@@ -46,10 +46,10 @@
    * with localStorage `theme=dark` stay on dark — no surprise flip.
    */
   :root {
-    --background: 0 0% 100%;         /* C-Hybrid — clean white base */
-    --foreground: 40 8% 10%;         /* Ink #1B1A17 — text on white */
-    --card: 0 0% 100%;               /* white card (lift via border/shadow) */
-    --card-foreground: 40 8% 10%;
+    --background: 45 27% 97%;        /* C-Hybrid — soft off-white #FAF9F6 (less glare than pure white) */
+    --foreground: 40 9% 9%;          /* Ink #1A1713 — strong text */
+    --card: 0 0% 100%;               /* pure white card → gentle lift above the off-white bg */
+    --card-foreground: 40 9% 9%;
     --primary: 35 53% 35%;           /* Ochre-deep #89612A — day accent. WCAG AA fix: was 42% (#A47532, 3.45:1 on paper, fails as small text). Same hue/sat, deepened to 35% → 4.7:1 AA. */
     --primary-foreground: 0 0% 100%; /* white text on ochre CTA */
     /* V4 a11y fix (design handoff): the *brand* ochre #A47532 above stays the
@@ -58,9 +58,9 @@
      * the CTA *button surface* only — same hue, lifts paper text to ≈5:1 AA.
      * Use `bg-[hsl(var(--primary-cta))]` on filled CTAs, keep paper text. */
     --primary-cta: 35 55% 35%;       /* Ochre-deep #8A6128 — filled CTA surface */
-    --muted: 40 25% 94%;             /* C-Hybrid surface #F4F1EB — warm-neutral lift */
-    --muted-foreground: 40 6% 39%;   /* Ink-meta #6A675F — ≈5.2:1 on white (AA) */
-    --border: 39 20% 87%;            /* Rule #E4DFD5 */
+    --muted: 42 24% 95%;             /* C-Hybrid surface #F5F2EC — warm-neutral lift */
+    --muted-foreground: 40 8% 33%;   /* Ink-meta #5C5950 — stronger for readability (≈6.3:1) */
+    --border: 39 19% 85%;            /* Rule #E0DACF — clearer separation */
     --ring: 35 53% 35%;              /* ochre — synced to deepened --primary (focus ring) */
     --radius: 0.625rem;
 
@@ -100,7 +100,7 @@
     --primary-foreground: 220 6% 10%; /* dark text on gold */
     --primary-cta: 36 67% 63%;       /* night CTA surface = gold (dark text ≈ 8:1 AA) */
     --muted: 225 5% 13%;             /* #1E1F22 — surface */
-    --muted-foreground: 40 5% 64%;   /* #A8A6A0 — meta on dark */
+    --muted-foreground: 40 6% 69%;   /* #B4B1AA — lifted for readability on dark (≈7.5:1) */
     --border: 222 6% 22%;            /* #34363A */
     --ring: 36 67% 63%;              /* gold */
 
