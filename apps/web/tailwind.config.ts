@@ -20,26 +20,24 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Warm-dark sepia editorial scale (candlelight body bg → border).
+        // C-Hybrid 2026-06-30 — was warm-dark sepia; now cool-neutral dark scale
+        // (matches charcoal). Keeps legacy `warm-dark-*` class names working.
         'warm-dark': {
-          50: '#13110D',
-          100: '#1B1714',
-          200: '#221C18',
-          300: '#2E2620',
-          400: '#3A302A',
-          500: '#4A3F36',
+          50: '#141517',
+          100: '#17181A',
+          200: '#1E1F22',
+          300: '#26282C',
+          400: '#2E3034',
+          500: '#34363A',
         },
-        // Cream scale — light-theme parity. Wave 60.56 P1.1 rename
-        // (cream-scale → cream) per /ultrareview must-fix: components used
-        // text-cream-{50,100,300,500} but JIT only generated text-cream-scale-*.
-        // DEFAULT preserves preset's flat `cream: '#F2EDE3'` for back-compat
-        // (existing utilities `text-cream`, `bg-cream` keep working).
+        // C-Hybrid 2026-06-30 — cream scale now neutral off-white (was warm cream).
+        // Legacy `cream-*` class names keep working, just cooler/cleaner.
         cream: {
-          DEFAULT: '#F2EDE3',
-          50: '#F5F0E6',
-          100: '#EFE7D6',
-          300: '#C9BFB0',
-          500: '#8A8275',
+          DEFAULT: '#F5F2EC',
+          50: '#FAF9F6',
+          100: '#F0EDE6',
+          300: '#D8D4CC',
+          500: '#8A8782',
         },
         // Gold extensions for Option D signature italic spans + period dots.
         'gold-soft': '#D4B373',

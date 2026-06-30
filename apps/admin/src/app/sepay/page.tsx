@@ -491,7 +491,7 @@ function AdminSepayPageInner() {
                             )}
                           </td>
                           <td className="px-4 py-3">{t.bank_brand_name ?? '—'}</td>
-                          <td className={cn('px-4 py-3 text-right font-mono', amtIn > 0 ? 'text-emerald-500' : 'text-muted-foreground')}>
+                          <td className={cn('px-4 py-3 text-right font-mono tabular-nums', amtIn > 0 ? 'text-emerald-500' : 'text-muted-foreground')}>
                             {amtIn > 0 ? `+${fmtVnd(amtIn)}` : '—'}
                           </td>
                           <td className="px-4 py-3 font-mono text-xs">{t.reference_number ?? '—'}</td>
@@ -549,7 +549,7 @@ function AdminSepayPageInner() {
                       return (
                         <tr key={r.id} className="border-b border-border/40 transition-colors last:border-0 hover:bg-muted/[0.04]">
                           <td className="whitespace-nowrap px-4 py-2.5 text-foreground/80">{fmtTs(r.requested_at)}</td>
-                          <td className="px-4 py-2.5 text-right font-mono text-red-400">−{fmtVnd(r.amount)}</td>
+                          <td className="px-4 py-2.5 text-right font-mono tabular-nums text-red-400">−{fmtVnd(r.amount)}</td>
                           <td className="max-w-xs px-4 py-2.5"><span className="line-clamp-2 text-foreground/75">{r.reason}</span></td>
                           <td className="px-4 py-2.5"><span className={cn('rounded-full px-2.5 py-0.5 text-xs font-medium', st.cls)}>{st.label}</span></td>
                           <td className="px-4 py-2.5">
@@ -714,7 +714,7 @@ function ReconcileView() {
                       <td className="px-4 py-2.5"><span className="inline-flex items-center gap-1 rounded bg-gold/15 px-2 py-0.5 font-mono text-xs text-gold"><Tag className="h-3 w-3" />{r.code}</span></td>
                       <td className="px-4 py-2.5">{r.order?.tier ?? '—'}</td>
                       <td className="px-4 py-2.5 font-mono text-xs">{r.order?.user_id ? <a href={`/customers/${r.order.user_id}`} className="text-gold hover:underline">{r.order.user_id.slice(0, 12)}…</a> : '—'}</td>
-                      <td className="px-4 py-2.5 text-right font-mono text-emerald-500">+{new Intl.NumberFormat('vi-VN').format(parseFloat(r.txn.amount_in || '0'))}</td>
+                      <td className="px-4 py-2.5 text-right font-mono tabular-nums text-emerald-500">+{new Intl.NumberFormat('vi-VN').format(parseFloat(r.txn.amount_in || '0'))}</td>
                       <td className="px-4 py-2.5">
                         {r.order?.underpaid ? (
                           <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-xs text-red-500">Thiếu tiền</span>
@@ -756,7 +756,7 @@ function ReconcileView() {
                     <tr key={r.txn.id ?? i} className="border-b border-border/40 last:border-0">
                       <td className="whitespace-nowrap px-4 py-2.5 text-foreground/80">{fmtTs(r.txn.transaction_date)}</td>
                       <td className="px-4 py-2.5 font-mono text-xs">{r.code}</td>
-                      <td className="px-4 py-2.5 text-right font-mono">+{new Intl.NumberFormat('vi-VN').format(parseFloat(r.txn.amount_in || '0'))}</td>
+                      <td className="px-4 py-2.5 text-right font-mono tabular-nums">+{new Intl.NumberFormat('vi-VN').format(parseFloat(r.txn.amount_in || '0'))}</td>
                       <td className="px-4 py-2.5 font-mono text-xs">{r.txn.reference_number ?? '—'}</td>
                     </tr>
                   ))}
@@ -1002,7 +1002,7 @@ function DashboardView() {
                 <div key={tier}>
                   <div className="flex justify-between text-xs">
                     <span>{TIER_LABEL[tier] ?? tier} <span className="text-muted-foreground">({v.count})</span></span>
-                    <span className="font-mono text-foreground/80">{fmtVnd(v.rev)}</span>
+                    <span className="font-mono tabular-nums text-foreground/80">{fmtVnd(v.rev)}</span>
                   </div>
                   <div className="mt-0.5 h-1.5 rounded bg-muted/10">
                     <div className="h-1.5 rounded bg-gold/70" style={{ width: `${(v.rev / maxTierRev) * 100}%` }} />

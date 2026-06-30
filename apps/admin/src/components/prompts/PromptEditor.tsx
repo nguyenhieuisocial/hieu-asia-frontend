@@ -88,7 +88,7 @@ export function PromptEditor({
         <div
           ref={gutterRef}
           aria-hidden="true"
-          className="select-none overflow-hidden border-r border-gold/10 bg-card/60 px-2 py-3 text-right font-mono text-xs leading-5 text-muted-foreground"
+          className="select-none overflow-hidden border-r border-gold/10 bg-card/60 px-2 py-3 text-right font-code text-xs leading-5 text-muted-foreground"
           style={{ minWidth: '3rem' }}
         >
           {Array.from({ length: lineCount }, (_, i) => (
@@ -108,7 +108,7 @@ export function PromptEditor({
           lang={spellCheck ? 'vi' : undefined}
           wrap={wrap ? 'soft' : 'off'}
           className={cn(
-            'flex-1 resize-none bg-transparent px-3 py-3 font-mono text-sm leading-5 text-foreground',
+            'flex-1 resize-none bg-transparent px-3 py-3 font-code text-sm leading-5 text-foreground',
             'placeholder:text-foreground/30 focus:outline-none',
             wrap ? 'whitespace-pre-wrap break-words' : 'whitespace-pre overflow-x-auto',
           )}

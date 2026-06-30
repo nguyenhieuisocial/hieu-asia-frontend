@@ -168,7 +168,7 @@ export function LensConstellation(props: {
 
 const FL_CSS = `
 .fl-box { position: relative; width: min(440px, 82vw); aspect-ratio: 1; }
-.fl { width: 100%; height: 100%; display: block; font-family: 'Newsreader', Georgia, serif; }
+.fl { width: 100%; height: 100%; display: block; font-family: var(--font-newsreader), Georgia, serif; }
 .fl-spin { transform-box: view-box; transform-origin: 200px 200px; }
 
 .fl-astro { transition: opacity .7s ease; }

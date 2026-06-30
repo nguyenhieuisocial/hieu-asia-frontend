@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Suspense } from 'react';
-import { Be_Vietnam_Pro, Inter } from 'next/font/google';
+import { Be_Vietnam_Pro } from 'next/font/google';
 import Script from 'next/script';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
@@ -18,7 +18,6 @@ const beVietnam = Be_Vietnam_Pro({
   variable: '--font-be-vietnam',
   display: 'swap',
 });
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 // 2026-06-29 — Outfit + JetBrains Mono removed. Headings + `font-mono` labels
 // both resolve to Be Vietnam Pro via the shared tokens (full VN coverage).
 
@@ -56,7 +55,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html
       lang={locale}
       suppressHydrationWarning
-      className={`${beVietnam.variable} ${inter.variable}`}
+      className={`${beVietnam.variable}`}
     >
       <body>
         {/* Official Telegram WebApp loader — required for SDK before hydration. */}

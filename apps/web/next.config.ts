@@ -13,6 +13,13 @@ const withBundleAnalyzer = bundleAnalyzer({
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@hieu-asia/ui', '@hieu-asia/types', '@hieu-asia/api-client'],
+  // 2026-06-30 — Vercel build OOM fix. `next build` re-runs ESLint + full tsc
+  // ("Linting and checking validity of types"), which OOM-killed the web deploy
+  // on Vercel's build container. The CI job "turbo lint + test + build" already
+  // enforces lint + types on every PR before merge, so the in-build re-check is
+  // redundant; skipping it cuts peak build memory. Quality gate stays in CI.
+  eslint: { ignoreDuringBuilds: true },
+  typescript: { ignoreBuildErrors: true },
   experimental: {
     typedRoutes: true,
     // Inline CSS into <head> instead of a render-blocking <link>. App-Router-
