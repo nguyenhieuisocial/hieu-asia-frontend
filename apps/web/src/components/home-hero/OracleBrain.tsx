@@ -40,6 +40,26 @@ const STARS = Array.from({ length: 22 }, (_, i) => ({
 
 export function OracleBrain(): React.JSX.Element {
   const [hover, setHover] = React.useState<number | null>(null);
+  const [inView, setInView] = React.useState(false);
+  const graphRef = React.useRef<HTMLDivElement | null>(null);
+
+  // Draw the constellation in once, when it scrolls into view (CSS handles the
+  // line-draw + node fade via [data-in]; reduced-motion shows it static).
+  React.useEffect(() => {
+    const el = graphRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setInView(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.35 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
     <section
@@ -58,7 +78,13 @@ export function OracleBrain(): React.JSX.Element {
           mình sâu.
         </p>
 
-        <div className="ob-graph" role="img" aria-label="Năm nhóm công cụ hội tụ về Bạn">
+        <div
+          ref={graphRef}
+          data-in={inView || undefined}
+          className="ob-graph"
+          role="img"
+          aria-label="Năm nhóm công cụ hội tụ về Bạn"
+        >
           <svg className="ob-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
             {HUBS.map((h, i) => (
               <line
@@ -67,6 +93,7 @@ export function OracleBrain(): React.JSX.Element {
                 y1="50"
                 x2={h.left}
                 y2={h.top}
+                pathLength={1}
                 vectorEffect="non-scaling-stroke"
                 className={`ob-line${hover === i ? ' ob-line-on' : ''}`}
               />

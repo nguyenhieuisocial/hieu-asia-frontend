@@ -837,6 +837,20 @@ body {
 .ob-hub:focus-visible { outline: 2px solid rgba(224, 174, 98, 0.6); outline-offset: 2px; border-radius: 10px; }
 .ob-tool { color: rgba(224, 174, 98, 0.72); }
 .ob-link { color: #e0ae62; }
+/* draw the constellation in once when it scrolls into view */
+@media (prefers-reduced-motion: no-preference) {
+  .ob-graph .ob-line { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .ob-graph[data-in] .ob-line { animation: ob-draw 0.85s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+  .ob-graph[data-in] .ob-line:nth-of-type(2) { animation-delay: 0.1s; }
+  .ob-graph[data-in] .ob-line:nth-of-type(3) { animation-delay: 0.2s; }
+  .ob-graph[data-in] .ob-line:nth-of-type(4) { animation-delay: 0.3s; }
+  .ob-graph[data-in] .ob-line:nth-of-type(5) { animation-delay: 0.4s; }
+  .ob-graph .ob-center, .ob-graph .ob-hub { opacity: 0; }
+  .ob-graph[data-in] .ob-center { animation: ob-fade-in 0.6s ease 0.5s both; }
+  .ob-graph[data-in] .ob-hub { animation: ob-fade-in 0.55s ease 0.3s both; }
+}
+@keyframes ob-draw { to { stroke-dashoffset: 0; } }
+@keyframes ob-fade-in { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
   .ob-star, .ob-center-glow { animation: none; }
 }
