@@ -135,6 +135,10 @@ const nextConfig: NextConfig = {
       // signin fails because no captchaToken passed. Caught Wave 60.62.verify
       // Playwright check (browser console "violates CSP directive").
       'https://challenges.cloudflare.com',
+      // Google Translate widget (ngôn ngữ mọi quốc gia, như ifan.asia) —
+      // element.js + its sub-scripts load from these hosts; without them the
+      // CSP blocks the widget silently.
+      'https://translate.google.com https://translate.googleapis.com https://www.gstatic.com',
       pixelScriptHosts,
     ]
       .filter(Boolean)
@@ -142,17 +146,17 @@ const nextConfig: NextConfig = {
     const csp = [
       "default-src 'self'",
       scriptSrc,
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://www.gstatic.com",
       "font-src 'self' data: https://fonts.gstatic.com",
       `img-src 'self' data: blob: https: ${pixelImgHosts}`,
       // Wave 60.80.fix — added unpkg.com + cdn.jsdelivr.net for dotlottie WASM
       // fallback fetches. Lighthouse best-practices flagged CSP-blocked errors
       // when primary WASM source failed; library retries from these CDNs.
-      `connect-src 'self' https://api.hieu.asia https://*.hieu.asia https://*.supabase.co https://*.supabase.in https://us.i.posthog.com https://*.posthog.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cloud.langfuse.com https://api.vietqr.io https://unpkg.com https://cdn.jsdelivr.net ${pixelConnectHosts}`,
+      `connect-src 'self' https://api.hieu.asia https://*.hieu.asia https://*.supabase.co https://*.supabase.in https://us.i.posthog.com https://*.posthog.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cloud.langfuse.com https://api.vietqr.io https://unpkg.com https://cdn.jsdelivr.net https://translate.googleapis.com https://translate.google.com ${pixelConnectHosts}`,
       // Wave 60.62 — Cloudflare Turnstile renders its widget inside an iframe
       // hosted at challenges.cloudflare.com — must allow frame-src in addition
       // to script-src above. Both needed for captcha to work.
-      "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://challenges.cloudflare.com",
+      "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://challenges.cloudflare.com https://translate.google.com",
       // Wave 60.80.fix — allow blob: workers for libraries that spawn Web
       // Workers via Blob URLs (e.g. dotlottie internal worker). Lighthouse
       // surfaced "Creating a worker from 'blob:...' violates CSP".

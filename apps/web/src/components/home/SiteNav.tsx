@@ -20,6 +20,7 @@ import {
   cn,
 } from '@hieu-asia/ui';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { GoogleTranslate } from '@/components/i18n/GoogleTranslate';
 import { useAuth } from '@/hooks/use-auth';
 import { signOut } from '@/lib/auth-client';
 import { getStreak } from '@/lib/daily-checkin';
@@ -170,6 +171,7 @@ export function SiteNav() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <GoogleTranslate />
           <ThemeToggle />
           {isAuthed ? (
             <AuthedMenu user={user} needsCheckin={needsCheckin} />
