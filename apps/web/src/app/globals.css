@@ -583,9 +583,9 @@ a[role='button']:not([disabled]):active,
   }
 }
 
-/* ── Google Translate widget (ngôn ngữ mọi quốc gia — như ifan.asia) ──────────
-   Ẩn banner Google chèn lên đầu trang + reset offset nó thêm vào <body>; chỉ
-   giữ ô <select> ngôn ngữ, style cho hợp thanh nav (sáng/tối theo token). */
+/* ── Language switcher (custom dropdown như ifan.asia, drives Google Translate)
+   Ẩn banner Google + reset offset body; raw goog-te combo là "engine" ẩn
+   (.gt-hidden); UI hiển thị là .gt-trigger + .gt-panel (theo token sáng/tối). */
 .goog-te-banner-frame,
 .skiptranslate > iframe {
   display: none !important;
@@ -601,33 +601,166 @@ body {
   background: none !important;
   box-shadow: none !important;
 }
-.gt-widget .goog-te-gadget {
-  font-size: 0 !important;
-  line-height: 0;
-  color: transparent;
+/* hidden Google engine (kept functional, off-screen) */
+.gt-hidden {
+  position: absolute !important;
+  left: -9999px;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
-.gt-widget .goog-te-gadget > span {
-  display: none !important;
+.gt-widget {
+  position: relative;
+  display: inline-block;
 }
-.gt-widget .goog-te-combo {
-  margin: 0 !important;
-  max-width: 8.5rem;
-  cursor: pointer;
+.gt-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   border-radius: 8px;
   border: 1px solid hsl(var(--border));
   background-color: hsl(var(--card));
-  padding: 0.4rem 0.55rem;
+  padding: 0.35rem 0.55rem;
   font-family: var(--font-be-vietnam), system-ui, sans-serif;
   font-size: 0.8rem;
   line-height: 1.2;
   color: hsl(var(--foreground));
+  cursor: pointer;
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
-.gt-widget .goog-te-combo:hover {
+.gt-trigger:hover {
   border-color: hsl(var(--primary) / 0.5);
   background-color: hsl(var(--muted));
 }
-.gt-widget .goog-te-combo:focus-visible {
+.gt-trigger:focus-visible {
   outline: 2px solid hsl(var(--primary) / 0.5);
   outline-offset: 1px;
+}
+.gt-name {
+  max-width: 8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gt-chev {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex-shrink: 0;
+  opacity: 0.6;
+  transition: transform 0.2s ease;
+}
+.gt-chev-open {
+  transform: rotate(180deg);
+}
+.gt-cc {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.6rem;
+  padding: 0.05rem 0.25rem;
+  border-radius: 4px;
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.gt-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.4rem);
+  z-index: 60;
+  width: 15rem;
+  max-width: calc(100vw - 1.5rem);
+  padding: 0.4rem;
+  border-radius: 12px;
+  border: 1px solid hsl(var(--border));
+  background-color: hsl(var(--card));
+  box-shadow: 0 12px 32px -8px hsl(var(--foreground) / 0.18);
+  animation: gt-pop 0.16s ease;
+}
+@keyframes gt-pop {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gt-panel { animation: none; }
+  .gt-chev { transition: none; }
+}
+.gt-search {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.3rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid hsl(var(--border));
+  background-color: hsl(var(--background));
+}
+.gt-search-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+.gt-search-input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  outline: none;
+  font-family: var(--font-be-vietnam), system-ui, sans-serif;
+  font-size: 0.82rem;
+  color: hsl(var(--foreground));
+}
+.gt-search-input::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+.gt-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 17rem;
+  overflow-y: auto;
+}
+.gt-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.45rem 0.5rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-be-vietnam), system-ui, sans-serif;
+  font-size: 0.84rem;
+  color: hsl(var(--foreground));
+  transition: background-color 0.12s ease;
+}
+.gt-item:hover {
+  background-color: hsl(var(--muted));
+}
+.gt-item-active {
+  background-color: hsl(var(--primary) / 0.12);
+  color: hsl(var(--primary));
+}
+.gt-item .gt-name {
+  flex: 1;
+  max-width: none;
+}
+.gt-check {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex-shrink: 0;
+  color: hsl(var(--primary));
+}
+.gt-empty {
+  padding: 0.6rem 0.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: hsl(var(--muted-foreground));
 }
