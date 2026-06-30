@@ -307,12 +307,12 @@ export function ActivityFeed() {
                 {it.href ? (
                   <Link
                     href={it.href}
-                    className="flex items-center gap-3 px-4 py-4 transition hover:bg-card/50 hover:text-gold"
+                    className="flex min-h-11 items-center gap-3 px-4 py-4 transition hover:bg-card/50 hover:text-gold active:scale-[0.98]"
                   >
                     {inner}
                   </Link>
                 ) : (
-                  <div className="flex items-center gap-3 px-4 py-4">{inner}</div>
+                  <div className="flex min-h-11 items-center gap-3 px-4 py-4">{inner}</div>
                 )}
               </li>
             );
