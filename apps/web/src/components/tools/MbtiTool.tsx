@@ -207,7 +207,7 @@ export function MbtiTool() {
             </Card>
           )}
 
-          <Button asChild variant="outline" className="w-full">
+          <Button asChild variant="outline" className="w-full transition active:scale-[0.98]">
             <Link href={`/learn/mbti/${result.type.toLowerCase()}`}>
               Tìm hiểu sâu về {result.type} →
             </Link>

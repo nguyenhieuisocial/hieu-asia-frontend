@@ -67,7 +67,7 @@ function ToolCard({ tool, eyebrow }: { tool: ExplorerTool; eyebrow?: string }) {
   return (
     <Link
       href={tool.href}
-      className="group flex h-full flex-col gap-3 rounded-2xl border border-border bg-card p-5 transition-all duration-200 hover:border-primary/40 hover:bg-primary/[0.05] hover:shadow-[0_1px_20px_-8px_hsl(var(--primary)/0.25)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:hover:shadow-[0_0_28px_-8px_rgba(184,146,61,0.35)]"
+      className="group flex h-full flex-col gap-3 rounded-card-editorial border border-border bg-card p-5 transition-all duration-200 active:scale-[0.98] hover:border-primary/40 hover:bg-primary/[0.05] hover:shadow-[0_1px_20px_-8px_hsl(var(--primary)/0.25)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:hover:shadow-[0_0_28px_-8px_rgba(184,146,61,0.35)]"
     >
       <span
         aria-hidden="true"
@@ -104,7 +104,7 @@ function FreeHeroCard({ item }: { item: FeaturedFree }) {
   return (
     <Link
       href={item.href}
-      className="group flex h-full flex-col gap-3 rounded-2xl border border-gold/30 bg-card p-5 transition-all duration-200 hover:border-gold/60 hover:bg-primary/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="group flex h-full flex-col gap-3 rounded-card-editorial border border-gold/30 bg-card p-5 transition-all duration-200 active:scale-[0.98] hover:border-gold/60 hover:bg-primary/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <span
         aria-hidden="true"
@@ -203,7 +203,7 @@ export function CongCuExplorer({
                 <a
                   key={c.id}
                   href={`#${c.id}`}
-                  className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 font-mono text-[11px] uppercase tracking-wide text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/[0.06] hover:text-primary"
+                  className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 font-mono text-[11px] uppercase tracking-wide text-muted-foreground transition-all active:scale-[0.98] hover:border-primary/40 hover:bg-primary/[0.06] hover:text-primary"
                 >
                   <span aria-hidden="true">{c.icon}</span>
                   {c.label}

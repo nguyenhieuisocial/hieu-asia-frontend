@@ -3,6 +3,7 @@ import { BatTuChecker } from '@/components/la-so-bat-tu/BatTuChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
+import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 
 const DESC =
@@ -130,8 +131,9 @@ export default function LaSoBatTuPage() {
           <BatTuChecker />
 
           {/* 4 trụ */}
-          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+          <RevealOnScroll>
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
               Bốn trụ nói lên điều gì
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -148,10 +150,12 @@ export default function LaSoBatTuPage() {
               ))}
             </div>
           </section>
+          </RevealOnScroll>
 
           {/* Thập Thần */}
-          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+          <RevealOnScroll>
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
               Thập Thần — 10 mối quan hệ với Nhật Chủ
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -167,10 +171,12 @@ export default function LaSoBatTuPage() {
               ))}
             </ul>
           </section>
+          </RevealOnScroll>
 
           {/* brand note */}
-          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Một lời nhắn</h2>
+          <RevealOnScroll>
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">Một lời nhắn</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               Tám chữ là một <strong>tấm gương để hiểu mình</strong>, không phải bản án số mệnh. Việc lập trụ
               là tính toán xác định; cân bằng ngũ hành chỉ gợi ý nơi bạn mạnh, nơi nên bù đắp. Bạn vẫn là người
@@ -178,10 +184,12 @@ export default function LaSoBatTuPage() {
               không bói mù.
             </p>
           </section>
+          </RevealOnScroll>
 
           {/* FAQ */}
-          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+          <RevealOnScroll>
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">
@@ -193,9 +201,11 @@ export default function LaSoBatTuPage() {
               ))}
             </dl>
           </section>
+          </RevealOnScroll>
 
-          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+          <RevealOnScroll>
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
               Nhận nhắc theo mùa
             </h2>
             <div className="mt-4">
@@ -207,6 +217,7 @@ export default function LaSoBatTuPage() {
               />
             </div>
           </section>
+          </RevealOnScroll>
         </section>
       </ToolPageShell>
     </>
