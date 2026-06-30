@@ -6,27 +6,19 @@ import Link from 'next/link';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { RealtimeIndicator } from '@/components/realtime-indicator';
 import { ChevronRight, LogOut } from 'lucide-react';
+import { NAV_GROUPS } from '@/lib/nav-config';
 
-const SEG_LABEL: Record<string, string> = {
-  '/': 'Tổng quan',
-  '/customers': 'Khách hàng',
-  '/users': 'Người dùng admin',
-  '/sessions': 'Phiên phân tích',
-  '/tasks': 'Task / Lỗi',
-  '/vendors': 'Vendors',
-  '/payments': 'Thanh toán',
-  '/affiliates': 'Affiliate',
-  '/analytics': 'Analytics',
-  '/posthog': 'PostHog',
-  '/llm-spend': 'Chi phí LLM',
-  '/rag': 'RAG',
-  '/prompts': 'Prompt Editor',
-  '/secrets': 'API Keys',
-  '/settings': 'Cài đặt',
-  '/connect': 'OAuth Connect',
-  '/system': 'Trạng thái hệ thống',
-  '/infra': 'Hạ tầng',
-};
+// Breadcrumb labels derive from the shared nav source of truth (NAV_GROUPS),
+// so every section stays in lockstep with the sidebar + ⌘K palette — no drift.
+const SEG_LABEL: Record<string, string> = Object.fromEntries(
+  NAV_GROUPS.flatMap((g) => g.items.map((it) => [it.href, it.label] as const)),
+);
+
+// Unknown dynamic segment (e.g. a UUID/id detail route) — truncate so a raw
+// 36-char id doesn't blow out the breadcrumb bar.
+function prettySegment(seg: string): string {
+  return seg.length > 12 ? seg.slice(0, 8) + '…' : seg;
+}
 
 function buildCrumbs(pathname: string | null): { href: string; label: string }[] {
   if (!pathname || pathname === '/') return [{ href: '/', label: 'Tổng quan' }];
@@ -35,7 +27,7 @@ function buildCrumbs(pathname: string | null): { href: string; label: string }[]
   let acc = '';
   for (const s of segs) {
     acc += '/' + s;
-    const label = SEG_LABEL[acc] ?? s;
+    const label = SEG_LABEL[acc] ?? prettySegment(s);
     crumbs.push({ href: acc, label });
   }
   return crumbs;
@@ -85,7 +77,10 @@ export function Topbar({ adminEmail }: { adminEmail: string }) {
       <div className="flex items-center gap-2">
         <RealtimeIndicator />
         <ThemeToggle />
-        <div className="hidden items-center gap-2 rounded-md border border-gold/15 bg-card/60 px-3 py-1.5 text-xs text-foreground/75 sm:flex">
+        <div
+          title={adminEmail}
+          className="flex items-center gap-2 rounded-md border border-gold/15 bg-card/60 px-2 py-1.5 text-xs text-foreground/75 sm:px-3"
+        >
           <span
             aria-hidden
             className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-gold/40 to-gold/10 font-heading text-[10px] text-gold"
