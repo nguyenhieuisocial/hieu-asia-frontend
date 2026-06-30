@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { TarotTool } from '@/components/tools/TarotTool';
+import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { faqPage } from '@/lib/seo/jsonld';
 
@@ -45,14 +46,14 @@ export default function TarotPage() {
       <div className="mx-auto mb-6 max-w-3xl">
         <Link
           href="/tarot/hom-nay"
-          className="flex items-center justify-between gap-3 rounded-lg border border-gold/25 bg-gold/5 px-4 py-3 text-sm transition-colors hover:bg-gold/10"
+          className="flex items-center justify-between gap-3 rounded-lg border border-gold/25 bg-gold/5 px-4 py-3 text-sm transition hover:bg-gold/10 hover:border-primary/40 active:scale-[0.98]"
         >
           <span className="text-foreground/85">🌅 <b className="text-foreground">Lá Tarot hôm nay</b> — mỗi ngày một lá để dừng lại ngẫm</span>
           <span className="shrink-0 text-gold">Xem →</span>
         </Link>
         <Link
           href="/tarot/y-nghia"
-          className="mt-3 flex items-center justify-between gap-3 rounded-lg border border-border bg-card/40 px-4 py-3 text-sm transition-colors hover:border-gold/40 hover:bg-gold/5"
+          className="mt-3 flex items-center justify-between gap-3 rounded-lg border border-border bg-card/40 px-4 py-3 text-sm transition hover:border-gold/40 hover:bg-gold/5 active:scale-[0.98]"
         >
           <span className="text-foreground/85">📖 <b className="text-foreground">Ý nghĩa 78 lá bài</b> — tra cứu nghĩa xuôi &amp; ngược từng lá</span>
           <span className="shrink-0 text-gold">Mở →</span>
@@ -61,7 +62,8 @@ export default function TarotPage() {
       <TarotTool />
 
       <div className="mx-auto mt-14 max-w-3xl space-y-8">
-        <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+        <RevealOnScroll>
+        <section className="rv-up rounded-card-editorial border border-border bg-card/40 p-6 backdrop-blur-sm">
           <h2 className="font-heading text-xl font-semibold text-foreground">
             Tarot là gì — và vì sao mình không dùng nó để &ldquo;bói&rdquo;?
           </h2>
@@ -89,8 +91,10 @@ export default function TarotPage() {
             </p>
           </div>
         </section>
+        </RevealOnScroll>
 
-        <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+        <RevealOnScroll>
+        <section className="rv-up rounded-card-editorial border border-border bg-card/40 p-6 backdrop-blur-sm">
           <h2 className="font-heading text-xl font-semibold text-foreground">Câu hỏi thường gặp</h2>
           <dl className="mt-4 space-y-4">
             {FAQS.map((f, i) => (
@@ -101,6 +105,7 @@ export default function TarotPage() {
             ))}
           </dl>
         </section>
+        </RevealOnScroll>
       </div>
 
       <JsonLd data={faqPage(FAQS)} />
