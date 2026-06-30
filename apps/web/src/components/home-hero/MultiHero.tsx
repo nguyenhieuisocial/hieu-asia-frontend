@@ -3,7 +3,6 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { LensConstellation } from './FourLens';
-import { OracleConstellation } from './OracleConstellation';
 import { LENSES } from '@/lib/catalog/lenses';
 
 /**
@@ -76,13 +75,6 @@ export function MultiHero(): React.JSX.Element {
     <section className="mh" aria-label="Giới thiệu hieu.asia" style={{ background: PAPER, color: INK, position: 'relative' }}>
       <style>{CSS}</style>
       <div className="mh-grain" aria-hidden="true" />
-      {/* Living celestial backdrop (graphRAG metaphor) — behind content, decorative. */}
-      <div
-        aria-hidden="true"
-        style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}
-      >
-        <OracleConstellation />
-      </div>
 
       <div className="mh-wrap">
         <div className="mh-copy">

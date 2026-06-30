@@ -27,6 +27,7 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 // of the retired /muc-lab demo into components/home-hero/. HeroV4 stays
 // available for other surfaces.
 import { MultiHero } from '@/components/home-hero/MultiHero';
+import { OracleBrain } from '@/components/home-hero/OracleBrain';
 import { InstantChartHero } from '@/components/home-hero/InstantChartHero';
 import { NotOraclesStrip } from '@/components/home-hero/NotOraclesStrip';
 import { Methodology } from '@/components/home-hero/Methodology';
@@ -444,6 +445,10 @@ export default function LandingPage() {
 
         {/* Câu chuyện thương hiệu "năm lăng kính → AI" — giữ bản sắc editorial */}
         <MultiHero />
+
+        {/* Bộ não Oracle — khu nền tối: đồ thị TOÀN BỘ công cụ hội tụ về "Bạn".
+            Mảng signature immersive; tương phản nền tối để chòm sao sáng rực. */}
+        <OracleBrain />
 
         {/* Brand "không phải oracle" — editorial decoder strip ngay dưới hero */}
         <RevealOnScroll><NotOraclesStrip /></RevealOnScroll>
