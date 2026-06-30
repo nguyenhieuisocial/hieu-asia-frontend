@@ -41,6 +41,7 @@ import { ScanRow } from '@/components/marketing/ScanRow';
 import { PullQuote } from '@/components/marketing/PullQuote';
 import { SocialProofQuiet } from '@/components/marketing/SocialProofQuiet';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
+import { ScrollProgress } from '@/components/fx/ScrollProgress';
 
 export const metadata: Metadata = {
   // Homepage title already contains the brand → bypass the layout
@@ -380,6 +381,7 @@ const HOME_FAQ: readonly FaqItem[] = [
 export default function LandingPage() {
   return (
     <>
+      <ScrollProgress />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSONLD) }}

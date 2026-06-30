@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { TOOLKIT_GROUPS } from '@/lib/catalog/tools';
+import { ShimmerText } from '@/components/fx/ShimmerText';
 
 /**
  * OracleBrain — the signature "night-sky" section: a living graph of the whole
@@ -235,7 +236,7 @@ export function OracleBrain(): React.JSX.Element {
           className="mx-auto mt-3 max-w-2xl text-editorial-h2 font-normal"
           style={{ color: '#F5F2EC' }}
         >
-          Hàng chục công cụ — <span style={{ color: '#E0AE62' }}>một bức tranh</span> về bạn.
+          Hàng chục công cụ — <ShimmerText>một bức tranh</ShimmerText> về bạn.
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-editorial-caption" style={{ color: '#A8A6A0' }}>
           Cổ học Á Đông, tâm lý hiện đại, chiêm tinh, trực giác — AI nối tất cả lại để bạn hiểu
