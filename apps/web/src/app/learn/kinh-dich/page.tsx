@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import {
   Accordion,
   AccordionContent,
@@ -7,8 +8,9 @@ import {
 } from '@hieu-asia/ui';
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
+import { QUE_PAGES } from '@/lib/que-kinh-dich';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import { article, breadcrumb, faqPage, itemList } from '@/lib/seo/jsonld';
 import {
   KinhDichFrame,
   KinhDichDepth,
@@ -74,6 +76,12 @@ const JSONLD = [
     { name: 'Kinh Dịch', url: '/learn/kinh-dich' },
   ]),
   faqPage(FAQS),
+  itemList(
+    QUE_PAGES.map((q) => ({
+      name: 'Quẻ ' + q.id + ' — ' + q.nameVi,
+      url: '/gieo-que/y-nghia/' + q.slug,
+    })),
+  ),
 ];
 
 export default function LearnKinhDichPage() {
@@ -370,6 +378,38 @@ export default function LearnKinhDichPage() {
                 </ul>
               </div>
             </div>
+          ),
+        },
+        {
+          id: 'thu-vien-que',
+          tocLabel: '64 quẻ',
+          heading: '64 quẻ Kinh Dịch',
+          children: (
+            <>
+              <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
+                Mỗi quẻ mở ra trang ý nghĩa đầy đủ: hình tượng, thế cục, gợi ý ứng xử và
+                câu hỏi tự soi — để tham khảo mà chiêm nghiệm, không phải lời phán định.
+              </p>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {QUE_PAGES.map((q) => (
+                  <Link
+                    key={q.slug}
+                    href={`/gieo-que/y-nghia/${q.slug}`}
+                    className="group rounded-lg border border-border bg-card/40 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-gold/40 hover:bg-card/60"
+                  >
+                    <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
+                      Quẻ {q.id}
+                    </p>
+                    <p className="mt-1.5 font-heading text-base font-semibold text-foreground group-hover:text-gold">
+                      {q.nameVi}
+                    </p>
+                    <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+                      {q.keyTags.join(' · ')}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </>
           ),
         },
         {
