@@ -44,6 +44,7 @@ import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { LiveBadge } from '@/components/admin/live-badge';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
 interface SepayTransaction {
   id: string;
@@ -359,6 +360,141 @@ function AdminSepayPageInner() {
     URL.revokeObjectURL(url);
   };
 
+  // Table A — Giao dịch (txns). Cells close over isMatch + openRefund.
+  const txColumns: AdminTableColumn<SepayTransaction>[] = [
+    {
+      id: 'time',
+      header: 'Thời gian',
+      className: 'whitespace-nowrap text-foreground/80',
+      cell: (t) => fmtTs(t.transaction_date),
+    },
+    {
+      id: 'order',
+      header: 'Đơn',
+      cell: (t) => {
+        const code = orderCode(t.transaction_content);
+        return code ? (
+          <span className="inline-flex items-center gap-1 rounded bg-gold/15 px-2 py-0.5 font-mono text-xs text-gold">
+            <Tag className="h-3 w-3" />{code}
+          </span>
+        ) : (
+          <span className="text-xs text-muted-foreground">—</span>
+        );
+      },
+    },
+    {
+      id: 'bank',
+      header: 'Ngân hàng',
+      cell: (t) => t.bank_brand_name ?? '—',
+    },
+    {
+      id: 'amount',
+      header: 'Tiền vào',
+      className: 'text-right',
+      cell: (t) => {
+        const amtIn = parseFloat(t.amount_in || '0');
+        return (
+          <span className={cn('font-mono tabular-nums', amtIn > 0 ? 'text-emerald-500' : 'text-muted-foreground')}>
+            {amtIn > 0 ? `+${fmtVnd(amtIn)}` : '—'}
+          </span>
+        );
+      },
+    },
+    {
+      id: 'reference',
+      header: 'Tham chiếu',
+      className: 'font-mono text-xs',
+      cell: (t) => t.reference_number ?? '—',
+    },
+    {
+      id: 'content',
+      header: 'Nội dung',
+      className: 'max-w-sm',
+      cell: (t) => {
+        const matched = isMatch(t);
+        return (
+          <span className="flex items-start gap-1.5">
+            {matched && <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold" />}
+            <span className="line-clamp-2 text-foreground/75">{t.transaction_content ?? '—'}</span>
+          </span>
+        );
+      },
+    },
+    {
+      id: 'refund',
+      header: 'Hoàn',
+      className: 'text-right',
+      cell: (t) => {
+        const amtIn = parseFloat(t.amount_in || '0');
+        return amtIn > 0 ? (
+          <Button size="sm" variant="ghost" onClick={() => openRefund(t)} title="Tạo yêu cầu hoàn tiền">
+            <Undo2 className="h-3.5 w-3.5" />
+          </Button>
+        ) : null;
+      },
+    },
+  ];
+
+  // Table B — Yêu cầu hoàn tiền (refunds). Cells close over actionMut.
+  const refundColumns: AdminTableColumn<RefundRecord>[] = [
+    {
+      id: 'time',
+      header: 'Thời gian',
+      className: 'whitespace-nowrap text-foreground/80',
+      cell: (r) => fmtTs(r.requested_at),
+    },
+    {
+      id: 'amount',
+      header: 'Số tiền',
+      className: 'text-right',
+      cell: (r) => <span className="font-mono tabular-nums text-red-400">−{fmtVnd(r.amount)}</span>,
+    },
+    {
+      id: 'reason',
+      header: 'Lý do',
+      className: 'max-w-xs',
+      cell: (r) => <span className="line-clamp-2 text-foreground/75">{r.reason}</span>,
+    },
+    {
+      id: 'status',
+      header: 'Trạng thái',
+      cell: (r) => {
+        const st = STATUS_STYLE[r.status];
+        return <span className={cn('rounded-full px-2.5 py-0.5 text-xs font-medium', st.cls)}>{st.label}</span>;
+      },
+    },
+    {
+      id: 'actions',
+      header: 'Thao tác',
+      className: 'text-right',
+      cell: (r) => {
+        const busy = actionMut.isPending;
+        return (
+          <div className="flex justify-end gap-1.5">
+            {r.status === 'requested' && (
+              <>
+                <Button size="sm" variant="outline" disabled={busy} onClick={() => actionMut.mutate({ id: r.id, action: 'accept' })}>
+                  <Check className="mr-1 h-3 w-3" />Duyệt
+                </Button>
+                <Button size="sm" variant="ghost" disabled={busy} onClick={() => { if (confirm('Từ chối yêu cầu hoàn tiền này?')) actionMut.mutate({ id: r.id, action: 'reject' }); }}>
+                  <XIcon className="h-3 w-3" />
+                </Button>
+              </>
+            )}
+            {r.status === 'approved' && (
+              <Button size="sm" disabled={busy} onClick={() => { if (confirm('Xác nhận ĐÃ chuyển khoản trả lại cho khách?')) actionMut.mutate({ id: r.id, action: 'complete' }); }}>
+                <CheckCircle2 className="mr-1 h-3 w-3" />Đã hoàn tiền
+              </Button>
+            )}
+            {(r.status === 'completed' || r.status === 'rejected') && (
+              <span className="text-xs text-muted-foreground">{r.completed_by ?? r.rejected_by ?? '—'}</span>
+            )}
+          </div>
+        );
+      },
+    },
+  ];
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -454,65 +590,18 @@ function AdminSepayPageInner() {
 
           {showError ? (
             <ErrorBlock message={errorMsg ?? 'Không tải được giao dịch SePay'} onRetry={() => refetch()} />
-          ) : isLoading ? (
-            <Card><CardContent className="p-8 text-center text-sm text-muted-foreground">Đang tải…</CardContent></Card>
-          ) : txns.length === 0 ? (
-            <EmptyState title="Chưa có giao dịch" description="Không có giao dịch khớp bộ lọc hiện tại." />
           ) : (
             <Card>
-              <CardContent className="overflow-x-auto p-0">
-                <table className="w-full text-sm">
-                  <thead className="sticky top-0 z-10 border-b border-border/60 bg-card text-left text-xs text-muted-foreground">
-                    <tr>
-                      <th className="px-4 py-3 font-medium">Thời gian</th>
-                      <th className="px-4 py-3 font-medium">Đơn</th>
-                      <th className="px-4 py-3 font-medium">Ngân hàng</th>
-                      <th className="px-4 py-3 text-right font-medium">Tiền vào</th>
-                      <th className="px-4 py-3 font-medium">Tham chiếu</th>
-                      <th className="px-4 py-3 font-medium">Nội dung</th>
-                      <th className="px-4 py-3 text-right font-medium">Hoàn</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {txns.map((t) => {
-                      const matched = isMatch(t);
-                      const amtIn = parseFloat(t.amount_in || '0');
-                      const code = orderCode(t.transaction_content);
-                      return (
-                        <tr key={t.id} className={cn('border-b border-border/40 transition-colors last:border-0 hover:bg-muted/[0.04]', matched && 'bg-gold/10')}>
-                          <td className="whitespace-nowrap px-4 py-3 text-foreground/80">{fmtTs(t.transaction_date)}</td>
-                          <td className="px-4 py-3">
-                            {code ? (
-                              <span className="inline-flex items-center gap-1 rounded bg-gold/15 px-2 py-0.5 font-mono text-xs text-gold">
-                                <Tag className="h-3 w-3" />{code}
-                              </span>
-                            ) : (
-                              <span className="text-xs text-muted-foreground">—</span>
-                            )}
-                          </td>
-                          <td className="px-4 py-3">{t.bank_brand_name ?? '—'}</td>
-                          <td className={cn('px-4 py-3 text-right font-mono tabular-nums', amtIn > 0 ? 'text-emerald-500' : 'text-muted-foreground')}>
-                            {amtIn > 0 ? `+${fmtVnd(amtIn)}` : '—'}
-                          </td>
-                          <td className="px-4 py-3 font-mono text-xs">{t.reference_number ?? '—'}</td>
-                          <td className="max-w-sm px-4 py-3">
-                            <span className="flex items-start gap-1.5">
-                              {matched && <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold" />}
-                              <span className="line-clamp-2 text-foreground/75">{t.transaction_content ?? '—'}</span>
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 text-right">
-                            {amtIn > 0 && (
-                              <Button size="sm" variant="ghost" onClick={() => openRefund(t)} title="Tạo yêu cầu hoàn tiền">
-                                <Undo2 className="h-3.5 w-3.5" />
-                              </Button>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+              <CardContent className="p-0">
+                <AdminTable
+                  rows={txns}
+                  columns={txColumns}
+                  getRowId={(t) => t.id}
+                  loading={isLoading}
+                  rowClassName={(t) => (isMatch(t) ? 'bg-gold/10' : undefined)}
+                  caption="Danh sách giao dịch ngân hàng"
+                  empty={<EmptyState title="Chưa có giao dịch" description="Không có giao dịch khớp bộ lọc hiện tại." />}
+                />
               </CardContent>
             </Card>
           )}
@@ -528,59 +617,13 @@ function AdminSepayPageInner() {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            {refunds.length === 0 ? (
-              <p className="px-6 py-10 text-center text-sm text-muted-foreground">Chưa có yêu cầu hoàn tiền nào. Vào tab "Giao dịch" → bấm ↩ để tạo.</p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead className="sticky top-0 z-10 border-b border-border/60 bg-card text-left text-xs text-muted-foreground">
-                    <tr>
-                      <th className="px-4 py-2.5 font-medium">Thời gian</th>
-                      <th className="px-4 py-2.5 text-right font-medium">Số tiền</th>
-                      <th className="px-4 py-2.5 font-medium">Lý do</th>
-                      <th className="px-4 py-2.5 font-medium">Trạng thái</th>
-                      <th className="px-4 py-2.5 text-right font-medium">Thao tác</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {refunds.map((r) => {
-                      const st = STATUS_STYLE[r.status];
-                      const busy = actionMut.isPending;
-                      return (
-                        <tr key={r.id} className="border-b border-border/40 transition-colors last:border-0 hover:bg-muted/[0.04]">
-                          <td className="whitespace-nowrap px-4 py-2.5 text-foreground/80">{fmtTs(r.requested_at)}</td>
-                          <td className="px-4 py-2.5 text-right font-mono tabular-nums text-red-400">−{fmtVnd(r.amount)}</td>
-                          <td className="max-w-xs px-4 py-2.5"><span className="line-clamp-2 text-foreground/75">{r.reason}</span></td>
-                          <td className="px-4 py-2.5"><span className={cn('rounded-full px-2.5 py-0.5 text-xs font-medium', st.cls)}>{st.label}</span></td>
-                          <td className="px-4 py-2.5">
-                            <div className="flex justify-end gap-1.5">
-                              {r.status === 'requested' && (
-                                <>
-                                  <Button size="sm" variant="outline" disabled={busy} onClick={() => actionMut.mutate({ id: r.id, action: 'accept' })}>
-                                    <Check className="mr-1 h-3 w-3" />Duyệt
-                                  </Button>
-                                  <Button size="sm" variant="ghost" disabled={busy} onClick={() => { if (confirm('Từ chối yêu cầu hoàn tiền này?')) actionMut.mutate({ id: r.id, action: 'reject' }); }}>
-                                    <XIcon className="h-3 w-3" />
-                                  </Button>
-                                </>
-                              )}
-                              {r.status === 'approved' && (
-                                <Button size="sm" disabled={busy} onClick={() => { if (confirm('Xác nhận ĐÃ chuyển khoản trả lại cho khách?')) actionMut.mutate({ id: r.id, action: 'complete' }); }}>
-                                  <CheckCircle2 className="mr-1 h-3 w-3" />Đã hoàn tiền
-                                </Button>
-                              )}
-                              {(r.status === 'completed' || r.status === 'rejected') && (
-                                <span className="text-xs text-muted-foreground">{r.completed_by ?? r.rejected_by ?? '—'}</span>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
+            <AdminTable
+              rows={refunds}
+              columns={refundColumns}
+              getRowId={(r) => r.id}
+              caption="Danh sách yêu cầu hoàn tiền"
+              empty={<span className="text-sm text-muted-foreground">Chưa có yêu cầu hoàn tiền nào. Vào tab "Giao dịch" → bấm ↩ để tạo.</span>}
+            />
           </CardContent>
         </Card>
       )}
@@ -675,6 +718,54 @@ function ReconcileView() {
   const matched = d.matched ?? [];
   const orphan = d.orphan ?? [];
   const other = d.other ?? [];
+
+  // Table C — Khớp đơn (matched). Row = { txn, code, order }.
+  type MatchedRow = { txn: ReconTxn; code: string; order: ReconOrder | null };
+  const matchedColumns: AdminTableColumn<MatchedRow>[] = [
+    {
+      id: 'time',
+      header: 'Thời gian',
+      className: 'whitespace-nowrap text-foreground/80',
+      cell: (r) => fmtTs(r.txn.transaction_date),
+    },
+    {
+      id: 'code',
+      header: 'Mã đơn',
+      cell: (r) => (
+        <span className="inline-flex items-center gap-1 rounded bg-gold/15 px-2 py-0.5 font-mono text-xs text-gold"><Tag className="h-3 w-3" />{r.code}</span>
+      ),
+    },
+    {
+      id: 'tier',
+      header: 'Gói',
+      cell: (r) => r.order?.tier ?? '—',
+    },
+    {
+      id: 'customer',
+      header: 'Khách',
+      className: 'font-mono text-xs',
+      cell: (r) => (r.order?.user_id ? <a href={`/customers/${r.order.user_id}`} className="text-gold hover:underline">{r.order.user_id.slice(0, 12)}…</a> : '—'),
+    },
+    {
+      id: 'amount',
+      header: 'Tiền vào',
+      className: 'text-right',
+      cell: (r) => <span className="font-mono tabular-nums text-emerald-500">+{new Intl.NumberFormat('vi-VN').format(parseFloat(r.txn.amount_in || '0'))}</span>,
+    },
+    {
+      id: 'status',
+      header: 'Trạng thái',
+      cell: (r) =>
+        r.order?.underpaid ? (
+          <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-xs text-red-500">Thiếu tiền</span>
+        ) : r.order?.status === 'paid' ? (
+          <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs text-emerald-500">Đã trả</span>
+        ) : (
+          <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs text-amber-500">{r.order?.status ?? '—'}</span>
+        ),
+    },
+  ];
+
   return (
     <div className="space-y-4">
       <div className="grid gap-3 sm:grid-cols-3">
@@ -690,46 +781,17 @@ function ReconcileView() {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          {matched.length === 0 ? (
-            <p className="px-6 py-8 text-center text-sm text-muted-foreground">
-              Chưa có giao dịch khớp đơn. Sẽ xuất hiện khi có thanh toán thật mang mã HIEUASIA.
-            </p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="border-b border-border/60 text-left text-xs text-muted-foreground">
-                  <tr>
-                    <th className="px-4 py-2.5 font-medium">Thời gian</th>
-                    <th className="px-4 py-2.5 font-medium">Mã đơn</th>
-                    <th className="px-4 py-2.5 font-medium">Gói</th>
-                    <th className="px-4 py-2.5 font-medium">Khách</th>
-                    <th className="px-4 py-2.5 text-right font-medium">Tiền vào</th>
-                    <th className="px-4 py-2.5 font-medium">Trạng thái</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {matched.map((r, i) => (
-                    <tr key={r.txn.id ?? i} className="border-b border-border/40 transition-colors last:border-0 hover:bg-muted/[0.04]">
-                      <td className="whitespace-nowrap px-4 py-2.5 text-foreground/80">{fmtTs(r.txn.transaction_date)}</td>
-                      <td className="px-4 py-2.5"><span className="inline-flex items-center gap-1 rounded bg-gold/15 px-2 py-0.5 font-mono text-xs text-gold"><Tag className="h-3 w-3" />{r.code}</span></td>
-                      <td className="px-4 py-2.5">{r.order?.tier ?? '—'}</td>
-                      <td className="px-4 py-2.5 font-mono text-xs">{r.order?.user_id ? <a href={`/customers/${r.order.user_id}`} className="text-gold hover:underline">{r.order.user_id.slice(0, 12)}…</a> : '—'}</td>
-                      <td className="px-4 py-2.5 text-right font-mono tabular-nums text-emerald-500">+{new Intl.NumberFormat('vi-VN').format(parseFloat(r.txn.amount_in || '0'))}</td>
-                      <td className="px-4 py-2.5">
-                        {r.order?.underpaid ? (
-                          <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-xs text-red-500">Thiếu tiền</span>
-                        ) : r.order?.status === 'paid' ? (
-                          <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs text-emerald-500">Đã trả</span>
-                        ) : (
-                          <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs text-amber-500">{r.order?.status ?? '—'}</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+          <AdminTable
+            rows={matched}
+            columns={matchedColumns}
+            getRowId={(r) => r.txn.id ?? r.code}
+            caption="Danh sách giao dịch khớp đơn"
+            empty={
+              <span className="text-sm text-muted-foreground">
+                Chưa có giao dịch khớp đơn. Sẽ xuất hiện khi có thanh toán thật mang mã HIEUASIA.
+              </span>
+            }
+          />
         </CardContent>
       </Card>
 
