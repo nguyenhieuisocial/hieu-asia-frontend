@@ -192,7 +192,7 @@ export function GoogleTranslate({ className = '' }: { className?: string }): Rea
         aria-label={`Chọn ngôn ngữ: ${currentLang.cc} ${currentLang.name}`}
         className="gt-trigger"
       >
-        <span className="gt-cc">{currentLang.cc}</span>
+        <span className="gt-cc" aria-hidden="true">{currentLang.cc}</span>
         <span className="gt-name">{currentLang.name}</span>
         <ChevronDown className={`gt-chev${open ? ' gt-chev-open' : ''}`} aria-hidden="true" />
       </button>
