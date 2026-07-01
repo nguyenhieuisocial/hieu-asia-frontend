@@ -37,7 +37,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // hiệu lastmod + quét lại sitemap liên tục (dễ trúng cửa sổ deploy → "không đọc được").
   // Mốc ổn định giúp crawl hiệu quả hơn. BUMP mốc này khi có cập nhật nội dung lớn.
   // (Trang động — community cases / cẩm nang pillars — vẫn dùng ngày publish THẬT bên dưới.)
-  const SITE_CONTENT_DATE = new Date('2026-06-16T00:00:00Z');
+  // 2026-07-02: bump sau đợt nâng cấp /learn lớn (15 chủ đề, hub 12 con giáp + sao hạn,
+  // active-learning) → báo Google nội dung mới, kích crawl lại.
+  const SITE_CONTENT_DATE = new Date('2026-07-02T00:00:00Z');
   const now = SITE_CONTENT_DATE;
 
   const palaceUrls: MetadataRoute.Sitemap = PALACES_CONTENT.map((p) => ({
