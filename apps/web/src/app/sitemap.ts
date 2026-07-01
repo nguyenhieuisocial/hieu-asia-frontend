@@ -31,6 +31,14 @@ const BASE_URL = 'https://hieu.asia';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
+// Sinh TĨNH tại BUILD (không regen theo-request) → Googlebot luôn nhận sitemap
+// tức thì, khỏi rủi ro cold-start/API-chậm làm GSC timeout "không thể tìm nạp".
+// URL 99% từ import tĩnh; chỉ pillars cam-nang là fetch (đã bọc try/catch,
+// non-fatal). `revalidate` = ISR 1h nền → bài cam-nang mới hiện trong ~1h (hoặc
+// ngay khi deploy — mọi cập nhật nội dung đều kích deploy → rebuild sitemap).
+export const dynamic = 'force-static';
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Mốc lastmod CỐ ĐỊNH cho trang tĩnh. KHÔNG dùng `new Date()`: sitemap là route động,
   // giờ-sinh-theo-request làm MỌI URL "đổi lastmod" mỗi lần regen → Google ngừng tin tín
