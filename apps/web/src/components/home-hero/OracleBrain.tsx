@@ -30,7 +30,14 @@ import type { BanMenhData } from '@/lib/ban-menh-data';
  */
 
 type Lens = { name: string; symbol: string; tagline: string };
-type Reveal = { dong: BanMenhData; conVat: string; tay: Lens | null; nearCusp: boolean };
+type Bazi = {
+  dayCan: string;
+  dayEl: string;
+  hourPillar: string | null;
+  strongest: string | null;
+  missing: string[];
+};
+type Reveal = { dong: BanMenhData; conVat: string; tay: Lens | null; nearCusp: boolean; bazi: Bazi };
 
 const ALL_TOOLS = TOOLKIT_GROUPS.flatMap((g) => g.tools.map((t) => t.n));
 
@@ -64,6 +71,7 @@ export function OracleBrain(): React.JSX.Element {
 
   // v5 — Soi thử đa lăng kính (demo sống)
   const [birthDate, setBirthDate] = React.useState('');
+  const [birthTime, setBirthTime] = React.useState('');
   const [reveal, setReveal] = React.useState<Reveal | null>(null);
   const [reading, setReading] = React.useState(false);
   const [err, setErr] = React.useState<string | null>(null);
@@ -110,10 +118,11 @@ export function OracleBrain(): React.JSX.Element {
     setErr(null);
     setReading(true);
     try {
-      const [banMenh, cung, conGiap] = await Promise.all([
+      const [banMenh, cung, conGiap, baziMod] = await Promise.all([
         import('@/lib/ban-menh-data'),
         import('@/lib/cung-hoang-dao-data'),
         import('@/lib/con-giap-animal'),
+        import('@/lib/bazi'),
       ]);
       const dong = banMenh.buildBanMenh(y);
       if (!dong) {
@@ -126,11 +135,26 @@ export function OracleBrain(): React.JSX.Element {
       const tay: Lens | null = found
         ? { name: found.name, symbol: found.symbol, tagline: found.tagline }
         : null;
+      const hm = birthTime.match(/^(\d{1,2}):(\d{2})$/);
+      const hour = hm ? Number(hm[1]) : 12;
+      const hasTime = hm != null && hour >= 0 && hour <= 23;
+      const chart = baziMod.calculateBazi({
+        birthSolarDate: birthDate,
+        birthHour: hasTime ? hour : 12,
+      });
+      const bazi: Bazi = {
+        dayCan: chart.dayMaster.can,
+        dayEl: chart.dayMaster.element,
+        hourPillar: hasTime ? `${chart.hour.can} ${chart.hour.chi}` : null,
+        strongest: hasTime ? chart.strongest : null,
+        missing: hasTime ? chart.missing : [],
+      };
       const result: Reveal = {
         dong,
         conVat: conGiap.conVatOf(dong.zodiac.ten),
         tay,
         nearCusp: sun.nearCusp,
+        bazi,
       };
       const show = (): void => {
         setReveal(result);
@@ -177,7 +201,7 @@ export function OracleBrain(): React.JSX.Element {
         {!reveal && (
           <form className="ob-soi" onSubmit={onSoi}>
             <label htmlFor="ob-dob" className="ob-soi-label">
-              Nhập ngày sinh — để bộ não soi bạn qua nhiều lăng kính
+              Nhập ngày sinh (giờ sinh không bắt buộc) — để bộ não soi bạn qua nhiều lăng kính
             </label>
             <div className="ob-soi-row">
               <input
@@ -194,6 +218,17 @@ export function OracleBrain(): React.JSX.Element {
                 aria-describedby={err ? 'ob-dob-err' : 'ob-dob-note'}
                 aria-invalid={err ? true : undefined}
               />
+              <input
+                id="ob-tob"
+                className="ob-soi-input ob-soi-time"
+                type="time"
+                value={birthTime}
+                onChange={(e) => {
+                  setBirthTime(e.target.value);
+                  if (err) setErr(null);
+                }}
+                aria-label="Giờ sinh (không bắt buộc)"
+              />
               <button type="submit" className="ob-soi-btn" disabled={reading}>
                 {reading ? 'Đang đọc…' : 'Soi thử'}
               </button>
@@ -204,7 +239,7 @@ export function OracleBrain(): React.JSX.Element {
               </span>
             ) : (
               <span id="ob-dob-note" className="ob-soi-note">
-                Cổ học Á Đông + chiêm tinh phương Tây · tính ngay trên máy, không lưu
+                Cổ học Á Đông · chiêm tinh phương Tây · Bát Tự · tính ngay trên máy, không lưu
               </span>
             )}
           </form>
@@ -370,9 +405,29 @@ export function OracleBrain(): React.JSX.Element {
                 </div>
               )}
 
+              <div className="ob-lens">
+                <span className="ob-lens-tag">Bát Tự — Tứ Trụ</span>
+                <p className="ob-lens-line">
+                  <strong>
+                    Nhật Chủ (chủ mệnh): {reveal.bazi.dayCan} — hành {reveal.bazi.dayEl}
+                  </strong>
+                </p>
+                <p className="ob-lens-sub">
+                  {reveal.bazi.hourPillar ? (
+                    <>
+                      Trụ giờ {reveal.bazi.hourPillar}
+                      {reveal.bazi.strongest && <> · ngũ hành vượng {reveal.bazi.strongest}</>}
+                      {reveal.bazi.missing.length > 0 && <> · thiếu {reveal.bazi.missing.join(', ')}</>}.
+                    </>
+                  ) : (
+                    'Thêm giờ sinh (không bắt buộc) để mở trụ giờ + cân bằng ngũ hành đầy đủ.'
+                  )}
+                </p>
+              </div>
+
               <p className="ob-reveal-body">
-                Đông gặp Tây — mới là hai lát cắt. Bức tranh đầy đủ (Tử Vi, Bát Tự, tâm lý…) cần
-                thêm giờ sinh.
+                Đông, Tây, Bát Tự — vài lát cắt về bạn. Bức tranh đầy đủ (lá số Tử Vi, tâm lý,
+                đại vận…) cần thêm giờ sinh chính xác.
               </p>
               <div className="ob-reveal-actions">
                 <a
