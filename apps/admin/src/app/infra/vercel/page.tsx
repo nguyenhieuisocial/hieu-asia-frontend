@@ -35,6 +35,7 @@ import {
   VercelDomainsCard,
   VercelEnvCard,
 } from '@/components/admin/infra/VercelDetailPanels';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
 const tool = getInfraTool('vercel')!;
 
@@ -114,6 +115,84 @@ function fmtAge(min: number | null | undefined): string | undefined {
   if (hours < 24) return `${Math.round(hours)} giờ trước`;
   return `${Math.round(hours / 24)} ngày trước`;
 }
+
+const DEPLOY_COLUMNS: AdminTableColumn<InfraVercelItem>[] = [
+  {
+    id: 'state',
+    header: 'Trạng thái',
+    cell: (d) => <InfraStatusPill label={d.state ?? '—'} tone={stateTone(d.state)} />,
+  },
+  {
+    id: 'target',
+    header: 'Môi trường',
+    className: 'text-muted-foreground',
+    cell: (d) => d.target ?? '—',
+  },
+  {
+    id: 'commit',
+    header: 'Commit',
+    className: 'max-w-[24rem] truncate',
+    cell: (d) =>
+      d.commit_message ?? <span className="text-muted-foreground">—</span>,
+  },
+  {
+    id: 'sha',
+    header: 'SHA',
+    className: 'whitespace-nowrap font-mono text-xs',
+    cell: (d) =>
+      d.commit_sha ? (
+        d.commit_url ? (
+          <a
+            href={d.commit_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="text-gold hover:underline"
+          >
+            {d.commit_sha.slice(0, 7)}
+          </a>
+        ) : (
+          <span className="text-muted-foreground">{d.commit_sha.slice(0, 7)}</span>
+        )
+      ) : (
+        <span className="text-muted-foreground">—</span>
+      ),
+  },
+  {
+    id: 'time',
+    header: 'Thời gian',
+    className: 'whitespace-nowrap text-muted-foreground',
+    cell: (d) => (
+      <>
+        {formatDateOrEmpty(d.created)}
+        {formatRelativeOrEmpty(d.created) && (
+          <span className="ml-1.5 text-xs opacity-70">
+            · {formatRelativeOrEmpty(d.created)}
+          </span>
+        )}
+      </>
+    ),
+  },
+  {
+    id: 'open',
+    header: 'Mở',
+    className: 'text-right',
+    cell: (d) =>
+      d.url ? (
+        <a
+          href={d.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="inline-flex items-center gap-1 text-gold hover:underline"
+        >
+          <ExternalLink className="h-3.5 w-3.5" />
+        </a>
+      ) : (
+        <span className="text-muted-foreground">—</span>
+      ),
+  },
+];
 
 export default function InfraVercelPage() {
   const query = useQuery({
@@ -219,88 +298,13 @@ export default function InfraVercelPage() {
                   </button>
                 ))}
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border text-left font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-                      <th className="px-4 py-2.5">Trạng thái</th>
-                      <th className="px-4 py-2.5">Môi trường</th>
-                      <th className="px-4 py-2.5">Commit</th>
-                      <th className="px-4 py-2.5">SHA</th>
-                      <th className="px-4 py-2.5">Thời gian</th>
-                      <th className="px-4 py-2.5 text-right">Mở</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filtered.map((d) => (
-                      <tr
-                        key={d.uid}
-                        onClick={() => setOpenUid(d.uid)}
-                        className="cursor-pointer border-b border-border/50 last:border-0 hover:bg-gold/5"
-                      >
-                        <td className="px-4 py-2.5">
-                          <InfraStatusPill
-                            label={d.state ?? '—'}
-                            tone={stateTone(d.state)}
-                          />
-                        </td>
-                        <td className="px-4 py-2.5 text-muted-foreground">
-                          {d.target ?? '—'}
-                        </td>
-                        <td className="max-w-[24rem] truncate px-4 py-2.5">
-                          {d.commit_message ?? (
-                            <span className="text-muted-foreground">—</span>
-                          )}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-2.5 font-mono text-xs">
-                          {d.commit_sha ? (
-                            d.commit_url ? (
-                              <a
-                                href={d.commit_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={(e) => e.stopPropagation()}
-                                className="text-gold hover:underline"
-                              >
-                                {d.commit_sha.slice(0, 7)}
-                              </a>
-                            ) : (
-                              <span className="text-muted-foreground">
-                                {d.commit_sha.slice(0, 7)}
-                              </span>
-                            )
-                          ) : (
-                            <span className="text-muted-foreground">—</span>
-                          )}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-2.5 text-muted-foreground">
-                          {formatDateOrEmpty(d.created)}
-                          {formatRelativeOrEmpty(d.created) && (
-                            <span className="ml-1.5 text-xs opacity-70">
-                              · {formatRelativeOrEmpty(d.created)}
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-4 py-2.5 text-right">
-                          {d.url ? (
-                            <a
-                              href={d.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                              className="inline-flex items-center gap-1 text-gold hover:underline"
-                            >
-                              <ExternalLink className="h-3.5 w-3.5" />
-                            </a>
-                          ) : (
-                            <span className="text-muted-foreground">—</span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <AdminTable
+                rows={filtered}
+                columns={DEPLOY_COLUMNS}
+                getRowId={(d) => d.uid}
+                onRowClick={(d) => setOpenUid(d.uid)}
+                caption="Danh sách deploy gần đây"
+              />
             </CardContent>
           </Card>
         </div>

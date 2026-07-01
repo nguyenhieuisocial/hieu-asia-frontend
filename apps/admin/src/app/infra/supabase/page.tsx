@@ -24,6 +24,7 @@ import { useAdminRole } from '@/hooks/useAdminRole';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel } from '@/components/admin/infra/infra-panel';
 import { SupabaseRowsDrawer } from '@/components/admin/infra/SupabaseRowsDrawer';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
 // Recharts lazy-loaded so it stays out of the initial bundle (ssr:false because
 // admin is auth-gated). Mirrors the Sentry/Vercel charts.
@@ -43,6 +44,33 @@ const tool = getInfraTool('supabase')!;
 function fmtNum(n: number): string {
   return n.toLocaleString('vi-VN');
 }
+
+const TABLE_COLUMNS: AdminTableColumn<InfraSupabaseItem>[] = [
+  {
+    id: 'schema',
+    header: 'Schema',
+    className: 'whitespace-nowrap font-mono text-muted-foreground',
+    cell: (t) => t.schema,
+  },
+  {
+    id: 'table',
+    header: 'Bảng',
+    className: 'font-medium text-foreground',
+    cell: (t) => t.table,
+  },
+  {
+    id: 'rows',
+    header: 'Ước tính',
+    className: 'text-right tabular-nums text-muted-foreground',
+    cell: (t) => fmtNum(t.rows),
+  },
+  {
+    id: 'rows_exact',
+    header: 'Chính xác',
+    className: 'text-right tabular-nums font-medium text-foreground',
+    cell: (t) => (t.rows_exact != null ? fmtNum(t.rows_exact) : '—'),
+  },
+];
 
 export default function InfraSupabasePage() {
   const query = useQuery({
@@ -100,51 +128,15 @@ export default function InfraSupabasePage() {
                 Bấm vào một bảng để xem dữ liệu (chỉ-đọc, cột nhạy cảm đã ẩn).
               </p>
             )}
-            <Card>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-border text-left font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-                        <th className="px-4 py-2.5">Schema</th>
-                        <th className="px-4 py-2.5">Bảng</th>
-                        <th className="px-4 py-2.5 text-right">Ước tính</th>
-                        <th className="px-4 py-2.5 text-right">Chính xác</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {items.map((t) => {
-                        const clickable = isOwner && !!t.table && t.schema === 'hieu_asia';
-                        return (
-                          <tr
-                            key={`${t.schema}.${t.table}`}
-                            onClick={clickable ? () => setOpenTable(t.table) : undefined}
-                            className={
-                              clickable
-                                ? 'cursor-pointer border-b border-border/50 last:border-0 hover:bg-gold/5'
-                                : 'border-b border-border/50 last:border-0 hover:bg-gold/5'
-                            }
-                          >
-                            <td className="whitespace-nowrap px-4 py-2.5 font-mono text-muted-foreground">
-                              {t.schema}
-                            </td>
-                            <td className="px-4 py-2.5 font-medium text-foreground">
-                              {t.table}
-                            </td>
-                            <td className="px-4 py-2.5 text-right tabular-nums text-muted-foreground">
-                              {fmtNum(t.rows)}
-                            </td>
-                            <td className="px-4 py-2.5 text-right tabular-nums font-medium text-foreground">
-                              {t.rows_exact != null ? fmtNum(t.rows_exact) : '—'}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
+            <AdminTable
+              rows={items}
+              columns={TABLE_COLUMNS}
+              getRowId={(t) => `${t.schema}.${t.table}`}
+              onRowClick={(t) => {
+                if (isOwner && t.table && t.schema === 'hieu_asia') setOpenTable(t.table);
+              }}
+              caption="Danh sách bảng theo số dòng"
+            />
 
             {/* Applied migrations (DB schema history) */}
             {(migrations.length > 0 || migrationsNote) && (

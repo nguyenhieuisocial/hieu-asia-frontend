@@ -15,6 +15,7 @@ import { getInfraAikido, type InfraAikidoItem, type InfraAikidoSummary } from '@
 import { getInfraTool } from '@/lib/infra-tools';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
 const tool = getInfraTool('aikido')!;
 
@@ -33,6 +34,32 @@ function sevTone(s: string): 'good' | 'bad' | 'warn' | 'neutral' {
   }
 }
 const fmtNum = (n: number) => n.toLocaleString('vi-VN');
+
+const ISSUE_COLUMNS: AdminTableColumn<InfraAikidoItem>[] = [
+  {
+    id: 'severity',
+    header: 'Mức',
+    cell: (i) => <InfraStatusPill label={i.severity} tone={sevTone(i.severity)} />,
+  },
+  {
+    id: 'title',
+    header: 'Lỗ hổng',
+    className: 'max-w-[30rem]',
+    cell: (i) => <span className="truncate font-medium text-foreground">{i.title}</span>,
+  },
+  {
+    id: 'type',
+    header: 'Loại',
+    className: 'font-mono text-xs text-muted-foreground',
+    cell: (i) => i.type,
+  },
+  {
+    id: 'score',
+    header: 'Điểm',
+    className: 'text-right tabular-nums text-muted-foreground',
+    cell: (i) => i.severity_score || '—',
+  },
+];
 
 export default function InfraAikidoPage() {
   const query = useQuery({
@@ -92,34 +119,12 @@ export default function InfraAikidoPage() {
 
             <Card>
               <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-border text-left font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-                        <th className="px-4 py-2.5">Mức</th>
-                        <th className="px-4 py-2.5">Lỗ hổng</th>
-                        <th className="px-4 py-2.5">Loại</th>
-                        <th className="px-4 py-2.5 text-right">Điểm</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filtered.map((i) => (
-                        <tr key={i.id} className="border-b border-border/50 last:border-0 hover:bg-gold/5">
-                          <td className="px-4 py-2.5">
-                            <InfraStatusPill label={i.severity} tone={sevTone(i.severity)} />
-                          </td>
-                          <td className="max-w-[30rem] px-4 py-2.5">
-                            <span className="truncate font-medium text-foreground">{i.title}</span>
-                          </td>
-                          <td className="px-4 py-2.5 font-mono text-xs text-muted-foreground">{i.type}</td>
-                          <td className="px-4 py-2.5 text-right tabular-nums text-muted-foreground">
-                            {i.severity_score || '—'}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                <AdminTable
+                  rows={filtered}
+                  columns={ISSUE_COLUMNS}
+                  getRowId={(i) => i.id}
+                  caption="Danh sách lỗ hổng bảo mật"
+                />
               </CardContent>
             </Card>
           </div>
