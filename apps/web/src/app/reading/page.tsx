@@ -9,7 +9,7 @@ import { Fab } from '@/components/product/Fab';
 export const metadata: Metadata = {
   title: 'Lá số của bạn',
   description:
-    'Bắt đầu lá số mới hoặc xem lại các báo cáo trước. Tử Vi · MBTI · Numerology · Palm.',
+    'Bắt đầu lá số mới hoặc xem lại các báo cáo trước. Tử Vi · MBTI · Thần Số Học · Palm.',
   alternates: { canonical: 'https://hieu.asia/reading' },
 };
 
@@ -34,7 +34,7 @@ const METHOD_CARDS = [
   },
   {
     method: 'palm',
-    name: 'Palm Reading',
+    name: 'Xem chỉ tay',
     blurb: 'Tải ảnh lòng bàn tay — phân tích đường tâm đạo / trí đạo.',
     minutes: '2–4 phút',
   },

@@ -66,7 +66,7 @@ const OPTIONAL_ITEMS: OptionalItem[] = [
   },
   {
     key: 'palm',
-    label: 'Upload ảnh bàn tay để Palm Reading (ảnh tự xoá sau 7 ngày)',
+    label: 'Upload ảnh bàn tay để Xem chỉ tay (ảnh tự xoá sau 7 ngày)',
     hint: 'Ảnh chỉ dùng để phân tích, không chia sẻ, mã hoá at-rest, xoá tự động sau 7 ngày.',
   },
   {

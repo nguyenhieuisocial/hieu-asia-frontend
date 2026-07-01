@@ -154,7 +154,7 @@ const PIPELINE = [
   {
     icon: Cpu,
     label: 'Engine deterministic',
-    desc: 'An sao 114 Bắc phái, lập 12 cung, đại vận, lưu niên.',
+    desc: 'An sao 121 Bắc phái, lập 12 cung, đại vận, lưu niên.',
   },
   {
     icon: FileCheck,

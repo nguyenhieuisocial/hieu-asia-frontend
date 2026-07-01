@@ -131,7 +131,7 @@ export default function ThanSoHocResultPage() {
 
   return (
     <ToolPageShell
-      eyebrow="Numerology · Pythagoras"
+      eyebrow="Thần Số Học · Pythagoras"
       icon={<span aria-hidden="true">🔢</span>}
       title={
         <>
