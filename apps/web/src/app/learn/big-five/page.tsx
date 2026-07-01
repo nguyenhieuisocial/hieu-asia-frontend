@@ -9,7 +9,7 @@ import {
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import { article, breadcrumb, faqPage, itemList } from '@/lib/seo/jsonld';
 import {
   BigFiveFrame,
   BigFiveDepth,
@@ -46,21 +46,6 @@ const FAQS = [
   },
 ];
 
-const JSONLD = [
-  article({
-    headline: 'Big Five (OCEAN): 5 chiều tính cách',
-    description:
-      'Big Five (OCEAN) là mô hình tính cách có cơ sở khoa học vững nhất, đo 5 chiều: Cởi mở, Tận tâm, Hướng ngoại, Dễ chịu, Nhạy cảm cảm xúc. Xu hướng, không phải nhãn cố định.',
-    url: '/learn/big-five',
-  }),
-  breadcrumb([
-    { name: 'Trang chủ', url: '/' },
-    { name: 'Học huyền học', url: '/learn' },
-    { name: 'Big Five', url: '/learn/big-five' },
-  ]),
-  faqPage(FAQS),
-];
-
 // 5 chiều OCEAN — mô tả 2 đầu của mỗi dải (không đầu nào "tốt/xấu" hơn).
 const DIMENSIONS: { vi: string; en: string; high: string; low: string }[] = [
   {
@@ -93,6 +78,27 @@ const DIMENSIONS: { vi: string; en: string; high: string; low: string }[] = [
     high: 'Nhạy cảm, dễ lo nghĩ, cảm xúc thay đổi nhanh.',
     low: 'Bình thản, ổn định, ít bị stress cuốn đi.',
   },
+];
+
+const JSONLD = [
+  article({
+    headline: 'Big Five (OCEAN): 5 chiều tính cách',
+    description:
+      'Big Five (OCEAN) là mô hình tính cách có cơ sở khoa học vững nhất, đo 5 chiều: Cởi mở, Tận tâm, Hướng ngoại, Dễ chịu, Nhạy cảm cảm xúc. Xu hướng, không phải nhãn cố định.',
+    url: '/learn/big-five',
+  }),
+  breadcrumb([
+    { name: 'Trang chủ', url: '/' },
+    { name: 'Học huyền học', url: '/learn' },
+    { name: 'Big Five', url: '/learn/big-five' },
+  ]),
+  faqPage(FAQS),
+  itemList(
+    DIMENSIONS.map((d) => ({
+      name: `${d.vi} (${d.en})`,
+      url: `/learn/big-five/${d.en.toLowerCase()}`,
+    })),
+  ),
 ];
 
 export default function LearnBigFivePage() {
