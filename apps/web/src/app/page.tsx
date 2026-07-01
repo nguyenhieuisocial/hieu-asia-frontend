@@ -503,7 +503,7 @@ export default function LandingPage() {
           title={
             <>
               Bạn đang phân vân{' '}
-              <u className="underline decoration-primary decoration-2 underline-offset-[6px]">
+              <u className="underline decoration-primary decoration-2 underline-offset-[0.2em]">
                 về điều gì
               </u>
               <span className="text-primary">.</span>

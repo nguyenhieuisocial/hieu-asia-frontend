@@ -1307,7 +1307,7 @@ export default function MethodologyPage() {
             </p>
             <h1 className="font-editorial-display text-hero-display font-bold tracking-tight text-foreground">
               Engine tính gì, AI luận gì,{' '}
-              <u className="underline decoration-primary decoration-2 underline-offset-[6px]">
+              <u className="underline decoration-primary decoration-2 underline-offset-[0.2em]">
                 <ShimmerText>bạn quyết định</ShimmerText>
               </u>{' '}
               gì
