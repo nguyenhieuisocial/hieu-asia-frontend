@@ -32,8 +32,9 @@ import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 export type AdminTableColumn<TRow> = {
   /** Unique column id. */
   id: string;
-  /** Header label (vi-VN). */
-  header: string;
+  /** Header label (vi-VN). Accepts a node so a column can host a select-all
+   *  checkbox or icon header (e.g. controlled bulk-select columns). */
+  header: React.ReactNode;
   /** Optional sort key for client-side sort. Falsy → not sortable. */
   sortKey?: keyof TRow;
   /** Cell renderer — receives full row. */
@@ -65,6 +66,9 @@ export type AdminTableProps<TRow> = {
   stickyHeader?: boolean;
   /** Extra container class. */
   className?: string;
+  /** Optional per-row class (e.g. highlight a row matched by a query param,
+   *  or dim a non-selectable row). Merged after the base row classes. */
+  rowClassName?: (row: TRow) => string | undefined;
 };
 
 type SortState<TRow> = {
@@ -96,6 +100,7 @@ export function AdminTable<TRow>({
   caption,
   stickyHeader = true,
   className,
+  rowClassName,
 }: AdminTableProps<TRow>) {
   const [sort, setSort] = React.useState<SortState<TRow>>(null);
   const [selected, setSelected] = React.useState<Set<string>>(new Set());
@@ -256,6 +261,7 @@ export function AdminTable<TRow>({
                       selectable={onBulkSelect != null}
                       isSelected={selected.has(id)}
                       onToggle={toggleOne}
+                      extraClassName={rowClassName?.(row)}
                     />
                   );
                 })}
@@ -278,6 +284,7 @@ const AdminTableRow = React.memo(function AdminTableRow<TRow>({
   selectable,
   isSelected,
   onToggle,
+  extraClassName,
 }: {
   row: TRow;
   rowId: string;
@@ -286,6 +293,7 @@ const AdminTableRow = React.memo(function AdminTableRow<TRow>({
   selectable: boolean;
   isSelected: boolean;
   onToggle: (id: string) => void;
+  extraClassName?: string;
 }) {
   const handleRowClick = React.useCallback(() => {
     onRowClick?.(row);
@@ -320,6 +328,7 @@ const AdminTableRow = React.memo(function AdminTableRow<TRow>({
         'transition-all duration-300 ease-editorial',
         onRowClick && 'cursor-pointer hover:bg-gold/[0.04] focus-visible:bg-gold/[0.06] focus-visible:outline-none',
         isSelected && 'bg-gold/[0.06]',
+        extraClassName,
       )}
     >
       {selectable && (
@@ -356,6 +365,7 @@ const AdminTableRow = React.memo(function AdminTableRow<TRow>({
   selectable: boolean;
   isSelected: boolean;
   onToggle: (id: string) => void;
+  extraClassName?: string;
 }) => React.ReactElement;
 
 function SkeletonRow<TRow>({
