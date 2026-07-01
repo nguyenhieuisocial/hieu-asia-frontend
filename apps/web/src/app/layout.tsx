@@ -173,7 +173,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'hieu.asia — Tử Vi & MBTI bằng AI',
-    description: 'Tử Vi · MBTI · Palm Reading bằng AI',
+    description: 'Tử Vi · MBTI · Xem Tướng bằng AI',
     images: [
       {
         url: '/og-image.jpg',

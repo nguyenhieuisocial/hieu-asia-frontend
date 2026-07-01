@@ -82,7 +82,7 @@ export default function ThanSoHocLandingPage() {
       dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
     />
     <ToolPageShell
-      eyebrow="Numerology · Pythagoras"
+      eyebrow="Thần Số Học · Pythagoras"
         relatedSlug="/than-so-hoc"
       icon={<span aria-hidden="true">🔢</span>}
       title={
