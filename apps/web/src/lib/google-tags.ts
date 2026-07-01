@@ -1,42 +1,57 @@
 /**
- * Google Tag Manager (GTM) + Google Analytics 4 (GA4) — CONSENT-GATED.
+ * Google Tag Manager (GTM) + Google Analytics 4 (GA4) with GOOGLE CONSENT MODE v2.
  *
- * Mirrors lib/marketing-pixels.ts: NO <script> is injected and neither gtm.js
- * nor gtag.js loads until the visitor grants ANALYTICS consent
- * (`localStorage["hieu.consent.analytics"] === "true"`). Firing before consent
- * would break the site's CMP (ConsentBanner) + VN Decree 13/2023 + EU GDPR,
- * which the whole app already honours.
+ * Strategy: load the tags for EVERY visitor, but start with all storage
+ * DENIED. Before consent, GA4 sends only anonymous, cookie-less pings (Google
+ * uses them for conversion modelling) — no cookies, no identifiers, so it stays
+ * within GDPR / VN Decree 13/2023. When the visitor grants analytics/marketing
+ * consent via the CMP, we flip the matching consent signals to `granted` and
+ * cookies + full measurement switch on. This captures the MAXIMUM data legally
+ * (modelled data from non-consenters + full data from consenters).
  *
  * Wiring:
- *   - lib/consent.ts setConsent() → loadGoogleTags() on grant, unloadGoogleTags() on revoke
- *   - <GoogleTags/> (components/analytics) mounts in the root layout and calls
- *     loadGoogleTags() on page load for RETURNING already-consented visitors.
+ *   - <GoogleTags/> (root layout) → initGoogleTags() once on mount.
+ *   - lib/consent.ts setConsent() → updateAnalyticsConsent() + updateMarketingConsent().
  *
- * The GTM `<noscript>` iframe is intentionally OMITTED: it cannot be
- * consent-gated (no JS to read consent), so shipping it would leak a tag load
- * for no-JS visitors — inconsistent with the load-on-consent model here.
+ * `gtag`/`dataLayer` are shared with lib/marketing-pixels.ts (Google Ads); this
+ * module never deletes those globals — it only pushes Consent Mode signals.
  *
- * IDs default to the production containers but can be overridden via env
- * (NEXT_PUBLIC_GTM_ID / NEXT_PUBLIC_GA4_ID). `gtag`/`dataLayer` are shared with
- * lib/marketing-pixels.ts (Google Ads); this module never deletes those
- * globals on unload — it uses GA4's official `ga-disable-<id>` opt-out flag
- * instead so revoking analytics can't break a still-consented Ads pixel.
+ * The GTM `<noscript>` iframe is intentionally OMITTED (no-JS clients can't run
+ * Consent Mode, so it would load a tag that ignores consent state).
+ *
+ * IDs default to the production containers; override via env
+ * (NEXT_PUBLIC_GTM_ID / NEXT_PUBLIC_GA4_ID).
  */
 
-const CONSENT_KEY = "hieu.consent.analytics";
+const ANALYTICS_KEY = "hieu.consent.analytics";
+const MARKETING_KEY = "hieu.consent.marketing";
 
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID ?? "GTM-TP7KDWN5";
 const GA4_ID = process.env.NEXT_PUBLIC_GA4_ID ?? "G-RR1YSW2J7T";
 
-let _loaded = false;
+let _initialized = false;
 
-export function hasAnalyticsConsent(): boolean {
+function readConsent(key: string): boolean {
   if (typeof window === "undefined") return false;
   try {
-    return window.localStorage.getItem(CONSENT_KEY) === "true";
+    return window.localStorage.getItem(key) === "true";
   } catch {
     return false;
   }
+}
+
+export function hasAnalyticsConsent(): boolean {
+  return readConsent(ANALYTICS_KEY);
+}
+
+function ensureGtag(): (...args: unknown[]) => void {
+  window.dataLayer = window.dataLayer || [];
+  if (!window.gtag) {
+    window.gtag = function gtag(...args: unknown[]) {
+      (window.dataLayer as unknown[]).push(args);
+    };
+  }
+  return window.gtag;
 }
 
 function injectScript(src: string, id: string): void {
@@ -48,65 +63,47 @@ function injectScript(src: string, id: string): void {
   document.head.appendChild(s);
 }
 
-function removeScriptById(id: string): void {
-  const el = document.getElementById(id);
-  if (el && el.parentNode) el.parentNode.removeChild(el);
-}
-
-function deleteCookieByPrefix(prefix: string): void {
-  try {
-    for (const raw of document.cookie.split(";")) {
-      const name = raw.split("=")[0]?.trim();
-      if (!name || !(name === prefix || name.startsWith(prefix))) continue;
-      const host = window.location.hostname;
-      const parts = host.split(".");
-      const apex = parts.length >= 2 ? "." + parts.slice(-2).join(".") : `.${host}`;
-      for (const dom of ["", `; Domain=${host}`, `; Domain=${apex}`]) {
-        document.cookie = `${name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT${dom}`;
-      }
-    }
-  } catch {
-    /* ignore */
-  }
-}
-
 /**
- * Load GTM + GA4. Must only be called once analytics consent is granted — the
- * belt-and-braces `hasAnalyticsConsent()` guard keeps it safe if a caller
- * forgets. Idempotent.
+ * Initialize Consent Mode v2 defaults, then load GTM + GA4. Idempotent — safe
+ * to call on every mount. Defaults reflect any consent already stored (returning
+ * visitors + rest-of-world legitimate-interest), otherwise DENIED.
  */
-export function loadGoogleTags(): void {
-  if (typeof window === "undefined") return;
-  if (_loaded) return;
-  if (!hasAnalyticsConsent()) return;
-  _loaded = true;
+export function initGoogleTags(): void {
+  if (typeof window === "undefined" || _initialized) return;
+  _initialized = true;
 
-  window.dataLayer = window.dataLayer || [];
-  // Reuse the shared gtag shim (marketing-pixels may already have defined it).
-  const gtag =
-    window.gtag ??
-    function gtag(...args: unknown[]) {
-      (window.dataLayer as unknown[]).push(args);
-    };
-  window.gtag = gtag;
+  const gtag = ensureGtag();
+  const analytics = readConsent(ANALYTICS_KEY);
+  const marketing = readConsent(MARKETING_KEY);
 
-  // GA4 (gtag.js).
-  if (GA4_ID) {
-    (window as unknown as Record<string, unknown>)[`ga-disable-${GA4_ID}`] = false;
-    injectScript(
-      `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA4_ID)}`,
-      "hieu-ga4",
-    );
-    gtag("js", new Date());
-    gtag("config", GA4_ID);
-  }
+  // Consent Mode v2 — defaults MUST be pushed before gtm.js/gtag.js run.
+  gtag("consent", "default", {
+    ad_storage: marketing ? "granted" : "denied",
+    ad_user_data: marketing ? "granted" : "denied",
+    ad_personalization: marketing ? "granted" : "denied",
+    analytics_storage: analytics ? "granted" : "denied",
+    functionality_storage: "granted",
+    security_storage: "granted",
+    wait_for_update: 500,
+  });
 
-  // GTM container.
+  gtag("js", new Date());
+  if (GA4_ID) gtag("config", GA4_ID);
+
   if (GTM_ID) {
     (window.dataLayer as unknown[]).push({
       "gtm.start": new Date().getTime(),
       event: "gtm.js",
     });
+  }
+
+  if (GA4_ID) {
+    injectScript(
+      `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA4_ID)}`,
+      "hieu-ga4",
+    );
+  }
+  if (GTM_ID) {
     injectScript(
       `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(GTM_ID)}`,
       "hieu-gtm",
@@ -114,20 +111,22 @@ export function loadGoogleTags(): void {
   }
 }
 
-/**
- * Tear down GTM + GA4 when the visitor revokes analytics consent. Removes the
- * injected scripts, sets GA4's runtime opt-out flag, and best-effort clears
- * GA cookies. Does NOT delete the shared `window.gtag`/`window.dataLayer`
- * (Google Ads in marketing-pixels.ts shares them).
- */
-export function unloadGoogleTags(): void {
+/** Flip GA4 analytics storage on/off when the visitor changes analytics consent. */
+export function updateAnalyticsConsent(granted: boolean): void {
   if (typeof window === "undefined") return;
-  _loaded = false;
-  removeScriptById("hieu-ga4");
-  removeScriptById("hieu-gtm");
-  if (GA4_ID) {
-    (window as unknown as Record<string, unknown>)[`ga-disable-${GA4_ID}`] = true;
-  }
-  deleteCookieByPrefix("_ga");
-  deleteCookieByPrefix("_gid");
+  initGoogleTags(); // guarantee 'default' was pushed before this 'update'
+  ensureGtag()("consent", "update", {
+    analytics_storage: granted ? "granted" : "denied",
+  });
+}
+
+/** Flip Ads storage/signals on/off when the visitor changes marketing consent. */
+export function updateMarketingConsent(granted: boolean): void {
+  if (typeof window === "undefined") return;
+  initGoogleTags();
+  ensureGtag()("consent", "update", {
+    ad_storage: granted ? "granted" : "denied",
+    ad_user_data: granted ? "granted" : "denied",
+    ad_personalization: granted ? "granted" : "denied",
+  });
 }

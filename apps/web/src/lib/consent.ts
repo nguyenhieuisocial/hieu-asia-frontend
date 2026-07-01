@@ -19,7 +19,7 @@
 
 import { optInPostHog, optOutPostHog } from "./posthog";
 import { loadMarketingPixels, unloadMarketingPixels } from "./marketing-pixels";
-import { loadGoogleTags, unloadGoogleTags } from "./google-tags";
+import { updateAnalyticsConsent, updateMarketingConsent } from "./google-tags";
 import { track } from "./analytics";
 
 export const CONSENT_SHOWN_KEY = "hieu.consent.shown";
@@ -135,23 +135,21 @@ export function setConsent(state: Partial<ConsentState>, source: ConsentSource):
   writeBoth(CONSENT_MARKETING_KEY, "hieu_consent_marketing", next.marketing);
   writeBoth(CONSENT_PERSONALIZATION_KEY, "hieu_consent_personalization", next.personalization);
 
-  // Analytics opt-in/out (PostHog + Google Analytics 4 / Tag Manager).
+  // Analytics opt-in/out (PostHog + Google Analytics 4 / Tag Manager via
+  // Consent Mode v2 — flips `analytics_storage` on/off).
   try {
-    if (next.analytics) {
-      optInPostHog();
-      loadGoogleTags();
-    } else {
-      optOutPostHog();
-      unloadGoogleTags();
-    }
+    if (next.analytics) optInPostHog();
+    else optOutPostHog();
+    updateAnalyticsConsent(next.analytics);
   } catch {
     /* ignore */
   }
 
-  // Marketing pixels load/unload.
+  // Marketing pixels load/unload + Consent Mode v2 ad-storage signals.
   try {
     if (next.marketing) loadMarketingPixels();
     else unloadMarketingPixels();
+    updateMarketingConsent(next.marketing);
   } catch {
     /* ignore */
   }

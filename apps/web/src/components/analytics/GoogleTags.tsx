@@ -1,19 +1,19 @@
 "use client";
 
 import * as React from "react";
-import { hasAnalyticsConsent, loadGoogleTags } from "@/lib/google-tags";
+import { initGoogleTags } from "@/lib/google-tags";
 
 /**
- * Mounts GTM + GA4 on page load for RETURNING visitors who already granted
- * analytics consent. First-time grant (and revocation) is handled synchronously
- * in lib/consent.ts setConsent(); this covers the case where consent was stored
- * in a previous session, so the tags come back on every subsequent load.
+ * Boots GTM + GA4 with Google Consent Mode v2 on every page load. The tags load
+ * for all visitors but start with storage DENIED (see lib/google-tags); cookies
+ * only switch on once the visitor grants consent via the CMP, which calls the
+ * consent-update helpers from lib/consent.ts setConsent().
  *
- * Renders nothing. No tag loads unless `hieu.consent.analytics === "true"`.
+ * Renders nothing.
  */
 export function GoogleTags(): null {
   React.useEffect(() => {
-    if (hasAnalyticsConsent()) loadGoogleTags();
+    initGoogleTags();
   }, []);
   return null;
 }
