@@ -518,23 +518,25 @@ export default function AnalyticsPage() {
               />
             }
             caption="Doanh thu theo gói"
+            footer={
+              tierBreakdown.rows.length > 0 ? (
+                <tr className="font-medium">
+                  <td className="px-3 py-2.5 text-foreground">Tổng</td>
+                  <td className="px-3 py-2.5 text-right font-mono text-foreground tabular-nums">
+                    {tierBreakdown.rows
+                      .reduce((s, r) => s + r.count, 0)
+                      .toLocaleString('vi-VN')}
+                  </td>
+                  <td className="px-3 py-2.5 text-right font-mono text-foreground tabular-nums">
+                    {fmtCurrency(tierBreakdown.total)}
+                  </td>
+                  <td className="px-3 py-2.5 text-right font-mono text-foreground/70 tabular-nums">
+                    100%
+                  </td>
+                </tr>
+              ) : undefined
+            }
           />
-          {tierBreakdown.rows.length > 0 && (
-            <div className="grid grid-cols-4 border-t border-border/60 px-6 py-2.5 font-medium">
-              <span className="text-foreground">Tổng</span>
-              <span className="text-right font-mono text-foreground tabular-nums">
-                {tierBreakdown.rows
-                  .reduce((s, r) => s + r.count, 0)
-                  .toLocaleString('vi-VN')}
-              </span>
-              <span className="text-right font-mono text-foreground tabular-nums">
-                {fmtCurrency(tierBreakdown.total)}
-              </span>
-              <span className="text-right font-mono text-foreground/70 tabular-nums">
-                100%
-              </span>
-            </div>
-          )}
         </CardContent>
       </Card>
 

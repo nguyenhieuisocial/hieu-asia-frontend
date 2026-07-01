@@ -69,6 +69,12 @@ export type AdminTableProps<TRow> = {
   /** Optional per-row class (e.g. highlight a row matched by a query param,
    *  or dim a non-selectable row). Merged after the base row classes. */
   rowClassName?: (row: TRow) => string | undefined;
+  /** Optional footer, rendered as a `<tfoot>` INSIDE the same `<table>` so its
+   *  cells share the auto-width columns (e.g. a totals row that must line up
+   *  under the data columns). Pass a `<tr>` of `<td>` cells matching the column
+   *  count + `className`s; when the table has a bulk-select column, prepend an
+   *  empty leading `<td>`. */
+  footer?: React.ReactNode;
 };
 
 type SortState<TRow> = {
@@ -101,6 +107,7 @@ export function AdminTable<TRow>({
   stickyHeader = true,
   className,
   rowClassName,
+  footer,
 }: AdminTableProps<TRow>) {
   const [sort, setSort] = React.useState<SortState<TRow>>(null);
   const [selected, setSelected] = React.useState<Set<string>>(new Set());
@@ -266,6 +273,7 @@ export function AdminTable<TRow>({
                   );
                 })}
         </tbody>
+        {footer && <tfoot className="bg-card/40">{footer}</tfoot>}
       </table>
     </div>
   );
