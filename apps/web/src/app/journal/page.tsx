@@ -13,6 +13,7 @@ import {
 import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import {
   readJournalEntries,
   type JournalEntry,
@@ -306,6 +307,17 @@ export default function JournalHubPage() {
             để nhìn các lựa chọn rõ hơn trước khi ghi vào nhật ký.
           </p>
         </section>
+
+        <div className="mt-12">
+          <RelatedTools
+            links={[
+              { href: '/weekly-review', label: 'Đánh giá tuần' },
+              { href: '/decisions', label: 'Decision Brief' },
+              { href: '/decision-simulator', label: 'Mô phỏng quyết định' },
+              { href: '/monthly-planning', label: 'Kế hoạch tháng' },
+            ]}
+          />
+        </div>
       </section>
 
       <SiteFooter />

@@ -12,6 +12,7 @@ import { ArrowRight, BookOpen } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { listCaseStudies, ILLUSTRATIVE_LABEL } from '@/lib/case-studies';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
@@ -120,6 +121,37 @@ export default function CaseStudiesIndexPage() {
                 kịch bản tổng hợp do chúng tôi dựng để minh hoạ quy trình ra
                 quyết định — không phản ánh một người dùng cụ thể nào.
               </p>
+            </div>
+
+            <div className="mt-10 flex flex-col gap-5 rounded-card-editorial border border-gold/25 bg-gold/5 p-6 text-center sm:p-8">
+              <div>
+                <h2 className="font-heading text-xl font-semibold text-foreground sm:text-2xl">
+                  Muốn thử quy trình này với lá số của bạn?
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  Trả lời vài câu hỏi ngắn để lập lá số và nhận một góc nhìn cho
+                  quyết định bạn đang cân nhắc.
+                </p>
+              </div>
+              <div>
+                <Link
+                  href="/onboarding"
+                  className="inline-flex items-center justify-center gap-1 rounded-card-editorial bg-gold px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-gold-soft"
+                >
+                  Bắt đầu lập lá số
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
+
+            <div className="mt-8 text-center">
+              <RelatedTools
+                links={[
+                  { href: '/community', label: 'Cộng đồng' },
+                  { href: '/hoi-dap', label: 'Hỏi đáp' },
+                  { href: '/tu-vi', label: 'Lập lá số Tử Vi' },
+                ]}
+              />
             </div>
           </div>
         </section>

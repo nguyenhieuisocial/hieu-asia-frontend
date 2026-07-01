@@ -20,6 +20,7 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 
 export const dynamic = 'force-dynamic';
 
@@ -350,6 +351,17 @@ export default function BanDoPage() {
               </div>
             </CardContent>
           </Card>
+
+          <div className="mt-8 border-t border-border pt-6">
+            <RelatedTools
+              links={[
+                { href: '/tu-vi', label: 'Xem Tử Vi' },
+                { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay' },
+                { href: '/tu-vi-2026', label: 'Tử Vi 2026' },
+                { href: '/sao-han', label: 'Xem sao hạn' },
+              ]}
+            />
+          </div>
         </section>
       </main>
       <SiteFooter />

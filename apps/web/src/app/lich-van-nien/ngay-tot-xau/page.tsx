@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ActivityChecker } from '@/components/lich-van-nien/ActivityChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
@@ -51,6 +52,15 @@ export default function NgayTotXauPage() {
             <li>≥ 60 điểm: phù hợp; &lt; 60: gợi ý ngày khác.</li>
           </ul>
         </section>
+
+        <RelatedTools
+          links={[
+            { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
+            { href: '/xem-ngay', label: 'Xem ngày tốt' },
+            { href: '/gio-hoang-dao', label: 'Giờ hoàng đạo' },
+            { href: '/ngay-kieng-ky', label: 'Ngày kiêng kỵ' },
+          ]}
+        />
       </section>
     </ToolPageShell>
   );

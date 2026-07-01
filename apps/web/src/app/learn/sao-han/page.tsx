@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from '@hieu-asia/ui';
 import { LearnArticle } from '@/components/learn/LearnArticle';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
@@ -336,6 +337,14 @@ export default function LearnSaoHanPage() {
                   Xem sao hạn miễn phí →
                 </Link>
               </p>
+              <div className="mt-6">
+                <RelatedTools
+                  links={[
+                    { href: '/sao-han', label: 'Xem sao hạn của bạn' },
+                    { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
+                  ]}
+                />
+              </div>
             </>
           ),
         },

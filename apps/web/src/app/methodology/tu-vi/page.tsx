@@ -19,6 +19,7 @@ import {
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { FloatingTOC } from '@/components/ui/FloatingTOC';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
@@ -1100,6 +1101,17 @@ export default function MethodologyTuViPage() {
                 /onboarding/topic <ChevronRight className="h-4 w-4" aria-hidden />
               </span>
             </Link>
+          </div>
+
+          <div className="mt-8">
+            <RelatedTools
+              links={[
+                { href: '/tu-vi', label: 'Lập lá số Tử Vi' },
+                { href: '/learn/tu-vi', label: 'Tìm hiểu Tử Vi' },
+                { href: '/methodology/bat-tu', label: 'Phương pháp Bát Tự' },
+                { href: '/methodology', label: 'Tổng quan phương pháp' },
+              ]}
+            />
           </div>
           </section>
 

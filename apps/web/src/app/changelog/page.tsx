@@ -39,7 +39,7 @@ interface ReleaseEntry {
 const RELEASES: readonly ReleaseEntry[] = [
   {
     version: 'V3.1',
-    date: 'Tháng 6, 2026',
+    date: 'Tháng 7, 2026',
     title: 'Bộ ra quyết định & công cụ theo dịp',
     tag: 'feature',
     bullets: [
@@ -82,7 +82,7 @@ const RELEASES: readonly ReleaseEntry[] = [
   },
   {
     version: 'V2.0',
-    date: 'Tháng 2, 2026',
+    date: 'Tháng 3, 2026',
     title: 'Đăng nhập không mật khẩu & giới thiệu bạn bè',
     tag: 'major',
     bullets: [
@@ -92,7 +92,7 @@ const RELEASES: readonly ReleaseEntry[] = [
   },
   {
     version: 'V1.5',
-    date: 'Tháng 1, 2026',
+    date: 'Tháng 2, 2026',
     title: 'Khu vực Học',
     tag: 'feature',
     bullets: [
