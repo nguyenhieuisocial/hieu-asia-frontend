@@ -20,6 +20,7 @@ import {
   projectTuViChartToStructured,
   type StructuredChartEnvelope,
 } from '@/lib/tuvi-client';
+import { describeApiError } from '@/lib/api-error';
 
 interface DecisionOption {
   label: string;
@@ -269,8 +270,7 @@ function NewDecisionInner() {
         }
         router.push(`/decisions/${id}`);
       } catch (err) {
-        const msg = err instanceof Error ? err.message : 'unknown';
-        setError(msg);
+        setError(describeApiError(err));
         setSubmitting(false);
       }
     },

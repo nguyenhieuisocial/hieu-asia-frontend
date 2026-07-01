@@ -20,6 +20,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { castTuViChart, type TuViChart, type TuViPalace } from '@/lib/tuvi-client';
+import { describeApiError } from '@/lib/api-error';
 
 type Gender = 'male' | 'female';
 
@@ -124,7 +125,7 @@ export function DaiVanHienTaiForm() {
       const palace = findCurrentDecadalPalace(chart, ageNow);
       setResult({ chart, palace, ageNow });
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Lỗi không xác định.');
+      setError(describeApiError(e));
     } finally {
       setLoading(false);
     }

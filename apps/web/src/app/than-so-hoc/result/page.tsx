@@ -26,6 +26,7 @@ import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/D
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
 import { KARMIC_DEBT, KARMIC_LESSONS } from '@/lib/than-so-hoc-karmic';
+import { describeApiError } from '@/lib/api-error';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -113,8 +114,7 @@ export default function ThanSoHocResultPage() {
         track('tool_used', { tool: 'than-so-hoc', result: 'ok' });
       }
     } catch (e) {
-      const msg = (e as Error).message;
-      setError(msg);
+      setError(describeApiError(e));
       track('tool_used', { tool: 'than-so-hoc', result: 'error' });
     } finally {
       setLoading(false);

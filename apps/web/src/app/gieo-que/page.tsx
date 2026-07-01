@@ -22,6 +22,7 @@ import { parseTrigrams, getHaoDongMota, readingFocus } from '@/lib/hao-dong';
 import { getThoanTu } from '@/lib/que-thoan-tu';
 import { getHaoTu, getHaoTuExtra, HAO_TU_SOURCE } from '@/lib/que-hao-tu';
 import { QUE_PAGES } from '@/lib/que-kinh-dich';
+import { describeApiError } from '@/lib/api-error';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -105,7 +106,7 @@ export default function GieoQuePage() {
       setCastId((n) => n + 1);
       track('tool_used', { tool: 'gieo-que', result: 'ok' });
     } catch (e) {
-      setError((e as Error).message);
+      setError(describeApiError(e));
       track('tool_used', { tool: 'gieo-que', result: 'error' });
     } finally {
       setLoading(false);
