@@ -57,6 +57,19 @@ const HUBS = TOOLKIT_GROUPS.map((g, i, arr) => {
   return { label: g.label, count: g.tools.length, tools: g.tools.map((t) => t.n), left, top, sats };
 });
 
+// Đợt 2 "chạm nhóm ra ý nghĩa": mô tả ngắn mỗi lăng kính (khớp NHÃN hub). Chỉ Cổ
+// học + Chiêm tinh có kết quả tính được ở client — còn lại chỉ giới thiệu + dẫn
+// tới công cụ (KHÔNG bịa kết quả, giữ đúng tinh thần teaser).
+const LENS_ABOUT: Record<string, string> = {
+  'Cổ học Á Đông': 'Từ ngày sinh: can chi, con giáp, mệnh nạp âm, màu & hướng nghề hợp.',
+  'Tâm lý hiện đại': 'Tính cách qua MBTI, Big Five, DISC, Enneagram — cần làm bài trắc nghiệm ngắn.',
+  'Chiêm tinh phương Tây': 'Cung hoàng đạo tính từ vị trí Mặt Trời lúc bạn sinh.',
+  'Trực giác': 'Tarot — lăng kính trực giác; bạn rút bài để soi một câu hỏi.',
+  'Khám phá & so sánh': 'So sánh nhiều lăng kính & hợp tuổi — ghép các mảnh thành bức tranh chung.',
+};
+const DONG_IDX = HUBS.findIndex((h) => h.label === 'Cổ học Á Đông');
+const TAY_IDX = HUBS.findIndex((h) => h.label === 'Chiêm tinh phương Tây');
+
 // Deterministic starfield (SSR-stable).
 const STARS = Array.from({ length: 24 }, (_, i) => ({
   left: (i * 53 + 7) % 100,
@@ -180,6 +193,46 @@ export function OracleBrain(): React.JSX.Element {
   const hopColors = reveal
     ? Array.from(new Set([...reveal.dong.banMenhColors, ...reveal.dong.hopColors])).slice(0, 4)
     : [];
+
+  // Đợt 2 — 1 nguồn cho lăng kính Cổ học & Chiêm tinh, dùng chung ở bảng tổng
+  // ("Lát cắt về bạn") lẫn bảng chạm-từng-nhóm sao. Trả null khi chưa soi.
+  const renderDongLens = (): React.JSX.Element | null =>
+    reveal ? (
+      <div className="ob-lens">
+        <span className="ob-lens-tag">Cổ học Á Đông</span>
+        <p className="ob-lens-line">
+          <strong>
+            Tuổi {reveal.dong.canChi} · con {reveal.conVat}
+          </strong>{' '}
+          — mệnh {reveal.dong.elementName} ({reveal.dong.napAmName}).
+        </p>
+        <p className="ob-lens-sub">
+          {hopColors.length > 0 && <>Hợp màu {hopColors.join(', ')}. </>}
+          {reveal.dong.avoidColors.length > 0 && (
+            <>Nên tiết chế {reveal.dong.avoidColors.join(', ')}. </>
+          )}
+          {reveal.dong.careers.length > 0 && (
+            <>Hợp hướng nghề {reveal.dong.careers.slice(0, 2).join(', ')}.</>
+          )}
+        </p>
+      </div>
+    ) : null;
+
+  const renderTayLens = (): React.JSX.Element | null =>
+    reveal?.tay ? (
+      <div className="ob-lens">
+        <span className="ob-lens-tag">Chiêm tinh phương Tây</span>
+        <p className="ob-lens-line">
+          <strong>
+            Cung {reveal.tay.name} {reveal.tay.symbol}
+          </strong>
+        </p>
+        <p className="ob-lens-sub">
+          {reveal.tay.tagline}
+          {reveal.nearCusp && ' (sinh sát ranh giới cung — cần giờ sinh để chắc chắn).'}
+        </p>
+      </div>
+    ) : null;
 
   return (
     <section
@@ -334,6 +387,8 @@ export function OracleBrain(): React.JSX.Element {
               key={h.label}
               type="button"
               aria-pressed={selected === i}
+              aria-expanded={selected === i}
+              aria-controls={selected === i ? 'ob-node-panel' : undefined}
               className={`ob-hub${isOn(i) ? ' ob-hub-on' : ''}${selected === i ? ' ob-hub-sel' : ''}`}
               style={{ left: `${h.left}%`, top: `${h.top}%` }}
               onMouseEnter={() => setHover(i)}
@@ -348,6 +403,8 @@ export function OracleBrain(): React.JSX.Element {
             </button>
           ))}
         </div>
+
+        <p className="ob-tap-hint">Chạm mỗi nhóm sao để xem riêng lăng kính đó.</p>
 
         {/* v5 — Lát cắt THẬT qua nhiều lăng kính (tính trên máy; chưa lưu gì). */}
         {reveal && (
@@ -371,39 +428,9 @@ export function OracleBrain(): React.JSX.Element {
                 </button>
               </div>
 
-              <div className="ob-lens">
-                <span className="ob-lens-tag">Cổ học Á Đông</span>
-                <p className="ob-lens-line">
-                  <strong>
-                    Tuổi {reveal.dong.canChi} · con {reveal.conVat}
-                  </strong>{' '}
-                  — mệnh {reveal.dong.elementName} ({reveal.dong.napAmName}).
-                </p>
-                <p className="ob-lens-sub">
-                  {hopColors.length > 0 && <>Hợp màu {hopColors.join(', ')}. </>}
-                  {reveal.dong.avoidColors.length > 0 && (
-                    <>Nên tiết chế {reveal.dong.avoidColors.join(', ')}. </>
-                  )}
-                  {reveal.dong.careers.length > 0 && (
-                    <>Hợp hướng nghề {reveal.dong.careers.slice(0, 2).join(', ')}.</>
-                  )}
-                </p>
-              </div>
+              {renderDongLens()}
 
-              {reveal.tay && (
-                <div className="ob-lens">
-                  <span className="ob-lens-tag">Chiêm tinh phương Tây</span>
-                  <p className="ob-lens-line">
-                    <strong>
-                      Cung {reveal.tay.name} {reveal.tay.symbol}
-                    </strong>
-                  </p>
-                  <p className="ob-lens-sub">
-                    {reveal.tay.tagline}
-                    {reveal.nearCusp && ' (sinh sát ranh giới cung — cần giờ sinh để chắc chắn).'}
-                  </p>
-                </div>
-              )}
+              {renderTayLens()}
 
               <div className="ob-lens">
                 <span className="ob-lens-tag">Bát Tự — Tứ Trụ</span>
@@ -447,8 +474,14 @@ export function OracleBrain(): React.JSX.Element {
 
         {/* Bảng chi tiết nhóm công cụ — hiện khi chạm/chọn một nhóm. */}
         {sel && (
-          <div className="ob-detail-wrap">
-            <div className="ob-detail" role="region" aria-label={`Công cụ nhóm ${sel.label}`}>
+          <div className="ob-detail-wrap" key={selected}>
+            <div
+              className="ob-detail"
+              id="ob-node-panel"
+              role="region"
+              aria-live="polite"
+              aria-label={`Lăng kính ${sel.label}`}
+            >
               <div className="ob-detail-head">
                 <span className="ob-detail-title">{sel.label}</span>
                 <span className="ob-detail-count">{sel.count} công cụ</span>
@@ -461,6 +494,16 @@ export function OracleBrain(): React.JSX.Element {
                   ×
                 </button>
               </div>
+              {selected === DONG_IDX && reveal ? (
+                renderDongLens()
+              ) : selected === TAY_IDX && reveal ? (
+                renderTayLens()
+              ) : (
+                <div className="ob-lens ob-lens-about">
+                  <span className="ob-lens-tag">{sel.label}</span>
+                  <p className="ob-lens-sub">{LENS_ABOUT[sel.label] ?? ''}</p>
+                </div>
+              )}
               <div className="ob-detail-tools">
                 {sel.tools.map((t) => (
                   <span key={t} className="ob-detail-tool">
