@@ -301,6 +301,117 @@ function extractLinks(src, into) {
 }
 
 // ---------------------------------------------------------------------------
+// shared "related tools" registry (apps/web/src/lib/related-tools.ts)
+//
+// Tool pages render cross-links through a SHARED registry instead of writing
+// literal <Link href> per page: they pass `relatedSlug="/route"` to
+// ToolPageShell (which renders <RelatedTools current={relatedSlug} />) or use
+// <RelatedTools current="/route" /> directly. RelatedTools then looks up
+// RELATED_TOOLS[current] and ALSO auto-appends a link to the '/cong-cu' hub.
+//
+// The literal href/router.push scan above cannot see those edges, so we parse
+// the registry file as TEXT (never import TS) and resolve each page's
+// relatedSlug/current back into the concrete hrefs it will render.
+//
+// NOTE: learn-lens resolution (relatedLenses) is intentionally NOT handled —
+// the learn `tryCta` href is already literal-captured, and relatedLenses is
+// dynamic/complex. Focus here is RELATED_TOOLS only.
+// ---------------------------------------------------------------------------
+
+/**
+ * Parse related-tools.ts into { aliasHref, registry }:
+ *   - aliasHref: alias name -> href, from `const L = { alias: { href: '/x', ... }, ... }`
+ *   - registry:  route -> [hrefs], from `RELATED_TOOLS = { '/route': [L.a, L.b], ... }`,
+ *                resolving each `L.<alias>` token via aliasHref.
+ * Defensive: returns empty maps + logs a warning if the file is missing or
+ * parsing yields nothing, so the build never crashes on a registry refactor.
+ */
+function parseRelatedRegistry() {
+  /** @type {Record<string, string>} */
+  const aliasHref = {};
+  /** @type {Record<string, string[]>} */
+  const registry = {};
+
+  const registryPath = join(APPS_DIR, 'web', 'src', 'lib', 'related-tools.ts');
+  if (!exists(registryPath)) {
+    console.warn('[extract-site-structure] related-tools.ts not found — skipping registry cross-links:', registryPath);
+    return { aliasHref, registry };
+  }
+
+  let src;
+  try {
+    src = readFileSync(registryPath, 'utf8');
+  } catch {
+    console.warn('[extract-site-structure] could not read related-tools.ts — skipping registry cross-links');
+    return { aliasHref, registry };
+  }
+
+  // 1) alias -> href  (per-line: `alias: { href: '/x', label: '...' }`)
+  const aliasRe = /(\w+)\s*:\s*\{\s*href\s*:\s*['"](\/[^'"]+)['"]/g;
+  let am;
+  while ((am = aliasRe.exec(src)) !== null) {
+    const href = normalizeLink(am[2]);
+    if (href) aliasHref[am[1]] = href;
+  }
+
+  // 2) route -> [L.alias, ...]  from the RELATED_TOOLS object body.
+  //    Isolate the object body via brace matching so we only scan real entries.
+  const rtStart = src.search(/RELATED_TOOLS\s*(?::[^=]*)?=\s*\{/);
+  const body = rtStart === -1 ? src : (() => {
+    const open = src.indexOf('{', rtStart);
+    let depth = 0;
+    for (let i = open; i < src.length; i++) {
+      if (src[i] === '{') depth++;
+      else if (src[i] === '}' && --depth === 0) return src.slice(open + 1, i);
+    }
+    return src.slice(open + 1);
+  })();
+
+  // Each entry: '/route': [ ... ]. The array may span multiple lines, so match
+  // the route key then capture up to the closing ']' with a non-greedy scan.
+  const entryRe = /['"](\/[^'"]+)['"]\s*:\s*\[([\s\S]*?)\]/g;
+  let em;
+  while ((em = entryRe.exec(body)) !== null) {
+    const route = normalizeLink(em[1]);
+    if (!route) continue;
+    const hrefs = [];
+    const tokenRe = /\bL\.(\w+)\b/g;
+    let tm;
+    while ((tm = tokenRe.exec(em[2])) !== null) {
+      const href = aliasHref[tm[1]];
+      if (href) hrefs.push(href);
+    }
+    if (hrefs.length) registry[route] = hrefs;
+  }
+
+  if (Object.keys(registry).length === 0) {
+    console.warn('[extract-site-structure] parsed 0 RELATED_TOOLS entries — registry cross-links unavailable');
+  }
+
+  return { aliasHref, registry };
+}
+
+/**
+ * Scan a page/component source for RELATED_TOOLS lookups (relatedSlug / current)
+ * and add every registry href for the matched route — plus the '/cong-cu' hub
+ * that RelatedTools always appends — into the page's links Set.
+ *   relatedSlug="/route"   relatedSlug='/route'
+ *   current="/route"       current={'/route'}     current='/route'
+ */
+function extractRegistryLinks(src, registry, into) {
+  const patterns = [/relatedSlug\s*=\s*["'](\/[^"']+)["']/g, /current\s*=\s*\{?\s*["'](\/[^"']+)["']/g];
+  for (const re of patterns) {
+    let m;
+    while ((m = re.exec(src)) !== null) {
+      const route = normalizeLink(m[1]);
+      if (!route || !registry[route]) continue;
+      for (const href of registry[route]) into.add(href);
+      into.add('/cong-cu'); // RelatedTools auto-appends the hub link
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
 // main
 // ---------------------------------------------------------------------------
 
@@ -321,6 +432,10 @@ function resolveGeneratedAt() {
 
 function build() {
   const generatedAt = resolveGeneratedAt();
+
+  // Parse the shared "related tools" registry ONCE — used below to resolve
+  // relatedSlug/current lookups into concrete cross-links per page.
+  const { registry } = parseRelatedRegistry();
 
   /** @type {Record<string, number>} */
   const perApp = {};
@@ -354,8 +469,11 @@ function build() {
       // self route should never appear as a cross-link
       const links = new Set();
       extractLinks(pageSrc, links);
+      extractRegistryLinks(pageSrc, registry, links);
       for (const comp of coLocatedComponents(pageFile)) {
-        extractLinks(readFileSync(comp, 'utf8'), links);
+        const compSrc = readFileSync(comp, 'utf8');
+        extractLinks(compSrc, links);
+        extractRegistryLinks(compSrc, registry, links);
       }
       links.delete(route);
 

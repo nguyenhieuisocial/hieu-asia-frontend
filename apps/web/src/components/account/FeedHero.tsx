@@ -17,9 +17,6 @@
  * Inputs (Wave 60.59.c):
  *   - hasSavedChart   → `public.charts` row for user.id (RLS-scoped);
  *                       falls back to localStorage if Supabase unavailable
- *   - membershipTier  → GET /api/user/me (server-side fact; today stubbed
- *                       to 'free' but the read path is now wired so the
- *                       day the worker fills it in we get gating for free)
  *   - hasPinnedInsight / hasRecentBrief → still localStorage probes
  *     (no DB tables yet; deferred Wave 60.60+)
  */
@@ -101,29 +98,6 @@ async function hasSavedChartDb(): Promise<boolean | null> {
   }
 }
 
-interface UserMeResponse {
-  ok?: boolean;
-  user_id?: string | null;
-  email?: string | null;
-  membership_tier?: 'free' | 'standard' | 'premium' | 'lifetime';
-}
-
-/**
- * Server-side membership tier. Today this is a stub returning 'free' (see
- * `/api/user/me/route.ts`) — but wiring it now means the day the worker
- * fills in real data, the CTA priority responds without another deploy.
- */
-async function fetchMembershipTier(): Promise<UserMeResponse['membership_tier']> {
-  try {
-    const res = await fetch('/api/user/me', { cache: 'no-store' });
-    if (!res.ok) return 'free';
-    const json = (await res.json()) as UserMeResponse;
-    return json.membership_tier ?? 'free';
-  } catch {
-    return 'free';
-  }
-}
-
 function hasRecentBrief(): boolean {
   if (typeof window === 'undefined') return true;
   try {
@@ -180,18 +154,13 @@ export interface FeedHeroProps {
 
 export function FeedHero({ user }: FeedHeroProps) {
   // Default CTA picked deterministically pre-hydrate to avoid layout shift;
-  // refined client-side once we've consulted Supabase + /api/user/me +
-  // localStorage. Membership tier is fetched but doesn't drive the CTA
-  // today (stub returns 'free' for everyone) — see header comment.
+  // refined client-side once we've consulted Supabase + localStorage.
   const [ctaKey, setCtaKey] = React.useState<CtaKey>('continue-mentor');
 
   React.useEffect(() => {
     let cancelled = false;
     (async () => {
-      const [dbChart, _tier] = await Promise.all([
-        hasSavedChartDb(),
-        fetchMembershipTier(),
-      ]);
+      const dbChart = await hasSavedChartDb();
       // Prefer DB truth; fall back to localStorage probe when Supabase is
       // unavailable or returns no rows (anon mid-session, fresh sign-in
       // before chart sync, etc.).
