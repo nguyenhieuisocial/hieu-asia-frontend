@@ -55,10 +55,6 @@ const AXES: { id: string; left: string; right: string; pitch: string }[] = [
 
 const LENS_INTEGRATION: { title: string; body: string }[] = [
   {
-    title: 'MBTI · ngôn ngữ tâm lý',
-    body: 'Gọi tên thiên hướng nhận thức và ra quyết định bằng từ vựng hiện đại — dễ chia sẻ, dễ phản tư.',
-  },
-  {
     title: 'Tử Vi · bản đồ thiên hướng',
     body: '12 cung mô tả lĩnh vực sống và động lực cốt lõi theo giờ sinh — chiều sâu mà MBTI không đo.',
   },
@@ -67,8 +63,12 @@ const LENS_INTEGRATION: { title: string; body: string }[] = [
     body: 'Tương quan Kim-Mộc-Thủy-Hỏa-Thổ trong tứ trụ — gợi ý khí chất và mùa của đời.',
   },
   {
-    title: 'Thần Số Học · chu kỳ thời gian',
-    body: 'Đường đời và năm cá nhân — đưa MBTI vào nhịp thời gian, không chỉ là chân dung tĩnh.',
+    title: 'Big Five · năm chiều đo lường',
+    body: 'Năm chiều tính cách được nghiên cứu rộng — bổ sung chiều định lượng cho bức chân dung MBTI.',
+  },
+  {
+    title: 'Xem Tướng · quan sát diện mạo',
+    body: 'Đọc thần thái và nét tướng như một góc nhìn bổ sung — đặt cạnh, không thay thế, tự thuật tâm lý.',
   },
 ];
 
@@ -101,7 +101,7 @@ const WEBPAGE_JSONLD = {
   '@type': 'WebPage',
   name: 'MBTI — 16 kiểu tâm trí',
   description:
-    'MBTI tại hieu.asia: 4 trục, 16 kiểu, một ngôn ngữ tự nhận diện thiên hướng — kết hợp với Tử Vi, Bát Tự, Thần Số Học qua AI Mentor.',
+    'MBTI tại hieu.asia: 4 trục, 16 kiểu, một ngôn ngữ tự nhận diện thiên hướng — đối chiếu cùng Tử Vi, Bát Tự, Big Five, Xem Tướng qua AI Mentor.',
   url: 'https://hieu.asia/mbti',
   inLanguage: 'vi-VN',
   isPartOf: {
@@ -245,14 +245,14 @@ export default function MbtiHubPage() {
             <div className="mb-6 flex items-center gap-3">
               <Brain className="h-5 w-5 text-gold" aria-hidden />
               <h2 className="font-sans text-section-display font-bold tracking-tight text-foreground">
-                hieu.asia <ItalicSpan>kết hợp</ItalicSpan> MBTI với 3 ống kính khác
+                hieu.asia <ItalicSpan>kết hợp</ItalicSpan> MBTI với 4 ống kính khác
               </h2>
             </div>
             <p className="max-w-marketing-text font-sans text-base leading-relaxed text-muted-foreground">
               MBTI một mình là một chân dung tâm lý hiện đại. Khi đặt cạnh Tử Vi, Bát
-              Tự, Thần Số Học — mỗi ống kính trả lời một câu hỏi khác về cùng một con
-              người. AI Mentor đối chiếu cả bốn để gợi ý hành động cụ thể, chứ không
-              chỉ đọc nhãn.
+              Tự, Big Five, Xem Tướng — mỗi ống kính trả lời một câu hỏi khác về cùng
+              một con người. AI Mentor đối chiếu cả năm để gợi ý hành động cụ thể, chứ
+              không chỉ đọc nhãn.
             </p>
 
             <div className="mt-8 grid gap-4 md:grid-cols-2">
