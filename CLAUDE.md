@@ -62,3 +62,29 @@ Telegram bot @hieuasiabot handler is in **Supabase Edge Function** (Deno runtime
 Don't waste time looking for a `hieu-asia-worker` repo — there isn't one. Historical naming: the repo is called "backend" because it used to host a now-retired Python/FastAPI tree.
 
 Full repo + folder tree + deploy mechanics: vault `82 - Monorepo Structure & Auto-sync.md`. Headline cross-repo map: vault `94 - Master Infrastructure Reference.md` (top of file).
+
+## Fix discipline — sửa bug TẬN GỐC (bắt buộc)
+
+Khi sửa bất kỳ bug nào:
+
+- **Tận gốc, không vá lẻ:** tìm HẾT chỗ dính cùng lỗi (grep toàn repo), sửa ở
+  nguồn dùng chung / gom về MỘT định nghĩa (shared component, utility class,
+  base CSS rule) để lỗi không tái phát — đừng chỉ sửa đúng chỗ được báo.
+- **Nhưng KHÔNG "fix cho có":** chỉ áp cách sửa ở nơi THỰC SỰ cùng lỗi. Ví dụ
+  right-edge scroll-fade chỉ cho hàng chip/thẻ cuộn ngang, KHÔNG cho
+  bảng/`<pre>`/tab strip (sẽ che cột/nhãn). Áp bừa để "trông như đã fix" là sai.
+- **Verify live trước khi nói "xong":** bằng chứng trên production (screenshot
+  hoặc computed style), không nói "should / probably".
+- **Trung thực về phạm vi:** chỉ khẳng định cái đã kiểm; không nói "đã fix hết"
+  nếu chưa rà hết mọi trang/tính năng.
+
+Ví dụ đã áp dụng (2026-07): gạch chân đè dấu tiếng Việt → base rule
+`u { text-underline-offset: 0.2em }` cho MỌI `<u>` (một nguồn); hàng cuộn ngang
+cắt cứng → utility dùng chung `.scroll-fade-x` (globals.css) áp cho mọi hàng
+chip/thẻ, trừ bảng/tab.
+
+## Session / agent prefs
+
+- **KHÔNG tự động archive session** khi user không yêu cầu.
+- **Ưu tiên sub-agent song song** (Agent tool) hơn Workflow; chỉ dùng Workflow
+  khi thật sự cần điều phối nhiều pha có phụ thuộc.
