@@ -23,6 +23,27 @@
   font-family: 'Noto Serif SC Han', var(--font-be-vietnam), Georgia, serif;
 }
 
+@layer base {
+  /* Vietnamese-safe underline: 0.2em offset clears descenders (y/g/q) + dấu
+   * nặng on EVERY <u> — single source, no per-heading hard-coded px offsets
+   * (6px was too tight and muddied diacritics on large display headings). */
+  u {
+    text-underline-offset: 0.2em;
+  }
+}
+
+@layer components {
+  /* Right-edge fade for horizontal chip/card scroll rows — signals "còn cuộn"
+   * instead of a hard cut. Dual-prefix for iOS Safari. In the components layer
+   * so a md:/lg:[mask-image:none] utility can switch it off where the row turns
+   * into a grid on desktop. Apply ONLY to chip/card/carousel rows — NOT tables,
+   * <pre>, or tab strips (a fade would hide columns/labels). */
+  .scroll-fade-x {
+    -webkit-mask-image: linear-gradient(to right, #000 90%, transparent);
+    mask-image: linear-gradient(to right, #000 90%, transparent);
+  }
+}
+
 /*
  * shadcn/ui design tokens — mapped to hieu.asia brand palette.
  * Replace via `pnpm dlx shadcn@latest init` if you want full shadcn theming.

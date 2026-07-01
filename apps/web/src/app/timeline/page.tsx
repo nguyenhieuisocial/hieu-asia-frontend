@@ -149,7 +149,7 @@ export default function TimelinePage() {
             10 đại vận trong đời — ví dụ minh hoạ (10 → 109 tuổi)
           </h2>
           <div
-            className="-mx-2 flex gap-3 overflow-x-auto px-2 pb-4"
+            className="-mx-2 flex gap-3 overflow-x-auto scroll-fade-x px-2 pb-4"
             role="list"
           >
             {segments.map((s) => (

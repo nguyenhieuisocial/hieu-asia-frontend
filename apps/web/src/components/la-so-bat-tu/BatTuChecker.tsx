@@ -588,7 +588,7 @@ export function BatTuChecker({
                   <strong>{chart.daiVan.forward ? 'thuận' : 'nghịch'}</strong> (theo can năm &amp; giới tính).
                   Mỗi vận kéo dài 10 năm.
                 </p>
-                <div className="-mx-1 mt-3 flex gap-2 overflow-x-auto px-1 pb-2" role="list">
+                <div className="-mx-1 mt-3 flex gap-2 overflow-x-auto scroll-fade-x px-1 pb-2" role="list">
                   {chart.daiVan.pillars.map((p) => {
                     const cur = curAge != null && curAge >= p.startAge && curAge <= p.endAge;
                     return (

@@ -254,7 +254,7 @@ function DecadalResult({
         <p className="mb-2 text-sm font-medium text-foreground">
           Chuỗi đại vận thật theo lá số của bạn
         </p>
-        <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-2" role="list">
+        <div className="-mx-1 flex gap-3 overflow-x-auto scroll-fade-x px-1 pb-2" role="list">
           {segments.map((s) => {
             const isCurrent = current != null && s.start === current.start;
             return (
