@@ -21,6 +21,7 @@ import { NextResponse } from 'next/server';
 import { requireAdminSession } from '@/lib/auth-server';
 import {
   fetchUserAttribution,
+  fetchUserDeviceProfile,
   fetchUserJourney,
   isPostHogServerConfigured,
 } from '@/lib/posthog-server';
@@ -43,12 +44,14 @@ export async function GET(_req: Request, ctx: Ctx) {
       configured: isPostHogServerConfigured(),
       source: null,
       events: [],
+      profile: null,
     });
   }
 
-  const [source, events] = await Promise.all([
+  const [source, events, profile] = await Promise.all([
     fetchUserAttribution(userId),
     fetchUserJourney(userId),
+    fetchUserDeviceProfile(userId),
   ]);
 
   return NextResponse.json({
@@ -56,5 +59,6 @@ export async function GET(_req: Request, ctx: Ctx) {
     configured: isPostHogServerConfigured(),
     source: source ?? null,
     events: events ?? [],
+    profile: profile ?? null,
   });
 }
