@@ -37,7 +37,6 @@ export function Methodology(): React.JSX.Element {
             <li key={l.n} className="rv-up" style={{ animationDelay: `${i * 45}ms` }}>
               <Link
                 href={l.href}
-                aria-label={l.cta}
                 className="group flex items-baseline gap-4 py-4 transition-colors hover:bg-primary/[0.04]"
               >
                 <span className="font-mono text-sm text-primary/70">{l.n}</span>
