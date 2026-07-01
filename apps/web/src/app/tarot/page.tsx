@@ -86,7 +86,9 @@ export default function TarotPage() {
             </p>
             <p>
               Vì vậy quy tắc của mình: lá bài <b className="text-foreground/85">gợi câu hỏi, bạn giữ câu trả lời</b>.
-              Không lá nào là điềm dữ, không ai phải mua lễ để &ldquo;hóa giải&rdquo; một lá bài.{' '}
+              Không lá nào là điềm dữ, không ai phải mua lễ để &ldquo;hóa giải&rdquo; một lá bài. Muốn tìm hiểu kỹ hơn,
+              đọc bài{' '}
+              <Link href="/learn/tarot" className="text-gold hover:underline">Học về Tarot</Link>.{' '}
               <Link href="/tu-kiem" className="text-gold hover:underline">Vì sao mình chọn cách này? →</Link>
             </p>
           </div>

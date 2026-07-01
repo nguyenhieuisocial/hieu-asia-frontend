@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import {
   Button,
@@ -518,6 +519,14 @@ export default function XemTuongPage() {
               chẩn đoán sức khoẻ hay tâm lý, không đoán tương lai, không quyết định thay bạn. Người
               xưa cũng nói &quot;tướng tự tâm sinh&quot; — nét mặt phản ánh nếp sống hiện tại và
               thay đổi theo thời gian, nên không có chuyện một bức ảnh định đoạt một đời người.
+            </p>
+            <p className="flex flex-wrap gap-x-4 gap-y-1 pt-1">
+              <Link href="/learn/palm" className="text-gold hover:underline">
+                Học về xem chỉ tay →
+              </Link>
+              <Link href="/methodology" className="text-gold hover:underline">
+                Phương pháp luận của hieu.asia →
+              </Link>
             </p>
           </div>
         </section>

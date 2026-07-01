@@ -345,7 +345,12 @@ const FEATURES_FAQ: readonly FaqItem[] = [
         Mentor đối thoại chạy trên các mô hình AI hàng đầu với cửa sổ ngữ cảnh
         lớn. Quan trọng hơn tên mô hình là cách nó hành xử: Mentor hiểu lá số của
         bạn, đặt câu hỏi có ngữ cảnh và gợi ý các bước — không phải chatbot trả
-        lời theo kịch bản, và bạn vẫn là người quyết định.
+        lời theo kịch bản, và bạn vẫn là người quyết định. Xem chi tiết engine
+        tính gì và AI luận gì tại{' '}
+        <Link href="/methodology" className="text-gold-700 underline-offset-2 hover:underline">
+          Phương pháp luận
+        </Link>
+        .
       </p>
     ),
   },
@@ -607,7 +612,7 @@ const FEATURES_FAQ_SCHEMA = [
   },
   {
     q: 'Mentor AI dùng mô hình nào?',
-    a: 'Mentor đối thoại chạy trên các mô hình AI hàng đầu với cửa sổ ngữ cảnh lớn. Quan trọng hơn tên mô hình là cách nó hành xử: Mentor hiểu lá số của bạn, đặt câu hỏi có ngữ cảnh và gợi ý các bước — không phải chatbot trả lời theo kịch bản, và bạn vẫn là người quyết định.',
+    a: 'Mentor đối thoại chạy trên các mô hình AI hàng đầu với cửa sổ ngữ cảnh lớn. Quan trọng hơn tên mô hình là cách nó hành xử: Mentor hiểu lá số của bạn, đặt câu hỏi có ngữ cảnh và gợi ý các bước — không phải chatbot trả lời theo kịch bản, và bạn vẫn là người quyết định. Xem chi tiết engine tính gì và AI luận gì tại Phương pháp luận (/methodology).',
   },
   {
     q: 'PDF có thể xuất nhiều lần?',

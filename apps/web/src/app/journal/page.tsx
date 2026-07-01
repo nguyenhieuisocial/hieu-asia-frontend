@@ -298,6 +298,13 @@ export default function JournalHubPage() {
             Mở Weekly Review
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+            Đang phân vân một quyết định lớn?{' '}
+            <Link href="/decisions" className="text-gold hover:underline">
+              Lập Decision Brief
+            </Link>{' '}
+            để nhìn các lựa chọn rõ hơn trước khi ghi vào nhật ký.
+          </p>
         </section>
       </section>
 
