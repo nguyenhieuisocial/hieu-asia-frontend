@@ -13,6 +13,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { Fingerprint } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -129,7 +130,81 @@ export function CustomerDetailTabs({
     });
   }
 
-  return <ProductTabs tabs={tabs} value={value} onValueChange={onValueChange} />;
+  return (
+    <div className="space-y-6">
+      <IdentityCard customer={customer} userId={userId} />
+      <ProductTabs tabs={tabs} value={value} onValueChange={onValueChange} />
+    </div>
+  );
+}
+
+/**
+ * "Danh tính & kênh liên hệ" — consolidates every way to identify + reach this
+ * customer across channels in one card. All fields come from the users row the
+ * detail API already returns (select=*); nothing new is fetched. Missing
+ * channels render "chưa liên kết" so the founder sees, at a glance, which
+ * channels a customer is reachable on. The user_id doubles as the PostHog
+ * distinct_id (the key behind the Hành trình tab), so it's labelled as such.
+ */
+function IdentityCard({
+  customer,
+  userId,
+}: {
+  customer: CustomerDetail | null;
+  userId: string;
+}) {
+  const channels: Array<{ label: string; value?: string | null; mono?: boolean }> = [
+    { label: 'Email', value: customer?.email, mono: true },
+    { label: 'Telegram', value: customer?.telegram_id, mono: true },
+    { label: 'Zalo', value: customer?.zalo_id, mono: true },
+    { label: 'Điện thoại', value: customer?.phone },
+  ];
+  const linked = channels.filter((c) => !!c.value).length;
+  const idValue = userId || customer?.id || '—';
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Fingerprint className="h-4 w-4 text-gold/70" aria-hidden />
+          Danh tính & kênh liên hệ
+        </CardTitle>
+        <CardDescription>
+          Mọi cách nhận diện &amp; liên hệ khách này — gộp từ các kênh. Đã liên kết{' '}
+          <span className="font-medium text-foreground/80">
+            {linked}/{channels.length}
+          </span>{' '}
+          kênh.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <dl className="grid gap-3 sm:grid-cols-2">
+          <div className="space-y-0.5 sm:col-span-2">
+            <dt className="text-[10px] uppercase tracking-wider text-muted-foreground">
+              Mã người dùng · cũng là ID phân tích (PostHog)
+            </dt>
+            <dd className="break-all font-mono text-sm text-foreground/90">{idValue}</dd>
+          </div>
+          {channels.map((c) => (
+            <div key={c.label} className="space-y-0.5">
+              <dt className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                {c.label}
+              </dt>
+              <dd
+                className={
+                  (c.mono ? 'font-mono ' : '') +
+                  'text-sm ' +
+                  (c.value ? 'text-foreground/90' : 'italic text-muted-foreground')
+                }
+              >
+                {c.value || 'chưa liên kết'}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </CardContent>
+    </Card>
+  );
 }
 
 function ProfileTab({ customer }: { customer: CustomerDetail }) {
