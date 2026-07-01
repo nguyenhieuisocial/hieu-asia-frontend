@@ -665,8 +665,8 @@ function Chapter1Content() {
                     {p.n}
                   </div>
                   <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <Icon className="h-4 w-4 text-primary/80" aria-hidden />
+                    <div className="flex items-start gap-2">
+                      <Icon className="mt-0.5 h-4 w-4 text-primary/80" aria-hidden />
                       <h3 className="font-sans text-base font-semibold text-foreground sm:text-lg">
                         {p.title}
                       </h3>
