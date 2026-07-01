@@ -754,8 +754,13 @@ export default function SessionDetailPage() {
           needs to be extended (vault 94 deferred item). */}
       {s.state_json && (() => {
         const sj = s.state_json as Record<string, unknown>;
-        // Worker may write these under flat keys or under a `request` envelope.
-        const reqEnv = (sj.request ?? sj.client ?? {}) as Record<string, unknown>;
+        // reading-create writes BOTH flat aliases (ip/country/city/user_agent)
+        // AND a nested `request_metadata` envelope. Read flat first, then fall
+        // back to the nested envelope (older `request`/`client` shapes too).
+        const reqEnv = (sj.request_metadata ?? sj.request ?? sj.client ?? {}) as Record<
+          string,
+          unknown
+        >;
         const ip = (sj.ip as string | undefined) ?? (sj.ip_address as string | undefined)
           ?? (reqEnv.ip as string | undefined) ?? (reqEnv.cf_connecting_ip as string | undefined);
         const country = (sj.country as string | undefined) ?? (reqEnv.country as string | undefined)
@@ -783,13 +788,10 @@ export default function SessionDetailPage() {
             <CardContent>
               {!hasAny ? (
                 <p className="text-xs italic text-muted-foreground">
-                  Worker chưa log request metadata vào <code className="font-mono text-gold/70">state_json</code>.
-                  Để hiển thị IP/geo/UA, cần extend Worker <code className="font-mono text-gold/70">handleReadingCreate</code>
-                  để ghi <code className="font-mono text-gold/70">ip / country / city / user_agent / referrer</code>
-                  từ Cloudflare request headers (<code className="font-mono text-gold/70">cf-connecting-ip</code>,{' '}
-                  <code className="font-mono text-gold/70">cf-ipcountry</code>,{' '}
-                  <code className="font-mono text-gold/70">request.cf.city</code>, etc.) vào reading_sessions.state_json.
-                  Tracked as Wave 60.20 follow-up in vault 94.
+                  Phiên này không có metadata request (<code className="font-mono text-gold/70">ip / country / city / user_agent / referrer</code>)
+                  trong <code className="font-mono text-gold/70">state_json</code> — thường là phiên cũ (tạo trước khi
+                  bật thu thập) hoặc kênh không phải web. Phiên mới qua web đã được ghi đầy đủ.
+                  Xem thêm hành vi khách ở mục <span className="text-gold/80">Nguồn &amp; hành trình</span> (PostHog) bên dưới.
                 </p>
               ) : (
                 <dl className="grid gap-3 sm:grid-cols-2">

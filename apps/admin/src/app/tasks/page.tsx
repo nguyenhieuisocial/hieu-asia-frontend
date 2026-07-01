@@ -134,7 +134,21 @@ export default function AdminTasksPage() {
     {
       key: 'name',
       header: 'Session',
-      cell: (t) => <span className="font-mono text-xs text-foreground">{t.name}</span>,
+      // Direct link to the session detail. stopPropagation so clicking the id
+      // navigates instead of also opening the row drawer.
+      cell: (t) =>
+        t.name ? (
+          <Link
+            href={`/sessions/${encodeURIComponent(t.name)}`}
+            onClick={(e) => e.stopPropagation()}
+            className="font-mono text-xs text-foreground underline decoration-dotted underline-offset-2 hover:text-gold"
+            title="Mở session detail"
+          >
+            {t.name}
+          </Link>
+        ) : (
+          <span className="text-foreground/30">—</span>
+        ),
     },
     {
       key: 'status',
