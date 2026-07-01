@@ -1,13 +1,17 @@
 /**
- * Google Tag Manager (GTM) + Google Analytics 4 (GA4) with GOOGLE CONSENT MODE v2.
+ * Google Tag Manager (GTM) container loader + GOOGLE CONSENT MODE v2.
  *
- * Strategy: load the tags for EVERY visitor, but start with all storage
- * DENIED. Before consent, GA4 sends only anonymous, cookie-less pings (Google
- * uses them for conversion modelling) — no cookies, no identifiers, so it stays
- * within GDPR / VN Decree 13/2023. When the visitor grants analytics/marketing
- * consent via the CMP, we flip the matching consent signals to `granted` and
- * cookies + full measurement switch on. This captures the MAXIMUM data legally
- * (modelled data from non-consenters + full data from consenters).
+ * GA4 is configured INSIDE the GTM container (a "Google tag" for G-RR1YSW2J7T
+ * firing on Initialization - All Pages), NOT loaded directly here — so every
+ * tag (GA4, Ads, pixels, events) is managed in the GTM UI without a code
+ * deploy, and GA4 is never double-counted.
+ *
+ * This module only: (1) pushes Consent Mode v2 defaults BEFORE gtm.js runs,
+ * then (2) loads the GTM container for EVERY visitor. Consent starts DENIED, so
+ * pre-consent GA4 (via GTM) sends anonymous, cookie-less pings that Google uses
+ * for conversion modelling — within GDPR / VN Decree 13/2023. On consent grant
+ * via the CMP we push a Consent Mode `update`, and GTM's tags switch to full
+ * measurement. This captures the MAXIMUM data legally (modelled + full).
  *
  * Wiring:
  *   - <GoogleTags/> (root layout) → initGoogleTags() once on mount.
@@ -17,17 +21,15 @@
  * module never deletes those globals — it only pushes Consent Mode signals.
  *
  * The GTM `<noscript>` iframe is intentionally OMITTED (no-JS clients can't run
- * Consent Mode, so it would load a tag that ignores consent state).
+ * Consent Mode, so it would load tags that ignore consent state).
  *
- * IDs default to the production containers; override via env
- * (NEXT_PUBLIC_GTM_ID / NEXT_PUBLIC_GA4_ID).
+ * Container ID defaults to production; override via NEXT_PUBLIC_GTM_ID.
  */
 
 const ANALYTICS_KEY = "hieu.consent.analytics";
 const MARKETING_KEY = "hieu.consent.marketing";
 
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID ?? "GTM-TP7KDWN5";
-const GA4_ID = process.env.NEXT_PUBLIC_GA4_ID ?? "G-RR1YSW2J7T";
 
 let _initialized = false;
 
@@ -64,9 +66,10 @@ function injectScript(src: string, id: string): void {
 }
 
 /**
- * Initialize Consent Mode v2 defaults, then load GTM + GA4. Idempotent — safe
- * to call on every mount. Defaults reflect any consent already stored (returning
- * visitors + rest-of-world legitimate-interest), otherwise DENIED.
+ * Push Consent Mode v2 defaults, then load the GTM container (which hosts GA4).
+ * Idempotent — safe to call on every mount. Defaults reflect any consent
+ * already stored (returning visitors + rest-of-world legitimate-interest),
+ * otherwise DENIED.
  */
 export function initGoogleTags(): void {
   if (typeof window === "undefined" || _initialized) return;
@@ -76,7 +79,7 @@ export function initGoogleTags(): void {
   const analytics = readConsent(ANALYTICS_KEY);
   const marketing = readConsent(MARKETING_KEY);
 
-  // Consent Mode v2 — defaults MUST be pushed before gtm.js/gtag.js run.
+  // Consent Mode v2 — defaults MUST be pushed before gtm.js runs.
   gtag("consent", "default", {
     ad_storage: marketing ? "granted" : "denied",
     ad_user_data: marketing ? "granted" : "denied",
@@ -87,23 +90,12 @@ export function initGoogleTags(): void {
     wait_for_update: 500,
   });
 
-  gtag("js", new Date());
-  if (GA4_ID) gtag("config", GA4_ID);
-
+  // Load the GTM container — GA4 + any future tags live inside it.
   if (GTM_ID) {
     (window.dataLayer as unknown[]).push({
       "gtm.start": new Date().getTime(),
       event: "gtm.js",
     });
-  }
-
-  if (GA4_ID) {
-    injectScript(
-      `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA4_ID)}`,
-      "hieu-ga4",
-    );
-  }
-  if (GTM_ID) {
     injectScript(
       `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(GTM_ID)}`,
       "hieu-gtm",
