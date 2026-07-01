@@ -355,6 +355,12 @@ export default function MbtiHubPage() {
         </section>
         <div className="mx-auto max-w-6xl px-6 pb-12">
           <RelatedTools current="/mbti" />
+          <p className="mt-3 text-sm text-muted-foreground">
+            Tìm hiểu sâu:{' '}
+            <Link href="/learn/mbti" className="text-gold hover:underline">
+              Học viện MBTI — 16 kiểu chi tiết
+            </Link>
+          </p>
         </div>
       </main>
 

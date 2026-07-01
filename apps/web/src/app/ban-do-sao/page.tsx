@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { SunMoonChecker } from '@/components/ban-do-sao/SunMoonChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -146,6 +147,21 @@ export default async function BanDoSaoPage({
               hành tinh là khoa học thiên văn — phần diễn giải chỉ là một góc nhìn tham khảo. Bạn vẫn là người
               viết nên câu chuyện của mình. hieu.asia trình bày trung thực: con số thật, diễn giải khiêm tốn.
             </p>
+          </section>
+
+          {/* Tìm hiểu thêm */}
+          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+              Tìm hiểu thêm
+            </h2>
+            <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+              <Link href="/learn/chiem-tinh" className="text-gold hover:underline">
+                Học về chiêm tinh phương Tây →
+              </Link>
+              <Link href="/cung-hoang-dao" className="text-gold hover:underline">
+                12 cung hoàng đạo →
+              </Link>
+            </div>
           </section>
 
           {/* FAQ */}
