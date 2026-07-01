@@ -5,10 +5,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@hieu-asia/ui';
+import Link from 'next/link';
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
+import { listCung } from '@/lib/cung-hoang-dao-data';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import { article, breadcrumb, faqPage, itemList } from '@/lib/seo/jsonld';
 import {
   ChiemTinhFrame,
   ChiemTinhDepth,
@@ -74,6 +76,7 @@ const JSONLD = [
     { name: 'Chiêm tinh phương Tây', url: '/learn/chiem-tinh' },
   ]),
   faqPage(FAQS),
+  itemList(listCung().map((s) => ({ name: s.name, url: '/cung-hoang-dao/' + s.slug }))),
 ];
 
 export default function LearnChiemTinhPage() {
@@ -375,6 +378,39 @@ export default function LearnChiemTinhPage() {
                 không phán "giàu/nghèo/số khổ/định mệnh", không bán "đổi mệnh/giải hạn".
               </p>
             </div>
+          ),
+        },
+        {
+          id: 'muoi-hai-cung',
+          tocLabel: '12 cung hoàng đạo',
+          heading: '12 cung hoàng đạo',
+          children: (
+            <>
+              <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
+                Mỗi cung mở ra trang riêng đầy đủ: tính cách theo nguyên tố và tính chất, điểm
+                mạnh, điều nên lưu ý, cung hợp và xu hướng tình yêu – công việc. Tất cả là tham
+                khảo để hiểu mình, không phán định số mệnh.
+              </p>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {listCung().map((s) => (
+                  <Link
+                    key={s.slug}
+                    href={`/cung-hoang-dao/${s.slug}`}
+                    className="group rounded-lg border border-border bg-card/40 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-gold/40 hover:bg-card/60"
+                  >
+                    <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
+                      {s.quality}
+                    </p>
+                    <p className="mt-1.5 font-heading text-base font-semibold text-foreground group-hover:text-gold">
+                      {s.symbol} {s.name}
+                    </p>
+                    <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+                      {s.dateLabel} · {s.element}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </>
           ),
         },
         {
