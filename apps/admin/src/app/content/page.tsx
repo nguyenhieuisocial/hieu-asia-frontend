@@ -34,12 +34,13 @@ import {
   cn,
   toast,
 } from '@hieu-asia/ui';
-import { FileText, Plus, Layers, ChevronRight, Sparkles } from 'lucide-react';
+import { FileText, Plus, Layers, ChevronRight, Sparkles, Download } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
 import { SavedFiltersMenu } from '@/components/admin/SavedFiltersMenu';
 import { useSavedFilters } from '@/lib/saved-filters';
 import { ErrorBlock } from '@/components/admin/error-block';
+import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import {
   useContentDrafts,
@@ -239,6 +240,38 @@ export default function ContentListPage() {
         icon={<FileText className="h-5 w-5" />}
         actions={
           <>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() =>
+                exportToCSV(
+                  rows.map((r) => ({
+                    topic: r.topic,
+                    type: r.type,
+                    slug: r.slug ?? '',
+                    status: r.status,
+                    judge_pick: JUDGE_LABEL[r.judge_pick],
+                    published_at: r.published_at ?? '',
+                    created_at: r.created_at ?? '',
+                  })),
+                  fmtCsvFilename('noi-dung'),
+                  {
+                    topic: 'Chủ đề',
+                    type: 'Loại',
+                    slug: 'Slug',
+                    status: 'Trạng thái',
+                    judge_pick: 'Judge chọn',
+                    published_at: 'Publish lúc',
+                    created_at: 'Tạo lúc',
+                  },
+                )
+              }
+              disabled={rows.length === 0}
+              title="Xuất các nội dung đang hiển thị ra file CSV."
+            >
+              <Download className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+              Xuất CSV
+            </Button>
             <Button
               size="sm"
               variant="outline"
