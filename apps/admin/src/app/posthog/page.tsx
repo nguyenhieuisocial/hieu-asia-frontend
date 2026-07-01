@@ -28,6 +28,7 @@ import {
   Database,
   Flame,
   Gauge,
+  Globe,
   MousePointerClick,
   Radio,
   Trophy,
@@ -41,6 +42,7 @@ import ToolScorecardPanel from '@/components/admin/analytics/ToolScorecardPanel'
 import ExplorerPanel from '@/components/admin/analytics/ExplorerPanel';
 import SessionReplayPanel from '@/components/admin/analytics/SessionReplayPanel';
 import HeatmapPanel from '@/components/admin/analytics/HeatmapPanel';
+import GeoDevicesPanel from '@/components/admin/analytics/GeoDevicesPanel';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 60;
@@ -54,6 +56,7 @@ const TABS = [
   { id: 'cohorts', label: 'Kênh traffic & Giữ chân', Icon: Compass },
   { id: 'tool-scorecard', label: 'Bảng điểm công cụ', Icon: Trophy },
   { id: 'web-vitals', label: 'Web Vitals', Icon: Gauge },
+  { id: 'geo-devices', label: 'Vị trí & Thiết bị', Icon: Globe },
   { id: 'sticky-cta', label: 'Sticky CTA', Icon: MousePointerClick },
   { id: 'live-events', label: 'Sự kiện trực tiếp', Icon: Radio },
   // Native, secure in-admin replacements for PostHog's own tools (no iframe,
@@ -108,6 +111,7 @@ export default async function PostHogHubPage({
         <ToolScorecardPanel sortCol={stcol} sortDir={stdir} />
       )}
       {active === 'web-vitals' && <WebVitalsPanel />}
+      {active === 'geo-devices' && <GeoDevicesPanel />}
       {active === 'sticky-cta' && <StickyCtaPanel />}
       {active === 'live-events' && <LiveEventsPanel />}
       {active === 'explorer' && <ExplorerPanel />}
