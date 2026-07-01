@@ -4,8 +4,7 @@ import * as React from 'react';
 import { TOOLKIT_GROUPS } from '@/lib/catalog/tools';
 import { ShimmerText } from '@/components/fx/ShimmerText';
 import { Marquee } from '@/components/fx/Marquee';
-import { buildBanMenh, type BanMenhData } from '@/lib/ban-menh-data';
-import { conVatOf } from '@/lib/con-giap-animal';
+import type { BanMenhData } from '@/lib/ban-menh-data';
 
 /**
  * OracleBrain — the signature "night-sky" section: the whole toolkit (Eastern
@@ -15,19 +14,23 @@ import { conVatOf } from '@/lib/con-giap-animal';
  * can translate them, percentage layout never clips, and motion is calm CSS
  * (draw-in on view + breathe + twinkle), fully gated by prefers-reduced-motion.
  *
- * v2 — richer: each domain hub sprouts satellite tool-nodes (the "dozens of
- * tools" breadth) and reveals its tool count on hover; faint branch lines +
- * a converging data pulse make the "everything flows into you" thesis visible.
+ * v3 — TAP TO FOCUS (mobile-first): chạm một nhóm → nhóm đó nổi bật + các nhóm
+ * khác mờ đi; bảng chi tiết liệt kê TÊN công cụ thật hiện ra.
  *
- * v3 — TAP TO FOCUS (mobile-first): chạm/click một nhóm → nhóm đó nổi bật +
- * các nhóm khác mờ đi, và một bảng chi tiết liệt kê TÊN công cụ thật hiện ra.
- *
- * v4 — SOI THỬ (demo sống): khách nhập NĂM SINH → chòm sao "đọc" (hội tụ) → tâm
- * "BẠN" phản chiếu MỘT LÁT CẮT THẬT về họ (can chi, con giáp, mệnh nạp âm, màu
- * hợp — tính bằng engine `buildBanMenh`, deterministic, chạy client, KHÔNG lưu)
- * → CTA lập lá số đầy đủ. Biến hero từ "thực đơn" thành bản demo sống lời hứa
- * "AI nối tất cả lại để bạn hiểu mình". Gated bởi prefers-reduced-motion.
+ * v5 — SOI THỬ ĐA LĂNG KÍNH (demo sống): khách nhập NGÀY SINH → chòm sao "đọc"
+ * (hội tụ) → phản chiếu MỘT LÁT CẮT THẬT qua NHIỀU LĂNG KÍNH:
+ *  • Cổ học Á Đông (từ năm): can chi, con giáp, mệnh nạp âm, màu/nghề hợp
+ *    — engine `buildBanMenh` (60 Giáp Tý, "chống bịa").
+ *  • Chiêm tinh phương Tây (từ ngày/tháng): cung Mặt Trời — engine
+ *    `sunSignFromDate` (vị trí Mặt Trời theo Meeus).
+ * Tất cả TÍNH TRÊN MÁY KHÁCH, KHÔNG lưu; engine nạp động khi bấm (homepage nhẹ).
+ * Đây là bản demo sống của lời hứa "AI nối các lăng kính về bạn". CTA → lập lá
+ * số đầy đủ. Số chủ đạo (thần số) tính ở máy chủ nên KHÔNG đưa vào teaser để
+ * tránh lệch với công cụ thật. Gated bởi prefers-reduced-motion.
  */
+
+type Lens = { name: string; symbol: string; tagline: string };
+type Reveal = { dong: BanMenhData; conVat: string; tay: Lens | null; nearCusp: boolean };
 
 const ALL_TOOLS = TOOLKIT_GROUPS.flatMap((g) => g.tools.map((t) => t.n));
 
@@ -38,7 +41,6 @@ const HUBS = TOOLKIT_GROUPS.map((g, i, arr) => {
   const a = ((-90 + (360 / arr.length) * i) * Math.PI) / 180;
   const left = 50 + Math.cos(a) * RADIUS;
   const top = 50 + Math.sin(a) * RADIUS;
-  // more tools → more satellites (the breadth is the point), capped for clarity
   const nSat = Math.max(3, Math.min(5, Math.round(g.tools.length / 3)));
   const sats = Array.from({ length: nSat }, (_, k) => {
     const sa = a + (k - (nSat - 1) / 2) * 0.42;
@@ -60,9 +62,9 @@ export function OracleBrain(): React.JSX.Element {
   const [inView, setInView] = React.useState(false);
   const graphRef = React.useRef<HTMLDivElement | null>(null);
 
-  // v4 — Soi thử (demo sống)
-  const [year, setYear] = React.useState('');
-  const [reveal, setReveal] = React.useState<BanMenhData | null>(null);
+  // v5 — Soi thử đa lăng kính (demo sống)
+  const [birthDate, setBirthDate] = React.useState('');
+  const [reveal, setReveal] = React.useState<Reveal | null>(null);
   const [reading, setReading] = React.useState(false);
   const [err, setErr] = React.useState<string | null>(null);
   const reducedRef = React.useRef(false);
@@ -95,38 +97,64 @@ export function OracleBrain(): React.JSX.Element {
     return () => io.disconnect();
   }, []);
 
-  const onSoi = (e: React.FormEvent): void => {
+  const onSoi = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    const data = buildBanMenh(parseInt(year, 10));
-    if (!data) {
-      setErr('Nhập năm sinh dương lịch từ 1950 đến 2026.');
+    const m = birthDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!m) {
+      setErr('Chọn ngày sinh dương lịch của bạn.');
       return;
     }
+    const y = Number(m[1]);
+    const mo = Number(m[2]);
+    const d = Number(m[3]);
     setErr(null);
-    if (reducedRef.current) {
-      setReveal(data);
-      return;
-    }
     setReading(true);
-    timerRef.current = window.setTimeout(() => {
-      setReveal(data);
+    try {
+      const [banMenh, cung, conGiap] = await Promise.all([
+        import('@/lib/ban-menh-data'),
+        import('@/lib/cung-hoang-dao-data'),
+        import('@/lib/con-giap-animal'),
+      ]);
+      const dong = banMenh.buildBanMenh(y);
+      if (!dong) {
+        setReading(false);
+        setErr('Năm sinh cần trong khoảng 1950–2026.');
+        return;
+      }
+      const sun = cung.sunSignFromDate(y, mo, d);
+      const found = cung.listCung().find((c) => c.slug === sun.slug);
+      const tay: Lens | null = found
+        ? { name: found.name, symbol: found.symbol, tagline: found.tagline }
+        : null;
+      const result: Reveal = {
+        dong,
+        conVat: conGiap.conVatOf(dong.zodiac.ten),
+        tay,
+        nearCusp: sun.nearCusp,
+      };
+      const show = (): void => {
+        setReveal(result);
+        setReading(false);
+      };
+      if (reducedRef.current) show();
+      else timerRef.current = window.setTimeout(show, 700);
+    } catch {
       setReading(false);
-    }, 950);
+      setErr('Chưa soi được, thử lại nhé.');
+    }
   };
 
   const resetReveal = (): void => {
     setReveal(null);
-    setYear('');
+    setBirthDate('');
     setErr(null);
   };
 
-  // Highlight = đang hover HOẶC đã chọn (click/tap).
   const isOn = (i: number) => hover === i || selected === i;
   const sel = selected !== null ? HUBS[selected] : null;
   const hopColors = reveal
-    ? Array.from(new Set([...reveal.banMenhColors, ...reveal.hopColors])).slice(0, 4)
+    ? Array.from(new Set([...reveal.dong.banMenhColors, ...reveal.dong.hopColors])).slice(0, 4)
     : [];
-  const conVat = reveal ? conVatOf(reveal.zodiac.ten) : '';
 
   return (
     <section
@@ -145,28 +173,25 @@ export function OracleBrain(): React.JSX.Element {
           mình sâu.
         </p>
 
-        {/* v4 — Lời mời chính: nhập năm sinh, "bộ não" soi thử một lát cắt THẬT. */}
+        {/* v5 — Lời mời chính: nhập ngày sinh, "bộ não" soi qua nhiều lăng kính. */}
         {!reveal && (
           <form className="ob-soi" onSubmit={onSoi}>
-            <label htmlFor="ob-year" className="ob-soi-label">
-              Nhập năm sinh — để bộ não soi thử một lát cắt về bạn
+            <label htmlFor="ob-dob" className="ob-soi-label">
+              Nhập ngày sinh — để bộ não soi bạn qua nhiều lăng kính
             </label>
             <div className="ob-soi-row">
               <input
-                id="ob-year"
-                className="ob-soi-input"
-                type="text"
-                inputMode="numeric"
-                autoComplete="off"
-                pattern="[0-9]*"
-                maxLength={4}
-                placeholder="VD 1990"
-                value={year}
+                id="ob-dob"
+                className="ob-soi-input ob-soi-date"
+                type="date"
+                min="1950-01-01"
+                max="2026-12-31"
+                value={birthDate}
                 onChange={(e) => {
-                  setYear(e.target.value.replace(/\D/g, '').slice(0, 4));
+                  setBirthDate(e.target.value);
                   if (err) setErr(null);
                 }}
-                aria-describedby={err ? 'ob-year-err' : 'ob-year-note'}
+                aria-describedby={err ? 'ob-dob-err' : 'ob-dob-note'}
                 aria-invalid={err ? true : undefined}
               />
               <button type="submit" className="ob-soi-btn" disabled={reading}>
@@ -174,12 +199,12 @@ export function OracleBrain(): React.JSX.Element {
               </button>
             </div>
             {err ? (
-              <span id="ob-year-err" className="ob-soi-err" role="alert">
+              <span id="ob-dob-err" className="ob-soi-err" role="alert">
                 {err}
               </span>
             ) : (
-              <span id="ob-year-note" className="ob-soi-note">
-                Chỉ tính từ năm sinh · không lưu gì · hoặc chạm một nhóm bên dưới
+              <span id="ob-dob-note" className="ob-soi-note">
+                Cổ học Á Đông + chiêm tinh phương Tây · tính ngay trên máy, không lưu
               </span>
             )}
           </form>
@@ -198,7 +223,6 @@ export function OracleBrain(): React.JSX.Element {
           onDragStart={(e) => e.preventDefault()}
         >
           <svg className="ob-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-            {/* main lines: hub → center (first → nth-of-type stagger works) */}
             {HUBS.map((h, i) => (
               <line
                 key={`l${i}`}
@@ -211,7 +235,6 @@ export function OracleBrain(): React.JSX.Element {
                 className={`ob-line${isOn(i) ? ' ob-line-on' : ''}`}
               />
             ))}
-            {/* faint branch lines: hub → its satellites */}
             {HUBS.map((h, i) =>
               h.sats.map((s, k) => (
                 <line
@@ -236,7 +259,6 @@ export function OracleBrain(): React.JSX.Element {
             />
           ))}
 
-          {/* converging data pulses (one per hub, travels hub → center) */}
           {HUBS.map((h, i) => (
             <span
               key={`p${i}`}
@@ -252,7 +274,6 @@ export function OracleBrain(): React.JSX.Element {
             />
           ))}
 
-          {/* satellite tool-nodes */}
           {HUBS.map((h, i) =>
             h.sats.map((s, k) => (
               <span
@@ -269,7 +290,7 @@ export function OracleBrain(): React.JSX.Element {
             <span className="ob-center-dot" aria-hidden="true" />
             <span className="ob-center-label">BẠN</span>
             <span className="ob-center-sub">
-              {reveal ? `${conVat} · mệnh ${reveal.elementName}` : 'hiểu mình sâu'}
+              {reveal ? `${reveal.conVat} · mệnh ${reveal.dong.elementName}` : 'hiểu mình sâu'}
             </span>
           </div>
 
@@ -293,35 +314,65 @@ export function OracleBrain(): React.JSX.Element {
           ))}
         </div>
 
-        {/* v4 — Lát cắt THẬT về khách (tính từ năm sinh; chưa lưu gì). */}
+        {/* v5 — Lát cắt THẬT qua nhiều lăng kính (tính trên máy; chưa lưu gì). */}
         {reveal && (
           <div className="ob-detail-wrap">
             <div className="ob-reveal" role="region" aria-live="polite" aria-label="Lát cắt về bạn">
               <div className="ob-reveal-head">
                 <span className="ob-reveal-emoji" aria-hidden="true">
-                  {reveal.zodiac.emoji}
+                  {reveal.dong.zodiac.emoji}
                 </span>
                 <span className="ob-reveal-heading">
-                  <span className="ob-reveal-title">
-                    Tuổi {reveal.canChi} · con {conVat}
-                  </span>
-                  <span className="ob-reveal-menh">
-                    Mệnh {reveal.elementName} — {reveal.napAmName}
-                  </span>
+                  <span className="ob-reveal-title">Lát cắt về bạn</span>
+                  <span className="ob-reveal-menh">Nhiều lăng kính — một bức tranh</span>
                 </span>
                 <button
                   type="button"
                   className="ob-detail-close"
                   onClick={resetReveal}
-                  aria-label="Thử năm khác"
+                  aria-label="Thử ngày khác"
                 >
                   ×
                 </button>
               </div>
+
+              <div className="ob-lens">
+                <span className="ob-lens-tag">Cổ học Á Đông</span>
+                <p className="ob-lens-line">
+                  <strong>
+                    Tuổi {reveal.dong.canChi} · con {reveal.conVat}
+                  </strong>{' '}
+                  — mệnh {reveal.dong.elementName} ({reveal.dong.napAmName}).
+                </p>
+                <p className="ob-lens-sub">
+                  {hopColors.length > 0 && <>Hợp màu {hopColors.join(', ')}. </>}
+                  {reveal.dong.avoidColors.length > 0 && (
+                    <>Nên tiết chế {reveal.dong.avoidColors.join(', ')}. </>
+                  )}
+                  {reveal.dong.careers.length > 0 && (
+                    <>Hợp hướng nghề {reveal.dong.careers.slice(0, 2).join(', ')}.</>
+                  )}
+                </p>
+              </div>
+
+              {reveal.tay && (
+                <div className="ob-lens">
+                  <span className="ob-lens-tag">Chiêm tinh phương Tây</span>
+                  <p className="ob-lens-line">
+                    <strong>
+                      Cung {reveal.tay.name} {reveal.tay.symbol}
+                    </strong>
+                  </p>
+                  <p className="ob-lens-sub">
+                    {reveal.tay.tagline}
+                    {reveal.nearCusp && ' (sinh sát ranh giới cung — cần giờ sinh để chắc chắn).'}
+                  </p>
+                </div>
+              )}
+
               <p className="ob-reveal-body">
-                {hopColors.length > 0 && <>Hợp màu {hopColors.join(', ')}. </>}
-                {reveal.careers.length > 0 && <>Hợp hướng nghề {reveal.careers.slice(0, 2).join(', ')}. </>}
-                Đây mới là một lát cắt từ năm sinh — bức tranh đầy đủ cần ngày, giờ sinh.
+                Đông gặp Tây — mới là hai lát cắt. Bức tranh đầy đủ (Tử Vi, Bát Tự, tâm lý…) cần
+                thêm giờ sinh.
               </p>
               <div className="ob-reveal-actions">
                 <a
@@ -332,15 +383,14 @@ export function OracleBrain(): React.JSX.Element {
                   Xem bức tranh đầy đủ →
                 </a>
                 <button type="button" className="ob-reveal-again" onClick={resetReveal}>
-                  Thử năm khác
+                  Thử ngày khác
                 </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Bảng chi tiết — hiện khi chạm/chọn một nhóm. Tên công cụ là DOM text
-            (dịch được). Chạm "×" hoặc chạm lại nhóm để thu về. */}
+        {/* Bảng chi tiết nhóm công cụ — hiện khi chạm/chọn một nhóm. */}
         {sel && (
           <div className="ob-detail-wrap">
             <div className="ob-detail" role="region" aria-label={`Công cụ nhóm ${sel.label}`}>
