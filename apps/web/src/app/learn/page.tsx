@@ -98,6 +98,12 @@ const TOPICS: readonly LearnTopic[] = [
     subtitle: 'Đông phương — Can Chi',
     blurb: 'Tam Hợp / Lục Hợp / Xung / Hại + nạp âm; giọng dung hòa, không phán khắc.',
   },
+  {
+    href: '/learn/sao-han',
+    title: 'Sao Hạn (Cửu Diệu)',
+    subtitle: 'Đông phương — 9 sao',
+    blurb: '9 sao chiếu mệnh theo tuổi + giới tính; góc nhìn tham khảo, không mê tín.',
+  },
 ];
 
 export default function LearnLandingPage() {

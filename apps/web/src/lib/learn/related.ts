@@ -26,6 +26,7 @@ const LEARN_TOPICS: readonly LearnTopic[] = [
   { slug: 'phong-thuy', eyebrow: 'PHONG THỦY', name: 'Phong Thủy', href: '/learn/phong-thuy' },
   { slug: 'chiem-tinh', eyebrow: 'CHIÊM TINH', name: 'Chiêm tinh', href: '/learn/chiem-tinh' },
   { slug: 'hop-tuoi', eyebrow: 'CAN CHI', name: 'Hợp tuổi', href: '/learn/hop-tuoi' },
+  { slug: 'sao-han', eyebrow: 'CỬU DIỆU', name: 'Sao Hạn', href: '/learn/sao-han' },
 ];
 
 /**
