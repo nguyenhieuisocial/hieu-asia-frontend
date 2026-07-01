@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage } from '@/lib/seo/jsonld';
 import { ZODIAC, pairToSlug } from '@/lib/hop-tuoi-pairs';
@@ -115,6 +116,16 @@ export default function HopTuoiTuoiHubPage() {
             </div>
           </div>
         </section>
+
+        <div className="mt-12 border-t border-border pt-6">
+          <RelatedTools
+            links={[
+              { href: '/hop-tuoi', label: 'Hợp tuổi theo năm sinh' },
+              { href: '/xem-hop-nhom', label: 'Xem hợp nhóm' },
+              { href: '/learn/con-giap', label: 'Tìm hiểu 12 con giáp' },
+            ]}
+          />
+        </div>
 
         <p className="mt-10 text-center text-xs text-foreground/40">
           Tham khảo tổng quan theo con giáp — không bói toán, không quyết định số phận.

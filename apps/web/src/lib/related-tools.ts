@@ -67,14 +67,27 @@ const L = {
   kimLau: { href: '/kim-lau', label: 'Kim Lâu (tuổi cưới)' },
   mauXe: { href: '/mau-xe-hop-menh', label: 'Màu xe hợp mệnh' },
   huongBan: { href: '/huong-ban-lam-viec', label: 'Hướng bàn làm việc' },
+  // 2026-07: cross-view — mỗi công cụ trỏ THÊM sang bài Học tương ứng (Học ↔ công cụ).
+  lnBatTu: { href: '/learn/bat-tu', label: 'Tìm hiểu Bát Tự' },
+  lnThanSo: { href: '/learn/than-so-hoc', label: 'Tìm hiểu Thần số học' },
+  lnMbti: { href: '/learn/mbti', label: 'Tìm hiểu MBTI' },
+  lnBigFive: { href: '/learn/big-five', label: 'Tìm hiểu Big Five' },
+  lnDisc: { href: '/learn/disc', label: 'Tìm hiểu DISC' },
+  lnEnneagram: { href: '/learn/enneagram', label: 'Tìm hiểu Enneagram' },
+  lnPalm: { href: '/learn/palm', label: 'Tìm hiểu Xem tướng' },
+  lnTarot: { href: '/learn/tarot', label: 'Tìm hiểu Tarot' },
+  lnKinhDich: { href: '/learn/kinh-dich', label: 'Tìm hiểu Kinh Dịch' },
+  lnSaoHan: { href: '/learn/sao-han', label: 'Tìm hiểu Sao hạn' },
+  lnHopTuoi: { href: '/learn/hop-tuoi', label: 'Tìm hiểu hợp tuổi' },
+  lnPhongThuy: { href: '/learn/phong-thuy', label: 'Tìm hiểu Phong thuỷ' },
 } as const;
 
 export const RELATED_TOOLS: Record<string, RelatedLink[]> = {
   // Tử Vi / mệnh lý Á Đông
   '/tu-vi': [L.tuvi2027, L.battu, L.thanso, L.menhcuc, L.lichvannien, L.bangchung],
   '/bang-chung': [L.laso, L.tuvi, L.battu],
-  '/bat-tu': [L.tuvi, L.thanso, L.canxuong, L.datten],
-  '/than-so-hoc': [L.tuvi, L.battu, L.mbti, L.canxuong],
+  '/bat-tu': [L.tuvi, L.thanso, L.canxuong, L.datten, L.lnBatTu],
+  '/than-so-hoc': [L.tuvi, L.battu, L.mbti, L.canxuong, L.lnThanSo],
   '/can-xuong': [L.tuvi, L.battu, L.thanso, L.saohan],
   '/tinh-menh-cuc': [L.tuvi, L.battu, L.thanso, L.bangchung],
   '/tu-vi-2026': [L.tuvi, L.tuvi2027, L.saohan, L.tuvihomnay, L.bangchung],
@@ -84,18 +97,18 @@ export const RELATED_TOOLS: Record<string, RelatedLink[]> = {
   '/tu-vi-tinh-yeu': [L.tuvi, L.hoptuoi, L.compat],
   '/tu-vi-tai-chinh': [L.tuvi, L.battu, L.tuvinghe],
   // Tâm lý học
-  '/mbti': [L.bigfive, L.disc, L.enneagram, L.sosanh],
-  '/big-five': [L.mbti, L.disc, L.enneagram, L.sosanh],
-  '/disc': [L.mbti, L.bigfive, L.enneagram, L.careerfit],
-  '/enneagram': [L.mbti, L.bigfive, L.disc, L.sosanh],
+  '/mbti': [L.bigfive, L.disc, L.enneagram, L.sosanh, L.lnMbti],
+  '/big-five': [L.mbti, L.disc, L.enneagram, L.sosanh, L.lnBigFive],
+  '/disc': [L.mbti, L.bigfive, L.enneagram, L.careerfit, L.lnDisc],
+  '/enneagram': [L.mbti, L.bigfive, L.disc, L.sosanh, L.lnEnneagram],
   // Chiêm nghiệm / phản tư
-  '/gieo-que': [L.tarot, L.xemtuong, L.tuvi],
-  '/tarot': [L.gieoque, L.xemtuong, L.mbti],
-  '/xem-tuong': [L.tuvi, L.gieoque, L.thanso],
+  '/gieo-que': [L.tarot, L.xemtuong, L.tuvi, L.lnKinhDich],
+  '/tarot': [L.gieoque, L.xemtuong, L.mbti, L.lnTarot],
+  '/xem-tuong': [L.tuvi, L.gieoque, L.thanso, L.lnPalm],
   // Lịch & ngày giờ
   '/lich-van-nien': [L.xemngay, L.giohoangdao, L.ngaykiengky, L.saohan],
   // Tương hợp
-  '/hop-tuoi': [L.hopnhom, L.compat, L.datten, L.saohan],
+  '/hop-tuoi': [L.hopnhom, L.compat, L.datten, L.saohan, L.lnHopTuoi],
   '/xem-hop-nhom': [L.hoptuoi, L.compat, L.mbti],
   '/compatibility': [L.hoptuoi, L.hopnhom, L.mbti],
   // Khác
@@ -110,7 +123,7 @@ export const RELATED_TOOLS: Record<string, RelatedLink[]> = {
   // Hiểu bản thân (chiêm tinh Tây)
   '/ban-do-sao': [L.cungHoangDao, L.mbti, L.bigfive, L.xemtuong],
   // Vận trình & thời gian
-  '/sao-han': [L.tuvihomnay, L.tuvi2026, L.daiVan, L.lichvannien],
+  '/sao-han': [L.tuvihomnay, L.tuvi2026, L.daiVan, L.lichvannien, L.lnSaoHan],
   // Xem ngày – giờ
   '/xem-ngay': [L.lichvannien, L.giohoangdao, L.ngaykiengky, L.xuatHanh],
   '/gio-hoang-dao': [L.xemngay, L.ngaykiengky, L.xuatHanh, L.lichvannien],
@@ -123,9 +136,9 @@ export const RELATED_TOOLS: Record<string, RelatedLink[]> = {
   '/khai-truong': [L.tamTai, L.xemngay, L.xemTuoiCuoi, L.hoptuoi, L.saohan],
   '/xong-dat': [L.hoptuoi, L.xemTuoiCuoi, L.tuvi2027, L.xemngay],
   '/huong-nha': [L.phiTinh, L.thuocloban, L.banMenh, L.huongBan, L.xemTuoiLamNha],
-  '/phi-tinh': [L.huongNha, L.thuocloban, L.banMenh, L.xemTuoiLamNha],
+  '/phi-tinh': [L.huongNha, L.thuocloban, L.banMenh, L.xemTuoiLamNha, L.lnPhongThuy],
   '/mau-xe-hop-menh': [L.banMenh, L.huongNha, L.huongBan, L.hoptuoi],
-  '/huong-ban-lam-viec': [L.huongNha, L.banMenh, L.mauXe, L.thuocloban],
+  '/huong-ban-lam-viec': [L.huongNha, L.banMenh, L.mauXe, L.thuocloban, L.lnPhongThuy],
   '/tam-tai': [L.xemTuoiCuoi, L.kimLau, L.saohan, L.hoptuoi],
   '/kim-lau': [L.xemTuoiCuoi, L.tamTai, L.xemngay, L.hoptuoi],
   // Quan hệ & gia đình

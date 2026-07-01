@@ -19,6 +19,7 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
@@ -510,7 +511,7 @@ export default function BatTuMethodologyPage() {
         </section>
 
         {/* 9. References */}
-        <section className="relative mx-auto max-w-4xl px-6 pb-20 pt-8">
+        <section className="relative mx-auto max-w-4xl px-6 pt-8">
           <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
             9. References
           </h2>
@@ -530,6 +531,36 @@ export default function BatTuMethodologyPage() {
               </li>
             ))}
           </ul>
+        </section>
+
+        {/* CTA + cross-links */}
+        <section className="relative mx-auto max-w-4xl px-6 pb-20 pt-8">
+          <div className="flex flex-col gap-5 rounded-xl border border-gold/25 bg-gold/5 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+            <div>
+              <h2 className="font-heading text-xl font-bold text-foreground sm:text-2xl">
+                Thử xem lá số Bát Tự của bạn
+              </h2>
+              <p className="mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
+                Nhập ngày giờ sinh, engine tính 4 trụ, thập thần và ngũ hành để
+                bạn đối chiếu cùng lá số Tử Vi.
+              </p>
+            </div>
+            <Link
+              href="/bat-tu"
+              className="inline-flex shrink-0 items-center justify-center rounded-xl bg-gold px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-gold-soft"
+            >
+              Xem Bát Tự
+            </Link>
+          </div>
+          <div className="mt-6">
+            <RelatedTools
+              links={[
+                { href: '/tu-vi', label: 'Lập lá số Tử Vi' },
+                { href: '/methodology/tu-vi', label: 'Phương pháp Tử Vi' },
+                { href: '/methodology', label: 'Tổng quan phương pháp' },
+              ]}
+            />
+          </div>
         </section>
       </main>
       <SiteFooter />

@@ -21,6 +21,7 @@ import {
   Skeleton,
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
@@ -286,6 +287,16 @@ export default function ThanSoHocResultPage() {
           <ResultActions data={data} />
 
           <PremiumCta />
+
+          <div className="border-t border-border pt-6">
+            <RelatedTools
+              links={[
+                { href: '/than-so-hoc', label: 'Tính lại Thần Số Học' },
+                { href: '/learn/than-so-hoc', label: 'Tìm hiểu Thần Số Học' },
+                { href: '/so-sanh', label: 'So sánh các lăng kính' },
+              ]}
+            />
+          </div>
         </div>
       )}
     </ToolPageShell>

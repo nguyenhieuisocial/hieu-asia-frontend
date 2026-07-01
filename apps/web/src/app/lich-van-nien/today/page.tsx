@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, Input, Label, Skeleton } from '@hieu-asia/ui';
 import { DayCard, type VanNienDayDTO } from '@/components/lich-van-nien/DayCard';
 import {
@@ -9,6 +8,7 @@ import {
   type VanNienMonthDayDTO,
 } from '@/components/lich-van-nien/CalendarMonth';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { safeJson } from '@/lib/safe-json';
 import { getVietnamDateParts } from '@/lib/vn-date';
 
@@ -188,9 +188,14 @@ export default function TodayPage() {
           />
         )}
 
-        <div className="text-center text-xs text-muted-foreground">
-          <Link href="/lich-van-nien" className="hover:text-gold">← Quay lại Lịch Vạn Niên</Link>
-        </div>
+        <RelatedTools
+          links={[
+            { href: '/lich-van-nien', label: 'Lịch Vạn Niên' },
+            { href: '/xem-ngay', label: 'Xem ngày tốt' },
+            { href: '/gio-hoang-dao', label: 'Giờ hoàng đạo' },
+            { href: '/ngay-kieng-ky', label: 'Ngày kiêng kỵ' },
+          ]}
+        />
       </section>
     </ToolPageShell>
   );

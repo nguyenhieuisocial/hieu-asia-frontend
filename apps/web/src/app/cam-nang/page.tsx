@@ -15,9 +15,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { BookOpen, ArrowRight } from 'lucide-react';
+import { Button } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage } from '@/lib/seo/jsonld';
 
@@ -148,6 +150,35 @@ export default async function CamNangIndexPage() {
                   </Link>
                 ))
               )}
+          </div>
+
+          {/* CTA + khám phá thêm — để trang không phải ngõ cụt */}
+          <div className="mt-12 rounded-card-editorial border border-gold/25 bg-gradient-to-br from-gold/[0.06] to-transparent p-6 sm:p-8">
+            <h2 className="font-heading text-xl font-semibold text-foreground sm:text-2xl">
+              Đọc xong rồi soi vào chính mình?
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              Lập lá số miễn phí trong 2 phút để xem những gì cẩm nang nói áp dụng thế nào
+              với lá số riêng của bạn — không cần tài khoản.
+            </p>
+            <div className="mt-4">
+              <Button asChild>
+                <Link href="/onboarding">
+                  Lập lá số của tôi
+                  <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden />
+                </Link>
+              </Button>
+            </div>
+          </div>
+
+          <div className="mt-8 border-t border-border pt-6">
+            <RelatedTools
+              links={[
+                { href: '/learn', label: 'Học về các bộ môn' },
+                { href: '/hoi-dap', label: 'Hỏi đáp' },
+                { href: '/tu-vi', label: 'Xem Tử Vi' },
+              ]}
+            />
           </div>
         </section>
       </main>

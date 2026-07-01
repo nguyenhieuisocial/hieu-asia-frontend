@@ -24,6 +24,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { TimeFlowChecker } from '@/components/time-flow/TimeFlowChecker';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const dynamic = 'force-dynamic';
@@ -286,6 +287,17 @@ export default function MonthlyPlanningPage() {
             </Link></Button>
           </div>
         </section>
+
+        <div className="mt-12">
+          <RelatedTools
+            links={[
+              { href: '/annual-planning', label: 'Kế hoạch năm' },
+              { href: '/weekly-review', label: 'Đánh giá tuần' },
+              { href: '/journal', label: 'Nhật ký quyết định' },
+              { href: '/decisions', label: 'Decision Brief' },
+            ]}
+          />
+        </div>
       </section>
 
       <SiteFooter />
