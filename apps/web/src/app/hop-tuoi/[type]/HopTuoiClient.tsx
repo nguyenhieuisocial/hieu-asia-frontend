@@ -26,6 +26,7 @@ import { BirthInputPair, isValidPerson, type PersonInput } from '@/components/ho
 import { CompatibilityScore } from '@/components/hop-tuoi/CompatibilityScore';
 import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 import { safeJson } from '@/lib/safe-json';
+import { describeApiError } from '@/lib/api-error';
 import type { HopTuoiType } from './page';
 
 // ----- shared API -----
@@ -112,7 +113,7 @@ function TwoPersonFlow({ type }: { type: 'wedding' | 'business' }) {
       if (!data.ok) throw new Error(data.error || 'Lỗi không xác định');
       setResult(data.result as CompatibilityResult);
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : String(e));
+      setError(describeApiError(e));
     } finally {
       setLoading(false);
     }
@@ -193,7 +194,7 @@ function BirthChildFlow() {
       if (!data.ok) throw new Error(data.error || 'Lỗi');
       setResult(data.result as BirthChildResult);
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : String(e));
+      setError(describeApiError(e));
     } finally {
       setLoading(false);
     }
@@ -398,7 +399,7 @@ function XongDatFlow() {
       if (!data.ok) throw new Error(data.error || 'Lỗi');
       setResult(data.result as XongDatResult);
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : String(e));
+      setError(describeApiError(e));
     } finally {
       setLoading(false);
     }

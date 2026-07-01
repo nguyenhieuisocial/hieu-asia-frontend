@@ -13,7 +13,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Fingerprint } from 'lucide-react';
+import { Fingerprint, MapPin } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -54,6 +54,8 @@ export interface CustomerDetailTabsProps {
   userId: string;
   /** Stitched cross-device/channel identities (visitor_identities) for this user. */
   identities?: CustomerDetailResponse['identities'];
+  /** Supabase Auth profile (name / last-login / provider) from auth.users. */
+  authInfo?: CustomerDetailResponse['auth_info'];
   /** Refetch the customer after a per-session access grant/revoke. */
   onSessionMutated?: () => void;
   /** Refetch the customer after a refund approve/reject. */
@@ -70,6 +72,7 @@ export function CustomerDetailTabs({
   onValueChange,
   userId,
   identities,
+  authInfo,
   onSessionMutated,
   onRefundMutated,
 }: CustomerDetailTabsProps) {
@@ -137,8 +140,91 @@ export function CustomerDetailTabs({
   return (
     <div className="space-y-6">
       <IdentityCard customer={customer} userId={userId} identities={identities} />
+      <AccessDeviceCard customer={customer} sessions={sessions} authInfo={authInfo} />
       <ProductTabs tabs={tabs} value={value} onValueChange={onValueChange} />
     </div>
+  );
+}
+
+/**
+ * "Truy cập & thiết bị" — login time / method / IP / device / activity in one
+ * place. Login-side fields (name, last sign-in, provider, email-verified,
+ * joined) come from Supabase Auth (auth.users, via the detail API's auth_info);
+ * IP / location / device come from the MOST RECENT reading session's request
+ * metadata (readSessionEnv). A customer with no reading sessions legitimately
+ * has no IP/device — those show "chưa có", while login fields still populate.
+ */
+function AccessDeviceCard({
+  customer,
+  sessions,
+  authInfo,
+}: {
+  customer: CustomerDetail | null;
+  sessions: SessionRow[];
+  authInfo?: CustomerDetailResponse['auth_info'];
+}) {
+  // sessions arrive updated_at desc → first one carrying request metadata is
+  // the latest known IP / device / location for this customer.
+  const latest = sessions
+    .map((s) => readSessionEnv(s.state_json))
+    .find((e) => e.ip || e.userAgent);
+  const location = latest
+    ? [latest.city, latest.region, latest.country].filter(Boolean).join(', ')
+    : '';
+  const providers = authInfo?.providers ?? null;
+  const joined = authInfo?.created_at ?? customer?.created_at ?? null;
+
+  const withRel = (iso?: string | null) =>
+    iso ? `${fmtDate(iso)} · ${fmtRelative(iso)}` : undefined;
+
+  const rows: Array<{ label: string; value?: string; mono?: boolean }> = [
+    { label: 'Tên (từ tài khoản)', value: authInfo?.display_name ?? customer?.display_name ?? undefined },
+    { label: 'Đăng nhập lần cuối', value: withRel(authInfo?.last_sign_in_at) },
+    { label: 'Đăng nhập qua', value: providers && providers.length ? providers.join(', ') : undefined },
+    { label: 'Email xác thực', value: authInfo?.email_confirmed_at ? 'Đã xác thực' : undefined },
+    { label: 'Tham gia', value: joined ? fmtDate(joined) : undefined },
+    { label: 'Hoạt động cuối', value: withRel(customer?.last_active) },
+    { label: 'Tổng phiên đọc', value: String(sessions.length) },
+    { label: 'IP gần nhất', value: latest?.ip, mono: true },
+    { label: 'Vị trí gần nhất', value: location || undefined },
+    { label: 'Thiết bị gần nhất', value: latest?.userAgent, mono: true },
+  ];
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <MapPin className="h-4 w-4 text-gold/70" aria-hidden />
+          Truy cập &amp; thiết bị
+        </CardTitle>
+        <CardDescription>
+          Đăng nhập, IP, thiết bị &amp; hoạt động — gộp từ Supabase Auth + phiên đọc.
+          {sessions.length === 0
+            ? ' Khách chưa tạo phiên đọc nào khi đăng nhập → chưa có IP/thiết bị.'
+            : ''}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <dl className="grid gap-3 sm:grid-cols-2">
+          {rows.map((r) => (
+            <div key={r.label} className="space-y-0.5">
+              <dt className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                {r.label}
+              </dt>
+              <dd
+                className={
+                  (r.mono ? 'font-mono ' : '') +
+                  'break-all text-sm ' +
+                  (r.value ? 'text-foreground/90' : 'italic text-muted-foreground')
+                }
+              >
+                {r.value || 'chưa có'}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </CardContent>
+    </Card>
   );
 }
 

@@ -101,6 +101,16 @@ export interface CustomerDetailResponse {
     first_seen?: string | null;
     last_seen?: string | null;
   }>;
+  /** Supabase Auth profile (auth.users) — name / last-login / provider / verified,
+   *  which do NOT live on hieu_asia.users. Null for non-uuid ids or on failure. */
+  auth_info?: {
+    display_name?: string | null;
+    last_sign_in_at?: string | null;
+    created_at?: string | null;
+    email_confirmed_at?: string | null;
+    phone?: string | null;
+    providers?: string[] | null;
+  } | null;
   note?: string;
   error?: string;
 }
