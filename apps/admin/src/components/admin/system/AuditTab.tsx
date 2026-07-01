@@ -41,6 +41,7 @@ import {
   DropdownMenuTrigger,
   Input,
   StatusBadge,
+  Time24,
 } from '@hieu-asia/ui';
 import {
   Activity,
@@ -239,6 +240,41 @@ const COLUMNS: AdminTableColumn<AuditEntry>[] = [
   },
 ];
 
+/**
+ * DateTime24 — ô NGÀY + GIỜ (Time24 24h) thay cho `<input type="datetime-local">`
+ * (control đó hiện AM/PM "SA/CH" theo locale trình duyệt — Google Translate không
+ * dịch được). Giữ NGUYÊN hợp đồng value = "YYYY-MM-DDTHH:MM" | "" nên
+ * `new Date(value).toISOString()` ở fetchAudit không đổi.
+ */
+function DateTime24({
+  value,
+  onChange,
+  dateLabel,
+  timeLabel,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  dateLabel: string;
+  timeLabel: string;
+}) {
+  const [datePart = '', timePart = ''] = value.split('T');
+  const emit = (d: string, t: string): void => {
+    onChange(d ? `${d}T${t || '00:00'}` : '');
+  };
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      <Input
+        type="date"
+        value={datePart}
+        onChange={(e) => emit(e.target.value, timePart)}
+        aria-label={dateLabel}
+        className="min-w-0 flex-1"
+      />
+      <Time24 value={timePart} onChange={(t) => emit(datePart, t)} aria-label={timeLabel} />
+    </div>
+  );
+}
+
 export function AuditTab() {
   // Free-text action search is the source of truth for the `action` filter
   // (Worker now does a case-insensitive PREFIX match). The preset dropdown is a
@@ -311,20 +347,6 @@ export function AuditTab() {
   const handleActorChange = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setActorInput(e.target.value);
-    },
-    [],
-  );
-
-  const handleFromChange = React.useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setFrom(e.target.value);
-    },
-    [],
-  );
-
-  const handleToChange = React.useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setTo(e.target.value);
     },
     [],
   );
@@ -446,17 +468,17 @@ export function AuditTab() {
               onChange={handleActorChange}
               placeholder="Actor (email / user_id)…"
             />
-            <Input
-              type="datetime-local"
+            <DateTime24
               value={from}
-              onChange={handleFromChange}
-              aria-label="Từ thời điểm"
+              onChange={setFrom}
+              dateLabel="Từ ngày"
+              timeLabel="Từ giờ"
             />
-            <Input
-              type="datetime-local"
+            <DateTime24
               value={to}
-              onChange={handleToChange}
-              aria-label="Đến thời điểm"
+              onChange={setTo}
+              dateLabel="Đến ngày"
+              timeLabel="Đến giờ"
             />
           </div>
         </CardContent>
