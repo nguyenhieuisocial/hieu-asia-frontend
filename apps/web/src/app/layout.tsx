@@ -15,6 +15,7 @@ import { ThemeProvider } from '@/components/providers/theme-provider';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { LazyMotionProvider } from '@/components/providers/lazy-motion-provider';
 import { PlausibleScript } from '@/components/analytics/PlausibleScript';
+import { AhrefsAnalytics } from '@/components/analytics/AhrefsAnalytics';
 import { GoogleTags } from '@/components/analytics/GoogleTags';
 import { PostHogProvider } from '@/components/PostHogProvider';
 import { ConsentBanner } from '@/components/cmp/ConsentBanner';
@@ -319,6 +320,10 @@ export default async function RootLayout({
           </ThemeProvider>
         </NextIntlClientProvider>
         <PlausibleScript />
+        {/* Ahrefs Web Analytics — cookieless/GDPR-friendly (like Plausible),
+            so it mounts un-gated. Feeds the AWT "Web Analytics" report with
+            SEO-correlated traffic (traffic ↔ keywords/rankings). */}
+        <AhrefsAnalytics />
         {/* GTM + GA4 — consent-gated: loads only after the visitor grants
             analytics consent (lib/google-tags via the CMP). Returning
             already-consented visitors get it re-loaded here on mount. */}
