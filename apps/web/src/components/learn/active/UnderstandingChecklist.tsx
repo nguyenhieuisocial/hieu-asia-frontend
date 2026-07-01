@@ -9,7 +9,13 @@
  * tick. Đây là TỰ ĐÁNH GIÁ để biết mình đang ở đâu — không phải bài thi.
  *
  * Trạng thái tick lưu localStorage theo topicId (đọc trong useEffect sau mount
- * để khớp hydrate). 0 LLM, 0 server.
+ * để khớp hydrate). 0 LLM.
+ *
+ * Đồng bộ đa thiết bị (TÙY CHỌN, best-effort): localStorage vẫn là nguồn chính.
+ * Sau mount cũng GET /api/user/preferences để union trạng thái từ server; mỗi
+ * lần tick POST (debounce ~600ms) lên cùng key. Mọi lỗi (401 khi chưa đăng nhập,
+ * network...) đều nuốt im lặng — không bao giờ vỡ UI. Chỉ chạm mạng trong
+ * useEffect / event handler (hydration-safe).
  */
 
 import * as React from 'react';
@@ -36,17 +42,71 @@ const keyFor = (topicId: string) => `learn:understanding:${topicId}`;
 export function UnderstandingChecklist({ topicId, facets }: UnderstandingChecklistProps) {
   const [checked, setChecked] = React.useState<Record<string, boolean>>({});
   const [hydrated, setHydrated] = React.useState(false);
+  const syncTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Đọc localStorage SAU mount để không lệch hydrate (SSR = tất cả chưa tick).
+  // Rồi GET server để union (best-effort, chưa đăng nhập → 401 → bỏ qua im lặng).
   React.useEffect(() => {
+    let local: Record<string, boolean> = {};
     try {
       const raw = window.localStorage.getItem(keyFor(topicId));
-      if (raw) setChecked(JSON.parse(raw) as Record<string, boolean>);
+      if (raw) {
+        local = JSON.parse(raw) as Record<string, boolean>;
+        setChecked(local);
+      }
     } catch {
       /* ignore */
     }
     setHydrated(true);
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/user/preferences', { credentials: 'same-origin' });
+        if (!res.ok) return;
+        const data = (await res.json()) as { ok?: boolean; preferences?: Record<string, unknown> };
+        const remote = data?.preferences?.[keyFor(topicId)];
+        if (!data?.ok || cancelled || typeof remote !== 'object' || remote === null) return;
+        // Union: server ∪ localStorage. Ghi lại localStorage để hai bên đồng bộ.
+        const merged = { ...(remote as Record<string, boolean>), ...local };
+        setChecked(merged);
+        try {
+          window.localStorage.setItem(keyFor(topicId), JSON.stringify(merged));
+        } catch {
+          /* ignore */
+        }
+      } catch {
+        /* ignore: 401/network — localStorage vẫn là nguồn chính */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [topicId]);
+
+  // Dọn timer debounce khi unmount.
+  React.useEffect(
+    () => () => {
+      if (syncTimer.current) clearTimeout(syncTimer.current);
+    },
+    [],
+  );
+
+  // POST debounce (~600ms) — fire-and-forget, nuốt mọi lỗi. user_id:'self' chỉ
+  // là placeholder cho PrefsSchema; proxy luôn ghi đè bằng user_id từ session.
+  const scheduleSync = (nextChecked: Record<string, boolean>) => {
+    if (syncTimer.current) clearTimeout(syncTimer.current);
+    syncTimer.current = setTimeout(() => {
+      fetch('/api/user/preferences', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ user_id: 'self', prefs: { [keyFor(topicId)]: nextChecked } }),
+      }).catch(() => {
+        /* best-effort */
+      });
+    }, 600);
+  };
 
   const toggle = (id: string) => {
     const checkedNext = !checked[id];
@@ -57,6 +117,7 @@ export function UnderstandingChecklist({ topicId, facets }: UnderstandingCheckli
       } catch {
         /* ignore */
       }
+      scheduleSync(next);
       return next;
     });
     // Đo lường ngoài updater (tránh fire 2 lần ở StrictMode dev).

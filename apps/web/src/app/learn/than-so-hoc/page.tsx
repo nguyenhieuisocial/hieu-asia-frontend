@@ -120,7 +120,7 @@ export default function LearnThanSoHocPage() {
         heading: 'Trải nghiệm ngay',
         blurb:
           'Chỉ cần ngày sinh và tên đầy đủ, hệ thống tính ra số chủ đạo, số biểu hiện và số linh hồn, kèm diễn giải năng lượng từng số.',
-        href: '/reading/new?method=numerology',
+        href: '/than-so-hoc',
         label: 'Khám phá Thần Số Học',
       }}
       sections={[

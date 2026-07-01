@@ -105,7 +105,7 @@ export function FloatingTOC({
             variant="outline"
             size="sm"
             aria-label={`Mở ${title.toLowerCase()}`}
-            className="fixed bottom-24 left-4 z-40 h-11 min-h-[44px] gap-2 rounded-card-editorial border-gold/30 bg-card/95 shadow-sm backdrop-blur"
+            className="fixed bottom-24 left-4 z-40 h-11 min-h-[44px] gap-2 rounded-card-editorial border-gold/30 bg-card shadow-md"
           >
             <List className="size-4" aria-hidden="true" />
             {title}

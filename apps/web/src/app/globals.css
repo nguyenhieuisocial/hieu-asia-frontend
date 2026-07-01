@@ -108,6 +108,13 @@
      * --ochre-rgb in dark mode resolves to gold-night for consistent
      * alpha math. */
     --ochre-rgb: 224 174 98;         /* Gold #E0AE62 in night mode */
+
+    /* /learn infographic surfaces — raised dark fills so near-black
+     * silhouettes stay visible on the ~#18 dark bg. NOT defined in :root,
+     * so light mode falls back to the literal hex in each var() call. */
+    --ig-fill: #2e2f35;      /* was #1A1A1C hand/sector/center fills */
+    --ig-fill-2: #26272c;    /* was #0E0E0F hub/node inactive fills */
+    --ig-gradient: #2a2438;  /* was #0E0E0F tu-vi radial gradient stop */
   }
 
   * {
@@ -832,10 +839,16 @@ body {
  * sâu (vignette tối dần ra rìa → thấy mình nhỏ bé), bụi sao dày, dải Ngân Hà
  * chéo, vầng nebula ấm (vàng) + lạnh (tím mystic/xanh). Mép section CRISP —
  * KHÔNG fade sang màu kem (đã bỏ hiệu ứng chuyển màu theo yêu cầu). */
+/* Xuống dòng hợp lý toàn site: tiêu đề cân bằng dòng (không mồ côi từ),
+ * đoạn văn tránh chữ mồ côi cuối dòng. */
+h1, h2, h3, h4 { text-wrap: balance; }
+p { text-wrap: pretty; }
+
 .ob-section {
   position: relative;
   overflow: hidden;
   isolation: isolate;
+  padding-block: clamp(3rem, 5vw, 4rem);
   background-color: #08090c;
   background-repeat: no-repeat;
   background-image:
@@ -887,9 +900,9 @@ body {
 .ob-graph {
   position: relative;
   width: 100%;
-  max-width: 680px;
-  margin: 2rem auto 0;
-  aspect-ratio: 5 / 4;
+  max-width: 880px;
+  margin: 1.25rem auto 0;
+  aspect-ratio: 3 / 2;
   /* Đồ thị tương tác (tap), KHÔNG phải nội dung để chọn/kéo → chặn bôi-chọn +
    * kéo-thả để bỏ cảm giác "kéo được nhóm" (bug user báo); tap vẫn sạch.
    * -webkit-touch-callout: none để chặn long-press callout/kéo trên iOS/mobile
@@ -898,11 +911,11 @@ body {
   -webkit-user-select: none;
   -webkit-touch-callout: none;
 }
-.ob-graph .ob-hub,
-.ob-graph .ob-sat,
-.ob-graph .ob-star,
-.ob-graph .ob-center { -webkit-user-drag: none; user-drag: none; -webkit-touch-callout: none; touch-action: manipulation; }
-.ob-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+/* Chặn kéo-thả TOÀN BỘ phần tử trong đồ thị (kể cả <svg> .ob-lines vốn kéo được
+ * như ảnh trong Chromium — đây là bug user báo còn sót). */
+.ob-graph, .ob-graph * { -webkit-user-drag: none; user-drag: none; }
+.ob-graph .ob-hub, .ob-graph .ob-center { -webkit-touch-callout: none; touch-action: manipulation; }
+.ob-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
 .ob-line { stroke: rgba(224, 174, 98, 0.28); stroke-width: 1.4; transition: stroke 0.25s ease; }
 .ob-line-on { stroke: rgba(224, 174, 98, 0.85); }
 .ob-star {

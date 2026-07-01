@@ -37,6 +37,8 @@ import {
 import { FileText, Plus, Layers, ChevronRight, Sparkles } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
+import { SavedFiltersMenu } from '@/components/admin/SavedFiltersMenu';
+import { useSavedFilters } from '@/lib/saved-filters';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import {
@@ -136,6 +138,10 @@ const DRAFT_COLUMNS: AdminTableColumn<ContentDraftListRow>[] = [
 export default function ContentListPage() {
   const [tab, setTab] = React.useState<ContentType>('newsletter');
   const [status, setStatus] = React.useState<'all' | ContentStatus>('all');
+  const savedFilters = useSavedFilters<{ tab: ContentType; status: 'all' | ContentStatus }>(
+    'content',
+    { tab: 'newsletter', status: 'all' },
+  );
 
   const filter = React.useMemo(
     () => ({
@@ -272,6 +278,20 @@ export default function ContentListPage() {
               {s.label}
             </button>
           ))}
+          <SavedFiltersMenu
+            className="ml-auto"
+            presets={savedFilters.presets}
+            onApply={(name) => {
+              const p = savedFilters.loadPreset(name);
+              if (p) {
+                setTab(p.tab);
+                setStatus(p.status);
+              }
+            }}
+            onDelete={savedFilters.deletePreset}
+            onSave={(name) => savedFilters.savePreset(name, { tab, status })}
+            saveHint="Lưu tab + trạng thái hiện tại"
+          />
         </div>
 
         <TabsContent value={tab} className="space-y-3">
