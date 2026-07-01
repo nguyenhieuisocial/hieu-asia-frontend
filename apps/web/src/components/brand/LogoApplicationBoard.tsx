@@ -154,7 +154,7 @@ export function LogoApplicationBoard() {
               hieu<span className="text-gold">.asia</span>
             </div>
             <div className="mt-1 text-[9px] text-cream/80">
-              Tử Vi · MBTI · Palm Reading bằng AI
+              Tử Vi · MBTI · Xem Tướng bằng AI
             </div>
           </div>
         </div>
