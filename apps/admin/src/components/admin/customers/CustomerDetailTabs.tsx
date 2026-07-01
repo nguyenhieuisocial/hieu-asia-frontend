@@ -161,6 +161,26 @@ function ProfileTab({ customer }: { customer: CustomerDetail }) {
   );
 }
 
+/**
+ * Extract request/device metadata from a session's state_json — mirrors the
+ * fallback chain in mapBackendSession (lib/admin-api.ts) + the /sessions/[id]
+ * "Request HTTP & vị trí" card. Admin-only, read-only display: surfaces the SAME
+ * fields already shown on the Sessions pages; no new data is collected or logged.
+ */
+function readSessionEnv(sj: unknown) {
+  const st = (sj ?? {}) as Record<string, unknown>;
+  const env = (st.request ?? st.client ?? {}) as Record<string, unknown>;
+  const pick = (...v: unknown[]) =>
+    v.find((x) => typeof x === 'string' && x.length > 0) as string | undefined;
+  return {
+    ip: pick(st.ip, st.ip_address, env.ip, env.cf_connecting_ip),
+    country: pick(st.country, env.country, env.cf_country),
+    city: pick(st.city, env.city, env.cf_city),
+    region: pick(st.region, env.region),
+    userAgent: pick(st.user_agent, st.ua, env.user_agent, env.ua),
+  };
+}
+
 function SessionsTab({
   sessions,
   onSessionMutated,
@@ -192,6 +212,8 @@ function SessionsTab({
           sj?.status ?? sj?.pipeline_status ?? s.status ?? '—';
         const createdAt =
           sj?.created_at ?? s.created_at ?? s.updated_at ?? null;
+        const env = readSessionEnv(sj);
+        const loc = [env.city, env.region, env.country].filter(Boolean).join(', ');
         return (
           <li
             key={sid}
@@ -210,6 +232,17 @@ function SessionsTab({
               >
                 {fmtDate(createdAt)} · {fmtRelative(createdAt)}
               </div>
+              {(env.ip || loc || env.userAgent) && (
+                <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 font-mono text-[10px] text-muted-foreground/70">
+                  {loc && <span title="Vị trí (suy từ IP)">{loc}</span>}
+                  {env.ip && <span title="Địa chỉ IP">IP {env.ip}</span>}
+                  {env.userAgent && (
+                    <span className="max-w-[260px] truncate" title={env.userAgent}>
+                      {env.userAgent}
+                    </span>
+                  )}
+                </div>
+              )}
             </Link>
             <span className="shrink-0 rounded border border-gold/20 bg-gold/5 px-2 py-0.5 text-xs text-muted-foreground">
               {status}

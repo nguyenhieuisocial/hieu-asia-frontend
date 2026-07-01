@@ -864,6 +864,9 @@ body {
  * đoạn văn tránh chữ mồ côi cuối dòng. */
 h1, h2, h3, h4 { text-wrap: balance; }
 p { text-wrap: pretty; }
+/* Token dài không có điểm ngắt (email, URL, mã giới thiệu, ID) tự xuống dòng
+ * thay vì đẩy tràn layout ngang. overflow-wrap kế thừa → phủ toàn site. */
+body { overflow-wrap: break-word; }
 
 .ob-section {
   position: relative;

@@ -23,7 +23,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { Card, CardContent, cn } from '@hieu-asia/ui';
+import { Button, Card, CardContent, cn, toast } from '@hieu-asia/ui';
 import {
   FolderTree,
   Search,
@@ -35,6 +35,7 @@ import {
   ChevronDown,
   Network,
   RefreshCw,
+  RotateCw,
   Unlink,
   CheckCircle2,
 } from 'lucide-react';
@@ -48,6 +49,7 @@ import {
   type SitePageNode,
 } from '@/lib/site-structure';
 import { computeAppBrokenLinks, type AppBrokenLinks } from '@/lib/site-structure-health';
+import { postRegenSitemap } from '@/lib/admin-api';
 
 // Heavy (React Flow) — lazy-load only when the "Tương tác" view is shown.
 const SiteMapFlow = dynamic(() => import('@/components/admin/site-structure/SiteMapFlow'), {
@@ -76,6 +78,32 @@ function liveUrlFor(app: AppGroupId, route: string): string | undefined {
   // Dynamic routes (`/foo/[id]`) have no canonical live URL — link to the section.
   if (route.includes('[')) return undefined;
   return base + (route === '/' ? '' : route);
+}
+
+/** Inline "Cập Nhật ngay" button — asks the worker to regenerate + republish the map. */
+function RefreshButton() {
+  const [pending, setPending] = React.useState(false);
+  const click = React.useCallback(async () => {
+    if (pending) return;
+    setPending(true);
+    const res = await postRegenSitemap();
+    setPending(false);
+    if (res.ok) {
+      toast.success('Đã yêu cầu cập nhật — bản đồ sẽ mới sau ~1–2 phút khi xuất bản xong.');
+      return;
+    }
+    if (res.error === 'DEPLOY_HOOK_NOT_CONFIGURED') {
+      toast.error('Nút chưa được kích hoạt: cần cấu hình Deploy Hook (VERCEL_ADMIN_DEPLOY_HOOK) trong Vercel.');
+      return;
+    }
+    toast.error(res.error ?? 'Không cập nhật được.');
+  }, [pending]);
+  return (
+    <Button variant="outline" size="sm" onClick={click} disabled={pending}>
+      <RotateCw className={`mr-1.5 h-3.5 w-3.5 ${pending ? 'animate-spin' : ''}`} />
+      {pending ? 'Đang gửi…' : 'Cập Nhật ngay'}
+    </Button>
+  );
 }
 
 export default function SiteStructurePage() {
@@ -139,14 +167,23 @@ export default function SiteStructurePage() {
       {/* Intro + stats */}
       <Card>
         <CardContent className="space-y-3 p-4 text-sm">
-          <p className="text-muted-foreground">
-            Đây là ảnh chụp <span className="font-medium text-foreground">tự động trích xuất</span> các trang,
-            chức năng và liên kết chéo của hệ thống ({SITE_GENERATED_AT}). Chạy lại{' '}
-            <code className="rounded bg-muted/50 px-1 py-0.5 font-mono text-xs">
-              pnpm --filter admin extract:sitemap
-            </code>{' '}
-            để cập nhật.
-          </p>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-muted-foreground">
+              Bản đồ tự động cập nhật mỗi lần xuất bản.
+              {SITE_GENERATED_AT && (
+                <>
+                  {' '}
+                  <span className="text-foreground">
+                    Cập nhật gần nhất:{' '}
+                    {SITE_GENERATED_AT.includes('T') && SITE_GENERATED_AT.includes('-')
+                      ? new Date(SITE_GENERATED_AT).toLocaleString('vi-VN')
+                      : SITE_GENERATED_AT}
+                  </span>
+                </>
+              )}
+            </p>
+            <RefreshButton />
+          </div>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-border/50 pt-3">
             <span className="flex items-center gap-1.5">
               <RefreshCw className="h-3.5 w-3.5 text-gold" aria-hidden />

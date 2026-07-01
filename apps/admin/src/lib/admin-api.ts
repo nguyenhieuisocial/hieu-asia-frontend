@@ -2487,3 +2487,23 @@ export function getInfraKvValue(ns: string, key: string): Promise<InfraKvValueRe
   qs.set('key', key);
   return fetchInfraKv<InfraKvValueResp>(`/value?${qs.toString()}`);
 }
+
+// ---------- Site-structure "Cập Nhật" (refresh) trigger ----------
+//
+// Owner-gated. Hits the LOCAL Next route `/api/admin/regen-sitemap` (NOT the
+// admin proxy / worker) which POSTs a Vercel Deploy Hook to redeploy the admin
+// app — the deploy re-runs the site-structure extractor and refreshes the map
+// snapshot. Never throws; returns the parsed `{ ok, error? }` so the button can
+// toast success vs the friendly error code (e.g. DEPLOY_HOOK_NOT_CONFIGURED).
+export async function postRegenSitemap(): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const res = await fetch('/api/admin/regen-sitemap', { method: 'POST' });
+    const body = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+    if (!res.ok || body.ok === false) {
+      return { ok: false, error: body.error ?? `HTTP ${res.status}` };
+    }
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: (err as Error).message };
+  }
+}

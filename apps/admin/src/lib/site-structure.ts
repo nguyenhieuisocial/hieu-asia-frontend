@@ -40,7 +40,7 @@ export interface SiteStats {
   totalEdges: number;
 }
 
-export const SITE_GENERATED_AT: string = 'snapshot';
+export const SITE_GENERATED_AT: string = '2026-07-01T14:32:17.722Z';
 
 export const SITE_STRUCTURE: AppGroup[] = [
   {
@@ -1477,7 +1477,7 @@ export const SITE_STRUCTURE: AppGroup[] = [
             section: 'learn',
             app: 'web',
             dynamic: false,
-            linksTo: ['/', '/learn', '/reading/new'],
+            linksTo: ['/', '/learn', '/than-so-hoc'],
           },
           {
             route: '/learn/tu-vi',

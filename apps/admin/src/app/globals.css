@@ -64,6 +64,12 @@
     color: hsl(var(--foreground));
   }
 
+  /* Xuống dòng hợp lý (khớp apps/web/src/app/globals.css): tiêu đề cân bằng
+   * dòng, đoạn văn tránh chữ mồ côi, token dài (email/URL/ID) không tràn ngang. */
+  h1, h2, h3, h4 { text-wrap: balance; }
+  p { text-wrap: pretty; }
+  body { overflow-wrap: break-word; }
+
   /* Baseline keyboard-focus visibility for the dense ops console — uses the
    * theme --ring token. :where() keeps specificity 0 so any component-level
    * focus-visible:ring styles still win. */
