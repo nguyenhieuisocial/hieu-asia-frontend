@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import {
   Accordion,
   AccordionContent,
@@ -7,8 +8,10 @@ import {
 } from '@hieu-asia/ui';
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
+import { MAJOR_PAGES, ALL_PAGES } from '@/lib/tarot-card-pages';
+import { MINOR_PAGES } from '@/lib/tarot-card-pages-minor';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import { article, breadcrumb, faqPage, itemList } from '@/lib/seo/jsonld';
 import {
   TarotFrame,
   TarotDepth,
@@ -74,6 +77,9 @@ const JSONLD = [
     { name: 'Tarot', url: '/learn/tarot' },
   ]),
   faqPage(FAQS),
+  itemList(
+    ALL_PAGES.map((c) => ({ name: c.name_vi, url: '/tarot/y-nghia/' + c.slug })),
+  ),
 ];
 
 export default function LearnTarotPage() {
@@ -308,6 +314,75 @@ export default function LearnTarotPage() {
                 <li>Khi các trường phái khác nhau (đánh số, nguyên tố, biến thể trải bài), nên nêu rõ thay vì khẳng định một chiều.</li>
               </ul>
             </div>
+          ),
+        },
+        {
+          id: 'thu-vien-la',
+          tocLabel: 'Thư viện 78 lá',
+          heading: 'Thư viện 78 lá bài',
+          children: (
+            <>
+              <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
+                Mỗi lá dưới đây mở trang ý nghĩa đầy đủ: nghĩa xuôi và nghĩa ngược, góc tình cảm –
+                công việc, cùng những câu hỏi tự soi. Đọc như lăng kính để hiểu mình — tham khảo,
+                không phán định.
+              </p>
+
+              <h3 className="mb-3 font-heading text-lg font-semibold text-foreground">
+                22 Ẩn Chính
+              </h3>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {MAJOR_PAGES.map((c) => (
+                  <Link
+                    key={c.slug}
+                    href={`/tarot/y-nghia/${c.slug}`}
+                    className="group rounded-lg border border-border bg-card/40 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-gold/40 hover:bg-card/60"
+                  >
+                    <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
+                      Ẩn Chính · {c.number}
+                    </p>
+                    <p className="mt-1.5 font-heading text-base font-semibold text-foreground group-hover:text-gold">
+                      {c.name_vi} · {c.name}
+                    </p>
+                    <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+                      {c.keyUp.slice(0, 3).join(' · ')}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+
+              <h3 className="mb-3 mt-8 font-heading text-lg font-semibold text-foreground">
+                56 Ẩn Phụ
+              </h3>
+              <div className="space-y-6">
+                {['Gậy', 'Cốc', 'Kiếm', 'Tiền'].map((suit) => (
+                  <div key={suit}>
+                    <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-gold-700">
+                      Chất {suit}
+                    </p>
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                      {MINOR_PAGES.filter((c) => c.suit_vi === suit).map((c) => (
+                        <Link
+                          key={c.slug}
+                          href={`/tarot/y-nghia/${c.slug}`}
+                          className="group rounded-lg border border-border bg-card/40 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-gold/40 hover:bg-card/60"
+                        >
+                          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
+                            {c.suit_vi}
+                          </p>
+                          <p className="mt-1.5 font-heading text-base font-semibold text-foreground group-hover:text-gold">
+                            {c.name_vi} · {c.name}
+                          </p>
+                          <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+                            {c.keyUp.slice(0, 3).join(' · ')}
+                          </p>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
           ),
         },
         {
