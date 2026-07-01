@@ -35,6 +35,7 @@ import {
   ChevronDown,
   Network,
   RefreshCw,
+  Clock,
   RotateCw,
   Unlink,
   CheckCircle2,
@@ -106,6 +107,32 @@ function RefreshButton() {
   );
 }
 
+/** Small stat pill for the intro summary row. */
+function StatChip({
+  icon,
+  value,
+  label,
+  muted,
+}: {
+  icon?: React.ReactNode;
+  value: number;
+  label: string;
+  muted?: boolean;
+}) {
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1',
+        muted ? 'border-border/60' : 'border-border bg-card/60',
+      )}
+    >
+      {icon}
+      <span className="font-mono text-sm font-semibold text-foreground">{value}</span>
+      <span className="text-xs text-muted-foreground">{label}</span>
+    </span>
+  );
+}
+
 export default function SiteStructurePage() {
   const [appId, setAppId] = React.useState<AppGroupId>('web');
   const [view, setView] = React.useState<'flow' | 'table'>('flow');
@@ -164,42 +191,37 @@ export default function SiteStructurePage() {
         }
       />
 
-      {/* Intro + stats */}
+      {/* Intro: refresh toolbar + stat chips */}
       <Card>
-        <CardContent className="space-y-3 p-4 text-sm">
+        <CardContent className="space-y-4 p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-muted-foreground">
-              Bản đồ tự động cập nhật mỗi lần xuất bản.
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+              <RefreshCw className="h-3.5 w-3.5 text-gold/70" aria-hidden />
+              <span>Tự động cập nhật mỗi lần xuất bản</span>
               {SITE_GENERATED_AT && (
-                <>
-                  {' '}
-                  <span className="text-foreground">
-                    Cập nhật gần nhất:{' '}
-                    {SITE_GENERATED_AT.includes('T') && SITE_GENERATED_AT.includes('-')
-                      ? new Date(SITE_GENERATED_AT).toLocaleString('vi-VN')
-                      : SITE_GENERATED_AT}
-                  </span>
-                </>
+                <span className="inline-flex items-center gap-1 rounded-full border border-border bg-muted/30 px-2 py-0.5 font-mono text-[10px] text-foreground/80">
+                  <Clock className="h-3 w-3 text-muted-foreground" aria-hidden />
+                  {SITE_GENERATED_AT.includes('T') && SITE_GENERATED_AT.includes('-')
+                    ? new Date(SITE_GENERATED_AT).toLocaleString('vi-VN')
+                    : SITE_GENERATED_AT}
+                </span>
               )}
-            </p>
+            </div>
             <RefreshButton />
           </div>
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-border/50 pt-3">
-            <span className="flex items-center gap-1.5">
-              <RefreshCw className="h-3.5 w-3.5 text-gold" aria-hidden />
-              <span className="font-medium text-foreground">{SITE_STATS.totalRoutes}</span>
-              <span className="text-muted-foreground">đường dẫn</span>
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Share2 className="h-3.5 w-3.5 text-gold" aria-hidden />
-              <span className="font-medium text-foreground">{SITE_STATS.totalEdges}</span>
-              <span className="text-muted-foreground">liên kết chéo</span>
-            </span>
+          <div className="flex flex-wrap gap-2 border-t border-border/50 pt-3">
+            <StatChip
+              icon={<FolderTree className="h-3.5 w-3.5 text-gold" aria-hidden />}
+              value={SITE_STATS.totalRoutes}
+              label="đường dẫn"
+            />
+            <StatChip
+              icon={<Share2 className="h-3.5 w-3.5 text-gold" aria-hidden />}
+              value={SITE_STATS.totalEdges}
+              label="liên kết chéo"
+            />
             {APP_TABS.map((t) => (
-              <span key={t.id} className="flex items-center gap-1.5">
-                <span className="font-mono text-xs text-muted-foreground">{t.label}:</span>
-                <span className="font-medium text-foreground">{SITE_STATS.perApp[t.id] ?? 0}</span>
-              </span>
+              <StatChip key={t.id} value={SITE_STATS.perApp[t.id] ?? 0} label={t.label} muted />
             ))}
           </div>
         </CardContent>
