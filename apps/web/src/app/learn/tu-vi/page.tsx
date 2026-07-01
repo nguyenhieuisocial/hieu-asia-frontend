@@ -350,8 +350,8 @@ export default function LearnTuViPage() {
               </div>
               <div>
                 <p className="mb-1.5">
-                  <strong className="text-foreground">Hai chính tinh còn lại</strong> —
-                  cặp nhật nguyệt và sao khẩu thiệt:
+                  <strong className="text-foreground">Ba chính tinh còn lại</strong> — nhật,
+                  khẩu thiệt và nguyên tắc:
                 </p>
                 <ul className="ml-5 list-disc space-y-1.5">
                   <li>
@@ -361,6 +361,10 @@ export default function LearnTuViPage() {
                   <li>
                     <strong className="text-foreground">Cự Môn</strong> — phân tích, tranh
                     luận, mạnh về lời nói.
+                  </li>
+                  <li>
+                    <strong className="text-foreground">Liêm Trinh</strong> — nguyên tắc, kỷ
+                    luật, nhiều sắc thái (chính trực hoặc đào hoa tuỳ cách cục).
                   </li>
                 </ul>
               </div>
