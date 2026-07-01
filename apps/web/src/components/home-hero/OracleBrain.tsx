@@ -101,6 +101,8 @@ export function OracleBrain(): React.JSX.Element {
           className="ob-graph"
           role="img"
           aria-label="Năm nhóm công cụ hội tụ về Bạn"
+          draggable={false}
+          onDragStart={(e) => e.preventDefault()}
         >
           <svg className="ob-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
             {/* main lines: hub → center (first → nth-of-type stagger works) */}
