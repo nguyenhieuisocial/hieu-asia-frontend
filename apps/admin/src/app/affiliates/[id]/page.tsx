@@ -526,9 +526,13 @@ export default function AdminAffiliateDetailPage({
                       <span className="rounded bg-muted/40 px-2 py-0.5 text-xs">{ev.event}</span>
                       <span className="text-muted-foreground">{dt(ev.ts)}</span>
                       {ev.user_id && (
-                        <span className="font-mono text-xs text-muted-foreground">
+                        <Link
+                          href={`/customers/${encodeURIComponent(ev.user_id)}`}
+                          className="font-mono text-xs text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-gold"
+                          title="Mở hồ sơ khách hàng này"
+                        >
                           user:{ev.user_id.slice(0, 8)}
-                        </span>
+                        </Link>
                       )}
                     </div>
                     {ev.commission !== undefined && (

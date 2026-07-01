@@ -1292,6 +1292,65 @@ export async function fetchUserDeviceProfile(
   };
 }
 
+export interface UserEngagement {
+  /** ISO timestamp of the very first event we have for this distinct_id (365d). */
+  firstSeen: string | null;
+  /** Distinct PostHog sessions ($session_id) in the window. */
+  sessions: number;
+  /** Total $pageview events. */
+  pageviews: number;
+  /** Total tool_used events (how many tools they ran). */
+  toolsUsed: number;
+  /** payment_completed count (0 = never paid). */
+  payments: number;
+  /** Sum of payment_completed `amount` (VND) — directional PostHog lower bound. */
+  revenue: number;
+}
+
+/**
+ * Engagement snapshot for one distinct_id over the last 365 days: first-seen,
+ * distinct sessions, pageviews, tools used, and paid status + revenue. Sits
+ * alongside the device/attribution blocks to give a one-glance "how engaged is
+ * this customer" read on both the customer- and session-detail pages, without
+ * opening PostHog. Revenue mirrors fetchPaidAttribution's `properties.amount`
+ * (a consent-gated client event → LOWER bound, not the canonical txn ledger).
+ * Returns null when unconfigured or the distinct_id has no events in the window.
+ */
+export async function fetchUserEngagement(
+  userId: string,
+): Promise<UserEngagement | null> {
+  if (!userId) return null;
+  const id = escapeHogQLString(userId);
+  const sql = `
+    SELECT
+      count()                                        AS total,
+      min(timestamp)                                 AS first_seen,
+      count(DISTINCT properties.$session_id)         AS sessions,
+      countIf(event = '$pageview')                   AS pageviews,
+      countIf(event = 'tool_used')                   AS tools_used,
+      countIf(event = 'payment_completed')           AS payments,
+      sum(if(event = 'payment_completed', toFloat(properties.amount), 0)) AS revenue
+    FROM events
+    WHERE distinct_id = '${id}'
+      AND timestamp > now() - INTERVAL 365 DAY
+  `;
+  const rows = await runHogQL(sql);
+  if (!rows || !rows[0]) return null;
+  const r = rows[0];
+  const total = Number(r[0] ?? 0) || 0;
+  // No events at all → let the panel hide the block (avoid an all-zero row).
+  if (total === 0) return null;
+  const firstSeen = r[1] != null && r[1] !== '' ? String(r[1]) : null;
+  return {
+    firstSeen,
+    sessions: Number(r[2] ?? 0) || 0,
+    pageviews: Number(r[3] ?? 0) || 0,
+    toolsUsed: Number(r[4] ?? 0) || 0,
+    payments: Number(r[5] ?? 0) || 0,
+    revenue: Number(r[6] ?? 0) || 0,
+  };
+}
+
 export interface UserJourneyEvent {
   /** Raw PostHog event name (e.g. tool_used, payment_completed, $pageview). */
   event: string;
