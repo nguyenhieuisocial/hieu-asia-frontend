@@ -1233,6 +1233,65 @@ export async function fetchUserAttribution(
   return attr;
 }
 
+export interface UserDeviceProfile {
+  browser: string | null;
+  os: string | null;
+  deviceType: string | null;
+  country: string | null;
+  city: string | null;
+  totalEvents: number;
+  activeDays: number;
+  lastSeen: string | null;
+}
+
+/**
+ * Device / geo / activity summary for one distinct_id, from PostHog's
+ * auto-captured properties ($browser / $os / $device_type / $geoip_*). Fills the
+ * gap where DB session metadata is sparse (old or non-web-channel sessions).
+ * Read-only, admin-only, 90-day window. Returns null when unconfigured or the
+ * user has no events in the window.
+ */
+export async function fetchUserDeviceProfile(
+  userId: string,
+): Promise<UserDeviceProfile | null> {
+  if (!userId) return null;
+  const id = escapeHogQLString(userId);
+  const sql = `
+    SELECT
+      argMax(nullIf(properties.$browser, ''), timestamp)            AS browser,
+      argMax(nullIf(properties.$os, ''), timestamp)                 AS os,
+      argMax(nullIf(properties.$device_type, ''), timestamp)        AS device_type,
+      argMax(nullIf(properties.$geoip_country_name, ''), timestamp) AS country,
+      argMax(nullIf(properties.$geoip_city_name, ''), timestamp)    AS city,
+      count()                                                        AS total_events,
+      count(DISTINCT toDate(timestamp))                             AS active_days,
+      max(timestamp)                                                 AS last_seen
+    FROM events
+    WHERE distinct_id = '${id}'
+      AND timestamp > now() - INTERVAL 90 DAY
+  `;
+  const rows = await runHogQL(sql);
+  if (!rows || !rows[0]) return null;
+  const r = rows[0];
+  const cell = (i: number): string | null => {
+    const v = r[i];
+    return v != null && v !== '' ? String(v) : null;
+  };
+  const totalEvents = Number(r[5] ?? 0) || 0;
+  // No events in the window → nothing to show; let the panel hide the section.
+  if (totalEvents === 0) return null;
+  return {
+    browser: cell(0),
+    os: cell(1),
+    deviceType: cell(2),
+    country: cell(3),
+    city: cell(4),
+    totalEvents,
+    activeDays: Number(r[6] ?? 0) || 0,
+    lastSeen: cell(7),
+  };
+}
+
 export interface UserJourneyEvent {
   /** Raw PostHog event name (e.g. tool_used, payment_completed, $pageview). */
   event: string;
