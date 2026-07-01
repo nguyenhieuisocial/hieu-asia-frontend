@@ -342,7 +342,7 @@ export default async function EnneagramTypePage({
       {/* Công việc */}
       <section className="relative mx-auto max-w-3xl px-6 pb-10">
         <h2 className="mb-2 flex items-center gap-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
-          <Briefcase className="h-5 w-5 text-sky-400" aria-hidden /> Nhóm {n} trong công việc
+          <Briefcase className="h-5 w-5 text-gold" aria-hidden /> Nhóm {n} trong công việc
         </h2>
         <p className="text-base leading-relaxed text-foreground/85">{d.workStyle}</p>
         <p className="mt-2 text-xs text-muted-foreground">
