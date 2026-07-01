@@ -124,7 +124,7 @@ export default async function ReferralLandingPage({
           Chào mừng đến <span className="text-gold">hieu.asia</span>
         </h1>
         <p className="mx-auto max-w-md text-sm text-muted-foreground">
-          Tử Vi · MBTI · Palm Reading · Mentor AI — tất cả trong một. Đăng ký tài khoản để mở khoá phân
+          Tử Vi · MBTI · Xem Tướng · Mentor AI — tất cả trong một. Đăng ký tài khoản để mở khoá phân
           tích cao cấp; mã giới thiệu đã được tự động áp dụng.
         </p>
 

@@ -187,7 +187,7 @@ const SERVICES_JSONLD = {
     },
     {
       '@type': 'Service',
-      name: 'Palm Reading AI',
+      name: 'Xem Tướng AI',
       serviceType: 'Palmistry / chiromancy AI analysis',
       provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
       areaServed: 'VN',
