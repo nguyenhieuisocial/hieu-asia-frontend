@@ -25,6 +25,8 @@ import {
 } from '@hieu-asia/ui';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
+import { useSavedFilters } from '@/lib/saved-filters';
+import { SavedFiltersMenu } from '@/components/admin/SavedFiltersMenu';
 
 // Recharts lazy-loaded — keeps it out of the initial admin bundle (tasks
 // page pattern). ssr:false because admin is auth-gated.
@@ -70,6 +72,7 @@ export function PromotersTab() {
   const qc = useQueryClient();
   const [search, setSearch] = React.useState('');
   const [reparentTarget, setReparentTarget] = React.useState<PromoterRow | null>(null);
+  const savedFilters = useSavedFilters<{ search: string }>('affiliate-promoters', { search: '' });
 
   const q = useQuery({
     queryKey: ['affiliate-promoters'],
@@ -196,6 +199,16 @@ export function PromotersTab() {
           <div className="ml-auto text-sm text-muted-foreground">
             {filtered.length} / {q.data?.length ?? 0}
           </div>
+          <SavedFiltersMenu
+            presets={savedFilters.presets}
+            onApply={(name) => {
+              const p = savedFilters.loadPreset(name);
+              if (p) setSearch(p.search);
+            }}
+            onDelete={savedFilters.deletePreset}
+            onSave={(name) => savedFilters.savePreset(name, { search })}
+            saveHint="Lưu bộ lọc hiện tại"
+          />
         </CardContent>
       </Card>
 

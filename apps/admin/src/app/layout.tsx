@@ -10,6 +10,7 @@ import { Sidebar } from '@/components/sidebar';
 import { Topbar } from '@/components/topbar';
 import { MobileNav } from '@/components/mobile-nav';
 import { CommandPalette } from '@/components/admin/command-palette';
+import { KeyboardShortcutsHelp } from '@/components/admin/KeyboardShortcutsHelp';
 import { Toaster } from '@hieu-asia/ui';
 import { ADMIN_SESSION_COOKIE, verifySession } from '@/lib/auth';
 import './globals.css';
@@ -88,6 +89,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   </div>
                   <MobileNav />
                   <CommandPalette />
+                  <KeyboardShortcutsHelp />
                 </div>
               </QueryProvider>
             </PostHogProvider>
