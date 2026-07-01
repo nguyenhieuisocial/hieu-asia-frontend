@@ -103,7 +103,7 @@ export function DataExportSection({ userId }: DataExportSectionProps) {
         <CardTitle className="text-xl">Tải xuống dữ liệu cá nhân</CardTitle>
         <CardDescription>
           Bạn có quyền nhận bản sao tất cả dữ liệu hệ thống lưu về bạn (Nghị định
-          13/2023/NĐ-CP). Bao gồm: phiên đọc, báo cáo, lịch sử chat, giao dịch
+          356/2025/NĐ-CP, thay thế 13/2023). Bao gồm: phiên đọc, báo cáo, lịch sử chat, giao dịch
           và audit log.
         </CardDescription>
       </CardHeader>

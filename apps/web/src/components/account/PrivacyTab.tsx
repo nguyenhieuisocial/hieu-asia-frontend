@@ -141,7 +141,7 @@ export function PrivacyTab({ userId }: PrivacyTabProps) {
       <div>
         <h2 className="font-heading text-2xl text-foreground sm:text-3xl">Quyền riêng tư</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Quyền theo Nghị định 13/2023/NĐ-CP — bạn kiểm soát mọi dữ liệu.
+          Quyền theo Nghị định 356/2025/NĐ-CP (thay thế 13/2023) — bạn kiểm soát mọi dữ liệu.
         </p>
       </div>
 
