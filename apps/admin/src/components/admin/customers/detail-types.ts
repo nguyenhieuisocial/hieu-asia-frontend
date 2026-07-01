@@ -10,6 +10,7 @@ export interface CustomerDetail {
   display_name?: string | null;
   email?: string | null;
   telegram_id?: string | null;
+  zalo_id?: string | null;
   plan?: string | null;
   created_at?: string | null;
   last_active?: string | null;
