@@ -830,32 +830,56 @@ body {
 /* ── OracleBrain graph (HTML + SVG: translatable text, no clipping, calm) ──── */
 /* Bộ não Oracle — cảm giác vũ trụ bao la (Milky Way): nền deep-space có chiều
  * sâu (vignette tối dần ra rìa → thấy mình nhỏ bé), bụi sao dày, dải Ngân Hà
- * chéo, vầng nebula ấm (vàng) + lạnh (tím mystic/xanh). Viền TRÊN & DƯỚI tan
- * mềm vào section sáng kế bên → chuyển màu mượt, hết tương phản cứng. */
+ * chéo, vầng nebula ấm (vàng) + lạnh (tím mystic/xanh). Mép section CRISP —
+ * KHÔNG fade sang màu kem (đã bỏ hiệu ứng chuyển màu theo yêu cầu). */
 .ob-section {
   position: relative;
   overflow: hidden;
-  background-color: #0a0b0e;
+  isolation: isolate;
+  background-color: #08090c;
   background-repeat: no-repeat;
   background-image:
-    linear-gradient(180deg, hsl(var(--background)) 0%, rgba(10, 11, 14, 0) 7%, rgba(10, 11, 14, 0) 93%, hsl(var(--background)) 100%),
-    radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.75), transparent),
-    radial-gradient(1px 1px at 27% 62%, rgba(255, 255, 255, 0.5), transparent),
-    radial-gradient(1.5px 1.5px at 41% 30%, rgba(236, 224, 200, 0.7), transparent),
-    radial-gradient(1px 1px at 58% 74%, rgba(255, 255, 255, 0.5), transparent),
-    radial-gradient(1px 1px at 69% 20%, rgba(255, 255, 255, 0.65), transparent),
-    radial-gradient(1.5px 1.5px at 83% 56%, rgba(236, 224, 200, 0.65), transparent),
-    radial-gradient(1px 1px at 91% 36%, rgba(255, 255, 255, 0.55), transparent),
-    radial-gradient(1px 1px at 34% 88%, rgba(255, 255, 255, 0.45), transparent),
-    radial-gradient(1px 1px at 6% 48%, rgba(255, 255, 255, 0.5), transparent),
-    radial-gradient(1px 1px at 20% 8%, rgba(255, 255, 255, 0.5), transparent),
-    radial-gradient(1px 1px at 76% 84%, rgba(255, 255, 255, 0.5), transparent),
-    radial-gradient(1.5px 1.5px at 52% 50%, rgba(255, 255, 255, 0.4), transparent),
-    linear-gradient(152deg, transparent 33%, rgba(224, 174, 98, 0.05) 47%, rgba(236, 224, 200, 0.08) 52%, rgba(150, 120, 205, 0.05) 57%, transparent 70%),
-    radial-gradient(55% 45% at 50% 44%, rgba(224, 174, 98, 0.10), transparent 70%),
-    radial-gradient(65% 55% at 80% 20%, rgba(140, 110, 195, 0.12), transparent 64%),
-    radial-gradient(60% 55% at 16% 82%, rgba(90, 120, 195, 0.08), transparent 60%),
-    radial-gradient(125% 95% at 50% 40%, #16181d 0%, #0c0d12 55%, #08090c 100%);
+    /* sao foreground thưa, sáng rõ */
+    radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1.6px 1.6px at 41% 30%, rgba(236, 224, 200, 0.8), transparent),
+    radial-gradient(1px 1px at 69% 20%, rgba(255, 255, 255, 0.75), transparent),
+    radial-gradient(1.6px 1.6px at 83% 56%, rgba(236, 224, 200, 0.75), transparent),
+    radial-gradient(1px 1px at 34% 88%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1.6px 1.6px at 52% 50%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1px 1px at 91% 36%, rgba(255, 255, 255, 0.6), transparent),
+    /* DẢI NGÂN HÀ — dòng sông ánh sáng chéo (lõi sáng + quầng rộng) */
+    linear-gradient(147deg, transparent 37%, rgba(236, 224, 200, 0.07) 45%, rgba(224, 174, 98, 0.11) 49%, rgba(245, 235, 215, 0.16) 51.5%, rgba(198, 178, 228, 0.10) 55%, rgba(120, 140, 205, 0.05) 60%, transparent 68%),
+    linear-gradient(147deg, transparent 27%, rgba(180, 160, 215, 0.055) 50%, transparent 74%),
+    /* nebula ấm (vàng) + lạnh (tím mystic/xanh) + gợi ý thiên hà xa */
+    radial-gradient(50% 42% at 50% 45%, rgba(224, 174, 98, 0.13), transparent 70%),
+    radial-gradient(60% 52% at 82% 17%, rgba(150, 115, 205, 0.17), transparent 62%),
+    radial-gradient(55% 50% at 13% 84%, rgba(90, 125, 200, 0.12), transparent 60%),
+    radial-gradient(13% 9% at 27% 32%, rgba(236, 224, 200, 0.11), transparent 70%),
+    /* nền deep-space + vignette mạnh (chiều sâu → thấy mình nhỏ bé) */
+    radial-gradient(120% 92% at 50% 42%, #191c22 0%, #0e0f14 46%, #08090c 80%, #050609 100%);
+}
+/* nội dung nổi trên lớp bụi sao ::before */
+.ob-section > div { position: relative; z-index: 1; }
+/* bụi sao thiên hà — lớp sao dày tile lại (cảm giác vô số vì sao), tan mềm ở mép */
+.ob-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1px 1px at 25px 20px, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 90px 55px, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1px 1px at 140px 30px, rgba(236, 224, 200, 0.7), transparent),
+    radial-gradient(1px 1px at 60px 100px, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 120px 120px, rgba(255, 255, 255, 0.75), transparent),
+    radial-gradient(1px 1px at 170px 85px, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 40px 150px, rgba(236, 224, 200, 0.55), transparent);
+  background-size: 190px 165px;
+  background-repeat: repeat;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+  opacity: 0.75;
 }
 .ob-eyebrow { color: #e0ae62; }
 .ob-title { color: #f5f2ec; }
