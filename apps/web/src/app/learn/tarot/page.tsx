@@ -9,6 +9,13 @@ import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import {
+  TarotFrame,
+  TarotDepth,
+  TarotRecall,
+  TarotChecklist,
+  TarotWhys,
+} from './_active-learning';
 
 export const metadata: Metadata = {
   title: 'Tarot là gì? 78 lá bài & cách đọc cho người mới',
@@ -100,6 +107,12 @@ export default function LearnTarotPage() {
       }}
       sections={[
         {
+          id: 'ban-do-bai-hoc',
+          tocLabel: 'Bản đồ bài học',
+          heading: 'Học cái này để làm gì',
+          children: <TarotFrame />,
+        },
+        {
           id: 'tong-quan',
           tocLabel: 'Tổng quan',
           heading: 'Tarot là gì — và cách đọc ở đây',
@@ -127,6 +140,12 @@ export default function LearnTarotPage() {
               </p>
             </div>
           ),
+        },
+        {
+          id: 'ban-chat-3-tang',
+          tocLabel: 'Bản chất · 3 độ sâu',
+          heading: 'Hiểu phần lõi ở tầng vừa sức bạn',
+          children: <TarotDepth />,
         },
         {
           id: 'cau-truc',
@@ -292,6 +311,18 @@ export default function LearnTarotPage() {
           ),
         },
         {
+          id: 'nam-lan-tai-sao',
+          tocLabel: '5 lần hỏi tại sao',
+          heading: 'Đào tới gốc: 5 lần hỏi “tại sao”',
+          children: <TarotWhys />,
+        },
+        {
+          id: 'tu-kiem-tra',
+          tocLabel: 'Tự kiểm tra hiểu',
+          heading: 'Tự kiểm tra: bạn nhớ và hiểu tới đâu',
+          children: <TarotRecall />,
+        },
+        {
           id: 'faq',
           tocLabel: 'Câu hỏi thường gặp',
           heading: 'Câu hỏi thường gặp',
@@ -309,6 +340,12 @@ export default function LearnTarotPage() {
               ))}
             </Accordion>
           ),
+        },
+        {
+          id: 'ban-da-hieu-chua',
+          tocLabel: 'Bạn đã hiểu chưa?',
+          heading: 'Bạn đã thật sự hiểu chưa?',
+          children: <TarotChecklist />,
         },
       ]}
     >

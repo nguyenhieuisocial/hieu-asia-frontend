@@ -10,6 +10,13 @@ import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import {
+  DiscFrame,
+  DiscDepth,
+  DiscRecall,
+  DiscChecklist,
+  DiscWhys,
+} from './_active-learning';
 
 export const metadata: Metadata = {
   title: 'DISC — 4 nhóm hành vi (D/I/S/C) | Học huyền học',
@@ -124,6 +131,12 @@ export default function LearnDiscPage() {
       }}
       sections={[
         {
+          id: 'ban-do-bai-hoc',
+          tocLabel: 'Bản đồ bài học',
+          heading: 'Học cái này để làm gì',
+          children: <DiscFrame />,
+        },
+        {
           id: 'bon-nhom',
           tocLabel: 'Bốn nhóm (DISC)',
           heading: 'Bốn nhóm hành vi',
@@ -168,6 +181,12 @@ export default function LearnDiscPage() {
           ),
         },
         {
+          id: 'ban-chat-3-tang',
+          tocLabel: 'Bản chất · 3 độ sâu',
+          heading: 'Hiểu phần lõi ở tầng vừa sức bạn',
+          children: <DiscDepth />,
+        },
+        {
           id: 'giai-thich',
           tocLabel: 'Giải thích chi tiết',
           heading: 'Giải thích chi tiết',
@@ -181,6 +200,24 @@ export default function LearnDiscPage() {
               ))}
             </Accordion>
           ),
+        },
+        {
+          id: 'nam-lan-tai-sao',
+          tocLabel: '5 lần hỏi tại sao',
+          heading: 'Đào tới gốc: 5 lần hỏi “tại sao”',
+          children: <DiscWhys />,
+        },
+        {
+          id: 'tu-kiem-tra',
+          tocLabel: 'Tự kiểm tra hiểu',
+          heading: 'Tự kiểm tra: bạn nhớ và hiểu tới đâu',
+          children: <DiscRecall />,
+        },
+        {
+          id: 'ban-da-hieu-chua',
+          tocLabel: 'Bạn đã hiểu chưa?',
+          heading: 'Bạn đã thật sự hiểu chưa?',
+          children: <DiscChecklist />,
         },
       ]}
     >
