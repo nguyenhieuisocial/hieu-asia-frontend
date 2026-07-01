@@ -18,14 +18,16 @@
 
 import * as React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, cn, toast } from '@hieu-asia/ui';
-import { MessageSquare, Star, AlertTriangle, CheckCircle2, Check } from 'lucide-react';
+import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, cn, Input, toast } from '@hieu-asia/ui';
+import { MessageSquare, Star, AlertTriangle, CheckCircle2, Check, Search } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { ContactCustomerDialog } from '@/components/admin/ContactCustomerDialog';
 import { FeedbackCharts } from '@/components/feedback/FeedbackCharts';
+import { SavedFiltersMenu } from '@/components/admin/SavedFiltersMenu';
+import { useSavedFilters } from '@/lib/saved-filters';
 
 type FeedbackStatus = 'new' | 'triaged' | 'resolved';
 type FeedbackSurface = 'reading' | 'pricing' | 'onboarding' | 'misc';
@@ -126,6 +128,26 @@ export default function FeedbackPage() {
     withRating.length > 0
       ? withRating.reduce((s, r) => s + (r.rating ?? 0), 0) / withRating.length
       : null;
+
+  // Client-side filter bar (this page previously dumped all rows unfiltered).
+  // KPI cards + charts stay on the full `rows`; only the table uses `filtered`.
+  const [search, setSearch] = React.useState('');
+  const [statusFilter, setStatusFilter] = React.useState<'all' | FeedbackStatus>('all');
+  const [surfaceFilter, setSurfaceFilter] = React.useState<'all' | FeedbackSurface>('all');
+  const savedFilters = useSavedFilters<{
+    search: string;
+    status: 'all' | FeedbackStatus;
+    surface: 'all' | FeedbackSurface;
+  }>('feedback', { search: '', status: 'all', surface: 'all' });
+  const filtered = React.useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return rows.filter((r) => {
+      if (statusFilter !== 'all' && r.status !== statusFilter) return false;
+      if (surfaceFilter !== 'all' && r.surface !== surfaceFilter) return false;
+      if (q && !`${r.message} ${r.user_email}`.toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }, [rows, search, statusFilter, surfaceFilter]);
 
   const cols: AdminTableColumn<Feedback>[] = [
     {
@@ -276,6 +298,96 @@ export default function FeedbackPage() {
       {!list.isError && <FeedbackCharts rows={rows} />}
 
       <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">Bộ lọc</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-3">
+          <div className="relative max-w-md">
+            <Search
+              className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
+              aria-hidden
+            />
+            <Input
+              placeholder="Tìm nội dung / email…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+          <div className="flex flex-wrap items-center gap-1.5">
+            {(
+              [
+                ['all', 'Tất cả'],
+                ['new', 'Mới'],
+                ['triaged', 'Đang xử lý'],
+                ['resolved', 'Đã xử lý'],
+              ] as const
+            ).map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setStatusFilter(value)}
+                className={cn(
+                  'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
+                  statusFilter === value
+                    ? 'border-gold/60 bg-gold/15 text-gold'
+                    : 'border-border bg-card/60 text-muted-foreground hover:border-gold/30 hover:text-foreground',
+                )}
+              >
+                {label}
+              </button>
+            ))}
+            <SavedFiltersMenu
+              className="ml-auto"
+              presets={savedFilters.presets}
+              onApply={(name) => {
+                const p = savedFilters.loadPreset(name);
+                if (p) {
+                  setSearch(p.search);
+                  setStatusFilter(p.status);
+                  setSurfaceFilter(p.surface);
+                }
+              }}
+              onDelete={savedFilters.deletePreset}
+              onSave={(name) =>
+                savedFilters.savePreset(name, {
+                  search,
+                  status: statusFilter,
+                  surface: surfaceFilter,
+                })
+              }
+              saveHint="Lưu bộ lọc hiện tại"
+            />
+          </div>
+          <div className="flex flex-wrap items-center gap-1.5">
+            {(
+              [
+                ['all', 'Mọi nơi'],
+                ['reading', SURFACE_LABEL.reading],
+                ['pricing', SURFACE_LABEL.pricing],
+                ['onboarding', SURFACE_LABEL.onboarding],
+                ['misc', SURFACE_LABEL.misc],
+              ] as const
+            ).map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setSurfaceFilter(value)}
+                className={cn(
+                  'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
+                  surfaceFilter === value
+                    ? 'border-purple/60 bg-purple/15 text-purple-700 dark:text-purple-100'
+                    : 'border-border bg-card/60 text-muted-foreground hover:border-purple/30 hover:text-foreground',
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
         <CardHeader>
           <CardTitle>Danh sách phản hồi</CardTitle>
           <CardDescription>
@@ -284,7 +396,7 @@ export default function FeedbackPage() {
         </CardHeader>
         <CardContent>
           <AdminTable
-            rows={rows}
+            rows={filtered}
             columns={cols}
             loading={list.isLoading}
             empty={
