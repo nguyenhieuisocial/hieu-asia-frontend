@@ -1005,7 +1005,7 @@ export interface AudienceBreakdown {
  */
 async function fetchDimensionCounts(prop: string, limit: number): Promise<DimensionCount[]> {
   const sql = `
-    SELECT coalesce(nullIf(${prop}, ''), 'Không rõ') AS k,
+    SELECT lower(coalesce(nullIf(${prop}, ''), 'không rõ')) AS k,
            count(DISTINCT person_id) AS users
     FROM events
     WHERE timestamp > now() - INTERVAL 30 DAY

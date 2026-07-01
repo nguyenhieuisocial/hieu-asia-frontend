@@ -24,6 +24,16 @@ export const metadata = {
   description: 'Phân bố người dùng theo quốc gia, thành phố, thiết bị (PostHog, 30 ngày)',
 };
 
+/**
+ * Title-case a merged (lower-cased) dimension key for display. The HogQL groups
+ * case-insensitively (lower()) so "Desktop" + "desktop" collapse to one accurate
+ * bucket; this restores a readable capitalisation ("united states" → "United
+ * States"). \p{L} + u-flag so Vietnamese ("không rõ" → "Không Rõ") title-cases too.
+ */
+function titleCase(s: string): string {
+  return s.replace(/\b\p{L}/gu, (c) => c.toUpperCase());
+}
+
 /** One ranked breakdown — horizontal bars scaled to the section's top value. */
 function BreakdownList({
   title,
@@ -49,8 +59,8 @@ function BreakdownList({
             return (
               <li key={r.key} className="space-y-1">
                 <div className="flex items-baseline justify-between gap-2 text-sm">
-                  <span className="truncate text-foreground/90" title={r.key}>
-                    {r.key}
+                  <span className="truncate text-foreground/90" title={titleCase(r.key)}>
+                    {titleCase(r.key)}
                   </span>
                   <span className="shrink-0 font-mono text-xs text-muted-foreground">
                     {r.users.toLocaleString('vi-VN')}
