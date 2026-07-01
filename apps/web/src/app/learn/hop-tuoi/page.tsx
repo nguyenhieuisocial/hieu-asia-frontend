@@ -9,6 +9,13 @@ import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import {
+  HopTuoiFrame,
+  HopTuoiDepth,
+  HopTuoiRecall,
+  HopTuoiChecklist,
+  HopTuoiWhys,
+} from './_active-learning';
 
 export const metadata: Metadata = {
   title: 'Hợp tuổi (12 con giáp): Tam Hợp, Lục Hợp, Lục Xung | Học huyền học',
@@ -104,6 +111,12 @@ export default function LearnHopTuoiPage() {
       }}
       sections={[
         {
+          id: 'ban-do-bai-hoc',
+          tocLabel: 'Bản đồ bài học',
+          heading: 'Học cái này để làm gì',
+          children: <HopTuoiFrame />,
+        },
+        {
           id: 'tong-quan',
           tocLabel: 'Tổng quan',
           heading: 'Hợp tuổi là gì — và KHÔNG là gì',
@@ -140,6 +153,12 @@ export default function LearnHopTuoiPage() {
               </p>
             </div>
           ),
+        },
+        {
+          id: 'ban-chat-3-tang',
+          tocLabel: 'Bản chất · 3 độ sâu',
+          heading: 'Hiểu phần lõi ở tầng vừa sức bạn',
+          children: <HopTuoiDepth />,
         },
         {
           id: 'can-chi-nen-tang',
@@ -337,6 +356,18 @@ export default function LearnHopTuoiPage() {
           ),
         },
         {
+          id: 'nam-lan-tai-sao',
+          tocLabel: '5 lần hỏi tại sao',
+          heading: 'Đào tới gốc: 5 lần hỏi “tại sao”',
+          children: <HopTuoiWhys />,
+        },
+        {
+          id: 'tu-kiem-tra',
+          tocLabel: 'Tự kiểm tra hiểu',
+          heading: 'Tự kiểm tra: bạn nhớ và hiểu tới đâu',
+          children: <HopTuoiRecall />,
+        },
+        {
           id: 'faq',
           tocLabel: 'Câu hỏi thường gặp',
           heading: 'Câu hỏi thường gặp',
@@ -354,6 +385,12 @@ export default function LearnHopTuoiPage() {
               ))}
             </Accordion>
           ),
+        },
+        {
+          id: 'ban-da-hieu-chua',
+          tocLabel: 'Bạn đã hiểu chưa?',
+          heading: 'Bạn đã thật sự hiểu chưa?',
+          children: <HopTuoiChecklist />,
         },
       ]}
     >

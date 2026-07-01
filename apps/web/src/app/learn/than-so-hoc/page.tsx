@@ -9,6 +9,13 @@ import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import {
+  ThanSoHocFrame,
+  ThanSoHocDepth,
+  ThanSoHocRecall,
+  ThanSoHocChecklist,
+  ThanSoHocWhys,
+} from './_active-learning';
 
 export const metadata: Metadata = {
   title: 'Thần Số Học Pythagoras: Học huyền học',
@@ -118,6 +125,12 @@ export default function LearnThanSoHocPage() {
       }}
       sections={[
         {
+          id: 'ban-do-bai-hoc',
+          tocLabel: 'Bản đồ bài học',
+          heading: 'Học cái này để làm gì',
+          children: <ThanSoHocFrame />,
+        },
+        {
           id: 'chin-so-chu-dao',
           tocLabel: '9 số chủ đạo',
           heading: '9 số chủ đạo',
@@ -142,6 +155,12 @@ export default function LearnThanSoHocPage() {
               </p>
             </>
           ),
+        },
+        {
+          id: 'ban-chat-3-tang',
+          tocLabel: 'Bản chất · 3 độ sâu',
+          heading: 'Hiểu phần lõi ở tầng vừa sức bạn',
+          children: <ThanSoHocDepth />,
         },
         {
           id: 'giai-thich',
@@ -356,6 +375,18 @@ export default function LearnThanSoHocPage() {
           ),
         },
         {
+          id: 'nam-lan-tai-sao',
+          tocLabel: '5 lần hỏi tại sao',
+          heading: 'Đào tới gốc: 5 lần hỏi “tại sao”',
+          children: <ThanSoHocWhys />,
+        },
+        {
+          id: 'tu-kiem-tra',
+          tocLabel: 'Tự kiểm tra hiểu',
+          heading: 'Tự kiểm tra: bạn nhớ và hiểu tới đâu',
+          children: <ThanSoHocRecall />,
+        },
+        {
           id: 'faq',
           tocLabel: 'Câu hỏi thường gặp',
           heading: 'Câu hỏi thường gặp',
@@ -373,6 +404,12 @@ export default function LearnThanSoHocPage() {
               ))}
             </Accordion>
           ),
+        },
+        {
+          id: 'ban-da-hieu-chua',
+          tocLabel: 'Bạn đã hiểu chưa?',
+          heading: 'Bạn đã thật sự hiểu chưa?',
+          children: <ThanSoHocChecklist />,
         },
       ]}
     >
