@@ -189,7 +189,7 @@ export function GoogleTranslate({ className = '' }: { className?: string }): Rea
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-label="Chọn ngôn ngữ"
+        aria-label={`Chọn ngôn ngữ: ${currentLang.cc} ${currentLang.name}`}
         className="gt-trigger"
       >
         <span className="gt-cc">{currentLang.cc}</span>
