@@ -5,6 +5,7 @@ import { TOOLKIT_GROUPS } from '@/lib/catalog/tools';
 import { ShimmerText } from '@/components/fx/ShimmerText';
 import { Marquee } from '@/components/fx/Marquee';
 import { buildBanMenh, type BanMenhData } from '@/lib/ban-menh-data';
+import { conVatOf } from '@/lib/con-giap-animal';
 
 /**
  * OracleBrain — the signature "night-sky" section: the whole toolkit (Eastern
@@ -125,6 +126,7 @@ export function OracleBrain(): React.JSX.Element {
   const hopColors = reveal
     ? Array.from(new Set([...reveal.banMenhColors, ...reveal.hopColors])).slice(0, 4)
     : [];
+  const conVat = reveal ? conVatOf(reveal.zodiac.ten) : '';
 
   return (
     <section
@@ -267,7 +269,7 @@ export function OracleBrain(): React.JSX.Element {
             <span className="ob-center-dot" aria-hidden="true" />
             <span className="ob-center-label">BẠN</span>
             <span className="ob-center-sub">
-              {reveal ? `${reveal.zodiac.ten} · mệnh ${reveal.elementName}` : 'hiểu mình sâu'}
+              {reveal ? `${conVat} · mệnh ${reveal.elementName}` : 'hiểu mình sâu'}
             </span>
           </div>
 
@@ -301,7 +303,7 @@ export function OracleBrain(): React.JSX.Element {
                 </span>
                 <span className="ob-reveal-heading">
                   <span className="ob-reveal-title">
-                    Tuổi {reveal.canChi} · con {reveal.zodiac.ten}
+                    Tuổi {reveal.canChi} · con {conVat}
                   </span>
                   <span className="ob-reveal-menh">
                     Mệnh {reveal.elementName} — {reveal.napAmName}

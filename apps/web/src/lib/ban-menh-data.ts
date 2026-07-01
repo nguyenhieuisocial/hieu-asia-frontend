@@ -17,6 +17,7 @@ import { yearProfile } from './sinh-con';
 import { ELEMENTS, type Element } from './dat-ten-ngu-hanh';
 import { getNguHanhRemedy } from './ngu-hanh-remedy';
 import type { FaqItem } from './seo/jsonld';
+import { conVatOf } from './con-giap-animal';
 
 /** Dải năm sinh có trang riêng — phủ phần lớn người đang sống + trẻ mới sinh. */
 export const FROM_YEAR = 1950;
@@ -123,7 +124,7 @@ export function buildBanMenh(year: number): BanMenhData | null {
     },
     {
       q: `Sinh năm ${year} tuổi con gì?`,
-      a: `Năm ${year} là năm ${p.canChi}, cầm tinh con ${p.zodiac.ten}. Lưu ý: tuổi tính theo năm âm lịch, nên người sinh tháng 1 hoặc đầu tháng 2 dương (trước Tết) có thể vẫn thuộc tuổi của năm liền trước.`,
+      a: `Năm ${year} là năm ${p.canChi}, cầm tinh con ${conVatOf(p.zodiac.ten)}. Lưu ý: tuổi tính theo năm âm lịch, nên người sinh tháng 1 hoặc đầu tháng 2 dương (trước Tết) có thể vẫn thuộc tuổi của năm liền trước.`,
     },
     {
       q: `Mệnh có quyết định số phận không?`,
@@ -132,7 +133,7 @@ export function buildBanMenh(year: number): BanMenhData | null {
   ];
 
   const seoTitle = `Sinh năm ${year} mệnh gì? Tuổi ${p.canChi} — ${p.napAmName}, hợp màu gì, nghề gì`;
-  const seoDescription = `Người sinh năm ${year} (tuổi ${p.canChi}, con ${p.zodiac.ten}) mệnh ${info.name} — nạp âm ${p.napAmName}. Màu hợp: ${cap([...banMenhColors, ...hopColors])}; màu nên hạn chế: ${cap(avoidColors)}${careers.length ? `; nghề hợp: ${cap(careers)}` : ''}. Tính theo nạp âm 60 Giáp Tý, tham khảo, không phán số mệnh.`;
+  const seoDescription = `Người sinh năm ${year} (tuổi ${p.canChi}, con ${conVatOf(p.zodiac.ten)}) mệnh ${info.name} — nạp âm ${p.napAmName}. Màu hợp: ${cap([...banMenhColors, ...hopColors])}; màu nên hạn chế: ${cap(avoidColors)}${careers.length ? `; nghề hợp: ${cap(careers)}` : ''}. Tính theo nạp âm 60 Giáp Tý, tham khảo, không phán số mệnh.`;
 
   return {
     year,
