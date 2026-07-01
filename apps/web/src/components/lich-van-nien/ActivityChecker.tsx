@@ -17,6 +17,7 @@ import {
   cn,
 } from '@hieu-asia/ui';
 import { safeJson } from '@/lib/safe-json';
+import { describeApiError } from '@/lib/api-error';
 import { getVietnamTodayISO } from '@/lib/vn-date';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import type { ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
@@ -95,8 +96,7 @@ export function ActivityChecker({
       if (!data.ok) throw new Error(data.error || 'Lỗi không xác định');
       setResult(data as CheckResult);
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      setError(msg);
+      setError(describeApiError(e));
     } finally {
       setLoading(false);
     }

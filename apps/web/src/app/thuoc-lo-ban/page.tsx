@@ -25,6 +25,7 @@ import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { faqPage } from '@/lib/seo/jsonld';
+import { describeApiError } from '@/lib/api-error';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -104,7 +105,7 @@ export default function ThuocLoBanPage() {
       setResult(json.result);
       track('tool_used', { tool: 'thuoc-lo-ban', result: 'ok' });
     } catch (e) {
-      setError((e as Error).message);
+      setError(describeApiError(e));
       track('tool_used', { tool: 'thuoc-lo-ban', result: 'error' });
     } finally {
       setLoading(false);
