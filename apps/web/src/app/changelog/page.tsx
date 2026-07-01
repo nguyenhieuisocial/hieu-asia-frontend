@@ -3,6 +3,7 @@
  *
  * Static content (no MDX dependency) listing the major milestones from V1.0
  * onward. Kept in-source so it ships at build time and is fully crawlable.
+ * Copy is user-facing (benefit-first) — no internal component/tooling jargon.
  */
 
 import type { Metadata } from 'next';
@@ -39,16 +40,13 @@ const RELEASES: readonly ReleaseEntry[] = [
   {
     version: 'V3.1',
     date: 'Tháng 6, 2026',
-    title: 'Bộ ra quyết định + công cụ theo dịp',
+    title: 'Bộ ra quyết định & công cụ theo dịp',
     tag: 'feature',
     bullets: [
-      'Bộ ra quyết định: Decision Simulator, Nhật ký quyết định, Weekly Review, Compatibility, Career-fit, kế hoạch năm/tháng và Timeline đại vận',
-      'So sánh lăng kính — đối chiếu nhiều góc nhìn về bạn trong một màn hình',
-      'Công cụ theo dịp: xem tuổi cưới / làm nhà / khai trương, hướng nhà, đặt tên ngũ hành, sao hạn, giờ hoàng đạo, ngày kiêng kỵ, kèm Tử Vi 2027',
-      'Huyền Không Phi Tinh — phân tích phương vị theo phi tinh',
-      'Điểm danh nhận quà và mời bạn nhận voucher',
-      'Telegram bot @hieuasiabot — tra cứu nhanh ngay trong Telegram',
-      'Xuất PDF cho nhiều công cụ để lưu lại và chia sẻ',
+      'Bộ công cụ ra quyết định: mô phỏng lựa chọn, nhật ký, đánh giá tuần, hợp đôi, hợp nghề và kế hoạch năm/tháng',
+      'So sánh nhiều lăng kính về bạn trong cùng một màn hình',
+      'Công cụ theo dịp: xem ngày & tuổi cho cưới hỏi, làm nhà, khai trương, đặt tên — kèm Tử Vi 2027',
+      'Điểm danh nhận quà, mời bạn nhận voucher, và tra cứu nhanh qua Telegram',
     ],
   },
   {
@@ -57,81 +55,69 @@ const RELEASES: readonly ReleaseEntry[] = [
     title: 'Thêm lăng kính tâm lý, trực giác & chiêm tinh phương Tây',
     tag: 'major',
     bullets: [
-      'Lăng kính tâm lý chuyên sâu mới: DISC và Enneagram, kèm bản đọc diễn giải bằng AI',
-      'Tarot — trải 1 lá và 3 lá để soi một câu hỏi cụ thể',
-      'Chiêm tinh phương Tây: Bản đồ sao (natal) cần ngày, giờ, nơi sinh chính xác, cùng tra cứu Cung hoàng đạo',
-      'Gieo quẻ Kinh Dịch để tham khảo cho một quyết định',
+      'DISC và Enneagram — hai lăng kính tâm lý mới, kèm bản đọc bằng AI',
+      'Tarot (trải 1 & 3 lá) và Gieo quẻ Kinh Dịch cho một câu hỏi cụ thể',
+      'Chiêm tinh phương Tây: Bản đồ sao (natal) và Cung hoàng đạo',
     ],
   },
   {
-    version: 'Wave 2',
+    version: 'V2.4',
     date: 'Tháng 5, 2026',
-    title: 'Polish công cộng — Community, Changelog, Newsletter',
+    title: 'Cộng đồng, Changelog & Newsletter',
     tag: 'polish',
     bullets: [
-      'Trang Cộng đồng & Changelog công khai',
-      'Newsletter signup wire-up qua /api/email/subscribe',
-      'Polish 6 trang flow (signin, reading, processing, unlock, settings) với SiteNav + SiteFooter nhất quán',
-      'Vanity URL redirects (/learn/numerology → /learn/than-so-hoc, /palm → /learn/palm)',
-      'Reveal-on-scroll cho các section dài, smooth scroll cho anchor links',
+      'Trang Cộng đồng, Changelog công khai và đăng ký nhận bản tin',
+      'Trải nghiệm mượt hơn: hiệu ứng cuộn và điều hướng nhất quán toàn site',
     ],
   },
   {
     version: 'V2.3',
     date: 'Tháng 4, 2026',
-    title: 'UI/UX polish sweep — Premium tools + Free Tools',
+    title: 'Trang chủ mới & 6 công cụ miễn phí',
     tag: 'major',
     bullets: [
-      'HeroV3 với gold gradient ornaments + WhyChoose trên homepage',
-      '6 công cụ miễn phí (Tử Vi hôm nay, Lịch Vạn Niên, Hợp tuổi, Thần Số Học, Cân Xương, Thước Lỗ Ban)',
-      'StoryTestimonials + FaqAccordion thay cho các block landing cũ',
-      'SiteNav với dropdown Công cụ + Học, SiteFooter restructured 5 cột',
-      'PostHog taxonomy chuẩn, Web Vitals tracking, survey trong-app',
+      'Trang chủ dựng lại, thêm 6 công cụ tra cứu miễn phí (Tử Vi hôm nay, Lịch Vạn Niên, Hợp tuổi, Thần Số, Cân Xương, Thước Lỗ Ban)',
+      'Câu chuyện người dùng, phần hỏi–đáp và điều hướng gọn gàng hơn',
     ],
   },
   {
     version: 'V2.2',
     date: 'Tháng 3, 2026',
-    title: 'Admin overhaul + LLM spend dashboard',
-    tag: 'feature',
+    title: 'Nền tảng vận hành',
+    tag: 'infra',
     bullets: [
-      'Trang quản trị mới (admin) với Secrets Manager',
-      'Bảng theo dõi chi phí LLM theo provider + model',
-      'Public site /tu-vi-hom-nay, /lich-van-nien, /hop-tuoi đã ổn định',
+      'Bảng điều khiển nội bộ và theo dõi chi phí AI',
+      'Các công cụ tra cứu hằng ngày đi vào ổn định',
     ],
   },
   {
     version: 'V2.0',
     date: 'Tháng 2, 2026',
-    title: 'Magic-link auth + Supabase + Affiliate V1.5',
+    title: 'Đăng nhập không mật khẩu & Affiliate',
     tag: 'major',
     bullets: [
-      'Đăng nhập bằng magic-link qua Supabase Auth (không cần mật khẩu)',
-      'Trang /signin và /auth/callback hoàn chỉnh',
-      'Affiliate V1.5: leaderboard, đường link /r/[code], assets cho người giới thiệu',
-      'Trang /brand showcase + Logo system SVG',
+      'Đăng nhập bằng magic-link — không cần mật khẩu',
+      'Chương trình giới thiệu (affiliate) và bộ nhận diện thương hiệu mới',
     ],
   },
   {
     version: 'V1.5',
     date: 'Tháng 1, 2026',
-    title: 'Learn hub — infographic giáo dục',
+    title: 'Khu vực Học',
     tag: 'feature',
     bullets: [
-      '5 bài học infographic: Tử Vi 12 cung, Bát Tự, MBTI, Palm, Numerology',
-      'Phương pháp EOSIDIN 7 bước giải thích cách hieu.asia chuyển dữ liệu thành insight',
-      'Trust carousel ở footer',
+      'Bài học trực quan cho Tử Vi, Bát Tự, MBTI, Xem Tướng và Thần Số',
+      'Giải thích cách hieu.asia biến dữ liệu thành gợi ý bạn có thể hành động',
     ],
   },
   {
     version: 'V1.4',
     date: 'Tháng 12, 2025',
-    title: 'Analytics + SEO + Settings',
+    title: 'Đo lường, SEO & Cài đặt',
     tag: 'infra',
     bullets: [
-      'Plausible + PostHog wired song song, funnel events',
-      'Lighthouse + SEO P0/P1: titles, metadata, JSON-LD, h1, preconnect',
-      'Trang /settings: notifications, locale, theme, privacy, account, telegram',
+      'Nền tảng đo lường và tối ưu tốc độ tải trang',
+      'Trang Cài đặt: thông báo, ngôn ngữ, giao diện và quyền riêng tư',
     ],
   },
   {
@@ -140,11 +126,9 @@ const RELEASES: readonly ReleaseEntry[] = [
     title: 'Ra mắt công khai',
     tag: 'major',
     bullets: [
-      'Lá số Tử Vi 12 cung với 114 sao theo Bắc phái',
-      'Bát Tự Tứ Trụ + Thần Số Học Pythagorean + MBTI',
-      'Palm Reading qua upload ảnh + AI vision',
-      'Mentor AI có ngữ cảnh — đối thoại, không scripted',
-      'Báo cáo Cẩm Nang Cuộc Đời với 9 section markdown',
+      'Lá số Tử Vi 12 cung theo trường phái Bắc',
+      'Bát Tự, MBTI, Thần Số và Xem Tướng qua ảnh (AI thị giác)',
+      'AI Mentor đối thoại có ngữ cảnh và báo cáo Cẩm Nang Cuộc Đời',
     ],
   },
 ];
@@ -176,8 +160,8 @@ export default function ChangelogPage() {
               <span className="bg-gold-gradient bg-clip-text text-transparent">xây gì</span>
             </h1>
             <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Lộ trình từ ngày đầu — không marketing tô hồng. Bạn thấy được cả
-              những thay đổi nhỏ và những bước nhảy lớn.
+              Lộ trình từ ngày đầu — không tô hồng. Bạn thấy được cả những thay
+              đổi nhỏ và những bước nhảy lớn.
             </p>
           </div>
         </section>
@@ -234,19 +218,19 @@ export default function ChangelogPage() {
               Có ý tưởng cho phiên bản tiếp theo?
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-sm text-muted-foreground sm:text-base">
-              Email cho chúng tôi hoặc theo dõi newsletter để cùng định hình
-              hieu.asia. Bạn không phải user — bạn là đồng tác giả.
+              Email cho chúng tôi hoặc theo dõi bản tin để cùng định hình
+              hieu.asia. Bạn không chỉ là người dùng — bạn là đồng tác giả.
             </p>
             <div className="mt-7 flex flex-wrap justify-center gap-3">
-              <Button asChild><Link href="/community#newsletter">
-                
-                  Đăng ký newsletter
+              <Button asChild>
+                <Link href="/community#newsletter">
+                  Đăng ký bản tin
                   <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-                
-              </Link></Button>
-              <Button asChild variant="outline"><Link href="mailto:hi@hieu.asia">
-                Email đội ngũ
-              </Link></Button>
+                </Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link href="mailto:hi@hieu.asia">Email đội ngũ</Link>
+              </Button>
             </div>
           </div>
         </section>
