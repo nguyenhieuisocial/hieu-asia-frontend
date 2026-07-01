@@ -15,6 +15,7 @@ import { ThemeProvider } from '@/components/providers/theme-provider';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { LazyMotionProvider } from '@/components/providers/lazy-motion-provider';
 import { PlausibleScript } from '@/components/analytics/PlausibleScript';
+import { GoogleTags } from '@/components/analytics/GoogleTags';
 import { PostHogProvider } from '@/components/PostHogProvider';
 import { ConsentBanner } from '@/components/cmp/ConsentBanner';
 import { FloatingMentor } from '@/components/marketing/FloatingMentor';
@@ -318,6 +319,10 @@ export default async function RootLayout({
           </ThemeProvider>
         </NextIntlClientProvider>
         <PlausibleScript />
+        {/* GTM + GA4 — consent-gated: loads only after the visitor grants
+            analytics consent (lib/google-tags via the CMP). Returning
+            already-consented visitors get it re-loaded here on mount. */}
+        <GoogleTags />
         {/* Vercel telemetry — mount cuối <body> để fire sau khi providers init xong. */}
         <Analytics />
         <SpeedInsights />

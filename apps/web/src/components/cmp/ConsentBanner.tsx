@@ -205,7 +205,7 @@ export function ConsentBanner(): React.ReactElement | null {
           />
           <ConsentRow
             label="Analytics"
-            description="PostHog, Plausible. Đo funnel + UX."
+            description="PostHog, Plausible, Google Analytics. Đo funnel + UX."
             checked={draft.analytics}
             onChange={(v) => setDraft((d) => ({ ...d, analytics: v }))}
           />
