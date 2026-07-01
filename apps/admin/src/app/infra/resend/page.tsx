@@ -27,6 +27,7 @@ import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
 import { ResendEmailDrawer } from '@/components/admin/infra/ResendEmailDrawer';
 import { domainStatusTone } from '@/components/admin/infra/resend-status';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
 const tool = getInfraTool('resend')!;
 
@@ -94,6 +95,71 @@ const STATUS_CARDS: Array<{
   { key: 'delayed', label: 'Trễ' },
   { key: 'queued', label: 'Hàng đợi' },
   { key: 'other', label: 'Khác' },
+];
+
+const DOMAIN_COLUMNS: AdminTableColumn<InfraResendDomain>[] = [
+  {
+    id: 'name',
+    header: 'Tên miền',
+    className: 'font-medium text-foreground',
+    cell: (d) => d.name ?? '—',
+  },
+  {
+    id: 'status',
+    header: 'Xác minh',
+    cell: (d) => (
+      <InfraStatusPill label={d.status ?? '—'} tone={domainStatusTone(d.status)} />
+    ),
+  },
+  {
+    id: 'region',
+    header: 'Vùng',
+    className: 'whitespace-nowrap font-mono text-muted-foreground',
+    cell: (d) => d.region ?? '—',
+  },
+  {
+    id: 'created',
+    header: 'Tạo lúc',
+    className: 'whitespace-nowrap text-muted-foreground',
+    cell: (d) => formatDateOrEmpty(d.created_at),
+  },
+];
+
+const EMAIL_COLUMNS: AdminTableColumn<InfraResendItem>[] = [
+  {
+    id: 'status',
+    header: 'Trạng thái',
+    cell: (e) => (
+      <InfraStatusPill label={e.last_event ?? '—'} tone={eventTone(e.last_event)} />
+    ),
+  },
+  {
+    id: 'to',
+    header: 'Người nhận',
+    className: 'max-w-[18rem] truncate text-muted-foreground',
+    cell: (e) => e.to ?? '—',
+  },
+  {
+    id: 'subject',
+    header: 'Tiêu đề',
+    className: 'max-w-[24rem] truncate',
+    cell: (e) => e.subject ?? <span className="text-muted-foreground">—</span>,
+  },
+  {
+    id: 'time',
+    header: 'Thời gian',
+    className: 'whitespace-nowrap text-muted-foreground',
+    cell: (e) => (
+      <>
+        {formatDateOrEmpty(e.created_at)}
+        {formatRelativeOrEmpty(e.created_at) && (
+          <span className="ml-1.5 text-xs opacity-70">
+            · {formatRelativeOrEmpty(e.created_at)}
+          </span>
+        )}
+      </>
+    ),
+  },
 ];
 
 export default function InfraResendPage() {
@@ -164,43 +230,13 @@ export default function InfraResendPage() {
                   </p>
                   <Card>
                     <CardContent className="p-0">
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-sm">
-                          <thead>
-                            <tr className="border-b border-border text-left font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-                              <th className="px-4 py-2.5">Tên miền</th>
-                              <th className="px-4 py-2.5">Xác minh</th>
-                              <th className="px-4 py-2.5">Vùng</th>
-                              <th className="px-4 py-2.5">Tạo lúc</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {domains.map((d) => (
-                              <tr
-                                key={d.id}
-                                onClick={() => setOpenRecord({ id: d.id, hint: d.name })}
-                                className="cursor-pointer border-b border-border/50 last:border-0 hover:bg-gold/5"
-                              >
-                                <td className="px-4 py-2.5 font-medium text-foreground">
-                                  {d.name ?? '—'}
-                                </td>
-                                <td className="px-4 py-2.5">
-                                  <InfraStatusPill
-                                    label={d.status ?? '—'}
-                                    tone={domainStatusTone(d.status)}
-                                  />
-                                </td>
-                                <td className="whitespace-nowrap px-4 py-2.5 font-mono text-muted-foreground">
-                                  {d.region ?? '—'}
-                                </td>
-                                <td className="whitespace-nowrap px-4 py-2.5 text-muted-foreground">
-                                  {formatDateOrEmpty(d.created_at)}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+                      <AdminTable
+                        rows={domains}
+                        columns={DOMAIN_COLUMNS}
+                        getRowId={(d) => d.id}
+                        onRowClick={(d) => setOpenRecord({ id: d.id, hint: d.name })}
+                        caption="Tên miền gửi Resend"
+                      />
                     </CardContent>
                   </Card>
                   <p className="text-xs text-muted-foreground">
@@ -271,64 +307,20 @@ export default function InfraResendPage() {
                 </div>
                 <Card>
                   <CardContent className="p-0">
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
-                        <thead>
-                          <tr className="border-b border-border text-left font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-                            <th className="px-4 py-2.5">Trạng thái</th>
-                            <th className="px-4 py-2.5">Người nhận</th>
-                            <th className="px-4 py-2.5">Tiêu đề</th>
-                            <th className="px-4 py-2.5">Thời gian</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {visibleEmails.map((e) => (
-                            <tr
-                              key={e.id}
-                              onClick={
-                                e.id ? () => setOpenRecord({ id: e.id, hint: e.subject }) : undefined
-                              }
-                              className={
-                                e.id
-                                  ? 'cursor-pointer border-b border-border/50 last:border-0 hover:bg-gold/5'
-                                  : 'border-b border-border/50 last:border-0 hover:bg-gold/5'
-                              }
-                            >
-                              <td className="px-4 py-2.5">
-                                <InfraStatusPill
-                                  label={e.last_event ?? '—'}
-                                  tone={eventTone(e.last_event)}
-                                />
-                              </td>
-                              <td className="max-w-[18rem] truncate px-4 py-2.5 text-muted-foreground">
-                                {e.to ?? '—'}
-                              </td>
-                              <td className="max-w-[24rem] truncate px-4 py-2.5">
-                                {e.subject ?? <span className="text-muted-foreground">—</span>}
-                              </td>
-                              <td className="whitespace-nowrap px-4 py-2.5 text-muted-foreground">
-                                {formatDateOrEmpty(e.created_at)}
-                                {formatRelativeOrEmpty(e.created_at) && (
-                                  <span className="ml-1.5 text-xs opacity-70">
-                                    · {formatRelativeOrEmpty(e.created_at)}
-                                  </span>
-                                )}
-                              </td>
-                            </tr>
-                          ))}
-                          {visibleEmails.length === 0 && (
-                            <tr>
-                              <td
-                                colSpan={4}
-                                className="px-4 py-6 text-center text-sm text-muted-foreground"
-                              >
-                                Không có email trả về / khiếu nại trong cửa sổ gần đây.
-                              </td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
+                    <AdminTable
+                      rows={visibleEmails}
+                      columns={EMAIL_COLUMNS}
+                      getRowId={(e) => e.id}
+                      onRowClick={(e) => {
+                        if (e.id) setOpenRecord({ id: e.id, hint: e.subject });
+                      }}
+                      empty={
+                        <span className="text-sm text-muted-foreground">
+                          Không có email trả về / khiếu nại trong cửa sổ gần đây.
+                        </span>
+                      }
+                      caption="Email gần đây"
+                    />
                   </CardContent>
                 </Card>
               </div>

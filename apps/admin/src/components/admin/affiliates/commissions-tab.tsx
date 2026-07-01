@@ -12,6 +12,7 @@ import * as React from 'react';
 import dynamic from 'next/dynamic';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Card, CardContent, toast } from '@hieu-asia/ui';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
 
 // Recharts lazy-loaded so it stays out of the initial admin bundle (tasks page
@@ -103,6 +104,70 @@ export function CommissionsTab() {
     setStates((cur) => (cur.includes(s) ? cur.filter((x) => x !== s) : [...cur, s]));
   }
 
+  const columns: AdminTableColumn<Commission>[] = [
+    {
+      id: 'id',
+      header: 'ID',
+      cell: (c) => <span className="font-mono text-xs text-muted-foreground">{c.id.slice(0, 8)}</span>,
+    },
+    {
+      id: 'beneficiary',
+      header: 'Beneficiary',
+      cell: (c) => (
+        <span className="text-foreground/85">{c.beneficiary_email ?? c.beneficiary_id.slice(0, 8)}</span>
+      ),
+    },
+    {
+      id: 'tier',
+      header: 'L',
+      className: 'text-right',
+      cell: (c) => <span className="font-mono">L{c.tier_level}</span>,
+    },
+    {
+      id: 'gross',
+      header: 'Gross',
+      className: 'text-right',
+      cell: (c) => <span className="font-mono">{vnd(c.gross_amount_vnd)}</span>,
+    },
+    {
+      id: 'commission',
+      header: 'Commission',
+      className: 'text-right',
+      cell: (c) => <span className="font-mono text-gold">{vnd(c.commission_vnd)}</span>,
+    },
+    { id: 'status', header: 'Status', cell: (c) => <StatusBadge status={c.status} /> },
+    {
+      id: 'created_at',
+      header: 'Created',
+      cell: (c) => <span className="text-xs text-muted-foreground">{dt(c.created_at)}</span>,
+    },
+    {
+      id: 'available_at',
+      header: 'Available',
+      cell: (c) => <span className="text-xs text-muted-foreground">{dt(c.available_at)}</span>,
+    },
+    {
+      id: 'actions',
+      header: '',
+      cell: (c) =>
+        (c.status === 'held' || c.status === 'available') && (
+          <Button
+            size="sm"
+            variant="ghost"
+            disabled={clawback.isPending}
+            onClick={() => {
+              if (confirm(`Clawback commission ${c.id.slice(0, 8)}?`)) {
+                clawback.mutate(c.id);
+              }
+            }}
+            className="border border-red-500/30 text-red-700 dark:text-red-300"
+          >
+            Clawback
+          </Button>
+        ),
+    },
+  ];
+
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
@@ -134,79 +199,22 @@ export function CommissionsTab() {
       )}
 
       <Card>
-        <CardContent className="overflow-x-auto pt-6">
-          {q.isLoading ? (
-            <p className="text-sm text-muted-foreground">Đang tải…</p>
-          ) : q.error ? (
+        <CardContent className="pt-6">
+          {q.error ? (
             <p className="text-sm text-red-700 dark:text-red-300">{(q.error as Error).message}</p>
           ) : (
-            <table className="w-full min-w-[760px] text-sm">
-              <thead className="border-b border-border text-left text-xs uppercase text-muted-foreground">
-                <tr>
-                  <th className="pb-2 pr-3">ID</th>
-                  <th className="pb-2 pr-3">Beneficiary</th>
-                  <th className="pb-2 pr-3 text-right">L</th>
-                  <th className="pb-2 pr-3 text-right">Gross</th>
-                  <th className="pb-2 pr-3 text-right">Commission</th>
-                  <th className="pb-2 pr-3">Status</th>
-                  <th className="pb-2 pr-3">Created</th>
-                  <th className="pb-2 pr-3">Available</th>
-                  <th className="pb-2"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {(q.data ?? []).map((c) => (
-                  <tr key={c.id} className="border-b border-border hover:bg-muted/30">
-                    <td className="py-2 pr-3 font-mono text-xs text-muted-foreground">
-                      {c.id.slice(0, 8)}
-                    </td>
-                    <td className="py-2 pr-3 text-foreground/85">
-                      {c.beneficiary_email ?? c.beneficiary_id.slice(0, 8)}
-                    </td>
-                    <td className="py-2 pr-3 text-right font-mono">L{c.tier_level}</td>
-                    <td className="py-2 pr-3 text-right font-mono">
-                      {vnd(c.gross_amount_vnd)}
-                    </td>
-                    <td className="py-2 pr-3 text-right font-mono text-gold">
-                      {vnd(c.commission_vnd)}
-                    </td>
-                    <td className="py-2 pr-3">
-                      <StatusBadge status={c.status} />
-                    </td>
-                    <td className="py-2 pr-3 text-xs text-muted-foreground">
-                      {dt(c.created_at)}
-                    </td>
-                    <td className="py-2 pr-3 text-xs text-muted-foreground">
-                      {dt(c.available_at)}
-                    </td>
-                    <td className="py-2">
-                      {(c.status === 'held' || c.status === 'available') && (
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          disabled={clawback.isPending}
-                          onClick={() => {
-                            if (confirm(`Clawback commission ${c.id.slice(0, 8)}?`)) {
-                              clawback.mutate(c.id);
-                            }
-                          }}
-                          className="border border-red-500/30 text-red-700 dark:text-red-300"
-                        >
-                          Clawback
-                        </Button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-                {q.data && q.data.length === 0 && (
-                  <tr>
-                    <td colSpan={9} className="py-6 text-center text-muted-foreground">
-                      Không có commission khớp filter.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+            <AdminTable
+              rows={q.data ?? []}
+              columns={columns}
+              getRowId={(c) => c.id}
+              loading={q.isLoading}
+              caption="Ledger commission affiliate"
+              empty={
+                <span className="text-sm text-muted-foreground">
+                  Không có commission khớp filter.
+                </span>
+              }
+            />
           )}
         </CardContent>
       </Card>

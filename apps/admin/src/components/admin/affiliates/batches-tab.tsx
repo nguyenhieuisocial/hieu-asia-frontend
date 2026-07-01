@@ -17,6 +17,7 @@ import * as React from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Card, CardContent, toast } from '@hieu-asia/ui';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
 interface Batch {
   id: string;
@@ -138,6 +139,90 @@ export function BatchesTab() {
       toast.error(e.name === 'TimeoutError' ? 'Quá lâu, thử lại' : e.message),
   });
 
+  const columns: AdminTableColumn<Batch>[] = [
+    { id: 'id', header: 'ID', cell: (b) => <span className="font-mono text-xs">{b.id.slice(0, 8)}</span> },
+    { id: 'status', header: 'Status', cell: (b) => <StatusBadge status={b.status} /> },
+    { id: 'rail', header: 'Rail', cell: (b) => b.rail ?? '—' },
+    {
+      id: 'total',
+      header: 'Total',
+      className: 'text-right',
+      cell: (b) => <span className="font-mono text-gold">{vnd(b.total_amount_vnd)}</span>,
+    },
+    {
+      id: 'affiliates',
+      header: 'Affiliates',
+      className: 'text-right',
+      cell: (b) => <span className="font-mono">{b.affiliate_count}</span>,
+    },
+    { id: 'approved_by', header: 'Approved by', cell: (b) => <span className="text-xs">{b.approved_by ?? '—'}</span> },
+    {
+      id: 'approved_at',
+      header: 'Approved at',
+      cell: (b) => <span className="text-xs text-muted-foreground">{dt(b.approved_at)}</span>,
+    },
+    {
+      id: 'paid_at',
+      header: 'Paid at',
+      cell: (b) => <span className="text-xs text-muted-foreground">{dt(b.paid_at)}</span>,
+    },
+    {
+      id: 'actions',
+      header: '',
+      cell: (b) => (
+        <div className="flex items-center gap-2">
+          {b.status === 'pending_approval' && (
+            <Button
+              size="sm"
+              disabled={approve.isPending}
+              onClick={() => {
+                if (confirm(`Duyệt batch ${b.id.slice(0, 8)} (${vnd(b.total_amount_vnd)})?`)) {
+                  approve.mutate(b.id);
+                }
+              }}
+            >
+              Approve
+            </Button>
+          )}
+          {b.rail === 'manual_csv' &&
+            // Wave 45.2 P3-3 — CSV button only after dispatch has flipped the
+            // batch to in_progress/completed. 'approved' is a transient state.
+            ['in_progress', 'completed'].includes(b.status) && (
+              <Button size="sm" variant="outline" disabled={csv.isPending} onClick={() => csv.mutate(b.id)}>
+                CSV
+              </Button>
+            )}
+          {b.rail === 'manual_csv' && b.status === 'in_progress' && (
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={markPaid.isPending}
+              onClick={() => {
+                if (
+                  confirm(
+                    `Xác nhận: bạn ĐÃ chuyển khoản xong cho batch ${b.id.slice(0, 8)} (${vnd(
+                      b.total_amount_vnd,
+                    )})? Thao tác này chỉ GHI NHẬN, không tự chuyển tiền.`,
+                  )
+                ) {
+                  markPaid.mutate(b.id);
+                }
+              }}
+            >
+              Ghi nhận đã trả
+            </Button>
+          )}
+          {b.rail !== 'manual_csv' &&
+            ['in_progress', 'completed', 'failed'].includes(b.status) && (
+              <span className="text-xs text-muted-foreground">
+                {b.rail === 'wise' ? 'Wise transfers' : 'Stripe transfers'}
+              </span>
+            )}
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -158,120 +243,23 @@ export function BatchesTab() {
       )}
 
       <Card>
-        <CardContent className="overflow-x-auto pt-6">
-          {q.isLoading ? (
-            <p className="text-sm text-muted-foreground">Đang tải…</p>
-          ) : q.error ? (
+        <CardContent className="pt-6">
+          {q.error ? (
             <p className="text-sm text-red-700 dark:text-red-300">{(q.error as Error).message}</p>
           ) : (
-            <table className="w-full text-sm">
-              <thead className="border-b border-border text-left text-xs uppercase text-muted-foreground">
-                <tr>
-                  <th className="pb-2 pr-3">ID</th>
-                  <th className="pb-2 pr-3">Status</th>
-                  <th className="pb-2 pr-3">Rail</th>
-                  <th className="pb-2 pr-3 text-right">Total</th>
-                  <th className="pb-2 pr-3 text-right">Affiliates</th>
-                  <th className="pb-2 pr-3">Approved by</th>
-                  <th className="pb-2 pr-3">Approved at</th>
-                  <th className="pb-2 pr-3">Paid at</th>
-                  <th className="pb-2"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {(q.data ?? []).map((b) => (
-                  <tr
-                    key={b.id}
-                    className={`border-b border-border hover:bg-muted/30 ${
-                      highlight === b.id ? 'bg-gold/5' : ''
-                    }`}
-                  >
-                    <td className="py-2 pr-3 font-mono text-xs">{b.id.slice(0, 8)}</td>
-                    <td className="py-2 pr-3">
-                      <StatusBadge status={b.status} />
-                    </td>
-                    <td className="py-2 pr-3">{b.rail ?? '—'}</td>
-                    <td className="py-2 pr-3 text-right font-mono text-gold">
-                      {vnd(b.total_amount_vnd)}
-                    </td>
-                    <td className="py-2 pr-3 text-right font-mono">{b.affiliate_count}</td>
-                    <td className="py-2 pr-3 text-xs">{b.approved_by ?? '—'}</td>
-                    <td className="py-2 pr-3 text-xs text-muted-foreground">
-                      {dt(b.approved_at)}
-                    </td>
-                    <td className="py-2 pr-3 text-xs text-muted-foreground">{dt(b.paid_at)}</td>
-                    <td className="py-2">
-                      <div className="flex items-center gap-2">
-                        {b.status === 'pending_approval' && (
-                          <Button
-                            size="sm"
-                            disabled={approve.isPending}
-                            onClick={() => {
-                              if (
-                                confirm(
-                                  `Duyệt batch ${b.id.slice(0, 8)} (${vnd(b.total_amount_vnd)})?`,
-                                )
-                              ) {
-                                approve.mutate(b.id);
-                              }
-                            }}
-                          >
-                            Approve
-                          </Button>
-                        )}
-                        {b.rail === 'manual_csv' &&
-                          // Wave 45.2 P3-3 — CSV button only after dispatch
-                          // has flipped the batch to in_progress/completed.
-                          // 'approved' is a transient pre-dispatch state.
-                          ['in_progress', 'completed'].includes(b.status) && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              disabled={csv.isPending}
-                              onClick={() => csv.mutate(b.id)}
-                            >
-                              CSV
-                            </Button>
-                          )}
-                        {b.rail === 'manual_csv' && b.status === 'in_progress' && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            disabled={markPaid.isPending}
-                            onClick={() => {
-                              if (
-                                confirm(
-                                  `Xác nhận: bạn ĐÃ chuyển khoản xong cho batch ${b.id.slice(0, 8)} (${vnd(
-                                    b.total_amount_vnd,
-                                  )})? Thao tác này chỉ GHI NHẬN, không tự chuyển tiền.`,
-                                )
-                              ) {
-                                markPaid.mutate(b.id);
-                              }
-                            }}
-                          >
-                            Ghi nhận đã trả
-                          </Button>
-                        )}
-                        {b.rail !== 'manual_csv' &&
-                          ['in_progress', 'completed', 'failed'].includes(b.status) && (
-                            <span className="text-xs text-muted-foreground">
-                              {b.rail === 'wise' ? 'Wise transfers' : 'Stripe transfers'}
-                            </span>
-                          )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-                {q.data && q.data.length === 0 && (
-                  <tr>
-                    <td colSpan={9} className="py-6 text-center text-muted-foreground">
-                      Chưa có batch nào. Bấm <strong>Build new batch</strong> để tạo.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+            <AdminTable
+              rows={q.data ?? []}
+              columns={columns}
+              getRowId={(b) => b.id}
+              loading={q.isLoading}
+              rowClassName={(b) => (highlight === b.id ? 'bg-gold/5' : undefined)}
+              caption="Danh sách batch payout"
+              empty={
+                <span className="text-sm text-muted-foreground">
+                  Chưa có batch nào. Bấm <strong>Build new batch</strong> để tạo.
+                </span>
+              }
+            />
           )}
         </CardContent>
       </Card>

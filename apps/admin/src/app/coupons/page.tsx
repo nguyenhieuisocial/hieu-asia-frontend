@@ -41,6 +41,7 @@ import { ErrorBlock } from '@/components/admin/error-block';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
 import { useBulkSelection } from '@/lib/bulk-action';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
 
 interface Coupon {
@@ -332,6 +333,113 @@ export default function CouponsPage() {
     qc.invalidateQueries({ queryKey: ['admin', 'coupons'] });
   }
 
+  // Custom leading checkbox column (NOT AdminTable onBulkSelect) so we keep the
+  // external useBulkSelection state + the active-only constraint (non-active
+  // coupons are non-selectable) + the shared bulk-action bar wiring.
+  const columns: AdminTableColumn<Coupon>[] = [
+    {
+      id: 'select',
+      className: 'w-10',
+      header: (
+        <input
+          type="checkbox"
+          checked={allActiveFilteredSelected}
+          onChange={togglePage}
+          aria-label="Chọn tất cả coupon active"
+          className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-card/60 text-gold accent-gold"
+        />
+      ),
+      cell: (c) => (
+        <input
+          type="checkbox"
+          checked={selected.has(c.code)}
+          disabled={c.status !== 'active'}
+          onChange={() => toggleOne(c.code)}
+          aria-label={`Chọn ${c.code}`}
+          className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-card/60 text-gold accent-gold disabled:cursor-not-allowed disabled:opacity-30"
+        />
+      ),
+    },
+    { id: 'code', header: 'Code', cell: (c) => <span className="font-mono text-gold">{c.code}</span> },
+    {
+      id: 'discount',
+      header: 'Giảm',
+      cell: (c) => <span className="tabular-nums text-foreground/90">{c.discount_pct}%</span>,
+    },
+    { id: 'status', header: 'Status', cell: (c) => statusPill(c.status) },
+    {
+      id: 'uses',
+      header: 'Uses',
+      cell: (c) => (
+        <span className="font-mono text-xs text-muted-foreground tabular-nums">
+          {c.uses ?? 0}
+          {c.max_uses ? <span className="text-muted-foreground">/{c.max_uses}</span> : ''}
+        </span>
+      ),
+    },
+    {
+      id: 'validity',
+      header: 'Hiệu lực',
+      cell: (c) => (
+        <span className="font-mono text-[11px] text-muted-foreground">
+          {fmtDate(c.valid_from)} → {fmtDate(c.valid_to)}
+        </span>
+      ),
+    },
+    {
+      id: 'note',
+      header: 'Note',
+      className: 'max-w-[18ch] truncate',
+      cell: (c) => (
+        <span className="text-xs text-muted-foreground" title={c.notes ?? ''}>
+          {c.notes ?? '—'}
+        </span>
+      ),
+    },
+    {
+      id: 'created',
+      header: 'Tạo',
+      cell: (c) => (
+        <span className="font-mono text-[11px] text-muted-foreground">{fmtDate(c.created_at)}</span>
+      ),
+    },
+    {
+      id: 'actions',
+      header: '',
+      className: 'text-right',
+      cell: (c) => (
+        <div className="flex items-center justify-end gap-1">
+          {c.status !== 'revoked' && (
+            <Button
+              size="sm"
+              variant="ghost"
+              disabled={editMut.isPending}
+              onClick={() => openEdit(c)}
+              aria-label={`Sửa ${c.code}`}
+              title="Sửa coupon"
+              className="text-gold hover:bg-gold/10"
+            >
+              <Pencil className="h-4 w-4" />
+            </Button>
+          )}
+          {c.status === 'active' && (
+            <Button
+              size="sm"
+              variant="ghost"
+              disabled={revokeMut.isPending}
+              onClick={() => onRevoke(c.code)}
+              aria-label={`Thu hồi ${c.code}`}
+              title="Thu hồi coupon"
+              className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -499,108 +607,15 @@ export default function CouponsPage() {
           )}
 
           {filtered.length > 0 && (
-            <div className="overflow-x-auto rounded-lg border border-gold/15 bg-card/60">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gold/15 text-left text-[11px] uppercase tracking-wider text-gold/80">
-                    <th className="w-10 px-3 py-2">
-                      <input
-                        type="checkbox"
-                        checked={allActiveFilteredSelected}
-                        onChange={togglePage}
-                        aria-label="Chọn tất cả coupon active"
-                        className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-card/60 text-gold accent-gold"
-                      />
-                    </th>
-                    <th className="px-3 py-2 font-medium">Code</th>
-                    <th className="px-3 py-2 font-medium">Giảm</th>
-                    <th className="px-3 py-2 font-medium">Status</th>
-                    <th className="px-3 py-2 font-medium">Uses</th>
-                    <th className="px-3 py-2 font-medium">Hiệu lực</th>
-                    <th className="px-3 py-2 font-medium">Note</th>
-                    <th className="px-3 py-2 font-medium">Tạo</th>
-                    <th className="px-3 py-2 font-medium" />
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((c) => {
-                    const isSelected = selected.has(c.code);
-                    const canSelect = c.status === 'active';
-                    return (
-                      <tr
-                        key={c.code}
-                        className={cn(
-                          'border-b border-gold/10 transition-all duration-300 ease-editorial last:border-0 hover:bg-gold/[0.03]',
-                          isSelected && 'bg-gold/5',
-                        )}
-                      >
-                        <td className="px-3 py-2">
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            disabled={!canSelect}
-                            onChange={() => toggleOne(c.code)}
-                            aria-label={`Chọn ${c.code}`}
-                            className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-card/60 text-gold accent-gold disabled:cursor-not-allowed disabled:opacity-30"
-                          />
-                        </td>
-                        <td className="px-3 py-2 font-mono text-gold">{c.code}</td>
-                        <td className="px-3 py-2 tabular-nums text-foreground/90">
-                          {c.discount_pct}%
-                        </td>
-                        <td className="px-3 py-2">{statusPill(c.status)}</td>
-                        <td className="px-3 py-2 font-mono text-xs text-muted-foreground tabular-nums">
-                          {c.uses ?? 0}
-                          {c.max_uses ? <span className="text-muted-foreground">/{c.max_uses}</span> : ''}
-                        </td>
-                        <td className="px-3 py-2 font-mono text-[11px] text-muted-foreground">
-                          {fmtDate(c.valid_from)} → {fmtDate(c.valid_to)}
-                        </td>
-                        <td
-                          className="max-w-[18ch] truncate px-3 py-2 text-xs text-muted-foreground"
-                          title={c.notes ?? ''}
-                        >
-                          {c.notes ?? '—'}
-                        </td>
-                        <td className="px-3 py-2 font-mono text-[11px] text-muted-foreground">
-                          {fmtDate(c.created_at)}
-                        </td>
-                        <td className="px-3 py-2 text-right">
-                          <div className="flex items-center justify-end gap-1">
-                            {c.status !== 'revoked' && (
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                disabled={editMut.isPending}
-                                onClick={() => openEdit(c)}
-                                aria-label={`Sửa ${c.code}`}
-                                title="Sửa coupon"
-                                className="text-gold hover:bg-gold/10"
-                              >
-                                <Pencil className="h-4 w-4" />
-                              </Button>
-                            )}
-                            {c.status === 'active' && (
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                disabled={revokeMut.isPending}
-                                onClick={() => onRevoke(c.code)}
-                                aria-label={`Thu hồi ${c.code}`}
-                                title="Thu hồi coupon"
-                                className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <AdminTable
+              rows={filtered}
+              columns={columns}
+              getRowId={(c) => c.code}
+              rowClassName={(c) =>
+                cn('hover:bg-gold/[0.03]', selected.has(c.code) && 'bg-gold/5')
+              }
+              caption="Danh sách coupon"
+            />
           )}
         </CardContent>
       </Card>

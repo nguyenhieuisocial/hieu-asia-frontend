@@ -1,47 +1,23 @@
-import { NextResponse, type NextRequest } from 'next/server';
+/**
+ * Provider API keys (Anthropic/OpenAI/Google) — PRODUCTION secrets → owner only
+ * (mirrors /admin/secrets). Worker is role-blind, so per-user role is enforced
+ * here. POST → set, DELETE → remove. Worker path /ai/keys/:vendor.
+ */
+import { NextResponse } from 'next/server';
 import { requireAdminSession } from '@/lib/auth-server';
-
-const GATEWAY = process.env.HIEU_API_GATEWAY_URL ?? 'https://api.hieu.asia';
-const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
+import { proxyToGateway } from '@/lib/proxy-gateway';
 
 type Ctx = { params: Promise<{ vendor: string }> };
 
-async function proxy(req: NextRequest, ctx: Ctx, method: 'POST' | 'DELETE') {
-  // Provider API keys (Anthropic/OpenAI/Google) are PRODUCTION secrets — setting or
-  // deleting them is owner-only, mirroring the /admin/secrets gate. The worker
-  // (/ai/keys/*) only checks the shared token (role-blind), so per-user role MUST be
-  // enforced here; without it a `viewer` could DoS the AI pipeline or swap a key.
+async function handle(req: Request, ctx: Ctx) {
   const auth = await requireAdminSession('owner');
   if ('error' in auth) return auth.error;
-  if (!TOKEN) {
-    return NextResponse.json(
-      { ok: false, error: 'HIEU_API_ADMIN_TOKEN not configured on the admin app' },
-      { status: 503 },
-    );
-  }
   const { vendor } = await ctx.params;
   if (!['anthropic', 'openai', 'google'].includes(vendor)) {
     return NextResponse.json({ ok: false, error: 'unknown vendor' }, { status: 400 });
   }
-  const body = method === 'POST' ? await req.text() : undefined;
-  try {
-    const r = await fetch(`${GATEWAY}/ai/keys/${vendor}`, {
-      method,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Admin-Token': TOKEN,
-      },
-      body,
-    });
-    const data = await r.json();
-    return NextResponse.json(data, { status: r.status });
-  } catch (err) {
-    return NextResponse.json(
-      { ok: false, error: `gateway unreachable: ${(err as Error).message}` },
-      { status: 502 },
-    );
-  }
+  return proxyToGateway(req, { path: `ai/keys/${vendor}`, adminEmail: auth.session.email });
 }
 
-export const POST = (req: NextRequest, ctx: Ctx) => proxy(req, ctx, 'POST');
-export const DELETE = (req: NextRequest, ctx: Ctx) => proxy(req, ctx, 'DELETE');
+export const POST = (req: Request, ctx: Ctx) => handle(req, ctx);
+export const DELETE = (req: Request, ctx: Ctx) => handle(req, ctx);

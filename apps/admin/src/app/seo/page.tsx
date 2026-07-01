@@ -32,6 +32,7 @@ import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard, type KpiCardProps } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import {
   getGscSearchAnalytics,
   type GscResponse,
@@ -110,49 +111,60 @@ function positionDelta(current: number, prev: number): Delta | null {
 
 /** Top-queries / top-pages table. Truncates long keys with a title tooltip. */
 function GscTable({ title, rows }: { title: string; rows: GscRow[] }) {
+  const columns: AdminTableColumn<GscRow>[] = [
+    {
+      id: 'key',
+      header: title.includes('khoá') ? 'Từ khoá' : 'Trang',
+      className: 'max-w-xs',
+      cell: (r) => (
+        <span className="block truncate text-foreground/85" title={r.key}>
+          {r.key}
+        </span>
+      ),
+    },
+    {
+      id: 'clicks',
+      header: 'Clicks',
+      className: 'text-right font-mono text-foreground',
+      cell: (r) => fmtInt(r.clicks),
+    },
+    {
+      id: 'impressions',
+      header: 'Impressions',
+      className: 'text-right font-mono text-foreground/70',
+      cell: (r) => fmtInt(r.impressions),
+    },
+    {
+      id: 'ctr',
+      header: 'CTR',
+      className: 'text-right font-mono text-foreground/70',
+      cell: (r) => fmtPct(r.ctr),
+    },
+    {
+      id: 'position',
+      header: 'Vị trí TB',
+      className: 'text-right font-mono text-foreground/70',
+      cell: (r) => fmtPos(r.position),
+    },
+  ];
+
   return (
     <Card>
       <CardHeader>
         <CardTitle className="text-sm">{title}</CardTitle>
       </CardHeader>
       <CardContent className="p-0">
-        {rows.length === 0 ? (
-          <p className="px-6 py-10 text-center text-sm text-muted-foreground">
-            Chưa có dữ liệu trong khoảng thời gian này.
-          </p>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="sticky top-0 z-10 border-b border-border/60 bg-card text-left text-xs text-muted-foreground">
-                <tr>
-                  <th className="px-4 py-2.5 font-medium">{title.includes('khoá') ? 'Từ khoá' : 'Trang'}</th>
-                  <th className="px-4 py-2.5 text-right font-medium">Clicks</th>
-                  <th className="px-4 py-2.5 text-right font-medium">Impressions</th>
-                  <th className="px-4 py-2.5 text-right font-medium">CTR</th>
-                  <th className="px-4 py-2.5 text-right font-medium">Vị trí TB</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((r) => (
-                  <tr
-                    key={r.key}
-                    className="border-b border-border/40 transition-colors last:border-0 hover:bg-muted/[0.04]"
-                  >
-                    <td className="max-w-xs px-4 py-2.5">
-                      <span className="block truncate text-foreground/85" title={r.key}>
-                        {r.key}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2.5 text-right font-mono text-foreground">{fmtInt(r.clicks)}</td>
-                    <td className="px-4 py-2.5 text-right font-mono text-foreground/70">{fmtInt(r.impressions)}</td>
-                    <td className="px-4 py-2.5 text-right font-mono text-foreground/70">{fmtPct(r.ctr)}</td>
-                    <td className="px-4 py-2.5 text-right font-mono text-foreground/70">{fmtPos(r.position)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <AdminTable
+          rows={rows}
+          columns={columns}
+          getRowId={(r) => r.key}
+          empty={
+            <p className="text-sm text-muted-foreground">
+              Chưa có dữ liệu trong khoảng thời gian này.
+            </p>
+          }
+          caption={title}
+        />
       </CardContent>
     </Card>
   );

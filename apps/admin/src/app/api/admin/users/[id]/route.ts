@@ -1,41 +1,22 @@
-import { NextResponse, type NextRequest } from 'next/server';
+/**
+ * Admin proxy → Worker /admin/users/:id (admin-user management → owner only).
+ *  PATCH → update, DELETE → remove.
+ */
 import { requireAdminSession } from '@/lib/auth-server';
-
-const GATEWAY = process.env.HIEU_API_GATEWAY_URL ?? 'https://api.hieu.asia';
-const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
+import { proxyToGateway } from '@/lib/proxy-gateway';
 
 type Ctx = { params: Promise<{ id: string }> };
 
-async function proxy(req: NextRequest, ctx: Ctx, method: 'PATCH' | 'DELETE') {
-  // Wave 60.62.T1.4 — defense-in-depth verifySession backfill (user mgmt → owner only).
+export async function PATCH(req: Request, ctx: Ctx) {
   const auth = await requireAdminSession('owner');
   if ('error' in auth) return auth.error;
-  if (!TOKEN) {
-    return NextResponse.json(
-      { ok: false, error: 'HIEU_API_ADMIN_TOKEN not configured on the admin app' },
-      { status: 503 },
-    );
-  }
   const { id } = await ctx.params;
-  const body = method === 'PATCH' ? await req.text() : undefined;
-  try {
-    const r = await fetch(`${GATEWAY}/admin/users/${encodeURIComponent(id)}`, {
-      method,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Admin-Token': TOKEN,
-      },
-      body,
-    });
-    const data = await r.json();
-    return NextResponse.json(data, { status: r.status });
-  } catch (err) {
-    return NextResponse.json(
-      { ok: false, error: `gateway unreachable: ${(err as Error).message}` },
-      { status: 502 },
-    );
-  }
+  return proxyToGateway(req, { path: `admin/users/${encodeURIComponent(id)}`, adminEmail: auth.session.email });
 }
 
-export const PATCH = (req: NextRequest, ctx: Ctx) => proxy(req, ctx, 'PATCH');
-export const DELETE = (req: NextRequest, ctx: Ctx) => proxy(req, ctx, 'DELETE');
+export async function DELETE(req: Request, ctx: Ctx) {
+  const auth = await requireAdminSession('owner');
+  if ('error' in auth) return auth.error;
+  const { id } = await ctx.params;
+  return proxyToGateway(req, { path: `admin/users/${encodeURIComponent(id)}`, adminEmail: auth.session.email });
+}
