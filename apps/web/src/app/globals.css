@@ -927,18 +927,15 @@ body { overflow-wrap: break-word; }
   max-width: 880px;
   margin: 1.25rem auto 0;
   aspect-ratio: 3 / 2;
-  /* Đồ thị tương tác (tap), KHÔNG phải nội dung để chọn/kéo → chặn bôi-chọn +
-   * kéo-thả để bỏ cảm giác "kéo được nhóm" (bug user báo); tap vẫn sạch.
-   * -webkit-touch-callout: none để chặn long-press callout/kéo trên iOS/mobile
-   * (user-select:none một mình KHÔNG đủ trên WebKit di động). */
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
 }
-/* Chặn kéo-thả TOÀN BỘ phần tử trong đồ thị (kể cả <svg> .ob-lines vốn kéo được
- * như ảnh trong Chromium — đây là bug user báo còn sót). */
-.ob-graph, .ob-graph * { -webkit-user-drag: none; user-drag: none; }
-.ob-graph .ob-hub, .ob-graph .ob-center { -webkit-touch-callout: none; touch-action: manipulation; }
+/* Toàn bộ Bộ não Oracle là trải nghiệm CHẠM/ĐỌC — chặn bôi-chọn & kéo-thả MỌI
+ * phần tử (graph, bảng chi tiết, marquee, link) để không "kéo/chọn nhóm" được.
+ * (Bug cũ chỉ chặn trong .ob-graph → bảng chi tiết + marquee vẫn kéo-chọn được.)
+ * -webkit-touch-callout: none chặn long-press callout/kéo trên iOS (user-select
+ * một mình KHÔNG đủ trên WebKit di động). */
+.ob-section { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.ob-section, .ob-section * { -webkit-user-drag: none; user-drag: none; }
+.ob-graph .ob-hub, .ob-graph .ob-center { touch-action: manipulation; }
 .ob-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
 .ob-line { stroke: rgba(224, 174, 98, 0.28); stroke-width: 1.4; transition: stroke 0.25s ease; }
 .ob-line-on { stroke: rgba(224, 174, 98, 0.85); }
@@ -1054,7 +1051,6 @@ body { overflow-wrap: break-word; }
 
 /* v3 — bảng chi tiết: liệt kê tên công cụ thật của nhóm đang chọn */
 .ob-detail {
-  margin: 1.25rem auto 0;
   max-width: 30rem;
   text-align: left;
   border: 1px solid rgba(224, 174, 98, 0.25);
@@ -1080,8 +1076,20 @@ body { overflow-wrap: break-word; }
   color: #e8e4d8;
 }
 .ob-detail-link { display: inline-block; margin-top: 0.75rem; color: #e0ae62; }
+/* Bảng chi tiết MỞ RỘNG MƯỢT (không "bụp/giật" đẩy nội dung phía dưới): grid-rows
+ * 0fr→1fr cho chiều cao co giãn mềm; khoảng cách trên cũng animate cùng. */
+.ob-detail-wrap { max-width: 30rem; margin: 1.25rem auto 0; }
+.ob-detail-wrap > .ob-detail { min-height: 0; overflow: hidden; }
 @media (prefers-reduced-motion: no-preference) {
-  .ob-detail { animation: ob-fade-in 0.3s ease both; }
+  .ob-detail-wrap {
+    display: grid;
+    grid-template-rows: 1fr;
+    animation: ob-detail-open 0.32s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+  @keyframes ob-detail-open {
+    from { grid-template-rows: 0fr; opacity: 0; margin-top: 0; }
+    to { grid-template-rows: 1fr; opacity: 1; margin-top: 1.25rem; }
+  }
 }
 
 /* draw the constellation in once when it scrolls into view */

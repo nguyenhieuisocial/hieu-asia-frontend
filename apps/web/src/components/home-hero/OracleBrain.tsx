@@ -201,32 +201,35 @@ export function OracleBrain(): React.JSX.Element {
         {/* Bảng chi tiết — hiện khi chạm/chọn một nhóm. Tên công cụ là DOM text
             (dịch được). Chạm "×" hoặc chạm lại nhóm để thu về. */}
         {sel && (
-          <div className="ob-detail" role="region" aria-label={`Công cụ nhóm ${sel.label}`}>
-            <div className="ob-detail-head">
-              <span className="ob-detail-title">{sel.label}</span>
-              <span className="ob-detail-count">{sel.count} công cụ</span>
-              <button
-                type="button"
-                className="ob-detail-close"
-                onClick={() => setSelected(null)}
-                aria-label="Đóng chi tiết"
+          <div className="ob-detail-wrap">
+            <div className="ob-detail" role="region" aria-label={`Công cụ nhóm ${sel.label}`}>
+              <div className="ob-detail-head">
+                <span className="ob-detail-title">{sel.label}</span>
+                <span className="ob-detail-count">{sel.count} công cụ</span>
+                <button
+                  type="button"
+                  className="ob-detail-close"
+                  onClick={() => setSelected(null)}
+                  aria-label="Đóng chi tiết"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="ob-detail-tools">
+                {sel.tools.map((t) => (
+                  <span key={t} className="ob-detail-tool">
+                    {t}
+                  </span>
+                ))}
+              </div>
+              <a
+                href="/cong-cu"
+                draggable={false}
+                className="ob-detail-link font-mono text-editorial-mono uppercase tracking-[0.12em] underline underline-offset-4"
               >
-                ×
-              </button>
+                Khám phá nhóm này →
+              </a>
             </div>
-            <div className="ob-detail-tools">
-              {sel.tools.map((t) => (
-                <span key={t} className="ob-detail-tool">
-                  {t}
-                </span>
-              ))}
-            </div>
-            <a
-              href="/cong-cu"
-              className="ob-detail-link font-mono text-editorial-mono uppercase tracking-[0.12em] underline underline-offset-4"
-            >
-              Khám phá nhóm này →
-            </a>
           </div>
         )}
 
