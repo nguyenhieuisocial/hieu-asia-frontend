@@ -10,7 +10,7 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 export const metadata: Metadata = {
   title: 'Tử Vi Đẩu Số: lập lá số, tra cung và sao bằng AI',
   description:
-    'Cẩm nang Tử Vi Đẩu Số: lập lá số 12 cung theo trường phái Bắc phái 121 sao, tra cứu ý nghĩa từng cung và từng sao, luận đại vận lưu niên. Miễn phí cốt lõi, AI Mentor tuỳ chọn.',
+    'Cẩm nang Tử Vi Đẩu Số: lập lá số 12 cung theo trường phái Bắc phái 121 sao, tra cứu ý nghĩa từng cung và từng sao miễn phí, luận đại vận lưu niên. Luận giải AI chuyên sâu tuỳ chọn qua /pricing.',
   alternates: { canonical: 'https://hieu.asia/tu-vi' },
   // Wave 60.96.2 — route-level openGraph REPLACES root-layout openGraph; must
   // re-declare `images` or Zalo/FB/Telegram/Slack previews render blank.
@@ -104,7 +104,7 @@ const WEBPAGE_JSONLD = {
   url: 'https://hieu.asia/tu-vi',
   name: 'Tử Vi Đẩu Số — lập lá số, tra cung, tra sao',
   description:
-    'Cẩm nang Tử Vi Đẩu Số 12 cung 121 sao Bắc phái — lập lá số AI miễn phí, tra ý nghĩa cung, ý nghĩa sao, luận đại vận lưu niên.',
+    'Cẩm nang Tử Vi Đẩu Số 12 cung 121 sao Bắc phái — tra cứu lá số, ý nghĩa cung, ý nghĩa sao miễn phí, luận đại vận lưu niên; luận giải AI chuyên sâu tuỳ chọn.',
   inLanguage: 'vi-VN',
   isPartOf: { '@type': 'WebSite', name: 'hieu.asia', url: 'https://hieu.asia' },
 };
