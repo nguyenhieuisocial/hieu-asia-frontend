@@ -830,22 +830,15 @@ body {
 /* ── OracleBrain graph (HTML + SVG: translatable text, no clipping, calm) ──── */
 /* Bộ não Oracle — cảm giác vũ trụ bao la (Milky Way): nền deep-space có chiều
  * sâu (vignette tối dần ra rìa → thấy mình nhỏ bé), bụi sao dày, dải Ngân Hà
- * chéo, vầng nebula ấm (vàng) + lạnh (tím mystic/xanh). Viền TRÊN & DƯỚI tan
- * mềm vào section sáng kế bên → chuyển màu mượt, hết tương phản cứng. */
+ * chéo, vầng nebula ấm (vàng) + lạnh (tím mystic/xanh). Mép section CRISP —
+ * KHÔNG fade sang màu kem (đã bỏ hiệu ứng chuyển màu theo yêu cầu). */
 .ob-section {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  /* khoảng đệm rộng để dải chuyển màu dài & mượt mà không đè nội dung */
-  padding-block: 8rem;
   background-color: #08090c;
   background-repeat: no-repeat;
   background-image:
-    /* CHUYỂN SECTION mượt–nhẹ–tinh tế: dải tan DÀI 120px, easing nhiều chặng,
-     * tính theo px (đều trên mọi màn) + theme-adaptive (hsl var / alpha). Tách
-     * 2 dải (trên + dưới) neo theo mép để độ dài luôn cố định. */
-    linear-gradient(to bottom, hsl(var(--background)) 0px, hsl(var(--background) / 0.86) 30px, hsl(var(--background) / 0.5) 58px, hsl(var(--background) / 0.22) 86px, hsl(var(--background) / 0.06) 106px, transparent 122px),
-    linear-gradient(to top, hsl(var(--background)) 0px, hsl(var(--background) / 0.86) 30px, hsl(var(--background) / 0.5) 58px, hsl(var(--background) / 0.22) 86px, hsl(var(--background) / 0.06) 106px, transparent 122px),
     /* sao foreground thưa, sáng rõ */
     radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.85), transparent),
     radial-gradient(1.6px 1.6px at 41% 30%, rgba(236, 224, 200, 0.8), transparent),
