@@ -28,6 +28,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle, cn } from '@hieu-asia
 import { RefreshCw } from 'lucide-react';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { adminFetch } from '@/lib/admin-fetch';
 import type { MetricsTrendPoint } from './MetricsTrendChart';
 
@@ -104,6 +105,73 @@ function errorRateClass(rate: number): string {
   if (rate < 0.02) return 'text-gold';
   return 'text-red-700 dark:text-red-300';
 }
+
+type EndpointRow = MetricsSummary['top_endpoints'][number];
+type UserAgentRow = MetricsSummary['top_user_agents'][number];
+
+const ENDPOINT_COLUMNS: AdminTableColumn<EndpointRow>[] = [
+  {
+    id: 'endpoint',
+    header: 'Endpoint',
+    className: 'font-mono text-xs text-foreground',
+    cell: (r) => r.endpoint,
+  },
+  {
+    id: 'count',
+    header: 'Số lượt',
+    className: 'text-right font-mono text-foreground/90',
+    cell: (r) => fmtNum(r.count),
+  },
+  {
+    id: 'p50',
+    header: 'p50 (ms)',
+    className: 'text-right',
+    cell: (r) => (
+      <span className={`font-mono ${latencyClass(r.p50_ms)}`}>
+        {r.p50_ms === null ? '—' : fmtNum(Math.round(r.p50_ms))}
+      </span>
+    ),
+  },
+  {
+    id: 'p95',
+    header: 'p95 (ms)',
+    className: 'text-right',
+    cell: (r) => (
+      <span className={`font-mono ${latencyClass(r.p95_ms)}`}>
+        {r.p95_ms === null ? '—' : fmtNum(Math.round(r.p95_ms))}
+      </span>
+    ),
+  },
+  {
+    id: 'errors',
+    header: 'Lỗi',
+    className: 'text-right font-mono text-foreground/90',
+    cell: (r) => fmtNum(r.errors),
+  },
+  {
+    id: 'error_rate',
+    header: 'Tỷ lệ lỗi',
+    className: 'text-right',
+    cell: (r) => (
+      <span className={`font-mono ${errorRateClass(r.error_rate)}`}>{fmtPct(r.error_rate)}</span>
+    ),
+  },
+];
+
+const USER_AGENT_COLUMNS: AdminTableColumn<UserAgentRow>[] = [
+  {
+    id: 'bucket',
+    header: 'Bucket',
+    className: 'font-mono text-xs text-foreground',
+    cell: (u) => u.bucket,
+  },
+  {
+    id: 'count',
+    header: 'Số lượt',
+    className: 'text-right font-mono text-foreground/90',
+    cell: (u) => fmtNum(u.count),
+  },
+];
 
 export function PerformanceTab() {
   const [data, setData] = React.useState<MetricsSummary | null>(null);
@@ -288,81 +356,24 @@ export function PerformanceTab() {
           <CardTitle className="text-base">Top endpoint (theo lượt gọi hôm nay)</CardTitle>
         </CardHeader>
         <CardContent>
-          {loading && !data ? (
-            <div className="space-y-2 py-2">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="h-10 animate-pulse rounded bg-muted/30" />
-              ))}
-            </div>
-          ) : rows.length === 0 ? (
-            <EmptyState
-              title="Chưa có metric hôm nay"
-              description="Worker chưa ghi nhận request nào cho ngày hiện tại. Counter reset theo UTC mỗi ngày."
-              className="border-0 bg-transparent"
-            />
-          ) : (
-            <div className="overflow-x-auto rounded-lg border border-gold/15 bg-card/60">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gold/15 text-left">
-                    <th className="px-4 py-3 font-mono text-xs uppercase tracking-wider text-gold/80">
-                      Endpoint
-                    </th>
-                    <th className="px-4 py-3 text-right font-mono text-xs uppercase tracking-wider text-gold/80">
-                      Số lượt
-                    </th>
-                    <th className="px-4 py-3 text-right font-mono text-xs uppercase tracking-wider text-gold/80">
-                      p50 (ms)
-                    </th>
-                    <th className="px-4 py-3 text-right font-mono text-xs uppercase tracking-wider text-gold/80">
-                      p95 (ms)
-                    </th>
-                    <th className="px-4 py-3 text-right font-mono text-xs uppercase tracking-wider text-gold/80">
-                      Lỗi
-                    </th>
-                    <th className="px-4 py-3 text-right font-mono text-xs uppercase tracking-wider text-gold/80">
-                      Tỷ lệ lỗi
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((r) => (
-                    <tr
-                      key={r.endpoint}
-                      className="border-b border-gold/10 last:border-0 hover:bg-gold/[0.03]"
-                    >
-                      <td className="px-4 py-3 font-mono text-xs text-foreground">{r.endpoint}</td>
-                      <td className="px-4 py-3 text-right font-mono text-foreground/90">
-                        {fmtNum(r.count)}
-                      </td>
-                      <td
-                        className={`px-4 py-3 text-right font-mono ${latencyClass(r.p50_ms)}`}
-                      >
-                        {r.p50_ms === null ? '—' : fmtNum(Math.round(r.p50_ms))}
-                      </td>
-                      <td
-                        className={`px-4 py-3 text-right font-mono ${latencyClass(r.p95_ms)}`}
-                      >
-                        {r.p95_ms === null ? '—' : fmtNum(Math.round(r.p95_ms))}
-                      </td>
-                      <td className="px-4 py-3 text-right font-mono text-foreground/90">
-                        {fmtNum(r.errors)}
-                      </td>
-                      <td
-                        className={`px-4 py-3 text-right font-mono ${errorRateClass(r.error_rate)}`}
-                      >
-                        {fmtPct(r.error_rate)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {typeof data?.isolate_flushes_today === 'number' && (
-                <p className="border-t border-gold/10 px-4 py-2 font-mono text-[10px] text-muted-foreground">
-                  {fmtNum(data.isolate_flushes_today)} isolate flushes today
-                </p>
-              )}
-            </div>
+          <AdminTable
+            rows={rows}
+            columns={ENDPOINT_COLUMNS}
+            getRowId={(r) => r.endpoint}
+            loading={loading && !data}
+            empty={
+              <EmptyState
+                title="Chưa có metric hôm nay"
+                description="Worker chưa ghi nhận request nào cho ngày hiện tại. Counter reset theo UTC mỗi ngày."
+                className="border-0 bg-transparent"
+              />
+            }
+            caption="Top endpoint theo lượt gọi hôm nay"
+          />
+          {typeof data?.isolate_flushes_today === 'number' && (
+            <p className="mt-2 px-1 font-mono text-[10px] text-muted-foreground">
+              {fmtNum(data.isolate_flushes_today)} isolate flushes today
+            </p>
           )}
         </CardContent>
       </Card>
@@ -373,33 +384,12 @@ export function PerformanceTab() {
             <CardTitle className="text-base">Top user-agent buckets</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto rounded-lg border border-gold/15 bg-card/60">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gold/15 text-left">
-                    <th className="px-4 py-3 font-mono text-xs uppercase tracking-wider text-gold/80">
-                      Bucket
-                    </th>
-                    <th className="px-4 py-3 text-right font-mono text-xs uppercase tracking-wider text-gold/80">
-                      Số lượt
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.top_user_agents.map((u) => (
-                    <tr
-                      key={u.bucket}
-                      className="border-b border-gold/10 last:border-0 hover:bg-gold/[0.03]"
-                    >
-                      <td className="px-4 py-3 font-mono text-xs text-foreground">{u.bucket}</td>
-                      <td className="px-4 py-3 text-right font-mono text-foreground/90">
-                        {fmtNum(u.count)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <AdminTable
+              rows={data.top_user_agents}
+              columns={USER_AGENT_COLUMNS}
+              getRowId={(u) => u.bucket}
+              caption="Top user-agent buckets"
+            />
           </CardContent>
         </Card>
       )}

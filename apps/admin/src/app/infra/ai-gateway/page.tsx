@@ -22,6 +22,7 @@ import {
 import { getInfraTool } from '@/lib/infra-tools';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel } from '@/components/admin/infra/infra-panel';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
 const tool = getInfraTool('ai-gateway')!;
 
@@ -59,6 +60,63 @@ function fmtPct(pct: number | null | undefined): string {
   if (typeof pct !== 'number' || Number.isNaN(pct)) return '—';
   return `${pct.toFixed(2)}%`;
 }
+
+const MODEL_COLUMNS: AdminTableColumn<InfraAiGatewayItem>[] = [
+  {
+    id: 'vendor',
+    header: 'Provider',
+    className: 'whitespace-nowrap font-medium text-foreground',
+    cell: (r) => r.vendor,
+  },
+  {
+    id: 'model',
+    header: 'Model',
+    className: 'max-w-[18rem] truncate font-mono text-xs text-muted-foreground',
+    cell: (r) => r.model,
+  },
+  {
+    id: 'requests',
+    header: 'Request',
+    className: 'text-right tabular-nums',
+    cell: (r) => fmtNum(r.requests),
+  },
+  {
+    id: 'cost',
+    header: 'Chi phí',
+    className: 'text-right tabular-nums',
+    cell: (r) => fmtCost(r.cost_usd),
+  },
+  {
+    id: 'latency',
+    header: 'Độ trễ p95',
+    className: 'text-right tabular-nums text-muted-foreground',
+    cell: (r) => fmtMs(r.latency_p95_ms),
+  },
+  {
+    id: 'error_rate',
+    header: 'Tỷ lệ lỗi',
+    className: 'text-right tabular-nums text-muted-foreground',
+    cell: (r) => fmtPct(r.error_rate_pct),
+  },
+  {
+    id: 'top_error',
+    header: 'Lỗi hay gặp',
+    className: 'max-w-[14rem] truncate text-xs text-muted-foreground',
+    cell: (r) => {
+      const topError = r.error_class_top?.[0];
+      return topError ? (
+        <span title={`${topError.error_class} (${topError.count})`}>
+          {topError.error_class}
+          <span className="ml-1 text-muted-foreground/70">
+            ×{fmtNum(topError.count)}
+          </span>
+        </span>
+      ) : (
+        '—'
+      );
+    },
+  },
+];
 
 export default function InfraAiGatewayPage() {
   const query = useQuery({
@@ -115,67 +173,12 @@ export default function InfraAiGatewayPage() {
             </Card>
           )}
 
-          <Card>
-            <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border text-left font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-                      <th className="px-4 py-2.5">Provider</th>
-                      <th className="px-4 py-2.5">Model</th>
-                      <th className="px-4 py-2.5 text-right">Request</th>
-                      <th className="px-4 py-2.5 text-right">Chi phí</th>
-                      <th className="px-4 py-2.5 text-right">Độ trễ p95</th>
-                      <th className="px-4 py-2.5 text-right">Tỷ lệ lỗi</th>
-                      <th className="px-4 py-2.5">Lỗi hay gặp</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {items.map((r) => {
-                      const topError = r.error_class_top?.[0];
-                      return (
-                        <tr
-                          key={`${r.vendor}/${r.model}`}
-                          className="border-b border-border/50 last:border-0 hover:bg-gold/5"
-                        >
-                          <td className="whitespace-nowrap px-4 py-2.5 font-medium text-foreground">
-                            {r.vendor}
-                          </td>
-                          <td className="max-w-[18rem] truncate px-4 py-2.5 font-mono text-xs text-muted-foreground">
-                            {r.model}
-                          </td>
-                          <td className="px-4 py-2.5 text-right tabular-nums">
-                            {fmtNum(r.requests)}
-                          </td>
-                          <td className="px-4 py-2.5 text-right tabular-nums">
-                            {fmtCost(r.cost_usd)}
-                          </td>
-                          <td className="px-4 py-2.5 text-right tabular-nums text-muted-foreground">
-                            {fmtMs(r.latency_p95_ms)}
-                          </td>
-                          <td className="px-4 py-2.5 text-right tabular-nums text-muted-foreground">
-                            {fmtPct(r.error_rate_pct)}
-                          </td>
-                          <td className="max-w-[14rem] truncate px-4 py-2.5 text-xs text-muted-foreground">
-                            {topError ? (
-                              <span title={`${topError.error_class} (${topError.count})`}>
-                                {topError.error_class}
-                                <span className="ml-1 text-muted-foreground/70">
-                                  ×{fmtNum(topError.count)}
-                                </span>
-                              </span>
-                            ) : (
-                              '—'
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
+          <AdminTable
+            rows={items}
+            columns={MODEL_COLUMNS}
+            getRowId={(r) => `${r.vendor}/${r.model}`}
+            caption="Thống kê theo model"
+          />
         </div>
       )}
     />

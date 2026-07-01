@@ -34,6 +34,7 @@ import { LiveBadge } from '@/components/admin/live-badge';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { EmptyState } from '@/components/admin/empty-state';
 import { EngineMetricsSection } from '@/components/admin/analytics/EngineMetricsSection';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { listTransactions } from '@/lib/admin-api';
 import { computeNetRevenue } from '@/lib/net-revenue';
 import type { AdminTransaction } from '@/lib/mock-data';
@@ -175,6 +176,37 @@ export default function AnalyticsPage() {
     () => aggregateByTier(txnQuery.data?.rows ?? []),
     [txnQuery.data?.rows],
   );
+
+  const tierColumns: AdminTableColumn<TierRow>[] = [
+    {
+      id: 'plan',
+      header: 'Gói',
+      className: 'text-foreground/85',
+      cell: (r) => TIER_LABEL[r.plan],
+    },
+    {
+      id: 'count',
+      header: 'Số giao dịch',
+      className: 'text-right font-mono text-foreground/70 tabular-nums',
+      cell: (r) => r.count.toLocaleString('vi-VN'),
+    },
+    {
+      id: 'total',
+      header: 'Doanh thu',
+      className: 'text-right font-mono text-foreground tabular-nums',
+      cell: (r) => fmtCurrency(r.total),
+    },
+    {
+      id: 'pct',
+      header: '% tổng',
+      className: 'text-right font-mono text-foreground/70 tabular-nums',
+      cell: (r) => {
+        const pct =
+          tierBreakdown.total > 0 ? (r.total / tierBreakdown.total) * 100 : 0;
+        return `${pct.toFixed(0)}%`;
+      },
+    },
+  ];
 
   const showError = !!error || data?.ok === false;
   const errorMsg = (error as Error | undefined)?.message ?? data?.error;
@@ -473,67 +505,38 @@ export default function AnalyticsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
-          {txnQuery.isLoading ? (
-            <p className="px-6 py-8 text-center text-sm text-muted-foreground">Đang tải…</p>
-          ) : tierBreakdown.rows.length === 0 ? (
-            <EmptyState
-              title="Chưa có doanh thu theo gói"
-              description="Khi có giao dịch thành công, phân bổ theo gói sẽ hiện ở đây."
-              className="border-0 bg-transparent py-8"
-            />
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="border-b border-border/60 text-left text-xs text-muted-foreground">
-                  <tr>
-                    <th className="px-6 py-2.5 font-medium">Gói</th>
-                    <th className="px-6 py-2.5 text-right font-medium">Số giao dịch</th>
-                    <th className="px-6 py-2.5 text-right font-medium">Doanh thu</th>
-                    <th className="px-6 py-2.5 text-right font-medium">% tổng</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tierBreakdown.rows.map((r) => {
-                    const pct =
-                      tierBreakdown.total > 0
-                        ? (r.total / tierBreakdown.total) * 100
-                        : 0;
-                    return (
-                      <tr
-                        key={r.plan}
-                        className="border-b border-border/40 transition-colors last:border-0 hover:bg-muted/[0.04]"
-                      >
-                        <td className="px-6 py-2.5 text-foreground/85">{TIER_LABEL[r.plan]}</td>
-                        <td className="px-6 py-2.5 text-right font-mono text-foreground/70 tabular-nums">
-                          {r.count.toLocaleString('vi-VN')}
-                        </td>
-                        <td className="px-6 py-2.5 text-right font-mono text-foreground tabular-nums">
-                          {fmtCurrency(r.total)}
-                        </td>
-                        <td className="px-6 py-2.5 text-right font-mono text-foreground/70 tabular-nums">
-                          {pct.toFixed(0)}%
-                        </td>
-                      </tr>
-                    );
-                  })}
-                  <tr className="border-t border-border/60 font-medium">
-                    <td className="px-6 py-2.5 text-foreground">Tổng</td>
-                    <td className="px-6 py-2.5 text-right font-mono text-foreground tabular-nums">
-                      {tierBreakdown.rows
-                        .reduce((s, r) => s + r.count, 0)
-                        .toLocaleString('vi-VN')}
-                    </td>
-                    <td className="px-6 py-2.5 text-right font-mono text-foreground tabular-nums">
-                      {fmtCurrency(tierBreakdown.total)}
-                    </td>
-                    <td className="px-6 py-2.5 text-right font-mono text-foreground/70 tabular-nums">
-                      100%
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          )}
+          <AdminTable
+            rows={tierBreakdown.rows}
+            columns={tierColumns}
+            getRowId={(r) => r.plan}
+            loading={txnQuery.isLoading}
+            empty={
+              <EmptyState
+                title="Chưa có doanh thu theo gói"
+                description="Khi có giao dịch thành công, phân bổ theo gói sẽ hiện ở đây."
+                className="border-0 bg-transparent py-8"
+              />
+            }
+            caption="Doanh thu theo gói"
+            footer={
+              tierBreakdown.rows.length > 0 ? (
+                <tr className="font-medium">
+                  <td className="px-3 py-2.5 text-foreground">Tổng</td>
+                  <td className="px-3 py-2.5 text-right font-mono text-foreground tabular-nums">
+                    {tierBreakdown.rows
+                      .reduce((s, r) => s + r.count, 0)
+                      .toLocaleString('vi-VN')}
+                  </td>
+                  <td className="px-3 py-2.5 text-right font-mono text-foreground tabular-nums">
+                    {fmtCurrency(tierBreakdown.total)}
+                  </td>
+                  <td className="px-3 py-2.5 text-right font-mono text-foreground/70 tabular-nums">
+                    100%
+                  </td>
+                </tr>
+              ) : undefined
+            }
+          />
         </CardContent>
       </Card>
 

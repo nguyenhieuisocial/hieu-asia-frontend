@@ -28,6 +28,7 @@ import {
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { EditableCell } from '@/components/admin/EditableCell';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import type { useBulkSelection } from '@/lib/bulk-action';
 import type { useSavedFilters } from '@/lib/saved-filters';
 
@@ -138,6 +139,138 @@ export function UsersList({
   onOpenEdit,
   onOpenDelete,
 }: UsersListProps) {
+  // Custom leading checkbox column (NOT AdminTable's onBulkSelect) so we keep
+  // the external `bulk` state, the owner-exclusion (owner rows non-selectable),
+  // and the indeterminate select-all header — none of which AdminTable's own
+  // selection model expresses.
+  const columns: AdminTableColumn<AdminUser>[] = [
+    {
+      id: 'select',
+      className: 'w-10',
+      header: (
+        <input
+          type="checkbox"
+          checked={bulk.allSelected}
+          ref={(el) => {
+            if (el) el.indeterminate = bulk.someSelected;
+          }}
+          onChange={bulk.toggleAll}
+          disabled={selectable.length === 0}
+          aria-label="Chọn tất cả user (trừ owner)"
+          className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-card/60 text-gold accent-gold disabled:cursor-not-allowed disabled:opacity-30"
+        />
+      ),
+      cell: (u) => (
+        <input
+          type="checkbox"
+          checked={bulk.isSelected(u.id)}
+          disabled={u.role === 'owner'}
+          onChange={() => bulk.toggle(u.id)}
+          aria-label={`Chọn ${u.email}`}
+          className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-card/60 text-gold accent-gold disabled:cursor-not-allowed disabled:opacity-30"
+          title={u.role === 'owner' ? 'Không thể chọn owner' : 'Chọn'}
+        />
+      ),
+    },
+    {
+      id: 'email',
+      header: 'Email',
+      cell: (u) => <span className="text-foreground">{u.email}</span>,
+    },
+    {
+      id: 'role',
+      header: 'Role',
+      width: '120px',
+      cell: (u) => (
+        // Wave 60.10 — inline-edit role (admin↔viewer only). Owner stays
+        // modal-only because promote/demote-owner needs the confirmation flow.
+        <EditableCell
+          variant="select"
+          value={u.role}
+          disabled={u.role === 'owner'}
+          disabledReason="Owner role chỉ đổi qua modal Sửa"
+          ariaLabel="Role"
+          breadcrumbTag="users.role"
+          options={[
+            { value: 'admin', label: ROLE_LABEL.admin },
+            { value: 'viewer', label: ROLE_LABEL.viewer },
+          ]}
+          onSave={async (newRole) => {
+            await onRoleInlineSave(u, newRole as AdminRole);
+          }}
+          display={(v) => {
+            const Icon = ROLE_ICON[v as AdminRole];
+            return (
+              <span
+                className={cn(
+                  'inline-flex items-center gap-1.5 rounded border px-2 py-0.5 text-xs font-medium',
+                  ROLE_TONE[v as AdminRole],
+                )}
+              >
+                <Icon className="h-3 w-3" />
+                {ROLE_LABEL[v as AdminRole]}
+              </span>
+            );
+          }}
+        />
+      ),
+    },
+    {
+      id: 'created',
+      header: 'Tạo lúc',
+      width: '180px',
+      cell: (u) => (
+        <>
+          <div className="font-mono text-xs text-foreground/85" title={u.created_at}>
+            {fmtDate(u.created_at)}
+          </div>
+          <div className="font-mono text-[10px] text-muted-foreground">
+            {fmtRelative(u.created_at)}
+          </div>
+        </>
+      ),
+    },
+    {
+      id: 'actions',
+      header: 'Thao tác',
+      width: '200px',
+      className: 'text-right',
+      cell: (u) => (
+        // Wave 60.68 — DropdownMenu primitive replaces the 3-button inline row.
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              aria-label={`Mở menu thao tác cho ${u.email}`}
+              className="inline-flex h-8 w-8 items-center justify-center rounded border border-gold/20 bg-card/60 text-muted-foreground hover:border-gold/50 hover:text-foreground"
+            >
+              <MoreHorizontal className="h-4 w-4" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="min-w-[10rem]">
+            <DropdownMenuItem onSelect={() => onOpenAudit(u)}>
+              <History className="h-4 w-4 text-muted-foreground" />
+              Xem audit log
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => onOpenEdit(u)}>
+              <Pencil className="h-4 w-4 text-gold" />
+              Sửa user
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              disabled={u.role === 'owner'}
+              onSelect={() => onOpenDelete(u)}
+              className="text-red-700 dark:text-red-300 focus:bg-red-500/10 focus:text-red-700 dark:focus:text-red-200"
+            >
+              <Trash2 className="h-4 w-4" />
+              {u.role === 'owner' ? 'Không thể xóa owner' : 'Xóa user'}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
+  ];
+
   return (
     <Card>
       <CardHeader>
@@ -255,155 +388,15 @@ export function UsersList({
             className="border-0 bg-transparent"
           />
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-gold/15 bg-card/60">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-gold/15 text-left">
-                  <th className="w-10 px-3 py-3">
-                    <input
-                      type="checkbox"
-                      checked={bulk.allSelected}
-                      ref={(el) => {
-                        if (el) el.indeterminate = bulk.someSelected;
-                      }}
-                      onChange={bulk.toggleAll}
-                      disabled={selectable.length === 0}
-                      aria-label="Chọn tất cả user (trừ owner)"
-                      className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-card/60 text-gold accent-gold disabled:cursor-not-allowed disabled:opacity-30"
-                    />
-                  </th>
-                  <th className="px-4 py-3 font-mono text-xs uppercase tracking-wider text-gold/80">
-                    Email
-                  </th>
-                  <th
-                    className="px-4 py-3 font-mono text-xs uppercase tracking-wider text-gold/80"
-                    style={{ width: '120px' }}
-                  >
-                    Role
-                  </th>
-                  <th
-                    className="px-4 py-3 font-mono text-xs uppercase tracking-wider text-gold/80"
-                    style={{ width: '180px' }}
-                  >
-                    Tạo lúc
-                  </th>
-                  <th
-                    className="px-4 py-3 text-right font-mono text-xs uppercase tracking-wider text-gold/80"
-                    style={{ width: '200px' }}
-                  >
-                    Thao tác
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((u) => {
-                  const isOwner = u.role === 'owner';
-                  const isSelected = bulk.isSelected(u.id);
-                  return (
-                    <tr
-                      key={u.id}
-                      className={cn(
-                        'border-b border-gold/10 transition-colors last:border-0 hover:bg-gold/[0.03]',
-                        isSelected && 'bg-gold/5',
-                      )}
-                    >
-                      <td className="px-3 py-3">
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          disabled={isOwner}
-                          onChange={() => bulk.toggle(u.id)}
-                          aria-label={`Chọn ${u.email}`}
-                          className="h-4 w-4 cursor-pointer rounded border-gold/30 bg-card/60 text-gold accent-gold disabled:cursor-not-allowed disabled:opacity-30"
-                          title={isOwner ? 'Không thể chọn owner' : 'Chọn'}
-                        />
-                      </td>
-                      <td className="px-4 py-3 text-foreground">{u.email}</td>
-                      <td className="px-4 py-3">
-                        {/* Wave 60.10 — inline-edit role (admin↔viewer only).
-                            Owner stays modal-only because promote/demote-owner
-                            needs the existing confirmation flow. */}
-                        <EditableCell
-                          variant="select"
-                          value={u.role}
-                          disabled={isOwner}
-                          disabledReason="Owner role chỉ đổi qua modal Sửa"
-                          ariaLabel="Role"
-                          breadcrumbTag="users.role"
-                          options={[
-                            { value: 'admin', label: ROLE_LABEL.admin },
-                            { value: 'viewer', label: ROLE_LABEL.viewer },
-                          ]}
-                          onSave={async (newRole) => {
-                            await onRoleInlineSave(u, newRole as AdminRole);
-                          }}
-                          display={(v) => {
-                            const Icon = ROLE_ICON[v as AdminRole];
-                            return (
-                              <span
-                                className={cn(
-                                  'inline-flex items-center gap-1.5 rounded border px-2 py-0.5 text-xs font-medium',
-                                  ROLE_TONE[v as AdminRole],
-                                )}
-                              >
-                                <Icon className="h-3 w-3" />
-                                {ROLE_LABEL[v as AdminRole]}
-                              </span>
-                            );
-                          }}
-                        />
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="font-mono text-xs text-foreground/85" title={u.created_at}>
-                          {fmtDate(u.created_at)}
-                        </div>
-                        <div className="font-mono text-[10px] text-muted-foreground">
-                          {fmtRelative(u.created_at)}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        {/* Wave 60.68 — DropdownMenu primitive replaces the
-                            3-button inline row. Keyboard-roving focus +
-                            ESC dismiss come free from Radix; visual surface
-                            matches the gold/15 border + bg-card chrome used
-                            elsewhere (Dialog/Sheet). */}
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <button
-                              type="button"
-                              aria-label={`Mở menu thao tác cho ${u.email}`}
-                              className="inline-flex h-8 w-8 items-center justify-center rounded border border-gold/20 bg-card/60 text-muted-foreground hover:border-gold/50 hover:text-foreground"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                            </button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="min-w-[10rem]">
-                            <DropdownMenuItem onSelect={() => onOpenAudit(u)}>
-                              <History className="h-4 w-4 text-muted-foreground" />
-                              Xem audit log
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => onOpenEdit(u)}>
-                              <Pencil className="h-4 w-4 text-gold" />
-                              Sửa user
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              disabled={u.role === 'owner'}
-                              onSelect={() => onOpenDelete(u)}
-                              className="text-red-700 dark:text-red-300 focus:bg-red-500/10 focus:text-red-700 dark:focus:text-red-200"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                              {u.role === 'owner' ? 'Không thể xóa owner' : 'Xóa user'}
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          <AdminTable
+            rows={filtered}
+            columns={columns}
+            getRowId={(u) => u.id}
+            rowClassName={(u) =>
+              cn('hover:bg-gold/[0.03]', bulk.isSelected(u.id) && 'bg-gold/5')
+            }
+            caption="Danh sách user admin"
+          />
         )}
       </CardContent>
     </Card>

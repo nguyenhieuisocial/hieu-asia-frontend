@@ -13,11 +13,12 @@
 
 import * as React from 'react';
 import dynamic from 'next/dynamic';
-import { Card, CardContent, cn } from '@hieu-asia/ui';
+import { Card, CardContent } from '@hieu-asia/ui';
 import { Clapperboard, MousePointerClick, AlertTriangle, Play } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
 const RrwebPlayer = dynamic(() => import('./RrwebPlayer'), {
   ssr: false,
@@ -107,6 +108,77 @@ export default function SessionReplayPanel() {
     }
   }, []);
 
+  const columns: AdminTableColumn<Recording>[] = [
+    {
+      id: 'user',
+      header: 'Người dùng',
+      className: 'font-mono text-xs text-foreground/85',
+      cell: (r) => r.person_name ?? r.distinct_id?.slice(0, 14) ?? '—',
+    },
+    {
+      id: 'start',
+      header: 'Bắt đầu',
+      className: 'whitespace-nowrap text-xs text-muted-foreground',
+      cell: (r) => fmtTime(r.start_time),
+    },
+    {
+      id: 'duration',
+      header: 'Dài',
+      className: 'font-mono text-xs tabular-nums',
+      cell: (r) => fmtDuration(r.duration),
+    },
+    {
+      id: 'clicks',
+      header: 'Click',
+      className: 'text-xs tabular-nums text-muted-foreground',
+      cell: (r) => (
+        <span className="inline-flex items-center gap-1">
+          <MousePointerClick className="h-3 w-3" aria-hidden />
+          {r.click_count ?? 0}
+        </span>
+      ),
+    },
+    {
+      id: 'errors',
+      header: 'Lỗi',
+      className: 'text-xs tabular-nums',
+      cell: (r) =>
+        r.console_error_count ? (
+          <span className="inline-flex items-center gap-1 text-red-400">
+            <AlertTriangle className="h-3 w-3" aria-hidden />
+            {r.console_error_count}
+          </span>
+        ) : (
+          <span className="text-muted-foreground">0</span>
+        ),
+    },
+    {
+      id: 'url',
+      header: 'Trang vào',
+      className: 'max-w-[22ch] truncate text-xs text-muted-foreground',
+      cell: (r) => (
+        <span className="block max-w-[22ch] truncate" title={r.start_url ?? ''}>
+          {r.start_url ?? '—'}
+        </span>
+      ),
+    },
+    {
+      id: 'action',
+      header: '',
+      className: 'text-right',
+      cell: (r) => (
+        <button
+          type="button"
+          onClick={() => void play(r.id)}
+          className="inline-flex items-center gap-1 rounded border border-gold/25 bg-gold/5 px-2 py-1 text-xs text-gold hover:border-gold/50"
+        >
+          <Play className="h-3 w-3" aria-hidden />
+          Phát
+        </button>
+      ),
+    },
+  ];
+
   return (
     <div className="space-y-5">
       <PageHeader
@@ -132,95 +204,24 @@ export default function SessionReplayPanel() {
       )}
 
       {/* List */}
-      {listLoading && (
-        <div className="space-y-2">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-12 animate-pulse rounded bg-muted/30" />
-          ))}
-        </div>
-      )}
-
-      {list && !list.ok && <ErrorBlock compact message={list.error ?? 'Không tải được danh sách phiên.'} />}
-
-      {list?.ok && list.recordings.length === 0 && (
-        <EmptyState
-          title="Chưa có phiên nào được ghi"
-          description="PostHog chưa ghi phiên nào (hệ thống đang ít traffic). Mục sẽ tự đầy khi có khách thật."
-          className="border-0 bg-transparent"
+      {list && !list.ok ? (
+        <ErrorBlock compact message={list.error ?? 'Không tải được danh sách phiên.'} />
+      ) : (
+        <AdminTable
+          rows={list?.recordings ?? []}
+          columns={columns}
+          getRowId={(r) => r.id}
+          loading={listLoading}
+          rowClassName={(r) => (activeId === r.id ? 'bg-gold/5' : undefined)}
+          caption="Danh sách phiên ghi lại"
+          empty={
+            <EmptyState
+              title="Chưa có phiên nào được ghi"
+              description="PostHog chưa ghi phiên nào (hệ thống đang ít traffic). Mục sẽ tự đầy khi có khách thật."
+              className="border-0 bg-transparent"
+            />
+          }
         />
-      )}
-
-      {list?.ok && list.recordings.length > 0 && (
-        <Card>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gold/15 text-left font-mono text-[11px] uppercase tracking-wide text-gold/80">
-                    <th className="px-3 py-2 font-medium">Người dùng</th>
-                    <th className="px-3 py-2 font-medium">Bắt đầu</th>
-                    <th className="px-3 py-2 font-medium">Dài</th>
-                    <th className="px-3 py-2 font-medium">Click</th>
-                    <th className="px-3 py-2 font-medium">Lỗi</th>
-                    <th className="px-3 py-2 font-medium">Trang vào</th>
-                    <th className="px-3 py-2 font-medium" />
-                  </tr>
-                </thead>
-                <tbody>
-                  {list.recordings.map((r) => (
-                    <tr
-                      key={r.id}
-                      className={cn(
-                        'border-b border-gold/10 last:border-0 hover:bg-gold/[0.03]',
-                        activeId === r.id && 'bg-gold/5',
-                      )}
-                    >
-                      <td className="px-3 py-2 font-mono text-xs text-foreground/85">
-                        {r.person_name ?? r.distinct_id?.slice(0, 14) ?? '—'}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-2 text-xs text-muted-foreground">
-                        {fmtTime(r.start_time)}
-                      </td>
-                      <td className="px-3 py-2 font-mono text-xs tabular-nums">{fmtDuration(r.duration)}</td>
-                      <td className="px-3 py-2 text-xs tabular-nums text-muted-foreground">
-                        <span className="inline-flex items-center gap-1">
-                          <MousePointerClick className="h-3 w-3" aria-hidden />
-                          {r.click_count ?? 0}
-                        </span>
-                      </td>
-                      <td className="px-3 py-2 text-xs tabular-nums">
-                        {r.console_error_count ? (
-                          <span className="inline-flex items-center gap-1 text-red-400">
-                            <AlertTriangle className="h-3 w-3" aria-hidden />
-                            {r.console_error_count}
-                          </span>
-                        ) : (
-                          <span className="text-muted-foreground">0</span>
-                        )}
-                      </td>
-                      <td
-                        className="max-w-[22ch] truncate px-3 py-2 text-xs text-muted-foreground"
-                        title={r.start_url ?? ''}
-                      >
-                        {r.start_url ?? '—'}
-                      </td>
-                      <td className="px-3 py-2 text-right">
-                        <button
-                          type="button"
-                          onClick={() => void play(r.id)}
-                          className="inline-flex items-center gap-1 rounded border border-gold/25 bg-gold/5 px-2 py-1 text-xs text-gold hover:border-gold/50"
-                        >
-                          <Play className="h-3 w-3" aria-hidden />
-                          Phát
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
       )}
     </div>
   );

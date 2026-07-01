@@ -25,6 +25,9 @@ import { getInfraTool } from '@/lib/infra-tools';
 import { formatRelativeOrEmpty } from '@/lib/format-date';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
+
+type DependabotItem = InfraGithubDependabot['items'][number];
 
 const tool = getInfraTool('github')!;
 
@@ -152,6 +155,62 @@ function severityPillTone(severity: string | null): 'good' | 'bad' | 'warn' | 'n
   }
 }
 
+const DEPENDABOT_COLUMNS: AdminTableColumn<DependabotItem>[] = [
+  {
+    id: 'package',
+    header: 'Gói',
+    cell: (it) => (
+      <>
+        <div className="font-medium text-foreground">{it.package ?? '—'}</div>
+        {it.summary && (
+          <div className="max-w-[28rem] truncate text-xs text-muted-foreground">
+            {it.summary}
+          </div>
+        )}
+      </>
+    ),
+  },
+  {
+    id: 'ecosystem',
+    header: 'Hệ sinh thái',
+    className: 'whitespace-nowrap font-mono text-xs text-muted-foreground',
+    cell: (it) => it.ecosystem ?? '—',
+  },
+  {
+    id: 'severity',
+    header: 'Mức độ',
+    cell: (it) => (
+      <InfraStatusPill label={it.severity ?? '—'} tone={severityPillTone(it.severity)} />
+    ),
+  },
+  {
+    id: 'code',
+    header: 'Mã lỗi',
+    className: 'whitespace-nowrap font-mono text-xs',
+    cell: (it) => {
+      const code = it.cve_id ?? it.ghsa_id;
+      return code ? (
+        it.url ? (
+          <a
+            href={it.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center gap-1 text-gold hover:underline"
+          >
+            {code}
+            <ExternalLink className="h-3 w-3" />
+          </a>
+        ) : (
+          <span className="text-muted-foreground">{code}</span>
+        )
+      ) : (
+        <span className="text-muted-foreground">—</span>
+      );
+    },
+  },
+];
+
 /** Dependabot security alerts — 4 severity StatCards + an items list. */
 function DependabotSection({ data }: { data: InfraGithubDependabot }) {
   if (!data.available) {
@@ -188,74 +247,88 @@ function DependabotSection({ data }: { data: InfraGithubDependabot }) {
       {data.items.length > 0 && (
         <Card>
           <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border text-left font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-                    <th className="px-4 py-2.5">Gói</th>
-                    <th className="px-4 py-2.5">Hệ sinh thái</th>
-                    <th className="px-4 py-2.5">Mức độ</th>
-                    <th className="px-4 py-2.5">Mã lỗi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.items.map((it, idx) => {
-                    const code = it.cve_id ?? it.ghsa_id;
-                    return (
-                      <tr
-                        key={`${it.repo ?? ''}-${it.package ?? ''}-${it.ghsa_id ?? idx}`}
-                        className="border-b border-border/50 last:border-0 hover:bg-gold/5"
-                      >
-                        <td className="px-4 py-2.5">
-                          <div className="font-medium text-foreground">
-                            {it.package ?? '—'}
-                          </div>
-                          {it.summary && (
-                            <div className="max-w-[28rem] truncate text-xs text-muted-foreground">
-                              {it.summary}
-                            </div>
-                          )}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-2.5 font-mono text-xs text-muted-foreground">
-                          {it.ecosystem ?? '—'}
-                        </td>
-                        <td className="px-4 py-2.5">
-                          <InfraStatusPill
-                            label={it.severity ?? '—'}
-                            tone={severityPillTone(it.severity)}
-                          />
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-2.5 font-mono text-xs">
-                          {code ? (
-                            it.url ? (
-                              <a
-                                href={it.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 text-gold hover:underline"
-                              >
-                                {code}
-                                <ExternalLink className="h-3 w-3" />
-                              </a>
-                            ) : (
-                              <span className="text-muted-foreground">{code}</span>
-                            )
-                          ) : (
-                            <span className="text-muted-foreground">—</span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <AdminTable
+              rows={data.items}
+              columns={DEPENDABOT_COLUMNS}
+              getRowId={(it) =>
+                `${it.repo ?? ''}-${it.package ?? ''}-${it.ghsa_id ?? it.cve_id ?? ''}`
+              }
+              caption="Cảnh báo bảo mật Dependabot"
+            />
           </CardContent>
         </Card>
       )}
     </div>
   );
 }
+
+const PR_COLUMNS: AdminTableColumn<InfraGithubPullRequest>[] = [
+  {
+    id: 'checks',
+    header: 'Checks',
+    cell: (pr) => {
+      const { label, tone } = checksTone(pr.checks);
+      return <InfraStatusPill label={label} tone={tone} />;
+    },
+  },
+  {
+    id: 'pr',
+    header: 'PR',
+    className: 'max-w-[24rem]',
+    cell: (pr) => (
+      <>
+        {pr.url ? (
+          <a
+            href={pr.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center gap-1 font-medium text-gold hover:underline"
+          >
+            <span className="font-mono text-xs">#{pr.number ?? '—'}</span>{' '}
+            <span className="truncate">{pr.title ?? '—'}</span>
+            <ExternalLink className="h-3 w-3 shrink-0" />
+          </a>
+        ) : (
+          <span className="font-medium text-foreground">
+            <span className="font-mono text-xs">#{pr.number ?? '—'}</span>{' '}
+            {pr.title ?? '—'}
+          </span>
+        )}
+        <div className="truncate font-mono text-xs text-muted-foreground">
+          {pr.repo}
+        </div>
+      </>
+    ),
+  },
+  {
+    id: 'author',
+    header: 'Tác giả',
+    className: 'whitespace-nowrap text-muted-foreground',
+    cell: (pr) => (
+      <>
+        {pr.author ?? '—'}
+        {pr.draft && (
+          <span className="ml-2">
+            <InfraStatusPill label="draft" tone="neutral" />
+          </span>
+        )}
+      </>
+    ),
+  },
+  {
+    id: 'branch',
+    header: 'Nhánh',
+    className: 'max-w-[14rem] truncate font-mono text-xs text-muted-foreground',
+    cell: (pr) => (pr.head ?? '—') + ' → ' + (pr.base ?? '—'),
+  },
+  {
+    id: 'created',
+    header: 'Tạo lúc',
+    className: 'whitespace-nowrap text-muted-foreground',
+    cell: (pr) => formatRelativeOrEmpty(pr.created_at) || '—',
+  },
+];
 
 /** Open pull requests — compact table with check-state pills. */
 function OpenPrsSection({ prs }: { prs: InfraGithubPullRequest[] }) {
@@ -265,70 +338,12 @@ function OpenPrsSection({ prs }: { prs: InfraGithubPullRequest[] }) {
         <p className="border-b border-border px-4 py-2.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
           Pull request đang mở
         </p>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border text-left font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-                <th className="px-4 py-2.5">Checks</th>
-                <th className="px-4 py-2.5">PR</th>
-                <th className="px-4 py-2.5">Tác giả</th>
-                <th className="px-4 py-2.5">Nhánh</th>
-                <th className="px-4 py-2.5">Tạo lúc</th>
-              </tr>
-            </thead>
-            <tbody>
-              {prs.map((pr, idx) => {
-                const { label, tone } = checksTone(pr.checks);
-                return (
-                  <tr
-                    key={pr.url ?? `${pr.repo}-${pr.number ?? idx}`}
-                    className="border-b border-border/50 last:border-0 hover:bg-gold/5"
-                  >
-                    <td className="px-4 py-2.5">
-                      <InfraStatusPill label={label} tone={tone} />
-                    </td>
-                    <td className="max-w-[24rem] px-4 py-2.5">
-                      {pr.url ? (
-                        <a
-                          href={pr.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 font-medium text-gold hover:underline"
-                        >
-                          <span className="font-mono text-xs">#{pr.number ?? '—'}</span>{' '}
-                          <span className="truncate">{pr.title ?? '—'}</span>
-                          <ExternalLink className="h-3 w-3 shrink-0" />
-                        </a>
-                      ) : (
-                        <span className="font-medium text-foreground">
-                          <span className="font-mono text-xs">#{pr.number ?? '—'}</span>{' '}
-                          {pr.title ?? '—'}
-                        </span>
-                      )}
-                      <div className="truncate font-mono text-xs text-muted-foreground">
-                        {pr.repo}
-                      </div>
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-2.5 text-muted-foreground">
-                      {pr.author ?? '—'}
-                      {pr.draft && (
-                        <span className="ml-2">
-                          <InfraStatusPill label="draft" tone="neutral" />
-                        </span>
-                      )}
-                    </td>
-                    <td className="max-w-[14rem] truncate px-4 py-2.5 font-mono text-xs text-muted-foreground">
-                      {(pr.head ?? '—') + ' → ' + (pr.base ?? '—')}
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-2.5 text-muted-foreground">
-                      {formatRelativeOrEmpty(pr.created_at) || '—'}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <AdminTable
+          rows={prs}
+          columns={PR_COLUMNS}
+          getRowId={(pr) => pr.url ?? `${pr.repo}-${pr.number ?? ''}`}
+          caption="Pull request đang mở"
+        />
       </CardContent>
     </Card>
   );
@@ -393,6 +408,87 @@ export default function InfraGithubPage() {
     [queryClient],
   );
 
+  // Built inside the component so the "Hành động" cell can close over
+  // `refetchList` (the RerunButton onDone handler).
+  const runColumns: AdminTableColumn<InfraGithubItem>[] = React.useMemo(
+    () => [
+      {
+        id: 'result',
+        header: 'Kết quả',
+        cell: (r) => {
+          const { label, tone } = runTone(r.status, r.conclusion);
+          return <InfraStatusPill label={label} tone={tone} />;
+        },
+      },
+      {
+        id: 'workflow',
+        header: 'Workflow',
+        className: 'max-w-[20rem]',
+        cell: (r) => (
+          <>
+            <div className="truncate font-medium text-foreground">{r.workflow}</div>
+            <div className="truncate font-mono text-xs text-muted-foreground">
+              {r.repo}
+            </div>
+          </>
+        ),
+      },
+      {
+        id: 'branch',
+        header: 'Nhánh',
+        className: 'max-w-[12rem] truncate font-mono text-xs text-muted-foreground',
+        cell: (r) => r.branch ?? '—',
+      },
+      {
+        id: 'actor',
+        header: 'Người chạy',
+        className: 'whitespace-nowrap text-muted-foreground',
+        cell: (r) => r.actor ?? '—',
+      },
+      {
+        id: 'time',
+        header: 'Thời gian',
+        className: 'whitespace-nowrap text-muted-foreground',
+        cell: (r) => formatRelativeOrEmpty(r.created_at) || '—',
+      },
+      {
+        id: 'action',
+        header: 'Hành động',
+        className: 'whitespace-nowrap text-right',
+        cell: (r) => {
+          const repo = normalizeRepo(r.repo);
+          const canRerun =
+            isRerunnable(r.conclusion) && repo !== null && r.run_id != null;
+          return canRerun ? (
+            <RerunButton repo={repo!} runId={r.run_id!} onDone={refetchList} />
+          ) : (
+            <span className="text-muted-foreground">—</span>
+          );
+        },
+      },
+      {
+        id: 'open',
+        header: 'Mở',
+        className: 'text-right',
+        cell: (r) =>
+          r.url ? (
+            <a
+              href={r.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1 text-gold hover:underline"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+          ) : (
+            <span className="text-muted-foreground">—</span>
+          ),
+      },
+    ],
+    [refetchList],
+  );
+
   const summary: InfraGithubSummary | undefined =
     query.data?.ok ? query.data.summary : undefined;
   const dependabot: InfraGithubDependabot | undefined =
@@ -433,81 +529,12 @@ export default function InfraGithubPage() {
           )}
           <Card>
           <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border text-left font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-                    <th className="px-4 py-2.5">Kết quả</th>
-                    <th className="px-4 py-2.5">Workflow</th>
-                    <th className="px-4 py-2.5">Nhánh</th>
-                    <th className="px-4 py-2.5">Người chạy</th>
-                    <th className="px-4 py-2.5">Thời gian</th>
-                    <th className="px-4 py-2.5 text-right">Hành động</th>
-                    <th className="px-4 py-2.5 text-right">Mở</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {items.map((r, idx) => {
-                    const { label, tone } = runTone(r.status, r.conclusion);
-                    const repo = normalizeRepo(r.repo);
-                    const canRerun =
-                      isRerunnable(r.conclusion) && repo !== null && r.run_id != null;
-                    return (
-                      <tr
-                        key={r.url ?? `${r.repo}-${r.workflow}-${idx}`}
-                        className="border-b border-border/50 last:border-0 hover:bg-gold/5"
-                      >
-                        <td className="px-4 py-2.5">
-                          <InfraStatusPill label={label} tone={tone} />
-                        </td>
-                        <td className="max-w-[20rem] px-4 py-2.5">
-                          <div className="truncate font-medium text-foreground">
-                            {r.workflow}
-                          </div>
-                          <div className="truncate font-mono text-xs text-muted-foreground">
-                            {r.repo}
-                          </div>
-                        </td>
-                        <td className="max-w-[12rem] truncate px-4 py-2.5 font-mono text-xs text-muted-foreground">
-                          {r.branch ?? '—'}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-2.5 text-muted-foreground">
-                          {r.actor ?? '—'}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-2.5 text-muted-foreground">
-                          {formatRelativeOrEmpty(r.created_at) || '—'}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-2.5 text-right">
-                          {canRerun ? (
-                            <RerunButton
-                              repo={repo!}
-                              runId={r.run_id!}
-                              onDone={refetchList}
-                            />
-                          ) : (
-                            <span className="text-muted-foreground">—</span>
-                          )}
-                        </td>
-                        <td className="px-4 py-2.5 text-right">
-                          {r.url ? (
-                            <a
-                              href={r.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-gold hover:underline"
-                            >
-                              <ExternalLink className="h-3.5 w-3.5" />
-                            </a>
-                          ) : (
-                            <span className="text-muted-foreground">—</span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <AdminTable
+              rows={items}
+              columns={runColumns}
+              getRowId={(r) => r.url ?? `${r.repo}-${r.workflow}-${r.run_id ?? ''}`}
+              caption="Lần chạy workflow gần đây"
+            />
           </CardContent>
           </Card>
         </div>

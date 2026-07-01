@@ -23,6 +23,8 @@ import {
   AlertTitle,
   AlertDescription,
   toast,
+  ProvinceWardSelect,
+  type ProvinceWardValue,
 } from '@hieu-asia/ui';
 import { safeJson } from '@/lib/safe-json';
 
@@ -33,6 +35,11 @@ interface TaxProfileStatus {
   tax_commitment_08: boolean;
   contract_accepted_at: string | null;
   contract_version: string | null;
+  address_province_code: string | null;
+  address_province_name: string | null;
+  address_ward_code: string | null;
+  address_ward_name: string | null;
+  address_street: string | null;
   complete: boolean;
 }
 
@@ -48,6 +55,8 @@ export function TaxProfileForm() {
   const [idNumber, setIdNumber] = React.useState('');
   const [commitment08, setCommitment08] = React.useState(false);
   const [acceptContract, setAcceptContract] = React.useState(false);
+  const [address, setAddress] = React.useState<ProvinceWardValue>({});
+  const [street, setStreet] = React.useState('');
 
   const load = React.useCallback(async () => {
     setLoading(true);
@@ -59,6 +68,13 @@ export function TaxProfileForm() {
         if (parsed.data.profile) {
           setLegalName(parsed.data.profile.legal_full_name ?? '');
           setCommitment08(parsed.data.profile.tax_commitment_08);
+          setStreet(parsed.data.profile.address_street ?? '');
+          setAddress({
+            provinceCode: parsed.data.profile.address_province_code ?? undefined,
+            provinceName: parsed.data.profile.address_province_name ?? undefined,
+            wardCode: parsed.data.profile.address_ward_code ?? undefined,
+            wardName: parsed.data.profile.address_ward_name ?? undefined,
+          });
         }
         setEditing(!parsed.data.profile?.complete);
       } else {
@@ -97,6 +113,15 @@ export function TaxProfileForm() {
       if (taxCode.trim()) body.tax_code = taxCode.trim();
       if (idNumber.trim()) body.id_number = idNumber.trim();
       if (acceptContract) body.accept_contract = true;
+      if (address.provinceCode) {
+        body.address_province_code = address.provinceCode;
+        if (address.provinceName) body.address_province_name = address.provinceName;
+      }
+      if (address.wardCode) {
+        body.address_ward_code = address.wardCode;
+        if (address.wardName) body.address_ward_name = address.wardName;
+      }
+      if (street.trim()) body.address_street = street.trim();
 
       const r = await fetch('/api/affiliate/tax-profile', {
         method: 'POST',
@@ -141,6 +166,17 @@ export function TaxProfileForm() {
                 {profile.legal_full_name ? <>Họ tên: <strong>{profile.legal_full_name}</strong>. </> : null}
                 Mã số thuế: <strong>{profile.tax_code_masked ?? '—'}</strong>.{' '}
                 {profile.tax_commitment_08 ? 'Có cam kết 08 (miễn khấu trừ).' : 'Khấu trừ 10% khi ≥ 2tr/lần.'}
+                {profile.address_ward_name || profile.address_province_name ? (
+                  <>
+                    {' '}Địa chỉ:{' '}
+                    <strong>
+                      {[profile.address_street, profile.address_ward_name, profile.address_province_name]
+                        .filter(Boolean)
+                        .join(', ')}
+                    </strong>
+                    .
+                  </>
+                ) : null}
               </AlertDescription>
             </Alert>
             <Button variant="outline" onClick={() => setEditing(true)}>
@@ -179,6 +215,16 @@ export function TaxProfileForm() {
                 onChange={(e) => setIdNumber(e.target.value)}
                 placeholder="12 chữ số"
                 inputMode="numeric"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Địa chỉ liên hệ thuế (không bắt buộc)</Label>
+              <ProvinceWardSelect value={address} onChange={setAddress} />
+              <Input
+                value={street}
+                onChange={(e) => setStreet(e.target.value)}
+                placeholder="Số nhà, tên đường (không bắt buộc)"
+                autoComplete="street-address"
               />
             </div>
             <label className="flex items-start gap-2 text-sm">

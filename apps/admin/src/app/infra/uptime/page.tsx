@@ -26,6 +26,7 @@ import { getInfraTool } from '@/lib/infra-tools';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
 import { UptimeMonitorDrawer } from '@/components/admin/infra/UptimeMonitorDrawer';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
 const tool = getInfraTool('uptime')!;
 
@@ -76,6 +77,68 @@ function incidentTone(inc: InfraUptimeIncident): 'good' | 'bad' | 'neutral' {
   return 'bad';
 }
 
+const MONITOR_COLUMNS: AdminTableColumn<InfraUptimeItem>[] = [
+  {
+    id: 'name',
+    header: 'Tên',
+    cell: (m) => (
+      <span className="font-medium text-foreground">
+        {m.name}
+        {m.monitor_type && (
+          <span className="ml-2 font-mono text-[10px] uppercase text-muted-foreground">
+            {m.monitor_type}
+          </span>
+        )}
+      </span>
+    ),
+  },
+  {
+    id: 'status',
+    header: 'Trạng thái',
+    cell: (m) => {
+      const pill = monitorPill(m);
+      return <InfraStatusPill label={pill.label} tone={pill.tone} />;
+    },
+  },
+  {
+    id: 'url',
+    header: 'URL',
+    className: 'max-w-[20rem] truncate font-mono text-xs text-muted-foreground',
+    cell: (m) =>
+      m.url ? (
+        <a
+          href={m.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="hover:text-gold hover:underline"
+        >
+          {m.url}
+        </a>
+      ) : (
+        '—'
+      ),
+  },
+  {
+    id: 'response',
+    header: 'Phản hồi',
+    className: 'text-right tabular-nums text-muted-foreground',
+    cell: (m) => fmtMs(m.response_time_ms),
+  },
+  {
+    id: 'ssl',
+    header: 'SSL',
+    className: 'text-right tabular-nums',
+    cell: (m) => fmtSsl(m.ssl_expiration),
+  },
+  {
+    id: 'last',
+    header: 'Kiểm gần nhất',
+    className: 'whitespace-nowrap text-xs text-muted-foreground',
+    cell: (m) => fmtTime(m.last_checked_at),
+  },
+];
+
 export default function InfraUptimePage() {
   const query = useQuery({
     queryKey: ['infra', 'uptime'],
@@ -120,72 +183,13 @@ export default function InfraUptimePage() {
             </div>
           )}
 
-          <Card>
-            <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border text-left font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-                      <th className="px-4 py-2.5">Tên</th>
-                      <th className="px-4 py-2.5">Trạng thái</th>
-                      <th className="px-4 py-2.5">URL</th>
-                      <th className="px-4 py-2.5 text-right">Phản hồi</th>
-                      <th className="px-4 py-2.5 text-right">SSL</th>
-                      <th className="px-4 py-2.5">Kiểm gần nhất</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {items.map((m) => {
-                      const pill = monitorPill(m);
-                      return (
-                        <tr
-                          key={m.id}
-                          onClick={() => setOpenId(m.id)}
-                          className="cursor-pointer border-b border-border/50 last:border-0 hover:bg-gold/5"
-                        >
-                          <td className="px-4 py-2.5 font-medium text-foreground">
-                            {m.name}
-                            {m.monitor_type && (
-                              <span className="ml-2 font-mono text-[10px] uppercase text-muted-foreground">
-                                {m.monitor_type}
-                              </span>
-                            )}
-                          </td>
-                          <td className="px-4 py-2.5">
-                            <InfraStatusPill label={pill.label} tone={pill.tone} />
-                          </td>
-                          <td className="max-w-[20rem] truncate px-4 py-2.5 font-mono text-xs text-muted-foreground">
-                            {m.url ? (
-                              <a
-                                href={m.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={(e) => e.stopPropagation()}
-                                className="hover:text-gold hover:underline"
-                              >
-                                {m.url}
-                              </a>
-                            ) : (
-                              '—'
-                            )}
-                          </td>
-                          <td className="px-4 py-2.5 text-right tabular-nums text-muted-foreground">
-                            {fmtMs(m.response_time_ms)}
-                          </td>
-                          <td className="px-4 py-2.5 text-right tabular-nums">
-                            {fmtSsl(m.ssl_expiration)}
-                          </td>
-                          <td className="whitespace-nowrap px-4 py-2.5 text-xs text-muted-foreground">
-                            {fmtTime(m.last_checked_at)}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
+          <AdminTable
+            rows={items}
+            columns={MONITOR_COLUMNS}
+            getRowId={(m) => m.id}
+            onRowClick={(m) => setOpenId(m.id)}
+            caption="Danh sách monitor uptime"
+          />
 
           <Card>
             <CardContent className="p-4">
