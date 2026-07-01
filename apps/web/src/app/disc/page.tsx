@@ -381,6 +381,13 @@ export default function DiscPage() {
             </div>
           )}
         </section>
+
+        <p className="mt-8 text-sm text-muted-foreground">
+          Muốn đặt DiSC cạnh các lăng kính khác?{' '}
+          <Link href="/so-sanh" className="text-gold hover:underline">
+            So sánh lăng kính
+          </Link>
+        </p>
       </ToolPageShell>
       <StickyMobileCta trackId="disc" />
     </>

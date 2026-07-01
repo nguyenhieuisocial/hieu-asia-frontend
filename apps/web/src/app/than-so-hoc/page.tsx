@@ -217,6 +217,14 @@ export default function ThanSoHocLandingPage() {
             chính mình, đối chiếu với trải nghiệm thật, và so với các lăng kính
             khác (Tử Vi, Big Five) thay vì tin một chiều.
           </p>
+          <p className="flex flex-wrap gap-x-4 gap-y-1">
+            <Link href="/learn/than-so-hoc" className="text-gold hover:underline">
+              Học về Thần số học →
+            </Link>
+            <Link href="/so-sanh" className="text-gold hover:underline">
+              So sánh lăng kính →
+            </Link>
+          </p>
         </div>
       </section>
       </RevealOnScroll>
