@@ -836,11 +836,16 @@ body {
   position: relative;
   overflow: hidden;
   isolation: isolate;
+  /* khoảng đệm rộng để dải chuyển màu dài & mượt mà không đè nội dung */
+  padding-block: 8rem;
   background-color: #08090c;
   background-repeat: no-repeat;
   background-image:
-    /* viền tan mềm trên/dưới → chuyển section mượt */
-    linear-gradient(180deg, hsl(var(--background)) 0%, rgba(8, 9, 12, 0) 7%, rgba(8, 9, 12, 0) 93%, hsl(var(--background)) 100%),
+    /* CHUYỂN SECTION mượt–nhẹ–tinh tế: dải tan DÀI 120px, easing nhiều chặng,
+     * tính theo px (đều trên mọi màn) + theme-adaptive (hsl var / alpha). Tách
+     * 2 dải (trên + dưới) neo theo mép để độ dài luôn cố định. */
+    linear-gradient(to bottom, hsl(var(--background)) 0px, hsl(var(--background) / 0.86) 30px, hsl(var(--background) / 0.5) 58px, hsl(var(--background) / 0.22) 86px, hsl(var(--background) / 0.06) 106px, transparent 122px),
+    linear-gradient(to top, hsl(var(--background)) 0px, hsl(var(--background) / 0.86) 30px, hsl(var(--background) / 0.5) 58px, hsl(var(--background) / 0.22) 86px, hsl(var(--background) / 0.06) 106px, transparent 122px),
     /* sao foreground thưa, sáng rõ */
     radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.85), transparent),
     radial-gradient(1.6px 1.6px at 41% 30%, rgba(236, 224, 200, 0.8), transparent),
