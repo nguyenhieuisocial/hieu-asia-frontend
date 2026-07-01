@@ -41,12 +41,22 @@ interface UserDeviceProfile {
   lastSeen: string | null;
 }
 
+interface UserEngagement {
+  firstSeen: string | null;
+  sessions: number;
+  pageviews: number;
+  toolsUsed: number;
+  payments: number;
+  revenue: number;
+}
+
 export interface UserJourneyResp {
   ok: boolean;
   configured: boolean;
   source: UserJourneySource | null;
   events: UserJourneyEvent[];
   profile: UserDeviceProfile | null;
+  engagement: UserEngagement | null;
 }
 
 export async function fetchUserJourney(userId: string): Promise<UserJourneyResp> {
@@ -57,12 +67,20 @@ export async function fetchUserJourney(userId: string): Promise<UserJourneyResp>
     const data = await r.json();
     return data as UserJourneyResp;
   } catch {
-    return { ok: false, configured: false, source: null, events: [], profile: null };
+    return { ok: false, configured: false, source: null, events: [], profile: null, engagement: null };
   }
 }
 
 function fmtDateTime(iso: string) {
   return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'medium' });
+}
+
+function fmtDate(iso: string) {
+  return new Date(iso).toLocaleDateString('vi-VN', { dateStyle: 'medium' });
+}
+
+function fmtVnd(n: number) {
+  return n.toLocaleString('vi-VN') + 'đ';
 }
 
 // Friendly Vietnamese labels for the PostHog events. Unknown events fall back to
@@ -129,6 +147,7 @@ export function UserJourneyPanel({ userId }: { userId: string }) {
   const source = data?.source ?? null;
   const events = data?.events ?? [];
   const profile = data?.profile ?? null;
+  const engagement = data?.engagement ?? null;
   const firstTouch = source
     ? fmtTouch(source.firstTouchSource, source.firstTouchMedium, source.firstTouchCampaign)
     : null;
@@ -165,6 +184,65 @@ export function UserJourneyPanel({ userId }: { userId: string }) {
           </p>
         ) : (
           <>
+            {/* Tương tác — engagement snapshot (sessions / pageviews / tools /
+                paid) từ PostHog, 365 ngày. Tóm tắt "khách này gắn bó tới đâu"
+                ngay đầu panel, trước chi tiết thiết bị & hành trình. */}
+            {engagement && (
+              <div className="space-y-2">
+                <h3 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  Tương tác (365 ngày)
+                </h3>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                  <div className="rounded-lg border border-border/60 bg-card/40 px-3 py-2">
+                    <div className="text-lg font-semibold text-foreground">
+                      {engagement.sessions.toLocaleString('vi-VN')}
+                    </div>
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Phiên</div>
+                  </div>
+                  <div className="rounded-lg border border-border/60 bg-card/40 px-3 py-2">
+                    <div className="text-lg font-semibold text-foreground">
+                      {engagement.pageviews.toLocaleString('vi-VN')}
+                    </div>
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Lượt xem</div>
+                  </div>
+                  <div className="rounded-lg border border-border/60 bg-card/40 px-3 py-2">
+                    <div className="text-lg font-semibold text-foreground">
+                      {engagement.toolsUsed.toLocaleString('vi-VN')}
+                    </div>
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Dùng công cụ</div>
+                  </div>
+                  <div
+                    className={
+                      'rounded-lg border px-3 py-2 ' +
+                      (engagement.payments > 0
+                        ? 'border-gold/40 bg-gold/10'
+                        : 'border-border/60 bg-card/40')
+                    }
+                  >
+                    <div
+                      className={
+                        'text-lg font-semibold ' +
+                        (engagement.payments > 0 ? 'text-gold' : 'text-foreground')
+                      }
+                    >
+                      {engagement.payments > 0 ? fmtVnd(engagement.revenue) : '—'}
+                    </div>
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                      {engagement.payments > 0 ? `Đã trả · ${engagement.payments} lần` : 'Chưa trả'}
+                    </div>
+                  </div>
+                </div>
+                {engagement.firstSeen && (
+                  <p className="text-xs text-muted-foreground">
+                    Lần đầu thấy:{' '}
+                    <span className="font-mono text-foreground/80" title={engagement.firstSeen}>
+                      {fmtDate(engagement.firstSeen)}
+                    </span>
+                  </p>
+                )}
+              </div>
+            )}
+
             {/* Thiết bị & vị trí — PostHog auto-props ($browser/$os/$device_type/$geoip_*).
                 Lấp chỗ DB thiếu metadata cho phiên cũ / kênh không phải web. */}
             {profile && (
