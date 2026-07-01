@@ -17,7 +17,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 export const metadata: Metadata = {
   title: 'Changelog',
   description:
-    'Lộ trình sản phẩm hieu.asia từ V1.0 đến hiện tại. Tử Vi · Bát Tự · MBTI · Big Five · Xem Tướng · AI Mentor.',
+    'Lộ trình sản phẩm hieu.asia trong năm 2026. Tử Vi · Bát Tự · MBTI · Big Five · Xem Tướng · AI Mentor.',
   alternates: { canonical: 'https://hieu.asia/changelog' },
   openGraph: {
     title: 'Changelog',
@@ -52,52 +52,42 @@ const RELEASES: readonly ReleaseEntry[] = [
   {
     version: 'V3.0',
     date: 'Tháng 6, 2026',
-    title: 'Thêm lăng kính tâm lý, trực giác & chiêm tinh phương Tây',
+    title: 'Thêm nhiều lăng kính mới',
     tag: 'major',
     bullets: [
-      'DISC và Enneagram — hai lăng kính tâm lý mới, kèm bản đọc bằng AI',
+      'Hai lăng kính tâm lý mới: DISC và Enneagram, kèm bản đọc bằng AI',
       'Tarot (trải 1 & 3 lá) và Gieo quẻ Kinh Dịch cho một câu hỏi cụ thể',
-      'Chiêm tinh phương Tây: Bản đồ sao (natal) và Cung hoàng đạo',
+      'Chiêm tinh phương Tây: Bản đồ sao và Cung hoàng đạo',
     ],
   },
   {
     version: 'V2.4',
     date: 'Tháng 5, 2026',
-    title: 'Cộng đồng, Changelog & Newsletter',
+    title: 'Cộng đồng & bản tin',
     tag: 'polish',
     bullets: [
-      'Trang Cộng đồng, Changelog công khai và đăng ký nhận bản tin',
-      'Trải nghiệm mượt hơn: hiệu ứng cuộn và điều hướng nhất quán toàn site',
+      'Trang Cộng đồng, trang cập nhật sản phẩm công khai và đăng ký nhận bản tin',
+      'Trải nghiệm mượt hơn khi cuộn và chuyển trang',
     ],
   },
   {
     version: 'V2.3',
     date: 'Tháng 4, 2026',
-    title: 'Trang chủ mới & 6 công cụ miễn phí',
+    title: 'Trang chủ mới & bộ công cụ miễn phí',
     tag: 'major',
     bullets: [
-      'Trang chủ dựng lại, thêm 6 công cụ tra cứu miễn phí (Tử Vi hôm nay, Lịch Vạn Niên, Hợp tuổi, Thần Số, Cân Xương, Thước Lỗ Ban)',
-      'Câu chuyện người dùng, phần hỏi–đáp và điều hướng gọn gàng hơn',
-    ],
-  },
-  {
-    version: 'V2.2',
-    date: 'Tháng 3, 2026',
-    title: 'Nền tảng vận hành',
-    tag: 'infra',
-    bullets: [
-      'Bảng điều khiển nội bộ và theo dõi chi phí AI',
-      'Các công cụ tra cứu hằng ngày đi vào ổn định',
+      'Trang chủ dựng lại; thêm công cụ tra cứu miễn phí: Tử Vi hôm nay, Lịch Vạn Niên, Hợp tuổi, Thần Số, Cân Xương, Thước Lỗ Ban',
+      'Thêm câu chuyện người dùng và mục hỏi–đáp',
     ],
   },
   {
     version: 'V2.0',
     date: 'Tháng 2, 2026',
-    title: 'Đăng nhập không mật khẩu & Affiliate',
+    title: 'Đăng nhập không mật khẩu & giới thiệu bạn bè',
     tag: 'major',
     bullets: [
-      'Đăng nhập bằng magic-link — không cần mật khẩu',
-      'Chương trình giới thiệu (affiliate) và bộ nhận diện thương hiệu mới',
+      'Đăng nhập bằng liên kết gửi qua email — không cần mật khẩu',
+      'Chương trình giới thiệu bạn bè nhận hoa hồng, và bộ nhận diện thương hiệu mới',
     ],
   },
   {
@@ -107,28 +97,7 @@ const RELEASES: readonly ReleaseEntry[] = [
     tag: 'feature',
     bullets: [
       'Bài học trực quan cho Tử Vi, Bát Tự, MBTI, Xem Tướng và Thần Số',
-      'Giải thích cách hieu.asia biến dữ liệu thành gợi ý bạn có thể hành động',
-    ],
-  },
-  {
-    version: 'V1.4',
-    date: 'Tháng 12, 2025',
-    title: 'Đo lường, SEO & Cài đặt',
-    tag: 'infra',
-    bullets: [
-      'Nền tảng đo lường và tối ưu tốc độ tải trang',
-      'Trang Cài đặt: thông báo, ngôn ngữ, giao diện và quyền riêng tư',
-    ],
-  },
-  {
-    version: 'V1.0',
-    date: 'Tháng 10, 2025',
-    title: 'Ra mắt công khai',
-    tag: 'major',
-    bullets: [
-      'Lá số Tử Vi 12 cung theo trường phái Bắc',
-      'Bát Tự, MBTI, Thần Số và Xem Tướng qua ảnh (AI thị giác)',
-      'AI Mentor đối thoại có ngữ cảnh và báo cáo Cẩm Nang Cuộc Đời',
+      'Giải thích cách hieu.asia biến dữ liệu của bạn thành gợi ý có thể hành động',
     ],
   },
 ];
