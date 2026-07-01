@@ -133,3 +133,9 @@ export type { LogoVariant, LogoKind } from './components/Logo';
 // Admin / back-office primitives
 export { DataTable, StatusBadge } from './components/DataTable';
 export type { Column as DataTableColumn, DataTableProps } from './components/DataTable';
+
+// Vietnamese administrative locations (post-1-July-2025 2-tier reform)
+export { ProvinceWardSelect } from './components/ProvinceWardSelect';
+export type { ProvinceWardValue, ProvinceWardSelectProps } from './components/ProvinceWardSelect';
+export { loadVnProvinces } from './lib/vn-locations';
+export type { VnProvince, VnWard } from './lib/vn-locations';

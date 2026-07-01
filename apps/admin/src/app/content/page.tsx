@@ -38,6 +38,7 @@ import { FileText, Plus, Layers, ChevronRight, Sparkles } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import {
   useContentDrafts,
   useGenerateContent,
@@ -83,6 +84,54 @@ function fmtDate(iso: string | null): string {
     return iso;
   }
 }
+
+const DRAFT_COLUMNS: AdminTableColumn<ContentDraftListRow>[] = [
+  {
+    id: 'topic',
+    header: 'Chủ đề',
+    cell: (row) => (
+      <>
+        <Link href={`/content/${row.id}`} className="text-foreground hover:text-gold">
+          {row.topic}
+        </Link>
+        {row.slug && (
+          <div className="font-mono text-[10px] text-muted-foreground">/{row.slug}</div>
+        )}
+      </>
+    ),
+  },
+  {
+    id: 'status',
+    header: 'Trạng thái',
+    cell: (row) => <StatusBadge status={STATUS_TONE[row.status]} label={row.status} />,
+  },
+  {
+    id: 'judge',
+    header: 'Judge chọn',
+    className: 'text-muted-foreground',
+    cell: (row) => JUDGE_LABEL[row.judge_pick],
+  },
+  {
+    id: 'created',
+    header: 'Tạo lúc',
+    className: 'text-muted-foreground',
+    cell: (row) => fmtDate(row.created_at),
+  },
+  {
+    id: 'actions',
+    header: 'Thao tác',
+    className: 'text-right',
+    cell: (row) => (
+      <Link
+        href={`/content/${row.id}`}
+        className="inline-flex items-center gap-1 text-xs text-gold hover:underline"
+      >
+        Xem
+        <ChevronRight className="h-3 w-3" />
+      </Link>
+    ),
+  },
+];
 
 export default function ContentListPage() {
   const [tab, setTab] = React.useState<ContentType>('newsletter');
@@ -232,49 +281,29 @@ export default function ContentListPage() {
               <CardContent className="py-4 text-sm text-muted-foreground">{note}</CardContent>
             </Card>
           )}
-          {isLoading ? (
-            <Card>
-              <CardContent className="py-12 text-center text-sm text-muted-foreground">
-                Đang tải...
-              </CardContent>
-            </Card>
-          ) : rows.length === 0 ? (
-            <EmptyState
-              title="Chưa có nội dung nào"
-              description={
-                tab === 'newsletter'
-                  ? 'Newsletter sẽ tự sinh mỗi Thứ Hai 08:00 VN, hoặc bấm "Tạo nội dung mới".'
-                  : 'Bấm "Tạo loạt 10 SEO pillar" để sinh cho tất cả audience routes, hoặc tạo từng pillar.'
-              }
-              illustration={<Sparkles className="h-12 w-12 text-gold" />}
-              action={
-                <Button size="sm" onClick={() => setCreateOpen(true)}>
-                  Tạo nội dung mới
-                </Button>
-              }
-            />
-          ) : (
-            <Card>
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-border">
-                  <thead>
-                    <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
-                      <th className="px-4 py-3">Chủ đề</th>
-                      <th className="px-4 py-3">Trạng thái</th>
-                      <th className="px-4 py-3">Judge chọn</th>
-                      <th className="px-4 py-3">Tạo lúc</th>
-                      <th className="px-4 py-3 text-right">Thao tác</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {rows.map((row) => (
-                      <Row key={row.id} row={row} />
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </Card>
-          )}
+          <AdminTable
+            rows={rows}
+            columns={DRAFT_COLUMNS}
+            getRowId={(row) => row.id}
+            loading={isLoading}
+            empty={
+              <EmptyState
+                title="Chưa có nội dung nào"
+                description={
+                  tab === 'newsletter'
+                    ? 'Newsletter sẽ tự sinh mỗi Thứ Hai 08:00 VN, hoặc bấm "Tạo nội dung mới".'
+                    : 'Bấm "Tạo loạt 10 SEO pillar" để sinh cho tất cả audience routes, hoặc tạo từng pillar.'
+                }
+                illustration={<Sparkles className="h-12 w-12 text-gold" />}
+                action={
+                  <Button size="sm" onClick={() => setCreateOpen(true)}>
+                    Tạo nội dung mới
+                  </Button>
+                }
+              />
+            }
+            caption="Danh sách nội dung draft"
+          />
         </TabsContent>
       </Tabs>
 
@@ -345,34 +374,5 @@ export default function ContentListPage() {
         </DialogContent>
       </Dialog>
     </div>
-  );
-}
-
-function Row({ row }: { row: ContentDraftListRow }) {
-  return (
-    <tr className="text-sm hover:bg-gold/5">
-      <td className="px-4 py-3">
-        <Link href={`/content/${row.id}`} className="text-foreground hover:text-gold">
-          {row.topic}
-        </Link>
-        {row.slug && (
-          <div className="font-mono text-[10px] text-muted-foreground">/{row.slug}</div>
-        )}
-      </td>
-      <td className="px-4 py-3">
-        <StatusBadge status={STATUS_TONE[row.status]} label={row.status} />
-      </td>
-      <td className="px-4 py-3 text-muted-foreground">{JUDGE_LABEL[row.judge_pick]}</td>
-      <td className="px-4 py-3 text-muted-foreground">{fmtDate(row.created_at)}</td>
-      <td className="px-4 py-3 text-right">
-        <Link
-          href={`/content/${row.id}`}
-          className="inline-flex items-center gap-1 text-xs text-gold hover:underline"
-        >
-          Xem
-          <ChevronRight className="h-3 w-3" />
-        </Link>
-      </td>
-    </tr>
   );
 }

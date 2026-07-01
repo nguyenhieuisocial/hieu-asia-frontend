@@ -155,6 +155,8 @@ export function Sidebar() {
                 <button
                   type="button"
                   onClick={() => toggleGroup(group.id)}
+                  aria-expanded={!isCollapsed}
+                  aria-controls={`navgrp-${group.id}`}
                   className="flex w-full items-center justify-between px-2 pb-1 text-left"
                 >
                   <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -168,7 +170,7 @@ export function Sidebar() {
                   />
                 </button>
                 {!isCollapsed && (
-                  <div className="space-y-0.5">
+                  <div id={`navgrp-${group.id}`} className="space-y-0.5">
                     {group.items.map(({ href, label, Icon }) => {
                       const active = isActive(href);
                       return (

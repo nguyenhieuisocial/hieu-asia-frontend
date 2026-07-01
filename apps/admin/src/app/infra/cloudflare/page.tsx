@@ -40,6 +40,7 @@ import {
   CfRoutesCard,
   CfPermissionNotes,
 } from '@/components/admin/infra/CloudflareDetailPanels';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
 const tool = getInfraTool('cloudflare')!;
 
@@ -59,6 +60,43 @@ const CloudflareDeployChart = dynamic(
 function fmtNum(n: number): string {
   return n.toLocaleString('vi-VN');
 }
+
+const DEPLOY_COLUMNS: AdminTableColumn<InfraCloudflareItem>[] = [
+  {
+    id: 'id',
+    header: 'Bản',
+    className: 'whitespace-nowrap font-mono text-xs text-muted-foreground',
+    cell: (d) => d.id.slice(0, 8),
+  },
+  {
+    id: 'live',
+    header: 'Đang chạy',
+    cell: (d) =>
+      d.live ? (
+        <InfraStatusPill label="live" tone="good" />
+      ) : (
+        <InfraStatusPill label="—" tone="neutral" />
+      ),
+  },
+  {
+    id: 'author',
+    header: 'Người',
+    className: 'max-w-[14rem] truncate text-muted-foreground',
+    cell: (d) => d.author_email ?? '—',
+  },
+  {
+    id: 'message',
+    header: 'Ghi chú',
+    className: 'max-w-[22rem] truncate text-foreground',
+    cell: (d) => d.message ?? '—',
+  },
+  {
+    id: 'time',
+    header: 'Thời gian',
+    className: 'whitespace-nowrap text-muted-foreground',
+    cell: (d) => formatRelativeOrEmpty(d.created_on) || '—',
+  },
+];
 
 export default function InfraCloudflarePage() {
   const query = useQuery({
@@ -140,52 +178,13 @@ export default function InfraCloudflarePage() {
             {bindings && <CfBindingsCard bindings={bindings} />}
             {routes && <CfRoutesCard routes={routes} />}
 
-            <Card>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-border text-left font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-                        <th className="px-4 py-2.5">Bản</th>
-                        <th className="px-4 py-2.5">Đang chạy</th>
-                        <th className="px-4 py-2.5">Người</th>
-                        <th className="px-4 py-2.5">Ghi chú</th>
-                        <th className="px-4 py-2.5">Thời gian</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {items.map((d) => (
-                        <tr
-                          key={d.id}
-                          onClick={() => setOpenId(d.id)}
-                          className="cursor-pointer border-b border-border/50 last:border-0 hover:bg-gold/5"
-                        >
-                          <td className="whitespace-nowrap px-4 py-2.5 font-mono text-xs text-muted-foreground">
-                            {d.id.slice(0, 8)}
-                          </td>
-                          <td className="px-4 py-2.5">
-                            {d.live ? (
-                              <InfraStatusPill label="live" tone="good" />
-                            ) : (
-                              <InfraStatusPill label="—" tone="neutral" />
-                            )}
-                          </td>
-                          <td className="max-w-[14rem] truncate px-4 py-2.5 text-muted-foreground">
-                            {d.author_email ?? '—'}
-                          </td>
-                          <td className="max-w-[22rem] truncate px-4 py-2.5 text-foreground">
-                            {d.message ?? '—'}
-                          </td>
-                          <td className="whitespace-nowrap px-4 py-2.5 text-muted-foreground">
-                            {formatRelativeOrEmpty(d.created_on) || '—'}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
+            <AdminTable
+              rows={items}
+              columns={DEPLOY_COLUMNS}
+              getRowId={(d) => d.id}
+              onRowClick={(d) => setOpenId(d.id)}
+              caption="Danh sách bản triển khai Cloudflare Worker"
+            />
           </div>
         )}
       />

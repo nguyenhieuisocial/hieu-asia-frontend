@@ -8,7 +8,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['@hieu-asia/ui', '@hieu-asia/types', '@hieu-asia/api-client'],
+  transpilePackages: ['@hieu-asia/ui', '@hieu-asia/types'],
   experimental: {
     typedRoutes: true,
   },

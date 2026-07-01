@@ -11,7 +11,6 @@
 
 import * as React from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Card, CardContent } from '@hieu-asia/ui';
 import { ExternalLink } from 'lucide-react';
 import {
   getInfraSentry,
@@ -24,6 +23,7 @@ import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
 import { SentryIssueDrawer } from '@/components/admin/infra/SentryIssueDrawer';
 import { MiniSparkline } from '@/components/admin/infra/MiniSparkline';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
 const tool = getInfraTool('sentry')!;
 
@@ -45,6 +45,81 @@ function levelTone(level: string): 'good' | 'bad' | 'warn' | 'neutral' {
 function fmtNum(n: number): string {
   return n.toLocaleString('vi-VN');
 }
+
+const ISSUE_COLUMNS: AdminTableColumn<InfraSentryItem>[] = [
+  {
+    id: 'level',
+    header: 'Mức',
+    cell: (i) => <InfraStatusPill label={i.level} tone={levelTone(i.level)} />,
+  },
+  {
+    id: 'title',
+    header: 'Lỗi',
+    className: 'max-w-[26rem]',
+    cell: (i) => (
+      <>
+        <div className="flex items-center gap-1.5">
+          <span className="truncate font-medium text-foreground">{i.title}</span>
+          {i.is_new_24h && (
+            <span className="shrink-0 rounded bg-jade/15 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wide text-jade-700 dark:text-jade-50">
+              mới 24h
+            </span>
+          )}
+        </div>
+        {i.culprit && (
+          <div className="truncate font-mono text-xs text-muted-foreground">{i.culprit}</div>
+        )}
+      </>
+    ),
+  },
+  {
+    id: 'count',
+    header: 'Số lần',
+    className: 'text-right tabular-nums',
+    cell: (i) => i.count,
+  },
+  {
+    id: 'userCount',
+    header: 'Người dùng',
+    className: 'text-right tabular-nums text-muted-foreground',
+    cell: (i) => i.userCount,
+  },
+  {
+    id: 'spark',
+    header: '24h',
+    cell: (i) =>
+      i.spark_24h && i.spark_24h.length > 1 ? (
+        <MiniSparkline data={i.spark_24h} ariaLabel="Lưu lượng lỗi 24h" />
+      ) : (
+        <span className="text-muted-foreground">—</span>
+      ),
+  },
+  {
+    id: 'lastSeen',
+    header: 'Gần nhất',
+    className: 'whitespace-nowrap text-muted-foreground',
+    cell: (i) => formatRelativeOrEmpty(i.lastSeen) || '—',
+  },
+  {
+    id: 'open',
+    header: 'Mở',
+    className: 'text-right',
+    cell: (i) =>
+      i.permalink ? (
+        <a
+          href={i.permalink}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="inline-flex items-center gap-1 text-gold hover:underline"
+        >
+          <ExternalLink className="h-3.5 w-3.5" />
+        </a>
+      ) : (
+        <span className="text-muted-foreground">—</span>
+      ),
+  },
+];
 
 export default function InfraSentryPage() {
   const queryClient = useQueryClient();
@@ -168,87 +243,13 @@ export default function InfraSentryPage() {
             </span>
           </div>
 
-          <Card>
-            <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border text-left font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-                      <th className="px-4 py-2.5">Mức</th>
-                      <th className="px-4 py-2.5">Lỗi</th>
-                      <th className="px-4 py-2.5 text-right">Số lần</th>
-                      <th className="px-4 py-2.5 text-right">Người dùng</th>
-                      <th className="px-4 py-2.5">24h</th>
-                      <th className="px-4 py-2.5">Gần nhất</th>
-                      <th className="px-4 py-2.5 text-right">Mở</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filtered.map((i) => (
-                      <tr
-                        key={i.id}
-                        onClick={() => setOpenId(i.id)}
-                        className="cursor-pointer border-b border-border/50 last:border-0 hover:bg-gold/5"
-                      >
-                        <td className="px-4 py-2.5">
-                          <InfraStatusPill label={i.level} tone={levelTone(i.level)} />
-                        </td>
-                        <td className="max-w-[26rem] px-4 py-2.5">
-                          <div className="flex items-center gap-1.5">
-                            <span className="truncate font-medium text-foreground">
-                              {i.title}
-                            </span>
-                            {i.is_new_24h && (
-                              <span className="shrink-0 rounded bg-jade/15 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wide text-jade-700 dark:text-jade-50">
-                                mới 24h
-                              </span>
-                            )}
-                          </div>
-                          {i.culprit && (
-                            <div className="truncate font-mono text-xs text-muted-foreground">
-                              {i.culprit}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-4 py-2.5 text-right tabular-nums">{i.count}</td>
-                        <td className="px-4 py-2.5 text-right tabular-nums text-muted-foreground">
-                          {i.userCount}
-                        </td>
-                        <td className="px-4 py-2.5">
-                          {i.spark_24h && i.spark_24h.length > 1 ? (
-                            <MiniSparkline
-                              data={i.spark_24h}
-                              ariaLabel="Lưu lượng lỗi 24h"
-                            />
-                          ) : (
-                            <span className="text-muted-foreground">—</span>
-                          )}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-2.5 text-muted-foreground">
-                          {formatRelativeOrEmpty(i.lastSeen) || '—'}
-                        </td>
-                        <td className="px-4 py-2.5 text-right">
-                          {i.permalink ? (
-                            <a
-                              href={i.permalink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                              className="inline-flex items-center gap-1 text-gold hover:underline"
-                            >
-                              <ExternalLink className="h-3.5 w-3.5" />
-                            </a>
-                          ) : (
-                            <span className="text-muted-foreground">—</span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
+          <AdminTable
+            rows={filtered}
+            columns={ISSUE_COLUMNS}
+            getRowId={(i) => i.id}
+            onRowClick={(i) => setOpenId(i.id)}
+            caption="Danh sách lỗi Sentry chưa xử lý"
+          />
         </div>
         );
       }}
