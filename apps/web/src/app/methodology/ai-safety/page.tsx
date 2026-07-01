@@ -222,7 +222,7 @@ const REFERENCES: { label: string; href?: string }[] = [
     href: 'https://www.nist.gov/itl/ai-risk-management-framework',
   },
   {
-    label: 'Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân',
+    label: 'Nghị định 356/2025/NĐ-CP (thay thế 13/2023) + Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15',
   },
 ];
 

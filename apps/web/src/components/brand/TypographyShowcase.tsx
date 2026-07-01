@@ -33,7 +33,7 @@ export function TypographyShowcase() {
           </Sample>
           <Sample label="h2 / Section" meta="Be Vietnam Pro · 40px · semibold · -1% tracking">
             <h2 className="font-heading text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-4xl">
-              Tử Vi · MBTI · Palm Reading · AI Mentor
+              Tử Vi · MBTI · Xem Tướng · AI Mentor
             </h2>
           </Sample>
           <Sample label="h3" meta="Be Vietnam Pro · 30px · semibold">

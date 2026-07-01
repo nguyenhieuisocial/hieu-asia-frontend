@@ -8,6 +8,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
+import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
@@ -207,7 +208,8 @@ export default async function CungDetailPage({
         </section>
 
         {/* Tính cách */}
-        <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <RevealOnScroll>
+        <section className="rv-up relative mx-auto max-w-3xl px-6 pb-10">
           <h2 className="mb-3 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             Cung {z.name} là người thế nào?
           </h2>
@@ -217,21 +219,23 @@ export default async function CungDetailPage({
             {z.name} thường {d.elementTendency}
           </p>
         </section>
+        </RevealOnScroll>
 
         {/* Điểm mạnh + Hướng phát triển */}
-        <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <RevealOnScroll>
+        <section className="rv-up relative mx-auto max-w-3xl px-6 pb-10">
           <div className="grid gap-3 sm:grid-cols-2">
             <Card className="border-border bg-card/40">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 font-heading text-base text-foreground">
-                  <TrendingUp className="h-4 w-4 text-emerald-400" aria-hidden /> Điểm mạnh nổi bật
+                  <TrendingUp className="h-4 w-4 text-primary" aria-hidden /> Điểm mạnh nổi bật
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-1.5 text-sm leading-relaxed text-foreground/80">
                   {extra.strengths.map((s) => (
                     <li key={s} className="flex gap-2">
-                      <span aria-hidden className="text-emerald-400">
+                      <span aria-hidden className="text-primary">
                         •
                       </span>
                       {s}
@@ -243,14 +247,14 @@ export default async function CungDetailPage({
             <Card className="border-border bg-card/40">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 font-heading text-base text-foreground">
-                  <Compass className="h-4 w-4 text-amber-400" aria-hidden /> Điều nên lưu ý
+                  <Compass className="h-4 w-4 text-primary" aria-hidden /> Điều nên lưu ý
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-1.5 text-sm leading-relaxed text-foreground/80">
                   {extra.growthEdges.map((s) => (
                     <li key={s} className="flex gap-2">
-                      <span aria-hidden className="text-amber-400">
+                      <span aria-hidden className="text-primary">
                         •
                       </span>
                       {s}
@@ -265,14 +269,16 @@ export default async function CungDetailPage({
             phải lời phán cố định. Mỗi người đều có thể rèn giũa theo hướng mình muốn.
           </p>
         </section>
+        </RevealOnScroll>
 
         {/* Tình yêu + Công việc */}
-        <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <RevealOnScroll>
+        <section className="rv-up relative mx-auto max-w-3xl px-6 pb-10">
           <div className="grid gap-3 sm:grid-cols-2">
             <Card className="border-border bg-card/40">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 font-heading text-base text-foreground">
-                  <Heart className="h-4 w-4 text-rose-400" aria-hidden /> Trong tình yêu
+                  <Heart className="h-4 w-4 text-primary" aria-hidden /> Trong tình yêu
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-sm leading-relaxed text-muted-foreground">
@@ -282,7 +288,7 @@ export default async function CungDetailPage({
             <Card className="border-border bg-card/40">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 font-heading text-base text-foreground">
-                  <Briefcase className="h-4 w-4 text-sky-400" aria-hidden /> Trong công việc
+                  <Briefcase className="h-4 w-4 text-primary" aria-hidden /> Trong công việc
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-sm leading-relaxed text-muted-foreground">
@@ -291,9 +297,11 @@ export default async function CungDetailPage({
             </Card>
           </div>
         </section>
+        </RevealOnScroll>
 
         {/* Hợp với cung nào */}
-        <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <RevealOnScroll>
+        <section className="rv-up relative mx-auto max-w-3xl px-6 pb-10">
           <h2 className="mb-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             Cung {z.name} hợp với cung nào?
           </h2>
@@ -337,9 +345,11 @@ export default async function CungDetailPage({
             </div>
           </div>
         </section>
+        </RevealOnScroll>
 
         {/* FAQ */}
-        <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <RevealOnScroll>
+        <section className="rv-up relative mx-auto max-w-3xl px-6 pb-10">
           <h2 className="mb-5 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             Câu hỏi thường gặp
           </h2>
@@ -356,10 +366,12 @@ export default async function CungDetailPage({
             ))}
           </div>
         </section>
+        </RevealOnScroll>
 
         {/* Bắt email */}
-        <section className="relative mx-auto max-w-3xl px-6 pb-10">
-          <div className="rounded-xl border border-border bg-card/40 p-6">
+        <RevealOnScroll>
+        <section className="rv-up relative mx-auto max-w-3xl px-6 pb-10">
+          <div className="rounded-card-editorial border border-border bg-card/40 p-6">
             <h2 className="mb-3 font-heading text-lg font-semibold text-foreground">
               Nhận bài về cung {z.name} và chiêm tinh
             </h2>
@@ -372,10 +384,12 @@ export default async function CungDetailPage({
             />
           </div>
         </section>
+        </RevealOnScroll>
 
         {/* CTA → bản đồ sao đầy đủ */}
-        <section className="relative mx-auto max-w-3xl px-6 pb-10">
-          <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent p-6 sm:p-8">
+        <RevealOnScroll>
+        <section className="rv-up relative mx-auto max-w-3xl px-6 pb-10">
+          <div className="rounded-card-editorial border border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent p-6 sm:p-8">
             <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
               Cung Mặt Trời chỉ là khởi đầu
             </h2>
@@ -398,9 +412,11 @@ export default async function CungDetailPage({
             </div>
           </div>
         </section>
+        </RevealOnScroll>
 
         {/* 11 cung còn lại */}
-        <section className="relative mx-auto max-w-3xl px-6 pb-12">
+        <RevealOnScroll>
+        <section className="rv-up relative mx-auto max-w-3xl px-6 pb-12">
           <h2 className="mb-4 font-heading text-lg font-semibold text-foreground">Các cung khác</h2>
           <div className="flex flex-wrap gap-2">
             {others.map((s) => (
@@ -412,6 +428,7 @@ export default async function CungDetailPage({
             kiểm chứng). Đây là công cụ khám phá bản thân để tham khảo, không phải lời phán số mệnh.
           </p>
         </section>
+        </RevealOnScroll>
 
         <div className="mx-auto max-w-6xl px-6 pb-12">
           <RelatedTools

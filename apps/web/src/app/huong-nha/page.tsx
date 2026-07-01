@@ -101,7 +101,10 @@ export default function HuongNhaPage() {
               Hướng tốt/xấu chỉ phụ thuộc cung phi (mệnh quái). Nếu đã biết cung phi của mình, tra
               thẳng ở đây.
             </p>
-            <div className="mt-4 overflow-x-auto">
+            <p className="mt-3 font-mono text-[11px] text-muted-foreground sm:hidden" aria-hidden="true">
+              ← vuốt ngang →
+            </p>
+            <div className="mt-2 overflow-x-auto sm:mt-4">
               <table className="w-full min-w-[560px] text-sm">
                 <thead>
                   <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">

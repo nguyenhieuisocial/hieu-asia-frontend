@@ -20,7 +20,7 @@ import type { FaqItem } from './seo/jsonld';
 
 /** Dải năm sinh có trang riêng — phủ phần lớn người đang sống + trẻ mới sinh. */
 export const FROM_YEAR = 1950;
-export const TO_YEAR = 2025;
+export const TO_YEAR = 2026;
 export const BIRTH_YEARS: number[] = Array.from(
   { length: TO_YEAR - FROM_YEAR + 1 },
   (_, i) => FROM_YEAR + i,

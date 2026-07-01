@@ -86,7 +86,7 @@ const LIMITATIONS = [
   'Giờ sinh không chính xác làm giảm confidence (xem /methodology cho confidence score).',
   'Dị biệt giữa trường phái Tử Vi (Bắc/Trung Châu/Tử Vân/Liễu Vô) — engine dùng Bắc phái.',
   'AI có thể diễn giải thiếu sắc thái Tử Vi sâu sắc — vẫn cần chuyên gia cho deep reading.',
-  'Palm Reading beta — chỉ là lớp tham chiếu phụ.',
+  'Xem Tướng beta — chỉ là lớp tham chiếu phụ.',
   'Bát Tự beta — chưa quyết định kết luận chính.',
 ];
 
@@ -105,7 +105,7 @@ const DATA_HANDLING = [
 ];
 
 const MODEL_ROUTING = [
-  'Primary: Anthropic Claude Opus.',
+  'Định hướng (theo thiết kế): Anthropic Claude Opus — thực tế có thể chạy model dự phòng khi cổng AI gián đoạn.',
   'Fallback: OpenAI GPT (khi Anthropic 429 hoặc unavailable).',
   'Vision (palm): Google Gemini.',
   'Tất cả model có thể thay đổi — methodology không bind model cụ thể mà bind capability + guardrail.',

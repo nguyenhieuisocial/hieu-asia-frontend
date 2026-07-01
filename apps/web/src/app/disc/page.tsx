@@ -226,7 +226,7 @@ export default function DiscPage() {
                       </div>
                     </div>
                     <div>
-                      <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-sky-300">
+                      <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold">
                         Giao tiếp &amp; làm việc
                       </div>
                       <p className="mt-1.5 text-sm leading-relaxed text-foreground/85">

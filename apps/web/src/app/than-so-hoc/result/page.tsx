@@ -131,7 +131,7 @@ export default function ThanSoHocResultPage() {
 
   return (
     <ToolPageShell
-      eyebrow="Numerology · Pythagoras"
+      eyebrow="Thần Số Học · Pythagoras"
       icon={<span aria-hidden="true">🔢</span>}
       title={
         <>
@@ -184,7 +184,7 @@ export default function ThanSoHocResultPage() {
               <CardContent className="flex items-start gap-5 p-5">
                 <div
                   aria-hidden="true"
-                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-gold/25 bg-gradient-to-br from-gold/15 via-background to-purple/20 font-heading text-2xl font-bold text-gold"
+                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-gold/25 bg-gradient-to-br from-gold/15 via-background to-gold/10 font-heading text-2xl font-bold text-gold"
                 >
                   {data.personal_month.number}
                 </div>
@@ -206,7 +206,7 @@ export default function ThanSoHocResultPage() {
               {data.pinnacle_cycles.map((p) => (
                 <div
                   key={p.index}
-                  className="rounded-xl border border-border bg-card/40 p-4 transition-colors hover:border-gold/30"
+                  className="rounded-xl border border-border bg-card/40 p-4 transition hover:border-gold/30 active:scale-[0.98]"
                 >
                   <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                     Đỉnh {p.index} · {p.age_range}
@@ -224,7 +224,7 @@ export default function ThanSoHocResultPage() {
               {data.challenges.map((c) => (
                 <div
                   key={c.index}
-                  className="rounded-xl border border-border bg-card/40 p-4 transition-colors hover:border-rose-400/30"
+                  className="rounded-xl border border-border bg-card/40 p-4 transition hover:border-rose-400/30 active:scale-[0.98]"
                 >
                   <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                     Thử thách {c.index}
@@ -372,14 +372,14 @@ function KarmicDebtSection({
 
 function HeroLifePath({ card, year }: { card: NumberCard; year: number }) {
   return (
-    <Card className="relative overflow-hidden border-gold/30 bg-gradient-to-br from-gold/10 via-card/60 to-purple/15">
+    <Card className="relative overflow-hidden border-gold/30 bg-gradient-to-br from-gold/10 via-card/60 to-gold/5">
       <div
         aria-hidden
         className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-gold/20 blur-3xl"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-16 -bottom-16 h-56 w-56 rounded-full bg-purple/30 blur-3xl"
+        className="pointer-events-none absolute -left-16 -bottom-16 h-56 w-56 rounded-full bg-gold/15 blur-3xl"
       />
       <CardContent className="relative p-6 sm:p-8">
         <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-8">
@@ -424,7 +424,7 @@ function NumberCardView({ card, highlight }: { card: NumberCard; highlight?: boo
       className={
         highlight
           ? 'border-gold/40 bg-gradient-to-br from-gold/10 to-transparent'
-          : 'border-border bg-card/40 transition-colors hover:border-gold/30'
+          : 'border-border bg-card/40 transition hover:border-gold/30 active:scale-[0.98]'
       }
     >
       <CardHeader className="pb-2">
@@ -647,7 +647,7 @@ function PremiumCta() {
     });
   };
   return (
-    <Card className="relative overflow-hidden border-gold/30 bg-gradient-to-br from-purple/20 via-card/40 to-gold/10">
+    <Card className="relative overflow-hidden border-gold/30 bg-gradient-to-br from-gold/15 via-card/40 to-gold/10">
       <div
         aria-hidden
         className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-gold/20 blur-3xl"

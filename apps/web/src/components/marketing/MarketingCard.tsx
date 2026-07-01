@@ -51,7 +51,7 @@ export function MarketingCard({
         'relative flex h-full flex-col overflow-hidden rounded-card-editorial border border-border',
         BG_CLASS[bg],
         PADDING_CLASS[padding],
-        'transition-colors duration-300 ease-editorial hover:border-gold/40',
+        'transition-colors duration-300 ease-editorial hover:border-gold/40 active:scale-[0.98] active:border-gold/60',
         className ?? '',
       ]
         .join(' ')

@@ -62,7 +62,7 @@ const CATEGORIES: ExplorerCategory[] = [
     id: 'kham-pha',
     icon: '🪞',
     label: 'Khám phá & tự kiểm',
-    blurb: 'So sánh các hệ, mô phỏng quyết định, bói toán cổ — và bài tự kiểm "đừng tin mù".',
+    blurb: 'So sánh các hệ, mô phỏng quyết định, luận mệnh cổ học — và bài tự kiểm "đừng tin mù".',
   },
 ];
 
@@ -93,7 +93,7 @@ const TOOLS: ExplorerTool[] = [
   { cat: 'hieu-ban-than', href: '/big-five', emoji: '📊', name: 'Big Five', desc: 'Mô hình 5 nhân tố: OCEAN — chuẩn mực tâm lý học hiện đại.' },
   { cat: 'hieu-ban-than', href: '/disc', emoji: '🎯', name: 'DISC', desc: 'Bốn phong cách hành vi: Dominance, Influence, Steadiness, Compliance.' },
   { cat: 'hieu-ban-than', href: '/enneagram', emoji: '🌀', name: 'Enneagram', desc: 'Chín nhóm tính cách — khám phá động cơ và nỗi sợ cốt lõi của bạn.' },
-  { cat: 'hieu-ban-than', href: '/than-so-hoc', emoji: '🔢', name: 'Thần Số Học', desc: 'Numerology: con số cuộc đời, sứ mệnh, linh hồn.' },
+  { cat: 'hieu-ban-than', href: '/than-so-hoc', emoji: '🔢', name: 'Thần Số Học', desc: 'Con số cuộc đời, sứ mệnh, linh hồn.' },
   { cat: 'hieu-ban-than', href: '/xem-tuong', emoji: '🖐️', name: 'Xem Chỉ Tay & Tướng Mặt', desc: 'Tải ảnh lòng bàn tay hoặc khuôn mặt — AI phân tích xu hướng tính cách theo tướng số học.' },
 
   // ── Chiêm tinh & Tarot ──────────────────────────────────────────

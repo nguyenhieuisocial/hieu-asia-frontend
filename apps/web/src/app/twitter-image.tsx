@@ -66,7 +66,7 @@ export default function TwitterImage() {
               display: 'flex',
             }}
           >
-            Tử Vi · MBTI · Palm Reading bằng AI
+            Tử Vi · MBTI · Xem Tướng bằng AI
           </div>
           <div
             style={{

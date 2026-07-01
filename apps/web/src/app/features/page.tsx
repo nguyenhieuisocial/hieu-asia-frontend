@@ -1,17 +1,19 @@
 /**
- * /features — Wave 60.35 editorial redesign.
- *
- * Refined Minimalism direction: 10 raw features → 3 categorical buckets
- * ("Phân tích lá số", "Cá nhân hoá & AI", "Mở rộng"), with the flagship
- * Tử Vi Đẩu Số rendered as a 2×2 featured tile to anchor the grid.
+ * /features — editorial content refresh (was Wave 60.35, 3 buckets / 10 tính
+ * năng — undercounted the live product). Now 4 categorical chapters that map
+ * to how the product is actually shaped:
+ *   01 "Năm lăng kính cốt lõi"        — the 5 flagship lenses (Tử Vi anchor).
+ *   02 "Lăng kính tâm lý & phương Tây" — DISC, Enneagram, Tarot, chiêm tinh, Dịch.
+ *   03 "Bộ ra quyết định"             — Mentor + simulator + nhật ký + tra cứu.
+ *   04 "Cộng đồng & hạ tầng"          — affiliate, quà, đa ngôn ngữ, realtime.
  *
  * Vault 71 brand voice "Hiểu mình. Quyết định mình." — keep copy concrete
  * and respect-driven (we do not sell certainty, we sell clarity).
  *
- * Every card now has a destination CTA (previous version left 3/10 dead).
- * Locked-behind-paywall features carry a `Premium` badge so users see the
- * pricing implication before they click. Card titles bumped to 20px / 700
- * weight (vault 102 typography rhythm).
+ * Every card has a destination CTA. Free/paid state is admin-configurable and
+ * changes, so we do NOT stamp per-tool `Premium` badges; instead we describe
+ * value and point gated unlocks at /pricing. `Mới` badge marks recent ships.
+ * Card titles 20px / 700 weight (vault 102 typography rhythm).
  *
  * Layout invariants:
  * - Mobile: single column, full-width cards.
@@ -34,6 +36,18 @@ import {
   Share2,
   Globe2,
   CalendarClock,
+  Layers,
+  Hexagon,
+  Sparkles,
+  Orbit,
+  Moon,
+  CircleDot,
+  Target,
+  TrendingUp,
+  GitCompare,
+  CalendarCheck,
+  Gift,
+  Users,
 } from 'lucide-react';
 import { Button } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
@@ -54,12 +68,12 @@ import { faqPage } from '@/lib/seo/jsonld';
 export const metadata: Metadata = {
   title: 'Tính năng',
   description:
-    'Tử Vi 12 cung, Bát Tự, MBTI, Big Five, Xem Tướng, Thần Số Học, AI Mentor, PDF Cẩm Nang, Tử Vi hôm nay, đa ngôn ngữ. Mọi tính năng của hieu.asia.',
+    'Năm lăng kính cốt lõi (Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng), thêm DISC, Enneagram, Tarot, bản đồ sao chiêm tinh, Kinh Dịch và bộ ra quyết định với AI Mentor — hơn 25 công cụ tự hiểu trên hieu.asia.',
   alternates: { canonical: 'https://hieu.asia/features' },
   openGraph: {
     title: 'Tính năng',
     description:
-      'Khám phá đầy đủ tính năng: Tử Vi 12 cung, Bát Tự, MBTI, Big Five, Xem Tướng, AI Mentor và nhiều hơn.',
+      'Năm lăng kính cốt lõi + DISC, Enneagram, Tarot, chiêm tinh phương Tây, Kinh Dịch và bộ ra quyết định với AI Mentor. Hơn 25 công cụ giúp bạn hiểu mình và quyết định.',
     url: 'https://hieu.asia/features',
     type: 'website',
     images: OG_DEFAULT_IMAGES,
@@ -67,11 +81,15 @@ export const metadata: Metadata = {
 };
 
 /**
- * Feature badge — visual cue for the pricing implication or recency.
- * - `premium` → locked behind a paid tier (Palm, PDF, Tử Vi hôm nay, đại vận lưu niên)
- * - `new`     → recently shipped (Affiliate, AI Mentor multimodal)
+ * Feature badge — visual cue for recency or maturity.
+ * - `new`  → recently shipped (DISC, Enneagram, decision suite, affiliate…)
+ * - `beta` → live but a secondary/cross-check layer (Bát Tự)
+ *
+ * NOTE: we no longer use a `premium` badge. Free/paid is admin-configurable
+ * and shifts over time, so absolute per-tool "Premium" claims go stale fast;
+ * gated unlocks are surfaced in copy via a /pricing link instead.
  */
-type Badge = 'premium' | 'new' | null;
+type Badge = 'new' | 'beta' | null;
 
 interface Feature {
   Icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
@@ -94,21 +112,17 @@ interface Bucket {
 
 const BUCKETS: readonly Bucket[] = [
   {
-    id: 'analysis',
-    eyebrow: 'Bucket 01',
-    title: 'Phân tích lá số',
+    id: 'core-lenses',
+    eyebrow: 'Chương 01',
+    title: 'Năm lăng kính cốt lõi',
     blurb:
-      'Nền tảng Đông phương truyền thống kết hợp khung tâm lý hiện đại. Năm lăng kính độc lập — thêm Thần Số Học và các công cụ cổ học khác — để bạn so sánh, không bị một nguồn duy nhất chi phối.',
+      'Nền tảng Đông phương truyền thống kết hợp khung tâm lý hiện đại. Năm lăng kính độc lập để bạn so sánh, không bị một nguồn duy nhất chi phối.',
     features: [
-      // Wave 60.37 CRIT-3 (sub-agent B): 3/4 CTAs in this bucket all said
-      // "Tìm hiểu/Khám phá X" — eye reads them as identical buttons. Rewrite
-      // each to hint at the concrete action so users see destination
-      // diversity (sample lá số · interpretation · calculator · upload).
       {
         Icon: Compass,
         anchor: 'tu-vi',
         title: 'Tử Vi Đẩu Số 12 cung',
-        desc: 'Lá số Bắc phái với 121 sao chính và phụ. Bản đồ 12 lĩnh vực đời sống — sự nghiệp, tài chính, tình cảm, sức khoẻ — kèm đại vận và lưu niên.',
+        desc: 'Lá số Bắc phái với 121 sao chính và phụ. Bản đồ 12 lĩnh vực đời sống — sự nghiệp, tài chính, tình cảm, sức khoẻ — kèm đại vận và lưu niên. Bản luận giải đầy đủ được mở khoá qua /pricing.',
         cta: { href: '/learn/tu-vi', label: 'Xem lá số mẫu' },
         featured: true,
       },
@@ -116,8 +130,9 @@ const BUCKETS: readonly Bucket[] = [
         Icon: Calendar,
         anchor: 'bat-tu',
         title: 'Bát Tự Tứ Trụ',
-        desc: 'Bốn trụ Năm – Tháng – Ngày – Giờ quanh Nhật Chủ (chính bạn). Hiểu thiên hướng bẩm sinh và thời điểm thuận để hành động, qua tương quan ngũ hành Kim – Mộc – Thủy – Hỏa – Thổ.',
+        desc: 'Bốn trụ Năm – Tháng – Ngày – Giờ quanh Nhật Chủ (chính bạn). Lớp đối chiếu phụ với Tử Vi, qua tương quan ngũ hành Kim – Mộc – Thủy – Hỏa – Thổ.',
         cta: { href: '/learn/bat-tu', label: 'Đọc giải nghĩa' },
+        badge: 'beta',
       },
       {
         Icon: Brain,
@@ -139,60 +154,152 @@ const BUCKETS: readonly Bucket[] = [
         title: 'Xem Tướng — Chỉ tay & Tướng mặt',
         desc: 'Tải ảnh lòng bàn tay hoặc khuôn mặt — AI vision đọc nét tướng, mô tả xu hướng tính cách (không phán số mệnh). Dùng được khi không có giờ sinh.',
         cta: { href: '/xem-tuong', label: 'Tải ảnh' },
-        badge: 'premium',
       },
     ],
   },
   {
-    id: 'personalization',
-    eyebrow: 'Bucket 02',
-    title: 'Cá nhân hoá & AI',
+    id: 'deep-lenses',
+    eyebrow: 'Chương 02',
+    title: 'Lăng kính tâm lý & phương Tây',
     blurb:
-      'Sau khi có lá số, dữ liệu sống cùng bạn. Mentor đối thoại, báo cáo xuất bản, thông điệp hàng ngày — tất cả căn cứ vào lá số của riêng bạn.',
+      'Thêm những góc nhìn sâu để bạn đối chiếu: tâm lý học hiện đại, chiêm tinh phương Tây, trực giác và Kinh Dịch — mỗi cái một cách kể về cùng một con người.',
+    features: [
+      {
+        Icon: Layers,
+        anchor: 'disc',
+        title: 'DISC — phong cách hành vi',
+        desc: 'Bốn xu hướng hành vi D · I · S · C — bạn ra quyết định, giao tiếp và làm việc nhóm theo cách nào. Thực dụng cho môi trường công việc.',
+        cta: { href: '/disc', label: 'Làm trắc nghiệm' },
+        badge: 'new',
+      },
+      {
+        Icon: Hexagon,
+        anchor: 'enneagram',
+        title: 'Enneagram — 9 kiểu động lực',
+        desc: '9 kiểu tính cách xoay quanh động lực và nỗi sợ cốt lõi — soi vào "vì sao" đằng sau hành vi, bổ sung cho MBTI và Big Five.',
+        cta: { href: '/enneagram', label: 'Khám phá kiểu của bạn' },
+        badge: 'new',
+      },
+      {
+        Icon: Sparkles,
+        anchor: 'tarot',
+        title: 'Tarot — trải bài phản chiếu',
+        desc: 'Rút 1 lá hoặc 3 lá để soi một câu hỏi đang trăn trở. Là công cụ phản chiếu nội tâm, không phải lời tiên tri chắc chắn.',
+        cta: { href: '/tarot', label: 'Rút bài' },
+      },
+      {
+        Icon: Orbit,
+        anchor: 'ban-do-sao',
+        title: 'Bản đồ sao (natal chart)',
+        desc: 'Bản đồ chiêm tinh phương Tây lúc bạn chào đời. Cung Mọc (Ascendant) cần giờ và nơi sinh chính xác — thiếu dữ liệu thì phần đó được lược bớt.',
+        cta: { href: '/ban-do-sao', label: 'Lập bản đồ sao' },
+      },
+      {
+        Icon: Moon,
+        anchor: 'cung-hoang-dao',
+        title: 'Cung hoàng đạo',
+        desc: '12 cung hoàng đạo theo ngày sinh — lối vào nhẹ nhàng vào chiêm tinh phương Tây trước khi đi sâu vào bản đồ sao đầy đủ.',
+        cta: { href: '/cung-hoang-dao', label: 'Xem cung của bạn' },
+      },
+      {
+        Icon: CircleDot,
+        anchor: 'gieo-que',
+        title: 'Kinh Dịch — Gieo quẻ',
+        desc: 'Gieo một quẻ Dịch cho tình huống bạn đang phân vân. 64 quẻ làm khung gợi mở để suy ngẫm, không phải phán định cứng nhắc.',
+        cta: { href: '/gieo-que', label: 'Gieo quẻ' },
+      },
+    ],
+  },
+  {
+    id: 'decisions',
+    eyebrow: 'Chương 03',
+    title: 'Bộ ra quyết định',
+    blurb:
+      'Hiểu mình mới là một nửa. Phần này biến hiểu biết thành hành động: Mentor đối thoại, mô phỏng lựa chọn, nhật ký, và cả kho tra cứu theo dịp cho việc lớn.',
     features: [
       {
         Icon: MessageSquareHeart,
         anchor: 'mentor',
         title: 'AI Mentor cá nhân hoá',
-        desc: 'Trò chuyện với Mentor về quyết định bạn đang cân nhắc. Mentor đặt câu hỏi, gợi ý các bước — bạn vẫn là người chọn con đường.',
-        cta: { href: '/onboarding?cta=mentor', label: 'Bắt đầu trò chuyện' },
+        desc: 'Trò chuyện với Mentor về quyết định bạn đang cân nhắc. Mentor hiểu lá số của bạn, đặt câu hỏi có ngữ cảnh và gợi ý các bước — bạn vẫn là người chọn con đường.',
+        cta: { href: '/decisions', label: 'Bắt đầu trò chuyện' },
+        featured: true,
+        badge: 'new',
+      },
+      {
+        Icon: Target,
+        anchor: 'decision-simulator',
+        title: 'Decision Simulator',
+        desc: 'Đặt hai, ba phương án cạnh nhau và xem mỗi lựa chọn dẫn tới đâu — dựa trên lá số và bối cảnh của bạn, để cân nhắc trước khi quyết.',
+        cta: { href: '/decision-simulator', label: 'Mô phỏng lựa chọn' },
         badge: 'new',
       },
       {
         Icon: FileText,
-        anchor: 'pdf',
-        title: 'PDF Cẩm Nang xuất bản',
-        desc: 'Tải toàn bộ phân tích thành PDF được thiết kế — chia sẻ với người thân hoặc lưu giữ làm cẩm nang cá nhân.',
-        cta: { href: '/pricing#premium', label: 'Mở khoá PDF' },
-        badge: 'premium',
+        anchor: 'journal',
+        title: 'Nhật ký & Weekly Review',
+        desc: 'Ghi lại quyết định và cảm nhận trong Nhật ký, rồi nhìn lại mỗi tuần với Weekly Review — thấy mình đang đi theo hướng nào.',
+        cta: { href: '/journal', label: 'Mở nhật ký' },
+        badge: 'new',
+      },
+      {
+        Icon: Users,
+        anchor: 'compatibility',
+        title: 'Hợp đôi & Hướng nghề',
+        desc: 'Compatibility soi sự hợp – khác giữa hai người; Career-fit gợi ý hướng nghề hợp với thiên hướng của bạn. Đối chiếu, không phán quyết.',
+        cta: { href: '/compatibility', label: 'Xem mức độ hợp' },
+      },
+      {
+        Icon: TrendingUp,
+        anchor: 'planning',
+        title: 'Kế hoạch & Timeline đại vận',
+        desc: 'Bản đồ cá nhân, kế hoạch năm và tháng, cùng Timeline đại vận — xâu chuỗi các giai đoạn lớn để bạn nhìn đường dài thay vì từng ngày rời rạc.',
+        cta: { href: '/timeline', label: 'Xem timeline đại vận' },
+      },
+      {
+        Icon: GitCompare,
+        anchor: 'explore',
+        title: 'So sánh, Hỏi đáp & Xem hợp nhóm',
+        desc: 'So sánh lăng kính để thấy các góc nhìn nói gì về cùng một điểm, đặt câu hỏi tự do ở Hỏi đáp, hay xem mức hợp của cả nhóm / gia đình.',
+        cta: { href: '/so-sanh', label: 'So sánh lăng kính' },
       },
       {
         Icon: Sunrise,
         anchor: 'daily',
-        title: 'Tử Vi hôm nay',
-        desc: 'Mỗi sáng một thông điệp ngắn dựa trên lá số của bạn. Không phải tử vi chung chung — cá nhân hoá theo cung mệnh và đại vận hiện tại.',
+        title: 'Tử Vi hôm nay & PDF Cẩm Nang',
+        desc: 'Mỗi sáng một thông điệp ngắn theo cung mệnh và đại vận hiện tại. Toàn bộ phân tích cũng xuất được thành PDF Cẩm Nang khi bạn mở khoá báo cáo.',
         cta: { href: '/tu-vi-hom-nay', label: 'Xem hôm nay' },
-        badge: 'premium',
+      },
+      {
+        Icon: CalendarCheck,
+        anchor: 'occasion-tools',
+        title: 'Tra cứu theo dịp & việc lớn',
+        desc: 'Lịch vạn niên, xem ngày tốt, giờ hoàng đạo, sao hạn, ngày kiêng kỵ, đặt tên ngũ hành, hợp tuổi, xem tuổi cưới – làm nhà – khai trương, hướng nhà — một kho tra cứu cho từng dịp.',
+        cta: { href: '/cong-cu', label: 'Mở kho công cụ' },
       },
     ],
   },
   {
-    id: 'extensions',
-    eyebrow: 'Bucket 03',
-    // Wave 60.37.c HIGH-5 (sub-agent B): "Mở rộng" read as a junk drawer
-    // — affiliate (community) + i18n + realtime (infra) had no shared axis.
-    // Rename to a defensible 2-word grouping that legitimizes the cluster.
+    id: 'community',
+    eyebrow: 'Chương 04',
     title: 'Cộng đồng & hạ tầng',
     blurb:
-      'Cộng đồng chia sẻ và hạ tầng vận hành — affiliate hoa hồng minh bạch, đa ngôn ngữ, đại vận lưu niên cập nhật theo thời gian thực.',
+      'Phần giữ trải nghiệm sống động và minh bạch — chia sẻ nhận quà, affiliate hoa hồng rõ ràng, đa ngôn ngữ, và đại vận cập nhật theo thời gian thực.',
     features: [
+      {
+        Icon: Gift,
+        anchor: 'rewards',
+        title: 'Điểm danh nhận quà & mời bạn',
+        desc: 'Điểm danh mỗi ngày để nhận quà, và mời bạn bè cùng dùng để cả hai nhận voucher. Một cách nhẹ nhàng để giữ thói quen tự soi mình.',
+        cta: { href: '/qua', label: 'Nhận quà hôm nay' },
+        badge: 'new',
+      },
       {
         Icon: Share2,
         anchor: 'affiliate',
         title: 'Affiliate program',
-        desc: 'Chia sẻ hieu.asia với bạn bè — nhận hoa hồng minh bạch khi họ đăng ký gói. Bảng theo dõi riêng để xem hiệu quả.',
+        desc: 'Chia sẻ hieu.asia và nhận hoa hồng minh bạch: 30% trên đơn đầu tiên và 10% trên các lần gia hạn. Một tầng duy nhất, không đa cấp.',
         cta: { href: '/affiliate', label: 'Tham gia affiliate' },
-        badge: 'new',
       },
       {
         Icon: Globe2,
@@ -235,9 +342,10 @@ const FEATURES_FAQ: readonly FaqItem[] = [
     q: 'Mentor AI dùng mô hình nào?',
     a: (
       <p>
-        Mentor đối thoại dùng Claude — model AI hiện đại với cửa sổ ngữ cảnh
-        lớn. Mentor không phải chatbot scripted — nó hiểu lá số của bạn và đặt
-        câu hỏi có ngữ cảnh.
+        Mentor đối thoại chạy trên các mô hình AI hàng đầu với cửa sổ ngữ cảnh
+        lớn. Quan trọng hơn tên mô hình là cách nó hành xử: Mentor hiểu lá số của
+        bạn, đặt câu hỏi có ngữ cảnh và gợi ý các bước — không phải chatbot trả
+        lời theo kịch bản, và bạn vẫn là người quyết định.
       </p>
     ),
   },
@@ -254,10 +362,11 @@ const FEATURES_FAQ: readonly FaqItem[] = [
     q: 'Tính năng nào miễn phí, tính năng nào trả phí?',
     a: (
       <p>
-        Khảo sát đầu vào và bản rút gọn Tử Vi / Bát Tự / MBTI / Big Five / Thần Số
-        Học luôn miễn phí. Xem Tướng, PDF Cẩm Nang và Tử Vi hôm nay (badge{' '}
-        <span className="font-medium text-gold-700">Premium</span>) yêu cầu một
-        trong các gói trả phí. Xem chi tiết tại{' '}
+        Bạn dùng thử được phần lớn công cụ mà không mất phí; phần được mở khoá là
+        các bản luận giải sâu — đầy đủ nhất là bản luận giải Tử Vi. Ranh giới
+        miễn phí / trả phí có thể thay đổi theo thời gian, nên thay vì nêu cứng
+        từng tính năng, bạn xem trạng thái mới nhất và những gì mỗi gói mở khoá
+        tại{' '}
         <Link href="/pricing" className="text-gold-700 underline-offset-2 hover:underline">
           /pricing
         </Link>
@@ -268,18 +377,18 @@ const FEATURES_FAQ: readonly FaqItem[] = [
 ];
 
 /**
- * Badge pill — premium = gold, new = jade. Mono-font label keeps the
+ * Badge pill — beta = gold, new = jade. Mono-font label keeps the
  * editorial idiom consistent with the trust strip and ornament divider.
  */
 function FeatureBadge({ badge }: { badge: Exclude<Badge, null> }) {
-  if (badge === 'premium') {
+  if (badge === 'beta') {
     return (
       // /ultrareview HIGH-2: `text-gold` failed AA on cream → `text-gold-700`
       // in light, `text-gold` in dark. Wave 60.37.c HIGH-6 (sub-agent B):
       // drop `bg-gold/10` cream-on-cream blob, keep `border-gold/60` only —
       // reads more architectural and competes less with the card's own bg.
       <span className="inline-flex items-center rounded-full border border-gold/60 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700 dark:text-gold">
-        Premium
+        Beta
       </span>
     );
   }
@@ -376,13 +485,15 @@ function FeatureCard({ feature }: { feature: Feature }) {
  * Keeps bucket.title string-typed in the BUCKETS array (no JSX in data).
  */
 function renderBucketTitle(id: string, title: string) {
-  // analysis: "Phân tích lá số"   → italicise "Phân tích"
-  // personalization: "Cá nhân hoá & AI" → italicise "Cá nhân hoá"
-  // extensions: "Cộng đồng & hạ tầng" → italicise "Cộng đồng"
+  // core-lenses:  "Năm lăng kính cốt lõi"        → italicise "Năm lăng kính"
+  // deep-lenses:  "Lăng kính tâm lý & phương Tây" → italicise "Lăng kính"
+  // decisions:    "Bộ ra quyết định"             → italicise "Bộ ra"
+  // community:    "Cộng đồng & hạ tầng"          → italicise "Cộng đồng"
   const splitAt: Record<string, number> = {
-    analysis: 'Phân tích'.length,
-    personalization: 'Cá nhân hoá'.length,
-    extensions: 'Cộng đồng'.length,
+    'core-lenses': 'Năm lăng kính'.length,
+    'deep-lenses': 'Lăng kính'.length,
+    decisions: 'Bộ ra'.length,
+    community: 'Cộng đồng'.length,
   };
   const cut = splitAt[id];
   if (!cut) return title;
@@ -496,7 +607,7 @@ const FEATURES_FAQ_SCHEMA = [
   },
   {
     q: 'Mentor AI dùng mô hình nào?',
-    a: 'Mentor đối thoại dùng Claude — model AI hiện đại với cửa sổ ngữ cảnh lớn. Mentor không phải chatbot scripted — nó hiểu lá số của bạn và đặt câu hỏi có ngữ cảnh.',
+    a: 'Mentor đối thoại chạy trên các mô hình AI hàng đầu với cửa sổ ngữ cảnh lớn. Quan trọng hơn tên mô hình là cách nó hành xử: Mentor hiểu lá số của bạn, đặt câu hỏi có ngữ cảnh và gợi ý các bước — không phải chatbot trả lời theo kịch bản, và bạn vẫn là người quyết định.',
   },
   {
     q: 'PDF có thể xuất nhiều lần?',
@@ -504,7 +615,7 @@ const FEATURES_FAQ_SCHEMA = [
   },
   {
     q: 'Tính năng nào miễn phí, tính năng nào trả phí?',
-    a: 'Khảo sát đầu vào và bản rút gọn Tử Vi / Bát Tự / MBTI / Big Five / Thần Số Học luôn miễn phí. Xem Tướng, PDF Cẩm Nang và Tử Vi hôm nay (badge Premium) yêu cầu một trong các gói trả phí. Xem chi tiết tại /pricing.',
+    a: 'Bạn dùng thử được phần lớn công cụ mà không mất phí; phần được mở khoá là các bản luận giải sâu — đầy đủ nhất là bản luận giải Tử Vi. Ranh giới miễn phí / trả phí có thể thay đổi theo thời gian, nên thay vì nêu cứng từng tính năng, bạn xem trạng thái mới nhất và những gì mỗi gói mở khoá tại /pricing.',
   },
 ];
 
@@ -519,14 +630,14 @@ export default function FeaturesPage() {
             Wave 60.79.T1 (vault 112 P0-04): add gold-ring ornament so the
             right half of the hero is no longer empty on lg+. */}
         <MarketingHero
-          eyebrow="SẢN PHẨM · 10 TÍNH NĂNG · 3 CHƯƠNG"
+          eyebrow="SẢN PHẨM · 25+ CÔNG CỤ · 4 CHƯƠNG"
           title={
             <>
-              Năm ống kính, <em className="italic text-gold-soft">mười</em> ngôn
+              Năm ống kính, <em className="italic text-gold-soft">nhiều</em> ngôn
               ngữ tự hiểu<span className="text-gold-dot">.</span>
             </>
           }
-          subtitle="Từ phân tích sao trên cung mệnh đến nhật ký nội tâm có A.I phản chiếu — tất cả nhằm giúp bạn nhận diện chính mình rõ hơn từng ngày."
+          subtitle="Năm lăng kính cốt lõi, thêm tâm lý hiện đại, chiêm tinh phương Tây và cả bộ ra quyết định — từ phân tích sao trên cung mệnh đến nhật ký nội tâm có A.I phản chiếu, giúp bạn nhận diện chính mình rõ hơn từng ngày."
           primaryCta={{ label: 'Bắt đầu luận giải', href: '/onboarding' }}
           secondaryCta={{ label: 'Xem bảng giá', href: '/pricing' }}
           ornament="gold-ring"

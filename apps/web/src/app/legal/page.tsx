@@ -12,7 +12,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 export const metadata: Metadata = {
   title: 'Pháp lý',
   description:
-    'Tổng hợp tài liệu pháp lý của hieu.asia: chính sách bảo mật, điều khoản, xuất và xoá dữ liệu cá nhân theo GDPR và Nghị định 13/2023.',
+    'Tổng hợp tài liệu pháp lý của hieu.asia: chính sách bảo mật, điều khoản, xuất và xoá dữ liệu cá nhân theo GDPR và Nghị định 356/2025/NĐ-CP (thay thế 13/2023).',
   alternates: { canonical: 'https://hieu.asia/legal' },
   // Hub mỏng trùng cột "Pháp lý" ở footer (đã trỏ thẳng Privacy/Terms). Để
   // noindex + bỏ khỏi sitemap (audit cấu trúc 2026-06-21) — dồn SEO về trang
@@ -37,7 +37,7 @@ const SECTIONS = [
     href: '/account',
     icon: Download,
     title: 'Xuất dữ liệu cá nhân',
-    desc: 'GDPR Điều 20 / Nghị định 13/2023 — tải JSON toàn bộ lá số, mentor sessions, settings.',
+    desc: 'GDPR Điều 20 / Nghị định 356/2025/NĐ-CP (thay thế 13/2023) — tải JSON toàn bộ lá số, mentor sessions, settings.',
   },
   {
     href: '/account',
@@ -68,9 +68,9 @@ export default function LegalHubPage() {
               </span>
             </h1>
             <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
-              hieu.asia tuân thủ GDPR và Nghị định 13/2023 về Bảo vệ dữ liệu cá
-              nhân. Bạn có quyền xem, xuất, sửa và xoá dữ liệu của mình bất cứ
-              lúc nào.
+              hieu.asia tuân thủ GDPR, Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15
+              và Nghị định 356/2025/NĐ-CP (thay thế 13/2023). Bạn có quyền xem,
+              xuất, sửa và xoá dữ liệu của mình bất cứ lúc nào.
             </p>
           </div>
         </section>

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { BangChungTool } from '@/components/bang-chung/BangChungTool';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { deriveProofCard, firstParam } from '@/lib/bang-chung/share-card';
@@ -133,13 +134,14 @@ export default function BangChungPage() {
         <section className="space-y-8">
           <BangChungTool />
 
-          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+          <RevealOnScroll>
+          <section className="rounded-card-editorial border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
               Cách hoạt động — 3 bước
             </h2>
             <div className="mt-4 grid gap-3 sm:grid-cols-3">
               {STEPS.map((s) => (
-                <div key={s.n} className="rounded-xl border border-border bg-background/40 p-4">
+                <div key={s.n} className="rounded-card-editorial border border-border bg-background/40 p-4 transition hover:border-primary/30 active:scale-[0.98]">
                   <div className="font-heading text-2xl font-bold text-gold-700">{s.n}</div>
                   <div className="mt-1 font-heading text-base font-semibold text-foreground">{s.t}</div>
                   <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{s.d}</p>
@@ -147,9 +149,11 @@ export default function BangChungPage() {
               ))}
             </div>
           </section>
+          </RevealOnScroll>
 
-          <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+          <RevealOnScroll>
+          <section className="rounded-card-editorial border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">
@@ -161,6 +165,7 @@ export default function BangChungPage() {
               ))}
             </dl>
           </section>
+          </RevealOnScroll>
         </section>
       </ToolPageShell>
     </>

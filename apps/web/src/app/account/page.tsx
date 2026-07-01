@@ -210,14 +210,14 @@ function AccountPageInner() {
                 Tài khoản
               </span>
             </div>
-            <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
               {SETTINGS_LINKS.map((s) => {
                 const Icon = s.icon;
                 return (
                   <li key={s.href}>
                     <Link
                       href={s.href}
-                      className="flex items-center gap-2 rounded-lg border border-border bg-card/30 px-3 py-2.5 text-xs text-foreground/80 transition hover:border-gold/40 hover:text-gold"
+                      className="flex min-h-11 items-center gap-2 rounded-lg border border-border bg-card/30 px-3 py-2.5 text-xs text-foreground/80 transition hover:border-gold/40 hover:text-gold active:scale-[0.98]"
                     >
                       <Icon className="h-3.5 w-3.5 text-gold/70" aria-hidden />
                       <span className="truncate">{s.label}</span>

@@ -11,9 +11,9 @@ import { describe, it, expect } from 'vitest';
 import { deskDirections, DESK_USE, isValidBirthYear } from './huong-ban-data';
 
 describe('deskDirections — biên', () => {
-  it('trả null khi năm ngoài 1930–2025', () => {
+  it('trả null khi năm ngoài 1930–2026', () => {
     expect(deskDirections(1929, 'nam')).toBeNull();
-    expect(deskDirections(2026, 'nu')).toBeNull();
+    expect(deskDirections(2027, 'nu')).toBeNull();
     expect(deskDirections(Number.NaN, 'nam')).toBeNull();
     expect(isValidBirthYear(1990)).toBe(true);
   });
@@ -21,7 +21,7 @@ describe('deskDirections — biên', () => {
 
 describe('deskDirections — bất biến toàn dải × 2 giới', () => {
   it('workDir=Sinh Khí, studyDir=Phục Vị; good/bad 4-4 không trùng', () => {
-    for (let y = 1930; y <= 2025; y++) {
+    for (let y = 1930; y <= 2026; y++) {
       for (const g of ['nam', 'nu'] as const) {
         const d = deskDirections(y, g);
         expect(d, `năm ${y} ${g}`).not.toBeNull();

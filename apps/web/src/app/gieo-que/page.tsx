@@ -15,6 +15,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
 import { parseTrigrams, getHaoDongMota, readingFocus } from '@/lib/hao-dong';
@@ -135,7 +136,7 @@ export default function GieoQuePage() {
       <div className="mx-auto mb-6 max-w-3xl">
         <Link
           href="/gieo-que/y-nghia"
-          className="flex items-center justify-between gap-3 rounded-lg border border-gold/25 bg-gold/5 px-4 py-3 text-sm transition-colors hover:bg-gold/10"
+          className="flex items-center justify-between gap-3 rounded-lg border border-gold/25 bg-gold/5 px-4 py-3 text-sm transition active:scale-[0.98] hover:bg-gold/10 hover:border-gold/40"
         >
           <span className="text-foreground/85">📖 <b className="text-foreground">Ý nghĩa 64 quẻ</b> — tra cứu tượng quẻ, thế cục &amp; lời khuyên từng quẻ</span>
           <span className="shrink-0 text-gold">Mở →</span>
@@ -445,7 +446,7 @@ export default function GieoQuePage() {
                   return (
                     <Link
                       href={`/gieo-que/y-nghia/${queSlug}`}
-                      className="flex items-center justify-between rounded-lg border border-gold/30 bg-gold/5 px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-gold/10"
+                      className="flex items-center justify-between rounded-lg border border-gold/30 bg-gold/5 px-4 py-3 text-sm font-medium text-foreground transition active:scale-[0.98] hover:bg-gold/10 hover:border-gold/40"
                     >
                       <span>
                         Đọc sâu quẻ <span className="text-gold-700">{result.hexagramPrimary.nameVi}</span>
@@ -579,9 +580,10 @@ export default function GieoQuePage() {
           </div>
         </section>
 
+        <RevealOnScroll>
         <section
           aria-labelledby="gq-about-heading"
-          className="mt-12 border-t border-border pt-10"
+          className="mt-12 border-t border-border pt-10 rv-up"
         >
           <h2
             id="gq-about-heading"
@@ -612,8 +614,10 @@ export default function GieoQuePage() {
             </p>
           </div>
         </section>
+        </RevealOnScroll>
 
-        <section aria-labelledby="gq-faq-heading" className="mt-10">
+        <RevealOnScroll>
+        <section aria-labelledby="gq-faq-heading" className="mt-10 rv-up">
           <h2
             id="gq-faq-heading"
             className="font-heading text-xl font-semibold text-foreground sm:text-2xl"
@@ -624,7 +628,7 @@ export default function GieoQuePage() {
             {FAQ.map((f) => (
               <details
                 key={f.q}
-                className="group rounded-lg border border-border bg-card/40 px-4 py-3"
+                className="group rounded-lg border border-border bg-card/40 px-4 py-3 transition-colors hover:border-gold/40"
               >
                 <summary className="cursor-pointer list-none font-medium text-foreground [&::-webkit-details-marker]:hidden">
                   {f.q}
@@ -636,6 +640,7 @@ export default function GieoQuePage() {
             ))}
           </dl>
         </section>
+        </RevealOnScroll>
       </ToolPageShell>
       <StickyMobileCta trackId="gieo-que" />
     </>

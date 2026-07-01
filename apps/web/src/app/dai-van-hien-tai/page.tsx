@@ -3,9 +3,9 @@ import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { DaiVanHienTaiForm } from './form';
 
 export const metadata: Metadata = {
-  title: 'Xem đại vận hiện tại — chu kỳ 10 năm bạn đang ở miễn phí',
+  title: 'Xem đại vận hiện tại — chu kỳ 10 năm bạn đang ở',
   description:
-    'Tra cứu đại vận hiện tại miễn phí: chu kỳ 10 năm bạn đang ở, chủ đề chính, cơ hội + rủi ro chính. Theo lá số Tử Vi Đẩu Số.',
+    'Tra cứu đại vận hiện tại: chu kỳ 10 năm bạn đang ở, chủ đề chính, cơ hội + rủi ro chính theo lá số Tử Vi Đẩu Số. Xem những gì mở khoá tại /pricing.',
   alternates: { canonical: 'https://hieu.asia/dai-van-hien-tai' },
   openGraph: {
     title: 'Đại vận hiện tại',

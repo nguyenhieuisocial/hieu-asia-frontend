@@ -228,7 +228,8 @@ html {
 /* ===== ShimmerText — sweep vàng dùng CHUNG (1 keyframe toàn site) =====
  * Trước đây ShimmerText inject <style> theo từng instance (useId) → CSS lọt vào
  * textContent của heading (kể cả <h1> LCP) + nesting <style> trong <h1> không hợp lệ.
- * Gom về 1 class .fx-shimmer + 1 keyframe ở đây; component chỉ gắn class. */
+ * Gom về 1 class .fx-shimmer + 1 keyframe ở đây; component chỉ gắn class.
+ * Quy ước motion + i18n: docs/homepage-motion-i18n-guardrails.md */
 .fx-shimmer {
   background: linear-gradient(100deg, #A47532 0%, #A47532 38%, #F5E1AA 50%, #A47532 62%, #A47532 100%);
   background-size: 250% 100%;
@@ -241,6 +242,41 @@ html {
   .fx-shimmer { animation: fxShimmer 4.5s linear infinite; }
 }
 @keyframes fxShimmer { 0% { background-position: -150% 0; } 100% { background-position: 250% 0; } }
+
+/* ===== Hero entrance — "màn chào" 1 lần khi tải (KHÔNG áp cho <h1> LCP) =====
+ * Chỉ áp cho eyebrow/subcopy/form quanh tiêu đề → cảm giác "settle in" sang
+ * mà KHÔNG trì hoãn LCP (H1 hiện tức thì). Toàn bộ trong no-preference nên
+ * reduced-motion → hiện ngay, không ẩn. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-enter { opacity: 0; animation: heroEnter .65s cubic-bezier(.2, .7, .2, 1) both; }
+}
+@keyframes heroEnter { from { opacity: 0; transform: translateY(.55em); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===== Chuyển trang mượt — fade-in nhẹ khi điều hướng (hết "bụp") =====
+ * app/template.tsx remount mỗi lần đổi trang → animation chạy lại. CHỈ opacity
+ * (KHÔNG transform → không tạo containing-block, giữ position:fixed/sticky của
+ * nav + CTA dính). Lần tải đầu bị bỏ qua ở template (giữ LCP). */
+@media (prefers-reduced-motion: no-preference) {
+  .page-fade { animation: pageFade .32s ease-out both; }
+}
+@keyframes pageFade { from { opacity: 0; } to { opacity: 1; } }
+
+/* ===== AuroraBackdrop — glow trôi sau hero (CSS dùng chung) =====
+ * KHÔNG để inline <style> trong component: React 19 dời/dedupe <style> nên 2
+ * instance (hero + MultiHero) phát sinh lệch vị trí server↔client → hydration
+ * #418. Để ở đây + opacity theo biến --ao (set qua data-i). */
+.aur { position: absolute; inset: 0; overflow: hidden; pointer-events: none; --ao: 0.34; }
+.aur[data-i='rich'] { --ao: 0.55; }
+.aur-blob { position: absolute; border-radius: 9999px; filter: blur(66px); will-change: transform; }
+.aur-a { top: -10%; left: 8%; width: 46%; height: 60%; background: radial-gradient(circle, rgba(224, 174, 98, var(--ao)) 0%, rgba(224, 174, 98, 0) 70%); animation: auroraA 18s ease-in-out infinite; }
+.aur-b { top: 6%; right: 2%; width: 42%; height: 55%; background: radial-gradient(circle, rgba(164, 117, 50, var(--ao)) 0%, rgba(164, 117, 50, 0) 70%); animation: auroraB 22s ease-in-out infinite; }
+.aur-c { bottom: -14%; left: 30%; width: 50%; height: 60%; background: radial-gradient(circle, rgba(212, 162, 97, var(--ao)) 0%, rgba(212, 162, 97, 0) 70%); animation: auroraC 26s ease-in-out infinite; }
+.aur-d { top: 24%; left: -8%; width: 38%; height: 50%; background: radial-gradient(circle, rgba(184, 146, 61, calc(var(--ao) * 0.8)) 0%, rgba(184, 146, 61, 0) 72%); animation: auroraD 31s ease-in-out infinite; }
+@keyframes auroraA { 0%, 100% { transform: translate(-12%, -8%) scale(1); } 50% { transform: translate(8%, 6%) scale(1.18); } }
+@keyframes auroraB { 0%, 100% { transform: translate(10%, -6%) scale(1.1); } 50% { transform: translate(-6%, 10%) scale(0.92); } }
+@keyframes auroraC { 0%, 100% { transform: translate(-4%, 10%) scale(0.95); } 50% { transform: translate(6%, -8%) scale(1.15); } }
+@keyframes auroraD { 0%, 100% { transform: translate(6%, 4%) scale(1.05); } 50% { transform: translate(-9%, -7%) scale(1.28); } }
+@media (prefers-reduced-motion: reduce) { .aur-a, .aur-b, .aur-c, .aur-d { animation: none; } }
 
 /* Same rationale for faint-gold LABEL text — the mono "eyebrow" tags above
  * headings (`text-gold/80|85|90`, ~11px) sit at ~2:1 on cream (gold #B8923D
@@ -646,7 +682,7 @@ body {
   gap: 0.4rem;
   border-radius: 8px;
   border: 1px solid hsl(var(--border));
-  background-color: hsl(var(--card));
+  background-color: transparent;
   padding: 0.35rem 0.55rem;
   font-family: var(--font-be-vietnam), system-ui, sans-serif;
   font-size: 0.8rem;
@@ -792,7 +828,66 @@ body {
 }
 
 /* ── OracleBrain graph (HTML + SVG: translatable text, no clipping, calm) ──── */
-.ob-section { background: #14161a; position: relative; overflow: hidden; }
+/* Bộ não Oracle — cảm giác vũ trụ bao la (Milky Way): nền deep-space có chiều
+ * sâu (vignette tối dần ra rìa → thấy mình nhỏ bé), bụi sao dày, dải Ngân Hà
+ * chéo, vầng nebula ấm (vàng) + lạnh (tím mystic/xanh). Viền TRÊN & DƯỚI tan
+ * mềm vào section sáng kế bên → chuyển màu mượt, hết tương phản cứng. */
+.ob-section {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  /* khoảng đệm rộng để dải chuyển màu dài & mượt mà không đè nội dung */
+  padding-block: 8rem;
+  background-color: #08090c;
+  background-repeat: no-repeat;
+  background-image:
+    /* CHUYỂN SECTION mượt–nhẹ–tinh tế: dải tan DÀI 120px, easing nhiều chặng,
+     * tính theo px (đều trên mọi màn) + theme-adaptive (hsl var / alpha). Tách
+     * 2 dải (trên + dưới) neo theo mép để độ dài luôn cố định. */
+    linear-gradient(to bottom, hsl(var(--background)) 0px, hsl(var(--background) / 0.86) 30px, hsl(var(--background) / 0.5) 58px, hsl(var(--background) / 0.22) 86px, hsl(var(--background) / 0.06) 106px, transparent 122px),
+    linear-gradient(to top, hsl(var(--background)) 0px, hsl(var(--background) / 0.86) 30px, hsl(var(--background) / 0.5) 58px, hsl(var(--background) / 0.22) 86px, hsl(var(--background) / 0.06) 106px, transparent 122px),
+    /* sao foreground thưa, sáng rõ */
+    radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1.6px 1.6px at 41% 30%, rgba(236, 224, 200, 0.8), transparent),
+    radial-gradient(1px 1px at 69% 20%, rgba(255, 255, 255, 0.75), transparent),
+    radial-gradient(1.6px 1.6px at 83% 56%, rgba(236, 224, 200, 0.75), transparent),
+    radial-gradient(1px 1px at 34% 88%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1.6px 1.6px at 52% 50%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1px 1px at 91% 36%, rgba(255, 255, 255, 0.6), transparent),
+    /* DẢI NGÂN HÀ — dòng sông ánh sáng chéo (lõi sáng + quầng rộng) */
+    linear-gradient(147deg, transparent 37%, rgba(236, 224, 200, 0.07) 45%, rgba(224, 174, 98, 0.11) 49%, rgba(245, 235, 215, 0.16) 51.5%, rgba(198, 178, 228, 0.10) 55%, rgba(120, 140, 205, 0.05) 60%, transparent 68%),
+    linear-gradient(147deg, transparent 27%, rgba(180, 160, 215, 0.055) 50%, transparent 74%),
+    /* nebula ấm (vàng) + lạnh (tím mystic/xanh) + gợi ý thiên hà xa */
+    radial-gradient(50% 42% at 50% 45%, rgba(224, 174, 98, 0.13), transparent 70%),
+    radial-gradient(60% 52% at 82% 17%, rgba(150, 115, 205, 0.17), transparent 62%),
+    radial-gradient(55% 50% at 13% 84%, rgba(90, 125, 200, 0.12), transparent 60%),
+    radial-gradient(13% 9% at 27% 32%, rgba(236, 224, 200, 0.11), transparent 70%),
+    /* nền deep-space + vignette mạnh (chiều sâu → thấy mình nhỏ bé) */
+    radial-gradient(120% 92% at 50% 42%, #191c22 0%, #0e0f14 46%, #08090c 80%, #050609 100%);
+}
+/* nội dung nổi trên lớp bụi sao ::before */
+.ob-section > div { position: relative; z-index: 1; }
+/* bụi sao thiên hà — lớp sao dày tile lại (cảm giác vô số vì sao), tan mềm ở mép */
+.ob-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1px 1px at 25px 20px, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 90px 55px, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1px 1px at 140px 30px, rgba(236, 224, 200, 0.7), transparent),
+    radial-gradient(1px 1px at 60px 100px, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 120px 120px, rgba(255, 255, 255, 0.75), transparent),
+    radial-gradient(1px 1px at 170px 85px, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 40px 150px, rgba(236, 224, 200, 0.55), transparent);
+  background-size: 190px 165px;
+  background-repeat: repeat;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+  opacity: 0.75;
+}
 .ob-eyebrow { color: #e0ae62; }
 .ob-title { color: #f5f2ec; }
 .ob-sub { color: #a8a6a0; }
@@ -802,7 +897,18 @@ body {
   max-width: 680px;
   margin: 2rem auto 0;
   aspect-ratio: 5 / 4;
+  /* Đồ thị tương tác (tap), KHÔNG phải nội dung để chọn/kéo → chặn bôi-chọn +
+   * kéo-thả để bỏ cảm giác "kéo được nhóm" (bug user báo); tap vẫn sạch.
+   * -webkit-touch-callout: none để chặn long-press callout/kéo trên iOS/mobile
+   * (user-select:none một mình KHÔNG đủ trên WebKit di động). */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
+.ob-graph .ob-hub,
+.ob-graph .ob-sat,
+.ob-graph .ob-star,
+.ob-graph .ob-center { -webkit-user-drag: none; user-drag: none; -webkit-touch-callout: none; touch-action: manipulation; }
 .ob-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .ob-line { stroke: rgba(224, 174, 98, 0.28); stroke-width: 1.4; transition: stroke 0.25s ease; }
 .ob-line-on { stroke: rgba(224, 174, 98, 0.85); }
@@ -810,9 +916,10 @@ body {
   position: absolute;
   width: 2px; height: 2px;
   border-radius: 50%;
-  background: #eceae3;
+  background: #f3efe4;
   transform: translate(-50%, -50%);
-  opacity: 0.35;
+  opacity: 0.5;
+  box-shadow: 0 0 3px rgba(236, 224, 200, 0.5);
   animation: ob-twinkle 3.2s ease-in-out infinite;
 }
 @keyframes ob-twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.7; } }
@@ -904,6 +1011,49 @@ body {
 .ob-hub:focus-visible { outline: 2px solid rgba(224, 174, 98, 0.6); outline-offset: 2px; border-radius: 10px; }
 .ob-tool { color: rgba(224, 174, 98, 0.72); }
 .ob-link { color: #e0ae62; }
+.ob-hint { color: rgba(224, 174, 98, 0.55); }
+
+/* v3 — TAP TO FOCUS: nhóm được chọn nổi bật, nhóm khác mờ. Dùng `filter:opacity`
+ * (KHÔNG dùng `opacity`) vì .ob-hub/.ob-sat có animation fade-in [fill:both] giữ
+ * opacity:1 → sẽ ghi đè property `opacity`; filter thì xếp chồng lên, luôn ăn. */
+.ob-graph[data-sel] .ob-hub:not(.ob-hub-on) { filter: opacity(0.3); }
+.ob-graph[data-sel] .ob-sat:not(.ob-sat-on) { filter: opacity(0.2); }
+.ob-graph[data-sel] .ob-line:not(.ob-line-on) { stroke: rgba(224, 174, 98, 0.07); }
+.ob-hub-sel .ob-hub-dot { transform: scale(1.75); box-shadow: 0 0 18px rgba(224, 174, 98, 1); }
+.ob-hub-sel .ob-hub-label { color: #f5f2ec; }
+
+/* v3 — bảng chi tiết: liệt kê tên công cụ thật của nhóm đang chọn */
+.ob-detail {
+  margin: 1.25rem auto 0;
+  max-width: 30rem;
+  text-align: left;
+  border: 1px solid rgba(224, 174, 98, 0.25);
+  border-radius: 14px;
+  background: rgba(28, 26, 22, 0.55);
+  padding: 14px 16px;
+}
+.ob-detail-head { display: flex; align-items: center; gap: 0.5rem; }
+.ob-detail-title { font-weight: 700; color: #f5f2ec; }
+.ob-detail-count { font-size: 11px; color: #e0ae62; }
+.ob-detail-close {
+  margin-left: auto; width: 26px; height: 26px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 18px; line-height: 1; color: #a8a6a0;
+  background: rgba(224, 174, 98, 0.08); border: 1px solid rgba(224, 174, 98, 0.2);
+  cursor: pointer; transition: background 0.2s ease, color 0.2s ease;
+}
+.ob-detail-close:hover { background: rgba(224, 174, 98, 0.16); color: #f5f2ec; }
+.ob-detail-tools { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
+.ob-detail-tool {
+  font-size: 12px; padding: 0.22rem 0.6rem; border-radius: 999px;
+  background: rgba(224, 174, 98, 0.1); border: 1px solid rgba(224, 174, 98, 0.22);
+  color: #e8e4d8;
+}
+.ob-detail-link { display: inline-block; margin-top: 0.75rem; color: #e0ae62; }
+@media (prefers-reduced-motion: no-preference) {
+  .ob-detail { animation: ob-fade-in 0.3s ease both; }
+}
+
 /* draw the constellation in once when it scrolls into view */
 @media (prefers-reduced-motion: no-preference) {
   .ob-graph .ob-line { stroke-dasharray: 1; stroke-dashoffset: 1; }

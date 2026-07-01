@@ -6,7 +6,7 @@ import { EOSIDIN } from '@/components/learn/EOSIDIN';
 export const metadata: Metadata = {
   title: 'Học huyền học hiện đại',
   description:
-    'Tìm hiểu Tử Vi, Bát Tự, Thần Số Học, MBTI và xem chỉ tay — kiến thức nền tảng cho người mới, infographic trực quan, ngôn ngữ Việt dễ hiểu.',
+    'Tìm hiểu Tử Vi, Bát Tự, MBTI, Big Five, DISC, Enneagram, Tarot, Chiêm tinh phương Tây, xem chỉ tay và nhiều bộ môn khác — kiến thức nền tảng cho người mới, infographic trực quan, ngôn ngữ Việt dễ hiểu.',
   alternates: { canonical: 'https://hieu.asia/learn' },
 };
 

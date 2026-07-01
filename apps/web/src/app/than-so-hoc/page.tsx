@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { track } from '@/lib/analytics';
 
 const FEATURES: { title: string; body: string; icon: string }[] = [
@@ -81,7 +82,7 @@ export default function ThanSoHocLandingPage() {
       dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
     />
     <ToolPageShell
-      eyebrow="Numerology · Pythagoras"
+      eyebrow="Thần Số Học · Pythagoras"
         relatedSlug="/than-so-hoc"
       icon={<span aria-hidden="true">🔢</span>}
       title={
@@ -98,14 +99,14 @@ export default function ThanSoHocLandingPage() {
       <div className="mx-auto mb-6 max-w-3xl">
         <Link
           href="/than-so-hoc/y-nghia"
-          className="flex items-center justify-between gap-3 rounded-lg border border-gold/25 bg-gold/5 px-4 py-3 text-sm transition-colors hover:bg-gold/10"
+          className="flex items-center justify-between gap-3 rounded-lg border border-gold/25 bg-gold/5 px-4 py-3 text-sm transition hover:bg-gold/10 hover:border-primary/40 active:scale-[0.98]"
         >
           <span className="text-foreground/85">🔢 <b className="text-foreground">Ý nghĩa 12 số chủ đạo</b> — tra cứu khuynh hướng, điểm mạnh &amp; bài học từng số</span>
           <span className="shrink-0 text-gold">Mở →</span>
         </Link>
         <Link
           href="/than-so-hoc/cac-loai-so"
-          className="mt-3 flex items-center justify-between gap-3 rounded-lg border border-border bg-card/40 px-4 py-3 text-sm transition-colors hover:border-gold/40 hover:bg-gold/5"
+          className="mt-3 flex items-center justify-between gap-3 rounded-lg border border-border bg-card/40 px-4 py-3 text-sm transition hover:border-gold/40 hover:bg-gold/5 active:scale-[0.98]"
         >
           <span className="text-foreground/85">🧮 <b className="text-foreground">Các loại số khác</b> — số vận mệnh, linh hồn, nhân cách, ngày sinh là gì</span>
           <span className="shrink-0 text-gold">Mở →</span>
@@ -188,9 +189,10 @@ export default function ThanSoHocLandingPage() {
         </aside>
       </section>
 
+      <RevealOnScroll>
       <section
         aria-labelledby="tsh-about-heading"
-        className="mt-12 border-t border-border pt-10"
+        className="rv-up mt-12 border-t border-border pt-10"
       >
         <h2
           id="tsh-about-heading"
@@ -217,10 +219,12 @@ export default function ThanSoHocLandingPage() {
           </p>
         </div>
       </section>
+      </RevealOnScroll>
 
+      <RevealOnScroll>
       <section
         aria-labelledby="tsh-faq-heading"
-        className="mt-10"
+        className="rv-up mt-10"
       >
         <h2
           id="tsh-faq-heading"
@@ -244,6 +248,7 @@ export default function ThanSoHocLandingPage() {
           ))}
         </dl>
       </section>
+      </RevealOnScroll>
     </ToolPageShell>
     <StickyMobileCta trackId="than-so-hoc" />
     </>
