@@ -24,6 +24,7 @@ import {
   toast,
 } from '@hieu-asia/ui';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
 // Recharts lazy-loaded — keeps it out of the initial admin bundle (tasks
 // page pattern). ssr:false because admin is auth-gated.
@@ -114,6 +115,65 @@ export function PromotersTab() {
     );
   }, [q.data, search]);
 
+  const columns: AdminTableColumn<PromoterRow>[] = [
+    { id: 'code', header: 'Mã', cell: (r) => <span className="font-mono text-gold">{r.affiliate_code}</span> },
+    { id: 'email', header: 'Email', cell: (r) => <span className="text-foreground/85">{r.email ?? '—'}</span> },
+    {
+      id: 'depth',
+      header: 'Depth',
+      sortKey: 'depth',
+      className: 'text-right',
+      cell: (r) => <span className="font-mono">{r.depth}</span>,
+    },
+    { id: 'tier', header: 'Tier', cell: (r) => <span className="capitalize">{r.tier}</span> },
+    {
+      id: 'status',
+      header: 'Status',
+      cell: (r) =>
+        r.status === 'active' ? (
+          <span className="text-green-400">active</span>
+        ) : (
+          <span className="text-red-400">{r.status}</span>
+        ),
+    },
+    { id: 'l1', header: 'L1', className: 'text-right', cell: (r) => <span className="font-mono">{r.l1_count}</span> },
+    { id: 'l2', header: 'L2', className: 'text-right', cell: (r) => <span className="font-mono">{r.l2_count}</span> },
+    { id: 'l3', header: 'L3', className: 'text-right', cell: (r) => <span className="font-mono">{r.l3_count}</span> },
+    {
+      id: 'created_at',
+      header: 'Tạo',
+      cell: (r) => <span className="text-xs text-muted-foreground">{dt(r.created_at)}</span>,
+    },
+    {
+      id: 'actions',
+      header: 'Actions',
+      cell: (r) => (
+        <div className="flex flex-wrap gap-1">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => {
+              if (!confirm('Ban/Unban tài khoản này?')) return;
+              banMut.mutate({ id: r.user_id, banned: r.status === 'active' });
+            }}
+            disabled={banMut.isPending}
+            className="border border-border"
+          >
+            {r.status === 'active' ? 'Ban' : 'Unban'}
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => setReparentTarget(r)}
+            className="border border-border"
+          >
+            Reparent
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -144,78 +204,18 @@ export function PromotersTab() {
       )}
 
       <Card>
-        <CardContent className="overflow-x-auto pt-6">
-          {q.isLoading ? (
-            <p className="text-sm text-muted-foreground">Đang tải…</p>
-          ) : q.error ? (
+        <CardContent className="pt-6">
+          {q.error ? (
             <p className="text-sm text-red-700 dark:text-red-300">{(q.error as Error).message}</p>
           ) : (
-            <table className="w-full min-w-[820px] text-sm">
-              <thead className="border-b border-border text-left text-xs uppercase text-muted-foreground">
-                <tr>
-                  <th className="pb-2 pr-3">Mã</th>
-                  <th className="pb-2 pr-3">Email</th>
-                  <th className="pb-2 pr-3 text-right">Depth</th>
-                  <th className="pb-2 pr-3">Tier</th>
-                  <th className="pb-2 pr-3">Status</th>
-                  <th className="pb-2 pr-3 text-right">L1</th>
-                  <th className="pb-2 pr-3 text-right">L2</th>
-                  <th className="pb-2 pr-3 text-right">L3</th>
-                  <th className="pb-2 pr-3">Tạo</th>
-                  <th className="pb-2">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((r) => (
-                  <tr key={r.user_id} className="border-b border-border hover:bg-muted/30">
-                    <td className="py-2 pr-3 font-mono text-gold">{r.affiliate_code}</td>
-                    <td className="py-2 pr-3 text-foreground/85">{r.email ?? '—'}</td>
-                    <td className="py-2 pr-3 text-right font-mono">{r.depth}</td>
-                    <td className="py-2 pr-3 capitalize">{r.tier}</td>
-                    <td className="py-2 pr-3">
-                      {r.status === 'active' ? (
-                        <span className="text-green-400">active</span>
-                      ) : (
-                        <span className="text-red-400">{r.status}</span>
-                      )}
-                    </td>
-                    <td className="py-2 pr-3 text-right font-mono">{r.l1_count}</td>
-                    <td className="py-2 pr-3 text-right font-mono">{r.l2_count}</td>
-                    <td className="py-2 pr-3 text-right font-mono">{r.l3_count}</td>
-                    <td className="py-2 pr-3 text-muted-foreground text-xs">{dt(r.created_at)}</td>
-                    <td className="py-2 flex flex-wrap gap-1">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => {
-                          if (!confirm('Ban/Unban tài khoản này?')) return;
-                          banMut.mutate({ id: r.user_id, banned: r.status === 'active' });
-                        }}
-                        disabled={banMut.isPending}
-                        className="border border-border"
-                      >
-                        {r.status === 'active' ? 'Ban' : 'Unban'}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => setReparentTarget(r)}
-                        className="border border-border"
-                      >
-                        Reparent
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-                {filtered.length === 0 && (
-                  <tr>
-                    <td colSpan={10} className="py-6 text-center text-muted-foreground">
-                      Chưa có promoter nào.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+            <AdminTable
+              rows={filtered}
+              columns={columns}
+              getRowId={(r) => r.user_id}
+              loading={q.isLoading}
+              caption="Danh sách promoter"
+              empty={<span className="text-sm text-muted-foreground">Chưa có promoter nào.</span>}
+            />
           )}
         </CardContent>
       </Card>

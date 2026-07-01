@@ -17,6 +17,7 @@ import { KpiCard } from '@/components/admin/kpi-card';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { EmptyState } from '@/components/admin/empty-state';
 import { getVendorTelemetry, type VendorTelemetryRow } from '@/lib/llm-spend-api';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
 type Vendor = 'anthropic' | 'openai' | 'google' | 'cloudflare';
 type Role = 'vision' | 'logic' | 'psychology' | 'alignment' | 'report' | 'mentor' | 'judge';
@@ -256,36 +257,66 @@ function errorRateClass(pct: number): string {
   return 'text-amber-600 dark:text-amber-400';
 }
 
-function VendorTelemetryRowCells({ row }: { row: VendorTelemetryRow }) {
-  return (
-    <tr className="transition-all duration-300 ease-editorial hover:bg-gold/[0.03]">
-      <td className="px-3 py-2 text-xs text-foreground/85">
+const TELEMETRY_COLUMNS: AdminTableColumn<VendorTelemetryRow>[] = [
+  {
+    id: 'vendor',
+    header: 'Vendor',
+    className: 'text-xs text-foreground/85',
+    cell: (row) => (
+      <>
         <span className="font-medium">{vendorLabel(row.vendor)}</span>
         <span className="ml-1.5 font-mono text-[10px] text-muted-foreground">{row.vendor}</span>
-      </td>
-      <td className="px-3 py-2 text-right tabular-nums text-xs text-foreground/85">
-        {row.requests.toLocaleString('vi-VN')}
-      </td>
-      <td className={`px-3 py-2 text-right tabular-nums text-xs ${errorRateClass(row.error_rate_pct)}`}>
+      </>
+    ),
+  },
+  {
+    id: 'requests',
+    header: 'Lượt gọi',
+    className: 'text-right tabular-nums text-xs text-foreground/85',
+    cell: (row) => row.requests.toLocaleString('vi-VN'),
+  },
+  {
+    id: 'errors',
+    header: 'Lỗi (tỉ lệ)',
+    className: 'text-right tabular-nums text-xs',
+    cell: (row) => (
+      <span className={errorRateClass(row.error_rate_pct)}>
         {row.errors.toLocaleString('vi-VN')}
         <span className="ml-1 text-[10px] opacity-80">({row.error_rate_pct.toFixed(1)}%)</span>
-      </td>
-      <td className="px-3 py-2 text-right tabular-nums text-xs text-foreground/85">
+      </span>
+    ),
+  },
+  {
+    id: 'latency',
+    header: 'Độ trễ TB / p95',
+    className: 'text-right tabular-nums text-xs text-foreground/85',
+    cell: (row) => (
+      <>
         <span className="font-mono">{row.latency_avg_ms.toLocaleString('vi-VN')}</span>
         <span className="text-muted-foreground"> / {row.latency_p95_ms.toLocaleString('vi-VN')} ms</span>
-      </td>
-      <td className="px-3 py-2 text-right tabular-nums text-xs text-foreground/85">
+      </>
+    ),
+  },
+  {
+    id: 'cost',
+    header: 'Chi phí',
+    className: 'text-right tabular-nums text-xs text-foreground/85',
+    cell: (row) => (
+      <>
         <span className="font-mono">{fmtUsd(row.cost_usd)}</span>
         {row.requests > 0 && row.cost_usd === 0 ? (
           <span className="ml-1 text-amber-500">(không ghi)</span>
         ) : null}
-      </td>
-      <td className="px-3 py-2 text-right font-mono text-[11px] text-muted-foreground">
-        {row.last_used_at ? new Date(row.last_used_at).toLocaleString('vi-VN') : '—'}
-      </td>
-    </tr>
-  );
-}
+      </>
+    ),
+  },
+  {
+    id: 'last_used',
+    header: 'Lần cuối',
+    className: 'text-right font-mono text-[11px] text-muted-foreground',
+    cell: (row) => (row.last_used_at ? new Date(row.last_used_at).toLocaleString('vi-VN') : '—'),
+  },
+];
 
 const TELEMETRY_WINDOWS = [
   { days: 1, label: '24 giờ' },
@@ -369,25 +400,11 @@ function VendorTelemetryCard() {
               <span className="font-semibold text-foreground">{total.toLocaleString('vi-VN')}</span>{' '}
               lượt gọi qua {items.length} vendor.
             </p>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-border text-sm">
-                <thead>
-                  <tr className="text-xs uppercase tracking-wider text-muted-foreground">
-                    <th className="px-3 py-2 text-left font-medium">Vendor</th>
-                    <th className="px-3 py-2 text-right font-medium">Lượt gọi</th>
-                    <th className="px-3 py-2 text-right font-medium">Lỗi (tỉ lệ)</th>
-                    <th className="px-3 py-2 text-right font-medium">Độ trễ TB / p95</th>
-                    <th className="px-3 py-2 text-right font-medium">Chi phí</th>
-                    <th className="px-3 py-2 text-right font-medium">Lần cuối</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {items.map((v) => (
-                    <VendorTelemetryRowCells key={v.vendor} row={v} />
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <AdminTable
+              rows={items}
+              columns={TELEMETRY_COLUMNS}
+              getRowId={(v) => v.vendor}
+            />
           </>
         )}
       </CardContent>

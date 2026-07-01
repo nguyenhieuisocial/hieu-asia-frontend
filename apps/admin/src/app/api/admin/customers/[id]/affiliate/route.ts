@@ -1,32 +1,20 @@
 /** Admin proxy → Worker GET /admin/customers/:id/affiliate (CDP outbound view). admin+. */
-import { type NextRequest, NextResponse } from 'next/server';
 import { requireAdminSession } from '@/lib/auth-server';
+import { proxyToGateway } from '@/lib/proxy-gateway';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const GATEWAY = process.env.HIEU_API_GATEWAY_URL ?? 'https://api.hieu.asia';
-const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
-
-type Ctx = { params: Promise<{ id: string }> };
-
-export async function GET(_req: NextRequest, ctx: Ctx) {
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
   const auth = await requireAdminSession('admin');
   if ('error' in auth) return auth.error;
-  if (!TOKEN) {
-    return NextResponse.json({ ok: false, error: 'HIEU_API_ADMIN_TOKEN not configured' }, { status: 503 });
-  }
-  const { id } = await ctx.params;
-  try {
-    const r = await fetch(`${GATEWAY}/admin/customers/${encodeURIComponent(id)}/affiliate`, {
-      method: 'GET',
-      cache: 'no-store',
-      headers: { 'Content-Type': 'application/json', 'X-Admin-Token': TOKEN, 'x-admin-email': auth.session.email },
-      signal: AbortSignal.timeout(20_000),
-    });
-    const data = await r.json();
-    return NextResponse.json(data, { status: r.status });
-  } catch (err) {
-    return NextResponse.json({ ok: false, error: `gateway unreachable: ${(err as Error).message}` }, { status: 502 });
-  }
+  const { id } = await params;
+  return proxyToGateway(req, {
+    path: `admin/customers/${encodeURIComponent(id)}/affiliate`,
+    adminEmail: auth.session.email,
+    timeoutMs: 20_000,
+  });
 }

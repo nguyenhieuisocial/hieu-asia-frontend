@@ -31,6 +31,7 @@ import {
 import { Shield, AlertTriangle, Repeat, DollarSign } from 'lucide-react';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
 type EndpointSlug = 'decisions-brief' | 'mentor-skills-decision';
 
@@ -108,6 +109,55 @@ function fmtPct(v: number): string {
 function fmtUsd(v: number): string {
   return `$${v.toFixed(2)}`;
 }
+
+interface CostBurnRow {
+  ep: EndpointSlug;
+  s: EndpointWindowStats;
+}
+
+const COST_BURN_COLUMNS: AdminTableColumn<CostBurnRow>[] = [
+  {
+    id: 'endpoint',
+    header: 'Endpoint',
+    cell: ({ ep }) => <span className="text-foreground">{ENDPOINT_LABEL[ep]}</span>,
+  },
+  {
+    id: 'calls',
+    header: 'Calls',
+    className: 'text-right font-mono text-foreground/85',
+    cell: ({ s }) => s.total,
+  },
+  {
+    id: 'pass',
+    header: 'Pass',
+    className: 'text-right font-mono',
+    cell: ({ s }) => (
+      <span
+        className={cn(
+          s.final_pass_rate >= 0.9
+            ? 'text-jade-700 dark:text-jade-50'
+            : s.final_pass_rate >= 0.7
+              ? 'text-gold'
+              : 'text-red-700 dark:text-red-300',
+        )}
+      >
+        {fmtPct(s.final_pass_rate)}
+      </span>
+    ),
+  },
+  {
+    id: 'retry',
+    header: 'Retry',
+    className: 'text-right font-mono text-muted-foreground',
+    cell: ({ s }) => fmtPct(s.retry_rate),
+  },
+  {
+    id: 'burn',
+    header: 'Burn (USD)',
+    className: 'text-right font-mono text-gold',
+    cell: ({ s }) => fmtUsd(s.cost_usd_estimate),
+  },
+];
 
 function sumByEndpoint<K extends keyof EndpointWindowStats>(
   w: WindowStats,
@@ -411,52 +461,17 @@ export function ValidatorTab() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gold/15 text-left font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                    <th className="py-2">Endpoint</th>
-                    <th className="py-2 text-right">Calls</th>
-                    <th className="py-2 text-right">Pass</th>
-                    <th className="py-2 text-right">Retry</th>
-                    <th className="py-2 text-right">Burn (USD)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ENDPOINTS.map((ep) => {
-                    const s = w30!.by_endpoint[ep];
-                    return (
-                      <tr
-                        key={ep}
-                        className="border-b border-gold/5 hover:bg-gold/5"
-                      >
-                        <td className="py-2 text-foreground">{ENDPOINT_LABEL[ep]}</td>
-                        <td className="py-2 text-right font-mono text-foreground/85">
-                          {s.total}
-                        </td>
-                        <td className="py-2 text-right font-mono">
-                          <span
-                            className={cn(
-                              s.final_pass_rate >= 0.9
-                                ? 'text-jade-700 dark:text-jade-50'
-                                : s.final_pass_rate >= 0.7
-                                  ? 'text-gold'
-                                  : 'text-red-700 dark:text-red-300',
-                            )}
-                          >
-                            {fmtPct(s.final_pass_rate)}
-                          </span>
-                        </td>
-                        <td className="py-2 text-right font-mono text-muted-foreground">
-                          {fmtPct(s.retry_rate)}
-                        </td>
-                        <td className="py-2 text-right font-mono text-gold">
-                          {fmtUsd(s.cost_usd_estimate)}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+              <AdminTable<CostBurnRow>
+                rows={
+                  w30
+                    ? ENDPOINTS.map((ep) => ({ ep, s: w30.by_endpoint[ep] }))
+                    : []
+                }
+                columns={COST_BURN_COLUMNS}
+                getRowId={(r) => r.ep}
+                loading={q.isLoading}
+                caption="Cost burn theo endpoint — 30 ngày"
+              />
             </CardContent>
           </Card>
 

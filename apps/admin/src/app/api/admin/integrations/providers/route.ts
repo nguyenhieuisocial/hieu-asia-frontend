@@ -1,31 +1,11 @@
-import { NextResponse } from 'next/server';
+/**
+ * Admin proxy → Worker GET /ai/providers (read-only providers status, viewer+).
+ */
 import { requireAdminSession } from '@/lib/auth-server';
+import { proxyToGateway } from '@/lib/proxy-gateway';
 
-const GATEWAY = process.env.HIEU_API_GATEWAY_URL ?? 'https://api.hieu.asia';
-const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
-
-// Read-only providers status. Gated by admin cookie at middleware layer; the
-// Worker itself requires X-Admin-Token (admin endpoint), so we forward it here.
-export async function GET() {
+export async function GET(req: Request) {
   const auth = await requireAdminSession();
   if ('error' in auth) return auth.error;
-  if (!TOKEN) {
-    return NextResponse.json(
-      { ok: false, error: 'HIEU_API_ADMIN_TOKEN not configured on the admin app' },
-      { status: 503 },
-    );
-  }
-  try {
-    const r = await fetch(`${GATEWAY}/ai/providers`, {
-      cache: 'no-store',
-      headers: { 'X-Admin-Token': TOKEN },
-    });
-    const data = await r.json();
-    return NextResponse.json(data, { status: r.status });
-  } catch (err) {
-    return NextResponse.json(
-      { ok: false, error: `gateway unreachable: ${(err as Error).message}` },
-      { status: 502 },
-    );
-  }
+  return proxyToGateway(req, { path: 'ai/providers', adminEmail: auth.session.email });
 }

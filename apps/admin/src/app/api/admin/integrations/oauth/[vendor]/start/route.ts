@@ -1,34 +1,15 @@
-import { NextResponse, type NextRequest } from 'next/server';
+/**
+ * POST /api/admin/integrations/oauth/[vendor]/start → worker /oauth/:vendor/start.
+ * Start AI-provider OAuth credential binding (privileged mutation) → admin+.
+ */
 import { requireAdminSession } from '@/lib/auth-server';
-
-const GATEWAY = process.env.HIEU_API_GATEWAY_URL ?? 'https://api.hieu.asia';
-const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
+import { proxyToGateway } from '@/lib/proxy-gateway';
 
 type Ctx = { params: Promise<{ vendor: string }> };
 
-export async function POST(_req: NextRequest, ctx: Ctx) {
-  // Starting AI-provider OAuth credential binding is a privileged mutation → admin+
-  // (worker is role-blind; enforce per-user role here).
+export async function POST(req: Request, ctx: Ctx) {
   const auth = await requireAdminSession('admin');
   if ('error' in auth) return auth.error;
-  if (!TOKEN) {
-    return NextResponse.json(
-      { ok: false, error: 'HIEU_API_ADMIN_TOKEN not configured' },
-      { status: 503 },
-    );
-  }
   const { vendor } = await ctx.params;
-  try {
-    const r = await fetch(`${GATEWAY}/oauth/${vendor}/start`, {
-      method: 'POST',
-      headers: { 'X-Admin-Token': TOKEN },
-    });
-    const data = await r.json();
-    return NextResponse.json(data, { status: r.status });
-  } catch (err) {
-    return NextResponse.json(
-      { ok: false, error: `gateway unreachable: ${(err as Error).message}` },
-      { status: 502 },
-    );
-  }
+  return proxyToGateway(req, { path: `oauth/${vendor}/start`, adminEmail: auth.session.email });
 }

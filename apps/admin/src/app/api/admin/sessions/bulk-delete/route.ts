@@ -1,44 +1,15 @@
 /**
- * Admin proxy to Worker `POST /admin/sessions/bulk-delete`.
- *
- * Body forwarded verbatim — UI must include `{ session_ids, confirm: "DELETE_BULK" }`.
+ * Admin proxy → Worker POST /admin/sessions/bulk-delete (destructive, admin+).
+ * Body verbatim — UI must include { session_ids, confirm: "DELETE_BULK" }.
  */
-import { type NextRequest, NextResponse } from 'next/server';
 import { requireAdminSession } from '@/lib/auth-server';
+import { proxyToGateway } from '@/lib/proxy-gateway';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const GATEWAY = process.env.HIEU_API_GATEWAY_URL ?? 'https://api.hieu.asia';
-const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
-
-export async function POST(req: NextRequest) {
-  // Wave 60.62.T1.4 — defense-in-depth verifySession backfill (destructive bulk delete → admin+).
+export async function POST(req: Request) {
   const auth = await requireAdminSession('admin');
   if ('error' in auth) return auth.error;
-  if (!TOKEN) {
-    return NextResponse.json(
-      { ok: false, error: 'HIEU_API_ADMIN_TOKEN not configured on the admin app' },
-      { status: 503 },
-    );
-  }
-  const body = await req.text();
-  try {
-    const r = await fetch(`${GATEWAY}/admin/sessions/bulk-delete`, {
-      method: 'POST',
-      cache: 'no-store',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Admin-Token': TOKEN,
-      },
-      body,
-    });
-    const data = await r.json();
-    return NextResponse.json(data, { status: r.status });
-  } catch (err) {
-    return NextResponse.json(
-      { ok: false, error: `gateway unreachable: ${(err as Error).message}` },
-      { status: 502 },
-    );
-  }
+  return proxyToGateway(req, { path: 'admin/sessions/bulk-delete', adminEmail: auth.session.email });
 }

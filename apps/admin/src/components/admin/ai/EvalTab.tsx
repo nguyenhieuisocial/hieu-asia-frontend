@@ -44,6 +44,7 @@ import {
 import { LiveBadge } from '@/components/admin/live-badge';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { EmptyState } from '@/components/admin/empty-state';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import {
   useEvalTrend,
   type EvalRun,
@@ -414,49 +415,46 @@ interface FailureListProps {
   failures: EvalFailure[];
 }
 
+const FAILURE_COLUMNS: AdminTableColumn<EvalFailure>[] = [
+  {
+    id: 'persona',
+    header: 'Persona',
+    cell: (f) => (
+      <>
+        <div className="font-medium text-foreground">{f.persona_label}</div>
+        <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+          {f.persona_id}
+        </div>
+      </>
+    ),
+  },
+  {
+    id: 'score',
+    header: 'Điểm',
+    className: 'text-right font-mono text-red-700 dark:text-red-300',
+    cell: (f) => fmtScore(f.score),
+  },
+  {
+    id: 'feedback',
+    header: 'Phản hồi của judge',
+    className: 'text-foreground/80',
+    cell: (f) => truncate(f.judge_feedback),
+  },
+];
+
 function FailureList({ failures }: FailureListProps) {
-  if (failures.length === 0) {
-    return (
-      <p className="rounded-md border border-jade/20 bg-jade/5 px-4 py-3 text-sm text-jade/80">
-        Không có persona nào dưới {PERSONA_FAIL_THRESHOLD} trong run mới nhất.
-      </p>
-    );
-  }
   return (
-    <div className="overflow-hidden rounded-md border border-gold/15">
-      <table className="w-full text-sm">
-        <thead className="bg-card/60">
-          <tr className="text-left font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            <th className="px-3 py-2">Persona</th>
-            <th className="px-3 py-2 text-right">Điểm</th>
-            <th className="px-3 py-2">Phản hồi của judge</th>
-          </tr>
-        </thead>
-        <tbody>
-          {failures.map((f) => (
-            <tr
-              key={f.persona_id}
-              className="border-t border-gold/10 align-top hover:bg-card/40"
-            >
-              <td className="px-3 py-2.5">
-                <div className="font-medium text-foreground">
-                  {f.persona_label}
-                </div>
-                <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                  {f.persona_id}
-                </div>
-              </td>
-              <td className="px-3 py-2.5 text-right font-mono text-red-700 dark:text-red-300">
-                {fmtScore(f.score)}
-              </td>
-              <td className="px-3 py-2.5 text-foreground/80">
-                {truncate(f.judge_feedback)}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <AdminTable
+      rows={failures}
+      columns={FAILURE_COLUMNS}
+      getRowId={(f) => f.persona_id}
+      empty={
+        <p className="rounded-md border border-jade/20 bg-jade/5 px-4 py-3 text-sm text-jade/80">
+          Không có persona nào dưới {PERSONA_FAIL_THRESHOLD} trong run mới nhất.
+        </p>
+      }
+      caption="Persona thất bại — run mới nhất"
+    />
   );
 }
 
@@ -466,55 +464,61 @@ interface RunHistoryProps {
   runs: EvalRun[];
 }
 
+const RUN_COLUMNS: AdminTableColumn<EvalRun>[] = [
+  {
+    id: 'date',
+    header: 'Ngày',
+    className: 'text-foreground/85',
+    cell: (r) => fmtDateLong(r.created_at),
+  },
+  {
+    id: 'judge_avg',
+    header: 'Judge avg',
+    className: 'text-right',
+    cell: (r) => {
+      const s = scoreStatus(r.judge_avg);
+      return (
+        <span
+          className={cn(
+            'font-mono font-semibold',
+            s === 'green' && 'text-jade',
+            s === 'amber' && 'text-gold',
+            s === 'red' && 'text-red-700 dark:text-red-300',
+          )}
+        >
+          {fmtScore(r.judge_avg)}
+        </span>
+      );
+    },
+  },
+  {
+    id: 'failures',
+    header: 'Failures',
+    className: 'text-right font-mono text-foreground/80',
+    cell: (r) => `${r.persona_failures}/${r.total_personas}`,
+  },
+  {
+    id: 'model',
+    header: 'Model',
+    className: 'font-mono text-xs text-muted-foreground',
+    cell: (r) => r.model_under_test,
+  },
+  {
+    id: 'prompt',
+    header: 'Prompt',
+    className: 'font-mono text-xs text-muted-foreground',
+    cell: (r) => r.prompt_version,
+  },
+];
+
 function RunHistory({ runs }: RunHistoryProps) {
   return (
-    <div className="overflow-x-auto rounded-md border border-gold/15">
-      <table className="w-full text-sm">
-        <thead className="bg-card/60">
-          <tr className="text-left font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            <th className="px-3 py-2">Ngày</th>
-            <th className="px-3 py-2 text-right">Judge avg</th>
-            <th className="px-3 py-2 text-right">Failures</th>
-            <th className="px-3 py-2">Model</th>
-            <th className="px-3 py-2">Prompt</th>
-          </tr>
-        </thead>
-        <tbody>
-          {runs.map((r) => {
-            const s = scoreStatus(r.judge_avg);
-            return (
-              <tr
-                key={r.run_id}
-                className="border-t border-gold/10 hover:bg-card/40"
-              >
-                <td className="px-3 py-2 text-foreground/85">
-                  {fmtDateLong(r.created_at)}
-                </td>
-                <td
-                  className={cn(
-                    'px-3 py-2 text-right font-mono font-semibold',
-                    s === 'green' && 'text-jade',
-                    s === 'amber' && 'text-gold',
-                    s === 'red' && 'text-red-700 dark:text-red-300',
-                  )}
-                >
-                  {fmtScore(r.judge_avg)}
-                </td>
-                <td className="px-3 py-2 text-right font-mono text-foreground/80">
-                  {r.persona_failures}/{r.total_personas}
-                </td>
-                <td className="px-3 py-2 font-mono text-xs text-muted-foreground">
-                  {r.model_under_test}
-                </td>
-                <td className="px-3 py-2 font-mono text-xs text-muted-foreground">
-                  {r.prompt_version}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+    <AdminTable
+      rows={runs}
+      columns={RUN_COLUMNS}
+      getRowId={(r) => r.run_id}
+      caption="Lịch sử các run eval gần nhất"
+    />
   );
 }
 
