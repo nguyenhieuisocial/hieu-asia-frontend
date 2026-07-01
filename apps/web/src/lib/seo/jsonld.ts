@@ -196,3 +196,49 @@ export function webPage(input: WebPageInput): JsonLdNode {
     isPartOf: { '@id': WEBSITE_ID },
   };
 }
+
+export interface OfferInput {
+  /** Nhãn bậc giá, khớp text hiển thị trên trang (chống cloaking). */
+  name: string;
+  /** Giá theo đồng VND (số nguyên). */
+  priceVnd: number;
+  /** Đường dẫn checkout/landing của bậc này (site-relative hoặc tuyệt đối). */
+  url: string;
+}
+
+export interface ProductInput {
+  name: string;
+  description: string;
+  /** URL trang bán chuẩn (canonical). */
+  url: string;
+  /** Mỗi bậc mua được → một Offer. */
+  offers: OfferInput[];
+  /** Ảnh đại diện; mặc định logo site. */
+  image?: string;
+}
+
+/**
+ * Product + Offer cho trang bán (vd /pricing). Mỗi bậc giá → một `Offer`
+ * (price + priceCurrency VND) → Google/AI search đọc được bảng giá máy-đọc-được
+ * (đủ điều kiện price rich result khi trang lên hạng) thay vì chỉ thấy chữ.
+ * `offers` thoả điều kiện Product hợp lệ nên không cần review/rating.
+ */
+export function product(input: ProductInput): JsonLdNode {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: input.name,
+    description: input.description,
+    image: abs(input.image ?? LOGO_PATH),
+    brand: { '@type': 'Brand', name: SITE_NAME },
+    url: abs(input.url),
+    offers: input.offers.map((o) => ({
+      '@type': 'Offer',
+      name: o.name,
+      price: String(o.priceVnd),
+      priceCurrency: 'VND',
+      availability: 'https://schema.org/InStock',
+      url: abs(o.url),
+    })),
+  };
+}
