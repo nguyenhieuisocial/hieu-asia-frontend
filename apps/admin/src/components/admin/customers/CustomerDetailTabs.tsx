@@ -35,6 +35,7 @@ import { fmtDate, fmtRelative } from './format';
 import {
   type AuditRow,
   type CustomerDetail,
+  type CustomerDetailResponse,
   hasComplianceField,
   type RefundRow,
   type SessionRow,
@@ -51,6 +52,8 @@ export interface CustomerDetailTabsProps {
   onValueChange: (id: string) => void;
   /** Route param = the user_id (PostHog distinct_id for authed users) — powers the journey tab. */
   userId: string;
+  /** Stitched cross-device/channel identities (visitor_identities) for this user. */
+  identities?: CustomerDetailResponse['identities'];
   /** Refetch the customer after a per-session access grant/revoke. */
   onSessionMutated?: () => void;
   /** Refetch the customer after a refund approve/reject. */
@@ -66,6 +69,7 @@ export function CustomerDetailTabs({
   value,
   onValueChange,
   userId,
+  identities,
   onSessionMutated,
   onRefundMutated,
 }: CustomerDetailTabsProps) {
@@ -132,7 +136,7 @@ export function CustomerDetailTabs({
 
   return (
     <div className="space-y-6">
-      <IdentityCard customer={customer} userId={userId} />
+      <IdentityCard customer={customer} userId={userId} identities={identities} />
       <ProductTabs tabs={tabs} value={value} onValueChange={onValueChange} />
     </div>
   );
@@ -149,9 +153,11 @@ export function CustomerDetailTabs({
 function IdentityCard({
   customer,
   userId,
+  identities,
 }: {
   customer: CustomerDetail | null;
   userId: string;
+  identities?: CustomerDetailResponse['identities'];
 }) {
   const channels: Array<{ label: string; value?: string | null; mono?: boolean }> = [
     { label: 'Email', value: customer?.email, mono: true },
@@ -161,6 +167,11 @@ function IdentityCard({
   ];
   const linked = channels.filter((c) => !!c.value).length;
   const idValue = userId || customer?.id || '—';
+  // Stitched identity rows (visitor_identities) — anon devices merged into this
+  // person + which flow linked them. Empty until a login/backfill stitches.
+  const idList = identities ?? [];
+  const linkedDevices = idList.filter((i) => i.anon_distinct_id).length;
+  const sources = [...new Set(idList.map((i) => i.link_source).filter(Boolean))] as string[];
 
   return (
     <Card>
@@ -202,6 +213,14 @@ function IdentityCard({
             </div>
           ))}
         </dl>
+        {idList.length > 0 && (
+          <p className="mt-3 border-t border-border/60 pt-3 text-xs text-muted-foreground">
+            Đã hợp nhất{' '}
+            <span className="font-medium text-foreground/80">{idList.length}</span> định danh
+            {linkedDevices > 0 && <> · {linkedDevices} thiết bị ẩn danh</>}
+            {sources.length > 0 && <> · nguồn: {sources.join(', ')}</>}
+          </p>
+        )}
       </CardContent>
     </Card>
   );

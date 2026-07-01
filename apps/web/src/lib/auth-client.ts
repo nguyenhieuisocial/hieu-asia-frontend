@@ -119,6 +119,32 @@ export function getSupabaseAuth(): SupabaseClient | null {
       } catch {
         /* never block auth on telemetry failure */
       }
+
+      // Identity stitching: link this browser's anon id → the authed user_id so
+      // visitor_identities unifies the person across devices/channels. Fire-and-
+      // forget: never awaited, never throws, never blocks auth.
+      try {
+        const anon =
+          (typeof window !== 'undefined' && window.localStorage.getItem('hieu.user_id')) || undefined;
+        // Only stitch when there is an anon id to link — the endpoint upserts on
+        // anon_distinct_id, so firing without one would insert a fresh bare
+        // authed-only row every sign-in (no upsert key). Nothing to link anyway
+        // when the browser never generated an anon id.
+        if (anon) {
+          const base = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
+          void fetch(`${base}/identity/link-self`, {
+            method: 'POST',
+            headers: {
+              'content-type': 'application/json',
+              authorization: `Bearer ${session.access_token}`,
+            },
+            body: JSON.stringify({ anon_distinct_id: anon }),
+            keepalive: true,
+          }).catch(() => {});
+        }
+      } catch {
+        /* never break auth */
+      }
     }
   });
 

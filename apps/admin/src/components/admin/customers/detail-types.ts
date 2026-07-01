@@ -93,6 +93,14 @@ export interface CustomerDetailResponse {
   transactions?: TxnRow[];
   refunds?: RefundRow[];
   audit_trail?: AuditRow[];
+  identities?: Array<{
+    anon_distinct_id?: string | null;
+    telegram_id?: string | null;
+    zalo_id?: string | null;
+    link_source?: string | null;
+    first_seen?: string | null;
+    last_seen?: string | null;
+  }>;
   note?: string;
   error?: string;
 }
