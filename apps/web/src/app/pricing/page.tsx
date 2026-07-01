@@ -34,7 +34,7 @@ import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { OrnamentDivider } from '@/components/marketing/OrnamentDivider';
 import { TrustStrip } from '@/components/marketing/TrustStrip';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { faqPage } from '@/lib/seo/jsonld';
+import { faqPage, product } from '@/lib/seo/jsonld';
 import {
   PRICING,
   ADVANCED_PRICING,
@@ -131,6 +131,24 @@ const PRICING_FAQ_SCHEMA: { q: string; a: string }[] = [
     a: 'Lá số và nhật ký nội tâm được mã hoá khi lưu trữ. Chúng tôi không bán dữ liệu, không dùng để huấn luyện mô hình của bên thứ ba, và bạn có thể xoá toàn bộ tài khoản bất cứ lúc nào — dữ liệu bị xoá vĩnh viễn trong vòng 30 ngày.',
   },
 ];
+
+/**
+ * Product + Offer JSON-LD cho /pricing. 4 bậc trả phí → 4 Offer, giá + URL khớp
+ * đúng các thẻ giá + CTA đang hiển thị (chống cloaking). Gói miễn phí không phải
+ * "mua" nên không liệt kê như một Offer. Giá lấy từ canonical `PRICING`.
+ */
+const PRICING_PRODUCT = {
+  name: 'hieu.asia — Gói thành viên & Lá số AI',
+  description:
+    'Lá số Tử Vi/Bát Tự đầy đủ, AI Mentor và các ống kính tự-hiểu-mình. Bắt đầu miễn phí, nâng cấp khi sẵn sàng — mọi gói trả phí đều bảo đảm hoàn tiền 14 ngày.',
+  url: '/pricing',
+  offers: [
+    { name: 'Premium — 1 lá số đầy đủ', priceVnd: PRICING.premium.vnd, url: '/onboarding' },
+    { name: 'Mentor — theo tháng', priceVnd: PRICING.monthly.vnd, url: '/checkout/mentor' },
+    { name: 'Mentor — theo năm', priceVnd: PRICING.yearly.vnd, url: '/checkout/yearly' },
+    { name: 'Lifetime — trọn đời', priceVnd: PRICING.lifetime.vnd, url: '/checkout/lifetime' },
+  ],
+};
 
 /**
  * Wave 62.05 — Tuỳ chọn nâng cao (Yearly + Lifetime).
@@ -376,6 +394,7 @@ export default function PricingPage() {
       </main>
       <SiteFooter />
       <StickyMobileCta label="Bắt đầu miễn phí" trackId="pricing" />
+      <JsonLd data={product(PRICING_PRODUCT)} />
       <JsonLd data={faqPage(PRICING_FAQ_SCHEMA)} />
     </>
   );
