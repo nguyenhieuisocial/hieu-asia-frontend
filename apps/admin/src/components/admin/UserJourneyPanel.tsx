@@ -30,11 +30,23 @@ interface UserJourneyEvent {
   url: string | null;
 }
 
+interface UserDeviceProfile {
+  browser: string | null;
+  os: string | null;
+  deviceType: string | null;
+  country: string | null;
+  city: string | null;
+  totalEvents: number;
+  activeDays: number;
+  lastSeen: string | null;
+}
+
 export interface UserJourneyResp {
   ok: boolean;
   configured: boolean;
   source: UserJourneySource | null;
   events: UserJourneyEvent[];
+  profile: UserDeviceProfile | null;
 }
 
 export async function fetchUserJourney(userId: string): Promise<UserJourneyResp> {
@@ -45,7 +57,7 @@ export async function fetchUserJourney(userId: string): Promise<UserJourneyResp>
     const data = await r.json();
     return data as UserJourneyResp;
   } catch {
-    return { ok: false, configured: false, source: null, events: [] };
+    return { ok: false, configured: false, source: null, events: [], profile: null };
   }
 }
 
@@ -116,6 +128,7 @@ export function UserJourneyPanel({ userId }: { userId: string }) {
   const data = journey.data;
   const source = data?.source ?? null;
   const events = data?.events ?? [];
+  const profile = data?.profile ?? null;
   const firstTouch = source
     ? fmtTouch(source.firstTouchSource, source.firstTouchMedium, source.firstTouchCampaign)
     : null;
@@ -152,6 +165,50 @@ export function UserJourneyPanel({ userId }: { userId: string }) {
           </p>
         ) : (
           <>
+            {/* Thiết bị & vị trí — PostHog auto-props ($browser/$os/$device_type/$geoip_*).
+                Lấp chỗ DB thiếu metadata cho phiên cũ / kênh không phải web. */}
+            {profile && (
+              <div className="space-y-2">
+                <h3 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  Thiết bị &amp; vị trí
+                </h3>
+                <dl className="grid gap-2 text-sm sm:grid-cols-2">
+                  {(profile.city || profile.country) && (
+                    <div className="space-y-0.5">
+                      <dt className="text-[10px] uppercase tracking-wider text-muted-foreground">Vị trí</dt>
+                      <dd className="font-mono text-foreground/90">
+                        {[profile.city, profile.country].filter(Boolean).join(', ')}
+                      </dd>
+                    </div>
+                  )}
+                  {(profile.deviceType || profile.os || profile.browser) && (
+                    <div className="space-y-0.5">
+                      <dt className="text-[10px] uppercase tracking-wider text-muted-foreground">Thiết bị</dt>
+                      <dd className="font-mono text-foreground/90">
+                        {[profile.deviceType, profile.os, profile.browser].filter(Boolean).join(' · ')}
+                      </dd>
+                    </div>
+                  )}
+                  <div className="space-y-0.5">
+                    <dt className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                      Hoạt động 90 ngày
+                    </dt>
+                    <dd className="font-mono text-foreground/90">
+                      {profile.totalEvents.toLocaleString('vi-VN')} sự kiện · {profile.activeDays} ngày
+                    </dd>
+                  </div>
+                  {profile.lastSeen && (
+                    <div className="space-y-0.5">
+                      <dt className="text-[10px] uppercase tracking-wider text-muted-foreground">Gần nhất</dt>
+                      <dd className="font-mono text-foreground/90" title={profile.lastSeen}>
+                        {fmtDateTime(profile.lastSeen)}
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+              </div>
+            )}
+
             {/* Nguồn — đến từ đâu */}
             <div className="space-y-2">
               <h3 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
