@@ -31,9 +31,8 @@ import {
 import { Receipt } from 'lucide-react';
 import { EmptyState } from '@/components/admin/empty-state';
 import { KpiCard } from '@/components/admin/kpi-card';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { getReportCosts, type ReportCostRow } from '@/lib/llm-spend-api';
-
-type SortKey = 'cost_usd' | 'trace_count' | 'total_latency_ms';
 
 const WINDOWS = [
   { days: 7, label: '7 ngày' },
@@ -56,9 +55,38 @@ function shortId(id: string): string {
   return bare.slice(0, 8);
 }
 
+const COLUMNS: AdminTableColumn<ReportCostRow>[] = [
+  {
+    id: 'report',
+    header: 'Báo cáo',
+    className: 'font-mono text-xs text-foreground',
+    cell: (r) => <span title={r.reading_session_id}>{shortId(r.reading_session_id)}</span>,
+  },
+  {
+    id: 'cost',
+    header: 'Chi phí',
+    sortKey: 'cost_usd',
+    className: 'text-right font-mono text-xs text-gold',
+    cell: (r) => fmtUsd(r.cost_usd),
+  },
+  {
+    id: 'traces',
+    header: 'Số gọi',
+    sortKey: 'trace_count',
+    className: 'text-right font-mono text-xs text-muted-foreground',
+    cell: (r) => r.trace_count,
+  },
+  {
+    id: 'latency',
+    header: 'Tổng độ trễ',
+    sortKey: 'total_latency_ms',
+    className: 'text-right font-mono text-xs text-purple',
+    cell: (r) => fmtSeconds(r.total_latency_ms),
+  },
+];
+
 export function ReportCostsPanel() {
   const [days, setDays] = React.useState<number>(30);
-  const [sortBy, setSortBy] = React.useState<SortKey>('cost_usd');
 
   const q = useQuery({
     queryKey: ['report-costs', days],
@@ -66,23 +94,7 @@ export function ReportCostsPanel() {
     staleTime: 60_000,
   });
 
-  const reports = React.useMemo<ReportCostRow[]>(() => {
-    const rows = q.data?.reports ?? [];
-    return [...rows].sort((a, b) => b[sortBy] - a[sortBy]);
-  }, [q.data, sortBy]);
-
-  const sortBtn = (key: SortKey, label: string) => (
-    <button
-      type="button"
-      onClick={() => setSortBy(key)}
-      className={`font-mono text-[10px] uppercase tracking-wider transition-colors ${
-        sortBy === key ? 'text-gold' : 'text-muted-foreground hover:text-foreground'
-      }`}
-    >
-      {label}
-      {sortBy === key ? ' ↓' : ''}
-    </button>
-  );
+  const reports = q.data?.reports ?? [];
 
   return (
     <Card>
@@ -114,57 +126,32 @@ export function ReportCostsPanel() {
         </div>
       </CardHeader>
       <CardContent>
-        {q.isLoading ? (
-          <div className="h-48 animate-pulse rounded bg-muted/30" />
-        ) : !q.data ? (
+        {!q.isLoading && !q.data ? (
           <EmptyState
             title="Chưa có dữ liệu chi phí báo cáo"
             description="Endpoint /admin/ai/report-costs chưa được triển khai, hoặc chưa có báo cáo nào trong khoảng thời gian này."
           />
-        ) : (q.data.report_count ?? 0) === 0 ? (
-          <EmptyState
-            title="Chưa có báo cáo nào"
-            description={`Không có báo cáo nào được tạo trong ${days} ngày qua.`}
-          />
         ) : (
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-              <KpiCard label="Số báo cáo" value={q.data.report_count} />
-              <KpiCard label="Chi phí TB / báo cáo" value={fmtUsd(q.data.avg_cost_usd)} />
-              <KpiCard label="Chi phí trung vị" value={fmtUsd(q.data.median_cost_usd)} />
+              <KpiCard label="Số báo cáo" value={q.data?.report_count ?? 0} />
+              <KpiCard label="Chi phí TB / báo cáo" value={fmtUsd(q.data?.avg_cost_usd ?? 0)} />
+              <KpiCard label="Chi phí trung vị" value={fmtUsd(q.data?.median_cost_usd ?? 0)} />
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gold/10 text-left">
-                    <th className="px-2 py-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                      Báo cáo
-                    </th>
-                    <th className="px-2 py-2 text-right">{sortBtn('cost_usd', 'Chi phí')}</th>
-                    <th className="px-2 py-2 text-right">{sortBtn('trace_count', 'Số gọi')}</th>
-                    <th className="px-2 py-2 text-right">{sortBtn('total_latency_ms', 'Tổng độ trễ')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {reports.map((r) => (
-                    <tr
-                      key={r.reading_session_id}
-                      className="border-b border-gold/5 transition-colors duration-300 ease-editorial hover:bg-card/60"
-                    >
-                      <td className="px-2 py-2 font-mono text-xs text-foreground" title={r.reading_session_id}>
-                        {shortId(r.reading_session_id)}
-                      </td>
-                      <td className="px-2 py-2 text-right font-mono text-xs text-gold">{fmtUsd(r.cost_usd)}</td>
-                      <td className="px-2 py-2 text-right font-mono text-xs text-muted-foreground">{r.trace_count}</td>
-                      <td className="px-2 py-2 text-right font-mono text-xs text-purple">
-                        {fmtSeconds(r.total_latency_ms)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <AdminTable
+              rows={reports}
+              columns={COLUMNS}
+              getRowId={(r) => r.reading_session_id}
+              loading={q.isLoading}
+              empty={
+                <EmptyState
+                  title="Chưa có báo cáo nào"
+                  description={`Không có báo cáo nào được tạo trong ${days} ngày qua.`}
+                />
+              }
+              caption="Chi phí mỗi báo cáo"
+            />
 
             <p className="text-[11px] leading-relaxed text-muted-foreground">
               Lưu ý: pipeline báo cáo hiện chưa ghi nhận <code className="font-mono">cost_usd</code> trên
