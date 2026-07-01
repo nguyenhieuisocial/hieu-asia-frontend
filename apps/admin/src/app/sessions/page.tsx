@@ -32,6 +32,8 @@ import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ShortId } from '@/components/admin/ShortId';
+import { SavedFiltersMenu } from '@/components/admin/SavedFiltersMenu';
+import { useSavedFilters } from '@/lib/saved-filters';
 import {
   Button,
   Card,
@@ -306,6 +308,13 @@ function AdminSessionsPageInner() {
   const [toDate, setToDate] = React.useState<string>(() => searchParams?.get('to') ?? '');
   const [userId, setUserId] = React.useState<string>(
     () => searchParams?.get('user_id') ?? '',
+  );
+  // Saved filter presets — client-side (localStorage). Purely additive; captures
+  // only the text-search + primary status filter to stay safe against the
+  // URL-synced multi-dimension filter state on this page.
+  const savedFilters = useSavedFilters<{ search: string; status: StatusFilter }>(
+    'sessions',
+    { search: '', status: '' },
   );
   const [selected, setSelected] = React.useState<string[]>([]);
   const [confirmBulkOpen, setConfirmBulkOpen] = React.useState(false);
@@ -1232,6 +1241,21 @@ function AdminSessionsPageInner() {
             >
               {isFetching ? 'Đang tải…' : 'Làm mới'}
             </Button>
+            <SavedFiltersMenu
+              className="ml-auto"
+              presets={savedFilters.presets}
+              onApply={(name) => {
+                const p = savedFilters.loadPreset(name);
+                if (p) {
+                  setSearch(p.search);
+                  setStatus(p.status);
+                  setPage(1);
+                }
+              }}
+              onDelete={savedFilters.deletePreset}
+              onSave={(name) => savedFilters.savePreset(name, { search, status })}
+              saveHint="Lưu bộ lọc hiện tại"
+            />
           </div>
           {userId ? (
             <div className="mt-3 flex items-center gap-2 text-xs">

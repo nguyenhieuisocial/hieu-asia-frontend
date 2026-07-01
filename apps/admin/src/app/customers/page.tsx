@@ -54,6 +54,8 @@ import {
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
+import { SavedFiltersMenu } from '@/components/admin/SavedFiltersMenu';
+import { useSavedFilters } from '@/lib/saved-filters';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { KpiCard } from '@/components/admin/kpi-card';
 import {
@@ -126,6 +128,10 @@ export default function CustomersPage() {
   const [search, setSearch] = React.useState('');
   const [plan, setPlan] = React.useState<PlanFilter>('all');
   const [cursor, setCursor] = React.useState<string | undefined>(undefined);
+  const savedFilters = useSavedFilters<{ search: string; plan: PlanFilter }>(
+    'customers',
+    { search: '', plan: 'all' },
+  );
 
   React.useEffect(() => {
     const t = window.setTimeout(() => setSearch(searchInput.trim()), 300);
@@ -392,6 +398,23 @@ export default function CustomersPage() {
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
+            <SavedFiltersMenu
+              className="ml-auto"
+              presets={savedFilters.presets}
+              onApply={(name) => {
+                const p = savedFilters.loadPreset(name);
+                if (p) {
+                  setSearchInput(p.search);
+                  setPlan(p.plan);
+                  setCursor(undefined);
+                }
+              }}
+              onDelete={savedFilters.deletePreset}
+              onSave={(name) =>
+                savedFilters.savePreset(name, { search: searchInput, plan })
+              }
+              saveHint="Lưu tìm kiếm + plan hiện tại"
+            />
           </div>
         </CardContent>
       </Card>

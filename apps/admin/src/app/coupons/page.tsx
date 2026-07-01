@@ -37,6 +37,8 @@ import {
 import { Ticket, Plus, ShieldAlert, Trash2, Search, Percent, CheckCircle2, XCircle, Download, Pencil } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
+import { SavedFiltersMenu } from '@/components/admin/SavedFiltersMenu';
+import { useSavedFilters } from '@/lib/saved-filters';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
@@ -173,6 +175,10 @@ export default function CouponsPage() {
   const [search, setSearch] = React.useState('');
   const [statusFilter, setStatusFilter] = React.useState<StatusFilter>('all');
   const searchRef = React.useRef<HTMLInputElement>(null);
+  const savedFilters = useSavedFilters<{ search: string; statusFilter: StatusFilter }>(
+    'coupons',
+    { search: '', statusFilter: 'all' },
+  );
 
   React.useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -546,7 +552,7 @@ export default function CouponsPage() {
                 className="pl-9"
               />
             </div>
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap items-center gap-1.5">
               {STATUS_FILTERS.map((f) => {
                 const active = statusFilter === f.value;
                 return (
@@ -565,6 +571,22 @@ export default function CouponsPage() {
                   </button>
                 );
               })}
+              <SavedFiltersMenu
+                className="ml-auto"
+                presets={savedFilters.presets}
+                onApply={(name) => {
+                  const p = savedFilters.loadPreset(name);
+                  if (p) {
+                    setSearch(p.search);
+                    setStatusFilter(p.statusFilter);
+                  }
+                }}
+                onDelete={savedFilters.deletePreset}
+                onSave={(name) =>
+                  savedFilters.savePreset(name, { search, statusFilter })
+                }
+                saveHint="Lưu tìm kiếm + trạng thái hiện tại"
+              />
             </div>
           </div>
         </CardHeader>
