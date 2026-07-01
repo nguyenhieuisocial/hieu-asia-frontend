@@ -99,6 +99,12 @@ const TOPICS: readonly LearnTopic[] = [
     blurb: 'Tam Hợp / Lục Hợp / Xung / Hại + nạp âm; giọng dung hòa, không phán khắc.',
   },
   {
+    href: '/learn/con-giap',
+    title: '12 Con Giáp',
+    subtitle: 'Đông phương — Địa Chi',
+    blurb: 'Tính cách, sở trường, tam hợp & tứ hành xung của 12 con giáp — tham khảo, không phán.',
+  },
+  {
     href: '/learn/sao-han',
     title: 'Sao Hạn (Cửu Diệu)',
     subtitle: 'Đông phương — 9 sao',
