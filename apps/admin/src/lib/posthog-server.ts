@@ -973,6 +973,81 @@ export async function fetchAcquisitionFunnel(): Promise<FunnelStepRow[] | null> 
 }
 
 /* -------------------------------------------------------------------------
+ * Audience breakdown — aggregate device / OS / browser / country / city
+ * distribution across ALL users, last 30 days, from PostHog's auto-captured
+ * properties ($device_type / $os / $browser / $geoip_*). Distinct from the
+ * per-user fetchUserDeviceProfile — this is the founder-facing "who is my
+ * audience" view (mobile-first split, top markets, top cities).
+ * --------------------------------------------------------------------- */
+
+export interface DimensionCount {
+  /** The dimension value, e.g. "Mobile" / "Vietnam" / "Chrome". */
+  key: string;
+  /** Distinct persons in this bucket over the window. */
+  users: number;
+}
+
+export interface AudienceBreakdown {
+  /** Distinct persons with any event in the 30-day window (denominator). */
+  totalUsers: number;
+  devices: DimensionCount[];
+  os: DimensionCount[];
+  browsers: DimensionCount[];
+  countries: DimensionCount[];
+  cities: DimensionCount[];
+}
+
+/**
+ * Distinct persons grouped by one auto-captured property, last 30 days,
+ * top `limit`. `prop` is a FIXED literal chosen by the caller below (never
+ * user input), so inline interpolation is injection-safe. Empty on failure so
+ * a single dimension's error never nulls the whole breakdown.
+ */
+async function fetchDimensionCounts(prop: string, limit: number): Promise<DimensionCount[]> {
+  const sql = `
+    SELECT coalesce(nullIf(${prop}, ''), 'Không rõ') AS k,
+           count(DISTINCT person_id) AS users
+    FROM events
+    WHERE timestamp > now() - INTERVAL 30 DAY
+    GROUP BY k
+    ORDER BY users DESC
+    LIMIT ${limit}
+  `;
+  const rows = await runHogQL(sql);
+  if (!rows) return [];
+  return rows
+    .map((r) => ({ key: String(r[0] ?? ''), users: Number(r[1] ?? 0) || 0 }))
+    .filter((r) => r.key);
+}
+
+/**
+ * Aggregate audience breakdown across five dimensions, run in parallel.
+ * Returns null only when PostHog is unconfigured or EVERY query failed (so the
+ * panel shows a clean "unavailable" state); otherwise returns whatever
+ * dimensions succeeded (each may be empty).
+ */
+export async function fetchAudienceBreakdown(): Promise<AudienceBreakdown | null> {
+  const [totalRows, devices, os, browsers, countries, cities] = await Promise.all([
+    runHogQL(`SELECT count(DISTINCT person_id) FROM events WHERE timestamp > now() - INTERVAL 30 DAY`),
+    fetchDimensionCounts('properties.$device_type', 6),
+    fetchDimensionCounts('properties.$os', 8),
+    fetchDimensionCounts('properties.$browser', 8),
+    fetchDimensionCounts('properties.$geoip_country_name', 12),
+    fetchDimensionCounts('properties.$geoip_city_name', 12),
+  ]);
+  const allEmpty =
+    totalRows === null &&
+    devices.length === 0 &&
+    os.length === 0 &&
+    browsers.length === 0 &&
+    countries.length === 0 &&
+    cities.length === 0;
+  if (allEmpty) return null;
+  const totalUsers = totalRows && totalRows[0] ? Number(totalRows[0][0] ?? 0) || 0 : 0;
+  return { totalUsers, devices, os, browsers, countries, cities };
+}
+
+/* -------------------------------------------------------------------------
  * Wave 61.07 — Feature flag REST helper (not HogQL).
  * --------------------------------------------------------------------- */
 
