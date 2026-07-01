@@ -72,7 +72,7 @@ export function EOSIDIN() {
             );
           })}
 
-          <circle cx={center} cy={center} r={62} fill="#1A1A1C" stroke="#B8923D" strokeOpacity={0.4} />
+          <circle cx={center} cy={center} r={62} fill="var(--ig-fill,#1A1A1C)" stroke="#B8923D" strokeOpacity={0.4} />
           <text
             x={center}
             y={center - 6}
@@ -104,7 +104,7 @@ export function EOSIDIN() {
                 cx={node.x}
                 cy={node.y}
                 r={36}
-                fill={active === node.idx ? '#B8923D' : '#0E0E0F'}
+                fill={active === node.idx ? '#B8923D' : "var(--ig-fill-2,#0E0E0F)"}
                 stroke="#B8923D"
                 strokeOpacity={active === node.idx ? 1 : 0.5}
                 strokeWidth={active === node.idx ? 2 : 1.5}

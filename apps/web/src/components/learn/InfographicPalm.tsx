@@ -76,7 +76,7 @@ export function InfographicPalm() {
       >
         <path
           d="M 50 200 Q 40 130 60 90 Q 75 60 95 70 L 105 130 Q 110 60 130 50 Q 150 45 155 80 L 158 130 Q 165 50 185 45 Q 205 50 205 90 L 208 135 Q 220 75 240 80 Q 258 90 255 130 L 250 200 Q 260 260 245 320 Q 220 360 165 365 Q 110 360 80 320 Q 55 270 50 200 Z"
-          fill="#1A1A1C"
+          fill="var(--ig-fill,#1A1A1C)"
           stroke="#B8923D"
           strokeOpacity={0.3}
           strokeWidth={1.5}

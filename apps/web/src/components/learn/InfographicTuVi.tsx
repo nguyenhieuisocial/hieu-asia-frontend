@@ -64,7 +64,7 @@ export function InfographicTuVi() {
         <defs>
           <radialGradient id="tv-bg" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#3B2754" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#0E0E0F" stopOpacity="0" />
+            <stop offset="100%" stopColor="var(--ig-gradient,#0E0E0F)" stopOpacity="0" />
           </radialGradient>
         </defs>
         <circle cx={center} cy={center} r={outerR + 10} fill="url(#tv-bg)" />
@@ -72,7 +72,7 @@ export function InfographicTuVi() {
           <g key={s.idx}>
             <path
               d={s.path}
-              fill={active === s.idx ? '#B8923D' : '#1A1A1C'}
+              fill={active === s.idx ? '#B8923D' : "var(--ig-fill,#1A1A1C)"}
               fillOpacity={active === s.idx ? 0.45 : 0.6}
               stroke="#B8923D"
               strokeOpacity={0.5}
@@ -94,7 +94,7 @@ export function InfographicTuVi() {
             </text>
           </g>
         ))}
-        <circle cx={center} cy={center} r={innerR - 6} fill="#0E0E0F" stroke="#B8923D" strokeOpacity={0.4} />
+        <circle cx={center} cy={center} r={innerR - 6} fill="var(--ig-fill-2,#0E0E0F)" stroke="#B8923D" strokeOpacity={0.4} />
         <text
           x={center}
           y={center - 12}
