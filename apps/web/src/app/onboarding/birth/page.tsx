@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu
 import { BirthDataForm } from '@/components/birth-data-form';
 import { SiteNav } from '@/components/home/SiteNav';
 import { OnboardingStepBadge } from '@/components/onboarding-recap';
+import { WizardFooter } from '@/components/onboarding/WizardFooter';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata = {
@@ -57,11 +58,7 @@ export default function OnboardingBirthPage() {
             </CardContent>
           </Card>
 
-          <p className="mt-6 text-center text-xs text-muted-foreground">
-            <Link href="/onboarding/consent" className="text-gold underline underline-offset-4 hover:opacity-80">
-              ← Quay lại bước Đồng ý dữ liệu
-            </Link>
-          </p>
+          <WizardFooter currentStep={4} totalSteps={4} previousHref="/onboarding/consent" />
         </section>
       </main>
     </>
