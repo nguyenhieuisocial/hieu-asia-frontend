@@ -99,7 +99,7 @@ export function AffiliateTab() {
           <CardHeader>
             <CardTitle className="text-lg">Bạn chưa tham gia affiliate</CardTitle>
             <CardDescription>
-              Đăng ký để nhận mã giới thiệu và 30% hoa hồng trên đơn của khách bạn giới thiệu.
+              Đăng ký để nhận mã giới thiệu: 30% hoa hồng đơn đầu + 10% khi khách gia hạn. Một cấp, không đa cấp.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -113,7 +113,7 @@ export function AffiliateTab() {
           <Card>
             <CardHeader>
               <CardTitle className="text-lg">Mã giới thiệu</CardTitle>
-              <CardDescription>Chia sẻ để nhận 30% hoa hồng trên đơn của khách bạn giới thiệu.</CardDescription>
+              <CardDescription>Chia sẻ để nhận 30% hoa hồng đơn đầu + 10% khi khách gia hạn. Một cấp, không đa cấp.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex flex-wrap items-center gap-2">

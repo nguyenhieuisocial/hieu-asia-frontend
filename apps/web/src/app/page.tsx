@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     absolute: 'Tử Vi & Bát Tự AI — hieu.asia | Cẩm nang hiểu mình',
   },
   description:
-    'Kết hợp Tử Vi, Bát Tự, Thần Số Học, MBTI và AI Mentor để giúp bạn hiểu bản thân, đặt câu hỏi đúng và tự ra quyết định có trách nhiệm.',
+    'Kết hợp Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng và AI Mentor để giúp bạn hiểu bản thân, đặt câu hỏi đúng và tự ra quyết định có trách nhiệm.',
   alternates: { canonical: 'https://hieu.asia/' },
   openGraph: {
     title: 'hieu.asia — Hiểu mình. Quyết định mình.',
@@ -125,7 +125,7 @@ const HOWTO_JSONLD = {
       '@type': 'HowToStep',
       position: 2,
       name: 'AI phân tích trong 30 giây',
-      text: 'Hệ thống tổng hợp Tử Vi, Bát Tự, Thần Số Học và MBTI thành một bức tranh rõ ràng.',
+      text: 'Hệ thống tổng hợp Tử Vi, Bát Tự, MBTI, Big Five và Xem Tướng (cùng các công cụ như Thần Số Học) thành một bức tranh rõ ràng.',
       url: 'https://hieu.asia/#how',
     },
     {
@@ -268,7 +268,7 @@ const SOFTWARE_APP_JSONLD = {
   applicationCategory: 'LifestyleApplication',
   operatingSystem: 'Web',
   description:
-    'Kết hợp Tử Vi, Bát Tự, Thần Số Học, MBTI và AI Mentor để giúp bạn hiểu bản thân, đặt câu hỏi đúng và tự ra quyết định có trách nhiệm.',
+    'Kết hợp Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng và AI Mentor để giúp bạn hiểu bản thân, đặt câu hỏi đúng và tự ra quyết định có trách nhiệm.',
   inLanguage: 'vi-VN',
   offers: [
     {

@@ -298,7 +298,7 @@ export function DaiVanHienTaiForm() {
                   <p>
                     Đây là bản rút gọn — chỉ nói cung chủ đại vận. Để xem chi tiết: cơ
                     hội + rủi ro mỗi năm, lưu niên 2026, tam phương tứ chính hỗ trợ/phá
-                    đại vận, Mentor đối thoại — lập lá số đầy đủ (vẫn miễn phí).
+                    đại vận, Mentor đối thoại — lập lá số đầy đủ.
                   </p>
                 </div>
 

@@ -167,8 +167,8 @@ export default function BatTuLandingPage() {
               Bát Tự đọc bản đồ ngũ hành từ tám chữ Thiên Can + Địa Chi của năm-tháng-ngày-giờ
               sinh. hieu.asia kết hợp engine tính xác định (cùng dữ liệu vào luôn cho cùng kết
               quả) tính 4 trụ + thập thần với AI Mentor
-              đối chiếu cùng Tử Vi, MBTI và Thần Số Học — để bạn ra quyết định, không phải để
-              phán mệnh.
+              đối chiếu cùng Tử Vi, MBTI, Big Five và Xem Tướng — để bạn ra quyết định, không
+              phải để phán mệnh.
             </p>
 
             <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
@@ -241,7 +241,7 @@ export default function BatTuLandingPage() {
               — Cách hieu.asia đọc
             </p>
             <h2 className="text-balance font-sans text-section-display font-bold tracking-tight text-foreground">
-              Một lá số, <ItalicSpan>bốn ống kính</ItalicSpan>
+              Một lá số, <ItalicSpan>năm ống kính</ItalicSpan>
             </h2>
 
             <div className="mt-8 grid gap-6 md:grid-cols-3">
@@ -310,8 +310,8 @@ export default function BatTuLandingPage() {
               Đọc <ItalicSpan goldDotAfter>tám chữ</ItalicSpan> của bạn
             </h2>
             <p className="mx-auto mt-6 max-w-marketing-text text-pretty text-base leading-relaxed text-muted-foreground">
-              Onboarding 5 phút. Engine tính 4 trụ, AI đối chiếu cùng Tử Vi, MBTI và Thần Số
-              Học — bạn đọc lá số đầy đủ trước khi xem luận giải.
+              Onboarding 5 phút. Engine tính 4 trụ, AI đối chiếu cùng Tử Vi, MBTI, Big Five và
+              Xem Tướng — bạn đọc lá số đầy đủ trước khi xem luận giải.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link

@@ -348,7 +348,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  // Ngũ hành bản mệnh theo năm sinh — hub + 1 trang/năm (1950–2025). Deterministic SSG.
+  // Ngũ hành bản mệnh theo năm sinh — hub + 1 trang/năm (1950–2026). Deterministic SSG.
   const banMenhUrls: MetadataRoute.Sitemap = [
     {
       url: `${BASE_URL}/ban-menh`,
