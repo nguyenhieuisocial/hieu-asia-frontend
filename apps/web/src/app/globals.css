@@ -1079,7 +1079,7 @@ body { overflow-wrap: break-word; }
 /* Bảng chi tiết MỞ RỘNG MƯỢT (không "bụp/giật" đẩy nội dung phía dưới): grid-rows
  * 0fr→1fr cho chiều cao co giãn mềm; khoảng cách trên cũng animate cùng. */
 .ob-detail-wrap { max-width: 30rem; margin: 1.25rem auto 0; }
-.ob-detail-wrap > .ob-detail { min-height: 0; overflow: hidden; }
+.ob-detail-wrap > .ob-detail, .ob-detail-wrap > .ob-reveal { min-height: 0; overflow: hidden; }
 @media (prefers-reduced-motion: no-preference) {
   .ob-detail-wrap {
     display: grid;
@@ -1091,6 +1091,67 @@ body { overflow-wrap: break-word; }
     to { grid-template-rows: 1fr; opacity: 1; margin-top: 1.25rem; }
   }
 }
+
+/* v4 — "Soi thử": lời mời nhập năm sinh. Input phải BẬT LẠI user-select
+ * (vì .ob-section đặt none để chặn kéo/chọn) → iOS mới gõ + đặt con trỏ được. */
+.ob-soi { margin: 1.5rem auto 0; max-width: 26rem; }
+.ob-soi-label { display: block; font-size: 13px; color: #cfc8ba; margin-bottom: 0.55rem; }
+.ob-soi-row { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+.ob-soi-input {
+  flex: 1 1 8rem; min-width: 0; max-width: 11rem;
+  height: 44px; padding: 0 0.9rem;
+  font-size: 15px; text-align: center; letter-spacing: 0.02em;
+  color: #f5f2ec; background: rgba(18, 20, 24, 0.72);
+  border: 1px solid rgba(224, 174, 98, 0.35); border-radius: 12px;
+  -webkit-user-select: text; user-select: text; -webkit-touch-callout: default;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.ob-soi-input::placeholder { color: #8a857a; }
+.ob-soi-input:focus { outline: none; border-color: rgba(224, 174, 98, 0.75); box-shadow: 0 0 0 3px rgba(224, 174, 98, 0.18); }
+.ob-soi-btn {
+  height: 44px; padding: 0 1.15rem;
+  font-size: 14px; font-weight: 600; white-space: nowrap;
+  color: #14161a; background: #e0ae62; border: 0; border-radius: 12px;
+  cursor: pointer; transition: background 0.2s ease, transform 0.1s ease;
+}
+.ob-soi-btn:hover { background: #ecc078; }
+.ob-soi-btn:active { transform: scale(0.98); }
+.ob-soi-btn:disabled { opacity: 0.7; cursor: default; }
+.ob-soi-note { display: block; font-size: 11.5px; color: #8f897d; margin-top: 0.5rem; }
+.ob-soi-err { display: block; font-size: 12px; color: #f0a08a; margin-top: 0.5rem; }
+
+/* "Đang đọc" — chòm sao hội tụ: mọi đường sáng lên + pulse chạy nhanh (~0.95s). */
+.ob-graph[data-reading] .ob-line { stroke: rgba(224, 174, 98, 0.85); }
+.ob-graph[data-reading] .ob-branch { stroke: rgba(224, 174, 98, 0.4); }
+@media (prefers-reduced-motion: no-preference) {
+  .ob-graph[data-reading] .ob-pulse { animation-duration: 0.55s !important; }
+  .ob-graph[data-reading] .ob-center-glow { animation-duration: 1.1s; }
+}
+
+/* Lát cắt THẬT về khách — thẻ phản chiếu (nền vàng trầm, tách khỏi bảng nhóm). */
+.ob-reveal {
+  max-width: 30rem; text-align: left;
+  border: 1px solid rgba(224, 174, 98, 0.4); border-radius: 14px;
+  background: rgba(40, 34, 22, 0.6); padding: 14px 16px;
+}
+.ob-reveal-head { display: flex; align-items: center; gap: 0.6rem; }
+.ob-reveal-emoji { font-size: 24px; line-height: 1; }
+.ob-reveal-heading { display: flex; flex-direction: column; min-width: 0; }
+.ob-reveal-title { font-weight: 700; color: #f5f2ec; font-size: 15px; }
+.ob-reveal-menh { font-size: 12.5px; color: #e0ae62; }
+.ob-reveal-body { margin-top: 0.6rem; font-size: 13px; line-height: 1.6; color: #d8d2c4; }
+.ob-reveal-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-top: 0.85rem; }
+.ob-reveal-cta {
+  display: inline-block; color: #14161a; background: #e0ae62;
+  padding: 0.5rem 0.9rem; border-radius: 999px; text-decoration: none;
+  transition: background 0.2s ease;
+}
+.ob-reveal-cta:hover { background: #ecc078; }
+.ob-reveal-again {
+  font-size: 12px; color: #cfc8ba; background: none; border: 0;
+  cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
+}
+.ob-reveal-again:hover { color: #f5f2ec; }
 
 /* draw the constellation in once when it scrolls into view */
 @media (prefers-reduced-motion: no-preference) {
