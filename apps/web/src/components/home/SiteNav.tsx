@@ -102,7 +102,7 @@ const MOBILE_TOOL_SECTIONS: readonly { label: string; links: readonly NavLink[] 
   }),
 ).filter((s) => s.links.length > 0);
 
-// Bài học — đủ 14 chủ đề /learn, xếp theo 3 trụ (founder: "bổ sung + sắp xếp").
+// Bài học — đủ 15 chủ đề /learn, xếp theo 3 trụ (founder: "bổ sung + sắp xếp").
 const MOBILE_LEARN: readonly NavLink[] = [
   { href: '/learn', label: 'Tất cả bài học' },
   // Cổ học Á Đông
@@ -113,6 +113,7 @@ const MOBILE_LEARN: readonly NavLink[] = [
   { href: '/learn/palm', label: 'Tướng tay' },
   { href: '/learn/phong-thuy', label: 'Phong thủy' },
   { href: '/learn/hop-tuoi', label: 'Hợp tuổi' },
+  { href: '/learn/con-giap', label: '12 Con Giáp' },
   { href: '/learn/sao-han', label: 'Sao Hạn' },
   // Tâm lý hiện đại
   { href: '/learn/mbti', label: 'MBTI' },

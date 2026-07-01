@@ -25,6 +25,7 @@ import { ENNEAGRAM_SLUGS } from '@/lib/enneagram-type-data';
 import { MBTI_SLUGS } from '@/lib/mbti-type-data';
 import { DISC_SLUGS } from '@/lib/disc-type-data';
 import { BIG_FIVE_SLUGS } from '@/lib/big-five-trait-data';
+import { CON_GIAP_SLUGS } from '@/lib/con-giap-data';
 
 const BASE_URL = 'https://hieu.asia';
 
@@ -79,6 +80,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/learn/phong-thuy`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/learn/chiem-tinh`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/learn/hop-tuoi`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/learn/con-giap`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/learn/sao-han`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/tu-vi-hom-nay`, lastModified: now, changeFrequency: 'daily', priority: 0.7 },
     { url: `${BASE_URL}/lich-van-nien`, lastModified: now, changeFrequency: 'daily', priority: 0.7 },
@@ -435,6 +437,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
+  // 12 Con Giáp — trang chi tiết 12 con giáp (/learn/con-giap/[slug]). Deterministic SSG.
+  const conGiapUrls: MetadataRoute.Sitemap = CON_GIAP_SLUGS.map((s) => ({
+    url: `${BASE_URL}/learn/con-giap/${s}`,
+    lastModified: now,
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }));
+
   // MBTI — trang chi tiết 16 nhóm (/learn/mbti/[code]). Deterministic SSG.
   const mbtiTypeUrls: MetadataRoute.Sitemap = MBTI_SLUGS.map((t) => ({
     url: `${BASE_URL}/learn/mbti/${t}`,
@@ -565,5 +575,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...lamNha, ...xongDat, ...khaiTruong, ...huongNha, ...tuVi2026ConGiap, ...tuVi2027ConGiap, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls, ...cungHoangDaoUrls, ...banMenhUrls, ...tamTaiUrls, ...kimLauUrls, ...mauXeUrls, ...huongBanUrls, ...cungHopUrls, ...enneagramTypeUrls, ...mbtiTypeUrls, ...discTypeUrls, ...bigFiveTraitUrls];
+  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...lamNha, ...xongDat, ...khaiTruong, ...huongNha, ...tuVi2026ConGiap, ...tuVi2027ConGiap, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls, ...cungHoangDaoUrls, ...banMenhUrls, ...tamTaiUrls, ...kimLauUrls, ...mauXeUrls, ...huongBanUrls, ...cungHopUrls, ...enneagramTypeUrls, ...conGiapUrls, ...mbtiTypeUrls, ...discTypeUrls, ...bigFiveTraitUrls];
 }
