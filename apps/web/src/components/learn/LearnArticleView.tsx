@@ -308,7 +308,7 @@ export function LearnArticleView({
                 <h2 className="mb-4 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
                   {relatedHeading}
                 </h2>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
                   {relatedLenses.map((lens) => (
                     <Link
                       key={lens.href}

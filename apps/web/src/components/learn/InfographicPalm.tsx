@@ -104,7 +104,7 @@ export function InfographicPalm() {
               key={line.id}
               type="button"
               onClick={() => setActive(line.id)}
-              className={`flex w-full items-center gap-2 rounded border px-2.5 py-1.5 text-left text-xs transition-colors ${
+              className={`flex min-h-[44px] w-full items-center gap-2 rounded border px-2.5 py-2 text-left text-xs transition-colors ${
                 active === line.id
                   ? 'border-gold bg-gold/10'
                   : 'border-border hover:border-gold/40'
