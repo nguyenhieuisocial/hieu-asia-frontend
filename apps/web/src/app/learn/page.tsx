@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { EOSIDIN } from '@/components/learn/EOSIDIN';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { itemList, breadcrumb } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   title: 'Học huyền học hiện đại',
@@ -101,6 +103,16 @@ const TOPICS: readonly LearnTopic[] = [
 export default function LearnLandingPage() {
   return (
     <main className="mx-auto max-w-5xl px-6 py-12 sm:py-16">
+      <JsonLd
+        data={[
+          itemList(TOPICS.map((t) => ({ name: t.title, url: t.href }))),
+          breadcrumb([
+            { name: 'Trang chủ', url: '/' },
+            { name: 'Học huyền học', url: '/learn' },
+          ]),
+        ]}
+      />
+
       <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
         <Link href="/" className="hover:text-gold">Trang chủ</Link>
         <span className="mx-1.5">/</span>

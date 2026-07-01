@@ -85,10 +85,10 @@ export const TOOLKIT_GROUPS: ToolGroup[] = [
       { n: 'Bát Tự', href: '/bat-tu', learn: '/learn/bat-tu' },
       { n: 'Xem Tướng', href: '/xem-tuong', learn: '/learn/palm' },
       { n: 'Thần Số', href: '/than-so-hoc', learn: '/learn/than-so-hoc' },
-      { n: 'Kinh Dịch', href: '/gieo-que' },
+      { n: 'Kinh Dịch', href: '/gieo-que', learn: '/learn/kinh-dich' },
       { n: 'Cân Xương', href: '/can-xuong' },
       { n: 'Thước Lỗ Ban', href: '/thuoc-lo-ban' },
-      { n: 'Hợp tuổi', href: '/hop-tuoi' },
+      { n: 'Hợp tuổi', href: '/hop-tuoi', learn: '/learn/hop-tuoi' },
       { n: 'Lịch vạn niên', href: '/lich-van-nien' },
       { n: 'Xem ngày tốt', href: '/xem-ngay' },
       { n: 'Sao hạn', href: '/sao-han' },
@@ -110,8 +110,8 @@ export const TOOLKIT_GROUPS: ToolGroup[] = [
   {
     label: 'Chiêm tinh phương Tây',
     tools: [
-      { n: 'Bản đồ sao', href: '/ban-do-sao' },
-      { n: 'Cung hoàng đạo', href: '/cung-hoang-dao' },
+      { n: 'Bản đồ sao', href: '/ban-do-sao', learn: '/learn/chiem-tinh' },
+      { n: 'Cung hoàng đạo', href: '/cung-hoang-dao', learn: '/learn/chiem-tinh' },
     ],
   },
   { label: 'Trực giác', tools: [{ n: 'Tarot', href: '/tarot', learn: '/learn/tarot' }] },

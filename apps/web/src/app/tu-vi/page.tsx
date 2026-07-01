@@ -8,7 +8,7 @@ import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
-  title: 'Tử Vi Đẩu Số: lập lá số, tra cung và sao bằng AI',
+  title: 'Công cụ Tử Vi Đẩu Số: lập lá số, tra cung và sao bằng AI',
   description:
     'Cẩm nang Tử Vi Đẩu Số: lập lá số 12 cung theo trường phái Bắc phái 121 sao, tra cứu ý nghĩa từng cung và từng sao miễn phí, luận đại vận lưu niên. Luận giải AI chuyên sâu tuỳ chọn qua /pricing.',
   alternates: { canonical: 'https://hieu.asia/tu-vi' },
@@ -147,6 +147,14 @@ export default function TuViHubPage() {
             lập lá số theo trường phái Bắc phái 121 sao, có đại vận và lưu niên — kèm AI
             Mentor đối chiếu với bối cảnh đời thực để giúp bạn ra quyết định.
           </p>
+
+          <Link
+            href="/learn/tu-vi"
+            className="mt-4 inline-flex items-center text-sm text-muted-foreground hover:text-gold"
+          >
+            Chưa quen Tử Vi? Đọc bài học cơ bản
+            <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
+          </Link>
 
           <div className="mt-7 flex flex-wrap gap-3">
             <Button asChild size="lg"><Link href="/onboarding">

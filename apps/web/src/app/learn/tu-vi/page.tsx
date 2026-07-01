@@ -6,7 +6,7 @@ import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { PALACE_READINGS } from '@/lib/palace-readings';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import { article, breadcrumb, faqPage, itemList } from '@/lib/seo/jsonld';
 import {
   TuViFrame,
   TuViDepth,
@@ -72,6 +72,9 @@ const JSONLD = [
     { name: 'Tử Vi 12 cung', url: '/learn/tu-vi' },
   ]),
   faqPage(FAQS),
+  itemList(
+    PALACE_READINGS.map((p) => ({ name: 'Cung ' + p.name, url: '/learn/tu-vi/' + p.slug })),
+  ),
 ];
 
 export default function LearnTuViPage() {
@@ -89,10 +92,17 @@ export default function LearnTuViPage() {
           ảnh hưởng đến một mặt cụ thể của cuộc sống, từ sức khỏe, tài chính, tình cảm đến
           sự nghiệp.{' '}
           <Link
+            href="/tu-vi"
+            className="text-gold-700 underline-offset-4 hover:underline"
+          >
+            lập lá số Tử Vi miễn phí
+          </Link>{' '}
+          hoặc{' '}
+          <Link
             href="/methodology/tu-vi"
             className="text-gold-700 underline-offset-4 hover:underline"
           >
-            Xem phương pháp luận →
+            xem phương pháp luận →
           </Link>
         </>
       }
@@ -253,6 +263,156 @@ export default function LearnTuViPage() {
                 phái khác nhấn sao kia; điểm chung là luận đúng theo thứ tự: chính tinh trước,
                 rồi độ sáng, rồi Tứ Hóa, sau cùng mới tới phụ tinh — tất cả trong tam phương
                 tứ chính.
+              </p>
+            </div>
+          ),
+        },
+        {
+          id: 'muoi-bon-chinh-tinh',
+          tocLabel: '14 chính tinh',
+          heading: '14 chính tinh: nhân vật chính của lá số',
+          children: (
+            <div className="space-y-4 text-sm leading-relaxed text-muted-foreground">
+              <p>
+                Toàn bộ hệ Tử Vi xoay quanh{' '}
+                <strong className="text-foreground">14 chính tinh</strong> — nhóm sao quyết
+                định khuôn của mỗi cung. Chúng thường được nhớ theo ba bộ kinh điển hay đi
+                cùng nhau, cộng vài sao còn lại. Đây là giới thiệu ngắn để nhận mặt, không
+                phải luận giải: một sao còn tuỳ vị trí, độ sáng và Tứ Hóa mới ra nghĩa.
+              </p>
+              <div>
+                <p className="mb-1.5">
+                  <strong className="text-foreground">Bộ Sát · Phá · Tham</strong> — nhóm
+                  biến động, đột phá:
+                </p>
+                <ul className="ml-5 list-disc space-y-1.5">
+                  <li>
+                    <strong className="text-foreground">Thất Sát</strong> — quyết đoán,
+                    mạnh mẽ, thích tự chủ.
+                  </li>
+                  <li>
+                    <strong className="text-foreground">Phá Quân</strong> — phá cách, đổi
+                    mới, dám mạo hiểm.
+                  </li>
+                  <li>
+                    <strong className="text-foreground">Tham Lang</strong> — nhiều ham muốn,
+                    đa tài, giỏi giao tế.
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <p className="mb-1.5">
+                  <strong className="text-foreground">Bộ Cơ · Nguyệt · Đồng · Lương</strong>{' '}
+                  — nhóm ôn hoà, chuyên môn, nội tâm:
+                </p>
+                <ul className="ml-5 list-disc space-y-1.5">
+                  <li>
+                    <strong className="text-foreground">Thiên Cơ</strong> — trí tuệ, linh
+                    hoạt, giỏi tính toán.
+                  </li>
+                  <li>
+                    <strong className="text-foreground">Thái Âm</strong> — nội tâm, gia đạo,
+                    thiên về tài âm.
+                  </li>
+                  <li>
+                    <strong className="text-foreground">Thiên Đồng</strong> — hoà hảo, dễ
+                    chịu, ưa an ổn.
+                  </li>
+                  <li>
+                    <strong className="text-foreground">Thiên Lương</strong> — che chở, đạo
+                    đức, có phong thái trưởng thượng.
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <p className="mb-1.5">
+                  <strong className="text-foreground">Bộ Tử · Phủ · Vũ · Tướng</strong> —
+                  nhóm quản trị, trật tự, nguồn lực:
+                </p>
+                <ul className="ml-5 list-disc space-y-1.5">
+                  <li>
+                    <strong className="text-foreground">Tử Vi</strong> — đế tinh, thiên
+                    hướng lãnh đạo, cần vai trò điều phối.
+                  </li>
+                  <li>
+                    <strong className="text-foreground">Thiên Phủ</strong> — khố tinh, tích
+                    luỹ, ổn định, thận trọng.
+                  </li>
+                  <li>
+                    <strong className="text-foreground">Vũ Khúc</strong> — tài tinh, kỷ
+                    luật, quyết liệt với tiền bạc.
+                  </li>
+                  <li>
+                    <strong className="text-foreground">Thiên Tướng</strong> — phụ tá, tham
+                    mưu, trung thành.
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <p className="mb-1.5">
+                  <strong className="text-foreground">Hai chính tinh còn lại</strong> —
+                  cặp nhật nguyệt và sao khẩu thiệt:
+                </p>
+                <ul className="ml-5 list-disc space-y-1.5">
+                  <li>
+                    <strong className="text-foreground">Thái Dương</strong> — dương khí,
+                    năng lượng, thiên về danh tiếng.
+                  </li>
+                  <li>
+                    <strong className="text-foreground">Cự Môn</strong> — phân tích, tranh
+                    luận, mạnh về lời nói.
+                  </li>
+                </ul>
+              </div>
+              <p>
+                Không sao nào "toàn tốt" hay "toàn xấu". Cùng một chính tinh, đặt ở cung
+                khác nhau và gặp Tứ Hóa khác nhau sẽ luận rất khác — nên đây chỉ là bước
+                nhận diện đầu tiên.
+              </p>
+            </div>
+          ),
+        },
+        {
+          id: 'lop-thoi-gian',
+          tocLabel: 'Đại vận & lưu niên',
+          heading: 'Lớp thời gian: đại vận, lưu niên',
+          children: (
+            <div className="space-y-4 text-sm leading-relaxed text-muted-foreground">
+              <p>
+                Lá số gốc mô tả thiên hướng cả đời. Nhưng đời người có{' '}
+                <strong className="text-foreground">nhịp</strong>: giai đoạn này thuận về
+                sự nghiệp, giai đoạn kia nặng về gia đạo. Tử Vi mô tả nhịp đó bằng một lớp
+                riêng — <strong className="text-foreground">lớp thời gian</strong> — được áp
+                sau cùng khi luận.
+              </p>
+              <p>
+                <strong className="text-foreground">Đại vận</strong> là các chu kỳ vận lớn,
+                mỗi vận kéo dài{' '}
+                <strong className="text-foreground">khoảng 10 năm</strong> và lần lượt đi
+                qua từng cung. Đại vận rơi vào cung nào thì mười năm ấy chủ đề đời sống
+                nghiêng về lĩnh vực của cung đó; điểm khởi và chiều đi của đại vận phụ thuộc
+                vào Cục và giới tính, âm dương của năm sinh.
+              </p>
+              <p>
+                <strong className="text-foreground">Lưu niên</strong> là lớp từng năm: mỗi
+                năm dương lịch tương ứng một cung "lưu", cho biết bầu không khí và trọng tâm
+                của riêng năm đó, lồng bên trong đại vận đang diễn ra.
+              </p>
+              <p>
+                Điểm làm mỗi năm có "màu" riêng là{' '}
+                <strong className="text-foreground">Tứ Hóa lưu niên</strong>: theo Thiên Can
+                của năm, bốn sao được gắn Hóa Lộc, Hóa Quyền, Hóa Khoa, Hóa Kỵ và rơi vào
+                các cung khác nhau, tạo cho từng năm một chủ đề — nơi có cơ hội, nơi nên cẩn
+                trọng.
+              </p>
+              <p>
+                Đây là lớp áp <strong className="text-foreground">cuối cùng</strong> trong
+                trình tự luận: sau khi đã đọc Mệnh trong tam phương tứ chính và Tứ Hóa gốc,
+                mới phủ đại vận rồi lưu niên để trả lời "giai đoạn này nên tập trung vào
+                đâu". Và như mọi phần khác của Tử Vi, đây là{' '}
+                <strong className="text-foreground">thiên hướng theo thời gian, không phải
+                số phận đóng khung</strong> — một vận thuận vẫn cần hành động, một vận khó
+                vẫn có khoảng xoay xở.
               </p>
             </div>
           ),
