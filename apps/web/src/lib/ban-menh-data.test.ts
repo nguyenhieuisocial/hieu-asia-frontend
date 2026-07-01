@@ -19,7 +19,7 @@ import {
 } from './ban-menh-data';
 
 describe('buildBanMenh — năm ngoài dải', () => {
-  it('trả null khi ngoài 1950–2025', () => {
+  it('trả null khi ngoài 1950–2026', () => {
     expect(buildBanMenh(FROM_YEAR - 1)).toBeNull();
     expect(buildBanMenh(TO_YEAR + 1)).toBeNull();
     expect(buildBanMenh(NaN)).toBeNull();
