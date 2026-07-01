@@ -108,6 +108,13 @@
      * --ochre-rgb in dark mode resolves to gold-night for consistent
      * alpha math. */
     --ochre-rgb: 224 174 98;         /* Gold #E0AE62 in night mode */
+
+    /* /learn infographic surfaces — raised dark fills so near-black
+     * silhouettes stay visible on the ~#18 dark bg. NOT defined in :root,
+     * so light mode falls back to the literal hex in each var() call. */
+    --ig-fill: #2e2f35;      /* was #1A1A1C hand/sector/center fills */
+    --ig-fill-2: #26272c;    /* was #0E0E0F hub/node inactive fills */
+    --ig-gradient: #2a2438;  /* was #0E0E0F tu-vi radial gradient stop */
   }
 
   * {
