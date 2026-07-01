@@ -327,7 +327,7 @@ export default function BrandPage() {
                     </li>
                     <li>
                       <span className="font-mono text-sm uppercase tracking-[0.3em] text-gold-700">
-                        Premium AI insight platform
+                        AI Personal Insight Platform
                       </span>
                       <div className="text-xs text-muted-foreground">Eyebrow tiếng Anh</div>
                     </li>
