@@ -132,15 +132,18 @@ function CustomerDetailPageInner() {
     if (!customer) return customer;
     const bd = sessions.find((s) => s.state_json?.birth_data)?.state_json
       ?.birth_data;
-    if (!bd) return customer;
+    // Name lives in auth.users (Google full_name), NOT hieu_asia.users — fold it
+    // in so the header + profile show the real name even for a customer with no
+    // reading sessions (bd undefined). Birth fields still come from the session.
+    const authName = data?.auth_info?.display_name ?? null;
     return {
       ...customer,
-      display_name: customer.display_name ?? bd.display_name ?? null,
-      birth_date: customer.birth_date ?? bd.birth_date ?? null,
-      birth_place: customer.birth_place ?? bd.birth_place ?? null,
-      primary_concern: customer.primary_concern ?? bd.primary_concern ?? null,
+      display_name: customer.display_name ?? authName ?? bd?.display_name ?? null,
+      birth_date: customer.birth_date ?? bd?.birth_date ?? null,
+      birth_place: customer.birth_place ?? bd?.birth_place ?? null,
+      primary_concern: customer.primary_concern ?? bd?.primary_concern ?? null,
     };
-  }, [customer, sessions]);
+  }, [customer, sessions, data?.auth_info]);
 
   const copyId = React.useCallback(() => {
     navigator.clipboard
@@ -199,7 +202,7 @@ function CustomerDetailPageInner() {
             {customer?.plan && <PlanBadge plan={customer.plan} />}
           </div>
           <h1 className="mt-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
-            {customer?.display_name ?? `Khách hàng ${id.slice(0, 8)}…`}
+            {enrichedCustomer?.display_name ?? `Khách hàng ${id.slice(0, 8)}…`}
           </h1>
           <div className="mt-1 flex items-center gap-2">
             {/* Wave 63 — show first 8 chars (founder: full UUID too long);
