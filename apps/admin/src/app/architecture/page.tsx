@@ -14,7 +14,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { Card, CardContent, cn } from '@hieu-asia/ui';
+import { Button, Card, CardContent, cn, toast } from '@hieu-asia/ui';
 import {
   Network,
   ArrowDown,
@@ -33,6 +33,7 @@ import {
   Lock,
   Zap,
   FolderTree,
+  RotateCw,
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import {
@@ -45,6 +46,7 @@ import {
   QUICK_ACTIONS,
   type ArchNode,
 } from '@/lib/architecture';
+import { postRegenSitemap } from '@/lib/admin-api';
 
 // Heavy (React Flow) — lazy-load only when the "Tương tác" view is shown.
 const SystemMapFlow = dynamic(
@@ -100,6 +102,32 @@ function RunJobButton({ job }: { job: string }) {
     >
       {state === 'running' ? 'Đang chạy…' : state === 'ok' ? '✓ đã chạy' : state === 'err' ? '✗ lỗi' : 'Chạy ngay'}
     </button>
+  );
+}
+
+/** Inline "Cập Nhật ngay" button — asks the worker to regenerate + republish the map. */
+function RefreshButton() {
+  const [pending, setPending] = React.useState(false);
+  const click = React.useCallback(async () => {
+    if (pending) return;
+    setPending(true);
+    const res = await postRegenSitemap();
+    setPending(false);
+    if (res.ok) {
+      toast.success('Đã yêu cầu cập nhật — bản đồ sẽ mới sau ~1–2 phút khi xuất bản xong.');
+      return;
+    }
+    if (res.error === 'DEPLOY_HOOK_NOT_CONFIGURED') {
+      toast.error('Nút chưa được kích hoạt: cần cấu hình Deploy Hook (VERCEL_ADMIN_DEPLOY_HOOK) trong Vercel.');
+      return;
+    }
+    toast.error(res.error ?? 'Không cập nhật được.');
+  }, [pending]);
+  return (
+    <Button variant="outline" size="sm" onClick={click} disabled={pending}>
+      <RotateCw className={`mr-1.5 h-3.5 w-3.5 ${pending ? 'animate-spin' : ''}`} />
+      {pending ? 'Đang gửi…' : 'Cập Nhật ngay'}
+    </Button>
   );
 }
 
@@ -285,6 +313,10 @@ export default function ArchitecturePage() {
             <span className="text-muted-foreground">
               {core.queueAgeMin == null ? '—' : core.queueAgeMin === 0 ? 'trống' : `chờ lâu nhất ${core.queueAgeMin} phút`}
             </span>
+          </span>
+          <span className="flex w-full flex-wrap items-center justify-between gap-3 border-t border-border/50 pt-3">
+            <span className="text-muted-foreground">Bản đồ tự động cập nhật mỗi lần xuất bản.</span>
+            <RefreshButton />
           </span>
         </CardContent>
       </Card>
