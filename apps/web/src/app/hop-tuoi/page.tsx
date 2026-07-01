@@ -10,12 +10,12 @@ import { faqPage } from '@/lib/seo/jsonld';
 export const metadata = {
   title: 'Hợp tuổi cưới hỏi, làm ăn, sinh con — Phân tích AI',
   description:
-    'Xem hợp tuổi miễn phí cho cưới hỏi, hợp tác kinh doanh, sinh con, xông đất. Hiểu rõ Tam Hợp, Lục Hợp, Lục Xung, Lục Hại và ngũ hành — minh bạch từng quy tắc, không phán mù.',
+    'Xem hợp tuổi cho cưới hỏi, hợp tác kinh doanh, sinh con, xông đất. Hiểu rõ Tam Hợp, Lục Hợp, Lục Xung, Lục Hại và ngũ hành — minh bạch từng quy tắc, không phán mù.',
   alternates: { canonical: 'https://hieu.asia/hop-tuoi' },
   openGraph: {
     title: 'Hợp tuổi cưới hỏi, làm ăn, sinh con',
     description:
-      'Tương hợp Can Chi theo từng việc cụ thể — Tam Hợp, Lục Hợp, Tứ Hành Xung. Miễn phí.',
+      'Tương hợp Can Chi theo từng việc cụ thể — Tam Hợp, Lục Hợp, Tứ Hành Xung. Minh bạch từng quy tắc, tức thì.',
     url: 'https://hieu.asia/hop-tuoi',
     type: 'website' as const,
   },
@@ -141,7 +141,7 @@ export default function HopTuoiLandingPage() {
           Xem <GoldAccent>Hợp Tuổi</GoldAccent>
         </>
       }
-      description="Tương hợp Can Chi theo từng việc cụ thể — Thiên Can, Địa Chi, Tam Hợp, Lục Hợp, Tứ Hành Xung. Miễn phí, tức thì."
+      description="Tương hợp Can Chi theo từng việc cụ thể — Thiên Can, Địa Chi, Tam Hợp, Lục Hợp, Tứ Hành Xung. Tức thì, không cần đăng ký."
       breadcrumb={[
         { label: 'Trang chủ', href: '/' },
         { label: 'Hợp tuổi' },

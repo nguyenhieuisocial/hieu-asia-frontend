@@ -39,7 +39,7 @@ export interface DeskDirections {
 }
 
 export function isValidBirthYear(year: number): boolean {
-  return Number.isInteger(year) && year >= 1930 && year <= 2025;
+  return Number.isInteger(year) && year >= 1930 && year <= 2026;
 }
 
 export function deskDirections(year: number, gender: Gender): DeskDirections | null {
