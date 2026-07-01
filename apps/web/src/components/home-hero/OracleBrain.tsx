@@ -5,6 +5,7 @@ import { TOOLKIT_GROUPS } from '@/lib/catalog/tools';
 import { ShimmerText } from '@/components/fx/ShimmerText';
 import { Marquee } from '@/components/fx/Marquee';
 import type { BanMenhData } from '@/lib/ban-menh-data';
+import { Time24 } from '@/components/Time24';
 
 /**
  * OracleBrain — the signature "night-sky" section: the whole toolkit (Eastern
@@ -218,15 +219,14 @@ export function OracleBrain(): React.JSX.Element {
                 aria-describedby={err ? 'ob-dob-err' : 'ob-dob-note'}
                 aria-invalid={err ? true : undefined}
               />
-              <input
+              <Time24
                 id="ob-tob"
-                className="ob-soi-input ob-soi-time"
-                type="time"
                 value={birthTime}
-                onChange={(e) => {
-                  setBirthTime(e.target.value);
+                onChange={(v) => {
+                  setBirthTime(v);
                   if (err) setErr(null);
                 }}
+                inputClassName="ob-time-field"
                 aria-label="Giờ sinh (không bắt buộc)"
               />
               <button type="submit" className="ob-soi-btn" disabled={reading}>

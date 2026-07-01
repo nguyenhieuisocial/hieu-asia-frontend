@@ -115,6 +115,8 @@ export {
 export { Skeleton } from './components/Skeleton';
 export { Alert, AlertTitle, AlertDescription } from './components/Alert';
 export { Textarea } from './components/Textarea';
+export { Time24 } from './components/Time24';
+export type { Time24Props } from './components/Time24';
 
 // Toast notifications (sonner-backed)
 export { toast } from './components/Toast';

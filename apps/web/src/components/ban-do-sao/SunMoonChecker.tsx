@@ -3,6 +3,7 @@
 import * as React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
+import { Time24 } from '@/components/Time24';
 import {
   computeChart,
   chartBalance,
@@ -251,7 +252,7 @@ export function SunMoonChecker({ initialDate, initialTime }: SunMoonCheckerProps
           </div>
           <div className="space-y-1">
             <Label htmlFor="smTime">Giờ sinh</Label>
-            <Input id="smTime" type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+            <Time24 id="smTime" value={time} onChange={setTime} />
           </div>
         </div>
         <div className="space-y-1">

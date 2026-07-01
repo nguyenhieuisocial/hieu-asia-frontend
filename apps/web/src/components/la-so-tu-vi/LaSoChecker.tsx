@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
+import { Time24 } from '@/components/Time24';
 import { castTuViHoroscope, type TuViChart, type TuViHoroscope, type TuViPalace, type TuViStar, type CachCuc, type TuanKhong, type TrietLo } from '@/lib/tuvi-client';
 import { TuViChart12Palaces } from '@/components/tuvi/TuViChart12Palaces';
 import { NguHanhRemedyCard } from '@/components/ngu-hanh/NguHanhRemedyCard';
@@ -179,7 +180,7 @@ export function LaSoChecker({
           </div>
           <div className="space-y-1">
             <Label htmlFor="lsTime">Giờ sinh</Label>
-            <Input id="lsTime" type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+            <Time24 id="lsTime" value={time} onChange={setTime} />
           </div>
           <div className="space-y-1">
             <Label htmlFor="lsGender">Giới tính</Label>

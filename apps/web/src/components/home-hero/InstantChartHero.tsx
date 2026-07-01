@@ -4,6 +4,7 @@ import * as React from 'react';
 import dynamic from 'next/dynamic';
 import { ShimmerText } from '@/components/fx/ShimmerText';
 import { AuroraBackdrop } from '@/components/fx/AuroraBackdrop';
+import { Time24 } from '@/components/Time24';
 
 // BatTuChecker (engine Bát Tự + bảng 4 trụ + Nhật Chủ + đại vận + Thần Sát + nút
 // PDF, ~716 LOC) CHỈ render sau khi khách bấm "Lập lá số" (state `revealed`).
@@ -144,16 +145,14 @@ export function InstantChartHero(): React.JSX.Element {
               >
                 Giờ sinh
               </label>
-              <input
+              <Time24
                 id="ich-time"
-                type="time"
                 value={time}
                 disabled={unknownTime}
-                onChange={(e) => {
-                  setTime(e.target.value);
+                onChange={(v) => {
+                  setTime(v);
                   onChangeAny();
                 }}
-                className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-1 focus-visible:ring-gold disabled:opacity-50"
               />
             </div>
 

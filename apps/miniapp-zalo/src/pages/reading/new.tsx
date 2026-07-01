@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, Input, Label } from '@hieu-asia/ui';
+import { Card, CardContent, Input, Label, Time24 } from '@hieu-asia/ui';
 import { ZaloHeader } from '../../components/zalo-header';
 import { ZaloBottomCta } from '../../components/zalo-bottom-cta';
 
@@ -65,11 +65,10 @@ export function NewReadingPage() {
             </div>
             <div>
               <Label htmlFor="btime">Giờ sinh</Label>
-              <Input
+              <Time24
                 id="btime"
-                type="time"
                 value={draft.birth_time}
-                onChange={(e) => setDraft({ ...draft, birth_time: e.target.value })}
+                onChange={(v) => setDraft({ ...draft, birth_time: v })}
               />
               <p className="mt-1 text-[11px] text-cream/50">
                 Nếu không nhớ, hệ thống sẽ giảm độ tin cậy phần vận hạn.
