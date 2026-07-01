@@ -94,7 +94,7 @@ export function ScanRow({
             Tailwind v4 arbitrary `[&::-webkit-scrollbar]:hidden` + Firefox
             `[scrollbar-width:none]`. */}
         <div
-          className={`mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-4 [-ms-overflow-style:none] [scroll-padding-inline:1.5rem] [scrollbar-width:none] [-webkit-mask-image:linear-gradient(to_right,black_90%,transparent)] [mask-image:linear-gradient(to_right,black_90%,transparent)] md:mt-8 md:grid md:gap-6 md:overflow-visible md:pb-0 md:[-webkit-mask-image:none] md:[mask-image:none] ${desktopColsClass} [&::-webkit-scrollbar]:hidden`}
+          className={`mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-4 [-ms-overflow-style:none] [scroll-padding-inline:1.5rem] [scrollbar-width:none] scroll-fade-x md:mt-8 md:grid md:gap-6 md:overflow-visible md:pb-0 md:[-webkit-mask-image:none] md:[mask-image:none] ${desktopColsClass} [&::-webkit-scrollbar]:hidden`}
         >
           {items.map((item) => (
             <Link

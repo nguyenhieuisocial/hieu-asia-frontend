@@ -194,7 +194,7 @@ export function CongCuExplorer({
         {!isSearching && (
           <nav
             aria-label="Nhảy tới nhóm"
-            className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [-webkit-mask-image:linear-gradient(to_right,black_90%,transparent)] [mask-image:linear-gradient(to_right,black_90%,transparent)] lg:flex-1 lg:flex-wrap lg:overflow-visible lg:pb-0 lg:[-webkit-mask-image:none] lg:[mask-image:none] [&::-webkit-scrollbar]:hidden"
+            className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] scroll-fade-x lg:flex-1 lg:flex-wrap lg:overflow-visible lg:pb-0 lg:[-webkit-mask-image:none] lg:[mask-image:none] [&::-webkit-scrollbar]:hidden"
           >
             {categories.map((c) => {
               const count = byCat.get(c.id)?.length ?? 0;

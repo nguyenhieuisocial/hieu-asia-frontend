@@ -26,7 +26,7 @@ export const Default: Story = {
     title: (
       <>
         Người Việt{' '}
-        <u className="underline decoration-gold decoration-2 underline-offset-[6px]">
+        <u className="underline decoration-gold decoration-2">
           tin tưởng
         </u>{' '}
         hieu.asia<span className="text-gold-dot">.</span>
@@ -65,7 +65,7 @@ export const WithoutRiskReversal: Story = {
     title: (
       <>
         Người Việt{' '}
-        <u className="underline decoration-gold decoration-2 underline-offset-[6px]">
+        <u className="underline decoration-gold decoration-2">
           tin tưởng
         </u>{' '}
         hieu.asia<span className="text-gold-dot">.</span>

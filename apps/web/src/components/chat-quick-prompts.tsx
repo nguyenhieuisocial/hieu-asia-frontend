@@ -10,7 +10,7 @@ export interface ChatQuickPromptsProps {
 export function ChatQuickPrompts({ prompts, onPick }: ChatQuickPromptsProps) {
   if (!prompts.length) return null;
   return (
-    <div className="flex gap-2 overflow-x-auto border-t border-gold/15 bg-card/40 px-3 py-2 sm:px-4">
+    <div className="flex gap-2 overflow-x-auto scroll-fade-x border-t border-gold/15 bg-card/40 px-3 py-2 sm:px-4">
       {prompts.map((p, i) => (
         <button
           key={i}
