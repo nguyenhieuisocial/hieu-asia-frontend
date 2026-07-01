@@ -610,7 +610,12 @@ export default function GieoQuePage() {
               · 1/8 dương động), và lời giải được soạn theo nghĩa truyền thống
               của từng quẻ. Quẻ Dịch ở đây là công cụ gợi mở suy ngẫm — đúng tinh
               thần &ldquo;không bói mù&rdquo; — không phải lời tiên đoán chắc
-              chắn; quyết định cuối cùng vẫn là của bạn.
+              chắn; quyết định cuối cùng vẫn là của bạn. Muốn hiểu gốc rễ 64 quẻ,
+              đọc bài{' '}
+              <Link href="/learn/kinh-dich" className="text-gold hover:underline">
+                Học về Kinh Dịch
+              </Link>
+              .
             </p>
           </div>
         </section>

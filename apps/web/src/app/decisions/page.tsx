@@ -265,6 +265,16 @@ export default function DecisionsHubPage() {
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
+          <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
+            Công cụ liên quan:{' '}
+            <Link href="/decision-simulator" className="text-gold hover:underline">
+              So sánh 2 lựa chọn
+            </Link>{' '}
+            ·{' '}
+            <Link href="/journal" className="text-gold hover:underline">
+              Nhật ký Quyết định
+            </Link>
+          </p>
         </section>
       </main>
 

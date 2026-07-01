@@ -261,6 +261,16 @@ export default function TuViNgheNghiepPage() {
             nghề cụ thể, và không thay được việc bạn đánh giá kỹ năng, thị trường,
             tài chính thực tế của mình.
           </p>
+          <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+            Liên quan:{' '}
+            <Link href="/lo-trinh" className="text-gold hover:underline">
+              Lộ trình theo nhu cầu
+            </Link>{' '}
+            ·{' '}
+            <Link href="/methodology" className="text-gold hover:underline">
+              Engine tính gì, AI luận gì
+            </Link>
+          </p>
         </section>
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12">

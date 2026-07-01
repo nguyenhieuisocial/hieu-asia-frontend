@@ -93,7 +93,11 @@ const FAQ: readonly FaqItem[] = [
         <em>quan hệ ngũ hành</em> + <em>thập thần</em> giữa 4 trụ. Tử Vi mạnh ở chi tiết lĩnh
         vực (sự nghiệp, hôn nhân, tài chính); Bát Tự mạnh ở cân bằng năng lượng tổng thể. Hai
         hệ bổ sung cho nhau — hieu.asia đọc cả hai để đối chiếu chéo kết luận, không nhân danh
-        một hệ duy nhất.
+        một hệ duy nhất. Xem{' '}
+        <Link href="/so-sanh" className="text-gold hover:text-gold-soft">
+          so sánh lăng kính
+        </Link>{' '}
+        để chọn công cụ hợp với câu hỏi của bạn.
       </>
     ),
   },
