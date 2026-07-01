@@ -10,7 +10,7 @@ import { InfographicMBTI } from '@/components/learn/InfographicMBTI';
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import { article, breadcrumb, faqPage, itemList } from '@/lib/seo/jsonld';
 import { listTypes, MBTI_GROUPS, type MbtiGroupKey } from '@/lib/mbti-type-data';
 import {
   MbtiFrame,
@@ -68,6 +68,12 @@ const JSONLD = [
     { name: 'MBTI', url: '/learn/mbti' },
   ]),
   faqPage(FAQS),
+  itemList(
+    listTypes().map((t) => ({
+      name: `${t.code} — ${t.nick}`,
+      url: `/learn/mbti/${t.slug}`,
+    })),
+  ),
 ];
 
 export default function LearnMBTIPage() {

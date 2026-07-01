@@ -9,7 +9,7 @@ import {
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import { article, breadcrumb, faqPage, itemList } from '@/lib/seo/jsonld';
 import {
   DiscFrame,
   DiscDepth,
@@ -44,21 +44,6 @@ const FAQS = [
     q: 'Cần lưu ý gì?',
     a: 'DISC mô tả phong cách hành vi ở thời điểm làm bài, không phải năng lực hay giá trị con người, và không cố định cả đời. Dùng nó để hiểu mình, giao tiếp tốt hơn và tự quyết — không để dán nhãn hay đánh giá ai.',
   },
-];
-
-const JSONLD = [
-  article({
-    headline: 'DISC — 4 nhóm hành vi (D/I/S/C)',
-    description:
-      'DISC mô tả 4 thiên hướng hành vi: Thống trị (D), Ảnh hưởng (I), Kiên định (S), Tuân thủ (C). Cách bạn phản ứng với thử thách và con người — xu hướng, không phải nhãn cố định.',
-    url: '/learn/disc',
-  }),
-  breadcrumb([
-    { name: 'Trang chủ', url: '/' },
-    { name: 'Học huyền học', url: '/learn' },
-    { name: 'DISC', url: '/learn/disc' },
-  ]),
-  faqPage(FAQS),
 ];
 
 // 4 nhóm hành vi DISC (Marston, 1928 — miền công cộng). Mỗi nhóm mô tả thiên
@@ -96,6 +81,27 @@ const STYLES: { letter: string; vi: string; en: string; drive: string; strength:
     strength: 'Cẩn thận, phân tích kỹ, làm đúng quy trình.',
     watch: 'Dễ cầu toàn, chần chừ khi thiếu dữ liệu.',
   },
+];
+
+const JSONLD = [
+  article({
+    headline: 'DISC — 4 nhóm hành vi (D/I/S/C)',
+    description:
+      'DISC mô tả 4 thiên hướng hành vi: Thống trị (D), Ảnh hưởng (I), Kiên định (S), Tuân thủ (C). Cách bạn phản ứng với thử thách và con người — xu hướng, không phải nhãn cố định.',
+    url: '/learn/disc',
+  }),
+  breadcrumb([
+    { name: 'Trang chủ', url: '/' },
+    { name: 'Học huyền học', url: '/learn' },
+    { name: 'DISC', url: '/learn/disc' },
+  ]),
+  faqPage(FAQS),
+  itemList(
+    STYLES.map((s) => ({
+      name: `${s.letter} — ${s.vi} (${s.en})`,
+      url: `/learn/disc/${s.letter.toLowerCase()}`,
+    })),
+  ),
 ];
 
 export default function LearnDiscPage() {
