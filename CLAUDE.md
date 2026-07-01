@@ -1,7 +1,7 @@
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **hieu-asia-frontend** (12108 symbols, 25281 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **hieu-asia-frontend** (12166 symbols, 25429 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > Index stale? Run `node .gitnexus/run.cjs analyze` from the project root — it auto-selects an available runner. No `.gitnexus/run.cjs` yet? `npx gitnexus analyze` (npm 11 crash → `npm i -g gitnexus`; #1939).
 
@@ -81,7 +81,16 @@ Khi sửa bất kỳ bug nào:
 Ví dụ đã áp dụng (2026-07): gạch chân đè dấu tiếng Việt → base rule
 `u { text-underline-offset: 0.2em }` cho MỌI `<u>` (một nguồn); hàng cuộn ngang
 cắt cứng → utility dùng chung `.scroll-fade-x` (globals.css) áp cho mọi hàng
-chip/thẻ, trừ bảng/tab.
+chip/thẻ, trừ bảng/tab. Ô giờ native hiện "SA/CH" (AM/PM) theo locale trình
+duyệt — là chrome trình duyệt nên Google Translate KHÔNG dịch được → đổi ngôn
+ngữ trang thì SA/CH sai; đã thay MỌI `<input type="time">` bằng component chung
+`Time24` (24h, 2 ô số Giờ:Phút) trong `@hieu-asia/ui`, dùng cho cả web + mini-app.
+
+**QUY TẮC (giữ vĩnh viễn):** KHÔNG dùng `<input type="time">` — luôn dùng
+`Time24` từ `@hieu-asia/ui`. Các input locale-chrome khác cũng cần cảnh giác:
+`datetime-local` / `month` / `week` (hiện tên tháng / AM/PM theo locale). Còn
+sót: 2 ô `datetime-local` ở admin AuditTab (nội bộ, không có widget đổi ngôn
+ngữ) — chấp nhận tạm, xử lý riêng khi cần vì Time24 chỉ nhận giờ, không nhận ngày.
 
 ## Session / agent prefs
 
