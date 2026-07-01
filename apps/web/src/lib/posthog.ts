@@ -150,11 +150,15 @@ export function getPostHog(): PostHog | null {
     capture_performance: true,
     // Privacy: don't capture console logs in recordings (may leak tokens/PII).
     enable_recording_console_log: false,
-    // Privacy: honour the browser's "Do Not Track" header.
-    respect_dnt: true,
-    // Privacy: only create person profiles for identified users — anonymous
-    // visitors stay in event-only mode (cheaper + GDPR-friendly).
-    person_profiles: "identified_only",
+    // Max capture: do NOT auto-opt-out on the browser "Do Not Track" header.
+    // Capture is already CMP-consent-gated (opt_out_by_default + opt-in on
+    // Accept), so an explicit consent choice overrides the non-binding DNT
+    // signal — consented visitors are measured even if their browser sets DNT.
+    respect_dnt: false,
+    // Max capture: create person profiles for ALL consented visitors, incl.
+    // anonymous pre-login ones, so their journeys are analysable as persons
+    // (not just events). Costs more PostHog events; capture stays consent-gated.
+    person_profiles: "always",
     // Persistence: localStorage for distinct_id continuity, cookie for SSR.
     cross_subdomain_cookie: true,
     persistence: "localStorage+cookie",
