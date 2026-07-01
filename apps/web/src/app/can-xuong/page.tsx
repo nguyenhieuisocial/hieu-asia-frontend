@@ -19,6 +19,7 @@ import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton'
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
+import { describeApiError } from '@/lib/api-error';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -136,7 +137,7 @@ export default function CanXuongPage() {
       setResult(json.result);
       track('tool_used', { tool: 'can-xuong', result: 'ok' });
     } catch (e) {
-      setError((e as Error).message);
+      setError(describeApiError(e));
       track('tool_used', { tool: 'can-xuong', result: 'error' });
     } finally {
       setLoading(false);

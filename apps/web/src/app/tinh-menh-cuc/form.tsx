@@ -24,6 +24,7 @@ import {
 } from '@/components/tools/DownloadToolPdfButton';
 import { castTuViChart, type TuViChart } from '@/lib/tuvi-client';
 import { getNguHanhRemedy, type NguHanhRemedy } from '@/lib/ngu-hanh-remedy';
+import { describeApiError } from '@/lib/api-error';
 
 type Gender = 'male' | 'female';
 
@@ -89,7 +90,7 @@ export function TinhMenhCucForm() {
       });
       setResult(chart);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Lỗi không xác định.');
+      setError(describeApiError(e));
     } finally {
       setLoading(false);
     }

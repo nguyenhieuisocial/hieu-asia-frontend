@@ -11,6 +11,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { safeJson } from '@/lib/safe-json';
 import { getVietnamDateParts } from '@/lib/vn-date';
+import { describeApiError } from '@/lib/api-error';
 
 function getApiBase(): string {
   if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_URL) {
@@ -55,7 +56,7 @@ export default function TodayPage() {
         if (!data.ok) throw new Error(data.error);
         if (data.day) setDayInfo(data.day);
       } catch (e) {
-        if (!cancelled) setError(String((e as Error)?.message ?? e));
+        if (!cancelled) setError(describeApiError(e));
       } finally {
         if (!cancelled) setLoading(false);
       }

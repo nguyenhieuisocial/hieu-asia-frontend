@@ -26,6 +26,7 @@ import { getSupabaseAuth } from '@/lib/auth-client';
 import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { faqPage } from '@/lib/seo/jsonld';
+import { describeApiError } from '@/lib/api-error';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -184,7 +185,7 @@ export default function XemTuongPage() {
       markVisionDone();
       track('tool_used', { tool: 'vision-read', kind, result: 'ok' });
     } catch (err) {
-      setError((err as Error).message);
+      setError(describeApiError(err));
       track('tool_used', { tool: 'vision-read', kind, result: 'error' });
     } finally {
       setLoading(false);
