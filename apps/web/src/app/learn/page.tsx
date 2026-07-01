@@ -182,6 +182,47 @@ export default function LearnLandingPage() {
         </div>
         <EOSIDIN />
       </section>
+
+      {/* Đóng vòng học → làm: hiểu cội nguồn rồi thì áp lên chính mình.
+          CTA lập lá số + link sang các công cụ thật (chống trang chỉ-đọc). */}
+      <section className="mt-16 rounded-2xl border border-gold/25 bg-card/40 px-6 py-10 text-center">
+        <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
+          Hiểu rồi — giờ soi vào{' '}
+          <span className="bg-gold-gradient bg-clip-text text-transparent">chính bạn</span>
+        </h2>
+        <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+          Lập lá số miễn phí trong 30 giây và đọc báo cáo của mình với đúng những khái niệm
+          bạn vừa tìm hiểu — không cần tài khoản.
+        </p>
+        <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <Link
+            href="/onboarding"
+            className="inline-flex min-h-11 items-center justify-center rounded-full bg-gold-gradient px-8 py-3 text-sm font-semibold text-ink transition-transform hover:-translate-y-0.5"
+          >
+            Lập lá số miễn phí
+          </Link>
+          <Link
+            href="/cong-cu"
+            className="inline-flex min-h-11 items-center justify-center rounded-full border border-gold/30 px-8 py-3 text-sm font-semibold text-gold-700 transition-colors hover:border-gold/60 hover:text-gold"
+          >
+            Xem tất cả công cụ
+          </Link>
+        </div>
+        <nav aria-label="Công cụ liên quan" className="mt-6 text-sm text-muted-foreground">
+          Thử ngay:{' '}
+          <Link href="/la-so-tu-vi" className="text-gold-700 hover:text-gold hover:underline">
+            Lá số Tử Vi
+          </Link>
+          {' · '}
+          <Link href="/mbti" className="text-gold-700 hover:text-gold hover:underline">
+            Trắc nghiệm MBTI
+          </Link>
+          {' · '}
+          <Link href="/xem-tuong" className="text-gold-700 hover:text-gold hover:underline">
+            Xem chỉ tay
+          </Link>
+        </nav>
+      </section>
     </main>
   );
 }

@@ -13,6 +13,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { TimeFlowChecker } from '@/components/time-flow/TimeFlowChecker';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
@@ -269,6 +270,17 @@ export default function AnnualPlanningPage() {
             </Link></Button>
           </div>
         </section>
+
+        <div className="mt-12">
+          <RelatedTools
+            links={[
+              { href: '/monthly-planning', label: 'Kế hoạch tháng' },
+              { href: '/weekly-review', label: 'Đánh giá tuần' },
+              { href: '/lo-trinh/ke-hoach-nam', label: 'Lộ trình kế hoạch năm' },
+              { href: '/tu-vi-2026', label: 'Tử Vi 2026' },
+            ]}
+          />
+        </div>
       </section>
 
       <SiteFooter />

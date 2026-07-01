@@ -23,6 +23,7 @@ import {
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import {
   makeId,
   mondayOfWeekVN,
@@ -473,6 +474,17 @@ export default function WeeklyReviewPage() {
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </section>
+
+            <div className="mt-12">
+              <RelatedTools
+                links={[
+                  { href: '/journal', label: 'Nhật ký quyết định' },
+                  { href: '/monthly-planning', label: 'Kế hoạch tháng' },
+                  { href: '/annual-planning', label: 'Kế hoạch năm' },
+                  { href: '/decisions', label: 'Decision Brief' },
+                ]}
+              />
+            </div>
           </>
         )}
       </section>

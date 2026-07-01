@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Button } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
@@ -168,6 +169,16 @@ export default function DoChinhXacPage() {
             </dl>
           </section>
           </RevealOnScroll>
+
+          <div className="border-t border-border pt-6">
+            <RelatedTools
+              links={[
+                { href: '/bang-chung', label: 'Tự kiểm chứng lá số' },
+                { href: '/methodology', label: 'Phương pháp luận' },
+                { href: '/tu-vi', label: 'Xem Tử Vi' },
+              ]}
+            />
+          </div>
         </div>
       </ToolPageShell>
     </>

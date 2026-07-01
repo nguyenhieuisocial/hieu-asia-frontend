@@ -4,6 +4,7 @@ import { Card, CardContent } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 
 export const metadata: Metadata = {
   title: 'Bản tin — Tử Vi hàng tuần',
@@ -70,6 +71,16 @@ export default function NewsletterHubPage() {
         </section>
 
         <NewsletterSignup variant="inline" id="newsletter-hub" />
+
+        <div className="mt-10">
+          <RelatedTools
+            links={[
+              { href: '/newsletter/archive', label: 'Các bài trước' },
+              { href: '/community', label: 'Cộng đồng' },
+              { href: '/changelog', label: 'Nhật ký cập nhật' },
+            ]}
+          />
+        </div>
       </main>
       <SiteFooter />
     </div>
