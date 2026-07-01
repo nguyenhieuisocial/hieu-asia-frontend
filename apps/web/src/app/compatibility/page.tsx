@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, RadioGroup, RadioGroupItem } from '@hieu-asia/ui';
+import { Time24 } from '@/components/Time24';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
@@ -98,11 +99,10 @@ function ProfileFieldset({
           <Label htmlFor={`${prefix}-time`} className="text-foreground/85">
             Giờ sinh (tùy chọn)
           </Label>
-          <Input
+          <Time24
             id={`${prefix}-time`}
-            type="time"
             value={value.birthTime}
-            onChange={(e) => onChange({ ...value, birthTime: e.target.value })}
+            onChange={(v) => onChange({ ...value, birthTime: v })}
             className="bg-card/60"
           />
         </div>

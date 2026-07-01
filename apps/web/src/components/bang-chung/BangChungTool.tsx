@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
+import { Time24 } from '@/components/Time24';
 import {
   backtestChart,
   type LifeCategory,
@@ -234,7 +235,7 @@ export function BangChungTool() {
             </div>
             <div className="space-y-1">
               <Label htmlFor="bcTime">Giờ sinh</Label>
-              <Input id="bcTime" type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+              <Time24 id="bcTime" value={time} onChange={setTime} />
             </div>
             <div className="space-y-1">
               <Label htmlFor="bcGender">Giới tính</Label>

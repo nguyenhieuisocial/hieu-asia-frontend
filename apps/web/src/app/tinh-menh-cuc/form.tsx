@@ -13,6 +13,7 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from '@hieu-asia/ui';
+import { Time24 } from '@/components/Time24';
 import { AlertTriangle, Sparkles, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
@@ -163,12 +164,7 @@ export function TinhMenhCucForm() {
                       </span>
                     )}
                   </Label>
-                  <Input
-                    id="birth-hour"
-                    type="time"
-                    value={birthHour}
-                    onChange={(e) => setBirthHour(e.target.value)}
-                  />
+                  <Time24 id="birth-hour" value={birthHour} onChange={setBirthHour} />
                   <label className="flex items-center gap-2 text-xs text-muted-foreground">
                     <input
                       type="checkbox"

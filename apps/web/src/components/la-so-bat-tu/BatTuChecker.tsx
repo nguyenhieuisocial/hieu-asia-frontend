@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
+import { Time24 } from '@/components/Time24';
 import { calculateBazi, type BaziChart, type BaziPillar, type Element, ELEMENTS } from '@/lib/bazi';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
@@ -236,7 +237,7 @@ export function BatTuChecker({
               </div>
               <div className="space-y-1">
                 <Label htmlFor="btTime">Giờ sinh</Label>
-                <Input id="btTime" type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+                <Time24 id="btTime" value={time} onChange={setTime} />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="btGender">Giới tính</Label>

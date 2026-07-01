@@ -13,6 +13,7 @@ import {
   Label,
   toast,
 } from '@hieu-asia/ui';
+import { Time24 } from '@/components/Time24';
 import { safeJson } from '@/lib/safe-json';
 import { formatVnDate } from '@/lib/vn-date';
 
@@ -216,12 +217,7 @@ export function MyChartTab() {
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="birth_time">Giờ sinh (HH:MM)</Label>
-                <Input
-                  id="birth_time"
-                  type="time"
-                  value={draft.birth_time ?? ''}
-                  onChange={(e) => setDraft({ ...draft, birth_time: e.target.value })}
-                />
+                <Time24 id="birth_time" value={draft.birth_time ?? ''} onChange={(v) => setDraft({ ...draft, birth_time: v })} />
               </div>
               <div className="space-y-1.5 sm:col-span-2">
                 <Label htmlFor="birth_place">Nơi sinh</Label>

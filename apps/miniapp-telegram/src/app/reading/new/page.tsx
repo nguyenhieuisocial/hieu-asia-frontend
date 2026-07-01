@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, Checkbox, Input, Label, RadioGroup, RadioGroupItem } from '@hieu-asia/ui';
+import { Card, CardContent, CardHeader, CardTitle, Checkbox, Input, Label, RadioGroup, RadioGroupItem, Time24 } from '@hieu-asia/ui';
 import { TgMainButton } from '@/components/tg-main-button';
 import { TgBackButton } from '@/components/tg-back-button';
 import { createReading, getOrCreateAnonUserId, type BirthData } from '@hieu-asia/supabase';
@@ -89,7 +89,7 @@ export default function NewReadingPage() {
             </Field>
 
             <Field label="Giờ sinh" hint="Càng chính xác càng tốt.">
-              <Input type="time" value={birthTime} onChange={(e) => setBirthTime(e.target.value)} disabled={unknownTime} />
+              <Time24 value={birthTime} onChange={setBirthTime} disabled={unknownTime} />
               <label className="mt-2 flex cursor-pointer items-center gap-2 text-sm text-cream/80">
                 <Checkbox checked={unknownTime} onChange={(e) => { setUnknownTime(e.target.checked); if (e.target.checked) setBirthTime(''); }} />
                 Không nhớ giờ sinh

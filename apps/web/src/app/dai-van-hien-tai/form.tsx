@@ -13,6 +13,7 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from '@hieu-asia/ui';
+import { Time24 } from '@/components/Time24';
 import { Timer, AlertTriangle, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
@@ -192,12 +193,7 @@ export function DaiVanHienTaiForm() {
 
                 <div className="space-y-2">
                   <Label htmlFor="birth-hour-dv">Giờ sinh</Label>
-                  <Input
-                    id="birth-hour-dv"
-                    type="time"
-                    value={birthHour}
-                    onChange={(e) => setBirthHour(e.target.value)}
-                  />
+                  <Time24 id="birth-hour-dv" value={birthHour} onChange={setBirthHour} />
                 </div>
 
                 <div className="space-y-2">

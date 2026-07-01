@@ -17,6 +17,7 @@ import {
   toast,
 } from '@hieu-asia/ui';
 import { Info } from 'lucide-react';
+import { Time24 } from '@/components/Time24';
 import {
   birthDataSchema,
   birthDateIssueMessage,
@@ -399,11 +400,20 @@ export function BirthDataForm() {
         >
           {(ariaProps) => (
             <>
-              <Input
-                type="time"
-                disabled={unknownTime}
-                {...ariaProps}
-                {...register('birth_time')}
+              <Controller
+                name="birth_time"
+                control={control}
+                render={({ field }) => (
+                  <Time24
+                    value={field.value ?? ''}
+                    onChange={field.onChange}
+                    disabled={unknownTime}
+                    aria-labelledby={ariaProps['aria-labelledby']}
+                    aria-describedby={ariaProps['aria-describedby']}
+                    aria-invalid={ariaProps['aria-invalid']}
+                    aria-required={ariaProps['aria-required']}
+                  />
+                )}
               />
               {/* Wave 60.95.i P2 — timezone clarification once the user
                   enters a time. Subtle (muted) — never an error. */}
