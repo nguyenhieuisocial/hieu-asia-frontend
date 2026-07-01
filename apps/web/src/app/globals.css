@@ -1031,7 +1031,7 @@ body {
 .ob-detail-close {
   margin-left: auto; width: 26px; height: 26px; border-radius: 50%;
   display: inline-flex; align-items: center; justify-content: center;
-  font-size: 18px; line-height: 1; color: #a8a6a0;
+  font-size: 18px; line-height: 1; color: #cfc8ba;
   background: rgba(224, 174, 98, 0.08); border: 1px solid rgba(224, 174, 98, 0.2);
   cursor: pointer; transition: background 0.2s ease, color 0.2s ease;
 }
