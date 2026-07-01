@@ -305,15 +305,16 @@ function extractLinks(src, into) {
 // ---------------------------------------------------------------------------
 
 /**
- * Generation timestamp. Defaults to the literal 'snapshot' so re-running with no
- * source changes produces a byte-identical file (idempotent diffs). Pass a real
- * ISO time via `--generated-at=<iso>`, `SITE_GENERATED_AT=<iso>`, or
- * `--generated-at=now` to stamp the current run.
+ * Generation timestamp. Defaults to a REAL ISO timestamp (`new Date().toISOString()`)
+ * captured at generation time, so every deploy stamps when the snapshot was built.
+ * Override with an explicit ISO time via `--generated-at=<iso>` or the
+ * `SITE_GENERATED_AT=<iso>` env var; `--generated-at=now` is also accepted and
+ * behaves identically to the default (current run time).
  */
 function resolveGeneratedAt() {
   const arg = process.argv.find((a) => a.startsWith('--generated-at='));
   const raw = arg ? arg.slice('--generated-at='.length) : process.env.SITE_GENERATED_AT;
-  if (!raw) return 'snapshot';
+  if (!raw) return new Date().toISOString();
   if (raw === 'now') return new Date().toISOString();
   return raw;
 }
