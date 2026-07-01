@@ -36,7 +36,7 @@ export function PrivacyPreferences({ prefs, onChange }: PrivacyPreferencesProps)
     <SettingsSection
       id="privacy"
       title="Quyền riêng tư"
-      description="Bạn kiểm soát dữ liệu của mình theo Nghị định 13/2023/NĐ-CP."
+      description="Bạn kiểm soát dữ liệu của mình theo Nghị định 356/2025/NĐ-CP (thay thế 13/2023)."
     >
       <PrefRow
         label="Analytics opt-in"

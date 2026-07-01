@@ -32,7 +32,7 @@ const PILLARS = [
   {
     icon: Lock,
     title: 'Riêng tư & hợp pháp',
-    body: 'Mã hoá AES-256 · không bán dữ liệu · tuân thủ Nghị định 13/2023.',
+    body: 'Mã hoá AES-256 · không bán dữ liệu · tuân thủ Nghị định 356/2025 (thay thế 13/2023).',
     href: '/privacy',
   },
 ] as const;

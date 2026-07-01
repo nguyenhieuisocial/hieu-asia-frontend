@@ -587,7 +587,7 @@ export function BirthDataForm() {
             />
             <span className="leading-relaxed">
               Tôi đồng ý cho hieu.asia xử lý ngày sinh, giờ sinh, nơi sinh và thông tin đi kèm để thiết lập lá số và phân tích bản thân của tôi theo{' '}
-              <span className="font-medium text-foreground">Nghị định 13/2023/NĐ-CP</span>. Tôi cũng đồng ý với{' '}
+              <span className="font-medium text-foreground">Nghị định 356/2025/NĐ-CP (thay thế 13/2023)</span>. Tôi cũng đồng ý với{' '}
               <Link
                 href="/terms"
                 target="_blank"

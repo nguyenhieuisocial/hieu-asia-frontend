@@ -16,7 +16,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 export const metadata: Metadata = {
   title: 'Changelog',
   description:
-    'Lộ trình sản phẩm hieu.asia từ V1.0 đến hiện tại. Tử Vi · MBTI · Palm Reading · Mentor AI.',
+    'Lộ trình sản phẩm hieu.asia từ V1.0 đến hiện tại. Tử Vi · Bát Tự · MBTI · Big Five · Xem Tướng · AI Mentor.',
   alternates: { canonical: 'https://hieu.asia/changelog' },
   openGraph: {
     title: 'Changelog',

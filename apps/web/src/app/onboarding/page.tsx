@@ -7,7 +7,7 @@ import { OnboardingIntentTracker } from '@/components/onboarding-intent-tracker'
 export const metadata: Metadata = {
   title: 'Mở khóa lá số',
   description:
-    'Bắt đầu lá số cá nhân hoá — 4 bước. Đồng ý xử lý dữ liệu theo Nghị định 13/2023/NĐ-CP. Mã hoá AES-256, không bán dữ liệu, có quyền rút lại bất cứ lúc nào.',
+    'Bắt đầu lá số cá nhân hoá — 4 bước. Đồng ý xử lý dữ liệu theo Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và Nghị định 356/2025/NĐ-CP (thay thế 13/2023). Mã hoá AES-256, không bán dữ liệu, có quyền rút lại bất cứ lúc nào.',
   alternates: { canonical: 'https://hieu.asia/onboarding' },
   // Wave 60.95.k P1-SEO — route-level openGraph REPLACES root-layout
   // openGraph (Next.js merge semantics), so we must re-declare `images` here
@@ -61,7 +61,7 @@ const WEBPAGE_JSONLD = {
   '@type': 'WebPage',
   name: 'Mở khóa lá số — hieu.asia',
   description:
-    'Bắt đầu lá số cá nhân hoá — 4 bước. Đồng ý xử lý dữ liệu theo Nghị định 13/2023/NĐ-CP.',
+    'Bắt đầu lá số cá nhân hoá — 4 bước. Đồng ý xử lý dữ liệu theo Nghị định 356/2025/NĐ-CP (thay thế 13/2023).',
   url: 'https://hieu.asia/onboarding',
   inLanguage: 'vi-VN',
   isPartOf: {
