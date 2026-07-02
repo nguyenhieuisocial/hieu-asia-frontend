@@ -125,7 +125,9 @@ export function OracleBrain(): React.JSX.Element {
   // Ghi thẳng CSS var (KHÔNG setState → 0 re-render), rAF throttle, dọn listener.
   // Chòm sao + nút GIỮ NGUYÊN (không parallax) nên bấm ổn định, đường nối không lệch.
   React.useEffect(() => {
-    if (!inView || reducedRef.current) return;
+    // Đợt "Tâm điểm BẠN kể" — TẠM DỪNG parallax khi đang mở 1 lăng kính (đang đọc)
+    // để bề mặt đọc đứng yên; mở lại khi đóng. (cleanup reset --ob-px/--ob-py = 0.)
+    if (!inView || reducedRef.current || selected !== null) return;
     const el = graphRef.current;
     if (!el) return;
     if (typeof window === 'undefined' || !window.matchMedia('(pointer: fine)').matches) return;
@@ -154,7 +156,7 @@ export function OracleBrain(): React.JSX.Element {
       el.style.removeProperty('--ob-px');
       el.style.removeProperty('--ob-py');
     };
-  }, [inView]);
+  }, [inView, selected]);
 
   const onSoi = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
@@ -223,6 +225,7 @@ export function OracleBrain(): React.JSX.Element {
     setReveal(null);
     setBirthDate('');
     setErr(null);
+    setSelected(null);
   };
 
   const isOn = (i: number) => hover === i || selected === i;
@@ -341,6 +344,7 @@ export function OracleBrain(): React.JSX.Element {
           data-sel={selected !== null || undefined}
           data-reading={reading || undefined}
           data-revealed={reveal ? true : undefined}
+          data-lensopen={selected !== null || undefined}
           className="ob-graph"
           role="img"
           aria-label="Năm nhóm công cụ hội tụ về Bạn"
@@ -427,13 +431,49 @@ export function OracleBrain(): React.JSX.Element {
             </span>
           </div>
 
+          {/* "Tâm điểm BẠN kể" — chạm 1 nhóm sao → ý nghĩa hiện NGAY GIỮA chòm sao
+              (quanh BẠN), tuyệt đối trong khung .ob-graph nên KHÔNG đẩy layout. */}
+          {sel && (
+            <div
+              className="ob-read"
+              id="ob-read"
+              role="region"
+              aria-live="polite"
+              aria-label={`Lăng kính ${sel.label}`}
+            >
+              <button
+                type="button"
+                className="ob-read-close"
+                onClick={() => setSelected(null)}
+                aria-label="Đóng"
+              >
+                ×
+              </button>
+              <div className="ob-read-body">
+                {selected === DONG_IDX && reveal ? (
+                  renderDongLens()
+                ) : selected === TAY_IDX && reveal ? (
+                  renderTayLens()
+                ) : (
+                  <div className="ob-lens ob-lens-about">
+                    <span className="ob-lens-tag">{sel.label}</span>
+                    <p className="ob-lens-sub">{LENS_ABOUT[sel.label] ?? ''}</p>
+                    {!reveal && (
+                      <p className="ob-read-cta">Nhập ngày sinh ở trên để soi lăng kính này.</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           {HUBS.map((h, i) => (
             <button
               key={h.label}
               type="button"
               aria-pressed={selected === i}
               aria-expanded={selected === i}
-              aria-controls={selected === i ? 'ob-node-panel' : undefined}
+              aria-controls={selected === i ? 'ob-read' : undefined}
               className={`ob-hub${isOn(i) ? ' ob-hub-on' : ''}${selected === i ? ' ob-hub-sel' : ''}`}
               style={{ left: `${h.left}%`, top: `${h.top}%` }}
               onMouseEnter={() => setHover(i)}
@@ -513,56 +553,6 @@ export function OracleBrain(): React.JSX.Element {
                   Thử ngày khác
                 </button>
               </div>
-            </div>
-          </div>
-        )}
-
-        {/* Bảng chi tiết nhóm công cụ — hiện khi chạm/chọn một nhóm. */}
-        {sel && (
-          <div className="ob-detail-wrap" key={selected}>
-            <div
-              className="ob-detail"
-              id="ob-node-panel"
-              role="region"
-              aria-live="polite"
-              aria-label={`Lăng kính ${sel.label}`}
-            >
-              <div className="ob-detail-head">
-                <span className="ob-detail-title">{sel.label}</span>
-                <span className="ob-detail-count">{sel.count} công cụ</span>
-                <button
-                  type="button"
-                  className="ob-detail-close"
-                  onClick={() => setSelected(null)}
-                  aria-label="Đóng chi tiết"
-                >
-                  ×
-                </button>
-              </div>
-              {selected === DONG_IDX && reveal ? (
-                renderDongLens()
-              ) : selected === TAY_IDX && reveal ? (
-                renderTayLens()
-              ) : (
-                <div className="ob-lens ob-lens-about">
-                  <span className="ob-lens-tag">{sel.label}</span>
-                  <p className="ob-lens-sub">{LENS_ABOUT[sel.label] ?? ''}</p>
-                </div>
-              )}
-              <div className="ob-detail-tools">
-                {sel.tools.map((t) => (
-                  <span key={t} className="ob-detail-tool">
-                    {t}
-                  </span>
-                ))}
-              </div>
-              <a
-                href="/cong-cu"
-                draggable={false}
-                className="ob-detail-link font-mono text-editorial-mono uppercase tracking-[0.12em] underline underline-offset-4"
-              >
-                Khám phá nhóm này →
-              </a>
             </div>
           </div>
         )}

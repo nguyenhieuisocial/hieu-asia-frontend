@@ -994,17 +994,18 @@ body { overflow-wrap: break-word; }
 }
 .ob-hub-on .ob-hub-dot { transform: scale(1.45); box-shadow: 0 0 14px rgba(224, 174, 98, 0.95); }
 .ob-hub-on .ob-hub-label { color: #f5f2ec; }
+/* Fix "giật": CHỪA SẴN chỗ (line-height cố định), chỉ đổi opacity — KHÔNG dùng
+   max-height 0→1.4em nữa (node `translate(-50%,-50%)` sẽ tự canh lại giữa → giật). */
 .ob-hub-count {
   font-size: 9.5px;
   font-weight: 600;
   letter-spacing: 0.06em;
   color: #e0ae62;
+  line-height: 1.4;
   opacity: 0;
-  max-height: 0;
-  overflow: hidden;
   transition: opacity 0.25s ease;
 }
-.ob-hub-on .ob-hub-count { opacity: 1; max-height: 1.4em; }
+.ob-hub-on .ob-hub-count { opacity: 1; }
 /* satellite tool-nodes + branch lines + converging pulse */
 .ob-sat {
   position: absolute;
@@ -1050,17 +1051,6 @@ body { overflow-wrap: break-word; }
 .ob-hub-sel .ob-hub-label { color: #f5f2ec; }
 
 /* v3 — bảng chi tiết: liệt kê tên công cụ thật của nhóm đang chọn */
-.ob-detail {
-  max-width: 30rem;
-  text-align: left;
-  border: 1px solid rgba(224, 174, 98, 0.25);
-  border-radius: 14px;
-  background: rgba(28, 26, 22, 0.55);
-  padding: 14px 16px;
-}
-.ob-detail-head { display: flex; align-items: center; gap: 0.5rem; }
-.ob-detail-title { font-weight: 700; color: #f5f2ec; }
-.ob-detail-count { font-size: 11px; color: #e0ae62; }
 .ob-detail-close {
   margin-left: auto; width: 26px; height: 26px; border-radius: 50%;
   display: inline-flex; align-items: center; justify-content: center;
@@ -1069,13 +1059,6 @@ body { overflow-wrap: break-word; }
   cursor: pointer; transition: background 0.2s ease, color 0.2s ease;
 }
 .ob-detail-close:hover { background: rgba(224, 174, 98, 0.16); color: #f5f2ec; }
-.ob-detail-tools { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
-.ob-detail-tool {
-  font-size: 12px; padding: 0.22rem 0.6rem; border-radius: 999px;
-  background: rgba(224, 174, 98, 0.1); border: 1px solid rgba(224, 174, 98, 0.22);
-  color: #e8e4d8;
-}
-.ob-detail-link { display: inline-block; margin-top: 0.75rem; color: #e0ae62; }
 /* Bảng chi tiết MỞ RỘNG MƯỢT (không "bụp/giật" đẩy nội dung phía dưới): grid-rows
  * 0fr→1fr cho chiều cao co giãn mềm; khoảng cách trên cũng animate cùng. */
 .ob-detail-wrap { max-width: 30rem; margin: 1.25rem auto 0; }
@@ -1179,6 +1162,47 @@ body { overflow-wrap: break-word; }
 .ob-lens-about { opacity: 0.9; }
 /* Gợi ý chạm dưới chòm sao. */
 .ob-tap-hint { margin-top: 0.85rem; font-size: 11.5px; color: #8f897d; text-align: center; }
+
+/* "Tâm điểm BẠN kể" — vùng đọc lăng kính NEO GIỮA chòm sao, position:absolute
+   trong .ob-graph (kích thước cố định) nên KHÔNG đẩy layout. Chòm sao đứng yên,
+   các nhóm khác mờ đi (data-sel sẵn có); nút vẫn ở vị trí cũ → không giật. */
+.ob-read {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  width: min(17rem, 82%);
+  max-height: 72%;
+  overflow-y: auto;
+  text-align: left;
+  padding: 0.85rem 1rem 0.95rem;
+  border-radius: 14px;
+  background: rgba(14, 15, 20, 0.9);
+  border: 1px solid rgba(224, 174, 98, 0.3);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  -webkit-user-select: text; user-select: text; -webkit-touch-callout: default;
+}
+.ob-read-close {
+  position: absolute; top: 6px; right: 8px;
+  width: 26px; height: 26px; line-height: 1;
+  font-size: 18px; color: #cfc8ba;
+  background: transparent; border: 0; border-radius: 8px; cursor: pointer;
+}
+.ob-read-close:hover { color: #f5f2ec; background: rgba(255, 255, 255, 0.06); }
+.ob-read-body > .ob-lens:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+.ob-read-cta { margin-top: 0.5rem; font-size: 11.5px; color: #e0ae62; }
+/* Khi 1 lăng kính mở: tâm 'BẠN' mờ nhẹ (nhường vùng đọc) + nền parallax đứng yên. */
+.ob-graph[data-lensopen] .ob-center-label,
+.ob-graph[data-lensopen] .ob-center-sub { opacity: 0.28; transition: opacity 0.25s ease; }
+@media (prefers-reduced-motion: no-preference) {
+  .ob-read { animation: ob-read-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .ob-graph[data-lensopen] .ob-plx-in { animation-play-state: paused; }
+}
+@keyframes ob-read-in {
+  from { opacity: 0; transform: translate(-50%, -46%) scale(0.96); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
 
 /* Đợt 3 — "chiều sâu vũ trụ": lớp nền parallax (nebula + starfield) chạy theo con
    trỏ (desktop) + trôi nhẹ (ambient). Chòm sao + NÚT GIỮ NGUYÊN (bấm ổn định,
