@@ -149,10 +149,17 @@ export const metadata: Metadata = {
       'vi-VN': 'https://hieu.asia',
     },
   },
+  // SEO-FIX: removed root-level `url` from openGraph.
+  // The root layout must NOT set `openGraph.url` because child pages that
+  // inherit this block (without declaring their own `openGraph`) would get
+  // `og:url = 'https://hieu.asia'` regardless of their canonical URL.
+  // This caused Ahrefs "Open Graph URL ≠ canonical" on 28 pages.
+  // Fix: omit `url` here — Next.js will not emit `<meta property="og:url">`
+  // when the field is absent, which is correct. Pages that need a specific
+  // og:url (e.g. the homepage) declare it in their own metadata export.
   openGraph: {
     type: 'website',
     locale: 'vi_VN',
-    url: 'https://hieu.asia',
     siteName: 'hieu.asia',
     title: 'hieu.asia — Tử Vi & MBTI bằng AI',
     description:
