@@ -1240,7 +1240,10 @@ body { overflow-wrap: break-word; }
   opacity: 0.6;
 }
 @media (prefers-reduced-motion: no-preference) {
-  .ob-plx { transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform; }
+  /* KHÔNG transition ở đây — độ mượt do JS lerp đảm nhiệm (fix bug: transition
+     0.4s tạo "đuôi trễ" vẫn trượt nốt đúng khoảnh khắc bấm nhóm → nhìn như mọi
+     nhóm di chuyển; freeze var không chặn được transition đang dở). */
+  .ob-plx { will-change: transform; }
   .ob-graph[data-in] .ob-plx-neb .ob-plx-in { animation: ob-drift-slow 26s ease-in-out infinite; }
   .ob-graph[data-in] .ob-plx-stars .ob-plx-in { animation: ob-drift-med 19s ease-in-out infinite; }
 }
