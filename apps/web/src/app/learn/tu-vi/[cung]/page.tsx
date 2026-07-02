@@ -24,7 +24,7 @@ export async function generateMetadata(
   const data = findPalaceReading(cung);
   if (!data) return { title: 'Không tìm thấy cung Tử Vi' };
   return {
-    title: `Cung ${data.name} — đọc lá số Tử Vi để ra quyết định`,
+    title: `Cung ${data.name}: đọc lá số Tử Vi`,
     description: data.governs.slice(0, 158),
     alternates: { canonical: `https://hieu.asia/learn/tu-vi/${data.slug}` },
     openGraph: {

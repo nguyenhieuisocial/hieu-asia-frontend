@@ -138,7 +138,7 @@ export function buildStyle(slugRaw: string): DiscStyleData | null {
   const others = DISC_SLUGS.filter((x) => x !== slug).map(refOf);
 
   const seoTitle = `DISC Nhóm ${letter} — ${s.vi} (${s.en})`;
-  const seoDescription = `Nhóm ${letter} DISC (${s.vi}/${s.en}): ${s.tagline} Tổng quan, điểm mạnh, hướng phát triển, cách giao tiếp & làm việc, công việc hợp — mô tả xu hướng hành vi, không phán số mệnh.`;
+  const seoDescription = `Nhóm ${letter} DISC (${s.vi}/${s.en}): tổng quan, điểm mạnh, hướng phát triển, cách giao tiếp – làm việc, công việc hợp. Mô tả xu hướng, không phán số mệnh.`;
 
   const faqs: { q: string; a: string }[] = [
     {

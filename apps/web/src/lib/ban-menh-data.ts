@@ -132,8 +132,8 @@ export function buildBanMenh(year: number): BanMenhData | null {
     },
   ];
 
-  const seoTitle = `Sinh năm ${year} mệnh gì? Tuổi ${p.canChi} — ${p.napAmName}, hợp màu gì, nghề gì`;
-  const seoDescription = `Người sinh năm ${year} (tuổi ${p.canChi}, con ${conVatOf(p.zodiac.ten)}) mệnh ${info.name} — nạp âm ${p.napAmName}. Màu hợp: ${cap([...banMenhColors, ...hopColors])}; màu nên hạn chế: ${cap(avoidColors)}${careers.length ? `; nghề hợp: ${cap(careers)}` : ''}. Tính theo nạp âm 60 Giáp Tý, tham khảo, không phán số mệnh.`;
+  const seoTitle = `Sinh năm ${year} mệnh gì? ${p.canChi} hợp màu, nghề`;
+  const seoDescription = `Sinh năm ${year} (${p.canChi}) mệnh ${info.name}, nạp âm ${p.napAmName}. Màu hợp, màu nên tránh, nghề hợp — theo nạp âm 60 Giáp Tý.`;
 
   return {
     year,

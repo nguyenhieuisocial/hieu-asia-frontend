@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 export const metadata: Metadata = {
-  title: 'Hợp đôi 2 lá số — Vùng giao tiếp + cách điều chỉnh',
+  title: 'Hợp đôi 2 lá số — giao tiếp & điều chỉnh',
   description:
     'So sánh 2 lá số trên 5 dimension: tính cách, giao tiếp, mục tiêu, tài chính, gia đình. Communication tips kèm vulnerability + reframe + suggested phrase.',
   alternates: { canonical: 'https://hieu.asia/compatibility' },

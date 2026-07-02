@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
-  title: 'Xem Chỉ Tay & Tướng Mặt miễn phí — AI phân tích ảnh thật',
+  title: 'Xem chỉ tay & tướng mặt bằng AI',
   description:
     'Tải ảnh lòng bàn tay hoặc khuôn mặt — AI phân tích xu hướng tính cách và ứng xử theo tướng số học. Không lưu ảnh, không bói toán.',
   alternates: { canonical: 'https://hieu.asia/xem-tuong' },

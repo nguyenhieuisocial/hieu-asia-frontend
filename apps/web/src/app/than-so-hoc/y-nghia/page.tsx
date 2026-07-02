@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   // SEO-FIX: absolute (76 → 49 chars) + description shortened (205 → ~155).
   title: { absolute: 'Ý nghĩa 12 số chủ đạo — Thần Số Học | hieu.asia' },
   description:
-    'Ý nghĩa từng số chủ đạo (đường đời) theo thần số học Pythagoras: khuynh hướng, điểm mạnh, bài học, góc tình cảm – công việc và câu hỏi tự soi. Mô tả khuynh hướng — không phán số phận.',
+    'Ý nghĩa từng số chủ đạo (đường đời) theo thần số học Pythagoras: khuynh hướng, điểm mạnh, bài học và câu hỏi tự soi. Mô tả khuynh hướng, không phán số phận.',
   alternates: { canonical: 'https://hieu.asia/than-so-hoc/y-nghia' },
   openGraph: {
     title: 'Ý nghĩa 12 số chủ đạo — thần số học | hieu.asia',

@@ -3,7 +3,8 @@ import type { ReactNode } from 'react';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
-  title: 'Lá Tarot hôm nay — gợi ý phản tư mỗi ngày | hieu.asia',
+  // title cố ý bỏ ở layout: page.tsx (segment 'hom-nay') tự khai title:{absolute}.
+  // Giữ title ở đây gây "Multiple title tags" — xem SEO audit GROUP 4.
   description:
     'Lá Tarot hôm nay — mỗi ngày một lá, chung cho mọi người. Không phải lời tiên đoán về ngày của bạn, mà là một lá để dừng lại và ngẫm. Miễn phí, không bói toán.',
   alternates: { canonical: 'https://hieu.asia/tarot/hom-nay' },

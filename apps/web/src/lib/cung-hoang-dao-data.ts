@@ -417,8 +417,8 @@ export function buildCung(slug: string): CungData | null {
     },
   ];
 
-  const seoTitle = `Cung ${z.name} (${extra.dateLabel}): tính cách, hợp cung nào, tình yêu & sự nghiệp`;
-  const seoDescription = `Cung ${z.name} — ${extra.english}, nguyên tố ${z.element}, ${z.quality}, chủ quản bởi ${extra.rulingPlanet}. Tính cách, điểm mạnh, điều nên lưu ý, cung hợp và xu hướng tình yêu – công việc. Tính theo thiên văn thật, tham khảo, không phán số mệnh.`;
+  const seoTitle = `Cung ${z.name}: tính cách & hợp cung`;
+  const seoDescription = `Cung ${z.name} — ${extra.english}, nguyên tố ${z.element}. Tính cách, điểm mạnh, cung hợp, xu hướng tình yêu & công việc. Tham khảo, không phán số mệnh.`;
 
   return {
     idx,

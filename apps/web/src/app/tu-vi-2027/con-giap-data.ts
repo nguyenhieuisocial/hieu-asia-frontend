@@ -174,10 +174,10 @@ export function buildConGiap2027(slug: string): ConGiap2027 | null {
       ? `Tuổi ${z.ten} năm 2027: ${verdictParts.join(', ')}. Đây là tham khảo theo phong tục, không phải lời phán số mệnh.`
       : `Tuổi ${z.ten} năm 2027 ở thế bình hoà, không hạn nổi bật theo Can Chi. Năm nay phần lớn do bạn quyết định.`;
 
-  const seoTitle = `Tử Vi 2027 tuổi ${z.ten} (con ${animalName}): hợp xung, sao hạn, Tam Tai`;
-  const seoDescription = `Tử Vi năm Đinh Mùi 2027 cho tuổi ${z.ten}: ${relCopy.label.toLowerCase()}, ${
-    isTamTai ? 'có phạm Tam Tai' : 'không phạm Tam Tai'
-  }, kèm vận trình sự nghiệp – tài lộc – tình cảm – sức khoẻ và bảng sao hạn theo từng năm sinh. Tính minh bạch theo Can Chi, tham khảo, không phán số mệnh.`;
+  const seoTitle = `Tử Vi 2027 tuổi ${z.ten}: hợp xung, sao hạn`;
+  const seoDescription = `Tử Vi Đinh Mùi 2027 tuổi ${z.ten} (con ${animalName}): ${relCopy.label.toLowerCase()}, ${
+    isTamTai ? 'có Tam Tai' : 'không Tam Tai'
+  }, kèm bảng sao hạn theo năm sinh. Tham khảo, không phán số mệnh.`;
 
   const firstCohort = cohorts.find((c) => c.birthYear >= 1980) ?? cohorts[0];
   const faqs: { q: string; a: string }[] = [

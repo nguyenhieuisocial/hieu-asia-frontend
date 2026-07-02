@@ -36,9 +36,9 @@ export const VARIANTS: DatTenVariant[] = [
     emoji: '👦',
     h1Suffix: 'con trai theo ngũ hành',
     eyebrow: 'Đặt tên · Con trai',
-    seoTitle: 'Đặt tên con trai theo ngũ hành — gợi ý tên hay, hợp mệnh',
+    seoTitle: 'Đặt tên con trai hợp mệnh theo ngũ hành',
     seoDescription:
-      'Tra mệnh ngũ hành của bé trai theo ngày sinh (nạp âm) và gợi ý tên con trai hợp mệnh: theo hành tương sinh, ý nghĩa mạnh mẽ. Gợi ý tham khảo — không phán số mệnh.',
+      'Tra mệnh ngũ hành của bé trai theo ngày sinh (nạp âm) và gợi ý tên hợp mệnh theo hành tương sinh, ý nghĩa mạnh mẽ. Gợi ý tham khảo — không phán số mệnh.',
     intro:
       'Nhập ngày sinh của bé trai để xem mệnh ngũ hành và gợi ý những cái tên hợp mệnh, ý nghĩa — tham khảo theo phong tục, không phải lời định đoạt tương lai của con.',
     considerations: [
@@ -69,9 +69,9 @@ export const VARIANTS: DatTenVariant[] = [
     emoji: '👧',
     h1Suffix: 'con gái theo ngũ hành',
     eyebrow: 'Đặt tên · Con gái',
-    seoTitle: 'Đặt tên con gái theo ngũ hành — gợi ý tên hay, hợp mệnh',
+    seoTitle: 'Đặt tên con gái hợp mệnh theo ngũ hành',
     seoDescription:
-      'Tra mệnh ngũ hành của bé gái theo ngày sinh (nạp âm) và gợi ý tên con gái hợp mệnh: theo hành tương sinh, ý nghĩa dịu dàng, đẹp. Gợi ý tham khảo — không phán số mệnh.',
+      'Tra mệnh ngũ hành của bé gái theo ngày sinh (nạp âm) và gợi ý tên hợp mệnh theo hành tương sinh, ý nghĩa dịu dàng. Gợi ý tham khảo — không phán số mệnh.',
     intro:
       'Nhập ngày sinh của bé gái để xem mệnh ngũ hành và gợi ý những cái tên hợp mệnh, ý nghĩa và đẹp — tham khảo theo phong tục, không phải lời định đoạt tương lai của con.',
     considerations: [
@@ -102,9 +102,9 @@ export const VARIANTS: DatTenVariant[] = [
     emoji: '🐴',
     h1Suffix: 'con sinh năm 2026 (Bính Ngọ)',
     eyebrow: 'Đặt tên · Năm 2026',
-    seoTitle: 'Đặt tên con sinh năm 2026 (Bính Ngọ) — mệnh Thiên Hà Thủy, gợi ý tên hợp mệnh',
+    seoTitle: 'Đặt tên con sinh 2026 Bính Ngọ — hợp mệnh Thủy',
     seoDescription:
-      'Bé sinh năm Bính Ngọ 2026 thuộc nạp âm Thiên Hà Thủy — mệnh Thủy. Gợi ý tên con 2026 hợp mệnh theo hành tương sinh (Kim, Thủy), kèm ý nghĩa. Tham khảo — không phán số mệnh.',
+      'Bé sinh năm Bính Ngọ 2026 nạp âm Thiên Hà Thủy — mệnh Thủy. Gợi ý tên hợp mệnh theo hành tương sinh (Kim, Thủy), kèm ý nghĩa. Tham khảo — không phán số mệnh.',
     intro:
       'Phần lớn bé sinh trong năm 2026 thuộc năm Bính Ngọ — nạp âm Thiên Hà Thủy, mệnh Thủy. Nhập đúng ngày sinh để công cụ tính chính xác theo âm lịch (bé sinh trước Tết Bính Ngọ vẫn thuộc năm cũ), rồi xem gợi ý tên hợp mệnh.',
     considerations: [

@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Trắc nghiệm Big Five (OCEAN) miễn phí — 5 chiều tính cách',
+  title: 'Trắc nghiệm Big Five (OCEAN) — 5 chiều tính cách',
   description:
-    'Làm trắc nghiệm tính cách Big Five (OCEAN) online theo thang IPIP-NEO: đo Cởi mở, Tận tâm, Hướng ngoại, Dễ chịu, Nhạy cảm cảm xúc. 20 câu, có kết quả và giải thích ngay.',
+    'Trắc nghiệm tính cách Big Five (OCEAN) online theo thang IPIP-NEO: đo Cởi mở, Tận tâm, Hướng ngoại, Dễ chịu, Nhạy cảm. 20 câu, kết quả ngay.',
   alternates: { canonical: 'https://hieu.asia/big-five' },
   openGraph: {
     title: 'Trắc nghiệm Big Five (OCEAN)',

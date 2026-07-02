@@ -178,12 +178,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/affiliate/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
   ];
 
-  // Daily / reading / brand additions.
+  // Daily / reading additions.
+  // SEO-FIX: /brand removed — it is robots:noindex (internal brand/design-system
+  // reference), so listing it in the sitemap caused Ahrefs "Noindex page in
+  // sitemap" + kept it flagged as an orphan. A noindex page must not be in the
+  // sitemap. If /brand is ever made public again, re-add it here and drop noindex.
   const waveAdditions: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/lich-van-nien/today`, lastModified: now, changeFrequency: 'daily', priority: 0.65 },
     { url: `${BASE_URL}/lich-van-nien/ngay-tot-xau`, lastModified: now, changeFrequency: 'daily', priority: 0.6 },
     { url: `${BASE_URL}/reading`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
-    { url: `${BASE_URL}/brand`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
     { url: `${BASE_URL}/thien-van`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
   ];
 

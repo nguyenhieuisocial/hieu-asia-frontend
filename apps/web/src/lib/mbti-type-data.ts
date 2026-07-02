@@ -348,7 +348,7 @@ export function buildType(slugRaw: string): MbtiTypeData | null {
   const others = MBTI_SLUGS.filter((s) => s !== slug).map(refOf);
 
   const seoTitle = `MBTI ${code} — ${t.nick}`;
-  const seoDescription = `${code} (${t.nick}): ${t.tagline} Tổng quan tính cách, điểm mạnh, hướng phát triển, chuỗi chức năng nhận thức (${t.stack.join('–')}), công việc và tình cảm — mô tả xu hướng, không phán số mệnh.`;
+  const seoDescription = `${code} (${t.nick}): tổng quan, điểm mạnh, hướng phát triển, chuỗi chức năng nhận thức (${t.stack.join('–')}), công việc và tình cảm. Không phán số mệnh.`;
 
   const faqs: { q: string; a: string }[] = [
     {

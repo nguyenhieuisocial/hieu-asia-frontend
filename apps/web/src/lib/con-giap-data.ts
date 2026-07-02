@@ -313,8 +313,8 @@ export function buildConGiap(slug: string): ConGiapData | null {
     },
   ];
 
-  const seoTitle = `Tuổi ${z.ten} (${z.nguHanh}): tính cách, hợp tuổi nào, năm sinh & sự nghiệp`;
-  const seoDescription = `Tuổi ${z.ten} — hành ${z.nguHanh}. Tính cách, điểm mạnh, điều nên luyện, tam hợp (${tamHopNames}), lục xung (${tuHanhXung.ten}), năm sinh và xu hướng nghề nghiệp, tình cảm. Tham khảo, không phán số mệnh.`;
+  const seoTitle = `Tuổi ${z.ten} (${z.nguHanh}): tính cách, hợp tuổi, sự nghiệp`;
+  const seoDescription = `Tuổi ${z.ten} — hành ${z.nguHanh}. Tính cách, điểm mạnh, tam hợp (${tamHopNames}), lục xung (${tuHanhXung.ten}), năm sinh và xu hướng nghề nghiệp, tình cảm. Tham khảo, không phán số mệnh.`;
 
   return {
     z,

@@ -17,7 +17,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 export const metadata: Metadata = {
   title: 'Changelog',
   description:
-    'Lộ trình sản phẩm hieu.asia trong năm 2026. Tử Vi · Bát Tự · MBTI · Big Five · Xem Tướng · AI Mentor.',
+    'Lộ trình sản phẩm và các tính năng đã ra mắt của hieu.asia trong năm 2026: Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng và AI Mentor.',
   alternates: { canonical: 'https://hieu.asia/changelog' },
   openGraph: {
     title: 'Changelog',

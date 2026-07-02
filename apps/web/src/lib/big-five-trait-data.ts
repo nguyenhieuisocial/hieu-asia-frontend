@@ -166,8 +166,8 @@ export function buildTrait(slugRaw: string): BigFiveTraitData | null {
   if (!t) return null;
 
   const others = BIG_FIVE_SLUGS.filter((s) => s !== slug).map(refOf);
-  const seoTitle = `${t.vi} (${t.en}) — chiều ${t.letter} của Big Five`;
-  const seoDescription = `${t.vi}/${t.en} trong Big Five (OCEAN): ${t.tagline} Người điểm cao vs điểm thấp, các facet, ứng dụng công việc — mô tả xu hướng, không có đầu nào tốt/xấu hơn.`;
+  const seoTitle = `${t.vi} (${t.en}) trong Big Five`;
+  const seoDescription = `${t.vi}/${t.en} trong Big Five (OCEAN): người điểm cao vs điểm thấp, các facet và ứng dụng công việc. Mô tả xu hướng, không có đầu nào tốt hơn.`;
 
   const facetText = t.facets.map((f) => `${f.label} (${f.gloss})`).join('; ');
 

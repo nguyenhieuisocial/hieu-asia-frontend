@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const s = getSaoGio(slug);
   if (!s) return {};
   const loai = s.good ? 'sao hoàng đạo (giờ tốt)' : 'sao hắc đạo (giờ xấu)';
-  const title = `Sao ${s.name} là gì? Ý nghĩa giờ ${s.name} — ${s.good ? 'giờ tốt' : 'giờ xấu'}`;
+  const title = `Sao ${s.name}: ý nghĩa giờ ${s.good ? 'tốt' : 'xấu'}`;
   const description = `Sao ${s.name} — ${loai}: ${s.keyTags.join(', ')}. ${
     s.good ? 'Việc thường hợp' : 'Việc nên thận trọng'
   } trong giờ ${s.name} và cách dùng tỉnh táo, không bói mù.`;
