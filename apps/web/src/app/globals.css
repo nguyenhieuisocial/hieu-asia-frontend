@@ -1044,6 +1044,10 @@ body { overflow-wrap: break-word; }
 /* v3 — TAP TO FOCUS: nhóm được chọn nổi bật, nhóm khác mờ. Dùng `filter:opacity`
  * (KHÔNG dùng `opacity`) vì .ob-hub/.ob-sat có animation fade-in [fill:both] giữ
  * opacity:1 → sẽ ghi đè property `opacity`; filter thì xếp chồng lên, luôn ăn. */
+/* Fix "bụp": mờ/sáng chuyển tiếp ÊM (0.3s) thay vì tối sầm tức thì lúc chọn. */
+.ob-hub { transition: filter 0.3s ease; }
+.ob-sat { transition: filter 0.3s ease; }
+.ob-line, .ob-branch { transition: stroke 0.3s ease; }
 .ob-graph[data-sel] .ob-hub:not(.ob-hub-on) { filter: opacity(0.3); }
 .ob-graph[data-sel] .ob-sat:not(.ob-sat-on) { filter: opacity(0.2); }
 .ob-graph[data-sel] .ob-line:not(.ob-line-on) { stroke: rgba(224, 174, 98, 0.07); }
@@ -1225,13 +1229,10 @@ body { overflow-wrap: break-word; }
    var(--ob-px/--ob-py) mặc định 0 ⇒ SSR/first-paint & mobile giống hệt hiện tại. */
 .ob-plx { position: absolute; inset: 0; pointer-events: none; }
 .ob-plx-in { position: absolute; inset: 0; }
-.ob-plx-neb {
-  z-index: 0;
-  transform: translate3d(calc(var(--ob-px, 0) * -6px), calc(var(--ob-py, 0) * -6px), 0);
-}
-.ob-plx-stars {
-  transform: translate3d(calc(var(--ob-px, 0) * 10px), calc(var(--ob-py, 0) * 10px), 0);
-}
+/* Parallax-theo-con-trỏ ĐÃ GỠ (3 vòng vá vẫn gây "nền trượt lúc bấm" — không thể
+   vừa đuổi-theo-con-trỏ vừa bất động khi tương tác). Chiều sâu giữ qua ambient
+   drift thuần CSS bên dưới — không dính con trỏ, pause khi mở lăng kính. */
+.ob-plx-neb { z-index: 0; }
 .ob-neb-glow {
   position: absolute; inset: -14%;
   background:
@@ -1256,7 +1257,6 @@ body { overflow-wrap: break-word; }
   50% { transform: translate3d(-2px, 2px, 0); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ob-plx-neb, .ob-plx-stars { transform: none; }
   .ob-plx-in { animation: none; }
 }
 
