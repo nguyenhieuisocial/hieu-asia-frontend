@@ -277,11 +277,27 @@ function IdentityCard({
   userId: string;
   identities?: CustomerDetailResponse['identities'];
 }) {
-  const channels: Array<{ label: string; value?: string | null; mono?: boolean }> = [
-    { label: 'Email', value: customer?.email, mono: true },
+  // href chỉ cho kênh link được thật: email → mailto, điện thoại → tel.
+  // Telegram ID dạng số KHÔNG mở được qua t.me/<id> — giữ text (không fix cho có).
+  const channels: Array<{
+    label: string;
+    value?: string | null;
+    mono?: boolean;
+    href?: string;
+  }> = [
+    {
+      label: 'Email',
+      value: customer?.email,
+      mono: true,
+      href: customer?.email ? `mailto:${customer.email}` : undefined,
+    },
     { label: 'Telegram', value: customer?.telegram_id, mono: true },
     { label: 'Zalo', value: customer?.zalo_id, mono: true },
-    { label: 'Điện thoại', value: customer?.phone },
+    {
+      label: 'Điện thoại',
+      value: customer?.phone,
+      href: customer?.phone ? `tel:${customer.phone}` : undefined,
+    },
   ];
   const linked = channels.filter((c) => !!c.value).length;
   const idValue = userId || customer?.id || '—';
@@ -326,7 +342,17 @@ function IdentityCard({
                   (c.value ? 'text-foreground/90' : 'italic text-muted-foreground')
                 }
               >
-                {c.value || 'chưa liên kết'}
+                {c.value && c.href ? (
+                  <a
+                    href={c.href}
+                    className="underline decoration-dotted underline-offset-2 hover:text-gold"
+                    title={c.href.startsWith('mailto:') ? 'Gửi email' : 'Gọi điện'}
+                  >
+                    {c.value}
+                  </a>
+                ) : (
+                  c.value || 'chưa liên kết'
+                )}
               </dd>
             </div>
           ))}
@@ -356,7 +382,25 @@ function ProfileTab({ customer }: { customer: CustomerDetail }) {
           <Field label="Tên hiển thị" value={customer.display_name} />
           <Field label="Email" value={customer.email} mono />
           <Field label="Telegram ID" value={customer.telegram_id} mono />
-          <Field label="Plan" value={customer.plan} />
+          <Field
+            label="Plan"
+            value={customer.plan}
+            hint={
+              customer.plan_expires_at
+                ? `hết hạn ${fmtDate(customer.plan_expires_at)}`
+                : customer.tier_updated_at
+                  ? `đổi gói ${fmtDate(customer.tier_updated_at)}`
+                  : undefined
+            }
+          />
+          {customer.app_role && <Field label="Vai trò" value={customer.app_role} />}
+          {customer.onboarding_completed_at && (
+            <Field
+              label="Onboarding"
+              value={`Hoàn tất ${fmtDate(customer.onboarding_completed_at)}`}
+              hint={fmtRelative(customer.onboarding_completed_at)}
+            />
+          )}
           <Field
             label="Tạo lúc"
             value={fmtDate(customer.created_at)}
@@ -731,6 +775,17 @@ function AuditTab({ rows }: { rows: AuditRow[] }) {
   );
 }
 
+/** Friendly labels for users.consent_flags keys (migration 0036). Unknown keys
+ *  fall back to the raw key so future flags still render. */
+const CONSENT_LABEL: Record<string, string> = {
+  email_tips: 'Email tips',
+  sms_anniversary: 'SMS sinh nhật',
+  zalo_optin: 'Zalo OA',
+  zalo_oa_broadcast: 'Zalo OA broadcast',
+  meta_retargeting: 'Meta retargeting',
+  google_retargeting: 'Google retargeting',
+};
+
 function ComplianceTab({ customer }: { customer: CustomerDetail }) {
   const kycToneMap: Record<string, string> = {
     verified: 'border-jade/40 bg-jade/15 text-jade-700 dark:text-jade-50',
@@ -806,6 +861,38 @@ function ComplianceTab({ customer }: { customer: CustomerDetail }) {
           value={customer.sms_anniversary_opt_in ? 'Đã đồng ý' : 'Từ chối'}
         />
       )}
+      {/* Real DB consent columns (0036/0037): consent_flags jsonb +
+          email_opted_out. The flat *_opt_in fields above never existed in the
+          users table — these are the live values the founder needs before
+          contacting anyone. */}
+      {customer.email_opted_out != null && (
+        <div>
+          <dt className="text-[10px] uppercase tracking-widest text-muted-foreground">
+            Email marketing
+          </dt>
+          <dd className="mt-1">
+            <span
+              className={`inline-flex items-center rounded border px-2 py-0.5 text-xs font-medium ${
+                customer.email_opted_out
+                  ? 'border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300'
+                  : 'border-jade/40 bg-jade/15 text-jade-700 dark:text-jade-50'
+              }`}
+            >
+              {customer.email_opted_out ? 'Đã hủy đăng ký' : 'Còn nhận email'}
+            </span>
+          </dd>
+        </div>
+      )}
+      {customer.consent_flags
+        && Object.entries(customer.consent_flags)
+          .filter(([, v]) => v != null)
+          .map(([k, v]) => (
+            <Field
+              key={k}
+              label={CONSENT_LABEL[k] ?? k}
+              value={v ? 'Đã đồng ý' : 'Từ chối'}
+            />
+          ))}
       {customer.referral_code && (
         <Field label="Referral code" value={customer.referral_code} mono />
       )}

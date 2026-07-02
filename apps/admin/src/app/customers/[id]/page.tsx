@@ -136,12 +136,21 @@ function CustomerDetailPageInner() {
     // in so the header + profile show the real name even for a customer with no
     // reading sessions (bd undefined). Birth fields still come from the session.
     const authName = data?.auth_info?.display_name ?? null;
+    // chart_data jsonb (users col, migration 0036) carries onboarding
+    // gender/birth even when the customer never created a reading session —
+    // flatten it so ProfileTab/ComplianceTab (which read flat fields) show it.
+    const cd = customer.chart_data ?? null;
     return {
       ...customer,
-      display_name: customer.display_name ?? authName ?? bd?.display_name ?? null,
+      display_name:
+        customer.display_name ?? authName ?? cd?.full_name ?? bd?.display_name ?? null,
       birth_date: customer.birth_date ?? bd?.birth_date ?? null,
       birth_place: customer.birth_place ?? bd?.birth_place ?? null,
       primary_concern: customer.primary_concern ?? bd?.primary_concern ?? null,
+      gender: customer.gender ?? cd?.gender ?? null,
+      birth_year: customer.birth_year ?? cd?.birth_year ?? null,
+      birth_month: customer.birth_month ?? cd?.birth_month ?? null,
+      birth_day: customer.birth_day ?? cd?.birth_day ?? null,
     };
   }, [customer, sessions, data?.auth_info]);
 
@@ -224,7 +233,10 @@ function CustomerDetailPageInner() {
         <div className="flex items-center gap-2">
           {/* Liên hệ khách qua email (template có sẵn). Tự vô hiệu hoá khi không
               có email — vẫn render để giải thích vì sao không gửi được. */}
-          <ContactCustomerDialog email={customer?.email ?? null} />
+          <ContactCustomerDialog
+            email={customer?.email ?? null}
+            optedOut={customer?.email_opted_out === true}
+          />
           {customer?.email && (
             <SetPlanDialog
               defaultEmail={customer.email}
