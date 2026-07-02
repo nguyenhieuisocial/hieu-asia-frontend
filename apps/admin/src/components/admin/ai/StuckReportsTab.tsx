@@ -102,7 +102,15 @@ function StuckRow({ row }: { row: StuckSessionRow }) {
       </div>
       <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-muted-foreground">
         <span>{STATUS_LABEL[row.status]}</span>
-        {row.user_id ? <span className="font-mono">user: {row.user_id}</span> : null}
+        {row.user_id ? (
+          <Link
+            href={`/customers/${encodeURIComponent(row.user_id)}`}
+            className="font-mono underline decoration-dotted underline-offset-2 hover:text-gold"
+            title="Mở hồ sơ khách hàng"
+          >
+            user: {row.user_id}
+          </Link>
+        ) : null}
       </div>
       <div className="mt-2 flex items-center gap-3">
         <Button size="sm" onClick={() => rerun.mutate()} disabled={rerun.isPending}>

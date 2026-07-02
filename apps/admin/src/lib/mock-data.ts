@@ -176,6 +176,10 @@ export interface AdminTask {
    * Optional — mock rows omit it.
    */
   raw_status?: string;
+  /** Owning session's user (worker enrichment, backend #345) — enables the
+   *  /customers/{user_id} link on the tasks page. Optional; mock rows omit. */
+  user_id?: string | null;
+  user_email?: string | null;
 }
 
 const TASK_NAMES = [

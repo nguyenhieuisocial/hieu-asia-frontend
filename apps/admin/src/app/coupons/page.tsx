@@ -48,7 +48,10 @@ import { trackAdminMutation } from '@/lib/admin-breadcrumb';
 
 interface Coupon {
   code: string;
-  discount_pct: number;
+  /** Percent discount — null for fixed-VND coupons (e.g. CTV credit codes). */
+  discount_pct: number | null;
+  /** Fixed VND discount — set when discount_pct is null (backend coupons.ts). */
+  discount_vnd?: number | null;
   status: 'active' | 'revoked' | 'expired';
   uses?: number;
   max_uses?: number | null;
@@ -261,7 +264,9 @@ export default function CouponsPage() {
 
   function openEdit(c: Coupon) {
     setEditForm({
-      discount_pct: c.discount_pct,
+      // Fixed-VND coupon (pct=null) → prefill 0; validation (1-100) blocks
+      // accidentally saving a pct over a VND coupon.
+      discount_pct: c.discount_pct ?? 0,
       max_uses: c.max_uses ?? null,
       // ISO timestamp → 'YYYY-MM-DD' for the <input type="date">.
       valid_to: c.valid_to ? c.valid_to.slice(0, 10) : null,
@@ -370,7 +375,18 @@ export default function CouponsPage() {
     {
       id: 'discount',
       header: 'Giảm',
-      cell: (c) => <span className="tabular-nums text-foreground/90">{c.discount_pct}%</span>,
+      // Gap audit 2026-07-02 — fixed-VND coupons (discount_pct=null,
+      // discount_vnd set; e.g. CTV credit codes) rendered "null%".
+      cell: (c) =>
+        c.discount_pct != null ? (
+          <span className="tabular-nums text-foreground/90">{c.discount_pct}%</span>
+        ) : c.discount_vnd != null ? (
+          <span className="tabular-nums text-foreground/90">
+            {Number(c.discount_vnd).toLocaleString('vi-VN')}đ
+          </span>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        ),
     },
     { id: 'status', header: 'Status', cell: (c) => statusPill(c.status) },
     {

@@ -106,17 +106,21 @@ export function AhrefsPanel() {
         {q.isLoading ? (
           <div className="h-28 animate-pulse rounded bg-muted/30" aria-hidden />
         ) : data && data.configured === false ? (
-          // No key — tell the founder exactly what to add. The panel lights up
-          // automatically once AHREFS_API_KEY is set on the admin (Vercel env).
+          // No key — honest state (checked 2026-07-02): API v3 keys need
+          // Ahrefs' PAID API add-on ("Upgrade to unlock API" — not in the
+          // current plan). Until that's purchased there is nothing to
+          // configure; the panel lights up automatically if a key is ever set.
           <div className="rounded-md border border-gold/25 bg-gold/5 px-4 py-3 text-sm text-muted-foreground">
-            <p className="font-medium text-foreground/90">Chưa kết nối Ahrefs.</p>
+            <p className="font-medium text-foreground/90">
+              Chưa kết nối Ahrefs API — gói Ahrefs hiện tại chưa gồm API.
+            </p>
             <p className="mt-1">
-              Thêm biến môi trường{' '}
-              <code className="font-mono text-gold/80">AHREFS_API_KEY</code> cho app admin
-              (Vercel → Settings → Environment Variables), tùy chọn{' '}
-              <code className="font-mono text-gold/80">AHREFS_TARGET</code> (mặc định{' '}
-              <code className="font-mono text-gold/80">hieu.asia</code>). Bảng sẽ tự hiện dữ liệu sau
-              khi deploy lại.
+              Ahrefs bán API v3 riêng (Enterprise/API add-on — trong dashboard hiện
+              &ldquo;Upgrade to unlock API&rdquo;). Nếu sau này nâng cấp: thêm{' '}
+              <code className="font-mono text-gold/80">AHREFS_API_KEY</code> vào env app admin
+              là bảng tự hiện. Trong lúc đó, số liệu SEO miễn phí vẫn đầy đủ ở panel{' '}
+              <span className="text-foreground/85">Google Search Console</span> phía trên,
+              và Ahrefs Site Audit/Web Analytics xem trực tiếp trên app.ahrefs.com.
             </p>
           </div>
         ) : !ov ? (

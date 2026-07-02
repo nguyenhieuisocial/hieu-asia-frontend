@@ -605,6 +605,9 @@ interface BackendTaskRow {
   error: string | null;
   created_at: string;
   updated_at: string;
+  /** Worker enrichment (backend #345) — owning session's user, best-effort. */
+  user_id?: string | null;
+  user_email?: string | null;
 }
 
 interface TasksEnvelope {
@@ -635,6 +638,9 @@ function mapBackendTask(row: BackendTaskRow): AdminTask {
     // above collapses every failure to 'failed', so the /tasks failure-reason
     // breakdown reads this to recover the failure category.
     raw_status: row.status,
+    // Owning session's user (backend #345 enrichment) → /customers link.
+    user_id: row.user_id ?? null,
+    user_email: row.user_email ?? null,
   };
 }
 
@@ -1043,7 +1049,11 @@ function mapPaymentToAdmin(t: PaymentTxn): AdminTransaction | null {
   const isPaid = t.type === 'intent_paid';
   const isCreated = t.type === 'intent_created';
   const isRefund = t.type === 'refund' || t.type === 'refund_completed';
-  if (!isPaid && !isCreated && !isRefund) return null;
+  // Gap audit 2026-07-02 — subscription renewals are REAL money events; the
+  // mapper silently dropped them, under-reporting recurring revenue on
+  // /payments. Rendered as succeeded like intent_paid.
+  const isRenewal = t.type === 'subscription_renewed';
+  if (!isPaid && !isCreated && !isRefund && !isRenewal) return null;
   const md = t.metadata ?? {};
   const tier = (md.tier as string | undefined) ?? '';
   const plan: AdminTransaction['plan'] =
@@ -1052,7 +1062,7 @@ function mapPaymentToAdmin(t: PaymentTxn): AdminTransaction | null {
       : tier === 'subscription_yearly'
         ? 'mentor_year'
         : 'mentor_month';
-  const status: AdminTransaction['status'] = isPaid
+  const status: AdminTransaction['status'] = isPaid || isRenewal
     ? 'succeeded'
     : isRefund
       ? 'refunded'

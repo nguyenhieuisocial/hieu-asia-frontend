@@ -251,6 +251,24 @@ export default function CustomersPage() {
         cell: (c) => <PlanBadge plan={c.plan} />,
       },
       {
+        // Backend #345 — per-page session counts so engagement is scannable
+        // without opening each detail. undefined (old worker) → "—".
+        id: 'sessions',
+        header: 'Phiên',
+        sortKey: 'sessions_count',
+        width: '70px',
+        className: 'text-right tabular-nums',
+        hideOnMobile: true,
+        cell: (c) =>
+          c.sessions_count == null ? (
+            <span className="text-muted-foreground">—</span>
+          ) : (
+            <span className={c.sessions_count > 0 ? 'text-foreground/90' : 'text-muted-foreground'}>
+              {c.sessions_count}
+            </span>
+          ),
+      },
+      {
         id: 'telegram',
         header: 'Telegram',
         width: '140px',

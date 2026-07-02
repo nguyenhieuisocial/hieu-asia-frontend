@@ -423,12 +423,23 @@ function OverviewTab() {
                       {row.action}
                     </span>
                     {row.resource_id && (
-                      <span className="font-mono text-xs text-muted-foreground">
+                      // Không link: resource_id có thể là payout/commission id —
+                      // trỏ bừa sang /affiliates/{id} sẽ 404. Tooltip full id.
+                      <span
+                        className="font-mono text-xs text-muted-foreground"
+                        title={row.resource_id}
+                      >
                         {row.resource_id.slice(0, 8)}
                       </span>
                     )}
                     {row.user_id && (
-                      <span className="text-xs text-muted-foreground">{row.user_id}</span>
+                      <Link
+                        href={`/customers/${encodeURIComponent(row.user_id)}`}
+                        className="text-xs text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-gold"
+                        title="Mở hồ sơ khách hàng"
+                      >
+                        {row.user_id}
+                      </Link>
                     )}
                   </div>
                   <span className="text-xs text-muted-foreground">{dt(row.timestamp)}</span>

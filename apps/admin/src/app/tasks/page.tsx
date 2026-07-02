@@ -151,6 +151,28 @@ export default function AdminTasksPage() {
         ),
     },
     {
+      // Gap audit 2026-07-02 — tasks linked the session but not the CUSTOMER.
+      // user_id/user_email arrive via worker enrichment (backend #345);
+      // best-effort → "—" when the join failed or the session is anonymous.
+      key: 'user_email',
+      header: 'Khách',
+      cell: (t) =>
+        t.user_id ? (
+          <Link
+            href={`/customers/${encodeURIComponent(t.user_id)}`}
+            onClick={(e) => e.stopPropagation()}
+            className="truncate text-xs text-foreground underline decoration-dotted underline-offset-2 hover:text-gold"
+            title="Mở hồ sơ khách hàng"
+          >
+            {t.user_email && t.user_email.includes('@')
+              ? t.user_email
+              : `${t.user_id.slice(0, 8)}…`}
+          </Link>
+        ) : (
+          <span className="text-foreground/30">—</span>
+        ),
+    },
+    {
       key: 'status',
       header: 'Trạng thái',
       width: '110px',
@@ -393,15 +415,27 @@ export default function AdminTasksPage() {
                   </pre>
                 </div>
 
-                {selectedTask.name && (
-                  <Link
-                    href={`/sessions/${encodeURIComponent(selectedTask.name)}`}
-                    className="inline-flex items-center gap-1.5 rounded-md border border-gold/30 px-3 py-1.5 text-xs text-gold transition-colors hover:bg-gold/10"
-                  >
-                    <ExternalLink className="h-3.5 w-3.5" />
-                    Xem session
-                  </Link>
-                )}
+                <div className="flex flex-wrap gap-2">
+                  {selectedTask.name && (
+                    <Link
+                      href={`/sessions/${encodeURIComponent(selectedTask.name)}`}
+                      className="inline-flex items-center gap-1.5 rounded-md border border-gold/30 px-3 py-1.5 text-xs text-gold transition-colors hover:bg-gold/10"
+                    >
+                      <ExternalLink className="h-3.5 w-3.5" />
+                      Xem session
+                    </Link>
+                  )}
+                  {selectedTask.user_id && (
+                    <Link
+                      href={`/customers/${encodeURIComponent(selectedTask.user_id)}`}
+                      className="inline-flex items-center gap-1.5 rounded-md border border-gold/30 px-3 py-1.5 text-xs text-gold transition-colors hover:bg-gold/10"
+                      title={selectedTask.user_email ?? undefined}
+                    >
+                      <ExternalLink className="h-3.5 w-3.5" />
+                      Xem khách hàng
+                    </Link>
+                  )}
+                </div>
               </div>
             </>
           )}
