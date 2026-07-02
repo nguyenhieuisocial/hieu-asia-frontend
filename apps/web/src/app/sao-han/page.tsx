@@ -11,7 +11,7 @@ const DESC =
   'Xem sao hạn (sao chiếu mệnh Cửu Diệu) theo tuổi và giới tính: La Hầu, Kế Đô, Thái Bạch, Thái Dương, Thái Âm, Mộc Đức, Thổ Tú, Thủy Diệu, Vân Hớn. Tra cứu nhanh kèm ý nghĩa từng sao — tham khảo theo phong tục, không bói toán.';
 
 export const metadata: Metadata = {
-  title: 'Xem sao hạn — sao chiếu mệnh theo tuổi (Cửu Diệu)',
+  title: 'Xem sao hạn — sao chiếu mệnh theo tuổi',
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/sao-han' },
   openGraph: {

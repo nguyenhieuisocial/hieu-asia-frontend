@@ -25,7 +25,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 export const metadata: Metadata = {
   title: 'Lộ trình theo nhu cầu',
   description:
-    'Chọn lộ trình theo nhu cầu thực tế: hiểu bản thân, sự nghiệp, tình cảm, kế hoạch năm, hoặc tra cứu hằng ngày. Mỗi lộ trình gợi ý đúng công cụ — bạn không phải đọc hết menu sản phẩm.',
+    'Chọn lộ trình theo nhu cầu: hiểu bản thân, sự nghiệp, tình cảm, kế hoạch năm hoặc tra cứu hằng ngày. Gợi ý đúng công cụ — không cần đọc hết menu.',
   alternates: { canonical: 'https://hieu.asia/lo-trinh' },
   openGraph: {
     title: 'Lộ trình theo nhu cầu',

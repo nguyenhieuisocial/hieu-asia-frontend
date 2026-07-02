@@ -14,7 +14,7 @@ import { ShimmerText } from '@/components/fx/ShimmerText';
 export const metadata: Metadata = {
   title: 'Về chúng tôi',
   description:
-    'hieu.asia là người bạn đồng hành cho mỗi quyết định quan trọng — tri thức cổ học Á Đông trình bày bằng tiếng Việt, AI hiện đại, văn phong điềm tĩnh, không định mệnh hoá.',
+    'hieu.asia — tri thức cổ học Á Đông trình bày bằng tiếng Việt, AI hiện đại, văn phong điềm tĩnh, không định mệnh hoá.',
   alternates: { canonical: 'https://hieu.asia/about' },
   // Wave 60.96.3 — route-level openGraph REPLACES root-layout openGraph; must
   // re-declare `images` or social preview cards render blank.

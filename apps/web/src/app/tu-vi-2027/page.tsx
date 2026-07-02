@@ -14,9 +14,9 @@ import type { RelationKind } from '@/lib/hop-tuoi-pairs';
 import { buildConGiap2027, CON_GIAP_SLUGS, YEAR_RANGE } from './con-giap-data';
 
 export const metadata: Metadata = {
-  title: 'Tử Vi 2027 năm Đinh Mùi — 12 con giáp, hợp xung, Tam Tai, sao hạn',
+  title: 'Tử Vi 2027 Đinh Mùi — 12 con giáp & sao hạn',
   description:
-    'Tử Vi 2027 (năm Đinh Mùi, hành Thổ) cho cả 12 con giáp: tuổi nào hợp/xung Thái Tuế, tuổi nào phạm Tam Tai, vận trình sự nghiệp – tài lộc – tình cảm – sức khoẻ và sao hạn theo năm sinh. Minh bạch theo Can Chi, tham khảo, không phán số mệnh.',
+    'Tử Vi 2027 (Đinh Mùi, hành Thổ) cho 12 con giáp: hợp/xung Thái Tuế, Tam Tai, sao hạn, vận trình sự nghiệp – tình cảm. Tham khảo, không phán số mệnh.',
   alternates: { canonical: 'https://hieu.asia/tu-vi-2027' },
   openGraph: {
     title: 'Tử Vi 2027 năm Đinh Mùi — 12 con giáp',

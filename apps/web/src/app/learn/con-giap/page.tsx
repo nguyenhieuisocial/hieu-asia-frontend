@@ -22,7 +22,7 @@ import {
 export const metadata: Metadata = {
   title: '12 Con Giáp — tính cách, tam hợp, tứ hành xung',
   description:
-    'Tính cách, sở trường, tam hợp và tứ hành xung của 12 con giáp (12 Địa Chi) theo ngũ hành — một góc nhìn tham khảo để hiểu mình và người quanh mình, không phán số mệnh.',
+    'Tính cách, tam hợp và tứ hành xung của 12 con giáp (12 Địa Chi) theo ngũ hành — góc nhìn tham khảo để hiểu mình và người quanh mình, không phán số mệnh.',
   alternates: { canonical: 'https://hieu.asia/learn/con-giap' },
 };
 

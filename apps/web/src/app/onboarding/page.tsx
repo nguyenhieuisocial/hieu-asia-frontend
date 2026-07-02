@@ -7,7 +7,7 @@ import { OnboardingIntentTracker } from '@/components/onboarding-intent-tracker'
 export const metadata: Metadata = {
   title: 'Mở khóa lá số',
   description:
-    'Bắt đầu lá số cá nhân hoá — 4 bước. Đồng ý xử lý dữ liệu theo Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và Nghị định 356/2025/NĐ-CP (thay thế 13/2023). Mã hoá AES-256, không bán dữ liệu, có quyền rút lại bất cứ lúc nào.',
+    'Bắt đầu lá số cá nhân hoá trong 4 bước. Mã hoá AES-256, không bán dữ liệu, có quyền rút lại đồng ý bất cứ lúc nào.',
   alternates: { canonical: 'https://hieu.asia/onboarding' },
   // Wave 60.95.k P1-SEO — route-level openGraph REPLACES root-layout
   // openGraph (Next.js merge semantics), so we must re-declare `images` here
