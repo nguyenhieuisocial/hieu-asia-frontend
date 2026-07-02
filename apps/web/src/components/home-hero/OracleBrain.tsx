@@ -139,37 +139,66 @@ export function OracleBrain(): React.JSX.Element {
   // Ghi thẳng CSS var (KHÔNG setState → 0 re-render), rAF throttle, dọn listener.
   // Chòm sao + nút GIỮ NGUYÊN (không parallax) nên bấm ổn định, đường nối không lệch.
   React.useEffect(() => {
-    // Khi đang mở 1 lăng kính: ĐÓNG BĂNG parallax TẠI CHỖ (early-return, giữ nguyên
-    // --ob-px/--ob-py) — TUYỆT ĐỐI không kéo về 0 lúc bấm (trước đây cleanup xóa var
-    // → cả lớp sao trượt ~10px/0.4s → "bấm là mọi nhóm dịch chuyển"). Đóng lăng kính
-    // xong parallax tự chạy tiếp mượt từ vị trí đóng băng.
+    // v3 — LERP trong JS, KHÔNG còn CSS transition 0.4s. Bug cũ: nền "đuổi theo"
+    // con trỏ với đuôi trễ 0.4s → rê tới nhóm rồi bấm ngay thì nền VẪN ĐANG TRƯỢT
+    // NỐT quãng trễ đúng khoảnh khắc bấm → "bấm là mọi nhóm di chuyển" (freeze var
+    // không chặn được transition đang dở). Giờ: mỗi frame tự tiến 16% về đích
+    // (mượt tương đương) và (a) con trỏ CHẠM vào bất kỳ .ob-hub nào → giữ nguyên
+    // đích → nền lặng TRƯỚC khi kịp bấm; (b) mở lăng kính → vòng lặp dừng tại chỗ;
+    // (c) rời khung → trôi êm về 0 qua cùng lerp (không snap).
     if (!inView || reducedRef.current) return;
     const el = graphRef.current;
     if (!el) return;
     if (typeof window === 'undefined' || !window.matchMedia('(pointer: fine)').matches) return;
-    const onMove = (e: PointerEvent): void => {
-      if (selectedRef.current !== null) return; // đang đọc → đứng yên
-      if (parallaxRafRef.current != null) return;
-      parallaxRafRef.current = window.requestAnimationFrame(() => {
-        parallaxRafRef.current = null;
+    const target = { x: 0, y: 0 };
+    const cur = { x: 0, y: 0 };
+    const ptr = { x: 0, y: 0, dirty: false };
+    const tick = (): void => {
+      parallaxRafRef.current = null;
+      if (selectedRef.current !== null) return; // đang đọc → bất động tuyệt đối
+      if (ptr.dirty) {
+        ptr.dirty = false;
         const r = el.getBoundingClientRect();
-        if (!r.width || !r.height) return;
-        const nx = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width - 0.5) * 2));
-        const ny = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height - 0.5) * 2));
-        el.style.setProperty('--ob-px', nx.toFixed(3));
-        el.style.setProperty('--ob-py', ny.toFixed(3));
-      });
+        if (r.width && r.height) {
+          target.x = Math.max(-1, Math.min(1, ((ptr.x - r.left) / r.width - 0.5) * 2));
+          target.y = Math.max(-1, Math.min(1, ((ptr.y - r.top) / r.height - 0.5) * 2));
+        }
+      }
+      cur.x += (target.x - cur.x) * 0.16;
+      cur.y += (target.y - cur.y) * 0.16;
+      if (Math.abs(target.x - cur.x) < 0.002) cur.x = target.x;
+      if (Math.abs(target.y - cur.y) < 0.002) cur.y = target.y;
+      el.style.setProperty('--ob-px', cur.x.toFixed(3));
+      el.style.setProperty('--ob-py', cur.y.toFixed(3));
+      if (cur.x !== target.x || cur.y !== target.y || ptr.dirty) {
+        parallaxRafRef.current = window.requestAnimationFrame(tick);
+      }
     };
-    const reset = (): void => {
-      if (selectedRef.current !== null) return; // đang đọc → giữ nguyên, không kéo về 0
-      el.style.setProperty('--ob-px', '0');
-      el.style.setProperty('--ob-py', '0');
+    const kick = (): void => {
+      if (parallaxRafRef.current == null) parallaxRafRef.current = window.requestAnimationFrame(tick);
+    };
+    const onMove = (e: PointerEvent): void => {
+      if (selectedRef.current !== null) return;
+      const t = e.target as Element | null;
+      // Con trỏ đang ở TRÊN một nhóm sao (sắp bấm) → giữ nguyên đích, nền tự lặng.
+      if (t && typeof t.closest === 'function' && t.closest('.ob-hub')) return;
+      ptr.x = e.clientX;
+      ptr.y = e.clientY;
+      ptr.dirty = true;
+      kick();
+    };
+    const onLeave = (): void => {
+      if (selectedRef.current !== null) return;
+      target.x = 0;
+      target.y = 0;
+      ptr.dirty = false;
+      kick(); // trôi êm về 0 qua lerp, không snap
     };
     el.addEventListener('pointermove', onMove, { passive: true });
-    el.addEventListener('pointerleave', reset, { passive: true });
+    el.addEventListener('pointerleave', onLeave, { passive: true });
     return () => {
       el.removeEventListener('pointermove', onMove);
-      el.removeEventListener('pointerleave', reset);
+      el.removeEventListener('pointerleave', onLeave);
       if (parallaxRafRef.current != null) window.cancelAnimationFrame(parallaxRafRef.current);
       el.style.removeProperty('--ob-px');
       el.style.removeProperty('--ob-py');
