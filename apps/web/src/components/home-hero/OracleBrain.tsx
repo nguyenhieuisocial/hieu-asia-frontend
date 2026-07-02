@@ -92,6 +92,12 @@ export function OracleBrain(): React.JSX.Element {
   const reducedRef = React.useRef(false);
   const timerRef = React.useRef<number | null>(null);
   const parallaxRafRef = React.useRef<number | null>(null);
+  // Gương của `selected` cho event handler (parallax freeze) — tránh re-subscribe listener.
+  const selectedRef = React.useRef<number | null>(null);
+
+  React.useEffect(() => {
+    selectedRef.current = selected;
+  }, [selected]);
 
   React.useEffect(() => {
     try {
@@ -125,13 +131,16 @@ export function OracleBrain(): React.JSX.Element {
   // Ghi thẳng CSS var (KHÔNG setState → 0 re-render), rAF throttle, dọn listener.
   // Chòm sao + nút GIỮ NGUYÊN (không parallax) nên bấm ổn định, đường nối không lệch.
   React.useEffect(() => {
-    // Đợt "Tâm điểm BẠN kể" — TẠM DỪNG parallax khi đang mở 1 lăng kính (đang đọc)
-    // để bề mặt đọc đứng yên; mở lại khi đóng. (cleanup reset --ob-px/--ob-py = 0.)
-    if (!inView || reducedRef.current || selected !== null) return;
+    // Khi đang mở 1 lăng kính: ĐÓNG BĂNG parallax TẠI CHỖ (early-return, giữ nguyên
+    // --ob-px/--ob-py) — TUYỆT ĐỐI không kéo về 0 lúc bấm (trước đây cleanup xóa var
+    // → cả lớp sao trượt ~10px/0.4s → "bấm là mọi nhóm dịch chuyển"). Đóng lăng kính
+    // xong parallax tự chạy tiếp mượt từ vị trí đóng băng.
+    if (!inView || reducedRef.current) return;
     const el = graphRef.current;
     if (!el) return;
     if (typeof window === 'undefined' || !window.matchMedia('(pointer: fine)').matches) return;
     const onMove = (e: PointerEvent): void => {
+      if (selectedRef.current !== null) return; // đang đọc → đứng yên
       if (parallaxRafRef.current != null) return;
       parallaxRafRef.current = window.requestAnimationFrame(() => {
         parallaxRafRef.current = null;
@@ -144,6 +153,7 @@ export function OracleBrain(): React.JSX.Element {
       });
     };
     const reset = (): void => {
+      if (selectedRef.current !== null) return; // đang đọc → giữ nguyên, không kéo về 0
       el.style.setProperty('--ob-px', '0');
       el.style.setProperty('--ob-py', '0');
     };
@@ -156,7 +166,28 @@ export function OracleBrain(): React.JSX.Element {
       el.style.removeProperty('--ob-px');
       el.style.removeProperty('--ob-py');
     };
-  }, [inView, selected]);
+  }, [inView]);
+
+  // 3 đường tắt lăng kính ĐỘC LẬP: nút ×, phím Esc, bấm bất kỳ đâu ngoài phần nội
+  // dung (trừ nút nhóm sao — để toggle/chuyển nhóm vẫn hoạt động như cũ).
+  React.useEffect(() => {
+    if (selected === null) return;
+    const onKey = (e: KeyboardEvent): void => {
+      if (e.key === 'Escape') setSelected(null);
+    };
+    const onDown = (e: PointerEvent): void => {
+      const t = e.target as Element | null;
+      if (!t || typeof t.closest !== 'function') return;
+      if (t.closest('.ob-hub') || t.closest('.ob-read-body')) return;
+      setSelected(null);
+    };
+    window.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', onDown);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onDown);
+    };
+  }, [selected]);
 
   const onSoi = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
