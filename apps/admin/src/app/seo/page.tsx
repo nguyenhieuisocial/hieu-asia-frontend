@@ -29,6 +29,7 @@ import {
   TrendingDown,
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
+import { AhrefsPanel } from '@/components/admin/seo/AhrefsPanel';
 import { KpiCard, type KpiCardProps } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
@@ -338,6 +339,8 @@ export default function SeoPage() {
   return (
     <div className="space-y-6">
       {header}
+
+      <AhrefsPanel />
 
       {ok?.site && (
         <p className="text-sm text-muted-foreground">
