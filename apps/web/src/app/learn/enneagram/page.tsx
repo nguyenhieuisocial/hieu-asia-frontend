@@ -20,9 +20,9 @@ import {
 } from './_active-learning';
 
 export const metadata: Metadata = {
-  title: 'Enneagram — 9 nhóm tính cách & 3 trung tâm | Học huyền học',
+  title: 'Enneagram — 9 nhóm tính cách & 3 trung tâm',
   description:
-    'Enneagram mô tả 9 nhóm tính cách theo động lực sâu bên trong (điều bạn sợ và điều bạn khao khát), chia theo 3 trung tâm: Bản năng, Tình cảm, Lý trí. Bản đồ để hiểu mình, không phải nhãn.',
+    'Enneagram: 9 nhóm tính cách theo động lực sâu (điều bạn sợ & khao khát), chia 3 trung tâm: Bản năng, Tình cảm, Lý trí. Bản đồ hiểu mình, không nhãn.',
   alternates: { canonical: 'https://hieu.asia/learn/enneagram' },
 };
 

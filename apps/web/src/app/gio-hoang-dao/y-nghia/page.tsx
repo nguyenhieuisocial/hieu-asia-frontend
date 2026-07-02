@@ -6,9 +6,9 @@ import { breadcrumb, faqPage, itemList, webPage } from '@/lib/seo/jsonld';
 import { SAO_GIO } from '@/lib/gio-hoang-dao-stars';
 
 export const metadata: Metadata = {
-  title: 'Ý nghĩa 12 sao giờ — 6 sao hoàng đạo & 6 sao hắc đạo',
+  title: 'Ý nghĩa 12 sao giờ — hoàng đạo & hắc đạo',
   description:
-    'Tra cứu ý nghĩa 12 sao giờ: 6 sao hoàng đạo (Thanh Long, Minh Đường, Kim Quỹ, Thiên Đức, Ngọc Đường, Tư Mệnh) và 6 sao hắc đạo (Thiên Hình, Chu Tước, Bạch Hổ, Thiên Lao, Huyền Vũ, Câu Trận) — mỗi sao kèm việc hợp/nên tránh và cách dùng tỉnh táo. Không bói mù.',
+    'Ý nghĩa 12 sao giờ: 6 sao hoàng đạo (Thanh Long, Minh Đường, Kim Quỹ…) và 6 sao hắc đạo — việc hợp/nên tránh và cách dùng tỉnh táo. Không bói mù.',
   alternates: { canonical: 'https://hieu.asia/gio-hoang-dao/y-nghia' },
   openGraph: {
     title: 'Ý nghĩa 12 sao giờ — hoàng đạo & hắc đạo | hieu.asia',

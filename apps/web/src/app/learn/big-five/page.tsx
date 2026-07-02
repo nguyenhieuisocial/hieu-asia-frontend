@@ -19,9 +19,9 @@ import {
 } from './_active-learning';
 
 export const metadata: Metadata = {
-  title: 'Big Five (OCEAN): Trắc nghiệm tính cách | Học huyền học',
+  title: 'Big Five (OCEAN) — 5 chiều tính cách khoa học',
   description:
-    'Big Five (OCEAN) là mô hình tính cách có cơ sở khoa học vững nhất, đo 5 chiều: Cởi mở, Tận tâm, Hướng ngoại, Dễ chịu, Nhạy cảm cảm xúc. Xu hướng, không phải nhãn cố định.',
+    'Big Five (OCEAN) — mô hình tính cách khoa học nhất, đo 5 chiều: Cởi mở, Tận tâm, Hướng ngoại, Dễ chịu, Nhạy cảm cảm xúc. Xu hướng, không nhãn.',
   alternates: { canonical: 'https://hieu.asia/learn/big-five' },
 };
 

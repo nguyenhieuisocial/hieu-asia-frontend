@@ -26,8 +26,7 @@ export const metadata: Metadata = {
   // Wave 54 BUG-034: rename "Methodology" → "Phương pháp" for VN consistency
   // (matches Wave 52.1 + 52 close-out sublink renames). Template appends
   // " · hieu.asia" automatically from root layout, so don't include it here.
-  title:
-    'Phương pháp Tử Vi — Trường phái, an sao, đại vận, lưu niên',
+  title: 'Phương pháp Tử Vi — trường phái & an sao',
   description:
     'Chi tiết phương pháp Tử Vi Bắc phái dùng tại hieu.asia: 121 sao chính/phụ, cách an Mệnh-Thân-Cục, đại vận, lưu niên, và đường phân định engine vs AI.',
   alternates: { canonical: 'https://hieu.asia/methodology/tu-vi' },

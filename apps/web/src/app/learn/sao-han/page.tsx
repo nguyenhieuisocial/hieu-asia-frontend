@@ -21,9 +21,9 @@ import {
 } from './_active-learning';
 
 export const metadata: Metadata = {
-  title: 'Sao Hạn (Cửu Diệu): 9 sao chiếu mệnh theo tuổi | Học huyền học',
+  title: 'Sao Hạn Cửu Diệu — 9 sao chiếu mệnh theo tuổi',
   description:
-    'Sao hạn (Cửu Diệu niên hạn): 9 sao chiếu mệnh theo tuổi và giới tính — La Hầu, Kế Đô, Thái Bạch, Thái Dương, Thái Âm, Mộc Đức, Thổ Tú, Thủy Diệu, Vân Hớn. Góc nhìn tham khảo, không mê tín, không bán lễ giải hạn.',
+    'Sao hạn Cửu Diệu: 9 sao chiếu mệnh theo tuổi và giới tính — La Hầu, Kế Đô, Thái Bạch, Thái Dương, Thái Âm… Góc nhìn tham khảo, không mê tín.',
   alternates: { canonical: 'https://hieu.asia/learn/sao-han' },
 };
 

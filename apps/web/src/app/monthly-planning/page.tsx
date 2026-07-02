@@ -30,7 +30,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Khung kế hoạch tháng — chia mục tiêu thành 4 tuần',
+  title: 'Kế hoạch tháng — chia mục tiêu thành 4 tuần',
   description:
     'Khung tham khảo chung để lập kế hoạch tháng: chia mục tiêu thành 4 tuần + các mảng cần cân đối. Lập lá số để cá nhân hoá theo đại vận và lưu nguyệt của bạn.',
   alternates: { canonical: 'https://hieu.asia/monthly-planning' },

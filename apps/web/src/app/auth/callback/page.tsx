@@ -202,6 +202,7 @@ export default function AuthCallbackPage() {
 
   return (
     <main className="min-h-screen bg-background text-foreground flex items-center justify-center">
+      <h1 className="sr-only">Xác thực tài khoản</h1>
       <div className="text-center">
         <p className="font-heading text-gold text-lg">Đang xác thực…</p>
         <p className="mt-2 text-sm text-foreground/75">

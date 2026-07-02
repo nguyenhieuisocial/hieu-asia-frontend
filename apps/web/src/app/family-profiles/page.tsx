@@ -26,7 +26,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 export const metadata: Metadata = {
   title: 'Hồ sơ gia đình — Hiểu cả nhà',
   description:
-    'Tạo hồ sơ cho người thân (cha mẹ, vợ/chồng, con) để hiểu giao tiếp và lập kế hoạch chung. Ưu tiên riêng tư: phân tích cơ bản, không luận giải chuyên sâu khi chưa có sự đồng ý.',
+    'Tạo hồ sơ người thân (cha mẹ, vợ/chồng, con) để hiểu giao tiếp và lập kế hoạch chung. Phân tích cơ bản, không luận giải chuyên sâu khi chưa có sự đồng ý.',
   alternates: { canonical: 'https://hieu.asia/family-profiles' },
   openGraph: {
     title: 'Hồ sơ gia đình — Hiểu cả nhà',

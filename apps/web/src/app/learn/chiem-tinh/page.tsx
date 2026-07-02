@@ -20,7 +20,7 @@ import {
 } from './_active-learning';
 
 export const metadata: Metadata = {
-  title: 'Chiêm tinh phương Tây: bản đồ sao & 12 cung hoàng đạo',
+  title: 'Chiêm tinh phương Tây — bản đồ sao & 12 cung',
   description:
     'Chiêm tinh phương Tây dựng bản đồ sao từ giờ + nơi sinh: 12 cung hoàng đạo, hành tinh, cung Mọc, 12 nhà, góc hợp — xu hướng để hiểu mình, không phán số mệnh.',
   alternates: { canonical: 'https://hieu.asia/learn/chiem-tinh' },
