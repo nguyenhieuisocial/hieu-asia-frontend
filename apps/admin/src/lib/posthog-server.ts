@@ -1314,6 +1314,8 @@ export interface UserDeviceProfile {
   deviceType: string | null;
   country: string | null;
   city: string | null;
+  /** Latest known IP ($ip) — backfills the customer card for login-only users. */
+  ip: string | null;
   totalEvents: number;
   activeDays: number;
   lastSeen: string | null;
@@ -1340,7 +1342,8 @@ export async function fetchUserDeviceProfile(
       argMax(nullIf(properties.$geoip_city_name, ''), timestamp)    AS city,
       count()                                                        AS total_events,
       count(DISTINCT toDate(timestamp))                             AS active_days,
-      max(timestamp)                                                 AS last_seen
+      max(timestamp)                                                 AS last_seen,
+      argMax(nullIf(properties.$ip, ''), timestamp)                 AS ip
     FROM events
     WHERE distinct_id = '${id}'
       AND timestamp > now() - INTERVAL 90 DAY
@@ -1364,6 +1367,7 @@ export async function fetchUserDeviceProfile(
     totalEvents,
     activeDays: Number(r[6] ?? 0) || 0,
     lastSeen: cell(7),
+    ip: cell(8),
   };
 }
 
