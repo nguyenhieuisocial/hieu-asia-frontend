@@ -99,13 +99,6 @@ export function OracleBrain(): React.JSX.Element {
   const [err, setErr] = React.useState<string | null>(null);
   const reducedRef = React.useRef(false);
   const timerRef = React.useRef<number | null>(null);
-  const parallaxRafRef = React.useRef<number | null>(null);
-  // Gương của `selected` cho event handler (parallax freeze) — tránh re-subscribe listener.
-  const selectedRef = React.useRef<number | null>(null);
-
-  React.useEffect(() => {
-    selectedRef.current = selected;
-  }, [selected]);
 
   React.useEffect(() => {
     try {
@@ -134,76 +127,12 @@ export function OracleBrain(): React.JSX.Element {
     return () => io.disconnect();
   }, []);
 
-  // Đợt 3 "chiều sâu vũ trụ" — parallax nền (nebula + starfield) theo con trỏ.
-  // CHỈ desktop (pointer:fine) + khi khung trong tầm nhìn + KHÔNG giảm-chuyển-động.
-  // Ghi thẳng CSS var (KHÔNG setState → 0 re-render), rAF throttle, dọn listener.
-  // Chòm sao + nút GIỮ NGUYÊN (không parallax) nên bấm ổn định, đường nối không lệch.
-  React.useEffect(() => {
-    // v3 — LERP trong JS, KHÔNG còn CSS transition 0.4s. Bug cũ: nền "đuổi theo"
-    // con trỏ với đuôi trễ 0.4s → rê tới nhóm rồi bấm ngay thì nền VẪN ĐANG TRƯỢT
-    // NỐT quãng trễ đúng khoảnh khắc bấm → "bấm là mọi nhóm di chuyển" (freeze var
-    // không chặn được transition đang dở). Giờ: mỗi frame tự tiến 16% về đích
-    // (mượt tương đương) và (a) con trỏ CHẠM vào bất kỳ .ob-hub nào → giữ nguyên
-    // đích → nền lặng TRƯỚC khi kịp bấm; (b) mở lăng kính → vòng lặp dừng tại chỗ;
-    // (c) rời khung → trôi êm về 0 qua cùng lerp (không snap).
-    if (!inView || reducedRef.current) return;
-    const el = graphRef.current;
-    if (!el) return;
-    if (typeof window === 'undefined' || !window.matchMedia('(pointer: fine)').matches) return;
-    const target = { x: 0, y: 0 };
-    const cur = { x: 0, y: 0 };
-    const ptr = { x: 0, y: 0, dirty: false };
-    const tick = (): void => {
-      parallaxRafRef.current = null;
-      if (selectedRef.current !== null) return; // đang đọc → bất động tuyệt đối
-      if (ptr.dirty) {
-        ptr.dirty = false;
-        const r = el.getBoundingClientRect();
-        if (r.width && r.height) {
-          target.x = Math.max(-1, Math.min(1, ((ptr.x - r.left) / r.width - 0.5) * 2));
-          target.y = Math.max(-1, Math.min(1, ((ptr.y - r.top) / r.height - 0.5) * 2));
-        }
-      }
-      cur.x += (target.x - cur.x) * 0.16;
-      cur.y += (target.y - cur.y) * 0.16;
-      if (Math.abs(target.x - cur.x) < 0.002) cur.x = target.x;
-      if (Math.abs(target.y - cur.y) < 0.002) cur.y = target.y;
-      el.style.setProperty('--ob-px', cur.x.toFixed(3));
-      el.style.setProperty('--ob-py', cur.y.toFixed(3));
-      if (cur.x !== target.x || cur.y !== target.y || ptr.dirty) {
-        parallaxRafRef.current = window.requestAnimationFrame(tick);
-      }
-    };
-    const kick = (): void => {
-      if (parallaxRafRef.current == null) parallaxRafRef.current = window.requestAnimationFrame(tick);
-    };
-    const onMove = (e: PointerEvent): void => {
-      if (selectedRef.current !== null) return;
-      const t = e.target as Element | null;
-      // Con trỏ đang ở TRÊN một nhóm sao (sắp bấm) → giữ nguyên đích, nền tự lặng.
-      if (t && typeof t.closest === 'function' && t.closest('.ob-hub')) return;
-      ptr.x = e.clientX;
-      ptr.y = e.clientY;
-      ptr.dirty = true;
-      kick();
-    };
-    const onLeave = (): void => {
-      if (selectedRef.current !== null) return;
-      target.x = 0;
-      target.y = 0;
-      ptr.dirty = false;
-      kick(); // trôi êm về 0 qua lerp, không snap
-    };
-    el.addEventListener('pointermove', onMove, { passive: true });
-    el.addEventListener('pointerleave', onLeave, { passive: true });
-    return () => {
-      el.removeEventListener('pointermove', onMove);
-      el.removeEventListener('pointerleave', onLeave);
-      if (parallaxRafRef.current != null) window.cancelAnimationFrame(parallaxRafRef.current);
-      el.style.removeProperty('--ob-px');
-      el.style.removeProperty('--ob-py');
-    };
-  }, [inView]);
+  // QUYẾT ĐỊNH KIẾN TRÚC (sau 3 vòng vá bug "bấm là nền di chuyển"): BỎ HẲN
+  // parallax-theo-con-trỏ. Mọi biến thể (CSS transition, JS lerp, freeze, hub-hold)
+  // đều còn "quãng lướt" đang chạy đúng lúc tay người dùng tiến tới bấm → không
+  // thể vừa đuổi-theo-con-trỏ vừa bất động khi tương tác. "Chiều sâu vũ trụ" giữ
+  // lại qua ambient drift thuần CSS (.ob-plx-in, chậm 17-26s, không dính con trỏ,
+  // pause khi mở lăng kính) — đẹp mà KHÔNG BAO GIỜ nhúc nhích lúc bấm.
 
   // 3 đường tắt lăng kính ĐỘC LẬP: nút ×, phím Esc, bấm bất kỳ đâu ngoài phần nội
   // dung (trừ nút nhóm sao — để toggle/chuyển nhóm vẫn hoạt động như cũ).
