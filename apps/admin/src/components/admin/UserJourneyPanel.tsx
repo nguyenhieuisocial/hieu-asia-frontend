@@ -10,8 +10,19 @@
 
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+} from 'recharts';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, colors } from '@hieu-asia/ui';
 import { UserRound } from 'lucide-react';
+
+const GOLD = colors.gold.DEFAULT;
 
 interface UserJourneySource {
   firstTouchSource: string | null;
@@ -51,6 +62,11 @@ interface UserEngagement {
   revenue: number;
 }
 
+interface UserActivityPoint {
+  date: string;
+  count: number;
+}
+
 export interface UserJourneyResp {
   ok: boolean;
   configured: boolean;
@@ -58,6 +74,7 @@ export interface UserJourneyResp {
   events: UserJourneyEvent[];
   profile: UserDeviceProfile | null;
   engagement: UserEngagement | null;
+  activity: UserActivityPoint[];
 }
 
 export async function fetchUserJourney(userId: string): Promise<UserJourneyResp> {
@@ -68,7 +85,7 @@ export async function fetchUserJourney(userId: string): Promise<UserJourneyResp>
     const data = await r.json();
     return data as UserJourneyResp;
   } catch {
-    return { ok: false, configured: false, source: null, events: [], profile: null, engagement: null };
+    return { ok: false, configured: false, source: null, events: [], profile: null, engagement: null, activity: [] };
   }
 }
 
@@ -149,6 +166,7 @@ export function UserJourneyPanel({ userId }: { userId: string }) {
   const events = data?.events ?? [];
   const profile = data?.profile ?? null;
   const engagement = data?.engagement ?? null;
+  const activity = data?.activity ?? [];
   const firstTouch = source
     ? fmtTouch(source.firstTouchSource, source.firstTouchMedium, source.firstTouchCampaign)
     : null;
@@ -241,6 +259,57 @@ export function UserJourneyPanel({ userId }: { userId: string }) {
                     </span>
                   </p>
                 )}
+              </div>
+            )}
+
+            {/* Hoạt động theo ngày — số sự kiện/ngày từ PostHog, biến các con số
+                tương tác thành đường xu hướng. Cần ≥2 ngày có sự kiện. */}
+            {activity.length >= 2 && (
+              <div className="space-y-2">
+                <h3 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  Hoạt động theo ngày
+                </h3>
+                <div className="h-28 w-full">
+                  <ResponsiveContainer>
+                    <AreaChart
+                      data={activity.map((p) => ({ label: p.date.slice(5), count: p.count }))}
+                      margin={{ top: 4, right: 8, left: 0, bottom: 0 }}
+                    >
+                      <defs>
+                        <linearGradient id="userActivityFill" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor={GOLD} stopOpacity={0.3} />
+                          <stop offset="100%" stopColor={GOLD} stopOpacity={0.02} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(184,146,61,0.1)" />
+                      <XAxis dataKey="label" stroke="rgba(242,237,227,0.5)" tick={{ fontSize: 10 }} />
+                      <YAxis
+                        stroke="rgba(242,237,227,0.5)"
+                        tick={{ fontSize: 10 }}
+                        width={28}
+                        allowDecimals={false}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          background: 'rgba(15,15,18,0.95)',
+                          border: '1px solid rgba(184,146,61,0.3)',
+                          borderRadius: 8,
+                          fontSize: 12,
+                        }}
+                        labelStyle={{ color: GOLD }}
+                        formatter={(value: unknown) => [String(value), 'Sự kiện']}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="count"
+                        stroke={GOLD}
+                        strokeWidth={2}
+                        fill="url(#userActivityFill)"
+                        dot={false}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             )}
 
