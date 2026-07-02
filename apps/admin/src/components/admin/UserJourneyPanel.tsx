@@ -36,6 +36,7 @@ interface UserDeviceProfile {
   deviceType: string | null;
   country: string | null;
   city: string | null;
+  ip: string | null;
   totalEvents: number;
   activeDays: number;
   lastSeen: string | null;
@@ -265,6 +266,12 @@ export function UserJourneyPanel({ userId }: { userId: string }) {
                       <dd className="font-mono text-foreground/90">
                         {[profile.deviceType, profile.os, profile.browser].filter(Boolean).join(' · ')}
                       </dd>
+                    </div>
+                  )}
+                  {profile.ip && (
+                    <div className="space-y-0.5">
+                      <dt className="text-[10px] uppercase tracking-wider text-muted-foreground">IP</dt>
+                      <dd className="font-mono text-foreground/90">{profile.ip}</dd>
                     </div>
                   )}
                   <div className="space-y-0.5">

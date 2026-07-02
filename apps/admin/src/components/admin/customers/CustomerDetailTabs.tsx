@@ -12,6 +12,7 @@
  */
 
 import * as React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { Fingerprint, MapPin } from 'lucide-react';
 import {
@@ -27,7 +28,7 @@ import {
   type AdminTableColumn,
 } from '@/components/admin/table/AdminTable';
 import { ProductTabs, type ProductTab } from '@/components/admin/product-tabs';
-import { UserJourneyPanel } from '@/components/admin/UserJourneyPanel';
+import { UserJourneyPanel, fetchUserJourney } from '@/components/admin/UserJourneyPanel';
 import { CustomerAffiliateCard } from '@/components/admin/customers/CustomerAffiliateCard';
 import { SessionAccessDialog } from './SessionAccessDialog';
 import { RefundActionDialog } from './RefundActionDialog';
@@ -140,7 +141,7 @@ export function CustomerDetailTabs({
   return (
     <div className="space-y-6">
       <IdentityCard customer={customer} userId={userId} identities={identities} />
-      <AccessDeviceCard customer={customer} sessions={sessions} authInfo={authInfo} />
+      <AccessDeviceCard customer={customer} sessions={sessions} authInfo={authInfo} userId={userId} />
       <ProductTabs tabs={tabs} value={value} onValueChange={onValueChange} />
     </div>
   );
@@ -158,19 +159,47 @@ function AccessDeviceCard({
   customer,
   sessions,
   authInfo,
+  userId,
 }: {
   customer: CustomerDetail | null;
   sessions: SessionRow[];
   authInfo?: CustomerDetailResponse['auth_info'];
+  userId: string;
 }) {
   // sessions arrive updated_at desc → first one carrying request metadata is
   // the latest known IP / device / location for this customer.
   const latest = sessions
     .map((s) => readSessionEnv(s.state_json))
     .find((e) => e.ip || e.userAgent);
-  const location = latest
+
+  // PostHog fallback — a login-only customer (no reading session) still has
+  // IP / location / device in PostHog's auto-captured props for every web
+  // visit. Reuse the SAME query as the Hành trình tab (identical queryKey →
+  // shared TanStack cache, zero extra PostHog round-trip).
+  const ph = useQuery({
+    queryKey: ['user-journey', userId],
+    queryFn: () => fetchUserJourney(userId),
+    enabled: !!userId,
+    staleTime: 60_000,
+  });
+  const profile = ph.data?.profile ?? null;
+
+  const sessionLoc = latest
     ? [latest.city, latest.region, latest.country].filter(Boolean).join(', ')
     : '';
+  const phLoc = profile ? [profile.city, profile.country].filter(Boolean).join(', ') : '';
+  const phDevice = profile
+    ? [profile.deviceType, profile.os, profile.browser].filter(Boolean).join(' · ')
+    : '';
+
+  const ip = latest?.ip ?? profile?.ip ?? undefined;
+  const location = sessionLoc || phLoc || undefined;
+  const device = latest?.userAgent ?? (phDevice || undefined);
+  const lastActive = customer?.last_active ?? profile?.lastSeen ?? null;
+
+  // A shown value came from PostHog (not a reading session) → footnote the source.
+  const usedPostHog = !latest && !!profile && (!!phLoc || !!phDevice || !!profile.ip);
+
   const providers = authInfo?.providers ?? null;
   const joined = authInfo?.created_at ?? customer?.created_at ?? null;
 
@@ -183,11 +212,11 @@ function AccessDeviceCard({
     { label: 'Đăng nhập qua', value: providers && providers.length ? providers.join(', ') : undefined },
     { label: 'Email xác thực', value: authInfo?.email_confirmed_at ? 'Đã xác thực' : undefined },
     { label: 'Tham gia', value: joined ? fmtDate(joined) : undefined },
-    { label: 'Hoạt động cuối', value: withRel(customer?.last_active) },
+    { label: 'Hoạt động cuối', value: withRel(lastActive) },
     { label: 'Tổng phiên đọc', value: String(sessions.length) },
-    { label: 'IP gần nhất', value: latest?.ip, mono: true },
-    { label: 'Vị trí gần nhất', value: location || undefined },
-    { label: 'Thiết bị gần nhất', value: latest?.userAgent, mono: true },
+    { label: 'IP gần nhất', value: ip, mono: true },
+    { label: 'Vị trí gần nhất', value: location },
+    { label: 'Thiết bị gần nhất', value: device, mono: true },
   ];
 
   return (
@@ -198,10 +227,8 @@ function AccessDeviceCard({
           Truy cập &amp; thiết bị
         </CardTitle>
         <CardDescription>
-          Đăng nhập, IP, thiết bị &amp; hoạt động — gộp từ Supabase Auth + phiên đọc.
-          {sessions.length === 0
-            ? ' Khách chưa tạo phiên đọc nào khi đăng nhập → chưa có IP/thiết bị.'
-            : ''}
+          Đăng nhập, IP, thiết bị &amp; hoạt động — gộp từ Supabase Auth + phiên đọc,
+          tự động bù từ PostHog (mọi lượt truy cập web) khi khách chưa tạo phiên đọc.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -223,6 +250,11 @@ function AccessDeviceCard({
             </div>
           ))}
         </dl>
+        {usedPostHog && (
+          <p className="mt-3 text-[11px] italic text-muted-foreground">
+            IP/vị trí/thiết bị lấy từ PostHog (khách chưa tạo phiên đọc).
+          </p>
+        )}
       </CardContent>
     </Card>
   );
