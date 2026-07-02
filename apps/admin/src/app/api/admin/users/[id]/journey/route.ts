@@ -20,6 +20,7 @@
 import { NextResponse } from 'next/server';
 import { requireAdminSession } from '@/lib/auth-server';
 import {
+  fetchUserActivitySeries,
   fetchUserAttribution,
   fetchUserDeviceProfile,
   fetchUserEngagement,
@@ -47,14 +48,16 @@ export async function GET(_req: Request, ctx: Ctx) {
       events: [],
       profile: null,
       engagement: null,
+      activity: [],
     });
   }
 
-  const [source, events, profile, engagement] = await Promise.all([
+  const [source, events, profile, engagement, activity] = await Promise.all([
     fetchUserAttribution(userId),
     fetchUserJourney(userId),
     fetchUserDeviceProfile(userId),
     fetchUserEngagement(userId),
+    fetchUserActivitySeries(userId),
   ]);
 
   return NextResponse.json({
@@ -64,5 +67,6 @@ export async function GET(_req: Request, ctx: Ctx) {
     events: events ?? [],
     profile: profile ?? null,
     engagement: engagement ?? null,
+    activity: activity ?? [],
   });
 }

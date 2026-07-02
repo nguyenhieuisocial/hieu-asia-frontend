@@ -1469,3 +1469,41 @@ export async function fetchUserJourney(
     }))
     .filter((e) => e.event);
 }
+
+export interface UserActivityPoint {
+  /** ISO date bucket (YYYY-MM-DD). */
+  date: string;
+  /** Event count that day. */
+  count: number;
+}
+
+/**
+ * Daily event count for one distinct_id over the last `days` days (default 30,
+ * clamped 7..365), oldest→newest. Powers a compact "hoạt động theo thời gian"
+ * activity chart on the customer / session pages — turning the raw engagement
+ * numbers into a trend. Days with zero events are omitted by PostHog; the UI
+ * fills the gaps so the axis stays continuous. `days` is clamped to an integer
+ * literal, so inline interpolation is injection-safe (same pattern as the other
+ * per-user readers). Returns null when unconfigured, on failure, or no events.
+ */
+export async function fetchUserActivitySeries(
+  userId: string,
+  days = 30,
+): Promise<UserActivityPoint[] | null> {
+  if (!userId) return null;
+  const id = escapeHogQLString(userId);
+  const win = Math.min(Math.max(Math.trunc(days) || 30, 7), 365);
+  const sql = `
+    SELECT toDate(timestamp) AS d, count() AS n
+    FROM events
+    WHERE distinct_id = '${id}'
+      AND timestamp > now() - INTERVAL ${win} DAY
+    GROUP BY d
+    ORDER BY d
+  `;
+  const rows = await runHogQL(sql);
+  if (!rows || rows.length === 0) return null;
+  return rows
+    .map((r) => ({ date: String(r[0] ?? ''), count: Number(r[1] ?? 0) || 0 }))
+    .filter((r) => r.date);
+}
