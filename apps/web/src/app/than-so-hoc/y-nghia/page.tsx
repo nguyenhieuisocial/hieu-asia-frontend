@@ -6,9 +6,10 @@ import { breadcrumb, faqPage, itemList, webPage } from '@/lib/seo/jsonld';
 import { SO_CHU_DAO } from '@/lib/than-so-hoc-numbers';
 
 export const metadata: Metadata = {
-  title: 'Ý nghĩa 12 số chủ đạo trong thần số học — 1–9 & 11, 22, 33 | hieu.asia',
+  // SEO-FIX: absolute (76 → 49 chars) + description shortened (205 → ~155).
+  title: { absolute: 'Ý nghĩa 12 số chủ đạo — Thần Số Học | hieu.asia' },
   description:
-    'Tra cứu ý nghĩa từng số chủ đạo (đường đời) theo thần số học Pythagoras: chân dung khuynh hướng, điểm mạnh, bài học, góc tình cảm – công việc và câu hỏi tự soi. Con số mô tả khuynh hướng — không phán số phận.',
+    'Ý nghĩa từng số chủ đạo (đường đời) theo thần số học Pythagoras: khuynh hướng, điểm mạnh, bài học, góc tình cảm – công việc và câu hỏi tự soi. Mô tả khuynh hướng — không phán số phận.',
   alternates: { canonical: 'https://hieu.asia/than-so-hoc/y-nghia' },
   openGraph: {
     title: 'Ý nghĩa 12 số chủ đạo — thần số học | hieu.asia',

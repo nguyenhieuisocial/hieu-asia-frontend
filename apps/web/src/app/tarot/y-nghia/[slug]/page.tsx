@@ -21,17 +21,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const c = getCardPage(slug);
   if (!c) return {};
-  const nhom = c.arcana === 'minor' ? `Ẩn phụ · ${c.suit_vi}` : `số ${c.number}, Ẩn chính`;
-  const title = `Ý nghĩa lá ${c.name} (${c.name_vi}) — xuôi & ngược | hieu.asia`;
-  const description = `Lá ${c.name} · ${c.name_vi} (${nhom}): xuôi — ${c.keyUp
-    .slice(0, 3)
-    .join(', ')}; ngược — ${c.keyRev.slice(0, 2).join(', ')}. Biểu tượng, góc tình cảm – công việc và câu hỏi tự soi.`;
+  // SEO-FIX: use { absolute } so the root template (' · hieu.asia') is NOT
+  // appended. Previous plain-string title included '| hieu.asia' and got the
+  // template suffix too → double branding + >60 chars in search results.
+  // short title fits in ~55 chars for all 78 cards.
+  const shortTitle = `Lá ${c.name_vi} (${c.name}) · Tarot | hieu.asia`;
+  // og:title can be longer — social cards allow more space.
+  const ogTitle = `Ý nghĩa lá ${c.name} (${c.name_vi}) — xuôi & ngược`;
+  // SEO-FIX: description truncated to stay under 160 chars.
+  // Old template with 3 upright + 2 reversed keywords often exceeded 160 chars.
+  const description = `Ý nghĩa lá ${c.name_vi} (${c.name}): xuôi — ${c.keyUp
+    .slice(0, 2)
+    .join(', ')}; ngược — ${c.keyRev[0]}. Biểu tượng, tình cảm – công việc và câu hỏi tự soi.`;
   const url = `https://hieu.asia/tarot/y-nghia/${c.slug}`;
   return {
-    title,
+    title: { absolute: shortTitle },
     description,
     alternates: { canonical: url },
-    openGraph: { title, description, url, siteName: 'hieu.asia', locale: 'vi_VN', type: 'article' },
+    openGraph: { title: ogTitle, description, url, siteName: 'hieu.asia', locale: 'vi_VN', type: 'article' },
   };
 }
 

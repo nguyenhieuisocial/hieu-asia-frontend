@@ -5,9 +5,10 @@ import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { PhiTinhChecker } from '@/components/phi-tinh/PhiTinhChecker';
 
 export const metadata: Metadata = {
-  title: 'Huyền Không Phi Tinh — Lập bàn phi tinh 9 cung theo vận & hướng | hieu.asia',
+  // SEO-FIX: absolute (77 → 50 chars) + description shortened (230 → ~150).
+  title: { absolute: 'Huyền Không Phi Tinh — Lập bàn 9 cung | hieu.asia' },
   description:
-    'Lập bàn Huyền Không Phi Tinh (玄空飛星) miễn phí: an vận tinh, sơn tinh, hướng tinh cho 9 cung theo nguyên vận và hướng nhà; phán Vượng sơn Vượng hướng, Thượng sơn Hạ thủy, Song tinh đáo hướng. Con số là thật, luận giải tham khảo.',
+    'Lập bàn Huyền Không Phi Tinh miễn phí: an vận tinh, sơn tinh, hướng tinh cho 9 cung theo nguyên vận và hướng nhà. Phán Vượng sơn Vượng hướng, Thượng sơn Hạ thủy, Song tinh đáo hướng.',
   alternates: { canonical: '/phi-tinh' },
 };
 

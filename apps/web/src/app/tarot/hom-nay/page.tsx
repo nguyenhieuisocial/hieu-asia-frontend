@@ -14,7 +14,8 @@ export const dynamic = 'force-dynamic';
 // Metadata riêng — nếu không khai báo, trang thừa kế canonical /tarot từ layout cha
 // và tự loại mình khỏi index.
 export const metadata: Metadata = {
-  title: 'Lá Tarot hôm nay — mỗi ngày một lá để ngẫm | hieu.asia',
+  // SEO-FIX: absolute (48 chars) prevents template doubling '...hieu.asia · hieu.asia'.
+  title: { absolute: 'Lá Tarot hôm nay — một lá để ngẫm | hieu.asia' },
   description:
     'Mỗi ngày một lá Tarot chung cho mọi người (theo giờ Việt Nam) kèm câu hỏi tự soi. Không tiên đoán vận ngày — chỉ là một phút dừng lại để ngẫm. Miễn phí.',
   alternates: { canonical: 'https://hieu.asia/tarot/hom-nay' },

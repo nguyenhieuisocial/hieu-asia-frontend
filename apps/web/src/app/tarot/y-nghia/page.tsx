@@ -7,9 +7,10 @@ import { MAJOR_PAGES } from '@/lib/tarot-card-pages';
 import { MINOR_PAGES } from '@/lib/tarot-card-pages-minor';
 
 export const metadata: Metadata = {
-  title: 'Ý nghĩa 78 lá bài Tarot — xuôi & ngược, đủ bộ | hieu.asia',
+  // SEO-FIX: absolute (62 → 52 chars) + description shortened (213 → ~155).
+  title: { absolute: 'Ý nghĩa 78 lá bài Tarot — xuôi & ngược | hieu.asia' },
   description:
-    'Tra cứu ý nghĩa đủ 78 lá Tarot (22 Ẩn chính + 56 Ẩn phụ: Gậy – Cốc – Kiếm – Tiền) theo hệ Rider–Waite–Smith: từ khóa xuôi – ngược, biểu tượng, góc tình cảm – công việc, câu hỏi tự soi. Không phán định mệnh.',
+    'Ý nghĩa đủ 78 lá Tarot (22 Ẩn chính + 56 Ẩn phụ) theo hệ Rider–Waite–Smith: từ khóa xuôi – ngược, biểu tượng, góc tình cảm – công việc và câu hỏi tự soi. Không phán định mệnh.',
   alternates: { canonical: 'https://hieu.asia/tarot/y-nghia' },
   openGraph: {
     title: 'Ý nghĩa 78 lá bài Tarot — xuôi & ngược, đủ bộ | hieu.asia',
