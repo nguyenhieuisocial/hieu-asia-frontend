@@ -35,6 +35,29 @@ export interface CustomerDetail {
   birth_date?: string | null;
   birth_place?: string | null;
   primary_concern?: string | null;
+  // Real users columns (returned via select=*) that were previously unread —
+  // gap audit 2026-07-02. chart_data (migration 0036) carries onboarding birth
+  // data + gender; the page flattens it into the flat fields above so
+  // gender/birth show even for customers with no reading session.
+  chart_data?: {
+    full_name?: string | null;
+    gender?: string | null;
+    birth_year?: number | null;
+    birth_month?: number | null;
+    birth_day?: number | null;
+    birth_hour?: number | null;
+    birth_hour_unknown?: boolean | null;
+  } | null;
+  /** Consent toggles (migration 0036) — keys: email_tips, sms_anniversary,
+   *  zalo_optin, meta_retargeting, google_retargeting, zalo_oa_broadcast. */
+  consent_flags?: Record<string, boolean | null | undefined> | null;
+  /** True = unsubscribed from email (migration 0037) — warn before contacting. */
+  email_opted_out?: boolean | null;
+  onboarding_completed_at?: string | null;
+  plan_expires_at?: string | null;
+  tier_updated_at?: string | null;
+  /** buyer / affiliate / admin… (migration 0017). */
+  app_role?: string | null;
   [extra: string]: unknown;
 }
 
@@ -129,5 +152,9 @@ export function hasComplianceField(c: CustomerDetail | null): boolean {
     || c.sms_anniversary_opt_in != null
     || c.gender != null
     || c.birth_year != null
+    // consent_flags/email_opted_out are the REAL DB columns (the flat opt-in
+    // fields above never existed in DB) — without these the tab hid real data.
+    || (c.consent_flags != null && Object.keys(c.consent_flags).length > 0)
+    || c.email_opted_out != null
   );
 }

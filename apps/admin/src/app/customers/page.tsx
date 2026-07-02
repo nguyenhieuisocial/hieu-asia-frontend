@@ -95,6 +95,7 @@ const CSV_HEADERS = {
   id: 'ID',
   email: 'Email',
   telegram_id: 'Telegram',
+  zalo_id: 'Zalo',
   plan: 'Plan',
   created_at: 'Tạo lúc',
   last_active: 'Hoạt động cuối',
@@ -202,6 +203,7 @@ export default function CustomersPage() {
         id: c.id,
         email: c.email ?? '',
         telegram_id: c.telegram_id ?? '',
+        zalo_id: c.zalo_id ?? '',
         plan: c.plan ?? '',
         created_at: c.created_at ?? '',
         last_active: c.last_active ?? '',
@@ -256,6 +258,20 @@ export default function CustomersPage() {
         cell: (c) => (
           <span className="font-mono text-xs text-muted-foreground">
             {c.telegram_id ?? '—'}
+          </span>
+        ),
+      },
+      {
+        // zalo_id has been selected by the backend list query since day 1 but
+        // never shown — detail's IdentityCard shows it, the list didn't (gap
+        // audit 2026-07-02).
+        id: 'zalo',
+        header: 'Zalo',
+        width: '140px',
+        hideOnMobile: true,
+        cell: (c) => (
+          <span className="font-mono text-xs text-muted-foreground">
+            {c.zalo_id ?? '—'}
           </span>
         ),
       },
