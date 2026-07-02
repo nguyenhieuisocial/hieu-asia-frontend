@@ -709,6 +709,16 @@ function AdminSessionsPageInner() {
                 {s.label}
               </div>
             ) : null}
+            {/* Gap audit 2026-07-02 — note was CSV-only; admins couldn't see
+                their own internal notes while scanning the list. */}
+            {s.note ? (
+              <div
+                className="mt-0.5 truncate text-[10px] italic text-muted-foreground"
+                title={s.note}
+              >
+                {s.note}
+              </div>
+            ) : null}
           </div>
         ),
       },
@@ -763,7 +773,10 @@ function AdminSessionsPageInner() {
           if (s.paid) {
             return (
               <div className="min-w-0">
-                <span className="inline-flex items-center rounded border border-jade/30 bg-jade/10 px-1.5 py-0.5 text-[11px] font-medium text-jade-700 dark:text-jade-50">
+                <span
+                  className="inline-flex items-center rounded border border-jade/30 bg-jade/10 px-1.5 py-0.5 text-[11px] font-medium text-jade-700 dark:text-jade-50"
+                  title={s.paid_at ? `Trả lúc ${fmtDateTime(s.paid_at)}` : undefined}
+                >
                   Đã trả
                 </span>
                 {s.tier ? (
@@ -823,7 +836,10 @@ function AdminSessionsPageInner() {
           }
           return (
             <div className="min-w-0">
-              <div className="truncate text-foreground/90">
+              <div
+                className="truncate text-foreground/90"
+                title={[s.city, s.region, s.country].filter(Boolean).join(', ')}
+              >
                 <span className="mr-1.5" aria-hidden>
                   {flag}
                 </span>
@@ -851,6 +867,24 @@ function AdminSessionsPageInner() {
         cell: (s) => (
           <span className="text-foreground/90">{fmtDuration(s.duration_seconds)}</span>
         ),
+      },
+      {
+        // Gap audit 2026-07-02 — cost_usd was mapped onto every row but never a
+        // column; operators had to open each session to see LLM spend.
+        id: 'cost',
+        header: 'Chi phí',
+        sortKey: 'cost_usd',
+        width: '90px',
+        className: 'text-right tabular-nums',
+        hideOnMobile: true,
+        cell: (s) => {
+          const n = Number(s.cost_usd ?? 0);
+          return n > 0 ? (
+            <span className="text-foreground/90">${n.toFixed(3)}</span>
+          ) : (
+            <span className="text-muted-foreground">—</span>
+          );
+        },
       },
       {
         id: 'status',
