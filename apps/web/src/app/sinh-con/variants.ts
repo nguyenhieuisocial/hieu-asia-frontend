@@ -39,9 +39,9 @@ export const VARIANTS: SinhConVariant[] = [
     emoji: '🐴',
     h1Suffix: 'năm 2026 Bính Ngọ',
     eyebrow: 'Sinh con · Năm 2026',
-    seoTitle: 'Sinh con năm 2026 Bính Ngọ — bé mệnh gì, hợp tuổi bố mẹ nào?',
+    seoTitle: 'Sinh con 2026 Bính Ngọ: mệnh gì, hợp bố mẹ nào?',
     seoDescription:
-      'Bé sinh năm 2026 Bính Ngọ tuổi Ngọ, mệnh Thủy (Thiên Hà Thủy). Đối chiếu với 12 con giáp của bố mẹ: tam hợp Dần – Tuất, lục hợp Mùi, nhóm cần dung hoà Tý, Sửu. Tham khảo theo phong tục, không phán định.',
+      'Bé sinh 2026 Bính Ngọ tuổi Ngọ, mệnh Thủy (Thiên Hà Thủy). Đối chiếu 12 con giáp bố mẹ: tam hợp Dần – Tuất, lục hợp Mùi. Tham khảo phong tục, không phán định.',
     intro:
       'Nhập năm sinh của bố mẹ để đối chiếu với bé sinh năm 2026 (Bính Ngọ — tuổi Ngọ, mệnh Thiên Hà Thủy) theo quan niệm Can Chi và ngũ hành. Đây là tham khảo phong tục — em bé nào cũng là phúc của gia đình.',
     considerations: [
@@ -78,9 +78,9 @@ export const VARIANTS: SinhConVariant[] = [
     emoji: '🐐',
     h1Suffix: 'năm 2027 Đinh Mùi',
     eyebrow: 'Sinh con · Năm 2027',
-    seoTitle: 'Sinh con năm 2027 Đinh Mùi — bé mệnh gì, hợp tuổi bố mẹ nào?',
+    seoTitle: 'Sinh con 2027 Đinh Mùi: mệnh gì, hợp bố mẹ nào?',
     seoDescription:
-      'Bé sinh năm 2027 Đinh Mùi tuổi Mùi, mệnh Thủy (Thiên Hà Thủy). Đối chiếu với 12 con giáp của bố mẹ: tam hợp Hợi – Mão, lục hợp Ngọ, nhóm cần dung hoà Sửu, Tý. Tham khảo theo phong tục, không phán định.',
+      'Bé sinh 2027 Đinh Mùi tuổi Mùi, mệnh Thủy (Thiên Hà Thủy). Đối chiếu 12 con giáp bố mẹ: tam hợp Hợi – Mão, lục hợp Ngọ. Tham khảo phong tục, không phán định.',
     intro:
       'Nhiều gia đình lên kế hoạch đón bé từ trước cả năm. Nhập năm sinh của bố mẹ để đối chiếu với bé sinh năm 2027 (Đinh Mùi — tuổi Mùi, mệnh Thiên Hà Thủy) theo quan niệm Can Chi và ngũ hành — tham khảo phong tục, không phán định.',
     considerations: [
@@ -116,9 +116,9 @@ export const VARIANTS: SinhConVariant[] = [
     emoji: '👨‍👩‍👧',
     h1Suffix: 'hợp tuổi bố mẹ',
     eyebrow: 'Sinh con · Hợp tuổi bố mẹ',
-    seoTitle: 'Sinh con hợp tuổi bố mẹ — cách đối chiếu con giáp & mệnh (tham khảo)',
+    seoTitle: 'Sinh con hợp tuổi bố mẹ — con giáp & nạp âm',
     seoDescription:
-      'Cách đối chiếu tuổi bố mẹ với năm sinh con theo Can Chi (Tam Hợp, Lục Hợp, Lục Xung, Lục Hại) và mệnh nạp âm (tương sinh – tương khắc). Giải thích minh bạch từng quy tắc — tham khảo phong tục, không phán định.',
+      'Cách đối chiếu tuổi bố mẹ với năm sinh con theo Can Chi (Tam Hợp, Lục Hợp, Lục Xung, Lục Hại) và mệnh nạp âm. Minh bạch từng quy tắc — tham khảo, không phán.',
     intro:
       'Trang này giải thích minh bạch cách dân gian đối chiếu tuổi bố mẹ với năm sinh của con — gồm quan hệ 12 con giáp (Tam Hợp, Lục Hợp, Lục Xung, Lục Hại) và mệnh nạp âm (tương sinh, tương khắc) — kèm công cụ thử ngay. Tất cả là quan niệm tham khảo: em bé nào cũng là phúc.',
     considerations: [

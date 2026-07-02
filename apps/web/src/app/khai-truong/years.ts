@@ -73,8 +73,8 @@ export function buildYearPage(birthYear: number): YearPageData {
   const goodYears = goodOpeningYearsFrom(birthYear, TARGET_YEAR, 4);
   const verdictShort = verdictShortOf(main);
 
-  const seoTitle = `Tuổi ${birthYear} khai trương năm ${TARGET_YEAR} được không? Tính Tam Tai, xung Thái Tuế`;
-  const seoDescription = `Chủ sinh ${birthYear} (${main.birthCanChi.name}) khai trương/mở hàng năm ${TARGET_YEAR}: ${verdictShort}. Cách tính minh bạch theo Tam Tai và xung tuổi${goodYears.length ? `; năm hợp gần nhất: ${goodYears.join(', ')}` : ''}. Tham khảo — không phán số mệnh.`;
+  const seoTitle = `Tuổi ${birthYear} khai trương năm ${TARGET_YEAR} được không?`;
+  const seoDescription = `Chủ sinh ${birthYear} (${main.birthCanChi.name}) khai trương năm ${TARGET_YEAR}: ${verdictShort}. Cách tính theo Tam Tai, xung Thái Tuế. Tham khảo — không phán số mệnh.`;
 
   const tamTaiYears = tamTaiSolarYears(birthYear, TARGET_YEAR, 12);
   const faqs: { q: string; a: string }[] = [

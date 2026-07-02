@@ -20,7 +20,7 @@ import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 export const metadata: Metadata = {
   title: 'Lưu trữ Newsletter',
   description:
-    'Đọc các bài tuần đã xuất bản — tự nhận thức, ra quyết định, ngôn ngữ cổ học hiện đại.',
+    'Đọc lại các bài newsletter tuần đã xuất bản của hieu.asia — về tự nhận thức, ra quyết định và ngôn ngữ cổ học diễn giải theo lối hiện đại.',
   alternates: { canonical: 'https://hieu.asia/newsletter/archive' },
   // Wave 60.96.3 — root-layout openGraph is replaced when a route declares its
   // own block. Without `images`, social preview cards (Zalo/FB/Telegram/Slack)

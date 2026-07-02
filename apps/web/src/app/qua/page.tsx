@@ -15,9 +15,9 @@ import { ReferralCard } from '@/components/account/ReferralCard';
  */
 
 export const metadata: Metadata = {
-  title: 'Quà & Lộ trình — hieu.asia',
+  title: 'Quà tặng & lộ trình cá nhân hoá',
   description:
-    'Lộ trình khởi đầu miễn phí + phần thưởng thật: điểm danh mỗi ngày, mời bạn nhận voucher giảm giá.',
+    'Lộ trình khởi đầu miễn phí cùng phần thưởng thật trên hieu.asia: điểm danh mỗi ngày, mời bạn bè và nhận voucher giảm giá cho các gói trả phí.',
   alternates: { canonical: 'https://hieu.asia/qua' },
 };
 

@@ -35,9 +35,9 @@ export const PURPOSES: XemNgayPurpose[] = [
     emoji: '💍',
     h1Suffix: 'cưới hỏi',
     eyebrow: 'Xem ngày · Cưới hỏi',
-    seoTitle: 'Xem ngày cưới hỏi tốt — chấm điểm theo Hoàng đạo, Tam Tai, Kim Lâu',
+    seoTitle: 'Xem ngày cưới hỏi tốt — Hoàng đạo, Kim Lâu',
     seoDescription:
-      'Chọn ngày cưới hỏi đẹp theo lịch vạn niên: chấm điểm 0–100 dựa trên Hoàng/Hắc đạo, trực ngày, sao tốt sao xấu và cảnh báo Tam Tai, Kim Lâu. Cá nhân hoá theo tuổi.',
+      'Chọn ngày cưới hỏi đẹp theo lịch vạn niên: chấm điểm 0–100 theo Hoàng/Hắc đạo, trực ngày, sao tốt xấu và cảnh báo Tam Tai, Kim Lâu. Cá nhân hoá theo tuổi.',
     intro:
       'Nhập ngày dự định cưới và năm sinh để xem ngày đó có thuận cho việc cưới hỏi không. Đây là tham khảo theo lịch pháp truyền thống, giúp bạn cân nhắc — không phải lời phán số mệnh.',
     considerations: [
@@ -69,9 +69,9 @@ export const PURPOSES: XemNgayPurpose[] = [
     emoji: '🏪',
     h1Suffix: 'khai trương',
     eyebrow: 'Xem ngày · Khai trương',
-    seoTitle: 'Xem ngày khai trương tốt — mở cửa hàng, công ty thuận lợi',
+    seoTitle: 'Xem ngày khai trương tốt — mở cửa hàng, công ty',
     seoDescription:
-      'Chọn ngày khai trương đẹp theo lịch vạn niên: chấm điểm dựa trên Hoàng đạo, trực ngày, sao Tài – Lộc và cảnh báo Tam Sai. Gợi ý ngày tốt hơn nếu ngày bạn chọn chưa thuận.',
+      'Chọn ngày khai trương đẹp theo lịch vạn niên: chấm điểm Hoàng đạo, trực ngày, sao Tài – Lộc và cảnh báo Tam Tai. Gợi ý ngày tốt hơn nếu ngày bạn chọn chưa hợp.',
     intro:
       'Nhập ngày dự định khai trương cửa hàng, công ty để xem ngày đó có thuận cho việc mở hàng không — tham khảo theo lịch pháp truyền thống, giúp bạn an tâm khởi sự.',
     considerations: [
@@ -103,7 +103,7 @@ export const PURPOSES: XemNgayPurpose[] = [
     emoji: '🏗️',
     h1Suffix: 'động thổ',
     eyebrow: 'Xem ngày · Động thổ',
-    seoTitle: 'Xem ngày động thổ tốt — khởi công xây nhà, sửa nhà',
+    seoTitle: 'Xem ngày động thổ tốt — khởi công xây, sửa nhà',
     seoDescription:
       'Chọn ngày động thổ, khởi công xây dựng theo lịch vạn niên: chấm điểm Hoàng đạo, trực ngày, kèm cảnh báo Tam Tai, Kim Lâu, Hoang Ốc theo tuổi gia chủ.',
     intro:
@@ -137,7 +137,7 @@ export const PURPOSES: XemNgayPurpose[] = [
     emoji: '🔑',
     h1Suffix: 'nhập trạch',
     eyebrow: 'Xem ngày · Nhập trạch',
-    seoTitle: 'Xem ngày nhập trạch tốt — về nhà mới, dọn vào nhà',
+    seoTitle: 'Xem ngày nhập trạch tốt — về nhà mới, dọn nhà',
     seoDescription:
       'Chọn ngày nhập trạch (về nhà mới) đẹp theo lịch vạn niên: chấm điểm Hoàng đạo, trực ngày, sao tốt xấu và cảnh báo Tam Tai, Kim Lâu, Hoang Ốc theo tuổi.',
     intro:
@@ -171,7 +171,7 @@ export const PURPOSES: XemNgayPurpose[] = [
     emoji: '🧭',
     h1Suffix: 'xuất hành',
     eyebrow: 'Xem ngày · Xuất hành',
-    seoTitle: 'Xem ngày xuất hành tốt — đi xa, khởi hành đầu năm',
+    seoTitle: 'Xem ngày xuất hành tốt — đi xa đầu năm',
     seoDescription:
       'Chọn ngày xuất hành, đi xa thuận lợi theo lịch vạn niên: chấm điểm Hoàng đạo, trực ngày, sao Tam Hợp – Lục Hợp, tránh Lục Xung, Tam Sát.',
     intro:
@@ -205,7 +205,7 @@ export const PURPOSES: XemNgayPurpose[] = [
     emoji: '🚗',
     h1Suffix: 'mua xe',
     eyebrow: 'Xem ngày · Mua xe',
-    seoTitle: 'Xem ngày mua xe tốt — tậu xe, nhận xe hanh thông',
+    seoTitle: 'Xem ngày mua xe tốt — nhận xe hanh thông',
     seoDescription:
       'Chọn ngày mua xe, nhận xe đẹp theo lịch vạn niên: chấm điểm Hoàng đạo, trực ngày, sao Tam Hợp – Lục Hợp, tránh Lục Xung, Tam Sát, Đại Hao.',
     intro:
@@ -239,7 +239,7 @@ export const PURPOSES: XemNgayPurpose[] = [
     emoji: '📝',
     h1Suffix: 'ký hợp đồng',
     eyebrow: 'Xem ngày · Ký hợp đồng',
-    seoTitle: 'Xem ngày ký hợp đồng tốt — giao dịch, hợp tác thuận lợi',
+    seoTitle: 'Xem ngày ký hợp đồng tốt — giao dịch thuận lợi',
     seoDescription:
       'Chọn ngày ký hợp đồng, giao dịch quan trọng theo lịch vạn niên: chấm điểm Hoàng đạo, trực ngày, sao Tam Hợp – Lục Hợp, tránh Lục Xung, Tam Sát.',
     intro:

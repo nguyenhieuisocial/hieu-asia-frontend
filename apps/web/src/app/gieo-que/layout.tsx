@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Gieo Quẻ Kinh Dịch online — bốc quẻ hỏi việc miễn phí',
+  title: 'Gieo quẻ Kinh Dịch online — bốc quẻ hỏi việc',
   description:
     'Gieo quẻ Kinh Dịch online theo phép 3 đồng xu: lập quẻ chính, quẻ biến và hào động trong 64 quẻ Dịch, kèm lời gợi mở để suy ngẫm trước khi quyết định.',
   alternates: { canonical: 'https://hieu.asia/gieo-que' },

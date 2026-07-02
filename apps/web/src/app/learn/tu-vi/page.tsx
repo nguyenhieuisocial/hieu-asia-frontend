@@ -18,7 +18,7 @@ import {
 export const metadata: Metadata = {
   title: 'Tử Vi 12 cung, Học huyền học',
   description:
-    'Tìm hiểu 12 cung Tử Vi: Mệnh, Tài Bạch, Phu Thê, Quan Lộc... Mỗi cung phản ánh một lĩnh vực đời sống cụ thể.',
+    'Tìm hiểu 12 cung Tử Vi: Mệnh, Tài Bạch, Phu Thê, Quan Lộc, Điền Trạch... Mỗi cung phản ánh một lĩnh vực đời sống cụ thể trên lá số của bạn.',
   alternates: { canonical: 'https://hieu.asia/learn/tu-vi' },
 };
 

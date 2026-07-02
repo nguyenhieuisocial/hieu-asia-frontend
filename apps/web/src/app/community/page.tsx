@@ -21,7 +21,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 export const metadata: Metadata = {
   title: 'Cộng đồng',
   description:
-    'Theo dõi hieu.asia trên Telegram, đăng ký newsletter hàng tuần và tham gia các vòng học huyền học thực hành.',
+    'Theo dõi hieu.asia trên Telegram, đăng ký newsletter hàng tuần và tham gia các vòng học huyền học thực hành cùng cộng đồng người yêu cổ học.',
   alternates: { canonical: 'https://hieu.asia/community' },
   openGraph: {
     title: 'Cộng đồng',

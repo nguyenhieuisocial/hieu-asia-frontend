@@ -83,8 +83,8 @@ export function buildType(slug: string): EnneagramTypeData | null {
   const others = ENNEAGRAM_TYPE_ORDER.filter((t) => t !== n).map(refOf);
   const workStyle = WORK_STYLE[n];
 
-  const seoTitle = `Enneagram Nhóm ${n} — ${meta.name} (${meta.nick})`;
-  const seoDescription = `Nhóm ${n} Enneagram (${meta.name}): ${meta.tagline} Khao khát, nỗi sợ cốt lõi, điểm mạnh, hướng phát triển, cánh ${n}w${l}/${n}w${r} và mũi tên phát triển — mô tả xu hướng, không phán số mệnh.`;
+  const seoTitle = `Enneagram Nhóm ${n} — ${meta.name}`;
+  const seoDescription = `Nhóm ${n} Enneagram (${meta.name}): khao khát, nỗi sợ cốt lõi, điểm mạnh, hướng phát triển, cánh và mũi tên phát triển. Mô tả xu hướng, không phán số mệnh.`;
 
   const faqs: { q: string; a: string }[] = [
     {

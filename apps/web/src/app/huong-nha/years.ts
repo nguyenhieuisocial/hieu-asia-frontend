@@ -41,8 +41,8 @@ export function buildYearPage(year: number): YearPageData {
   const namBest = nam.good[0]!; // luôn có 4 hướng tốt
   const nuBest = nu.good[0]!;
 
-  const seoTitle = `Sinh năm ${year} hợp hướng nhà nào? Hướng tốt theo cung phi (nam & nữ)`;
-  const seoDescription = `Gia chủ sinh năm ${year}: nam thuộc cung ${nam.cungPhi} (${groupLabel(nam.group)}) hợp hướng ${namBest.direction}; nữ thuộc cung ${nu.cungPhi} (${groupLabel(nu.group)}) hợp hướng ${nuBest.direction}. Bảng 4 hướng tốt – 4 hướng tránh, tính theo Bát Trạch. Tham khảo, không phán số mệnh.`;
+  const seoTitle = `Sinh năm ${year} hợp hướng nhà nào? (nam & nữ)`;
+  const seoDescription = `Gia chủ sinh ${year}: nam cung ${nam.cungPhi} hợp hướng ${namBest.direction}; nữ cung ${nu.cungPhi} hợp hướng ${nuBest.direction}. Bảng 4 hướng tốt – 4 hướng tránh theo Bát Trạch. Tham khảo.`;
 
   const faqs: { q: string; a: string }[] = [
     {

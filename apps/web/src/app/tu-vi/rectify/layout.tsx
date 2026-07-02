@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
-  title: 'Birth Time Rectification — hồi cứu giờ sinh chính xác',
+  title: 'Hồi cứu giờ sinh (Birth Time Rectification)',
   description:
-    'Không nhớ chính xác giờ sinh? Trả lời 12 câu hỏi hồi cứu sự kiện đời để thu hẹp khung giờ (canh) khả dĩ xuống top 3 ứng viên. Heuristic, không thay thế chuyên gia.',
+    'Không nhớ chính xác giờ sinh? Trả lời 12 câu hồi cứu sự kiện đời để thu hẹp khung giờ (canh) xuống top 3. Heuristic, không thay chuyên gia.',
   alternates: { canonical: 'https://hieu.asia/tu-vi/rectify' },
   openGraph: {
     title: 'Birth Time Rectification',

@@ -74,8 +74,8 @@ export function buildYearPage(birthYear: number): YearPageData {
   const goodYears = goodYearsFrom(birthYear, TARGET_YEAR);
   const verdictShort = verdictShortOf(main);
 
-  const seoTitle = `Sinh năm ${birthYear} cưới năm ${TARGET_YEAR} được không? Tính Kim Lâu, Tam Tai`;
-  const seoDescription = `Cô dâu sinh ${birthYear} (${main.birthCanChi.name}) cưới năm ${TARGET_YEAR}: ${verdictShort}. Tuổi mụ ${main.kimLau.ageMu}, cách tính minh bạch từng bước${goodYears.length ? `; năm không phạm gần nhất: ${goodYears.join(', ')}` : ''}. Tham khảo — không phán số mệnh.`;
+  const seoTitle = `Sinh ${birthYear} cưới ${TARGET_YEAR} được không? Kim Lâu, Tam Tai`;
+  const seoDescription = `Cô dâu sinh ${birthYear} (${main.birthCanChi.name}) cưới năm ${TARGET_YEAR}: ${verdictShort}. Tuổi mụ ${main.kimLau.ageMu}, tính Kim Lâu, Tam Tai minh bạch. Tham khảo — không phán số mệnh.`;
 
   const tamTaiYears = tamTaiSolarYears(birthYear, TARGET_YEAR, 12);
   const faqs: { q: string; a: string }[] = [

@@ -19,8 +19,8 @@ export async function generateMetadata(
   const data = findStarContent(star);
   if (!data) return {};
   return {
-    title: `Sao ${data.name} trong Tử Vi: ý nghĩa, vị trí và cách luận`,
-    description: `${data.archetype} Ý nghĩa khi đứng tại cung Mệnh, Quan Lộc, Tài Bạch — hieu.asia`,
+    title: `Sao ${data.name} trong Tử Vi Đẩu Số`,
+    description: `Sao ${data.name} — ${data.archetype} Ý nghĩa khi toạ cung Mệnh, Quan Lộc, Tài Bạch và cách luận trên lá số Tử Vi.`.slice(0, 158),
     alternates: { canonical: `https://hieu.asia/tu-vi/sao/${data.slug}` },
     openGraph: {
       title: `Sao ${data.name}`,

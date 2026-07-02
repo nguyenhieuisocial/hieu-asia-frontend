@@ -48,7 +48,7 @@ export const COMPARISONS: readonly Comparison[] = [
     a: { ten: 'MBTI', href: '/mbti', tag: '16 nhóm tính cách' },
     b: { ten: 'Big Five', href: '/big-five', tag: '5 chiều OCEAN' },
     intro:
-      'MBTI chia con người thành 16 nhóm dễ nhớ; Big Five (OCEAN) đo 5 chiều tính cách theo thang liên tục và được giới nghiên cứu tâm lý tin dùng hơn. Đây là hai lăng kính bổ trợ nhau, không loại trừ nhau.',
+      'MBTI chia con người thành 16 nhóm dễ nhớ; Big Five (OCEAN) đo 5 chiều tính cách theo thang liên tục, được giới nghiên cứu tin dùng hơn. Hai lăng kính bổ trợ.',
     dims: [
       {
         aspect: 'Cách phân loại',
@@ -103,7 +103,7 @@ export const COMPARISONS: readonly Comparison[] = [
     a: { ten: 'Tử Vi', href: '/tu-vi', tag: 'Đẩu Số · 12 cung' },
     b: { ten: 'Bát Tự', href: '/bat-tu', tag: 'Tứ Trụ · Can Chi' },
     intro:
-      'Tử Vi Đẩu Số lập lá số 12 cung với hàng chục sao; Bát Tự (Tứ Trụ) dựa trên Can - Chi của giờ, ngày, tháng, năm sinh. Đây là hai trường phái luận mệnh Á Đông khác nhau về cách tiếp cận — bổ sung cho nhau.',
+      'Tử Vi Đẩu Số lập lá số 12 cung nhiều sao; Bát Tự (Tứ Trụ) dựa trên Can Chi của giờ, ngày, tháng, năm sinh. Hai trường phái luận mệnh Á Đông, bổ sung nhau.',
     dims: [
       {
         aspect: 'Cơ sở',
@@ -157,7 +157,7 @@ export const COMPARISONS: readonly Comparison[] = [
     a: { ten: 'MBTI', href: '/mbti', tag: '16 nhóm tư duy' },
     b: { ten: 'DISC', href: '/disc', tag: '4 phong cách hành vi' },
     intro:
-      'MBTI mô tả cách bạn tư duy và nạp năng lượng (16 nhóm); DISC tập trung vào phong cách HÀNH VI và giao tiếp (4 nhóm D/i/S/C), rất hay dùng nơi công sở. Một cái nhìn vào bên trong, một cái nhìn vào cách bạn tương tác.',
+      'MBTI mô tả cách bạn tư duy và nạp năng lượng (16 nhóm); DISC tập trung vào phong cách hành vi và giao tiếp (4 nhóm D/i/S/C), rất hay dùng nơi công sở.',
     dims: [
       {
         aspect: 'Trọng tâm',
@@ -197,7 +197,7 @@ export const COMPARISONS: readonly Comparison[] = [
     a: { ten: 'MBTI', href: '/mbti', tag: '16 nhóm tư duy' },
     b: { ten: 'Enneagram', href: '/enneagram', tag: '9 nhóm động lực' },
     intro:
-      'MBTI mô tả CÁCH bạn tư duy và tiếp nhận thông tin (16 nhóm); Enneagram đào vào ĐỘNG LỰC và nỗi sợ cốt lõi đứng sau hành vi (9 nhóm). Một bên trả lời "bạn vận hành thế nào", một bên trả lời "vì sao bạn làm vậy".',
+      'MBTI mô tả cách bạn tư duy và tiếp nhận thông tin (16 nhóm); Enneagram đào vào động lực và nỗi sợ cốt lõi sau hành vi (9 nhóm). Một về "cách", một về "vì sao".',
     dims: [
       {
         aspect: 'Trọng tâm',
@@ -252,7 +252,7 @@ export const COMPARISONS: readonly Comparison[] = [
     a: { ten: 'Enneagram', href: '/enneagram', tag: '9 nhóm động lực' },
     b: { ten: 'Big Five', href: '/big-five', tag: '5 chiều OCEAN' },
     intro:
-      'Enneagram nhóm con người theo 9 động lực cốt lõi và mở ra con đường phát triển; Big Five (OCEAN) đo 5 chiều tính cách trên thang liên tục với nền nghiên cứu vững nhất. Một bên giàu ý nghĩa phát triển, một bên chính xác và đo lường được.',
+      'Enneagram nhóm con người theo 9 động lực cốt lõi và mở đường phát triển; Big Five (OCEAN) đo 5 chiều tính cách trên thang liên tục với nền nghiên cứu vững nhất.',
     dims: [
       {
         aspect: 'Cách phân loại',
@@ -307,7 +307,7 @@ export const COMPARISONS: readonly Comparison[] = [
     a: { ten: 'Thần Số Học', href: '/than-so-hoc', tag: 'Số chủ đạo · Pythagoras' },
     b: { ten: 'Tử Vi', href: '/tu-vi', tag: 'Đẩu Số · 12 cung' },
     intro:
-      'Thần Số Học (Tây phương) rút các con số chủ đạo từ ngày sinh và tên; Tử Vi (Á Đông) lập lá số 12 cung với hàng chục sao. Hai truyền thống khác hẳn về nguồn gốc và cách tính — cùng là lăng kính để chiêm nghiệm, không phán số phận.',
+      'Thần Số Học (Tây phương) rút các số chủ đạo từ ngày sinh và tên; Tử Vi (Á Đông) lập lá số 12 cung nhiều sao. Hai truyền thống khác gốc, cùng để chiêm nghiệm.',
     dims: [
       {
         aspect: 'Nguồn gốc',

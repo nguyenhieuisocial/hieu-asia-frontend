@@ -9,7 +9,7 @@ import { Fab } from '@/components/product/Fab';
 export const metadata: Metadata = {
   title: 'Lá số của bạn',
   description:
-    'Bắt đầu lá số mới hoặc xem lại các báo cáo trước. Tử Vi · MBTI · Thần Số Học · Palm.',
+    'Bắt đầu lá số mới hoặc xem lại các báo cáo đã lập trước đây — Tử Vi, Bát Tự, MBTI, Thần Số Học và Xem tướng, tất cả ở một nơi.',
   alternates: { canonical: 'https://hieu.asia/reading' },
 };
 

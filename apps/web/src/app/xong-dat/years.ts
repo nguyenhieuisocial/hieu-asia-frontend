@@ -60,10 +60,9 @@ export function buildHostPage(hostYear: number): HostPageData {
   const top = topCandidates(hostYear, TARGET_YEAR, 6);
   const caution = cautionChis(hostYear, TARGET_YEAR);
   const menhName = ELEMENTS[host.element].name;
-  const top3 = top.slice(0, 3).map((r) => `${r.guest.year} (${r.guest.canChi})`).join(', ');
 
-  const seoTitle = `Tuổi xông đất 2027 cho gia chủ sinh năm ${hostYear} (${host.canChi}) — gợi ý & cách tính`;
-  const seoDescription = `Gia chủ sinh ${hostYear} (${host.canChi}, mệnh ${menhName}) đón Tết Đinh Mùi 2027: gợi ý tuổi xông đất ${top3}… Chấm minh bạch theo tam hợp, lục hợp với chi năm/gia chủ và ngũ hành tương sinh. Tham khảo phong tục, không phán định.`;
+  const seoTitle = `Tuổi xông đất 2027 cho gia chủ sinh ${hostYear}`;
+  const seoDescription = `Gia chủ sinh ${hostYear} (${host.canChi}, mệnh ${menhName}) đón Tết Đinh Mùi 2027: gợi ý tuổi xông đất theo tam hợp, lục hợp và ngũ hành tương sinh. Tham khảo, không phán định.`;
 
   const considerations = [
     `Gia chủ sinh ${hostYear} thuộc năm ${host.canChi} — tuổi ${host.zodiac.ten}, mệnh ${menhName} (${host.napAmName}).`,

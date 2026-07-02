@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Trắc nghiệm DiSC miễn phí — 4 phong cách hành vi D/i/S/C',
+  title: 'Trắc nghiệm DiSC — 4 phong cách hành vi',
   description:
-    'Làm trắc nghiệm DiSC online: xác định phong cách hành vi Quyết đoán (D), Ảnh hưởng (i), Ổn định (S), Tuân thủ (C) để hiểu cách bạn giao tiếp và làm việc. 16 câu, kết quả ngay.',
+    'Trắc nghiệm DiSC online: xác định phong cách hành vi Quyết đoán (D), Ảnh hưởng (i), Ổn định (S), Tuân thủ (C). 16 câu, kết quả ngay.',
   alternates: { canonical: 'https://hieu.asia/disc' },
   openGraph: {
     title: 'Trắc nghiệm DiSC',

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   // SEO-FIX: absolute (62 → 52 chars) + description shortened (213 → ~155).
   title: { absolute: 'Ý nghĩa 78 lá bài Tarot — xuôi & ngược | hieu.asia' },
   description:
-    'Ý nghĩa đủ 78 lá Tarot (22 Ẩn chính + 56 Ẩn phụ) theo hệ Rider–Waite–Smith: từ khóa xuôi – ngược, biểu tượng, góc tình cảm – công việc và câu hỏi tự soi. Không phán định mệnh.',
+    'Ý nghĩa đủ 78 lá Tarot (22 Ẩn chính + 56 Ẩn phụ) theo hệ Rider–Waite–Smith: từ khóa xuôi – ngược, biểu tượng và câu hỏi tự soi. Không phán định mệnh.',
   alternates: { canonical: 'https://hieu.asia/tarot/y-nghia' },
   openGraph: {
     title: 'Ý nghĩa 78 lá bài Tarot — xuôi & ngược, đủ bộ | hieu.asia',

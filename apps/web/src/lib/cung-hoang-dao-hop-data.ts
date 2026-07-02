@@ -137,8 +137,8 @@ export function buildPair(slug: string): PairData | null {
     },
   ];
 
-  const seoTitle = `Cung ${a.z.name} và ${b.z.name} có hợp nhau không? Độ hợp tình yêu & tính cách`;
-  const seoDescription = `${a.z.name} và ${b.z.name}: ${relLabel.toLowerCase()}. ${relBlurb} Xu hướng hòa hợp theo nguyên tố, tham khảo, không phán số mệnh.`;
+  const seoTitle = `${a.z.name} và ${b.z.name} có hợp nhau? Độ hợp`;
+  const seoDescription = `${a.z.name} và ${b.z.name}: ${relLabel.toLowerCase()}. Xu hướng hòa hợp theo nguyên tố, điểm lệch pha và gợi ý dung hoà. Tham khảo, không phán số mệnh.`;
 
   return {
     slug,
