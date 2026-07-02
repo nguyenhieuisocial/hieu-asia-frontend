@@ -28,7 +28,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 export const revalidate = 300; // 5 minutes — newly published pillars surface fast
 
 export const metadata: Metadata = {
-  title: 'Cẩm nang hieu.asia — Tử Vi, Bát Tự, MBTI, Thần Số Học',
+  title: { absolute: 'Cẩm nang hieu.asia — Tử Vi, Bát Tự, MBTI, Thần Số Học' },
   description:
     'Cẩm nang chuyên đề về Tử Vi, Bát Tự, MBTI và Thần Số Học — viết dễ hiểu, đối chiếu nhiều nguồn và biên tập tay, nói thẳng giới hạn thay vì phán số mệnh.',
   alternates: { canonical: 'https://hieu.asia/cam-nang' },

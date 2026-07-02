@@ -8,9 +8,9 @@ import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
-  title: 'Công cụ Tử Vi Đẩu Số: lập lá số, tra cung và sao bằng AI',
+  title: 'Tử Vi Đẩu Số — lập lá số, tra cung & sao',
   description:
-    'Cẩm nang Tử Vi Đẩu Số: lập lá số 12 cung theo trường phái Bắc phái 121 sao, tra cứu ý nghĩa từng cung và từng sao miễn phí, luận đại vận lưu niên. Luận giải AI chuyên sâu tuỳ chọn qua /pricing.',
+    'Tử Vi Đẩu Số: lập lá số 12 cung, 121 sao (Bắc phái), tra cứu ý nghĩa cung & sao miễn phí, luận đại vận lưu niên. AI chuyên sâu tuỳ chọn qua /pricing.',
   alternates: { canonical: 'https://hieu.asia/tu-vi' },
   // Wave 60.96.2 — route-level openGraph REPLACES root-layout openGraph; must
   // re-declare `images` or Zalo/FB/Telegram/Slack previews render blank.

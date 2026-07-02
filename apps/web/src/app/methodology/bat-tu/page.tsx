@@ -25,7 +25,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 export const metadata: Metadata = {
   title: 'Bát Tự — Beta',
   description:
-    'Bát Tự ở hieu.asia hiện ở trạng thái beta — engine tính được 4 trụ, thập thần và ngũ hành nhưng chỉ đóng vai trò lớp đối chiếu phụ với Tử Vi, không tự quyết định kết luận.',
+    'Bát Tự tại hieu.asia đang beta — tính được 4 trụ, thập thần, ngũ hành nhưng chỉ là lớp đối chiếu phụ với Tử Vi, không tự quyết định kết luận.',
   alternates: { canonical: 'https://hieu.asia/methodology/bat-tu' },
   openGraph: {
     title: 'Bát Tự — Beta',

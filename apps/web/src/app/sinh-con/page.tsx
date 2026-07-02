@@ -11,7 +11,7 @@ const DESC =
   'Đối chiếu năm sinh dự kiến của bé với tuổi bố mẹ theo Can Chi (Tam Hợp, Lục Hợp…) và mệnh nạp âm (tương sinh – tương khắc). Quy tắc minh bạch, giọng dung hoà — tham khảo phong tục, không phán định; em bé nào cũng là phúc.';
 
 export const metadata: Metadata = {
-  title: 'Sinh con theo năm — bé mệnh gì, đối chiếu tuổi bố mẹ',
+  title: 'Sinh con theo năm — mệnh bé & tuổi bố mẹ',
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/sinh-con' },
   openGraph: {

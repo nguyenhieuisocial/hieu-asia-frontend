@@ -15,9 +15,9 @@ import { BanMenhFinder } from './BanMenhFinder';
 const URL = 'https://hieu.asia/ban-menh';
 
 export const metadata: Metadata = {
-  title: 'Sinh năm nào mệnh gì? Tra ngũ hành bản mệnh (nạp âm) & màu hợp theo năm sinh',
+  title: 'Tra bản mệnh & ngũ hành nạp âm theo năm sinh',
   description:
-    'Tra ngũ hành bản mệnh theo năm sinh: bạn mệnh Kim, Mộc, Thủy, Hỏa hay Thổ, nạp âm là gì, hợp màu gì và nên hạn chế màu nào. Tính theo nạp âm 60 Giáp Tý, suy màu theo luật tương sinh – tương khắc. Tham khảo, không phán số mệnh.',
+    'Tra ngũ hành bản mệnh (nạp âm) theo năm sinh: mệnh Kim, Mộc, Thủy, Hỏa hay Thổ, màu hợp và nên hạn chế. Tính theo 60 Giáp Tý, tham khảo.',
   alternates: { canonical: URL },
   openGraph: {
     title: 'Sinh năm nào mệnh gì? Tra ngũ hành bản mệnh & màu hợp',

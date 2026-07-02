@@ -13,7 +13,7 @@ const DESC =
   'Gợi ý tuổi xông đất Tết Đinh Mùi 2027 theo năm sinh gia chủ: chấm minh bạch 3 lớp — tam hợp/lục hợp với chi năm, với tuổi gia chủ và ngũ hành tương sinh. Tham khảo phong tục, không phán định.';
 
 export const metadata: Metadata = {
-  title: 'Xem tuổi xông đất Tết 2027 (Đinh Mùi) — gợi ý theo tam hợp & ngũ hành',
+  title: 'Tuổi xông đất Tết 2027 — tam hợp & ngũ hành',
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/xong-dat' },
   openGraph: {

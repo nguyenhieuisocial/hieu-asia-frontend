@@ -19,9 +19,9 @@ import {
 } from './_active-learning';
 
 export const metadata: Metadata = {
-  title: 'Phong Thủy: hướng nhà, chọn ngày & ngũ hành | Học huyền học',
+  title: 'Phong Thủy — hướng nhà, ngũ hành & chọn ngày',
   description:
-    'Phong Thủy ứng dụng: hiểu Bát Trạch để xem hướng nhà hợp tuổi, bổ khuyết ngũ hành, chọn ngày–giờ và xem tuổi. Quy tắc minh bạch để tham khảo, không phán số mệnh.',
+    'Phong Thủy ứng dụng: Bát Trạch — hướng nhà hợp tuổi, bổ khuyết ngũ hành, chọn ngày–giờ và xem tuổi. Quy tắc minh bạch, tham khảo, không phán số mệnh.',
   alternates: { canonical: 'https://hieu.asia/learn/phong-thuy' },
 };
 

@@ -68,7 +68,7 @@ import { faqPage } from '@/lib/seo/jsonld';
 export const metadata: Metadata = {
   title: 'Tính năng',
   description:
-    'Năm lăng kính cốt lõi (Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng), thêm DISC, Enneagram, Tarot, bản đồ sao chiêm tinh, Kinh Dịch và bộ ra quyết định với AI Mentor — hơn 25 công cụ tự hiểu trên hieu.asia.',
+    'Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng, DISC, Enneagram, Tarot, chiêm tinh, Kinh Dịch và bộ ra quyết định với AI Mentor — hơn 25 công cụ tự hiểu.',
   alternates: { canonical: 'https://hieu.asia/features' },
   openGraph: {
     title: 'Tính năng',

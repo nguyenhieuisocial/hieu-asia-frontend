@@ -17,9 +17,9 @@ import { SunSignFinder } from './SunSignFinder';
 const URL = 'https://hieu.asia/cung-hoang-dao';
 
 export const metadata: Metadata = {
-  title: 'Cung hoàng đạo: 12 cung, ngày sinh, tính cách & độ hợp — tính theo thiên văn thật',
+  title: 'Cung hoàng đạo — tính cách, ngày sinh & độ hợp',
   description:
-    'Tra cung hoàng đạo theo ngày sinh và tìm hiểu 12 cung: Bạch Dương, Kim Ngưu, Song Tử, Cự Giải, Sư Tử, Xử Nữ, Thiên Bình, Bọ Cạp, Nhân Mã, Ma Kết, Bảo Bình, Song Ngư. Tính cách, nguyên tố, hành tinh chủ quản và cung hợp nhau. Tính theo vị trí Mặt Trời thật, tham khảo, không phán số mệnh.',
+    'Tra cung hoàng đạo theo ngày sinh & tìm hiểu 12 cung: Bạch Dương đến Song Ngư — tính cách, nguyên tố, hành tinh chủ và cung hợp. Tham khảo.',
   alternates: { canonical: URL },
   openGraph: {
     title: 'Cung hoàng đạo — 12 cung, ngày sinh & độ hợp',

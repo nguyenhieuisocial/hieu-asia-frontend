@@ -25,7 +25,7 @@ import { ResultDisclaimer } from '@/components/ResultDisclaimer';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 
 export const metadata: Metadata = {
-  title: 'Mẫu báo cáo Tử Vi — xem trước trải nghiệm Premium',
+  title: 'Mẫu báo cáo Tử Vi — xem trước Premium',
   description:
     'Báo cáo Tử Vi mẫu công khai: 12 cung, Mệnh — Thân, đại vận, lưu niên, kế hoạch 30-60-90 ngày. Xem trước trước khi quyết định lập lá số.',
   alternates: { canonical: 'https://hieu.asia/sample-report' },

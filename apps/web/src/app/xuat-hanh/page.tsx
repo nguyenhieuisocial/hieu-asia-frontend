@@ -10,7 +10,7 @@ const DESC =
   'Tra hướng xuất hành (Hỷ Thần cầu may, Tài Thần cầu tài) và giờ hoàng đạo cho bất kỳ ngày nào, tính theo Can-Chi của ngày. Minh bạch, kiểm chứng được — phong tục tham khảo, không phán số mệnh.';
 
 export const metadata: Metadata = {
-  title: 'Hướng & giờ xuất hành hôm nay — tra theo ngày (Hỷ Thần, Tài Thần)',
+  title: 'Hướng & giờ xuất hành — tra theo ngày',
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/xuat-hanh' },
   openGraph: {

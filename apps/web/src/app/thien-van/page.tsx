@@ -9,9 +9,10 @@ import { SkyTimeline } from '@/components/thien-van/SkyTimeline';
 import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 
 export const metadata: Metadata = {
-  title: 'Lịch thiên văn 2026–2030 — nguyệt thực, nhật thực, phân & chí (giờ VN) | hieu.asia',
+  // SEO-FIX: absolute (84 → 57 chars) + description shortened (178 → ~155).
+  title: { absolute: 'Lịch Thiên Văn 2026–2030: Nhật & Nguyệt Thực | hieu.asia' },
   description:
-    'Lịch các sự kiện thiên văn quan sát được tại Việt Nam: nguyệt thực (“trăng máu”), nhật thực một phần, xuân phân – hạ chí – thu phân – đông chí. Ngày giờ tính thật theo giờ VN.',
+    'Lịch thiên văn 2026–2030 tại Việt Nam: nguyệt thực (trăng máu), nhật thực một phần, xuân phân – hạ chí – thu phân – đông chí. Ngày giờ theo giờ VN.',
   alternates: { canonical: '/thien-van' },
 };
 

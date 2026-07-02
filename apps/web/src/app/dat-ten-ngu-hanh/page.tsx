@@ -12,7 +12,7 @@ const DESC =
   'Tra mệnh ngũ hành của bé theo ngày sinh (nạp âm) và gợi ý tên hợp mệnh theo phong tục: tên thuộc hành tương sinh, tránh hành tương khắc. Gợi ý tham khảo theo nghĩa chữ — không phán số mệnh.';
 
 export const metadata: Metadata = {
-  title: 'Đặt tên con theo ngũ hành — tra mệnh & gợi ý tên hợp mệnh',
+  title: 'Đặt tên theo ngũ hành — tra mệnh & gợi ý tên',
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/dat-ten-ngu-hanh' },
   openGraph: {

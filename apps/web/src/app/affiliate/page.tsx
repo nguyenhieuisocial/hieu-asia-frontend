@@ -19,7 +19,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { PRICING, formatVND } from '@/lib/pricing';
 
 export const metadata: Metadata = {
-  title: 'Cộng tác viên hieu.asia: biến niềm tin thành thu nhập',
+  title: { absolute: 'Cộng tác viên hieu.asia — kiếm hoa hồng & thu nhập' },
   description:
     'Giới thiệu hieu.asia cho người cần một góc nhìn về chính họ, nhận 30% hoa hồng đơn đầu + 10% các lần gia hạn. Minh bạch tuyệt đối, miễn phí, không đa cấp.',
   alternates: { canonical: 'https://hieu.asia/affiliate' },

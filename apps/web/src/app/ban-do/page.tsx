@@ -25,7 +25,7 @@ import { RelatedTools } from '@/components/tools/RelatedTools';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Bản đồ của bạn — gợi ý cá nhân theo tuần/tháng/năm',
+  title: 'Bản đồ cá nhân — gợi ý theo tuần/tháng/năm',
   description:
     'Gợi ý cá nhân hoá theo ngày, tuần, tháng và năm dựa trên lá số của bạn. Gói đồng hành cập nhật mỗi tuần.',
   alternates: { canonical: 'https://hieu.asia/ban-do' },

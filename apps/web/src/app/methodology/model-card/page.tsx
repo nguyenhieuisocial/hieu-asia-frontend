@@ -28,7 +28,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 export const metadata: Metadata = {
   title: 'Model Card — AI Mentor',
   description:
-    'Model card cho AI Mentor + Composer của hieu.asia: mục đích, input/output, guardrails, human review, known limitations, evaluation, data handling, model routing.',
+    'Model card — AI Mentor + Composer của hieu.asia: mục đích, input/output, guardrails, human review, known limitations, evaluation, data handling.',
   alternates: { canonical: 'https://hieu.asia/methodology/model-card' },
   openGraph: {
     title: 'Model Card — AI Mentor',
