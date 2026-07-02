@@ -1100,7 +1100,11 @@ body { overflow-wrap: break-word; }
 .ob-soi-btn:hover { background: #ecc078; }
 .ob-soi-btn:active { transform: scale(0.98); }
 .ob-soi-btn:disabled { opacity: 0.7; cursor: default; }
-.ob-soi-date { color-scheme: dark; max-width: 13rem; text-align: left; }
+/* Ô ngày sinh: KHÓA min-width đủ hiện trọn dd/mm/yyyy + icon lịch (fix bug năm
+   bị cắt "30/04/99…" khi hàng chật vì thêm 2 ô Giờ:Phút — .ob-soi-input gốc cho
+   min-width:0 nên flex bóp nhỏ tùy ý). Hàng đã flex-wrap → chật thì XUỐNG DÒNG,
+   không bao giờ cắt chữ. */
+.ob-soi-date { color-scheme: dark; flex: 1 1 9.5rem; min-width: 9.5rem; max-width: 13rem; text-align: left; }
 .ob-soi-time { color-scheme: dark; max-width: 8rem; text-align: left; }
 /* Time24 (2 ô số GIỜ:PHÚT) trong nền tối Bộ não Oracle — khớp .ob-soi-input. */
 .ob-time-field {
