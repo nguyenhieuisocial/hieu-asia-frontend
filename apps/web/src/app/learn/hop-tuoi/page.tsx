@@ -18,7 +18,7 @@ import {
 } from './_active-learning';
 
 export const metadata: Metadata = {
-  title: 'Hợp tuổi (12 con giáp): Tam Hợp, Lục Hợp, Lục Xung | Học huyền học',
+  title: 'Hợp tuổi 12 con giáp — Tam Hợp, Lục Hợp & Xung',
   description:
     'Hợp tuổi (12 con giáp) theo Can Chi: Tam Hợp, Lục Hợp, Lục Xung, Lục Hại và mệnh nạp âm. Góc nhìn tham khảo, dung hòa — không phán số mệnh, không kiêng kỵ.',
   alternates: { canonical: 'https://hieu.asia/learn/hop-tuoi' },

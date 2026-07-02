@@ -21,9 +21,9 @@ const DAYS = TET_DAYS.map((d) => ({ ...d, r: computeXuatHanh(d.dd, d.mm, d.yy) }
 const mung1 = DAYS[0]!.r;
 
 export const metadata: Metadata = {
-  title: 'Xuất hành đầu năm 2027 (Đinh Mùi): hướng & giờ tốt mùng 1, 2, 3 Tết',
+  title: 'Xuất hành Tết 2027 — hướng & giờ tốt 3 ngày',
   description:
-    'Hướng xuất hành Tết Đinh Mùi 2027: hướng Hỷ Thần, Tài Thần và giờ hoàng đạo cho mùng 1 (6/2), mùng 2 (7/2), mùng 3 (8/2). Tính theo Can-Chi từng ngày, minh bạch nguồn — phong tục tham khảo, không phán số mệnh.',
+    'Hướng xuất hành Tết Đinh Mùi 2027 — Hỷ Thần, Tài Thần & giờ hoàng đạo cho mùng 1 (6/2), mùng 2 (7/2), mùng 3 (8/2). Tính theo Can-Chi, tham khảo.',
   alternates: { canonical: 'https://hieu.asia/xuat-hanh-2027' },
   openGraph: {
     title: 'Xuất hành đầu năm 2027 — hướng & giờ tốt mùng 1, 2, 3 Tết',

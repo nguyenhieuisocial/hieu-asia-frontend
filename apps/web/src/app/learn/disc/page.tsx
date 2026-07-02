@@ -21,7 +21,7 @@ import {
 export const metadata: Metadata = {
   title: 'DISC — 4 nhóm hành vi (D/I/S/C) | Học huyền học',
   description:
-    'DISC mô tả 4 thiên hướng hành vi: Thống trị (D), Ảnh hưởng (I), Kiên định (S), Tuân thủ (C). Cách bạn phản ứng với thử thách và con người — xu hướng, không phải nhãn cố định.',
+    'DISC: 4 thiên hướng hành vi — Thống trị (D), Ảnh hưởng (I), Kiên định (S), Tuân thủ (C). Cách bạn phản ứng với thử thách và con người — xu hướng, không nhãn.',
   alternates: { canonical: 'https://hieu.asia/learn/disc' },
 };
 

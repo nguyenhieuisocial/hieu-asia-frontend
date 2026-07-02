@@ -10,9 +10,9 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
-  title: 'Tháng cô hồn 2026 là tháng nào? Lịch âm, ý nghĩa và cách nhìn bình tĩnh',
+  title: 'Tháng cô hồn 2026 — lịch âm & cách nhìn',
   description:
-    'Tháng cô hồn 2026 (tháng 7 âm lịch) từ 13/8 đến 11/9 dương lịch, Rằm Vu Lan 27/8. Nguồn gốc, những điều dân gian thường kiêng, và góc nhìn không mê tín: hiểu để chủ động chứ không phải để sợ.',
+    'Tháng cô hồn 2026 (tháng 7 âm lịch): từ 13/8 đến 11/9, Rằm Vu Lan 27/8. Nguồn gốc, điều thường kiêng và góc nhìn không mê tín — hiểu để chủ động.',
   alternates: { canonical: 'https://hieu.asia/thang-co-hon-2026' },
   openGraph: {
     title: 'Tháng cô hồn 2026 — tháng nào, kiêng gì, nên hiểu thế nào',

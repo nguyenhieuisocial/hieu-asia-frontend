@@ -10,7 +10,7 @@ const DESC =
   'Tra ngày kiêng kỵ theo phong tục dân gian: Tam Nương (mùng 3, 7, 13, 18, 22, 27), Nguyệt Kỵ (mùng 5, 14, 23), Dương Công Kỵ Nhật và Nguyệt Tận (ngày cuối tháng âm). Nhập ngày dương lịch để xem ngày âm và ngày đó có phải ngày kiêng không — tham khảo, không bói toán.';
 
 export const metadata: Metadata = {
-  title: 'Ngày kiêng kỵ — Tam Nương, Nguyệt Kỵ, Dương Công & Nguyệt Tận',
+  title: 'Ngày kiêng kỵ — Tam Nương & Nguyệt Kỵ',
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/ngay-kieng-ky' },
   openGraph: {

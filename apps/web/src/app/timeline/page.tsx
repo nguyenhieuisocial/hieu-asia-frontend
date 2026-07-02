@@ -19,7 +19,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Timeline đại vận — đại vận 10 năm vận hành thế nào',
+  title: 'Timeline đại vận — 10 năm vận hành thế nào',
   description:
     'Đại vận = giai đoạn 10 năm trong Tử Vi Đẩu Số. Trang này minh hoạ cách 10 đại vận nối tiếp nhau — lập lá số để biết bạn đang ở đại vận nào theo ngày giờ sinh.',
   alternates: { canonical: 'https://hieu.asia/timeline' },

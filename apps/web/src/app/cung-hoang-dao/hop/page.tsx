@@ -20,9 +20,9 @@ import { PairPicker } from './PairPicker';
 const URL = 'https://hieu.asia/cung-hoang-dao/hop';
 
 export const metadata: Metadata = {
-  title: 'Độ hợp cung hoàng đạo: tra cặp đôi 12 cung — cung nào hợp cung nào',
+  title: 'Độ hợp 12 cung hoàng đạo — tra cặp đôi',
   description:
-    'Tra độ hợp giữa 2 cung hoàng đạo: chọn cung của bạn và người kia để xem hai cung có hợp nhau không (tình yêu, tính cách). Phân loại theo nguyên tố — cùng nguyên tố, bổ trợ, cung đối, khác biệt. Tham khảo, không phán số mệnh.',
+    'Tra độ hợp 2 cung hoàng đạo: chọn cung của bạn và người kia — hợp theo nguyên tố (cùng, bổ trợ, đối, khác biệt). Tham khảo, không phán số mệnh.',
   alternates: { canonical: URL },
   openGraph: {
     title: 'Độ hợp cung hoàng đạo — tra cặp đôi 12 cung',
