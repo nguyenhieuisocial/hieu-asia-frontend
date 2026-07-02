@@ -170,7 +170,9 @@ export default function AdminTasksPage() {
       width: '90px',
       cell: (t) => (t.duration_seconds == null ? '—' : `${t.duration_seconds}s`),
     },
-    { key: 'retries', header: 'Retry', align: 'right', width: '60px' },
+    // retries column REMOVED (gap audit 2026-07-02): backend hardcodes
+    // retries=0 (reading_tasks has no retries column yet) — a permanently-zero
+    // column misleads operators. Re-add when the DB column lands.
     {
       key: 'error',
       header: 'Lỗi',
@@ -373,10 +375,16 @@ export default function AdminTasksPage() {
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-muted-foreground">Retry</span>
-                  <span className="font-mono text-xs text-foreground">{selectedTask.retries}</span>
-                </div>
+                {/* Retry hidden while backend hardcodes retries=0 (no DB column
+                    yet) — showing a fake 0 misleads triage. */}
+                {selectedTask.retries > 0 && (
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-muted-foreground">Retry</span>
+                    <span className="font-mono text-xs text-foreground">
+                      {selectedTask.retries}
+                    </span>
+                  </div>
+                )}
 
                 <div className="space-y-1.5">
                   <span className="text-muted-foreground">Lỗi</span>
