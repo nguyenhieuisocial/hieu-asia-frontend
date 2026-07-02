@@ -37,7 +37,10 @@ export const metadata: Metadata = {
   description:
     'Hệ thống nhận diện hieu.asia — logo, màu, typography, spacing, icon, photo direction, ứng dụng và giọng nói thương hiệu.',
   alternates: { canonical: 'https://hieu.asia/brand' },
-  robots: { index: true, follow: true },
+  // SEO-FIX: noindex. This is an internal brand/design-system reference page
+  // with no organic search intent; leaving it indexed-but-unlinked made it an
+  // Ahrefs "orphan page". follow:true so it still passes link equity onward.
+  robots: { index: false, follow: true },
 };
 
 const TOC = [

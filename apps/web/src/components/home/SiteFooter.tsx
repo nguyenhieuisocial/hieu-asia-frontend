@@ -205,9 +205,12 @@ function FooterColLegal({
           </li>
         ))}
       </ul>
-      {/* Newsletter mini-CTA — small per spec */}
+      {/* Newsletter mini-CTA — small per spec. SEO-FIX: point to the dedicated
+          /newsletter hub (was /community#newsletter, which left /newsletter with
+          zero incoming internal links → Ahrefs "orphan page"). The footer link
+          is global, so every page now links to /newsletter. */}
       <Link
-        href="/community#newsletter"
+        href="/newsletter"
         className="mt-5 inline-flex min-h-11 items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3.5 py-2 text-xs font-medium text-primary transition-colors hover:bg-primary/10 active:bg-primary/15 touch-manipulation"
       >
         Newsletter
