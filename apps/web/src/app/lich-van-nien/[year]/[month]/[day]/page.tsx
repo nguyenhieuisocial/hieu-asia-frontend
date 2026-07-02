@@ -81,7 +81,9 @@ export async function generateMetadata({
   if (!isValidDate(y, m, d)) return {};
   const url = `https://hieu.asia/lich-van-nien/${y}/${String(m).padStart(2, '0')}/${String(d).padStart(2, '0')}`;
   return {
-    title: `Ngày ${d}/${m}/${y} — âm lịch, Can Chi, giờ hoàng đạo`,
+    // SEO-FIX: old title + ' · hieu.asia' template exceeded 60 chars.
+    // Shortened: 'Ngày DD/MM/YYYY — âm lịch & giờ hoàng đạo' = max 44 chars → 56 total.
+    title: `Ngày ${d}/${m}/${y} — âm lịch & giờ hoàng đạo`,
     description: `Lịch vạn niên ngày ${d}/${m}/${y}: âm lịch, Thiên Can Địa Chi, Hoàng/Hắc đạo, Trực, sao tốt sao xấu, giờ hoàng đạo và việc nên/kiêng.`,
     alternates: { canonical: url },
     openGraph: {

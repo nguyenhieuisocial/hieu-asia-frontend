@@ -6,7 +6,8 @@ import { breadcrumb, faqPage, webPage } from '@/lib/seo/jsonld';
 import { LOAI_SO } from '@/lib/than-so-hoc-loai-so';
 
 export const metadata: Metadata = {
-  title: 'Các loại số trong thần số học — Vận mệnh, Linh hồn, Nhân cách, Ngày sinh | hieu.asia',
+  // SEO-FIX: absolute + shorten (89 → 58 chars). Prevents double brand suffix.
+  title: { absolute: 'Các loại số Thần Số Học — Vận Mệnh & Nhân Cách | hieu.asia' },
   description:
     '4 loại số trong thần số học Pythagoras — Vận Mệnh, Linh Hồn, Nhân Cách, Ngày Sinh: mỗi loại tính từ đâu, tiết lộ điều gì. Hiểu để tự soi, không bói toán.',
   alternates: { canonical: 'https://hieu.asia/than-so-hoc/cac-loai-so' },

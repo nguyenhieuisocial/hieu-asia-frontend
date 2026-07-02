@@ -6,9 +6,10 @@ import { breadcrumb, faqPage, itemList, webPage } from '@/lib/seo/jsonld';
 import { QUE_PAGES, TRIGRAMS } from '@/lib/que-kinh-dich';
 
 export const metadata: Metadata = {
-  title: 'Ý nghĩa 64 quẻ Kinh Dịch — tra cứu đủ bộ theo trình tự King Wen | hieu.asia',
+  // SEO-FIX: absolute (79 → 48 chars) + description shortened (182 → ~155).
+  title: { absolute: 'Ý nghĩa 64 quẻ Kinh Dịch — đủ bộ | hieu.asia' },
   description:
-    'Tra cứu ý nghĩa đủ 64 quẻ Kinh Dịch: tượng quẻ, ý chính của thế cục, gợi ý ứng xử, góc tình cảm – công việc và câu hỏi tự soi cho từng quẻ. Quẻ mô tả thế cục — không phán số mệnh.',
+    'Ý nghĩa đủ 64 quẻ Kinh Dịch: tượng quẻ, ý chính thế cục, gợi ý ứng xử, góc tình cảm – công việc và câu hỏi tự soi. Quẻ mô tả thế cục — không phán số mệnh.',
   alternates: { canonical: 'https://hieu.asia/gieo-que/y-nghia' },
   openGraph: {
     title: 'Ý nghĩa 64 quẻ Kinh Dịch — đủ bộ | hieu.asia',

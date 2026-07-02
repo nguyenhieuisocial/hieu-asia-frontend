@@ -23,14 +23,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const q = getQue(slug);
   if (!q) return {};
-  const title = `Quẻ ${q.nameVi} (quẻ số ${q.id}) — ý nghĩa & lời khuyên | hieu.asia`;
-  const description = `Quẻ ${q.nameVi} — quẻ ${q.id}/64 Kinh Dịch: ${q.keyTags.join(', ')}. Tượng quẻ, ý chính của thế cục, gợi ý ứng xử, góc tình cảm – công việc và câu hỏi tự soi.`;
+  // SEO-FIX: { absolute } prevents root template ' · hieu.asia' from appending.
+  // Previous title had '| hieu.asia' AND got the template suffix → double brand.
+  // Short format fits ~45 chars for all 64 quẻ names.
+  const shortTitle = `Quẻ ${q.nameVi} (số ${q.id}) — Kinh Dịch | hieu.asia`;
+  const ogTitle = `Quẻ ${q.nameVi} (quẻ số ${q.id}) — ý nghĩa & lời khuyên`;
+  // SEO-FIX: limit keyTags to 3 to keep description ≤ 155 chars.
+  const description = `Quẻ ${q.nameVi} (${q.id}/64 Kinh Dịch) — ${q.keyTags.slice(0, 3).join(', ')}. Gợi ý ứng xử, tình cảm – công việc và câu hỏi tự soi.`;
   const url = `https://hieu.asia/gieo-que/y-nghia/${q.slug}`;
   return {
-    title,
+    title: { absolute: shortTitle },
     description,
     alternates: { canonical: url },
-    openGraph: { title, description, url, siteName: 'hieu.asia', locale: 'vi_VN', type: 'article' },
+    openGraph: { title: ogTitle, description, url, siteName: 'hieu.asia', locale: 'vi_VN', type: 'article' },
   };
 }
 
