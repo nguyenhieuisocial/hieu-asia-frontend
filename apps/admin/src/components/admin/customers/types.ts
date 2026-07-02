@@ -9,6 +9,8 @@ export interface Customer {
   display_name?: string | null;
   email?: string | null;
   telegram_id?: string | null;
+  /** Selected by handleCustomersList since day 1 but previously unmapped. */
+  zalo_id?: string | null;
   avatar_url?: string | null;
   // Wave 54 (#269 follow-up): `lifetime` for the 4.99M one-time tier.
   plan?: CustomerPlan | null;

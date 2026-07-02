@@ -23,10 +23,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!n) return {};
   const title = `Số chủ đạo ${n.number} — ${n.archetype}: ý nghĩa, điểm mạnh, bài học | hieu.asia`;
   const description = `Thần số học số ${n.number}${n.master ? ' (số master)' : ''} — ${n.archetype}: ${n.keyTags.join(', ')}. Chân dung khuynh hướng, điểm mạnh, bài học lớn, góc tình cảm – công việc và câu hỏi tự soi.`;
+  const metaTitle = `Số chủ đạo ${n.number} — ${n.archetype}: ý nghĩa & bài học`;
+  const metaDescription = `Thần số học số ${n.number}${n.master ? ' (số master)' : ''} — ${n.archetype}: ${n.keyTags.join(', ')}. Chân dung khuynh hướng, điểm mạnh và bài học lớn.`.slice(0, 158);
   const url = `https://hieu.asia/than-so-hoc/y-nghia/${n.slug}`;
   return {
-    title,
-    description,
+    title: { absolute: metaTitle },
+    description: metaDescription,
     alternates: { canonical: url },
     openGraph: { title, description, url, siteName: 'hieu.asia', locale: 'vi_VN', type: 'article' },
   };

@@ -27,7 +27,7 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'Bản đồ cá nhân — gợi ý theo tuần/tháng/năm',
   description:
-    'Gợi ý cá nhân hoá theo ngày, tuần, tháng và năm dựa trên lá số của bạn. Gói đồng hành cập nhật mỗi tuần.',
+    'Gợi ý cá nhân hoá theo ngày, tuần, tháng và năm dựa trên lá số Tử Vi của bạn. Gói đồng hành cập nhật mỗi tuần, nhắc việc nên làm.',
   alternates: { canonical: 'https://hieu.asia/ban-do' },
 };
 

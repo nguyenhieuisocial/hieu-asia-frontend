@@ -10,7 +10,7 @@ const DESC =
   'Lập & xem lá số Bát Tự (Tứ Trụ) miễn phí từ ngày giờ sinh — đủ 4 trụ năm/tháng/ngày/giờ (8 chữ), ngũ hành, Nhật Chủ, Thập Thần, cân bằng ngũ hành & đại vận (vận 10 năm). Trụ tính theo tiết khí (đúng chuẩn Bát Tự). Con số là thật; luận giải để hiểu mình, không bói toán.';
 
 const BASE_META: Metadata = {
-  title: 'Xem lá số Bát Tự (Tứ Trụ) miễn phí — 8 chữ, ngũ hành, Thập Thần',
+  title: 'Xem lá số Bát Tự (Tứ Trụ) miễn phí',
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/la-so-bat-tu' },
   openGraph: {

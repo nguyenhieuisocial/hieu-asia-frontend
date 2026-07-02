@@ -19,7 +19,7 @@ export async function generateMetadata(
   const data = findPalaceContent(palace);
   if (!data) return {};
   return {
-    title: `Cung ${data.name} là gì? Cách luận trong Tử Vi Đẩu Số`,
+    title: `Cung ${data.name} trong Tử Vi Đẩu Số`,
     description: `${data.overview.slice(0, 155)}`,
     alternates: { canonical: `https://hieu.asia/tu-vi/${data.slug}` },
     openGraph: {

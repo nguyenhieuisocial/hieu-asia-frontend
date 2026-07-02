@@ -9,7 +9,7 @@ import type { Metadata } from 'next';
  * same trap caught in Wave 60.95.k cho /pricing, /sample-report, /methodology.
  */
 export const metadata: Metadata = {
-  title: 'Thần Số Học miễn phí: tính số chủ đạo, vận mệnh, linh hồn',
+  title: 'Thần Số Học: tính số chủ đạo & vận mệnh',
   description:
     'Tính số chủ đạo, số vận mệnh, số linh hồn và năm cá nhân 2026 miễn phí — phân tích AI dựa trên ngày sinh và họ tên đầy đủ.',
   alternates: { canonical: 'https://hieu.asia/than-so-hoc' },

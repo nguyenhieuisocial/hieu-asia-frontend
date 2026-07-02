@@ -11,7 +11,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'MBTI — 16 kiểu tâm trí',
   description:
-    'MBTI tại hieu.asia: 16 kiểu tâm trí trên 4 trục E/I · N/S · T/F · J/P — không nhãn dán, mà là ngôn ngữ tự nhận diện thiên hướng. Kết hợp với Tử Vi, Bát Tự, Thần Số Học qua AI Mentor.',
+    'MBTI: 16 kiểu tâm trí trên 4 trục E/I · N/S · T/F · J/P — ngôn ngữ tự nhận diện thiên hướng, không nhãn dán. Kết hợp Tử Vi, Bát Tự, Thần Số Học qua AI.',
   alternates: { canonical: 'https://hieu.asia/mbti' },
   robots: { index: true, follow: true },
   openGraph: {

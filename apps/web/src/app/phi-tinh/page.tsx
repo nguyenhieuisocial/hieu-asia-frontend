@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   // SEO-FIX: absolute (77 → 50 chars) + description shortened (230 → ~150).
   title: { absolute: 'Huyền Không Phi Tinh — Lập bàn 9 cung | hieu.asia' },
   description:
-    'Lập bàn Huyền Không Phi Tinh miễn phí: an vận tinh, sơn tinh, hướng tinh cho 9 cung theo nguyên vận và hướng nhà. Phán Vượng sơn Vượng hướng, Thượng sơn Hạ thủy, Song tinh đáo hướng.',
+    'Lập bàn Huyền Không Phi Tinh miễn phí: an vận tinh, sơn tinh, hướng tinh cho 9 cung theo nguyên vận và hướng nhà. Nhận diện cách cục Vượng sơn Vượng hướng.',
   alternates: { canonical: '/phi-tinh' },
 };
 

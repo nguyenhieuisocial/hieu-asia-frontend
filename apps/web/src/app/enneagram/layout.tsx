@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Trắc nghiệm Enneagram miễn phí — 9 nhóm tính cách',
+  title: 'Trắc nghiệm Enneagram — 9 nhóm tính cách',
   description:
-    'Làm trắc nghiệm Enneagram online: xác định nhóm tính cách (1–9) cùng cánh (wing) để hiểu động cơ cốt lõi, nỗi sợ nền tảng và hướng phát triển của bạn. 36 câu, kết quả ngay.',
+    'Trắc nghiệm Enneagram online: xác định nhóm tính cách (1–9) cùng cánh để hiểu động cơ cốt lõi, nỗi sợ và hướng phát triển. 36 câu, kết quả ngay.',
   alternates: { canonical: 'https://hieu.asia/enneagram' },
   openGraph: {
     title: 'Trắc nghiệm Enneagram',

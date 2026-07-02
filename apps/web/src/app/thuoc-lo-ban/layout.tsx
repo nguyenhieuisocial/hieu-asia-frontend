@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Thước Lỗ Ban online: tra cung tốt xấu theo kích thước cm',
+  title: 'Thước Lỗ Ban online — tra cung tốt xấu',
   description:
     'Tra cứu thước Lỗ Ban 42.9cm / 38.8cm / 52.2cm online — nhập kích thước cửa, giường, bàn thờ để xem cung tốt xấu và ý nghĩa từng cung.',
   alternates: { canonical: 'https://hieu.asia/thuoc-lo-ban' },

@@ -39,9 +39,9 @@ export const ILLUSTRATIVE_LABEL = 'Tình huống minh hoạ — không phải ng
 export const CASE_STUDIES: readonly CaseStudy[] = [
   {
     slug: 'tu-bo-cong-viec-on-dinh',
-    title: 'Bỏ công việc ổn định để khởi nghiệp ở tuổi 28',
+    title: 'Bỏ việc ổn định để khởi nghiệp',
     excerpt:
-      'T. đã làm 5 năm trong ngân hàng. Lá số chỉ ra Tài Bạch tốt nhưng Sự Nghiệp thiếu Hoá Quyền. Decision Brief giúp T. thấy: bài toán không phải "có nên đi" mà "đi với cấu trúc tài chính nào".',
+      'T. làm 5 năm ngân hàng. Lá số cho thấy Tài Bạch tốt nhưng Sự Nghiệp thiếu Hoá Quyền. Bài toán không phải "có nên đi" mà "đi với cấu trúc tài chính nào".',
     persona: 'Nữ, 28 tuổi, ngành tài chính, đã có 1 con nhỏ',
     year: 2025,
     insight:
@@ -61,9 +61,9 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
   },
   {
     slug: 'chon-truong-cho-con-vao-cap-2',
-    title: 'Chọn trường cấp 2 cho con — khi cha mẹ bất đồng',
+    title: 'Chọn trường cấp 2 khi bố mẹ khác ý',
     excerpt:
-      'A. và chồng tranh cãi 3 tháng về việc cho con học trường công gần nhà hay trường tư xa hơn. Lá số con nói gì? Lá số cha mẹ nói gì về cách họ ra quyết định khi không đồng ý?',
+      'A. và chồng tranh cãi 3 tháng: cho con học trường công gần nhà hay trường tư xa hơn? Lá số con và lá số cha mẹ nói gì về cách họ quyết định khi bất đồng?',
     persona: 'Nữ, 36 tuổi, mẹ 2 con, đang sống ở TP.HCM',
     year: 2025,
     insight:
@@ -83,9 +83,9 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
   },
   {
     slug: 'doi-nghe-sau-30-tuoi',
-    title: 'Đổi ngành nghề sau 30 — khi đam mê và tài chính cùng đói',
+    title: 'Đổi nghề sau 30 khi tài chính đói',
     excerpt:
-      'M. làm developer 8 năm, muốn chuyển sang viết. Career Fit cho thấy điểm phù hợp 65 (không cao, không thấp). Bài học: career fit chỉ là một dữ liệu, không phải án quyết.',
+      'M. làm developer 8 năm, muốn chuyển sang viết. Career Fit chỉ 65 (không cao, không thấp). Bài học: career fit chỉ là một dữ liệu, không phải án quyết.',
     persona: 'Nam, 31 tuổi, kỹ sư phần mềm, sống một mình',
     year: 2026,
     insight:
@@ -105,9 +105,9 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
   },
   {
     slug: 'quan-he-vo-chong-ran-nut',
-    title: 'Quan hệ vợ chồng có dấu hiệu rạn nứt — có nên ly hôn?',
+    title: 'Rạn nứt hôn nhân — có nên ly hôn?',
     excerpt:
-      'Sau 3 năm ngại đối diện vấn đề, T. gần như quyết định ly hôn. Lá số chỉ ra cung Phu Thê có Thiên Cơ + Hoá Kỵ — đối ứng hôn nhân nhiều biến động nhưng không tự nhiên đổ vỡ. Compatibility check với chồng cho thấy điểm va chạm chính: cách giải toả căng thẳng.',
+      'Sau 3 năm ngại đối diện, T. gần như quyết định ly hôn. Cung Phu Thê có Thiên Cơ + Hoá Kỵ — hôn nhân nhiều biến động nhưng không tất yếu đổ vỡ.',
     persona: 'Nữ, 42 tuổi, kế toán, 12 năm hôn nhân, 1 con tuổi teen',
     year: 2025,
     insight:
@@ -128,9 +128,9 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
   },
   {
     slug: 'dau-tu-bat-dong-san-dau-tien',
-    title: 'Đầu tư bất động sản đầu tiên — có nên nhảy vào lúc thị trường đỉnh?',
+    title: 'Mua nhà đầu tiên lúc đỉnh',
     excerpt:
-      'Sau 8 năm tích luỹ, M. gần như chốt mua căn hộ chung cư TP.HCM thì đại vận sắp chuyển. Lá số chỉ ra cung Tài Bạch + Điền Trạch — không hợp đầu tư BĐS chu kỳ ngắn. Decision Brief cùng tư vấn tài chính giúp M. nhìn ra: bài toán không phải mua hay không, mà là cho mục đích gì.',
+      'Sau 8 năm tích luỹ, M. gần chốt mua căn hộ TP.HCM thì đại vận sắp chuyển. Lá số cho thấy Tài Bạch, Điền Trạch không hợp lướt sóng BĐS. Nên mua cho mục đích gì?',
     persona: 'Nam, 35 tuổi, kỹ sư, đã tiết kiệm 8 năm, đang phân vân giữa 2 căn hộ ở TP.HCM và Đà Nẵng',
     year: 2026,
     insight:
@@ -151,9 +151,9 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
   },
   {
     slug: 'khoi-nghiep-lan-thu-3',
-    title: 'Khởi nghiệp lần thứ 3 sau 2 thất bại — có nên thử nữa?',
+    title: 'Khởi nghiệp lần 3 sau 2 thất bại',
     excerpt:
-      'Sau 2 lần đóng startup (1 lần do market timing, 1 lần do co-founder), Q. ngại thử lần 3. Lá số chỉ ra cung Mệnh có Phá Quân + Liêm Trinh — mẫu hình "phải vỡ rồi mới định hình". Decision Brief giúp Q. tách 2 thất bại thành 2 bài học khác nhau.',
+      'Sau 2 lần đóng startup (sai timing, rồi sai co-founder), Q. ngại thử lần 3. Cung Mệnh có Phá Quân + Liêm Trinh — "phải vỡ rồi mới định hình".',
     persona: 'Nam, 41 tuổi, founder 2 startup đã đóng, đang phân vân giữa đi làm thuê an toàn vs thử lần nữa với ý tưởng mới',
     year: 2025,
     insight:

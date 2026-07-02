@@ -62,8 +62,9 @@ export async function generateMetadata(
     return { title: 'Không tìm thấy bài cẩm nang' };
   }
   const url = `https://hieu.asia/cam-nang/${pillar.slug}`;
+  const topicShort = pillar.topic.slice(0, 37).trim();
   return {
-    title: `${pillar.topic} — Cẩm nang`,
+    title: `${topicShort} — Cẩm nang`,
     description: pillar.content.replace(/\s+/g, ' ').trim().slice(0, 157).replace(/\s\S*$/, '') + '…',
     alternates: { canonical: url },
     openGraph: {

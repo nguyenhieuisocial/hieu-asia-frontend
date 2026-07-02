@@ -5,7 +5,8 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 
 export const metadata = {
   title: 'Điều khoản dịch vụ',
-  description: 'Điều khoản sử dụng dịch vụ hieu.asia.',
+  description:
+    'Điều khoản sử dụng dịch vụ hieu.asia: quyền và nghĩa vụ của người dùng, phạm vi trách nhiệm, quy định về nội dung huyền học và cách thức thay đổi điều khoản.',
   alternates: { canonical: 'https://hieu.asia/terms' },
 };
 

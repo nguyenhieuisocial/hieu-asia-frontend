@@ -34,8 +34,13 @@ export async function generateMetadata({
   if (!parsed) return {};
   const { a, b } = parsed;
   const copy = RELATION_COPY[relationOf(a.slug, b.slug)];
-  const title = `Tuổi ${a.ten} hợp tuổi ${b.ten} không? — Luận giải Can Chi`;
-  const description = copy.summary(a.ten, b.ten).slice(0, 200);
+  const title = `Tuổi ${a.ten} hợp tuổi ${b.ten} không?`;
+  const summary = copy.summary(a.ten, b.ten);
+  const description = (
+    summary.length < 110
+      ? `${summary} Xem luận giải Can Chi: mức độ hợp, điểm cần dung hoà và gợi ý cho tuổi ${a.ten} – ${b.ten}.`
+      : summary
+  ).slice(0, 158);
   const canonical = `${BASE}/hop-tuoi/tuoi/${canonicalPairSlug(a.slug, b.slug)}`;
   return {
     title,

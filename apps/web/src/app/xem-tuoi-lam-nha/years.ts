@@ -76,9 +76,13 @@ export function buildYearPage(birthYear: number): YearPageData {
   const scan = scanBuildYears(birthYear, TARGET_YEAR, 6);
   const goodYears = goodBuildYearsFrom(birthYear, TARGET_YEAR);
   const verdictShort = verdictShortOf(main);
+  // Bản gọn cho description (bỏ ngoặc cung Hoang Ốc + gộp "phạm" lặp) để giữ ≤160 code point.
+  const verdictMeta = verdictShort
+    .replace(/\s*\([^)]*\)/g, '')
+    .replace(/,\s*phạm /g, ', ');
 
-  const seoTitle = `Sinh năm ${birthYear} làm nhà năm ${TARGET_YEAR} được không? Tính Kim Lâu, Hoang Ốc, Tam Tai`;
-  const seoDescription = `Gia chủ sinh ${birthYear} (${main.birthCanChi.name}) làm nhà năm ${TARGET_YEAR}: ${verdictShort}. Tuổi mụ ${main.kimLau.ageMu}, cách tính minh bạch từng bước${goodYears.length ? `; năm được tuổi gần nhất: ${goodYears.join(', ')}` : ''}. Tham khảo — không phán số mệnh.`;
+  const seoTitle = `Sinh ${birthYear} làm nhà ${TARGET_YEAR}? Kim Lâu, Hoang Ốc`;
+  const seoDescription = `Gia chủ sinh ${birthYear} (${main.birthCanChi.name}) làm nhà năm ${TARGET_YEAR}: ${verdictMeta}. Tuổi mụ ${main.kimLau.ageMu}, cách tính minh bạch từng bước. Tham khảo — không phán số mệnh.`;
 
   const tamTaiYears = tamTaiSolarYears(birthYear, TARGET_YEAR, 12);
   const faqs: { q: string; a: string }[] = [

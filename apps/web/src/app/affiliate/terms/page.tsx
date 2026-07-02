@@ -14,7 +14,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 export const metadata: Metadata = {
   title: 'Điều khoản chương trình affiliate',
   description:
-    'Điều khoản, quyền lợi và nghĩa vụ thuế khi tham gia chương trình affiliate hieu.asia.',
+    'Điều khoản, quyền lợi, cơ cấu hoa hồng và nghĩa vụ thuế thu nhập cá nhân khi tham gia chương trình affiliate (tiếp thị liên kết) của hieu.asia.',
   alternates: { canonical: 'https://hieu.asia/affiliate/terms' },
   openGraph: {
     title: 'Điều khoản chương trình affiliate',

@@ -89,8 +89,8 @@ export function buildTamTai(slug: string): TamTaiDetail | null {
   const memberNames = groupMembers.map((m) => m.ten).join(', ');
   const chiYears = tamTaiChis.join(', ');
 
-  const seoTitle = `Tuổi ${z.ten} phạm Tam Tai năm nào? Cách tính & các năm cần lưu ý`;
-  const seoDescription = `Tuổi ${z.ten} (con ${animal}) thuộc nhóm Tam Hợp ${memberNames}, gặp Tam Tai vào các năm ${chiYears}. Xem danh sách năm dương lịch Tam Tai ${CALENDAR_FROM}–${CALENDAR_TO} và cách hiểu đúng — phong tục để tham khảo, không hù dọa.`;
+  const seoTitle = `Tuổi ${z.ten} phạm Tam Tai năm nào? Cách tính`;
+  const seoDescription = `Tuổi ${z.ten} (con ${animal}), Tam Hợp ${memberNames}, gặp Tam Tai năm ${chiYears}. Danh sách năm dương lịch ${CALENDAR_FROM}–${CALENDAR_TO} và cách hiểu đúng — tham khảo, không hù dọa.`;
 
   const faqs = [
     {

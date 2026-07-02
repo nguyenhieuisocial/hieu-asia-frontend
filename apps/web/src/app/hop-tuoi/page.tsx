@@ -8,9 +8,9 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { faqPage } from '@/lib/seo/jsonld';
 
 export const metadata = {
-  title: 'Hợp tuổi cưới hỏi, làm ăn, sinh con — Phân tích AI',
+  title: 'Hợp tuổi cưới hỏi, làm ăn, sinh con',
   description:
-    'Xem hợp tuổi cho cưới hỏi, hợp tác kinh doanh, sinh con, xông đất. Hiểu rõ Tam Hợp, Lục Hợp, Lục Xung, Lục Hại và ngũ hành — minh bạch từng quy tắc, không phán mù.',
+    'Xem hợp tuổi cho cưới hỏi, hợp tác kinh doanh, sinh con, xông đất. Hiểu Tam Hợp, Lục Hợp, Lục Xung, Lục Hại và ngũ hành — minh bạch từng quy tắc, không phán mù.',
   alternates: { canonical: 'https://hieu.asia/hop-tuoi' },
   openGraph: {
     title: 'Hợp tuổi cưới hỏi, làm ăn, sinh con',

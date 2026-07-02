@@ -63,12 +63,16 @@ export function ContactCustomerDialog({
   viewUrl,
   triggerLabel = 'Liên hệ khách',
   triggerVariant = 'outline',
+  optedOut = false,
 }: {
   /** Email khách. Rỗng/null = khách không có email → trigger vô hiệu hoá. */
   email?: string | null;
   viewUrl?: string;
   triggerLabel?: string;
   triggerVariant?: React.ComponentProps<typeof Button>['variant'];
+  /** users.email_opted_out — khách đã hủy đăng ký email. KHÔNG chặn cứng (vẫn
+   *  có email giao dịch hợp lệ, vd hoàn tiền) nhưng cảnh báo rõ trước khi gửi. */
+  optedOut?: boolean;
 }) {
   const hasEmail = !!(email && email.includes('@'));
   const [open, setOpen] = React.useState(false);
@@ -158,6 +162,14 @@ export function ContactCustomerDialog({
               tiêu đề / nội dung hoàn toàn tự do.
             </DialogDescription>
           </DialogHeader>
+
+          {optedOut && (
+            <p className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-xs text-red-700 dark:text-red-300">
+              ⚠️ Khách này đã <strong>hủy đăng ký email</strong> (email_opted_out). Chỉ gửi khi
+              thực sự là email giao dịch (vd: báo bài đọc đã mua, hoàn tiền) — không gửi nội dung
+              marketing.
+            </p>
+          )}
 
           <div className="space-y-4">
             <div className="space-y-2">

@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Tất cả công cụ — hieu.asia',
+  title: 'Tất cả công cụ tử vi, bát tự & trắc nghiệm',
   description:
-    'Khám phá toàn bộ công cụ luận số, tâm lý học, và phong thủy tại hieu.asia: Tử Vi, Bát Tự, Thần Số, MBTI, Big Five, DISC, Tarot, Gieo Quẻ, Cân Xương, Thước Lỗ Ban, Hợp Tuổi, Lịch Vạn Niên.',
+    'Toàn bộ công cụ luận số, tâm lý học và phong thủy: Tử Vi, Bát Tự, Thần Số, MBTI, Big Five, DISC, Tarot, Gieo Quẻ, Thước Lỗ Ban, Hợp Tuổi.',
   alternates: { canonical: 'https://hieu.asia/cong-cu' },
   robots: { index: true, follow: true },
   openGraph: {

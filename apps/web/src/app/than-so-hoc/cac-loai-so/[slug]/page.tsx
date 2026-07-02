@@ -22,9 +22,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!l) return {};
   const title = `${l.name} trong thần số học là gì? Cách tính và ý nghĩa từng số | hieu.asia`;
   const description = `${l.name} (${l.englishName}) trong thần số học: cách tính và ý nghĩa từng số 1–9 + số master. Không bói toán, không phán số mệnh.`;
+  const metaTitle = `${l.name}: cách tính & ý nghĩa từng số`;
   const url = `https://hieu.asia/than-so-hoc/cac-loai-so/${l.slug}`;
   return {
-    title,
+    title: { absolute: metaTitle },
     description,
     alternates: { canonical: url },
     openGraph: {
