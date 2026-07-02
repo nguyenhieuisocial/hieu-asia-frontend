@@ -54,7 +54,15 @@ const HUBS = TOOLKIT_GROUPS.map((g, i, arr) => {
     const sa = a + (k - (nSat - 1) / 2) * 0.42;
     return { left: left + Math.cos(sa) * SAT_R, top: top + Math.sin(sa) * SAT_R };
   });
-  return { label: g.label, count: g.tools.length, tools: g.tools.map((t) => t.n), left, top, sats };
+  return {
+    label: g.label,
+    count: g.tools.length,
+    // Giữ cả href để tên công cụ trong lăng kính là LINK bấm được (cross-link).
+    tools: g.tools.map((t) => ({ n: t.n, href: t.href })),
+    left,
+    top,
+    sats,
+  };
 });
 
 // Đợt 2 "chạm nhóm ra ý nghĩa": mô tả ngắn mỗi lăng kính (khớp NHÃN hub). Chỉ Cổ
@@ -494,6 +502,13 @@ export function OracleBrain(): React.JSX.Element {
                     )}
                   </div>
                 )}
+                <div className="ob-read-tools">
+                  {sel.tools.map((t) => (
+                    <a key={t.n} href={t.href} draggable={false} className="ob-read-tool">
+                      {t.n}
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           )}

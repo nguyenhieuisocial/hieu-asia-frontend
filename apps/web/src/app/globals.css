@@ -1198,6 +1198,15 @@ body { overflow-wrap: break-word; }
 .ob-read-close:hover { color: #f5f2ec; background: rgba(255, 255, 255, 0.06); }
 .ob-read-body > .ob-lens:first-child { margin-top: 0; padding-top: 0; border-top: none; }
 .ob-read-cta { margin-top: 0.5rem; font-size: 11.5px; color: #e0ae62; }
+/* Cross-link: tên công cụ trong lăng kính = LINK bấm được tới trang công cụ. */
+.ob-read-tools { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
+.ob-read-tool {
+  font-size: 12px; padding: 0.24rem 0.62rem; border-radius: 999px;
+  background: rgba(224, 174, 98, 0.1); border: 1px solid rgba(224, 174, 98, 0.22);
+  color: #e8e4d8; text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.ob-read-tool:hover { background: rgba(224, 174, 98, 0.2); border-color: rgba(224, 174, 98, 0.5); color: #f5f2ec; }
 /* Khi 1 lăng kính mở: tâm 'BẠN' mờ nhẹ (nhường vùng đọc) + nền parallax đứng yên. */
 .ob-graph[data-lensopen] .ob-center-label,
 .ob-graph[data-lensopen] .ob-center-sub { opacity: 0.28; transition: opacity 0.25s ease; }
