@@ -605,6 +605,9 @@ interface BackendTaskRow {
   error: string | null;
   created_at: string;
   updated_at: string;
+  /** Worker enrichment (backend #345) — owning session's user, best-effort. */
+  user_id?: string | null;
+  user_email?: string | null;
 }
 
 interface TasksEnvelope {
@@ -635,6 +638,9 @@ function mapBackendTask(row: BackendTaskRow): AdminTask {
     // above collapses every failure to 'failed', so the /tasks failure-reason
     // breakdown reads this to recover the failure category.
     raw_status: row.status,
+    // Owning session's user (backend #345 enrichment) → /customers link.
+    user_id: row.user_id ?? null,
+    user_email: row.user_email ?? null,
   };
 }
 
