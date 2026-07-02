@@ -819,11 +819,16 @@ export default function SessionDetailPage() {
           const logicMeta = (sj.logic_meta ?? {}) as Record<string, unknown>;
           const psychMeta = (sj.psychology_meta ?? {}) as Record<string, unknown>;
           const alignMeta = (sj.alignment_meta ?? {}) as Record<string, unknown>;
+          // Gap audit 2026-07-02 — top-level vendor/model was only in the CSV
+          // export; surface it explicitly instead of hiding it in role metas.
+          const vendorUsed =
+            typeof sj.vendor_used === 'string' && sj.vendor_used ? sj.vendor_used : null;
 
           const hasBirth = Object.keys(birth).length > 0;
           const hasTuvi = Object.keys(tuvi).length > 0;
           const hasInsights = Object.keys(insights).length > 0;
           const hasMeta =
+            !!vendorUsed ||
             Object.keys(reportMeta).length > 0 ||
             Object.keys(logicMeta).length > 0 ||
             Object.keys(psychMeta).length > 0 ||
@@ -1048,6 +1053,14 @@ export default function SessionDetailPage() {
                     <CardDescription>Vendor + model dùng cho từng role.</CardDescription>
                   </CardHeader>
                   <CardContent>
+                    {vendorUsed && (
+                      <p className="mb-3 text-sm">
+                        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                          Vendor / Model:{' '}
+                        </span>
+                        <span className="font-mono text-foreground/90">{vendorUsed}</span>
+                      </p>
+                    )}
                     <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
                       {(
                         [
@@ -1097,6 +1110,56 @@ export default function SessionDetailPage() {
             <pre className="overflow-x-auto rounded border border-red-500/30 bg-red-500/5 p-3 font-mono text-xs leading-relaxed text-red-700 dark:text-red-200">
               {s.error}
             </pre>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Gap audit 2026-07-02 — chat_history was fetched end-to-end (worker →
+          getSession → AdminSession) but never rendered: the mentor/chat
+          conversation was invisible to admin. Entries are defensive-parsed
+          ({role, content|message|text} or plain string) so odd shapes never
+          crash the page. */}
+      {Array.isArray(s.chat_history) && s.chat_history.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Lịch sử hội thoại · {s.chat_history.length}</CardTitle>
+            <CardDescription>Trao đổi mentor/chat gắn với phiên này.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ol className="space-y-2">
+              {s.chat_history.map((m, i) => {
+                const e = (m ?? {}) as Record<string, unknown>;
+                const role =
+                  typeof e.role === 'string'
+                    ? e.role
+                    : typeof e.sender === 'string'
+                      ? e.sender
+                      : '—';
+                const text =
+                  typeof m === 'string'
+                    ? m
+                    : String(e.content ?? e.message ?? e.text ?? JSON.stringify(m));
+                const isUser = /user|khách/i.test(role);
+                return (
+                  <li
+                    key={i}
+                    className="rounded-md border border-border/60 bg-card/40 px-3 py-2"
+                  >
+                    <div
+                      className={
+                        'text-[10px] uppercase tracking-widest ' +
+                        (isUser ? 'text-gold' : 'text-muted-foreground')
+                      }
+                    >
+                      {role}
+                    </div>
+                    <div className="mt-0.5 whitespace-pre-wrap text-sm text-foreground/90">
+                      {text}
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
           </CardContent>
         </Card>
       )}
