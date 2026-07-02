@@ -91,6 +91,7 @@ export function OracleBrain(): React.JSX.Element {
   const [err, setErr] = React.useState<string | null>(null);
   const reducedRef = React.useRef(false);
   const timerRef = React.useRef<number | null>(null);
+  const parallaxRafRef = React.useRef<number | null>(null);
 
   React.useEffect(() => {
     try {
@@ -118,6 +119,42 @@ export function OracleBrain(): React.JSX.Element {
     io.observe(el);
     return () => io.disconnect();
   }, []);
+
+  // Đợt 3 "chiều sâu vũ trụ" — parallax nền (nebula + starfield) theo con trỏ.
+  // CHỈ desktop (pointer:fine) + khi khung trong tầm nhìn + KHÔNG giảm-chuyển-động.
+  // Ghi thẳng CSS var (KHÔNG setState → 0 re-render), rAF throttle, dọn listener.
+  // Chòm sao + nút GIỮ NGUYÊN (không parallax) nên bấm ổn định, đường nối không lệch.
+  React.useEffect(() => {
+    if (!inView || reducedRef.current) return;
+    const el = graphRef.current;
+    if (!el) return;
+    if (typeof window === 'undefined' || !window.matchMedia('(pointer: fine)').matches) return;
+    const onMove = (e: PointerEvent): void => {
+      if (parallaxRafRef.current != null) return;
+      parallaxRafRef.current = window.requestAnimationFrame(() => {
+        parallaxRafRef.current = null;
+        const r = el.getBoundingClientRect();
+        if (!r.width || !r.height) return;
+        const nx = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width - 0.5) * 2));
+        const ny = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height - 0.5) * 2));
+        el.style.setProperty('--ob-px', nx.toFixed(3));
+        el.style.setProperty('--ob-py', ny.toFixed(3));
+      });
+    };
+    const reset = (): void => {
+      el.style.setProperty('--ob-px', '0');
+      el.style.setProperty('--ob-py', '0');
+    };
+    el.addEventListener('pointermove', onMove, { passive: true });
+    el.addEventListener('pointerleave', reset, { passive: true });
+    return () => {
+      el.removeEventListener('pointermove', onMove);
+      el.removeEventListener('pointerleave', reset);
+      if (parallaxRafRef.current != null) window.cancelAnimationFrame(parallaxRafRef.current);
+      el.style.removeProperty('--ob-px');
+      el.style.removeProperty('--ob-py');
+    };
+  }, [inView]);
 
   const onSoi = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
@@ -310,6 +347,10 @@ export function OracleBrain(): React.JSX.Element {
           draggable={false}
           onDragStart={(e) => e.preventDefault()}
         >
+          <div className="ob-plx ob-plx-neb" aria-hidden="true">
+            <div className="ob-plx-in ob-neb-glow" />
+          </div>
+
           <svg className="ob-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
             {HUBS.map((h, i) => (
               <line
@@ -338,14 +379,18 @@ export function OracleBrain(): React.JSX.Element {
             )}
           </svg>
 
-          {STARS.map((s, i) => (
-            <span
-              key={i}
-              className="ob-star"
-              style={{ left: `${s.left}%`, top: `${s.top}%`, animationDelay: `${s.delay}s` }}
-              aria-hidden="true"
-            />
-          ))}
+          <div className="ob-plx ob-plx-stars" aria-hidden="true">
+            <div className="ob-plx-in">
+              {STARS.map((s, i) => (
+                <span
+                  key={i}
+                  className="ob-star"
+                  style={{ left: `${s.left}%`, top: `${s.top}%`, animationDelay: `${s.delay}s` }}
+                  aria-hidden="true"
+                />
+              ))}
+            </div>
+          </div>
 
           {HUBS.map((h, i) => (
             <span
