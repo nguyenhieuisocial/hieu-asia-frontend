@@ -112,7 +112,7 @@ const nextConfig: NextConfig = {
     //   Google Ads:    googletagmanager.com (JS), googleadservices.com + google.com (conn/img)
     //   TikTok Pixel:  analytics.tiktok.com (JS+conn)
     const pixelScriptHosts = 'https://connect.facebook.net https://www.googletagmanager.com https://analytics.tiktok.com';
-    const pixelConnectHosts = 'https://*.facebook.com https://www.googleadservices.com https://www.google-analytics.com https://www.google.com https://analytics.tiktok.com';
+    const pixelConnectHosts = 'https://*.facebook.com https://www.googleadservices.com https://www.google-analytics.com https://*.google-analytics.com https://analytics.google.com https://www.google.com https://analytics.tiktok.com';
     const pixelImgHosts = 'https://*.facebook.com https://www.google.com https://www.googleadservices.com https://www.google-analytics.com';
 
     const scriptSrc = [
