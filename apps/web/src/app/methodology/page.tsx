@@ -248,6 +248,13 @@ const DATA_ROWS: {
     ai: 'phân tích nét tướng',
     status: 'beta',
   },
+  {
+    method: 'Tarot / Gieo quẻ (Kinh Dịch)',
+    data: 'câu hỏi bạn đang phân vân',
+    engine: 'Rút ngẫu nhiên (RNG)',
+    ai: 'gợi câu hỏi phản tư — không tiên đoán',
+    status: 'production',
+  },
 ];
 
 const AI_CAN = [
@@ -643,7 +650,9 @@ function Chapter1Content() {
           (natal). Các bài tâm lý đều là bài tự đánh giá: bạn tự trả lời, hệ
           thống chấm điểm theo thang đo cố định, AI chỉ diễn giải kết quả. Bản
           đồ sao do engine tính toán từ dữ liệu sinh (cần giờ và nơi sinh chính
-          xác cho phần Cung Mọc). Thần Số Học và các công cụ còn lại nằm trong
+          xác cho phần Cung Mọc). Riêng Tarot và Gieo quẻ Kinh Dịch là công cụ chiêm nghiệm — lá bài / quẻ
+          rút ngẫu nhiên thật, engine chỉ tạo ngẫu nhiên còn AI gợi câu hỏi tự
+          phản tư, KHÔNG tiên đoán tương lai. Thần Số Học và các công cụ còn lại nằm trong
           bộ công cụ mở rộng.
         </p>
       </div>
