@@ -24,6 +24,7 @@ import {
 } from '@hieu-asia/ui';
 import { ChevronLeft, Eye, GitCompare } from 'lucide-react';
 import { PromptEditor } from '@/components/prompts/PromptEditor';
+import { WiringBadge, type PromptMeta } from '@/components/prompts/prompt-meta';
 import { formatDateOrEmpty } from '@/lib/format-date';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
 
@@ -49,20 +50,22 @@ interface PromptDetail {
   version: number;
   /** Derived on the FE (#12) — the worker does NOT return this. */
   is_custom: boolean;
-  /**
-   * NOT returned by the worker (#13, needs-backend). The "So sánh ↔ default"
-   * diff + "Khác mặc định" hint stay disabled until the worker exposes it.
-   */
+  /** Bản chuẩn hệ thống (DEFAULT_PROMPTS) — worker trả kể từ #13. */
   default_system?: string;
+  /** Ý nghĩa & kết nối (backend #351). undefined nếu worker cũ chưa deploy. */
+  meta?: PromptMeta;
 }
 
-/** Raw worker row — no `is_custom` / `default_system` / `history`. */
+/** Raw worker row — no `is_custom` / `history`. Optional fields là các đợt
+ *  backend bổ sung sau (default_system #13, meta #351); worker cũ có thể thiếu. */
 interface RawPrompt {
   role: Role;
   system: string;
   updated_at: string | null;
   updated_by: string | null;
   version: number;
+  default_system?: string;
+  meta?: PromptMeta;
 }
 
 interface PromptResp {
@@ -149,9 +152,10 @@ async function revertPromptVersion(role: string, at: string): Promise<PromptDeta
   return deriveIsCustom(data.prompt);
 }
 
-// Wave 52-C — Delegate to shared util so 0 / "" / null all render
-// "Chưa override" instead of "08:00 1/1/70".
-const fmtDate = (iso: string | null) => formatDateOrEmpty(iso, 'Chưa override');
+// Wave 52-C — Delegate to shared util so 0 / "" / null all render the
+// fallback instead of "08:00 1/1/70". Fallback "Bản chuẩn hệ thống" (task
+// #30): chưa có ngày cập nhật nghĩa là đang dùng bản chuẩn, chưa ai chỉnh.
+const fmtDate = (iso: string | null) => formatDateOrEmpty(iso, 'Bản chuẩn hệ thống');
 
 /** Tiny line-diff for hint panel — counts +/- lines vs default. */
 function diffSummary(a: string, b: string): { added: number; removed: number } {
@@ -263,7 +267,7 @@ export default function PromptEditPage() {
       // Wave 60.62.T1.1 — backfill audit breadcrumb. Destructive
       // (wipes custom prompt back to default).
       trackAdminMutation('prompts.reset', 'success', { role });
-      toast.success('Đã khôi phục mặc định');
+      toast.success('Đã khôi phục bản chuẩn hệ thống');
       qc.setQueryData(['admin', 'prompts', role], updated);
       qc.invalidateQueries({ queryKey: ['admin', 'prompts'] });
       setDraft(updated.system);
@@ -339,13 +343,18 @@ export default function PromptEditPage() {
             Prompts
           </Link>
           <h1 className="mt-1 font-heading text-2xl font-semibold text-foreground">
-            {role}
+            {prompt?.meta?.label ?? role}
             {prompt && (
-              <span className="ml-2 font-mono text-xs font-normal text-muted-foreground">
-                v{prompt.version} · {prompt.is_custom ? 'custom' : 'default'}
+              <span className="ml-2 text-xs font-normal text-muted-foreground">
+                {prompt.is_custom
+                  ? `Bản tùy chỉnh v${prompt.version}`
+                  : 'Bản chuẩn hệ thống'}
               </span>
             )}
           </h1>
+          {prompt?.meta?.summary && (
+            <p className="mt-1 max-w-2xl text-xs text-muted-foreground">{prompt.meta.summary}</p>
+          )}
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Button
@@ -355,7 +364,7 @@ export default function PromptEditPage() {
             disabled={!prompt?.default_system || !draft}
           >
             <GitCompare className="mr-1.5 h-3.5 w-3.5" />
-            So sánh v{prompt?.version ?? 1} ↔ default
+            So sánh v{prompt?.version ?? 1} ↔ bản chuẩn
           </Button>
           <Button
             variant="outline"
@@ -405,9 +414,9 @@ export default function PromptEditPage() {
               )}
               {hasDefaultDiff && diff && (
                 <Alert variant="default">
-                  <AlertTitle>Khác mặc định</AlertTitle>
+                  <AlertTitle>Khác bản chuẩn hệ thống</AlertTitle>
                   <AlertDescription>
-                    +{diff.added} dòng mới · -{diff.removed} dòng đã xóa so với DEFAULT_PROMPTS.
+                    +{diff.added} dòng mới · -{diff.removed} dòng đã xóa so với bản chuẩn hệ thống.
                   </AlertDescription>
                 </Alert>
               )}
@@ -416,6 +425,26 @@ export default function PromptEditPage() {
 
           {/* Metadata 30% */}
           <div className="lg:col-span-3 space-y-4">
+            {/* Ý nghĩa & kết nối — meta từ worker (backend #351). Worker cũ
+                chưa deploy → prompt.meta undefined → ẩn cả panel. */}
+            {prompt?.meta && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm">Ý nghĩa &amp; kết nối</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3 text-xs">
+                  <p className="leading-5 text-foreground/85">{prompt.meta.detail}</p>
+                  <MetaList label="Nhận đầu vào từ" items={prompt.meta.upstream} />
+                  <MetaList label="Kết quả đi tới" items={prompt.meta.downstream} />
+                  <MetaList label="Chạy ở đâu" items={prompt.meta.runs_at} />
+                  <div>
+                    <div className="text-muted-foreground">Model</div>
+                    <div className="mt-0.5 text-foreground/85">{prompt.meta.model}</div>
+                  </div>
+                  <WiringBadge wiring={prompt.meta.wiring} note={prompt.meta.wiring_note} />
+                </CardContent>
+              </Card>
+            )}
             <Card>
               <CardHeader>
                 <CardTitle className="text-sm">Metadata</CardTitle>
@@ -427,7 +456,7 @@ export default function PromptEditPage() {
                 <div>
                   Trạng thái:{' '}
                   <span className={prompt?.is_custom ? 'text-gold' : 'text-muted-foreground'}>
-                    {prompt?.is_custom ? 'custom' : 'default'}
+                    {prompt?.is_custom ? 'Bản tùy chỉnh' : 'Bản chuẩn hệ thống'}
                   </span>
                 </div>
                 <div>
@@ -512,24 +541,37 @@ export default function PromptEditPage() {
         </div>
       )}
 
-      {/* Bottom action bar */}
-      <div className="sticky bottom-0 flex flex-wrap items-center justify-end gap-2 border-t border-gold/15 bg-card/95 py-3 backdrop-blur">
-        <Button variant="ghost" onClick={() => router.push('/prompts')} disabled={saveMut.isPending}>
-          Hủy
-        </Button>
-        <Button
-          variant="outline"
-          onClick={() => setConfirmResetOpen(true)}
-          disabled={saveMut.isPending || resetMut.isPending || !prompt?.is_custom}
-        >
-          Khôi phục mặc định
-        </Button>
-        <Button
-          onClick={() => setConfirmSaveOpen(true)}
-          disabled={!dirty || saveMut.isPending || isLoading}
-        >
-          {saveMut.isPending ? 'Đang lưu…' : 'Lưu'}
-        </Button>
+      {/* Bottom action bar — wiring_note đặt cạnh nút Lưu để admin biết bấm
+          Lưu có hiệu lực thế nào (kv_live áp dụng ngay / code_* thì không). */}
+      <div className="sticky bottom-0 flex flex-wrap items-center justify-between gap-2 border-t border-gold/15 bg-card/95 py-3 backdrop-blur">
+        <div className="flex min-w-0 flex-1 items-center gap-2">
+          {prompt?.meta && (
+            <>
+              <WiringBadge wiring={prompt.meta.wiring} note={prompt.meta.wiring_note} />
+              <span className="hidden min-w-0 truncate text-[11px] text-muted-foreground md:inline">
+                {prompt.meta.wiring_note}
+              </span>
+            </>
+          )}
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="ghost" onClick={() => router.push('/prompts')} disabled={saveMut.isPending}>
+            Hủy
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => setConfirmResetOpen(true)}
+            disabled={saveMut.isPending || resetMut.isPending || !prompt?.is_custom}
+          >
+            Khôi phục bản chuẩn
+          </Button>
+          <Button
+            onClick={() => setConfirmSaveOpen(true)}
+            disabled={!dirty || saveMut.isPending || isLoading}
+          >
+            {saveMut.isPending ? 'Đang lưu…' : 'Lưu'}
+          </Button>
+        </div>
       </div>
 
       {/* Save confirm */}
@@ -538,8 +580,11 @@ export default function PromptEditPage() {
           <DialogHeader>
             <DialogTitle>Lưu prompt cho vai trò {role}?</DialogTitle>
             <DialogDescription>
-              Sẽ áp dụng ngay cho mọi phiên phân tích mới. Version sẽ tăng lên v
-              {(prompt?.version ?? 1) + 1}.
+              {/* wiring_note nói đúng hiệu lực của nút Lưu cho role này (kv_live
+                  áp dụng ngay, code_* thì cần deploy) — fallback câu cũ khi
+                  worker chưa trả meta. */}
+              {prompt?.meta?.wiring_note ?? 'Sẽ áp dụng ngay cho mọi phiên phân tích mới.'}{' '}
+              Version sẽ tăng lên v{(prompt?.version ?? 1) + 1}.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -557,9 +602,9 @@ export default function PromptEditPage() {
       <Dialog open={confirmResetOpen} onOpenChange={setConfirmResetOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Khôi phục mặc định?</DialogTitle>
+            <DialogTitle>Khôi phục bản chuẩn hệ thống?</DialogTitle>
             <DialogDescription>
-              Sẽ ghi đè custom prompt hiện tại bằng DEFAULT_PROMPTS. Hành động không hoàn tác.
+              Sẽ ghi đè bản tùy chỉnh hiện tại bằng bản chuẩn hệ thống. Hành động không hoàn tác.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -585,7 +630,7 @@ export default function PromptEditPage() {
             <DialogTitle>So sánh phiên bản</DialogTitle>
             <DialogDescription>
               Bên trái: bản hiện đang chỉnh (v{prompt?.version ?? 1}{dirty ? ' + chưa lưu' : ''}). Bên
-              phải / inline: DEFAULT_PROMPTS gốc.
+              phải / inline: bản chuẩn hệ thống.
             </DialogDescription>
           </DialogHeader>
           {prompt?.default_system ? (
@@ -609,7 +654,7 @@ export default function PromptEditPage() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">Chưa load được default — thử reload.</p>
+            <p className="text-sm text-muted-foreground">Chưa load được bản chuẩn — thử reload.</p>
           )}
           <DialogFooter>
             <Button variant="ghost" onClick={() => setDiffOpen(false)}>
@@ -719,6 +764,23 @@ ${draft
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+/** Một mục danh sách trong panel "Ý nghĩa & kết nối" (upstream/downstream/runs_at). */
+function MetaList({ label, items }: { label: string; items: string[] }) {
+  if (items.length === 0) return null;
+  return (
+    <div>
+      <div className="text-muted-foreground">{label}</div>
+      <ul className="mt-0.5 space-y-0.5">
+        {items.map((item) => (
+          <li key={item} className="text-foreground/85">
+            • {item}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
