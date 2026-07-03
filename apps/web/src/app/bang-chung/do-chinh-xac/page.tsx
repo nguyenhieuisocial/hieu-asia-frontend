@@ -7,9 +7,9 @@ import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 
-const TITLE = 'Tử Vi có chính xác không? — chúng tôi đang ĐO, công khai';
+const TITLE = 'Tử Vi có chính xác không? Chúng tôi đang đo';
 const DESC =
-  'Hầu hết nơi xem tử vi đều tự nhận “chính xác” mà không có bằng chứng. Chúng tôi làm ngược lại: đo độ chính xác bằng dữ liệu thật, có nhóm đối chứng ngẫu nhiên, công khai cả khi lá số trượt — và chưa công bố con số nào khi chưa đủ mẫu. Đây là tinh thần “không bói mù”.';
+  'Hầu hết nơi xem tử vi tự nhận “chính xác” mà không có bằng chứng. Chúng tôi đo bằng dữ liệu thật, có nhóm đối chứng, công khai cả khi lá số trượt. Không bói mù.';
 
 export const metadata: Metadata = {
   title: TITLE,

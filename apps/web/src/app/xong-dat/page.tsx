@@ -10,7 +10,7 @@ import { yearChiGroups } from '@/lib/xong-dat';
 import { HOST_YEARS, TARGET_YEAR, slugOf } from './years';
 
 const DESC =
-  'Gợi ý tuổi xông đất Tết Đinh Mùi 2027 theo năm sinh gia chủ: chấm minh bạch 3 lớp — tam hợp/lục hợp với chi năm, với tuổi gia chủ và ngũ hành tương sinh. Tham khảo phong tục, không phán định.';
+  'Gợi ý tuổi xông đất 2027 theo năm sinh gia chủ: chấm 3 lớp — tam hợp/lục hợp chi năm, tuổi gia chủ và ngũ hành. Tham khảo phong tục, không phán định.';
 
 export const metadata: Metadata = {
   title: 'Tuổi xông đất Tết 2027 — tam hợp & ngũ hành',

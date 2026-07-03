@@ -17,9 +17,9 @@ import {
 } from '@/lib/huong-nha';
 import { BIRTH_YEARS, slugOf } from './years';
 
-const TITLE = 'Xem hướng nhà hợp tuổi — Bát Trạch theo cung phi (Đông/Tây tứ mệnh)';
+const TITLE = 'Xem hướng nhà hợp tuổi theo Bát Trạch';
 const DESCRIPTION =
-  'Nhập năm sinh + giới tính để biết mệnh quái (cung phi) và 4 hướng nhà tốt – 4 hướng nên tránh theo Bát Trạch: hướng đặt cửa chính, giường, bếp, bàn làm việc. Tính minh bạch, tham khảo theo phong tục — không phán giàu nghèo.';
+  'Nhập năm sinh + giới tính để biết cung phi và 4 hướng tốt – 4 hướng nên tránh theo Bát Trạch: cửa chính, giường, bếp, bàn làm việc. Tham khảo phong tục.';
 
 export const metadata: Metadata = {
   title: TITLE,

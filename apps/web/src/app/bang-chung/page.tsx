@@ -9,7 +9,7 @@ import { deriveProofCard, firstParam } from '@/lib/bang-chung/share-card';
 const DESC =
   'Đừng vội tin lá số — hãy KIỂM CHỨNG nó bằng chính quá khứ của bạn. Nhập vài sự kiện đời thật đã xảy ra, hệ thống tính lại lá số đúng như nó đứng ở từng năm đó và cho thấy lá số có ghi dấu lĩnh vực ấy không — thành thật cả khi không khớp. Con số là thật, không bói mù.';
 
-const TITLE = 'Bằng Chứng — kiểm chứng lá số bằng quá khứ thật của bạn';
+const TITLE = 'Bằng chứng — kiểm chứng độ chính xác lá số';
 
 // Dynamic OG: when a shared link carries the aggregate result (hit/total/strong —
 // NO personal data), unfurl a personalized card so it spreads. Otherwise default.

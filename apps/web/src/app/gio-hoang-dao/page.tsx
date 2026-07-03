@@ -8,7 +8,7 @@ import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { HOANG_DAO_STARS, HAC_DAO_STARS } from '@/lib/gio-hoang-dao';
 
 const DESC =
-  'Xem giờ hoàng đạo (giờ tốt) trong ngày theo lịch pháp truyền thống: mỗi ngày có 6 giờ hoàng đạo và 6 giờ hắc đạo, đổi theo Địa Chi của ngày. Nhập ngày để xem giờ tốt — tham khảo, không bói toán.';
+  'Xem giờ hoàng đạo (giờ tốt) trong ngày theo lịch pháp truyền thống: mỗi ngày 6 giờ hoàng đạo, 6 giờ hắc đạo theo Địa Chi. Nhập ngày để xem — tham khảo.';
 
 export const metadata: Metadata = {
   title: 'Giờ hoàng đạo hôm nay — tra giờ tốt trong ngày',

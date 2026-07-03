@@ -6,7 +6,7 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage } from '@/lib/seo/jsonld';
 import { COMPARISONS } from '@/lib/so-sanh';
 
-const TITLE = 'So sánh các lăng kính: MBTI, Big Five, Tử Vi, Bát Tự, DISC';
+const TITLE = 'So sánh MBTI, Big Five, Tử Vi, Bát Tự, DISC';
 const DESCRIPTION =
   'So sánh khách quan các công cụ hiểu mình của hieu.asia — MBTI vs Big Five, Tử Vi vs Bát Tự, MBTI vs DISC. Khác nhau ở đâu và nên chọn cái nào?';
 
