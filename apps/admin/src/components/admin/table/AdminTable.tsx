@@ -83,7 +83,9 @@ type SortState<TRow> = {
 } | null;
 
 const DEFAULT_EMPTY = (
-  <span className="text-sm text-muted-foreground">Chưa có dữ liệu.</span>
+  <span className="text-sm text-muted-foreground">
+    Chưa có dữ liệu — bảng sẽ tự hiện khi có bản ghi.
+  </span>
 );
 
 function defaultGetRowId<TRow>(row: TRow): string {

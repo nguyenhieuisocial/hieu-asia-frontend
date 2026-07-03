@@ -53,9 +53,11 @@ export default function AdminPaymentsPage() {
   });
 
   // KPI aggregates — derived from current filter state on the Transactions tab.
-  // Falls back to the probe query so the strip never shows `—` on first paint.
+  // Falls back to the probe query; khi probe còn đang tải thì strip hiện `—`
+  // thay vì 0đ giả (audit UX 2026-07-03 — số 0 giả trên trang doanh thu).
   const fallbackRows = Array.isArray(txProbe.data?.rows) ? txProbe.data.rows : [];
   const rowsForKpi = txRows.length > 0 ? txRows : fallbackRows;
+  const kpiLoading = txProbe.isLoading && txRows.length === 0;
 
   const totalRevenue = rowsForKpi
     .filter((t) => t.status === 'succeeded')
@@ -97,21 +99,21 @@ export default function AdminPaymentsPage() {
       <div className="grid gap-4 sm:grid-cols-3">
         <KpiCard
           label="Doanh thu (trang)"
-          value={fmtVnd(totalRevenue)}
+          value={kpiLoading ? '—' : fmtVnd(totalRevenue)}
           icon={trendingIcon}
           accent="jade"
-          hint={`${succeededCount} succeeded · ${totalTx} giao dịch`}
+          hint={kpiLoading ? 'đang tải…' : `${succeededCount} thành công · ${totalTx} giao dịch`}
         />
         <KpiCard
           label="Giao dịch (tổng)"
-          value={totalTx}
+          value={kpiLoading ? '—' : totalTx}
           icon={receiptIcon}
           accent="gold"
           hint="trong nhật ký"
         />
         <KpiCard
-          label="Refunded (trang)"
-          value={refundedCount}
+          label="Hoàn tiền (trang)"
+          value={kpiLoading ? '—' : refundedCount}
           icon={undoIcon}
           accent={refundedCount > 0 ? 'red' : 'jade'}
           hint="đã hoàn"

@@ -186,7 +186,7 @@ function ExperimentCard({
 
       {/* Per-variant breakdown */}
       {stats.length > 0 && (
-        <div className="mt-3 overflow-hidden rounded-md border border-border">
+        <div className="mt-3 overflow-x-auto rounded-md border border-border">
           <table className="w-full text-sm">
             <thead className="bg-muted/30 text-left text-xs text-muted-foreground">
               <tr>

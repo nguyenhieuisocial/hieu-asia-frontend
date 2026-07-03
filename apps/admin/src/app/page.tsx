@@ -263,7 +263,7 @@ export default function AdminOverviewPage() {
       <h2 className="font-heading text-sm font-semibold uppercase tracking-wider text-foreground/85">
         Vận hành
       </h2>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-7">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-7">
         <KpiCard
           label="Tổng người dùng"
           value={kpis.data?.total_users.toLocaleString('vi-VN') ?? '—'}
