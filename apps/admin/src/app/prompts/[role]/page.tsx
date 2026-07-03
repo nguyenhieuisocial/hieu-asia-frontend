@@ -27,7 +27,18 @@ import { PromptEditor } from '@/components/prompts/PromptEditor';
 import { formatDateOrEmpty } from '@/lib/format-date';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
 
-const ROLES = ['vision', 'logic', 'psychology', 'alignment', 'report', 'mentor', 'judge'] as const;
+/** Must match Worker KV keys (backend PROMPT_ROLES — 9 roles kể từ #348). */
+const ROLES = [
+  'vision',
+  'logic',
+  'psychology',
+  'alignment',
+  'report',
+  'mentor',
+  'judge',
+  'decisions',
+  'ops_copilot',
+] as const;
 type Role = (typeof ROLES)[number];
 
 interface PromptDetail {
