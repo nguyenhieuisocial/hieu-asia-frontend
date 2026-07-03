@@ -7,7 +7,7 @@ import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { KIENG_KY_INFO, type KiengKyKey } from '@/lib/ngay-kieng-ky';
 
 const DESC =
-  'Tra ngày kiêng kỵ theo phong tục dân gian: Tam Nương (mùng 3, 7, 13, 18, 22, 27), Nguyệt Kỵ (mùng 5, 14, 23), Dương Công Kỵ Nhật và Nguyệt Tận (ngày cuối tháng âm). Nhập ngày dương lịch để xem ngày âm và ngày đó có phải ngày kiêng không — tham khảo, không bói toán.';
+  'Tra ngày kiêng kỵ theo phong tục: Tam Nương, Nguyệt Kỵ, Dương Công Kỵ Nhật, Nguyệt Tận. Nhập ngày dương để xem ngày âm & có phải ngày kiêng không — tham khảo.';
 
 export const metadata: Metadata = {
   title: 'Ngày kiêng kỵ — Tam Nương & Nguyệt Kỵ',

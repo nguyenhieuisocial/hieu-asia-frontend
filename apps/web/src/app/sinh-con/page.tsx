@@ -8,7 +8,7 @@ import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { VARIANTS } from './variants';
 
 const DESC =
-  'Đối chiếu năm sinh dự kiến của bé với tuổi bố mẹ theo Can Chi (Tam Hợp, Lục Hợp…) và mệnh nạp âm (tương sinh – tương khắc). Quy tắc minh bạch, giọng dung hoà — tham khảo phong tục, không phán định; em bé nào cũng là phúc.';
+  'Đối chiếu năm sinh dự kiến của bé với tuổi bố mẹ theo Can Chi (Tam Hợp, Lục Hợp) và mệnh nạp âm. Quy tắc minh bạch — tham khảo phong tục, không phán định.';
 
 export const metadata: Metadata = {
   title: 'Sinh con theo năm — mệnh bé & tuổi bố mẹ',

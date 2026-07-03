@@ -8,7 +8,7 @@ import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { PURPOSES } from './purposes';
 
 const DESC =
-  'Xem ngày tốt cho cưới hỏi, khai trương, động thổ, nhập trạch, xuất hành, mua xe, ký hợp đồng. Chấm điểm theo Hoàng đạo, trực ngày, sao tốt xấu và cảnh báo Tam Tai, Kim Lâu, Hoang Ốc theo tuổi.';
+  'Xem ngày tốt cho cưới hỏi, khai trương, động thổ, nhập trạch, xuất hành, mua xe, ký hợp đồng. Chấm điểm theo Hoàng đạo, trực ngày, sao tốt xấu & Tam Tai.';
 
 export const metadata: Metadata = {
   title: 'Xem ngày tốt theo mục đích — Lịch Vạn Niên',
