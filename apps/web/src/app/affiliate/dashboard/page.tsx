@@ -349,7 +349,7 @@ export default function AffiliateDashboardPage() {
   const minPayout = balance?.min_payout_vnd ?? data.min_payout_vnd;
   const canPayout =
     !!balance && balance.available_vnd >= balance.min_payout_vnd && a.status === 'active';
-  const shareText = `Tôi đang dùng hieu.asia — phân tích Tử Vi, MBTI và lòng bàn tay bằng AI. Đăng ký qua link của tôi nhé: ${shareUrl}`;
+  const shareText = `Tôi đang dùng hieu.asia — phân tích Tử Vi, Bát Tự, MBTI, Big Five, lòng bàn tay và nhiều phương pháp khác bằng AI. Đăng ký qua link của tôi nhé: ${shareUrl}`;
 
   return (
     <div className="min-h-screen bg-background text-foreground">

@@ -15,7 +15,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Bát Tự — Tám chữ định mệnh',
   description:
-    'Bát Tự (Tứ Trụ) đọc bản đồ ngũ hành từ 8 chữ năm-tháng-ngày-giờ sinh. Engine chính xác + AI đối chiếu với Tử Vi, MBTI, Thần Số Học. Miễn phí.',
+    'Bát Tự (Tứ Trụ) đọc bản đồ ngũ hành từ 8 chữ năm-tháng-ngày-giờ sinh. Engine chính xác + AI đối chiếu cùng Tử Vi, MBTI, Big Five, DISC, Enneagram… Miễn phí.',
   alternates: { canonical: 'https://hieu.asia/bat-tu' },
   robots: { index: true, follow: true },
   openGraph: {
