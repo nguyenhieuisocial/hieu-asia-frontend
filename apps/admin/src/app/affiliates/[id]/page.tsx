@@ -288,7 +288,7 @@ export default function AdminAffiliateDetailPage({
         <div className="grid gap-4 sm:grid-cols-4">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs uppercase text-muted-foreground">Clicks</CardTitle>
+              <CardTitle className="text-xs uppercase text-muted-foreground">Lượt click</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-xl font-bold">{s.clicks}</div>
@@ -296,7 +296,7 @@ export default function AdminAffiliateDetailPage({
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs uppercase text-muted-foreground">Conversions</CardTitle>
+              <CardTitle className="text-xs uppercase text-muted-foreground">Chuyển đổi</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-xl font-bold">{s.conversions}</div>
@@ -304,7 +304,7 @@ export default function AdminAffiliateDetailPage({
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs uppercase text-muted-foreground">Total earned</CardTitle>
+              <CardTitle className="text-xs uppercase text-muted-foreground">Tổng hoa hồng</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-xl font-bold text-gold">{vnd(s.total_earned)}</div>
@@ -360,7 +360,7 @@ export default function AdminAffiliateDetailPage({
         {/* Payout Rail (Wave 45) */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Payout Rail</CardTitle>
+            <CardTitle className="text-base">Kênh chi trả</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="grid gap-2 text-sm sm:grid-cols-2">

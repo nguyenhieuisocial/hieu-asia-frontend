@@ -21,6 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  StatusBadge,
   toast,
 } from '@hieu-asia/ui';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
@@ -120,36 +121,46 @@ export function PromotersTab() {
 
   const columns: AdminTableColumn<PromoterRow>[] = [
     { id: 'code', header: 'Mã', cell: (r) => <span className="font-mono text-gold">{r.affiliate_code}</span> },
-    { id: 'email', header: 'Email', cell: (r) => <span className="text-foreground/85">{r.email ?? '—'}</span> },
+    {
+      id: 'email',
+      header: 'Email',
+      cell: (r) => (
+        <span className="block max-w-[22ch] truncate text-foreground/85" title={r.email ?? undefined}>
+          {r.email ?? '—'}
+        </span>
+      ),
+    },
     {
       id: 'depth',
-      header: 'Depth',
+      header: 'Tầng',
       sortKey: 'depth',
       className: 'text-right',
+      hideOnMobile: true,
       cell: (r) => <span className="font-mono">{r.depth}</span>,
     },
-    { id: 'tier', header: 'Tier', cell: (r) => <span className="capitalize">{r.tier}</span> },
+    { id: 'tier', header: 'Hạng', cell: (r) => <span className="capitalize">{r.tier}</span> },
     {
       id: 'status',
-      header: 'Status',
+      header: 'Trạng thái',
       cell: (r) =>
         r.status === 'active' ? (
-          <span className="text-green-400">active</span>
+          <StatusBadge status="success" label="Hoạt động" />
         ) : (
-          <span className="text-red-400">{r.status}</span>
+          <StatusBadge status="error" label={r.status === 'banned' ? 'Bị ban' : r.status} />
         ),
     },
-    { id: 'l1', header: 'L1', className: 'text-right', cell: (r) => <span className="font-mono">{r.l1_count}</span> },
-    { id: 'l2', header: 'L2', className: 'text-right', cell: (r) => <span className="font-mono">{r.l2_count}</span> },
-    { id: 'l3', header: 'L3', className: 'text-right', cell: (r) => <span className="font-mono">{r.l3_count}</span> },
+    { id: 'l1', header: 'L1', className: 'text-right', hideOnMobile: true, cell: (r) => <span className="font-mono">{r.l1_count}</span> },
+    { id: 'l2', header: 'L2', className: 'text-right', hideOnMobile: true, cell: (r) => <span className="font-mono">{r.l2_count}</span> },
+    { id: 'l3', header: 'L3', className: 'text-right', hideOnMobile: true, cell: (r) => <span className="font-mono">{r.l3_count}</span> },
     {
       id: 'created_at',
       header: 'Tạo',
+      hideOnMobile: true,
       cell: (r) => <span className="text-xs text-muted-foreground">{dt(r.created_at)}</span>,
     },
     {
       id: 'actions',
-      header: 'Actions',
+      header: 'Thao tác',
       cell: (r) => (
         <div className="flex flex-wrap gap-1">
           <Button

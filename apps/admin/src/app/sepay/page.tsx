@@ -385,6 +385,7 @@ function AdminSepayPageInner() {
     {
       id: 'bank',
       header: 'Ngân hàng',
+      hideOnMobile: true,
       cell: (t) => t.bank_brand_name ?? '—',
     },
     {
@@ -419,6 +420,7 @@ function AdminSepayPageInner() {
       id: 'accumulated',
       header: 'Số dư',
       className: 'text-right',
+      hideOnMobile: true,
       cell: (t) => {
         const v = parseFloat(t.accumulated || '0');
         return v > 0 ? (
@@ -431,8 +433,10 @@ function AdminSepayPageInner() {
     {
       id: 'reference',
       header: 'Tham chiếu',
-      className: 'font-mono text-xs',
-      cell: (t) => t.reference_number ?? '—',
+      className: 'max-w-[16ch] truncate font-mono text-xs',
+      hideOnMobile: true,
+      cell: (t) =>
+        t.reference_number ? <span title={t.reference_number}>{t.reference_number}</span> : '—',
     },
     {
       id: 'content',
@@ -481,6 +485,7 @@ function AdminSepayPageInner() {
       id: 'reason',
       header: 'Lý do',
       className: 'max-w-xs',
+      hideOnMobile: true,
       cell: (r) => <span className="line-clamp-2 text-foreground/75">{r.reason}</span>,
     },
     {
@@ -491,6 +496,7 @@ function AdminSepayPageInner() {
       id: 'intent',
       header: 'Đơn gốc',
       className: 'font-mono text-xs',
+      hideOnMobile: true,
       cell: (r) =>
         r.intent_id ? (
           <span title={r.reference ? `ref: ${r.reference}` : r.intent_id}>
@@ -504,6 +510,7 @@ function AdminSepayPageInner() {
       id: 'actors',
       header: 'Ai xử lý',
       className: 'max-w-[220px] text-xs',
+      hideOnMobile: true,
       cell: (r) => {
         const steps = [
           r.requested_by ? `yêu cầu: ${r.requested_by}` : null,
@@ -687,6 +694,7 @@ function AdminSepayPageInner() {
               rows={refunds}
               columns={refundColumns}
               getRowId={(r) => r.id}
+              loading={refundsQ.isLoading}
               caption="Danh sách yêu cầu hoàn tiền"
               empty={<span className="text-sm text-muted-foreground">Chưa có yêu cầu hoàn tiền nào. Vào tab "Giao dịch" → bấm ↩ để tạo.</span>}
             />
@@ -804,12 +812,14 @@ function ReconcileView() {
     {
       id: 'tier',
       header: 'Gói',
+      hideOnMobile: true,
       cell: (r) => r.order?.tier ?? '—',
     },
     {
       id: 'customer',
       header: 'Khách',
       className: 'font-mono text-xs',
+      hideOnMobile: true,
       cell: (r) => (r.order?.user_id ? <a href={`/customers/${r.order.user_id}`} className="text-gold hover:underline">{r.order.user_id.slice(0, 12)}…</a> : '—'),
     },
     {

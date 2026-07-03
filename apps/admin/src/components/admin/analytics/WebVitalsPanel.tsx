@@ -122,7 +122,7 @@ export default async function WebVitalsPage() {
                     {fmtValue(metric, t.ni)} · poor ≥ {fmtValue(metric, t.ni)}
                   </p>
                 </header>
-                <div className="overflow-hidden rounded-card-editorial border border-border bg-card">
+                <div className="overflow-x-auto rounded-card-editorial border border-border bg-card">
                   <table className="w-full text-sm">
                     <thead className="border-b border-border bg-muted/40 text-left">
                       <tr>

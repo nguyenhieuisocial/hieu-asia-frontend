@@ -16,7 +16,7 @@
 import * as React from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button, Card, CardContent, toast } from '@hieu-asia/ui';
+import { Button, Card, CardContent, StatusBadge, toast } from '@hieu-asia/ui';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
 interface Batch {
@@ -33,6 +33,19 @@ interface Batch {
 }
 
 type Rail = 'manual_csv' | 'wise' | 'stripe_connect';
+
+const STATUS_BADGE: Record<
+  string,
+  { status: 'success' | 'warning' | 'error' | 'info' | 'neutral'; label: string }
+> = {
+  pending_approval: { status: 'warning', label: 'Chờ duyệt' },
+  approved: { status: 'success', label: 'Đã duyệt' },
+  in_progress: { status: 'info', label: 'Đang chi' },
+  completed: { status: 'success', label: 'Hoàn tất' },
+  paid: { status: 'success', label: 'Đã trả' },
+  failed: { status: 'error', label: 'Thất bại' },
+  rejected: { status: 'error', label: 'Từ chối' },
+};
 
 function vnd(n: number) {
   return n.toLocaleString('vi-VN') + 'đ';
@@ -141,11 +154,18 @@ export function BatchesTab() {
 
   const columns: AdminTableColumn<Batch>[] = [
     { id: 'id', header: 'ID', cell: (b) => <span className="font-mono text-xs">{b.id.slice(0, 8)}</span> },
-    { id: 'status', header: 'Status', cell: (b) => <StatusBadge status={b.status} /> },
+    {
+      id: 'status',
+      header: 'Trạng thái',
+      cell: (b) => {
+        const s = STATUS_BADGE[b.status] ?? { status: 'neutral' as const, label: b.status };
+        return <StatusBadge status={s.status} label={s.label} />;
+      },
+    },
     { id: 'rail', header: 'Rail', cell: (b) => b.rail ?? '—' },
     {
       id: 'total',
-      header: 'Total',
+      header: 'Tổng',
       className: 'text-right',
       cell: (b) => <span className="font-mono text-gold">{vnd(b.total_amount_vnd)}</span>,
     },
@@ -155,15 +175,22 @@ export function BatchesTab() {
       className: 'text-right',
       cell: (b) => <span className="font-mono">{b.affiliate_count}</span>,
     },
-    { id: 'approved_by', header: 'Approved by', cell: (b) => <span className="text-xs">{b.approved_by ?? '—'}</span> },
+    {
+      id: 'approved_by',
+      header: 'Người duyệt',
+      hideOnMobile: true,
+      cell: (b) => <span className="text-xs">{b.approved_by ?? '—'}</span>,
+    },
     {
       id: 'approved_at',
-      header: 'Approved at',
+      header: 'Duyệt lúc',
+      hideOnMobile: true,
       cell: (b) => <span className="text-xs text-muted-foreground">{dt(b.approved_at)}</span>,
     },
     {
       id: 'paid_at',
-      header: 'Paid at',
+      header: 'Trả lúc',
+      hideOnMobile: true,
       cell: (b) => <span className="text-xs text-muted-foreground">{dt(b.paid_at)}</span>,
     },
     {
@@ -315,21 +342,6 @@ function WithholdingStatementOpener() {
   );
 }
 
-function StatusBadge({ status }: { status: string }) {
-  const cls =
-    status === 'approved'
-      ? 'bg-jade/20 text-jade-700 dark:text-jade-50'
-      : status === 'completed' || status === 'paid'
-        ? 'bg-green-500/20 text-green-700 dark:text-green-300'
-        : status === 'in_progress'
-          ? 'bg-blue-500/20 text-blue-700 dark:text-blue-300'
-          : status === 'pending_approval'
-            ? 'bg-yellow-500/20 text-yellow-700 dark:text-yellow-300'
-            : status === 'failed' || status === 'rejected'
-              ? 'bg-red-500/20 text-red-700 dark:text-red-300'
-              : 'bg-muted/40 text-muted-foreground';
-  return <span className={`rounded px-2 py-0.5 text-[10px] uppercase ${cls}`}>{status}</span>;
-}
 
 // ---------------------------------------------------------------------------
 // Build-batch modal — Wave 45.

@@ -174,32 +174,34 @@ export function FraudTab() {
           {cleared.length === 0 ? (
             <p className="text-sm text-muted-foreground">Chưa có flag nào được clear.</p>
           ) : (
-            <table className="w-full text-sm">
-              <thead className="border-b border-border text-left text-xs uppercase text-muted-foreground">
-                <tr>
-                  <th className="pb-2 pr-3">Mã</th>
-                  <th className="pb-2 pr-3">Lý do</th>
-                  <th className="pb-2 pr-3">Detail</th>
-                  <th className="pb-2 pr-3">Flagged</th>
-                  <th className="pb-2 pr-3">Cleared</th>
-                  <th className="pb-2">By</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cleared.map((f) => (
-                  <tr key={f.code} className="border-b border-border">
-                    <td className="py-1.5 pr-3 font-mono text-gold">{f.code}</td>
-                    <td className="py-1.5 pr-3">{REASON_LABEL[f.reason]}</td>
-                    <td className="py-1.5 pr-3 text-muted-foreground">{f.detail}</td>
-                    <td className="py-1.5 pr-3 text-muted-foreground">{dt(f.flagged_at)}</td>
-                    <td className="py-1.5 pr-3 text-muted-foreground">
-                      {f.cleared_at ? dt(f.cleared_at) : '—'}
-                    </td>
-                    <td className="py-1.5 text-muted-foreground">{f.cleared_by ?? '—'}</td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="border-b border-border text-left text-xs uppercase text-muted-foreground">
+                  <tr>
+                    <th className="pb-2 pr-3">Mã</th>
+                    <th className="pb-2 pr-3">Lý do</th>
+                    <th className="pb-2 pr-3">Chi tiết</th>
+                    <th className="pb-2 pr-3">Gắn cờ lúc</th>
+                    <th className="pb-2 pr-3">Gỡ cờ lúc</th>
+                    <th className="pb-2">Bởi</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {cleared.map((f) => (
+                    <tr key={f.code} className="border-b border-border">
+                      <td className="py-1.5 pr-3 font-mono text-gold">{f.code}</td>
+                      <td className="py-1.5 pr-3">{REASON_LABEL[f.reason]}</td>
+                      <td className="py-1.5 pr-3 text-muted-foreground">{f.detail}</td>
+                      <td className="py-1.5 pr-3 text-muted-foreground">{dt(f.flagged_at)}</td>
+                      <td className="py-1.5 pr-3 text-muted-foreground">
+                        {f.cleared_at ? dt(f.cleared_at) : '—'}
+                      </td>
+                      <td className="py-1.5 text-muted-foreground">{f.cleared_by ?? '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </CardContent>
       </Card>

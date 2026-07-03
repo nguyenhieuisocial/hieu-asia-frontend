@@ -684,6 +684,7 @@ function AdminSessionsPageInner() {
         header: 'Tạo',
         sortKey: 'created_at',
         width: '140px',
+        hideOnMobile: true,
         cell: (s) => (
           <div>
             <div className="font-mono text-xs text-foreground/85">{fmtDateTime(s.created_at)}</div>
@@ -726,6 +727,9 @@ function AdminSessionsPageInner() {
         id: 'user',
         header: 'User',
         sortKey: 'user_email',
+        // UX audit 2026-07-03 — cột flex không giới hạn đẩy bảng ~1600px;
+        // cap width + truncate (email đầy đủ vẫn xem được qua title).
+        width: '200px',
         // Wave 63 — was showing the raw user_id UUID under the email +
         // "—" for anonymous sessions ("tên user không chính xác / ID quá
         // dài"). Now: real email (or "Khách ẩn danh" for guest sessions) +
@@ -742,13 +746,13 @@ function AdminSessionsPageInner() {
                   e.stopPropagation();
                   handleFilterByUser(s.user_id);
                 }}
-                className="truncate text-left text-foreground underline-offset-2 hover:text-gold hover:underline"
+                className="max-w-[22ch] truncate text-left text-foreground underline-offset-2 hover:text-gold hover:underline"
                 title={`Lọc theo user: ${s.user_email}`}
               >
                 {s.user_email}
               </button>
             ) : (
-              <div className="truncate text-foreground">
+              <div className="max-w-[22ch] truncate text-foreground">
                 {s.user_email && s.user_email.includes('@') ? (
                   s.user_email
                 ) : (
@@ -764,6 +768,7 @@ function AdminSessionsPageInner() {
         id: 'paid',
         header: 'Thanh toán',
         width: '120px',
+        hideOnMobile: true,
         cell: (s) => {
           // null → not enriched by backend yet → "—". true → green badge +
           // tier. false → muted "Chưa".
@@ -795,7 +800,9 @@ function AdminSessionsPageInner() {
         header: 'Mối quan tâm',
         hideOnMobile: true,
         cell: (s) => (
-          <span className="line-clamp-1 text-foreground/85">{s.primary_concern}</span>
+          <span className="line-clamp-1 max-w-[36ch] text-foreground/85" title={s.primary_concern}>
+            {s.primary_concern}
+          </span>
         ),
       },
       {

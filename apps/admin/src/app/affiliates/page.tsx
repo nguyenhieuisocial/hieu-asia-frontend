@@ -146,7 +146,7 @@ function AdminAffiliatesPageInner() {
       },
       {
         id: 'referrals',
-        label: 'Referrals',
+        label: 'Giới thiệu',
         icon: <GitBranch size={16} />,
         content: <ReferralsTab />,
       },
@@ -327,7 +327,7 @@ function OverviewTab() {
           hint={`${commissionsQ.data?.length ?? 0} dòng`}
         />
         <KpiTile
-          label="Payout pending"
+          label="Chờ chi trả"
           value={vnd(pendingPayoutTotal)}
           hint={`${payoutsQ.data?.length ?? 0} dòng`}
         />
@@ -550,13 +550,13 @@ function PayoutsInlineTab() {
               <thead className="border-b border-border text-left text-xs uppercase text-muted-foreground">
                 <tr>
                   <th className="pb-2 pr-3">ID</th>
-                  <th className="pb-2 pr-3">Code</th>
-                  <th className="pb-2 pr-3">Period</th>
+                  <th className="pb-2 pr-3">Mã</th>
+                  <th className="pb-2 pr-3">Kỳ</th>
                   <th className="pb-2 pr-3 text-right">Số tiền</th>
-                  <th className="pb-2 pr-3">Method</th>
-                  <th className="pb-2 pr-3">Batch</th>
-                  <th className="pb-2 pr-3">Paid at</th>
-                  <th className="pb-2">Reference</th>
+                  <th className="hidden pb-2 pr-3 md:table-cell">Phương thức</th>
+                  <th className="hidden pb-2 pr-3 md:table-cell">Đợt chi</th>
+                  <th className="pb-2 pr-3">Trả lúc</th>
+                  <th className="hidden pb-2 md:table-cell">Tham chiếu</th>
                 </tr>
               </thead>
               <tbody>
@@ -570,8 +570,8 @@ function PayoutsInlineTab() {
                     <td className="py-2 pr-3 text-right font-mono text-gold">
                       {vnd(p.amount_vnd)}
                     </td>
-                    <td className="py-2 pr-3">{p.method ?? '—'}</td>
-                    <td className="py-2 pr-3">
+                    <td className="hidden py-2 pr-3 md:table-cell">{p.method ?? '—'}</td>
+                    <td className="hidden py-2 pr-3 md:table-cell">
                       {p.batch_id ? (
                         <Link
                           href={`/affiliates?tab=batches&batchId=${p.batch_id}`}
@@ -586,7 +586,7 @@ function PayoutsInlineTab() {
                     <td className="py-2 pr-3 text-xs text-muted-foreground">
                       {dtSafe(p.paid_at)}
                     </td>
-                    <td className="py-2 font-mono text-xs">{p.reference ?? '—'}</td>
+                    <td className="hidden py-2 font-mono text-xs md:table-cell">{p.reference ?? '—'}</td>
                   </tr>
                 ))}
                 {q.data && q.data.length === 0 && (

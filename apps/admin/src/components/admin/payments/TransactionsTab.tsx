@@ -65,6 +65,14 @@ const STATUS_TONE: Record<
   failed: 'error',
 };
 
+// Nhãn trạng thái tiếng Việt (theo mẫu STATUS_LABEL của app/sessions/page.tsx).
+const STATUS_LABEL: Record<AdminTransaction['status'], string> = {
+  succeeded: 'Thành công',
+  refunded: 'Hoàn tiền',
+  pending: 'Chờ xử lý',
+  failed: 'Thất bại',
+};
+
 const PLAN_LABEL: Record<AdminTransaction['plan'], string> = {
   mentor_month: 'Mentor tháng',
   mentor_year: 'Mentor năm',
@@ -81,10 +89,10 @@ interface PaymentsFilter {
 
 const STATUS_OPTIONS: Array<{ value: StatusFilter; label: string }> = [
   { value: 'all', label: 'Tất cả trạng thái' },
-  { value: 'succeeded', label: 'Succeeded' },
-  { value: 'refunded', label: 'Refunded' },
-  { value: 'pending', label: 'Pending' },
-  { value: 'failed', label: 'Failed' },
+  { value: 'succeeded', label: 'Thành công' },
+  { value: 'refunded', label: 'Hoàn tiền' },
+  { value: 'pending', label: 'Chờ xử lý' },
+  { value: 'failed', label: 'Thất bại' },
 ];
 
 const PLAN_OPTIONS: Array<{ value: PlanFilter; label: string }> = [
@@ -116,7 +124,7 @@ const CSV_HEADERS = {
   amount_usd: 'Số tiền (VND)',
   status: 'Status',
   stripe_id: 'Intent ID',
-  created_at: 'Created',
+  created_at: 'Ngày tạo',
 } as const;
 
 export interface TransactionsTabProps {
@@ -222,7 +230,7 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
         // Gap audit 2026-07-02 — user_id hiển thị dạng text cụt; giờ bấm ra
         // thẳng hồ sơ khách.
         key: 'user_email',
-        header: 'User',
+        header: 'Khách',
         cell: (t) =>
           t.user_id ? (
             <Link
@@ -256,16 +264,18 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
           t.status === 'refunded' ? (
             <span className="inline-flex items-center gap-1.5">
               <Undo2 className="h-3 w-3 text-warn-700 dark:text-warn-300" aria-hidden />
-              <StatusBadge status={STATUS_TONE[t.status]} label={t.status} />
+              <StatusBadge status={STATUS_TONE[t.status]} label={STATUS_LABEL[t.status]} />
             </span>
           ) : (
-            <StatusBadge status={STATUS_TONE[t.status]} label={t.status} />
+            <StatusBadge status={STATUS_TONE[t.status]} label={STATUS_LABEL[t.status]} />
           ),
       },
       {
         key: 'created_at',
         header: 'Tạo',
         width: '150px',
+        // Cột phụ — ẩn dưới md để mobile khỏi scroll qua 8 cột.
+        className: 'hidden md:table-cell',
         cell: (t) =>
           new Date(t.created_at).toLocaleString('vi-VN', {
             dateStyle: 'short',
@@ -275,6 +285,7 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
       {
         key: 'stripe_id',
         header: 'Intent',
+        className: 'hidden md:table-cell',
         cell: (t) => (
           <span className="font-mono text-xs text-muted-foreground" title={t.stripe_id}>
             {maskSecret(t.stripe_id)}
@@ -286,6 +297,7 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
         // session, tier, underpaid) luôn được trả về nhưng chưa từng hiển thị.
         key: 'metadata',
         header: 'Chi tiết',
+        className: 'hidden md:table-cell',
         cell: (t) => {
           const md = (t.metadata ?? {}) as Record<string, unknown>;
           const sessionId = typeof md.session_id === 'string' ? md.session_id : null;
@@ -322,7 +334,7 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
             );
           }
           return bits.length ? (
-            <span className="flex flex-wrap items-center gap-1.5">{bits}</span>
+            <span className="flex max-w-[200px] flex-wrap items-center gap-1.5">{bits}</span>
           ) : (
             <span className="text-xs text-muted-foreground">—</span>
           );
