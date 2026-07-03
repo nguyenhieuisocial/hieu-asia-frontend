@@ -55,7 +55,7 @@ const ROUTES: Route[] = [
     Icon: Compass,
     framing:
       'Bạn muốn một bức chân dung trung thực: điểm mạnh, vùng tối, kiểu năng lượng và lý do mình hay vướng cùng một loại vấn đề.',
-    kit: ['Lá số tổng quan + cung Mệnh–Thân', 'MBTI + Thần Số Học bổ trợ', 'Cẩm nang cá nhân PDF'],
+    kit: ['Lá số tổng quan + cung Mệnh–Thân', 'MBTI, Big Five, DISC, Enneagram bổ trợ', 'Cẩm nang cá nhân PDF'],
   },
   {
     slug: 'su-nghiep',

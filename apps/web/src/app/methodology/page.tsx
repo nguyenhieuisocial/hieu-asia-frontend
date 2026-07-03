@@ -787,7 +787,8 @@ function Chapter2Content() {
         </h3>
         <p className="mt-2 font-sans text-sm text-muted-foreground/70">
           Lá số và bản đồ sao do engine tính; các bài tâm lý do bạn tự trả lời
-          rồi chấm điểm theo thang đo cố định. AI chỉ đọc output đã structured.
+          rồi chấm điểm theo thang đo cố định; Tarot / gieo quẻ thì rút ngẫu
+          nhiên để gợi phản tư. AI chỉ đọc output đã structured.
         </p>
 
         {/* Wave 60.79.T3 (vault 112 P1 #8): 5-col table overflows on 375px.
