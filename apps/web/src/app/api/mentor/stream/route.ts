@@ -22,6 +22,10 @@ import type {
   MentorResponse,
   Reading,
 } from '@hieu-asia/types';
+import {
+  DEFAULT_MENTOR_SYSTEM_PROMPT,
+  buildMentorSystemPrompt,
+} from '@/lib/mentor-system-prompt';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -33,9 +37,6 @@ const SUPABASE_URL =
   process.env.SUPABASE_URL ?? 'https://fvftbqairezsybasqsek.supabase.co';
 // Wave 65: reading-get is owner-gated — service token + verified owner ids.
 const READING_PROXY_TOKEN = process.env.READING_PROXY_TOKEN;
-
-const DEFAULT_SYSTEM_PROMPT =
-  'Bạn là mentor cá nhân. Trả lời ấm áp, đồng cảm, ngắn gọn (2-3 đoạn), tiếng Việt. Luôn nhắc rằng user quyết định, AI chỉ gợi mở.';
 
 const CHUNK_DELAY_MS = 50;
 const CHUNK_TARGET_CHARS = 60;
@@ -76,32 +77,6 @@ async function fetchReading(sessionId: string, ownerIds: string[]): Promise<Read
   } catch {
     return null;
   }
-}
-
-function buildSystemPrompt(session: Reading): string {
-  // Narrow to full paid report — preview shape ({ preview }) has no markdown.
-  const reportMd =
-    session.report != null && 'markdown' in session.report
-      ? session.report.markdown.trim()
-      : undefined;
-  const chart = session.tuvi_chart;
-  const lines: string[] = [
-    'Bạn là mentor cá nhân của user này. Sử dụng báo cáo dưới đây làm "Bộ não cố định" — không nói trái với nội dung báo cáo, tham chiếu cụ thể vào các phần đã viết.',
-  ];
-  if (reportMd) lines.push('', '--- BÁO CÁO CỦA USER ---', reportMd);
-  if (chart) {
-    lines.push(
-      '',
-      '--- BÁT TỰ ---',
-      `Năm: ${chart.year}, Tháng: ${chart.month}, Ngày: ${chart.day}, Giờ: ${chart.hour}`,
-    );
-  }
-  lines.push(
-    '',
-    '--- CONTEXT ---',
-    'User đang trò chuyện trên giao diện chat. Trả lời ấm áp, đồng cảm, ngắn gọn (2-3 đoạn), tiếng Việt. Luôn nhắc rằng user quyết định, AI chỉ gợi mở.',
-  );
-  return lines.join('\n');
 }
 
 /**
@@ -179,13 +154,13 @@ export async function POST(req: NextRequest) {
       ? body.session_id
       : undefined;
 
-  let systemPrompt = DEFAULT_SYSTEM_PROMPT;
+  let systemPrompt = DEFAULT_MENTOR_SYSTEM_PROMPT;
   let userId: string | undefined;
   if (sessionId) {
     const ownerIds = await resolveReadingOwnerIds(req);
     const session = await fetchReading(sessionId, ownerIds);
     if (session) {
-      systemPrompt = buildSystemPrompt(session);
+      systemPrompt = buildMentorSystemPrompt(session);
       userId = session.user_id;
     }
   }
