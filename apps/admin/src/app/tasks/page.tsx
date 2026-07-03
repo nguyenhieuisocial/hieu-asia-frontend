@@ -247,32 +247,32 @@ export default function AdminTasksPage() {
       {/* Queue KPIs */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard
-          label="Pending"
+          label="Đang chờ"
           value={queue.data?.default ?? 0}
           icon={<Clock className="h-4 w-4" />}
           accent={oldestAlert ? 'red' : 'gold'}
-          hint="đang chờ"
+          hint="trong hàng đợi"
         />
         <KpiCard
-          label="Processing"
+          label="Đang xử lý"
           value={queue.data?.high_priority ?? 0}
           icon={<Activity className="h-4 w-4" />}
           accent="purple"
           hint="đang chạy"
         />
         <KpiCard
-          label="Oldest pending"
+          label="Chờ lâu nhất"
           value={fmtAge(oldestAge)}
           icon={oldestAlert ? <AlertTriangle className="h-4 w-4" /> : <Clock className="h-4 w-4" />}
           accent={oldestAlert ? 'red' : 'jade'}
-          hint={oldestAlert ? 'SLA breach' : 'OK'}
+          hint={oldestAlert ? 'quá SLA 1 giờ' : 'OK'}
         />
         <KpiCard
-          label="RAG queue"
+          label="Hàng đợi RAG"
           value={queue.data?.rag ?? 0}
           icon={<Bot className="h-4 w-4" />}
           accent="jade"
-          hint="indexing jobs"
+          hint="job đánh chỉ mục"
         />
       </div>
 
