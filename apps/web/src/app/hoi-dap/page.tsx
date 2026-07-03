@@ -6,7 +6,7 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
-const TITLE = 'Hỏi đáp về hieu.asia — Tử Vi AI, Bát Tự, MBTI & các phương pháp';
+const TITLE = 'Hỏi đáp — Tử Vi, Bát Tự, MBTI & các phương pháp';
 const DESCRIPTION =
   'Giải đáp ngắn gọn, trung thực: hieu.asia là gì, có phải xem bói không, có chính xác không, Tử Vi / Bát Tự / MBTI / Big Five / DISC là gì và nên bắt đầu từ đâu.';
 

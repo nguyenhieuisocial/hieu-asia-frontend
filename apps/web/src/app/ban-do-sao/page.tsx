@@ -8,7 +8,7 @@ import { ZODIAC } from '@/lib/western-astrology';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 const DESC =
-  'Tính bản đồ sao của bạn theo chiêm tinh phương Tây — cung Mặt Trời, Mặt Trăng, cung Mọc & 8 hành tinh (Sao Thủy → Diêm Vương) từ ngày giờ & nơi sinh, bằng thuật toán thiên văn (Meeus + Schlyter) đối chiếu thư viện chuẩn. Con số là thật, diễn giải để hiểu mình, không bói toán.';
+  'Tính bản đồ sao chiêm tinh phương Tây — cung Mặt Trời, Mặt Trăng, cung Mọc & 8 hành tinh từ ngày giờ sinh, bằng thuật toán thiên văn. Diễn giải để hiểu mình.';
 
 export const metadata: Metadata = {
   title: 'Bản đồ sao — Mặt Trời, Mặt Trăng & 8 hành tinh',

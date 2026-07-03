@@ -9,7 +9,7 @@ import { ELEMENTS, type Element } from '@/lib/dat-ten-ngu-hanh';
 import { VARIANTS } from './variants';
 
 const DESC =
-  'Tra mệnh ngũ hành của bé theo ngày sinh (nạp âm) và gợi ý tên hợp mệnh theo phong tục: tên thuộc hành tương sinh, tránh hành tương khắc. Gợi ý tham khảo theo nghĩa chữ — không phán số mệnh.';
+  'Tra mệnh ngũ hành của bé theo ngày sinh (nạp âm) và gợi ý tên hợp mệnh: chọn hành tương sinh, tránh tương khắc. Tham khảo theo nghĩa chữ — không phán số mệnh.';
 
 export const metadata: Metadata = {
   title: 'Đặt tên theo ngũ hành — tra mệnh & gợi ý tên',

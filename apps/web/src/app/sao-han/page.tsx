@@ -8,7 +8,7 @@ import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { SAO_ORDER, SAO_INFO, TYPE_LABEL, type SaoType } from '@/lib/sao-han';
 
 const DESC =
-  'Xem sao hạn (sao chiếu mệnh Cửu Diệu) theo tuổi và giới tính: La Hầu, Kế Đô, Thái Bạch, Thái Dương, Thái Âm, Mộc Đức, Thổ Tú, Thủy Diệu, Vân Hớn. Tra cứu nhanh kèm ý nghĩa từng sao — tham khảo theo phong tục, không bói toán.';
+  'Xem sao hạn (Cửu Diệu) theo tuổi và giới tính: La Hầu, Kế Đô, Thái Bạch, Thái Dương, Thái Âm, Mộc Đức, Thổ Tú, Thủy Diệu, Vân Hớn. Tham khảo theo phong tục.';
 
 export const metadata: Metadata = {
   title: 'Xem sao hạn — sao chiếu mệnh theo tuổi',

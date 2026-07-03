@@ -8,7 +8,7 @@ import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 const DESC =
-  'Lập & xem lá số Tử Vi Đẩu Số miễn phí từ ngày giờ sinh — đầy đủ 12 cung, 121 sao, độ sáng (miếu/vượng/hãm), Tứ Hóa, cách cục & tam phương tứ chính, bằng engine chuẩn. Con số là thật; luận giải để hiểu mình, không bói toán.';
+  'Lập & xem lá số Tử Vi Đẩu Số miễn phí từ ngày giờ sinh — 12 cung, 121 sao, độ sáng, Tứ Hóa, cách cục, bằng engine chuẩn. Luận giải để hiểu mình, không bói toán.';
 
 export const metadata: Metadata = {
   title: 'Xem lá số Tử Vi miễn phí — 12 cung, 121 sao',

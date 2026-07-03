@@ -41,11 +41,15 @@ export const OG_DEFAULT_IMAGES = [
 export const LOGO_PATH = OG_DEFAULT;
 
 /**
- * Official profiles for Organization.sameAs (Knowledge Panel signal).
- * TODO(product): extend with Facebook / TikTok / YouTube / LinkedIn when
- * confirmed (see specs-trien-khai/geo-ai-search.md §4 decision #1).
+ * Official profiles for Organization.sameAs (Knowledge Panel / entity signal).
+ * Only list profiles that actually exist and are linked from the site (the
+ * footer links Telegram + Facebook). TODO(product): add TikTok / YouTube /
+ * LinkedIn when those profiles are confirmed live.
  */
-export const SOCIAL_LINKS: string[] = ['https://t.me/hieuasiabot'];
+export const SOCIAL_LINKS: string[] = [
+  'https://t.me/hieuasiabot',
+  'https://facebook.com/hieu.asia',
+];
 
 export const CONTACT_EMAIL = 'hi@hieu.asia';
 
