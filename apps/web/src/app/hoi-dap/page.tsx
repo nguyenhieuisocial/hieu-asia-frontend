@@ -18,7 +18,7 @@ interface QA {
 const VE_HIEU_ASIA: QA[] = [
   {
     q: 'hieu.asia là gì?',
-    a: 'hieu.asia là nền tảng "hiểu mình" bằng AI, kết hợp các lăng kính phương Đông (Tử Vi, Bát Tự) và tâm lý học hiện đại (MBTI, Big Five, DISC). Mục tiêu là giúp bạn tự hiểu bản thân và ra quyết định tốt hơn — không phán định số mệnh.',
+    a: 'hieu.asia là nền tảng "hiểu mình" bằng AI, kết hợp các lăng kính phương Đông (Tử Vi, Bát Tự), tâm lý học hiện đại (MBTI, Big Five, DISC, Enneagram) và cả chiêm tinh phương Tây. Mục tiêu là giúp bạn tự hiểu bản thân và ra quyết định tốt hơn — không phán định số mệnh.',
   },
   {
     q: 'hieu.asia có phải xem bói không?',
@@ -30,7 +30,7 @@ const VE_HIEU_ASIA: QA[] = [
   },
   {
     q: 'hieu.asia có miễn phí không?',
-    a: 'Nhiều công cụ miễn phí và cho kết quả ngay: MBTI, Big Five, DISC, Lịch Vạn Niên, hợp tuổi, xem ngày tốt… Một số phần đọc chuyên sâu có gói trả phí.',
+    a: 'Nhiều công cụ miễn phí và cho kết quả ngay: MBTI, Big Five, DISC, Enneagram, Tarot, gieo quẻ, bản đồ sao, Lịch Vạn Niên, hợp tuổi, xem ngày tốt… Một số phần đọc chuyên sâu có gói trả phí.',
   },
   {
     q: 'Cần cung cấp thông tin gì?',
@@ -39,6 +39,10 @@ const VE_HIEU_ASIA: QA[] = [
   {
     q: 'Dữ liệu của tôi có an toàn không?',
     a: 'Thông tin bạn nhập được dùng để tạo kết quả cho chính bạn. Bạn có thể xem chi tiết tại trang Chính sách quyền riêng tư (hieu.asia/privacy).',
+  },
+  {
+    q: 'Có những lăng kính, công cụ nào? Muốn hiểu bản chất từng cái thì đọc ở đâu?',
+    a: 'Ngoài Tử Vi, Bát Tự, MBTI, Big Five, DISC còn có Enneagram, Tarot, gieo quẻ Kinh Dịch, chiêm tinh phương Tây (bản đồ sao, cung hoàng đạo), xem tướng, thần số học, 12 con giáp, sao hạn cùng nhiều công cụ theo dịp. Khu vực Học (hieu.asia/learn) giải thích trực quan từng lăng kính bằng ngôn ngữ dễ hiểu; xem đủ công cụ ở hieu.asia/cong-cu.',
   },
 ];
 
@@ -62,6 +66,22 @@ const VE_PHUONG_PHAP: QA[] = [
   {
     q: 'DISC là gì?',
     a: 'DISC mô tả 4 phong cách hành vi và giao tiếp: Quyết đoán (D), Ảnh hưởng (i), Ổn định (S), Tuân thủ (C). Rất hữu ích cho làm việc nhóm và giao tiếp.',
+  },
+  {
+    q: 'Enneagram là gì?',
+    a: 'Enneagram chia tính cách thành 9 nhóm theo động lực và nỗi sợ cốt lõi bên trong — thiên về "vì sao bạn hành động như vậy". Nhiều người thấy nó chạm sâu về động cơ, bổ sung tốt cho MBTI và Big Five.',
+  },
+  {
+    q: 'Tarot và Gieo quẻ Kinh Dịch dùng để làm gì?',
+    a: 'Là công cụ để dừng lại chiêm nghiệm một câu hỏi cụ thể, không phải để "đoán tương lai". Lá bài / quẻ là ngẫu nhiên thật; giá trị nằm ở chỗ bạn soi vấn đề của mình vào bộ biểu tượng rồi tự nghĩ rõ hơn — quyết định vẫn ở bạn.',
+  },
+  {
+    q: 'hieu.asia có chiêm tinh phương Tây (cung hoàng đạo) không?',
+    a: 'Có. Bản đồ sao tính vị trí Mặt Trời, Mặt Trăng và các hành tinh từ ngày giờ & nơi sinh bằng thuật toán thiên văn chuẩn (cung Mặt Trời, Mặt Trăng, cung Mọc). Con số là thật; phần diễn giải để hiểu mình, không phải tiên đoán.',
+  },
+  {
+    q: 'Còn Xem tướng và Thần số học thì sao?',
+    a: 'Đều có. Xem tướng (chỉ tay) và Thần số học (theo ngày sinh & tên) là những lăng kính nhẹ để tự soi thêm một góc. hieu.asia trình bày như gợi ý chiêm nghiệm, không phán số mệnh.',
   },
   {
     q: '"Tử Vi AI" khác gì xem tử vi thông thường trên mạng?',
@@ -132,6 +152,10 @@ const THEO_TUNG_VIEC: QA[] = [
   {
     q: 'Có nên dựa vào Tử Vi để quyết định việc lớn (cưới hỏi, đổi việc)?',
     a: 'Nên xem như một góc tham khảo cùng lý trí và hoàn cảnh thật, không phải căn cứ duy nhất. Công cụ Quyết định của hieu.asia chính là để kết hợp lá số với bối cảnh của bạn rồi gợi ý bước đi, thay vì phán đúng/sai.',
+  },
+  {
+    q: 'hieu.asia có công cụ nào giúp ra quyết định không?',
+    a: 'Có — bộ công cụ ra quyết định: mô phỏng lựa chọn, nhật ký, đánh giá tuần và kế hoạch năm/tháng. Chúng kết hợp góc nhìn từ lá số / tính cách với bối cảnh thật của bạn để bạn nghĩ mạch lạc hơn, thay vì phán "nên hay không nên".',
   },
 ];
 
