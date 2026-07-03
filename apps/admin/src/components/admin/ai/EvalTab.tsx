@@ -45,6 +45,7 @@ import { LiveBadge } from '@/components/admin/live-badge';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { EmptyState } from '@/components/admin/empty-state';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
+import { fmtDateTime } from '@/lib/format';
 import {
   useEvalTrend,
   type EvalRun,
@@ -107,21 +108,6 @@ function fmtDateShort(iso: string): string {
     });
   } catch {
     return iso.slice(0, 10);
-  }
-}
-
-function fmtDateLong(iso: string): string {
-  try {
-    const d = new Date(iso);
-    return d.toLocaleString('vi-VN', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  } catch {
-    return iso;
   }
 }
 
@@ -218,7 +204,7 @@ function HeroCard({ latest, yesterday }: HeroCardProps) {
             </CardTitle>
             <CardDescription className="text-xs text-muted-foreground">
               Median của Claude · OpenAI · Google ·{' '}
-              {fmtDateLong(latest.created_at)}
+              {fmtDateTime(latest.created_at)}
             </CardDescription>
           </div>
           <StatusPill status={status}>{pillContent}</StatusPill>
@@ -469,7 +455,7 @@ const RUN_COLUMNS: AdminTableColumn<EvalRun>[] = [
     id: 'date',
     header: 'Ngày',
     className: 'text-foreground/85',
-    cell: (r) => fmtDateLong(r.created_at),
+    cell: (r) => fmtDateTime(r.created_at),
   },
   {
     id: 'judge_avg',

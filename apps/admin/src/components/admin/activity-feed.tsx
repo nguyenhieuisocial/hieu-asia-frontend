@@ -17,6 +17,7 @@ import { useQuery } from '@tanstack/react-query';
 import { cn } from '@hieu-asia/ui';
 import { Activity } from 'lucide-react';
 import { listSessions } from '@/lib/admin-api';
+import { fmtRelative } from '@/lib/format';
 
 interface AuditEntry {
   id: string;
@@ -63,20 +64,6 @@ async function fetchAudit(): Promise<AuditEntry[] | null> {
   } catch {
     return null;
   }
-}
-
-function relTime(iso: string): string {
-  const t = new Date(iso).getTime();
-  if (Number.isNaN(t)) return iso;
-  const sec = Math.max(0, (Date.now() - t) / 1000);
-  if (sec < 60) return `${sec.toFixed(0)}s trước`;
-  const m = sec / 60;
-  if (m < 60) return `${m.toFixed(0)}m trước`;
-  const h = m / 60;
-  if (h < 24) return `${h.toFixed(0)}h trước`;
-  const d = h / 24;
-  if (d < 7) return `${d.toFixed(0)}d trước`;
-  return new Date(iso).toLocaleDateString('vi-VN');
 }
 
 const TONE_DOT: Record<AuditEntry['tone'], string> = {
@@ -172,7 +159,7 @@ export function ActivityFeed() {
                   <div className="flex items-center justify-between gap-2 text-xs">
                     <span className="truncate font-medium text-foreground/90">{e.action}</span>
                     <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
-                      {relTime(e.ts)}
+                      {fmtRelative(e.ts)}
                     </span>
                   </div>
                   {e.detail && (

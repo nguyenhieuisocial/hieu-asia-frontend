@@ -45,6 +45,7 @@ import { ErrorBlock } from '@/components/admin/error-block';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { LiveBadge } from '@/components/admin/live-badge';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
+import { fmtDateTime, fmtNumber } from '@/lib/format';
 
 interface SepayTransaction {
   id: string;
@@ -141,14 +142,6 @@ async function fetchRefunds(): Promise<RefundsEnvelope> {
   }
 }
 
-function fmtTs(ts: string) {
-  const d = new Date(ts.replace(' ', 'T'));
-  if (Number.isNaN(d.getTime())) return ts;
-  return d.toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
-}
-function fmtVnd(amount: number) {
-  return new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(amount);
-}
 /** Trích mã đơn hieu.asia "HIEUASIA xxxxxxxx" từ nội dung CK. */
 function orderCode(content: string | null): string | null {
   const m = (content ?? '').toUpperCase().match(/HIEUASIA\s+([A-Z0-9]{8})/);
@@ -366,7 +359,7 @@ function AdminSepayPageInner() {
       id: 'time',
       header: 'Thời gian',
       className: 'whitespace-nowrap text-foreground/80',
-      cell: (t) => fmtTs(t.transaction_date),
+      cell: (t) => fmtDateTime(t.transaction_date),
     },
     {
       id: 'order',
@@ -396,7 +389,7 @@ function AdminSepayPageInner() {
         const amtIn = parseFloat(t.amount_in || '0');
         return (
           <span className={cn('font-mono tabular-nums', amtIn > 0 ? 'text-emerald-500' : 'text-muted-foreground')}>
-            {amtIn > 0 ? `+${fmtVnd(amtIn)}` : '—'}
+            {amtIn > 0 ? `+${fmtNumber(amtIn)}` : '—'}
           </span>
         );
       },
@@ -410,7 +403,7 @@ function AdminSepayPageInner() {
       cell: (t) => {
         const v = parseFloat(t.amount_out || '0');
         return v > 0 ? (
-          <span className="font-mono tabular-nums text-red-400">−{fmtVnd(v)}</span>
+          <span className="font-mono tabular-nums text-red-400">−{fmtNumber(v)}</span>
         ) : (
           <span className="text-muted-foreground">—</span>
         );
@@ -424,7 +417,7 @@ function AdminSepayPageInner() {
       cell: (t) => {
         const v = parseFloat(t.accumulated || '0');
         return v > 0 ? (
-          <span className="font-mono tabular-nums text-foreground/80">{fmtVnd(v)}</span>
+          <span className="font-mono tabular-nums text-foreground/80">{fmtNumber(v)}</span>
         ) : (
           <span className="text-muted-foreground">—</span>
         );
@@ -473,13 +466,13 @@ function AdminSepayPageInner() {
       id: 'time',
       header: 'Thời gian',
       className: 'whitespace-nowrap text-foreground/80',
-      cell: (r) => fmtTs(r.requested_at),
+      cell: (r) => fmtDateTime(r.requested_at),
     },
     {
       id: 'amount',
       header: 'Số tiền',
       className: 'text-right',
-      cell: (r) => <span className="font-mono tabular-nums text-red-400">−{fmtVnd(r.amount)}</span>,
+      cell: (r) => <span className="font-mono tabular-nums text-red-400">−{fmtNumber(r.amount)}</span>,
     },
     {
       id: 'reason',
@@ -589,7 +582,7 @@ function AdminSepayPageInner() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard label="Giao dịch tiền vào" value={txns.filter((t) => parseFloat(t.amount_in || '0') > 0).length} icon={<Activity className="h-4 w-4" />} accent="jade" />
-        <KpiCard label="Tổng tiền vào (VND)" value={fmtVnd(totalIn)} icon={<DollarSign className="h-4 w-4" />} accent="gold" />
+        <KpiCard label="Tổng tiền vào (VND)" value={fmtNumber(totalIn)} icon={<DollarSign className="h-4 w-4" />} accent="gold" />
         <KpiCard label="Đơn hieu.asia" value={orderCount} hint="có mã HIEUASIA" icon={<Tag className="h-4 w-4" />} accent="purple" />
         <KpiCard label="Hoàn tiền chờ xử lý" value={pendingRefunds} icon={<Clock className="h-4 w-4" />} accent={pendingRefunds > 0 ? 'warn' : undefined} />
       </div>
@@ -800,7 +793,7 @@ function ReconcileView() {
       id: 'time',
       header: 'Thời gian',
       className: 'whitespace-nowrap text-foreground/80',
-      cell: (r) => fmtTs(r.txn.transaction_date),
+      cell: (r) => fmtDateTime(r.txn.transaction_date),
     },
     {
       id: 'code',
@@ -892,7 +885,7 @@ function ReconcileView() {
                 <tbody>
                   {orphan.map((r, i) => (
                     <tr key={r.txn.id ?? i} className="border-b border-border/40 last:border-0">
-                      <td className="whitespace-nowrap px-4 py-2.5 text-foreground/80">{fmtTs(r.txn.transaction_date)}</td>
+                      <td className="whitespace-nowrap px-4 py-2.5 text-foreground/80">{fmtDateTime(r.txn.transaction_date)}</td>
                       <td className="px-4 py-2.5 font-mono text-xs">{r.code}</td>
                       <td className="px-4 py-2.5 text-right font-mono tabular-nums">+{new Intl.NumberFormat('vi-VN').format(parseFloat(r.txn.amount_in || '0'))}</td>
                       <td className="px-4 py-2.5 font-mono text-xs">{r.txn.reference_number ?? '—'}</td>
@@ -1075,9 +1068,9 @@ function DashboardView() {
   return (
     <div className="space-y-4">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <KpiCard label="Doanh thu" value={fmtVnd(revenue)} icon={<DollarSign className="h-4 w-4" />} accent="gold" />
+        <KpiCard label="Doanh thu" value={fmtNumber(revenue)} icon={<DollarSign className="h-4 w-4" />} accent="gold" />
         <KpiCard label="Đơn đã trả" value={paid.length} icon={<CheckCircle2 className="h-4 w-4" />} accent="jade" />
-        <KpiCard label="Giá TB / đơn" value={fmtVnd(aov)} icon={<Tag className="h-4 w-4" />} accent="purple" />
+        <KpiCard label="Giá TB / đơn" value={fmtNumber(aov)} icon={<Tag className="h-4 w-4" />} accent="purple" />
         <KpiCard label="Tỉ lệ chốt" value={`${conv}%`} hint={`${paid.length}/${created.length} đơn`} icon={<Activity className="h-4 w-4" />} />
       </div>
 
@@ -1095,7 +1088,7 @@ function DashboardView() {
                   <tr key={x.user_id} className="border-b border-border/40 last:border-0">
                     <td className="px-4 py-2"><a href={`/customers/${x.user_id}`} className="font-mono text-xs text-gold hover:underline">{x.user_id.slice(0, 12)}…</a></td>
                     <td className="px-4 py-2 text-xs">cần <span className="text-emerald-500">{x.expected_plan}</span> · đang <span className="text-red-500">{x.actual_plan ?? 'free'}</span></td>
-                    <td className="px-4 py-2 text-right text-xs text-muted-foreground">{fmtTs(x.last_paid_at)}</td>
+                    <td className="px-4 py-2 text-right text-xs text-muted-foreground">{fmtDateTime(x.last_paid_at)}</td>
                     <td className="px-4 py-2 text-right">
                       <DriftFixDialog drift={x} onSuccess={() => driftQ.refetch()} />
                     </td>
@@ -1118,7 +1111,7 @@ function DashboardView() {
           <CardContent>
             <div className="flex h-32 items-end gap-1">
               {days.map((x) => (
-                <div key={x.day} className="group flex flex-1 flex-col items-center justify-end" title={`${x.day}: ${fmtVnd(x.rev)}`}>
+                <div key={x.day} className="group flex flex-1 flex-col items-center justify-end" title={`${x.day}: ${fmtNumber(x.rev)}`}>
                   <div className="w-full rounded-t bg-gold/60 transition-all group-hover:bg-gold" style={{ height: `${Math.max(2, (x.rev / maxDayRev) * 100)}%` }} />
                 </div>
               ))}
@@ -1140,7 +1133,7 @@ function DashboardView() {
                 <div key={tier}>
                   <div className="flex justify-between text-xs">
                     <span>{TIER_LABEL[tier] ?? tier} <span className="text-muted-foreground">({v.count})</span></span>
-                    <span className="font-mono tabular-nums text-foreground/80">{fmtVnd(v.rev)}</span>
+                    <span className="font-mono tabular-nums text-foreground/80">{fmtNumber(v.rev)}</span>
                   </div>
                   <div className="mt-0.5 h-1.5 rounded bg-muted/10">
                     <div className="h-1.5 rounded bg-gold/70" style={{ width: `${(v.rev / maxTierRev) * 100}%` }} />
@@ -1165,9 +1158,9 @@ function DashboardView() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-1.5 text-sm">
-            <div className="flex justify-between"><span className="text-muted-foreground">Webhook cuối</span><span className="font-mono">{healthQ.data?.last_webhook_at ? fmtTs(healthQ.data.last_webhook_at) : '—'}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">Webhook cuối</span><span className="font-mono">{healthQ.data?.last_webhook_at ? fmtDateTime(healthQ.data.last_webhook_at) : '—'}</span></div>
             <div className="flex justify-between"><span className="text-muted-foreground">Webhook 24h</span><span className="font-mono">{healthQ.data?.webhooks_24h ?? 0}</span></div>
-            <div className="flex justify-between"><span className="text-muted-foreground">Thanh toán cuối</span><span className="font-mono">{healthQ.data?.last_paid_at ? fmtTs(healthQ.data.last_paid_at) : '—'}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">Thanh toán cuối</span><span className="font-mono">{healthQ.data?.last_paid_at ? fmtDateTime(healthQ.data.last_paid_at) : '—'}</span></div>
           </CardContent>
         </Card>
 

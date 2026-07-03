@@ -33,6 +33,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, colors } fro
 import { listTransactions } from '@/lib/admin-api';
 import { DonutChart, type DonutSlice } from '@/components/admin/donut-chart';
 import type { AdminTransaction } from '@/lib/mock-data';
+import { fmtVnd } from '@/lib/format';
 
 const GOLD = colors.gold.DEFAULT;
 const JADE = colors.jade.DEFAULT;
@@ -40,11 +41,6 @@ const PURPLE = colors.purple.DEFAULT;
 const REFUND_RED = '#C2410C';
 
 const REVENUE_WINDOW_DAYS = 14;
-
-/** VND formatter — mirrors /payments + /sepay (amount_usd actually holds VND). */
-function fmtVnd(amount: number): string {
-  return new Intl.NumberFormat('vi-VN').format(amount) + 'đ';
-}
 
 function dayKey(d: Date): string {
   const y = d.getFullYear();

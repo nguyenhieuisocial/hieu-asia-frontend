@@ -24,6 +24,7 @@ import { Tag } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
+import { fmtVnd } from '@/lib/format';
 
 interface FeaturePrice {
   slug: string;
@@ -96,7 +97,7 @@ export default function FeaturePricesPage() {
   const saveMut = useMutation({
     mutationFn: updatePrice,
     onSuccess: (item) => {
-      toast.success('Đã lưu', { description: `${item.label}: ${item.vnd === 0 ? 'Miễn phí' : item.vnd.toLocaleString('vi-VN') + 'đ'}` });
+      toast.success('Đã lưu', { description: `${item.label}: ${item.vnd === 0 ? 'Miễn phí' : fmtVnd(item.vnd)}` });
       qc.invalidateQueries({ queryKey: ['admin', 'feature-prices'] });
     },
     onError: (e) => toast.error('Lưu thất bại', { description: (e as Error).message }),

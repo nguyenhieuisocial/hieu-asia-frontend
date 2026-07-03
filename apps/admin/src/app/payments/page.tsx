@@ -32,11 +32,7 @@ import { LiveBadge } from '@/components/admin/live-badge';
 import { TransactionsTab } from '@/components/admin/payments/TransactionsTab';
 import { PaymentCharts } from '@/components/payments/PaymentCharts';
 import type { AdminTransaction } from '@/lib/mock-data';
-
-/** VND formatter — mirrors /sepay (no USD anywhere in this product). */
-function fmtVnd(amount: number): string {
-  return new Intl.NumberFormat('vi-VN').format(amount) + 'đ';
-}
+import { fmtVnd } from '@/lib/format';
 
 export default function AdminPaymentsPage() {
   // KPI tracking surfaces — kept in the page so the strip updates as the

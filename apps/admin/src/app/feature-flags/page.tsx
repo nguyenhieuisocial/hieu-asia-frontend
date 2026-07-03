@@ -37,6 +37,7 @@ import { ErrorBlock } from '@/components/admin/error-block';
 import { useOptimisticMutation } from '@/lib/optimistic-mutation';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
 import { clampRolloutPct } from '@/lib/rollout-pct';
+import { fmtDateTime } from '@/lib/format';
 
 interface FeatureFlag {
   key: string;
@@ -72,15 +73,6 @@ interface ToggleVars {
   key: string;
   enabled: boolean;
   rollout_pct?: number;
-}
-
-function fmtDate(iso?: string | null) {
-  if (!iso) return '—';
-  try {
-    return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
-  } catch {
-    return iso;
-  }
 }
 
 async function fetchFlags(): Promise<FlagsResponse> {
@@ -132,7 +124,7 @@ function HistoryRow({ entry }: { entry: AuditEntry }) {
   return (
     <li className="rounded-lg border border-gold/15 bg-card/60 px-3 py-2.5">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="font-mono text-[11px] text-muted-foreground">{fmtDate(entry.ts)}</span>
+        <span className="font-mono text-[11px] text-muted-foreground">{fmtDateTime(entry.ts)}</span>
         <span className="truncate font-mono text-[11px] text-gold" title={entry.actor ?? ''}>
           {entry.actor ?? '—'}
         </span>
@@ -317,7 +309,7 @@ function FlagRow({
         </div>
 
         <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-          Cập nhật: {fmtDate(flag.last_modified)}
+          Cập nhật: {fmtDateTime(flag.last_modified)}
         </p>
       </div>
       <div className="flex items-center gap-3">

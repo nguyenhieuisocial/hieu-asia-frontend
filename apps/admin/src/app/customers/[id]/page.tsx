@@ -43,6 +43,7 @@ import { CustomerIntelligenceCard } from '@/components/admin/customers/CustomerI
 import { PlanBadge } from '@/components/admin/customers/PlanBadge';
 import { SetPlanDialog } from '@/components/admin/customers/SetPlanDialog';
 import { ContactCustomerDialog } from '@/components/admin/ContactCustomerDialog';
+import { fmtVnd } from '@/lib/format';
 import type {
   CustomerDetailResponse,
 } from '@/components/admin/customers/detail-types';
@@ -281,9 +282,7 @@ function CustomerDetailPageInner() {
         <KpiCard
           label="Tổng chi tiêu"
           value={
-            totalSpend > 0
-              ? new Intl.NumberFormat('vi-VN').format(totalSpend) + ' đ'
-              : '—'
+            totalSpend > 0 ? fmtVnd(totalSpend) : '—'
           }
           icon={<Receipt className="h-4 w-4" aria-hidden />}
           accent="purple"

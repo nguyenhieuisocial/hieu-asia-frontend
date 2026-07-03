@@ -14,6 +14,7 @@ import {
 } from 'recharts';
 import { colors } from '@hieu-asia/ui';
 import type { NetRevenueDay } from '@/lib/net-revenue';
+import { fmtVnd } from '@/lib/format';
 
 // Gross = gold (same token as the revenue bar chart); net = jade (tiền giữ lại).
 const GOLD = colors.gold.DEFAULT;
@@ -50,10 +51,7 @@ export function NetRevenueChart({ data }: { data: NetRevenueDay[] }) {
             formatter={(value: unknown, name: unknown) => {
               const n = typeof value === 'number' ? value : Number(value);
               const key = String(name);
-              return [
-                new Intl.NumberFormat('vi-VN').format(n) + ' đ',
-                SERIES_LABEL[key] ?? key,
-              ];
+              return [fmtVnd(n), SERIES_LABEL[key] ?? key];
             }}
           />
           <Legend

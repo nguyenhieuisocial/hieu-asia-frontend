@@ -84,9 +84,3 @@ export async function fetchFraudReport(): Promise<FraudReportResponse> {
   const r = await fetch('/api/admin/affiliates/fraud-report', { cache: 'no-store' });
   return jsonOk<FraudReportResponse>(r);
 }
-
-// ----- Formatting helpers -----
-
-export function vnd(n: number): string {
-  return n.toLocaleString('vi-VN') + 'đ';
-}

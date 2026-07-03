@@ -27,6 +27,7 @@ import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
 import { UptimeMonitorDrawer } from '@/components/admin/infra/UptimeMonitorDrawer';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
+import { fmtDateTime } from '@/lib/format';
 
 const tool = getInfraTool('uptime')!;
 
@@ -37,13 +38,6 @@ function fmtNum(n: number): string {
 function fmtMs(ms: number | null | undefined): string {
   if (ms == null) return '—';
   return `${Math.round(ms).toLocaleString('vi-VN')} ms`;
-}
-
-function fmtTime(iso: string | null): string {
-  if (!iso) return '—';
-  const t = Date.parse(iso);
-  if (Number.isNaN(t)) return '—';
-  return new Date(t).toLocaleString('vi-VN');
 }
 
 /** SSL days-until-expiry — red text when ≤14 days, "—" when not applicable. */
@@ -135,7 +129,7 @@ const MONITOR_COLUMNS: AdminTableColumn<InfraUptimeItem>[] = [
     id: 'last',
     header: 'Kiểm gần nhất',
     className: 'whitespace-nowrap text-xs text-muted-foreground',
-    cell: (m) => fmtTime(m.last_checked_at),
+    cell: (m) => fmtDateTime(m.last_checked_at),
   },
 ];
 
@@ -208,8 +202,8 @@ export default function InfraUptimePage() {
                       <div className="min-w-0">
                         <p className="truncate font-medium text-foreground">{inc.name}</p>
                         <p className="mt-0.5 text-xs text-muted-foreground">
-                          Bắt đầu {fmtTime(inc.started_at)}
-                          {inc.resolved_at ? ` · Đã xử lý ${fmtTime(inc.resolved_at)}` : ''}
+                          Bắt đầu {fmtDateTime(inc.started_at)}
+                          {inc.resolved_at ? ` · Đã xử lý ${fmtDateTime(inc.resolved_at)}` : ''}
                         </p>
                       </div>
                       <InfraStatusPill

@@ -72,6 +72,7 @@ import {
 import { getGscSearchAnalytics } from '@/lib/gsc-api';
 import { getLlmSpendKpis } from '@/lib/llm-spend-api';
 import { Search, MousePointerClick, Percent, Gauge } from 'lucide-react';
+import { fmtVnd } from '@/lib/format';
 
 /** BUG-022: surface a visual alert + Triage CTA when oldest pending > 60 min. */
 const QUEUE_ALERT_AGE_SECONDS = 60 * 60;
@@ -82,10 +83,7 @@ const QUEUE_ALERT_AGE_SECONDS = 60 * 60;
 const QUEUE_CRITICAL_AGE_SECONDS = 4 * 60 * 60;
 
 // #55: weekly_revenue_usd actually holds VND (SePay), despite the legacy field
-// name — format as VND, not USD.
-function fmtVnd(v: number) {
-  return `${v.toLocaleString('vi-VN', { maximumFractionDigits: 0 })}đ`;
-}
+// name — format as VND (fmtVnd from @/lib/format), not USD.
 
 function fmtUsdSmall(v: number) {
   if (v < 1) return `$${v.toFixed(2)}`;

@@ -9,6 +9,7 @@
  */
 
 import * as React from 'react';
+import { fmtDateTime } from '@/lib/format';
 import {
   Button,
   Card,
@@ -39,14 +40,6 @@ const CHANNEL_LABEL: Record<Channel, string> = {
   email: 'Email',
   telegram: 'Telegram',
 };
-
-function dt(iso: string) {
-  try {
-    return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
-  } catch {
-    return iso;
-  }
-}
 
 export function BroadcastTab() {
   const [subject, setSubject] = React.useState('');
@@ -206,7 +199,7 @@ export function BroadcastTab() {
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-semibold">{b.subject}</span>
-                    <span className="text-xs text-muted-foreground">{dt(b.created_at)}</span>
+                    <span className="text-xs text-muted-foreground">{fmtDateTime(b.created_at)}</span>
                   </div>
                   <p className="mt-1 line-clamp-2 text-muted-foreground">{b.body}</p>
                   <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">

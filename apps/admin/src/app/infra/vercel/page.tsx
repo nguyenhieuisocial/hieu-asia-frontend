@@ -27,6 +27,7 @@ import {
 import { useAdminRole } from '@/hooks/useAdminRole';
 import { getInfraTool } from '@/lib/infra-tools';
 import { formatDateOrEmpty, formatRelativeOrEmpty } from '@/lib/format-date';
+import { fmtPct } from '@/lib/format';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
 import { VercelDeployDrawer } from '@/components/admin/infra/VercelDeployDrawer';
@@ -101,10 +102,6 @@ function stateTone(state: string | null): 'good' | 'bad' | 'warn' | 'neutral' {
     default:
       return 'neutral';
   }
-}
-
-function fmtPct(pct: number): string {
-  return `${pct.toFixed(1)}%`;
 }
 
 // minutes → "2 giờ trước" / "15 phút trước" / "1 ngày trước"
@@ -245,7 +242,7 @@ export default function InfraVercelPage() {
               {summary.success_rate_pct != null && (
                 <StatCard
                   label="Tỉ lệ thành công"
-                  value={fmtPct(summary.success_rate_pct)}
+                  value={fmtPct(summary.success_rate_pct / 100)}
                 />
               )}
               {summary.last_prod_state != null && (
