@@ -31,6 +31,8 @@ import {
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
+import { PipelineDiagram } from '@/components/prompts/PipelineDiagram';
+import { WiringBadge, type PromptMeta } from '@/components/prompts/prompt-meta';
 import {
   formatDateOrEmpty,
   formatRelativeOrEmpty,
@@ -80,6 +82,8 @@ export interface PromptSummary {
   version: number;
   /** `true` if KV has an override; `false` if currently using built-in default. */
   is_custom: boolean;
+  /** Ý nghĩa & kết nối (backend #351). undefined nếu worker cũ chưa deploy. */
+  meta?: PromptMeta;
 }
 
 /** Raw worker row — does NOT include `is_custom`; we derive it on the FE. */
@@ -89,6 +93,8 @@ interface RawPrompt {
   updated_at: string | null;
   updated_by: string | null;
   version: number;
+  /** Backend #351 — worker cũ chưa deploy thì thiếu field này. */
+  meta?: PromptMeta;
 }
 
 interface ListResp {
@@ -117,9 +123,10 @@ async function fetchPrompts(): Promise<PromptSummary[]> {
 }
 
 // Wave 52-C — Date formatters live in `@/lib/format-date` now so the
-// "1970-01-01" leak fix (treat 0/null/"" as missing → "Chưa override")
-// applies consistently across every admin page.
-const fmtDate = (iso: string | null) => formatDateOrEmpty(iso, 'Chưa override');
+// "1970-01-01" leak fix (treat 0/null/"" as missing) applies consistently
+// across every admin page. Fallback "Bản chuẩn hệ thống" (task #30): chưa có
+// ngày cập nhật nghĩa là đang dùng bản chuẩn, chưa ai chỉnh.
+const fmtDate = (iso: string | null) => formatDateOrEmpty(iso, 'Bản chuẩn hệ thống');
 const fmtRelative = (iso: string | null) => formatRelativeOrEmpty(iso);
 
 type FilterMode = 'all' | 'custom' | 'default';
@@ -151,7 +158,8 @@ export default function PromptsListPage() {
       if (filterMode === 'custom' && !p?.is_custom) return false;
       if (filterMode === 'default' && p?.is_custom) return false;
       if (q) {
-        const haystack = `${role} ${meta.label} ${meta.tagline}`.toLowerCase();
+        const haystack =
+          `${role} ${meta.label} ${meta.tagline} ${p?.meta?.label ?? ''} ${p?.meta?.summary ?? ''}`.toLowerCase();
         if (!haystack.includes(q)) return false;
       }
       return true;
@@ -184,38 +192,41 @@ export default function PromptsListPage() {
     <div className="space-y-6">
       <PageHeader
         title="Prompt Editor"
-        description={`Chỉnh system prompt cho ${ROLES.length} vai trò AI (pipeline đọc + mentor + judge + cố vấn quyết định + trợ lý vận hành). Lưu vào KV để override default.`}
+        description={`Chỉnh system prompt cho ${ROLES.length} vai trò AI (pipeline đọc + mentor + judge + cố vấn quyết định + trợ lý vận hành). Lưu vào KV để ghi đè bản chuẩn hệ thống.`}
         icon={<Sparkles className="h-5 w-5" />}
         badge={
           customCount > 0 ? (
             <span className="rounded-full border border-gold/20 bg-gold/10 px-2 py-0.5 font-mono text-[10px] text-gold">
-              {customCount}/{ROLES.length} custom
+              {customCount}/{ROLES.length} tùy chỉnh
             </span>
           ) : null
         }
       />
 
+      {/* Sơ đồ kết nối 9 prompt — click node cuộn tới card role bên dưới. */}
+      <PipelineDiagram />
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard
-          label="Total roles"
+          label="Tổng vai trò"
           value={ROLES.length}
           icon={<Sparkles className="h-4 w-4" />}
           accent="gold"
-          hint="agent pipeline"
+          hint="pipeline + ngoài pipeline"
         />
         <KpiCard
-          label="Custom overrides"
+          label="Bản tùy chỉnh"
           value={customCount}
           icon={<FileText className="h-4 w-4" />}
           accent="purple"
-          hint={`${ROLES.length - customCount} default`}
+          hint={`${ROLES.length - customCount} bản chuẩn hệ thống`}
         />
         <KpiCard
-          label="Total versions"
+          label="Tổng phiên bản"
           value={totalVersions || '—'}
           icon={<Scale className="h-4 w-4" />}
           accent="jade"
-          hint="lifetime edits"
+          hint="tổng lần chỉnh sửa"
         />
         <KpiCard
           label="Cập nhật cuối"
@@ -242,7 +253,8 @@ export default function PromptsListPage() {
           <AlertTitle>Worker endpoint chưa sẵn sàng</AlertTitle>
           <AlertDescription>
             <code className="font-mono text-xs">GET /admin/prompts</code> trả 404 hoặc empty. Sẽ
-            hiển thị 7 thẻ rỗng — click để edit thử (PUT có thể fail cho đến khi Worker deploy).
+            hiển thị {ROLES.length} thẻ rỗng — click để edit thử (PUT có thể fail cho đến khi
+            Worker deploy).
           </AlertDescription>
         </Alert>
       )}
@@ -278,13 +290,13 @@ export default function PromptsListPage() {
           onClick={handleFilterAll}
         />
         <FilterChip
-          label="Custom"
+          label="Bản tùy chỉnh"
           count={customCount}
           active={filterMode === 'custom'}
           onClick={handleFilterCustom}
         />
         <FilterChip
-          label="Default"
+          label="Bản chuẩn"
           count={ROLES.length - customCount}
           active={filterMode === 'default'}
           onClick={handleFilterDefault}
@@ -305,7 +317,12 @@ export default function PromptsListPage() {
           const meta = ROLE_META[role];
           const p = byRole.get(role);
           return (
-            <Link key={role} href={`/prompts/${role}`} className="group focus:outline-none">
+            <Link
+              key={role}
+              id={`role-card-${role}`}
+              href={`/prompts/${role}`}
+              className="group scroll-mt-24 focus:outline-none"
+            >
               <Card className="h-full border-gold/15 transition-all duration-300 ease-editorial group-hover:border-gold/40 group-hover:shadow-[0_8px_28px_-12px_rgba(184,146,61,0.18)] group-focus-visible:border-gold/60">
                 <CardHeader className="flex flex-row items-start gap-3">
                   <div className="rounded-md border border-gold/25 bg-gold/10 p-2 text-gold">
@@ -313,10 +330,14 @@ export default function PromptsListPage() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
-                      <CardTitle className="text-base text-foreground">{meta.label}</CardTitle>
+                      <CardTitle className="text-base text-foreground">
+                        {p?.meta?.label ?? meta.label}
+                      </CardTitle>
                       <ChevronRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-gold" />
                     </div>
-                    <p className="mt-1 text-xs text-muted-foreground">{meta.tagline}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {p?.meta?.summary ?? meta.tagline}
+                    </p>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-2 pt-0">
@@ -324,18 +345,17 @@ export default function PromptsListPage() {
                     <Skeleton className="h-5 w-24" />
                   ) : (
                     <div className="flex flex-wrap items-center gap-2">
+                      {/* Task #30 — version 0 = đang dùng bản chuẩn; v>=1 = bản tùy chỉnh. */}
                       {p?.is_custom ? (
-                        <span className="inline-flex items-center rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-gold">
-                          custom
+                        <span className="inline-flex items-center rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 text-[10px] text-gold">
+                          Bản tùy chỉnh v{p.version}
                         </span>
                       ) : (
-                        <span className="inline-flex items-center rounded-full border border-border bg-muted/30 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                          default
+                        <span className="inline-flex items-center rounded-full border border-border bg-muted/30 px-2 py-0.5 text-[10px] text-muted-foreground">
+                          Bản chuẩn hệ thống
                         </span>
                       )}
-                      <span className="inline-flex items-center rounded-full border border-border bg-muted/30 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                        v{p?.version ?? 1}
-                      </span>
+                      {p?.meta && <WiringBadge wiring={p.meta.wiring} note={p.meta.wiring_note} />}
                     </div>
                   )}
                   <div className="text-xs text-muted-foreground">
