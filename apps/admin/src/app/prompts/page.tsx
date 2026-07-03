@@ -17,9 +17,11 @@ import {
   Eye,
   Brain,
   Heart,
+  Bot,
   Compass,
   FileText,
   GraduationCap,
+  Lightbulb,
   Scale,
   ChevronRight,
   Search,
@@ -35,7 +37,8 @@ import {
   isMissingDate,
 } from '@/lib/format-date';
 
-/** Canonical agent roles. Must match Worker KV keys. */
+/** Canonical agent roles. Must match Worker KV keys (backend PROMPT_ROLES —
+ *  9 roles kể từ backend #348: thêm decisions + ops_copilot). */
 const ROLES = [
   'vision',
   'logic',
@@ -44,6 +47,8 @@ const ROLES = [
   'report',
   'mentor',
   'judge',
+  'decisions',
+  'ops_copilot',
 ] as const;
 type Role = (typeof ROLES)[number];
 
@@ -55,6 +60,16 @@ const ROLE_META: Record<Role, { label: string; tagline: string; Icon: LucideIcon
   report: { label: 'Report', tagline: 'Tổng hợp báo cáo cuối cùng', Icon: FileText },
   mentor: { label: 'Mentor', tagline: 'Chat tiếp theo sau khi đọc xong', Icon: GraduationCap },
   judge: { label: 'Judge', tagline: 'Kiểm tra chất lượng & nhất quán', Icon: Scale },
+  decisions: {
+    label: 'Decisions',
+    tagline: 'Cố vấn "Giả lập quyết định" (persona + quy tắc; schema JSON do code giữ)',
+    Icon: Lightbulb,
+  },
+  ops_copilot: {
+    label: 'Ops Copilot',
+    tagline: 'Trợ lý vận hành admin — trả lời chủ từ số liệu hệ thống',
+    Icon: Bot,
+  },
 };
 
 export interface PromptSummary {
@@ -169,7 +184,7 @@ export default function PromptsListPage() {
     <div className="space-y-6">
       <PageHeader
         title="Prompt Editor"
-        description="Chỉnh system prompt cho 7 vai trò trong pipeline agent. Lưu vào KV để override default."
+        description={`Chỉnh system prompt cho ${ROLES.length} vai trò AI (pipeline đọc + mentor + judge + cố vấn quyết định + trợ lý vận hành). Lưu vào KV để override default.`}
         icon={<Sparkles className="h-5 w-5" />}
         badge={
           customCount > 0 ? (
