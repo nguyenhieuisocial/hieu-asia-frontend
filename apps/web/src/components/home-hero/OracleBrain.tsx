@@ -6,6 +6,8 @@ import { ShimmerText } from '@/components/fx/ShimmerText';
 import { Marquee } from '@/components/fx/Marquee';
 import type { BanMenhData } from '@/lib/ban-menh-data';
 import { Time24 } from '@/components/Time24';
+// Diễn giải Bát Tự đời thường (data tĩnh nhỏ, dùng chung — engine vẫn lazy-import).
+import { CAN_PLAIN, TEN_GOD_PLAIN, NGU_HANH_PLAIN } from '@/lib/bat-tu-plain';
 
 /**
  * OracleBrain — the signature "night-sky" section: the whole toolkit (Eastern
@@ -615,27 +617,43 @@ export function OracleBrain(): React.JSX.Element {
                 <span className="ob-lens-tag">Bát Tự — Tứ Trụ</span>
                 <p className="ob-lens-line">
                   <strong>
-                    Nhật Chủ (chủ mệnh): {reveal.bazi.dayCan} —{' '}
-                    {reveal.bazi.dayYang ? 'dương' : 'âm'} {reveal.bazi.dayEl}
+                    "Chất gốc" của bạn: {reveal.bazi.dayCan} — hình tượng{' '}
+                    {CAN_PLAIN[reveal.bazi.dayCan]?.hinh ?? reveal.bazi.dayEl}
                   </strong>
                 </p>
+                {CAN_PLAIN[reveal.bazi.dayCan] && (
+                  <p className="ob-lens-sub">{CAN_PLAIN[reveal.bazi.dayCan]!.blurb}</p>
+                )}
+                {TEN_GOD_PLAIN[reveal.bazi.monthTenGod] && (
+                  <p className="ob-lens-sub">
+                    Nền công việc & trưởng thành (trụ tháng {reveal.bazi.monthTenGod}):{' '}
+                    {TEN_GOD_PLAIN[reveal.bazi.monthTenGod]}
+                  </p>
+                )}
                 <p className="ob-lens-sub">
-                  Tứ Trụ: năm {reveal.bazi.yearPillar} · tháng {reveal.bazi.monthPillar} · ngày{' '}
-                  {reveal.bazi.dayPillar}
+                  "Mã thời gian" của bạn — Tứ Trụ: năm {reveal.bazi.yearPillar} · tháng{' '}
+                  {reveal.bazi.monthPillar} · ngày {reveal.bazi.dayPillar}
                   {reveal.bazi.hourPillar && <> · giờ {reveal.bazi.hourPillar}</>}.
                 </p>
                 <p className="ob-lens-sub">
-                  Thập Thần trụ tháng: {reveal.bazi.monthTenGod}.
                   {reveal.bazi.hourPillar ? (
                     <>
-                      {reveal.bazi.strongest && <> Ngũ hành vượng {reveal.bazi.strongest}</>}
-                      {reveal.bazi.missing.length > 0 && (
-                        <> · thiếu {reveal.bazi.missing.join(', ')}</>
+                      {reveal.bazi.strongest && (
+                        <>
+                          Trong bạn, chất {reveal.bazi.strongest} đang trội —{' '}
+                          {NGU_HANH_PLAIN[reveal.bazi.strongest]?.vuong}.
+                        </>
                       )}
-                      {(reveal.bazi.strongest || reveal.bazi.missing.length > 0) && <>.</>}
+                      {reveal.bazi.missing.length > 0 && (
+                        <>
+                          {' '}
+                          Hơi thiếu chất {reveal.bazi.missing.join(', ')} —{' '}
+                          {NGU_HANH_PLAIN[reveal.bazi.missing[0]!]?.thieu}.
+                        </>
+                      )}
                     </>
                   ) : (
-                    <> Thêm giờ sinh (không bắt buộc) để mở trụ giờ + cân bằng ngũ hành đầy đủ.</>
+                    <>Thêm giờ sinh (không bắt buộc) để xem chất nào đang trội / còn thiếu trong bạn.</>
                   )}
                 </p>
               </div>
