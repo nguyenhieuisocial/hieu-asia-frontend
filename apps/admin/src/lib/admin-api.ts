@@ -1076,6 +1076,10 @@ function mapPaymentToAdmin(t: PaymentTxn): AdminTransaction | null {
     status,
     created_at: t.created_at,
     stripe_id: t.intent_id ?? '',
+    // Gap audit 2026-07-02 — pass the raw joins through so the UI can link the
+    // customer and show metadata (coupon/tool/session/underpaid) it always had.
+    user_id: t.user_id ?? null,
+    metadata: md,
   };
 }
 

@@ -11,6 +11,7 @@ import { use } from 'react';
 import Link from 'next/link';
 import { AlertTriangle } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, StatusBadge } from '@hieu-asia/ui';
+import { TaxKycCard } from '@/components/admin/affiliates/TaxKycCard';
 import { fetchFraudReport, type FraudFlag } from '@/lib/affiliate-admin-api';
 
 type PreferredRail = 'manual_csv' | 'wise' | 'stripe_connect';
@@ -352,6 +353,9 @@ export default function AdminAffiliateDetailPage({
             </div>
           </CardContent>
         </Card>
+
+        {/* Thuế & KYC — gap audit 2026-07-02 (route worker mới, MST masked) */}
+        <TaxKycCard userId={id} />
 
         {/* Payout Rail (Wave 45) */}
         <Card>

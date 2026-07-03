@@ -401,6 +401,34 @@ function AdminSepayPageInner() {
       },
     },
     {
+      // Gap audit 2026-07-02 — SePay trả amount_out + accumulated (số dư chạy)
+      // từ ngày đầu nhưng bảng chỉ hiện tiền vào → đối soát thiếu nửa bức tranh.
+      id: 'amount_out',
+      header: 'Tiền ra',
+      className: 'text-right',
+      cell: (t) => {
+        const v = parseFloat(t.amount_out || '0');
+        return v > 0 ? (
+          <span className="font-mono tabular-nums text-red-400">−{fmtVnd(v)}</span>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        );
+      },
+    },
+    {
+      id: 'accumulated',
+      header: 'Số dư',
+      className: 'text-right',
+      cell: (t) => {
+        const v = parseFloat(t.accumulated || '0');
+        return v > 0 ? (
+          <span className="font-mono tabular-nums text-foreground/80">{fmtVnd(v)}</span>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        );
+      },
+    },
+    {
       id: 'reference',
       header: 'Tham chiếu',
       className: 'font-mono text-xs',
@@ -454,6 +482,44 @@ function AdminSepayPageInner() {
       header: 'Lý do',
       className: 'max-w-xs',
       cell: (r) => <span className="line-clamp-2 text-foreground/75">{r.reason}</span>,
+    },
+    {
+      // Gap audit 2026-07-02 — intent_id/reference có trên record nhưng không
+      // hiển thị → không tra được refund thuộc đơn nào. intent_id là khoá nối
+      // sang đối soát/payments; nối thẳng tới hồ sơ khách cần backend trả
+      // user_id (follow-up, không làm bừa ở FE).
+      id: 'intent',
+      header: 'Đơn gốc',
+      className: 'font-mono text-xs',
+      cell: (r) =>
+        r.intent_id ? (
+          <span title={r.reference ? `ref: ${r.reference}` : r.intent_id}>
+            {r.intent_id.slice(0, 14)}…
+          </span>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        ),
+    },
+    {
+      id: 'actors',
+      header: 'Ai xử lý',
+      className: 'max-w-[220px] text-xs',
+      cell: (r) => {
+        const steps = [
+          r.requested_by ? `yêu cầu: ${r.requested_by}` : null,
+          r.accepted_by ? `duyệt: ${r.accepted_by}` : null,
+          r.completed_by ? `hoàn: ${r.completed_by}` : null,
+          r.rejected_by ? `từ chối: ${r.rejected_by}` : null,
+          r.note ? `ghi chú: ${r.note}` : null,
+        ].filter((s): s is string => !!s);
+        return steps.length ? (
+          <span className="line-clamp-2 text-muted-foreground" title={steps.join('\n')}>
+            {steps.join(' · ')}
+          </span>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        );
+      },
     },
     {
       id: 'status',

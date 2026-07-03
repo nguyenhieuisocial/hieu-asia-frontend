@@ -310,6 +310,12 @@ export interface AdminTransaction {
   status: 'succeeded' | 'refunded' | 'pending' | 'failed';
   created_at: string;
   stripe_id: string;
+  /** Real user_id when available (backend TransactionRecord) → /customers link.
+   *  Optional; mock rows omit. Gap audit 2026-07-02. */
+  user_id?: string | null;
+  /** Raw TransactionRecord.metadata (coupon, tool_slug, session_id, tier,
+   *  underpaid…) — previously fetched but never displayed. */
+  metadata?: Record<string, unknown> | null;
 }
 
 export const MOCK_TRANSACTIONS: AdminTransaction[] = Array.from({ length: 40 }, (_, i) => {
