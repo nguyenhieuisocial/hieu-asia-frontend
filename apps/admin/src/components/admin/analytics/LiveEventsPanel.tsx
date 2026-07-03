@@ -14,21 +14,10 @@ import {
   fetchRecentEvents,
   isPostHogServerConfigured,
 } from '@/lib/posthog-server';
+import { fmtRelative } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 60;
-
-function timeAgo(iso: string): string {
-  const ms = Date.now() - new Date(iso).getTime();
-  if (Number.isNaN(ms)) return iso;
-  const s = Math.max(0, Math.floor(ms / 1000));
-  if (s < 60) return `${s}s trước`;
-  const m = Math.floor(s / 60);
-  if (m < 60) return `${m} phút trước`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h} giờ trước`;
-  return `${Math.floor(h / 24)} ngày trước`;
-}
 
 export default async function LiveEventsPanel() {
   const configured = isPostHogServerConfigured();
@@ -92,7 +81,7 @@ export default async function LiveEventsPanel() {
                     className="whitespace-nowrap px-4 py-2 text-muted-foreground"
                     title={r.timestamp}
                   >
-                    {timeAgo(r.timestamp)}
+                    {fmtRelative(r.timestamp)}
                   </td>
                   <td className="px-4 py-2">
                     <code className="font-mono text-foreground">{r.event}</code>

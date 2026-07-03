@@ -14,6 +14,7 @@ import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { FileCheck2 } from 'lucide-react';
+import { fmtDateTime } from '@/lib/format';
 
 interface TaxProfile {
   has_tax_code?: boolean;
@@ -43,15 +44,6 @@ async function fetchTaxProfile(id: string): Promise<TaxProfileResponse> {
     return (await r.json()) as TaxProfileResponse;
   } catch {
     return { ok: false };
-  }
-}
-
-function fmtDt(iso?: string | null): string {
-  if (!iso) return '—';
-  try {
-    return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
-  } catch {
-    return iso;
   }
 }
 
@@ -126,7 +118,7 @@ export function TaxKycCard({ userId }: { userId: string }) {
               label="Hợp đồng CTV"
               value={
                 p.contract_accepted_at
-                  ? `Đã ký ${fmtDt(p.contract_accepted_at)}${p.contract_version ? ` (v${p.contract_version})` : ''}`
+                  ? `Đã ký ${fmtDateTime(p.contract_accepted_at)}${p.contract_version ? ` (v${p.contract_version})` : ''}`
                   : 'Chưa ký'
               }
             />

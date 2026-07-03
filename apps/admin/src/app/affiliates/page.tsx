@@ -43,7 +43,8 @@ import {
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ProductTabs, type ProductTab } from '@/components/admin/product-tabs';
-import { fetchAffiliatesList, fetchFraudReport, vnd } from '@/lib/affiliate-admin-api';
+import { fetchAffiliatesList, fetchFraudReport } from '@/lib/affiliate-admin-api';
+import { fmtVnd, fmtDateTime } from '@/lib/format';
 import { PromotersTab } from '@/components/admin/affiliates/promoters-tab';
 import { CommissionsTab } from '@/components/admin/affiliates/commissions-tab';
 import { BatchesTab } from '@/components/admin/affiliates/batches-tab';
@@ -269,14 +270,6 @@ async function fetchTopAffiliates(): Promise<TopRow[]> {
   return d.leaderboard as TopRow[];
 }
 
-function dt(iso: string) {
-  try {
-    return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
-  } catch {
-    return iso;
-  }
-}
-
 function OverviewTab() {
   const promotersQ = useQuery({ queryKey: ['affiliate-promoters'], queryFn: fetchPromoters, staleTime: 60_000 });
   const commissionsQ = useQuery({
@@ -323,12 +316,12 @@ function OverviewTab() {
         />
         <KpiTile
           label="Commission held + available"
-          value={vnd(commissionTotal)}
+          value={fmtVnd(commissionTotal)}
           hint={`${commissionsQ.data?.length ?? 0} dòng`}
         />
         <KpiTile
           label="Chờ chi trả"
-          value={vnd(pendingPayoutTotal)}
+          value={fmtVnd(pendingPayoutTotal)}
           hint={`${payoutsQ.data?.length ?? 0} dòng`}
         />
         <KpiTile
@@ -385,11 +378,11 @@ function OverviewTab() {
                   </div>
                   <div className="text-right text-sm">
                     <div className="font-semibold text-gold">
-                      {vnd(row.total_earned_vnd)}
+                      {fmtVnd(row.total_earned_vnd)}
                     </div>
                     <div className="text-xs text-muted-foreground">
                       {row.total_orders.toLocaleString('vi-VN')} đơn ·{' '}
-                      {vnd(row.total_available_vnd)} available
+                      {fmtVnd(row.total_available_vnd)} available
                     </div>
                   </div>
                 </li>
@@ -442,7 +435,7 @@ function OverviewTab() {
                       </Link>
                     )}
                   </div>
-                  <span className="text-xs text-muted-foreground">{dt(row.timestamp)}</span>
+                  <span className="text-xs text-muted-foreground">{fmtDateTime(row.timestamp)}</span>
                 </li>
               ))}
             </ul>
@@ -490,15 +483,6 @@ async function fetchPayoutsLedger(status: PayoutStatus): Promise<PayoutLedgerRow
   const d = await r.json();
   if (!r.ok || !d.ok) throw new Error(d.error ?? `HTTP ${r.status}`);
   return d.payouts as PayoutLedgerRow[];
-}
-
-function dtSafe(iso: string | null) {
-  if (!iso) return '—';
-  try {
-    return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
-  } catch {
-    return iso;
-  }
 }
 
 function PayoutsInlineTab() {
@@ -568,7 +552,7 @@ function PayoutsInlineTab() {
                     <td className="py-2 pr-3 font-mono text-gold">{p.affiliate_code}</td>
                     <td className="py-2 pr-3">{p.period}</td>
                     <td className="py-2 pr-3 text-right font-mono text-gold">
-                      {vnd(p.amount_vnd)}
+                      {fmtVnd(p.amount_vnd)}
                     </td>
                     <td className="hidden py-2 pr-3 md:table-cell">{p.method ?? '—'}</td>
                     <td className="hidden py-2 pr-3 md:table-cell">
@@ -584,7 +568,7 @@ function PayoutsInlineTab() {
                       )}
                     </td>
                     <td className="py-2 pr-3 text-xs text-muted-foreground">
-                      {dtSafe(p.paid_at)}
+                      {fmtDateTime(p.paid_at)}
                     </td>
                     <td className="hidden py-2 font-mono text-xs md:table-cell">{p.reference ?? '—'}</td>
                   </tr>

@@ -48,10 +48,7 @@ import { ReportCostsPanel } from '@/components/llm-spend/ReportCostsPanel';
 import { PageHeader } from '@/components/admin/page-header';
 import { LiveBadge } from '@/components/admin/live-badge';
 import { DollarSign } from 'lucide-react';
-
-function fmtTime(d: Date) {
-  return d.toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'medium' });
-}
+import { fmtDateTime } from '@/lib/format';
 
 export default function LlmSpendPage() {
   const qc = useQueryClient();
@@ -188,7 +185,7 @@ export default function LlmSpendPage() {
             <code className="font-mono text-gold">hieu_asia.llm_traces</code>.
             <br />
             <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-              Cập nhật lần cuối: {lastRefresh ? fmtTime(lastRefresh) : '—'}
+              Cập nhật lần cuối: {lastRefresh ? fmtDateTime(lastRefresh) : '—'}
             </span>
           </>
         }

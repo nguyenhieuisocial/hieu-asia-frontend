@@ -22,6 +22,7 @@ import {
 } from 'recharts';
 import { colors } from '@hieu-asia/ui';
 import { ChartSection } from './ChartSection';
+import { fmtVnd } from '@/lib/format';
 
 const JADE = colors.jade.DEFAULT;
 
@@ -34,10 +35,6 @@ function vndShort(n: number): string {
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'tr';
   if (n >= 1_000) return Math.round(n / 1_000) + 'k';
   return String(n);
-}
-
-function vndFull(n: number): string {
-  return n.toLocaleString('vi-VN') + 'đ';
 }
 
 export function PayoutTrendChart({ rows }: { rows: PayoutTrendRow[] }) {
@@ -82,7 +79,7 @@ export function PayoutTrendChart({ rows }: { rows: PayoutTrendRow[] }) {
               }}
               labelStyle={{ color: colors.gold.DEFAULT }}
               formatter={(value: unknown) => [
-                vndFull(typeof value === 'number' ? value : Number(value)),
+                fmtVnd(typeof value === 'number' ? value : Number(value)),
                 'Đã chi',
               ]}
             />

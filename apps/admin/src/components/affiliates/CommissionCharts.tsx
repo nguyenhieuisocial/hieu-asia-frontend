@@ -22,6 +22,7 @@ import {
 import { colors } from '@hieu-asia/ui';
 import { DonutChart, type DonutSlice } from '@/components/admin/donut-chart';
 import { ChartSection } from './ChartSection';
+import { fmtVnd } from '@/lib/format';
 
 const GOLD = colors.gold.DEFAULT;
 
@@ -52,10 +53,6 @@ function vndShort(n: number): string {
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'tr';
   if (n >= 1_000) return Math.round(n / 1_000) + 'k';
   return String(n);
-}
-
-function vndFull(n: number): string {
-  return n.toLocaleString('vi-VN') + 'đ';
 }
 
 function monthKey(iso: string): string | null {
@@ -139,7 +136,7 @@ export function CommissionCharts({ rows }: { rows: CommissionRow[] }) {
                   }}
                   labelStyle={{ color: GOLD }}
                   formatter={(value: unknown) => [
-                    vndFull(typeof value === 'number' ? value : Number(value)),
+                    fmtVnd(typeof value === 'number' ? value : Number(value)),
                     'Hoa hồng',
                   ]}
                 />

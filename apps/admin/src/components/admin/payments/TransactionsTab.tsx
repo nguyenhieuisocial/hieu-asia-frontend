@@ -54,6 +54,7 @@ import { ErrorBlock } from '@/components/admin/error-block';
 import type { AdminTransaction } from '@/lib/mock-data';
 import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
 import { useSavedFilters } from '@/lib/saved-filters';
+import { fmtVnd } from '@/lib/format';
 
 const STATUS_TONE: Record<
   AdminTransaction['status'],
@@ -110,11 +111,6 @@ function maskSecret(value: string | null | undefined): string {
   const s = String(value);
   if (s.length <= 12) return s;
   return `${s.slice(0, 4)}…${s.slice(-4)}`;
-}
-
-/** VND formatter — mirrors /sepay (the `amount_usd` field actually holds VND). */
-function fmtVnd(amount: number): string {
-  return new Intl.NumberFormat('vi-VN').format(amount) + 'đ';
 }
 
 const CSV_HEADERS = {

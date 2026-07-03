@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { colors } from '@hieu-asia/ui';
+import { fmtVnd } from '@/lib/format';
 
 // Wave 60.9 — labelStyle + Bar fill use shared `colors.gold.DEFAULT` token.
 const GOLD = colors.gold.DEFAULT;
@@ -32,7 +33,7 @@ export function RevenueChart({ data }: { data: RevenueDay[] }) {
             labelStyle={{ color: GOLD }}
             formatter={(value: unknown) => {
               const n = typeof value === 'number' ? value : Number(value);
-              return [new Intl.NumberFormat('vi-VN').format(n) + ' đ', 'Doanh thu'];
+              return [fmtVnd(n), 'Doanh thu'];
             }}
           />
           <Bar dataKey="amount" fill={GOLD} radius={[4, 4, 0, 0]} />

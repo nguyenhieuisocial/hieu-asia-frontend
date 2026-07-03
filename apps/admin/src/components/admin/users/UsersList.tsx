@@ -31,6 +31,7 @@ import { EditableCell } from '@/components/admin/EditableCell';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import type { useBulkSelection } from '@/lib/bulk-action';
 import type { useSavedFilters } from '@/lib/saved-filters';
+import { fmtDateTime, fmtRelative } from '@/lib/format';
 
 export type AdminRole = 'owner' | 'admin' | 'viewer';
 
@@ -65,29 +66,6 @@ const ROLE_FILTERS: Array<{ value: 'all' | AdminRole; label: string }> = [
   { value: 'admin', label: 'Admin' },
   { value: 'viewer', label: 'Viewer' },
 ];
-
-function fmtDate(iso: string) {
-  try {
-    return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
-  } catch {
-    return iso;
-  }
-}
-
-function fmtRelative(iso: string) {
-  try {
-    const t = new Date(iso).getTime();
-    const diff = Date.now() - t;
-    const d = Math.floor(diff / 86_400_000);
-    if (d < 1) return 'hôm nay';
-    if (d < 7) return `${d} ngày trước`;
-    if (d < 30) return `${Math.floor(d / 7)} tuần trước`;
-    if (d < 365) return `${Math.floor(d / 30)} tháng trước`;
-    return `${Math.floor(d / 365)} năm trước`;
-  } catch {
-    return '';
-  }
-}
 
 type BulkSelection = ReturnType<typeof useBulkSelection<AdminUser>>;
 type SavedFilters = ReturnType<
@@ -222,7 +200,7 @@ export function UsersList({
       cell: (u) => (
         <>
           <div className="font-mono text-xs text-foreground/85" title={u.created_at}>
-            {fmtDate(u.created_at)}
+            {fmtDateTime(u.created_at)}
           </div>
           <div className="font-mono text-[10px] text-muted-foreground">
             {fmtRelative(u.created_at)}

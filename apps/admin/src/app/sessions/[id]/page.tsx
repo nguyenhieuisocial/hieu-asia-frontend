@@ -52,6 +52,7 @@ import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ContactCustomerDialog } from '@/components/admin/ContactCustomerDialog';
 import { UserJourneyPanel } from '@/components/admin/UserJourneyPanel';
+import { fmtDateTime, fmtDuration } from '@/lib/format';
 import type { TaskStatus } from '@hieu-asia/types';
 
 const STATUS_TONE: Record<TaskStatus, React.ComponentProps<typeof StatusBadge>['status']> = {
@@ -135,16 +136,6 @@ async function bulkDelete(sessionIds: string[]) {
   const data = await r.json().catch(() => ({ ok: false, error: `HTTP ${r.status}` }));
   if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
   return data;
-}
-
-function fmtDateTime(iso: string) {
-  return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'medium' });
-}
-
-function fmtDuration(sec: number | null) {
-  if (sec == null) return '—';
-  if (sec < 60) return `${sec}s`;
-  return `${Math.floor(sec / 60)}m ${sec % 60}s`;
 }
 
 // Wave 60.20 — Compact label/value pair for the Request meta dl grid.

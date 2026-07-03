@@ -14,6 +14,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Card, CardContent, StatusBadge, toast } from '@hieu-asia/ui';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
+import { fmtVnd, fmtDateTime } from '@/lib/format';
 
 // Recharts lazy-loaded so it stays out of the initial admin bundle (tasks page
 // pattern). ssr:false — admin is auth-gated, not SEO-indexed.
@@ -55,18 +56,6 @@ const STATUS_BADGE: Record<
   clawed_back: { status: 'error', label: 'Thu hồi' },
   void: { status: 'neutral', label: 'Huỷ' },
 };
-
-function vnd(n: number) {
-  return n.toLocaleString('vi-VN') + 'đ';
-}
-function dt(iso: string | null) {
-  if (!iso) return '—';
-  try {
-    return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
-  } catch {
-    return iso;
-  }
-}
 
 async function fetchCommissions(states: StateKey[]): Promise<Commission[]> {
   const url = `/api/admin/affiliates/commissions?status=${states.join(',')}`;
@@ -140,13 +129,13 @@ export function CommissionsTab() {
       id: 'gross',
       header: 'Gross',
       className: 'text-right',
-      cell: (c) => <span className="font-mono">{vnd(c.gross_amount_vnd)}</span>,
+      cell: (c) => <span className="font-mono">{fmtVnd(c.gross_amount_vnd)}</span>,
     },
     {
       id: 'commission',
       header: 'Hoa hồng',
       className: 'text-right',
-      cell: (c) => <span className="font-mono text-gold">{vnd(c.commission_vnd)}</span>,
+      cell: (c) => <span className="font-mono text-gold">{fmtVnd(c.commission_vnd)}</span>,
     },
     {
       id: 'status',
@@ -160,13 +149,13 @@ export function CommissionsTab() {
       id: 'created_at',
       header: 'Ngày tạo',
       hideOnMobile: true,
-      cell: (c) => <span className="text-xs text-muted-foreground">{dt(c.created_at)}</span>,
+      cell: (c) => <span className="text-xs text-muted-foreground">{fmtDateTime(c.created_at)}</span>,
     },
     {
       id: 'available_at',
       header: 'Khả dụng lúc',
       hideOnMobile: true,
-      cell: (c) => <span className="text-xs text-muted-foreground">{dt(c.available_at)}</span>,
+      cell: (c) => <span className="text-xs text-muted-foreground">{fmtDateTime(c.available_at)}</span>,
     },
     {
       id: 'actions',

@@ -30,6 +30,7 @@ import { LiveBadge } from '@/components/admin/live-badge';
 import { EmptyState } from '@/components/admin/empty-state';
 import { KpiCard } from '@/components/admin/kpi-card';
 import type { AdminTask } from '@/lib/mock-data';
+import { fmtDateTime } from '@/lib/format';
 import type { TaskStatus } from '@hieu-asia/types';
 
 // Recharts lazy-loaded so it stays out of the initial bundle (GscTrendChart
@@ -42,15 +43,6 @@ const FailureReasonChart = dynamic(
     loading: () => <div className="h-64 animate-pulse rounded bg-muted/30" aria-hidden />,
   },
 );
-
-function fmtTs(iso: string | null | undefined): string {
-  if (!iso) return '—';
-  try {
-    return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'medium' });
-  } catch {
-    return iso;
-  }
-}
 
 const TONE: Record<TaskStatus, React.ComponentProps<typeof StatusBadge>['status']> = {
   queued: 'neutral',
@@ -389,7 +381,7 @@ export default function AdminTasksPage() {
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-muted-foreground">Bắt đầu</span>
                   <span className="font-mono text-xs text-foreground">
-                    {fmtTs(selectedTask.started_at)}
+                    {fmtDateTime(selectedTask.started_at)}
                   </span>
                 </div>
 

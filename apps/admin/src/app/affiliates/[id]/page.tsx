@@ -13,6 +13,7 @@ import { AlertTriangle } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, StatusBadge } from '@hieu-asia/ui';
 import { TaxKycCard } from '@/components/admin/affiliates/TaxKycCard';
 import { fetchFraudReport, type FraudFlag } from '@/lib/affiliate-admin-api';
+import { fmtVnd, fmtDateTime } from '@/lib/format';
 
 type PreferredRail = 'manual_csv' | 'wise' | 'stripe_connect';
 type RailStatus = 'pending' | 'verified' | 'rejected' | 'manual_only';
@@ -69,18 +70,6 @@ interface DetailResponse {
   stats: Stats;
   payouts: PayoutRecord[];
   recent: TrackEvent[];
-}
-
-function vnd(n: number) {
-  return n.toLocaleString('vi-VN') + 'đ';
-}
-
-function dt(iso: string) {
-  try {
-    return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
-  } catch {
-    return iso;
-  }
 }
 
 export default function AdminAffiliateDetailPage({
@@ -276,7 +265,7 @@ export default function AdminAffiliateDetailPage({
               <ul className="mt-1 space-y-0.5 text-xs text-red-700/90 dark:text-red-100/80">
                 {fraudFlags.map((f, i) => (
                   <li key={i} className="font-mono">
-                    {f.reason} — {f.detail} ({dt(f.flagged_at)})
+                    {f.reason} — {f.detail} ({fmtDateTime(f.flagged_at)})
                   </li>
                 ))}
               </ul>
@@ -307,7 +296,7 @@ export default function AdminAffiliateDetailPage({
               <CardTitle className="text-xs uppercase text-muted-foreground">Tổng hoa hồng</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-gold">{vnd(s.total_earned)}</div>
+              <div className="text-xl font-bold text-gold">{fmtVnd(s.total_earned)}</div>
             </CardContent>
           </Card>
           <Card>
@@ -315,7 +304,7 @@ export default function AdminAffiliateDetailPage({
               <CardTitle className="text-xs uppercase text-muted-foreground">Khả dụng</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold">{vnd(s.pending_payout)}</div>
+              <div className="text-xl font-bold">{fmtVnd(s.pending_payout)}</div>
             </CardContent>
           </Card>
         </div>
@@ -343,7 +332,7 @@ export default function AdminAffiliateDetailPage({
               {(a.commission_rate_recurring * 100).toFixed(0)}%
             </div>
             <div>
-              <span className="text-muted-foreground">Tạo lúc:</span> {dt(a.created_at)}
+              <span className="text-muted-foreground">Tạo lúc:</span> {fmtDateTime(a.created_at)}
             </div>
             <div>
               <span className="text-muted-foreground">Trạng thái:</span>{' '}
@@ -391,7 +380,7 @@ export default function AdminAffiliateDetailPage({
               </div>
               <div>
                 <span className="text-muted-foreground">Verified at:</span>{' '}
-                {a.rail_account_verified_at ? dt(a.rail_account_verified_at) : '—'}
+                {a.rail_account_verified_at ? fmtDateTime(a.rail_account_verified_at) : '—'}
               </div>
             </div>
             <div className="flex flex-wrap gap-2 border-t border-border pt-3">
@@ -445,13 +434,13 @@ export default function AdminAffiliateDetailPage({
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div>
-                        <span className="font-mono text-gold">{vnd(p.amount)}</span>{' '}
+                        <span className="font-mono text-gold">{fmtVnd(p.amount)}</span>{' '}
                         <span className="text-muted-foreground">· {p.method.toUpperCase()}</span>{' '}
                         <span className="font-mono text-xs text-muted-foreground">{p.destination}</span>
                       </div>
                       <div className="text-sm">
                         {p.status === 'pending' && <span className="text-yellow-400">Đang chờ</span>}
-                        {p.status === 'paid' && <span className="text-green-400">Đã trả ({dt(p.paid_at ?? '')})</span>}
+                        {p.status === 'paid' && <span className="text-green-400">Đã trả ({fmtDateTime(p.paid_at ?? '')})</span>}
                         {p.status === 'rejected' && <span className="text-red-400">Từ chối</span>}
                       </div>
                     </div>
@@ -459,7 +448,7 @@ export default function AdminAffiliateDetailPage({
                       <div className="mt-1 text-xs text-muted-foreground">Lý do: {p.rejected_reason}</div>
                     )}
                     <div className="mt-1 text-xs text-muted-foreground">
-                      Yêu cầu lúc {dt(p.requested_at)}
+                      Yêu cầu lúc {fmtDateTime(p.requested_at)}
                     </div>
                     {p.status === 'pending' && (
                       <div className="mt-2 flex gap-2">
@@ -528,7 +517,7 @@ export default function AdminAffiliateDetailPage({
                   >
                     <div className="flex items-center gap-3">
                       <span className="rounded bg-muted/40 px-2 py-0.5 text-xs">{ev.event}</span>
-                      <span className="text-muted-foreground">{dt(ev.ts)}</span>
+                      <span className="text-muted-foreground">{fmtDateTime(ev.ts)}</span>
                       {ev.user_id && (
                         <Link
                           href={`/customers/${encodeURIComponent(ev.user_id)}`}
@@ -540,7 +529,7 @@ export default function AdminAffiliateDetailPage({
                       )}
                     </div>
                     {ev.commission !== undefined && (
-                      <span className="font-mono text-gold">+{vnd(ev.commission)}</span>
+                      <span className="font-mono text-gold">+{fmtVnd(ev.commission)}</span>
                     )}
                   </div>
                 ))}

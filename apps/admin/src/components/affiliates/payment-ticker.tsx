@@ -8,7 +8,7 @@
 
 import * as React from 'react';
 import { getBrowserSupabase } from '@/lib/supabase-browser';
-import { vnd } from '@/lib/affiliate-admin-api';
+import { fmtVnd } from '@/lib/format';
 import { cn } from '@hieu-asia/ui';
 
 interface TickerItem {
@@ -44,7 +44,7 @@ export function PaymentTicker() {
         const code = p.affiliate_code ?? 'unknown';
         const amount = typeof p.amount === 'number' ? p.amount : undefined;
         const text =
-          p.message ?? `Conversion mới · ${code}${amount ? ` · +${vnd(amount)}` : ''}`;
+          p.message ?? `Conversion mới · ${code}${amount ? ` · +${fmtVnd(amount)}` : ''}`;
         pushItem({ id: crypto.randomUUID(), message: text, amount, ts: Date.now() });
       },
     );

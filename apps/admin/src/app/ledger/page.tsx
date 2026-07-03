@@ -10,10 +10,10 @@ import { KpiCard } from '@/components/admin/kpi-card';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { EmptyState } from '@/components/admin/empty-state';
 import { formatDateOrEmpty } from '@/lib/format-date';
+import { fmtVnd } from '@/lib/format';
 import { buildLedger, type LedgerMovement } from '@/lib/ledger';
 import { AccountingTab } from '@/components/admin/ledger/AccountingTab';
 
-const fmtVnd = (n: number) => `${Math.round(n).toLocaleString('vi-VN')}₫`;
 const fmtDate = (iso: string) => formatDateOrEmpty(iso, '—');
 
 interface PaymentTxn {

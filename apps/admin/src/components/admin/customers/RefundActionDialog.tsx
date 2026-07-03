@@ -30,6 +30,7 @@ import {
   Textarea,
   toast,
 } from '@hieu-asia/ui';
+import { fmtVnd } from '@/lib/format';
 
 interface RefundActionResponse {
   ok: boolean;
@@ -63,8 +64,7 @@ export function RefundActionDialog({
     if (open) setNote('');
   }, [open]);
 
-  const amountLabel =
-    amountVnd != null ? new Intl.NumberFormat('vi-VN').format(amountVnd) + ' đ' : '—';
+  const amountLabel = fmtVnd(amountVnd);
 
   const submit = React.useCallback(async () => {
     setPending(true);

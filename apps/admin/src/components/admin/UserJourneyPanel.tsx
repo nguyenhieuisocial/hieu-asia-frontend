@@ -21,6 +21,7 @@ import {
 } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, colors } from '@hieu-asia/ui';
 import { UserRound } from 'lucide-react';
+import { fmtDateTime, fmtDate, fmtVnd } from '@/lib/format';
 
 const GOLD = colors.gold.DEFAULT;
 
@@ -87,18 +88,6 @@ export async function fetchUserJourney(userId: string): Promise<UserJourneyResp>
   } catch {
     return { ok: false, configured: false, source: null, events: [], profile: null, engagement: null, activity: [] };
   }
-}
-
-function fmtDateTime(iso: string) {
-  return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'medium' });
-}
-
-function fmtDate(iso: string) {
-  return new Date(iso).toLocaleDateString('vi-VN', { dateStyle: 'medium' });
-}
-
-function fmtVnd(n: number) {
-  return n.toLocaleString('vi-VN') + 'đ';
 }
 
 // Friendly Vietnamese labels for the PostHog events. Unknown events fall back to
