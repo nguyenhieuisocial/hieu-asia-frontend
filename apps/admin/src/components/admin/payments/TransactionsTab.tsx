@@ -20,6 +20,7 @@
  */
 
 import * as React from 'react';
+import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import {
   Button,
@@ -217,7 +218,24 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
           </span>
         ),
       },
-      { key: 'user_email', header: 'User' },
+      {
+        // Gap audit 2026-07-02 — user_id hiển thị dạng text cụt; giờ bấm ra
+        // thẳng hồ sơ khách.
+        key: 'user_email',
+        header: 'User',
+        cell: (t) =>
+          t.user_id ? (
+            <Link
+              href={`/customers/${encodeURIComponent(t.user_id)}`}
+              className="font-mono text-xs text-foreground underline decoration-dotted underline-offset-2 hover:text-gold"
+              title="Mở hồ sơ khách hàng"
+            >
+              {maskSecret(t.user_id)}
+            </Link>
+          ) : (
+            <span className="font-mono text-xs text-muted-foreground">{t.user_email}</span>
+          ),
+      },
       { key: 'plan', header: 'Gói', width: '120px', cell: (t) => PLAN_LABEL[t.plan] },
       {
         key: 'amount_usd',
@@ -262,6 +280,53 @@ export function TransactionsTab({ onRowsChange, onTotalChange }: TransactionsTab
             {maskSecret(t.stripe_id)}
           </span>
         ),
+      },
+      {
+        // Gap audit 2026-07-02 — TransactionRecord.metadata (coupon, tool,
+        // session, tier, underpaid) luôn được trả về nhưng chưa từng hiển thị.
+        key: 'metadata',
+        header: 'Chi tiết',
+        cell: (t) => {
+          const md = (t.metadata ?? {}) as Record<string, unknown>;
+          const sessionId = typeof md.session_id === 'string' ? md.session_id : null;
+          const bits: React.ReactNode[] = [];
+          if (typeof md.coupon === 'string' && md.coupon) {
+            bits.push(
+              <span key="coupon" className="rounded bg-gold/15 px-1.5 py-0.5 font-mono text-[10px] text-gold">
+                {md.coupon}
+              </span>,
+            );
+          }
+          if (typeof md.tool_slug === 'string' && md.tool_slug) {
+            bits.push(
+              <span key="tool" className="text-[11px] text-muted-foreground">{md.tool_slug}</span>,
+            );
+          }
+          if (sessionId) {
+            bits.push(
+              <Link
+                key="session"
+                href={`/sessions/${encodeURIComponent(sessionId)}`}
+                className="font-mono text-[10px] text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-gold"
+                title={`Mở phiên ${sessionId}`}
+              >
+                phiên↗
+              </Link>,
+            );
+          }
+          if (md.underpaid === true) {
+            bits.push(
+              <span key="under" className="rounded bg-red-500/10 px-1.5 py-0.5 text-[10px] font-medium text-red-700 dark:text-red-300">
+                thiếu tiền
+              </span>,
+            );
+          }
+          return bits.length ? (
+            <span className="flex flex-wrap items-center gap-1.5">{bits}</span>
+          ) : (
+            <span className="text-xs text-muted-foreground">—</span>
+          );
+        },
       },
     ],
     [],
