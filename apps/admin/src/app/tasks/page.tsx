@@ -60,10 +60,10 @@ const TONE: Record<TaskStatus, React.ComponentProps<typeof StatusBadge>['status'
 };
 
 const STATUS_LABEL: Record<TaskStatus, string> = {
-  queued: 'queued',
-  running: 'running',
-  completed: 'completed',
-  failed: 'failed',
+  queued: 'Chờ',
+  running: 'Đang chạy',
+  completed: 'Hoàn tất',
+  failed: 'Lỗi',
 };
 
 const STATUS_FILTERS: Array<{ value: '' | TaskStatus; label: string }> = [
@@ -134,17 +134,19 @@ export default function AdminTasksPage() {
     {
       key: 'name',
       header: 'Session',
+      width: '170px',
       // Direct link to the session detail. stopPropagation so clicking the id
-      // navigates instead of also opening the row drawer.
+      // navigates instead of also opening the row drawer. Id rút gọn để bảng
+      // không tràn ngang — id đầy đủ nằm trong title.
       cell: (t) =>
         t.name ? (
           <Link
             href={`/sessions/${encodeURIComponent(t.name)}`}
             onClick={(e) => e.stopPropagation()}
             className="font-mono text-xs text-foreground underline decoration-dotted underline-offset-2 hover:text-gold"
-            title="Mở session detail"
+            title={t.name}
           >
-            {t.name}
+            {t.name.length > 18 ? `${t.name.slice(0, 18)}…` : t.name}
           </Link>
         ) : (
           <span className="text-foreground/30">—</span>
@@ -182,6 +184,8 @@ export default function AdminTasksPage() {
       key: 'started_at',
       header: 'Bắt đầu',
       width: '150px',
+      // Cột phụ — ẩn dưới md để mobile khỏi scroll qua 8 cột.
+      className: 'hidden md:table-cell',
       cell: (t) =>
         new Date(t.started_at).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' }),
     },
@@ -190,6 +194,7 @@ export default function AdminTasksPage() {
       header: 'Thời lượng',
       align: 'right',
       width: '90px',
+      className: 'hidden md:table-cell',
       cell: (t) => (t.duration_seconds == null ? '—' : `${t.duration_seconds}s`),
     },
     // retries column REMOVED (gap audit 2026-07-02): backend hardcodes

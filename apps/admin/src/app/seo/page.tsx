@@ -111,7 +111,7 @@ function positionDelta(current: number, prev: number): Delta | null {
 }
 
 /** Top-queries / top-pages table. Truncates long keys with a title tooltip. */
-function GscTable({ title, rows }: { title: string; rows: GscRow[] }) {
+function GscTable({ title, rows, loading }: { title: string; rows: GscRow[]; loading?: boolean }) {
   const columns: AdminTableColumn<GscRow>[] = [
     {
       id: 'key',
@@ -159,6 +159,7 @@ function GscTable({ title, rows }: { title: string; rows: GscRow[] }) {
           rows={rows}
           columns={columns}
           getRowId={(r) => r.key}
+          loading={loading}
           empty={
             <p className="text-sm text-muted-foreground">
               Chưa có dữ liệu trong khoảng thời gian này.
@@ -414,8 +415,8 @@ export default function SeoPage() {
         />
       ) : (
         <div className="grid gap-4 lg:grid-cols-2">
-          <GscTable title="Từ khoá hàng đầu" rows={ok?.queries ?? []} />
-          <GscTable title="Trang hàng đầu" rows={ok?.pages ?? []} />
+          <GscTable title="Từ khoá hàng đầu" rows={ok?.queries ?? []} loading={q.isLoading} />
+          <GscTable title="Trang hàng đầu" rows={ok?.pages ?? []} loading={q.isLoading} />
         </div>
       )}
 

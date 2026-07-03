@@ -11,7 +11,7 @@
 import * as React from 'react';
 import dynamic from 'next/dynamic';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button, Card, CardContent, toast } from '@hieu-asia/ui';
+import { Button, Card, CardContent, StatusBadge, toast } from '@hieu-asia/ui';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
 
@@ -43,6 +43,18 @@ interface Commission {
 const STATES = ['pending', 'held', 'available', 'paid', 'clawed_back', 'void'] as const;
 type StateKey = (typeof STATES)[number];
 const DEFAULT_STATES: StateKey[] = ['held', 'available'];
+
+const STATUS_BADGE: Record<
+  string,
+  { status: 'success' | 'warning' | 'error' | 'info' | 'neutral'; label: string }
+> = {
+  pending: { status: 'warning', label: 'Chờ xử lý' },
+  held: { status: 'warning', label: 'Đang giữ' },
+  available: { status: 'success', label: 'Khả dụng' },
+  paid: { status: 'success', label: 'Đã trả' },
+  clawed_back: { status: 'error', label: 'Thu hồi' },
+  void: { status: 'neutral', label: 'Huỷ' },
+};
 
 function vnd(n: number) {
   return n.toLocaleString('vi-VN') + 'đ';
@@ -121,6 +133,7 @@ export function CommissionsTab() {
       id: 'tier',
       header: 'L',
       className: 'text-right',
+      hideOnMobile: true,
       cell: (c) => <span className="font-mono">L{c.tier_level}</span>,
     },
     {
@@ -131,19 +144,28 @@ export function CommissionsTab() {
     },
     {
       id: 'commission',
-      header: 'Commission',
+      header: 'Hoa hồng',
       className: 'text-right',
       cell: (c) => <span className="font-mono text-gold">{vnd(c.commission_vnd)}</span>,
     },
-    { id: 'status', header: 'Status', cell: (c) => <StatusBadge status={c.status} /> },
+    {
+      id: 'status',
+      header: 'Trạng thái',
+      cell: (c) => {
+        const b = STATUS_BADGE[c.status] ?? { status: 'neutral' as const, label: c.status };
+        return <StatusBadge status={b.status} label={b.label} />;
+      },
+    },
     {
       id: 'created_at',
-      header: 'Created',
+      header: 'Ngày tạo',
+      hideOnMobile: true,
       cell: (c) => <span className="text-xs text-muted-foreground">{dt(c.created_at)}</span>,
     },
     {
       id: 'available_at',
-      header: 'Available',
+      header: 'Khả dụng lúc',
+      hideOnMobile: true,
       cell: (c) => <span className="text-xs text-muted-foreground">{dt(c.available_at)}</span>,
     },
     {
@@ -222,18 +244,3 @@ export function CommissionsTab() {
   );
 }
 
-function StatusBadge({ status }: { status: string }) {
-  const cls =
-    status === 'available'
-      ? 'bg-jade/20 text-jade-700 dark:text-jade-50'
-      : status === 'paid'
-        ? 'bg-green-500/20 text-green-700 dark:text-green-300'
-        : status === 'held' || status === 'pending'
-          ? 'bg-yellow-500/20 text-yellow-700 dark:text-yellow-300'
-          : status === 'clawed_back'
-            ? 'bg-red-500/20 text-red-700 dark:text-red-300'
-            : 'bg-muted/40 text-muted-foreground';
-  return (
-    <span className={`rounded px-2 py-0.5 text-[10px] uppercase ${cls}`}>{status}</span>
-  );
-}

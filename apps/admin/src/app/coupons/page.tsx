@@ -74,9 +74,9 @@ type StatusFilter = 'all' | 'active' | 'revoked' | 'expired';
 
 const STATUS_FILTERS: Array<{ value: StatusFilter; label: string }> = [
   { value: 'all', label: 'Tất cả' },
-  { value: 'active', label: 'Active' },
-  { value: 'revoked', label: 'Revoked' },
-  { value: 'expired', label: 'Expired' },
+  { value: 'active', label: 'Còn hiệu lực' },
+  { value: 'revoked', label: 'Đã thu hồi' },
+  { value: 'expired', label: 'Hết hạn' },
 ];
 
 function fmtDate(iso?: string | null) {
@@ -100,8 +100,14 @@ const STATUS_TONE: Record<
   revoked: 'error',
 };
 
+const STATUS_LABEL: Record<Coupon['status'], string> = {
+  active: 'Còn hiệu lực',
+  expired: 'Hết hạn',
+  revoked: 'Đã thu hồi',
+};
+
 function statusPill(s: Coupon['status']) {
-  return <StatusBadge status={STATUS_TONE[s]} label={s} />;
+  return <StatusBadge status={STATUS_TONE[s]} label={STATUS_LABEL[s]} />;
 }
 
 async function fetchCoupons(): Promise<CouponsResponse> {
@@ -373,7 +379,7 @@ export default function CouponsPage() {
         />
       ),
     },
-    { id: 'code', header: 'Code', cell: (c) => <span className="font-mono text-gold">{c.code}</span> },
+    { id: 'code', header: 'Mã', cell: (c) => <span className="font-mono text-gold">{c.code}</span> },
     {
       id: 'discount',
       header: 'Giảm',
@@ -404,10 +410,11 @@ export default function CouponsPage() {
           <span className="text-xs text-muted-foreground">Mọi gói</span>
         ),
     },
-    { id: 'status', header: 'Status', cell: (c) => statusPill(c.status) },
+    { id: 'status', header: 'Trạng thái', cell: (c) => statusPill(c.status) },
     {
       id: 'uses',
-      header: 'Uses',
+      header: 'Lượt dùng',
+      hideOnMobile: true,
       cell: (c) => (
         <span className="font-mono text-xs text-muted-foreground tabular-nums">
           {c.uses ?? 0}
@@ -418,6 +425,7 @@ export default function CouponsPage() {
     {
       id: 'validity',
       header: 'Hiệu lực',
+      hideOnMobile: true,
       cell: (c) => (
         <span className="font-mono text-[11px] text-muted-foreground">
           {fmtDate(c.valid_from)} → {fmtDate(c.valid_to)}
@@ -426,8 +434,9 @@ export default function CouponsPage() {
     },
     {
       id: 'note',
-      header: 'Note',
+      header: 'Ghi chú',
       className: 'max-w-[18ch] truncate',
+      hideOnMobile: true,
       cell: (c) => (
         <span className="text-xs text-muted-foreground" title={c.notes ?? ''}>
           {c.notes ?? '—'}
@@ -437,6 +446,7 @@ export default function CouponsPage() {
     {
       id: 'created',
       header: 'Tạo',
+      hideOnMobile: true,
       cell: (c) => (
         <span className="font-mono text-[11px] text-muted-foreground">{fmtDate(c.created_at)}</span>
       ),
@@ -514,12 +524,12 @@ export default function CouponsPage() {
                     code: 'Code',
                     discount_pct: 'Discount %',
                     status: 'Status',
-                    uses: 'Uses',
+                    uses: 'Lượt dùng',
                     max_uses: 'Max uses',
                     valid_from: 'Valid from',
                     valid_to: 'Valid to',
                     notes: 'Notes',
-                    created_at: 'Created',
+                    created_at: 'Ngày tạo',
                   },
                 )
               }
@@ -538,21 +548,21 @@ export default function CouponsPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard
-          label="Active"
+          label="Còn hiệu lực"
           value={activeCount}
           icon={<CheckCircle2 className="h-4 w-4" />}
           accent="jade"
           hint="đang dùng được"
         />
         <KpiCard
-          label="Revoked"
+          label="Đã thu hồi"
           value={revokedCount}
           icon={<XCircle className="h-4 w-4" />}
           accent={revokedCount > 0 ? 'red' : 'jade'}
           hint="đã thu hồi"
         />
         <KpiCard
-          label="Expired"
+          label="Hết hạn"
           value={expiredCount}
           icon={<Ticket className="h-4 w-4" />}
           accent="purple"

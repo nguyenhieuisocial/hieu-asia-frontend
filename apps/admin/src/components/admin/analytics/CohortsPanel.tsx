@@ -156,7 +156,7 @@ export default async function CohortsPage() {
           <Users2 className="h-5 w-5 text-gold" aria-hidden />
           Acquisition channels (30 ngày)
         </h2>
-        <div className="overflow-hidden rounded-card-editorial border border-border bg-card">
+        <div className="overflow-x-auto rounded-card-editorial border border-border bg-card">
           <table className="w-full text-sm">
             <thead className="border-b border-border bg-muted/40 text-left">
               <tr>
@@ -227,7 +227,7 @@ export default async function CohortsPage() {
           ].map((t) => (
             <div
               key={t.title}
-              className="overflow-hidden rounded-card-editorial border border-border bg-card"
+              className="overflow-x-auto rounded-card-editorial border border-border bg-card"
             >
               <table className="w-full text-sm">
                 <thead className="border-b border-border bg-muted/40 text-left">
@@ -274,7 +274,7 @@ export default async function CohortsPage() {
           <Filter className="h-5 w-5 text-gold" aria-hidden />
           Conversion funnel (30 ngày)
         </h2>
-        <div className="overflow-hidden rounded-card-editorial border border-border bg-card">
+        <div className="overflow-x-auto rounded-card-editorial border border-border bg-card">
           <table className="w-full text-sm">
             <thead className="border-b border-border bg-muted/40 text-left">
               <tr>
