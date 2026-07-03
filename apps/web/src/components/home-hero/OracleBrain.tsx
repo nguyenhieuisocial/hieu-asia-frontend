@@ -30,15 +30,24 @@ import { Time24 } from '@/components/Time24';
  * tránh lệch với công cụ thật. Gated bởi prefers-reduced-motion.
  */
 
-type Lens = { name: string; symbol: string; tagline: string };
+type Lens = { name: string; symbol: string; tagline: string; element: string; quality: string };
 type Bazi = {
   dayCan: string;
   dayEl: string;
+  yearPillar: string;
   hourPillar: string | null;
   strongest: string | null;
   missing: string[];
 };
-type Reveal = { dong: BanMenhData; conVat: string; tay: Lens | null; nearCusp: boolean; bazi: Bazi };
+type Reveal = {
+  dong: BanMenhData;
+  conVat: string;
+  tay: Lens | null;
+  nearCusp: boolean;
+  bazi: Bazi;
+  /** true = sinh TRƯỚC Lập Xuân → đã quy về năm âm liền trước (chuẩn mệnh học). */
+  lunarAdjusted: boolean;
+};
 
 const ALL_TOOLS = TOOLKIT_GROUPS.flatMap((g) => g.tools.map((t) => t.n));
 
@@ -174,7 +183,19 @@ export function OracleBrain(): React.JSX.Element {
         import('@/lib/con-giap-animal'),
         import('@/lib/bazi'),
       ]);
-      const dong = banMenh.buildBanMenh(y);
+      const hm = birthTime.match(/^(\d{1,2}):(\d{2})$/);
+      const hour = hm ? Number(hm[1]) : 12;
+      const hasTime = hm != null && hour >= 0 && hour <= 23;
+      // Tính Bát Tự TRƯỚC — engine đã xử lý ranh giới LẬP XUÂN (meta.solarYearForPillar
+      // = năm âm chuẩn mệnh học). Lăng kính Cổ học tra 60 Giáp Tý theo ĐÚNG năm này
+      // → người sinh tháng 1–đầu tháng 2 (trước Lập Xuân) không còn bị gán nhầm
+      // con giáp/can chi/mệnh, và 2 lăng kính Đông + Bát Tự luôn khớp nhau.
+      const chart = baziMod.calculateBazi({
+        birthSolarDate: birthDate,
+        birthHour: hasTime ? hour : 12,
+      });
+      const lunarYear = chart.meta.solarYearForPillar;
+      const dong = banMenh.buildBanMenh(lunarYear);
       if (!dong) {
         setReading(false);
         setErr('Năm sinh cần trong khoảng 1950–2026.');
@@ -183,18 +204,18 @@ export function OracleBrain(): React.JSX.Element {
       const sun = cung.sunSignFromDate(y, mo, d);
       const found = cung.listCung().find((c) => c.slug === sun.slug);
       const tay: Lens | null = found
-        ? { name: found.name, symbol: found.symbol, tagline: found.tagline }
+        ? {
+            name: found.name,
+            symbol: found.symbol,
+            tagline: found.tagline,
+            element: found.element,
+            quality: found.quality,
+          }
         : null;
-      const hm = birthTime.match(/^(\d{1,2}):(\d{2})$/);
-      const hour = hm ? Number(hm[1]) : 12;
-      const hasTime = hm != null && hour >= 0 && hour <= 23;
-      const chart = baziMod.calculateBazi({
-        birthSolarDate: birthDate,
-        birthHour: hasTime ? hour : 12,
-      });
       const bazi: Bazi = {
         dayCan: chart.dayMaster.can,
         dayEl: chart.dayMaster.element,
+        yearPillar: `${chart.year.can} ${chart.year.chi}`,
         hourPillar: hasTime ? `${chart.hour.can} ${chart.hour.chi}` : null,
         strongest: hasTime ? chart.strongest : null,
         missing: hasTime ? chart.missing : [],
@@ -205,6 +226,7 @@ export function OracleBrain(): React.JSX.Element {
         tay,
         nearCusp: sun.nearCusp,
         bazi,
+        lunarAdjusted: lunarYear !== y,
       };
       const show = (): void => {
         setReveal(result);
@@ -244,14 +266,22 @@ export function OracleBrain(): React.JSX.Element {
           — mệnh {reveal.dong.elementName} ({reveal.dong.napAmName}).
         </p>
         <p className="ob-lens-sub">
+          {reveal.dong.sinhElementName} sinh {reveal.dong.elementName} (tương sinh) ·{' '}
+          {reveal.dong.khacElementName} khắc {reveal.dong.elementName} (nên tiết chế).{' '}
           {hopColors.length > 0 && <>Hợp màu {hopColors.join(', ')}. </>}
           {reveal.dong.avoidColors.length > 0 && (
-            <>Nên tiết chế {reveal.dong.avoidColors.join(', ')}. </>
+            <>Nên tiết chế màu {reveal.dong.avoidColors.join(', ')}. </>
           )}
           {reveal.dong.careers.length > 0 && (
             <>Hợp hướng nghề {reveal.dong.careers.slice(0, 2).join(', ')}.</>
           )}
         </p>
+        {reveal.lunarAdjusted && (
+          <p className="ob-lens-sub">
+            Bạn sinh trước Lập Xuân — tuổi âm tính theo năm {reveal.dong.year} (chuẩn mệnh
+            học, khớp trụ năm Bát Tự).
+          </p>
+        )}
       </div>
     ) : null;
 
@@ -265,7 +295,7 @@ export function OracleBrain(): React.JSX.Element {
           </strong>
         </p>
         <p className="ob-lens-sub">
-          {reveal.tay.tagline}
+          Nhóm {reveal.tay.element} · {reveal.tay.quality}. {reveal.tay.tagline}
           {reveal.nearCusp && ' (sinh sát ranh giới cung — cần giờ sinh để chắc chắn).'}
         </p>
       </div>
@@ -529,14 +559,16 @@ export function OracleBrain(): React.JSX.Element {
                   </strong>
                 </p>
                 <p className="ob-lens-sub">
+                  Trụ năm {reveal.bazi.yearPillar}
                   {reveal.bazi.hourPillar ? (
                     <>
-                      Trụ giờ {reveal.bazi.hourPillar}
+                      {' '}
+                      · trụ giờ {reveal.bazi.hourPillar}
                       {reveal.bazi.strongest && <> · ngũ hành vượng {reveal.bazi.strongest}</>}
                       {reveal.bazi.missing.length > 0 && <> · thiếu {reveal.bazi.missing.join(', ')}</>}.
                     </>
                   ) : (
-                    'Thêm giờ sinh (không bắt buộc) để mở trụ giờ + cân bằng ngũ hành đầy đủ.'
+                    <>. Thêm giờ sinh (không bắt buộc) để mở trụ giờ + cân bằng ngũ hành đầy đủ.</>
                   )}
                 </p>
               </div>
