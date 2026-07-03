@@ -40,6 +40,8 @@ type Lens = {
   quality: string;
   rulingPlanet: string;
   strengths: string[];
+  growthEdge: string | null;
+  love: string;
   work: string;
   opposite: string;
 };
@@ -66,9 +68,10 @@ type Reveal = {
   dong: BanMenhData;
   conVat: string;
   /** Tính cách tuổi (con giáp) — engine con-giap-data, cùng nguồn trang /con-giap. */
-  cg: { tagline: string; strengths: string[] } | null;
-  /** Hướng tốt + 1 lời khuyên hành động theo hành bản mệnh (ngu-hanh-remedy). */
+  cg: { tagline: string; strengths: string[]; growthEdge: string | null; love: string } | null;
+  /** Hướng tốt + vật phẩm + 1 lời khuyên hành động theo hành bản mệnh (ngu-hanh-remedy). */
   huongTot: string[];
+  vatPham: string[];
   loiKhuyen: string | null;
   tay: Lens | null;
   nearCusp: boolean;
@@ -256,6 +259,8 @@ export function OracleBrain(): React.JSX.Element {
               quality: found.quality,
               rulingPlanet: detail.extra.rulingPlanet,
               strengths: detail.extra.strengths.slice(0, 2),
+              growthEdge: detail.extra.growthEdges[0] ?? null,
+              love: detail.extra.love,
               work: detail.extra.work,
               opposite: detail.opposite.name,
             }
@@ -290,8 +295,16 @@ export function OracleBrain(): React.JSX.Element {
       const result: Reveal = {
         dong,
         conVat: conGiap.conVatOf(dong.zodiac.ten),
-        cg: cgd ? { tagline: cgd.extra.tagline, strengths: cgd.extra.strengths.slice(0, 2) } : null,
+        cg: cgd
+          ? {
+              tagline: cgd.extra.tagline,
+              strengths: cgd.extra.strengths.slice(0, 2),
+              growthEdge: cgd.extra.growthEdges[0] ?? null,
+              love: cgd.extra.love,
+            }
+          : null,
         huongTot: remedy?.huongTot ?? [],
+        vatPham: remedy?.vatPham?.slice(0, 2) ?? [],
         loiKhuyen: remedy?.loiKhuyen?.[0] ?? null,
         tay,
         nearCusp: sun.nearCusp,
@@ -341,8 +354,10 @@ export function OracleBrain(): React.JSX.Element {
             {reveal.cg.strengths.length > 0 && (
               <> Nổi bật: {reveal.cg.strengths.join(' · ')}.</>
             )}
+            {reveal.cg.growthEdge && <> Nên luyện: {reveal.cg.growthEdge}</>}
           </p>
         )}
+        {reveal.cg?.love && <p className="ob-lens-sub">Tình cảm: {reveal.cg.love}</p>}
         <p className="ob-lens-sub">
           {reveal.dong.sinhElementName} sinh {reveal.dong.elementName} (tương sinh) ·{' '}
           {reveal.dong.khacElementName} khắc {reveal.dong.elementName} (nên tiết chế).{' '}
@@ -354,9 +369,10 @@ export function OracleBrain(): React.JSX.Element {
             <>Hợp hướng nghề {reveal.dong.careers.slice(0, 2).join(', ')}.</>
           )}
         </p>
-        {(reveal.huongTot.length > 0 || reveal.loiKhuyen) && (
+        {(reveal.huongTot.length > 0 || reveal.vatPham.length > 0 || reveal.loiKhuyen) && (
           <p className="ob-lens-sub">
             {reveal.huongTot.length > 0 && <>Hướng tốt: {reveal.huongTot.join(', ')}. </>}
+            {reveal.vatPham.length > 0 && <>Vật phẩm hợp: {reveal.vatPham.join('; ')}. </>}
             {reveal.loiKhuyen && <>Gợi ý: {reveal.loiKhuyen}</>}
           </p>
         )}
@@ -386,8 +402,10 @@ export function OracleBrain(): React.JSX.Element {
         {reveal.tay.strengths.length > 0 && (
           <p className="ob-lens-sub">
             Nổi bật: {reveal.tay.strengths.join(' · ')}. {reveal.tay.work}
+            {reveal.tay.growthEdge && <> Nên luyện: {reveal.tay.growthEdge}</>}
           </p>
         )}
+        {reveal.tay.love && <p className="ob-lens-sub">Tình cảm: {reveal.tay.love}</p>}
         <p className="ob-lens-sub">Cung đối: {reveal.tay.opposite} — vừa hút vừa thử thách.</p>
       </div>
     ) : null;
