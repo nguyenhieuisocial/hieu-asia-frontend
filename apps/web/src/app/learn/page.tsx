@@ -110,6 +110,24 @@ const TOPICS: readonly LearnTopic[] = [
     subtitle: 'Đông phương — 9 sao',
     blurb: '9 sao chiếu mệnh theo tuổi + giới tính; góc nhìn tham khảo, không mê tín.',
   },
+  {
+    href: '/learn/trach-cat',
+    title: 'Trạch Cát — chọn ngày giờ',
+    subtitle: 'Đông phương — Trạch cát',
+    blurb: 'Chọn ngày giờ tốt cho cưới hỏi, động thổ, khai trương: hoàng đạo, 12 trực, giờ đẹp — tham khảo.',
+  },
+  {
+    href: '/learn/can-xuong',
+    title: 'Cân Xương Đoán Số',
+    subtitle: 'Đông phương — Viên Thiên Cang',
+    blurb: 'Cân “trọng lượng” năm–tháng–ngày–giờ sinh ra bài thơ vận số; đọc như lời động viên, không phán.',
+  },
+  {
+    href: '/learn/dat-ten-ngu-hanh',
+    title: 'Đặt Tên Theo Ngũ Hành',
+    subtitle: 'Đông phương — Ngũ hành',
+    blurb: 'Chọn tên bổ hành còn thiếu trong Bát Tự của bé; nghĩa đẹp + âm hay là chính, không máy móc.',
+  },
 ];
 
 export default function LearnLandingPage() {
