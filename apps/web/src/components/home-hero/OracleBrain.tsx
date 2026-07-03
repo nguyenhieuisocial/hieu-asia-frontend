@@ -658,9 +658,15 @@ export function OracleBrain(): React.JSX.Element {
                 </p>
               </div>
 
+              {/* Cầu nối sang sản phẩm chính: Bát Tự = "chất" → Tử Vi = bản đồ 12
+                  lĩnh vực đời (đủ 12 cung, dịch đời thường, khớp palace-readings). */}
               <p className="ob-reveal-body">
-                Đông, Tây, Bát Tự — vài lát cắt về bạn. Bức tranh đầy đủ (lá số Tử Vi, tâm lý,
-                đại vận…) cần thêm giờ sinh chính xác.
+                Bát Tự vừa cho biết <strong>&ldquo;chất&rdquo;</strong> của bạn. Lá số{' '}
+                <strong>Tử Vi đầy đủ</strong> sẽ vẽ tiếp bản đồ{' '}
+                <strong>12 lĩnh vực đời</strong>: con người bạn (Mệnh) · cha mẹ · anh chị em ·
+                hôn nhân · con cái · tiền bạc · sự nghiệp · nhà đất · sức khỏe · đi xa &amp; cơ
+                hội bên ngoài · bạn bè quý nhân · phúc đức — kèm đại vận từng chặng 10 năm.
+                Cần giờ sinh chính xác để lập.
               </p>
               <div className="ob-reveal-actions">
                 <a
