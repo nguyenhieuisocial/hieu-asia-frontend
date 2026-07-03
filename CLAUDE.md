@@ -1,7 +1,7 @@
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **hieu-asia-frontend** (12166 symbols, 25429 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **hieu-asia-frontend** (12236 symbols, 25575 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > Index stale? Run `node .gitnexus/run.cjs analyze` from the project root — it auto-selects an available runner. No `.gitnexus/run.cjs` yet? `npx gitnexus analyze` (npm 11 crash → `npm i -g gitnexus`; #1939).
 
@@ -88,12 +88,24 @@ ngữ trang thì SA/CH sai; đã thay MỌI `<input type="time">` bằng compone
 
 **QUY TẮC (giữ vĩnh viễn):** KHÔNG dùng `<input type="time">` — luôn dùng
 `Time24` từ `@hieu-asia/ui`. Các input locale-chrome khác cũng cần cảnh giác:
-`datetime-local` / `month` / `week` (hiện tên tháng / AM/PM theo locale). Còn
-sót: 2 ô `datetime-local` ở admin AuditTab (nội bộ, không có widget đổi ngôn
-ngữ) — chấp nhận tạm, xử lý riêng khi cần vì Time24 chỉ nhận giờ, không nhận ngày.
+`datetime-local` / `month` / `week` (hiện tên tháng / AM/PM theo locale).
+(AuditTab admin đã thay bằng `DateTime24` cục bộ = date + Time24, PR #741.)
+
+**QUY TẮC (giữ vĩnh viễn) — hiệu ứng nhún/tactile:** global press-feedback PHẢI
+dùng thuộc tính riêng `scale:` (compose), KHÔNG BAO GIỜ `transform:` trần —
+`transform: scale()` GHI ĐÈ transform định vị (vd `translate(-50%,-50%)`) làm
+element VĂNG đúng nửa kích thước khi `:active` (bug OracleBrain 5 vòng, vault 94
+round 5). Triệu chứng "văng đúng nửa thân khi bấm/hover" ⇒ grep rule `:active`/
+`:hover` global TRƯỚC. Verify tương tác phải đo bằng pointer THẬT
+(mouse.down/hold/move — programmatic `.click()` KHÔNG kích `:active`).
 
 ## Session / agent prefs
 
 - **KHÔNG tự động archive session** khi user không yêu cầu.
 - **Ưu tiên sub-agent song song** (Agent tool) hơn Workflow; chỉ dùng Workflow
   khi thật sự cần điều phối nhiều pha có phụ thuộc.
+- **Verify trên trình duyệt:** dùng **Cent Browser đang mở** của user (claude-in-chrome
+  MCP, select browser rồi thao tác trong tab group MCP) — **KHÔNG mở cửa sổ
+  Chrome/Playwright mới** (user thấy cửa sổ lạ bật lên; đã nhắc 2026-07-02).
+- **KHÔNG bỏ qua/hoãn task** vì "chưa có traffic / chưa cần thiết / nội bộ thôi" —
+  làm tận nơi hoặc ghi task theo dõi rõ ràng (rule user đặt 2026-07-02).
