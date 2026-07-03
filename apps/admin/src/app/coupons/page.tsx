@@ -52,6 +52,8 @@ interface Coupon {
   discount_pct: number | null;
   /** Fixed VND discount — set when discount_pct is null (backend coupons.ts). */
   discount_vnd?: number | null;
+  /** Plans the coupon applies to — empty/null = every plan (backend coupons.ts). */
+  tier_filter?: string[] | null;
   status: 'active' | 'revoked' | 'expired';
   uses?: number;
   max_uses?: number | null;
@@ -386,6 +388,20 @@ export default function CouponsPage() {
           </span>
         ) : (
           <span className="text-muted-foreground">—</span>
+        ),
+    },
+    {
+      // Gap audit 2026-07-02 — tier_filter (coupon áp cho gói nào) được trả về
+      // nhưng chưa hiển thị; admin không biết phạm vi coupon.
+      id: 'scope',
+      header: 'Áp dụng cho',
+      cell: (c) =>
+        c.tier_filter && c.tier_filter.length > 0 ? (
+          <span className="text-xs text-foreground/80" title={c.tier_filter.join(', ')}>
+            {c.tier_filter.join(', ')}
+          </span>
+        ) : (
+          <span className="text-xs text-muted-foreground">Mọi gói</span>
         ),
     },
     { id: 'status', header: 'Status', cell: (c) => statusPill(c.status) },
