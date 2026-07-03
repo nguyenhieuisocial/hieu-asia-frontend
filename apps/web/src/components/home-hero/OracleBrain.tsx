@@ -54,6 +54,13 @@ type Bazi = {
   hourPillar: string | null;
   strongest: string | null;
   missing: string[];
+  // FULL — chỉ mở khi nhập ĐỦ giờ sinh (4 trụ thật; không giờ = trụ giờ giả định
+  // nên các tầng dưới đây sẽ sai → gate hasTime, trung thực):
+  hourTenGod: string | null;
+  elementCount: Record<string, number> | null;
+  thanSat: { name: string; meaning: string }[];
+  relations: { type: string; chi: string; detail: string }[];
+  namNay: { label: string; tenGod: string } | null;
 };
 type Reveal = {
   dong: BanMenhData;
@@ -213,9 +220,16 @@ export function OracleBrain(): React.JSX.Element {
       // = năm âm chuẩn mệnh học). Lăng kính Cổ học tra 60 Giáp Tý theo ĐÚNG năm này
       // → người sinh tháng 1–đầu tháng 2 (trước Lập Xuân) không còn bị gán nhầm
       // con giáp/can chi/mệnh, và 2 lăng kính Đông + Bát Tự luôn khớp nhau.
+      // asOf = hôm nay (tính tại thời điểm bấm — event handler, không đụng SSR)
+      // để engine trả LƯU NIÊN (vận năm nay). Đại vận cần giới tính → teaser bỏ qua.
+      const now = new Date();
+      const asOf = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(
+        now.getDate(),
+      ).padStart(2, '0')}`;
       const chart = baziMod.calculateBazi({
         birthSolarDate: birthDate,
         birthHour: hasTime ? hour : 12,
+        asOf,
       });
       const lunarYear = chart.meta.solarYearForPillar;
       const dong = banMenh.buildBanMenh(lunarYear);
@@ -257,6 +271,21 @@ export function OracleBrain(): React.JSX.Element {
         hourPillar: hasTime ? `${chart.hour.can} ${chart.hour.chi}` : null,
         strongest: hasTime ? chart.strongest : null,
         missing: hasTime ? chart.missing : [],
+        hourTenGod: hasTime ? chart.hour.tenGod : null,
+        elementCount: hasTime ? chart.elementCount : null,
+        thanSat: hasTime
+          ? chart.thanSat.slice(0, 2).map((t) => ({ name: t.name, meaning: t.meaning }))
+          : [],
+        relations: hasTime
+          ? chart.relations.slice(0, 2).map((r) => ({ type: r.type, chi: r.chi, detail: r.detail }))
+          : [],
+        namNay:
+          hasTime && chart.luuNien
+            ? {
+                label: `${chart.luuNien.year} (${chart.luuNien.can} ${chart.luuNien.chi})`,
+                tenGod: chart.luuNien.tenGod,
+              }
+            : null,
       };
       const result: Reveal = {
         dong,
@@ -653,9 +682,45 @@ export function OracleBrain(): React.JSX.Element {
                       )}
                     </>
                   ) : (
-                    <>Thêm giờ sinh (không bắt buộc) để xem chất nào đang trội / còn thiếu trong bạn.</>
+                    <>Thêm giờ sinh (không bắt buộc) để mở FULL: trụ giờ, bản đồ ngũ hành, sao đáng chú ý, kết nối các trụ và vận năm nay.</>
                   )}
                 </p>
+                {/* FULL — chỉ khi nhập đủ giờ (4 trụ thật, không suy diễn từ giờ giả định). */}
+                {reveal.bazi.elementCount && (
+                  <p className="ob-lens-sub">
+                    Bản đồ ngũ hành (8 chữ):{' '}
+                    {['Mộc', 'Hỏa', 'Thổ', 'Kim', 'Thủy']
+                      .map((el) => `${el} ${reveal.bazi.elementCount![el] ?? 0}`)
+                      .join(' · ')}
+                    .
+                  </p>
+                )}
+                {reveal.bazi.hourTenGod && TEN_GOD_PLAIN[reveal.bazi.hourTenGod] && (
+                  <p className="ob-lens-sub">
+                    Trụ giờ — hậu vận &amp; đời sau ({reveal.bazi.hourTenGod}):{' '}
+                    {TEN_GOD_PLAIN[reveal.bazi.hourTenGod]}
+                  </p>
+                )}
+                {reveal.bazi.relations.length > 0 && (
+                  <p className="ob-lens-sub">
+                    Kết nối giữa các trụ:{' '}
+                    {reveal.bazi.relations
+                      .map((r) => `${r.type} ${r.chi} — ${r.detail}`)
+                      .join(' · ')}
+                  </p>
+                )}
+                {reveal.bazi.thanSat.length > 0 && (
+                  <p className="ob-lens-sub">
+                    Sao đáng chú ý:{' '}
+                    {reveal.bazi.thanSat.map((t) => `${t.name} — ${t.meaning}`).join(' · ')}
+                  </p>
+                )}
+                {reveal.bazi.namNay && TEN_GOD_PLAIN[reveal.bazi.namNay.tenGod] && (
+                  <p className="ob-lens-sub">
+                    Năm nay {reveal.bazi.namNay.label} với bạn mang năng lượng{' '}
+                    {reveal.bazi.namNay.tenGod}: {TEN_GOD_PLAIN[reveal.bazi.namNay.tenGod]}
+                  </p>
+                )}
               </div>
 
               {/* Cầu nối sang sản phẩm chính: Bát Tự = "chất" → Tử Vi = bản đồ 12
