@@ -19,6 +19,7 @@ import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
+import { fmtDateTime } from '@/lib/format';
 
 const RrwebPlayer = dynamic(() => import('./RrwebPlayer'), {
   ssr: false,
@@ -48,14 +49,6 @@ function fmtDuration(sec: number | null): string {
   const m = Math.floor(sec / 60);
   const s = Math.floor(sec % 60);
   return `${m}:${String(s).padStart(2, '0')}`;
-}
-function fmtTime(iso: string | null): string {
-  if (!iso) return '—';
-  try {
-    return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
-  } catch {
-    return iso;
-  }
 }
 
 export default function SessionReplayPanel() {
@@ -119,7 +112,7 @@ export default function SessionReplayPanel() {
       id: 'start',
       header: 'Bắt đầu',
       className: 'whitespace-nowrap text-xs text-muted-foreground',
-      cell: (r) => fmtTime(r.start_time),
+      cell: (r) => fmtDateTime(r.start_time),
     },
     {
       id: 'duration',

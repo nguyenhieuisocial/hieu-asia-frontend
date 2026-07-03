@@ -31,6 +31,7 @@ import { ErrorBlock } from '@/components/admin/error-block';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { adminFetch } from '@/lib/admin-fetch';
 import type { MetricsTrendPoint } from './MetricsTrendChart';
+import { fmtDateTime, fmtPct } from '@/lib/format';
 
 // Recharts (~150KB) lazy-loaded so it stays out of the initial bundle (same
 // pattern as GscTrendChart on /seo). ssr:false — admin is auth-gated, not
@@ -73,18 +74,6 @@ interface HealthInfo {
   version?: string;
   commit?: string;
   uptime?: number;
-}
-
-function fmtDateTime(iso: string) {
-  try {
-    return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'medium' });
-  } catch {
-    return iso;
-  }
-}
-
-function fmtPct(n: number) {
-  return `${(n * 100).toFixed(2)}%`;
 }
 
 function fmtNum(n: number) {
@@ -153,7 +142,7 @@ const ENDPOINT_COLUMNS: AdminTableColumn<EndpointRow>[] = [
     header: 'Tỷ lệ lỗi',
     className: 'text-right',
     cell: (r) => (
-      <span className={`font-mono ${errorRateClass(r.error_rate)}`}>{fmtPct(r.error_rate)}</span>
+      <span className={`font-mono ${errorRateClass(r.error_rate)}`}>{fmtPct(r.error_rate, 2)}</span>
     ),
   },
 ];
@@ -298,7 +287,7 @@ export function PerformanceTab() {
           <span
             className={`font-mono ${errorRate >= 0.05 ? 'text-red-700 dark:text-red-300' : errorRate > 0 ? 'text-gold' : 'text-jade-700 dark:text-jade-50'}`}
           >
-            {data ? `${fmtPct(errorRate)} (${fmtNum(totalErrors)}/${fmtNum(totalRequests)})` : '—'}
+            {data ? `${fmtPct(errorRate, 2)} (${fmtNum(totalErrors)}/${fmtNum(totalRequests)})` : '—'}
           </span>
         </span>
       </div>

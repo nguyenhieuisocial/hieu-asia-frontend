@@ -34,6 +34,7 @@ import { ApiKeyRowActions } from './ApiKeyRowActions';
 import { GenerateApiKeyDialog } from './GenerateApiKeyDialog';
 import { RevokeKeyDialog } from './RevokeKeyDialog';
 import type { AdminApiKey } from './types';
+import { fmtDate } from '@/lib/format';
 
 const ICON_PLUS = <Plus className="h-3.5 w-3.5" aria-hidden />;
 const ICON_KEY = <KeyRound className="h-10 w-10 text-gold/60" aria-hidden />;
@@ -59,15 +60,6 @@ async function fetchApiKeys(): Promise<ApiKeysResp> {
     return JSON.parse(text) as ApiKeysResp;
   } catch {
     return { ok: false, error: `Invalid JSON (status ${r.status})` };
-  }
-}
-
-function fmtDate(s: string | null | undefined): string {
-  if (!s) return '—';
-  try {
-    return new Date(s).toLocaleDateString('vi-VN');
-  } catch {
-    return s;
   }
 }
 

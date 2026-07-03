@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { DataTable, StatusBadge, type DataTableColumn } from '@hieu-asia/ui';
 import type { LlmTraceRow } from '@/lib/llm-spend-api';
+import { fmtDateTime } from '@/lib/format';
 
 interface Props {
   rows: LlmTraceRow[];
@@ -11,10 +12,6 @@ interface Props {
   onVendorFilterChange: (v: string) => void;
   roleFilter: string;
   onRoleFilterChange: (v: string) => void;
-}
-
-function fmtTime(iso: string) {
-  return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'medium' });
 }
 
 function statusTone(s: string): React.ComponentProps<typeof StatusBadge>['status'] {
@@ -48,7 +45,7 @@ export function RecentTracesTable({
       key: 'created_at',
       header: 'Thời gian',
       width: '180px',
-      cell: (r) => <span className="font-mono text-xs text-foreground/85">{fmtTime(r.created_at)}</span>,
+      cell: (r) => <span className="font-mono text-xs text-foreground/85">{fmtDateTime(r.created_at)}</span>,
     },
     {
       key: 'vendor',

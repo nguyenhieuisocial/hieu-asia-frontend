@@ -11,6 +11,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
+import { fmtDateTime } from '@/lib/format';
 
 // Recharts lazy-loaded — out of the initial admin bundle (tasks page pattern).
 const FraudReasonChart = dynamic(
@@ -50,14 +51,6 @@ const REASON_TONE: Record<FraudFlag['reason'], string> = {
   velocity: 'bg-yellow-500/15 text-yellow-700 dark:text-yellow-300',
   manual: 'bg-muted/40 text-muted-foreground',
 };
-
-function dt(iso: string) {
-  try {
-    return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
-  } catch {
-    return iso;
-  }
-}
 
 export function FraudTab() {
   const [data, setData] = React.useState<Resp | null>(null);
@@ -147,7 +140,7 @@ export function FraudTab() {
                   <div className="mt-1 text-foreground/85">{f.detail}</div>
                   <div className="mt-1 flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">
-                      Flagged: {dt(f.flagged_at)}
+                      Flagged: {fmtDateTime(f.flagged_at)}
                     </span>
                     <Button
                       size="sm"
@@ -192,9 +185,9 @@ export function FraudTab() {
                       <td className="py-1.5 pr-3 font-mono text-gold">{f.code}</td>
                       <td className="py-1.5 pr-3">{REASON_LABEL[f.reason]}</td>
                       <td className="py-1.5 pr-3 text-muted-foreground">{f.detail}</td>
-                      <td className="py-1.5 pr-3 text-muted-foreground">{dt(f.flagged_at)}</td>
+                      <td className="py-1.5 pr-3 text-muted-foreground">{fmtDateTime(f.flagged_at)}</td>
                       <td className="py-1.5 pr-3 text-muted-foreground">
-                        {f.cleared_at ? dt(f.cleared_at) : '—'}
+                        {f.cleared_at ? fmtDateTime(f.cleared_at) : '—'}
                       </td>
                       <td className="py-1.5 text-muted-foreground">{f.cleared_by ?? '—'}</td>
                     </tr>

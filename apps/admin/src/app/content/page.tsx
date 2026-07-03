@@ -42,6 +42,7 @@ import { useSavedFilters } from '@/lib/saved-filters';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
+import { fmtDateTime } from '@/lib/format';
 import {
   useContentDrafts,
   useGenerateContent,
@@ -73,21 +74,6 @@ const JUDGE_LABEL: Record<DraftKey, string> = {
   google: 'Gemini',
 };
 
-function fmtDate(iso: string | null): string {
-  if (!iso) return '—';
-  try {
-    return new Date(iso).toLocaleString('vi-VN', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  } catch {
-    return iso;
-  }
-}
-
 const DRAFT_COLUMNS: AdminTableColumn<ContentDraftListRow>[] = [
   {
     id: 'topic',
@@ -118,7 +104,7 @@ const DRAFT_COLUMNS: AdminTableColumn<ContentDraftListRow>[] = [
     id: 'created',
     header: 'Tạo lúc',
     className: 'text-muted-foreground',
-    cell: (row) => fmtDate(row.created_at),
+    cell: (row) => fmtDateTime(row.created_at),
   },
   {
     id: 'actions',

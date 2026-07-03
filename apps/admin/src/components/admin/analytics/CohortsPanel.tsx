@@ -24,6 +24,7 @@ import {
   fetchPaidAttribution,
   isPostHogServerConfigured,
 } from '@/lib/posthog-server';
+import { fmtVnd } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 60;
@@ -42,10 +43,6 @@ function weekLabel(iso: string): string {
   const m = iso.match(/(\d{4})-(\d{2})-(\d{2})/);
   if (!m) return iso;
   return `${Number(m[3])}/${Number(m[2])}`;
-}
-
-function vnd(n: number): string {
-  return `${new Intl.NumberFormat('vi-VN').format(Math.round(n))} đ`;
 }
 
 export default async function CohortsPage() {
@@ -256,7 +253,7 @@ export default async function CohortsPage() {
                           {r.paid_users.toLocaleString('vi-VN')}
                         </td>
                         <td className="px-4 py-3 text-right font-mono text-foreground">
-                          {vnd(r.revenue)}
+                          {fmtVnd(r.revenue)}
                         </td>
                       </tr>
                     ))

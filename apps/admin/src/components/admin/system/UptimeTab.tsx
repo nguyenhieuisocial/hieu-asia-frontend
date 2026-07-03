@@ -23,6 +23,7 @@ import { AlertTriangle, CheckCircle2, TrendingUp, ShieldAlert } from 'lucide-rea
 import { KpiCard } from '@/components/admin/kpi-card';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { adminFetch } from '@/lib/admin-fetch';
+import { fmtDateTime } from '@/lib/format';
 
 interface UptimeDay {
   date: string;
@@ -46,15 +47,6 @@ const SEV_CLASS: Record<Incident['severity'], string> = {
 
 function fmtPct(v: number) {
   return v >= 99.95 ? '100%' : `${v.toFixed(2)}%`;
-}
-
-function fmtDate(iso: string) {
-  return new Date(iso).toLocaleString('vi-VN', {
-    day: '2-digit',
-    month: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
 }
 
 interface WafEvent {
@@ -222,7 +214,7 @@ export function UptimeTab() {
       width: '150px',
       hideOnMobile: true,
       cell: (r) => (
-        <span className="font-mono text-xs text-foreground/90">{fmtDate(r.datetime)}</span>
+        <span className="font-mono text-xs text-foreground/90">{fmtDateTime(r.datetime)}</span>
       ),
     },
   ];
@@ -233,7 +225,7 @@ export function UptimeTab() {
       header: 'Thời điểm',
       sortKey: 'ts',
       width: '160px',
-      cell: (r) => <span className="font-mono text-xs text-foreground/90">{fmtDate(r.ts)}</span>,
+      cell: (r) => <span className="font-mono text-xs text-foreground/90">{fmtDateTime(r.ts)}</span>,
     },
     {
       id: 'service',
@@ -270,7 +262,7 @@ export function UptimeTab() {
       hideOnMobile: true,
       cell: (r) =>
         r.resolved_at ? (
-          <span className="font-mono text-xs text-jade-700 dark:text-jade-300">{fmtDate(r.resolved_at)}</span>
+          <span className="font-mono text-xs text-jade-700 dark:text-jade-300">{fmtDateTime(r.resolved_at)}</span>
         ) : (
           <span className="font-mono text-xs text-warn-700 dark:text-warn-300">đang xử lý</span>
         ),

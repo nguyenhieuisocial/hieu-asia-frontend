@@ -18,6 +18,7 @@ import { useSearchParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Card, CardContent, StatusBadge, toast } from '@hieu-asia/ui';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
+import { fmtVnd, fmtDateTime } from '@/lib/format';
 
 interface Batch {
   id: string;
@@ -46,18 +47,6 @@ const STATUS_BADGE: Record<
   failed: { status: 'error', label: 'Thất bại' },
   rejected: { status: 'error', label: 'Từ chối' },
 };
-
-function vnd(n: number) {
-  return n.toLocaleString('vi-VN') + 'đ';
-}
-function dt(iso: string | null) {
-  if (!iso) return '—';
-  try {
-    return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
-  } catch {
-    return iso;
-  }
-}
 
 async function fetchBatches(): Promise<Batch[]> {
   const r = await fetch('/api/admin/affiliates/batches', { cache: 'no-store' });
@@ -119,7 +108,7 @@ export function BatchesTab() {
     onSuccess: (d) => {
       toast.success(
         `CSV ${d.row_count} dòng đã sẵn sàng${
-          typeof d.total_net_vnd === 'number' ? ` · tổng chi (sau thuế) ${vnd(d.total_net_vnd)}` : ''
+          typeof d.total_net_vnd === 'number' ? ` · tổng chi (sau thuế) ${fmtVnd(d.total_net_vnd)}` : ''
         }`,
       );
       // Wave 45.2 P2-5 — surface missing-bank-info warning before download.
@@ -167,7 +156,7 @@ export function BatchesTab() {
       id: 'total',
       header: 'Tổng',
       className: 'text-right',
-      cell: (b) => <span className="font-mono text-gold">{vnd(b.total_amount_vnd)}</span>,
+      cell: (b) => <span className="font-mono text-gold">{fmtVnd(b.total_amount_vnd)}</span>,
     },
     {
       id: 'affiliates',
@@ -185,13 +174,13 @@ export function BatchesTab() {
       id: 'approved_at',
       header: 'Duyệt lúc',
       hideOnMobile: true,
-      cell: (b) => <span className="text-xs text-muted-foreground">{dt(b.approved_at)}</span>,
+      cell: (b) => <span className="text-xs text-muted-foreground">{fmtDateTime(b.approved_at)}</span>,
     },
     {
       id: 'paid_at',
       header: 'Trả lúc',
       hideOnMobile: true,
-      cell: (b) => <span className="text-xs text-muted-foreground">{dt(b.paid_at)}</span>,
+      cell: (b) => <span className="text-xs text-muted-foreground">{fmtDateTime(b.paid_at)}</span>,
     },
     {
       id: 'actions',
@@ -203,7 +192,7 @@ export function BatchesTab() {
               size="sm"
               disabled={approve.isPending}
               onClick={() => {
-                if (confirm(`Duyệt batch ${b.id.slice(0, 8)} (${vnd(b.total_amount_vnd)})?`)) {
+                if (confirm(`Duyệt batch ${b.id.slice(0, 8)} (${fmtVnd(b.total_amount_vnd)})?`)) {
                   approve.mutate(b.id);
                 }
               }}
@@ -227,7 +216,7 @@ export function BatchesTab() {
               onClick={() => {
                 if (
                   confirm(
-                    `Xác nhận: bạn ĐÃ chuyển khoản xong cho batch ${b.id.slice(0, 8)} (${vnd(
+                    `Xác nhận: bạn ĐÃ chuyển khoản xong cho batch ${b.id.slice(0, 8)} (${fmtVnd(
                       b.total_amount_vnd,
                     )})? Thao tác này chỉ GHI NHẬN, không tự chuyển tiền.`,
                   )
@@ -370,7 +359,7 @@ function BuildBatchModal({ onClose, onBuilt }: { onClose: () => void; onBuilt: (
       const d = await r.json();
       if (!r.ok || !d.ok) throw new Error(d.error ?? `HTTP ${r.status}`);
       toast.success(
-        `Đã tạo batch ${String(d.batch_id).slice(0, 8)} — ${d.affiliate_count} affiliates, ${vnd(
+        `Đã tạo batch ${String(d.batch_id).slice(0, 8)} — ${d.affiliate_count} affiliates, ${fmtVnd(
           d.total_amount_vnd,
         )}`,
       );

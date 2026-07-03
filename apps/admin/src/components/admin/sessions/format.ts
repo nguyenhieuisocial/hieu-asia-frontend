@@ -1,53 +1,11 @@
 /**
  * Wave 60.71.T2.sessions — shared formatters for /sessions list.
+ *
+ * fmtDateTime/fmtRelative/fmtDuration/fmtVnd giờ là re-export từ `@/lib/format`
+ * (gom formatter 2026-07-03) — giữ tên cũ để call sites không đổi.
  */
 
-/** vi-VN short date+time. */
-export function fmtDateTime(iso: string | null | undefined): string {
-  if (!iso) return '—';
-  try {
-    return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
-  } catch {
-    return iso;
-  }
-}
-
-/** "5m", "2h", "3d" — falls back to "—" when missing. */
-export function fmtRelative(iso: string | null | undefined): string {
-  if (!iso) return '';
-  try {
-    const diff = Date.now() - new Date(iso).getTime();
-    const m = Math.floor(diff / 60_000);
-    if (m < 1) return 'vừa xong';
-    if (m < 60) return `${m}m`;
-    const h = Math.floor(m / 60);
-    if (h < 24) return `${h}h`;
-    return `${Math.floor(h / 24)}d`;
-  } catch {
-    return '';
-  }
-}
-
-/** Duration in seconds → "1m 23s" / "45s" / "—". */
-export function fmtDuration(sec: number | null | undefined): string {
-  if (sec == null) return '—';
-  if (sec < 60) return `${sec}s`;
-  return `${Math.floor(sec / 60)}m ${sec % 60}s`;
-}
-
-/** VND amount → "1.234.567 ₫" (vi-VN grouping). Null/undefined → "—". */
-export function fmtVnd(amount: number | null | undefined): string {
-  if (amount == null || !Number.isFinite(amount)) return '—';
-  try {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-      maximumFractionDigits: 0,
-    }).format(amount);
-  } catch {
-    return `${Math.round(amount).toLocaleString('vi-VN')} ₫`;
-  }
-}
+export { fmtDateTime, fmtRelative, fmtDuration, fmtVnd } from '@/lib/format';
 
 /**
  * Humanize a UUID-ish session_id. Vault 107 §5.6 spec — show first 8 chars

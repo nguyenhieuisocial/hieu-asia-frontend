@@ -28,6 +28,7 @@ import { ContactCustomerDialog } from '@/components/admin/ContactCustomerDialog'
 import { FeedbackCharts } from '@/components/feedback/FeedbackCharts';
 import { SavedFiltersMenu } from '@/components/admin/SavedFiltersMenu';
 import { useSavedFilters } from '@/lib/saved-filters';
+import { fmtDateTime } from '@/lib/format';
 
 type FeedbackStatus = 'new' | 'triaged' | 'resolved';
 type FeedbackSurface = 'reading' | 'pricing' | 'onboarding' | 'misc';
@@ -73,15 +74,6 @@ function Stars({ value }: { value: number | null }) {
       ))}
     </span>
   );
-}
-
-function fmtDate(iso: string) {
-  return new Date(iso).toLocaleString('vi-VN', {
-    day: '2-digit',
-    month: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
 }
 
 export default function FeedbackPage() {
@@ -155,7 +147,7 @@ export default function FeedbackPage() {
       header: 'Lúc',
       sortKey: 'ts',
       width: '130px',
-      cell: (r) => <span className="font-mono text-xs text-foreground/85">{fmtDate(r.ts)}</span>,
+      cell: (r) => <span className="font-mono text-xs text-foreground/85">{fmtDateTime(r.ts)}</span>,
     },
     {
       id: 'user',

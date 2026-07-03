@@ -24,9 +24,9 @@ import { KpiCard } from '@/components/admin/kpi-card';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { useAdminRole } from '@/hooks/useAdminRole';
 import { formatDateOrEmpty } from '@/lib/format-date';
+import { fmtVnd } from '@/lib/format';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
 
-const fmtVnd = (n: number) => `${Math.round(n).toLocaleString('vi-VN')}₫`;
 const fmtDate = (iso: string) => formatDateOrEmpty(iso, '—');
 
 interface JournalLine {

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { HandCoins, ExternalLink } from 'lucide-react';
+import { fmtVnd } from '@/lib/format';
 
 interface CustomerAffiliate {
   ok: boolean;
@@ -14,8 +15,6 @@ interface CustomerAffiliate {
   balance: { available_vnd: number; pending_vnd: number; paid_vnd: number };
   configured: boolean;
 }
-
-const fmtVnd = (n: number) => `${Math.round(n || 0).toLocaleString('vi-VN')}₫`;
 
 async function fetchCustomerAffiliate(userId: string): Promise<CustomerAffiliate> {
   const r = await fetch(`/api/admin/customers/${encodeURIComponent(userId)}/affiliate`, { cache: 'no-store' });

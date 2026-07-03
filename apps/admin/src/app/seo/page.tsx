@@ -41,6 +41,7 @@ import {
   type GscMetrics,
   type GscMovingQuery,
 } from '@/lib/gsc-api';
+import { fmtPct } from '@/lib/format';
 
 // Recharts (~150KB gzipped) lazy-loaded so it stays out of the initial bundle;
 // the trend card hydrates after the KPI row paints. ssr:false — admin is
@@ -63,10 +64,6 @@ const RANGE_OPTIONS: { value: Range; label: string }[] = [
 
 function fmtInt(v: number): string {
   return new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(v);
-}
-/** ctr is 0..1 → percentage with 1 decimal. */
-function fmtPct(v: number): string {
-  return `${(v * 100).toFixed(1)}%`;
 }
 /** avg rank — 1 decimal, lower = better. */
 function fmtPos(v: number): string {
