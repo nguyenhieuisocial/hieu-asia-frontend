@@ -14,7 +14,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { Card, CardContent, cn } from '@hieu-asia/ui';
+import { Button, Card, CardContent, cn, toast } from '@hieu-asia/ui';
 import {
   Network,
   ArrowDown,
@@ -33,6 +33,7 @@ import {
   Lock,
   Zap,
   FolderTree,
+  RotateCw,
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import {
@@ -45,6 +46,7 @@ import {
   QUICK_ACTIONS,
   type ArchNode,
 } from '@/lib/architecture';
+import { postRegenSitemap } from '@/lib/admin-api';
 
 // Heavy (React Flow) — lazy-load only when the "Tương tác" view is shown.
 const SystemMapFlow = dynamic(
@@ -169,6 +171,37 @@ const LIVE_SLUGS = Array.from(
   new Set(ARCH_LAYERS.flatMap((l) => l.nodes.map((n) => n.infraSlug).filter(Boolean) as string[])),
 );
 
+/**
+ * "Cập Nhật ngay" — kích 1 lần TRIỂN KHAI LẠI (Vercel Deploy Hook) để làm mới
+ * toàn bộ admin (chạy lại extract:sitemap cho /site-structure + build lại từ
+ * nguồn mới nhất). KHÁC /site-structure ở chỗ: sơ đồ hệ thống là dữ liệu viết
+ * tay (lib/architecture.ts) nên nút này là "redeploy", không tự sinh lại data.
+ */
+function RefreshButton() {
+  const [pending, setPending] = React.useState(false);
+  const click = React.useCallback(async () => {
+    if (pending) return;
+    setPending(true);
+    const res = await postRegenSitemap();
+    setPending(false);
+    if (res.ok) {
+      toast.success('Đã yêu cầu triển khai lại — hệ thống & bản đồ sẽ cập nhật sau ~1–2 phút.');
+      return;
+    }
+    if (res.error === 'DEPLOY_HOOK_NOT_CONFIGURED') {
+      toast.error('Nút chưa được kích hoạt: cần cấu hình Deploy Hook (VERCEL_ADMIN_DEPLOY_HOOK) trong Vercel.');
+      return;
+    }
+    toast.error(res.error ?? 'Không cập nhật được.');
+  }, [pending]);
+  return (
+    <Button variant="outline" size="sm" onClick={click} disabled={pending}>
+      <RotateCw className={`mr-1.5 h-3.5 w-3.5 ${pending ? 'animate-spin' : ''}`} />
+      {pending ? 'Đang gửi…' : 'Cập Nhật ngay'}
+    </Button>
+  );
+}
+
 export default function ArchitecturePage() {
   const [statuses, setStatuses] = React.useState<Record<string, Live>>(() =>
     Object.fromEntries(LIVE_SLUGS.map((s) => [s, 'loading'])),
@@ -261,12 +294,15 @@ export default function ArchitecturePage() {
         description="Trung tâm vận hành: hành động nhanh, trạng thái sống, sơ đồ hệ thống, luồng dữ liệu, cẩm nang, tác vụ định kỳ và phân quyền — tất cả một chỗ."
         icon={<Network className="h-5 w-5" />}
         actions={
-          <Link
-            href="/site-structure"
-            className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:border-gold/40 hover:text-foreground"
-          >
-            <FolderTree className="h-3.5 w-3.5" aria-hidden /> Xem cấu trúc trang
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/site-structure"
+              className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:border-gold/40 hover:text-foreground"
+            >
+              <FolderTree className="h-3.5 w-3.5" aria-hidden /> Xem cấu trúc trang
+            </Link>
+            <RefreshButton />
+          </div>
         }
       />
 
