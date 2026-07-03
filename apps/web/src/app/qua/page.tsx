@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StartupPath } from '@/components/home/StartupPath';
@@ -43,10 +44,37 @@ export default function QuaPage() {
         <StartupPath />
 
         {/* Phần thưởng đang có — điểm danh + mời bạn (tự hiện khi đã đăng nhập) */}
-        <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
+        <section className="mx-auto max-w-6xl px-4 pb-12 sm:px-6">
           <div className="grid gap-6 lg:grid-cols-2">
             <StreakCard />
             <ReferralCard />
+          </div>
+        </section>
+
+        {/* Nhận & dùng quà + lối đi tiếp (cho cả khách chưa đăng nhập) */}
+        <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
+          <div className="rounded-2xl border border-gold/25 bg-gradient-to-br from-gold/[0.06] to-transparent p-6 sm:p-8">
+            <h2 className="font-heading text-xl font-bold text-foreground sm:text-2xl">
+              Nhận &amp; dùng quà thế nào?
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Điểm danh mỗi ngày và mời bạn bè để tích voucher — voucher giảm thẳng vào các
+              gói trả phí khi bạn sẵn sàng. Chưa vội: phần lớn công cụ đã miễn phí.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link
+                href="/cong-cu"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-gold-gradient px-5 py-2.5 text-sm font-semibold text-ink transition-transform hover:scale-[1.02]"
+              >
+                Khám phá công cụ →
+              </Link>
+              <Link
+                href="/pricing"
+                className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-gold"
+              >
+                Xem các gói &amp; dùng voucher →
+              </Link>
+            </div>
           </div>
         </section>
       </main>
