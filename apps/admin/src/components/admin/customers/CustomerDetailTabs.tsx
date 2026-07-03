@@ -33,6 +33,7 @@ import { CustomerAffiliateCard } from '@/components/admin/customers/CustomerAffi
 import { SessionAccessDialog } from './SessionAccessDialog';
 import { RefundActionDialog } from './RefundActionDialog';
 import { fmtDate, fmtRelative } from './format';
+import { fmtVnd } from '@/lib/format';
 import {
   type AuditRow,
   type CustomerDetail,
@@ -562,9 +563,7 @@ function TransactionsTab({ transactions }: { transactions: TxnRow[] }) {
         className: 'text-right tabular-nums',
         cell: (t) => (
           <span className="text-foreground/85">
-            {t.amount != null
-              ? new Intl.NumberFormat('vi-VN').format(t.amount) + ' đ'
-              : '—'}
+            {t.amount != null ? fmtVnd(t.amount) : '—'}
           </span>
         ),
       },
@@ -655,9 +654,7 @@ function RefundsTab({
         className: 'text-right tabular-nums',
         cell: (r) => (
           <span className="text-foreground/85">
-            {r.amount_vnd != null
-              ? new Intl.NumberFormat('vi-VN').format(r.amount_vnd) + ' đ'
-              : '—'}
+            {r.amount_vnd != null ? fmtVnd(r.amount_vnd) : '—'}
           </span>
         ),
       },

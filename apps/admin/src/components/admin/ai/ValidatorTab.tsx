@@ -32,6 +32,7 @@ import { Shield, AlertTriangle, Repeat, DollarSign } from 'lucide-react';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
+import { fmtPct } from '@/lib/format';
 
 type EndpointSlug = 'decisions-brief' | 'mentor-skills-decision';
 
@@ -99,11 +100,6 @@ async function fetchSummary(): Promise<AiQualitySummary | null> {
   } catch {
     return null;
   }
-}
-
-function fmtPct(v: number): string {
-  if (!Number.isFinite(v)) return '—';
-  return `${(v * 100).toFixed(1)}%`;
 }
 
 function fmtUsd(v: number): string {

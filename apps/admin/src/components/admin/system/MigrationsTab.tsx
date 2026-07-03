@@ -22,6 +22,7 @@ import { Database, CheckCircle2, AlertTriangle, Clock } from 'lucide-react';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { MockBanner } from '@/components/mock-banner';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
+import { fmtDateTime } from '@/lib/format';
 
 type MigrationStatus = 'applied' | 'pending' | 'failed';
 
@@ -87,17 +88,6 @@ const STATUS_ICON: Record<MigrationStatus, React.ComponentType<{ className?: str
   pending: Clock,
   failed: AlertTriangle,
 };
-
-function fmtDateTime(iso: string | null) {
-  if (!iso) return '—';
-  return new Date(iso).toLocaleString('vi-VN', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
 
 function fmtDuration(ms: number | null) {
   if (ms == null) return '—';

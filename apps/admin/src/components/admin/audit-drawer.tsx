@@ -24,6 +24,7 @@ import {
 } from '@hieu-asia/ui';
 import { Activity, AlertTriangle, ExternalLink } from 'lucide-react';
 import { ErrorBlock } from './error-block';
+import { fmtAuditDate, fmtRelative } from './audit/format';
 
 interface AuditEntry {
   id?: string;
@@ -50,33 +51,6 @@ const HIGH_RISK_ACTIONS = new Set([
   'admin_user_deleted',
   'admin_user_role_changed',
 ]);
-
-function fmtDate(iso: string | null | undefined): string {
-  if (!iso) return '—';
-  try {
-    return new Date(iso).toLocaleString('vi-VN', {
-      dateStyle: 'short',
-      timeStyle: 'medium',
-    });
-  } catch {
-    return iso;
-  }
-}
-
-function fmtRelative(iso: string | null | undefined): string {
-  if (!iso) return '';
-  try {
-    const diff = Date.now() - new Date(iso).getTime();
-    const m = Math.floor(diff / 60_000);
-    if (m < 1) return 'vừa xong';
-    if (m < 60) return `${m}m`;
-    const h = Math.floor(m / 60);
-    if (h < 24) return `${h}h`;
-    return `${Math.floor(h / 24)}d`;
-  } catch {
-    return '';
-  }
-}
 
 async function fetchAudit(actor: string, limit: number): Promise<AuditResponse> {
   const qs = new URLSearchParams();
@@ -193,7 +167,7 @@ export function AuditLogDrawer({
                     </span>
                   </div>
                   <div className="mt-1.5 font-mono text-[10px] text-muted-foreground" title={e.ts ?? ''}>
-                    {fmtDate(e.ts)}
+                    {fmtAuditDate(e.ts)}
                   </div>
                   {e.resource_id && (
                     <div className="mt-1 font-mono text-[10px] text-muted-foreground">

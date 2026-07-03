@@ -38,6 +38,7 @@ import { AdminTable, type AdminTableColumn } from '@/components/admin/table/Admi
 import { listTransactions } from '@/lib/admin-api';
 import { computeNetRevenue } from '@/lib/net-revenue';
 import type { AdminTransaction } from '@/lib/mock-data';
+import { fmtVnd } from '@/lib/format';
 
 interface AnalyticsResponse {
   ok: boolean;
@@ -90,10 +91,6 @@ const FUNNEL_LABELS: Record<string, string> = {
 };
 
 const FUNNEL_ORDER = ['reading_started', 'consent_given', 'palm_uploaded', 'survey_completed', 'report_ready', 'mentor_started', 'paid'];
-
-function fmtCurrency(n: number) {
-  return new Intl.NumberFormat('vi-VN').format(n) + ' đ';
-}
 
 // Revenue-by-tier — pure client-side aggregation over the transactions list
 // (listTransactions already maps metadata.tier → plan). No new endpoint.
@@ -194,7 +191,7 @@ export default function AnalyticsPage() {
       id: 'total',
       header: 'Doanh thu',
       className: 'text-right font-mono text-foreground tabular-nums',
-      cell: (r) => fmtCurrency(r.total),
+      cell: (r) => fmtVnd(r.total),
     },
     {
       id: 'pct',
@@ -348,7 +345,7 @@ export default function AnalyticsPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard
           label={`Doanh thu (${days}d)`}
-          value={fmtCurrency(revenue.total)}
+          value={fmtVnd(revenue.total)}
           icon={<DollarSign className="h-4 w-4" />}
           accent="gold"
           delta={revenueDelta}
@@ -357,10 +354,10 @@ export default function AnalyticsPage() {
         {netRevenue && (
           <KpiCard
             label={`Tiền thực thu (${days}d)`}
-            value={fmtCurrency(netRevenue.netTotal)}
+            value={fmtVnd(netRevenue.netTotal)}
             icon={<Wallet className="h-4 w-4" />}
             accent="jade"
-            hint={`gộp ${fmtCurrency(netRevenue.grossTotal)} − hoàn ${fmtCurrency(netRevenue.refundsTotal)}`}
+            hint={`gộp ${fmtVnd(netRevenue.grossTotal)} − hoàn ${fmtVnd(netRevenue.refundsTotal)}`}
           />
         )}
         <KpiCard
@@ -392,7 +389,7 @@ export default function AnalyticsPage() {
             value={refunds.ratePct.toFixed(1) + '%'}
             icon={<Undo2 className="h-4 w-4" />}
             accent="gold"
-            hint={`${fmtCurrency(refunds.total)} · ${refunds.count} lệnh`}
+            hint={`${fmtVnd(refunds.total)} · ${refunds.count} lệnh`}
           />
         )}
         {abandoned && (
@@ -401,7 +398,7 @@ export default function AnalyticsPage() {
             value={abandoned.abandonRatePct.toFixed(1) + '%'}
             icon={<ShoppingCart className="h-4 w-4" />}
             accent="purple"
-            hint={`${abandoned.abandonedTotal}/${abandoned.createdTotal} đơn · rò rỉ ${fmtCurrency(abandoned.leakageVnd)}`}
+            hint={`${abandoned.abandonedTotal}/${abandoned.createdTotal} đơn · rò rỉ ${fmtVnd(abandoned.leakageVnd)}`}
           />
         )}
       </div>
@@ -476,7 +473,7 @@ export default function AnalyticsPage() {
                 <CardDescription>
                   Số đơn bắt đầu thanh toán so với đã trả mỗi ngày. Bỏ giỏ{' '}
                   {abandoned.abandonRatePct.toFixed(1)}% · ước tính rò rỉ{' '}
-                  {fmtCurrency(abandoned.leakageVnd)}.
+                  {fmtVnd(abandoned.leakageVnd)}.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -528,7 +525,7 @@ export default function AnalyticsPage() {
                       .toLocaleString('vi-VN')}
                   </td>
                   <td className="px-3 py-2.5 text-right font-mono text-foreground tabular-nums">
-                    {fmtCurrency(tierBreakdown.total)}
+                    {fmtVnd(tierBreakdown.total)}
                   </td>
                   <td className="px-3 py-2.5 text-right font-mono text-foreground/70 tabular-nums">
                     100%

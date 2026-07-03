@@ -45,6 +45,7 @@ import { exportToCSV, fmtCsvFilename } from '@/lib/csv-export';
 import { useBulkSelection } from '@/lib/bulk-action';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
+import { fmtDate, fmtVnd } from '@/lib/format';
 
 interface Coupon {
   code: string;
@@ -78,15 +79,6 @@ const STATUS_FILTERS: Array<{ value: StatusFilter; label: string }> = [
   { value: 'revoked', label: 'Đã thu hồi' },
   { value: 'expired', label: 'Hết hạn' },
 ];
-
-function fmtDate(iso?: string | null) {
-  if (!iso) return '—';
-  try {
-    return new Date(iso).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
-  } catch {
-    return iso;
-  }
-}
 
 // Wave 60.81.B Tier 3 polish — delegate to canonical `StatusBadge` (success /
 // warning / error / info / neutral) so coupons/sessions/tasks/payments share
@@ -390,7 +382,7 @@ export default function CouponsPage() {
           <span className="tabular-nums text-foreground/90">{c.discount_pct}%</span>
         ) : c.discount_vnd != null ? (
           <span className="tabular-nums text-foreground/90">
-            {Number(c.discount_vnd).toLocaleString('vi-VN')}đ
+            {fmtVnd(Number(c.discount_vnd))}
           </span>
         ) : (
           <span className="text-muted-foreground">—</span>

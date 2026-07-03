@@ -23,6 +23,7 @@ import {
 } from '@hieu-asia/ui';
 import { Mail, Palette, ShieldCheck, UserCircle2 } from 'lucide-react';
 import type { AdminProfile } from './types';
+import { fmtDateTime } from '@/lib/format';
 
 const ICON_AVATAR = <UserCircle2 className="h-10 w-10 text-gold/60" aria-hidden />;
 const ICON_MAIL = <Mail className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />;
@@ -47,15 +48,6 @@ async function fetchProfile(): Promise<ProfileResp> {
     return JSON.parse(text) as ProfileResp;
   } catch {
     return { ok: false, error: `Invalid JSON (status ${r.status})` };
-  }
-}
-
-function fmtDate(s: string | null | undefined): string {
-  if (!s) return '—';
-  try {
-    return new Date(s).toLocaleString('vi-VN');
-  } catch {
-    return s;
   }
 }
 
@@ -103,7 +95,7 @@ export function ProfileTab() {
                   </span>
                 </p>
                 <p className="font-mono text-[11px] text-muted-foreground">
-                  Last login: {fmtDate(profile.last_login_at)}
+                  Last login: {fmtDateTime(profile.last_login_at)}
                 </p>
                 {data?.degraded && (
                   <p className="text-[11px] text-amber-700 dark:text-amber-300">

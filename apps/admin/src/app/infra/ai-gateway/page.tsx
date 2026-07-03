@@ -20,6 +20,7 @@ import {
   type InfraAiGatewaySeriesPoint,
 } from '@/lib/admin-api';
 import { getInfraTool } from '@/lib/infra-tools';
+import { fmtPct } from '@/lib/format';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel } from '@/components/admin/infra/infra-panel';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
@@ -54,11 +55,6 @@ function fmtBalance(usd: number): string {
 function fmtMs(ms: number | null | undefined): string {
   if (ms == null) return '—';
   return `${Math.round(ms).toLocaleString('vi-VN')} ms`;
-}
-
-function fmtPct(pct: number | null | undefined): string {
-  if (typeof pct !== 'number' || Number.isNaN(pct)) return '—';
-  return `${pct.toFixed(2)}%`;
 }
 
 const MODEL_COLUMNS: AdminTableColumn<InfraAiGatewayItem>[] = [
@@ -96,7 +92,7 @@ const MODEL_COLUMNS: AdminTableColumn<InfraAiGatewayItem>[] = [
     id: 'error_rate',
     header: 'Tỷ lệ lỗi',
     className: 'text-right tabular-nums text-muted-foreground',
-    cell: (r) => fmtPct(r.error_rate_pct),
+    cell: (r) => fmtPct(r.error_rate_pct / 100, 2),
   },
   {
     id: 'top_error',

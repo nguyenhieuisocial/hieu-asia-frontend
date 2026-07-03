@@ -28,6 +28,7 @@ import { trackAdminMutation } from '@/lib/admin-breadcrumb';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { useSavedFilters } from '@/lib/saved-filters';
 import { SavedFiltersMenu } from '@/components/admin/SavedFiltersMenu';
+import { fmtDateTime } from '@/lib/format';
 
 // Recharts lazy-loaded — keeps it out of the initial admin bundle (tasks
 // page pattern). ssr:false because admin is auth-gated.
@@ -59,14 +60,6 @@ async function fetchPromoters(): Promise<PromoterRow[]> {
   const d = await r.json();
   if (!r.ok || !d.ok) throw new Error(d.error ?? `HTTP ${r.status}`);
   return d.promoters as PromoterRow[];
-}
-
-function dt(iso: string) {
-  try {
-    return new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
-  } catch {
-    return iso;
-  }
 }
 
 export function PromotersTab() {
@@ -156,7 +149,7 @@ export function PromotersTab() {
       id: 'created_at',
       header: 'Tạo',
       hideOnMobile: true,
-      cell: (r) => <span className="text-xs text-muted-foreground">{dt(r.created_at)}</span>,
+      cell: (r) => <span className="text-xs text-muted-foreground">{fmtDateTime(r.created_at)}</span>,
     },
     {
       id: 'actions',

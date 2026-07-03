@@ -15,21 +15,8 @@ export function fmtAuditDate(iso: string | null | undefined): string {
   }
 }
 
-/** "5m", "2h", "3d" — "" when missing. */
-export function fmtRelative(iso: string | null | undefined): string {
-  if (!iso) return '';
-  try {
-    const diff = Date.now() - new Date(iso).getTime();
-    const m = Math.floor(diff / 60_000);
-    if (m < 1) return 'vừa xong';
-    if (m < 60) return `${m}m`;
-    const h = Math.floor(m / 60);
-    if (h < 24) return `${h}h`;
-    return `${Math.floor(h / 24)}d`;
-  } catch {
-    return '';
-  }
-}
+// Relative time — re-export từ @/lib/format (gom formatter 2026-07-03).
+export { fmtRelative } from '@/lib/format';
 
 /**
  * Actions considered "critical" for compliance — they erase data, rotate

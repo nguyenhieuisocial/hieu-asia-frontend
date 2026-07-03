@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import { fmtVnd } from '@/lib/format';
 
 // Refund = tiền rời khỏi quỹ → màu cảnh báo (đỏ gạch ấm, hợp tông kem/vàng).
 const REFUND_RED = '#C2410C';
@@ -31,7 +32,7 @@ export function RefundChart({ data }: { data: RefundDay[] }) {
             labelStyle={{ color: REFUND_RED }}
             formatter={(value: unknown) => {
               const n = typeof value === 'number' ? value : Number(value);
-              return [new Intl.NumberFormat('vi-VN').format(n) + ' đ', 'Hoàn tiền'];
+              return [fmtVnd(n), 'Hoàn tiền'];
             }}
           />
           <Bar dataKey="amount" fill={REFUND_RED} radius={[4, 4, 0, 0]} />
