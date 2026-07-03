@@ -30,11 +30,25 @@ import { Time24 } from '@/components/Time24';
  * tránh lệch với công cụ thật. Gated bởi prefers-reduced-motion.
  */
 
-type Lens = { name: string; symbol: string; tagline: string; element: string; quality: string };
+type Lens = {
+  name: string;
+  symbol: string;
+  tagline: string;
+  element: string;
+  quality: string;
+  rulingPlanet: string;
+  strengths: string[];
+  work: string;
+  opposite: string;
+};
 type Bazi = {
   dayCan: string;
   dayEl: string;
+  dayYang: boolean;
   yearPillar: string;
+  monthPillar: string;
+  dayPillar: string;
+  monthTenGod: string;
   hourPillar: string | null;
   strongest: string | null;
   missing: string[];
@@ -42,6 +56,11 @@ type Bazi = {
 type Reveal = {
   dong: BanMenhData;
   conVat: string;
+  /** Tính cách tuổi (con giáp) — engine con-giap-data, cùng nguồn trang /con-giap. */
+  cg: { tagline: string; strengths: string[] } | null;
+  /** Hướng tốt + 1 lời khuyên hành động theo hành bản mệnh (ngu-hanh-remedy). */
+  huongTot: string[];
+  loiKhuyen: string | null;
   tay: Lens | null;
   nearCusp: boolean;
   bazi: Bazi;
@@ -177,11 +196,13 @@ export function OracleBrain(): React.JSX.Element {
     setErr(null);
     setReading(true);
     try {
-      const [banMenh, cung, conGiap, baziMod] = await Promise.all([
+      const [banMenh, cung, conGiap, baziMod, conGiapData, nguHanh] = await Promise.all([
         import('@/lib/ban-menh-data'),
         import('@/lib/cung-hoang-dao-data'),
         import('@/lib/con-giap-animal'),
         import('@/lib/bazi'),
+        import('@/lib/con-giap-data'),
+        import('@/lib/ngu-hanh-remedy'),
       ]);
       const hm = birthTime.match(/^(\d{1,2}):(\d{2})$/);
       const hour = hm ? Number(hm[1]) : 12;
@@ -201,21 +222,36 @@ export function OracleBrain(): React.JSX.Element {
         setErr('Năm sinh cần trong khoảng 1950–2026.');
         return;
       }
+      // Tầng chiều sâu — TOÀN dữ liệu chuẩn từ engine sẵn có (không bịa):
+      // tính cách tuổi (con-giap-data), hướng tốt + lời khuyên (ngu-hanh-remedy),
+      // chi tiết cung (buildCung: chủ quản/điểm mạnh/công việc/cung đối).
+      const cgd = conGiapData.buildConGiap(dong.zodiac.slug);
+      const remedy = nguHanh.getNguHanhRemedy(dong.elementName);
       const sun = cung.sunSignFromDate(y, mo, d);
       const found = cung.listCung().find((c) => c.slug === sun.slug);
-      const tay: Lens | null = found
-        ? {
-            name: found.name,
-            symbol: found.symbol,
-            tagline: found.tagline,
-            element: found.element,
-            quality: found.quality,
-          }
-        : null;
+      const detail = cung.buildCung(sun.slug);
+      const tay: Lens | null =
+        found && detail
+          ? {
+              name: found.name,
+              symbol: found.symbol,
+              tagline: found.tagline,
+              element: found.element,
+              quality: found.quality,
+              rulingPlanet: detail.extra.rulingPlanet,
+              strengths: detail.extra.strengths.slice(0, 2),
+              work: detail.extra.work,
+              opposite: detail.opposite.name,
+            }
+          : null;
       const bazi: Bazi = {
         dayCan: chart.dayMaster.can,
         dayEl: chart.dayMaster.element,
+        dayYang: chart.dayMaster.yang,
         yearPillar: `${chart.year.can} ${chart.year.chi}`,
+        monthPillar: `${chart.month.can} ${chart.month.chi}`,
+        dayPillar: `${chart.day.can} ${chart.day.chi}`,
+        monthTenGod: chart.month.tenGod,
         hourPillar: hasTime ? `${chart.hour.can} ${chart.hour.chi}` : null,
         strongest: hasTime ? chart.strongest : null,
         missing: hasTime ? chart.missing : [],
@@ -223,6 +259,9 @@ export function OracleBrain(): React.JSX.Element {
       const result: Reveal = {
         dong,
         conVat: conGiap.conVatOf(dong.zodiac.ten),
+        cg: cgd ? { tagline: cgd.extra.tagline, strengths: cgd.extra.strengths.slice(0, 2) } : null,
+        huongTot: remedy?.huongTot ?? [],
+        loiKhuyen: remedy?.loiKhuyen?.[0] ?? null,
         tay,
         nearCusp: sun.nearCusp,
         bazi,
@@ -265,6 +304,14 @@ export function OracleBrain(): React.JSX.Element {
           </strong>{' '}
           — mệnh {reveal.dong.elementName} ({reveal.dong.napAmName}).
         </p>
+        {reveal.cg && (
+          <p className="ob-lens-sub">
+            Tuổi {reveal.conVat}: {reveal.cg.tagline}
+            {reveal.cg.strengths.length > 0 && (
+              <> Nổi bật: {reveal.cg.strengths.join(' · ')}.</>
+            )}
+          </p>
+        )}
         <p className="ob-lens-sub">
           {reveal.dong.sinhElementName} sinh {reveal.dong.elementName} (tương sinh) ·{' '}
           {reveal.dong.khacElementName} khắc {reveal.dong.elementName} (nên tiết chế).{' '}
@@ -276,6 +323,12 @@ export function OracleBrain(): React.JSX.Element {
             <>Hợp hướng nghề {reveal.dong.careers.slice(0, 2).join(', ')}.</>
           )}
         </p>
+        {(reveal.huongTot.length > 0 || reveal.loiKhuyen) && (
+          <p className="ob-lens-sub">
+            {reveal.huongTot.length > 0 && <>Hướng tốt: {reveal.huongTot.join(', ')}. </>}
+            {reveal.loiKhuyen && <>Gợi ý: {reveal.loiKhuyen}</>}
+          </p>
+        )}
         {reveal.lunarAdjusted && (
           <p className="ob-lens-sub">
             Bạn sinh trước Lập Xuân — tuổi âm tính theo năm {reveal.dong.year} (chuẩn mệnh
@@ -295,9 +348,16 @@ export function OracleBrain(): React.JSX.Element {
           </strong>
         </p>
         <p className="ob-lens-sub">
-          Nhóm {reveal.tay.element} · {reveal.tay.quality}. {reveal.tay.tagline}
+          Nhóm {reveal.tay.element} · {reveal.tay.quality} · chủ quản {reveal.tay.rulingPlanet}.{' '}
+          {reveal.tay.tagline}
           {reveal.nearCusp && ' (sinh sát ranh giới cung — cần giờ sinh để chắc chắn).'}
         </p>
+        {reveal.tay.strengths.length > 0 && (
+          <p className="ob-lens-sub">
+            Nổi bật: {reveal.tay.strengths.join(' · ')}. {reveal.tay.work}
+          </p>
+        )}
+        <p className="ob-lens-sub">Cung đối: {reveal.tay.opposite} — vừa hút vừa thử thách.</p>
       </div>
     ) : null;
 
@@ -555,20 +615,27 @@ export function OracleBrain(): React.JSX.Element {
                 <span className="ob-lens-tag">Bát Tự — Tứ Trụ</span>
                 <p className="ob-lens-line">
                   <strong>
-                    Nhật Chủ (chủ mệnh): {reveal.bazi.dayCan} — hành {reveal.bazi.dayEl}
+                    Nhật Chủ (chủ mệnh): {reveal.bazi.dayCan} —{' '}
+                    {reveal.bazi.dayYang ? 'dương' : 'âm'} {reveal.bazi.dayEl}
                   </strong>
                 </p>
                 <p className="ob-lens-sub">
-                  Trụ năm {reveal.bazi.yearPillar}
+                  Tứ Trụ: năm {reveal.bazi.yearPillar} · tháng {reveal.bazi.monthPillar} · ngày{' '}
+                  {reveal.bazi.dayPillar}
+                  {reveal.bazi.hourPillar && <> · giờ {reveal.bazi.hourPillar}</>}.
+                </p>
+                <p className="ob-lens-sub">
+                  Thập Thần trụ tháng: {reveal.bazi.monthTenGod}.
                   {reveal.bazi.hourPillar ? (
                     <>
-                      {' '}
-                      · trụ giờ {reveal.bazi.hourPillar}
-                      {reveal.bazi.strongest && <> · ngũ hành vượng {reveal.bazi.strongest}</>}
-                      {reveal.bazi.missing.length > 0 && <> · thiếu {reveal.bazi.missing.join(', ')}</>}.
+                      {reveal.bazi.strongest && <> Ngũ hành vượng {reveal.bazi.strongest}</>}
+                      {reveal.bazi.missing.length > 0 && (
+                        <> · thiếu {reveal.bazi.missing.join(', ')}</>
+                      )}
+                      {(reveal.bazi.strongest || reveal.bazi.missing.length > 0) && <>.</>}
                     </>
                   ) : (
-                    <>. Thêm giờ sinh (không bắt buộc) để mở trụ giờ + cân bằng ngũ hành đầy đủ.</>
+                    <> Thêm giờ sinh (không bắt buộc) để mở trụ giờ + cân bằng ngũ hành đầy đủ.</>
                   )}
                 </p>
               </div>
