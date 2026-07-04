@@ -9,6 +9,7 @@
  * PHẢI khớp `PROMPT_ROLES` trong worker (backend/prompts/index.ts):
  *  - 9 role pipeline + 2 standalone (kể từ #348/#351)
  *  - 5 công cụ tính cách/tarot + Cẩm Nang Cuộc Đời (kể từ #353, 2026-07-04)
+ *  - natal (Chiêm tinh phương Tây) + horoscope (Tử vi hằng ngày) → đủ 17 (2026-07-04)
  */
 export const PROMPT_ROLES = [
   'vision',
@@ -26,6 +27,8 @@ export const PROMPT_ROLES = [
   'bigfive',
   'tarot',
   'life_manual',
+  'natal',
+  'horoscope',
 ] as const;
 
 export type PromptRole = (typeof PROMPT_ROLES)[number];
