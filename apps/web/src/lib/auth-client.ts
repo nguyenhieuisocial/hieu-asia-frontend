@@ -145,6 +145,17 @@ export function getSupabaseAuth(): SupabaseClient | null {
       } catch {
         /* never break auth */
       }
+
+      // Flush personality results cached during the ANONYMOUS session (user did a
+      // tool BEFORE signing in) so they reach the server for the Cẩm Nang report.
+      // Dynamic import keeps scoring code out of the auth bundle; the flush itself
+      // de-dupes so this reload-triggered SIGNED_IN won't re-POST identical data.
+      try {
+        const { flushPersonalityOnLogin } = await import('./scoring/submit-personality');
+        flushPersonalityOnLogin();
+      } catch {
+        /* never block auth on personality persistence */
+      }
     }
   });
 
