@@ -26,6 +26,11 @@ import {
   ChevronRight,
   Search,
   Sparkles,
+  Puzzle,
+  Gauge,
+  Orbit,
+  SlidersHorizontal,
+  BookOpen,
   X,
   type LucideIcon,
 } from 'lucide-react';
@@ -39,22 +44,14 @@ import {
   formatRelativeOrEmpty,
   isMissingDate,
 } from '@/lib/format-date';
+import { PROMPT_ROLES as ROLES, type PromptRole } from '@/lib/prompt-roles';
 
-/** Canonical agent roles. Must match Worker KV keys (backend PROMPT_ROLES —
- *  9 roles kể từ backend #348: thêm decisions + ops_copilot). */
-const ROLES = [
-  'vision',
-  'logic',
-  'psychology',
-  'alignment',
-  'report',
-  'mentor',
-  'judge',
-  'decisions',
-  'ops_copilot',
-] as const;
-type Role = (typeof ROLES)[number];
+// Canonical role list gom về @/lib/prompt-roles (một nguồn cho cả list + detail).
+type Role = PromptRole;
 
+// Nhãn/tagline/icon dự phòng cho từng role. `meta` từ worker (backend #351) là
+// nguồn hiển thị chính; bảng này là fallback + icon cho lưới thẻ. 15 role: 9
+// pipeline/standalone + 5 công cụ + Cẩm Nang (backend #353).
 const ROLE_META: Record<Role, { label: string; tagline: string; Icon: LucideIcon }> = {
   vision: { label: 'Vision', tagline: 'Diễn giải biểu tượng & ý nghĩa lá bài', Icon: Eye },
   logic: { label: 'Logic', tagline: 'Phân tích nhân quả, ràng buộc, tradeoff', Icon: Brain },
@@ -72,6 +69,16 @@ const ROLE_META: Record<Role, { label: string; tagline: string; Icon: LucideIcon
     label: 'Ops Copilot',
     tagline: 'Trợ lý vận hành admin — trả lời chủ từ số liệu hệ thống',
     Icon: Bot,
+  },
+  mbti: { label: 'MBTI', tagline: 'Đọc kết quả trắc nghiệm 16 loại (khung tự-phản-tỉnh)', Icon: Puzzle },
+  disc: { label: 'DISC', tagline: 'Đọc phong cách hành vi 4 chiều', Icon: Gauge },
+  enneagram: { label: 'Enneagram', tagline: 'Đọc 9 nhóm động cơ & nỗi sợ cốt lõi', Icon: Orbit },
+  bigfive: { label: 'Big Five', tagline: 'Đọc 5 chiều tính cách (IPIP)', Icon: SlidersHorizontal },
+  tarot: { label: 'Tarot', tagline: 'Gợi mở phản tư quanh câu hỏi (không tiên đoán)', Icon: Sparkles },
+  life_manual: {
+    label: 'Cẩm Nang Cuộc Đời',
+    tagline: 'Báo cáo cao cấp đa lăng kính (~30 mục) — bản chuẩn nội dung',
+    Icon: BookOpen,
   },
 };
 
