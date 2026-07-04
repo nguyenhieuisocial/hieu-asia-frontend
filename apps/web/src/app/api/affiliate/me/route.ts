@@ -12,6 +12,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const HIEU_API_URL = process.env.HIEU_API_URL ?? 'https://api.hieu.asia';
+const HIEU_API_SERVICE_TOKEN = process.env.HIEU_API_SERVICE_TOKEN;
 const COOKIE_NAME = 'hieu_aff_id';
 
 export async function GET(req: NextRequest) {
@@ -19,10 +20,17 @@ export async function GET(req: NextRequest) {
   if (!affId) {
     return NextResponse.json({ ok: false, error: 'not_signed_in' }, { status: 401 });
   }
+  // The worker gates /affiliate/me behind isService() (Wave 30 IDOR hardening),
+  // so this proxy MUST present the shared service token — same as /api/affiliate/track.
+  // Without it the worker replies 401 "Service token required" and the dashboard
+  // (which reads any 401 as "not signed in") wrongly shows "Bạn chưa đăng nhập".
+  if (!HIEU_API_SERVICE_TOKEN) {
+    return NextResponse.json({ ok: false, error: 'service_unavailable' }, { status: 503 });
+  }
   try {
     const res = await fetch(`${HIEU_API_URL}/affiliate/me`, {
       method: 'GET',
-      headers: { 'x-affiliate-id': affId },
+      headers: { 'x-affiliate-id': affId, 'x-service-token': HIEU_API_SERVICE_TOKEN },
       cache: 'no-store',
     });
     const text = await res.text();

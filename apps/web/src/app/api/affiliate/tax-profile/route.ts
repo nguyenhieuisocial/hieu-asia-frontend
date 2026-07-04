@@ -14,6 +14,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const HIEU_API_URL = process.env.HIEU_API_URL ?? 'https://api.hieu.asia';
+const HIEU_API_SERVICE_TOKEN = process.env.HIEU_API_SERVICE_TOKEN;
 const COOKIE_NAME = 'hieu_aff_id';
 
 async function proxy(req: NextRequest, method: 'GET' | 'POST') {
@@ -21,11 +22,17 @@ async function proxy(req: NextRequest, method: 'GET' | 'POST') {
   if (!affId) {
     return NextResponse.json({ ok: false, error: 'not_signed_in' }, { status: 401 });
   }
+  // Worker gates /affiliate/tax-profile behind isService() — same as /affiliate/me,
+  // so present the shared service token or the worker replies 401 "Service token required".
+  if (!HIEU_API_SERVICE_TOKEN) {
+    return NextResponse.json({ ok: false, error: 'service_unavailable' }, { status: 503 });
+  }
   try {
     const init: RequestInit = {
       method,
       headers: {
         'x-affiliate-id': affId,
+        'x-service-token': HIEU_API_SERVICE_TOKEN,
         ...(method === 'POST' ? { 'content-type': 'application/json' } : {}),
       },
       cache: 'no-store',
