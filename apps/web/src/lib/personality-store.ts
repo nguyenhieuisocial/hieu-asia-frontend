@@ -110,7 +110,7 @@ export function getMbtiType(): string | null {
   const raw = getPersonalityResult('mbti');
   if (!raw) return null;
   const m = raw.match(/MBTI:\s*([EI][NS][TF][JP])/i);
-  return m ? m[1].toUpperCase() : null;
+  return m?.[1] ? m[1].toUpperCase() : null;
 }
 
 /**
