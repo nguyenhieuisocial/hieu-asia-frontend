@@ -35,6 +35,11 @@ export interface PromptMeta {
   wiring_note: string;
   /** Model đang dùng, mô tả tiếng Việt. */
   model: string;
+  /** Cụm sơ đồ mạng lưới (PROMPT_GRAPH, backend #355). Optional: worker cũ chưa
+   *  deploy thì undefined → sơ đồ tự bỏ node. */
+  group?: 'reading' | 'tool' | 'master' | 'assistant';
+  /** Kết quả role này chảy tiếp vào role nào — cạnh có hướng cho sơ đồ. */
+  flowsTo?: string[];
 }
 
 const WIRING_BADGE: Record<PromptWiring, { label: string; className: string }> = {
