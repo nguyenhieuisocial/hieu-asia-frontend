@@ -5,6 +5,9 @@ import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
 import { Time24 } from '@/components/Time24';
 import { calculateBazi, type BaziChart, type BaziPillar, type Element, ELEMENTS } from '@/lib/bazi';
+// Diễn giải đời thường dùng chung (cùng nguồn teaser OracleBrain) — khớp 100%
+// chuỗi engine, có test bao phủ. KHÔNG viết map mới ở đây.
+import { CAN_PLAIN, TEN_GOD_PLAIN, NGU_HANH_PLAIN } from '@/lib/bat-tu-plain';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { ProofDisclosure } from '@/components/la-so-bat-tu/ProofDisclosure';
@@ -422,6 +425,34 @@ export function BatTuChecker({
                 — đây là &ldquo;chính bạn&rdquo; trong lá số. Các trụ khác đọc theo quan hệ với can ngày này
                 (cột Thập Thần: {chart.year.tenGod}, {chart.month.tenGod}, {chart.hour.tenGod}).
               </p>
+              {/* Diễn giải đời thường Nhật Chủ — luôn hiện (mobile-first, không hover). */}
+              {CAN_PLAIN[chart.dayMaster.can] && (
+                <p className="mt-2 text-sm leading-relaxed text-foreground/70">
+                  Nói dễ hiểu: chất gốc của bạn như hình tượng{' '}
+                  <strong>{CAN_PLAIN[chart.dayMaster.can]!.hinh}</strong> —{' '}
+                  {CAN_PLAIN[chart.dayMaster.can]!.blurb}
+                </p>
+              )}
+              {/* Chú giải các Thập Thần có mặt — luôn hiện, thay tooltip (hover không dùng
+                  được trên mobile, 80% khách). Chỉ liệt kê các vai trò KHÁC nhau. */}
+              {(() => {
+                const seen = new Set<string>();
+                const tenGods = [chart.year, chart.month, chart.hour]
+                  .map((p) => p.tenGod)
+                  .filter((tg) => TEN_GOD_PLAIN[tg] && !seen.has(tg) && seen.add(tg));
+                return tenGods.length ? (
+                  <div className="mt-3 space-y-1 border-t border-border/50 pt-3">
+                    <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+                      Thập Thần trong lá số bạn nghĩa là
+                    </p>
+                    {tenGods.map((tg) => (
+                      <p key={tg} className="text-xs leading-relaxed text-foreground/70">
+                        <strong className="text-gold-700">{tg}</strong>: {TEN_GOD_PLAIN[tg]}
+                      </p>
+                    ))}
+                  </div>
+                ) : null;
+              })()}
             </div>
 
             <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
@@ -497,6 +528,30 @@ export function BatTuChecker({
                 )}
                 .
               </p>
+              {/* Ý nghĩa hành vượng/thiếu — diễn giải đời thường, luôn hiện (mobile-first). */}
+              {(() => {
+                const strong = NGU_HANH_PLAIN[chart.strongest];
+                const miss = chart.missing[0];
+                const missPlain = miss ? NGU_HANH_PLAIN[miss] : null;
+                if (!strong && !(miss && missPlain)) return null;
+                return (
+                  <p className="mt-2 text-sm leading-relaxed text-foreground/70">
+                    {strong && (
+                      <>
+                        Mạnh{' '}
+                        <strong className={EL_TEXT[chart.strongest]}>{chart.strongest}</strong> —{' '}
+                        {strong.vuong}.
+                      </>
+                    )}
+                    {miss && missPlain && (
+                      <>
+                        {' '}
+                        Thiếu <strong>{miss}</strong> — {missPlain.thieu}.
+                      </>
+                    )}
+                  </p>
+                );
+              })()}
               <p className="mt-2 text-xs text-muted-foreground">
                 Đây là đếm 8 chữ nổi — cách nhìn nhanh sự cân bằng. Phần <strong>tàng can</strong> ở trên cho
                 thấy ngũ hành còn ẩn thêm; luận vượng/nhược &amp; dụng thần (cân theo mùa sinh) là phần bản đọc
