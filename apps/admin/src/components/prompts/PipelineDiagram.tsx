@@ -10,13 +10,14 @@ import type { PromptMeta, PromptWiring } from './prompt-meta';
  * (`meta.group` + `meta.flowsTo`, backend #355). Thêm role/công cụ mới ở backend
  * là sơ đồ tự cập nhật, không phải sửa tay ở đây nữa.
  *
- * Bố cục theo cụm:
- *  - reading   : pipeline đọc lá số — xếp cột theo ĐỘ SÂU tính từ cạnh flowsTo
- *                (vision/logic → psychology → alignment → report → mentor → judge).
- *  - tool      : công cụ tính cách/tarot (hàng ngang); cái nào chảy vào Cẩm Nang
- *                thì gắn nhãn "chảy vào Cẩm Nang".
- *  - master    : báo cáo cao cấp (Cẩm Nang).
- *  - assistant : trợ lý đứng ngoài pipeline.
+ * Bố cục vẽ ĐƯỜNG NỐI THẬT (không chỉ nhãn chữ):
+ *  - reading  : pipeline đọc lá số — xếp cột theo ĐỘ SÂU (vision/logic →
+ *               psychology → alignment → report → mentor → judge), mũi tên giữa cột.
+ *  - hội tụ   : mọi node (bất kể nhóm) có cạnh flowsTo trỏ sang một node MASTER
+ *               (Cẩm Nang) được gom thành CỘT FEEDER → mũi tên → node master. Đây
+ *               là chỗ trước đây chỉ ghi chữ "chảy vào Cẩm Nang" mà không có đường.
+ *  - còn lại  : công cụ đứng riêng (Tarot, Chiêm tinh), nội dung định kỳ, trợ lý
+ *               ngoài pipeline — hàng ngang; cạnh nối-chéo (nếu có) vẫn gắn nhãn.
  *
  * Click node → cuộn tới card role tương ứng (id={`role-card-<role>`}).
  */
@@ -37,15 +38,6 @@ interface Node {
   group: Group;
   flowsTo: string[];
 }
-
-const GROUP_TITLE: Record<Group, string> = {
-  reading: 'Pipeline đọc lá số',
-  tool: 'Công cụ tính cách & Tarot',
-  master: 'Báo cáo cao cấp',
-  daily: 'Nội dung định kỳ',
-  assistant: 'Trợ lý đứng ngoài pipeline',
-};
-const GROUP_ORDER: Group[] = ['reading', 'tool', 'master', 'daily', 'assistant'];
 
 /** Chấm màu theo cách đấu dây (khớp WiringBadge): xanh lá=sửa-là-ăn-ngay,
  *  xanh dương=đồng bộ code, hổ phách=bản chuẩn trong code. */
@@ -113,6 +105,44 @@ export function PipelineDiagram({ prompts }: { prompts: DiagramPrompt[] }) {
     [nodes],
   );
 
+  // Hội tụ: mỗi node MASTER + các feeder (node nhóm khác trỏ flowsTo vào nó) được
+  // vẽ thành 1 khối [cột feeder] → [master]. Đây là đường nối trước đây thiếu.
+  const { converge, feederRoles, convergedMasters } = React.useMemo(() => {
+    const feederRoles = new Set<string>();
+    const convergedMasters = new Set<string>();
+    const converge = byGroup.master
+      .map((master) => {
+        const feeders = nodes
+          .filter((n) => n.group !== 'master' && n.flowsTo.includes(master.role))
+          .sort((a, b) => a.label.localeCompare(b.label, 'vi'));
+        return { master, feeders };
+      })
+      .filter((c) => c.feeders.length > 0);
+    for (const c of converge) {
+      convergedMasters.add(c.master.role);
+      for (const f of c.feeders) feederRoles.add(f.role);
+    }
+    return { converge, feederRoles, convergedMasters };
+  }, [nodes, byGroup]);
+
+  // Node còn lại của từng nhóm phẳng (đã trừ feeder + master đã hội tụ).
+  const leftover: Record<Exclude<Group, 'reading'>, Node[]> = React.useMemo(
+    () => ({
+      tool: byGroup.tool.filter((n) => !feederRoles.has(n.role)),
+      master: byGroup.master.filter((n) => !convergedMasters.has(n.role)),
+      daily: byGroup.daily,
+      assistant: byGroup.assistant,
+    }),
+    [byGroup, feederRoles, convergedMasters],
+  );
+
+  const LEFTOVER_TITLE: Record<Exclude<Group, 'reading'>, string> = {
+    tool: 'Công cụ đọc riêng',
+    master: 'Báo cáo cao cấp',
+    daily: 'Nội dung định kỳ',
+    assistant: 'Trợ lý đứng ngoài pipeline',
+  };
+
   // Worker cũ chưa deploy PROMPT_GRAPH → không render (card list vẫn hiển thị đủ).
   if (nodes.length === 0) return null;
 
@@ -122,26 +152,33 @@ export function PipelineDiagram({ prompts }: { prompts: DiagramPrompt[] }) {
         <CardTitle className="text-sm">Sơ đồ kết nối {nodes.length} prompt</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 pb-4">
-        {GROUP_ORDER.filter((g) => byGroup[g].length > 0).map((g) => (
-          <GroupBlock key={g} title={GROUP_TITLE[g]} group={g} nodes={byGroup[g]} roleToGroup={roleToGroup} />
+        {byGroup.reading.length > 0 && (
+          <DiagramSection title="Pipeline đọc lá số">
+            <ReadingFlow nodes={byGroup.reading} />
+          </DiagramSection>
+        )}
+
+        {converge.map((c) => (
+          <DiagramSection key={c.master.role} title={`Công cụ → ${c.master.label}`}>
+            <ConvergeFlow feeders={c.feeders} target={c.master} />
+          </DiagramSection>
         ))}
+
+        {(['tool', 'master', 'daily', 'assistant'] as const)
+          .filter((g) => leftover[g].length > 0)
+          .map((g) => (
+            <DiagramSection key={g} title={LEFTOVER_TITLE[g]}>
+              <FlatRow nodes={leftover[g]} roleToGroup={roleToGroup} />
+            </DiagramSection>
+          ))}
+
         <Legend />
       </CardContent>
     </Card>
   );
 }
 
-function GroupBlock({
-  title,
-  group,
-  nodes,
-  roleToGroup,
-}: {
-  title: string;
-  group: Group;
-  nodes: Node[];
-  roleToGroup: Map<string, Group>;
-}) {
+function DiagramSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
       <div className="mb-2 flex items-center gap-2">
@@ -150,13 +187,7 @@ function GroupBlock({
         </span>
         <span className="h-px flex-1 bg-gold/10" />
       </div>
-      <div className="overflow-x-auto pb-1">
-        {group === 'reading' ? (
-          <ReadingFlow nodes={nodes} />
-        ) : (
-          <FlatRow nodes={nodes} roleToGroup={roleToGroup} />
-        )}
-      </div>
+      <div className="overflow-x-auto pb-1">{children}</div>
     </div>
   );
 }
@@ -189,7 +220,25 @@ function ReadingFlow({ nodes }: { nodes: Node[] }) {
   );
 }
 
-/** Cụm phẳng (tool/master/assistant): hàng ngang, gắn nhãn cạnh liên-cụm. */
+/** Khối hội tụ: cột feeder (các công cụ) → mũi tên → node master (Cẩm Nang). */
+function ConvergeFlow({ feeders, target }: { feeders: Node[]; target: Node }) {
+  return (
+    <div className="flex min-w-max items-center gap-3">
+      <div className="flex flex-col gap-2">
+        {feeders.map((n) => (
+          <RoleNode key={n.role} node={n} />
+        ))}
+      </div>
+      <div className="flex flex-col items-center">
+        <Arrow />
+        <span className="mt-0.5 text-[9px] text-muted-foreground">gộp vào</span>
+      </div>
+      <RoleNode node={target} emphasis />
+    </div>
+  );
+}
+
+/** Cụm phẳng (leftover): hàng ngang, gắn nhãn cạnh nối-chéo còn lại (nếu có). */
 function FlatRow({
   nodes,
   roleToGroup,
@@ -200,7 +249,6 @@ function FlatRow({
   return (
     <div className="flex min-w-max flex-wrap items-start gap-2">
       {nodes.map((n) => {
-        // Cạnh chảy sang cụm KHÁC (vd DISC → Cẩm Nang) → nhãn nhỏ dưới node.
         const crossLinks = n.flowsTo.filter(
           (t) => roleToGroup.get(t) && roleToGroup.get(t) !== n.group,
         );
@@ -236,8 +284,9 @@ function IoNode({ label }: { label: string }) {
   );
 }
 
-/** Node role — click cuộn tới card role tương ứng trên trang list. */
-function RoleNode({ node }: { node: Node }) {
+/** Node role — click cuộn tới card role tương ứng trên trang list. `emphasis`
+ *  làm nổi node đích của khối hội tụ (Cẩm Nang). */
+function RoleNode({ node, emphasis = false }: { node: Node; emphasis?: boolean }) {
   const handleClick = React.useCallback(() => {
     document
       .getElementById(`role-card-${node.role}`)
@@ -248,7 +297,11 @@ function RoleNode({ node }: { node: Node }) {
       type="button"
       onClick={handleClick}
       title={`Cuộn tới thẻ ${node.label}`}
-      className="inline-flex items-center gap-1.5 rounded-md border border-gold/25 bg-gold/10 px-2.5 py-1.5 text-left text-[11px] leading-4 text-foreground transition-all duration-300 ease-editorial hover:border-gold/60 hover:bg-gold/15 focus:outline-none focus-visible:border-gold/60"
+      className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-left text-[11px] leading-4 text-foreground transition-all duration-300 ease-editorial focus:outline-none focus-visible:border-gold/60 ${
+        emphasis
+          ? 'border-gold/60 bg-gold/20 shadow-sm hover:bg-gold/25'
+          : 'border-gold/25 bg-gold/10 hover:border-gold/60 hover:bg-gold/15'
+      }`}
     >
       {node.stage !== null && (
         <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-gold/20 font-mono text-[9px] text-gold">
@@ -260,7 +313,7 @@ function RoleNode({ node }: { node: Node }) {
         aria-hidden
       />
       <span className="whitespace-nowrap">
-        <span className="font-medium text-gold">{node.label}</span>
+        <span className={`font-medium text-gold${emphasis ? ' font-semibold' : ''}`}>{node.label}</span>
         {node.note && <span className="ml-1 text-muted-foreground">{node.note}</span>}
       </span>
     </button>
