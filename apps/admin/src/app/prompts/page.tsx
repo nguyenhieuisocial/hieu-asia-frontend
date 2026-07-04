@@ -52,8 +52,8 @@ import { PROMPT_ROLES as ROLES, type PromptRole } from '@/lib/prompt-roles';
 type Role = PromptRole;
 
 // Nhãn/tagline/icon dự phòng cho từng role. `meta` từ worker (backend #351) là
-// nguồn hiển thị chính; bảng này là fallback + icon cho lưới thẻ. 15 role: 9
-// pipeline/standalone + 5 công cụ + Cẩm Nang (backend #353).
+// nguồn hiển thị chính; bảng này là fallback + icon cho lưới thẻ. 17 role: 9
+// pipeline/standalone + 5 công cụ + Cẩm Nang (backend #353) + natal + horoscope.
 const ROLE_META: Record<Role, { label: string; tagline: string; Icon: LucideIcon }> = {
   vision: { label: 'Vision', tagline: 'Diễn giải biểu tượng & ý nghĩa lá bài', Icon: Eye },
   logic: { label: 'Logic', tagline: 'Phân tích nhân quả, ràng buộc, tradeoff', Icon: Brain },
