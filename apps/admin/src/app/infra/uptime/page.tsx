@@ -25,6 +25,7 @@ import {
 import { getInfraTool } from '@/lib/infra-tools';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
+import { EmptyState } from '@/components/admin/empty-state';
 import { UptimeMonitorDrawer } from '@/components/admin/infra/UptimeMonitorDrawer';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { fmtDateTime } from '@/lib/format';
@@ -191,7 +192,7 @@ export default function InfraUptimePage() {
                 Sự cố gần đây
               </p>
               {incidents.length === 0 ? (
-                <p className="text-sm text-muted-foreground">Không có sự cố gần đây.</p>
+                <EmptyState compact title="Không có sự cố gần đây." />
               ) : (
                 <ul className="space-y-2">
                   {incidents.map((inc) => (

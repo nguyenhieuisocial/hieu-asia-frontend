@@ -28,6 +28,7 @@
 import * as React from 'react';
 import { cn } from '@hieu-asia/ui';
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
+import { EmptyState } from '@/components/admin/empty-state';
 
 export type AdminTableColumn<TRow> = {
   /** Unique column id. */
@@ -82,10 +83,14 @@ type SortState<TRow> = {
   dir: 'asc' | 'desc';
 } | null;
 
+// Shared EmptyState with chrome stripped — the table container already
+// provides the border/backdrop, the empty <td> provides the padding.
 const DEFAULT_EMPTY = (
-  <span className="text-sm text-muted-foreground">
-    Chưa có dữ liệu — bảng sẽ tự hiện khi có bản ghi.
-  </span>
+  <EmptyState
+    title="Chưa có dữ liệu"
+    description="Bảng sẽ tự hiện khi có bản ghi."
+    className="border-none bg-transparent p-0"
+  />
 );
 
 function defaultGetRowId<TRow>(row: TRow): string {

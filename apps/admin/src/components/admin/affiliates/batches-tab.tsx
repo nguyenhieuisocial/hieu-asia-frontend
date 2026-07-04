@@ -17,6 +17,7 @@ import * as React from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Card, CardContent, StatusBadge, toast } from '@hieu-asia/ui';
+import { EmptyState } from '@/components/admin/empty-state';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { fmtVnd, fmtDateTime } from '@/lib/format';
 
@@ -271,9 +272,15 @@ export function BatchesTab() {
               rowClassName={(b) => (highlight === b.id ? 'bg-gold/5' : undefined)}
               caption="Danh sách batch payout"
               empty={
-                <span className="text-sm text-muted-foreground">
-                  Chưa có batch nào. Bấm <strong>Build new batch</strong> để tạo.
-                </span>
+                <EmptyState
+                  title="Chưa có batch nào"
+                  description={
+                    <>
+                      Bấm <strong>Build new batch</strong> để tạo.
+                    </>
+                  }
+                  className="border-none bg-transparent p-0"
+                />
               }
             />
           )}

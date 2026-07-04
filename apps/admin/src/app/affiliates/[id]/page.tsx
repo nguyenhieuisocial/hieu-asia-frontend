@@ -11,6 +11,8 @@ import { use } from 'react';
 import Link from 'next/link';
 import { AlertTriangle } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, StatusBadge } from '@hieu-asia/ui';
+import { PageHeader } from '@/components/admin/page-header';
+import { EmptyState } from '@/components/admin/empty-state';
 import { TaxKycCard } from '@/components/admin/affiliates/TaxKycCard';
 import { fetchFraudReport, type FraudFlag } from '@/lib/affiliate-admin-api';
 import { fmtVnd, fmtDateTime } from '@/lib/format';
@@ -222,25 +224,29 @@ export default function AdminAffiliateDetailPage({
   return (
     <main className="min-h-dvh bg-card p-6 text-foreground">
       <div className="mx-auto max-w-5xl space-y-6">
-        <header className="flex items-center justify-between">
-          <div>
-            <Link href="/affiliates" className="text-sm text-muted-foreground hover:text-gold">
-              ← Affiliates
-            </Link>
-            <h1 className="mt-1 text-2xl font-bold">
-              {a.display_name}{' '}
-              <span className="ml-2 font-mono text-base text-gold">{a.code}</span>
-            </h1>
-            <p className="text-sm text-muted-foreground">{a.email}</p>
-          </div>
-          <Button
-            variant={a.status === 'active' ? 'outline' : 'default'}
-            onClick={toggleBan}
-            disabled={busy}
-            className={a.status === 'active' ? 'border-red-500/40 text-red-700 dark:text-red-300 hover:bg-red-500/10' : ''}
-          >
-            {a.status === 'active' ? 'Ban' : 'Unban'}
-          </Button>
+        <header className="space-y-1">
+          <Link href="/affiliates" className="text-sm text-muted-foreground hover:text-gold">
+            ← Affiliates
+          </Link>
+          <PageHeader
+            title={
+              <>
+                {a.display_name}{' '}
+                <span className="ml-2 font-mono text-base text-gold">{a.code}</span>
+              </>
+            }
+            description={a.email}
+            actions={
+              <Button
+                variant={a.status === 'active' ? 'outline' : 'default'}
+                onClick={toggleBan}
+                disabled={busy}
+                className={a.status === 'active' ? 'border-red-500/40 text-red-700 dark:text-red-300 hover:bg-red-500/10' : ''}
+              >
+                {a.status === 'active' ? 'Ban' : 'Unban'}
+              </Button>
+            }
+          />
         </header>
 
         {/* Fraud warning — surfaces active fraud flags on load, BEFORE the admin
@@ -424,7 +430,7 @@ export default function AdminAffiliateDetailPage({
           </CardHeader>
           <CardContent>
             {data.payouts.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Chưa có yêu cầu.</p>
+              <EmptyState compact title="Chưa có yêu cầu." />
             ) : (
               <div className="space-y-2">
                 {data.payouts.map((p) => (
@@ -438,10 +444,15 @@ export default function AdminAffiliateDetailPage({
                         <span className="text-muted-foreground">· {p.method.toUpperCase()}</span>{' '}
                         <span className="font-mono text-xs text-muted-foreground">{p.destination}</span>
                       </div>
-                      <div className="text-sm">
-                        {p.status === 'pending' && <span className="text-yellow-400">Đang chờ</span>}
-                        {p.status === 'paid' && <span className="text-green-400">Đã trả ({fmtDateTime(p.paid_at ?? '')})</span>}
-                        {p.status === 'rejected' && <span className="text-red-400">Từ chối</span>}
+                      <div className="flex items-center gap-2 text-sm">
+                        {p.status === 'pending' && <StatusBadge status="warning" label="Đang chờ" />}
+                        {p.status === 'paid' && (
+                          <>
+                            <StatusBadge status="success" label="Đã trả" />
+                            <span className="text-xs text-muted-foreground">{fmtDateTime(p.paid_at ?? '')}</span>
+                          </>
+                        )}
+                        {p.status === 'rejected' && <StatusBadge status="error" label="Từ chối" />}
                       </div>
                     </div>
                     {p.rejected_reason && (
@@ -507,7 +518,7 @@ export default function AdminAffiliateDetailPage({
           </CardHeader>
           <CardContent>
             {data.recent.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Chưa có sự kiện.</p>
+              <EmptyState compact title="Chưa có sự kiện." />
             ) : (
               <div className="space-y-1 text-sm">
                 {data.recent.map((ev, i) => (

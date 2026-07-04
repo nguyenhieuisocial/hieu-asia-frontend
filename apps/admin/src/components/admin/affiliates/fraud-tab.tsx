@@ -11,6 +11,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
+import { EmptyState } from '@/components/admin/empty-state';
 import { fmtDateTime } from '@/lib/format';
 
 // Recharts lazy-loaded — out of the initial admin bundle (tasks page pattern).
@@ -116,7 +117,7 @@ export function FraudTab() {
         </CardHeader>
         <CardContent>
           {active.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Không có flag nào.</p>
+            <EmptyState compact title="Không có flag nào." />
           ) : (
             <div className="space-y-2">
               {active.map((f) => (
@@ -165,7 +166,7 @@ export function FraudTab() {
         </CardHeader>
         <CardContent>
           {cleared.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Chưa có flag nào được clear.</p>
+            <EmptyState compact title="Chưa có flag nào được clear." />
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">

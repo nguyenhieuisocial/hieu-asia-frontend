@@ -21,6 +21,9 @@ export interface EmptyStateProps {
   action?: React.ReactNode;
   /** Secondary, smaller. */
   secondaryAction?: React.ReactNode;
+  /** Compact variant for in-card / drawer sections: no illustration, tighter
+   *  padding. Default (false) keeps the full illustrated block. */
+  compact?: boolean;
   className?: string;
 }
 
@@ -41,19 +44,34 @@ export function EmptyState({
   illustration,
   action,
   secondaryAction,
+  compact = false,
   className,
 }: EmptyStateProps) {
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-gold/20 bg-card/50 px-6 py-12 text-center',
+        'flex flex-col items-center justify-center text-center',
+        compact
+          ? 'gap-1.5 rounded-lg border border-dashed border-gold/15 bg-card/40 px-4 py-6'
+          : 'gap-4 rounded-xl border border-dashed border-gold/20 bg-card/50 px-6 py-12',
         className,
       )}
     >
-      {illustration ?? <DefaultIllustration />}
+      {!compact && (illustration ?? <DefaultIllustration />)}
       <div className="max-w-md space-y-1.5">
-        <h3 className="font-heading text-lg font-semibold text-foreground">{title}</h3>
-        {description && <p className="text-sm text-muted-foreground">{description}</p>}
+        <h3
+          className={cn(
+            'font-heading font-semibold text-foreground',
+            compact ? 'text-sm' : 'text-lg',
+          )}
+        >
+          {title}
+        </h3>
+        {description && (
+          <p className={cn('text-muted-foreground', compact ? 'text-xs' : 'text-sm')}>
+            {description}
+          </p>
+        )}
       </div>
       {(action || secondaryAction) && (
         <div className="flex flex-wrap items-center justify-center gap-2 pt-1">

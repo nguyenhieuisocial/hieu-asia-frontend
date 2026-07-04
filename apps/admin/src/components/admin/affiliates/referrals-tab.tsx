@@ -13,6 +13,7 @@ import * as React from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { Button, Card, CardContent, Input } from '@hieu-asia/ui';
+import { EmptyState } from '@/components/admin/empty-state';
 import { ReferralDepthChart } from '@/components/affiliates/ReferralDepthChart';
 
 interface PromoterRow {
@@ -149,7 +150,7 @@ export function ReferralsTab() {
           ) : q.error ? (
             <p className="text-sm text-red-700 dark:text-red-300">{(q.error as Error).message}</p>
           ) : visibleTrees.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Không có node nào khớp.</p>
+            <EmptyState compact title="Không có node nào khớp." />
           ) : (
             <ul className="space-y-1">
               {visibleTrees.map((n) => (
