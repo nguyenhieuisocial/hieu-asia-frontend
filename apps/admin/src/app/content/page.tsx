@@ -55,7 +55,7 @@ import {
 
 const STATUS_FILTERS: Array<{ value: 'all' | ContentStatus; label: string }> = [
   { value: 'all', label: 'Tất cả' },
-  { value: 'draft', label: 'Draft' },
+  { value: 'draft', label: 'Bản nháp' },
   { value: 'in_review', label: 'Đang review' },
   { value: 'published', label: 'Đã publish' },
   { value: 'archived', label: 'Đã lưu trữ' },
@@ -66,6 +66,14 @@ const STATUS_TONE: Record<ContentStatus, React.ComponentProps<typeof StatusBadge
   in_review: 'warning',
   published: 'success',
   archived: 'info',
+};
+
+// Nhãn trạng thái tiếng Việt cho badge — khớp STATUS_FILTERS phía trên.
+const STATUS_LABEL: Record<ContentStatus, string> = {
+  draft: 'Bản nháp',
+  in_review: 'Đang review',
+  published: 'Đã publish',
+  archived: 'Đã lưu trữ',
 };
 
 const JUDGE_LABEL: Record<DraftKey, string> = {
@@ -92,7 +100,7 @@ const DRAFT_COLUMNS: AdminTableColumn<ContentDraftListRow>[] = [
   {
     id: 'status',
     header: 'Trạng thái',
-    cell: (row) => <StatusBadge status={STATUS_TONE[row.status]} label={row.status} />,
+    cell: (row) => <StatusBadge status={STATUS_TONE[row.status]} label={STATUS_LABEL[row.status]} />,
   },
   {
     id: 'judge',

@@ -369,7 +369,7 @@ export default function AnalyticsPage() {
           hint={`${sessions.completed} hoàn thành`}
         />
         <KpiCard
-          label="Conversion"
+          label="Chuyển đổi"
           value={(sessions.conversion_rate * 100).toFixed(1) + '%'}
           icon={<TrendingUp className="h-4 w-4" />}
           accent="jade"

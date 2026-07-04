@@ -21,6 +21,16 @@ function statusTone(s: string): React.ComponentProps<typeof StatusBadge>['status
   return 'neutral';
 }
 
+// Nhãn trạng thái tiếng Việt; status lạ giữ nguyên raw để không giấu thông tin.
+const STATUS_LABEL: Record<string, string> = {
+  ok: 'OK',
+  success: 'Thành công',
+  error: 'Lỗi',
+  failed: 'Thất bại',
+  rate_limited: 'Bị giới hạn',
+  timeout: 'Timeout',
+};
+
 export function RecentTracesTable({
   rows,
   isLoading,
@@ -49,7 +59,7 @@ export function RecentTracesTable({
     },
     {
       key: 'vendor',
-      header: 'Vendor',
+      header: 'Nhà cung cấp',
       width: '110px',
       cell: (r) => <span className="font-mono text-xs text-gold">{r.vendor}</span>,
     },
@@ -60,7 +70,7 @@ export function RecentTracesTable({
     },
     {
       key: 'role',
-      header: 'Role',
+      header: 'Vai trò',
       width: '110px',
       cell: (r) => (r.role ? <span className="text-xs text-muted-foreground">{r.role}</span> : <span className="text-foreground/30">—</span>),
     },
@@ -84,7 +94,7 @@ export function RecentTracesTable({
     },
     {
       key: 'latency_ms',
-      header: 'Latency',
+      header: 'Độ trễ',
       align: 'right',
       width: '90px',
       cell: (r) => (r.latency_ms == null ? '—' : <span className="font-mono text-xs">{r.latency_ms}ms</span>),
@@ -93,7 +103,7 @@ export function RecentTracesTable({
       key: 'status',
       header: 'Trạng thái',
       width: '110px',
-      cell: (r) => <StatusBadge status={statusTone(r.status)} label={r.status} />,
+      cell: (r) => <StatusBadge status={statusTone(r.status)} label={STATUS_LABEL[r.status] ?? r.status} />,
     },
   ];
 
@@ -101,7 +111,7 @@ export function RecentTracesTable({
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
         <label className="flex items-center gap-2">
-          <span>Vendor:</span>
+          <span>Nhà cung cấp:</span>
           <select
             value={vendorFilter}
             onChange={(e) => onVendorFilterChange(e.target.value)}
@@ -116,7 +126,7 @@ export function RecentTracesTable({
           </select>
         </label>
         <label className="flex items-center gap-2">
-          <span>Role:</span>
+          <span>Vai trò:</span>
           <select
             value={roleFilter}
             onChange={(e) => onRoleFilterChange(e.target.value)}

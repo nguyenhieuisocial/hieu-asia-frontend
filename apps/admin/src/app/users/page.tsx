@@ -249,7 +249,7 @@ export default function AdminUsersPage() {
           hint="tài khoản"
         />
         <KpiCard
-          label="Owner"
+          label="Chủ sở hữu"
           value={ownerCount}
           icon={<Crown className="h-4 w-4" />}
           accent="gold"

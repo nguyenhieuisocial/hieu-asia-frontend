@@ -224,8 +224,8 @@ function CustomerDetailPageInner() {
               type="button"
               onClick={copyId}
               className="inline-flex h-6 w-6 items-center justify-center rounded text-muted-foreground hover:bg-primary/10 hover:text-primary"
-              aria-label="Copy ID"
-              title="Copy ID"
+              aria-label="Sao chép ID"
+              title="Sao chép ID"
             >
               <Copy className="h-3 w-3" aria-hidden />
             </button>
