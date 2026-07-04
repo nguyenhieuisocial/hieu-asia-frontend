@@ -17,6 +17,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui'
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { PRICING, formatVND } from '@/lib/pricing';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: { absolute: 'Cộng tác viên hieu.asia — kiếm hoa hồng & thu nhập' },
@@ -29,6 +30,7 @@ export const metadata: Metadata = {
       'Bạn dẫn đường, hieu.asia trả công xứng đáng. 30% đơn đầu + 10% gia hạn, trả tiền minh bạch, miễn phí tham gia.',
     url: 'https://hieu.asia/affiliate',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 
