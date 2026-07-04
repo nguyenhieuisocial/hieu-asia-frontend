@@ -32,6 +32,10 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
 const BIG_FIVE_CACHE_KEY = 'hieu:personality:v1:big-five-scores';
 const DISC_CACHE_KEY = 'hieu:personality:v1:disc-scores';
+/** Last payload successfully persisted on this device. Used to skip re-POSTing
+ *  identical data: SIGNED_IN fires on every reload (session restore) and submit
+ *  is retried on each tool completion — a changed payload has a new signature. */
+const LAST_SYNC_KEY = 'hieu:personality:v1:last-sync';
 
 /** Cached Big Five half: DB-shaped scores + raw answers, for later combination. */
 interface BigFiveCache {
@@ -123,14 +127,6 @@ async function trySubmit(): Promise<void> {
     const hasScores = Boolean(bigFive && disc);
     if (!hasScores && !mbtiType && !enneagram) return;
 
-    // Auth: endpoint verifies a Supabase JWT and sets user_id from it. Anonymous
-    // users simply keep their localStorage results (no error surfaced).
-    const sb = getSupabaseAuth();
-    if (!sb) return;
-    const { data } = await sb.auth.getSession();
-    const token = data.session?.access_token;
-    if (!token) return;
-
     const body: Record<string, unknown> = { variant: 'extended' };
     // Big Five + DiSC only when BOTH halves exist (endpoint needs a COMPLETE set;
     // a partial write would 400). Omitting them entirely is fine (0070) and the
@@ -147,15 +143,33 @@ async function trySubmit(): Promise<void> {
       if (enneagram.wing !== undefined) body.enneagram_wing = enneagram.wing;
     }
 
-    await fetch(`${API_BASE}/survey/personality/submit`, {
+    // De-dupe: skip the round-trip when this exact payload was already persisted
+    // on this device. Guards against re-POSTing on every SIGNED_IN (reload) and
+    // on repeated tool completions; a CHANGED result yields a new signature → sent.
+    const sig = JSON.stringify(body);
+    const s = store();
+    if (s && s.getItem(LAST_SYNC_KEY) === sig) return;
+
+    // Auth: endpoint verifies a Supabase JWT and sets user_id from it. Anonymous
+    // users simply keep their localStorage results (no token → no sig stored, so a
+    // later sign-in re-attempts the flush and finally persists this payload).
+    const sb = getSupabaseAuth();
+    if (!sb) return;
+    const { data } = await sb.auth.getSession();
+    const token = data.session?.access_token;
+    if (!token) return;
+
+    const resp = await fetch(`${API_BASE}/survey/personality/submit`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(body),
+      body: sig,
       keepalive: true,
     });
+    // Mark this exact payload as synced only on success, so failures retry later.
+    if (resp.ok) s?.setItem(LAST_SYNC_KEY, sig);
   } catch {
     /* best-effort — never break the lens result flow on a persistence failure */
   }
@@ -168,5 +182,16 @@ async function trySubmit(): Promise<void> {
  * savePersonalityResult. Fire-and-forget (no-ops when anonymous / nothing new).
  */
 export function submitSelfIdentifiedPersonality(): void {
+  void trySubmit();
+}
+
+/**
+ * Flush any personality results cached during an ANONYMOUS session once the user
+ * signs in. Wired into the Supabase SIGNED_IN handler (auth-client.ts) so a user
+ * who completes a tool BEFORE logging in still reaches the server. Fire-and-
+ * forget; the LAST_SYNC de-dupe keeps reload-triggered SIGNED_IN events from
+ * re-POSTing identical data.
+ */
+export function flushPersonalityOnLogin(): void {
   void trySubmit();
 }
