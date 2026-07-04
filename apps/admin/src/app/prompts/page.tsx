@@ -31,6 +31,8 @@ import {
   Orbit,
   SlidersHorizontal,
   BookOpen,
+  Telescope,
+  CalendarDays,
   X,
   type LucideIcon,
 } from 'lucide-react';
@@ -50,8 +52,8 @@ import { PROMPT_ROLES as ROLES, type PromptRole } from '@/lib/prompt-roles';
 type Role = PromptRole;
 
 // Nhãn/tagline/icon dự phòng cho từng role. `meta` từ worker (backend #351) là
-// nguồn hiển thị chính; bảng này là fallback + icon cho lưới thẻ. 15 role: 9
-// pipeline/standalone + 5 công cụ + Cẩm Nang (backend #353).
+// nguồn hiển thị chính; bảng này là fallback + icon cho lưới thẻ. 17 role: 9
+// pipeline/standalone + 5 công cụ + Cẩm Nang (backend #353) + natal + horoscope.
 const ROLE_META: Record<Role, { label: string; tagline: string; Icon: LucideIcon }> = {
   vision: { label: 'Vision', tagline: 'Diễn giải biểu tượng & ý nghĩa lá bài', Icon: Eye },
   logic: { label: 'Logic', tagline: 'Phân tích nhân quả, ràng buộc, tradeoff', Icon: Brain },
@@ -80,6 +82,8 @@ const ROLE_META: Record<Role, { label: string; tagline: string; Icon: LucideIcon
     tagline: 'Báo cáo cao cấp đa lăng kính (~30 mục) — bản chuẩn nội dung',
     Icon: BookOpen,
   },
+  natal: { label: 'Chiêm tinh phương Tây', tagline: 'Đọc bản đồ sao (natal chart) — không tiên đoán', Icon: Telescope },
+  horoscope: { label: 'Tử vi hằng ngày', tagline: 'Bản tin tử vi mỗi ngày cho 12 con giáp', Icon: CalendarDays },
 };
 
 export interface PromptSummary {

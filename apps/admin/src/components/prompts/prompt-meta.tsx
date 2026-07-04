@@ -36,8 +36,9 @@ export interface PromptMeta {
   /** Model đang dùng, mô tả tiếng Việt. */
   model: string;
   /** Cụm sơ đồ mạng lưới (PROMPT_GRAPH, backend #355). Optional: worker cũ chưa
-   *  deploy thì undefined → sơ đồ tự bỏ node. */
-  group?: 'reading' | 'tool' | 'master' | 'assistant';
+   *  deploy thì undefined → sơ đồ tự bỏ node. ("daily" thêm 2026-07-04 cho
+   *  nội dung định kỳ như tử vi hằng ngày.) */
+  group?: 'reading' | 'tool' | 'master' | 'assistant' | 'daily';
   /** Kết quả role này chảy tiếp vào role nào — cạnh có hướng cho sơ đồ. */
   flowsTo?: string[];
 }
