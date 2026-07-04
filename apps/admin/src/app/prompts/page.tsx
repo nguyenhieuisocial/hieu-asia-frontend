@@ -211,8 +211,9 @@ export default function PromptsListPage() {
         }
       />
 
-      {/* Sơ đồ kết nối 9 prompt — click node cuộn tới card role bên dưới. */}
-      <PipelineDiagram />
+      {/* Sơ đồ mạng lưới prompt — vẽ tự động từ meta.group + meta.flowsTo;
+          click node cuộn tới card role bên dưới. */}
+      <PipelineDiagram prompts={data ?? []} />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard
