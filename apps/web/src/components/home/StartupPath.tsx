@@ -13,6 +13,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Check, Gift, ArrowRight } from 'lucide-react';
+import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { readSavedProfile } from '@/lib/saved-profile';
 
 interface Step {
@@ -65,6 +66,7 @@ export function StartupPath() {
   }, []);
 
   return (
+    <RevealOnScroll>
     <section aria-labelledby="startup-path-h" className="bg-background">
       <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
         <div className="mb-8 max-w-2xl">
@@ -128,5 +130,6 @@ export function StartupPath() {
         </ol>
       </div>
     </section>
+    </RevealOnScroll>
   );
 }
