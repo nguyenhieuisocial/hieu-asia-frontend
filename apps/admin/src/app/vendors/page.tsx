@@ -260,7 +260,7 @@ function errorRateClass(pct: number): string {
 const TELEMETRY_COLUMNS: AdminTableColumn<VendorTelemetryRow>[] = [
   {
     id: 'vendor',
-    header: 'Vendor',
+    header: 'Nhà cung cấp',
     className: 'text-xs text-foreground/85',
     cell: (row) => (
       <>
@@ -542,7 +542,7 @@ export default function VendorsPage() {
               <table className="min-w-full divide-y divide-border text-sm">
                 <thead>
                   <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
-                    <th className="px-3 py-2 font-medium">Role</th>
+                    <th className="px-3 py-2 font-medium">Vai trò</th>
                     <th className="px-3 py-2 font-medium">Primary</th>
                     <th className="px-3 py-2 font-medium">Fallback chain</th>
                   </tr>
@@ -625,7 +625,7 @@ export default function VendorsPage() {
                     <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
                       <th className="px-3 py-2 font-medium">Tên</th>
                       <th className="px-3 py-2 font-medium">Thời gian</th>
-                      <th className="px-3 py-2 font-medium">Latency</th>
+                      <th className="px-3 py-2 font-medium">Độ trễ</th>
                       <th className="px-3 py-2 font-medium">Chi phí</th>
                       <th className="px-3 py-2 font-medium">Observations</th>
                     </tr>

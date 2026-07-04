@@ -96,7 +96,7 @@ const CSV_HEADERS = {
   email: 'Email',
   telegram_id: 'Telegram',
   zalo_id: 'Zalo',
-  plan: 'Plan',
+  plan: 'Gói',
   created_at: 'Tạo lúc',
   last_active: 'Hoạt động cuối',
 } as const;
@@ -245,7 +245,7 @@ export default function CustomersPage() {
       },
       {
         id: 'plan',
-        header: 'Plan',
+        header: 'Gói',
         sortKey: 'plan',
         width: '120px',
         cell: (c) => <PlanBadge plan={c.plan} />,
@@ -421,7 +421,7 @@ export default function CustomersPage() {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="min-w-[12rem]">
-                <DropdownMenuLabel>Plan</DropdownMenuLabel>
+                <DropdownMenuLabel>Gói</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuRadioGroup value={plan} onValueChange={onPlanChange}>
                   {PLAN_OPTIONS.map((opt) => (

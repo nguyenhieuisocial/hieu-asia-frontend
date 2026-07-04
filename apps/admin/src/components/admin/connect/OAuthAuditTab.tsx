@@ -76,7 +76,7 @@ const COLUMNS: AdminTableColumn<AuditRow>[] = [
   },
   {
     id: 'action',
-    header: 'Action',
+    header: 'Hành động',
     sortKey: 'action',
     cell: (r) => <span className="text-foreground/85">{r.action}</span>,
   },

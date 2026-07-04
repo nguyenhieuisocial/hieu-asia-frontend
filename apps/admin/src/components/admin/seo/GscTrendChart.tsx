@@ -79,7 +79,7 @@ export function GscTrendChart({ data }: GscTrendChartProps) {
             yAxisId="impr"
             type="monotone"
             dataKey="impressions"
-            name="Impressions"
+            name="Hiển thị"
             stroke={JADE}
             strokeWidth={1.5}
             fill="url(#gscImpr)"
@@ -89,7 +89,7 @@ export function GscTrendChart({ data }: GscTrendChartProps) {
             yAxisId="clicks"
             type="monotone"
             dataKey="clicks"
-            name="Clicks"
+            name="Lượt click"
             stroke={GOLD}
             strokeWidth={2}
             dot={false}

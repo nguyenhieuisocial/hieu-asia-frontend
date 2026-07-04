@@ -37,12 +37,19 @@ const LICENSE_TONE: Record<RagChunk['license_status'], React.ComponentProps<type
   fair_use: 'warning',
 };
 
+// Nhãn tiếng Việt cho license_status (thay vì in raw EN lên badge).
+const LICENSE_LABEL: Record<RagChunk['license_status'], string> = {
+  owned_or_licensed: 'Có bản quyền',
+  public_domain: 'Công cộng',
+  fair_use: 'Sử dụng hợp lý',
+};
+
 export default function AdminRagPage() {
   const qc = useQueryClient();
   const chunks = useQuery({ queryKey: ['admin', 'rag', 'chunks'], queryFn: listRagChunks, staleTime: 60_000 });
 
   const cols: DataTableColumn<RagChunk>[] = [
-    { key: 'source_id', header: 'Source ID', cell: (c) => <span className="font-mono text-xs text-foreground/85">{c.source_id}</span> },
+    { key: 'source_id', header: 'Mã nguồn', cell: (c) => <span className="font-mono text-xs text-foreground/85">{c.source_id}</span> },
     { key: 'source_title', header: 'Tiêu đề', cell: (c) => <span className="text-foreground">{c.source_title}</span> },
     {
       key: 'discipline',
@@ -54,7 +61,7 @@ export default function AdminRagPage() {
       key: 'license_status',
       header: 'License',
       width: '130px',
-      cell: (c) => <StatusBadge status={LICENSE_TONE[c.license_status]} label={c.license_status.replace(/_/g, ' ')} />,
+      cell: (c) => <StatusBadge status={LICENSE_TONE[c.license_status]} label={LICENSE_LABEL[c.license_status]} />,
     },
     { key: 'chunk_count', header: 'Chunks', align: 'right', width: '80px' },
     {
@@ -126,7 +133,7 @@ export default function AdminRagPage() {
           hint="corpus_chunks"
         />
         <KpiCard
-          label="Status"
+          label="Trạng thái"
           value={<StatusBadge status="success" label="ingest đã bật" />}
           icon={<BookOpen className="h-4 w-4" />}
           accent="jade"
