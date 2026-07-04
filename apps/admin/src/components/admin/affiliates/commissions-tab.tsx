@@ -12,6 +12,7 @@ import * as React from 'react';
 import dynamic from 'next/dynamic';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Card, CardContent, StatusBadge, toast } from '@hieu-asia/ui';
+import { EmptyState } from '@/components/admin/empty-state';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
 import { fmtVnd, fmtDateTime } from '@/lib/format';
@@ -221,9 +222,10 @@ export function CommissionsTab() {
               loading={q.isLoading}
               caption="Ledger commission affiliate"
               empty={
-                <span className="text-sm text-muted-foreground">
-                  Không có commission khớp filter.
-                </span>
+                <EmptyState
+                  title="Không có commission khớp filter."
+                  className="border-none bg-transparent p-0"
+                />
               }
             />
           )}

@@ -411,7 +411,7 @@ export default function AdminOverviewPage() {
           ) : (
             <div className="grid gap-4 sm:grid-cols-3">
               <KpiCard
-                label="Clicks (7d)"
+                label="Lượt click (7 ngày)"
                 value={fmtInt(gscClicks)}
                 icon={<MousePointerClick className="h-4 w-4" />}
                 accent="gold"

@@ -50,6 +50,7 @@ import ReactMarkdown from 'react-markdown';
 import { getSession, patchSession, setSessionAccess } from '@/lib/admin-api';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { EmptyState } from '@/components/admin/empty-state';
+import { PageHeader } from '@/components/admin/page-header';
 import { ContactCustomerDialog } from '@/components/admin/ContactCustomerDialog';
 import { UserJourneyPanel } from '@/components/admin/UserJourneyPanel';
 import { fmtDateTime, fmtDuration } from '@/lib/format';
@@ -392,54 +393,60 @@ export default function SessionDetailPage() {
           (email = the human), not the opaque session UUID. UUID demoted to
           a small copy-chip below for support-ticket cross-reference. */}
       <div className="flex flex-col gap-4">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2">
-            <ListTodo className="h-5 w-5 text-gold" />
-            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-              Session detail
+        <PageHeader
+          eyebrow={
+            <>
+              <ListTodo className="h-5 w-5 text-gold" />
+              <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                Session detail
+              </span>
+              <StatusBadge status={STATUS_TONE[s.status]} label={STATUS_LABEL[s.status]} />
+              {s.reading_type ? (
+                <span
+                  className="inline-flex items-center rounded border border-gold/25 bg-gold/10 px-1.5 py-0.5 text-[11px] text-gold"
+                  title={`reading_type: ${s.reading_type}`}
+                >
+                  {READING_TYPE_LABEL[s.reading_type] ?? s.reading_type}
+                </span>
+              ) : null}
+              {s.channel ? (
+                <span
+                  className="inline-flex items-center rounded border border-border bg-card/60 px-1.5 py-0.5 text-[11px] text-muted-foreground"
+                  title={`channel: ${s.channel}`}
+                >
+                  {CHANNEL_LABEL[s.channel] ?? s.channel}
+                </span>
+              ) : null}
+            </>
+          }
+          title={
+            <span className="block truncate" title={s.user_email && s.user_email.includes('@') ? s.user_email : 'Người dùng ẩn danh'}>
+              {s.user_email && s.user_email.includes('@') ? s.user_email : <span className="italic text-muted-foreground">Người dùng ẩn danh</span>}
             </span>
-            <StatusBadge status={STATUS_TONE[s.status]} label={STATUS_LABEL[s.status]} />
-            {s.reading_type ? (
-              <span
-                className="inline-flex items-center rounded border border-gold/25 bg-gold/10 px-1.5 py-0.5 text-[11px] text-gold"
-                title={`reading_type: ${s.reading_type}`}
+          }
+          meta={
+            <>
+              <span className="rounded border border-gold/30 bg-gold/5 px-2 py-0.5 font-mono text-xs text-gold/80" title={s.session_id}>
+                {s.session_id}
+              </span>
+              <button
+                type="button"
+                onClick={copyId}
+                className="inline-flex h-6 items-center gap-1 rounded border border-border px-2 text-xs text-muted-foreground hover:bg-gold/10 hover:text-gold"
+                aria-label="Sao chép ID phiên"
+                title="Sao chép toàn bộ ID phiên"
               >
-                {READING_TYPE_LABEL[s.reading_type] ?? s.reading_type}
-              </span>
-            ) : null}
-            {s.channel ? (
-              <span
-                className="inline-flex items-center rounded border border-border bg-card/60 px-1.5 py-0.5 text-[11px] text-muted-foreground"
-                title={`channel: ${s.channel}`}
-              >
-                {CHANNEL_LABEL[s.channel] ?? s.channel}
-              </span>
-            ) : null}
-          </div>
-          <h1 className="mt-2 truncate text-2xl font-semibold text-foreground" title={s.user_email && s.user_email.includes('@') ? s.user_email : 'Người dùng ẩn danh'}>
-            {s.user_email && s.user_email.includes('@') ? s.user_email : <span className="italic text-muted-foreground">Người dùng ẩn danh</span>}
-          </h1>
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs">
-            <span className="rounded border border-gold/30 bg-gold/5 px-2 py-0.5 font-mono text-gold/80" title={s.session_id}>
-              {s.session_id}
-            </span>
-            <button
-              type="button"
-              onClick={copyId}
-              className="inline-flex h-6 items-center gap-1 rounded border border-border px-2 text-muted-foreground hover:bg-gold/10 hover:text-gold"
-              aria-label="Copy session ID"
-              title="Copy full session ID"
-            >
-              <Copy className="h-3 w-3" />
-              <span className="hidden sm:inline">Copy ID</span>
-            </button>
-            {s.user_id && (
-              <span className="rounded border border-border px-2 py-0.5 font-mono text-muted-foreground" title={`user_id: ${s.user_id}`}>
-                u: {s.user_id.slice(0, 8)}…
-              </span>
-            )}
-          </div>
-        </div>
+                <Copy className="h-3 w-3" />
+                <span className="hidden sm:inline">Sao chép ID</span>
+              </button>
+              {s.user_id && (
+                <span className="rounded border border-border px-2 py-0.5 font-mono text-xs text-muted-foreground" title={`user_id: ${s.user_id}`}>
+                  u: {s.user_id.slice(0, 8)}…
+                </span>
+              )}
+            </>
+          }
+        />
 
         {/* Actions toolbar — re-run / rename / delete / view customer / copy
             link, alongside the existing report-open + copy buttons. Mirrors the
@@ -602,7 +609,7 @@ export default function SessionDetailPage() {
           hint={s.status === 'running' ? 'đang chạy' : 'pipeline'}
         />
         <KpiCard
-          label="Cost"
+          label="Chi phí"
           value={`$${s.cost_usd.toFixed(3)}`}
           icon={<DollarSign className="h-4 w-4" />}
           accent="purple"

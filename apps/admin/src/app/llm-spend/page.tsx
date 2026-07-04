@@ -47,6 +47,7 @@ import { CostPanel } from '@/components/llm-spend/CostPanel';
 import { ReportCostsPanel } from '@/components/llm-spend/ReportCostsPanel';
 import { PageHeader } from '@/components/admin/page-header';
 import { LiveBadge } from '@/components/admin/live-badge';
+import { EmptyState } from '@/components/admin/empty-state';
 import { DollarSign } from 'lucide-react';
 import { fmtDateTime } from '@/lib/format';
 
@@ -299,7 +300,9 @@ export default function LlmSpendPage() {
                 ))}
                 {topUsers.isLoading && <li className="text-muted-foreground">Đang tải…</li>}
                 {!topUsers.isLoading && (topUsers.data ?? []).length === 0 && (
-                  <li className="text-muted-foreground">Chưa có dữ liệu user.</li>
+                  <li>
+                    <EmptyState compact title="Chưa có dữ liệu user." />
+                  </li>
                 )}
               </ol>
             </CardContent>

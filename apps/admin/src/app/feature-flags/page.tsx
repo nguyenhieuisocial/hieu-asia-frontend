@@ -27,6 +27,7 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
+  StatusBadge,
   Switch,
   toast,
 } from '@hieu-asia/ui';
@@ -267,9 +268,7 @@ function FlagRow({
         <div className="flex items-center gap-2">
           <code className="font-mono text-sm text-gold">{flag.key}</code>
           {flag.rollout_pct < 100 && (
-            <span className="inline-flex items-center rounded-full border border-warn-500/40 bg-warn-500/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-warn-700 dark:text-warn-300">
-              {flag.rollout_pct}% rollout
-            </span>
+            <StatusBadge status="warning" label={`${flag.rollout_pct}% rollout`} />
           )}
         </div>
         <p className="mt-1 text-xs text-muted-foreground">{flag.description}</p>

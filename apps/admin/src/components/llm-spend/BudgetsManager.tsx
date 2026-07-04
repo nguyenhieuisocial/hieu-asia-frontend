@@ -14,6 +14,7 @@ import {
   StatusBadge,
 } from '@hieu-asia/ui';
 import { upsertApiBudget, type ApiBudgetRow, type BudgetUpsert } from '@/lib/llm-spend-api';
+import { EmptyState } from '@/components/admin/empty-state';
 
 interface Props {
   rows: ApiBudgetRow[];
@@ -72,7 +73,7 @@ export function BudgetsManager({ rows, isLoading }: Props) {
         <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Budget hiện hữu</h3>
         {isLoading && <p className="text-sm text-muted-foreground">Đang tải…</p>}
         {!isLoading && rows.length === 0 && (
-          <p className="text-sm text-muted-foreground">Chưa có budget. Tạo budget đầu tiên ở cột phải.</p>
+          <EmptyState compact title="Chưa có budget" description="Tạo budget đầu tiên ở cột phải." />
         )}
         <ul className="space-y-2">
           {rows.map((b) => {

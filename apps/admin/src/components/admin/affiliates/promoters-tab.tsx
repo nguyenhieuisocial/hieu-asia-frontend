@@ -25,6 +25,7 @@ import {
   toast,
 } from '@hieu-asia/ui';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
+import { EmptyState } from '@/components/admin/empty-state';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { useSavedFilters } from '@/lib/saved-filters';
 import { SavedFiltersMenu } from '@/components/admin/SavedFiltersMenu';
@@ -231,7 +232,7 @@ export function PromotersTab() {
               getRowId={(r) => r.user_id}
               loading={q.isLoading}
               caption="Danh sách promoter"
-              empty={<span className="text-sm text-muted-foreground">Chưa có promoter nào.</span>}
+              empty={<EmptyState title="Chưa có promoter nào." className="border-none bg-transparent p-0" />}
             />
           )}
         </CardContent>

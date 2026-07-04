@@ -37,6 +37,7 @@ import {
   User,
 } from 'lucide-react';
 import { ErrorBlock } from '@/components/admin/error-block';
+import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { CustomerDetailTabs } from '@/components/admin/customers/CustomerDetailTabs';
 import { CustomerIntelligenceCard } from '@/components/admin/customers/CustomerIntelligenceCard';
@@ -202,19 +203,19 @@ function CustomerDetailPageInner() {
         Quay lại danh sách
       </Link>
 
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
+      <PageHeader
+        eyebrow={
+          <>
             <User className="h-5 w-5 text-primary" aria-hidden />
             <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
               Khách hàng
             </span>
             {customer?.plan && <PlanBadge plan={customer.plan} />}
-          </div>
-          <h1 className="mt-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
-            {enrichedCustomer?.display_name ?? `Khách hàng ${id.slice(0, 8)}…`}
-          </h1>
-          <div className="mt-1 flex items-center gap-2">
+          </>
+        }
+        title={enrichedCustomer?.display_name ?? `Khách hàng ${id.slice(0, 8)}…`}
+        meta={
+          <>
             {/* Wave 63 — show first 8 chars (founder: full UUID too long);
                 full id stays in title + the copy button beside it. */}
             <p className="font-mono text-xs text-muted-foreground" title={id}>
@@ -224,32 +225,34 @@ function CustomerDetailPageInner() {
               type="button"
               onClick={copyId}
               className="inline-flex h-6 w-6 items-center justify-center rounded text-muted-foreground hover:bg-primary/10 hover:text-primary"
-              aria-label="Copy ID"
-              title="Copy ID"
+              aria-label="Sao chép ID"
+              title="Sao chép ID"
             >
               <Copy className="h-3 w-3" aria-hidden />
             </button>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          {/* Liên hệ khách qua email (template có sẵn). Tự vô hiệu hoá khi không
-              có email — vẫn render để giải thích vì sao không gửi được. */}
-          <ContactCustomerDialog
-            email={customer?.email ?? null}
-            optedOut={customer?.email_opted_out === true}
-          />
-          {customer?.email && (
-            <SetPlanDialog
-              defaultEmail={customer.email}
-              triggerLabel="Cấp gói cho user này"
-              onSuccess={() => refetch()}
+          </>
+        }
+        actions={
+          <>
+            {/* Liên hệ khách qua email (template có sẵn). Tự vô hiệu hoá khi không
+                có email — vẫn render để giải thích vì sao không gửi được. */}
+            <ContactCustomerDialog
+              email={customer?.email ?? null}
+              optedOut={customer?.email_opted_out === true}
             />
-          )}
-          <Button variant="outline" size="sm" onClick={onRefresh} disabled={isFetching}>
-            {isFetching ? 'Đang tải…' : 'Làm mới'}
-          </Button>
-        </div>
-      </div>
+            {customer?.email && (
+              <SetPlanDialog
+                defaultEmail={customer.email}
+                triggerLabel="Cấp gói cho user này"
+                onSuccess={() => refetch()}
+              />
+            )}
+            <Button variant="outline" size="sm" onClick={onRefresh} disabled={isFetching}>
+              {isFetching ? 'Đang tải…' : 'Làm mới'}
+            </Button>
+          </>
+        }
+      />
 
       {showError && (
         <ErrorBlock

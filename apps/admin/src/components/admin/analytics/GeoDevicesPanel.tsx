@@ -10,6 +10,7 @@
 
 import { Globe } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
+import { EmptyState } from '@/components/admin/empty-state';
 import {
   fetchAudienceBreakdown,
   isPostHogServerConfigured,
@@ -51,7 +52,7 @@ function BreakdownList({
         {title}
       </h3>
       {rows.length === 0 ? (
-        <p className="text-sm text-muted-foreground">Chưa có dữ liệu.</p>
+        <EmptyState compact title="Chưa có dữ liệu." />
       ) : (
         <ul className="space-y-2.5">
           {rows.map((r) => {

@@ -151,7 +151,7 @@ export function ApiKeysTab() {
       },
       {
         id: 'status',
-        header: 'Status',
+        header: 'Trạng thái',
         width: '100px',
         cell: (k) => {
           if (k.revoked_at) {

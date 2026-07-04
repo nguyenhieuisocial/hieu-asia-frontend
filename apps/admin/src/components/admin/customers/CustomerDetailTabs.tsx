@@ -384,7 +384,7 @@ function ProfileTab({ customer }: { customer: CustomerDetail }) {
           <Field label="Email" value={customer.email} mono />
           <Field label="Telegram ID" value={customer.telegram_id} mono />
           <Field
-            label="Plan"
+            label="Gói"
             value={customer.plan}
             hint={
               customer.plan_expires_at
@@ -891,7 +891,7 @@ function ComplianceTab({ customer }: { customer: CustomerDetail }) {
             />
           ))}
       {customer.referral_code && (
-        <Field label="Referral code" value={customer.referral_code} mono />
+        <Field label="Mã giới thiệu" value={customer.referral_code} mono />
       )}
       {customer.partner_id && (
         <div>

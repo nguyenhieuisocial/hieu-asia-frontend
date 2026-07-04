@@ -22,6 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
   Input,
+  StatusBadge,
   cn,
   toast,
 } from '@hieu-asia/ui';
@@ -151,11 +152,14 @@ function isoDaysAgo(days: number): string {
   return new Date(Date.now() - days * 86_400_000).toISOString().slice(0, 10);
 }
 
-const STATUS_STYLE: Record<RefundStatus, { label: string; cls: string }> = {
-  requested: { label: 'Chờ duyệt', cls: 'bg-amber-500/15 text-amber-500' },
-  approved: { label: 'Đã duyệt — chờ chuyển', cls: 'bg-blue-500/15 text-blue-500' },
-  completed: { label: 'Đã hoàn tiền', cls: 'bg-emerald-500/15 text-emerald-500' },
-  rejected: { label: 'Từ chối', cls: 'bg-red-500/15 text-red-500' },
+const STATUS_BADGE: Record<
+  RefundStatus,
+  { status: 'success' | 'warning' | 'error' | 'info' | 'neutral'; label: string }
+> = {
+  requested: { status: 'warning', label: 'Chờ duyệt' },
+  approved: { status: 'info', label: 'Đã duyệt — chờ chuyển' },
+  completed: { status: 'success', label: 'Đã hoàn tiền' },
+  rejected: { status: 'error', label: 'Từ chối' },
 };
 
 const PRESETS: { label: string; days: number | 'today' | null }[] = [
@@ -525,8 +529,8 @@ function AdminSepayPageInner() {
       id: 'status',
       header: 'Trạng thái',
       cell: (r) => {
-        const st = STATUS_STYLE[r.status];
-        return <span className={cn('rounded-full px-2.5 py-0.5 text-xs font-medium', st.cls)}>{st.label}</span>;
+        const st = STATUS_BADGE[r.status];
+        return <StatusBadge status={st.status} label={st.label} />;
       },
     },
     {
@@ -826,11 +830,11 @@ function ReconcileView() {
       header: 'Trạng thái',
       cell: (r) =>
         r.order?.underpaid ? (
-          <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-xs text-red-500">Thiếu tiền</span>
+          <StatusBadge status="error" label="Thiếu tiền" />
         ) : r.order?.status === 'paid' ? (
-          <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs text-emerald-500">Đã trả</span>
+          <StatusBadge status="success" label="Đã trả" />
         ) : (
-          <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs text-amber-500">{r.order?.status ?? '—'}</span>
+          <StatusBadge status="warning" label={r.order?.status ?? '—'} />
         ),
     },
   ];
@@ -1151,9 +1155,9 @@ function DashboardView() {
             <CardTitle className="flex items-center gap-2 text-sm">
               Webhook SePay
               {healthQ.data?.ok && (healthQ.data.webhooks_24h ?? 0) > 0 ? (
-                <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs text-emerald-500">Đang nhận</span>
+                <StatusBadge status="success" label="Đang nhận" />
               ) : (
-                <span className="rounded-full bg-muted/20 px-2 py-0.5 text-xs text-muted-foreground">Chưa có webhook</span>
+                <StatusBadge status="neutral" label="Chưa có webhook" />
               )}
             </CardTitle>
           </CardHeader>
@@ -1182,9 +1186,9 @@ function DashboardView() {
                         <td className="px-4 py-2">{TIER_LABEL[s.plan] ?? s.plan}</td>
                         <td className="px-4 py-2 text-right">
                           {s.expired ? (
-                            <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-xs text-red-500">Hết hạn</span>
+                            <StatusBadge status="error" label="Hết hạn" />
                           ) : (
-                            <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs text-amber-500">còn {s.days_left} ngày</span>
+                            <StatusBadge status="warning" label={`còn ${s.days_left} ngày`} />
                           )}
                         </td>
                       </tr>

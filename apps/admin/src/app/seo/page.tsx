@@ -122,13 +122,13 @@ function GscTable({ title, rows, loading }: { title: string; rows: GscRow[]; loa
     },
     {
       id: 'clicks',
-      header: 'Clicks',
+      header: 'Lượt click',
       className: 'text-right font-mono text-foreground',
       cell: (r) => fmtInt(r.clicks),
     },
     {
       id: 'impressions',
-      header: 'Impressions',
+      header: 'Hiển thị',
       className: 'text-right font-mono text-foreground/70',
       cell: (r) => fmtInt(r.impressions),
     },

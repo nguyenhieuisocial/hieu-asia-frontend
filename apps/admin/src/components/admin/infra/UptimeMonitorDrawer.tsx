@@ -29,6 +29,7 @@ import {
 } from '@/lib/admin-api';
 import { formatDateOrEmpty, formatRelativeOrEmpty } from '@/lib/format-date';
 import { ErrorBlock } from '@/components/admin/error-block';
+import { EmptyState } from '@/components/admin/empty-state';
 import { InfraStatusPill } from '@/components/admin/infra/infra-panel';
 
 // Recharts lazy-loaded so it stays out of the initial bundle (ssr:false because
@@ -229,7 +230,7 @@ export function UptimeMonitorDrawer({
                 Sự cố gần đây
               </p>
               {incidents.length === 0 ? (
-                <p className="text-sm text-muted-foreground">Không có sự cố gần đây.</p>
+                <EmptyState compact title="Không có sự cố gần đây." />
               ) : (
                 <ul className="space-y-2">
                   {incidents.map((inc) => (
