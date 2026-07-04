@@ -18,6 +18,7 @@ import { getSupabaseAuth } from '@/lib/auth-client';
 import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
 import { EXTENDED_SURVEY_SCHEMA, type BigFiveTrait } from '@/lib/survey-schema-extended';
 import { scoreBigFive, type BigFiveScoreWithMeta } from '@/lib/scoring/big-five';
+import { submitBigFive } from '@/lib/scoring/submit-personality';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -128,6 +129,10 @@ export default function BigFivePage() {
     const scored = scoreBigFive(answers);
     setResult(scored);
     savePersonalityResult('big-five', buildBigFiveSummary(scored.scores));
+    // Persist to the server (personality_scores) for the Cẩm Nang report. Only
+    // fires the full submit once the DiSC half is also present + user signed in;
+    // otherwise caches this half in localStorage. Fire-and-forget.
+    submitBigFive(scored, answers);
     track('tool_used', { tool: 'big-five', result: 'ok' });
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
   };
