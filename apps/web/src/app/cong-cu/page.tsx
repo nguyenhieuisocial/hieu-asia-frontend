@@ -11,7 +11,7 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, itemList, webPage } from '@/lib/seo/jsonld';
 
 // 2026-06-22 — Sắp xếp lại + thiết kế lại /cong-cu (workflow 3-hướng→chấm→tổng hợp).
-// ~48 công cụ chia 7 NHÓM theo việc người dùng cần làm, có vùng "Bắt đầu ở đây"
+// 53 công cụ chia 7 NHÓM theo việc người dùng cần làm, có vùng "Bắt đầu ở đây"
 // (lá số miễn phí + 5 lăng kính) và thanh nhảy-nhóm. Thẻ dùng BIẾN-THEME nên
 // chạy đúng cả light (Giấy thấm) lẫn dark (Khoảng lặng) — sửa lỗi nền trắng-mờ cũ.
 
@@ -205,7 +205,7 @@ const commandPanel = (
 );
 
 export default function CongCuPage() {
-  // 2026-06-23: thêm dữ-liệu-cấu-trúc cho trang danh-mục — ItemList 49 công cụ
+  // 2026-06-23: thêm dữ-liệu-cấu-trúc cho trang danh-mục — ItemList 53 công cụ
   // + breadcrumb + webPage → Google/AI hiểu đây là bộ sưu tập có cấu trúc, index
   // tốt các link công cụ (liên-kết-nội-bộ = nút-thắt traffic).
   const JSONLD = [

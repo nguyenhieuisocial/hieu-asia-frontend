@@ -8,7 +8,7 @@ import { itemList, breadcrumb } from '@/lib/seo/jsonld';
 export const metadata: Metadata = {
   title: 'Học huyền học hiện đại',
   description:
-    'Tử Vi, Bát Tự, MBTI, Big Five, DISC, Enneagram, Tarot, Kinh Dịch, chiêm tinh, thần số, con giáp, sao hạn… 15 chủ đề, infographic trực quan, ngôn ngữ Việt.',
+    'Tử Vi, Bát Tự, MBTI, Big Five, DISC, Enneagram, Tarot, Kinh Dịch, chiêm tinh, thần số, con giáp, sao hạn… 18 chủ đề, infographic trực quan, ngôn ngữ Việt.',
   alternates: { canonical: 'https://hieu.asia/learn' },
 };
 
