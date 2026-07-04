@@ -18,6 +18,7 @@ import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
 import { savePersonalityResult, buildDiscSummary } from '@/lib/personality-store';
 import { EXTENDED_SURVEY_SCHEMA, type DiscDimension } from '@/lib/survey-schema-extended';
 import { scoreDisc, type DiscScoreWithMeta } from '@/lib/scoring/disc';
+import { submitDisc } from '@/lib/scoring/submit-personality';
 import { buildStyle } from '@/lib/disc-type-data';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
@@ -122,6 +123,10 @@ export default function DiscPage() {
     const scored = scoreDisc(answers);
     setResult(scored);
     savePersonalityResult('disc', buildDiscSummary(scored.primary_style, scored.secondary_style));
+    // Persist to the server (personality_scores) for the Cẩm Nang report. Only
+    // fires the full submit once the Big Five half is also present + user signed
+    // in; otherwise caches this half in localStorage. Fire-and-forget.
+    submitDisc(scored, answers);
     track('tool_used', { tool: 'disc', result: 'ok' });
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
   };

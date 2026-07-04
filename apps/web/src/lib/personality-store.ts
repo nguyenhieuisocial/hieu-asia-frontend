@@ -99,3 +99,32 @@ export function buildDiscSummary(primary: string, secondary: string): string {
 export function buildEnneagramSummary(label: string, name: string): string {
   return `Enneagram: ${label} — ${name}`;
 }
+
+/**
+ * Extract the raw MBTI type (e.g. "INTJ") from the stored MBTI summary string,
+ * or null if no MBTI result is stored. Parses the summary written by
+ * `buildMbtiSummary` ("MBTI: INTJ (…)"). Used to forward the self-identified
+ * MBTI type to the personality-scores backend (`/survey/personality/submit`).
+ */
+export function getMbtiType(): string | null {
+  const raw = getPersonalityResult('mbti');
+  if (!raw) return null;
+  const m = raw.match(/MBTI:\s*([EI][NS][TF][JP])/i);
+  return m?.[1] ? m[1].toUpperCase() : null;
+}
+
+/**
+ * Extract the raw Enneagram type + optional wing from the stored Enneagram
+ * summary string, or null if none is stored. Parses the summary written by
+ * `buildEnneagramSummary` ("Enneagram: 8w9 — …" or "Enneagram: 8 — …").
+ * Used to forward the self-identified Enneagram result to the backend.
+ */
+export function getEnneagramTypeWing(): { type: number; wing?: number } | null {
+  const raw = getPersonalityResult('enneagram');
+  if (!raw) return null;
+  const m = raw.match(/Enneagram:\s*([1-9])(?:w([1-9]))?/);
+  if (!m) return null;
+  const type = Number(m[1]);
+  const wing = m[2] ? Number(m[2]) : undefined;
+  return wing !== undefined ? { type, wing } : { type };
+}
