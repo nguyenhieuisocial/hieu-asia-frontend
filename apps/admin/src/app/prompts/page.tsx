@@ -31,6 +31,8 @@ import {
   Orbit,
   SlidersHorizontal,
   BookOpen,
+  Telescope,
+  CalendarDays,
   X,
   type LucideIcon,
 } from 'lucide-react';
@@ -80,6 +82,8 @@ const ROLE_META: Record<Role, { label: string; tagline: string; Icon: LucideIcon
     tagline: 'Báo cáo cao cấp đa lăng kính (~30 mục) — bản chuẩn nội dung',
     Icon: BookOpen,
   },
+  natal: { label: 'Chiêm tinh phương Tây', tagline: 'Đọc bản đồ sao (natal chart) — không tiên đoán', Icon: Telescope },
+  horoscope: { label: 'Tử vi hằng ngày', tagline: 'Bản tin tử vi mỗi ngày cho 12 con giáp', Icon: CalendarDays },
 };
 
 export interface PromptSummary {
