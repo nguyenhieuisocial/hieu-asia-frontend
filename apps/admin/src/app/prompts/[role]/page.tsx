@@ -28,20 +28,7 @@ import { PromptEditor } from '@/components/prompts/PromptEditor';
 import { WiringBadge, type PromptMeta } from '@/components/prompts/prompt-meta';
 import { formatDateOrEmpty } from '@/lib/format-date';
 import { trackAdminMutation } from '@/lib/admin-breadcrumb';
-
-/** Must match Worker KV keys (backend PROMPT_ROLES — 9 roles kể từ #348). */
-const ROLES = [
-  'vision',
-  'logic',
-  'psychology',
-  'alignment',
-  'report',
-  'mentor',
-  'judge',
-  'decisions',
-  'ops_copilot',
-] as const;
-type Role = (typeof ROLES)[number];
+import { PROMPT_ROLES as ROLES, type PromptRole as Role } from '@/lib/prompt-roles';
 
 interface PromptDetail {
   role: Role;
