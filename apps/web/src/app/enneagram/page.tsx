@@ -16,6 +16,7 @@ import { safeJson } from '@/lib/safe-json';
 import { getSupabaseAuth } from '@/lib/auth-client';
 import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
 import { savePersonalityResult, buildEnneagramSummary } from '@/lib/personality-store';
+import { submitSelfIdentifiedPersonality } from '@/lib/scoring/submit-personality';
 import {
   ENNEAGRAM_PAGES,
   ENNEAGRAM_TYPE_ORDER,
@@ -145,6 +146,9 @@ export default function EnneagramPage() {
     const scored = scoreEnneagram(answers);
     setResult(scored);
     savePersonalityResult('enneagram', buildEnneagramSummary(scored.label, TYPE_META[scored.type].name));
+    // Persist to the server (signed-in users) so Cẩm Nang can use it even without
+    // the Big Five/DiSC quizzes. Fire-and-forget; no-ops when anonymous.
+    submitSelfIdentifiedPersonality();
     track('tool_used', { tool: 'enneagram', result: 'ok' });
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
   };
