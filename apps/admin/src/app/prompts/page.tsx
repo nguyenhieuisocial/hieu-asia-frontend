@@ -30,6 +30,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
+import { EmptyState } from '@/components/admin/empty-state';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { PipelineDiagram } from '@/components/prompts/PipelineDiagram';
 import { WiringBadge, type PromptMeta } from '@/components/prompts/prompt-meta';
@@ -304,12 +305,10 @@ export default function PromptsListPage() {
       </div>
 
       {visibleRoles.length === 0 && !isLoading && (
-        <Alert variant="default">
-          <AlertTitle>Không có prompt khớp bộ lọc</AlertTitle>
-          <AlertDescription>
-            Thử xóa từ khoá hoặc chuyển sang "Tất cả".
-          </AlertDescription>
-        </Alert>
+        <EmptyState
+          title="Không có prompt khớp bộ lọc"
+          description='Thử xóa từ khoá hoặc chuyển sang "Tất cả".'
+        />
       )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

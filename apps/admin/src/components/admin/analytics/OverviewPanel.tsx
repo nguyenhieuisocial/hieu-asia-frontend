@@ -32,6 +32,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  StatusBadge,
 } from '@hieu-asia/ui';
 import {
   ExternalLink,
@@ -46,6 +47,7 @@ import {
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { LiveBadge } from '@/components/admin/live-badge';
+import { EmptyState } from '@/components/admin/empty-state';
 import {
   fetchEvents24h,
   fetchUniqueUsers24h,
@@ -227,9 +229,7 @@ async function SurveyResponsesTile() {
       </CardHeader>
       <CardContent className="space-y-2">
         {rows.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            Chưa có phản hồi nào trong 7 ngày qua.
-          </p>
+          <EmptyState compact title="Chưa có phản hồi nào trong 7 ngày qua." />
         ) : (
           rows.map((r) => (
             <div
@@ -285,7 +285,7 @@ async function FeatureFlagExposureTile() {
       </CardHeader>
       <CardContent className="space-y-2">
         {rows.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Chưa có exposure nào.</p>
+          <EmptyState compact title="Chưa có exposure nào." />
         ) : (
           rows.map((r) => (
             <div
@@ -334,7 +334,7 @@ async function TopPageviewsTile() {
       </CardHeader>
       <CardContent className="space-y-2">
         {rows.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Chưa có pageview nào.</p>
+          <EmptyState compact title="Chưa có pageview nào." />
         ) : (
           rows.map((r, i) => (
             <div
@@ -384,9 +384,7 @@ async function ToolUsageTile() {
       </CardHeader>
       <CardContent className="space-y-2">
         {rows.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            Chưa có lượt dùng công cụ nào trong 30 ngày.
-          </p>
+          <EmptyState compact title="Chưa có lượt dùng công cụ nào trong 30 ngày." />
         ) : (
           rows.map((r) => (
             <div
@@ -508,9 +506,7 @@ export default function AdminPostHogPage() {
           fullyConfigured ? (
             <LiveBadge tone="jade" />
           ) : (
-            <span className="rounded-full border border-amber-400/30 bg-amber-500/10 px-2 py-0.5 font-mono text-[10px] text-amber-700 dark:text-amber-200">
-              {configuredCount}/{status.length} cấu hình
-            </span>
+            <StatusBadge status="warning" label={`${configuredCount}/${status.length} cấu hình`} />
           )
         }
       />

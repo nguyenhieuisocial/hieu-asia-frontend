@@ -20,6 +20,7 @@ import {
   Textarea,
   Checkbox,
 } from '@hieu-asia/ui';
+import { EmptyState } from '@/components/admin/empty-state';
 
 type Channel = 'email' | 'telegram' | 'in_app';
 type TargetStatus = 'active' | 'all';
@@ -189,7 +190,7 @@ export function BroadcastTab() {
         </CardHeader>
         <CardContent>
           {history.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Chưa có broadcast nào.</p>
+            <EmptyState compact title="Chưa có broadcast nào." />
           ) : (
             <div className="space-y-2">
               {history.map((b) => (

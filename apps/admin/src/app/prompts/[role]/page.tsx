@@ -23,6 +23,7 @@ import {
   toast,
 } from '@hieu-asia/ui';
 import { ChevronLeft, Eye, GitCompare } from 'lucide-react';
+import { PageHeader } from '@/components/admin/page-header';
 import { PromptEditor } from '@/components/prompts/PromptEditor';
 import { WiringBadge, type PromptMeta } from '@/components/prompts/prompt-meta';
 import { formatDateOrEmpty } from '@/lib/format-date';
@@ -333,8 +334,8 @@ export default function PromptEditPage() {
   return (
     <div className="space-y-6">
       {/* Header / breadcrumb */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
+      <PageHeader
+        eyebrow={
           <Link
             href="/prompts"
             className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-gold"
@@ -342,7 +343,9 @@ export default function PromptEditPage() {
             <ChevronLeft className="h-3.5 w-3.5" />
             Prompts
           </Link>
-          <h1 className="mt-1 font-heading text-2xl font-semibold text-foreground">
+        }
+        title={
+          <>
             {prompt?.meta?.label ?? role}
             {prompt && (
               <span className="ml-2 text-xs font-normal text-muted-foreground">
@@ -351,32 +354,32 @@ export default function PromptEditPage() {
                   : 'Bản chuẩn hệ thống'}
               </span>
             )}
-          </h1>
-          {prompt?.meta?.summary && (
-            <p className="mt-1 max-w-2xl text-xs text-muted-foreground">{prompt.meta.summary}</p>
-          )}
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setDiffOpen(true)}
-            disabled={!prompt?.default_system || !draft}
-          >
-            <GitCompare className="mr-1.5 h-3.5 w-3.5" />
-            So sánh v{prompt?.version ?? 1} ↔ bản chuẩn
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setPreviewOpen(true)}
-            disabled={!draft}
-          >
-            <Eye className="mr-1.5 h-3.5 w-3.5" />
-            Preview
-          </Button>
-        </div>
-      </div>
+          </>
+        }
+        description={prompt?.meta?.summary}
+        actions={
+          <>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setDiffOpen(true)}
+              disabled={!prompt?.default_system || !draft}
+            >
+              <GitCompare className="mr-1.5 h-3.5 w-3.5" />
+              So sánh v{prompt?.version ?? 1} ↔ bản chuẩn
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPreviewOpen(true)}
+              disabled={!draft}
+            >
+              <Eye className="mr-1.5 h-3.5 w-3.5" />
+              Preview
+            </Button>
+          </>
+        }
+      />
 
       {error && (
         <Alert variant="destructive">

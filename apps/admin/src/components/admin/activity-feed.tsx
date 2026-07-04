@@ -15,7 +15,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@hieu-asia/ui';
-import { Activity } from 'lucide-react';
+import { EmptyState } from '@/components/admin/empty-state';
 import { listSessions } from '@/lib/admin-api';
 import { fmtRelative } from '@/lib/format';
 
@@ -137,10 +137,7 @@ export function ActivityFeed() {
       )}
 
       {noData && (
-        <div className="mt-4 flex flex-col items-center gap-2 py-6 text-center">
-          <Activity className="h-6 w-6 text-foreground/30" />
-          <p className="text-xs text-muted-foreground">Chưa có hoạt động — chờ event đầu tiên.</p>
-        </div>
+        <EmptyState compact className="mt-4" title="Chưa có hoạt động — chờ event đầu tiên." />
       )}
 
       {!isLoading && entries.length > 0 && (

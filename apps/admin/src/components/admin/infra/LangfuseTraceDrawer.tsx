@@ -21,6 +21,7 @@ import {
 import { getInfraLangfuseDetail } from '@/lib/admin-api';
 import { formatDateOrEmpty } from '@/lib/format-date';
 import { ErrorBlock } from '@/components/admin/error-block';
+import { EmptyState } from '@/components/admin/empty-state';
 
 function fmtLatency(ms: number | null | undefined): string {
   if (ms == null || !Number.isFinite(ms)) return '—';
@@ -132,7 +133,7 @@ export function LangfuseTraceDrawer({
                 Observations ({observations.length})
               </p>
               {observations.length === 0 ? (
-                <p className="text-sm text-muted-foreground">Không có observation.</p>
+                <EmptyState compact title="Không có observation." />
               ) : (
                 <ol className="space-y-2">
                   {observations.map((o, i) => {
