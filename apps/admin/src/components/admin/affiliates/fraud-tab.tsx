@@ -141,7 +141,7 @@ export function FraudTab() {
                   <div className="mt-1 text-foreground/85">{f.detail}</div>
                   <div className="mt-1 flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">
-                      Flagged: {fmtDateTime(f.flagged_at)}
+                      Gắn cờ: {fmtDateTime(f.flagged_at)}
                     </span>
                     <Button
                       size="sm"

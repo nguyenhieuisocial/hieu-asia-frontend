@@ -62,9 +62,9 @@ const ROLE_ICON: Record<AdminRole, React.ComponentType<{ className?: string }>> 
 
 const ROLE_FILTERS: Array<{ value: 'all' | AdminRole; label: string }> = [
   { value: 'all', label: 'Tất cả' },
-  { value: 'owner', label: 'Owner' },
-  { value: 'admin', label: 'Admin' },
-  { value: 'viewer', label: 'Viewer' },
+  { value: 'owner', label: 'Chủ sở hữu' },
+  { value: 'admin', label: 'Quản trị' },
+  { value: 'viewer', label: 'Chỉ đọc' },
 ];
 
 type BulkSelection = ReturnType<typeof useBulkSelection<AdminUser>>;
@@ -157,7 +157,7 @@ export function UsersList({
     },
     {
       id: 'role',
-      header: 'Role',
+      header: 'Vai trò',
       width: '120px',
       cell: (u) => (
         // Wave 60.10 — inline-edit role (admin↔viewer only). Owner stays

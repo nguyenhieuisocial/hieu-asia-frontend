@@ -228,7 +228,7 @@ function ConnectPageInner() {
     () => [
       {
         id: 'name',
-        header: 'Provider',
+        header: 'Nhà cung cấp',
         sortKey: 'name',
         cell: (r) => (
           <div className="min-w-0">
@@ -265,7 +265,7 @@ function ConnectPageInner() {
       },
       {
         id: 'status',
-        header: 'Status',
+        header: 'Trạng thái',
         sortKey: 'status',
         width: '120px',
         cell: (r) => {

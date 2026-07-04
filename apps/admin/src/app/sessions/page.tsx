@@ -694,7 +694,7 @@ function AdminSessionsPageInner() {
       },
       {
         id: 'session_id',
-        header: 'Session',
+        header: 'Phiên',
         sortKey: 'session_id',
         width: '200px',
         cell: (s) => (
@@ -725,7 +725,7 @@ function AdminSessionsPageInner() {
       },
       {
         id: 'user',
-        header: 'User',
+        header: 'Khách',
         sortKey: 'user_email',
         // UX audit 2026-07-03 — cột flex không giới hạn đẩy bảng ~1600px;
         // cap width + truncate (email đầy đủ vẫn xem được qua title).

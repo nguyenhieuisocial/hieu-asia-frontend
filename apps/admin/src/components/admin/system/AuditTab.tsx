@@ -192,7 +192,7 @@ const COLUMNS: AdminTableColumn<AuditEntry>[] = [
   },
   {
     id: 'action',
-    header: 'Action',
+    header: 'Hành động',
     sortKey: 'action',
     width: '220px',
     cell: (e) => {
@@ -234,7 +234,7 @@ const COLUMNS: AdminTableColumn<AuditEntry>[] = [
   },
   {
     id: 'metadata',
-    header: 'Details',
+    header: 'Chi tiết',
     width: '120px',
     cell: (e) => <AuditDetailsMenu metadata={e.metadata} />,
   },
@@ -359,7 +359,7 @@ export function AuditTab() {
     exportCsv(entries);
   }, [entries]);
 
-  const actionLabel = action ? action : 'Action: tất cả';
+  const actionLabel = action ? action : 'Hành động: tất cả';
 
   return (
     <div className="space-y-6">
@@ -450,7 +450,7 @@ export function AuditTab() {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="min-w-[16rem]">
-                  <DropdownMenuLabel>Action mẫu</DropdownMenuLabel>
+                  <DropdownMenuLabel>Hành động mẫu</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuRadioGroup value={action || '__all'} onValueChange={handleActionPreset}>
                     {ACTION_OPTIONS.map((opt) => (

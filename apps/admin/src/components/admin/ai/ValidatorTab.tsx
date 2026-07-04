@@ -143,7 +143,7 @@ const COST_BURN_COLUMNS: AdminTableColumn<CostBurnRow>[] = [
   },
   {
     id: 'retry',
-    header: 'Retry',
+    header: 'Thử lại',
     className: 'text-right font-mono text-muted-foreground',
     cell: ({ s }) => fmtPct(s.retry_rate),
   },
