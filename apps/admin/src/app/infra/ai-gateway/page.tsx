@@ -60,7 +60,7 @@ function fmtMs(ms: number | null | undefined): string {
 const MODEL_COLUMNS: AdminTableColumn<InfraAiGatewayItem>[] = [
   {
     id: 'vendor',
-    header: 'Provider',
+    header: 'Nhà cung cấp',
     className: 'whitespace-nowrap font-medium text-foreground',
     cell: (r) => r.vendor,
   },

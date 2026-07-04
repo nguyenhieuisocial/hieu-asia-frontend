@@ -70,21 +70,21 @@ const COLUMNS: AdminTableColumn<WebhookDelivery>[] = [
   },
   {
     id: 'vendor',
-    header: 'Vendor',
+    header: 'Nhà cung cấp',
     sortKey: 'vendor',
     width: '140px',
     cell: (r) => <span className="text-foreground/85">{r.vendor}</span>,
   },
   {
     id: 'event',
-    header: 'Event',
+    header: 'Sự kiện',
     cell: (r) => (
       <span className="font-mono text-xs text-muted-foreground">{r.event}</span>
     ),
   },
   {
     id: 'status',
-    header: 'Status',
+    header: 'Trạng thái',
     sortKey: 'status',
     width: '100px',
     cell: (r) => {

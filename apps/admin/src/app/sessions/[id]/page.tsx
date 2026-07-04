@@ -427,11 +427,11 @@ export default function SessionDetailPage() {
               type="button"
               onClick={copyId}
               className="inline-flex h-6 items-center gap-1 rounded border border-border px-2 text-muted-foreground hover:bg-gold/10 hover:text-gold"
-              aria-label="Copy session ID"
-              title="Copy full session ID"
+              aria-label="Sao chép ID phiên"
+              title="Sao chép toàn bộ ID phiên"
             >
               <Copy className="h-3 w-3" />
-              <span className="hidden sm:inline">Copy ID</span>
+              <span className="hidden sm:inline">Sao chép ID</span>
             </button>
             {s.user_id && (
               <span className="rounded border border-border px-2 py-0.5 font-mono text-muted-foreground" title={`user_id: ${s.user_id}`}>
@@ -602,7 +602,7 @@ export default function SessionDetailPage() {
           hint={s.status === 'running' ? 'đang chạy' : 'pipeline'}
         />
         <KpiCard
-          label="Cost"
+          label="Chi phí"
           value={`$${s.cost_usd.toFixed(3)}`}
           icon={<DollarSign className="h-4 w-4" />}
           accent="purple"

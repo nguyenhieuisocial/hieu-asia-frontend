@@ -115,10 +115,10 @@ function maskSecret(value: string | null | undefined): string {
 
 const CSV_HEADERS = {
   id: 'ID',
-  user_email: 'User',
-  plan: 'Plan',
+  user_email: 'Khách',
+  plan: 'Gói',
   amount_usd: 'Số tiền (VND)',
-  status: 'Status',
+  status: 'Trạng thái',
   stripe_id: 'Intent ID',
   created_at: 'Ngày tạo',
 } as const;

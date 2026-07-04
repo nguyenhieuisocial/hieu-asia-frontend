@@ -125,7 +125,7 @@ export default function AdminTasksPage() {
     },
     {
       key: 'name',
-      header: 'Session',
+      header: 'Phiên',
       width: '170px',
       // Direct link to the session detail. stopPropagation so clicking the id
       // navigates instead of also opening the row drawer. Id rút gọn để bảng
