@@ -41,6 +41,10 @@ export interface PromptMeta {
   group?: 'reading' | 'tool' | 'master' | 'assistant' | 'daily';
   /** Kết quả role này chảy tiếp vào role nào — cạnh có hướng cho sơ đồ. */
   flowsTo?: string[];
+  /** Lăng kính tính-bằng-engine role này còn dệt vào (không qua prompt riêng nên
+   *  không có cạnh flowsTo) — vd Cẩm Nang gộp Tử Vi/Tứ Trụ/Thần số/Chiêm tinh.
+   *  Chỉ để sơ đồ phản ánh ĐỦ nội dung. (backend PROMPT_GRAPH.ingests) */
+  ingests?: string[];
 }
 
 const WIRING_BADGE: Record<PromptWiring, { label: string; className: string }> = {
