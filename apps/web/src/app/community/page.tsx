@@ -55,7 +55,7 @@ const CHANNELS = [
   {
     href: '/learn',
     label: 'Học huyền học',
-    desc: '15 chủ đề nền tảng: Tử Vi, Bát Tự, MBTI, Big Five, DISC, Enneagram, Tarot, Kinh Dịch, chiêm tinh, xem tướng, thần số, 12 con giáp, sao hạn…',
+    desc: '18 chủ đề nền tảng: Tử Vi, Bát Tự, MBTI, Big Five, DISC, Enneagram, Tarot, Kinh Dịch, chiêm tinh, xem tướng, thần số, 12 con giáp, sao hạn…',
     icon: BookOpen,
     cta: 'Vào thư viện',
     external: false,

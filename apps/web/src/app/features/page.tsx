@@ -68,12 +68,12 @@ import { faqPage } from '@/lib/seo/jsonld';
 export const metadata: Metadata = {
   title: 'Tính năng',
   description:
-    'Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng, DISC, Enneagram, Tarot, chiêm tinh, Kinh Dịch và bộ ra quyết định với AI Mentor — hơn 25 công cụ tự hiểu.',
+    'Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng, DISC, Enneagram, Tarot, chiêm tinh, Kinh Dịch và bộ ra quyết định với AI Mentor — hơn 50 công cụ.',
   alternates: { canonical: 'https://hieu.asia/features' },
   openGraph: {
     title: 'Tính năng',
     description:
-      'Năm lăng kính cốt lõi + DISC, Enneagram, Tarot, chiêm tinh phương Tây, Kinh Dịch và bộ ra quyết định với AI Mentor. Hơn 25 công cụ giúp bạn hiểu mình và quyết định.',
+      'Năm lăng kính cốt lõi + DISC, Enneagram, Tarot, chiêm tinh phương Tây, Kinh Dịch và bộ ra quyết định với AI Mentor. Hơn 50 công cụ giúp bạn hiểu mình và quyết định.',
     url: 'https://hieu.asia/features',
     type: 'website',
     images: OG_DEFAULT_IMAGES,
@@ -635,7 +635,7 @@ export default function FeaturesPage() {
             Wave 60.79.T1 (vault 112 P0-04): add gold-ring ornament so the
             right half of the hero is no longer empty on lg+. */}
         <MarketingHero
-          eyebrow="SẢN PHẨM · 25+ CÔNG CỤ · 4 CHƯƠNG"
+          eyebrow="SẢN PHẨM · 50+ CÔNG CỤ · 4 CHƯƠNG"
           title={
             <>
               Năm ống kính, <em className="italic text-gold-soft">nhiều</em> ngôn

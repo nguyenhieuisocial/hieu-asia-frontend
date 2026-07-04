@@ -102,7 +102,7 @@ const MOBILE_TOOL_SECTIONS: readonly { label: string; links: readonly NavLink[] 
   }),
 ).filter((s) => s.links.length > 0);
 
-// Bài học — đủ 15 chủ đề /learn, xếp theo 3 trụ (founder: "bổ sung + sắp xếp").
+// Bài học — đủ 18 chủ đề /learn, xếp theo 3 trụ (founder: "bổ sung + sắp xếp").
 const MOBILE_LEARN: readonly NavLink[] = [
   { href: '/learn', label: 'Tất cả bài học' },
   // Cổ học Á Đông
