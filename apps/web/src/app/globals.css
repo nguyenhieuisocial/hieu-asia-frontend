@@ -30,6 +30,22 @@
   u {
     text-underline-offset: 0.2em;
   }
+
+  /* iOS Safari inflates <input type="date"> past its declared height (h-11 /
+   * 44px) and ignores the box model — the native value pseudo-element carries
+   * intrinsic sizing until appearance is reset. Symptom: the date box renders
+   * TALLER than sibling text inputs / selects on iOS (homepage "Lập lá số" hero
+   * form + every date tool). Reset appearance at ONE source so all date inputs
+   * across web/admin/mini-app match their siblings; desktop Chrome keeps its
+   * calendar-picker indicator (a separate pseudo, untouched). Single source —
+   * do NOT re-style height per component. */
+  input[type='date'] {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  input[type='date']::-webkit-date-and-time-value {
+    margin: 0;
+  }
 }
 
 @layer components {
