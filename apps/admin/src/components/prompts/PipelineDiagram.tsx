@@ -37,6 +37,7 @@ interface Node {
   wiring: PromptWiring;
   group: Group;
   flowsTo: string[];
+  ingests: string[];
 }
 
 /** Chấm màu theo cách đấu dây (khớp WiringBadge): xanh lá=sửa-là-ăn-ngay,
@@ -90,6 +91,7 @@ export function PipelineDiagram({ prompts }: { prompts: DiagramPrompt[] }) {
           wiring: meta.wiring,
           group: meta.group!,
           flowsTo: meta.flowsTo ?? [],
+          ingests: meta.ingests ?? [],
         };
       });
   }, [prompts]);
@@ -228,6 +230,23 @@ function ConvergeFlow({ feeders, target }: { feeders: Node[]; target: Node }) {
         {feeders.map((n) => (
           <RoleNode key={n.role} node={n} />
         ))}
+        {target.ingests.length > 0 && (
+          <div className="mt-1 rounded-md border border-dashed border-border/70 bg-muted/10 p-1.5">
+            <div className="mb-1 text-[9px] font-medium uppercase tracking-wide text-muted-foreground">
+              + lăng kính engine (không qua prompt)
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {target.ingests.map((x) => (
+                <span
+                  key={x}
+                  className="inline-flex items-center rounded border border-dashed border-border bg-muted/20 px-1.5 py-0.5 text-[10px] leading-4 text-muted-foreground"
+                >
+                  {x}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       <div className="flex flex-col items-center">
         <Arrow />
