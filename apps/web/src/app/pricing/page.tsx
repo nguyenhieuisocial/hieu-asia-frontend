@@ -277,14 +277,14 @@ export default function PricingPage() {
               id: 'free',
               name: 'MIỄN PHÍ',
               nameDisplay: 'Khởi đầu',
-              description: 'Khảo sát đầu vào và 6 công cụ tra cứu — không cần thẻ.',
+              description: 'Hơn 50 công cụ tra cứu miễn phí — không cần thẻ.',
               priceMonthly: PRICING.standard.vnd,
               bestFor:
                 'bạn muốn thử công cụ và xem tổng quan trước khi quyết định.',
               features: [
                 'Khảo sát đầu vào',
-                '6 công cụ tra cứu cơ bản',
-                'Tử Vi · Bát Tự · MBTI · Thần Số',
+                'Hơn 50 công cụ tra cứu miễn phí',
+                'Tử Vi · Bát Tự · MBTI · Big Five · Tarot · Thần Số…',
                 'Lưu hồ sơ cá nhân',
               ],
               ctaLabel: 'Bắt đầu miễn phí',
