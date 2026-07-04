@@ -151,13 +151,49 @@ export default function AffiliateDashboardPage() {
     }
   }, []);
 
+  // The dashboard authenticates via the legacy KV cookie (`hieu_aff_id`), but
+  // the user logs in through Supabase. If that cookie is missing (cleared / new
+  // device / expired) an already-logged-in affiliate wrongly sees "chưa đăng
+  // nhập". Re-mint the cookie FROM the current Supabase login via the JWT-gated
+  // /affiliate/restore-session endpoint. Returns true only if the cookie was
+  // set (i.e. the caller is a real affiliate), so load() can retry once.
+  const tryRestoreSession = React.useCallback(async (): Promise<boolean> => {
+    const supabase = getSupabaseAuth();
+    if (!supabase) return false;
+    const { data: sess } = await supabase.auth.getSession();
+    const token = sess.session?.access_token;
+    if (!token) return false;
+    try {
+      const res = await fetch(`${API_BASE}/affiliate/restore-session`, {
+        headers: { authorization: `Bearer ${token}` },
+        cache: 'no-store',
+      });
+      const j = await res.json().catch(() => null);
+      if (!j?.ok || !j.token) return false;
+      // Hand the signed token to the Next route that sets the httpOnly cookie.
+      const set = await fetch('/api/affiliate/me', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ token: j.token }),
+      });
+      return set.ok;
+    } catch {
+      return false;
+    }
+  }, []);
+
   const load = React.useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       // KV cookie path: profile (payout method/destination), performance
       // counters, recent events, payout history. NOT money totals.
-      const res = await fetch('/api/affiliate/me', { cache: 'no-store' });
+      let res = await fetch('/api/affiliate/me', { cache: 'no-store' });
+      // Cookie missing but the user may still be logged in via Supabase —
+      // restore the KV session cookie from that login, then retry once.
+      if (res.status === 401 && (await tryRestoreSession())) {
+        res = await fetch('/api/affiliate/me', { cache: 'no-store' });
+      }
       if (res.status === 401) {
         setError('not_signed_in');
         return;
@@ -181,7 +217,7 @@ export default function AffiliateDashboardPage() {
     } finally {
       setLoading(false);
     }
-  }, [loadBalance]);
+  }, [loadBalance, tryRestoreSession]);
 
   React.useEffect(() => {
     load();
