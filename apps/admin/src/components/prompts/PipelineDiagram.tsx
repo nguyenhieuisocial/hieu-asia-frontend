@@ -42,9 +42,10 @@ const GROUP_TITLE: Record<Group, string> = {
   reading: 'Pipeline đọc lá số',
   tool: 'Công cụ tính cách & Tarot',
   master: 'Báo cáo cao cấp',
+  daily: 'Nội dung định kỳ',
   assistant: 'Trợ lý đứng ngoài pipeline',
 };
-const GROUP_ORDER: Group[] = ['reading', 'tool', 'master', 'assistant'];
+const GROUP_ORDER: Group[] = ['reading', 'tool', 'master', 'daily', 'assistant'];
 
 /** Chấm màu theo cách đấu dây (khớp WiringBadge): xanh lá=sửa-là-ăn-ngay,
  *  xanh dương=đồng bộ code, hổ phách=bản chuẩn trong code. */
@@ -102,7 +103,7 @@ export function PipelineDiagram({ prompts }: { prompts: DiagramPrompt[] }) {
   }, [prompts]);
 
   const byGroup = React.useMemo(() => {
-    const m: Record<Group, Node[]> = { reading: [], tool: [], master: [], assistant: [] };
+    const m: Record<Group, Node[]> = { reading: [], tool: [], master: [], daily: [], assistant: [] };
     for (const n of nodes) m[n.group].push(n);
     return m;
   }, [nodes]);
