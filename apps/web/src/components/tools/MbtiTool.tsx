@@ -11,6 +11,7 @@ import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton'
 import { aiReadingToSections } from '@/lib/pdf/ai-reading-sections';
 import { track } from '@/lib/analytics';
 import { savePersonalityResult, buildMbtiSummary } from '@/lib/personality-store';
+import { submitSelfIdentifiedPersonality } from '@/lib/scoring/submit-personality';
 import { safeJson } from '@/lib/safe-json';
 import { getSupabaseAuth } from '@/lib/auth-client';
 import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
@@ -113,6 +114,9 @@ export function MbtiTool() {
     const scored = scoreMbti(answers);
     setResult(scored);
     savePersonalityResult('mbti', buildMbtiSummary(scored.type));
+    // Persist to the server (signed-in users) so Cẩm Nang can use it even without
+    // the Big Five/DiSC quizzes. Fire-and-forget; no-ops when anonymous.
+    submitSelfIdentifiedPersonality();
     track('tool_used', { tool: 'mbti', result: 'ok' });
     if (typeof window !== 'undefined') {
       document.getElementById('mbti-test')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
