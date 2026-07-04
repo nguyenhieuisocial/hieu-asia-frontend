@@ -103,21 +103,25 @@ export function submitDisc(
 }
 
 /**
- * Assemble + POST the full personality-scores row when BOTH the Big Five and
- * DiSC halves are available and the user is signed in. MBTI/Enneagram (self-
- * identified, from localStorage) are always attached when present. Fire-and-
- * forget: never throws, never blocks the UI, silently no-ops when data is
- * incomplete or the user is anonymous.
+ * Assemble + POST a personality-scores row for the signed-in user. Sends the
+ * full Big Five + DiSC `scores` when BOTH halves are cached; ALSO sends the
+ * self-identified MBTI/Enneagram (from localStorage) whenever present — so a
+ * user who did only those tools still reaches Cẩm Nang (backend migration 0070
+ * + worker-side merge accept a scores-absent write and merge onto one row per
+ * user). Fire-and-forget: never throws, never blocks the UI, silently no-ops
+ * when there is nothing to persist or the user is anonymous.
  */
 async function trySubmit(): Promise<void> {
   try {
     const bigFive = readCache<BigFiveCache>(BIG_FIVE_CACHE_KEY);
     const disc = readCache<DiscCache>(DISC_CACHE_KEY);
+    const mbtiType = getMbtiType();
+    const enneagram = getEnneagramTypeWing();
 
-    // The endpoint requires a COMPLETE Big Five + DiSC scores object. Without
-    // both halves we cannot build a valid `scores` payload — keep the results
-    // in localStorage and wait for the other lens to complete.
-    if (!bigFive || !disc) return;
+    // Nothing to persist yet → keep localStorage results and wait. (A full
+    // scores payload needs BOTH lens halves; MBTI/Enneagram can go on their own.)
+    const hasScores = Boolean(bigFive && disc);
+    if (!hasScores && !mbtiType && !enneagram) return;
 
     // Auth: endpoint verifies a Supabase JWT and sets user_id from it. Anonymous
     // users simply keep their localStorage results (no error surfaced).
@@ -127,14 +131,14 @@ async function trySubmit(): Promise<void> {
     const token = data.session?.access_token;
     if (!token) return;
 
-    const mbtiType = getMbtiType();
-    const enneagram = getEnneagramTypeWing();
-
-    const body: Record<string, unknown> = {
-      variant: 'extended',
-      scores: { ...bigFive.scores, ...disc.scores },
-      raw_answers: { ...bigFive.raw_answers, ...disc.raw_answers },
-    };
+    const body: Record<string, unknown> = { variant: 'extended' };
+    // Big Five + DiSC only when BOTH halves exist (endpoint needs a COMPLETE set;
+    // a partial write would 400). Omitting them entirely is fine (0070) and the
+    // worker merge preserves any previously-submitted scores.
+    if (bigFive && disc) {
+      body.scores = { ...bigFive.scores, ...disc.scores };
+      body.raw_answers = { ...bigFive.raw_answers, ...disc.raw_answers };
+    }
     // Optional self-identified frameworks — the endpoint ignores invalid values
     // rather than rejecting, but only send when present to keep the body minimal.
     if (mbtiType) body.mbti_type = mbtiType;
@@ -155,4 +159,14 @@ async function trySubmit(): Promise<void> {
   } catch {
     /* best-effort — never break the lens result flow on a persistence failure */
   }
+}
+
+/**
+ * Fire a personality submit after the user records a self-identified framework
+ * (MBTI type or Enneagram type/wing) so it reaches the server even if they never
+ * do the /big-five + /disc quizzes. Called from MbtiTool / EnneagramTool after
+ * savePersonalityResult. Fire-and-forget (no-ops when anonymous / nothing new).
+ */
+export function submitSelfIdentifiedPersonality(): void {
+  void trySubmit();
 }
