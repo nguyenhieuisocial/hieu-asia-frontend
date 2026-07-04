@@ -203,8 +203,10 @@ function ReadingFlow({ nodes }: { nodes: Node[] }) {
   for (const n of nodes) columns[d(n.role)]!.push(n);
   for (const col of columns) col.sort((a, b) => (a.stage ?? 99) - (b.stage ?? 99));
 
+  // flex-wrap (thay min-w-max) → hàng pipeline TỰ XUỐNG DÒNG khi hẹp, hết cuộn
+  // ngang. gap-y cho khoảng cách giữa các dòng khi wrap.
   return (
-    <div className="flex min-w-max items-center gap-2">
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-3">
       <IoNode label="Ảnh bàn tay + Số liệu lá số tính sẵn" />
       {columns.map((col, i) => (
         <React.Fragment key={i}>
