@@ -73,6 +73,17 @@ function injectScript(src: string, id: string): void {
  */
 export function initGoogleTags(): void {
   if (typeof window === "undefined" || _initialized) return;
+
+  // PRODUCTION-HOST GUARD — only fire GTM/GA4 on the real hieu.asia host.
+  // Without this, Vercel preview deploys (*.vercel.app, heavily bot-crawled from
+  // US datacenters) and localhost dev load the SAME GTM container into the SAME
+  // production GA4 property (G-RR1YSW2J7T), inflating it with non-real traffic
+  // (a large share of the observed "US" sessions). Any hieu.asia (sub)domain
+  // passes; anything else (preview / localhost / lookalike) is skipped. This can
+  // never disable production analytics because every real host ends in hieu.asia.
+  const host = window.location.hostname;
+  if (host !== "hieu.asia" && !host.endsWith(".hieu.asia")) return;
+
   _initialized = true;
 
   const gtag = ensureGtag();
