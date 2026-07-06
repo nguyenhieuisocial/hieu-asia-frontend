@@ -18,7 +18,7 @@ export function NotOraclesStrip(): React.JSX.Element {
         {PILLS.map((p, i) => (
           <span
             key={p}
-            className="rv-up rounded-full border border-primary/25 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-foreground/70"
+            className="rv-up rounded-full border border-primary/25 px-3 py-1.5 font-mono text-[13px] uppercase tracking-[0.12em] text-foreground/70"
             style={{ animationDelay: `${120 + i * 80}ms` }}
           >
             {p}

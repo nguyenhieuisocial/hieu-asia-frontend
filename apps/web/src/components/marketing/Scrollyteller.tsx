@@ -170,7 +170,7 @@ export function Scrollyteller({
                           : 'text-muted-foreground/70 hover:bg-card/40 hover:text-muted-foreground'
                       }`}
                     >
-                      <span className="mr-2 font-mono text-[10px] tracking-[0.12em]">
+                      <span className="mr-2 font-mono text-[12px] tracking-[0.12em]">
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       {c.eyebrow ?? c.id}

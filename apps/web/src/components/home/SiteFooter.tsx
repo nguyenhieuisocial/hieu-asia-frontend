@@ -139,7 +139,7 @@ function FooterCol({
     // distinct navigation region for screen readers (/ultrareview pass 2 P1).
     <nav className={className} aria-label={title}>
       <div className="border-t-2 border-primary/30 pt-3">
-        <h3 className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">
+        <h3 className="font-mono text-[13px] font-semibold uppercase tracking-[0.12em] text-primary">
           {title}
         </h3>
       </div>
@@ -158,7 +158,7 @@ function FooterCol({
             >
               {link.label}
               {link.tag === 'premium' && (
-                <span className="shrink-0 rounded-full border border-[hsl(var(--primary-cta))]/40 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-[hsl(var(--primary-cta))]">
+                <span className="shrink-0 rounded-full border border-[hsl(var(--primary-cta))]/40 px-1.5 py-0.5 font-mono text-[12px] uppercase tracking-wider text-[hsl(var(--primary-cta))]">
                   Premium
                 </span>
               )}
@@ -185,7 +185,7 @@ function FooterColLegal({
   return (
     <nav aria-label="Pháp lý">
       <div className="border-t-2 border-primary/30 pt-3">
-        <h3 className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">
+        <h3 className="font-mono text-[13px] font-semibold uppercase tracking-[0.12em] text-primary">
           Pháp lý
         </h3>
       </div>
@@ -198,7 +198,7 @@ function FooterColLegal({
             >
               {link.label}
               {link.tag === 'premium' && (
-                <span className="shrink-0 rounded-full border border-[hsl(var(--primary-cta))]/40 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-[hsl(var(--primary-cta))]">
+                <span className="shrink-0 rounded-full border border-[hsl(var(--primary-cta))]/40 px-1.5 py-0.5 font-mono text-[12px] uppercase tracking-wider text-[hsl(var(--primary-cta))]">
                   Premium
                 </span>
               )}

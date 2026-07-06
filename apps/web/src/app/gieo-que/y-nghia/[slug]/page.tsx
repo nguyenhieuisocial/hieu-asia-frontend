@@ -116,7 +116,7 @@ export default async function QueMeaningPage({ params }: Props) {
               ))}
             </div>
             <div className="min-w-0 flex-1">
-              <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold/80">Cấu trúc quẻ</div>
+              <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold/80">Cấu trúc quẻ</div>
               <p className="mt-2 text-sm leading-relaxed text-foreground/85">
                 {up ? (
                   <>
@@ -142,7 +142,7 @@ export default async function QueMeaningPage({ params }: Props) {
 
         {thoanTu && (
           <section className="rounded-2xl border border-gold/25 bg-gradient-to-br from-gold/[0.07] to-transparent p-6">
-            <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold/80">
+            <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold/80">
               Thoán từ · 卦辞 — nguyên văn Chu Dịch
             </div>
             <p lang="zh-Hant" className="mt-3 font-heading text-2xl leading-relaxed text-foreground">
@@ -167,7 +167,7 @@ export default async function QueMeaningPage({ params }: Props) {
             <ol className="mt-4 space-y-4">
               {haoList.map((h) => (
                 <li key={h.line} className="border-l-2 border-gold/25 pl-4">
-                  <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+                  <div className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
                     Hào {h.line} · {h.label}
                   </div>
                   <p lang="zh-Hant" className="mt-1 font-heading text-lg leading-relaxed text-foreground">{h.han}</p>

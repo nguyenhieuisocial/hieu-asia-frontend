@@ -208,7 +208,7 @@ function LensCard({ data }: { data: JourneyLens }) {
           <Check className="h-3 w-3" />
         </span>
       )}
-      <p className="font-mono text-[9.5px] uppercase tracking-[0.1em] text-gold-700">
+      <p className="font-mono text-[12px] uppercase tracking-[0.1em] text-gold-700">
         {lens.eyebrow}
       </p>
       <h3 className="mt-1.5 font-heading text-lg text-foreground">{lens.name}</h3>
@@ -219,7 +219,7 @@ function LensCard({ data }: { data: JourneyLens }) {
           </p>
           <Link
             href={reviewHref}
-            className="mt-3 inline-flex items-center gap-1 border-b border-gold pb-px font-mono text-[11px] text-foreground transition hover:text-gold"
+            className="mt-3 inline-flex items-center gap-1 border-b border-gold pb-px font-mono text-[13px] text-foreground transition hover:text-gold"
           >
             Xem lại <ArrowRight className="h-3 w-3" aria-hidden />
           </Link>
@@ -231,7 +231,7 @@ function LensCard({ data }: { data: JourneyLens }) {
           </p>
           <Link
             href={actionHref}
-            className="mt-3 inline-flex items-center gap-1 border-b border-gold pb-px font-mono text-[11px] text-foreground transition hover:text-gold"
+            className="mt-3 inline-flex items-center gap-1 border-b border-gold pb-px font-mono text-[13px] text-foreground transition hover:text-gold"
           >
             Soi ngay <ArrowRight className="h-3 w-3" aria-hidden />
           </Link>

@@ -338,7 +338,7 @@ export default function LearnTarotPage() {
                     href={`/tarot/y-nghia/${c.slug}`}
                     className="group rounded-lg border border-border bg-card/40 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-gold/40 hover:bg-card/60"
                   >
-                    <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
+                    <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
                       Ẩn Chính · {c.number}
                     </p>
                     <p className="mt-1.5 font-heading text-base font-semibold text-foreground group-hover:text-gold">
@@ -357,7 +357,7 @@ export default function LearnTarotPage() {
               <div className="space-y-6">
                 {['Gậy', 'Cốc', 'Kiếm', 'Tiền'].map((suit) => (
                   <div key={suit}>
-                    <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-gold-700">
+                    <p className="mb-3 font-mono text-[13px] uppercase tracking-[0.14em] text-gold-700">
                       Chất {suit}
                     </p>
                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -367,7 +367,7 @@ export default function LearnTarotPage() {
                           href={`/tarot/y-nghia/${c.slug}`}
                           className="group rounded-lg border border-border bg-card/40 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-gold/40 hover:bg-card/60"
                         >
-                          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
+                          <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
                             {c.suit_vi}
                           </p>
                           <p className="mt-1.5 font-heading text-base font-semibold text-foreground group-hover:text-gold">

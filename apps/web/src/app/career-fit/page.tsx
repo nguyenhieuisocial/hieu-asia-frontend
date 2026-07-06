@@ -398,7 +398,7 @@ export default function CareerFitPage() {
             </div>
 
             <div>
-              <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+              <h2 className="mb-3 font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
                 Top 3 nhóm phù hợp
               </h2>
               <div className="grid gap-4 md:grid-cols-3">
@@ -429,7 +429,7 @@ export default function CareerFitPage() {
             </div>
 
             <div>
-              <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+              <h2 className="mb-3 font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
                 Toàn bộ 5 nhóm — xếp hạng
               </h2>
               <div className="overflow-hidden rounded-xl border border-border bg-card/40">

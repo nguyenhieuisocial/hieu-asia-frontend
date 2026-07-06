@@ -37,7 +37,7 @@ function StarPill({ star }: { star: { name: string; brightness?: string; mutagen
     <span
       title={star.brightness ? `${star.name} (${star.brightness})` : star.name}
       className={cn(
-        'inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-mono text-[10px]',
+        'inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-mono text-[12px]',
         isLucky && 'bg-jade/15 text-jade-50',
         isUnlucky && 'bg-red-500/15 text-red-300',
         !isLucky && !isUnlucky && 'bg-muted/5 text-foreground/80',
@@ -47,7 +47,7 @@ function StarPill({ star }: { star: { name: string; brightness?: string; mutagen
       {star.mutagen && (
         <span
           title={`Hóa ${star.mutagen}`}
-          className="rounded bg-gold/20 px-1 text-[9px] text-gold"
+          className="rounded bg-gold/20 px-1 text-[12px] text-gold"
         >
           {star.mutagen}
         </span>
@@ -73,13 +73,13 @@ function PalaceCell({ palace, selected, trigon, onClick }: PalaceCellProps) {
       )}
     >
       <div className="flex w-full items-center justify-between">
-        <span className="font-mono text-[9px] uppercase tracking-wider text-gold/80">
+        <span className="font-mono text-[12px] uppercase tracking-wider text-gold/80">
           {palace.heavenlyStem} {palace.earthlyBranch}
         </span>
         {palace.isBodyPalace && (
           <span
             title="Cung Thân"
-            className="rounded bg-purple/30 px-1 font-mono text-[9px] text-foreground/85"
+            className="rounded bg-purple/30 px-1 font-mono text-[12px] text-foreground/85"
           >
             Thân
           </span>
@@ -94,7 +94,7 @@ function PalaceCell({ palace, selected, trigon, onClick }: PalaceCellProps) {
         </div>
       )}
       {palace.decadal?.range && (
-        <p className="mt-auto font-mono text-[9px] text-muted-foreground">
+        <p className="mt-auto font-mono text-[12px] text-muted-foreground">
           ĐV {palace.decadal.range[0]}–{palace.decadal.range[1]}
         </p>
       )}
@@ -107,7 +107,7 @@ function PalaceDetail({ palace }: { palace: TuViPalace }) {
     <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent p-5">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold/80">
+          <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold/80">
             {palace.heavenlyStem} {palace.earthlyBranch}
           </p>
           <h3 className="mt-1 font-heading text-2xl font-bold text-foreground">Cung {palace.name}</h3>
@@ -127,7 +127,7 @@ function PalaceDetail({ palace }: { palace: TuViPalace }) {
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
         {palace.majorStars.length > 0 && (
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-widest text-gold/85">
+            <p className="font-mono text-[12px] uppercase tracking-widest text-gold/85">
               Chính tinh
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
@@ -139,7 +139,7 @@ function PalaceDetail({ palace }: { palace: TuViPalace }) {
         )}
         {palace.minorStars.length > 0 && (
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            <p className="font-mono text-[12px] uppercase tracking-widest text-muted-foreground">
               Phụ tinh
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
@@ -151,7 +151,7 @@ function PalaceDetail({ palace }: { palace: TuViPalace }) {
         )}
         {palace.adjectiveStars.length > 0 && (
           <div className="sm:col-span-2">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            <p className="font-mono text-[12px] uppercase tracking-widest text-muted-foreground">
               Sao bổ trợ ({palace.adjectiveStars.length})
             </p>
             <div className="mt-2 flex flex-wrap gap-1">
@@ -159,7 +159,7 @@ function PalaceDetail({ palace }: { palace: TuViPalace }) {
                 <StarPill key={s.name} star={s} />
               ))}
               {palace.adjectiveStars.length > 12 && (
-                <span className="text-[10px] text-muted-foreground">
+                <span className="text-[12px] text-muted-foreground">
                   +{palace.adjectiveStars.length - 12} sao khác
                 </span>
               )}
@@ -243,7 +243,7 @@ export function TuViChart12Palaces({
       <PalaceDetail palace={selectedPalace} />
 
       {/* Legend */}
-      <div className="flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
+      <div className="flex flex-wrap items-center gap-3 text-[13px] text-muted-foreground">
         <span className="inline-flex items-center gap-1.5">
           <span className="h-2 w-3 rounded-sm bg-gold" /> Cung đang chọn
         </span>
@@ -265,7 +265,7 @@ export function TuViChart12Palaces({
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
+      <p className="font-mono text-[12px] uppercase tracking-widest text-muted-foreground">{label}</p>
       <p className="mt-1 font-heading text-sm font-semibold text-foreground sm:text-base">{value}</p>
     </div>
   );

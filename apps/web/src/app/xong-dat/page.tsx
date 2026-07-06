@@ -91,7 +91,7 @@ export default function XongDatPage() {
             aria-label="Tuổi xông đất theo năm sinh gia chủ"
             className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm"
           >
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Xem nhanh theo năm sinh gia chủ
             </h2>
             <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1.5 text-sm">
@@ -105,7 +105,7 @@ export default function XongDatPage() {
 
           {/* Năm Đinh Mùi — nhóm chi tính từ engine */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Năm {groups.target.canChi} {TARGET_YEAR} — nhóm tuổi xét theo chi năm
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -138,7 +138,7 @@ export default function XongDatPage() {
 
           {/* Phương pháp */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Cách chấm — minh bạch từng quy tắc
             </h2>
             <div className="mt-3 space-y-3 text-sm leading-relaxed text-muted-foreground">
@@ -165,7 +165,7 @@ export default function XongDatPage() {
 
           {/* Một lời nhắn */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Một lời nhắn
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -178,7 +178,7 @@ export default function XongDatPage() {
 
           {/* FAQ */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">
@@ -193,7 +193,7 @@ export default function XongDatPage() {
 
           {/* Nhận nhắc theo mùa */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Nhận nhắc theo mùa
             </h2>
             <div className="mt-3">

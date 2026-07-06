@@ -56,7 +56,7 @@ export function PinnedInsights({
               <button
                 type="button"
                 onClick={() => onUnpin(p.id)}
-                className="mt-2 text-[10px] uppercase tracking-wider text-foreground/40 hover:text-gold"
+                className="mt-2 text-[12px] uppercase tracking-wider text-foreground/40 hover:text-gold"
               >
                 Bỏ ghim
               </button>

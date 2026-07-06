@@ -363,7 +363,7 @@ export default function MethodologyTuViPage() {
             <span className="text-muted-foreground">Methodology Tử Vi</span>
           </nav>
 
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
             Methodology · Tử Vi
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -940,7 +940,7 @@ export default function MethodologyTuViPage() {
             <CardContent className="space-y-4 text-sm leading-relaxed text-foreground/80 sm:text-base">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="rounded-lg border border-border bg-card/60 p-4">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+                  <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
                     Mode dễ hiểu
                   </p>
                   <p className="mt-2 text-foreground/85">
@@ -948,7 +948,7 @@ export default function MethodologyTuViPage() {
                   </p>
                 </div>
                 <div className="rounded-lg border border-border bg-card/60 p-4">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+                  <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
                     Mode chuyên sâu
                   </p>
                   <p className="mt-2 text-foreground/85">
@@ -1070,7 +1070,7 @@ export default function MethodologyTuViPage() {
               href="/sample-report"
               className="group rounded-xl border border-border bg-card/40 p-5 transition hover:border-gold/40"
             >
-              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+              <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
                 Xem trước
               </p>
               <h3 className="mt-2 font-heading text-lg text-foreground">
@@ -1087,7 +1087,7 @@ export default function MethodologyTuViPage() {
               href="/onboarding/topic"
               className="group rounded-xl border border-gold/30 bg-gold/10 p-5 transition hover:border-gold/60 hover:bg-gold/15"
             >
-              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+              <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
                 Bắt đầu
               </p>
               <h3 className="mt-2 font-heading text-lg text-foreground">
@@ -1120,7 +1120,7 @@ export default function MethodologyTuViPage() {
               aria-label="Mục lục"
               className="sticky top-20 rounded-lg border border-border bg-card/40 p-4"
             >
-              <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
+              <p className="mb-3 font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
                 Mục lục
               </p>
               <ul className="space-y-1.5 text-xs">

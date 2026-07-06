@@ -73,7 +73,7 @@ export default function TarotTodayPage() {
 
         <div className="mt-4 rounded-card-editorial border border-gold/25 bg-gradient-to-br from-gold/10 to-transparent p-6 sm:p-8">
           <div className="flex items-baseline justify-between gap-3">
-            <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Lá của ngày</span>
+            <span className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">Lá của ngày</span>
             <span className="font-mono text-xs capitalize text-muted-foreground">{kind}</span>
           </div>
           <h2 className="mt-1 font-heading text-3xl font-bold text-foreground">
@@ -92,7 +92,7 @@ export default function TarotTodayPage() {
         </div>
 
         <div className="mt-6 rounded-card-editorial border border-border bg-card/40 p-5">
-          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+          <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
             Vài câu để bạn tự soi
           </div>
           <ul className="mt-3 space-y-2">

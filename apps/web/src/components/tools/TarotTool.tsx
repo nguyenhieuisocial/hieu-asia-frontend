@@ -199,7 +199,7 @@ export function TarotTool() {
           {drawn.map((d, i) => (
             <div key={i} className="rounded-xl border border-gold/15 bg-background/40 p-5 transition active:scale-[0.98] hover:border-gold/40">
               <div className="flex items-baseline justify-between gap-3">
-                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">{positions[i] ?? ''}</p>
+                <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">{positions[i] ?? ''}</p>
                 <span className="font-mono text-xs capitalize text-muted-foreground">
                   {d.card.arcana === 'major' ? 'Ẩn chính' : d.card.suit}
                 </span>
@@ -233,7 +233,7 @@ export function TarotTool() {
             />
           ) : reading ? (
             <div className="rounded-xl border border-gold/20 bg-gradient-to-br from-gold/5 to-transparent p-5">
-              <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+              <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
                 Đọc sâu cùng AI
               </div>
               <article className="markdown-report mt-3 space-y-3 text-sm leading-relaxed text-foreground/90">

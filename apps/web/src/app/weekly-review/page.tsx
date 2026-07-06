@@ -258,7 +258,7 @@ export default function WeeklyReviewPage() {
                     </CardTitle>
                     <p className="mt-1 text-xs text-muted-foreground">
                       {formatWeek(thisWeekReview.weekStart)} ·{' '}
-                      <span className="rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[10px] font-medium text-gold-700">
+                      <span className="rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[12px] font-medium text-gold-700">
                         {TOPIC_LABEL[thisWeekReview.topicFocus]}
                       </span>
                     </p>
@@ -429,7 +429,7 @@ export default function WeeklyReviewPage() {
                                 <span className="text-sm font-medium text-foreground">
                                   {formatWeek(r.weekStart)}
                                 </span>
-                                <span className="rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[10px] font-medium text-gold-700">
+                                <span className="rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[12px] font-medium text-gold-700">
                                   {TOPIC_LABEL[r.topicFocus]}
                                 </span>
                               </div>

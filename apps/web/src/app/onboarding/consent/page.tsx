@@ -176,7 +176,7 @@ export default function OnboardingConsentPage() {
       <SiteNav />
       <main className="min-h-screen">
         <section className="mx-auto max-w-3xl px-6 pt-24 pb-20">
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Bước 3 / 4</p>
+          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">Bước 3 / 4</p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">
             Bạn cho phép xử lý gì?
           </h1>

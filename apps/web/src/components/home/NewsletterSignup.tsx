@@ -66,7 +66,7 @@ export function NewsletterSignup({
 
       <div className="relative grid items-center gap-8 md:grid-cols-[1.2fr_1fr]">
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-primary/90 sm:text-xs">
+          <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-primary/90 sm:text-xs">
             Newsletter · mỗi tuần một bài
           </p>
           <h2 className="mt-4 text-balance font-heading text-2xl font-bold leading-tight text-foreground sm:text-3xl">
@@ -143,7 +143,7 @@ export function NewsletterSignup({
               {!email && state !== 'loading' && (
                 <p
                   id={`${id}-hint`}
-                  className="text-[11px] text-muted-foreground"
+                  className="text-[13px] text-muted-foreground"
                 >
                   Nhập email trước để đăng ký.
                 </p>
@@ -157,7 +157,7 @@ export function NewsletterSignup({
                   {error}
                 </p>
               )}
-              <p className="text-[11px] leading-relaxed text-muted-foreground">
+              <p className="text-[13px] leading-relaxed text-muted-foreground">
                 Bằng cách đăng ký bạn đồng ý với{' '}
                 <a href="/privacy" className="underline hover:text-primary">
                   Chính sách bảo mật

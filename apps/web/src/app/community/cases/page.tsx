@@ -42,7 +42,7 @@ export default function CaseStudiesIndexPage() {
             className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,_rgba(59,39,84,0.4)_0%,_transparent_55%)]"
           />
           <div className="mx-auto max-w-4xl px-6 py-16 text-center sm:py-24">
-            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-primary sm:text-xs">
+            <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-primary sm:text-xs">
               Cộng đồng / Case studies
             </p>
             <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
@@ -80,7 +80,7 @@ export default function CaseStudiesIndexPage() {
                     <span aria-hidden>·</span>
                     <span>{c.persona}</span>
                   </div>
-                  <p className="mt-3 inline-flex rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-[11px] font-medium text-gold/90">
+                  <p className="mt-3 inline-flex rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-[13px] font-medium text-gold/90">
                     {c.illustrativeLabel}
                   </p>
                   <h2 className="mt-3 font-heading text-xl font-semibold text-foreground sm:text-2xl">

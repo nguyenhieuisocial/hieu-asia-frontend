@@ -124,7 +124,7 @@ export default async function OnboardingPage({
             <OnboardingStepBadge />
           </nav>
 
-          <p className="font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-gold/80">
+          <p className="font-mono text-[13px] font-medium uppercase tracking-[0.12em] text-gold/80">
             Hiểu mình. Quyết định mình.
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
@@ -170,7 +170,7 @@ export default async function OnboardingPage({
               doesn't feel half-empty before the first scroll. */}
           <div className="mt-10 grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl border border-gold/20 bg-gold/5 px-4 py-3 text-center">
-              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold/80">
+              <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold/80">
                 Bảo mật
               </p>
               <p className="mt-1 font-heading text-lg font-bold text-foreground">
@@ -178,7 +178,7 @@ export default async function OnboardingPage({
               </p>
             </div>
             <div className="rounded-xl border border-border bg-card/40 px-4 py-3 text-center">
-              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold/80">
+              <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold/80">
                 Thời gian
               </p>
               <p className="mt-1 font-heading text-lg font-bold text-foreground">
@@ -186,7 +186,7 @@ export default async function OnboardingPage({
               </p>
             </div>
             <div className="rounded-xl border border-border bg-card/40 px-4 py-3 text-center">
-              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold/80">
+              <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold/80">
                 Phương pháp
               </p>
               <p className="mt-1 font-heading text-lg font-bold text-foreground">

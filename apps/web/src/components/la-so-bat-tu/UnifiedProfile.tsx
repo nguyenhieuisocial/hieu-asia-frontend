@@ -151,7 +151,7 @@ function CardShell({
 }) {
   return (
     <div className="flex flex-col rounded-xl border border-gold/20 bg-card/40 p-4">
-      <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">{badge}</p>
+      <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">{badge}</p>
       <p className="mt-2 font-heading text-base font-semibold text-foreground">{title}</p>
       <div className="mt-2 space-y-1.5">{children}</div>
       {gateway && (
@@ -243,7 +243,7 @@ export function UnifiedProfile({
   return (
     <div className="space-y-4">
       <div className="text-center">
-        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+        <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
           Hồ sơ con người
         </p>
         <p className="mx-auto mt-1.5 max-w-xl font-heading text-xl text-foreground">
@@ -391,7 +391,7 @@ export function UnifiedProfile({
 
       {/* Synthesis — TRUNG THỰC: chỉ nêu điểm chung khi THẬT có */}
       <div className="rounded-xl border border-gold/30 bg-gold/[0.05] p-4">
-        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+        <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
           Đây là toàn bộ bạn — trong một khung nhìn
         </p>
         {sunMoonSameElement ? (

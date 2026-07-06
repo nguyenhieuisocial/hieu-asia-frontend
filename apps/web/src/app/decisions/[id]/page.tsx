@@ -220,7 +220,7 @@ export default function DecisionBriefPage() {
 
         <header className="mb-10">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center rounded-full border border-gold/30 bg-gold/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-gold-700">
+            <span className="inline-flex items-center rounded-full border border-gold/30 bg-gold/10 px-2.5 py-0.5 font-mono text-[12px] uppercase tracking-wider text-gold-700">
               {topicLabel}
             </span>
             <span className="text-xs text-muted-foreground">

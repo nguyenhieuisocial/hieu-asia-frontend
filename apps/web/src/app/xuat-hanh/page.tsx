@@ -96,7 +96,7 @@ export default function XuatHanhPage() {
 
           {/* Giải thích */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Hướng xuất hành tính thế nào?
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">

@@ -75,7 +75,7 @@ export default function PhiTinhPage() {
           <PhiTinhChecker />
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Đọc bàn phi tinh thế nào
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -88,7 +88,7 @@ export default function PhiTinhPage() {
           </section>
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Một lời nhắn</h2>
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">Một lời nhắn</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               Bàn phi tinh là <strong>phần lý khí</strong> — tính theo công thức xác định, minh bạch. Nhưng phong
               thủy đầy đủ còn cần <strong>loan đầu</strong> (địa hình, dòng nước, đường, nhà xung quanh) mà công
@@ -99,7 +99,7 @@ export default function PhiTinhPage() {
           </section>
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">Câu hỏi thường gặp</h2>
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">Câu hỏi thường gặp</h2>
             <dl className="mt-4 space-y-4">
               {FAQS.map((f, i) => (
                 <div key={i}>

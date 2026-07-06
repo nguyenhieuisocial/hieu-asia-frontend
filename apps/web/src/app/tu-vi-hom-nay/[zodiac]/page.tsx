@@ -183,7 +183,7 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
             <span className="mx-1.5">/</span>
             <span className="text-muted-foreground">Tuổi {label}</span>
           </nav>
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
             Tử Vi hằng ngày
           </p>
           <div className="mt-3 flex items-start gap-4">
@@ -230,7 +230,7 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
           <section className="mx-auto max-w-3xl px-6 py-4">
             <h2 className="font-heading text-xl font-semibold text-foreground">
               Bốn lĩnh vực
-              <ExpertTerm className="ml-2 font-mono text-[11px] font-normal uppercase tracking-[0.12em] text-gold/80">
+              <ExpertTerm className="ml-2 font-mono text-[13px] font-normal uppercase tracking-[0.12em] text-gold/80">
                 · tứ cung trọng yếu
               </ExpertTerm>
             </h2>

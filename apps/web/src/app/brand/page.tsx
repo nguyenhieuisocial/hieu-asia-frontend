@@ -109,7 +109,7 @@ export default function BrandPage() {
           {/* TOC */}
           <aside className="hidden lg:block">
             <nav className="sticky top-24 space-y-1" aria-label="Mục lục">
-              <div className="px-3 pb-2 font-mono text-[10px] uppercase tracking-[0.3em] text-gold-700">
+              <div className="px-3 pb-2 font-mono text-[12px] uppercase tracking-[0.3em] text-gold-700">
                 Mục lục
               </div>
               {TOC.map(({ id, label, Icon }) => (
@@ -397,7 +397,7 @@ function Section({
 }) {
   return (
     <section id={id} className="scroll-mt-24">
-      <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-gold-700">
+      <div className="font-mono text-[13px] uppercase tracking-[0.32em] text-gold-700">
         {eyebrow}
       </div>
       <h2 className="mt-2 font-heading text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
@@ -425,7 +425,7 @@ function LogoSwatch({
     >
       <div className="flex flex-1 items-center justify-center px-4">{children}</div>
       <div
-        className={`border-t px-4 py-2 text-[11px] ${
+        className={`border-t px-4 py-2 text-[13px] ${
           bg === 'dark' ? 'border-gold/10 text-muted-foreground' : 'border-gold/15 text-foreground/60'
         }`}
       >
@@ -462,15 +462,15 @@ function ClearSpaceGuide() {
         <div className="mt-5 flex items-end gap-6">
           <div className="flex flex-col items-center gap-2">
             <SymbolMark size={16} />
-            <span className="font-mono text-[10px] text-muted-foreground">16 px</span>
+            <span className="font-mono text-[12px] text-muted-foreground">16 px</span>
           </div>
           <div className="flex flex-col items-center gap-2">
             <Wordmark size={20} />
-            <span className="font-mono text-[10px] text-muted-foreground">80 px W</span>
+            <span className="font-mono text-[12px] text-muted-foreground">80 px W</span>
           </div>
           <div className="flex flex-col items-center gap-2">
             <Lockup size={30} />
-            <span className="font-mono text-[10px] text-muted-foreground">120 px W</span>
+            <span className="font-mono text-[12px] text-muted-foreground">120 px W</span>
           </div>
         </div>
       </div>
@@ -486,7 +486,7 @@ function DownloadItem({ title, hint }: { title: string; hint: string }) {
     >
       <div>
         <div className="font-heading text-sm font-semibold text-foreground">{title}</div>
-        <div className="mt-1 text-[11px] text-muted-foreground">{hint}</div>
+        <div className="mt-1 text-[13px] text-muted-foreground">{hint}</div>
       </div>
       <ArrowUpRight className="h-4 w-4 text-gold/60" aria-hidden="true" />
     </div>

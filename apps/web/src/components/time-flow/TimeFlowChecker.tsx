@@ -130,7 +130,7 @@ export function TimeFlowChecker({ scope }: { scope: Scope }) {
   return (
     <Card className="border-gold/30 bg-gold/[0.04]">
       <CardHeader>
-        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+        <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
           Cá nhân hoá
         </p>
         {/* h2 (không phải CardTitle/h3): heading đầu tiên sau h1 trên /annual-planning
@@ -226,7 +226,7 @@ function DecadalResult({
     <div className="space-y-4">
       {current && (
         <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
             Đại vận hiện tại
           </p>
           <p className="mt-2 text-sm leading-relaxed text-foreground/85">
@@ -266,7 +266,7 @@ function DecadalResult({
                   isCurrent ? 'border-gold/60 bg-gold/[0.08]' : 'border-border bg-card/40'
                 }`}
               >
-                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+                <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-muted-foreground">
                   {s.start}–{s.end} tuổi
                 </p>
                 <p className="mt-1 font-heading text-sm font-semibold text-foreground">
@@ -364,7 +364,7 @@ function MutagenResult({
 
   return (
     <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
-      <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+      <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
         Vận {isYear ? 'năm nay' : 'tháng này'}
         {cc ? ` — ${scopeWord} ${cc}` : ''}
       </p>

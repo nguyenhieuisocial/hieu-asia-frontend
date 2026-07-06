@@ -128,7 +128,7 @@ export default async function ConGiapDetailPage({
           <span className="mx-1.5">/</span>
           <span className="text-foreground/70">Tuổi {z.ten}</span>
         </nav>
-        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+        <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
           12 Con Giáp · Địa Chi {z.ten} · Hành {z.nguHanh}
         </p>
         <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -137,7 +137,7 @@ export default async function ConGiapDetailPage({
           </span>
           Tuổi {ten}
         </h1>
-        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/[0.06] px-3 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/[0.06] px-3 py-1 font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
           Ngũ hành {z.nguHanh}
         </p>
         <p className="mt-4 text-base leading-relaxed text-foreground/80 sm:text-lg">
@@ -322,7 +322,7 @@ export default async function ConGiapDetailPage({
       {/* Năm sinh ví dụ */}
       <section className="relative mx-auto max-w-3xl px-6 pb-10">
         <div className="rounded-xl border border-border bg-card/40 p-5">
-          <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+          <p className="flex items-center gap-2 font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
             <CalendarDays className="h-4 w-4" aria-hidden /> Một số năm sinh tuổi {z.ten}
           </p>
           <p className="mt-2 text-sm leading-relaxed text-foreground/85">

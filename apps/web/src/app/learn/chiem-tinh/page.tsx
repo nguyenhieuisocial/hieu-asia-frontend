@@ -398,7 +398,7 @@ export default function LearnChiemTinhPage() {
                     href={`/cung-hoang-dao/${s.slug}`}
                     className="group rounded-lg border border-border bg-card/40 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-gold/40 hover:bg-card/60"
                   >
-                    <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
+                    <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
                       {s.quality}
                     </p>
                     <p className="mt-1.5 font-heading text-base font-semibold text-foreground group-hover:text-gold">

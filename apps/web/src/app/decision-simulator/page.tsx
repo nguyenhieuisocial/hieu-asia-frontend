@@ -372,7 +372,7 @@ function ChoiceFields({
   const descLen = desc.length;
   return (
     <fieldset className="space-y-3">
-      <legend className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+      <legend className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
         {heading}
       </legend>
       <div>

@@ -65,16 +65,16 @@ function PillarCard({ pillar, highlight }: { pillar: BaziPillar; highlight?: boo
         highlight ? 'border-gold/60 bg-gold/[0.08]' : 'border-border bg-card/40'
       }`}
     >
-      <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+      <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
         {pillar.label}
       </p>
       <p className={`mt-2 font-heading text-2xl font-bold ${EL_TEXT[pillar.canElement]}`}>{pillar.can}</p>
       <p className={`font-heading text-2xl font-bold ${EL_TEXT[pillar.chiElement]}`}>{pillar.chi}</p>
-      <p className="mt-1 text-[10px] text-muted-foreground">
+      <p className="mt-1 text-[12px] text-muted-foreground">
         {pillar.canElement}/{pillar.chiElement}
       </p>
-      <p className="mt-2 text-[11px] font-medium text-gold-700">{pillar.tenGod}</p>
-      <p className="mt-1 rounded bg-border/40 px-1.5 py-0.5 text-[10px] text-muted-foreground">
+      <p className="mt-2 text-[13px] font-medium text-gold-700">{pillar.tenGod}</p>
+      <p className="mt-1 rounded bg-border/40 px-1.5 py-0.5 text-[12px] text-muted-foreground">
         {pillar.truongSinh}
       </p>
     </div>
@@ -276,7 +276,7 @@ export function BatTuChecker({
         {chart && (
           <div ref={resultRef} className="scroll-mt-24 space-y-5 pt-2">
             <div>
-              <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+              <p className="mb-2 font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
                 Tứ Trụ — 8 chữ
               </p>
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
@@ -420,7 +420,7 @@ export function BatTuChecker({
             </div>
 
             <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
-              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+              <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
                 Nhật Chủ (chủ mệnh)
               </p>
               <p className="mt-2 text-sm leading-relaxed text-foreground/85">
@@ -448,7 +448,7 @@ export function BatTuChecker({
                   .filter((tg) => TEN_GOD_PLAIN[tg] && !seen.has(tg) && seen.add(tg));
                 return tenGods.length ? (
                   <div className="mt-3 space-y-1 border-t border-border/50 pt-3">
-                    <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+                    <p className="text-[13px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
                       Thập Thần trong lá số bạn nghĩa là
                     </p>
                     {tenGods.map((tg) => (
@@ -462,7 +462,7 @@ export function BatTuChecker({
             </div>
 
             <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
-              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+              <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
                 Tàng can &amp; nạp âm (chiều sâu lá số)
               </p>
               <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
@@ -474,20 +474,20 @@ export function BatTuChecker({
                 {[chart.year, chart.month, chart.day, chart.hour].map((p) => (
                   <div key={p.label} className="rounded-lg border border-border bg-card/40 p-2.5">
                     <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                      <span className="w-12 shrink-0 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                      <span className="w-12 shrink-0 font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
                         {p.label}
                       </span>
                       <span className="font-heading text-sm font-semibold">
                         <span className={EL_TEXT[p.canElement]}>{p.can}</span>{' '}
                         <span className={EL_TEXT[p.chiElement]}>{p.chi}</span>
                       </span>
-                      <span className="text-[11px] text-foreground/70">
+                      <span className="text-[13px] text-foreground/70">
                         nạp âm <strong className={EL_TEXT[p.napAm.element]}>{p.napAm.name}</strong>
                       </span>
                     </div>
                     <div className="mt-1.5 flex flex-wrap gap-1.5 sm:pl-14">
                       {p.hiddenStems.map((h) => (
-                        <span key={h.can} className="rounded bg-border/40 px-1.5 py-0.5 text-[11px]">
+                        <span key={h.can} className="rounded bg-border/40 px-1.5 py-0.5 text-[13px]">
                           <span className={`font-medium ${EL_TEXT[h.element]}`}>{h.can}</span>
                           <span className="text-muted-foreground"> · {h.tenGod}</span>
                         </span>
@@ -503,7 +503,7 @@ export function BatTuChecker({
             </div>
 
             <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
-              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+              <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
                 Cân bằng ngũ hành (8 chữ)
               </p>
               <ul className="mt-3 space-y-1.5">
@@ -566,7 +566,7 @@ export function BatTuChecker({
             </div>
 
             <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
-              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+              <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
                 Quan hệ giữa các trụ (hợp · xung · tam hợp)
               </p>
               <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
@@ -591,7 +591,7 @@ export function BatTuChecker({
                         key={`${rel.type}-${rel.chi}-${rel.pillars}`}
                         className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-sm"
                       >
-                        <span className={`shrink-0 rounded px-1.5 py-0.5 text-[11px] font-medium ${tone}`}>
+                        <span className={`shrink-0 rounded px-1.5 py-0.5 text-[13px] font-medium ${tone}`}>
                           {rel.type}
                         </span>
                         <span className="font-medium text-foreground/90">{rel.chi}</span>
@@ -607,7 +607,7 @@ export function BatTuChecker({
             </div>
 
             <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
-              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+              <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
                 Thần Sát (sao tượng trưng)
               </p>
               <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
@@ -626,7 +626,7 @@ export function BatTuChecker({
                       key={`${ts.name}-${ts.chi}-${ts.pillars}`}
                       className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-sm"
                     >
-                      <span className="shrink-0 rounded bg-gold/15 px-1.5 py-0.5 text-[11px] font-medium text-gold-700">
+                      <span className="shrink-0 rounded bg-gold/15 px-1.5 py-0.5 text-[13px] font-medium text-gold-700">
                         {ts.name}
                       </span>
                       <span className="font-medium text-foreground/90">{ts.chi}</span>
@@ -642,7 +642,7 @@ export function BatTuChecker({
 
             {chart.daiVan && (
               <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
-                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+                <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
                   Đại vận (vận 10 năm)
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-foreground/85">
@@ -661,14 +661,14 @@ export function BatTuChecker({
                           cur ? 'border-gold/60 bg-gold/[0.08]' : 'border-border bg-card/40'
                         }`}
                       >
-                        <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                        <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
                           {p.startAge}–{p.endAge}t{cur ? ' ●' : ''}
                         </p>
                         <p className="mt-1 font-heading text-sm font-semibold">
                           <span className={EL_TEXT[p.canElement]}>{p.can}</span>{' '}
                           <span className={EL_TEXT[p.chiElement]}>{p.chi}</span>
                         </p>
-                        <p className="mt-0.5 text-[10px] text-gold-700">{p.tenGod}</p>
+                        <p className="mt-0.5 text-[12px] text-gold-700">{p.tenGod}</p>
                       </div>
                     );
                   })}
@@ -683,7 +683,7 @@ export function BatTuChecker({
 
             {chart.luuNien && (
               <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
-                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+                <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
                   Vận năm nay — lưu niên {chart.luuNien.can} {chart.luuNien.chi}
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-foreground/85">

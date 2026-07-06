@@ -89,7 +89,7 @@ export function InstantChartHero(): React.JSX.Element {
           Hiểu mình. Quyết định mình.
         </p>
         <p
-          className="hero-enter mt-2 font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80"
+          className="hero-enter mt-2 font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80"
           style={{ animationDelay: '150ms' }}
         >
           Lá số Bát Tự thật · tính ngay · miễn phí
@@ -119,7 +119,7 @@ export function InstantChartHero(): React.JSX.Element {
             <div className="space-y-1">
               <label
                 htmlFor="ich-date"
-                className="block font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
+                className="block font-mono text-[13px] uppercase tracking-[0.12em] text-muted-foreground"
               >
                 Ngày sinh (dương lịch)
               </label>
@@ -141,7 +141,7 @@ export function InstantChartHero(): React.JSX.Element {
             <div className="space-y-1">
               <label
                 htmlFor="ich-time"
-                className="block font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
+                className="block font-mono text-[13px] uppercase tracking-[0.12em] text-muted-foreground"
               >
                 Giờ sinh
               </label>
@@ -159,7 +159,7 @@ export function InstantChartHero(): React.JSX.Element {
             <div className="space-y-1">
               <label
                 htmlFor="ich-gender"
-                className="block font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
+                className="block font-mono text-[13px] uppercase tracking-[0.12em] text-muted-foreground"
               >
                 Giới tính
               </label>
@@ -205,7 +205,7 @@ export function InstantChartHero(): React.JSX.Element {
               Hãy chọn ngày sinh dương lịch để lập lá số.
             </p>
           )}
-          <p className="mt-3 font-mono text-[11px] leading-relaxed text-muted-foreground">
+          <p className="mt-3 font-mono text-[13px] leading-relaxed text-muted-foreground">
             Tính ngay trong trình duyệt · không lưu nếu bạn chưa đăng ký · không bán hay chia sẻ.
           </p>
         </form>

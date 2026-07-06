@@ -282,7 +282,7 @@ export default function AiSafetyPage() {
               <span className="text-muted-foreground">AI Safety</span>
             </nav>
 
-            <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+            <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
               AI Safety
             </p>
             <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -363,7 +363,7 @@ export default function AiSafetyPage() {
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">{row.measure}</td>
                     <td className="px-4 py-3">
-                      <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade-300">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[13px] font-medium text-jade-300">
                         <CheckCircle2 className="h-3 w-3" aria-hidden />
                         {row.status}
                       </span>
@@ -402,13 +402,13 @@ export default function AiSafetyPage() {
                 </CardHeader>
                 <CardContent className="space-y-3 text-sm text-foreground/80">
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                    <p className="font-mono text-[12px] uppercase tracking-wider text-muted-foreground">
                       User prompt ví dụ
                     </p>
                     <p className="mt-1 italic text-muted-foreground">{c.example}</p>
                   </div>
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-wider text-jade-300/80">
+                    <p className="font-mono text-[12px] uppercase tracking-wider text-jade-300/80">
                       Reply mẫu
                     </p>
                     <p className="mt-1 leading-relaxed">{c.reply}</p>

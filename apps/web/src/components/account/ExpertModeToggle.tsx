@@ -30,7 +30,7 @@ export function ExpertModeToggle() {
           Khi tắt, ngôn ngữ đơn giản hơn.
         </p>
         {isUrlForced && (
-          <p className="mt-2 text-[11px] text-gold/80">
+          <p className="mt-2 text-[13px] text-gold/80">
             Đang bị ép bởi đường link (?expert) — bỏ tham số khỏi URL để dùng lại
             cài đặt cá nhân.
           </p>

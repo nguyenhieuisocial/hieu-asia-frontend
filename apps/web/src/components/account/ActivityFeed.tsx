@@ -243,7 +243,7 @@ export function ActivityFeed() {
         >
           Bạn vừa làm gì?
         </h2>
-        <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+        <span className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
           Hoạt động gần đây
         </span>
       </div>
@@ -290,7 +290,7 @@ export function ActivityFeed() {
                   <Icon className="h-4 w-4 text-gold" aria-hidden />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                  <span className="block font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
                     {meta.label} · {relTime(it.ts)}
                   </span>
                   <span className="mt-0.5 block truncate text-sm text-foreground/90">

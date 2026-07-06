@@ -170,7 +170,7 @@ export default function LearnConGiapPage() {
           children: (
             <div className="space-y-6">
               <div className="rounded-card-editorial border border-emerald-500/20 bg-emerald-500/[0.04] p-5 sm:p-6">
-                <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-emerald-300">
+                <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-emerald-300">
                   Tam Hợp — nhóm hợp nhịp
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-foreground/85">
@@ -184,7 +184,7 @@ export default function LearnConGiapPage() {
                 </p>
               </div>
               <div className="rounded-card-editorial border border-amber-500/20 bg-amber-500/[0.04] p-5 sm:p-6">
-                <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-amber-300">
+                <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-amber-300">
                   Tứ hành xung — cặp khác nhịp
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-foreground/85">

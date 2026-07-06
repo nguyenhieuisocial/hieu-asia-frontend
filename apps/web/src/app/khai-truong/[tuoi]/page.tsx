@@ -87,7 +87,7 @@ export default async function KhaiTruongYearPage({
       >
         <section className="space-y-8">
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Kết quả cho chủ sinh {d.birthYear} — khai trương năm {TARGET_YEAR}
             </h2>
             <p className={`mt-3 text-lg font-semibold ${VERDICT_TEXT_CLASS[d.main.verdict]}`}>
@@ -107,7 +107,7 @@ export default async function KhaiTruongYearPage({
           </section>
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               So sánh các năm gần: {TARGET_YEAR}–{TARGET_YEAR + 5}
             </h2>
             <div className="mt-4 overflow-x-auto">
@@ -154,7 +154,7 @@ export default async function KhaiTruongYearPage({
           <KhaiTruongChecker defaultBirthYear={d.birthYear} defaultTargetYear={TARGET_YEAR} />
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Câu hỏi thường gặp — sinh năm {d.birthYear}
             </h2>
             <dl className="mt-4 space-y-4">
@@ -168,7 +168,7 @@ export default async function KhaiTruongYearPage({
           </section>
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Nhận nhắc theo mùa
             </h2>
             <p className="mt-2 text-sm font-medium text-foreground">

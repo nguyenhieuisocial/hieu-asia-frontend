@@ -171,7 +171,7 @@ export function AffiliateTab() {
 function MiniStat({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-xl border border-border bg-card/40 p-4">
-      <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
+      <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
       <p className="mt-2 font-heading text-2xl text-foreground">{value}</p>
     </div>
   );

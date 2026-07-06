@@ -229,7 +229,7 @@ export function LaSoChecker({
 
             {cachCuc.length > 0 && (
               <div className="rv-up rounded-xl border border-gold/20 bg-card/40 p-4" style={{ animationDelay: '60ms' }}>
-                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+                <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
                   Cách cục — thế cục có tên trong lá số
                 </p>
                 <ul className="mt-3 space-y-3">
@@ -239,7 +239,7 @@ export function LaSoChecker({
                         <strong className="text-foreground">{c.name}</strong>
                         {c.nameHan && <span className="text-xs text-muted-foreground">{c.nameHan}</span>}
                         <span
-                          className={`rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide ${
+                          className={`rounded-full border px-2 py-0.5 text-[12px] uppercase tracking-wide ${
                             c.polarity === 'cát'
                               ? 'border-gold/40 text-gold'
                               : c.polarity === 'hung'
@@ -267,7 +267,7 @@ export function LaSoChecker({
 
             {tuanKhong && tuanKhong.palaces.length > 0 && (
               <div className="rv-up rounded-xl border border-gold/20 bg-card/40 p-4" style={{ animationDelay: '120ms' }}>
-                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+                <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
                   Tuần Không (旬空) — cung “không vong”
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-foreground/85">
@@ -285,7 +285,7 @@ export function LaSoChecker({
 
             {triet && triet.palaces.length > 0 && (
               <div className="rv-up rounded-xl border border-gold/20 bg-card/40 p-4" style={{ animationDelay: '150ms' }}>
-                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+                <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
                   Triệt Lộ Không Vong — cung bị “triệt”
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-foreground/85">
@@ -304,7 +304,7 @@ export function LaSoChecker({
 
             {daiVan && (
               <div className="rv-up rounded-xl border border-gold/20 bg-card/40 p-4" style={{ animationDelay: '180ms' }}>
-                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+                <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
                   Vận 10 năm hiện tại (đại vận)
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-foreground/85">
@@ -329,7 +329,7 @@ export function LaSoChecker({
 
             {luuNien && luuNienHoa && (
               <div className="rv-up rounded-xl border border-gold/20 bg-card/40 p-4" style={{ animationDelay: '240ms' }}>
-                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+                <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
                   Vận năm nay{luuNienCanChi ? ` — lưu niên ${luuNienCanChi}` : ''}
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-foreground/85">

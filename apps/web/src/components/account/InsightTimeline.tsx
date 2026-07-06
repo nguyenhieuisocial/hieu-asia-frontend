@@ -113,7 +113,7 @@ export function InsightTimeline({ items, loading = false }: InsightTimelineProps
           <article className="rounded-xl border border-border bg-card/40 p-4 transition hover:border-gold/40">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
-                <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
                   {meta.label} · {formatDate(it.ts)}
                 </p>
                 <h3 className="mt-1 truncate font-heading text-sm text-foreground sm:text-base">

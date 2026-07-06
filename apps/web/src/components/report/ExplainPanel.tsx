@@ -128,7 +128,7 @@ export function ExplainPanel({
               </div>
             )}
 
-            <p className="mt-4 flex items-start gap-2 border-t border-border pt-3 text-[11px] leading-relaxed text-muted-foreground">
+            <p className="mt-4 flex items-start gap-2 border-t border-border pt-3 text-[13px] leading-relaxed text-muted-foreground">
               <Info className="mt-0.5 h-3 w-3 shrink-0" aria-hidden="true" />
               <span>
                 Đây là khung dữ liệu lá số mà phần luận giải đã trích dẫn. AI
