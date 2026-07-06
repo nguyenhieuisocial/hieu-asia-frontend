@@ -13,6 +13,7 @@ import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton'
 import { ProofDisclosure } from '@/components/la-so-bat-tu/ProofDisclosure';
 import { UnifiedProfile } from '@/components/la-so-bat-tu/UnifiedProfile';
 import { PRICING, formatVND } from '@/lib/pricing';
+import { useScrollToResult } from '@/lib/use-scroll-to-result';
 
 /**
  * Công cụ Bát Tự (Tứ Trụ) bấm-thử miễn phí. Engine `lib/bazi.ts` chạy NGAY trong
@@ -133,8 +134,10 @@ export function BatTuChecker({
   const [gender, setGender] = React.useState<'M' | 'F'>(initialGender ?? 'M');
   const [chart, setChart] = React.useState<BaziChart | null>(null);
   const [error, setError] = React.useState<string | null>(null);
+  const { resultRef, armScroll } = useScrollToResult(chart);
 
   const onCast = React.useCallback(() => {
+    armScroll();
     if (!date) {
       setError('Hãy chọn ngày sinh dương lịch.');
       return;
@@ -153,7 +156,7 @@ export function BatTuChecker({
     } catch {
       setError('Chưa lập được lá số — kiểm tra lại ngày sinh.');
     }
-  }, [date, time, gender, embedded]);
+  }, [date, time, gender, embedded, armScroll]);
 
   // Mở link chia sẻ (?d=&t=&g=) → tự điền + lập lá số ngay (không cần bấm lại).
   // Embedded mode bỏ qua URL host (hero trang chủ dùng prop initial* thay thế).
@@ -268,7 +271,7 @@ export function BatTuChecker({
         {error && <p className="text-sm text-destructive">{error}</p>}
 
         {chart && (
-          <div className="space-y-5 pt-2">
+          <div ref={resultRef} className="scroll-mt-24 space-y-5 pt-2">
             <div>
               <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
                 Tứ Trụ — 8 chữ
