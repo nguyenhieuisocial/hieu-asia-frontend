@@ -20,6 +20,7 @@ import {
   type PalaceStars,
 } from '@/lib/phi-tinh';
 import { track } from '@/lib/analytics';
+import { useScrollToResult } from '@/lib/use-scroll-to-result';
 
 // Bản chất 9 sao (tri thức cổ điển — mô tả NGẮN, xu hướng tham khảo, không phán hung cát tuyệt đối).
 const STAR_NATURE: Record<number, { name: string; element: string; note: string }> = {
@@ -95,12 +96,14 @@ export function PhiTinhChecker() {
   const [yun, setYun] = React.useState(9);
   const [sitting, setSitting] = React.useState('Tý');
   const [chart, setChart] = React.useState<FlyingStarChart | null>(null);
+  const { resultRef, armScroll } = useScrollToResult(chart);
 
   const onView = React.useCallback(() => {
+    armScroll();
     const c = computeFlyingStarChart(yun, sitting);
     setChart(c);
     track('phi_tinh_chart', { yun, sitting, pattern: c.pattern });
-  }, [yun, sitting]);
+  }, [yun, sitting, armScroll]);
 
   const sitGrid = chart ? chart.palaces.findIndex((p) => p.palace.gua === chart.sitting.gua) : -1;
   const faceGrid = chart ? chart.palaces.findIndex((p) => p.palace.gua === chart.facing.gua) : -1;
@@ -153,7 +156,7 @@ export function PhiTinhChecker() {
 
       {chart && (
         <>
-          <Card className="border-primary/30 bg-primary/5">
+          <Card ref={resultRef} className="scroll-mt-24 border-primary/30 bg-primary/5">
             <CardHeader>
               <CardTitle className="text-base">
                 {VAN_OPTIONS.find((o) => o.v === chart.yun)?.label.split(' ·')[0]} · Tọa {chart.sitting.name} ({chart.sitting.han}) — Hướng {chart.facing.name} ({chart.facing.han})

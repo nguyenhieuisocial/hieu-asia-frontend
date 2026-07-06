@@ -10,6 +10,7 @@ import { NguHanhRemedyCard } from '@/components/ngu-hanh/NguHanhRemedyCard';
 import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { PRICING, formatVND } from '@/lib/pricing';
+import { useScrollToResult } from '@/lib/use-scroll-to-result';
 
 /**
  * Cách cục (hệ chính tinh hội về Mệnh) — ported from the backend reading engine
@@ -117,8 +118,10 @@ export function LaSoChecker({
   const [triet, setTriet] = React.useState<TrietLo | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const { resultRef, armScroll } = useScrollToResult(chart);
 
   const onCast = React.useCallback(async () => {
+    armScroll();
     if (!date) {
       setError('Hãy chọn ngày sinh dương lịch.');
       return;
@@ -146,7 +149,7 @@ export function LaSoChecker({
     } finally {
       setLoading(false);
     }
-  }, [date, time, gender]);
+  }, [date, time, gender, armScroll]);
 
   // Link chia sẻ (?d=&t=&g=) đã pre-fill ngày–giờ–giới tính qua prop initial* →
   // lập lá số NGAY khi mở (không cần bấm lại). Chỉ chạy 1 lần lúc mount; nếu
@@ -209,7 +212,7 @@ export function LaSoChecker({
           // `data-in` kích hoạt hệ reveal sẵn có (globals.css) → lá số + các ô
           // dữ-liệu hiện-dần theo nhịp khi vừa tính xong. Tự tắt khi
           // prefers-reduced-motion (rv-* chỉ ẩn ban đầu trong no-preference).
-          <div className="space-y-5 pt-2" data-in>
+          <div ref={resultRef} className="scroll-mt-24 space-y-5 pt-2" data-in>
             <div className="rv-fade">
               {/* Mở sẵn cung Mệnh — ô cá-nhân-nhất khách muốn đọc đầu tiên về
                   chính mình — thay vì cung ở index 0 (chung chung). */}
