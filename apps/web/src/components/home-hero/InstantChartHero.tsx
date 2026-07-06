@@ -181,6 +181,7 @@ export function InstantChartHero(): React.JSX.Element {
           <label className="mt-3 flex cursor-pointer items-center gap-2 text-xs text-foreground/75">
             <input
               type="checkbox"
+              aria-label="Không nhớ giờ sinh — để 12:00"
               checked={unknownTime}
               onChange={(e) => {
                 setUnknownTime(e.target.checked);

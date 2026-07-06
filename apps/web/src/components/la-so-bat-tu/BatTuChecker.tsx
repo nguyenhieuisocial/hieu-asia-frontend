@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
+import { Button, Card, CardContent, CardHeader, Input, Label } from '@hieu-asia/ui';
 import { Time24 } from '@/components/Time24';
 import { calculateBazi, type BaziChart, type BaziPillar, type Element, ELEMENTS } from '@/lib/bazi';
 // Diễn giải đời thường dùng chung (cùng nguồn teaser OracleBrain) — khớp 100%
@@ -227,7 +227,10 @@ export function BatTuChecker({
     <Card className="border-gold/20 bg-card/60 backdrop-blur-sm">
       {!embedded && (
         <CardHeader>
-          <CardTitle className="font-heading text-lg">Nhập ngày &amp; giờ sinh (dương lịch)</CardTitle>
+          {/* h2 (không phải CardTitle/h3): heading đầu tiên sau h1 của trang /la-so-bat-tu — tránh nhảy bậc h1→h3 (a11y S6). */}
+          <h2 className="font-heading text-lg font-semibold leading-none tracking-tight text-foreground">
+            Nhập ngày &amp; giờ sinh (dương lịch)
+          </h2>
         </CardHeader>
       )}
       <CardContent className="space-y-4">

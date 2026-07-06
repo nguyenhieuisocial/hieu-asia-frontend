@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
+import { Button, Card, CardContent, CardHeader, Input, Label } from '@hieu-asia/ui';
 import { Time24 } from '@/components/Time24';
 import { castTuViHoroscope, type TuViChart, type TuViHoroscope, type TuViPalace, type TuViStar, type CachCuc, type TuanKhong, type TrietLo } from '@/lib/tuvi-client';
 import { TuViChart12Palaces } from '@/components/tuvi/TuViChart12Palaces';
@@ -173,7 +173,10 @@ export function LaSoChecker({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Nhập ngày, giờ &amp; giới tính</CardTitle>
+        {/* h2 (không phải CardTitle/h3): heading đầu tiên sau h1 của trang /la-so-tu-vi — tránh nhảy bậc h1→h3 (a11y S6). */}
+        <h2 className="font-heading text-xl font-semibold leading-none tracking-tight text-foreground">
+          Nhập ngày, giờ &amp; giới tính
+        </h2>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid gap-3 sm:grid-cols-3">

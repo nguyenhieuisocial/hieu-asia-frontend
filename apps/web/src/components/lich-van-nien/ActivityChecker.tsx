@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
   Input,
   Label,
   Select,
@@ -112,7 +111,11 @@ export function ActivityChecker({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Kiểm tra ngày tốt</CardTitle>
+        {/* h2 (không phải CardTitle/h3): heading đầu tiên sau h1 trên /lich-van-nien/ngay-tot-xau
+            và /xem-ngay/[purpose] — tránh nhảy bậc h1→h3 (a11y S6). */}
+        <h2 className="font-heading text-xl font-semibold leading-none tracking-tight text-foreground">
+          Kiểm tra ngày tốt
+        </h2>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid gap-3 md:grid-cols-3">

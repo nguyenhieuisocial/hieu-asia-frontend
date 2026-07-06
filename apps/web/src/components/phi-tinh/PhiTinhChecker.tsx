@@ -112,7 +112,10 @@ export function PhiTinhChecker() {
     <div className="space-y-6">
       <Card className="border-border bg-card/50">
         <CardHeader>
-          <CardTitle className="text-base">Lập bàn Phi Tinh</CardTitle>
+          {/* h2 (không phải CardTitle/h3): heading đầu tiên sau h1 của trang /phi-tinh — tránh nhảy bậc h1→h3 (a11y S6). */}
+          <h2 className="font-heading text-base font-semibold leading-none tracking-tight text-foreground">
+            Lập bàn Phi Tinh
+          </h2>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
