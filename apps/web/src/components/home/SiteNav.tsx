@@ -78,9 +78,10 @@ function NudgeDot({ className }: { className?: string }) {
  */
 const PRIMARY_LINKS: readonly NavLink[] = [
   // "Lá số" trỏ thẳng công cụ lá số THẬT (client-side, không form-wall) —
-  // Phase 1 front-door. Mentor vẫn vào /onboarding cho luồng đối thoại.
+  // Phase 1 front-door. Mentor trỏ về storefront /mentor (S7b) — trang bán
+  // gói Mentor AI; luồng đối thoại /onboarding vẫn dùng cho CTA intent khác.
   { href: '/la-so-bat-tu', label: 'Lá số' },
-  { href: '/onboarding?intent=decision', label: 'Mentor' },
+  { href: '/mentor', label: 'Mentor' },
   { href: '/cong-cu', label: 'Công cụ' },
   { href: '/methodology', label: 'Phương pháp' },
   { href: '/pricing', label: 'Giá' },
