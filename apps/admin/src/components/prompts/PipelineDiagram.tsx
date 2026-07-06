@@ -205,13 +205,16 @@ function ReadingFlow({ nodes }: { nodes: Node[] }) {
 
   // flex-wrap (thay min-w-max) → hàng pipeline TỰ XUỐNG DÒNG khi hẹp, hết cuộn
   // ngang. gap-y cho khoảng cách giữa các dòng khi wrap.
+  const lastIdx = columns.length - 1;
   return (
     <div className="flex flex-wrap items-center gap-x-1.5 gap-y-3">
       <IoNode label="Ảnh bàn tay + Số liệu lá số tính sẵn" />
       {columns.map((col, i) => (
         // Gộp [mũi tên + cột node] thành khối DÍNH LIỀN (items-center, không tách
         // khi wrap) → node xuống dòng luôn kèm mũi tên "→" dẫn vào, đọc như dòng
-        // nối tiếp thay vì ô lẻ mất mũi tên.
+        // nối tiếp thay vì ô lẻ mất mũi tên. Cột CUỐI gộp luôn [mũi tên + ô "Báo
+        // cáo user đọc"] vào CHUNG khối → ô output không bao giờ rớt xuống dòng
+        // MỘT MÌNH (luôn dính node cột cuối), kể cả màn ~1536px logic (1920 @125%).
         <div key={i} className="flex items-center gap-x-1.5">
           <Arrow />
           <div className="flex flex-col gap-2">
@@ -219,12 +222,14 @@ function ReadingFlow({ nodes }: { nodes: Node[] }) {
               <RoleNode key={n.role} node={n} />
             ))}
           </div>
+          {i === lastIdx && (
+            <>
+              <Arrow />
+              <IoNode label="Báo cáo user đọc" />
+            </>
+          )}
         </div>
       ))}
-      <div className="flex items-center gap-x-1.5">
-        <Arrow />
-        <IoNode label="Báo cáo user đọc" />
-      </div>
     </div>
   );
 }
