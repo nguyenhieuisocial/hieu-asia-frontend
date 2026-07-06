@@ -5,12 +5,21 @@ import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } fro
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { Fab } from '@/components/product/Fab';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: 'Lá số của bạn',
   description:
     'Bắt đầu lá số mới hoặc xem lại các báo cáo đã lập trước đây — Tử Vi, Bát Tự, MBTI, Thần Số Học và Xem tướng, tất cả ở một nơi.',
   alternates: { canonical: 'https://hieu.asia/reading' },
+  openGraph: {
+    title: 'Lá số của bạn — hieu.asia',
+    description:
+      'Bắt đầu lá số mới hoặc xem lại các báo cáo đã lập — Tử Vi, Bát Tự, MBTI, Thần Số Học, Xem tướng.',
+    url: 'https://hieu.asia/reading',
+    type: 'website',
+    images: OG_DEFAULT_IMAGES,
+  },
 };
 
 const METHOD_CARDS = [

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { XemTuoiCuoiChecker } from '@/components/xem-tuoi-cuoi/XemTuoiCuoiChecker';
 // Gộp cưới hỏi (audit cấu trúc 2026-06-21): nhúng công cụ "hợp tuổi vợ chồng"
 // (trước ở /hop-tuoi/wedding) làm mục 2 → trang này thành "Cưới hỏi" trọn vẹn.
@@ -12,7 +13,8 @@ import { checkWeddingYear, VERDICT_LABEL } from '@/lib/xem-tuoi-cuoi';
 import { BIRTH_YEARS, TARGET_YEAR, slugOf } from './years';
 
 const TITLE = `Xem tuổi cưới năm ${TARGET_YEAR} — tính Kim Lâu, Tam Tai theo năm sinh`;
-const DESCRIPTION = `Kiểm tra năm ${TARGET_YEAR} có thuận để cưới theo năm sinh cô dâu, chú rể: Kim Lâu (tuổi mụ chia 9), Tam Tai, chi năm xung tuổi — hiển thị rõ từng bước tính, kèm các năm không phạm gần nhất. Tham khảo minh bạch, không phán số mệnh.`;
+// SEO S7: rút gọn 221 → ~154 ký tự (Google cắt mô tả ~170).
+const DESCRIPTION = `Kiểm tra năm ${TARGET_YEAR} có thuận để cưới theo năm sinh cô dâu, chú rể: Kim Lâu, Tam Tai, chi năm xung tuổi — rõ từng bước tính, kèm các năm không phạm gần nhất.`;
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -23,6 +25,7 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     url: 'https://hieu.asia/xem-tuoi-cuoi',
     type: 'website' as const,
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

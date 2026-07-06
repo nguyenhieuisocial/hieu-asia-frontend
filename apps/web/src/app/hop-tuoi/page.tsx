@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
@@ -6,8 +7,9 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { faqPage } from '@/lib/seo/jsonld';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Hợp tuổi cưới hỏi, làm ăn, sinh con',
   description:
     'Xem hợp tuổi cho cưới hỏi, hợp tác kinh doanh, sinh con, xông đất. Hiểu Tam Hợp, Lục Hợp, Lục Xung, Lục Hại và ngũ hành — minh bạch từng quy tắc, không phán mù.',
@@ -18,6 +20,7 @@ export const metadata = {
       'Tương hợp Can Chi theo từng việc cụ thể — Tam Hợp, Lục Hợp, Tứ Hành Xung. Minh bạch từng quy tắc, tức thì.',
     url: 'https://hieu.asia/hop-tuoi',
     type: 'website' as const,
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

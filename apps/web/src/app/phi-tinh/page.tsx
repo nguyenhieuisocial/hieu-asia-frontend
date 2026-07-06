@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { PhiTinhChecker } from '@/components/phi-tinh/PhiTinhChecker';
 
 export const metadata: Metadata = {
@@ -10,6 +11,14 @@ export const metadata: Metadata = {
   description:
     'Lập bàn Huyền Không Phi Tinh miễn phí: an vận tinh, sơn tinh, hướng tinh cho 9 cung theo nguyên vận và hướng nhà. Nhận diện cách cục Vượng sơn Vượng hướng.',
   alternates: { canonical: '/phi-tinh' },
+  openGraph: {
+    title: 'Huyền Không Phi Tinh — Lập bàn 9 cung',
+    description:
+      'Lập bàn phi tinh 9 cung miễn phí theo nguyên vận và hướng nhà — vận tinh, sơn tinh, hướng tinh, cách cục.',
+    url: 'https://hieu.asia/phi-tinh',
+    type: 'website',
+    images: OG_DEFAULT_IMAGES,
+  },
 };
 
 const FAQS = [

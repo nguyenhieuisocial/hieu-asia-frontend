@@ -3,13 +3,15 @@ import Link from 'next/link';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { XemTuoiLamNhaChecker } from '@/components/xem-tuoi-lam-nha/XemTuoiLamNhaChecker';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { checkBuildYear, BUILD_VERDICT_LABEL } from '@/lib/xem-tuoi-lam-nha';
 import { BIRTH_YEARS, TARGET_YEAR, slugOf } from './years';
 
 const TITLE = `Xem tuổi làm nhà năm ${TARGET_YEAR} — tính Kim Lâu, Hoang Ốc, Tam Tai`;
-const DESCRIPTION = `Kiểm tra năm ${TARGET_YEAR} có được tuổi xây/sửa nhà theo năm sinh gia chủ: Kim Lâu (tuổi mụ chia 9), Hoang Ốc (tuổi mụ chia 6), Tam Tai — hiển thị rõ từng bước tính, kèm các năm được tuổi gần nhất và tục mượn tuổi. Tham khảo minh bạch, không phán số mệnh.`;
+// SEO S7: rút gọn 246 → ~162 ký tự (Google cắt mô tả ~170).
+const DESCRIPTION = `Kiểm tra năm ${TARGET_YEAR} có được tuổi xây/sửa nhà theo năm sinh gia chủ: Kim Lâu, Hoang Ốc, Tam Tai — rõ từng bước tính, kèm các năm được tuổi gần nhất và tục mượn tuổi.`;
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -20,6 +22,7 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     url: 'https://hieu.asia/xem-tuoi-lam-nha',
     type: 'website' as const,
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

@@ -6,8 +6,9 @@ import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 
+// SEO S7: rút gọn 269 → ~157 ký tự (Google cắt mô tả ~170).
 const DESC =
-  'Lập & xem lá số Bát Tự (Tứ Trụ) miễn phí từ ngày giờ sinh — đủ 4 trụ năm/tháng/ngày/giờ (8 chữ), ngũ hành, Nhật Chủ, Thập Thần, cân bằng ngũ hành & đại vận (vận 10 năm). Trụ tính theo tiết khí (đúng chuẩn Bát Tự). Con số là thật; luận giải để hiểu mình, không bói toán.';
+  'Lập & xem lá số Bát Tự (Tứ Trụ) miễn phí từ ngày giờ sinh — 4 trụ, ngũ hành, Nhật Chủ, Thập Thần, đại vận; trụ tính theo tiết khí đúng chuẩn, không bói toán.';
 
 const BASE_META: Metadata = {
   title: 'Xem lá số Bát Tự (Tứ Trụ) miễn phí',
