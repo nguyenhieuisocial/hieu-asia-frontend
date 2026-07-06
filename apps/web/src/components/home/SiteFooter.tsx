@@ -217,7 +217,10 @@ function FooterColLegal({
         Newsletter
         <ArrowRight className="h-3 w-3" aria-hidden="true" />
       </Link>
-      <div className="mt-4 flex items-center gap-3">
+      {/* T-TAP — `gap-2` + `flex-wrap` on mobile: 3×44px icons + 2×8px gaps
+          (=148px) fit the ~151px footer grid column on 375px devices, where
+          `gap-3` forced flex-shrink down to ~40px wide. Desktop restores gap-3. */}
+      <div className="mt-4 flex flex-wrap items-center gap-2 sm:gap-3">
         <SocialLink href="mailto:hi@hieu.asia" label="Email">
           <Mail className="h-4 w-4" aria-hidden="true" />
         </SocialLink>
@@ -247,7 +250,9 @@ function SocialLink({
       href={href}
       aria-label={label}
       {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary sm:h-9 sm:w-9"
+      // T-TAP — `shrink-0` keeps the 44×44 tap target: without it the flex row
+      // squeezed these to ~40px wide inside the narrow mobile footer column.
+      className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary sm:h-9 sm:w-9"
     >
       {children}
     </Link>
