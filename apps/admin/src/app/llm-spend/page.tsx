@@ -46,6 +46,7 @@ import { BudgetsManager } from '@/components/llm-spend/BudgetsManager';
 import { CostPanel } from '@/components/llm-spend/CostPanel';
 import { ReportCostsPanel } from '@/components/llm-spend/ReportCostsPanel';
 import { PageHeader } from '@/components/admin/page-header';
+import { RoleContextBanner } from '@/components/admin/role-context-banner';
 import { LiveBadge } from '@/components/admin/live-badge';
 import { EmptyState } from '@/components/admin/empty-state';
 import { DollarSign } from 'lucide-react';
@@ -198,6 +199,10 @@ export default function LlmSpendPage() {
           </Button>
         }
       />
+
+      <React.Suspense fallback={null}>
+        <RoleContextBanner />
+      </React.Suspense>
 
       {!configured && (
         // Wave 60.83 — replace raw amber-* with Wave 60.81.B WarnToken semantic
