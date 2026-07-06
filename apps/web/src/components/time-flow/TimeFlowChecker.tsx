@@ -14,6 +14,7 @@ import {
   type TuViHoroscope,
   type TuViScope,
 } from '@/lib/tuvi-client';
+import { useScrollToResult } from '@/lib/use-scroll-to-result';
 
 /**
  * Shared "lập lá số → vận thật" island for the planning pages. One form, one
@@ -97,8 +98,10 @@ export function TimeFlowChecker({ scope }: { scope: Scope }) {
   const [horoscope, setHoroscope] = React.useState<TuViHoroscope | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const { resultRef, armScroll } = useScrollToResult(chart);
 
   const onCast = React.useCallback(async () => {
+    armScroll();
     if (!date) {
       setError('Hãy chọn ngày sinh dương lịch.');
       return;
@@ -120,7 +123,7 @@ export function TimeFlowChecker({ scope }: { scope: Scope }) {
     } finally {
       setLoading(false);
     }
-  }, [date, time, gender]);
+  }, [date, time, gender, armScroll]);
 
   const idp = `tf-${scope}`;
 
@@ -178,7 +181,7 @@ export function TimeFlowChecker({ scope }: { scope: Scope }) {
         {error && <p className="text-sm text-destructive">{error}</p>}
 
         {chart && horoscope && (
-          <div className="space-y-4 pt-1">
+          <div ref={resultRef} className="scroll-mt-24 space-y-4 pt-1">
             {scope === 'decadal' && (
               <DecadalResult chart={chart} horoscope={horoscope} birthDate={date} />
             )}
