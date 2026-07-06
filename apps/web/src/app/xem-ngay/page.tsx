@@ -5,6 +5,7 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { PURPOSES } from './purposes';
 
 const DESC =
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
     description: DESC,
     url: 'https://hieu.asia/xem-ngay',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

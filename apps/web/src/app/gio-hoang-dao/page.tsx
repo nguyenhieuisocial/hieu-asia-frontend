@@ -5,6 +5,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { HOANG_DAO_STARS, HAC_DAO_STARS } from '@/lib/gio-hoang-dao';
 
 const DESC =
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
     description: DESC,
     url: 'https://hieu.asia/gio-hoang-dao',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 

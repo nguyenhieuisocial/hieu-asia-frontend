@@ -5,12 +5,21 @@ import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui'
 import { DayCard, type VanNienDayDTO } from '@/components/lich-van-nien/DayCard';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
   title: 'Lịch Vạn Niên 2026 — Tra cứu ngày giờ tốt xấu',
   description:
     'Lịch vạn niên Việt Nam: ngày dương âm, Can Chi, Hoàng đạo / Hắc đạo, sao tốt sao xấu, giờ hoàng đạo, ngày tốt cho cưới hỏi, khai trương, động thổ.',
   alternates: { canonical: 'https://hieu.asia/lich-van-nien' },
+  openGraph: {
+    title: 'Lịch Vạn Niên 2026 — Tra cứu ngày giờ tốt xấu',
+    description:
+      'Ngày dương âm, Can Chi, Hoàng đạo / Hắc đạo, giờ hoàng đạo, ngày tốt cho cưới hỏi, khai trương, động thổ.',
+    url: 'https://hieu.asia/lich-van-nien',
+    type: 'website',
+    images: OG_DEFAULT_IMAGES,
+  },
 };
 
 const FAQS = [

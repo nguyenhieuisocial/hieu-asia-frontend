@@ -5,6 +5,7 @@ import { XongDatChecker } from '@/components/xong-dat/XongDatChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
+import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { ELEMENTS } from '@/lib/dat-ten-ngu-hanh';
 import { yearChiGroups } from '@/lib/xong-dat';
 import { HOST_YEARS, TARGET_YEAR, slugOf } from './years';
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
     description: DESC,
     url: 'https://hieu.asia/xong-dat',
     type: 'website',
+    images: OG_DEFAULT_IMAGES,
   },
 };
 
