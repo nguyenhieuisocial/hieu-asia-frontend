@@ -1,0 +1,53 @@
+{
+  "origin": "https://hieu.asia",
+  "unit": "KB (uncompressed)",
+  "pages": [
+    {
+      "path": "/",
+      "htmlKB": 805,
+      "jsChunks": 26,
+      "jsKB": 1670,
+      "cssFiles": 2,
+      "cssKB": 239,
+      "totalKB": 2713
+    },
+    {
+      "path": "/la-so-bat-tu",
+      "htmlKB": 600,
+      "jsChunks": 27,
+      "jsKB": 1671,
+      "cssFiles": 2,
+      "cssKB": 239,
+      "totalKB": 2510
+    },
+    {
+      "path": "/pricing",
+      "htmlKB": 609,
+      "jsChunks": 28,
+      "jsKB": 1691,
+      "cssFiles": 2,
+      "cssKB": 239,
+      "totalKB": 2538
+    },
+    {
+      "path": "/cong-cu",
+      "htmlKB": 660,
+      "jsChunks": 23,
+      "jsKB": 1575,
+      "cssFiles": 2,
+      "cssKB": 239,
+      "totalKB": 2473
+    },
+    {
+      "path": "/cam-nang",
+      "htmlKB": 579,
+      "jsChunks": 24,
+      "jsKB": 1571,
+      "cssFiles": 2,
+      "cssKB": 239,
+      "totalKB": 2388
+    }
+  ],
+  "capturedAt": "2026-07-04",
+  "note": "S1 baseline bundle-size (uncompressed, prod). So sánh lại ở S20 perf (§FF/§II)."
+}
