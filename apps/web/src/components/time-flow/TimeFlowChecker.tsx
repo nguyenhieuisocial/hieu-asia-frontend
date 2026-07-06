@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
+import { Button, Card, CardContent, CardHeader, Input, Label } from '@hieu-asia/ui';
 import { Time24 } from '@/components/Time24';
 import {
   DownloadToolPdfButton,
@@ -133,9 +133,11 @@ export function TimeFlowChecker({ scope }: { scope: Scope }) {
         <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
           Cá nhân hoá
         </p>
-        <CardTitle className="font-heading text-xl sm:text-2xl">
+        {/* h2 (không phải CardTitle/h3): heading đầu tiên sau h1 trên /annual-planning
+            /monthly-planning /timeline — tránh nhảy bậc h1→h3 (a11y S6). */}
+        <h2 className="font-heading text-xl font-semibold leading-none tracking-tight text-foreground sm:text-2xl">
           {SCOPE_COPY[scope].heading}
-        </CardTitle>
+        </h2>
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground">
