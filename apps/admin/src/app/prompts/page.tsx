@@ -244,7 +244,7 @@ export default function PromptsListPage() {
     <div className="space-y-6">
       <PageHeader
         title="Prompt Editor"
-        description={`Chỉnh system prompt cho ${ROLES.length} vai trò AI (pipeline đọc + mentor + judge + cố vấn quyết định + trợ lý vận hành). Lưu vào KV để ghi đè bản chuẩn hệ thống.`}
+        description={`Chỉnh system prompt cho ${ROLES.length} vai trò AI. Lưu vào KV để ghi đè bản chuẩn hệ thống.`}
         icon={<Sparkles className="h-5 w-5" />}
         badge={
           customCount > 0 ? (
