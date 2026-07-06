@@ -13,6 +13,7 @@ import {
 } from '@hieu-asia/ui';
 import { Cpu, CheckCircle2, AlertCircle, Activity, Zap, BarChart2, Info } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
+import { RoleContextBanner } from '@/components/admin/role-context-banner';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { EmptyState } from '@/components/admin/empty-state';
@@ -460,6 +461,10 @@ export default function VendorsPage() {
           </Button>
         }
       />
+
+      <React.Suspense fallback={null}>
+        <RoleContextBanner />
+      </React.Suspense>
 
       {showError && (
         <ErrorBlock

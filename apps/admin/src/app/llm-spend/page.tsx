@@ -46,6 +46,7 @@ import { BudgetsManager } from '@/components/llm-spend/BudgetsManager';
 import { CostPanel } from '@/components/llm-spend/CostPanel';
 import { ReportCostsPanel } from '@/components/llm-spend/ReportCostsPanel';
 import { PageHeader } from '@/components/admin/page-header';
+import { RoleContextBanner } from '@/components/admin/role-context-banner';
 import { LiveBadge } from '@/components/admin/live-badge';
 import { EmptyState } from '@/components/admin/empty-state';
 import { DollarSign } from 'lucide-react';
@@ -128,6 +129,15 @@ export default function LlmSpendPage() {
     setLastRefresh(new Date());
   }, []);
 
+  // Tầng 2 — deep-link: seed the traces role filter from ?role= khi mở trang,
+  // để /llm-spend?role=<role> (từ Vai trò 360) LỌC luôn bảng chi tiết chứ không
+  // chỉ hiện banner. Đọc qua window (client-only) nên không phải bọc cả trang
+  // trong Suspense. Chạy 1 lần lúc mount; sau đó dropdown của bảng vẫn đổi được.
+  React.useEffect(() => {
+    const r = new URLSearchParams(window.location.search).get('role');
+    if (r) setRoleFilter(r);
+  }, []);
+
   // Realtime: refetch KPIs / traces on new INSERT into llm_traces.
   React.useEffect(() => {
     if (!configured) return;
@@ -198,6 +208,10 @@ export default function LlmSpendPage() {
           </Button>
         }
       />
+
+      <React.Suspense fallback={null}>
+        <RoleContextBanner />
+      </React.Suspense>
 
       {!configured && (
         // Wave 60.83 — replace raw amber-* with Wave 60.81.B WarnToken semantic
