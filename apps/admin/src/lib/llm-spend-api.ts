@@ -296,6 +296,10 @@ export interface VendorTelemetryRow {
   requests: number;
   errors: number;
   error_rate_pct: number;
+  /** Cú cấu hình model premium nhưng tụt về Llama free (cổng premium fail). Tách
+   *  khỏi errors. Optional: worker cũ chưa deploy thì thiếu → FE hiện "—". */
+  downgrades?: number;
+  downgrade_rate_pct?: number;
   latency_avg_ms: number;
   latency_p95_ms: number;
   cost_usd: number;
