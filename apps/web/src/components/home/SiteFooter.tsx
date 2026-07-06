@@ -48,6 +48,7 @@ const COL_DOCS: readonly FooterLink[] = [
 ];
 
 const COL_LEGAL: readonly FooterLink[] = [
+  { href: '/legal', label: 'Tổng quan pháp lý' },
   { href: '/privacy', label: 'Privacy' },
   { href: '/terms', label: 'Terms' },
   { href: '/privacy#nd-13-2023', label: 'Dữ liệu cá nhân' },
