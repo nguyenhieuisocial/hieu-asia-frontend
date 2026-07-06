@@ -18,6 +18,7 @@ import * as React from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { Shield, Brain, Timer, AlertTriangle, Network } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
+import { RoleContextBanner } from '@/components/admin/role-context-banner';
 import { ProductTabs, type ProductTab } from '@/components/admin/product-tabs';
 import { ValidatorTab } from '@/components/admin/ai/ValidatorTab';
 import { EvalTab } from '@/components/admin/ai/EvalTab';
@@ -92,6 +93,7 @@ function AiQualityPageInner() {
         description="Output-validator realtime + eval nightly đa-judge — gộp trong một trang."
         icon={<Shield className="h-5 w-5" />}
       />
+      <RoleContextBanner />
       <ProductTabs tabs={tabs} value={active} onValueChange={onTabChange} />
     </div>
   );
