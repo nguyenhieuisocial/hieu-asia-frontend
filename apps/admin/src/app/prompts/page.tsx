@@ -19,6 +19,7 @@ import {
   Heart,
   Bot,
   Compass,
+  Cpu,
   FileText,
   GraduationCap,
   Lightbulb,
@@ -134,6 +135,32 @@ async function fetchPrompts(): Promise<PromptSummary[]> {
   return (data.prompts ?? []).map(deriveIsCustom);
 }
 
+// Tầng 0b — model THẬT mỗi role, đọc từ log llm_traces (role + model chính xác
+// sau khi sửa cost-tracking). `PROMPT_META.model` chỉ là chuỗi mô tả gõ tay nên
+// dễ lệch; đây là cái ĐANG CHẠY thật. Best-effort: endpoint lỗi / role chưa có
+// log → thẻ tự fallback về mô tả gõ tay.
+interface RoleModelRow {
+  role: Role;
+  model: string;
+  vendor: string;
+  calls: number;
+  last_seen: string | null;
+  models: Array<{ model: string; vendor: string; count: number }>;
+}
+interface RoleModelsResp {
+  ok: boolean;
+  window_days?: number;
+  roles?: RoleModelRow[];
+  error?: string;
+}
+async function fetchRoleModels(): Promise<RoleModelRow[]> {
+  const r = await fetch('/api/admin-proxy/admin/ai/role-models?days=90', { cache: 'no-store' });
+  if (!r.ok) return []; // best-effort — fall back to hand-typed meta.model
+  const data: RoleModelsResp = await r.json();
+  if (!data.ok) return [];
+  return data.roles ?? [];
+}
+
 // Wave 52-C — Date formatters live in `@/lib/format-date` now so the
 // "1970-01-01" leak fix (treat 0/null/"" as missing) applies consistently
 // across every admin page. Fallback "Bản chuẩn hệ thống" (task #30): chưa có
@@ -150,6 +177,13 @@ export default function PromptsListPage() {
     staleTime: 60_000,
   });
 
+  // Tầng 0b — model thật/role (best-effort; không chặn render nếu lỗi).
+  const { data: roleModels } = useQuery({
+    queryKey: ['admin', 'prompt-role-models'],
+    queryFn: fetchRoleModels,
+    staleTime: 60_000,
+  });
+
   // Wave 60.71.T2.prompts polish — search + custom/default filter so the
   // 7-role grid scales when we add more agents (e.g. specialised
   // judges/critics). State is local; no URL sync because the grid is small.
@@ -161,6 +195,12 @@ export default function PromptsListPage() {
     for (const p of data ?? []) m.set(p.role, p);
     return m;
   }, [data]);
+
+  const rmByRole = React.useMemo(() => {
+    const m = new Map<Role, RoleModelRow>();
+    for (const r of roleModels ?? []) m.set(r.role, r);
+    return m;
+  }, [roleModels]);
 
   const visibleRoles = React.useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -327,6 +367,7 @@ export default function PromptsListPage() {
         {visibleRoles.map((role) => {
           const meta = ROLE_META[role];
           const p = byRole.get(role);
+          const rm = rmByRole.get(role);
           return (
             <Link
               key={role}
@@ -367,6 +408,28 @@ export default function PromptsListPage() {
                         </span>
                       )}
                       {p?.meta && <WiringBadge wiring={p.meta.wiring} note={p.meta.wiring_note} />}
+                    </div>
+                  )}
+                  {/* Tầng 0b — model THẬT (từ log llm_traces) nếu có; fallback mô tả cấu hình gõ tay. */}
+                  {(rm || p?.meta?.model) && (
+                    <div className="flex items-center gap-1.5 text-[11px]">
+                      <Cpu className="h-3 w-3 shrink-0 text-gold/70" aria-hidden />
+                      <span
+                        className="truncate font-mono text-foreground/85"
+                        title={rm ? `${rm.model} · ${rm.vendor}` : (p?.meta?.model ?? '')}
+                      >
+                        {rm ? rm.model : p?.meta?.model}
+                      </span>
+                      {rm ? (
+                        <span
+                          className="shrink-0 text-muted-foreground"
+                          title={`Model thật đang chạy — ${rm.calls} lượt gần đây (vendor ${rm.vendor})`}
+                        >
+                          · thật
+                        </span>
+                      ) : (
+                        <span className="shrink-0 text-muted-foreground">· cấu hình</span>
+                      )}
                     </div>
                   )}
                   <div className="text-xs text-muted-foreground">
