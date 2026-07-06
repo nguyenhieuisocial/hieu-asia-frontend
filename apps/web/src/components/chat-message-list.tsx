@@ -122,7 +122,8 @@ function MessageBubble({
             </ReactMarkdown>
           </div>
         )}
-        <div className="mt-2 flex items-center justify-between gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+        {/* Touch/keyboard parity: hover không tồn tại trên mobile — luôn hiện trên màn nhỏ, và hiện khi nút bên trong nhận focus. */}
+        <div className="mt-2 flex items-center justify-between gap-2 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 max-sm:opacity-100">
           <span className="font-mono text-xs text-muted-foreground">{time}</span>
           {!isUser && (
             <div className="flex items-center gap-1">

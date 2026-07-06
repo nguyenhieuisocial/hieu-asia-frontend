@@ -732,7 +732,10 @@ function TechBadge({
 }) {
   return (
     <div
-      className="group relative flex items-center gap-1.5 rounded-lg border border-border/60 bg-card/40 px-2.5 py-2 text-xs text-foreground/75 hover:border-gold/40 hover:text-foreground transition-colors cursor-default"
+      // tabIndex: touch/keyboard không có hover và title attr không hiện trên
+      // mobile — cho badge nhận focus (tap/Tab) để tooltip hiện qua group-focus.
+      tabIndex={0}
+      className="group relative flex items-center gap-1.5 rounded-lg border border-border/60 bg-card/40 px-2.5 py-2 text-xs text-foreground/75 hover:border-gold/40 hover:text-foreground transition-colors cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-gold"
       title={tooltip}
     >
       <span className="text-gold" aria-hidden>{icon}</span>
@@ -740,7 +743,7 @@ function TechBadge({
       {/* Tooltip */}
       <div
         role="tooltip"
-        className="pointer-events-none absolute bottom-full left-0 z-10 mb-1.5 w-56 rounded-lg border border-border bg-background p-2.5 text-xs leading-relaxed text-foreground/80 opacity-0 shadow-lg transition-opacity group-hover:opacity-100"
+        className="pointer-events-none absolute bottom-full left-0 z-10 mb-1.5 w-56 rounded-lg border border-border bg-background p-2.5 text-xs leading-relaxed text-foreground/80 opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus:opacity-100"
       >
         {tooltip}
       </div>

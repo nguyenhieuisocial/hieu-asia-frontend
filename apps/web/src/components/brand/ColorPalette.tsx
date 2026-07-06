@@ -162,7 +162,7 @@ function SwatchTile({ name, hex, fg = 'light', note }: Swatch) {
           <Check className={`h-3.5 w-3.5 ${fg === 'dark' ? 'text-ink' : 'text-cream'}`} />
         ) : (
           <Copy
-            className={`h-3.5 w-3.5 opacity-0 transition group-hover:opacity-100 ${fg === 'dark' ? 'text-ink' : 'text-cream'}`}
+            className={`h-3.5 w-3.5 opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100 max-sm:opacity-100 ${fg === 'dark' ? 'text-ink' : 'text-cream'}`}
           />
         )}
       </span>
@@ -204,7 +204,7 @@ function GradientTile({ name, css, note }: { name: string; css: string; note: st
         {copied ? (
           <Check className="h-3.5 w-3.5 text-cream" />
         ) : (
-          <Copy className="h-3.5 w-3.5 text-cream opacity-0 transition group-hover:opacity-100" />
+          <Copy className="h-3.5 w-3.5 text-cream opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100 max-sm:opacity-100" />
         )}
       </span>
     </button>
