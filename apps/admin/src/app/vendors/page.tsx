@@ -288,6 +288,29 @@ const TELEMETRY_COLUMNS: AdminTableColumn<VendorTelemetryRow>[] = [
     ),
   },
   {
+    id: 'downgrade',
+    header: 'Tụt free',
+    className: 'text-right tabular-nums text-xs',
+    cell: (row) => {
+      // Cú cấu hình premium nhưng thực tế chạy Llama free (cổng premium fail).
+      // Tỉ lệ cao = premium KHÔNG dùng được — khác "lỗi vendor". Worker cũ chưa
+      // deploy → downgrades undefined → hiện "—".
+      const dg = row.downgrades ?? 0;
+      const rate = row.downgrade_rate_pct ?? 0;
+      return dg > 0 ? (
+        <span
+          className={rate >= 50 ? 'font-semibold text-amber-600 dark:text-amber-400' : 'text-amber-600 dark:text-amber-400'}
+          title="Cú cấu hình model cao cấp nhưng tụt về Llama free (cổng premium thất bại). KHÔNG phải lỗi vendor — là premium không dùng được."
+        >
+          {dg.toLocaleString('vi-VN')}
+          <span className="ml-1 text-[10px] opacity-80">({rate.toFixed(1)}%)</span>
+        </span>
+      ) : (
+        <span className="text-muted-foreground/60">—</span>
+      );
+    },
+  },
+  {
     id: 'latency',
     header: 'Độ trễ TB / p95',
     className: 'text-right tabular-nums text-xs text-foreground/85',
@@ -349,7 +372,10 @@ function VendorTelemetryCard() {
             </CardTitle>
             <CardDescription>
               Số lượt gọi, lỗi, độ trễ và chi phí gom theo từng vendor AI (từ ledger
-              llm_traces). Tô đỏ khi tỉ lệ lỗi ≥ {ERROR_RED_PCT}%.
+              llm_traces). Tô đỏ khi tỉ lệ lỗi ≥ {ERROR_RED_PCT}%. Cột{' '}
+              <span className="text-amber-600 dark:text-amber-400">Tụt free</span> = cú
+              cấu hình model cao cấp nhưng thực chạy Llama free (cổng premium fail) —
+              tỉ lệ cao nghĩa là premium không dùng được, KHÁC lỗi vendor.
             </CardDescription>
           </div>
           <div className="flex gap-1">
