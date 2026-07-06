@@ -239,9 +239,13 @@ function ConvergeFlow({ feeders, target }: { feeders: Node[]; target: Node }) {
   return (
     <div className="flex min-w-max items-center gap-3">
       <div className="flex flex-col gap-2">
-        {feeders.map((n) => (
-          <RoleNode key={n.role} node={n} />
-        ))}
+        {/* Feeders xếp NGANG tự xuống dòng khi hẹp (thay cột dọc 4 ô cao lêu nghêu)
+            → dùng bề ngang đang bỏ trống, cụm hội tụ thấp lại. */}
+        <div className="flex flex-wrap items-center gap-2">
+          {feeders.map((n) => (
+            <RoleNode key={n.role} node={n} />
+          ))}
+        </div>
         {target.ingests.length > 0 && (
           <div className="mt-1 rounded-md border border-dashed border-border/70 bg-muted/10 p-1.5">
             <div className="mb-1 text-[9px] font-medium uppercase tracking-wide text-muted-foreground">
