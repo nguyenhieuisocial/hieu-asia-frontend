@@ -323,22 +323,24 @@ function RoleNode({ node, emphasis = false }: { node: Node; emphasis?: boolean }
       type="button"
       onClick={handleClick}
       title={`Cuộn tới thẻ ${node.label}`}
-      className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-left text-[11px] leading-4 text-foreground transition-all duration-300 ease-editorial focus:outline-none focus-visible:border-gold/60 ${
+      className={`inline-flex max-w-[150px] items-start gap-1.5 rounded-md border px-2.5 py-1.5 text-left text-[11px] leading-4 text-foreground transition-all duration-300 ease-editorial focus:outline-none focus-visible:border-gold/60 ${
         emphasis
           ? 'border-gold/60 bg-gold/20 shadow-sm hover:bg-gold/25'
           : 'border-gold/25 bg-gold/10 hover:border-gold/60 hover:bg-gold/15'
       }`}
     >
       {node.stage !== null && (
-        <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-gold/20 font-mono text-[9px] text-gold">
+        <span className="mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-gold/20 font-mono text-[9px] text-gold">
           {node.stage}
         </span>
       )}
       <span
-        className={`h-1.5 w-1.5 shrink-0 rounded-full ${WIRING_DOT[node.wiring]}`}
+        className={`mt-[5px] h-1.5 w-1.5 shrink-0 rounded-full ${WIRING_DOT[node.wiring]}`}
         aria-hidden
       />
-      <span className="whitespace-nowrap">
+      {/* Bó bề rộng + cho chữ TỰ XUỐNG DÒNG bên trong (như ô Ảnh bàn tay) → node
+          hẹp lại, cả pipeline gọn trên 1 hàng, ô 'Báo cáo user đọc' hết rớt lẻ. */}
+      <span className="min-w-0">
         <span className={`font-medium text-gold${emphasis ? ' font-semibold' : ''}`}>{node.label}</span>
         {node.note && <span className="ml-1 text-muted-foreground">{node.note}</span>}
       </span>
