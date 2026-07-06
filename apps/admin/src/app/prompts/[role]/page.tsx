@@ -22,7 +22,7 @@ import {
   Skeleton,
   toast,
 } from '@hieu-asia/ui';
-import { ChevronLeft, Eye, GitCompare } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Cpu, Eye, GitCompare } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { PromptEditor } from '@/components/prompts/PromptEditor';
 import { WiringBadge, type PromptMeta } from '@/components/prompts/prompt-meta';
@@ -81,6 +81,29 @@ async function fetchPrompt(role: string): Promise<PromptDetail | null> {
   const data: PromptResp = await r.json();
   if (!r.ok || !data.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
   return data.prompt ? deriveIsCustom(data.prompt) : null;
+}
+
+// Tầng 3 — "Vai trò 360": số liệu THẬT của vai trò này từ log llm_traces
+// (model đang chạy + chi phí + độ trễ + tỉ lệ lỗi). cost/latency/error là các
+// trường backend bổ sung sau (PR Tầng 3) → optional để trang không vỡ nếu worker
+// cũ chưa deploy. Endpoint trả mọi role; lọc theo role hiện tại phía FE.
+interface RoleModel {
+  role: Role;
+  model: string;
+  vendor: string;
+  calls: number;
+  cost_usd?: number;
+  avg_latency_ms?: number;
+  error_rate_pct?: number;
+  last_seen: string | null;
+  models: Array<{ model: string; vendor: string; count: number }>;
+}
+async function fetchRoleModel(role: string): Promise<RoleModel | null> {
+  const r = await fetch('/api/admin-proxy/admin/ai/role-models?days=90', { cache: 'no-store' });
+  if (!r.ok) return null; // best-effort — panel tự ẩn
+  const data: { ok?: boolean; roles?: RoleModel[] } = await r.json();
+  if (!data?.ok) return null;
+  return (data.roles ?? []).find((x) => x.role === role) ?? null;
 }
 
 async function savePrompt(role: string, system: string): Promise<PromptDetail> {
@@ -220,6 +243,14 @@ export default function PromptEditPage() {
   const { data: history } = useQuery({
     queryKey: ['admin', 'prompts', role, 'history'],
     queryFn: () => fetchHistory(role),
+    enabled: isValidRole,
+    staleTime: 60_000,
+  });
+
+  // Tầng 3 — số liệu thật/vai trò (best-effort; panel tự ẩn nếu chưa có log).
+  const { data: roleModel } = useQuery({
+    queryKey: ['admin', 'role-model', role],
+    queryFn: () => fetchRoleModel(role),
     enabled: isValidRole,
     staleTime: 60_000,
   });
@@ -428,10 +459,64 @@ export default function PromptEditPage() {
                   <MetaList label="Kết quả đi tới" items={prompt.meta.downstream} />
                   <MetaList label="Chạy ở đâu" items={prompt.meta.runs_at} />
                   <div>
-                    <div className="text-muted-foreground">Model</div>
+                    <div className="text-muted-foreground">Model (cấu hình)</div>
                     <div className="mt-0.5 text-foreground/85">{prompt.meta.model}</div>
                   </div>
                   <WiringBadge wiring={prompt.meta.wiring} note={prompt.meta.wiring_note} />
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Tầng 3 — "Vai trò 360": số liệu THẬT từ log llm_traces (90 ngày). */}
+            {roleModel && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm">Số liệu thật · 90 ngày</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3 text-xs">
+                  <div>
+                    <div className="text-muted-foreground">Model đang chạy (thật)</div>
+                    <div className="mt-0.5 flex items-center gap-1.5">
+                      <Cpu className="h-3.5 w-3.5 shrink-0 text-gold/70" aria-hidden />
+                      <span className="truncate font-mono text-foreground/90" title={`${roleModel.model} · ${roleModel.vendor}`}>
+                        {roleModel.model}
+                      </span>
+                      <span className="shrink-0 text-muted-foreground">· {roleModel.vendor}</span>
+                    </div>
+                    {roleModel.models.length > 1 && (
+                      <div className="mt-1 text-[11px] text-muted-foreground">
+                        Có dùng dự phòng:{' '}
+                        {roleModel.models.slice(1).map((m) => `${m.model} (${m.count})`).join(', ')}
+                      </div>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Stat label="Lượt gọi" value={roleModel.calls.toLocaleString('vi-VN')} />
+                    <Stat
+                      label="Chi phí"
+                      value={typeof roleModel.cost_usd === 'number' ? `$${roleModel.cost_usd.toFixed(4)}` : '—'}
+                    />
+                    <Stat
+                      label="Độ trễ TB"
+                      value={
+                        typeof roleModel.avg_latency_ms === 'number' && roleModel.avg_latency_ms > 0
+                          ? `${roleModel.avg_latency_ms.toLocaleString('vi-VN')} ms`
+                          : '—'
+                      }
+                    />
+                    <Stat
+                      label="Tỉ lệ lỗi"
+                      value={typeof roleModel.error_rate_pct === 'number' ? `${roleModel.error_rate_pct}%` : '—'}
+                    />
+                  </div>
+                  <div className="border-t border-gold/10 pt-2">
+                    <div className="mb-1.5 text-muted-foreground">Xem sâu hơn theo vai trò</div>
+                    <div className="flex flex-wrap gap-1.5">
+                      <RoleLink href={`/llm-spend?role=${role}`} label="Chi phí" />
+                      <RoleLink href={`/ai-quality?role=${role}`} label="Chất lượng" />
+                      <RoleLink href={`/vendors?role=${role}`} label="Vendor" />
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -755,6 +840,29 @@ ${draft
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+/** Ô số liệu nhỏ trong card "Số liệu thật" (Tầng 3). */
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded border border-gold/10 bg-card/60 px-2 py-1.5">
+      <div className="text-[10px] text-muted-foreground">{label}</div>
+      <div className="mt-0.5 font-mono text-foreground/90">{value}</div>
+    </div>
+  );
+}
+
+/** Link nhảy sâu theo vai trò sang trang khác (Tầng 2 — target đọc ?role=). */
+function RoleLink({ href, label }: { href: string; label: string }) {
+  return (
+    <Link
+      href={href}
+      className="inline-flex items-center gap-1 rounded border border-gold/20 bg-card/60 px-2 py-1 text-[11px] text-muted-foreground transition-colors hover:border-gold/40 hover:text-gold"
+    >
+      {label}
+      <ChevronRight className="h-3 w-3" aria-hidden />
+    </Link>
   );
 }
 
