@@ -141,7 +141,7 @@ const CSS = `
 .mh-soi-n { color: ${OCHRE_DEEP}; font-weight: 500; font-family: var(--font-newsreader), Georgia, serif; font-size: 1.15em; font-style: italic; }
 .mh-soi-r { color: ${SOFT}; }
 .mh-soi-q { color: ${INK}; opacity: .92; font-family: var(--font-newsreader), Georgia, serif; font-size: 1.12em; font-style: italic; }
-.mh-hint { margin: 0; font-family: var(--font-be-vietnam), system-ui, sans-serif; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: ${SOFT}; opacity: .78; }
+.mh-hint { margin: 0; font-family: var(--font-be-vietnam), system-ui, sans-serif; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: ${SOFT}; opacity: .78; } /* T-TAP — was 10.5px */
 
 .mh-act { display: flex; flex-direction: column; gap: 14px; }
 .mh-cta-row { display: flex; flex-direction: column; gap: 10px; }
@@ -152,8 +152,8 @@ const CSS = `
 .mh-cta-ghost::before { background: radial-gradient(circle, rgba(164,117,50,.5), rgba(164,117,50,0) 70%); }
 .mh-cta > * { position: relative; z-index: 1; }
 .mh-cta-num { font-family: var(--font-be-vietnam), system-ui, sans-serif; margin-right: .6em; opacity: .85; }
-.mh-cta-sub { font-family: var(--font-be-vietnam), system-ui, sans-serif; font-size: 11px; opacity: .68; margin-left: .5em; }
-.mh-micro { font-family: var(--font-be-vietnam), system-ui, sans-serif; font-size: 11px; letter-spacing: .14em; color: ${SOFT}; margin: 0; text-align: center; }
+.mh-cta-sub { font-family: var(--font-be-vietnam), system-ui, sans-serif; font-size: 12px; opacity: .68; margin-left: .5em; } /* T-TAP — was 11px */
+.mh-micro { font-family: var(--font-be-vietnam), system-ui, sans-serif; font-size: 12px; letter-spacing: .14em; color: ${SOFT}; margin: 0; text-align: center; } /* T-TAP — was 11px */
 .mh-gift { font-family: var(--font-newsreader), Georgia, serif; font-size: .94rem; line-height: 1.4; color: ${OCHRE_DEEP}; margin: 0; text-align: center; font-style: italic; }
 .mh-gift strong { font-weight: 600; font-style: normal; }
 .mh-gift-mk { color: ${OCHRE}; font-style: normal; margin-right: .2em; }

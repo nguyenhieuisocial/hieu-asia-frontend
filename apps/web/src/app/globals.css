@@ -1029,7 +1029,7 @@ body { overflow-wrap: break-word; }
 /* Fix "giật": CHỪA SẴN chỗ (line-height cố định), chỉ đổi opacity — KHÔNG dùng
    max-height 0→1.4em nữa (node `translate(-50%,-50%)` sẽ tự canh lại giữa → giật). */
 .ob-hub-count {
-  font-size: 9.5px;
+  font-size: 12px; /* T-TAP — was 9.5px; ≥12px legibility floor on mobile */
   font-weight: 600;
   letter-spacing: 0.06em;
   color: #e0ae62;
@@ -1156,7 +1156,7 @@ body { overflow-wrap: break-word; }
 .ob-time-field:focus-visible { outline: none; border-color: rgba(224, 174, 98, 0.75); box-shadow: 0 0 0 3px rgba(224, 174, 98, 0.18); }
 .ob-time-field::-webkit-outer-spin-button,
 .ob-time-field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-.ob-soi-note { display: block; font-size: 11.5px; color: #8f897d; margin-top: 0.5rem; }
+.ob-soi-note { display: block; font-size: 12px; color: #8f897d; margin-top: 0.5rem; } /* T-TAP — was 11.5px */
 .ob-soi-err { display: block; font-size: 12px; color: #f0a08a; margin-top: 0.5rem; }
 
 /* "Đang đọc" — chòm sao hội tụ: mọi đường sáng lên + pulse chạy nhanh (~0.95s). */
@@ -1201,7 +1201,7 @@ body { overflow-wrap: break-word; }
 /* Đợt 2 — khối "giới thiệu lăng kính" (chạm nhóm sao khi chưa có kết quả tính). */
 .ob-lens-about { opacity: 0.9; }
 /* Gợi ý chạm dưới chòm sao. */
-.ob-tap-hint { margin-top: 0.85rem; font-size: 11.5px; color: #8f897d; text-align: center; }
+.ob-tap-hint { margin-top: 0.85rem; font-size: 12px; color: #8f897d; text-align: center; } /* T-TAP — was 11.5px */
 
 /* "Tâm điểm BẠN kể" — vùng đọc lăng kính NEO GIỮA chòm sao, position:absolute
    trong .ob-graph (kích thước cố định) nên KHÔNG đẩy layout. Chòm sao đứng yên,
@@ -1313,5 +1313,7 @@ body { overflow-wrap: break-word; }
 }
 @media (max-width: 480px) {
   .ob-graph { aspect-ratio: 4 / 5; max-width: 360px; }
-  .ob-hub-label { max-width: 5rem; font-size: 10px; }
+  /* T-TAP — was font-size: 10px; keep the base 12px (legibility floor),
+     only the max-width tightening remains for ≤480px. */
+  .ob-hub-label { max-width: 5rem; }
 }
