@@ -96,7 +96,11 @@ export function ActivityChecker({
       const parsed = await safeJson<CheckResult & { error?: string }>(res);
       if (!parsed.ok) throw new Error(`Phản hồi không hợp lệ (HTTP ${parsed.status})`);
       const data = parsed.data;
-      if (!data.ok) throw new Error(data.error || 'Lỗi không xác định');
+      // data.ok là PHÁN QUYẾT ngày tốt/xấu (score >= 60), KHÔNG phải cờ thành
+      // công — ok:false + score vẫn là kết quả hợp lệ ("✗ Không phù hợp").
+      // Lỗi thật của API luôn kèm trường error (vd. thiếu date → HTTP 400).
+      if (data.error) throw new Error(data.error);
+      if (typeof data.score !== 'number') throw new Error('Lỗi không xác định');
       setResult(data as CheckResult);
     } catch (e: unknown) {
       setError(describeApiError(e));
