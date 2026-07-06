@@ -109,7 +109,7 @@ const config: Config = {
           { lineHeight: '1.65', letterSpacing: '0' },
         ],
         eyebrow: [
-          '11px',
+          '12px',
           { lineHeight: '1.4', letterSpacing: '0.12em' },
         ],
         'price-amount': ['40px', { lineHeight: '1.2' }],
@@ -128,7 +128,7 @@ const config: Config = {
         //   6 · 19px · 1.45 ·  0      · "Lede" — Sub-deck paragraph
         //   7 · 16px · 1.55 ·  0      · "Body" — Default (use text-base)
         //   8 · 13px · 1.5  ·  0.02em · "Caption" — Meta / helper
-        //   9 · 11px · 1.4  ·  0.12em · "Mono" — Label (alias eyebrow)
+        //   9 · 12px · 1.4  ·  0.12em · "Mono" — Label (alias eyebrow) [T-FONT 2026-07-06: 11→12px, quyết founder nâng nhãn ≤11px]
         //
         // Display fluid via clamp on smaller breakpoints to prevent overflow
         // on mobile. Body + Mono are intentionally fixed (don't fluid-shrink
@@ -169,7 +169,7 @@ const config: Config = {
           { lineHeight: '1.5', letterSpacing: '0.02em' },
         ],
         'editorial-mono': [
-          '11px',
+          '12px',
           { lineHeight: '1.4', letterSpacing: '0.12em' },
         ],
       },
