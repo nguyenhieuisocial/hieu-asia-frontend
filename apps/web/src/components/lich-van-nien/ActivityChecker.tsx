@@ -19,6 +19,7 @@ import {
 import { safeJson } from '@/lib/safe-json';
 import { describeApiError } from '@/lib/api-error';
 import { getVietnamTodayISO } from '@/lib/vn-date';
+import { useScrollToResult } from '@/lib/use-scroll-to-result';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import type { ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 
@@ -75,8 +76,10 @@ export function ActivityChecker({
   const [loading, setLoading] = React.useState(false);
   const [result, setResult] = React.useState<CheckResult | null>(null);
   const [error, setError] = React.useState<string | null>(null);
+  const { resultRef, armScroll } = useScrollToResult(result);
 
   async function onCheck() {
+    armScroll();
     setLoading(true);
     setError(null);
     setResult(null);
@@ -158,7 +161,7 @@ export function ActivityChecker({
         )}
 
         {result && (
-          <div className="space-y-3">
+          <div ref={resultRef} className="scroll-mt-24 space-y-3">
             <div
               className={cn(
                 'rounded-lg border p-4',
