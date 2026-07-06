@@ -357,7 +357,7 @@ function TextInput({
         className="w-full resize-y rounded-md border border-gold/20 bg-card/60 px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/70 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/40"
       />
       {max !== undefined && (
-        <span className="self-end font-mono text-[11px] text-muted-foreground">
+        <span className="self-end font-mono text-[13px] text-muted-foreground">
           {value.length}/{max}
         </span>
       )}

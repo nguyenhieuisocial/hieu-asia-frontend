@@ -225,7 +225,7 @@ export default function MbtiHubPage() {
                   key={axis.id}
                   className="rounded-xl border border-border bg-muted/40 p-5"
                 >
-                  <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-gold-soft">
+                  <div className="flex items-center gap-2 font-mono text-[13px] uppercase tracking-[0.12em] text-gold-soft">
                     <span>{axis.left}</span>
                     <span className="text-muted-foreground/70">·</span>
                     <span>{axis.right}</span>

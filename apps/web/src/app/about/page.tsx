@@ -149,7 +149,7 @@ export default function AboutPage() {
         <section className="relative bg-background py-16 md:py-20 rv-up">
           <div className="mx-auto max-w-5xl px-6">
             <div className="mb-12 text-center">
-              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
+              <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
                 Sứ mệnh & tầm nhìn
               </p>
               <h2 className="mt-2 font-heading text-2xl font-bold text-foreground sm:text-3xl">
@@ -162,7 +162,7 @@ export default function AboutPage() {
                 for free, consistent with HowToStart/WhyTrust cards. */}
             <div className="grid gap-10 md:grid-cols-2">
               <MarketingCard padding="standard" bg="warm-dark-200">
-                <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
+                <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
                   Sứ mệnh
                 </p>
                 <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -173,7 +173,7 @@ export default function AboutPage() {
                 </p>
               </MarketingCard>
               <MarketingCard padding="standard" bg="warm-dark-200">
-                <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
+                <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
                   Tầm nhìn
                 </p>
                 <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">

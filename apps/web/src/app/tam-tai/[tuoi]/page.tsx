@@ -137,7 +137,7 @@ export default async function TamTaiConGiapPage({
 
           {/* FAQ */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">
@@ -152,7 +152,7 @@ export default async function TamTaiConGiapPage({
 
           {/* Email */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Nhận nhắc theo mùa cho tuổi {z.ten}
             </h2>
             <div className="mt-4">

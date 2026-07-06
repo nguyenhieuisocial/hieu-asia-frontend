@@ -75,7 +75,7 @@ export function AssetCard({ asset }: Props) {
             <div className="text-sm font-semibold">{asset.title}</div>
             <div className="mt-0.5 text-xs text-muted-foreground">{asset.caption}</div>
           </div>
-          <span className="shrink-0 rounded bg-gold/10 px-2 py-0.5 text-[10px] uppercase text-gold">
+          <span className="shrink-0 rounded bg-gold/10 px-2 py-0.5 text-[12px] uppercase text-gold">
             {TYPE_LABEL[asset.type]}
           </span>
         </div>
@@ -83,7 +83,7 @@ export function AssetCard({ asset }: Props) {
         {asset.platforms && (
           <div className="flex flex-wrap gap-1">
             {asset.platforms.map((p) => (
-              <span key={p} className="rounded bg-muted/5 px-2 py-0.5 text-[10px] text-muted-foreground">
+              <span key={p} className="rounded bg-muted/5 px-2 py-0.5 text-[12px] text-muted-foreground">
                 {p}
               </span>
             ))}

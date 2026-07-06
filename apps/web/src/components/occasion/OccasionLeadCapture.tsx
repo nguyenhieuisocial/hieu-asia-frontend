@@ -122,7 +122,7 @@ export function OccasionLeadCapture({
           {error}
         </p>
       )}
-      <p className="text-[11px] leading-relaxed text-muted-foreground">
+      <p className="text-[13px] leading-relaxed text-muted-foreground">
         Tự nguyện — không spam, huỷ bất cứ lúc nào. Email không chia sẻ cho bên thứ ba (xem{' '}
         <a href="/privacy" className="underline hover:text-gold">
           Chính sách bảo mật

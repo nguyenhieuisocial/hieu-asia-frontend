@@ -114,7 +114,7 @@ export function StreakCard({ variant = 'card' }: { variant?: 'card' | 'compact' 
         </p>
         {ms.reached && (
           <span
-            className={`inline-flex items-center gap-1 rounded-full border border-gold/40 px-2 py-0.5 text-[11px] font-medium text-gold-700 ${
+            className={`inline-flex items-center gap-1 rounded-full border border-gold/40 px-2 py-0.5 text-[13px] font-medium text-gold-700 ${
               ms.justHit ? 'bg-gold/15' : ''
             }`}
           >
@@ -178,13 +178,13 @@ export function StreakCard({ variant = 'card' }: { variant?: 'card' | 'compact' 
             Chuỗi ngày của bạn
           </h2>
           {ms.reached && (
-            <span className="inline-flex items-center gap-1 rounded-full border border-gold/40 px-2 py-0.5 text-[11px] font-medium text-gold-700">
+            <span className="inline-flex items-center gap-1 rounded-full border border-gold/40 px-2 py-0.5 text-[13px] font-medium text-gold-700">
               <span aria-hidden>🏅</span>
               {ms.reached.label}
             </span>
           )}
         </div>
-        <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+        <span className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
           Điểm danh
         </span>
       </div>

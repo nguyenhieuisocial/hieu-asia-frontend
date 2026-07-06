@@ -68,10 +68,10 @@ export function CalendarMonth({ year, month, days, onSelectDay, selectedDay, cla
                 )}
               >
                 <div className="text-sm font-semibold">{cell.solarDay}</div>
-                <div className="text-[10px] text-foreground/70 leading-tight">
+                <div className="text-[12px] text-foreground/70 leading-tight">
                   {cell.lunarDay}/{cell.lunarMonth}
                 </div>
-                <div className="text-[9px] mt-0.5">
+                <div className="text-[12px] mt-0.5">
                   {cell.isHoangDao ? (
                     <span className="text-amber-700 dark:text-amber-300">Hoàng</span>
                   ) : cell.isHacDao ? (

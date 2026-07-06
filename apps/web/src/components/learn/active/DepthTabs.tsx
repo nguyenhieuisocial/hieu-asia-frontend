@@ -43,7 +43,7 @@ export function DepthTabs({ topicId, concept, levels, defaultLevelId }: DepthTab
   return (
     <div className="rounded-card-editorial border border-border bg-card/40 p-5 sm:p-6">
       <div className="mb-4 flex flex-col gap-1">
-        <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
+        <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
           Cùng một ý · ba độ sâu
         </p>
         <p className="font-heading text-base text-foreground sm:text-lg">{concept}</p>

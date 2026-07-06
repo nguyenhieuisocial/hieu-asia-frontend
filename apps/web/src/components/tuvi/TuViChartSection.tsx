@@ -124,7 +124,7 @@ export function TuViChartSection({
     <section className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold/80">
+          <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold/80">
             Lá số 12 cung · Bắc phái 121 sao
           </p>
           <h2 className="mt-1 font-heading text-2xl font-semibold text-foreground sm:text-3xl">

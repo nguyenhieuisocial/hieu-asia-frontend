@@ -134,7 +134,7 @@ export default function LaSoBatTuPage() {
           {/* 4 trụ */}
           <RevealOnScroll>
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
               Bốn trụ nói lên điều gì
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -156,7 +156,7 @@ export default function LaSoBatTuPage() {
           {/* Thập Thần */}
           <RevealOnScroll>
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
               Thập Thần — 10 mối quan hệ với Nhật Chủ
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -177,7 +177,7 @@ export default function LaSoBatTuPage() {
           {/* brand note */}
           <RevealOnScroll>
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">Một lời nhắn</h2>
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">Một lời nhắn</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               Tám chữ là một <strong>tấm gương để hiểu mình</strong>, không phải bản án số mệnh. Việc lập trụ
               là tính toán xác định; cân bằng ngũ hành chỉ gợi ý nơi bạn mạnh, nơi nên bù đắp. Bạn vẫn là người
@@ -190,7 +190,7 @@ export default function LaSoBatTuPage() {
           {/* FAQ */}
           <RevealOnScroll>
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">
@@ -206,7 +206,7 @@ export default function LaSoBatTuPage() {
 
           <RevealOnScroll>
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
               Nhận nhắc theo mùa
             </h2>
             <div className="mt-4">

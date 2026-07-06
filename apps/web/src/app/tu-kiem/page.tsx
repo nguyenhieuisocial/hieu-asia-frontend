@@ -88,7 +88,7 @@ export default function TuKiemPage() {
                   >
                     <CardContent className="p-4">
                       <p className="mb-3 text-sm leading-relaxed text-foreground/90">
-                        <span className="mr-2 font-mono text-[11px] text-muted-foreground">{i + 1}.</span>
+                        <span className="mr-2 font-mono text-[13px] text-muted-foreground">{i + 1}.</span>
                         {stmt}
                       </p>
                       <div className="flex gap-2">

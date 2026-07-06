@@ -70,7 +70,7 @@ export function StartupPath() {
     <section aria-labelledby="startup-path-h" className="bg-background">
       <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
         <div className="mb-8 max-w-2xl">
-          <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+          <span className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
             Lộ trình khởi đầu
           </span>
           <h2
@@ -106,7 +106,7 @@ export function StartupPath() {
                       {done ? <Check className="h-4 w-4" /> : s.n}
                     </span>
                     {s.reward && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wide text-primary">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 font-mono text-[12px] uppercase tracking-wide text-primary">
                         <Gift className="h-3 w-3" />
                         Quà
                       </span>
@@ -119,7 +119,7 @@ export function StartupPath() {
                   {s.reward && (
                     <p className="text-xs font-medium text-primary">{s.reward}</p>
                   )}
-                  <span className="mt-auto flex items-center gap-1.5 pt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-primary transition-colors group-hover:text-foreground">
+                  <span className="mt-auto flex items-center gap-1.5 pt-1 font-mono text-[13px] uppercase tracking-[0.12em] text-primary transition-colors group-hover:text-foreground">
                     {done ? 'Xong — xem lại' : s.cta}
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                   </span>

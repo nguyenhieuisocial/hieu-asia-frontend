@@ -73,7 +73,7 @@ function Cell({
 }) {
   return (
     <div className={`flex min-w-0 flex-col gap-1 px-4 py-3 sm:px-5 ${className}`}>
-      <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+      <span className="font-mono text-[13px] uppercase tracking-[0.12em] text-muted-foreground">
         {label}
       </span>
       <div className="min-w-0">{children}</div>
@@ -112,7 +112,7 @@ export function AstroTickerLive() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/60 opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
                 </span>
-                <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+                <span className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
                   Thiên văn
                   <br className="hidden sm:block" /> hôm nay
                 </span>
@@ -134,7 +134,7 @@ export function AstroTickerLive() {
                     {state.currentHour.canChi}
                   </span>
                   <span
-                    className={`font-mono text-[11px] uppercase tracking-wide ${
+                    className={`font-mono text-[13px] uppercase tracking-wide ${
                       state.isCurrentGood ? 'text-[color:var(--hanh-moc,#6B8154)]' : 'text-muted-foreground'
                     }`}
                   >
@@ -186,7 +186,7 @@ export function AstroTickerLive() {
 
               <Link
                 href="/gio-hoang-dao"
-                className="group col-span-2 flex w-full shrink-0 items-center gap-1.5 self-center whitespace-nowrap px-4 py-3 font-mono text-[11px] uppercase tracking-[0.12em] text-primary transition-colors hover:text-foreground active:text-foreground sm:col-auto sm:ml-auto sm:w-auto sm:px-5"
+                className="group col-span-2 flex w-full shrink-0 items-center gap-1.5 self-center whitespace-nowrap px-4 py-3 font-mono text-[13px] uppercase tracking-[0.12em] text-primary transition-colors hover:text-foreground active:text-foreground sm:col-auto sm:ml-auto sm:w-auto sm:px-5"
               >
                 Xem giờ hoàng đạo
                 <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />

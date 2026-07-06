@@ -90,7 +90,7 @@ export function TierProgress({ tier, tiers }: Props) {
                   <span style={{ color: t.badge_color }} className="font-semibold">
                     {t.name}
                   </span>
-                  {active && <span className="text-[10px] text-gold">Hiện tại</span>}
+                  {active && <span className="text-[12px] text-gold">Hiện tại</span>}
                 </div>
                 <div className="mt-1 text-muted-foreground">
                   ≥ {t.min_monthly_conversions} lượt giới thiệu/tháng

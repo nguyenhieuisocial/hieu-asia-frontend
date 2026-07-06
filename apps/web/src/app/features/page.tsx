@@ -392,14 +392,14 @@ function FeatureBadge({ badge }: { badge: Exclude<Badge, null> }) {
       // in light, `text-gold` in dark. Wave 60.37.c HIGH-6 (sub-agent B):
       // drop `bg-gold/10` cream-on-cream blob, keep `border-gold/60` only —
       // reads more architectural and competes less with the card's own bg.
-      <span className="inline-flex items-center rounded-full border border-gold/60 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700 dark:text-gold">
+      <span className="inline-flex items-center rounded-full border border-gold/60 px-2 py-0.5 font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700 dark:text-gold">
         Beta
       </span>
     );
   }
   return (
     // Wave 60.37.c HIGH-6: same border-only treatment for symmetry.
-    <span className="inline-flex items-center rounded-full border border-jade/60 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-jade-300">
+    <span className="inline-flex items-center rounded-full border border-jade/60 px-2 py-0.5 font-mono text-[12px] uppercase tracking-[0.12em] text-jade-300">
       Mới
     </span>
   );
@@ -682,7 +682,7 @@ export default function FeaturesPage() {
                     Wave 60.56 P3.3: italic verb spans on lead noun match the
                     MarketingHero idiom (Instrument-serif italic in gold-soft). */}
                 <header className="mx-auto max-w-2xl text-center">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700 sm:text-xs">
+                  <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700 sm:text-xs">
                     {bucket.eyebrow}
                   </p>
                   <h2 className="mt-3 font-heading text-2xl font-bold leading-tight tracking-tight text-foreground sm:text-3xl">
@@ -732,7 +732,7 @@ export default function FeaturesPage() {
           />
           <OrnamentDivider className="mb-12" glyph="❖" />
           <div className="mx-auto max-w-3xl px-6 text-center">
-            <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700 sm:text-xs">
+            <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700 sm:text-xs">
               Bắt đầu
             </p>
             <h2 className="mt-4 text-balance font-heading text-3xl font-bold text-foreground sm:text-4xl">

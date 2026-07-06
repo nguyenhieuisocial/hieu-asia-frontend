@@ -78,10 +78,10 @@ export default function KinhDichMeaningsHubPage() {
                       className="flex h-full items-baseline justify-between gap-3 rounded-lg border border-border bg-card/40 px-4 py-2.5 transition-colors hover:border-gold/40 hover:bg-gold/5"
                     >
                       <span className="font-medium text-foreground">
-                        <span className="font-mono text-[11px] text-gold/80">{String(q.id).padStart(2, '0')}</span>{' '}
+                        <span className="font-mono text-[13px] text-gold/80">{String(q.id).padStart(2, '0')}</span>{' '}
                         {q.nameVi}
                       </span>
-                      <span className="shrink-0 text-right text-[11px] leading-snug text-muted-foreground">
+                      <span className="shrink-0 text-right text-[13px] leading-snug text-muted-foreground">
                         {up && down ? `${up.tuong}/${down.tuong}` : ''} · {q.keyTags[0]}
                       </span>
                     </Link>

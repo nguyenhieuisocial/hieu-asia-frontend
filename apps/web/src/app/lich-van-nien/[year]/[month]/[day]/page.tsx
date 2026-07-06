@@ -151,7 +151,7 @@ export default async function ArchiveDayPage({
             <span className="text-muted-foreground">{dateLabel}</span>
           </nav>
 
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
             {data.solarDate?.weekday ?? '—'}
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -203,7 +203,7 @@ export default async function ArchiveDayPage({
               <Stat label="Can Chi ngày" value={data.canChi?.day ?? '—'} />
               <Stat label="Trực ngày" value={data.trucNgay ?? '—'} />
               <div className="sm:col-span-2">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                <p className="font-mono text-[12px] uppercase tracking-widest text-muted-foreground">
                   Phân loại
                 </p>
                 <p className="mt-1 font-heading text-lg font-semibold">
@@ -272,7 +272,7 @@ export default async function ArchiveDayPage({
               <CardContent className="grid gap-3 sm:grid-cols-2">
                 {goodStars.length > 0 && (
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-jade-50">
+                    <p className="font-mono text-[12px] uppercase tracking-widest text-jade-50">
                       Sao tốt
                     </p>
                     <div className="mt-2 flex flex-wrap gap-1.5">
@@ -284,7 +284,7 @@ export default async function ArchiveDayPage({
                 )}
                 {badStars.length > 0 && (
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-red-300">
+                    <p className="font-mono text-[12px] uppercase tracking-widest text-red-300">
                       Sao xấu
                     </p>
                     <div className="mt-2 flex flex-wrap gap-1.5">
@@ -363,7 +363,7 @@ export default async function ArchiveDayPage({
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
+      <p className="font-mono text-[12px] uppercase tracking-widest text-muted-foreground">{label}</p>
       <p className="mt-1 font-heading text-lg font-semibold text-foreground">{value}</p>
     </div>
   );

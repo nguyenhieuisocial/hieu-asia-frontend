@@ -137,7 +137,7 @@ export function UnderstandingChecklist({ topicId, facets }: UnderstandingCheckli
       </p>
 
       <div className="mt-4" aria-hidden={!hydrated}>
-        <div className="mb-1.5 flex items-center justify-between font-mono text-[11px] text-muted-foreground">
+        <div className="mb-1.5 flex items-center justify-between font-mono text-[13px] text-muted-foreground">
           <span>Tự tin giải thích</span>
           <span aria-live="polite">
             {done}/{total}
@@ -168,7 +168,7 @@ export function UnderstandingChecklist({ topicId, facets }: UnderstandingCheckli
                   onChange={() => toggle(f.id)}
                 />
                 <span className="min-w-0">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
+                  <span className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
                     {f.facet}
                   </span>
                   <span

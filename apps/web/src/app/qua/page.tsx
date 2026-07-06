@@ -55,7 +55,7 @@ export default function QuaPage() {
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[360px] bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.14)_0%,_transparent_60%)]"
           />
           <div className="mx-auto max-w-3xl px-4 pt-14 pb-8 text-center sm:px-6 sm:pt-20">
-            <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+            <span className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
               Quà của bạn
             </span>
             <h1 className="mt-3 font-marketing-display text-3xl leading-tight text-foreground sm:text-5xl">

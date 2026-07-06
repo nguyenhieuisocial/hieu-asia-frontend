@@ -85,7 +85,7 @@ export function AccountSection({ userId }: AccountSectionProps) {
 function Field({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="rounded-lg border border-border bg-card/30 px-3 py-2">
-      <div className="text-[10px] font-semibold uppercase tracking-widest text-foreground/40">{label}</div>
+      <div className="text-[12px] font-semibold uppercase tracking-widest text-foreground/40">{label}</div>
       <div className="mt-1 text-sm">{value}</div>
     </div>
   );

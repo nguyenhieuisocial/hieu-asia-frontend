@@ -415,7 +415,7 @@ export default function PrivacyPage() {
                 <Link href="/account" className="text-gold-700 underline">
                   /account → Xuất dữ liệu
                 </Link>
-                . (Wired qua Worker endpoint <code className="font-mono text-[11px]">/user/export</code>.)
+                . (Wired qua Worker endpoint <code className="font-mono text-[13px]">/user/export</code>.)
               </li>
               <li>
                 <strong className="text-foreground">Quyền hạn chế xử lý (restriction):</strong>{' '}
@@ -528,7 +528,7 @@ export default function PrivacyPage() {
                 <tbody className="text-foreground/80">
                   {COOKIES.map((c) => (
                     <tr key={c.name} className="border-b border-border align-top">
-                      <td className="px-2 py-2.5 font-mono text-[11px]">{c.name}</td>
+                      <td className="px-2 py-2.5 font-mono text-[13px]">{c.name}</td>
                       <td className="px-2 py-2.5">{c.purpose}</td>
                       <td className="px-2 py-2.5">{c.retention}</td>
                       <td className="px-2 py-2.5 capitalize">{c.category}</td>

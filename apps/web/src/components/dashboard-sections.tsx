@@ -78,7 +78,7 @@ function StatusBadge({ status }: { status: DashboardReport['status'] }) {
   return (
     <span
       className={cn(
-        'rounded-full px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider',
+        'rounded-full px-2 py-0.5 font-mono text-[12px] uppercase tracking-wider',
         m.cls,
       )}
     >

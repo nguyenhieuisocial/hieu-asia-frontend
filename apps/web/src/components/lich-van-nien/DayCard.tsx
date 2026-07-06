@@ -140,7 +140,7 @@ export function DayCard({ day, className }: Props) {
               >
                 <div className="font-semibold">{h.name}</div>
                 <div className="opacity-80">{h.canChi}</div>
-                <div className="mt-1 text-[11px]">
+                <div className="mt-1 text-[13px]">
                   {h.type === 'hoang_dao' ? '✦ Hoàng đạo' : '○ Hắc đạo'} — {h.star}
                 </div>
               </div>

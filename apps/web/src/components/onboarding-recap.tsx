@@ -77,7 +77,7 @@ export function OnboardingRecap() {
   return (
     <div className="mt-6 space-y-4">
       <div className="rounded-lg border border-gold/20 bg-card/40 p-4">
-        <p className="font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-gold-700">
+        <p className="font-mono text-[13px] font-medium uppercase tracking-[0.12em] text-gold-700">
           Bạn đã chọn:
         </p>
         <ul className="mt-3 space-y-2 text-sm text-foreground/80">

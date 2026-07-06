@@ -86,7 +86,7 @@ export default function SaoHanPage() {
 
           {/* 9 sao Cửu Diệu */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               9 sao Cửu Diệu
             </h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -100,7 +100,7 @@ export default function SaoHanPage() {
                         {s.name}
                       </span>
                     </div>
-                    <p className="mt-0.5 text-[11px] uppercase tracking-wide text-muted-foreground">
+                    <p className="mt-0.5 text-[13px] uppercase tracking-wide text-muted-foreground">
                       {TYPE_LABEL[s.type]}
                     </p>
                     <p className="mt-1.5 text-xs leading-relaxed text-foreground/60">
@@ -115,7 +115,7 @@ export default function SaoHanPage() {
 
           {/* Nguồn gốc Cửu Diệu — lớp "nói có sách": thiên văn thật đằng sau phong tục */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Từ thiên văn đến phong tục — Cửu Diệu là gì?
             </h2>
             <div className="mt-3 space-y-3 text-sm leading-relaxed text-muted-foreground">
@@ -145,7 +145,7 @@ export default function SaoHanPage() {
 
           {/* Note về cúng sao — neutral framing */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Một lời nhắn
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -158,7 +158,7 @@ export default function SaoHanPage() {
 
           {/* FAQ */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">
@@ -172,7 +172,7 @@ export default function SaoHanPage() {
           </section>
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Xem sao hạn theo tuổi (con giáp)
             </h2>
             <div className="mt-3 flex flex-wrap gap-x-1.5 gap-y-1 text-sm sm:gap-x-3">
@@ -189,7 +189,7 @@ export default function SaoHanPage() {
           </section>
 
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Nhận nhắc theo mùa
             </h2>
             <div className="mt-4">

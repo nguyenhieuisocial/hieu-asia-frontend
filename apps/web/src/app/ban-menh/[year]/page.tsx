@@ -154,7 +154,7 @@ export default async function BanMenhYearPage({
 
         {/* Hero */}
         <section className="relative mx-auto max-w-3xl px-6 pb-10 pt-6 sm:pt-8">
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
             Ngũ hành bản mệnh · Tuổi {d.canChi}
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">

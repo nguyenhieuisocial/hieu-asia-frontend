@@ -150,7 +150,7 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
             Sửa
           </button>
         </div>
-        <p className="mt-2 text-[11px] text-muted-foreground">
+        <p className="mt-2 text-[13px] text-muted-foreground">
           Đánh giá đúng/không được gửi ẩn danh để cải thiện chất lượng luận
           giải. Ghi chú tự do của bạn giữ trên máy, không gửi đi.
         </p>
@@ -255,7 +255,7 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
         </div>
       )}
 
-      <p className="mt-3 text-[11px] text-muted-foreground">
+      <p className="mt-3 text-[13px] text-muted-foreground">
         Đánh giá đúng/không được gửi ẩn danh để cải thiện chất lượng luận giải.
         Ghi chú tự do của bạn giữ trên máy, không gửi đi.
       </p>

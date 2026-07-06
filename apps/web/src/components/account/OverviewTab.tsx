@@ -211,12 +211,12 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
             key={s.label}
             className="rounded-xl border border-border bg-card/40 p-4"
           >
-            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+            <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
               {s.label}
             </p>
             <p className="mt-2 font-heading text-2xl text-foreground">{s.value}</p>
             {s.hint && (
-              <p className="mt-1 text-[11px] text-foreground/40">{s.hint}</p>
+              <p className="mt-1 text-[13px] text-foreground/40">{s.hint}</p>
             )}
           </div>
         ))}
@@ -261,7 +261,7 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
             <span className="mt-0.5 block text-xs text-muted-foreground">
               Còn {Math.max(1, 3 - manualState.progress)} bước nữa để mở khoá — một trang tổng hợp về chính bạn (in &amp; chia sẻ được).
             </span>
-            <span className="mt-1 block text-[11px] text-gold/70">
+            <span className="mt-1 block text-[13px] text-gold/70">
               {manualState.progress}/3
             </span>
           </span>
@@ -327,7 +327,7 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
                   <>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm text-foreground/90">{a.label}</p>
-                      <p className="mt-0.5 text-[11px] text-muted-foreground">{relTime(a.ts)}</p>
+                      <p className="mt-0.5 text-[13px] text-muted-foreground">{relTime(a.ts)}</p>
                     </div>
                     {a.href && (
                       <ChevronRight

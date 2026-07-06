@@ -137,7 +137,7 @@ export default function TuVi2026Page() {
         />
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12 pt-6 sm:pt-8">
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
             Năm Bính Ngọ · hành Hỏa · 17/02/2026 → 05/02/2027
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -218,7 +218,7 @@ export default function TuVi2026Page() {
                 key={m.name}
                 className="rounded-lg border border-border bg-card/40 p-3"
               >
-                <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">
+                <p className="font-mono text-[12px] uppercase tracking-widest text-gold/80">
                   {m.name}
                 </p>
                 <p className="mt-1 text-sm leading-relaxed text-foreground/80">{m.theme}</p>

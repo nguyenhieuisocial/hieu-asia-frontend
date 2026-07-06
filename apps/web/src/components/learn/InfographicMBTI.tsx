@@ -61,7 +61,7 @@ export function InfographicMBTI() {
               }`}
             >
               <div className={`font-heading text-base font-bold ${style.text}`}>{t.code}</div>
-              <div className="text-[11px] text-muted-foreground">{t.nickname}</div>
+              <div className="text-[13px] text-muted-foreground">{t.nickname}</div>
             </button>
           );
         })}

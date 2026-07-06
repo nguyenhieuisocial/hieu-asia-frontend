@@ -137,7 +137,7 @@ export function MbtiTool() {
         <div className="space-y-4">
           <Card className="border-gold/30 bg-gradient-to-br from-gold/10 to-transparent">
             <CardContent className="p-6 text-center">
-              <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+              <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
                 Kiểu của bạn
               </div>
               <div className="mt-2 font-heading text-5xl font-bold tracking-[0.15em] text-gold-700">
@@ -163,7 +163,7 @@ export function MbtiTool() {
                   <p className="font-heading text-xl text-foreground">
                     {meta.code} · {meta.nick}
                   </p>
-                  <p className="mt-0.5 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                  <p className="mt-0.5 font-mono text-[13px] uppercase tracking-[0.14em] text-muted-foreground">
                     {meta.groupMeta.name} · {meta.groupMeta.en}
                   </p>
                   <p className="mt-2 text-sm italic leading-relaxed text-muted-foreground">
@@ -173,7 +173,7 @@ export function MbtiTool() {
                 <p className="text-sm leading-relaxed text-foreground/85">{meta.overview}</p>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-emerald-300">
+                    <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-emerald-300">
                       Điểm mạnh nổi bật
                     </div>
                     <ul className="mt-1.5 space-y-1 text-sm leading-relaxed text-foreground/85">
@@ -188,7 +188,7 @@ export function MbtiTool() {
                     </ul>
                   </div>
                   <div>
-                    <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-amber-300">
+                    <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-amber-300">
                       Hướng phát triển
                     </div>
                     <ul className="mt-1.5 space-y-1 text-sm leading-relaxed text-foreground/85">
@@ -203,7 +203,7 @@ export function MbtiTool() {
                     </ul>
                   </div>
                 </div>
-                <p className="text-[11px] leading-relaxed text-muted-foreground">
+                <p className="text-[13px] leading-relaxed text-muted-foreground">
                   Đây là <strong>xu hướng</strong> của nhóm {meta.code}, không phải lời phán cố định —
                   ai cũng có thể rèn giũa theo hướng mình muốn.
                 </p>
@@ -226,7 +226,7 @@ export function MbtiTool() {
               <Card key={m.axis} className="border-border bg-card/50">
                 <CardContent className="p-5">
                   <div className="flex items-baseline justify-between gap-3">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                    <span className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
                       {m.label}
                     </span>
                     <span className="font-heading text-sm text-gold-700">
@@ -234,7 +234,7 @@ export function MbtiTool() {
                       <span className="text-xs text-muted-foreground">· nghiêng {strength}%</span>
                     </span>
                   </div>
-                  <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground">
+                  <div className="mt-2 flex items-center justify-between text-[13px] text-muted-foreground">
                     <span className={positiveChosen ? 'font-medium text-foreground' : ''}>{m.pos} ({ax.positive})</span>
                     <span className={!positiveChosen ? 'font-medium text-foreground' : ''}>{m.neg} ({ax.negative})</span>
                   </div>
@@ -267,7 +267,7 @@ export function MbtiTool() {
           {!paywall && (readingLoading || reading) && (
             <Card className="relative overflow-hidden border border-gold/20 bg-gradient-to-br from-gold/5 to-transparent">
               <CardContent className="p-6">
-                <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
                   Luận giải sâu
                 </div>
                 {readingLoading && !reading ? (
@@ -296,7 +296,7 @@ export function MbtiTool() {
                     </ReactMarkdown>
                   </article>
                 ) : null}
-                <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
+                <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">
                   Cơ sở: khung loại hình tâm lý (kiểu Jung). Mô tả xu hướng, không phán định mệnh.
                 </p>
               </CardContent>

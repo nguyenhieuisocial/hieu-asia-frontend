@@ -330,7 +330,7 @@ function DrawerGroup({
         {sections
           ? sections.map((s) => (
               <div key={s.label} className="mt-1.5 flex flex-col gap-0.5 first:mt-0">
-                <p className="px-3 pt-1 font-mono text-[10px] uppercase tracking-[0.12em] text-primary">
+                <p className="px-3 pt-1 font-mono text-[12px] uppercase tracking-[0.12em] text-primary">
                   {s.label}
                 </p>
                 {s.links.map((l) => (
@@ -394,7 +394,7 @@ function MobileDrawer({
         >
           {isAuthed && userEmail && (
             <div className="mb-2 rounded-md border border-primary/15 bg-primary/5 px-3 py-2">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-primary/85">
+              <p className="font-mono text-[12px] uppercase tracking-widest text-primary/85">
                 Đã đăng nhập
               </p>
               <p className="mt-0.5 truncate text-xs text-foreground/85">{userEmail}</p>

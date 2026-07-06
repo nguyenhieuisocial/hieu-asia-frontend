@@ -136,7 +136,7 @@ export default function BangChungPage() {
 
           <RevealOnScroll>
           <section className="rounded-card-editorial border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
               Cách hoạt động — 3 bước
             </h2>
             <div className="mt-4 grid gap-3 sm:grid-cols-3">
@@ -153,7 +153,7 @@ export default function BangChungPage() {
 
           <RevealOnScroll>
           <section className="rounded-card-editorial border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">

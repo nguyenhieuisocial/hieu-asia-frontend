@@ -21,7 +21,7 @@ export function ResultDisclaimer({ children, className }: ResultDisclaimerProps)
       role="note"
       className={cn('flex items-center justify-center', className)}
     >
-      <p className="rounded-full border border-gold/20 bg-card/50 px-4 py-1.5 text-center text-[11px] leading-snug text-muted-foreground backdrop-blur-sm sm:text-xs">
+      <p className="rounded-full border border-gold/20 bg-card/50 px-4 py-1.5 text-center text-[13px] leading-snug text-muted-foreground backdrop-blur-sm sm:text-xs">
         {children ??
           'Kết quả mang tính tham khảo — không thay thế tư vấn y tế, pháp lý hay tài chính.'}
       </p>

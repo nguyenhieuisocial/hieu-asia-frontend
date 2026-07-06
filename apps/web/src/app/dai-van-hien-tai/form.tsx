@@ -157,7 +157,7 @@ export function DaiVanHienTaiForm() {
             <span className="text-muted-foreground">Đại vận hiện tại</span>
           </nav>
 
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
             Free tool · Chu kỳ 10 năm
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -241,7 +241,7 @@ export function DaiVanHienTaiForm() {
               <CardContent className="space-y-5">
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="rounded-md border border-gold/30 bg-gold/[0.05] p-4">
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">
+                    <p className="font-mono text-[12px] uppercase tracking-widest text-gold/80">
                       Tuổi hiện tại
                     </p>
                     <p className="mt-1 font-heading text-2xl font-bold text-gold">
@@ -249,7 +249,7 @@ export function DaiVanHienTaiForm() {
                     </p>
                   </div>
                   <div className="rounded-md border border-gold/30 bg-gold/[0.05] p-4">
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-gold/80">
+                    <p className="font-mono text-[12px] uppercase tracking-widest text-gold/80">
                       Đại vận
                     </p>
                     <p className="mt-1 font-heading text-2xl font-bold text-gold">
@@ -259,7 +259,7 @@ export function DaiVanHienTaiForm() {
                 </div>
 
                 <div className="rounded-md border border-border bg-card/40 p-4">
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  <p className="font-mono text-[12px] uppercase tracking-widest text-muted-foreground">
                     Cung chủ đại vận
                   </p>
                   <p className="mt-1 font-heading text-xl font-semibold text-foreground">
@@ -273,7 +273,7 @@ export function DaiVanHienTaiForm() {
 
                 {result.palace.majorStars.length > 0 && (
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-gold/85">
+                    <p className="font-mono text-[12px] uppercase tracking-widest text-gold/85">
                       Chính tinh tại đại vận
                     </p>
                     <div className="mt-2 flex flex-wrap gap-2">

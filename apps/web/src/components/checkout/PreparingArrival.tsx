@@ -87,7 +87,7 @@ export function PreparingArrival({
         dành riêng cho bạn.
       </p>
 
-      <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.12em] text-cream-500">
+      <p className="mt-8 font-mono text-[13px] uppercase tracking-[0.12em] text-cream-500">
         Bước cuối · ~3 giây
       </p>
     </div>

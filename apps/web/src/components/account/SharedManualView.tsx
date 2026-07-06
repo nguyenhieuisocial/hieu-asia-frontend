@@ -57,7 +57,7 @@ export function SharedManualView({ manual }: { manual: OperatingManual }) {
 
       <article className="pom-print-root mx-auto w-full max-w-3xl rounded-2xl border border-border bg-card/40 p-6 sm:p-10">
         <header className="border-b border-gold/15 pb-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
             Sổ tay cá nhân (chia sẻ)
           </p>
           <h1 className="mt-2 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
@@ -77,7 +77,7 @@ export function SharedManualView({ manual }: { manual: OperatingManual }) {
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
             {id.birthDate && <span>Sinh {formatDateVN(id.birthDate)}</span>}
             {id.chartHash && (
-              <span className="font-mono text-[11px] uppercase tracking-wider text-gold/85">
+              <span className="font-mono text-[13px] uppercase tracking-wider text-gold/85">
                 #{id.chartHash}
               </span>
             )}

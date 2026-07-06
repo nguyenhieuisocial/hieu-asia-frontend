@@ -198,7 +198,7 @@ export function LearnArticleView({
         </nav>
 
         <header className="mb-10 max-w-2xl">
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
             {eyebrow}
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
@@ -208,7 +208,7 @@ export function LearnArticleView({
             {standfirst}
           </p>
           {readMeta ? (
-            <p className="mt-5 border-t border-border pt-4 font-mono text-[11px] tracking-[0.06em] text-muted-foreground">
+            <p className="mt-5 border-t border-border pt-4 font-mono text-[13px] tracking-[0.06em] text-muted-foreground">
               {readMeta}
             </p>
           ) : null}
@@ -221,7 +221,7 @@ export function LearnArticleView({
             aria-label="Mục lục bài viết"
             className="hidden lg:block lg:sticky lg:top-24 lg:self-start"
           >
-            <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+            <p className="mb-3 font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
               Trong bài
             </p>
             <ul className="space-y-px">
@@ -241,7 +241,7 @@ export function LearnArticleView({
                           : 'border-border text-muted-foreground hover:text-foreground',
                       )}
                     >
-                      <span aria-hidden="true" className="text-[10px] opacity-70">
+                      <span aria-hidden="true" className="text-[12px] opacity-70">
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       <span>{item.label}</span>
@@ -305,7 +305,7 @@ export function LearnArticleView({
             {/* Related lenses */}
             {relatedLenses.length > 0 ? (
               <section aria-label={relatedHeading} className="pt-2">
-                <h2 className="mb-4 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+                <h2 className="mb-4 font-mono text-[13px] uppercase tracking-[0.12em] text-muted-foreground">
                   {relatedHeading}
                 </h2>
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -315,7 +315,7 @@ export function LearnArticleView({
                       href={lens.href}
                       className="group rounded-card-editorial border border-border bg-card/40 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-gold/40"
                     >
-                      <p className="font-mono text-[10px] uppercase tracking-[0.1em] text-gold-700">
+                      <p className="font-mono text-[12px] uppercase tracking-[0.1em] text-gold-700">
                         {lens.eyebrow}
                       </p>
                       <p className="mt-1.5 font-heading text-base text-foreground group-hover:text-gold">

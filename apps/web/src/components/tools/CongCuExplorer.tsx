@@ -77,7 +77,7 @@ function ToolCard({ tool, eyebrow }: { tool: ExplorerTool; eyebrow?: string }) {
       </span>
       <div className="flex flex-col gap-1">
         {eyebrow && (
-          <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-primary">
+          <span className="font-mono text-[12px] uppercase tracking-[0.12em] text-primary">
             {eyebrow}
           </span>
         )}
@@ -203,7 +203,7 @@ export function CongCuExplorer({
                 <a
                   key={c.id}
                   href={`#${c.id}`}
-                  className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 font-mono text-[11px] uppercase tracking-wide text-muted-foreground transition-all active:scale-[0.98] hover:border-primary/40 hover:bg-primary/[0.06] hover:text-primary"
+                  className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 font-mono text-[13px] uppercase tracking-wide text-muted-foreground transition-all active:scale-[0.98] hover:border-primary/40 hover:bg-primary/[0.06] hover:text-primary"
                 >
                   <span aria-hidden="true">{c.icon}</span>
                   {c.label}
@@ -218,7 +218,7 @@ export function CongCuExplorer({
       {isSearching ? (
         /* ── Chế độ tìm kiếm: 1 lưới phẳng ── */
         <>
-          <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+          <p className="mt-4 font-mono text-[13px] uppercase tracking-[0.12em] text-muted-foreground">
             {filtered.length} / {tools.length} công cụ
           </p>
           {filtered.length > 0 ? (
@@ -252,7 +252,7 @@ export function CongCuExplorer({
         <>
           {/* Lá số miễn phí — CHỈ mobile/tablet (desktop đã có panel hero bên phải) */}
           <div className="mt-8 lg:hidden">
-            <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+            <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
               {featured.eyebrow}
             </p>
             <h2 className="mt-2 font-heading text-xl font-semibold text-foreground sm:text-2xl">
@@ -271,7 +271,7 @@ export function CongCuExplorer({
           {/* Năm lăng kính — luôn hiện */}
           {lensTools.length > 0 && (
             <section aria-label={featured.lensesHeading} className="mt-8">
-              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+              <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-muted-foreground">
                 {featured.lensesHeading}
               </p>
               <ul

@@ -50,7 +50,7 @@ export function FaqAccordion({
     >
       <div className="mx-auto max-w-3xl px-6">
         <div className="text-center">
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary/90 sm:text-xs">
+          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary/90 sm:text-xs">
             {eyebrow}
           </p>
           <h2

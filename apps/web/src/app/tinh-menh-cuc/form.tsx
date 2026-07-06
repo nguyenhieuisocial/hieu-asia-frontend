@@ -122,7 +122,7 @@ export function TinhMenhCucForm() {
             <span className="text-muted-foreground">Tính Mệnh Cục</span>
           </nav>
 
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
             Free tool · Bước 1 của Tử Vi
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -160,7 +160,7 @@ export function TinhMenhCucForm() {
                   <Label htmlFor="birth-hour">
                     Giờ sinh{' '}
                     {!hasTime && (
-                      <span className="font-mono text-[10px] text-amber-300">
+                      <span className="font-mono text-[12px] text-amber-300">
                         — không nhớ giờ thì để 12:00
                       </span>
                     )}
@@ -476,7 +476,7 @@ export function TinhMenhCucForm() {
 function ResultRow({ label, value, hint }: { label: string; value: string; hint: string }) {
   return (
     <div className="rounded-md border border-border bg-card/40 p-3">
-      <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
+      <p className="font-mono text-[12px] uppercase tracking-widest text-muted-foreground">{label}</p>
       <p className="mt-1 font-heading text-lg font-semibold text-gold-700">{value}</p>
       <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
     </div>
@@ -537,7 +537,7 @@ function NguHanhRemedySection({ fiveElementsClass }: { fiveElementsClass: string
 
           {/* Lời khuyên hành động */}
           <div>
-            <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            <p className="mb-2 font-mono text-[12px] uppercase tracking-widest text-muted-foreground">
               Lời khuyên hành động
             </p>
             <ol className="space-y-2">
@@ -564,7 +564,7 @@ function NguHanhRemedySection({ fiveElementsClass }: { fiveElementsClass: string
 function RemedyBlock({ title, items, hint }: { title: string; items: string[]; hint: string }) {
   return (
     <div>
-      <p className="mb-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+      <p className="mb-1.5 font-mono text-[12px] uppercase tracking-widest text-muted-foreground">
         {title}
       </p>
       <div className="flex flex-wrap gap-2">

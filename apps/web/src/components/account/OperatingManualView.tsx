@@ -177,7 +177,7 @@ function ManualHeader({
   const id = manual.identity;
   return (
     <header className={embedded ? '' : 'border-b border-gold/15 pb-6'}>
-      <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+      <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
         Sổ tay cá nhân
       </p>
       <h1
@@ -207,7 +207,7 @@ function ManualHeader({
         {id.chartHash && (
           <Link
             href="/methodology/tu-vi"
-            className="font-mono text-[11px] uppercase tracking-wider text-gold/85 hover:underline"
+            className="font-mono text-[13px] uppercase tracking-wider text-gold/85 hover:underline"
             title="Mã lá số — bấm để xem phương pháp đối chiếu"
           >
             #{id.chartHash}

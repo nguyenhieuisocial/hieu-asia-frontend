@@ -144,11 +144,11 @@ export function ProofDisclosure({ chart }: { chart: BaziChart }) {
                   {row.basis}
                 </p>
                 <div className="mt-2 flex flex-wrap items-center gap-1.5 sm:pl-5">
-                  <span className="rounded bg-border/50 px-2 py-0.5 font-mono text-[11px] text-foreground/80">
+                  <span className="rounded bg-border/50 px-2 py-0.5 font-mono text-[13px] text-foreground/80">
                     {row.evidence}
                   </span>
                   {row.source && (
-                    <span className="text-[11px] italic text-muted-foreground">
+                    <span className="text-[13px] italic text-muted-foreground">
                       tra theo {row.source}
                     </span>
                   )}
@@ -156,7 +156,7 @@ export function ProofDisclosure({ chart }: { chart: BaziChart }) {
               </div>
             ))}
 
-            <p className="flex items-start gap-2 rounded-lg border border-gold/20 bg-gold/[0.05] p-3 text-[11px] leading-relaxed text-foreground/80">
+            <p className="flex items-start gap-2 rounded-lg border border-gold/20 bg-gold/[0.05] p-3 text-[13px] leading-relaxed text-foreground/80">
               <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold-700" aria-hidden="true" />
               <span>
                 <strong>Con số tính từ lịch — kiểm chứng được.</strong> Toàn bộ ở trên là dữ kiện

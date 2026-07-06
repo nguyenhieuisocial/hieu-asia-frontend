@@ -109,7 +109,7 @@ export default function HopHubPage() {
 
         {/* Hero */}
         <section className="relative mx-auto max-w-3xl px-6 pb-8 pt-6 sm:pt-8">
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
             Chiêm tinh phương Tây · Độ hợp
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -134,7 +134,7 @@ export default function HopHubPage() {
           <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
             Chọn ô giao giữa hai cung để xem chi tiết. Màu thể hiện kiểu quan hệ theo nguyên tố.
           </p>
-          <p className="mb-2 font-mono text-[11px] text-muted-foreground sm:hidden" aria-hidden="true">
+          <p className="mb-2 font-mono text-[13px] text-muted-foreground sm:hidden" aria-hidden="true">
             ← vuốt ngang →
           </p>
           <div className="overflow-x-auto rounded-lg border border-border">
@@ -168,7 +168,7 @@ export default function HopHubPage() {
                           title={`${sign.name} & ${signs[j]!.name}: ${RELATION_SHORT[c.relation]}`}
                           className={`flex h-10 w-10 items-center justify-center rounded sm:h-7 sm:w-7 ${CELL_COLOR[c.relation]} transition hover:ring-1 hover:ring-gold/50`}
                         >
-                          <span aria-hidden className="text-[11px]">
+                          <span aria-hidden className="text-[13px]">
                             {signs[j]!.symbol}
                           </span>
                         </Link>

@@ -68,7 +68,7 @@ function TypeChip({ t }: { t: TypeRef }) {
     >
       <span
         aria-hidden="true"
-        className="flex h-5 w-5 items-center justify-center rounded-full border border-gold/40 font-heading text-[11px] text-gold-700"
+        className="flex h-5 w-5 items-center justify-center rounded-full border border-gold/40 font-heading text-[13px] text-gold-700"
       >
         {t.n}
       </span>
@@ -125,7 +125,7 @@ export default async function EnneagramTypePage({
           <span className="mx-1.5">/</span>
           <span className="text-foreground/70">Nhóm {n}</span>
         </nav>
-        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+        <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
           Enneagram · Trung tâm {meta.center} · Nhóm {n}
         </p>
         <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">

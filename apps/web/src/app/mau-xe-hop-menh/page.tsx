@@ -109,7 +109,7 @@ export default function MauXeHubPage() {
 
           {/* Bảng tham chiếu màu xe theo hành */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Màu xe theo từng hành ngũ hành
             </h2>
             <div className="mt-4 space-y-4">
@@ -164,7 +164,7 @@ export default function MauXeHubPage() {
 
           {/* FAQ */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">
@@ -179,7 +179,7 @@ export default function MauXeHubPage() {
 
           {/* Email */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Nhận nội dung phong thủy hữu ích
             </h2>
             <div className="mt-4">
