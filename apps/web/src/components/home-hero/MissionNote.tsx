@@ -17,7 +17,7 @@ export function MissionNote(): React.JSX.Element {
           dùng nó mà tự quyết, không bị phán. Vì vậy mỗi kết quả đều nói thẳng: đây là dữ kiện, còn
           quyết định là của bạn.”
         </blockquote>
-        <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+        <p className="mt-4 font-mono text-[13px] uppercase tracking-[0.14em] text-muted-foreground">
           — Đội ngũ hieu.asia
         </p>
       </div>

@@ -136,7 +136,7 @@ export function MentorTab() {
             </p>
           )}
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+            <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
               Mục tiêu hiện tại
             </p>
             {memory && memory.currentGoals.length > 0 ? (
@@ -150,7 +150,7 @@ export function MentorTab() {
             )}
           </div>
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+            <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
               Quyết định mở
             </p>
             {memory && memory.openDecisions.length > 0 ? (
@@ -198,7 +198,7 @@ export function MentorTab() {
                       <p className="truncate text-sm text-foreground/90">
                         {s.preview ?? `Phiên ${s.reading_id.slice(0, 8)}`}
                       </p>
-                      <p className="mt-0.5 font-mono text-[10px] text-muted-foreground">
+                      <p className="mt-0.5 font-mono text-[12px] text-muted-foreground">
                         {fmtDate(s.last_message_at)} · {s.reading_id.slice(0, 12)}
                       </p>
                     </div>

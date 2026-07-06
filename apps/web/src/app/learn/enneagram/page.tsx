@@ -150,7 +150,7 @@ export default function LearnEnneagramPage() {
                         <span className="font-heading text-base text-foreground group-hover:text-gold">
                           {t.vi}
                         </span>
-                        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                        <span className="font-mono text-[13px] uppercase tracking-[0.14em] text-muted-foreground">
                           {t.en}
                         </span>
                       </div>
@@ -184,7 +184,7 @@ export default function LearnEnneagramPage() {
                 <li key={c.name} className="border-t border-border/60 pt-4 first:border-0 first:pt-0">
                   <div className="flex items-baseline gap-2">
                     <span className="font-heading text-base text-foreground">{c.name}</span>
-                    <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                    <span className="font-mono text-[13px] uppercase tracking-[0.14em] text-muted-foreground">
                       {c.types}
                     </span>
                   </div>

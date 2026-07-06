@@ -298,7 +298,7 @@ export default function SurveyPage() {
             </span>
             <span className="font-mono tracking-[0.12em] font-medium text-gold/80">Bước 3 / 3</span>
           </nav>
-          <p className="font-mono text-[11px] tracking-[0.12em] font-medium text-gold/80">
+          <p className="font-mono text-[13px] tracking-[0.12em] font-medium text-gold/80">
             Khảo sát tính cách
           </p>
           <h1 className="mt-3 font-heading text-3xl font-semibold leading-tight text-foreground sm:text-4xl">

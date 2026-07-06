@@ -182,7 +182,7 @@ export function FeedHero({ user }: FeedHeroProps) {
   return (
     <section className="space-y-6">
       <div>
-        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+        <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
           Hôm nay
         </p>
         <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
@@ -198,7 +198,7 @@ export function FeedHero({ user }: FeedHeroProps) {
         className="group flex items-center justify-between gap-4 rounded-2xl border border-gold/40 bg-gold/[0.08] p-5 transition hover:border-gold/70 hover:bg-gold/[0.13]"
       >
         <div className="min-w-0">
-          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold/80">
+          <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold/80">
             {cta.eyebrow}
           </p>
           <p className="mt-1.5 font-heading text-lg text-foreground sm:text-xl">

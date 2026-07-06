@@ -156,7 +156,7 @@ export function ConsentBanner(): React.ReactElement | null {
       {/* Wave 55 BUG-002 — mobile compact pill. Hidden on sm+ (desktop
           always sees the full layout via the second block below). */}
       <div className={`flex items-center justify-between gap-2 sm:hidden ${collapsed ? "" : "hidden"}`}>
-        <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/85">
+        <span className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/85">
           🍪 Cookies
         </span>
         <div className="flex shrink-0 gap-1.5">
@@ -166,14 +166,14 @@ export function ConsentBanner(): React.ReactElement | null {
               setCollapsed(false);
               setExpanded(true);
             }}
-            className="rounded-md border border-border px-2.5 py-1 text-[11px] font-medium text-foreground/85 hover:bg-card"
+            className="rounded-md border border-border px-2.5 py-1 text-[13px] font-medium text-foreground/85 hover:bg-card"
           >
             Tuỳ chỉnh
           </button>
           <button
             type="button"
             onClick={acceptAll}
-            className="rounded-md bg-gold px-2.5 py-1 text-[11px] font-semibold text-ink hover:bg-gold/90"
+            className="rounded-md bg-gold px-2.5 py-1 text-[13px] font-semibold text-ink hover:bg-gold/90"
           >
             OK
           </button>
@@ -284,7 +284,7 @@ function ConsentRow({ label, description, checked, disabled, onChange }: Consent
       />
       <span className="flex-1">
         <span className="font-semibold text-foreground">{label}</span>
-        <span className="block text-[11px] text-muted-foreground">{description}</span>
+        <span className="block text-[13px] text-muted-foreground">{description}</span>
       </span>
     </label>
   );

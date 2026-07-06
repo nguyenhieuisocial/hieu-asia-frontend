@@ -401,7 +401,7 @@ export default function AffiliateDashboardPage() {
         </nav>
         <header className="flex items-center justify-between">
           <div>
-            <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+            <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
               Affiliate · Dashboard
             </p>
             <h1 className="mt-2 font-heading text-2xl font-bold sm:text-3xl">

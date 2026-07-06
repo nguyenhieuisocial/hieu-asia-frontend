@@ -113,7 +113,7 @@ export default async function MbtiTypePage({
           <span className="mx-1.5">/</span>
           <span className="text-foreground/70">{d.code}</span>
         </nav>
-        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+        <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
           MBTI · {d.groupMeta.name} ({d.groupMeta.en})
         </p>
         <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -251,7 +251,7 @@ export default async function MbtiTypePage({
               <div>
                 <div className="flex items-baseline gap-2">
                   <span className="font-mono text-base font-semibold text-foreground">{s.fn}</span>
-                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                  <span className="font-mono text-[13px] uppercase tracking-[0.14em] text-muted-foreground">
                     {s.role}
                   </span>
                 </div>

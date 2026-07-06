@@ -103,7 +103,7 @@ export function ReflectCard({ date }: { date: string }) {
         aria-label="Ghi chú cá nhân cho câu hỏi suy ngẫm hôm nay"
       />
 
-      <p className="mt-2 font-mono text-[10px] text-muted-foreground">
+      <p className="mt-2 font-mono text-[12px] text-muted-foreground">
         Lưu tự động · chỉ mình bạn thấy
       </p>
     </section>

@@ -50,7 +50,7 @@ export function TrustBand() {
           className="group mb-6 flex flex-col items-start gap-2 rounded-2xl border border-primary/20 bg-card/70 p-5 transition hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10 active:scale-[0.99] sm:flex-row sm:items-center sm:justify-between"
         >
           <div className="min-w-0">
-            <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+            <span className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
               Bằng Chứng
             </span>
             <p className="mt-1 font-marketing-display text-xl leading-snug text-foreground sm:text-2xl">
@@ -60,7 +60,7 @@ export function TrustBand() {
               Nhập một sự kiện đã xảy ra — xem lá số năm đó đã “ghi dấu” đúng tới đâu (khoe cả chỗ trật).
             </p>
           </div>
-          <span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.12em] text-primary transition-colors group-hover:text-foreground">
+          <span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap font-mono text-[13px] uppercase tracking-[0.12em] text-primary transition-colors group-hover:text-foreground">
             Tự kiểm chứng
             <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
           </span>

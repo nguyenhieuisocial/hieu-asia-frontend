@@ -84,7 +84,7 @@ export default async function SoChuDaoPage({ params }: Props) {
           <div className="flex items-center gap-6">
             <span className="font-heading text-6xl font-bold text-gold">{n.number}</span>
             <div className="min-w-0 flex-1">
-              <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold/80">
+              <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold/80">
                 {n.master ? 'Số master — cường độ cao' : 'Số cơ bản'}
               </div>
               <div className="mt-2 flex flex-wrap gap-1.5">

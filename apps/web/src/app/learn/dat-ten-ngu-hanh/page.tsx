@@ -216,7 +216,7 @@ export default function LearnDatTenNguHanhPage() {
                         Hành {h.hanh}
                       </span>
                     </div>
-                    <p className="mt-0.5 text-[11px] uppercase tracking-wide text-muted-foreground">
+                    <p className="mt-0.5 text-[13px] uppercase tracking-wide text-muted-foreground">
                       {h.bo}
                     </p>
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">

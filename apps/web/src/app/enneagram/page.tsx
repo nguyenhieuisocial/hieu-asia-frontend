@@ -187,7 +187,7 @@ export default function EnneagramPage() {
             <div className="mx-auto max-w-2xl space-y-4">
               <Card className="border-gold/30 bg-gradient-to-br from-gold/10 to-transparent">
                 <CardContent className="p-6 text-center sm:p-8">
-                  <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                  <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
                     Nhóm tính cách của bạn
                   </div>
                   <div className="my-2 bg-gold-gradient bg-clip-text font-heading text-5xl font-bold text-transparent">
@@ -224,7 +224,7 @@ export default function EnneagramPage() {
                     { label: 'Hướng phát triển', text: meta.growth },
                   ].map((row) => (
                     <div key={row.label} className="border-t border-border/60 pt-3 first:border-0 first:pt-0">
-                      <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
+                      <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
                         {row.label}
                       </div>
                       <p className="mt-1 text-sm leading-relaxed text-foreground/85">{row.text}</p>
@@ -235,12 +235,12 @@ export default function EnneagramPage() {
 
               <Card className="border-gold/20 bg-card/50">
                 <CardContent className="p-6">
-                  <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                  <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
                     Đường phát triển &amp; áp lực
                   </div>
                   <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
-                      <div className="text-[10px] font-mono uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+                      <div className="text-[12px] font-mono uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
                         Khi phát triển →
                       </div>
                       <p className="mt-1 text-sm text-foreground/90">
@@ -254,7 +254,7 @@ export default function EnneagramPage() {
                       </p>
                     </div>
                     <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3">
-                      <div className="text-[10px] font-mono uppercase tracking-widest text-amber-600 dark:text-amber-400">
+                      <div className="text-[12px] font-mono uppercase tracking-widest text-amber-600 dark:text-amber-400">
                         Khi áp lực →
                       </div>
                       <p className="mt-1 text-sm text-foreground/90">
@@ -268,7 +268,7 @@ export default function EnneagramPage() {
                       </p>
                     </div>
                   </div>
-                  <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
+                  <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">
                     Theo mô hình Riso-Hudson: khi lành mạnh bạn hấp thụ điểm mạnh của nhóm phát triển;
                     khi căng thẳng dễ rơi vào điểm yếu của nhóm áp lực.
                   </p>
@@ -277,7 +277,7 @@ export default function EnneagramPage() {
 
               <Card className="border-border bg-card/50">
                 <CardContent className="space-y-3 p-5">
-                  <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                  <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
                     Điểm 9 nhóm
                   </div>
                   {ENNEAGRAM_TYPE_ORDER.map((t) => {
@@ -321,7 +321,7 @@ export default function EnneagramPage() {
               {!paywall && (readingLoading || reading) && (
                 <Card className="relative overflow-hidden border border-gold/20 bg-gradient-to-br from-gold/5 to-transparent">
                   <CardContent className="p-6">
-                    <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                    <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
                       Luận giải sâu
                     </div>
                     {readingLoading && !reading ? (
@@ -350,7 +350,7 @@ export default function EnneagramPage() {
                         </ReactMarkdown>
                       </article>
                     ) : null}
-                    <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
+                    <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">
                       Cơ sở: hệ thống Enneagram chín nhóm tính cách (mô hình phát triển bản thân, miền
                       công cộng). Mô tả xu hướng tâm lý, không phán định số mệnh.
                     </p>

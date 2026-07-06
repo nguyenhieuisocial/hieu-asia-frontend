@@ -111,7 +111,7 @@ export function ScanRow({
             >
               <div className="mb-4">{item.icon}</div>
               {item.tag && (
-                <p className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-primary">
+                <p className="mb-1.5 font-mono text-[12px] uppercase tracking-[0.14em] text-primary">
                   {item.tag}
                 </p>
               )}

@@ -167,7 +167,7 @@ export default async function LichVanNienPage() {
               >
                 {a.emoji}
               </div>
-              <div className="text-[11px] font-medium leading-tight text-foreground/85 sm:text-xs">
+              <div className="text-[13px] font-medium leading-tight text-foreground/85 sm:text-xs">
                 {a.label}
               </div>
             </Link>

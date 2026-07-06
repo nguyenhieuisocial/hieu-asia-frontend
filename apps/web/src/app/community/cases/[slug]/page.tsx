@@ -79,7 +79,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
           </Link>
 
           <header className="mt-8">
-            <p className="inline-flex rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-[11px] font-medium text-gold/90">
+            <p className="inline-flex rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-[13px] font-medium text-gold/90">
               {c.illustrativeLabel}
             </p>
             <div className="mt-4 flex items-center gap-3 text-xs text-muted-foreground">
@@ -181,7 +181,7 @@ function Section({
 }) {
   return (
     <section className="mt-8 first:mt-0">
-      <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+      <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
         {title}
       </h2>
       <div className="mt-3 text-base leading-relaxed text-foreground/85">

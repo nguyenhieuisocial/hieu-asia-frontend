@@ -38,7 +38,7 @@ export function LearnFrame(props: LearnFrameProps) {
   const { caption } = props;
   return (
     <div className="rounded-card-editorial border border-gold/20 bg-card/40 p-5 sm:p-6">
-      <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
+      <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
         Bản đồ bài học
       </p>
       <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
@@ -51,12 +51,12 @@ export function LearnFrame(props: LearnFrameProps) {
           <li key={step.key} className="flex gap-3.5">
             <span
               aria-hidden="true"
-              className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-gold/30 font-mono text-[11px] text-gold-700"
+              className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-gold/30 font-mono text-[13px] text-gold-700"
             >
               {i + 1}
             </span>
             <div className="min-w-0">
-              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700">
+              <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
                 {step.label}
               </p>
               <div className="mt-1 text-sm leading-relaxed text-muted-foreground">

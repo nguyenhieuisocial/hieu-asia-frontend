@@ -119,7 +119,7 @@ export default async function LaSoTuViPage({
           {/* 12 cung */}
           <RevealOnScroll>
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
               12 cung trong lá số
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -140,7 +140,7 @@ export default async function LaSoTuViPage({
           {/* Đọc theo tam phương tứ chính — showcase method */}
           <RevealOnScroll>
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
               Đọc theo tam phương tứ chính
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -158,7 +158,7 @@ export default async function LaSoTuViPage({
           {/* Một lời nhắn — brand */}
           <RevealOnScroll>
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">Một lời nhắn</h2>
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">Một lời nhắn</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               Lá số là một <strong>tấm gương để hiểu mình</strong>, không phải bản án số mệnh. Việc an cung –
               an sao là tính toán xác định; phần luận giải chỉ là một góc nhìn tham khảo. Bạn vẫn là người
@@ -171,7 +171,7 @@ export default async function LaSoTuViPage({
           {/* FAQ */}
           <RevealOnScroll>
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">
@@ -187,7 +187,7 @@ export default async function LaSoTuViPage({
 
           <RevealOnScroll>
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
               Nhận nhắc theo mùa
             </h2>
             <div className="mt-4">

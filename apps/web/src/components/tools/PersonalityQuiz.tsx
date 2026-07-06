@@ -84,7 +84,7 @@ export function PersonalityQuiz({
                       <RadioGroupItem value={String(c.value)} id={`${q.name}-${c.value}`} />
                       <Label
                         htmlFor={`${q.name}-${c.value}`}
-                        className="font-normal text-[11px] text-muted-foreground"
+                        className="font-normal text-[13px] text-muted-foreground"
                       >
                         {c.value}
                       </Label>

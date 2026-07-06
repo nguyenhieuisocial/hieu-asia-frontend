@@ -42,7 +42,7 @@ export function Methodology(): React.JSX.Element {
                 <span className="font-mono text-sm text-primary/70">{l.n}</span>
                 <span className="min-w-[5em] font-editorial-display text-xl italic text-foreground">{l.name}</span>
                 <span className="flex-1 text-foreground/85">{l.give}</span>
-                <span className="hidden font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground sm:block">
+                <span className="hidden font-mono text-[13px] uppercase tracking-[0.1em] text-muted-foreground sm:block">
                   {l.meta}
                 </span>
                 <ArrowRight

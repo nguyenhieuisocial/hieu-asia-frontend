@@ -76,14 +76,14 @@ function PodiumCard({ row, rank }: { row: PodiumRow; rank: number }) {
       <div className="text-3xl sm:text-4xl" aria-hidden="true">
         {MEDALS[rank - 1]}
       </div>
-      <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+      <div className="mt-2 font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
         #{rank}
       </div>
       <div className="mt-3 font-mono text-base font-semibold text-foreground sm:text-lg">
         {row.affiliate_code || '—'}
       </div>
       {row.tier && (
-        <div className="mt-2 inline-flex items-center rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-gold">
+        <div className="mt-2 inline-flex items-center rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[12px] font-medium uppercase tracking-wider text-gold">
           {row.tier}
         </div>
       )}

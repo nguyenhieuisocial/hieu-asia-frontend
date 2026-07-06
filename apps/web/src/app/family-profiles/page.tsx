@@ -236,7 +236,7 @@ export default function FamilyProfilesPage() {
             {DEMO_PROFILES.map((p) => (
               <Card key={p.label} className="border-border bg-card/40">
                 <CardHeader>
-                  <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+                  <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
                     Thành viên
                   </p>
                   <CardTitle className="font-heading text-lg">
@@ -263,7 +263,7 @@ export default function FamilyProfilesPage() {
         <section className="rounded-xl border border-gold/25 bg-gold/[0.04] p-6 sm:p-8">
           <div className="flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-gold" aria-hidden="true" />
-            <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+            <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
               Tiếp theo
             </p>
           </div>

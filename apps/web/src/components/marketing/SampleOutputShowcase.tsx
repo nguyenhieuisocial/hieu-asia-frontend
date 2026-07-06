@@ -54,7 +54,7 @@ const CARDS: SampleCard[] = [
       </p>
     ),
     footer: (
-      <span className="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-[0.12em] text-primary/80">
+      <span className="inline-flex items-center gap-1 text-[13px] font-mono uppercase tracking-[0.12em] text-primary/80">
         <span aria-hidden>·</span> Có nút “Vì sao?” mở evidence
       </span>
     ),
@@ -74,7 +74,7 @@ const CARDS: SampleCard[] = [
       </p>
     ),
     footer: (
-      <span className="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-[0.12em] text-primary/80">
+      <span className="inline-flex items-center gap-1 text-[13px] font-mono uppercase tracking-[0.12em] text-primary/80">
         <span aria-hidden>·</span> Có timeline lưu niên năm
       </span>
     ),
@@ -87,7 +87,7 @@ const CARDS: SampleCard[] = [
     body: (
       <div className="space-y-2.5">
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+          <p className="font-mono text-[12px] uppercase tracking-widest text-muted-foreground">
             Bạn hỏi
           </p>
           <p className="text-muted-foreground text-[13px] leading-relaxed">
@@ -95,7 +95,7 @@ const CARDS: SampleCard[] = [
           </p>
         </div>
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-widest text-primary/80">
+          <p className="font-mono text-[12px] uppercase tracking-widest text-primary/80">
             Mentor
           </p>
           <p className="text-muted-foreground text-[13px] leading-relaxed">
@@ -193,7 +193,7 @@ export function SampleOutputShowcase() {
             >
               <div className="mb-3 flex items-center gap-2">
                 {c.icon}
-                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+                <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-muted-foreground">
                   {c.eyebrow}
                 </p>
               </div>
@@ -228,7 +228,7 @@ export function SampleOutputShowcase() {
           </Link>
         </div>
 
-        <p className="mt-6 text-center font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+        <p className="mt-6 text-center font-mono text-[13px] uppercase tracking-widest text-muted-foreground">
           Persona demo · không phải dữ liệu thật
         </p>
       </div>

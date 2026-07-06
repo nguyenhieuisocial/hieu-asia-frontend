@@ -154,7 +154,7 @@ export default function LearnBigFivePage() {
                       <span className="font-heading text-base text-foreground group-hover:text-gold">
                         {d.vi}
                       </span>
-                      <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                      <span className="font-mono text-[13px] uppercase tracking-[0.14em] text-muted-foreground">
                         {d.en}
                       </span>
                       <span

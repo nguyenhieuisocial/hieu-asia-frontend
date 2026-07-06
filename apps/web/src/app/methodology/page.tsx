@@ -574,20 +574,20 @@ function StatusBadge({
 }) {
   if (status === 'production') {
     return (
-      <span className="inline-flex rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade-300">
+      <span className="inline-flex rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[13px] font-medium text-jade-300">
         production
       </span>
     );
   }
   if (status === 'beta') {
     return (
-      <span className="inline-flex rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-300">
+      <span className="inline-flex rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[13px] font-medium text-amber-300">
         beta
       </span>
     );
   }
   return (
-    <span className="inline-flex rounded-full border border-border bg-muted/5 px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+    <span className="inline-flex rounded-full border border-border bg-muted/5 px-2 py-0.5 text-[13px] font-medium text-muted-foreground">
       optional
     </span>
   );
@@ -632,7 +632,7 @@ function Chapter1Content() {
                       {lens.name}
                     </h4>
                   </div>
-                  <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-primary/70">
+                  <p className="mt-1 font-mono text-[13px] uppercase tracking-[0.12em] text-primary/70">
                     {lens.how}
                   </p>
                   <p className="mt-2 font-sans text-sm leading-relaxed text-muted-foreground">
@@ -706,7 +706,7 @@ function Chapter1Content() {
               <li key={step.label} className="relative">
                 <div className="flex h-full flex-col rounded-xl border border-border bg-muted/40 p-5">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-[11px] text-primary/80">
+                    <span className="font-mono text-[13px] text-primary/80">
                       0{idx + 1}
                     </span>
                     <Icon className="h-4 w-4 text-primary/80" aria-hidden />
@@ -808,19 +808,19 @@ function Chapter2Content() {
               </div>
               <dl className="mt-3 space-y-2 text-sm">
                 <div>
-                  <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-primary/80">
+                  <dt className="font-mono text-[12px] uppercase tracking-[0.12em] text-primary/80">
                     Dữ liệu dùng
                   </dt>
                   <dd className="mt-0.5 text-muted-foreground">{row.data}</dd>
                 </div>
                 <div>
-                  <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-primary/80">
+                  <dt className="font-mono text-[12px] uppercase tracking-[0.12em] text-primary/80">
                     Engine tính?
                   </dt>
                   <dd className="mt-0.5 text-muted-foreground">{row.engine}</dd>
                 </div>
                 <div>
-                  <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-primary/80">
+                  <dt className="font-mono text-[12px] uppercase tracking-[0.12em] text-primary/80">
                     AI làm gì
                   </dt>
                   <dd className="mt-0.5 text-muted-foreground">{row.ai}</dd>
@@ -1049,19 +1049,19 @@ function Chapter3Content() {
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                 <p className="font-mono text-sm text-muted-foreground/70">{row.result}</p>
                 {row.status === 'pass' ? (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade-300">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[13px] font-medium text-jade-300">
                     <CheckCircle2 className="h-3 w-3" aria-hidden />
                     pass
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-300">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[13px] font-medium text-amber-300">
                     <Info className="h-3 w-3" aria-hidden />
                     partial
                   </span>
                 )}
               </div>
               {row.status === 'partial' && (
-                <p className="mt-2 text-[11px] text-muted-foreground/70">
+                <p className="mt-2 text-[13px] text-muted-foreground/70">
                   2 case đang review do dị biệt trường phái
                 </p>
               )}
@@ -1090,12 +1090,12 @@ function Chapter3Content() {
                   </td>
                   <td className="px-4 py-3">
                     {row.status === 'pass' ? (
-                      <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade-300">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[13px] font-medium text-jade-300">
                         <CheckCircle2 className="h-3 w-3" aria-hidden />
                         pass
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-300">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[13px] font-medium text-amber-300">
                         <Info className="h-3 w-3" aria-hidden />
                         partial — 2 case đang review do dị biệt trường phái
                       </span>
@@ -1474,12 +1474,12 @@ export default function MethodologyPage() {
                         {c.id}
                       </p>
                       {c.status === 'pass' ? (
-                        <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade-300">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[13px] font-medium text-jade-300">
                           <CheckCircle2 className="h-3 w-3" aria-hidden />
                           pass
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-300">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[13px] font-medium text-amber-300">
                           <Info className="h-3 w-3" aria-hidden />
                           partial
                         </span>
@@ -1487,13 +1487,13 @@ export default function MethodologyPage() {
                     </div>
                     <dl className="mt-3 space-y-2 text-sm">
                       <div>
-                        <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground/70">
+                        <dt className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground/70">
                           Input
                         </dt>
                         <dd className="mt-0.5 font-mono text-xs text-foreground">{c.input}</dd>
                       </div>
                       <div>
-                        <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground/70">
+                        <dt className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground/70">
                           Expected
                         </dt>
                         <dd className="mt-0.5 font-mono text-xs text-muted-foreground">{c.expected}</dd>
@@ -1525,12 +1525,12 @@ export default function MethodologyPage() {
                         <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{c.expected}</td>
                         <td className="px-4 py-3">
                           {c.status === 'pass' ? (
-                            <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade-300">
+                            <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[13px] font-medium text-jade-300">
                               <CheckCircle2 className="h-3 w-3" aria-hidden />
                               pass
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-300">
+                            <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[13px] font-medium text-amber-300">
                               <Info className="h-3 w-3" aria-hidden />
                               partial
                             </span>
@@ -1582,12 +1582,12 @@ export default function MethodologyPage() {
                         n = {c.count}
                       </span>
                       {c.passRate.startsWith('100') ? (
-                        <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade-300">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[13px] font-medium text-jade-300">
                           <CheckCircle2 className="h-3 w-3" aria-hidden />
                           {c.passRate}
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-300">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[13px] font-medium text-amber-300">
                           <Info className="h-3 w-3" aria-hidden />
                           {c.passRate}
                         </span>
@@ -1625,12 +1625,12 @@ export default function MethodologyPage() {
                         <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{c.count}</td>
                         <td className="px-4 py-3">
                           {c.passRate.startsWith('100') ? (
-                            <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[11px] font-medium text-jade-300">
+                            <span className="inline-flex items-center gap-1 rounded-full border border-jade/30 bg-jade/10 px-2 py-0.5 text-[13px] font-medium text-jade-300">
                               <CheckCircle2 className="h-3 w-3" aria-hidden />
                               {c.passRate}
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-300">
+                            <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[13px] font-medium text-amber-300">
                               <Info className="h-3 w-3" aria-hidden />
                               {c.passRate}
                             </span>

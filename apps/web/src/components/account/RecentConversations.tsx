@@ -125,7 +125,7 @@ export function RecentConversations() {
                 />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm text-foreground">{title}</p>
-                  <p className="mt-0.5 text-[11px] text-muted-foreground">
+                  <p className="mt-0.5 text-[13px] text-muted-foreground">
                     {conv.message_count} tin nhắn · {formatDate(conv.last_message_at)}
                   </p>
                 </div>

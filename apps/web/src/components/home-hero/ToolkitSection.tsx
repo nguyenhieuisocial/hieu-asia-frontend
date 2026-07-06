@@ -26,7 +26,7 @@ export function ToolkitSection(): React.JSX.Element {
         <div className="mt-8 space-y-6">
           {GROUPS.map((g, gi) => (
             <div key={g.label} className="rv-up" style={{ animationDelay: `${gi * 80}ms` }}>
-              <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-primary/70">{g.label}</p>
+              <p className="font-mono text-[13px] uppercase tracking-[0.14em] text-primary/70">{g.label}</p>
               <div className="mt-2 flex flex-wrap gap-2">
                 {g.tools.map((t) => (
                   <span key={t.href} className="inline-flex items-center gap-1">
@@ -42,7 +42,7 @@ export function ToolkitSection(): React.JSX.Element {
                         // a11y (WCAG 2.5.3 Label-in-Name): nhãn phải CHỨA chữ
                         // hiển thị "học" để điều khiển bằng giọng nói hoạt động.
                         aria-label={`Học về ${t.n}`}
-                        className="-my-1 inline-flex items-center px-1 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-primary underline underline-offset-2 transition-colors hover:text-primary"
+                        className="-my-1 inline-flex items-center px-1 py-1.5 font-mono text-[12px] uppercase tracking-[0.08em] text-primary underline underline-offset-2 transition-colors hover:text-primary"
                       >
                         học
                       </a>

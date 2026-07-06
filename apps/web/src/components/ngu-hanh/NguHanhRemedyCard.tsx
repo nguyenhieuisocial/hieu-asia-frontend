@@ -64,7 +64,7 @@ export function NguHanhRemedyCard({ fiveElementsClass }: Props) {
           />
 
           <div>
-            <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            <p className="mb-2 font-mono text-[12px] uppercase tracking-widest text-muted-foreground">
               Lời khuyên hành động
             </p>
             <ol className="space-y-2">
@@ -101,7 +101,7 @@ function RemedyBlock({
 }) {
   return (
     <div>
-      <p className="mb-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+      <p className="mb-1.5 font-mono text-[12px] uppercase tracking-widest text-muted-foreground">
         {title}
       </p>
       <div className="flex flex-wrap gap-2">

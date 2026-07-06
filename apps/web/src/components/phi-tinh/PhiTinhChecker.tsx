@@ -82,12 +82,12 @@ function PalaceCell({ ps, isSitting, isFacing }: { ps: PalaceStars; isSitting: b
       <div className="font-editorial-display text-2xl font-medium text-foreground" title="Vận tinh">
         {ps.van}
       </div>
-      <div className="mt-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
+      <div className="mt-0.5 text-[12px] uppercase tracking-wide text-muted-foreground">
         {ps.palace.gua}
         {ps.palace.grid !== 4 ? ` · ${ps.palace.dir}` : ''}
       </div>
-      {isSitting && <div className="absolute bottom-1 text-[9px] font-semibold text-primary">TỌA</div>}
-      {isFacing && <div className="absolute bottom-1 text-[9px] font-semibold text-gold-700">HƯỚNG</div>}
+      {isSitting && <div className="absolute bottom-1 text-[12px] font-semibold text-primary">TỌA</div>}
+      {isFacing && <div className="absolute bottom-1 text-[12px] font-semibold text-gold-700">HƯỚNG</div>}
     </div>
   );
 }

@@ -121,7 +121,7 @@ export default function ChangelogPage() {
             className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.18)_0%,_transparent_55%)]"
           />
           <div className="mx-auto max-w-4xl px-6 py-16 text-center sm:py-20">
-            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gold-700 sm:text-xs">
+            <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700 sm:text-xs">
               Changelog · lộ trình minh bạch
             </p>
             <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
@@ -150,13 +150,13 @@ export default function ChangelogPage() {
                       <span className="font-heading text-xl font-semibold text-foreground">
                         {r.version}
                       </span>
-                      <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+                      <span className="font-mono text-[13px] uppercase tracking-[0.12em] text-muted-foreground">
                         {r.date}
                       </span>
                       {tag && (
                         <span
                           className={[
-                            'inline-flex items-center rounded-full border px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider',
+                            'inline-flex items-center rounded-full border px-2.5 py-0.5 text-[12px] font-medium uppercase tracking-wider',
                             tag.cls,
                           ].join(' ')}
                         >

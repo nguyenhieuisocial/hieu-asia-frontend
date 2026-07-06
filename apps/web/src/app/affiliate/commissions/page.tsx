@@ -263,7 +263,7 @@ export default function AffiliateCommissionsPage() {
 
         {/* Hero */}
         <header className="mb-10">
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
             Affiliate · Commissions
           </p>
           <h1 className="mt-2 font-heading text-3xl font-bold sm:text-4xl">

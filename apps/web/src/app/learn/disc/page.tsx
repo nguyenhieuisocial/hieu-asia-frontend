@@ -161,7 +161,7 @@ export default function LearnDiscPage() {
                       <span className="font-heading text-base text-foreground group-hover:text-gold">
                         {s.vi}
                       </span>
-                      <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                      <span className="font-mono text-[13px] uppercase tracking-[0.14em] text-muted-foreground">
                         {s.en}
                       </span>
                       <span

@@ -121,7 +121,7 @@ export default function XemNgayHubPage() {
         {/* Cách chấm điểm ngày — nội dung giáo dục */}
         <RevealOnScroll>
         <section className="mt-10 rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+          <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
             Xem ngày tốt dựa trên những gì?
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -153,7 +153,7 @@ export default function XemNgayHubPage() {
         {/* 12 Trực — lớp giải thích cốt lõi (audit content-depth) */}
         <RevealOnScroll>
         <section className="mt-6 rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+          <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
             12 Trực — nhịp 12 bước của ngày
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -195,7 +195,7 @@ export default function XemNgayHubPage() {
         {/* Một lời nhắn */}
         <RevealOnScroll>
         <section className="mt-6 rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+          <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
             Một lời nhắn
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -210,7 +210,7 @@ export default function XemNgayHubPage() {
         {/* FAQ */}
         <RevealOnScroll>
         <section className="mt-6 rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+          <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
             Câu hỏi thường gặp
           </h2>
           <dl className="mt-4 space-y-4">
@@ -227,7 +227,7 @@ export default function XemNgayHubPage() {
         {/* Nhận nhắc theo mùa */}
         <RevealOnScroll>
         <section className="mt-6 rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm rv-up">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+          <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
             Nhận nhắc theo mùa
           </h2>
           <div className="mt-3">

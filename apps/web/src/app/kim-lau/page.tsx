@@ -83,7 +83,7 @@ export default function KimLauHubPage() {
 
           {/* 4 loại Kim Lâu */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               4 loại Kim Lâu (theo số dư tuổi mụ chia 9)
             </h2>
             <div className="mt-4 overflow-x-auto">
@@ -114,7 +114,7 @@ export default function KimLauHubPage() {
 
           {/* Bảng tuổi mụ phạm */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Các tuổi mụ phạm Kim Lâu (1–49)
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -148,7 +148,7 @@ export default function KimLauHubPage() {
 
           {/* FAQ */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">
@@ -163,7 +163,7 @@ export default function KimLauHubPage() {
 
           {/* Email */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Nhận nhắc theo mùa cưới
             </h2>
             <div className="mt-4">

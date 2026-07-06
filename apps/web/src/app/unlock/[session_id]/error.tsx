@@ -46,7 +46,7 @@ export default function UnlockError({
             </p>
           )}
           {error.digest && (
-            <p className="mt-2 font-mono text-[10px] uppercase tracking-widest opacity-70">
+            <p className="mt-2 font-mono text-[12px] uppercase tracking-widest opacity-70">
               Mã lỗi: {error.digest}
             </p>
           )}

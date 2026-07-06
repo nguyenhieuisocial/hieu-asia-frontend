@@ -63,7 +63,7 @@ type Template = {
 };
 
 const SIGN_OFF = (
-  <p className="mt-4 font-mono text-[11px] uppercase tracking-widest text-primary/80">
+  <p className="mt-4 font-mono text-[13px] uppercase tracking-widest text-primary/80">
     Sẵn sàng lập lá số thật sự?{' '}
     <Link
       href="/onboarding"
@@ -618,7 +618,7 @@ export function MentorSampleInteractive() {
 
         {/* Persona card — fixed Chi Lan ENFP for demo */}
         <div className="mx-auto mt-10 max-w-marketing-tight">
-          <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+          <p className="mb-2 font-mono text-[12px] uppercase tracking-widest text-muted-foreground">
             BƯỚC 01 · PERSONA MẪU
           </p>
           <div className="rounded-[2px] border border-border/30 bg-card p-5 md:p-6">
@@ -656,7 +656,7 @@ export function MentorSampleInteractive() {
             <form onSubmit={handleSubmit}>
               <label
                 htmlFor="mentor-demo-input"
-                className="mb-2 block font-mono text-[10px] uppercase tracking-widest text-muted-foreground"
+                className="mb-2 block font-mono text-[12px] uppercase tracking-widest text-muted-foreground"
               >
                 BƯỚC 02 · CÂU HỎI CỦA BẠN
               </label>
@@ -669,7 +669,7 @@ export function MentorSampleInteractive() {
                 className="min-h-[100px] w-full rounded-[2px] border border-border/40 bg-card p-4 font-sans text-[15px] leading-relaxed text-foreground transition placeholder:text-muted-foreground focus:border-primary focus:shadow-md focus:shadow-primary/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
               />
               <div className="mt-3 flex items-center justify-between gap-3">
-                <p className="text-[11px] text-muted-foreground">
+                <p className="text-[13px] text-muted-foreground">
                   Demo client-side · không gửi lên server
                 </p>
                 <button
@@ -693,7 +693,7 @@ export function MentorSampleInteractive() {
                     aria-hidden
                   />
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                    <p className="font-mono text-[12px] uppercase tracking-widest text-muted-foreground">
                       Bạn hỏi
                     </p>
                     <p className="mt-1 font-sans text-[15px] font-medium leading-snug text-foreground">
@@ -703,7 +703,7 @@ export function MentorSampleInteractive() {
                 </div>
                 {/* Mentor response */}
                 <div className="mt-5 border-t border-border/30 pt-5">
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-primary/80">
+                  <p className="font-mono text-[12px] uppercase tracking-widest text-primary/80">
                     Mentor · Chi Lan persona
                   </p>
                   <div className="mt-3 space-y-3 font-editorial-display text-[15px] leading-relaxed text-muted-foreground md:text-[16px]">
@@ -721,7 +721,7 @@ export function MentorSampleInteractive() {
                   <RotateCcw className="size-3.5" aria-hidden strokeWidth={2} />
                   Hỏi câu khác
                 </button>
-                <p className="text-[11px] text-muted-foreground">
+                <p className="text-[13px] text-muted-foreground">
                   Phản hồi dựa trên persona Chi Lan · ENFP · Mệnh Hỏa
                 </p>
               </div>
