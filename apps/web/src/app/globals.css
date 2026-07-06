@@ -180,6 +180,10 @@
  * [data-reduced-motion='true'] override below. */
 html {
   scroll-behavior: smooth;
+  /* Prevent iOS/mobile from auto-inflating text on orientation change or in
+   * landscape — keeps the designed type scale intact everywhere. (S4) */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -735,7 +739,7 @@ body {
   background-color: transparent;
   padding: 0.35rem 0.55rem;
   font-family: var(--font-be-vietnam), system-ui, sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   line-height: 1.2;
   color: hsl(var(--foreground));
   cursor: pointer;
@@ -748,6 +752,12 @@ body {
 .gt-trigger:focus-visible {
   outline: 2px solid hsl(var(--primary) / 0.5);
   outline-offset: 1px;
+}
+/* Touch: the language control + its menu rows hit the 44px tap target on
+ * mobile. Desktop stays compact (min-height only applies ≤640px). (S3a) */
+@media (max-width: 640px) {
+  .gt-trigger { min-height: 44px; }
+  .gt-item { min-height: 44px; }
 }
 .gt-name {
   max-width: 8rem;
@@ -775,7 +785,7 @@ body {
   border-radius: 4px;
   background-color: hsl(var(--muted));
   color: hsl(var(--muted-foreground));
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.04em;
 }
