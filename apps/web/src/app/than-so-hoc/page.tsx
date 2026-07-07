@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
+import { Button, Card, CardContent, CardHeader, Input, Label } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
@@ -116,7 +116,7 @@ export default function ThanSoHocLandingPage() {
         <div className="lg:col-span-3">
           <Card className="border-gold/20 bg-card/60 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle className="font-heading text-lg">Nhập thông tin của bạn</CardTitle>
+              <h2 className="font-heading text-lg font-semibold leading-none tracking-tight text-foreground">Nhập thông tin của bạn</h2>
             </CardHeader>
             <CardContent>
               <form className="space-y-5" onSubmit={onSubmit}>
