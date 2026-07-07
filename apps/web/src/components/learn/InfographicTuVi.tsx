@@ -120,7 +120,7 @@ export function InfographicTuVi() {
             key={c.name}
             type="button"
             onClick={() => setActive(i)}
-            className={`rounded border px-2 py-1 text-left transition-colors ${
+            className={`inline-flex min-h-11 items-center rounded border px-2 py-1 text-left transition-colors ${
               active === i
                 ? 'border-gold bg-gold/10 text-gold'
                 : 'border-border text-muted-foreground hover:border-gold/40'
