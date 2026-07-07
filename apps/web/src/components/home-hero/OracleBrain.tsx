@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { TOOLKIT_GROUPS } from '@/lib/catalog/tools';
+import { TOOLKIT_GROUPS } from '@/lib/site-registry';
 import { ShimmerText } from '@/components/fx/ShimmerText';
 import { Marquee } from '@/components/fx/Marquee';
 import type { BanMenhData } from '@/lib/ban-menh-data';

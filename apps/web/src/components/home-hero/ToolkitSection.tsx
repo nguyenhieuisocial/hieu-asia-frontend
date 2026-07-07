@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { TOOLKIT_GROUPS } from '@/lib/catalog/tools';
+import { TOOLKIT_GROUPS } from '@/lib/site-registry';
 
 /**
  * ToolkitSection — chống undersell: hieu.asia KHÔNG chỉ năm lăng kính.
  * Showcase cả bộ công cụ nhóm theo: Cổ học Á Đông / Tâm lý hiện đại / Trực giác.
- * Dữ liệu từ catalog (lib/catalog/tools) — 1 nguồn sự thật. Editorial, link /cong-cu.
+ * Dữ liệu từ site-registry (lib/site-registry) — 1 nguồn sự thật. Editorial, link /cong-cu.
  */
 const GROUPS = TOOLKIT_GROUPS;
 

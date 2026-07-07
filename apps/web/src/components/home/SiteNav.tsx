@@ -24,7 +24,7 @@ import { GoogleTranslate } from '@/components/i18n/GoogleTranslate';
 import { useAuth } from '@/hooks/use-auth';
 import { signOut } from '@/lib/auth-client';
 import { getStreak } from '@/lib/daily-checkin';
-import { QUICK_LOOKUP, QUICK_GROUPS } from '@/lib/catalog/tools';
+import { QUICK_LOOKUP, QUICK_GROUPS } from '@/lib/site-registry';
 
 interface NavLink {
   href: string;
