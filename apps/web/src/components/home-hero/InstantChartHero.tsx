@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { ShimmerText } from '@/components/fx/ShimmerText';
 import { AuroraBackdrop } from '@/components/fx/AuroraBackdrop';
 import { Time24 } from '@/components/Time24';
+import { useScrollToResult } from '@/lib/use-scroll-to-result';
 
 // BatTuChecker (engine Bát Tự + bảng 4 trụ + Nhật Chủ + đại vận + Thần Sát + nút
 // PDF, ~716 LOC) CHỈ render sau khi khách bấm "Lập lá số" (state `revealed`).
@@ -53,6 +54,7 @@ export function InstantChartHero(): React.JSX.Element {
   const [gender, setGender] = React.useState<'M' | 'F'>('M');
   const [revealed, setRevealed] = React.useState(false);
   const [touched, setTouched] = React.useState(false);
+  const { resultRef, armScroll } = useScrollToResult(revealed);
 
   // Khi đã hiện lá số mà người dùng đổi input → ẩn để họ bấm "Lập lại" cho khớp.
   const onChangeAny = React.useCallback(() => {
@@ -64,9 +66,10 @@ export function InstantChartHero(): React.JSX.Element {
       e.preventDefault();
       setTouched(true);
       if (!date) return;
+      armScroll();
       setRevealed(true);
     },
-    [date],
+    [date, armScroll],
   );
 
   const effectiveTime = unknownTime ? '12:00' : time;
@@ -214,7 +217,8 @@ export function InstantChartHero(): React.JSX.Element {
             + giao diện + CTA-mang-theo-lá-số của BatTuChecker (embedded mode:
             không ghi đè URL trang chủ). */}
         <div
-          className={`grid grid-cols-1 transition-all duration-500 ${
+          ref={resultRef}
+          className={`scroll-mt-24 grid grid-cols-1 transition-all duration-500 ${
             revealed ? 'mt-8 grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
           }`}
         >
