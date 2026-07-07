@@ -6,6 +6,7 @@ import { ShimmerText } from '@/components/fx/ShimmerText';
 import { AuroraBackdrop } from '@/components/fx/AuroraBackdrop';
 import { Time24 } from '@/components/Time24';
 import { useScrollToResult } from '@/lib/use-scroll-to-result';
+import { track } from '@/lib/analytics';
 
 // BatTuChecker (engine Bát Tự + bảng 4 trụ + Nhật Chủ + đại vận + Thần Sát + nút
 // PDF, ~716 LOC) CHỈ render sau khi khách bấm "Lập lá số" (state `revealed`).
@@ -56,16 +57,37 @@ export function InstantChartHero(): React.JSX.Element {
   const [touched, setTouched] = React.useState(false);
   const { resultRef, armScroll } = useScrollToResult(revealed);
 
+  // Analytics (S11): trang chủ là bề mặt "giá trị đầu tiên" nhưng trước đây KHÔNG
+  // bắn sự kiện nào → phễu đo MÙ đúng khúc quan trọng nhất (khách nhập ngày → ra
+  // lá số ngay). Bắn form_started lúc khách chạm input lần đầu, và
+  // form_submitted + tool_used lúc lá số hiện ra → phễu home→bắt-đầu→lá-số đo được.
+  const startedRef = React.useRef(false);
+  const startAtRef = React.useRef<number | null>(null);
+  const markStarted = React.useCallback(() => {
+    if (startedRef.current) return;
+    startedRef.current = true;
+    startAtRef.current = Date.now();
+    track('form_started', { form_id: 'home-instant-hero', page: '/' });
+  }, []);
+
   // Khi đã hiện lá số mà người dùng đổi input → ẩn để họ bấm "Lập lại" cho khớp.
   const onChangeAny = React.useCallback(() => {
+    markStarted();
     if (revealed) setRevealed(false);
-  }, [revealed]);
+  }, [revealed, markStarted]);
 
   const onSubmit = React.useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
       setTouched(true);
       if (!date) return;
+      const startedAt = startAtRef.current;
+      track('form_submitted', {
+        form_id: 'home-instant-hero',
+        page: '/',
+        time_to_submit_ms: startedAt ? Date.now() - startedAt : null,
+      });
+      track('tool_used', { tool: 'home-instant-bat-tu', result: 'ok' });
       armScroll();
       setRevealed(true);
     },
