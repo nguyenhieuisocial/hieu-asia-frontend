@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { expiredSeasonalTarget } from '@/lib/seasonal';
 import { PALACES_CONTENT, ALL_STARS_CONTENT } from '@/lib/tuvi-content';
 import { listCaseStudies } from '@/lib/case-studies';
 import { PALACE_READINGS } from '@/lib/palace-readings';
@@ -591,5 +592,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  return [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...lamNha, ...xongDat, ...khaiTruong, ...huongNha, ...tuVi2026ConGiap, ...tuVi2027ConGiap, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls, ...cungHoangDaoUrls, ...banMenhUrls, ...tamTaiUrls, ...kimLauUrls, ...mauXeUrls, ...huongBanUrls, ...cungHopUrls, ...enneagramTypeUrls, ...conGiapUrls, ...mbtiTypeUrls, ...discTypeUrls, ...bigFiveTraitUrls];
+  const allRoutes = [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...lamNha, ...xongDat, ...khaiTruong, ...huongNha, ...tuVi2026ConGiap, ...tuVi2027ConGiap, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls, ...cungHoangDaoUrls, ...banMenhUrls, ...tamTaiUrls, ...kimLauUrls, ...mauXeUrls, ...huongBanUrls, ...cungHopUrls, ...enneagramTypeUrls, ...conGiapUrls, ...mbtiTypeUrls, ...discTypeUrls, ...bigFiveTraitUrls];
+  // S10 mùa vụ: rụng trang thời-điểm đã hết hạn khỏi sitemap (vẫn giữ file).
+  return allRoutes.filter((e) => expiredSeasonalTarget(e.url.replace(BASE_URL, '')) === null);
 }
