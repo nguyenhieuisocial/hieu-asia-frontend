@@ -9,10 +9,6 @@
  *   - name / blurb → card copy (vi-VN)
  *   - Icon         → lucide glyph
  *   - external     → "mở trang gốc ↗" deep-link to the vendor dashboard
- *   - built        → true once both a worker `case` + an `/infra/<slug>/page.tsx`
- *                    exist. All current tools are built; the flag still guards an
- *                    "đang dựng" badge on the hub grid for any future not-yet-
- *                    built tool added with `built: false`.
  */
 
 import type { LucideIcon } from 'lucide-react';
@@ -41,8 +37,6 @@ export interface InfraTool {
   external: string;
   /** Env var(s) the worker needs for this tool's detail endpoint. */
   env: string;
-  /** True once the worker case + the /infra/<slug> page both exist. */
-  built: boolean;
 }
 
 export const INFRA_TOOLS: InfraTool[] = [
@@ -53,7 +47,6 @@ export const INFRA_TOOLS: InfraTool[] = [
     Icon: Triangle,
     external: 'https://vercel.com/nguyenhieuisocial-4628s-projects',
     env: 'ADMIN_VERCEL_TOKEN',
-    built: true,
   },
   {
     slug: 'sentry',
@@ -62,7 +55,6 @@ export const INFRA_TOOLS: InfraTool[] = [
     Icon: Bug,
     external: 'https://sentry.io/organizations/hieuasia/issues/',
     env: 'SENTRY_API_TOKEN',
-    built: true,
   },
   {
     slug: 'resend',
@@ -71,7 +63,6 @@ export const INFRA_TOOLS: InfraTool[] = [
     Icon: Mail,
     external: 'https://resend.com/emails',
     env: 'RESEND_API_KEY',
-    built: true,
   },
   {
     slug: 'cloudflare',
@@ -80,7 +71,6 @@ export const INFRA_TOOLS: InfraTool[] = [
     Icon: Cloud,
     external: 'https://dash.cloudflare.com/',
     env: 'CF_ANALYTICS_TOKEN / CLOUDFLARE_API_TOKEN',
-    built: true,
   },
   {
     slug: 'kv',
@@ -89,7 +79,6 @@ export const INFRA_TOOLS: InfraTool[] = [
     Icon: KeyRound,
     external: 'https://dash.cloudflare.com/?to=/:account/workers/kv/namespaces',
     env: 'KV bindings (SESSIONS / CACHE / AFFILIATES)',
-    built: true,
   },
   {
     slug: 'supabase',
@@ -98,7 +87,6 @@ export const INFRA_TOOLS: InfraTool[] = [
     Icon: Database,
     external: 'https://supabase.com/dashboard/project/_',
     env: 'SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY',
-    built: true,
   },
   {
     slug: 'langfuse',
@@ -107,7 +95,6 @@ export const INFRA_TOOLS: InfraTool[] = [
     Icon: LineChart,
     external: 'https://cloud.langfuse.com',
     env: 'LANGFUSE_PUBLIC_KEY / LANGFUSE_SECRET_KEY',
-    built: true,
   },
   {
     slug: 'github',
@@ -116,7 +103,6 @@ export const INFRA_TOOLS: InfraTool[] = [
     Icon: Github,
     external: 'https://github.com/nguyenhieuisocial',
     env: 'GITHUB_TOKEN',
-    built: true,
   },
   {
     slug: 'telegram',
@@ -125,7 +111,6 @@ export const INFRA_TOOLS: InfraTool[] = [
     Icon: Send,
     external: 'https://t.me/ad_hieuasia_bot',
     env: 'TELEGRAM_* tokens',
-    built: true,
   },
   {
     slug: 'ai-gateway',
@@ -134,7 +119,6 @@ export const INFRA_TOOLS: InfraTool[] = [
     Icon: Network,
     external: 'https://vercel.com/nguyenhieuisocial-4628s-projects/~/ai',
     env: 'AI_GATEWAY_API_KEY',
-    built: true,
   },
   {
     slug: 'uptime',
@@ -143,7 +127,6 @@ export const INFRA_TOOLS: InfraTool[] = [
     Icon: Activity,
     external: 'https://uptime.betterstack.com/',
     env: 'BETTERSTACK_API_TOKEN',
-    built: true,
   },
   {
     slug: 'aikido',
@@ -152,7 +135,6 @@ export const INFRA_TOOLS: InfraTool[] = [
     Icon: ShieldCheck,
     external: 'https://app.aikido.dev/issues',
     env: 'AIKIDO_CLIENT_ID / AIKIDO_CLIENT_SECRET',
-    built: true,
   },
 ];
 

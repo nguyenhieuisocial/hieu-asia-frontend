@@ -20,7 +20,7 @@ import {
   type InfraAiGatewaySeriesPoint,
 } from '@/lib/admin-api';
 import { getInfraTool } from '@/lib/infra-tools';
-import { fmtPct } from '@/lib/format';
+import { fmtNumber, fmtPct } from '@/lib/format';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel } from '@/components/admin/infra/infra-panel';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
@@ -39,10 +39,6 @@ const AiGatewayTrendChart = dynamic(
     loading: () => <div className="h-72 animate-pulse rounded bg-muted/30" aria-hidden />,
   },
 );
-
-function fmtNum(n: number): string {
-  return n.toLocaleString('vi-VN');
-}
 
 function fmtCost(usd: number): string {
   return `$${usd.toFixed(4)}`;
@@ -74,7 +70,7 @@ const MODEL_COLUMNS: AdminTableColumn<InfraAiGatewayItem>[] = [
     id: 'requests',
     header: 'Request',
     className: 'text-right tabular-nums',
-    cell: (r) => fmtNum(r.requests),
+    cell: (r) => fmtNumber(r.requests),
   },
   {
     id: 'cost',
@@ -104,7 +100,7 @@ const MODEL_COLUMNS: AdminTableColumn<InfraAiGatewayItem>[] = [
         <span title={`${topError.error_class} (${topError.count})`}>
           {topError.error_class}
           <span className="ml-1 text-muted-foreground/70">
-            ×{fmtNum(topError.count)}
+            ×{fmtNumber(topError.count)}
           </span>
         </span>
       ) : (
@@ -131,8 +127,8 @@ export default function InfraAiGatewayPage() {
       tool={tool}
       query={query}
       emptyTitle="Chưa có lượt gọi nào"
-      renderTable={(items) => (
-        <div className="space-y-6">
+      renderSummary={
+        <>
           {summary && (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {summary.balance_usd != null && (
@@ -153,7 +149,7 @@ export default function InfraAiGatewayPage() {
                   value={fmtBalance(summary.total_spend_usd)}
                 />
               )}
-              <StatCard label="Tổng request" value={fmtNum(summary.total_requests)} />
+              <StatCard label="Tổng request" value={fmtNumber(summary.total_requests)} />
               <StatCard label="Tổng chi phí" value={fmtCost(summary.total_cost_usd)} />
             </div>
           )}
@@ -168,14 +164,15 @@ export default function InfraAiGatewayPage() {
               </CardContent>
             </Card>
           )}
-
-          <AdminTable
-            rows={items}
-            columns={MODEL_COLUMNS}
-            getRowId={(r) => `${r.vendor}/${r.model}`}
-            caption="Thống kê theo model"
-          />
-        </div>
+        </>
+      }
+      renderTable={(items) => (
+        <AdminTable
+          rows={items}
+          columns={MODEL_COLUMNS}
+          getRowId={(r) => `${r.vendor}/${r.model}`}
+          caption="Thống kê theo model"
+        />
       )}
     />
   );

@@ -323,7 +323,10 @@ export const MOCK_TRANSACTIONS: AdminTransaction[] = Array.from({ length: 40 }, 
   const planRoll = i % 5;
   const plan: AdminTransaction['plan'] =
     planRoll === 0 ? 'lifetime' : planRoll <= 1 ? 'mentor_year' : 'mentor_month';
-  const amount = plan === 'lifetime' ? 199 : plan === 'mentor_year' ? 89 : 9.9;
+  // VND magnitudes — `amount_usd` thực chất chứa VND (khớp mapPaymentToAdmin ở
+  // admin-api; sản phẩm không có USD). Trước đây để 199/89/9.9 nên khi gateway
+  // lỗi và rơi về mock, bảng + KPI "Doanh thu (trang)" hiện "199 ₫" sai bậc.
+  const amount = plan === 'lifetime' ? 2_990_000 : plan === 'mentor_year' ? 990_000 : 99_000;
   const statusRoll = i % 13;
   return {
     id: `tx_${pad(i + 1, 4)}`,

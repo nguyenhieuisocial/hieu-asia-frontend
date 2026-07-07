@@ -23,6 +23,7 @@ import {
 } from '@/lib/admin-api';
 import { getInfraTool } from '@/lib/infra-tools';
 import { formatRelativeOrEmpty } from '@/lib/format-date';
+import { fmtNumber } from '@/lib/format';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
@@ -107,10 +108,6 @@ function runTone(
     default:
       return { label: conclusion, tone: 'neutral' };
   }
-}
-
-function fmtNum(n: number): string {
-  return n.toLocaleString('vi-VN');
 }
 
 /** Short 7-char sha for the recent-commits list. */
@@ -233,16 +230,16 @@ function DependabotSection({ data }: { data: InfraGithubDependabot }) {
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <StatCard
           label="Critical"
-          value={fmtNum(sev.critical)}
+          value={fmtNumber(sev.critical)}
           className={severityCardClass(sev.critical)}
         />
         <StatCard
           label="High"
-          value={fmtNum(sev.high)}
+          value={fmtNumber(sev.high)}
           className={severityCardClass(sev.high)}
         />
-        <StatCard label="Medium" value={fmtNum(sev.medium)} />
-        <StatCard label="Low" value={fmtNum(sev.low)} />
+        <StatCard label="Medium" value={fmtNumber(sev.medium)} />
+        <StatCard label="Low" value={fmtNumber(sev.low)} />
       </div>
       {data.items.length > 0 && (
         <Card>

@@ -8,12 +8,12 @@
 
 import { permanentRedirect } from 'next/navigation';
 
-export default function ReferralsRedirect({
+export default async function ReferralsRedirect({
   searchParams,
 }: {
-  searchParams: { root?: string };
+  searchParams: Promise<{ root?: string }>;
 }) {
-  const root = searchParams.root;
+  const { root } = await searchParams;
   permanentRedirect(
     root
       ? `/affiliates?tab=referrals&root=${encodeURIComponent(root)}`

@@ -30,6 +30,7 @@ import {
 } from '@/lib/admin-api';
 import { getInfraTool } from '@/lib/infra-tools';
 import { formatRelativeOrEmpty } from '@/lib/format-date';
+import { fmtNumber } from '@/lib/format';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
 import { CloudflareDeployDrawer } from '@/components/admin/infra/CloudflareDeployDrawer';
@@ -56,10 +57,6 @@ const CloudflareDeployChart = dynamic(
     loading: () => <div className="h-64 animate-pulse rounded bg-muted/30" aria-hidden />,
   },
 );
-
-function fmtNum(n: number): string {
-  return n.toLocaleString('vi-VN');
-}
 
 const DEPLOY_COLUMNS: AdminTableColumn<InfraCloudflareItem>[] = [
   {
@@ -135,7 +132,7 @@ export default function InfraCloudflarePage() {
               {summary && (
                 <StatCard
                   label="Tổng số bản"
-                  value={fmtNum(summary.total_deployments)}
+                  value={fmtNumber(summary.total_deployments)}
                   hint={
                     formatRelativeOrEmpty(summary.live_deployment_at)
                       ? `Đang chạy ${formatRelativeOrEmpty(summary.live_deployment_at)}`
@@ -145,8 +142,8 @@ export default function InfraCloudflarePage() {
               )}
               {cadence && (
                 <>
-                  <StatCard label="Deploy 7 ngày" value={fmtNum(cadence.deploys_7d)} />
-                  <StatCard label="Deploy 30 ngày" value={fmtNum(cadence.deploys_30d)} />
+                  <StatCard label="Deploy 7 ngày" value={fmtNumber(cadence.deploys_7d)} />
+                  <StatCard label="Deploy 30 ngày" value={fmtNumber(cadence.deploys_30d)} />
                   <StatCard
                     label="Cách lần cuối"
                     value={

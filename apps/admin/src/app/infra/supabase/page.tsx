@@ -20,6 +20,7 @@ import {
   type InfraSupabaseMigration,
 } from '@/lib/admin-api';
 import { getInfraTool } from '@/lib/infra-tools';
+import { fmtNumber } from '@/lib/format';
 import { useAdminRole } from '@/hooks/useAdminRole';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel } from '@/components/admin/infra/infra-panel';
@@ -41,10 +42,6 @@ const SupabaseSignupChart = dynamic(
 
 const tool = getInfraTool('supabase')!;
 
-function fmtNum(n: number): string {
-  return n.toLocaleString('vi-VN');
-}
-
 const TABLE_COLUMNS: AdminTableColumn<InfraSupabaseItem>[] = [
   {
     id: 'schema',
@@ -62,13 +59,13 @@ const TABLE_COLUMNS: AdminTableColumn<InfraSupabaseItem>[] = [
     id: 'rows',
     header: 'Ước tính',
     className: 'text-right tabular-nums text-muted-foreground',
-    cell: (t) => fmtNum(t.rows),
+    cell: (t) => fmtNumber(t.rows),
   },
   {
     id: 'rows_exact',
     header: 'Chính xác',
     className: 'text-right tabular-nums font-medium text-foreground',
-    cell: (t) => (t.rows_exact != null ? fmtNum(t.rows_exact) : '—'),
+    cell: (t) => (t.rows_exact != null ? fmtNumber(t.rows_exact) : '—'),
   },
 ];
 
@@ -105,9 +102,9 @@ export default function InfraSupabasePage() {
           <div className="space-y-6">
             {summary && (
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                <StatCard label="Tổng số bảng" value={fmtNum(summary.total_tables)} />
+                <StatCard label="Tổng số bảng" value={fmtNumber(summary.total_tables)} />
                 {summary.total_users != null && (
-                  <StatCard label="Tổng người dùng" value={fmtNum(summary.total_users)} />
+                  <StatCard label="Tổng người dùng" value={fmtNumber(summary.total_users)} />
                 )}
               </div>
             )}

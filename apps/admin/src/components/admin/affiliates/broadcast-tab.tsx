@@ -19,6 +19,7 @@ import {
   Input,
   Textarea,
   Checkbox,
+  StatusBadge,
 } from '@hieu-asia/ui';
 import { EmptyState } from '@/components/admin/empty-state';
 
@@ -207,16 +208,17 @@ export function BroadcastTab() {
                     <span>{b.recipients} recipients</span>
                     <span>· {b.channels.map((c) => CHANNEL_LABEL[c]).join(' · ')}</span>
                     <span>· {b.target_status === 'all' ? 'tất cả' : 'active'}</span>
-                    <span
-                      className={`ml-auto rounded px-2 py-0.5 text-[10px] uppercase ${
-                        b.status === 'sent'
-                          ? 'bg-green-500/15 text-green-700 dark:text-green-300'
-                          : b.status === 'queued'
-                            ? 'bg-yellow-500/15 text-yellow-700 dark:text-yellow-300'
-                            : 'bg-red-500/15 text-red-700 dark:text-red-300'
-                      }`}
-                    >
-                      {b.status}
+                    <span className="ml-auto">
+                      <StatusBadge
+                        status={
+                          b.status === 'sent'
+                            ? 'success'
+                            : b.status === 'queued'
+                              ? 'warning'
+                              : 'error'
+                        }
+                        label={b.status}
+                      />
                     </span>
                   </div>
                 </div>

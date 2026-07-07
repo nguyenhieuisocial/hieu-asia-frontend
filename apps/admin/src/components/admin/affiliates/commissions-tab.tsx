@@ -116,7 +116,12 @@ export function CommissionsTab() {
       id: 'beneficiary',
       header: 'Beneficiary',
       cell: (c) => (
-        <span className="text-foreground/85">{c.beneficiary_email ?? c.beneficiary_id.slice(0, 8)}</span>
+        <span
+          className="block max-w-[22ch] truncate text-foreground/85"
+          title={c.beneficiary_email ?? undefined}
+        >
+          {c.beneficiary_email ?? c.beneficiary_id.slice(0, 8)}
+        </span>
       ),
     },
     {

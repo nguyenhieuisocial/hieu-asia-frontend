@@ -233,10 +233,15 @@ function FlagRow({
   onOpenHistory: (key: string) => void;
 }) {
   const [pct, setPct] = React.useState(String(flag.rollout_pct));
+  // True once the user edits the field, until their change is saved. Guards the
+  // sync-from-server effect below so a refetch — e.g. the one a switch toggle
+  // triggers, which doesn't carry rollout_pct — can't clobber an unsaved edit.
+  const editingRef = React.useRef(false);
 
   // Keep the local input in sync when the server value changes (e.g. after a
   // successful save / refetch) — but don't fight the user while they edit.
   React.useEffect(() => {
+    if (editingRef.current) return;
     setPct(String(flag.rollout_pct));
   }, [flag.rollout_pct]);
 
@@ -244,10 +249,14 @@ function FlagRow({
   const dirty = parsed !== flag.rollout_pct;
 
   const handlePctChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    editingRef.current = true;
     setPct(e.target.value);
   }, []);
 
   const handleSave = React.useCallback(() => {
+    // Their edit is being persisted — release the guard so the server value can
+    // sync back in again (their own save landing, or a later external change).
+    editingRef.current = false;
     onSaveRollout({ key: flag.key, enabled: flag.enabled, rollout_pct: parsed });
   }, [onSaveRollout, flag.key, flag.enabled, parsed]);
 

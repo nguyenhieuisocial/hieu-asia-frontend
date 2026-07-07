@@ -280,7 +280,11 @@ export default function LlmSpendPage() {
               <CardDescription>Tổng USD cộng dồn từ MV <code className="font-mono">llm_trace_daily</code>.</CardDescription>
             </CardHeader>
             <CardContent>
-              <VendorBarChart data={daily.data ?? []} />
+              {daily.isLoading ? (
+                <div className="h-64 animate-pulse rounded bg-muted/30" />
+              ) : (
+                <VendorBarChart data={daily.data ?? []} />
+              )}
             </CardContent>
           </Card>
         </TabsContent>

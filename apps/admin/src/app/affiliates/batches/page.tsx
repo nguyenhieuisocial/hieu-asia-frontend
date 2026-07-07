@@ -8,12 +8,12 @@
 
 import { permanentRedirect } from 'next/navigation';
 
-export default function BatchesRedirect({
+export default async function BatchesRedirect({
   searchParams,
 }: {
-  searchParams: { id?: string };
+  searchParams: Promise<{ id?: string }>;
 }) {
-  const id = searchParams.id;
+  const { id } = await searchParams;
   permanentRedirect(
     id ? `/affiliates?tab=batches&batchId=${encodeURIComponent(id)}` : '/affiliates?tab=batches',
   );
