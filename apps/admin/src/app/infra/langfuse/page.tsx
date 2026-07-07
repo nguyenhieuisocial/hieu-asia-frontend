@@ -28,9 +28,11 @@ import {
 } from '@/lib/admin-api';
 import { getInfraTool } from '@/lib/infra-tools';
 import { formatDateOrEmpty, formatRelativeOrEmpty } from '@/lib/format-date';
+import { fmtNumber } from '@/lib/format';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel } from '@/components/admin/infra/infra-panel';
 import { LangfuseTraceDrawer } from '@/components/admin/infra/LangfuseTraceDrawer';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 
 const tool = getInfraTool('langfuse')!;
 
@@ -47,10 +49,6 @@ const LangfuseTrendChart = dynamic(
   },
 );
 
-function fmtNum(n: number): string {
-  return n.toLocaleString('vi-VN');
-}
-
 function fmtCost(usd: number | null | undefined): string {
   if (usd == null || !Number.isFinite(usd)) return '—';
   return `$${usd.toFixed(4)}`;
@@ -61,6 +59,123 @@ function fmtLatency(ms: number | null | undefined): string {
   if (ms < 1000) return `${Math.round(ms)} ms`;
   return `${(ms / 1000).toFixed(2)} s`;
 }
+
+const BY_MODEL_COLUMNS: AdminTableColumn<InfraLangfuseModelRow>[] = [
+  {
+    id: 'model',
+    header: 'Mô hình',
+    className: 'max-w-[18rem] truncate font-mono text-xs text-foreground',
+    cell: (m) => m.model,
+  },
+  {
+    id: 'traces',
+    header: 'Trace',
+    className: 'text-right tabular-nums',
+    cell: (m) => fmtNumber(m.traces),
+  },
+  {
+    id: 'tokens',
+    header: 'Token',
+    className: 'text-right tabular-nums text-muted-foreground',
+    cell: (m) => fmtNumber(m.total_tokens),
+  },
+  {
+    id: 'cost',
+    header: 'Chi phí',
+    className: 'text-right tabular-nums',
+    cell: (m) => fmtCost(m.cost_usd),
+  },
+];
+
+const BY_ROLE_COLUMNS: AdminTableColumn<InfraLangfuseRole>[] = [
+  {
+    id: 'role',
+    header: 'Vai trò',
+    className: 'whitespace-nowrap font-medium text-foreground',
+    cell: (r) => r.role,
+  },
+  {
+    id: 'traces',
+    header: 'Trace',
+    className: 'text-right tabular-nums',
+    cell: (r) => fmtNumber(r.traces),
+  },
+  {
+    id: 'cost',
+    header: 'Chi phí',
+    className: 'text-right tabular-nums',
+    cell: (r) => fmtCost(r.cost_usd),
+  },
+];
+
+const SCORE_COLUMNS: AdminTableColumn<InfraLangfuseScore>[] = [
+  {
+    id: 'name',
+    header: 'Tên',
+    className: 'whitespace-nowrap font-medium text-foreground',
+    cell: (s) => s.name ?? '—',
+  },
+  {
+    id: 'value',
+    header: 'Giá trị',
+    className: 'text-right tabular-nums',
+    cell: (s) => (s.value == null ? '—' : String(s.value)),
+  },
+  {
+    id: 'comment',
+    header: 'Ghi chú',
+    className: 'max-w-[18rem] truncate text-muted-foreground',
+    cell: (s) => s.comment ?? '—',
+  },
+  {
+    id: 'trace',
+    header: 'Trace',
+    className: 'max-w-[10rem] truncate font-mono text-xs text-muted-foreground',
+    cell: (s) => s.trace_id ?? '—',
+  },
+];
+
+const TRACE_COLUMNS: AdminTableColumn<InfraLangfuseItem>[] = [
+  {
+    id: 'name',
+    header: 'Tên',
+    className: 'max-w-[24rem] truncate font-medium text-foreground',
+    cell: (t) => t.name ?? <span className="text-muted-foreground">—</span>,
+  },
+  {
+    id: 'latency',
+    header: 'Độ trễ',
+    className: 'text-right tabular-nums text-muted-foreground',
+    cell: (t) => fmtLatency(t.latency_ms),
+  },
+  {
+    id: 'cost',
+    header: 'Chi phí',
+    className: 'text-right tabular-nums',
+    cell: (t) => fmtCost(t.cost_usd),
+  },
+  {
+    id: 'user',
+    header: 'Người dùng',
+    className: 'max-w-[14rem] truncate font-mono text-xs text-muted-foreground',
+    cell: (t) => t.user_id ?? '—',
+  },
+  {
+    id: 'timestamp',
+    header: 'Thời gian',
+    className: 'whitespace-nowrap text-muted-foreground',
+    cell: (t) => (
+      <>
+        {formatDateOrEmpty(t.timestamp)}
+        {formatRelativeOrEmpty(t.timestamp) && (
+          <span className="ml-1.5 text-xs opacity-70">
+            · {formatRelativeOrEmpty(t.timestamp)}
+          </span>
+        )}
+      </>
+    ),
+  },
+];
 
 export default function InfraLangfusePage() {
   // Draft filter inputs vs the applied filter (applied only on submit so we
@@ -109,7 +224,7 @@ export default function InfraLangfusePage() {
                 <StatCard label="Chi hôm nay" value={fmtCost(summary.spend_today_usd)} />
               )}
               {summary.traces_24h != null && (
-                <StatCard label="Trace 24h" value={fmtNum(summary.traces_24h)} />
+                <StatCard label="Trace 24h" value={fmtNumber(summary.traces_24h)} />
               )}
               {summary.latency_avg_ms !== undefined && (
                 <StatCard label="Độ trễ TB" value={fmtLatency(summary.latency_avg_ms)} />
@@ -139,128 +254,57 @@ export default function InfraLangfusePage() {
           )}
 
           {byModel.length > 0 && (
-            <Card>
-              <CardContent className="p-0">
-                <p className="px-4 pt-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                  Theo mô hình (chi phí)
-                </p>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-border text-left font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-                        <th className="px-4 py-2.5">Mô hình</th>
-                        <th className="px-4 py-2.5 text-right">Trace</th>
-                        <th className="px-4 py-2.5 text-right">Token</th>
-                        <th className="px-4 py-2.5 text-right">Chi phí</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {byModel.map((m) => (
-                        <tr
-                          key={m.model}
-                          className="border-b border-border/50 last:border-0 hover:bg-gold/5"
-                        >
-                          <td className="max-w-[18rem] truncate px-4 py-2.5 font-mono text-xs text-foreground">
-                            {m.model}
-                          </td>
-                          <td className="px-4 py-2.5 text-right tabular-nums">
-                            {fmtNum(m.traces)}
-                          </td>
-                          <td className="px-4 py-2.5 text-right tabular-nums text-muted-foreground">
-                            {fmtNum(m.total_tokens)}
-                          </td>
-                          <td className="px-4 py-2.5 text-right tabular-nums">
-                            {fmtCost(m.cost_usd)}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="space-y-2">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                Theo mô hình (chi phí)
+              </p>
+              <Card>
+                <CardContent className="p-0">
+                  <AdminTable
+                    rows={byModel}
+                    columns={BY_MODEL_COLUMNS}
+                    getRowId={(m) => m.model}
+                    caption="Chi phí theo mô hình"
+                  />
+                </CardContent>
+              </Card>
+            </div>
           )}
 
           {byRole.length > 0 && (
-            <Card>
-              <CardContent className="p-0">
-                <p className="px-4 pt-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                  Theo vai trò
-                </p>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-border text-left font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-                        <th className="px-4 py-2.5">Vai trò</th>
-                        <th className="px-4 py-2.5 text-right">Trace</th>
-                        <th className="px-4 py-2.5 text-right">Chi phí</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {byRole.map((r) => (
-                        <tr
-                          key={r.role}
-                          className="border-b border-border/50 last:border-0 hover:bg-gold/5"
-                        >
-                          <td className="whitespace-nowrap px-4 py-2.5 font-medium text-foreground">
-                            {r.role}
-                          </td>
-                          <td className="px-4 py-2.5 text-right tabular-nums">
-                            {fmtNum(r.traces)}
-                          </td>
-                          <td className="px-4 py-2.5 text-right tabular-nums">
-                            {fmtCost(r.cost_usd)}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="space-y-2">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                Theo vai trò
+              </p>
+              <Card>
+                <CardContent className="p-0">
+                  <AdminTable
+                    rows={byRole}
+                    columns={BY_ROLE_COLUMNS}
+                    getRowId={(r) => r.role}
+                    caption="Chi phí theo vai trò"
+                  />
+                </CardContent>
+              </Card>
+            </div>
           )}
 
           {scores.length > 0 && (
-            <Card>
-              <CardContent className="p-0">
-                <p className="px-4 pt-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                  Điểm đánh giá (scores)
-                </p>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-border text-left font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-                        <th className="px-4 py-2.5">Tên</th>
-                        <th className="px-4 py-2.5 text-right">Giá trị</th>
-                        <th className="px-4 py-2.5">Ghi chú</th>
-                        <th className="px-4 py-2.5">Trace</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {scores.map((s) => (
-                        <tr
-                          key={s.id}
-                          className="border-b border-border/50 last:border-0 hover:bg-gold/5"
-                        >
-                          <td className="whitespace-nowrap px-4 py-2.5 font-medium text-foreground">
-                            {s.name ?? '—'}
-                          </td>
-                          <td className="px-4 py-2.5 text-right tabular-nums">
-                            {s.value == null ? '—' : String(s.value)}
-                          </td>
-                          <td className="max-w-[18rem] truncate px-4 py-2.5 text-muted-foreground">
-                            {s.comment ?? '—'}
-                          </td>
-                          <td className="max-w-[10rem] truncate px-4 py-2.5 font-mono text-xs text-muted-foreground">
-                            {s.trace_id ?? '—'}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="space-y-2">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                Điểm đánh giá (scores)
+              </p>
+              <Card>
+                <CardContent className="p-0">
+                  <AdminTable
+                    rows={scores}
+                    columns={SCORE_COLUMNS}
+                    getRowId={(s) => s.id}
+                    caption="Điểm đánh giá"
+                  />
+                </CardContent>
+              </Card>
+            </div>
           )}
 
           {/* Trace search / filter — applied on submit (forwarded to Langfuse) */}
@@ -336,57 +380,15 @@ export default function InfraLangfusePage() {
             )}
           </form>
 
-          <Card>
-            <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border text-left font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-                      <th className="px-4 py-2.5">Tên</th>
-                      <th className="px-4 py-2.5 text-right">Độ trễ</th>
-                      <th className="px-4 py-2.5 text-right">Chi phí</th>
-                      <th className="px-4 py-2.5">Người dùng</th>
-                      <th className="px-4 py-2.5">Thời gian</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {items.map((t) => (
-                      <tr
-                        key={t.id}
-                        onClick={t.id ? () => setOpenTraceId(t.id) : undefined}
-                        className={
-                          t.id
-                            ? 'cursor-pointer border-b border-border/50 last:border-0 hover:bg-gold/5'
-                            : 'border-b border-border/50 last:border-0 hover:bg-gold/5'
-                        }
-                      >
-                        <td className="max-w-[24rem] truncate px-4 py-2.5 font-medium text-foreground">
-                          {t.name ?? <span className="text-muted-foreground">—</span>}
-                        </td>
-                        <td className="px-4 py-2.5 text-right tabular-nums text-muted-foreground">
-                          {fmtLatency(t.latency_ms)}
-                        </td>
-                        <td className="px-4 py-2.5 text-right tabular-nums">
-                          {fmtCost(t.cost_usd)}
-                        </td>
-                        <td className="max-w-[14rem] truncate px-4 py-2.5 font-mono text-xs text-muted-foreground">
-                          {t.user_id ?? '—'}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-2.5 text-muted-foreground">
-                          {formatDateOrEmpty(t.timestamp)}
-                          {formatRelativeOrEmpty(t.timestamp) && (
-                            <span className="ml-1.5 text-xs opacity-70">
-                              · {formatRelativeOrEmpty(t.timestamp)}
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
+          <AdminTable
+            rows={items}
+            columns={TRACE_COLUMNS}
+            getRowId={(t) => t.id}
+            onRowClick={(t) => {
+              if (t.id) setOpenTraceId(t.id);
+            }}
+            caption="Trace LLM gần đây"
+          />
         </div>
       )}
     />

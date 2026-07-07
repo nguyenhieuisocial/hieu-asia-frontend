@@ -5,9 +5,7 @@
  *
  * One card per 3rd-party tool (from `INFRA_TOOLS`). Each card links to its
  * detail panel `/infra/<slug>` and offers a "mở trang gốc ↗" deep-link to the
- * vendor's own dashboard. Tools not built yet still show a card (so the hub is
- * complete) but are tagged "đang dựng" — their `/infra/<slug>` page renders a
- * placeholder until a follow-up agent ships them.
+ * vendor's own dashboard. Every tool has its own `/infra/<slug>` detail page.
  *
  * Goal: an operator can triage Vercel/Sentry/Resend/… from inside admin
  * without juggling 9 vendor logins.
@@ -46,11 +44,6 @@ export default function InfraHubPage() {
                       <h3 className="font-heading text-base font-semibold text-foreground">
                         {tool.name}
                       </h3>
-                      {!tool.built && (
-                        <span className="mt-0.5 inline-flex items-center rounded-full border border-gold/30 bg-gold/10 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-gold">
-                          đang dựng
-                        </span>
-                      )}
                     </div>
                   </div>
                   <a

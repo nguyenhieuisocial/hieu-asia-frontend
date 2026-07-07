@@ -45,7 +45,6 @@ import HeatmapPanel from '@/components/admin/analytics/HeatmapPanel';
 import GeoDevicesPanel from '@/components/admin/analytics/GeoDevicesPanel';
 
 export const dynamic = 'force-dynamic';
-export const revalidate = 60;
 
 const TABS = [
   { id: 'overview', label: 'Tổng quan lưu lượng', Icon: Activity },

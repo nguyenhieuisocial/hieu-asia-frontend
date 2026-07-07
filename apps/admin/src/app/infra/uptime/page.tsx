@@ -28,13 +28,9 @@ import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-pane
 import { EmptyState } from '@/components/admin/empty-state';
 import { UptimeMonitorDrawer } from '@/components/admin/infra/UptimeMonitorDrawer';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
-import { fmtDateTime } from '@/lib/format';
+import { fmtDateTime, fmtNumber } from '@/lib/format';
 
 const tool = getInfraTool('uptime')!;
-
-function fmtNum(n: number): string {
-  return n.toLocaleString('vi-VN');
-}
 
 function fmtMs(ms: number | null | undefined): string {
   if (ms == null) return '—';
@@ -163,18 +159,18 @@ export default function InfraUptimePage() {
         <div className="space-y-6">
           {summary && (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <StatCard label="Tổng" value={fmtNum(summary.total)} />
-              <StatCard label="Đang chạy" value={fmtNum(summary.up)} />
+              <StatCard label="Tổng" value={fmtNumber(summary.total)} />
+              <StatCard label="Đang chạy" value={fmtNumber(summary.up)} />
               <StatCard
                 label="Đang lỗi"
-                value={fmtNum(summary.down)}
+                value={fmtNumber(summary.down)}
                 className={
                   summary.down > 0
                     ? 'border-red-400/40 bg-red-500/5 hover:border-red-400/60'
                     : undefined
                 }
               />
-              <StatCard label="Tạm dừng" value={fmtNum(summary.paused)} />
+              <StatCard label="Tạm dừng" value={fmtNumber(summary.paused)} />
             </div>
           )}
 

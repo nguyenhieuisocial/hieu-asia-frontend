@@ -42,6 +42,7 @@ import {
 } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { ProductTabs, type ProductTab } from '@/components/admin/product-tabs';
 import { fetchAffiliatesList, fetchFraudReport } from '@/lib/affiliate-admin-api';
 import { fmtVnd, fmtDateTime } from '@/lib/format';
@@ -494,6 +495,55 @@ function PayoutsInlineTab() {
     refetchInterval: 60_000,
   });
 
+  const columns: AdminTableColumn<PayoutLedgerRow>[] = [
+    {
+      id: 'id',
+      header: 'ID',
+      cell: (p) => <span className="font-mono text-xs text-muted-foreground">{p.id}</span>,
+    },
+    { id: 'code', header: 'Mã', cell: (p) => <span className="font-mono text-gold">{p.affiliate_code}</span> },
+    { id: 'period', header: 'Kỳ', cell: (p) => p.period },
+    {
+      id: 'amount',
+      header: 'Số tiền',
+      className: 'text-right',
+      cell: (p) => <span className="font-mono text-gold">{fmtVnd(p.amount_vnd)}</span>,
+    },
+    {
+      id: 'method',
+      header: 'Phương thức',
+      hideOnMobile: true,
+      cell: (p) => p.method ?? '—',
+    },
+    {
+      id: 'batch',
+      header: 'Đợt chi',
+      hideOnMobile: true,
+      cell: (p) =>
+        p.batch_id ? (
+          <Link
+            href={`/affiliates?tab=batches&batchId=${p.batch_id}`}
+            className="font-mono text-xs text-gold hover:underline"
+          >
+            {p.batch_id.slice(0, 8)}
+          </Link>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        ),
+    },
+    {
+      id: 'paid_at',
+      header: 'Trả lúc',
+      cell: (p) => <span className="text-xs text-muted-foreground">{fmtDateTime(p.paid_at)}</span>,
+    },
+    {
+      id: 'reference',
+      header: 'Tham chiếu',
+      hideOnMobile: true,
+      cell: (p) => <span className="font-mono text-xs">{p.reference ?? '—'}</span>,
+    },
+  ];
+
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
@@ -524,64 +574,18 @@ function PayoutsInlineTab() {
       )}
 
       <Card>
-        <CardContent className="overflow-x-auto pt-6">
-          {q.isLoading ? (
-            <p className="text-sm text-muted-foreground">Đang tải…</p>
-          ) : q.error ? (
+        <CardContent className="pt-6">
+          {q.error ? (
             <p className="text-sm text-red-700 dark:text-red-300">{(q.error as Error).message}</p>
           ) : (
-            <table className="w-full text-sm">
-              <thead className="border-b border-border text-left text-xs uppercase text-muted-foreground">
-                <tr>
-                  <th className="pb-2 pr-3">ID</th>
-                  <th className="pb-2 pr-3">Mã</th>
-                  <th className="pb-2 pr-3">Kỳ</th>
-                  <th className="pb-2 pr-3 text-right">Số tiền</th>
-                  <th className="hidden pb-2 pr-3 md:table-cell">Phương thức</th>
-                  <th className="hidden pb-2 pr-3 md:table-cell">Đợt chi</th>
-                  <th className="pb-2 pr-3">Trả lúc</th>
-                  <th className="hidden pb-2 md:table-cell">Tham chiếu</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(q.data ?? []).map((p) => (
-                  <tr key={p.id} className="border-b border-border hover:bg-muted/30">
-                    <td className="py-2 pr-3 font-mono text-xs text-muted-foreground">
-                      {p.id}
-                    </td>
-                    <td className="py-2 pr-3 font-mono text-gold">{p.affiliate_code}</td>
-                    <td className="py-2 pr-3">{p.period}</td>
-                    <td className="py-2 pr-3 text-right font-mono text-gold">
-                      {fmtVnd(p.amount_vnd)}
-                    </td>
-                    <td className="hidden py-2 pr-3 md:table-cell">{p.method ?? '—'}</td>
-                    <td className="hidden py-2 pr-3 md:table-cell">
-                      {p.batch_id ? (
-                        <Link
-                          href={`/affiliates?tab=batches&batchId=${p.batch_id}`}
-                          className="font-mono text-xs text-gold hover:underline"
-                        >
-                          {p.batch_id.slice(0, 8)}
-                        </Link>
-                      ) : (
-                        <span className="text-muted-foreground">—</span>
-                      )}
-                    </td>
-                    <td className="py-2 pr-3 text-xs text-muted-foreground">
-                      {fmtDateTime(p.paid_at)}
-                    </td>
-                    <td className="hidden py-2 font-mono text-xs md:table-cell">{p.reference ?? '—'}</td>
-                  </tr>
-                ))}
-                {q.data && q.data.length === 0 && (
-                  <tr>
-                    <td colSpan={8} className="py-6 text-center text-muted-foreground">
-                      Chưa có payout nào.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+            <AdminTable
+              rows={q.data ?? []}
+              columns={columns}
+              getRowId={(p) => String(p.id)}
+              loading={q.isLoading}
+              caption="Sổ chi trả affiliate"
+              empty={<EmptyState title="Chưa có payout nào." className="border-none bg-transparent p-0" />}
+            />
           )}
         </CardContent>
       </Card>

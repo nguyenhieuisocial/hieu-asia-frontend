@@ -10,8 +10,9 @@
 import * as React from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
+import { Button, Card, CardContent, CardHeader, CardTitle, StatusBadge, toast } from '@hieu-asia/ui';
 import { EmptyState } from '@/components/admin/empty-state';
+import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
 import { fmtDateTime } from '@/lib/format';
 
 // Recharts lazy-loaded — out of the initial admin bundle (tasks page pattern).
@@ -46,11 +47,14 @@ const REASON_LABEL: Record<FraudFlag['reason'], string> = {
   manual: 'Admin manual',
 };
 
-const REASON_TONE: Record<FraudFlag['reason'], string> = {
-  ip_duplicate: 'bg-orange-500/15 text-orange-700 dark:text-orange-300',
-  self_referral: 'bg-red-500/20 text-red-700 dark:text-red-300',
-  velocity: 'bg-yellow-500/15 text-yellow-700 dark:text-yellow-300',
-  manual: 'bg-muted/40 text-muted-foreground',
+const REASON_STATUS: Record<
+  FraudFlag['reason'],
+  'success' | 'warning' | 'error' | 'info' | 'neutral'
+> = {
+  ip_duplicate: 'warning',
+  self_referral: 'error',
+  velocity: 'warning',
+  manual: 'neutral',
 };
 
 export function FraudTab() {
@@ -87,7 +91,7 @@ export function FraudTab() {
       if (!d.ok) throw new Error(d.error ?? 'Clear flag thất bại');
       await load();
     } catch (e) {
-      alert((e as Error).message);
+      toast.error((e as Error).message);
     } finally {
       setClearing(null);
     }
@@ -95,6 +99,35 @@ export function FraudTab() {
 
   const active = data?.flags.filter((f) => !f.cleared_at) ?? [];
   const cleared = data?.flags.filter((f) => f.cleared_at) ?? [];
+
+  const clearedColumns: AdminTableColumn<FraudFlag>[] = [
+    { id: 'code', header: 'Mã', cell: (f) => <span className="font-mono text-gold">{f.code}</span> },
+    { id: 'reason', header: 'Lý do', cell: (f) => REASON_LABEL[f.reason] },
+    {
+      id: 'detail',
+      header: 'Chi tiết',
+      cell: (f) => <span className="text-muted-foreground">{f.detail}</span>,
+    },
+    {
+      id: 'flagged_at',
+      header: 'Gắn cờ lúc',
+      cell: (f) => <span className="text-muted-foreground">{fmtDateTime(f.flagged_at)}</span>,
+    },
+    {
+      id: 'cleared_at',
+      header: 'Gỡ cờ lúc',
+      cell: (f) => (
+        <span className="text-muted-foreground">
+          {f.cleared_at ? fmtDateTime(f.cleared_at) : '—'}
+        </span>
+      ),
+    },
+    {
+      id: 'cleared_by',
+      header: 'Bởi',
+      cell: (f) => <span className="text-muted-foreground">{f.cleared_by ?? '—'}</span>,
+    },
+  ];
 
   return (
     <div className="space-y-4">
@@ -132,11 +165,7 @@ export function FraudTab() {
                     >
                       {f.code}
                     </Link>
-                    <span
-                      className={`rounded px-2 py-0.5 text-[10px] uppercase ${REASON_TONE[f.reason]}`}
-                    >
-                      {REASON_LABEL[f.reason]}
-                    </span>
+                    <StatusBadge status={REASON_STATUS[f.reason]} label={REASON_LABEL[f.reason]} />
                   </div>
                   <div className="mt-1 text-foreground/85">{f.detail}</div>
                   <div className="mt-1 flex items-center justify-between">
@@ -168,34 +197,12 @@ export function FraudTab() {
           {cleared.length === 0 ? (
             <EmptyState compact title="Chưa có flag nào được clear." />
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="border-b border-border text-left text-xs uppercase text-muted-foreground">
-                  <tr>
-                    <th className="pb-2 pr-3">Mã</th>
-                    <th className="pb-2 pr-3">Lý do</th>
-                    <th className="pb-2 pr-3">Chi tiết</th>
-                    <th className="pb-2 pr-3">Gắn cờ lúc</th>
-                    <th className="pb-2 pr-3">Gỡ cờ lúc</th>
-                    <th className="pb-2">Bởi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cleared.map((f) => (
-                    <tr key={`${f.code}-${f.flagged_at}`} className="border-b border-border">
-                      <td className="py-1.5 pr-3 font-mono text-gold">{f.code}</td>
-                      <td className="py-1.5 pr-3">{REASON_LABEL[f.reason]}</td>
-                      <td className="py-1.5 pr-3 text-muted-foreground">{f.detail}</td>
-                      <td className="py-1.5 pr-3 text-muted-foreground">{fmtDateTime(f.flagged_at)}</td>
-                      <td className="py-1.5 pr-3 text-muted-foreground">
-                        {f.cleared_at ? fmtDateTime(f.cleared_at) : '—'}
-                      </td>
-                      <td className="py-1.5 text-muted-foreground">{f.cleared_by ?? '—'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <AdminTable
+              rows={cleared}
+              columns={clearedColumns}
+              getRowId={(f) => `${f.code}-${f.flagged_at}`}
+              caption="Lịch sử flag đã clear"
+            />
           )}
         </CardContent>
       </Card>

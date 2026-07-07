@@ -63,14 +63,27 @@ import {
   type ProviderCatalogueEntry,
   type ProviderRow,
 } from '@/components/admin/connect/types';
-import { Button } from '@hieu-asia/ui';
+import { Button, StatusBadge } from '@hieu-asia/ui';
 
 const TAB_PROVIDERS = 'providers';
 const TAB_AUDIT = 'audit';
 const TAB_WEBHOOKS = 'webhooks';
 
+const VALID_TABS = new Set([TAB_PROVIDERS, TAB_AUDIT, TAB_WEBHOOKS]);
+
 const ICON_CONNECTED = <CheckCircle2 className="h-4 w-4" aria-hidden />;
 const ICON_PLUG = <Plug className="h-4 w-4" aria-hidden />;
+
+// Status pill tone per provider state — shared <StatusBadge> (as tasks/payments/
+// sessions use) instead of hand-rolled spans.
+const STATUS_TONE: Record<
+  ProviderRow['status'],
+  React.ComponentProps<typeof StatusBadge>['status']
+> = {
+  connected: 'success',
+  failed: 'error',
+  disconnected: 'neutral',
+};
 
 interface ProvidersResp {
   ok?: boolean;
@@ -134,7 +147,8 @@ function ConnectPageInner() {
   const search = useSearchParams();
   // Derive the active tab from the URL each render (no local useState) so
   // browser back/forward stays in sync with `?tab=`. Matches /system + /audit.
-  const tab = search?.get('tab') ?? TAB_PROVIDERS;
+  const param = search?.get('tab') ?? '';
+  const tab = VALID_TABS.has(param) ? param : TAB_PROVIDERS;
   const [connectState, setConnectState] = React.useState<{
     open: boolean;
     initial: ProviderCatalogueEntry | null;
@@ -273,27 +287,7 @@ function ConnectPageInner() {
         header: 'Trạng thái',
         sortKey: 'status',
         width: '120px',
-        cell: (r) => {
-          if (r.status === 'connected') {
-            return (
-              <span className="inline-flex items-center gap-1 rounded border border-jade/30 bg-jade/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-jade-700 dark:text-jade-50">
-                connected
-              </span>
-            );
-          }
-          if (r.status === 'failed') {
-            return (
-              <span className="inline-flex items-center gap-1 rounded border border-red-500/30 bg-red-500/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-red-700 dark:text-red-200">
-                failed
-              </span>
-            );
-          }
-          return (
-            <span className="inline-flex items-center gap-1 rounded border border-muted/40 bg-muted/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-              disconnected
-            </span>
-          );
-        },
+        cell: (r) => <StatusBadge status={STATUS_TONE[r.status]} label={r.status} />,
       },
       {
         id: 'actions',

@@ -29,10 +29,6 @@ interface ProviderRow {
   oauth: boolean;
   model: string;
   last_used: string | null;
-  requests_7d: number;
-  fallback_count_7d: number;
-  latency_p50_ms: number;
-  latency_p95_ms: number;
 }
 
 interface RoleRoute {
@@ -43,7 +39,6 @@ interface RoleRoute {
 interface VendorsResponse {
   ok: boolean;
   providers?: ProviderRow[];
-  default_models?: Record<Vendor, string>;
   role_routing?: Record<Role, RoleRoute>;
   sources?: { langfuse: boolean };
   error?: string;
@@ -187,7 +182,9 @@ function VendorCard({ p, telem }: { p: ProviderRow; telem?: VendorTelemetryRow }
           <dd className="font-mono text-[11px] text-muted-foreground">
             {telem?.last_used_at
               ? new Date(telem.last_used_at).toLocaleString('vi-VN')
-              : p.last_used ?? 'chưa đo'}
+              : p.last_used
+                ? new Date(p.last_used).toLocaleString('vi-VN')
+                : 'chưa đo'}
           </dd>
         </dl>
 
@@ -442,6 +439,82 @@ function VendorTelemetryCard() {
 const VENDORS_ORDER: Vendor[] = ['anthropic', 'openai', 'google', 'cloudflare'];
 const ROLES_ORDER: Role[] = ['vision', 'logic', 'psychology', 'alignment', 'report', 'mentor', 'judge'];
 
+interface RoleRoutingRow {
+  role: Role;
+  route: RoleRoute;
+}
+
+const ROLE_ROUTING_COLUMNS: AdminTableColumn<RoleRoutingRow>[] = [
+  {
+    id: 'role',
+    header: 'Vai trò',
+    className: 'font-mono text-xs text-foreground/85',
+    cell: (row) => ROLE_LABEL[row.role],
+  },
+  {
+    id: 'primary',
+    header: 'Primary',
+    cell: (row) => (
+      <span className="rounded border border-gold/30 bg-gold/10 px-2 py-0.5 font-mono text-xs text-gold">
+        {row.route.primary}
+      </span>
+    ),
+  },
+  {
+    id: 'fallbacks',
+    header: 'Fallback chain',
+    cell: (row) => (
+      <div className="flex flex-wrap gap-1">
+        {row.route.fallbacks.length === 0 ? (
+          <span className="text-muted-foreground">—</span>
+        ) : (
+          row.route.fallbacks.map((fb, i) => (
+            <span
+              key={fb + i}
+              className="rounded border border-border bg-muted/30 px-2 py-0.5 font-mono text-xs text-muted-foreground"
+            >
+              {fb}
+            </span>
+          ))
+        )}
+      </div>
+    ),
+  },
+];
+
+const LANGFUSE_COLUMNS: AdminTableColumn<LangfuseTrace>[] = [
+  {
+    id: 'name',
+    header: 'Tên',
+    className: 'font-mono text-xs text-foreground/85',
+    cell: (t) => t.name ?? '—',
+  },
+  {
+    id: 'timestamp',
+    header: 'Thời gian',
+    className: 'font-mono text-xs text-muted-foreground',
+    cell: (t) => (t.timestamp ? new Date(t.timestamp).toLocaleString('vi-VN') : '—'),
+  },
+  {
+    id: 'latency',
+    header: 'Độ trễ',
+    className: 'tabular-nums text-xs text-foreground/85',
+    cell: (t) => (t.latency_ms != null ? `${t.latency_ms} ms` : '—'),
+  },
+  {
+    id: 'cost',
+    header: 'Chi phí',
+    className: 'tabular-nums text-xs text-foreground/85',
+    cell: (t) => (t.total_cost != null ? `$${t.total_cost.toFixed(4)}` : '—'),
+  },
+  {
+    id: 'observations',
+    header: 'Observations',
+    className: 'tabular-nums text-xs text-foreground/85',
+    cell: (t) => t.observation_count ?? '—',
+  },
+];
+
 export default function VendorsPage() {
   const { data, isLoading, refetch, isFetching, error } = useQuery({
     queryKey: ['admin', 'vendors'],
@@ -467,6 +540,9 @@ export default function VendorsPage() {
   const errorMsg = (error as Error | undefined)?.message ?? data?.error;
   const providers = data?.providers ?? [];
   const routing = data?.role_routing ?? null;
+  const roleRoutingRows: RoleRoutingRow[] = routing
+    ? ROLES_ORDER.flatMap((r) => (routing[r] ? [{ role: r, route: routing[r] }] : []))
+    : [];
 
   const telemetryItems = telemetry?.items ?? [];
   const hasTelemetry = !!telemetry && telemetryItems.length > 0;
@@ -569,47 +645,11 @@ export default function VendorsPage() {
           {!routing ? (
             <p className="py-4 text-center text-sm text-muted-foreground">Chưa có routing.</p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-border text-sm">
-                <thead>
-                  <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
-                    <th className="px-3 py-2 font-medium">Vai trò</th>
-                    <th className="px-3 py-2 font-medium">Primary</th>
-                    <th className="px-3 py-2 font-medium">Fallback chain</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {ROLES_ORDER.map(r => {
-                    const route = routing[r];
-                    if (!route) return null;
-                    return (
-                      <tr key={r} className="transition-all duration-300 ease-editorial hover:bg-gold/[0.03]">
-                        <td className="px-3 py-2 font-mono text-xs text-foreground/85">{ROLE_LABEL[r]}</td>
-                        <td className="px-3 py-2">
-                          <span className="rounded border border-gold/30 bg-gold/10 px-2 py-0.5 font-mono text-xs text-gold">
-                            {route.primary}
-                          </span>
-                        </td>
-                        <td className="px-3 py-2">
-                          <div className="flex flex-wrap gap-1">
-                            {route.fallbacks.length === 0 ? (
-                              <span className="text-muted-foreground">—</span>
-                            ) : route.fallbacks.map((fb, i) => (
-                              <span
-                                key={fb + i}
-                                className="rounded border border-border bg-muted/30 px-2 py-0.5 font-mono text-xs text-muted-foreground"
-                              >
-                                {fb}
-                              </span>
-                            ))}
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <AdminTable
+              rows={roleRoutingRows}
+              columns={ROLE_ROUTING_COLUMNS}
+              getRowId={(row) => row.role}
+            />
           )}
         </CardContent>
       </Card>
@@ -650,38 +690,11 @@ export default function VendorsPage() {
                   hint="traces gần nhất"
                 />
               </div>
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-border text-sm">
-                  <thead>
-                    <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
-                      <th className="px-3 py-2 font-medium">Tên</th>
-                      <th className="px-3 py-2 font-medium">Thời gian</th>
-                      <th className="px-3 py-2 font-medium">Độ trễ</th>
-                      <th className="px-3 py-2 font-medium">Chi phí</th>
-                      <th className="px-3 py-2 font-medium">Observations</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {(lfData.traces ?? []).map((t) => (
-                      <tr key={t.id} className="transition-all duration-300 ease-editorial hover:bg-gold/[0.03]">
-                        <td className="px-3 py-2 font-mono text-xs text-foreground/85">{t.name ?? '—'}</td>
-                        <td className="px-3 py-2 font-mono text-xs text-muted-foreground">
-                          {t.timestamp ? new Date(t.timestamp).toLocaleString('vi-VN') : '—'}
-                        </td>
-                        <td className="px-3 py-2 tabular-nums text-xs text-foreground/85">
-                          {t.latency_ms != null ? `${t.latency_ms} ms` : '—'}
-                        </td>
-                        <td className="px-3 py-2 tabular-nums text-xs text-foreground/85">
-                          {t.total_cost != null ? `$${t.total_cost.toFixed(4)}` : '—'}
-                        </td>
-                        <td className="px-3 py-2 tabular-nums text-xs text-foreground/85">
-                          {t.observation_count ?? '—'}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <AdminTable
+                rows={lfData.traces ?? []}
+                columns={LANGFUSE_COLUMNS}
+                getRowId={(t) => t.id}
+              />
             </div>
           ) : null}
         </CardContent>

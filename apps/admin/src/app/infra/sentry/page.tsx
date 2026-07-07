@@ -19,6 +19,7 @@ import {
 } from '@/lib/admin-api';
 import { getInfraTool } from '@/lib/infra-tools';
 import { formatRelativeOrEmpty } from '@/lib/format-date';
+import { fmtNumber } from '@/lib/format';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
 import { SentryIssueDrawer } from '@/components/admin/infra/SentryIssueDrawer';
@@ -40,10 +41,6 @@ function levelTone(level: string): 'good' | 'bad' | 'warn' | 'neutral' {
     default:
       return 'neutral';
   }
-}
-
-function fmtNum(n: number): string {
-  return n.toLocaleString('vi-VN');
 }
 
 const ISSUE_COLUMNS: AdminTableColumn<InfraSentryItem>[] = [
@@ -164,15 +161,15 @@ export default function InfraSentryPage() {
           {summary && (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {summary.errors_24h != null && (
-                <StatCard label="Lỗi 24h" value={fmtNum(summary.errors_24h)} />
+                <StatCard label="Lỗi 24h" value={fmtNumber(summary.errors_24h)} />
               )}
               {summary.unresolved_count != null && (
-                <StatCard label="Chưa xử lý" value={fmtNum(summary.unresolved_count)} />
+                <StatCard label="Chưa xử lý" value={fmtNumber(summary.unresolved_count)} />
               )}
               {summary.fatal_count != null && (
                 <StatCard
                   label="Nghiêm trọng (fatal)"
-                  value={fmtNum(summary.fatal_count)}
+                  value={fmtNumber(summary.fatal_count)}
                   className={
                     summary.fatal_count > 0
                       ? 'border-red-400/40 bg-red-500/5 hover:border-red-400/60'
@@ -188,7 +185,7 @@ export default function InfraSentryPage() {
                       {summary.top_issue.title}
                     </span>
                   }
-                  hint={`${fmtNum(summary.top_issue.count)} lần`}
+                  hint={`${fmtNumber(summary.top_issue.count)} lần`}
                 />
               )}
             </div>

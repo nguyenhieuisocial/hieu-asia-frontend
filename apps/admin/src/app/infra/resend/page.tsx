@@ -23,6 +23,7 @@ import {
 } from '@/lib/admin-api';
 import { getInfraTool } from '@/lib/infra-tools';
 import { formatDateOrEmpty, formatRelativeOrEmpty } from '@/lib/format-date';
+import { fmtNumber } from '@/lib/format';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
 import { ResendEmailDrawer } from '@/components/admin/infra/ResendEmailDrawer';
@@ -75,10 +76,6 @@ function eventTone(event: string | null): 'good' | 'bad' | 'warn' | 'neutral' {
     default:
       return 'neutral';
   }
-}
-
-function fmtNum(n: number): string {
-  return n.toLocaleString('vi-VN');
 }
 
 // Delivery-status cards, in funnel order. Each renders only when the worker
@@ -211,7 +208,7 @@ export default function InfraResendPage() {
                     <StatCard
                       key={c.key}
                       label={c.label}
-                      value={fmtNum(summary![c.key] as number)}
+                      value={fmtNumber(summary![c.key] as number)}
                       className={
                         c.bad && (summary![c.key] as number) > 0
                           ? 'border-red-400/40 bg-red-500/5 hover:border-red-400/60'

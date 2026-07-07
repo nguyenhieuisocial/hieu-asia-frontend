@@ -13,6 +13,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent } from '@hieu-asia/ui';
 import { getInfraAikido, type InfraAikidoItem, type InfraAikidoSummary } from '@/lib/admin-api';
 import { getInfraTool } from '@/lib/infra-tools';
+import { fmtNumber } from '@/lib/format';
 import { StatCard } from '@/components/stat-card';
 import { InfraPanel, InfraStatusPill } from '@/components/admin/infra/infra-panel';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/table/AdminTable';
@@ -33,8 +34,6 @@ function sevTone(s: string): 'good' | 'bad' | 'warn' | 'neutral' {
       return 'neutral';
   }
 }
-const fmtNum = (n: number) => n.toLocaleString('vi-VN');
-
 const ISSUE_COLUMNS: AdminTableColumn<InfraAikidoItem>[] = [
   {
     id: 'severity',
@@ -81,18 +80,18 @@ export default function InfraAikidoPage() {
           <div className="space-y-6">
             {summary && (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                {summary.open_count != null && <StatCard label="Đang mở" value={fmtNum(summary.open_count)} />}
+                {summary.open_count != null && <StatCard label="Đang mở" value={fmtNumber(summary.open_count)} />}
                 {summary.critical_count != null && (
                   <StatCard
                     label="Nghiêm trọng (critical)"
-                    value={fmtNum(summary.critical_count)}
+                    value={fmtNumber(summary.critical_count)}
                     className={summary.critical_count > 0 ? 'border-red-400/40 bg-red-500/5' : undefined}
                   />
                 )}
                 {summary.high_count != null && (
                   <StatCard
                     label="Cao (high)"
-                    value={fmtNum(summary.high_count)}
+                    value={fmtNumber(summary.high_count)}
                     className={summary.high_count > 0 ? 'border-amber-400/40 bg-amber-500/5' : undefined}
                   />
                 )}

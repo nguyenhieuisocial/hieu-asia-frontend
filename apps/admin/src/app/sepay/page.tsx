@@ -148,8 +148,14 @@ function orderCode(content: string | null): string | null {
   const m = (content ?? '').toUpperCase().match(/HIEUASIA\s+([A-Z0-9]{8})/);
   return m?.[1] ?? null;
 }
+// Day key "YYYY-MM-DD" trong giờ VN (ICT, UTC+7). Nghiệp vụ chạy ở Việt Nam nên
+// phải dịch mốc thời gian +7h TRƯỚC khi cắt ngày UTC; nếu không, preset "Hôm
+// nay"/7/30 ngày và cột doanh thu theo ngày sẽ lệch 1 ngày lúc gần nửa đêm.
+function ictDayKey(ms: number): string {
+  return new Date(ms + 7 * 3_600_000).toISOString().slice(0, 10);
+}
 function isoDaysAgo(days: number): string {
-  return new Date(Date.now() - days * 86_400_000).toISOString().slice(0, 10);
+  return ictDayKey(Date.now() - days * 86_400_000);
 }
 
 const STATUS_BADGE: Record<
@@ -839,6 +845,36 @@ function ReconcileView() {
     },
   ];
 
+  // Table D — Tiền mồ côi (orphan). Row = { txn, code }. Cùng cột/header như
+  // bảng thủ công trước (Thời gian / Mã / Tiền vào / Tham chiếu).
+  type OrphanRow = (typeof orphan)[number];
+  const orphanColumns: AdminTableColumn<OrphanRow>[] = [
+    {
+      id: 'time',
+      header: 'Thời gian',
+      className: 'whitespace-nowrap text-foreground/80',
+      cell: (r) => fmtDateTime(r.txn.transaction_date),
+    },
+    {
+      id: 'code',
+      header: 'Mã',
+      className: 'font-mono text-xs',
+      cell: (r) => r.code,
+    },
+    {
+      id: 'amount',
+      header: 'Tiền vào',
+      className: 'text-right font-mono tabular-nums',
+      cell: (r) => `+${new Intl.NumberFormat('vi-VN').format(parseFloat(r.txn.amount_in || '0'))}`,
+    },
+    {
+      id: 'reference',
+      header: 'Tham chiếu',
+      className: 'font-mono text-xs',
+      cell: (r) => r.txn.reference_number ?? '—',
+    },
+  ];
+
   return (
     <div className="space-y-4">
       <div className="grid gap-3 sm:grid-cols-3">
@@ -876,28 +912,12 @@ function ReconcileView() {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="border-b border-border/60 text-left text-xs text-muted-foreground">
-                  <tr>
-                    <th className="px-4 py-2.5 font-medium">Thời gian</th>
-                    <th className="px-4 py-2.5 font-medium">Mã</th>
-                    <th className="px-4 py-2.5 text-right font-medium">Tiền vào</th>
-                    <th className="px-4 py-2.5 font-medium">Tham chiếu</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orphan.map((r, i) => (
-                    <tr key={r.txn.id ?? i} className="border-b border-border/40 last:border-0">
-                      <td className="whitespace-nowrap px-4 py-2.5 text-foreground/80">{fmtDateTime(r.txn.transaction_date)}</td>
-                      <td className="px-4 py-2.5 font-mono text-xs">{r.code}</td>
-                      <td className="px-4 py-2.5 text-right font-mono tabular-nums">+{new Intl.NumberFormat('vi-VN').format(parseFloat(r.txn.amount_in || '0'))}</td>
-                      <td className="px-4 py-2.5 font-mono text-xs">{r.txn.reference_number ?? '—'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <AdminTable
+              rows={orphan}
+              columns={orphanColumns}
+              getRowId={(r) => r.txn.id ?? r.code}
+              caption="Danh sách tiền mồ côi"
+            />
           </CardContent>
         </Card>
       )}
@@ -1062,12 +1082,47 @@ function DashboardView() {
   const maxTierRev = Math.max(1, ...tierRows.map(([, v]) => v.rev));
 
   const days: { day: string; rev: number }[] = [];
-  for (let i = 13; i >= 0; i--) days.push({ day: new Date(Date.now() - i * 86_400_000).toISOString().slice(0, 10), rev: 0 });
+  for (let i = 13; i >= 0; i--) days.push({ day: ictDayKey(Date.now() - i * 86_400_000), rev: 0 });
   for (const r of paid) {
-    const slot = days.find((x) => x.day === (r.created_at || '').slice(0, 10));
+    const t = r.created_at ? new Date(r.created_at).getTime() : NaN;
+    if (Number.isNaN(t)) continue;
+    const key = ictDayKey(t);
+    const slot = days.find((x) => x.day === key);
     if (slot) slot.rev += r.amount ?? 0;
   }
   const maxDayRev = Math.max(1, ...days.map((x) => x.rev));
+
+  // Table E — Lệch thanh toán (drift). Dùng lại shape DriftRow mà dialog sửa gói
+  // đã nhận. Thêm header (bảng thủ công trước không có header).
+  const driftColumns: AdminTableColumn<DriftRow>[] = [
+    {
+      id: 'customer',
+      header: 'Khách',
+      cell: (x) => (
+        <a href={`/customers/${x.user_id}`} className="font-mono text-xs text-gold hover:underline">{x.user_id.slice(0, 12)}…</a>
+      ),
+    },
+    {
+      id: 'plan',
+      header: 'Lệch gói',
+      className: 'text-xs',
+      cell: (x) => (
+        <>cần <span className="text-emerald-500">{x.expected_plan}</span> · đang <span className="text-red-500">{x.actual_plan ?? 'free'}</span></>
+      ),
+    },
+    {
+      id: 'paid',
+      header: 'Trả lần cuối',
+      className: 'text-right text-xs text-muted-foreground',
+      cell: (x) => fmtDateTime(x.last_paid_at),
+    },
+    {
+      id: 'action',
+      header: '',
+      className: 'text-right',
+      cell: (x) => <DriftFixDialog drift={x} onSuccess={() => driftQ.refetch()} />,
+    },
+  ];
 
   return (
     <div className="space-y-4">
@@ -1086,20 +1141,12 @@ function DashboardView() {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm"><tbody>
-                {driftQ.data.drifts!.map((x) => (
-                  <tr key={x.user_id} className="border-b border-border/40 last:border-0">
-                    <td className="px-4 py-2"><a href={`/customers/${x.user_id}`} className="font-mono text-xs text-gold hover:underline">{x.user_id.slice(0, 12)}…</a></td>
-                    <td className="px-4 py-2 text-xs">cần <span className="text-emerald-500">{x.expected_plan}</span> · đang <span className="text-red-500">{x.actual_plan ?? 'free'}</span></td>
-                    <td className="px-4 py-2 text-right text-xs text-muted-foreground">{fmtDateTime(x.last_paid_at)}</td>
-                    <td className="px-4 py-2 text-right">
-                      <DriftFixDialog drift={x} onSuccess={() => driftQ.refetch()} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody></table>
-            </div>
+            <AdminTable
+              rows={driftQ.data.drifts!}
+              columns={driftColumns}
+              getRowId={(x) => x.user_id}
+              caption="Danh sách user lệch thanh toán"
+            />
           </CardContent>
         </Card>
       )}
@@ -1177,24 +1224,38 @@ function DashboardView() {
                 .filter((s) => s.plan !== 'lifetime' && s.days_left !== null && s.days_left <= 14)
                 .sort((a, b) => (a.days_left ?? 0) - (b.days_left ?? 0));
               if (subs.length === 0) return <p className="px-4 py-6 text-center text-sm text-muted-foreground">Không có sub sắp hết hạn (14 ngày).</p>;
+              type SubRow = (typeof subs)[number];
+              const subColumns: AdminTableColumn<SubRow>[] = [
+                {
+                  id: 'id',
+                  header: 'Mã',
+                  className: 'font-mono text-xs',
+                  cell: (s) => `${s.id.slice(0, 12)}…`,
+                },
+                {
+                  id: 'plan',
+                  header: 'Gói',
+                  cell: (s) => TIER_LABEL[s.plan] ?? s.plan,
+                },
+                {
+                  id: 'status',
+                  header: 'Trạng thái',
+                  className: 'text-right',
+                  cell: (s) =>
+                    s.expired ? (
+                      <StatusBadge status="error" label="Hết hạn" />
+                    ) : (
+                      <StatusBadge status="warning" label={`còn ${s.days_left} ngày`} />
+                    ),
+                },
+              ];
               return (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm"><tbody>
-                    {subs.map((s) => (
-                      <tr key={s.id} className="border-b border-border/40 last:border-0">
-                        <td className="px-4 py-2 font-mono text-xs">{s.id.slice(0, 12)}…</td>
-                        <td className="px-4 py-2">{TIER_LABEL[s.plan] ?? s.plan}</td>
-                        <td className="px-4 py-2 text-right">
-                          {s.expired ? (
-                            <StatusBadge status="error" label="Hết hạn" />
-                          ) : (
-                            <StatusBadge status="warning" label={`còn ${s.days_left} ngày`} />
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody></table>
-                </div>
+                <AdminTable
+                  rows={subs}
+                  columns={subColumns}
+                  getRowId={(s) => s.id}
+                  caption="Subscription sắp/đã hết hạn"
+                />
               );
             })()}
           </CardContent>

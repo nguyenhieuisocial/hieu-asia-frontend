@@ -39,6 +39,15 @@ interface InfraPanelProps<T> {
   };
   /** Render the success table for the fetched items. */
   renderTable: (items: T[]) => React.ReactNode;
+  /**
+   * Optional always-visible content (summary tiles, trend chart, aux panels)
+   * rendered whenever the fetch SUCCEEDED — in BOTH the empty and non-empty
+   * states. Use this for per-page data that is independent of the primary list
+   * (e.g. AI-Gateway's prepaid balance), so it doesn't vanish when the list is
+   * empty and InfraPanel swaps in the "✓ đã kết nối" state. Pages that keep
+   * their summary INSIDE `renderTable` don't pass this and are unaffected.
+   */
+  renderSummary?: React.ReactNode;
   /** vi-VN copy for the empty (zero-rows) state. */
   emptyTitle?: string;
   /**
@@ -53,6 +62,7 @@ export function InfraPanel<T>({
   tool,
   query,
   renderTable,
+  renderSummary,
   emptyTitle = 'Chưa có dữ liệu',
   headerActions,
 }: InfraPanelProps<T>) {
@@ -153,31 +163,39 @@ export function InfraPanel<T>({
             ))}
           </CardContent>
         </Card>
-      ) : items.length === 0 ? (
-        // Đã kết nối (data.ok) nhưng không có mục nào — đây là trạng thái BÌNH
-        // THƯỜNG/KHOẺ (vd Sentry 0 lỗi), KHÔNG phải "chưa làm xong". Hiển thị rõ
-        // "đã kết nối" + dấu check xanh để operator không tưởng tool hỏng/thiếu.
-        <EmptyState
-          title={emptyTitle}
-          illustration={
-            <div className="relative mx-auto h-20 w-20" aria-hidden>
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-jade/20 via-jade/10 to-gold/10 blur-xl" />
-              <div className="relative flex h-full w-full items-center justify-center rounded-full border border-jade/30 bg-card/60 backdrop-blur-sm">
-                <CheckCircle2 className="h-9 w-9 text-jade/80" />
-              </div>
-            </div>
-          }
-          description={
-            <>
-              <span className="font-medium text-jade-700 dark:text-jade-50">
-                ✓ {tool.name} đã kết nối
-              </span>{' '}
-              — không có dữ liệu nào lúc này. Mục sẽ tự hiện ở đây khi có.
-            </>
-          }
-        />
       ) : (
-        renderTable(items)
+        <>
+          {/* Per-page summary/aux (tiles, chart, panels) that must survive an
+              empty primary list — e.g. AI-Gateway's prepaid balance. Rendered on
+              every successful fetch, above the table / empty state. */}
+          {renderSummary}
+          {items.length === 0 ? (
+            // Đã kết nối (data.ok) nhưng không có mục nào — đây là trạng thái BÌNH
+            // THƯỜNG/KHOẺ (vd Sentry 0 lỗi), KHÔNG phải "chưa làm xong". Hiển thị rõ
+            // "đã kết nối" + dấu check xanh để operator không tưởng tool hỏng/thiếu.
+            <EmptyState
+              title={emptyTitle}
+              illustration={
+                <div className="relative mx-auto h-20 w-20" aria-hidden>
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-jade/20 via-jade/10 to-gold/10 blur-xl" />
+                  <div className="relative flex h-full w-full items-center justify-center rounded-full border border-jade/30 bg-card/60 backdrop-blur-sm">
+                    <CheckCircle2 className="h-9 w-9 text-jade/80" />
+                  </div>
+                </div>
+              }
+              description={
+                <>
+                  <span className="font-medium text-jade-700 dark:text-jade-50">
+                    ✓ {tool.name} đã kết nối
+                  </span>{' '}
+                  — không có dữ liệu nào lúc này. Mục sẽ tự hiện ở đây khi có.
+                </>
+              }
+            />
+          ) : (
+            renderTable(items)
+          )}
+        </>
       )}
     </div>
   );

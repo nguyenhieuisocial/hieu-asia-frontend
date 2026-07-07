@@ -92,6 +92,15 @@ const FUNNEL_LABELS: Record<string, string> = {
 
 const FUNNEL_ORDER = ['reading_started', 'consent_given', 'palm_uploaded', 'survey_completed', 'report_ready', 'mentor_started', 'paid'];
 
+// funnel_v2 (the authoritative event funnel the drop-off banner reads) names
+// its stages after the raw backend events; three differ from the frontend
+// funnel keys. Map them so a funnel_v2-only response labels/orders correctly.
+const FUNNEL_V2_KEY_MAP: Record<string, string> = {
+  report_viewed: 'report_ready',
+  mentor_message_sent: 'mentor_started',
+  payment_completed: 'paid',
+};
+
 // Revenue-by-tier — pure client-side aggregation over the transactions list
 // (listTransactions already maps metadata.tier → plan). No new endpoint.
 const TIER_LABEL: Record<AdminTransaction['plan'], string> = {
@@ -215,8 +224,17 @@ export default function AnalyticsPage() {
     tokens: v.tokens,
     requests: v.requests,
   }));
+  // Prefer the legacy `funnel` record (7-stage, frontend-keyed — the exact
+  // current shape). If a response carries only `funnel_v2`, derive the counts
+  // from its stages so the chart never renders empty while the drop-off banner
+  // (which reads funnel_v2) reports drop-offs — the two must agree.
+  const funnelCounts: Record<string, number> =
+    data?.funnel ??
+    Object.fromEntries(
+      (data?.funnel_v2?.stages ?? []).map(s => [FUNNEL_V2_KEY_MAP[s.name] ?? s.name, s.count]),
+    );
   const funnel: FunnelStage[] = FUNNEL_ORDER.flatMap(k => {
-    const count = data?.funnel?.[k];
+    const count = funnelCounts[k];
     if (count === undefined) return [];
     return [{ key: k, label: FUNNEL_LABELS[k] ?? k, count }];
   });
