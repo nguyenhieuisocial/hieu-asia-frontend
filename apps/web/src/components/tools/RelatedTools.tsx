@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { RELATED_TOOLS, type RelatedLink } from '@/lib/related-tools';
+import { RELATED_TOOLS, type RelatedLink } from '@/lib/site-registry';
 
 export type { RelatedLink };
 
