@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
-import { ArrowRight, ArrowLeft, Sparkles, Palette, ShieldCheck, Briefcase } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Sparkles, Palette, ShieldCheck, Briefcase, Compass } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
@@ -18,6 +18,13 @@ import {
   FROM_YEAR,
   TO_YEAR,
 } from '@/lib/ban-menh-data';
+// Cross-link theo TUỔI này sang các công cụ cũng keyed theo năm sinh (giảm near-dup
+// giữa các trang /ban-menh + internal-link các trang sâu để Google phát hiện/crawl).
+import { BIRTH_YEARS as LAM_NHA_YEARS, slugOf as lamNhaSlug } from '@/app/xem-tuoi-lam-nha/years';
+import { HOST_YEARS as XONG_DAT_YEARS, slugOf as xongDatSlug } from '@/app/xong-dat/years';
+import { BIRTH_YEARS as KHAI_TRUONG_YEARS, slugOf as khaiTruongSlug } from '@/app/khai-truong/years';
+import { BIRTH_YEARS as HUONG_NHA_YEARS, slugOf as huongNhaSlug } from '@/app/huong-nha/years';
+import { BIRTH_YEARS as CUOI_YEARS, slugOf as cuoiSlug } from '@/app/xem-tuoi-cuoi/years';
 
 export const dynamicParams = false;
 
@@ -87,6 +94,28 @@ export default async function BanMenhYearPage({
 
   const prev = y > FROM_YEAR ? y - 1 : null;
   const next = y < TO_YEAR ? y + 1 : null;
+
+  // Cross-link "theo tuổi này" — chỉ phát link tới công cụ có ĐÚNG năm sinh này
+  // trong danh sách năm của nó (guard .includes) để không bao giờ trỏ tới trang
+  // không tồn tại. Mỗi trang /ban-menh/<year> nhờ đó có bộ link riêng → giảm
+  // near-dup + đưa Googlebot vào các trang sâu (làm nhà/cưới/khai trương/hướng/xông đất).
+  const sameAgeLinks = [
+    LAM_NHA_YEARS.includes(y)
+      ? { href: `/xem-tuoi-lam-nha/${lamNhaSlug(y)}`, label: `Tuổi ${d.canChi} làm nhà năm nào tốt?` }
+      : null,
+    CUOI_YEARS.includes(y)
+      ? { href: `/xem-tuoi-cuoi/${cuoiSlug(y)}`, label: `Tuổi ${d.canChi} cưới năm nào đẹp?` }
+      : null,
+    KHAI_TRUONG_YEARS.includes(y)
+      ? { href: `/khai-truong/${khaiTruongSlug(y)}`, label: `Tuổi ${d.canChi} khai trương năm nào hợp?` }
+      : null,
+    HUONG_NHA_YEARS.includes(y)
+      ? { href: `/huong-nha/${huongNhaSlug(y)}`, label: `Tuổi ${d.canChi} hợp hướng nhà nào?` }
+      : null,
+    XONG_DAT_YEARS.includes(y)
+      ? { href: `/xong-dat/${xongDatSlug(y)}`, label: `Gia chủ ${d.canChi} chọn tuổi xông đất 2027` }
+      : null,
+  ].filter((l): l is { href: string; label: string } => l !== null);
 
   const JSONLD = [
     article({
@@ -355,6 +384,33 @@ export default async function BanMenhYearPage({
             </div>
           </div>
         </section>
+
+        {/* Cross-tool theo tuổi này — link các trang sâu cùng năm sinh */}
+        {sameAgeLinks.length > 0 && (
+          <section className="relative mx-auto max-w-3xl px-6 pb-10">
+            <h2 className="mb-2 flex items-center gap-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+              <Compass className="h-6 w-6 text-gold" aria-hidden /> Xem thêm cho tuổi {d.canChi} (sinh năm {year})
+            </h2>
+            <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+              Cùng tuổi {d.canChi} — sinh năm {year} — bạn có thể tra nhanh các việc trọng đại theo
+              đúng năm sinh này. Mỗi liên kết dưới đây mở trang tính riêng cho tuổi {d.canChi}, minh
+              bạch từng bước để tham khảo.
+            </p>
+            <ul className="grid gap-2 sm:grid-cols-2">
+              {sameAgeLinks.map((l) => (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className="flex items-start gap-2 rounded-lg border border-border bg-card/40 p-3 text-sm leading-relaxed text-foreground/85 transition hover:border-gold/40 hover:text-gold"
+                  >
+                    <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-gold/80" aria-hidden />
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {/* Điều hướng năm trước / sau */}
         <section className="relative mx-auto max-w-3xl px-6 pb-12">
