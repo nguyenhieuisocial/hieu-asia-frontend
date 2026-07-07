@@ -326,7 +326,7 @@ export default async function ExperimentsPage() {
     : null;
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-10">
+    <div className="space-y-6">
       <PageHeader
         icon={<FlaskConical className="h-5 w-5" aria-hidden />}
         title="A/B Testing — Feature Flags"
@@ -467,6 +467,6 @@ export default async function ExperimentsPage() {
           <Tag className="inline h-3 w-3" aria-hidden /> tags từ PostHog.
         </p>
       </div>
-    </main>
+    </div>
   );
 }

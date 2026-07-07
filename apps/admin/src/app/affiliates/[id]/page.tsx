@@ -196,12 +196,16 @@ export default function AdminAffiliateDetailPage({
     }
     setBusy(true);
     try {
-      await fetch(`/api/admin/affiliates/${id}/verify-rail`, {
+      const r = await fetch(`/api/admin/affiliates/${id}/verify-rail`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ status }),
       });
+      const d = await r.json();
+      if (!r.ok || !d.ok) throw new Error(d.error ?? `HTTP ${r.status}`);
       await load();
+    } catch (e) {
+      setError((e as Error).message);
     } finally {
       setBusy(false);
     }
@@ -414,7 +418,7 @@ export default function AdminAffiliateDetailPage({
                 Reset to pending
               </Button>
               <Link
-                href={`/audit-log?action=affiliate_rail_verified&resource_id=${encodeURIComponent(id)}`}
+                href={`/audit?action=affiliate_rail_verified&resource_id=${encodeURIComponent(id)}`}
                 className="ml-auto self-center text-xs text-muted-foreground hover:text-gold"
               >
                 Xem audit log →

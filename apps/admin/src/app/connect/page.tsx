@@ -132,8 +132,9 @@ export default function ConnectPage() {
 function ConnectPageInner() {
   const router = useRouter();
   const search = useSearchParams();
-  const initialTab = search?.get('tab') ?? TAB_PROVIDERS;
-  const [tab, setTab] = React.useState(initialTab);
+  // Derive the active tab from the URL each render (no local useState) so
+  // browser back/forward stays in sync with `?tab=`. Matches /system + /audit.
+  const tab = search?.get('tab') ?? TAB_PROVIDERS;
   const [connectState, setConnectState] = React.useState<{
     open: boolean;
     initial: ProviderCatalogueEntry | null;
@@ -161,7 +162,12 @@ function ConnectPageInner() {
   // be fed — those KPIs (and the Connected-by / Last-used columns) are dropped
   // rather than always rendering 0 / "—" as if tracked.
   const kpi = React.useMemo(() => {
-    const total = rows.filter((r) => r.status === 'connected').length;
+    // Exclude the always-connected `native` entry (Cloudflare) from `total` so
+    // it matches `available`'s non-native population — otherwise connected can
+    // exceed available (e.g. "13 / 12").
+    const total = rows.filter(
+      (r) => r.status === 'connected' && r.category !== 'native',
+    ).length;
     const available = PROVIDER_CATALOGUE.filter((p) => p.category !== 'native')
       .length;
     return { total, available };
@@ -214,7 +220,6 @@ function ConnectPageInner() {
 
   const handleTabChange = React.useCallback(
     (id: string) => {
-      setTab(id);
       const next = new URLSearchParams(search?.toString() ?? '');
       if (id === TAB_PROVIDERS) next.delete('tab');
       else next.set('tab', id);

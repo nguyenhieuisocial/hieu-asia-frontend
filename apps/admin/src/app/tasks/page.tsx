@@ -246,11 +246,11 @@ export default function AdminTasksPage() {
           hint="trong hàng đợi"
         />
         <KpiCard
-          label="Đang xử lý"
+          label="Chờ (ưu tiên cao)"
           value={queue.data?.high_priority ?? 0}
           icon={<Activity className="h-4 w-4" />}
           accent="purple"
-          hint="đang chạy"
+          hint="đang chờ ưu tiên"
         />
         <KpiCard
           label="Chờ lâu nhất"

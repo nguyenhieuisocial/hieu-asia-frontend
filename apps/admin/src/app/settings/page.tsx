@@ -85,13 +85,13 @@ function AdminSettingsPageInner() {
   const router = useRouter();
   const search = useSearchParams();
 
+  // Derive the active tab from the URL each render (no local useState) so
+  // browser back/forward stays in sync with `?tab=`. Matches /system + /audit.
   const param = search?.get('tab') ?? '';
-  const initialTab = VALID_TABS.has(param) ? param : TAB_PROFILE;
-  const [tab, setTab] = React.useState(initialTab);
+  const tab = VALID_TABS.has(param) ? param : TAB_PROFILE;
 
   const handleTabChange = React.useCallback(
     (id: string) => {
-      setTab(id);
       const next = new URLSearchParams(search?.toString() ?? '');
       if (id === TAB_PROFILE) next.delete('tab');
       else next.set('tab', id);

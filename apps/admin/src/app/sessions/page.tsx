@@ -317,6 +317,9 @@ function AdminSessionsPageInner() {
     { search: '', status: '' },
   );
   const [selected, setSelected] = React.useState<string[]>([]);
+  // Bump to force AdminTable to clear its internal checkbox Set (our `selected`
+  // array is only the outbound copy; the table owns the real selection state).
+  const [selectionResetKey, setSelectionResetKey] = React.useState(0);
   const [confirmBulkOpen, setConfirmBulkOpen] = React.useState(false);
   const [bulkConfirmText, setBulkConfirmText] = React.useState('');
   const [confirmSingleId, setConfirmSingleId] = React.useState<string | null>(null);
@@ -489,6 +492,7 @@ function AdminSessionsPageInner() {
     onSuccess: (_d, ids) => {
       toast.success(`Đã xóa ${ids.length} phiên`);
       setSelected([]);
+      setSelectionResetKey((k) => k + 1);
       setConfirmBulkOpen(false);
       setBulkConfirmText('');
       qc.invalidateQueries({ queryKey: ['admin', 'sessions'] });
@@ -585,6 +589,7 @@ function AdminSessionsPageInner() {
 
   const handleClearSelected = React.useCallback(() => {
     setSelected([]);
+    setSelectionResetKey((k) => k + 1);
   }, []);
 
   const handleOpenBulkConfirm = React.useCallback(() => {
@@ -1341,6 +1346,7 @@ function AdminSessionsPageInner() {
             onRowClick={handleRowClick}
             loading={isLoading}
             onBulkSelect={setSelected}
+            selectionResetKey={selectionResetKey}
             getRowId={getSessionId}
             caption="Danh sách phiên phân tích"
             empty={

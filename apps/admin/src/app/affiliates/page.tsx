@@ -617,9 +617,9 @@ function CodesInlineTab() {
             Hướng mở rộng (Wave 44+): tạo riêng tab Affiliate-only ở trang Coupons, hoặc tách
             schema <code>affiliate_codes</code> nếu yêu cầu reporting riêng biệt.
           </p>
-          <Link href="/coupons">
-            <Button>Mở /coupons</Button>
-          </Link>
+          <Button asChild>
+            <Link href="/coupons">Mở /coupons</Link>
+          </Button>
         </CardContent>
       </Card>
     </div>

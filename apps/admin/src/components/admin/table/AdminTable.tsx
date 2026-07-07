@@ -59,6 +59,11 @@ export type AdminTableProps<TRow> = {
   empty?: React.ReactNode;
   /** Optional bulk-select callback. When set, a leading checkbox column appears. */
   onBulkSelect?: (selectedIds: string[]) => void;
+  /** Bump this (e.g. increment a counter) to clear the internal selection Set —
+   *  the only way a parent can reset checkboxes after "Bỏ chọn" / bulk delete.
+   *  Undefined (default) never clears, so callers that don't opt in are
+   *  unaffected. */
+  selectionResetKey?: number | string;
   /** Stable id getter. Defaults to `(row as { id: string }).id`. */
   getRowId?: (row: TRow) => string;
   /** Caption for a11y. */
@@ -109,6 +114,7 @@ export function AdminTable<TRow>({
   loading = false,
   empty,
   onBulkSelect,
+  selectionResetKey,
   getRowId = defaultGetRowId,
   caption,
   stickyHeader = true,
@@ -125,6 +131,19 @@ export function AdminTable<TRow>({
   React.useEffect(() => {
     onBulkSelect?.(Array.from(selected));
   }, [selected, onBulkSelect]);
+
+  // Let a parent reset the internal selection by bumping `selectionResetKey`.
+  // Guarded on the previous key (ref) so this is a no-op on mount — callers that
+  // never pass the prop keep their exact prior behaviour. Clearing `selected`
+  // re-fires the effect above, which emits `onBulkSelect([])`, keeping parent +
+  // table in sync. No loop: this effect depends only on the key, and clearing
+  // the Set never changes the key back.
+  const prevResetKey = React.useRef(selectionResetKey);
+  React.useEffect(() => {
+    if (prevResetKey.current === selectionResetKey) return;
+    prevResetKey.current = selectionResetKey;
+    setSelected(new Set());
+  }, [selectionResetKey]);
 
   const sortedRows = React.useMemo(() => {
     if (!sort) return rows;

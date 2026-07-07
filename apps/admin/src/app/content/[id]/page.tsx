@@ -58,6 +58,14 @@ const STATUS_TONE: Record<ContentStatus, React.ComponentProps<typeof StatusBadge
   archived: 'info',
 };
 
+// Nhãn trạng thái tiếng Việt — khớp danh sách /content (STATUS_LABEL ở list page).
+const STATUS_LABEL: Record<ContentStatus, string> = {
+  draft: 'Bản nháp',
+  in_review: 'Đang review',
+  published: 'Đã publish',
+  archived: 'Đã lưu trữ',
+};
+
 type TabKey = DraftKey | 'edited';
 
 // Live markdown preview for the edited draft. Reuses react-markdown (already a
@@ -311,7 +319,7 @@ export default function ContentDetailPage() {
             draft.type
           )
         }
-        badge={<StatusBadge status={STATUS_TONE[draft.status]} label={draft.status} />}
+        badge={<StatusBadge status={STATUS_TONE[draft.status]} label={STATUS_LABEL[draft.status]} />}
         actions={
           <div className="flex flex-wrap gap-2">
             <Button size="sm" variant="outline" onClick={onSaveDraft} disabled={patchMut.isPending}>

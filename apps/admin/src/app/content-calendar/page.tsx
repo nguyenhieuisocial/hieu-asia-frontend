@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import {
   Card,
   CardContent,
@@ -20,7 +20,8 @@ import { CalendarDays, Sparkles, Moon, Info } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { ErrorBlock } from '@/components/admin/error-block';
 import { EmptyState } from '@/components/admin/empty-state';
-import { formatDateOrEmpty } from '@/lib/format-date';
+import { fmtDate } from '@/lib/format';
+import { useGenerateContent } from '@/hooks/useContentDrafts';
 
 const PROXY = '/api/admin-proxy';
 
@@ -43,7 +44,6 @@ async function fetchCalendar(): Promise<CalendarSlot[]> {
   return data.slots ?? [];
 }
 
-const fmtDate = (iso: string) => formatDateOrEmpty(iso, iso);
 const daysUntil = (iso: string): number | null => {
   const t = Date.parse(iso);
   if (!Number.isFinite(t)) return null;
@@ -61,23 +61,32 @@ export default function ContentCalendarPage() {
 
   const [topic, setTopic] = React.useState<string | null>(null);
 
-  const genMut = useMutation({
-    mutationFn: async (t: string) => {
-      const r = await fetch(`${PROXY}/admin/content/generate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topic: t, type: 'pillar' }),
-      });
-      const d = await r.json().catch(() => ({}));
-      if (!r.ok || d?.ok === false) throw new Error(d?.error ?? `HTTP ${r.status}`);
-      return d;
-    },
-    onSuccess: () => {
-      toast.success('Đã tạo bản nháp', { description: 'Xem & duyệt ở trang Nội dung (/content).' });
-      setTopic(null);
-    },
-    onError: (e) => toast.error('Tạo bài thất bại', { description: (e as Error).message }),
-  });
+  // Reuse the shared generate hook (same as /content) — it handles the #47
+  // ~25s edge-proxy timeout and invalidates the content list. Seasonal topics
+  // (Tết, Vu Lan…) are newsletter-shaped and need no slug; the old code sent
+  // type:'pillar' with no slug, which the worker 400s ("pillar requires slug").
+  const genMut = useGenerateContent();
+
+  const onGenerate = (t: string) => {
+    genMut.mutate(
+      { type: 'newsletter', topic: t },
+      {
+        onSuccess: (res) => {
+          if (res.ok) {
+            toast.success('Đã tạo bản nháp', { description: 'Xem & duyệt ở trang Nội dung (/content).' });
+            setTopic(null);
+          } else if (res.timedOut) {
+            // #47 — generation outran the edge proxy; the worker keeps going.
+            toast.info('Đang tạo bản nháp', { description: res.error });
+            setTopic(null);
+          } else {
+            toast.error('Tạo bài thất bại', { description: res.error });
+          }
+        },
+        onError: (e) => toast.error('Tạo bài thất bại', { description: (e as Error).message }),
+      },
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -176,7 +185,7 @@ export default function ContentCalendarPage() {
           </DialogHeader>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setTopic(null)}>Hủy</Button>
-            <Button onClick={() => topic && genMut.mutate(topic)} disabled={genMut.isPending}>
+            <Button onClick={() => topic && onGenerate(topic)} disabled={genMut.isPending}>
               {genMut.isPending ? 'Đang tạo…' : 'Tạo bản nháp'}
             </Button>
           </DialogFooter>

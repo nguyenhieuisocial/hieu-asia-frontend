@@ -123,7 +123,13 @@ function CustomerDetailPageInner() {
     [data?.audit_trail],
   );
 
-  const totalSpend = transactions.reduce((s, t) => s + (t.amount ?? 0), 0);
+  // Total spend = PAID intents only. The txn:log feed (admin/data.ts) also
+  // carries intent_created (unpaid) + subscription_renewed rows; summing every
+  // type inflated lifetime spend. Mirror the backend's total_spend_vnd, which
+  // filters type === 'intent_paid'.
+  const totalSpend = transactions
+    .filter((t) => t.type === 'intent_paid')
+    .reduce((s, t) => s + (t.amount ?? 0), 0);
 
   // Wave 63.6 — enrich the customer with birth_date / birth_place /
   // primary_concern pulled from the most recent reading session's
