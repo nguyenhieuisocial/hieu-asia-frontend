@@ -16,6 +16,7 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import { LoTrinhChart } from '@/components/lo-trinh/LoTrinhChart';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
@@ -282,6 +283,19 @@ export default function KeHoachNamPage() {
             </div>
           </div>
         </section>
+        <div className="mx-auto max-w-4xl px-6 pb-12">
+          <div className="border-t border-border pt-6">
+            <RelatedTools
+              links={[
+                { href: '/dai-van-hien-tai', label: 'Đại vận hiện tại' },
+                { href: '/tu-vi-2026', label: 'Tử Vi 2026' },
+                { href: '/timeline', label: 'Timeline đại vận' },
+                { href: '/tu-vi-hom-nay', label: 'Tử Vi hôm nay' },
+                { href: '/sao-han', label: 'Xem sao hạn' },
+              ]}
+            />
+          </div>
+        </div>
       </main>
       <SiteFooter />
     </div>

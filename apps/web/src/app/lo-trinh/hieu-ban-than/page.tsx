@@ -16,6 +16,7 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { RelatedTools } from '@/components/tools/RelatedTools';
 import {
   BeginnerContent,
   ExpertContent,
@@ -309,6 +310,19 @@ export default function HieuBanThanPage() {
             </div>
           </div>
         </section>
+        <div className="mx-auto max-w-4xl px-6 pb-12">
+          <div className="border-t border-border pt-6">
+            <RelatedTools
+              links={[
+                { href: '/mbti', label: 'MBTI' },
+                { href: '/big-five', label: 'Big Five' },
+                { href: '/than-so-hoc', label: 'Thần số học' },
+                { href: '/tu-vi', label: 'Tử Vi' },
+                { href: '/so-sanh', label: 'So sánh lăng kính' },
+              ]}
+            />
+          </div>
+        </div>
       </main>
       <SiteFooter />
     </div>
