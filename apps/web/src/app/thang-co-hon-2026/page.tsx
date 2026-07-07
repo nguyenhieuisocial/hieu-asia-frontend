@@ -8,6 +8,8 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import { permanentRedirect } from 'next/navigation';
+import { expiredSeasonalTarget } from '@/lib/seasonal';
 
 export const metadata: Metadata = {
   title: 'Tháng cô hồn 2026 — lịch âm & cách nhìn',
@@ -73,6 +75,9 @@ const JSONLD = [
 ];
 
 export default function ThangCoHon2026Page() {
+  // S10 mùa vụ: hết 2026 → 308 về evergreen (Next tự dựng redirect lúc build).
+  const evergreen = expiredSeasonalTarget('/thang-co-hon-2026');
+  if (evergreen) permanentRedirect(evergreen);
   return (
     <>
       <SiteNav />
