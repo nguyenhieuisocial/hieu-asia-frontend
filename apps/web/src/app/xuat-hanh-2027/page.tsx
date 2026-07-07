@@ -9,6 +9,8 @@ import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 import { computeXuatHanh } from '@/lib/xuat-hanh';
+import { permanentRedirect } from 'next/navigation';
+import { expiredSeasonalTarget } from '@/lib/seasonal';
 
 // Tết Đinh Mùi 2027 — mùng 1 = Thứ Bảy 06/02/2027 (giao thừa 05/02).
 const TET_DAYS = [
@@ -79,6 +81,9 @@ const JSONLD = [
 ];
 
 export default function XuatHanh2027Page() {
+  // S10 mùa vụ: hết 2027 → 308 về evergreen (Next tự dựng redirect lúc build).
+  const evergreen = expiredSeasonalTarget('/xuat-hanh-2027');
+  if (evergreen) permanentRedirect(evergreen);
   return (
     <>
       <SiteNav />
