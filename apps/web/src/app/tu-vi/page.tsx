@@ -6,6 +6,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { AUX_STARS_CONTENT } from '@/lib/tuvi-content';
 
 export const metadata: Metadata = {
   title: 'Tử Vi Đẩu Số — lập lá số, tra cung & sao',
@@ -87,6 +88,13 @@ const AUX_STARS: { slug: string; name: string; hint: string }[] = [
   { slug: 'hoa-loc', name: 'Hoá Lộc', hint: 'Tứ hoá — cơ hội tài lộc.' },
   { slug: 'hoa-ky', name: 'Hoá Kỵ', hint: 'Tứ hoá — chủ đề cần chú ý.' },
 ];
+
+// Các phụ tinh / sát tinh / cát tinh CÒN LẠI (ngoài nhóm điểm ở trên). Liệt kê để
+// MỌI trang /tu-vi/sao/[star] đều có ít nhất một liên kết nội bộ — nếu chỉ nằm
+// trong sitemap mà không được trang nào trỏ tới, Google coi là trang mồ côi và
+// gần như không quét (bối cảnh: 47 sao nhưng hub cũ chỉ trỏ 24).
+const SHOWN_STAR_SLUGS = new Set([...MAJOR_STARS, ...AUX_STARS].map((s) => s.slug));
+const MORE_STARS = AUX_STARS_CONTENT.filter((s) => !SHOWN_STAR_SLUGS.has(s.slug));
 
 const BREADCRUMB_JSONLD = {
   '@context': 'https://schema.org',
@@ -264,6 +272,37 @@ export default function TuViHubPage() {
             ))}
           </div>
         </section>
+
+        {/* Toàn bộ sao còn lại — bảo đảm mọi trang /tu-vi/sao/[star] có liên kết
+            nội bộ (chống trang mồ côi để Google khám phá đủ). */}
+        {MORE_STARS.length > 0 && (
+          <section className="relative mx-auto max-w-5xl px-6 pb-12">
+            <div className="mb-6 flex items-center gap-3">
+              <Sparkles className="h-5 w-5 text-gold/60" aria-hidden />
+              <h2 className="font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+                Toàn bộ phụ tinh &amp; sát tinh
+              </h2>
+            </div>
+            <p className="mb-6 max-w-3xl text-sm text-muted-foreground sm:text-base">
+              Tử Vi Bắc phái còn dùng nhiều phụ tinh, sát tinh và cát tinh khác để
+              tinh chỉnh lá số. Bấm từng sao để tra ý nghĩa và cách nó ảnh hưởng theo
+              từng cung.
+            </p>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+              {MORE_STARS.map((s) => (
+                <Link
+                  key={s.slug}
+                  href={`/tu-vi/sao/${s.slug}`}
+                  title={s.archetype}
+                  className="flex items-center justify-between gap-2 rounded-lg border border-border bg-card/40 px-3 py-3 text-sm text-foreground transition hover:border-gold/40 active:scale-[0.98]"
+                >
+                  <span className="font-heading">{s.name}</span>
+                  <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Đặc trưng */}
         <section className="relative mx-auto max-w-5xl px-6 pb-20">
