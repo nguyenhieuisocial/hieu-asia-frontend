@@ -18,7 +18,7 @@
 
 import * as React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, cn, Input, toast } from '@hieu-asia/ui';
+import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, cn, Input, StatusBadge, toast } from '@hieu-asia/ui';
 import { MessageSquare, Star, AlertTriangle, CheckCircle2, Check, Search } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { KpiCard } from '@/components/admin/kpi-card';
@@ -50,10 +50,19 @@ const SURFACE_LABEL: Record<FeedbackSurface, string> = {
   misc: 'Khác',
 };
 
-const STATUS_CLASS: Record<FeedbackStatus, string> = {
-  new: 'border-gold/40 bg-gold/10 text-gold',
-  triaged: 'border-warn-500/40 bg-warn-500/10 text-warn-700 dark:text-warn-300',
-  resolved: 'border-jade-300/40 bg-jade-500/15 text-jade-700 dark:text-jade-300',
+// Delegate to canonical StatusBadge (success / warning / error / info / neutral)
+// so feedback shares one pill with coupons/sepay. Tones mirror the KPI card
+// accents below: new = gold, triaged = purple, resolved = jade.
+const STATUS_TONE: Record<FeedbackStatus, React.ComponentProps<typeof StatusBadge>['status']> = {
+  new: 'warning',
+  triaged: 'info',
+  resolved: 'success',
+};
+
+const STATUS_LABEL: Record<FeedbackStatus, string> = {
+  new: 'Mới',
+  triaged: 'Đang xử lý',
+  resolved: 'Đã xử lý',
 };
 
 function Stars({ value }: { value: number | null }) {
@@ -193,16 +202,7 @@ export default function FeedbackPage() {
       header: 'Trạng thái',
       sortKey: 'status',
       width: '120px',
-      cell: (r) => (
-        <span
-          className={cn(
-            'inline-flex items-center rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider',
-            STATUS_CLASS[r.status],
-          )}
-        >
-          {r.status}
-        </span>
-      ),
+      cell: (r) => <StatusBadge status={STATUS_TONE[r.status]} label={STATUS_LABEL[r.status]} />,
     },
     {
       id: 'actions',

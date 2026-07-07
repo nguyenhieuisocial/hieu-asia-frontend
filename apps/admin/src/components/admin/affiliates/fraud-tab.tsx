@@ -122,7 +122,7 @@ export function FraudTab() {
             <div className="space-y-2">
               {active.map((f) => (
                 <div
-                  key={f.code}
+                  key={`${f.code}-${f.flagged_at}`}
                   className="rounded border border-red-500/30 bg-red-500/5 p-3 text-sm"
                 >
                   <div className="flex items-center justify-between">
@@ -182,7 +182,7 @@ export function FraudTab() {
                 </thead>
                 <tbody>
                   {cleared.map((f) => (
-                    <tr key={f.code} className="border-b border-border">
+                    <tr key={`${f.code}-${f.flagged_at}`} className="border-b border-border">
                       <td className="py-1.5 pr-3 font-mono text-gold">{f.code}</td>
                       <td className="py-1.5 pr-3">{REASON_LABEL[f.reason]}</td>
                       <td className="py-1.5 pr-3 text-muted-foreground">{f.detail}</td>

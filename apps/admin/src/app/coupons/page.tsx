@@ -264,8 +264,8 @@ export default function CouponsPage() {
 
   function openEdit(c: Coupon) {
     setEditForm({
-      // Fixed-VND coupon (pct=null) → prefill 0; validation (1-100) blocks
-      // accidentally saving a pct over a VND coupon.
+      // Edit is %-only and the Pencil button is hidden for fixed-VND coupons
+      // (discount_pct=null), so this path only runs for percentage coupons.
       discount_pct: c.discount_pct ?? 0,
       max_uses: c.max_uses ?? null,
       // ISO timestamp → 'YYYY-MM-DD' for the <input type="date">.
@@ -449,7 +449,10 @@ export default function CouponsPage() {
       className: 'text-right',
       cell: (c) => (
         <div className="flex items-center justify-end gap-1">
-          {c.status !== 'revoked' && (
+          {/* Edit dialog only edits discount_pct, so hide it for fixed-VND
+              coupons (discount_pct=null) — otherwise saving would overwrite a
+              VND coupon into a percentage one. VND codes are backend-managed. */}
+          {c.status !== 'revoked' && c.discount_pct != null && (
             <Button
               size="sm"
               variant="ghost"
