@@ -159,6 +159,19 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "relatedLabel": "Tra cứu tuổi trọn đời"
   },
   {
+    "href": "/luc-thap-hoa-giap",
+    "catalog": {
+      "cat": "la-so",
+      "emoji": "🗓️",
+      "name": "Lục Thập Hoa Giáp",
+      "desc": "Bảng tra 60 Can Chi (Giáp Tý → Quý Hợi) kèm nạp âm và ngũ hành bản mệnh từng năm."
+    },
+    "surfaces": [
+      "catalog"
+    ],
+    "relatedLabel": "Lục Thập Hoa Giáp (60 Can Chi)"
+  },
+  {
     "href": "/tuong-hop-12-con-giap",
     "catalog": {
       "cat": "quan-he",
