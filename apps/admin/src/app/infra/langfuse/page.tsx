@@ -216,8 +216,8 @@ export default function InfraLangfusePage() {
       tool={tool}
       query={query}
       emptyTitle="Chưa có trace gần đây"
-      renderTable={(items) => (
-        <div className="space-y-6">
+      renderSummary={
+        <>
           {summary && (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {summary.spend_today_usd != null && (
@@ -379,17 +379,18 @@ export default function InfraLangfusePage() {
               </button>
             )}
           </form>
-
-          <AdminTable
-            rows={items}
-            columns={TRACE_COLUMNS}
-            getRowId={(t) => t.id}
-            onRowClick={(t) => {
-              if (t.id) setOpenTraceId(t.id);
-            }}
-            caption="Trace LLM gần đây"
-          />
-        </div>
+        </>
+      }
+      renderTable={(items) => (
+        <AdminTable
+          rows={items}
+          columns={TRACE_COLUMNS}
+          getRowId={(t) => t.id}
+          onRowClick={(t) => {
+            if (t.id) setOpenTraceId(t.id);
+          }}
+          caption="Trace LLM gần đây"
+        />
       )}
     />
     </>
