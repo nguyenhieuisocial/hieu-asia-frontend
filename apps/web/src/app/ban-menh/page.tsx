@@ -242,6 +242,7 @@ export default function BanMenhHubPage() {
               { href: '/mau-xe-hop-menh', label: 'Màu xe hợp mệnh' },
               { href: '/huong-nha', label: 'Hướng nhà hợp tuổi' },
               { href: '/hop-tuoi', label: 'Xem hợp tuổi' },
+              { href: '/luc-thap-hoa-giap', label: 'Lục Thập Hoa Giáp — bảng 60 Can Chi & nạp âm' },
             ]}
           />
         </div>
