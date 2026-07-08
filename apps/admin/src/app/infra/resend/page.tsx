@@ -197,130 +197,131 @@ export default function InfraResendPage() {
         query={query}
         emptyTitle="Chưa có email gần đây"
         headerActions={<SendTestEmailButton />}
-        renderTable={(items) => {
-          const visibleEmails = problemsOnly ? items.filter(isProblemEmail) : items;
-          const problemCount = items.filter(isProblemEmail).length;
-          return (
-            <div className="space-y-6">
-              {cards.length > 0 && (
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-                  {cards.map((c) => (
-                    <StatCard
-                      key={c.key}
-                      label={c.label}
-                      value={fmtNumber(summary![c.key] as number)}
-                      className={
-                        c.bad && (summary![c.key] as number) > 0
-                          ? 'border-red-400/40 bg-red-500/5 hover:border-red-400/60'
-                          : undefined
-                      }
-                    />
-                  ))}
-                </div>
-              )}
+        renderSummary={
+          <>
+            {cards.length > 0 && (
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                {cards.map((c) => (
+                  <StatCard
+                    key={c.key}
+                    label={c.label}
+                    value={fmtNumber(summary![c.key] as number)}
+                    className={
+                      c.bad && (summary![c.key] as number) > 0
+                        ? 'border-red-400/40 bg-red-500/5 hover:border-red-400/60'
+                        : undefined
+                    }
+                  />
+                ))}
+              </div>
+            )}
 
-              {/* Sending domains */}
-              {domains.length > 0 && (
-                <div className="space-y-2">
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                    Tên miền gửi ({domains.length})
-                  </p>
-                  <Card>
-                    <CardContent className="p-0">
-                      <AdminTable
-                        rows={domains}
-                        columns={DOMAIN_COLUMNS}
-                        getRowId={(d) => d.id}
-                        onRowClick={(d) => setOpenRecord({ id: d.id, hint: d.name })}
-                        caption="Tên miền gửi Resend"
-                      />
-                    </CardContent>
-                  </Card>
-                  <p className="text-xs text-muted-foreground">
-                    Bấm vào một tên miền để xem các bản ghi DNS (SPF/DKIM/MX/DMARC).
-                  </p>
-                </div>
-              )}
-
-              {/* API keys */}
-              {apiKeys.length > 0 && (
-                <div className="space-y-2">
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                    API keys ({apiKeys.length})
-                  </p>
-                  <Card>
-                    <CardContent className="p-0">
-                      <table className="w-full text-sm">
-                        <tbody>
-                          {apiKeys.map((k) => (
-                            <tr
-                              key={k.id}
-                              className="border-b border-border/40 last:border-0"
-                            >
-                              <td className="px-4 py-2 font-medium text-foreground">
-                                {k.name ?? '(không tên)'}
-                              </td>
-                              <td className="whitespace-nowrap px-4 py-2 text-right text-muted-foreground">
-                                {formatDateOrEmpty(k.created_at)}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
-
-              {/* Honest notes for any panel we couldn't read (missing scope). */}
-              {permissionNotes.length > 0 && (
-                <ul className="space-y-1 text-xs text-muted-foreground">
-                  {permissionNotes.map((n, i) => (
-                    <li key={i}>· {n}</li>
-                  ))}
-                </ul>
-              )}
-
-              {/* Recent emails + bounce/complaint filter */}
+            {/* Sending domains */}
+            {domains.length > 0 && (
               <div className="space-y-2">
-                <div className="flex items-center justify-between gap-3">
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                    Email gần đây
-                  </p>
-                  <label className="inline-flex cursor-pointer items-center gap-2 text-xs text-muted-foreground">
-                    <input
-                      type="checkbox"
-                      checked={problemsOnly}
-                      onChange={(e) => setProblemsOnly(e.target.checked)}
-                      className="h-3.5 w-3.5 accent-gold"
-                    />
-                    Chỉ trả về / khiếu nại
-                    {problemCount > 0 && (
-                      <span className="rounded-full border border-red-400/40 bg-red-500/10 px-1.5 py-0.5 text-[10px] text-red-700 dark:text-red-200">
-                        {problemCount}
-                      </span>
-                    )}
-                  </label>
-                </div>
+                <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  Tên miền gửi ({domains.length})
+                </p>
                 <Card>
                   <CardContent className="p-0">
                     <AdminTable
-                      rows={visibleEmails}
-                      columns={EMAIL_COLUMNS}
-                      getRowId={(e) => e.id}
-                      onRowClick={(e) => {
-                        if (e.id) setOpenRecord({ id: e.id, hint: e.subject });
-                      }}
-                      empty={
-                        <span className="text-sm text-muted-foreground">
-                          Không có email trả về / khiếu nại trong cửa sổ gần đây.
-                        </span>
-                      }
-                      caption="Email gần đây"
+                      rows={domains}
+                      columns={DOMAIN_COLUMNS}
+                      getRowId={(d) => d.id}
+                      onRowClick={(d) => setOpenRecord({ id: d.id, hint: d.name })}
+                      caption="Tên miền gửi Resend"
                     />
                   </CardContent>
                 </Card>
+                <p className="text-xs text-muted-foreground">
+                  Bấm vào một tên miền để xem các bản ghi DNS (SPF/DKIM/MX/DMARC).
+                </p>
               </div>
+            )}
+
+            {/* API keys */}
+            {apiKeys.length > 0 && (
+              <div className="space-y-2">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  API keys ({apiKeys.length})
+                </p>
+                <Card>
+                  <CardContent className="p-0">
+                    <table className="w-full text-sm">
+                      <tbody>
+                        {apiKeys.map((k) => (
+                          <tr
+                            key={k.id}
+                            className="border-b border-border/40 last:border-0"
+                          >
+                            <td className="px-4 py-2 font-medium text-foreground">
+                              {k.name ?? '(không tên)'}
+                            </td>
+                            <td className="whitespace-nowrap px-4 py-2 text-right text-muted-foreground">
+                              {formatDateOrEmpty(k.created_at)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {/* Honest notes for any panel we couldn't read (missing scope). */}
+            {permissionNotes.length > 0 && (
+              <ul className="space-y-1 text-xs text-muted-foreground">
+                {permissionNotes.map((n, i) => (
+                  <li key={i}>· {n}</li>
+                ))}
+              </ul>
+            )}
+          </>
+        }
+        renderTable={(items) => {
+          const visibleEmails = problemsOnly ? items.filter(isProblemEmail) : items;
+          const problemCount = items.filter(isProblemEmail).length;
+          // Recent emails + bounce/complaint filter.
+          return (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between gap-3">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  Email gần đây
+                </p>
+                <label className="inline-flex cursor-pointer items-center gap-2 text-xs text-muted-foreground">
+                  <input
+                    type="checkbox"
+                    checked={problemsOnly}
+                    onChange={(e) => setProblemsOnly(e.target.checked)}
+                    className="h-3.5 w-3.5 accent-gold"
+                  />
+                  Chỉ trả về / khiếu nại
+                  {problemCount > 0 && (
+                    <span className="rounded-full border border-red-400/40 bg-red-500/10 px-1.5 py-0.5 text-[10px] text-red-700 dark:text-red-200">
+                      {problemCount}
+                    </span>
+                  )}
+                </label>
+              </div>
+              <Card>
+                <CardContent className="p-0">
+                  <AdminTable
+                    rows={visibleEmails}
+                    columns={EMAIL_COLUMNS}
+                    getRowId={(e) => e.id}
+                    onRowClick={(e) => {
+                      if (e.id) setOpenRecord({ id: e.id, hint: e.subject });
+                    }}
+                    empty={
+                      <span className="text-sm text-muted-foreground">
+                        Không có email trả về / khiếu nại trong cửa sổ gần đây.
+                      </span>
+                    }
+                    caption="Email gần đây"
+                  />
+                </CardContent>
+              </Card>
             </div>
           );
         }}

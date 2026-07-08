@@ -508,8 +508,8 @@ export default function InfraGithubPage() {
       tool={tool}
       query={query}
       emptyTitle="Chưa có lần chạy gần đây"
-      renderTable={(items) => (
-        <div className="space-y-6">
+      renderSummary={
+        <>
           {lastDeploy && deployTone && (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <StatCard
@@ -524,7 +524,10 @@ export default function InfraGithubPage() {
           {recentCommits.length > 0 && (
             <RecentCommitsSection commits={recentCommits} />
           )}
-          <Card>
+        </>
+      }
+      renderTable={(items) => (
+        <Card>
           <CardContent className="p-0">
             <AdminTable
               rows={items}
@@ -533,8 +536,7 @@ export default function InfraGithubPage() {
               caption="Lần chạy workflow gần đây"
             />
           </CardContent>
-          </Card>
-        </div>
+        </Card>
       )}
     />
   );
