@@ -242,7 +242,7 @@ export function BatTuChecker({
             <div className="grid gap-3 sm:grid-cols-3">
               <div className="space-y-1">
                 <Label htmlFor="btDate">Ngày sinh (dương lịch)</Label>
-                <Input id="btDate" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+                <Input id="btDate" type="date" value={date} onChange={(e) => setDate(e.target.value)} aria-invalid={!!error} aria-describedby={error ? 'bt-err' : undefined} />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="btTime">Giờ sinh</Label>
@@ -271,7 +271,7 @@ export function BatTuChecker({
             </Button>
           </>
         )}
-        {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
+        {error && <p id="bt-err" role="alert" className="text-sm text-destructive">{error}</p>}
 
         {chart && (
           <div ref={resultRef} className="scroll-mt-24 space-y-5 pt-2">

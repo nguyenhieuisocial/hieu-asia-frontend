@@ -154,6 +154,8 @@ export function TimeFlowChecker({ scope }: { scope: Scope }) {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
+              aria-invalid={!!error}
+              aria-describedby={error ? 'tf-err' : undefined}
             />
           </div>
           <div className="space-y-1">
@@ -180,7 +182,7 @@ export function TimeFlowChecker({ scope }: { scope: Scope }) {
         <Button onClick={() => void onCast()} disabled={loading} size="lg">
           {loading ? 'Đang lập lá số…' : '✦ Xem vận thật của tôi'}
         </Button>
-        {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
+        {error && <p id="tf-err" role="alert" className="text-sm text-destructive">{error}</p>}
 
         {chart && horoscope && (
           <div ref={resultRef} className="scroll-mt-24 space-y-4 pt-1">
