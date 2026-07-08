@@ -126,8 +126,8 @@ export default function InfraCloudflarePage() {
         tool={tool}
         query={query}
         emptyTitle="Chưa có bản triển khai"
-        renderTable={(items) => (
-          <div className="space-y-6">
+        renderSummary={
+          <>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               {summary && (
                 <StatCard
@@ -174,15 +174,16 @@ export default function InfraCloudflarePage() {
             {cron && <CfCronCard crons={cron} />}
             {bindings && <CfBindingsCard bindings={bindings} />}
             {routes && <CfRoutesCard routes={routes} />}
-
-            <AdminTable
-              rows={items}
-              columns={DEPLOY_COLUMNS}
-              getRowId={(d) => d.id}
-              onRowClick={(d) => setOpenId(d.id)}
-              caption="Danh sách bản triển khai Cloudflare Worker"
-            />
-          </div>
+          </>
+        }
+        renderTable={(items) => (
+          <AdminTable
+            rows={items}
+            columns={DEPLOY_COLUMNS}
+            getRowId={(d) => d.id}
+            onRowClick={(d) => setOpenId(d.id)}
+            caption="Danh sách bản triển khai Cloudflare Worker"
+          />
         )}
       />
     </>
