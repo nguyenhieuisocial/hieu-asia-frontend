@@ -183,6 +183,7 @@ export default function LucThapHoaGiapPage() {
           <div className="mt-8 border-t border-border pt-6">
             <p className="text-sm text-muted-foreground">Xem sâu hơn:{' '}
               <Link href="/tra-cuu-tuoi" className="text-gold hover:underline">Tra cứu tuổi trọn đời</Link>{' · '}
+              <Link href="/tuong-hop-12-con-giap" className="text-gold hover:underline">Bản đồ tương hợp 12 con giáp</Link>{' · '}
               <Link href="/ban-menh" className="text-gold hover:underline">Ngũ hành bản mệnh theo năm</Link>{' · '}
               <Link href="/learn/con-giap" className="text-gold hover:underline">12 con giáp</Link>{' · '}
               <Link href="/la-so-bat-tu" className="text-gold hover:underline">Lập lá số Bát Tự</Link>

@@ -187,6 +187,8 @@ const STATIC_LINKS: { href: string; label: string }[] = [
   { href: '/kim-lau', label: 'Kim Lâu — tính tuổi cưới / làm nhà' },
   { href: '/can-xuong', label: 'Cân xương tính số' },
   { href: '/hop-tuoi', label: 'Xem hợp tuổi (đôi lứa, làm ăn)' },
+  { href: '/tuong-hop-12-con-giap', label: 'Bản đồ tương hợp 12 con giáp' },
+  { href: '/luc-thap-hoa-giap', label: 'Lục Thập Hoa Giáp — bảng 60 Can Chi' },
 ];
 
 export function TraCuuTuoi({

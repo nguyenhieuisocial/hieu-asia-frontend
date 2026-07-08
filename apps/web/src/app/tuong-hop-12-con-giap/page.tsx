@@ -115,6 +115,7 @@ const DEEP_LINKS: { href: string; label: string }[] = [
   { href: '/learn/hop-tuoi', label: 'Tìm hiểu: hợp tuổi hoạt động thế nào' },
   { href: '/learn/con-giap', label: 'Tính cách 12 con giáp' },
   { href: '/tra-cuu-tuoi', label: 'Tra cứu tuổi trọn đời từ năm sinh' },
+  { href: '/luc-thap-hoa-giap', label: 'Lục Thập Hoa Giáp — bảng 60 Can Chi' },
 ];
 
 export default async function TuongHop12ConGiapPage({
