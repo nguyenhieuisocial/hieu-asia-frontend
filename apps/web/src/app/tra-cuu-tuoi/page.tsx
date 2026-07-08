@@ -82,7 +82,15 @@ const FAQS: FaqItem[] = [
   },
 ];
 
-export default function TraCuuTuoiPage() {
+export default async function TraCuuTuoiPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ year?: string; gender?: string }>;
+}) {
+  const sp = await searchParams;
+  const initialYear = typeof sp.year === 'string' ? sp.year : undefined;
+  const initialGender: 'nam' | 'nu' | undefined =
+    sp.gender === 'nu' ? 'nu' : sp.gender === 'nam' ? 'nam' : undefined;
   const JSONLD = [
     breadcrumb([
       { name: 'Trang chủ', url: '/' },
@@ -118,7 +126,7 @@ export default function TraCuuTuoiPage() {
           </p>
 
           <div className="mt-7">
-            <TraCuuTuoi />
+            <TraCuuTuoi initialYear={initialYear} initialGender={initialGender} />
           </div>
         </section>
 

@@ -189,10 +189,26 @@ const STATIC_LINKS: { href: string; label: string }[] = [
   { href: '/hop-tuoi', label: 'Xem hợp tuổi (đôi lứa, làm ăn)' },
 ];
 
-export function TraCuuTuoi(): React.JSX.Element {
-  const [year, setYear] = React.useState('');
-  const [gender, setGender] = React.useState<Gender>('nam');
-  const [revealed, setRevealed] = React.useState(false);
+export function TraCuuTuoi({
+  initialYear,
+  initialGender,
+}: {
+  initialYear?: string;
+  initialGender?: Gender;
+} = {}): React.JSX.Element {
+  // Prefill từ ?year=/?gender= (link nội bộ, vd từ /ban-menh/1990): nếu năm hợp
+  // lệ → hiện kết quả NGAY, khỏi bấm lại. KHÔNG armScroll ở mount → không giật
+  // khi mở trực tiếp; compute deterministic + cùng năm hiện tại server/client →
+  // không lệch hydrate.
+  const validInit =
+    !!initialYear &&
+    Number.isInteger(Number(initialYear)) &&
+    Number(initialYear) >= MIN_YEAR &&
+    Number(initialYear) <= MAX_YEAR &&
+    !!yearProfile(Number(initialYear));
+  const [year, setYear] = React.useState(initialYear ?? '');
+  const [gender, setGender] = React.useState<Gender>(initialGender ?? 'nam');
+  const [revealed, setRevealed] = React.useState(validInit);
   const [error, setError] = React.useState<string | null>(null);
   // Tính năm hiện tại 1 lần phía client. Chỉ dùng trong khối kết quả (hiện sau
   // khi bấm) nên không gây lệch hydrate.

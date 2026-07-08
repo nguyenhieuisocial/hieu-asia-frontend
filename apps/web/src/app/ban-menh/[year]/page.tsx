@@ -100,6 +100,7 @@ export default async function BanMenhYearPage({
   // không tồn tại. Mỗi trang /ban-menh/<year> nhờ đó có bộ link riêng → giảm
   // near-dup + đưa Googlebot vào các trang sâu (làm nhà/cưới/khai trương/hướng/xông đất).
   const sameAgeLinks = [
+    { href: `/tra-cuu-tuoi?year=${y}`, label: `Tra cứu trọn đời tuổi ${d.canChi}` },
     LAM_NHA_YEARS.includes(y)
       ? { href: `/xem-tuoi-lam-nha/${lamNhaSlug(y)}`, label: `Tuổi ${d.canChi} làm nhà năm nào tốt?` }
       : null,
