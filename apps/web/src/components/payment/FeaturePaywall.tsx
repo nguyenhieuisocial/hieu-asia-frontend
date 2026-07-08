@@ -435,7 +435,7 @@ export function FeaturePaywall({
               </div>
             )}
             {codeErr && (
-              <p className="text-xs text-red-300">{codeErr}</p>
+              <p role="alert" className="text-xs text-red-300">{codeErr}</p>
             )}
           </div>
 

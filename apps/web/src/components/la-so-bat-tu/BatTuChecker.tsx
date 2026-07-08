@@ -271,7 +271,7 @@ export function BatTuChecker({
             </Button>
           </>
         )}
-        {error && <p className="text-sm text-destructive">{error}</p>}
+        {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
 
         {chart && (
           <div ref={resultRef} className="scroll-mt-24 space-y-5 pt-2">

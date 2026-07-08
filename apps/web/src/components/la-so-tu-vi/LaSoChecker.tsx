@@ -209,7 +209,7 @@ export function LaSoChecker({
         <Button onClick={() => void onCast()} disabled={loading} size="lg">
           {loading ? 'Đang lập lá số…' : '✦ Lập lá số Tử Vi'}
         </Button>
-        {error && <p className="text-sm text-destructive">{error}</p>}
+        {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
 
         {chart && (
           // `data-in` kích hoạt hệ reveal sẵn có (globals.css) → lá số + các ô
