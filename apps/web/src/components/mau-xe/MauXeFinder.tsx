@@ -73,6 +73,8 @@ export function MauXeFinder() {
             onChange={(e) => setValue(e.target.value)}
             min={1950}
             max={2025}
+            aria-invalid={!!error}
+            aria-describedby={error ? 'mauxe-err' : undefined}
             className="w-44 rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none focus:border-gold/50"
           />
         </label>
@@ -81,7 +83,7 @@ export function MauXeFinder() {
         </Button>
       </form>
 
-      {error && <p role="alert" className="mt-3 text-sm text-rose-600 dark:text-rose-400">{error}</p>}
+      {error && <p id="mauxe-err" role="alert" className="mt-3 text-sm text-rose-600 dark:text-rose-400">{error}</p>}
 
       {data && (
         <div className="mt-5 space-y-4">

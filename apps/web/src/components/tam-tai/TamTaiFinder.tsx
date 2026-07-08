@@ -94,6 +94,8 @@ export function TamTaiFinder() {
             onChange={(e) => setValue(e.target.value)}
             min={1900}
             max={2100}
+            aria-invalid={!!error}
+            aria-describedby={error ? 'tamtai-err' : undefined}
             className="w-40 rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none focus:border-gold/50"
           />
         </label>
@@ -102,7 +104,7 @@ export function TamTaiFinder() {
         </Button>
       </form>
 
-      {error && <p role="alert" className="mt-3 text-sm text-rose-600 dark:text-rose-400">{error}</p>}
+      {error && <p id="tamtai-err" role="alert" className="mt-3 text-sm text-rose-600 dark:text-rose-400">{error}</p>}
 
       {result && (
         <div className="mt-5 space-y-3 rounded-xl border border-border bg-background/60 p-4 text-sm leading-relaxed">
