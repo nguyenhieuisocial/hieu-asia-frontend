@@ -63,7 +63,7 @@ export function KimLauFinder() {
         </Button>
       </form>
 
-      {error && <p className="mt-3 text-sm text-rose-600 dark:text-rose-400">{error}</p>}
+      {error && <p role="alert" className="mt-3 text-sm text-rose-600 dark:text-rose-400">{error}</p>}
 
       {rows && (
         <div className="mt-5 space-y-3">

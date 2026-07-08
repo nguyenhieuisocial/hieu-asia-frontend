@@ -180,7 +180,7 @@ export function TimeFlowChecker({ scope }: { scope: Scope }) {
         <Button onClick={() => void onCast()} disabled={loading} size="lg">
           {loading ? 'Đang lập lá số…' : '✦ Xem vận thật của tôi'}
         </Button>
-        {error && <p className="text-sm text-destructive">{error}</p>}
+        {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
 
         {chart && horoscope && (
           <div ref={resultRef} className="scroll-mt-24 space-y-4 pt-1">
