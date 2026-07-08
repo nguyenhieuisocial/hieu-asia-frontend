@@ -159,6 +159,19 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "relatedLabel": "Tra cứu tuổi trọn đời"
   },
   {
+    "href": "/tuong-hop-12-con-giap",
+    "catalog": {
+      "cat": "quan-he",
+      "emoji": "🧭",
+      "name": "Bản đồ tương hợp 12 con giáp",
+      "desc": "Chọn con giáp của bạn: xem hợp/khắc với cả 11 con còn lại — tam hợp, lục xung, ngũ hành sinh khắc, tất cả trên một bản đồ."
+    },
+    "surfaces": [
+      "catalog"
+    ],
+    "relatedLabel": "Bản đồ tương hợp 12 con giáp"
+  },
+  {
     "href": "/bang-chung",
     "catalog": {
       "cat": "la-so",
