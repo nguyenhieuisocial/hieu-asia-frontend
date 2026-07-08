@@ -198,6 +198,16 @@ export default function LearnConGiapPage() {
                   sung.
                 </p>
               </div>
+              <p className="text-sm leading-relaxed text-foreground/85">
+                Muốn xem nhanh một con giáp hợp hay khắc với cả 11 con còn lại?{' '}
+                <Link
+                  href="/tuong-hop-12-con-giap"
+                  className="text-gold underline underline-offset-4 hover:text-gold/80"
+                >
+                  Mở bản đồ tương hợp 12 con giáp
+                </Link>{' '}
+                — tam hợp, lục xung và ngũ hành sinh khắc gói gọn trên một bảng.
+              </p>
             </div>
           ),
         },

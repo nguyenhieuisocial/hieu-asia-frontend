@@ -410,6 +410,7 @@ export default async function ConGiapDetailPage({
         <RelatedTools
           links={[
             { href: '/hop-tuoi', label: 'Xem hợp tuổi' },
+            { href: '/tuong-hop-12-con-giap', label: 'Bản đồ tương hợp 12 con giáp' },
             { href: '/learn/hop-tuoi', label: 'Tìm hiểu hợp tuổi' },
             { href: '/learn/con-giap', label: '12 Con Giáp' },
           ]}
