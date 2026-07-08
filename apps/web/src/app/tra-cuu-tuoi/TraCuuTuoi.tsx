@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   Sparkles,
   CalendarClock,
@@ -84,10 +85,12 @@ function Row({
   label,
   badge,
   detail,
+  action,
 }: {
   label: string;
   badge: React.ReactNode;
   detail: string;
+  action?: string;
 }) {
   return (
     <div className="flex flex-col gap-1 rounded-lg border border-border/60 bg-background/40 p-3">
@@ -96,6 +99,17 @@ function Row({
         {badge}
       </div>
       <p className="text-xs leading-relaxed text-muted-foreground">{detail}</p>
+      {action && (
+        <p className="mt-0.5 flex gap-1.5 text-xs leading-relaxed text-foreground/75">
+          <span aria-hidden className="shrink-0 text-gold">
+            →
+          </span>
+          <span>
+            <span className="font-medium text-foreground/85">Nên làm gì: </span>
+            {action}
+          </span>
+        </p>
+      )}
     </div>
   );
 }
@@ -215,6 +229,7 @@ export function TraCuuTuoi({
   // Tính năm hiện tại 1 lần phía client. Chỉ dùng trong khối kết quả (hiện sau
   // khi bấm) nên không gây lệch hydrate.
   const [currentYear] = React.useState(() => new Date().getFullYear());
+  const router = useRouter();
   const { resultRef, armScroll } = useScrollToResult(revealed);
 
   const onChangeAny = React.useCallback(() => {
@@ -244,8 +259,12 @@ export function TraCuuTuoi({
       });
       armScroll();
       setRevealed(true);
+      // Ghi năm + giới tính vào địa chỉ để khi rời trang rồi bấm Back, kết quả
+      // được khôi phục (page.tsx đọc ?year/?gender → prefill + hiện lại), không
+      // phải nhập lại. scroll:false để không nhảy lên đầu, nhường armScroll.
+      router.replace(`/tra-cuu-tuoi?year=${y}&gender=${gender}`, { scroll: false });
     },
-    [year, armScroll],
+    [year, gender, armScroll, router],
   );
 
   const data = revealed ? buildResult(Number(year), gender, currentYear) : null;
@@ -382,6 +401,11 @@ export function TraCuuTuoi({
                       detail={`Tuổi mụ ${data.kimLau.ageMu} chia 9 dư ${data.kimLau.remainder}${
                         data.kimLau.type ? ` — ${data.kimLau.note}` : ' — không rơi 1/3/6/8'
                       }.`}
+                      action={
+                        data.kimLau.type
+                          ? 'Cưới hỏi hay làm nhà năm nay: nếu không gấp, dân gian thường hoãn sang năm không phạm, hoặc mượn tuổi người hợp đứng ra lo việc. Tham khảo, không bắt buộc.'
+                          : 'Xét theo Kim Lâu, năm nay thuận cho cưới hỏi và làm nhà.'
+                      }
                     />
                     <Row
                       label="Tam Tai"
@@ -395,6 +419,11 @@ export function TraCuuTuoi({
                       detail={`Nhóm tuổi ${data.tamTai.birthChi} gặp Tam Tai vào 3 năm ${data.tamTai.tamTaiChis.join(
                         ', ',
                       )}. Năm nay là năm ${data.tamTai.yearChi}.`}
+                      action={
+                        data.tamTai.isTamTai
+                          ? 'Đang trong 3 năm Tam Tai: nên giữ ổn định, cân nhắc kỹ trước việc lớn (xây nhà, cưới hỏi, mở kinh doanh). Đây chỉ là giai đoạn nên thận trọng hơn, không phải điềm dữ.'
+                          : 'Năm nay không nằm trong 3 năm Tam Tai của nhóm tuổi bạn.'
+                      }
                     />
                     <Row
                       label="Xung năm / năm tuổi"
@@ -414,6 +443,13 @@ export function TraCuuTuoi({
                             ? `Năm nay trùng chi tuổi (${data.xung.birthChi}) — chỉ là lưu ý nhẹ, không phải hạn.`
                             : `Chi năm ${data.xung.yearChi} không xung với chi tuổi ${data.xung.birthChi}.`
                       }
+                      action={
+                        data.xung.isXung
+                          ? 'Năm xung Thái Tuế: việc trọng đại nên cẩn trọng và giữ hoà khí; nhiều người chọn năm khác cho việc lớn. Tham khảo.'
+                          : data.xung.isNamTuoi
+                            ? 'Chỉ là năm tuổi (trùng chi tuổi) — lưu ý nhẹ, không cần kiêng gì đặc biệt.'
+                            : 'Năm nay không xung với tuổi bạn.'
+                      }
                     />
                     <Row
                       label="Hoang Ốc"
@@ -425,6 +461,11 @@ export function TraCuuTuoi({
                         )
                       }
                       detail={`Tuổi mụ ${data.hoangOc.ageMu} đếm vòng Hoang Ốc rơi cung ${data.hoangOc.cung} (bước ${data.hoangOc.step}/6) — ${data.hoangOc.note}.`}
+                      action={
+                        data.hoangOc.isPham
+                          ? 'Định xây hay sửa nhà năm nay: dân gian thường hoãn, hoặc mượn tuổi người không phạm đứng ra khởi công / động thổ. Tham khảo.'
+                          : 'Xét theo Hoang Ốc, năm nay thuận cho việc khởi công xây nhà.'
+                      }
                     />
                     {data.saoHan && (
                       <Row
