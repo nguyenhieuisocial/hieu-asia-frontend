@@ -28,6 +28,8 @@ import {
   DownloadToolPdfButton,
   type ToolPdfPayload,
 } from '@/components/tools/DownloadToolPdfButton';
+import { readBirthProfile, saveBirthProfile } from '@/lib/birth-profile';
+import { SavedBirthInfoHint } from '@/components/tools/SavedBirthInfoHint';
 
 const TYPE_STYLE: Record<SaoType, string> = {
   tot: 'border-emerald-300 bg-emerald-50 dark:border-emerald-700 dark:bg-emerald-950/30',
@@ -48,6 +50,23 @@ export function SaoHanCalculator() {
   const [viewYear, setViewYear] = React.useState(String(thisYear));
   const [result, setResult] = React.useState<SaoHanResult | null>(null);
   const [error, setError] = React.useState<string | null>(null);
+  const [prefilled, setPrefilled] = React.useState(false);
+
+  // Tự điền từ hồ sơ ngày sinh dùng chung (nếu có) + hiện kết quả ngay. Đọc
+  // localStorage trong effect (không phải lúc render) để tránh lệch hydrate.
+  React.useEffect(() => {
+    const p = readBirthProfile();
+    if (p.gender) setGender(p.gender);
+    if (p.year) {
+      setBirthYear(String(p.year));
+      const r = computeSaoHan(p.year, p.gender ?? 'nam', thisYear);
+      if (r) {
+        setResult(r);
+        setPrefilled(true);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function onCheck() {
     setError(null);
@@ -60,6 +79,7 @@ export function SaoHanCalculator() {
       return;
     }
     setResult(r);
+    saveBirthProfile({ year: by, gender });
   }
 
   return (
@@ -109,6 +129,8 @@ export function SaoHanCalculator() {
         <Button onClick={onCheck} className="w-full md:w-auto">
           Xem sao hạn
         </Button>
+
+        <SavedBirthInfoHint show={prefilled} onClear={() => setPrefilled(false)} />
 
         {error && (
           <div className="rounded-md border border-rose-300 bg-rose-50 p-3 text-sm text-rose-800 dark:border-rose-700 dark:bg-rose-950/30 dark:text-rose-200">

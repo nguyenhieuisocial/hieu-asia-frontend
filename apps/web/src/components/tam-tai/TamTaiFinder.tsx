@@ -5,13 +5,15 @@
  * phạm không" luôn đúng theo năm hiện tại (không làm trang SSG bị stale).
  * Grounded 100% trên engine: canChiOfYear / checkTamTai / TAM_TAI_YEARS.
  */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@hieu-asia/ui';
 import {
   DownloadToolPdfButton,
   type ToolPdfPayload,
 } from '@/components/tools/DownloadToolPdfButton';
+import { readBirthProfile, saveBirthProfile } from '@/lib/birth-profile';
+import { SavedBirthInfoHint } from '@/components/tools/SavedBirthInfoHint';
 import { ZODIAC } from '@/lib/hop-tuoi-pairs';
 import {
   canChiOfYear,
@@ -59,6 +61,17 @@ export function TamTaiFinder() {
   const [value, setValue] = useState('');
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState('');
+  const [prefilled, setPrefilled] = useState(false);
+
+  // Tự điền từ hồ sơ ngày sinh dùng chung (nếu có) + hiện kết quả ngay.
+  useEffect(() => {
+    const p = readBirthProfile();
+    if (p.year && p.year >= 1900 && p.year <= 2100) {
+      setValue(String(p.year));
+      setResult(compute(p.year));
+      setPrefilled(true);
+    }
+  }, []);
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -70,6 +83,7 @@ export function TamTaiFinder() {
     }
     setError('');
     setResult(compute(y));
+    saveBirthProfile({ year: y });
   }
 
   return (
@@ -103,6 +117,12 @@ export function TamTaiFinder() {
           Tra Tam Tai
         </Button>
       </form>
+
+      {prefilled && (
+        <div className="mt-3">
+          <SavedBirthInfoHint show onClear={() => setPrefilled(false)} />
+        </div>
+      )}
 
       {error && <p id="tamtai-err" role="alert" className="mt-3 text-sm text-rose-600 dark:text-rose-400">{error}</p>}
 
