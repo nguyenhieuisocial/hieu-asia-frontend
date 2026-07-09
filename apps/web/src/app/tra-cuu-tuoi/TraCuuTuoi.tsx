@@ -24,6 +24,7 @@ import { ELEMENTS } from '@/lib/dat-ten-ngu-hanh';
 import { BIRTH_YEARS as HUONG_NHA_YEARS, slugOf as huongNhaSlug } from '@/app/huong-nha/years';
 import { BIRTH_YEARS as CUOI_YEARS, slugOf as cuoiSlug } from '@/app/xem-tuoi-cuoi/years';
 import { BIRTH_YEARS as LAM_NHA_YEARS, slugOf as lamNhaSlug } from '@/app/xem-tuoi-lam-nha/years';
+import { saveBirthProfile } from '@/lib/birth-profile';
 
 /**
  * TraCuuTuoi — công cụ tra cứu tuổi trọn đời (client-side 100%).
@@ -259,6 +260,9 @@ export function TraCuuTuoi({
       });
       armScroll();
       setRevealed(true);
+      // Lưu vào "hồ sơ ngày sinh dùng chung" (trên máy) để các công cụ khác
+      // (Sao hạn, Tam Tai...) tự điền, khỏi nhập lại.
+      saveBirthProfile({ year: y, gender });
       // Ghi năm + giới tính vào địa chỉ để khi rời trang rồi bấm Back, kết quả
       // được khôi phục (page.tsx đọc ?year/?gender → prefill + hiện lại), không
       // phải nhập lại. scroll:false để không nhảy lên đầu, nhường armScroll.
