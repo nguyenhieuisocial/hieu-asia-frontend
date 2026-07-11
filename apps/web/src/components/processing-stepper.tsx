@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, MotionConfig } from 'framer-motion';
 import { Check, Loader2 } from 'lucide-react';
 
 export type StepKey =
@@ -42,7 +42,10 @@ export function ProcessingStepper({ steps }: ProcessingStepperProps) {
       : `Đã hoàn thành ${doneCount} trên ${total} bước`;
 
   return (
-    <>
+    // reducedMotion="user" makes every descendant framer animation (the step
+    // fades AND the infinite running-pulse in StepIndicator) honour
+    // prefers-reduced-motion — the CSS `*` reset can't stop JS-driven anims. (T25)
+    <MotionConfig reducedMotion="user">
       <ol className="space-y-5" aria-label="Tiến trình phân tích">
         {steps.map((step, idx) => (
           <li
@@ -99,7 +102,7 @@ export function ProcessingStepper({ steps }: ProcessingStepperProps) {
       <p className="sr-only" aria-live="polite" aria-atomic="true">
         {liveText}
       </p>
-    </>
+    </MotionConfig>
   );
 }
 
