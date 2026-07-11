@@ -39,32 +39,54 @@ const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
 // authorization MUST happen in the proxy — there is no backend fallback.
 const ROLE_RANK = { viewer: 0, admin: 1, owner: 2 } as const;
 
+// Backend path prefixes that require OWNER for EVERY method (read included).
+// This list MUST mirror every dedicated apps/admin/src/app/api/admin/**/route.ts
+// that calls requireAdminSession('owner'); the Worker is role-blind so this
+// proxy is the only per-user authz point, and any owner path missing here is
+// reachable at mere ADMIN rank through /api/admin-proxy/<path> (e.g. before
+// this fix, POST admin/users {role:'owner'} was an admin→owner self-escalation).
+// Each entry matches the exact path OR any deeper sub-path (segment-boundary
+// safe — 'admin/users' matches 'admin/users' and 'admin/users/set-plan' but
+// NOT 'admin/usersX').
+const OWNER_PATH_PREFIXES = [
+  'admin/secrets',              // production secrets (read or write)
+  'admin/users',                // admin-user CRUD (role=owner self-escalation) + end-user plan comp (admin/users/set-plan)
+  'admin/ledger/journal',       // manual journal entry + journal/void (accounting integrity)
+  'admin/ledger/close',         // period close / trial-balance snapshot
+  'ai/keys',                    // provider API keys (Anthropic/OpenAI/Google) — production secrets
+  'admin/sepay/refund',         // SePay money movement
+  'admin/sepay/reconcile',      // SePay money reconcile
+  'admin/sepay/drift/fix',      // SePay drift correction (money)
+  'admin/infra/supabase/rows',  // raw table rows (PII); table-stats GET at admin/infra/supabase stays viewer
+] as const;
+
+/** True when `path` equals `prefix` or is a sub-path of it (respects '/' boundaries). */
+function underPrefix(path: string, prefix: string): boolean {
+  return path === prefix || path.startsWith(prefix + '/');
+}
+
 /**
  * Minimum role required to forward a given request.
- *   - GET (read)              → viewer  (dashboards stay readable for read-only ops)
- *   - mutations (POST/PATCH/DELETE) → admin
- *   - production secrets (read OR write), SePay refunds/reconcile (money),
- *     and comped paid-access grants → owner
+ *   - GET (read)                     → viewer  (dashboards stay readable)
+ *   - mutations (POST/PATCH/DELETE)  → admin
+ *   - OWNER_PATH_PREFIXES (any method), comped paid-access grants, and
+ *     destructive settings writes    → owner
  */
 function requiredRank(method: string, segments: string[]): number {
   const path = segments.join('/');
-  // Owner-only surfaces: production secrets, money movement, comped access.
-  if (path === 'admin/secrets' || path.startsWith('admin/secrets/')) return ROLE_RANK.owner;
-  if (path === 'admin/sepay/refund' || path.startsWith('admin/sepay/refund/')) return ROLE_RANK.owner;
-  if (path === 'admin/sepay/reconcile') return ROLE_RANK.owner;
-  if (path === 'admin/sepay/drift/fix') return ROLE_RANK.owner;
-  // Supabase ROW BROWSER returns raw table rows (PII even when column-masked) →
-  // owner-only, mirroring admin/secrets. The table-stats GET (admin/infra/supabase)
-  // stays viewer; only this rows sub-path is gated.
-  if (path === 'admin/infra/supabase/rows') return ROLE_RANK.owner;
+  // Owner-only surfaces (all methods): secrets, admin-user mgmt, money, keys, PII.
+  if (OWNER_PATH_PREFIXES.some((p) => underPrefix(path, p))) return ROLE_RANK.owner;
+  // Comped paid-access grants: admin/sessions/:id/access → owner.
   if (segments[0] === 'admin' && segments[1] === 'sessions' && segments[3] === 'access') {
     return ROLE_RANK.owner;
   }
-  // Alert-threshold writes are owner-only — a viewer/admin must not be able to
-  // mute production alerts. Read (GET) stays open to viewer. (Mirrors the
-  // dedicated /api/admin/settings/alert-thresholds proxy's owner gate so the
-  // generic proxy path can't bypass it.)
-  if (path === 'admin/settings/alert-thresholds' && method !== 'GET') {
+  // Settings WRITES are owner-only; reads (GET) stay viewer. Loosening a
+  // retention window or alert threshold silences production signal. Mirrors the
+  // dedicated /api/admin/settings/{retention,alert-thresholds} owner gates.
+  if (
+    method !== 'GET' &&
+    (path === 'admin/settings/alert-thresholds' || path === 'admin/settings/retention')
+  ) {
     return ROLE_RANK.owner;
   }
   // Default: reads open to viewer; any write needs admin.
