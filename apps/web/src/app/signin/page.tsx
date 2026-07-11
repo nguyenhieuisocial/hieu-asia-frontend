@@ -42,7 +42,14 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
   const reason = params.reason;
 
   return (
-    <>
+    // Wave 60.80.a11y — /signin is a hardcoded warm-dark editorial surface
+    // (`bg-warm-dark-50`, cream text, Turnstile theme="dark"). Scope it to the
+    // dark token set so the shared chrome (SiteNav/SiteFooter) renders dark too.
+    // Otherwise the light-theme translucent header (`bg-card/70`) blends over the
+    // dark <main> to ~#b9b9b9, dropping nav-link + logo contrast below WCAG AA
+    // (axe color-contrast, 7 nav links @3.71 + logo @3.23). Dark tokens flip the
+    // nav text to bone/gold on charcoal (≥6:1), matching the page's own design.
+    <div className="dark">
       <SiteNav />
       <main
         id="main-content"
@@ -106,6 +113,6 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
         </div>
       </main>
       <SiteFooter />
-    </>
+    </div>
   );
 }
