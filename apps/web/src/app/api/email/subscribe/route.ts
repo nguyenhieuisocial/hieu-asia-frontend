@@ -22,6 +22,7 @@
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
+import { checkBotId } from 'botid/server';
 import { Resend } from 'resend';
 
 export const runtime = 'nodejs';
@@ -102,6 +103,14 @@ async function writeToAudience(args: {
 }
 
 export async function POST(req: NextRequest) {
+  // Reject automated floods before any work — mirrors the 5 sibling paid/LLM
+  // routes. Stops a bot from burning the Resend contact quota / polluting the
+  // newsletter Audience via this public, unauthenticated endpoint.
+  const botCheck = await checkBotId();
+  if (botCheck.isBot) {
+    return NextResponse.json({ ok: false, error: 'bot_detected' }, { status: 403 });
+  }
+
   let body: SubscribeBody;
   try {
     body = (await req.json()) as SubscribeBody;
@@ -129,10 +138,17 @@ export async function POST(req: NextRequest) {
   // worker is down or times out we degrade to ok=true so the form CTA stays
   // reliable — worker logs persist 7 days for manual reconciliation.
   let alreadySubscribedUpstream: boolean | undefined;
+  let upstreamAccepted = false;
   try {
+    // Forward the real client IP so the worker's per-IP rate-limit is
+    // per-attacker, not per-Vercel-egress-IP (copies the validate-code pattern).
+    const clientIp = req.headers.get('x-forwarded-for') ?? req.headers.get('x-real-ip');
     const upstream = await fetch(`${HIEU_API_URL}/email/subscribe`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        'content-type': 'application/json',
+        ...(clientIp ? { 'x-forwarded-for': clientIp } : {}),
+      },
       body: JSON.stringify({ email, source }),
       signal: AbortSignal.timeout(3500),
     });
@@ -156,15 +172,21 @@ export async function POST(req: NextRequest) {
     }
     if (upstream.ok && data.ok) {
       alreadySubscribedUpstream = data.alreadySubscribed;
+      upstreamAccepted = true;
     }
     // 5xx — degrade silently below; we still attempt the Audience write.
   } catch {
     /* network / timeout — degrade silently below */
   }
 
-  // Dual-write to Resend Audience. Skipped silently if env not configured;
-  // never blocks the user-facing 200 response.
-  const audienceResult = await writeToAudience({ email, source, interest, signupPath });
+  // Dual-write to Resend Audience — ONLY when the worker accepted the request
+  // (2xx + ok). On worker 429/5xx/timeout we skip it, so the CloudFlare rate-
+  // limit also governs Resend (was: always wrote → a worker outage became an
+  // unthrottled Resend flood). Trade-off: a lead lost during a worker partition
+  // isn't captured in Resend — acceptable at pre-launch volume.
+  const audienceResult = upstreamAccepted
+    ? await writeToAudience({ email, source, interest, signupPath })
+    : 'skipped';
   const alreadySubscribed =
     alreadySubscribedUpstream ?? (audienceResult === 'duplicate' ? true : undefined);
 

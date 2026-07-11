@@ -53,5 +53,12 @@ initBotId({
       path: '/api/mentor/stream',
       method: 'POST',
     },
+    {
+      // Public newsletter signup — no auth. BotID stops automated floods from
+      // burning the Resend contact quota; pairs with checkBotId() in
+      // /api/email/subscribe.
+      path: '/api/email/subscribe',
+      method: 'POST',
+    },
   ],
 });
