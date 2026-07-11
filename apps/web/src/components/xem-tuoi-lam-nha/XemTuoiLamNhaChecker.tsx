@@ -18,6 +18,7 @@ import {
   type BuildYearResult,
 } from '@/lib/xem-tuoi-lam-nha';
 import { track } from '@/lib/analytics';
+import { useScrollToResult } from '@/lib/use-scroll-to-result';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import {
   DownloadToolPdfButton,
@@ -99,6 +100,8 @@ export function XemTuoiLamNhaChecker({
     [ownerYear, targetYear],
   );
 
+  const { resultRef, armScroll } = useScrollToResult(ownerResult);
+
   return (
     <Card>
       <CardHeader>
@@ -114,7 +117,10 @@ export function XemTuoiLamNhaChecker({
               inputMode="numeric"
               placeholder="Ví dụ: 1990"
               value={ownerValue}
-              onChange={(e) => setOwnerValue(e.target.value)}
+              onChange={(e) => {
+                setOwnerValue(e.target.value);
+                armScroll();
+              }}
             />
           </div>
           <div className="space-y-1">
@@ -124,7 +130,10 @@ export function XemTuoiLamNhaChecker({
               type="number"
               inputMode="numeric"
               value={targetValue}
-              onChange={(e) => setTargetValue(e.target.value)}
+              onChange={(e) => {
+                setTargetValue(e.target.value);
+                armScroll();
+              }}
             />
           </div>
           <div className="space-y-1">
@@ -135,7 +144,10 @@ export function XemTuoiLamNhaChecker({
               inputMode="numeric"
               placeholder="Nếu định mượn tuổi"
               value={borrowValue}
-              onChange={(e) => setBorrowValue(e.target.value)}
+              onChange={(e) => {
+                setBorrowValue(e.target.value);
+                armScroll();
+              }}
             />
           </div>
         </div>
@@ -148,7 +160,7 @@ export function XemTuoiLamNhaChecker({
         )}
 
         {ownerResult && (
-          <div className="space-y-4">
+          <div ref={resultRef} className="scroll-mt-24 space-y-4">
             <PersonResult title="Gia chủ" result={ownerResult} />
             {borrowResult && (
               <>

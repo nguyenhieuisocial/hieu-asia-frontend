@@ -25,6 +25,7 @@ import {
 import { track } from '@/lib/analytics';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
+import { useScrollToResult } from '@/lib/use-scroll-to-result';
 
 type GenderFilter = 'ca' | 'nam' | 'nu';
 
@@ -60,6 +61,7 @@ export function DatTenNguHanhChecker({ defaultGender = 'ca' }: { defaultGender?:
     () => (parsed ? computeBanMenh(parsed.d, parsed.m, parsed.y) : null),
     [parsed],
   );
+  const { resultRef, armScroll } = useScrollToResult(result);
 
   return (
     <Card>
@@ -70,7 +72,15 @@ export function DatTenNguHanhChecker({ defaultGender = 'ca' }: { defaultGender?:
         <div className="grid gap-3 sm:grid-cols-3">
           <div className="space-y-1">
             <Label htmlFor="dtDate">Ngày sinh của bé (dương lịch)</Label>
-            <Input id="dtDate" type="date" value={value} onChange={(e) => setValue(e.target.value)} />
+            <Input
+              id="dtDate"
+              type="date"
+              value={value}
+              onChange={(e) => {
+                armScroll();
+                setValue(e.target.value);
+              }}
+            />
           </div>
           <div className="space-y-1">
             <Label htmlFor="dtGender">Giới tính</Label>
@@ -86,14 +96,22 @@ export function DatTenNguHanhChecker({ defaultGender = 'ca' }: { defaultGender?:
             </Select>
           </div>
           <div className="flex items-end">
-            <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={() => setValue(todayISO())}>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full sm:w-auto"
+              onClick={() => {
+                armScroll();
+                setValue(todayISO());
+              }}
+            >
               Về hôm nay
             </Button>
           </div>
         </div>
 
         {result && (
-          <div className="space-y-4">
+          <div ref={resultRef} className="scroll-mt-24 space-y-4">
             <div className="rounded-lg border bg-card/40 p-4">
               <p className="text-sm text-muted-foreground">
                 Bé sinh ngày{' '}
