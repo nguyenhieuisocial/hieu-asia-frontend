@@ -299,6 +299,8 @@ export function TraCuuTuoi({
                 setYear(e.target.value);
                 onChangeAny();
               }}
+              aria-invalid={!!error}
+              aria-describedby={error ? 'tct-year-err' : undefined}
               className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-1 focus-visible:ring-gold"
             />
           </div>
@@ -332,7 +334,7 @@ export function TraCuuTuoi({
           ✦ Tra cứu
         </button>
         {error && (
-          <p className="mt-2 text-xs text-destructive" role="alert">
+          <p id="tct-year-err" className="mt-2 text-xs text-destructive" role="alert">
             {error}
           </p>
         )}

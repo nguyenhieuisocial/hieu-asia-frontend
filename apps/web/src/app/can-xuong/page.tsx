@@ -185,6 +185,8 @@ export default function CanXuongPage() {
                     value={birthDate}
                     onChange={(e) => setBirthDate(e.target.value)}
                     required
+                    aria-invalid={!!error && !birthDate}
+                    aria-describedby={error && !birthDate ? 'birth_date-err' : undefined}
                     className="bg-card/60"
                   />
                 </div>
@@ -244,6 +246,7 @@ export default function CanXuongPage() {
                 </div>
                 {error && (
                   <p
+                    id="birth_date-err"
                     role="alert"
                     className="rounded-md border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-300"
                   >
