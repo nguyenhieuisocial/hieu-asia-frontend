@@ -21,6 +21,7 @@ import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
 import { NatalWheel } from './NatalWheel';
 import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 import { aiReadingToSections } from '@/lib/pdf/ai-reading-sections';
+import { useScrollToResult } from '@/lib/use-scroll-to-result';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -180,6 +181,7 @@ export function SunMoonChecker({ initialDate, initialTime }: SunMoonCheckerProps
   }, [parsedDate, time, placeIdx]);
 
   const balance = React.useMemo<ChartBalance | null>(() => (chart ? chartBalance(chart) : null), [chart]);
+  const { resultRef, armScroll } = useScrollToResult(chart);
 
   // Reset reading khi chart thay đổi (đổi ngày/giờ/nơi sinh)
   React.useEffect(() => {
@@ -248,7 +250,15 @@ export function SunMoonChecker({ initialDate, initialTime }: SunMoonCheckerProps
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="space-y-1">
             <Label htmlFor="smDate">Ngày sinh (dương lịch)</Label>
-            <Input id="smDate" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+            <Input
+              id="smDate"
+              type="date"
+              value={date}
+              onChange={(e) => {
+                armScroll();
+                setDate(e.target.value);
+              }}
+            />
           </div>
           <div className="space-y-1">
             <Label htmlFor="smTime">Giờ sinh</Label>
@@ -281,7 +291,7 @@ export function SunMoonChecker({ initialDate, initialTime }: SunMoonCheckerProps
         )}
 
         {chart && (
-          <div className="space-y-4">
+          <div ref={resultRef} className="scroll-mt-24 space-y-4">
             {/* Bánh xe bản đồ sao — neo thị giác, vẽ đúng kinh độ thật */}
             <div className="rounded-xl border border-gold/20 bg-gradient-to-br from-gold/5 to-transparent p-4">
               <NatalWheel chart={chart} className="mx-auto block w-full max-w-[360px]" />

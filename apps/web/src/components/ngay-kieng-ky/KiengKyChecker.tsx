@@ -22,6 +22,7 @@ import {
   DownloadToolPdfButton,
   type ToolPdfPayload,
 } from '@/components/tools/DownloadToolPdfButton';
+import { useScrollToResult } from '@/lib/use-scroll-to-result';
 
 const HIT_BADGE: Record<KiengKyKey, string> = {
   tam_nuong:
@@ -59,6 +60,7 @@ export function KiengKyChecker() {
     () => (parsed ? kiengKyInSolarMonth(parsed.y, parsed.m) : []),
     [parsed],
   );
+  const { resultRef, armScroll } = useScrollToResult(result);
 
   return (
     <Card>
@@ -73,7 +75,10 @@ export function KiengKyChecker() {
               id="kkDate"
               type="date"
               value={value}
-              onChange={(e) => setValue(e.target.value)}
+              onChange={(e) => {
+                armScroll();
+                setValue(e.target.value);
+              }}
             />
           </div>
           <div className="flex items-end">
@@ -81,7 +86,10 @@ export function KiengKyChecker() {
               type="button"
               variant="outline"
               className="w-full sm:w-auto"
-              onClick={() => setValue(getVietnamTodayISO())}
+              onClick={() => {
+                armScroll();
+                setValue(getVietnamTodayISO());
+              }}
             >
               Về hôm nay
             </Button>
@@ -89,7 +97,7 @@ export function KiengKyChecker() {
         </div>
 
         {result && (
-          <div className="space-y-3">
+          <div ref={resultRef} className="scroll-mt-24 space-y-3">
             <p className="text-sm text-muted-foreground">
               Ngày{' '}
               <strong className="text-foreground">

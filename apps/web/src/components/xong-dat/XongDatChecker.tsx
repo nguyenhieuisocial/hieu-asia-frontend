@@ -27,6 +27,7 @@ import {
   type XongDatResult,
 } from '@/lib/xong-dat';
 import { track } from '@/lib/analytics';
+import { useScrollToResult } from '@/lib/use-scroll-to-result';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import {
   DownloadToolPdfButton,
@@ -96,6 +97,8 @@ export function XongDatChecker({ defaultHostYear }: { defaultHostYear?: number }
     return g && h ? checkXongDat(g, h, Number(targetYear)) : null;
   }, [guestYear, hostYear, targetYear]);
 
+  const { resultRef, armScroll } = useScrollToResult(host);
+
   return (
     <Card>
       <CardHeader>
@@ -111,7 +114,10 @@ export function XongDatChecker({ defaultHostYear }: { defaultHostYear?: number }
               inputMode="numeric"
               placeholder="vd 1988"
               value={hostYear}
-              onChange={(e) => setHostYear(e.target.value)}
+              onChange={(e) => {
+                armScroll();
+                setHostYear(e.target.value);
+              }}
             />
           </div>
           <div className="space-y-1">
@@ -146,7 +152,7 @@ export function XongDatChecker({ defaultHostYear }: { defaultHostYear?: number }
         </div>
 
         {host && target && (
-          <div className="rounded-lg border bg-card/40 p-4">
+          <div ref={resultRef} className="scroll-mt-24 rounded-lg border bg-card/40 p-4">
             <p className="text-sm text-muted-foreground">
               Gia chủ sinh năm <strong className="text-foreground">{host.year}</strong> —{' '}
               <strong className="text-foreground">

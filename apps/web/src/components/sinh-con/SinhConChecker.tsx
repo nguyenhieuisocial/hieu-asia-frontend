@@ -29,6 +29,7 @@ import {
   DownloadToolPdfButton,
   type ToolPdfPayload,
 } from '@/components/tools/DownloadToolPdfButton';
+import { useScrollToResult } from '@/lib/use-scroll-to-result';
 
 const CHILD_YEARS = [2026, 2027, 2028] as const;
 
@@ -83,6 +84,7 @@ export function SinhConChecker({ defaultYear = 2027 }: { defaultYear?: number } 
     const y = parseYear(boYear);
     return y ? checkParentChild(y, Number(childYear)) : null;
   }, [boYear, childYear]);
+  const { resultRef, armScroll } = useScrollToResult(me ?? bo);
 
   return (
     <Card>
@@ -93,7 +95,13 @@ export function SinhConChecker({ defaultYear = 2027 }: { defaultYear?: number } 
         <div className="grid gap-3 sm:grid-cols-3">
           <div className="space-y-1">
             <Label htmlFor="scChildYear">Bé dự kiến sinh năm</Label>
-            <Select value={childYear} onValueChange={setChildYear}>
+            <Select
+              value={childYear}
+              onValueChange={(v) => {
+                armScroll();
+                setChildYear(v);
+              }}
+            >
               <SelectTrigger id="scChildYear">
                 <SelectValue />
               </SelectTrigger>
@@ -117,7 +125,10 @@ export function SinhConChecker({ defaultYear = 2027 }: { defaultYear?: number } 
               inputMode="numeric"
               placeholder="vd 1996"
               value={meYear}
-              onChange={(e) => setMeYear(e.target.value)}
+              onChange={(e) => {
+                armScroll();
+                setMeYear(e.target.value);
+              }}
             />
           </div>
           <div className="space-y-1">
@@ -128,7 +139,10 @@ export function SinhConChecker({ defaultYear = 2027 }: { defaultYear?: number } 
               inputMode="numeric"
               placeholder="vd 1993"
               value={boYear}
-              onChange={(e) => setBoYear(e.target.value)}
+              onChange={(e) => {
+                armScroll();
+                setBoYear(e.target.value);
+              }}
             />
           </div>
         </div>
@@ -155,7 +169,7 @@ export function SinhConChecker({ defaultYear = 2027 }: { defaultYear?: number } 
         )}
 
         {(me || bo) && (
-          <div className="space-y-3">
+          <div ref={resultRef} className="scroll-mt-24 space-y-3">
             {me && child && <ParentResult title="Mẹ" check={me} childTen={child.zodiac.ten} />}
             {bo && child && <ParentResult title="Bố" check={bo} childTen={child.zodiac.ten} />}
             <p className="text-xs leading-relaxed text-muted-foreground">
