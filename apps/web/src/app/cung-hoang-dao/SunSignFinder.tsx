@@ -65,6 +65,8 @@ export function SunSignFinder() {
           min="1900-01-01"
           max="2100-12-31"
           onChange={(e) => setDate(e.target.value)}
+          aria-invalid={!!error}
+          aria-describedby={error ? 'sun-sign-date-err' : undefined}
           className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-gold/60"
         />
         <Button type="button" onClick={handleCheck} size="lg">
@@ -73,7 +75,7 @@ export function SunSignFinder() {
       </div>
 
       {error && (
-        <p role="alert" className="mt-3 text-sm text-rose-400">
+        <p id="sun-sign-date-err" role="alert" className="mt-3 text-sm text-rose-400">
           {error}
         </p>
       )}

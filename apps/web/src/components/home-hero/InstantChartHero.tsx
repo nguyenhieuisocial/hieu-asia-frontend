@@ -159,6 +159,8 @@ export function InstantChartHero(): React.JSX.Element {
                   onChangeAny();
                 }}
                 required
+                aria-invalid={touched && !date}
+                aria-describedby={touched && !date ? 'ich-date-err' : undefined}
                 className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-1 focus-visible:ring-gold"
               />
             </div>
@@ -226,7 +228,7 @@ export function InstantChartHero(): React.JSX.Element {
             ✦ Lập lá số Bát Tự của tôi →
           </button>
           {touched && !date && (
-            <p className="mt-2 text-xs text-destructive" role="alert">
+            <p id="ich-date-err" className="mt-2 text-xs text-destructive" role="alert">
               Hãy chọn ngày sinh dương lịch để lập lá số.
             </p>
           )}
