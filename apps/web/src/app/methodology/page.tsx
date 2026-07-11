@@ -830,7 +830,7 @@ function Chapter2Content() {
           ))}
         </div>
         {/* md+: original table */}
-        <div className="mt-4 hidden overflow-x-auto rounded-xl border border-border bg-muted/40 md:block">
+        <div tabIndex={0} className="mt-4 hidden overflow-x-auto rounded-xl border border-border bg-muted/40 md:block">
           <table className="w-full min-w-[720px] text-sm">
             <thead>
               <tr className="border-b border-border text-left font-mono text-eyebrow uppercase tracking-[0.12em] text-primary/80">
@@ -1069,7 +1069,7 @@ function Chapter3Content() {
           ))}
         </div>
         {/* md+: original table */}
-        <div className="mt-4 hidden overflow-x-auto rounded-xl border border-border bg-muted/40 md:block">
+        <div tabIndex={0} className="mt-4 hidden overflow-x-auto rounded-xl border border-border bg-muted/40 md:block">
           <table className="w-full min-w-[560px] text-sm">
             <thead>
               <tr className="border-b border-border text-left font-mono text-eyebrow uppercase tracking-[0.12em] text-primary/80">
@@ -1504,7 +1504,7 @@ export default function MethodologyPage() {
               </div>
 
               {/* md+: table */}
-              <div className="mt-card hidden overflow-x-auto rounded-xl border border-border bg-muted/40 md:block">
+              <div tabIndex={0} className="mt-card hidden overflow-x-auto rounded-xl border border-border bg-muted/40 md:block">
                 <table className="w-full min-w-[720px] text-sm">
                   <thead>
                     <tr className="border-b border-border text-left font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
@@ -1603,7 +1603,7 @@ export default function MethodologyPage() {
               </div>
 
               {/* md+: table */}
-              <div className="mt-card hidden overflow-x-auto rounded-xl border border-border bg-muted/40 md:block">
+              <div tabIndex={0} className="mt-card hidden overflow-x-auto rounded-xl border border-border bg-muted/40 md:block">
                 <table className="w-full min-w-[720px] text-sm">
                   <thead>
                     <tr className="border-b border-border text-left font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
