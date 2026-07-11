@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { motion, AnimatePresence, MotionConfig } from 'framer-motion';
+import { motion, AnimatePresence, MotionConfig } from 'motion/react';
 import { Check, Loader2 } from 'lucide-react';
 
 export type StepKey =
