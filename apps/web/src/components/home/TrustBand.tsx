@@ -54,14 +54,14 @@ export function TrustBand() {
               Bằng Chứng
             </span>
             <p className="mt-1 font-marketing-display text-xl leading-snug text-foreground sm:text-2xl">
-              Kiểm chứng lá số bằng <span className="italic">quá khứ thật của bạn</span>.
+              Đừng vội tin. Kiểm chứng bằng <span className="italic">quá khứ của chính bạn</span>.
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Nhập một sự kiện đã xảy ra — xem lá số năm đó đã “ghi dấu” đúng tới đâu (khoe cả chỗ trật).
+              Nhập một chuyện đã xảy ra với bạn. Xem lá số năm đó nói gì, đúng tới đâu, và cả chỗ nó trật.
             </p>
           </div>
           <span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap font-mono text-[13px] uppercase tracking-[0.12em] text-primary transition-colors group-hover:text-foreground">
-            Tự kiểm chứng
+            Kiểm chứng lá số của tôi
             <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
           </span>
         </Link>
