@@ -23,6 +23,7 @@ import {
   type ToolPdfPayload,
 } from '@/components/tools/DownloadToolPdfButton';
 import { HoursDial } from './HoursDial';
+import { useScrollToResult } from '@/lib/use-scroll-to-result';
 
 function parseISO(value: string): { d: number; m: number; y: number } | null {
   const parts = value.split('-').map(Number);
@@ -46,6 +47,7 @@ export function GioHoangDaoChecker() {
     () => (parsed ? computeGioHoangDao(parsed.d, parsed.m, parsed.y) : null),
     [parsed],
   );
+  const { resultRef, armScroll } = useScrollToResult(result);
 
   const isToday = value !== '' && value === today;
   const next = React.useMemo(
@@ -70,17 +72,17 @@ export function GioHoangDaoChecker() {
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="space-y-1">
             <Label htmlFor="ghdDate">Chọn ngày (dương lịch)</Label>
-            <Input id="ghdDate" type="date" value={value} onChange={(e) => setValue(e.target.value)} />
+            <Input id="ghdDate" type="date" value={value} onChange={(e) => { armScroll(); setValue(e.target.value); }} />
           </div>
           <div className="flex items-end">
-            <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={() => setValue(getVietnamTodayISO())}>
+            <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={() => { armScroll(); setValue(getVietnamTodayISO()); }}>
               Về hôm nay
             </Button>
           </div>
         </div>
 
         {result && (
-          <div className="space-y-3">
+          <div ref={resultRef} className="scroll-mt-24 space-y-3">
             <p className="text-sm text-muted-foreground">
               Ngày{' '}
               <strong className="text-foreground">

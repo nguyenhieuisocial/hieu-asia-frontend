@@ -23,6 +23,7 @@ import { deskDirections, type DeskDirections, type Gender } from '@/lib/huong-ba
 import { STAR_INFO } from '@/lib/huong-nha';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { track } from '@/lib/analytics';
+import { useScrollToResult } from '@/lib/use-scroll-to-result';
 
 function parseYear(value: string): number | null {
   const y = Number(value);
@@ -74,6 +75,7 @@ export function DeskDirectionChecker({
     () => (year ? deskDirections(year, gender) : null),
     [year, gender],
   );
+  const { resultRef, armScroll } = useScrollToResult(result);
 
   return (
     <Card>
@@ -90,12 +92,21 @@ export function DeskDirectionChecker({
               inputMode="numeric"
               placeholder="Ví dụ: 1990"
               value={yearValue}
-              onChange={(e) => setYearValue(e.target.value)}
+              onChange={(e) => {
+                armScroll();
+                setYearValue(e.target.value);
+              }}
             />
           </div>
           <div className="space-y-1">
             <Label htmlFor="hbGender">Giới tính</Label>
-            <Select value={gender} onValueChange={(v) => setGender(v as Gender)}>
+            <Select
+              value={gender}
+              onValueChange={(v) => {
+                armScroll();
+                setGender(v as Gender);
+              }}
+            >
               <SelectTrigger id="hbGender">
                 <SelectValue />
               </SelectTrigger>
@@ -115,7 +126,7 @@ export function DeskDirectionChecker({
         )}
 
         {result && (
-          <div className="space-y-5">
+          <div ref={resultRef} className="scroll-mt-24 space-y-5">
             <div className="rounded-lg border bg-card/40 p-4">
               <p className="text-sm text-muted-foreground">
                 Bạn sinh năm <strong className="text-foreground">{result.year}</strong> (
