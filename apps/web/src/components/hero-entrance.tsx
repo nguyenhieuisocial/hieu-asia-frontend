@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion } from 'motion/react';
 
 export function HeroEntrance({ children }: { children: React.ReactNode }) {
   // Respect prefers-reduced-motion: the global CSS `*` reset can't neutralise a

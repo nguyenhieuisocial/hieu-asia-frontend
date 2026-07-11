@@ -15,10 +15,11 @@ import type { ReactNode } from 'react';
  * R6 finding: 4.6 KB + 15 KB lazy vs 30+ KB full motion → ~50% savings
  * on initial JS for marketing pages that don't animate above-the-fold.
  *
- * NOTE: existing 5 `framer-motion` imports (reading/processing, hero-entrance,
- * processing-stepper, landing/Hero, animations/TextRotate) are isolated to
- * non-home product surfaces and remain on `framer-motion@11` — no interaction
- * with this LazyMotion tree. Phase 3-5 will migrate incrementally.
+ * NOTE (note 167 T38, done): the 3 remaining direct animation imports
+ * (reading/processing, hero-entrance, processing-stepper) now import from
+ * `motion/react` (motion@12), and the duplicate `framer-motion@11` dependency
+ * was removed — the app ships a single animation runtime. This LazyMotion tree
+ * already used motion/react and is unaffected.
  */
 export function LazyMotionProvider({ children }: { children: ReactNode }) {
   return (
