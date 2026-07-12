@@ -65,6 +65,7 @@ export function DatTenFrame() {
 
 export function DatTenDepth() {
   return (
+    <div className="space-y-6">
     <DepthTabs
       topicId="dat-ten-ngu-hanh"
       concept="Vì sao ngũ hành chỉ là lớp tham khảo, còn nghĩa và âm mới là cái gốc của một tên hay"
@@ -121,6 +122,167 @@ export function DatTenDepth() {
         },
       ]}
     />
+    <DepthTabs
+      topicId="dat-ten-ngu-hanh"
+      concept="Dụng thần: hành cần bổ, tìm ra bằng cách lập Bát Tự xem hành nào vượng, hành nào nhược"
+      levels={[
+        {
+          id: 'eli5',
+          label: 'Trẻ 5 tuổi',
+          content: (
+            <p>
+              Mỗi em bé sinh ra mang sẵn năm loại “chất”: Kim, Mộc, Thủy, Hỏa, Thổ. Có bé nhiều chất
+              này mà ít chất kia. Người lớn nhìn xem bé đang {strong('thiếu chất nào')}, rồi chọn một
+              cái tên bù vào cho cân. Chất đang thiếu ấy chính là cái ta muốn thêm qua tên.
+            </p>
+          ),
+        },
+        {
+          id: 'eli14',
+          label: 'Người 14 tuổi',
+          content: (
+            <>
+              <p>
+                Người ta lập {strong('Bát Tự')} của bé từ giờ, ngày, tháng, năm sinh, rồi nhìn xem
+                trong đó hành nào {strong('vượng')} (mạnh), hành nào {strong('nhược')} (yếu) hay thiếu
+                hẳn.
+              </p>
+              <p>
+                Hành đang thiếu, cần được nâng đỡ để lá số cân bằng, gọi là {strong('dụng thần')} —
+                chính là hành ta muốn bổ qua cái tên. Đồng thời tránh những hành gây xung khắc kẻo lá
+                số lệch thêm.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'expert',
+          label: 'Chuyên gia',
+          content: (
+            <>
+              <p>
+                Bước đầu của quy trình đặt tên: từ tứ trụ, xét {strong('vượng – nhược')} của lá số rồi
+                xác định {strong('dụng thần')} — hành cần bổ để đưa lá số về cân bằng, đồng thời tránh
+                hành gây xung khắc. Đừng đoán bằng mắt: phải lập Bát Tự mới biết vì sao chọn hành này
+                chứ không phải hành kia.
+              </p>
+              <p>
+                Bạn không cần tự tính tay, có thể để công cụ hỗ trợ; phần hiểu này để bạn không nhận
+                một gợi ý kiểu {strong('“hộp đen”')}. Và nhớ: đây mới là hành cần bổ, chưa phải cả cái
+                tên.
+              </p>
+            </>
+          ),
+        },
+      ]}
+    />
+    <DepthTabs
+      topicId="dat-ten-ngu-hanh"
+      concept="Nhận biết hành của một chữ: qua bộ thủ chữ Hán, hay qua nghĩa và âm"
+      levels={[
+        {
+          id: 'eli5',
+          label: 'Trẻ 5 tuổi',
+          content: (
+            <p>
+              Mỗi chữ dùng để đặt tên cũng được xếp vào một hành. Làm sao biết chữ nào thuộc hành nào?
+              Nhìn {strong('nghĩa')} của nó là ra: chữ gợi tới nước — sông, suối, biển — thường thuộc
+              Thủy; chữ gợi tới cây cối thuộc Mộc; chữ gợi tới ánh sáng, mặt trời thuộc Hỏa.
+            </p>
+          ),
+        },
+        {
+          id: 'eli14',
+          label: 'Người 14 tuổi',
+          content: (
+            <>
+              <p>
+                Cách phổ biến nhất là nhận biết qua {strong('bộ thủ chữ Hán')}: chữ chứa bộ Thủy (氵)
+                thuộc Thủy, bộ Mộc (木) thuộc Mộc, bộ Hỏa (火) hay Nhật (日) thuộc Hỏa, bộ Kim (金)
+                thuộc Kim, bộ Thổ (土) hay Sơn (山) thuộc Thổ.
+              </p>
+              <p>
+                Ngoài bộ thủ, người ta còn xét theo {strong('nghĩa')} hoặc {strong('âm')} gợi hành.
+                Các cách này bổ sung cho nhau, và việc xếp một chữ vào hành nào ít nhiều mang tính quy
+                ước.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'expert',
+          label: 'Chuyên gia',
+          content: (
+            <>
+              <p>
+                Ba lối nhận biết — {strong('bộ thủ, nghĩa, âm')} — được dùng song song. Bộ thủ cho tín
+                hiệu rõ nhất (Giang, Hà, Hải, Khê đều mang bộ Thủy), nhưng nhiều chữ Việt được xếp hành
+                chủ yếu theo nghĩa, nên cách xếp có phần {strong('quy ước')} chứ không phải luật cứng.
+              </p>
+              <p>
+                Hệ quả thực dụng: đừng câu nệ một chữ phải “đúng bộ” bằng mọi giá. Trong số các chữ hợp
+                hành, hãy chọn chữ {strong('nghĩa đẹp và âm hay')}, đừng ép lấy một chữ khó đọc chỉ vì
+                nó đúng bộ thủ.
+              </p>
+            </>
+          ),
+        },
+      ]}
+    />
+    <DepthTabs
+      topicId="dat-ten-ngu-hanh"
+      concept="Tam tài, tứ cách: lớp đếm nét chữ Hán, vì sao chỉ nên xem là tham khảo phụ"
+      levels={[
+        {
+          id: 'eli5',
+          label: 'Trẻ 5 tuổi',
+          content: (
+            <p>
+              Ngoài chuyện xem hành của chữ, có người còn {strong('đếm số nét')} viết ra mỗi chữ, rồi
+              từ những con số đó đoán tốt hay xấu. Cách này rắc rối và không mấy hợp với tên tiếng
+              Việt, nên chỉ xem cho biết, đừng lo lắng theo nó.
+            </p>
+          ),
+        },
+        {
+          id: 'eli14',
+          label: 'Người 14 tuổi',
+          content: (
+            <>
+              <p>
+                {strong('Tam tài')} là Thiên – Địa – Nhân; {strong('tứ cách')} là Thiên cách, Địa
+                cách, Nhân cách, Tổng cách. Người ta đếm số nét từng chữ Hán trong họ tên, cộng theo
+                công thức để ra các “cách”, rồi luận cát – hung. Hệ này phổ biến trong danh học Nhật –
+                Hàn.
+              </p>
+              <p>
+                Vấn đề: tên thuần Việt viết bằng chữ Quốc ngữ, {strong('không có số nét chữ Hán cố định')},
+                nên áp lớp này vào khá khập khiễng.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'expert',
+          label: 'Chuyên gia',
+          content: (
+            <>
+              <p>
+                Một chữ Việt có thể ứng với nhiều chữ Hán khác nhau, mỗi chữ số nét khác nhau, nên kết
+                quả tam tài – tứ cách thành ra {strong('tuỳ cách quy chữ')} và dễ mâu thuẫn giữa các
+                hệ. Vì vậy hieu.asia không lấy lớp này làm chính, chỉ xem là {strong('tham khảo phụ')} —
+                phần chính vẫn là hành, nghĩa và âm.
+              </p>
+              <p>
+                Rộng hơn: cả ngũ hành lẫn số nét trong tên đều là {strong('quan niệm văn hoá')}, không
+                có bằng chứng quyết định vận mệnh, nên đừng câu nệ.
+              </p>
+            </>
+          ),
+        },
+      ]}
+    />
+    </div>
   );
 }
 

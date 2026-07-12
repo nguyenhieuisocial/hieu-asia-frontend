@@ -228,6 +228,116 @@ export function ChiemTinhDepth() {
           },
         ]}
       />
+
+      <DepthTabs
+        topicId="chiem-tinh"
+        concept="Cung Mọc (ASC) và bốn góc chân trời"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Hãy hình dung bản đồ sao như một căn phòng có bốn góc. {strong('Cung Mọc')} là góc
+                phía Đông của bầu trời, phía mặt trời mọc, đúng lúc bạn chào đời. Chính bốn góc này làm bản
+                đồ của bạn khác bản đồ người sinh cùng ngày mà khác giờ. Muốn bốn góc đúng thì phải
+                biết giờ sinh cho chuẩn.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Bốn góc là bốn mốc của bản đồ. Cung Mọc ({strong('ASC')}) là lớp vỏ, ấn tượng đầu
+                  tiên người khác thấy ở bạn. Đối diện nó là {strong('Điểm Lặn (DSC)')}: đối tác, hôn
+                  nhân. {strong('Thiên đỉnh (MC)')} nói về sự nghiệp, danh tiếng; đối diện là{' '}
+                  {strong('Thiên để (IC)')}: gốc rễ, gia đình.
+                </p>
+                <p>
+                  Ghép lại thành hai trục: ASC–DSC là “tôi và người kia”, MC–IC là “chỗ công khai và
+                  chỗ riêng tư”. Cung Mọc còn quyết định cách xếp toàn bộ 12 nhà.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Cung Mọc không phải hành tinh mà là điểm đang mọc ở chân trời phía Đông, tính từ{' '}
+                  {strong('giờ và nơi sinh')}. Vì nó đổi cung mỗi khoảng 2 giờ nên đây là phần nhạy
+                  giờ nhất: lệch giờ sinh là lệch cung Mọc, kéo theo cả cách xếp 12 nhà (hệ
+                  Whole-Sign lấy nhà 1 là cung chứa cung Mọc).
+                </p>
+                <p>
+                  MC và IC nằm trên trục dọc, gắn với sự nghiệp và gốc rễ. Thiếu giờ sinh chính xác
+                  thì cả bốn góc lẫn các nhà đều có thể sai, nên đừng chốt cứng khi không rõ giờ.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="chiem-tinh"
+        concept="Mười thiên thể — mỗi hành tinh nói “cái gì”"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Cung cho biết bạn thuộc kiểu tính nào, còn mỗi hành tinh lo một việc riêng, như các
+                nhân vật trong một đội. {strong('Mặt Trời')} là con người thật của bạn,{' '}
+                {strong('Mặt Trăng')} là cảm xúc, Sao Kim lo chuyện yêu thương và cái đẹp, Sao Hỏa lo
+                hành động. Nhìn cả đội mới hiểu một người, chứ không chỉ nhìn một nhân vật.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Mười thiên thể, mỗi cái một khía cạnh: Mặt Trời (bản ngã, ý chí), Mặt Trăng (cảm
+                  xúc, nhu cầu an toàn), Sao Thủy (tư duy, giao tiếp), Sao Kim (tình yêu, giá trị),
+                  Sao Hỏa (hành động, khát khao), Sao Mộc (mở rộng, niềm tin), Sao Thổ (kỷ luật, trách
+                  nhiệm — là “thầy nghiêm”, không phải “xui”).
+                </p>
+                <p>
+                  Ba hành tinh xa là Thiên Vương, Hải Vương, Diêm Vương. Cách luận là ghép:{' '}
+                  {strong('hành tinh')} (cái gì) — ở cung (kiểu gì) — trong nhà (lĩnh vực nào).
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Ba hành tinh ngoài — Thiên Vương, Hải Vương, Diêm Vương — chuyển động rất chậm nên
+                  cả một {strong('thế hệ')} sinh gần nhau chia chung vị trí cung của chúng. Vì thế
+                  trong bài đọc cá nhân, {strong('nhà')} và {strong('góc hợp')} của chúng quan trọng
+                  hơn cung: chúng cho biết dấu ấn thế hệ ấy chạm vào lĩnh vực nào của riêng bạn.
+                </p>
+                <p>
+                  Công cụ ở đây tính tới Sao Diêm Vương là hết, không thêm Chiron hay tiểu hành tinh.
+                  Và Sao Thổ nên đọc như bài học trưởng thành, đừng đọc thành điềm xấu.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
     </div>
   );
 }

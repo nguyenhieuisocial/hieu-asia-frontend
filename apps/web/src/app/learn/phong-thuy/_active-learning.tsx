@@ -225,6 +225,118 @@ export function PhongThuyDepth() {
           },
         ]}
       />
+
+      <DepthTabs
+        topicId="phong-thuy"
+        concept="Ngũ hành: tương sinh và tương khắc để làm gì"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Năm thứ trong tự nhiên — {strong('Kim, Mộc, Thủy, Hỏa, Thổ')} — vừa giúp nhau vừa
+                chặn nhau. Nước tưới cho cây lớn lên, đó là giúp nhau; nhưng nước lại dập được lửa,
+                đó là chặn nhau. Người xưa lấy hai kiểu quan hệ đó làm gốc để đoán màu nào, hướng nào
+                hợp với mình.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Ngũ hành liên hệ qua hai vòng. {strong('Tương sinh')} (nuôi dưỡng): Mộc → Hỏa →
+                  Thổ → Kim → Thủy → Mộc, một vòng khép kín. {strong('Tương khắc')} (chế ngự): Mộc
+                  khắc Thổ, Thổ khắc Thủy, Thủy khắc Hỏa, Hỏa khắc Kim, Kim khắc Mộc.
+                </p>
+                <p>
+                  Hai vòng này không phải để dọa nhau, mà là bộ quy tắc gốc. Từ đó người ta suy ra
+                  màu hợp, hướng hợp, và cả luật cát – hung của tám du niên tinh trong Bát Trạch.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Trong bổ khuyết ngũ hành, vòng tương sinh cho quy tắc chọn màu:{' '}
+                  {strong('màu hợp')} lấy màu của hành bản mệnh cộng màu của hành sinh ra nó — tức
+                  “mẹ sinh con”. Hướng hợp là hướng cố hữu của hành: Kim về Tây/Tây Bắc, Mộc về
+                  Đông/Đông Nam, Thủy về Bắc, Hỏa về Nam, Thổ về Trung tâm/Đông Bắc/Tây Nam.
+                </p>
+                <p>
+                  Một lưu ý về nguồn: {strong('hành chủ đạo')} có thể tính khác nhau giữa các hệ —
+                  qua Cục trong Tử Vi, hay Nhật Chủ cộng Dụng Thần trong Bát Tự. Hai nơi ra hành khác
+                  nhau là do phương pháp tính khác, không phải lỗi.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="phong-thuy"
+        concept="Bát Trạch khác Huyền Không Phi Tinh ở chỗ nào"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Có hai cách xem nhà. Một cách hỏi {strong('“nhà này hợp với ai”')} — nhìn vào người:
+                bạn sinh năm nào. Cách kia hỏi {strong('“nhà này, thời kỳ này, ra sao”')} — nhìn vào
+                ngôi nhà và thời gian. Cùng một căn nhà, hai cách trả lời hai câu khác nhau, không
+                cãi nhau.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  {strong('Bát Trạch')} tính theo người: từ năm sinh và giới tính suy ra mệnh quái,
+                  rồi lập bảng 8 hướng cát/hung — kết quả không đổi theo thời gian.
+                </p>
+                <p>
+                  {strong('Huyền Không Phi Tinh')} tính theo thời gian và hướng nhà: chia thời gian
+                  thành các Vận 20 năm (hiện là Cửu Vận, 2024–2043), rồi dựa vào tọa – hướng của
+                  ngôi nhà mà lập bàn 9 cung. Một bên gắn với bạn, một bên gắn với căn nhà và thời
+                  kỳ, nên hai phương pháp trả lời hai câu hỏi khác nhau.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Bát Trạch {strong('tĩnh')} — gắn với mệnh quái người, chỉ cần năm sinh và giới
+                  tính, không dùng tới hướng nhà hay thời gian. Phi Tinh {strong('động')} — với mỗi
+                  nhà lập ba tầng sao: vận tinh, sơn tinh (thiên về người), hướng tinh (thiên về tài
+                  lộc), bằng cách cho sao nhập trung cung rồi bay thuận hoặc nghịch theo một trong 24
+                  sơn. Ba bàn xếp xong hiện ra các cách cục, ví dụ Vượng sơn Vượng hướng.
+                </p>
+                <p>
+                  Công cụ {strong('/phi-tinh')} lập bàn theo phương pháp Hạ Quái chuẩn, không làm
+                  Thế quái (kiêm hướng) vì khẩu quyết các phái bất đồng. Bài này dừng ở mức khái
+                  niệm, không đi vào an sao chi tiết.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
     </div>
   );
 }

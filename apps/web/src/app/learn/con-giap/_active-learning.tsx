@@ -178,6 +178,171 @@ export function ConGiapDepth() {
           },
         ]}
       />
+      <DepthTabs
+        topicId="con-giap"
+        concept="Tam Hợp — ba con giáp cách đều 4 ngôi hội thành một cục ngũ hành"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Trong 12 con giáp có những nhóm ba con hợp nhau, gọi là {strong('Tam Hợp')}. Ba con
+                này đứng cách đều nhau trên vòng tròn, giống ba bạn ngồi cách đều quanh một chiếc bàn.
+                Người xưa tin ba tuổi cùng nhóm thường dễ thân nhau, hay giúp được nhau. Đây là gợi ý
+                cho vui, không phải điều bắt buộc.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  {strong('Tam Hợp')} là ba con giáp cách đều nhau 4 ngôi trên vòng 12 con giáp, hội
+                  lại thành một “cục” ngũ hành. Có đúng bốn nhóm: {strong('Thân–Tý–Thìn')} thành cục
+                  Thủy, {strong('Dần–Ngọ–Tuất')} thành cục Hỏa, {strong('Tỵ–Dậu–Sửu')} thành cục
+                  Kim, {strong('Hợi–Mão–Mùi')} thành cục Mộc.
+                </p>
+                <p>
+                  Các tuổi trong cùng một nhóm thường được xem là dễ đồng điệu và bổ trợ nhau. Nhớ
+                  rằng đây là xu hướng để tham khảo, không phải điều chắc chắn sẽ xảy ra.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Về cấu trúc, Tam Hợp lấy ba Địa Chi cách đều nhau 4 ngôi trên vòng 12 chi rồi quy
+                  cả ba về một hành chung, gọi là “cục”. Bốn cục ứng với bốn hành: Thân–Tý–Thìn
+                  (Thủy), Dần–Ngọ–Tuất (Hỏa), Tỵ–Dậu–Sửu (Kim), Hợi–Mão–Mùi (Mộc).
+                </p>
+                <p>
+                  Điểm đáng chú ý: ba chi trong một cục vốn {strong('không cùng hành từ đầu')} (ví dụ
+                  Thân hành Kim, Tý hành Thủy, Thìn hành Thổ), nhưng khi hội đủ thì cùng vượng về một
+                  hành. Vì vậy nên đọc Tam Hợp như một chỉ báo dễ đồng điệu có xu hướng, rồi vẫn xét
+                  từng con người cụ thể, không dừng lại ở năm sinh.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+      <DepthTabs
+        topicId="con-giap"
+        concept="Tứ hành xung — cặp lục xung đối xứng 180°, khác nhịp chứ không phải điềm xấu"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Có những cặp con giáp nằm đối diện nhau trên vòng tròn, người ta gọi là “xung”. Nghe
+                hơi đáng sợ, nhưng {strong('xung chỉ nghĩa là hai người có nếp sống khác nhau')}, đôi
+                khi hay cãi nhẹ. Nó không phải điềm xấu đâu. Rất nhiều cặp “xung” vẫn thương nhau và ở
+                bên nhau rất lâu.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  {strong('Tứ hành xung')} là cách gọi dân gian cho các cặp lục xung: hai con giáp
+                  nằm {strong('đối xứng 180°')} trên vòng, tức đối diện thẳng nhau. Sáu cặp là Tý–Ngọ,
+                  Sửu–Mùi, Dần–Thân, Mão–Dậu, Thìn–Tuất, Tỵ–Hợi.
+                </p>
+                <p>
+                  “Xung” ở đây chỉ hai nếp sống khác nhịp, đôi khi dễ va quan điểm nên cần dung hoà
+                  nhiều hơn, chứ không phải dấu hiệu tai hoạ. Nhiều cặp khác nhịp lại rất bền, vì khác
+                  biệt đúng cách trở thành bổ sung cho nhau.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Lục xung ghép các Địa Chi đối xứng 180° trên vòng thành sáu cặp: Tý–Ngọ, Sửu–Mùi,
+                  Dần–Thân, Mão–Dậu, Thìn–Tuất, Tỵ–Hợi. “Tứ hành xung” là lối nói quen thuộc trong
+                  dân gian cho nhóm quan hệ này.
+                </p>
+                <p>
+                  Điểm cần đính chính: chữ “xung” hay bị hiểu thành điềm xấu, trong khi nó chỉ mô tả{' '}
+                  {strong('hai nhịp sống lệch nhau')}, dễ va quan điểm và cần dung hoà nhiều hơn. Rất
+                  nhiều cặp xung vẫn rất bền, khi khác biệt đúng cách trở thành bổ sung, nên một cặp
+                  xung không phải lý do để lo lắng.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+      <DepthTabs
+        topicId="con-giap"
+        concept="Lục Hợp — sáu cặp con giáp bổ trợ, cân bằng mạnh yếu cho nhau"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Ngoài những nhóm ba hợp nhau, còn có sáu {strong('cặp đôi')} hợp nhau gọi là Lục Hợp.
+                Trong mỗi cặp, cái giỏi của người này giúp bù cái yếu của người kia, nên ở cạnh nhau
+                thấy dễ chịu. Giống một bạn giỏi vẽ chơi với một bạn giỏi kể chuyện, ghép lại thì vui
+                hơn. Đây cũng là gợi ý tham khảo thôi.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Ngoài Tam Hợp (nhóm ba) và Tứ hành xung (cặp đối nhau), Can Chi còn lớp{' '}
+                  {strong('Lục Hợp')}: sáu cặp con giáp bổ trợ nhau. Đó là Tý–Sửu, Dần–Hợi, Mão–Tuất,
+                  Thìn–Dậu, Tỵ–Thân, Ngọ–Mùi.
+                </p>
+                <p>
+                  Trong một cặp lục hợp, điểm mạnh của người này thường cân bằng điểm yếu của người
+                  kia, gợi ý một sự gắn kết dễ chịu. Đây là một trong nhiều lớp quan hệ giữa các con
+                  giáp, và như mọi thứ ở con giáp, nó chỉ là xu hướng tham khảo.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  {strong('Lục Hợp')} là sáu cặp Địa Chi được xem là bổ trợ: Tý–Sửu, Dần–Hợi,
+                  Mão–Tuất, Thìn–Dậu, Tỵ–Thân, Ngọ–Mùi. Ý nghĩa thường gặp là điểm mạnh của chi này
+                  cân bằng điểm yếu của chi kia, tạo cảm giác ăn ý.
+                </p>
+                <p>
+                  Cần đặt đúng phạm vi: Tam Hợp và lục xung là hai lớp hay nhắc nhất, còn Lục Hợp,
+                  Tương Hại và Tương Hình là các lớp bổ sung. Công cụ hợp tuổi của hieu.asia phân theo
+                  sáu nhóm và có tính Lục Hợp, nên hãy xem đây là một lát cắt thực dụng, không phải
+                  toàn bộ Can Chi.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
     </div>
   );
 }

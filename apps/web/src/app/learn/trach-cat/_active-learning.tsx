@@ -26,37 +26,39 @@ export function TrachCatFrame() {
     <LearnFrame
       problem={
         <>
-          Sắp có một việc trọng đại — {strong('cưới hỏi, động thổ, khai trương, xuất hành, ký kết')} —
-          và bạn muốn chọn một ngày giờ “thuận”, để mọi thứ khởi đầu chỉn chu và trong lòng an tâm hơn.
+          Sắp có một việc trọng đại — {strong('cưới hỏi, động thổ, khai trương, xuất hành, ký kết')}{' '}
+          — và bạn muốn chọn một ngày giờ “thuận”, để mọi thứ khởi đầu chỉn chu và trong lòng an tâm
+          hơn.
         </>
       }
       why={
         <>
-          Trạch cát (擇吉 — “chọn điều lành”) là cách người xưa {strong('hệ thống hoá')} việc chọn thời
-          điểm: dựa trên lịch can–chi, ngũ hành sinh–khắc và hệ thần sát. Nó tồn tại như một{' '}
-          {strong('nếp văn hoá')} thể hiện sự chuẩn bị và tôn trọng, không phải bùa phép định sẵn kết
-          quả.
+          Trạch cát (擇吉 — “chọn điều lành”) là cách người xưa {strong('hệ thống hoá')} việc chọn
+          thời điểm: dựa trên lịch can–chi, ngũ hành sinh–khắc và hệ thần sát. Nó tồn tại như một{' '}
+          {strong('nếp văn hoá')} thể hiện sự chuẩn bị và tôn trọng, không phải bùa phép định sẵn
+          kết quả.
         </>
       }
       what={
         <>
-          Là việc chọn {strong('ngày và giờ tốt')} cho việc lớn, đối chiếu qua nhiều hệ quy chiếu: ngày
-          hoàng đạo, 12 Trực, nhị thập bát tú, giờ hoàng đạo và các ngày kiêng. {strong('Không phải')}
+          Là việc chọn {strong('ngày và giờ tốt')} cho việc lớn, đối chiếu qua nhiều hệ quy chiếu:
+          ngày hoàng đạo, 12 Trực, nhị thập bát tú, giờ hoàng đạo và các ngày kiêng.{' '}
+          {strong('Không phải')}
           lời hứa thành công — chỉ là một góc nhìn tham khảo để chuẩn bị.
         </>
       }
       how={
         <>
-          Thực dụng theo {strong('3 lớp')}: (1) hợp {strong('tuổi')} — tránh xung/hình/hại, tránh năm
-          Kim Lâu, Hoang Ốc, Tam Tai; (2) hợp {strong('việc')} — chọn ngày có Trực/sao phù hợp loại
-          việc, tránh ngày kiêng; (3) chọn {strong('giờ hoàng đạo')} trong ngày đó.
+          Thực dụng theo {strong('3 lớp')}: (1) hợp {strong('tuổi')} — tránh xung/hình/hại, tránh
+          năm Kim Lâu, Hoang Ốc, Tam Tai; (2) hợp {strong('việc')} — chọn ngày có Trực/sao phù hợp
+          loại việc, tránh ngày kiêng; (3) chọn {strong('giờ hoàng đạo')} trong ngày đó.
         </>
       }
       soWhat={
         <>
-          Để bạn khởi sự với một {strong('mốc thời gian đã cân nhắc')} — hợp nhịp sinh hoạt, tránh trùng
-          ngày kiêng theo phong tục, và quan trọng nhất là {strong('an tâm để tập trung')} vào phần
-          thực chất: con người, năng lực và sự chuẩn bị.
+          Để bạn khởi sự với một {strong('mốc thời gian đã cân nhắc')} — hợp nhịp sinh hoạt, tránh
+          trùng ngày kiêng theo phong tục, và quan trọng nhất là {strong('an tâm để tập trung')} vào
+          phần thực chất: con người, năng lực và sự chuẩn bị.
         </>
       }
     />
@@ -65,125 +67,246 @@ export function TrachCatFrame() {
 
 export function TrachCatDepth() {
   return (
-    <DepthTabs
-      topicId="trach-cat"
-      concept="Vì sao chọn ngày tốt giúp ta an tâm — mà vẫn không bảo đảm thành công"
-      levels={[
-        {
-          id: 'eli5',
-          label: 'Trẻ 5 tuổi',
-          content: (
-            <p>
-              Trạch cát giống như chọn một ngày nắng đẹp để đi chơi xa: chọn khéo thì {strong('dễ chịu')}
-              hơn, ai cũng vui. Nhưng chuyến đi vui hay không còn tuỳ mình chuẩn bị kỹ tới đâu — ngày
-              đẹp chỉ là {strong('điểm khởi đầu tốt')}, không thay ta làm mọi việc.
-            </p>
-          ),
-        },
-        {
-          id: 'eli14',
-          label: 'Người 14 tuổi',
-          content: (
-            <>
+    <div className="space-y-6">
+      <DepthTabs
+        topicId="trach-cat"
+        concept="Vì sao chọn ngày tốt giúp ta an tâm — mà vẫn không bảo đảm thành công"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Người xưa dựa vào {strong('lịch can–chi')} (âm lịch), ngũ hành sinh–khắc và hệ “thần
-                sát” (sao tốt / sao xấu của từng ngày) để xếp ngày nào hợp việc gì. Cách làm gọn là{' '}
-                {strong('3 lớp')}: hợp tuổi → hợp việc → chọn giờ đẹp trong ngày.
+                Trạch cát giống như chọn một ngày nắng đẹp để đi chơi xa: chọn khéo thì{' '}
+                {strong('dễ chịu')}
+                hơn, ai cũng vui. Nhưng chuyến đi vui hay không còn tuỳ mình chuẩn bị kỹ tới đâu —
+                ngày đẹp chỉ là {strong('điểm khởi đầu tốt')}, không thay ta làm mọi việc.
               </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Người xưa dựa vào {strong('lịch can–chi')} (âm lịch), ngũ hành sinh–khắc và hệ
+                  “thần sát” (sao tốt / sao xấu của từng ngày) để xếp ngày nào hợp việc gì. Cách làm
+                  gọn là {strong('3 lớp')}: hợp tuổi → hợp việc → chọn giờ đẹp trong ngày.
+                </p>
+                <p>
+                  Đây là một {strong('nếp văn hoá')} giúp việc lớn khởi đầu chỉn chu và mọi người
+                  thấy an tâm. Nhưng ngày giờ chỉ là cái khung —{' '}
+                  {strong('sự chuẩn bị và con người')} mới quyết định kết quả, nên chọn ngày đẹp rồi
+                  vẫn phải làm việc cho tử tế.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Trạch cát chồng nhiều {strong('hệ quy chiếu')} lên cùng một ngày: (1) ngày hoàng
+                  đạo / hắc đạo — mỗi ngày ứng một trong 12 vị thần trực nhật, 6 hoàng đạo là ngày
+                  tốt; (2) {strong('thập nhị Trực')} (Kiến, Trừ, Mãn, Bình, Định, Chấp, Phá, Nguy,
+                  Thành, Thu, Khai, Bế) — mỗi trực hợp/kỵ loại việc riêng; (3) nhị thập bát tú (28
+                  sao, có tú cát – tú hung); (4) {strong('giờ hoàng đạo')} — trong 12 giờ (canh) của
+                  ngày có 6 giờ hoàng đạo, suy từ địa chi của ngày. Chồng lên nhau là để chọn ngày
+                  “sạch” nhiều mặt.
+                </p>
+                <p>
+                  Điểm cần giữ tỉnh táo: các hệ này {strong('không đo được nhân quả')} theo nghĩa
+                  khoa học. Giá trị thật của trạch cát là {strong('đồng bộ nhịp sinh hoạt')} (mọi
+                  người sắp lịch quanh một mốc đã chọn) cộng {strong('tâm lý an tâm')} khi thấy mình
+                  đã chuẩn bị chu đáo. Vì thế nó là công cụ tham khảo, không phải phép bảo đảm — và
+                  không cần “mua” sự may mắn bằng lễ lạt tốn kém.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+      <DepthTabs
+        topicId="trach-cat"
+        concept="Nhị thập bát tú là lớp sao gì trong việc chọn ngày"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Đây là một {strong('nếp văn hoá')} giúp việc lớn khởi đầu chỉn chu và mọi người thấy an
-                tâm. Nhưng ngày giờ chỉ là cái khung — {strong('sự chuẩn bị và con người')} mới quyết
-                định kết quả, nên chọn ngày đẹp rồi vẫn phải làm việc cho tử tế.
+                Người xưa chia bầu trời quanh mặt trời thành {strong('28 ô sao')}, gọi là hai mươi
+                tám tú. Mỗi ngày, bầu trời “ghé” một ô, hôm sau sang ô kế bên, cứ thế xoay đủ vòng
+                rồi quay lại từ đầu. Giống 28 trạm dừng nối nhau: mỗi ngày dừng đúng{' '}
+                {strong('một trạm')}, không trạm nào bị bỏ qua.
               </p>
-            </>
-          ),
-        },
-        {
-          id: 'expert',
-          label: 'Chuyên gia',
-          content: (
-            <>
-              <p>
-                Trạch cát chồng nhiều {strong('hệ quy chiếu')} lên cùng một ngày: (1) ngày hoàng đạo /
-                hắc đạo — mỗi ngày ứng một trong 12 vị thần trực nhật, 6 hoàng đạo là ngày tốt; (2){' '}
-                {strong('thập nhị Trực')} (Kiến, Trừ, Mãn, Bình, Định, Chấp, Phá, Nguy, Thành, Thu,
-                Khai, Bế) — mỗi trực hợp/kỵ loại việc riêng; (3) nhị thập bát tú (28 sao, có tú cát – tú
-                hung); (4) {strong('giờ hoàng đạo')} — trong 12 giờ (canh) của ngày có 6 giờ hoàng đạo,
-                suy từ địa chi của ngày. Chồng lên nhau là để chọn ngày “sạch” nhiều mặt.
-              </p>
-              <p>
-                Điểm cần giữ tỉnh táo: các hệ này {strong('không đo được nhân quả')} theo nghĩa khoa
-                học. Giá trị thật của trạch cát là {strong('đồng bộ nhịp sinh hoạt')} (mọi người sắp
-                lịch quanh một mốc đã chọn) cộng {strong('tâm lý an tâm')} khi thấy mình đã chuẩn bị chu
-                đáo. Vì thế nó là công cụ tham khảo, không phải phép bảo đảm — và không cần “mua” sự may
-                mắn bằng lễ lạt tốn kém.
-              </p>
-            </>
-          ),
-        },
-      ]}
-    />
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Nhị thập bát tú là {strong('28 chòm sao')} nằm quanh vòng hoàng đạo, chia đều cho
+                  bốn phương trời. Mỗi phương 7 tú và ứng một linh thần quen thuộc: Đông là Thanh
+                  Long, Bắc là Huyền Vũ, Tây là Bạch Hổ, Nam là Chu Tước.
+                </p>
+                <p>
+                  Mỗi ngày ứng với một tú, xoay vòng đều đặn. Khi xét một ngày, đây là{' '}
+                  {strong('lớp sao thứ ba')} — đặt cạnh ngày hoàng đạo và 12 Trực. Thêm một góc để
+                  đối chiếu, không phải yếu tố duy nhất quyết định ngày đẹp hay không.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Nhị thập bát tú là hệ định vị của thiên văn cổ: chia bầu trời quanh hoàng đạo
+                  thành 28 phần, gom vào {strong('bốn phương ứng tứ linh')}. Vài tú có tên đã quen
+                  tai — sao Giác đứng đầu 28 tú, rồi sao Bích, sao Đẩu.
+                </p>
+                <p>
+                  Chỗ cần tỉnh táo: đây là lớp có {strong('dị bản nhiều nhất')}. Việc một tú tốt hay
+                  xấu, con vật biểu tượng và loại việc hợp, mỗi sách gán một khác — có phái xếp thế
+                  này, phái khác xếp thế kia. Vì thế bài này không chép một bảng cát/hung cứng; cách
+                  dùng lành là bám đúng một bản lịch bạn đang tra, {strong('đừng trộn nhiều nguồn')}{' '}
+                  rồi rối.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+    </div>
   );
 }
 
 export function TrachCatDepthTruc() {
   return (
-    <DepthTabs
-      topicId="trach-cat"
-      concept="Thập nhị Trực (12 Trực) là gì, và vì sao mỗi ngày lại “hợp” một loại việc khác nhau"
-      levels={[
-        {
-          id: 'eli5',
-          label: 'Trẻ 5 tuổi',
-          content: (
-            <p>
-              12 Trực giống 12 kiểu ngày thay phiên nhau. Có ngày hợp “làm cho xong”, có ngày hợp
-              “dọn bỏ cái cũ”, có ngày hợp “mở ra cái mới”. Mỗi kiểu ngày {strong('giỏi một việc')},
-              không có kiểu ngày nào giỏi tất cả.
-            </p>
-          ),
-        },
-        {
-          id: 'eli14',
-          label: 'Người 14 tuổi',
-          content: (
-            <>
+    <div className="space-y-6">
+      <DepthTabs
+        topicId="trach-cat"
+        concept="Thập nhị Trực (12 Trực) là gì, và vì sao mỗi ngày lại “hợp” một loại việc khác nhau"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Mỗi ngày mang một trong 12 Trực xoay vòng theo thứ tự: Kiến, Trừ, Mãn, Bình, Định,
-                Chấp, Phá, Nguy, Thành, Thu, Khai, Bế. Tên trực gợi luôn tính chất ngày:{' '}
-                {strong('Định')} là ổn định (hợp ký kết, cưới hỏi), {strong('Khai')} là mở ra (hợp
-                khai trương), {strong('Bế')} là đóng lại (kỵ mở hàng, khởi sự mới).
+                12 Trực giống 12 kiểu ngày thay phiên nhau. Có ngày hợp “làm cho xong”, có ngày hợp
+                “dọn bỏ cái cũ”, có ngày hợp “mở ra cái mới”. Mỗi kiểu ngày{' '}
+                {strong('giỏi một việc')}, không có kiểu ngày nào giỏi tất cả.
               </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Mỗi ngày mang một trong 12 Trực xoay vòng theo thứ tự: Kiến, Trừ, Mãn, Bình, Định,
+                  Chấp, Phá, Nguy, Thành, Thu, Khai, Bế. Tên trực gợi luôn tính chất ngày:{' '}
+                  {strong('Định')} là ổn định (hợp ký kết, cưới hỏi), {strong('Khai')} là mở ra (hợp
+                  khai trương), {strong('Bế')} là đóng lại (kỵ mở hàng, khởi sự mới).
+                </p>
+                <p>
+                  Vì thế xem trực là cách đọc nhanh: ngày này nghiêng về {strong('khởi sự')} hay nên{' '}
+                  {strong('kiêng')}. Nhưng không trực nào tốt cho mọi việc — nên trực chỉ là một lớp
+                  trong nhiều lớp cùng xét.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  12 Trực (còn gọi “Kiến Trừ thập nhị khách”) gắn theo quan hệ giữa{' '}
+                  {strong('địa chi của ngày và địa chi của tháng')}: mỗi tháng, trực Kiến rơi vào
+                  ngày có chi trùng chi tháng, rồi 11 trực còn lại nối tiếp. Mỗi trực có bảng hợp/kỵ
+                  riêng theo lịch pháp.
+                </p>
+                <p>
+                  Cần biết là các bản lịch có {strong('dị bản nhỏ')}: tên gọi (“Thâu” hay “Thu”) và
+                  chi tiết hợp/kỵ từng trực không phải lúc nào cũng khớp nhau. Vì vậy nên đọc trực
+                  như một <strong>xu hướng tham khảo</strong>, chọn theo một bản lịch nhất quán thay
+                  vì so nhiều nguồn rồi rối.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+      <DepthTabs
+        topicId="trach-cat"
+        concept="Ngày hoàng đạo / hắc đạo là gì — và vì sao đó không phải chuyện thiên văn"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Vì thế xem trực là cách đọc nhanh: ngày này nghiêng về {strong('khởi sự')} hay nên{' '}
-                {strong('kiêng')}. Nhưng không trực nào tốt cho mọi việc — nên trực chỉ là một lớp
-                trong nhiều lớp cùng xét.
+                Người xưa tưởng tượng mỗi ngày có một vị thần thay phiên nhau “trực”, như người canh
+                cửa đổi ca. Ngày tới lượt một vị {strong('thần hiền')} canh thì gọi là ngày hoàng
+                đạo — dễ chịu để làm việc lớn. Ngày tới lượt vị khó tính hơn thì gọi là ngày hắc
+                đạo, nên cẩn thận hơn một chút. Chỉ vậy thôi, không có phép màu nào.
               </p>
-            </>
-          ),
-        },
-        {
-          id: 'expert',
-          label: 'Chuyên gia',
-          content: (
-            <>
-              <p>
-                12 Trực (còn gọi “Kiến Trừ thập nhị khách”) gắn theo quan hệ giữa{' '}
-                {strong('địa chi của ngày và địa chi của tháng')}: mỗi tháng, trực Kiến rơi vào ngày
-                có chi trùng chi tháng, rồi 11 trực còn lại nối tiếp. Mỗi trực có bảng hợp/kỵ riêng
-                theo lịch pháp.
-              </p>
-              <p>
-                Cần biết là các bản lịch có {strong('dị bản nhỏ')}: tên gọi (“Thâu” hay “Thu”) và chi
-                tiết hợp/kỵ từng trực không phải lúc nào cũng khớp nhau. Vì vậy nên đọc trực như một
-                {' '}<strong>xu hướng tham khảo</strong>, chọn theo một bản lịch nhất quán thay vì so
-                nhiều nguồn rồi rối.
-              </p>
-            </>
-          ),
-        },
-      ]}
-    />
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Mỗi ngày ứng với một trong {strong('12 vị thần trực nhật')}, thay phiên nhau. Sáu
+                  vị thiện làm nên sáu ngày hoàng đạo — được coi là ngày tốt; sáu vị còn lại là ngày
+                  hắc đạo, phong tục thường kiêng việc lớn.
+                </p>
+                <p>
+                  Một điểm hay nhầm: “hoàng đạo” ở đây là tên một loại {strong('thần sát')} trong
+                  lịch, không phải chuyện mặt trời đi qua giữa trời như trong thiên văn. Nó cũng
+                  không cố định vào rằm hay mùng một — vị thần nào trực ngày nào đổi theo lịch, nên
+                  ngày hoàng đạo rơi rải khắp tháng.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Mười hai vị thần trực nhật chính là {strong('vòng 12 sao thần')} bạn gặp lại ở lớp
+                  giờ. Sáu vị thiện là Thanh Long, Minh Đường, Kim Quỹ, Thiên Đức (còn gọi Bảo
+                  Quang), Ngọc Đường, Tư Mệnh; sáu vị ác là Thiên Hình, Chu Tước, Bạch Hổ, Thiên
+                  Lao, Huyền Vũ, Câu Trận.
+                </p>
+                <p>
+                  Vị nào cai ngày nào được sắp bằng quy tắc “khởi Thanh Long”: xét ngày thì mốc khởi
+                  đổi theo {strong('tháng')}, xét giờ thì đổi theo chi của ngày. Nói cách khác, ngày
+                  và giờ hoàng đạo dùng chung một hệ thần sát, chỉ khác cấp áp dụng. Ngày hoàng đạo
+                  mới là {strong('lớp nền')} — hợp việc gì còn phải xét thêm Trực và sao ngày, nên
+                  một ngày hiếm khi tốt cho mọi việc.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+    </div>
   );
 }
 
@@ -212,12 +335,12 @@ export function TrachCatDepthSaoGio() {
               <p>
                 12 canh giờ trong ngày (Tý, Sửu, Dần… Hợi, mỗi canh hai tiếng) được gắn 12 sao thần
                 luân phiên: {strong('6 sao hoàng đạo')} (Thanh Long, Minh Đường, Kim Quỹ, Thiên Đức,
-                Ngọc Đường, Tư Mệnh) là giờ tốt; {strong('6 sao hắc đạo')} (Thiên Hình, Chu Tước, Bạch
-                Hổ, Thiên Lao, Huyền Vũ, Câu Trận) là giờ nên thận trọng.
+                Ngọc Đường, Tư Mệnh) là giờ tốt; {strong('6 sao hắc đạo')} (Thiên Hình, Chu Tước,
+                Bạch Hổ, Thiên Lao, Huyền Vũ, Câu Trận) là giờ nên thận trọng.
               </p>
               <p>
-                Sao nào rơi vào giờ nào lại {strong('đổi theo địa chi của ngày')}. Đó là lý do giờ tốt
-                của hôm nay khác giờ tốt của ngày mai — và vì sao không có “giờ chết” cố định.
+                Sao nào rơi vào giờ nào lại {strong('đổi theo địa chi của ngày')}. Đó là lý do giờ
+                tốt của hôm nay khác giờ tốt của ngày mai — và vì sao không có “giờ chết” cố định.
               </p>
             </>
           ),
@@ -228,16 +351,16 @@ export function TrachCatDepthSaoGio() {
           content: (
             <>
               <p>
-                Cách xếp: mốc khởi sao Thanh Long đặt theo {strong('chi của ngày')} (bài quyết cổ “Dần
-                Thân gia Tý, Mão Dậu Dần, Thìn Tuất Thìn, Tỵ Hợi Ngọ, Tý Ngọ Thân, Sửu Mùi Tuất”), rồi
-                xếp vòng 12 sao cố định lên 12 canh. Vì vòng cố định là 6 tốt xen 6 xấu, mỗi ngày{' '}
-                {strong('luôn có đúng 6 giờ hoàng đạo')}.
+                Cách xếp: mốc khởi sao Thanh Long đặt theo {strong('chi của ngày')} (bài quyết cổ
+                “Dần Thân gia Tý, Mão Dậu Dần, Thìn Tuất Thìn, Tỵ Hợi Ngọ, Tý Ngọ Thân, Sửu Mùi
+                Tuất”), rồi xếp vòng 12 sao cố định lên 12 canh. Vì vòng cố định là 6 tốt xen 6 xấu,
+                mỗi ngày {strong('luôn có đúng 6 giờ hoàng đạo')}.
               </p>
               <p>
                 Đây chính là phép mà công cụ giờ hoàng đạo của hieu.asia tính ra khi bạn nhập ngày.
-                Cùng hệ 12 sao thần này còn được dùng để định {strong('ngày')} hoàng đạo / hắc đạo (khi
-                đó mốc khởi đổi theo tháng) — nên bạn sẽ gặp lại đúng những tên sao ấy ở cả lớp ngày lẫn
-                lớp giờ.
+                Cùng hệ 12 sao thần này còn được dùng để định {strong('ngày')} hoàng đạo / hắc đạo
+                (khi đó mốc khởi đổi theo tháng) — nên bạn sẽ gặp lại đúng những tên sao ấy ở cả lớp
+                ngày lẫn lớp giờ.
               </p>
             </>
           ),
@@ -254,10 +377,10 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
     prompt: 'Quy trình thực dụng “3 lớp” để chọn ngày tốt gồm những lớp nào, theo thứ tự?',
     answer: (
       <>
-        Ba lớp theo thứ tự: (1) hợp {strong('tuổi')} — tránh xung/hình/hại con giáp, việc cưới hoặc làm
-        nhà tránh năm Kim Lâu, Hoang Ốc, Tam Tai; (2) hợp {strong('việc')} — chọn ngày có Trực và sao
-        phù hợp với loại việc, tránh các ngày kiêng; (3) chọn {strong('giờ hoàng đạo')} trong chính
-        ngày đã chọn.
+        Ba lớp theo thứ tự: (1) hợp {strong('tuổi')} — tránh xung/hình/hại con giáp, việc cưới hoặc
+        làm nhà tránh năm Kim Lâu, Hoang Ốc, Tam Tai; (2) hợp {strong('việc')} — chọn ngày có Trực
+        và sao phù hợp với loại việc, tránh các ngày kiêng; (3) chọn {strong('giờ hoàng đạo')} trong
+        chính ngày đã chọn.
       </>
     ),
   },
@@ -328,10 +451,10 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       'Vận dụng: Một người đã chọn được ngày rất đẹp để khai trương nhưng không chuẩn bị hàng hoá, nhân sự gì. Trạch cát có “cứu” được việc đó không? Vì sao?',
     answer: (
       <>
-        Không. Trạch cát chỉ giúp chọn một {strong('mốc khởi đầu đã cân nhắc')} và mang lại sự an tâm,
-        thể hiện sự chuẩn bị & tôn trọng — nó {strong('không bảo đảm thành công')}. Điều thực sự quyết
-        định vẫn là sự chuẩn bị, con người và năng lực. Ngày đẹp mà thiếu chuẩn bị thì việc vẫn khó
-        thành.
+        Không. Trạch cát chỉ giúp chọn một {strong('mốc khởi đầu đã cân nhắc')} và mang lại sự an
+        tâm, thể hiện sự chuẩn bị & tôn trọng — nó {strong('không bảo đảm thành công')}. Điều thực
+        sự quyết định vẫn là sự chuẩn bị, con người và năng lực. Ngày đẹp mà thiếu chuẩn bị thì việc
+        vẫn khó thành.
       </>
     ),
   },
@@ -383,10 +506,10 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
     answer: (
       <>
         Không tất định. Ngày “xấu” theo lịch pháp là {strong('lời nhắc thận trọng')} theo phong tục,
-        không phải bản án. Cái quyết định vẫn là sự chuẩn bị — hàng hoá, nhân sự, dịch vụ — chứ không
-        phải con số ngày. Bạn có thể chọn một {strong('giờ hoàng đạo')} trong ngày đó, chuẩn bị kỹ hơn
-        và giữ tâm thế bình tĩnh; đó mới là cách “hoá giải” thực tế, và cũng đúng tinh thần tham khảo,
-        không phán số mệnh.
+        không phải bản án. Cái quyết định vẫn là sự chuẩn bị — hàng hoá, nhân sự, dịch vụ — chứ
+        không phải con số ngày. Bạn có thể chọn một {strong('giờ hoàng đạo')} trong ngày đó, chuẩn
+        bị kỹ hơn và giữ tâm thế bình tĩnh; đó mới là cách “hoá giải” thực tế, và cũng đúng tinh
+        thần tham khảo, không phán số mệnh.
       </>
     ),
   },
@@ -459,21 +582,22 @@ export function TrachCatWhys() {
       topicId="trach-cat"
       start={
         <>
-          Một người xem được ngày cưới rất đẹp (hoàng đạo, hợp tuổi), liền yên tâm rằng hôn nhân chắc
-          chắn sẽ hạnh phúc, và bỏ qua việc chuẩn bị, thấu hiểu nhau trước khi về chung nhà.
+          Một người xem được ngày cưới rất đẹp (hoàng đạo, hợp tuổi), liền yên tâm rằng hôn nhân
+          chắc chắn sẽ hạnh phúc, và bỏ qua việc chuẩn bị, thấu hiểu nhau trước khi về chung nhà.
         </>
       }
       chain={[
         {
-          question: 'Vì sao “chọn được ngày đẹp nên hôn nhân chắc chắn hạnh phúc” là suy nghĩ chưa hợp lý?',
+          question:
+            'Vì sao “chọn được ngày đẹp nên hôn nhân chắc chắn hạnh phúc” là suy nghĩ chưa hợp lý?',
           because: <>Vì trạch cát {strong('không bảo đảm')} kết quả của việc đó.</>,
         },
         {
           question: 'Vì sao trạch cát không bảo đảm được kết quả?',
           because: (
             <>
-              Vì nó chỉ giúp chọn một {strong('mốc khởi đầu đã cân nhắc')} — điều quyết định thành hay
-              bại là sự chuẩn bị, con người và năng lực.
+              Vì nó chỉ giúp chọn một {strong('mốc khởi đầu đã cân nhắc')} — điều quyết định thành
+              hay bại là sự chuẩn bị, con người và năng lực.
             </>
           ),
         },
@@ -490,8 +614,8 @@ export function TrachCatWhys() {
           question: 'Vì sao đó lại là “tham khảo” chứ không phải quy luật tất định?',
           because: (
             <>
-              Vì hệ ngày hoàng đạo, 12 Trực, thần sát… là {strong('quy ước lịch pháp – văn hoá')}, không
-              đo được nhân quả theo nghĩa khoa học; nó là khung nhắc nhở, không phải phép màu.
+              Vì hệ ngày hoàng đạo, 12 Trực, thần sát… là {strong('quy ước lịch pháp – văn hoá')},
+              không đo được nhân quả theo nghĩa khoa học; nó là khung nhắc nhở, không phải phép màu.
             </>
           ),
         },
@@ -499,17 +623,18 @@ export function TrachCatWhys() {
           question: 'Vì sao điều đó đổi cách ta nên dùng trạch cát?',
           because: (
             <>
-              Vì hiểu đúng rồi thì ta dùng nó để {strong('an tâm và chuẩn bị kỹ hơn')}, chứ không ỷ lại
-              vào ngày giờ — càng không cần tốn tiền mua lễ để “giải”.
+              Vì hiểu đúng rồi thì ta dùng nó để {strong('an tâm và chuẩn bị kỹ hơn')}, chứ không ỷ
+              lại vào ngày giờ — càng không cần tốn tiền mua lễ để “giải”.
             </>
           ),
         },
       ]}
       root={
         <>
-          Trạch cát là một nếp văn hoá đẹp để khởi sự việc lớn cho chỉn chu và an tâm, không phải lời
-          hứa may mắn. Chọn ngày giờ tốt rồi vẫn phải dồn sức vào phần thực chất — con người và sự chuẩn
-          bị. Hãy dùng nó như một góc nhìn để chủ động hơn, {strong('tham khảo, không phán định')}.
+          Trạch cát là một nếp văn hoá đẹp để khởi sự việc lớn cho chỉn chu và an tâm, không phải
+          lời hứa may mắn. Chọn ngày giờ tốt rồi vẫn phải dồn sức vào phần thực chất — con người và
+          sự chuẩn bị. Hãy dùng nó như một góc nhìn để chủ động hơn,{' '}
+          {strong('tham khảo, không phán định')}.
         </>
       }
     />

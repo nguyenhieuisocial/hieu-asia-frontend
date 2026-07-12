@@ -173,6 +173,168 @@ export function CanXuongDepth() {
         },
       ]}
     />
+
+    <DepthTabs
+      topicId="can-xuong"
+      concept="Bốn trọng lượng góp vào: năm, tháng, ngày, giờ"
+      levels={[
+        {
+          id: 'eli5',
+          label: 'Trẻ 5 tuổi',
+          content: (
+            <p>
+              Cân xương chỉ nhìn vào {strong('bốn thứ')} trong ngày sinh của bạn: năm, tháng, ngày và
+              giờ. Mỗi thứ được cho một “cân nặng” nho nhỏ. Không phải cân cả người bạn đâu, chỉ cân bốn
+              con số ngày sinh thôi. Cộng bốn cân nặng đó lại là ra một con số để đọc thơ.
+            </p>
+          ),
+        },
+        {
+          id: 'eli14',
+          label: 'Người 14 tuổi',
+          content: (
+            <>
+              <p>
+                Bốn yếu tố góp trọng lượng đều lấy theo {strong('lịch âm')}: năm sinh tra theo can–chi
+                (như Canh Ngọ, Tân Mùi), tháng theo tháng âm từ giêng đến chạp, ngày theo ngày âm mùng 1
+                đến 30, và giờ theo 12 canh giờ (Tý, Sửu, Dần…).
+              </p>
+              <p>
+                Mỗi yếu tố có một bảng riêng, cho một giá trị tính bằng {strong('lạng hoặc chỉ')}. Bạn
+                không phải nhớ bảng nào; công cụ tự tra khi bạn nhập ngày giờ sinh.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'expert',
+          label: 'Chuyên gia',
+          content: (
+            <>
+              <p>
+                Chỉ có {strong('đúng bốn yếu tố này')} góp vào tổng, không có gì khác: không nơi sinh,
+                không tên, không lá số nhiều tầng. Mỗi yếu tố tra một bảng cố định — 60 can–chi cho năm,
+                12 tháng, 30 ngày âm, 12 canh giờ — rồi bốn giá trị cộng lại.
+              </p>
+              <p>
+                Con số cụ thể của từng ô nằm trong các bảng truyền thống. Điều đáng nắm ở đây là biết{' '}
+                {strong('bốn yếu tố nào')} tạo nên tổng, thay vì nhận một kết quả như “hộp đen”.
+              </p>
+            </>
+          ),
+        },
+      ]}
+    />
+
+    <DepthTabs
+      topicId="can-xuong"
+      concept="Cách cộng bốn trọng lượng thành tổng rồi tra bài thơ"
+      levels={[
+        {
+          id: 'eli5',
+          label: 'Trẻ 5 tuổi',
+          content: (
+            <p>
+              Sau khi mỗi phần ngày sinh có một cân nặng nhỏ, bạn {strong('cộng cả bốn lại')} thành một
+              con số lớn hơn. Con số tổng đó dắt bạn tới đúng một bài thơ. Giống như cộng điểm bốn môn
+              thành một tổng, rồi xem tổng ấy ứng bài thơ nào. Chỉ con số cộng xong mới quan trọng, không
+              phải từng phần lẻ.
+            </p>
+          ),
+        },
+        {
+          id: 'eli14',
+          label: 'Người 14 tuổi',
+          content: (
+            <>
+              <p>
+                Ba bước rất gọn. Một, tra bốn trọng lượng từ năm, tháng, ngày, giờ âm lịch. Hai,{' '}
+                {strong('cộng cả bốn')} lại thành tổng “cân nặng xương”, thường rơi vào khoảng 2 lạng 1
+                đến chừng 7 lạng 1. Ba, đối chiếu tổng ấy với đúng một bài thơ đã soạn sẵn.
+              </p>
+              <p>
+                Theo quan niệm dân gian, tổng nặng thường ứng bài nghe “sang, thuận” hơn, tổng nhẹ ứng
+                bài “vất vả” hơn — nhưng chỉ nên đọc như {strong('lời động viên')} thôi.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'expert',
+          label: 'Chuyên gia',
+          content: (
+            <>
+              <p>
+                Điểm cần nắm: thứ dùng để tra thơ là {strong('con số tổng')}, không phải từng trọng
+                lượng riêng lẻ. Bốn giá trị cộng lại rơi vào một mức trong khoảng 2 lạng 1 đến chừng 7
+                lạng 1, và mỗi mức tổng ứng đúng một bài thơ đã soạn sẵn.
+              </p>
+              <p>
+                Toàn bộ chỗ “khó” của phương pháp chỉ là đổi ngày dương sang ngày âm rồi tra bốn bảng;
+                phần còn lại là {strong('một phép cộng và một lần đối chiếu')}. Công cụ làm hết các bước
+                này khi bạn nhập ngày giờ sinh âm lịch.
+              </p>
+            </>
+          ),
+        },
+      ]}
+    />
+
+    <DepthTabs
+      topicId="can-xuong"
+      concept="Nguồn gốc Viên Thiên Cang — và vì sao bản văn định hình ở đời sau"
+      levels={[
+        {
+          id: 'eli5',
+          label: 'Trẻ 5 tuổi',
+          content: (
+            <p>
+              Người ta kể rằng cách cân xương này do một ông tên {strong('Viên Thiên Cang')} sống thời
+              nhà Đường ngày xưa nghĩ ra. Gắn với tên một người nổi tiếng khiến nhiều người tin hơn.
+              Nhưng thật ra các bảng số và bài thơ ta dùng bây giờ được nhiều người thêm thắt qua nhiều
+              đời, chứ không phải một mình ông ấy viết ra hết.
+            </p>
+          ),
+        },
+        {
+          id: 'eli14',
+          label: 'Người 14 tuổi',
+          content: (
+            <>
+              <p>
+                Cân xương thường được gắn với {strong('Viên Thiên Cang')}, một nhà thiên văn và tướng số
+                nổi tiếng đời Đường. Gắn tên một danh nhân đời Đường giúp phương pháp có “gốc gác” và sức
+                thuyết phục trong dân gian.
+              </p>
+              <p>
+                Nhưng bản văn phổ biến hôm nay — các bảng trọng lượng và bộ bài thơ —{' '}
+                {strong('định hình ở đời sau')}, không hẳn nguyên vẹn từ thời ông. Nói cách khác, đây là
+                một di sản văn hoá được bồi đắp qua nhiều đời.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'expert',
+          label: 'Chuyên gia',
+          content: (
+            <>
+              <p>
+                Cần phân biệt hai chuyện: cái tên gắn với phương pháp, và văn bản thực sự đang lưu hành.
+                Viên Thiên Cang là danh nhân đời Đường, nhưng các bảng trọng lượng và bộ bài thơ như ta
+                thấy ngày nay {strong('định hình ở đời sau')}, hơn là công thức nguyên vẹn của một tác giả
+                duy nhất.
+              </p>
+              <p>
+                Đó là đặc điểm của một văn bản dân gian được bồi đắp qua nhiều đời. Hiểu vậy rồi thì trân
+                trọng cân xương vì {strong('sự mộc mạc và tinh thần động viên')} của nó, chứ không phải vì
+                nó “chính xác”.
+              </p>
+            </>
+          ),
+        },
+      ]}
+    />
     </div>
   );
 }
