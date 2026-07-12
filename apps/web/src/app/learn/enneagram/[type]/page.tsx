@@ -220,6 +220,14 @@ export default async function EnneagramTypePage({
         </div>
       </section>
 
+      {/* Chân dung sâu */}
+      <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <h2 className="mb-3 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+          Chân dung sâu: động lực này vận hành thế nào
+        </h2>
+        <p className="text-base leading-relaxed text-foreground/85">{d.deepProfile}</p>
+      </section>
+
       {/* Điểm mạnh + Hướng phát triển */}
       <section className="relative mx-auto max-w-3xl px-6 pb-10">
         <div className="grid gap-3 sm:grid-cols-2">
@@ -247,6 +255,17 @@ export default async function EnneagramTypePage({
         <p className="mt-3 text-xs text-muted-foreground">
           Điểm mạnh và hướng phát triển là <strong>xu hướng</strong> của nhóm {n}, không phải lời
           phán cố định. Mỗi người đều có thể rèn giũa theo hướng mình muốn.
+        </p>
+      </section>
+
+      {/* Thực hành phát triển */}
+      <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <h2 className="mb-3 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+          Thực hành phát triển hằng ngày
+        </h2>
+        <p className="text-base leading-relaxed text-foreground/85">{d.growthPractices}</p>
+        <p className="mt-2 text-xs text-muted-foreground">
+          Vài việc nhỏ, cụ thể để luyện — gợi ý, không phải chỉ dẫn bắt buộc.
         </p>
       </section>
 
@@ -337,6 +356,29 @@ export default async function EnneagramTypePage({
             <span className="ml-2 text-sm text-muted-foreground">pha nét {d.wingRight.name}</span>
           </Link>
         </div>
+      </section>
+
+      {/* Ba bản năng (subtype) */}
+      <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <h2 className="mb-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+          Ba bản năng ở nhóm {n}
+        </h2>
+        <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+          Cùng là nhóm {n} nhưng ba bản năng — tự tồn (sp), xã hội (so), thân mật (sx) — làm nó hiện
+          ra ba kiểu khác nhau. Đây là nét phác họa; trắc nghiệm ở trang này không đo bản năng trội.
+        </p>
+        <p className="text-base leading-relaxed text-foreground/85">{d.subtypeNotes}</p>
+      </section>
+
+      {/* Dễ nhận nhầm */}
+      <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <h2 className="mb-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+          Dễ nhận nhầm nhóm {n} với ai
+        </h2>
+        <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+          Cách chắc nhất để phân biệt là nhìn động cơ bên trong, không nhìn hành vi bề mặt.
+        </p>
+        <p className="text-base leading-relaxed text-foreground/85">{d.misidentifications}</p>
       </section>
 
       {/* Công việc */}

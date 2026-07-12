@@ -63,6 +63,18 @@ export function DiscFrame() {
 
 export function DiscDepth() {
   return (
+    <div className="space-y-4">
+      <DiscDepthAxes />
+      <DiscDepthPure />
+      <DiscDepthStrengthWatch />
+      <DiscDepthRoleStress />
+      <DiscDepthTeamNotHiring />
+    </div>
+  );
+}
+
+function DiscDepthAxes() {
+  return (
     <DepthTabs
       topicId="disc"
       concept="Vì sao chỉ cần hai trục là suy ra được cả bốn nhóm"
@@ -112,6 +124,240 @@ export function DiscDepth() {
                 mạnh ở một–hai nhóm và nhạt hơn ở phần còn lại, nên có thể {strong('vừa D vừa S')}.
                 Phong cách còn đổi theo vai trò (ở nhà khác ở công ty) và theo lúc căng thẳng — nên
                 “góc” của một người là điểm tham khảo, không phải nhãn cứng.
+              </p>
+            </>
+          ),
+        },
+      ]}
+    />
+  );
+}
+
+function DiscDepthPure() {
+  return (
+    <DepthTabs
+      topicId="disc"
+      concept="Vì sao chỉ có bốn nhóm mà gần như không ai thuần một nhóm"
+      levels={[
+        {
+          id: 'eli5',
+          label: 'Trẻ 5 tuổi',
+          content: (
+            <p>
+              Bốn nhóm giống bốn hướng trên la bàn: đông, tây, nam, bắc. Bạn có thể đi hướng{' '}
+              {strong('đông–nam')}, đâu cần đúng phóc một hướng. Người ta cũng vậy — thường nghiêng về
+              một hoặc hai nhóm, ít khi &ldquo;thuần&rdquo; đúng một nhóm.
+            </p>
+          ),
+        },
+        {
+          id: 'eli14',
+          label: 'Người 14 tuổi',
+          content: (
+            <>
+              <p>
+                DISC không phát cho bạn một cái nhãn duy nhất. Nó đo bạn {strong('mạnh bao nhiêu ở từng nhóm')}{' '}
+                trong bốn nhóm. Vì đo bằng tỉ lệ, hầu hết mọi người có một nhóm trội, một nhóm phụ, và
+                phần còn lại nhạt hơn.
+              </p>
+              <p>
+                &ldquo;Thuần một nhóm&rdquo; là trường hợp hiếm, không phải mặc định. Bốn nhóm chỉ có{' '}
+                {strong('bốn')} vì chúng là bốn góc của hai trục — thêm góc nào cũng không nằm trên hai
+                trục đó nữa.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'expert',
+          label: 'Chuyên gia',
+          content: (
+            <>
+              <p>
+                Bốn nhóm là bốn góc sinh ra từ hai trục, nên chúng không rời nhau mà nằm trên cùng một{' '}
+                {strong('mặt phẳng')}. Một người là một điểm trên mặt phẳng đó, thường lệch về một góc
+                kèm ảnh hưởng của góc liền kề.
+              </p>
+              <p>
+                Vì thế &ldquo;D thuần&rdquo; hay &ldquo;S thuần&rdquo; là {strong('lý tưởng hoá')};
+                thực tế là các pha trộn, và pha trộn còn đổi theo vai trò lẫn lúc căng thẳng. Con số
+                bốn đến từ cấu trúc hai trục, không phải vì người ta chỉ có bốn kiểu.
+              </p>
+            </>
+          ),
+        },
+      ]}
+    />
+  );
+}
+
+function DiscDepthStrengthWatch() {
+  return (
+    <DepthTabs
+      topicId="disc"
+      concept="Điểm mạnh và mặt cần để ý là hai mặt của cùng một tính nết"
+      levels={[
+        {
+          id: 'eli5',
+          label: 'Trẻ 5 tuổi',
+          content: (
+            <p>
+              Người quyết đoán, dám nhận việc khó thì cũng dễ sốt ruột với ai làm chậm. Đó không phải
+              hai người khác nhau, mà là {strong('một tính nết nhìn từ hai phía')}. Nhóm nào trong DISC
+              cũng vậy: mặt sáng và mặt cần để ý đi liền nhau.
+            </p>
+          ),
+        },
+        {
+          id: 'eli14',
+          label: 'Người 14 tuổi',
+          content: (
+            <>
+              <p>
+                Lấy nhóm D: thế mạnh là {strong('đẩy việc về đích')}, nhưng cùng cái nhịp nhanh quyết
+                liệt đó khiến họ dễ lấn át người khác lúc gấp. Nhóm C cẩn thận, làm đúng quy trình, nên
+                cũng dễ cầu toàn và chần chừ khi dữ liệu chưa đủ.
+              </p>
+              <p>
+                Mỗi điểm mạnh kèm một cái giá, vì cả hai mọc ra từ một thiên hướng. Biết vậy thì bạn
+                thôi trách &ldquo;sao lại thế&rdquo;, và hiểu người kia đang trả giá cho chính thế mạnh
+                của họ.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'expert',
+          label: 'Chuyên gia',
+          content: (
+            <>
+              <p>
+                Điểm mạnh và mặt cần để ý là {strong('cùng một hành vi ở hai bối cảnh')}. Nhịp nhanh
+                của nhóm I tạo không khí, lan năng lượng cho cả nhóm; đúng nhịp ấy khi cần ngồi yên làm
+                việc lặp lại thì thành ngại chi tiết. Sự kiên nhẫn, đáng tin của nhóm S là chỗ dựa lúc
+                căng thẳng, cũng chính nó khiến họ ngại thay đổi gấp và khó nói &ldquo;không&rdquo;.
+              </p>
+              <p>
+                Nên đọc DISC theo cặp: mỗi nhóm mạnh ở bối cảnh này thì đuối ở bối cảnh kia,{' '}
+                {strong('không nhóm nào tốt hay xấu hơn')}. Phối hợp tốt là đặt người vào chỗ hợp với
+                mặt sáng của họ và lường trước mặt cần để ý, chứ không bắt ai bỏ đi tính nết của mình.
+              </p>
+            </>
+          ),
+        },
+      ]}
+    />
+  );
+}
+
+function DiscDepthRoleStress() {
+  return (
+    <DepthTabs
+      topicId="disc"
+      concept="Vì sao cùng một người mà phong cách đổi theo vai trò và lúc căng thẳng"
+      levels={[
+        {
+          id: 'eli5',
+          label: 'Trẻ 5 tuổi',
+          content: (
+            <p>
+              Bạn ở nhà với người thân khác với bạn ở lớp, ở chỗ làm. Không phải bạn giả vờ, chỉ là mỗi
+              chỗ kéo ra những mặt khác nhau của bạn. Kết quả DISC cũng là {strong('ảnh chụp ở một hoàn cảnh')},
+              không phải con người bạn trong mọi lúc.
+            </p>
+          ),
+        },
+        {
+          id: 'eli14',
+          label: 'Người 14 tuổi',
+          content: (
+            <>
+              <p>
+                DISC đo {strong('hành vi quan sát được')} — cách bạn cư xử — mà hành vi thì co giãn theo
+                hoàn cảnh. Cùng một người có thể nghiêng nhóm S ôn hoà lúc bình thường, rồi khi việc dồn
+                dập sát hạn lại lộ ra nét nhóm D quyết liệt cho kịp.
+              </p>
+              <p>
+                Vì vậy &ldquo;góc&rdquo; DISC của một người là {strong('điểm tham khảo')}, không phải
+                nhãn dán chết. Làm lại bài ở một giai đoạn khác của đời, hay một vai trò khác, tỉ lệ bốn
+                nhóm có thể xê dịch.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'expert',
+          label: 'Chuyên gia',
+          content: (
+            <>
+              <p>
+                Chỗ này dễ hiểu lầm: nhiều người coi kết quả DISC như một bản chất cố định. Nhưng vì
+                DISC chỉ soi hành vi chứ {strong('không đo năng lực hay giá trị')} con người, mà hành vi
+                thì linh hoạt, nên phong cách đổi theo vai trò (ở nhà, ở nhóm bạn, ở công ty) và theo
+                mức căng thẳng là chuyện bình thường.
+              </p>
+              <p>
+                Điều này không làm DISC vô dụng, chỉ đổi cách dùng: xem tỉ lệ bốn nhóm như một{' '}
+                {strong('lát cắt hiện tại')} để hiểu mình và điều chỉnh giao tiếp, đừng biến nó thành
+                lời phán cho cả đời.
+              </p>
+            </>
+          ),
+        },
+      ]}
+    />
+  );
+}
+
+function DiscDepthTeamNotHiring() {
+  return (
+    <DepthTabs
+      topicId="disc"
+      concept="Vì sao DISC hợp làm ngôn ngữ chung cho nhóm, nhưng không hợp để tuyển người"
+      levels={[
+        {
+          id: 'eli5',
+          label: 'Trẻ 5 tuổi',
+          content: (
+            <p>
+              DISC giống như biết bạn mình thích nhắn tin ngắn gọn hay thích gọi điện tán gẫu. Biết vậy
+              để {strong('nói chuyện cho hợp')}, chứ không phải để chấm ai giỏi hơn ai. Nó là công cụ
+              hiểu nhau, không phải cái thước xếp hạng người.
+            </p>
+          ),
+        },
+        {
+          id: 'eli14',
+          label: 'Người 14 tuổi',
+          content: (
+            <>
+              <p>
+                DISC được thiết kế để một nhóm {strong('hiểu nhau nhanh')}: biết đồng nghiệp nghiêng
+                nhóm C thích thông tin rõ ràng, có số liệu thì bạn chuẩn bị dữ liệu thay vì thúc quyết
+                vội. Đó là chỗ nó phát huy.
+              </p>
+              <p>
+                Nhưng nó {strong('không đo năng lực')}, đạo đức hay khả năng thành công, nên dùng để
+                tuyển hay loại ứng viên là dùng sai chỗ. Thêm nữa, bản tự đánh giá kiểu ép-chọn khiến
+                điểm của bạn khó đem so trực tiếp với điểm người khác.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'expert',
+          label: 'Chuyên gia',
+          content: (
+            <>
+              <p>
+                Có một lý do kỹ thuật khiến DISC không hợp để xếp hạng người: bản tự đánh giá thường
+                bắt {strong('chọn từ hợp nhất trong một nhóm từ')} (ép-chọn), nên kết quả cho biết bạn
+                nghiêng về đâu trong chính mình, hơn là đặt bạn lên cùng một thước với người khác.
+              </p>
+              <p>
+                Vậy nên đặt DISC đúng chỗ: làm ngôn ngữ chung để phối hợp và giao tiếp trong nhóm. Đặt
+                sai chỗ — lấy nó tuyển người, đo năng lực — thì một lăng kính tiện dụng thành cái nhãn
+                oan. Trình bày cả giá trị lẫn giới hạn như vậy là chủ ý của hieu.asia.
               </p>
             </>
           ),
@@ -190,6 +436,40 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       </>
     ),
   },
+  {
+    id: 'q6',
+    type: 'mcq',
+    prompt: 'DISC hợp nhất với việc nào dưới đây?',
+    choices: [
+      {
+        text: 'Cải thiện giao tiếp và phối hợp trong một nhóm',
+        correct: true,
+        note: 'Đúng — đó là mục đích thiết kế của DISC: làm ngôn ngữ chung để hiểu nhau.',
+      },
+      {
+        text: 'Tuyển chọn hoặc loại ứng viên',
+        note: 'Không — DISC không đo năng lực; không nên dùng để tuyển hay loại người.',
+      },
+      {
+        text: 'Đo chỉ số thông minh',
+        note: 'Không — DISC không đo trí thông minh, chỉ mô tả phong cách hành vi.',
+      },
+    ],
+  },
+  {
+    id: 'q7',
+    type: 'open',
+    prompt:
+      'Marston có vai trò gì với DISC, và vì sao các bản trắc nghiệm thương mại lại có thương hiệu riêng?',
+    answer: (
+      <>
+        William Moulton Marston (1928, <em>Emotions of Normal People</em>) đưa ra {strong('ý tưởng gốc')}{' '}
+        về bốn khuynh hướng hành vi. Lý thuyết đó thuộc {strong('miền công cộng')}, nên nhiều công ty
+        về sau tự xây bảng đo và đăng ký thương hiệu riêng như DiSC®. Nói cách khác: khung ý tưởng là
+        chung, còn từng bộ câu hỏi cụ thể là sản phẩm riêng của mỗi nhà cung cấp.
+      </>
+    ),
+  },
 ];
 
 export function DiscRecall() {
@@ -231,6 +511,16 @@ const FACETS: UnderstandingFacet[] = [
     id: 'teach-back',
     facet: 'Dạy lại',
     can: 'Giảng lại “hai trục ra bốn nhóm” cho một người chưa biết, bằng ví dụ của riêng bạn.',
+  },
+  {
+    id: 'origin',
+    facet: 'Nguồn gốc',
+    can: 'Kể được DISC bắt nguồn từ Marston (1928, Emotions of Normal People) và vì sao các bản trắc nghiệm thương mại có thương hiệu riêng dù lý thuyết gốc thuộc miền công cộng.',
+  },
+  {
+    id: 'limits',
+    facet: 'Giới hạn khoa học',
+    can: 'Nói được vì sao không nên dùng DISC để tuyển người, và vì sao bản tự đánh giá ép-chọn khiến khó so điểm giữa người này với người kia.',
   },
   {
     id: 'metacognition',

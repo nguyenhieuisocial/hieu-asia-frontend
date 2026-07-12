@@ -63,6 +63,18 @@ export function BigFiveFrame() {
 
 export function BigFiveDepth() {
   return (
+    <div className="space-y-4">
+      <BigFiveDepthSpectrum />
+      <BigFiveDepthFacet />
+      <BigFiveDepthWhyFive />
+      <BigFiveDepthMidpoint />
+      <BigFiveDepthSnapshot />
+    </div>
+  );
+}
+
+function BigFiveDepthSpectrum() {
+  return (
     <DepthTabs
       topicId="big-five"
       concept="Vì sao Big Five là “dải liên tục”, không phải “16 cái hộp”"
@@ -112,6 +124,232 @@ export function BigFiveDepth() {
                 Thẩm mỹ, Ham trí tuệ, Cởi mở giá trị…), nên hai người {strong('cùng điểm tổng')} vẫn có
                 thể rất khác nhau ở từng facet. Và điểm là một {strong('lát cắt ở thời điểm làm bài')},
                 không cố định cả đời — đọc như một góc nhìn, không phải nhãn dán.
+              </p>
+            </>
+          ),
+        },
+      ]}
+    />
+  );
+}
+
+function BigFiveDepthFacet() {
+  return (
+    <DepthTabs
+      topicId="big-five"
+      concept="Facet là gì, và vì sao hai người cùng điểm tổng vẫn khác nhau"
+      levels={[
+        {
+          id: 'eli5',
+          label: 'Trẻ 5 tuổi',
+          content: (
+            <p>
+              Mỗi chiều lớn giống một cái hộp to, bên trong có {strong('sáu ngăn nhỏ')} gọi là facet.
+              Hai bạn cùng &ldquo;hộp Cởi mở đầy như nhau&rdquo; vẫn có thể đầy ở những ngăn khác nhau.
+            </p>
+          ),
+        },
+        {
+          id: 'eli14',
+          label: 'Người 14 tuổi',
+          content: (
+            <>
+              <p>
+                Chiều Cởi mở gồm sáu facet: Trí tưởng tượng, Thẩm mỹ, Cảm xúc, Phiêu lưu, Ham trí tuệ,
+                Cởi mở giá trị. Bạn có thể {strong('cao ở Thẩm mỹ mà bình thường ở Phiêu lưu')}.
+              </p>
+              <p>
+                Điểm tổng của một chiều chỉ là trung bình của sáu ngăn, nên nó {strong('giấu đi')} sự
+                khác biệt bên trong. Muốn hiểu một người kỹ hơn thì nhìn xuống tầng facet.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'expert',
+          label: 'Chuyên gia',
+          content: (
+            <>
+              <p>
+                Năm chiều nhân sáu facet cho {strong('ba mươi khía cạnh')}. Facet giúp phân giải sâu
+                hơn: hai người cùng điểm tổng một chiều vẫn có thể có hồ sơ facet khác hẳn, dẫn tới cách
+                hành xử khác nhau.
+              </p>
+              <p>
+                Đây là lý do đọc Big Five ở tầng facet cho chân dung tinh hơn là chỉ nhìn năm con số
+                lớn. Bộ facet ở đây là bản miền công cộng (họ IPIP-NEO), đúng bộ mà công cụ của
+                hieu.asia dùng.
+              </p>
+            </>
+          ),
+        },
+      ]}
+    />
+  );
+}
+
+function BigFiveDepthWhyFive() {
+  return (
+    <DepthTabs
+      topicId="big-five"
+      concept="Vì sao là năm chiều, không phải bốn hay sáu"
+      levels={[
+        {
+          id: 'eli5',
+          label: 'Trẻ 5 tuổi',
+          content: (
+            <p>
+              Người ta không tự chọn con số năm rồi bắt tính cách chia vừa. Họ gom {strong('rất nhiều từ tả người')}{' '}
+              lại, xếp những từ hay đi cùng nhau thành nhóm, và đếm ra khoảng năm nhóm cứ hiện lên.
+            </p>
+          ),
+        },
+        {
+          id: 'eli14',
+          label: 'Người 14 tuổi',
+          content: (
+            <>
+              <p>
+                Từ kho từ mô tả tính cách, khi xếp những từ thường đi cùng nhau, các nhà nghiên cứu
+                thấy chúng {strong('dồn về năm cụm lớn')}, lặp lại qua nhiều ngôn ngữ và mẫu người.
+              </p>
+              <p>
+                Con số năm là thứ {strong('nổi lên từ dữ liệu')}, không phải đặt trước rồi nhồi vào.
+                Chính vì thế nó đáng tin hơn một bảng phân loại do ai đó tự nghĩ ra.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'expert',
+          label: 'Chuyên gia',
+          content: (
+            <>
+              <p>
+                Năm là điểm hội tụ phổ biến nhất, nhưng {strong('không phải bất biến')}. Có mô hình đề
+                xuất sáu chiều, có cách gộp thành ít hơn tuỳ phương pháp và mẫu nghiên cứu.
+              </p>
+              <p>
+                Điều đáng nói là năm chiều {strong('tái lập được')} ở nhiều bối cảnh khác nhau, nên giới
+                hàn lâm dùng nó làm khung tham chiếu chung — một sự đồng thuận thực dụng, không phải
+                chân lý đóng.
+              </p>
+            </>
+          ),
+        },
+      ]}
+    />
+  );
+}
+
+function BigFiveDepthMidpoint() {
+  return (
+    <DepthTabs
+      topicId="big-five"
+      concept="Vì sao điểm ở giữa dải (ambivert) là một kết quả thật, không phải “chưa xác định”"
+      levels={[
+        {
+          id: 'eli5',
+          label: 'Trẻ 5 tuổi',
+          content: (
+            <p>
+              Hỏi &ldquo;bạn thích ngọt hay mặn?&rdquo; có người mê cả hai, tuỳ bữa. Đâu phải họ chưa
+              biết mình thích gì. Trên dải Hướng ngoại cũng thế: đứng ở giữa nghĩa là bạn{' '}
+              {strong('linh hoạt')}, lúc thích gặp gỡ lúc thích ở một mình — một câu trả lời thật,
+              không phải bỏ trống.
+            </p>
+          ),
+        },
+        {
+          id: 'eli14',
+          label: 'Người 14 tuổi',
+          content: (
+            <>
+              <p>
+                Vì mỗi chiều là một {strong('dải liên tục')}, ai cũng đứng ở đâu đó trên thước, kể cả
+                khúc giữa. Điểm giữa trên Hướng ngoại (hay gọi là ambivert) nghĩa là bạn xoay được giữa
+                giao tiếp và làm việc một mình tuỳ hoàn cảnh.
+              </p>
+              <p>
+                Điều này khác kiểu test &ldquo;đóng hộp&rdquo;, nơi phải rơi vào bên này hoặc bên kia.
+                Ở Big Five, điểm giữa {strong('hợp lệ y như')} điểm ở hai đầu, không phải &ldquo;kết quả
+                lỗi&rdquo; hay &ldquo;chưa đủ dữ liệu&rdquo;.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'expert',
+          label: 'Chuyên gia',
+          content: (
+            <>
+              <p>
+                Coi điểm giữa là &ldquo;chưa xác định&rdquo; là hiểu nhầm bản chất thang đo. Dải liên
+                tục không đòi bạn phải lệch hẳn về một đầu; đứng ở khúc giữa là {strong('một vị trí thật trên thước')},
+                không phải chỗ trống chờ điền.
+              </p>
+              <p>
+                Ý nghĩa thực dụng: đừng ép kết quả thành &ldquo;hướng nội hay hướng ngoại&rdquo;. Nếu
+                bạn ở giữa, cái đáng đọc là bạn co giãn theo bối cảnh. Muốn hiểu kỹ hơn thì nhìn xuống
+                tầng {strong('facet')}, vì hai người cùng điểm giữa vẫn có thể mạnh yếu khác nhau ở từng
+                facet.
+              </p>
+            </>
+          ),
+        },
+      ]}
+    />
+  );
+}
+
+function BigFiveDepthSnapshot() {
+  return (
+    <DepthTabs
+      topicId="big-five"
+      concept="Vì sao điểm Big Five là ảnh chụp một thời điểm, có thể đổi theo giai đoạn đời"
+      levels={[
+        {
+          id: 'eli5',
+          label: 'Trẻ 5 tuổi',
+          content: (
+            <p>
+              Đo chiều cao hồi lớp 1 khác lớp 9. Cái thước không sai, chỉ là bạn đã lớn lên. Điểm Big
+              Five cũng là {strong('số đo ở lúc bạn làm bài')}, không phải con dấu đóng chặt cho cả đời.
+            </p>
+          ),
+        },
+        {
+          id: 'eli14',
+          label: 'Người 14 tuổi',
+          content: (
+            <>
+              <p>
+                Big Five đo xu hướng của bạn ở {strong('thời điểm làm bài')}. Xu hướng đó có thể đổi
+                theo giai đoạn: hoàn cảnh sống, công việc, những gì bạn trải qua đều có thể kéo một chiều
+                dịch đi ít nhiều.
+              </p>
+              <p>
+                Vì thế điểm số là một lát cắt để hiểu mình lúc này, không phải bản án cố định. Làm lại
+                bài sau vài năm, con số có thể khác, và điều đó {strong('bình thường')}.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'expert',
+          label: 'Chuyên gia',
+          content: (
+            <>
+              <p>
+                Điểm là một {strong('lát cắt, không phải hằng số')}. Big Five mô tả xu hướng chứ không
+                khắc một bản chất bất biến, nên theo giai đoạn đời và hoàn cảnh, vị trí của bạn trên mỗi
+                dải có thể xê dịch.
+              </p>
+              <p>
+                Chỗ này nối với một giới hạn đã nói: nhãn &ldquo;cao/thấp&rdquo; chỉ là quy ước ngưỡng,
+                và điểm dựa trên tự đánh giá nên còn chịu cả tâm trạng lúc làm bài. Gộp lại, cách đọc
+                đúng là xem kết quả như một {strong('góc nhìn để hiểu mình')} và tự quyết ở hiện tại, kết
+                hợp với các lăng kính khác, đừng biến nó thành cái nhãn nhốt mình cả đời.
               </p>
             </>
           ),
@@ -199,6 +437,39 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       </>
     ),
   },
+  {
+    id: 'q6',
+    type: 'mcq',
+    prompt: 'Nhược điểm nào sau đây là thật của Big Five?',
+    choices: [
+      {
+        text: 'Phần lớn nghiên cứu dựng trên nhóm dân cư phương Tây, học vấn cao (WEIRD), nên tính phổ quát ở mọi văn hoá vẫn còn bàn cãi',
+        correct: true,
+        note: 'Đúng — đây là giới hạn WEIRD; thêm nữa, bài đo dựa trên tự đánh giá nên có thiên lệch.',
+      },
+      {
+        text: 'Nó xếp mỗi người vào 1 trong 16 hộp cứng',
+        note: 'Không — đó là MBTI; Big Five dùng dải liên tục.',
+      },
+      {
+        text: 'Nó đo được giá trị và phẩm chất của một con người',
+        note: 'Không — Big Five mô tả xu hướng, không đo giá trị con người.',
+      },
+    ],
+  },
+  {
+    id: 'q7',
+    type: 'open',
+    prompt: 'Vì sao con số “năm” chiều lại đáng tin hơn là do ai đó chọn sẵn?',
+    answer: (
+      <>
+        Vì năm chiều {strong('không được đặt trước rồi nhồi dữ liệu vào')}. Khi gom từ mô tả tính cách
+        và xếp những từ hay đi cùng nhau, các nhà nghiên cứu thấy chúng dồn về khoảng năm cụm, lặp lại
+        qua nhiều ngôn ngữ và mẫu người. Vẫn có tranh luận (vài mô hình đề xuất sáu chiều), nhưng năm
+        là {strong('điểm hội tụ phổ biến nhất')}, nổi lên từ dữ liệu.
+      </>
+    ),
+  },
 ];
 
 export function BigFiveRecall() {
@@ -240,6 +511,16 @@ const FACETS: UnderstandingFacet[] = [
     id: 'teach-back',
     facet: 'Dạy lại',
     can: 'Giảng lại ý “dải liên tục, không có đầu nào tốt/xấu” cho một người chưa biết, bằng ví dụ của riêng bạn.',
+  },
+  {
+    id: 'history',
+    facet: 'Dòng lịch sử',
+    can: 'Kể lại dòng lexical: Allport–Odbert lọc từ trong từ điển, Cattell rút gọn, phân tích nhân tố hội tụ về năm, Goldberg phổ biến tên "Big Five", Costa–McCrae chuẩn hoá bộ đo NEO.',
+  },
+  {
+    id: 'limits',
+    facet: 'Giới hạn của chuẩn',
+    can: 'Nói được các giới hạn: mẫu nghiên cứu thiên về nhóm WEIRD, tự đánh giá có thiên lệch, nhãn cao/thấp là quy ước ngưỡng, và mô hình không đo giá trị con người.',
   },
   {
     id: 'metacognition',

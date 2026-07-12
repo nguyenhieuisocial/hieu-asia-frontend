@@ -10,6 +10,10 @@ import {
   Brain,
   Briefcase,
   Heart,
+  Sun,
+  CloudRain,
+  Shuffle,
+  Sprout,
 } from 'lucide-react';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
@@ -230,6 +234,36 @@ export default async function MbtiTypePage({
         </p>
       </section>
 
+      {/* Khi ở phong độ tốt + Dưới áp lực */}
+      <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Card className="border-border bg-card/40">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 font-heading text-base text-foreground">
+                <Sun className="h-4 w-4 text-amber-400" aria-hidden /> Khi ở phong độ tốt
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm leading-relaxed text-foreground/80">
+              {d.atBest}
+            </CardContent>
+          </Card>
+          <Card className="border-border bg-card/40">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 font-heading text-base text-foreground">
+                <CloudRain className="h-4 w-4 text-sky-400" aria-hidden /> Dưới áp lực
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm leading-relaxed text-foreground/80">
+              {d.underStress}
+            </CardContent>
+          </Card>
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">
+          Đây là những nếp <strong>thường thấy</strong> khi {d.code} phát triển lành mạnh hoặc khi
+          căng thẳng kéo dài — mô tả để nhận ra và tự điều chỉnh, không phải điều bắt buộc xảy ra.
+        </p>
+      </section>
+
       {/* Chuỗi chức năng nhận thức */}
       <section className="relative mx-auto max-w-3xl px-6 pb-10">
         <h2 className="mb-2 flex items-center gap-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
@@ -260,6 +294,33 @@ export default async function MbtiTypePage({
             </li>
           ))}
         </ol>
+      </section>
+
+      {/* Dễ nhầm với */}
+      <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <h2 className="mb-2 flex items-center gap-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+          <Shuffle className="h-5 w-5 text-gold" aria-hidden /> Dễ nhầm {d.code} với nhóm nào
+        </h2>
+        <p className="text-base leading-relaxed text-foreground/85">{d.commonConfusions}</p>
+        <p className="mt-2 text-xs text-muted-foreground">
+          Hai nhóm có thể trông giống nhau ở bề ngoài nhưng khác ở chuỗi chức năng bên trong. Khi
+          phân vân, hãy nhìn cách một người <strong>ra quyết định</strong> và <strong>nạp năng
+          lượng</strong>, chứ đừng chỉ nhìn hành vi.
+        </p>
+      </section>
+
+      {/* Con đường trưởng thành */}
+      <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <h2 className="mb-2 flex items-center gap-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+          <Sprout className="h-5 w-5 text-emerald-400" aria-hidden /> Con đường trưởng thành của{' '}
+          {d.code}
+        </h2>
+        <p className="text-base leading-relaxed text-foreground/85">{d.growthPath}</p>
+        <p className="mt-2 text-xs text-muted-foreground">
+          Trong lý thuyết chức năng nhận thức, phát triển thường đi từ việc dùng tốt chức năng{' '}
+          <strong>phụ trợ</strong> và <strong>cấp ba</strong>, rồi dần làm hoà với chức năng kém — một
+          hướng gợi ý để tự quan sát, không phải bài kiểm tra.
+        </p>
       </section>
 
       {/* Công việc */}
