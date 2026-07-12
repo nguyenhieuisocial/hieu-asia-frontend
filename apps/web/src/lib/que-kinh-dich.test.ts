@@ -201,3 +201,28 @@ describe('que-kinh-dich › slug', () => {
     expect(getQue('khong-ton-tai')).toBeUndefined();
   });
 });
+
+describe('que-kinh-dich › nội dung bách khoa: sequenceNote + misread (2026-07)', () => {
+  it('cả 64 quẻ đều có sequenceNote không rỗng, đủ dày (> 30 ký tự)', () => {
+    for (const q of QUE_PAGES) {
+      expect(typeof q.sequenceNote).toBe('string');
+      expect(q.sequenceNote.trim().length).toBeGreaterThan(30);
+    }
+  });
+
+  it('cả 64 quẻ đều có misread không rỗng, đủ dày (> 30 ký tự)', () => {
+    for (const q of QUE_PAGES) {
+      expect(typeof q.misread).toBe('string');
+      expect(q.misread.trim().length).toBeGreaterThan(30);
+    }
+  });
+
+  it('sequenceNote của quẻ chẵn nhắc tới quẻ lẻ đi cặp (2k nhắc "quẻ 2k-1") và ngược lại', () => {
+    // Luật cặp King Wen: (1,2), (3,4)… (63,64). Mỗi sequenceNote phải neo được
+    // vào quẻ đi cặp của nó — kiểm bằng chuỗi "quẻ <số>" xuất hiện trong ghi chú.
+    for (const q of QUE_PAGES) {
+      const partner = q.id % 2 === 1 ? q.id + 1 : q.id - 1;
+      expect(q.sequenceNote).toContain(`quẻ ${partner}`);
+    }
+  });
+});
