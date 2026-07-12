@@ -3,10 +3,11 @@
  *
  * TẤT CẢ grounded từ chính bài viết Thần Số Học (Pythagoras: rút số chủ đạo từ
  * ngày sinh; bốn con số lõi từ tên — Vận Mệnh/Biểu Đạt, Linh Hồn, Nhân Cách,
- * Ngày Sinh; đọc cộng hưởng; số bậc thầy 11/22/33; số Nợ Nghiệp 13/14/16/19;
- * Bài Học Nghiệp; quy ước bỏ dấu tên Việt & chữ Y; định vị pseudoscience). KHÔNG
- * thêm dữ kiện mới, KHÔNG bịa số/ngày/dẫn nguồn. Giữ giọng "tham khảo / góc nhìn,
- * không phán định — một lăng kính để hiểu mình".
+ * Ngày Sinh; đọc cộng hưởng; số bậc thầy 11/22/33; số Nợ Nghiệp 13/14/16/19 bắt
+ * ở 4 vị trí lõi; hai cách tính Đường Đời — theo thành phần vs cộng thẳng; Bài
+ * Học Nghiệp; quy ước bỏ dấu tên Việt & chữ Y; định vị pseudoscience). KHÔNG bịa
+ * số/ngày/dẫn nguồn; ví dụ số học đều tự kiểm chứng được. Giữ giọng "tham khảo /
+ * góc nhìn, không phán định — một lăng kính để hiểu mình".
  */
 
 import * as React from 'react';
@@ -67,63 +68,277 @@ export function ThanSoHocFrame() {
 
 export function ThanSoHocDepth() {
   return (
-    <DepthTabs
-      topicId="than-so-hoc"
-      concept="Vì sao nên “đọc cộng hưởng” nhiều con số, đừng đọc một số lẻ"
-      levels={[
-        {
-          id: 'eli5',
-          label: 'Trẻ 5 tuổi',
-          content: (
-            <p>
-              Đừng đoán một bài hát chỉ bằng một nốt nhạc. Một con số trong lá số thần số cũng vậy: chỉ
-              nhìn một số rồi kết luận về cả con người là thiếu. Phải nghe {strong('cả bản nhạc')} —
-              nhiều con số cùng lúc — mới ra giai điệu thật.
-            </p>
-          ),
-        },
-        {
-          id: 'eli14',
-          label: 'Người 14 tuổi',
-          content: (
-            <>
+    <div className="space-y-5">
+      <DepthTabs
+        topicId="than-so-hoc"
+        concept="Số Đường Đời — con số trung tâm của lá số"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Ngoài Số Đường Đời (rút từ ngày sinh), tên đầy đủ cho thêm {strong('bốn con số lõi')}:
-                Vận Mệnh (tất cả chữ cái), Linh Hồn (nguyên âm), Nhân Cách (phụ âm) và Ngày Sinh.
+                Số Đường Đời giống {strong('con đường chính')} bạn đi suốt đời, tính ra từ ngày sinh.
+                Nếu chỉ được đọc một con số duy nhất trong cả lá số, hãy đọc số này — nó nói về chủ đề
+                lớn nhất của đời bạn.
               </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Số Đường Đời (tiếng Việt còn gọi {strong('Số Chủ Đạo')}) rút từ ngày–tháng–năm sinh.
+                  Nó mô tả con đường lớn: chủ đề, bài học và kiểu trải nghiệm bạn gặp đi gặp lại. Vì
+                  ngày sinh không đổi, đây là con số cố định và trung tâm nhất của lá số.
+                </p>
+                <p>
+                  Mỗi số từ 1 đến 9 là một dải năng lượng có {strong('hai cực')}: cực sáng (điểm mạnh)
+                  và cực tối (bài học cần rèn). Ví dụ số 1 mạnh ở khởi xướng, dẫn đầu nhưng phải rèn cái
+                  tôi để hợp tác được. Đọc cả hai cực, đừng chỉ nhìn điểm mạnh.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Có hai cách tính: rút gọn {strong('riêng')} từng phần ngày, tháng, năm rồi mới cộng
+                  (cách Decoz mà hieu.asia dùng), hay cộng thẳng cả chuỗi ngày sinh. Đa số ca cho cùng
+                  kết quả; chúng chỉ lệch ở vài ca biên có {strong('số Master ẩn')} trong tháng hoặc năm
+                  — cách theo thành phần giữ được, cộng thẳng làm rơi mất.
+                </p>
+                <p>
+                  Một sắc thái nữa: nếu tổng trung gian của ba phần đã rút rơi đúng 13/14/16/19 thì
+                  Đường Đời còn mang thêm một {strong('Số Nợ Nghiệp')}. Cùng ra số cuối là 7, nhưng số 7
+                  đến từ tổng 16 mang màu khác số 7 đến từ tổng 25 — nền khiêm nhường của bài học 16.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="than-so-hoc"
+        concept="Bốn con số lõi từ tên: Vận Mệnh · Linh Hồn · Nhân Cách · Ngày Sinh"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Cách dùng hay nhất là {strong('đọc cộng hưởng')}: khi các số cùng hướng thì năng lượng
-                nhất quán; khi lệch nhau thì có một “sức kéo nội tâm” đáng soi. Ví dụ khoảng cách giữa
-                Nhân Cách (người ta thấy bạn thế nào) và Linh Hồn (bạn thật sự khao khát gì) là một góc
-                nhìn rất đắt.
+                Tên đầy đủ của bạn giấu thêm {strong('bốn con số')}. Mỗi con số như một ô cửa sổ nhìn
+                vào một căn phòng khác trong cùng một ngôi nhà: một phòng là tài năng, một phòng là điều
+                thầm kín, một phòng là vẻ ngoài, một phòng là món quà riêng.
               </p>
-            </>
-          ),
-        },
-        {
-          id: 'expert',
-          label: 'Chuyên gia',
-          content: (
-            <>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Ngoài Đường Đời (từ ngày sinh), tên đầy đủ và ngày sinh cho thêm bốn con số lõi:
+                </p>
+                <ul className="list-disc space-y-1 pl-5">
+                  <li>
+                    {strong('Vận Mệnh (Biểu Đạt)')} — từ tất cả chữ cái trong tên: năng khiếu trời cho,
+                    cách bạn cống hiến ra ngoài.
+                  </li>
+                  <li>{strong('Linh Hồn')} — từ nguyên âm: khao khát sâu kín, động lực thầm lặng.</li>
+                  <li>{strong('Nhân Cách')} — từ phụ âm: lớp vỏ ngoài, ấn tượng đầu người khác thấy.</li>
+                  <li>{strong('Ngày Sinh')} — lấy riêng ngày trong tháng: một tài năng bẩm sinh cụ thể.</li>
+                </ul>
+                <p>
+                  Nếu Đường Đời là “con đường đi” thì Vận Mệnh là “hành lý mang theo”. Đọc bốn số này
+                  cùng nhau, đừng tách rời.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Vì nguyên âm cộng phụ âm là toàn bộ chữ, khoảng cách giữa {strong('Nhân Cách')} (phụ
+                  âm) và {strong('Linh Hồn')} (nguyên âm) chính là khoảng cách giữa “người ta thấy bạn
+                  thế nào” và “bạn thật sự muốn gì” — chất liệu luận đắt giá nhất. Các số từ tên phải
+                  tính theo {strong('tên trên khai sinh')}, không phải nghệ danh; đây là điểm hay bị làm
+                  sai.
+                </p>
+                <p>
+                  Với Số Ngày Sinh, engine rút gọn giữ Master 11/22 (33 không xảy ra vì ngày tối đa là
+                  31); một số trường phái lại giữ nguyên số ngày 1–31 làm con số riêng — đó là khác
+                  trường phái, không phải sai. Và như mọi số từ tên Việt, phải bỏ dấu về chữ La-tinh
+                  trước khi tra, nên việc xếp chữ Y vào nguyên âm là một quy ước ảnh hưởng tới cả Linh
+                  Hồn lẫn Nhân Cách.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="than-so-hoc"
+        concept="Vì sao nên “đọc cộng hưởng” nhiều con số, đừng đọc một số lẻ"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Kỹ thuật nền là {strong('rút gọn')} tổng về một chữ số, trừ khi rơi đúng{' '}
-                {strong('11, 22, 33')} thì giữ nguyên (số bậc thầy). Vì nguyên âm + phụ âm = toàn bộ
-                chữ, nên TRƯỚC
-                khi rút gọn, tổng Linh Hồn và Nhân Cách bằng đúng tổng Vận Mệnh; sau khi rút gọn riêng
-                thì cộng trực tiếp thường không còn bằng nhau.
+                Đừng đoán một bài hát chỉ bằng một nốt nhạc. Một con số trong lá số thần số cũng vậy:
+                chỉ nhìn một số rồi kết luận về cả con người là thiếu. Phải nghe {strong('cả bản nhạc')}{' '}
+                — nhiều con số cùng lúc — mới ra giai điệu thật.
               </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Ngoài Số Đường Đời (rút từ ngày sinh), tên đầy đủ cho thêm {strong('bốn con số lõi')}:
+                  Vận Mệnh (tất cả chữ cái), Linh Hồn (nguyên âm), Nhân Cách (phụ âm) và Ngày Sinh.
+                </p>
+                <p>
+                  Cách dùng hay nhất là {strong('đọc cộng hưởng')}: khi các số cùng hướng thì năng
+                  lượng nhất quán; khi lệch nhau thì có một “sức kéo nội tâm” đáng soi. Ví dụ khoảng
+                  cách giữa Nhân Cách (người ta thấy bạn thế nào) và Linh Hồn (bạn thật sự khao khát
+                  gì) là một góc nhìn rất đắt.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Kỹ thuật nền là {strong('rút gọn')} tổng về một chữ số, trừ khi rơi đúng{' '}
+                  {strong('11, 22, 33')} thì giữ nguyên (số bậc thầy). Vì nguyên âm + phụ âm = toàn bộ
+                  chữ, nên TRƯỚC khi rút gọn, tổng Linh Hồn và Nhân Cách bằng đúng tổng Vận Mệnh; sau
+                  khi rút gọn riêng thì cộng trực tiếp thường không còn bằng nhau.
+                </p>
+                <p>
+                  Có những điểm là {strong('khác trường phái, không phải sai')}: xếp chữ Y là nguyên âm
+                  hay phụ âm, công nhận cả 11/22/33 hay chỉ 11/22, có dùng bộ Nợ Nghiệp 13/14/16/19 hay
+                  không — hieu.asia trình bày theo cách đọc Decoz. Với tên Việt, bảng Pythagoras chỉ có
+                  26 chữ La-tinh nên phải bỏ dấu (Nguyễn → NGUYEN, Đ → D) — một quy ước thực dụng, không
+                  phải chân lý.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="than-so-hoc"
+        concept="Số Master (11 · 22 · 33) là gì"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Có những điểm là {strong('khác trường phái, không phải sai')}: xếp chữ Y là nguyên âm
-                hay phụ âm, công nhận cả 11/22/33 hay chỉ 11/22, có dùng bộ Nợ Nghiệp 13/14/16/19 hay
-                không — hieu.asia trình bày theo cách đọc Decoz. Với tên Việt, bảng Pythagoras chỉ có
-                26 chữ La-tinh nên phải bỏ dấu (Nguyễn → NGUYEN, Đ → D) — một quy ước thực dụng, không
-                phải chân lý.
+                Có ba con số “đậm” hơn: 11, 22, 33. Chúng không thu nhỏ lại như các số khác. Giống như
+                vặn âm lượng to hơn — nghe rõ hơn, nhưng cũng dễ chói tai hơn.
               </p>
-            </>
-          ),
-        },
-      ]}
-    />
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <p>
+                Khi cộng chữ số mà ra đúng 11, 22 hoặc 33 thì {strong('giữ nguyên')}, không rút về 2,
+                4, 6. Mỗi số Master là bản cường độ cao của số gốc: 11 của 2, 22 của 4, 33 của 6. Nghĩa
+                là tiềm năng lớn hơn nhưng bài tập cũng khó hơn và dễ quá tải hơn — {strong('không phải')}{' '}
+                “đẳng cấp cao hơn người”.
+              </p>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Người mang số Master thường dao động giữa dạng gốc (2/4/6) và dạng Master, và nhiều
+                  khi chỉ kích hoạt cường độ Master ở giai đoạn trưởng thành. Có trường phái chỉ công
+                  nhận 11 và 22, đòi điều kiện chặt cho 33; cách đọc Decoz mà hieu.asia dùng công nhận
+                  cả ba.
+                </p>
+                <p>
+                  Đọc số Master đúng tinh thần là nêu {strong('tiềm năng kèm áp lực')}, tránh tâng bốc
+                  kiểu “bạn là linh hồn cao cấp” — đó vừa là câu Barnum vừa dễ nuôi thói ngạo mạn.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="than-so-hoc"
+        concept="Nợ Nghiệp là gì — đọc cho tỉnh"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Vài con số (13, 14, 16, 19) giống một bài tập về nhà còn dang dở, không phải một lời
+                nguyền. Có bài tập thì làm cho xong, thế thôi — không có gì phải sợ.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <p>
+                Trong cách đọc Decoz, bốn số 13/14/16/19 là “nợ nghiệp” — một bài học chưa hoàn thiện
+                cần nỗ lực có ý thức ở đời này, {strong('không phải điềm xấu hay bản án')}. Mỗi số đều
+                đi kèm một điều cần học và một cách đi tới cụ thể (ví dụ 13 học lao động bền bỉ, 16 học
+                khiêm nhường).
+              </p>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Nợ Nghiệp xuất hiện khi một con số lõi đi qua đúng 13/14/16/19 ở {strong('tổng trung gian')}{' '}
+                  trước khi rút gọn. hieu.asia bắt nó ở bốn vị trí — Đường Đời, Vận Mệnh, Linh Hồn và
+                  Ngày Sinh — và cố ý bỏ qua Nhân Cách vì đó là vị trí các trường phái còn tranh cãi.
+                </p>
+                <p>
+                  “Kiếp trước” ở đây là {strong('ẩn dụ biểu tượng')}, không phải khẳng định siêu hình;
+                  và không phải hệ nào cũng dùng bộ số này — đây là đặc trưng Decoz. Đọc cho tỉnh nghĩa
+                  là không hù dọa, không bán “giải nghiệp”.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+    </div>
   );
 }
 
@@ -199,6 +414,60 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       </>
     ),
   },
+  {
+    id: 'q6',
+    type: 'mcq',
+    prompt: 'hieu.asia tính Số Đường Đời theo cách nào, và vì sao?',
+    choices: [
+      {
+        text: 'Cộng thẳng tất cả chữ số của ngày sinh một lần rồi rút gọn',
+        note: 'Đó là “cách B”. hieu.asia không dùng làm mặc định vì nó có thể làm rơi mất số Master ẩn trong tháng hoặc năm.',
+      },
+      {
+        text: 'Rút gọn riêng ngày, tháng, năm rồi mới cộng lại — để giữ được số Master ẩn trong tháng/năm',
+        correct: true,
+        note: 'Đúng — đây là cách theo thành phần của Decoz. Ví dụ người sinh 01/01/1980: cách này ra 11, còn cộng thẳng ra 2.',
+      },
+      {
+        text: 'Chỉ lấy năm sinh vì năm là quan trọng nhất',
+        note: 'Sai — Đường Đời dùng cả ngày, tháng và năm sinh.',
+      },
+    ],
+  },
+  {
+    id: 'q7',
+    type: 'open',
+    prompt: 'Bài Học Nghiệp khác Số Nợ Nghiệp ở điểm cốt lõi nào?',
+    answer: (
+      <>
+        Nợ Nghiệp (13/14/16/19) đến từ một con số {strong('có mặt')} khi tính; còn Bài Học Nghiệp là
+        các chữ số 1–9 {strong('vắng mặt')} khi quy đổi tên sang số. Một bên là bài học gắn với con số
+        hiện diện, một bên là phẩm chất ứng với con số thiếu. Cả hai đều đóng khung là “việc cần rèn”,
+        không phải khiếm khuyết hay điềm xấu.
+      </>
+    ),
+  },
+  {
+    id: 'q8',
+    type: 'mcq',
+    prompt:
+      'Vì sao nên đọc một lá số theo thứ tự (Đường Đời trước, rồi các số khác) thay vì phán chung chung?',
+    choices: [
+      {
+        text: 'Để chống Barnum — buộc mỗi nhận định phải dẫn về một con số thật đã tính, thay vì câu đúng với mọi người',
+        correct: true,
+        note: 'Đúng — “vì Đường Đời của bạn là 4 nên…” thay cho “bạn vừa mạnh mẽ vừa nhạy cảm”.',
+      },
+      {
+        text: 'Vì con số đầu tiên luôn quan trọng hơn tất cả các số sau',
+        note: 'Không — thứ tự để có bối cảnh, không phải để xếp hạng số nào “hơn”.',
+      },
+      {
+        text: 'Vì đọc nhanh hơn nên khách hài lòng hơn',
+        note: 'Không — mục đích là chính xác và chống nói chung chung, không phải tốc độ.',
+      },
+    ],
+  },
 ];
 
 export function ThanSoHocRecall() {
@@ -217,6 +486,11 @@ const FACETS: UnderstandingFacet[] = [
     can: 'Mô tả cách rút số chủ đạo từ ngày sinh và bốn con số lõi từ tên (Vận Mệnh, Linh Hồn, Nhân Cách, Ngày Sinh), gồm bước rút gọn về một chữ số.',
   },
   {
+    id: 'history',
+    facet: 'Nguồn gốc',
+    can: 'Nói được vì sao cái tên “Pythagoras” chỉ là quy ước — hệ hiện đại được định hình ở thế kỷ 20 (Balliett, Jordan, Decoz) — và phân biệt được Pythagorean với Chaldean.',
+  },
+  {
     id: 'discrimination',
     facet: 'Phân biệt',
     can: 'Phân biệt Vận Mệnh (tất cả chữ cái), Linh Hồn (nguyên âm) và Nhân Cách (phụ âm) — và vì sao khoảng cách Nhân Cách ↔ Linh Hồn đáng soi.',
@@ -230,6 +504,11 @@ const FACETS: UnderstandingFacet[] = [
     id: 'application',
     facet: 'Vận dụng',
     can: 'Giải thích vì sao nên đọc cộng hưởng nhiều con số, và vì sao hai công cụ khác nhau có thể ra kết quả hơi lệch mà chưa chắc ai sai.',
+  },
+  {
+    id: 'synthesis',
+    facet: 'Tổng hợp',
+    can: 'Nêu được thứ tự luận một lá số (Đường Đời → Vận Mệnh → Linh Hồn/Nhân Cách → Ngày Sinh → Master → Nợ Nghiệp) và vì sao mỗi nhận định phải dẫn về một con số thật để tránh Barnum.',
   },
   {
     id: 'guard',

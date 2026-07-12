@@ -62,62 +62,170 @@ export function PhongThuyFrame() {
 
 export function PhongThuyDepth() {
   return (
-    <DepthTabs
-      topicId="phong-thuy"
-      concept="Vì sao cùng một hướng lại “cát” với người này mà “hung” với người kia"
-      levels={[
-        {
-          id: 'eli5',
-          label: 'Trẻ 5 tuổi',
-          content: (
-            <p>
-              Cùng một chiếc áo, người này mặc vừa, người kia mặc chật. Hướng nhà cũng vậy: hướng Nam
-              không phải {strong('“tốt cho tất cả mọi người”')} — nó tốt hay không là tùy{' '}
-              {strong('bạn là ai')} (sinh năm nào), nên phải xem của riêng bạn trước.
-            </p>
-          ),
-        },
-        {
-          id: 'eli14',
-          label: 'Người 14 tuổi',
-          content: (
-            <>
+    <div className="space-y-6">
+      <DepthTabs
+        topicId="phong-thuy"
+        concept="Vì sao cùng một hướng lại “cát” với người này mà “hung” với người kia"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Từ năm sinh + giới tính, Bát Trạch suy ra {strong('Cung Phi')} (mệnh quái) của bạn.
-                Tám quẻ chia hai nhóm "đồng khí": {strong('Đông tứ mệnh')} (Khảm, Ly, Chấn, Tốn) hợp
-                Bắc, Nam, Đông, Đông Nam; {strong('Tây tứ mệnh')} (Càn, Khôn, Cấn, Đoài) hợp Tây Bắc,
-                Tây Nam, Đông Bắc, Tây.
+                Cùng một chiếc áo, người này mặc vừa, người kia mặc chật. Hướng nhà cũng vậy: hướng Nam
+                không phải {strong('“tốt cho tất cả mọi người”')} — nó tốt hay không là tùy{' '}
+                {strong('bạn là ai')} (sinh năm nào), nên phải xem của riêng bạn trước.
               </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Từ năm sinh + giới tính, Bát Trạch suy ra {strong('Cung Phi')} (mệnh quái) của bạn.
+                  Tám quẻ chia hai nhóm "đồng khí": {strong('Đông tứ mệnh')} (Khảm, Ly, Chấn, Tốn) hợp
+                  Bắc, Nam, Đông, Đông Nam; {strong('Tây tứ mệnh')} (Càn, Khôn, Cấn, Đoài) hợp Tây Bắc,
+                  Tây Nam, Đông Bắc, Tây.
+                </p>
+                <p>
+                  Bạn thuộc nhóm nào thì 4 hướng cùng nhóm gặp toàn sao cát, còn 4 hướng nhóm kia thành
+                  sao hung. Vì thế cùng một hướng có thể là cát cho người Đông tứ mà là hung cho người
+                  Tây tứ — bước đầu tiên luôn là xác định bạn thuộc nhóm nào.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Mỗi hướng so với mệnh quái mang một {strong('du niên tinh')}. Bốn sao cát (giảm dần):
+                  Sinh Khí, Thiên Y, Diên Niên, Phục Vị; bốn sao hung (nặng giảm dần): Tuyệt Mệnh, Ngũ
+                  Quỷ, Lục Sát, Họa Hại. Trong Bát Trạch, "tốt/xấu" gắn với{' '}
+                  {strong('việc gì đặt ở đâu')}, không phải dán nhãn số phận — ví dụ quy tắc bếp truyền
+                  thống là "tọa hung – hướng cát".
+                </p>
+                <p>
+                  Một lưu ý: bảng Cung Phi cổ điển vốn tính theo năm âm lịch, nên người sinh sát Tết nên
+                  tự đối chiếu thêm — đây là chỗ các trường phái có thể khác nhau. Tất cả là gợi ý bố trí
+                  để tham khảo, không phải bảo đảm kết quả.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="phong-thuy"
+        concept="Cung Phi là gì và tính ra sao"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Bạn thuộc nhóm nào thì 4 hướng cùng nhóm gặp toàn sao cát, còn 4 hướng nhóm kia thành
-                sao hung. Vì thế cùng một hướng có thể là cát cho người Đông tứ mà là hung cho người
-                Tây tứ — bước đầu tiên luôn là xác định bạn thuộc nhóm nào.
+                Cung Phi giống một {strong('“số riêng”')} của mỗi người, lấy từ năm bạn sinh ra và bạn
+                là con trai hay con gái. Biết số đó rồi mới biết hướng nào hợp với bạn.
               </p>
-            </>
-          ),
-        },
-        {
-          id: 'expert',
-          label: 'Chuyên gia',
-          content: (
-            <>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  {strong('Cung Phi')} (命卦, mệnh quái) là một trong tám quẻ. Cách tính: cộng dồn các
+                  chữ số của năm sinh dương lịch, rút gọn về một số từ 1 đến 9, rồi tra bảng theo giới
+                  tính. Ví dụ năm 1990: 1 + 9 + 9 + 0 = 19 → 1 + 9 = 10 → 1 + 0 = 1.
+                </p>
+                <p>
+                  Với số 1, nam ra quẻ {strong('Khảm')} (thuộc Đông tứ mệnh), nữ ra quẻ{' '}
+                  {strong('Cấn')} (thuộc Tây tứ mệnh). Cùng một năm sinh, nam và nữ có thể ra hai quẻ
+                  khác nhóm — nên giới tính là một phần của phép tính, không bỏ được.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Cung Phi là mệnh quái đại diện cho một người, gốc ở Lạc Thư và Cửu cung. Có hai chỗ
+                  các phái tính khác nhau. Thứ nhất, bảng cổ điển vốn lấy {strong('năm âm lịch')} (đổi
+                  mốc quanh Tết), nên người sinh sát Tết có thể lệch một năm nếu chỉ lấy năm dương;
+                  công cụ chốt dùng năm dương lịch cho nhất quán.
+                </p>
+                <p>
+                  Thứ hai, {strong('số 5')} ở trung cung Lạc Thư không ứng quẻ nào; tục lệ quy nam số 5
+                  về Khôn (có phái dùng Cấn), nữ về Cấn (hoặc Khôn). Bảng tra trực tiếp mà công cụ dùng
+                  chốt nam số 5 ra {strong('Càn')}, nữ số 5 ra {strong('Ly')} — cứ bám kết quả công cụ,
+                  đây là chỗ có trường phái tính khác.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="phong-thuy"
+        concept="Vì sao bếp lại đặt ở hướng hung (“tọa hung – hướng cát”)"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Mỗi hướng so với mệnh quái mang một {strong('du niên tinh')}. Bốn sao cát (giảm dần):
-                Sinh Khí, Thiên Y, Diên Niên, Phục Vị; bốn sao hung (nặng giảm dần): Tuyệt Mệnh, Ngũ
-                Quỷ, Lục Sát, Họa Hại. Trong Bát Trạch, "tốt/xấu" gắn với{' '}
-                {strong('việc gì đặt ở đâu')}, không phải dán nhãn số phận — ví dụ quy tắc bếp truyền
-                thống là "tọa hung – hướng cát".
+                Cái bếp hơi đặc biệt: người ta đặt nó ở góc {strong('“xấu”')} nhưng cho miệng bếp quay
+                về phía {strong('“tốt”')}. Giống như đứng ở chỗ tối mà nhìn ra phía sáng.
               </p>
-              <p>
-                Một lưu ý: bảng Cung Phi cổ điển vốn tính theo năm âm lịch, nên người sinh sát Tết nên
-                tự đối chiếu thêm — đây là chỗ các trường phái có thể khác nhau. Tất cả là gợi ý bố trí
-                để tham khảo, không phải bảo đảm kết quả.
-              </p>
-            </>
-          ),
-        },
-      ]}
-    />
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Trong Bát Trạch, "tốt/xấu" gắn với {strong('việc gì đặt ở đâu')}, không phải nhãn số
+                  phận dán lên một hướng. Bếp theo quy tắc {strong('"tọa hung – hướng cát"')}: đặt ở
+                  vùng mang sao hung, nhưng miệng bếp (cửa bếp) quay về hướng có sao cát.
+                </p>
+                <p>
+                  Nhờ vậy, ngay cả một vùng "hung" vẫn có công năng riêng. Đây là gợi ý bố trí, không
+                  có nghĩa vùng đó "xui xẻo chắc chắn".
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Ý niệm truyền thống: ngọn lửa của bếp {strong('“đè”')} được vùng khí xấu, còn nguồn
+                  khí đi vào qua miệng bếp thì lấy từ hướng cát. Vì thế bố trí bếp không phải "tránh
+                  hướng hung" một cách máy móc, mà là dùng đúng vùng hung cho đúng vật.
+                </p>
+                <p>
+                  Điều này cho thấy Bát Trạch là bộ {strong('quy tắc bố trí để tham khảo')}, không phải
+                  định luật số mệnh — và là điểm rất dễ nói nhầm khi tư vấn cho người mới.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+    </div>
   );
 }
 
@@ -140,13 +248,13 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
     prompt: 'Bát Trạch suy ra Cung Phi (mệnh quái) của một người từ đâu?',
     choices: [
       {
+        text: 'Từ ngày và giờ sinh chính xác tới phút',
+        note: 'Không — đó gần với cách lập lá số Tử Vi / Bát Tự, không phải Cung Phi Bát Trạch.',
+      },
+      {
         text: 'Từ năm sinh và giới tính',
         correct: true,
         note: 'Đúng — từ năm sinh + giới tính suy ra mệnh quái, rồi lập bảng 8 hướng.',
-      },
-      {
-        text: 'Từ ngày và giờ sinh chính xác tới phút',
-        note: 'Không — đó gần với cách lập lá số Tử Vi / Bát Tự, không phải Cung Phi Bát Trạch.',
       },
       {
         text: 'Từ hướng ngôi nhà đang ở',
@@ -160,17 +268,17 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
     prompt: 'Nhóm nào sau đây là bốn sao CÁT trong tám du niên tinh của Bát Trạch?',
     choices: [
       {
-        text: 'Sinh Khí, Thiên Y, Diên Niên, Phục Vị',
-        correct: true,
-        note: 'Đúng — bốn sao cát, tốt giảm dần từ Sinh Khí đến Phục Vị.',
-      },
-      {
         text: 'Tuyệt Mệnh, Ngũ Quỷ, Lục Sát, Họa Hại',
         note: 'Đây lại là bốn sao HUNG (nặng giảm dần), không phải sao cát.',
       },
       {
         text: 'Khảm, Ly, Chấn, Tốn',
         note: 'Đây là bốn quẻ của nhóm Đông tứ mệnh, không phải du niên tinh.',
+      },
+      {
+        text: 'Sinh Khí, Thiên Y, Diên Niên, Phục Vị',
+        correct: true,
+        note: 'Đúng — bốn sao cát, tốt giảm dần từ Sinh Khí đến Phục Vị.',
       },
     ],
   },
@@ -208,6 +316,66 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       </>
     ),
   },
+  {
+    id: 'q6',
+    type: 'mcq',
+    prompt: 'Cung Phi mà công cụ tính dựa trên loại năm nào?',
+    choices: [
+      {
+        text: 'Luôn là năm âm lịch, đổi mốc đúng giao thừa Tết Nguyên Đán',
+        note: 'Không — bảng cổ điển vốn theo năm âm, nhưng công cụ này chốt dùng năm dương lịch.',
+      },
+      {
+        text: 'Năm dương lịch — công cụ chốt dùng năm dương cho nhất quán',
+        correct: true,
+        note: 'Đúng — bảng cổ điển vốn tính theo năm âm, nên người sinh sát Tết nên tự đối chiếu thêm.',
+      },
+      {
+        text: 'Tùy ngày và giờ sinh chính xác tới phút',
+        note: 'Không — Cung Phi chỉ cần năm sinh và giới tính, không cần ngày giờ.',
+      },
+    ],
+  },
+  {
+    id: 'q7',
+    type: 'mcq',
+    prompt: 'Điểm khác cốt lõi giữa Huyền Không Phi Tinh và Bát Trạch là gì?',
+    choices: [
+      {
+        text: 'Cả hai đều chỉ tính theo năm sinh của chủ nhà',
+        note: 'Không — Phi Tinh không dùng năm sinh, mà dùng Vận (chu kỳ 20 năm) cùng tọa hướng nhà.',
+      },
+      {
+        text: 'Phi Tinh chỉ là tên gọi khác của Bát Trạch',
+        note: 'Không — hai phương pháp khác nhau cả về đầu vào lẫn cách lập bàn.',
+      },
+      {
+        text: 'Bát Trạch tĩnh theo người (mệnh quái); Phi Tinh động theo thời gian (vận) và tọa hướng nhà',
+        correct: true,
+        note: 'Đúng — Phi Tinh thêm lớp thời gian và hướng nhà mà Bát Trạch không xét.',
+      },
+    ],
+  },
+  {
+    id: 'q8',
+    type: 'mcq',
+    prompt: 'Trên thước Lỗ Ban, đâu là nhóm bốn cung TỐT trong bộ 8 cung?',
+    choices: [
+      {
+        text: 'Tài, Nghĩa, Quan, Bản',
+        correct: true,
+        note: 'Đúng — bốn cung tốt xen kẽ với bốn cung xấu trong bộ 8 cung kinh điển.',
+      },
+      {
+        text: 'Bệnh, Ly, Kiếp, Hại',
+        note: 'Đây lại là bốn cung XẤU của thước Lỗ Ban.',
+      },
+      {
+        text: 'Sinh Khí, Thiên Y, Diên Niên, Phục Vị',
+        note: 'Đây là bốn du niên tinh cát của Bát Trạch, không phải cung trên thước Lỗ Ban.',
+      },
+    ],
+  },
 ];
 
 export function PhongThuyRecall() {
@@ -234,6 +402,16 @@ const FACETS: UnderstandingFacet[] = [
     id: 'boundary',
     facet: 'Ranh giới',
     can: 'Chỉ ra những gì ngoài phạm vi công cụ (Loan Đầu, trấn yểm, vật phẩm, Thế quái) và vì sao xem ngày không thay luật sư hay an toàn.',
+  },
+  {
+    id: 'cung-phi',
+    facet: 'Tự tính Cung Phi',
+    can: 'Tự cộng dồn năm sinh về một số 1–9, tra bảng theo giới tính ra Cung Phi, và nêu được hai lưu ý (mốc năm âm/dương sát Tết; số 5 quy ước tùy phái).',
+  },
+  {
+    id: 'phi-tinh',
+    facet: 'Lớp thời gian',
+    can: 'Phân biệt Bát Trạch (tĩnh theo người) với Huyền Không Phi Tinh (động theo Vận và tọa hướng nhà), và biết công cụ /phi-tinh làm Hạ Quái chuẩn, không làm Thế quái.',
   },
   {
     id: 'application',
