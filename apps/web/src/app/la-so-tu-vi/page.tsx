@@ -10,7 +10,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 const DESC =
   'Lập & xem lá số Tử Vi Đẩu Số miễn phí từ ngày giờ sinh — 12 cung, 121 sao, độ sáng, Tứ Hóa, cách cục, bằng engine chuẩn. Luận giải để hiểu mình, không bói toán.';
 
-export const metadata: Metadata = {
+const BASE_META: Metadata = {
   title: 'Xem lá số Tử Vi miễn phí — 12 cung, 121 sao',
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/la-so-tu-vi' },
@@ -22,6 +22,29 @@ export const metadata: Metadata = {
     images: OG_DEFAULT_IMAGES,
   },
 };
+
+// Link chia sẻ (?d=&t=&g=) → ảnh OG ĐỘNG theo lá số (preview FB/Zalo hiện ngày
+// sinh + con giáp của người gửi → "lá số CỦA TÔI", click nhiều hơn). Canonical
+// VẪN trỏ /la-so-tu-vi (không index URL tham số). Mirror pattern /la-so-bat-tu.
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ d?: string; t?: string; g?: string }>;
+}): Promise<Metadata> {
+  const sp = await searchParams;
+  const d = sp?.d;
+  if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return BASE_META;
+  const t = sp.t ?? '12:00';
+  const g = sp.g === 'F' ? 'F' : 'M';
+  const ogUrl = `https://hieu.asia/la-so-tu-vi/og?d=${d}&t=${encodeURIComponent(t)}&g=${g}`;
+  const title = 'Lá số Tử Vi của tôi — hieu.asia';
+  return {
+    ...BASE_META,
+    title,
+    openGraph: { ...BASE_META.openGraph, title, images: [{ url: ogUrl, width: 1200, height: 630, alt: 'Lá số Tử Vi' }] },
+    twitter: { card: 'summary_large_image', title, images: [ogUrl] },
+  };
+}
 
 const CUNG: Array<{ name: string; govern: string }> = [
   { name: 'Mệnh', govern: 'bản thân, tính cách cốt lõi, khí chất' },
